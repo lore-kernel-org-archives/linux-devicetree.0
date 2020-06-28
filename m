@@ -2,87 +2,145 @@ Return-Path: <SRS0=6oDv=AJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D96C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 28 Jun 2020 06:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 106FFC433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 28 Jun 2020 07:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92CCE207E8
-	for <linux-devicetree@archiver.kernel.org>; Sun, 28 Jun 2020 06:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D719F207E8
+	for <linux-devicetree@archiver.kernel.org>; Sun, 28 Jun 2020 07:24:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HtxMeacr"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="D82vwPQi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726051AbgF1GhZ (ORCPT
+        id S1726128AbgF1HYy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 28 Jun 2020 02:37:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44304 "EHLO
+        Sun, 28 Jun 2020 03:24:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbgF1GhZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 28 Jun 2020 02:37:25 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00A93C061794
-        for <devicetree@vger.kernel.org>; Sat, 27 Jun 2020 23:37:24 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id dr13so13156465ejc.3
-        for <devicetree@vger.kernel.org>; Sat, 27 Jun 2020 23:37:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=iUXx+7YRSLXxfIms/TP+PNmkL/8TkVtZnmICV5XUjPk=;
-        b=HtxMeacr3Z2cWSCALOatgTtptSevkOJMM5HFkKGRFUh0JSl3gz10vkkvB9jPuXdCa0
-         wKqmfReSZkSi4+mbgIT/kyeLgPIesb9dJeDT1TTb95VelMkp3wCWxvgIfrGDuMyD+sbk
-         de6cNiWy+9H8oS/8KM8dqqyqBqYjJ225M0DNQsnfrUM8gudfw2UX4oVJlw6YiMZHommW
-         3wTh0ofaOTARyRiooRGV2gGzRl896arD1vptPFcFN20lvuFplx+leocj6YX29It5Ytw0
-         L438Rg0xgwIy2I5kMoIg8e7dYxycX0bJvko6iuYyqRYyMjR7TwZ4HlpUlIKuLvvpePKj
-         dZXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=iUXx+7YRSLXxfIms/TP+PNmkL/8TkVtZnmICV5XUjPk=;
-        b=TsYNRJfHjh794wbkkpiRB4cD57mvwyPRJ5aO7Nt2OUFx7lneVqpXn/QSoFyWeWMx7S
-         UsD4nptR1usi0iuFDTktostu2w7dWTfqM7euGNAN98jBL3HvBS+iGlrs7BIxm7UgZl9S
-         EB3Y34WeCgCJFPbmzgy0CCZtGyz+lSZ0BHyz3iMhrJ2Qhem+Pfo4VL1zX89PxzsymE8/
-         odP0gOsDu9Ph5Al/iuhOlw8Z1pmhCcmODo+kQRg1FDVMXO7YHj1U3u3jH7Z629SCVy8S
-         9eJHYh3FsjTGdwyHi5QiSPu5kn8sWInzuZXURhNahZSVlxJNodb8S1u+jtCmOUX+et+1
-         Ivdw==
-X-Gm-Message-State: AOAM533SkPrThJFgTOW/iaqENxyXfuY8y8wPbJauZ66Wyl140wT0Hz+I
-        96eGmmkYvhvwn6jsCi67sSsCkDH9fxwqeVjN2Z+aYA==
-X-Google-Smtp-Source: ABdhPJwDYE/k7xpZBmf6iEqvJPD8CzhEgKf5MswtJlSFdYxxfg6UVYHu/yZw9Bo+a8hmnigetkjLQVfGwwrSQe9EUIk=
-X-Received: by 2002:a17:906:2786:: with SMTP id j6mr8886684ejc.216.1593326243692;
- Sat, 27 Jun 2020 23:37:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200626080538.3454-1-krzk@kernel.org>
-In-Reply-To: <20200626080538.3454-1-krzk@kernel.org>
-From:   Jun Nie <jun.nie@linaro.org>
-Date:   Sun, 28 Jun 2020 14:37:12 +0800
-Message-ID: <CABymUCOZW56OCv4V246-SLE-TRLQ4G36x3pe7P5hdX-z7NM_Sg@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: zx: Align L2 cache-controller nodename with dtschema
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
+        with ESMTP id S1725958AbgF1HYw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 28 Jun 2020 03:24:52 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1261C061794;
+        Sun, 28 Jun 2020 00:24:52 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 502244FB;
+        Sun, 28 Jun 2020 09:24:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1593329087;
+        bh=lDJLYgo5DAMTz/2ZdYYg0U6WeJE3NuS2/RgMKA97/9A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=D82vwPQig11JOHMRyv/yZYP6lyVm8zSHDNpAs0wCDRKTXvpE+c5DucVv1Cv2X83RT
+         TJdPfYkU6pAuRhBrNqmysO/eOdeFqpg8qR6JQGz95C83P5RHew9bWDMGhXDQrmpLhs
+         vMoSUdCBnQvqz1GD8hajRAHRr79ryIsz/3AvgwTk=
+Date:   Sun, 28 Jun 2020 10:24:44 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v5 2/2] drm/panel: simple: Add Satoz SAT050AT40H12R2
+ panel support
+Message-ID: <20200628072444.GA8391@pendragon.ideasonboard.com>
+References: <20200109184037.9091-1-miquel.raynal@bootlin.com>
+ <20200109184037.9091-2-miquel.raynal@bootlin.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200109184037.9091-2-miquel.raynal@bootlin.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Krzysztof Kozlowski <krzk@kernel.org> =E4=BA=8E2020=E5=B9=B46=E6=9C=8826=E6=
-=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=884:05=E5=86=99=E9=81=93=EF=BC=9A
->
-> Fix dtschema validator warnings like:
->     l2-cache-controller@c00000: $nodename:0:
->         'l2-cache-controller@c00000' does not match '^(cache-controller|c=
-pu)(@[0-9a-f,]+)*$'
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Hi Miquel,
+
+On Thu, Jan 09, 2020 at 07:40:37PM +0100, Miquel Raynal wrote:
+> Add support for the Satoz SAT050AT40H12R2 panel.
+> 
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 > ---
->  arch/arm/boot/dts/zx296702.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-Reviewed-by: Jun Nie <jun.nie@linaro.org>
+> 
+> Changes since v4:
+> * None.
+> 
+> Changes since v3:
+> * Added connector type.
+> 
+> Changes since v2:
+> * Dropped two uneeded lines which would fail the build.
+> 
+> Changes since v1:
+> * Switched to display_timing's instead of display_mode.
+> 
+>  drivers/gpu/drm/panel/panel-simple.c | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> index aaa08beac13c..1aa6622abc49 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -2577,6 +2577,30 @@ static const struct panel_desc samsung_ltn140at29_301 = {
+>  	},
+>  };
+>  
+> +static const struct display_timing satoz_sat050at40h12r2_timing = {
+> +	.pixelclock = {33300000, 33300000, 50000000},
+> +	.hactive = {800, 800, 800},
+> +	.hfront_porch = {16, 210, 354},
+> +	.hback_porch = {46, 46, 46},
+> +	.hsync_len = {1, 1, 40},
+> +	.vactive = {480, 480, 480},
+> +	.vfront_porch = {7, 22, 147},
+> +	.vback_porch = {23, 23, 23},
+> +	.vsync_len = {1, 1, 20},
+> +};
+> +
+> +static const struct panel_desc satoz_sat050at40h12r2 = {
+> +	.timings = &satoz_sat050at40h12r2_timing,
+> +	.num_timings = 1,
+> +	.bpc = 8,
+> +	.size = {
+> +		.width = 108,
+> +		.height = 65,
+> +	},
+> +	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+> +	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+
+I'm trying to fix inconsistencies in the panel-simple driver, and this
+caught my eyes. MEDIA_BUS_FMT_RGB888_1X24 isn't a correct format for
+LVDS panels. MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
+MEDIA_BUS_FMT_RGB888_1X7X4_SPWG or MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA
+should be used instead. As I couldn't find documentation for the panel,
+I can't tell which format is correct. Could you please help ?
+
+> +};
+> +
+>  static const struct drm_display_mode sharp_ld_d5116z01b_mode = {
+>  	.clock = 168480,
+>  	.hdisplay = 1920,
+> @@ -3377,6 +3401,9 @@ static const struct of_device_id platform_of_match[] = {
+>  	}, {
+>  		.compatible = "samsung,ltn140at29-301",
+>  		.data = &samsung_ltn140at29_301,
+> +	}, {
+> +		.compatible = "satoz,sat050at40h12r2",
+> +		.data = &satoz_sat050at40h12r2,
+>  	}, {
+>  		.compatible = "sharp,ld-d5116z01b",
+>  		.data = &sharp_ld_d5116z01b,
+
+-- 
+Regards,
+
+Laurent Pinchart
