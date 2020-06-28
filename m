@@ -2,211 +2,311 @@ Return-Path: <SRS0=6oDv=AJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ECE7C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 28 Jun 2020 15:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51EACC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 28 Jun 2020 16:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF0B20708
-	for <linux-devicetree@archiver.kernel.org>; Sun, 28 Jun 2020 15:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DAA32076C
+	for <linux-devicetree@archiver.kernel.org>; Sun, 28 Jun 2020 16:39:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="yZAoun79"
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="xv5roH2M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726068AbgF1PZF (ORCPT
+        id S1726007AbgF1QjG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 28 Jun 2020 11:25:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39954 "EHLO
+        Sun, 28 Jun 2020 12:39:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbgF1PZF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 28 Jun 2020 11:25:05 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B807EC03E97B
-        for <devicetree@vger.kernel.org>; Sun, 28 Jun 2020 08:25:04 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id e22so10777810edq.8
-        for <devicetree@vger.kernel.org>; Sun, 28 Jun 2020 08:25:04 -0700 (PDT)
+        with ESMTP id S1726104AbgF1QjF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 28 Jun 2020 12:39:05 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BC92C03E97B
+        for <devicetree@vger.kernel.org>; Sun, 28 Jun 2020 09:39:05 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id u25so7797945lfm.1
+        for <devicetree@vger.kernel.org>; Sun, 28 Jun 2020 09:39:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1b9CJfwpY0EgSXhBndDQBKUa9u+/ZVGbt1pfC+YeSuw=;
-        b=yZAoun79toPOZsMGyueUTRkh4Nw/MHVeXBKo0dLG4Ui89HmnkUL4xBWhbH8YqfSxZK
-         00cA/KeJLJw6P5ijgtW214UgInYAskXsT6t5Rq+J7wmxAPiZvKRnN4vSfv8dR+3IbEOe
-         FVAsI47eGB+ENWrE9gvDYbdqfoX4ghFz+wIRT/LWuKXzdmJEAvhiVB4uoNzvwMwdTJuh
-         nPDNzMxJcc/U++9qSVxGxEZJh3jNmRlBYMyWjyrrMFuHtrvJBS1DEOfnxtkVuHucophl
-         5xSPTMhRcBEUoCI/DOvZJc/YoTjt+FQTo9CyRxEIz/mAEakPblOeLpqIDLbhpezFz9vY
-         EiiA==
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=44jYHq4vsT34apIFOBTKIM6GNTAQfLucICyAOjYoaHI=;
+        b=xv5roH2MW70tL4MGfmDBsFBeMTFdN8HNMhSdntgUB8K6FBEY94yiMfdU5C8R+2Itif
+         Q2uET52Mhl6EtTC9yvqAKxK2SC6ri8KaAnJqUlrtUib8JviVdboxI0VYNAIlJDOHB89X
+         CpDjkZKhLrykUkPIfKwtkeqN0Z2Z0Fz4eVehJuHLOQtm/HsRzmZyOuRIwFPxxQLoI0Zo
+         cQgYzTe8RkQtMmyaDhUPjJ1mUpPKEMnx6wcYU+5LSWcMAqJup6/xgxA6rvYPqtndi+E5
+         I6eLaCHaCz4+iI9Iyu0u7vt2kfzr4AMb14WKl18mxiOwJ81sxOa8WoqH8EM2EK6GmVwY
+         EYGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1b9CJfwpY0EgSXhBndDQBKUa9u+/ZVGbt1pfC+YeSuw=;
-        b=kwcKj3sjkx9sycvr7sU2IYm4Y7r7On/5nrYPhdQJ98wbWG9AFl4Crv0eee5+i3c4eB
-         OkuonzRQ2J2sH6UmKmZ7Np34QYXNES26is5l3QwOFMRExmbvD0N1PeoXmz5c0cPm/lM4
-         JrCHTEcZj1Cgmqy/OW+7BhyyIIyRaG9Fnf/WkVsw4U+FKZBbKuO8kZ7Y2mCNtffgE/cQ
-         Iablq6wzUW+GJZOIVlDE0lQDn29yQIQW4e9b1j3NyY6OtQIKeHLIjZQ+oZ3z/dSpBsH2
-         XqCch4W6ZzrZ/svO8WyywMbQNrK7v+z9zsDVNYXLGATgEMZI1WrD+eTVR5asTsoIrV7C
-         rBCA==
-X-Gm-Message-State: AOAM53395F/EIe+wqakNeMGjEbjvcTykcelqlvqXpSpOiTf2nutNG1GX
-        REkCZXfJxW6FybbR/tvTb+NXbw==
-X-Google-Smtp-Source: ABdhPJyHGt8w/vkED3O9MUf6wMaxnG7NVdZmoxcRWxRd4Douo2Da3U0WcwxR3Oj+ECzAcIz9Db0ZvQ==
-X-Received: by 2002:aa7:c4d8:: with SMTP id p24mr11006986edr.323.1593357903293;
-        Sun, 28 Jun 2020 08:25:03 -0700 (PDT)
-Received: from localhost.localdomain ([2001:16b8:5c19:a301:3446:ed90:fece:8da5])
-        by smtp.gmail.com with ESMTPSA id cw14sm4929991edb.88.2020.06.28.08.25.01
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=44jYHq4vsT34apIFOBTKIM6GNTAQfLucICyAOjYoaHI=;
+        b=ouynVNKLFka23tX9TgyyBBC+QcdFhxB67WicbDX/ELsCrkBiqoAOMpe5VJWtCPUZa1
+         DOhkGXWx/aBhyVWqnO1f1uTlOgctrtpyYgQQkYjDmkH/QDrAYL60VMzL69OoQy9phXgz
+         RsNzApfeOhKnOHOH3evAUOezozd5icQo/UNugKziqLkLAAHirUcj7+XM7k5UA6qRFGVd
+         ykck9vezW36MmJCfDb5ZdzZg9ehtREkmOOZMesBiQvuy2cjRCo+KKyFQCbE5Dna4BAQa
+         lf6Qz27z6mt2/zDpR+S8AkGaWJklAfIe4rVZOnEWKr8KqYrVEUdrV5PqLtjqW1Ek/vMw
+         GO0A==
+X-Gm-Message-State: AOAM531+QANueIhnqvagD3c5wZmyhr85H1mPvRJkjm1N5NO2pDo88FOD
+        qQIRVanlMBiDO5BiExle6/XPuQ==
+X-Google-Smtp-Source: ABdhPJwYFpUzHoFTLqaCGCMebyfNZi6L+IyBYJ6JYAp5+Z0/nV2LtvHVREUDHQBCfrnQ0V+l7CWZ1g==
+X-Received: by 2002:a19:4805:: with SMTP id v5mr7212954lfa.75.1593362343618;
+        Sun, 28 Jun 2020 09:39:03 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id j22sm10354676lfe.63.2020.06.28.09.39.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 08:25:02 -0700 (PDT)
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
-        bcousson@baylibre.com, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        "H . Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Drew Fustini <drew@beagleboard.org>
-Subject: [PATCH v2] ARM: dts: am335x-pocketbeagle: set default mux for gpio pins
-Date:   Sun, 28 Jun 2020 17:24:43 +0200
-Message-Id: <20200628152442.322593-1-drew@beagleboard.org>
-X-Mailer: git-send-email 2.25.1
+        Sun, 28 Jun 2020 09:39:03 -0700 (PDT)
+Date:   Sun, 28 Jun 2020 18:39:02 +0200
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pinctrl: renesas,rza2-pinctrl: Convert to
+ json-schema
+Message-ID: <20200628163902.GI1105424@oden.dyn.berto.se>
+References: <20200626143638.16512-1-geert+renesas@glider.be>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200626143638.16512-1-geert+renesas@glider.be>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-These pins on the PocketBeagle P1 and P2 headers are connected to AM3358
-balls with gpio lines, and these pins are not used for any other
-peripherals by default. These GPIO lines are unclaimed and could be used
-by userspace program through the gpiod ABI.
+Hi Geert,
 
-This patch adds a "default" state in the am33xx_pinmux node and sets the
-mux for those pins to gpio (mode 7) with input enable and pull-up or
-down (per the ball reset rel. state in section 4.2 of datasheet [0]).
+Thanks for your work.
 
-[0] http://www.ti.com/lit/ds/symlink/am3358.pdf
+On 2020-06-26 16:36:38 +0200, Geert Uytterhoeven wrote:
+> Convert the Renesas RZ/A2 combined Pin and GPIO controller Device Tree
+> binding documentation to json-schema.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  .../bindings/pinctrl/renesas,rza2-pinctrl.txt |  87 ---------------
+>  .../pinctrl/renesas,rza2-pinctrl.yaml         | 100 ++++++++++++++++++
+>  2 files changed, 100 insertions(+), 87 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
+> deleted file mode 100644
+> index a63ccd476cdaf919..0000000000000000
+> --- a/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
+> +++ /dev/null
+> @@ -1,87 +0,0 @@
+> -Renesas RZ/A2 combined Pin and GPIO controller
+> -
+> -The Renesas SoCs of the RZ/A2 series feature a combined Pin and GPIO controller.
+> -Pin multiplexing and GPIO configuration is performed on a per-pin basis.
+> -Each port features up to 8 pins, each of them configurable for GPIO
+> -function (port mode) or in alternate function mode.
+> -Up to 8 different alternate function modes exist for each single pin.
+> -
+> -Pin controller node
+> --------------------
+> -
+> -Required properties:
+> -  - compatible: shall be:
+> -    - "renesas,r7s9210-pinctrl": for RZ/A2M
+> -  - reg
+> -    Address base and length of the memory area where the pin controller
+> -    hardware is mapped to.
+> -  - gpio-controller
+> -    This pin controller also controls pins as GPIO
+> -  - #gpio-cells
+> -    Must be 2
+> -  - gpio-ranges
+> -    Expresses the total number of GPIO ports/pins in this SoC
+> -
+> -Example: Pin controller node for RZ/A2M SoC (r7s9210)
+> -
+> -	pinctrl: pin-controller@fcffe000 {
+> -		compatible = "renesas,r7s9210-pinctrl";
+> -		reg = <0xfcffe000 0x1000>;
+> -
+> -		gpio-controller;
+> -		#gpio-cells = <2>;
+> -		gpio-ranges = <&pinctrl 0 0 176>;
+> -	};
+> -
+> -Sub-nodes
+> ----------
+> -
+> -The child nodes of the pin controller designate pins to be used for
+> -specific peripheral functions or as GPIO.
+> -
+> -- Pin multiplexing sub-nodes:
+> -  A pin multiplexing sub-node describes how to configure a set of
+> -  (or a single) pin in some desired alternate function mode.
+> -  The values for the pinmux properties are a combination of port name, pin
+> -  number and the desired function index. Use the RZA2_PINMUX macro located
+> -  in include/dt-bindings/pinctrl/r7s9210-pinctrl.h to easily define these.
+> -  For assigning GPIO pins, use the macro RZA2_PIN also in r7s9210-pinctrl.h
+> -  to express the desired port pin.
+> -
+> -  Required properties:
+> -    - pinmux:
+> -      integer array representing pin number and pin multiplexing configuration.
+> -      When a pin has to be configured in alternate function mode, use this
+> -      property to identify the pin by its global index, and provide its
+> -      alternate function configuration number along with it.
+> -      When multiple pins are required to be configured as part of the same
+> -      alternate function they shall be specified as members of the same
+> -      argument list of a single "pinmux" property.
+> -      Helper macros to ease assembling the pin index from its position
+> -      (port where it sits on and pin number) and alternate function identifier
+> -      are provided by the pin controller header file at:
+> -      <dt-bindings/pinctrl/r7s9210-pinctrl.h>
+> -      Integers values in "pinmux" argument list are assembled as:
+> -      ((PORT * 8 + PIN) | MUX_FUNC << 16)
+> -
+> -  Example: Board specific pins configuration
+> -
+> -	&pinctrl {
+> -		/* Serial Console */
+> -		scif4_pins: serial4 {
+> -			pinmux = <RZA2_PINMUX(PORT9, 0, 4)>,	/* TxD4 */
+> -				 <RZA2_PINMUX(PORT9, 1, 4)>;	/* RxD4 */
+> -		};
+> -	};
+> -
+> -  Example: Assigning a GPIO:
+> -
+> -	leds {
+> -		status = "okay";
+> -		compatible = "gpio-leds";
+> -
+> -		led0 {
+> -			/* P6_0 */
+> -			gpios = <&pinctrl RZA2_PIN(PORT6, 0) GPIO_ACTIVE_HIGH>;
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml
+> new file mode 100644
+> index 0000000000000000..b7911a994f3a9f12
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml
+> @@ -0,0 +1,100 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/renesas,rza2-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Renesas RZ/A2 combined Pin and GPIO controller
+> +
+> +maintainers:
+> +  - Chris Brandt <chris.brandt@renesas.com>
+> +  - Geert Uytterhoeven <geert+renesas@glider.be>
+> +
+> +description:
+> +  The Renesas SoCs of the RZ/A2 series feature a combined Pin and GPIO
+> +  controller.
+> +  Pin multiplexing and GPIO configuration is performed on a per-pin basis.
+> +  Each port features up to 8 pins, each of them configurable for GPIO function
+> +  (port mode) or in alternate function mode.
+> +  Up to 8 different alternate function modes exist for each single pin.
 
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
----
-v2 changes:
-- change default mux from output to input.  Input is safer as it does
-  not drive the line.  If the user wants output, they will need to edit
-  this device tree.
+This paragraph formatting looks odd, but I'm not sure it's intentional 
+or not :-) In either case with or without this changed,
 
- arch/arm/boot/dts/am335x-pocketbeagle.dts | 98 +++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-diff --git a/arch/arm/boot/dts/am335x-pocketbeagle.dts b/arch/arm/boot/dts/am335x-pocketbeagle.dts
-index f0b222201b86..e9cc5cb218f1 100644
---- a/arch/arm/boot/dts/am335x-pocketbeagle.dts
-+++ b/arch/arm/boot/dts/am335x-pocketbeagle.dts
-@@ -60,6 +60,104 @@ vmmcsd_fixed: fixedregulator0 {
- };
- 
- &am33xx_pinmux {
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 =   <	&P2_03_gpio &P1_34_gpio &P2_19_gpio &P2_24_gpio
-+			&P2_33_gpio &P2_22_gpio &P2_18_gpio &P2_10_gpio
-+			&P2_06_gpio &P2_04_gpio &P2_02_gpio &P2_08_gpio
-+			&P2_17_gpio >;
-+
-+	/* P2_03 (ZCZ ball T10) gpio0_23 0x824 */
-+	P2_03_gpio: pinmux_P2_03_gpio {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD9, PIN_INPUT_PULLUP, MUX_MODE7)
-+		>;
-+	};
-+
-+	/* P1_34 (ZCZ ball T11) gpio0_26 0x828 */
-+	P1_34_gpio: pinmux_P1_34_gpio {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD10, PIN_INPUT_PULLUP, MUX_MODE7)
-+		>;
-+	};
-+
-+		/* P2_19 (ZCZ ball U12) gpio0_27 0x82c */
-+	P2_19_gpio: pinmux_P2_19_gpio {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD11, PIN_INPUT_PULLUP, MUX_MODE7)
-+		>;
-+	};
-+
-+	/* P2_24 (ZCZ ball T12) gpio1_12 0x830 */
-+	P2_24_gpio: pinmux_P2_24_gpio {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD12, PIN_INPUT_PULLUP, MUX_MODE7)
-+		>;
-+	};
-+
-+	/* P2_33 (ZCZ ball R12) gpio1_13 0x834 */
-+	P2_33_gpio: pinmux_P2_33_gpio {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD13, PIN_INPUT_PULLUP, MUX_MODE7)
-+		>;
-+	};
-+
-+	/* P2_22 (ZCZ ball V13) gpio1_14 0x838 */
-+	P2_22_gpio: pinmux_P2_22_gpio {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD14, PIN_INPUT_PULLUP, MUX_MODE7)
-+		>;
-+	};
-+
-+	/* P2_18 (ZCZ ball U13) gpio1_15 0x83c */
-+	P2_18_gpio: pinmux_P2_18_gpio {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD15, PIN_INPUT_PULLUP, MUX_MODE7)
-+		>;
-+	};
-+
-+	/* P2_10 (ZCZ ball R14) gpio1_20 0x850 */
-+	P2_10_gpio: pinmux_P2_10_gpio {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_A4, PIN_INPUT_PULLUP, MUX_MODE7)
-+		>;
-+	};
-+
-+	/* P2_06 (ZCZ ball U16) gpio1_25 0x864 */
-+	P2_06_gpio: pinmux_P2_06_gpio {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_A9, PIN_INPUT_PULLUP, MUX_MODE7)
-+		>;
-+	};
-+
-+	/* P2_04 (ZCZ ball T16) gpio1_26 0x868 */
-+	P2_04_gpio: pinmux_P2_04_gpio {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_A10, PIN_INPUT_PULLUP, MUX_MODE7)
-+		>;
-+	};
-+
-+	/* P2_02 (ZCZ ball V17) gpio1_27 0x86c */
-+	P2_02_gpio: pinmux_P2_02_gpio {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_A11, PIN_INPUT_PULLUP, MUX_MODE7)
-+		>;
-+	};
-+
-+	/* P2_08 (ZCZ ball U18) gpio1_28 0x878 */
-+	P2_08_gpio: pinmux_P2_08_gpio {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_BEN1, PIN_INPUT_PULLDOWN, MUX_MODE7)
-+		>;
-+	};
-+
-+	/* P2_17 (ZCZ ball V12) gpio2_1 0x88c */
-+	P2_17_gpio: pinmux_P2_17_gpio {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_CLK, PIN_INPUT_PULLUP, MUX_MODE7)
-+		>;
-+	};
-+
- 	i2c2_pins: pinmux-i2c2-pins {
- 		pinctrl-single,pins = <
- 			AM33XX_PADCONF(AM335X_PIN_UART1_RTSN, PIN_INPUT_PULLUP, MUX_MODE3)	/* (D17) uart1_rtsn.I2C2_SCL */
+> +
+> +properties:
+> +  compatible:
+> +    const: "renesas,r7s9210-pinctrl" # RZ/A2M
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    const: 2
+> +    description:
+> +      The first cell contains the global GPIO port index, constructed using the
+> +      RZA2_PIN() helper macro in r7s9210-pinctrl.h.
+> +      E.g. "RZA2_PIN(PORT6, 0)" for P6_0.
+> +
+> +  gpio-ranges:
+> +    maxItems: 1
+> +
+> +patternProperties:
+> +  "^.*$":
+> +    if:
+> +      type: object
+> +    then:
+> +      allOf:
+> +        - $ref: pincfg-node.yaml#
+> +        - $ref: pinmux-node.yaml#
+> +      description:
+> +        The child nodes of the pin controller designate pins to be used for
+> +        specific peripheral functions or as GPIO.
+> +
+> +        A pin multiplexing sub-node describes how to configure a set of
+> +        (or a single) pin in some desired alternate function mode.
+> +        The values for the pinmux properties are a combination of port name,
+> +        pin number and the desired function index. Use the RZA2_PINMUX macro
+> +        located in include/dt-bindings/pinctrl/r7s9210-pinctrl.h to easily
+> +        define these.
+> +        For assigning GPIO pins, use the macro RZA2_PIN also in
+> +        to express the desired port pin.
+> +
+> +      properties:
+> +        phandle: true
+> +
+> +        pinmux:
+> +          description:
+> +            Values are constructed from GPIO port number, pin number, and
+> +            alternate function configuration number using the RZA2_PINMUX()
+> +            helper macro in r7s9210-pinctrl.h.
+> +
+> +      required:
+> +        - pinmux
+> +
+> +      additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +  - gpio-ranges
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/pinctrl/r7s9210-pinctrl.h>
+> +    pinctrl: pin-controller@fcffe000 {
+> +            compatible = "renesas,r7s9210-pinctrl";
+> +            reg = <0xfcffe000 0x1000>;
+> +
+> +            gpio-controller;
+> +            #gpio-cells = <2>;
+> +            gpio-ranges = <&pinctrl 0 0 176>;
+> +
+> +            /* Serial Console */
+> +            scif4_pins: serial4 {
+> +                    pinmux = <RZA2_PINMUX(PORT9, 0, 4)>, /* TxD4 */
+> +                             <RZA2_PINMUX(PORT9, 1, 4)>; /* RxD4 */
+> +            };
+> +    };
+> -- 
+> 2.17.1
+> 
+
 -- 
-2.25.1
-
+Regards,
+Niklas Söderlund
