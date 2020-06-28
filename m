@@ -4,117 +4,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 106FFC433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 28 Jun 2020 07:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8407BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 28 Jun 2020 07:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D719F207E8
-	for <linux-devicetree@archiver.kernel.org>; Sun, 28 Jun 2020 07:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D57720768
+	for <linux-devicetree@archiver.kernel.org>; Sun, 28 Jun 2020 07:28:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="D82vwPQi"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="uOXm1rRx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbgF1HYy (ORCPT
+        id S1726112AbgF1H2X (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 28 Jun 2020 03:24:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51524 "EHLO
+        Sun, 28 Jun 2020 03:28:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbgF1HYw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 28 Jun 2020 03:24:52 -0400
+        with ESMTP id S1725933AbgF1H2X (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 28 Jun 2020 03:28:23 -0400
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1261C061794;
-        Sun, 28 Jun 2020 00:24:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 850F0C061794;
+        Sun, 28 Jun 2020 00:28:23 -0700 (PDT)
 Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 502244FB;
-        Sun, 28 Jun 2020 09:24:47 +0200 (CEST)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C030C4FB;
+        Sun, 28 Jun 2020 09:28:21 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1593329087;
-        bh=lDJLYgo5DAMTz/2ZdYYg0U6WeJE3NuS2/RgMKA97/9A=;
+        s=mail; t=1593329301;
+        bh=ck+LjAkxjFbi+T46BUzZf+XpAk4V6f33vhP8DfWZQHI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D82vwPQig11JOHMRyv/yZYP6lyVm8zSHDNpAs0wCDRKTXvpE+c5DucVv1Cv2X83RT
-         TJdPfYkU6pAuRhBrNqmysO/eOdeFqpg8qR6JQGz95C83P5RHew9bWDMGhXDQrmpLhs
-         vMoSUdCBnQvqz1GD8hajRAHRr79ryIsz/3AvgwTk=
-Date:   Sun, 28 Jun 2020 10:24:44 +0300
+        b=uOXm1rRxayXR+zKQy3KRDZgAUKQTQRWl8eKer9/zKORUNd5yFoInZcCU7aBUs+y6Y
+         YOr58xIXYiNhUT0myqyZxMLrTlYE7PeBX/ITh9unu3mm08hj0KPhRkuDwGD1NnIT71
+         ZdSA1chOyEZIx1s1yK9BircekQKa03LFbtHav0iw=
+Date:   Sun, 28 Jun 2020 10:28:19 +0300
 From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+To:     Pascal Roeleven <dev@pascalroeleven.nl>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v5 2/2] drm/panel: simple: Add Satoz SAT050AT40H12R2
- panel support
-Message-ID: <20200628072444.GA8391@pendragon.ideasonboard.com>
-References: <20200109184037.9091-1-miquel.raynal@bootlin.com>
- <20200109184037.9091-2-miquel.raynal@bootlin.com>
+        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2 2/5] drm: panel: Add Starry KR070PE2T
+Message-ID: <20200628072819.GB8391@pendragon.ideasonboard.com>
+References: <20200320112205.7100-1-dev@pascalroeleven.nl>
+ <20200320112205.7100-3-dev@pascalroeleven.nl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200109184037.9091-2-miquel.raynal@bootlin.com>
+In-Reply-To: <20200320112205.7100-3-dev@pascalroeleven.nl>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Miquel,
+Hi Pascal,
 
-On Thu, Jan 09, 2020 at 07:40:37PM +0100, Miquel Raynal wrote:
-> Add support for the Satoz SAT050AT40H12R2 panel.
+On Fri, Mar 20, 2020 at 12:21:33PM +0100, Pascal Roeleven wrote:
+> The KR070PE2T is a 7" panel with a resolution of 800x480.
 > 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> KR070PE2T is the marking present on the ribbon cable. As this panel is
+> probably available under different brands, this marking will catch
+> most devices.
+> 
+> As I can't find a datasheet for this panel, the bus_flags are instead
+> from trial-and-error. The flags seem to be common for these kind of
+> panels as well.
+> 
+> Signed-off-by: Pascal Roeleven <dev@pascalroeleven.nl>
 > ---
-> 
-> Changes since v4:
-> * None.
-> 
-> Changes since v3:
-> * Added connector type.
-> 
-> Changes since v2:
-> * Dropped two uneeded lines which would fail the build.
-> 
-> Changes since v1:
-> * Switched to display_timing's instead of display_mode.
-> 
->  drivers/gpu/drm/panel/panel-simple.c | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
+>  drivers/gpu/drm/panel/panel-simple.c | 29 ++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
 > 
 > diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> index aaa08beac13c..1aa6622abc49 100644
+> index e14c14ac6..b3d257257 100644
 > --- a/drivers/gpu/drm/panel/panel-simple.c
 > +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -2577,6 +2577,30 @@ static const struct panel_desc samsung_ltn140at29_301 = {
->  	},
+> @@ -2842,6 +2842,32 @@ static const struct panel_desc shelly_sca07010_bfn_lnn = {
+>  	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
 >  };
 >  
-> +static const struct display_timing satoz_sat050at40h12r2_timing = {
-> +	.pixelclock = {33300000, 33300000, 50000000},
-> +	.hactive = {800, 800, 800},
-> +	.hfront_porch = {16, 210, 354},
-> +	.hback_porch = {46, 46, 46},
-> +	.hsync_len = {1, 1, 40},
-> +	.vactive = {480, 480, 480},
-> +	.vfront_porch = {7, 22, 147},
-> +	.vback_porch = {23, 23, 23},
-> +	.vsync_len = {1, 1, 20},
+> +static const struct drm_display_mode starry_kr070pe2t_mode = {
+> +	.clock = 33000,
+> +	.hdisplay = 800,
+> +	.hsync_start = 800 + 209,
+> +	.hsync_end = 800 + 209 + 1,
+> +	.htotal = 800 + 209 + 1 + 45,
+> +	.vdisplay = 480,
+> +	.vsync_start = 480 + 22,
+> +	.vsync_end = 480 + 22 + 1,
+> +	.vtotal = 480 + 22 + 1 + 22,
+> +	.vrefresh = 60,
 > +};
 > +
-> +static const struct panel_desc satoz_sat050at40h12r2 = {
-> +	.timings = &satoz_sat050at40h12r2_timing,
-> +	.num_timings = 1,
+> +static const struct panel_desc starry_kr070pe2t = {
+> +	.modes = &starry_kr070pe2t_mode,
+> +	.num_modes = 1,
 > +	.bpc = 8,
 > +	.size = {
-> +		.width = 108,
-> +		.height = 65,
+> +		.width = 152,
+> +		.height = 86,
 > +	},
 > +	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_NEGEDGE,
 > +	.connector_type = DRM_MODE_CONNECTOR_LVDS,
 
 I'm trying to fix inconsistencies in the panel-simple driver, and this
@@ -126,19 +122,19 @@ I can't tell which format is correct. Could you please help ?
 
 > +};
 > +
->  static const struct drm_display_mode sharp_ld_d5116z01b_mode = {
->  	.clock = 168480,
+>  static const struct drm_display_mode starry_kr122ea0sra_mode = {
+>  	.clock = 147000,
 >  	.hdisplay = 1920,
-> @@ -3377,6 +3401,9 @@ static const struct of_device_id platform_of_match[] = {
+> @@ -3474,6 +3500,9 @@ static const struct of_device_id platform_of_match[] = {
 >  	}, {
->  		.compatible = "samsung,ltn140at29-301",
->  		.data = &samsung_ltn140at29_301,
+>  		.compatible = "shelly,sca07010-bfn-lnn",
+>  		.data = &shelly_sca07010_bfn_lnn,
 > +	}, {
-> +		.compatible = "satoz,sat050at40h12r2",
-> +		.data = &satoz_sat050at40h12r2,
+> +		.compatible = "starry,kr070pe2t",
+> +		.data = &starry_kr070pe2t,
 >  	}, {
->  		.compatible = "sharp,ld-d5116z01b",
->  		.data = &sharp_ld_d5116z01b,
+>  		.compatible = "starry,kr122ea0sra",
+>  		.data = &starry_kr122ea0sra,
 
 -- 
 Regards,
