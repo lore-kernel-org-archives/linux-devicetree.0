@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6B0C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 28 Jun 2020 20:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E72FAC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 28 Jun 2020 20:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2DBB206F2
-	for <linux-devicetree@archiver.kernel.org>; Sun, 28 Jun 2020 20:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6DDA206F2
+	for <linux-devicetree@archiver.kernel.org>; Sun, 28 Jun 2020 20:34:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593376189;
-	bh=FEHo1UuIHQpzcajXmsN834ntqjUiX66JOcT9ouERb0M=;
+	s=default; t=1593376450;
+	bh=f150PUxzlRF1ro795mRP6yAR7C3HpuYBEnqGNJDwC94=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=q3UEERIyIepg3btQLLaQPZ/dkWTTyGVdaaJDBy3xS4hQ0YtDn7xOk60sFBpYqoayd
-	 jWknl8eGESOH3GMM6bAHpWEDV/9qGRm+AjQRg9gMWEiwgjrDuqbPU6yJhK6qum000k
-	 NZgKX2oRyZtqHg4anBM/JJBV2dH2xt8LifJR+yKQ=
+	b=RZYxYyXNfMYf3D1k3R4IYpzxNrt2YcHb/b/SzppPazFOWc6VaMykKdIxJni9uezZJ
+	 ZBSUWmBdDoc194hGfLlpgK8fmiAKBVM9LMgG/OcOvta4v0FA3jOx2BZnQWjbOw0u6I
+	 l6u++Nr7ooTzh5ys+3LzLO1b3oFGpdlcivzfqQTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726080AbgF1U3t (ORCPT
+        id S1726080AbgF1UeK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 28 Jun 2020 16:29:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54156 "EHLO mail.kernel.org"
+        Sun, 28 Jun 2020 16:34:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726011AbgF1U3t (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 28 Jun 2020 16:29:49 -0400
+        id S1726011AbgF1UeK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 28 Jun 2020 16:34:10 -0400
 Received: from localhost.localdomain (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93BA6206E9;
-        Sun, 28 Jun 2020 20:29:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 833EA206E9;
+        Sun, 28 Jun 2020 20:34:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593376188;
-        bh=FEHo1UuIHQpzcajXmsN834ntqjUiX66JOcT9ouERb0M=;
+        s=default; t=1593376449;
+        bh=f150PUxzlRF1ro795mRP6yAR7C3HpuYBEnqGNJDwC94=;
         h=From:To:Cc:Subject:Date:From;
-        b=bn5IELXxAmxqNU2sRFR90ycKiIrAcP0GuoFiGbN201si7H2d9BT20E3Pq4UaqzS83
-         GKHm9e5vOTSdEfZy4iEH2bfXeI+00Z7wIgffnyDWE95PYnVyehqMmBnUndZ4pD20u8
-         7yG35cwW1Y32Ngam4uQZ9N9r7BzjfFUA3SIGn+Bg=
+        b=NFikk0dlPhNRJb7iSJhvodRnuuH6Pze6PBIwYW9dszhVTYvZIoWukiCzTGv/CFS+n
+         pg7GhsWWsAD+KIXSgFtBa/BPbRYvaA1a5RAue/zCsRB7byjRaUDlZ+3GxHClCxz0Vl
+         7mfBAL2VyCeaOfRtvJ3Pm75o+48MFN7GTm2FcxZ4=
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     linux-iio@vger.kernelorg, devicetree@vger.kernel.org,
+To:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>
 Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Subject: [PATCH] dt-bindings: iio: accel: kionix,kxsd9 yaml conversion.
-Date:   Sun, 28 Jun 2020 21:27:32 +0100
-Message-Id: <20200628202732.49793-1-jic23@kernel.org>
+Date:   Sun, 28 Jun 2020 21:32:05 +0100
+Message-Id: <20200628203205.49915-1-jic23@kernel.org>
 X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -61,7 +61,10 @@ accelerometer.
 
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- .../bindings/iio/accel/kionix,kxsd9.txt       | 22 -------
+
+Sorry, typo in iio mailing list in first try at sending this out.
+
+.../bindings/iio/accel/kionix,kxsd9.txt       | 22 -------
  .../bindings/iio/accel/kionix,kxsd9.yaml      | 65 +++++++++++++++++++
  2 files changed, 65 insertions(+), 22 deletions(-)
  delete mode 100644 Documentation/devicetree/bindings/iio/accel/kionix,kxsd9.txt
