@@ -2,124 +2,92 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9B4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 057B8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB50A2078A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2D852072D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:33:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593459234;
+	bh=dFJc4RSIx1riUoySHDk4MsDch7GYOxIOeYDc1FtDpHU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Lc2zasAGjTkf48DNICxQUERZzEPcfcphqdPtApSVs2KrfYNIa0nx4F39nF2li/vGY
+	 9mo6nyEfpmyBJX8pMzWxig5NEcUW9hiuFyr8rsG5Q/wEBu/WJh7fHMcTRNOazAIMol
+	 sa0N1RAIdca/FD0kutSmZeqDPG7UmgiTt0z/xFmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733106AbgF2TdT (ORCPT
+        id S1733271AbgF2Tdv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:33:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46778 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733228AbgF2Tco (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:32:44 -0400
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [IPv6:2a00:da80:fff0:2::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5576C02A56E;
-        Mon, 29 Jun 2020 06:36:47 -0700 (PDT)
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 2E0DD1C0C23; Mon, 29 Jun 2020 15:36:45 +0200 (CEST)
-Date:   Mon, 29 Jun 2020 15:36:44 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Merlijn Wajer <merlijn@wizzup.org>, jikos@suse.cz, vojtech@suse.cz
-Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Beno??t Cousson <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Borislav Petkov <bp@suse.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        Mark Gross <mgross@linux.intel.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        "open list:OMAP DEVICE TREE SUPPORT" <linux-omap@vger.kernel.org>,
-        "open list:OMAP DEVICE TREE SUPPORT" <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." 
-        <linux-input@vger.kernel.org>
-Subject: input maintainer -- are you there? was Re: [PATCH 1/2] Input: add
- `SW_MACHINE_COVER`
-Message-ID: <20200629133644.GA22227@amd>
-References: <20200612125402.18393-1-merlijn@wizzup.org>
- <20200612125402.18393-2-merlijn@wizzup.org>
- <20200616105045.GB1718@bug>
- <fef69c79-9943-7bd1-5c51-101f551cf2c8@wizzup.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="0F1p//8PRICkK4MW"
-Content-Disposition: inline
-In-Reply-To: <fef69c79-9943-7bd1-5c51-101f551cf2c8@wizzup.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Mon, 29 Jun 2020 15:33:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42844 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733260AbgF2Tdu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:33:50 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.195])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECE9A20786;
+        Mon, 29 Jun 2020 19:33:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593459230;
+        bh=dFJc4RSIx1riUoySHDk4MsDch7GYOxIOeYDc1FtDpHU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rFTphCwsWP1gPmwdEZ2LAE2oJ6Xjq4APHvUYk7Iag1wa0MB/NZaROELVjj4F0vKlR
+         3OxsIUdveAntbpruENkwqJAR9HILVBJLA4fGqOc1PwJ1jsSMA0Tc+ClsBzajHqVR64
+         uuReBlCLISY20JLhAxC8s9eqpRMt1dBI0f2ocFsQ=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: [RFT 2/3] arm64: dts: exynos: Add unit address to soc node on Exynos5433
+Date:   Mon, 29 Jun 2020 21:33:37 +0200
+Message-Id: <20200629193338.29540-2-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200629193338.29540-1-krzk@kernel.org>
+References: <20200629193338.29540-1-krzk@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Add @0 unit address to 'soc' node match its 'reg' property and silence
+DTC warning:
 
---0F1p//8PRICkK4MW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+    Warning (unit_address_vs_reg): /soc: node has a reg or ranges property, but no unit name
 
-Hi!
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-> Looks like we're blocking on this input patch.
->=20
-> On 16/06/2020 12:50, Pavel Machek wrote:
-> > On Fri 2020-06-12 14:53:58, Merlijn Wajer wrote:
-> >> This event code represents the state of a removable cover of a device.
-> >> Value 0 means that the cover is open or removed, value 1 means that the
-> >> cover is closed.
-> >>
-> >> Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com> Acked=
--by: Tony Lindgren=20
-> >> <tony@atomide.com> Signed-off-by: Merlijn Wajer <merlijn@wizzup.org> -=
---
-> >=20
-> > Dmitry, can we get some kind of comment here, or better yet can we get =
-you to apply this?
->=20
-> This is part of a patch series to resolve problems with the Nokia N900
-> not booting when the cover is removed (making the cover be the card
-> detect was also just weird IMHO). Just removing the card-detect from the
-> DTS is fine, but it was suggested that we expose the data instead as
-> input event. And that's gotten no response for about four months.
->=20
-> Should we just drop the feature and only remove the cd-gpios line from
-> the DTS, assuming upstream doesn't want this SW_MACHINE_COVER code?
+---
 
-I believe series is good, lets keep it. Changing now will only delay
-it a bit more. Let me try to get Dmitry's attention...
+Not tested on HW.
+---
+ arch/arm64/boot/dts/exynos/exynos5433.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-If that does not work, we can get Linus' attention :-).
+diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+index 6721966140f4..ebe089469b5f 100644
+--- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+@@ -256,7 +256,7 @@
+ 		cpu_on = <0xC4000003>;
+ 	};
+ 
+-	soc: soc {
++	soc: soc@0 {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-- 
+2.17.1
 
-If that does not work, umm, there are some other options.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---0F1p//8PRICkK4MW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl757mwACgkQMOfwapXb+vJWKwCeKCWtJeiWc/FxANNI2HrHGQQ7
-Fx4An1mjqwvcVp1xJprABVuC4z8nryZ1
-=Fk60
------END PGP SIGNATURE-----
-
---0F1p//8PRICkK4MW--
