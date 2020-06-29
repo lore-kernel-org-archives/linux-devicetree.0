@@ -2,51 +2,86 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DF1C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F6CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6317F206F1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C417B206F1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:58:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="S5gF1lYb"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Lju5246x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387978AbgF2U5F (ORCPT
+        id S2389927AbgF2U61 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:57:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43384 "EHLO
+        Mon, 29 Jun 2020 16:58:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731263AbgF2TNG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:13:06 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 058DDC0D941B;
-        Mon, 29 Jun 2020 05:01:03 -0700 (PDT)
-Received: from pendragon.bb.dnainternet.fi (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 07B58734;
-        Mon, 29 Jun 2020 14:01:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1593432062;
-        bh=X0xCbcYYYzfCKHt5yFv1VQW59LoexinUu8b4tbBY7VU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S5gF1lYbPD5U7b9shzsI+EzCTcQZ14Chmrflm1b+TCuAJ2Yq0MXD2Ds1TsocSI50E
-         RIyuIUhozo3GKTcD6xFieOC6MHOaAl4A1FEhFOr4jtLhwiM9KSSV0HIQeDL8I4wQZk
-         jVcDb0HmYnbtZfjEjdhNQ06b/gTCz93lsoz9RNUA=
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Vinod Koul <vkoul@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH v9 1/3] dt-bindings: phy: Add DT bindings for Xilinx ZynqMP PSGTR PHY
-Date:   Mon, 29 Jun 2020 15:00:52 +0300
-Message-Id: <20200629120054.29338-2-laurent.pinchart@ideasonboard.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200629120054.29338-1-laurent.pinchart@ideasonboard.com>
-References: <20200629120054.29338-1-laurent.pinchart@ideasonboard.com>
+        with ESMTP id S1728979AbgF2TND (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:13:03 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A856C00E3DF
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:04:25 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id g75so15105769wme.5
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:04:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=eg4utbhrf/3v6wZhuPotuFpmqRh7IC4ZAOzFVoP+DSU=;
+        b=Lju5246xETI3n7x5ApaA2zIYYyPdv7uL89+PkXu5UmfdDnoJt/A+1kV4EnWbvWHsfT
+         U0KiDkQo2C6/d8Ee7wMfJSSmn58uoqIdNiTjX8Hz5nTHyctnp2RJTz/wtYYsoJ+dtuhV
+         XjmJm2KbsyS/VgCkUtqgfIB2Q8m9h6+TRtPh688uJ2bkMEAzy6TyrNqZ5+p0Jq6QQPRe
+         TpitUFUM90jHaT+neQCa+q1jY5kpWoCkFluHE4al/HsV1lisaXYbrRjufnYUNHF7JcYD
+         MtPNLz8KCHYZnMSa1RhX8WtsifRsmdGJ5BQYv8xh4yMTTQv22xrYgZ/0nqbMjj7pN0qH
+         WHeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=eg4utbhrf/3v6wZhuPotuFpmqRh7IC4ZAOzFVoP+DSU=;
+        b=HnH28ejF94LtKrda3VarZA7+1tRjNQgXunN0BesLZjF7cX8P66wgat7sZYRcD/qOju
+         buI6wiaJ0QBM3Z+Vhfz7Vux1FayiUWCNQBcjqoJJxTZZsxM/Dj+LqjMftGGormJXkdEV
+         +PLQL3TnAdXK4HNzsBatLUFScZph6ouEK9xwZfmnz64XK5jDnEzddbKJ7Ec5TB3sgZy6
+         A0KY2uI7rgyFe95GlKhBy03nOIvK+SKqUOpAmdHSv+6kL6iK57ml3uZpD3P9u1kTTfIl
+         o4d9aOHr8YFTw9TVL+Gac+Od9sefO3sDDUpZZqEDNrCMQATQmmXMG1sDXyLbWPMiUjV0
+         bZRA==
+X-Gm-Message-State: AOAM531eIo8zaOi9dOC7DzJu3xTmhmTpHTauOR7jvMGQYN5FEpWOm7Qo
+        CzZlRfrBvAqSrVSvwj4+lcvNQw==
+X-Google-Smtp-Source: ABdhPJyyXNydd+nOMTGEVlBmI0TP9I7QgzsG5vIU8vPWhBARI6Y2TnNfIwesmyvIGRb47dVl+VGcrA==
+X-Received: by 2002:a7b:c3d0:: with SMTP id t16mr17776997wmj.117.1593432263901;
+        Mon, 29 Jun 2020 05:04:23 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id d81sm25274347wmc.0.2020.06.29.05.04.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 05:04:23 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v2 08/10] of: mdio: remove the 'extern' keyword from function declarations
+Date:   Mon, 29 Jun 2020 14:03:44 +0200
+Message-Id: <20200629120346.4382-9-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200629120346.4382-1-brgl@bgdev.pl>
+References: <20200629120346.4382-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -54,171 +89,66 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Add DT bindings for the Xilinx ZynqMP PHY. ZynqMP SoCs have a High Speed
-Processing System Gigabit Transceiver which provides PHY capabilities to
-USB, SATA, PCIE, Display Port and Ehernet SGMII controllers.
+The 'extern' keyword in headers doesn't have any benefit. Remove them
+all from the of_mdio.h header.
 
-Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
-Changes since v8:
+ include/linux/of_mdio.h | 37 ++++++++++++++++++-------------------
+ 1 file changed, 18 insertions(+), 19 deletions(-)
 
-- Rebase on phy/next
-
-Changes since v7:
-
-- Switch to GPL-2.0-only OR BSD-2-Clause
-
-Changes since v6:
-
-- Fixed specification of compatible-dependent xlnx,tx-termination-fix
-  property
-- Dropped status property from example
-- Use 4 spaces to indent example
-
-Changes since v5:
-
-- Document clocks and clock-names properties
-- Document resets and reset-names properties
-- Replace subnodes with an additional entry in the PHY cells
-- Drop lane frequency PHY cell, replaced by reference clock phandle
-- Convert bindings to YAML
-- Reword the subject line
-- Drop Rob's R-b as the bindings have significantly changed
-- Drop resets and reset-names properties
----
- .../bindings/phy/xlnx,zynqmp-psgtr.yaml       | 105 ++++++++++++++++++
- include/dt-bindings/phy/phy.h                 |   1 +
- 2 files changed, 106 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-
-diff --git a/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-new file mode 100644
-index 000000000000..09e3cde7ebca
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-@@ -0,0 +1,105 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/xlnx,zynqmp-psgtr.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Xilinx ZynqMP Gigabit Transceiver PHY Device Tree Bindings
-+
-+maintainers:
-+  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-+
-+description: |
-+  This binding describes the Xilinx ZynqMP Gigabit Transceiver (GTR) PHY. The
-+  GTR provides four lanes and is used by USB, SATA, PCIE, Display port and
-+  Ethernet SGMII controllers.
-+
-+properties:
-+  "#phy-cells":
-+    const: 4
-+    description: |
-+      The cells contain the following arguments.
-+
-+      - description: The GTR lane
-+        minimum: 0
-+        maximum: 3
-+      - description: The PHY type
-+        enum:
-+          - PHY_TYPE_DP
-+          - PHY_TYPE_PCIE
-+          - PHY_TYPE_SATA
-+          - PHY_TYPE_SGMII
-+          - PHY_TYPE_USB
-+      - description: The PHY instance
-+        minimum: 0
-+        maximum: 1 # for DP, SATA or USB
-+        maximum: 3 # for PCIE or SGMII
-+      - description: The reference clock number
-+        minimum: 0
-+        maximum: 3
-+
-+  compatible:
-+    enum:
-+      - xlnx,zynqmp-psgtr-v1.1
-+      - xlnx,zynqmp-psgtr
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 4
-+    description: |
-+      Clock for each PS_MGTREFCLK[0-3] reference clock input. Unconnected
-+      inputs shall not have an entry.
-+
-+  clock-names:
-+    minItems: 1
-+    maxItems: 4
-+    items:
-+      pattern: "^ref[0-3]$"
-+
-+  reg:
-+    items:
-+      - description: SERDES registers block
-+      - description: SIOU registers block
-+
-+  reg-names:
-+    items:
-+      - const: serdes
-+      - const: siou
-+
-+  xlnx,tx-termination-fix:
-+    description: |
-+      Include this for fixing functional issue with the TX termination
-+      resistance in GT, which can be out of spec for the XCZU9EG silicon
-+      version.
-+    type: boolean
-+
-+required:
-+  - "#phy-cells"
-+  - compatible
-+  - reg
-+  - reg-names
-+
-+if:
-+  properties:
-+    compatible:
-+      const: xlnx,zynqmp-psgtr-v1.1
-+
-+then:
-+  properties:
-+    xlnx,tx-termination-fix: false
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    phy: phy@fd400000 {
-+        compatible = "xlnx,zynqmp-psgtr-v1.1";
-+        reg = <0x0 0xfd400000 0x0 0x40000>,
-+              <0x0 0xfd3d0000 0x0 0x1000>;
-+        reg-names = "serdes", "siou";
-+        clocks = <&refclks 3>, <&refclks 2>, <&refclks 0>;
-+        clock-names = "ref1", "ref2", "ref3";
-+        #phy-cells = <4>;
-+    };
-+
-+...
-diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
-index 3727ef72138b..36e8c241cf48 100644
---- a/include/dt-bindings/phy/phy.h
-+++ b/include/dt-bindings/phy/phy.h
-@@ -18,5 +18,6 @@
- #define PHY_TYPE_UFS		5
- #define PHY_TYPE_DP		6
- #define PHY_TYPE_XPCS		7
-+#define PHY_TYPE_SGMII		8
+diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
+index 0f61a4ac6bcf..ba8e157f24ad 100644
+--- a/include/linux/of_mdio.h
++++ b/include/linux/of_mdio.h
+@@ -12,27 +12,26 @@
+ #include <linux/of.h>
  
- #endif /* _DT_BINDINGS_PHY */
+ #if IS_ENABLED(CONFIG_OF_MDIO)
+-extern bool of_mdiobus_child_is_phy(struct device_node *child);
+-extern int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np);
+-extern struct phy_device *of_phy_find_device(struct device_node *phy_np);
+-extern struct phy_device *of_phy_connect(struct net_device *dev,
+-					 struct device_node *phy_np,
+-					 void (*hndlr)(struct net_device *),
+-					 u32 flags, phy_interface_t iface);
+-extern struct phy_device *
++bool of_mdiobus_child_is_phy(struct device_node *child);
++int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np);
++struct phy_device *of_phy_find_device(struct device_node *phy_np);
++struct phy_device *
++of_phy_connect(struct net_device *dev, struct device_node *phy_np,
++	       void (*hndlr)(struct net_device *), u32 flags,
++	       phy_interface_t iface);
++struct phy_device *
+ of_phy_get_and_connect(struct net_device *dev, struct device_node *np,
+ 		       void (*hndlr)(struct net_device *));
+-struct phy_device *of_phy_attach(struct net_device *dev,
+-				 struct device_node *phy_np, u32 flags,
+-				 phy_interface_t iface);
+-
+-extern struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np);
+-extern int of_phy_register_fixed_link(struct device_node *np);
+-extern void of_phy_deregister_fixed_link(struct device_node *np);
+-extern bool of_phy_is_fixed_link(struct device_node *np);
+-extern int of_mdiobus_phy_device_register(struct mii_bus *mdio,
+-				     struct phy_device *phy,
+-				     struct device_node *child, u32 addr);
++struct phy_device *
++of_phy_attach(struct net_device *dev, struct device_node *phy_np,
++	      u32 flags, phy_interface_t iface);
++
++struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np);
++int of_phy_register_fixed_link(struct device_node *np);
++void of_phy_deregister_fixed_link(struct device_node *np);
++bool of_phy_is_fixed_link(struct device_node *np);
++int of_mdiobus_phy_device_register(struct mii_bus *mdio, struct phy_device *phy,
++				   struct device_node *child, u32 addr);
+ 
+ static inline int of_mdio_parse_addr(struct device *dev,
+ 				     const struct device_node *np)
 -- 
-Regards,
-
-Laurent Pinchart
+2.26.1
 
