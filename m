@@ -2,116 +2,79 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDFF0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54175C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7CDD20702
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DCAB20786
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:02:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730368AbgF2T7R (ORCPT
+        id S1732269AbgF2UB4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:59:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388504AbgF2T6y (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:58:54 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AE44C061755
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 12:58:54 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jpzvT-0001Px-Tj; Mon, 29 Jun 2020 21:58:47 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jpzvS-0005io-8i; Mon, 29 Jun 2020 21:58:46 +0200
-Date:   Mon, 29 Jun 2020 21:58:46 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
-        p.zabel@pengutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar.linux@gmail.com
-Subject: Re: [PATCH v3 2/2] Add PWM fan controller driver for LGM SoC
-Message-ID: <20200629195846.6fonhke5d2rs4mna@pengutronix.de>
-References: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
- <df22a642083474e71f9f8274c033a6ef9757af5f.1593420979.git.rahul.tanwar@linux.intel.com>
+        Mon, 29 Jun 2020 16:01:56 -0400
+Received: from muru.com ([72.249.23.125]:59972 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731818AbgF2TkL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:11 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id EA96381A8;
+        Mon, 29 Jun 2020 17:13:52 +0000 (UTC)
+Date:   Mon, 29 Jun 2020 10:12:57 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        "Mark A. Yoder" <mark.a.yoder@gmail.com>
+Subject: Re: [PATCH V2] ARM: dts: am33xx-l4: add gpio-ranges
+Message-ID: <20200629171257.GU37466@atomide.com>
+References: <20200610110258.GA3024740@x1>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="kjvrp6vjwce3kmbh"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <df22a642083474e71f9f8274c033a6ef9757af5f.1593420979.git.rahul.tanwar@linux.intel.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <20200610110258.GA3024740@x1>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+* Drew Fustini <drew@beagleboard.org> [200610 04:03]:
+> Add gpio-ranges properties to the gpio controller nodes.
+> 
+> These gpio-ranges were created based on "Table 9-10. CONTROL_MODULE
+> REGISTERS" in the  "AM335x Technical Reference Manual" [0] and "Table
+> 4-2. Pin Attributes" in the "AM335x Sitara Processor datasheet" [1].
+> A csv file with this data is available for reference [2].
+> 
+> These mappings are valid for all SoC's that are using am33xx-l4.dtsi.
+> In addition, the only TI AM33xx parts that actually exist are [0]:
+> AM3351, AM3352, AM3354, AM3356, AM3357, AM3358, AM3359
+> 
+> These gpio-ranges properties should be added as they describe the
+> relationship between a gpio line and pin control register that exists
+> in the hardware.  For example, GPMC_A0 pin has mode 7 which is labeled
+> gpio1_16. conf_gpmc_a0 register is at offset 840h which makes it pin 16.
+> 
+> [0] https://www.ti.com/lit/ug/spruh73q/spruh73q.pdf
+> [1] http://www.ti.com/lit/ds/symlink/am3358.pdf
+> [2] https://gist.github.com/pdp7/6ffaddc8867973c1c3e8612cfaf72020
+> [3] http://www.ti.com/processors/sitara-arm/am335x-cortex-a8/overview.html
+> 
+> Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> ---
+> V2 changes:
+> - clarify that these gpio-ranges are valid for all SoCs including that
+>   am33xx-l4.dtsi
+> - describe why these gpio-ranges should be added
 
---kjvrp6vjwce3kmbh
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks applying into omap-for-v5.9/dt.
 
-Hello,
+Regards,
 
-On Mon, Jun 29, 2020 at 05:03:47PM +0800, Rahul Tanwar wrote:
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index cb8d739067d2..a3303e22d5fa 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -232,6 +232,15 @@ config PWM_IMX_TPM
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-imx-tpm.
-> =20
-> +config PWM_INTEL_LGM
-> +	tristate "Intel LGM PWM support"
-> +	depends on X86 || COMPILE_TEST
-
-Another thing I just noticed: You're using regmap, so I think you should
-have
-
-	select REGMAP_MMIO
-
-here.
-
-> +	help
-> +	  Generic PWM fan controller driver for LGM SoC.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-intel-lgm.
-> +
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---kjvrp6vjwce3kmbh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl76R/IACgkQwfwUeK3K
-7AnSIwgAioBKgOURNuZlj2ZaOEbNv0Asga+afCAc5eCL1G1zoFg3nIUlLLtz0EUT
-MGLMD63sjZHvB3kkMZYwA5DZFs6prNaWoI2HxN6LA2SCNalwjIQvbxQMvwUh9vwD
-9sJfzQaubgGEawID/xOniJyuTOf66HFXQ9moU0VEf3NwTm2pfrapFrOzsKQP8a/K
-8VPsgHGCWrIchyhSyw+zOM36XccSSl/TXLWEspAoPh5dOLKKxlcpPsgAe37v7JGJ
-QXg09RtvP+ipfWdrPSrt/+2tOj2b5AgatzgBh0Gdt0JEO0SMprMwkl+8PIv7mqhF
-LrDM55V72Emp+3WPOdTJUwrR7zN+iQ==
-=J0cp
------END PGP SIGNATURE-----
-
---kjvrp6vjwce3kmbh--
+Tony
