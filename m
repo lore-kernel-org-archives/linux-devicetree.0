@@ -2,96 +2,252 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56971C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 23:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2848C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 23:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28C5720780
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 23:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBCAD2078A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 23:52:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="WBR3E7e3"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="UIDT07o7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbgF2XmK (ORCPT
+        id S1726981AbgF2XwY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 19:42:10 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:37144 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbgF2XmK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 19:42:10 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1A502299;
-        Tue, 30 Jun 2020 01:42:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1593474128;
-        bh=T1iden6Vlf5KKvBUkdJt1bpgWZzESjRHafhJ//bGhy4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WBR3E7e3mjuyzfiGf9W3lCZsKyMq7YWX93q+vcxnp3momOqmxnGXCLcq/Cy6Pu7Oc
-         hM5FfUTBvD2A0/H2wta/Zs2rSlm0n5rntFVZ6JqMe5+8eKCy+AP6t37iBgcf8WEt5+
-         F7Ddp7xT/LvgntbZsYvJmfwcoZfAXo83pjSuBhO0=
-Date:   Tue, 30 Jun 2020 02:42:04 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH 6/4] dt-bindings: display: renesas: lvds: RZ/G2E needs
- renesas,companion too
-Message-ID: <20200629234204.GJ21452@pendragon.ideasonboard.com>
-References: <20200405232318.26833-1-laurent.pinchart+renesas@ideasonboard.com>
- <20200513233908.23629-1-laurent.pinchart+renesas@ideasonboard.com>
- <CAMuHMdWL9xhzbVhZ6N1xbh+YmP_RBMO4H1uMXXexbJXq6amcLA@mail.gmail.com>
- <20200629081140.GG227119@ravnborg.org>
+        Mon, 29 Jun 2020 19:52:24 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:49166 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726226AbgF2XwX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 19:52:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1593474740; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=P5Qq095rKF3uyYrOAeCOssNQFzeyNSGNN2mhlGuYWGE=;
+        b=UIDT07o7LqUOtL3gDxuLzAWkaKUkTQrPveZZfJwId6GzoldMh/f6XTvM+P/+1ujwHEbpwy
+        koAK17MI2X92+mkPcLwl+iWo2YBkuwK1llyf10gXnQsMnG+WjbojRFc9tM3tIAW8VConjr
+        JhugrEsLFTEQpoP5qmvNW7+iO/uAZQQ=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     od@zcrc.me, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Rob Herring <robh@kernel.org>, Sam Ravnborg <sam@ravnborg.org>
+Subject: [PATCH v2 01/10] dt-bindings: display: Convert ingenic,lcd.txt to YAML
+Date:   Tue, 30 Jun 2020 01:52:01 +0200
+Message-Id: <20200629235210.441709-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200629081140.GG227119@ravnborg.org>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sam,
+Convert the ingenic,lcd.txt to a new ingenic,lcd.yaml file.
 
-On Mon, Jun 29, 2020 at 10:11:40AM +0200, Sam Ravnborg wrote:
-> On Thu, May 14, 2020 at 08:44:19AM +0200, Geert Uytterhoeven wrote:
-> > On Thu, May 14, 2020 at 1:39 AM Laurent Pinchart wrote:
-> > > From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > >
-> > > Document RZ/G2E support for property renesas,companion.
-> > >
-> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> > > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> > 
-> > > --- a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.yaml
-> > > +++ b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.yaml
-> > > @@ -81,9 +81,9 @@ properties:
-> > >      $ref: /schemas/types.yaml#/definitions/phandle
-> > >      description:
-> > >        phandle to the companion LVDS encoder. This property is mandatory
-> > > -      for the first LVDS encoder on D3 and E3 SoCs, and shall point to
-> > > -      the second encoder to be used as a companion in dual-link mode. It
-> > > -      shall not be set for any other LVDS encoder.
-> > > +      for the first LVDS encoder on D3, R-Car E3 and RZ/G2E SoCs, and shall
-> > 
-> > R-Car D3 and E3, and RZ/G2E SoCs
-> > 
-> > > +      point to the second encoder to be used as a companion in dual-link mode.
-> > > +      It shall not be set for any other LVDS encoder.
-> 
-> Laurent, I assume you will re-spin a ne version wth the changelog
-> corrected.
+In the process, the new ingenic,jz4780-lcd compatible string has been
+added.
 
-Yes I will. Thanks for checking.
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
 
+Notes:
+    v2: Add info about IPU at port@8
+
+ .../bindings/display/ingenic,lcd.txt          |  45 -------
+ .../bindings/display/ingenic,lcd.yaml         | 126 ++++++++++++++++++
+ 2 files changed, 126 insertions(+), 45 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/ingenic,lcd.txt
+ create mode 100644 Documentation/devicetree/bindings/display/ingenic,lcd.yaml
+
+diff --git a/Documentation/devicetree/bindings/display/ingenic,lcd.txt b/Documentation/devicetree/bindings/display/ingenic,lcd.txt
+deleted file mode 100644
+index 01e3261defb6..000000000000
+--- a/Documentation/devicetree/bindings/display/ingenic,lcd.txt
++++ /dev/null
+@@ -1,45 +0,0 @@
+-Ingenic JZ47xx LCD driver
+-
+-Required properties:
+-- compatible: one of:
+-  * ingenic,jz4740-lcd
+-  * ingenic,jz4725b-lcd
+-  * ingenic,jz4770-lcd
+-- reg: LCD registers location and length
+-- clocks: LCD pixclock and device clock specifiers.
+-	   The device clock is only required on the JZ4740.
+-- clock-names: "lcd_pclk" and "lcd"
+-- interrupts: Specifies the interrupt line the LCD controller is connected to.
+-
+-Example:
+-
+-panel {
+-	compatible = "sharp,ls020b1dd01d";
+-
+-	backlight = <&backlight>;
+-	power-supply = <&vcc>;
+-
+-	port {
+-		panel_input: endpoint {
+-			remote-endpoint = <&panel_output>;
+-		};
+-	};
+-};
+-
+-
+-lcd: lcd-controller@13050000 {
+-	compatible = "ingenic,jz4725b-lcd";
+-	reg = <0x13050000 0x1000>;
+-
+-	interrupt-parent = <&intc>;
+-	interrupts = <31>;
+-
+-	clocks = <&cgu JZ4725B_CLK_LCD>;
+-	clock-names = "lcd";
+-
+-	port {
+-		panel_output: endpoint {
+-			remote-endpoint = <&panel_input>;
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/display/ingenic,lcd.yaml b/Documentation/devicetree/bindings/display/ingenic,lcd.yaml
+new file mode 100644
+index 000000000000..d56db1802fad
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/ingenic,lcd.yaml
+@@ -0,0 +1,126 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/ingenic,lcd.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Ingenic SoCs LCD controller devicetree bindings
++
++maintainers:
++  - Paul Cercueil <paul@crapouillou.net>
++
++properties:
++  $nodename:
++    pattern: "^lcd-controller@[0-9a-f]+$"
++
++  compatible:
++    enum:
++      - ingenic,jz4740-lcd
++      - ingenic,jz4725b-lcd
++      - ingenic,jz4770-lcd
++      - ingenic,jz4780-lcd
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: Pixel clock
++      - description: Module clock
++    minItems: 1
++
++  clock-names:
++    items:
++      - const: lcd_pclk
++      - const: lcd
++    minItems: 1
++
++  port:
++    description: OF graph bindings (specified in bindings/graph.txt).
++
++  ports:
++    description: OF graph bindings (specified in bindings/graph.txt).
++    type: object
++    properties:
++      port@0:
++        type: object
++        description: DPI output, to interface with TFT panels.
++
++      port@8:
++        type: object
++        description: Link to the Image Processing Unit (IPU).
++          (See ingenic,ipu.yaml).
++
++    required:
++      - port@0
++
++required:
++    - compatible
++    - reg
++    - interrupts
++    - clocks
++    - clock-names
++
++if:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - ingenic,jz4740-lcd
++          - ingenic,jz4780-lcd
++then:
++  properties:
++    clocks:
++      minItems: 2
++    clock-names:
++      minItems: 2
++else:
++  properties:
++    clocks:
++      maxItems: 1
++    clock-names:
++      maxItems: 1
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/jz4740-cgu.h>
++    lcd-controller@13050000 {
++      compatible = "ingenic,jz4740-lcd";
++      reg = <0x13050000 0x1000>;
++
++      interrupt-parent = <&intc>;
++      interrupts = <30>;
++
++      clocks = <&cgu JZ4740_CLK_LCD_PCLK>, <&cgu JZ4740_CLK_LCD>;
++      clock-names = "lcd_pclk", "lcd";
++
++      port {
++        endpoint {
++          remote-endpoint = <&panel_input>;
++        };
++      };
++    };
++
++  - |
++    #include <dt-bindings/clock/jz4725b-cgu.h>
++    lcd-controller@13050000 {
++      compatible = "ingenic,jz4725b-lcd";
++      reg = <0x13050000 0x1000>;
++
++      interrupt-parent = <&intc>;
++      interrupts = <31>;
++
++      clocks = <&cgu JZ4725B_CLK_LCD>;
++      clock-names = "lcd_pclk";
++
++      port {
++        endpoint {
++          remote-endpoint = <&panel_input>;
++        };
++      };
++    };
 -- 
-Regards,
+2.27.0
 
-Laurent Pinchart
