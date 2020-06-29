@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C55EC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 770A2C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64F8C20748
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5831020724
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="s9kteNeX"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="GHZrNXAb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730050AbgF2Uky (ORCPT
+        id S1731691AbgF2Uky (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Mon, 29 Jun 2020 16:40:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43364 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731685AbgF2TOJ (ORCPT
+        with ESMTP id S1730050AbgF2TOJ (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:14:09 -0400
 Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5643EC00E3CB
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:04:18 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id f18so15866899wml.3
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:04:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58753C00E3C5
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:04:15 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id 22so15124140wmg.1
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:04:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kk4GqzupyJ/zMhEjt50iMo8E42JSASWwyoRhFrVXFkw=;
-        b=s9kteNeXi1zTwB+iA/Da/H/SPwbWFgSRcTYjOhHXHWF3DK4DgkjnWLtB3kXWUYcT73
-         hrQ3sZLr45ONRMe37aZJiaJZqvsJkdNy022pJEVyvesHs/Usys8f1PNEbBh/x2TgLjW5
-         MzXNu61KMK8OAc8kI7zqSWj6yUSfkkAeWvduGtmpBPGg5zflFGTAloz+lI6SH8ZeyaF4
-         fgHItffrSY9r+xFcjDC7cJKNDoYT11AD7qfDTq0LviqPvjIASWNkM3GOYEhgZi13/HMO
-         nbFl97jRYhP8AwnmUe5P7dnadnS6u8YZj+1fWhK6Oe2uxf6rzW6Igdl90lnBrDHpjR5z
-         NqZw==
+        bh=nZJ9RrYkX//UjOI/5YYylQYoHuaDDR4YnVJY1VbZiK8=;
+        b=GHZrNXAbixM8hIlftssrgQxdDlC2R8smynvTThHUqsGw3QGlkt8NhoPhAOcQQGzRtw
+         8UiJW8UelWWaFm3hR3IBZDUiETIQ4cw/d0cKQJ2t1YCJDD+35seh4iu5J6/ZnfNA9Cf2
+         0PVuY8rWNQGb4TJy8iFdvM58AtK7sHgm7tkKp+d8JruntQqh4/uEGDPUikx3v8VCVX/X
+         t0nKty1pn7Dat78dI2BiItZ4JxBDOUehXZ0nt2E9AXLK4007faqBTbkxlHvbnLr9M2so
+         H+SDo8uHBGYBqIx7PHreVr5lgWWgBQR/mjyFndySyTN3eQfiaXuMtvjj/R5CALJQPX52
+         cZCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kk4GqzupyJ/zMhEjt50iMo8E42JSASWwyoRhFrVXFkw=;
-        b=FaMNnScdK2as007cgYkBcdkknru+NHRyFeY1oyvjUWzba0XTqXkxXXI34iBgBXD5OZ
-         XxF7XrzZ9G8rE91zEAAiqkq7nrDaOs61w8D6ZIEU6/70d4yCOb0oM9ZOSOvxjmVuiuI0
-         VLdIa/cutibZS9IK1Elel21pRCGsyb1UNQDEYViRxvmuBsXmeXoeofakvMln1tuw6SoX
-         xgEp+4MfjWD0Ah0mFay1vbq8MLeOs4ohLrx94wvoD90nT2+DB7pVm8tCs8A+7xQ9Udsx
-         HQw9pERI9qCQJMP4MmnjFESUW/adGAeMefmRvnL0xAz1n8RiAS175lM1HDRMwc2j95jl
-         Z45w==
-X-Gm-Message-State: AOAM530v9d3dcvkKr6OIvkLRonBbm/e5lhIAEqQL7vuuBXwSlOsyRD2U
-        Rrh4fGC6GqhoA3BTfn3AjPTbag==
-X-Google-Smtp-Source: ABdhPJyWDqDeFgVInuObhpy/Ftb/2DR2R2EIJXvEfaNkWasvMTcTlNr2GvJFRYK1k6XxTkq/Wt9wfQ==
-X-Received: by 2002:a1c:cc0d:: with SMTP id h13mr17832883wmb.168.1593432256110;
-        Mon, 29 Jun 2020 05:04:16 -0700 (PDT)
+        bh=nZJ9RrYkX//UjOI/5YYylQYoHuaDDR4YnVJY1VbZiK8=;
+        b=t72N8BN7P+oWhRVU24PSQoh3Azl22+6B7dK0pbQl56GpZX0vfdfbRN7BkvskxsJuFT
+         AxP34fjng5Ygjmwjjf0UHynZ8HeVfupG7dhfwHf37NBAHeaRJRldutRqVSO5xR77fjAx
+         cRyKwt8DydjHQKKLHVvFkdIGbyUfuZJ0PJesc7tKk6u6SClB73ypWLQ2mYoGaLCzI2SP
+         oTehBHH/7uQCStPiWDpxw7ZJp87BdA6Es90KMlt0aCg2CDqYb6OTYl2hCHo0difGYRzF
+         TcZsN7cXZlk4G1XfCy5HoeTYBbvsxWpjBSu5k4HzM5EIz+jlF2hckzQlUQhNyJJSfcmr
+         t4HQ==
+X-Gm-Message-State: AOAM532Ud2DoLFJaqGch8ArVzVKQkknnCgP6OiJj8gbV+DM/kFNUBhbx
+        vKPv2eNwvXpsZe4NEvqXraeU8w==
+X-Google-Smtp-Source: ABdhPJxPsnR1q89EpF5XRsu5RI2Mrvn6hFviI2UQaVTUzem4LR886XkHZ07utmAJlfbggOLXkkyVfg==
+X-Received: by 2002:a7b:c381:: with SMTP id s1mr17268979wmj.25.1593432254093;
+        Mon, 29 Jun 2020 05:04:14 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id d81sm25274347wmc.0.2020.06.29.05.04.14
+        by smtp.gmail.com with ESMTPSA id d81sm25274347wmc.0.2020.06.29.05.04.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 05:04:15 -0700 (PDT)
+        Mon, 29 Jun 2020 05:04:13 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         "David S . Miller" <davem@davemloft.net>,
@@ -76,9 +76,9 @@ Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 03/10] net: devres: rename the release callback of devm_register_netdev()
-Date:   Mon, 29 Jun 2020 14:03:39 +0200
-Message-Id: <20200629120346.4382-4-brgl@bgdev.pl>
+Subject: [PATCH v2 02/10] net: ethernet: ixgbe: don't call devm_mdiobus_free()
+Date:   Mon, 29 Jun 2020 14:03:38 +0200
+Message-Id: <20200629120346.4382-3-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200629120346.4382-1-brgl@bgdev.pl>
 References: <20200629120346.4382-1-brgl@bgdev.pl>
@@ -91,36 +91,55 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Make it an explicit counterpart to devm_register_netdev() just like we
-do with devm_free_netdev() for better clarity.
+The idea behind devres is that the release callbacks are called if
+probe fails. As we now check the return value of ixgbe_mii_bus_init(),
+we can drop the call devm_mdiobus_free() in error path as the release
+callback will be called automatically.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- net/devres.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_phy.c | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
-diff --git a/net/devres.c b/net/devres.c
-index 57a6a88d11f6..1f9be2133787 100644
---- a/net/devres.c
-+++ b/net/devres.c
-@@ -39,7 +39,7 @@ struct net_device *devm_alloc_etherdev_mqs(struct device *dev, int sizeof_priv,
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.c
+index 2fb97967961c..7980d7265e10 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.c
+@@ -905,7 +905,6 @@ s32 ixgbe_mii_bus_init(struct ixgbe_hw *hw)
+ 	struct pci_dev *pdev = adapter->pdev;
+ 	struct device *dev = &adapter->netdev->dev;
+ 	struct mii_bus *bus;
+-	int err = -ENODEV;
+ 
+ 	bus = devm_mdiobus_alloc(dev);
+ 	if (!bus)
+@@ -923,7 +922,7 @@ s32 ixgbe_mii_bus_init(struct ixgbe_hw *hw)
+ 	case IXGBE_DEV_ID_X550EM_A_1G_T:
+ 	case IXGBE_DEV_ID_X550EM_A_1G_T_L:
+ 		if (!ixgbe_x550em_a_has_mii(hw))
+-			goto ixgbe_no_mii_bus;
++			return -ENODEV;
+ 		bus->read = &ixgbe_x550em_a_mii_bus_read;
+ 		bus->write = &ixgbe_x550em_a_mii_bus_write;
+ 		break;
+@@ -948,15 +947,8 @@ s32 ixgbe_mii_bus_init(struct ixgbe_hw *hw)
+ 	 */
+ 	hw->phy.mdio.mode_support = MDIO_SUPPORTS_C45 | MDIO_SUPPORTS_C22;
+ 
+-	err = mdiobus_register(bus);
+-	if (!err) {
+-		adapter->mii_bus = bus;
+-		return 0;
+-	}
+-
+-ixgbe_no_mii_bus:
+-	devm_mdiobus_free(dev, bus);
+-	return err;
++	adapter->mii_bus = bus;
++	return mdiobus_register(bus);
  }
- EXPORT_SYMBOL(devm_alloc_etherdev_mqs);
  
--static void devm_netdev_release(struct device *dev, void *this)
-+static void devm_unregister_netdev(struct device *dev, void *this)
- {
- 	struct net_device_devres *res = this;
- 
-@@ -77,7 +77,7 @@ int devm_register_netdev(struct device *dev, struct net_device *ndev)
- 				 netdev_devres_match, ndev)))
- 		return -EINVAL;
- 
--	dr = devres_alloc(devm_netdev_release, sizeof(*dr), GFP_KERNEL);
-+	dr = devres_alloc(devm_unregister_netdev, sizeof(*dr), GFP_KERNEL);
- 	if (!dr)
- 		return -ENOMEM;
- 
+ /**
 -- 
 2.26.1
 
