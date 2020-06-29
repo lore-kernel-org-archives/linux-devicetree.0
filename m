@@ -4,105 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03915C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E40ACC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D62C6206C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:39:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8160206C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:40:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593463161;
-	bh=L1Zczp4G94BGZF6AbOCQuN5y8MVMnaPGHuo808oDcHo=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=vT5Qpv8DDwlziAdE1qE/kUGSLUNj4KSz/jjySRyGi7BCwAYYZYDIOXQqtq3q5PPMh
-	 5X1OcjZebHQ7iDiRfd/gXpZqV02Qgn+Qmp8USiAaQYfCeyDGBAYaYEhmFtiC59Zk6a
-	 dIdiXwV/63jGF84PDAp0uNn3nNYt9b+muzxasio0=
+	s=default; t=1593463203;
+	bh=Lr3CMgYgCXLYecKvct+/e3fDTyPBFo0Z6hWoiAqABpA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=W3jmVdKW2rAQNtJ7JYWisMtb37O4XKkXGxOvKQLcjbR97PF3K5EtuUGuVYxr1oiU+
+	 HvAezf1QuBnd4rnX6LVfGnDvtoLojIKYOp301vhDFQOpG6Oo/4qEcP0TYxqdaAsrBw
+	 AclPtej6JVhg/4qmfOd5ocRBSrsZvJf5x5vip9ts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389590AbgF2UjU (ORCPT
+        id S2389148AbgF2UkB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:39:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39302 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:40:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389392AbgF2UjU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:39:20 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.195])
+        id S1732181AbgF2UkA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 29 Jun 2020 16:40:00 -0400
+Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12F8B20672;
-        Mon, 29 Jun 2020 20:39:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07D2520672;
+        Mon, 29 Jun 2020 20:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593463159;
-        bh=L1Zczp4G94BGZF6AbOCQuN5y8MVMnaPGHuo808oDcHo=;
-        h=From:To:Subject:Date:From;
-        b=LDzIOgDv674g5tQqCvxsTTAKURVuacJ5Rf9RT9R+uWMp6sTNSpMwjEBywxXZs9/xU
-         Rx3i4ms6wo21O+78JqdY2Fp6UHaUsptFMfN10IYKj/6ecDXqKoyrQQDSH1SAhLx9sq
-         Z1sEONvenJ8ztfTbIFnrWfSDgJY0AcjApohqqJt8=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: arm: samsung: Do not require clkout on Exynos5260 and Exynos7
-Date:   Mon, 29 Jun 2020 22:38:59 +0200
-Message-Id: <20200629203859.17298-1-krzk@kernel.org>
+        s=default; t=1593463200;
+        bh=Lr3CMgYgCXLYecKvct+/e3fDTyPBFo0Z6hWoiAqABpA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VGF3FL2C5fFMkpWpUvlLxMtnbfuOeK808qCNy7NpAs7kePs0qJZM0bF0wR8rCsOlU
+         8xo8V9C6JOT/F/YSTq4vDqsuxi0hzqxOAl9LVN+sCN9u/syCSXwwmSYcAPm2ekVNT/
+         AKDLiVUyBgJfqgKjXZZVyG61eI1zwIGQ7ZD9aLRU=
+From:   Dinh Nguyen <dinguyen@kernel.org>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     dinguyen@kernel.org, devicetree@vger.kernel.org,
+        linux-stable <stable@vger.kernel.org>
+Subject: [PATCH 1/3] arm64: dts: agilex: add status to qspi dts node
+Date:   Mon, 29 Jun 2020 15:39:47 -0500
+Message-Id: <20200629203949.6601-1-dinguyen@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The PMU (Power Management Unit) driver is a clkout clock provider (for
-clock signal monitoring) only for certain Exynos SoCs.  It was never
-implemented for Exynos5260 and Exynos7.  This fixes dtschema validator
-warnings like:
+Add status = "okay" to QSPI node.
 
-    system-controller@105c0000: '#clock-cells' is a required property
-
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Fixes: c4c8757b2d895 ("arm64: dts: agilex: add QSPI support for Intel
+Agilex")
+Cc: linux-stable <stable@vger.kernel.org> # >= v5.5
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 ---
- .../devicetree/bindings/arm/samsung/pmu.yaml  | 22 ++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.yaml b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
-index c9651892710e..686c13c14e32 100644
---- a/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
-+++ b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
-@@ -85,12 +85,28 @@ properties:
- required:
-   - compatible
-   - reg
--  - '#clock-cells'
--  - clock-names
--  - clocks
+diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts b/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
+index 51d948323bfd..92f478def723 100644
+--- a/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
++++ b/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
+@@ -98,6 +98,7 @@
+ };
  
- additionalProperties: false
- 
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - samsung,exynos3250-pmu
-+              - samsung,exynos4210-pmu
-+              - samsung,exynos4412-pmu
-+              - samsung,exynos5250-pmu
-+              - samsung,exynos5410-pmu
-+              - samsung,exynos5420-pmu
-+              - samsung,exynos5433-pmu
-+    then:
-+      required:
-+        - '#clock-cells'
-+        - clock-names
-+        - clocks
-+
- examples:
-   - |
-     #include <dt-bindings/clock/exynos5250.h>
+ &qspi {
++	status = "okay";
+ 	flash@0 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 -- 
 2.17.1
 
