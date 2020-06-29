@@ -2,104 +2,106 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BA0C433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 201CBC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBABB214F1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:27:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="SLRB44N0"
+	by mail.kernel.org (Postfix) with ESMTP id ECC9921531
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:29:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593466167;
+	bh=iIs58fRuYkpMgTsFBKYFLGnGWc18yjUOw+YiUjF08do=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=MKwOG14USvLze8I8cxRB2Y7zIuFWiFyXpfHwHlahZJlGIRqDa0wNIsxlvrolg/FV5
+	 IuvkF46A5w6gITn5kLz24KTU+QDxijR+6PshQYFb9cLPPgUWySeMcW7J7WYnwSbMEw
+	 wJ3a4k0PNg+jf5BUPEFvJAAnIMrJ8WFo/8cyFY7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729068AbgF2V1k (ORCPT
+        id S1731125AbgF2V30 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:27:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38384 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729057AbgF2Smo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 14:42:44 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4D4BC031C73;
-        Mon, 29 Jun 2020 11:05:55 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id h28so13687243edz.0;
-        Mon, 29 Jun 2020 11:05:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hJ7bwzBcJdJpIqyIZcO1uCM9Pw8AFzZZQdo+BMkM/wI=;
-        b=SLRB44N0JiC73+18YWv4FOQgCRuo9RDcXbGvKQN9AK5bgYKeK4KBNdylz0TGW704q2
-         mVyX0kOwJ8f2lhJVD6O4pvcH9fRnRamZAQ4k2fOeJ9y2nqv801LHCj9c+V0sV41kCYsl
-         qOafEoFtNGiraeC+62ve5Q59dPv05KWkzenF6UtDAvTfLOJ8t0jMRpEZVgx7oYfji6dv
-         v2ilBNMlssGpE2qqwUoAIXeCwvBfO7RUGvFARu0t1xZvlEsmJvpyT37fMHmkjAwEf0ky
-         St6mxRNAtxjV6tDEOEMHg9zhX0rdM4wWf6P11Y2tCyzxsFdhqUS0nP/fBPyeSefcVE7V
-         Vjtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hJ7bwzBcJdJpIqyIZcO1uCM9Pw8AFzZZQdo+BMkM/wI=;
-        b=gkEPeX7IT/kW6jasTz2HjoOAxirrQ7RhIbgyCGXVOkUGXsUEXvxbc/HRtzkbw+3YRg
-         XK6ZGcAErWq6Dxlo8K5ClZaAonN8X8OUjjoNRlU5TcEA5kF4aIdNFIP0TKZ7RYDqmkt0
-         /ju96LajN73bXeJmqNq+joOW9D72DSwJ0zjd1bzlwy/KPbwhHy9nSWDafDdH7ZLKhRLg
-         BhoFrqdN+RPPgtB/FXo1vPlko6qzglnWzXEAmE4BF7wbnrvsvSMnWCZ4wpvZorIgxdYL
-         rEaZPFr1jyiPUiZidlsap0qiwnM+o7HurCzkkLz5cCh1xt8hQbJLT1lcSoH8S3pNPMgy
-         9EIA==
-X-Gm-Message-State: AOAM533GFQoiVImqgCtrBYMl9GxcX8BTaicCKgE/ALswIzUyqBtET0G6
-        wCCTfOZPd+0i7aEw9dMeLBaSld6s
-X-Google-Smtp-Source: ABdhPJxCsPnKAQk2H0DnK6TPDN2TMKek+xOMmP/lSIUI54dR+E3eobWScl1UkHE91a2hvf1KvmltdA==
-X-Received: by 2002:aa7:c80d:: with SMTP id a13mr19225286edt.327.1593453954340;
-        Mon, 29 Jun 2020 11:05:54 -0700 (PDT)
-Received: from localhost.localdomain (p200300f137396800428d5cfffeb99db8.dip0.t-ipconnect.de. [2003:f1:3739:6800:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id w18sm232937ejc.62.2020.06.29.11.05.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 11:05:53 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     devicetree@vger.kernel.org, robh+dt@kernel.org
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        marcel@holtmann.org, alistair@alistair23.me, anarsoul@gmail.com,
-        kuba@kernel.org, davem@davemloft.net,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH] dt-bindings: net: bluetooth: realtek: Fix uart-has-rtscts example
-Date:   Mon, 29 Jun 2020 20:05:45 +0200
-Message-Id: <20200629180545.2879272-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 29 Jun 2020 17:29:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60600 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728929AbgF2SlZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:41:25 -0400
+Received: from localhost.localdomain (unknown [194.230.155.195])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E70E023355;
+        Mon, 29 Jun 2020 08:16:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593418594;
+        bh=iIs58fRuYkpMgTsFBKYFLGnGWc18yjUOw+YiUjF08do=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gZn1jSr0/iGSqKsIu83/ocM3a9UieUOU60YFQnCWXsZdzlDGLVoXBWelYDUPUW1OL
+         PMhBxLGwQxYeMGjFnycfsSx6vnwc8lqaIVTRL6QrNDYoWKbZBpa4WIbdCy4kVEwEbA
+         5aHgzdzCM9cnnXrdVsBL8QqrVua/9JxunrZGHMS8=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Dinh Nguyen <dinguyen@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH] arm64: dts: spcfpga: Align GIC, NAND and UART nodenames with dtschema
+Date:   Mon, 29 Jun 2020 10:16:29 +0200
+Message-Id: <20200629081629.13653-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-uart-has-rtscts is a boolean property. These are defined as present
-(which means that this property evaluates to "true") or absent (which
-means that this property evaluates to "false"). Remove the numeric value
-from the example to make it comply with the boolean property bindings.
+Fix dtschema validator warnings like:
+    intc@fffc1000: $nodename:0:
+        'intc@fffc1000' does not match '^interrupt-controller(@[0-9a-f,]+)*$'
 
-Fixes: 1cc2d0e021f867 ("dt-bindings: net: bluetooth: Add rtl8723bs-bluetooth")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- Documentation/devicetree/bindings/net/realtek-bluetooth.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/realtek-bluetooth.yaml b/Documentation/devicetree/bindings/net/realtek-bluetooth.yaml
-index f15a5e5e4859..c488f24ed38f 100644
---- a/Documentation/devicetree/bindings/net/realtek-bluetooth.yaml
-+++ b/Documentation/devicetree/bindings/net/realtek-bluetooth.yaml
-@@ -44,7 +44,7 @@ examples:
-     uart1 {
-         pinctrl-names = "default";
-         pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
--        uart-has-rtscts = <1>;
-+        uart-has-rtscts;
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+index d1fc9c2055f4..9498d1de730c 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+@@ -77,7 +77,7 @@
+ 		method = "smc";
+ 	};
  
-         bluetooth {
-             compatible = "realtek,rtl8723bs-bt";
+-	intc: intc@fffc1000 {
++	intc: interrupt-controller@fffc1000 {
+ 		compatible = "arm,gic-400", "arm,cortex-a15-gic";
+ 		#interrupt-cells = <3>;
+ 		interrupt-controller;
+@@ -302,7 +302,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		nand: nand@ffb90000 {
++		nand: nand-controller@ffb90000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			compatible = "altr,socfpga-denali-nand";
+@@ -445,7 +445,7 @@
+ 			clock-names = "timer";
+ 		};
+ 
+-		uart0: serial0@ffc02000 {
++		uart0: serial@ffc02000 {
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0xffc02000 0x100>;
+ 			interrupts = <0 108 4>;
+@@ -456,7 +456,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		uart1: serial1@ffc02100 {
++		uart1: serial@ffc02100 {
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0xffc02100 0x100>;
+ 			interrupts = <0 109 4>;
 -- 
-2.27.0
+2.17.1
 
