@@ -2,138 +2,133 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70ECDC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 22:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A76CBC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 22:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A5FD20702
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 22:26:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ljl6F57/"
+	by mail.kernel.org (Postfix) with ESMTP id 7D65720776
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 22:30:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593469815;
+	bh=O+5/632VmkMlqnpdl0jutUizUbyPJrK/xc+bhIzMP5A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=knUDRg4uvtDHH+2GtKyjJOTYn3sUQML4FbXZBTXu/a2FweOzYbR2XjnH2zDq7BFWG
+	 glWIwO7vhI/y9bITiKN5rHXOZr4GlwjOu37JxM/cPCbO6oWFLKt3q2NnifsbSNmzK4
+	 NWaxTgCHDxWVlPUWV+5w+UgwKTi3Ai4caEcW/lpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730470AbgF2W0Q (ORCPT
+        id S1728660AbgF2WaP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:26:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46314 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbgF2W0Q (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 18:26:16 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D749C061755;
-        Mon, 29 Jun 2020 15:26:15 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id w6so18450736ejq.6;
-        Mon, 29 Jun 2020 15:26:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uLrF+jjxF5OBkT9A4ZfGcSFTtJNvBwrUYxVPDIS2euc=;
-        b=ljl6F57/XOyWQURIpW+SYGe4bHNcdPifrgDCw24RC+hnGGqwpRlyGiY/mzZuA4sSbx
-         TeYo3z8Ufl89Li/087qtQtJ9yTEh++OJ9m71n+SXhpzAK2T4jGhl7JXDxspZyWsnKxBu
-         k7P9M0GtxOH6/gRBRnh9oUvWtpzmGljW6RVoQ3oU9OPOlmiVnyvdkhXZAVXFvXUf/tCr
-         Tzz4eNbn/yV6INdTYHThjjxpw+43Ld5UmMcnks2I9V2HJlS/jAGLCxbe9ppqLydxFDLg
-         8MRFCWGFJ3/f7cwHeSirkNItjyDGoJY5aXLch5LHVxMUKjAivXcrodHjiWs9Zq1Gpc5A
-         iGeQ==
+        Mon, 29 Jun 2020 18:30:15 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:42832 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726951AbgF2WaO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 18:30:14 -0400
+Received: by mail-io1-f65.google.com with SMTP id c16so18933166ioi.9;
+        Mon, 29 Jun 2020 15:30:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uLrF+jjxF5OBkT9A4ZfGcSFTtJNvBwrUYxVPDIS2euc=;
-        b=Af+WQLx3TfmbH2C3ZDRuyfL7mruSENAq54LDCIs1wOZXiHtH6tNKU7oBGNR48xrwmz
-         qNJNkuPnhgC0jnrc2dqSsOdSfqwbO2s18Nrq7g6P6Is6F1IuFJF+Xk47PU1CiwXSktdF
-         2rf3A/iuOzCK7Tu2ryWSXNoIFu1qYR27HtSSMR3Y7kXNRBK0QhNH2lURoWv7AbHpihR7
-         NyEfTHDzWvcRkUC+4vebU+B/k3ry07g3KVNQzXC5TyADiWXer8w3OKShIGr7SpPG6W/X
-         jrf4Z6hKEbpxv658FojQ9AMaxvuW7vYLsMrx/5fdzXAu4GrwEjchIRS0iDGAcwcIbYma
-         fF8w==
-X-Gm-Message-State: AOAM530ll0wd8ObgTeTBBNLjQ74DdfZzBEkFiEtHfGEy+G1eHulfpEmY
-        wY0JGVtpB3h9BlFxNenHKSg=
-X-Google-Smtp-Source: ABdhPJxu0f3tnqjZ6HdE27eVb1JqxXjsWLvQl9OFzp7badrN8VqEab5KFGVI1t8l0ZpWVCoHu0dtXA==
-X-Received: by 2002:a17:906:12cd:: with SMTP id l13mr16230422ejb.96.1593469574315;
-        Mon, 29 Jun 2020 15:26:14 -0700 (PDT)
-Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
-        by smtp.googlemail.com with ESMTPSA id y21sm592877ejo.4.2020.06.29.15.26.13
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aGmQNEbF1Z1L1phYaSvVlsTnm5BPf7k4yHvjYUm7EmA=;
+        b=QFCSmxbD1AFNB8e12QdRIMIaOlWF3vVF/rHRcRmxdzBU9kJbIyIFHFkY1PqESuHAyT
+         kf5bnh5Hf+UlpZRn0AqCiZhaC+lxVlF7Re+d1UaowkxRPCTlKn3YfOPob4zi2XB/q1kR
+         MEq2CMXB2eZjJ3ugzfcbi2LW3qEyh941HxJej8p6THYY/9cfznJX8e2Ll3VX09ZhXqaz
+         Fi0yh1XVZKS6F7CZo+mWklVOqjgswJtTT1vdUs5RL9EdF0Fmyyhxy8yaLr9g0iE7IpE7
+         5Zq8ag9T83KIvHiA/F6r3W4r7qYh2v0i3oN8WKpoWwUK122LRnTgzp0+lA6eC5HxFnNC
+         M+iw==
+X-Gm-Message-State: AOAM533eYNXa69ombeL4d2s6h4RwoW4AlWIM8xIIuRpn5Drilc1bQTDX
+        kL+Vby7AyRUnC1sfyeat0HzHaMxwtA==
+X-Google-Smtp-Source: ABdhPJyVNbvX17VhfX0EFlfpZLx+W/pn+BWFrDM6q+CHhAkYhKFVPGebNlEHbcPwRZOyWWP0JNqCOw==
+X-Received: by 2002:a6b:ee02:: with SMTP id i2mr2855447ioh.110.1593469813356;
+        Mon, 29 Jun 2020 15:30:13 -0700 (PDT)
+Received: from xps15 ([64.188.179.255])
+        by smtp.gmail.com with ESMTPSA id x16sm540604iob.35.2020.06.29.15.30.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 15:26:13 -0700 (PDT)
-From:   Konrad Dybcio <konradybcio@gmail.com>
-To:     skrzynka@konradybcio.pl
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Mon, 29 Jun 2020 15:30:12 -0700 (PDT)
+Received: (nullmailer pid 3075349 invoked by uid 1000);
+        Mon, 29 Jun 2020 22:30:11 -0000
+Date:   Mon, 29 Jun 2020 16:30:11 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>, devicetree@vger.kernel.org,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH -next] arm64: dts: sdm630: Temporarily disable SMMUs by default
-Date:   Tue, 30 Jun 2020 00:26:10 +0200
-Message-Id: <20200629222610.168511-1-konradybcio@gmail.com>
-X-Mailer: git-send-email 2.27.0
+Subject: Re: [PATCH v9 1/3] dt-bindings: phy: Add DT bindings for Xilinx
+ ZynqMP PSGTR PHY
+Message-ID: <20200629223011.GA3074548@bogus>
+References: <20200629120054.29338-1-laurent.pinchart@ideasonboard.com>
+ <20200629120054.29338-2-laurent.pinchart@ideasonboard.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200629120054.29338-2-laurent.pinchart@ideasonboard.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There happens to be an issue between how kernel handles
-qcom-smmuv2 and how the hypervisor would like it to be
-handled. That results in the platform hanging completely
-after the SMMUs are probed.
+On Mon, 29 Jun 2020 15:00:52 +0300, Laurent Pinchart wrote:
+> From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+> 
+> Add DT bindings for the Xilinx ZynqMP PHY. ZynqMP SoCs have a High Speed
+> Processing System Gigabit Transceiver which provides PHY capabilities to
+> USB, SATA, PCIE, Display Port and Ehernet SGMII controllers.
+> 
+> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> Changes since v8:
+> 
+> - Rebase on phy/next
+> 
+> Changes since v7:
+> 
+> - Switch to GPL-2.0-only OR BSD-2-Clause
+> 
+> Changes since v6:
+> 
+> - Fixed specification of compatible-dependent xlnx,tx-termination-fix
+>   property
+> - Dropped status property from example
+> - Use 4 spaces to indent example
+> 
+> Changes since v5:
+> 
+> - Document clocks and clock-names properties
+> - Document resets and reset-names properties
+> - Replace subnodes with an additional entry in the PHY cells
+> - Drop lane frequency PHY cell, replaced by reference clock phandle
+> - Convert bindings to YAML
+> - Reword the subject line
+> - Drop Rob's R-b as the bindings have significantly changed
+> - Drop resets and reset-names properties
+> ---
+>  .../bindings/phy/xlnx,zynqmp-psgtr.yaml       | 105 ++++++++++++++++++
+>  include/dt-bindings/phy/phy.h                 |   1 +
+>  2 files changed, 106 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+> 
 
-Hence, disable the SMMU nodes temporarily, until the
-issue is rectified.
 
-This has been overlooked by me in the initial
-porting stage, as my defconfig has SMMU disabled.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
----
- arch/arm64/boot/dts/qcom/sdm630.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.example.dt.yaml: example-0: phy@fd400000:reg:0: [0, 4248829952, 0, 262144] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.example.dt.yaml: example-0: phy@fd400000:reg:1: [0, 4248633344, 0, 4096] is too long
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm630.dtsi b/arch/arm64/boot/dts/qcom/sdm630.dtsi
-index 88efe8200c80..deb928d303c2 100644
---- a/arch/arm64/boot/dts/qcom/sdm630.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm630.dtsi
-@@ -518,6 +518,8 @@ anoc2_smmu: iommu@16c0000 {
- 				<GIC_SPI 472 IRQ_TYPE_LEVEL_HIGH>,
- 				<GIC_SPI 473 IRQ_TYPE_LEVEL_HIGH>,
- 				<GIC_SPI 474 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			status = "disabled";
- 		};
- 
- 		tcsr_mutex_regs: syscon@1f40000 {
-@@ -749,6 +751,8 @@ kgsl_smmu: iommu@5040000 {
- 				<GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
- 				<GIC_SPI 349 IRQ_TYPE_LEVEL_HIGH>,
- 				<GIC_SPI 350 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			status = "disabled";
- 		};
- 
- 		lpass_smmu: iommu@5100000 {
-@@ -778,6 +782,8 @@ lpass_smmu: iommu@5100000 {
- 				<GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>,
- 				<GIC_SPI 310 IRQ_TYPE_LEVEL_HIGH>,
- 				<GIC_SPI 404 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			status = "disabled";
- 		};
- 
- 		spmi_bus: spmi@800f000 {
-@@ -1074,6 +1080,8 @@ mmss_smmu: iommu@cd00000 {
- 				<GIC_SPI 274 IRQ_TYPE_LEVEL_HIGH>,
- 				<GIC_SPI 275 IRQ_TYPE_LEVEL_HIGH>,
- 				<GIC_SPI 276 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			status = "disabled";
- 		};
- 
- 		apcs_glb: mailbox@17911000 {
--- 
-2.27.0
+
+See https://patchwork.ozlabs.org/patch/1319269
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
 
