@@ -2,119 +2,181 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17940C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 18:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3419AC433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02201204EC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 18:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B6C820663
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:01:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="j+xQvVCY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726076AbgF2S7D convert rfc822-to-8bit (ORCPT
+        id S1730363AbgF2TBX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:59:03 -0400
-Received: from mga09.intel.com ([134.134.136.24]:65099 "EHLO mga09.intel.com"
+        Mon, 29 Jun 2020 15:01:23 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:52563 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726960AbgF2S6y (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:58:54 -0400
-IronPort-SDR: eKoD8V2wqTWUE0QfvlcDWBj2fUJGp1JQFAZEWCcOdd9RB6Iz2k79WYN3SDqzCHfZ5x5HJtYUrS
- TCxYV5wPo5rQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="147558727"
-X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
-   d="scan'208";a="147558727"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 10:18:48 -0700
-IronPort-SDR: PfovTJ7ctRVVTVNzrBgATY6YChrZ/17qHIHtYJnPMMZEpZLRlO/kZ9uRGO0xFF6kZv7z2obVoF
- C6l1q1l38H6w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
-   d="scan'208";a="424885466"
-Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
-  by orsmga004.jf.intel.com with ESMTP; 29 Jun 2020 10:18:47 -0700
-Received: from orsmsx112.amr.corp.intel.com ([169.254.3.199]) by
- ORSMSX106.amr.corp.intel.com ([169.254.1.104]) with mapi id 14.03.0439.000;
- Mon, 29 Jun 2020 10:18:47 -0700
-From:   "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Heiner Kallweit" <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "Florian Fainelli" <f.fainelli@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: RE: [PATCH v2 02/10] net: ethernet: ixgbe: don't call
- devm_mdiobus_free()
-Thread-Topic: [PATCH v2 02/10] net: ethernet: ixgbe: don't call
- devm_mdiobus_free()
-Thread-Index: AQHWTg2KqoUStuk1GEW2zcU3EcxbWKjv1lQw
-Date:   Mon, 29 Jun 2020 17:18:46 +0000
-Message-ID: <61CC2BC414934749BD9F5BF3D5D940449874064D@ORSMSX112.amr.corp.intel.com>
-References: <20200629120346.4382-1-brgl@bgdev.pl>
- <20200629120346.4382-3-brgl@bgdev.pl>
-In-Reply-To: <20200629120346.4382-3-brgl@bgdev.pl>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1729778AbgF2TBM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:01:12 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593457271; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=7RTKsK1vkgMcrQEAHJsfsvSNG30HIOc0GMqPzPCA89A=;
+ b=j+xQvVCYDpK41DQ+w+slKfQ9gag+Io68lmZ+qswEoJvgMf5t3WQX4LZnTfcvjYVHDJpXZI8H
+ wgNisQmd32j7GBdhgZJR5GDdVPVzYBf8hNwMC8WfvWDSeWagiDf5eKVW6baoTpJehFgejnBN
+ ZMAnnljsP+mitlcxeX42+SBo5Lc=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5ef9f192c4bb4f886d603935 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 13:50:10
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A36BDC43395; Mon, 29 Jun 2020 13:50:09 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: harigovi)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1502AC433C8;
+        Mon, 29 Jun 2020 13:50:09 +0000 (UTC)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 29 Jun 2020 19:20:09 +0530
+From:   harigovi@codeaurora.org
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org
+Subject: Re: [v3] arm64: dts: sc7180: add nodes for idp display
+In-Reply-To: <159304723830.62212.5069780400830519255@swboyd.mtv.corp.google.com>
+References: <20200217085842.28333-1-harigovi@codeaurora.org>
+ <159304723830.62212.5069780400830519255@swboyd.mtv.corp.google.com>
+Message-ID: <5c2265e82af8f755d649c0c36a462f19@codeaurora.org>
+X-Sender: harigovi@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Bartosz Golaszewski <brgl@bgdev.pl>
-> Sent: Monday, June 29, 2020 05:04
-> To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; David S . Miller
-> <davem@davemloft.net>; Jakub Kicinski <kuba@kernel.org>; John Crispin
-> <john@phrozen.org>; Sean Wang <sean.wang@mediatek.com>; Mark Lee
-> <Mark-MC.Lee@mediatek.com>; Matthias Brugger
-> <matthias.bgg@gmail.com>; Heiner Kallweit <hkallweit1@gmail.com>; Andrew
-> Lunn <andrew@lunn.ch>; Florian Fainelli <f.fainelli@gmail.com>; Russell King
-> <linux@armlinux.org.uk>; Rob Herring <robh+dt@kernel.org>; Frank Rowand
-> <frowand.list@gmail.com>
-> Cc: linux-kernel@vger.kernel.org; netdev@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; linux-mediatek@lists.infradead.org;
-> devicetree@vger.kernel.org; Bartosz Golaszewski
-> <bgolaszewski@baylibre.com>
-> Subject: [PATCH v2 02/10] net: ethernet: ixgbe: don't call
-> devm_mdiobus_free()
+On 2020-06-25 06:37, Stephen Boyd wrote:
+> Quoting Harigovindan P (2020-02-17 00:58:42)
+>> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts 
+>> b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+>> index 388f50ad4fde..349db8fe78a5 100644
+>> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+>> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+>> @@ -232,6 +233,57 @@ vreg_bob: bob {
+>>         };
+>>  };
+>> 
+>> +&dsi0 {
+>> +       status = "okay";
+>> +
+>> +       vdda-supply = <&vreg_l3c_1p2>;
+>> +
+>> +       panel@0 {
+>> +               compatible = "visionox,rm69299-1080p-display";
+>> +               reg = <0>;
+>> +
+>> +               vdda-supply = <&vreg_l8c_1p8>;
+>> +               vdd3p3-supply = <&vreg_l18a_2p8>;
+>> +
+>> +               pinctrl-names = "default";
+>> +               pinctrl-0 = <&disp_pins>;
+>> +
+>> +               reset-gpios = <&pm6150l_gpio 3 GPIO_ACTIVE_HIGH>;
+>> +
+>> +               ports {
+>> +                       #address-cells = <1>;
+>> +                       #size-cells = <0>;
+>> +                       port@0 {
+>> +                               reg = <0>;
+>> +                               panel0_in: endpoint {
+>> +                                       remote-endpoint = <&dsi0_out>;
+>> +                               };
+>> +                       };
+>> +               };
+>> +       };
+>> +
+>> +       ports {
+>> +               port@1 {
+>> +                       endpoint {
+>> +                               remote-endpoint = <&panel0_in>;
+>> +                               data-lanes = <0 1 2 3>;
 > 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Is this property needed? If it's the default assumption it would be 
+> nice
+> to omit it so that we don't have to think about it.
+> This property is needed during panel probe. If this is not mentioned 
+> here,
+mipi_dsi_attach() will fail during panel probe. In dsi_host.c, 
+dsi_host_attach()
+fails since dsi lanes are greater than msm_host lanes. msm_host lanes 
+are updated
+as part of dsi_host_parse_dt. If we dont provide data-lanes in dt, it'll 
+have default
+value and fail in dsi_host_attach().
+>> +                       };
+>> +               };
+>> +       };
+>> +};
+>> +
+>> +&dsi_phy {
+>> +       status = "okay";
+>> +};
+>> +
+>> +&mdp {
+>> +       status = "okay";
+>> +};
+>> +
+>> +&mdss {
+>> +       status = "okay";
+>> +};
+>> +
+>>  &qspi {
+>>         status = "okay";
+>>         pinctrl-names = "default";
+>> @@ -289,6 +341,17 @@ &usb_1_qmpphy {
+>> 
+>>  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+>> 
+>> +&pm6150l_gpio {
+>> +       disp_pins: disp-pins {
 > 
-> The idea behind devres is that the release callbacks are called if probe fails. As
-> we now check the return value of ixgbe_mii_bus_init(), we can drop the call
-> devm_mdiobus_free() in error path as the release callback will be called
-> automatically.
+> Curious how this works. It looks like PMIC GPIOS are expecting the node
+> to look like:
 > 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
- 
-Acked-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-
-> ---
->  drivers/net/ethernet/intel/ixgbe/ixgbe_phy.c | 14 +++-----------
->  1 file changed, 3 insertions(+), 11 deletions(-)
+> 	disp_pins: disp-pins {
+> 		pinconf {
+> 			pins = "gpio3";
+> 			function = PMIC_GPIO_FUNC_FUNC1;
+> 			qcom,drive-strength = <PMIC_GPIO_STRENGTH_MED>;
+> 			power-source = <PM6150_GPIO_VPH>;
+> 			bias-disable;
+> 			output-low;
+> 		};
+> 
+> but this doesn't use the macros or the subnode for pinconf. Why? Also,
+> the PM6150_GPIO_VPH macro doesn't exist.
+We are discussing with PMIC team to have that macro in the header file.
+Will add other macros as part of next version.
+> 
+>> +               pins = "gpio3";
+>> +               function = "func1";
+>> +               qcom,drive-strength = <2>;
+>> +               power-source = <0>;
+>> +               bias-disable;
+>> +               output-low;
+>> +       };
+>> +};
+>> +
