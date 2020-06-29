@@ -2,113 +2,85 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E555EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90117C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6247214F1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60B5E206A1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:31:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466192;
-	bh=IEYbbfxHL0R+rJ5eiAE7+uNb2jSF+lIweaM7Y+Gfts8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kpXH0faBsZz6AT9KVXEp4Hv3Dchxz8uasNhiO+iYUzO2mGmeaVK5d23iLQZKasicG
-	 oC9oIoLcoESXd7MgEM47sjDz7nfnbt3hC4ZBtaGO8ulE9v/VkhWbfOPECyztNid5ms
-	 jxmYwdTqW4PqB20lpxJ87QtfV1VkiONHpxnTn2NM=
+	s=default; t=1593466262;
+	bh=P4Y+FCT/+WCOx5YCwdsX3MXOEtmwwCaFhV7DU4kMtKw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=f2T1zyEmuWqJAzSHJhG/DJRjJEsOawAHAZGK66Fyks0vg6NZm2NGhCxVl73ikPnst
+	 CgKBVqa0bkhE0szUXhO2gj1fAMGP/trztgKnL86u4w/IHEsusqDI0c2VbL7pWYGaVV
+	 YgYz13i8oc1FaHfKj6lLLjHrn0PPy+pJU3a9Q/E0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgF2V3r (ORCPT
+        id S1728852AbgF2VbA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:29:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60652 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:31:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728909AbgF2SlZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:41:25 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728698AbgF2SlU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:41:20 -0400
+Received: from localhost.localdomain (unknown [194.230.155.195])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4D8323B08;
-        Mon, 29 Jun 2020 14:26:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0F9823356;
+        Mon, 29 Jun 2020 08:15:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593440768;
-        bh=IEYbbfxHL0R+rJ5eiAE7+uNb2jSF+lIweaM7Y+Gfts8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uV2p61E7ul0vof3Ye7MwmEoZfRUDkdelrmFKPTDe7nX3rTdBPdKqf+PXonbfnc+ZS
-         IE6x4O0iKrR9J6T3f7gZXK4vHqJrCxmgaTcwfOc3rNzgZnlvj20lMrj6UNr+h3I6Uo
-         wQMWBv7DyXdsEhfd31poJwTw1BFlfPXjllT+muXE=
-Date:   Mon, 29 Jun 2020 10:26:06 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Ralph Siemsen <ralph.siemsen@linaro.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Pavel Machek <pavel@denx.de>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 4.19 182/267] spi: dw: Return any value retrieved from
- the dma_transfer callback
-Message-ID: <20200629142606.GR1931@sasha-vm>
-References: <20200619141648.840376470@linuxfoundation.org>
- <20200619141657.498868116@linuxfoundation.org>
- <20200619210719.GB12233@amd>
- <20200622205121.4xuki7guyj6u5yul@mobilestation>
- <20200626151800.GA22242@maple.netwinder.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200626151800.GA22242@maple.netwinder.org>
+        s=default; t=1593418545;
+        bh=P4Y+FCT/+WCOx5YCwdsX3MXOEtmwwCaFhV7DU4kMtKw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fh1HqOwJ9Z8Y/2rNYtoZQ9IDsjVKbXvY1kGz1lNPQBK+wYKWtNJ6YOIncMkGNNbJ/
+         HgMb3XXmbbKuDOGxdkUvLBRDoVl81X1238wxtmyDJvp0800+ljgHdLPd8nNtZANxHO
+         eWzLuFqmC9/GSf1qvvBz3OxfQZdI+/HujJ+BNDO0=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Tsahee Zidenberg <tsahee@annapurnalabs.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 3/3] arm64: dts: alpine: Fix GIC unit address
+Date:   Mon, 29 Jun 2020 10:15:35 +0200
+Message-Id: <20200629081535.13502-3-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200629081535.13502-1-krzk@kernel.org>
+References: <20200629081535.13502-1-krzk@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 11:18:00AM -0400, Ralph Siemsen wrote:
->Hi Serge, Pavel, Greg,
->
->On Mon, Jun 22, 2020 at 11:51:21PM +0300, Serge Semin wrote:
->>Hello Pavel
->>
->>On Fri, Jun 19, 2020 at 11:07:19PM +0200, Pavel Machek wrote:
->>
->>>Mainline patch simply changes return value, but code is different in
->>>v4.19, and poll_transfer will now be avoided when dws->dma_mapped. Is
->>>that a problem?
->>
->>Actually no.) In that old 4.19 context it's even better to return straight away
->>no matter what value is returned by the dma_transfer() callback.
->
->This patch changes the return dma_transfer return value from 0 to 1, 
->however it was only done in spi-dw-mid.c func mid_spi_dma_transfer().
->
->There is an identical function in spi-dw-mmio.c that needs the same 
->treatment, otherwise access to the SPI device becomes erratic and even 
->causes kernel to hang. Guess how I found this ;-)
->
->So the following patch is needed as well, at least in 4.9 and 4.19, I 
->did not check/test other versions. Mainline does not need this, since 
->the code seems to have been refactored to avoid the duplication.
->
->Regards,
->-Ralph
->
->diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
->index c563c2815093..99641c485288 100644
->--- a/drivers/spi/spi-dw-mmio.c
->+++ b/drivers/spi/spi-dw-mmio.c
->@@ -358,7 +358,7 @@ static int mmio_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
+Node unit address should be the same as first address appearing in "reg"
+property.  Fixes DTC warning:
 
-Um, I can't find this function anywhere... what am I missing?
+    arch/arm64/boot/dts/al/alpine-v2.dtsi:116.38-126.5:
+        Warning (simple_bus_reg): /soc/interrupt-controller@f0100000: simple-bus unit address format error, expected "f0200000"
 
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm64/boot/dts/al/alpine-v2.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/al/alpine-v2.dtsi b/arch/arm64/boot/dts/al/alpine-v2.dtsi
+index de2eaf77b1ff..4eb2cd14e00b 100644
+--- a/arch/arm64/boot/dts/al/alpine-v2.dtsi
++++ b/arch/arm64/boot/dts/al/alpine-v2.dtsi
+@@ -113,7 +113,7 @@
+ 				     <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
+-		gic: interrupt-controller@f0100000 {
++		gic: interrupt-controller@f0200000 {
+ 			compatible = "arm,gic-v3";
+ 			reg = <0x0 0xf0200000 0x0 0x10000>,	/* GIC Dist */
+ 			      <0x0 0xf0280000 0x0 0x200000>,	/* GICR */
 -- 
-Thanks,
-Sasha
+2.17.1
+
