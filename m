@@ -2,91 +2,125 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDDF2C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C55EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9301620672
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:40:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593463205;
-	bh=IBqeirKPT8c7wmG4BPRldsNMENUT88K8pOX2cD5ov0A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BZIIzCmQDdKFgwu+txiZTxhHC9mU6t+z8qyid3lwYnzEy2eVPFKYZuZqo6j12QjBi
-	 s/mAS/O2Wtx+hQxL7oA3nK+l6AuHB7LlY0E9N2PTVmHMSfssc1Fw8OGWDowCzfFzaK
-	 Lc7BjcbBnnpXzR8jh6fLZBWhvQFOLzEefDOF5csk=
+	by mail.kernel.org (Postfix) with ESMTP id 64F8C20748
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="s9kteNeX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731714AbgF2UkF (ORCPT
+        id S1730050AbgF2Uky (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:40:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389471AbgF2UkC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:40:02 -0400
-Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5275120771;
-        Mon, 29 Jun 2020 20:40:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593463201;
-        bh=IBqeirKPT8c7wmG4BPRldsNMENUT88K8pOX2cD5ov0A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SDY6bsUD7MD6zbQ6sIlOut/22uy/Q4zhMlaod/kJLOwT1jSkUweXIC8L2UayIPiH8
-         HSbR+qftW2rj6pgAGEESmVGQCOj/RstAQGpQnD2+UNRo49Z1Nv+VZeYLddG89Y7QyJ
-         tF8lSoMV0UaQCRFtjehON9ARPWfKPyjTcraFYzAA=
-From:   Dinh Nguyen <dinguyen@kernel.org>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     dinguyen@kernel.org, devicetree@vger.kernel.org,
-        Dinh Nguyen <dinh.nguyen@intel.com>,
-        linux-stable <stable@vger.kernel.org>
-Subject: [PATCH 3/3] arm64: dts: stratix10: increase QSPI reg address in nand dts file
-Date:   Mon, 29 Jun 2020 15:39:49 -0500
-Message-Id: <20200629203949.6601-3-dinguyen@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200629203949.6601-1-dinguyen@kernel.org>
-References: <20200629203949.6601-1-dinguyen@kernel.org>
+        Mon, 29 Jun 2020 16:40:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731685AbgF2TOJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:14:09 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5643EC00E3CB
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:04:18 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id f18so15866899wml.3
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:04:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=kk4GqzupyJ/zMhEjt50iMo8E42JSASWwyoRhFrVXFkw=;
+        b=s9kteNeXi1zTwB+iA/Da/H/SPwbWFgSRcTYjOhHXHWF3DK4DgkjnWLtB3kXWUYcT73
+         hrQ3sZLr45ONRMe37aZJiaJZqvsJkdNy022pJEVyvesHs/Usys8f1PNEbBh/x2TgLjW5
+         MzXNu61KMK8OAc8kI7zqSWj6yUSfkkAeWvduGtmpBPGg5zflFGTAloz+lI6SH8ZeyaF4
+         fgHItffrSY9r+xFcjDC7cJKNDoYT11AD7qfDTq0LviqPvjIASWNkM3GOYEhgZi13/HMO
+         nbFl97jRYhP8AwnmUe5P7dnadnS6u8YZj+1fWhK6Oe2uxf6rzW6Igdl90lnBrDHpjR5z
+         NqZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=kk4GqzupyJ/zMhEjt50iMo8E42JSASWwyoRhFrVXFkw=;
+        b=FaMNnScdK2as007cgYkBcdkknru+NHRyFeY1oyvjUWzba0XTqXkxXXI34iBgBXD5OZ
+         XxF7XrzZ9G8rE91zEAAiqkq7nrDaOs61w8D6ZIEU6/70d4yCOb0oM9ZOSOvxjmVuiuI0
+         VLdIa/cutibZS9IK1Elel21pRCGsyb1UNQDEYViRxvmuBsXmeXoeofakvMln1tuw6SoX
+         xgEp+4MfjWD0Ah0mFay1vbq8MLeOs4ohLrx94wvoD90nT2+DB7pVm8tCs8A+7xQ9Udsx
+         HQw9pERI9qCQJMP4MmnjFESUW/adGAeMefmRvnL0xAz1n8RiAS175lM1HDRMwc2j95jl
+         Z45w==
+X-Gm-Message-State: AOAM530v9d3dcvkKr6OIvkLRonBbm/e5lhIAEqQL7vuuBXwSlOsyRD2U
+        Rrh4fGC6GqhoA3BTfn3AjPTbag==
+X-Google-Smtp-Source: ABdhPJyWDqDeFgVInuObhpy/Ftb/2DR2R2EIJXvEfaNkWasvMTcTlNr2GvJFRYK1k6XxTkq/Wt9wfQ==
+X-Received: by 2002:a1c:cc0d:: with SMTP id h13mr17832883wmb.168.1593432256110;
+        Mon, 29 Jun 2020 05:04:16 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id d81sm25274347wmc.0.2020.06.29.05.04.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 05:04:15 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v2 03/10] net: devres: rename the release callback of devm_register_netdev()
+Date:   Mon, 29 Jun 2020 14:03:39 +0200
+Message-Id: <20200629120346.4382-4-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200629120346.4382-1-brgl@bgdev.pl>
+References: <20200629120346.4382-1-brgl@bgdev.pl>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinh.nguyen@intel.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Match the QSPI reg address in the socfpga_stratix10_socdk.dts file.
+Make it an explicit counterpart to devm_register_netdev() just like we
+do with devm_free_netdev() for better clarity.
 
-Fixes: 80f132d73709 ("arm64: dts: increase the QSPI reg address for Stratix10
-and Agilex")
-Cc: linux-stable <stable@vger.kernel.org> # >= v5.6
-Signed-off-by: Dinh Nguyen <dinh.nguyen@intel.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- arch/arm64/boot/dts/altera/socfpga_stratix10_socdk_nand.dts | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/devres.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk_nand.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk_nand.dts
-index 4000c393243d..c07966740e14 100644
---- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk_nand.dts
-+++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk_nand.dts
-@@ -212,12 +212,12 @@
+diff --git a/net/devres.c b/net/devres.c
+index 57a6a88d11f6..1f9be2133787 100644
+--- a/net/devres.c
++++ b/net/devres.c
+@@ -39,7 +39,7 @@ struct net_device *devm_alloc_etherdev_mqs(struct device *dev, int sizeof_priv,
+ }
+ EXPORT_SYMBOL(devm_alloc_etherdev_mqs);
  
- 			qspi_boot: partition@0 {
- 				label = "Boot and fpga data";
--				reg = <0x0 0x034B0000>;
-+				reg = <0x0 0x03FE0000>;
- 			};
+-static void devm_netdev_release(struct device *dev, void *this)
++static void devm_unregister_netdev(struct device *dev, void *this)
+ {
+ 	struct net_device_devres *res = this;
  
--			qspi_rootfs: partition@4000000 {
-+			qspi_rootfs: partition@3FE0000 {
- 				label = "Root Filesystem - JFFS2";
--				reg = <0x034B0000 0x0EB50000>;
-+				reg = <0x03FE0000 0x0C020000>;
- 			};
- 		};
- 	};
+@@ -77,7 +77,7 @@ int devm_register_netdev(struct device *dev, struct net_device *ndev)
+ 				 netdev_devres_match, ndev)))
+ 		return -EINVAL;
+ 
+-	dr = devres_alloc(devm_netdev_release, sizeof(*dr), GFP_KERNEL);
++	dr = devres_alloc(devm_unregister_netdev, sizeof(*dr), GFP_KERNEL);
+ 	if (!dr)
+ 		return -ENOMEM;
+ 
 -- 
-2.17.1
+2.26.1
 
