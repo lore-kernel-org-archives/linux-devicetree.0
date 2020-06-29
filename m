@@ -2,110 +2,161 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E687C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7753FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34D7620656
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FAB220656
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:42:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nt/jc4Xm"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="OQH0L9cB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgF2Vl6 (ORCPT
+        id S1727930AbgF2VmT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:41:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37584 "EHLO
+        Mon, 29 Jun 2020 17:42:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727930AbgF2Sh6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 14:37:58 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55871C031414;
-        Mon, 29 Jun 2020 10:19:38 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id g67so7703338pgc.8;
-        Mon, 29 Jun 2020 10:19:38 -0700 (PDT)
+        with ESMTP id S1727917AbgF2Sh5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 14:37:57 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0D0FC02A545
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:51:33 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id 66so289476vka.13
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:51:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kyRzeVuvIOnKhsJ+5uonKu8f8yeOpAny5n1VdDosRFk=;
-        b=Nt/jc4Xm3mvn5WqweNAwuOw5XVFPe3sw7g1bxrnFrB14aW4N+u8tzFVgRTc90SHXRB
-         ZiXp58toYoc0ODij/6SbIdGrnrSdEZo7/jEOUGj0GahDzCeX/xMZNKq2+bK/otDzj4cz
-         9NsaMQbXza8P6bwQW3R7MhLu/ahcGjau2xeGrfvMhoIIviu7q/uSvncMPj4rd4I8V58E
-         G2z0UuGPGV55wArpeJlarXOVZfwvYi8EM6ltHIpaAoMlUzAi1xe9MmrQkStUPNzjyJa1
-         DYBGvYHBHW56EC5ACRP0KFpMU3rjMPnfG5B26lphNu2nqAxgbskxmS4SFidlzo5ff7l4
-         QSLA==
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xHEvnwaXIaI22DXPizYpJcrsTL4/AwhMEQ6IhYTQKlQ=;
+        b=OQH0L9cBVHLRgTVZhw1jd+9UWSypZQN30gG3yvEpHJvc2VXIoNz+hyJGcfUcBU+7e4
+         oCc7XEKBqBQPleKnUVnLbIp6WsDfC+WCcVQhpW8dNcfHdlE37M0unZrcRr+0gg3/aEvf
+         PMdPFYwgtQ+R9ZtNcXAgyQyPNtpr4cbByuURBHAnjcHM+1N71I+sWI1yfCbGzQcEdiAN
+         yY4uALwvM8jRmBCwqjPgXEIl4AGsHRadzBeA2q8DcqrH+lwiFBEB3A6DNV046uaF3RHg
+         gXgPPRlYEZ8ZU+Sn3QHjIt7k5b5qK/HGOI6FP26Yjc3r+mq7qoc4ZOwpVuG+VUgxyPPT
+         2jyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kyRzeVuvIOnKhsJ+5uonKu8f8yeOpAny5n1VdDosRFk=;
-        b=k6TEzmiboAZOZ9a+3Viah9V4Lso+MjXejSBIw6/f4GZiZtvr0rDQEaRSosOLEdWNna
-         FIgwAJTPgioti2BrrFZiuEJn+08murrR5shPzZ0/5XNTqGXrJk3xpeskocg0noKQynfh
-         OvM3eVK5+pfB7dwI58B2eD0M/MIlVU+TIik0U5IW2KyQ5oIs8vw+mz5iCnPfsDfIg8ZH
-         4C0RTHcePtAevheHhqB+iIzLokrcUk6XHXhP6uKOxUXp5r+p9stwJGIwiDivO9Z+LEje
-         DAkRUKoFi+TVr2XnX8bDvR/eRyq0Os3Dwyp6OaC4V20PBVyVX5bVGB7i0pUYU9BLz20w
-         0aGA==
-X-Gm-Message-State: AOAM532Agf8e2ktFA87JIkmEeqBT0rbjXiA32Vxtsy4g44xs+28FALJN
-        7IlU4HL+Wc6CKqBqgMVdolU=
-X-Google-Smtp-Source: ABdhPJwBz4zO1nux6YEsGIypPIa2qPGaoUx75nn3Ar1oull1wcbktACCA97kxB2CT7b9kqFFkD3b1w==
-X-Received: by 2002:a63:8c5d:: with SMTP id q29mr10983595pgn.249.1593451177944;
-        Mon, 29 Jun 2020 10:19:37 -0700 (PDT)
-Received: from [10.230.30.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id g12sm257852pfb.190.2020.06.29.10.19.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 10:19:37 -0700 (PDT)
-Subject: Re: [PATCH v2 05/10] phy: un-inline devm_mdiobus_register()
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Russell King <linux@armlinux.org.uk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20200629120346.4382-1-brgl@bgdev.pl>
- <20200629120346.4382-6-brgl@bgdev.pl>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <a88026d5-8a4e-52be-93fd-e683fb2ff05d@gmail.com>
-Date:   Mon, 29 Jun 2020 10:19:35 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xHEvnwaXIaI22DXPizYpJcrsTL4/AwhMEQ6IhYTQKlQ=;
+        b=DHjyZTIfabtU+eQFAct6Z0GNFLXzLuZCZY1zanvfP2otVjQIz6NZfioydsFyM6lVHu
+         TB+UMznB0lnJv8yx2+p7x/fQM6fzIw6WX8s8fkmKPxrIkII72T2OrNNysZcRczNZOkhT
+         oVC5m3oMXPZhzrwHR2Q4pwSKc94cPSI8N0qejqjFpmJJ6FFDI0AcNXYt9slPvQEtbG8j
+         n/Mk0pC6hYh7lL6MISDI3i9eeo+Jng2dTjM/TkY4dknLpmHg+tvwBaSI2wxFOsz0jkqg
+         H3QmuPZc7uLVAy93PXNc6aZxoXHEvNp/tiBAdosgK6G7Haof18sRhfWMc1tTgjl+dnqN
+         CGNg==
+X-Gm-Message-State: AOAM533ok54OepvLE2An6BdgL2EcF2qh3B/TF0rKWmG+yI7FzrvfnjaL
+        kBbW86x4BYb8XD/63EFZGG9K+7F+b+I4P+eANYZbZg==
+X-Google-Smtp-Source: ABdhPJxV2IA2m9d5l16yBy3n1SZ0g7UHEZV6/cJ+b6V/XLPjujs0azTgjgMwltUJn2YBO0p0U04OWasRwsCDgvXmOEE=
+X-Received: by 2002:ac5:c189:: with SMTP id z9mr9880244vkb.79.1593435092807;
+ Mon, 29 Jun 2020 05:51:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200629120346.4382-6-brgl@bgdev.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200619151541.15069-1-geert+renesas@glider.be>
+In-Reply-To: <20200619151541.15069-1-geert+renesas@glider.be>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Mon, 29 Jun 2020 18:21:21 +0530
+Message-ID: <CAHLCerMfp42VHDxhCfnFmxphic0OVD55ZzmzwnrEvfF6WUARgg@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: thermal: rcar-thermal: Improve schema validation
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, Jun 19, 2020 at 8:45 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+>
+>   - Document missing "#thermal-sensor-cells",
+>   - Factor out common required properties,
+>   - "interrupts", "clocks", and "power-domains" are required on R-Mobile
+>     APE6, too,
+>   - Invert logic to simplify descriptions,
+>   - Add "additionalProperties: false".
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-On 6/29/2020 5:03 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Functions should only be static inline if they're very short. This
-> devres helper is already over 10 lines and it will grow soon as we'll
-> be improving upon its approach. Pull it into mdio_devres.c.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+> ---
+>  .../bindings/thermal/rcar-thermal.yaml        | 53 ++++++++++++-------
+>  1 file changed, 34 insertions(+), 19 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml b/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml
+> index 0994693d240f9ff4..88787b98992fe7c9 100644
+> --- a/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml
+> +++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml
+> @@ -59,25 +59,40 @@ properties:
+>    resets:
+>      maxItems: 1
+>
+> -if:
+> -  properties:
+> -    compatible:
+> -      contains:
+> -        enum:
+> -          - renesas,thermal-r8a73a4 # R-Mobile APE6
+> -          - renesas,thermal-r8a7779 # R-Car H1
+> -then:
+> -  required:
+> -    - compatible
+> -    - reg
+> -else:
+> -  required:
+> -    - compatible
+> -    - reg
+> -    - interrupts
+> -    - clocks
+> -    - power-domains
+> -    - resets
+> +  '#thermal-sensor-cells':
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +allOf:
+> +  - if:
+> +      not:
+> +        properties:
+> +          compatible:
+> +            contains:
+> +              enum:
+> +                - renesas,thermal-r8a73a4 # R-Mobile APE6
+> +                - renesas,thermal-r8a7779 # R-Car H1
+> +    then:
+> +      required:
+> +        - resets
+> +        - '#thermal-sensor-cells'
+> +
+> +  - if:
+> +      not:
+> +        properties:
+> +          compatible:
+> +            contains:
+> +              const: renesas,thermal-r8a7779 # R-Car H1
+> +    then:
+> +      required:
+> +        - interrupts
+> +        - clocks
+> +        - power-domains
+> +
+> +additionalProperties: false
+>
+>  examples:
+>    # Example (non interrupt support)
+> --
+> 2.17.1
+>
