@@ -2,124 +2,112 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C39C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A36FFC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3577C2065F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 883C72065F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:28:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KMAALDJG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BdCW9dI6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731717AbgF2T2D (ORCPT
+        id S1732426AbgF2T2O (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:28:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46032 "EHLO
+        Mon, 29 Jun 2020 15:28:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732773AbgF2T15 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:27:57 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53DA0C03E97B
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 12:27:57 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id f2so7474418plr.8
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 12:27:57 -0700 (PDT)
+        with ESMTP id S1732758AbgF2T1t (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:27:49 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EA5BC030F3F;
+        Mon, 29 Jun 2020 09:58:33 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id q5so17238582wru.6;
+        Mon, 29 Jun 2020 09:58:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gjtO3+vpKn1A68ulTNV3+i1kW5W8NfqinqR35PqtzaI=;
-        b=KMAALDJGoGqtO4OG1RHmMXxEqwnS9LcbGgumEAe0ue9WMeuKbWgzvqK6u9RHeNs3PO
-         hJVPWrtmgZ3DV9y8pQjNFfIrujZfg/OeJOB+5YH9B647Krz5oAq9Q6OefmoCPUHRnpO8
-         gO0OUkpAmKqS+MtNG7QBmUCW0a6wVU+vzFpVo6mK6BVJlBuoF/r3WOwqtnF72kf34a5K
-         bT8WsbVXiGXMsekX+lWRdz9N2oyaWBp+EjqpPPlH07TbHmzlYsdPRA2dze8JFXDONFuc
-         VG3tMGgUk55U3op7075lFmFL+v6gF9r2IhQ7YZ8eVy8KV7Zk/UlXsWEE/ZT+RaRbrCwt
-         GNRA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EXieR2sKCVcuynFXj2Dp91Rx/LX+vZuPzCYIluYGYqw=;
+        b=BdCW9dI6O2ID3uqf56vYmvG7S+fdM8QNerUMd1X2JionIRz+qIPUlM5rWCSvL/+UCt
+         zvwMhhwE/TXKbCYG9ID7I9ygUQH+8T9k9KYMvWu+JHNlTbJIFYwJIgVJs5BgGjKU86gf
+         kXrJckQyt3K2z59k0OFjRJxmE0ADLVeSmMYS17m3Rhvdan9zDd7VM8GaaUTAw9fApXHP
+         PE+lFtfE8xP6ROi7X2UXlG6lttCibWZW/LgUXkH+Sm/g9OgnJAeD57hVdtUg2iLX/Egu
+         W9ZG/B64qi8wc2xkGhqiFdCxoPVcr1rpqZi1VS2u4Kt5v/33rcpSfb2H78HjL/acb7KJ
+         4j8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gjtO3+vpKn1A68ulTNV3+i1kW5W8NfqinqR35PqtzaI=;
-        b=EZGuvUlu/pYN40vkuGuVlGjFP7wI91zZ8GBEBg8hvWqKO+BAckhEz9br64h7VTZJjQ
-         yWzfPx84f0RnG0yh7YML4RlCvoaYG2qIwYmB026bpRgImY08jkOLxzLtO+DPDPvrXU3u
-         m60G1NMgso+RpeqxIiUVfrJ517QSX9QKInVJZgZ5jIRt0uajLUoKMcZjegq9mbsXKwap
-         pIbVXKg0p6PcmMH1t6KaFG48GD3ytQd8INaLb7ZIBYhl1B2tK95I2O7rQVqOGuIAb2G2
-         arz6Vvh2x8KW+5Dco1vApuBSy0V2zx4ZSF2A8p5LPdml/8pxlUd7eUznqE7ltcJLx/xh
-         rl9g==
-X-Gm-Message-State: AOAM530vGSpIPjtqrktOL8Yjw8v+nmbZMpACi0wTG9VIPg5sXGzMzdDP
-        D25Usinp1VIwYAObLe+zg5bsIA==
-X-Google-Smtp-Source: ABdhPJy0SChbO2shXRc4vp0bmFhI2gH9IjNGdF2dYdDp0EX9wxfgtO8MwNTFrtY2y9b7qitmPqOirw==
-X-Received: by 2002:a17:90b:4c8b:: with SMTP id my11mr18897947pjb.153.1593458876736;
-        Mon, 29 Jun 2020 12:27:56 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 22sm428848pfx.94.2020.06.29.12.27.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 12:27:56 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 12:25:24 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EXieR2sKCVcuynFXj2Dp91Rx/LX+vZuPzCYIluYGYqw=;
+        b=Y6qXd1tzsxDusZrBWdyTDswgUD7jMetPOVu2H0z/PjeAq3NAneKzluS9TgbKKpq6Kv
+         0JtYP+N7nB4EmImABwZHygjSuMblZU+ZXcaB+Q5gdgw/L+l9kaTadNObBnUj9G7FTsFH
+         tABPbU6QlBBGtzurRaYaVrwyI9xIdofrUm1zm1jTt90cNWzs/RDkWrYlt59yJj4pbtAC
+         2RN9rDS42ZhzsikxcDlMhZBHSdEwvAfLYtaKjMQMxRDsAfUaRmMWAVUf+NiYQ4BNvKTO
+         jMIMFSbFS3jKVn7wyTGSCWkRpK1zCQaOfG3GSGWVCT5NxTwqOOiAgqjFOooTeI562oKF
+         IZFA==
+X-Gm-Message-State: AOAM531+4wOHS7mcs5MExaHM71hNodENrdTsa6jAEAaWfCGrNc0xqMKy
+        B5hOJTqixoLYxuoIH+xbqLg=
+X-Google-Smtp-Source: ABdhPJyJ5w3YtAo+uLmhSmj4foLwUKDf1M6Afay3gViElI8XhO8rG9IkHCGg5/fyGiENO61wD6cZDw==
+X-Received: by 2002:a5d:6802:: with SMTP id w2mr17172707wru.88.1593449912197;
+        Mon, 29 Jun 2020 09:58:32 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id c20sm460651wrb.65.2020.06.29.09.58.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2020 09:58:31 -0700 (PDT)
+Subject: Re: [PATCH v2 02/10] net: ethernet: ixgbe: don't call
+ devm_mdiobus_free()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Russell King <linux@armlinux.org.uk>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH -next] <linux/of.h>: add stub for of_get_next_parent() to
- fix qcom build error
-Message-ID: <20200629192524.GK388985@builder.lan>
-References: <ce0d7561-ff93-d267-b57a-6505014c728c@infradead.org>
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20200629120346.4382-1-brgl@bgdev.pl>
+ <20200629120346.4382-3-brgl@bgdev.pl>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <daff86d4-f0f1-f4d8-2e7a-1535573f9ba1@gmail.com>
+Date:   Mon, 29 Jun 2020 09:58:26 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ce0d7561-ff93-d267-b57a-6505014c728c@infradead.org>
+In-Reply-To: <20200629120346.4382-3-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon 29 Jun 09:43 PDT 2020, Randy Dunlap wrote:
 
-> From: Randy Dunlap <rdunlap@infradead.org>
-> 
-> Fix a (COMPILE_TEST) build error when CONFIG_OF is not set/enabled
-> by adding a stub for of_get_next_parent().
-> 
-> ../drivers/soc/qcom/qcom-geni-se.c:819:11: error: implicit declaration of function 'of_get_next_parent'; did you mean 'of_get_parent'? [-Werror=implicit-function-declaration]
-> ../drivers/soc/qcom/qcom-geni-se.c:819:9: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: linux-arm-msm@vger.kernel.org
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+On 6/29/2020 5:03 AM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> The idea behind devres is that the release callbacks are called if
+> probe fails. As we now check the return value of ixgbe_mii_bus_init(),
+> we can drop the call devm_mdiobus_free() in error path as the release
+> callback will be called automatically.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Regards,
-Bjorn
-
-> ---
->  include/linux/of.h |    5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> --- linux-next-20200629.orig/include/linux/of.h
-> +++ linux-next-20200629/include/linux/of.h
-> @@ -630,6 +630,11 @@ static inline struct device_node *of_get
->  	return NULL;
->  }
->  
-> +static inline struct device_node *of_get_next_parent(struct device_node *node)
-> +{
-> +	return NULL;
-> +}
-> +
->  static inline struct device_node *of_get_next_child(
->  	const struct device_node *node, struct device_node *prev)
->  {
-> 
-> 
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
