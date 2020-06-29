@@ -8,93 +8,91 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF20C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 22:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0431C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 22:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEBD920656
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 22:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB227206E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 22:18:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XxYH2BiF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e79tUWEs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726042AbgF2WNy (ORCPT
+        id S1726632AbgF2WSa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:13:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44428 "EHLO
+        Mon, 29 Jun 2020 18:18:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbgF2WNx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 18:13:53 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B50C6C061755
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 15:13:53 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id e13so16824417qkg.5
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 15:13:53 -0700 (PDT)
+        with ESMTP id S1726170AbgF2WSa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 18:18:30 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0209BC061755
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 15:18:29 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id i16so14149867qtr.7
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 15:18:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=WaeN+BPizh0oD4lgsc2IXCnccXq/tl6lrLlep28vPpE=;
-        b=XxYH2BiFhwqoGonCdHt8VMwAcPxxTYxOi6Wd9noxQQ3E+F+llRAho067kSK1cPBhIU
-         Rn7sbDIc06n/nLGF94FKRkmazbRnK6PY0u8hyapgwNqYucjpY0DPDCbbj8CESwyh3SKt
-         LYV9VG/hGYeBR8SRiLMTwR2sg6voojNvXNe1hv1v0Xy+PLLqAJSNA5Teg+4JwQS2vhTu
-         d9sgGwHTM+lqc82sCVmIvRp69uOOxE+eQ8pu03K4v5rLNtL6t1TZfRXFpitf1kEireuO
-         Y2RNaTtxf8UeHFntY30YVfbEe8AOVpGlItmdXSOmAitSldDRAHY3D1RU7zoGLUI4WUPb
-         s30g==
+        h=from:to:cc:subject:date:message-id;
+        bh=nEpPOTzpqJXzA5Vx5Bee1tTpx60CqqvAKtskT/vJ8uc=;
+        b=e79tUWEsL8AvrHF2OdQPUMllhM1r/2hLcXcTDTXDOb2swkV0H+rmwLUXDzzhRA0aIY
+         Vqtnuhc8/A1ggivYXnIqImOgGEQtlxx9VmP60pGanty/uD3xLUF+QSsJ2pA821q4Np5H
+         N91Najp71smv05TKPdXPFYs/VjME2SLtOXKCRZ0FTWoRRyXJM0jhIX5H/xZKQ2l65F/F
+         dNJ/l6AHmIN5gOYNFW1kI5JVzP3VE5TOg/HAR9otGQj1uRprxHuHWgkFqerxGVbxy4eO
+         +ZVytcBEyr/OtyAcDOlh3Tzi7Z1fJR0ID7L1oXHUM7lj359SO24KevtTi8ozzb85+hB4
+         tBmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=WaeN+BPizh0oD4lgsc2IXCnccXq/tl6lrLlep28vPpE=;
-        b=h5bRSPsCP1IzfO4cPAG2VPUUxzgPnNzsXt2FknS6oMQ0sxjvs97fKfQArfAmZZH5xP
-         FF7ktvIuKvIzOT0UIZgij6po0NWS8mC0cpU8zuTq01bgYyUr0AjQn1oGbpAZzqWkHOwh
-         GESFeo/NvUqZMamXbi+l8SIdwayL8U5nqO96or81GCzgA+vKvr4O6Hc0ACTInocbxE6Z
-         0cDJRWqxAGrELaCToE4SYy/qqgGShZC4NGn4ZeOvLaCh1/ZmvQns1kKj/+Yl3MsK51b2
-         WGVDU5KZpdhX4ApEj5RIgqcGZsNPVJ0b+wlI+VRXlhsGEv4zyWRMbVTTm7xMejpoo2j/
-         HFNw==
-X-Gm-Message-State: AOAM530HBWgCf1mTGkbr1Xextb/sje10ei9FLAUvy7eF6GvpfXUjT/VC
-        VPOFPbXpPghFTgZZ3bC4/pM=
-X-Google-Smtp-Source: ABdhPJybzmB4veGNSBHIAsbA003nVTo+WzLqmEaoRWj9oihFxukT/Jh/ZFEGze4wq7LdQNGjZ0gtnw==
-X-Received: by 2002:a37:4d0f:: with SMTP id a15mr17053518qkb.313.1593468832915;
-        Mon, 29 Jun 2020 15:13:52 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=nEpPOTzpqJXzA5Vx5Bee1tTpx60CqqvAKtskT/vJ8uc=;
+        b=MuD+dfPXEjLLZEUtOtbQbN0YIBMdBNHWLU2lmq+yd0zbQv8Kd+ewx6ezisAI3QHIAV
+         6ZgVntBdtFXSv6J6UOMwiMb4guh3eJS+ZN7TTyxuD0ovo6GGArsrNVeGo91Kswh8uPtI
+         F7WLAJIIZYBxyXfFFXjin2AcrR/031MYtjJjd/hm9wE9XrOElELTxkAvQNwogKwWMEcD
+         daYqy5lYIlqdFRHPBGvHAz0pZTWNx5tahtwfW0c5YiG6lDm47D4KzzAMhDJN0DLO8QVv
+         SUnlN6KXZo/soz7QPvZ2QaO7qG4BNylpF9RAdEEAXzIuM68YFzjz3zFTbKeoaPb2qEu0
+         mKyg==
+X-Gm-Message-State: AOAM531ErDvaRnvncZewAdkXb0umC0nrxm5IVA1SG7KgenNqwsp3F9NB
+        lKMc0CICcBLM9ZlkLBdXyMs=
+X-Google-Smtp-Source: ABdhPJzXDd3P3kAqLg7wnnNCJEYpgyiwRrAK6S/I+GQND6WYBRRFhv1FNEU7RR0ZWkZHOpGt0kFlzg==
+X-Received: by 2002:ac8:1c36:: with SMTP id a51mr18096122qtk.138.1593469109139;
+        Mon, 29 Jun 2020 15:18:29 -0700 (PDT)
 Received: from localhost.localdomain ([2804:14c:482:92b:9524:444f:ca0e:d637])
-        by smtp.gmail.com with ESMTPSA id y23sm1390365qkj.25.2020.06.29.15.13.50
+        by smtp.gmail.com with ESMTPSA id n28sm1308640qtf.8.2020.06.29.15.18.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 15:13:52 -0700 (PDT)
+        Mon, 29 Jun 2020 15:18:28 -0700 (PDT)
 From:   Fabio Estevam <festevam@gmail.com>
-To:     maxime@cerno.tech
-Cc:     eric@anholt.net, robh+dt@kernel.org, devicetree@vger.kernel.org,
+To:     robh+dt@kernel.org
+Cc:     yamada.masahiro@socionext.com, devicetree@vger.kernel.org,
         Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 2/2] dt-bindings: display: vc4: dpi: Pass the required 'power-supply' prorperty
-Date:   Mon, 29 Jun 2020 19:13:27 -0300
-Message-Id: <20200629221327.19885-2-festevam@gmail.com>
+Subject: [PATCH] dt-bindings: uniphier-system-bus: Use 'serial' as node name
+Date:   Mon, 29 Jun 2020 19:18:18 -0300
+Message-Id: <20200629221818.20366-1-festevam@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200629221327.19885-1-festevam@gmail.com>
-References: <20200629221327.19885-1-festevam@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Pass the required 'power-supply' prorperty to fix the following warning
-seen with 'make dt_binding_check': 
+Use 'serial' as node name to fix the following warning seen with
+'make dt_binding_check': 
 
-Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.example.dt.yaml: panel: 'power-supply' is a required property
+Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.example.dt.yaml: uart@5,00200000: $nodename:0: 'uart@5,00200000' does not match '^serial(@[0-9a-f,]+)*$'
 
 Signed-off-by: Fabio Estevam <festevam@gmail.com>
 ---
- Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/bus/socionext,uniphier-system-bus.yaml  | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml
-index 24119411b007..7ab03614a8ea 100644
---- a/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml
-+++ b/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml
-@@ -47,6 +47,7 @@ examples:
+diff --git a/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml b/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
+index c4c9119e4a20..9fa4f891fa00 100644
+--- a/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
++++ b/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
+@@ -87,7 +87,7 @@ examples:
+             phy-mode = "mii";
+         };
  
-     panel: panel {
-         compatible = "ontat,yx700wv03";
-+        power-supply = <&panel_reg>;
- 
-         port {
-             panel_in: endpoint {
+-        uart@5,00200000 {
++        serial@5,00200000 {
+             compatible = "ns16550a";
+             reg = <5 0x00200000 0x20>;
+             interrupts = <0 49 4>;
 -- 
 2.17.1
 
