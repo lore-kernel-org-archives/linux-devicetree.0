@@ -2,111 +2,80 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADCFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C6CC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A14C20672
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:47:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593463634;
-	bh=1FzB/rHDbLCFiaQrrcup6dDILllaEDSN7udkmW8GdHs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KZvqAO4FQcEIoYVYNFi8YG08gWwQLeyHpgaWUPaZffaSBKVZFyVv5G1tgQ1V5l0H6
-	 K5Cv6qzEGMi5AIkYwolCSSsQM/Vn7QtSu+Fpqm8TTabXoBjQxKdGHQavBZLJ976OyT
-	 U++G2XZVXBdBwALLQtnBhRtfn9stfw65ZJAjIz6A=
+	by mail.kernel.org (Postfix) with ESMTP id 8185920663
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:49:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732940AbgF2UrL (ORCPT
+        id S1731681AbgF2Usx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:47:11 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:37535 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389751AbgF2Uqr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 16:46:47 -0400
-Received: by mail-ed1-f65.google.com with SMTP id g20so13961170edm.4;
-        Mon, 29 Jun 2020 13:46:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fpPGAVi5ST0Msn1ZYb/hxyyJfD9nRccBP2hwCtuMGbQ=;
-        b=i7GMMqckeMJNgqcvezDmEvoJHQUY/MZrJ8k2hDVJGSw5KRWzu2RVsOe1O8nIOhOGNv
-         GPy0KUcL//XG4ESPqqiGITqL1CB25ar0ClG6kOcorNaKefN+zrJFaJyiB+jSObJ8EjtQ
-         bzID+TFgcJU2NAIJSh2dncjw3x74bnPWm61cqUIrd6SXLEHSx7knMwYn1MFWLTz7dpCp
-         tK35COpcYgqjACbqIOFvRjIzlg5pq4wT2x5mdTnmdbCupqW3SrJxAxXeSoJiMtDtW94g
-         ccgSg1oJ7T0fvB7vV/ISZaRYN9J0a2gNbPxNCuTEo3da8YHw+J6pwucC3ogxGVUr8c0C
-         +OzA==
-X-Gm-Message-State: AOAM530r9E1IFSGDstTD2J9IYoLlD9/gDYSY92eV0CwLwLR3lNGRLHUS
-        D99JI5Gj/Haf23WTs7oS/GQ=
-X-Google-Smtp-Source: ABdhPJxKgZqpneEuu5YuIHLp12CmML5exM0XVIJFM5zeSUnLRZQcoWHqnrzGNkURRUuzjRkRJIbIeQ==
-X-Received: by 2002:a05:6402:134e:: with SMTP id y14mr19784901edw.4.1593463605392;
-        Mon, 29 Jun 2020 13:46:45 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.195])
-        by smtp.googlemail.com with ESMTPSA id k23sm434660ejo.120.2020.06.29.13.46.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jun 2020 13:46:44 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 22:46:42 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sylwester Nawrocki <snawrocki@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: Re: [PATCH 1/3] ARM: dts: exynos: Fix missing empty reg/ranges
- property regulators on Trats
-Message-ID: <20200629204642.GA26060@kozik-lap>
-References: <20200629193338.29540-1-krzk@kernel.org>
- <03a23289-1188-db77-6c38-a7dddeac183c@kernel.org>
+        Mon, 29 Jun 2020 16:48:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43352 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731510AbgF2TNs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:13:48 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33299C014AFC;
+        Mon, 29 Jun 2020 00:59:50 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: myjosserand)
+        with ESMTPSA id EA3EF2A1D14
+Subject: Re: [PATCH v4 0/2] ARM: Add Rockchip rk3288w support
+To:     Heiko Stuebner <heiko@sntech.de>, robh+dt@kernel.org,
+        sboyd@kernel.org, mturquette@baylibre.com
+Cc:     linux-clk@vger.kernel.org, kernel@collabora.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20200602080644.11333-1-mylene.josserand@collabora.com>
+ <159238429476.1470505.6023847362048785737.b4-ty@sntech.de>
+From:   Mylene Josserand <mylene.josserand@collabora.com>
+Message-ID: <66bfd77c-83e4-3689-d8c1-c5ae47b40f02@collabora.com>
+Date:   Mon, 29 Jun 2020 09:59:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <03a23289-1188-db77-6c38-a7dddeac183c@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <159238429476.1470505.6023847362048785737.b4-ty@sntech.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 09:50:26PM +0200, Sylwester Nawrocki wrote:
-> Hi Krzysztof,
-> 
-> On 6/29/20 21:33, Krzysztof Kozlowski wrote:
-> > Remove the simple-bus compatible from a regulators node because its
-> > children do not have any unit addresses.  This fixes DTC warning:
-> > 
-> >      Warning (simple_bus_reg): /regulators/regulator-0: missing or empty reg/ranges property
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >   arch/arm/boot/dts/exynos4210-trats.dts | 2 --
-> >   1 file changed, 2 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/exynos4210-trats.dts b/arch/arm/boot/dts/exynos4210-trats.dts
-> > index 3d791db6095c..cec413ee4490 100644
-> > --- a/arch/arm/boot/dts/exynos4210-trats.dts
-> > +++ b/arch/arm/boot/dts/exynos4210-trats.dts
-> > @@ -31,8 +31,6 @@
-> >   	};
-> >   	regulators {
-> > -		compatible = "simple-bus";
-> 
-> I think you would also need to remove the 'regulators' node altogether,
-> otherwise with your change the subnodes below won't get parsed and the
-> regulators will not get registered.
+Hello Heiko,
 
-Good point, I actually did not test this patch. Let me recheck and send
-a follow up.
+On 6/17/20 10:58 AM, Heiko Stuebner wrote:
+> On Tue, 2 Jun 2020 10:06:42 +0200, Mylène Josserand wrote:
+>> Context
+>> -------
+>>
+>> Here is my V4 of my patches that add the support for the Rockchip
+>> RK3288w which is a revision of the RK3288. It is mostly the same SOC
+>> except for, at least, one clock tree which is different.
+>> This difference is only known by looking at the BSP kernel [1].
+>>
+>> [...]
+> 
+> Applied, thanks!
 
-Thanks for review!
+Thank you!
 
 Best regards,
-Krzysztof
+Mylène
+
+> 
+> [1/2] clk: rockchip: Handle clock tree for rk3288w variant
+>        commit: 1627f683636df70fb25358b0a7b39a24e8fce5bf
+> [2/2] dt-bindings: clocks: add rk3288w variant compatible
+>        commit: 00bd404144241155653bb0d0c15be51e4e6983aa
+> 
+> Best regards,
+> 
 
