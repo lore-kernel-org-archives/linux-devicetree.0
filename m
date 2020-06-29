@@ -2,171 +2,88 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB05AC433E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF885C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE1FB206C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:49:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="wrrcCV/e"
+	by mail.kernel.org (Postfix) with ESMTP id A23642065D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:50:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593463823;
+	bh=bf1gx6HwyAGL1lgUaDDu+79hOVdRZJ+m+V17HLQNqP8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rbwPZQMAdzf8FtbJYemZQWj3w3WdC8dbWdXyY7quM3iS8wTfwZ+7UQmD5fdQFaTo5
+	 txtfp9wud9R4FGXXqm/NjepK3+j08KS38x82lpQ3b1nz21vK35pqCEWQDgbjwuwYmI
+	 jTVO/65XNYSzoYE2yOv1wvffkDZTnSJPf4oeBvnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732778AbgF2Utu (ORCPT
+        id S2389338AbgF2UuJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:49:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43364 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730812AbgF2TNj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:13:39 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33D01C00E3D6
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:04:20 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id a6so13599203wmm.0
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:04:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=hztYQwCZoivzm5mGWlL7y58+THNI2tIqMQL/obqgBh8=;
-        b=wrrcCV/eHtEzwZIw9VBAP2zQ1gydhl0t9E8l473TWC1k05eOBumji4Os1tiblAIJzO
-         4wOzef0hZPVEX5d6XcKMyCLmyT1b7YyADt6ahskiop6YYNc4kCYECitUEPTZ2F+fGW7i
-         6y8Uvfl5xMLYsCcJdugcnS3YtHoCINKs3ujOoex6Br78sdsqIuKWAPmqQBMdtMgzZc4Z
-         IgDmjSTOStUefzpm8hIuT/c2k0/+8rBOE6qocp0QN+rhvRzXyv46oLIUH3XFLdMSc0fo
-         EpUTI/q2/srGjYzlHBIkYZyaLKmmyxTE0lK2PPy6VX9gggVCK384yzLHsG9blwPMptuJ
-         bl8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hztYQwCZoivzm5mGWlL7y58+THNI2tIqMQL/obqgBh8=;
-        b=pB9Dn3qms79MjITcUhiaLQ/ltpOs6nTByRgc4E2+wdmX1L3K4jClWUL8lfga+jpkLc
-         KniLjVrpCfiQXb5lsePwlh2igHCjx7dLJYSMuSiusozJj4uDkeXtIX+tjq8kXkAECjq1
-         7R1dgfkqvuWvBfePWgN4itVTa9kvomHzGiodU8c0uPyCjE2Wl5MdAiTILZOq8jcRyHlo
-         YlJ42xiBc53NU01h7XdBIOKit8qFowx8pYkltE8/CeyCna1a9TH1way27AW3rHDFY8wp
-         MaX7BgBkc8I+5MIFxMWFsoOL+l6rE4TclJXMoIx2lKlbo8KzDtNpLqf6pL3o0QF8TkTP
-         KZPA==
-X-Gm-Message-State: AOAM531vpJp72DE6Zaf72+Kv/Lxey2igDj1pD8G/CxAyGl4PnLynDuq6
-        U2W6pjmmH9mFiVXgAljQkR9pWw==
-X-Google-Smtp-Source: ABdhPJwFYLtezxZPsklmDvGqxvDLuEveoshSgJPr77DKJtvQVHg9COcCXF74kUionqbzZntdIBqycg==
-X-Received: by 2002:a7b:cc8b:: with SMTP id p11mr17633011wma.180.1593432258934;
-        Mon, 29 Jun 2020 05:04:18 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id d81sm25274347wmc.0.2020.06.29.05.04.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 05:04:18 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 05/10] phy: un-inline devm_mdiobus_register()
-Date:   Mon, 29 Jun 2020 14:03:41 +0200
-Message-Id: <20200629120346.4382-6-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200629120346.4382-1-brgl@bgdev.pl>
-References: <20200629120346.4382-1-brgl@bgdev.pl>
+        Mon, 29 Jun 2020 16:50:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46664 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731473AbgF2UuI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 29 Jun 2020 16:50:08 -0400
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DEE020720;
+        Mon, 29 Jun 2020 20:50:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593463807;
+        bh=bf1gx6HwyAGL1lgUaDDu+79hOVdRZJ+m+V17HLQNqP8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=13bkz6rT88bW5ozmcTVlIDpLKBOZ9RXp5Dr9YU/HxouH/lD3TjAXms857cHHw2KkV
+         /2ixNXRUdyyGI63P/xu6opcacLXslGJGqcQJutmchqqO/13Dp1GMejsr+c+vg2puDb
+         qanzweqYc6g3z+fdluowc8Z2mlJoZ+ONrT0Cw5pw=
+Received: by mail-ot1-f45.google.com with SMTP id d4so16724576otk.2;
+        Mon, 29 Jun 2020 13:50:07 -0700 (PDT)
+X-Gm-Message-State: AOAM530enl5d2ZGClclltXDXi9w2bAcDslvSppaGQZUxrk+FJUEOQVwb
+        E3C8G1nI7fIl4noVO/zSJ+k5EZMzh9Tx4SgQlg==
+X-Google-Smtp-Source: ABdhPJzzF4kN7KDy2z2NmYmJxIweiy6VO0KsRTtdXWY9U7ErrDy0wmMgtxFXM1W9UJjV4JYyi44/uK+KLXtRv6Qmytk=
+X-Received: by 2002:a9d:2646:: with SMTP id a64mr14052433otb.107.1593463806654;
+ Mon, 29 Jun 2020 13:50:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200625170434.635114-1-masahiroy@kernel.org> <20200625170434.635114-5-masahiroy@kernel.org>
+In-Reply-To: <20200625170434.635114-5-masahiroy@kernel.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 29 Jun 2020 14:49:55 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL4pTFK_pSNn1cSvjzwdg71dVzM3P06BYYEwDj2t+swPA@mail.gmail.com>
+Message-ID: <CAL_JsqL4pTFK_pSNn1cSvjzwdg71dVzM3P06BYYEwDj2t+swPA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] dt-bindings: split DT schema check rules
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Thu, Jun 25, 2020 at 11:05 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> When building %.dt.yaml from %.dts, two things happen in a row:
+>
+>  [1] Run DTC to convert %.dts into %.dt.yaml
+>
+>  [2] Run dt-validate against %.dt.yaml
+>
+> Currently, when any .yaml schema file is updated, processed-schema.yaml
+> is regenerated, then both [1] and [2] are rerun for all .dts files.
+>
+> Actually, we do not need to rerun [1] since the original .dts is not
+> updated.
 
-Functions should only be static inline if they're very short. This
-devres helper is already over 10 lines and it will grow soon as we'll
-be improving upon its approach. Pull it into mdio_devres.c.
+I have plans (and an intern working on it) to integrate the schema
+checks into dtc. That's going to make turning on the schema checks
+just a flag to dtc. I'm not sure if adding the complexity here is
+worth it as I'd expect much of this patch to go away again.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/net/phy/Makefile      |  2 +-
- drivers/net/phy/mdio_devres.c | 18 ++++++++++++++++++
- include/linux/phy.h           | 15 ++-------------
- 3 files changed, 21 insertions(+), 14 deletions(-)
- create mode 100644 drivers/net/phy/mdio_devres.c
+Is there any negative impact on the absolute clean build time? I'm
+more concerned about that than optimizing rerunning.
 
-diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-index dc9e53b511d6..896afdcac437 100644
---- a/drivers/net/phy/Makefile
-+++ b/drivers/net/phy/Makefile
-@@ -3,7 +3,7 @@
- 
- libphy-y			:= phy.o phy-c45.o phy-core.o phy_device.o \
- 				   linkmode.o
--mdio-bus-y			+= mdio_bus.o mdio_device.o
-+mdio-bus-y			+= mdio_bus.o mdio_device.o mdio_devres.o
- 
- ifdef CONFIG_MDIO_DEVICE
- obj-y				+= mdio-boardinfo.o
-diff --git a/drivers/net/phy/mdio_devres.c b/drivers/net/phy/mdio_devres.c
-new file mode 100644
-index 000000000000..f0b4b6cfe5e3
---- /dev/null
-+++ b/drivers/net/phy/mdio_devres.c
-@@ -0,0 +1,18 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+
-+#include <linux/phy.h>
-+
-+int __devm_mdiobus_register(struct mii_bus *bus, struct module *owner)
-+{
-+	int ret;
-+
-+	if (!bus->is_managed)
-+		return -EPERM;
-+
-+	ret = __mdiobus_register(bus, owner);
-+	if (!ret)
-+		bus->is_managed_registered = 1;
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(__devm_mdiobus_register);
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index b693b609b2f5..4935867f024b 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -313,20 +313,9 @@ static inline struct mii_bus *mdiobus_alloc(void)
- }
- 
- int __mdiobus_register(struct mii_bus *bus, struct module *owner);
-+int __devm_mdiobus_register(struct mii_bus *bus, struct module *owner);
- #define mdiobus_register(bus) __mdiobus_register(bus, THIS_MODULE)
--static inline int devm_mdiobus_register(struct mii_bus *bus)
--{
--	int ret;
--
--	if (!bus->is_managed)
--		return -EPERM;
--
--	ret = mdiobus_register(bus);
--	if (!ret)
--		bus->is_managed_registered = 1;
--
--	return ret;
--}
-+#define devm_mdiobus_register(bus) __devm_mdiobus_register(bus, THIS_MODULE)
- 
- void mdiobus_unregister(struct mii_bus *bus);
- void mdiobus_free(struct mii_bus *bus);
--- 
-2.26.1
-
+Rob
