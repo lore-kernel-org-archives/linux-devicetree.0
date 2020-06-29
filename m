@@ -2,142 +2,107 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F46EC433E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7649C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4DB214F1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:23:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="l8oEpc8o";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jvAnAfyG"
+	by mail.kernel.org (Postfix) with ESMTP id 8E5F1208DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:23:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390965AbgF2VWp (ORCPT
+        id S1729589AbgF2VXa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:22:45 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:58681 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729596AbgF2Sv1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:51:27 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 805C058035E;
-        Mon, 29 Jun 2020 11:07:50 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 29 Jun 2020 11:07:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=WE1PSDJ6UR5jIFS55riBxt9LPeJ
-        Xh4U7NigTPnNX65A=; b=l8oEpc8ou0b31MaSG3xJyMa7ni1mk3WLjAf0+QKHhjs
-        AVpZBfZIOMlIwpRfzUZ14GCy22hl/ny7wF6EPd/RmE10onf4Ip8tNfeqRwOPe/KF
-        gPA9Mojv1xbR1GKjCgVa8zHPvuXzX/L9FcWYOtdSddgGtn8h1eG9jBxj75YJbHTK
-        AANJop2cVs8dOOdN/3CdbzUDXLfYiXtQNsQYaSDjYw02qjx1HRJeF5WHzMmAyjXS
-        3KhOuwB1qhHBpETNlNr2Wcj3pOWH0N/xGG6lycaJauSm7B8zbUUSEZMMBd+GhU53
-        6JgTxPN4HoKR9TklVbYstBJUuXqO1J9mbgHbuVlFbiA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=WE1PSD
-        J6UR5jIFS55riBxt9LPeJXh4U7NigTPnNX65A=; b=jvAnAfyGaqUn/08ZHsSqLO
-        uW19B9zLVT4SoApSBBkRM437Kkyd5+RLGxYcTd9L/oNbS6MJbqab7VsM98DbsCWO
-        4d+n8RBYK/BF0fHr9iBnrIaiiVmQvnFV3zkFgHUJ5uXQbG6usHTFF8bzNilFUc7u
-        VHSM1KJiVUTLlVmNRTKoIFa+4KuOnlVlYMVDSkofqAXPutOIj/pnE21k7/gu3pBQ
-        daqivTY5w3AmuBudK+2x1qoXFuOwCBazHChG9faFssJKqFPAI7ckWQyHm9tFFwxU
-        pbbe+PLQsGexmH8opjSu/KNzsplx1vR5KknkeXSlJ597pWOeC+sjwaFee54Bzuew
-        ==
-X-ME-Sender: <xms:wwP6XqWvknOfJkcPQBXZIqW8UorMwaNBI5C1ODdyBwTlMY09xUHPxw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudelledguddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
-    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:wwP6XmkjVUmeiEdlJgUfigxWgJQVaqJmvthVxhwDQFDiMykoEnTrdA>
-    <xmx:wwP6XubBPGGFyYHtXHWC-1pZWDOV_FPhqmC25ASqd2-PXgI2_RfGwg>
-    <xmx:wwP6XhWf_nU3-9dDRfPGYtrX-iylRBw_6x4z_SVVOUOMQWduDd8qGA>
-    <xmx:xgP6XmWAWQwhFI3MhZjhHXi92Prz-GT5C9njmChD_WUolvvNS1KtFw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0E01A3280060;
-        Mon, 29 Jun 2020 11:07:47 -0400 (EDT)
-Date:   Mon, 29 Jun 2020 17:07:45 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Frank Lee <frank@allwinnertech.com>
-Cc:     robh+dt@kernel.org, wens@csie.org, mturquette@baylibre.com,
-        sboyd@kernel.org, srinivas.kandagatla@linaro.org,
-        linus.walleij@linaro.org, anarsoul@gmail.com,
-        tiny.windzz@gmail.com, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        p.zabel@pengutronix.de, clabbe@baylibre.com, icenowy@aosc.io,
-        megous@megous.com, karlp@tweak.net.au, bage@linutronix.de,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-        huangshuosheng@allwinnertech.com, liyong@allwinnertech.com
-Subject: Re: [PATCH v2 06/11] nvmem: sunxi-sid: add support for A100's SID
- controller
-Message-ID: <20200629150745.ettjdggv55gfxs5s@gilmour.lan>
-References: <20200622025907.32574-1-frank@allwinnertech.com>
- <20200622025907.32574-7-frank@allwinnertech.com>
+        Mon, 29 Jun 2020 17:23:30 -0400
+Received: from mga03.intel.com ([134.134.136.65]:63956 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729579AbgF2SvT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:51:19 -0400
+IronPort-SDR: 6tz/aK0mFFjsu6H6gRYNe7UNCe03xG7aMFSa1UMK77M7EhZPp12gJ70IXm9mHXkVQvQlBP04yx
+ t2nIO0oFgi3A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="145924785"
+X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
+   d="scan'208";a="145924785"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 01:29:33 -0700
+IronPort-SDR: Yje5pJtHisKCnMm9oaXwD3WOMepqsjCYESgdEHBWDtl9I+QL0Q7N0Oz6cvmmd8a5TR8Zpr/IjD
+ nBi8NdHXLoTQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
+   d="scan'208";a="480704639"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 29 Jun 2020 01:29:26 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jppAN-00Gcni-K1; Mon, 29 Jun 2020 11:29:27 +0300
+Date:   Mon, 29 Jun 2020 11:29:27 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     sean.wang@mediatek.com, robh+dt@kernel.org, jslaby@suse.com,
+        robert.jarzmik@free.fr, arnd@arndb.de, p.zabel@pengutronix.de,
+        joel@jms.id.au, david@lechnology.com, jan.kiszka@siemens.com,
+        heikki.krogerus@linux.intel.com, hpeter@gmail.com, vigneshr@ti.com,
+        matthias.bgg@gmail.com, tthayer@opensource.altera.com,
+        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Steven Liu <steven.liu@mediatek.com>,
+        Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: [PATCH v4] tty: serial: don't do termios for BTIF
+Message-ID: <20200629082927.GA3703480@smile.fi.intel.com>
+References: <78efa2b1e2599deff4d838b05b4054ec5ac2976a.1592595601.git.sean.wang@mediatek.com>
+ <20200627141222.GC1901451@kroah.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qt3qjbwfvcqzuc6s"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200622025907.32574-7-frank@allwinnertech.com>
+In-Reply-To: <20200627141222.GC1901451@kroah.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Sat, Jun 27, 2020 at 04:12:22PM +0200, Greg KH wrote:
+> On Sat, Jun 20, 2020 at 03:59:14AM +0800, sean.wang@mediatek.com wrote:
+> > From: Sean Wang <sean.wang@mediatek.com>
+> > 
+> > Bluetooth Interface (BTIF) is designed dedicatedly for MediaTek SOC with
+> > BT in order to be instead of the UART interface between BT module and Host
+> > CPU, and not exported to user space to access.
+> > 
+> > As the UART design, BTIF will be an APB slave and can transmit or receive
+> > data by MCU access, but doesn't provide termios function like baudrate and
+> > flow control setup.
+> > 
+> > Even LCR on offset 0xC that is just a FAKELCR
+> > a. If FAKELCR[7] is equaled to 1, RBR(0x00), THR(0x00), IER(0x04)
+> >    will not be readable/writable.
+> > 
+> > b. If FAKELCR is equaled to 0xBF, RBR(0x00), THR(0x00), IER(0x04),
+> >    IIR(0x08), and LSR(0x14) will not be readable/writable.
+> > 
+> > So adding a new capability 'UART_CAP_NTIO' for the unusual unsupported
+> > case.
+> > 
+> > The bluetooth driver would use BTIF device as a serdev. So the termios
+> > still function would be called in kernelspace from ttyport_open in
+> > drivers/tty/serdev/serdev-ttyprt.c.
 
---qt3qjbwfvcqzuc6s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > +#define UART_CAP_NTIO	(1 << 18)	/* UART doesn't do termios */
+> 
+> Naming is hard.  I will never remember what "NTIO" is, how about we make
+> it explicit:
+> 	define UART_CAP_IGNORE_TERMIOS
+> 
+> And the _CAP_ name is getting out of hand, this isn't a "capability",
+> it's a "quirk for this port" but that's a battle to worry about later...
 
-On Mon, Jun 22, 2020 at 10:59:02AM +0800, Frank Lee wrote:
-> Add support for A100's SID controller.
->=20
-> Signed-off-by: Frank Lee <frank@allwinnertech.com>
-> ---
->  drivers/nvmem/sunxi_sid.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->=20
-> diff --git a/drivers/nvmem/sunxi_sid.c b/drivers/nvmem/sunxi_sid.c
-> index e26ef1b..8ac074b 100644
-> --- a/drivers/nvmem/sunxi_sid.c
-> +++ b/drivers/nvmem/sunxi_sid.c
-> @@ -189,6 +189,11 @@ static int sunxi_sid_probe(struct platform_device *p=
-dev)
->  	.need_register_readout =3D true,
->  };
-> =20
-> +static const struct sunxi_sid_cfg sun50i_a100_cfg =3D {
-> +	.value_offset =3D 0x200,
-> +	.size =3D 0x100,
-> +};
-> +
+For quirks we have a separate field in struct uart_port. Perhaps that can be used?
 
-It looks like it's the same tha nthe H3 / A64 then?
+-- 
+With Best Regards,
+Andy Shevchenko
 
-If so, you can just reuse their compatible as fallback
 
-Maxime
-
---qt3qjbwfvcqzuc6s
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXvoDwQAKCRDj7w1vZxhR
-xR1+AQDUmJ2eKxkSAKY8N3oAYv2RkDrEZNTRivNZeW/rTDtt1gD/fIJbT8KdkTtN
-Oq4B49fJoiJYQc72b1d+sdbscb9XAw4=
-=7lp0
------END PGP SIGNATURE-----
-
---qt3qjbwfvcqzuc6s--
