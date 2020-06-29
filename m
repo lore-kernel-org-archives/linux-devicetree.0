@@ -2,375 +2,192 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A94EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BACAC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 043C2206F1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:59:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="cq42QKYm"
+	by mail.kernel.org (Postfix) with ESMTP id 4BAF120720
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:00:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593464429;
+	bh=Lh3dzYXSrs+vBBw5yfOr7+OhUwSsd0+MyH/UH8tKOb0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=mcaqQTVKPdpbV46Ya/cmcIRhCbEw4lWFGxwGpG+q7poZmcqBkThpsgM98BEvxUG74
+	 OHv/3iwcw84TyVvFAH4zW3W8eSj4sA4i1gBZAG4l6Gc9Mpe8XvrIibvD2CeIJsNxD3
+	 +00396HINCX+/BaNSV93z4Xo6sYolQM6hBT3Hbso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731255AbgF2U6m (ORCPT
+        id S1729905AbgF2VAY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:58:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43380 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731222AbgF2TNC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:13:02 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27031C00E3DD
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:04:23 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a6so16286798wrm.4
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:04:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xq/04cXluHxdn4oi+41YOzLKGhFgJERYE/hh7Fzob8w=;
-        b=cq42QKYmOY4CtgFfqpxPZGj+yH2jOhEq38bEjhAHoYTOXYGCicGLSutWfhQ6z5Vh2B
-         U0lZ5r8yZIQt2X4ZPwujuxJRz9HH6HNYoSaHyPglfp3ukXWSIqwb+E+J3YLDTwrHMrCV
-         ZIjniX4ZwfBATGFb0Wf3xeffsu5ooRohKhDhMtE0pEWJOCaADxTynAwlB1ez86wcN5nV
-         BtfBAZI0+Xi58iZ+ptSSkUaYiYSzbz5OpsYKp5upjJ/YXYQNPaX+Oc0bLJIwJfT6s9jw
-         8jSxiCzyozRWdLOocNL5TtWN+mY0/AzdFPQY/sS+4mL9/9eOSmuL6t34Xy96O7G6kg0f
-         WfXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xq/04cXluHxdn4oi+41YOzLKGhFgJERYE/hh7Fzob8w=;
-        b=b04NGIL2p4ihUmOrZKPClTc6NahqaTZmIEG+WtQuFuv/kqTNb3uTkQCai6eK9T7xkA
-         jxKPd09v0PunPmOgcYNnRuB51i4hMkvtxI0SB1HKbZoLgUWHtu39oE4e/cgFhC/+eGVn
-         8jHaQcTTd515/Z9cq8cxVriLh7gHA/kC3az4uTAEo0CBUUfJcQCeG/CJ3mDOrhLuxw8m
-         U+/dtLsPPaRDmZ9ZHs8H++7fFdiD0axb8IDMV5jx0ozbs8VNEn9xoWes8clCTw2vbxG/
-         z+tV7T1x9DvAzM5CWvhVziymti+VWAPqfl9enUrSQPyqQQ6VUYa0eIBPo01n1l3OF0Az
-         XLgw==
-X-Gm-Message-State: AOAM5331PMPhAjmoCUI88QacnGEnvcpHNskuEvcKbeFZm3zqqwNTJ+H3
-        ELJz/Z/dESL6gtRoKEpC7wGhmQ==
-X-Google-Smtp-Source: ABdhPJyrWCbmLd6m6LZkBqztyMtmYuEkSUadLFAGKZEzpCnv3LiUC60yUSxB/ZOUMh6W4+tCPoXEpA==
-X-Received: by 2002:a5d:65cd:: with SMTP id e13mr18265629wrw.213.1593432261778;
-        Mon, 29 Jun 2020 05:04:21 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id d81sm25274347wmc.0.2020.06.29.05.04.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 05:04:21 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 07/10] net: phy: don't abuse devres in devm_mdiobus_register()
-Date:   Mon, 29 Jun 2020 14:03:43 +0200
-Message-Id: <20200629120346.4382-8-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200629120346.4382-1-brgl@bgdev.pl>
-References: <20200629120346.4382-1-brgl@bgdev.pl>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 29 Jun 2020 17:00:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52960 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387950AbgF2VAW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 29 Jun 2020 17:00:22 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.195])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78E9B20720;
+        Mon, 29 Jun 2020 21:00:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593464421;
+        bh=Lh3dzYXSrs+vBBw5yfOr7+OhUwSsd0+MyH/UH8tKOb0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=kupGB0hbbgG6pMG1gVN5xphVJj+12dZ1xKSPlkX2A8B6AmtuglmspwxWi1U8a7rmS
+         79mcXRtRF3gL6cFZeOQ88ZKlMAQRyq8JphSQAhpOrzMsGg4cIhhTiJ1cvYqesf+Pql
+         PN7vnxw4+JHTNM1V+rrxLS8broP9JfjrOo74VD3Q=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Sylwester Nawrocki <snawrocki@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Pankaj Dubey <pankaj.dubey@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v2] ARM: dts: exynos: Fix missing empty reg/ranges property regulators on Trats
+Date:   Mon, 29 Jun 2020 22:59:48 +0200
+Message-Id: <20200629205948.32250-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Remove the regulators node entirely because its children do not have any
+unit addresses.  This fixes DTC warning:
 
-We currently have two managed helpers for mdiobus - devm_mdiobus_alloc()
-and devm_mdiobus_register(). The idea behind devres is that the release
-callback releases whatever resource the devm function allocates. In the
-mdiobus case however there's no devres associated with the device by
-devm_mdiobus_register(). Instead the release callback for
-devm_mdiobus_alloc(): _devm_mdiobus_free() unregisters the device if
-it is marked as managed.
+    Warning (simple_bus_reg): /regulators/regulator-0: missing or empty reg/ranges property
 
-This all seems wrong. The managed structure shouldn't need to know or
-care about whether it's managed or not - and this is the case now for
-struct mii_bus. The devres wrapper should be opaque to the managed
-resource.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-This changeset makes devm_mdiobus_alloc() and devm_mdiobus_register()
-conform to common devres standards: devm_mdiobus_alloc() allocates a
-devres structure and registers a callback that will call mdiobus_free().
-__devm_mdiobus_register() allocated another devres and registers a
-callback that will unregister the bus.
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- .../driver-api/driver-model/devres.rst        |  1 -
- drivers/net/ethernet/realtek/r8169_main.c     |  2 +-
- drivers/net/phy/mdio_bus.c                    | 73 ----------------
- drivers/net/phy/mdio_devres.c                 | 83 +++++++++++++++++--
- include/linux/phy.h                           | 10 +--
- 5 files changed, 82 insertions(+), 87 deletions(-)
 
-diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
-index 5463fc8a60c1..e0333d66a7f4 100644
---- a/Documentation/driver-api/driver-model/devres.rst
-+++ b/Documentation/driver-api/driver-model/devres.rst
-@@ -342,7 +342,6 @@ LED
- MDIO
-   devm_mdiobus_alloc()
-   devm_mdiobus_alloc_size()
--  devm_mdiobus_free()
-   devm_mdiobus_register()
+Changes since v1:
+1. Remove the node, not only compatible, as pointed out by Sylwester.
+---
+ arch/arm/boot/dts/exynos4210-trats.dts | 98 ++++++++++++--------------
+ 1 file changed, 47 insertions(+), 51 deletions(-)
+
+diff --git a/arch/arm/boot/dts/exynos4210-trats.dts b/arch/arm/boot/dts/exynos4210-trats.dts
+index 3d791db6095c..5cc96f04a4fa 100644
+--- a/arch/arm/boot/dts/exynos4210-trats.dts
++++ b/arch/arm/boot/dts/exynos4210-trats.dts
+@@ -30,62 +30,58 @@
+ 		stdout-path = "serial2:115200n8";
+ 	};
  
- MEM
-diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
-index b660ddbe4025..bfb68a1b1958 100644
---- a/drivers/net/ethernet/realtek/r8169_main.c
-+++ b/drivers/net/ethernet/realtek/r8169_main.c
-@@ -5103,7 +5103,7 @@ static int r8169_mdio_register(struct rtl8169_private *tp)
- 	new_bus->read = r8169_mdio_read_reg;
- 	new_bus->write = r8169_mdio_write_reg;
- 
--	ret = devm_mdiobus_register(new_bus);
-+	ret = devm_mdiobus_register(&pdev->dev, new_bus);
- 	if (ret)
- 		return ret;
- 
-diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
-index 6ceee82b2839..42192991f55d 100644
---- a/drivers/net/phy/mdio_bus.c
-+++ b/drivers/net/phy/mdio_bus.c
-@@ -165,79 +165,6 @@ struct mii_bus *mdiobus_alloc_size(size_t size)
- }
- EXPORT_SYMBOL(mdiobus_alloc_size);
- 
--static void _devm_mdiobus_free(struct device *dev, void *res)
--{
--	struct mii_bus *bus = *(struct mii_bus **)res;
+-	regulators {
+-		compatible = "simple-bus";
 -
--	if (bus->is_managed_registered && bus->state == MDIOBUS_REGISTERED)
--		mdiobus_unregister(bus);
--
--	mdiobus_free(bus);
--}
--
--static int devm_mdiobus_match(struct device *dev, void *res, void *data)
--{
--	struct mii_bus **r = res;
--
--	if (WARN_ON(!r || !*r))
--		return 0;
--
--	return *r == data;
--}
--
--/**
-- * devm_mdiobus_alloc_size - Resource-managed mdiobus_alloc_size()
-- * @dev:		Device to allocate mii_bus for
-- * @sizeof_priv:	Space to allocate for private structure.
-- *
-- * Managed mdiobus_alloc_size. mii_bus allocated with this function is
-- * automatically freed on driver detach.
-- *
-- * If an mii_bus allocated with this function needs to be freed separately,
-- * devm_mdiobus_free() must be used.
-- *
-- * RETURNS:
-- * Pointer to allocated mii_bus on success, NULL on failure.
-- */
--struct mii_bus *devm_mdiobus_alloc_size(struct device *dev, int sizeof_priv)
--{
--	struct mii_bus **ptr, *bus;
--
--	ptr = devres_alloc(_devm_mdiobus_free, sizeof(*ptr), GFP_KERNEL);
--	if (!ptr)
--		return NULL;
--
--	/* use raw alloc_dr for kmalloc caller tracing */
--	bus = mdiobus_alloc_size(sizeof_priv);
--	if (bus) {
--		*ptr = bus;
--		devres_add(dev, ptr);
--		bus->is_managed = 1;
--	} else {
--		devres_free(ptr);
--	}
--
--	return bus;
--}
--EXPORT_SYMBOL_GPL(devm_mdiobus_alloc_size);
--
--/**
-- * devm_mdiobus_free - Resource-managed mdiobus_free()
-- * @dev:		Device this mii_bus belongs to
-- * @bus:		the mii_bus associated with the device
-- *
-- * Free mii_bus allocated with devm_mdiobus_alloc_size().
-- */
--void devm_mdiobus_free(struct device *dev, struct mii_bus *bus)
--{
--	int rc;
--
--	rc = devres_release(dev, _devm_mdiobus_free,
--			    devm_mdiobus_match, bus);
--	WARN_ON(rc);
--}
--EXPORT_SYMBOL_GPL(devm_mdiobus_free);
--
- /**
-  * mdiobus_release - mii_bus device release callback
-  * @d: the target struct device that contains the mii_bus
-diff --git a/drivers/net/phy/mdio_devres.c b/drivers/net/phy/mdio_devres.c
-index 3ee887733d4a..0b9bd9a61378 100644
---- a/drivers/net/phy/mdio_devres.c
-+++ b/drivers/net/phy/mdio_devres.c
-@@ -1,25 +1,96 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
+-		vemmc_reg: regulator-0 {
+-			compatible = "regulator-fixed";
+-			regulator-name = "VMEM_VDD_2.8V";
+-			regulator-min-microvolt = <2800000>;
+-			regulator-max-microvolt = <2800000>;
+-			gpio = <&gpk0 2 GPIO_ACTIVE_HIGH>;
+-			enable-active-high;
+-		};
++	vemmc_reg: regulator-0 {
++		compatible = "regulator-fixed";
++		regulator-name = "VMEM_VDD_2.8V";
++		regulator-min-microvolt = <2800000>;
++		regulator-max-microvolt = <2800000>;
++		gpio = <&gpk0 2 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
  
-+#include <linux/device.h>
- #include <linux/phy.h>
-+#include <linux/stddef.h>
-+
-+struct mdiobus_devres {
-+	struct mii_bus *mii;
-+};
-+
-+static void devm_mdiobus_free(struct device *dev, void *this)
-+{
-+	struct mdiobus_devres *dr = this;
-+
-+	mdiobus_free(dr->mii);
-+}
-+
-+/**
-+ * devm_mdiobus_alloc_size - Resource-managed mdiobus_alloc_size()
-+ * @dev:		Device to allocate mii_bus for
-+ * @sizeof_priv:	Space to allocate for private structure
-+ *
-+ * Managed mdiobus_alloc_size. mii_bus allocated with this function is
-+ * automatically freed on driver detach.
-+ *
-+ * RETURNS:
-+ * Pointer to allocated mii_bus on success, NULL on out-of-memory error.
-+ */
-+struct mii_bus *devm_mdiobus_alloc_size(struct device *dev, int sizeof_priv)
-+{
-+	struct mdiobus_devres *dr;
-+
-+	dr = devres_alloc(devm_mdiobus_free, sizeof(*dr), GFP_KERNEL);
-+	if (!dr)
-+		return NULL;
-+
-+	dr->mii = mdiobus_alloc_size(sizeof_priv);
-+	if (!dr->mii) {
-+		devres_free(dr);
-+		return NULL;
-+	}
-+
-+	devres_add(dev, dr);
-+	return dr->mii;
-+}
-+EXPORT_SYMBOL(devm_mdiobus_alloc_size);
-+
-+static void devm_mdiobus_unregister(struct device *dev, void *this)
-+{
-+	struct mdiobus_devres *dr = this;
-+
-+	mdiobus_unregister(dr->mii);
-+}
-+
-+static int mdiobus_devres_match(struct device *dev,
-+				void *this, void *match_data)
-+{
-+	struct mdiobus_devres *res = this;
-+	struct mii_bus *mii = match_data;
-+
-+	return mii == res->mii;
-+}
+-		tsp_reg: regulator-1 {
+-			compatible = "regulator-fixed";
+-			regulator-name = "TSP_FIXED_VOLTAGES";
+-			regulator-min-microvolt = <2800000>;
+-			regulator-max-microvolt = <2800000>;
+-			gpio = <&gpl0 3 GPIO_ACTIVE_HIGH>;
+-			enable-active-high;
+-		};
++	tsp_reg: regulator-1 {
++		compatible = "regulator-fixed";
++		regulator-name = "TSP_FIXED_VOLTAGES";
++		regulator-min-microvolt = <2800000>;
++		regulator-max-microvolt = <2800000>;
++		gpio = <&gpl0 3 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
  
- /**
-  * __devm_mdiobus_register - Resource-managed variant of mdiobus_register()
-+ * @dev:	Device to register mii_bus for
-  * @bus:	MII bus structure to register
-  * @owner:	Owning module
-  *
-  * Returns 0 on success, negative error number on failure.
-  */
--int __devm_mdiobus_register(struct mii_bus *bus, struct module *owner)
-+int __devm_mdiobus_register(struct device *dev, struct mii_bus *bus,
-+			    struct module *owner)
- {
-+	struct mdiobus_devres *dr;
- 	int ret;
+-		cam_af_28v_reg: regulator-2 {
+-			compatible = "regulator-fixed";
+-			regulator-name = "8M_AF_2.8V_EN";
+-			regulator-min-microvolt = <2800000>;
+-			regulator-max-microvolt = <2800000>;
+-			gpio = <&gpk1 1 GPIO_ACTIVE_HIGH>;
+-			enable-active-high;
+-		};
++	cam_af_28v_reg: regulator-2 {
++		compatible = "regulator-fixed";
++		regulator-name = "8M_AF_2.8V_EN";
++		regulator-min-microvolt = <2800000>;
++		regulator-max-microvolt = <2800000>;
++		gpio = <&gpk1 1 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
  
--	if (!bus->is_managed)
--		return -EPERM;
-+	if (WARN_ON(!devres_find(dev, devm_mdiobus_free,
-+				 mdiobus_devres_match, bus)))
-+		return -EINVAL;
-+
-+	dr = devres_alloc(devm_mdiobus_unregister, sizeof(*dr), GFP_KERNEL);
-+	if (!dr)
-+		return -ENOMEM;
+-		cam_io_en_reg: regulator-3 {
+-			compatible = "regulator-fixed";
+-			regulator-name = "CAM_IO_EN";
+-			regulator-min-microvolt = <2800000>;
+-			regulator-max-microvolt = <2800000>;
+-			gpio = <&gpe2 1 GPIO_ACTIVE_HIGH>;
+-			enable-active-high;
+-		};
++	cam_io_en_reg: regulator-3 {
++		compatible = "regulator-fixed";
++		regulator-name = "CAM_IO_EN";
++		regulator-min-microvolt = <2800000>;
++		regulator-max-microvolt = <2800000>;
++		gpio = <&gpe2 1 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
  
- 	ret = __mdiobus_register(bus, owner);
--	if (!ret)
--		bus->is_managed_registered = 1;
-+	if (ret) {
-+		devres_free(dr);
-+		return ret;
-+	}
+-		cam_io_12v_reg: regulator-4 {
+-			compatible = "regulator-fixed";
+-			regulator-name = "8M_1.2V_EN";
+-			regulator-min-microvolt = <1200000>;
+-			regulator-max-microvolt = <1200000>;
+-			gpio = <&gpe2 5 GPIO_ACTIVE_HIGH>;
+-			enable-active-high;
+-		};
++	cam_io_12v_reg: regulator-4 {
++		compatible = "regulator-fixed";
++		regulator-name = "8M_1.2V_EN";
++		regulator-min-microvolt = <1200000>;
++		regulator-max-microvolt = <1200000>;
++		gpio = <&gpe2 5 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
  
--	return ret;
-+	dr->mii = bus;
-+	devres_add(dev, dr);
-+	return 0;
- }
- EXPORT_SYMBOL(__devm_mdiobus_register);
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 4935867f024b..3695e9d6b3f6 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -260,9 +260,6 @@ struct mii_bus {
- 	int (*reset)(struct mii_bus *bus);
- 	struct mdio_bus_stats stats[PHY_MAX_ADDR];
+-		vt_core_15v_reg: regulator-5 {
+-			compatible = "regulator-fixed";
+-			regulator-name = "VT_CORE_1.5V";
+-			regulator-min-microvolt = <1500000>;
+-			regulator-max-microvolt = <1500000>;
+-			gpio = <&gpe2 2 GPIO_ACTIVE_HIGH>;
+-			enable-active-high;
+-		};
++	vt_core_15v_reg: regulator-5 {
++		compatible = "regulator-fixed";
++		regulator-name = "VT_CORE_1.5V";
++		regulator-min-microvolt = <1500000>;
++		regulator-max-microvolt = <1500000>;
++		gpio = <&gpe2 2 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
+ 	};
  
--	unsigned int is_managed:1;	/* is device-managed */
--	unsigned int is_managed_registered:1;
--
- 	/*
- 	 * A lock to ensure that only one thing can read/write
- 	 * the MDIO bus at a time
-@@ -313,9 +310,11 @@ static inline struct mii_bus *mdiobus_alloc(void)
- }
- 
- int __mdiobus_register(struct mii_bus *bus, struct module *owner);
--int __devm_mdiobus_register(struct mii_bus *bus, struct module *owner);
-+int __devm_mdiobus_register(struct device *dev, struct mii_bus *bus,
-+			    struct module *owner);
- #define mdiobus_register(bus) __mdiobus_register(bus, THIS_MODULE)
--#define devm_mdiobus_register(bus) __devm_mdiobus_register(bus, THIS_MODULE)
-+#define devm_mdiobus_register(dev, bus) \
-+		__devm_mdiobus_register(dev, bus, THIS_MODULE)
- 
- void mdiobus_unregister(struct mii_bus *bus);
- void mdiobus_free(struct mii_bus *bus);
-@@ -326,7 +325,6 @@ static inline struct mii_bus *devm_mdiobus_alloc(struct device *dev)
- }
- 
- struct mii_bus *mdio_find_bus(const char *mdio_name);
--void devm_mdiobus_free(struct device *dev, struct mii_bus *bus);
- struct phy_device *mdiobus_scan(struct mii_bus *bus, int addr);
- 
- #define PHY_INTERRUPT_DISABLED	false
+ 	gpio-keys {
 -- 
-2.26.1
+2.17.1
 
