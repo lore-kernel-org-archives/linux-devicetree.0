@@ -2,211 +2,377 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B076EC433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85BC6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 878A4206F1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:13:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="O6TA/khj"
+	by mail.kernel.org (Postfix) with ESMTP id 6CF55206A5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:17:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731248AbgF2TNC (ORCPT
+        id S1730996AbgF2TRH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:13:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43376 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731222AbgF2TM7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:12:59 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 255B3C00875B
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 01:47:55 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id f7so12673990wrw.1
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 01:47:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EffOshP13YGIgJwXnCvVvNFs3Gt+n5ALuno/hX+Xibk=;
-        b=O6TA/khj2oAd50wICvTYvI8rNtrjotOqN8tzE3VwLns4q49M36UxPhle5ZI+whRmsb
-         e/KvJVk0YKIz25aWGKJu7NgL+4s+h4h7TGCeStNrjO9+ECce1sJWpllWWrtqDkYps6me
-         gNFHnP6kRuzn4vlzSPeA6N8Dcabbfrejo2pLlBKAy5Oy1Z9sgcofHZv60bXtC2d6j/4v
-         LNlkuaBR9uyBGK+z4xLYq8PItyU+TYf6QmlWFrD4Nmp1JCMJSFM0awNfgTE8kH4ufECr
-         or+PCddx/lCrdI+309TTG03QGtBbE1vB5OhgdfRES9E0qx2aez7HFRjgomo51QH5Mizs
-         GQsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=EffOshP13YGIgJwXnCvVvNFs3Gt+n5ALuno/hX+Xibk=;
-        b=pCdM3HngbFWrMg8r7O8OnlTbJmJGusZ8iDvQZck05r2E5h5ZkRysEv76PwuNjHoaiO
-         nia8yj/C+gTD++I50c1W5z4LRzseQu7H2HK81W8mjlddkMb67u0JzPOHRZ0PyFI7K+LM
-         9mk/yLWqxHXg0kZPEKheZOyOkCZocQqhd+nEQn8mpd+poL9gLnAnUUbGyj3eprjDtYII
-         7iqN5lzgT75CfxC+kGWq4ZqCV20MAYpE9ZuXYE6EW9b+IG+JJoK9xtvFYr47uxbDGvw8
-         EhDwh1QL20CSL1vGI5/gXaaFk26Z/K+aQUpm+H/vVvjm//7kmKcgZh4+hwYQcSlIuR3y
-         yfQA==
-X-Gm-Message-State: AOAM533gk5rcBJrQR0Ai+c1bfLAekF8ZXOv00XW/IkXc4ibg7gm9FY3w
-        If6KskJOJ4DMs3P+TsKXQMR7fw==
-X-Google-Smtp-Source: ABdhPJyKCEz4lXI73wHLHAlG3HZk35S0elYYf8BSZHGCOmLggLDix7TloGxvh3UbU/inFApdle93DA==
-X-Received: by 2002:adf:e811:: with SMTP id o17mr17081860wrm.53.1593420473627;
-        Mon, 29 Jun 2020 01:47:53 -0700 (PDT)
-Received: from ?IPv6:2a01:e35:2ec0:82b0:9902:c1f0:76c7:9dbc? ([2a01:e35:2ec0:82b0:9902:c1f0:76c7:9dbc])
-        by smtp.gmail.com with ESMTPSA id s15sm8329418wmj.41.2020.06.29.01.47.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 01:47:52 -0700 (PDT)
-Subject: Re: [PATCH v9 00/11] Genericize DW MIPI DSI bridge and add i.MX 6
- driver
-To:     Adrian Ratiu <adrian.ratiu@collabora.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Yannick FERTRE <yannick.fertre@st.com>,
-        Andrzej Hajda <a.hajda@samsung.com>, linux-imx@nxp.com,
-        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com
-References: <20200609174959.955926-1-adrian.ratiu@collabora.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <c6f10db1-7f56-a156-36a1-125e764c8c1a@baylibre.com>
-Date:   Mon, 29 Jun 2020 10:47:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200609174959.955926-1-adrian.ratiu@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 29 Jun 2020 15:17:07 -0400
+Received: from mga01.intel.com ([192.55.52.88]:63701 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731798AbgF2TRA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:17:00 -0400
+IronPort-SDR: zQVslvxTdUJYmnYaCQxQykC8p0vqjS7YNVyM89ASyWn/EjmwOMcb9QKBeHGZqkvJqLKh+rDWu3
+ IHTOxb5iJr5w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="163944968"
+X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
+   d="scan'208";a="163944968"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 02:04:04 -0700
+IronPort-SDR: efGfS+925yJcyydLz+hA38uSECBwuq0VTi09MpkwYmNzyQB8Hi5E4S5E6idD+Kk58G5TjNEWpo
+ 96wjqlfNb0qw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
+   d="scan'208";a="424750634"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by orsmga004.jf.intel.com with ESMTP; 29 Jun 2020 02:04:01 -0700
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
+Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v3 2/2] Add PWM fan controller driver for LGM SoC
+Date:   Mon, 29 Jun 2020 17:03:47 +0800
+Message-Id: <df22a642083474e71f9f8274c033a6ef9757af5f.1593420979.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
+References: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
+In-Reply-To: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
+References: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Adrian,
+Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
+This PWM controller does not have any other consumer, it is a
+dedicated PWM controller for fan attached to the system. Add
+driver for this PWM fan controller.
 
-On 09/06/2020 19:49, Adrian Ratiu wrote:
-> [Re-submitting to cc dri-devel, sorry about the noise]
-> 
-> Hello all,
-> 
-> v9 cleanly applies on top of latest next-20200609 tree.
-> 
-> v9 does not depend on other patches as the last binding doc has been merged.
-> 
-> All feedback up to this point has been addressed. Specific details in
-> individual patch changelogs.
-> 
-> The biggest changes are the deprecation of the Synopsys DW bridge bind()
-> API in favor of of_drm_find_bridge() and .attach callbacks, the addition
-> of a TODO entry which outlines future planned bridge driver refactorings
-> and a reordering of some i.MX 6 patches to appease checkpatch.
-> 
-> The idea behind the TODO is to get this regmap and i.MX 6 driver merged
-> and then do the rest of refactorings in-tree because it's easier and the
-> refactorings themselves are out-of-scope of this series which is adding
-> i.MX 6 support and is quite big already, so please, if there are more
-> refactoring ideas, let's add them to the TODO doc. :) I intend to tackle
-> those after this series is merged to avoid two complex inter-dependent
-> simultaneous series.
+Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+---
+ drivers/pwm/Kconfig         |   9 ++
+ drivers/pwm/Makefile        |   1 +
+ drivers/pwm/pwm-intel-lgm.c | 265 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 275 insertions(+)
+ create mode 100644 drivers/pwm/pwm-intel-lgm.c
 
-This has been around here for a long time and you seem to have addressed all
-the reviews.
-
-> 
-> As always more testing is welcome especially on Rockchip and STM SoCs.
-
-It has been tested on STM, but I'd like a feedback on RK platform before applying
-the bridge parts.
-
-Can the imx & stm patches be applied separately ?
-
-Neil
-
-> 
-> Big thank you to everyone who has contributed to this up to now,
-> Adrian
-> 
-> Adrian Ratiu (11):
->   drm: bridge: dw_mipi_dsi: add initial regmap infrastructure
->   drm: bridge: dw_mipi_dsi: abstract register access using reg_fields
->   drm: bridge: dw_mipi_dsi: add dsi v1.01 support
->   drm: bridge: dw_mipi_dsi: remove bind/unbind API
->   dt-bindings: display: add i.MX6 MIPI DSI host controller doc
->   ARM: dts: imx6qdl: add missing mipi dsi properties
->   drm: imx: Add i.MX 6 MIPI DSI host platform driver
->   drm: stm: dw-mipi-dsi: let the bridge handle the HW version check
->   drm: bridge: dw-mipi-dsi: split low power cfg register into fields
->   drm: bridge: dw-mipi-dsi: fix bad register field offsets
->   Documentation: gpu: todo: Add dw-mipi-dsi consolidation plan
-> 
->  .../display/imx/fsl,mipi-dsi-imx6.yaml        | 112 +++
->  Documentation/gpu/todo.rst                    |  25 +
->  arch/arm/boot/dts/imx6qdl.dtsi                |   8 +
->  drivers/gpu/drm/bridge/synopsys/Kconfig       |   1 +
->  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 713 ++++++++++++------
->  drivers/gpu/drm/imx/Kconfig                   |   8 +
->  drivers/gpu/drm/imx/Makefile                  |   1 +
->  drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c        | 399 ++++++++++
->  .../gpu/drm/rockchip/dw-mipi-dsi-rockchip.c   |   7 +-
->  drivers/gpu/drm/stm/dw_mipi_dsi-stm.c         |  16 +-
->  10 files changed, 1059 insertions(+), 231 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
->  create mode 100644 drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c
-> 
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index cb8d739067d2..a3303e22d5fa 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -232,6 +232,15 @@ config PWM_IMX_TPM
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called pwm-imx-tpm.
+ 
++config PWM_INTEL_LGM
++	tristate "Intel LGM PWM support"
++	depends on X86 || COMPILE_TEST
++	help
++	  Generic PWM fan controller driver for LGM SoC.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called pwm-intel-lgm.
++
+ config PWM_IQS620A
+ 	tristate "Azoteq IQS620A PWM support"
+ 	depends on MFD_IQS62X || COMPILE_TEST
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index a59c710e98c7..db154a6b4f51 100644
+--- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -20,6 +20,7 @@ obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
+ obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
+ obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
+ obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
++obj-$(CONFIG_PWM_INTEL_LGM)	+= pwm-intel-lgm.o
+ obj-$(CONFIG_PWM_IQS620A)	+= pwm-iqs620a.o
+ obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
+ obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
+diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
+new file mode 100644
+index 000000000000..661fa7d9145d
+--- /dev/null
++++ b/drivers/pwm/pwm-intel-lgm.c
+@@ -0,0 +1,265 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020 Intel Corporation.
++ *
++ * Notes & Limitations:
++ * - The hardware supports fixed period which is dependent on 2/3 or 4
++ *   wire fan mode.
++ * - Supports normal polarity. Does not support changing polarity.
++ * - When PWM is disabled, output of PWM will become 0(inactive). It doesn't
++ *   keep track of running period.
++ * - When duty cycle is changed, PWM output may be a mix of previous setting
++ *   and new setting for the first period. From second period, the output is
++ *   based on new setting.
++ * - Supports 100% duty cycle.
++ * - It is a dedicated PWM fan controller. There are no other consumers for
++ *   this PWM controller.
++ */
++#include <linux/bitfield.h>
++#include <linux/clk.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/pwm.h>
++#include <linux/regmap.h>
++#include <linux/reset.h>
++
++#define PWM_FAN_CON0		0x0
++#define PWM_FAN_EN_EN		BIT(0)
++#define PWM_FAN_EN_DIS		0x0
++#define PWM_FAN_EN_MSK		BIT(0)
++#define PWM_FAN_MODE_2WIRE	0x0
++#define PWM_FAN_MODE_4WIRE	0x1
++#define PWM_FAN_MODE_MSK	BIT(1)
++#define PWM_FAN_DC_MSK		GENMASK(23, 16)
++
++#define PWM_FAN_CON1		0x4
++#define PWM_FAN_MAX_RPM_MSK	GENMASK(15, 0)
++
++#define MAX_RPM			(BIT(16) - 1)
++#define DFAULT_RPM		4000
++#define MAX_DUTY_CYCLE		(BIT(8) - 1)
++
++#define DC_BITS			8
++
++#define PERIOD_2WIRE_NSECS	40000000
++#define PERIOD_4WIRE_NSECS	40000
++
++#define LGM_PWM_DIV_ROUND_DOWN(n, d) (((n) + ((d) / 2) - 1) / (d))
++
++struct lgm_pwm_chip {
++	struct pwm_chip chip;
++	struct regmap *regmap;
++	struct clk *clk;
++	struct reset_control *rst;
++	u32 period;
++};
++
++static inline struct lgm_pwm_chip *to_lgm_pwm_chip(struct pwm_chip *chip)
++{
++	return container_of(chip, struct lgm_pwm_chip, chip);
++}
++
++static int lgm_pwm_enable(struct pwm_chip *chip, bool enable)
++{
++	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
++	struct regmap *regmap = pc->regmap;
++
++	if (enable)
++		regmap_update_bits(regmap, PWM_FAN_CON0,
++				   PWM_FAN_EN_MSK, PWM_FAN_EN_EN);
++	else
++		regmap_update_bits(regmap, PWM_FAN_CON0,
++			   	   PWM_FAN_EN_MSK, PWM_FAN_EN_DIS);
++
++	return 0;
++}
++
++static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
++			 const struct pwm_state *state)
++{
++	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
++	u32 duty_cycle, val;
++	unsigned int period;
++
++	period = min_t(unsigned int, state->period, pc->period);
++
++	if (state->polarity != PWM_POLARITY_NORMAL ||
++	    period < pc->period)
++		return -EINVAL;
++
++	duty_cycle = min_t(u32, state->duty_cycle, period);
++
++	/* reg_value = duty_ns * MAX_REG_VAL(0xff) / period_ns */
++	val = LGM_PWM_DIV_ROUND_DOWN(duty_cycle << DC_BITS, period);
++	val = min_t(u32, val, MAX_DUTY_CYCLE);
++
++	regmap_update_bits(pc->regmap, PWM_FAN_CON0, PWM_FAN_DC_MSK,
++			   FIELD_PREP(PWM_FAN_DC_MSK, val));
++
++	if (state->enabled != regmap_test_bits(pc->regmap, PWM_FAN_CON0,
++					       PWM_FAN_EN_EN))
++		lgm_pwm_enable(chip, state->enabled);
++
++	return 0;
++}
++
++static void lgm_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++			      struct pwm_state *state)
++{
++	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
++	u32 duty, val;
++
++	state->enabled = regmap_test_bits(pc->regmap, PWM_FAN_CON0,
++					  PWM_FAN_EN_EN);
++	state->polarity = PWM_POLARITY_NORMAL;
++	state->period = pc->period; /* fixed period */
++
++	regmap_read(pc->regmap, PWM_FAN_CON0, &val);
++	duty = FIELD_GET(PWM_FAN_DC_MSK, val);
++	state->duty_cycle = duty * pc->period >> DC_BITS;
++	state->duty_cycle = roundup_pow_of_two(state->duty_cycle);
++}
++
++static const struct pwm_ops lgm_pwm_ops = {
++	.get_state = lgm_pwm_get_state,
++	.apply = lgm_pwm_apply,
++	.owner = THIS_MODULE,
++};
++
++static void lgm_pwm_init(struct lgm_pwm_chip *pc)
++{
++	struct device *dev = pc->chip.dev;
++	struct regmap *regmap = pc->regmap;
++	u32 max_rpm, fan_wire, con0_val, con0_mask;
++
++	if (device_property_read_u32(dev, "intel,fan-wire", &fan_wire))
++		fan_wire = 2; /* default is 2 wire mode */
++
++	con0_mask = PWM_FAN_MODE_MSK;
++
++	switch (fan_wire) {
++	case 4:
++		con0_val = FIELD_PREP(PWM_FAN_MODE_MSK, PWM_FAN_MODE_4WIRE);
++		pc->period = PERIOD_4WIRE_NSECS;
++		break;
++	default:
++		/* default is 2wire mode */
++		con0_val = FIELD_PREP(PWM_FAN_MODE_MSK, PWM_FAN_MODE_2WIRE);
++		pc->period = PERIOD_2WIRE_NSECS;
++		break;
++	}
++
++	if (device_property_read_u32(dev, "intel,max-rpm", &max_rpm))
++		max_rpm = DFAULT_RPM;
++
++	max_rpm = min_t(u32, max_rpm, MAX_RPM);
++	if (max_rpm == 0)
++		max_rpm = DFAULT_RPM;
++
++	regmap_update_bits(regmap, PWM_FAN_CON1, PWM_FAN_MAX_RPM_MSK, max_rpm);
++	regmap_update_bits(regmap, PWM_FAN_CON0, con0_mask, con0_val);
++}
++
++static const struct regmap_config lgm_pwm_regmap_config = {
++	.reg_bits = 32,
++	.reg_stride = 4,
++	.val_bits = 32,
++};
++
++static int lgm_pwm_probe(struct platform_device *pdev)
++{
++	struct lgm_pwm_chip *pc;
++	struct device *dev = &pdev->dev;
++	void __iomem *io_base;
++	int ret;
++
++	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
++	if (!pc)
++		return -ENOMEM;
++
++	io_base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(io_base))
++		return PTR_ERR(io_base);
++
++	pc->regmap = devm_regmap_init_mmio(dev, io_base, &lgm_pwm_regmap_config);
++	if (IS_ERR(pc->regmap)) {
++		ret = PTR_ERR(pc->regmap);
++		dev_err(dev, "failed to init register map: %pe\n", pc->regmap);
++		return ret;
++	}
++
++	pc->clk = devm_clk_get(dev, NULL);
++	if (IS_ERR(pc->clk)) {
++		ret = PTR_ERR(pc->clk);
++		dev_err(dev, "failed to get clock: %pe\n", pc->clk);
++		return ret;
++	}
++
++	pc->rst = devm_reset_control_get_exclusive(dev, NULL);
++	if (IS_ERR(pc->rst)) {
++		ret = PTR_ERR(pc->rst);
++		dev_err(dev, "failed to get reset control: %pe\n", pc->rst);
++		return ret;
++	}
++
++	ret = reset_control_deassert(pc->rst);
++	if (ret) {
++		dev_err(dev, "cannot deassert reset control: %pe\n",
++			ERR_PTR(ret));
++		return ret;
++	}
++
++	ret = clk_prepare_enable(pc->clk);
++	if (ret) {
++		dev_err(dev, "failed to enable clock\n");
++		return ret;
++	}
++
++	pc->chip.dev = dev;
++	pc->chip.ops = &lgm_pwm_ops;
++	pc->chip.npwm = 1;
++
++	lgm_pwm_init(pc);
++
++	ret = pwmchip_add(&pc->chip);
++	if (ret < 0) {
++		dev_err(dev, "failed to add PWM chip: %pe\n", ERR_PTR(ret));
++		clk_disable_unprepare(pc->clk);
++		reset_control_assert(pc->rst);
++		return ret;
++	}
++
++	platform_set_drvdata(pdev, pc);
++	return 0;
++}
++
++static int lgm_pwm_remove(struct platform_device *pdev)
++{
++	struct lgm_pwm_chip *pc = platform_get_drvdata(pdev);
++	int ret;
++
++	ret = pwmchip_remove(&pc->chip);
++	if (ret < 0)
++		return ret;
++
++	clk_disable_unprepare(pc->clk);
++	reset_control_assert(pc->rst);
++
++	return 0;
++}
++
++static const struct of_device_id lgm_pwm_of_match[] = {
++	{ .compatible = "intel,lgm-pwm" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, lgm_pwm_of_match);
++
++static struct platform_driver lgm_pwm_driver = {
++	.driver = {
++		.name = "intel-pwm",
++		.of_match_table = lgm_pwm_of_match,
++	},
++	.probe = lgm_pwm_probe,
++	.remove = lgm_pwm_remove,
++};
++module_platform_driver(lgm_pwm_driver);
+-- 
+2.11.0
 
