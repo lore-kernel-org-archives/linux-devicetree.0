@@ -2,86 +2,76 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0326EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8A7C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAB672067D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:34:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459255;
-	bh=Qg01wBxePLOsA49sRw8sCHtBiCZMuG8bJXoshpWkoeQ=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=v337I5NlhEid3WgPr3FAfLkbyQE6LCrpbt0F5nnBHqev/UDXBHcYmLKfZBGowYvA+
-	 mb+fo/TuxK7CZBBSKm6WTEC5NuCjHFQmSlalcSz+QbcJ3rGbfObaozFgKgEToumSvM
-	 H3tHgiOerDu04ZoUHbFlkdfjQuJpqXc2gPbFxoWk=
+	by mail.kernel.org (Postfix) with ESMTP id 26984206A1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:34:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729810AbgF2TeO (ORCPT
+        id S1730540AbgF2Te5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:34:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42790 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:34:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:41218 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733191AbgF2Tdr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:33:47 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.195])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAD0620702;
-        Mon, 29 Jun 2020 19:33:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593459227;
-        bh=Qg01wBxePLOsA49sRw8sCHtBiCZMuG8bJXoshpWkoeQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=qDvFpcrHO2Wdrze8rG0x3E2k2AaIKn7UF6xZ0Sw4Pzh+wWRe4iobuBvnq5X/JRKqa
-         +sxYnMOogg7RXJO5cGTO7MmW+eT7D4C2uFHF5sxTswBUROj3MkraoV8bgyMpM4subd
-         Dke/mIxIs886657LdCx84Wubtq5cUhPPD1Mm2PWo=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: [PATCH 1/3] ARM: dts: exynos: Fix missing empty reg/ranges property regulators on Trats
-Date:   Mon, 29 Jun 2020 21:33:36 +0200
-Message-Id: <20200629193338.29540-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        id S1730794AbgF2Tez (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:34:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B92501045;
+        Mon, 29 Jun 2020 01:55:19 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 462B83F71E;
+        Mon, 29 Jun 2020 01:55:17 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 09:55:10 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 04/20] arm64: dts: arm: vexpress: Move fixed devices
+ out of bus node
+Message-ID: <20200629085510.GA9940@bogus>
+References: <20200513103016.130417-1-andre.przywara@arm.com>
+ <20200513103016.130417-5-andre.przywara@arm.com>
+ <20200528024810.GA232303@roeck-us.net>
+ <20200528025552.GA232631@roeck-us.net>
+ <20200627035753.GA63049@roeck-us.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200627035753.GA63049@roeck-us.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Remove the simple-bus compatible from a regulators node because its
-children do not have any unit addresses.  This fixes DTC warning:
+On Fri, Jun 26, 2020 at 08:57:53PM -0700, Guenter Roeck wrote:
+>
+> The problem reported below is still seen in the mainline kernel.
+>
+> > Here is my list of reverts on top of next-20200526:
+> >
+> > bdc8a817612b (HEAD -> master) Revert "arm64: dts: vexpress: Move fixed devices out of bus node"
+> > 9a1f85df9e1a Revert "arm64: dts: fvp/juno: Fix serial node names"
+> > 381e0bbe8c00 Revert "arm64: dts: fvp/juno: Fix bus node names"
+> > 63723f67bf4b Revert "arm64: dts: vexpress: Fix VExpress LED names"
+> >
+>
+> Maybe all those patches should be reverted if no fix is in sight ?
+>
 
-    Warning (simple_bus_reg): /regulators/regulator-0: missing or empty reg/ranges property
+I have pushed the fix to -next already more than 2 weeks ago and sent
+the pull request to Arm SoC team. I see it just landed in main over the
+weekend. Arm SoC team tend to wait until enough fixes get accumulate.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/exynos4210-trats.dts | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos4210-trats.dts b/arch/arm/boot/dts/exynos4210-trats.dts
-index 3d791db6095c..cec413ee4490 100644
---- a/arch/arm/boot/dts/exynos4210-trats.dts
-+++ b/arch/arm/boot/dts/exynos4210-trats.dts
-@@ -31,8 +31,6 @@
- 	};
- 
- 	regulators {
--		compatible = "simple-bus";
--
- 		vemmc_reg: regulator-0 {
- 			compatible = "regulator-fixed";
- 			regulator-name = "VMEM_VDD_2.8V";
--- 
-2.17.1
-
+--
+Regards,
+Sudeep
