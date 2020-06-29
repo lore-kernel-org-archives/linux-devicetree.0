@@ -2,89 +2,120 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB2DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 22:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B94CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 23:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65D4B20786
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 22:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14AE5206C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 23:01:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593471453;
-	bh=5MJQJznnXjAAqH2IsfbyAP07tOgYQTg/CbKEJ3PGrAM=;
+	s=default; t=1593471660;
+	bh=3wP5b80abw1cycqVOac5xzbE4D1IDX+gIomCXaIgWxg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e32SLOiC6m2Be1VDIUrC3mCINAhKFTXoudydqpeu7VT/SzuaQm/W+iuiJ9uJwjyP2
-	 1pLbocxVSlw3XqViTSuVdUieOkJ8UE4ioj73DowhdvoZjd1iQJOLtp92TNz+JShd/g
-	 RKoe/5ThNNEdi9RzgPcSSiF8lDh/OlqQ9dpenJJE=
+	b=RURQAnpuAt47L0A8iDoWgGFmGxX3WYzADo0R6VmuRmuhz2VhLCv9f/pf2DugeVFT2
+	 nfhyhqc8fLqVgF7w2BXvhKLyBA0d8XOPGI27qqemMip5OK1u0r6SnSdzqknjq+zCCg
+	 g++zHPZDAiLprKQvNNQ1VJivgbFbzf10PdRgUMrk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbgF2W5d (ORCPT
+        id S1728541AbgF2XBA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:57:33 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:44844 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726114AbgF2W5c (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 18:57:32 -0400
-Received: by mail-il1-f194.google.com with SMTP id w73so4148652ila.11;
-        Mon, 29 Jun 2020 15:57:31 -0700 (PDT)
+        Mon, 29 Jun 2020 19:01:00 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:36941 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728512AbgF2XA7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 19:00:59 -0400
+Received: by mail-il1-f195.google.com with SMTP id r12so8782522ilh.4
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 16:00:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=dp0rGNgZmkxwh7zp+29hFN6emNIwuOOMBeYyx3CVAik=;
-        b=LrwgjYpYvbOWJB9+8HJgaDN4FZLobwT8W8qETMZCZwe+v6/vpyTWe0jRMZ+Mkk6UB5
-         GhNyPON7o5a+J4sXSO1Ga9Ul8NJruHojkD8RmFpRaUARvIpxJ8gW9Apwfht8dGx2ypAe
-         /yxhT0zcBMWyk5FNAQ/OCo/qpz8ZElEJ+VXM3iNMfBG9zppohCiC4xtS55Y2FXx+3hwm
-         ydQSkQkfCY+uqCIyB+pRA1oKUdcmJCUrsTNEU8e61b7WwNsc8JTfq5hFlsr6Hv9hagv2
-         08NcjpFloYaJ1uhOltia6dCvfB3906q7Zw6WnIaaB05shBxfEVSAE+LJIgcsOl/g8MUK
-         kD9Q==
-X-Gm-Message-State: AOAM531jINgdmJhZQiZpqrc+TwZDraXx48dA6mhNxiDI1z2Pjgwuvddy
-        l+U/HOs2aKNeVC1c9TauyQ==
-X-Google-Smtp-Source: ABdhPJxwe1PjcRY+JXc5+U813s3C1AUlbXLLaCfBat76uCGtRfWqUuccOKkmM6ZqkcwcRMWCpSPskg==
-X-Received: by 2002:a92:760d:: with SMTP id r13mr16384260ilc.68.1593471451159;
-        Mon, 29 Jun 2020 15:57:31 -0700 (PDT)
+        bh=HDXW6Q7IXpGlVGwl/SyNPRj/AOT6XQANukWDkTboxtk=;
+        b=eJXv3u2Ho/uybI8dVh8aPyLfMRFKIw222/bp64SEqEUE6HevFZ/C7YkVweJyeOXj0K
+         NLH1YEdRcldNp+RAvXQf6Kp+QJKNcIU5+oDf7350RjgaT3rCLG9G3KI03aOnT4j1Sd5t
+         pWEQUFUVocUkuFkqn8zo2QCoYwLwPjaqsQv+dudtjQR5wCwofKagcz7UL2bTcKbqzTWG
+         BkcnbrMB44L/88bfRZnygo4Xuh9xpIO82p/Ne8ha0q9fGJN6SJ8vm3z+WENoZmA7p2Ld
+         F4rsvXfZYXVX8Ctq06Bs32tN5iN9djx43LRsoFl1GuBHpAY43QyatWSS6S7fmn9/00Vn
+         aG3g==
+X-Gm-Message-State: AOAM530wLjlnKaKTAYOxPEf8AYmrdIcfZ0o1n2XbtQcz9IgD/eQk3hha
+        rEly0ChqLtkzdJFY07jHeA==
+X-Google-Smtp-Source: ABdhPJzXkkFIvPP45YSjX5PdPoReaMw/SNOfn8/6F8zjpSyem/3bYxO4nHSPF1bbwwX2kqMox3e3DA==
+X-Received: by 2002:a92:4001:: with SMTP id n1mr18469020ila.269.1593471658159;
+        Mon, 29 Jun 2020 16:00:58 -0700 (PDT)
 Received: from xps15 ([64.188.179.255])
-        by smtp.gmail.com with ESMTPSA id p9sm498502ilc.78.2020.06.29.15.57.29
+        by smtp.gmail.com with ESMTPSA id y20sm601993ioc.30.2020.06.29.16.00.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 15:57:30 -0700 (PDT)
-Received: (nullmailer pid 3124287 invoked by uid 1000);
-        Mon, 29 Jun 2020 22:57:28 -0000
-Date:   Mon, 29 Jun 2020 16:57:28 -0600
+        Mon, 29 Jun 2020 16:00:57 -0700 (PDT)
+Received: (nullmailer pid 3129721 invoked by uid 1000);
+        Mon, 29 Jun 2020 23:00:54 -0000
+Date:   Mon, 29 Jun 2020 17:00:54 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-Cc:     linux-kernel@vger.kernel.org, sspatil@android.com, afd@ti.com,
-        dmurphy@ti.com, sre@kernel.org, pali@kernel.org,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v13 3/4] dt-bindings: power: Add the bindings for the
- bq2515x family of chargers.
-Message-ID: <20200629225728.GA3124127@bogus>
-References: <20200622191837.9326-1-r-rivera-matos@ti.com>
- <20200622191837.9326-4-r-rivera-matos@ti.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        linux-mtd@lists.infradead.org,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        masonccyang@mxic.com.tw, juliensu@mxic.com.tw,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v11 1/2] dt-bindings: mtd: Document nand-ecc-engine
+Message-ID: <20200629230054.GA3124427@bogus>
+References: <20200626071357.21421-1-miquel.raynal@bootlin.com>
+ <20200626071357.21421-2-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200622191837.9326-4-r-rivera-matos@ti.com>
+In-Reply-To: <20200626071357.21421-2-miquel.raynal@bootlin.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 22 Jun 2020 14:18:36 -0500, Ricardo Rivera-Matos wrote:
-> The BQ2515X family of devices are highly integrated battery management
-> ICs that integrate the most common functions for wearable devices
-> namely a charger, an output voltage rail, ADC for battery and system
-> monitoring, and a push-button controller.
+On Fri, Jun 26, 2020 at 09:13:56AM +0200, Miquel Raynal wrote:
+> This property is needed to precisely point to the hardware ECC engine
+> to use when there are several of them available. Here, hardware also
+> refers to the on-die possibility.
 > 
-> Datasheets:
-> http://www.ti.com/lit/ds/symlink/bq25150.pdf
-> http://www.ti.com/lit/ds/symlink/bq25155.pdf
-> 
-> Signed-off-by: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 > ---
->  .../bindings/power/supply/bq2515x.yaml        | 93 +++++++++++++++++++
->  1 file changed, 93 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/bq2515x.yaml
+>  .../devicetree/bindings/mtd/nand-controller.yaml     | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/mtd/nand-controller.yaml b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> index 4a0798247d2d..0969d2e6720b 100644
+> --- a/Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> +++ b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> @@ -56,6 +56,18 @@ patternProperties:
+>            (Linux will handle the calculations). soft_bch is deprecated
+>            and should be replaced by soft and nand-ecc-algo.
+>  
+> +      nand-ecc-engine:
+> +        maxItems: 1
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+maxItems is for arrays and this is a phandle. It needs a type reference.
+
+> +        description:
+
+You need '|' at the end if you want the formatting preserved.
+
+> +	  A phandle on the hardware ECC engine if any. There are
+
+A tab is not valid YAML. 
+
+> +          basically three possibilities:
+> +          1/ The ECC engine is part of the NAND controller, in this
+> +          case the phandle should reference the parent node.
+> +          2/ The ECC engine is part of the NAND part (on-die), in this
+> +          case the phandle should reference the node itself.
+> +          3/ The ECC engine is external, in this case the phandle should
+> +          reference the specific ECC engine node.
+> +
+>        nand-ecc-placement:
+>          allOf:
+>            - $ref: /schemas/types.yaml#/definitions/string
+> -- 
+> 2.20.1
+> 
