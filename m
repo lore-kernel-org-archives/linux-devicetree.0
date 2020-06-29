@@ -2,103 +2,91 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D22C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8106C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 22:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06E7A2065D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFF1B206E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 22:05:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468212;
-	bh=uhgx90ReH2lg8RDTwDIx75LdlJVQowsGqEzwBIC1kXc=;
+	s=default; t=1593468322;
+	bh=5DJkEWgfoZzrTC4GdUQL2z07RM8g3Zpqg0tTNNwHrOI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=clvZoSEk7MkHl5ZVWcsLFPjh+mSVM1SqzMjaB5xo+FmPf4wlhG89g7slAnYE4ougB
-	 uxliAT4whbrJ6iq3JMA1Y3NiLHHq5KUyVmet5TSq2kG1pfsZWViBX+QxIXEc4KKRZw
-	 AUVfunSig10DXO3oCtZGeUiOkkB3hefbh7bVFsyA=
+	b=0zis+5Jw37Ob9zlVIB2PzxwyrLkTC1SDVBCkQGZaLsMeCqZEm5UEZf1kdTvs+nFkY
+	 ahQq5//kgHDcJKtHomMP+zSbC5dNWJThP5j6Hpv93A39pWKCzO+Tj8FV3B6v0wVznK
+	 +TbuFxaOJdYws1tMYHgQqkcLsvvZOCr1abVBzSKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391487AbgF2WDa (ORCPT
+        id S2391869AbgF2WFI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:03:30 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38804 "EHLO
+        Mon, 29 Jun 2020 18:05:08 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:37067 "EHLO
         mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726235AbgF2WDa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 18:03:30 -0400
-Received: by mail-io1-f68.google.com with SMTP id f6so3269520ioj.5;
-        Mon, 29 Jun 2020 15:03:29 -0700 (PDT)
+        with ESMTP id S2391865AbgF2WFG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 18:05:06 -0400
+Received: by mail-io1-f68.google.com with SMTP id v6so5193838iob.4;
+        Mon, 29 Jun 2020 15:05:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=cCuA/1H5zPFkQibB/1FVyUKxdfeDC7D9Mc34Pi/i1Bk=;
-        b=TahneyMEvXAwMXkAVcepLu2TEJe6a44UQUlMXNF588bh9E55ftMgEnRjslBkwEgFVw
-         1lZzxACgKsSVl6pjB4KC9BNsrfZMYLlquQjcL5aJJyGyTIEUcE1EHhoui6UU/KczTLW9
-         7O9CWwnKCNEpBlRU3aIUhBg/eM8KcxsQ7kWBPN7lFvnmyQhb/Ulkc9SqCyhR9y2o7ZrT
-         h21xnilNaHQvr8jsIy/zecePgniZ2DAafmMsywrPAZVxP3bmOMgWjqKBBscBPYfzDT/1
-         NI4b181pR4dyVKwxeYDW6+5wp3VAWeIbq7uzjcVlYSAtWjXL+rfvzDqOfEJ5hsPTpglL
-         dWcw==
-X-Gm-Message-State: AOAM532+uLIIMkfIpxfH4BUtPK0VxNet1PjRUEJjUGcVvR0QVeOuvsHW
-        +vCEikfAogM1rVgd/Pa3xg==
-X-Google-Smtp-Source: ABdhPJzQNlss41FGC2hfOql88X+H8ZgwM3IXBHQO6+dHsWdZNlR+AYQSnEQVWlioy6ByTnwwWVx/Bg==
-X-Received: by 2002:a5e:9b0b:: with SMTP id j11mr19140572iok.17.1593468209250;
-        Mon, 29 Jun 2020 15:03:29 -0700 (PDT)
+        bh=/33WwvXDUgobqj85r5L3nzLt5ser+3dcQ28svWATI7k=;
+        b=mifdKd076vt1x5Ou7aR4oKqwHs2Fqnn/+OFDNsQXVfa6hHKR4yRnzFX/WQWnyg5rxn
+         mkdXsccScyk8qejLl092dkXpTsFrRFeCQoEhB2jXD2R/JDUBkhhs70kaLANQseD/fVwR
+         FHR8i+nUTHOdDunZLy5Esm7JsUm4UTILGPjvxarqKQqcIhso8tN0ZnRgss5b2oR9ybd3
+         wzYB1ZgspLoAPcOOsFmScLDu7FEZhJNASfDTroEiH3c8wGzwQcvqo1P4zmPQ8FWxykCL
+         6t/nLXPfGR0RyGF17614wKs+/06idorQlldid+QdvVUUp+OXC18oX1x8TT9nqV2WhvC5
+         c+tg==
+X-Gm-Message-State: AOAM5317VzWIU8D6C42s0zlRJCgfXNLpBWtQKb48FCfPst7flQstOf7k
+        I1UDQWo45w1TTAUE5PhVjrxOcTbkjw==
+X-Google-Smtp-Source: ABdhPJxVuYyuGtstqDJ8HOPThuovY3rPXcwWLAx5FKDmu1o5PgaYcJiB1dyG+EsqAE8S7/Upre6ZQQ==
+X-Received: by 2002:a05:6602:2dca:: with SMTP id l10mr18871444iow.163.1593468305897;
+        Mon, 29 Jun 2020 15:05:05 -0700 (PDT)
 Received: from xps15 ([64.188.179.255])
-        by smtp.gmail.com with ESMTPSA id q4sm606515ils.11.2020.06.29.15.03.27
+        by smtp.gmail.com with ESMTPSA id o19sm543584iob.5.2020.06.29.15.05.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 15:03:28 -0700 (PDT)
-Received: (nullmailer pid 3018066 invoked by uid 1000);
-        Mon, 29 Jun 2020 22:03:26 -0000
-Date:   Mon, 29 Jun 2020 16:03:26 -0600
+        Mon, 29 Jun 2020 15:05:05 -0700 (PDT)
+Received: (nullmailer pid 3021658 invoked by uid 1000);
+        Mon, 29 Jun 2020 22:05:02 -0000
+Date:   Mon, 29 Jun 2020 16:05:02 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Pawel Laszczak <pawell@cadence.com>
-Cc:     devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, ben.dooks@codethink.co.uk,
-        jpawar@cadence.com, sparmar@cadence.com, weiyongjun1@huawei.com,
-        rogerq@ti.com, linux-kernel@vger.kernel.org,
-        dan.carpenter@oracle.com, robh+dt@kernel.org,
-        colin.king@canonical.com, balbi@kernel.org, kurahul@cadene.com,
-        peter.chen@nxp.com
-Subject: Re: [PATCH RFC 1/5] dt-bindings: add binding for CDNSP-DRD controller
-Message-ID: <20200629220326.GA3017609@bogus>
-References: <20200626045450.10205-1-pawell@cadence.com>
- <20200626045450.10205-2-pawell@cadence.com>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        ulf.hansson@linaro.org, s.trumtrar@pengutronix.de,
+        aisheng.dong@nxp.com, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V4 3/3] dt-bindings: clock: Correct example in i.MX8QXP
+ LPCG binding
+Message-ID: <20200629220502.GA3019731@bogus>
+References: <1592450578-30140-1-git-send-email-Anson.Huang@nxp.com>
+ <1592450578-30140-3-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200626045450.10205-2-pawell@cadence.com>
+In-Reply-To: <1592450578-30140-3-git-send-email-Anson.Huang@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 26 Jun 2020 06:54:46 +0200, Pawel Laszczak wrote:
-> This patch aim at documenting USB related dt-bindings for the
-> Cadence CDNSP-DRD controller.
+On Thu, Jun 18, 2020 at 11:22:58AM +0800, Anson Huang wrote:
+> In i.MX8QXP LPCG binding's example, "fsl,imx7d-usdhc" as fallback
+> compatible is incorrect, remove it to avoid below build error:
 > 
-> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+> Documentation/devicetree/bindings/clock/imx8qxp-lpcg.example.dt.yaml:
+> mmc@5b010000: compatible: Additional items are not allowed ('fsl,imx7d-usdhc' was unexpected)
+> Documentation/devicetree/bindings/clock/imx8qxp-lpcg.example.dt.yaml:
+> mmc@5b010000: compatible: ['fsl,imx8qxp-usdhc', 'fsl,imx7d-usdhc'] is too long
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  .../devicetree/bindings/usb/cdns-cdnsp.yaml   | 104 ++++++++++++++++++
->  1 file changed, 104 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/cdns-cdnsp.yaml
-> 
+> New patch, to fix build error when patch #1 is added.
 
+So, patch 1 should come last. I'll re-order when applying.
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/cdns-cdnsp.example.dt.yaml: example-0: usb@f3000000:reg:0: [0, 29437952, 0, 1024] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/cdns-cdnsp.example.dt.yaml: example-0: usb@f3000000:reg:1: [0, 4076929024, 0, 65536] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/cdns-cdnsp.example.dt.yaml: example-0: usb@f3000000:reg:2: [0, 4076994560, 0, 65536] is too long
-
-
-See https://patchwork.ozlabs.org/patch/1317380
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+Rob
