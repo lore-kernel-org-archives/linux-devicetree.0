@@ -7,107 +7,102 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3FCC433E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9699BC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF97920760
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 758A6206A5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:54:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467618;
-	bh=uQiadOMZ3uEfWQnv8fMX1w6chwspqEv0Mi50OtEKkKk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OGYpqbf4nlTH94qhRWjJl8OTeI/IYuYK3OKnG7so0gpGoxzDwajNzagE8KjoGMWgW
-	 ts4n8/FCNt98G3LCx8QywfLoKgXRaQl/tAfjp96Tyf1eX43DdQjXiCPe0Wg34osHBU
-	 P15hiG/5raOpPtWwnkrzVaDSIJFn4Z3nIUTA10m0=
+	s=default; t=1593467679;
+	bh=5rhii0RPtqMd801EeEYeeEKTbuvPVzbyTh8iApbbK/o=;
+	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=ODKmlLcBMVyAUxgNp/quNip23xlKanjQPgoI+qo2mybY0JN/8S1rRMMUT8qU/Pdsc
+	 5sh38pwcyXfljK3r1jzaSm/if2y1HSew4s12ZtC7TNsFDIb+slWdckSWhF4mHW8nLC
+	 0yGJtC8L0Flr/0JuzYqofHBh7V5evRB4qmpYmqmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404642AbgF2Vxg (ORCPT
+        id S2391382AbgF2Vyd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:53:36 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37466 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404461AbgF2Vxf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 17:53:35 -0400
-Received: by mail-io1-f65.google.com with SMTP id v6so5163812iob.4;
-        Mon, 29 Jun 2020 14:53:35 -0700 (PDT)
+        Mon, 29 Jun 2020 17:54:33 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:45362 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389336AbgF2Vy2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 17:54:28 -0400
+Received: by mail-il1-f194.google.com with SMTP id l9so15863059ilq.12;
+        Mon, 29 Jun 2020 14:54:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=TqO9zSccC03uQUBHdnGu8Ma3JV07Cz0JDvsVx9Gx0ZY=;
-        b=BI5j2klROPkAw5y71Nus7JZg2kw4DRN35t07NRJ8k7ia18GH/E0t3shkmjJ18jl0SP
-         /rTnVa2UbnSnJNgWxI8OFen9vWgatI3pPXPj/4WMXjJxvxFdSfI8ywNrCw+WR8YrlARO
-         mTaMURwB9Z0RPIn2mWLBE3qw5vk2hYKNR44yqIGVs0T5bLDvpLknUc7eTNupVfliVRya
-         yVSNAzcpr7e6v2Yuir7Nod8b0MTrOaH4d/ss5+Sjr+y+jmc320xfXlce2YPHTYuC5Z+2
-         BMCB9J5u9DHwASyI2AxdIoxbMR+zKhJu9ae7SVdM6q14yX88MEBetp6EFiJLHf2B1XDL
-         0GPA==
-X-Gm-Message-State: AOAM530wCbae5J3sg6I2a4rDTIcR9/v6t5Jp3l6xGyiG5A8bpLNxhtph
-        jaQqtkoVLIj2QHFMncrWsw==
-X-Google-Smtp-Source: ABdhPJyIbG7PIhmtfb8YhLKR5Xh3nGklRFT+QTShHlA/Rx0Efb1UteRJRihqMm1UaKN8nH02gpJ1Xw==
-X-Received: by 2002:a05:6638:2601:: with SMTP id m1mr9213481jat.43.1593467614612;
-        Mon, 29 Jun 2020 14:53:34 -0700 (PDT)
+        bh=C8dUSvhRmWNPjC/Gxl3IeAC98sriVh3zuvoUxs+yN3o=;
+        b=UBGlhBo9qQTRssFhh/7fDs7y1nRpj6NGSpivSRzbxVhbqioJnjpyEUM1gcyKvEW7+O
+         9r6V7uHJntwbWG2yU/yxqXmZwOOoyIekPFG+eV1yfOZjO777pUzf1BZ/HOrcXK/mCR39
+         xa5slE+1Pc/zUdOA9EjBUMcbj+1+mZxMck6m6QRHCS8niYmTv4+BaXLMKqpZwRl2uUM7
+         xgnTQFGRVTxJv4AXMzjnnXMNhjc5OVoYB5BjwCikOtvbv6yZ+UBEP4QSMyItrmYwbAcH
+         6s6YqZNkkMMoRwEvp8Qu8x3pKimkgGwocb/dq9Py6Qmlof8grR1fRyCafi0Bj6eZwiO8
+         YzIQ==
+X-Gm-Message-State: AOAM533ECi4X4Pn4EG5gkgtKTfI1CMX3I/gJ12qzgrZGPhs9yrdabM3V
+        JqBCCSAP9Yy0afdh9+GTmg==
+X-Google-Smtp-Source: ABdhPJydHNBwHC1sjSL393mIV8ElpWA8UM200L9n5v4oEctdkRP/KNOR4wq2uIs9B/BUiGXS1q9B0w==
+X-Received: by 2002:a92:d4cf:: with SMTP id o15mr15678654ilm.160.1593467667476;
+        Mon, 29 Jun 2020 14:54:27 -0700 (PDT)
 Received: from xps15 ([64.188.179.255])
-        by smtp.gmail.com with ESMTPSA id t12sm604000ilo.80.2020.06.29.14.53.32
+        by smtp.gmail.com with ESMTPSA id t18sm611073ilm.55.2020.06.29.14.54.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 14:53:34 -0700 (PDT)
-Received: (nullmailer pid 2994774 invoked by uid 1000);
-        Mon, 29 Jun 2020 21:53:31 -0000
-Date:   Mon, 29 Jun 2020 15:53:31 -0600
+        Mon, 29 Jun 2020 14:54:26 -0700 (PDT)
+Received: (nullmailer pid 2997019 invoked by uid 1000);
+        Mon, 29 Jun 2020 21:54:24 -0000
+Date:   Mon, 29 Jun 2020 15:54:24 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Hanks Chen <hanks.chen@mediatek.com>
-Cc:     wsd_upstream@mediatek.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        linux-kernel@vger.kernel.org, mtk01761 <wendell.lin@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>, linux-clk@vger.kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        CC Hwang <cc.hwang@mediatek.com>,
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-mmc@vger.kernel.org,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
         linux-arm-kernel@lists.infradead.org,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v6 1/7] dt-bindings: pinctrl: add bindings for MediaTek
- MT6779 SoC
-Message-ID: <20200629215331.GA2991039@bogus>
-References: <1592480018-3340-1-git-send-email-hanks.chen@mediatek.com>
- <1592480018-3340-2-git-send-email-hanks.chen@mediatek.com>
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v4 1/3] dt-bindings: mmc: Add Sparx5 SDHCI controller
+ bindings
+Message-ID: <20200629215424.GA2996213@bogus>
+References: <20200618141326.25723-1-lars.povlsen@microchip.com>
+ <20200618141326.25723-2-lars.povlsen@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1592480018-3340-2-git-send-email-hanks.chen@mediatek.com>
+In-Reply-To: <20200618141326.25723-2-lars.povlsen@microchip.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 18 Jun 2020 19:33:32 +0800, Hanks Chen wrote:
-> From: Andy Teng <andy.teng@mediatek.com>
+On Thu, 18 Jun 2020 16:13:24 +0200, Lars Povlsen wrote:
+> The Sparx5 SDHCI controller is based on the Designware controller IP.
 > 
-> Add devicetree bindings for MediaTek MT6779 pinctrl driver.
-> 
-> Signed-off-by: Andy Teng <andy.teng@mediatek.com>
+> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
 > ---
->  .../bindings/pinctrl/mediatek,mt6779-pinctrl.yaml  |  210 ++++++++++++++++++++
->  1 file changed, 210 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
+>  .../mmc/microchip,dw-sparx5-sdhci.yaml        | 65 +++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
 > 
 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.example.dts:21:18: fatal error: dt-bindings/pinctrl/mt6779-pinfunc.h: No such file or directory
-         #include <dt-bindings/pinctrl/mt6779-pinfunc.h>
+Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.example.dts:20:18: fatal error: dt-bindings/clock/microchip,sparx5.h: No such file or directory
+         #include <dt-bindings/clock/microchip,sparx5.h>
                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 compilation terminated.
-scripts/Makefile.lib:315: recipe for target 'Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.example.dt.yaml] Error 1
+scripts/Makefile.lib:315: recipe for target 'Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.example.dt.yaml] Error 1
 make[1]: *** Waiting for unfinished jobs....
 Makefile:1347: recipe for target 'dt_binding_check' failed
 make: *** [dt_binding_check] Error 2
 
 
-See https://patchwork.ozlabs.org/patch/1312018
+See https://patchwork.ozlabs.org/patch/1312158
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
@@ -115,11 +110,4 @@ error(s), then make sure dt-schema is up to date:
 pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
 
 Please check and re-submit.
-
-
-
-Here, you need patch 2 to come first or merge it into this patch as it 
-is part of the binding.
-
-Rob
 
