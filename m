@@ -2,99 +2,181 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F7AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3355C433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA98D206F1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E045C206E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:11:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728436AbgF2TH0 (ORCPT
+        id S1730471AbgF2TLW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:07:26 -0400
-Received: from mga17.intel.com ([192.55.52.151]:62620 "EHLO mga17.intel.com"
+        Mon, 29 Jun 2020 15:11:22 -0400
+Received: from mx.socionext.com ([202.248.49.38]:30877 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730502AbgF2TG3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:06:29 -0400
-IronPort-SDR: lXLlsiyBLxFrrdh6m5nEbpukwALCQwYGdSBa60m+AnJjcsH8h6N4Sx1L/EjS5V6Nwhz2pQVMXx
- ZbZFvrrZZWpg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="126073966"
-X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
-   d="scan'208";a="126073966"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 02:03:54 -0700
-IronPort-SDR: MZhnpP0pf2VFgb3b6QVjSS5RQR+MAR2w6scdr+baj26AvOvJbZ1qMyqYScOr3zZjjoytDrcjPN
- fSCyVzcsx7MQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
-   d="scan'208";a="386338695"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by fmsmga001.fm.intel.com with ESMTP; 29 Jun 2020 02:03:51 -0700
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
-Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v3 0/2] pwm: intel: Add PWM driver for a new SoC
-Date:   Mon, 29 Jun 2020 17:03:45 +0800
-Message-Id: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
+        id S1730760AbgF2TLT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:11:19 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 29 Jun 2020 18:49:31 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 83E1060060;
+        Mon, 29 Jun 2020 18:49:31 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Mon, 29 Jun 2020 18:49:31 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id 1653D4031A;
+        Mon, 29 Jun 2020 18:49:31 +0900 (JST)
+Received: from [10.213.29.155] (unknown [10.213.29.155])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 7654F120455;
+        Mon, 29 Jun 2020 18:49:30 +0900 (JST)
+Subject: Re: [PATCH v5 2/6] PCI: uniphier: Add misc interrupt handler to
+ invoke PME and AER
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1592469493-1549-3-git-send-email-hayashi.kunihiko@socionext.com>
+ <87v9jcet5h.wl-maz@kernel.org>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <c09ceb2f-0bf3-a5de-f918-1ccd0dba1e0a@socionext.com>
+Date:   Mon, 29 Jun 2020 18:49:30 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <87v9jcet5h.wl-maz@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Patch 1 adds dt binding document in YAML format.
-Patch 2 add PWM fan controller driver for LGM SoC.
+Hi Marc,
 
-Patch series is baselined on linux 5.8-rc2.
+On 2020/06/27 18:48, Marc Zyngier wrote:
+> On Thu, 18 Jun 2020 09:38:09 +0100,
+> Kunihiko Hayashi <hayashi.kunihiko@socionext.com> wrote:
+>>
+>> The misc interrupts consisting of PME, AER, and Link event, is handled
+>> by INTx handler, however, these interrupts should be also handled by
+>> MSI handler.
+>>
+>> This adds the function uniphier_pcie_misc_isr() that handles misc
+>> interrupts, which is called from both INTx and MSI handlers.
+>> This function detects PME and AER interrupts with the status register,
+>> and invoke PME and AER drivers related to MSI.
+>>
+>> And this sets the mask for misc interrupts from INTx if MSI is enabled
+>> and sets the mask for misc interrupts from MSI if MSI is disabled.
+>>
+>> Cc: Marc Zyngier <maz@kernel.org>
+>> Cc: Jingoo Han <jingoohan1@gmail.com>
+>> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>> ---
+>>   drivers/pci/controller/dwc/pcie-uniphier.c | 57 ++++++++++++++++++++++++------
+>>   1 file changed, 46 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+>> index a5401a0..5ce2479 100644
+>> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+>> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+>> @@ -44,7 +44,9 @@
+>>   #define PCL_SYS_AUX_PWR_DET		BIT(8)
+>>   
+>>   #define PCL_RCV_INT			0x8108
+>> +#define PCL_RCV_INT_ALL_INT_MASK	GENMASK(28, 25)
+>>   #define PCL_RCV_INT_ALL_ENABLE		GENMASK(20, 17)
+>> +#define PCL_RCV_INT_ALL_MSI_MASK	GENMASK(12, 9)
+>>   #define PCL_CFG_BW_MGT_STATUS		BIT(4)
+>>   #define PCL_CFG_LINK_AUTO_BW_STATUS	BIT(3)
+>>   #define PCL_CFG_AER_RC_ERR_MSI_STATUS	BIT(2)
+>> @@ -167,7 +169,15 @@ static void uniphier_pcie_stop_link(struct dw_pcie *pci)
+>>   
+>>   static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
+>>   {
+>> -	writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
+>> +	u32 val;
+>> +
+>> +	val = PCL_RCV_INT_ALL_ENABLE;
+>> +	if (pci_msi_enabled())
+>> +		val |= PCL_RCV_INT_ALL_INT_MASK;
+>> +	else
+>> +		val |= PCL_RCV_INT_ALL_MSI_MASK;
+> 
+> Does this affect endpoints? Or just the RC itself?
 
-v3:
-- Address below review concerns from Uwe Kleine-König.
-  * Remove fan rpm calibration task from the driver.
-  * Modify apply op as per the review feedback.
-  * Add roundup & round down where necessary.
-  * Address other misc code quality related review concerns.
-  * Use devm_reset_control_get_exclusive(). (Philipp Zabel)
-  * Improve dt binding document.
+These interrupts are asserted by RC itself, so this part affects only RC.
 
-v2:
-- Address below review concerns from Uwe Kleine-König.
-  * Add notes and limitations about PWM HW.
-  * Rename all functions and structure to lgm_pwm_* 
-  * Readjust space aligninment in structure fields to single space.
-  * Switch to using apply instead of config/enable/disable.
-  * Address other code quality related concerns.
-  * Rebase to 5.8-rc1.
-- Address review concerns in dt binding YAML from Rob Herring.
+>> +
+>> +	writel(val, priv->base + PCL_RCV_INT);
+>>   	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
+>>   }
+>>   
+>> @@ -231,32 +241,56 @@ static const struct irq_domain_ops uniphier_intx_domain_ops = {
+>>   	.map = uniphier_pcie_intx_map,
+>>   };
+>>   
+>> -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
+>> +static void uniphier_pcie_misc_isr(struct pcie_port *pp, bool is_msi)
+>>   {
+>> -	struct pcie_port *pp = irq_desc_get_handler_data(desc);
+>>   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>>   	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+>> -	struct irq_chip *chip = irq_desc_get_chip(desc);
+>> -	unsigned long reg;
+>> -	u32 val, bit, virq;
+>> +	u32 val, virq;
+>>   
+>> -	/* INT for debug */
+>>   	val = readl(priv->base + PCL_RCV_INT);
+>>   
+>>   	if (val & PCL_CFG_BW_MGT_STATUS)
+>>   		dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
+>> +
+>>   	if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
+>>   		dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
+>> -	if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+>> -		dev_dbg(pci->dev, "Root Error\n");
+>> -	if (val & PCL_CFG_PME_MSI_STATUS)
+>> -		dev_dbg(pci->dev, "PME Interrupt\n");
+>> +
+>> +	if (is_msi) {
+>> +		if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+>> +			dev_dbg(pci->dev, "Root Error Status\n");
+>> +
+>> +		if (val & PCL_CFG_PME_MSI_STATUS)
+>> +			dev_dbg(pci->dev, "PME Interrupt\n");
+>> +
+>> +		if (val & (PCL_CFG_AER_RC_ERR_MSI_STATUS |
+>> +			   PCL_CFG_PME_MSI_STATUS)) {
+>> +			virq = irq_linear_revmap(pp->irq_domain, 0);
+>> +			generic_handle_irq(virq);
+>> +		}
+>> +	}
+> 
+> Please have two handlers: one for interrupts that are from the RC,
+> another for interrupts coming from the endpoints.
+I assume that this handler treats interrupts from the RC only and
+this is set on the member ".msi_host_isr" added in the patch 1/6.
+I think that the handler for interrupts coming from endpoints should be
+treated as a normal case (after calling .msi_host_isr in
+dw_handle_msi_irq()).
 
-v1:
-- Initial version.
+Thank you,
 
-
-Rahul Tanwar (2):
-  Add DT bindings YAML schema for PWM fan controller of LGM SoC
-  Add PWM fan controller driver for LGM SoC
-
- .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     |  51 ++++
- drivers/pwm/Kconfig                                |   9 +
- drivers/pwm/Makefile                               |   1 +
- drivers/pwm/pwm-intel-lgm.c                        | 265 +++++++++++++++++++++
- 4 files changed, 326 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
- create mode 100644 drivers/pwm/pwm-intel-lgm.c
-
--- 
-2.11.0
-
+---
+Best Regards
+Kunihiko Hayashi
