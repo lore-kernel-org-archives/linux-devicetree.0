@@ -2,101 +2,116 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BF7C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E15C8C433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 020992067D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:45:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="1apygDmx"
+	by mail.kernel.org (Postfix) with ESMTP id BECD3206A1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593467178;
+	bh=gF4C5IJL9Z7p1l9MBEr0x0+yhKuUVQmPfhBBdsQPwNk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FjqBMt8MGChpB7hPil7ONX9rb3jEvP9JK9lz1tEHHSFVSnQGslMQBgmxPda5BONzG
+	 LDWnsogM2BUeS//KIr5/qeRavNjwE85tXcUQvv5udL3AGJSBvXXRqDXTGaTyJlXkC7
+	 GzA+FEM3gU1Luy1+OpViECH5fRCu5oh3sEzAYIvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgF2VpC (ORCPT
+        id S2403985AbgF2VqQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:45:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37572 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727791AbgF2Sho (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 14:37:44 -0400
-Received: from mail-qk1-x736.google.com (mail-qk1-x736.google.com [IPv6:2607:f8b0:4864:20::736])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 841C3C03143E
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 10:21:18 -0700 (PDT)
-Received: by mail-qk1-x736.google.com with SMTP id j80so15981209qke.0
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 10:21:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=I8kRZdRWy2CNksnUvA4vMT2OP8+RWTSu608AfsNc9EI=;
-        b=1apygDmxhVUeOck6YT2ehOf2FANif1flKXbiiH5pwXFOcVL3MCIB3rLJrm2Fi891Nk
-         MzNgJTynEbZEM6RmPWC6rQmHM0xisz7BS8Mjwg5hVhCpoBkycd9Pa4/fDRmeJb2AfcSt
-         PKq/bGA9ZrC0iJjj+vpWRm5jsPwpOjtmRa2PZluqW4vceoiYtwMp1hIUCJHzoLXAxogj
-         8qFJKmVqbkr6Il3ywL6U/S+ON5fpqB5wHxar/Oy1UeEpnPh8SP4+3Wem9ylowQrGiRHD
-         e242nR2eel4UrZ83dpXwhn3F0kpR9CteDtJEr++DuU2FRVyM73GrngJ/hGJ73KXTgy5s
-         9fkQ==
+        Mon, 29 Jun 2020 17:46:16 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:44090 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403971AbgF2VqP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 17:46:15 -0400
+Received: by mail-il1-f193.google.com with SMTP id w73so4008872ila.11;
+        Mon, 29 Jun 2020 14:46:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=I8kRZdRWy2CNksnUvA4vMT2OP8+RWTSu608AfsNc9EI=;
-        b=JPGFBCMYQKB0oEYNop93IS3ZSamfsfR3wJ4b9CLBWab9mnkim8EyhaEJ7u6Ojj+CX9
-         6QiodxGEKWayJLbMRLWbjUErp4gUyf6xzQWIJecZ9VKB2Gbeeuumwr+zQRAxS1UJWI8O
-         +9W9EceWVY+Q2O+UIdLJGj0ZCnMZGwHy4Cgiin0UcfZHL5iIxteH2jwgf5DpzFvKYp1w
-         4vTNJQEi2CkdXK+phykqBTJzry0JBzQEYFY7msEOH2+1I5WNm65ZxhPaad7McWq7Lkha
-         rtQwyNZ/P5kMqUoamKEB1WblYx0nl1j2jgn4rN7ZYUyz03nLQFqz6LT1B9EsmL9izr/s
-         sTyA==
-X-Gm-Message-State: AOAM533H6RaOkNEisp6fuRZJHU5/4BMGl88Uy5fDw9gu5D0pZWZvpRbK
-        JAKzUHOMe0viJhuKvwlhJ2PeXw==
-X-Google-Smtp-Source: ABdhPJyjHZ1Ch/PjZ+965RMN96NmZrqCT+xeR/xLjS+9vfd0gWt6mXhLuZL/vyni7Vcfy2ZbrGQxEQ==
-X-Received: by 2002:a37:a204:: with SMTP id l4mr15330059qke.200.1593451277354;
-        Mon, 29 Jun 2020 10:21:17 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id q5sm408363qtf.12.2020.06.29.10.21.16
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uyW+jW1awHxTjKyRxm3xfnDiRBllSD4XGWQa5b78Aw8=;
+        b=bvczna650WplwrbE2t7lBZio1h82/M0jvHqMsVdFzDLnwQFT7OHKuk6ME5eHq6C7rI
+         INRc3gxByEzTCDdE1Rblvl0dRi0VUEOIiz/eUjDXGg+7xEJ2tj7qevgFZHHMV85Xvswz
+         cDvF/sAXKN8AoSqsNLHiTrwHZ++2hmE809fM+zcOpevJuL7j4TfKaJfdNTDT42MIukqU
+         w7cw0uatIu09PN4lUBHI+UxikLJQd6m2SQ5F2FChin9O56LWMKkhwVG7E3fS2QxVFScJ
+         VOm1qsH9Fspg8qd90mqmE0PoPtvpXRLndSEzDQTT2u3CPLJ84Jhddiogeou/pgHILVMX
+         GnrA==
+X-Gm-Message-State: AOAM530t+ex3qOLtQ+bOv5I1nLSdenyrJEMRcrLykP5qF6glB9Tm6xCN
+        p6h69JFn1NdGNlHJheg1bQ==
+X-Google-Smtp-Source: ABdhPJxBseoySQnNrO/ucBAVbxE8Ve40ZGwZtZVMP9DsPrIAMec0KapS8vUwFpWKDddIkdU/wn0rOw==
+X-Received: by 2002:a92:b684:: with SMTP id m4mr17425649ill.153.1593467174525;
+        Mon, 29 Jun 2020 14:46:14 -0700 (PDT)
+Received: from xps15 ([64.188.179.255])
+        by smtp.gmail.com with ESMTPSA id z9sm612748ilz.45.2020.06.29.14.46.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 10:21:16 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 11/13] dt-bindings: power: Add missing rpmpd rpmh regulator level
-Date:   Mon, 29 Jun 2020 13:20:41 -0400
-Message-Id: <20200629172049.30452-12-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200629172049.30452-1-jonathan@marek.ca>
-References: <20200629172049.30452-1-jonathan@marek.ca>
+        Mon, 29 Jun 2020 14:46:13 -0700 (PDT)
+Received: (nullmailer pid 2980772 invoked by uid 1000);
+        Mon, 29 Jun 2020 21:46:12 -0000
+Date:   Mon, 29 Jun 2020 15:46:12 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     devicetree@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Paul Burton <paulburton@kernel.org>
+Subject: Re: [PATCH v4 1/6] dt-bindings: power: Convert mti,mips-cpc to DT
+ schema
+Message-ID: <20200629214612.GA2979868@bogus>
+References: <20200617223201.23259-1-Sergey.Semin@baikalelectronics.ru>
+ <20200617223201.23259-2-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617223201.23259-2-Sergey.Semin@baikalelectronics.ru>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add RPMH_REGULATOR_LEVEL_SVS_L0, used by sm8250.
+On Thu, 18 Jun 2020 01:31:55 +0300, Serge Semin wrote:
+> It's a Cluster Power Controller embedded into the MIPS IP cores.
+> Currently the corresponding dts node is supposed to have compatible
+> and reg properties.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> 
+> ---
+> 
+> Changelog prev:
+> - Reword the changelog summary - use shorter version.
+> - Lowercase the example hex'es.
+> ---
+>  .../bindings/power/mti,mips-cpc.txt           |  8 -----
+>  .../bindings/power/mti,mips-cpc.yaml          | 35 +++++++++++++++++++
+>  2 files changed, 35 insertions(+), 8 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.txt
+>  create mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
+> 
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
----
- include/dt-bindings/power/qcom-rpmpd.h | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/include/dt-bindings/power/qcom-rpmpd.h b/include/dt-bindings/power/qcom-rpmpd.h
-index dc146e44228b..5e61eaf73bdd 100644
---- a/include/dt-bindings/power/qcom-rpmpd.h
-+++ b/include/dt-bindings/power/qcom-rpmpd.h
-@@ -55,6 +55,7 @@
- #define RPMH_REGULATOR_LEVEL_MIN_SVS	48
- #define RPMH_REGULATOR_LEVEL_LOW_SVS	64
- #define RPMH_REGULATOR_LEVEL_SVS	128
-+#define RPMH_REGULATOR_LEVEL_SVS_L0	144
- #define RPMH_REGULATOR_LEVEL_SVS_L1	192
- #define RPMH_REGULATOR_LEVEL_SVS_L2	224
- #define RPMH_REGULATOR_LEVEL_NOM	256
--- 
-2.26.1
+My bot found errors running 'make dt_binding_check' on your patch:
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/mti,mips-cpc.example.dt.yaml: example-0: cpc@1bde0000:reg:0: [0, 467533824, 0, 32768] is too long
+
+
+See https://patchwork.ozlabs.org/patch/1311661
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
 
