@@ -2,103 +2,101 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95EA0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 732D5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B224214F1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49F25208B6
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:25:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593465950;
+	bh=uX5WXDrJa9DPLlsdJIWYE4UvjtgmVVqjU+UrlPR1sGQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HNt7bSVTXSYihqcsSPTI9GF0acZLYSwNFxrYdTZslAYsdfWEIzaZ28PSxTx0gNNZA
+	 peUMcDiXranfs9MIGET9WXa3LCufRFx6ywZHt28761yT7uAb/eysCT9LCCCsGAs813
+	 FGCzp4SRZ/AD6HT+T8Tn0khQtOZhqCy4uBk9QCFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbgF2VZU (ORCPT
+        id S2388646AbgF2VZq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:25:20 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:53500 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728392AbgF2Stz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 14:49:55 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 68F48804A4;
-        Mon, 29 Jun 2020 10:11:42 +0200 (CEST)
-Date:   Mon, 29 Jun 2020 10:11:40 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH 6/4] dt-bindings: display: renesas: lvds: RZ/G2E needs
- renesas,companion too
-Message-ID: <20200629081140.GG227119@ravnborg.org>
-References: <20200405232318.26833-1-laurent.pinchart+renesas@ideasonboard.com>
- <20200513233908.23629-1-laurent.pinchart+renesas@ideasonboard.com>
- <CAMuHMdWL9xhzbVhZ6N1xbh+YmP_RBMO4H1uMXXexbJXq6amcLA@mail.gmail.com>
+        Mon, 29 Jun 2020 17:25:46 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:37277 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726862AbgF2VZW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 17:25:22 -0400
+Received: by mail-il1-f193.google.com with SMTP id r12so8592120ilh.4;
+        Mon, 29 Jun 2020 14:25:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8sRNZq3i6sSIEbh/4bbkFq8rEMNhJ4QITzwGR/lljm8=;
+        b=BMC1syC41NCzxzB/pbvJpgmQ9FcJc5r2D9qsr143aDRDPwde32ULP75xo6hvY+HWtd
+         zDs9rX3aN+AZolPZnXfuJ/Pddaesd9gT3tUQhK1K5K72vX/qyoEOfeHK7MeisQh8vr6K
+         qPAivX8E+N9cl/7GtrHIjbACdnyPdHdSYBkce5VbSW3vJXAB0GlvsKZpksM7dgjTn/a8
+         CRq13jzvF8q+y0d4Gd0yz54JG48+UWl8PBqLIZpum2LNlhjllL2RzF1DgC116EdW50gy
+         bxMNzYL+dJMt6a9IJAfS84wSVfPTENitg2A8kHmFF/xZ10pVbQdB1JYin3bSl7doJ/qe
+         /fFQ==
+X-Gm-Message-State: AOAM531oa1G9btWWBSgKh3ZdNF6mVUbfN1BL+izUwqhB4NJd2u4Vhzxa
+        9+MVaBm15Ar84+kjGg5y3g==
+X-Google-Smtp-Source: ABdhPJx7dUZO0U25grEUl0vGwvMDDg6JWilgQ6/cy87UtwfMefk9HX94VG7CywqBbog84JPOnX3tTQ==
+X-Received: by 2002:a92:b685:: with SMTP id m5mr17246717ill.219.1593465921481;
+        Mon, 29 Jun 2020 14:25:21 -0700 (PDT)
+Received: from xps15 ([64.188.179.255])
+        by smtp.gmail.com with ESMTPSA id v3sm630164ili.12.2020.06.29.14.25.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 14:25:21 -0700 (PDT)
+Received: (nullmailer pid 2935889 invoked by uid 1000);
+        Mon, 29 Jun 2020 21:25:19 -0000
+Date:   Mon, 29 Jun 2020 15:25:19 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Michal Marek <michal.lkml@markovi.net>
+Subject: Re: [PATCH 3/4] dt-bindings: copy process-schema-examples.yaml to
+ process-schema.yaml
+Message-ID: <20200629212519.GA2935789@bogus>
+References: <20200625170434.635114-1-masahiroy@kernel.org>
+ <20200625170434.635114-4-masahiroy@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdWL9xhzbVhZ6N1xbh+YmP_RBMO4H1uMXXexbJXq6amcLA@mail.gmail.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=P1BnusSwAAAA:8 a=yC-0_ovQAAAA:8 a=tBb2bbeoAAAA:8
-        a=e5mUnYsNAAAA:8 a=vFHsjM1-0c_F3_rMw0gA:9 a=CjuIK1q_8ugA:10
-        a=CojVow1nldcA:10 a=D0XLA9XvdZm18NrgonBM:22 a=QsnFDINu91a9xkgZirup:22
-        a=Oj-tNtZlA1e06AYgeCfH:22 a=Vxmtnl_E_bksehYqCbjh:22
+In-Reply-To: <20200625170434.635114-4-masahiroy@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 14, 2020 at 08:44:19AM +0200, Geert Uytterhoeven wrote:
-> On Thu, May 14, 2020 at 1:39 AM Laurent Pinchart
-> <laurent.pinchart+renesas@ideasonboard.com> wrote:
-> > From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> >
-> > Document RZ/G2E support for property renesas,companion.
-> >
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+On Fri, 26 Jun 2020 02:04:33 +0900, Masahiro Yamada wrote:
+> There are two processed schema files:
 > 
-> > --- a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.yaml
-> > +++ b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.yaml
-> > @@ -81,9 +81,9 @@ properties:
-> >      $ref: /schemas/types.yaml#/definitions/phandle
-> >      description:
-> >        phandle to the companion LVDS encoder. This property is mandatory
-> > -      for the first LVDS encoder on D3 and E3 SoCs, and shall point to
-> > -      the second encoder to be used as a companion in dual-link mode. It
-> > -      shall not be set for any other LVDS encoder.
-> > +      for the first LVDS encoder on D3, R-Car E3 and RZ/G2E SoCs, and shall
+>  - processed-schema-examples.yaml
 > 
-> R-Car D3 and E3, and RZ/G2E SoCs
+>     Used for 'make dt_binding_check'. This is always a full schema.
 > 
-> > +      point to the second encoder to be used as a companion in dual-link mode.
-> > +      It shall not be set for any other LVDS encoder.
+>  - processed-schema.yaml
+> 
+>     Used for 'make dtbs_check'. This may be a full schema, or a smaller
+>     subset if DT_SCHEMA_FILES is given by a user.
+> 
+> If DT_SCHEMA_FILES is not specified, they are the same. You can copy
+> the former to the latter instead of running dt-mk-schema twice. This
+> saves the cpu time a lot when you do 'make dt_binding_check dtbs_check'
+> because building the full schema takes a couple of seconds.
+> 
+> If DT_SCHEMA_FILES is specified, processed-schema.yaml is generated
+> based on the specified yaml files.
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+> 
+>  Documentation/devicetree/bindings/Makefile | 28 +++++++++++++++-------
+>  scripts/Makefile.lib                       |  3 +++
+>  2 files changed, 23 insertions(+), 8 deletions(-)
+> 
 
-Laurent, I assume you will re-spin a ne version wth the changelog
-corrected.
-
-	Sam
-
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Applied, thanks!
