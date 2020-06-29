@@ -4,114 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3918BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 908E6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF87206A1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72866206E9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:38:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466637;
-	bh=Tt9I5dS3JeAJvU2sRBG7+iIKUeVdnCbPfw8XBTvHkOY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IaUx49UncupTFVeLhoACrdIRP5q+X5rdty0EEpCtfAGwmUEb+zulIKWidF+kwB2XW
-	 CpCLt0ogvvamENdmtQDE3kFbSMLu4ZwuKeCNkhqaKE6sHwuK2xSkVCOgd0aR8f+cF8
-	 BSTuNLU1Ur+xCfdAWafXlLCWAfc3pXZKhHKoaHjA=
+	s=default; t=1593466726;
+	bh=ewj35rSkElcFIZJ1hg66kwd3Hqh8xk0tOa2edu8ul6s=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=sKFSR84L2hpjDVFMrDkcobxx0SZTsW0r0+SO6RbYTxbFh+Ntsy9W52dHI/UNEgDQg
+	 LgnyO8E8I2cm+kFraF9AK2nCNyB1Yle3BPYXF7emdvSTxpsKp28suN7tzBCuVK5Q5/
+	 iS38VIxPyHFBpdojXRnEPx+YKtLmSHPjnQklq2U4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbgF2VhQ (ORCPT
+        id S1730055AbgF2Vii (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:37:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60668 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:38:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728411AbgF2Ski (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:40:38 -0400
+        id S1728349AbgF2Skc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:40:32 -0400
 Received: from localhost.localdomain (unknown [194.230.155.195])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBAA723358;
-        Mon, 29 Jun 2020 08:17:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B70F2085B;
+        Mon, 29 Jun 2020 08:15:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593418624;
-        bh=Tt9I5dS3JeAJvU2sRBG7+iIKUeVdnCbPfw8XBTvHkOY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M3w/jW0sfpY78qC1W4n6OjPGfllVKlWaaK7SOpQVQopV6Em32krY/i5WIrgMV3qLk
-         vp14DQthtenP6sNr7r3+P61E3WmqI0okr9qg/iwMv2dcxDNmy3nxgzrPaz9GmOZpnA
-         NyZeEKzl1pngW5YhOIISNKGHKp+p8Au1+oLpdHvA=
+        s=default; t=1593418541;
+        bh=ewj35rSkElcFIZJ1hg66kwd3Hqh8xk0tOa2edu8ul6s=;
+        h=From:To:Cc:Subject:Date:From;
+        b=UWvRfKHtNAZnU9vTW3cs08UEr9o1o7kqvg7ahwYE1DOS9WSEf1ELbbw/H3torogjJ
+         9DtSz9ASc0TuNNu3dUj5myKETz43cRuCM7MfI/ZmSz+w4kRVE7TcebAxWn/38woaJV
+         ft4eqKuF+6CYIOIIEKW5KwSyF47qdpYtYxN9ieGA=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>,
+To:     Tsahee Zidenberg <tsahee@annapurnalabs.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 2/2] arm64: dts: hisilicon: Align UART nodename with dtschema
-Date:   Mon, 29 Jun 2020 10:16:57 +0200
-Message-Id: <20200629081657.13821-2-krzk@kernel.org>
+Subject: [PATCH 1/3] ARM: dts: alpine: Align GIC nodename with dtschema
+Date:   Mon, 29 Jun 2020 10:15:33 +0200
+Message-Id: <20200629081535.13502-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200629081657.13821-1-krzk@kernel.org>
-References: <20200629081657.13821-1-krzk@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 Fix dtschema validator warnings like:
-    uart@f8015000: $nodename:0: 'uart@f8015000' does not match '^serial(@[0-9a-f,]+)*$'
+    gic@fb001000: $nodename:0:
+        'gic@fb001000' does not match '^interrupt-controller(@[0-9a-f,]+)*$'
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/alpine.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-index 2072b637b5af..3d189d9f0d24 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -302,7 +302,7 @@
- 			mboxes = <&mailbox 1 0 11>;
+diff --git a/arch/arm/boot/dts/alpine.dtsi b/arch/arm/boot/dts/alpine.dtsi
+index d3036ea823d1..3b0675a1c460 100644
+--- a/arch/arm/boot/dts/alpine.dtsi
++++ b/arch/arm/boot/dts/alpine.dtsi
+@@ -91,7 +91,7 @@
  		};
  
--		uart0: uart@f8015000 {	/* console */
-+		uart0: serial@f8015000 {	/* console */
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x0 0xf8015000 0x0 0x1000>;
- 			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-@@ -311,7 +311,7 @@
- 			clock-names = "uartclk", "apb_pclk";
- 		};
- 
--		uart1: uart@f7111000 {
-+		uart1: serial@f7111000 {
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x0 0xf7111000 0x0 0x1000>;
- 			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-@@ -325,7 +325,7 @@
- 			status = "disabled";
- 		};
- 
--		uart2: uart@f7112000 {
-+		uart2: serial@f7112000 {
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x0 0xf7112000 0x0 0x1000>;
- 			interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
-@@ -337,7 +337,7 @@
- 			status = "disabled";
- 		};
- 
--		uart3: uart@f7113000 {
-+		uart3: serial@f7113000 {
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x0 0xf7113000 0x0 0x1000>;
- 			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-@@ -349,7 +349,7 @@
- 			status = "disabled";
- 		};
- 
--		uart4: uart@f7114000 {
-+		uart4: serial@f7114000 {
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x0 0xf7114000 0x0 0x1000>;
- 			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+ 		/* Interrupt Controller */
+-		gic: gic@fb001000 {
++		gic: interrupt-controller@fb001000 {
+ 			compatible = "arm,cortex-a15-gic";
+ 			#interrupt-cells = <3>;
+ 			#size-cells = <0>;
 -- 
 2.17.1
 
