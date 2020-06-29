@@ -2,377 +2,123 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85BC6C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6331AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CF55206A5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 478ED206C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:18:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="VvL4yO6j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730996AbgF2TRH (ORCPT
+        id S1729878AbgF2TSt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:17:07 -0400
-Received: from mga01.intel.com ([192.55.52.88]:63701 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731798AbgF2TRA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:17:00 -0400
-IronPort-SDR: zQVslvxTdUJYmnYaCQxQykC8p0vqjS7YNVyM89ASyWn/EjmwOMcb9QKBeHGZqkvJqLKh+rDWu3
- IHTOxb5iJr5w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="163944968"
-X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
-   d="scan'208";a="163944968"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 02:04:04 -0700
-IronPort-SDR: efGfS+925yJcyydLz+hA38uSECBwuq0VTi09MpkwYmNzyQB8Hi5E4S5E6idD+Kk58G5TjNEWpo
- 96wjqlfNb0qw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
-   d="scan'208";a="424750634"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga004.jf.intel.com with ESMTP; 29 Jun 2020 02:04:01 -0700
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
-Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v3 2/2] Add PWM fan controller driver for LGM SoC
-Date:   Mon, 29 Jun 2020 17:03:47 +0800
-Message-Id: <df22a642083474e71f9f8274c033a6ef9757af5f.1593420979.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
-References: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
-References: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
+        Mon, 29 Jun 2020 15:18:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43358 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731771AbgF2TOV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:14:21 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1EEBC0F26CE
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:04:13 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id o2so15872476wmh.2
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:04:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Hz0iVZuquqaAZG91zpdXr2Uyq4D9Tl6Yab1oO2oLyu4=;
+        b=VvL4yO6jCcGsEdtzYiLzKqRQKd+CJHaFyeqJWf7CcFeUmtn3q8wK56Ka3u84RH2/TB
+         NB1CiAymp//XtqnFz5/H+ApJeRCUh/SqYJkad+wuFzUrSypwMyamn05nNgh9bLzgio/4
+         QBu82NPhZZT4p9ki5bX41KR4ZogP7bglHyn0k1CHfqSTORfkjFmMOuW3F+ZcTgaapo1B
+         kH2qepefaYlMyQ/1lvRS5epPqtlijcTGvri5VRyh7kANgzWCz96TsJFHbd1OpXN75CnZ
+         b9jNoyvkUTRs0Vyin0UkoI4pBwLsrwpFCWDaCSYqIKh9GuRWgBS4RIRv05e4D75Eph+2
+         us+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Hz0iVZuquqaAZG91zpdXr2Uyq4D9Tl6Yab1oO2oLyu4=;
+        b=CO2N9CcL2uMwUTOss8Kiw31ETnPfpcbl/xfDK3IcQqxP+B7JJD52DkLqvnBr3h2WAc
+         f8rurbA5ZPz8LR/YQiT1SKFQWz653+y1RcFXXKnkOYDKWaGnjWRHIXS7mD/6kUTzWTH9
+         mEloLkThPaSxLxaKopTeqKSjM/T6oa7DrbGP2SMu++SzU95O/S4rnTxWc+5dCkqQGGpz
+         eaKjPFEqkNMMDknj74+zKTYw63XBJQdYS9FlTi9WpxMj0CtJjff9hP/tk6O1etDqZMUr
+         QB65hI8A+qzA4kGa+JqTFbVGkfex5MsCSRHSGj0VPOdGdzPPnZ/QQO1Rcd/ja1G6oFmX
+         uYYg==
+X-Gm-Message-State: AOAM532kWJyOjo8SHdZ/aCMoipAy/UTgJjwPGQWRbp8hCYNey+ebVxfY
+        a/xnZm4Cy54mNSc2kxb4A+R6tg==
+X-Google-Smtp-Source: ABdhPJwR+XCjvBHh7hN27yb4wbyQ2NgRHNnJda5bGoNm1j9W8pobPb9+mBDwQzfYrDFvbqSH7NAqWg==
+X-Received: by 2002:a7b:cc8b:: with SMTP id p11mr17632537wma.180.1593432252690;
+        Mon, 29 Jun 2020 05:04:12 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id d81sm25274347wmc.0.2020.06.29.05.04.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 05:04:12 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v2 01/10] net: ethernet: ixgbe: check the return value of ixgbe_mii_bus_init()
+Date:   Mon, 29 Jun 2020 14:03:37 +0200
+Message-Id: <20200629120346.4382-2-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200629120346.4382-1-brgl@bgdev.pl>
+References: <20200629120346.4382-1-brgl@bgdev.pl>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
-This PWM controller does not have any other consumer, it is a
-dedicated PWM controller for fan attached to the system. Add
-driver for this PWM fan controller.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+This function may fail. Check its return value and propagate the error
+code.
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/pwm/Kconfig         |   9 ++
- drivers/pwm/Makefile        |   1 +
- drivers/pwm/pwm-intel-lgm.c | 265 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 275 insertions(+)
- create mode 100644 drivers/pwm/pwm-intel-lgm.c
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index cb8d739067d2..a3303e22d5fa 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -232,6 +232,15 @@ config PWM_IMX_TPM
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-imx-tpm.
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+index 97a423ecf808..8752b5eea091 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+@@ -11175,10 +11175,14 @@ static int ixgbe_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 			IXGBE_LINK_SPEED_10GB_FULL | IXGBE_LINK_SPEED_1GB_FULL,
+ 			true);
  
-+config PWM_INTEL_LGM
-+	tristate "Intel LGM PWM support"
-+	depends on X86 || COMPILE_TEST
-+	help
-+	  Generic PWM fan controller driver for LGM SoC.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-intel-lgm.
-+
- config PWM_IQS620A
- 	tristate "Azoteq IQS620A PWM support"
- 	depends on MFD_IQS62X || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index a59c710e98c7..db154a6b4f51 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
- obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
- obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
- obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
-+obj-$(CONFIG_PWM_INTEL_LGM)	+= pwm-intel-lgm.o
- obj-$(CONFIG_PWM_IQS620A)	+= pwm-iqs620a.o
- obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
- obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
-diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
-new file mode 100644
-index 000000000000..661fa7d9145d
---- /dev/null
-+++ b/drivers/pwm/pwm-intel-lgm.c
-@@ -0,0 +1,265 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 Intel Corporation.
-+ *
-+ * Notes & Limitations:
-+ * - The hardware supports fixed period which is dependent on 2/3 or 4
-+ *   wire fan mode.
-+ * - Supports normal polarity. Does not support changing polarity.
-+ * - When PWM is disabled, output of PWM will become 0(inactive). It doesn't
-+ *   keep track of running period.
-+ * - When duty cycle is changed, PWM output may be a mix of previous setting
-+ *   and new setting for the first period. From second period, the output is
-+ *   based on new setting.
-+ * - Supports 100% duty cycle.
-+ * - It is a dedicated PWM fan controller. There are no other consumers for
-+ *   this PWM controller.
-+ */
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/pwm.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+
-+#define PWM_FAN_CON0		0x0
-+#define PWM_FAN_EN_EN		BIT(0)
-+#define PWM_FAN_EN_DIS		0x0
-+#define PWM_FAN_EN_MSK		BIT(0)
-+#define PWM_FAN_MODE_2WIRE	0x0
-+#define PWM_FAN_MODE_4WIRE	0x1
-+#define PWM_FAN_MODE_MSK	BIT(1)
-+#define PWM_FAN_DC_MSK		GENMASK(23, 16)
-+
-+#define PWM_FAN_CON1		0x4
-+#define PWM_FAN_MAX_RPM_MSK	GENMASK(15, 0)
-+
-+#define MAX_RPM			(BIT(16) - 1)
-+#define DFAULT_RPM		4000
-+#define MAX_DUTY_CYCLE		(BIT(8) - 1)
-+
-+#define DC_BITS			8
-+
-+#define PERIOD_2WIRE_NSECS	40000000
-+#define PERIOD_4WIRE_NSECS	40000
-+
-+#define LGM_PWM_DIV_ROUND_DOWN(n, d) (((n) + ((d) / 2) - 1) / (d))
-+
-+struct lgm_pwm_chip {
-+	struct pwm_chip chip;
-+	struct regmap *regmap;
-+	struct clk *clk;
-+	struct reset_control *rst;
-+	u32 period;
-+};
-+
-+static inline struct lgm_pwm_chip *to_lgm_pwm_chip(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct lgm_pwm_chip, chip);
-+}
-+
-+static int lgm_pwm_enable(struct pwm_chip *chip, bool enable)
-+{
-+	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-+	struct regmap *regmap = pc->regmap;
-+
-+	if (enable)
-+		regmap_update_bits(regmap, PWM_FAN_CON0,
-+				   PWM_FAN_EN_MSK, PWM_FAN_EN_EN);
-+	else
-+		regmap_update_bits(regmap, PWM_FAN_CON0,
-+			   	   PWM_FAN_EN_MSK, PWM_FAN_EN_DIS);
-+
-+	return 0;
-+}
-+
-+static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			 const struct pwm_state *state)
-+{
-+	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-+	u32 duty_cycle, val;
-+	unsigned int period;
-+
-+	period = min_t(unsigned int, state->period, pc->period);
-+
-+	if (state->polarity != PWM_POLARITY_NORMAL ||
-+	    period < pc->period)
-+		return -EINVAL;
-+
-+	duty_cycle = min_t(u32, state->duty_cycle, period);
-+
-+	/* reg_value = duty_ns * MAX_REG_VAL(0xff) / period_ns */
-+	val = LGM_PWM_DIV_ROUND_DOWN(duty_cycle << DC_BITS, period);
-+	val = min_t(u32, val, MAX_DUTY_CYCLE);
-+
-+	regmap_update_bits(pc->regmap, PWM_FAN_CON0, PWM_FAN_DC_MSK,
-+			   FIELD_PREP(PWM_FAN_DC_MSK, val));
-+
-+	if (state->enabled != regmap_test_bits(pc->regmap, PWM_FAN_CON0,
-+					       PWM_FAN_EN_EN))
-+		lgm_pwm_enable(chip, state->enabled);
-+
-+	return 0;
-+}
-+
-+static void lgm_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+			      struct pwm_state *state)
-+{
-+	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-+	u32 duty, val;
-+
-+	state->enabled = regmap_test_bits(pc->regmap, PWM_FAN_CON0,
-+					  PWM_FAN_EN_EN);
-+	state->polarity = PWM_POLARITY_NORMAL;
-+	state->period = pc->period; /* fixed period */
-+
-+	regmap_read(pc->regmap, PWM_FAN_CON0, &val);
-+	duty = FIELD_GET(PWM_FAN_DC_MSK, val);
-+	state->duty_cycle = duty * pc->period >> DC_BITS;
-+	state->duty_cycle = roundup_pow_of_two(state->duty_cycle);
-+}
-+
-+static const struct pwm_ops lgm_pwm_ops = {
-+	.get_state = lgm_pwm_get_state,
-+	.apply = lgm_pwm_apply,
-+	.owner = THIS_MODULE,
-+};
-+
-+static void lgm_pwm_init(struct lgm_pwm_chip *pc)
-+{
-+	struct device *dev = pc->chip.dev;
-+	struct regmap *regmap = pc->regmap;
-+	u32 max_rpm, fan_wire, con0_val, con0_mask;
-+
-+	if (device_property_read_u32(dev, "intel,fan-wire", &fan_wire))
-+		fan_wire = 2; /* default is 2 wire mode */
-+
-+	con0_mask = PWM_FAN_MODE_MSK;
-+
-+	switch (fan_wire) {
-+	case 4:
-+		con0_val = FIELD_PREP(PWM_FAN_MODE_MSK, PWM_FAN_MODE_4WIRE);
-+		pc->period = PERIOD_4WIRE_NSECS;
-+		break;
-+	default:
-+		/* default is 2wire mode */
-+		con0_val = FIELD_PREP(PWM_FAN_MODE_MSK, PWM_FAN_MODE_2WIRE);
-+		pc->period = PERIOD_2WIRE_NSECS;
-+		break;
-+	}
-+
-+	if (device_property_read_u32(dev, "intel,max-rpm", &max_rpm))
-+		max_rpm = DFAULT_RPM;
-+
-+	max_rpm = min_t(u32, max_rpm, MAX_RPM);
-+	if (max_rpm == 0)
-+		max_rpm = DFAULT_RPM;
-+
-+	regmap_update_bits(regmap, PWM_FAN_CON1, PWM_FAN_MAX_RPM_MSK, max_rpm);
-+	regmap_update_bits(regmap, PWM_FAN_CON0, con0_mask, con0_val);
-+}
-+
-+static const struct regmap_config lgm_pwm_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+};
-+
-+static int lgm_pwm_probe(struct platform_device *pdev)
-+{
-+	struct lgm_pwm_chip *pc;
-+	struct device *dev = &pdev->dev;
-+	void __iomem *io_base;
-+	int ret;
-+
-+	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
-+	if (!pc)
-+		return -ENOMEM;
-+
-+	io_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(io_base))
-+		return PTR_ERR(io_base);
-+
-+	pc->regmap = devm_regmap_init_mmio(dev, io_base, &lgm_pwm_regmap_config);
-+	if (IS_ERR(pc->regmap)) {
-+		ret = PTR_ERR(pc->regmap);
-+		dev_err(dev, "failed to init register map: %pe\n", pc->regmap);
-+		return ret;
-+	}
-+
-+	pc->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(pc->clk)) {
-+		ret = PTR_ERR(pc->clk);
-+		dev_err(dev, "failed to get clock: %pe\n", pc->clk);
-+		return ret;
-+	}
-+
-+	pc->rst = devm_reset_control_get_exclusive(dev, NULL);
-+	if (IS_ERR(pc->rst)) {
-+		ret = PTR_ERR(pc->rst);
-+		dev_err(dev, "failed to get reset control: %pe\n", pc->rst);
-+		return ret;
-+	}
-+
-+	ret = reset_control_deassert(pc->rst);
-+	if (ret) {
-+		dev_err(dev, "cannot deassert reset control: %pe\n",
-+			ERR_PTR(ret));
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(pc->clk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable clock\n");
-+		return ret;
-+	}
-+
-+	pc->chip.dev = dev;
-+	pc->chip.ops = &lgm_pwm_ops;
-+	pc->chip.npwm = 1;
-+
-+	lgm_pwm_init(pc);
-+
-+	ret = pwmchip_add(&pc->chip);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to add PWM chip: %pe\n", ERR_PTR(ret));
-+		clk_disable_unprepare(pc->clk);
-+		reset_control_assert(pc->rst);
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, pc);
-+	return 0;
-+}
-+
-+static int lgm_pwm_remove(struct platform_device *pdev)
-+{
-+	struct lgm_pwm_chip *pc = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = pwmchip_remove(&pc->chip);
-+	if (ret < 0)
-+		return ret;
-+
-+	clk_disable_unprepare(pc->clk);
-+	reset_control_assert(pc->rst);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id lgm_pwm_of_match[] = {
-+	{ .compatible = "intel,lgm-pwm" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, lgm_pwm_of_match);
-+
-+static struct platform_driver lgm_pwm_driver = {
-+	.driver = {
-+		.name = "intel-pwm",
-+		.of_match_table = lgm_pwm_of_match,
-+	},
-+	.probe = lgm_pwm_probe,
-+	.remove = lgm_pwm_remove,
-+};
-+module_platform_driver(lgm_pwm_driver);
+-	ixgbe_mii_bus_init(hw);
++	err = ixgbe_mii_bus_init(hw);
++	if (err)
++		goto err_netdev;
+ 
+ 	return 0;
+ 
++err_netdev:
++	unregister_netdev(netdev);
+ err_register:
+ 	ixgbe_release_hw_control(adapter);
+ 	ixgbe_clear_interrupt_scheme(adapter);
 -- 
-2.11.0
+2.26.1
 
