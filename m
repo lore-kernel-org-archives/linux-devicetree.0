@@ -7,93 +7,104 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF05C433E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 727CFC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D170206A5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55094206A5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467804;
-	bh=wfjFiECLgmI6YdnDVX7rASM5LSDbnrbzKR9wXxeg6Y0=;
+	s=default; t=1593467840;
+	bh=9azITMfQ7Egi4kjhUOh84JkmaFPQhwylfwifEV8vHbk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z1j3JeQ54ImsBYAope+h1s9cdo/ovaDK1zNSYy9snEEuqqgetFRPvT26NVTOCFv0a
-	 zD6b2L6Ekf/CUnUP40HeaG+BOZ71DP45MZxPg0mpI7PQfvnd1gGGNisPH/zUztNf3z
-	 nTTbTnaAvvATQ9ATXb/yE2BWsEcEdPPD3HKy1m+c=
+	b=iqlb8DFjjdb1KpqA3itldrybp6ChoDFhPkJdbet0ti2VQ6hak5a6oNDKucCO+tsBT
+	 TZJMo4tv4VE4PW0YMl1VG2Kza2DnM0+klfyqwXWRAejVAk++fpye29SR8SFUtWeaAs
+	 h6JfgsXR2wAJq7cVuqDx6C4NbhyRpwZheHcXBR+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391600AbgF2V4N (ORCPT
+        id S2404695AbgF2V5M (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:56:13 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:38693 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726529AbgF2V4J (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 17:56:09 -0400
-Received: by mail-io1-f65.google.com with SMTP id f6so3249860ioj.5;
-        Mon, 29 Jun 2020 14:56:09 -0700 (PDT)
+        Mon, 29 Jun 2020 17:57:12 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:37081 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404693AbgF2V5L (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 17:57:11 -0400
+Received: by mail-il1-f194.google.com with SMTP id r12so8660504ilh.4;
+        Mon, 29 Jun 2020 14:57:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=7BzdbzHdhO67Ygeg4vmtsn4XIT8EQ37NcHABkSdRi3E=;
-        b=I0At8bxZQkXym3kz+XxCrI1Zet38RIVqzWLaUWe4KNL20owkV8kedIk5u57bsFVxsf
-         2QZMGvbCYj7o3gYemLkx0YFr+fzMUF+BP0ht/BPr3q1S/89gUpUPzjpbShvHKl6gOOqd
-         QjPZ6El3Hu8wGPcidxbi69aPCC4p9mq5zrDQgo4lOkH6jQNVleiJx1Nge2/hGxQMhIsn
-         GTuXbtJHJX+IJVgI8nP/v/GnkklMWLqA5CtM8RKEO+K8MxbCL5eK7nP0wmdBbUmrgAcG
-         8zyD0NJyxXANuvQ6ByOo/mvCavuF75N9xBCIHQo4QgHT2+rsS2+I414OjS5XS/JXl7iE
-         ma9Q==
-X-Gm-Message-State: AOAM53163AWRJY0k7ytHI0M126BFg2CAz9IA5sCSWB/Mr1mNZTSOnU8W
-        Y5TG0P1srLKSELs4ITvOOA==
-X-Google-Smtp-Source: ABdhPJwEvFQMnYXTu1dUlTrx8NG/GBWsngrOu89NxHz6Tg+mFbZeo4sGg728NSX2H2aFS2/qL1GcVQ==
-X-Received: by 2002:a02:cf12:: with SMTP id q18mr13182774jar.3.1593467768763;
-        Mon, 29 Jun 2020 14:56:08 -0700 (PDT)
+        bh=PfqS3OG1vRy132QSpT7juMRTX02P9BHgaTSVVVztCHs=;
+        b=DfNPn8nSieYrxwZR4kiLsm5q02mjI1zLF6jaju7c5LVQaTnUtQ73iNsJ0b7aZIjBVz
+         zi2WfH6d9xMTGMj+tjJBIADasYixGuXhcMLUofck3f0pOBKdBx4fOGDsTYdT3p9FhWf5
+         lQrNnOEd0BtgDD/c+ujEBRxmOrApSX8KUqBKXu2pIe88v+ZLNMEHV5BWPCLpcVly3KWx
+         wfieq2K6yvfH2iSUAGFxudO/HyyLTFlZVyGOVl0g3ipZBQwitKwQFSUNvk1eqnYkZ7sS
+         lJJ96LsjgL2Bgud6Jld3Zv9JJWwngNhMfpkY48n6ukIdBZIXL7sm5VBx6ioh6x9NVmEV
+         zeGA==
+X-Gm-Message-State: AOAM5327a4cQzBiqqphjaMzp+zSTfdlYgXt4ye2BnF2pV9+JTHLaLxf0
+        odKNSyKEtRwjHukWefUNAg==
+X-Google-Smtp-Source: ABdhPJw0pDnSmcQd55WjOydr5ed57EqP4M5g0HlMaKpmBlY4fMmFnosgqPZ9g8WdnUknA418MQ3pSg==
+X-Received: by 2002:a92:cd01:: with SMTP id z1mr355216iln.103.1593467830459;
+        Mon, 29 Jun 2020 14:57:10 -0700 (PDT)
 Received: from xps15 ([64.188.179.255])
-        by smtp.gmail.com with ESMTPSA id y5sm590604iov.3.2020.06.29.14.56.07
+        by smtp.gmail.com with ESMTPSA id k126sm540191iof.50.2020.06.29.14.57.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 14:56:08 -0700 (PDT)
-Received: (nullmailer pid 3001028 invoked by uid 1000);
-        Mon, 29 Jun 2020 21:56:06 -0000
-Date:   Mon, 29 Jun 2020 15:56:06 -0600
+        Mon, 29 Jun 2020 14:57:09 -0700 (PDT)
+Received: (nullmailer pid 3003522 invoked by uid 1000);
+        Mon, 29 Jun 2020 21:57:08 -0000
+Date:   Mon, 29 Jun 2020 15:57:08 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, wsd_upstream@mediatek.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: devapc: add bindings for
- devapc-mt6873
-Message-ID: <20200629215606.GA3000557@bogus>
-References: <1592559720-8482-1-git-send-email-neal.liu@mediatek.com>
- <1592559720-8482-2-git-send-email-neal.liu@mediatek.com>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Andy Gross <agross@kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Hartmut Knaack <knaack.h@gmx.de>, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 1/5] dt-bindings: thermal: qcom: add adc-thermal monitor
+ bindings
+Message-ID: <20200629215708.GA3003126@bogus>
+References: <20200621193549.2070434-1-dmitry.baryshkov@linaro.org>
+ <20200621193549.2070434-2-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1592559720-8482-2-git-send-email-neal.liu@mediatek.com>
+In-Reply-To: <20200621193549.2070434-2-dmitry.baryshkov@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 19 Jun 2020 17:41:59 +0800, Neal Liu wrote:
-> Add bindings for MT6873 devapc.
+On Sun, 21 Jun 2020 22:35:45 +0300, Dmitry Baryshkov wrote:
+> Add bindings for thermal monitor, part of Qualcomm PMIC5 chips. It is a
+> close counterpart of VADC part of those PMICs.
 > 
-> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 > ---
->  .../soc/mediatek/devapc/devapc-mt6873.yaml         |   61 ++++++++++++++++++++
->  1 file changed, 61 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/mediatek/devapc/devapc-mt6873.yaml
+>  .../bindings/thermal/qcom-spmi-adc-tm5.yaml   | 143 ++++++++++++++++++
+>  1 file changed, 143 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/qcom-spmi-adc-tm5.yaml
 > 
 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/soc/mediatek/devapc/devapc-mt6873.example.dt.yaml: example-0: devapc@10207000:reg:0: [0, 270561280, 0, 4096] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/soc/mediatek/devapc/devapc-mt6873.example.dt.yaml: example-0: devapc@10207000:reg:1: [0, 271007744, 0, 4096] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/soc/mediatek/devapc/devapc-mt6873.example.dt.yaml: example-0: devapc@10207000:reg:2: [0, 271011840, 0, 4096] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/soc/mediatek/devapc/devapc-mt6873.example.dt.yaml: example-0: devapc@10207000:reg:3: [0, 285343744, 0, 4096] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/soc/mediatek/devapc/devapc-mt6873.example.dt.yaml: example-0: devapc@10207000:reg:4: [0, 270589952, 0, 4096] is too long
+Documentation/devicetree/bindings/thermal/qcom-spmi-adc-tm5.yaml:  while scanning a block scalar
+  in "<unicode string>", line 114, column 5
+found a tab character where an indentation space is expected
+  in "<unicode string>", line 115, column 1
+Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/thermal/qcom-spmi-adc-tm5.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/thermal/qcom-spmi-adc-tm5.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+Makefile:1347: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
 
-See https://patchwork.ozlabs.org/patch/1312741
+See https://patchwork.ozlabs.org/patch/1313977
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
