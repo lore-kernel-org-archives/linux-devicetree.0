@@ -2,110 +2,377 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9CEC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCC7C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACF6220663
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:29:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UU3gMqGQ"
+	by mail.kernel.org (Postfix) with ESMTP id 797BD206E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:32:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593459132;
+	bh=fMJnMeJx8wGXwDbv34zc9g+wG1Ni0PSEYZC1BY7IAlA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=bhBwxWZejOSnbxkwX9LHCceLqEodhs/HDsTxmtPI/ysNyeZwiygohn/jwaeRg0lDd
+	 04k2ZGZ98oRStCODM1zbCMaF+4RDg4kPueOkmLZe6QFuQEtr2cVbz3eLjfZCUddXAf
+	 bKR0pAJcSW8LtJnK76b7AHPlZvBUhJqk0i1wbndo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbgF2T3L (ORCPT
+        id S1730638AbgF2TcL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:29:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45966 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732709AbgF2T1m (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:27:42 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01409C030F3E;
-        Mon, 29 Jun 2020 09:57:51 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id a6so14140026wmm.0;
-        Mon, 29 Jun 2020 09:57:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BQzFhhy4PPK+wORzA0eq8X7nCm3stS5K4TwJi9mD/OU=;
-        b=UU3gMqGQIDDI4aV0Xe5aM83CVRlvInAiCH7amNVA9uDmhXzVxpFuk1FmMYKZM7OCPq
-         a4tPy0pbznEdYQw55lRvmJjvgWSsIc7aOxVebt9kZHI03PxoJP4moiQaIKd2tsdTOA/U
-         JnNxFFUR43OLdXU4VvUpzlUX8gBrFgskl8tYwFfefmN/6EVob1pxAVGGSjb+l0vDpJoE
-         1a0DQSEFESYn08TPLpotPXvSKci9hmgYmBodhIaYks6pt7ykXGzVHeNT2li7jOYsBXKz
-         48agFyMb16F0QjcuV8o6yQ9F0zbAjdFAwxQPL1C9mdfV583zS7X0Ou6E3pbFcUKXGDOC
-         eQLA==
+        Mon, 29 Jun 2020 15:32:11 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46438 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732429AbgF2TcI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:32:08 -0400
+Received: by mail-io1-f65.google.com with SMTP id a12so18448743ion.13;
+        Mon, 29 Jun 2020 12:32:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=BQzFhhy4PPK+wORzA0eq8X7nCm3stS5K4TwJi9mD/OU=;
-        b=rEHiRwp8EeSh0IpAo7vSqLiC4bEN6Ttqd6oyd6HAQNsSLPLN40h7a8spc1s5UQ0uek
-         cEdd6kTt0uY8L0NgT0XNCztS2yGhHk+MHdiYhLmzNlek5pUUT7a9CuVVjBzs5kOwwbru
-         RqEK1fsB9YvC7zWID7yhkhbwU9ZX87Dq5xX0IM8bn7Gt28Hk9bfshAIrvdDJZTkpBoRc
-         s5PaoaAJNtAcRr+mcGAJfG8LAWkhm0SgiYuHJGGFDoxY2+22g8FCRtmywhAnxyzxRQMw
-         dhNnhuEcoV5zBuqmgm/YUShdCM59GeH8kb73W8VrfCIAsg7Ea9qQLmKlK4kGJbV2LrM+
-         z3cw==
-X-Gm-Message-State: AOAM533q0ehb269wRMVeNRodwDu4vCBgO6Dk80D2VoxAkTMw1CpE46WI
-        UDkF1xUzXMUHyonm9kFhI7M=
-X-Google-Smtp-Source: ABdhPJwfZU06pq3cZr3NXQLT/Ki5iwUmKfY9cklbAHtcV0HoBVmGm8eeONMeuclh5OLF4878sWZCdQ==
-X-Received: by 2002:a1c:19c5:: with SMTP id 188mr3212232wmz.124.1593449869667;
-        Mon, 29 Jun 2020 09:57:49 -0700 (PDT)
-Received: from [10.230.30.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id t4sm510754wmf.4.2020.06.29.09.57.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 09:57:49 -0700 (PDT)
-Subject: Re: [PATCH v2 01/10] net: ethernet: ixgbe: check the return value of
- ixgbe_mii_bus_init()
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Russell King <linux@armlinux.org.uk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20200629120346.4382-1-brgl@bgdev.pl>
- <20200629120346.4382-2-brgl@bgdev.pl>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <7e30d5fc-b6db-1c09-3515-e309da1eb0f5@gmail.com>
-Date:   Mon, 29 Jun 2020 09:57:44 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        bh=sxRkPuDfPbrS9C7pjKtoug/7Im3FpACWhfxon0s0d4Q=;
+        b=mThvgoW64fiF80nE8HeDGJIFps6Vigecmu4kZg7elhENOIRxR2RfUte53R8Mjutwrt
+         8mvaT4Z9BpnqKpzy5QNacCy+CQa4EOIlN80/KtPhi+u84dkIQ4UyMCd9kdUcwhZrqAMf
+         F8eHpTiHKoEEr0NriZLIWMKoGGWy3npqenp4yNnONev1orkdv1f1mUpEaA0GDaoq2H/d
+         c7YqyldK0XfVj4KcsIV3/K0cdUXSEJ0cBBudDF02gKDrVGeZVnZpIRAcKP9LbGA8MbSX
+         usB99KSUAbizsqmsn0FI4+ZSyYyLf+udXjBOBrBt8P2dDsAlDPjES9JuJdb9RQa1bMCO
+         Q+/w==
+X-Gm-Message-State: AOAM530vqTwElNLopWfNMkAhb/PnoKOVEzp5n5AWwia+X7kAu7Nn2mbK
+        1n5Kv0pjJIoxnwKckzqhXHukI9N2WQ==
+X-Google-Smtp-Source: ABdhPJyoOA8axgu8kqOwB6MHsfwTzlZXdimo9+8p3rtAttS0bGleNvdFKHg38ny8eaDKNKn8oWu/Zg==
+X-Received: by 2002:a05:6602:15c8:: with SMTP id f8mr18219285iow.183.1593459126187;
+        Mon, 29 Jun 2020 12:32:06 -0700 (PDT)
+Received: from xps15.herring.priv ([64.188.179.255])
+        by smtp.googlemail.com with ESMTPSA id s17sm378792ioj.10.2020.06.29.12.32.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 12:32:05 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Andre Przywara <andre.przywara@arm.com>,
+        Joel Stanley <joel@jms.id.au>
+Subject: [PATCH] scripts/dtc: Update to upstream version v1.6.0-11-g9d7888cbf19c
+Date:   Mon, 29 Jun 2020 13:32:03 -0600
+Message-Id: <20200629193203.2727682-1-robh@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200629120346.4382-2-brgl@bgdev.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Sync with upstream dtc primarily to pickup the I2C bus check fixes. The
+interrupt_provider check is noisy, so turn it off for now.
 
+This adds the following commits from upstream:
 
-On 6/29/2020 5:03 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> This function may fail. Check its return value and propagate the error
-> code.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+9d7888cbf19c dtc: Consider one-character strings as strings
+8259d59f59de checks: Improve i2c reg property checking
+fdabcf2980a4 checks: Remove warning for I2C_OWN_SLAVE_ADDRESS
+2478b1652c8d libfdt: add extern "C" for C++
+f68bfc2668b2 libfdt: trivial typo fix
+7be250b4d059 libfdt: Correct condition for reordering blocks
+81e0919a3e21 checks: Add interrupt provider test
+85e5d839847a Makefile: when building libfdt only, do not add unneeded deps
+b28464a550c5 Fix some potential unaligned accesses in dtc
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+Planning to apply this for 5.8-rc.
+
+ scripts/Makefile.lib        |  4 +++-
+ scripts/dtc/checks.c        | 39 ++++++++++++++++++++++++++++++++++---
+ scripts/dtc/dtc.h           | 31 +++++++++++++++++++++++++++++
+ scripts/dtc/flattree.c      |  2 +-
+ scripts/dtc/libfdt/fdt_rw.c |  2 +-
+ scripts/dtc/libfdt/fdt_sw.c |  2 +-
+ scripts/dtc/libfdt/libfdt.h |  8 ++++++++
+ scripts/dtc/treesource.c    |  8 ++++----
+ scripts/dtc/version_gen.h   |  2 +-
+ scripts/dtc/yamltree.c      |  6 +++---
+ 10 files changed, 89 insertions(+), 15 deletions(-)
+
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 99ac59c59826..e6411b37ecf6 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -259,6 +259,7 @@ quiet_cmd_gzip = GZIP    $@
+ # DTC
+ # ---------------------------------------------------------------------------
+ DTC ?= $(objtree)/scripts/dtc/dtc
++DTC_FLAGS += -Wno-interrupt_provider
+ 
+ # Disable noisy checks by default
+ ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
+@@ -274,7 +275,8 @@ endif
+ 
+ ifneq ($(findstring 2,$(KBUILD_EXTRA_WARN)),)
+ DTC_FLAGS += -Wnode_name_chars_strict \
+-	-Wproperty_name_chars_strict
++	-Wproperty_name_chars_strict \
++	-Winterrupt_provider
+ endif
+ 
+ DTC_FLAGS += $(DTC_FLAGS_$(basetarget))
+diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
+index 4b3c486f1399..b7955dbd71ca 100644
+--- a/scripts/dtc/checks.c
++++ b/scripts/dtc/checks.c
+@@ -1022,6 +1022,9 @@ static void check_i2c_bus_bridge(struct check *c, struct dt_info *dti, struct no
+ }
+ WARNING(i2c_bus_bridge, check_i2c_bus_bridge, NULL, &addr_size_cells);
+ 
++#define I2C_OWN_SLAVE_ADDRESS	(1U << 30)
++#define I2C_TEN_BIT_ADDRESS	(1U << 31)
++
+ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node *node)
+ {
+ 	struct property *prop;
+@@ -1044,6 +1047,8 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
+ 	}
+ 
+ 	reg = fdt32_to_cpu(*cells);
++	/* Ignore I2C_OWN_SLAVE_ADDRESS */
++	reg &= ~I2C_OWN_SLAVE_ADDRESS;
+ 	snprintf(unit_addr, sizeof(unit_addr), "%x", reg);
+ 	if (!streq(unitname, unit_addr))
+ 		FAIL(c, dti, node, "I2C bus unit address format error, expected \"%s\"",
+@@ -1051,10 +1056,15 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
+ 
+ 	for (len = prop->val.len; len > 0; len -= 4) {
+ 		reg = fdt32_to_cpu(*(cells++));
+-		if (reg > 0x3ff)
++		/* Ignore I2C_OWN_SLAVE_ADDRESS */
++		reg &= ~I2C_OWN_SLAVE_ADDRESS;
++
++		if ((reg & I2C_TEN_BIT_ADDRESS) && ((reg & ~I2C_TEN_BIT_ADDRESS) > 0x3ff))
+ 			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 10-bits, got \"0x%x\"",
+ 				  reg);
+-
++		else if (reg > 0x7f)
++			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 7-bits, got \"0x%x\". Set I2C_TEN_BIT_ADDRESS for 10 bit addresses or fix the property",
++				  reg);
+ 	}
+ }
+ WARNING(i2c_bus_reg, check_i2c_bus_reg, NULL, &reg_format, &i2c_bus_bridge);
+@@ -1547,6 +1557,28 @@ static bool node_is_interrupt_provider(struct node *node)
+ 
+ 	return false;
+ }
++
++static void check_interrupt_provider(struct check *c,
++				     struct dt_info *dti,
++				     struct node *node)
++{
++	struct property *prop;
++
++	if (!node_is_interrupt_provider(node))
++		return;
++
++	prop = get_property(node, "#interrupt-cells");
++	if (!prop)
++		FAIL(c, dti, node,
++		     "Missing #interrupt-cells in interrupt provider");
++
++	prop = get_property(node, "#address-cells");
++	if (!prop)
++		FAIL(c, dti, node,
++		     "Missing #address-cells in interrupt provider");
++}
++WARNING(interrupt_provider, check_interrupt_provider, NULL);
++
+ static void check_interrupts_property(struct check *c,
+ 				      struct dt_info *dti,
+ 				      struct node *node)
+@@ -1604,7 +1636,7 @@ static void check_interrupts_property(struct check *c,
+ 
+ 	prop = get_property(irq_node, "#interrupt-cells");
+ 	if (!prop) {
+-		FAIL(c, dti, irq_node, "Missing #interrupt-cells in interrupt-parent");
++		/* We warn about that already in another test. */
+ 		return;
+ 	}
+ 
+@@ -1828,6 +1860,7 @@ static struct check *check_table[] = {
+ 	&deprecated_gpio_property,
+ 	&gpios_property,
+ 	&interrupts_property,
++	&interrupt_provider,
+ 
+ 	&alias_paths,
+ 
+diff --git a/scripts/dtc/dtc.h b/scripts/dtc/dtc.h
+index 6e74ecea55a3..a08f4159cd03 100644
+--- a/scripts/dtc/dtc.h
++++ b/scripts/dtc/dtc.h
+@@ -51,6 +51,37 @@ extern int annotate;		/* annotate .dts with input source location */
+ 
+ typedef uint32_t cell_t;
+ 
++static inline uint16_t dtb_ld16(const void *p)
++{
++	const uint8_t *bp = (const uint8_t *)p;
++
++	return ((uint16_t)bp[0] << 8)
++		| bp[1];
++}
++
++static inline uint32_t dtb_ld32(const void *p)
++{
++	const uint8_t *bp = (const uint8_t *)p;
++
++	return ((uint32_t)bp[0] << 24)
++		| ((uint32_t)bp[1] << 16)
++		| ((uint32_t)bp[2] << 8)
++		| bp[3];
++}
++
++static inline uint64_t dtb_ld64(const void *p)
++{
++	const uint8_t *bp = (const uint8_t *)p;
++
++	return ((uint64_t)bp[0] << 56)
++		| ((uint64_t)bp[1] << 48)
++		| ((uint64_t)bp[2] << 40)
++		| ((uint64_t)bp[3] << 32)
++		| ((uint64_t)bp[4] << 24)
++		| ((uint64_t)bp[5] << 16)
++		| ((uint64_t)bp[6] << 8)
++		| bp[7];
++}
+ 
+ #define streq(a, b)	(strcmp((a), (b)) == 0)
+ #define strstarts(s, prefix)	(strncmp((s), (prefix), strlen(prefix)) == 0)
+diff --git a/scripts/dtc/flattree.c b/scripts/dtc/flattree.c
+index bd6977eedcb8..07f10d2b5d79 100644
+--- a/scripts/dtc/flattree.c
++++ b/scripts/dtc/flattree.c
+@@ -156,7 +156,7 @@ static void asm_emit_data(void *e, struct data d)
+ 		emit_offset_label(f, m->ref, m->offset);
+ 
+ 	while ((d.len - off) >= sizeof(uint32_t)) {
+-		asm_emit_cell(e, fdt32_to_cpu(*((fdt32_t *)(d.val+off))));
++		asm_emit_cell(e, dtb_ld32(d.val + off));
+ 		off += sizeof(uint32_t);
+ 	}
+ 
+diff --git a/scripts/dtc/libfdt/fdt_rw.c b/scripts/dtc/libfdt/fdt_rw.c
+index 524b520c8486..93e4a2b56348 100644
+--- a/scripts/dtc/libfdt/fdt_rw.c
++++ b/scripts/dtc/libfdt/fdt_rw.c
+@@ -436,7 +436,7 @@ int fdt_open_into(const void *fdt, void *buf, int bufsize)
+ 			return struct_size;
+ 	}
+ 
+-	if (can_assume(LIBFDT_ORDER) |
++	if (can_assume(LIBFDT_ORDER) ||
+ 	    !fdt_blocks_misordered_(fdt, mem_rsv_size, struct_size)) {
+ 		/* no further work necessary */
+ 		err = fdt_move(fdt, buf, bufsize);
+diff --git a/scripts/dtc/libfdt/fdt_sw.c b/scripts/dtc/libfdt/fdt_sw.c
+index 26759d5dfb8c..94ce4bb91a00 100644
+--- a/scripts/dtc/libfdt/fdt_sw.c
++++ b/scripts/dtc/libfdt/fdt_sw.c
+@@ -32,7 +32,7 @@ static int fdt_sw_probe_(void *fdt)
+ /* 'memrsv' state:	Initial state after fdt_create()
+  *
+  * Allowed functions:
+- *	fdt_add_reservmap_entry()
++ *	fdt_add_reservemap_entry()
+  *	fdt_finish_reservemap()		[moves to 'struct' state]
+  */
+ static int fdt_sw_probe_memrsv_(void *fdt)
+diff --git a/scripts/dtc/libfdt/libfdt.h b/scripts/dtc/libfdt/libfdt.h
+index 36fadcdea516..fe49b5d78938 100644
+--- a/scripts/dtc/libfdt/libfdt.h
++++ b/scripts/dtc/libfdt/libfdt.h
+@@ -9,6 +9,10 @@
+ #include "libfdt_env.h"
+ #include "fdt.h"
+ 
++#ifdef __cplusplus
++extern "C" {
++#endif
++
+ #define FDT_FIRST_SUPPORTED_VERSION	0x02
+ #define FDT_LAST_SUPPORTED_VERSION	0x11
+ 
+@@ -2069,4 +2073,8 @@ int fdt_overlay_apply(void *fdt, void *fdto);
+ 
+ const char *fdt_strerror(int errval);
+ 
++#ifdef __cplusplus
++}
++#endif
++
+ #endif /* LIBFDT_H */
+diff --git a/scripts/dtc/treesource.c b/scripts/dtc/treesource.c
+index c9d980c8abfc..061ba8c9c5e8 100644
+--- a/scripts/dtc/treesource.c
++++ b/scripts/dtc/treesource.c
+@@ -110,13 +110,13 @@ static void write_propval_int(FILE *f, const char *p, size_t len, size_t width)
+ 			fprintf(f, "%02"PRIx8, *(const uint8_t*)p);
+ 			break;
+ 		case 2:
+-			fprintf(f, "0x%02"PRIx16, fdt16_to_cpu(*(const fdt16_t*)p));
++			fprintf(f, "0x%02"PRIx16, dtb_ld16(p));
+ 			break;
+ 		case 4:
+-			fprintf(f, "0x%02"PRIx32, fdt32_to_cpu(*(const fdt32_t*)p));
++			fprintf(f, "0x%02"PRIx32, dtb_ld32(p));
+ 			break;
+ 		case 8:
+-			fprintf(f, "0x%02"PRIx64, fdt64_to_cpu(*(const fdt64_t*)p));
++			fprintf(f, "0x%02"PRIx64, dtb_ld64(p));
+ 			break;
+ 		}
+ 		if (p + width < end)
+@@ -183,7 +183,7 @@ static enum markertype guess_value_type(struct property *prop)
+ 			nnotcelllbl++;
+ 	}
+ 
+-	if ((p[len-1] == '\0') && (nnotstring == 0) && (nnul < (len-nnul))
++	if ((p[len-1] == '\0') && (nnotstring == 0) && (nnul <= (len-nnul))
+ 	    && (nnotstringlbl == 0)) {
+ 		return TYPE_STRING;
+ 	} else if (((len % sizeof(cell_t)) == 0) && (nnotcelllbl == 0)) {
+diff --git a/scripts/dtc/version_gen.h b/scripts/dtc/version_gen.h
+index 61dd7112d6e4..0714799446f8 100644
+--- a/scripts/dtc/version_gen.h
++++ b/scripts/dtc/version_gen.h
+@@ -1 +1 @@
+-#define DTC_VERSION "DTC 1.6.0-g87a656ae"
++#define DTC_VERSION "DTC 1.6.0-g9d7888cb"
+diff --git a/scripts/dtc/yamltree.c b/scripts/dtc/yamltree.c
+index 5b6ea8ea862f..4e93c12dc658 100644
+--- a/scripts/dtc/yamltree.c
++++ b/scripts/dtc/yamltree.c
+@@ -59,10 +59,10 @@ static void yaml_propval_int(yaml_emitter_t *emitter, struct marker *markers, ch
+ 			sprintf(buf, "0x%"PRIx8, *(uint8_t*)(data + off));
+ 			break;
+ 		case 2:
+-			sprintf(buf, "0x%"PRIx16, fdt16_to_cpu(*(fdt16_t*)(data + off)));
++			sprintf(buf, "0x%"PRIx16, dtb_ld16(data + off));
+ 			break;
+ 		case 4:
+-			sprintf(buf, "0x%"PRIx32, fdt32_to_cpu(*(fdt32_t*)(data + off)));
++			sprintf(buf, "0x%"PRIx32, dtb_ld32(data + off));
+ 			m = markers;
+ 			is_phandle = false;
+ 			for_each_marker_of_type(m, REF_PHANDLE) {
+@@ -73,7 +73,7 @@ static void yaml_propval_int(yaml_emitter_t *emitter, struct marker *markers, ch
+ 			}
+ 			break;
+ 		case 8:
+-			sprintf(buf, "0x%"PRIx64, fdt64_to_cpu(*(fdt64_t*)(data + off)));
++			sprintf(buf, "0x%"PRIx64, dtb_ld64(data + off));
+ 			break;
+ 		}
+ 
 -- 
-Florian
+2.25.1
+
