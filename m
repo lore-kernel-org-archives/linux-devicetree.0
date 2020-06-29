@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4937FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EC8C433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 266282063A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0328A2063A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:43:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="VWtqmuPq"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="oHzmtKVg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbgF2VnO (ORCPT
+        id S2391105AbgF2VnO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Mon, 29 Jun 2020 17:43:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37578 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727877AbgF2Shw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 14:37:52 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 323B2C03142B
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 10:21:09 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id h18so8002814qvl.3
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 10:21:09 -0700 (PDT)
+        with ESMTP id S1727871AbgF2Shv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 14:37:51 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 317B3C031430
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 10:21:11 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id v19so13398587qtq.10
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 10:21:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=marek-ca.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=fNFf1AHiZrCdSiYdBqYQtf+nkqBR/m0y7WTyi1yw8FM=;
-        b=VWtqmuPqPQ/Wmey41mf2SgkPFEQeVhfHg2KV97SKy14BZK+kLMSbjYN+ZPvMGC5i0Y
-         +r4q9jtPqzscxAPUihxpI+WhVY4fA2fOb5wNdVYpsw7mHOTtH58z96/Me2kJL2riWq1/
-         Ri2ca9uK/R3fhW8iFGRWnFah8BahMMXcCU19Dc5bqR+XweDTz9Bs6jxVG0mGLwyN2okP
-         y35pEgnQfrTJ39nlz4rC58djQsnMs3TyogejJSjEdxLWK4354Bmk8SX4uWlf82+Yf5yB
-         tUrfhKqMTiJD8nKznciNwm0aDEqSDMW6Hb5j9mXpIPahzmXfvyGuwkkpd48KuK7PXvCn
-         +Yfw==
+        bh=XikCz1+zr3FnvV2tYs/cOdK5k7ijVDZQLAkhovyJ9wo=;
+        b=oHzmtKVg4mDiXoIv90UY28rvbCERFVLGDpG/7OO1sWyA7OiOM8riiwAC+72M9N9i9y
+         TLg/CuNCRxl/UgM1VIft/qGTEG7l6vzZAFa/nN6A5vTVqSaBzSi/hi09c0tJtDq9MSfr
+         xYYf2me8OnHTlP6mo8vvmYDR4H/OHrDzF4O3QOIr5N2uudWtJEItuusx+10iNEjJTUOT
+         cH+IUlZcgYaXYLM50l3GFnbZdZha8zlsEy+4eePbHv4YCV9xB6Xvqz8vscWhvA1IR+pC
+         VTfkJ8zUy0GJ4GVvgBercGjMxA/jwmWSpnASmPEt+EG9ldlQAEHr2AK0tk03kKEn/FnS
+         59UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=fNFf1AHiZrCdSiYdBqYQtf+nkqBR/m0y7WTyi1yw8FM=;
-        b=BXseaVykLQCoucodC4ptW8IxwGA6ZGDblrInMMKEvWVTRJbbiL2ObDxdbqpHsLEews
-         u2urGop3lTsrFI8/rd9QvOeArSPvl7TbtCQ+sVp71/NKTwEfAaEAJ7PMz/lBftjliTL5
-         ZwsFFerCmIA2qHj1PIm8lkxw5MFeR+pEbkBzyEqKKH710Kz0LMnLYOciwImXU6PeC8fF
-         Lhz+EYhpmRWKlMBMO42qk4Cb1EAOw9Nb/CeN0dolBOk+caQgYOCknlEP2b/VYG+UQt7M
-         GRKSeLJXnxAobTcjJMb/Oi4ZzJvjzo74VQQ/wIWXreGWi4fWJEprjRE3aCru6jUj+74j
-         ti7A==
-X-Gm-Message-State: AOAM533jXdUYNM2Ch00GrwREzeIteh7dqog+pm7JPPSJZBaNM148GIfr
-        APXbVtDae/xz9JYVnLRWRP3kaQ==
-X-Google-Smtp-Source: ABdhPJyflHo+JB8zV+2M63HtV4/+CmvoKImlgNTrNPL+fJa4r4o9hHcti8JR5R4KbbSHo/VHx0tpug==
-X-Received: by 2002:a05:6214:13c6:: with SMTP id cg6mr16481717qvb.160.1593451268441;
-        Mon, 29 Jun 2020 10:21:08 -0700 (PDT)
+        bh=XikCz1+zr3FnvV2tYs/cOdK5k7ijVDZQLAkhovyJ9wo=;
+        b=Sxo6hKHurDjHeszJXDtNWth/TJfJIa7r5SzwYCqS9L5vrtglhfmmoc2cPSyBjAzccn
+         MJetiqq+6nbJFYn1bcU9Otr8b5QbNRcwyhJ03xvCdqB806zvb1YqobQT3VArXSeyVMn7
+         HhVeEclv2IC68BtfVWmuuMByjYKLaXPfiFycB5mmrPOdDrfS0cPYD3jo3EU84VgrkzCk
+         k8mmp4RNTqklLSlxOe3otkfBGujj2f9qTeE0+eNuC3pIuHA57L97QonZ8pe2d/lNtNd0
+         kNewmjyPUnu6ft6tiY4lJWw8MgdzNyWnATlfWb0UGCWUiLex+s/4XdouGkMsha+fbPHg
+         zz7A==
+X-Gm-Message-State: AOAM532Lb7kbpYffwtmUMIsOCIHQo+UAZkxwNzJIFg9iw/4OA9o5TzhU
+        Ofop7YIrlgGHadpgNL3IYbtx9QSEyys=
+X-Google-Smtp-Source: ABdhPJx3skupfPl9B/dzCTc8I20RAdMZje7jYDHR44GD9LAHO48epycaqSeUhhgZpCUM6hLNojrG5g==
+X-Received: by 2002:ac8:378f:: with SMTP id d15mr16598634qtc.256.1593451270376;
+        Mon, 29 Jun 2020 10:21:10 -0700 (PDT)
 Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id q5sm408363qtf.12.2020.06.29.10.21.07
+        by smtp.gmail.com with ESMTPSA id q5sm408363qtf.12.2020.06.29.10.21.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 10:21:08 -0700 (PDT)
+        Mon, 29 Jun 2020 10:21:10 -0700 (PDT)
 From:   Jonathan Marek <jonathan@marek.ca>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     Andy Gross <agross@kernel.org>,
@@ -68,9 +68,9 @@ Cc:     Andy Gross <agross@kernel.org>,
         linux-clk@vger.kernel.org (open list:COMMON CLK FRAMEWORK),
         devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 06/13] dt-bindings: clock: Introduce SM8150 QCOM Graphics clock bindings
-Date:   Mon, 29 Jun 2020 13:20:36 -0400
-Message-Id: <20200629172049.30452-7-jonathan@marek.ca>
+Subject: [PATCH v2 07/13] dt-bindings: clock: Introduce SM8250 QCOM Graphics clock bindings
+Date:   Mon, 29 Jun 2020 13:20:37 -0400
+Message-Id: <20200629172049.30452-8-jonathan@marek.ca>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200629172049.30452-1-jonathan@marek.ca>
 References: <20200629172049.30452-1-jonathan@marek.ca>
@@ -82,42 +82,42 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 Add device tree bindings for graphics clock controller for
-Qualcomm Technology Inc's SM8150 SoCs.
+Qualcomm Technology Inc's SM8250 SoCs.
 
 Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 ---
- .../bindings/clock/qcom,sm8150-gpucc.yaml     | 74 +++++++++++++++++++
- include/dt-bindings/clock/qcom,gpucc-sm8150.h | 40 ++++++++++
+ .../bindings/clock/qcom,sm8250-gpucc.yaml     | 74 +++++++++++++++++++
+ include/dt-bindings/clock/qcom,gpucc-sm8250.h | 40 ++++++++++
  2 files changed, 114 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,sm8150-gpucc.yaml
- create mode 100644 include/dt-bindings/clock/qcom,gpucc-sm8150.h
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sm8250-gpucc.yaml
+ create mode 100644 include/dt-bindings/clock/qcom,gpucc-sm8250.h
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,sm8150-gpucc.yaml b/Documentation/devicetree/bindings/clock/qcom,sm8150-gpucc.yaml
+diff --git a/Documentation/devicetree/bindings/clock/qcom,sm8250-gpucc.yaml b/Documentation/devicetree/bindings/clock/qcom,sm8250-gpucc.yaml
 new file mode 100644
-index 000000000000..683b50dd3492
+index 000000000000..2b9c8f97b76d
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/qcom,sm8150-gpucc.yaml
++++ b/Documentation/devicetree/bindings/clock/qcom,sm8250-gpucc.yaml
 @@ -0,0 +1,74 @@
 +# SPDX-License-Identifier: GPL-2.0-only
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/clock/qcom,sm8150-gpucc.yaml#
++$id: http://devicetree.org/schemas/clock/qcom,sm8250-gpucc.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Qualcomm Graphics Clock & Reset Controller Binding for SM8150
++title: Qualcomm Graphics Clock & Reset Controller Binding for SM8250
 +
 +maintainers:
 +  -
 +
 +description: |
 +  Qualcomm graphics clock control module which supports the clocks, resets and
-+  power domains on SM8150.
++  power domains on SM8250.
 +
-+  See also dt-bindings/clock/qcom,gpucc-sm8150.h.
++  See also dt-bindings/clock/qcom,gpucc-sm8250.h.
 +
 +properties:
 +  compatible:
-+    const: qcom,sm8150-gpucc
++    const: qcom,sm8250-gpucc
 +
 +  clocks:
 +    items:
@@ -156,11 +156,11 @@ index 000000000000..683b50dd3492
 +
 +examples:
 +  - |
-+    #include <dt-bindings/clock/qcom,gcc-sm8150.h>
++    #include <dt-bindings/clock/qcom,gcc-sm8250.h>
 +    #include <dt-bindings/clock/qcom,rpmh.h>
-+    clock-controller@2c90000 {
-+      compatible = "qcom,sm8150-gpucc";
-+      reg = <0x2c90000 0x9000>;
++    clock-controller@3d90000 {
++      compatible = "qcom,sm8250-gpucc";
++      reg = <0x3d90000 0x9000>;
 +      clocks = <&rpmhcc RPMH_CXO_CLK>,
 +               <&gcc GCC_GPU_GPLL0_CLK_SRC>,
 +               <&gcc GCC_GPU_GPLL0_DIV_CLK_SRC>;
@@ -172,19 +172,19 @@ index 000000000000..683b50dd3492
 +      #power-domain-cells = <1>;
 +    };
 +...
-diff --git a/include/dt-bindings/clock/qcom,gpucc-sm8150.h b/include/dt-bindings/clock/qcom,gpucc-sm8150.h
+diff --git a/include/dt-bindings/clock/qcom,gpucc-sm8250.h b/include/dt-bindings/clock/qcom,gpucc-sm8250.h
 new file mode 100644
-index 000000000000..e7cac7fe9739
+index 000000000000..c8fe64e399fd
 --- /dev/null
-+++ b/include/dt-bindings/clock/qcom,gpucc-sm8150.h
++++ b/include/dt-bindings/clock/qcom,gpucc-sm8250.h
 @@ -0,0 +1,40 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
 + * Copyright (c) 2017-2020, The Linux Foundation. All rights reserved.
 + */
 +
-+#ifndef _DT_BINDINGS_CLK_QCOM_GPU_CC_SM8150_H
-+#define _DT_BINDINGS_CLK_QCOM_GPU_CC_SM8150_H
++#ifndef _DT_BINDINGS_CLK_QCOM_GPU_CC_SM8250_H
++#define _DT_BINDINGS_CLK_QCOM_GPU_CC_SM8250_H
 +
 +/* GPU_CC clock registers */
 +#define GPU_CC_AHB_CLK				0
@@ -202,15 +202,15 @@ index 000000000000..e7cac7fe9739
 +#define GPU_CC_GX_QDSS_TSCTR_CLK		12
 +#define GPU_CC_GX_VSENSE_CLK			13
 +#define GPU_CC_PLL1				14
-+#define GPU_CC_PLL_TEST_CLK			15
-+#define GPU_CC_SLEEP_CLK			16
++#define GPU_CC_SLEEP_CLK			15
++#define GPU_CC_HLOS1_VOTE_GPU_SMMU_CLK		16
 +
 +/* GPU_CC Resets */
-+#define GPUCC_GPU_CC_CX_BCR			0
-+#define GPUCC_GPU_CC_GFX3D_AON_BCR		1
-+#define GPUCC_GPU_CC_GMU_BCR			2
-+#define GPUCC_GPU_CC_GX_BCR			3
-+#define GPUCC_GPU_CC_SPDM_BCR			4
++#define GPUCC_GPU_CC_ACD_BCR			0
++#define GPUCC_GPU_CC_CX_BCR			1
++#define GPUCC_GPU_CC_GFX3D_AON_BCR		2
++#define GPUCC_GPU_CC_GMU_BCR			3
++#define GPUCC_GPU_CC_GX_BCR			4
 +#define GPUCC_GPU_CC_XO_BCR			5
 +
 +/* GPU_CC GDSCRs */
