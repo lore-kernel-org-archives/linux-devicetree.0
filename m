@@ -4,105 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48767C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64342C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CF4C20656
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41E91206A5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:48:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467219;
-	bh=xa0Hrnu6FM8LHBC/Pqp9ywPVRqrBEcn8klGkVdowRAQ=;
+	s=default; t=1593467321;
+	bh=pHWXkpDmMnzt9/atnFVWTOS9Q9wcOY5N5scI8iSGDa4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DVGqKESfqTKh5wEMNW/rB+fFuCW6XZ0woXGkh/6+5/eDmQ8/JGHUfYcliScE0bD7L
-	 QHCGruxNYe+oUSZmObXyqlsRNCXAry01YUQEe4DVt9/KAoNtFOjGe4ToE7ItcLNPS3
-	 lXR7TsUCBhanZ6gb9YJbZwLLVakrZAHndSazEHFI=
+	b=s5xZ9ZQbQw41C96mI2qDtXiionZHBfM3O+Fx/hDlq/Wsc4p5hi1OQjyEpsDKMzG0/
+	 K1uw9RFNBQ4ejtQ+MZwu9X8NMpu+ySPGf+R52F5fwJaS+3tx5S8Qif7T3ey+ltN8Xl
+	 ZebiiABLToIWSbWCszEwFSG+wRpcfjtMTY96ynGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgF2Vq4 (ORCPT
+        id S1726718AbgF2VsT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:46:56 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:44187 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727795AbgF2Vqy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 17:46:54 -0400
-Received: by mail-il1-f196.google.com with SMTP id w73so4010394ila.11;
-        Mon, 29 Jun 2020 14:46:54 -0700 (PDT)
+        Mon, 29 Jun 2020 17:48:19 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38672 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404255AbgF2VsJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 17:48:09 -0400
+Received: by mail-io1-f68.google.com with SMTP id f6so3231010ioj.5;
+        Mon, 29 Jun 2020 14:48:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=93evjCDhdxZ5UWBeY+2YkNq7PalFs0r3h+XQkaBP8dE=;
-        b=Jn8n6FSAMp1WRC9FP4nhYyc5yzZIUJrJYvbRitDXqTh0+9F2M07/kj959pmP8c+7O2
-         163nyURuKwDEz9i35weEXUawZhSRNuDe+1nJQtKwjpOutQDmXpGI10KNgHkdbx0gNvx7
-         Yz3H67uBzx5plqmfaxJZuOneXyewxlbR/5qcV285XVc6qW/OkrA6lb1GtqD+hd/xNuRh
-         7CpUdLEfnjLJAxJTHK5S6GiHE1pF6kwd3Fb4tbacMb/Ef5vDDsDOyWWNvX/Z12gK/jIS
-         Ex4xwE6Ews3MMf9pU1VT7sP87tNcUnxle6Pa3PPTa8DbZgfmBOcQ1kgo5QEmaJsQSXpc
-         PVNA==
-X-Gm-Message-State: AOAM5319guXfCAtwVpDMKvYyG/5KK/rotBknpcGCgkNSJNGUtivOiHG+
-        221pvJd0LixWV7LzkfN0A70zvFBUQg==
-X-Google-Smtp-Source: ABdhPJy5G6waKe2rY07vRikAafpF0kBxLxk5gLmS6+u89sWZvMM/h5dLNkW6kl0bObAjVL3Cfk1hBg==
-X-Received: by 2002:a92:d4cf:: with SMTP id o15mr18251954ilm.25.1593467213572;
-        Mon, 29 Jun 2020 14:46:53 -0700 (PDT)
+        bh=wGWmyGXfNATJETlByWIEZ13t4eNzYwD3JHETLNfxb54=;
+        b=LSTQHAqoIoV/qaZ7TayTtaGHtNbbU7i50/njuRYKApJYi5gEpkVGwdXkB8vXP2xdsk
+         ysyi5ajs/I2ER9KBGj8+FdLPeUk8NJJgtiU2kYrYe8LvmeJZVEegydgAFgSmUidGI5WE
+         XRSdYwZpFaVKH9pNYAuiBhl4LeC0cjIdybvKY0LCYUMqPuHFiCci7zW8rPSRUHfyHuvy
+         H/wxaPx+sjuP4DW/i4PbZTOq8/BgZvYCxkrQq9+BHaNs1n2gpQcaogkhoQvBW95ajTAK
+         lcIRPfmdOKKvOR8GTecazz47RjfNvCGq1WXPpHwSQ4GAS/yciphyChc6sEuD6dZ1XKTl
+         K5qQ==
+X-Gm-Message-State: AOAM531m6d+RoibLzHPJ5tXG+6acAXaykD8ExqP0U9wwrSS/kSIyu9wP
+        oLPMdakqjKQrvQRXi7jXsA==
+X-Google-Smtp-Source: ABdhPJwEfRn6dYm/O5ro6RnMRhK1qWiklysncseXKlDL5Wp1cyeVC6ap1ygyNz6c3jdV70Ag3tnIxg==
+X-Received: by 2002:a6b:1496:: with SMTP id 144mr18920446iou.6.1593467288379;
+        Mon, 29 Jun 2020 14:48:08 -0700 (PDT)
 Received: from xps15 ([64.188.179.255])
-        by smtp.gmail.com with ESMTPSA id k185sm654843ilk.16.2020.06.29.14.46.52
+        by smtp.gmail.com with ESMTPSA id k3sm601299ils.8.2020.06.29.14.48.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 14:46:53 -0700 (PDT)
-Received: (nullmailer pid 2982377 invoked by uid 1000);
-        Mon, 29 Jun 2020 21:46:52 -0000
-Date:   Mon, 29 Jun 2020 15:46:52 -0600
+        Mon, 29 Jun 2020 14:48:07 -0700 (PDT)
+Received: (nullmailer pid 2985144 invoked by uid 1000);
+        Mon, 29 Jun 2020 21:48:05 -0000
+Date:   Mon, 29 Jun 2020 15:48:05 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        devicetree@vger.kernel.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-mips@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v4 3/6] dt-bindings: bus: Add MIPS CDMM controller
-Message-ID: <20200629214652.GA2981813@bogus>
-References: <20200617223201.23259-1-Sergey.Semin@baikalelectronics.ru>
- <20200617223201.23259-4-Sergey.Semin@baikalelectronics.ru>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     mturquette@baylibre.com, ulf.hansson@linaro.org, sboyd@kernel.org,
+        aisheng.dong@nxp.com, linux-clk@vger.kernel.org,
+        festevam@gmail.com, s.hauer@pengutronix.de, robh+dt@kernel.org,
+        s.trumtrar@pengutronix.de, devicetree@vger.kernel.org,
+        shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH V4 1/3] dt-bindings: mmc: Convert imx esdhc to json-schema
+Message-ID: <20200629214805.GA2983242@bogus>
+References: <1592450578-30140-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200617223201.23259-4-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <1592450578-30140-1-git-send-email-Anson.Huang@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 18 Jun 2020 01:31:57 +0300, Serge Semin wrote:
-> It's a Common Device Memory Map controller embedded into the MIPS IP
-> cores, which dts node is supposed to have compatible and reg properties.
+On Thu, 18 Jun 2020 11:22:56 +0800, Anson Huang wrote:
+> Convert the i.MX ESDHC binding to DT schema format using json-schema
 > 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: linux-mips@vger.kernel.org
-> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
-> 
-> Changelog prev:
-> - Lowercase the example hex'es.
+> No change.
 > ---
->  .../bindings/bus/mti,mips-cdmm.yaml           | 35 +++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/bus/mti,mips-cdmm.yaml
+>  .../devicetree/bindings/mmc/fsl-imx-esdhc.txt      |  67 -----------
+>  .../devicetree/bindings/mmc/fsl-imx-esdhc.yaml     | 124 +++++++++++++++++++++
+>  2 files changed, 124 insertions(+), 67 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
+>  create mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
 > 
 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/bus/mti,mips-cdmm.example.dt.yaml: example-0: cdmm@1bde8000:reg:0: [0, 467566592, 0, 32768] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.example.dt.yaml: mmc@5b010000: compatible: Additional items are not allowed ('fsl,imx7d-usdhc' was unexpected)
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.example.dt.yaml: mmc@5b010000: compatible: ['fsl,imx8qxp-usdhc', 'fsl,imx7d-usdhc'] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx35-clock.example.dt.yaml: esdhc@53fb4000: $nodename:0: 'esdhc@53fb4000' does not match '^mmc(@.*)?$'
 
 
-See https://patchwork.ozlabs.org/patch/1311658
+See https://patchwork.ozlabs.org/patch/1311722
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
