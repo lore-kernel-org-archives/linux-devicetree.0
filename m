@@ -2,101 +2,104 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 732D5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BA0C433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49F25208B6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:25:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593465950;
-	bh=uX5WXDrJa9DPLlsdJIWYE4UvjtgmVVqjU+UrlPR1sGQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HNt7bSVTXSYihqcsSPTI9GF0acZLYSwNFxrYdTZslAYsdfWEIzaZ28PSxTx0gNNZA
-	 peUMcDiXranfs9MIGET9WXa3LCufRFx6ywZHt28761yT7uAb/eysCT9LCCCsGAs813
-	 FGCzp4SRZ/AD6HT+T8Tn0khQtOZhqCy4uBk9QCFQ=
+	by mail.kernel.org (Postfix) with ESMTP id CBABB214F1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:27:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="SLRB44N0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388646AbgF2VZq (ORCPT
+        id S1729068AbgF2V1k (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:25:46 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:37277 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726862AbgF2VZW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 17:25:22 -0400
-Received: by mail-il1-f193.google.com with SMTP id r12so8592120ilh.4;
-        Mon, 29 Jun 2020 14:25:21 -0700 (PDT)
+        Mon, 29 Jun 2020 17:27:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38384 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729057AbgF2Smo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 14:42:44 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4D4BC031C73;
+        Mon, 29 Jun 2020 11:05:55 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id h28so13687243edz.0;
+        Mon, 29 Jun 2020 11:05:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hJ7bwzBcJdJpIqyIZcO1uCM9Pw8AFzZZQdo+BMkM/wI=;
+        b=SLRB44N0JiC73+18YWv4FOQgCRuo9RDcXbGvKQN9AK5bgYKeK4KBNdylz0TGW704q2
+         mVyX0kOwJ8f2lhJVD6O4pvcH9fRnRamZAQ4k2fOeJ9y2nqv801LHCj9c+V0sV41kCYsl
+         qOafEoFtNGiraeC+62ve5Q59dPv05KWkzenF6UtDAvTfLOJ8t0jMRpEZVgx7oYfji6dv
+         v2ilBNMlssGpE2qqwUoAIXeCwvBfO7RUGvFARu0t1xZvlEsmJvpyT37fMHmkjAwEf0ky
+         St6mxRNAtxjV6tDEOEMHg9zhX0rdM4wWf6P11Y2tCyzxsFdhqUS0nP/fBPyeSefcVE7V
+         Vjtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8sRNZq3i6sSIEbh/4bbkFq8rEMNhJ4QITzwGR/lljm8=;
-        b=BMC1syC41NCzxzB/pbvJpgmQ9FcJc5r2D9qsr143aDRDPwde32ULP75xo6hvY+HWtd
-         zDs9rX3aN+AZolPZnXfuJ/Pddaesd9gT3tUQhK1K5K72vX/qyoEOfeHK7MeisQh8vr6K
-         qPAivX8E+N9cl/7GtrHIjbACdnyPdHdSYBkce5VbSW3vJXAB0GlvsKZpksM7dgjTn/a8
-         CRq13jzvF8q+y0d4Gd0yz54JG48+UWl8PBqLIZpum2LNlhjllL2RzF1DgC116EdW50gy
-         bxMNzYL+dJMt6a9IJAfS84wSVfPTENitg2A8kHmFF/xZ10pVbQdB1JYin3bSl7doJ/qe
-         /fFQ==
-X-Gm-Message-State: AOAM531oa1G9btWWBSgKh3ZdNF6mVUbfN1BL+izUwqhB4NJd2u4Vhzxa
-        9+MVaBm15Ar84+kjGg5y3g==
-X-Google-Smtp-Source: ABdhPJx7dUZO0U25grEUl0vGwvMDDg6JWilgQ6/cy87UtwfMefk9HX94VG7CywqBbog84JPOnX3tTQ==
-X-Received: by 2002:a92:b685:: with SMTP id m5mr17246717ill.219.1593465921481;
-        Mon, 29 Jun 2020 14:25:21 -0700 (PDT)
-Received: from xps15 ([64.188.179.255])
-        by smtp.gmail.com with ESMTPSA id v3sm630164ili.12.2020.06.29.14.25.20
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hJ7bwzBcJdJpIqyIZcO1uCM9Pw8AFzZZQdo+BMkM/wI=;
+        b=gkEPeX7IT/kW6jasTz2HjoOAxirrQ7RhIbgyCGXVOkUGXsUEXvxbc/HRtzkbw+3YRg
+         XK6ZGcAErWq6Dxlo8K5ClZaAonN8X8OUjjoNRlU5TcEA5kF4aIdNFIP0TKZ7RYDqmkt0
+         /ju96LajN73bXeJmqNq+joOW9D72DSwJ0zjd1bzlwy/KPbwhHy9nSWDafDdH7ZLKhRLg
+         BhoFrqdN+RPPgtB/FXo1vPlko6qzglnWzXEAmE4BF7wbnrvsvSMnWCZ4wpvZorIgxdYL
+         rEaZPFr1jyiPUiZidlsap0qiwnM+o7HurCzkkLz5cCh1xt8hQbJLT1lcSoH8S3pNPMgy
+         9EIA==
+X-Gm-Message-State: AOAM533GFQoiVImqgCtrBYMl9GxcX8BTaicCKgE/ALswIzUyqBtET0G6
+        wCCTfOZPd+0i7aEw9dMeLBaSld6s
+X-Google-Smtp-Source: ABdhPJxCsPnKAQk2H0DnK6TPDN2TMKek+xOMmP/lSIUI54dR+E3eobWScl1UkHE91a2hvf1KvmltdA==
+X-Received: by 2002:aa7:c80d:: with SMTP id a13mr19225286edt.327.1593453954340;
+        Mon, 29 Jun 2020 11:05:54 -0700 (PDT)
+Received: from localhost.localdomain (p200300f137396800428d5cfffeb99db8.dip0.t-ipconnect.de. [2003:f1:3739:6800:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id w18sm232937ejc.62.2020.06.29.11.05.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 14:25:21 -0700 (PDT)
-Received: (nullmailer pid 2935889 invoked by uid 1000);
-        Mon, 29 Jun 2020 21:25:19 -0000
-Date:   Mon, 29 Jun 2020 15:25:19 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: Re: [PATCH 3/4] dt-bindings: copy process-schema-examples.yaml to
- process-schema.yaml
-Message-ID: <20200629212519.GA2935789@bogus>
-References: <20200625170434.635114-1-masahiroy@kernel.org>
- <20200625170434.635114-4-masahiroy@kernel.org>
+        Mon, 29 Jun 2020 11:05:53 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     devicetree@vger.kernel.org, robh+dt@kernel.org
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        marcel@holtmann.org, alistair@alistair23.me, anarsoul@gmail.com,
+        kuba@kernel.org, davem@davemloft.net,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH] dt-bindings: net: bluetooth: realtek: Fix uart-has-rtscts example
+Date:   Mon, 29 Jun 2020 20:05:45 +0200
+Message-Id: <20200629180545.2879272-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625170434.635114-4-masahiroy@kernel.org>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 26 Jun 2020 02:04:33 +0900, Masahiro Yamada wrote:
-> There are two processed schema files:
-> 
->  - processed-schema-examples.yaml
-> 
->     Used for 'make dt_binding_check'. This is always a full schema.
-> 
->  - processed-schema.yaml
-> 
->     Used for 'make dtbs_check'. This may be a full schema, or a smaller
->     subset if DT_SCHEMA_FILES is given by a user.
-> 
-> If DT_SCHEMA_FILES is not specified, they are the same. You can copy
-> the former to the latter instead of running dt-mk-schema twice. This
-> saves the cpu time a lot when you do 'make dt_binding_check dtbs_check'
-> because building the full schema takes a couple of seconds.
-> 
-> If DT_SCHEMA_FILES is specified, processed-schema.yaml is generated
-> based on the specified yaml files.
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
-> 
->  Documentation/devicetree/bindings/Makefile | 28 +++++++++++++++-------
->  scripts/Makefile.lib                       |  3 +++
->  2 files changed, 23 insertions(+), 8 deletions(-)
-> 
+uart-has-rtscts is a boolean property. These are defined as present
+(which means that this property evaluates to "true") or absent (which
+means that this property evaluates to "false"). Remove the numeric value
+from the example to make it comply with the boolean property bindings.
 
-Applied, thanks!
+Fixes: 1cc2d0e021f867 ("dt-bindings: net: bluetooth: Add rtl8723bs-bluetooth")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ Documentation/devicetree/bindings/net/realtek-bluetooth.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/net/realtek-bluetooth.yaml b/Documentation/devicetree/bindings/net/realtek-bluetooth.yaml
+index f15a5e5e4859..c488f24ed38f 100644
+--- a/Documentation/devicetree/bindings/net/realtek-bluetooth.yaml
++++ b/Documentation/devicetree/bindings/net/realtek-bluetooth.yaml
+@@ -44,7 +44,7 @@ examples:
+     uart1 {
+         pinctrl-names = "default";
+         pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
+-        uart-has-rtscts = <1>;
++        uart-has-rtscts;
+ 
+         bluetooth {
+             compatible = "realtek,rtl8723bs-bt";
+-- 
+2.27.0
+
