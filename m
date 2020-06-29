@@ -7,76 +7,91 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 908E6C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 584F1C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72866206E9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AF19206A1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:39:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466726;
-	bh=ewj35rSkElcFIZJ1hg66kwd3Hqh8xk0tOa2edu8ul6s=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=sKFSR84L2hpjDVFMrDkcobxx0SZTsW0r0+SO6RbYTxbFh+Ntsy9W52dHI/UNEgDQg
-	 LgnyO8E8I2cm+kFraF9AK2nCNyB1Yle3BPYXF7emdvSTxpsKp28suN7tzBCuVK5Q5/
-	 iS38VIxPyHFBpdojXRnEPx+YKtLmSHPjnQklq2U4=
+	s=default; t=1593466767;
+	bh=JxZnQhlw2nhy3/u8SncM0Q8kYK47QJ0SPz/EOw5Tpw4=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=Zxvh6nd70P7nLu0bojxYjVIIlleyzCkXzyBAnMQtqCar1RgR7EPnjaGR7JXv8ItKA
+	 tjB0EieKsU47F8GrXW5lK0hsyR3ZG1G+FhWpXFLz5Ze4R1uSi0tf3yWIK0RmVSf2yq
+	 P2by4eJV1PERBzQEfTQLBa8hJVNpJUebigITYn7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730055AbgF2Vii (ORCPT
+        id S1728343AbgF2Skb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:38:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60646 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 14:40:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728349AbgF2Skc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:40:32 -0400
+        id S1728315AbgF2Ska (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:40:30 -0400
 Received: from localhost.localdomain (unknown [194.230.155.195])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B70F2085B;
-        Mon, 29 Jun 2020 08:15:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DEBB2376E;
+        Mon, 29 Jun 2020 10:05:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593418541;
-        bh=ewj35rSkElcFIZJ1hg66kwd3Hqh8xk0tOa2edu8ul6s=;
-        h=From:To:Cc:Subject:Date:From;
-        b=UWvRfKHtNAZnU9vTW3cs08UEr9o1o7kqvg7ahwYE1DOS9WSEf1ELbbw/H3torogjJ
-         9DtSz9ASc0TuNNu3dUj5myKETz43cRuCM7MfI/ZmSz+w4kRVE7TcebAxWn/38woaJV
-         ft4eqKuF+6CYIOIIEKW5KwSyF47qdpYtYxN9ieGA=
+        s=default; t=1593425158;
+        bh=JxZnQhlw2nhy3/u8SncM0Q8kYK47QJ0SPz/EOw5Tpw4=;
+        h=From:To:Subject:Date:From;
+        b=ngxxE/lsDh33mkzuffsuyLpd1gg6fyTpF9QpKESTdaam6H0FYUrDDCJjqea3rwRPS
+         L/UleGewoX+FZ5R8rfpgWpPBAfNHEQGVOr4hEtewf06RWYv9G2FTFkRxw8AuwcCpi9
+         dZbOUoG2/1Mx6LHyp8O98P7g4wdlvMD96Sp5Xhfo=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Tsahee Zidenberg <tsahee@annapurnalabs.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 1/3] ARM: dts: alpine: Align GIC nodename with dtschema
-Date:   Mon, 29 Jun 2020 10:15:33 +0200
-Message-Id: <20200629081535.13502-1-krzk@kernel.org>
+Subject: [PATCH v3 1/2] dt-bindings: iio: bmc150_magn: Document and fix missing compatibles
+Date:   Mon, 29 Jun 2020 12:05:36 +0200
+Message-Id: <20200629100537.20365-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Fix dtschema validator warnings like:
-    gic@fb001000: $nodename:0:
-        'gic@fb001000' does not match '^interrupt-controller(@[0-9a-f,]+)*$'
+The driver supports also BMC156B and BMM150B.  Add existing compatibles
+marking the BMM150B one as deprecated (due to redundant suffix "_magn"
+because the device unlike two others is a magnetometer only).  Introduce
+a new, proper compatible for the deprecated one.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/alpine.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/alpine.dtsi b/arch/arm/boot/dts/alpine.dtsi
-index d3036ea823d1..3b0675a1c460 100644
---- a/arch/arm/boot/dts/alpine.dtsi
-+++ b/arch/arm/boot/dts/alpine.dtsi
-@@ -91,7 +91,7 @@
- 		};
+---
+
+Changes since v2:
+1. Add compatible only for bmm150.
+
+Changes since v1:
+1. Mark old compatibles as deprecated, add new one.
+---
+ .../devicetree/bindings/iio/magnetometer/bmc150_magn.txt    | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt b/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
+index fd5fca90fb39..22912e43b60c 100644
+--- a/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
++++ b/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
+@@ -4,7 +4,11 @@ http://ae-bst.resource.bosch.com/media/products/dokumente/bmc150/BST-BMC150-DS00
  
- 		/* Interrupt Controller */
--		gic: gic@fb001000 {
-+		gic: interrupt-controller@fb001000 {
- 			compatible = "arm,cortex-a15-gic";
- 			#interrupt-cells = <3>;
- 			#size-cells = <0>;
+ Required properties:
+ 
+-  - compatible : should be "bosch,bmc150_magn"
++  - compatible : should be one of:
++                 "bosch,bmc150_magn"
++                 "bosch,bmc156_magn"
++                 "bosch,bmm150"
++                 "bosch,bmm150_magn" (DEPRECATED, use bosch,bmm150)
+   - reg : the I2C address of the magnetometer
+ 
+ Optional properties:
 -- 
 2.17.1
 
