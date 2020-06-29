@@ -2,213 +2,94 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C9CC433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4CFC433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A27F20720
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4C1F2073E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:05:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="OjFhA1dn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mt6YICf2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389482AbgF2VD2 (ORCPT
+        id S2390262AbgF2VEj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:03:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43356 "EHLO
+        Mon, 29 Jun 2020 17:04:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731135AbgF2TMr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:12:47 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A751C00E3E1
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:04:26 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id o11so16271376wrv.9
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:04:26 -0700 (PDT)
+        with ESMTP id S1731103AbgF2TMo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:12:44 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB4DBC00E3F4;
+        Mon, 29 Jun 2020 05:13:59 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id d16so5980115edz.12;
+        Mon, 29 Jun 2020 05:13:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eVmQOBvXDEaCTQLZaTTLEM9yQEsfq0hXc2Ftz5NNRNk=;
-        b=OjFhA1dnSrFI1gIICDBzM2SLLegg0XEeK2w3+ih4lI+BQ9GqcJIYdUku4UBlwpSaRZ
-         oWeFaIwiKUGZrfqHnMCp9dhJCf92zn+eTig0GGSBlC3KsWknJDmoO6tgZILVJZUcl+yC
-         QmWi46Gfv5bIDFKLrFhkdsZRMQrJ6P6qJpFqKDDhSzEAk71TG51e5m7PqmRxSF0IaqCc
-         lK9LD+XqZqQRHrKSXKSdHC/hs9aTw8jxruL4o0utD0y5ZWsfoLkJ7uHtuUFgXQu8el/Z
-         IZFO4cHhlix+pszDjPZAgsLlvEXWJMjb1djS9n8VbDBxifgDwWlHj5nio1tnagKzkQpq
-         nW+A==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Af8MV+kVnTa7zdW0E2E5KjHeensJMBWL2+gQQwCUvNQ=;
+        b=Mt6YICf2k3JascEFwPr+DhVRtQVII9mitVMQBW+uLVMO8/WmyQT80jOuzZcBOBRepN
+         3tzXW2b8Mjlq8B8TpjQH2Tm4bNtSxoR7BC3Ghx5abmvL9u/vB1JdEbT44qNQyVO7ATqh
+         vhiHpEgAX3qNWmGPTqSgTxz1V9WXJ70C8RxRSdOpBFQEs+omcOyaBtsZEvBYihgp9WGg
+         2buf1O+ocG/M3upbbAGl/w2ACJOYmw68GTIfmYtflzMC3yjUY+Bi+IDmAIHhyHnMsxY9
+         hb78RlB/eUGpN8EF8ikWLyk9OuAjyuLVWBi8wDqq3TbqdoCE/aFcJv10R/pPmR2yCAyw
+         qAOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eVmQOBvXDEaCTQLZaTTLEM9yQEsfq0hXc2Ftz5NNRNk=;
-        b=qVgvFvDOERKYwiWEnas/+l0Q8N4YrsMvigQY164CGGP7AALdayEInwWIQoqbGGBu6z
-         9Zs9MqM/iPO0lkx2E0UNsU/w+iU/ua1d7N7VGU9ERGAKcioN9JJszWIi7Y0fPpfOkRI5
-         9HIeGkMIzWHob6IW7JOTJHY2+Gl1PGey3XzF3Io1o0GA4AhRTHEZr6PC88iRMmf4hJQC
-         zzsjO3g4MsuGgusl1/9GnjgoeKUdKzJT5NFDbtozszcuhAzodotBdORJ57PVuYzftlaX
-         jSo2ApPdWgQaR4H1Hnmw9uWGpOELDjxaz7o+fgNuE2WL5GkA31ybdVfMazBiyEIAZDQa
-         w1aA==
-X-Gm-Message-State: AOAM530hcMpAWvZkeBODkm5YQCkpIaM51fZniXn5J6iZxBI8Q64s/cpF
-        dxko7GQj5AhL1YOtdNytenQqvQ==
-X-Google-Smtp-Source: ABdhPJygWkINqtaUiia5EDfNIDWDJjLM7/a2wl0W+j+uTircW3QIDYx940S5jXAlZA8pQbi4TXQ8rw==
-X-Received: by 2002:adf:84e2:: with SMTP id 89mr17420797wrg.139.1593432265315;
-        Mon, 29 Jun 2020 05:04:25 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id d81sm25274347wmc.0.2020.06.29.05.04.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 05:04:24 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 09/10] of: mdio: provide devm_of_mdiobus_register()
-Date:   Mon, 29 Jun 2020 14:03:45 +0200
-Message-Id: <20200629120346.4382-10-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200629120346.4382-1-brgl@bgdev.pl>
-References: <20200629120346.4382-1-brgl@bgdev.pl>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Af8MV+kVnTa7zdW0E2E5KjHeensJMBWL2+gQQwCUvNQ=;
+        b=oFW2Lxj1CtqT32ZG8i8M/PS0hhpXotD7aL7aG3tzjZJ1/DauOurLYbcU2x/STLA36q
+         x7AB39z0oq3IvzG0w6mVNCBpky10GdL6G5Q+Cy5PhfGlQvHFfcPTl6oSHBGuGS0MSP50
+         0PgySA/IyLJ2BfnIylcfHpYS0kNrQc0VFvVUJLvEet/YYIsh93GKOvGxrSKQcaYkUsYJ
+         x/+FNNNof/USi6M907qtWIFJ0ArGZFNs72IPPBC5w/i1SKgX0i1NcKIsRTXV++u4okJS
+         X3l8qHVH65QyjJJy6Ps8qMm+mNLr08Qp6visdbEkt6MqbI8pXHQtD3iTeT+WCTqFzSfn
+         Z/QQ==
+X-Gm-Message-State: AOAM530rMQoSdMfCpNCtipfPBYu6ygGkR0qN6aY1tFVTMmE1oNHJ/O5c
+        mSH4BnOk836TtYfVSuhUW9ZPBiQ8bEkFQ74wIls=
+X-Google-Smtp-Source: ABdhPJx8GL2/LtvhYYnPZOnTG4JvnILLNC3i/hbToZbdsMBix31WyuKYxSB8w2InTRozYPvAU2y9b9ASSm/xVcLNwMA=
+X-Received: by 2002:a50:ec8f:: with SMTP id e15mr16899806edr.70.1593432838641;
+ Mon, 29 Jun 2020 05:13:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200621213806.551879-1-konradybcio@gmail.com>
+ <20200621213806.551879-9-konradybcio@gmail.com> <20200629120918.GB1319@bug>
+In-Reply-To: <20200629120918.GB1319@bug>
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Date:   Mon, 29 Jun 2020 14:13:22 +0200
+Message-ID: <CAMS8qEVaJ0ZpZ1HE8U9DbPfV0-cc=_qyLYdA1g7NYfz-WcE+aA@mail.gmail.com>
+Subject: Re: [PATCH 8/8] arm64: dts: qcom: Add support for Sony Xperia 10/10
+ Plus (Ganges platform)
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-clk@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-gpio@vger.kernel.org, Martin Botka <martin.botka1@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> This is not usual comment style.
 
-Implement a managed variant of of_mdiobus_register(). We need to make
-mdio_devres into its own module because otherwise we'd hit circular
-sumbol dependencies between phylib and of_mdio.
+This was fixed in a later revision and is currently applied to
+qcom/linux in the correct form. [1]
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- .../driver-api/driver-model/devres.rst        |  1 +
- drivers/net/phy/Makefile                      |  4 +-
- drivers/net/phy/mdio_devres.c                 | 37 +++++++++++++++++++
- include/linux/of_mdio.h                       |  3 ++
- 4 files changed, 44 insertions(+), 1 deletion(-)
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git/commit/?h=for-next&id=234d7d6b4cbfab0e900f12658053689bb3376141
 
-diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
-index e0333d66a7f4..eaaaafc21134 100644
---- a/Documentation/driver-api/driver-model/devres.rst
-+++ b/Documentation/driver-api/driver-model/devres.rst
-@@ -343,6 +343,7 @@ MDIO
-   devm_mdiobus_alloc()
-   devm_mdiobus_alloc_size()
-   devm_mdiobus_register()
-+  devm_of_mdiobus_register()
- 
- MEM
-   devm_free_pages()
-diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-index 896afdcac437..c9a9adf194d5 100644
---- a/drivers/net/phy/Makefile
-+++ b/drivers/net/phy/Makefile
-@@ -3,7 +3,8 @@
- 
- libphy-y			:= phy.o phy-c45.o phy-core.o phy_device.o \
- 				   linkmode.o
--mdio-bus-y			+= mdio_bus.o mdio_device.o mdio_devres.o
-+mdio-bus-y			+= mdio_bus.o mdio_device.o
-+mdio-devres-y			+= mdio_devres.o
- 
- ifdef CONFIG_MDIO_DEVICE
- obj-y				+= mdio-boardinfo.o
-@@ -17,6 +18,7 @@ libphy-y			+= $(mdio-bus-y)
- else
- obj-$(CONFIG_MDIO_DEVICE)	+= mdio-bus.o
- endif
-+obj-$(CONFIG_MDIO_DEVICE)	+= mdio-devres.o
- libphy-$(CONFIG_SWPHY)		+= swphy.o
- libphy-$(CONFIG_LED_TRIGGER_PHY)	+= phy_led_triggers.o
- 
-diff --git a/drivers/net/phy/mdio_devres.c b/drivers/net/phy/mdio_devres.c
-index 0b9bd9a61378..b560e99695df 100644
---- a/drivers/net/phy/mdio_devres.c
-+++ b/drivers/net/phy/mdio_devres.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
- 
- #include <linux/device.h>
-+#include <linux/of_mdio.h>
- #include <linux/phy.h>
- #include <linux/stddef.h>
- 
-@@ -94,3 +95,39 @@ int __devm_mdiobus_register(struct device *dev, struct mii_bus *bus,
- 	return 0;
- }
- EXPORT_SYMBOL(__devm_mdiobus_register);
-+
-+#if IS_ENABLED(CONFIG_OF_MDIO)
-+/**
-+ * devm_of_mdiobus_register - Resource managed variant of of_mdiobus_register()
-+ * @dev:	Device to register mii_bus for
-+ * @mdio:	MII bus structure to register
-+ * @np:		Device node to parse
-+ */
-+int devm_of_mdiobus_register(struct device *dev, struct mii_bus *mdio,
-+			     struct device_node *np)
-+{
-+	struct mdiobus_devres *dr;
-+	int ret;
-+
-+	if (WARN_ON(!devres_find(dev, devm_mdiobus_free,
-+				 mdiobus_devres_match, mdio)))
-+		return -EINVAL;
-+
-+	dr = devres_alloc(devm_mdiobus_unregister, sizeof(*dr), GFP_KERNEL);
-+	if (!dr)
-+		return -ENOMEM;
-+
-+	ret = of_mdiobus_register(mdio, np);
-+	if (ret) {
-+		devres_free(dr);
-+		return ret;
-+	}
-+
-+	dr->mii = mdio;
-+	devres_add(dev, dr);
-+	return 0;
-+}
-+EXPORT_SYMBOL(devm_of_mdiobus_register);
-+#endif /* CONFIG_OF_MDIO */
-+
-+MODULE_LICENSE("GPL");
-diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
-index ba8e157f24ad..1efb88d9f892 100644
---- a/include/linux/of_mdio.h
-+++ b/include/linux/of_mdio.h
-@@ -8,12 +8,15 @@
- #ifndef __LINUX_OF_MDIO_H
- #define __LINUX_OF_MDIO_H
- 
-+#include <linux/device.h>
- #include <linux/phy.h>
- #include <linux/of.h>
- 
- #if IS_ENABLED(CONFIG_OF_MDIO)
- bool of_mdiobus_child_is_phy(struct device_node *child);
- int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np);
-+int devm_of_mdiobus_register(struct device *dev, struct mii_bus *mdio,
-+			     struct device_node *np);
- struct phy_device *of_phy_find_device(struct device_node *phy_np);
- struct phy_device *
- of_phy_connect(struct net_device *dev, struct device_node *phy_np,
--- 
-2.26.1
-
+Regards
+Konrad
