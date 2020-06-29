@@ -2,106 +2,158 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0219C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7B5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC8E4206A5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD885206C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:59:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467932;
-	bh=JaTM7OpwurAOBBFLTAzbnjTnVOjccL2UK9UeapBg/7s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bOc89KsI7ffFSbXRfnHBq15snY8pnWsc1skYGyrMb7/sE5SMJ5l2j4JL8x38FHAQi
-	 o5ibnH09HyZfIJ6pVZwgr27NYmS+A1gMCkYZoeMmbWTT0zWDKl2pETUcxoWm53DRxM
-	 aN+MkTkTapAWJ5TzUcnNPHPaW1zEgBNaIkbkj5Ns=
+	s=default; t=1593467995;
+	bh=ZtASUsHSUH9iBmQouSmlHBp0adBRXfaTVKN3IEKwB2A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=BmP5t7E5euVsq25+uPxP5mxRwjLvTDEGVDkS7egdfpa4anW3ki25fVxpFf0Y1OhHm
+	 Q4EiEPE62Yo1j+Rh50sPrVpTm3D6ZnPmFEZ0qZhUfTU94rsR3kV0RGpz9SW2nB08Uk
+	 NboeQu6fEhjEzCnRhWSGQe/7Rpzuypycll+y+eEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404455AbgF2V6n (ORCPT
+        id S2391713AbgF2V7z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:58:43 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:39213 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729176AbgF2V6m (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 17:58:42 -0400
-Received: by mail-il1-f193.google.com with SMTP id k6so15862732ili.6;
-        Mon, 29 Jun 2020 14:58:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6QT2CxKngMlY2p6AbcTTZAUqsEvoLy2nz/okkRGauIc=;
-        b=lUp/19A7OQSUweoHI2QEAowtTQzqfc2lloX74hWdQME3l6d04TbFg9uaAKJkEZgTVG
-         P7rRIS3F1R3SShw2kyEAjSVL1YDPeDbfIIByNwf7RDW+95blrcRu77A1x3i8+17nEcnC
-         dbE89/8fqM8FS09XGD4CmFtwIv4J6sqSYfWax0HsIbPwSsiQ6nozeoZOLRMnM/FGIUzK
-         6rObPbd7dfRmV1z6ZoxJPXRYrsZ779rSrLHnVldNMrboR5+CruKN392Zwk3QGqMl9fyx
-         Mi01wCC05p7NADXAB8xJBqQ0qe9jwRmPii4L2SvQWKO1X2dkdmLRwIK7cDDIwh2/QgpC
-         CBZQ==
-X-Gm-Message-State: AOAM530kYFx0mchKQIasRRp81PyQLwgO3FrzYBgB7Ly0JozI8yel7UsC
-        2vtxG2ldVr1x3oQZ0bh+hg==
-X-Google-Smtp-Source: ABdhPJylefPN6e1fWTB8vAdKMAzJZl6DuCBfuuXfmf35nWeNuXIU1oLVRKCxPnf1E3+V6I0ZxzpOqw==
-X-Received: by 2002:a92:bf0c:: with SMTP id z12mr17464216ilh.151.1593467921338;
-        Mon, 29 Jun 2020 14:58:41 -0700 (PDT)
-Received: from xps15 ([64.188.179.255])
-        by smtp.gmail.com with ESMTPSA id b8sm669748ilc.42.2020.06.29.14.58.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 14:58:40 -0700 (PDT)
-Received: (nullmailer pid 3006922 invoked by uid 1000);
-        Mon, 29 Jun 2020 21:58:39 -0000
-Date:   Mon, 29 Jun 2020 15:58:39 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Florinel Iordache <florinel.iordache@nxp.com>
-Cc:     kuba@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org,
-        linux-doc@vger.kernel.org, devicetree@vger.kernel.org,
-        davem@davemloft.net, andrew@lunn.ch, mark.rutland@arm.com,
-        linux@armlinux.org.uk, corbet@lwn.net, ioana.ciornei@nxp.com,
-        linux-kernel@vger.kernel.org, hkallweit1@gmail.com,
-        f.fainelli@gmail.com, leoyang.li@nxp.com, netdev@vger.kernel.org,
-        madalin.bucur@oss.nxp.com
-Subject: Re: [PATCH net-next v3 2/7] dt-bindings: net: add backplane dt
- bindings
-Message-ID: <20200629215839.GA3004274@bogus>
-References: <1592832924-31733-1-git-send-email-florinel.iordache@nxp.com>
- <1592832924-31733-3-git-send-email-florinel.iordache@nxp.com>
+        Mon, 29 Jun 2020 17:59:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56764 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726392AbgF2SfZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:25 -0400
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFCA3255C7;
+        Mon, 29 Jun 2020 17:57:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593453470;
+        bh=ZtASUsHSUH9iBmQouSmlHBp0adBRXfaTVKN3IEKwB2A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2kKS+wDhkOuxpH9plHm9j0XcBd1NOUkJJmJEvlxcmanpfHqlzhfaHZvWTWdWKm1fj
+         wSf07FVi3Vc5BoJg00SsFz9stOKYZjSXPZ0CZnwRUr9xGG9SK7jE+dnTuQahmLknAV
+         QdfXGtfSQm+QApl5nSJa5URHEmOz9dzGsODL98zw=
+Received: by mail-ot1-f51.google.com with SMTP id q21so8790879otc.7;
+        Mon, 29 Jun 2020 10:57:49 -0700 (PDT)
+X-Gm-Message-State: AOAM530ZH+ymx1LRhBUi64LdyKz+BbmrCg9xFIijTPklFGRFQdXbXrT8
+        a0c6j2G3NQXXwQ5O1ORx4/1uP7KmUySXwk2IGA==
+X-Google-Smtp-Source: ABdhPJyimQAzFgXMjRYrAPs8oEIeWpJhMBKYcA7auFeZopuljB1Q7c28J7qEymPHWgbqxTgyvUyyluEt85Lj4qCu1n4=
+X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr14554766ots.192.1593453469212;
+ Mon, 29 Jun 2020 10:57:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1592832924-31733-3-git-send-email-florinel.iordache@nxp.com>
+References: <20200618224413.1115849-1-robh@kernel.org> <20200619215341.GA6857@ravnborg.org>
+ <20200622165730.pnx7fzbq5e6q5h4l@holly.lan>
+In-Reply-To: <20200622165730.pnx7fzbq5e6q5h4l@holly.lan>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 29 Jun 2020 11:57:37 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK1yJ09k6tKak==TjRN17VzueVkcf-WOLw2ETL2ZJv9sg@mail.gmail.com>
+Message-ID: <CAL_JsqK1yJ09k6tKak==TjRN17VzueVkcf-WOLw2ETL2ZJv9sg@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: backlight: Convert common backlight bindings
+ to DT schema
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Sam Ravnborg <sam@ravnborg.org>, devicetree@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 22 Jun 2020 16:35:19 +0300, Florinel Iordache wrote:
-> Add ethernet backplane device tree bindings
-> 
-> Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
-> ---
->  .../bindings/net/ethernet-controller.yaml          |  7 ++-
->  .../devicetree/bindings/net/ethernet-phy.yaml      | 50 ++++++++++++++++++++++
->  .../devicetree/bindings/net/serdes-lane.yaml       | 49 +++++++++++++++++++++
->  Documentation/devicetree/bindings/net/serdes.yaml  | 42 ++++++++++++++++++
->  4 files changed, 146 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/serdes-lane.yaml
->  create mode 100644 Documentation/devicetree/bindings/net/serdes.yaml
-> 
+On Mon, Jun 22, 2020 at 10:57 AM Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+>
+> On Fri, Jun 19, 2020 at 11:53:41PM +0200, Sam Ravnborg wrote:
+> > > diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml
+> > > new file mode 100644
+> > > index 000000000000..7e1f109a38a4
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml
+> > > @@ -0,0 +1,98 @@
+> > > +# SPDX-License-Identifier: GPL-2.0-only
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/leds/backlight/pwm-backlight.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: pwm-backlight bindings
+> > > +
+> > > +maintainers:
+> > > +  - Lee Jones <lee.jones@linaro.org>
+> > > +  - Daniel Thompson <daniel.thompson@linaro.org>
+> > > +  - Jingoo Han <jingoohan1@gmail.com>
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: pwm-backlight
+> > > +
+> > > +  pwms:
+> > > +    maxItems: 1
+> > > +
+> > > +  pwm-names: true
+> > > +
+> > > +  power-supply:
+> > > +    description: regulator for supply voltage
+> > > +
+> > > +  enable-gpios:
+> > > +    description: Contains a single GPIO specifier for the GPIO which enables
+> > > +      and disables the backlight
+> > > +    maxItems: 1
+> > > +
+> > > +  post-pwm-on-delay-ms:
+> > > +    description: Delay in ms between setting an initial (non-zero) PWM and
+> > > +      enabling the backlight using GPIO.
+> > > +
+> > > +  pwm-off-delay-ms:
+> > > +    description: Delay in ms between disabling the backlight using GPIO
+> > > +      and setting PWM value to 0.
+> > > +
+> > > +  brightness-levels:
+> > > +    description: Array of distinct brightness levels. Typically these are
+> > > +      in the range from 0 to 255, but any range starting at 0 will do. The
+> > > +      actual brightness level (PWM duty cycle) will be interpolated from
+> > > +      these values. 0 means a 0% duty cycle (darkest/off), while the last
+> > > +      value in the array represents a 100% duty cycle (brightest).
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> > > +
+> > > +  default-brightness-level:
+> > > +    description: The default brightness level (index into the array defined
+> > > +      by the "brightness-levels" property).
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > Same comment as before...
+>
+> Sorry the "ditto" meant I didn't thing about PWM as much as I should
+> have.
+>
+> The situation for PWM is a little different to LED. That's mostly
+> because we decided not to clutter the LED code with
+> "num-interpolated-steps".
+>
+> The PWM code implements the default-brightness-level as an index into
+> the brightness array *after* it has been expanded using interpolation.
+> In other words today Linux treats the default-brightness-level more
+> like[1].
+>
+>     description: The default brightness level. When
+>       num-interpolated-steps is not set this is simply an index into
+>       the array defined by the "brightness-levels" property. If
+>       num-interpolated-steps is set the brightness array will be
+>       expanded by interpolation before we index to get a default
+>       level.
+>
+> This is the best I have come up with so far... but I concede it still
+> lacks elegance.
 
+Happy to add this or whatever folks want if there's agreement, but I
+don't want to get bogged down on re-reviewing and re-writing the
+binding on what is just a conversion. There's a mountain of bindings
+to convert.
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/serdes.example.dt.yaml: example-0: serdes@1ea0000:reg:0: [0, 32112640, 0, 8192] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/serdes-lane.example.dt.yaml: example-0: serdes@1ea0000:reg:0: [0, 32112640, 0, 8192] is too long
-
-
-See https://patchwork.ozlabs.org/patch/1314386
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+Rob
