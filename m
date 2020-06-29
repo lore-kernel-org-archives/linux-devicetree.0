@@ -2,153 +2,95 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F6CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 422E7C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C417B206F1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A55206F1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:58:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Lju5246x"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Es+y1Zca"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389927AbgF2U61 (ORCPT
+        id S1731222AbgF2U6n (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:58:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43382 "EHLO
+        Mon, 29 Jun 2020 16:58:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728979AbgF2TND (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:13:03 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A856C00E3DF
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:04:25 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id g75so15105769wme.5
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:04:25 -0700 (PDT)
+        with ESMTP id S1731251AbgF2TNC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:13:02 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20E6AC00E3F8;
+        Mon, 29 Jun 2020 05:16:09 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id o18so11889056eje.7;
+        Mon, 29 Jun 2020 05:16:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eg4utbhrf/3v6wZhuPotuFpmqRh7IC4ZAOzFVoP+DSU=;
-        b=Lju5246xETI3n7x5ApaA2zIYYyPdv7uL89+PkXu5UmfdDnoJt/A+1kV4EnWbvWHsfT
-         U0KiDkQo2C6/d8Ee7wMfJSSmn58uoqIdNiTjX8Hz5nTHyctnp2RJTz/wtYYsoJ+dtuhV
-         XjmJm2KbsyS/VgCkUtqgfIB2Q8m9h6+TRtPh688uJ2bkMEAzy6TyrNqZ5+p0Jq6QQPRe
-         TpitUFUM90jHaT+neQCa+q1jY5kpWoCkFluHE4al/HsV1lisaXYbrRjufnYUNHF7JcYD
-         MtPNLz8KCHYZnMSa1RhX8WtsifRsmdGJ5BQYv8xh4yMTTQv22xrYgZ/0nqbMjj7pN0qH
-         WHeg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=soXbhE7fjamRPVpZww01jKbOBo61CZjTIZgKR2wcZEM=;
+        b=Es+y1ZcaFE2vyCcFPTaEYe17yllLj4xwPgelB6vNVhT6If85EMMEEoqcEXGHKlO5j9
+         r9I7EmCPe2amg3d60HJp9VhsfrvguLKNGZxpFyaJnNYmAMWlc22X/9D4KnoMJUkKpIk7
+         wVkcc9u2zPA3Woe/4vuUiI+eZzUSE/zj3U/shduIu+ZaZYvzjzxZ0yjKmuWfC63Ia16q
+         VUD/BrbSbMhGRCd8+q5RVU8LDnvePf0HL9m70oPYoG09tLusSgOhSCFM44UoTQvie1cL
+         De2k7jXdx3A4vDrzulA2jsFfkVGWbqnvjG4/ZDcGk/yTg6Tx36oChwqyqphcb0laxjeY
+         Xhrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eg4utbhrf/3v6wZhuPotuFpmqRh7IC4ZAOzFVoP+DSU=;
-        b=HnH28ejF94LtKrda3VarZA7+1tRjNQgXunN0BesLZjF7cX8P66wgat7sZYRcD/qOju
-         buI6wiaJ0QBM3Z+Vhfz7Vux1FayiUWCNQBcjqoJJxTZZsxM/Dj+LqjMftGGormJXkdEV
-         +PLQL3TnAdXK4HNzsBatLUFScZph6ouEK9xwZfmnz64XK5jDnEzddbKJ7Ec5TB3sgZy6
-         A0KY2uI7rgyFe95GlKhBy03nOIvK+SKqUOpAmdHSv+6kL6iK57ml3uZpD3P9u1kTTfIl
-         o4d9aOHr8YFTw9TVL+Gac+Od9sefO3sDDUpZZqEDNrCMQATQmmXMG1sDXyLbWPMiUjV0
-         bZRA==
-X-Gm-Message-State: AOAM531eIo8zaOi9dOC7DzJu3xTmhmTpHTauOR7jvMGQYN5FEpWOm7Qo
-        CzZlRfrBvAqSrVSvwj4+lcvNQw==
-X-Google-Smtp-Source: ABdhPJyyXNydd+nOMTGEVlBmI0TP9I7QgzsG5vIU8vPWhBARI6Y2TnNfIwesmyvIGRb47dVl+VGcrA==
-X-Received: by 2002:a7b:c3d0:: with SMTP id t16mr17776997wmj.117.1593432263901;
-        Mon, 29 Jun 2020 05:04:23 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id d81sm25274347wmc.0.2020.06.29.05.04.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 05:04:23 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 08/10] of: mdio: remove the 'extern' keyword from function declarations
-Date:   Mon, 29 Jun 2020 14:03:44 +0200
-Message-Id: <20200629120346.4382-9-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200629120346.4382-1-brgl@bgdev.pl>
-References: <20200629120346.4382-1-brgl@bgdev.pl>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=soXbhE7fjamRPVpZww01jKbOBo61CZjTIZgKR2wcZEM=;
+        b=L0kdPZ4uxOA3be8s1CDoQsFWc0Q/y9qgH+r5gBpihg921a3ACsCFFXCi/FVMJvxlWD
+         hgnqXm82qxf5kC1cM4BBI9JRPDHNQKn/hw/9PYzZ6eAa9V3w9RN3bIlQk4s5vmtmUQY1
+         JC8T+d6OxZzc/o0Q92+22fh7az5e+Zw4hBLSrTdxm86FQJnfzZcXNTA3iPWgzv49Lg5L
+         4rNAydAa9poxcKfN5+VU/LvHZ4SNz4cUpCrg2pwbmXW29WmaOU0sWNmZpPbuvDC67Zvy
+         a5VycNsNZzykZbaZw7ZsrDVCrNQrdAHBfJATmGae3Qg/4O6r2cLKdytZUHRpEXogSa0Q
+         PGQg==
+X-Gm-Message-State: AOAM531Nh+5nUTMZjkk5Mbwj8F3jCo4n+GvUDJuJU7R4GTgEd/1K5VH0
+        ynF8pYguCDtcWObhMfhFDw1h+iasPuGbEEH2GZk=
+X-Google-Smtp-Source: ABdhPJxibo/BsVYpl4Oy+gCRpolTV0ZDAlF/gJWHHVyBTDNjk0EwwwBF7+zdsNd3Zc80ngr8WBE4JutDoPOiK7iCNno=
+X-Received: by 2002:a17:907:264d:: with SMTP id ar13mr9310992ejc.504.1593432967918;
+ Mon, 29 Jun 2020 05:16:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200621213806.551879-1-konradybcio@gmail.com>
+ <20200621213806.551879-8-konradybcio@gmail.com> <20200629120911.GA1319@bug>
+In-Reply-To: <20200629120911.GA1319@bug>
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Date:   Mon, 29 Jun 2020 14:15:32 +0200
+Message-ID: <CAMS8qEXdoX1Zpm660sOMM9b2rni9qXM_7rAi9kkzFBQYmL3EgQ@mail.gmail.com>
+Subject: Re: [PATCH 7/8] arm64: dts: qcom: Add support for Sony Xperia
+ XA2/Plus/Ultra (Nile platform)
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-clk@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Do you really want autorepeat on keys like camera focus?
 
-The 'extern' keyword in headers doesn't have any benefit. Remove them
-all from the of_mdio.h header.
+I miiiight want to reconsider that when it will actually be in use :)
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- include/linux/of_mdio.h | 37 ++++++++++++++++++-------------------
- 1 file changed, 18 insertions(+), 19 deletions(-)
+> No volume up?
 
-diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
-index 0f61a4ac6bcf..ba8e157f24ad 100644
---- a/include/linux/of_mdio.h
-+++ b/include/linux/of_mdio.h
-@@ -12,27 +12,26 @@
- #include <linux/of.h>
- 
- #if IS_ENABLED(CONFIG_OF_MDIO)
--extern bool of_mdiobus_child_is_phy(struct device_node *child);
--extern int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np);
--extern struct phy_device *of_phy_find_device(struct device_node *phy_np);
--extern struct phy_device *of_phy_connect(struct net_device *dev,
--					 struct device_node *phy_np,
--					 void (*hndlr)(struct net_device *),
--					 u32 flags, phy_interface_t iface);
--extern struct phy_device *
-+bool of_mdiobus_child_is_phy(struct device_node *child);
-+int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np);
-+struct phy_device *of_phy_find_device(struct device_node *phy_np);
-+struct phy_device *
-+of_phy_connect(struct net_device *dev, struct device_node *phy_np,
-+	       void (*hndlr)(struct net_device *), u32 flags,
-+	       phy_interface_t iface);
-+struct phy_device *
- of_phy_get_and_connect(struct net_device *dev, struct device_node *np,
- 		       void (*hndlr)(struct net_device *));
--struct phy_device *of_phy_attach(struct net_device *dev,
--				 struct device_node *phy_np, u32 flags,
--				 phy_interface_t iface);
--
--extern struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np);
--extern int of_phy_register_fixed_link(struct device_node *np);
--extern void of_phy_deregister_fixed_link(struct device_node *np);
--extern bool of_phy_is_fixed_link(struct device_node *np);
--extern int of_mdiobus_phy_device_register(struct mii_bus *mdio,
--				     struct phy_device *phy,
--				     struct device_node *child, u32 addr);
-+struct phy_device *
-+of_phy_attach(struct net_device *dev, struct device_node *phy_np,
-+	      u32 flags, phy_interface_t iface);
-+
-+struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np);
-+int of_phy_register_fixed_link(struct device_node *np);
-+void of_phy_deregister_fixed_link(struct device_node *np);
-+bool of_phy_is_fixed_link(struct device_node *np);
-+int of_mdiobus_phy_device_register(struct mii_bus *mdio, struct phy_device *phy,
-+				   struct device_node *child, u32 addr);
- 
- static inline int of_mdio_parse_addr(struct device *dev,
- 				     const struct device_node *np)
--- 
-2.26.1
+On this board, vol up is managed by pm660 resin.
 
+Regards
+Konrad
