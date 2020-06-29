@@ -2,155 +2,129 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0B4C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 18:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F74C433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 18:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3DD22063A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 18:40:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593456024;
-	bh=ILZFwBhefvZnaUZ/7Eq1riYSV2CyDKBAdHgbSEH2bvk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LRVslVvDmYBRPwc1ixCOrNbvVSlmCuQWDVtfdWgfcyrPnYbV0ZVvqHsO9Ee/hJsYE
-	 WXBwgrs1ZOxGtEUEn1hP2itwJwPTJGYn/p0PP2qp2NmJ0L3UG/Llw/ASbIl5lXfchL
-	 s7u+u6sZkAvApDbNfd4AxnL9dJJVJ8lwWcp/J9yY=
+	by mail.kernel.org (Postfix) with ESMTP id 73F2A204EC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 18:45:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbgF2SkW (ORCPT
+        id S1726159AbgF2Soh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:40:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60654 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 14:44:37 -0400
+Received: from mga02.intel.com ([134.134.136.20]:40916 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728191AbgF2SkV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:40:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90CF423CD0;
-        Mon, 29 Jun 2020 11:43:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593431023;
-        bh=ILZFwBhefvZnaUZ/7Eq1riYSV2CyDKBAdHgbSEH2bvk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=a6eq+b/baQ8GRm4G4tA7nJQs1RF4yoXbAet+TfIH2YL8pVHzyt+ujIBmMtuPw+G55
-         jk2YHqwBRV4QvVyqu7Lm5tk+mzwndE62UwmdaHWhRifb9Wje5gTGF7Z/oqO6+w8ENI
-         ZYQGRwJn1Dal6tPhfOoEcg1AFPn+JyMwbtSySjbc=
-Date:   Mon, 29 Jun 2020 13:43:33 +0200
-From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     Pawel Laszczak <pawell@cadence.com>
-Cc:     Peter Chen <peter.chen@nxp.com>, Felipe Balbi <balbi@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        "ben.dooks@codethink.co.uk" <ben.dooks@codethink.co.uk>,
-        "colin.king@canonical.com" <colin.king@canonical.com>,
-        "rogerq@ti.com" <rogerq@ti.com>,
-        "weiyongjun1@huawei.com" <weiyongjun1@huawei.com>,
-        Jayshri Dajiram Pawar <jpawar@cadence.com>,
-        Rahul Kumar <kurahul@cadence.com>,
-        Sanket Parmar <sparmar@cadence.com>
-Subject: Re: [PATCH RFC 0/5] Introduced new Cadence USBSSP DRD Driver.
-Message-ID: <20200629114333.GB121549@kroah.com>
-References: <20200626045450.10205-1-pawell@cadence.com>
- <878sga5nfr.fsf@kernel.org>
- <BL0PR07MB5522A8796EE7BFB5062A8E76DD930@BL0PR07MB5522.namprd07.prod.outlook.com>
- <20200629034213.GB30684@b29397-desktop>
- <20200629043146.GA323164@kroah.com>
- <DM6PR07MB552969E5B50BF3B29547DAEADD6E0@DM6PR07MB5529.namprd07.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM6PR07MB552969E5B50BF3B29547DAEADD6E0@DM6PR07MB5529.namprd07.prod.outlook.com>
+        id S1726051AbgF2SoC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:44:02 -0400
+IronPort-SDR: a+SOZ1NxVd3QEdWfn5A05yR/TJuFoBHoE9aq3qKb8KsLSD0o9HyPlbe9rqsP48BQO7HN2ErI5I
+ ww7XNEoKknqA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="134249545"
+X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
+   d="scan'208";a="134249545"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 02:04:00 -0700
+IronPort-SDR: STrvPj96RlAD7lPaaBOdSDyKih7aU1PdIQXeqvI1m6nWdHjjGCQy8LCHSPGJCI3J/c8s9USQH+
+ Sn2Hajo4qAZQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
+   d="scan'208";a="294829170"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by orsmga002.jf.intel.com with ESMTP; 29 Jun 2020 02:03:56 -0700
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
+Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v3 1/2] Add DT bindings YAML schema for PWM fan controller of LGM SoC
+Date:   Mon, 29 Jun 2020 17:03:46 +0800
+Message-Id: <cd0692812e7f1bce365a7594b076ae0ed19d2b37.1593420979.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
+References: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
+In-Reply-To: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
+References: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 11:20:00AM +0000, Pawel Laszczak wrote:
-> 
-> >> > Hi Felipe,
-> >> >
-> >> > >
-> >> > >Hi,
-> >> > >
-> >> > >Pawel Laszczak <pawell@cadence.com> writes:
-> >> > >> This patch introduce new Cadence USBSS DRD driver to linux kernel.
-> >> > >>
-> >> > >> The Cadence USBSS DRD Controller is a highly configurable IP Core which
-> >> > >> can be instantiated as Dual-Role Device (DRD), Peripheral Only and
-> >> > >> Host Only (XHCI)configurations.
-> >> > >>
-> >> > >> The current driver has been validated with FPGA burned. We have support
-> >> > >> for PCIe bus, which is used on FPGA prototyping.
-> >> > >>
-> >> > >> The host side of USBSS-DRD controller is compliance with XHCI
-> >> > >> specification, so it works with standard XHCI Linux driver.
-> >> > >>
-> >> > >> The host side of USBSS DRD controller is compliant with XHCI.
-> >> > >> The architecture for device side is almost the same as for host side,
-> >> > >> and most of the XHCI specification can be used to understand how
-> >> > >> this controller operates.
-> >> > >>
-> >> > >> This controller and driver support Full Speed, Hight Speed, Supper Speed
-> >> > >> and Supper Speed Plus USB protocol.
-> >> > >>
-> >> > >> The prefix cdnsp used in driver has chosen by analogy to cdn3 driver.
-> >> > >> The last letter of this acronym means PLUS. The formal name of controller
-> >> > >> is USBSSP but it's to generic so I've decided to use CDNSP.
-> >> > >>
-> >> > >> The patch 1: adds DT binding.
-> >> > >> The patch 2: adds PCI to platform wrapper used on Cadnece testing
-> >> > >>              platform. It is FPGA based on platform.
-> >> > >> The patches 3-5: add the main part of driver and has been intentionally
-> >> > >>              split into 3 part. In my opinion such division should not
-> >> > >>              affect understanding and reviewing the driver, and cause that
-> >> > >>              main patch (4/5) is little smaller. Patch 3 introduces main
-> >> > >>              header file for driver, 4 is the main part that implements all
-> >> > >>              functionality of driver and 5 introduces tracepoints.
-> >> > >
-> >> > >I'm more interested in how is this different from CDNS3. Aren't they SW compatible?
-> >> >
-> >> > In general, the controller can be split into 2 part- DRD part and the rest UDC.
-> >> >
-> >> > The second part UDC which consist gadget.c, ring.c and mem.c file is completely different.
-> >> >
-> >> > The DRD part contains drd.c and core.c.
-> >> > cdnsp drd.c is similar to cdns3 drd.c but it's little different. CDNSP has similar, but has different register space.
-> >> > Some register was moved, some was removed and some was added.
-> >> >
-> >> > core.c is very similar and eventually could be common for both drivers.  I thought about this but
-> >> > I wanted to avoid interfering with cdns3 driver at this point CDNSP is still under testing and
-> >> > CDNS3 is used by some products on the market.
-> >>
-> >> Pawel, I suggest adding CDNSP at driver/staging first since it is still
-> >> under testing. When you are thinking the driver (as well as hardware) are
-> >> mature, you could try to add gadget part (eg, gadget-v2) and make
-> >> necessary changes for core.c.
-> >
-> >I only take code for drivers/staging/ that for some reason is not
-> >meeting the normal coding style/rules/whatever.  For stuff that is an
-> >obvious duplicate of existing code like this, and needs to be
-> >rearchitected.  It is much more work to try to convert code once it is
-> >in the tree than to just do it out of the tree on your own and resubmit
-> >it, as you don't have to follow the in-kernel rules of "one patch does
-> >one thing" that you would if it was in staging.
-> >
-> >So don't think that staging is the right place for this, just spend a
-> >few weeks to get it right and then resubmit it.
-> >
-> 
-> Ok, 
-> I try to reuse the code from cdns3. Where  such common code should be
-> placed ? Should I move it to e.g. drivers/usb/common/cdns or it should remain in 
-> cdns3 directory.
+Intel's LGM(Lightning Mountain) SoC contains a PWM fan controller
+which is only used to control the fan attached to the system. This
+PWM controller does not have any other consumer other than fan.
+Add DT bindings documentation for this PWM fan controller.
 
-In the cdns3 directory makes the most sense.
+Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+---
+ .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     | 51 ++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
 
-thanks,
+diff --git a/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+new file mode 100644
+index 000000000000..bc3fbc46ec5c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+@@ -0,0 +1,51 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/intel,lgm-pwm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: LGM SoC PWM fan controller
++
++maintainers:
++  - Rahul Tanwar <rahul.tanwar@intel.com>
++
++properties:
++  compatible:
++    const: intel,lgm-pwm
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  intel,fan-wire:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    description: Specifies fan mode. Default when unspecified is 2.
++
++  intel,max-rpm:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    description:
++      Specifies maximum RPM of fan attached to the system.
++      Default when unspecified is 4000.
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - resets
++
++additionalProperties: false
++
++examples:
++  - |
++    pwm: pwm@e0d00000 {
++        compatible = "intel,lgm-pwm";
++        reg = <0xe0d00000 0x30>;
++        #pwm-cells = <2>;
++        clocks = <&cgu0 126>;
++        resets = <&rcu0 0x30 21>;
++    };
+-- 
+2.11.0
 
-greg k-h
