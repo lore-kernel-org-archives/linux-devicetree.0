@@ -2,299 +2,276 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4179C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA6DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9756C20748
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:42:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C332C20672
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:42:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EJevnq1Q"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Lx3CXAeD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389098AbgF2UmD (ORCPT
+        id S2389633AbgF2UmP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:42:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57832 "EHLO
+        Mon, 29 Jun 2020 16:42:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389622AbgF2UmB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 16:42:01 -0400
-Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F316C061755
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 13:42:01 -0700 (PDT)
-Received: by mail-qk1-x732.google.com with SMTP id k18so16576177qke.4
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 13:42:01 -0700 (PDT)
+        with ESMTP id S1731652AbgF2TOE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:14:04 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50523C008612
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 03:27:42 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id dg28so12364991edb.3
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 03:27:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=8jpkMMCZ9Vq0NvRazLzzXPiv8xnbPqfCWhE/+a83M64=;
-        b=EJevnq1Qm1fMrGg9QqwoGUo74xXnWz+OPLe22wYa8z9X7/EESR/StW4NBOVZUvfATX
-         AHN4aZzjhhGvyeJsncj0H3Q3U/a7FxJYRBUijeZOnNB1p4Tp3HUxx0EbjmjSmr9TIjP0
-         7/n3h2c0RV8GVI6qG0UNAxaWURnlnXhz3fM7E=
+        bh=dyroAN44J2OM/AhTWy0pxzrNp1szrmJqs4ojQ9k1drM=;
+        b=Lx3CXAeD23+wZge0roPuQ06+3bFnks98aupHyP/952olcUbmZ2dGTSHxJzw5EIsGUz
+         uvmG4nB45dVQbnkuBckzCSHvrW6zVQknmXJgYHoxX9RTQxR9W989Dk2c+DFBEIzUtvdl
+         dZiHdHK9D7RHwsK8Co1GH/0nYKIPbjqHYwn5s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8jpkMMCZ9Vq0NvRazLzzXPiv8xnbPqfCWhE/+a83M64=;
-        b=i1U2c37jzy+MzrKLn/01ybRtuNZAYDMHrWIT+oyb62TvhenXW1C5kKxdzbJ/TglSf7
-         5hMRKUzo2WgGLxUdaWuwYotorgvxR3hWCL4UAe7KnaFvxeBTtdLiC2TjNz/yKVHifDKq
-         9TFmBsUnHOQUPjjRkME84zaKiaqwyYKJGwcDxXGqawTu5jBCCW1pby9bEf9cgpoh8YmK
-         aQfltY2bP3kp6CGsXFt/mPaUY5swG/QzUi5f2lILbsOd3yGZmsNnpT4luJCg2FqsBKUM
-         cUvr1PXXfSKNr2oVdNAKVcIs/S6IHeWwnn1b2KRWbVHsTqFDU+yvFJjRLth/QB1Elh37
-         vK2A==
-X-Gm-Message-State: AOAM532S+fog8rATn3gk2NFtmCJ8G6/zKS+5OzhtS136gDKtyOjtbh/V
-        o9cvM3AbrTzOTYq4WzAcXoADxUYPmeM1isiIpZkBkA==
-X-Google-Smtp-Source: ABdhPJz8hrXiqyvgz2TipcXO+EtwvIq9Y5rsREXLGe5IM9Sztn7Oq3J3mOBRjpZf7CxTfMsRqJxG2qEVfDufAZ2LwDI=
-X-Received: by 2002:a37:b341:: with SMTP id c62mr16343321qkf.128.1593463320086;
- Mon, 29 Jun 2020 13:42:00 -0700 (PDT)
+        bh=dyroAN44J2OM/AhTWy0pxzrNp1szrmJqs4ojQ9k1drM=;
+        b=TzkT0nXUK+VLCJtnZgYUM2ILRHg+tOH3pvVIGWvJ7uBldppH3LuzG3rWA6iJIMz/F8
+         7qw6hgoB6NEyszG2j96nAl5Lnv80xLbaH5s4qHhwQQgurpjwC2+/Z418kY12N2El+6zj
+         IYRAmtszCpVzIj0siPXWkSWmQGdzwBzUMXq/b5s0xJevIXZSz9FpMzyMukG1L5FFjlwb
+         Oy7JhiPvUR6I54gIJCN+2wpXnDww/uHAPqoIzcok3vJt5VwkwysVArFex/CP6TlQN2OO
+         QxnQgJu9Fn/fH5LETiZM3IFdMY+3ZvFSkT4T4cMwAScRyTTdIp+kSRhoxPA4dXeG+l0i
+         +SQg==
+X-Gm-Message-State: AOAM533qwM9JcvBzMqgXhGAGrjziVbcmUSPSfbFqQ2EpQakIPgM9tDLM
+        U55jshRiE+dRoqjLahZzt066xazYXBqtFw==
+X-Google-Smtp-Source: ABdhPJwtEXzYmEy5UMQoXLicEFeHmvS7tle7i5FeBP12xnc+2Ta0wC6eze8PtwJUhErguq2Ex5nGeQ==
+X-Received: by 2002:a50:eb02:: with SMTP id y2mr14195838edp.281.1593426460847;
+        Mon, 29 Jun 2020 03:27:40 -0700 (PDT)
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com. [209.85.128.53])
+        by smtp.gmail.com with ESMTPSA id dm1sm25528084ejc.99.2020.06.29.03.27.39
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2020 03:27:40 -0700 (PDT)
+Received: by mail-wm1-f53.google.com with SMTP id f18so15586512wml.3
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 03:27:39 -0700 (PDT)
+X-Received: by 2002:a1c:4303:: with SMTP id q3mr16649103wma.134.1593426459341;
+ Mon, 29 Jun 2020 03:27:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200511204635.GC136540@google.com> <20200512134154.GC2085641@kuha.fi.intel.com>
- <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com>
- <CACeCKadiiokPdPB2Q5WBQFrPuxjpm3TiDgaaerncVR_Z7Z0nvg@mail.gmail.com>
- <CAL_Jsq+MM3-ugLvSGc_wc6RvHVyxyDUD0DkvwQaQJMYCCFpfHg@mail.gmail.com>
- <20200609235740.GA154315@google.com> <20200610153356.GC3213128@kuha.fi.intel.com>
- <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com>
- <CACeCKadq6tuqzR_6DuiZeL+=aOMb05EWd4o0sNyGOcZJ=dYx8g@mail.gmail.com>
- <CAL_JsqJQb5P26JC-KqkeHoWxAb63N+_XRK==b-WWJ+pYpdHO8Q@mail.gmail.com> <CACeCKacUa1-ttBmKS_Q_xZCsArgGWkB4s9eG0c5Lc5RHa1W35Q@mail.gmail.com>
-In-Reply-To: <CACeCKacUa1-ttBmKS_Q_xZCsArgGWkB4s9eG0c5Lc5RHa1W35Q@mail.gmail.com>
-From:   Prashant Malani <pmalani@chromium.org>
-Date:   Mon, 29 Jun 2020 13:41:48 -0700
-Message-ID: <CACeCKachd34UtiZXY3i8za_ZHG9xtHSiPX55=Ed78n=S15b3Hg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
-To:     Rob Herring <robh@kernel.org>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tim Wawrzynczak <twawrzynczak@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Rajmohan Mani <rajmohan.mani@intel.com>
+References: <20200615122937.18965-1-dongchun.zhu@mediatek.com>
+ <20200615122937.18965-3-dongchun.zhu@mediatek.com> <20200618191026.GA73379@chromium.org>
+ <1593417224.17166.10.camel@mhfsdcap03>
+In-Reply-To: <1593417224.17166.10.camel@mhfsdcap03>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Mon, 29 Jun 2020 12:27:28 +0200
+X-Gmail-Original-Message-ID: <CAAFQd5DAbGDp=e-b2K89ydyK_bft5D2grpFfGDtX6hC__n-L-g@mail.gmail.com>
+Message-ID: <CAAFQd5DAbGDp=e-b2K89ydyK_bft5D2grpFfGDtX6hC__n-L-g@mail.gmail.com>
+Subject: Re: [PATCH V10 2/2] media: i2c: ov02a10: Add OV02A10 image sensor driver
+To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Cao Bing Bu <bingbu.cao@intel.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        Sj Huang <sj.huang@mediatek.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        Louis Kuo <louis.kuo@mediatek.com>,
+        =?UTF-8?B?U2hlbmduYW4gV2FuZyAo546L5Zyj55S3KQ==?= 
+        <shengnan.wang@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+On Mon, Jun 29, 2020 at 9:54 AM Dongchun Zhu <dongchun.zhu@mediatek.com> wrote:
+>
+> Hi Tomasz,
+>
+> On Thu, 2020-06-18 at 19:10 +0000, Tomasz Figa wrote:
+> > Hi Dongchun,
+> >
+> > On Mon, Jun 15, 2020 at 08:29:37PM +0800, Dongchun Zhu wrote:
+> > > Add a V4L2 sub-device driver for OV02A10 image sensor.
+> > >
+> > > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > > ---
+> > >  MAINTAINERS                 |    1 +
+> > >  drivers/media/i2c/Kconfig   |   13 +
+> > >  drivers/media/i2c/Makefile  |    1 +
+> > >  drivers/media/i2c/ov02a10.c | 1042 +++++++++++++++++++++++++++++++++++++++++++
+> > >  4 files changed, 1057 insertions(+)
+> > >  create mode 100644 drivers/media/i2c/ov02a10.c
+> > >
+> >
+> > Thank you for the patch. Please see my comments inline.
+> >
+>
+> [snip]
+>
+> > > +static int ov02a10_probe(struct i2c_client *client)
+> > > +{
+> > > +   struct device *dev = &client->dev;
+> > > +   struct ov02a10 *ov02a10;
+> > > +   unsigned int rotation;
+> > > +   unsigned int clock_lane_tx_speed;
+> > > +   unsigned int i;
+> > > +   int ret;
+> > > +
+> > > +   ov02a10 = devm_kzalloc(dev, sizeof(*ov02a10), GFP_KERNEL);
+> > > +   if (!ov02a10)
+> > > +           return -ENOMEM;
+> > > +
+> > > +   ret = ov02a10_check_hwcfg(dev, ov02a10);
+> > > +   if (ret) {
+> > > +           dev_err(dev, "failed to check HW configuration: %d", ret);
+> > > +           return ret;
+> > > +   }
+> > > +
+> > > +   v4l2_i2c_subdev_init(&ov02a10->subdev, client, &ov02a10_subdev_ops);
+> > > +   ov02a10->mipi_clock_tx_speed = OV02A10_MIPI_TX_SPEED_DEFAULT;
+> > > +   ov02a10->fmt.code = MEDIA_BUS_FMT_SBGGR10_1X10;
+> > > +
+> > > +   /* Optional indication of physical rotation of sensor */
+> > > +   ret = fwnode_property_read_u32(dev_fwnode(dev), "rotation", &rotation);
+> > > +   if (!ret && rotation == 180) {
+> > > +           ov02a10->upside_down = true;
+> > > +           ov02a10->fmt.code = MEDIA_BUS_FMT_SRGGB10_1X10;
+> > > +   }
+> > > +
+> > > +   /* Optional indication of mipi TX speed */
+> > > +   ret = fwnode_property_read_u32(dev_fwnode(dev), "ovti,mipi-tx-speed",
+> > > +                                  &clock_lane_tx_speed);
+> > > +
+> > > +   if (!ret)
+> > > +           ov02a10->mipi_clock_tx_speed = clock_lane_tx_speed;
+> > > +
+> > > +   /* Get system clock (eclk) */
+> > > +   ov02a10->eclk = devm_clk_get(dev, "eclk");
+> > > +   if (IS_ERR(ov02a10->eclk)) {
+> > > +           ret = PTR_ERR(ov02a10->eclk);
+> > > +           dev_err(dev, "failed to get eclk %d\n", ret);
+> > > +           return ret;
+> > > +   }
+> > > +
+> > > +   ret = fwnode_property_read_u32(dev_fwnode(dev), "clock-frequency",
+> > > +                                  &ov02a10->eclk_freq);
+> > > +   if (ret) {
+> > > +           dev_err(dev, "failed to get eclk frequency\n");
+> > > +           return ret;
+> > > +   }
+> > > +
+> > > +   ret = clk_set_rate(ov02a10->eclk, ov02a10->eclk_freq);
+> > > +   if (ret) {
+> > > +           dev_err(dev, "failed to set eclk frequency (24MHz)\n");
+> > > +           return ret;
+> > > +   }
+> > > +
+> > > +   if (clk_get_rate(ov02a10->eclk) != OV02A10_ECLK_FREQ) {
+> > > +           dev_warn(dev, "wrong eclk frequency %d Hz, expected: %d Hz\n",
+> > > +                    ov02a10->eclk_freq, OV02A10_ECLK_FREQ);
+> > > +           return -EINVAL;
+> > > +   }
+> > > +
+> > > +   ov02a10->pd_gpio = devm_gpiod_get(dev, "powerdown", GPIOD_OUT_HIGH);
+> > > +   if (IS_ERR(ov02a10->pd_gpio)) {
+> > > +           ret = PTR_ERR(ov02a10->pd_gpio);
+> > > +           dev_err(dev, "failed to get powerdown-gpios %d\n", ret);
+> > > +           return ret;
+> > > +   }
+> > > +
+> > > +   ov02a10->rst_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+> > > +   if (IS_ERR(ov02a10->rst_gpio)) {
+> > > +           ret = PTR_ERR(ov02a10->rst_gpio);
+> > > +           dev_err(dev, "failed to get reset-gpios %d\n", ret);
+> > > +           return ret;
+> > > +   }
+> > > +
+> > > +   for (i = 0; i < ARRAY_SIZE(ov02a10_supply_names); i++)
+> > > +           ov02a10->supplies[i].supply = ov02a10_supply_names[i];
+> > > +
+> > > +   ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ov02a10_supply_names),
+> > > +                                 ov02a10->supplies);
+> > > +   if (ret) {
+> > > +           dev_err(dev, "failed to get regulators\n");
+> > > +           return ret;
+> > > +   }
+> > > +
+> > > +   mutex_init(&ov02a10->mutex);
+> > > +   ov02a10->cur_mode = &supported_modes[0];
+> > > +   ret = ov02a10_initialize_controls(ov02a10);
+> > > +   if (ret) {
+> > > +           dev_err(dev, "failed to initialize controls\n");
+> > > +           goto err_destroy_mutex;
+> > > +   }
+> > > +
+> > > +   ov02a10->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+> > > +   ov02a10->subdev.entity.ops = &ov02a10_subdev_entity_ops;
+> > > +   ov02a10->subdev.entity.function = MEDIA_ENT_F_CAM_SENSOR;
+> > > +   ov02a10->pad.flags = MEDIA_PAD_FL_SOURCE;
+> > > +   ret = media_entity_pads_init(&ov02a10->subdev.entity, 1, &ov02a10->pad);
+> > > +   if (ret < 0) {
+> > > +           dev_err(dev, "failed to init entity pads: %d", ret);
+> > > +           goto err_free_handler;
+> > > +   }
+> > > +
+> > > +   pm_runtime_enable(dev);
+> > > +   if (!pm_runtime_enabled(dev)) {
+> > > +           ret = ov02a10_power_on(dev);
+> > > +           if (ret < 0) {
+> > > +                   dev_err(dev, "failed to power on: %d\n", ret);
+> > > +                   goto err_clean_entity;
+> > > +           }
+> > > +   }
+> > > +
+> > > +   ret = v4l2_async_register_subdev(&ov02a10->subdev);
+> > > +   if (ret) {
+> > > +           dev_err(dev, "failed to register V4L2 subdev: %d", ret);
+> > > +           goto err_power_off;
+> > > +   }
+> > > +
+> > > +   return 0;
+> > > +
+> > > +err_power_off:
+> > > +   pm_runtime_disable(dev);
+> > > +   if (!pm_runtime_enabled(dev))
+> >
+> > This would be always true, resulting in unbalanced power off. Moving
+> > pm_runtime_disable() after this if should work better.
+> >
+>
+> Pardon, do you mean that we shall use like this:
+> err_power_off:
+>         if (!pm_runtime_enabled(dev)) {
+>                 pm_runtime_disable(dev);
+>                 if (!pm_runtime_status_suspended(dev)
+>                         ov02a10_power_off(dev);
+>         }
 
-Just following up on this. Would the below example align better with
-OF graph requirements?
+Hmm, that wouldn't really work, because there is no reason to disable
+runtime PM if it's disabled already. I also noticed that we don't need
+to check pm_runtime_status_suspended() in the error path in probe,
+because we only ever attempt to power it on when runtime PM is
+disabled in kernel config. This would make the end result as:
 
-Example begins at <example_start>, but in summary:
-- port@1 (Superspeed) of usb-c-connector will have 3 endpoints (0 =
-goes to mode switch, 1 = goes to orientation switch, 2 = goes to data
-role switch)
-- port@2 (SBU) of usb-c-connector will have 2 endpoints (0 = goes to
-mode switch, 1 = goes to orientation switch)
--These end points can go through arbitrarily long paths (including
-retimers) as long as they end up at the following devices:
-    a. device with compatible string "typec-mode-switch" for endpoint 0.
-    b. device with compatible string "typec-orientation-switch" for endpoint 1.
-    c. device with compatible string "typec-data-role-switch" for endpoint 2.
-- Connector class framework will perform the traversal from
-usb-c-connector port endpoints to the "*-switch" devices.
+         if (pm_runtime_enabled(dev))
+                 pm_runtime_disable(dev);
+         else
+                 ov02a10_power_off(dev);
 
 Best regards,
-
-On Fri, Jun 12, 2020 at 10:34 AM Prashant Malani <pmalani@chromium.org> wrote:
->
-> Hi Rob,
->
-> Thanks as always for your help in reviewing this proposal!
->
-> Kindly see inline
->
-> (Trimming text);
-> On Thu, Jun 11, 2020 at 02:00:47PM -0600, Rob Herring wrote:
-> > On Wed, Jun 10, 2020 at 11:49 AM Prashant Malani <pmalani@chromium.org> wrote:
-> > >
-> > > Hi Rob,
-> > >
-> > > On Wed, Jun 10, 2020 at 9:53 AM Rob Herring <robh@kernel.org> wrote:
-> > > >
-> > > > > On Tue, Jun 09, 2020 at 04:57:40PM -0700, Prashant Malani wrote:
-> > >
-> > > I think the updated example handles this grouping (port@1 going to a
-> > > "SS mux") although as you said it should probably be a group of muxes,
-> > > but I think the example illustrates the point. Is that assessment
-> > > correct?
-> >
-> > Yes, but let's stop calling it a mux. It's a "USB Type C signal routing blob".
->
-> Ack.
->
-> Let's go with "-switch" ? That's what the connector class uses and it
-> conveys the meaning (unless that is a reserved keyword in DT).
->
-> >
-> > > Would this block the addition of the "*-switch" properties? IIUC the
-> > > two are related but not dependent on each other.
-> > >
-> > > The *-switch properties are phandles which the Type C connector class
-> > > framework expects (and uses to get handles to those switches).
-> > > These would point to the "mux" or "group of mux" abstractions as noted earlier.
-> >
-> > You don't need them though. Walk the graph. You get the connector
-> > port@1 remote endpoint and then get its parent.
-> >
->
-> I see; would it be something along the lines of this? (DT example
-> follows; search for "example_end" to jump to bottom):
->
-> <example_start>
->
-> connector@0 {
->     compatible = "usb-c-connector";
->     reg = <0>;
->     power-role = "dual";
->     data-role = "dual";
->     try-power-role = "source";
->     ....
->     ports {
->         #address-cells = <1>;
->         #size-cells = <0>;
->
->         port@0 {
->             reg = <0>;
->             usb_con_hs: endpoint {
->                 remote-endpoint = <&foo_usb_hs_controller>;
->             };
->         };
->
->         port@1 {
->             reg = <1>;
->             #address-cells = <1>;
->             #size-cells = <0>;
->
->             usb_con0_ss_mode: endpoint@0 {
->                 reg = <0>
->                 remote-endpoint = <&mode_switch_ss_in>;
->             };
->
->             usb_con0_ss_orientation: endpoint@1 {
->                         reg = <1>
->                         remote-endpoint = <&orientation_switch_ss_in>;
->             };
->
->             usb_con0_ss_data_role: endpoint@2 {
->                         reg = <2>
->                         remote-endpoint = <&data_role_switch_in>;
->             };
->         };
->
->         port@2 {
->             reg = <2>;
->             #address-cells = <1>;
->             #size-cells = <0>;
->             usb_con0_sbu_mode: endpoint@0 {
->                         reg = <0>
->                         remote-endpoint = <&mode_switch_sbu_in>;
->             };
->             usb_con0_sbu_orientation: endpoint@1 {
->                         reg = <1>
->                         remote-endpoint = <&orientation_switch_sbu_in>;
->             };
->         };
->     };
-> };
->
-> mode_switch {
->     compatible = "typec-mode-switch";
->     mux-controls = <&mode_mux_controller>;
->     mux-control-names = "mode";
->     #address-cells = <1>;
->     #size-cells = <0>;
->
->     port@0 {
->         reg = <0>;
->         mode_switch_ss_in: endpoint {
->             remote-endpoint = <&usb_con0_ss_mode>
->         };
->     };
->
->     port@1 {
->         reg = <1>;
->         mode_switch_out_usb3: endpoint {
->             remote-endpoint = <&usb3_0_ep>
->         };
->     };
->
->     port@2 {
->         reg = <2>;
->         mode_switch_out_dp: endpoint {
->             remote-endpoint = <&dp0_out_ep>
->         };
->     };
->
->     port@3 {
->         reg = <3>;
->         mode_switch_sbu_in: endpoint {
->             remote-endpoint = <&usb_con0_sbu_mode>
->         };
->     };
->     // ... other ports similarly defined.
-> };
->
-> orientation_switch {
->     compatible = "typec-orientation-switch";
->     mux-controls = <&orientation_mux_controller>;
->     mux-control-names = "orientation";
->     #address-cells = <1>;
->     #size-cells = <0>;
->
->     port@0 {
->         reg = <0>;
->         orientation_switch_ss_in: endpoint {
->             remote-endpoint = <&usb_con0_ss_orientation>
->         };
->     };
->
->     port@1
->         reg = <1>;
->         orientation_switch_sbu_in: endpoint {
->             remote-endpoint = <&usb_con0_sbu_orientation>
->         };
->     };
->     // ... other ports similarly defined.
-> };
->
-> data_role_switch {
->     compatible = "typec-data-role-switch";
->     mux-controls = <&data_role_switch_controller>;
->     mux-control-names = "data_role";
->
->     port {
->         data_role_switch_in: endpoint {
->             remote-endpoint = <&usb_con0_ss_data_role>
->         };
->     };
-> };
->
-> <example_end>
->
-> Would this be conformant to OF graph and usb-connector bindings
-> requirements? We'll certainly send out a format PATCH/RFC series for
-> this, but I was hoping to gauge whether we're thinking along the right lines.
->
-> So, in effect this would mean:
-> - New bindings(and compatible strings) to be added for:
->   typec-{orientation,data-role,mode}-switch.
-> - Handling in Type C connector class to parse switches from OF graph.
-> - Handling in Type C connector class for distinct switches for port@1
->   (SS lines) and port@2 (SBU lines).
->
-> The only thing I'm confused about is how we can define these switch
-> remote-endpoint bindings in usb-connector.yaml; the port can have an
-> remote-endpoint, but can we specify what the parent of the remote-endpoint
-> should have as a compatible string? Or do we not need to?
->
-> Best regards,
->
-> -Prashant
->
+Tomasz
