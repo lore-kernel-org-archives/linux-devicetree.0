@@ -2,114 +2,54 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65445C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D88C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 22:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44E5420656
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468402;
-	bh=OZjHJXBgqjf6jeepRHxPRWcffZ7WEL55H+kz4WjR/4s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TXnAxT0TGCFPUQOStW1XBqCuw5ctAxV9N1y/U49kawTpAae53a+1WcZ/b1JPX2k1G
-	 bAvs6BgjdHdWRb8N3ac/HFD7Y4XI/72TkFp1qiMZcUjPaybZyBuRLXOCmbF5zQlslt
-	 6Qg+1iQO6L25FxDcZuCm+93Japj60VqXpnwhP+OM=
+	by mail.kernel.org (Postfix) with ESMTP id B162E20656
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 22:07:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390547AbgF2WGl (ORCPT
+        id S2391719AbgF2WGx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:06:41 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:40152 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404852AbgF2WGj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 18:06:39 -0400
-Received: by mail-io1-f65.google.com with SMTP id q8so18891303iow.7;
-        Mon, 29 Jun 2020 15:06:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=d7i/LtCWxvjcrkXKayf7wJy9l1xOiA2SNi/swky4zLs=;
-        b=qLdJXcPscwc3PFY50yegWdAsLBHC54GiL4gYXMR3cLhKfeE3Qc4tzIKGsyz/QutbkW
-         dNFNivu56Q9rxEcbHgc6nt7Ux9uxtTPEgSbkkK2VaLArJUTSPLPfOhjQvFqNXhEGsONp
-         HfF1/16rL3djkFNZIkWNL//zR0Ve5ogJUcR5mW/cp6UOajRLAQcpAODLTWpdHJptoBVL
-         LBBWcvW8YyxiMfdAlWVxig9cWw7vxrNdjS2LpMOP969UKZLN3VTaduq5qoJzzelrnD5V
-         yDIK+ZWMemU8w/3LmJL4WJI8dfK8Vpq3c0IiHyaGamLZzf32CN0tUBCFDJyGszPasPcE
-         8HXw==
-X-Gm-Message-State: AOAM5310p9e0Oi5sOfZduAQx7NXmtg+f0oMJCFh4x9/0jSfeaaR0+oWg
-        i+CdgQSAe1IZS3VvIj+Fgw==
-X-Google-Smtp-Source: ABdhPJzu7iHEmXhdSieXnQBr0DvEvJgrCjdJBUPurQFawvCOFA7nufQByGRhQUQtaAcZ36ucGFZwCw==
-X-Received: by 2002:a6b:5b14:: with SMTP id v20mr19143451ioh.182.1593468398381;
-        Mon, 29 Jun 2020 15:06:38 -0700 (PDT)
-Received: from xps15 ([64.188.179.255])
-        by smtp.gmail.com with ESMTPSA id t11sm627471ils.3.2020.06.29.15.06.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 15:06:37 -0700 (PDT)
-Received: (nullmailer pid 3025233 invoked by uid 1000);
-        Mon, 29 Jun 2020 22:06:36 -0000
-Date:   Mon, 29 Jun 2020 16:06:36 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sumit Gupta <sumitg@nvidia.com>
-Cc:     viresh.kumar@linaro.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        catalin.marinas@arm.com, mperttunen@nvidia.com,
-        jonathanh@nvidia.com, rjw@rjwysocki.net,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org, will@kernel.org,
-        talho@nvidia.com, linux-arm-kernel@lists.infradead.org,
-        thierry.reding@gmail.com, bbasu@nvidia.com
-Subject: Re: [TEGRA194_CPUFREQ PATCH v4 1/4] dt-bindings: arm: Add t194
- ccplex compatible and bpmp property
-Message-ID: <20200629220636.GA3022986@bogus>
-References: <1593186236-12760-1-git-send-email-sumitg@nvidia.com>
- <1593186236-12760-2-git-send-email-sumitg@nvidia.com>
+        Mon, 29 Jun 2020 18:06:53 -0400
+Received: from muru.com ([72.249.23.125]:59938 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726112AbgF2SfO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:14 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id B266381B7;
+        Mon, 29 Jun 2020 17:17:04 +0000 (UTC)
+Date:   Mon, 29 Jun 2020 10:16:09 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        bcousson@baylibre.com, Linux-OMAP <linux-omap@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Subject: Re: [PATCH v2] arm: dts: am335x-pocketbeagle: add gpio-line-names
+Message-ID: <20200629171609.GW37466@atomide.com>
+References: <20200618182921.GA61509@x1>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1593186236-12760-2-git-send-email-sumitg@nvidia.com>
+In-Reply-To: <20200618182921.GA61509@x1>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 26 Jun 2020 21:13:53 +0530, Sumit Gupta wrote:
-> To do frequency scaling on all CPUs within T194 CPU Complex, we need
-> to query BPMP for data on valid operating points. Document a compatible
-> string under 'cpus' node to represent the CPU Complex for binding drivers
-> like cpufreq which don't have their node or CPU Complex node to bind to.
-> Also, document a property to point to the BPMP device that can be queried
-> for all CPUs.
-> 
-> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
-> ---
->  Documentation/devicetree/bindings/arm/cpus.yaml | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
+* Drew Fustini <drew@beagleboard.org> [200618 11:30]:
+> The BeagleBoard.org PocketBeagle has P1 and P2 headers [0] which expose
+> many of the TI AM3358 SoC balls to stacking expansion boards called
+> "capes", or to other external connections like jumper wires connected
+> to a breadboard.
 
+Thanks applying into omap-for-v5.9/dt.
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/cpus.yaml: properties:nvidia,bpmp: Additional properties are not allowed ('descrption' was unexpected)
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/cpus.yaml: properties:nvidia,bpmp: 'descrption' is not one of ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'deprecated', 'description', 'else', 'enum', 'exclusiveMaximum', 'exclusiveMinimum', 'items', 'if', 'minItems', 'minimum', 'maxItems', 'maximum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'required', 'then', 'type', 'typeSize', 'unevaluatedProperties', 'uniqueItems']
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/cpus.yaml: properties:nvidia,bpmp: {'$ref': '/schemas/types.yaml#/definitions/phandle', 'descrption': 'Specifies the bpmp node that needs to be queried to get\noperating point data for all CPUs.\n\nOptional for NVIDIA Tegra194 Carmel CPUs\n'} is not valid under any of the given schemas (Possible causes of the failure):
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/cpus.yaml: properties:nvidia,bpmp: 'description' is a required property
-
-Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/arm/cpus.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/arm/cpus.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-Makefile:1347: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-
-See https://patchwork.ozlabs.org/patch/1317775
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+Tony
