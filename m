@@ -2,89 +2,112 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BFEBC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48767C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 120A820656
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CF4C20656
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467209;
-	bh=PRzEUjCwFdEbb2h7LthoNz2Fd8Gh9/Q8utmKomXm5U8=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=LPRw+XaTtkkerLCQjKKAsNoOe1z7H7q/48vuR1ox3xyVYKrUyYAWHXw12I7Gca7Mf
-	 YqUTt3313ZZaE8I3HPiWVq0A3m89m5HxI71D+HSa+Mjz6ZWNbh++PpD8HMYopPWmH+
-	 wQ1fhEs2Qr4OQ7xBTlzRHCmtGeICovsMRZhCXv7s=
+	s=default; t=1593467219;
+	bh=xa0Hrnu6FM8LHBC/Pqp9ywPVRqrBEcn8klGkVdowRAQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DVGqKESfqTKh5wEMNW/rB+fFuCW6XZ0woXGkh/6+5/eDmQ8/JGHUfYcliScE0bD7L
+	 QHCGruxNYe+oUSZmObXyqlsRNCXAry01YUQEe4DVt9/KAoNtFOjGe4ToE7ItcLNPS3
+	 lXR7TsUCBhanZ6gb9YJbZwLLVakrZAHndSazEHFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403993AbgF2Vq2 (ORCPT
+        id S1727798AbgF2Vq4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:46:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56764 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726765AbgF2Sft (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:49 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9520255CB;
-        Mon, 29 Jun 2020 18:15:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593454524;
-        bh=PRzEUjCwFdEbb2h7LthoNz2Fd8Gh9/Q8utmKomXm5U8=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=Cjie/f2sybCATA4dkTGFcdf59jIZLIWBY4SBWEoNDYh68xvujTFZ817yIvQtB6lI+
-         +9A/rMEaV7xPEijchgYYTDVRYRuTK28yEMdGLgZwWY15w/4gCz9kTkEzy03QVGT4ZI
-         JDzvQ3bLdUv9oA55zVyE9o5Mvdwp5zqxSnqSsIaI=
-Date:   Mon, 29 Jun 2020 19:15:22 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>, perex@perex.cz, tiwai@suse.com,
-        lgirdwood@gmail.com
-Cc:     robh@kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20200626154143.20351-1-dmurphy@ti.com>
-References: <20200626154143.20351-1-dmurphy@ti.com>
-Subject: Re: [PATCH 1/4] ASoC: tas2562: Add right and left channel slot programming
-Message-Id: <159345450675.54191.5281354512647747070.b4-ty@kernel.org>
+        Mon, 29 Jun 2020 17:46:56 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:44187 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727795AbgF2Vqy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 17:46:54 -0400
+Received: by mail-il1-f196.google.com with SMTP id w73so4010394ila.11;
+        Mon, 29 Jun 2020 14:46:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=93evjCDhdxZ5UWBeY+2YkNq7PalFs0r3h+XQkaBP8dE=;
+        b=Jn8n6FSAMp1WRC9FP4nhYyc5yzZIUJrJYvbRitDXqTh0+9F2M07/kj959pmP8c+7O2
+         163nyURuKwDEz9i35weEXUawZhSRNuDe+1nJQtKwjpOutQDmXpGI10KNgHkdbx0gNvx7
+         Yz3H67uBzx5plqmfaxJZuOneXyewxlbR/5qcV285XVc6qW/OkrA6lb1GtqD+hd/xNuRh
+         7CpUdLEfnjLJAxJTHK5S6GiHE1pF6kwd3Fb4tbacMb/Ef5vDDsDOyWWNvX/Z12gK/jIS
+         Ex4xwE6Ews3MMf9pU1VT7sP87tNcUnxle6Pa3PPTa8DbZgfmBOcQ1kgo5QEmaJsQSXpc
+         PVNA==
+X-Gm-Message-State: AOAM5319guXfCAtwVpDMKvYyG/5KK/rotBknpcGCgkNSJNGUtivOiHG+
+        221pvJd0LixWV7LzkfN0A70zvFBUQg==
+X-Google-Smtp-Source: ABdhPJy5G6waKe2rY07vRikAafpF0kBxLxk5gLmS6+u89sWZvMM/h5dLNkW6kl0bObAjVL3Cfk1hBg==
+X-Received: by 2002:a92:d4cf:: with SMTP id o15mr18251954ilm.25.1593467213572;
+        Mon, 29 Jun 2020 14:46:53 -0700 (PDT)
+Received: from xps15 ([64.188.179.255])
+        by smtp.gmail.com with ESMTPSA id k185sm654843ilk.16.2020.06.29.14.46.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 14:46:53 -0700 (PDT)
+Received: (nullmailer pid 2982377 invoked by uid 1000);
+        Mon, 29 Jun 2020 21:46:52 -0000
+Date:   Mon, 29 Jun 2020 15:46:52 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        devicetree@vger.kernel.org,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-mips@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v4 3/6] dt-bindings: bus: Add MIPS CDMM controller
+Message-ID: <20200629214652.GA2981813@bogus>
+References: <20200617223201.23259-1-Sergey.Semin@baikalelectronics.ru>
+ <20200617223201.23259-4-Sergey.Semin@baikalelectronics.ru>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617223201.23259-4-Sergey.Semin@baikalelectronics.ru>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 26 Jun 2020 10:41:40 -0500, Dan Murphy wrote:
-> Add programming for the tdm slots for the right and left. This also
-> requires configuring the RX/TX offsets for the DAI format type.
+On Thu, 18 Jun 2020 01:31:57 +0300, Serge Semin wrote:
+> It's a Common Device Memory Map controller embedded into the MIPS IP
+> cores, which dts node is supposed to have compatible and reg properties.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: linux-mips@vger.kernel.org
+> 
+> ---
+> 
+> Changelog prev:
+> - Lowercase the example hex'es.
+> ---
+>  .../bindings/bus/mti,mips-cdmm.yaml           | 35 +++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/bus/mti,mips-cdmm.yaml
+> 
 
-Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Thanks!
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/bus/mti,mips-cdmm.example.dt.yaml: example-0: cdmm@1bde8000:reg:0: [0, 467566592, 0, 32768] is too long
 
-[1/3] ASoC: tas2562: Add right and left channel slot programming
-      commit: d7bd40ae55ce339a3c9be7fc2087c671d3d80894
-[2/3] ASoC: tas2562: Add voltage sense slot property
-      commit: f10b6c99c08433861d1ed62267fa57ced7dbdf50
-[3/3] ASoC: tas2562: Add voltage sense slot configuration
-      commit: 09ed395b05feb7d0f77ab52c48d2f77c1b44d2ab
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+See https://patchwork.ozlabs.org/patch/1311658
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Please check and re-submit.
 
-Thanks,
-Mark
