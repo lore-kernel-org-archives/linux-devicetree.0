@@ -2,109 +2,235 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E31FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E99A1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 429FA20672
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C758E206C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:45:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="blY5505y"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xb6v613G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731596AbgF2TN7 (ORCPT
+        id S1731591AbgF2TN7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Mon, 29 Jun 2020 15:13:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43356 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731569AbgF2TN5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:13:57 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7081FC08EACC
-        for <devicetree@vger.kernel.org>; Sun, 28 Jun 2020 23:17:45 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id gc15so573469pjb.0
-        for <devicetree@vger.kernel.org>; Sun, 28 Jun 2020 23:17:45 -0700 (PDT)
+        with ESMTP id S1731558AbgF2TNx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:13:53 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 755B9C0A88C0
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 00:36:22 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id o2so15094622wmh.2
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 00:36:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/iWF9Aktns6tjUCoIAHOc+DKzNhTAu9vb8oX3epUC60=;
-        b=blY5505ygN1qt1Y8DSpy0SiYhbAhUtlzOYCJQL61xLBe5ORTR3pWGY2BSrDFUf/frY
-         D2KvctYi0X9Ru4JBVk6rpW0KJGoE6oLqz2VhAUynepoFHbJ2tVw3/pYv2ujjSLBKo+cZ
-         xJsCdaCDR1eK+PCnlmrpDahrh6/Q/7Ls9G6cjc2mnEoLxWf8SRWVkadedQsCIsOXQcog
-         QbspxLbknbwM3pgGBz+VC2c9ai4fqnMqPyOi2JVK+m+Y8+R7SofQf6PYyPWFqo4q/6Lg
-         9DW1LM6RJ/DvVtF9/5oFhneRt9RQoGxAXSwjuwZVCv7KOp0aPb2jd6ycudIjnuVJqhNz
-         l6AA==
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=lpjt1zswNKMvS5djY3ctzDxWqp304nocjJTBTZb5p18=;
+        b=Xb6v613GSJsh7dDsApm/ir5qwYnG+gAoxzl8vTH96tkpKLL1mF97c2GqfpOtrQj2W6
+         QQcjmzdmPhYC5hJPSKm2uaEzcBag8wI9ndCV3kP0BuM1nBzpeOae8Pc2Q63/2fAHNHPu
+         ISeB8G+ht4jUjXD9Ogb10cbG/Jv1732N9rB8ogsB5xT5AXOAvNFZUT2PbFo8i3vsPozb
+         A/V+3Oi32EeHw2wJz8+xAtA7A3nnyj2tPKOCKp6oh7CLEV0O2IQjS+etZguzyx3xCZUo
+         pLU6BFrepzT0sbG0LLQ2jF33V7P0HHfNaFDSJnxoCXozxRk6XjuvnW/efM5mFPgmYySb
+         fAxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/iWF9Aktns6tjUCoIAHOc+DKzNhTAu9vb8oX3epUC60=;
-        b=KsZ3+NqOwVKx7SJWFoBc+AvJCnBwOmalscri1gTm/4WP3gTWGK5OyFkpuIuiLM8pLd
-         vDiwrJiXpcjqDCY4Pc5drxIg5CgTuerFPrRTQKlrbjb2s5QeohWJdHMothKaMH6cckvz
-         OZ+8k3pdRg5vVPgPLuWgh0dJyfyqHFGcYn+D5bcm5x4WFWI9bDfUG/P8nd2BMXpyVD+r
-         3r0oNiPxLAdQgBJUKf21KrqGOLAStE8VCHfjD8fHm6kTpqz0KrawGBDxMV764gLi6TFP
-         wumUY1RtzH3fbpvAepd97wGQsFoVXIvII2Y5uWDJWGg8w0WpPJvRmDkQ8IdlpQZPYliI
-         l4hg==
-X-Gm-Message-State: AOAM53279gcQL68yr941WBPBwaeUiMaiAM+cIdraYgdAd+/U66J1SHch
-        /Wu9TJxz1CnGuy0nC4bL+tKYGQ==
-X-Google-Smtp-Source: ABdhPJwTKfFVHzwQAGzguT3A58qTDtSwnwdELyYHjDiWd5nJqHRq6K6pp1+oar1iZXy/qT8C+R3bhQ==
-X-Received: by 2002:a17:902:201:: with SMTP id 1mr12567598plc.195.1593411464987;
-        Sun, 28 Jun 2020 23:17:44 -0700 (PDT)
-Received: from localhost ([122.172.127.76])
-        by smtp.gmail.com with ESMTPSA id t184sm3828984pfd.49.2020.06.28.23.17.44
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 28 Jun 2020 23:17:44 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 11:47:42 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sumit Gupta <sumitg@nvidia.com>
-Cc:     rjw@rjwysocki.net, catalin.marinas@arm.com, will@kernel.org,
-        thierry.reding@gmail.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, jonathanh@nvidia.com, talho@nvidia.com,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        bbasu@nvidia.com, mperttunen@nvidia.com
-Subject: Re: [TEGRA194_CPUFREQ PATCH v4 4/4] arm64: defconfig: Enable
- CONFIG_ARM_TEGRA194_CPUFREQ
-Message-ID: <20200629061742.26pd4rzswlb5wegx@vireshk-i7>
-References: <1593186236-12760-1-git-send-email-sumitg@nvidia.com>
- <1593186236-12760-5-git-send-email-sumitg@nvidia.com>
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=lpjt1zswNKMvS5djY3ctzDxWqp304nocjJTBTZb5p18=;
+        b=WXhgcR02u8zVRJplqDRuLCz49v/2JZZ2aXJCH8jyz4i8MMK7018Jpmjdr5R6AGBkNA
+         j4sYXE3N1cW+61xSJtRn0KPq5XGTMiHZl1nBp39IbhouY6ASomCFtUbCENAmYGYWnxKP
+         7OpZ/wKufxg3gDzD7d9s53BtuoU4oMEvk/XDEnDe6ckM5ohses95WJlv/eJj1ei+pUoq
+         RlpzlTVVDkqWUpdFM93cfodSN7c5e57Z3JVeP7H2r1q9EN9B64Op9J9lR2fcZGF/WfoM
+         u9NjHrXtWB60hXdYNK4hIaK8Ol9eTkC8OtAG83vD2ky17qABM6R+773mimvHt1Ewjck5
+         HE4Q==
+X-Gm-Message-State: AOAM533kRnFsMZxpcOCDTw/YL+Jb0sgn9vsYYOGbW7jOpSwCZMZmU+de
+        t/IqG3oYWymGzM7dKynqGq/KJw==
+X-Google-Smtp-Source: ABdhPJy67jjtg4NKwoCcMRemNsFqljoxw5xMsjUhinUQsYu2vFwl6e5TypTLoHbqRvCXbQ6CnBoYsA==
+X-Received: by 2002:a7b:c345:: with SMTP id l5mr16097005wmj.31.1593416180947;
+        Mon, 29 Jun 2020 00:36:20 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id a126sm26988070wme.28.2020.06.29.00.36.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 00:36:19 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 08:36:17 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/4] ARM: dts: uniphier: change support card to
+ simple-mfd from simple-bus
+Message-ID: <20200629073617.GF177734@dell>
+References: <20200623114614.792648-1-yamada.masahiro@socionext.com>
+ <20200623114614.792648-4-yamada.masahiro@socionext.com>
+ <20200623122413.GA954398@dell>
+ <CAK7LNAR-dm6Zbtt9MsUunn9+qqwTtRCbq4Wzb=8uKLtfaLK6TQ@mail.gmail.com>
+ <20200624181605.GJ954398@dell>
+ <CAK7LNATFUX56t=wn-3qOSYLwESp63gqDWjADEVQ1g1CYrGxA3g@mail.gmail.com>
+ <20200625145726.GT954398@dell>
+ <CAK7LNAQdoe_eS8d9AoF1p4QgAB7oUM9aA+qgFS2GwPZsZbTnhg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1593186236-12760-5-git-send-email-sumitg@nvidia.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK7LNAQdoe_eS8d9AoF1p4QgAB7oUM9aA+qgFS2GwPZsZbTnhg@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 26-06-20, 21:13, Sumit Gupta wrote:
-> Enable Tegra194 CPU frequency scaling support by default.
-> 
-> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
-> ---
->  arch/arm64/configs/defconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index f9d378d..385bd35 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -91,6 +91,7 @@ CONFIG_ARM_QCOM_CPUFREQ_NVMEM=y
->  CONFIG_ARM_QCOM_CPUFREQ_HW=y
->  CONFIG_ARM_RASPBERRYPI_CPUFREQ=m
->  CONFIG_ARM_TEGRA186_CPUFREQ=y
-> +CONFIG_ARM_TEGRA194_CPUFREQ=y
->  CONFIG_QORIQ_CPUFREQ=y
->  CONFIG_ARM_SCPI_PROTOCOL=y
->  CONFIG_RASPBERRYPI_FIRMWARE=y
+On Mon, 29 Jun 2020, Masahiro Yamada wrote:
 
-Instead of this, maybe you can rather add a default y thing in the
-Kconfig itself as this is a single platform driver.
+> On Thu, Jun 25, 2020 at 11:57 PM Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > On Thu, 25 Jun 2020, Masahiro Yamada wrote:
+> >
+> > > On Thu, Jun 25, 2020 at 3:16 AM Lee Jones <lee.jones@linaro.org> wrote:
+> > > >
+> > > > On Thu, 25 Jun 2020, Masahiro Yamada wrote:
+> > > >
+> > > > > On Tue, Jun 23, 2020 at 9:24 PM Lee Jones <lee.jones@linaro.org> wrote:
+> > > > > >
+> > > > > > On Tue, 23 Jun 2020, Masahiro Yamada wrote:
+> > > > > >
+> > > > > > > 'make ARCH=arm dtbs_check' emits the following warning:
+> > > > > > >
+> > > > > > >   support-card@1,1f00000: $nodename:0: 'support-card@1,1f00000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+> > > > > > >
+> > > > > > > Maybe, simple-mfd could be a better fit for this device.
+> > > > > >
+> > > > > > The two should be equivalent.
+> > > > >
+> > > > > Yes, I know.
+> > > > > That's why I can change "simple-bus" to "simple-mfd"
+> > > > > with no risk.
+> > > > >
+> > > > > The difference is schema-check.
+> > > > >
+> > > > > The node name for "simple-bus" is checked by 'make dtbs_check'.
+> > > > >
+> > > > > See this code:
+> > > > > https://github.com/robherring/dt-schema/blob/v2020.05/schemas/simple-bus.yaml#L17
+> > > > >
+> > > > > Even if I rename the node, it does not accept the
+> > > > > unit name '1,1f00000'
+> > > > >
+> > > > > > What do you mean by "maybe"?  Does this squash the warning?
+> > > > >
+> > > > > "maybe" means I am not quite sure
+> > > > > which compatible is a better fit
+> > > > > to describe this device.
+> > > > >
+> > > > > As mentioned above, simple-bus and simple-mfd
+> > > > > are interchangeable from a driver point of view.
+> > > > >
+> > > > > This add-on board is integrated with various peripherals
+> > > > > such as 16550a serial, smsc9115 ether etc.
+> > > > > The address-decode is implemented in a CPLD device.
+> > > > > It has chip selects and local addresses, which are mapped to
+> > > > > the parent.
+> > > > >
+> > > > > It can be either simple-bus or simple-mfd, I think.
+> > > > >
+> > > > >
+> > > > > dt-schema checks the node name of simple-bus.
+> > > > > Currently, there is no check for simple-mfd.
+> > > > >
+> > > > > So, I think this patch is an easy solution
+> > > > > to fix the warning.
+> > > >
+> > > > Yes, looking at the documentation it seems as though 'simple-mfd'
+> > > > would be a better fit.  Is the device a single IP with various
+> > > > different functions?
+> > >
+> > > Not an IP.
+> > >
+> > > This is a small board that consists of
+> > > a CPLD + ethernet controller + serial controller + LED, etc.
+> >
+> > Then simple MFD does not seem like a good fit.
+> >
+> > Neither does 'simple-bus'.
+> 
+> Then, I do not know what to do.
+> 
+> 
+> This board connection is so simple
+> that no hardware initialization needed to get access
+> to peripherals.
+> 
+> So, 'simple-bus' or 'simple-mfd' is preferred.
+> 
+> If this is not either simple-bus or simple-mfd,
+> I need a special driver to probe the
+> child devices such as ethernet, serial etc.
+> 
+> 
+> 
+> > What is it you're trying to describe in the device hierarchy?
+> 
+> 
+> The connection is as follows:
+> 
+> 
+> |-Main board -|      |----- add-on board ----|
+> |             |      |     (this board)      |
+> |             |      |                       |
+> |    (SoC) ---|------|--- CPLD --- ethernet  |
+> |             |      |          |- serial    |
+> |-------------|      |          |- LED       |
+>                      |                       |
+>                      |-----------------------|
+> 
+> 
+> 
+> uniphier-support-card.dtsi describes the
+> "add-on board" part.
+> Address-decode is implemented in CPLD.
+> 
+> 
+> So, the criteria to become MFD is
+> whether it is an IP integrated into SoC.
+> 
+> 
+> - implemented in an SoC  --> MFD
+
+If
+
+ s/in an SoC/in a single piece of silicon/
+
+... then yes.
+
+> - implemented in a board + CPLD  --> not MFD
+> 
+> Right?
+
+Right.  Unless all H/W is represented inside the CPLD, in which case
+the CPLD is, in theory, the MFD.  Although, due to the nature of
+CPLDs, this is a slippery slope.
+
+You may want something like:
+
+  arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
+
+... where the add-on board is represented separately (not in the
+same hierarchical structure as the main board.  The main board is then
+included as a DTSI from the add-on board.
+
+It might also be worth looking at how consumer boards such as the
+RaspberryPi, BeagleBoard and the like handle their add-on boards,
+mezzanines, capes, hats, etc.
 
 -- 
-viresh
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
