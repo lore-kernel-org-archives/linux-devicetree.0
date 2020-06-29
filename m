@@ -2,117 +2,87 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74EB9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 23:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21106C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 23:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3071D20780
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 23:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E583320776
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 23:19:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ciW8v2d9"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="TNGaxkB4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbgF2XOM (ORCPT
+        id S1728409AbgF2XTs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 19:14:12 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:55864 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726180AbgF2XOM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 19:14:12 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05TCqx0C108046;
-        Mon, 29 Jun 2020 07:52:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593435179;
-        bh=LxZK6XItt8eRN8M36E8UH3WGeBppveLJV6p+zmugmTI=;
-        h=From:To:CC:Subject:Date;
-        b=ciW8v2d9+KONMCI11Nvt2pemy2FVyX1TioT/topmoboAD+JEFreQeaSFDFiJHH00V
-         Gw43BL5TtfflHc7I9JwE5SV4Y6UKpFl6RWI4v/askkCrF2Pbij/LMoQf/35+YGVDeE
-         rWLwKvUrKyVJQB4qps0HHlmopiab4pCq+1aoCSfg=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05TCqxJl014789
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 29 Jun 2020 07:52:59 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 29
- Jun 2020 07:52:59 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 29 Jun 2020 07:52:58 -0500
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05TCqugv015456;
-        Mon, 29 Jun 2020 07:52:56 -0500
-From:   Roger Quadros <rogerq@ti.com>
-To:     <t-kristo@ti.com>
-CC:     <robh@kernel.org>, <kishon@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v4 0/6] arm64: ti: k3-j721e: Add SERDES PHY and USB3.0 support
-Date:   Mon, 29 Jun 2020 15:52:48 +0300
-Message-ID: <20200629125254.28754-1-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 29 Jun 2020 19:19:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728131AbgF2XTr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 19:19:47 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF169C03E979
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 16:19:47 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id gc9so2182367pjb.2
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 16:19:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=7BCJlfo7G05xbD0az983kKAGFwTGf/oknVgG88bEOuo=;
+        b=TNGaxkB4WqrzO1Rk2s8RincaD8Rigbs1OexXplCAyMg266FHEL1M5oJZrqqCc4OtXC
+         dp31cQYL6GvgZWbR4tfGNlmCwOL8ISJsaS6+8H/YyjK816ypFrD15qyg/sygrl2v6rKS
+         KvaPkQipNntsnindjHXBkzi19Wb2/S9eqVQ84Gy22MprFtGor1olAX78/0rFk/syv8J2
+         XRmPVPpEOBPLPUURo9vOOiZ9w040EIggc2A2RC6p3/F4ePo0v5eDZr+AaHShDKt1pcnp
+         WWU/sRbTyynjwsbTCN/rjvHArtlod0LWN3Sj6mMcXhil62v6nUoNNXdJd7tMDct8s2m9
+         Gd0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=7BCJlfo7G05xbD0az983kKAGFwTGf/oknVgG88bEOuo=;
+        b=boOCcQykfqFgjS/HhUfTSe9SRfcTbMAVLdGCNrpRF5tb5/PFC6FPUhQDIoW61ToGWB
+         +OPVfXfC2UDEb70eMtHcv9Hr78NItG99FB+wiOo8T405doZEQkn4CK+LgxP1oLn6j1FP
+         bc3m+QupLhAR69cPut+wEf/A2AByxXVmjQhoag1HRVuUG/qrXIoch0bwo/KoVmPqCpWm
+         LZoYTqa4lZVQ5kQI9fEEy9UkqlU1MS1ipBVCOK3Glfuh0V96OdJDY24dwXq4VghxG3/1
+         Hh8bKD6E/y85eWKGZZ8BKxyEgDQVSz3H4hlJdZP9UmhAVHGy459zAoWhsILBzjYcRThG
+         OP7Q==
+X-Gm-Message-State: AOAM530XIg+kN26ZLaIOGJr6RXYb5jyTBWCgjgfd2EToa2oAWQtuzIL/
+        Lq4XgHzU6hPZxLqDCMyONlQTBg==
+X-Google-Smtp-Source: ABdhPJx0eXNtAX3bA2KoFAmvdhYvpSuaxwQz3i/aAvo77Rr8UlXpr4imdKYkriuLLMVI7PdD3GaHpQ==
+X-Received: by 2002:a17:902:b90c:: with SMTP id bf12mr15253811plb.61.1593472787396;
+        Mon, 29 Jun 2020 16:19:47 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id 9sm623822pfh.160.2020.06.29.16.19.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 16:19:46 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: meson: add missing gxl rng clock
+Date:   Mon, 29 Jun 2020 16:19:44 -0700
+Message-Id: <159347276726.1911.12754465903057336311.b4-ty@baylibre.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200617125346.1163527-1-jbrunet@baylibre.com>
+References: <20200617125346.1163527-1-jbrunet@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Tero,
+On Wed, 17 Jun 2020 14:53:46 +0200, Jerome Brunet wrote:
+> The peripheral clock of the RNG is missing for gxl while it is present
+> for gxbb.
 
-This series adds SERDES PHY support and Type-C USB Super-Speed support
-to the J721E EVM.
+Applied, thanks!
 
-Please queue this for -next. Thanks.
+[1/1] arm64: dts: meson: add missing gxl rng clock
+      commit: 95ca6f06dd4827ff63be5154120c7a8511cd9a41
 
-cheers,
--roger
-
-Changelog:
-v4:
-- Removed redundant patch
-- used compaible string for yaml filename
-- typo fix s/mdf/mfd in patch subject
-- added simple-mfd, address-cells, size-cells and ranges
-
-v3:
-- Add new DT schema for J721E System controller.
-- Re-order system controller's compatible string i.e. most compatible to least.
-
-v2:
-- Addressed Rob's comments.
-- Changed type-C debounce delay from 300ms to 700ms as 300ms is not
-sufficient on EVM.
-
-
-Kishon Vijay Abraham I (2):
-  arm64: dts: ti: k3-j721e-main: Add WIZ and SERDES PHY nodes
-  arm64: dts: ti: k3-j721e-main: Add system controller node and SERDES
-    lane mux
-
-Roger Quadros (4):
-  dt-bindings: mfd: ti,j721e-system-controller.yaml: Add J721e system
-    controller
-  arm64: dts: ti: k3-j721e-main.dtsi: Add USB to SERDES MUX
-  arm64: dts: ti: k3-j721e: Enable Super-Speed support for USB0
-  arm64: dts: k3-j721e-proc-board: Add wait time for sampling Type-C DIR
-    line
-
- .../mfd/ti,j721e-system-controller.yaml       |  74 +++++
- .../dts/ti/k3-j721e-common-proc-board.dts     |  33 ++-
- arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 275 ++++++++++++++++++
- include/dt-bindings/mux/mux-j721e-wiz.h       |  53 ++++
- 4 files changed, 433 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/ti,j721e-system-controller.yaml
- create mode 100644 include/dt-bindings/mux/mux-j721e-wiz.h
-
+Best regards,
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+Kevin Hilman <khilman@baylibre.com>
