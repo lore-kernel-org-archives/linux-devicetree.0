@@ -2,110 +2,340 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F59C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 18:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D1F4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 18:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84F212225F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 18:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52F252236F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 18:39:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ewKodK9a"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KN/J4ROR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbgF2Sit (ORCPT
+        id S1728113AbgF2Sjm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:38:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37560 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727953AbgF2SiA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 14:38:00 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAE29C031416;
-        Mon, 29 Jun 2020 10:20:31 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id k1so7359789pls.2;
-        Mon, 29 Jun 2020 10:20:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EBxO7W3vjKfKExb7YIhRFg//dsteKdeNGdPmppkjMb8=;
-        b=ewKodK9aN0OWBZQbu44iYiVfZECWxTo16lvDvRM89Z4teK9Y+NqZrKgHYKIHfQNOTY
-         vWSJsKDUNNqYREungOJwclpKtKpmRkrGL+hMdIqE94CYuq5fgEYhUIMzysHUIT76AEss
-         9/Hf9IgN/E1R5MQ6oWDqXpxAzTI8bKdOJqf3X5whfi8CQo95Fb5coiHOOJu0SF++m1CG
-         xuFod+DMFoP8uTRz17dh9MvwIzMuRq7CCB2EiZri8RNCupv/MdpyiQacCznzyf9Hd0Hm
-         FhBrhOLm+FIsA6Wt/Uu/B/3Nlo28pPvmhyhjwn+WhNH66L0Y/en19olQMt1/sRgiJtSM
-         LrFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EBxO7W3vjKfKExb7YIhRFg//dsteKdeNGdPmppkjMb8=;
-        b=A92X8F6O9ZZ/sefrG8X3+lnBbHgSzPl/mH0w2b8Fr8ovLmcCCO3Y5wd8syVZhNHSAo
-         XEE8Yb1+zHFY8GwyiJavjdyPPJGoe5a3Mi0eUaH0PAfpiZQJi5MvY3Y3HntfHVaR5l3A
-         KLcsLcnF5aLnTeCaU9OwV5ygsP9dyWUm0vvcdYGhaPBWh4RCodBGcDSWeQSpsbGJhgGw
-         1LpiwXwHPfLVLoCAHFkyct2v5m8auuGJx8+87WHPBuF2JcW74T2bNxwHpF0A0EScN3Te
-         QbJvN/+/FLSbgtbq+Yi8qnDlNbqWk8KoBhVDyY+EEne8SOwQGSucIVvzTmzsEY+uYUZL
-         bxEQ==
-X-Gm-Message-State: AOAM533j5O2Dp47UJOXGXjMlbVZ9bVHufOnuGYp+UJ0wnbqIzW/bD/2E
-        0erjhOVP6vvY1GJnU71B5IU=
-X-Google-Smtp-Source: ABdhPJwBXYzSqVqaej7MrTtvAoxQQyVfrLurS2VT0FpRREZWIImH+ognZwMO6/Mmioqfe4mIEvAzzw==
-X-Received: by 2002:a17:902:301:: with SMTP id 1mr14726130pld.214.1593451231314;
-        Mon, 29 Jun 2020 10:20:31 -0700 (PDT)
-Received: from [10.230.30.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id f29sm331735pga.59.2020.06.29.10.20.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 10:20:30 -0700 (PDT)
-Subject: Re: [PATCH v2 08/10] of: mdio: remove the 'extern' keyword from
- function declarations
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Russell King <linux@armlinux.org.uk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20200629120346.4382-1-brgl@bgdev.pl>
- <20200629120346.4382-9-brgl@bgdev.pl>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <4ec2d4c1-3169-da94-2fe2-1165e1fbd531@gmail.com>
-Date:   Mon, 29 Jun 2020 10:20:28 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        Mon, 29 Jun 2020 14:39:42 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:54506 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728106AbgF2Sjl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 14:39:41 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05TCr4Ph015342;
+        Mon, 29 Jun 2020 07:53:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593435184;
+        bh=prnwTOgxqOwaVzHicWh00ZrdSrVyEiINn+lOenIn0iI=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=KN/J4ROR/oI5Az5/BT4HzEw3lmfTgU9XuuKif52wr4+knLyt8ZqQ53HDp0MRiyuXr
+         VKuqfawTMNL0HmyO0GpHpR6onydb7AT2EqQyU3aOccmijzvJ+7s8VuEunDX+lg9qFe
+         lF/r2rSe3H9fB1x/q5Wxm6+imz5T/SWjIEbPuD4o=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05TCr4RE111295
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 29 Jun 2020 07:53:04 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 29
+ Jun 2020 07:53:03 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 29 Jun 2020 07:53:03 -0500
+Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05TCqugx015456;
+        Mon, 29 Jun 2020 07:53:02 -0500
+From:   Roger Quadros <rogerq@ti.com>
+To:     <t-kristo@ti.com>
+CC:     <robh@kernel.org>, <kishon@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v4 2/6] arm64: dts: ti: k3-j721e-main: Add WIZ and SERDES PHY nodes
+Date:   Mon, 29 Jun 2020 15:52:50 +0300
+Message-ID: <20200629125254.28754-3-rogerq@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200629125254.28754-1-rogerq@ti.com>
+References: <20200629125254.28754-1-rogerq@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200629120346.4382-9-brgl@bgdev.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
+Add DT nodes for all instances of WIZ and SERDES modules.
 
-On 6/29/2020 5:03 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> The 'extern' keyword in headers doesn't have any benefit. Remove them
-> all from the of_mdio.h header.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 241 ++++++++++++++++++++++
+ 1 file changed, 241 insertions(+)
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+index 96c929da639d..b11cb51af747 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+@@ -4,6 +4,7 @@
+  *
+  * Copyright (C) 2016-2019 Texas Instruments Incorporated - http://www.ti.com/
+  */
++#include <dt-bindings/phy/phy.h>
+ 
+ &cbass_main {
+ 	msmc_ram: sram@70000000 {
+@@ -277,6 +278,246 @@
+ 		pinctrl-single,function-mask = <0xffffffff>;
+ 	};
+ 
++	dummy_cmn_refclk: dummy-cmn-refclk {
++		#clock-cells = <0>;
++		compatible = "fixed-clock";
++		clock-frequency = <100000000>;
++	};
++
++	dummy_cmn_refclk1: dummy-cmn-refclk1 {
++		#clock-cells = <0>;
++		compatible = "fixed-clock";
++		clock-frequency = <100000000>;
++	};
++
++	serdes_wiz0: wiz@5000000 {
++		compatible = "ti,j721e-wiz-16g";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		power-domains = <&k3_pds 292 TI_SCI_PD_EXCLUSIVE>;
++		clocks = <&k3_clks 292 5>, <&k3_clks 292 11>, <&dummy_cmn_refclk>;
++		clock-names = "fck", "core_ref_clk", "ext_ref_clk";
++		assigned-clocks = <&k3_clks 292 11>, <&k3_clks 292 0>;
++		assigned-clock-parents = <&k3_clks 292 15>, <&k3_clks 292 4>;
++		num-lanes = <2>;
++		#reset-cells = <1>;
++		ranges = <0x5000000 0x0 0x5000000 0x10000>;
++
++		wiz0_pll0_refclk: pll0-refclk {
++			clocks = <&k3_clks 292 11>, <&dummy_cmn_refclk>;
++			#clock-cells = <0>;
++			assigned-clocks = <&wiz0_pll0_refclk>;
++			assigned-clock-parents = <&k3_clks 292 11>;
++		};
++
++		wiz0_pll1_refclk: pll1-refclk {
++			clocks = <&k3_clks 292 0>, <&dummy_cmn_refclk1>;
++			#clock-cells = <0>;
++			assigned-clocks = <&wiz0_pll1_refclk>;
++			assigned-clock-parents = <&k3_clks 292 0>;
++		};
++
++		wiz0_refclk_dig: refclk-dig {
++			clocks = <&k3_clks 292 11>, <&k3_clks 292 0>, <&dummy_cmn_refclk>, <&dummy_cmn_refclk1>;
++			#clock-cells = <0>;
++			assigned-clocks = <&wiz0_refclk_dig>;
++			assigned-clock-parents = <&k3_clks 292 11>;
++		};
++
++		wiz0_cmn_refclk_dig_div: cmn-refclk-dig-div {
++			clocks = <&wiz0_refclk_dig>;
++			#clock-cells = <0>;
++		};
++
++		wiz0_cmn_refclk1_dig_div: cmn-refclk1-dig-div {
++			clocks = <&wiz0_pll1_refclk>;
++			#clock-cells = <0>;
++		};
++
++		serdes0: serdes@5000000 {
++			compatible = "ti,sierra-phy-t0";
++			reg-names = "serdes";
++			reg = <0x5000000 0x10000>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			resets = <&serdes_wiz0 0>;
++			reset-names = "sierra_reset";
++			clocks = <&wiz0_cmn_refclk_dig_div>, <&wiz0_cmn_refclk1_dig_div>;
++			clock-names = "cmn_refclk_dig_div", "cmn_refclk1_dig_div";
++		};
++	};
++
++	serdes_wiz1: wiz@5010000 {
++		compatible = "ti,j721e-wiz-16g";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		power-domains = <&k3_pds 293 TI_SCI_PD_EXCLUSIVE>;
++		clocks = <&k3_clks 293 5>, <&k3_clks 293 13>, <&dummy_cmn_refclk>;
++		clock-names = "fck", "core_ref_clk", "ext_ref_clk";
++		assigned-clocks = <&k3_clks 293 13>, <&k3_clks 293 0>;
++		assigned-clock-parents = <&k3_clks 293 17>, <&k3_clks 293 4>;
++		num-lanes = <2>;
++		#reset-cells = <1>;
++		ranges = <0x5010000 0x0 0x5010000 0x10000>;
++
++		wiz1_pll0_refclk: pll0-refclk {
++			clocks = <&k3_clks 293 13>, <&dummy_cmn_refclk>;
++			#clock-cells = <0>;
++			assigned-clocks = <&wiz1_pll0_refclk>;
++			assigned-clock-parents = <&k3_clks 293 13>;
++		};
++
++		wiz1_pll1_refclk: pll1-refclk {
++			clocks = <&k3_clks 293 0>, <&dummy_cmn_refclk1>;
++			#clock-cells = <0>;
++			assigned-clocks = <&wiz1_pll1_refclk>;
++			assigned-clock-parents = <&k3_clks 293 0>;
++		};
++
++		wiz1_refclk_dig: refclk-dig {
++			clocks = <&k3_clks 293 13>, <&k3_clks 293 0>, <&dummy_cmn_refclk>, <&dummy_cmn_refclk1>;
++			#clock-cells = <0>;
++			assigned-clocks = <&wiz1_refclk_dig>;
++			assigned-clock-parents = <&k3_clks 293 13>;
++		};
++
++		wiz1_cmn_refclk_dig_div: cmn-refclk-dig-div{
++			clocks = <&wiz1_refclk_dig>;
++			#clock-cells = <0>;
++		};
++
++		wiz1_cmn_refclk1_dig_div: cmn-refclk1-dig-div {
++			clocks = <&wiz1_pll1_refclk>;
++			#clock-cells = <0>;
++		};
++
++		serdes1: serdes@5010000 {
++			compatible = "ti,sierra-phy-t0";
++			reg-names = "serdes";
++			reg = <0x5010000 0x10000>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			resets = <&serdes_wiz1 0>;
++			reset-names = "sierra_reset";
++			clocks = <&wiz1_cmn_refclk_dig_div>, <&wiz1_cmn_refclk1_dig_div>;
++			clock-names = "cmn_refclk_dig_div", "cmn_refclk1_dig_div";
++		};
++	};
++
++	serdes_wiz2: wiz@5020000 {
++		compatible = "ti,j721e-wiz-16g";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		power-domains = <&k3_pds 294 TI_SCI_PD_EXCLUSIVE>;
++		clocks = <&k3_clks 294 5>, <&k3_clks 294 11>, <&dummy_cmn_refclk>;
++		clock-names = "fck", "core_ref_clk", "ext_ref_clk";
++		assigned-clocks = <&k3_clks 294 11>, <&k3_clks 294 0>;
++		assigned-clock-parents = <&k3_clks 294 15>, <&k3_clks 294 4>;
++		num-lanes = <2>;
++		#reset-cells = <1>;
++		ranges = <0x5020000 0x0 0x5020000 0x10000>;
++
++		wiz2_pll0_refclk: pll0-refclk {
++			clocks = <&k3_clks 294 11>, <&dummy_cmn_refclk>;
++			#clock-cells = <0>;
++			assigned-clocks = <&wiz2_pll0_refclk>;
++			assigned-clock-parents = <&k3_clks 294 11>;
++		};
++
++		wiz2_pll1_refclk: pll1-refclk {
++			clocks = <&k3_clks 294 0>, <&dummy_cmn_refclk1>;
++			#clock-cells = <0>;
++			assigned-clocks = <&wiz2_pll1_refclk>;
++			assigned-clock-parents = <&k3_clks 294 0>;
++		};
++
++		wiz2_refclk_dig: refclk-dig {
++			clocks = <&k3_clks 294 11>, <&k3_clks 294 0>, <&dummy_cmn_refclk>, <&dummy_cmn_refclk1>;
++			#clock-cells = <0>;
++			assigned-clocks = <&wiz2_refclk_dig>;
++			assigned-clock-parents = <&k3_clks 294 11>;
++		};
++
++		wiz2_cmn_refclk_dig_div: cmn-refclk-dig-div {
++			clocks = <&wiz2_refclk_dig>;
++			#clock-cells = <0>;
++		};
++
++		wiz2_cmn_refclk1_dig_div: cmn-refclk1-dig-div {
++			clocks = <&wiz2_pll1_refclk>;
++			#clock-cells = <0>;
++		};
++
++		serdes2: serdes@5020000 {
++			compatible = "ti,sierra-phy-t0";
++			reg-names = "serdes";
++			reg = <0x5020000 0x10000>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			resets = <&serdes_wiz2 0>;
++			reset-names = "sierra_reset";
++			clocks = <&wiz2_cmn_refclk_dig_div>, <&wiz2_cmn_refclk1_dig_div>;
++			clock-names = "cmn_refclk_dig_div", "cmn_refclk1_dig_div";
++		};
++	};
++
++	serdes_wiz3: wiz@5030000 {
++		compatible = "ti,j721e-wiz-16g";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		power-domains = <&k3_pds 295 TI_SCI_PD_EXCLUSIVE>;
++		clocks = <&k3_clks 295 5>, <&k3_clks 295 9>, <&dummy_cmn_refclk>;
++		clock-names = "fck", "core_ref_clk", "ext_ref_clk";
++		assigned-clocks = <&k3_clks 295 9>, <&k3_clks 295 0>;
++		assigned-clock-parents = <&k3_clks 295 13>, <&k3_clks 295 4>;
++		num-lanes = <2>;
++		#reset-cells = <1>;
++		ranges = <0x5030000 0x0 0x5030000 0x10000>;
++
++		wiz3_pll0_refclk: pll0-refclk {
++			clocks = <&k3_clks 295 9>, <&dummy_cmn_refclk>;
++			#clock-cells = <0>;
++			assigned-clocks = <&wiz3_pll0_refclk>;
++			assigned-clock-parents = <&k3_clks 295 9>;
++		};
++
++		wiz3_pll1_refclk: pll1-refclk {
++			clocks = <&k3_clks 295 0>, <&dummy_cmn_refclk1>;
++			#clock-cells = <0>;
++			assigned-clocks = <&wiz3_pll1_refclk>;
++			assigned-clock-parents = <&k3_clks 295 0>;
++		};
++
++		wiz3_refclk_dig: refclk-dig {
++			clocks = <&k3_clks 295 9>, <&k3_clks 295 0>, <&dummy_cmn_refclk>, <&dummy_cmn_refclk1>;
++			#clock-cells = <0>;
++			assigned-clocks = <&wiz3_refclk_dig>;
++			assigned-clock-parents = <&k3_clks 295 9>;
++		};
++
++		wiz3_cmn_refclk_dig_div: cmn-refclk-dig-div {
++			clocks = <&wiz3_refclk_dig>;
++			#clock-cells = <0>;
++		};
++
++		wiz3_cmn_refclk1_dig_div: cmn-refclk1-dig-div {
++			clocks = <&wiz3_pll1_refclk>;
++			#clock-cells = <0>;
++		};
++
++		serdes3: serdes@5030000 {
++			compatible = "ti,sierra-phy-t0";
++			reg-names = "serdes";
++			reg = <0x5030000 0x10000>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			resets = <&serdes_wiz3 0>;
++			reset-names = "sierra_reset";
++			clocks = <&wiz3_cmn_refclk_dig_div>, <&wiz3_cmn_refclk1_dig_div>;
++			clock-names = "cmn_refclk_dig_div", "cmn_refclk1_dig_div";
++		};
++	};
++
+ 	main_uart0: serial@2800000 {
+ 		compatible = "ti,j721e-uart", "ti,am654-uart";
+ 		reg = <0x00 0x02800000 0x00 0x100>;
 -- 
-Florian
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
