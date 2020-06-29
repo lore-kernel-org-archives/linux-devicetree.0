@@ -2,108 +2,110 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 191F2C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E687C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5FE520656
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:41:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466897;
-	bh=NgETdEp/TPGsMKNJQFJucR9ZSygTH08g48sTzqUJy8M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tth/+xzoIB4cH92+vHsthkUtPR72tpTTB50GKvmo6plxYdt1rnn0Q4dseC2WHjcwz
-	 YhzFmVz4xzgrj0VV8TSJfeBEtofyTB7hnLDvVSGzGDw55irC3R+hjzDnI2tWV4ZZv+
-	 JWg8AfmEgL5MDAp/Z1OZxNJ0jF+BBUDW3P8nntc4=
+	by mail.kernel.org (Postfix) with ESMTP id 34D7620656
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:42:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nt/jc4Xm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403848AbgF2Vlg (ORCPT
+        id S1727932AbgF2Vl6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:41:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60596 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726118AbgF2SkR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:40:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9501723370;
-        Mon, 29 Jun 2020 08:41:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593420062;
-        bh=NgETdEp/TPGsMKNJQFJucR9ZSygTH08g48sTzqUJy8M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VfCp9hE0U1V55QP8CtGkrKq/7ClTTCkOVeDpojaZzjd7aUXx+6pITg+YyxFaYu4jr
-         naHIJq0reLlZHSS6rTDqZoD6oWcAgnDmap4zDCam+du0CHBSo+I67WBnoXL2IzwO6f
-         66sWli0Vhn6A4ZyHu6XwMOh6ciaE6hDAN4crXajo=
-Date:   Mon, 29 Jun 2020 10:40:51 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     sean.wang@mediatek.com, robh+dt@kernel.org, jslaby@suse.com,
-        robert.jarzmik@free.fr, arnd@arndb.de, p.zabel@pengutronix.de,
-        joel@jms.id.au, david@lechnology.com, jan.kiszka@siemens.com,
-        heikki.krogerus@linux.intel.com, hpeter@gmail.com, vigneshr@ti.com,
-        matthias.bgg@gmail.com, tthayer@opensource.altera.com,
-        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Steven Liu <steven.liu@mediatek.com>,
-        Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v4] tty: serial: don't do termios for BTIF
-Message-ID: <20200629084051.GA1234189@kroah.com>
-References: <78efa2b1e2599deff4d838b05b4054ec5ac2976a.1592595601.git.sean.wang@mediatek.com>
- <20200627141222.GC1901451@kroah.com>
- <20200629082927.GA3703480@smile.fi.intel.com>
+        Mon, 29 Jun 2020 17:41:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37584 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727930AbgF2Sh6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 14:37:58 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55871C031414;
+        Mon, 29 Jun 2020 10:19:38 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id g67so7703338pgc.8;
+        Mon, 29 Jun 2020 10:19:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=kyRzeVuvIOnKhsJ+5uonKu8f8yeOpAny5n1VdDosRFk=;
+        b=Nt/jc4Xm3mvn5WqweNAwuOw5XVFPe3sw7g1bxrnFrB14aW4N+u8tzFVgRTc90SHXRB
+         ZiXp58toYoc0ODij/6SbIdGrnrSdEZo7/jEOUGj0GahDzCeX/xMZNKq2+bK/otDzj4cz
+         9NsaMQbXza8P6bwQW3R7MhLu/ahcGjau2xeGrfvMhoIIviu7q/uSvncMPj4rd4I8V58E
+         G2z0UuGPGV55wArpeJlarXOVZfwvYi8EM6ltHIpaAoMlUzAi1xe9MmrQkStUPNzjyJa1
+         DYBGvYHBHW56EC5ACRP0KFpMU3rjMPnfG5B26lphNu2nqAxgbskxmS4SFidlzo5ff7l4
+         QSLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kyRzeVuvIOnKhsJ+5uonKu8f8yeOpAny5n1VdDosRFk=;
+        b=k6TEzmiboAZOZ9a+3Viah9V4Lso+MjXejSBIw6/f4GZiZtvr0rDQEaRSosOLEdWNna
+         FIgwAJTPgioti2BrrFZiuEJn+08murrR5shPzZ0/5XNTqGXrJk3xpeskocg0noKQynfh
+         OvM3eVK5+pfB7dwI58B2eD0M/MIlVU+TIik0U5IW2KyQ5oIs8vw+mz5iCnPfsDfIg8ZH
+         4C0RTHcePtAevheHhqB+iIzLokrcUk6XHXhP6uKOxUXp5r+p9stwJGIwiDivO9Z+LEje
+         DAkRUKoFi+TVr2XnX8bDvR/eRyq0Os3Dwyp6OaC4V20PBVyVX5bVGB7i0pUYU9BLz20w
+         0aGA==
+X-Gm-Message-State: AOAM532Agf8e2ktFA87JIkmEeqBT0rbjXiA32Vxtsy4g44xs+28FALJN
+        7IlU4HL+Wc6CKqBqgMVdolU=
+X-Google-Smtp-Source: ABdhPJwBz4zO1nux6YEsGIypPIa2qPGaoUx75nn3Ar1oull1wcbktACCA97kxB2CT7b9kqFFkD3b1w==
+X-Received: by 2002:a63:8c5d:: with SMTP id q29mr10983595pgn.249.1593451177944;
+        Mon, 29 Jun 2020 10:19:37 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id g12sm257852pfb.190.2020.06.29.10.19.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2020 10:19:37 -0700 (PDT)
+Subject: Re: [PATCH v2 05/10] phy: un-inline devm_mdiobus_register()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Russell King <linux@armlinux.org.uk>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20200629120346.4382-1-brgl@bgdev.pl>
+ <20200629120346.4382-6-brgl@bgdev.pl>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <a88026d5-8a4e-52be-93fd-e683fb2ff05d@gmail.com>
+Date:   Mon, 29 Jun 2020 10:19:35 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629082927.GA3703480@smile.fi.intel.com>
+In-Reply-To: <20200629120346.4382-6-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 11:29:27AM +0300, Andy Shevchenko wrote:
-> On Sat, Jun 27, 2020 at 04:12:22PM +0200, Greg KH wrote:
-> > On Sat, Jun 20, 2020 at 03:59:14AM +0800, sean.wang@mediatek.com wrote:
-> > > From: Sean Wang <sean.wang@mediatek.com>
-> > > 
-> > > Bluetooth Interface (BTIF) is designed dedicatedly for MediaTek SOC with
-> > > BT in order to be instead of the UART interface between BT module and Host
-> > > CPU, and not exported to user space to access.
-> > > 
-> > > As the UART design, BTIF will be an APB slave and can transmit or receive
-> > > data by MCU access, but doesn't provide termios function like baudrate and
-> > > flow control setup.
-> > > 
-> > > Even LCR on offset 0xC that is just a FAKELCR
-> > > a. If FAKELCR[7] is equaled to 1, RBR(0x00), THR(0x00), IER(0x04)
-> > >    will not be readable/writable.
-> > > 
-> > > b. If FAKELCR is equaled to 0xBF, RBR(0x00), THR(0x00), IER(0x04),
-> > >    IIR(0x08), and LSR(0x14) will not be readable/writable.
-> > > 
-> > > So adding a new capability 'UART_CAP_NTIO' for the unusual unsupported
-> > > case.
-> > > 
-> > > The bluetooth driver would use BTIF device as a serdev. So the termios
-> > > still function would be called in kernelspace from ttyport_open in
-> > > drivers/tty/serdev/serdev-ttyprt.c.
+
+
+On 6/29/2020 5:03 AM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> > > +#define UART_CAP_NTIO	(1 << 18)	/* UART doesn't do termios */
-> > 
-> > Naming is hard.  I will never remember what "NTIO" is, how about we make
-> > it explicit:
-> > 	define UART_CAP_IGNORE_TERMIOS
-> > 
-> > And the _CAP_ name is getting out of hand, this isn't a "capability",
-> > it's a "quirk for this port" but that's a battle to worry about later...
+> Functions should only be static inline if they're very short. This
+> devres helper is already over 10 lines and it will grow soon as we'll
+> be improving upon its approach. Pull it into mdio_devres.c.
 > 
-> For quirks we have a separate field in struct uart_port. Perhaps that can be used?
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-That would be much nicer, if possible.
-
-thanks,
-
-greg k-h
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
