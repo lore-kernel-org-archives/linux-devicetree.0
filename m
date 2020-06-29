@@ -2,139 +2,299 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83295C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4179C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E56720663
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9756C20748
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:42:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="W34A5EzI"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EJevnq1Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387972AbgF2UlH (ORCPT
+        id S2389098AbgF2UmD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:41:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43388 "EHLO
+        Mon, 29 Jun 2020 16:42:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731684AbgF2TOI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:14:08 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D19EC0F26C2
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:04:12 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id a6so16286174wrm.4
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:04:12 -0700 (PDT)
+        with ESMTP id S2389622AbgF2UmB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 16:42:01 -0400
+Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F316C061755
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 13:42:01 -0700 (PDT)
+Received: by mail-qk1-x732.google.com with SMTP id k18so16576177qke.4
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 13:42:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=C3SFeAEvbOoZI/xpVJ8MO71Sd1LqnSCGoIeWQbxnMQg=;
-        b=W34A5EzIFj5HWi2O+Uu6ihBeBiDeWhpckbWrX2jnfqXAR3x0qNViaW+WgvnvpxwiWO
-         MGqgE1enmwmS0gQxdKT5NnCo8pT8qbnyks2TEEdLnPjFm0OCLBWs+QPHAs9eXm7uQdat
-         JWbhorZHQ3BtymX0aXM/lywfKu/bT8ZNk4SSMGwMY45YdISPCRJHVeIp8gOWUa6hI3x5
-         yl2q7FCGF3ftBuUSxFt5y3sPjglhVa+3G49n58H+eBi39BWD3W01vtmugl+iYZj5MxaS
-         mkrYBWhfSoM6r/EQlCIFuE/GmGSu3DIPQIVdw8C/+juCBxxelde4Yfeywt4RMER4CJbR
-         0+DA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8jpkMMCZ9Vq0NvRazLzzXPiv8xnbPqfCWhE/+a83M64=;
+        b=EJevnq1Qm1fMrGg9QqwoGUo74xXnWz+OPLe22wYa8z9X7/EESR/StW4NBOVZUvfATX
+         AHN4aZzjhhGvyeJsncj0H3Q3U/a7FxJYRBUijeZOnNB1p4Tp3HUxx0EbjmjSmr9TIjP0
+         7/n3h2c0RV8GVI6qG0UNAxaWURnlnXhz3fM7E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=C3SFeAEvbOoZI/xpVJ8MO71Sd1LqnSCGoIeWQbxnMQg=;
-        b=GgqkL/8KmYS4fZlHLi/8LB8pSnPX2WSNjWBhtNV9/pTQU9gPuP7lq1gHm1zO4/YROr
-         UynCyEvWZHf2kbIiLMyrXHTLP+DHYUquLft49kbJKh6kwssgC4TzyGYbGUY36zCXbDQl
-         pI5KNs/e6PWXM1AbR7szGj6vransyTKx5EVvkiQzGEoQf6b5AHHnzNp4Va4CpQZn590F
-         AoFnFtxlQYADbu3aovnN8r4MBNidUb2i2yAMLwaXtJy5GRChFcNDcPlYEE6frYDP17Md
-         NzX5QYOt65fTxga0tSLGLQVH0CSDelHQD9g+6FAklCIz5RdUWnh73e6UOug1tBV1e3B0
-         YUBw==
-X-Gm-Message-State: AOAM531sQBuztn5WDh8ANrWeWhBYwd9TX7sYZnaFPZbpWcpaKR3P5xee
-        ifzb+HSgicUzPiXJg1k8eu2tKw==
-X-Google-Smtp-Source: ABdhPJzvKPYK67MLNdl2CXmAriudaJFiLrZRmwhzT6FCEy4WwbiER21DP71IWFlJPEiw6dlp0MpaYQ==
-X-Received: by 2002:adf:e40e:: with SMTP id g14mr18038664wrm.271.1593432250982;
-        Mon, 29 Jun 2020 05:04:10 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id d81sm25274347wmc.0.2020.06.29.05.04.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 05:04:10 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 00/10] net: improve devres helpers
-Date:   Mon, 29 Jun 2020 14:03:36 +0200
-Message-Id: <20200629120346.4382-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8jpkMMCZ9Vq0NvRazLzzXPiv8xnbPqfCWhE/+a83M64=;
+        b=i1U2c37jzy+MzrKLn/01ybRtuNZAYDMHrWIT+oyb62TvhenXW1C5kKxdzbJ/TglSf7
+         5hMRKUzo2WgGLxUdaWuwYotorgvxR3hWCL4UAe7KnaFvxeBTtdLiC2TjNz/yKVHifDKq
+         9TFmBsUnHOQUPjjRkME84zaKiaqwyYKJGwcDxXGqawTu5jBCCW1pby9bEf9cgpoh8YmK
+         aQfltY2bP3kp6CGsXFt/mPaUY5swG/QzUi5f2lILbsOd3yGZmsNnpT4luJCg2FqsBKUM
+         cUvr1PXXfSKNr2oVdNAKVcIs/S6IHeWwnn1b2KRWbVHsTqFDU+yvFJjRLth/QB1Elh37
+         vK2A==
+X-Gm-Message-State: AOAM532S+fog8rATn3gk2NFtmCJ8G6/zKS+5OzhtS136gDKtyOjtbh/V
+        o9cvM3AbrTzOTYq4WzAcXoADxUYPmeM1isiIpZkBkA==
+X-Google-Smtp-Source: ABdhPJz8hrXiqyvgz2TipcXO+EtwvIq9Y5rsREXLGe5IM9Sztn7Oq3J3mOBRjpZf7CxTfMsRqJxG2qEVfDufAZ2LwDI=
+X-Received: by 2002:a37:b341:: with SMTP id c62mr16343321qkf.128.1593463320086;
+ Mon, 29 Jun 2020 13:42:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200511204635.GC136540@google.com> <20200512134154.GC2085641@kuha.fi.intel.com>
+ <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com>
+ <CACeCKadiiokPdPB2Q5WBQFrPuxjpm3TiDgaaerncVR_Z7Z0nvg@mail.gmail.com>
+ <CAL_Jsq+MM3-ugLvSGc_wc6RvHVyxyDUD0DkvwQaQJMYCCFpfHg@mail.gmail.com>
+ <20200609235740.GA154315@google.com> <20200610153356.GC3213128@kuha.fi.intel.com>
+ <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com>
+ <CACeCKadq6tuqzR_6DuiZeL+=aOMb05EWd4o0sNyGOcZJ=dYx8g@mail.gmail.com>
+ <CAL_JsqJQb5P26JC-KqkeHoWxAb63N+_XRK==b-WWJ+pYpdHO8Q@mail.gmail.com> <CACeCKacUa1-ttBmKS_Q_xZCsArgGWkB4s9eG0c5Lc5RHa1W35Q@mail.gmail.com>
+In-Reply-To: <CACeCKacUa1-ttBmKS_Q_xZCsArgGWkB4s9eG0c5Lc5RHa1W35Q@mail.gmail.com>
+From:   Prashant Malani <pmalani@chromium.org>
+Date:   Mon, 29 Jun 2020 13:41:48 -0700
+Message-ID: <CACeCKachd34UtiZXY3i8za_ZHG9xtHSiPX55=Ed78n=S15b3Hg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
+To:     Rob Herring <robh@kernel.org>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tim Wawrzynczak <twawrzynczak@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Rajmohan Mani <rajmohan.mani@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Hi Rob,
 
-So it seems like there's no support for relaxing certain networking devres
-helpers to not require previously allocated structures to also be managed.
-However the way mdio devres variants are implemented is still wrong and I
-modified my series to address it while keeping the functions strict.
+Just following up on this. Would the below example align better with
+OF graph requirements?
 
-First two patches modify the ixgbe driver to get rid of the last user of
-devm_mdiobus_free().
+Example begins at <example_start>, but in summary:
+- port@1 (Superspeed) of usb-c-connector will have 3 endpoints (0 =
+goes to mode switch, 1 = goes to orientation switch, 2 = goes to data
+role switch)
+- port@2 (SBU) of usb-c-connector will have 2 endpoints (0 = goes to
+mode switch, 1 = goes to orientation switch)
+-These end points can go through arbitrarily long paths (including
+retimers) as long as they end up at the following devices:
+    a. device with compatible string "typec-mode-switch" for endpoint 0.
+    b. device with compatible string "typec-orientation-switch" for endpoint 1.
+    c. device with compatible string "typec-data-role-switch" for endpoint 2.
+- Connector class framework will perform the traversal from
+usb-c-connector port endpoints to the "*-switch" devices.
 
-Patches 3, 4, 5 and 6 are mostly cosmetic.
+Best regards,
 
-Patch 7 fixes the way devm_mdiobus_register() is implemented.
-
-Patches 8 & 9 provide a managed variant of of_mdiobus_register() and
-last patch uses it in mtk-star-emac driver.
-
-v1 -> v2:
-- drop the patch relaxing devm_register_netdev()
-- require struct mii_bus to be managed in devm_mdiobus_register() and
-  devm_of_mdiobus_register() but don't store that information in the
-  structure itself: use devres_find() instead
-
-Bartosz Golaszewski (10):
-  net: ethernet: ixgbe: check the return value of ixgbe_mii_bus_init()
-  net: ethernet: ixgbe: don't call devm_mdiobus_free()
-  net: devres: rename the release callback of devm_register_netdev()
-  Documentation: devres: add missing mdio helper
-  phy: un-inline devm_mdiobus_register()
-  phy: mdio: add kerneldoc for __devm_mdiobus_register()
-  net: phy: don't abuse devres in devm_mdiobus_register()
-  of: mdio: remove the 'extern' keyword from function declarations
-  of: mdio: provide devm_of_mdiobus_register()
-  net: ethernet: mtk-star-emac: use devm_of_mdiobus_register()
-
- .../driver-api/driver-model/devres.rst        |   3 +-
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c |   6 +-
- drivers/net/ethernet/intel/ixgbe/ixgbe_phy.c  |  14 +-
- drivers/net/ethernet/mediatek/mtk_star_emac.c |  13 +-
- drivers/net/ethernet/realtek/r8169_main.c     |   2 +-
- drivers/net/phy/Makefile                      |   2 +
- drivers/net/phy/mdio_bus.c                    |  73 ----------
- drivers/net/phy/mdio_devres.c                 | 133 ++++++++++++++++++
- include/linux/of_mdio.h                       |  40 +++---
- include/linux/phy.h                           |  21 +--
- net/devres.c                                  |   4 +-
- 11 files changed, 174 insertions(+), 137 deletions(-)
- create mode 100644 drivers/net/phy/mdio_devres.c
-
--- 
-2.26.1
-
+On Fri, Jun 12, 2020 at 10:34 AM Prashant Malani <pmalani@chromium.org> wrote:
+>
+> Hi Rob,
+>
+> Thanks as always for your help in reviewing this proposal!
+>
+> Kindly see inline
+>
+> (Trimming text);
+> On Thu, Jun 11, 2020 at 02:00:47PM -0600, Rob Herring wrote:
+> > On Wed, Jun 10, 2020 at 11:49 AM Prashant Malani <pmalani@chromium.org> wrote:
+> > >
+> > > Hi Rob,
+> > >
+> > > On Wed, Jun 10, 2020 at 9:53 AM Rob Herring <robh@kernel.org> wrote:
+> > > >
+> > > > > On Tue, Jun 09, 2020 at 04:57:40PM -0700, Prashant Malani wrote:
+> > >
+> > > I think the updated example handles this grouping (port@1 going to a
+> > > "SS mux") although as you said it should probably be a group of muxes,
+> > > but I think the example illustrates the point. Is that assessment
+> > > correct?
+> >
+> > Yes, but let's stop calling it a mux. It's a "USB Type C signal routing blob".
+>
+> Ack.
+>
+> Let's go with "-switch" ? That's what the connector class uses and it
+> conveys the meaning (unless that is a reserved keyword in DT).
+>
+> >
+> > > Would this block the addition of the "*-switch" properties? IIUC the
+> > > two are related but not dependent on each other.
+> > >
+> > > The *-switch properties are phandles which the Type C connector class
+> > > framework expects (and uses to get handles to those switches).
+> > > These would point to the "mux" or "group of mux" abstractions as noted earlier.
+> >
+> > You don't need them though. Walk the graph. You get the connector
+> > port@1 remote endpoint and then get its parent.
+> >
+>
+> I see; would it be something along the lines of this? (DT example
+> follows; search for "example_end" to jump to bottom):
+>
+> <example_start>
+>
+> connector@0 {
+>     compatible = "usb-c-connector";
+>     reg = <0>;
+>     power-role = "dual";
+>     data-role = "dual";
+>     try-power-role = "source";
+>     ....
+>     ports {
+>         #address-cells = <1>;
+>         #size-cells = <0>;
+>
+>         port@0 {
+>             reg = <0>;
+>             usb_con_hs: endpoint {
+>                 remote-endpoint = <&foo_usb_hs_controller>;
+>             };
+>         };
+>
+>         port@1 {
+>             reg = <1>;
+>             #address-cells = <1>;
+>             #size-cells = <0>;
+>
+>             usb_con0_ss_mode: endpoint@0 {
+>                 reg = <0>
+>                 remote-endpoint = <&mode_switch_ss_in>;
+>             };
+>
+>             usb_con0_ss_orientation: endpoint@1 {
+>                         reg = <1>
+>                         remote-endpoint = <&orientation_switch_ss_in>;
+>             };
+>
+>             usb_con0_ss_data_role: endpoint@2 {
+>                         reg = <2>
+>                         remote-endpoint = <&data_role_switch_in>;
+>             };
+>         };
+>
+>         port@2 {
+>             reg = <2>;
+>             #address-cells = <1>;
+>             #size-cells = <0>;
+>             usb_con0_sbu_mode: endpoint@0 {
+>                         reg = <0>
+>                         remote-endpoint = <&mode_switch_sbu_in>;
+>             };
+>             usb_con0_sbu_orientation: endpoint@1 {
+>                         reg = <1>
+>                         remote-endpoint = <&orientation_switch_sbu_in>;
+>             };
+>         };
+>     };
+> };
+>
+> mode_switch {
+>     compatible = "typec-mode-switch";
+>     mux-controls = <&mode_mux_controller>;
+>     mux-control-names = "mode";
+>     #address-cells = <1>;
+>     #size-cells = <0>;
+>
+>     port@0 {
+>         reg = <0>;
+>         mode_switch_ss_in: endpoint {
+>             remote-endpoint = <&usb_con0_ss_mode>
+>         };
+>     };
+>
+>     port@1 {
+>         reg = <1>;
+>         mode_switch_out_usb3: endpoint {
+>             remote-endpoint = <&usb3_0_ep>
+>         };
+>     };
+>
+>     port@2 {
+>         reg = <2>;
+>         mode_switch_out_dp: endpoint {
+>             remote-endpoint = <&dp0_out_ep>
+>         };
+>     };
+>
+>     port@3 {
+>         reg = <3>;
+>         mode_switch_sbu_in: endpoint {
+>             remote-endpoint = <&usb_con0_sbu_mode>
+>         };
+>     };
+>     // ... other ports similarly defined.
+> };
+>
+> orientation_switch {
+>     compatible = "typec-orientation-switch";
+>     mux-controls = <&orientation_mux_controller>;
+>     mux-control-names = "orientation";
+>     #address-cells = <1>;
+>     #size-cells = <0>;
+>
+>     port@0 {
+>         reg = <0>;
+>         orientation_switch_ss_in: endpoint {
+>             remote-endpoint = <&usb_con0_ss_orientation>
+>         };
+>     };
+>
+>     port@1
+>         reg = <1>;
+>         orientation_switch_sbu_in: endpoint {
+>             remote-endpoint = <&usb_con0_sbu_orientation>
+>         };
+>     };
+>     // ... other ports similarly defined.
+> };
+>
+> data_role_switch {
+>     compatible = "typec-data-role-switch";
+>     mux-controls = <&data_role_switch_controller>;
+>     mux-control-names = "data_role";
+>
+>     port {
+>         data_role_switch_in: endpoint {
+>             remote-endpoint = <&usb_con0_ss_data_role>
+>         };
+>     };
+> };
+>
+> <example_end>
+>
+> Would this be conformant to OF graph and usb-connector bindings
+> requirements? We'll certainly send out a format PATCH/RFC series for
+> this, but I was hoping to gauge whether we're thinking along the right lines.
+>
+> So, in effect this would mean:
+> - New bindings(and compatible strings) to be added for:
+>   typec-{orientation,data-role,mode}-switch.
+> - Handling in Type C connector class to parse switches from OF graph.
+> - Handling in Type C connector class for distinct switches for port@1
+>   (SS lines) and port@2 (SBU lines).
+>
+> The only thing I'm confused about is how we can define these switch
+> remote-endpoint bindings in usb-connector.yaml; the port can have an
+> remote-endpoint, but can we specify what the parent of the remote-endpoint
+> should have as a compatible string? Or do we not need to?
+>
+> Best regards,
+>
+> -Prashant
+>
