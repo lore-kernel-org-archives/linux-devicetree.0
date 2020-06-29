@@ -2,121 +2,67 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 577DEC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E047CC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35A6E206F1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:14:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="PSx0WywE"
+	by mail.kernel.org (Postfix) with ESMTP id C95F7206A1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:15:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388501AbgF2VOL (ORCPT
+        id S1730210AbgF2VPA convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:14:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40878 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730113AbgF2S5m (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 14:57:42 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 815E5C00F805
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:29:03 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id ga4so16334287ejb.11
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:29:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nLPL88OfKWPjoDgMrUq7HX0bJ21PFQyFVAStT19x/30=;
-        b=PSx0WywEstp6kzCgrb2T780nS7vnNFzJS+U+DK53C0PhGN6LZvYDc2EFvOEAdEmhEj
-         RUqqwUYHPI+moJOm1Lu+qDnTY8k7w4i1ZmDLAcEGCt5/VfkthQIciG4scNhgkF7qBZsF
-         vapojTxZMy6hzLbJ19FtwmOG4LeFbtDfvu2hGXI5r15prpIVDn5Q6Ex36/ORxBC8HOMu
-         p8sNi03zdwEm4JKaNFhsJFwkK43/7a69OrK8KLs3I2Jj3FUWqdHQLOJ+ViEJxwPsy3tk
-         RJ+tPHTitdFJ/MPwm7Oci+jsb+VVt/S6RIkCjMGIh8K6vN3UA3j4206+/RBfGp3XCb1e
-         Wcrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nLPL88OfKWPjoDgMrUq7HX0bJ21PFQyFVAStT19x/30=;
-        b=IkWws8lDMNeAgp/sLGThEchxvf0ZXrdKFi/MI6GcGkWxp2sg5Vcy++FeMgPV6X3qOQ
-         T+kRSFaKcXpJY93ASAGn+b/c1DfORtTnuJeomOUny69fu1pAt5dMkpnqucrXpYDiCn4h
-         tFD94nBeeQRXoK3OtLw0z9BcWTSRnT8pDN2GFq1fcZ9jVA0mMyPYwQb321tQ/3Z/DYSN
-         HZVdUGB6K+/3FlinpiUFGRhaBVZF1BpzJ5YarBN79azUVczQnM9wKiJ3LfuEA92c2dno
-         lnjag0GX4mGsJ9GE78fy+i9NsurDRaHrKq+dSjfsJyHDpifXTAg2+oktZBQsJBqf+Ie3
-         W/Xw==
-X-Gm-Message-State: AOAM532FyINt2JoQL51EjFOZeuEX4Za930An0zAdsRSZ2QMeMQovYB5W
-        MaqB0aPEND56iLShEiyVJxffVQ==
-X-Google-Smtp-Source: ABdhPJysnXFWJwpJ6uF9IEbsegahi3Y1+BUPbpahxlycTv66BVhVh2m/VMBwbtCgMcpWhDDWY9vklw==
-X-Received: by 2002:a17:906:fa15:: with SMTP id lo21mr14416147ejb.156.1593433742019;
-        Mon, 29 Jun 2020 05:29:02 -0700 (PDT)
-Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
-        by smtp.gmail.com with ESMTPSA id a1sm18278094ejk.125.2020.06.29.05.29.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 05:29:01 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 14:28:58 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        devicetree@vger.kernel.org, bcousson@baylibre.com,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Subject: Re: [PATCH v3 0/3] pinctrl: single: support #pinctrl-cells = 2
-Message-ID: <20200629122858.GA506802@x1>
-References: <20200622172951.524306-1-drew@beagleboard.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622172951.524306-1-drew@beagleboard.org>
+        Mon, 29 Jun 2020 17:15:00 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:55692 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726912AbgF2S4r (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 14:56:47 -0400
+Received: from marcel-macpro.fritz.box (p5b3d2638.dip0.t-ipconnect.de [91.61.38.56])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 23289CECDA;
+        Mon, 29 Jun 2020 21:06:40 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] dt-bindings: net: bluetooth: realtek: Fix uart-has-rtscts
+ example
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200629180545.2879272-1-martin.blumenstingl@googlemail.com>
+Date:   Mon, 29 Jun 2020 20:56:45 +0200
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Alistair Francis <alistair@alistair23.me>, anarsoul@gmail.com,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <8BBD6F0B-DE92-4241-999E-ED26040E891B@holtmann.org>
+References: <20200629180545.2879272-1-martin.blumenstingl@googlemail.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 07:29:48PM +0200, Drew Fustini wrote:
-> Currently, pinctrl-single only allows #pinctrl-cells = 1.
-> 
-> This series will allow pinctrl-single to also support #pinctrl-cells = 2
-> 
-> If "pinctrl-single,pins" has 3 arguments (offset, conf, mux) then
-> pcs_parse_one_pinctrl_entry() does an OR operation on to get the
-> value to store in the register.
->     
-> To take advantage of #pinctrl-cells = 2, the AM33XX_PADCONF macro in
-> omap.h is modified to keep pin conf and pin mux values separate.
-> 
-> change log:
-> - v3: change order of patches to make sure the pinctrl-single.c patch
->   does not break anything without the dts patches
-> 
-> - v2: remove outer parentheses from AM33XX_PADCONF macro as it causes a
->   compile error in dtc.  I had added it per suggestion from checkpatch
->   about having parentheses around complex values.
-> 
-> Drew Fustini (3):
->   pinctrl: single: parse #pinctrl-cells = 2
->   ARM: dts: change AM33XX_PADCONF macro separate conf and mux
->   ARM: dts: am33xx-l4: change #pinctrl-cells from 1 to 2
-> 
->  arch/arm/boot/dts/am33xx-l4.dtsi   |  2 +-
->  drivers/pinctrl/pinctrl-single.c   | 11 +++++++++--
->  include/dt-bindings/pinctrl/omap.h |  2 +-
->  3 files changed, 11 insertions(+), 4 deletions(-)
-> 
-> -- 
-> 2.25.1
-> 
+Hi Martin,
 
-Hi Tony - do you think this series is useful as-is?
+> uart-has-rtscts is a boolean property. These are defined as present
+> (which means that this property evaluates to "true") or absent (which
+> means that this property evaluates to "false"). Remove the numeric value
+> from the example to make it comply with the boolean property bindings.
+> 
+> Fixes: 1cc2d0e021f867 ("dt-bindings: net: bluetooth: Add rtl8723bs-bluetooth")
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+> Documentation/devicetree/bindings/net/realtek-bluetooth.yaml | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Or do you want to see some usage of the seperate conf and mux values
-first?
+patch has been applied to bluetooth-next tree.
 
-thanks,
-drew
+Regards
+
+Marcel
+
