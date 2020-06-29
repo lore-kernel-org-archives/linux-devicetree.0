@@ -2,161 +2,243 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7753FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B7B5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FAB220656
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 724C22063A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:42:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="OQH0L9cB"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="w5i6SQNv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgF2VmT (ORCPT
+        id S1731007AbgF2Vm3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:42:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37556 "EHLO
+        Mon, 29 Jun 2020 17:42:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727917AbgF2Sh5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 14:37:57 -0400
-Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0D0FC02A545
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:51:33 -0700 (PDT)
-Received: by mail-vk1-xa44.google.com with SMTP id 66so289476vka.13
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:51:33 -0700 (PDT)
+        with ESMTP id S1727915AbgF2Sh4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 14:37:56 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76B29C03143F
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 10:21:19 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id g13so13426457qtv.8
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 10:21:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xHEvnwaXIaI22DXPizYpJcrsTL4/AwhMEQ6IhYTQKlQ=;
-        b=OQH0L9cBVHLRgTVZhw1jd+9UWSypZQN30gG3yvEpHJvc2VXIoNz+hyJGcfUcBU+7e4
-         oCc7XEKBqBQPleKnUVnLbIp6WsDfC+WCcVQhpW8dNcfHdlE37M0unZrcRr+0gg3/aEvf
-         PMdPFYwgtQ+R9ZtNcXAgyQyPNtpr4cbByuURBHAnjcHM+1N71I+sWI1yfCbGzQcEdiAN
-         yY4uALwvM8jRmBCwqjPgXEIl4AGsHRadzBeA2q8DcqrH+lwiFBEB3A6DNV046uaF3RHg
-         gXgPPRlYEZ8ZU+Sn3QHjIt7k5b5qK/HGOI6FP26Yjc3r+mq7qoc4ZOwpVuG+VUgxyPPT
-         2jyw==
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=DqAKdt3lk82f18skm9MplMyKRKUbc8f3Yv5d4peK0Jw=;
+        b=w5i6SQNv/k+D73je2CRcdyD+0Az5V4KBSj88gUxaNU9octr3t+vYWR1z9dbIMJj/1F
+         PaGfgCqeVeOZhH0syXM4R1Zk+2GqLopRZpjR+7jKyeAFSAZyq+uQiaVLtr5tzj4FqO3u
+         x00S0zaaOyA4NhkmlXy9lJlxPHpJd7c6hv9QxDfNMSuusi0N5rCEY7jLOK9DBmEdEJMV
+         lsmvJyoKgPlPeuE6sfmWOCrmAWngDxCGrNReUqv9F0zwoL9a7NDubghRYQa6Yv7ySY36
+         If73t3/CtelKI7xYjNdKnrgRRyUmA9jQRvHuq75pkOoDhN1m7c8ETQMnYY3rY796K0Bo
+         fgtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xHEvnwaXIaI22DXPizYpJcrsTL4/AwhMEQ6IhYTQKlQ=;
-        b=DHjyZTIfabtU+eQFAct6Z0GNFLXzLuZCZY1zanvfP2otVjQIz6NZfioydsFyM6lVHu
-         TB+UMznB0lnJv8yx2+p7x/fQM6fzIw6WX8s8fkmKPxrIkII72T2OrNNysZcRczNZOkhT
-         oVC5m3oMXPZhzrwHR2Q4pwSKc94cPSI8N0qejqjFpmJJ6FFDI0AcNXYt9slPvQEtbG8j
-         n/Mk0pC6hYh7lL6MISDI3i9eeo+Jng2dTjM/TkY4dknLpmHg+tvwBaSI2wxFOsz0jkqg
-         H3QmuPZc7uLVAy93PXNc6aZxoXHEvNp/tiBAdosgK6G7Haof18sRhfWMc1tTgjl+dnqN
-         CGNg==
-X-Gm-Message-State: AOAM533ok54OepvLE2An6BdgL2EcF2qh3B/TF0rKWmG+yI7FzrvfnjaL
-        kBbW86x4BYb8XD/63EFZGG9K+7F+b+I4P+eANYZbZg==
-X-Google-Smtp-Source: ABdhPJxV2IA2m9d5l16yBy3n1SZ0g7UHEZV6/cJ+b6V/XLPjujs0azTgjgMwltUJn2YBO0p0U04OWasRwsCDgvXmOEE=
-X-Received: by 2002:ac5:c189:: with SMTP id z9mr9880244vkb.79.1593435092807;
- Mon, 29 Jun 2020 05:51:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200619151541.15069-1-geert+renesas@glider.be>
-In-Reply-To: <20200619151541.15069-1-geert+renesas@glider.be>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Mon, 29 Jun 2020 18:21:21 +0530
-Message-ID: <CAHLCerMfp42VHDxhCfnFmxphic0OVD55ZzmzwnrEvfF6WUARgg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: thermal: rcar-thermal: Improve schema validation
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=DqAKdt3lk82f18skm9MplMyKRKUbc8f3Yv5d4peK0Jw=;
+        b=rnkEEpIBlB/NwP6fQtFTYiIzj2MIQzufMG+q5B5vBYbWqfA+AI88nmFuTSDvk0qgrh
+         cFjQqQO/Cx758Bz/15v0h6ggWfnXBBbKgagitS/+OGWrXGS56zXyft1vi+Qkv/r3W6i5
+         CZlG79yxPpS5tr+ixPZO2qpY5CjuG6NcV+2Zir1s26f40jNRsUbAOkHJ5xmAum6lEOFB
+         4KKmvyT2AI8ykThdopr5QaRvF479Lz1nWbjw4xV81fF+2nObe8+JqIzahQE6fKtzavym
+         PuniImvsURvE05SzZ2gdrt8na4BP4kCk9eo3DIRBhFXeHvCKlDSxHucnNDzyowvETUlA
+         ak/w==
+X-Gm-Message-State: AOAM530Hz6KUyg4kB5TQ1/G2LwWmHAGqZ/bUYp3OAtE+YHfebJfsdLf6
+        WSPQqeBi68jrm0f3KDhqKxjH8g==
+X-Google-Smtp-Source: ABdhPJzoX9t8EnEg8SA3ZjJG2lajLSBPeU7HyGvl3rLXCaUCHfg2zKcEyUNd/+m0kAxQSeLfsPAnYQ==
+X-Received: by 2002:ac8:36d8:: with SMTP id b24mr16512566qtc.315.1593451278675;
+        Mon, 29 Jun 2020 10:21:18 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id q5sm408363qtf.12.2020.06.29.10.21.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 10:21:18 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 12/13] arm64: dts: qcom: add sm8150 GPU nodes
+Date:   Mon, 29 Jun 2020 13:20:42 -0400
+Message-Id: <20200629172049.30452-13-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200629172049.30452-1-jonathan@marek.ca>
+References: <20200629172049.30452-1-jonathan@marek.ca>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 8:45 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
->
->   - Document missing "#thermal-sensor-cells",
->   - Factor out common required properties,
->   - "interrupts", "clocks", and "power-domains" are required on R-Mobile
->     APE6, too,
->   - Invert logic to simplify descriptions,
->   - Add "additionalProperties: false".
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+This brings up the GPU. Tested on HDK855 by running vulkan CTS.
 
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+---
+ arch/arm64/boot/dts/qcom/sm8150.dtsi | 136 +++++++++++++++++++++++++++
+ 1 file changed, 136 insertions(+)
 
-> ---
->  .../bindings/thermal/rcar-thermal.yaml        | 53 ++++++++++++-------
->  1 file changed, 34 insertions(+), 19 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml b/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml
-> index 0994693d240f9ff4..88787b98992fe7c9 100644
-> --- a/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml
-> +++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml
-> @@ -59,25 +59,40 @@ properties:
->    resets:
->      maxItems: 1
->
-> -if:
-> -  properties:
-> -    compatible:
-> -      contains:
-> -        enum:
-> -          - renesas,thermal-r8a73a4 # R-Mobile APE6
-> -          - renesas,thermal-r8a7779 # R-Car H1
-> -then:
-> -  required:
-> -    - compatible
-> -    - reg
-> -else:
-> -  required:
-> -    - compatible
-> -    - reg
-> -    - interrupts
-> -    - clocks
-> -    - power-domains
-> -    - resets
-> +  '#thermal-sensor-cells':
-> +    const: 0
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +allOf:
-> +  - if:
-> +      not:
-> +        properties:
-> +          compatible:
-> +            contains:
-> +              enum:
-> +                - renesas,thermal-r8a73a4 # R-Mobile APE6
-> +                - renesas,thermal-r8a7779 # R-Car H1
-> +    then:
-> +      required:
-> +        - resets
-> +        - '#thermal-sensor-cells'
-> +
-> +  - if:
-> +      not:
-> +        properties:
-> +          compatible:
-> +            contains:
-> +              const: renesas,thermal-r8a7779 # R-Car H1
-> +    then:
-> +      required:
-> +        - interrupts
-> +        - clocks
-> +        - power-domains
-> +
-> +additionalProperties: false
->
->  examples:
->    # Example (non interrupt support)
-> --
-> 2.17.1
->
+diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+index f928ef9fa3a3..2be39eb0ce7f 100644
+--- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+@@ -10,6 +10,7 @@
+ #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+ #include <dt-bindings/clock/qcom,rpmh.h>
+ #include <dt-bindings/clock/qcom,gcc-sm8150.h>
++#include <dt-bindings/clock/qcom,gpucc-sm8150.h>
+ 
+ / {
+ 	interrupt-parent = <&intc>;
+@@ -540,6 +541,141 @@ glink-edge {
+ 			};
+ 		};
+ 
++		gpu: gpu@2c00000 {
++			/*
++			 * note: the amd,imageon compatible makes it possible
++			 * to use the drm/msm driver without the display node,
++			 * make sure to remove it when display node is added
++			 */
++			compatible = "qcom,adreno-640.1",
++				     "qcom,adreno",
++				     "amd,imageon";
++			#stream-id-cells = <16>;
++
++			reg = <0 0x2c00000 0 0x40000>;
++			reg-names = "kgsl_3d0_reg_memory";
++
++			interrupts = <GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH>;
++
++			iommus = <&adreno_smmu 0 0x401>;
++
++			operating-points-v2 = <&gpu_opp_table>;
++
++			qcom,gmu = <&gmu>;
++
++			zap-shader {
++				memory-region = <&gpu_mem>;
++			};
++
++			/* note: downstream checks gpu binning for 675 Mhz */
++			gpu_opp_table: opp-table {
++				compatible = "operating-points-v2";
++
++				opp-675000000 {
++					opp-hz = /bits/ 64 <675000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
++				};
++
++				opp-585000000 {
++					opp-hz = /bits/ 64 <585000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
++				};
++
++				opp-499200000 {
++					opp-hz = /bits/ 64 <499200000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_SVS_L2>;
++				};
++
++				opp-427000000 {
++					opp-hz = /bits/ 64 <427000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
++				};
++
++				opp-345000000 {
++					opp-hz = /bits/ 64 <345000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
++				};
++
++				opp-257000000 {
++					opp-hz = /bits/ 64 <257000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
++				};
++			};
++		};
++
++		gmu: gmu@2c6a000 {
++			compatible="qcom,adreno-gmu-640.1", "qcom,adreno-gmu";
++
++			reg = <0 0x2c6a000 0 0x30000>,
++			      <0 0xb290000 0 0x10000>,
++			      <0 0xb490000 0 0x10000>;
++			reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
++
++			interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "hfi", "gmu";
++
++			clocks = <&gpucc GPU_CC_AHB_CLK>,
++				 <&gpucc GPU_CC_CX_GMU_CLK>,
++			         <&gpucc GPU_CC_CXO_CLK>,
++				 <&gcc GCC_DDRSS_GPU_AXI_CLK>,
++				 <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
++			clock-names = "ahb", "gmu", "cxo", "axi", "memnoc";
++
++			power-domains = <&gpucc GPU_CX_GDSC>,
++					<&gpucc GPU_GX_GDSC>;
++			power-domain-names = "cx", "gx";
++
++			iommus = <&adreno_smmu 5 0x400>;
++
++			operating-points-v2 = <&gmu_opp_table>;
++
++			gmu_opp_table: opp-table {
++				compatible = "operating-points-v2";
++
++				opp-200000000 {
++					opp-hz = /bits/ 64 <200000000>;
++					opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
++				};
++			};
++		};
++
++		gpucc: clock-controller@2c90000 {
++			compatible = "qcom,sm8150-gpucc";
++			reg = <0 0x2c90000 0 0x9000>;
++			clocks = <&rpmhcc RPMH_CXO_CLK>,
++				 <&gcc GCC_GPU_GPLL0_CLK_SRC>,
++				 <&gcc GCC_GPU_GPLL0_DIV_CLK_SRC>;
++			clock-names = "bi_tcxo",
++				      "gcc_gpu_gpll0_clk_src",
++				      "gcc_gpu_gpll0_div_clk_src";
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++			#power-domain-cells = <1>;
++		};
++
++		adreno_smmu: iommu@2ca0000 {
++			compatible = "qcom,sm8150-smmu-500", "arm,mmu-500";
++			reg = <0 0x2ca0000 0 0x10000>;
++			#iommu-cells = <2>;
++			#global-interrupts = <1>;
++			interrupts = <GIC_SPI 674 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 681 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 682 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 683 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 684 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 685 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 686 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 687 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 688 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gpucc GPU_CC_AHB_CLK>,
++				 <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
++			         <&gcc GCC_GPU_SNOC_DVM_GFX_CLK>;
++			clock-names = "ahb", "bus", "iface";
++
++			power-domains = <&gpucc GPU_CX_GDSC>;
++		};
++
+ 		tlmm: pinctrl@3100000 {
+ 			compatible = "qcom,sm8150-pinctrl";
+ 			reg = <0x0 0x03100000 0x0 0x300000>,
+-- 
+2.26.1
+
