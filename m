@@ -2,71 +2,116 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9ABBC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3918BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 833B4206A1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:37:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FF87206A1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:37:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466628;
-	bh=mPGiTVcftIoSXUZ6f1pWsVTJ28Byph4d25oaNFRkBPk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L+WbbXQQHKosNL0Rv85+NRMtQkQGKQkNe+GsYAFfZ0xI7AL3PxHyPOUMznZsqSJCf
-	 8RpxQOFjIA+YDUOujMFnuD9uiYbDh7xToY+Kn0zJfwADEosWA9R0KESYP8Evf29Xda
-	 kgnZFkiZyRR3rAa0cuPGgggXH+1wqBdsfpr04p1g=
+	s=default; t=1593466637;
+	bh=Tt9I5dS3JeAJvU2sRBG7+iIKUeVdnCbPfw8XBTvHkOY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IaUx49UncupTFVeLhoACrdIRP5q+X5rdty0EEpCtfAGwmUEb+zulIKWidF+kwB2XW
+	 CpCLt0ogvvamENdmtQDE3kFbSMLu4ZwuKeCNkhqaKE6sHwuK2xSkVCOgd0aR8f+cF8
+	 BSTuNLU1Ur+xCfdAWafXlLCWAfc3pXZKhHKoaHjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728403AbgF2VhH (ORCPT
+        id S1728413AbgF2VhQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:37:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60642 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:37:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728417AbgF2Ski (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1728411AbgF2Ski (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Mon, 29 Jun 2020 14:40:38 -0400
-Received: from localhost (unknown [122.182.251.219])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from localhost.localdomain (unknown [194.230.155.195])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5E1423437;
-        Mon, 29 Jun 2020 09:49:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBAA723358;
+        Mon, 29 Jun 2020 08:17:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593424174;
-        bh=mPGiTVcftIoSXUZ6f1pWsVTJ28Byph4d25oaNFRkBPk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GkBvIT/XpoNOV/3SQ5LCkp7Sta+rrT6l0NHlJ87pF/Ct/Sm1OBCD2lf5OiCN723X/
-         ANew8yU8tLPCBqz32Jzge5OMl9ifu7G7DAkRh9dU3Fl9tcHTOoxvLXIyjxUbx/ALSE
-         uBlg1hU9MDuDLlGsuj0g+R2HCfOz3iARq19Lsolo=
-Date:   Mon, 29 Jun 2020 15:19:30 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: phy: qcom: Fix missing 'ranges' and example
- addresses
-Message-ID: <20200629094930.GF2599@vkoul-mobl>
-References: <20200611151835.1100883-1-robh@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200611151835.1100883-1-robh@kernel.org>
+        s=default; t=1593418624;
+        bh=Tt9I5dS3JeAJvU2sRBG7+iIKUeVdnCbPfw8XBTvHkOY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=M3w/jW0sfpY78qC1W4n6OjPGfllVKlWaaK7SOpQVQopV6Em32krY/i5WIrgMV3qLk
+         vp14DQthtenP6sNr7r3+P61E3WmqI0okr9qg/iwMv2dcxDNmy3nxgzrPaz9GmOZpnA
+         NyZeEKzl1pngW5YhOIISNKGHKp+p8Au1+oLpdHvA=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 2/2] arm64: dts: hisilicon: Align UART nodename with dtschema
+Date:   Mon, 29 Jun 2020 10:16:57 +0200
+Message-Id: <20200629081657.13821-2-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200629081657.13821-1-krzk@kernel.org>
+References: <20200629081657.13821-1-krzk@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11-06-20, 09:18, Rob Herring wrote:
-> The QCom QMP PHY bindings have child nodes with translatable (MMIO)
-> addresses, so a 'ranges' property is required in the parent node.
-> Additionally, the examples default to 1 address and size cell, so let's
-> fix that, too.
+Fix dtschema validator warnings like:
+    uart@f8015000: $nodename:0: 'uart@f8015000' does not match '^serial(@[0-9a-f,]+)*$'
 
-Acked-By: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index 2072b637b5af..3d189d9f0d24 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -302,7 +302,7 @@
+ 			mboxes = <&mailbox 1 0 11>;
+ 		};
+ 
+-		uart0: uart@f8015000 {	/* console */
++		uart0: serial@f8015000 {	/* console */
+ 			compatible = "arm,pl011", "arm,primecell";
+ 			reg = <0x0 0xf8015000 0x0 0x1000>;
+ 			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+@@ -311,7 +311,7 @@
+ 			clock-names = "uartclk", "apb_pclk";
+ 		};
+ 
+-		uart1: uart@f7111000 {
++		uart1: serial@f7111000 {
+ 			compatible = "arm,pl011", "arm,primecell";
+ 			reg = <0x0 0xf7111000 0x0 0x1000>;
+ 			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+@@ -325,7 +325,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		uart2: uart@f7112000 {
++		uart2: serial@f7112000 {
+ 			compatible = "arm,pl011", "arm,primecell";
+ 			reg = <0x0 0xf7112000 0x0 0x1000>;
+ 			interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
+@@ -337,7 +337,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		uart3: uart@f7113000 {
++		uart3: serial@f7113000 {
+ 			compatible = "arm,pl011", "arm,primecell";
+ 			reg = <0x0 0xf7113000 0x0 0x1000>;
+ 			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
+@@ -349,7 +349,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		uart4: uart@f7114000 {
++		uart4: serial@f7114000 {
+ 			compatible = "arm,pl011", "arm,primecell";
+ 			reg = <0x0 0xf7114000 0x0 0x1000>;
+ 			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
 -- 
-~Vinod
+2.17.1
+
