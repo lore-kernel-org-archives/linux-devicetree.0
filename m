@@ -2,158 +2,105 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7B5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0424C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD885206C3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 21:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADFC92078B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467995;
-	bh=ZtASUsHSUH9iBmQouSmlHBp0adBRXfaTVKN3IEKwB2A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BmP5t7E5euVsq25+uPxP5mxRwjLvTDEGVDkS7egdfpa4anW3ki25fVxpFf0Y1OhHm
-	 Q4EiEPE62Yo1j+Rh50sPrVpTm3D6ZnPmFEZ0qZhUfTU94rsR3kV0RGpz9SW2nB08Uk
-	 NboeQu6fEhjEzCnRhWSGQe/7Rpzuypycll+y+eEw=
+	s=default; t=1593468048;
+	bh=ksD8/YhOmPyxDpDhDWAW8V+BdGDwMP3O1CnBq8iX7BA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2I1NBSEolGZRrFrTnY5u0Z54LV+M/TxJmzUHkH8M0uWmYqBgkgFvrhErwcOWPkW0B
+	 7LME10Gp6ktqp+9EXNmadqJvPktb99oqoNw1lBaXDwJPv6Etd9hBHOwvh7HMTqNGhq
+	 aVvRq6HTAPKgFfzMSkX/jsiQcbz3RhjnWM7br3aM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391713AbgF2V7z (ORCPT
+        id S2404828AbgF2WAq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:59:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56764 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726392AbgF2SfZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:25 -0400
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFCA3255C7;
-        Mon, 29 Jun 2020 17:57:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593453470;
-        bh=ZtASUsHSUH9iBmQouSmlHBp0adBRXfaTVKN3IEKwB2A=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2kKS+wDhkOuxpH9plHm9j0XcBd1NOUkJJmJEvlxcmanpfHqlzhfaHZvWTWdWKm1fj
-         wSf07FVi3Vc5BoJg00SsFz9stOKYZjSXPZ0CZnwRUr9xGG9SK7jE+dnTuQahmLknAV
-         QdfXGtfSQm+QApl5nSJa5URHEmOz9dzGsODL98zw=
-Received: by mail-ot1-f51.google.com with SMTP id q21so8790879otc.7;
-        Mon, 29 Jun 2020 10:57:49 -0700 (PDT)
-X-Gm-Message-State: AOAM530ZH+ymx1LRhBUi64LdyKz+BbmrCg9xFIijTPklFGRFQdXbXrT8
-        a0c6j2G3NQXXwQ5O1ORx4/1uP7KmUySXwk2IGA==
-X-Google-Smtp-Source: ABdhPJyimQAzFgXMjRYrAPs8oEIeWpJhMBKYcA7auFeZopuljB1Q7c28J7qEymPHWgbqxTgyvUyyluEt85Lj4qCu1n4=
-X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr14554766ots.192.1593453469212;
- Mon, 29 Jun 2020 10:57:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200618224413.1115849-1-robh@kernel.org> <20200619215341.GA6857@ravnborg.org>
- <20200622165730.pnx7fzbq5e6q5h4l@holly.lan>
-In-Reply-To: <20200622165730.pnx7fzbq5e6q5h4l@holly.lan>
+        Mon, 29 Jun 2020 18:00:46 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:43106 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404812AbgF2WAo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 18:00:44 -0400
+Received: by mail-il1-f195.google.com with SMTP id i18so15885149ilk.10
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 15:00:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XibhlPkg3VOTmV4eLtvatFLe5OTKIBnR1/3S5Ja9w/I=;
+        b=JQ4Em5kANRpQ1QGNwHXw3VnCdXCJrB4J70fVrPEVmxKmCxJHYoFfBQcCodDkSQiyi7
+         c6u23mYbZn8P3RDV+5hWYy4holFXFZ+tmxuVcyfOnPEcavSTjAbjNnfIxMuQqQlunXY3
+         mwVsW8U832eG4hUjLWwf5QZI+3GhrBoI9ye0bZLvWgMH5Sydq3PEE+wXkeoxSR32esf8
+         1qMhlRbZmCam8KOomr516tRpHXBRze3dm0dsTCbQdZi/V9dn3CW25tmFIz7TzZ38OVz6
+         TPWLLKrJjTq58XP3i4nHv9iVkaIVfk/ijD7frrFcM0xMCcY3Pdu45L9jWquaAycWREwF
+         D/Qw==
+X-Gm-Message-State: AOAM531p2+5PamQqRgsW5OSrPnLrcUsKhVGX1HAonDijXIg3IHthMZGZ
+        WcLaHdX5WLShEMhazw1NDK6Mq7aZFg==
+X-Google-Smtp-Source: ABdhPJw/3aWE5XK3CTeLWAvSAH1gjgTz2xAun9mWY7bxA0/ul+apY1Zq5c7rq/5DZCJLxWdy1hNz4Q==
+X-Received: by 2002:a05:6e02:e43:: with SMTP id l3mr17582767ilk.11.1593468043226;
+        Mon, 29 Jun 2020 15:00:43 -0700 (PDT)
+Received: from xps15 ([64.188.179.255])
+        by smtp.gmail.com with ESMTPSA id s190sm674589ilc.28.2020.06.29.15.00.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 15:00:42 -0700 (PDT)
+Received: (nullmailer pid 3011558 invoked by uid 1000);
+        Mon, 29 Jun 2020 22:00:40 -0000
+Date:   Mon, 29 Jun 2020 16:00:40 -0600
 From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 29 Jun 2020 11:57:37 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK1yJ09k6tKak==TjRN17VzueVkcf-WOLw2ETL2ZJv9sg@mail.gmail.com>
-Message-ID: <CAL_JsqK1yJ09k6tKak==TjRN17VzueVkcf-WOLw2ETL2ZJv9sg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: backlight: Convert common backlight bindings
- to DT schema
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Sam Ravnborg <sam@ravnborg.org>, devicetree@vger.kernel.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Cc:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, alsa-devel@alsa-project.org
+Subject: Re: [PATCH 1/2] dt-bindings: sound: convert rk3328 codec binding to
+ yaml
+Message-ID: <20200629220040.GA3011219@bogus>
+References: <20200623124734.1736470-1-katsuhiro@katsuster.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623124734.1736470-1-katsuhiro@katsuster.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 10:57 AM Daniel Thompson
-<daniel.thompson@linaro.org> wrote:
->
-> On Fri, Jun 19, 2020 at 11:53:41PM +0200, Sam Ravnborg wrote:
-> > > diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml
-> > > new file mode 100644
-> > > index 000000000000..7e1f109a38a4
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml
-> > > @@ -0,0 +1,98 @@
-> > > +# SPDX-License-Identifier: GPL-2.0-only
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/leds/backlight/pwm-backlight.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: pwm-backlight bindings
-> > > +
-> > > +maintainers:
-> > > +  - Lee Jones <lee.jones@linaro.org>
-> > > +  - Daniel Thompson <daniel.thompson@linaro.org>
-> > > +  - Jingoo Han <jingoohan1@gmail.com>
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: pwm-backlight
-> > > +
-> > > +  pwms:
-> > > +    maxItems: 1
-> > > +
-> > > +  pwm-names: true
-> > > +
-> > > +  power-supply:
-> > > +    description: regulator for supply voltage
-> > > +
-> > > +  enable-gpios:
-> > > +    description: Contains a single GPIO specifier for the GPIO which enables
-> > > +      and disables the backlight
-> > > +    maxItems: 1
-> > > +
-> > > +  post-pwm-on-delay-ms:
-> > > +    description: Delay in ms between setting an initial (non-zero) PWM and
-> > > +      enabling the backlight using GPIO.
-> > > +
-> > > +  pwm-off-delay-ms:
-> > > +    description: Delay in ms between disabling the backlight using GPIO
-> > > +      and setting PWM value to 0.
-> > > +
-> > > +  brightness-levels:
-> > > +    description: Array of distinct brightness levels. Typically these are
-> > > +      in the range from 0 to 255, but any range starting at 0 will do. The
-> > > +      actual brightness level (PWM duty cycle) will be interpolated from
-> > > +      these values. 0 means a 0% duty cycle (darkest/off), while the last
-> > > +      value in the array represents a 100% duty cycle (brightest).
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> > > +
-> > > +  default-brightness-level:
-> > > +    description: The default brightness level (index into the array defined
-> > > +      by the "brightness-levels" property).
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > Same comment as before...
->
-> Sorry the "ditto" meant I didn't thing about PWM as much as I should
-> have.
->
-> The situation for PWM is a little different to LED. That's mostly
-> because we decided not to clutter the LED code with
-> "num-interpolated-steps".
->
-> The PWM code implements the default-brightness-level as an index into
-> the brightness array *after* it has been expanded using interpolation.
-> In other words today Linux treats the default-brightness-level more
-> like[1].
->
->     description: The default brightness level. When
->       num-interpolated-steps is not set this is simply an index into
->       the array defined by the "brightness-levels" property. If
->       num-interpolated-steps is set the brightness array will be
->       expanded by interpolation before we index to get a default
->       level.
->
-> This is the best I have come up with so far... but I concede it still
-> lacks elegance.
+On Tue, 23 Jun 2020 21:47:33 +0900, Katsuhiro Suzuki wrote:
+> Just convert Rockchip rk3328 audio codec binding to DT schema.
+> 
+> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+> ---
+>  .../bindings/sound/rockchip,rk3328-codec.txt  | 28 ---------
+>  .../bindings/sound/rockchip,rk3328-codec.yaml | 61 +++++++++++++++++++
+>  2 files changed, 61 insertions(+), 28 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/rockchip,rk3328-codec.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/rockchip,rk3328-codec.yaml
+> 
 
-Happy to add this or whatever folks want if there's agreement, but I
-don't want to get bogged down on re-reviewing and re-writing the
-binding on what is just a conversion. There's a mountain of bindings
-to convert.
 
-Rob
+My bot found errors running 'make dt_binding_check' on your patch:
+
+Error: Documentation/devicetree/bindings/sound/rockchip,rk3328-codec.example.dts:22.26-27 syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:315: recipe for target 'Documentation/devicetree/bindings/sound/rockchip,rk3328-codec.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/sound/rockchip,rk3328-codec.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+Makefile:1347: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+
+See https://patchwork.ozlabs.org/patch/1315234
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
