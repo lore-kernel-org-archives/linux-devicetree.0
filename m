@@ -2,120 +2,99 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C72C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0877C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 631A820672
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:45:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="bhKeRr58"
+	by mail.kernel.org (Postfix) with ESMTP id 8946320720
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:46:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593463595;
+	bh=UCUfaDjUVmlDpTU3LRBvAL1Yi4B0vDt8IAFLorzpyrA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nevz3Jx4cmCX7VRwlk0SclkLwLxCsh4VWP5yi9XoVmZdgLF9+igcwOyX7VqrSya8e
+	 3x8p3NB1+QwUhQe2maSS6CSnXr9SajUN4OAsxudk1x1+ZJU5G23/vulunubS0BMJ7q
+	 stJuKSSdaNLbX3PsoVAgA89rUxABeyPxekmH8l2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731721AbgF2UpX (ORCPT
+        id S1729174AbgF2UqG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:45:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43370 "EHLO
+        Mon, 29 Jun 2020 16:46:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731579AbgF2TN6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:13:58 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73D26C00E3D8
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:04:21 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id r12so16220878wrj.13
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:04:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rcgV1UNGKm4K4QD82m2Udcr1uoHRVa+LAuPxtdS553M=;
-        b=bhKeRr58llmIS9VKgVFyB6mAC7XOTgR+vC4RJRrwyWIr5sh0Pep1GPWHLAgwGzpwAc
-         MGPqTye+7rp41hJ0FSDOVSH+p83Zt/3ZFe7cwcMshyi04ZZeZpr/muoHkBS6d3gEFsqC
-         gL9tprIlM/mTLQfg0PC3ySsy+WIP8DkfosTU4J5ojN9iLGjwYxKS/OZIJyN/rXYZmrgt
-         b/PirIRVemOkzEXXswFvaL53RJkfuhhqpelHeBzIZhnZXZ+/gqm1xcXkTKom438Uu5E3
-         dMbEgvGvBvjLo2LDuXkeV0gRZt75ZzMGwBn8D2w+jiehl1HPOVrLev1YO1EDLxfeZxlK
-         6RTw==
+        with ESMTP id S1731559AbgF2TNx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:13:53 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62D95C08ECB9;
+        Sun, 28 Jun 2020 23:52:14 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id n2so2833421edr.5;
+        Sun, 28 Jun 2020 23:52:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rcgV1UNGKm4K4QD82m2Udcr1uoHRVa+LAuPxtdS553M=;
-        b=TqHGDqhnt/moSPWSGnNBWFAvO0mm9y6xFmF/08fDEW/m8wBcSRW8sSll0YSINT0SVf
-         ddClm61JCMLV82l6HyujQSuXZFLAYkkRfaPwnYA14nyKArNCMslurSGWoGIYPpL5tmyx
-         qedq1oJfTUj4BM4yKnbysEwd/6bxmtqItC+UvZP6PPntgAeRHqTjO5ZPi1O6FAK+ooJ7
-         JnLJyniyap6vNGYj/avc+Sg62kyObQV3NzoPcf31RoRUDaXKXSFs/6K5RM9P2ya2HQ7V
-         pBfh/aWD/faYOgGutPLsUIfcpsKb53CelhgR6+e0XYJa+jOQXKcqeW8x3kMwnSs3HjUY
-         7RMg==
-X-Gm-Message-State: AOAM530PAehu0Tqc1ETjSuUHetleMyTvkmZnQdIlOCYQS9ktTBEr5/mg
-        Sn58LmeqiYYFlYeOV6YQ1Uo6AQ==
-X-Google-Smtp-Source: ABdhPJwlADkzSAVFbK3JmZ+v+w78Y8jXO+OaWZ19/qk/J/aygV+blBomdVtOyQPcaDByMnxBjS6U2A==
-X-Received: by 2002:adf:c185:: with SMTP id x5mr18180867wre.403.1593432260279;
-        Mon, 29 Jun 2020 05:04:20 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id d81sm25274347wmc.0.2020.06.29.05.04.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 05:04:19 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 06/10] phy: mdio: add kerneldoc for __devm_mdiobus_register()
-Date:   Mon, 29 Jun 2020 14:03:42 +0200
-Message-Id: <20200629120346.4382-7-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200629120346.4382-1-brgl@bgdev.pl>
-References: <20200629120346.4382-1-brgl@bgdev.pl>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MJNvhIQCteTm5VtFSyzzsWJRKykcFhaBMFS+SgAaulE=;
+        b=uNI53+DW4ONYlbuHphXC9uYMySsEMjyWfy5sBfX+nJbg4OS9i4+HWrsrE1tWTK/Hef
+         02OIFYUVziudbAsKub4UzWh1xRVhXjYE5FnNrbLcGcXQ7qr+7Ilpk6XFAzB9kDwAr/QX
+         oVGpNc84c8tKZEO/yPLs7jAyvT8qSv0+gbiIG00uGK+Gwk026vO4birTebkPxwjQCQhf
+         /tHgX4kwxIn/+TzpFtRp457rHdY1XnQlQxPZnPfuwaj4Aa1o+VvZR5OWzyPUY0G5Aev4
+         cvLIOMRCe4/yYTnMIyWSIVYfHH2FtVDSQs1Xw2AFfqOuYKr//f3g2FyzEjOUPiRn0ykP
+         zNZA==
+X-Gm-Message-State: AOAM532Z9dACPIuq4ShX8Zn+MRhc06Y3FtBXyvPT6EdT5VC2gN9OcQ9L
+        8+/oJ1CkwU6vJkS4NbTiDc0=
+X-Google-Smtp-Source: ABdhPJw9FZnwCiOCE7JrbDHqCcdYHvx1EqL2R+gxeefz5/+dK9PWLHMqdziIkts4ezYexqkOwTWX0w==
+X-Received: by 2002:a50:f047:: with SMTP id u7mr16877181edl.274.1593413532938;
+        Sun, 28 Jun 2020 23:52:12 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.195])
+        by smtp.googlemail.com with ESMTPSA id m14sm9438582ejx.80.2020.06.28.23.52.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 28 Jun 2020 23:52:12 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 08:52:10 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: iio: bmc150_magn: Document and fix
+ missing compatibles
+Message-ID: <20200629065210.GB5879@kozik-lap>
+References: <20200622060110.23192-1-krzk@kernel.org>
+ <20200627144359.1ae30bb0@archlinux>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200627144359.1ae30bb0@archlinux>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Sat, Jun 27, 2020 at 02:43:59PM +0100, Jonathan Cameron wrote:
+> On Mon, 22 Jun 2020 08:01:09 +0200
+> Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> 
+> > The driver supports also BMC156B and BMM150B but these compatibles had
+> > redundant suffix "_magn".  Add existing compatibles marking them
+> > deprecated along with adding a new, proper one for this family of
+> > devices.
+> Thanks for tidying this up.
+> 
+> The BMC156B is a dual magnetometer and accelerometer chip
+> so for that one the _magn postfix probably is needed.
+> 
+> Or am I missing something?
+> 
+> The way this does SPI is rather odd but seems to be the same as the bmc150
+> (two chips with non overlapping register maps).
 
-This function is not documented. Add a short kerneldoc description.
+You're right, only one compatible should be trimmed from suffix. I'll
+send v3.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/net/phy/mdio_devres.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/net/phy/mdio_devres.c b/drivers/net/phy/mdio_devres.c
-index f0b4b6cfe5e3..3ee887733d4a 100644
---- a/drivers/net/phy/mdio_devres.c
-+++ b/drivers/net/phy/mdio_devres.c
-@@ -2,6 +2,13 @@
- 
- #include <linux/phy.h>
- 
-+/**
-+ * __devm_mdiobus_register - Resource-managed variant of mdiobus_register()
-+ * @bus:	MII bus structure to register
-+ * @owner:	Owning module
-+ *
-+ * Returns 0 on success, negative error number on failure.
-+ */
- int __devm_mdiobus_register(struct mii_bus *bus, struct module *owner)
- {
- 	int ret;
--- 
-2.26.1
+Best regards,
+Krzysztof
 
