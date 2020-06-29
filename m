@@ -2,99 +2,150 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E41C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72382C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C01720672
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:34:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BuDp9scE"
+	by mail.kernel.org (Postfix) with ESMTP id 5811620672
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:38:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732483AbgF2Uel (ORCPT
+        id S2388888AbgF2UiC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:34:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45314 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731843AbgF2TXv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:23:51 -0400
-Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B03DC061755
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 12:23:51 -0700 (PDT)
-Received: by mail-qt1-x836.google.com with SMTP id x62so13766918qtd.3
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 12:23:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=d9BGVshqPZNqtsgKezZ53Dstz56cRP9gTsU+AsUUoSE=;
-        b=BuDp9scEtuO1UJpKqW/ythg98OIq5vdZki8GlPCelrABvX/khclaPEaiZfheOQSEiE
-         D6JsqeBYl84apl8SpaiH3vk4zkPQEsB90dOnrfGVPVjzdZ9wwEhnX0Lh2kbR4CbZfHvX
-         ZoaVvg7/3vQ+JJVg1i7EpK0TbwUj5WcArH0RJ0rzkxUYr7Ar+NfLPlLBlf+Ndq8AqvcW
-         sSmmfeYK5TNFwLnjxZUS2DmFgE9ASF4NKx2QYA1ux9sSktYCWLD9wvnexM6hnRWM8wK3
-         xL4ua/YV/K20OhRpSryUuksrGH0tbHlZTv1q4I8ZpyHu3na7M203eyfjkglQys+hlo39
-         dWGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=d9BGVshqPZNqtsgKezZ53Dstz56cRP9gTsU+AsUUoSE=;
-        b=ewWmkw9oKEUp1EqORqE+uDbFuvVW6KynaUJuxCB3ECSUCoxxoqpddPlYcJxTS0hfjn
-         9yiCRMiGBqCr9OY9Ofsyt66Wt4rGrHL66yp5qamOQIxxYW7WTqxzmGf+CdZjHBAIye/x
-         GpfSFUWwrcC2fmpCVBsE/4VFrYVSGM8djAhEyN21mvmTRUB8/Tzq1CPOQCYO6B54QoEN
-         IJIyye4EuJaCUTutHLod/zu1q4iaiZatt0GYW5ZJPErM/GL+7zHCcAZ4SZfnNkeI8iHm
-         q3PRwekI4at9CuIgjo9i+wY3pysmRNUJC3zJtPKNWWB/awUj5YZ0O0CsgiQRH+XntR86
-         uIRw==
-X-Gm-Message-State: AOAM531OksSzdD7wO6xWkw0CsY/4f8cWeX9uoAlm+CxACl/Pz4nQuQDq
-        /cX1pbrJD2chzDqFIN6QOLQ=
-X-Google-Smtp-Source: ABdhPJwguGXCUEabIqEKOZqBAu7shyV6rh3WVKAjPnyVkpustWXuW+JRfsTFjz4K+juOnurNv2vpxw==
-X-Received: by 2002:ac8:4f50:: with SMTP id i16mr2010185qtw.216.1593458630427;
-        Mon, 29 Jun 2020 12:23:50 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14c:482:92b:9524:444f:ca0e:d637])
-        by smtp.gmail.com with ESMTPSA id w11sm737122qtk.35.2020.06.29.12.23.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 12:23:49 -0700 (PDT)
-From:   Fabio Estevam <festevam@gmail.com>
-To:     robh+dt@kernel.org
-Cc:     lee.jones@linaro.org, benjamin.gaignard@st.com,
-        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>
-Subject: [RFC] dt-bindings: mfd: st,stmfx: Remove extra additionalProperties
-Date:   Mon, 29 Jun 2020 16:23:35 -0300
-Message-Id: <20200629192335.24622-1-festevam@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 29 Jun 2020 16:38:02 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:36938 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbgF2TSw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:18:52 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 5F29F20024;
+        Mon, 29 Jun 2020 21:18:49 +0200 (CEST)
+Date:   Mon, 29 Jun 2020 21:18:47 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH] dt-bindings: backlight: Convert common backlight
+ bindings to DT schema
+Message-ID: <20200629191847.GA318506@ravnborg.org>
+References: <20200618224413.1115849-1-robh@kernel.org>
+ <20200619215341.GA6857@ravnborg.org>
+ <20200622165730.pnx7fzbq5e6q5h4l@holly.lan>
+ <CAL_JsqK1yJ09k6tKak==TjRN17VzueVkcf-WOLw2ETL2ZJv9sg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqK1yJ09k6tKak==TjRN17VzueVkcf-WOLw2ETL2ZJv9sg@mail.gmail.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=KKAkSRfTAAAA:8 a=gEfo2CItAAAA:8 a=pGLkceISAAAA:8
+        a=wNlRYuuYm4J86z4hMpcA:9 a=hv1kb02ZR_FIT1_D:21 a=XilPnIEmbnQ7gt8O:21
+        a=CjuIK1q_8ugA:10 a=cvBusfyB2V15izCimMoJ:22 a=sptkURWiP4Gy88Gu7hUp:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The following build error is seen with 'make dt_binding_check':
+On Mon, Jun 29, 2020 at 11:57:37AM -0600, Rob Herring wrote:
+> On Mon, Jun 22, 2020 at 10:57 AM Daniel Thompson
+> <daniel.thompson@linaro.org> wrote:
+> >
+> > On Fri, Jun 19, 2020 at 11:53:41PM +0200, Sam Ravnborg wrote:
+> > > > diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..7e1f109a38a4
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml
+> > > > @@ -0,0 +1,98 @@
+> > > > +# SPDX-License-Identifier: GPL-2.0-only
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/leds/backlight/pwm-backlight.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: pwm-backlight bindings
+> > > > +
+> > > > +maintainers:
+> > > > +  - Lee Jones <lee.jones@linaro.org>
+> > > > +  - Daniel Thompson <daniel.thompson@linaro.org>
+> > > > +  - Jingoo Han <jingoohan1@gmail.com>
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    const: pwm-backlight
+> > > > +
+> > > > +  pwms:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  pwm-names: true
+> > > > +
+> > > > +  power-supply:
+> > > > +    description: regulator for supply voltage
+> > > > +
+> > > > +  enable-gpios:
+> > > > +    description: Contains a single GPIO specifier for the GPIO which enables
+> > > > +      and disables the backlight
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  post-pwm-on-delay-ms:
+> > > > +    description: Delay in ms between setting an initial (non-zero) PWM and
+> > > > +      enabling the backlight using GPIO.
+> > > > +
+> > > > +  pwm-off-delay-ms:
+> > > > +    description: Delay in ms between disabling the backlight using GPIO
+> > > > +      and setting PWM value to 0.
+> > > > +
+> > > > +  brightness-levels:
+> > > > +    description: Array of distinct brightness levels. Typically these are
+> > > > +      in the range from 0 to 255, but any range starting at 0 will do. The
+> > > > +      actual brightness level (PWM duty cycle) will be interpolated from
+> > > > +      these values. 0 means a 0% duty cycle (darkest/off), while the last
+> > > > +      value in the array represents a 100% duty cycle (brightest).
+> > > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> > > > +
+> > > > +  default-brightness-level:
+> > > > +    description: The default brightness level (index into the array defined
+> > > > +      by the "brightness-levels" property).
+> > > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > Same comment as before...
+> >
+> > Sorry the "ditto" meant I didn't thing about PWM as much as I should
+> > have.
+> >
+> > The situation for PWM is a little different to LED. That's mostly
+> > because we decided not to clutter the LED code with
+> > "num-interpolated-steps".
+> >
+> > The PWM code implements the default-brightness-level as an index into
+> > the brightness array *after* it has been expanded using interpolation.
+> > In other words today Linux treats the default-brightness-level more
+> > like[1].
+> >
+> >     description: The default brightness level. When
+> >       num-interpolated-steps is not set this is simply an index into
+> >       the array defined by the "brightness-levels" property. If
+> >       num-interpolated-steps is set the brightness array will be
+> >       expanded by interpolation before we index to get a default
+> >       level.
+> >
+> > This is the best I have come up with so far... but I concede it still
+> > lacks elegance.
+> 
+> Happy to add this or whatever folks want if there's agreement, but I
+> don't want to get bogged down on re-reviewing and re-writing the
+> binding on what is just a conversion. There's a mountain of bindings
+> to convert.
+The original explanation is ok, as pointed out by Daniel.
+So I suggest moving forward with that and then others can improve the
+descriptions later as necessary.
 
-  CHKDT   Documentation/devicetree/bindings/mfd/st,stmfx.yaml
-/home/fabio/linux-next/Documentation/devicetree/bindings/mfd/st,stmfx.yaml: properties:pinctrl:patternProperties: {'enum': ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'deprecated', 'description', 'else', 'enum', 'if', 'items', 'maxItems', 'maximum', 'minItems', 'minimum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'propertyNames', 'required', 'then', 'unevaluatedProperties']} is not allowed for 'additionalProperties'
-
-Remove the extra 'additionalProperties' to pass the build.
-
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
----
- Documentation/devicetree/bindings/mfd/st,stmfx.yaml | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mfd/st,stmfx.yaml b/Documentation/devicetree/bindings/mfd/st,stmfx.yaml
-index 0ce56a0da553..bed22d4abffb 100644
---- a/Documentation/devicetree/bindings/mfd/st,stmfx.yaml
-+++ b/Documentation/devicetree/bindings/mfd/st,stmfx.yaml
-@@ -73,8 +73,6 @@ properties:
-           output-high: true
-           output-low: true
- 
--      additionalProperties: false
--
-     additionalProperties: false
- 
-     required:
--- 
-2.17.1
-
+	Sam
