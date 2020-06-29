@@ -2,129 +2,110 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 746FDC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F59C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 18:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65221255DA
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84F212225F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 18:39:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ewKodK9a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725998AbgF2Se5 (ORCPT
+        id S1726699AbgF2Sit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:34:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:34560 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725887AbgF2Se5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:34:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73384113E;
-        Mon, 29 Jun 2020 02:06:00 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0412D3F71E;
-        Mon, 29 Jun 2020 02:05:57 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 10:05:51 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Hanjun Guo <guohanjun@huawei.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Will Deacon <will@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        Mon, 29 Jun 2020 14:38:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37560 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727953AbgF2SiA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 14:38:00 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAE29C031416;
+        Mon, 29 Jun 2020 10:20:31 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id k1so7359789pls.2;
+        Mon, 29 Jun 2020 10:20:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EBxO7W3vjKfKExb7YIhRFg//dsteKdeNGdPmppkjMb8=;
+        b=ewKodK9aN0OWBZQbu44iYiVfZECWxTo16lvDvRM89Z4teK9Y+NqZrKgHYKIHfQNOTY
+         vWSJsKDUNNqYREungOJwclpKtKpmRkrGL+hMdIqE94CYuq5fgEYhUIMzysHUIT76AEss
+         9/Hf9IgN/E1R5MQ6oWDqXpxAzTI8bKdOJqf3X5whfi8CQo95Fb5coiHOOJu0SF++m1CG
+         xuFod+DMFoP8uTRz17dh9MvwIzMuRq7CCB2EiZri8RNCupv/MdpyiQacCznzyf9Hd0Hm
+         FhBrhOLm+FIsA6Wt/Uu/B/3Nlo28pPvmhyhjwn+WhNH66L0Y/en19olQMt1/sRgiJtSM
+         LrFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EBxO7W3vjKfKExb7YIhRFg//dsteKdeNGdPmppkjMb8=;
+        b=A92X8F6O9ZZ/sefrG8X3+lnBbHgSzPl/mH0w2b8Fr8ovLmcCCO3Y5wd8syVZhNHSAo
+         XEE8Yb1+zHFY8GwyiJavjdyPPJGoe5a3Mi0eUaH0PAfpiZQJi5MvY3Y3HntfHVaR5l3A
+         KLcsLcnF5aLnTeCaU9OwV5ygsP9dyWUm0vvcdYGhaPBWh4RCodBGcDSWeQSpsbGJhgGw
+         1LpiwXwHPfLVLoCAHFkyct2v5m8auuGJx8+87WHPBuF2JcW74T2bNxwHpF0A0EScN3Te
+         QbJvN/+/FLSbgtbq+Yi8qnDlNbqWk8KoBhVDyY+EEne8SOwQGSucIVvzTmzsEY+uYUZL
+         bxEQ==
+X-Gm-Message-State: AOAM533j5O2Dp47UJOXGXjMlbVZ9bVHufOnuGYp+UJ0wnbqIzW/bD/2E
+        0erjhOVP6vvY1GJnU71B5IU=
+X-Google-Smtp-Source: ABdhPJwBXYzSqVqaej7MrTtvAoxQQyVfrLurS2VT0FpRREZWIImH+ognZwMO6/Mmioqfe4mIEvAzzw==
+X-Received: by 2002:a17:902:301:: with SMTP id 1mr14726130pld.214.1593451231314;
+        Mon, 29 Jun 2020 10:20:31 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id f29sm331735pga.59.2020.06.29.10.20.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2020 10:20:30 -0700 (PDT)
+Subject: Re: [PATCH v2 08/10] of: mdio: remove the 'extern' keyword from
+ function declarations
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Russell King <linux@armlinux.org.uk>,
         Rob Herring <robh+dt@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: Re: [PATCH v2 01/12] ACPI/IORT: Make iort_match_node_callback walk
- the ACPI namespace for NC
-Message-ID: <20200629090551.GA28873@e121166-lin.cambridge.arm.com>
-References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
- <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
- <20200619082013.13661-2-lorenzo.pieralisi@arm.com>
- <718cae1f-2f33-f6d9-f278-157300b73116@huawei.com>
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20200629120346.4382-1-brgl@bgdev.pl>
+ <20200629120346.4382-9-brgl@bgdev.pl>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <4ec2d4c1-3169-da94-2fe2-1165e1fbd531@gmail.com>
+Date:   Mon, 29 Jun 2020 10:20:28 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <718cae1f-2f33-f6d9-f278-157300b73116@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200629120346.4382-9-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 12:24:43PM +0800, Hanjun Guo wrote:
-> Hi Lorenzo,
+
+
+On 6/29/2020 5:03 AM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> On 2020/6/19 16:20, Lorenzo Pieralisi wrote:
-> > When the iort_match_node_callback is invoked for a named component
-> > the match should be executed upon a device with an ACPI companion.
-> > 
-> > For devices with no ACPI companion set-up the ACPI device tree must be
-> > walked in order to find the first parent node with a companion set and
-> > check the parent node against the named component entry to check whether
-> > there is a match and therefore an IORT node describing the in/out ID
-> > translation for the device has been found.
-> > 
-> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: Hanjun Guo <guohanjun@huawei.com>
-> > Cc: Sudeep Holla <sudeep.holla@arm.com>
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: Robin Murphy <robin.murphy@arm.com>
-> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > ---
-> >   drivers/acpi/arm64/iort.c | 20 ++++++++++++++++++--
-> >   1 file changed, 18 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> > index 28a6b387e80e..5eee81758184 100644
-> > --- a/drivers/acpi/arm64/iort.c
-> > +++ b/drivers/acpi/arm64/iort.c
-> > @@ -264,15 +264,31 @@ static acpi_status iort_match_node_callback(struct acpi_iort_node *node,
-> >   	if (node->type == ACPI_IORT_NODE_NAMED_COMPONENT) {
-> >   		struct acpi_buffer buf = { ACPI_ALLOCATE_BUFFER, NULL };
-> > -		struct acpi_device *adev = to_acpi_device_node(dev->fwnode);
-> > +		struct acpi_device *adev;
-> >   		struct acpi_iort_named_component *ncomp;
-> > +		struct device *nc_dev = dev;
-> > +
-> > +		/*
-> > +		 * Walk the device tree to find a device with an
-> > +		 * ACPI companion; there is no point in scanning
-> > +		 * IORT for a device matching a named component if
-> > +		 * the device does not have an ACPI companion to
-> > +		 * start with.
-> > +		 */
-> > +		do {
-> > +			adev = ACPI_COMPANION(nc_dev);
-> > +			if (adev)
-> > +				break;
-> > +
-> > +			nc_dev = nc_dev->parent;
-> > +		} while (nc_dev);
+> The 'extern' keyword in headers doesn't have any benefit. Remove them
+> all from the of_mdio.h header.
 > 
-> I'm lost here, we need the ACPI_COMPANION (the same as
-> to_acpi_device_node()) of the device, but why do we need to go
-> up to find the parent node?
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-For devices that aren't described in the DSDT - IORT translations
-are determined by their ACPI parent device. Do you see/Have you
-found any issue with this approach ?
-
-> For a platform device, if I use its parent's full path name for
-> its named component entry, then it will match, but this will violate
-> the IORT spec.
-
-Can you elaborate on this please I don't get the point you
-are making.
-
-Thanks,
-Lorenzo
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
