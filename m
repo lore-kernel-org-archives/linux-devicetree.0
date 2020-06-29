@@ -2,106 +2,120 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 032B7C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C72C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB36E20672
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 631A820672
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:45:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="np8GQKHl"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="bhKeRr58"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389124AbgF2Up1 (ORCPT
+        id S1731721AbgF2UpX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:45:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58372 "EHLO
+        Mon, 29 Jun 2020 16:45:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389307AbgF2UpZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 16:45:25 -0400
-Received: from mail-ua1-x936.google.com (mail-ua1-x936.google.com [IPv6:2607:f8b0:4864:20::936])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67F31C03E979
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 13:45:25 -0700 (PDT)
-Received: by mail-ua1-x936.google.com with SMTP id l12so1046768uak.7
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 13:45:25 -0700 (PDT)
+        with ESMTP id S1731579AbgF2TN6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 15:13:58 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73D26C00E3D8
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:04:21 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id r12so16220878wrj.13
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 05:04:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w7kFF6I/7tjyYaS1rtr5oIMqxgnM+l1sJPudiJl+Cto=;
-        b=np8GQKHletK7G3CJusLVB9GC+G7QJF/kREt9GxLJ1t3Hlt3hdOPYI7AnTqvqvfjjOh
-         XTfgB9NlwsFFJPFFY/3WXO2tvqKQyGWdikLrXJA5twdfvWv6WqsfZ8fbSnJ761heXjn9
-         vHh9j+YN5HmSWr/N6yqL9vCMgNC/cINJ2irupbhcqOWIFiVYa2coSiBY23Qs4cG4b/ie
-         cUcy4Xxu/2VK8s6dDPcsm9MWe4pGDUccuyqfsEfwzQSOtHKWPVj5rEL732Fq4SCxwmox
-         8LSPZSwt63n11b2S6g6OLJdtEXt+dK5kugr9Rn/1xTEMZV2pqm/UsihoKln3VyxotYET
-         UjTQ==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=rcgV1UNGKm4K4QD82m2Udcr1uoHRVa+LAuPxtdS553M=;
+        b=bhKeRr58llmIS9VKgVFyB6mAC7XOTgR+vC4RJRrwyWIr5sh0Pep1GPWHLAgwGzpwAc
+         MGPqTye+7rp41hJ0FSDOVSH+p83Zt/3ZFe7cwcMshyi04ZZeZpr/muoHkBS6d3gEFsqC
+         gL9tprIlM/mTLQfg0PC3ySsy+WIP8DkfosTU4J5ojN9iLGjwYxKS/OZIJyN/rXYZmrgt
+         b/PirIRVemOkzEXXswFvaL53RJkfuhhqpelHeBzIZhnZXZ+/gqm1xcXkTKom438Uu5E3
+         dMbEgvGvBvjLo2LDuXkeV0gRZt75ZzMGwBn8D2w+jiehl1HPOVrLev1YO1EDLxfeZxlK
+         6RTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w7kFF6I/7tjyYaS1rtr5oIMqxgnM+l1sJPudiJl+Cto=;
-        b=thk/NVa08+cOm72RXF8kXxRh5obfohvARjwbe94qrsRmi5W53rqwq0gstUdhDP4OFe
-         cn1P/oYRo0yKt4JEBJkxgLlo1dQlf3GYZULKJQ80FwVGsKuS07RSywKxcm06e0kZfAGY
-         s9CAZPH8hCY2FtPkUw3bzinPLzBklghtyQqa6p2VqiSgqql6+J/z6O+8gcL4bgYz2CGd
-         +LzYjhA6HlOI/MigxqLLl5PQH9soWx2xCqLAhl5jCLBHdit45kOYD8hc9My0WjqDrpSP
-         LbVFrNBFGn5QFDBUAaqzWy7z4DL0dfK+rUA3zI5TSM/CnxnG0/VFNvgB7EfJljaHty5S
-         k9xQ==
-X-Gm-Message-State: AOAM531bCldUmzeP7iXrv1QwolFOGhp7/htgPtNv9ddLFUcztMADm9gn
-        2T547gksNhbKkIg6yr6bqT22VK6n2hUu0lExDFnpkQ==
-X-Google-Smtp-Source: ABdhPJxJKIf8c61d6Sxw032JzZeDqSjWcveZhm6ih/0vZLyM07fRcVrc1Lj+/k5p5DI0zMqvLZYhwCd5VnyTNVlYSEQ=
-X-Received: by 2002:a9f:3b18:: with SMTP id i24mr12193440uah.52.1593463524191;
- Mon, 29 Jun 2020 13:45:24 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=rcgV1UNGKm4K4QD82m2Udcr1uoHRVa+LAuPxtdS553M=;
+        b=TqHGDqhnt/moSPWSGnNBWFAvO0mm9y6xFmF/08fDEW/m8wBcSRW8sSll0YSINT0SVf
+         ddClm61JCMLV82l6HyujQSuXZFLAYkkRfaPwnYA14nyKArNCMslurSGWoGIYPpL5tmyx
+         qedq1oJfTUj4BM4yKnbysEwd/6bxmtqItC+UvZP6PPntgAeRHqTjO5ZPi1O6FAK+ooJ7
+         JnLJyniyap6vNGYj/avc+Sg62kyObQV3NzoPcf31RoRUDaXKXSFs/6K5RM9P2ya2HQ7V
+         pBfh/aWD/faYOgGutPLsUIfcpsKb53CelhgR6+e0XYJa+jOQXKcqeW8x3kMwnSs3HjUY
+         7RMg==
+X-Gm-Message-State: AOAM530PAehu0Tqc1ETjSuUHetleMyTvkmZnQdIlOCYQS9ktTBEr5/mg
+        Sn58LmeqiYYFlYeOV6YQ1Uo6AQ==
+X-Google-Smtp-Source: ABdhPJwlADkzSAVFbK3JmZ+v+w78Y8jXO+OaWZ19/qk/J/aygV+blBomdVtOyQPcaDByMnxBjS6U2A==
+X-Received: by 2002:adf:c185:: with SMTP id x5mr18180867wre.403.1593432260279;
+        Mon, 29 Jun 2020 05:04:20 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id d81sm25274347wmc.0.2020.06.29.05.04.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 05:04:19 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v2 06/10] phy: mdio: add kerneldoc for __devm_mdiobus_register()
+Date:   Mon, 29 Jun 2020 14:03:42 +0200
+Message-Id: <20200629120346.4382-7-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200629120346.4382-1-brgl@bgdev.pl>
+References: <20200629120346.4382-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-References: <1593087419-903-1-git-send-email-kalyan_t@codeaurora.org> <CAD=FV=VXAQagbM-dn7MWGm08DdBxefc4jHNbkvHzuBjSM_jWnw@mail.gmail.com>
-In-Reply-To: <CAD=FV=VXAQagbM-dn7MWGm08DdBxefc4jHNbkvHzuBjSM_jWnw@mail.gmail.com>
-From:   Kristian Kristensen <hoegsberg@google.com>
-Date:   Mon, 29 Jun 2020 13:45:13 -0700
-Message-ID: <CAOPc6T=E68D8NG+hkRH6WTnYBcCzq=-H6q1M_NVoU9S6eGkxFg@mail.gmail.com>
-Subject: Re: [v2] drm/msm/dpu: add support for dither block in display
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        mkrishn@codeaurora.org, travitej@codeaurora.org,
-        nganji@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Yes, this is a big improvement for the display I have here. Thanks Kalyan.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Tested-by: Kristian H. Kristensen <hoegsberg@google.com>
+This function is not documented. Add a short kerneldoc description.
 
-On Thu, Jun 25, 2020 at 3:21 PM Doug Anderson <dianders@chromium.org> wrote:
->
-> Hi,
->
-> On Thu, Jun 25, 2020 at 5:17 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
-> >
-> > This change enables dither block for primary interface
-> > in display.
-> >
-> > Enabled for 6bpc in the current version.
-> >
-> > Changes in v1:
-> >  - Remove redundant error checks (Rob).
-> >
-> > Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
-> > ---
-> >  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c     | 39 +++++++++++++++
-> >  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c | 63 +++++++++++++++++++++----
-> >  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h | 28 +++++++++++
-> >  3 files changed, 121 insertions(+), 9 deletions(-)
->
-> Tested-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/net/phy/mdio_devres.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/net/phy/mdio_devres.c b/drivers/net/phy/mdio_devres.c
+index f0b4b6cfe5e3..3ee887733d4a 100644
+--- a/drivers/net/phy/mdio_devres.c
++++ b/drivers/net/phy/mdio_devres.c
+@@ -2,6 +2,13 @@
+ 
+ #include <linux/phy.h>
+ 
++/**
++ * __devm_mdiobus_register - Resource-managed variant of mdiobus_register()
++ * @bus:	MII bus structure to register
++ * @owner:	Owning module
++ *
++ * Returns 0 on success, negative error number on failure.
++ */
+ int __devm_mdiobus_register(struct mii_bus *bus, struct module *owner)
+ {
+ 	int ret;
+-- 
+2.26.1
+
