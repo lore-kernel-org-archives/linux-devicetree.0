@@ -2,129 +2,99 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78411C433E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F7AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D10820663
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:02:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="gmquFxOv"
+	by mail.kernel.org (Postfix) with ESMTP id DA98D206F1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 19:07:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbgF2TB7 (ORCPT
+        id S1728436AbgF2TH0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:01:59 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:32101 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730443AbgF2TBq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:01:46 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593457306; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
- To: From: Sender; bh=UN67+6exueZt49OSSOSCDajV8YbGx6Hd7cdOXnOfMkk=; b=gmquFxOvoYsZmYDjx2j5sQjUrpF2XmxITRTxzEwEc7xu+6O+fpYqLHeVbzpK2yLh1sAOtV9u
- 2hIo17mU6bi8OajdGkfPLqcIZ1aEf53UP9jRejTy7bTfGpttLHPcMhlPkBbPnFS5vMmbXrKm
- l6ujXHN03U7fPIPvJXOfA51pg/0=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5ef9daf68fe116ddd98d18b7 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 12:13:42
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D3F7DC433CB; Mon, 29 Jun 2020 12:13:41 +0000 (UTC)
-Received: from Pillair (unknown [183.83.71.149])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: pillair)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 26A85C433C6;
-        Mon, 29 Jun 2020 12:13:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 26A85C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
-From:   "Rakesh Pillai" <pillair@codeaurora.org>
-To:     "'Doug Anderson'" <dianders@chromium.org>,
-        "'Kalle Valo'" <kvalo@codeaurora.org>
-Cc:     <ath10k@lists.infradead.org>,
-        "'open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS'" 
-        <devicetree@vger.kernel.org>,
-        "'linux-wireless'" <linux-wireless@vger.kernel.org>,
-        "'LKML'" <linux-kernel@vger.kernel.org>
-References: <1593194502-13164-1-git-send-email-pillair@codeaurora.org> <1593194502-13164-3-git-send-email-pillair@codeaurora.org> <CAD=FV=V1C2Lu31n8xQ8HPf21fNo_Da2SLtZAeStFBEou9+geEA@mail.gmail.com>
-In-Reply-To: <CAD=FV=V1C2Lu31n8xQ8HPf21fNo_Da2SLtZAeStFBEou9+geEA@mail.gmail.com>
-Subject: RE: [PATCH 2/2] ath10k: Add support for chain1 regulator supply voting
-Date:   Mon, 29 Jun 2020 17:43:35 +0530
-Message-ID: <000301d64e0e$b9e32c70$2da98550$@codeaurora.org>
+        Mon, 29 Jun 2020 15:07:26 -0400
+Received: from mga17.intel.com ([192.55.52.151]:62620 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730502AbgF2TG3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:06:29 -0400
+IronPort-SDR: lXLlsiyBLxFrrdh6m5nEbpukwALCQwYGdSBa60m+AnJjcsH8h6N4Sx1L/EjS5V6Nwhz2pQVMXx
+ ZbZFvrrZZWpg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="126073966"
+X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
+   d="scan'208";a="126073966"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 02:03:54 -0700
+IronPort-SDR: MZhnpP0pf2VFgb3b6QVjSS5RQR+MAR2w6scdr+baj26AvOvJbZ1qMyqYScOr3zZjjoytDrcjPN
+ fSCyVzcsx7MQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
+   d="scan'208";a="386338695"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga001.fm.intel.com with ESMTP; 29 Jun 2020 02:03:51 -0700
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
+Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v3 0/2] pwm: intel: Add PWM driver for a new SoC
+Date:   Mon, 29 Jun 2020 17:03:45 +0800
+Message-Id: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQKOP6JTmaF44S4OU0UHs+POXUh10gKWMw65AYCLAK6nXugGkA==
-Content-Language: en-us
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Patch 1 adds dt binding document in YAML format.
+Patch 2 add PWM fan controller driver for LGM SoC.
+
+Patch series is baselined on linux 5.8-rc2.
+
+v3:
+- Address below review concerns from Uwe Kleine-König.
+  * Remove fan rpm calibration task from the driver.
+  * Modify apply op as per the review feedback.
+  * Add roundup & round down where necessary.
+  * Address other misc code quality related review concerns.
+  * Use devm_reset_control_get_exclusive(). (Philipp Zabel)
+  * Improve dt binding document.
+
+v2:
+- Address below review concerns from Uwe Kleine-König.
+  * Add notes and limitations about PWM HW.
+  * Rename all functions and structure to lgm_pwm_* 
+  * Readjust space aligninment in structure fields to single space.
+  * Switch to using apply instead of config/enable/disable.
+  * Address other code quality related concerns.
+  * Rebase to 5.8-rc1.
+- Address review concerns in dt binding YAML from Rob Herring.
+
+v1:
+- Initial version.
 
 
-> -----Original Message-----
-> From: Doug Anderson <dianders@chromium.org>
-> Sent: Saturday, June 27, 2020 3:22 AM
-> To: Rakesh Pillai <pillair@codeaurora.org>; Kalle Valo
-> <kvalo@codeaurora.org>
-> Cc: ath10k@lists.infradead.org; open list:OPEN FIRMWARE AND FLATTENED
-> DEVICE TREE BINDINGS <devicetree@vger.kernel.org>; linux-wireless =
-<linux-
-> wireless@vger.kernel.org>; LKML <linux-kernel@vger.kernel.org>
-> Subject: Re: [PATCH 2/2] ath10k: Add support for chain1 regulator =
-supply
-> voting
->=20
-> Hi,
->=20
-> On Fri, Jun 26, 2020 at 11:02 AM Rakesh Pillai =
-<pillair@codeaurora.org> wrote:
-> >
-> > Add support to vote for chain-1 voltage regulator
-> > in WCN3990.
-> >
-> > Tested-on: WCN3990 hw1.0 SNOC WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
-> >
-> > Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-> > ---
-> >  drivers/net/wireless/ath/ath10k/snoc.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/net/wireless/ath/ath10k/snoc.c
-> b/drivers/net/wireless/ath/ath10k/snoc.c
-> > index 645ed5f..407a074 100644
-> > --- a/drivers/net/wireless/ath/ath10k/snoc.c
-> > +++ b/drivers/net/wireless/ath/ath10k/snoc.c
-> > @@ -45,6 +45,7 @@ static const char * const ath10k_regulators[] =3D =
-{
-> >         "vdd-1.8-xo",
-> >         "vdd-1.3-rfa",
-> >         "vdd-3.3-ch0",
-> > +       "vdd-3.3-ch1",
->=20
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
->=20
-> ...with the slight nit that ${SUBJECT} and description should probably
-> call it "chan1" and not "chain1".  Presumably the maintainer can fix
-> when applying.
->=20
-> -Doug
+Rahul Tanwar (2):
+  Add DT bindings YAML schema for PWM fan controller of LGM SoC
+  Add PWM fan controller driver for LGM SoC
 
-Hi Doug,
+ .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     |  51 ++++
+ drivers/pwm/Kconfig                                |   9 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-intel-lgm.c                        | 265 +++++++++++++++++++++
+ 4 files changed, 326 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-intel-lgm.c
 
-It has to be chain1 only, not chan1.
-This is the power supply rail for the wlan-chain1=20
+-- 
+2.11.0
 
