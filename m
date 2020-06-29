@@ -2,63 +2,119 @@ Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E93C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A364C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0B2D20656
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32E8B20656
+	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 20:25:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732258AbgF2URH (ORCPT
+        id S1732841AbgF2UZq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:17:07 -0400
-Received: from muru.com ([72.249.23.125]:59968 "EHLO muru.com"
+        Mon, 29 Jun 2020 16:25:46 -0400
+Received: from mga04.intel.com ([192.55.52.120]:36333 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729266AbgF2TaK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:30:10 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 710FC81A7;
-        Mon, 29 Jun 2020 17:04:53 +0000 (UTC)
-Date:   Mon, 29 Jun 2020 10:03:58 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, bcousson@baylibre.com,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        "H . Nikolaus Schaller" <hns@goldelico.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2] ARM: dts: am335x-pocketbeagle: set default mux for
- gpio pins
-Message-ID: <20200629170358.GT37466@atomide.com>
-References: <20200628152442.322593-1-drew@beagleboard.org>
+        id S1732536AbgF2TZ1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:25:27 -0400
+IronPort-SDR: BPilyrZLEUod/rd+lo7jG6DPHzSfrpWGg6/ouOqILsj/8HCJlvaJdVSH0PyMHwmn0XZQ/S+cDu
+ N5XEPMpOuIvQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="143489070"
+X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
+   d="scan'208";a="143489070"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 10:17:12 -0700
+IronPort-SDR: drsb/8/BwkA3Y2h1fsUPStPFXNQJ5FQkja8l/n53h3urLpIrJ7NopQ1VBDXnKKbcTMU7N0TbNS
+ 9Qh3pagMirFw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
+   d="scan'208";a="280936341"
+Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
+  by orsmga006.jf.intel.com with ESMTP; 29 Jun 2020 10:17:12 -0700
+Received: from orsmsx111.amr.corp.intel.com (10.22.240.12) by
+ ORSMSX109.amr.corp.intel.com (10.22.240.7) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 29 Jun 2020 10:17:12 -0700
+Received: from orsmsx112.amr.corp.intel.com ([169.254.3.199]) by
+ ORSMSX111.amr.corp.intel.com ([169.254.12.75]) with mapi id 14.03.0439.000;
+ Mon, 29 Jun 2020 10:17:11 -0700
+From:   "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: RE: [PATCH v2 01/10] net: ethernet: ixgbe: check the return value
+ of ixgbe_mii_bus_init()
+Thread-Topic: [PATCH v2 01/10] net: ethernet: ixgbe: check the return value
+ of ixgbe_mii_bus_init()
+Thread-Index: AQHWTg2BLgDIjVCQa0C9CEFbwRBNpqjv0qMg
+Date:   Mon, 29 Jun 2020 17:17:11 +0000
+Message-ID: <61CC2BC414934749BD9F5BF3D5D94044987405F1@ORSMSX112.amr.corp.intel.com>
+References: <20200629120346.4382-1-brgl@bgdev.pl>
+ <20200629120346.4382-2-brgl@bgdev.pl>
+In-Reply-To: <20200629120346.4382-2-brgl@bgdev.pl>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.138]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200628152442.322593-1-drew@beagleboard.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+> -----Original Message-----
+> From: Bartosz Golaszewski <brgl@bgdev.pl>
+> Sent: Monday, June 29, 2020 05:04
+> To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; David S . Miller
+> <davem@davemloft.net>; Jakub Kicinski <kuba@kernel.org>; John Crispin
+> <john@phrozen.org>; Sean Wang <sean.wang@mediatek.com>; Mark Lee
+> <Mark-MC.Lee@mediatek.com>; Matthias Brugger
+> <matthias.bgg@gmail.com>; Heiner Kallweit <hkallweit1@gmail.com>; Andrew
+> Lunn <andrew@lunn.ch>; Florian Fainelli <f.fainelli@gmail.com>; Russell King
+> <linux@armlinux.org.uk>; Rob Herring <robh+dt@kernel.org>; Frank Rowand
+> <frowand.list@gmail.com>
+> Cc: linux-kernel@vger.kernel.org; netdev@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; linux-mediatek@lists.infradead.org;
+> devicetree@vger.kernel.org; Bartosz Golaszewski
+> <bgolaszewski@baylibre.com>
+> Subject: [PATCH v2 01/10] net: ethernet: ixgbe: check the return value of
+> ixgbe_mii_bus_init()
+> 
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> This function may fail. Check its return value and propagate the error code.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+ 
+Acked-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 
-* Drew Fustini <drew@beagleboard.org> [200628 08:26]:
-> v2 changes:
-> - change default mux from output to input.  Input is safer as it does
->   not drive the line.  If the user wants output, they will need to edit
->   this device tree.
-
-So can you please clarify this a bit, are you saying that gpio output can't
-be done via userspace?
-
-Needing to change the dts does not sound good to me.. But maybe you mean
-this is needed until the gpio-omap and pinctrl-single patches are merged?
-
-Regards,
-
-Tony
+> ---
+>  drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
