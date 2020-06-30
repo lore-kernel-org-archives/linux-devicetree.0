@@ -2,63 +2,63 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E592FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 14:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D33C6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 14:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD43020780
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 14:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEDE72072D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 14:09:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rwwK6jpR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SfHGeyk6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388604AbgF3OJd (ORCPT
+        id S2388667AbgF3OJj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 10:09:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50572 "EHLO
+        Tue, 30 Jun 2020 10:09:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730339AbgF3OJd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 10:09:33 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A31ECC061755;
-        Tue, 30 Jun 2020 07:09:31 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id d16so9716662edz.12;
-        Tue, 30 Jun 2020 07:09:31 -0700 (PDT)
+        with ESMTP id S2388638AbgF3OJg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 10:09:36 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D644C03E979;
+        Tue, 30 Jun 2020 07:09:36 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id d18so10715489edv.6;
+        Tue, 30 Jun 2020 07:09:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2aw9SI1zZwxufKdUMmejN/ekatHE+VAVco1DX+Y+FY4=;
-        b=rwwK6jpRJsEHiK4BoMlll0ENItVNp+mdP+ONVk1jZq6ohef/P76F/DtnarxckVKWQR
-         BHstHgSub3cksT46FLvW/F7jYFucwEKwfUFffHse00k8NakI4sbCQ9vz0plj5z07KmDf
-         BTLyYoWByVhXIV03J20RrH5AggIqbGVQX6NIDTbA29FuEaTzHo4q8a1jiHUVmzHpFp/0
-         TMJbg4tqasK+gCNNOsAoHBhHFJZzPXjvl4foU3+d2v2ayU9l2jVRQVUCb+HrkwknRPWa
-         Vk5VHuvga0SXfiYcEkRQSoCZU+cAzet08TBKBBim/+5oiohSWDy9gBHOTfdf8b+gI/8Y
-         9UKQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=bVQQTJXU6hJpQRkzdM4lyDkk+cMKxAXFIqG0ygvRxok=;
+        b=SfHGeyk6zmICdMn/GLsq7lSISJo9s3/S8rwrpOzB13OFCF0I6r5KZMet6mQsHyFz+I
+         NzFMOnN8/ORWPd8s8LLIORnOlrlIiKm/+kjhPCmAh9KOZe6uGZd8AF94cl3sxYxaYi4o
+         xbPRX46EC1MwRZi01MMC3aTCofKys6gaNZoy4Z1BbWIDBrVIyWCeWe92RpxXB4E4mCag
+         HNJzAT12Gug/lQ1PrJptiYKhjuViP1pG0jiP4gpX1TjMlI5iBz7HsLTQAXfG3E4VTuXR
+         RZh0Svd26sYt/6znK6nTqdfWzKsHYxsKFC21TzrAcL71koJu5ueQxISKnmofOUIpotFJ
+         MR/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2aw9SI1zZwxufKdUMmejN/ekatHE+VAVco1DX+Y+FY4=;
-        b=C3IuiKKQeKdsNdLTTMPX1NjWuE0Vj1pLHGQRG9yU3UM3GLpb9j8TieUqbfRk9ii/+L
-         ARByIZDXSwq8MlkM58039z6nPI61xv5kxlN94dwu6mM6xFat65t789K9Zl0cQh2ZmGwo
-         F7g27YEbuq3mfExxSXA+MHLQf/UAwXs+S2eRYiSugf99YJFYKnx8qle9EjXUuULoY63m
-         Iy6DOAvc4ASlACbDWuJk0gkx4AJwH8DKkESPGqFogdUZ+G+3igkuhpSY+W9FJ0gJMIMv
-         SbwNZZF+BwtE/sqEmI5NhtyXNwntyKxTeIlTCUEcqGVT7/rpynkaUzm+DB0HxyeLbcWR
-         Timw==
-X-Gm-Message-State: AOAM5336znGWlqK4yY5c0BTB9zez7d2MlEaxGHWSFENPoPK6KZH/GTB2
-        3MBza5kebfQyrKxXlDFb/iY=
-X-Google-Smtp-Source: ABdhPJzYXiy/R6+9eFuU9RewJe73bnv8r6K5lsqiboSZRIHamXRSwLD42BFEmfwnH2m+rnpJO5sLYQ==
-X-Received: by 2002:a50:9dc8:: with SMTP id l8mr23076742edk.248.1593526170484;
-        Tue, 30 Jun 2020 07:09:30 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=bVQQTJXU6hJpQRkzdM4lyDkk+cMKxAXFIqG0ygvRxok=;
+        b=Jf1meEnvjrITefjbD/ploR2wozRYZjX1ZhMIb8tKwHDpR1CBcnxitxPoMWorcSCp1+
+         5vk1/2qTIfxr4LstzeodJOWMERcDv8VVowix7O3HNOYNaSsuTv9L9w32E+PXLLO5m8pH
+         ADiiLtL/2cxBd/t7xmbr5W8/RNbiahcAzaT+YqxD2i376qhH70jk8DzdIvki2AOZVzU4
+         oTwLjDvlDuOtiqL/TYSTi/oOtDqvQcAGwg3Pc8Jue8cmiaElaSLVxYlqO7o79dJ6Ts8B
+         eIsosxrY9JSO2giiuEh4tkREP0pN890SWPrVy+k6KTQIGgBaaDH60q+UpvVq69lNadst
+         mS4A==
+X-Gm-Message-State: AOAM532pWJxG0+aBwCK0pgVHn520Nd4r8SSvWK++4VC+K+J1ij8iSjhJ
+        Vt21qA8h8toMDzaF7emZOPk=
+X-Google-Smtp-Source: ABdhPJyz0OMfOW/Xa88VFynWcMy1NSyPgY8PeKveBacdGW+P36+12SjlNLo9CurpHIz7wWhMzVn5gw==
+X-Received: by 2002:a50:cd53:: with SMTP id d19mr23730475edj.300.1593526175005;
+        Tue, 30 Jun 2020 07:09:35 -0700 (PDT)
 Received: from localhost ([213.191.183.145])
-        by smtp.gmail.com with ESMTPSA id b98sm2982891edf.24.2020.06.30.07.09.28
+        by smtp.gmail.com with ESMTPSA id se16sm2093611ejb.93.2020.06.30.07.09.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jun 2020 07:09:29 -0700 (PDT)
+        Tue, 30 Jun 2020 07:09:34 -0700 (PDT)
 From:   Iskren Chernev <iskren.chernev@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Andy Gross <agross@kernel.org>,
@@ -67,10 +67,12 @@ Cc:     Andy Gross <agross@kernel.org>,
         ~postmarketos/upstreaming@lists.sr.ht,
         linux-arm-msm@vger.kernel.org,
         Iskren Chernev <iskren.chernev@gmail.com>
-Subject: [PATCH 0/7] ARM: dts: qcom: msm8974: klte: Enable some hardware
-Date:   Tue, 30 Jun 2020 17:09:05 +0300
-Message-Id: <20200630140912.260294-1-iskren.chernev@gmail.com>
+Subject: [PATCH 2/7] ARM: dts: qcom: msm8974-klte: Add support for touchkey
+Date:   Tue, 30 Jun 2020 17:09:07 +0300
+Message-Id: <20200630140912.260294-3-iskren.chernev@gmail.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200630140912.260294-1-iskren.chernev@gmail.com>
+References: <20200630140912.260294-1-iskren.chernev@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -78,37 +80,91 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Enable support for various hw found on the Samsung Galaxy S5:
-- touchkey (the two buttons around the home button)
-- touchscreen
-- notification led
-- wifi
-- external SD card
+Add support for the touchkey found on the Samsung Galaxy S5. The
+touchkey is responsible for handling the application and back buttons
+found around the home button.
 
-Please note that for working wifi the correct firmware is needed. Check [1]
-for links and locations.
+Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
+---
+ .../boot/dts/qcom-msm8974-samsung-klte.dts    | 44 ++++++++++++++++++-
+ 1 file changed, 43 insertions(+), 1 deletion(-)
 
-Also note, that to actually run a mainline kernel on the klte, you'd need
-to apply this patch [2]. Any feedback on getting this to run on pure
-mainline are welcome.
-
-[1] https://gitlab.com/postmarketOS/pmaports/-/blob/master/firmware/firmware-samsung-klte/APKBUILD
-[2] https://gitlab.com/postmarketOS/linux-postmarketos/-/commit/765f55b248cd3b231af8431fe2f2aeca263b4e4b
-
-Iskren Chernev (7):
-  ARM: dts: qcom: msm8974-klte: Merge pinctrl nodes
-  ARM: dts: qcom: msm8974-klte: Add support for touchkey
-  ARM: dts: qcom: msm8974-klte: Add support for touchscreen
-  ARM: dts: qcom: msm8974-klte: Add support for led
-  ARM: dts: qcom: msm8974-klte: Add gpio expander chip
-  ARM: dts: qcom: msm8974-klte: Add support for wifi
-  ARM: dts: qcom: msm8974-klte: Add support for SD card
-
- .../boot/dts/qcom-msm8974-samsung-klte.dts    | 301 +++++++++++++++++-
- 1 file changed, 292 insertions(+), 9 deletions(-)
-
-
-base-commit: c28e58ee9dadc99f79cf16ca805221feddd432ad
---
+diff --git a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
+index 9520c6e7910ce..750e2f261139a 100644
+--- a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
++++ b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
+@@ -145,7 +145,7 @@ pma8084_l18: l18 {
+ 					};
+ 
+ 					pma8084_l19: l19 {
+-						regulator-min-microvolt = <2900000>;
++						regulator-min-microvolt = <3300000>;
+ 						regulator-max-microvolt = <3300000>;
+ 					};
+ 
+@@ -203,6 +203,31 @@ pma8084_l27: l27 {
+ 		};
+ 	};
+ 
++	i2c-gpio-touchkey {
++		compatible = "i2c-gpio";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		sda-gpios = <&msmgpio 95 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++		scl-gpios = <&msmgpio 96 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c_touchkey_pins>;
++
++		touchkey@20 {
++			compatible = "cypress,tm2-touchkey";
++			reg = <0x20>;
++
++			interrupt-parent = <&pma8084_gpios>;
++			interrupts = <6 IRQ_TYPE_EDGE_FALLING>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&touchkey_pin>;
++
++			vcc-supply = <&max77826_ldo15>;
++			vdd-supply = <&pma8084_l19>;
++
++			linux,keycodes = <KEY_APPSELECT KEY_BACK>;
++		};
++	};
++
+ 	/delete-node/ vreg-boost;
+ };
+ 
+@@ -268,6 +293,15 @@ mux {
+ 				bias-disable;
+ 			};
+ 		};
++
++		i2c_touchkey_pins: i2c-touchkey {
++			mux {
++				pins = "gpio95", "gpio96";
++				function = "gpio";
++				input-enable;
++				bias-pull-up;
++			};
++		};
+ 	};
+ 
+ 	sdhci@f9824900 {
+@@ -418,6 +452,14 @@ gpio_keys_pin_a: gpio-keys-active {
+ 				bias-pull-up;
+ 				power-source = <PMA8084_GPIO_S4>;
+ 			};
++
++			touchkey_pin: touchkey-int-pin {
++				pins = "gpio6";
++				function = "normal";
++				bias-disable;
++				input-enable;
++				power-source = <PMA8084_GPIO_S4>;
++			};
+ 		};
+ 	};
+ };
+-- 
 2.27.0
 
