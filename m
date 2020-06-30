@@ -2,380 +2,115 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F90C433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 07:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 378ADC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 08:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE40420775
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 07:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E8922073E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 08:20:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UeEp+5tk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730250AbgF3Hz6 (ORCPT
+        id S1730893AbgF3IUU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 03:55:58 -0400
-Received: from mga17.intel.com ([192.55.52.151]:17247 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730150AbgF3Hz5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 30 Jun 2020 03:55:57 -0400
-IronPort-SDR: E6RIncGx2eOg6yNgVlNemE5uGWC/mMDM+lj3yf1hpSU+VO/2B6tUan8d5zzBiega+MypIo0rmG
- FCuiY5H674Ow==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="126296779"
-X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
-   d="scan'208";a="126296779"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 00:55:49 -0700
-IronPort-SDR: LvMjUkDsjkUMR8Fi4JWC5BXD6Wnw75XvbsDzoEpkFjWRyJT2XEzrXCRXY+8RkD1EoCJNuyrDIR
- bc5S9y6CY3Ig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
-   d="scan'208";a="425115873"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga004.jf.intel.com with ESMTP; 30 Jun 2020 00:55:46 -0700
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
-Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v4 2/2] Add PWM fan controller driver for LGM SoC
-Date:   Tue, 30 Jun 2020 15:55:32 +0800
-Message-Id: <a74b18b68f26bf902c30a017050cc4ea070da887.1593503228.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1593503228.git.rahul.tanwar@linux.intel.com>
-References: <cover.1593503228.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1593503228.git.rahul.tanwar@linux.intel.com>
-References: <cover.1593503228.git.rahul.tanwar@linux.intel.com>
+        Tue, 30 Jun 2020 04:20:20 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:63762 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730750AbgF3IUU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 30 Jun 2020 04:20:20 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593505219; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=c70MMxXQxL9Q0nDICJFkGeCgnQoGRAhYSDB6a9QVanY=; b=UeEp+5tkO9aJViNi4zZ8wF32GBbEeYS0GSrZhb6rH7W19MJSwzjioFsSL0wse4NrosuS2l3B
+ 5CpxjNmrXLeDO4wbyXqf768RHB/5Coh10n3xd3HPtZabaFD08UClQLgypLH7KMCOaFtC5JNh
+ d/ZDadQ4Y5+2YcEFqxYqUaQpdNk=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-east-1.postgun.com with SMTP id
+ 5efaf5b186de6ccd44d461b3 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 30 Jun 2020 08:20:01
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B3007C433A1; Tue, 30 Jun 2020 08:20:00 +0000 (UTC)
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 97CBBC433C6;
+        Tue, 30 Jun 2020 08:19:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 97CBBC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     bjorn.andersson@linaro.org
+Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, will@kernel.org,
+        saiprakash.ranjan@codeaurora.org, robh+dt@kernel.org,
+        evgreen@chromium.org, dianders@chromium.org, mka@chromium.org,
+        devicetree@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>,
+        stable@vger.kernel.org
+Subject: [PATCH] arm64: dts: qcom: sc7180: Drop the unused non-MSA SID
+Date:   Tue, 30 Jun 2020 13:49:38 +0530
+Message-Id: <20200630081938.8131-1-sibis@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
-This PWM controller does not have any other consumer, it is a
-dedicated PWM controller for fan attached to the system. Add
-driver for this PWM fan controller.
+Having a non-MSA (Modem Self-Authentication) SID bypassed breaks modem
+sandboxing i.e if a transaction were to originate from it, the hardware
+memory protections units (XPUs) would fail to flag them (any transaction
+originating from modem are historically termed as an MSA transaction).
+Drop the unused non-MSA modem SID on SC7180 SoCs and cheza so that SMMU
+continues to block them.
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Fixes: bec71ba243e95 ("arm64: dts: qcom: sc7180: Update Q6V5 MSS node")
+Fixes: 68aee4af5f620 ("arm64: dts: qcom: sdm845-cheza: Add iommus property")
+Cc: stable@vger.kernel.org
+Reported-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
- drivers/pwm/Kconfig         |  11 ++
- drivers/pwm/Makefile        |   1 +
- drivers/pwm/pwm-intel-lgm.c | 266 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 278 insertions(+)
- create mode 100644 drivers/pwm/pwm-intel-lgm.c
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts    | 2 +-
+ arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index cb8d739067d2..3486edab09c4 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -232,6 +232,17 @@ config PWM_IMX_TPM
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-imx-tpm.
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+index 39dbfc89689e8..141de49a1b7d6 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+@@ -312,7 +312,7 @@ &qupv3_id_1 {
+ &remoteproc_mpss {
+ 	status = "okay";
+ 	compatible = "qcom,sc7180-mss-pil";
+-	iommus = <&apps_smmu 0x460 0x1>, <&apps_smmu 0x444 0x3>;
++	iommus = <&apps_smmu 0x461 0x0>, <&apps_smmu 0x444 0x3>;
+ 	memory-region = <&mba_mem &mpss_mem>;
+ };
  
-+config PWM_INTEL_LGM
-+	tristate "Intel LGM PWM support"
-+	depends on OF && HAS_IOMEM
-+	depends on X86 || COMPILE_TEST
-+	select REGMAP_MMIO
-+	help
-+	  Generic PWM fan controller driver for LGM SoC.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-intel-lgm.
-+
- config PWM_IQS620A
- 	tristate "Azoteq IQS620A PWM support"
- 	depends on MFD_IQS62X || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index a59c710e98c7..db154a6b4f51 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
- obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
- obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
- obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
-+obj-$(CONFIG_PWM_INTEL_LGM)	+= pwm-intel-lgm.o
- obj-$(CONFIG_PWM_IQS620A)	+= pwm-iqs620a.o
- obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
- obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
-diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
-new file mode 100644
-index 000000000000..fddfedd56fc3
---- /dev/null
-+++ b/drivers/pwm/pwm-intel-lgm.c
-@@ -0,0 +1,266 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 Intel Corporation.
-+ *
-+ * Notes & Limitations:
-+ * - The hardware supports fixed period which is dependent on 2/3 or 4
-+ *   wire fan mode.
-+ * - Supports normal polarity. Does not support changing polarity.
-+ * - When PWM is disabled, output of PWM will become 0(inactive). It doesn't
-+ *   keep track of running period.
-+ * - When duty cycle is changed, PWM output may be a mix of previous setting
-+ *   and new setting for the first period. From second period, the output is
-+ *   based on new setting.
-+ * - It is a dedicated PWM fan controller. There are no other consumers for
-+ *   this PWM controller.
-+ */
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/pwm.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+
-+#define LGM_PWM_FAN_CON0		0x0
-+#define LGM_PWM_FAN_EN_EN		BIT(0)
-+#define LGM_PWM_FAN_EN_DIS		0x0
-+#define LGM_PWM_FAN_EN_MSK		BIT(0)
-+#define LGM_PWM_FAN_MODE_2WIRE		0x0
-+#define LGM_PWM_FAN_MODE_4WIRE		0x1
-+#define LGM_PWM_FAN_MODE_MSK		BIT(1)
-+#define LGM_PWM_FAN_DC_MSK		GENMASK(23, 16)
-+
-+#define LGM_PWM_FAN_CON1		0x4
-+#define LGM_PWM_FAN_MAX_RPM_MSK		GENMASK(15, 0)
-+
-+#define LGM_PWM_MAX_RPM			(BIT(16) - 1)
-+#define LGM_PWM_DEFAULT_RPM		4000
-+#define LGM_PWM_MAX_DUTY_CYCLE		(BIT(8) - 1)
-+
-+#define LGM_PWM_DC_BITS			8
-+
-+#define LGM_PWM_PERIOD_2WIRE_NSECS	40000000
-+#define LGM_PWM_PERIOD_4WIRE_NSECS	40000
-+
-+struct lgm_pwm_chip {
-+	struct pwm_chip chip;
-+	struct regmap *regmap;
-+	struct clk *clk;
-+	struct reset_control *rst;
-+	u32 period;
-+};
-+
-+static inline struct lgm_pwm_chip *to_lgm_pwm_chip(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct lgm_pwm_chip, chip);
-+}
-+
-+static int lgm_pwm_enable(struct pwm_chip *chip, bool enable)
-+{
-+	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-+	struct regmap *regmap = pc->regmap;
-+
-+	regmap_update_bits(regmap, LGM_PWM_FAN_CON0, LGM_PWM_FAN_EN_MSK,
-+			   enable ? LGM_PWM_FAN_EN_EN : LGM_PWM_FAN_EN_DIS);
-+
-+	return 0;
-+}
-+
-+static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			 const struct pwm_state *state)
-+{
-+	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-+	u32 duty_cycle, val;
-+	unsigned int period;
-+
-+	if (!state->enabled) {
-+		lgm_pwm_enable(chip, 0);
-+		return 0;
-+	}
-+
-+	period = min_t(u64, state->period, pc->period);
-+
-+	if (state->polarity != PWM_POLARITY_NORMAL ||
-+	    period < pc->period)
-+		return -EINVAL;
-+
-+	duty_cycle = min_t(u32, state->duty_cycle, period);
-+	/* reg_value = duty_ns * LGM_PWM_MAX_DUTY_CYCLE(0xff) / period_ns */
-+	val = duty_cycle * LGM_PWM_MAX_DUTY_CYCLE / period;
-+
-+	regmap_update_bits(pc->regmap, LGM_PWM_FAN_CON0, LGM_PWM_FAN_DC_MSK,
-+			   FIELD_PREP(LGM_PWM_FAN_DC_MSK, val));
-+
-+	if (state->enabled)
-+		lgm_pwm_enable(chip, 1);
-+
-+	return 0;
-+}
-+
-+static void lgm_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+			      struct pwm_state *state)
-+{
-+	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-+	u32 duty, val;
-+
-+	state->enabled = regmap_test_bits(pc->regmap, LGM_PWM_FAN_CON0,
-+					  LGM_PWM_FAN_EN_EN);
-+	state->polarity = PWM_POLARITY_NORMAL;
-+	state->period = pc->period; /* fixed period */
-+
-+	regmap_read(pc->regmap, LGM_PWM_FAN_CON0, &val);
-+	duty = FIELD_GET(LGM_PWM_FAN_DC_MSK, val);
-+	state->duty_cycle = DIV_ROUND_UP(duty * pc->period,
-+					 LGM_PWM_MAX_DUTY_CYCLE);
-+}
-+
-+static const struct pwm_ops lgm_pwm_ops = {
-+	.get_state = lgm_pwm_get_state,
-+	.apply = lgm_pwm_apply,
-+	.owner = THIS_MODULE,
-+};
-+
-+static void lgm_pwm_init(struct lgm_pwm_chip *pc)
-+{
-+	struct device *dev = pc->chip.dev;
-+	struct regmap *regmap = pc->regmap;
-+	u32 max_rpm, fan_wire, con0_val, con0_mask;
-+
-+	if (device_property_read_u32(dev, "intel,fan-wire", &fan_wire))
-+		fan_wire = 2; /* default is 2 wire mode */
-+
-+	con0_mask = LGM_PWM_FAN_MODE_MSK;
-+
-+	switch (fan_wire) {
-+	case 4:
-+		con0_val = FIELD_PREP(LGM_PWM_FAN_MODE_MSK, LGM_PWM_FAN_MODE_4WIRE);
-+		pc->period = LGM_PWM_PERIOD_4WIRE_NSECS;
-+		break;
-+	default:
-+		/* default is 2wire mode */
-+		con0_val = FIELD_PREP(LGM_PWM_FAN_MODE_MSK, LGM_PWM_FAN_MODE_2WIRE);
-+		pc->period = LGM_PWM_PERIOD_2WIRE_NSECS;
-+		break;
-+	}
-+
-+	if (device_property_read_u32(dev, "intel,max-rpm", &max_rpm))
-+		max_rpm = LGM_PWM_DEFAULT_RPM;
-+
-+	max_rpm = min_t(u32, max_rpm, LGM_PWM_MAX_RPM);
-+	if (max_rpm == 0)
-+		max_rpm = LGM_PWM_DEFAULT_RPM;
-+
-+	regmap_update_bits(regmap, LGM_PWM_FAN_CON1, LGM_PWM_FAN_MAX_RPM_MSK, max_rpm);
-+	regmap_update_bits(regmap, LGM_PWM_FAN_CON0, con0_mask, con0_val);
-+}
-+
-+static const struct regmap_config lgm_pwm_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+};
-+
-+static int lgm_pwm_probe(struct platform_device *pdev)
-+{
-+	struct lgm_pwm_chip *pc;
-+	struct device *dev = &pdev->dev;
-+	void __iomem *io_base;
-+	int ret;
-+
-+	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
-+	if (!pc)
-+		return -ENOMEM;
-+
-+	io_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(io_base))
-+		return PTR_ERR(io_base);
-+
-+	pc->regmap = devm_regmap_init_mmio(dev, io_base, &lgm_pwm_regmap_config);
-+	if (IS_ERR(pc->regmap)) {
-+		ret = PTR_ERR(pc->regmap);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to init register map: %pe\n",
-+				pc->regmap);
-+		return ret;
-+	}
-+
-+	pc->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(pc->clk)) {
-+		ret = PTR_ERR(pc->clk);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get clock: %pe\n", pc->clk);
-+		return ret;
-+	}
-+
-+	pc->rst = devm_reset_control_get_exclusive(dev, NULL);
-+	if (IS_ERR(pc->rst)) {
-+		ret = PTR_ERR(pc->rst);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get reset control: %pe\n",
-+				pc->rst);
-+		return ret;
-+	}
-+
-+	ret = reset_control_deassert(pc->rst);
-+	if (ret) {
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "cannot deassert reset control: %pe\n",
-+				ERR_PTR(ret));
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(pc->clk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable clock\n");
-+		return ret;
-+	}
-+
-+	pc->chip.dev = dev;
-+	pc->chip.ops = &lgm_pwm_ops;
-+	pc->chip.npwm = 1;
-+
-+	lgm_pwm_init(pc);
-+
-+	ret = pwmchip_add(&pc->chip);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to add PWM chip: %pe\n", ERR_PTR(ret));
-+		clk_disable_unprepare(pc->clk);
-+		reset_control_assert(pc->rst);
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, pc);
-+	return 0;
-+}
-+
-+static int lgm_pwm_remove(struct platform_device *pdev)
-+{
-+	struct lgm_pwm_chip *pc = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = pwmchip_remove(&pc->chip);
-+	if (ret < 0)
-+		return ret;
-+
-+	clk_disable_unprepare(pc->clk);
-+	reset_control_assert(pc->rst);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id lgm_pwm_of_match[] = {
-+	{ .compatible = "intel,lgm-pwm" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, lgm_pwm_of_match);
-+
-+static struct platform_driver lgm_pwm_driver = {
-+	.driver = {
-+		.name = "intel-pwm",
-+		.of_match_table = lgm_pwm_of_match,
-+	},
-+	.probe = lgm_pwm_probe,
-+	.remove = lgm_pwm_remove,
-+};
-+module_platform_driver(lgm_pwm_driver);
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+index 70466cc4b4055..64fc1bfd66fad 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+@@ -634,7 +634,7 @@ &mdss_mdp {
+ };
+ 
+ &mss_pil {
+-	iommus = <&apps_smmu 0x780 0x1>,
++	iommus = <&apps_smmu 0x781 0x0>,
+ 		 <&apps_smmu 0x724 0x3>;
+ };
+ 
 -- 
-2.11.0
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
