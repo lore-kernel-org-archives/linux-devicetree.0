@@ -2,135 +2,128 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC95C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 12:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AD2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 12:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F0812073E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 12:10:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C55642073E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 12:12:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o31V1ZHO"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BCSt1Dp5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733056AbgF3MK0 (ORCPT
+        id S2387474AbgF3MMZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 08:10:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60330 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733044AbgF3MK0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 08:10:26 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0F83C061755
-        for <devicetree@vger.kernel.org>; Tue, 30 Jun 2020 05:10:25 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id m2so18185366otr.12
-        for <devicetree@vger.kernel.org>; Tue, 30 Jun 2020 05:10:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NAGbdMKehJWxVlFr926dVUaKEFdL3dy5MG19MRyLbvI=;
-        b=o31V1ZHOjDOtIAN1jxax4laiARUXPgXnugPc1/4XM8WMjPSFHvToHuXOCwr8b6553o
-         DD3YKEwTm4+CfJahjqIORUg/UTHjboKMM5TuFnY2zKY2I0dmFZI87Ij9hA4NRF4+KFG4
-         yWkH5zKmFhH4uQhUHJarZjzMSM2qE589nU27UPRDXFhnOkO7Y2YZ51mOLE8dy8Cb46rR
-         R8IcfZCVXQdvau7deKcyFFPXLBa1L5e/C97DU15/1cSl5GvQXExB+gKMiKt1Wt1Yx18c
-         OfjxNkK53zUySfTva7QQ/7kjE8TYr12Zol3Ot8Fkb/jmXreYFq0y5WdK2C/E1ThLoXHd
-         TS8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NAGbdMKehJWxVlFr926dVUaKEFdL3dy5MG19MRyLbvI=;
-        b=BpVyNoJYjoXp1ook25C9UZ4APITPo40IgWQhiyZmY1WQperyNqe/DV9pVVsN5PFoXj
-         vaYU6IbGApZGD9nn8z/s0ruATDCbfa/qo98t0cLBW7spAqL+WlAcN0ym+PIcUQggHPDH
-         YV7tInEPgA2Cg6EfXSqxl0DjzfR13COICYTyablXSGzqKfWOMtHsYMLu3JWaQN0nGbK7
-         +X+8BPj81uImcREgHxrk2BtLvSJ1cKLIhRIrstiIK6mNBBizTfONNh/WTR09wzf9sYo1
-         OpM5RCuVwWth5FT99l3uqCyHN26fisqkC1iY774xq5buzJNpzpmTd16PCb+c9WMTm0/y
-         ktPQ==
-X-Gm-Message-State: AOAM531nuz4B9tx+L5RWyA1xHm3gK178i4ZE2teGdSt4YYcGtkGFbbk4
-        fYeRF1ueHF4SZvUYtQhg2jPjRB0H0aCC1rhrGAWq9g==
-X-Google-Smtp-Source: ABdhPJw2q4etsQZ39OpngsI1fW2rJDW4wZr4IX5R00YqLdMFCViWYY17CGQyW/rchwxHK0PaipZZaeBJGlqE8HeogaI=
-X-Received: by 2002:a9d:39f5:: with SMTP id y108mr17820882otb.262.1593519025244;
- Tue, 30 Jun 2020 05:10:25 -0700 (PDT)
+        Tue, 30 Jun 2020 08:12:25 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:38242 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387472AbgF3MMZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 08:12:25 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05UCCMf3089585;
+        Tue, 30 Jun 2020 07:12:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593519142;
+        bh=et4T6iPMsRHLVyKKx++mxCxWhvL5/2hFNsxqiU7F2xQ=;
+        h=From:Subject:To:CC:References:Date:In-Reply-To;
+        b=BCSt1Dp5wlonHM8cJwAHBUR9RYY2yDDS9Y7kUxaclNxWrBOyN3rhWS1GzgkOaFB5z
+         Z5LqUAaje6TwN/WvFhed+l6Bdmxt7/mfHtWY5khX9x81XHSTkZjboNSAeb5dlnhBnk
+         DRM5UM2RXjjihDLigRNTFtYJJI7s6I+KOxUpL+TQ=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05UCCMZW089782
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 30 Jun 2020 07:12:22 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 30
+ Jun 2020 07:12:22 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 30 Jun 2020 07:12:22 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05UCCLe9022272;
+        Tue, 30 Jun 2020 07:12:21 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v13 2/4] dt-bindings: power: Convert battery.txt to
+ battery.yaml
+To:     Rob Herring <robh@kernel.org>,
+        Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+CC:     <sre@kernel.org>, <pali@kernel.org>, <afd@ti.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <sspatil@android.com>
+References: <20200622191837.9326-1-r-rivera-matos@ti.com>
+ <20200622191837.9326-3-r-rivera-matos@ti.com>
+ <20200629225630.GA3114703@bogus>
+Message-ID: <371c96ae-09b1-4d1b-14b0-f9628b922ce5@ti.com>
+Date:   Tue, 30 Jun 2020 07:12:16 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200621193549.2070434-1-dmitry.baryshkov@linaro.org>
- <20200621193549.2070434-6-dmitry.baryshkov@linaro.org> <CAHLCerOqWWr3i32tRgGfep12YfDufw-WU80VWUsUNpDDZ13D-w@mail.gmail.com>
-In-Reply-To: <CAHLCerOqWWr3i32tRgGfep12YfDufw-WU80VWUsUNpDDZ13D-w@mail.gmail.com>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date:   Tue, 30 Jun 2020 15:10:13 +0300
-Message-ID: <CAA8EJppAQgmS7VVCjVe8QST2RQU46mXO2jtUPFY30mH9sVu_rQ@mail.gmail.com>
-Subject: Re: [PATCH 5/5] arm64: dts: sm8250-dts: add thermal zones using
- pmic's adc-tm5
-To:     Amit Kucheria <amit.kucheria@verdurent.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        linux-iio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200629225630.GA3114703@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Rob
 
-On Tue, 30 Jun 2020 at 08:06, Amit Kucheria <amit.kucheria@verdurent.com> wrote:
-> On Mon, Jun 22, 2020 at 1:06 AM Dmitry Baryshkov
-> <dmitry.baryshkov@linaro.org> wrote:
-> >
-> > Port thermal zones definitions from msm-4.19 tree. Enable and add
-> > channel configuration to PMIC's ADC-TM definitions. Declare thermal
-> > zones and respective trip points.
-> >
-> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/sm8250-mtp.dts | 237 ++++++++++++++++++++++++
-> >  1 file changed, 237 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/sm8250-mtp.dts b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
->
-> IMO, this should be separated in the pmic dts file like we do for
-> other QC platforms since the PMICs tend to be used in multiple
-> platforms.
+On 6/29/20 5:56 PM, Rob Herring wrote:
+> On Mon, Jun 22, 2020 at 02:18:35PM -0500, Ricardo Rivera-Matos wrote:
+>> From: Dan Murphy<dmurphy@ti.com>
+>>
+>> Convert the battery.txt file to yaml and fix up the examples.
+>>
+>> Signed-off-by: Dan Murphy<dmurphy@ti.com>
+>> ---
+>>   .../bindings/power/supply/battery.txt         |  83 +----------
+>>   .../bindings/power/supply/battery.yaml        | 139 ++++++++++++++++++
+>>   2 files changed, 141 insertions(+), 81 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/power/supply/battery.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+>> index 5e29595edd74..4c5216fcb760 100644
+>> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
+>> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+>> @@ -1,87 +1,8 @@
+>> -Battery Characteristics
+>> -
+>> -The devicetree battery node provides static battery characteristics.
+>> -In smart batteries, these are typically stored in non-volatile memory
+>> -on a fuel gauge chip. The battery node should be used where there is
+>> -no appropriate non-volatile memory, or it is unprogrammed/incorrect.
+>> -
+>> -Upstream dts files should not include battery nodes, unless the battery
+>> -represented cannot easily be replaced in the system by one of a
+>> -different type. This prevents unpredictable, potentially harmful,
+>> -behavior should a replacement that changes the battery type occur
+>> -without a corresponding update to the dtb.
+>> +The contents of this file has been moved to battery.yaml
+>>   
+>>   Please note that not all charger drivers respect all of the properties.
+>>   
+>> -Required Properties:
+>> - - compatible: Must be "simple-battery"
+>> -
+>> -Optional Properties:
+>>    - over-voltage-threshold-microvolt: battery over-voltage limit
+>>    - re-charge-voltage-microvolt: limit to automatically start charging again
+> Why are some things not moved?
 
-Unlike other PMIC/tsens thermal zones, these definitions are quite
-specific to the board from my point of view.
+These were applied recently to the text file on May 8th.  They just 
+showed up in the 5.8 kernel.
 
-> > index aa37eb112d85..78f0cf582a9a 100644
-> > --- a/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
-> > +++ b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
-> > @@ -24,6 +24,104 @@ chosen {
-> >                 stdout-path = "serial0:115200n8";
-> >         };
-> >
-> > +       thermal-zones {
-> > +               xo-therm {
-> > +                       polling-delay-passive = <0>;
-> > +                       polling-delay = <0>;
-> > +                       thermal-sensors = <&pm8150_adc_tm 0>;
-> > +                       trips {
-> > +                               active-config0 {
-> > +                                       temperature = <125000>;
-> > +                                       hysteresis = <1000>;
-> > +                                       type = "passive";
-> > +                               };
-> > +                       };
-> > +               };
-> > +
+Not sure if there are any more pending changes for the battery.txt but 
+they should be on hold until the yaml is applied.
 
+We will update the yaml
 
+Dan
 
--- 
-With best wishes
-Dmitry
