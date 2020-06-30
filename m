@@ -2,98 +2,127 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E981EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 12:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB60C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 12:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6BBD20675
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 12:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F5F820774
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 12:32:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2v94f0i"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iB1u14VG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733284AbgF3MZk (ORCPT
+        id S1732804AbgF3McA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 08:25:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34466 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731651AbgF3MZj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 08:25:39 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4901C061755;
-        Tue, 30 Jun 2020 05:25:38 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id k18so18286179qke.4;
-        Tue, 30 Jun 2020 05:25:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=BRR8i7RJHesVYS8D5y4NlbAdWYIwjYV0Hk1TUaPO3AI=;
-        b=M2v94f0iWK1+hCbMfg2iIXYliDBC8wAZui/gdbkWtrhUwG+2z551smPEQbW1ZhBTly
-         O20NeIkgX1cozh0q9HlvBR1fQmBsIuny+02eWkNzQ8jkzUjWM1OlaRbZ0E9IsVgopzIW
-         5ZWTuObdo/etMAnAfZhfaxGwrbKcIpsGpP8zgMjjQsPp6P3biagHHPtkTCSyR9i5YvZM
-         tkJ8VTs5+h2CgunXFwGzOYRZeyOMG+33YFPOV7M9s2vt+K8kKjrtluBvcmS2XJ34z6iY
-         gsYOpoLIz1XozK9G1w84lr3GazlI6b1h3RNOS5lT0AjqzterMgxOXEgFPIUnZS6Akm4B
-         ujJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=BRR8i7RJHesVYS8D5y4NlbAdWYIwjYV0Hk1TUaPO3AI=;
-        b=RbRgyaiFXQFH/W4/kuhJB5ebVAh9yPxmba5W+igqKNOGJXXrnE6jYpAP5MWn/zhb5K
-         bEZGkzbPazA7PmpvjBMaeg+h+ZvFmZ/kppM2GQ21r+LKIvXUls+oHxvAhXZHwETAe6D/
-         r4KfIPIguz92XwpkJDVjh+3/5igx1+GSCS/EY7VSXsOFX+vWqBL4dmAojwesk4PKSl9v
-         FjAgvjyew+dlql91mn6pxsRyxeygCwLyDroXS+wyUmYEZzPjqfnjIX9FCfeI3GgIHG8C
-         67/iUsefRUZ+g7hGiKlGdiGFY7Z0IHz1ylDkpA//Jj30bxHms+zoAVHsn94V45MZTGtc
-         D25A==
-X-Gm-Message-State: AOAM530xPdL2ME7PII1EpJPMdCmQ9h1q7kYruZKMbkz5Vif4/trqbnvJ
-        EoEqVO/mwrtFZikLKW3wiFU=
-X-Google-Smtp-Source: ABdhPJyqU86TejxnQRH01Xd+nYEIEW8xybysprOn1m3Hs/JdkbdqzFXZc9sGRAb26ebqEupffnSwvA==
-X-Received: by 2002:a37:689:: with SMTP id 131mr11787583qkg.468.1593519937878;
-        Tue, 30 Jun 2020 05:25:37 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14c:482:92b:d42f:2bc1:abe3:59f0])
-        by smtp.gmail.com with ESMTPSA id d186sm2877189qkb.110.2020.06.30.05.25.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 05:25:37 -0700 (PDT)
-From:   Fabio Estevam <festevam@gmail.com>
-To:     robh+dt@kernel.org
-Cc:     j-keerthy@ti.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH] dt-bindings: thermal: k3: Fix the reg property
-Date:   Tue, 30 Jun 2020 09:25:27 -0300
-Message-Id: <20200630122527.28640-1-festevam@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 30 Jun 2020 08:32:00 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:35704 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732042AbgF3Mb7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 30 Jun 2020 08:31:59 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593520318; h=Message-ID: References: In-Reply-To: Subject:
+ To: From: Date: Content-Transfer-Encoding: Content-Type: MIME-Version:
+ Sender; bh=k0MdTyKtV4z22dAVkmjS3nxPgaMUlZ3id20kmVJEhWM=; b=iB1u14VGapzOLtu3Yg284PV+XPuo9R6a8qy17AB+ThH3xZTgtQcvC/7dmrg2QUK2o58WFVqa
+ 7UKWWZ6D2P2o9oV9B1RNbdwqHBixic69q2bKM3x1vMvjnoIE5QJwehFcj16ZDm1p22oQDlrq
+ wR+89M2nEs7kTD3yKiUInYMnBdE=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n13.prod.us-east-1.postgun.com with SMTP id
+ 5efb30b1c4bb4f886db6ea4b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 30 Jun 2020 12:31:45
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4C166C4339C; Tue, 30 Jun 2020 12:31:44 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: gokulsri)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9A0D0C433C8;
+        Tue, 30 Jun 2020 12:31:43 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 30 Jun 2020 18:01:43 +0530
+From:   gokulsri@codeaurora.org
+To:     gokulsri@codeaurora.org, sboyd@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, david.brown@linaro.org,
+        devicetree@vger.kernel.org, jassisinghbrar@gmail.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        mark.rutland@arm.com, mturquette@baylibre.com, ohad@wizery.com,
+        robh+dt@kernel.org, sricharan@codeaurora.org,
+        nprakash@codeaurora.org
+Subject: Re: [PATCH V5 00/10] remoteproc: qcom: q6v5-wcss: Add support for
+ secure pil
+In-Reply-To: <1589362265-22702-1-git-send-email-gokulsri@codeaurora.org>
+References: <1589362265-22702-1-git-send-email-gokulsri@codeaurora.org>
+Message-ID: <14579d9dbcc06bca392b41ace1b0ce49@codeaurora.org>
+X-Sender: gokulsri@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Adjust the reg property to fix the following warning seen with
-'make dt_binding_check':
+  Hi Bjorn,
+  My below patch series (https://patchwork.kernel.org/cover/11545511/) 
+with all the review comments addressed and this is on top of
+  Govind's series (https://patchwork.kernel.org/cover/11060629/) "[v5] 
+"Add non PAS wcss Q6 support for QCS404".
+  Need your help to know how should I proceed further to merge these 
+patches.
 
-Documentation/devicetree/bindings/thermal/ti,am654-thermal.example.dt.yaml: example-0: thermal@42050000:reg:0: [0, 1107623936, 0, 604] is too long
+  Regards,
+  Gokul
 
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
----
- Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml b/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
-index 25b9209c2e5d..ea14de80ec75 100644
---- a/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
-+++ b/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
-@@ -35,7 +35,7 @@ examples:
-     #include <dt-bindings/soc/ti,sci_pm_domain.h>
-     vtm: thermal@42050000 {
-         compatible = "ti,am654-vtm";
--        reg = <0x0 0x42050000 0x0 0x25c>;
-+        reg = <0x42050000 0x25c>;
-         power-domains = <&k3_pds 80 TI_SCI_PD_EXCLUSIVE>;
-         #thermal-sensor-cells = <1>;
-     };
--- 
-2.17.1
-
+On 2020-05-13 15:00, Gokul Sriram Palanisamy wrote:
+> IPQ8074 needs support for secure pil as well.
+> Also, currently only unified firmware is supported.
+> IPQ8074 supports split firmware for q6 and m3, so
+> adding support for that.
+> 
+> This series is based on Govind's
+> "[v5] Add non PAS wcss Q6 support for QCS404"
+> 
+> changes since v4:
+>  - Rebased patch 8
+> 
+> changes since v3:
+>  - In patch 10, Added release_firmware to free up
+>    memory requested for m3 firmware.
+> 
+> changes since v2:
+>  - In patch 5, Added a driver data 'bcr_reset_required'
+>    to select if bcr reset is required
+>  - In patch 10, Removed syscon implementation and moved
+>    to mailbox framework to access APCS IPC
+> 
+> changes since v1:
+>  - In patch 10, Addressed minor review comments.
+> 
+> Gokul Sriram Palanisamy (10):
+>   remoteproc: qcom: Add PRNG proxy clock
+>   remoteproc: qcom: Add secure PIL support
+>   remoteproc: qcom: Add support for split q6 + m3 wlan firmware
+>   remoteproc: qcom: Add ssr subdevice identifier
+>   remoteproc: qcom: Update regmap offsets for halt register
+>   dt-bindings: clock: qcom: Add reset for WCSSAON
+>   clk: qcom: Add WCSSAON reset
+>   dt-bindings: firmware: qcom: Add compatible for IPQ8074 SoC
+>   arm64: dts: Add support for scm on IPQ8074 SoCs
+>   arm64: dts: qcom: Enable Q6v5 WCSS for ipq8074 SoC
+> 
+>  .../devicetree/bindings/firmware/qcom,scm.txt      |   1 +
+>  arch/arm64/boot/dts/qcom/ipq8074.dtsi              | 127 
+> +++++++++++++++++
+>  drivers/clk/qcom/gcc-ipq8074.c                     |   1 +
+>  drivers/remoteproc/qcom_q6v5_wcss.c                | 157 
+> +++++++++++++++++----
+>  include/dt-bindings/clock/qcom,gcc-ipq8074.h       |   1 +
+>  5 files changed, 258 insertions(+), 29 deletions(-)
