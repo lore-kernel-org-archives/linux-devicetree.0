@@ -2,119 +2,170 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDADC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 19:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0381AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 19:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C332220723
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 19:41:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593546078;
-	bh=MUY2zAb9ej42QoUZhuM7uIq2vBR0S2G7iTH/6kZSNoo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Cj63XrRuXXPuuxg2ZsG7klLqBlX7/MsQb7zgHFmHvNNQCdYM2vt6lpMcCfsZMBsbn
-	 b6QGfooBAFBMWZg0x7sOjxhGlId4EwBCJxm6j0ZuoaBVBs31vpdPLpmFAK9lCZaPXK
-	 PnLbYRCqcFqKkBbu+XUJYhJ53vhZUQrGeDdvBjBM=
+	by mail.kernel.org (Postfix) with ESMTP id D2C8220772
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 19:52:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sJpdTUn+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbgF3TlS (ORCPT
+        id S1728533AbgF3TwK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 15:41:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35838 "EHLO mail.kernel.org"
+        Tue, 30 Jun 2020 15:52:10 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:20301 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726672AbgF3TlS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 30 Jun 2020 15:41:18 -0400
-Received: from localhost (p54b336a9.dip0.t-ipconnect.de [84.179.54.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728423AbgF3TwK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 30 Jun 2020 15:52:10 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593546729; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=khdI7KK3P5HEXu5fVmHtaSFBLxX53kdpZO9nigjlUsg=; b=sJpdTUn+wJ0o4WA514CF5BvXkzf+k7VzFkZv3XaSceFHr45vnmgAacg+kTuHKB1KTf+VwKkr
+ pQIDv5dvLzw+569fqdLAFTo3HjLWPjum+FxPa5U3/blZH0srMZRmxxRPqpnqN0uOFDjJ9URD
+ vm6OgINM/l5qb3h0yBE+1x3HzsU=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n19.prod.us-west-2.postgun.com with SMTP id
+ 5efb97e85866879c76f8cff8 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 30 Jun 2020 19:52:08
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 65414C433C6; Tue, 30 Jun 2020 19:52:08 +0000 (UTC)
+Received: from linuxdisplay-lab-04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0D37206B6;
-        Tue, 30 Jun 2020 19:41:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593546077;
-        bh=MUY2zAb9ej42QoUZhuM7uIq2vBR0S2G7iTH/6kZSNoo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KHMtbm5+UulStf9r28guPNnQXe7wJgyeZ49Hn0ellKbk5ls0Mb76DNdfrDQM5T2RA
-         zPSqDcgj2GptvgtQ1VWqMt5cZYgOPZEPN9mS7m1ku2b27tHfuNwdx/kz6Ui2a69RFg
-         AN1YTohIRrSu7BBPK5PAMpZDsVvWUnmfFdqI5NT4=
-Date:   Tue, 30 Jun 2020 21:41:07 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Alain Volmat <alain.volmat@st.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com
-Subject: Re: [PATCH v2 3/4] dt-bindings: i2c-stm32: add SMBus Alert bindings
-Message-ID: <20200630194107.GA999@ninjato>
-References: <1593070769-9106-1-git-send-email-alain.volmat@st.com>
- <1593070769-9106-4-git-send-email-alain.volmat@st.com>
+        (Authenticated sender: tanmay)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DBF0AC433C6;
+        Tue, 30 Jun 2020 19:52:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DBF0AC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tanmay@codeaurora.org
+From:   Tanmay Shah <tanmay@codeaurora.org>
+To:     swboyd@chromium.org, seanpaul@chromium.org
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        sam@ravnborg.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        robdclark@gmail.com, aravindh@codeaurora.org,
+        abhinavk@codeaurora.org, chandanu@codeaurora.org,
+        varar@codeaurora.org, Tanmay Shah <tanmay@codeaurora.org>
+Subject: [PATCH v3] arm64: dts: qcom: sc7180: Add Display Port dt node
+Date:   Tue, 30 Jun 2020 12:51:51 -0700
+Message-Id: <20200630195151.347-1-tanmay@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fUYQa+Pmc3FrFX/N"
-Content-Disposition: inline
-In-Reply-To: <1593070769-9106-4-git-send-email-alain.volmat@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Add DP device node on sc7180.
 
---fUYQa+Pmc3FrFX/N
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Changes in v2:
 
-On Thu, Jun 25, 2020 at 09:39:28AM +0200, Alain Volmat wrote:
-> Add a new binding of the i2c-stm32f7 driver to enable the handling
-> of the SMBUS-Alert.
->=20
-> The I2C/SMBUS framework already provides a mechanism to enable SMBus-Alert
-> by naming an IRQ line "smbus_alert". However, on stm32, the SMBus-Alert is
-> part of the i2c IRQ. Using the smbus_alert naming here would lead to havi=
-ng
-> 2 handlers (the handler of the driver and the smbus_alert handler
-> from I2C/SMBUS framework) on the unique i2c IRQ of the stm32. Meaning that
-> the smbus_alert handler would get called for all IRQ generated by the stm=
-32
-> I2C controller.
->=20
-> For that reason, the smbus_alert IRQ naming cannot be used and a dedicated
-> binding is introduced.
+- Add assigned-clocks and assigned-clock-parents
+- Remove cell-index and pixel_rcg
+- Change compatible to qcom,sc7180-dp
 
-What if we update the core to not register another irq handler if the
-"smbus_alert" and main irq are the same?
+Changes in v3:
+- Update commit text
+- Make DP child node of MDSS
+- Remove data-lanes property from SOC dts
+- Disable DP node in SOC dts
+- Assign DP to Port2 in MDP node
+- Add MDSS AHB clock in DP device node
 
-I think it could work. However, while trying to make a proof-of-concept,
-I found that irq descriptions in the generic i2c binding document are
-probably mixed up. And before fixing that, I'd like to get HostNotify
-done first.
+This patch depends-on:
+	https://patchwork.freedesktop.org/series/78953/
 
-Makes sense?
+Signed-off-by: Tanmay Shah <tanmay@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 49 ++++++++++++++++++++++++++--
+ 1 file changed, 47 insertions(+), 2 deletions(-)
 
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 31b9217bb5bf..271d55db62ab 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -2371,6 +2371,13 @@ dpu_intf1_out: endpoint {
+ 							remote-endpoint = <&dsi0_in>;
+ 						};
+ 					};
++
++					port@2 {
++						reg = <2>;
++						dpu_intf0_out: endpoint {
++							remote-endpoint = <&dp_in>;
++						};
++					};
+ 				};
+ 			};
+ 
+@@ -2440,6 +2447,44 @@ dsi_phy: dsi-phy@ae94400 {
+ 
+ 				status = "disabled";
+ 			};
++
++			msm_dp: displayport-controller@ae90000{
++				status = "disabled";
++				compatible = "qcom,sc7180-dp";
++
++				reg = <0 0xae90000 0 0x1400>;
++				reg-names = "dp_controller";
++
++				interrupt-parent = <&mdss>;
++				interrupts = <12 0>;
++
++				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
++					 <&dispcc DISP_CC_MDSS_DP_AUX_CLK>,
++					 <&dispcc DISP_CC_MDSS_DP_LINK_CLK>,
++					 <&dispcc DISP_CC_MDSS_DP_LINK_INTF_CLK>,
++					 <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK>;
++				clock-names = "core_iface", "core_aux", "ctrl_link",
++					      "ctrl_link_iface", "stream_pixel";
++				#clock-cells = <1>;
++				assigned-clocks = <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
++				assigned-clock-parents = <&msm_dp 1>;
++
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					port@0 {
++						reg = <0>;
++						dp_in: endpoint {
++							remote-endpoint = <&dpu_intf0_out>;
++						};
++					};
++
++					port@1 {
++						reg = <1>;
++						dp_out: endpoint { };
++					};
++				};
++			};
+ 		};
+ 
+ 		dispcc: clock-controller@af00000 {
+@@ -2449,8 +2494,8 @@ dispcc: clock-controller@af00000 {
+ 				 <&gcc GCC_DISP_GPLL0_CLK_SRC>,
+ 				 <&dsi_phy 0>,
+ 				 <&dsi_phy 1>,
+-				 <0>,
+-				 <0>;
++				 <&msm_dp 0>,
++				 <&msm_dp 1>;
+ 			clock-names = "bi_tcxo",
+ 				      "gcc_disp_gpll0_clk_src",
+ 				      "dsi0_phy_pll_out_byteclk",
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
---fUYQa+Pmc3FrFX/N
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl77lU8ACgkQFA3kzBSg
-KbbT6g/9Egl83vNI937BTjmBcYCaXx6Gp6/eqR5ivn/5S8K8m02jfXpEFtmtcbmm
-zUSWjyEJhmbtW3As/aCComDpEw4tTMM/ZknYMsJekBL5HzE+9vhIJXZv4HpQZjNw
-xrWRp6+FKNiLH4gsooYoUXY20QJGCDKM5afVP+cf9krmG8GSc352k/44B32h5j3k
-ipYKq79nrRmwc4znBCFWsnheElVUcBV/NdNrbF94JmilR1XjfWskZhWVVicgE0N5
-by+k0pLA4y47w6FZ7t02VeOqzMQD7IcBEE+zc6tJIXkkAzdlW2qvLeRMa/yaG0nW
-h9jPkiGfeVZIXVOWUEJf1IQqcdhHlbcJ5Y0YfpJqYMO91stBHvggGC1W0QpK/IDy
-1NXX9Kq/Mt5wpK5NIHP3Z80I0k0SoRdIDj/9+u/uv59eOirk2fP4SGxFhIG1MCDP
-yJLZGkZfG/bUytZ7q7MOZhhz1lEnFBHy+JQSz0oKBlAE1XIEWLcsc72sAIxBdY2Z
-MXJ9ZqNJ3jp0G84gxO8DpKbXytRCwnMI/q3v8bPl8iPwnh09J+qiqSQa8t9z5sPD
-eAndynskw8ircBx2IAWdSJsEaGW/en8kO985aA8tMl/0iuDCSZecr4L/U20VirI+
-98SVuiNYHZm7ndamn2offfUBn8ZF/zN5zklIsKrVoJP71NXWTec=
-=C1fS
------END PGP SIGNATURE-----
-
---fUYQa+Pmc3FrFX/N--
