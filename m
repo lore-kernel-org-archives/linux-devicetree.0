@@ -2,206 +2,123 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35DA1C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 10:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D43A3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 10:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1905D20771
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 10:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB62620760
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 10:25:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732189AbgF3KKY (ORCPT
+        id S1732505AbgF3KZI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 06:10:24 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:34554 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732310AbgF3KKY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 06:10:24 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id BFA4B80522;
-        Tue, 30 Jun 2020 12:10:20 +0200 (CEST)
-Date:   Tue, 30 Jun 2020 12:10:19 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, od@zcrc.me
-Subject: Re: [PATCH v2 04/10] drm/ingenic: Add missing CR in debug strings
-Message-ID: <20200630101019.GC553950@ravnborg.org>
-References: <20200629235210.441709-1-paul@crapouillou.net>
- <20200629235210.441709-4-paul@crapouillou.net>
+        Tue, 30 Jun 2020 06:25:08 -0400
+Received: from foss.arm.com ([217.140.110.172]:36092 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732514AbgF3KZD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 30 Jun 2020 06:25:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9943C31B;
+        Tue, 30 Jun 2020 03:25:02 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 66CC53F68F;
+        Tue, 30 Jun 2020 03:25:00 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 11:24:54 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Hanjun Guo <guohanjun@huawei.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Will Deacon <will@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: Re: [PATCH v2 01/12] ACPI/IORT: Make iort_match_node_callback walk
+ the ACPI namespace for NC
+Message-ID: <20200630102454.GA17556@e121166-lin.cambridge.arm.com>
+References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
+ <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
+ <20200619082013.13661-2-lorenzo.pieralisi@arm.com>
+ <718cae1f-2f33-f6d9-f278-157300b73116@huawei.com>
+ <20200629090551.GA28873@e121166-lin.cambridge.arm.com>
+ <765078e7-b3ec-af5d-0405-7834ba0f120a@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200629235210.441709-4-paul@crapouillou.net>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8 a=7gkXJVJtAAAA:8 a=e5mUnYsNAAAA:8
-        a=O7-e7zmCaJ8UY64ll6EA:9 a=CjuIK1q_8ugA:10 a=9LHmKk7ezEChjTCyhBa9:22
-        a=E9Po1WZjFZOl8hwRPBS3:22 a=Vxmtnl_E_bksehYqCbjh:22
-        a=pHzHmUro8NiASowvMSCR:22 a=nt3jZW36AmriUCFCBwmW:22
+In-Reply-To: <765078e7-b3ec-af5d-0405-7834ba0f120a@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 01:52:04AM +0200, Paul Cercueil wrote:
-> If you pass a string that is not terminated with a carriage return to
-> dev_err(), it will eventually be printed with a carriage return, but
-> not right away, since the kernel will wait for a pr_cont().
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+On Tue, Jun 30, 2020 at 11:06:41AM +0800, Hanjun Guo wrote:
 
-It would have been nice if most was converted to drm_err() and friends
-when touching these.
-That may come later..
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+[...]
 
-> ---
+> > For devices that aren't described in the DSDT - IORT translations
+> > are determined by their ACPI parent device. Do you see/Have you
+> > found any issue with this approach ?
 > 
-> Notes:
->     v2: New patch
+> The spec says "Describes the IO relationships between devices
+> represented in the ACPI namespace.", and in section 3.1.1.3 Named
+> component node, it says:
+
+PCI devices aren't necessarily described in the ACPI namespace and we
+still use IORT to describe them - through the RC node.
+
+> "Named component nodes are used to describe devices that are also
+> included in the Differentiated System Description Table (DSDT). See
+> [ACPI]."
 > 
->  drivers/gpu/drm/ingenic/ingenic-drm-drv.c | 30 +++++++++++------------
->  1 file changed, 15 insertions(+), 15 deletions(-)
+> So from my understanding, the IORT spec for now, can only do ID
+> translations for devices in the DSDT.
+
+I think you can read this multiple ways but this patch does not
+change this concept. What changes, is applying parent's node IORT
+mapping to child nodes with no associated DSDT nodes, it is the
+same thing we do with PCI and the _DMA method - we could update
+the wording in the specs if that clarifies but I don't think this
+deliberately disregards the specifications.
+
+> > > For a platform device, if I use its parent's full path name for
+> > > its named component entry, then it will match, but this will violate
+> > > the IORT spec.
+> > 
+> > Can you elaborate on this please I don't get the point you
+> > are making.
 > 
-> diff --git a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-> index 16f0740df507..a15f9a1940c6 100644
-> --- a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-> +++ b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-> @@ -623,14 +623,14 @@ static int ingenic_drm_probe(struct platform_device *pdev)
->  
->  	base = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(base)) {
-> -		dev_err(dev, "Failed to get memory resource");
-> +		dev_err(dev, "Failed to get memory resource\n");
->  		return PTR_ERR(base);
->  	}
->  
->  	priv->map = devm_regmap_init_mmio(dev, base,
->  					  &ingenic_drm_regmap_config);
->  	if (IS_ERR(priv->map)) {
-> -		dev_err(dev, "Failed to create regmap");
-> +		dev_err(dev, "Failed to create regmap\n");
->  		return PTR_ERR(priv->map);
->  	}
->  
-> @@ -641,21 +641,21 @@ static int ingenic_drm_probe(struct platform_device *pdev)
->  	if (soc_info->needs_dev_clk) {
->  		priv->lcd_clk = devm_clk_get(dev, "lcd");
->  		if (IS_ERR(priv->lcd_clk)) {
-> -			dev_err(dev, "Failed to get lcd clock");
-> +			dev_err(dev, "Failed to get lcd clock\n");
->  			return PTR_ERR(priv->lcd_clk);
->  		}
->  	}
->  
->  	priv->pix_clk = devm_clk_get(dev, "lcd_pclk");
->  	if (IS_ERR(priv->pix_clk)) {
-> -		dev_err(dev, "Failed to get pixel clock");
-> +		dev_err(dev, "Failed to get pixel clock\n");
->  		return PTR_ERR(priv->pix_clk);
->  	}
->  
->  	ret = drm_of_find_panel_or_bridge(dev->of_node, 0, 0, &panel, &bridge);
->  	if (ret) {
->  		if (ret != -EPROBE_DEFER)
-> -			dev_err(dev, "Failed to get panel handle");
-> +			dev_err(dev, "Failed to get panel handle\n");
->  		return ret;
->  	}
->  
-> @@ -684,7 +684,7 @@ static int ingenic_drm_probe(struct platform_device *pdev)
->  				       ARRAY_SIZE(ingenic_drm_primary_formats),
->  				       NULL, DRM_PLANE_TYPE_PRIMARY, NULL);
->  	if (ret) {
-> -		dev_err(dev, "Failed to register primary plane: %i", ret);
-> +		dev_err(dev, "Failed to register primary plane: %i\n", ret);
->  		return ret;
->  	}
->  
-> @@ -693,7 +693,7 @@ static int ingenic_drm_probe(struct platform_device *pdev)
->  	ret = drm_crtc_init_with_planes(drm, &priv->crtc, &priv->primary,
->  					NULL, &ingenic_drm_crtc_funcs, NULL);
->  	if (ret) {
-> -		dev_err(dev, "Failed to init CRTC: %i", ret);
-> +		dev_err(dev, "Failed to init CRTC: %i\n", ret);
->  		return ret;
->  	}
->  
-> @@ -705,25 +705,25 @@ static int ingenic_drm_probe(struct platform_device *pdev)
->  	ret = drm_simple_encoder_init(drm, &priv->encoder,
->  				      DRM_MODE_ENCODER_DPI);
->  	if (ret) {
-> -		dev_err(dev, "Failed to init encoder: %i", ret);
-> +		dev_err(dev, "Failed to init encoder: %i\n", ret);
->  		return ret;
->  	}
->  
->  	ret = drm_bridge_attach(&priv->encoder, bridge, NULL, 0);
->  	if (ret) {
-> -		dev_err(dev, "Unable to attach bridge");
-> +		dev_err(dev, "Unable to attach bridge\n");
->  		return ret;
->  	}
->  
->  	ret = drm_irq_install(drm, irq);
->  	if (ret) {
-> -		dev_err(dev, "Unable to install IRQ handler");
-> +		dev_err(dev, "Unable to install IRQ handler\n");
->  		return ret;
->  	}
->  
->  	ret = drm_vblank_init(drm, 1);
->  	if (ret) {
-> -		dev_err(dev, "Failed calling drm_vblank_init()");
-> +		dev_err(dev, "Failed calling drm_vblank_init()\n");
->  		return ret;
->  	}
->  
-> @@ -731,7 +731,7 @@ static int ingenic_drm_probe(struct platform_device *pdev)
->  
->  	ret = clk_prepare_enable(priv->pix_clk);
->  	if (ret) {
-> -		dev_err(dev, "Unable to start pixel clock");
-> +		dev_err(dev, "Unable to start pixel clock\n");
->  		return ret;
->  	}
->  
-> @@ -746,20 +746,20 @@ static int ingenic_drm_probe(struct platform_device *pdev)
->  		 */
->  		ret = clk_set_rate(priv->lcd_clk, parent_rate);
->  		if (ret) {
-> -			dev_err(dev, "Unable to set LCD clock rate");
-> +			dev_err(dev, "Unable to set LCD clock rate\n");
->  			goto err_pixclk_disable;
->  		}
->  
->  		ret = clk_prepare_enable(priv->lcd_clk);
->  		if (ret) {
-> -			dev_err(dev, "Unable to start lcd clock");
-> +			dev_err(dev, "Unable to start lcd clock\n");
->  			goto err_pixclk_disable;
->  		}
->  	}
->  
->  	ret = drm_dev_register(drm, 0);
->  	if (ret) {
-> -		dev_err(dev, "Failed to register DRM driver");
-> +		dev_err(dev, "Failed to register DRM driver\n");
->  		goto err_devclk_disable;
->  	}
->  
-> -- 
-> 2.27.0
+> For example, device A is not described in DSDT so can't represent
+> as a NC node in IORT. Device B can be described in DSDT and it
+> is the parent of device A, so device B can be represented in IORT
+> with memory access properties and node flags with Substream width
+> and Stall supported info.
 > 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> When we trying to translate device A's ID, we reuse all the memory
+> access properties and node flags from its parent (device B), but
+> will it the same?
+
+I assume so why wouldn't it be ? Why would be describe them in
+a parent-child relationship if that's not how the system looks like
+in HW ?
+
+Do you have a specific example in mind that we should be aware of ?
+
+> So the IORT spec don't support this, at least it's pretty vague
+> I think.
+
+I think that's a matter of wording, it can be updated if it needs be,
+reach out if you see any issue with the current approach please.
+
+Thanks,
+Lorenzo
