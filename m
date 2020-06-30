@@ -2,212 +2,288 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42EFCC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 15:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C4DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 15:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2182620675
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 15:39:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDAC120760
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 15:43:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="XPwYdaT3"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="o8Mb8XrN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389551AbgF3PjG (ORCPT
+        id S2389676AbgF3Pns (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 11:39:06 -0400
-Received: from mail-dm6nam12on2079.outbound.protection.outlook.com ([40.107.243.79]:6071
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731107AbgF3PjD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 30 Jun 2020 11:39:03 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=B7ApMDXX31QEd5NbksuDSWjSnLPrOtOkODDfJpw97eATqRXdI1LGgzwIKfi/NzAqjX1QV8mwqKfBwl27GHFD0q2pQID1sf0HkvXQodQrkKQJpdenC5I12udkOmH8BEtTTf92TpS4xXrvzmy+TKtJdthV5tr0HhLH4N0J9gt/Xp26hlEn5c6oRyDs4N8sa4Nz7yc3YpPbPF2qzqaUmGeUAP/p829el7xCfcYhkEJXHo2WcMhMEJS6jdzA9oQiUodTexxr/SPfiFk3PQhz24f8DJmWjJgiUYErDMzev0IkCTQxad5QQ2+qmFRik3nT/BRzKdw6t5uxgppeZna1xtOv6Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ULwFnId12BOKn2lWfVbvOr5jV5Oxn938DJ4JbYf8CAY=;
- b=Q6a8mOEh3BVAytWNOBQuwQRmdj9xKD4UclPYgvg8AM3DnYoB/jI2t+aAigRbNF+d/sXaUAM4j1nYeP+MFdmwFzN41x4dJblEBPI/Pp6Wj+DCzvKal3om+EtNFxQoMbKBvGbUQNl0B7yCR/i9OsMHtBFze32vFh+jm49UeGeACiAXGULQYJejzSixEMINn1F3ghu4n9d2q4pA/LYlFK6Td2EA/hvXabEleo7HdY/uE82H5Efu2rElV0ePn9Xp+gfOGpVWAy9RFZNWISzrSMigRYvgHS35UUGqmvRNqUO+AyFxXh9YtV4Hxv9OfZjKeGiJ/4PtIubwGm1Y+ZSARupDAg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ULwFnId12BOKn2lWfVbvOr5jV5Oxn938DJ4JbYf8CAY=;
- b=XPwYdaT32KIu9POyUdOrHcILcoyN8ZzHxnbL6gwt8Q1obAyQmJDhnWMnXOhDY8PTyzX1c6+ig5om8mBSLVOKXyufT3UeGMQW9RGgvBulDaveeL4IQ1CSg6/HvE1YtQ8k5EJN6n0s4KsCySQaEy4LtudaIiLadLSeVyWB3ld+U3o=
-Received: from BYAPR02MB4407.namprd02.prod.outlook.com (2603:10b6:a03:55::31)
- by BYAPR02MB5430.namprd02.prod.outlook.com (2603:10b6:a03:a4::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.23; Tue, 30 Jun
- 2020 15:38:58 +0000
-Received: from BYAPR02MB4407.namprd02.prod.outlook.com
- ([fe80::e59d:9815:461e:2a79]) by BYAPR02MB4407.namprd02.prod.outlook.com
- ([fe80::e59d:9815:461e:2a79%6]) with mapi id 15.20.3131.028; Tue, 30 Jun 2020
- 15:38:58 +0000
-From:   Ben Levinsky <BLEVINSK@xilinx.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stefano Stabellini <stefanos@xilinx.com>
-CC:     Rob Herring <robh@kernel.org>, "ohad@wizery.com" <ohad@wizery.com>,
-        Michal Simek <michals@xilinx.com>,
-        Jolly Shah <JOLLYS@xilinx.com>, Rajan Vaja <RAJANV@xilinx.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stefano Stabellini <stefanos@xilinx.com>
-Subject: RE: [PATCH v4 4/5] dt-bindings: remoteproc: Add documentation for
- ZynqMP R5 rproc bindings
-Thread-Topic: [PATCH v4 4/5] dt-bindings: remoteproc: Add documentation for
- ZynqMP R5 rproc bindings
-Thread-Index: AQHWGl7uxdGBAyULe0azD2FJNJZOnqijj0uAgBdEEWCAF8YrgIAeHusAgAAc24CAAN6D4A==
-Date:   Tue, 30 Jun 2020 15:38:57 +0000
-Message-ID: <BYAPR02MB44079AC22428C6D59548E7ECB56F0@BYAPR02MB4407.namprd02.prod.outlook.com>
-References: <1587749770-15082-1-git-send-email-ben.levinsky@xilinx.com>
- <1587749770-15082-5-git-send-email-ben.levinsky@xilinx.com>
- <20200511221755.GA13585@bogus>
- <BYAPR02MB44077C8B7B7FD23FDE8E31B8B5B00@BYAPR02MB4407.namprd02.prod.outlook.com>
- <CAL_JsqLGo380SRYska+xGgJhgF8NCRvY56ewafvSCU6c-LmhZw@mail.gmail.com>
- <alpine.DEB.2.21.2006291734370.8121@sstabellini-ThinkPad-T480s>
- <20200630022029.GC407764@builder.lan>
-In-Reply-To: <20200630022029.GC407764@builder.lan>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=none action=none header.from=xilinx.com;
-x-originating-ip: [98.207.156.201]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 01cad00d-67c5-4eeb-cd0d-08d81d0bb466
-x-ms-traffictypediagnostic: BYAPR02MB5430:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR02MB54305657D15B0347FA06BBE4B56F0@BYAPR02MB5430.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0450A714CB
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KvPsff1rO+AQLbVo5ETF9cvjKNO3K1mUXkVwJsAQSQe+W1rLQdINeaXtJSts3Ckq57Oay22oTS/K1O7lOdjGZ9fhJg8VRXmjlNIW9ycwMb9C31z1mT0c0Yd+TguR/y7723W+gPf4SJEK+OJJnhyStKDBuOqaRaIDOym0uETgw95zb64RWebkCPXcyjXdtE0q85uBKkHdVtm5fwrdXT43zbnG+vjfAjtolEp0sKebIAgxPgpUBiqZltpJjjoziT4y4gM2+Ch4DWbDIxNKgOWQDLoZru/c2pypw3X5f7Rgn5Jj4cCmgA3kmF0+sfu5PMBzdB50CguWd7B/Q6tbq8yJQw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR02MB4407.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(376002)(136003)(346002)(396003)(39860400002)(33656002)(6506007)(26005)(8936002)(478600001)(53546011)(52536014)(55016002)(107886003)(2906002)(5660300002)(7696005)(6636002)(86362001)(83380400001)(8676002)(66946007)(186003)(66446008)(4326008)(54906003)(71200400001)(9686003)(66556008)(76116006)(66476007)(64756008)(316002)(110136005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: tvxWEnce4nx7qNvcxBGpHh/p8fA5L47xk2+DfZx1VXUI9EValW3L+yYQwVJb3RLSkZVL56WHzH13gEzsh/s4qLlgN4LC8wkfu2MddLdJq6XfMxKFwdi4VKgNwu2HreAlbfRfhrm2yWQcDlyE06l5ODqH3NKNethZMTrEla1RGSYQd1GFkZANv1eMEGBAXWc+s4fdKxAIcKjxqIjgkGOPw816itgXcuctYUh1t9LXPjYIFcqPw0Dj1bY6LUdSHvhgcHDpH8DN7birvR4Bs4M0ZkmYRwBjl6dABmGbGQLbhl5DmG/zWmoYiAeU5LeUJ5OMMSHMxspdG47CrObTdYX+K3zBjB+Ai+XbisGji8eq8csTN0Gb1ia0nHtcdwPm8CID77tw4ESW4SBm5BhqLKOfGj5AX6lp45Qf5CkrbpnbHboXmBIDJ4dvKuJNNWyhwAgWtewE0RxSgCnHTQwKKdqmCObzl+w+ATdrak5s/2OBuP69yczHUOVSttrEjUf9fwBV
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 30 Jun 2020 11:43:48 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:15501 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389655AbgF3Pns (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 11:43:48 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5efb5d810001>; Tue, 30 Jun 2020 08:42:58 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 30 Jun 2020 08:43:47 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 30 Jun 2020 08:43:47 -0700
+Received: from [10.2.167.193] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Jun
+ 2020 15:43:46 +0000
+Subject: Re: [RFC PATCH v2 00/18] Support for Tegra video capture from
+ external sensor
+To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
+        <robh+dt@kernel.org>, <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
+References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
+ <b3f63f3f-50b2-e818-2c59-8009c31a9825@xs4all.nl>
+ <f5c84071-46ad-aa6f-0820-1813d4a907c9@nvidia.com>
+ <a60d8f80-312d-fce3-61f5-328e7f2a7a64@xs4all.nl>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <72ca3b09-7ca6-7421-4a9d-98326d1af087@nvidia.com>
+Date:   Tue, 30 Jun 2020 08:44:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR02MB4407.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 01cad00d-67c5-4eeb-cd0d-08d81d0bb466
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2020 15:38:57.9328
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oipKRxZPPA2HEXFexZrDxBYFEPbbGzKEc7CRIOagxcn4WCAClb7q1K/hGn7785pDXN/1hwXUoo+s6LW2fysvbA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5430
+In-Reply-To: <a60d8f80-312d-fce3-61f5-328e7f2a7a64@xs4all.nl>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1593531778; bh=Awb4OZIabXTvu1FWi3MWChEmL15hnuFJ0Nq97kg1ETs=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=o8Mb8XrNExe1mOsfRBwLYJhxbCBvOHqFQBhg0hdfQcvrmKkj+iXgqerAJYgKQPdpz
+         DAfJnvLS87E8V2C1so1VxhjniLTCPqo6XuvQhRnL4pzOcaKGign0sLGLDZij5GKs3n
+         afw93lqS+cRCKWs2A/BhGhBQaqZFgllCakBRVNYe67r0JstZ80bxQMtL6pD2ny3ygY
+         zkFVBllnGihHper0iJ27Cpf0JxpZ+y1ejErgn/qumdxh9lj+KgwGV2MMegoJUSM6W2
+         x/oAzwMW73OYUkqx/rWn1b0l1EsWwHmH+CqlyXrwrsymmNd4zSDSnbXvPkNIs+8p0Y
+         5mW5icd2i5Tzw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Bjorn,
 
+On 6/30/20 8:13 AM, Hans Verkuil wrote:
+> On 30/06/2020 16:58, Sowjanya Komatineni wrote:
+>> On 6/30/20 2:21 AM, Hans Verkuil wrote:
+>>> On 17/06/2020 03:41, Sowjanya Komatineni wrote:
+>>>> This series adds support for video capture from external camera sensor to
+>>>> Tegra video driver.
+>>>>
+>>>> Jetson TX1 has camera expansion connector and supports custom camera module
+>>>> designed as per TX1 design specification.
+>>>>
+>>>> This series also enables camera capture support for Jetson Nano which has
+>>>> Raspberry PI camera header.
+>>>>
+>>>> This series is tested with IMX219 camera sensor.
+>>> Which tree did you base this on? The media_tree master? Or the mainline kernel?
+>> These patches are with linux-next base at the time I sent them out which
+>> are on 20200616
+>>> I now have the imx219 detected, but if I try to stream I get this:
+>>>
+>>> $ v4l2-ctl --stream-mmap
+>>> <[  512.840944] video4linux video0: MW_ACK_DONE syncpt timeout: -11
+>>> [  512.972975] video4linux video0: frame start syncpt timeout: -11
+>>> <VIDIOC_DQBUF: failed: Input/output error
+>>> [  513.180770] video4linux video0: MW_ACK_DONE syncpt timeout: -11
+>>>
+>>> And then everything hangs and I need to reset.
+>>>
+>>> I'm testing with the media_tree master with your patches on top.
+>>>
+>>> Regards,
+>>>
+>>> 	Hans
+>> Are you using same device tree as I sent offline? It uses CSI A for IMX219.
+>>
+>> Does you setup also uses CSI-A as x2 for IMX219?
+>>
+>> I tested them on Jetson Nano + IMX219 rasp PI module and also on Jetson
+>> TX1 + IMX274.
+>>
+>> I did not see any issue and am able to capture from both.
+>>
+>> Will try again on my side with today's latest linux-next and update result.
+> Please use the media_tree master, that's what I use as well.
+>
+> I did some more testing and there is something weird going on.
+>
+> I have a Leopard Imaging camera expansion board (LI-JTX1-MIPI-ADPT) with
+> three camera connectors. See here for the datasheet:
+>
+> https://www.leopardimaging.com/uploads/LI-TX1-KIT-IMX274M12-T_datasheet.pdf
+>
+> The first connector (with an IMX274) causes this error:
+>
+> $ v4l2-ctl -d1 --stream-mmap
+> [  599.265885] video4linux video1: MW_ACK_DONE syncpt timeout: -11
+> [  599.473883] video4linux video1: MW_ACK_DONE syncpt timeout: -11
+> [  599.681904] video4linux video1: frame start syncpt timeout: -11
+> [  599.681909] video4linux video1: MW_ACK_DONE syncpt timeout: -11
+> <VIDIOC_DQBUF: failed: Input/output error
+> [  599.897884] video4linux video1: MW_ACK_DONE syncpt timeout: -11
+>
+> Similar to the test above where I had an IMX219 connected. Except it didn't
+> hang with the IMX274 (I'm beginning to suspect a locking issue in the imx219
+> driver that is causing the hang, I'll look at that tomorrow).
+>
+> If I connect the IMX219 to the middle camera connector, then it works fine.
+> I think I tested this with the IMX274 as well, but I'm not 100% certain, also
+> something to double check tomorrow.
+>
+> If I connect the IMX219 or IMX274 to the third camera connector, then I get this:
 
+Would like to know CSI port mapping to connectors as mipi calibrate pads 
+cells need to be updated in device tree based on CSI port in use.
 
------Original Message-----
-From: Bjorn Andersson <bjorn.andersson@linaro.org>=20
-Sent: Monday, June 29, 2020 7:20 PM
-To: Stefano Stabellini <stefanos@xilinx.com>
-Cc: Rob Herring <robh@kernel.org>; Ben Levinsky <BLEVINSK@xilinx.com>; ohad=
-@wizery.com; Michal Simek <michals@xilinx.com>; Jolly Shah <JOLLYS@xilinx.c=
-om>; Rajan Vaja <RAJANV@xilinx.com>; mark.rutland@arm.com; linux-remoteproc=
-@vger.kernel.org; linux-arm-kernel@lists.infradead.org; devicetree@vger.ker=
-nel.org; linux-kernel@vger.kernel.org; Stefano Stabellini <stefanos@xilinx.=
-com>
-Subject: Re: [PATCH v4 4/5] dt-bindings: remoteproc: Add documentation for =
-ZynqMP R5 rproc bindings
+Will see if I can find that from DS link you sent above.
 
-On Mon 29 Jun 17:37 PDT 2020, Stefano Stabellini wrote:
+>
+> $ v4l2-ctl -d0 --stream-mmap
+> [  820.513866] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>
+> [  820.525354] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>
+> [  820.536780] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>
+> [  820.548222] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>
+> [  820.559639] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+> <[  820.646931] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+> [  820.658355] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+> [  820.669797] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+> [  820.681216] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+> [  820.692601] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+> <<<<<<<<<<<<<<< 14.50 fps
+> <<<<<<<<<<<<<<< 14.75 fps
+> <<<<<<<<<<<<<<< 14.73 fps
+> <<<<<<<<<<<<<<< 14.80 fps
+> <<<<<<<<<<<<<[  825.517854] tegra_mc_irq: 133437 callbacks suppressed
+> [  825.517874] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+> [  825.534395] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+> [  825.545833] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+> [  825.557280] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+> [  825.579346] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+> [  825.590764] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+> [  825.602188] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+> [  825.613649] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+> [  825.625075] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+> [  825.645983] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+> < 14.64 fps
+> <<<<<<<<<<<<<<<< 14.87 fps
+> <<<<<<<<<<<<<<< 14.89 fps
+>
+> Something is producing EMEM address decode errors. But it is streaming.
 
-> On Wed, 10 Jun 2020, Rob Herring wrote:
-> > On Tue, May 26, 2020 at 11:40 AM Ben Levinsky <BLEVINSK@xilinx.com> wro=
-te:
-> > >
-> > > Hi Rob,
-> > >
-> > > The Xilinx R5 Remoteproc driver has been around for a long time -- ad=
-mittedly we should have upstreamed it long ago. The driver in the current f=
-orm is using an "classic" remoteproc device tree node as described here.
-> >=20
-> > I would rather not have 2 possible bindings to maintain. If there's=20
-> > been no rush to upstream this til now, then it can wait longer.
-> >=20
-> > >
-> > > I am working with Stefano to come up with an appropriate System Devic=
-e Tree representation but it is not going to be ready right away. Our prefe=
-rence would be to upstream the remoteproc node and driver in their current =
-forms while system device tree is maturing.
-> >=20
-> > There's obviously going to still need to be some sort of description=20
-> > of the interface between cores, but this has parts that obviously=20
-> > conflict with what's getting defined for system DT. The TCMs are the=20
-> > most obvious. If you can remove (or hardcode in the driver) what=20
-> > conflicts, then perhaps this can be upstreamed now.
->=20
->=20
-> Hi Rob,
->=20
-> Sorry it took a while to answer back but we wanted to do some research=20
-> to make sure the reply is correct.
->=20
->=20
-> The System Device Tree version of the OpenAMP remoteproc bindings aims=20
-> at being simpler and vendor-neutral. As anything else System Device=20
-> Tree, Lopper will read it and generate a "traditional" device tree=20
-> with the existing remoteproc bindings. In that sense, it might not=20
-> affect Linux directly.
->=20
+above memory controller errors may be due to access faults and not sure 
+why these show up on your setup. I never have these with my testing.
 
-Can you give some examples of how you will be able to describe the hardware=
- involved in powering/clocking resources surrounding your remoteproc and th=
-e necessary resources in a "simpler and vendor neutral"
-way that then can be further lopped(?) into something that Linux can use to=
- control any remoteproc?
+Also I am using CMA alloc of 256MB and not sure if low CMA alloc size is 
+causing this. Can you try with CMA alloc size of 256MB?
 
-> However, given the fragmentation of the remoteproc bindings across=20
-> multiple vendors (they are all different), I think it is a good idea=20
-> for Linux, for System Device Tree, and in general to come up with=20
-> simpler remoteproc bindings, more aligned between the vendors. If=20
-> nothing else, it is going to make Lopper's development easier.
->=20
+>
+> If I enable the TPG then everything is fine.
+>
+> So I have currently three different behaviors for three camera connectors.
+>
+> Do you have a datasheet for your Jetson TX1 camera board? It could be useful
+> to compare the two.
 
-In my view the big reason for the fragmentation between bindings is because=
- they all describe different hardware. There has been common properties of =
-remoteprocs discussed, but apart from the firmware-name property I don't th=
-ink we have agreed on any.
+Yeah we have and will send it offline.
 
->=20
-> So I think it is a good idea to take this opportunity to simplify the=20
-> Xilinx remoteproc bindings as you suggested. The idea of to removing=20
-> the TCM nodes is a good one. In addition I asked Ben to have a look at=20
-> whether the mboxes and mbox-names properties can be removed too.
->=20
+Also based on connector mapping to corresponding CSI port, 
+mipi-calibrate pad cell value also need to be changed.
 
-If your remoteproc uses a mailbox for signaling, then this should be descri=
-bed in devicetree. This will allow you to reuse components in other designs=
- where either part is replaced or reused.
+Below is for CSI-A
 
-[Ben Levinsky] The Xilinx R5 remoteproc binding can optionally use the mail=
-box. That is if loading a simple binary that is not making use of IPC then =
-the mailbox is optional and not needed. Not sure if you still would prefer =
-to have the example showcasing use of mailbox then.
-
-
-Regards,
-Bjorn
-
-> Ben will reply with a simplified bindings proposal.
+nvidia,mipi-calibrate = <&mipi 0x001>
+> Regards,
+>
+> 	Hans
+>
+>>>> This series include,
+>>>>
+>>>> VI I2C related fixes
+>>>> - Camera sensor programming happens through VI I2C which is on host1x bus.
+>>>> - These patches includes device tree and I2C driver fixes for VI I2C.
+>>>>
+>>>> Tegra video driver updates
+>>>> - TPG Vs Non-TPG based on Kconfig
+>>>> - Support for external sensor video capture based on device graph from DT.
+>>>> - Support for selection ioctl operations
+>>>> - Tegra MIPI CSI pads calibration
+>>>> - CSI T-CLK and T-HS settle time computation based on clock rates.
+>>>>
+>>>> Host1x driver updates
+>>>> - Adds API to allow creating mipi device for specific device node.
+>>>> - Splits MIPI pads calibrate start and waiting for calibration to be done.
+>>>>
+>>>> Device tree updates
+>>>> - Adds camera connector 2V8, 1V8, 1V2 regulator supplies to Jetson TX1 DT.
+>>>> - Enabled VI and CSI support in Jetson Nano DT.
+>>>>
+>>>>
+>>>> Delta between patch versions:
+>>>>
+>>>> [v2]:	Includes below changes based on v1 feedback
+>>>> 	- dt-binding document and the driver update for device graph to use
+>>>> 	  separate ports for sink endpoint and source endpoint for csi.
+>>>> 	- Use data-lanes endpoint property for csi.
+>>>> 	- Update tegra_mipi_request() to take device node pointer argument
+>>>> 	  rather than adding extra API.
+>>>> 	- Remove checking for clk pointer before clk_disable.
+>>>>
+>>>>
+>>>> Sowjanya Komatineni (18):
+>>>>     dt-bindings: i2c: tegra: Document Tegra210 VI I2C clocks and
+>>>>       power-domains
+>>>>     arm64: tegra: Add missing clocks and power-domains to Tegra210 VI I2C
+>>>>     i2c: tegra: Don't mark VI I2C as IRQ safe runtime PM
+>>>>     i2c: tegra: Fix the error path in tegra_i2c_runtime_resume
+>>>>     i2c: tegra: Fix runtime resume to re-init VI I2C
+>>>>     i2c: tegra: Avoid tegra_i2c_init_dma() for Tegra210 vi i2c
+>>>>     media: tegra-video: Fix channel format alignment
+>>>>     media: tegra-video: Enable TPG based on kernel config
+>>>>     media: tegra-video: Update format lookup to offset based
+>>>>     dt-bindings: tegra: Update VI and CSI bindings with port info
+>>>>     media: tegra-video: Add support for external sensor capture
+>>>>     media: tegra-video: Add support for selection ioctl ops
+>>>>     gpu: host1x: mipi: Update tegra_mipi_request() to be node based
+>>>>     gpu: host1x: mipi: Split tegra_mipi_calibrate and tegra_mipi_wait
+>>>>     media: tegra-video: Add CSI MIPI pads calibration
+>>>>     media: tegra-video: Compute settle times based on the clock rate
+>>>>     arm64: tegra: jetson-tx1: Add camera supplies
+>>>>     arm64: tegra: Enable Tegra VI CSI support for Jetson Nano
+>>>>
+>>>>    .../display/tegra/nvidia,tegra20-host1x.txt        |  92 ++-
+>>>>    .../devicetree/bindings/i2c/nvidia,tegra20-i2c.txt |  19 +-
+>>>>    arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |  41 ++
+>>>>    arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts |  10 +
+>>>>    arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   6 +
+>>>>    drivers/gpu/drm/tegra/dsi.c                        |   9 +-
+>>>>    drivers/gpu/host1x/mipi.c                          |  30 +-
+>>>>    drivers/i2c/busses/i2c-tegra.c                     |  39 +-
+>>>>    drivers/staging/media/tegra-video/Kconfig          |   7 +
+>>>>    drivers/staging/media/tegra-video/csi.c            | 245 ++++++-
+>>>>    drivers/staging/media/tegra-video/csi.h            |   8 +
+>>>>    drivers/staging/media/tegra-video/tegra210.c       |  25 +-
+>>>>    drivers/staging/media/tegra-video/vi.c             | 770 +++++++++++++++++++--
+>>>>    drivers/staging/media/tegra-video/vi.h             |  23 +-
+>>>>    drivers/staging/media/tegra-video/video.c          |  23 +-
+>>>>    include/linux/host1x.h                             |   4 +-
+>>>>    16 files changed, 1251 insertions(+), 100 deletions(-)
+>>>>
