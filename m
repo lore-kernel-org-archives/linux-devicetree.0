@@ -1,194 +1,97 @@
-Return-Path: <SRS0=mth2=AK=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E14C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 23:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4B0C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 00:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FE0C20722
-	for <linux-devicetree@archiver.kernel.org>; Mon, 29 Jun 2020 23:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AADFB20781
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 00:09:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="JmnOwkQA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ofjxhuaw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728573AbgF2Xxe (ORCPT
+        id S1726616AbgF3AJD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 19:53:34 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:50264 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728527AbgF2Xxe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 19:53:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1593474749; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0DynBegu3BQi3AOKQqJAS/lq1/E9JbDIO+f1jYZbVtg=;
-        b=JmnOwkQA+/xyJbIditbSFEDzGiojGeimG0Yx09gNMWyCNCASccMLGPP4yeWa02yI+TDqYJ
-        pSjONFmnbWDdQiBkpwUc0wfXu6hIfyawRLf0xr5QMjPfLR8DaskZ0Bd0CQDUlUCQ04FE9h
-        fqdb2ynWWTq94mpjJTAxvKqxRrLkAE0=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     od@zcrc.me, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 10/10] drm/ingenic: Support multiple panels/bridges
-Date:   Tue, 30 Jun 2020 01:52:10 +0200
-Message-Id: <20200629235210.441709-10-paul@crapouillou.net>
-In-Reply-To: <20200629235210.441709-1-paul@crapouillou.net>
-References: <20200629235210.441709-1-paul@crapouillou.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 29 Jun 2020 20:09:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbgF3AJC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 20:09:02 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5164C061755;
+        Mon, 29 Jun 2020 17:09:02 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id l63so9048301pge.12;
+        Mon, 29 Jun 2020 17:09:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Kx8J891apkIa/g8IE/ArV1cGSLaJdXykQLAbT7gapEo=;
+        b=OfjxhuawS11Tyw27qrDv6z78jdyLU+y90/sALz95jSn5ElzsTBhObyaJPWIUD06A8Q
+         Rq9XbItl+rW0T4wkm3urohy2MEtJxfCb8Zxdtc2EvR4//sFm4GNqIQ5CJdw2kcr/h3Kk
+         SniFgSMVoyHJMiixcZZjfmshzJRypFvUzhO1JSqygFQSDGN3lgJ9cn7Bf8TfA87dnXPF
+         7KLoCYmjfVzAxwkcHXac+9fkRa9st4bULqoFc1xWKDAv2tGSeiC7B097UFowCgbfi1AE
+         ySFdSzcfGj6S0Z4ATo4HcLrBUQ70+lNBm5vHCZ6KSVPBr18nMWacb2eK++3xPAE1PdJB
+         4WSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Kx8J891apkIa/g8IE/ArV1cGSLaJdXykQLAbT7gapEo=;
+        b=NNWjXCuEC8jtdgL77HyJ6i2m2sEiLpuho/dj22Sj5DOLn/aXKtCJQAARy1FYufX2h+
+         t+iTe40dUqKCombWhNqlKMf3Vg1LC9DHl7dpNz4yM8hJ2Yr1s2tUmXZbqOcgdBqA+Imu
+         2fUxVhb3gZUlAnOcDi6hCEttn5CBJnijMnlLBLjdy5DS/B0wscekCTOgSwAWe/qxEZ6+
+         1PBp95DzNN9RaNp0pArvb6EzHhgzaiT9IEbdSRyOUpdt6CLZUk2nyPb+YFgHiLL1qGhG
+         JTnfU16qVlGCx9vpVpokLpxlmSNbWWaZKG+I+ZDEw7bWyPHYzuUfFp8Oz34/oQCYnaeK
+         rl3g==
+X-Gm-Message-State: AOAM532MYstZz/NNf5ryNaoEwqkDB9BlM1j/RG3cIJTIKBQweeTHf2Ty
+        tGNpo0jOhZlCapx/lK8BJnw9mFjD+KJqWA==
+X-Google-Smtp-Source: ABdhPJy27ifQA45ma6XMOnXykokl5ViL5QxEvsVBhYpeBWZBo8l1JoEZW17Z+4iSRG19EFlNaLhJHQ==
+X-Received: by 2002:a63:125f:: with SMTP id 31mr13062566pgs.239.1593475742116;
+        Mon, 29 Jun 2020 17:09:02 -0700 (PDT)
+Received: from taoren-ubuntu-R90MNF91.thefacebook.com (c-73-252-146-110.hsd1.ca.comcast.net. [73.252.146.110])
+        by smtp.gmail.com with ESMTPSA id m9sm754600pgq.61.2020.06.29.17.09.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 17:09:01 -0700 (PDT)
+From:   rentao.bupt@gmail.com
+To:     Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org, taoren@fb.com
+Cc:     Tao Ren <rentao.bupt@gmail.com>
+Subject: [PATCH 0/3] ARM: dts: aspeed: fixup wedge40 device tree
+Date:   Mon, 29 Jun 2020 17:08:48 -0700
+Message-Id: <20200630000851.26879-1-rentao.bupt@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Support multiple panels or bridges connected to the same DPI output of
-the SoC. This setup can be found for instance on the GCW Zero, where the
-same DPI output interfaces the internal 320x240 TFT panel, and the ITE
-IT6610 HDMI chip.
+From: Tao Ren <rentao.bupt@gmail.com>
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
+The patch series update several devices' settings in Facebook Wedge40
+device tree.
 
-Notes:
-    v2: No change
+Patch #1 disables a few i2c controllers as they are not being used at
+present.
 
- drivers/gpu/drm/ingenic/ingenic-drm-drv.c | 74 +++++++++++++----------
- 1 file changed, 43 insertions(+), 31 deletions(-)
+Patch #2 enables adc device for voltage monitoring.
 
-diff --git a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-index 36440acd23de..18f7a9eccfc0 100644
---- a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-+++ b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-@@ -52,7 +52,6 @@ struct ingenic_drm {
- 	struct drm_device drm;
- 	struct drm_plane f0, f1, *ipu_plane;
- 	struct drm_crtc crtc;
--	struct drm_encoder encoder;
- 
- 	struct device *dev;
- 	struct regmap *map;
-@@ -106,12 +105,6 @@ static inline struct ingenic_drm *drm_crtc_get_priv(struct drm_crtc *crtc)
- 	return container_of(crtc, struct ingenic_drm, crtc);
- }
- 
--static inline struct ingenic_drm *
--drm_encoder_get_priv(struct drm_encoder *encoder)
--{
--	return container_of(encoder, struct ingenic_drm, encoder);
--}
--
- static void ingenic_drm_crtc_atomic_enable(struct drm_crtc *crtc,
- 					   struct drm_crtc_state *state)
- {
-@@ -451,7 +444,7 @@ static void ingenic_drm_encoder_atomic_mode_set(struct drm_encoder *encoder,
- 						struct drm_crtc_state *crtc_state,
- 						struct drm_connector_state *conn_state)
- {
--	struct ingenic_drm *priv = drm_encoder_get_priv(encoder);
-+	struct ingenic_drm *priv = drm_device_get_priv(encoder->dev);
- 	struct drm_display_mode *mode = &crtc_state->adjusted_mode;
- 	struct drm_connector *conn = conn_state->connector;
- 	struct drm_display_info *info = &conn->display_info;
-@@ -654,9 +647,11 @@ static int ingenic_drm_bind(struct device *dev)
- 	struct clk *parent_clk;
- 	struct drm_bridge *bridge;
- 	struct drm_panel *panel;
-+	struct drm_encoder *encoder;
- 	struct drm_device *drm;
- 	void __iomem *base;
- 	long parent_rate;
-+	unsigned int i, clone_mask = 0;
- 	int ret, irq;
- 
- 	soc_info = of_device_get_match_data(dev);
-@@ -730,17 +725,6 @@ static int ingenic_drm_bind(struct device *dev)
- 		return PTR_ERR(priv->pix_clk);
- 	}
- 
--	ret = drm_of_find_panel_or_bridge(dev->of_node, 0, 0, &panel, &bridge);
--	if (ret) {
--		if (ret != -EPROBE_DEFER)
--			dev_err(dev, "Failed to get panel handle\n");
--		return ret;
--	}
--
--	if (panel)
--		bridge = devm_drm_panel_bridge_add_typed(dev, panel,
--							 DRM_MODE_CONNECTOR_DPI);
--
- 	priv->dma_hwdesc[0] = dma_alloc_coherent(dev, sizeof(*priv->dma_hwdesc[0]),
- 						 &priv->dma_hwdesc_phys[0],
- 						 GFP_KERNEL);
-@@ -804,22 +788,50 @@ static int ingenic_drm_bind(struct device *dev)
- 		}
- 	}
- 
--	priv->encoder.possible_crtcs = 1;
-+	for (i = 0; ; i++) {
-+		ret = drm_of_find_panel_or_bridge(dev->of_node, 0, i,
-+						  &panel, &bridge);
-+		if (ret) {
-+			if (ret == -ENODEV)
-+				break; /* we're done */
-+			if (ret != -EPROBE_DEFER)
-+				dev_err(dev, "Failed to get bridge handle\n");
-+			return ret;
-+		}
- 
--	drm_encoder_helper_add(&priv->encoder,
--			       &ingenic_drm_encoder_helper_funcs);
-+		if (panel)
-+			bridge = devm_drm_panel_bridge_add_typed(dev, panel,
-+								 DRM_MODE_CONNECTOR_DPI);
- 
--	ret = drm_simple_encoder_init(drm, &priv->encoder,
--				      DRM_MODE_ENCODER_DPI);
--	if (ret) {
--		dev_err(dev, "Failed to init encoder: %i\n", ret);
--		return ret;
-+		encoder = devm_kzalloc(dev, sizeof(*encoder), GFP_KERNEL);
-+		if (!encoder)
-+			return -ENOMEM;
-+
-+		encoder->possible_crtcs = 1;
-+
-+		drm_encoder_helper_add(encoder,
-+				       &ingenic_drm_encoder_helper_funcs);
-+
-+		ret = drm_simple_encoder_init(drm, encoder,
-+					      DRM_MODE_ENCODER_DPI);
-+		if (ret) {
-+			dev_err(dev, "Failed to init encoder: %d\n", ret);
-+			return ret;
-+		}
-+
-+		ret = drm_bridge_attach(encoder, bridge, NULL, 0);
-+		if (ret) {
-+			dev_err(dev, "Unable to attach bridge\n");
-+			return ret;
-+		}
- 	}
- 
--	ret = drm_bridge_attach(&priv->encoder, bridge, NULL, 0);
--	if (ret) {
--		dev_err(dev, "Unable to attach bridge\n");
--		return ret;
-+	drm_for_each_encoder(encoder, drm) {
-+		clone_mask |= BIT(drm_encoder_index(encoder));
-+	}
-+
-+	drm_for_each_encoder(encoder, drm) {
-+		encoder->possible_clones = clone_mask;
- 	}
- 
- 	ret = drm_irq_install(drm, irq);
+Patch #3 enables pwm_tacho device for fan control and monitoring.
+
+Tao Ren (3):
+  ARM: dts: aspeed: wedge40: disable a few i2c controllers
+  ARM: dts: aspeed: wedge40: enable adc device
+  ARM: dts: aspeed: wedge40: enable pwm_tacho device
+
+ .../boot/dts/aspeed-bmc-facebook-wedge40.dts  | 42 +++++++++++++++----
+ 1 file changed, 34 insertions(+), 8 deletions(-)
+
 -- 
-2.27.0
+2.17.1
 
