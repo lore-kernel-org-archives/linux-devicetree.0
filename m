@@ -2,111 +2,141 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB27C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 16:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E49C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 16:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97EA220759
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 16:07:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D5EB2074F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 16:10:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gorani.run header.i=@gorani.run header.b="EqeihTTH"
+	dkim=pass (2048-bit key) header.d=gorani.run header.i=@gorani.run header.b="Ysv+xs4V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbgF3QHO (ORCPT
+        id S1727062AbgF3QKE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 12:07:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40488 "EHLO
+        Tue, 30 Jun 2020 12:10:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbgF3QHN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 12:07:13 -0400
+        with ESMTP id S1726117AbgF3QKE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 12:10:04 -0400
 Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [IPv6:2001:67c:2050::465:201])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC720C061755;
-        Tue, 30 Jun 2020 09:07:12 -0700 (PDT)
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2C4CC061755;
+        Tue, 30 Jun 2020 09:10:03 -0700 (PDT)
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
         (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 49x8Pl3xpLzQlKq;
-        Tue, 30 Jun 2020 18:07:07 +0200 (CEST)
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 49x8T56KSVzQlL5;
+        Tue, 30 Jun 2020 18:10:01 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at heinlein-support.de
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
-        t=1593533225;
+        t=1593533399;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=/VL3Dz21dAtlF89v8AL+P+yUgMw+q0l6pUr1vTyUoRU=;
-        b=EqeihTTHsiTT+BI6AgUseJbDcpN1EGzeddVVIET8Qls83y16c1BxHS8/mRSrurLqael9cY
-        3Nqv++7+9xGp22RZPIexb54ttwZp57nN9avBi+GB29Kb7ctK96/yXxe1d4c8Vl2aHreM4V
-        ygmrRdOl4zYQ5Thcwdb/AWrdNKq6uFQF3Tt74bk/VuGr3vTaF/oFpQzYXd3+XqjZ3JYzKG
-        Z/arA3T2RYn8wS3Nm68G1dOY5oIv4qSI+uVgyMGqegA23TSu7t/yySz7lFgxGIe1IUc+Cp
-        svGunnbd0XUKBVMzKVEOwO+KTEeKXA/wrDnMPMFD2NFYzFX1gbl42feidMw/5g==
-Received: from smtp2.mailbox.org ([80.241.60.241])
+        bh=/GvbcSzf93t3Xo8PgTLO0RFe1bXEAMDeF7vWz9G0lXY=;
+        b=Ysv+xs4V8Jruw1SxiPoUfjc6pgAqz91VNB8/TGmbrM6bCDpgr6byLNxH1oBz6+X2FsYugj
+        6f6t+GJh9046R2sqSJhTQIF2xTrIHb7qWcjFOeHlMoUMHlVTWQ4T0zDXG/gsmV8Og0bN4B
+        3S36A6pgFxS+hbBuFkX1/fjP05xLfnjy106gR+ZLXSi1d8t5CIY624T6CoGqn47rH1UmUH
+        auD5wx+t8YI2amB2gt9qAngvycTsQPaTWMkvAeRoFAABUXHsFSCctSbcbQetHBC63cnRkI
+        7lkQEk9J0hmKRCt+PyKgHUCdZYVnlu4DMNZBgk900GOE4wcRHY224Lf2Mzj+Vg==
+Received: from smtp1.mailbox.org ([80.241.60.240])
         by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
-        with ESMTP id 5ezmpbc6kQ54; Tue, 30 Jun 2020 18:07:03 +0200 (CEST)
-Subject: Re: [PATCH v2 2/2] dt-bindings: gpio: Add bindings for NXP PCA9570
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-References: <20200625075957.364273-1-mans0n@gorani.run>
- <20200629220117.GA3012245@bogus>
+        with ESMTP id 5PLJZsftWcGX; Tue, 30 Jun 2020 18:09:57 +0200 (CEST)
 From:   Sungbo Eo <mans0n@gorani.run>
-Message-ID: <7686930b-2dca-bc88-1989-9daf74bf5af1@gorani.run>
-Date:   Wed, 1 Jul 2020 01:06:54 +0900
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Sungbo Eo <mans0n@gorani.run>
+Subject: [PATCH v3 2/2] dt-bindings: gpio: Add bindings for NXP PCA9570
+Date:   Wed,  1 Jul 2020 01:09:34 +0900
+Message-Id: <20200630160934.1197066-1-mans0n@gorani.run>
+In-Reply-To: <20200630160736.1196697-1-mans0n@gorani.run>
+References: <20200630160736.1196697-1-mans0n@gorani.run>
 MIME-Version: 1.0
-In-Reply-To: <20200629220117.GA3012245@bogus>
-Content-Type: text/plain; charset=euc-kr; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-MBO-SPAM-Probability: 0
-X-Rspamd-Score: -4.58 / 15.00 / 15.00
-X-Rspamd-Queue-Id: 2A4AE177B
-X-Rspamd-UID: 942bc2
+Content-Transfer-Encoding: 8bit
+X-MBO-SPAM-Probability: 8
+X-Rspamd-Score: 1.27 / 15.00 / 15.00
+X-Rspamd-Queue-Id: 706AB17FE
+X-Rspamd-UID: c515cf
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-06-30 07:01, Rob Herring wrote:
-> On Thu, 25 Jun 2020 16:59:57 +0900, Sungbo Eo wrote:
->> This patch adds device tree bindings for the NXP PCA9570,
->> a 4-bit I2C GPO expander.
->>
->> Signed-off-by: Sungbo Eo <mans0n@gorani.run>
->> ---
->> I don't feel I can really maintain this driver, but it seems all yaml docs
->> have a maintainers field so I just added it...
->> ---
->>   .../bindings/gpio/gpio-pca9570.yaml           | 42 +++++++++++++++++++
->>   1 file changed, 42 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
->>
-> 
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> Documentation/devicetree/bindings/gpio/gpio-pca9570.example.dts:21.13-26: Warning (reg_format): /example-0/gpio@24:reg: property has invalid length (4 bytes) (#address-cells == 1, #size-cells == 1)
-> Documentation/devicetree/bindings/gpio/gpio-pca9570.example.dt.yaml: Warning (pci_device_reg): Failed prerequisite 'reg_format'
-> Documentation/devicetree/bindings/gpio/gpio-pca9570.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-> Documentation/devicetree/bindings/gpio/gpio-pca9570.example.dt.yaml: Warning (simple_bus_reg): Failed prerequisite 'reg_format'
-> Documentation/devicetree/bindings/gpio/gpio-pca9570.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-> Documentation/devicetree/bindings/gpio/gpio-pca9570.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/gpio/gpio-pca9570.example.dt.yaml: example-0: gpio@24:reg:0: [36] is too short
-> 
-> 
-> See https://patchwork.ozlabs.org/patch/1316796
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure dt-schema is up to date:
-> 
-> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-> 
-> Please check and re-submit.
-> 
+This patch adds device tree bindings for the NXP PCA9570,
+a 4-bit I2C GPO expander.
 
-Thank you for pointing it out! I didn't noticed it. I'll re-submit an 
-updated patch soon.
+Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+---
+v3:
+* fixed dt_binding_check error
+
+v2:
+I don't feel I can really maintain this driver, but it seems all yaml docs
+have a maintainers field so I just added it...
+---
+ .../bindings/gpio/gpio-pca9570.yaml           | 47 +++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml b/Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
+new file mode 100644
+index 000000000000..338c5312a106
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
+@@ -0,0 +1,47 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/gpio-pca9570.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: PCA9570 I2C GPO expander
++
++maintainers:
++  - Sungbo Eo <mans0n@gorani.run>
++
++properties:
++  compatible:
++    enum:
++      - nxp,pca9570
++
++  reg:
++    maxItems: 1
++
++  gpio-controller: true
++
++  '#gpio-cells':
++    const: 2
++
++required:
++  - compatible
++  - reg
++  - gpio-controller
++  - "#gpio-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    i2c0 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        gpio@24 {
++            compatible = "nxp,pca9570";
++            reg = <0x24>;
++            gpio-controller;
++            #gpio-cells = <2>;
++        };
++    };
++
++...
+-- 
+2.27.0
+
