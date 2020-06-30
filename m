@@ -2,266 +2,177 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EED93C433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 15:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C7DC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 15:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEFD42073E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 15:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 875E6207FB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 15:24:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="OOZu4ibD"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kYjGBml7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389281AbgF3PNl (ORCPT
+        id S2389379AbgF3PYl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 11:13:41 -0400
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:57079 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732495AbgF3PNk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 30 Jun 2020 11:13:40 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id qHwzjrsIScVLFqHx2jf41t; Tue, 30 Jun 2020 17:13:37 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1593530017; bh=p9ZlDMf7joOlpkJNrJR8xvhVlpaUeJzTRbSA+7EbrwA=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=OOZu4ibDiGHWYohLULSxl7snkOTeTxKE8QHbBhqbHLuJI9gsviOUGcum2mh3Ws0yx
-         VvAZ7TbJ6CIuXCedrK1vqNyDKph340psXTuQ9NXYL40c3lZw4zE/ZSex2ZZD6wto6s
-         6A6Z5Ok1mNxde793ERwPEZX/RboU7OWPkflNJB7vwTaxWArdQ2YZ65WsdhBUG7r32T
-         B1eSvtGvKi9p4G185OQ7Fq4J3hOs5R4hi7Q+UCAa0SbLmjQ8DHGGs67Q0Ed3WpJa18
-         ii78TvrJ9DEILlhksNo00dXhQUvuTmUDdulqQGW6j3yOucL2q8OsRdf3vRZXBW+v0j
-         o0n/FZDfwlzjA==
-Subject: Re: [RFC PATCH v2 00/18] Support for Tegra video capture from
- external sensor
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com
-Cc:     digetx@gmail.com, sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
- <b3f63f3f-50b2-e818-2c59-8009c31a9825@xs4all.nl>
- <f5c84071-46ad-aa6f-0820-1813d4a907c9@nvidia.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <a60d8f80-312d-fce3-61f5-328e7f2a7a64@xs4all.nl>
-Date:   Tue, 30 Jun 2020 17:13:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 30 Jun 2020 11:24:41 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:17182 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387869AbgF3PYk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 11:24:40 -0400
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200630152436epoutp03275bae38438c7f2f57c1bdcc629e6dc3~dW7UryBQw2505225052epoutp03M
+        for <devicetree@vger.kernel.org>; Tue, 30 Jun 2020 15:24:36 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200630152436epoutp03275bae38438c7f2f57c1bdcc629e6dc3~dW7UryBQw2505225052epoutp03M
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593530676;
+        bh=PJsaZosZhVboh9xvS5edmokuNsTfJ9mFnkqdFYvcbb4=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=kYjGBml71GvdrID6X97yNrbbdKCyIrlcfps6jQdFKI6J6WSJAJZ1ictIMAVssN9cq
+         e2srWPNH/CFR5DT1byY52rqBK2dnSvowttbP3tNSbpHXSBfQY7u1TcFBzx0UEVJVXP
+         ub9r+FuytWNnBNgh0dNMfcGFrpz1BkiKSHZ7o2lg=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20200630152436epcas5p3e8a810a0cd70bf63ad72397d8489cb1a~dW7UMWmvj1101211012epcas5p3j;
+        Tue, 30 Jun 2020 15:24:36 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        EB.F0.09703.4395BFE5; Wed,  1 Jul 2020 00:24:36 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200630152435epcas5p1d7bff0effc267dc6ea9ceb116328de8f~dW7Tewm6S2994429944epcas5p18;
+        Tue, 30 Jun 2020 15:24:35 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200630152435epsmtrp2eb0c826c43a6ec29baa493396fd5b364~dW7Td9Rju3154931549epsmtrp2I;
+        Tue, 30 Jun 2020 15:24:35 +0000 (GMT)
+X-AuditID: b6c32a4a-4cbff700000025e7-b7-5efb5934833a
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        4C.6F.08382.3395BFE5; Wed,  1 Jul 2020 00:24:35 +0900 (KST)
+Received: from alimakhtar02 (unknown [107.108.234.165]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200630152431epsmtip23448907310a2e22c34e9fa19291b14f1~dW7PZmFIC1451814518epsmtip2f;
+        Tue, 30 Jun 2020 15:24:30 +0000 (GMT)
+From:   "Alim Akhtar" <alim.akhtar@samsung.com>
+To:     "'Krzysztof Kozlowski'" <krzk@kernel.org>,
+        "'Rob Herring'" <robh+dt@kernel.org>,
+        "'Kukjin Kim'" <kgene@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Cc:     "'Marek Szyprowski'" <m.szyprowski@samsung.com>,
+        "'Bartlomiej Zolnierkiewicz'" <b.zolnierkie@samsung.com>,
+        "'Sylwester Nawrocki'" <snawrocki@kernel.org>,
+        "'Chanwoo Choi'" <cw00.choi@samsung.com>,
+        "'Pankaj Dubey'" <pankaj.dubey@samsung.com>
+In-Reply-To: <20200629204442.17336-1-krzk@kernel.org>
+Subject: RE: [PATCH 1/4] arm64: dts: exynos: Add PWM interrupts on Exynos7
+Date:   Tue, 30 Jun 2020 20:54:28 +0530
+Message-ID: <001101d64ef2$8f824620$ae86d260$@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <f5c84071-46ad-aa6f-0820-1813d4a907c9@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfIrIILr6mjajrX4qxQ5REZAOwj1tnDKOsyH6P04Jie5fZe4RIbCbP41MihSiP6CRzI67vjRvgg5Y+XnPm0jHNc441e7tOmozP/YnaGcI/HA3diFwEgPc
- LKY2hkzS1/fuVwNFFZQpM9xGNvBAzubF2EFXyG5SokH7RlYywD9bDOEvXxn/7DeD9eb0I8SPFkXHofpkwuvR0tAmk1OyJVZOIyQmw+OUl9iLG5ZFHGb8n1f4
- t/YaqgmyINkhzYUDRPR9V0EOkeW5dpV6AaybzDnaTVahsDhkar5v5+mqC82D44bfub5/7Utrdyzbiju6EFHRUiAeBLbJFB7iW7+0uKzS4ruG4ZNK6VbMil5X
- pDZeoYwAvn+O8n/k4SB80kAC9AV/nvhfGex/RzT0XPhprYYLPeYDINvoaNZK1L2P+lslUCDJ4dQi8ZDqmUE/OwiL6eQdtf5eNkXQfhsG8d2i1QZGO5EzdLZw
- wYrpEaWWZ3uDLfUyhIkfw9mTPbSvsFl4bFCGIcfs0B9LPorN1P9b61JFDEUbKJj8uYsCr3/iRfY5ZxDPoD3F5hczj2a8CKPR7LlolLjtoale2hcFBglQZbO2
- jKD8VKt9waN96U2J186HczCWGNu4TvplCMxC1RonzS4NuGKWZS9SG3AzFKZk+k8EdA+n+W/l5bK1CXOQhoMBgaEw
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQE8Ci1xY1y92w75eesLer1AkuYEHgJddoA8qhH923A=
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrEKsWRmVeSWpSXmKPExsWy7bCmhq5J5O84g+dPuS02zljPanH9y3NW
+        i/lHzrFa9D9+zWxx/vwGdotNj6+xWlzeNYfNYsb5fUwWa4/cZbdYtPULu0Xr3iPsFu1PXzI7
+        8HhsWtXJ5rF5Sb1H35ZVjB6fN8kFsERx2aSk5mSWpRbp2yVwZRyecp+1YKZAxcGTy1gbGOfy
+        djFyckgImEhcX7marYuRi0NIYDejRPPpR+wQzidGibnLnzNCON8YJX5u/8sC09IzrRuqai+j
+        RMfs31DOG0aJyefWsIJUsQnoSuxY3AY2WESgnUli7/7lYA6zwE9GiaYNB8GqOAVMJRYtmM4M
+        YgsLeEm8uv4QzGYRUJXY9GARkM3BwStgKTFzWx1ImFdAUOLkzCdgZzALyEtsfzuHGeIkBYmf
+        T5eBjRQRsJJ4+/oHM0SNuMTRnz1QNXs4JBq3WkHYLhJHLu+AigtLvDq+hR3ClpL4/G4vG8ha
+        CYFsiZ5dxhDhGoml845BfW8vceDKHBaQEmYBTYn1u/QhNvFJ9P5+wgTRySvR0SYEUa0q0fzu
+        KlSntMTE7m5WCNtD4lP/FaYJjIqzkPw1C8lfs5DcPwth2QJGllWMkqkFxbnpqcWmBUZ5qeV6
+        xYm5xaV56XrJ+bmbGMHJSstrB+PDBx/0DjEycTAeYpTgYFYS4T1t8CtOiDclsbIqtSg/vqg0
+        J7X4EKM0B4uSOK/SjzNxQgLpiSWp2ampBalFMFkmDk6pBib3z5N4lAP8PX70K4h7yXgXFETm
+        /fwo/mHuQ6Hr7reKHI6yLHr7JtTp0fsnD+Z+7K00kt5QlhjnrHV18i/fPOd7oclVrCdyv3db
+        vK8quL7IseWslIBvy+pFywO9DirlPr6+XDhEffJK0a8LmvOeXH4st3lm/NonAjMzVm+0E5dY
+        8LmmuLw5zPvNs7UBU6ezfg8OvGy9ZrbBi82CXDzXyy7HrP/u/lAnYnmZr06mgPTy+2cfharM
+        mXTi0hwhVmlz14he62X7JMV/dxgU2ixVD5Xly2ZsdGV4HypuLXnsmE/+6ltfTC6/6b6ioW8V
+        m2TwU6F7ZlTsmujnbqp7G/jYVcPW5sc/8Htv3lG6gEV0nxJLcUaioRZzUXEiAG3EFqLFAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKIsWRmVeSWpSXmKPExsWy7bCSvK5x5O84gxUnpSw2zljPanH9y3NW
+        i/lHzrFa9D9+zWxx/vwGdotNj6+xWlzeNYfNYsb5fUwWa4/cZbdYtPULu0Xr3iPsFu1PXzI7
+        8HhsWtXJ5rF5Sb1H35ZVjB6fN8kFsERx2aSk5mSWpRbp2yVwZRyecp+1YKZAxcGTy1gbGOfy
+        djFyckgImEj0TOtm72Lk4hAS2M0o8bDzMSNEQlri+sYJ7BC2sMTKf8+hil4xSjR//MQEkmAT
+        0JXYsbiNDcQWEehlkjj53gSkiFngN6PE04sXWCE62hglVl08wgJSxSlgKrFowXRmEFtYwEvi
+        1fWHYDaLgKrEpgeLgGwODl4BS4mZ2+pAwrwCghInZz5hAQkzC+hJtG0EO45ZQF5i+9s5zBDH
+        KUj8fLqMFeIGK4m3r38wQ9SISxz92cM8gVF4FpJJsxAmzUIyaRaSjgWMLKsYJVMLinPTc4sN
+        CwzzUsv1ihNzi0vz0vWS83M3MYJjTktzB+P2VR/0DjEycTAeYpTgYFYS4T1t8CtOiDclsbIq
+        tSg/vqg0J7X4EKM0B4uSOO+NwoVxQgLpiSWp2ampBalFMFkmDk6pBiZjBS/XwyYzI3fmzemp
+        Z5x5YcH89UEPSle9tiidzeX5jnHSbN36TOkMUZb1p05OiD6m/KXMrUuoctXvpDOJ6rv+y7eX
+        eB4+9jt9dn3uwUm2J12yNDbzenxfZ6Smtq5m5g1Wp30RRTIlS848Py75SSYkSOD/K5uU29c5
+        3xx+J/bJ5025sfOdX2LV2499v9EeFxPb9Pp34G+BWpfcOxvynXYsnB61TrNrvc3kzFXSd5vv
+        HRVd1OERa/cgYKHxF+V/q/g4YudZs3Jc32RnLJzcahPt1F3TlLV/ok+o0enIs01fpq/IjBHu
+        PP5or+f7VRfPb5gYpKn5dOfKvzumro3sKvZjYtAtY+pk/xx92t/aNlyJpTgj0VCLuag4EQAv
+        8BuPKAMAAA==
+X-CMS-MailID: 20200630152435epcas5p1d7bff0effc267dc6ea9ceb116328de8f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200629205534epcas5p33eb7cbdff4aee986d2e509e0c79cf952
+References: <CGME20200629205534epcas5p33eb7cbdff4aee986d2e509e0c79cf952@epcas5p3.samsung.com>
+        <20200629204442.17336-1-krzk@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 30/06/2020 16:58, Sowjanya Komatineni wrote:
+Hi Krzysztof,
+
+> -----Original Message-----
+> From: Krzysztof Kozlowski <krzk@kernel.org>
+> Sent: 30 June 2020 02:15
+> To: Rob Herring <robh+dt@kernel.org>; Kukjin Kim <kgene@kernel.org>;
+> Krzysztof Kozlowski <krzk@kernel.org>; devicetree@vger.kernel.org;
+linux-arm-
+> kernel@lists.infradead.org; linux-samsung-soc@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Cc: Marek Szyprowski <m.szyprowski@samsung.com>; Bartlomiej Zolnierkiewicz
+> <b.zolnierkie@samsung.com>; Sylwester Nawrocki <snawrocki@kernel.org>;
+> Alim Akhtar <alim.akhtar@samsung.com>; Chanwoo Choi
+> <cw00.choi@samsung.com>; Pankaj Dubey <pankaj.dubey@samsung.com>
+> Subject: [PATCH 1/4] arm64: dts: exynos: Add PWM interrupts on Exynos7
 > 
-> On 6/30/20 2:21 AM, Hans Verkuil wrote:
->> On 17/06/2020 03:41, Sowjanya Komatineni wrote:
->>> This series adds support for video capture from external camera sensor to
->>> Tegra video driver.
->>>
->>> Jetson TX1 has camera expansion connector and supports custom camera module
->>> designed as per TX1 design specification.
->>>
->>> This series also enables camera capture support for Jetson Nano which has
->>> Raspberry PI camera header.
->>>
->>> This series is tested with IMX219 camera sensor.
->> Which tree did you base this on? The media_tree master? Or the mainline kernel?
-> These patches are with linux-next base at the time I sent them out which 
-> are on 20200616
->>
->> I now have the imx219 detected, but if I try to stream I get this:
->>
->> $ v4l2-ctl --stream-mmap
->> <[  512.840944] video4linux video0: MW_ACK_DONE syncpt timeout: -11
->> [  512.972975] video4linux video0: frame start syncpt timeout: -11
->> <VIDIOC_DQBUF: failed: Input/output error
->> [  513.180770] video4linux video0: MW_ACK_DONE syncpt timeout: -11
->>
->> And then everything hangs and I need to reset.
->>
->> I'm testing with the media_tree master with your patches on top.
->>
->> Regards,
->>
->> 	Hans
+> Add required interrupts to PWM node on Exynos7.  This fixes DT schema
+> warning:
 > 
-> Are you using same device tree as I sent offline? It uses CSI A for IMX219.
+>     pwm@136c0000: 'interrupts' is a required property
 > 
-> Does you setup also uses CSI-A as x2 for IMX219?
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > 
-> I tested them on Jetson Nano + IMX219 rasp PI module and also on Jetson 
-> TX1 + IMX274.
+> ---
 > 
-> I did not see any issue and am able to capture from both.
+> Not tested
+> ---
+>  arch/arm64/boot/dts/exynos/exynos7.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> Will try again on my side with today's latest linux-next and update result.
+> diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> index f590891efe25..523547b3d539 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> @@ -581,6 +581,11 @@
+>  		pwm: pwm@136c0000 {
+>  			compatible = "samsung,exynos4210-pwm";
+>  			reg = <0x136c0000 0x100>;
+> +			interrupts = <GIC_SPI 444 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 445 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 446 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 447 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 448 IRQ_TYPE_LEVEL_HIGH>;
+PWM IRQs are from 449 ~ 453 for PWM[0] ~ PWM[4] on this SoC.
+444 ~ 447 are for HSI2C and 448 is for ADC.
+Please see the exynos7.dtsi
+Also drivers/pwm/pwm-samsung.c does not uses interrupt at all, still we need
+interrupts property to be added here?
 
-Please use the media_tree master, that's what I use as well.
+>  			samsung,pwm-outputs = <0>, <1>, <2>, <3>;
+>  			#pwm-cells = <3>;
+>  			clocks = <&clock_peric0 PCLK_PWM>;
+> --
+> 2.17.1
 
-I did some more testing and there is something weird going on.
-
-I have a Leopard Imaging camera expansion board (LI-JTX1-MIPI-ADPT) with
-three camera connectors. See here for the datasheet:
-
-https://www.leopardimaging.com/uploads/LI-TX1-KIT-IMX274M12-T_datasheet.pdf
-
-The first connector (with an IMX274) causes this error:
-
-$ v4l2-ctl -d1 --stream-mmap
-[  599.265885] video4linux video1: MW_ACK_DONE syncpt timeout: -11
-[  599.473883] video4linux video1: MW_ACK_DONE syncpt timeout: -11
-[  599.681904] video4linux video1: frame start syncpt timeout: -11
-[  599.681909] video4linux video1: MW_ACK_DONE syncpt timeout: -11
-<VIDIOC_DQBUF: failed: Input/output error
-[  599.897884] video4linux video1: MW_ACK_DONE syncpt timeout: -11
-
-Similar to the test above where I had an IMX219 connected. Except it didn't
-hang with the IMX274 (I'm beginning to suspect a locking issue in the imx219
-driver that is causing the hang, I'll look at that tomorrow).
-
-If I connect the IMX219 to the middle camera connector, then it works fine.
-I think I tested this with the IMX274 as well, but I'm not 100% certain, also
-something to double check tomorrow.
-
-If I connect the IMX219 or IMX274 to the third camera connector, then I get this:
-
-$ v4l2-ctl -d0 --stream-mmap
-[  820.513866] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-
-[  820.525354] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-
-[  820.536780] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-
-[  820.548222] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-
-[  820.559639] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-<[  820.646931] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-[  820.658355] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-[  820.669797] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-[  820.681216] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-[  820.692601] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-<<<<<<<<<<<<<<< 14.50 fps
-<<<<<<<<<<<<<<< 14.75 fps
-<<<<<<<<<<<<<<< 14.73 fps
-<<<<<<<<<<<<<<< 14.80 fps
-<<<<<<<<<<<<<[  825.517854] tegra_mc_irq: 133437 callbacks suppressed
-[  825.517874] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-[  825.534395] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-[  825.545833] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-[  825.557280] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-[  825.579346] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-[  825.590764] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-[  825.602188] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-[  825.613649] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-[  825.625075] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-[  825.645983] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-< 14.64 fps
-<<<<<<<<<<<<<<<< 14.87 fps
-<<<<<<<<<<<<<<< 14.89 fps
-
-Something is producing EMEM address decode errors. But it is streaming.
-
-If I enable the TPG then everything is fine.
-
-So I have currently three different behaviors for three camera connectors.
-
-Do you have a datasheet for your Jetson TX1 camera board? It could be useful
-to compare the two.
-
-Regards,
-
-	Hans
-
-> 
->>
->>> This series include,
->>>
->>> VI I2C related fixes
->>> - Camera sensor programming happens through VI I2C which is on host1x bus.
->>> - These patches includes device tree and I2C driver fixes for VI I2C.
->>>
->>> Tegra video driver updates
->>> - TPG Vs Non-TPG based on Kconfig
->>> - Support for external sensor video capture based on device graph from DT.
->>> - Support for selection ioctl operations
->>> - Tegra MIPI CSI pads calibration
->>> - CSI T-CLK and T-HS settle time computation based on clock rates.
->>>
->>> Host1x driver updates
->>> - Adds API to allow creating mipi device for specific device node.
->>> - Splits MIPI pads calibrate start and waiting for calibration to be done.
->>>
->>> Device tree updates
->>> - Adds camera connector 2V8, 1V8, 1V2 regulator supplies to Jetson TX1 DT.
->>> - Enabled VI and CSI support in Jetson Nano DT.
->>>
->>>
->>> Delta between patch versions:
->>>
->>> [v2]:	Includes below changes based on v1 feedback
->>> 	- dt-binding document and the driver update for device graph to use
->>> 	  separate ports for sink endpoint and source endpoint for csi.
->>> 	- Use data-lanes endpoint property for csi.
->>> 	- Update tegra_mipi_request() to take device node pointer argument
->>> 	  rather than adding extra API.
->>> 	- Remove checking for clk pointer before clk_disable.
->>>
->>>
->>> Sowjanya Komatineni (18):
->>>    dt-bindings: i2c: tegra: Document Tegra210 VI I2C clocks and
->>>      power-domains
->>>    arm64: tegra: Add missing clocks and power-domains to Tegra210 VI I2C
->>>    i2c: tegra: Don't mark VI I2C as IRQ safe runtime PM
->>>    i2c: tegra: Fix the error path in tegra_i2c_runtime_resume
->>>    i2c: tegra: Fix runtime resume to re-init VI I2C
->>>    i2c: tegra: Avoid tegra_i2c_init_dma() for Tegra210 vi i2c
->>>    media: tegra-video: Fix channel format alignment
->>>    media: tegra-video: Enable TPG based on kernel config
->>>    media: tegra-video: Update format lookup to offset based
->>>    dt-bindings: tegra: Update VI and CSI bindings with port info
->>>    media: tegra-video: Add support for external sensor capture
->>>    media: tegra-video: Add support for selection ioctl ops
->>>    gpu: host1x: mipi: Update tegra_mipi_request() to be node based
->>>    gpu: host1x: mipi: Split tegra_mipi_calibrate and tegra_mipi_wait
->>>    media: tegra-video: Add CSI MIPI pads calibration
->>>    media: tegra-video: Compute settle times based on the clock rate
->>>    arm64: tegra: jetson-tx1: Add camera supplies
->>>    arm64: tegra: Enable Tegra VI CSI support for Jetson Nano
->>>
->>>   .../display/tegra/nvidia,tegra20-host1x.txt        |  92 ++-
->>>   .../devicetree/bindings/i2c/nvidia,tegra20-i2c.txt |  19 +-
->>>   arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |  41 ++
->>>   arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts |  10 +
->>>   arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   6 +
->>>   drivers/gpu/drm/tegra/dsi.c                        |   9 +-
->>>   drivers/gpu/host1x/mipi.c                          |  30 +-
->>>   drivers/i2c/busses/i2c-tegra.c                     |  39 +-
->>>   drivers/staging/media/tegra-video/Kconfig          |   7 +
->>>   drivers/staging/media/tegra-video/csi.c            | 245 ++++++-
->>>   drivers/staging/media/tegra-video/csi.h            |   8 +
->>>   drivers/staging/media/tegra-video/tegra210.c       |  25 +-
->>>   drivers/staging/media/tegra-video/vi.c             | 770 +++++++++++++++++++--
->>>   drivers/staging/media/tegra-video/vi.h             |  23 +-
->>>   drivers/staging/media/tegra-video/video.c          |  23 +-
->>>   include/linux/host1x.h                             |   4 +-
->>>   16 files changed, 1251 insertions(+), 100 deletions(-)
->>>
 
