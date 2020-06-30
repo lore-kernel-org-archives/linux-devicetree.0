@@ -4,268 +4,195 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A685C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 05:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFABC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 05:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 402C3206CB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 05:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13184206BE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 05:37:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nzwt2UEd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eYs6ntqm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgF3F2X (ORCPT
+        id S1727956AbgF3FhK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 01:28:23 -0400
-Received: from mail-eopbgr70044.outbound.protection.outlook.com ([40.107.7.44]:24452
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726015AbgF3F2X (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 30 Jun 2020 01:28:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Iz0zMau0dkqhDSxEoyzi65R0oEKKlXpx/TPiyXq9DQIIpqn1IXnhTqju0CB55jhAxkwKq3C+t+hG01RgdNuwiLRj75TGdqn9L9eDNBXaAumxrKuJSUbZda+Q3X8yArP5X9bgHTqLCqWufLhIirHUOKki1HuzXy3RdN9BGzyU4strp5hWaYZQEVax/FQ+cjB71iHF9K4svGmT3igBG3BPLdyoYaDkEDnO63O0Rya6LDqAwrA8O+Qw8gVzrWHDOaUXvdhxqgSeWC+JVV/IialT7AhqDbEB4DzqZffyFaGEJImadfS52fqP6y+H5DKFxItpFimIcjSRqjHh7bLhqfn9yw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lF6plXu65UdsuRH3ZRGToErneNpkGcq9PN+qbD4wdEA=;
- b=eCARefYb8xzTmovRTwEauO9EPxgafl/wkyHdCnvHtdqEbero8NFMWeKwEUOQA3Zv89qYEuvdXjDoguOIo6YWvrgFPxRHnThCrYbZZs1vDbZAfCizLU1tLKNxO5P1a1BRW5lNQnECI3CRY+clzE9zTr22W5Bq0OSA5gjgFpC6MJiYEM42lOJ/a58kxHFVxVhb5rxYeiLuE63VXzQNTZj2e29MQ0UK5hLpRBfA+WTXnz/HSmeYziGvpvI4bHIuzE/8BFfe/R1jWxVuj9B1XVzY8FPDgvMRTbtZuxYqBRXATYufMnX2xu3aSEm4fVurov7ukSTkNRBlP7WEoYpfr6b99Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lF6plXu65UdsuRH3ZRGToErneNpkGcq9PN+qbD4wdEA=;
- b=nzwt2UEd85UW6WVikjX8ujDtzHD1fOlf847Jae7O3q6M9pTaHmmod461dBg77u+ZyurPvH5saPghbOCvy4xjiVQ+aUyzHqqgKJdKs0DhFc7KmS+nqh36tDErQsHtpLrrZ7/JkGUNxpWasQJfBFqdrU5oCHbmPNKX8Fr9cVdekpc=
-Received: from DBBPR04MB6090.eurprd04.prod.outlook.com (2603:10a6:10:c4::22)
- by DB6PR04MB3032.eurprd04.prod.outlook.com (2603:10a6:6:10::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.26; Tue, 30 Jun
- 2020 05:28:16 +0000
-Received: from DBBPR04MB6090.eurprd04.prod.outlook.com
- ([fe80::c11b:3254:dd7b:66d]) by DBBPR04MB6090.eurprd04.prod.outlook.com
- ([fe80::c11b:3254:dd7b:66d%7]) with mapi id 15.20.3131.028; Tue, 30 Jun 2020
- 05:28:16 +0000
-From:   Andy Tang <andy.tang@nxp.com>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-CC:     Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>,
+        Tue, 30 Jun 2020 01:37:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56184 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726875AbgF3FhK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 01:37:10 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03AACC03E979
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 22:37:09 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id 9so20970375ljv.5
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 22:37:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=y+NTTpix/VNOdqLN5V3EttevSJs3w1JqKA5tqe0k7BM=;
+        b=eYs6ntqmqtss9ojrvsY3GbB/7L1Al+U7Czg/OV/4iPVxFlg/rgjAwylYV2+807Ouw3
+         lG2gJOT6XtkwFhsSetyTp9B8beQdewzvq/NiVR+Ld/CtY3TmqPqJsGdIKNRSJgpEG+Va
+         HI+a0ktwNFAqqxnY5QzXXsDkxmfbfRXtzzJwH0R0p3Krd1wqu9p9hRUdHu4borVz2iky
+         ua61SdmRu99QBiPLuGGEbJJhbl2bl2jK8hph6bBgjLfGUKts9nCzELPGrg3B/qD8RTO+
+         CvwzlQaEB3O6b3sCb6o28skMvKESdqY+ZIMoymJl+kjgJvPPzrUfHCVuchyknlc7mlgz
+         SIfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=y+NTTpix/VNOdqLN5V3EttevSJs3w1JqKA5tqe0k7BM=;
+        b=Cj17Rp2YV439+0z00Q6YHn9KvWPA1/pjPf3DHFbYNLICtJZoBoNtTLS3D6uNKvrgY7
+         AM7pSKyXFHIp8/GgEzf1kXT3w8fyNclD/9HE8T8lG4w2MU9nLfHJ52XsEG1S3Squwx+w
+         KQOJYEOCx8YSr++imvelLz+8igZTU7qdgE1v++VNiz9Vmois2RPkV+riSMikJWUeIe3p
+         S+zCs1I9PrGMHtkJHaTDfeYEQXQ5hSc1mIM01R9uo8UPavVwpg3IwhG0XDuRHo2kX0tu
+         VUc4hxnNvLvxbxzImed2O2Sy2mVIQF63US2PA/7NrLdO+dwE5I/iIL1pmvjFP9D55LGV
+         awlw==
+X-Gm-Message-State: AOAM531IR5BAwYAeiMT936qDJXXqwp0KN0RxMnPgbjqnDUjEWlf+0j6y
+        1R4whbvMA7lKosRQ7xYuHXGzY5MSchYM1eJxu2ggEw==
+X-Google-Smtp-Source: ABdhPJyetVRam7dpe9Lk5SgkZI4NJyaTUvqWahZ3sGQ69bb4D0vK7IghSfJMsneSvvEZUdzelLl1qUxjPYP5FO0EPoY=
+X-Received: by 2002:a2e:a58a:: with SMTP id m10mr9501981ljp.346.1593495428184;
+ Mon, 29 Jun 2020 22:37:08 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200630032014.22956-1-andy.tang@nxp.com> <CAHLCerO3B4Z67KP8VaF957Jkid21gLvzhS49gNeqUC+6muPkjA@mail.gmail.com>
+ <DBBPR04MB609085CD69E4CCBDD49CCF66F36F0@DBBPR04MB6090.eurprd04.prod.outlook.com>
+In-Reply-To: <DBBPR04MB609085CD69E4CCBDD49CCF66F36F0@DBBPR04MB6090.eurprd04.prod.outlook.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 30 Jun 2020 11:06:56 +0530
+Message-ID: <CAP245DV-_+5Ht=yP9Mnzb2vUqXDJSEeBPfbNh48mEt62PmBeWA@mail.gmail.com>
+Subject: Re: [EXT] Re: [PATCH 1/2] arm64: dts: ls1088a: add more thermal zone support
+To:     Andy Tang <andy.tang@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>,
         Rob Herring <robh+dt@kernel.org>,
         lakml <linux-arm-kernel@lists.infradead.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] Re: [PATCH 1/2] arm64: dts: ls1088a: add more thermal zone
- support
-Thread-Topic: [EXT] Re: [PATCH 1/2] arm64: dts: ls1088a: add more thermal zone
- support
-Thread-Index: AQHWTo44S8AorskBBEKeL2bS3reQjqjwnPGAgAAC6hA=
-Date:   Tue, 30 Jun 2020 05:28:16 +0000
-Message-ID: <DBBPR04MB609085CD69E4CCBDD49CCF66F36F0@DBBPR04MB6090.eurprd04.prod.outlook.com>
-References: <20200630032014.22956-1-andy.tang@nxp.com>
- <CAHLCerO3B4Z67KP8VaF957Jkid21gLvzhS49gNeqUC+6muPkjA@mail.gmail.com>
-In-Reply-To: <CAHLCerO3B4Z67KP8VaF957Jkid21gLvzhS49gNeqUC+6muPkjA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [92.121.68.129]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 4671f3c2-0890-4e61-516e-08d81cb6648b
-x-ms-traffictypediagnostic: DB6PR04MB3032:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR04MB30321A711D9F683EA1643762F36F0@DB6PR04MB3032.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 0450A714CB
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +xaIAgirmH60gQVwBjqhFSxsqVg+KIaxt4B/AO0ZaRbSfx2NPMhkY+Ym9GwWkgGDKBaGy2RiJgOhthHt2Lvp8oMXzo2ZP1E2qaOLFBDZ3GpkNQ/cNSRiICVYsRHNHU3ahGFEpWZdnj5jrGbkuNd9IZ7SLTxXqI3J7IrF98B1+lpnlN3uJNKI1hEEPrUrJ0JakDUOQ8ZwwwkX+lNh0BTzemo06peLjJ9nyM4cW6uqdDOX6CED1xL6Fu0mX7qRaz4IhYET/6iHT9qqAwLGqUtnF99C19K4wpC0ncQwup3MjP2Mx0MvtVwyPi/P0iCHlSZ7WQyvXYwXIuBhrWKcQvv/3w==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR04MB6090.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(136003)(39860400002)(396003)(346002)(376002)(54906003)(64756008)(9686003)(76116006)(7696005)(55016002)(8676002)(2906002)(86362001)(83380400001)(66446008)(186003)(6916009)(26005)(52536014)(4326008)(66556008)(33656002)(44832011)(5660300002)(316002)(8936002)(66946007)(6506007)(478600001)(53546011)(71200400001)(66476007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 8NbHHRRV1Bs+UJwRlmbi11cUKny7WfXJNoVvGoqtOPvTTjWTFjZnRBqQkZY9yEqfDkMoQTZjDMZ2GE75U5jYUvoA0izAljvI6XDIzIOEhoLX+WZq7DqbQf/lzw2eH1txy2VVxNC6lkpbDH662yjFmBNtJKlBUkhOGU0l8ad17X7Nd3LotlOsUDTY8uAUwzAT3HcS+X31VYnzVumUJoQNC/WJYdofuNTP5WOqvP5hhcu312HcBjDCugaCns5ZATIjVrMyiRqdpB81aSiPRvNbgQBwr8ig3CeXs+q2igmFpbItNzmdKjJ2qMmpQwX1LHhh4XU2OOCq9m7baqvE8ZNv3c/+a2fsbF0fUiUS2/Y9s47xcP+b1UJ62c6MHt+VwObmOOMsFc0VkcQSfbl7YkCQr1Qdj5V4aIYkowKQlbAVeY489pCrwF8bVJmo63R1m9V1XGGGwpyVl0QeKJXpHj2224dft/es+SyLRPqSNJv30n0=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DBBPR04MB6090.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4671f3c2-0890-4e61-516e-08d81cb6648b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2020 05:28:16.8513
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: N8FQn1n1H58dz34M7gTtscmiwboAorpN8myYqdkbnoW/vAX0k0L6xg1YJ5UThZAtTAZo5+nHoD5qxGXDARg7ww==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR04MB3032
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW1pdCBLdWNoZXJpYSA8
-YW1pdC5rdWNoZXJpYUBsaW5hcm8ub3JnPg0KPiBTZW50OiAyMDIw5bm0NuaciDMw5pelIDEzOjEy
-DQo+IFRvOiBBbmR5IFRhbmcgPGFuZHkudGFuZ0BueHAuY29tPg0KPiBDYzogU2hhd24gR3VvIDxz
-aGF3bmd1b0BrZXJuZWwub3JnPjsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBSb2INCj4g
-SGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgbGFrbWwgPGxpbnV4LWFybS1rZXJuZWxAbGlz
-dHMuaW5mcmFkZWFkLm9yZz47DQo+IG9wZW4gbGlzdDpPUEVOIEZJUk1XQVJFIEFORCBGTEFUVEVO
-RUQgREVWSUNFIFRSRUUgQklORElOR1MNCj4gPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsg
-TEtNTCA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz4NCj4gU3ViamVjdDogW0VYVF0gUmU6
-IFtQQVRDSCAxLzJdIGFybTY0OiBkdHM6IGxzMTA4OGE6IGFkZCBtb3JlIHRoZXJtYWwgem9uZQ0K
-PiBzdXBwb3J0DQo+IA0KPiBDYXV0aW9uOiBFWFQgRW1haWwNCj4gDQo+IE9uIFR1ZSwgSnVuIDMw
-LCAyMDIwIGF0IDg6NTYgQU0gPGFuZHkudGFuZ0BueHAuY29tPiB3cm90ZToNCj4gPg0KPiA+IEZy
-b206IFl1YW50aWFuIFRhbmcgPGFuZHkudGFuZ0BueHAuY29tPg0KPiA+DQo+ID4gVGhlcmUgYXJl
-IDIgdGhlcm1hbCB6b25lcyBpbiBsczEwODhhIHNvYy4gQWRkIHRoZSBvdGhlciB0aGVybWFsIHpv
-bmUNCj4gPiBub2RlIHRvIGVuYWJsZSBpdC4NCj4gPiBBbHNvIHVwZGF0ZSB0aGUgdmFsdWVzIGlu
-IGNhbGlicmF0aW9uIHRhYmxlIHRvIG1ha2UgdGhlIHRlbXBlcmF0dXJlcw0KPiA+IG1vbml0b3Jl
-ZCBtb3JlIHByZWNpc2UuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBZdWFudGlhbiBUYW5nIDxh
-bmR5LnRhbmdAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgLi4uL2FybTY0L2Jvb3QvZHRzL2ZyZWVz
-Y2FsZS9mc2wtbHMxMDg4YS5kdHNpIHwgMTAwDQo+ID4gKysrKysrKysrKystLS0tLS0tDQo+ID4g
-IDEgZmlsZSBjaGFuZ2VkLCA2MiBpbnNlcnRpb25zKCspLCAzOCBkZWxldGlvbnMoLSkNCj4gPg0K
-PiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDg4
-YS5kdHNpDQo+ID4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDg4YS5k
-dHNpDQo+ID4gaW5kZXggMzZhNzk5NTU0NjIwLi5jY2JiYzIzZTZjODUgMTAwNjQ0DQo+ID4gLS0t
-IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA4OGEuZHRzaQ0KPiA+ICsr
-KyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwODhhLmR0c2kNCj4gPiBA
-QCAtMTI5LDE5ICsxMjksMTkgQEANCj4gPiAgICAgICAgIH07DQo+ID4NCj4gPiAgICAgICAgIHRo
-ZXJtYWwtem9uZXMgew0KPiA+IC0gICAgICAgICAgICAgICBjcHVfdGhlcm1hbDogY3B1LXRoZXJt
-YWwgew0KPiA+ICsgICAgICAgICAgICAgICBjb3JlLWNsdXN0ZXIgew0KPiA+ICAgICAgICAgICAg
-ICAgICAgICAgICAgIHBvbGxpbmctZGVsYXktcGFzc2l2ZSA9IDwxMDAwPjsNCj4gPiAgICAgICAg
-ICAgICAgICAgICAgICAgICBwb2xsaW5nLWRlbGF5ID0gPDUwMDA+Ow0KPiA+ICAgICAgICAgICAg
-ICAgICAgICAgICAgIHRoZXJtYWwtc2Vuc29ycyA9IDwmdG11IDA+Ow0KPiA+DQo+ID4gICAgICAg
-ICAgICAgICAgICAgICAgICAgdHJpcHMgew0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgY3B1X2FsZXJ0OiBjcHUtYWxlcnQgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgY29yZV9jbHVzdGVyX2FsZXJ0Og0KPiBjb3JlLWNsdXN0ZXItYWxlcnQNCj4gPiAr
-IHsNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdGVtcGVyYXR1
-cmUgPSA8ODUwMDA+Ow0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICBoeXN0ZXJlc2lzID0gPDIwMDA+Ow0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICB0eXBlID0gInBhc3NpdmUiOw0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgfTsNCj4gPg0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY3B1
-X2NyaXQ6IGNwdS1jcml0IHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNv
-cmVfY2x1c3Rlcl9jcml0OiBjb3JlLWNsdXN0ZXItY3JpdCB7DQo+ID4gICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHRlbXBlcmF0dXJlID0gPDk1MDAwPjsNCj4gPiAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaHlzdGVyZXNpcyA9IDwyMDAwPjsN
-Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdHlwZSA9ICJjcml0
-aWNhbCI7IEBADQo+IC0xNTAsNw0KPiA+ICsxNTAsNyBAQA0KPiA+DQo+ID4gICAgICAgICAgICAg
-ICAgICAgICAgICAgY29vbGluZy1tYXBzIHsNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIG1hcDAgew0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICB0cmlwID0gPCZjcHVfYWxlcnQ+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICB0cmlwID0NCj4gPCZjb3JlX2NsdXN0ZXJfYWxlcnQ+Ow0KPiA+ICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb29saW5nLWRldmljZSA9DQo+ID4gICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZjcHUwDQo+IFRI
-RVJNQUxfTk9fTElNSVQgVEhFUk1BTF9OT19MSU1JVD4sDQo+ID4gICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZjcHUxDQo+ID4gVEhFUk1BTF9OT19MSU1J
-VCBUSEVSTUFMX05PX0xJTUlUPiwgQEAgLTE2Myw2ICsxNjMsMjYgQEANCj4gPiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIH07DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgfTsN
-Cj4gPiAgICAgICAgICAgICAgICAgfTsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgIHNvYyB7
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcG9sbGluZy1kZWxheS1wYXNzaXZlID0gPDEw
-MDA+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHBvbGxpbmctZGVsYXkgPSA8NTAwMD47
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgdGhlcm1hbC1zZW5zb3JzID0gPCZ0bXUgMT47
-DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHRyaXBzIHsNCj4gPiArICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHNvYy1hbGVydCB7DQo+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHRlbXBlcmF0dXJlID0gPDg1MDAwPjsNCj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaHlzdGVyZXNpcyA9IDwyMDAwPjsN
-Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdHlwZSA9ICJwYXNz
-aXZlIjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH07DQo+ID4gKw0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc29jLWNyaXQgew0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0ZW1wZXJhdHVyZSA9IDw5NTAwMD47DQo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGh5c3RlcmVzaXMgPSA8
-MjAwMD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHR5cGUg
-PSAiY3JpdGljYWwiOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4g
-PiArICAgICAgICAgICAgICAgICAgICAgICB9Ow0KPiA+ICsgICAgICAgICAgICAgICB9Ow0KPiAN
-Cj4gWW91IHNob3VsZCBhbHNvIGFkZCBhIGNvb2xpbmctbWFwcyBzZWN0aW9uIGZvciB0aGlzIHRo
-ZXJtYWwgem9uZSBnaXZlbiB0aGF0IGl0DQo+IGhhcyBhIHBhc3NpdmUgdHJpcCB0eXBlLiBPdGhl
-cndpc2UgdGhlcmUgaXMgbm8gdXNlIGZvciBhIHBhc3NpdmUgdHJpcCB0eXBlLg0KSXQgaXMgYmV0
-dGVyIHRvIGhhdmUgYSBjb29saW5nIGRldmljZS4gQnV0IHRoZXJlIGlzIG9ubHkgb25lIGNvb2xp
-bmcgZGV2aWNlIG9uIHRoaXMgcGxhdGZvcm0NCndoaWNoIGlzIHVzZWQgYnkgY29yZS1jbHVzdGVy
-LiBTbyB0aGVyZSBpcyBubyBleHRyYSBjb29saW5nIGRldmljZSBmb3IgaXQuDQpUaGlzIHpvbmUg
-Y2FuIHRha2UgYWN0aW9uIHdoZW4gY3JpdGljYWwgdGVtcCBpcyByZWFjaGVkLiBTbyBpdCBpcyBz
-dGlsbCB1c2VmdWwuDQpXaGF0IGRvIHlvdSBzdWdnZXN0PyANCg0KQlIsDQpBbmR5DQo+IA0KPiA+
-ICAgICAgICAgfTsNCj4gPg0KPiA+ICAgICAgICAgdGltZXIgew0KPiA+IEBAIC0yMDksNDUgKzIy
-OSw0OSBAQA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLHFv
-cmlxLXRtdSI7DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MCAweDFmODAw
-MDAgMHgwIDB4MTAwMDA+Ow0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdHMg
-PSA8MCAyMyAweDQ+Ow0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgIGZzbCx0bXUtcmFuZ2Ug
-PSA8MHhiMDAwMCAweDkwMDJhIDB4NjAwNGMNCj4gMHgzMDA2Mj47DQo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgZnNsLHRtdS1yYW5nZSA9IDwweGIwMDAwIDB4OTAwMmEgMHg2MDA0Yw0KPiA+
-ICsgMHg3MDA2Mj47DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgZnNsLHRtdS1jYWxpYnJh
-dGlvbiA9DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAvKiBDYWxpYnJhdGlv
-biBkYXRhIGdyb3VwIDEgKi8NCj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDww
-eDAwMDAwMDAwIDB4MDAwMDAwMjYNCj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IDB4MDAwMDAwMDEgMHgwMDAwMDAyZA0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgMHgwMDAwMDAwMiAweDAwMDAwMDMyDQo+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAweDAwMDAwMDAzIDB4MDAwMDAwMzkNCj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIDB4MDAwMDAwMDQgMHgwMDAwMDAzZg0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgMHgwMDAwMDAwNSAweDAwMDAwMDQ2DQo+ID4gLSAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAweDAwMDAwMDA2IDB4MDAwMDAwNGQNCj4gPiAtICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIDB4MDAwMDAwMDcgMHgwMDAwMDA1NA0KPiA+IC0gICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgMHgwMDAwMDAwOCAweDAwMDAwMDVhDQo+ID4gLSAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAweDAwMDAwMDA5IDB4MDAwMDAwNjENCj4gPiAtICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIDB4MDAwMDAwMGEgMHgwMDAwMDA2YQ0KPiA+IC0gICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgMHgwMDAwMDAwYiAweDAwMDAwMDcxDQo+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICA8MHgwMDAwMDAwMCAweDAwMDAwMDIzDQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwMDAwMDAxIDB4MDAwMDAwMmENCj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMDAwMDIgMHgwMDAwMDAzMA0KPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAwMDAwMyAweDAwMDAwMDM3DQo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwMDAwMDA0IDB4MDAwMDAwM2QNCj4g
-PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMDAwMDUgMHgwMDAwMDA0NA0K
-PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAwMDAwNiAweDAwMDAwMDRh
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwMDAwMDA3IDB4MDAwMDAw
-NTENCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMDAwMDggMHgwMDAw
-MDA1Nw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAwMDAwOSAweDAw
-MDAwMDVlDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwMDAwMDBhIDB4
-MDAwMDAwNjQNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMDAwMGIg
-MHgwMDAwMDA2Yg0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLyogQ2FsaWJy
-YXRpb24gZGF0YSBncm91cCAyICovDQo+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAweDAwMDEwMDAwIDB4MDAwMDAwMjUNCj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIDB4MDAwMTAwMDEgMHgwMDAwMDAyYw0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgMHgwMDAxMDAwMiAweDAwMDAwMDM1DQo+ID4gLSAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAweDAwMDEwMDAzIDB4MDAwMDAwM2QNCj4gPiAtICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIDB4MDAwMTAwMDQgMHgwMDAwMDA0NQ0KPiA+IC0gICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgMHgwMDAxMDAwNSAweDAwMDAwMDRlDQo+ID4gLSAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAweDAwMDEwMDA2IDB4MDAwMDAwNTcNCj4gPiAtICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIDB4MDAwMTAwMDcgMHgwMDAwMDA2MQ0KPiA+IC0gICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgMHgwMDAxMDAwOCAweDAwMDAwMDZiDQo+ID4gLSAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAweDAwMDEwMDA5IDB4MDAwMDAwNzYNCj4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMTAwMDAgMHgwMDAwMDAyMg0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAxMDAwMSAweDAwMDAwMDJhDQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwMDEwMDAyIDB4MDAwMDAwMzINCj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMTAwMDMgMHgwMDAwMDAzYQ0KPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAxMDAwNCAweDAwMDAwMDQyDQo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwMDEwMDA1IDB4MDAwMDAwNGENCj4g
-PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMTAwMDYgMHgwMDAwMDA1Mg0K
-PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAxMDAwNyAweDAwMDAwMDVh
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwMDEwMDA4IDB4MDAwMDAw
-NjINCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMTAwMDkgMHgwMDAw
-MDA2YQ0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLyogQ2FsaWJyYXRpb24g
-ZGF0YSBncm91cCAzICovDQo+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAw
-MDIwMDAwIDB4MDAwMDAwMjkNCj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4
-MDAwMjAwMDEgMHgwMDAwMDAzMw0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-MHgwMDAyMDAwMiAweDAwMDAwMDNkDQo+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAweDAwMDIwMDAzIDB4MDAwMDAwNDkNCj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIDB4MDAwMjAwMDQgMHgwMDAwMDA1Ng0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgMHgwMDAyMDAwNSAweDAwMDAwMDYxDQo+ID4gLSAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAweDAwMDIwMDA2IDB4MDAwMDAwNmQNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIDB4MDAwMjAwMDAgMHgwMDAwMDAyMQ0KPiA+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgMHgwMDAyMDAwMSAweDAwMDAwMDJiDQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAweDAwMDIwMDAyIDB4MDAwMDAwMzUNCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIDB4MDAwMjAwMDMgMHgwMDAwMDA0MA0KPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgMHgwMDAyMDAwNCAweDAwMDAwMDRhDQo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAweDAwMDIwMDA1IDB4MDAwMDAwNTQNCj4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMjAwMDYgMHgwMDAwMDA1ZQ0KPiA+ICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgLyogQ2FsaWJyYXRpb24gZGF0YSBncm91cCA0ICovDQo+
-ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwMDMwMDAwIDB4MDAwMDAwMjEN
-Cj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMzAwMDEgMHgwMDAwMDAy
-YQ0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAzMDAwMiAweDAwMDAw
-MDNjDQo+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwMDMwMDAzIDB4MDAw
-MDAwNGU+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAzMDAwMCAw
-eDAwMDAwMDEwDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwMDMwMDAx
-IDB4MDAwMDAwMWMNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMzAw
-MDIgMHgwMDAwMDAyNw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAz
-MDAwMyAweDAwMDAwMDMyDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAw
-MDMwMDA0IDB4MDAwMDAwM2UNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4
-MDAwMzAwMDUgMHgwMDAwMDA0OQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-MHgwMDAzMDAwNiAweDAwMDAwMDU0DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAweDAwMDMwMDA3IDB4MDAwMDAwNjA+Ow0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIGxp
-dHRsZS1lbmRpYW47DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgI3RoZXJtYWwtc2Vuc29y
-LWNlbGxzID0gPDE+Ow0KPiA+ICAgICAgICAgICAgICAgICB9Ow0KPiA+IC0tDQo+ID4gMi4xNy4x
-DQo+ID4NCg==
+On Tue, Jun 30, 2020 at 10:58 AM Andy Tang <andy.tang@nxp.com> wrote:
+>
+>
+>
+> > -----Original Message-----
+> > From: Amit Kucheria <amit.kucheria@linaro.org>
+> > Sent: 2020=E5=B9=B46=E6=9C=8830=E6=97=A5 13:12
+> > To: Andy Tang <andy.tang@nxp.com>
+> > Cc: Shawn Guo <shawnguo@kernel.org>; Leo Li <leoyang.li@nxp.com>; Rob
+> > Herring <robh+dt@kernel.org>; lakml <linux-arm-kernel@lists.infradead.o=
+rg>;
+> > open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+> > <devicetree@vger.kernel.org>; LKML <linux-kernel@vger.kernel.org>
+> > Subject: [EXT] Re: [PATCH 1/2] arm64: dts: ls1088a: add more thermal zo=
+ne
+> > support
+> >
+> > Caution: EXT Email
+> >
+> > On Tue, Jun 30, 2020 at 8:56 AM <andy.tang@nxp.com> wrote:
+> > >
+> > > From: Yuantian Tang <andy.tang@nxp.com>
+> > >
+> > > There are 2 thermal zones in ls1088a soc. Add the other thermal zone
+> > > node to enable it.
+> > > Also update the values in calibration table to make the temperatures
+> > > monitored more precise.
+> > >
+> > > Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+> > > ---
+> > >  .../arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 100
+> > > +++++++++++-------
+> > >  1 file changed, 62 insertions(+), 38 deletions(-)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > > b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > > index 36a799554620..ccbbc23e6c85 100644
+> > > --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > > @@ -129,19 +129,19 @@
+> > >         };
+> > >
+> > >         thermal-zones {
+> > > -               cpu_thermal: cpu-thermal {
+> > > +               core-cluster {
+> > >                         polling-delay-passive =3D <1000>;
+> > >                         polling-delay =3D <5000>;
+> > >                         thermal-sensors =3D <&tmu 0>;
+> > >
+> > >                         trips {
+> > > -                               cpu_alert: cpu-alert {
+> > > +                               core_cluster_alert:
+> > core-cluster-alert
+> > > + {
+> > >                                         temperature =3D <85000>;
+> > >                                         hysteresis =3D <2000>;
+> > >                                         type =3D "passive";
+> > >                                 };
+> > >
+> > > -                               cpu_crit: cpu-crit {
+> > > +                               core_cluster_crit: core-cluster-crit =
+{
+> > >                                         temperature =3D <95000>;
+> > >                                         hysteresis =3D <2000>;
+> > >                                         type =3D "critical"; @@
+> > -150,7
+> > > +150,7 @@
+> > >
+> > >                         cooling-maps {
+> > >                                 map0 {
+> > > -                                       trip =3D <&cpu_alert>;
+> > > +                                       trip =3D
+> > <&core_cluster_alert>;
+> > >                                         cooling-device =3D
+> > >                                                 <&cpu0
+> > THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> > >                                                 <&cpu1
+> > > THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, @@ -163,6 +163,26 @@
+> > >                                 };
+> > >                         };
+> > >                 };
+> > > +
+> > > +               soc {
+> > > +                       polling-delay-passive =3D <1000>;
+> > > +                       polling-delay =3D <5000>;
+> > > +                       thermal-sensors =3D <&tmu 1>;
+> > > +
+> > > +                       trips {
+> > > +                               soc-alert {
+> > > +                                       temperature =3D <85000>;
+> > > +                                       hysteresis =3D <2000>;
+> > > +                                       type =3D "passive";
+> > > +                               };
+> > > +
+> > > +                               soc-crit {
+> > > +                                       temperature =3D <95000>;
+> > > +                                       hysteresis =3D <2000>;
+> > > +                                       type =3D "critical";
+> > > +                               };
+> > > +                       };
+> > > +               };
+> >
+> > You should also add a cooling-maps section for this thermal zone given =
+that it
+> > has a passive trip type. Otherwise there is no use for a passive trip t=
+ype.
+> It is better to have a cooling device. But there is only one cooling devi=
+ce on this platform
+> which is used by core-cluster. So there is no extra cooling device for it=
+.
+> This zone can take action when critical temp is reached. So it is still u=
+seful.
+> What do you suggest?
+
+If the action taken by the core-cluster cooling-maps is the only one
+that can be taken, I suggest getting rid of the the soc-alert passive
+trip completely. It is not of any use.
+
+If there is a chance that your soc thermal-zone can heat up before
+your cpu-cluster zone (unlikely), you could use the same cooling
+device (cpu0, cpu1) for soc thermal zone too.
