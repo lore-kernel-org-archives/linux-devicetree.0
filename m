@@ -2,170 +2,129 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A84C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 14:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C609FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 14:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD29E2073E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 14:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A26722074D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 14:11:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GQg6Mbdt"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GVVje8vy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388789AbgF3OKH (ORCPT
+        id S1731123AbgF3OLA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 10:10:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50592 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388654AbgF3OJi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 10:09:38 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ED84C061755;
-        Tue, 30 Jun 2020 07:09:38 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id ga4so20749001ejb.11;
-        Tue, 30 Jun 2020 07:09:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=H/evTaw/z01ZGDeG0L9HG7odwSXvoYGd70EVEtMJgyw=;
-        b=GQg6MbdtC7O/JksYFnsXCQUa7VM8GqRFaJ7o8tcCki5SbVvNanFklIHngwm1SCsdqC
-         TiCNmopPL1Snjo7Fdp4DTuoud9uG2t5ZbHcB+yD2UD+nJPL6amp/HOxMecS6EZs6Ds3V
-         cEGwKV7X36jt39dHe/Lhe7DxJtDdcoSS3BM1ufWuJhYrCUwaWl0kamfYurWYaGbaPLXs
-         vVdxw3V1aSUlRPXyqc2mtIZ7pI7aaK2Z1ru9CkXNoq7zo7hJAAMzwv55RCLXIJbH9/SB
-         TPhpEXceHaEjSDLRP/rNok1EhUfP8FXZnsD9Pqg0ZAxb+y9elKXyFHc4UeI/Lt8GYk/E
-         X8XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=H/evTaw/z01ZGDeG0L9HG7odwSXvoYGd70EVEtMJgyw=;
-        b=qKEmkcxd6EBBHDiigRWtySxHT+cID03D8BeAVH8oqusKDoQ3WWg15XW3nOkqt+gfbp
-         lpBl3ogqtNKDDbWRVICyNbD66LBxXuVTZ0X/uBBP6M0Io8kjZm+DUmF+40BfjRGPAyyk
-         LTSrqVKB/usRa6//tcND1sgTFtYVSaU1C3NXLZhvQiEW3hYwVr1pu9Og4A0SiQHLNZ+w
-         kBaLI9blgu59MTV/55i1glQB3413u9qbkB9r2+dHbIFuYVDw7yx7VZmeShzzR/g+N+Fl
-         cGBv0WDV1lcj0VJPKjAGSXvUjERCAnZvMCDIWGNAW7gH2WOBHG65G4XLOMDSVWDDMBIM
-         JWIg==
-X-Gm-Message-State: AOAM530U7CCpOsMhN7YdCYkP3Yu7zdP3Tl0ixgBl3IUA/+WMM6bUA4t3
-        L+BH9HBoInWmKeQu/nkO58Y=
-X-Google-Smtp-Source: ABdhPJxbREhkDAOSI8igfNmrRTf/zORHDkDfanfv8ux3Hn4L44dxoCoo9pmVHaHGHVli3Hb61tBPpQ==
-X-Received: by 2002:a17:906:970a:: with SMTP id k10mr19194276ejx.236.1593526177178;
-        Tue, 30 Jun 2020 07:09:37 -0700 (PDT)
-Received: from localhost ([213.191.183.145])
-        by smtp.gmail.com with ESMTPSA id n5sm2132704eja.70.2020.06.30.07.09.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jun 2020 07:09:36 -0700 (PDT)
-From:   Iskren Chernev <iskren.chernev@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        linux-arm-msm@vger.kernel.org,
-        Iskren Chernev <iskren.chernev@gmail.com>
-Subject: [PATCH 3/7] ARM: dts: qcom: msm8974-klte: Add support for touchscreen
-Date:   Tue, 30 Jun 2020 17:09:08 +0300
-Message-Id: <20200630140912.260294-4-iskren.chernev@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200630140912.260294-1-iskren.chernev@gmail.com>
-References: <20200630140912.260294-1-iskren.chernev@gmail.com>
+        Tue, 30 Jun 2020 10:11:00 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:35376 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729908AbgF3OK7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 10:10:59 -0400
+X-UUID: 7355e478856f46dda6151b4e554d11f7-20200630
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=cxMnMMWUcVlBq3TyW4cE97CM4bI+Rge6V0CEfuXLJSs=;
+        b=GVVje8vy47V91iiWKK/nPY7B2b5015LBDU7sMrA53GVdlYsnxBIBsng+47QeeH+E5YQ2UwykS2bVR74JAbiU6Qvl4E7sXk5xBzTKlEIvdulUP8f/DoAgZxL1twSFEpQmLLnDwDth+Vnucv2Nsa++zvlnmbQG9mr13iQhTFmRvTY=;
+X-UUID: 7355e478856f46dda6151b4e554d11f7-20200630
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <jerry-ch.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 871010070; Tue, 30 Jun 2020 22:10:54 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 30 Jun 2020 22:10:50 +0800
+Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 30 Jun 2020 22:10:50 +0800
+Message-ID: <1593526253.29676.28.camel@mtksdccf07>
+Subject: Re: [RFC PATCH V4 0/4] media: platform: Add support for Face
+ Detection (FD) on mt8183 SoC
+From:   Jerry-ch Chen <Jerry-ch.Chen@mediatek.com>
+To:     Tomasz Figa <tfiga@chromium.org>
+CC:     "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>,
+        HansVerkuil <hverkuil@xs4all.nl>,
+        "laurent.pinchart+renesas@ideasonboard.com" 
+        <laurent.pinchart+renesas@ideasonboard.com>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "pihsun@chromium.org" <pihsun@chromium.org>,
+        "yuzhao@chromium.org" <yuzhao@chromium.org>,
+        "zwisler@chromium.org" <zwisler@chromium.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Sean Cheng =?UTF-8?Q?=28=E9=84=AD=E6=98=87=E5=BC=98=29?= 
+        <Sean.Cheng@mediatek.com>,
+        "Sj Huang =?UTF-8?Q?=28=E9=BB=83=E4=BF=A1=E7=92=8B=29?=" 
+        <sj.huang@mediatek.com>,
+        Christie Yu =?UTF-8?Q?=28=E6=B8=B8=E9=9B=85=E6=83=A0=29?= 
+        <christie.yu@mediatek.com>,
+        Frederic Chen =?UTF-8?Q?=28=E9=99=B3=E4=BF=8A=E5=85=83=29?= 
+        <Frederic.Chen@mediatek.com>,
+        Jungo Lin =?UTF-8?Q?=28=E6=9E=97=E6=98=8E=E4=BF=8A=29?= 
+        <jungo.lin@mediatek.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        <jerry-ch.chen@mediatek.com>
+Date:   Tue, 30 Jun 2020 22:10:53 +0800
+In-Reply-To: <20200521183825.GB249683@chromium.org>
+References: <20191204124732.10932-1-Jerry-Ch.chen@mediatek.com>
+         <1588903371.16825.14.camel@mtksdccf07>
+         <CAAFQd5CP+gH3zG9fejBv_hTzeAExMoY+L38W8e4e3OSc-gVRHg@mail.gmail.com>
+         <20200521183825.GB249683@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for the touchscreen found on the Samsung Galaxy S5.
-
-Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
----
- .../boot/dts/qcom-msm8974-samsung-klte.dts    | 54 +++++++++++++++++++
- 1 file changed, 54 insertions(+)
-
-diff --git a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-index 750e2f261139a..085636f182d01 100644
---- a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-@@ -284,6 +284,16 @@ cmd-data {
- 			};
- 		};
- 
-+		i2c2_pins: i2c2 {
-+			mux {
-+				pins = "gpio6", "gpio7";
-+				function = "blsp_i2c2";
-+
-+				drive-strength = <2>;
-+				bias-disable;
-+			};
-+		};
-+
- 		i2c6_pins: i2c6 {
- 			mux {
- 				pins = "gpio29", "gpio30";
-@@ -342,6 +352,42 @@ phy@a {
- 		};
- 	};
- 
-+	i2c@f9924000 {
-+		status = "okay";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c2_pins>;
-+
-+		touchscreen@20 {
-+			compatible = "syna,rmi4-i2c";
-+			reg = <0x20>;
-+
-+			interrupt-parent = <&pma8084_gpios>;
-+			interrupts = <8 IRQ_TYPE_EDGE_FALLING>;
-+
-+			vdd-supply = <&max77826_ldo13>;
-+			vio-supply = <&pma8084_lvs2>;
-+
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&touch_pin>;
-+
-+			syna,startup-delay-ms = <100>;
-+
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			rmi4-f01@1 {
-+				reg = <0x1>;
-+				syna,nosleep-mode = <1>;
-+			};
-+
-+			rmi4-f12@12 {
-+				reg = <0x12>;
-+				syna,sensor-type = <1>;
-+			};
-+		};
-+	};
-+
- 	i2c@f9928000 {
- 		status = "okay";
- 
-@@ -460,6 +506,14 @@ touchkey_pin: touchkey-int-pin {
- 				input-enable;
- 				power-source = <PMA8084_GPIO_S4>;
- 			};
-+
-+			touch_pin: touchscreen-int-pin {
-+				pins = "gpio8";
-+				function = "normal";
-+				bias-disable;
-+				input-enable;
-+				power-source = <PMA8084_GPIO_S4>;
-+			};
- 		};
- 	};
- };
--- 
-2.27.0
+SGkgVG9tYXN6LA0KDQpPbiBUaHUsIDIwMjAtMDUtMjEgYXQgMTg6MzggKzAwMDAsIFRvbWFzeiBG
+aWdhIHdyb3RlOg0KPiBIaSBKZXJyeSwNCj4gDQo+IE9uIFdlZCwgTWF5IDEzLCAyMDIwIGF0IDEx
+OjQ1OjM3UE0gKzAyMDAsIFRvbWFzeiBGaWdhIHdyb3RlOg0KPiA+IEhpIEplcnJ5LA0KPiA+IA0K
+PiA+IE9uIEZyaSwgTWF5IDgsIDIwMjAgYXQgNDowMyBBTSBKZXJyeS1jaCBDaGVuIDxKZXJyeS1j
+aC5DaGVuQG1lZGlhdGVrLmNvbT4gd3JvdGU6DQo+ID4gPg0KPiA+ID4gSGkgTGF1cmVudCwgVG9t
+YXN6LCBNYXR0aGlhcywNCj4gPiA+DQo+ID4gPiBnZW50bGUgcGluZyBmb3IgdGhpcyBwYXRjaCBz
+ZXQsDQo+ID4gPiBJZiBubyBuZXcgY29tbWVudHMsIEkgd291bGQgbGlrZSB0byBzZW5kIGEgbmV3
+ZXIgdmVyc2lvbi4NCj4gPiA+DQo+ID4gDQo+ID4gU29ycnksIEkgc3RpbGwgaGF2ZW4ndCBoYWQg
+YSBjaGFuY2UgdG8gbG9vayBhdCB0aGUgc2VyaWVzLCBzbyBmZWVsDQo+ID4gZnJlZSB0byBzZW5k
+IGEgbmV3IHZlcnNpb24gYW5kIEkgd2lsbCB0YWtlIGEgbG9vayBhdCB0aGUgbmV3IG9uZS4NCj4g
+PiANCj4gDQo+IEZpbmFsbHkgZm91bmQgc29tZSB0aW1lIHRvIHJldmlldyB0aGUgc2VyaWVzLiBB
+Z2FpbiBzb3JyeSBmb3IgdGhlIGRlbGF5DQo+IGFuZCB0aGFua3MgZm9yIHlvdXIgcGF0aWVuY2Uu
+DQo+IA0KPiBTb21lIGdlbmVyYWwgY29tbWVudHM6DQo+IDEpIFRoZSBtZXRhZGF0YSBmb3JtYXQg
+Rm91ckNDIHNob3VsZCBiZSBhZGRlZCBpbiBhIHNlcGFyYXRlIHBhdGNoLA0KPiB0b2dldGhlciB3
+aXRoIGRvY3VtZW50YXRpb24gZm9yIGl0Lg0KPiAyKSBDb250cm9sIElEcywgc3RydWN0cyB1c2Vk
+IGJ5IHRoZSB1c2Vyc3BhY2UsIGV0Yy4gc2hvdWxkIGJlIGRlZmluZWQgaW4NCj4gYSBoZWFkZXIg
+dW5kZXIgaW5jbHVkZS91YXBpL2xpbnV4Lg0KPiANCj4gUGxlYXNlIGFsc28gY2hlY2sgbXkgcmVw
+bGllcyB0byBwYXJ0aWN1bGFyIHBhdGNoZXMgZm9yIGZ1cnRoZXIgY29tbWVudHMuDQo+IA0KPiBC
+ZXN0IHJlZ2FyZHMsDQo+IFRvbWFzeg0KDQpBcHByZWNpYXRlIGZvciB5b3VyIHJlcGx5LA0KDQpT
+byBmYXIsIEkndmUgbG9jYWxseSBjcmVhdGVkIGFuIHVhcGkgaGVhZGVyOg0KaW5jbHVkZS91YXBp
+L2xpbnV4L210a19mZF80MC5oDQp3aGljaCBwcm92aWRlcyBzb21lIHZhbHVlcywgY29udHJvbCBp
+ZHMsIGFuZCB0aGUgZGVmaW5pdGlvbnMgb2YNCnN0cnVjdHVyZXMgdGhhdCB3b3VsZCBiZSBuZWVk
+ZWQgYnkgdXNlciBvZiBtdGtfZmRfNDAgZHJpdmVyLg0KSW4gYWRkaXRpb24sIEkgYWxzbyBwcm92
+aWRlIGEgTUFDUk8gYXMgZXhhbXBsZSBpbiBjb21tZW50cyB0aGF0IGNhbg0KZXh0cmFjdCB0aGUg
+c3RydWN0IG1lbWJlciB3aXRoIGJpdCBsZW5ndGggYW5kIG9mZnNldA0KZGVmaW5pdGlvbnMoZWxp
+bWluYXRlIHRoZSBiaXQtZmllbGRzKS4NCg0KQWxzbywgSSB3b3VsZCBsaWtlIHRvIHJlbmFtZSBz
+dHJ1Y3QgZmRfdXNlcl9vdXRwdXQgd2l0aCBzdHJ1Y3QNCm10a19mZF9od19yZXN1bHQuIEkgd29y
+cnkgZmRfdXNlcl9vdXRwdXQgd291bGQgYmUgYSBjb25mdXNpbmcgbmFtZS4NCkkgd2lsbCBhZGQg
+dGhlbSBpbiBhIHNlcGFyYXRlIHBhdGNoIGluIG5leHQgdmVyc2lvbi4NCg0KSSBhbSBzdGlsbCB3
+b3JraW5nIG9uIHRoZSBkb2N1bWVudGF0aW9uLCB3aGljaCBtaWdodCBiZQ0KRG9jdW1lbnRhdGlv
+bi9tZWRpYS91YXBpL3Y0bC9waXhmbXQtbWV0YS1tdGstZmQtNDAucnN0Lg0KUmVmZXJpbmcgdGhl
+IG90aGVyIHBpeGZtdC0qLnJzdCBmaWxlcywgSSB3aWxsIHRyeSB0byBwcm92aWRlIHRoZQ0KZmxh
+dC10YWJsZSBvZiB0aGUgbWV0YWRhdGEgd2l0aCB0aGUgc3RydWN0dXJlIG9mIHRoZSBtdGtfZmRf
+aHdfcmVzdWx0Lg0KDQpJIGFtIGNvbmZ1c2luZyB0aGF0IHNob3VsZCBJIHJlbWFpbiB0aGUgbmFt
+ZSB3aXRoIC00MCBpbiB0aGUgdGFpbCBvZiByc3QNCmZpbGU/DQpTaW5jZSBJIHRoaW5rIHRoZSBs
+YXlvdXQgb2YgbWV0YWRhdGEgbWlnaHQgYmUgZGlmZmVyZW50IGluIHRoZSBmdXR1cmUNCm10ayBm
+ZCBkcml2ZXJzLiBNYXliZSB0aGV5IGNyZWF0ZSBhIG5ldyBvbmUgb3Igc2hvdWxkIHRoZXkgdXBk
+YXRlIHRoZQ0KcnN0IGZpbGUgd2hlbiB0aGV5IGFyZSB1cHN0cmVhbWluZz8NCg0KT3RoZXIgY29t
+bWVudHMgYXJlIGFsbW9zdCBmaXhlZCwgSSB3aWxsIGluZm9ybSB5b3UgYnkgdGhpcyBtYWlsIHRo
+cmVhZA0KYXMgc29vbiBhcyBJIGZpbmlzaCB0aGUgZG9jdW1lbnRhdGlvbiBvZiBmZCBtZXRhZGF0
+YSBmb3JtYXQuDQoNClNvcnJ5IGZvciB0aGUgbGF0ZSByZXNwb25zZSwNClRoYW5rcyBhbmQgQmVz
+dCBSZWdhcmRzLA0KSmVycnkNCg==
 
