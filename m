@@ -8,92 +8,92 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF028C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 12:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E981EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 12:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F36B2073E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 12:18:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6BBD20675
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 12:25:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nlg+lxzE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2v94f0i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732517AbgF3MSS (ORCPT
+        id S1733284AbgF3MZk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 08:18:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33326 "EHLO
+        Tue, 30 Jun 2020 08:25:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732509AbgF3MSR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 08:18:17 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 531FEC061755;
-        Tue, 30 Jun 2020 05:18:17 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id u12so15315764qth.12;
-        Tue, 30 Jun 2020 05:18:17 -0700 (PDT)
+        with ESMTP id S1731651AbgF3MZj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 08:25:39 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4901C061755;
+        Tue, 30 Jun 2020 05:25:38 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id k18so18286179qke.4;
+        Tue, 30 Jun 2020 05:25:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=vOMMQVIga0beBT3w7vXuKPKMQNuuOqyf8on6+kC9jVU=;
-        b=nlg+lxzE0jp5jmPKZfHKLR3+9sM6BtieN520qJBBFjy4xLQBqYJwAayqpptHcFFOh6
-         VajWH/M5J9BeACaUfzglsvSrAgiID/iFlood3g+kRCRnd6XbXdajaZD9dAFDoYOt+Hqu
-         bbtNY7FZHyTT+uSIqytmr2EuFsQzkhVp8IvNwbJfzCPgc0+0JB9xcifsO1jWNvLIo2ye
-         rnRpXfTW0cOP0l7fxbLCTGj35zu1P4rSAf8dcee2oscshEslcMhAF1hQFb/a1DIpXSd0
-         ewgPnZgMkPJEGG7qLssMNhQjsWhODU9NZDA+8tPRk68IWGWcTruw8A1yKG53PK5Wrbbb
-         AqUQ==
+        bh=BRR8i7RJHesVYS8D5y4NlbAdWYIwjYV0Hk1TUaPO3AI=;
+        b=M2v94f0iWK1+hCbMfg2iIXYliDBC8wAZui/gdbkWtrhUwG+2z551smPEQbW1ZhBTly
+         O20NeIkgX1cozh0q9HlvBR1fQmBsIuny+02eWkNzQ8jkzUjWM1OlaRbZ0E9IsVgopzIW
+         5ZWTuObdo/etMAnAfZhfaxGwrbKcIpsGpP8zgMjjQsPp6P3biagHHPtkTCSyR9i5YvZM
+         tkJ8VTs5+h2CgunXFwGzOYRZeyOMG+33YFPOV7M9s2vt+K8kKjrtluBvcmS2XJ34z6iY
+         gsYOpoLIz1XozK9G1w84lr3GazlI6b1h3RNOS5lT0AjqzterMgxOXEgFPIUnZS6Akm4B
+         ujJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=vOMMQVIga0beBT3w7vXuKPKMQNuuOqyf8on6+kC9jVU=;
-        b=YEhdj6BgqRp8mn2Xj3AZV3HepLYUkjuaz88unmXlIby+kEpMoZVKrguzLLvW+jxU84
-         PCo0lJ5cknz+jZPIMCLZU1TwtX3otvpDuxkyLRNXmZLaXW8qV1hIy9ruo8qoxU9SBNgg
-         OZviR8EGD0WS8D5odwojaE3tCMLk0Jw5zqo+JjprAdeDWOhaOXs35EP8uadSh4cPfHFg
-         b9KeXGn+RzSEN9zUyZoCvLYBpCkN3KC+1Hn6nqs1iaS6BO0DuPhrBeynaO0LK8Fm29df
-         Xoqnw/Pty4ZCck8DAFVhaxDnFB+Z0Y9rwcZILk9Xt+SmRWyamewNQJ2ZdO9Kf+keXHhP
-         ERpA==
-X-Gm-Message-State: AOAM533Zw0MItcU5I6r4T9ZrVTJjvZE3tB4T6qhucxl8UhPWohI99gi/
-        hHMCnHeFgxx1Oh1JqixTYvjNmp0+QeQ=
-X-Google-Smtp-Source: ABdhPJxkZfDQqtr0npeZl1dS+FUq7vXS0nVwrVCawTiGkteXTN50Z1H97zhn/mmvohszMxIyd+rQFw==
-X-Received: by 2002:ac8:2af0:: with SMTP id c45mr20371651qta.296.1593519496475;
-        Tue, 30 Jun 2020 05:18:16 -0700 (PDT)
+        bh=BRR8i7RJHesVYS8D5y4NlbAdWYIwjYV0Hk1TUaPO3AI=;
+        b=RbRgyaiFXQFH/W4/kuhJB5ebVAh9yPxmba5W+igqKNOGJXXrnE6jYpAP5MWn/zhb5K
+         bEZGkzbPazA7PmpvjBMaeg+h+ZvFmZ/kppM2GQ21r+LKIvXUls+oHxvAhXZHwETAe6D/
+         r4KfIPIguz92XwpkJDVjh+3/5igx1+GSCS/EY7VSXsOFX+vWqBL4dmAojwesk4PKSl9v
+         FjAgvjyew+dlql91mn6pxsRyxeygCwLyDroXS+wyUmYEZzPjqfnjIX9FCfeI3GgIHG8C
+         67/iUsefRUZ+g7hGiKlGdiGFY7Z0IHz1ylDkpA//Jj30bxHms+zoAVHsn94V45MZTGtc
+         D25A==
+X-Gm-Message-State: AOAM530xPdL2ME7PII1EpJPMdCmQ9h1q7kYruZKMbkz5Vif4/trqbnvJ
+        EoEqVO/mwrtFZikLKW3wiFU=
+X-Google-Smtp-Source: ABdhPJyqU86TejxnQRH01Xd+nYEIEW8xybysprOn1m3Hs/JdkbdqzFXZc9sGRAb26ebqEupffnSwvA==
+X-Received: by 2002:a37:689:: with SMTP id 131mr11787583qkg.468.1593519937878;
+        Tue, 30 Jun 2020 05:25:37 -0700 (PDT)
 Received: from localhost.localdomain ([2804:14c:482:92b:d42f:2bc1:abe3:59f0])
-        by smtp.gmail.com with ESMTPSA id r2sm2738129qtn.27.2020.06.30.05.18.13
+        by smtp.gmail.com with ESMTPSA id d186sm2877189qkb.110.2020.06.30.05.25.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 05:18:15 -0700 (PDT)
+        Tue, 30 Jun 2020 05:25:37 -0700 (PDT)
 From:   Fabio Estevam <festevam@gmail.com>
 To:     robh+dt@kernel.org
-Cc:     amit.kucheria@linaro.org, rui.zhang@intel.com,
+Cc:     j-keerthy@ti.com, amit.kucheria@verdurent.com,
         daniel.lezcano@linaro.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH] dt-bindings: thermal: Remove soc unit address
-Date:   Tue, 30 Jun 2020 09:18:04 -0300
-Message-Id: <20200630121804.27887-1-festevam@gmail.com>
+Subject: [PATCH] dt-bindings: thermal: k3: Fix the reg property
+Date:   Tue, 30 Jun 2020 09:25:27 -0300
+Message-Id: <20200630122527.28640-1-festevam@gmail.com>
 X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Remove the soc unit address to fix the following warning seen with
+Adjust the reg property to fix the following warning seen with
 'make dt_binding_check':
 
-Documentation/devicetree/bindings/thermal/thermal-sensor.example.dts:22.20-49.11: Warning (unit_address_vs_reg): /example-0/soc@0: node has a unit name, but no reg or ranges property
+Documentation/devicetree/bindings/thermal/ti,am654-thermal.example.dt.yaml: example-0: thermal@42050000:reg:0: [0, 1107623936, 0, 604] is too long
 
 Signed-off-by: Fabio Estevam <festevam@gmail.com>
 ---
- Documentation/devicetree/bindings/thermal/thermal-sensor.yaml | 2 +-
+ Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/thermal/thermal-sensor.yaml b/Documentation/devicetree/bindings/thermal/thermal-sensor.yaml
-index fcd25a0af38c..727d04550324 100644
---- a/Documentation/devicetree/bindings/thermal/thermal-sensor.yaml
-+++ b/Documentation/devicetree/bindings/thermal/thermal-sensor.yaml
-@@ -41,7 +41,7 @@ examples:
-     #include <dt-bindings/interrupt-controller/arm-gic.h>
- 
-     // Example 1: SDM845 TSENS
--    soc: soc@0 {
-+    soc: soc {
-             #address-cells = <2>;
-             #size-cells = <2>;
- 
+diff --git a/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml b/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
+index 25b9209c2e5d..ea14de80ec75 100644
+--- a/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
++++ b/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
+@@ -35,7 +35,7 @@ examples:
+     #include <dt-bindings/soc/ti,sci_pm_domain.h>
+     vtm: thermal@42050000 {
+         compatible = "ti,am654-vtm";
+-        reg = <0x0 0x42050000 0x0 0x25c>;
++        reg = <0x42050000 0x25c>;
+         power-domains = <&k3_pds 80 TI_SCI_PD_EXCLUSIVE>;
+         #thermal-sensor-cells = <1>;
+     };
 -- 
 2.17.1
 
