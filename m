@@ -2,171 +2,151 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B30AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 16:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 099CCC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 17:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04B7320768
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 16:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6CC2207F9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 17:02:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="S35BdFWK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tqjQx/HF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729616AbgF3Q7k (ORCPT
+        id S2389979AbgF3RCK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 12:59:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48592 "EHLO
+        Tue, 30 Jun 2020 13:02:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbgF3Q7j (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 12:59:39 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5948C061755
-        for <devicetree@vger.kernel.org>; Tue, 30 Jun 2020 09:59:39 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id a6so20922289wrm.4
-        for <devicetree@vger.kernel.org>; Tue, 30 Jun 2020 09:59:39 -0700 (PDT)
+        with ESMTP id S1727061AbgF3RCJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 13:02:09 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42985C061755;
+        Tue, 30 Jun 2020 10:02:09 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id n23so23475934ljh.7;
+        Tue, 30 Jun 2020 10:02:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=S5SIOLALGIZncts/DJyWGyyazBiYaPzK0cWTq20Jh4Y=;
-        b=S35BdFWKkHxN1uhqpE7F6FyY6pN9PUZKZxXk+5SIcIr1h8vxrp4yNRRMHc+JwQc2Eu
-         oWLIpkiX6tmQau9iPGep6rp9hf3nUOB53Ar3ePAkXzrfb76u9qqUaxFpaPysEy5dHNhj
-         dqOH2suunGgPG21pkM5bXkp4GxzMYarwVuLQ4=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Zm73/VCv6D7tyjxlDYUvUqi434b/awSj205uGGSiY5E=;
+        b=tqjQx/HFMAKT91zIH/bwqIcsxDgnE+o7tj9C36qUiMT6LNlS/MRbarOXOhAjo05SoQ
+         42fTsD0Bbk4bFkjSL/DeMJM1UVylpbSuBvlr1nF/qHCagwxzJ6dQLIUvvgqbJxLp18pv
+         3LWb9GK2CNPoyF1sPNibc8ZYqqCmfOH0Xnk28lzC8Ct4OyESOg2brOSo2eMj2siUijDX
+         Ivn+g/tGC1mkwx1GjiVqPpprQ6Up/09PXknZPXh0nlVUcLsCiMEYAzYS3Aj5GgaDi6Fp
+         R0jkzp/RRyeUbxxpJmjJsJIiUR+11UuIhdigZDR4eYY8I+3d304tk+pC4kvx5942gepY
+         dLUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=S5SIOLALGIZncts/DJyWGyyazBiYaPzK0cWTq20Jh4Y=;
-        b=V9tcAVKmHWd9NUyfvAiDdow3WSzus7mVDomLXuhGao2Uit7CjzFcMpO4VCCY6H5j+v
-         KQ5PQQGE/p4Bsh6ijxavcX70nB2Yk8xy8I+JkFyin5Yx0ioWF4iuoaygkUDj4SfWhrG7
-         CoiOJiJosaY9KRHX2Tb0SdygLi2/NKGtAEpxjn0EyVKRYYejW04gDfuL3adGJGWwqyPo
-         jDb9P3Q94ry+mPsdQIjz0EIfI8bDAJNmsHgcw8USR8v1DjLAu6Y2ovJBwcAWIPJGSoTh
-         Ukt1NxuRMGL805U9YEybp1Xpsdpax8XOYYsd68XjQTimTi26+Ywl4bp4SNCFpWpUEmeX
-         fkqg==
-X-Gm-Message-State: AOAM5327i2yvnVqZCtQsJNZ612CF/Gnyn1q+VGCvFsqjOcUpO0nPNhe/
-        D2oWCyXAs2r4qtZS666BQONKNw==
-X-Google-Smtp-Source: ABdhPJwpJTVS7qPaQ6MQ1iEj2CZyIM1zNdxdfp4VfBreddvVoj+gOxcVmDCKJ/pcI3OpI8vIr5V84Q==
-X-Received: by 2002:adf:9404:: with SMTP id 4mr21952876wrq.367.1593536378447;
-        Tue, 30 Jun 2020 09:59:38 -0700 (PDT)
-Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
-        by smtp.gmail.com with ESMTPSA id x7sm4316857wrr.72.2020.06.30.09.59.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 09:59:37 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 16:59:36 +0000
-From:   Tomasz Figa <tfiga@chromium.org>
-To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        mchehab@kernel.org, andriy.shevchenko@linux.intel.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        sakari.ailus@linux.intel.com, drinkcat@chromium.org,
-        matthias.bgg@gmail.com, bingbu.cao@intel.com,
-        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        louis.kuo@mediatek.com, shengnan.wang@mediatek.com
-Subject: Re: [PATCH V11 1/2] media: dt-bindings: media: i2c: Document OV02A10
- bindings
-Message-ID: <20200630165936.GC1212092@chromium.org>
-References: <20200630024942.20891-1-dongchun.zhu@mediatek.com>
- <20200630024942.20891-2-dongchun.zhu@mediatek.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Zm73/VCv6D7tyjxlDYUvUqi434b/awSj205uGGSiY5E=;
+        b=OWee7zGU7J+sdUsJ4RNDErkYgz11GY+DqrnJmf1k7CMjxaxQ3C0dm27x9r4S+v1Ty5
+         ijPyZhZU3OEaCh6NH8H0yaeI9C9eKogw9+3ljUWwB0UO01D9eP/nnUTcZM+f4U8yPpXw
+         /HSCwFoOcQhF8RpC/gu7AGsAmQudcgHIXp8cNW3jp3tH4hDhtMg+LWj/8yN2l8vCuVNO
+         Otwe2mEh0IHgqI5NtxUPEK7KrqraF5lScMCtoLSWqobmovHb+HXd7pBV+0kHU7Y67Zek
+         7XW2YM8J2Rf+CW7V+uTk94OmbcEhpXYQxdKrzVuBISYBp67Dy8p8L0+XfvU0jGQWrc1I
+         xH8A==
+X-Gm-Message-State: AOAM532lIg/qKHxXpx4a9STzrza7fIeA0FK5Ys/6SYskHDOTt+pF6Hm+
+        m+b3+ji09h1PbIGA9do15VkWfvqMhGI=
+X-Google-Smtp-Source: ABdhPJySlQU/MvAcD940eAO4I0jczbnnGO6YWZ/sb/tciNiEsQmajGFLUIMqC2ALxjQA7vqNRzlD3A==
+X-Received: by 2002:a2e:b8c2:: with SMTP id s2mr11668004ljp.368.1593536527151;
+        Tue, 30 Jun 2020 10:02:07 -0700 (PDT)
+Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.googlemail.com with ESMTPSA id d21sm587797ljo.85.2020.06.30.10.02.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jun 2020 10:02:06 -0700 (PDT)
+Subject: Re: [PATCH v8 1/7] of_graph: add of_graph_presents()
+To:     Rob Herring <robh@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200617222703.17080-1-digetx@gmail.com>
+ <20200617222703.17080-2-digetx@gmail.com> <20200629231211.GA3142766@bogus>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <1ef25775-1f37-25ce-f534-54cc995a5658@gmail.com>
+Date:   Tue, 30 Jun 2020 20:02:04 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200630024942.20891-2-dongchun.zhu@mediatek.com>
+In-Reply-To: <20200629231211.GA3142766@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 10:49:41AM +0800, Dongchun Zhu wrote:
-> Add DT bindings documentation for OmniVision OV02A10 image sensor.
+30.06.2020 02:12, Rob Herring пишет:
+> On Thu, Jun 18, 2020 at 01:26:57AM +0300, Dmitry Osipenko wrote:
+>> In some case, like a DRM display code for example, it's useful to silently
+>> check whether port node exists at all in a device-tree before proceeding
+>> with parsing of the graph.
+>>
+>> This patch adds of_graph_presents() that returns true if given device-tree
+>> node contains OF graph port.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/of/property.c    | 52 +++++++++++++++++++++++++++++++++-------
+>>  include/linux/of_graph.h |  6 +++++
+>>  2 files changed, 49 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/of/property.c b/drivers/of/property.c
+>> index 1f2086f4e7ce..b84ed6a7cf50 100644
+>> --- a/drivers/of/property.c
+>> +++ b/drivers/of/property.c
+>> @@ -29,6 +29,48 @@
+>>  
+>>  #include "of_private.h"
+>>  
+>> +/**
+>> + * of_graph_get_first_local_port() - get first local port node
+>> + * @node: pointer to a local endpoint device_node
+>> + *
+>> + * Return: First local port node associated with local endpoint node linked
+>> + *	   to @node. Use of_node_put() on it when done.
+>> + */
+>> +static struct device_node *
+>> +of_graph_get_first_local_port(const struct device_node *node)
+>> +{
+>> +	struct device_node *ports, *port;
+>> +
+>> +	ports = of_get_child_by_name(node, "ports");
+>> +	if (ports)
+>> +		node = ports;
+>> +
+>> +	port = of_get_child_by_name(node, "port");
+>> +	of_node_put(ports);
+>> +
+>> +	return port;
+>> +}
+>> +
+>> +/**
+>> + * of_graph_presents() - check graph's presence
+>> + * @node: pointer to a device_node checked for the graph's presence
+>> + *
+>> + * Return: True if @node has a port or ports sub-node, false otherwise.
+>> + */
+>> +bool of_graph_presents(const struct device_node *node)
 > 
-> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> ---
->  .../bindings/media/i2c/ovti,ov02a10.yaml           | 172 +++++++++++++++++++++
->  MAINTAINERS                                        |   7 +
->  2 files changed, 179 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ovti,ov02a10.yaml
+> of_graph_is_present
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ovti,ov02a10.yaml b/Documentation/devicetree/bindings/media/i2c/ovti,ov02a10.yaml
-> new file mode 100644
-> index 0000000..3a916cc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ovti,ov02a10.yaml
-> @@ -0,0 +1,172 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright (c) 2020 MediaTek Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/i2c/ovti,ov02a10.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Omnivision OV02A10 CMOS Sensor Device Tree Bindings
-> +
-> +maintainers:
-> +  - Dongchun Zhu <dongchun.zhu@mediatek.com>
-> +
-> +description: |-
-> +  The Omnivision OV02A10 is a low-cost, high performance, 1/5-inch, 2 megapixel
-> +  image sensor, which is the latest production derived from Omnivision's CMOS
-> +  image sensor technology. Ihis chip supports high frame rate speeds up to 30fps
-> +  @ 1600x1200 (UXGA) resolution transferred over a 1-lane MIPI interface. The
-> +  sensor output is available via CSI-2 serial data output.
-> +
-> +properties:
-> +  compatible:
-> +    const: ovti,ov02a10
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: top mux camtg clock
-> +      - description: divider clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: eclk
-> +      - const: freq_mux
-> +
-> +  clock-frequency:
-> +    description:
-> +      Frequency of the eclk clock in Hertz.
-> +
-> +  dovdd-supply:
-> +    description:
-> +      Definition of the regulator used as Digital I/O voltage supply.
-> +
-> +  avdd-supply:
-> +    description:
-> +      Definition of the regulator used as Analog voltage supply.
-> +
-> +  dvdd-supply:
-> +    description:
-> +      Definition of the regulator used as Digital core voltage supply.
-> +
-> +  powerdown-gpios:
-> +    description:
-> +      Must be the device tree identifier of the GPIO connected to the
-> +      PD_PAD pin. This pin is used to place the OV02A10 into standby mode
-> +      or shutdown mode. As the line needs to be high for the powerdown mode
-> +      to be active, it should be marked GPIO_ACTIVE_HIGH.
-> +    maxItems: 1
-> +
-> +  reset-gpios:
-> +    description:
-> +      Must be the device tree identifier of the GPIO connected to the
-> +      RST_PD pin. If specified, it will be asserted during driver probe.
-> +      As the line needs to be low for the reset to be active, it should be
-> +      marked GPIO_ACTIVE_LOW.
+> Otherwise,
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
 
-I like the way the description explains this. :)
+Thanks!
 
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
-
-Best regards,
-Tomasz
+I'll address the comment and then factor out this and the
+drm_of_find_panel_or_bridge() changes into a separate series in v9,
+since the Tegra DRM patches could be applied separately by Thierry.
