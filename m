@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF89C433E4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 18:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4BAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 18:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE5582068F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 18:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1892206CB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 18:46:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="MUSFN5Ch"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qtdlhazw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbgF3Sq2 (ORCPT
+        id S1726782AbgF3Sqw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 14:46:28 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:61884 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726590AbgF3Sq0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 30 Jun 2020 14:46:26 -0400
+        Tue, 30 Jun 2020 14:46:52 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:29726 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726771AbgF3Sqw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 30 Jun 2020 14:46:52 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593542785; h=Content-Transfer-Encoding: MIME-Version:
+ s=smtp; t=1593542811; h=Content-Transfer-Encoding: MIME-Version:
  References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=pCxMGoAE11mzNnegsROvEKZ7dz7oA11oMEGTQyVjkqw=; b=MUSFN5ChhpeBfzbx/3ev0COh3s97muyZqWB9g+zCxhl4aB/KWS6Y9CN+COd/uEgyltXNhXFG
- gEYBJrIQ1LZxbUE0pGD+H3tTYhheS7LabvOUC9aOxwHbS9UNYkEvTua5TMNMechf2w7TzsSH
- yi6weF47bkY42MuPr7lTaBDPJtU=
-X-Mailgun-Sending-Ip: 69.72.43.7
+ Sender; bh=lZK/1sJ7giMB71ltvhZxZ8UDrH68vc4Q/d6owJrWIiM=; b=qtdlhazw7jYThz43RWorpO7Ekq+oBs/Y3ZWSUhKbwIicznDnOosjoOD20tG+RUruPWMZXIKQ
+ +3yFq0LcVmRCnzpH8xXqCJsekFZ9hfM1XlRu9frq+Aa0p+YaKSneTufeDWT3NA+1TwZfxE1r
+ TaMQBs8Ef6mR4CDZz1vzTOagJl8=
+X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n13.prod.us-west-2.postgun.com with SMTP id
- 5efb88806bebe35deb4d03fb (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 30 Jun 2020 18:46:24
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 5efb88993a8a8b20b8268e1d (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 30 Jun 2020 18:46:49
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 504ADC433CB; Tue, 30 Jun 2020 18:46:24 +0000 (UTC)
+        id 578A2C433C8; Tue, 30 Jun 2020 18:46:48 +0000 (UTC)
 Received: from linuxdisplay-lab-04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: tanmay)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 31A94C433C6;
-        Tue, 30 Jun 2020 18:46:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 31A94C433C6
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 19FF6C433C8;
+        Tue, 30 Jun 2020 18:46:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 19FF6C433C8
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tanmay@codeaurora.org
 From:   Tanmay Shah <tanmay@codeaurora.org>
@@ -55,11 +56,11 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         robdclark@gmail.com, daniel@ffwll.ch, airlied@linux.ie,
         aravindh@codeaurora.org, abhinavk@codeaurora.org,
         chandanu@codeaurora.org, varar@codeaurora.org,
-        Tanmay Shah <tanmay@codeaurora.org>,
-        Jani Nikula <jani.nikula@intel.com>
-Subject: [PATCH v8 2/6] drm: add constant N value in helper file
-Date:   Tue, 30 Jun 2020 11:45:03 -0700
-Message-Id: <20200630184507.15589-3-tanmay@codeaurora.org>
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Tanmay Shah <tanmay@codeaurora.org>
+Subject: [PATCH v8 5/6] drm/msm/dpu: add display port support in DPU
+Date:   Tue, 30 Jun 2020 11:45:06 -0700
+Message-Id: <20200630184507.15589-6-tanmay@codeaurora.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200630184507.15589-1-tanmay@codeaurora.org>
 References: <20200630184507.15589-1-tanmay@codeaurora.org>
@@ -70,50 +71,158 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Chandan Uddaraju <chandanu@codeaurora.org>
+From: Jeykumar Sankaran <jsanka@codeaurora.org>
 
-The constant N value (0x8000) is used by i915 DP
-driver. Define this value in dp helper header file
-to use in multiple Display Port drivers. Change
-i915 driver accordingly.
+Add display port support in DPU by creating hooks
+for DP encoder enumeration and encoder mode
+initialization.
 
-Change in v6: Change commit message
+changes in v2:
+	- rebase on [2] (Sean Paul)
+	- remove unwanted error checks and
+	  switch cases (Jordan Crouse)
 
+[1] https://lwn.net/Articles/768265/
+[2] https://lkml.org/lkml/2018/11/17/87
+
+changes in V3:
+-- Moved this change as part of the DP driver changes.
+-- Addressed compilation issues on the latest code base.
+
+Changes in v6:
+-- Fix checkpatch.pl warning
+
+Changes in v7: Remove depends-on tag from commit message.
+
+Changes in v8: None
+
+Signed-off-by: Jeykumar Sankaran <jsanka@codeaurora.org>
 Signed-off-by: Chandan Uddaraju <chandanu@codeaurora.org>
 Signed-off-by: Vara Reddy <varar@codeaurora.org>
 Signed-off-by: Tanmay Shah <tanmay@codeaurora.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Acked-by: Jani Nikula <jani.nikula@intel.com>
 ---
- drivers/gpu/drm/i915/display/intel_display.c | 2 +-
- include/drm/drm_dp_helper.h                  | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c |  8 +--
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c     | 65 +++++++++++++++++----
+ 2 files changed, 58 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
-index c1836095ea38..81c461aeb3ba 100644
---- a/drivers/gpu/drm/i915/display/intel_display.c
-+++ b/drivers/gpu/drm/i915/display/intel_display.c
-@@ -8085,7 +8085,7 @@ static void compute_m_n(unsigned int m, unsigned int n,
- 	 * which the devices expect also in synchronous clock mode.
- 	 */
- 	if (constant_n)
--		*ret_n = 0x8000;
-+		*ret_n = DP_LINK_CONSTANT_N_VALUE;
- 	else
- 		*ret_n = min_t(unsigned int, roundup_pow_of_two(n), DATA_LINK_N_MAX);
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index 753cc2fcf916..b439e482fc80 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -1994,7 +1994,7 @@ static int dpu_encoder_setup_display(struct dpu_encoder_virt *dpu_enc,
+ {
+ 	int ret = 0;
+ 	int i = 0;
+-	enum dpu_intf_type intf_type;
++	enum dpu_intf_type intf_type = INTF_NONE;
+ 	struct dpu_enc_phys_init_params phys_params;
  
-diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
-index 1165ec105638..73dae5bd6048 100644
---- a/include/drm/drm_dp_helper.h
-+++ b/include/drm/drm_dp_helper.h
-@@ -1134,6 +1134,7 @@
- #define DP_MST_PHYSICAL_PORT_0 0
- #define DP_MST_LOGICAL_PORT_0 8
+ 	if (!dpu_enc) {
+@@ -2016,9 +2016,9 @@ static int dpu_encoder_setup_display(struct dpu_encoder_virt *dpu_enc,
+ 	case DRM_MODE_ENCODER_DSI:
+ 		intf_type = INTF_DSI;
+ 		break;
+-	default:
+-		DPU_ERROR_ENC(dpu_enc, "unsupported display interface type\n");
+-		return -EINVAL;
++	case DRM_MODE_ENCODER_TMDS:
++		intf_type = INTF_DP;
++		break;
+ 	}
  
-+#define DP_LINK_CONSTANT_N_VALUE 0x8000
- #define DP_LINK_STATUS_SIZE	   6
- bool drm_dp_channel_eq_ok(const u8 link_status[DP_LINK_STATUS_SIZE],
- 			  int lane_count);
+ 	WARN_ON(disp_info->num_of_h_tiles < 1);
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+index b8615d4fe8a3..f6c219f875db 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+@@ -492,6 +492,33 @@ static int _dpu_kms_initialize_dsi(struct drm_device *dev,
+ 	return rc;
+ }
+ 
++static int _dpu_kms_initialize_displayport(struct drm_device *dev,
++					    struct msm_drm_private *priv,
++					    struct dpu_kms *dpu_kms)
++{
++	struct drm_encoder *encoder = NULL;
++	int rc = 0;
++
++	if (!priv->dp)
++		return rc;
++
++	encoder = dpu_encoder_init(dev, DRM_MODE_ENCODER_TMDS);
++	if (IS_ERR(encoder)) {
++		DPU_ERROR("encoder init failed for dsi display\n");
++		return PTR_ERR(encoder);
++	}
++
++	rc = msm_dp_modeset_init(priv->dp, dev, encoder);
++	if (rc) {
++		DPU_ERROR("modeset_init failed for DP, rc = %d\n", rc);
++		drm_encoder_cleanup(encoder);
++		return rc;
++	}
++
++	priv->encoders[priv->num_encoders++] = encoder;
++	return rc;
++}
++
+ /**
+  * _dpu_kms_setup_displays - create encoders, bridges and connectors
+  *                           for underlying displays
+@@ -504,12 +531,21 @@ static int _dpu_kms_setup_displays(struct drm_device *dev,
+ 				    struct msm_drm_private *priv,
+ 				    struct dpu_kms *dpu_kms)
+ {
+-	/**
+-	 * Extend this function to initialize other
+-	 * types of displays
+-	 */
++	int rc = 0;
++
++	rc = _dpu_kms_initialize_dsi(dev, priv, dpu_kms);
++	if (rc) {
++		DPU_ERROR("initialize_dsi failed, rc = %d\n", rc);
++		return rc;
++	}
+ 
+-	return _dpu_kms_initialize_dsi(dev, priv, dpu_kms);
++	rc = _dpu_kms_initialize_displayport(dev, priv, dpu_kms);
++	if (rc) {
++		DPU_ERROR("initialize_DP failed, rc = %d\n", rc);
++		return rc;
++	}
++
++	return rc;
+ }
+ 
+ static void _dpu_kms_drm_obj_destroy(struct dpu_kms *dpu_kms)
+@@ -694,13 +730,20 @@ static void _dpu_kms_set_encoder_mode(struct msm_kms *kms,
+ 	info.capabilities = cmd_mode ? MSM_DISPLAY_CAP_CMD_MODE :
+ 			MSM_DISPLAY_CAP_VID_MODE;
+ 
+-	/* TODO: No support for DSI swap */
+-	for (i = 0; i < ARRAY_SIZE(priv->dsi); i++) {
+-		if (priv->dsi[i]) {
+-			info.h_tile_instance[info.num_of_h_tiles] = i;
+-			info.num_of_h_tiles++;
++	switch (info.intf_type) {
++	case DRM_MODE_ENCODER_DSI:
++		/* TODO: No support for DSI swap */
++		for (i = 0; i < ARRAY_SIZE(priv->dsi); i++) {
++			if (priv->dsi[i]) {
++				info.h_tile_instance[info.num_of_h_tiles] = i;
++				info.num_of_h_tiles++;
++			}
+ 		}
+-	}
++		break;
++	case DRM_MODE_ENCODER_TMDS:
++		info.num_of_h_tiles = 1;
++		break;
++	};
+ 
+ 	rc = dpu_encoder_setup(encoder->dev, encoder, &info);
+ 	if (rc)
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
