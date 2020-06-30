@@ -2,109 +2,105 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D20C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 09:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C2EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 09:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A2C820774
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 09:36:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Xiq6/Exw"
+	by mail.kernel.org (Postfix) with ESMTP id EB43C206A1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 09:48:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731608AbgF3JgO (ORCPT
+        id S1732016AbgF3JsN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 05:36:14 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:24584 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730613AbgF3JgO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 30 Jun 2020 05:36:14 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05U9Ytb1002355;
-        Tue, 30 Jun 2020 11:35:42 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=XvCnsTc0gHyxA4bCQuL6yxD7F1TD1d0nVE+Ilwp4DeE=;
- b=Xiq6/ExwBe2jgYMzd+pcK7nxWvhuZTiZD4+4aj24d34XfntXZzCOg2vU6FyXga20MRKD
- PJOMKuRZSZrEgXKkZziTieNlwWC7FC6WQ7K5ug86Uc/UuIMj1FH5c6MokhYVTyd1RB4Y
- BViFUk/QltOESaJu/VrVtyK11Z3odChqDAl2TRZxDSeOSNsesG5PvoP6T2JMLbtl24n/
- QJhdX61xYpJCFSWNu//POwF8zBpTJo0Zh/4hG69m+nY2ObKs8JX7I7gNJhF2Gsg4aJIA
- dGPTfO8/bP3n6l54ihWE3J1/86/86QAJnpe1rNONw8Ia2/X5tXbXZfJztV2RmEVDgQnS YA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31wu89hxgm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 30 Jun 2020 11:35:42 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 314C510002A;
-        Tue, 30 Jun 2020 11:35:41 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 14BEE2ADA10;
-        Tue, 30 Jun 2020 11:35:41 +0200 (CEST)
-Received: from [10.211.8.105] (10.75.127.49) by SFHDAG6NODE2.st.com
- (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 30 Jun
- 2020 11:35:39 +0200
-Subject: Re: [PATCH v5 4/6] memory: stm32-fmc2-ebi: add STM32 FMC2 EBI
- controller driver
-To:     Richard Weinberger <richard.weinberger@gmail.com>
-CC:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
+        Tue, 30 Jun 2020 05:48:13 -0400
+Received: from lithops.sigma-star.at ([195.201.40.130]:44196 "EHLO
+        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732008AbgF3JsN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 05:48:13 -0400
+X-Greylist: delayed 510 seconds by postgrey-1.27 at vger.kernel.org; Tue, 30 Jun 2020 05:48:12 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id EB070607400F;
+        Tue, 30 Jun 2020 11:39:40 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id qd6xqziz9yTM; Tue, 30 Jun 2020 11:39:37 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 786BA6074029;
+        Tue, 30 Jun 2020 11:39:37 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id UNVw8191GTR5; Tue, 30 Jun 2020 11:39:37 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 423E0607400F;
+        Tue, 30 Jun 2020 11:39:37 +0200 (CEST)
+Date:   Tue, 30 Jun 2020 11:39:37 +0200 (CEST)
+From:   Richard Weinberger <richard@nod.at>
+To:     Christophe Kerello <christophe.kerello@st.com>
+Cc:     Richard Weinberger <richard.weinberger@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, <arnd@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>, arnd@linaro.org,
         Alexandre Torgue <alexandre.torgue@st.com>,
-        Marek Vasut <marex@denx.de>, <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <linux-mtd@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <1591975362-22009-1-git-send-email-christophe.kerello@st.com>
- <1591975362-22009-5-git-send-email-christophe.kerello@st.com>
- <CAFLxGvzfh1Qa_gM9bZAxaoCbO6xCoNdaPN=Ea20Up_zPVgjugw@mail.gmail.com>
-From:   Christophe Kerello <christophe.kerello@st.com>
-Message-ID: <e30abadc-83c0-f010-be36-fe8d14c4aea9@st.com>
-Date:   Tue, 30 Jun 2020 11:35:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Marek Vasut <marex@denx.de>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        linux-stm32@st-md-mailman.stormreply.com
+Message-ID: <1839269888.74591.1593509977137.JavaMail.zimbra@nod.at>
+In-Reply-To: <e30abadc-83c0-f010-be36-fe8d14c4aea9@st.com>
+References: <1591975362-22009-1-git-send-email-christophe.kerello@st.com> <1591975362-22009-5-git-send-email-christophe.kerello@st.com> <CAFLxGvzfh1Qa_gM9bZAxaoCbO6xCoNdaPN=Ea20Up_zPVgjugw@mail.gmail.com> <e30abadc-83c0-f010-be36-fe8d14c4aea9@st.com>
+Subject: Re: [PATCH v5 4/6] memory: stm32-fmc2-ebi: add STM32 FMC2 EBI
+ controller driver
 MIME-Version: 1.0
-In-Reply-To: <CAFLxGvzfh1Qa_gM9bZAxaoCbO6xCoNdaPN=Ea20Up_zPVgjugw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-06-30_03:2020-06-30,2020-06-29 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [195.201.40.130]
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF68 (Linux)/8.8.12_GA_3809)
+Thread-Topic: memory: stm32-fmc2-ebi: add STM32 FMC2 EBI controller driver
+Thread-Index: IyChESkmAt61iUEj3iffmldxiXkByg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Richard,
+----- Ursprüngliche Mail -----
+> Von: "Christophe Kerello" <christophe.kerello@st.com>
+> An: "Richard Weinberger" <richard.weinberger@gmail.com>
+> CC: "Miquel Raynal" <miquel.raynal@bootlin.com>, "richard" <richard@nod.at>, "Vignesh Raghavendra" <vigneshr@ti.com>,
+> "Rob Herring" <robh+dt@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>, arnd@linaro.org, "Alexandre Torgue"
+> <alexandre.torgue@st.com>, "Marek Vasut" <marex@denx.de>, "devicetree" <devicetree@vger.kernel.org>, "linux-kernel"
+> <linux-kernel@vger.kernel.org>, "linux-mtd" <linux-mtd@lists.infradead.org>, linux-stm32@st-md-mailman.stormreply.com
+> Gesendet: Dienstag, 30. Juni 2020 11:35:38
+> Betreff: Re: [PATCH v5 4/6] memory: stm32-fmc2-ebi: add STM32 FMC2 EBI controller driver
 
-On 6/30/20 11:13 AM, Richard Weinberger wrote:
-> On Fri, Jun 12, 2020 at 5:24 PM Christophe Kerello
-> <christophe.kerello@st.com> wrote:
->>
->> The driver adds the support for the STMicroelectronics FMC2 EBI controller
->> found on STM32MP SOCs.
->>
->> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
->> ---
->> +       if (!IS_ERR(rstc)) {
->> +               reset_control_assert(rstc);
->> +               reset_control_deassert(rstc);
+> Hi Richard,
 > 
-> Shouldn't there be a small delay between assert and deassert?
-> Other than that the code looks good to me.
+> On 6/30/20 11:13 AM, Richard Weinberger wrote:
+>> On Fri, Jun 12, 2020 at 5:24 PM Christophe Kerello
+>> <christophe.kerello@st.com> wrote:
+>>>
+>>> The driver adds the support for the STMicroelectronics FMC2 EBI controller
+>>> found on STM32MP SOCs.
+>>>
+>>> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+>>> ---
+>>> +       if (!IS_ERR(rstc)) {
+>>> +               reset_control_assert(rstc);
+>>> +               reset_control_deassert(rstc);
+>> 
+>> Shouldn't there be a small delay between assert and deassert?
+>> Other than that the code looks good to me.
+>> 
 > 
+> Even if I have currently not met any issue, I will add a udelay(2) to be
+> safe. It will be part of v6.
 
-Even if I have currently not met any issue, I will add a udelay(2) to be 
-safe. It will be part of v6.
+Well, if it works and you are sure, please go for it. Like I said, I'm no expert in
+this.
+I just noticed that other users add a delay and wondered.
 
 Thanks,
-Christophe Kerello.
+//richard
