@@ -2,97 +2,215 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3232C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 18:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C36C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 18:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2DA82074D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 18:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C48EC2068F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 18:46:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="saY/O19M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387844AbgF3SUn (ORCPT
+        id S1726676AbgF3Sqd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 14:20:43 -0400
-Received: from muru.com ([72.249.23.125]:60110 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733297AbgF3SUn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 30 Jun 2020 14:20:43 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 620CE8164;
-        Tue, 30 Jun 2020 18:21:33 +0000 (UTC)
-Date:   Tue, 30 Jun 2020 11:20:37 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, bcousson@baylibre.com,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        "H . Nikolaus Schaller" <hns@goldelico.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2] ARM: dts: am335x-pocketbeagle: set default mux for
- gpio pins
-Message-ID: <20200630182037.GF37466@atomide.com>
-References: <20200628152442.322593-1-drew@beagleboard.org>
- <20200629170358.GT37466@atomide.com>
- <20200630020102.GA45128@x1>
+        Tue, 30 Jun 2020 14:46:33 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:49521 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726598AbgF3Sqb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 30 Jun 2020 14:46:31 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593542790; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=JVp6ztFmSfBp/89cC0q1xOFq2wmVMRIfciNQmdrjxII=; b=saY/O19MGP60mOmGvYdY/isOZ2jWqccJBUItFlPqvleWyM8XK+PtiUuPxSlZjZYVOGCWoMEr
+ x0LVwfIabOdd8moH2IBrnCnuveQC8pCYHJ4A8sm71jVA+I9mQLhoYa6trmPBd+qMa0P2DpSP
+ cdlp7FeDfSMet9g0R2J9+FpASrY=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
+ 5efb88783a8a8b20b82641d9 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 30 Jun 2020 18:46:16
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DF39DC433CA; Tue, 30 Jun 2020 18:46:15 +0000 (UTC)
+Received: from linuxdisplay-lab-04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tanmay)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 263F0C433C8;
+        Tue, 30 Jun 2020 18:46:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 263F0C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tanmay@codeaurora.org
+From:   Tanmay Shah <tanmay@codeaurora.org>
+To:     robh+dt@kernel.org, swboyd@chromium.org, sam@ravnborg.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, seanpaul@chromium.org,
+        robdclark@gmail.com, daniel@ffwll.ch, airlied@linux.ie,
+        aravindh@codeaurora.org, abhinavk@codeaurora.org,
+        chandanu@codeaurora.org, varar@codeaurora.org,
+        Tanmay Shah <tanmay@codeaurora.org>
+Subject: [PATCH v8 0/6] Add support for DisplayPort driver on SnapDragon
+Date:   Tue, 30 Jun 2020 11:45:01 -0700
+Message-Id: <20200630184507.15589-1-tanmay@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200630020102.GA45128@x1>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Drew Fustini <drew@beagleboard.org> [200630 02:02]:
-> On Mon, Jun 29, 2020 at 10:03:58AM -0700, Tony Lindgren wrote:
-> > Hi,
-> > 
-> > * Drew Fustini <drew@beagleboard.org> [200628 08:26]:
-> > > v2 changes:
-> > > - change default mux from output to input.  Input is safer as it does
-> > >   not drive the line.  If the user wants output, they will need to edit
-> > >   this device tree.
-> > 
-> > So can you please clarify this a bit, are you saying that gpio output can't
-> > be done via userspace?
-> 
-> As it stands, there is no way for userspace to change a pin from gpio 
-> input to gpio output as it is based on the reciever active bit in the
-> pin control register (table 9-60 in the AM3358 datasheet [0]).
+These patches add Display-Port driver on SnapDragon/msm hardware.
+This series also contains device-tree bindings for msm DP driver.
+It also contains Makefile and Kconfig changes to compile msm DP driver.
 
-OK. I guess one not so nice option would be to enable receiver active
-for all the gpio pins.. But this also affects power consumption a little.
+The block diagram of DP driver is shown below:
 
-> I thought it would be useful to at least define the GPIOs available for
-> use on the PocketBeagle by default (and eventually the other BeagleBone
-> device trees).  Input seems to be the safest value.  This patch at least
-> makes it more clear where the user should edit to switch from input to
-> output.
 
-Some TI TRMs actually have tables listing the preferred mux logic
-for unused pins. I recall safe mode input pull down being one of the
-preferred modes. Sorry not sure which TRM that is, maybe omap3 or
-omap4 or omap5?
+                 +-------------+
+                 |DRM FRAMEWORK|
+                 +------+------+
+                        |
+                   +----v----+
+                   | DP DRM  |
+                   +----+----+
+                        |
+                   +----v----+
+     +------------+|   DP    +----------++------+
+     +        +---+| DISPLAY |+---+      |      |
+     |        +    +-+-----+-+    |      |      |
+     |        |      |     |      |      |      |
+     |        |      |     |      |      |      |
+     |        |      |     |      |      |      |
+     v        v      v     v      v      v      v
+ +------+ +------+ +---+ +----+ +----+ +---+ +-----+
+ |  DP  | |  DP  | |DP | | DP | | DP | |DP | | DP  |
+ |PARSER| | HPD  | |AUX| |LINK| |CTRL| |PHY| |POWER|
+ +--+---+ +---+--+ +---+ +----+ +--+-+ +-+-+ +-----+
+    |                              |     |
+ +--v---+                         +v-----v+
+ |DEVICE|                         |  DP   |
+ | TREE |                         |CATALOG|
+ +------+                         +---+---+
+                                      |
+                                  +---v----+
+                                  |CTRL/PHY|
+                                  |   HW   |
+                                  +--------+
 
-> > Needing to change the dts does not sound good to me.. But maybe you mean
-> > this is needed until the gpio-omap and pinctrl-single patches are merged?
->
-> I agree that I would like for userspace to be able to do run-time
-> changes.  However, I think something would need to be added to the
-> pinconf support in pinctrl-single for that to be possible.  There are
-> bias properties but non for receiver enable.
-> 
-> Does it seem sensible to add that?
+Changes in v7:
 
-Well let's see with Linus W says. To me it seems this might be a good
-reason to allow a sysfs interface to change the pinctrl if we don't
-have it yet? With the proper gpio line naming it should be quite simple
-to use too :)
+- Modify cover letter description and fix title.
+- Introduce dp-controller.yaml for common bindings across SOC
+- Rename dp-sc7180.yaml to dp-controller-sc7180.yaml for SC7180 bindings
+- Rename compatible string to qcom,sc7180-dp
+- Add assigned-clocks and assigned-clock-parents properties in bindings
+- Remove redundant code from driver
+- Extend series to include HPD detection logic
 
-Regards,
+Changes in v8:
 
-Tony
+- Add MDSS AHB clock in bindings 
+- Replace mode->vrefresh use with drm_mode_vrefresh API
+- Remove redundant aux config code from parser and aux module
+- Assign default max lanes if data-lanes property is not available
+- Fix use-after-free during DP driver remove
+- Unregister hardware clocks during driver cleanup
+
+This series depends-on:
+	https://patchwork.freedesktop.org/patch/366159/
+	https://patchwork.freedesktop.org/patch/369859/
+
+Chandan Uddaraju (4):
+  dt-bindings: msm/dp: add bindings of DP/DP-PLL driver for Snapdragon
+  drm: add constant N value in helper file
+  drm/msm/dp: add displayPort driver support
+  drm/msm/dp: add support for DP PLL driver
+
+Jeykumar Sankaran (1):
+  drm/msm/dpu: add display port support in DPU
+
+Tanmay Shah (1):
+  drm/msm/dp: Add Display Port HPD feature
+
+ .../display/msm/dp-controller-sc7180.yaml     |  144 ++
+ .../bindings/display/msm/dp-controller.yaml   |   61 +
+ .../bindings/display/msm/dpu-sc7180.yaml      |   11 +
+ drivers/gpu/drm/i915/display/intel_display.c  |    2 +-
+ drivers/gpu/drm/msm/Kconfig                   |   16 +
+ drivers/gpu/drm/msm/Makefile                  |   14 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c   |   29 +-
+ .../drm/msm/disp/dpu1/dpu_encoder_phys_vid.c  |    8 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c       |   83 +-
+ drivers/gpu/drm/msm/dp/dp_aux.c               |  510 +++++
+ drivers/gpu/drm/msm/dp/dp_aux.h               |   29 +
+ drivers/gpu/drm/msm/dp/dp_catalog.c           | 1060 ++++++++++
+ drivers/gpu/drm/msm/dp/dp_catalog.h           |  104 +
+ drivers/gpu/drm/msm/dp/dp_ctrl.c              | 1707 +++++++++++++++++
+ drivers/gpu/drm/msm/dp/dp_ctrl.h              |   35 +
+ drivers/gpu/drm/msm/dp/dp_display.c           | 1017 ++++++++++
+ drivers/gpu/drm/msm/dp/dp_display.h           |   31 +
+ drivers/gpu/drm/msm/dp/dp_drm.c               |  168 ++
+ drivers/gpu/drm/msm/dp/dp_drm.h               |   18 +
+ drivers/gpu/drm/msm/dp/dp_hpd.c               |   69 +
+ drivers/gpu/drm/msm/dp/dp_hpd.h               |   79 +
+ drivers/gpu/drm/msm/dp/dp_link.c              | 1216 ++++++++++++
+ drivers/gpu/drm/msm/dp/dp_link.h              |  132 ++
+ drivers/gpu/drm/msm/dp/dp_panel.c             |  490 +++++
+ drivers/gpu/drm/msm/dp/dp_panel.h             |   95 +
+ drivers/gpu/drm/msm/dp/dp_parser.c            |  267 +++
+ drivers/gpu/drm/msm/dp/dp_parser.h            |  138 ++
+ drivers/gpu/drm/msm/dp/dp_pll.c               |   99 +
+ drivers/gpu/drm/msm/dp/dp_pll.h               |   61 +
+ drivers/gpu/drm/msm/dp/dp_pll_10nm.c          |  917 +++++++++
+ drivers/gpu/drm/msm/dp/dp_pll_private.h       |  111 ++
+ drivers/gpu/drm/msm/dp/dp_power.c             |  392 ++++
+ drivers/gpu/drm/msm/dp/dp_power.h             |  103 +
+ drivers/gpu/drm/msm/dp/dp_reg.h               |  517 +++++
+ drivers/gpu/drm/msm/msm_drv.c                 |    2 +
+ drivers/gpu/drm/msm/msm_drv.h                 |   59 +-
+ include/drm/drm_dp_helper.h                   |    1 +
+ 37 files changed, 9776 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/msm/dp-controller-sc7180.yaml
+ create mode 100644 Documentation/devicetree/bindings/display/msm/dp-controller.yaml
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_aux.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_aux.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_catalog.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_catalog.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_ctrl.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_ctrl.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_display.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_display.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_drm.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_drm.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_hpd.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_hpd.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_link.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_link.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_panel.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_panel.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_parser.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_parser.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_pll.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_pll.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_pll_10nm.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_pll_private.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_power.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_power.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_reg.h
+
+
+base-commit: 0a19b068acc47d05212f03e494381926dc0381e2
+prerequisite-patch-id: 8058026a54241aa728a91dd1685419afb249959e
+prerequisite-patch-id: ed730eb83f84501579332a0f0ab98f7ef649e868
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
