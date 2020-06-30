@@ -2,198 +2,128 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DBF2C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 19:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F752C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 19:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3D90206A1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 19:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66D25206C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 19:22:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="gKHdRUe5"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="CSRw4qA3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726257AbgF3TPg (ORCPT
+        id S1726527AbgF3TWg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 15:15:36 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:52892 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726217AbgF3TPg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 15:15:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1593544533; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zyzWH6/6MTK+rTxq8XDIprmsIZUC3mOvx5/gSWX5RU8=;
-        b=gKHdRUe5icVdTNy4SwD7Ti8ml9qLxB56EZX3c9BlcAZGFT1A0WA2UptnBHuIvikc8nsN8N
-        qtzWKUrU1a2gYB8NlYn0gGotbADHD3N6M5scnB0RXSysaepRpjN4bWig3mKo2ddOkJDwSy
-        HeD9n6CYSII4P6FpvlinY6Z+0YlajSM=
-Date:   Tue, 30 Jun 2020 21:15:21 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v3 1/2] dt-bindings: timer: Add Ingenic X1000 OST
- bindings.
-To:     =?UTF-8?b?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Message-Id: <LT6RCQ.V5ANBLLSA4OD3@crapouillou.net>
-In-Reply-To: <20200630171553.70670-2-zhouyanjie@wanyeetech.com>
-References: <20200630171553.70670-1-zhouyanjie@wanyeetech.com>
-        <20200630171553.70670-2-zhouyanjie@wanyeetech.com>
+        Tue, 30 Jun 2020 15:22:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgF3TWg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 15:22:36 -0400
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3F54C061755;
+        Tue, 30 Jun 2020 12:22:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Z50zmfnBPo2u0p8708BAruvf3MnDJq1nng3tchC4BxM=; b=CSRw4qA3mqrXDXC30pTR66alas
+        v8/PTBq36Esj+PKN5s/rhns+lUf5KGCaFmEjZLDjCMief1m4AzpfaSpc4pou2l0sWIOxlI1pDg654
+        1hCURAZCV5U5z0PapH1RKgrrIwNB7wug4UAaLLNjuNBQINiSr99qYZPe67P4DDMxbpTc=;
+Received: from p200300ccff14dd001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff14:dd00:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jqLpZ-0001r0-AN; Tue, 30 Jun 2020 21:22:09 +0200
+Date:   Tue, 30 Jun 2020 21:22:07 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
+Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Josua Mayer <josua.mayer@jm0.eu>
+Subject: Re: [RFC PATCH 00/10] Netronix embedded controller driver for Kobo
+ and Tolino ebook readers
+Message-ID: <20200630212207.018ad355@aktux>
+In-Reply-To: <20200630071523.GA2983@latitude>
+References: <20200620223915.1311485-1-j.neuschaefer@gmx.net>
+        <20200630084051.66feadea@aktux>
+        <20200630071523.GA2983@latitude>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Zhou,
+On Tue, 30 Jun 2020 09:15:23 +0200
+Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
 
-Le mer. 1 juil. 2020 =C3=A0 1:15, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie)=
-=20
-<zhouyanjie@wanyeetech.com> a =C3=A9crit :
-> Add the OST bindings for the X10000 SoC from Ingenic.
+> On Tue, Jun 30, 2020 at 08:40:51AM +0200, Andreas Kemnade wrote:
+> [...]
+> > got a chance to test it on a Tolino Shine 2 HD.
+> > It uses the RTC from the RC5T619 but backlight seems to go via MSP430
+> > EC.
+> >=20
+> > I got this.
+> >=20
+> > [    1.453603] ntxec 0-0043: Netronix embedded controller version f110 =
+detected.
+> > [   10.723638] ntxec-rtc 21a0000.i2c:embedded-controller@43:rtc: regist=
+ered as rtc0
+> > [   10.775276] ntxec-pwm: probe of 21a0000.i2c:embedded-controller@43:p=
+wm failed with error -5 =20
 >=20
-> Tested-by: =E5=91=A8=E6=AD=A3 (Zhou Zheng) <sernia.zhou@foxmail.com>
-> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
-eetech.com>
-> ---
->=20
-> Notes:
->     v1->v2:
->     No change.
->=20
->     v2->v3:
->     Fix wrong parameters in "clocks".
->=20
->  .../devicetree/bindings/timer/ingenic,ost.yaml     | 61=20
-> ++++++++++++++++++++++
->  include/dt-bindings/clock/ingenic,ost.h            | 12 +++++
-
-Please name them ingenic,sysost.yaml and ingenic,sysost.h, to=20
-differenciate with the OST that is in the JZ SoCs.
-
->  2 files changed, 73 insertions(+)
->  create mode 100644=20
-> Documentation/devicetree/bindings/timer/ingenic,ost.yaml
->  create mode 100644 include/dt-bindings/clock/ingenic,ost.h
->=20
-> diff --git a/Documentation/devicetree/bindings/timer/ingenic,ost.yaml=20
-> b/Documentation/devicetree/bindings/timer/ingenic,ost.yaml
-> new file mode 100644
-> index 000000000000..459dd3d161c2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/ingenic,ost.yaml
-> @@ -0,0 +1,61 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/timer/ingenic,ost.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Bindings for SYSOST in Ingenic XBurst family SoCs
-> +
-> +maintainers:
-> +  - =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wanyeetech.com=
+> Hmm, -EIO from the PWM driver.
 >
-> +
-> +description:
-> +  The SYSOST in an Ingenic SoC provides one 64bit timer for=20
-> clocksource
-> +  and one or more than one 32bit timers for clockevent.
+Weird...
+IOMUXC_SW_PAD_CTL_PAD_I2C1_SDA/SCL is identical between
+vendor kernel (heavily patched 3.0.35) and patched mainline.
+                       =20
+MX6SL_PAD_I2C1_SCL__I2C1_SCL     0x4001f8b1
+MX6SL_PAD_I2C1_SDA__I2C1_SDA     0x4001f8b1
 
-"and one or more than one" -> "and one or more"
+root@tolino2:~# i2cset -f 0 0x43 0xa3 0x0001 w
+WARNING! This program can confuse your I2C bus, cause data loss and worse!
+I will write to device file /dev/i2c-0, chip address 0x43, data address
+0xa3, data 0x01, mode word.
+Continue? [Y/n]=20
+Error: Write failed
+root@tolino2:~# i2cset -f 0 0x43 0xa3 0x0000 w
+WARNING! This program can confuse your I2C bus, cause data loss and worse!
+I will write to device file /dev/i2c-0, chip address 0x43, data address
+0xa3, data 0x00, mode word.
+Continue? [Y/n]=20
+Error: Write failed
 
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +
-> +      - description: SYSOST in Ingenic XBurst family SoCs
+but backlight gets toggled. Same behavior on vendor kernel and
+in vendor uboot.
+That smells.
 
-XBurst is the name of the CPU, not a SoC family, so you would just=20
-write 'Ingenic SoCs'. But just drop the description alltogether, it=20
-does not add anything valuable.
-
-> +        enum:
-> +          - ingenic,x1000-ost
-> +          - ingenic,x2000-ost
-
-You have "ingenic,x2000-ost" as a compatible string, but your driver=20
-(in patch [2/2]) only handles the first compatible string. Either they=20
-are different, in this case the driver should handle both, or they work=20
-the same, and in the case the "ingenic,x2000-ost" string should use=20
-"ingenic,x1000-ost" as a fallback string.
-
-Cheers,
--Paul
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: ost
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - "#clock-cells"
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/x1000-cgu.h>
-> +
-> +    ost: timer@12000000 {
-> +    		compatible =3D "ingenic,x1000-ost";
-> +    		reg =3D <0x12000000 0x3c>;
-> +
-> +    		#clock-cells =3D <1>;
-> +
-> +    		clocks =3D <&cgu X1000_CLK_OST>;
-> +    		clock-names =3D "ost";
-> +
-> +    		interrupt-parent =3D <&cpuintc>;
-> +    		interrupts =3D <3>;
-> +    	};
-> +...
-> diff --git a/include/dt-bindings/clock/ingenic,ost.h=20
-> b/include/dt-bindings/clock/ingenic,ost.h
-> new file mode 100644
-> index 000000000000..9ac88e90babf
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/ingenic,ost.h
-> @@ -0,0 +1,12 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * This header provides clock numbers for the ingenic,tcu DT binding.
-> + */
-> +
-> +#ifndef __DT_BINDINGS_CLOCK_INGENIC_OST_H__
-> +#define __DT_BINDINGS_CLOCK_INGENIC_OST_H__
-> +
-> +#define OST_CLK_PERCPU_TIMER	0
-> +#define OST_CLK_GLOBAL_TIMER	1
-> +
-> +#endif /* __DT_BINDINGS_CLOCK_INGENIC_OST_H__ */
-> --
-> 2.11.0
->=20
-
-
+Regards,
+Andreas
