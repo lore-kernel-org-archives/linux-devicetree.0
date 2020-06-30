@@ -2,123 +2,243 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF2BC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 05:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9420BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 05:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 860A720720
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 05:06:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 643C220722
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 05:12:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="1w04gmdN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NJIBZqjm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbgF3FGa (ORCPT
+        id S1726715AbgF3FMc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 01:06:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51436 "EHLO
+        Tue, 30 Jun 2020 01:12:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbgF3FGa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 01:06:30 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEA1DC03E97A
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 22:06:29 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id m25so10481128vsp.8
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 22:06:29 -0700 (PDT)
+        with ESMTP id S1726436AbgF3FMc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 01:12:32 -0400
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43372C03E979
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 22:12:32 -0700 (PDT)
+Received: by mail-ua1-x943.google.com with SMTP id l12so1344785uak.7
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 22:12:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=d2uK/hi+Brt2pyT8LlHzAvwg6MH09+PI7YkbZr7ga+Q=;
-        b=1w04gmdNQ9631ByNUaIX12DL4x7KugjLTxDBq6DWEzjTB+Bj7ylamNrLVKFrmZgtNa
-         k7fgYt6AF9A/t2fCLvOrWTTlBmnMvX0dZSy7zrb4NVScTeipGAlp9d48kt2sRd6jxGWj
-         FUC8F4z5WWmpAB8WHygOoDg35N/GVKFNH575j/jXhKtR3+CULVQQopTznDJnXzXHnTeb
-         eUwtKBE7OXcYowlpfj6CtOGL6VTYlPcitOhYYBog+f4Jiwd51v9oWG4d4/Md1lTpFb3B
-         7VNsRaU3vmOM7cMKRGgp7dQqe2wIVC2ervcfdFIHkzBW4x0pPMfVV/OnFAs//Z+U/gHX
-         oj7g==
+        bh=GZqNJf/On7BSXnSaIpAwlixbpz1QEKZR/Qh4WmlHE/w=;
+        b=NJIBZqjmorg7A0uHIHgK7pGtai2uUiiTma8MdmUkVCHd7SDCxBgURyucrMkwdp+L/X
+         dNkiucbsIrhfA1ZA0nnEKfcBG59EechfNdhez+CIs+s9SzgZdfhBNuADSBxHaNxccY9b
+         dyyUubT4IBnUVvIjV75XEkalZZR7i+fjNvR9Tr6WjP65XVjAeQ2vl5X7xU2FLERe8FQl
+         qaWhrz5R2fCn+7ZDjNdwnIzGpFnaj9ivBMMhvi5jPVtc643LBW4K2hHYPhG/Fz/f4peS
+         xBQiGYopJppEfASjygrVZtCDzqOg7lpNNWM2dSmae9wm6l4qEFLqW/fgz+8jJ6N1Z0DC
+         LfeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=d2uK/hi+Brt2pyT8LlHzAvwg6MH09+PI7YkbZr7ga+Q=;
-        b=m75vttv0Iuhh0tK4CYchzi94u7NW8VzUkWPsvnCXpluu7V+31TcMEcsSZad8DOIIYn
-         SL56KKG+seY1BdA7VnauvepyQH6SsYSA88bZw/cV+mm1EXVZzAaVbqse2Y5rU6QSKpvx
-         RqbXjadBr61eDh73cnIs1A55prFQaM+vrbjBWX7befoM6ziv0khDr47+G2g5R7dF7wAN
-         X0EvavTeGHaMwhK4whS3a5TAd0fxLWguNTMWS1nwacGvsAT9r28tZd8APtgzvvmX86e8
-         c5pBtCSnbvyFjh+2V7zddwEPznLoaGynXNyvAxJEd0XmpZZFb/TWh9DLrFrCBkPht/O+
-         LgnQ==
-X-Gm-Message-State: AOAM532llDvaz4xICKgaOmeErN+lkozKgCsm3HZDEewVIZwWBoW+RCyl
-        RnIXjDYQUEp2N9f21W4lbKFf+P990HNnK6iE170pxg==
-X-Google-Smtp-Source: ABdhPJyJeJB83cxwO/XegM9Yw4FjPp35g425s3MnN+uM3+yvSRh2sWTu7OFfztRHesCvhTzAgHB9mldeqJIayobuIF8=
-X-Received: by 2002:a67:f557:: with SMTP id z23mr13521181vsn.27.1593493588999;
- Mon, 29 Jun 2020 22:06:28 -0700 (PDT)
+        bh=GZqNJf/On7BSXnSaIpAwlixbpz1QEKZR/Qh4WmlHE/w=;
+        b=B37r0NF/oU7AWoJTziS1NFvCs/9hnvQer2CY4pTVQ565E8seu1RoY0F3WIlrSBVoV2
+         YqVkPNLRrZNA/Hbe/N7sxp95BaEkjZMGx2lItwrDDicJ5xpeZiizt5xrVoqXgH0i0Ax2
+         2vEn8wT03EmerWF/CrR4GIA7QUTbxaCH8LikE05gYti1XqQj1kI6Je8J40mbKb60rRrc
+         w2WWOjHepyQK/bnHH5mcNwQA1B1Uixo3Wg9S8BSHwK7PCHK/dM7sKFlbpeSszAPQa/SG
+         NTWBFwhTLnLp1fcrUxtEH4On3bQT/x9+kOCFGhL+99rOirXvrO+DLprR3cvcGTAIZ0RT
+         pNiQ==
+X-Gm-Message-State: AOAM532LHP6ZhRBUhZVUMXSbFz+k8iSGoOh7E4tM6jfK8zC49TRtq+iW
+        W5UTLH+7BK1UStUdtdILKSIvHiO96ONJR69uVLGvCg==
+X-Google-Smtp-Source: ABdhPJysDkIaaWnh2DqQmc9Gtn6fINTLTYAwh+PfYrZlIuIQbRi6Xt9uuRB0lB6S1M+uDHcG3XhPJeGk1ho0vHvBT48=
+X-Received: by 2002:a9f:3113:: with SMTP id m19mr4054878uab.77.1593493951335;
+ Mon, 29 Jun 2020 22:12:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200621193549.2070434-1-dmitry.baryshkov@linaro.org> <20200621193549.2070434-6-dmitry.baryshkov@linaro.org>
-In-Reply-To: <20200621193549.2070434-6-dmitry.baryshkov@linaro.org>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Tue, 30 Jun 2020 10:36:18 +0530
-Message-ID: <CAHLCerOqWWr3i32tRgGfep12YfDufw-WU80VWUsUNpDDZ13D-w@mail.gmail.com>
-Subject: Re: [PATCH 5/5] arm64: dts: sm8250-dts: add thermal zones using
- pmic's adc-tm5
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+References: <20200630032014.22956-1-andy.tang@nxp.com>
+In-Reply-To: <20200630032014.22956-1-andy.tang@nxp.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 30 Jun 2020 10:42:19 +0530
+Message-ID: <CAHLCerO3B4Z67KP8VaF957Jkid21gLvzhS49gNeqUC+6muPkjA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: dts: ls1088a: add more thermal zone support
+To:     Yuantian Tang <andy.tang@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        linux-iio@vger.kernel.org
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Dmitry,
-
-On Mon, Jun 22, 2020 at 1:06 AM Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
+On Tue, Jun 30, 2020 at 8:56 AM <andy.tang@nxp.com> wrote:
 >
-> Port thermal zones definitions from msm-4.19 tree. Enable and add
-> channel configuration to PMIC's ADC-TM definitions. Declare thermal
-> zones and respective trip points.
+> From: Yuantian Tang <andy.tang@nxp.com>
 >
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> There are 2 thermal zones in ls1088a soc. Add the other thermal zone
+> node to enable it.
+> Also update the values in calibration table to make the temperatures
+> monitored more precise.
+>
+> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
 > ---
->  arch/arm64/boot/dts/qcom/sm8250-mtp.dts | 237 ++++++++++++++++++++++++
->  1 file changed, 237 insertions(+)
+>  .../arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 100 +++++++++++-------
+>  1 file changed, 62 insertions(+), 38 deletions(-)
 >
-> diff --git a/arch/arm64/boot/dts/qcom/sm8250-mtp.dts b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
-
-IMO, this should be separated in the pmic dts file like we do for
-other QC platforms since the PMICs tend to be used in multiple
-platforms.
-
-> index aa37eb112d85..78f0cf582a9a 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
-> @@ -24,6 +24,104 @@ chosen {
->                 stdout-path = "serial0:115200n8";
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> index 36a799554620..ccbbc23e6c85 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> @@ -129,19 +129,19 @@
 >         };
 >
-> +       thermal-zones {
-> +               xo-therm {
-> +                       polling-delay-passive = <0>;
-> +                       polling-delay = <0>;
-> +                       thermal-sensors = <&pm8150_adc_tm 0>;
+>         thermal-zones {
+> -               cpu_thermal: cpu-thermal {
+> +               core-cluster {
+>                         polling-delay-passive = <1000>;
+>                         polling-delay = <5000>;
+>                         thermal-sensors = <&tmu 0>;
+>
+>                         trips {
+> -                               cpu_alert: cpu-alert {
+> +                               core_cluster_alert: core-cluster-alert {
+>                                         temperature = <85000>;
+>                                         hysteresis = <2000>;
+>                                         type = "passive";
+>                                 };
+>
+> -                               cpu_crit: cpu-crit {
+> +                               core_cluster_crit: core-cluster-crit {
+>                                         temperature = <95000>;
+>                                         hysteresis = <2000>;
+>                                         type = "critical";
+> @@ -150,7 +150,7 @@
+>
+>                         cooling-maps {
+>                                 map0 {
+> -                                       trip = <&cpu_alert>;
+> +                                       trip = <&core_cluster_alert>;
+>                                         cooling-device =
+>                                                 <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+>                                                 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> @@ -163,6 +163,26 @@
+>                                 };
+>                         };
+>                 };
+> +
+> +               soc {
+> +                       polling-delay-passive = <1000>;
+> +                       polling-delay = <5000>;
+> +                       thermal-sensors = <&tmu 1>;
+> +
 > +                       trips {
-> +                               active-config0 {
-> +                                       temperature = <125000>;
-> +                                       hysteresis = <1000>;
+> +                               soc-alert {
+> +                                       temperature = <85000>;
+> +                                       hysteresis = <2000>;
 > +                                       type = "passive";
+> +                               };
+> +
+> +                               soc-crit {
+> +                                       temperature = <95000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "critical";
 > +                               };
 > +                       };
 > +               };
-> +
+
+You should also add a cooling-maps section for this thermal zone given
+that it has a passive trip type. Otherwise there is no use for a
+passive trip type.
+
+>         };
+>
+>         timer {
+> @@ -209,45 +229,49 @@
+>                         compatible = "fsl,qoriq-tmu";
+>                         reg = <0x0 0x1f80000 0x0 0x10000>;
+>                         interrupts = <0 23 0x4>;
+> -                       fsl,tmu-range = <0xb0000 0x9002a 0x6004c 0x30062>;
+> +                       fsl,tmu-range = <0xb0000 0x9002a 0x6004c 0x70062>;
+>                         fsl,tmu-calibration =
+>                                 /* Calibration data group 1 */
+> -                               <0x00000000 0x00000026
+> -                               0x00000001 0x0000002d
+> -                               0x00000002 0x00000032
+> -                               0x00000003 0x00000039
+> -                               0x00000004 0x0000003f
+> -                               0x00000005 0x00000046
+> -                               0x00000006 0x0000004d
+> -                               0x00000007 0x00000054
+> -                               0x00000008 0x0000005a
+> -                               0x00000009 0x00000061
+> -                               0x0000000a 0x0000006a
+> -                               0x0000000b 0x00000071
+> +                               <0x00000000 0x00000023
+> +                               0x00000001 0x0000002a
+> +                               0x00000002 0x00000030
+> +                               0x00000003 0x00000037
+> +                               0x00000004 0x0000003d
+> +                               0x00000005 0x00000044
+> +                               0x00000006 0x0000004a
+> +                               0x00000007 0x00000051
+> +                               0x00000008 0x00000057
+> +                               0x00000009 0x0000005e
+> +                               0x0000000a 0x00000064
+> +                               0x0000000b 0x0000006b
+>                                 /* Calibration data group 2 */
+> -                               0x00010000 0x00000025
+> -                               0x00010001 0x0000002c
+> -                               0x00010002 0x00000035
+> -                               0x00010003 0x0000003d
+> -                               0x00010004 0x00000045
+> -                               0x00010005 0x0000004e
+> -                               0x00010006 0x00000057
+> -                               0x00010007 0x00000061
+> -                               0x00010008 0x0000006b
+> -                               0x00010009 0x00000076
+> +                               0x00010000 0x00000022
+> +                               0x00010001 0x0000002a
+> +                               0x00010002 0x00000032
+> +                               0x00010003 0x0000003a
+> +                               0x00010004 0x00000042
+> +                               0x00010005 0x0000004a
+> +                               0x00010006 0x00000052
+> +                               0x00010007 0x0000005a
+> +                               0x00010008 0x00000062
+> +                               0x00010009 0x0000006a
+>                                 /* Calibration data group 3 */
+> -                               0x00020000 0x00000029
+> -                               0x00020001 0x00000033
+> -                               0x00020002 0x0000003d
+> -                               0x00020003 0x00000049
+> -                               0x00020004 0x00000056
+> -                               0x00020005 0x00000061
+> -                               0x00020006 0x0000006d
+> +                               0x00020000 0x00000021
+> +                               0x00020001 0x0000002b
+> +                               0x00020002 0x00000035
+> +                               0x00020003 0x00000040
+> +                               0x00020004 0x0000004a
+> +                               0x00020005 0x00000054
+> +                               0x00020006 0x0000005e
+>                                 /* Calibration data group 4 */
+> -                               0x00030000 0x00000021
+> -                               0x00030001 0x0000002a
+> -                               0x00030002 0x0000003c
+> -                               0x00030003 0x0000004e>;
+> +                               0x00030000 0x00000010
+> +                               0x00030001 0x0000001c
+> +                               0x00030002 0x00000027
+> +                               0x00030003 0x00000032
+> +                               0x00030004 0x0000003e
+> +                               0x00030005 0x00000049
+> +                               0x00030006 0x00000054
+> +                               0x00030007 0x00000060>;
+>                         little-endian;
+>                         #thermal-sensor-cells = <1>;
+>                 };
+> --
+> 2.17.1
+>
