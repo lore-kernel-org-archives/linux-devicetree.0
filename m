@@ -2,170 +2,114 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0381AC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 19:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 412A5C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 20:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2C8220772
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 19:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 172A820772
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 20:00:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sJpdTUn+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CpGnE3fR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728533AbgF3TwK (ORCPT
+        id S1729050AbgF3UAG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 15:52:10 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:20301 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728423AbgF3TwK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 30 Jun 2020 15:52:10 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593546729; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=khdI7KK3P5HEXu5fVmHtaSFBLxX53kdpZO9nigjlUsg=; b=sJpdTUn+wJ0o4WA514CF5BvXkzf+k7VzFkZv3XaSceFHr45vnmgAacg+kTuHKB1KTf+VwKkr
- pQIDv5dvLzw+569fqdLAFTo3HjLWPjum+FxPa5U3/blZH0srMZRmxxRPqpnqN0uOFDjJ9URD
- vm6OgINM/l5qb3h0yBE+1x3HzsU=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n19.prod.us-west-2.postgun.com with SMTP id
- 5efb97e85866879c76f8cff8 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 30 Jun 2020 19:52:08
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 65414C433C6; Tue, 30 Jun 2020 19:52:08 +0000 (UTC)
-Received: from linuxdisplay-lab-04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tanmay)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DBF0AC433C6;
-        Tue, 30 Jun 2020 19:52:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DBF0AC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tanmay@codeaurora.org
-From:   Tanmay Shah <tanmay@codeaurora.org>
-To:     swboyd@chromium.org, seanpaul@chromium.org
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        sam@ravnborg.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        robdclark@gmail.com, aravindh@codeaurora.org,
-        abhinavk@codeaurora.org, chandanu@codeaurora.org,
-        varar@codeaurora.org, Tanmay Shah <tanmay@codeaurora.org>
-Subject: [PATCH v3] arm64: dts: qcom: sc7180: Add Display Port dt node
-Date:   Tue, 30 Jun 2020 12:51:51 -0700
-Message-Id: <20200630195151.347-1-tanmay@codeaurora.org>
-X-Mailer: git-send-email 2.27.0
+        Tue, 30 Jun 2020 16:00:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48200 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728878AbgF3UAF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 16:00:05 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6BF2C061755;
+        Tue, 30 Jun 2020 13:00:04 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id w16so21875309ejj.5;
+        Tue, 30 Jun 2020 13:00:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=ldl1WwxRjxrbVs0UyhlhGaXCB+HE7WnXiRirMFC/VI0=;
+        b=CpGnE3fRqwe5FDnQJHrqoN5FQAsEk/lJgO/etAhGA/GpHiRweSYKsr/NgURn7e6B4D
+         +jlULt0/BZAn/jEV2kKgM2JpUsO2tbI/vCWl5oY8c3yUcT4XBLHmS2C6JcLvxd1POBB3
+         L+D6r9yDP91lkK6SuwP5JX/5MCGetnWX7JdxXibLZH1170XyCBXKQE9RGHZ8xtVJnAkm
+         AJaqI8VOALrvvwx+CoPcg5iN8M3LJYF/OxMIYNQQMU1O/UIRbkHI/nxv5BTaxWNixnNw
+         GugNu3MdWMT1PAl7siYeUGj2EPYdnf0A7WCAm8G8tXOvQKBc934o4PK3ix/HbjhvqfN3
+         Z3Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=ldl1WwxRjxrbVs0UyhlhGaXCB+HE7WnXiRirMFC/VI0=;
+        b=BHgq6/80ggRrp6YjM4Hks5ez28MYoCInrJY03M31vKkKiUrYMGbwnEhbdo6QuD143g
+         ie/zwB7oAVtZtqR2WCcHRR8XJp490z9YNBeWuWr/0+G+zEjG9cC18v8XR0YjGmgzlwAd
+         SRcMT18m1eYD7nyoLojPQHHYMyanQymihkbBlt7Kr8gB/Vz7OmLaAbdMmbh6zEMd6cCp
+         cwqqhA2naLBamzWuBbnCWTdT7KjS5pUtv6QgWnK4uFpGjlc6/b7NWogb8asn6GNl07ok
+         xrIKTqeFH083tTsXxXgh5l5axJ1lyJZ84sBADjAt4ucygSPh212vILiyQ5Ho5MppJXKb
+         nsVg==
+X-Gm-Message-State: AOAM5314Qiwwhi4Xw5I2sWKFfKUMLFW02kYT1xGc9SWjfB5hTkcii/Cn
+        6IyYGSi3F8vxh+HyVMnaHVY=
+X-Google-Smtp-Source: ABdhPJx6VFGPGnkdrs5wh+o9pBBfjA00TUqefANt1swuANi6ZEQ+n81vfiqllrSO33moHSoygdt0NA==
+X-Received: by 2002:a17:906:7f90:: with SMTP id f16mr19377109ejr.507.1593547202116;
+        Tue, 30 Jun 2020 13:00:02 -0700 (PDT)
+Received: from felia ([2001:16b8:2d31:bc00:cc6f:aee9:d326:7bf7])
+        by smtp.gmail.com with ESMTPSA id y7sm3768744edq.25.2020.06.30.13.00.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 13:00:01 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
+Date:   Tue, 30 Jun 2020 21:59:51 +0200 (CEST)
+X-X-Sender: lukas@felia
+To:     Evan Benn <evanbenn@chromium.org>
+cc:     Julius Werner <jwerner@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] MAINTAINERS: rectify entry in ARM SMC WATCHDOG DRIVER
+In-Reply-To: <CAKz_xw3KuWFSkcz-9hLHGZ2=S7nJ=K=AN6j2FJ6afZBFowJO7g@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.2006302156120.3966@felia>
+References: <20200602052104.7795-1-lukas.bulwahn@gmail.com> <828311d2-61ea-42cb-1449-a53f3772543d@roeck-us.net> <CAODwPW_oxDxF_5-icRs0eaRVLgtP+bDc_OSKa=EcfeSp=c6Fag@mail.gmail.com> <CAKz_xw0Tqr-idoZbNzg_didSCr5L+L1=76xjF=Sqj4DgpL9g7Q@mail.gmail.com>
+ <CAKz_xw3KuWFSkcz-9hLHGZ2=S7nJ=K=AN6j2FJ6afZBFowJO7g@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add DP device node on sc7180.
 
-Changes in v2:
 
-- Add assigned-clocks and assigned-clock-parents
-- Remove cell-index and pixel_rcg
-- Change compatible to qcom,sc7180-dp
+On Fri, 5 Jun 2020, Evan Benn wrote:
 
-Changes in v3:
-- Update commit text
-- Make DP child node of MDSS
-- Remove data-lanes property from SOC dts
-- Disable DP node in SOC dts
-- Assign DP to Port2 in MDP node
-- Add MDSS AHB clock in DP device node
+> AFAICT this has now been merged upstream, I'm not sure what action to take:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=5c24a28b4eb842ad1256496be6ae01bab15f1dcb
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=72a9e7fea5866fc471fda78f05f166595c8c6ba6
 
-This patch depends-on:
-	https://patchwork.freedesktop.org/series/78953/
+This patch is still fully valid and still applies to next-20200630; it can 
+be simply applied as any other bug fix to your driver code.
 
-Signed-off-by: Tanmay Shah <tanmay@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 49 ++++++++++++++++++++++++++--
- 1 file changed, 47 insertions(+), 2 deletions(-)
+Evan, can you please ask Wim as linux-watchdog maintainer to pick-up this 
+patch, with the reviews below?
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 31b9217bb5bf..271d55db62ab 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -2371,6 +2371,13 @@ dpu_intf1_out: endpoint {
- 							remote-endpoint = <&dsi0_in>;
- 						};
- 					};
-+
-+					port@2 {
-+						reg = <2>;
-+						dpu_intf0_out: endpoint {
-+							remote-endpoint = <&dp_in>;
-+						};
-+					};
- 				};
- 			};
- 
-@@ -2440,6 +2447,44 @@ dsi_phy: dsi-phy@ae94400 {
- 
- 				status = "disabled";
- 			};
-+
-+			msm_dp: displayport-controller@ae90000{
-+				status = "disabled";
-+				compatible = "qcom,sc7180-dp";
-+
-+				reg = <0 0xae90000 0 0x1400>;
-+				reg-names = "dp_controller";
-+
-+				interrupt-parent = <&mdss>;
-+				interrupts = <12 0>;
-+
-+				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
-+					 <&dispcc DISP_CC_MDSS_DP_AUX_CLK>,
-+					 <&dispcc DISP_CC_MDSS_DP_LINK_CLK>,
-+					 <&dispcc DISP_CC_MDSS_DP_LINK_INTF_CLK>,
-+					 <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK>;
-+				clock-names = "core_iface", "core_aux", "ctrl_link",
-+					      "ctrl_link_iface", "stream_pixel";
-+				#clock-cells = <1>;
-+				assigned-clocks = <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
-+				assigned-clock-parents = <&msm_dp 1>;
-+
-+				ports {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					port@0 {
-+						reg = <0>;
-+						dp_in: endpoint {
-+							remote-endpoint = <&dpu_intf0_out>;
-+						};
-+					};
-+
-+					port@1 {
-+						reg = <1>;
-+						dp_out: endpoint { };
-+					};
-+				};
-+			};
- 		};
- 
- 		dispcc: clock-controller@af00000 {
-@@ -2449,8 +2494,8 @@ dispcc: clock-controller@af00000 {
- 				 <&gcc GCC_DISP_GPLL0_CLK_SRC>,
- 				 <&dsi_phy 0>,
- 				 <&dsi_phy 1>,
--				 <0>,
--				 <0>;
-+				 <&msm_dp 0>,
-+				 <&msm_dp 1>;
- 			clock-names = "bi_tcxo",
- 				      "gcc_disp_gpll0_clk_src",
- 				      "dsi0_phy_pll_out_byteclk",
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Lukas
 
+> 
+> On Wed, Jun 3, 2020 at 9:22 AM Evan Benn <evanbenn@chromium.org> wrote:
+> >
+> > Apologies for that slip up.
+> >
+> > Reviewed-by: Evan Benn <evanbenn@chromium.org>
+> >
+> > On Wed, Jun 3, 2020 at 6:16 AM Julius Werner <jwerner@chromium.org> wrote:
+> > >
+> > > Reviewed-by: Julius Werner <jwerner@chromium.org>
+> 
