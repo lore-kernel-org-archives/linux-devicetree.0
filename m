@@ -2,151 +2,129 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 099CCC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 17:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B27C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 17:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6CC2207F9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 17:02:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CBED20772
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 17:07:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tqjQx/HF"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="krnaQcrW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389979AbgF3RCK (ORCPT
+        id S2390022AbgF3RHu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 13:02:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48982 "EHLO
+        Tue, 30 Jun 2020 13:07:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727061AbgF3RCJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 13:02:09 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42985C061755;
-        Tue, 30 Jun 2020 10:02:09 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id n23so23475934ljh.7;
-        Tue, 30 Jun 2020 10:02:09 -0700 (PDT)
+        with ESMTP id S2390021AbgF3RHu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 13:07:50 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09D22C03E979
+        for <devicetree@vger.kernel.org>; Tue, 30 Jun 2020 10:07:50 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id j18so19525962wmi.3
+        for <devicetree@vger.kernel.org>; Tue, 30 Jun 2020 10:07:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Zm73/VCv6D7tyjxlDYUvUqi434b/awSj205uGGSiY5E=;
-        b=tqjQx/HFMAKT91zIH/bwqIcsxDgnE+o7tj9C36qUiMT6LNlS/MRbarOXOhAjo05SoQ
-         42fTsD0Bbk4bFkjSL/DeMJM1UVylpbSuBvlr1nF/qHCagwxzJ6dQLIUvvgqbJxLp18pv
-         3LWb9GK2CNPoyF1sPNibc8ZYqqCmfOH0Xnk28lzC8Ct4OyESOg2brOSo2eMj2siUijDX
-         Ivn+g/tGC1mkwx1GjiVqPpprQ6Up/09PXknZPXh0nlVUcLsCiMEYAzYS3Aj5GgaDi6Fp
-         R0jkzp/RRyeUbxxpJmjJsJIiUR+11UuIhdigZDR4eYY8I+3d304tk+pC4kvx5942gepY
-         dLUg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=eo3ES9sUCig8aLu5NZZkJQXvABEslHkuO9SXxTeXs7A=;
+        b=krnaQcrWpA9PjZpBjE+pBBdEaARw/s+oHt5/YFoFvJphTS/aiTcVUYQvXi8rYFehln
+         Nfsb2EgxZD8PIG4hq8NhzdV40PvmoApJZXgYKSUdgQ6ZfIRZOcvoDAiF/gR/7702rhfM
+         0OLGZAHNZ1+N5mBncwANibrTdVA7yBuMl3lhM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Zm73/VCv6D7tyjxlDYUvUqi434b/awSj205uGGSiY5E=;
-        b=OWee7zGU7J+sdUsJ4RNDErkYgz11GY+DqrnJmf1k7CMjxaxQ3C0dm27x9r4S+v1Ty5
-         ijPyZhZU3OEaCh6NH8H0yaeI9C9eKogw9+3ljUWwB0UO01D9eP/nnUTcZM+f4U8yPpXw
-         /HSCwFoOcQhF8RpC/gu7AGsAmQudcgHIXp8cNW3jp3tH4hDhtMg+LWj/8yN2l8vCuVNO
-         Otwe2mEh0IHgqI5NtxUPEK7KrqraF5lScMCtoLSWqobmovHb+HXd7pBV+0kHU7Y67Zek
-         7XW2YM8J2Rf+CW7V+uTk94OmbcEhpXYQxdKrzVuBISYBp67Dy8p8L0+XfvU0jGQWrc1I
-         xH8A==
-X-Gm-Message-State: AOAM532lIg/qKHxXpx4a9STzrza7fIeA0FK5Ys/6SYskHDOTt+pF6Hm+
-        m+b3+ji09h1PbIGA9do15VkWfvqMhGI=
-X-Google-Smtp-Source: ABdhPJySlQU/MvAcD940eAO4I0jczbnnGO6YWZ/sb/tciNiEsQmajGFLUIMqC2ALxjQA7vqNRzlD3A==
-X-Received: by 2002:a2e:b8c2:: with SMTP id s2mr11668004ljp.368.1593536527151;
-        Tue, 30 Jun 2020 10:02:07 -0700 (PDT)
-Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.googlemail.com with ESMTPSA id d21sm587797ljo.85.2020.06.30.10.02.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jun 2020 10:02:06 -0700 (PDT)
-Subject: Re: [PATCH v8 1/7] of_graph: add of_graph_presents()
-To:     Rob Herring <robh@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200617222703.17080-1-digetx@gmail.com>
- <20200617222703.17080-2-digetx@gmail.com> <20200629231211.GA3142766@bogus>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <1ef25775-1f37-25ce-f534-54cc995a5658@gmail.com>
-Date:   Tue, 30 Jun 2020 20:02:04 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eo3ES9sUCig8aLu5NZZkJQXvABEslHkuO9SXxTeXs7A=;
+        b=l0+eM3eVPocfzLPjq0/ygfd3HrGBvP5xvFiGfcZkAu2mX/WXlP+tag5g+XC2PUO5TV
+         lByUi9oWhhBGWoT1bVW4DZcS2o4mfoO79neesE8R7jZi69uljEeWJXQNwsqF1//1k+bL
+         aCDDTkdhF4WsGTnj6ifUhCOteqt8N3VQCHcge64tWEd0jjzaVQOiJhfWnmmoJSqAUtNT
+         3eMhetLTlcVDUakL2fhJIHuBAeGWtk2YfX3sOuTIr85LbNu4wMW2sfyp0orlJssGqwQJ
+         UW3+O5M+4QAWXktPwobuL2yWlNuLcIMIywa3NcrEqZogI0I9tP2X3UP7Q3aLzEUo9cc9
+         wqnA==
+X-Gm-Message-State: AOAM532ZCQYzEOLQJvDyMlXcBZQyIkpKt9goJp0Nn6mSBKqWb2nnvBLt
+        Mre085CSi+c24prvBmwelRNo8g==
+X-Google-Smtp-Source: ABdhPJwlgaLryaWZGTbiuR1St0l7UpAMy7IhlnmJgccwBKqfDnX8dswNiXEgaVH7QqQgdM/4TqRpEA==
+X-Received: by 2002:a1c:2e0e:: with SMTP id u14mr22242245wmu.55.1593536868603;
+        Tue, 30 Jun 2020 10:07:48 -0700 (PDT)
+Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
+        by smtp.gmail.com with ESMTPSA id h14sm4457200wrt.36.2020.06.30.10.07.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 10:07:48 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 17:07:46 +0000
+From:   Tomasz Figa <tfiga@chromium.org>
+To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        mchehab@kernel.org, andriy.shevchenko@linux.intel.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        sakari.ailus@linux.intel.com, drinkcat@chromium.org,
+        matthias.bgg@gmail.com, bingbu.cao@intel.com,
+        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        louis.kuo@mediatek.com, shengnan.wang@mediatek.com
+Subject: Re: [PATCH V11 2/2] media: i2c: ov02a10: Add OV02A10 image sensor
+ driver
+Message-ID: <20200630170746.GD1212092@chromium.org>
+References: <20200630024942.20891-1-dongchun.zhu@mediatek.com>
+ <20200630024942.20891-3-dongchun.zhu@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200629231211.GA3142766@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630024942.20891-3-dongchun.zhu@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-30.06.2020 02:12, Rob Herring пишет:
-> On Thu, Jun 18, 2020 at 01:26:57AM +0300, Dmitry Osipenko wrote:
->> In some case, like a DRM display code for example, it's useful to silently
->> check whether port node exists at all in a device-tree before proceeding
->> with parsing of the graph.
->>
->> This patch adds of_graph_presents() that returns true if given device-tree
->> node contains OF graph port.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/of/property.c    | 52 +++++++++++++++++++++++++++++++++-------
->>  include/linux/of_graph.h |  6 +++++
->>  2 files changed, 49 insertions(+), 9 deletions(-)
->>
->> diff --git a/drivers/of/property.c b/drivers/of/property.c
->> index 1f2086f4e7ce..b84ed6a7cf50 100644
->> --- a/drivers/of/property.c
->> +++ b/drivers/of/property.c
->> @@ -29,6 +29,48 @@
->>  
->>  #include "of_private.h"
->>  
->> +/**
->> + * of_graph_get_first_local_port() - get first local port node
->> + * @node: pointer to a local endpoint device_node
->> + *
->> + * Return: First local port node associated with local endpoint node linked
->> + *	   to @node. Use of_node_put() on it when done.
->> + */
->> +static struct device_node *
->> +of_graph_get_first_local_port(const struct device_node *node)
->> +{
->> +	struct device_node *ports, *port;
->> +
->> +	ports = of_get_child_by_name(node, "ports");
->> +	if (ports)
->> +		node = ports;
->> +
->> +	port = of_get_child_by_name(node, "port");
->> +	of_node_put(ports);
->> +
->> +	return port;
->> +}
->> +
->> +/**
->> + * of_graph_presents() - check graph's presence
->> + * @node: pointer to a device_node checked for the graph's presence
->> + *
->> + * Return: True if @node has a port or ports sub-node, false otherwise.
->> + */
->> +bool of_graph_presents(const struct device_node *node)
-> 
-> of_graph_is_present
-> 
-> Otherwise,
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
+Hi Dongchun,
 
-Thanks!
+On Tue, Jun 30, 2020 at 10:49:42AM +0800, Dongchun Zhu wrote:
+> Add a V4L2 sub-device driver for OV02A10 image sensor.
+> 
+> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> ---
+>  MAINTAINERS                 |    1 +
+>  drivers/media/i2c/Kconfig   |   13 +
+>  drivers/media/i2c/Makefile  |    1 +
+>  drivers/media/i2c/ov02a10.c | 1052 +++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 1067 insertions(+)
+>  create mode 100644 drivers/media/i2c/ov02a10.c
 
-I'll address the comment and then factor out this and the
-drm_of_find_panel_or_bridge() changes into a separate series in v9,
-since the Tegra DRM patches could be applied separately by Thierry.
+Thank you for the patch. Please see my comments inline.
+
+[snip]
+> +static int ov02a10_entity_init_cfg(struct v4l2_subdev *sd,
+> +				   struct v4l2_subdev_pad_config *cfg)
+> +{
+> +	struct v4l2_subdev_format fmt = {
+> +		.which = cfg ? V4L2_SUBDEV_FORMAT_TRY : V4L2_SUBDEV_FORMAT_ACTIVE,
+
+As we discussed before, this function is never called with cfg == NULL.
+Perhaps what we need here is to call ov02a10_set_fmt() twice, once for
+V4L2_SUBDEV_FORMAT_ACTIVE and then for V4L2_SUBDEV_FORMAT_TRY?
+
+Sakari, would that be a proper implementation of this function?
+
+> +		.format = {
+> +			.width = 1600,
+> +			.height = 1200,
+> +		}
+> +	};
+> +
+> +	ov02a10_set_fmt(sd, cfg, &fmt);
+> +
+> +	return 0;
+[snip]
+
+With this and Sakari's comment about the initial state of the reset pin
+fixed, feel free to add my
+
+Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+
+Best regards,
+Tomasz
