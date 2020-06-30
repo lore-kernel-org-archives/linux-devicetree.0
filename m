@@ -2,142 +2,94 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCB7C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 11:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E889C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 11:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C50E20780
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 11:55:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A6FA20774
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 11:56:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Q/LSsYXZ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wIR3jAVa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732446AbgF3LzI (ORCPT
+        id S1733199AbgF3L4s (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 07:55:08 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:57292 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729580AbgF3LzG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 07:55:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1593518102; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iLivQZbuAtImOA556A9/GwUMm1HUXka6DPlyQAzwKuo=;
-        b=Q/LSsYXZWBuyh3RUShBSmnkCNm3OyljvBxuq7YsUziu9aEZs299XhTkBGr9tr0Vk/6OK0l
-        0ehGwufTYFqKBASWXDhdCexfbuQqnfAcYbmJZLcPrEdMC6yBgFauZJXyceTNFvTKj/2stY
-        u8pTDrig8VjQB57LdZpNC3n9/a9sxxo=
-Date:   Tue, 30 Jun 2020 13:54:51 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 06/10] drm/ingenic: Set DMA descriptor chain address in
- probe
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, od@zcrc.me
-Message-Id: <FFMQCQ.LQ37IHUC6U3Z@crapouillou.net>
-In-Reply-To: <20200630114453.GB560155@ravnborg.org>
-References: <20200629235210.441709-1-paul@crapouillou.net>
-        <20200629235210.441709-6-paul@crapouillou.net>
-        <20200630114453.GB560155@ravnborg.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+        Tue, 30 Jun 2020 07:56:48 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:17690 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729580AbgF3L4r (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 30 Jun 2020 07:56:47 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593518206; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=SmYTLnNpkoDIf6PQYp/bYgNnjLKYi/RBNugVXmRrIRU=; b=wIR3jAVaj+0RZ2KOnggtsnFTcyzGtEYgdsx6+NtMfGPriqvbcV2CvRjFeVCbHIDRK98jI/T5
+ kwvPHfMYS2Iq0KvPjJsMJ/LH8/qtFTiaAVCcJsFVijuRV8vopMdQt0RTj9xRZqhOheW53YDz
+ KqXsKt++FEWYoLtDrJ41tY5FtKs=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n13.prod.us-west-2.postgun.com with SMTP id
+ 5efb287dfe1db4db89f40bf9 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 30 Jun 2020 11:56:45
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8C5F3C433A0; Tue, 30 Jun 2020 11:56:45 +0000 (UTC)
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 30920C433C6;
+        Tue, 30 Jun 2020 11:56:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 30920C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     robdclark@gmail.com, sean@poorly.run, agross@kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH 0/4] DVFS support for dpu and dsi
+Date:   Tue, 30 Jun 2020 17:26:12 +0530
+Message-Id: <1593518176-24450-1-git-send-email-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sam,
+These patches add DVFS support for DPU and DSI. Where posted
+earlier as part of a series with multiple different drivers [1]
+I have split them into specific driver changes in order to avoid
+confusion on dependencies. Also added the corresponding device tree
+changes for sdm845 and sc7180 platforms.
 
-Le mar. 30 juin 2020 =E0 13:44, Sam Ravnborg <sam@ravnborg.org> a =E9crit=20
-:
-> Hi Paul.
->=20
-> On Tue, Jun 30, 2020 at 01:52:06AM +0200, Paul Cercueil wrote:
->>  The address of the DMA descriptor never changes. It can therefore=20
->> be set
->>  in the probe function.
->>=20
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  ---
->>=20
->>  Notes:
->>      v2: No change
->>=20
->>   drivers/gpu/drm/ingenic/ingenic-drm-drv.c | 5 +++--
->>   1 file changed, 3 insertions(+), 2 deletions(-)
->>=20
->>  diff --git a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c=20
->> b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
->>  index 924c8daf071a..f7b0c5dc8cd8 100644
->>  --- a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
->>  +++ b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
->>  @@ -358,8 +358,6 @@ static void=20
->> ingenic_drm_crtc_atomic_flush(struct drm_crtc *crtc,
->>   		ingenic_drm_crtc_update_ctrl(priv, finfo);
->>=20
->>   		clk_set_rate(priv->pix_clk, state->adjusted_mode.clock * 1000);
->>  -
->>  -		regmap_write(priv->map, JZ_REG_LCD_DA0, priv->dma_hwdesc->next);
->>   	}
->>=20
->>   	if (event) {
->>  @@ -757,6 +755,9 @@ static int ingenic_drm_probe(struct=20
->> platform_device *pdev)
->>   		}
->>   	}
->>=20
->>  +	/* Set address of our DMA descriptor chain */
->>  +	regmap_write(priv->map, JZ_REG_LCD_DA0, priv->dma_hwdesc_phys);
->>  +
->=20
->=20
-> What is the purpose of this code after the assignment was moved:
->=20
-> static int ingenic_drm_probe(struct platform_device *pdev)
-> {
-> ...
-> 	priv->dma_hwdesc->next =3D priv->dma_hwdesc_phys;
->=20
-> I do not see ->next used anymore.
-> Could this assignment be dropped?
->=20
->=20
-> And the following line:
-> 	priv->dma_hwdesc->id =3D 0xdeafbead;
->=20
-> I can only see ->id be assingned, it is never referenced??
->=20
-> Maybe this is all related to the structure assumed by the data pointed
-> to by JZ_REG_LCD_DA0?
+These patches have no other dependency and will need to be merged in
+via the MSM DRM tree.
 
-As its name suggests, 'dma_hwdesc' points to a DMA hardware descriptor.=20
-Setting ->next sets the address of the next descriptor (which is itself=20
-since we only use one descriptor). The 'id' field will be copied by the=20
-hardware to a register when the DMA descriptor is loaded, so we can=20
-know from userspace (debugfs) what DMA descriptors are loaded by=20
-looking up the IDs.
+DT patches will need to land via the msm tree.
 
--Paul
+[1] https://lkml.org/lkml/2020/6/15/535
 
-> 	Sam
->=20
->>   	ret =3D drm_dev_register(drm, 0);
->>   	if (ret) {
->>   		dev_err(dev, "Failed to register DRM driver\n");
->>  --
->>  2.27.0
->>=20
->>  _______________________________________________
->>  dri-devel mailing list
->>  dri-devel@lists.freedesktop.org
->>  https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Rajendra Nayak (4):
+  drm/msm/dpu: Use OPP API to set clk/perf state
+  drm/msm: dsi: Use OPP API to set clk/perf state
+  arm64: dts: sdm845: Add DSI and MDP OPP tables and power-domains
+  arm64: dts: sc7180: Add DSI and MDP OPP tables and power-domains
 
+ arch/arm64/boot/dts/qcom/sc7180.dtsi          | 49 ++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          | 59 +++++++++++++++++++++++++++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c |  3 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c       | 26 +++++++++++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h       |  4 ++
+ drivers/gpu/drm/msm/dsi/dsi.h                 |  2 +
+ drivers/gpu/drm/msm/dsi/dsi_cfg.c             |  4 +-
+ drivers/gpu/drm/msm/dsi/dsi_host.c            | 58 ++++++++++++++++++++++++++
+ 8 files changed, 201 insertions(+), 4 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
