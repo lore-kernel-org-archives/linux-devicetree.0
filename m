@@ -2,84 +2,115 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EC2C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 15:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F094C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 15:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A417F2074F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 15:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17C462073E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 15:11:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593529389;
-	bh=ceHbzSs/83Q0ypQpLthZOqO3wxthaDHFWyXQesdsgMY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=IOloeKAvskhjPxZvYSwdXMyHmitHQ/i8pl2FiQ5x5794Qo4TUYEFfR6ffQaLdrgYg
-	 LC1iKIWOgrVrhiSfFDDOPy6U0jScoY+xPilnMpF2w4+cSJTXw4BJF+QNliNNJgK1RW
-	 S5kLcpwApe5H9mZvRCEqwM/g4kv7zSSrDN+CHP2k=
+	s=default; t=1593529890;
+	bh=Kof5P3F4RhHddyde/k6hvfouOCHADx+GYO+1CoM3OgM=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=MWyUWKZ68pkOIiAh8zSXXGJ3/w95sxgm/OZVz9O6h2acj72YW+/i/kdTUqqftOCwY
+	 AAmCxUaJE8g1WPW0pDK1j47ynIKZGHcif+Cehg3V7qMHJN0sxh5nkyOc2X9pMrzumi
+	 dOX/YqLLgCH8iyVKBEhv7OG3fdk8C5pQJDKm6lMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387570AbgF3PDI (ORCPT
+        id S2389246AbgF3PL3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 11:03:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43786 "EHLO mail.kernel.org"
+        Tue, 30 Jun 2020 11:11:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725872AbgF3PDH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 30 Jun 2020 11:03:07 -0400
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1729051AbgF3PL3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 30 Jun 2020 11:11:29 -0400
+Received: from localhost (p54b336a9.dip0.t-ipconnect.de [84.179.54.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FA4420760;
-        Tue, 30 Jun 2020 15:03:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CCD120720;
+        Tue, 30 Jun 2020 15:11:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593529387;
-        bh=ceHbzSs/83Q0ypQpLthZOqO3wxthaDHFWyXQesdsgMY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vSZCwLsH+iMDz+MY2ZIRHPYWOElmC9SiQwdulXDlcnREmiBTNzfVhBttXdzuzKWBg
-         7u7Xuk1mZ+UqHwT+a8LNyz6TxCXbq9vXQqqi71gFAPGzzrMlZChGXmGQq9K61VNI0e
-         LIaUhSTF7+YBSX+O4ncc3LvKdw/VsOeIuz+tuBfQ=
-Received: by mail-ot1-f41.google.com with SMTP id w17so10784678otl.4;
-        Tue, 30 Jun 2020 08:03:07 -0700 (PDT)
-X-Gm-Message-State: AOAM530yQ0P2b59zthZ5SVz4xZSr1yBRt0gu0kqYNOx8ILX0CVU+2eIR
-        4RmLO0WjVT/sed4Le8zurVKf9xAYsUM6TfK+tQ==
-X-Google-Smtp-Source: ABdhPJyHn4l+/NwndAftXaakjpZXbV5I8NVV011dKEXXnSASflFpNbhUdHbUP5sgV9PUY1KbAY0JtpII44wCyclZ4uk=
-X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr18421643ots.192.1593529386559;
- Tue, 30 Jun 2020 08:03:06 -0700 (PDT)
+        s=default; t=1593529889;
+        bh=Kof5P3F4RhHddyde/k6hvfouOCHADx+GYO+1CoM3OgM=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=wDcjG9Ffp2rf2uyADpUEj8oIWGdNSEHcfaFoqa6A2PydIwLazG4iE4vp2Dr3rz9HY
+         lgsmGFRLso5cO8GTM1JLw/m5tCTB4+9iKbbfhPX7paqvUJBYp1aDsmOYduexVJd4XX
+         WfNUaav0IfqFf3DoRSzEp6acRgJBg1ZWoLp4Ahao=
+Date:   Tue, 30 Jun 2020 17:11:15 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com
+Subject: Re: [PATCH 4/4] i2c: stm32f7: Add SMBus-specific protocols support
+Message-ID: <20200630151115.GA1058@kunai>
+References: <1588657871-14747-1-git-send-email-alain.volmat@st.com>
+ <1588657871-14747-5-git-send-email-alain.volmat@st.com>
+ <20200523110140.GD3459@ninjato>
+ <20200526103938.GC14423@gnbcxd0016.gnb.st.com>
+ <20200630064050.GA996@ninjato>
+ <20200630093135.GC5652@gnbcxd0016.gnb.st.com>
 MIME-Version: 1.0
-References: <20200630121804.27887-1-festevam@gmail.com> <20200630144130.GA572716@bogus>
-In-Reply-To: <20200630144130.GA572716@bogus>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 30 Jun 2020 09:02:55 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJq7rBcCsrTTpeFHpbHZm2Z1TRB3vYcR5iqSj7E9=dtig@mail.gmail.com>
-Message-ID: <CAL_JsqJq7rBcCsrTTpeFHpbHZm2Z1TRB3vYcR5iqSj7E9=dtig@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: thermal: Remove soc unit address
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="IS0zKkzwUGydFO0o"
+Content-Disposition: inline
+In-Reply-To: <20200630093135.GC5652@gnbcxd0016.gnb.st.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 8:41 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, 30 Jun 2020 09:18:04 -0300, Fabio Estevam wrote:
-> > Remove the soc unit address to fix the following warning seen with
-> > 'make dt_binding_check':
-> >
-> > Documentation/devicetree/bindings/thermal/thermal-sensor.example.dts:22.20-49.11: Warning (unit_address_vs_reg): /example-0/soc@0: node has a unit name, but no reg or ranges property
-> >
-> > Signed-off-by: Fabio Estevam <festevam@gmail.com>
-> > ---
-> >  Documentation/devicetree/bindings/thermal/thermal-sensor.yaml | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
->
-> Applied, thanks!
 
-thermal-zones.yaml had the same warning, so I added a fix for it to this.
+--IS0zKkzwUGydFO0o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Rob
+Hi Alain,
+
+> Ok, understood. Fine for me that way as well. I am just a little worrying that
+> the "host-notify" can now be present in both controller AND slave nodes
+> and might be a bit hard to understand. At the same time I don't have a better
+> proposal for naming the binding for the controller.
+
+It is a valid concern, maybe we could name the binding for the host
+"enable-host-notify"?
+
+> Please do not consider serie v2 I just posted few days ago and I will
+> post a serie v3 updating the binding information and using the host-notify
+> binding in the i2c-stm32f7 driver.
+
+I also have an idea for the SMBusAlert topic, hopefully I can come up
+with a summary later today.
+
+All the best,
+
+   Wolfram
+
+
+--IS0zKkzwUGydFO0o
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl77Vg8ACgkQFA3kzBSg
+KbY4ww//em/vnMiq7NS89p7OgWcLT8uZEKJWygqaUmVWOpwz0HD1JlDWg1fgYnCQ
+cICy1tOydUEo+FXs/AZty5YQHRSghTEYrEA/SDdTfKDassc897O6K747UW9OYAYN
+94ls0vDGfyW9+MmyPhLLHbocYfHpyPusZyueZvqH5ou5+1RlmyPvXgg9/Hh+SCYR
+oY4JoZZ0u8k/WpZGhS4z4QQKXJ/h2220mEvLVxEwt/ZhQWXWGTHCc9T6yHmplXxR
+SQu64RVtAz/JZfOQcG6JiBsX+ZD707n78SClOSszcGrKMfFBGdXJa1giQcFI9wEQ
+ImA91dkgWhYWYaynOyn1wydKElDfHSIm4TSjDo5JtIGO5u/+CrnYzrSBsJ76lz3C
+VQ9XrgyN2On4t+hKEJ044QKPJcoGUBnIUx8ERU9JbEIXHgHBmXNs0Vvt6gH0cBBu
+hLMgnRWOUZdh382yowRY0cdq3gD4ePXiivAVLoDaQDDetk/eWX9GIZNPROU0rS6E
+/F7W8yI3hohLmvDqA8AnHvEQR3wnNmmXBCJLV/sK3Q5FI8OEFxETwsumAziY4nHW
+rujYZBZ7z+apz3Bxq08DUZxj9aIZ+o3SN39cW7j3pU4e47wnrpf4WRCAchwiVjvu
+EkaGFUnE/oAmfrP2FzisenLvLUvyZ477TWrDVytEHbBzgWnfEsI=
+=6INs
+-----END PGP SIGNATURE-----
+
+--IS0zKkzwUGydFO0o--
