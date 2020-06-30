@@ -2,114 +2,109 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC38C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 03:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B1EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 03:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 579872063A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 03:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61BDD206BE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 03:57:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iWqkTxL7"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="PGUP9isY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbgF3DfP (ORCPT
+        id S1728961AbgF3D5C (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 23:35:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37408 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728949AbgF3DfP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 23:35:15 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E7DEC061755;
-        Mon, 29 Jun 2020 20:35:15 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id f6so4833856pjq.5;
-        Mon, 29 Jun 2020 20:35:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zXTJu9jT8dNH6yUHWppqC/x9/GobYCOn1TeUoW6Oe2g=;
-        b=iWqkTxL71XRvSS4sU9MEVbqA0zX3uK25gZRe1sW9ZdLlE61oG0fvWpzgRwjcwfnaem
-         WaxWZ99FgYDjEnRPhfzU+F3nInUIUTE4fhtgNg24sTypdCimPlOUBSsLt/ccMagoixS6
-         CAykD0pAOZf3w8Snk6K9GUZXaaqSXFhnD1LLkFbD9TotXkovGM/NwLe4sF5zJi6OjsfX
-         16hQlBDJr1hr/kgKa3oUu8gkgEq+JJHH7XWhkklfk/mVtxjo146pqMqq6BukMrlJuaLE
-         m6J7sm2c5w73jB9GwcJoa06c/FrXW0+ySJGyaO0LEGXRp6V87ZE/HmJPjrTcxZsu7IqE
-         YtBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zXTJu9jT8dNH6yUHWppqC/x9/GobYCOn1TeUoW6Oe2g=;
-        b=Z5x+tgdb2RzWOXGjJCIRdrAGNVr69oBwCYOnOHHI7nA6itKH7V50bJMEmPINTz3xv8
-         7ET50Q0r1snPSzQrdIEWYjMhTakLM6MkckIS808xJo4Q08DACXW+7/3kA2Vhy+64nmyN
-         1hWT1fAmgFZnVt+fSs6//A/u5oPBeWoBdAYYV21wDbl7NNU54iELGqThdn6/JAuUBaRG
-         4nSzaGK2C8uE2jYUPlO650x4WfRRwrmB2TTh90aEF2yn/9Ws3aAePAv3C77qKhm0htHC
-         zU70sU6FgyIDY7I4Mik0z9d8EoeSc/VS5XtiFVmhfviTgYiNwPQ6lVsK9Yt6inhl0rMt
-         HAPw==
-X-Gm-Message-State: AOAM530qqFzicyDoBcW3w+wnTxDJps1DNh+ReZUrXa8ixlphoQ7DmIfz
-        pFP8V+p+GmxsQQdn8JuyBRDGJYeg
-X-Google-Smtp-Source: ABdhPJyuqES7YHE+dO2Q8QxVIJmIRCcLH32v79l4dg9XowoMVoc7ZffBzaLSjZusbAPAt/dJiMi3bA==
-X-Received: by 2002:a17:90a:7409:: with SMTP id a9mr20442046pjg.107.1593488114205;
-        Mon, 29 Jun 2020 20:35:14 -0700 (PDT)
-Received: from [10.230.30.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 125sm911379pff.130.2020.06.29.20.35.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 20:35:13 -0700 (PDT)
-Subject: Re: [PATCH] of: of_mdio: count number of regitered phys
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc:     hkallweit1@gmail.com, linux@armlinux.org.uk, robh+dt@kernel.org,
-        frowand.list@gmail.com, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1593415596-9487-1-git-send-email-claudiu.beznea@microchip.com>
- <20200630004543.GB597495@lunn.ch>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <6b022bcc-a670-da1d-5f5a-bdf4af667652@gmail.com>
-Date:   Mon, 29 Jun 2020 20:35:11 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        Mon, 29 Jun 2020 23:57:02 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:27191 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726710AbgF3D5A (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 23:57:00 -0400
+X-UUID: b9632d1a4fa94819ad44fda2f8b56f45-20200630
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=4lUxsw7V57/rtfRfCgvAn7FcvMGUUtdcRvghF/iSYBM=;
+        b=PGUP9isYSLXgVE94dGfV09wr2suqppJLTq5ls9fhkpFM5nD8P4AgWooGath4CBESIm81MFRE+RKHwF1A/AXde7a2ISp1RBN6ljJwN4aAyWbAOQk0zdvVuk/+tsXZtboDihm/S3Mi2NBmjiwC4MZzvbVdbPJuUYTI4Ho6gsLk3Rc=;
+X-UUID: b9632d1a4fa94819ad44fda2f8b56f45-20200630
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1543449792; Tue, 30 Jun 2020 11:56:55 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 30 Jun 2020 11:56:46 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 30 Jun 2020 11:56:47 +0800
+Message-ID: <1593489406.20357.3.camel@mtkswgap22>
+Subject: Re: [PATCH v6 1/7] dt-bindings: pinctrl: add bindings for MediaTek
+ MT6779 SoC
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     <wsd_upstream@mediatek.com>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        "Michael Turquette" <mturquette@baylibre.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        <linux-kernel@vger.kernel.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        "Loda Chou" <loda.chou@mediatek.com>, <linux-clk@vger.kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 30 Jun 2020 11:56:46 +0800
+In-Reply-To: <20200629215331.GA2991039@bogus>
+References: <1592480018-3340-1-git-send-email-hanks.chen@mediatek.com>
+         <1592480018-3340-2-git-send-email-hanks.chen@mediatek.com>
+         <20200629215331.GA2991039@bogus>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <20200630004543.GB597495@lunn.ch>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: ADC1B506D8928896ABE48FDF843DCAE64088D056FDD7FFEC2981FE32960985E62000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+T24gTW9uLCAyMDIwLTA2LTI5IGF0IDE1OjUzIC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gVGh1LCAxOCBKdW4gMjAyMCAxOTozMzozMiArMDgwMCwgSGFua3MgQ2hlbiB3cm90ZToNCj4g
+PiBGcm9tOiBBbmR5IFRlbmcgPGFuZHkudGVuZ0BtZWRpYXRlay5jb20+DQo+ID4gDQo+ID4gQWRk
+IGRldmljZXRyZWUgYmluZGluZ3MgZm9yIE1lZGlhVGVrIE1UNjc3OSBwaW5jdHJsIGRyaXZlci4N
+Cj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbmR5IFRlbmcgPGFuZHkudGVuZ0BtZWRpYXRlay5j
+b20+DQo+ID4gLS0tDQo+ID4gIC4uLi9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1w
+aW5jdHJsLnlhbWwgIHwgIDIxMCArKysrKysrKysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hh
+bmdlZCwgMjEwIGluc2VydGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1waW5jdHJs
+LnlhbWwNCj4gPiANCj4gDQo+IA0KPiBNeSBib3QgZm91bmQgZXJyb3JzIHJ1bm5pbmcgJ21ha2Ug
+ZHRfYmluZGluZ19jaGVjaycgb24geW91ciBwYXRjaDoNCj4gDQo+IERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1waW5jdHJsLmV4YW1wbGUu
+ZHRzOjIxOjE4OiBmYXRhbCBlcnJvcjogZHQtYmluZGluZ3MvcGluY3RybC9tdDY3NzktcGluZnVu
+Yy5oOiBObyBzdWNoIGZpbGUgb3IgZGlyZWN0b3J5DQo+ICAgICAgICAgICNpbmNsdWRlIDxkdC1i
+aW5kaW5ncy9waW5jdHJsL210Njc3OS1waW5mdW5jLmg+DQo+ICAgICAgICAgICAgICAgICAgIF5+
+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+DQo+IGNvbXBpbGF0aW9uIHRlcm1p
+bmF0ZWQuDQo+IHNjcmlwdHMvTWFrZWZpbGUubGliOjMxNTogcmVjaXBlIGZvciB0YXJnZXQgJ0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1w
+aW5jdHJsLmV4YW1wbGUuZHQueWFtbCcgZmFpbGVkDQo+IG1ha2VbMV06ICoqKiBbRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvbWVkaWF0ZWssbXQ2Nzc5LXBpbmN0cmwu
+ZXhhbXBsZS5kdC55YW1sXSBFcnJvciAxDQo+IG1ha2VbMV06ICoqKiBXYWl0aW5nIGZvciB1bmZp
+bmlzaGVkIGpvYnMuLi4uDQo+IE1ha2VmaWxlOjEzNDc6IHJlY2lwZSBmb3IgdGFyZ2V0ICdkdF9i
+aW5kaW5nX2NoZWNrJyBmYWlsZWQNCj4gbWFrZTogKioqIFtkdF9iaW5kaW5nX2NoZWNrXSBFcnJv
+ciAyDQo+IA0KPiANCj4gU2VlIGh0dHBzOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcGF0Y2gvMTMx
+MjAxOA0KPiANCj4gSWYgeW91IGFscmVhZHkgcmFuICdtYWtlIGR0X2JpbmRpbmdfY2hlY2snIGFu
+ZCBkaWRuJ3Qgc2VlIHRoZSBhYm92ZQ0KPiBlcnJvcihzKSwgdGhlbiBtYWtlIHN1cmUgZHQtc2No
+ZW1hIGlzIHVwIHRvIGRhdGU6DQo+IA0KPiBwaXAzIGluc3RhbGwgZ2l0K2h0dHBzOi8vZ2l0aHVi
+LmNvbS9kZXZpY2V0cmVlLW9yZy9kdC1zY2hlbWEuZ2l0QG1hc3RlciAtLXVwZ3JhZGUNCj4gDQo+
+IFBsZWFzZSBjaGVjayBhbmQgcmUtc3VibWl0Lg0KPiANCkkgYWxyZWFkeSByYW4gdGhlIGR0X2Jp
+bmRpbmdfY2hlY2sgYW5kIGl0IGxvb2tzIGdvb2QuDQoNCj4gDQo+IA0KPiBIZXJlLCB5b3UgbmVl
+ZCBwYXRjaCAyIHRvIGNvbWUgZmlyc3Qgb3IgbWVyZ2UgaXQgaW50byB0aGlzIHBhdGNoIGFzIGl0
+IA0KPiBpcyBwYXJ0IG9mIHRoZSBiaW5kaW5nLg0KPiANCkknbGwgbWVyZ2UgaXQgaW50byB0aGlz
+IHBhdGNoIGluIG5leHQgdmVyc2lvbi4NClRoYW5rIHlvdSBmb3IgeW91ciBjb21tZW50Lg0KDQpI
+YW5rcw0KDQo+IFJvYg0KPiANCg0K
 
-
-On 6/29/2020 5:45 PM, Andrew Lunn wrote:
-> On Mon, Jun 29, 2020 at 10:26:36AM +0300, Claudiu Beznea wrote:
->> In case of_mdiobus_register_phy()/of_mdiobus_register_device()
->> returns -ENODEV for all PHYs in device tree or for all scanned
->> PHYs there is a chance that of_mdiobus_register() to
->> return success code although no PHY devices were registered.
->> Add a counter that increments every time a PHY was registered
->> to avoid the above scenario.
-> 
-> Hi Claudiu
-> 
-> There is a danger here this will break something. Without this patch,
-> an empty bus is O.K. But with this patch, a bus without a PHY is a
-> problem.
-> 
-> Take for example FEC. It often comes in pairs. Each has an MDIO
-> bus. But to save pins, there are some designs which place two PHYs on
-> one bus, leaving the other empty. The driver unconditionally calls
-> of_mdiobus_register() and if it returns an error, it will error out
-> the probe. So i would not be too surprised if you get reports of
-> missing interfaces with this patch.
-
-Agreed, the potential for breakage here is too high especially given
-this is fixing a hypothetical problem rather an an actual one. Even if
-we were taking this from the angle of power management, runtime PM
-should ensure that a MDIO bus with no slave, or no activity gets runtime
-suspended.
--- 
-Florian
