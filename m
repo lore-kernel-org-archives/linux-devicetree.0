@@ -2,109 +2,123 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B1EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 03:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF2BC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 05:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61BDD206BE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 03:57:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 860A720720
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 05:06:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="PGUP9isY"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="1w04gmdN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728961AbgF3D5C (ORCPT
+        id S1726309AbgF3FGa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 23:57:02 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:27191 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726710AbgF3D5A (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 23:57:00 -0400
-X-UUID: b9632d1a4fa94819ad44fda2f8b56f45-20200630
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=4lUxsw7V57/rtfRfCgvAn7FcvMGUUtdcRvghF/iSYBM=;
-        b=PGUP9isYSLXgVE94dGfV09wr2suqppJLTq5ls9fhkpFM5nD8P4AgWooGath4CBESIm81MFRE+RKHwF1A/AXde7a2ISp1RBN6ljJwN4aAyWbAOQk0zdvVuk/+tsXZtboDihm/S3Mi2NBmjiwC4MZzvbVdbPJuUYTI4Ho6gsLk3Rc=;
-X-UUID: b9632d1a4fa94819ad44fda2f8b56f45-20200630
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1543449792; Tue, 30 Jun 2020 11:56:55 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 30 Jun 2020 11:56:46 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 30 Jun 2020 11:56:47 +0800
-Message-ID: <1593489406.20357.3.camel@mtkswgap22>
-Subject: Re: [PATCH v6 1/7] dt-bindings: pinctrl: add bindings for MediaTek
- MT6779 SoC
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     <wsd_upstream@mediatek.com>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        "Michael Turquette" <mturquette@baylibre.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        <linux-kernel@vger.kernel.org>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        "Loda Chou" <loda.chou@mediatek.com>, <linux-clk@vger.kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 30 Jun 2020 11:56:46 +0800
-In-Reply-To: <20200629215331.GA2991039@bogus>
-References: <1592480018-3340-1-git-send-email-hanks.chen@mediatek.com>
-         <1592480018-3340-2-git-send-email-hanks.chen@mediatek.com>
-         <20200629215331.GA2991039@bogus>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Tue, 30 Jun 2020 01:06:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbgF3FGa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 01:06:30 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEA1DC03E97A
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 22:06:29 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id m25so10481128vsp.8
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 22:06:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d2uK/hi+Brt2pyT8LlHzAvwg6MH09+PI7YkbZr7ga+Q=;
+        b=1w04gmdNQ9631ByNUaIX12DL4x7KugjLTxDBq6DWEzjTB+Bj7ylamNrLVKFrmZgtNa
+         k7fgYt6AF9A/t2fCLvOrWTTlBmnMvX0dZSy7zrb4NVScTeipGAlp9d48kt2sRd6jxGWj
+         FUC8F4z5WWmpAB8WHygOoDg35N/GVKFNH575j/jXhKtR3+CULVQQopTznDJnXzXHnTeb
+         eUwtKBE7OXcYowlpfj6CtOGL6VTYlPcitOhYYBog+f4Jiwd51v9oWG4d4/Md1lTpFb3B
+         7VNsRaU3vmOM7cMKRGgp7dQqe2wIVC2ervcfdFIHkzBW4x0pPMfVV/OnFAs//Z+U/gHX
+         oj7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d2uK/hi+Brt2pyT8LlHzAvwg6MH09+PI7YkbZr7ga+Q=;
+        b=m75vttv0Iuhh0tK4CYchzi94u7NW8VzUkWPsvnCXpluu7V+31TcMEcsSZad8DOIIYn
+         SL56KKG+seY1BdA7VnauvepyQH6SsYSA88bZw/cV+mm1EXVZzAaVbqse2Y5rU6QSKpvx
+         RqbXjadBr61eDh73cnIs1A55prFQaM+vrbjBWX7befoM6ziv0khDr47+G2g5R7dF7wAN
+         X0EvavTeGHaMwhK4whS3a5TAd0fxLWguNTMWS1nwacGvsAT9r28tZd8APtgzvvmX86e8
+         c5pBtCSnbvyFjh+2V7zddwEPznLoaGynXNyvAxJEd0XmpZZFb/TWh9DLrFrCBkPht/O+
+         LgnQ==
+X-Gm-Message-State: AOAM532llDvaz4xICKgaOmeErN+lkozKgCsm3HZDEewVIZwWBoW+RCyl
+        RnIXjDYQUEp2N9f21W4lbKFf+P990HNnK6iE170pxg==
+X-Google-Smtp-Source: ABdhPJyJeJB83cxwO/XegM9Yw4FjPp35g425s3MnN+uM3+yvSRh2sWTu7OFfztRHesCvhTzAgHB9mldeqJIayobuIF8=
+X-Received: by 2002:a67:f557:: with SMTP id z23mr13521181vsn.27.1593493588999;
+ Mon, 29 Jun 2020 22:06:28 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: ADC1B506D8928896ABE48FDF843DCAE64088D056FDD7FFEC2981FE32960985E62000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200621193549.2070434-1-dmitry.baryshkov@linaro.org> <20200621193549.2070434-6-dmitry.baryshkov@linaro.org>
+In-Reply-To: <20200621193549.2070434-6-dmitry.baryshkov@linaro.org>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Tue, 30 Jun 2020 10:36:18 +0530
+Message-ID: <CAHLCerOqWWr3i32tRgGfep12YfDufw-WU80VWUsUNpDDZ13D-w@mail.gmail.com>
+Subject: Re: [PATCH 5/5] arm64: dts: sm8250-dts: add thermal zones using
+ pmic's adc-tm5
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        linux-iio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA2LTI5IGF0IDE1OjUzIC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gVGh1LCAxOCBKdW4gMjAyMCAxOTozMzozMiArMDgwMCwgSGFua3MgQ2hlbiB3cm90ZToNCj4g
-PiBGcm9tOiBBbmR5IFRlbmcgPGFuZHkudGVuZ0BtZWRpYXRlay5jb20+DQo+ID4gDQo+ID4gQWRk
-IGRldmljZXRyZWUgYmluZGluZ3MgZm9yIE1lZGlhVGVrIE1UNjc3OSBwaW5jdHJsIGRyaXZlci4N
-Cj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbmR5IFRlbmcgPGFuZHkudGVuZ0BtZWRpYXRlay5j
-b20+DQo+ID4gLS0tDQo+ID4gIC4uLi9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1w
-aW5jdHJsLnlhbWwgIHwgIDIxMCArKysrKysrKysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hh
-bmdlZCwgMjEwIGluc2VydGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1waW5jdHJs
-LnlhbWwNCj4gPiANCj4gDQo+IA0KPiBNeSBib3QgZm91bmQgZXJyb3JzIHJ1bm5pbmcgJ21ha2Ug
-ZHRfYmluZGluZ19jaGVjaycgb24geW91ciBwYXRjaDoNCj4gDQo+IERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1waW5jdHJsLmV4YW1wbGUu
-ZHRzOjIxOjE4OiBmYXRhbCBlcnJvcjogZHQtYmluZGluZ3MvcGluY3RybC9tdDY3NzktcGluZnVu
-Yy5oOiBObyBzdWNoIGZpbGUgb3IgZGlyZWN0b3J5DQo+ICAgICAgICAgICNpbmNsdWRlIDxkdC1i
-aW5kaW5ncy9waW5jdHJsL210Njc3OS1waW5mdW5jLmg+DQo+ICAgICAgICAgICAgICAgICAgIF5+
-fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+DQo+IGNvbXBpbGF0aW9uIHRlcm1p
-bmF0ZWQuDQo+IHNjcmlwdHMvTWFrZWZpbGUubGliOjMxNTogcmVjaXBlIGZvciB0YXJnZXQgJ0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1w
-aW5jdHJsLmV4YW1wbGUuZHQueWFtbCcgZmFpbGVkDQo+IG1ha2VbMV06ICoqKiBbRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvbWVkaWF0ZWssbXQ2Nzc5LXBpbmN0cmwu
-ZXhhbXBsZS5kdC55YW1sXSBFcnJvciAxDQo+IG1ha2VbMV06ICoqKiBXYWl0aW5nIGZvciB1bmZp
-bmlzaGVkIGpvYnMuLi4uDQo+IE1ha2VmaWxlOjEzNDc6IHJlY2lwZSBmb3IgdGFyZ2V0ICdkdF9i
-aW5kaW5nX2NoZWNrJyBmYWlsZWQNCj4gbWFrZTogKioqIFtkdF9iaW5kaW5nX2NoZWNrXSBFcnJv
-ciAyDQo+IA0KPiANCj4gU2VlIGh0dHBzOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcGF0Y2gvMTMx
-MjAxOA0KPiANCj4gSWYgeW91IGFscmVhZHkgcmFuICdtYWtlIGR0X2JpbmRpbmdfY2hlY2snIGFu
-ZCBkaWRuJ3Qgc2VlIHRoZSBhYm92ZQ0KPiBlcnJvcihzKSwgdGhlbiBtYWtlIHN1cmUgZHQtc2No
-ZW1hIGlzIHVwIHRvIGRhdGU6DQo+IA0KPiBwaXAzIGluc3RhbGwgZ2l0K2h0dHBzOi8vZ2l0aHVi
-LmNvbS9kZXZpY2V0cmVlLW9yZy9kdC1zY2hlbWEuZ2l0QG1hc3RlciAtLXVwZ3JhZGUNCj4gDQo+
-IFBsZWFzZSBjaGVjayBhbmQgcmUtc3VibWl0Lg0KPiANCkkgYWxyZWFkeSByYW4gdGhlIGR0X2Jp
-bmRpbmdfY2hlY2sgYW5kIGl0IGxvb2tzIGdvb2QuDQoNCj4gDQo+IA0KPiBIZXJlLCB5b3UgbmVl
-ZCBwYXRjaCAyIHRvIGNvbWUgZmlyc3Qgb3IgbWVyZ2UgaXQgaW50byB0aGlzIHBhdGNoIGFzIGl0
-IA0KPiBpcyBwYXJ0IG9mIHRoZSBiaW5kaW5nLg0KPiANCkknbGwgbWVyZ2UgaXQgaW50byB0aGlz
-IHBhdGNoIGluIG5leHQgdmVyc2lvbi4NClRoYW5rIHlvdSBmb3IgeW91ciBjb21tZW50Lg0KDQpI
-YW5rcw0KDQo+IFJvYg0KPiANCg0K
+Hi Dmitry,
 
+On Mon, Jun 22, 2020 at 1:06 AM Dmitry Baryshkov
+<dmitry.baryshkov@linaro.org> wrote:
+>
+> Port thermal zones definitions from msm-4.19 tree. Enable and add
+> channel configuration to PMIC's ADC-TM definitions. Declare thermal
+> zones and respective trip points.
+>
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8250-mtp.dts | 237 ++++++++++++++++++++++++
+>  1 file changed, 237 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sm8250-mtp.dts b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
+
+IMO, this should be separated in the pmic dts file like we do for
+other QC platforms since the PMICs tend to be used in multiple
+platforms.
+
+> index aa37eb112d85..78f0cf582a9a 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
+> @@ -24,6 +24,104 @@ chosen {
+>                 stdout-path = "serial0:115200n8";
+>         };
+>
+> +       thermal-zones {
+> +               xo-therm {
+> +                       polling-delay-passive = <0>;
+> +                       polling-delay = <0>;
+> +                       thermal-sensors = <&pm8150_adc_tm 0>;
+> +                       trips {
+> +                               active-config0 {
+> +                                       temperature = <125000>;
+> +                                       hysteresis = <1000>;
+> +                                       type = "passive";
+> +                               };
+> +                       };
+> +               };
+> +
