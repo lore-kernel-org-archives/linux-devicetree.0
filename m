@@ -2,112 +2,125 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA26EC433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 06:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC63C433E4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 06:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9F2A20759
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 06:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8F4820768
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 06:22:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Q64iXN0K"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CdZajyIJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730042AbgF3GWm (ORCPT
+        id S1729975AbgF3GWo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 02:22:42 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:53950 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729901AbgF3GWl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 02:22:41 -0400
-X-UUID: 58c55bafefdb433484826967884d46ed-20200630
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=nR6OzzIisReA8shV0BgR3bsU+tUWbUvrl963V50edjM=;
-        b=Q64iXN0KDB+49ds74oVzmvWAlkcdaUMxtxYJNw438CBRQEmUJod+Dg57rXYp3lgjCZ9CdPS0fccuOAXnNi7+A7q88VoaCbeHkNpcdY95AwCz7r6m4UDtzYZyAAustrCuw1RUoF1GWSuVoR1WfMHuWT/H+BJV4559Vk33CXjE5DY=;
-X-UUID: 58c55bafefdb433484826967884d46ed-20200630
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <dongchun.zhu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 898209961; Tue, 30 Jun 2020 14:22:35 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 30 Jun 2020 14:22:32 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 30 Jun 2020 14:22:33 +0800
-From:   Dongchun Zhu <dongchun.zhu@mediatek.com>
-To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
-        <mchehab@kernel.org>, <andriy.shevchenko@linux.intel.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <sakari.ailus@linux.intel.com>, <drinkcat@chromium.org>,
-        <tfiga@chromium.org>, <matthias.bgg@gmail.com>,
-        <bingbu.cao@intel.com>
-CC:     <srv_heupstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>, <sj.huang@mediatek.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <louis.kuo@mediatek.com>, <shengnan.wang@mediatek.com>,
-        <dongchun.zhu@mediatek.com>
-Subject: [PATCH V9 0/2] media: i2c: Add support for DW9768 VCM
-Date:   Tue, 30 Jun 2020 14:22:09 +0800
-Message-ID: <20200630062211.22988-1-dongchun.zhu@mediatek.com>
-X-Mailer: git-send-email 2.9.2
+        Tue, 30 Jun 2020 02:22:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34940 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730014AbgF3GWm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 02:22:42 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBB6CC03E97A
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 23:22:41 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id u185so6935739pfu.1
+        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 23:22:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yxI0dB1QFgZNIVokC1hI+G+Iqlv6A0nmADwj9+78Tks=;
+        b=CdZajyIJHDjOv65E77khrmmw03A7NqdRALdHclmEq43x0A5YERCb9uk8uLW+tX46JL
+         zSfex5IBG8VNGN9gNc70Fxurl907/DAYftlHGmLH9BFvsGGy8nIXnFHWNmHXHSpaSCz/
+         qDqUQZaZcpY5ijqfUZnFDGCWEx6Lgt2HkKvc8oc/Ao9Z0RLEFiXPgur13RH4msc0NuBO
+         7hSiDCK2LgMP9EW7nWsi0kh1ymWFCECLq47QkmJ+3IeZnRZoEHNQl8Zxe/GFOuFd5Q0D
+         YXp8LhRkXDNS1eig3k5dfutAxsToJhnqtQW+V4e/4F7uLVYKOPTTAG6CHrxxWGv12DlY
+         WthQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yxI0dB1QFgZNIVokC1hI+G+Iqlv6A0nmADwj9+78Tks=;
+        b=KeG+s1Zy9RCPnCHZ2QuT+qz7p9+N7ZjbWQUcJaeGBk1SNhs7YwngdZKlHVFvEuH67Q
+         /n1VqIAlhnECfco1CCAmqj105ZZau2OTuRM3IWZxCJASrA+eQl/AXRGfHf43pDSdGFdJ
+         Epk1tefV/D5ZrgMexJ8/7tTW6i3/QA9T/bg/1GbpyGvMPW5uQryxWq7OHALYe7GsmbMB
+         eOfZta2kDAQEu5ZIAOS8lBS86Yr7zZW5xhSGcnjxrWfYwjBVwXBPH5N61iUHIXL5lymd
+         q1HH6RwgQalIkuzZHa9Hh8Qu8l5z6EEtJNNjH2xo3UYUVpcFvV9IoPIiBbu3bdshFh9L
+         aqBA==
+X-Gm-Message-State: AOAM530p/Vbro3gS9tl84blA4Wscco1sARTHe5lXimZVNllm5QUaC0Ry
+        DYnb1dr1o5qK81soz+49ogqMLA==
+X-Google-Smtp-Source: ABdhPJwkpX+UqkRhUMU2StSSepg0T7aIZhYVKhSZq4GziMwUla8dN0NFMDLDBH2U3p99v/31HC6nbw==
+X-Received: by 2002:aa7:8f08:: with SMTP id x8mr2228098pfr.41.1593498161157;
+        Mon, 29 Jun 2020 23:22:41 -0700 (PDT)
+Received: from localhost ([103.208.69.16])
+        by smtp.gmail.com with ESMTPSA id n37sm1486372pgl.82.2020.06.29.23.22.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 23:22:39 -0700 (PDT)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, daniel.lezcano@linaro.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: update Amit Kucheria's email to a single email address
+Date:   Tue, 30 Jun 2020 11:52:32 +0530
+Message-Id: <8cbb7004a6a9b846a8d827f514f33f1a265dd5d4.1593498024.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGVsbG8sDQoNClRoaXMgc2VyaWVzIGFkZHMgRFQgYmluZGluZ3MgYW5kIFY0TDIgc3ViLWRldmlj
-ZSBkcml2ZXIgZm9yIERvbmd3b29uJ3MgRFc5NzY4LA0Kd2hpY2ggaXMgYSAxMC1iaXQgREFDIHdp
-dGggMTAwbUEgb3V0cHV0IGN1cnJlbnQgc2luayBjYXBhYmlsaXR5Lg0KDQpUaGUgZHJpdmVyIGlz
-IGRlc2lnbmVkIGZvciBsaW5lYXIgY29udHJvbCBvZiB2b2ljZSBjb2lsIG1vdG9yKFZDTSkuDQpJ
-dCBjcmVhdGVzIGEgVjRMMiBzdWItZGV2aWNlIGFuZCBwcm92aWRlcyBjb250cm9sIHRvIHNldCB0
-aGUgZGVzaXJlZCBmb2N1cy4NCg0KSXQgY29udHJvbHMgdGhlIHBvc2l0aW9uIHdpdGggMTAtYml0
-IERBQyBkYXRhIERbOTowXSBhbmQgc2VwZXJhdGVzDQp0d28gOC1iaXQgcmVnaXN0ZXJzIHRvIGNv
-bnRyb2wgdGhlIFZDTSBwb3NpdGlvbiBhcyBiZWxvd3MuDQpEQUNfTVNCOiBEWzk6OF0oQUREUjog
-MHgwMyk6DQogICAgICstLS0rLS0tKy0tLSstLS0rLS0tKy0tLSstLS0rLS0tKw0KICAgICB8LS0t
-fC0tLXwtLS18LS0tfC0tLXwtLS18RDA5fEQwOHwNCiAgICAgKy0tLSstLS0rLS0tKy0tLSstLS0r
-LS0tKy0tLSstLS0rDQpEQUNfTFNCOiBEWzc6MF0oQUREUjogMHgwNCk6DQogICAgICstLS0rLS0t
-Ky0tLSstLS0rLS0tKy0tLSstLS0rLS0tKw0KICAgICB8RDA3fEQwNnxEMDV8RDA0fEQwM3xEMDJ8
-RDAxfEQwMHwNCiAgICAgKy0tLSstLS0rLS0tKy0tLSstLS0rLS0tKy0tLSstLS0rDQoNClRoaXMg
-ZHJpdmVyIHN1cHBvcnRzOg0KIC0gc2V0IERXOTc2OCB0byBzdGFuZGJ5IG1vZGUgb25jZSBzdXNw
-ZW5kIGFuZCB0dXJuIGl0IGJhY2sgdG8gYWN0aXZlIGlmIHJlc3VtZQ0KIC0gc2V0IHRoZSBkZXNp
-cmVkIGZvY3VzIHZpYSBWNEwyX0NJRF9GT0NVU19BQlNPTFVURSBjdHJsDQoNClByZXZpb3VzIHZl
-cnNpb25zIG9mIHRoaXMgcGF0Y2gtc2V0IGNhbiBiZSBmb3VuZCBoZXJlOg0KIHY4OiBodHRwczov
-L2xvcmUua2VybmVsLm9yZy9saW51eC1tZWRpYS8yMDIwMDYxNjEyNTUzMS4zMTY3MS0xLWRvbmdj
-aHVuLnpodUBtZWRpYXRlay5jb20vDQogdjc6IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4
-LW1lZGlhLzIwMjAwNjA1MTA1NDEyLjE4ODEzLTEtZG9uZ2NodW4uemh1QG1lZGlhdGVrLmNvbS8N
-CiB2NjogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtbWVkaWEvMjAyMDA1MTgxMzI3MzEu
-MjA4NTUtMS1kb25nY2h1bi56aHVAbWVkaWF0ZWsuY29tLw0KIHY1OiBodHRwczovL2xvcmUua2Vy
-bmVsLm9yZy9saW51eC1tZWRpYS8yMDIwMDUwMjE2MTcyNy4zMDQ2My0xLWRvbmdjaHVuLnpodUBt
-ZWRpYXRlay5jb20vDQogdjQ6IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LW1lZGlhLzIw
-MjAwMzMwMTIzNjM0LjM2My0xLWRvbmdjaHVuLnpodUBtZWRpYXRlay5jb20vDQogdjM6IGh0dHBz
-Oi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LW1lZGlhLzIwMjAwMjI4MTU1OTU4LjIwNjU3LTEtZG9u
-Z2NodW4uemh1QG1lZGlhdGVrLmNvbS8NCiB2MjogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGlu
-dXgtbWVkaWEvMjAxOTA5MDUwNzIxNDIuMTQ2MDYtMS1kb25nY2h1bi56aHVAbWVkaWF0ZWsuY29t
-Lw0KIHYxOiBodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eC1tZWRpYS8yMDE5MDcwODEwMDY0
-MS4yNzAyLTEtZG9uZ2NodW4uemh1QG1lZGlhdGVrLmNvbS8NCg0KTWFpbmx5IGNoYW5nZXMgb2Yg
-djkgYXJlIGFkZHJlc3NpbmcgY29tbWVudHMgZnJvbSBUb21hc3ouDQpDb21wYXJlZCB0byB2ODoN
-CiAtIFJlZmluZSBkdzk3NjhfY2FsX21vdmVfZGVsYXkoKSB0byByZXR1cm4gdGhlIHZhbHVlIGlu
-IGEgc3RhbmRhcmQgdW5pdA0KIC0gUmVmaW5lIGVycl9wb3dlcl9vZmYgZXJyb3IgaGFuZGxlciBz
-ZWN0aW9uIGluIHByb2JlKCkNCiAtIFVzZSBwbV9ydW50aW1lX3N0YXR1c19zdXNwZW5kZWQoKSBp
-biByZW1vdmUoKQ0KDQpQbGVhc2UgcmV2aWV3Lg0KVGhhbmtzLg0KDQpEb25nY2h1biBaaHUgKDIp
-Og0KICBtZWRpYTogZHQtYmluZGluZ3M6IG1lZGlhOiBpMmM6IERvY3VtZW50IERXOTc2OCBiaW5k
-aW5ncw0KICBtZWRpYTogaTJjOiBkdzk3Njg6IEFkZCBEVzk3NjggVkNNIGRyaXZlcg0KDQogLi4u
-L2JpbmRpbmdzL21lZGlhL2kyYy9kb25nd29vbixkdzk3NjgueWFtbCAgICAgICAgfCAxMDAgKysr
-Kw0KIE1BSU5UQUlORVJTICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwg
-ICA4ICsNCiBkcml2ZXJzL21lZGlhL2kyYy9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAg
-ICB8ICAxMiArDQogZHJpdmVycy9tZWRpYS9pMmMvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAg
-ICAgICAgfCAgIDEgKw0KIGRyaXZlcnMvbWVkaWEvaTJjL2R3OTc2OC5jICAgICAgICAgICAgICAg
-ICAgICAgICAgIHwgNTU0ICsrKysrKysrKysrKysrKysrKysrKw0KIDUgZmlsZXMgY2hhbmdlZCwg
-Njc1IGluc2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL21lZGlhL2kyYy9kb25nd29vbixkdzk3NjgueWFtbA0KIGNyZWF0ZSBt
-b2RlIDEwMDY0NCBkcml2ZXJzL21lZGlhL2kyYy9kdzk3NjguYw0KDQotLSANCjIuOS4yDQo=
+Emails currently go to different mailboxes. Switch to the kernel.org
+address so I can forward them to a single mailbox.
+
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+---
+ Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 2 +-
+ MAINTAINERS                                               | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+index d7be931b42d22..0985e65a9d871 100644
+--- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
++++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+@@ -8,7 +8,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: QCOM SoC Temperature Sensor (TSENS)
+ 
+ maintainers:
+-  - Amit Kucheria <amit.kucheria@linaro.org>
++  - Amit Kucheria <amitk@kernel.org>
+ 
+ description: |
+   QCOM SoCs have TSENS IP to allow temperature measurement. There are currently
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 496fd4eafb68c..f80cb6185662f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14230,7 +14230,7 @@ F:	drivers/net/ethernet/qualcomm/rmnet/
+ F:	include/linux/if_rmnet.h
+ 
+ QUALCOMM TSENS THERMAL DRIVER
+-M:	Amit Kucheria <amit.kucheria@linaro.org>
++M:	Amit Kucheria <amitk@kernel.org>
+ L:	linux-pm@vger.kernel.org
+ L:	linux-arm-msm@vger.kernel.org
+ S:	Maintained
+@@ -16930,7 +16930,7 @@ F:	drivers/media/radio/radio-raremono.c
+ THERMAL
+ M:	Zhang Rui <rui.zhang@intel.com>
+ M:	Daniel Lezcano <daniel.lezcano@linaro.org>
+-R:	Amit Kucheria <amit.kucheria@verdurent.com>
++R:	Amit Kucheria <amitk@kernel.org>
+ L:	linux-pm@vger.kernel.org
+ S:	Supported
+ Q:	https://patchwork.kernel.org/project/linux-pm/list/
+-- 
+2.25.1
 
