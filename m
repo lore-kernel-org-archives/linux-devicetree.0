@@ -2,128 +2,97 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F752C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 19:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E87C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 19:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66D25206C0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 19:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3912206C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 19:29:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="CSRw4qA3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="co3GS2Cj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbgF3TWg (ORCPT
+        id S1727889AbgF3T3o (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 15:22:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42364 "EHLO
+        Tue, 30 Jun 2020 15:29:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgF3TWg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 15:22:36 -0400
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3F54C061755;
-        Tue, 30 Jun 2020 12:22:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Z50zmfnBPo2u0p8708BAruvf3MnDJq1nng3tchC4BxM=; b=CSRw4qA3mqrXDXC30pTR66alas
-        v8/PTBq36Esj+PKN5s/rhns+lUf5KGCaFmEjZLDjCMief1m4AzpfaSpc4pou2l0sWIOxlI1pDg654
-        1hCURAZCV5U5z0PapH1RKgrrIwNB7wug4UAaLLNjuNBQINiSr99qYZPe67P4DDMxbpTc=;
-Received: from p200300ccff14dd001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff14:dd00:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1jqLpZ-0001r0-AN; Tue, 30 Jun 2020 21:22:09 +0200
-Date:   Tue, 30 Jun 2020 21:22:07 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
-Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        with ESMTP id S1726961AbgF3T3o (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 15:29:44 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F17FC061755;
+        Tue, 30 Jun 2020 12:29:44 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id k5so342966pjg.3;
+        Tue, 30 Jun 2020 12:29:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=z9NbGrJNVhmDvwjE4p/JaViBJ44BVQVTuZHg6UXMIYY=;
+        b=co3GS2Cjq3IS4PBvsxpk3iaeANWXu9yXQTCa2iad2uBkShSkMJdxn3+XTqZQwNfDXy
+         RlY76zsgVjCL43sSBus5UM6FBRu0aVIGHO4JN/bDnKmaer8C5enTUMgjW4YUfz0eEODp
+         txdPInWQ7GWQUOgDHHs67W+oOI5hBCYfzX84Pyz9UvnCOi9y2q9BZsXzQtKmfkRJwZS/
+         DSpFrB5U9oQ8oRblkl/qrgws8AvvQ8uhGK98S0lQDOU8OMLjrYC4/eH9XoZZOebAzwN3
+         GMrQM3PT/yZRtiT7PUVWYyuFrPxxrQknyJOyE0djQIFkCeBzVBbtogf+f5Rg3LzrjwjY
+         5UiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=z9NbGrJNVhmDvwjE4p/JaViBJ44BVQVTuZHg6UXMIYY=;
+        b=IJ1p4wsJ8933pTc/90QJlWLZOVSf+VxrPV0IsOJCBOVWIgIw0WzFeUgAipJCoZfo3s
+         IetVpmsBSlp0AmQJfvYJVRt8RzYYPgPGn6EgTm3pkd1t7ATGMNpRuC6Ek7b34OxIl3Ly
+         0XSy2p+RBFriT9v0pJCZyKuELLs9S1yeAoW97hvxpMRyc+zxJQq5cADi7Li8nNxd7FDK
+         ms7Tbqo7yqhbtnv9aiPDHnetMKMMKBMQrZx2IgF492WB+eNCbAbUuz7HaSLNG+27A8oa
+         SMusYD7DnsJUec00RYHnsNoCNT2ROzm81mZL6OvSSNgRRkFIyFlVAxe5uwmKhAPsm0Kk
+         bZoA==
+X-Gm-Message-State: AOAM533VYVJW+nsZ17bV/+OIiebLSAYxaGNpjw9V/EvDo7Yr2sD8fB/8
+        bmjv9GUbuTixMfrBQ309ypk=
+X-Google-Smtp-Source: ABdhPJwv4jFJgO1XEbhIRLji/2KijRhr9g67KUtACfRcPhhVmiFQ8SFh/i4yjIkB/MOaOvhH2n3yTg==
+X-Received: by 2002:a17:902:8a8f:: with SMTP id p15mr19083179plo.172.1593545383723;
+        Tue, 30 Jun 2020 12:29:43 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
+        by smtp.gmail.com with ESMTPSA id s12sm3554059pgp.54.2020.06.30.12.29.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 12:29:43 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 12:29:41 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Merlijn Wajer <merlijn@wizzup.org>
+Cc:     pavel@ucw.cz,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>
-Subject: Re: [RFC PATCH 00/10] Netronix embedded controller driver for Kobo
- and Tolino ebook readers
-Message-ID: <20200630212207.018ad355@aktux>
-In-Reply-To: <20200630071523.GA2983@latitude>
-References: <20200620223915.1311485-1-j.neuschaefer@gmx.net>
-        <20200630084051.66feadea@aktux>
-        <20200630071523.GA2983@latitude>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Mark Gross <mgross@linux.intel.com>,
+        "open list:OMAP DEVICE TREE SUPPORT" <linux-omap@vger.kernel.org>,
+        "open list:OMAP DEVICE TREE SUPPORT" <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." 
+        <linux-input@vger.kernel.org>
+Subject: Re: [PATCH 0/2] Add SW_MACHINE_COVER key
+Message-ID: <20200630192941.GI248110@dtor-ws>
+References: <20200612125402.18393-1-merlijn@wizzup.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200612125402.18393-1-merlijn@wizzup.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 30 Jun 2020 09:15:23 +0200
-Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
+On Fri, Jun 12, 2020 at 02:53:57PM +0200, Merlijn Wajer wrote:
 
-> On Tue, Jun 30, 2020 at 08:40:51AM +0200, Andreas Kemnade wrote:
-> [...]
-> > got a chance to test it on a Tolino Shine 2 HD.
-> > It uses the RTC from the RC5T619 but backlight seems to go via MSP430
-> > EC.
-> >=20
-> > I got this.
-> >=20
-> > [    1.453603] ntxec 0-0043: Netronix embedded controller version f110 =
-detected.
-> > [   10.723638] ntxec-rtc 21a0000.i2c:embedded-controller@43:rtc: regist=
-ered as rtc0
-> > [   10.775276] ntxec-pwm: probe of 21a0000.i2c:embedded-controller@43:p=
-wm failed with error -5 =20
->=20
-> Hmm, -EIO from the PWM driver.
->
-Weird...
-IOMUXC_SW_PAD_CTL_PAD_I2C1_SDA/SCL is identical between
-vendor kernel (heavily patched 3.0.35) and patched mainline.
-                       =20
-MX6SL_PAD_I2C1_SCL__I2C1_SCL     0x4001f8b1
-MX6SL_PAD_I2C1_SDA__I2C1_SDA     0x4001f8b1
+Applied, thank you.
 
-root@tolino2:~# i2cset -f 0 0x43 0xa3 0x0001 w
-WARNING! This program can confuse your I2C bus, cause data loss and worse!
-I will write to device file /dev/i2c-0, chip address 0x43, data address
-0xa3, data 0x01, mode word.
-Continue? [Y/n]=20
-Error: Write failed
-root@tolino2:~# i2cset -f 0 0x43 0xa3 0x0000 w
-WARNING! This program can confuse your I2C bus, cause data loss and worse!
-I will write to device file /dev/i2c-0, chip address 0x43, data address
-0xa3, data 0x00, mode word.
-Continue? [Y/n]=20
-Error: Write failed
-
-but backlight gets toggled. Same behavior on vendor kernel and
-in vendor uboot.
-That smells.
-
-Regards,
-Andreas
+-- 
+Dmitry
