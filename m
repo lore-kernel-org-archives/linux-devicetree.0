@@ -2,147 +2,147 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A055C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 09:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFA1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 10:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4994420675
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 09:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B17FF2073E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 10:08:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731936AbgF3Jyj (ORCPT
+        id S1732190AbgF3KIs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 05:54:39 -0400
-Received: from mga06.intel.com ([134.134.136.31]:28216 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729017AbgF3Jyi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 30 Jun 2020 05:54:38 -0400
-IronPort-SDR: 3egwSlgcvGrt7yz2u5URGRWNfd8k2WIdJ3WiNUvgXgIVdmTQyExZWv0CM0mI8owgekIueIXTas
- RNeNjSXOcJJw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="207707327"
-X-IronPort-AV: E=Sophos;i="5.75,297,1589266800"; 
-   d="scan'208";a="207707327"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 02:54:37 -0700
-IronPort-SDR: hNZYhpiv341hl+Aaw19NRwC/RAT3wXvH0OvhwikoLADF8pd4rKS0TFT3hVl/6uQ/v9O66bnsKU
- Ub+CtVmIo0jA==
-X-IronPort-AV: E=Sophos;i="5.75,297,1589266800"; 
-   d="scan'208";a="355732216"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 02:54:33 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id C2250207F6; Tue, 30 Jun 2020 12:54:30 +0300 (EEST)
-Date:   Tue, 30 Jun 2020 12:54:30 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        mchehab@kernel.org, andriy.shevchenko@linux.intel.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, drinkcat@chromium.org,
-        tfiga@chromium.org, matthias.bgg@gmail.com, bingbu.cao@intel.com,
-        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        louis.kuo@mediatek.com, shengnan.wang@mediatek.com
-Subject: Re: [PATCH V11 2/2] media: i2c: ov02a10: Add OV02A10 image sensor
- driver
-Message-ID: <20200630095430.GF16711@paasikivi.fi.intel.com>
-References: <20200630024942.20891-1-dongchun.zhu@mediatek.com>
- <20200630024942.20891-3-dongchun.zhu@mediatek.com>
+        Tue, 30 Jun 2020 06:08:48 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:34368 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732188AbgF3KIr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 06:08:47 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id EF6C280554;
+        Tue, 30 Jun 2020 12:08:42 +0200 (CEST)
+Date:   Tue, 30 Jun 2020 12:08:41 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, od@zcrc.me
+Subject: Re: [PATCH v2 02/10] dt-bindings: display: Add ingenic,ipu.yaml
+Message-ID: <20200630100841.GA553950@ravnborg.org>
+References: <20200629235210.441709-1-paul@crapouillou.net>
+ <20200629235210.441709-2-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200630024942.20891-3-dongchun.zhu@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200629235210.441709-2-paul@crapouillou.net>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8 a=7gkXJVJtAAAA:8 a=gEfo2CItAAAA:8
+        a=e5mUnYsNAAAA:8 a=zaYY7jrkgZO2RDDRebYA:9 a=CjuIK1q_8ugA:10
+        a=9LHmKk7ezEChjTCyhBa9:22 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=sptkURWiP4Gy88Gu7hUp:22 a=Vxmtnl_E_bksehYqCbjh:22
+        a=pHzHmUro8NiASowvMSCR:22 a=nt3jZW36AmriUCFCBwmW:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Dongchun,
-
-Thanks for the update.
-
-On Tue, Jun 30, 2020 at 10:49:42AM +0800, Dongchun Zhu wrote:
-> Add a V4L2 sub-device driver for OV02A10 image sensor.
+On Tue, Jun 30, 2020 at 01:52:02AM +0200, Paul Cercueil wrote:
+> Add documentation of the Device Tree bindings for the Image Processing
+> Unit (IPU) found in most Ingenic SoCs.
 > 
-> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Do not know the IPU but looks correct.
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
 > ---
->  MAINTAINERS                 |    1 +
->  drivers/media/i2c/Kconfig   |   13 +
->  drivers/media/i2c/Makefile  |    1 +
->  drivers/media/i2c/ov02a10.c | 1052 +++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 1067 insertions(+)
->  create mode 100644 drivers/media/i2c/ov02a10.c
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 378c961..a6a2f8b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12566,6 +12566,7 @@ L:	linux-media@vger.kernel.org
->  S:	Maintained
->  T:	git git://linuxtv.org/media_tree.git
->  F:	Documentation/devicetree/bindings/media/i2c/ovti,ov02a10.yaml
-> +F:	drivers/media/i2c/ov02a10.c
->  
->  OMNIVISION OV13858 SENSOR DRIVER
->  M:	Sakari Ailus <sakari.ailus@linux.intel.com>
-> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-> index da11036..65519cf 100644
-> --- a/drivers/media/i2c/Kconfig
-> +++ b/drivers/media/i2c/Kconfig
-> @@ -812,6 +812,19 @@ config VIDEO_IMX355
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called imx355.
->  
-> +config VIDEO_OV02A10
-> +	tristate "OmniVision OV02A10 sensor support"
-> +	depends on I2C && VIDEO_V4L2
-> +	select MEDIA_CONTROLLER
-> +	select VIDEO_V4L2_SUBDEV_API
-> +	select V4L2_FWNODE
-> +	help
-> +	  This is a Video4Linux2 sensor driver for the OmniVision
-> +	  OV02A10 camera.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called ov02a10.
-> +
->  config VIDEO_OV2640
->  	tristate "OmniVision OV2640 sensor support"
->  	depends on VIDEO_V4L2 && I2C
-> diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
-> index 993acab..384e676 100644
-> --- a/drivers/media/i2c/Makefile
-> +++ b/drivers/media/i2c/Makefile
-> @@ -63,6 +63,7 @@ obj-$(CONFIG_VIDEO_VP27SMPX) += vp27smpx.o
->  obj-$(CONFIG_VIDEO_SONY_BTF_MPX) += sony-btf-mpx.o
->  obj-$(CONFIG_VIDEO_UPD64031A) += upd64031a.o
->  obj-$(CONFIG_VIDEO_UPD64083) += upd64083.o
-> +obj-$(CONFIG_VIDEO_OV02A10) += ov02a10.o
->  obj-$(CONFIG_VIDEO_OV2640) += ov2640.o
->  obj-$(CONFIG_VIDEO_OV2680) += ov2680.o
->  obj-$(CONFIG_VIDEO_OV2685) += ov2685.o
-> diff --git a/drivers/media/i2c/ov02a10.c b/drivers/media/i2c/ov02a10.c
+> Notes:
+>     v2: Add missing 'const' in items list
+> 
+>  .../bindings/display/ingenic,ipu.yaml         | 65 +++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/ingenic,ipu.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/ingenic,ipu.yaml b/Documentation/devicetree/bindings/display/ingenic,ipu.yaml
 > new file mode 100644
-> index 0000000..f7fd329
+> index 000000000000..5bfc33eb32c9
 > --- /dev/null
-> +++ b/drivers/media/i2c/ov02a10.c
-
-...
-
-> +	ov02a10->rst_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-
-
-Shouldn't this be GPIOD_OUT_HIGH? That's the state it'll be after powering
-the sensor off the first time. Alternatively make reset signal high in
-runtime suspend callback.
-
--- 
-Kind regards,
-
-Sakari Ailus
+> +++ b/Documentation/devicetree/bindings/display/ingenic,ipu.yaml
+> @@ -0,0 +1,65 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/ingenic,ipu.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Ingenic SoCs Image Processing Unit (IPU) devicetree bindings
+> +
+> +maintainers:
+> +  - Paul Cercueil <paul@crapouillou.net>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - enum:
+> +        - ingenic,jz4725b-ipu
+> +        - ingenic,jz4760-ipu
+> +      - items:
+> +        - const: ingenic,jz4770-ipu
+> +        - const: ingenic,jz4760-ipu
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: ipu
+> +
+> +patternProperties:
+> +  "^ports?$":
+> +    description: OF graph bindings (specified in bindings/graph.txt).
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/jz4770-cgu.h>
+> +    ipu@13080000 {
+> +      compatible = "ingenic,jz4770-ipu", "ingenic,jz4760-ipu";
+> +      reg = <0x13080000 0x800>;
+> +
+> +      interrupt-parent = <&intc>;
+> +      interrupts = <29>;
+> +
+> +      clocks = <&cgu JZ4770_CLK_IPU>;
+> +      clock-names = "ipu";
+> +
+> +      port {
+> +        ipu_ep: endpoint {
+> +          remote-endpoint = <&lcdc_ep>;
+> +        };
+> +      };
+> +    };
+> -- 
+> 2.27.0
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
