@@ -2,111 +2,104 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18435C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 01:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B42C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 01:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E71D520781
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 01:36:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YzFIJVJ/"
+	by mail.kernel.org (Postfix) with ESMTP id 332DF20780
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 01:52:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593481965;
+	bh=wkNs6nVy0bQpGGNSvXZEm1u8oAdelr54dfLGB7PYB+U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=em+A4CXfR/GIvCgHU4PHLBt8+CLql/MLMqRTWbc3ZM+MdsiyMsk1pcbmL6J5cGwj4
+	 xaS9hHCIoHH6pSgtsw5MjpLjQK8Jgujt7Au775v7OzLTiYtAeB3LXRXFPU5pyADHd9
+	 eupgNO0ktwbMkqp5pyYX4pOzXlR++m/AohsKqSqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbgF3Bgi (ORCPT
+        id S1728602AbgF3Bwo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 21:36:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47558 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbgF3Bgh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 21:36:37 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F1F2C061755
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 18:36:37 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id x62so14455103qtd.3
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 18:36:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=l2Xg4aQwUyetnTxL0PwCdz9HzeQwoFK5MsRigLULc90=;
-        b=YzFIJVJ/Sw7j2tzy65Yy+gqcrGf6iq4u3OgvAr6xS4iJ/A/shX5XG/5576LGcx+LaW
-         7nFbDmXxHkShYE32yooPq3SORcZlMebYHQBKJWKpkz04GSwyKu6bFzKoRLZ50sUD0oMj
-         Fzy8bpjn5lNBjYKJZeVfWEaB8Qv2C7RooI02r4Yx3Dh68IfgOT5fLfdwNS/TZIEls4jn
-         IF2MZoj+xNuvggxJ0hdZWr67hkPvaPCyhA5Skflke00gfGLcmy2+5Mvjsn3hJjdVyeEW
-         Xz7g/DU6h71hdpbSkSj4gmnEt3yAvaRqxY4FRY8xGOKpjtCydxPIweQbDrY3nxNVBHiV
-         +gzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=l2Xg4aQwUyetnTxL0PwCdz9HzeQwoFK5MsRigLULc90=;
-        b=P6ldlyE54zJy5LgLN3EHVUL8Oclbi3PlB+psk066BSdAXzDQkPvnLYBtqe9yBY5al/
-         mUpVyAD2qJAk8FWLDuCqQFKgg+k5l1gwtIHHS3ilbIkEK3u+vbmGMSRvcVLGcfkpdd81
-         g34xxsKMAQi26y8QboLUmgm1kIRgeCma2yso+EZIDxj+R+feSP6rxbYhs2grxG8C4v7X
-         ZHBXfnZ52+BzFwL/4Q8Anex4t8r0LqMxpW4KWHpguXGjpuBAR+V3MLgu3HjQRVql36/T
-         rPJWK8D5qFlKM70TAQzuQGVuxj3s7lVOxHSfi2evR33BXKDfRzRXqGytJn+OMgHT2gUo
-         a9EA==
-X-Gm-Message-State: AOAM532ueSKqPgWZcwM3C5sADxKF8wgd5vL9vmrImJmwCavYsLIq+fof
-        LBNLDXsiYv3lDhTHYm2psJdTxg==
-X-Google-Smtp-Source: ABdhPJwJ2tBwLuCXC4nb7gGwAadRBqolulV56bI5ht0QSbVmXHbbTCC95NBxsvzxVfB16FCzxcRQ5w==
-X-Received: by 2002:ac8:7508:: with SMTP id u8mr18615749qtq.339.1593480996652;
-        Mon, 29 Jun 2020 18:36:36 -0700 (PDT)
-Received: from localhost (rfs.netwinder.org. [206.248.184.2])
-        by smtp.gmail.com with ESMTPSA id q28sm1890413qtk.13.2020.06.29.18.36.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jun 2020 18:36:36 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 21:36:35 -0400
-From:   Ralph Siemsen <ralph.siemsen@linaro.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Pavel Machek <pavel@denx.de>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 4.19 182/267] spi: dw: Return any value retrieved from
- the dma_transfer callback
-Message-ID: <20200630013635.GA27038@maple.netwinder.org>
-References: <20200619141648.840376470@linuxfoundation.org>
- <20200619141657.498868116@linuxfoundation.org>
- <20200619210719.GB12233@amd>
- <20200622205121.4xuki7guyj6u5yul@mobilestation>
- <20200626151800.GA22242@maple.netwinder.org>
- <20200629142606.GR1931@sasha-vm>
+        Mon, 29 Jun 2020 21:52:44 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:60299 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726003AbgF3Bwo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 21:52:44 -0400
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 05U1qCct029907;
+        Tue, 30 Jun 2020 10:52:13 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 05U1qCct029907
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1593481933;
+        bh=pzUnP+Gd/o71cSKBNMVmFDAQhku4dhuHdwm+GTsm+dQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Z/YKjt+0I8CwnlcfGXxiM76xxMtgFODo0Udz4VqTd6CKBsUlq7XA5yMEetuHdo/pW
+         3HgcfiV3FXbjk4H5APsgullI7XFlYZH390On8SQhyFpcoeIOjG2bMcCSVFbhJbIX3E
+         8+db+cuS2ytCwlhWgryth1k4QWye5Q8yR8L73VqlvFzs/OnXZVGNWTrtGffqyan/T3
+         c3xglyXCTMosaiY9EyEDWn++HE/rzV/+ACOEa7SP4b/bjLp9cOc6bnK8Izc4lPALRH
+         HVDYxsOgzIBea+GDhgLewH6bLT/SjbM528NNV6UkbcQMIkoCuux6e8hwAy+x1SZpNg
+         IS0m+3H8FlYIw==
+X-Nifty-SrcIP: [209.85.222.45]
+Received: by mail-ua1-f45.google.com with SMTP id c7so4503116uap.0;
+        Mon, 29 Jun 2020 18:52:13 -0700 (PDT)
+X-Gm-Message-State: AOAM53041HppmKQUPQD8jyxOk3j3WiJgB8pqz53RbYKOvlskWLVVRdMq
+        wSy0CKfTkxtBO4vAfs6JIi8Jybxu4aQpAN+rbrI=
+X-Google-Smtp-Source: ABdhPJx34KgJOS3yCKldjTe3z4RlrwFHHKAIReVcj4g+8cBmyLg1qxOv+ce1XT52RH9evjclhDuFnFDuKvDgX3lnJiU=
+X-Received: by 2002:ab0:156d:: with SMTP id p42mr12963596uae.121.1593481932354;
+ Mon, 29 Jun 2020 18:52:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200629142606.GR1931@sasha-vm>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200625170434.635114-1-masahiroy@kernel.org> <20200625170434.635114-5-masahiroy@kernel.org>
+ <CAL_JsqL4pTFK_pSNn1cSvjzwdg71dVzM3P06BYYEwDj2t+swPA@mail.gmail.com>
+In-Reply-To: <CAL_JsqL4pTFK_pSNn1cSvjzwdg71dVzM3P06BYYEwDj2t+swPA@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 30 Jun 2020 10:51:34 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQzG5ty=knL4eh=8w43p57BGMf6mRMTR1rPrhdFoKs7YA@mail.gmail.com>
+Message-ID: <CAK7LNAQzG5ty=knL4eh=8w43p57BGMf6mRMTR1rPrhdFoKs7YA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] dt-bindings: split DT schema check rules
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 10:26:06AM -0400, Sasha Levin wrote:
->>diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
->>index c563c2815093..99641c485288 100644
->>--- a/drivers/spi/spi-dw-mmio.c
->>+++ b/drivers/spi/spi-dw-mmio.c
->>@@ -358,7 +358,7 @@ static int mmio_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
+On Tue, Jun 30, 2020 at 5:50 AM Rob Herring <robh+dt@kernel.org> wrote:
 >
->Um, I can't find this function anywhere... what am I missing?
+> On Thu, Jun 25, 2020 at 11:05 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > When building %.dt.yaml from %.dts, two things happen in a row:
+> >
+> >  [1] Run DTC to convert %.dts into %.dt.yaml
+> >
+> >  [2] Run dt-validate against %.dt.yaml
+> >
+> > Currently, when any .yaml schema file is updated, processed-schema.yaml
+> > is regenerated, then both [1] and [2] are rerun for all .dts files.
+> >
+> > Actually, we do not need to rerun [1] since the original .dts is not
+> > updated.
+>
+> I have plans (and an intern working on it) to integrate the schema
+> checks into dtc. That's going to make turning on the schema checks
+> just a flag to dtc. I'm not sure if adding the complexity here is
+> worth it as I'd expect much of this patch to go away again.
+>
+> Is there any negative impact on the absolute clean build time? I'm
+> more concerned about that than optimizing rerunning.
 
-Nothing... my bad. The code in question was added on a vendor branch
-(https://github.com/renesas-rz/rzn1_linux/blob/rzn1-stable-v4.19/drivers/spi/spi-dw-mmio.c#L338
-if you are curious).
+No benefit on the absolute clean build time.
 
-I'm very sorry for wasting your time... please disregard the patch!
+OK, then please skip this patch.
 
--Ralph
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
