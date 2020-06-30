@@ -2,183 +2,262 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE033C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 16:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E79C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 16:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 974D820723
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 16:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3832420759
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 16:53:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vrFYsy4P"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CVgtFTy2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726639AbgF3Qfu (ORCPT
+        id S2389840AbgF3QxG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 12:35:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44918 "EHLO
+        Tue, 30 Jun 2020 12:53:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389026AbgF3Qfp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 12:35:45 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C466FC03E979
-        for <devicetree@vger.kernel.org>; Tue, 30 Jun 2020 09:35:44 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id s10so20800525wrw.12
-        for <devicetree@vger.kernel.org>; Tue, 30 Jun 2020 09:35:44 -0700 (PDT)
+        with ESMTP id S2389815AbgF3QxF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 12:53:05 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11A1EC03E979
+        for <devicetree@vger.kernel.org>; Tue, 30 Jun 2020 09:53:05 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id w3so7832407wmi.4
+        for <devicetree@vger.kernel.org>; Tue, 30 Jun 2020 09:53:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=UY5dDFhwanGzAjA/Hwk2nkrFK53nDw/tdJsDrb47uYk=;
-        b=vrFYsy4PUl1thVhIBI/n6B96HCHkilWvostX6tmewC49h0ySiM903UwYD1fxS29iu4
-         yOiq4Y1F1VPbwPzqlrm6Y+NfDMSiRbhA4SkEp+BZa0TPe9+QxNfVog0TbB/EPwrtMmqA
-         dkdkDd9lcFAdHIGd3N1iZ/r8mVRIbmnEVsXeXR2t5mBHnz0wOPu4Qqq8oiTEzx90ZPbE
-         P1euW+KHLG0Ghx2/f6vqQKD826gOZ7tSSs8m43sJHNB/3mVoQolt1i3kdO6KWDPBxpge
-         J+AwQRo8tLxwQhDhizaWP0hyxjlZHmfiWkyP7ld2AOQIBdzdJg8M/vkkBZdEQ69MTzwV
-         PJPg==
+        bh=PL3gqYes7408Y9j0oN+9/8tWxq6suSL5CFMjvoIOGD8=;
+        b=CVgtFTy2QTfqoViXoqnmGJ/iZi91tUj2Bpdip43Pq0diQqzgGNBkGq5N9G2XQWvogo
+         68V3n2TQHlygtYUjKpStr7tg1ROHAbvN648GHZPuqq49G5p7U3AlcHrOQaxXfINfdefd
+         Gk9ELgymUifA8xcKS3fnlBXshAs1nJ7VDRI+M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=UY5dDFhwanGzAjA/Hwk2nkrFK53nDw/tdJsDrb47uYk=;
-        b=oZnwPjdO3Ho8sD8HLRJwILfI0p/bC91rbhe6n9/h5aHdeShAS0RJZtmw66etMwV3+x
-         d+sckIx/3/pChK9ni+WUGbnv+WqgvEMEiBuLpw7YghSlObCPToiJ4TotewqyDDUe0T3E
-         EsmHGbpVxr49r1isJsSi9n6BSDIbq6WBNAFWLgJOxYwMGNnWoJ6/aEJO8kTvkLJU7Xp2
-         py55dC6/8gKyXscLn/OoqzeW71jFn5a/o8Pn1dkGxnpKYS4lAfhU4mW3tjsYcrDpYY2k
-         mX42ypRVsCVMxhHTaH7QwIJRukSn8+gnoECKdiancsu5YBCoOjKwFb36kvLM1nF9Xagh
-         BNVA==
-X-Gm-Message-State: AOAM533FeEv8fI36Mpxo+/WWsxjMReyB3PuaQAA32KZRCe0APT+WjAZ4
-        Zg0gqG4RrPJqqAaXVYNGBnmfIQ==
-X-Google-Smtp-Source: ABdhPJwHpMmHLbOR2PK+c8AILDnO4gKbH2fhAO3npF+VHuPJVOUOu/Moc+PFY2jA82EhThxZdEOdtw==
-X-Received: by 2002:adf:ec90:: with SMTP id z16mr22454514wrn.52.1593534943359;
-        Tue, 30 Jun 2020 09:35:43 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id k126sm4324376wme.17.2020.06.30.09.35.42
+        bh=PL3gqYes7408Y9j0oN+9/8tWxq6suSL5CFMjvoIOGD8=;
+        b=PpFbJ0Oq43UIBA+gqnXPhyfcpk7N8x1Q8hSgCiChC8l3qJ0eWjY+VyjRLR+wldQO9z
+         fQIEcmEmg3mg898vXCCf/ZG35Qcp9ncEyKhXpEOx6aDFVLWRiRSMsLbX548kwMhk40wf
+         mknf0xftJdaSAQS9fQLfULbgQjyRCb57pgdmI5cCVqVISc7Osg5g5Y1a2ehAoreEbWlG
+         d9wNW/9P+41AIntPa5JCWHPW3LgNeu1wGoaAJP9S9hz305SuQUMMPlCgcZg++Tzq8lEV
+         POdoFAZ9EXIffVJ3q+Gjc8pzEchdDHeMsXbu+kE8qo9FBHL4Tztm18U/QNz+SHmb9yKm
+         erEg==
+X-Gm-Message-State: AOAM5328uDde1Mr/IAQEF5NpeeNRApmbguRRwqWRbyrxcUDP7zskKnNH
+        yYCSskDA4DtQgIeNQe3ZPlpD+Q==
+X-Google-Smtp-Source: ABdhPJxKifqOAzYOp4J9Bly4NiQnEMA2gDFLYP7zxPsqUSediKZtqJghVuv6mAfW2Fa0i+QexvGymA==
+X-Received: by 2002:a1c:bcd4:: with SMTP id m203mr22111391wmf.124.1593535983680;
+        Tue, 30 Jun 2020 09:53:03 -0700 (PDT)
+Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
+        by smtp.gmail.com with ESMTPSA id f186sm4010614wmf.29.2020.06.30.09.53.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 09:35:42 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 17:35:41 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH] dt-bindings: backlight: Convert common backlight
- bindings to DT schema
-Message-ID: <20200630163541.cvllavnbmgdlvpfy@holly.lan>
-References: <20200618224413.1115849-1-robh@kernel.org>
- <20200619215341.GA6857@ravnborg.org>
- <20200622165730.pnx7fzbq5e6q5h4l@holly.lan>
- <CAL_JsqK1yJ09k6tKak==TjRN17VzueVkcf-WOLw2ETL2ZJv9sg@mail.gmail.com>
- <20200629191847.GA318506@ravnborg.org>
+        Tue, 30 Jun 2020 09:53:03 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 16:53:01 +0000
+From:   Tomasz Figa <tfiga@chromium.org>
+To:     Xia Jiang <xia.jiang@mediatek.com>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        srv_heupstream@mediatek.com, senozhatsky@chromium.org,
+        mojahsu@chromium.org, drinkcat@chromium.org,
+        maoguang.meng@mediatek.com, sj.huang@mediatek.com
+Subject: Re: [PATCH RESEND v9 18/18] media: platform: Add jpeg enc feature
+Message-ID: <20200630165301.GA1212092@chromium.org>
+References: <20200604090553.10861-1-xia.jiang@mediatek.com>
+ <20200604090553.10861-20-xia.jiang@mediatek.com>
+ <20200611184640.GC8694@chromium.org>
+ <1593485781.20112.43.camel@mhfsdcap03>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200629191847.GA318506@ravnborg.org>
+In-Reply-To: <1593485781.20112.43.camel@mhfsdcap03>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 09:18:47PM +0200, Sam Ravnborg wrote:
-> On Mon, Jun 29, 2020 at 11:57:37AM -0600, Rob Herring wrote:
-> > On Mon, Jun 22, 2020 at 10:57 AM Daniel Thompson
-> > <daniel.thompson@linaro.org> wrote:
-> > >
-> > > On Fri, Jun 19, 2020 at 11:53:41PM +0200, Sam Ravnborg wrote:
-> > > > > diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml
-> > > > > new file mode 100644
-> > > > > index 000000000000..7e1f109a38a4
-> > > > > --- /dev/null
-> > > > > +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml
-> > > > > @@ -0,0 +1,98 @@
-> > > > > +# SPDX-License-Identifier: GPL-2.0-only
-> > > > > +%YAML 1.2
-> > > > > +---
-> > > > > +$id: http://devicetree.org/schemas/leds/backlight/pwm-backlight.yaml#
-> > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > > +
-> > > > > +title: pwm-backlight bindings
-> > > > > +
-> > > > > +maintainers:
-> > > > > +  - Lee Jones <lee.jones@linaro.org>
-> > > > > +  - Daniel Thompson <daniel.thompson@linaro.org>
-> > > > > +  - Jingoo Han <jingoohan1@gmail.com>
-> > > > > +
-> > > > > +properties:
-> > > > > +  compatible:
-> > > > > +    const: pwm-backlight
-> > > > > +
-> > > > > +  pwms:
-> > > > > +    maxItems: 1
-> > > > > +
-> > > > > +  pwm-names: true
-> > > > > +
-> > > > > +  power-supply:
-> > > > > +    description: regulator for supply voltage
-> > > > > +
-> > > > > +  enable-gpios:
-> > > > > +    description: Contains a single GPIO specifier for the GPIO which enables
-> > > > > +      and disables the backlight
-> > > > > +    maxItems: 1
-> > > > > +
-> > > > > +  post-pwm-on-delay-ms:
-> > > > > +    description: Delay in ms between setting an initial (non-zero) PWM and
-> > > > > +      enabling the backlight using GPIO.
-> > > > > +
-> > > > > +  pwm-off-delay-ms:
-> > > > > +    description: Delay in ms between disabling the backlight using GPIO
-> > > > > +      and setting PWM value to 0.
-> > > > > +
-> > > > > +  brightness-levels:
-> > > > > +    description: Array of distinct brightness levels. Typically these are
-> > > > > +      in the range from 0 to 255, but any range starting at 0 will do. The
-> > > > > +      actual brightness level (PWM duty cycle) will be interpolated from
-> > > > > +      these values. 0 means a 0% duty cycle (darkest/off), while the last
-> > > > > +      value in the array represents a 100% duty cycle (brightest).
-> > > > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> > > > > +
-> > > > > +  default-brightness-level:
-> > > > > +    description: The default brightness level (index into the array defined
-> > > > > +      by the "brightness-levels" property).
-> > > > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > > Same comment as before...
-> > >
-> > > Sorry the "ditto" meant I didn't thing about PWM as much as I should
-> > > have.
-> > >
-> > > The situation for PWM is a little different to LED. That's mostly
-> > > because we decided not to clutter the LED code with
-> > > "num-interpolated-steps".
-> > >
-> > > The PWM code implements the default-brightness-level as an index into
-> > > the brightness array *after* it has been expanded using interpolation.
-> > > In other words today Linux treats the default-brightness-level more
-> > > like[1].
-> > >
-> > >     description: The default brightness level. When
-> > >       num-interpolated-steps is not set this is simply an index into
-> > >       the array defined by the "brightness-levels" property. If
-> > >       num-interpolated-steps is set the brightness array will be
-> > >       expanded by interpolation before we index to get a default
-> > >       level.
-> > >
-> > > This is the best I have come up with so far... but I concede it still
-> > > lacks elegance.
+Hi Xia,
+
+On Tue, Jun 30, 2020 at 10:56:21AM +0800, Xia Jiang wrote:
+> On Thu, 2020-06-11 at 18:46 +0000, Tomasz Figa wrote:
+> > Hi Xia,
 > > 
-> > Happy to add this or whatever folks want if there's agreement, but I
-> > don't want to get bogged down on re-reviewing and re-writing the
-> > binding on what is just a conversion. There's a mountain of bindings
-> > to convert.
-> The original explanation is ok, as pointed out by Daniel.
-> So I suggest moving forward with that and then others can improve the
-> descriptions later as necessary.
+> > On Thu, Jun 04, 2020 at 05:05:53PM +0800, Xia Jiang wrote:
+[snip]
+> > > +static void mtk_jpeg_enc_device_run(void *priv)
+> > > +{
+> > > +	struct mtk_jpeg_ctx *ctx = priv;
+> > > +	struct mtk_jpeg_dev *jpeg = ctx->jpeg;
+> > > +	struct vb2_v4l2_buffer *src_buf, *dst_buf;
+> > > +	enum vb2_buffer_state buf_state = VB2_BUF_STATE_ERROR;
+> > > +	unsigned long flags;
+> > > +	struct mtk_jpeg_src_buf *jpeg_src_buf;
+> > > +	struct mtk_jpeg_enc_bs enc_bs;
+> > > +	int ret;
+> > > +
+> > > +	src_buf = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+> > > +	dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+> > > +	jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(&src_buf->vb2_buf);
+> > > +
+> > > +	ret = pm_runtime_get_sync(jpeg->dev);
+> > > +	if (ret < 0)
+> > > +		goto enc_end;
+> > > +
+> > > +	spin_lock_irqsave(&jpeg->hw_lock, flags);
+> > > +
+> > > +	/*
+> > > +	 * Resetting the hardware every frame is to ensure that all the
+> > > +	 * registers are cleared. This is a hardware requirement.
+> > > +	 */
+> > > +	mtk_jpeg_enc_reset(jpeg->reg_base);
+> > > +
+> > > +	mtk_jpeg_set_enc_dst(ctx, jpeg->reg_base, &dst_buf->vb2_buf, &enc_bs);
+> > > +	mtk_jpeg_set_enc_src(ctx, jpeg->reg_base, &src_buf->vb2_buf);
+> > > +	mtk_jpeg_enc_set_config(jpeg->reg_base, ctx->out_q.fmt->hw_format,
+> > > +				ctx->enable_exif, ctx->enc_quality,
+> > > +				ctx->restart_interval);
+> > > +	mtk_jpeg_enc_start(jpeg->reg_base);
+> > 
+> > Could we just move the above 5 functions into one function inside
+> > mtk_jpeg_enc_hw.c that takes mtk_jpeg_dev pointer as its argument, let's
+> > say mtk_jpeg_enc_hw_run() and simply program all the data to the registers
+> > directly, without the extra level of abstractions?
+> I can move the 5 functions into one function(mtk_jpeg_enc_hw_run()), but
+> this function will be very long, because it contains computation code
+> such as setting dst addr, blk_num, quality.
+> In v4, you have adviced the following architecture:
+> How about the following model, as used by many other drivers:
+> 
+> mtk_jpeg_enc_set_src()
+> {
+>         // Set any registers related to source format and buffer
+> }
+> 
+> mtk_jpeg_enc_set_dst()
+> {
+>         // Set any registers related to destination format and buffer
+> }
+> 
+> mtk_jpeg_enc_set_params()
+> {
+>         // Set any registers related to additional encoding parameters
+> }
+> 
+> mtk_jpeg_enc_device_run(enc, ctx)
+> {
+>         mtk_jpeg_enc_set_src(enc, src_buf, src_fmt);
+>         mtk_jpeg_enc_set_dst(enc, dst_buf, dst_fmt);
+>         mtk_jpeg_enc_set_params(enc, ctx);
+>         // Trigger the hardware run
+> }
+> I think that this architecture is more clear(mtk_jpeg_enc_set_config is
+> equivalent to mtk_jpeg_enc_set_params).
+> Should I keep the original architecture or move 5 functions into
+> mtk_jpeg_enc_hw_run?
 
-That's fine for me to. It would be clearer in version history (improving
-definitions during a conversion hides them when mining the changelog).
+Sounds good to me.
 
+My biggest issue with the code that it ends up introducing one more
+level of abstraction, but with the approach you suggested, the arguments
+just accept standard structs, which avoids that problem.
 
-Daniel.
+[snip]
+> > > +
+> > > +	ctx->fh.ctrl_handler = &ctx->ctrl_hdl;
+> > > +	ctx->colorspace = V4L2_COLORSPACE_JPEG,
+> > > +	ctx->ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
+> > > +	ctx->quantization = V4L2_QUANTIZATION_DEFAULT;
+> > > +	ctx->xfer_func = V4L2_XFER_FUNC_DEFAULT;
+> > 
+> > Since we already have a v4l2_pix_format_mplane struct which has fields for
+> > the above 4 values, could we just store them there?
+> > 
+> > Also, I don't see this driver handling the colorspaces in any way, but it
+> > seems to allow changing them from the userspace. This is incorrect, because
+> > the userspace has no way to know that the colorspace is not handled.
+> > Instead, the try_fmt implementation should always override the
+> > userspace-provided colorspace configuration with the ones that the driver
+> > assumes.
+> > 
+> > > +	pix_mp->width = MTK_JPEG_MIN_WIDTH;
+> > > +	pix_mp->height = MTK_JPEG_MIN_HEIGHT;
+> > > +
+> > > +	q->fmt = mtk_jpeg_find_format(V4L2_PIX_FMT_YUYV,
+> > > +				      MTK_JPEG_FMT_FLAG_ENC_OUTPUT);
+> > > +	vidioc_try_fmt(container_of(pix_mp, struct v4l2_format,
+> > > +				    fmt.pix_mp), q->fmt);
+> > > +	q->w = pix_mp->width;
+> > > +	q->h = pix_mp->height;
+> > > +	q->crop_rect.width = pix_mp->width;
+> > > +	q->crop_rect.height = pix_mp->height;
+> > > +	q->sizeimage[0] = pix_mp->plane_fmt[0].sizeimage;
+> > > +	q->bytesperline[0] = pix_mp->plane_fmt[0].bytesperline;
+> > 
+> > Actually, do we need this custom mtk_jpeg_q_data struct? Why couldn't we
+> > just keep the same values inside the standard v4l2_pix_format_mplane
+> > struct?
+> I think that we need mtk_jpeg_q_data struct.If we delete it, how can we
+> know these values(w, h, sizeimage, bytesperline, mtk_jpeg_fmt) belong to
+> output or capture(output and capture's sizeimages are different, width
+> and height are differnt too for jpeg dec )?We have
+> s_fmt_vid_out_mplane/cap_mplane function to set these values.
+> 
+> But we can use standard v4l2_pix_format_mplane struct replacing the w, h
+> bytesperline, sizeimage in mtk_jpeg_q_data struct like this:
+> struct mtk_jpeg_q_data{
+> 	struct mtk_jpeg_fmt *fmt;
+> 	struct v4l2_pix_format_mplane pix_mp;
+> 	struct v4l2_rect enc_crop_rect
+> }
+> Then delete ctx->colorspace ctx->ycbcr_enc ctx->quantization
+> ctx->xfer_func, becuase v4l2_pix_format_mplane in q_data has contained
+> them and assign them for out_q and cap_q separately.
+> 
+> WDYT?
+
+Sounds good to me. I was considering just making it like
+
+struct mtk_jpeg_ctx {
+	struct mtk_jpeg_fmt *src_fmt;
+	struct v4l2_pix_format_mplane src_pix_mp;
+	struct v4l2_rect src_crop;
+
+	struct mtk_jpeg_fmt *dst_fmt;
+	struct v4l2_pix_format_mplane dst_pix_mp;
+	struct v4l2_rect dst_crop;
+};
+
+but I like your suggestion as well, as long as custom data structures
+are not used to store standard information.
+[snip]
+> > > @@ -1042,8 +1619,12 @@ static int mtk_jpeg_probe(struct platform_device *pdev)
+> > >  		return jpeg_irq;
+> > >  	}
+> > >  
+> > > -	ret = devm_request_irq(&pdev->dev, jpeg_irq, mtk_jpeg_dec_irq, 0,
+> > > -			       pdev->name, jpeg);
+> > > +	if (jpeg->variant->is_encoder)
+> > > +		ret = devm_request_irq(&pdev->dev, jpeg_irq, mtk_jpeg_enc_irq,
+> > > +				       0, pdev->name, jpeg);
+> > > +	else
+> > > +		ret = devm_request_irq(&pdev->dev, jpeg_irq, mtk_jpeg_dec_irq,
+> > > +				       0, pdev->name, jpeg);
+> > 
+> > Rather than having "is_encoder" in the variant struct, would it make more
+> > sense to have "irq_handler" instead? That would avoid the explicit if.
+> Do you mean to delete "is_encoder"? It is used 8 times in the
+> driver.Should I move them all to the match data?
+
+Yes. It would make the code linear and the varability between the
+decoder and encoder would be self-contained in the variant struct.
+
+Best regards,
+Tomasz
