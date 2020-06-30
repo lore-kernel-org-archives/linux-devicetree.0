@@ -2,158 +2,81 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDFE1C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 02:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D33C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 02:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9D8820722
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 02:23:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eqGvK2P0"
+	by mail.kernel.org (Postfix) with ESMTP id A3B4F2078A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 02:44:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbgF3CXD (ORCPT
+        id S1728633AbgF3Cn7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 29 Jun 2020 22:23:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728048AbgF3CXC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 29 Jun 2020 22:23:02 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B563C03E97A
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 19:23:02 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id s14so7845249plq.6
-        for <devicetree@vger.kernel.org>; Mon, 29 Jun 2020 19:23:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=D7EQW6LVu/0LCQVaLjrZlygqrUoX4J/4WhIdq95ups4=;
-        b=eqGvK2P0KbEv7YNVWM3sX4gdSuUS22MEImdYUCitDNbLwwQhlXEWVMN+sfnQfxSI7s
-         X3ZIBVg76VMnPRXZLDlylOoDN2aMsPdl82fJrcCwBMALeO9TkTUu4vmMLyek91DGMJKb
-         b5KkT4yWgiJNfABUQSLhbMG+6l8qMZK7pv24h3ZS18gqVw5Kq1LmRqmgHfUnSrdtbjfb
-         bSMaxciVuXntSrLmo3XqJ4Td/FraZqYIPvwoEXdWHAV/LeSKTk+BRhZOU2ypdssfZ/le
-         crp20QShS7XdaU+N1xz+B+0AbQA4L0rm24yak5coOERB5bK9q1uVAn7wadqkY1rG1c13
-         CMwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=D7EQW6LVu/0LCQVaLjrZlygqrUoX4J/4WhIdq95ups4=;
-        b=C2/LBRX+p+teC6SswtIdcu40sBeoO9sY5E71wstuhLdAh1XJ7CFlLexodxO+ySUDS4
-         CjCoC5Yxk1RDcJVvT1PqYWqrCTa8aixFajS+FwzkW47TFVD3viQwtjOrDv35Ylin2SJK
-         b5SpFj8SPjUPM7OTZN0R1l/2wQXtnwoPVSeiLF/zrQit2VIndD5HYC3sBVixrPofCYLB
-         wWX3WuCKEiJ9cx2l3rbIjBUJSaKM3/pK4VXR/zyZ4URFa8T3PMYwln3vjgAKKLTlvwXJ
-         IdIdeRTsKJR5TkYogI/amLloC7hVHDqdKgzYUYSXoCBsE/bjjEwUCpNyCN1IEQkFsxfl
-         F3Rg==
-X-Gm-Message-State: AOAM530O595nc6QpRfDPi4jVXyn8DVZ2u8+HuKPamDsxUSKq3yWaLAs9
-        g5qOT3Al6ZZe05tPYCyiXX8nqw==
-X-Google-Smtp-Source: ABdhPJzrYacdOd5DIB52tslC3wsLFea6Uoc0i4RCCBB1Jf0xYsnX6xU+fppqQC3njjiitgbGDm3/BQ==
-X-Received: by 2002:a17:90a:20e9:: with SMTP id f96mr20462600pjg.13.1593483781624;
-        Mon, 29 Jun 2020 19:23:01 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id j19sm819933pfn.109.2020.06.29.19.23.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 19:23:00 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 19:20:29 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Stefano Stabellini <stefano.stabellini@xilinx.com>
-Cc:     Rob Herring <robh@kernel.org>, Ben Levinsky <BLEVINSK@xilinx.com>,
-        "ohad@wizery.com" <ohad@wizery.com>,
-        Michal Simek <michals@xilinx.com>,
-        Jolly Shah <JOLLYS@xilinx.com>, Rajan Vaja <RAJANV@xilinx.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stefano Stabellini <stefanos@xilinx.com>
-Subject: Re: [PATCH v4 4/5] dt-bindings: remoteproc: Add documentation for
- ZynqMP R5 rproc bindings
-Message-ID: <20200630022029.GC407764@builder.lan>
-References: <1587749770-15082-1-git-send-email-ben.levinsky@xilinx.com>
- <1587749770-15082-5-git-send-email-ben.levinsky@xilinx.com>
- <20200511221755.GA13585@bogus>
- <BYAPR02MB44077C8B7B7FD23FDE8E31B8B5B00@BYAPR02MB4407.namprd02.prod.outlook.com>
- <CAL_JsqLGo380SRYska+xGgJhgF8NCRvY56ewafvSCU6c-LmhZw@mail.gmail.com>
- <alpine.DEB.2.21.2006291734370.8121@sstabellini-ThinkPad-T480s>
+        Mon, 29 Jun 2020 22:43:59 -0400
+Received: from mga09.intel.com ([134.134.136.24]:35120 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725988AbgF3Cn6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 29 Jun 2020 22:43:58 -0400
+IronPort-SDR: 0eYd3uo7oYVeK9QNa+JpdZYu4vtcc4UN4h5UmBJOI9f0IHvoVSMK+dmMz0d744792hiVfHlq1x
+ gq1Bp1oChEUg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="147678580"
+X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
+   d="scan'208";a="147678580"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 19:43:58 -0700
+IronPort-SDR: xkDX+TYq9LZuJz0dItZ/6FPZqkq5q9DFqkIgenfjuiSfv3L+nY4EJ+S8HK+UDM0w5GDCRebgZ6
+ T7ze+QW53OxQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
+   d="scan'208";a="425040347"
+Received: from lkp-server01.sh.intel.com (HELO 28879958b202) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 29 Jun 2020 19:43:56 -0700
+Received: from kbuild by 28879958b202 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jq6FX-0001IQ-V5; Tue, 30 Jun 2020 02:43:55 +0000
+Date:   Tue, 30 Jun 2020 10:43:10 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     alexandru.tachici@analog.com, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     kbuild-all@lists.01.org, robh+dt@kernel.org, linux@roeck-us.net,
+        Alexandru Tachici <alexandru.tachici@analog.com>
+Subject: [RFC PATCH] hwmon: pmbus: adm1266: pmbus_block_xfer() can be static
+Message-ID: <20200630024310.GA23779@89284d6ea506>
+References: <20200624151736.95785-3-alexandru.tachici@analog.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2006291734370.8121@sstabellini-ThinkPad-T480s>
+In-Reply-To: <20200624151736.95785-3-alexandru.tachici@analog.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon 29 Jun 17:37 PDT 2020, Stefano Stabellini wrote:
 
-> On Wed, 10 Jun 2020, Rob Herring wrote:
-> > On Tue, May 26, 2020 at 11:40 AM Ben Levinsky <BLEVINSK@xilinx.com> wrote:
-> > >
-> > > Hi Rob,
-> > >
-> > > The Xilinx R5 Remoteproc driver has been around for a long time -- admittedly we should have upstreamed it long ago. The driver in the current form is using an "classic" remoteproc device tree node as described here.
-> > 
-> > I would rather not have 2 possible bindings to maintain. If there's
-> > been no rush to upstream this til now, then it can wait longer.
-> > 
-> > >
-> > > I am working with Stefano to come up with an appropriate System Device Tree representation but it is not going to be ready right away. Our preference would be to upstream the remoteproc node and driver in their current forms while system device tree is maturing.
-> > 
-> > There's obviously going to still need to be some sort of description
-> > of the interface between cores, but this has parts that obviously
-> > conflict with what's getting defined for system DT. The TCMs are the
-> > most obvious. If you can remove (or hardcode in the driver) what
-> > conflicts, then perhaps this can be upstreamed now.
-> 
-> 
-> Hi Rob,
-> 
-> Sorry it took a while to answer back but we wanted to do some research
-> to make sure the reply is correct.
-> 
-> 
-> The System Device Tree version of the OpenAMP remoteproc bindings aims
-> at being simpler and vendor-neutral. As anything else System Device
-> Tree, Lopper will read it and generate a "traditional" device tree with
-> the existing remoteproc bindings. In that sense, it might not affect
-> Linux directly.
-> 
+Signed-off-by: kernel test robot <lkp@intel.com>
+---
+ adm1266.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Can you give some examples of how you will be able to describe the
-hardware involved in powering/clocking resources surrounding your
-remoteproc and the necessary resources in a "simpler and vendor neutral"
-way that then can be further lopped(?) into something that Linux can use
-to control any remoteproc?
-
-> However, given the fragmentation of the remoteproc bindings across
-> multiple vendors (they are all different), I think it is a good idea for
-> Linux, for System Device Tree, and in general to come up with simpler
-> remoteproc bindings, more aligned between the vendors. If nothing else,
-> it is going to make Lopper's development easier.
-> 
-
-In my view the big reason for the fragmentation between bindings is
-because they all describe different hardware. There has been common
-properties of remoteprocs discussed, but apart from the firmware-name
-property I don't think we have agreed on any.
-
-> 
-> So I think it is a good idea to take this opportunity to simplify the
-> Xilinx remoteproc bindings as you suggested. The idea of to removing the
-> TCM nodes is a good one. In addition I asked Ben to have a look at
-> whether the mboxes and mbox-names properties can be removed too.
-> 
-
-If your remoteproc uses a mailbox for signaling, then this should be
-described in devicetree. This will allow you to reuse components in
-other designs where either part is replaced or reused.
-
-Regards,
-Bjorn
-
-> Ben will reply with a simplified bindings proposal.
+diff --git a/drivers/hwmon/pmbus/adm1266.c b/drivers/hwmon/pmbus/adm1266.c
+index 381d89a8569f2..1aa3f0a738151 100644
+--- a/drivers/hwmon/pmbus/adm1266.c
++++ b/drivers/hwmon/pmbus/adm1266.c
+@@ -24,8 +24,8 @@ DECLARE_CRC8_TABLE(pmbus_crc_table);
+  * followed by a Read Block without the Read-Block command field and the
+  * Write-Block STOP bit.
+  */
+-int pmbus_block_xfer(struct i2c_client *client, u8 cmd, u8 w_len,
+-		     u8 *data_w, u8 *data_r)
++static int pmbus_block_xfer(struct i2c_client *client, u8 cmd, u8 w_len,
++			    u8 *data_w, u8 *data_r)
+ {
+ 	u8 write_buf[ADM1266_PMBUS_BLOCK_MAX + 2];
+ 	struct i2c_msg msgs[2] = {
