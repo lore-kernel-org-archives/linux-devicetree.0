@@ -2,127 +2,107 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB60C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 12:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 310A7C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 12:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F5F820774
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 12:32:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 039E12083E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 12:57:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iB1u14VG"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Xx2bl8JE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732804AbgF3McA (ORCPT
+        id S2388043AbgF3M54 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 08:32:00 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:35704 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732042AbgF3Mb7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 30 Jun 2020 08:31:59 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593520318; h=Message-ID: References: In-Reply-To: Subject:
- To: From: Date: Content-Transfer-Encoding: Content-Type: MIME-Version:
- Sender; bh=k0MdTyKtV4z22dAVkmjS3nxPgaMUlZ3id20kmVJEhWM=; b=iB1u14VGapzOLtu3Yg284PV+XPuo9R6a8qy17AB+ThH3xZTgtQcvC/7dmrg2QUK2o58WFVqa
- 7UKWWZ6D2P2o9oV9B1RNbdwqHBixic69q2bKM3x1vMvjnoIE5QJwehFcj16ZDm1p22oQDlrq
- wR+89M2nEs7kTD3yKiUInYMnBdE=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n13.prod.us-east-1.postgun.com with SMTP id
- 5efb30b1c4bb4f886db6ea4b (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 30 Jun 2020 12:31:45
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4C166C4339C; Tue, 30 Jun 2020 12:31:44 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: gokulsri)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9A0D0C433C8;
-        Tue, 30 Jun 2020 12:31:43 +0000 (UTC)
+        Tue, 30 Jun 2020 08:57:56 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:34212 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387952AbgF3M54 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 08:57:56 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05UCvnbu027125;
+        Tue, 30 Jun 2020 07:57:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593521869;
+        bh=ccAR2l5UfUJRa3XDJKA2gVG365Re+jn/ntZxzTY+wzw=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=Xx2bl8JEFAGH+cr++w2VSP0tU+LNhAA6+sVBFC4zCn4YcTY8JSYhDx/0ZaL4dxW6+
+         0ZjNYZuKNSZ32hJvaXUWKd0bJO7HPfBNf7RYoS/eEEpRz8fdQ6JfZ1zJQo7zY6CRn+
+         AdcLETWcXgXFN+YRYn3z6oSeelPsSRRA3QKvDsoA=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05UCvnFL081788
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 30 Jun 2020 07:57:49 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 30
+ Jun 2020 07:57:48 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 30 Jun 2020 07:57:48 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05UCviAJ084334;
+        Tue, 30 Jun 2020 07:57:47 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <broonie@kernel.org>, <lgirdwood@gmail.com>, <robh+dt@kernel.org>
+CC:     <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 1/3] ASoC: ti: davinci-mcasp: Specify stream_name for playback/capture
+Date:   Tue, 30 Jun 2020 15:58:41 +0300
+Message-ID: <20200630125843.11561-2-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200630125843.11561-1-peter.ujfalusi@ti.com>
+References: <20200630125843.11561-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 30 Jun 2020 18:01:43 +0530
-From:   gokulsri@codeaurora.org
-To:     gokulsri@codeaurora.org, sboyd@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, david.brown@linaro.org,
-        devicetree@vger.kernel.org, jassisinghbrar@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        mark.rutland@arm.com, mturquette@baylibre.com, ohad@wizery.com,
-        robh+dt@kernel.org, sricharan@codeaurora.org,
-        nprakash@codeaurora.org
-Subject: Re: [PATCH V5 00/10] remoteproc: qcom: q6v5-wcss: Add support for
- secure pil
-In-Reply-To: <1589362265-22702-1-git-send-email-gokulsri@codeaurora.org>
-References: <1589362265-22702-1-git-send-email-gokulsri@codeaurora.org>
-Message-ID: <14579d9dbcc06bca392b41ace1b0ce49@codeaurora.org>
-X-Sender: gokulsri@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-  Hi Bjorn,
-  My below patch series (https://patchwork.kernel.org/cover/11545511/) 
-with all the review comments addressed and this is on top of
-  Govind's series (https://patchwork.kernel.org/cover/11060629/) "[v5] 
-"Add non PAS wcss Q6 support for QCS404".
-  Need your help to know how should I proceed further to merge these 
-patches.
+In order to dai stream widgets to be created the stream_name must be set.
 
-  Regards,
-  Gokul
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ sound/soc/ti/davinci-mcasp.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-On 2020-05-13 15:00, Gokul Sriram Palanisamy wrote:
-> IPQ8074 needs support for secure pil as well.
-> Also, currently only unified firmware is supported.
-> IPQ8074 supports split firmware for q6 and m3, so
-> adding support for that.
-> 
-> This series is based on Govind's
-> "[v5] Add non PAS wcss Q6 support for QCS404"
-> 
-> changes since v4:
->  - Rebased patch 8
-> 
-> changes since v3:
->  - In patch 10, Added release_firmware to free up
->    memory requested for m3 firmware.
-> 
-> changes since v2:
->  - In patch 5, Added a driver data 'bcr_reset_required'
->    to select if bcr reset is required
->  - In patch 10, Removed syscon implementation and moved
->    to mailbox framework to access APCS IPC
-> 
-> changes since v1:
->  - In patch 10, Addressed minor review comments.
-> 
-> Gokul Sriram Palanisamy (10):
->   remoteproc: qcom: Add PRNG proxy clock
->   remoteproc: qcom: Add secure PIL support
->   remoteproc: qcom: Add support for split q6 + m3 wlan firmware
->   remoteproc: qcom: Add ssr subdevice identifier
->   remoteproc: qcom: Update regmap offsets for halt register
->   dt-bindings: clock: qcom: Add reset for WCSSAON
->   clk: qcom: Add WCSSAON reset
->   dt-bindings: firmware: qcom: Add compatible for IPQ8074 SoC
->   arm64: dts: Add support for scm on IPQ8074 SoCs
->   arm64: dts: qcom: Enable Q6v5 WCSS for ipq8074 SoC
-> 
->  .../devicetree/bindings/firmware/qcom,scm.txt      |   1 +
->  arch/arm64/boot/dts/qcom/ipq8074.dtsi              | 127 
-> +++++++++++++++++
->  drivers/clk/qcom/gcc-ipq8074.c                     |   1 +
->  drivers/remoteproc/qcom_q6v5_wcss.c                | 157 
-> +++++++++++++++++----
->  include/dt-bindings/clock/qcom,gcc-ipq8074.h       |   1 +
->  5 files changed, 258 insertions(+), 29 deletions(-)
+diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
+index b93c1ee302c0..617440767c45 100644
+--- a/sound/soc/ti/davinci-mcasp.c
++++ b/sound/soc/ti/davinci-mcasp.c
+@@ -1623,12 +1623,14 @@ static struct snd_soc_dai_driver davinci_mcasp_dai[] = {
+ 		.name		= "davinci-mcasp.0",
+ 		.probe		= davinci_mcasp_dai_probe,
+ 		.playback	= {
++			.stream_name = "IIS Playback",
+ 			.channels_min	= 1,
+ 			.channels_max	= 32 * 16,
+ 			.rates 		= DAVINCI_MCASP_RATES,
+ 			.formats	= DAVINCI_MCASP_PCM_FMTS,
+ 		},
+ 		.capture 	= {
++			.stream_name = "IIS Capture",
+ 			.channels_min 	= 1,
+ 			.channels_max	= 32 * 16,
+ 			.rates 		= DAVINCI_MCASP_RATES,
+@@ -1642,6 +1644,7 @@ static struct snd_soc_dai_driver davinci_mcasp_dai[] = {
+ 		.name		= "davinci-mcasp.1",
+ 		.probe		= davinci_mcasp_dai_probe,
+ 		.playback 	= {
++			.stream_name = "DIT Playback",
+ 			.channels_min	= 1,
+ 			.channels_max	= 384,
+ 			.rates		= DAVINCI_MCASP_RATES,
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
