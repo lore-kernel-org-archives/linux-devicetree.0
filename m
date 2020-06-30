@@ -2,317 +2,106 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41499C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 11:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2524C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 11:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 153A22067D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 11:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD2E82067D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 11:03:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="leaEwUhl"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="d5UVI0cD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732578AbgF3LBn (ORCPT
+        id S1732814AbgF3LD1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 07:01:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729924AbgF3LBm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 07:01:42 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FC8BC061755;
-        Tue, 30 Jun 2020 04:01:42 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id cv18so4086575pjb.1;
-        Tue, 30 Jun 2020 04:01:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=gEzbAtWIsd1iT+azfZmBohV/AqNwaJqbCk/ZUwUKLT0=;
-        b=leaEwUhlrx1gy/9yiqVISsuLabInmyXc8xDGKZVpuptAILgjdqoaqwXFngch1HLIrL
-         o5RCszW3eAbDwYoKQbKGUvelfXsvCtVhg+hy8tGNj+Gd2KqMH2GXXNDS2AyYcs3LXWUm
-         UAV2MnaDf51VDC0CeL6lvg/ozSDerA3hqBX1ZiVMu0efFY4UYrnjtgCdpyTSso2KpNu5
-         Je0ZeWsVXrR6prPCxCXOajTM9WPNWhgwz2QwZ4uV6D1vEJ6z/gDDQdSPk6UnaW1dc98V
-         h96WHVDFNzysBcOgQACRLDyU67m2qlCt6epxAk6MNmi95CQlUSrbl5njXSSiXGvkBMWv
-         Xakg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=gEzbAtWIsd1iT+azfZmBohV/AqNwaJqbCk/ZUwUKLT0=;
-        b=HKa2bV2ooj8/tW0qhZ1vWhsUTd9y5FScUXL0KSMDpQpxd5SVd6keduAJ1bwwQTCoUR
-         fr1djIaFPBg2Hsz66VN37PfoeiL5JgAmtpc/Ay95aYZEN+xbaL2dD9CuM7mKacy6fEdV
-         zHmx1xQ21zU9YtRXgQdRQUb+T+7Wd1z3Z4WxtCG6zQ4HuBSjnfIvfE0DLPR86eIkUyS9
-         GLT1KwIVPiWZ+9hICxv1uoL6QSQcRXNOj3+FybrIIVh2wugWBr7/du9DTOzqpxuM2L44
-         x1XX9MYrKacytHy3RHAukCqqCCjzhKZZ2mzc+BAdmOfD7ppfbHoZ/vQULieqZN3Ur+gw
-         MCAQ==
-X-Gm-Message-State: AOAM533s0nuRM3/6zP4MtuZdw9mFKCYNS2ij6sWREA7N7hzvHgYx1XIX
-        qUpLrZMbbsVqDpL5KfZwncw=
-X-Google-Smtp-Source: ABdhPJyREwXSVODTdzfEGftFAjOVrLZfFcROPLoHe2lnXV7IrZg4RB3U1hWtLlG2eK4lLlLalR/zhw==
-X-Received: by 2002:a17:90b:24a:: with SMTP id fz10mr18849189pjb.36.1593514901642;
-        Tue, 30 Jun 2020 04:01:41 -0700 (PDT)
-Received: from in099003062.routereb3c90.com ([106.51.138.45])
-        by smtp.gmail.com with ESMTPSA id j36sm2487231pgj.39.2020.06.30.04.01.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 04:01:40 -0700 (PDT)
-From:   Vinay Simha BN <simhavcs@gmail.com>
-Cc:     Vinay Simha BN <simhavcs@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v4 1/2] dt-binding: Add DSI/LVDS TC358775 bridge bindings
-Date:   Tue, 30 Jun 2020 16:31:12 +0530
-Message-Id: <20200630110119.11885-1-simhavcs@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Tue, 30 Jun 2020 07:03:27 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:60755 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729924AbgF3LD0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 07:03:26 -0400
+X-UUID: b09a279ec0ae4986aea6504e62e75534-20200630
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=95kISZUSvb1i6OWzMABsaIUaNlAlruFq+xXF6/0ThCQ=;
+        b=d5UVI0cDtCN5mJT9R0W64vMR7q1TVlSamYwBrxPshjmdLLEIgX2V1ZDieKn0VbY3mpE01KjpnKXcOJmX2jQ7XGCv4NvzAZc/8FV2sLjAfJ4lU6856rmkhkxxn4px3AaebX7Z4o39GN0jDBDl6tiDgeLIVsVChX2f/izYb6ZEm3Y=;
+X-UUID: b09a279ec0ae4986aea6504e62e75534-20200630
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <chao.hao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 108669166; Tue, 30 Jun 2020 19:03:23 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 30 Jun 2020 19:03:20 +0800
+Received: from [10.15.20.246] (10.15.20.246) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 30 Jun 2020 19:03:19 +0800
+Message-ID: <1593514941.13270.6.camel@mbjsdccf07>
+Subject: Re: [PATCH v5 09/10] iommu/mediatek: Modify MMU_CTRL register
+ setting
+From:   chao hao <Chao.Hao@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
+        "Yong Wu" <yong.wu@mediatek.com>,
+        Evan Green <evgreen@chromium.org>,
+        <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        FY Yang <fy.yang@mediatek.com>,
+        Chao Hao <chao.hao@mediatek.com>
+Date:   Tue, 30 Jun 2020 19:02:21 +0800
+In-Reply-To: <e063a5d2-8edc-9cf9-4872-d3f4abb1e481@gmail.com>
+References: <20200629071310.1557-1-chao.hao@mediatek.com>
+         <20200629071310.1557-10-chao.hao@mediatek.com>
+         <e063a5d2-8edc-9cf9-4872-d3f4abb1e481@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This driver is tested with two panels with Apq8016-IFC6309 board
-https://www.inforcecomputing.com/products/single-board-computers-sbc/qualcomm-snapdragon-410-inforce-6309-micro-sbc
-
-1. 1366x768@60 auo,b101xtn01 data-mapping = "jeida-24"
-2. 800x480@60 innolux,at070tn92 data-mapping = "vesa-24"
-
-Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
-
----
-v1:
- Initial version wast .txt file
-
-v2:
- From txt to yaml file format
-
-v3:
-* Andrzej Hajda review comments incorporated
-  dual port lvds implemented
-
-* Laurent Pinchart review comments incorporated
-  dsi lanes property removed and it is dynamically
-  picked from the dsi ports
-  VESA/JEIDA format picked from panel-lvds dts
----
- .../display/bridge/toshiba,tc358775.yaml      | 204 ++++++++++++++++++
- 1 file changed, 204 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
-
-diff --git a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
-new file mode 100644
-index 000000000000..ec53d62d408b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
-@@ -0,0 +1,204 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/toshiba,tc358775.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Toshiba TC358775 DSI to LVDS bridge bindings
-+
-+maintainers:
-+ - Vinay Simha BN <simhavcs@gmail.com>
-+
-+description: |
-+ This binding supports DSI to LVDS bridge TC358775
-+
-+properties:
-+  compatible:
-+    const: toshiba,tc358775
-+
-+  reg:
-+    maxItems: 1
-+    description: i2c address of the bridge, 0x0f
-+
-+  vdd-supply:
-+    maxItems: 1
-+    description:  1.2V LVDS Power Supply
-+
-+  vddio-supply:
-+    maxItems: 1
-+    description: 1.8V IO Power Supply
-+
-+  stby-gpios:
-+    maxItems: 1
-+    description: Standby pin, Low active
-+
-+  reset-gpios:
-+    maxItems: 1
-+    description: Hardware reset, Low active
-+
-+  ports:
-+    type: object
-+    description:
-+      A node containing input and output port nodes with endpoint definitions
-+      as documented in
-+      Documentation/devicetree/bindings/media/video-interfaces.txt
-+    properties:
-+      "#address-cells":
-+        const: 1
-+
-+      "#size-cells":
-+        const: 0
-+
-+      port@0:
-+        type: object
-+        description: |
-+          DSI Input. The remote endpoint phandle should be a
-+          reference to a valid mipi_dsi_host device node.
-+
-+      port@1:
-+        type: object
-+        description: |
-+          Video port for LVDS output (panel or connector).
-+
-+      port@2:
-+        type: object
-+        description: |
-+          Video port for Dual link LVDS output (panel or connector).
-+
-+    required:
-+      - port@0
-+      - port@1
-+
-+required:
-+ - compatible
-+ - reg
-+ - vdd-supply
-+ - vddio-supply
-+ - stby-gpios
-+ - reset-gpios
-+ - ports
-+
-+examples:
-+ - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    i2c@78b8000 {
-+        /* On High speed expansion */
-+        label = "HS-I2C2";
-+        reg = <0x078b8000 0x500>;
-+        clock-frequency = <400000>; /* fastmode operation */
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        tc_bridge: bridge@f {
-+            compatible = "toshiba,tc358775";
-+            reg = <0x0f>;
-+
-+            vdd-supply = <&pm8916_l2>;
-+            vddio-supply = <&pm8916_l6>;
-+
-+            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
-+            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
-+
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                port@0 {
-+                    reg = <0>;
-+                    d2l_in_test: endpoint {
-+                        remote-endpoint = <&dsi0_out>;
-+                    };
-+                };
-+
-+                port@1 {
-+                    reg = <1>;
-+                    lvds_out: endpoint {
-+                        remote-endpoint = <&panel_in>;
-+                    };
-+                };
-+            };
-+        };
-+    };
-+
-+    dsi@1a98000 {
-+        reg = <0x1a98000 0x25c>;
-+        reg-names = "dsi_ctrl";
-+
-+        ports {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            port@1 {
-+                reg = <1>;
-+                dsi0_out: endpoint {
-+                    remote-endpoint = <&d2l_in_test>;
-+                        data-lanes = <0 1 2 3>;
-+                };
-+             };
-+         };
-+     };
-+
-+ - |
-+    i2c@78b8000 {
-+        /* On High speed expansion */
-+        label = "HS-I2C2";
-+        reg = <0x078b8000 0x500>;
-+        clock-frequency = <400000>; /* fastmode operation */
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        tc_bridge_dual: bridge@f {
-+            compatible = "toshiba,tc358775";
-+            reg = <0x0f>;
-+
-+            vdd-supply = <&pm8916_l2>;
-+            vddio-supply = <&pm8916_l6>;
-+
-+            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
-+            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
-+
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                port@0 {
-+                    reg = <0>;
-+                    d2l_in_dual: endpoint {
-+                        remote-endpoint = <&dsi0_out_dual>;
-+                    };
-+                };
-+
-+                port@1 {
-+                    reg = <1>;
-+                    lvds0_out: endpoint {
-+                        remote-endpoint = <&panel_in0>;
-+                    };
-+                };
-+
-+                port@2 {
-+                    reg = <2>;
-+                    lvds1_out: endpoint {
-+                        remote-endpoint = <&panel_in1>;
-+                    };
-+                };
-+            };
-+        };
-+    };
-+
-+    dsi@1a98000 {
-+        reg = <0x1a98000 0x25c>;
-+        reg-names = "dsi_ctrl";
-+
-+        ports {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            port@1 {
-+                reg = <1>;
-+                dsi0_out_dual: endpoint {
-+                    remote-endpoint = <&d2l_in_dual>;
-+                        data-lanes = <0 1 2 3>;
-+                };
-+             };
-+         };
-+     };
-+...
--- 
-2.17.1
+T24gTW9uLCAyMDIwLTA2LTI5IGF0IDEyOjI4ICswMjAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
+Og0KPiANCj4gT24gMjkvMDYvMjAyMCAwOToxMywgQ2hhbyBIYW8gd3JvdGU6DQo+ID4gTVQ4MTcz
+IGlzIGRpZmZlcmVudCBmcm9tIG90aGVyIFNvQ3MgZm9yIE1NVV9DVFJMIHJlZ2lzdGVyLg0KPiA+
+IEZvciBtdDgxNzMsIGl0cyBiaXQ5IGlzIGluX29yZGVyX3dyaXRlX2VuIGFuZCBkb2Vzbid0IHVz
+ZSBpdHMNCj4gPiBkZWZhdWx0IDEnYjEuPiBGb3Igb3RoZXIgU29DcywgYml0WzEyXSByZXByZXNl
+bnRzIHZpY3RpbV90bGJfZW4gZmVhdHVyZSBhbmQNCj4gPiB2aWN0aW1fdGxiIGlzIGVuYWJsZSBk
+ZWZhdWx0bHkoYml0WzEyXT0xKSwgaWYgd2UgdXNlDQo+ID4gInJlZ3ZhbCA9IEZfTU1VX1RGX1BS
+T1RfVE9fUFJPR1JBTV9BRERSIiwgdmljdGltX3RsYiB3aWxsIGJlDQo+ID4gZGlzYWJsZWQsIGl0
+IHdpbGwgZHJvcCBpb21tdSBwZXJmb3JtYWNlLg0KPiA+IFNvIHdlIG5lZWQgdG8gZGVhbCB3aXRo
+IHRoZSBzZXR0aW5nIG9mIE1NVV9DVFJMIHNlcGFyYXRlbHkNCj4gPiBmb3IgbXQ4MTczIGFuZCBv
+dGhlcnMuDQo+ID4gDQo+IA0KPiBNeSBwcm9wb3NhbCB0byByZXdyaXRlIHRoZSBjb21taXQgbWVz
+c2FnZToNCj4gDQo+IFRoZSBNTVVfQ1RSTCByZWdpc2VyIG9mIE1UODE3MyBpcyBkaWZmZXJlbnQg
+ZnJvbSBvdGhlciBTb0NzLiBUaGUgaW5fb3JkZXJfd3JfZW4NCj4gaXMgYml0WzldIHdoaWNoIGlz
+IHplcm8gYnkgZGVmYXVsdC4NCj4gT3RoZXIgU29DcyBoYXZlIHRoZSB2aXRjaW1fdGxiX2VuIGZl
+YXR1cmUgbWFwcGVkIHRvIGJpdFsxMl0uIFRoaXMgYml0IGlzIHNldCB0bw0KPiBvbmUgYnkgZGVm
+YXVsdC4gV2UgbmVlZCB0byBwcmVzZXJ2ZSB0aGUgYml0IHdoZW4gc2V0dGluZw0KPiBGX01NVV9U
+Rl9QUk9UX1RPX1BST0dSQU1fQUREUiBhcyBvdGhlcndpc2UgdGhlIGJpdCB3aWxsIGJlIGNsZWFy
+ZWQgYW5kIElPTU1VDQo+IHBlcmZvcm1hbmNlIHdpbGwgZHJvcC4NCg0KZ290IGl0LCB0aGFua3Mg
+Zm9yIHlvdXIgYWR2aWNlIHZlcnkgbXVjaC4NCg0KPiANCj4gDQo+ID4gU3VnZ2VzdGVkLWJ5OiBN
+YXR0aGlhcyBCcnVnZ2VyIDxtYXR0aGlhcy5iZ2dAZ21haWwuY29tPg0KPiA+IFN1Z2dlc3RlZC1i
+eTogWW9uZyBXdSA8eW9uZy53dUBtZWRpYXRlay5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogQ2hh
+byBIYW8gPGNoYW8uaGFvQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9pb21t
+dS9tdGtfaW9tbXUuYyB8IDMgKystDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMo
+KyksIDEgZGVsZXRpb24oLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pb21tdS9t
+dGtfaW9tbXUuYyBiL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmMNCj4gPiBpbmRleCA4Mjk5YTMy
+OTkwOTAuLmU0NmUyZGVlZTNmZCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2lvbW11L210a19p
+b21tdS5jDQo+ID4gKysrIGIvZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuYw0KPiA+IEBAIC01NDMs
+MTEgKzU0MywxMiBAQCBzdGF0aWMgaW50IG10a19pb21tdV9od19pbml0KGNvbnN0IHN0cnVjdCBt
+dGtfaW9tbXVfZGF0YSAqZGF0YSkNCj4gPiAgCQlyZXR1cm4gcmV0Ow0KPiA+ICAJfQ0KPiA+ICAN
+Cj4gPiArCXJlZ3ZhbCA9IHJlYWRsX3JlbGF4ZWQoZGF0YS0+YmFzZSArIFJFR19NTVVfQ1RSTF9S
+RUcpOw0KPiANCj4gVGhlIHJlYWQgaXMgb25seSBuZWVkZWQgaW4gdGhlIGVsc2UgYnJhbmNoLg0K
+PiANCm9rLCB0aGFua3MNCg0KPiA+ICAJaWYgKGRhdGEtPnBsYXRfZGF0YS0+bTR1X3BsYXQgPT0g
+TTRVX01UODE3MykNCj4gPiAgCQlyZWd2YWwgPSBGX01NVV9QUkVGRVRDSF9SVF9SRVBMQUNFX01P
+RCB8DQo+ID4gIAkJCSBGX01NVV9URl9QUk9UX1RPX1BST0dSQU1fQUREUl9NVDgxNzM7DQo+ID4g
+IAllbHNlDQo+ID4gLQkJcmVndmFsID0gRl9NTVVfVEZfUFJPVF9UT19QUk9HUkFNX0FERFI7DQo+
+ID4gKwkJcmVndmFsIHw9IEZfTU1VX1RGX1BST1RfVE9fUFJPR1JBTV9BRERSOw0KPiA+ICAJd3Jp
+dGVsX3JlbGF4ZWQocmVndmFsLCBkYXRhLT5iYXNlICsgUkVHX01NVV9DVFJMX1JFRyk7DQo+ID4g
+IA0KPiA+ICAJcmVndmFsID0gRl9MMl9NVUxJVF9ISVRfRU4gfA0KPiA+IA0KDQo=
 
