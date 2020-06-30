@@ -2,100 +2,90 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C31DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 08:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A16C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 08:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBFAE20775
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 08:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7836206BE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 08:45:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rozF7XQ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731227AbgF3I3r (ORCPT
+        id S1731635AbgF3Ipu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 04:29:47 -0400
-Received: from mx.socionext.com ([202.248.49.38]:39572 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727059AbgF3I3r (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 30 Jun 2020 04:29:47 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 30 Jun 2020 17:29:45 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 1E273180B3C;
-        Tue, 30 Jun 2020 17:29:45 +0900 (JST)
-Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Tue, 30 Jun 2020 17:29:45 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by iyokan.css.socionext.com (Postfix) with ESMTP id 8DADB40362;
-        Tue, 30 Jun 2020 17:29:44 +0900 (JST)
-Received: from [10.213.29.165] (unknown [10.213.29.165])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 23E46120415;
-        Tue, 30 Jun 2020 17:29:44 +0900 (JST)
-Subject: Re: [PATCH 1/2] dt-bindings: phy: Add UniPhier AHCI PHY description
-To:     Rob Herring <robh@kernel.org>
-Cc:     Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-References: <1592534207-13550-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1592534207-13550-2-git-send-email-hayashi.kunihiko@socionext.com>
- <20200629215520.GA2998145@bogus>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <329e5fb4-7fad-3d67-a797-5f31cf7ab9d7@socionext.com>
-Date:   Tue, 30 Jun 2020 17:29:43 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200629215520.GA2998145@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 30 Jun 2020 04:45:50 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:38250 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731592AbgF3Ipu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 30 Jun 2020 04:45:50 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593506749; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=rAKtccetH34TV6x/upG9acuC1zVPFGS1zzbOIvOup1g=; b=rozF7XQ0XKnetiQGaDw+rQ3nY0eR67QdMBqo7m5bJ2kI2+QygEadTqN+b7smpYNkSIPvZqxA
+ s6wm35sdVJV72TU4KJbcYjmk+EU/2n9Msa1wcQFYf64PkQL2QMD486DTQO44WxrJEDRENPKV
+ nkL8/xxUsadkWMzkp3E/t6ojHjo=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n13.prod.us-east-1.postgun.com with SMTP id
+ 5efafbac86de6ccd44db6f94 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 30 Jun 2020 08:45:32
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DAF28C43395; Tue, 30 Jun 2020 08:45:31 +0000 (UTC)
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3C108C433C8;
+        Tue, 30 Jun 2020 08:45:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3C108C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH 0/4] sdm845/sc7180: Add OPP tables to support IO DVFS
+Date:   Tue, 30 Jun 2020 14:15:08 +0530
+Message-Id: <1593506712-24557-1-git-send-email-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Driver changes to support DVFS for sdhc and qup (uart and spi) have been merged.
+Add OPP tables and power-domains in device tree to enable support for
+DVFS in these devices, on sdm845 and sc7180 SoC platforms.
 
-On 2020/06/30 6:55, Rob Herring wrote:
-> On Fri, 19 Jun 2020 11:36:46 +0900, Kunihiko Hayashi wrote:
->> Add DT bindings for PHY interface built into ahci controller implemented
->> in UniPhier SoCs.
->>
->> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->> ---
->>   .../bindings/phy/socionext,uniphier-ahci-phy.yaml  | 76 ++++++++++++++++++++++
->>   1 file changed, 76 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/phy/socionext,uniphier-ahci-phy.yaml
->>
-> 
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/socionext,uniphier-ahci-phy.yaml: properties:reset-names: [{'items': [{'const': 'link'}, {'const': 'phy'}]}] is not of type 'object', 'boolean'
-> Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/phy/socionext,uniphier-ahci-phy.example.dts' failed
-> make[1]: *** [Documentation/devicetree/bindings/phy/socionext,uniphier-ahci-phy.example.dts] Error 1
-> make[1]: *** Waiting for unfinished jobs....
-> Makefile:1347: recipe for target 'dt_binding_check' failed
-> make: *** [dt_binding_check] Error 2
-> 
-> 
-> See https://patchwork.ozlabs.org/patch/1312535
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure dt-schema is up to date:
-> 
-> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-> 
-> Please check and re-submit.
+These were posted earlier and reviewed [1] and later dropped by me to first
+get the driver changes merged in.
+The last outstanding comment on these was from Matthias to move the
+OPP tables inside of the node which uses them. I have done that for sdhc,
+but left the qup tables outside as its a common table used across many
+nodes, and it just gets more confusing adding it elsewhere.
 
-I made a mistake when creating the patch.
-I've found where it is wrong, so fix it in v2.
+Patches are rebased and should apply cleanly on for-next of the msm tree.
 
-Thank you,
+[1] https://lkml.org/lkml/2020/4/28/561
 
----
-Best Regards
-Kunihiko Hayashi
+Rajendra Nayak (4):
+  arm64: dts: sdm845: Add OPP table for all qup devices
+  arm64: dts: sc7180: Add OPP table for all qup devices
+  arm64: dts: sdm845: Add sdhc opps and power-domains
+  arm64: dts: sc7180: Add sdhc opps and power-domains
+
+ arch/arm64/boot/dts/qcom/sc7180.dtsi |  91 +++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 109 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 200 insertions(+)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
