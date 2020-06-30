@@ -2,141 +2,396 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E49C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 16:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8A9C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 16:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D5EB2074F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 16:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE56720722
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 16:16:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gorani.run header.i=@gorani.run header.b="Ysv+xs4V"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="U+a1y8st"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727062AbgF3QKE (ORCPT
+        id S1731864AbgF3QQv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 12:10:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40922 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726117AbgF3QKE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 12:10:04 -0400
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [IPv6:2001:67c:2050::465:201])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2C4CC061755;
-        Tue, 30 Jun 2020 09:10:03 -0700 (PDT)
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 49x8T56KSVzQlL5;
-        Tue, 30 Jun 2020 18:10:01 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
-        t=1593533399;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/GvbcSzf93t3Xo8PgTLO0RFe1bXEAMDeF7vWz9G0lXY=;
-        b=Ysv+xs4V8Jruw1SxiPoUfjc6pgAqz91VNB8/TGmbrM6bCDpgr6byLNxH1oBz6+X2FsYugj
-        6f6t+GJh9046R2sqSJhTQIF2xTrIHb7qWcjFOeHlMoUMHlVTWQ4T0zDXG/gsmV8Og0bN4B
-        3S36A6pgFxS+hbBuFkX1/fjP05xLfnjy106gR+ZLXSi1d8t5CIY624T6CoGqn47rH1UmUH
-        auD5wx+t8YI2amB2gt9qAngvycTsQPaTWMkvAeRoFAABUXHsFSCctSbcbQetHBC63cnRkI
-        7lkQEk9J0hmKRCt+PyKgHUCdZYVnlu4DMNZBgk900GOE4wcRHY224Lf2Mzj+Vg==
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
-        with ESMTP id 5PLJZsftWcGX; Tue, 30 Jun 2020 18:09:57 +0200 (CEST)
-From:   Sungbo Eo <mans0n@gorani.run>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Sungbo Eo <mans0n@gorani.run>
-Subject: [PATCH v3 2/2] dt-bindings: gpio: Add bindings for NXP PCA9570
-Date:   Wed,  1 Jul 2020 01:09:34 +0900
-Message-Id: <20200630160934.1197066-1-mans0n@gorani.run>
-In-Reply-To: <20200630160736.1196697-1-mans0n@gorani.run>
-References: <20200630160736.1196697-1-mans0n@gorani.run>
+        Tue, 30 Jun 2020 12:16:51 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1105 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728290AbgF3QQu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 12:16:50 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5efb653e0000>; Tue, 30 Jun 2020 09:15:58 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 30 Jun 2020 09:16:47 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 30 Jun 2020 09:16:47 -0700
+Received: from [10.2.167.193] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Jun
+ 2020 16:16:46 +0000
+Subject: Re: [RFC PATCH v2 00/18] Support for Tegra video capture from
+ external sensor
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
+        <robh+dt@kernel.org>, <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
+References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
+ <b3f63f3f-50b2-e818-2c59-8009c31a9825@xs4all.nl>
+ <f5c84071-46ad-aa6f-0820-1813d4a907c9@nvidia.com>
+ <a60d8f80-312d-fce3-61f5-328e7f2a7a64@xs4all.nl>
+ <72ca3b09-7ca6-7421-4a9d-98326d1af087@nvidia.com>
+Message-ID: <e8a8a678-e9e8-e941-8dcb-0e747616ba59@nvidia.com>
+Date:   Tue, 30 Jun 2020 09:17:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-MBO-SPAM-Probability: 8
-X-Rspamd-Score: 1.27 / 15.00 / 15.00
-X-Rspamd-Queue-Id: 706AB17FE
-X-Rspamd-UID: c515cf
+In-Reply-To: <72ca3b09-7ca6-7421-4a9d-98326d1af087@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1593533758; bh=XSg2qN4yyT+tMT1zZSUfxAuzNf/qjGAod/D3XjDMvSc=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=U+a1y8stOypxAdDAGLd5xIiLrymaSl8aPTN1kxmJUrS9wEYXFMas9Ch5VQm9SctGm
+         R0yM7ZtBEKkamZWP78XKiZZSLpB9D9FSbPM7WCOotCpboKVRvmY38ODbjgErm3pRl4
+         bWY4e0JEohyIUej65fA0LjiyAFMybb6fCTSffr3e9cWYRezGjWZUByRoJvc21UsfPq
+         lG7I3PNbeqYClJaOvA3foL+rBhIgiqryUFMljtlLVERYwfLWSmdVF6E8L8M+dy83xr
+         a3EpT1GmZ2Wd5qtSf830KYTMa9L9mWyjggO89I2xos7m7Mdw8FKrpVGsGvCrt4l1lu
+         bU+ubzvEZmttw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds device tree bindings for the NXP PCA9570,
-a 4-bit I2C GPO expander.
 
-Signed-off-by: Sungbo Eo <mans0n@gorani.run>
----
-v3:
-* fixed dt_binding_check error
+On 6/30/20 8:44 AM, Sowjanya Komatineni wrote:
+>
+> On 6/30/20 8:13 AM, Hans Verkuil wrote:
+>> On 30/06/2020 16:58, Sowjanya Komatineni wrote:
+>>> On 6/30/20 2:21 AM, Hans Verkuil wrote:
+>>>> On 17/06/2020 03:41, Sowjanya Komatineni wrote:
+>>>>> This series adds support for video capture from external camera=20
+>>>>> sensor to
+>>>>> Tegra video driver.
+>>>>>
+>>>>> Jetson TX1 has camera expansion connector and supports custom=20
+>>>>> camera module
+>>>>> designed as per TX1 design specification.
+>>>>>
+>>>>> This series also enables camera capture support for Jetson Nano=20
+>>>>> which has
+>>>>> Raspberry PI camera header.
+>>>>>
+>>>>> This series is tested with IMX219 camera sensor.
+>>>> Which tree did you base this on? The media_tree master? Or the=20
+>>>> mainline kernel?
+>>> These patches are with linux-next base at the time I sent them out=20
+>>> which
+>>> are on 20200616
+>>>> I now have the imx219 detected, but if I try to stream I get this:
+>>>>
+>>>> $ v4l2-ctl --stream-mmap
+>>>> <[=C2=A0 512.840944] video4linux video0: MW_ACK_DONE syncpt timeout: -=
+11
+>>>> [=C2=A0 512.972975] video4linux video0: frame start syncpt timeout: -1=
+1
+>>>> <VIDIOC_DQBUF: failed: Input/output error
+>>>> [=C2=A0 513.180770] video4linux video0: MW_ACK_DONE syncpt timeout: -1=
+1
+>>>>
+>>>> And then everything hangs and I need to reset.
+>>>>
+>>>> I'm testing with the media_tree master with your patches on top.
+>>>>
+>>>> Regards,
+>>>>
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0Hans
+>>> Are you using same device tree as I sent offline? It uses CSI A for=20
+>>> IMX219.
+>>>
+>>> Does you setup also uses CSI-A as x2 for IMX219?
+>>>
+>>> I tested them on Jetson Nano + IMX219 rasp PI module and also on Jetson
+>>> TX1 + IMX274.
+>>>
+>>> I did not see any issue and am able to capture from both.
+>>>
+>>> Will try again on my side with today's latest linux-next and update=20
+>>> result.
+>> Please use the media_tree master, that's what I use as well.
+>>
+>> I did some more testing and there is something weird going on.
+>>
+>> I have a Leopard Imaging camera expansion board (LI-JTX1-MIPI-ADPT) with
+>> three camera connectors. See here for the datasheet:
+>>
+>> https://www.leopardimaging.com/uploads/LI-TX1-KIT-IMX274M12-T_datasheet.=
+pdf=20
+>>
+>>
+>> The first connector (with an IMX274) causes this error:
+>>
+>> $ v4l2-ctl -d1 --stream-mmap
+>> [=C2=A0 599.265885] video4linux video1: MW_ACK_DONE syncpt timeout: -11
+>> [=C2=A0 599.473883] video4linux video1: MW_ACK_DONE syncpt timeout: -11
+>> [=C2=A0 599.681904] video4linux video1: frame start syncpt timeout: -11
+>> [=C2=A0 599.681909] video4linux video1: MW_ACK_DONE syncpt timeout: -11
+>> <VIDIOC_DQBUF: failed: Input/output error
+>> [=C2=A0 599.897884] video4linux video1: MW_ACK_DONE syncpt timeout: -11
+>>
+>> Similar to the test above where I had an IMX219 connected. Except it=20
+>> didn't
+>> hang with the IMX274 (I'm beginning to suspect a locking issue in the=20
+>> imx219
+>> driver that is causing the hang, I'll look at that tomorrow).
+>>
+>> If I connect the IMX219 to the middle camera connector, then it works=20
+>> fine.
+>> I think I tested this with the IMX274 as well, but I'm not 100%=20
+>> certain, also
+>> something to double check tomorrow.
+>>
+>> If I connect the IMX219 or IMX274 to the third camera connector, then=20
+>> I get this:
+>
+> Would like to know CSI port mapping to connectors as mipi calibrate=20
+> pads cells need to be updated in device tree based on CSI port in use.
+>
+> Will see if I can find that from DS link you sent above.
+>
+>>
+>> $ v4l2-ctl -d0 --stream-mmap
+>> [=C2=A0 820.513866] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>>
+>> [=C2=A0 820.525354] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>>
+>> [=C2=A0 820.536780] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>>
+>> [=C2=A0 820.548222] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>>
+>> [=C2=A0 820.559639] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> <[=C2=A0 820.646931] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> [=C2=A0 820.658355] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> [=C2=A0 820.669797] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> [=C2=A0 820.681216] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> [=C2=A0 820.692601] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> <<<<<<<<<<<<<<< 14.50 fps
+>> <<<<<<<<<<<<<<< 14.75 fps
+>> <<<<<<<<<<<<<<< 14.73 fps
+>> <<<<<<<<<<<<<<< 14.80 fps
+>> <<<<<<<<<<<<<[ 825.517854] tegra_mc_irq: 133437 callbacks suppressed
+>> [=C2=A0 825.517874] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> [=C2=A0 825.534395] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> [=C2=A0 825.545833] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> [=C2=A0 825.557280] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> [=C2=A0 825.579346] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> [=C2=A0 825.590764] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> [=C2=A0 825.602188] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> [=C2=A0 825.613649] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> [=C2=A0 825.625075] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> [=C2=A0 825.645983] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> < 14.64 fps
+>> <<<<<<<<<<<<<<<< 14.87 fps
+>> <<<<<<<<<<<<<<< 14.89 fps
+>>
+>> Something is producing EMEM address decode errors. But it is streaming.
+>
+> above memory controller errors may be due to access faults and not=20
+> sure why these show up on your setup. I never have these with my testing.
+>
+> Also I am using CMA alloc of 256MB and not sure if low CMA alloc size=20
+> is causing this. Can you try with CMA alloc size of 256MB?
+>
+>>
+>> If I enable the TPG then everything is fine.
+>>
+>> So I have currently three different behaviors for three camera=20
+>> connectors.
+>>
+>> Do you have a datasheet for your Jetson TX1 camera board? It could be=20
+>> useful
+>> to compare the two.
+>
+> Yeah we have and will send it offline.
+>
+> Also based on connector mapping to corresponding CSI port,=20
+> mipi-calibrate pad cell value also need to be changed.
+>
+> Below is for CSI-A
+>
+> nvidia,mipi-calibrate =3D <&mipi 0x001>
+>> Regards,
+>>
+>> =C2=A0=C2=A0=C2=A0=C2=A0Hans
+Connector-1 is CSI-AB where you had timeouts.
 
-v2:
-I don't feel I can really maintain this driver, but it seems all yaml docs
-have a maintainers field so I just added it...
----
- .../bindings/gpio/gpio-pca9570.yaml           | 47 +++++++++++++++++++
- 1 file changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
+Connector-2 is CSI-CD and this works for you.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml b/Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
-new file mode 100644
-index 000000000000..338c5312a106
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
-@@ -0,0 +1,47 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/gpio-pca9570.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: PCA9570 I2C GPO expander
-+
-+maintainers:
-+  - Sungbo Eo <mans0n@gorani.run>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - nxp,pca9570
-+
-+  reg:
-+    maxItems: 1
-+
-+  gpio-controller: true
-+
-+  '#gpio-cells':
-+    const: 2
-+
-+required:
-+  - compatible
-+  - reg
-+  - gpio-controller
-+  - "#gpio-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        gpio@24 {
-+            compatible = "nxp,pca9570";
-+            reg = <0x24>;
-+            gpio-controller;
-+            #gpio-cells = <2>;
-+        };
-+    };
-+
-+...
--- 
-2.27.0
+Connector-3 is CSI-EF and this works for streaming from above but=20
+there's memory access fault errors (EMEM address decode errors)
 
+These EMEM decode errors are not related to connector but its just they=20
+showed up during connector-3 testing I believe. Can you also keep CMA=20
+size to 256MB and try?
+
+Not sure if CSI-AB issue with FS and MW_ACK sp timeouts are due to some=20
+HW/setup issue. Streaming should work on CSI-AB ports as well just like=20
+CSI-CD/EF with proper device tree change for port index and mipi=20
+calibrate cells for corresponding ports.
+
+On my setup that I tested IMX274 is on CSI-AB.
+
+Will update my side test results with today's linux-next
+
+>>
+>>>>> This series include,
+>>>>>
+>>>>> VI I2C related fixes
+>>>>> - Camera sensor programming happens through VI I2C which is on=20
+>>>>> host1x bus.
+>>>>> - These patches includes device tree and I2C driver fixes for VI I2C.
+>>>>>
+>>>>> Tegra video driver updates
+>>>>> - TPG Vs Non-TPG based on Kconfig
+>>>>> - Support for external sensor video capture based on device graph=20
+>>>>> from DT.
+>>>>> - Support for selection ioctl operations
+>>>>> - Tegra MIPI CSI pads calibration
+>>>>> - CSI T-CLK and T-HS settle time computation based on clock rates.
+>>>>>
+>>>>> Host1x driver updates
+>>>>> - Adds API to allow creating mipi device for specific device node.
+>>>>> - Splits MIPI pads calibrate start and waiting for calibration to=20
+>>>>> be done.
+>>>>>
+>>>>> Device tree updates
+>>>>> - Adds camera connector 2V8, 1V8, 1V2 regulator supplies to Jetson=20
+>>>>> TX1 DT.
+>>>>> - Enabled VI and CSI support in Jetson Nano DT.
+>>>>>
+>>>>>
+>>>>> Delta between patch versions:
+>>>>>
+>>>>> [v2]:=C2=A0=C2=A0=C2=A0 Includes below changes based on v1 feedback
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- dt-binding document and the driver update f=
+or device graph=20
+>>>>> to use
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 separate ports for sink endpoint and s=
+ource endpoint for csi.
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- Use data-lanes endpoint property for csi.
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- Update tegra_mipi_request() to take device =
+node pointer=20
+>>>>> argument
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rather than adding extra API.
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- Remove checking for clk pointer before clk_=
+disable.
+>>>>>
+>>>>>
+>>>>> Sowjanya Komatineni (18):
+>>>>> =C2=A0=C2=A0=C2=A0 dt-bindings: i2c: tegra: Document Tegra210 VI I2C =
+clocks and
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 power-domains
+>>>>> =C2=A0=C2=A0=C2=A0 arm64: tegra: Add missing clocks and power-domains=
+ to Tegra210=20
+>>>>> VI I2C
+>>>>> =C2=A0=C2=A0=C2=A0 i2c: tegra: Don't mark VI I2C as IRQ safe runtime =
+PM
+>>>>> =C2=A0=C2=A0=C2=A0 i2c: tegra: Fix the error path in tegra_i2c_runtim=
+e_resume
+>>>>> =C2=A0=C2=A0=C2=A0 i2c: tegra: Fix runtime resume to re-init VI I2C
+>>>>> =C2=A0=C2=A0=C2=A0 i2c: tegra: Avoid tegra_i2c_init_dma() for Tegra21=
+0 vi i2c
+>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Fix channel format alignment
+>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Enable TPG based on kernel con=
+fig
+>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Update format lookup to offset=
+ based
+>>>>> =C2=A0=C2=A0=C2=A0 dt-bindings: tegra: Update VI and CSI bindings wit=
+h port info
+>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Add support for external senso=
+r capture
+>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Add support for selection ioct=
+l ops
+>>>>> =C2=A0=C2=A0=C2=A0 gpu: host1x: mipi: Update tegra_mipi_request() to =
+be node based
+>>>>> =C2=A0=C2=A0=C2=A0 gpu: host1x: mipi: Split tegra_mipi_calibrate and =
+tegra_mipi_wait
+>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Add CSI MIPI pads calibration
+>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Compute settle times based on =
+the clock rate
+>>>>> =C2=A0=C2=A0=C2=A0 arm64: tegra: jetson-tx1: Add camera supplies
+>>>>> =C2=A0=C2=A0=C2=A0 arm64: tegra: Enable Tegra VI CSI support for Jets=
+on Nano
+>>>>>
+>>>>> =C2=A0=C2=A0 .../display/tegra/nvidia,tegra20-host1x.txt=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 92 ++-
+>>>>> =C2=A0=C2=A0 .../devicetree/bindings/i2c/nvidia,tegra20-i2c.txt | 19 =
++-
+>>>>> =C2=A0=C2=A0 arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi=C2=A0=C2=
+=A0=C2=A0=C2=A0 | 41 ++
+>>>>> =C2=A0=C2=A0 arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts | 10 =
++
+>>>>> =C2=A0=C2=A0 arch/arm64/boot/dts/nvidia/tegra210.dtsi=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 6 +
+>>>>> =C2=A0=C2=A0 drivers/gpu/drm/tegra/dsi.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 9 +-
+>>>>> =C2=A0=C2=A0 drivers/gpu/host1x/mipi.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 30 +-
+>>>>> =C2=A0=C2=A0 drivers/i2c/busses/i2c-tegra.c=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 | 39 +-
+>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/Kconfig=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 7 +
+>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/csi.c=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 245 ++++++-
+>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/csi.h=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 8 +
+>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/tegra210.c=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 | 25 +-
+>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/vi.c=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 770=20
+>>>>> +++++++++++++++++++--
+>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/vi.h=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 23 +-
+>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/video.c=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 23 +-
+>>>>> =C2=A0=C2=A0 include/linux/host1x.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 4 +-
+>>>>> =C2=A0=C2=A0 16 files changed, 1251 insertions(+), 100 deletions(-)
+>>>>>
