@@ -2,105 +2,133 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECA8C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 14:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC0DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 14:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0060B207F9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 14:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E2982072D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 14:09:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DjbUwWSe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oUfUydbJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388758AbgF3OAK (ORCPT
+        id S2388641AbgF3OJh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 10:00:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49122 "EHLO
+        Tue, 30 Jun 2020 10:09:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388748AbgF3OAI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 10:00:08 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7350C03E97A
-        for <devicetree@vger.kernel.org>; Tue, 30 Jun 2020 07:00:07 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id l2so18221206wmf.0
-        for <devicetree@vger.kernel.org>; Tue, 30 Jun 2020 07:00:07 -0700 (PDT)
+        with ESMTP id S1730339AbgF3OJe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 10:09:34 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3A16C061755;
+        Tue, 30 Jun 2020 07:09:33 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id a1so20775947ejg.12;
+        Tue, 30 Jun 2020 07:09:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=+Oh4ApefyTnqgl3zRri2ZSE2mhpbCR1hfUifrIURqpY=;
-        b=DjbUwWSe0bUOM79CA2NMctk+cF1xo4+d4SgV4E081WpLOL71nEMW/qhGD4qvMVdkxD
-         dFQW7QgDRN86ePS6S0HIQoSyEwa2ndIcxq/ZG47135c7UHKCGmbVdpt+hQMoogfEDJgZ
-         jmAwWa3o0MUkXn4uggszhTCs1cLF1JiH3rtDSZI8cgk7HLi/5EFBJz8Jbwmv27Y6KREZ
-         G++sPZQaGCqQbhngv033h+GyA/J4Bck5x7iVJ+kyz8W8oQ6AfP+kHArvuv57Fg7tOXXw
-         NyI0XKPo20bCaXkQGlyd4GGel83m4H+oRbCoOyckk8eZYcZ073bm58KmfMskU0tLIN2v
-         7V0Q==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=oEIesOIh2eEPyGIcocRpHywZ3RCRJufVPViTP+ZtDmQ=;
+        b=oUfUydbJvn80XfAt4xB0253AhcIFR0rzDDHBHnGqNgSJJeCNp8utgIbixVou1AnICx
+         Ao7UjLmjeCdrIlucwmpUmVIkAXOgWn4jeM4pH+683Ud90e6+Ps0VEqYJGb3rGBGdVi7E
+         Ld+56O46f6DuEY1lcHGqN9pz1XHzRyj1PCR1LKGXnunSeArQ9jDNbhLI8FsMBQw+OwIJ
+         DtfmvNEBADn1HE7jrr0TAZHJeI66rDThQmigSpV6Hgo3Z6eJHpOtEXlBokERutYnEFnY
+         jHKnCeKwKhe4Bwgy8UiHZwUaWt/GmJSLtiwQCJMEpbOQ9fVHkEWHjw38biqC/cz9ZcEo
+         Srmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=+Oh4ApefyTnqgl3zRri2ZSE2mhpbCR1hfUifrIURqpY=;
-        b=UWZHQ+C4i+c+iyC1+HvEQCt1GusAE3GED9lXKIBKK9XAnXzrLO4l/4uU+8T5RWvSnx
-         sWgbn2oMh5cjuBZ0xXLzBMm6CogpFPK0LE6Dm6CZ0mNAPNaoNtdUii8XLCDjHd7IHe7I
-         ZuMn/O0o4Z/227nrFSEW0CpkUBnX61m+/Vcz3XL6VRzGfRLQAbX0OCEyKO+SL4Gt5jgg
-         BcHSDWcoJjyMz+fi1+0nZ+wnfvQu3mtFQP0PenYrTGoaiqe3Cso7l1Qj7JxTRQD9e6sG
-         9TPsqbfNYdlyP8ICo9Eh5CT9ePCSwgjrTcyI/3zasaZVIBWYCgv3H/lV6scteUqb2pJx
-         FaOg==
-X-Gm-Message-State: AOAM531XKpZuY0r+paZmSusAi9AU3F//NOByrAIqS8BCDv17TaK0CZLm
-        SsxEmm178C1g/V2aXs8bhec5Ow==
-X-Google-Smtp-Source: ABdhPJwbLE+kcjKkrLT/25qlwcFppdADS5iumyeK5/Qqd5eAaD0ht8ENlqsto/03COPQKARN64Thnw==
-X-Received: by 2002:a7b:c099:: with SMTP id r25mr22949202wmh.159.1593525606573;
-        Tue, 30 Jun 2020 07:00:06 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id o9sm3931023wrs.1.2020.06.30.07.00.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 07:00:05 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 15:00:04 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     robh+dt@kernel.org, benjamin.gaignard@st.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: mfd: st,stmfx: Remove extra
- additionalProperties
-Message-ID: <20200630140004.GM1179328@dell>
-References: <20200630114443.26414-1-festevam@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=oEIesOIh2eEPyGIcocRpHywZ3RCRJufVPViTP+ZtDmQ=;
+        b=A3C1ANijYobTNP/JvVA81jqX2fWeSJJVvD1MwDsBkxJW4D5JpJbExLZoOH5uJBRXXe
+         /8tPtlW+Mkib7ORJv2DctIy8rT1JBBeM1Ch6GwusyGh1A1L2SxuQ7n/xPwe0yYcfvNlr
+         fP4ioAP5+9ndQud3M91r9VVPFQo9JGNdSgDhKxaSCZWt43OSEiuPnq0OFN04HoTBKsqo
+         bdGM/nCyqNKdL6aaCnWtZxrHHroS6dgMLo+DaaFwAPDiFKfhmagr7ChgMLBgKZb3Psov
+         UXOFPNacM0WwveHi2SUi+kpWnWaHtvR959uW1c+ISB52QkG5LqKt+IxJVRWSN4oZQHJr
+         kCWQ==
+X-Gm-Message-State: AOAM533IvivXhSaKgYxzGcl9nzcfbjeMW6suenbJ8ypjEKuzTgejYx/L
+        a9DsR56GPhbKoRcTr3KHdKg=
+X-Google-Smtp-Source: ABdhPJyrcx0lP72w+PUYC/gRd9qIp40weTnteBiasf0hsJwZdonmgfDC04OEt+smFoWFC1HL6uYxTQ==
+X-Received: by 2002:a17:906:194b:: with SMTP id b11mr12484199eje.28.1593526172627;
+        Tue, 30 Jun 2020 07:09:32 -0700 (PDT)
+Received: from localhost ([213.191.183.145])
+        by smtp.gmail.com with ESMTPSA id lv17sm2146098ejb.56.2020.06.30.07.09.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jun 2020 07:09:32 -0700 (PDT)
+From:   Iskren Chernev <iskren.chernev@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        linux-arm-msm@vger.kernel.org,
+        Iskren Chernev <iskren.chernev@gmail.com>
+Subject: [PATCH 1/7] ARM: dts: qcom: msm8974-klte: Merge pinctrl nodes
+Date:   Tue, 30 Jun 2020 17:09:06 +0300
+Message-Id: <20200630140912.260294-2-iskren.chernev@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200630140912.260294-1-iskren.chernev@gmail.com>
+References: <20200630140912.260294-1-iskren.chernev@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200630114443.26414-1-festevam@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 30 Jun 2020, Fabio Estevam wrote:
+commit cd13c72c1853 ("ARM: dts: qcom: msm8974-klte: Add max77826 pmic
+node") and commit 8bf7a360a92c ("ARM: dts: qcom: msm8974-klte: Add sdhci1
+node") both added pinctrl node. This patch merges the two nodes.
 
-> The following build error is seen with 'make dt_binding_check':
-> 
->   CHKDT   Documentation/devicetree/bindings/mfd/st,stmfx.yaml
-> /home/fabio/linux-next/Documentation/devicetree/bindings/mfd/st,stmfx.yaml: properties:pinctrl:patternProperties: {'enum': ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'deprecated', 'description', 'else', 'enum', 'if', 'items', 'maxItems', 'maximum', 'minItems', 'minimum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'propertyNames', 'required', 'then', 'unevaluatedProperties']} is not allowed for 'additionalProperties'
-> 
-> Remove the extra 'additionalProperties' to pass the build.
-> 
-> Signed-off-by: Fabio Estevam <festevam@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> Changes since RFC:
-> - Added Rob's Reviewed-by
-> - Added lkml on Cc
-> 
->  Documentation/devicetree/bindings/mfd/st,stmfx.yaml | 2 --
->  1 file changed, 2 deletions(-)
+Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
+---
+ .../boot/dts/qcom-msm8974-samsung-klte.dts    | 22 +++++++++----------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
-Applied, thanks.
+diff --git a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
+index d4dc98214225a..9520c6e7910ce 100644
+--- a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
++++ b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
+@@ -258,6 +258,16 @@ cmd-data {
+ 				bias-pull-up;
+ 			};
+ 		};
++
++		i2c6_pins: i2c6 {
++			mux {
++				pins = "gpio29", "gpio30";
++				function = "blsp_i2c6";
++
++				drive-strength = <2>;
++				bias-disable;
++			};
++		};
+ 	};
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+ 	sdhci@f9824900 {
+@@ -298,18 +308,6 @@ phy@a {
+ 		};
+ 	};
+
+-	pinctrl@fd510000 {
+-		i2c6_pins: i2c6 {
+-			mux {
+-				pins = "gpio29", "gpio30";
+-				function = "blsp_i2c6";
+-
+-				drive-strength = <2>;
+-				bias-disable;
+-			};
+-		};
+-	};
+-
+ 	i2c@f9928000 {
+ 		status = "okay";
+
+--
+2.27.0
+
