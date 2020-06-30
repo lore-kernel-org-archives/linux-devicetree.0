@@ -2,126 +2,114 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26137C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 07:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A79C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 07:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AF6C2073E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 07:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30AB62073E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 07:08:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cv498ppM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730611AbgF3HHq (ORCPT
+        id S1730649AbgF3HIc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 03:07:46 -0400
-Received: from mga12.intel.com ([192.55.52.136]:2116 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730386AbgF3HHq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 30 Jun 2020 03:07:46 -0400
-IronPort-SDR: hMOBxv46gEWRiUELMFJ/DDcT67owjSTk6G5DQ20loaaBjVoak47/A3lUPAJCbaEM/qf5Gund4X
- ORm/jDbCzTKg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="125796951"
-X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
-   d="scan'208";a="125796951"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 00:07:45 -0700
-IronPort-SDR: zN0xCHYhnQTCKA6dD9R2SaSnOqW7vy7mgzTVJKR9fw9+XOH8P45kstYiWnpOjPL58W/EcoHYFt
- KioPeOKNjU5g==
-X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
-   d="scan'208";a="454499042"
-Received: from letingex-mobl.ger.corp.intel.com ([10.214.248.180])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 00:07:37 -0700
-Message-ID: <e7068d39c8ca60159ba7d1d5f917ef209570bb86.camel@linux.intel.com>
-Subject: Re: [PATCH 0/7] Add initial Keem Bay SoC / Board support
-From:   Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
-To:     linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc:     devicetree@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-kernel@vger.kernel.org, Dinh Nguyen <dinguyen@kernel.org>,
-        Paul Murphy <paul.j.murphy@intel.com>,
-        Will Deacon <will@kernel.org>,
-        Daniele Alessandrelli <daniele.alessandrelli@intel.com>
-Date:   Tue, 30 Jun 2020 08:07:28 +0100
-In-Reply-To: <20200616155613.121242-1-daniele.alessandrelli@linux.intel.com>
-References: <20200616155613.121242-1-daniele.alessandrelli@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        Tue, 30 Jun 2020 03:08:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42018 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbgF3HIc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 03:08:32 -0400
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A6EAC061755
+        for <devicetree@vger.kernel.org>; Tue, 30 Jun 2020 00:08:32 -0700 (PDT)
+Received: by mail-wm1-x332.google.com with SMTP id w3so6028206wmi.4
+        for <devicetree@vger.kernel.org>; Tue, 30 Jun 2020 00:08:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=23N3PD1zYKiJlQjoSFZFSqUybbWQSmtHguDgu99PEU8=;
+        b=cv498ppMfYJE+lXeMujo9ianyHcIe+HquAh9138Py4bb12b9Z611l9iABZmUXtSCsy
+         4hqMGaooxHdZqYYOTMbWH2gLCOnN2rFlSsH49cZnYwKaF8m7cWKMpHDyqMwth9jqOJz4
+         mvrkiEmxvX3V7K2fuDzf4FrhpNXc8k9a23ITh3kLIXGgSwAZOxA+t1f/LD4DLnVYDrL8
+         mE0k07CcN1D2eWf/Bjalm4YQ+Owc4iGmguTjauDkGOyEklov1Hi428MUAmaudpWVJInE
+         yKTCO9FraE4q687k+DWRCvgk54WJ3BFfv5goqmKhptbbrlDWG6EqJhdLBD+UFFUJcnUv
+         RgOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=23N3PD1zYKiJlQjoSFZFSqUybbWQSmtHguDgu99PEU8=;
+        b=XU+04JFpsP74ySIE9gFM9bOsdY2OwR+VXKURO+lQpvX4BGh/ilB5CAxjlRPpRuChma
+         /mjHhvjzeJFIom2IHt25YxHaaOXqF41I2idecAswCwM8zdZYYom6Vii05stX5NTAR0FF
+         vIT9C3n4m/1hJYx7bW6YhrinNXr8fAr2GQceDhiIHRAZBEIm+nlFJY1z39NbHtxRcv/T
+         /M8kULeuoWREpTDhEVOfY/TYJq0TwkAPlDqHMA3+XEV/DA5w3T6nN91lZPsSE011B2eP
+         UT265GT1mm4vsgQgCvP3WSeYScHIdLp1lHOOBIISVSRg+ThrvmsZzEIOgQ+spoTiWKM9
+         oQ4Q==
+X-Gm-Message-State: AOAM530fVI2Qs5mQjGsGBV3xdRHqZBqrU7IA231DkOFE5mFZsM5ln4QG
+        H9VSoquTav5fENOoFifmSKg/xQ==
+X-Google-Smtp-Source: ABdhPJxE0uRlw1BHrGZHphRrxopSZLNGJ39LLva4RCTcFLvGJM9h+w4u8HKR+ZlfGd4zK30+SKxSZg==
+X-Received: by 2002:a1c:9acf:: with SMTP id c198mr20007906wme.172.1593500910731;
+        Tue, 30 Jun 2020 00:08:30 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id 14sm2303314wmk.19.2020.06.30.00.08.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 00:08:30 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 08:08:28 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     robh+dt@kernel.org, benjamin.gaignard@st.com,
+        devicetree@vger.kernel.org
+Subject: Re: [RFC] dt-bindings: mfd: st,stmfx: Remove extra
+ additionalProperties
+Message-ID: <20200630070828.GE1179328@dell>
+References: <20200629192335.24622-1-festevam@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200629192335.24622-1-festevam@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 2020-06-16 at 16:56 +0100, Daniele Alessandrelli wrote:
-> Hi,
-> 
-> This patch-set adds initial support for a new Intel Movidius SoC
-> code-named
-> Keem Bay. The SoC couples an ARM Cortex A53 CPU with an Intel
-> Movidius VPU.
-> 
-> This initial patch-set enables only the minimal set of components
-> required to
-> make the Keem Bay EVM board boot into initramfs.
-> 
-> Brief summary of the patch-set:
-> * Patches 1-2 add the Keem Bay SCMI Mailbox driver (needed to enable
-> SCMI in
->   Keem Bay)
-> * Patch 3 adds the ARCH_KEEMBAY config option
-> * Patches 4-7 add minimal device tree for Keem Bay SoC and Keem Bay
-> EVM
->   (together with information about the SoC maintainers)
-> 
-> Regards,
-> Daniele
-> 
-> 
-> Daniele Alessandrelli (5):
->   arm64: Add config for Keem Bay SoC
->   dt-bindings: arm: Add Keem Bay bindings
->   MAINTAINERS: Add maintainers for Keem Bay SoC
->   arm64: dts: keembay: Add device tree for Keem Bay SoC
->   arm64: dts: keembay: Add device tree for Keem Bay EVM board
-> 
-> Paul Murphy (2):
->   dt-bindings: mailbox: Add Keem Bay SCMI mailbox bindings
->   mailbox: keembay-scmi-mailbox: Add support for Keem Bay mailbox
-> 
->  .../devicetree/bindings/arm/keembay.yaml      |  19 ++
->  .../mailbox/intel,keembay-scmi-mailbox.yaml   |  44 ++++
->  MAINTAINERS                                   |  16 ++
->  arch/arm64/Kconfig.platforms                  |   5 +
->  arch/arm64/boot/dts/intel/Makefile            |   1 +
->  arch/arm64/boot/dts/intel/keembay-evm.dts     |  55 +++++
->  arch/arm64/boot/dts/intel/keembay-soc.dtsi    | 172 +++++++++++++++
->  drivers/mailbox/Kconfig                       |   9 +
->  drivers/mailbox/Makefile                      |   2 +
->  drivers/mailbox/keembay-scmi-mailbox.c        | 203
-> ++++++++++++++++++
->  include/dt-bindings/clock/keembay-clocks.h    | 188 ++++++++++++++++
->  include/dt-bindings/power/keembay-power.h     |  19 ++
->  12 files changed, 733 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/arm/keembay.yaml
->  create mode 100644
-> Documentation/devicetree/bindings/mailbox/intel,keembay-scmi-
-> mailbox.yaml
->  create mode 100644 arch/arm64/boot/dts/intel/keembay-evm.dts
->  create mode 100644 arch/arm64/boot/dts/intel/keembay-soc.dtsi
->  create mode 100644 drivers/mailbox/keembay-scmi-mailbox.c
->  create mode 100644 include/dt-bindings/clock/keembay-clocks.h
->  create mode 100644 include/dt-bindings/power/keembay-power.h
-> 
+On Mon, 29 Jun 2020, Fabio Estevam wrote:
 
-Ping
+> The following build error is seen with 'make dt_binding_check':
+> 
+>   CHKDT   Documentation/devicetree/bindings/mfd/st,stmfx.yaml
+> /home/fabio/linux-next/Documentation/devicetree/bindings/mfd/st,stmfx.yaml: properties:pinctrl:patternProperties: {'enum': ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'deprecated', 'description', 'else', 'enum', 'if', 'items', 'maxItems', 'maximum', 'minItems', 'minimum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'propertyNames', 'required', 'then', 'unevaluatedProperties']} is not allowed for 'additionalProperties'
+> 
+> Remove the extra 'additionalProperties' to pass the build.
+> 
+> Signed-off-by: Fabio Estevam <festevam@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/st,stmfx.yaml | 2 --
+>  1 file changed, 2 deletions(-)
 
+Any reason for not sending this to LKML?
 
+> diff --git a/Documentation/devicetree/bindings/mfd/st,stmfx.yaml b/Documentation/devicetree/bindings/mfd/st,stmfx.yaml
+> index 0ce56a0da553..bed22d4abffb 100644
+> --- a/Documentation/devicetree/bindings/mfd/st,stmfx.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/st,stmfx.yaml
+> @@ -73,8 +73,6 @@ properties:
+>            output-high: true
+>            output-low: true
+>  
+> -      additionalProperties: false
+> -
+>      additionalProperties: false
+>  
+>      required:
 
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
