@@ -2,114 +2,234 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66725C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 20:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08982C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 20:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 430E5206B6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 20:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC8F920663
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 20:49:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g+V9Uwcb"
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="JXQFgrWP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729776AbgF3UjF (ORCPT
+        id S1726119AbgF3UtX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 16:39:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54174 "EHLO
+        Tue, 30 Jun 2020 16:49:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729341AbgF3UjE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 16:39:04 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3324EC061755;
-        Tue, 30 Jun 2020 13:39:04 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id m22so108173pgv.9;
-        Tue, 30 Jun 2020 13:39:04 -0700 (PDT)
+        with ESMTP id S1726135AbgF3UtW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 16:49:22 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4105C03E97A
+        for <devicetree@vger.kernel.org>; Tue, 30 Jun 2020 13:49:21 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id n23so24258256ljh.7
+        for <devicetree@vger.kernel.org>; Tue, 30 Jun 2020 13:49:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SQiFOaLh1j0WoaGW8HU6ASOHGGkIHwej9YhMbLkGD8g=;
-        b=g+V9UwcbjoJZzicB/JpaUeCKluYowoLvLMVisPV+jeRGBTkI7Nz6RPIzsGk12F0fH4
-         zq/A8QQj7ER1s5L2bebyDMf6pcf4jJrFqPWsz8Nf6m0g+E9DkiBSX/L5ca6pNqUeCCcw
-         iu1N4qUwaKLe25xgQCJ55rIiIZhS9Jk/Mn1DheWX9BumrVflAOe0cqTGIDEAl2iLhDDq
-         yEsH105D84RpOGz42JNSKMcQ/fBYJZ6v5H+5+9SpjyGb2U435gTzdIYaTB+IqQSAkHYy
-         PWalaZd40GHE5Q60lwbIZU0JyTULWHVU9DbPFz8cUzJJVBeh160NzRcC6d1Gu+WZR29m
-         CsQQ==
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=xvMzBYx/+eZkL1U4iAm8DZ6iRc4MRD6poHIjEeZk1I0=;
+        b=JXQFgrWPHof0j3cDBxYmxzEqX9RoavpSkASuonw6dNEvCOEvPn6X2dMDaw063EBgEQ
+         KYGF46P6F52DF0TNrG7OrpNghsS8Ls3+ozRCcOWE+PRp4wsxTvwvUX6Xgy7UlVRbT/gU
+         82vG4ANNWRsprwLsb9SYwpZnKTrVt+JUaHCISqJZGGfDuJxy5Nl24LfxZ3NWdYSYwfoG
+         xO3FrjHlpPN3NT8+jl85xT64F0jnPOuR8LgSWG9xSn65OMEifV73tw0WfZm6FArgHmMP
+         Uj4fpkYzuK8FVBsDLRO3ID5ZQbhmgTsAxE36chU8KC0ny2Je80/vq31H68vWx63swFWX
+         oEDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SQiFOaLh1j0WoaGW8HU6ASOHGGkIHwej9YhMbLkGD8g=;
-        b=AVc6+mbv1r3LFj1+3t44r3k1NaSmP/mmOsAvBgGX0a0vjFT6umw1/ngR+nX6ijsS1w
-         8JwX8bTQu3f8ThrswynZ/ChSYZJuA8L1JML/vtZceHReBzWiEW/q/OaDh9ZIT2mGYfPF
-         OUdISTxrQ4R6ck45snD9N5Nzr8mM0DE4uqI0RJGt2o1yrRCI9K8QJYaEnqpuX2CW78h/
-         HYtq1cvHO+3W9OiYw9Y76ibIlVWADRFOtVH1m6n4UfH2jkrOi4AGmhbAC2Jla7Ey89un
-         aTeisQYtBK+pAUwuI9zamx+j32bH+4NFla9WJmuwb6zg1uFeLTuTTY+2325+wvInSiKR
-         bnBQ==
-X-Gm-Message-State: AOAM533CfYMJp7cQkfiYwZ9n3e/JWc9azHsTY1/evGys1l63C4bTtTTh
-        iwF+by4GLZwTggUD7k2WUnk=
-X-Google-Smtp-Source: ABdhPJwBbu9XaH6Gaawzg4apz35khgge11T7VS3A9pjCwqj0I3uOdYn6Igtq9M7Fe91d4sXCDCowiw==
-X-Received: by 2002:a05:6a00:1507:: with SMTP id q7mr19535233pfu.131.1593549543796;
-        Tue, 30 Jun 2020 13:39:03 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 19sm3576756pfy.193.2020.06.30.13.39.02
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Jun 2020 13:39:03 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 13:39:02 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     linux-watchdog@vger.kernel.org,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: Re: [RESEND PATCHv3 2/2] dt-bindings: watchdog: Add compatible for
- QCS404, SC7180, SDM845, SM8150
-Message-ID: <20200630203902.GA20540@roeck-us.net>
-References: <cover.1593112534.git.saiprakash.ranjan@codeaurora.org>
- <09da1ba319dc4a27ef4e4e177e67e68f1cb4f35b.1593112534.git.saiprakash.ranjan@codeaurora.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=xvMzBYx/+eZkL1U4iAm8DZ6iRc4MRD6poHIjEeZk1I0=;
+        b=k7gDdrte1ZulfzYuMI3IJH6sPYC9FXqYb1hqXQ7fPIXd8MvCmAzOD3mj3mkpsIzedr
+         k6t0fXeedrEA+LDKHzDWMTUOlVwwmn94JISZF6EEJ1j7wSfwnTycN/gR+Pmu2xelwKhK
+         H8JfvBUQ9OPFp8M4OIxNeM3DAcCG12VSXA+nGpyHi7ZeB5jaLdjxFnMtprsdiduUTTnT
+         eTCtX3eiGSz0IZpfogVaorrFsMEWj568/v82g+j9SDTn+kJrqUwf9Hd/lXP7Cxf+hX2Y
+         r+aeiwIS3aYlLQ5WtM/LCdLyzidyYriES9jNbWNyYL47R+wxghu1doCQ2fvQCrlOII3c
+         Rhew==
+X-Gm-Message-State: AOAM530ORDdniKrAoenmRNRO7bn4QikDXIrjsTJLt4ZdaxRajYmqBaiA
+        8i6xyTBPsfBn6jxAsgmOEMNgzg==
+X-Google-Smtp-Source: ABdhPJyvN++jQvWmhL1Nhi4QY7ErV0bsXsbkHZP2JNUtRN07KQpUgLR60RQJZ/BTWYqFLoid4vKvUg==
+X-Received: by 2002:a2e:580f:: with SMTP id m15mr11054422ljb.357.1593550159379;
+        Tue, 30 Jun 2020 13:49:19 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id q1sm1195630lfp.42.2020.06.30.13.49.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 13:49:18 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 22:49:18 +0200
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/8] dt-bindings: media: renesas,fcp: Convert binding
+ to YAML
+Message-ID: <20200630204918.GA2365286@oden.dyn.berto.se>
+References: <20200621004734.28602-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20200621004734.28602-2-laurent.pinchart+renesas@ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <09da1ba319dc4a27ef4e4e177e67e68f1cb4f35b.1593112534.git.saiprakash.ranjan@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200621004734.28602-2-laurent.pinchart+renesas@ideasonboard.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 12:59:05AM +0530, Sai Prakash Ranjan wrote:
-> Add missing compatible for watchdog timer on QCS404,
-> SC7180, SDM845 and SM8150 SoCs.
+Hi Laurent,
+
+Thanks for your work.
+
+On 2020-06-21 03:47:27 +0300, Laurent Pinchart wrote:
+> Convert the Renesas R-Car FCP text binding to YAML.
 > 
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->  Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
+> Changes since v1:
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-> index 5448cc537a03..0709ddf0b6a5 100644
-> --- a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-> +++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-> @@ -15,6 +15,10 @@ allOf:
->  properties:
->    compatible:
->      enum:
-> +      - qcom,apss-wdt-qcs404
-> +      - qcom,apss-wdt-sc7180
-> +      - qcom,apss-wdt-sdm845
-> +      - qcom,apss-wdt-sm8150
->        - qcom,kpss-timer
->        - qcom,kpss-wdt
->        - qcom,kpss-wdt-apq8064
+> - Simplify comments on compatible strings
+> - Update MAINTAINERS
+> ---
+>  .../devicetree/bindings/media/renesas,fcp.txt | 34 -----------
+>  .../bindings/media/renesas,fcp.yaml           | 56 +++++++++++++++++++
+>  MAINTAINERS                                   |  2 +-
+>  3 files changed, 57 insertions(+), 35 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/media/renesas,fcp.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/renesas,fcp.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/media/renesas,fcp.txt b/Documentation/devicetree/bindings/media/renesas,fcp.txt
+> deleted file mode 100644
+> index 79c37395b396..000000000000
+> --- a/Documentation/devicetree/bindings/media/renesas,fcp.txt
+> +++ /dev/null
+> @@ -1,34 +0,0 @@
+> -Renesas R-Car Frame Compression Processor (FCP)
+> ------------------------------------------------
+> -
+> -The FCP is a companion module of video processing modules in the Renesas R-Car
+> -Gen3 and RZ/G2 SoCs. It provides data compression and decompression, data
+> -caching, and conversion of AXI transactions in order to reduce the memory
+> -bandwidth.
+> -
+> -There are three types of FCP: FCP for Codec (FCPC), FCP for VSP (FCPV) and FCP
+> -for FDP (FCPF). Their configuration and behaviour depend on the module they
+> -are paired with. These DT bindings currently support the FCPV and FCPF.
+> -
+> - - compatible: Must be one or more of the following
+> -
+> -   - "renesas,fcpv" for generic compatible 'FCP for VSP'
+> -   - "renesas,fcpf" for generic compatible 'FCP for FDP'
+> -
+> - - reg: the register base and size for the device registers
+> - - clocks: Reference to the functional clock
+> -
+> -Optional properties:
+> - - power-domains : power-domain property defined with a power domain specifier
+> -		   to respective power domain.
+> -
+> -
+> -Device node example
+> --------------------
+> -
+> -	fcpvd1: fcp@fea2f000 {
+> -		compatible = "renesas,fcpv";
+> -		reg = <0 0xfea2f000 0 0x200>;
+> -		clocks = <&cpg CPG_MOD 602>;
+> -		power-domains = <&sysc R8A7795_PD_A3VP>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/media/renesas,fcp.yaml b/Documentation/devicetree/bindings/media/renesas,fcp.yaml
+> new file mode 100644
+> index 000000000000..9241bf3c5efc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/renesas,fcp.yaml
+> @@ -0,0 +1,56 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/renesas,fcp.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Renesas R-Car Frame Compression Processor (FCP)
+> +
+> +maintainers:
+> +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> +
+> +description: |
+> +  The FCP is a companion module of video processing modules in the Renesas
+> +  R-Car Gen3 and RZ/G2 SoCs. It provides data compression and decompression,
+> +  data caching, and conversion of AXI transactions in order to reduce the
+> +  memory bandwidth.
+> +
+> +  There are three types of FCP: FCP for Codec (FCPC), FCP for VSP (FCPV) and
+> +  FCP for FDP (FCPF). Their configuration and behaviour depend on the module
+> +  they are paired with. These DT bindings currently support the FCPV and FCPF.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - renesas,fcpv # FCP for VSP
+> +      - renesas,fcpf # FCP for FDP
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  # R8A7790 (R-Car H2) VSP1-S
+
+Hum, R8A7790 is H2 but the example below is from H3 R8A7795[01] is it 
+not? With this fixed,
+
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+
+> +  - |
+> +    #include <dt-bindings/clock/renesas-cpg-mssr.h>
+> +    #include <dt-bindings/power/r8a7795-sysc.h>
+> +
+> +    fcp@fea2f000 {
+> +        compatible = "renesas,fcpv";
+> +        reg = <0xfea2f000 0x200>;
+> +        clocks = <&cpg CPG_MOD 602>;
+> +        power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+> +    };
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 68f21d46614c..660ed6606de2 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -10700,7 +10700,7 @@ L:	linux-media@vger.kernel.org
+>  L:	linux-renesas-soc@vger.kernel.org
+>  S:	Supported
+>  T:	git git://linuxtv.org/media_tree.git
+> -F:	Documentation/devicetree/bindings/media/renesas,fcp.txt
+> +F:	Documentation/devicetree/bindings/media/renesas,fcp.yaml
+>  F:	drivers/media/platform/rcar-fcp.c
+>  F:	include/media/rcar-fcp.h
+>  
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
+> 
+
+-- 
+Regards,
+Niklas Söderlund
