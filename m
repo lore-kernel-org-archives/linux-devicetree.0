@@ -2,177 +2,105 @@ Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 258E5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 13:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECA8C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 14:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0701020722
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 13:55:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0060B207F9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 14:00:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DjbUwWSe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732973AbgF3Ny7 (ORCPT
+        id S2388758AbgF3OAK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 09:54:59 -0400
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:22440 "EHLO
-        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731919AbgF3Ny7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 09:54:59 -0400
-Received: from fsav104.sakura.ne.jp (fsav104.sakura.ne.jp [27.133.134.231])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 05UDsJKI069879;
-        Tue, 30 Jun 2020 22:54:19 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav104.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav104.sakura.ne.jp);
- Tue, 30 Jun 2020 22:54:19 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav104.sakura.ne.jp)
-Received: from localhost.localdomain (121.252.232.153.ap.dti.ne.jp [153.232.252.121])
-        (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 05UDsFJk069836
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Tue, 30 Jun 2020 22:54:19 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
-To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     Heiko Stuebner <heiko@sntech.de>, alsa-devel@alsa-project.org,
-        linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Subject: [PATCH v2] dt-bindings: sound: convert rk3328 codec binding to yaml
-Date:   Tue, 30 Jun 2020 22:54:12 +0900
-Message-Id: <20200630135412.718447-1-katsuhiro@katsuster.net>
-X-Mailer: git-send-email 2.27.0
+        Tue, 30 Jun 2020 10:00:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388748AbgF3OAI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 10:00:08 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7350C03E97A
+        for <devicetree@vger.kernel.org>; Tue, 30 Jun 2020 07:00:07 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id l2so18221206wmf.0
+        for <devicetree@vger.kernel.org>; Tue, 30 Jun 2020 07:00:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=+Oh4ApefyTnqgl3zRri2ZSE2mhpbCR1hfUifrIURqpY=;
+        b=DjbUwWSe0bUOM79CA2NMctk+cF1xo4+d4SgV4E081WpLOL71nEMW/qhGD4qvMVdkxD
+         dFQW7QgDRN86ePS6S0HIQoSyEwa2ndIcxq/ZG47135c7UHKCGmbVdpt+hQMoogfEDJgZ
+         jmAwWa3o0MUkXn4uggszhTCs1cLF1JiH3rtDSZI8cgk7HLi/5EFBJz8Jbwmv27Y6KREZ
+         G++sPZQaGCqQbhngv033h+GyA/J4Bck5x7iVJ+kyz8W8oQ6AfP+kHArvuv57Fg7tOXXw
+         NyI0XKPo20bCaXkQGlyd4GGel83m4H+oRbCoOyckk8eZYcZ073bm58KmfMskU0tLIN2v
+         7V0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=+Oh4ApefyTnqgl3zRri2ZSE2mhpbCR1hfUifrIURqpY=;
+        b=UWZHQ+C4i+c+iyC1+HvEQCt1GusAE3GED9lXKIBKK9XAnXzrLO4l/4uU+8T5RWvSnx
+         sWgbn2oMh5cjuBZ0xXLzBMm6CogpFPK0LE6Dm6CZ0mNAPNaoNtdUii8XLCDjHd7IHe7I
+         ZuMn/O0o4Z/227nrFSEW0CpkUBnX61m+/Vcz3XL6VRzGfRLQAbX0OCEyKO+SL4Gt5jgg
+         BcHSDWcoJjyMz+fi1+0nZ+wnfvQu3mtFQP0PenYrTGoaiqe3Cso7l1Qj7JxTRQD9e6sG
+         9TPsqbfNYdlyP8ICo9Eh5CT9ePCSwgjrTcyI/3zasaZVIBWYCgv3H/lV6scteUqb2pJx
+         FaOg==
+X-Gm-Message-State: AOAM531XKpZuY0r+paZmSusAi9AU3F//NOByrAIqS8BCDv17TaK0CZLm
+        SsxEmm178C1g/V2aXs8bhec5Ow==
+X-Google-Smtp-Source: ABdhPJwbLE+kcjKkrLT/25qlwcFppdADS5iumyeK5/Qqd5eAaD0ht8ENlqsto/03COPQKARN64Thnw==
+X-Received: by 2002:a7b:c099:: with SMTP id r25mr22949202wmh.159.1593525606573;
+        Tue, 30 Jun 2020 07:00:06 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id o9sm3931023wrs.1.2020.06.30.07.00.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 07:00:05 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 15:00:04 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     robh+dt@kernel.org, benjamin.gaignard@st.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: mfd: st,stmfx: Remove extra
+ additionalProperties
+Message-ID: <20200630140004.GM1179328@dell>
+References: <20200630114443.26414-1-festevam@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200630114443.26414-1-festevam@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch converts Rockchip rk3328 audio codec binding to DT schema.
-And adds description about "mclk" clock and fixes some errors in
-original example.
+On Tue, 30 Jun 2020, Fabio Estevam wrote:
 
-Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
----
- .../bindings/sound/rockchip,rk3328-codec.txt  | 28 --------
- .../bindings/sound/rockchip,rk3328-codec.yaml | 70 +++++++++++++++++++
- 2 files changed, 70 insertions(+), 28 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/rockchip,rk3328-codec.txt
- create mode 100644 Documentation/devicetree/bindings/sound/rockchip,rk3328-codec.yaml
+> The following build error is seen with 'make dt_binding_check':
+> 
+>   CHKDT   Documentation/devicetree/bindings/mfd/st,stmfx.yaml
+> /home/fabio/linux-next/Documentation/devicetree/bindings/mfd/st,stmfx.yaml: properties:pinctrl:patternProperties: {'enum': ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'deprecated', 'description', 'else', 'enum', 'if', 'items', 'maxItems', 'maximum', 'minItems', 'minimum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'propertyNames', 'required', 'then', 'unevaluatedProperties']} is not allowed for 'additionalProperties'
+> 
+> Remove the extra 'additionalProperties' to pass the build.
+> 
+> Signed-off-by: Fabio Estevam <festevam@gmail.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> Changes since RFC:
+> - Added Rob's Reviewed-by
+> - Added lkml on Cc
+> 
+>  Documentation/devicetree/bindings/mfd/st,stmfx.yaml | 2 --
+>  1 file changed, 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip,rk3328-codec.txt b/Documentation/devicetree/bindings/sound/rockchip,rk3328-codec.txt
-deleted file mode 100644
-index 1ecd75d2032a..000000000000
---- a/Documentation/devicetree/bindings/sound/rockchip,rk3328-codec.txt
-+++ /dev/null
-@@ -1,28 +0,0 @@
--* Rockchip Rk3328 internal codec
--
--Required properties:
--
--- compatible: "rockchip,rk3328-codec"
--- reg: physical base address of the controller and length of memory mapped
--  region.
--- rockchip,grf: the phandle of the syscon node for GRF register.
--- clocks: a list of phandle + clock-specifer pairs, one for each entry in clock-names.
--- clock-names: should be "pclk".
--- spk-depop-time-ms: speak depop time msec.
--
--Optional properties:
--
--- mute-gpios: GPIO specifier for external line driver control (typically the
--              dedicated GPIO_MUTE pin)
--
--Example for rk3328 internal codec:
--
--codec: codec@ff410000 {
--	compatible = "rockchip,rk3328-codec";
--	reg = <0x0 0xff410000 0x0 0x1000>;
--	rockchip,grf = <&grf>;
--	clocks = <&cru PCLK_ACODEC>;
--	clock-names = "pclk";
--	mute-gpios = <&grf_gpio 0 GPIO_ACTIVE_LOW>;
--	spk-depop-time-ms = 100;
--};
-diff --git a/Documentation/devicetree/bindings/sound/rockchip,rk3328-codec.yaml b/Documentation/devicetree/bindings/sound/rockchip,rk3328-codec.yaml
-new file mode 100644
-index 000000000000..525b48c2f5de
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/rockchip,rk3328-codec.yaml
-@@ -0,0 +1,70 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/rockchip,rk3328-codec.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Rockchip rk3328 internal codec
-+
-+maintainers:
-+  - Heiko Stuebner <heiko@sntech.de>
-+
-+properties:
-+  compatible:
-+    const: rockchip,rk3328-codec
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: clock for audio codec
-+      - description: clock for I2S master clock
-+
-+  clock-names:
-+    items:
-+      - const: pclk
-+      - const: mclk
-+
-+  rockchip,grf:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      The phandle of the syscon node for the GRF register.
-+
-+  spk-depop-time-ms:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    default: 200
-+    description:
-+      Speaker depop time in msec.
-+
-+  mute-gpios:
-+    maxItems: 1
-+    description:
-+      GPIO specifier for external line driver control (typically the
-+      dedicated GPIO_MUTE pin)
-+
-+  "#sound-dai-cells":
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - rockchip,grf
-+  - "#sound-dai-cells"
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/clock/rk3328-cru.h>
-+    codec: codec@ff410000 {
-+      compatible = "rockchip,rk3328-codec";
-+      reg = <0xff410000 0x1000>;
-+      clocks = <&cru PCLK_ACODECPHY>, <&cru SCLK_I2S1>;
-+      clock-names = "pclk", "mclk";
-+      rockchip,grf = <&grf>;
-+      mute-gpios = <&grf_gpio 0 GPIO_ACTIVE_LOW>;
-+      spk-depop-time-ms = <100>;
-+      #sound-dai-cells = <0>;
-+    };
+Applied, thanks.
+
 -- 
-2.27.0
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
