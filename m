@@ -7,65 +7,65 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03292C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 09:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A97C433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 09:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D58A52073E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 09:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6015C2067D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 09:46:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="HuiGKxnQ"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="PId0Flju"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729670AbgGAJqH (ORCPT
+        id S1729667AbgGAJqH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Wed, 1 Jul 2020 05:46:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34818 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729658AbgGAJqG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 05:46:06 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFF97C03E979
-        for <devicetree@vger.kernel.org>; Wed,  1 Jul 2020 02:46:05 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id g75so21686979wme.5
-        for <devicetree@vger.kernel.org>; Wed, 01 Jul 2020 02:46:05 -0700 (PDT)
+        with ESMTP id S1729637AbgGAJqF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 05:46:05 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8602C03E979
+        for <devicetree@vger.kernel.org>; Wed,  1 Jul 2020 02:46:04 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id l17so21720704wmj.0
+        for <devicetree@vger.kernel.org>; Wed, 01 Jul 2020 02:46:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=2LMkCbMP/fW3R0JY/uxUZEZ9R2osohzFUesMp17+pMA=;
-        b=HuiGKxnQzZpLlRxThfRTnOhCSU//LCi/puShODTGZ46B+LoY9thZL2n/lyYruh84Xy
-         FzX7LqEVPAhmNdR9GoZwEnl0PWHhtCLSGKm76GYKq0wrcAc0UMQRfpsIAZoK+ENSX97w
-         L1h7/Ulp7uzTMNjxF2k6j+NOMBz0XgFVRS85qp0jjWtvuhBOUOJUC1ariSviTZTXoxt4
-         ILIcPg4Ty5znQQ80vRwKVkTXul8z2PcHwyal3RDtEREF6bFb0JdM/m+M5fqn4wA+Cp/K
-         6hYOqUEnSQJqxBOLNHwvKPskeMprusRmjAMlkjJvebIH4d1L6klHbgyg/dh3z3IURGaD
-         RDXg==
+        bh=G4XcfcAkqZ4hOUekNAJTnLH2TON/M34d5Vhe+YnBg/I=;
+        b=PId0Flju4Q2mnrmD+zyXcMyBEX/vsGY7PaI1Jqf3GwnZ45nmIjaJKl71CR0hmJIihG
+         SJTMuR80xK7ueQ+ZhlIv3mFmX74kZIeYpjZcf6J5/WZZYnVJyNFxMRhvqGTF9Z4T9+m4
+         GNM3ScLuTEDLnSjWIo446YAVCYLBB3yxXeFip4mLplgBsl6cjjp2otK+1LZTPuMI4Bc5
+         Typvtipqs3kyWZ7ISzuVtRu3pFRi2wobeJgZjCfSrU9vzUvSqP/7JJ1N5eBBwsTpnTQI
+         WduSPKG8IxfrKAp1EohfeeP42Y/ltaL+eG6heWoZGWo7zhaHyi/DXGRBrS/KK3QB54ay
+         hzYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2LMkCbMP/fW3R0JY/uxUZEZ9R2osohzFUesMp17+pMA=;
-        b=XQSLtclfn1FLS/iH+/SfROgORI61miiwu/z0JQhE7g+4cqHEBLoXUoRL3eHdl1pE7A
-         799T6uLn0PQeB0JkBzdmaJW8HZIU34IWqclrRxQnnf/2/5TCQMxR5gQ4k+HeodSovcF/
-         ydQAUq2OIpzJgwfuOKyqZ2hHuTvgzcOO3nM8DepKy9JipmIx35NcNfqIRYeAAFqQSRZZ
-         J3qQIR6BSVgZtXyuSGYXXubDehLGex1hpXF1eE8PLYFhFLgHrt6ciRT+y+e+dflPbslL
-         Xjluli0gujWCedCNaFXxcdwIBIVe86460bnKb6IZCshvVZnL7syTelKMYjyeTDJbAYKT
-         X5wg==
-X-Gm-Message-State: AOAM531dueNrVnWodNAAt2UG5DDuNmta3AHeSV4DUYdZQHBdmb0IACqz
-        J48xt879eOi/hldtgdVbjUiWnQ==
-X-Google-Smtp-Source: ABdhPJzdxyb0nGawWBsr2xEb7LJdcuL1c2OsDnBTglQIDKTV8eA1yyQ0UVabx6iu+anzu0LLvTOukQ==
-X-Received: by 2002:a7b:c7d2:: with SMTP id z18mr26629285wmk.149.1593596764449;
-        Wed, 01 Jul 2020 02:46:04 -0700 (PDT)
-Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id f13sm6270472wmb.33.2020.07.01.02.46.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=G4XcfcAkqZ4hOUekNAJTnLH2TON/M34d5Vhe+YnBg/I=;
+        b=XXXQvk9uPanLLWbseL8EVjjZlEKlDU77yu8J/s7Bh8Fkr+FWjWT3yi77fZDYFpVxdx
+         7LaVeKsduVgEhuFc+jcGPdWEaoGtqm7ufhWGDwPYtobjPRzXum7Ek/Hyv5Jt5N+76tqy
+         RAkwxTD9sTx8U5JscfhFLhL52iMFBICVOJxviozp4fvUx++cfLOmVSfOr9UyqNQ9+PTL
+         nXow1CxKHms/k0shIaxUH6kM/EgF4nRpVO4uDpKh0Julgck7orhANMwgauC7sv2VckaY
+         XZaMAIkh/ltGFf7ahW7xtSYuVD4feSEPval+5Jm4MhB23hvfXAVeJyDontzEivmeZ2j6
+         iW7A==
+X-Gm-Message-State: AOAM531BaSPqmXv13cOeVEpgvDlXW5qYtcr9JO6zU6ROLngvK+MvciCB
+        3jbc882a/D6skpOe+UycLZqoeA==
+X-Google-Smtp-Source: ABdhPJwGYCx4064BPXe4yJCuTcAybc1uPAIFv4sHsqvIdcGQlkWgNAjEJ8RRaVlmu28j/JoPLobTAA==
+X-Received: by 2002:a1c:c387:: with SMTP id t129mr18585253wmf.27.1593596763411;
         Wed, 01 Jul 2020 02:46:03 -0700 (PDT)
+Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id f13sm6270472wmb.33.2020.07.01.02.46.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 02:46:02 -0700 (PDT)
 From:   Jerome Brunet <jbrunet@baylibre.com>
 To:     Kevin Hilman <khilman@baylibre.com>
 Cc:     Jerome Brunet <jbrunet@baylibre.com>,
         linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] arm64: dts: meson: odroid-n2: add jack audio output support
-Date:   Wed,  1 Jul 2020 11:45:56 +0200
-Message-Id: <20200701094556.194498-3-jbrunet@baylibre.com>
+Subject: [PATCH 1/2] arm64: dts: meson: odroid-n2: enable audio loopback
+Date:   Wed,  1 Jul 2020 11:45:55 +0200
+Message-Id: <20200701094556.194498-2-jbrunet@baylibre.com>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200701094556.194498-1-jbrunet@baylibre.com>
 References: <20200701094556.194498-1-jbrunet@baylibre.com>
@@ -77,167 +77,121 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for audio on jack socket of the odroid-n2
+Add capture pcm interfaces and loopback routes to the odroid-n2
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- .../boot/dts/amlogic/meson-g12b-odroid-n2.dts | 79 +++++++++++++++++--
- 1 file changed, 74 insertions(+), 5 deletions(-)
+ .../boot/dts/amlogic/meson-g12b-odroid-n2.dts | 65 +++++++++++++++++--
+ 1 file changed, 61 insertions(+), 4 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-index d4421ad164bd..34fffa6d859d 100644
+index 169ea283d4ee..d4421ad164bd 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
 +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-@@ -9,6 +9,7 @@
- #include "meson-g12b-s922x.dtsi"
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/gpio/meson-g12a-gpio.h>
-+#include <dt-bindings/sound/meson-g12a-toacodec.h>
- #include <dt-bindings/sound/meson-g12a-tohdmitx.h>
- 
- / {
-@@ -20,6 +21,14 @@ aliases {
- 		ethernet0 = &ethmac;
- 	};
- 
-+	dioo2133: audio-amplifier-0 {
-+		compatible = "simple-audio-amplifier";
-+		enable-gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_HIGH>;
-+		VCC-supply = <&vcc_5v>;
-+		sound-name-prefix = "U19";
-+		status = "okay";
-+	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-@@ -209,16 +218,26 @@ hdmi_connector_in: endpoint {
+@@ -209,11 +209,28 @@ hdmi_connector_in: endpoint {
  	sound {
  		compatible = "amlogic,axg-sound-card";
  		model = "G12B-ODROID-N2";
--		audio-aux-devs = <&tdmout_b>, <&tdmin_a>, <&tdmin_b>,
--				 <&tdmin_c>, <&tdmin_lb>;
-+		audio-widgets = "Line", "Lineout";
-+		audio-aux-devs = <&tdmout_b>, <&tdmout_c>, <&tdmin_a>,
-+				 <&tdmin_b>, <&tdmin_c>, <&tdmin_lb>,
-+				 <&dioo2133>;
+-		audio-aux-devs = <&tdmout_b>;
++		audio-aux-devs = <&tdmout_b>, <&tdmin_a>, <&tdmin_b>,
++				 <&tdmin_c>, <&tdmin_lb>;
  		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
  				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
  				"TDMOUT_B IN 2", "FRDDR_C OUT 1",
- 				"TDM_B Playback", "TDMOUT_B OUT",
-+				"TDMOUT_C IN 0", "FRDDR_A OUT 2",
-+				"TDMOUT_C IN 1", "FRDDR_B OUT 2",
-+				"TDMOUT_C IN 2", "FRDDR_C OUT 2",
-+				"TDM_C Playback", "TDMOUT_C OUT",
- 				"TDMIN_A IN 4", "TDM_B Loopback",
- 				"TDMIN_B IN 4", "TDM_B Loopback",
- 				"TDMIN_C IN 4", "TDM_B Loopback",
- 				"TDMIN_LB IN 1", "TDM_B Loopback",
-+				"TDMIN_A IN 5", "TDM_C Loopback",
-+				"TDMIN_B IN 5", "TDM_C Loopback",
-+				"TDMIN_C IN 5", "TDM_C Loopback",
-+				"TDMIN_LB IN 2", "TDM_C Loopback",
- 				"TODDR_A IN 0", "TDMIN_A OUT",
- 				"TODDR_B IN 0", "TDMIN_A OUT",
- 				"TODDR_C IN 0", "TDMIN_A OUT",
-@@ -230,7 +249,11 @@ sound {
- 				"TODDR_C IN 2", "TDMIN_C OUT",
- 				"TODDR_A IN 6", "TDMIN_LB OUT",
- 				"TODDR_B IN 6", "TDMIN_LB OUT",
--				"TODDR_C IN 6", "TDMIN_LB OUT";
-+				"TODDR_C IN 6", "TDMIN_LB OUT",
-+				"U19 INL", "ACODEC LOLP",
-+				"U19 INR", "ACODEC LORP",
-+				"Lineout", "U19 OUTL",
-+				"Lineout", "U19 OUTR";
+-				"TDM_B Playback", "TDMOUT_B OUT";
++				"TDM_B Playback", "TDMOUT_B OUT",
++				"TDMIN_A IN 4", "TDM_B Loopback",
++				"TDMIN_B IN 4", "TDM_B Loopback",
++				"TDMIN_C IN 4", "TDM_B Loopback",
++				"TDMIN_LB IN 1", "TDM_B Loopback",
++				"TODDR_A IN 0", "TDMIN_A OUT",
++				"TODDR_B IN 0", "TDMIN_A OUT",
++				"TODDR_C IN 0", "TDMIN_A OUT",
++				"TODDR_A IN 1", "TDMIN_B OUT",
++				"TODDR_B IN 1", "TDMIN_B OUT",
++				"TODDR_C IN 1", "TDMIN_B OUT",
++				"TODDR_A IN 2", "TDMIN_C OUT",
++				"TODDR_B IN 2", "TDMIN_C OUT",
++				"TODDR_C IN 2", "TDMIN_C OUT",
++				"TODDR_A IN 6", "TDMIN_LB OUT",
++				"TODDR_B IN 6", "TDMIN_LB OUT",
++				"TODDR_C IN 6", "TDMIN_LB OUT";
  
  		assigned-clocks = <&clkc CLKID_MPLL2>,
  				  <&clkc CLKID_MPLL0>,
-@@ -275,22 +298,56 @@ dai-link-6 {
- 			dai-tdm-slot-tx-mask-3 = <1 1>;
- 			mclk-fs = <256>;
- 
--			codec {
-+			codec-0 {
- 				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_B>;
- 			};
-+
-+			codec-1 {
-+				sound-dai = <&toacodec TOACODEC_IN_B>;
-+			};
+@@ -236,8 +253,20 @@ dai-link-2 {
+ 			sound-dai = <&frddr_c>;
  		};
  
--		/* hdmi glue */
-+		/* i2s jack output interface */
- 		dai-link-7 {
-+			sound-dai = <&tdmif_c>;
-+			dai-format = "i2s";
-+			dai-tdm-slot-tx-mask-0 = <1 1>;
-+			mclk-fs = <256>;
-+
-+			codec-0 {
-+				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_C>;
-+			};
-+
-+			codec-1 {
-+				sound-dai = <&toacodec TOACODEC_IN_C>;
-+			};
+-		/* 8ch hdmi interface */
+ 		dai-link-3 {
++			sound-dai = <&toddr_a>;
 +		};
 +
-+		/* hdmi glue */
-+		dai-link-8 {
++		dai-link-4 {
++			sound-dai = <&toddr_b>;
++		};
++
++		dai-link-5 {
++			sound-dai = <&toddr_c>;
++		};
++
++		/* 8ch hdmi interface */
++		dai-link-6 {
+ 			sound-dai = <&tdmif_b>;
+ 			dai-format = "i2s";
+ 			dai-tdm-slot-tx-mask-0 = <1 1>;
+@@ -252,7 +281,7 @@ codec {
+ 		};
+ 
+ 		/* hdmi glue */
+-		dai-link-4 {
++		dai-link-7 {
  			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
  
  			codec {
- 				sound-dai = <&hdmi_tx>;
- 			};
- 		};
-+
-+		/* acodec glue */
-+		dai-link-9 {
-+			sound-dai = <&toacodec TOACODEC_OUT>;
-+
-+			codec {
-+				sound-dai = <&acodec>;
-+			};
-+		};
- 	};
- };
- 
-+&acodec {
-+	AVDD-supply = <&vddao_1v8>;
-+	status = "okay";
-+};
-+
- &arb {
- 	status = "okay";
- };
-@@ -505,6 +562,10 @@ &tdmif_b {
+@@ -476,6 +505,22 @@ &tdmif_b {
  	status = "okay";
  };
  
-+&tdmif_c {
++&tdmin_a {
 +	status = "okay";
 +};
 +
- &tdmin_a {
++&tdmin_b {
++	status = "okay";
++};
++
++&tdmin_c {
++	status = "okay";
++};
++
++&tdmin_lb {
++	status = "okay";
++};
++
+ &tdmout_b {
  	status = "okay";
  };
-@@ -525,6 +586,14 @@ &tdmout_b {
+@@ -484,6 +529,18 @@ &tohdmitx {
  	status = "okay";
  };
  
-+&tdmout_c {
++&toddr_a {
 +	status = "okay";
 +};
 +
-+&toacodec {
++&toddr_b {
 +	status = "okay";
 +};
 +
- &tohdmitx {
++&toddr_c {
++	status = "okay";
++};
++
+ &uart_AO {
  	status = "okay";
- };
+ 	pinctrl-0 = <&uart_ao_a_pins>;
 -- 
 2.25.4
 
