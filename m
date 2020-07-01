@@ -2,262 +2,207 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6702C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 21:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1885C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 21:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B845E20B1F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 21:23:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="rWmjvfLu"
+	by mail.kernel.org (Postfix) with ESMTP id A7C36206B7
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 21:28:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgGAVWJ (ORCPT
+        id S1725915AbgGAV2K (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 17:22:09 -0400
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:43036 "EHLO
-        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727124AbgGAVWI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 17:22:08 -0400
-Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 8CF3430C0B2;
-        Wed,  1 Jul 2020 14:22:06 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 8CF3430C0B2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1593638526;
-        bh=nhrK2RlYox51CSLhX6kAW8Tc5Nzfqg2aOArAqXmjQoM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=rWmjvfLu2xdb5dBCSs2msmprlhJNkn8S5dVXenLzoHn34v3NkIG4LvR1NxJ8E4Yt0
-         GN0HE+FLpkmBfHttGAJUwKJJ5ofv2/RLGYZPDEwjVpSlvsq/WvDaLJfkA3eE8TTfFY
-         8fJtetnFJI2FqIGNf1NYqtVhOTROC88YoDWRlbEc=
-Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 57535140096;
-        Wed,  1 Jul 2020 14:22:00 -0700 (PDT)
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-To:     linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        devel@driverdev.osuosl.org (open list:STAGING SUBSYSTEM),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE),
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS FOR ALLWINNER
-        A10), Florian Fainelli <f.fainelli@gmail.com>,
+        Wed, 1 Jul 2020 17:28:10 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:49774 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgGAV2J (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 17:28:09 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 9F98A803202A;
+        Wed,  1 Jul 2020 21:28:04 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id g3WW4EqKCj7G; Thu,  2 Jul 2020 00:28:03 +0300 (MSK)
+Date:   Thu, 2 Jul 2020 00:28:00 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        iommu@lists.linux-foundation.org (open list:IOMMU DRIVERS),
-        Jens Axboe <axboe@kernel.dk>,
-        Julien Grall <julien.grall@arm.com>,
-        linux-acpi@vger.kernel.org (open list:ACPI FOR ARM64 (ACPI/arm64)),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM PORT),
-        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
-        Parallel ATA drivers)), linux-kernel@vger.kernel.org (open list),
-        linux-media@vger.kernel.org (open list:ALLWINNER A10 CSI DRIVER),
-        linux-remoteproc@vger.kernel.org (open list:REMOTE PROCESSOR
-        (REMOTEPROC) SUBSYSTEM),
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-sh@vger.kernel.org (open list:SUPERH),
-        linux-usb@vger.kernel.org (open list:USB SUBSYSTEM),
-        Oliver Neukum <oneukum@suse.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Rob Herring <robh@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH v6 00/12] PCI: brcmstb: enable PCIe for STB chips
-Date:   Wed,  1 Jul 2020 17:21:30 -0400
-Message-Id: <20200701212155.37830-1-james.quinlan@broadcom.com>
-X-Mailer: git-send-email 2.17.1
+        Marc Zyngier <maz@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 6/6] MAINTAINERS: Add maintainers for MIPS core drivers
+Message-ID: <20200701212800.r7ue36dp2qnmmsmm@mobilestation>
+References: <20200617223201.23259-1-Sergey.Semin@baikalelectronics.ru>
+ <20200617223201.23259-7-Sergey.Semin@baikalelectronics.ru>
+ <e29c9643-db5c-2d89-ff56-0900091770ea@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e29c9643-db5c-2d89-ff56-0900091770ea@linaro.org>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Patchset Summary:
-  Enhance a PCIe host controller driver.  Because of its unusual design
-  we are foced to change dev->dma_pfn_offset into a more general role
-  allowing multiple offsets.  See the 'v1' notes below for more info.
+Hello Daniel
 
-v6:
-  Commit "device core: Introduce DMA range map":
-  -- of_dma_get_range() now takes a single argument and returns either
-     NULL, a valid map, or an ERR_PTR. (Robin)
-  -- offsets are no longer a PFN value but an actual address. (Robin)
-  -- the bus_dma_region struct stores the range size instead of
-     the cpu_end and pci_end values. (Robin)
-  -- devices that were setting a single offset with no boundaries
-     have been modified to have boundaries; in a few places
-     where this informatino was unavilable a /* FIXME: ... */
-     comment was added. (Robin)
-  -- dma_attach_offset_range() can be called when an offset
-     map already exists; if it's range is already present
-     nothing is done and success is returned. (Robin)
-  All commits:
-  -- Man name/style/corrections/etc changed (Bjorn)
-  -- rebase to Torvalds master
+On Wed, Jul 01, 2020 at 09:00:03AM +0200, Daniel Lezcano wrote:
+> On 18/06/2020 00:32, Serge Semin wrote:
+> > Add Thomas and myself as maintainers of the MIPS CPU and GIC IRQchip, MIPS
+> > GIC timer and MIPS CPS CPUidle drivers.
+> 
 
-v5:
-  Commit "device core: Introduce multiple dma pfn offsets"
-  -- in of/address.c: "map_size = 0" => "*map_size = 0"
-  -- use kcalloc instead of kzalloc (AndyS)
-  -- use PHYS_ADDR_MAX instead of "~(phys_addr_t)0"
-  Commit "PCI: brcmstb: Set internal memory viewport sizes"
-  -- now gives error on missing dma-ranges property.
-  Commit "dt-bindings: PCI: Add bindings for more Brcmstb chips"
-  -- removed "Allof:" from brcm,scb-sizes definition (RobH)
-  All Commits:
-  -- indentation style, use max chars 100 (AndyS)
-  -- rebased to torvalds master
+> Why will you add yourself in the MAINTAINERS file for those drivers when
+> git shows just one contribution for the mips-gic-timer for the timer
+> stability ?
+> 
+> git shortlog --numbered --summary drivers/cpuidle/cpuidle-cps.c
+>      4  Paul Burton
+>      1  Daniel Lezcano
+>      1  Marcin Nowakowski
+>      1  Matt Redfearn
+>      1  Thomas Gleixner
+> 
+> git shortlog --numbered --summary drivers/clocksource/mips-gic-timer.c
+>     11  Andrew Bresticker
+>      4  Ezequiel Garcia
+>      4  Matt Redfearn
+>      4  Paul Burton
+>      3  Daniel Lezcano
+>      3  Thomas Gleixner
+>      2  Linus Torvalds
+>      1  Alex Smith
+>      1  Christophe Jaillet
+>      1  Felix Fietkau
+>      1  Ingo Molnar
+>      1  Markos Chandras
+>      1  Paul Gortmaker
+>      1  Rafał Miłecki
+>      1  Richard Cochran
+>      1  Serge Semin
+>      1  Viresh Kumar
+>      1  YueHaibing
 
-v4:
-  Commit "device core: Introduce multiple dma pfn offsets"
-  -- of_dma_get_range() does not take a dev param but instead
-     takes two "out" params: map and map_size.  We do this so
-     that the code that parses dma-ranges is separate from
-     the code that modifies 'dev'.   (Nicolas)
-  -- the separate case of having a single pfn offset has
-     been removed and is now processed by going through the
-     map array. (Nicolas)
-  -- move attach_uniform_dma_pfn_offset() from of/address.c to
-     dma/mapping.c so that it does not depend on CONFIG_OF. (Nicolas)
-  -- devm_kcalloc => devm_kzalloc (DanC)
-  -- add/fix assignment to dev->dma_pfn_offset_map for func
-     attach_uniform_dma_pfn_offset() (DanC, Nicolas)
-  -- s/struct dma_pfn_offset_region/struct bus_dma_region/ (Nicolas)
-  -- s/attach_uniform_dma_pfn_offset/dma_attach_uniform_pfn_offset/
-  -- s/attach_dma_pfn_offset_map/dma_attach_pfn_offset_map/
-  -- More use of PFN_{PHYS,DOWN,UP}. (AndyS)
-  Commit "of: Include a dev param in of_dma_get_range()"
-  -- this commit was sqaushed with "device core: Introduce ..."
+I suppose that the number of commits isn't a main criteria to make someone of
+being a maintainer of a particular driver, though it might be a sufficient
+condition why someone could be appointed with the role. Anyway as I said in
+the cover letter that was a mere suggestion:
 
-v3:
-  Commit "device core: Introduce multiple dma pfn offsets"
-  Commit "arm: dma-mapping: Invoke dma offset func if needed"
-  -- The above two commits have been squashed.  More importantly,
-     the code has been modified so that the functionality for
-     multiple pfn offsets subsumes the use of dev->dma_pfn_offset.
-     In fact, dma_pfn_offset is removed and supplanted by
-     dma_pfn_offset_map, which is a pointer to an array.  The
-     more common case of a uniform offset is now handled as
-     a map with a single entry, while cases requiring multiple
-     pfn offsets use a map with multiple entries.  Code paths
-     that used to do this:
+> > Suggestion.
+> > Since Paul isn't looking after the MIPS arch code anymore, Ralf hasn't
+> > been seen maintaining MIPS for a long time, Thomas is only responsible
+> > for the next part of it:
+> >         F:      Documentation/devicetree/bindings/mips/
+> >         F:      Documentation/mips/
+> >         F:      arch/mips/
+> >         F:      drivers/platform/mips/
+> > the MIPS-specific drivers like:
+> >         F:      drivers/bus/mips_cdmm.c
+> >         F:      drivers/irqchip/irq-mips-cpu.c
+> >         F:      drivers/irqchip/irq-mips-gic.c
+> >         F:      drivers/clocksource/mips-gic-timer.c
+> >         F:      drivers/cpuidle/cpuidle-cps.c
+> > seem to be left for the subsystems maintainers to support. So if you don't
+> > mind or unless there is a better alternative, I can help with looking
+> > after them to ease the maintainers review burden and since I'll be working
+> > on our MIPS-based SoC drivers integrating into the mainline kernel repo
+> > anyway. Thomas agreed to join in maintaining that drivers."
 
-         dev->dma_pfn_offset = mydrivers_pfn_offset;
+Primarily I've propose my help with looking after those drivers, since I'll be
+working on our SoC drivers with those components installed anyway.
 
-     have been changed to do this:
+Another reason why I've decided to create this patch is that I've discovered there
+is noone looking after the drivers/bus/mips_cdmm.c driver. Noone responded to
+accept/decline the CDMM-related changes proposed in this patchset
+(mips_cdmm.c driver), noone except Rob responded to the DT bindings conversion
+patches (irq-mips-gic.c, mips_cdmm.c drivers):
+  68d4fa5d0bb8 dt-bindings: bus: Add MIPS CDMM controller
+  7256641fe15e dt-bindings: interrupt-controller: Convert mti,gic to DT schema
+  da16cdddd947 dt-bindings: power: Convert mti,mips-cpc to DT schema
+Finally I didn't say it in the cover letter, but cpuidle-cps wasn't working for
+our SoC, so I'll have to dig into that driver anyway. Moreover It seems to me
+that cpuidle-cps.c will be abandoned by the author since Paul Burton stopped
+working for MIPS. So based on that I collected all MIPS-related but scattered
+around the kernel subsystems drivers (MIPS CDMM, MIPS CPU/GIC IRQ-chip,
+MIPS GIC-timer and MIPS CPU-idle CPS) in the dedicated maintainers entry and
+proposed my help with their maintenance. By Marc' suggestion Thomas agreed to
+join in.
 
-         attach_uniform_dma_pfn_offset(dev, pfn_offset);
+If you don't need our help in maintaining the mips-gic-timer.c and cpuidle-cps.c
+drivers, then just say so. I'll discard them from the maintenance entry created
+by this patch. Though in that case the list won't be full.)
 
-  Commit "dt-bindings: PCI: Add bindings for more Brcmstb chips"
-  -- Add if/then clause for required props: resets, reset-names (RobH)
-  -- Change compatible list from const to enum (RobH)
-  -- Change list of u32-tuples to u64 (RobH)
+> 
+> Also, in the cpuidle-cps.c history, there is no signed-off from Rafael,
+> neither an Acked-by when it was merged. That make me think the patch
+> went through another path than the linux-pm tree without a cpuidle
+> framework maintainer acknowledgement.
+> 
+> Perhaps it is a mistake and the patch was actually acked-by, but I would
+> like to remind the patches have to be acked by the upper maintainers and
+> being listed in the MAINTAINERS file does not give the right of override
+> this rule.
 
-  Commit "of: Include a dev param in of_dma_get_range()"
-  -- modify of/unittests.c to add NULL param in of_dma_get_range() call.
+Sorry. I don't really get it what patch you are talking about. But I
+totally aware of the rule you've mentioned.
 
-  Commit "device core: Add ability to handle multiple dma offsets"
-  -- align comment in device.h (AndyS).
-  -- s/cpu_beg/cpu_start/ and s/dma_beg/dma_start/ in struct
-     dma_pfn_offset_region (AndyS).
+-Sergey
 
-v2:
-Commit: "device core: Add ability to handle multiple dma offsets"
-  o Added helper func attach_dma_pfn_offset_map() in address.c (Chistoph)
-  o Helpers funcs added to __phys_to_dma() & __dma_to_phys() (Christoph)
-  o Added warning when multiple offsets are needed and !DMA_PFN_OFFSET_MAP
-  o dev->dma_pfn_map => dev->dma_pfn_offset_map
-  o s/frm/from/ for dma_pfn_offset_frm_{phys,dma}_addr() (Christoph)
-  o In device.h: s/const void */const struct dma_pfn_offset_region */
-  o removed 'unlikely' from unlikely(dev->dma_pfn_offset_map) since
-    guarded by CONFIG_DMA_PFN_OFFSET_MAP (Christoph)
-  o Since dev->dma_pfn_offset is copied in usb/core/{usb,message}.c, now
-    dev->dma_pfn_offset_map is copied as well.
-  o Merged two of the DMA commits into one (Christoph).
-
-Commit "arm: dma-mapping: Invoke dma offset func if needed":
-  o Use helper functions instead of #if CONFIG_DMA_PFN_OFFSET
-
-Other commits' changes:
-  o Removed need for carrying of_id var in priv (Nicolas)
-  o Commit message rewordings (Bjorn)
-  o Commit log messages filled to 75 chars (Bjorn)
-  o devm_reset_control_get_shared())
-    => devm_reset_control_get_optional_shared (Philipp)
-  o Add call to reset_control_assert() in PCIe remove routines (Philipp)
-
-v1:
-This patchset expands the usefulness of the Broadcom Settop Box PCIe
-controller by building upon the PCIe driver used currently by the
-Raspbery Pi.  Other forms of this patchset were submitted by me years
-ago and not accepted; the major sticking point was the code required
-for the DMA remapping needed for the PCIe driver to work [1].
-
-There have been many changes to the DMA and OF subsystems since that
-time, making a cleaner and less intrusive patchset possible.  This
-patchset implements a generalization of "dev->dma_pfn_offset", except
-that instead of a single scalar offset it provides for multiple
-offsets via a function which depends upon the "dma-ranges" property of
-the PCIe host controller.  This is required for proper functionality
-of the BrcmSTB PCIe controller and possibly some other devices.
-
-[1] https://lore.kernel.org/linux-arm-kernel/1516058925-46522-5-git-send-email-jim2101024@gmail.com/
-
-
-Jim Quinlan (12):
-  PCI: brcmstb: PCIE_BRCMSTB depends on ARCH_BRCMSTB
-  ata: ahci_brcm: Fix use of BCM7216 reset controller
-  dt-bindings: PCI: Add bindings for more Brcmstb chips
-  PCI: brcmstb: Add bcm7278 register info
-  PCI: brcmstb: Add suspend and resume pm_ops
-  PCI: brcmstb: Add bcm7278 PERST# support
-  PCI: brcmstb: Add control of rescal reset
-  device core: Introduce DMA range map, supplanting dma_pfn_offset
-  PCI: brcmstb: Set additional internal memory DMA viewport sizes
-  PCI: brcmstb: Accommodate MSI for older chips
-  PCI: brcmstb: Set bus max burst size by chip type
-  PCI: brcmstb: Add bcm7211, bcm7216, bcm7445, bcm7278 to match list
-
- .../bindings/pci/brcm,stb-pcie.yaml           |  56 ++-
- arch/arm/include/asm/dma-mapping.h            |   9 +-
- arch/arm/mach-keystone/keystone.c             |  17 +-
- arch/sh/drivers/pci/pcie-sh7786.c             |   9 +-
- arch/sh/kernel/dma-coherent.c                 |  14 +-
- arch/x86/pci/sta2x11-fixup.c                  |   7 +-
- drivers/acpi/arm64/iort.c                     |   5 +-
- drivers/ata/ahci_brcm.c                       |  11 +-
- drivers/gpu/drm/sun4i/sun4i_backend.c         |   7 +-
- drivers/iommu/io-pgtable-arm.c                |   2 +-
- .../platform/sunxi/sun4i-csi/sun4i_csi.c      |   6 +-
- .../platform/sunxi/sun6i-csi/sun6i_csi.c      |   5 +-
- drivers/of/address.c                          |  95 ++--
- drivers/of/device.c                           |  50 ++-
- drivers/of/of_private.h                       |   9 +-
- drivers/of/unittest.c                         |  35 +-
- drivers/pci/controller/Kconfig                |   3 +-
- drivers/pci/controller/pcie-brcmstb.c         | 408 +++++++++++++++---
- drivers/remoteproc/remoteproc_core.c          |   2 +-
- .../staging/media/sunxi/cedrus/cedrus_hw.c    |   8 +-
- drivers/usb/core/message.c                    |   4 +-
- drivers/usb/core/usb.c                        |   2 +-
- include/linux/device.h                        |   4 +-
- include/linux/dma-direct.h                    |  10 +-
- include/linux/dma-mapping.h                   |  37 ++
- kernel/dma/coherent.c                         |  11 +-
- kernel/dma/mapping.c                          |  53 +++
- 27 files changed, 684 insertions(+), 195 deletions(-)
-
--- 
-2.17.1
-
+> 
+> 
+> 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Acked-by: Marc Zyngier <maz@kernel.org>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: linux-mips@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > 
+> > ---
+> > 
+> > Changelog v3:
+> > - Keep the files list alphabetically ordered.
+> > - Add Thomas as the co-maintainer of the designated drivers.
+> > ---
+> >  MAINTAINERS | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 2926327e4976..20532e0287d7 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -11278,6 +11278,17 @@ F:	arch/mips/configs/generic/board-boston.config
+> >  F:	drivers/clk/imgtec/clk-boston.c
+> >  F:	include/dt-bindings/clock/boston-clock.h
+> >  
+> > +MIPS CORE DRIVERS
+> > +M:	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > +M:	Serge Semin <fancer.lancer@gmail.com>
+> > +L:	linux-mips@vger.kernel.org
+> > +S:	Supported
+> > +F:	drivers/bus/mips_cdmm.c
+> > +F:	drivers/clocksource/mips-gic-timer.c
+> > +F:	drivers/cpuidle/cpuidle-cps.c
+> > +F:	drivers/irqchip/irq-mips-cpu.c
+> > +F:	drivers/irqchip/irq-mips-gic.c
+> > +
+> >  MIPS GENERIC PLATFORM
+> >  M:	Paul Burton <paulburton@kernel.org>
+> >  L:	linux-mips@vger.kernel.org
+> > 
+> 
+> 
+> -- 
+> <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> 
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
