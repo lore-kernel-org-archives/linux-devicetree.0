@@ -2,83 +2,315 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1D1C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 09:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C32A5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 09:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 529D020722
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 09:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99AAD20722
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 09:19:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729183AbgGAJQY (ORCPT
+        id S1729206AbgGAJTr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:16:24 -0400
-Received: from mga11.intel.com ([192.55.52.93]:21544 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728776AbgGAJQY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jul 2020 05:16:24 -0400
-IronPort-SDR: ttru2E9b2dBHY+bbHvbro0c7gwP00b/HugUFSpEltYkNcOH7SOu/+dOKGNrPJFcAV5+y/ElKYw
- YxEt7kQJepsQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="144689083"
-X-IronPort-AV: E=Sophos;i="5.75,299,1589266800"; 
-   d="scan'208";a="144689083"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 02:16:24 -0700
-IronPort-SDR: Nbl7zm0UC4Q0tOalM8IapjeJbZy3GvjOB3grt6wLAxXu6vAIm/hp2QstzuSPYNdFYsvvlTsHB0
- ETX1pUk8u9sg==
-X-IronPort-AV: E=Sophos;i="5.75,299,1589266800"; 
-   d="scan'208";a="321182597"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 02:16:20 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 2AB0C20760; Wed,  1 Jul 2020 12:16:18 +0300 (EEST)
-Date:   Wed, 1 Jul 2020 12:16:18 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        mchehab@kernel.org, andriy.shevchenko@linux.intel.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, drinkcat@chromium.org,
-        tfiga@chromium.org, matthias.bgg@gmail.com, bingbu.cao@intel.com,
-        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        louis.kuo@mediatek.com, shengnan.wang@mediatek.com
-Subject: Re: [PATCH V9 0/2] media: i2c: Add support for DW9768 VCM
-Message-ID: <20200701091618.GN16711@paasikivi.fi.intel.com>
-References: <20200630062211.22988-1-dongchun.zhu@mediatek.com>
+        Wed, 1 Jul 2020 05:19:47 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:51952 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726715AbgGAJTq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 05:19:46 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id B6A0C80503;
+        Wed,  1 Jul 2020 11:19:41 +0200 (CEST)
+Date:   Wed, 1 Jul 2020 11:19:40 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Vinay Simha BN <simhavcs@gmail.com>
+Cc:     narmstrong@baylibre.com, Ken-Sue.Tan@taec.toshiba.com,
+        Chris.Cheng@taec.toshiba.com, Bhushan.Patel@taec.toshiba.com,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v5 1/2] dt-binding: Add DSI/LVDS TC358775 bridge bindings
+Message-ID: <20200701091940.GB266726@ravnborg.org>
+References: <20200701070344.6330-1-simhavcs@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200630062211.22988-1-dongchun.zhu@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200701070344.6330-1-simhavcs@gmail.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=7oS1v-cyAAAA:8 a=pGLkceISAAAA:8 a=gEfo2CItAAAA:8
+        a=e5mUnYsNAAAA:8 a=dHiIaXZRstW55kd5OMIA:9 a=ie3UdB0zIniZHkjz:21
+        a=LqGCcjRVTOAnRfX9:21 a=CjuIK1q_8ugA:10 a=PcM2qe9_4d1tJnOwuzRa:22
+        a=sptkURWiP4Gy88Gu7hUp:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Dongchun,
+Hi Vinay.
 
-On Tue, Jun 30, 2020 at 02:22:09PM +0800, Dongchun Zhu wrote:
-> Hello,
+On Wed, Jul 01, 2020 at 12:33:36PM +0530, Vinay Simha BN wrote:
+> This driver is tested with two panels with Apq8016-IFC6309 board
+> https://www.inforcecomputing.com/products/single-board-computers-sbc/qualcomm-snapdragon-410-inforce-6309-micro-sbc
 > 
-> This series adds DT bindings and V4L2 sub-device driver for Dongwoon's DW9768,
-> which is a 10-bit DAC with 100mA output current sink capability.
+> 1. 1366x768@60 auo,b101xtn01 data-mapping = "jeida-24"
+> 2. 800x480@60 innolux,at070tn92 data-mapping = "vesa-24"
 > 
-> The driver is designed for linear control of voice coil motor(VCM).
-> It creates a V4L2 sub-device and provides control to set the desired focus.
+> Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
+> 
+> ---
+> v1:
+>  Initial version wast .txt file
+> 
+> v2:
+>  From txt to yaml file format
+> 
+> v3:
+> * Andrzej Hajda review comments incorporated
+>   dual port lvds implemented
+> 
+> * Laurent Pinchart review comments incorporated
+>   dsi lanes property removed and it is dynamically
+>   picked from the dsi ports
+>   VESA/JEIDA format picked from panel-lvds dts
+> ---
+>  .../display/bridge/toshiba,tc358775.yaml      | 204 ++++++++++++++++++
+>  1 file changed, 204 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+> new file mode 100644
+> index 000000000000..ec53d62d408b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+> @@ -0,0 +1,204 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/bridge/toshiba,tc358775.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Toshiba TC358775 DSI to LVDS bridge bindings
+> +
+> +maintainers:
+> + - Vinay Simha BN <simhavcs@gmail.com>
+> +
+> +description: |
+> + This binding supports DSI to LVDS bridge TC358775
+> +
+> +properties:
+> +  compatible:
+> +    const: toshiba,tc358775
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: i2c address of the bridge, 0x0f
+> +
+> +  vdd-supply:
+> +    maxItems: 1
+> +    description:  1.2V LVDS Power Supply
+> +
+> +  vddio-supply:
+> +    maxItems: 1
+> +    description: 1.8V IO Power Supply
+> +
+> +  stby-gpios:
+> +    maxItems: 1
+> +    description: Standby pin, Low active
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +    description: Hardware reset, Low active
+> +
+> +  ports:
+> +    type: object
+> +    description:
+> +      A node containing input and output port nodes with endpoint definitions
+> +      as documented in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> +    properties:
+> +      "#address-cells":
+> +        const: 1
+> +
+> +      "#size-cells":
+> +        const: 0
+> +
+> +      port@0:
+> +        type: object
+> +        description: |
+> +          DSI Input. The remote endpoint phandle should be a
+> +          reference to a valid mipi_dsi_host device node.
+> +
+> +      port@1:
+> +        type: object
+> +        description: |
+> +          Video port for LVDS output (panel or connector).
+> +
+> +      port@2:
+> +        type: object
+> +        description: |
+> +          Video port for Dual link LVDS output (panel or connector).
+> +
+> +    required:
+> +      - port@0
+> +      - port@1
+> +
+> +required:
+> + - compatible
+> + - reg
+> + - vdd-supply
+> + - vddio-supply
+> + - stby-gpios
+> + - reset-gpios
+> + - ports
+> +
+> +examples:
+> + - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    i2c@78b8000 {
+> +        /* On High speed expansion */
+> +        label = "HS-I2C2";
+> +        reg = <0x078b8000 0x500>;
+> +        clock-frequency = <400000>; /* fastmode operation */
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        tc_bridge: bridge@f {
+> +            compatible = "toshiba,tc358775";
+> +            reg = <0x0f>;
+> +
+> +            vdd-supply = <&pm8916_l2>;
+> +            vddio-supply = <&pm8916_l6>;
+> +
+> +            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
+> +            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
+> +
+> +            ports {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                port@0 {
+> +                    reg = <0>;
+> +                    d2l_in_test: endpoint {
+> +                        remote-endpoint = <&dsi0_out>;
+> +                    };
+> +                };
+> +
+> +                port@1 {
+> +                    reg = <1>;
+> +                    lvds_out: endpoint {
+> +                        remote-endpoint = <&panel_in>;
+> +                    };
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +    dsi@1a98000 {
+> +        reg = <0x1a98000 0x25c>;
+> +        reg-names = "dsi_ctrl";
+> +
+> +        ports {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +            port@1 {
+> +                reg = <1>;
+> +                dsi0_out: endpoint {
+> +                    remote-endpoint = <&d2l_in_test>;
+> +                        data-lanes = <0 1 2 3>;
+> +                };
+> +             };
+> +         };
+> +     };
+> +
+Fix indent. One of the '}' is indented one space too much.
 
-Thanks for the update.
 
-There seem to be trailing whitespaces at least in the first patch, and a
-conflict in MAINTAINERS vs. current media tree master.
+> + - |
+> +    i2c@78b8000 {
+> +        /* On High speed expansion */
+> +        label = "HS-I2C2";
+> +        reg = <0x078b8000 0x500>;
+> +        clock-frequency = <400000>; /* fastmode operation */
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+What is the purpose with the second example?
+Does it explain the binding better in some way?
 
-Could you address these, please?
+The examples shall help understanding the binding, not help
+understanding the HW. The latter is the role of the binding.
 
--- 
-Regards,
 
-Sakari Ailus
+> +
+> +        tc_bridge_dual: bridge@f {
+> +            compatible = "toshiba,tc358775";
+> +            reg = <0x0f>;
+> +
+> +            vdd-supply = <&pm8916_l2>;
+> +            vddio-supply = <&pm8916_l6>;
+> +
+> +            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
+> +            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
+> +
+> +            ports {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                port@0 {
+> +                    reg = <0>;
+> +                    d2l_in_dual: endpoint {
+> +                        remote-endpoint = <&dsi0_out_dual>;
+> +                    };
+> +                };
+> +
+> +                port@1 {
+> +                    reg = <1>;
+> +                    lvds0_out: endpoint {
+> +                        remote-endpoint = <&panel_in0>;
+> +                    };
+> +                };
+> +
+> +                port@2 {
+> +                    reg = <2>;
+> +                    lvds1_out: endpoint {
+> +                        remote-endpoint = <&panel_in1>;
+> +                    };
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +    dsi@1a98000 {
+> +        reg = <0x1a98000 0x25c>;
+> +        reg-names = "dsi_ctrl";
+> +
+> +        ports {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +            port@1 {
+> +                reg = <1>;
+> +                dsi0_out_dual: endpoint {
+> +                    remote-endpoint = <&d2l_in_dual>;
+> +                        data-lanes = <0 1 2 3>;
+> +                };
+> +             };
+> +         };
+> +     };
+If this example is kept then fix indent of '}'.
+
+	Sam
+> +...
+> -- 
+> 2.17.1
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
