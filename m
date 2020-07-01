@@ -6,78 +6,78 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D588FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 22:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7E1C433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 22:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB0882082F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 22:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E77252085B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 22:24:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593642246;
-	bh=UOXPAuNZizHV54u2UlRgg0ZGPwJiEwjwXZbEWx49rQ8=;
+	s=default; t=1593642257;
+	bh=HguEhSuy+TQJwfPgAmeSVzUPU4XvdrCi4pUBHZc9nX0=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=SXYUjq9HHBBf2cXknpMEMO2LYL1vxKo27iKt5VZa2W69SXUvu88XKnv8zgdtjQF5e
-	 f5l8ARDPe/8QFvFJK2wliLQqSnl4pwQYhYFpjfWKyypsDo74yTLTIXVyLWkfR1msiA
-	 Ay+igh3homx1vZo4DQbZRA/nI+LNRj5ZB1eRqI+k=
+	b=C5qcuxytYnfDIvnsWax0psVMD5HRv08PTkn5fesb8daPp4DF/fNxG+qG9f2WwcgEY
+	 2z265VT8EPOrA7ea40xi1DlsAUHJ+89zB44sIac6nVPN+ktYE8NpUkSf2qc1xgUXUT
+	 xQ5sYx+08I6YbQWQeRVoIAGqHAG0O7Tn+Zbhqh9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728046AbgGAWYA (ORCPT
+        id S1728086AbgGAWYQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 18:24:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50958 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 18:24:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726464AbgGAWYA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jul 2020 18:24:00 -0400
+        id S1726464AbgGAWYQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Jul 2020 18:24:16 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC2F72082F;
-        Wed,  1 Jul 2020 22:23:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11AF8207E8;
+        Wed,  1 Jul 2020 22:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593642239;
-        bh=UOXPAuNZizHV54u2UlRgg0ZGPwJiEwjwXZbEWx49rQ8=;
+        s=default; t=1593642255;
+        bh=HguEhSuy+TQJwfPgAmeSVzUPU4XvdrCi4pUBHZc9nX0=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=XCO6yN0SOZdO4tHwPmSJ07OoXe1xfyEgg7TnarI9gzJtngKvGuDTDCsupZcuRMzpH
-         LD/NGofIded1lWgJKb2W2wlGyy/3qwEO0OWMZIFkAd2l+ieXZCu21VOp0vOCnZodvR
-         n2p+XBqIPL9sgwzepKz+9MqeFD7+8n10tmdjdzMo=
-Date:   Wed, 01 Jul 2020 23:23:57 +0100
+        b=QnDFizlnL7MCgV5wrTnsU7SP536qZzWl81Skg2dTtNoDE1mD7h8OkeeTLzU+zJIp6
+         Ri5j2qRZuyWrNqSwLQASaB+PC7B8in5SjMeG/RzbZjDCQZnZgQ21GezocLLm6GZsQ8
+         /DyYPtilrzyb3VVFGimpzp+hCIE2HPamV7xBCMhM=
+Date:   Wed, 01 Jul 2020 23:24:13 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     lgirdwood@gmail.com, Wesley Cheng <wcheng@codeaurora.org>,
-        heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-        jackp@codeaurora.org, rdunlap@infradead.org
-In-Reply-To: <20200626185516.18018-1-wcheng@codeaurora.org>
-References: <20200626185516.18018-1-wcheng@codeaurora.org>
-Subject: Re: [PATCH v4 0/6] Introduce PMIC based USB type C detection
-Message-Id: <159364222729.10880.15242810692121676047.b4-ty@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        devicetree@vger.kernel.org
+Cc:     Mason Yang <masonccyang@mxic.com.tw>,
+        linux-mtd@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-spi@vger.kernel.org
+In-Reply-To: <9969c8a1-e6be-38a9-ced5-ce8c5ff07046@cogentembedded.com>
+References: <9969c8a1-e6be-38a9-ced5-ce8c5ff07046@cogentembedded.com>
+Subject: Re: [PATCH v5 0/2] Add Renesas RPC-IF support
+Message-Id: <159364224814.10988.6815822575560386098.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 26 Jun 2020 11:55:10 -0700, Wesley Cheng wrote:
-> Changes in v4:
->  - Modified qcom,pmic-typec binding to include the SS mux and the DRD remote
->    endpoint nodes underneath port@1, which is assigned to the SSUSB path
->    according to usb-connector
->  - Added usb-connector reference to the typec dt-binding
->  - Added tags to the usb type c and vbus nodes
->  - Removed "qcom" tags from type c and vbus nodes
->  - Modified Kconfig module name, and removed module alias from the typec driver
+On Tue, 16 Jun 2020 23:00:20 +0300, Sergei Shtylyov wrote:
+> Here's a set of 2 patches against Linus' repo. Renesas Reduced Pin Count
+> Interface (RPC-IF) allows a SPI flash or HyperFlash connected to the SoC
+> to be accessed via the external address space read mode or the manual mode.
+> The memory controller driver for RPC-IF registers either SPI or HyperFLash
+> subdevice, depending on the contents of the device tree subnode; it also
+> provides the abstract "back end" API that can be used by the "front end"
+> SPI/MTD drivers to talk to the real hardware...
 > 
 > [...]
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
 Thanks!
 
-[1/2] regulator: Add support for QCOM PMIC VBUS booster
-      commit: 4fe66d5a62fbe1b050e783e7a01f986632c08c44
-[2/2] regulator: Add dt-binding for QCOM PMIC VBUS output regulator
-      commit: a824bab7c62d7ecd8ccfe9693da7ccb7e4683760
+[1/2] dt-bindings: memory: document Renesas RPC-IF bindings
+      commit: ab1c362061d92556bd96fd2c0b188f8e4223e3e3
+[2/2] memory: add Renesas RPC-IF driver
+      commit: ca7d8b980b67f133317525c4273e144116ee1ae5
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
