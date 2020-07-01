@@ -2,104 +2,157 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC99BC433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 07:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6544C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 07:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6AD1206A1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 07:34:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CAD720773
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 07:43:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jjGc2Fb5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728290AbgGAHeW (ORCPT
+        id S1728323AbgGAHnF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 03:34:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42248 "EHLO
+        Wed, 1 Jul 2020 03:43:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728142AbgGAHeW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 03:34:22 -0400
-Received: from hillosipuli.retiisi.org.uk (hillosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::81:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5289DC061755;
-        Wed,  1 Jul 2020 00:34:22 -0700 (PDT)
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 3DA42634C87;
-        Wed,  1 Jul 2020 10:34:05 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1jqXFt-0000nt-C5; Wed, 01 Jul 2020 10:34:05 +0300
-Date:   Wed, 1 Jul 2020 10:34:05 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc:     linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v4 1/4] device property: Add a function to test is a
- fwnode is a graph endpoint
-Message-ID: <20200701073405.GB836@valkosipuli.retiisi.org.uk>
-References: <20200701062140.12953-1-laurent.pinchart+renesas@ideasonboard.com>
- <20200701062140.12953-2-laurent.pinchart+renesas@ideasonboard.com>
+        with ESMTP id S1727836AbgGAHnD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 03:43:03 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C1F6C061755;
+        Wed,  1 Jul 2020 00:43:03 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id s16so7565299lfp.12;
+        Wed, 01 Jul 2020 00:43:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Vhza9ZHeiMaCPs/6QRV0zm5dqFctu0tGjnrB9xohpRY=;
+        b=jjGc2Fb5f5oGDiIof5sN1xI+8DKa0bOXujnT3GO1Br5PDOxSM+kEYWhbWtKT5KjtLH
+         fnuP0+B6s6RWxdH8fetIqJQVdQszj3Kfa2RgnE8R4LUfey9OsKPmnZEFR3yWv2EieCT/
+         WOnNnkbm+BfX4PlRgD886yD+mYts7JB/RQ0IxOe+r5++BznYspBgwtwGsEZ22TwBjdGu
+         SdrqTH8eYsF5uFcscqmUvLAtf/x6yRe/9JD2PV7HMfo8BM0dfcw0NyUG/E38vWaD30SE
+         Ox5oDna49wLaCwhpIpI1Jchp6ghjDWUxnTB/ZA8SeKl37pnCrXRIOKqakZK/wm85GiNh
+         YpIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Vhza9ZHeiMaCPs/6QRV0zm5dqFctu0tGjnrB9xohpRY=;
+        b=G1DTASZS2wWi1PKuG6B57aTKAAty4zbOGyxqciyhBU7XQ+zjGUgNd3SfvGNc8K8C/z
+         +jKVXQWp1B+KqCt037Abs+FOwYk8a3yFy4c7SqsY9UAdOM1OVoZU+K7lOYyUv0J5hWoy
+         iUa8pDh/HbPJPQOonqSHxMgCl/77/Lq9UBHR4jHWzZvvaY6qIqdYFUwgVtsGp8n9ci3c
+         n2JBf1cNwVxOeEhFgRyl2+NiD2UWiHmdLi1dUazbi+GBw0/qfqS0FBqVXKxB/AGzxN1E
+         pbYCpZ6eRCGfViVqj3jj1v72ourVtVyeJlysqpyOdTF6qjKwQI/h5/k7uLFofucPStKq
+         CADw==
+X-Gm-Message-State: AOAM531HcuCy+I0TXRwzWM9uwh4IJfrqe/P1Q04hKSXidtulkO3wBILb
+        be4HTfFajWrQ822X/X4eHl4=
+X-Google-Smtp-Source: ABdhPJxzWdx03z6LDNSI0qZvHK4dIxS6mE6LKiwnMXFfZ5H2XLyjhSUJJvI3F4HorF2xTzpmLloM7g==
+X-Received: by 2002:ac2:44b2:: with SMTP id c18mr13714003lfm.99.1593589381631;
+        Wed, 01 Jul 2020 00:43:01 -0700 (PDT)
+Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.gmail.com with ESMTPSA id e10sm1520881ljb.118.2020.07.01.00.43.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 00:43:00 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v10 1/2] of_graph: add of_graph_is_present()
+Date:   Wed,  1 Jul 2020 10:42:31 +0300
+Message-Id: <20200701074232.13632-2-digetx@gmail.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200701074232.13632-1-digetx@gmail.com>
+References: <20200701074232.13632-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200701062140.12953-2-laurent.pinchart+renesas@ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Laurent,
+In some cases it's very useful to silently check whether port node exists
+at all in a device-tree before proceeding with parsing the graph. The DRM
+bridges code is one example of such case where absence of a graph in a
+device-tree is a legit condition.
 
-On Wed, Jul 01, 2020 at 09:21:37AM +0300, Laurent Pinchart wrote:
-> Drivers may need to test if a fwnode is a graph endpoint. To avoid
-> hand-written solutions that wouldn't work for all fwnode types, add a
-> new fwnode_graph_is_endpoint() function for this purpose. We don't need
-> to wire it up to different backends for OF and ACPI for now, as the
-> implementation can simply be based on checkout the presence of a
-> remote-endpoint property.
-> 
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> ---
->  include/linux/property.h | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/include/linux/property.h b/include/linux/property.h
-> index 10d03572f52e..9f805c442819 100644
-> --- a/include/linux/property.h
-> +++ b/include/linux/property.h
-> @@ -389,6 +389,11 @@ struct fwnode_handle *
->  fwnode_graph_get_remote_node(const struct fwnode_handle *fwnode, u32 port,
->  			     u32 endpoint);
->  
-> +static inline bool fwnode_graph_is_endpoint(struct fwnode_handle *fwnode)
-> +{
-> +	return fwnode_property_present(fwnode, "remote-endpoint");
-> +}
-> +
->  /*
->   * Fwnode lookup flags
->   *
+This patch adds of_graph_is_present() which returns true if given
+device-tree node contains OF graph port.
 
-Thanks for the patch. I've bounced it to devicetree and linux-acpi lists
-(now cc'd) --- hope that works.
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/of/property.c    | 23 +++++++++++++++++++++++
+ include/linux/of_graph.h |  6 ++++++
+ 2 files changed, 29 insertions(+)
 
-Rafael: do you think this simple patch could go though the media tree,
-assuming that folks are generally fine with the patch as such?
-Alternatively,
-
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-
+diff --git a/drivers/of/property.c b/drivers/of/property.c
+index 6a5760f0d6cd..fed7229d9d9f 100644
+--- a/drivers/of/property.c
++++ b/drivers/of/property.c
+@@ -29,6 +29,29 @@
+ 
+ #include "of_private.h"
+ 
++/**
++ * of_graph_is_present() - check graph's presence
++ * @node: pointer to device_node containing graph port
++ *
++ * Return: True if @node has a port or ports (with a port) sub-node,
++ * false otherwise.
++ */
++bool of_graph_is_present(const struct device_node *node)
++{
++	struct device_node *ports, *port;
++
++	ports = of_get_child_by_name(node, "ports");
++	if (ports)
++		node = ports;
++
++	port = of_get_child_by_name(node, "port");
++	of_node_put(ports);
++	of_node_put(port);
++
++	return !!port;
++}
++EXPORT_SYMBOL(of_graph_is_present);
++
+ /**
+  * of_property_count_elems_of_size - Count the number of elements in a property
+  *
+diff --git a/include/linux/of_graph.h b/include/linux/of_graph.h
+index 01038a6aade0..4d7756087b6b 100644
+--- a/include/linux/of_graph.h
++++ b/include/linux/of_graph.h
+@@ -38,6 +38,7 @@ struct of_endpoint {
+ 	     child = of_graph_get_next_endpoint(parent, child))
+ 
+ #ifdef CONFIG_OF
++bool of_graph_is_present(const struct device_node *node);
+ int of_graph_parse_endpoint(const struct device_node *node,
+ 				struct of_endpoint *endpoint);
+ int of_graph_get_endpoint_count(const struct device_node *np);
+@@ -56,6 +57,11 @@ struct device_node *of_graph_get_remote_node(const struct device_node *node,
+ 					     u32 port, u32 endpoint);
+ #else
+ 
++static inline bool of_graph_is_present(const struct device_node *node)
++{
++	return false;
++}
++
+ static inline int of_graph_parse_endpoint(const struct device_node *node,
+ 					struct of_endpoint *endpoint)
+ {
 -- 
-Kind regards,
+2.26.0
 
-Sakari Ailus
