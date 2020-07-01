@@ -6,70 +6,64 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27AA2C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 22:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E256C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 22:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEDE620780
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 22:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E3DF207E8
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 22:22:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593642164;
-	bh=cJ/E7eJozKmA8owHe5A5Mzv6L3LI8x9nRfUS77HPINA=;
+	s=default; t=1593642169;
+	bh=sNB0otr3YXbGQdp8LUGPooYFhKBdpdTWobuGYek895E=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=FG3yMJC5Tv1T6yzbCt0AJ4Ajy6FOp5aaLWAZzFVS4NRCRYO9POVkjvPxQrDUawmSj
-	 sL0Yw+sF3fRdRt8b0ThgvSoA14vYcPMJJLE9aSvOMk3ofNaX98pjE0hQr7V1GxMWXm
-	 Ypap5P3tJTGzW/BNj380njKVseZBnmqF1JYs8sB8=
+	b=gJnLEbP2ReVzlpRLfkyrndIVMDoStevUf4gY9ZsjMpU2lkYWC0jWd++nJk5PLj9e+
+	 0X3NHpqWC8fjnnKXe5HIhCX5JGDY04RM+WEnZjr8KFtvC4gfNf7q9hcG9Js59/MgFm
+	 HLhg/J2KR7IzdjJB16kEROB8sqCBMrD7lW1ZnZV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbgGAWWn (ORCPT
+        id S1727099AbgGAWWt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 18:22:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49810 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 18:22:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726404AbgGAWWn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jul 2020 18:22:43 -0400
+        id S1726404AbgGAWWs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Jul 2020 18:22:48 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77574207E8;
-        Wed,  1 Jul 2020 22:22:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BE5520780;
+        Wed,  1 Jul 2020 22:22:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593642163;
-        bh=cJ/E7eJozKmA8owHe5A5Mzv6L3LI8x9nRfUS77HPINA=;
+        s=default; t=1593642168;
+        bh=sNB0otr3YXbGQdp8LUGPooYFhKBdpdTWobuGYek895E=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=eoZetv183/MwvWt4g9XDdVjYYsLTKM3H+xWZ9H88Ciadikq8X5B7IjbZPxke7OytK
-         0khhZ0pQ70pTNdYl1Wko3KkJCe4bG+XwA2DNLuFlfOs/+1Oa5euSv4F5l2qhUSjjCZ
-         eYZ09tWNMNXg6H1ACS8jpDmejaNm2KrM+ZcGDXSU=
-Date:   Wed, 01 Jul 2020 23:22:40 +0100
+        b=YilNAXuy18fwlQ34TqLP/zvBVBwFLd7MI44QdIFpJeNoCMFk8quUX+vSzdJBPSDkr
+         t5hJrURtDoaWKAxBGmIopKIMwVL3xf4VHA3nGLkDKsT039wJ6RS+Y6BR8+SJY02vE1
+         YnKtwgf1+TPE+VpGopzPypu8j/GLJk3x8AoLMryc=
+Date:   Wed, 01 Jul 2020 23:22:45 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     lgirdwood@gmail.com, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        robh+dt@kernel.org
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-In-Reply-To: <20200630125843.11561-1-peter.ujfalusi@ti.com>
-References: <20200630125843.11561-1-peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v4 0/3] ASoC: ti: Add support for audio on J721e EVM
-Message-Id: <159364215574.10630.2058528286314798186.b4-ty@kernel.org>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     alsa-devel@alsa-project.org, kuninori.morimoto.gx@renesas.com,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20200630223020.25546-1-festevam@gmail.com>
+References: <20200630223020.25546-1-festevam@gmail.com>
+Subject: Re: [PATCH] ASoC: dt-bindings: simple-card: Fix 'make dt_binding_check' warnings
+Message-Id: <159364215574.10630.10014931369710772889.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 30 Jun 2020 15:58:40 +0300, Peter Ujfalusi wrote:
-> Changes since v3:
-> - Fix the single clock source handling and typo
+On Tue, 30 Jun 2020 19:30:20 -0300, Fabio Estevam wrote:
+> The following build warnings are seen with 'make dt_binding_check':
 > 
-> Changes since v2:
-> - DT binding:
->  - use proper (?) patch subject for the binding docuemtn patch
->  - drop pll4 and pll15 from DT - driver should check the rate via
->    clk_get_parent. If it is not available (as it is not currently) then use the
->    match_data provided rates.
->  - add simple explanation for the clocking setup
->  - Use descriptive names for clocks: cpb/ivi-mcasp-auxclk and cpb/ivi-codec-scki
->  - dt_binding_check shows no errors/warnings
-> - ASoC machine driver:
->  - Try to read the PLL4/15 rate with clk API (parent of the two clock divider)
->    if it is not available then use the match_data provided numbers.
->  - Support for single PLL setup
+> Documentation/devicetree/bindings/sound/simple-card.example.dts:209.46-211.15: Warning (unit_address_vs_reg): /example-4/sound/simple-audio-card,cpu@0: node has a unit name, but no reg or ranges property
+> Documentation/devicetree/bindings/sound/simple-card.example.dts:213.37-215.15: Warning (unit_address_vs_reg): /example-4/sound/simple-audio-card,cpu@1: node has a unit name, but no reg or ranges property
+> Documentation/devicetree/bindings/sound/simple-card.example.dts:250.42-261.15: Warning (unit_address_vs_reg): /example-5/sound/simple-audio-card,dai-link@0: node has a unit name, but no reg or ranges property
+> Documentation/devicetree/bindings/sound/simple-card.example.dts:263.42-288.15: Warning (unit_address_vs_reg): /example-5/sound/simple-audio-card,dai-link@1: node has a unit name, but no reg or ranges property
+> Documentation/devicetree/bindings/sound/simple-card.example.dts:270.32-272.19: Warning (unit_address_vs_reg): /example-5/sound/simple-audio-card,dai-link@1/cpu@0: node has a unit name, but no reg or ranges property
+> Documentation/devicetree/bindings/sound/simple-card.example.dts:273.23-275.19: Warning (unit_address_vs_reg): /example-5/sound/simple-audio-card,dai-link@1/cpu@1: node has a unit name, but no reg or ranges property
+> Documentation/devicetree/bindings/sound/simple-card.example.dts:276.23-278.19: Warning (unit_address_vs_reg): /example-5/sound/simple-audio-card,dai-link@1/cpu@2: node has a unit name, but no reg or ranges property
+> Documentation/devicetree/bindings/sound/simple-card.example.dts:279.23-281.19: Warning (unit_address_vs_reg): /example-5/sound/simple-audio-card,dai-link@1/cpu@3: node has a unit name, but no reg or ranges property
+> Documentation/devicetree/bindings/sound/simple-card.example.dts:290.42-303.15: Warning (unit_address_vs_reg): /example-5/sound/simple-audio-card,dai-link@2: node has a unit name, but no reg or ranges property
 > 
 > [...]
 
@@ -79,12 +73,8 @@ Applied to
 
 Thanks!
 
-[1/3] ASoC: ti: davinci-mcasp: Specify stream_name for playback/capture
-      commit: ef3ab250aad9920fa7fd6280051c92a488109b87
-[2/3] ASoC: dt-bindings: Add documentation for TI j721e EVM (CPB and IVI)
-      commit: 8142500e7dc0d214e3c7a22788116f71cd84f07b
-[3/3] ASoC: ti: Add custom machine driver for j721e EVM (CPB and IVI)
-      commit: 6748d05590594837e42dfa975879fb275099f0b2
+[1/1] ASoC: dt-bindings: simple-card: Fix 'make dt_binding_check' warnings
+      commit: 88ba5f4a642e4fb6ab7058254967f55375ca068d
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
