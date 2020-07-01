@@ -2,215 +2,112 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE24CC433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 07:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89597C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 07:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCCAB2078D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 07:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64A622070C
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 07:22:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M5xx14Cv"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="nR5D7eL9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbgGAHEl (ORCPT
+        id S1728124AbgGAHWH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 03:04:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37670 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727981AbgGAHEj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 03:04:39 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BA86C03E979
-        for <devicetree@vger.kernel.org>; Wed,  1 Jul 2020 00:04:39 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id s10so22596399wrw.12
-        for <devicetree@vger.kernel.org>; Wed, 01 Jul 2020 00:04:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=e12F1suikdS3lGtBuyJAayumJr4O2+9e5bqVwPL0o7M=;
-        b=M5xx14CvYq83HbV1b8rfXttQ1GPSnY1Tk0KdGpXG8pGlUAlrg0sWDEnk8bzKkJ6r6k
-         2Aa0XA3apmz6vDJQ0V5lUPceHC4c95rjbZ0M/T1M/vH/i0zfizzW71uUJr+IuzrwnQru
-         9kTAGNbQv3W1fYpXuQhR+qoNUkjPUQnu2c/R1I+MTqIlj2BJoKllFFzmemkMhkrlTlo+
-         yiv1jOcJwAo7xFKUnGiVXrK0m4pTQpddkUlVJcbN5jtVBKnBeLEE62nGdLe64NtdU2hP
-         6P7VnvWOXc23r0ZP3HU6wwfGlrc8BLrfA2YlVx4xaX6aBozq60qV4YXQi72OtSGVKYUT
-         Y6Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=e12F1suikdS3lGtBuyJAayumJr4O2+9e5bqVwPL0o7M=;
-        b=To/OE9jWUbUiW2ZMv0oosSCSPxmFwkCmflVUr2HeAVeOtCAEx/VA2FnA0i0BHeiu1n
-         KQ1qh1y04uZL5JNyyJWLnn0klNQMJxjZyzG5sFtqCqymj/49U86y50oZnSTzm4IN4G2R
-         jlZJt544Wx9GU9Z3IgmV2bkhk0yPTUDdtdTjwX1vAqSOBIEF96pOD/FuAXp5NOTMjr+8
-         pILKb/cJnejVfUEBnDAxm5o/tsMs+OvScVgfgajbDy3Zp/vxRW1rs2BmPKJBmfLv39AS
-         d8rXyoENkDTP1r/hVazIwnkV8RZpdDVu7rnMIigDHYwvCagMoLbBxnTKLLFXeqzd7cEO
-         7igQ==
-X-Gm-Message-State: AOAM533xM3eho+sLWidzCQogZWgb9J4Mg3WCahAOuO/NeL4zGKI9cIYr
-        D+ZuYca0QfLqKYzayLfU1/YjWQ==
-X-Google-Smtp-Source: ABdhPJyZ0zCqVJ4yCEcYTanPmJiMHwO+RzvGh5qS/YdgNhZ3s59Ce3qt5dt+K7Lrub9MMzWPYdgvBA==
-X-Received: by 2002:a5d:66ca:: with SMTP id k10mr14794987wrw.244.1593587077069;
-        Wed, 01 Jul 2020 00:04:37 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id l18sm6294142wrm.52.2020.07.01.00.04.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 00:04:36 -0700 (PDT)
-Date:   Wed, 1 Jul 2020 08:04:34 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     robh+dt@kernel.org, broonie@kernel.org, gregkh@linuxfoundation.org,
-        andriy.shevchenko@linux.intel.com, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com, arnd@arndb.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/1] mfd: Add I2C based System Configuaration (SYSCON)
- access
-Message-ID: <20200701070434.GP1179328@dell>
-References: <20200622075145.1464020-1-lee.jones@linaro.org>
- <e436fd60bf0ebb6d72a76034d0fc35de@walle.cc>
- <f505c52d565ba7dbf05eef895782c410@walle.cc>
+        Wed, 1 Jul 2020 03:22:07 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:50022 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728065AbgGAHWG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 03:22:06 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0617Hv6J007048;
+        Wed, 1 Jul 2020 09:21:59 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=Fqmgqga7p2xlC5BiTeb3k17/KtVTjMNwbFVFawb4x7s=;
+ b=nR5D7eL9XpRFGaQ3n2Kj9aQi2Krz0FV8izzxrZnISlkjN9LPUTy7/rzbHiqIHpE/p/ff
+ 3oFKoDVUgj+TB9sgElbiyNKcHY4llIQQMnisg0F+aqpu/Q36A/HHMJpYufmMIYVkwknO
+ 6YE5YBVosCNSzHZBLJEd31wkAYTbsqzdlM3jUuThwHXxdvxuqqwLj0/SwS+owGqC4LRq
+ wrsU1L4FBEjxMMBM4njK0SblMerWQAsHo5jK06hZ4hvFlrNhapBgoQHrMQf7E7axzKhV
+ sweOsaXFyDC1c+Dx7U1sNr0Drwdvhpdsyo6sco9Atz4jVNQP++OO8bPAvFmuXgKPSmLs Kw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31wuk1g3ad-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Jul 2020 09:21:59 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0029410002A;
+        Wed,  1 Jul 2020 09:21:58 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E7E94210F81;
+        Wed,  1 Jul 2020 09:21:58 +0200 (CEST)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 1 Jul
+ 2020 09:21:58 +0200
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Wed, 1 Jul 2020 09:21:58 +0200
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     Fabio Estevam <festevam@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [RFC] dt-bindings: mfd: st,stmfx: Remove extra
+ additionalProperties
+Thread-Topic: [RFC] dt-bindings: mfd: st,stmfx: Remove extra
+ additionalProperties
+Thread-Index: AQHWTkrSTJHqoDOlXEWFBhpGidYzp6jyMn8A
+Date:   Wed, 1 Jul 2020 07:21:58 +0000
+Message-ID: <18c2405c-3c9d-58e0-c5ab-61a214341322@st.com>
+References: <20200629192335.24622-1-festevam@gmail.com>
+In-Reply-To: <20200629192335.24622-1-festevam@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.44]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <71BB0AF4334288459BD49C56CBA98190@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f505c52d565ba7dbf05eef895782c410@walle.cc>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-01_03:2020-07-01,2020-07-01 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 01 Jul 2020, Michael Walle wrote:
-
-> Hi Lee,
-> 
-> Am 2020-06-30 11:16, schrieb Michael Walle:
-> > I'm just trying to use this for my sl28 driver. Some remarks, see below.
-> > 
-> > Am 2020-06-22 09:51, schrieb Lee Jones:
-> > > The existing SYSCON implementation only supports MMIO (memory mapped)
-> > > accesses, facilitated by Regmap.  This extends support for registers
-> > > held behind I2C busses.
-> > > 
-> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > > ---
-> > > Changelog:
-> > > 
-> > > v3 => v4
-> > >   - Add ability to provide a non-default Regmap configuration
-> > > 
-> > > v2 => v3
-> > >   - Change 'is CONFIG' present check to include loadable modules
-> > >     - s/#ifdef CONFIG_MFD_SYSCON_I2C/#if
-> > > IS_ENABLED(CONFIG_MFD_SYSCON_I2C)/
-> > > 
-> > > v1 => v2
-> > >   - Remove legacy references to OF
-> > >   - Allow building as a module (fixes h8300 0-day issue)
-> > > 
-> > > drivers/mfd/Kconfig            |   7 +++
-> > >  drivers/mfd/Makefile           |   1 +
-> > >  drivers/mfd/syscon-i2c.c       | 104
-> > > +++++++++++++++++++++++++++++++++
-> > >  include/linux/mfd/syscon-i2c.h |  36 ++++++++++++
-> > >  4 files changed, 148 insertions(+)
-> > >  create mode 100644 drivers/mfd/syscon-i2c.c
-> > >  create mode 100644 include/linux/mfd/syscon-i2c.h
-> > > 
-> > 
-> > [..]
-> > 
-> > > +static struct regmap *syscon_i2c_get_regmap(struct i2c_client
-> > > *client,
-> > > +					    struct regmap_config *regmap_config)
-> > > +{
-> > > +	struct device *dev = &client->dev;
-> > > +	struct syscon *entry, *syscon = NULL;
-> > > +
-> > > +	spin_lock(&syscon_i2c_list_slock);
-> > > +
-> > > +	list_for_each_entry(entry, &syscon_i2c_list, list)
-> > > +		if (entry->dev == dev) {
-> > > +			syscon = entry;
-> > > +			break;
-> > > +		}
-> > > +
-> > > +	spin_unlock(&syscon_i2c_list_slock);
-> > > +
-> > > +	if (!syscon)
-> > > +		syscon = syscon_i2c_register(client, regmap_config);
-> > > +
-> > > +	if (IS_ERR(syscon))
-> > > +		return ERR_CAST(syscon);
-> > > +
-> > > +	return syscon->regmap;
-> > > +}
-> > > +
-> > > +struct regmap *syscon_i2c_to_regmap_config(struct i2c_client *client,
-> > > +					   struct regmap_config *regmap_config)
-> > > +{
-> > > +	return syscon_i2c_get_regmap(client, regmap_config);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(syscon_i2c_to_regmap_config);
-> > > +
-> > > +struct regmap *syscon_i2c_to_regmap(struct i2c_client *client)
-> > > +{
-> > > +	return syscon_i2c_get_regmap(client, &syscon_i2c_regmap_config);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(syscon_i2c_to_regmap);
-> > 
-> > What do you think about
-> > 
-> > struct regmap *syscon_i2c_to_regmap(struct device *dev)
-> > {
-> > 	struct i2c_client *client = i2c_verify_client(dev);
-> > 
-> > 	if (!client)
-> > 		return ERR_PTR(-EINVAL);
-> > 
-> > 	return syscon_i2c_get_regmap(client, &syscon_i2c_regmap_config);
-> > }
-> > 
-> > Or even move it to syscon_i2c_get_regmap().
-> > 
-> > This way, (a) a driver doesn't have to use "#include <linux/i2c.h>" just
-> > to call to_i2c_client() (or i2c_verify_client()) and (b) you won't do it
-> > all over again in all sub drivers.
-> > 
-> > So you could just do a
-> >   regmap = syscon_i2c_to_regmap(pdev->dev.parent);
-> > 
-> > I've also noticed that the mmio syscon uses device_node as parameter.
-> > What
-> > was the reason to divert from that? Just curious.
-> 
-> How is this supposed to be used?
-> 
-> I had something like the following in mind:
-> 
-> &i2c {
->   cpld@4a {
->     compatible = "simple-mfd";
->     reg = <0x4a>;
-> 
->     gpio@4 {
->       compatible = "vendor,gpio";
->       reg = <0x4>;
->     };
->   };
-> };
-
-Yes, that was the idea.
-
-> But I think the childen are not enumerated if its an I2C device. And
-> the actual i2c driver is also missing.
-
-What do you mean?  Can you elaborate?
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+DQoNCk9uIDYvMjkvMjAgOToyMyBQTSwgRmFiaW8gRXN0ZXZhbSB3cm90ZToNCj4gVGhlIGZvbGxv
+d2luZyBidWlsZCBlcnJvciBpcyBzZWVuIHdpdGggJ21ha2UgZHRfYmluZGluZ19jaGVjayc6DQo+
+DQo+ICAgIENIS0RUICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9zdCxz
+dG1meC55YW1sDQo+IC9ob21lL2ZhYmlvL2xpbnV4LW5leHQvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL21mZC9zdCxzdG1meC55YW1sOiBwcm9wZXJ0aWVzOnBpbmN0cmw6cGF0dGVy
+blByb3BlcnRpZXM6IHsnZW51bSc6IFsnJHJlZicsICdhZGRpdGlvbmFsSXRlbXMnLCAnYWRkaXRp
+b25hbFByb3BlcnRpZXMnLCAnYWxsT2YnLCAnYW55T2YnLCAnY29uc3QnLCAnY29udGFpbnMnLCAn
+ZGVmYXVsdCcsICdkZXBlbmRlbmNpZXMnLCAnZGVwcmVjYXRlZCcsICdkZXNjcmlwdGlvbicsICdl
+bHNlJywgJ2VudW0nLCAnaWYnLCAnaXRlbXMnLCAnbWF4SXRlbXMnLCAnbWF4aW11bScsICdtaW5J
+dGVtcycsICdtaW5pbXVtJywgJ211bHRpcGxlT2YnLCAnbm90JywgJ29uZU9mJywgJ3BhdHRlcm4n
+LCAncGF0dGVyblByb3BlcnRpZXMnLCAncHJvcGVydGllcycsICdwcm9wZXJ0eU5hbWVzJywgJ3Jl
+cXVpcmVkJywgJ3RoZW4nLCAndW5ldmFsdWF0ZWRQcm9wZXJ0aWVzJ119IGlzIG5vdCBhbGxvd2Vk
+IGZvciAnYWRkaXRpb25hbFByb3BlcnRpZXMnDQo+DQo+IFJlbW92ZSB0aGUgZXh0cmEgJ2FkZGl0
+aW9uYWxQcm9wZXJ0aWVzJyB0byBwYXNzIHRoZSBidWlsZC4NClJldmlld2VkLWJ5OiBCZW5qYW1p
+biBHYWlnbmFyZCA8YmVuamFtaW4uZ2FpZ25hcmRAc3QuY29tPg0KPg0KPiBTaWduZWQtb2ZmLWJ5
+OiBGYWJpbyBFc3RldmFtIDxmZXN0ZXZhbUBnbWFpbC5jb20+DQo+IC0tLQ0KPiAgIERvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvc3Qsc3RtZngueWFtbCB8IDIgLS0NCj4gICAx
+IGZpbGUgY2hhbmdlZCwgMiBkZWxldGlvbnMoLSkNCj4NCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvc3Qsc3RtZngueWFtbCBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvc3Qsc3RtZngueWFtbA0KPiBpbmRleCAwY2U1NmEw
+ZGE1NTMuLmJlZDIyZDRhYmZmYiAxMDA2NDQNCj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL21mZC9zdCxzdG1meC55YW1sDQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9tZmQvc3Qsc3RtZngueWFtbA0KPiBAQCAtNzMsOCArNzMsNiBAQCBw
+cm9wZXJ0aWVzOg0KPiAgICAgICAgICAgICBvdXRwdXQtaGlnaDogdHJ1ZQ0KPiAgICAgICAgICAg
+ICBvdXRwdXQtbG93OiB0cnVlDQo+ICAgDQo+IC0gICAgICBhZGRpdGlvbmFsUHJvcGVydGllczog
+ZmFsc2UNCj4gLQ0KPiAgICAgICBhZGRpdGlvbmFsUHJvcGVydGllczogZmFsc2UNCj4gICANCj4g
+ICAgICAgcmVxdWlyZWQ6DQo=
