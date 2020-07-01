@@ -2,88 +2,164 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DC6C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 09:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B2DDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 10:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60AD92067D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 09:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7B2820722
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 10:11:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="wbqk8Ph9"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="klJWoWQj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729607AbgGAJqE (ORCPT
+        id S1729339AbgGAKLH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:46:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34804 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbgGAJqD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 05:46:03 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6CA1C061755
-        for <devicetree@vger.kernel.org>; Wed,  1 Jul 2020 02:46:03 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id z2so846840wrp.2
-        for <devicetree@vger.kernel.org>; Wed, 01 Jul 2020 02:46:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WsaJCqMmyft0xsDXaDX0E0lFydjZ70ccL/4pSLdMeMc=;
-        b=wbqk8Ph9l/AGhRL3xUbGbNhLrunVeFNmXALYi0Gg56El/K1rrk3zzHtIf/sL1VdR3D
-         b3pBroqn4YTxTHIIg1cvze/q+fzpvAhGEZDjCHSYCcq3D5LN9cY+N8oqtoWmi3wp1Zi/
-         /2XzsEcLLsPKDqNJ0Iv8Pt5nWZ6zDwps1akv3mKqrH2Cy82IA0v1BCdPm4SgSazw/GwS
-         nlL23SjmZepHaJdtV+jbzGPq7hH9hZaEBSgS1gTZjMW3gva2JtXqB+uVIkeRsrWE8+iR
-         53WDNdZ+PSHEoUKREoeFk7IeT7n9qSzJiWpx1Q/aBY/EIKHhYk8bNIF+wmeGtkT/lul2
-         P7Rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WsaJCqMmyft0xsDXaDX0E0lFydjZ70ccL/4pSLdMeMc=;
-        b=nC2RkpJfM6jfRR/752zGLFt8z9MWgY2OkVkSJx7N8BsvCDLfgrsB9HUD8OsSmeEsbz
-         0QOowTUcmDyt1GvaFOJEMCVs5eFlY9SXHJ/C5k46w+RjMvCxgAgz7ZS4lXLqa5r73NRP
-         bJGyYZj9+iVUTGZ5Bmeu5FSsmQlTNMplW3JVSBgnIBofjsfVba38925ioOfBynlohUDu
-         8Jy6c3Rw1rJ+e7cAHnIUrPbKJnwQoSPCdUtpn4m5W4z2SdDgYgOoogQ8P2atVhgtO+AC
-         4u1+pdIleELRyxeYHvdDivnEvMsTM6tu5rW04gl/d19yd/shDh2bp65DEIS8MbkozdXS
-         7vFQ==
-X-Gm-Message-State: AOAM533D8cEbILYCktPttoN4Za8JK+NQFsoGQYxZsXoJ2zlJwl4dT1LT
-        OFiJCNTuVJyCrRfCJCfVCwfbAA==
-X-Google-Smtp-Source: ABdhPJxK5vIN7UeAUbYNFQLTvAZEkw2V7bkjRvhqNfHoOiZLWbl8nRVLfm7/OR/9iJN3Dm6TZLb17Q==
-X-Received: by 2002:a5d:4f8b:: with SMTP id d11mr2853363wru.147.1593596762403;
-        Wed, 01 Jul 2020 02:46:02 -0700 (PDT)
-Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id f13sm6270472wmb.33.2020.07.01.02.46.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 02:46:01 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] arm64: dts: meson: odroid-n2: update sound card
-Date:   Wed,  1 Jul 2020 11:45:54 +0200
-Message-Id: <20200701094556.194498-1-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.25.4
+        Wed, 1 Jul 2020 06:11:07 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:33469 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729358AbgGAKLH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 06:11:07 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593598266; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=amiqoJGPjX9RNHOLVHTe5Q2mOjhh5iGIl3d/MtXJOIs=;
+ b=klJWoWQj2Memq5yCwOsgscVbjLRTXuQKSZKwTXxTsBas6yfpx/UCmToaAzbt3H0QdzS9u/Ws
+ m40mWJw3jNTzr50hjGX25nE5felUcxTK4nYuFy0kKmoVpSYGyvzJg3tjwojh74D7nlpmiA8E
+ Qnl9QzhpdwqI6A8m9GWHIK3frrk=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
+ 5efc6139117610c7ff405ea6 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 01 Jul 2020 10:11:05
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2A470C433AD; Wed,  1 Jul 2020 10:11:05 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B6F35C433C8;
+        Wed,  1 Jul 2020 10:11:03 +0000 (UTC)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 01 Jul 2020 15:41:03 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Will Deacon <will@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        John Stultz <john.stultz@linaro.org>,
+        freedreno@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Joerg Roedel <joro@8bytes.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, Sean Paul <sean@poorly.run>,
+        Shawn Guo <shawn.guo@linaro.org>, Takashi Iwai <tiwai@suse.de>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH v9 0/7] iommu/arm-smmu: Enable split pagetable support
+In-Reply-To: <20200626200042.13713-1-jcrouse@codeaurora.org>
+References: <20200626200042.13713-1-jcrouse@codeaurora.org>
+Message-ID: <bdc2a4348230f430138d320e49e188c0@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patchset adds the support for the TDM loopback and audio on the jack
-output using the internal codec.
+Hi Will, Robin,
 
-Jerome Brunet (2):
-  arm64: dts: meson: odroid-n2: enable audio loopback
-  arm64: dts: meson: odroid-n2: add jack audio output support
+On 2020-06-27 01:30, Jordan Crouse wrote:
+> Another iteration of the split-pagetable support for arm-smmu and the 
+> Adreno GPU
+> SMMU. After email discussions [1] we opted to make a arm-smmu 
+> implementation for
+> specifically for the Adreno GPU and use that to enable split pagetable 
+> support
+> and later other implementation specific bits that we need.
+> 
+> On the hardware side this is very close to the same code from before 
+> [2] only
+> the TTBR1 quirk is turned on by the implementation and not a domain 
+> attribute.
+> In drm/msm we use the returned size of the aperture as a clue to let us 
+> know
+> which virtual address space we should use for global memory objects.
+> 
+> There are two open items that you should be aware of. First, in the
+> implementation specific code we have to check the compatible string of 
+> the
+> device so that we only enable TTBR1 for the GPU (SID 0) and not the GMU 
+> (SID 4).
+> I went back and forth trying to decide if I wanted to use the 
+> compatible string
+> or the SID as the filter and settled on the compatible string but I 
+> could be
+> talked out of it.
+> 
+> The other open item is that in drm/msm the hardware only uses 49 bits 
+> of the
+> address space but arm-smmu expects the address to be sign extended all 
+> the way
+> to 64 bits. This isn't a problem normally unless you look at the 
+> hardware
+> registers that contain a IOVA and then the upper bits will be zero. I 
+> opted to
+> restrict the internal drm/msm IOVA range to only 49 bits and then sign 
+> extend
+> right before calling iommu_map / iommu_unmap. This is a bit wonky but I 
+> thought
+> that matching the hardware would be less confusing when debugging a 
+> hang.
+> 
+> v9: Fix bot-detected merge conflict
+> v7: Add attached device to smmu_domain to pass to implementation 
+> specific
+> functions
+> 
+> [1] 
+> https://lists.linuxfoundation.org/pipermail/iommu/2020-May/044537.html
+> [2] https://patchwork.kernel.org/patch/11482591/
+> 
+> 
+> Jordan Crouse (7):
+>   iommu/arm-smmu: Pass io-pgtable config to implementation specific
+>     function
+>   iommu/arm-smmu: Add support for split pagetables
+>   dt-bindings: arm-smmu: Add compatible string for Adreno GPU SMMU
+>   iommu/arm-smmu: Add a pointer to the attached device to smmu_domain
+>   iommu/arm-smmu: Add implementation for the adreno GPU SMMU
+>   drm/msm: Set the global virtual address range from the IOMMU domain
+>   arm: dts: qcom: sm845: Set the compatible string for the GPU SMMU
+> 
+>  .../devicetree/bindings/iommu/arm,smmu.yaml   |  4 ++
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi          |  2 +-
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.c       | 13 +++++-
+>  drivers/gpu/drm/msm/msm_iommu.c               |  7 +++
+>  drivers/iommu/arm-smmu-impl.c                 |  6 ++-
+>  drivers/iommu/arm-smmu-qcom.c                 | 45 ++++++++++++++++++-
+>  drivers/iommu/arm-smmu.c                      | 38 +++++++++++-----
+>  drivers/iommu/arm-smmu.h                      | 30 ++++++++++---
+>  8 files changed, 120 insertions(+), 25 deletions(-)
 
- .../boot/dts/amlogic/meson-g12b-odroid-n2.dts | 136 +++++++++++++++++-
- 1 file changed, 131 insertions(+), 5 deletions(-)
+Any chance reviewing this?
+
+Thanks,
+Sai
 
 -- 
-2.25.4
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
