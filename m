@@ -2,181 +2,318 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCDAC433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 07:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5A2C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 07:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C1032065D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 07:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89F1320722
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 07:04:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j8Toj+Y1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NnxOQGwN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbgGAHAQ (ORCPT
+        id S1728048AbgGAHEY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 03:00:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36948 "EHLO
+        Wed, 1 Jul 2020 03:04:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727988AbgGAHAH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 03:00:07 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C31D5C03E979
-        for <devicetree@vger.kernel.org>; Wed,  1 Jul 2020 00:00:06 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id z15so11357109wrl.8
-        for <devicetree@vger.kernel.org>; Wed, 01 Jul 2020 00:00:06 -0700 (PDT)
+        with ESMTP id S1727981AbgGAHEX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 03:04:23 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18E51C061755;
+        Wed,  1 Jul 2020 00:04:23 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id b92so10635476pjc.4;
+        Wed, 01 Jul 2020 00:04:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+pRKYTmuOThutSuGqfNrgAamAdWYk1YESRlVS2CO28A=;
-        b=j8Toj+Y1Sm33G/MY5KpRJO/4MLA6Xmjv5NEmZN881Y2JY1sddA5DRPZK6/0hHYYGcd
-         krHNiAHXOdRvae6EVQZAGELUQtm8CGXJ/x+SgYHM0VvPaidxeEwowx7vTVi8h37/rb9C
-         R7BfnkfDNL4HN0vdPWCRCwrMaip4v5M1lbG4IKaFHPpDzHWHhYc+HHpuyL85P/cGtTGi
-         WyANo0R3IJVjvT7gqHcbR4cXVNMm9/NoowviYuOanpFmwrhD5+xp9JMNCo9TJNFskga1
-         /lU/Kvj3kKhEUI3AAcKj3cvObXMNLBpVx5h/aEMMdxo8fGGXRH2H1kj9IBR9Z7shRmJe
-         qOpQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=gEzbAtWIsd1iT+azfZmBohV/AqNwaJqbCk/ZUwUKLT0=;
+        b=NnxOQGwN2fiVijkyKWMDRKyu6NhJ9XGf1RN8fCmtWJbYPFPZwt1E2v1y95ag2laVoz
+         JuRRtV/SSKcCUZ5IBPUmO4XZZOss80RdERJBx/cWm3TR/JNM8fcyzk79WbIqDxc2+8Um
+         6bAnewGJU/0QdRS1mj/C/NqEo5w4fF/ao5pT/Bfp2sMKKvlfNqt0xWNBGW4yy9TfKEQJ
+         UTMBlxfU8+DNUQ/I/lK0ONPLhCR47k9No8uQ6GRE8QF32H5caMOcNZ/GXPFSCQlPGX7p
+         vdMzvNa00shOqnPOB6rxqrSPoA6ueTsDPgqXItp09e21hATcW6yrktrPCXRbnsAO0lYZ
+         URfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+pRKYTmuOThutSuGqfNrgAamAdWYk1YESRlVS2CO28A=;
-        b=MUoG3fkhcPpF4tDht1SzlQXd2LhnM7CAFdtZnFh2oxs1QAZYuPHIEmwIEZNGMqjwZw
-         eOoAMqEy4MdBlzrMQwdfCR6pxNhQfSbm5KW/WYSwgfo+JkwjdZetgo6u97zlfckL4Vpc
-         RaKXNmGe+Gp37apyyeVmtfo084KFooG7Zy59Wkc+AKgvIiHYP6RwZAGSBzefpukqqHbp
-         YM3wN8iZ6oNDhfHYQYCVD1t/qyrNUe9CmcV53ST6NxCEUp7EE6BbHHSuipEonQTQk7q6
-         8SOPw63ilnMWZ8ePGaKSGwNRFnbYbXaS9lKKiiaE0OpNlVE6QnyOZzwKUailfIwwgDiF
-         CBDw==
-X-Gm-Message-State: AOAM5317MDrmvq8Bts7GQ4f3Ts9RDDQkQYGhNJ+m/NWVIu3c311+alk/
-        M1HUIQT3qcUUkiIMPXel485ANQ==
-X-Google-Smtp-Source: ABdhPJzXAeq3ERQ5grT5ciAC17dbRoZi+Anv+tNI3+3VRZcEoztY0g+mRZPxmb9Cn/QQRsS3FfyLAQ==
-X-Received: by 2002:adf:828b:: with SMTP id 11mr27284990wrc.58.1593586805272;
-        Wed, 01 Jul 2020 00:00:05 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:54f4:a99f:ab88:bc07? ([2a01:e34:ed2f:f020:54f4:a99f:ab88:bc07])
-        by smtp.googlemail.com with ESMTPSA id o205sm6355532wme.24.2020.07.01.00.00.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Jul 2020 00:00:04 -0700 (PDT)
-Subject: Re: [PATCH v4 6/6] MAINTAINERS: Add maintainers for MIPS core drivers
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200617223201.23259-1-Sergey.Semin@baikalelectronics.ru>
- <20200617223201.23259-7-Sergey.Semin@baikalelectronics.ru>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <e29c9643-db5c-2d89-ff56-0900091770ea@linaro.org>
-Date:   Wed, 1 Jul 2020 09:00:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200617223201.23259-7-Sergey.Semin@baikalelectronics.ru>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=gEzbAtWIsd1iT+azfZmBohV/AqNwaJqbCk/ZUwUKLT0=;
+        b=hy4nJOd4iJFyHi0RMpOLHbQEyAon/bm5qsRvbK/EhnrSs4oK0YgXrv/WSmQidYnghV
+         GPoDtylMVM5ZhlgreT4ICW79Dj6xqAYHjA0datPYXh6ntpSICdp52sK0jb3teCM/1tbJ
+         NJ9+X0wJ4HLvvZjTr3kccteV0rapWeYg1ANU3p7sB8+LuDFxR70pRQanSnkngnFOR4bd
+         bvVhaBUCE+UD0p7bh8oJMAff0mGW1TpLbh6+yIKJ6pxK2uuaOjgBRWgc30mOvIayPah5
+         mH804Xhlq9jW07z/wmd9hCooW983vUaUc/bitwrrDps+ox7NsS99qvyV9t+fLhw9NCnT
+         4Akg==
+X-Gm-Message-State: AOAM5305EP+J5NjBuU5aJDt9JgYF/8bVhCL4F7e+O711sJNQKrrs68Md
+        Pxhye5P9M8VM6m2vxdco9tqfWd7LnMc=
+X-Google-Smtp-Source: ABdhPJx/6lPBNeVtHwsvQ63vNg3gQTw0bGryosd9ftVV+EMIb/Bl718hMVuloKtYMtKlOW9lBXxOlQ==
+X-Received: by 2002:a17:902:9042:: with SMTP id w2mr11542065plz.8.1593587062534;
+        Wed, 01 Jul 2020 00:04:22 -0700 (PDT)
+Received: from in099003062.routereb3c90.com ([106.51.138.45])
+        by smtp.gmail.com with ESMTPSA id f2sm3623201pfb.184.2020.07.01.00.04.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 00:04:21 -0700 (PDT)
+From:   Vinay Simha BN <simhavcs@gmail.com>
+To:     narmstrong@baylibre.com, Ken-Sue.Tan@taec.toshiba.com,
+        Chris.Cheng@taec.toshiba.com, Bhushan.Patel@taec.toshiba.com
+Cc:     Vinay Simha BN <simhavcs@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v5 1/2] dt-binding: Add DSI/LVDS TC358775 bridge bindings
+Date:   Wed,  1 Jul 2020 12:33:36 +0530
+Message-Id: <20200701070344.6330-1-simhavcs@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 18/06/2020 00:32, Serge Semin wrote:
-> Add Thomas and myself as maintainers of the MIPS CPU and GIC IRQchip, MIPS
-> GIC timer and MIPS CPS CPUidle drivers.
+This driver is tested with two panels with Apq8016-IFC6309 board
+https://www.inforcecomputing.com/products/single-board-computers-sbc/qualcomm-snapdragon-410-inforce-6309-micro-sbc
 
-Why will you add yourself in the MAINTAINERS file for those drivers when
-git shows just one contribution for the mips-gic-timer for the timer
-stability ?
+1. 1366x768@60 auo,b101xtn01 data-mapping = "jeida-24"
+2. 800x480@60 innolux,at070tn92 data-mapping = "vesa-24"
 
-git shortlog --numbered --summary drivers/cpuidle/cpuidle-cps.c
-     4  Paul Burton
-     1  Daniel Lezcano
-     1  Marcin Nowakowski
-     1  Matt Redfearn
-     1  Thomas Gleixner
+Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
 
-git shortlog --numbered --summary drivers/clocksource/mips-gic-timer.c
-    11  Andrew Bresticker
-     4  Ezequiel Garcia
-     4  Matt Redfearn
-     4  Paul Burton
-     3  Daniel Lezcano
-     3  Thomas Gleixner
-     2  Linus Torvalds
-     1  Alex Smith
-     1  Christophe Jaillet
-     1  Felix Fietkau
-     1  Ingo Molnar
-     1  Markos Chandras
-     1  Paul Gortmaker
-     1  Rafał Miłecki
-     1  Richard Cochran
-     1  Serge Semin
-     1  Viresh Kumar
-     1  YueHaibing
+---
+v1:
+ Initial version wast .txt file
 
-Also, in the cpuidle-cps.c history, there is no signed-off from Rafael,
-neither an Acked-by when it was merged. That make me think the patch
-went through another path than the linux-pm tree without a cpuidle
-framework maintainer acknowledgement.
+v2:
+ From txt to yaml file format
 
-Perhaps it is a mistake and the patch was actually acked-by, but I would
-like to remind the patches have to be acked by the upper maintainers and
-being listed in the MAINTAINERS file does not give the right of override
-this rule.
+v3:
+* Andrzej Hajda review comments incorporated
+  dual port lvds implemented
 
+* Laurent Pinchart review comments incorporated
+  dsi lanes property removed and it is dynamically
+  picked from the dsi ports
+  VESA/JEIDA format picked from panel-lvds dts
+---
+ .../display/bridge/toshiba,tc358775.yaml      | 204 ++++++++++++++++++
+ 1 file changed, 204 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
 
-
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Acked-by: Marc Zyngier <maz@kernel.org>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> 
-> ---
-> 
-> Changelog v3:
-> - Keep the files list alphabetically ordered.
-> - Add Thomas as the co-maintainer of the designated drivers.
-> ---
->  MAINTAINERS | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 2926327e4976..20532e0287d7 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11278,6 +11278,17 @@ F:	arch/mips/configs/generic/board-boston.config
->  F:	drivers/clk/imgtec/clk-boston.c
->  F:	include/dt-bindings/clock/boston-clock.h
->  
-> +MIPS CORE DRIVERS
-> +M:	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> +M:	Serge Semin <fancer.lancer@gmail.com>
-> +L:	linux-mips@vger.kernel.org
-> +S:	Supported
-> +F:	drivers/bus/mips_cdmm.c
-> +F:	drivers/clocksource/mips-gic-timer.c
-> +F:	drivers/cpuidle/cpuidle-cps.c
-> +F:	drivers/irqchip/irq-mips-cpu.c
-> +F:	drivers/irqchip/irq-mips-gic.c
-> +
->  MIPS GENERIC PLATFORM
->  M:	Paul Burton <paulburton@kernel.org>
->  L:	linux-mips@vger.kernel.org
-> 
-
-
+diff --git a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+new file mode 100644
+index 000000000000..ec53d62d408b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+@@ -0,0 +1,204 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/bridge/toshiba,tc358775.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Toshiba TC358775 DSI to LVDS bridge bindings
++
++maintainers:
++ - Vinay Simha BN <simhavcs@gmail.com>
++
++description: |
++ This binding supports DSI to LVDS bridge TC358775
++
++properties:
++  compatible:
++    const: toshiba,tc358775
++
++  reg:
++    maxItems: 1
++    description: i2c address of the bridge, 0x0f
++
++  vdd-supply:
++    maxItems: 1
++    description:  1.2V LVDS Power Supply
++
++  vddio-supply:
++    maxItems: 1
++    description: 1.8V IO Power Supply
++
++  stby-gpios:
++    maxItems: 1
++    description: Standby pin, Low active
++
++  reset-gpios:
++    maxItems: 1
++    description: Hardware reset, Low active
++
++  ports:
++    type: object
++    description:
++      A node containing input and output port nodes with endpoint definitions
++      as documented in
++      Documentation/devicetree/bindings/media/video-interfaces.txt
++    properties:
++      "#address-cells":
++        const: 1
++
++      "#size-cells":
++        const: 0
++
++      port@0:
++        type: object
++        description: |
++          DSI Input. The remote endpoint phandle should be a
++          reference to a valid mipi_dsi_host device node.
++
++      port@1:
++        type: object
++        description: |
++          Video port for LVDS output (panel or connector).
++
++      port@2:
++        type: object
++        description: |
++          Video port for Dual link LVDS output (panel or connector).
++
++    required:
++      - port@0
++      - port@1
++
++required:
++ - compatible
++ - reg
++ - vdd-supply
++ - vddio-supply
++ - stby-gpios
++ - reset-gpios
++ - ports
++
++examples:
++ - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    i2c@78b8000 {
++        /* On High speed expansion */
++        label = "HS-I2C2";
++        reg = <0x078b8000 0x500>;
++        clock-frequency = <400000>; /* fastmode operation */
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        tc_bridge: bridge@f {
++            compatible = "toshiba,tc358775";
++            reg = <0x0f>;
++
++            vdd-supply = <&pm8916_l2>;
++            vddio-supply = <&pm8916_l6>;
++
++            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
++            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
++
++            ports {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                port@0 {
++                    reg = <0>;
++                    d2l_in_test: endpoint {
++                        remote-endpoint = <&dsi0_out>;
++                    };
++                };
++
++                port@1 {
++                    reg = <1>;
++                    lvds_out: endpoint {
++                        remote-endpoint = <&panel_in>;
++                    };
++                };
++            };
++        };
++    };
++
++    dsi@1a98000 {
++        reg = <0x1a98000 0x25c>;
++        reg-names = "dsi_ctrl";
++
++        ports {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            port@1 {
++                reg = <1>;
++                dsi0_out: endpoint {
++                    remote-endpoint = <&d2l_in_test>;
++                        data-lanes = <0 1 2 3>;
++                };
++             };
++         };
++     };
++
++ - |
++    i2c@78b8000 {
++        /* On High speed expansion */
++        label = "HS-I2C2";
++        reg = <0x078b8000 0x500>;
++        clock-frequency = <400000>; /* fastmode operation */
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        tc_bridge_dual: bridge@f {
++            compatible = "toshiba,tc358775";
++            reg = <0x0f>;
++
++            vdd-supply = <&pm8916_l2>;
++            vddio-supply = <&pm8916_l6>;
++
++            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
++            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
++
++            ports {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                port@0 {
++                    reg = <0>;
++                    d2l_in_dual: endpoint {
++                        remote-endpoint = <&dsi0_out_dual>;
++                    };
++                };
++
++                port@1 {
++                    reg = <1>;
++                    lvds0_out: endpoint {
++                        remote-endpoint = <&panel_in0>;
++                    };
++                };
++
++                port@2 {
++                    reg = <2>;
++                    lvds1_out: endpoint {
++                        remote-endpoint = <&panel_in1>;
++                    };
++                };
++            };
++        };
++    };
++
++    dsi@1a98000 {
++        reg = <0x1a98000 0x25c>;
++        reg-names = "dsi_ctrl";
++
++        ports {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            port@1 {
++                reg = <1>;
++                dsi0_out_dual: endpoint {
++                    remote-endpoint = <&d2l_in_dual>;
++                        data-lanes = <0 1 2 3>;
++                };
++             };
++         };
++     };
++...
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+2.17.1
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
