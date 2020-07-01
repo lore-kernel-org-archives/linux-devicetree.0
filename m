@@ -2,32 +2,32 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49568C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A00C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 245BE2082F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F9892082F
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:30:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="cu165IC4"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="DqCF3jkS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732345AbgGAQaE (ORCPT
+        id S1732416AbgGAQ3j (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:30:04 -0400
-Received: from vps.xff.cz ([195.181.215.36]:52356 "EHLO vps.xff.cz"
+        Wed, 1 Jul 2020 12:29:39 -0400
+Received: from vps.xff.cz ([195.181.215.36]:52284 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732392AbgGAQ3k (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:29:40 -0400
+        id S1732384AbgGAQ3h (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Jul 2020 12:29:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593620974; bh=nAN8YH0dTS9ekxTU+3jeZZJ57RajRUpBksX/8oyPlxM=;
+        t=1593620973; bh=EDHzW5S2+qb2oeqA0b2GK7kayadrwI5GDPCMTwgUIPA=;
         h=From:To:Cc:Subject:Date:References:From;
-        b=cu165IC4uUdtwrquy7kRB928uOp3pSjzWgElKUGNjuSOITOTQnu9LS5GA98vbiiiy
-         GE/3CUId3vLLcTyWKKVxk9eJe6DJ/29o9b/dPT/oiqG9UKXcARHggmIcV2FOGx4HMF
-         UxlzHS+hoHdmIXWOQh9XYvgUr+G7QaLc0LD1Qr+w=
+        b=DqCF3jkSJzh0D5n4bdh3w+d/XLwdJE8qVKBF5F9A5BWtCIaOo54Kk+DIepIRVtJG6
+         ZLa8BZ38T6cqRguNK/aoOYhwRhmj8zdPMqv2aG+IPGbp2udNxmCtUSM7TVb6cHu+uA
+         +4jahIGnjuar8gwEQ0eF0cWTne9ZIPcfe4vOhZCg=
 From:   Ondrej Jirman <megous@megous.com>
 To:     linux-sunxi@googlegroups.com,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -47,262 +47,276 @@ Cc:     Ondrej Jirman <megous@megous.com>, dri-devel@lists.freedesktop.org,
         Samuel Holland <samuel@sholland.org>,
         Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
         Bhushan Shah <bshah@kde.org>
-Subject: [PATCH v7 09/13] drm/panel: st7703: Add support for Xingbangda XBD599
-Date:   Wed,  1 Jul 2020 18:29:24 +0200
-Message-Id: <20200701162928.1638874-10-megous@megous.com>
+Subject: [PATCH v7 05/13] drm/panel: st7703: Rename functions from jh057n prefix to st7703
+Date:   Wed,  1 Jul 2020 18:29:20 +0200
+Message-Id: <20200701162928.1638874-6-megous@megous.com>
 In-Reply-To: <20200701162928.1638874-1-megous@megous.com>
 References: <20200701162928.1638874-1-megous@megous.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Xingbangda XBD599 is a 5.99" 720x1440 MIPI-DSI LCD panel used in
-PinePhone. Add support for it.
+This is done so that code that's not specific to a particular
+jh057n panel is named after the controller. Functions specific
+to the panel are kept named after the panel.
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/gpu/drm/panel/panel-sitronix-st7703.c | 199 +++++++++++++++++-
- 1 file changed, 197 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/panel/panel-sitronix-st7703.c | 90 ++++++++++---------
+ 1 file changed, 46 insertions(+), 44 deletions(-)
 
 diff --git a/drivers/gpu/drm/panel/panel-sitronix-st7703.c b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
-index 96e39ec94900..dadb482b244d 100644
+index da4e373291f9..14761fec3789 100644
 --- a/drivers/gpu/drm/panel/panel-sitronix-st7703.c
 +++ b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
-@@ -39,10 +39,11 @@
- #define ST7703_CMD_SETEXTC	 0xB9
- #define ST7703_CMD_SETMIPI	 0xBA
- #define ST7703_CMD_SETVDC	 0xBC
--#define ST7703_CMD_UNKNOWN0	 0xBF
-+#define ST7703_CMD_UNKNOWN_BF	 0xBF
- #define ST7703_CMD_SETSCR	 0xC0
- #define ST7703_CMD_SETPOWER	 0xC1
- #define ST7703_CMD_SETPANEL	 0xCC
-+#define ST7703_CMD_UNKNOWN_C6	 0xC6
- #define ST7703_CMD_SETGAMMA	 0xE0
- #define ST7703_CMD_SETEQ	 0xE3
- #define ST7703_CMD_SETGIP1	 0xE9
-@@ -109,7 +110,7 @@ static int jh057n_init_sequence(struct st7703 *ctx)
- 	msleep(20);
+@@ -1,6 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Rockteck jh057n00900 5.5" MIPI-DSI panel driver
++ * Driver for panels based on Sitronix ST7703 controller, souch as:
++ *
++ * - Rocktech jh057n00900 5.5" MIPI-DSI panel
+  *
+  * Copyright (C) Purism SPC 2019
+  */
+@@ -21,7 +23,7 @@
+ #include <drm/drm_panel.h>
+ #include <drm/drm_print.h>
  
- 	dsi_generic_write_seq(dsi, ST7703_CMD_SETVCOM, 0x3F, 0x3F);
--	dsi_generic_write_seq(dsi, ST7703_CMD_UNKNOWN0, 0x02, 0x11, 0x00);
-+	dsi_generic_write_seq(dsi, ST7703_CMD_UNKNOWN_BF, 0x02, 0x11, 0x00);
- 	dsi_generic_write_seq(dsi, ST7703_CMD_SETGIP1,
- 			      0x82, 0x10, 0x06, 0x05, 0x9E, 0x0A, 0xA5, 0x12,
- 			      0x31, 0x23, 0x37, 0x83, 0x04, 0xBC, 0x27, 0x38,
-@@ -162,6 +163,199 @@ struct st7703_panel_desc jh057n00900_panel_desc = {
- 	.init_sequence = jh057n_init_sequence,
+-#define DRV_NAME "panel-rocktech-jh057n00900"
++#define DRV_NAME "panel-sitronix-st7703"
+ 
+ /* Manufacturer specific Commands send via DSI */
+ #define ST7703_CMD_ALL_PIXEL_OFF 0x22
+@@ -45,7 +47,7 @@
+ #define ST7703_CMD_SETGIP1	 0xE9
+ #define ST7703_CMD_SETGIP2	 0xEA
+ 
+-struct jh057n {
++struct st7703 {
+ 	struct device *dev;
+ 	struct drm_panel panel;
+ 	struct gpio_desc *reset_gpio;
+@@ -56,9 +58,9 @@ struct jh057n {
+ 	struct dentry *debugfs;
  };
  
-+#define dsi_dcs_write_seq(dsi, cmd, seq...) do {			\
-+		static const u8 d[] = { seq };				\
-+		int ret;						\
-+		ret = mipi_dsi_dcs_write(dsi, cmd, d, ARRAY_SIZE(d));	\
-+		if (ret < 0)						\
-+			return ret;					\
-+	} while (0)
-+
-+
-+static int xbd599_init_sequence(struct st7703 *ctx)
-+{
-+	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
-+
-+	/*
-+	 * Init sequence was supplied by the panel vendor.
-+	 */
-+
-+	/* Magic sequence to unlock user commands below. */
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETEXTC, 0xF1, 0x12, 0x83);
-+
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETMIPI,
-+			  0x33, /* VC_main = 0, Lane_Number = 3 (4 lanes) */
-+			  0x81, /* DSI_LDO_SEL = 1.7V, RTERM = 90 Ohm */
-+			  0x05, /* IHSRX = x6 (Low High Speed driving ability) */
-+			  0xF9, /* TX_CLK_SEL = fDSICLK/16 */
-+			  0x0E, /* HFP_OSC (min. HFP number in DSI mode) */
-+			  0x0E, /* HBP_OSC (min. HBP number in DSI mode) */
-+			  /* The rest is undocumented in ST7703 datasheet */
-+			  0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+			  0x44, 0x25, 0x00, 0x91, 0x0a, 0x00, 0x00, 0x02,
-+			  0x4F, 0x11, 0x00, 0x00, 0x37);
-+
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETPOWER_EXT,
-+			  0x25, /* PCCS = 2, ECP_DC_DIV = 1/4 HSYNC */
-+			  0x22, /* DT = 15ms XDK_ECP = x2 */
-+			  0x20, /* PFM_DC_DIV = /1 */
-+			  0x03  /* ECP_SYNC_EN = 1, VGX_SYNC_EN = 1 */);
-+
-+	/* RGB I/F porch timing */
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETRGBIF,
-+			  0x10, /* VBP_RGB_GEN */
-+			  0x10, /* VFP_RGB_GEN */
-+			  0x05, /* DE_BP_RGB_GEN */
-+			  0x05, /* DE_FP_RGB_GEN */
-+			  /* The rest is undocumented in ST7703 datasheet */
-+			  0x03, 0xFF,
-+			  0x00, 0x00,
-+			  0x00, 0x00);
-+
-+	/* Source driving settings. */
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETSCR,
-+			  0x73, /* N_POPON */
-+			  0x73, /* N_NOPON */
-+			  0x50, /* I_POPON */
-+			  0x50, /* I_NOPON */
-+			  0x00, /* SCR[31,24] */
-+			  0xC0, /* SCR[23,16] */
-+			  0x08, /* SCR[15,8] */
-+			  0x70, /* SCR[7,0] */
-+			  0x00  /* Undocumented */);
-+
-+	/* NVDDD_SEL = -1.8V, VDDD_SEL = out of range (possibly 1.9V?) */
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETVDC, 0x4E);
-+
-+	/*
-+	 * SS_PANEL = 1 (reverse scan), GS_PANEL = 0 (normal scan)
-+	 * REV_PANEL = 1 (normally black panel), BGR_PANEL = 1 (BGR)
-+	 */
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETPANEL, 0x0B);
-+
-+	/* Zig-Zag Type C column inversion. */
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETCYC, 0x80);
-+
-+	/* Set display resolution. */
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETDISP,
-+			  0xF0, /* NL = 240 */
-+			  0x12, /* RES_V_LSB = 0, BLK_CON = VSSD,
-+				 * RESO_SEL = 720RGB
-+				 */
-+			  0xF0  /* WHITE_GND_EN = 1 (GND),
-+				 * WHITE_FRAME_SEL = 7 frames,
-+				 * ISC = 0 frames
-+				 */);
-+
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETEQ,
-+			  0x00, /* PNOEQ */
-+			  0x00, /* NNOEQ */
-+			  0x0B, /* PEQGND */
-+			  0x0B, /* NEQGND */
-+			  0x10, /* PEQVCI */
-+			  0x10, /* NEQVCI */
-+			  0x00, /* PEQVCI1 */
-+			  0x00, /* NEQVCI1 */
-+			  0x00, /* reserved */
-+			  0x00, /* reserved */
-+			  0xFF, /* reserved */
-+			  0x00, /* reserved */
-+			  0xC0, /* ESD_DET_DATA_WHITE = 1, ESD_WHITE_EN = 1 */
-+			  0x10  /* SLPIN_OPTION = 1 (no need vsync after sleep-in)
-+				 * VEDIO_NO_CHECK_EN = 0
-+				 * ESD_WHITE_GND_EN = 0
-+				 * ESD_DET_TIME_SEL = 0 frames
-+				 */);
-+
-+	/* Undocumented command. */
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_UNKNOWN_C6, 0x01, 0x00, 0xFF, 0xFF, 0x00);
-+
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETPOWER,
-+			  0x74, /* VBTHS, VBTLS: VGH = 17V, VBL = -11V */
-+			  0x00, /* FBOFF_VGH = 0, FBOFF_VGL = 0 */
-+			  0x32, /* VRP  */
-+			  0x32, /* VRN */
-+			  0x77, /* reserved */
-+			  0xF1, /* APS = 1 (small),
-+				 * VGL_DET_EN = 1, VGH_DET_EN = 1,
-+				 * VGL_TURBO = 1, VGH_TURBO = 1
-+				 */
-+			  0xFF, /* VGH1_L_DIV, VGL1_L_DIV (1.5MHz) */
-+			  0xFF, /* VGH1_R_DIV, VGL1_R_DIV (1.5MHz) */
-+			  0xCC, /* VGH2_L_DIV, VGL2_L_DIV (2.6MHz) */
-+			  0xCC, /* VGH2_R_DIV, VGL2_R_DIV (2.6MHz) */
-+			  0x77, /* VGH3_L_DIV, VGL3_L_DIV (4.5MHz) */
-+			  0x77  /* VGH3_R_DIV, VGL3_R_DIV (4.5MHz) */);
-+
-+	/* Reference voltage. */
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETBGP,
-+			  0x07, /* VREF_SEL = 4.2V */
-+			  0x07  /* NVREF_SEL = 4.2V */);
-+	msleep(20);
-+
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETVCOM,
-+			  0x2C, /* VCOMDC_F = -0.67V */
-+			  0x2C  /* VCOMDC_B = -0.67V */);
-+
-+	/* Undocumented command. */
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_UNKNOWN_BF, 0x02, 0x11, 0x00);
-+
-+	/* This command is to set forward GIP timing. */
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETGIP1,
-+			  0x82, 0x10, 0x06, 0x05, 0xA2, 0x0A, 0xA5, 0x12,
-+			  0x31, 0x23, 0x37, 0x83, 0x04, 0xBC, 0x27, 0x38,
-+			  0x0C, 0x00, 0x03, 0x00, 0x00, 0x00, 0x0C, 0x00,
-+			  0x03, 0x00, 0x00, 0x00, 0x75, 0x75, 0x31, 0x88,
-+			  0x88, 0x88, 0x88, 0x88, 0x88, 0x13, 0x88, 0x64,
-+			  0x64, 0x20, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
-+			  0x02, 0x88, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
-+
-+	/* This command is to set backward GIP timing. */
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETGIP2,
-+			  0x02, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+			  0x00, 0x00, 0x00, 0x00, 0x02, 0x46, 0x02, 0x88,
-+			  0x88, 0x88, 0x88, 0x88, 0x88, 0x64, 0x88, 0x13,
-+			  0x57, 0x13, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
-+			  0x75, 0x88, 0x23, 0x14, 0x00, 0x00, 0x02, 0x00,
-+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x0A,
-+			  0xA5, 0x00, 0x00, 0x00, 0x00);
-+
-+	/* Adjust the gamma characteristics of the panel. */
-+	dsi_dcs_write_seq(dsi, ST7703_CMD_SETGAMMA,
-+			  0x00, 0x09, 0x0D, 0x23, 0x27, 0x3C, 0x41, 0x35,
-+			  0x07, 0x0D, 0x0E, 0x12, 0x13, 0x10, 0x12, 0x12,
-+			  0x18, 0x00, 0x09, 0x0D, 0x23, 0x27, 0x3C, 0x41,
-+			  0x35, 0x07, 0x0D, 0x0E, 0x12, 0x13, 0x10, 0x12,
-+			  0x12, 0x18);
-+
-+	return 0;
-+}
-+
-+static const struct drm_display_mode xbd599_mode = {
-+	.hdisplay    = 720,
-+	.hsync_start = 720 + 40,
-+	.hsync_end   = 720 + 40 + 40,
-+	.htotal	     = 720 + 40 + 40 + 40,
-+	.vdisplay    = 1440,
-+	.vsync_start = 1440 + 18,
-+	.vsync_end   = 1440 + 18 + 10,
-+	.vtotal	     = 1440 + 18 + 10 + 17,
-+	.clock	     = 69000,
-+	.flags	     = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-+	.width_mm    = 68,
-+	.height_mm   = 136,
-+};
-+
-+static const struct st7703_panel_desc xbd599_desc = {
-+	.mode = &xbd599_mode,
-+	.lanes = 4,
-+	.mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE,
-+	.format = MIPI_DSI_FMT_RGB888,
-+	.init_sequence = xbd599_init_sequence,
-+};
-+
- static int st7703_enable(struct drm_panel *panel)
+-static inline struct jh057n *panel_to_jh057n(struct drm_panel *panel)
++static inline struct st7703 *panel_to_st7703(struct drm_panel *panel)
  {
- 	struct st7703 *ctx = panel_to_st7703(panel);
-@@ -427,6 +621,7 @@ static int st7703_remove(struct mipi_dsi_device *dsi)
+-	return container_of(panel, struct jh057n, panel);
++	return container_of(panel, struct st7703, panel);
+ }
  
- static const struct of_device_id st7703_of_match[] = {
- 	{ .compatible = "rocktech,jh057n00900", .data = &jh057n00900_panel_desc },
-+	{ .compatible = "xingbangda,xbd599", .data = &xbd599_desc },
+ #define dsi_generic_write_seq(dsi, seq...) do {				\
+@@ -69,7 +71,7 @@ static inline struct jh057n *panel_to_jh057n(struct drm_panel *panel)
+ 			return ret;					\
+ 	} while (0)
+ 
+-static int jh057n_init_sequence(struct jh057n *ctx)
++static int jh057n_init_sequence(struct st7703 *ctx)
+ {
+ 	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+ 	struct device *dev = ctx->dev;
+@@ -141,9 +143,9 @@ static int jh057n_init_sequence(struct jh057n *ctx)
+ 	return 0;
+ }
+ 
+-static int jh057n_enable(struct drm_panel *panel)
++static int st7703_enable(struct drm_panel *panel)
+ {
+-	struct jh057n *ctx = panel_to_jh057n(panel);
++	struct st7703 *ctx = panel_to_st7703(panel);
+ 	int ret;
+ 
+ 	ret = jh057n_init_sequence(ctx);
+@@ -156,17 +158,17 @@ static int jh057n_enable(struct drm_panel *panel)
+ 	return 0;
+ }
+ 
+-static int jh057n_disable(struct drm_panel *panel)
++static int st7703_disable(struct drm_panel *panel)
+ {
+-	struct jh057n *ctx = panel_to_jh057n(panel);
++	struct st7703 *ctx = panel_to_st7703(panel);
+ 	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+ 
+ 	return mipi_dsi_dcs_set_display_off(dsi);
+ }
+ 
+-static int jh057n_unprepare(struct drm_panel *panel)
++static int st7703_unprepare(struct drm_panel *panel)
+ {
+-	struct jh057n *ctx = panel_to_jh057n(panel);
++	struct st7703 *ctx = panel_to_st7703(panel);
+ 
+ 	if (!ctx->prepared)
+ 		return 0;
+@@ -178,9 +180,9 @@ static int jh057n_unprepare(struct drm_panel *panel)
+ 	return 0;
+ }
+ 
+-static int jh057n_prepare(struct drm_panel *panel)
++static int st7703_prepare(struct drm_panel *panel)
+ {
+-	struct jh057n *ctx = panel_to_jh057n(panel);
++	struct st7703 *ctx = panel_to_st7703(panel);
+ 	int ret;
+ 
+ 	if (ctx->prepared)
+@@ -229,10 +231,10 @@ static const struct drm_display_mode default_mode = {
+ 	.height_mm   = 130,
+ };
+ 
+-static int jh057n_get_modes(struct drm_panel *panel,
++static int st7703_get_modes(struct drm_panel *panel,
+ 			    struct drm_connector *connector)
+ {
+-	struct jh057n *ctx = panel_to_jh057n(panel);
++	struct st7703 *ctx = panel_to_st7703(panel);
+ 	struct drm_display_mode *mode;
+ 
+ 	mode = drm_mode_duplicate(connector->dev, &default_mode);
+@@ -253,17 +255,17 @@ static int jh057n_get_modes(struct drm_panel *panel,
+ 	return 1;
+ }
+ 
+-static const struct drm_panel_funcs jh057n_drm_funcs = {
+-	.disable   = jh057n_disable,
+-	.unprepare = jh057n_unprepare,
+-	.prepare   = jh057n_prepare,
+-	.enable	   = jh057n_enable,
+-	.get_modes = jh057n_get_modes,
++static const struct drm_panel_funcs st7703_drm_funcs = {
++	.disable   = st7703_disable,
++	.unprepare = st7703_unprepare,
++	.prepare   = st7703_prepare,
++	.enable	   = st7703_enable,
++	.get_modes = st7703_get_modes,
+ };
+ 
+ static int allpixelson_set(void *data, u64 val)
+ {
+-	struct jh057n *ctx = data;
++	struct st7703 *ctx = data;
+ 	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+ 
+ 	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Setting all pixels on\n");
+@@ -281,7 +283,7 @@ static int allpixelson_set(void *data, u64 val)
+ DEFINE_SIMPLE_ATTRIBUTE(allpixelson_fops, NULL,
+ 			allpixelson_set, "%llu\n");
+ 
+-static void jh057n_debugfs_init(struct jh057n *ctx)
++static void st7703_debugfs_init(struct st7703 *ctx)
+ {
+ 	ctx->debugfs = debugfs_create_dir(DRV_NAME, NULL);
+ 
+@@ -289,16 +291,16 @@ static void jh057n_debugfs_init(struct jh057n *ctx)
+ 			    &allpixelson_fops);
+ }
+ 
+-static void jh057n_debugfs_remove(struct jh057n *ctx)
++static void st7703_debugfs_remove(struct st7703 *ctx)
+ {
+ 	debugfs_remove_recursive(ctx->debugfs);
+ 	ctx->debugfs = NULL;
+ }
+ 
+-static int jh057n_probe(struct mipi_dsi_device *dsi)
++static int st7703_probe(struct mipi_dsi_device *dsi)
+ {
+ 	struct device *dev = &dsi->dev;
+-	struct jh057n *ctx;
++	struct st7703 *ctx;
+ 	int ret;
+ 
+ 	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+@@ -339,7 +341,7 @@ static int jh057n_probe(struct mipi_dsi_device *dsi)
+ 		return ret;
+ 	}
+ 
+-	drm_panel_init(&ctx->panel, dev, &jh057n_drm_funcs,
++	drm_panel_init(&ctx->panel, dev, &st7703_drm_funcs,
+ 		       DRM_MODE_CONNECTOR_DSI);
+ 
+ 	ret = drm_panel_of_backlight(&ctx->panel);
+@@ -362,13 +364,13 @@ static int jh057n_probe(struct mipi_dsi_device *dsi)
+ 		     drm_mode_vrefresh(&default_mode),
+ 		     mipi_dsi_pixel_format_to_bpp(dsi->format), dsi->lanes);
+ 
+-	jh057n_debugfs_init(ctx);
++	st7703_debugfs_init(ctx);
+ 	return 0;
+ }
+ 
+-static void jh057n_shutdown(struct mipi_dsi_device *dsi)
++static void st7703_shutdown(struct mipi_dsi_device *dsi)
+ {
+-	struct jh057n *ctx = mipi_dsi_get_drvdata(dsi);
++	struct st7703 *ctx = mipi_dsi_get_drvdata(dsi);
+ 	int ret;
+ 
+ 	ret = drm_panel_unprepare(&ctx->panel);
+@@ -382,12 +384,12 @@ static void jh057n_shutdown(struct mipi_dsi_device *dsi)
+ 			      ret);
+ }
+ 
+-static int jh057n_remove(struct mipi_dsi_device *dsi)
++static int st7703_remove(struct mipi_dsi_device *dsi)
+ {
+-	struct jh057n *ctx = mipi_dsi_get_drvdata(dsi);
++	struct st7703 *ctx = mipi_dsi_get_drvdata(dsi);
+ 	int ret;
+ 
+-	jh057n_shutdown(dsi);
++	st7703_shutdown(dsi);
+ 
+ 	ret = mipi_dsi_detach(dsi);
+ 	if (ret < 0)
+@@ -396,28 +398,28 @@ static int jh057n_remove(struct mipi_dsi_device *dsi)
+ 
+ 	drm_panel_remove(&ctx->panel);
+ 
+-	jh057n_debugfs_remove(ctx);
++	st7703_debugfs_remove(ctx);
+ 
+ 	return 0;
+ }
+ 
+-static const struct of_device_id jh057n_of_match[] = {
++static const struct of_device_id st7703_of_match[] = {
+ 	{ .compatible = "rocktech,jh057n00900" },
  	{ /* sentinel */ }
  };
- MODULE_DEVICE_TABLE(of, st7703_of_match);
+-MODULE_DEVICE_TABLE(of, jh057n_of_match);
++MODULE_DEVICE_TABLE(of, st7703_of_match);
+ 
+-static struct mipi_dsi_driver jh057n_driver = {
+-	.probe	= jh057n_probe,
+-	.remove = jh057n_remove,
+-	.shutdown = jh057n_shutdown,
++static struct mipi_dsi_driver st7703_driver = {
++	.probe	= st7703_probe,
++	.remove = st7703_remove,
++	.shutdown = st7703_shutdown,
+ 	.driver = {
+ 		.name = DRV_NAME,
+-		.of_match_table = jh057n_of_match,
++		.of_match_table = st7703_of_match,
+ 	},
+ };
+-module_mipi_dsi_driver(jh057n_driver);
++module_mipi_dsi_driver(st7703_driver);
+ 
+ MODULE_AUTHOR("Guido Günther <agx@sigxcpu.org>");
+-MODULE_DESCRIPTION("DRM driver for Rocktech JH057N00900 MIPI DSI panel");
++MODULE_DESCRIPTION("DRM driver for Sitronix ST7703 based MIPI DSI panels");
+ MODULE_LICENSE("GPL v2");
 -- 
 2.27.0
 
