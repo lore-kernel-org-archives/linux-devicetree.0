@@ -2,208 +2,181 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BF3C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 06:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCDAC433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 07:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9ECCE20722
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 06:57:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593586653;
-	bh=MddEptcGuA+xDjhZTaidbaAEbq4GjnI6EOwSMMBEqMg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cThmtWcg2LH5DV1QKr9xQhijUiTdQH4ijxhxRnaEZ4DPZRP5uwYVyqRRGDBpOywQe
-	 mOEYfN7UCaqA3Lkx7MfQthbUdCZBiq1rVCovSSeZv4GPH0CvFwJRJ55kp6sqNYSem0
-	 RQABlZ3ScYKGikuKttwne3UhDnCvGuDW3P7RqqZo=
+	by mail.kernel.org (Postfix) with ESMTP id 4C1032065D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 07:00:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j8Toj+Y1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbgGAG5d (ORCPT
+        id S1727991AbgGAHAQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 02:57:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbgGAG5c (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jul 2020 02:57:32 -0400
-Received: from localhost (unknown [122.182.251.219])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBF5020663;
-        Wed,  1 Jul 2020 06:57:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593586651;
-        bh=MddEptcGuA+xDjhZTaidbaAEbq4GjnI6EOwSMMBEqMg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T8qPgdvnbqW+zCjqSw63r5xCWrBv5sE3QA98/xCZ/LaisXDiSiUcXjOnyqUFhoHwY
-         4aEzhTIimMTP6kKl7tC/4DEP+E8pUFov8s72V4PEK/q6Z5ACWNkhi7Gzq1Th3Z+S1P
-         igMPr+3YvkAIUZNx/MtPf6Rpjna5OxYJ/scNYQ2g=
-Date:   Wed, 1 Jul 2020 12:27:27 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Russell King <rmk+kernel@armlinux.org.uk>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] phy: armada-38x: fix NETA lockup when repeatedly
- switching speeds
-Message-ID: <20200701065727.GY2599@vkoul-mobl>
-References: <20200630160452.GD1551@shell.armlinux.org.uk>
- <E1jqIlO-0007rX-Tv@rmk-PC.armlinux.org.uk>
+        Wed, 1 Jul 2020 03:00:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727988AbgGAHAH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 03:00:07 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C31D5C03E979
+        for <devicetree@vger.kernel.org>; Wed,  1 Jul 2020 00:00:06 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id z15so11357109wrl.8
+        for <devicetree@vger.kernel.org>; Wed, 01 Jul 2020 00:00:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+pRKYTmuOThutSuGqfNrgAamAdWYk1YESRlVS2CO28A=;
+        b=j8Toj+Y1Sm33G/MY5KpRJO/4MLA6Xmjv5NEmZN881Y2JY1sddA5DRPZK6/0hHYYGcd
+         krHNiAHXOdRvae6EVQZAGELUQtm8CGXJ/x+SgYHM0VvPaidxeEwowx7vTVi8h37/rb9C
+         R7BfnkfDNL4HN0vdPWCRCwrMaip4v5M1lbG4IKaFHPpDzHWHhYc+HHpuyL85P/cGtTGi
+         WyANo0R3IJVjvT7gqHcbR4cXVNMm9/NoowviYuOanpFmwrhD5+xp9JMNCo9TJNFskga1
+         /lU/Kvj3kKhEUI3AAcKj3cvObXMNLBpVx5h/aEMMdxo8fGGXRH2H1kj9IBR9Z7shRmJe
+         qOpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+pRKYTmuOThutSuGqfNrgAamAdWYk1YESRlVS2CO28A=;
+        b=MUoG3fkhcPpF4tDht1SzlQXd2LhnM7CAFdtZnFh2oxs1QAZYuPHIEmwIEZNGMqjwZw
+         eOoAMqEy4MdBlzrMQwdfCR6pxNhQfSbm5KW/WYSwgfo+JkwjdZetgo6u97zlfckL4Vpc
+         RaKXNmGe+Gp37apyyeVmtfo084KFooG7Zy59Wkc+AKgvIiHYP6RwZAGSBzefpukqqHbp
+         YM3wN8iZ6oNDhfHYQYCVD1t/qyrNUe9CmcV53ST6NxCEUp7EE6BbHHSuipEonQTQk7q6
+         8SOPw63ilnMWZ8ePGaKSGwNRFnbYbXaS9lKKiiaE0OpNlVE6QnyOZzwKUailfIwwgDiF
+         CBDw==
+X-Gm-Message-State: AOAM5317MDrmvq8Bts7GQ4f3Ts9RDDQkQYGhNJ+m/NWVIu3c311+alk/
+        M1HUIQT3qcUUkiIMPXel485ANQ==
+X-Google-Smtp-Source: ABdhPJzXAeq3ERQ5grT5ciAC17dbRoZi+Anv+tNI3+3VRZcEoztY0g+mRZPxmb9Cn/QQRsS3FfyLAQ==
+X-Received: by 2002:adf:828b:: with SMTP id 11mr27284990wrc.58.1593586805272;
+        Wed, 01 Jul 2020 00:00:05 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:54f4:a99f:ab88:bc07? ([2a01:e34:ed2f:f020:54f4:a99f:ab88:bc07])
+        by smtp.googlemail.com with ESMTPSA id o205sm6355532wme.24.2020.07.01.00.00.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Jul 2020 00:00:04 -0700 (PDT)
+Subject: Re: [PATCH v4 6/6] MAINTAINERS: Add maintainers for MIPS core drivers
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200617223201.23259-1-Sergey.Semin@baikalelectronics.ru>
+ <20200617223201.23259-7-Sergey.Semin@baikalelectronics.ru>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <e29c9643-db5c-2d89-ff56-0900091770ea@linaro.org>
+Date:   Wed, 1 Jul 2020 09:00:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <E1jqIlO-0007rX-Tv@rmk-PC.armlinux.org.uk>
+In-Reply-To: <20200617223201.23259-7-Sergey.Semin@baikalelectronics.ru>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 30-06-20, 17:05, Russell King wrote:
-> The mvneta hardware appears to lock up in various random ways when
-> repeatedly switching speeds between 1G and 2.5G, which involves
-> reprogramming the COMPHY.  It is not entirely clear why this happens,
-> but best guess is that reprogramming the COMPHY glitches mvneta clocks
-> causing the hardware to fail.  It seems that rebooting resolves the
-> failure, but not down/up cycling the interface alone.
+On 18/06/2020 00:32, Serge Semin wrote:
+> Add Thomas and myself as maintainers of the MIPS CPU and GIC IRQchip, MIPS
+> GIC timer and MIPS CPS CPUidle drivers.
+
+Why will you add yourself in the MAINTAINERS file for those drivers when
+git shows just one contribution for the mips-gic-timer for the timer
+stability ?
+
+git shortlog --numbered --summary drivers/cpuidle/cpuidle-cps.c
+     4  Paul Burton
+     1  Daniel Lezcano
+     1  Marcin Nowakowski
+     1  Matt Redfearn
+     1  Thomas Gleixner
+
+git shortlog --numbered --summary drivers/clocksource/mips-gic-timer.c
+    11  Andrew Bresticker
+     4  Ezequiel Garcia
+     4  Matt Redfearn
+     4  Paul Burton
+     3  Daniel Lezcano
+     3  Thomas Gleixner
+     2  Linus Torvalds
+     1  Alex Smith
+     1  Christophe Jaillet
+     1  Felix Fietkau
+     1  Ingo Molnar
+     1  Markos Chandras
+     1  Paul Gortmaker
+     1  Rafał Miłecki
+     1  Richard Cochran
+     1  Serge Semin
+     1  Viresh Kumar
+     1  YueHaibing
+
+Also, in the cpuidle-cps.c history, there is no signed-off from Rafael,
+neither an Acked-by when it was merged. That make me think the patch
+went through another path than the linux-pm tree without a cpuidle
+framework maintainer acknowledgement.
+
+Perhaps it is a mistake and the patch was actually acked-by, but I would
+like to remind the patches have to be acked by the upper maintainers and
+being listed in the MAINTAINERS file does not give the right of override
+this rule.
+
+
+
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Acked-by: Marc Zyngier <maz@kernel.org>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: linux-mips@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
 > 
-> Various other approaches have been tried, such as trying to cleanly
-> power down the COMPHY and then take it back through the power up
-> initialisation, but this does not seem to help.
-> 
-> It was finally noticed that u-boot's last step when configuring a
-> COMPHY for "SGMII" mode was to poke at a register described as
-> "GBE_CONFIGURATION_REG", which is undocumented in any external
-> documentation.  All that we have is the fact that u-boot sets a bit
-> corresponding to the "SGMII" lane at the end of COMPHY initialisation.
-> 
-> Experimentation shows that if we clear this bit prior to changing the
-> speed, and then set it afterwards, mvneta does not suffer this problem
-> on the SolidRun Clearfog when switching speeds between 1G and 2.5G.
-> 
-> This problem was found while script-testing phylink.
-> 
-> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 > ---
->  arch/arm/boot/dts/armada-38x.dtsi          |  3 +-
-
-lgtm, i need ack for dts parts before I can apply this
-
->  drivers/phy/marvell/phy-armada38x-comphy.c | 45 ++++++++++++++++++----
->  2 files changed, 40 insertions(+), 8 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-> index e038abc0c6b4..420ae26e846b 100644
-> --- a/arch/arm/boot/dts/armada-38x.dtsi
-> +++ b/arch/arm/boot/dts/armada-38x.dtsi
-> @@ -344,7 +344,8 @@
+> Changelog v3:
+> - Keep the files list alphabetically ordered.
+> - Add Thomas as the co-maintainer of the designated drivers.
+> ---
+>  MAINTAINERS | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2926327e4976..20532e0287d7 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11278,6 +11278,17 @@ F:	arch/mips/configs/generic/board-boston.config
+>  F:	drivers/clk/imgtec/clk-boston.c
+>  F:	include/dt-bindings/clock/boston-clock.h
 >  
->  			comphy: phy@18300 {
->  				compatible = "marvell,armada-380-comphy";
-> -				reg = <0x18300 0x100>;
-> +				reg-names = "comphy", "conf";
-> +				reg = <0x18300 0x100>, <0x18460 4>;
->  				#address-cells = <1>;
->  				#size-cells = <0>;
->  
-> diff --git a/drivers/phy/marvell/phy-armada38x-comphy.c b/drivers/phy/marvell/phy-armada38x-comphy.c
-> index 6960dfd8ad8c..0fe408964334 100644
-> --- a/drivers/phy/marvell/phy-armada38x-comphy.c
-> +++ b/drivers/phy/marvell/phy-armada38x-comphy.c
-> @@ -41,6 +41,7 @@ struct a38x_comphy_lane {
->  
->  struct a38x_comphy {
->  	void __iomem *base;
-> +	void __iomem *conf;
->  	struct device *dev;
->  	struct a38x_comphy_lane lane[MAX_A38X_COMPHY];
->  };
-> @@ -54,6 +55,21 @@ static const u8 gbe_mux[MAX_A38X_COMPHY][MAX_A38X_PORTS] = {
->  	{ 0, 0, 3 },
->  };
->  
-> +static void a38x_set_conf(struct a38x_comphy_lane *lane, bool enable)
-> +{
-> +	struct a38x_comphy *priv = lane->priv;
-> +	u32 conf;
+> +MIPS CORE DRIVERS
+> +M:	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> +M:	Serge Semin <fancer.lancer@gmail.com>
+> +L:	linux-mips@vger.kernel.org
+> +S:	Supported
+> +F:	drivers/bus/mips_cdmm.c
+> +F:	drivers/clocksource/mips-gic-timer.c
+> +F:	drivers/cpuidle/cpuidle-cps.c
+> +F:	drivers/irqchip/irq-mips-cpu.c
+> +F:	drivers/irqchip/irq-mips-gic.c
 > +
-> +	if (priv->conf) {
-> +		conf = readl_relaxed(priv->conf);
-> +		if (enable)
-> +			conf |= BIT(lane->port);
-> +		else
-> +			conf &= ~BIT(lane->port);
-> +		writel(conf, priv->conf);
-> +	}
-> +}
-> +
->  static void a38x_comphy_set_reg(struct a38x_comphy_lane *lane,
->  				unsigned int offset, u32 mask, u32 value)
->  {
-> @@ -97,6 +113,7 @@ static int a38x_comphy_set_mode(struct phy *phy, enum phy_mode mode, int sub)
->  {
->  	struct a38x_comphy_lane *lane = phy_get_drvdata(phy);
->  	unsigned int gen;
-> +	int ret;
->  
->  	if (mode != PHY_MODE_ETHERNET)
->  		return -EINVAL;
-> @@ -115,13 +132,20 @@ static int a38x_comphy_set_mode(struct phy *phy, enum phy_mode mode, int sub)
->  		return -EINVAL;
->  	}
->  
-> +	a38x_set_conf(lane, false);
-> +
->  	a38x_comphy_set_speed(lane, gen, gen);
->  
-> -	return a38x_comphy_poll(lane, COMPHY_STAT1,
-> -				COMPHY_STAT1_PLL_RDY_TX |
-> -				COMPHY_STAT1_PLL_RDY_RX,
-> -				COMPHY_STAT1_PLL_RDY_TX |
-> -				COMPHY_STAT1_PLL_RDY_RX);
-> +	ret = a38x_comphy_poll(lane, COMPHY_STAT1,
-> +			       COMPHY_STAT1_PLL_RDY_TX |
-> +			       COMPHY_STAT1_PLL_RDY_RX,
-> +			       COMPHY_STAT1_PLL_RDY_TX |
-> +			       COMPHY_STAT1_PLL_RDY_RX);
-> +
-> +	if (ret == 0)
-> +		a38x_set_conf(lane, true);
-> +
-> +	return ret;
->  }
->  
->  static const struct phy_ops a38x_comphy_ops = {
-> @@ -174,14 +198,21 @@ static int a38x_comphy_probe(struct platform_device *pdev)
->  	if (!priv)
->  		return -ENOMEM;
->  
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	base = devm_ioremap_resource(&pdev->dev, res);
-> +	base = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(base))
->  		return PTR_ERR(base);
->  
->  	priv->dev = &pdev->dev;
->  	priv->base = base;
->  
-> +	/* Optional */
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "conf");
-> +	if (res) {
-> +		priv->conf = devm_ioremap_resource(&pdev->dev, res);
-> +		if (IS_ERR(priv->conf))
-> +			return PTR_ERR(priv->conf);
-> +	}
-> +
->  	for_each_available_child_of_node(pdev->dev.of_node, child) {
->  		struct phy *phy;
->  		int ret;
-> -- 
-> 2.20.1
+>  MIPS GENERIC PLATFORM
+>  M:	Paul Burton <paulburton@kernel.org>
+>  L:	linux-mips@vger.kernel.org
+> 
+
 
 -- 
-~Vinod
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
