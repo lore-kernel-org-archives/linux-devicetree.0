@@ -2,176 +2,109 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4A2C433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 10:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B34A8C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 10:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE3852067D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 10:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81F332074D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 10:34:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="H6IDNyTt"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="a/cVqSQJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729992AbgGAKbf (ORCPT
+        id S1729949AbgGAKez (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 06:31:35 -0400
-Received: from vps.xff.cz ([195.181.215.36]:41976 "EHLO vps.xff.cz"
+        Wed, 1 Jul 2020 06:34:55 -0400
+Received: from vps.xff.cz ([195.181.215.36]:42944 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729822AbgGAKbd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jul 2020 06:31:33 -0400
+        id S1729180AbgGAKey (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Jul 2020 06:34:54 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593599488; bh=DcIwYA7UiV2HZIT74/WIK+hRV/P3BCbOenueqgwjk/o=;
-        h=From:To:Cc:Subject:Date:From;
-        b=H6IDNyTtjqu60WUzYVWz23IzaUHz/Qq14fOs8WY9Jq439fSo8yYsgsSYlJByt0hDa
-         JlzlSPITb/Pwg1J4lrOr7bS1zBpw7PIvkgEIS9dnPlAWz4dLxPYUsC9zpzRTuCDVfs
-         y98wNsXhEPzillpUYTaWK/Af1ECW3nG9xro1dj9Y=
-From:   Ondrej Jirman <megous@megous.com>
-To:     linux-sunxi@googlegroups.com,
+        t=1593599692; bh=B7kWQsfpsGr8GvlX/z/EdaUkxTMac7sQsGSIptCqVQE=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=a/cVqSQJeci9mwW2INPMd6BuXqViGSBir/xjSPUR3Df3hcV+pzYZosoSHUHT0o2GX
+         Op3mZ9UoCxzoidvMK3P6lWYVlLNFONzbOF9a0NmK5IwJqY1ZJQPCynM7DKy7s118y3
+         SQ/7qhljisG3F7W8VnkQ3GND12mq3LLxvLaryu+8=
+Date:   Wed, 1 Jul 2020 12:34:51 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
         Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
         Purism Kernel Team <kernel@puri.sm>,
         Rob Herring <robh+dt@kernel.org>,
         Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Icenowy Zheng <icenowy@aosc.io>
-Cc:     Ondrej Jirman <megous@megous.com>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
+        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Samuel Holland <samuel@sholland.org>,
         Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
         Bhushan Shah <bshah@kde.org>
-Subject: [PATCH v6 00/13] Add support for PinePhone LCD panel
-Date:   Wed,  1 Jul 2020 12:31:13 +0200
-Message-Id: <20200701103126.1512615-1-megous@megous.com>
+Subject: Re: [PATCH v5 09/13] drm/panel: st7703: Add support for Xingbangda
+ XBD599
+Message-ID: <20200701103451.67worsg3wvupyuoh@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
+        Purism Kernel Team <kernel@puri.sm>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Samuel Holland <samuel@sholland.org>,
+        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
+        Bhushan Shah <bshah@kde.org>
+References: <20200626005601.241022-1-megous@megous.com>
+ <20200626005601.241022-10-megous@megous.com>
+ <CACRpkdZcMA_Y_eH8_TL09Z0_DADDcUy5s_S45UfrnoSKmNgtXw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZcMA_Y_eH8_TL09Z0_DADDcUy5s_S45UfrnoSKmNgtXw@mail.gmail.com>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patchset adds support for the LCD panel of PinePhone.
+Hello Linus,
 
-I've tested this on PinePhone 1.0 and 1.2.
+On Wed, Jul 01, 2020 at 09:50:40AM +0200, Linus Walleij wrote:
+> On Fri, Jun 26, 2020 at 2:56 AM Ondrej Jirman <megous@megous.com> wrote:
+> 
+> > Xingbangda XBD599 is a 5.99" 720x1440 MIPI-DSI LCD panel used in
+> > PinePhone. Add support for it.
+> >
+> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> 
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Please take a look.
+Thank you very much for the review. :)
 
-thank you and regards,
-  Ondrej Jirman
+I've sent v6 which should fix the currently remaining issues with dt bindings
++ one timing issue I've found in this patch. I've kept your reviewed-by tag,
+because it's a fairly trivial issue. But feel free to complain.
 
-Changes in v6:
-- Fixed spacing in yaml
-- Fixed wrong vccio->iovcc supply name in the bindings doc
-- I noticed that the original driver uses a delay of 20ms in the init
-  function to achieve a combined total of 120ms required from post-reset
-  to display_on. I've added a similar delay to xbd599_init, so that
-  xbd599 panel also has the right timing. (patch 9)
-- v5->v6 diff: https://megous.com/dl/tmp/v5-v6.patch
-- Added review/ack tags
-- Learned to run dt_binding_check by myself ;)
+thank you again and regards,
+	o.
 
-Changes in v5:
-- rewritten on top of rocktech-jh057n00900 driver
-- rocktech-jh057n00900 renamed to st7703 (controller name)
-- converted rocktech-jh057n00900 bindings to yaml and extended for xbd599
-
-Changes in v4:
-- use ->type from the mode instead of hardcoding (Samuel)
-- move init_sequence to ->prepare (Samuel)
-- move anti-flicker delay to ->enable, explain it (Samuel)
-- add enter_sleep after display_off (Samuel)
-- drop ->disable (move code to ->unprepare)
-- add ID bytes dumping (Linus)
-  (I can't test it since allwinner DSI driver has a broken
-   dcs_read function, and I didn't manage to fix it.)
-- document magic bytes (Linus)
-- assert reset during powerup
-- cleanup powerup timings according to the datasheet
-
-Changes in v3:
-- Panel driver renamed to the name of the LCD controller
-- Re-organize the driver slightly to more easily support more panels
-  based on the same controller.
-- Add patch to enable the touchscreen to complete the LCD support
-  on PinePhone.
-- Dropped the "DSI fix" patch (the driver seems to work for me without it)
-- Improved brightness levels handling:
-  - PinePhone 1.0 uses default levels generated by the driver
-  - On PinePhone 1.1 duty cycles < 20% lead to black screen, so
-    default levels can't be used. Martijn Braam came up with a
-    list of duty cycle values that lead to perception of linear
-    brigtness level <-> light intensity on PinePhone 1.1
-- There was some feedback on v2 about this being similar to st7701.
-  It's only similar in name. Most of the "user commands" are different,
-  so I opted to keep this in a new driver instead of creating st770x.
-  
-  Anyone who likes to check the differences, here are datasheets:
-
-  - https://megous.com/dl/tmp/ST7703_DS_v01_20160128.pdf
-  - https://megous.com/dl/tmp/ST7701.pdf
-
-Changes in v2:
-- DT Example fix.
-- DT Format fix.
-- Raised copyright info to 2020.
-- Sort panel operation functions.
-- Sort inclusion.
-
-
--- For phone owners: --
-
-There's an open question on how to set the backlight brightness values
-on post 1.0 revision phone, since lower duty cycles (< 10-20%) lead
-to backlight being black. It would be nice if more people can test
-the various backlight levels on 1.1 and 1.2 revision with this change
-in dts:
-
-       brightness-levels = <0 1000>;
-       num-interpolated-steps = <1000>;
-
-and report at what brightness level the backlight turns on. So far it
-seems this has a wide range. Lowest useable duty cycle for me is ~7%
-on 1.2 and for Martijn ~20% on 1.1.
-
-Icenowy Zheng (2):
-  dt-bindings: vendor-prefixes: Add Xingbangda
-  arm64: dts: sun50i-a64-pinephone: Enable LCD support on PinePhone
-
-Ondrej Jirman (11):
-  dt-bindings: panel: Convert rocktech,jh057n00900 to yaml
-  dt-bindings: panel: Add compatible for Xingbangda XBD599 panel
-  drm/panel: rocktech-jh057n00900: Rename the driver to st7703
-  drm/panel: st7703: Rename functions from jh057n prefix to st7703
-  drm/panel: st7703: Prepare for supporting multiple panels
-  drm/panel: st7703: Move code specific to jh057n closer together
-  drm/panel: st7703: Move generic part of init sequence to enable
-    callback
-  drm/panel: st7703: Add support for Xingbangda XBD599
-  drm/panel: st7703: Enter sleep after display off
-  drm/panel: st7703: Assert reset prior to powering down the regulators
-  arm64: dts: sun50i-a64-pinephone: Add touchscreen support
-
- .../display/panel/rocktech,jh057n00900.txt    |  23 -
- .../display/panel/rocktech,jh057n00900.yaml   |  70 ++
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- .../allwinner/sun50i-a64-pinephone-1.1.dts    |  19 +
- .../dts/allwinner/sun50i-a64-pinephone.dtsi   |  54 ++
- drivers/gpu/drm/panel/Kconfig                 |  26 +-
- drivers/gpu/drm/panel/Makefile                |   2 +-
- .../drm/panel/panel-rocktech-jh057n00900.c    | 424 -----------
- drivers/gpu/drm/panel/panel-sitronix-st7703.c | 656 ++++++++++++++++++
- 9 files changed, 815 insertions(+), 461 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
- delete mode 100644 drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
- create mode 100644 drivers/gpu/drm/panel/panel-sitronix-st7703.c
-
--- 
-2.27.0
-
+> Yours,
+> Linus Walleij
