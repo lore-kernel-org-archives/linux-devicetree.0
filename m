@@ -2,507 +2,261 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5AFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 17:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D657C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 17:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F06320780
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 17:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34D1D20780
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 17:40:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VIe1lfRl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732646AbgGARgG (ORCPT
+        id S1731215AbgGARj7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 13:36:06 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:52664 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbgGARgG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 13:36:06 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 0D60980575;
-        Wed,  1 Jul 2020 19:36:00 +0200 (CEST)
-Date:   Wed, 1 Jul 2020 19:35:58 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: display: Convert connectors to DT schema
-Message-ID: <20200701173558.GA1106008@ravnborg.org>
-References: <20200630200216.1172566-1-robh@kernel.org>
+        Wed, 1 Jul 2020 13:39:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726432AbgGARj7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 13:39:59 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8A74C08C5C1
+        for <devicetree@vger.kernel.org>; Wed,  1 Jul 2020 10:39:58 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id w3so11675106wmi.4
+        for <devicetree@vger.kernel.org>; Wed, 01 Jul 2020 10:39:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fFDvcz0hYnyIh9jHxPAtyN9av+PQpLRh+pv6ybPeMDg=;
+        b=VIe1lfRlNqAMzIzbFiAEcRtt3s5kdUhUyyonbZkUgEjVLIfbjIZu3u64YtUWaLE9CI
+         47EuQyfu14+USSeqphEdlZoyK1L7EZYEHVd6mIJtXc1WyTyWKMoKxG8hG/NqlOXTBB/1
+         orvk/ZzdqT1AU62l9ZeIRZncpViRgxAb5Fs7FibEQlxgR0iI74qn8HPzdGxY7auSTGUV
+         Bmi4Tn0BcpaUttPPP+9E0k4SL36BM59D5hJjawW2nE8UYwDQEiev4mJgervwRf3JWQVN
+         Cd9VICil1r3/r/2WmBbM4PUsMkcp4RooxuE32EOIfEjFQzdKOs8SGLpXwBdPgmEryPAD
+         tkAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fFDvcz0hYnyIh9jHxPAtyN9av+PQpLRh+pv6ybPeMDg=;
+        b=ooGgUnjfq6BWE1HoOt+Cy3oFe66683gQ7ljTn8jjZ+9lpQK4jErH0NSPqjsSOc58iO
+         FF6DwTjabqX6T0kXbL1MXDDChoer/tmpRYHrKwmuLtbIMRa2725SP4cQjzwg1wRgn39e
+         P+Hn1VUO9i1c+0WRYkl1Rwr3heFWBVxTWTSzvl37m2r+onZMcq2P3f9G0dJo5bioiSVc
+         hN0EVhvZ/hKSXQVLsFThOuEWOQuU3WkXEOd86sxM2KtOiyw6BHYNnKdbUPVPw1fz1jIk
+         SyQo141+pcBaCLVW0gL2fyB6axgOnSqYul8g0arZPCOZrA9MpInQN0IVuRyeFeE8xo3r
+         0Z2A==
+X-Gm-Message-State: AOAM532Fe4yUQZvVlhyKu5sSwT8DcmP8HELcRmVparFWwtOXnDk91ak7
+        KgLge2x/CwLxhfHEfIKaKBTKYQ==
+X-Google-Smtp-Source: ABdhPJxt88x7esVs3Vxi2/yyNnJgjXSRmmn3Z3vqgAtoSBp17YHS9d8wHhnYIxYoEiXANomBBEzBIQ==
+X-Received: by 2002:a1c:668b:: with SMTP id a133mr27422193wmc.10.1593625197372;
+        Wed, 01 Jul 2020 10:39:57 -0700 (PDT)
+Received: from [10.44.66.8] ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id y7sm7918140wrt.11.2020.07.01.10.39.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Jul 2020 10:39:56 -0700 (PDT)
+Subject: Re: [RESEND] arm64: dts: imx8m: Add NOC nodes
+To:     Abel Vesa <abel.vesa@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1592905621-9689-1-git-send-email-abel.vesa@nxp.com>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <fe06a000-e53c-1d04-6995-92d570077efd@linaro.org>
+Date:   Wed, 1 Jul 2020 20:39:55 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200630200216.1172566-1-robh@kernel.org>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8 a=P1BnusSwAAAA:8 a=VwQbUJbxAAAA:8
-        a=gEfo2CItAAAA:8 a=v9MTcrhFrrVzZmTFnlcA:9 a=mZ8UhpUad26fvTgo:21
-        a=b3PhPxD7qVPbVGwQ:21 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
-        a=D0XLA9XvdZm18NrgonBM:22 a=AjGcO6oz07-iQ99wixmX:22
-        a=sptkURWiP4Gy88Gu7hUp:22
+In-Reply-To: <1592905621-9689-1-git-send-email-abel.vesa@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob
+Hi Abel,
 
-On Tue, Jun 30, 2020 at 02:02:16PM -0600, Rob Herring wrote:
-> Convert the analog TV, DVI, HDMI, and VGA connector bindings to DT schema
-> format.
+On 6/23/20 12:47, Abel Vesa wrote:
+> From: Leonard Crestez <leonard.crestez@nxp.com>
 > 
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> Add nodes for the main interconnect of the imx8m series chips.
+> 
+> These nodes are bound to by devfreq and interconnect drivers.
+> 
+> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> Tested-by: Martin Kepplinger <martin.kepplinger@puri.sm>
 > ---
-> v2:
-> - Make Laurent maintainer
-> - Add missing port and compatible required
-> - Drop copy-n-paste 'type' from dvi-connector
-> - Use 4 space indent on examples
-I assume you take this via the DT tree.
+> 
+> This is part of the following patchset:
+> 
+> https://www.spinics.net/lists/arm-kernel/msg797026.html
 
-	Sam
-> ---
->  .../display/connector/analog-tv-connector.txt | 31 --------
->  .../connector/analog-tv-connector.yaml        | 52 ++++++++++++++
->  .../display/connector/dvi-connector.txt       | 36 ----------
->  .../display/connector/dvi-connector.yaml      | 70 +++++++++++++++++++
->  .../display/connector/hdmi-connector.txt      | 31 --------
->  .../display/connector/hdmi-connector.yaml     | 64 +++++++++++++++++
->  .../display/connector/vga-connector.txt       | 36 ----------
->  .../display/connector/vga-connector.yaml      | 46 ++++++++++++
->  8 files changed, 232 insertions(+), 134 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
->  create mode 100644 Documentation/devicetree/bindings/display/connector/analog-tv-connector.yaml
->  delete mode 100644 Documentation/devicetree/bindings/display/connector/dvi-connector.txt
->  create mode 100644 Documentation/devicetree/bindings/display/connector/dvi-connector.yaml
->  delete mode 100644 Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
->  create mode 100644 Documentation/devicetree/bindings/display/connector/hdmi-connector.yaml
->  delete mode 100644 Documentation/devicetree/bindings/display/connector/vga-connector.txt
->  create mode 100644 Documentation/devicetree/bindings/display/connector/vga-connector.yaml
+Nit: Looks like the previous version is also including the dt-bindings
+headers, but this part is missing here?
+
+In any case:
+Acked-by: Georgi Djakov <georgi.djakov@linaro.org>
+
 > 
-> diff --git a/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt b/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
-> deleted file mode 100644
-> index 883bcb2604c7..000000000000
-> --- a/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
-> +++ /dev/null
-> @@ -1,31 +0,0 @@
-> -Analog TV Connector
-> -===================
-> -
-> -Required properties:
-> -- compatible: "composite-video-connector" or "svideo-connector"
-> -
-> -Optional properties:
-> -- label: a symbolic name for the connector
-> -- sdtv-standards: limit the supported TV standards on a connector to the given
-> -                  ones. If not specified all TV standards are allowed.
-> -                  Possible TV standards are defined in
-> -                  include/dt-bindings/display/sdtv-standards.h.
-> -
-> -Required nodes:
-> -- Video port for TV input
-> -
-> -Example
-> --------
-> -#include <dt-bindings/display/sdtv-standards.h>
-> -
-> -tv: connector {
-> -	compatible = "composite-video-connector";
-> -	label = "tv";
-> -	sdtv-standards = <(SDTV_STD_PAL | SDTV_STD_NTSC)>;
-> -
-> -	port {
-> -		tv_connector_in: endpoint {
-> -			remote-endpoint = <&venc_out>;
-> -		};
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/display/connector/analog-tv-connector.yaml b/Documentation/devicetree/bindings/display/connector/analog-tv-connector.yaml
-> new file mode 100644
-> index 000000000000..eebe88fed999
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/connector/analog-tv-connector.yaml
-> @@ -0,0 +1,52 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/connector/analog-tv-connector.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> All the patches are already in except this one.
+> 
+>  arch/arm64/boot/dts/freescale/imx8mm.dtsi | 23 +++++++++++++++++++++++
+>  arch/arm64/boot/dts/freescale/imx8mn.dtsi | 23 +++++++++++++++++++++++
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 23 +++++++++++++++++++++++
+>  3 files changed, 69 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> index c6bf8ba..00b96da 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> @@ -869,6 +869,29 @@
+>  
+>  		};
+>  
+> +		noc: interconnect@32700000 {
+> +			compatible = "fsl,imx8mm-noc", "fsl,imx8m-noc";
+> +			reg = <0x32700000 0x100000>;
+> +			clocks = <&clk IMX8MM_CLK_NOC>;
+> +			fsl,ddrc = <&ddrc>;
+> +			#interconnect-cells = <1>;
+> +			operating-points-v2 = <&noc_opp_table>;
 > +
-> +title: Analog TV Connector
+> +			noc_opp_table: opp-table {
+> +				compatible = "operating-points-v2";
 > +
-> +maintainers:
-> +  - Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+> +				opp-150M {
+> +					opp-hz = /bits/ 64 <150000000>;
+> +				};
+> +				opp-375M {
+> +					opp-hz = /bits/ 64 <375000000>;
+> +				};
+> +				opp-750M {
+> +					opp-hz = /bits/ 64 <750000000>;
+> +				};
+> +			};
+> +		};
 > +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - composite-video-connector
-> +      - svideo-connector
+>  		aips4: bus@32c00000 {
+>  			compatible = "fsl,aips-bus", "simple-bus";
+>  			reg = <0x32c00000 0x400000>;
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+> index 9a4b65a..656fa9b 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+> @@ -756,6 +756,29 @@
+>  
+>  		};
+>  
+> +		noc: interconnect@32700000 {
+> +			compatible = "fsl,imx8mn-noc", "fsl,imx8m-noc";
+> +			reg = <0x32700000 0x100000>;
+> +			clocks = <&clk IMX8MN_CLK_NOC>;
+> +			fsl,ddrc = <&ddrc>;
+> +			#interconnect-cells = <1>;
+> +			operating-points-v2 = <&noc_opp_table>;
 > +
-> +  label: true
+> +			noc_opp_table: opp-table {
+> +				compatible = "operating-points-v2";
 > +
-> +  sdtv-standards:
-> +    description:
-> +      Limit the supported TV standards on a connector to the given ones. If
-> +      not specified all TV standards are allowed. Possible TV standards are
-> +      defined in include/dt-bindings/display/sdtv-standards.h.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +				opp-100M {
+> +					opp-hz = /bits/ 64 <100000000>;
+> +				};
+> +				opp-600M {
+> +					opp-hz = /bits/ 64 <600000000>;
+> +				};
+> +				opp-800M {
+> +					opp-hz = /bits/ 64 <800000000>;
+> +				};
+> +			};
+> +		};
 > +
-> +  port:
-> +    description: Connection to controller providing analog TV signals
+>  		aips4: bus@32c00000 {
+>  			compatible = "fsl,aips-bus", "simple-bus";
+>  			reg = <0x32c00000 0x400000>;
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> index 54bed64..6c24ec1 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -1037,6 +1037,29 @@
+>  			};
+>  		};
+>  
+> +		noc: interconnect@32700000 {
+> +			compatible = "fsl,imx8mq-noc", "fsl,imx8m-noc";
+> +			reg = <0x32700000 0x100000>;
+> +			clocks = <&clk IMX8MQ_CLK_NOC>;
+> +			fsl,ddrc = <&ddrc>;
+> +			#interconnect-cells = <1>;
+> +			operating-points-v2 = <&noc_opp_table>;
 > +
-> +required:
-> +  - compatible
-> +  - port
+> +			noc_opp_table: opp-table {
+> +				compatible = "operating-points-v2";
 > +
-> +additionalProperties: false
+> +				opp-133M {
+> +					opp-hz = /bits/ 64 <133333333>;
+> +				};
+> +				opp-400M {
+> +					opp-hz = /bits/ 64 <400000000>;
+> +				};
+> +				opp-800M {
+> +					opp-hz = /bits/ 64 <800000000>;
+> +				};
+> +			};
+> +		};
 > +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/display/sdtv-standards.h>
-> +
-> +    connector {
-> +        compatible = "composite-video-connector";
-> +        label = "tv";
-> +        sdtv-standards = <(SDTV_STD_PAL | SDTV_STD_NTSC)>;
-> +
-> +        port {
-> +            tv_connector_in: endpoint {
-> +                remote-endpoint = <&venc_out>;
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/display/connector/dvi-connector.txt b/Documentation/devicetree/bindings/display/connector/dvi-connector.txt
-> deleted file mode 100644
-> index 207e42e9eba0..000000000000
-> --- a/Documentation/devicetree/bindings/display/connector/dvi-connector.txt
-> +++ /dev/null
-> @@ -1,36 +0,0 @@
-> -DVI Connector
-> -==============
-> -
-> -Required properties:
-> -- compatible: "dvi-connector"
-> -
-> -Optional properties:
-> -- label: a symbolic name for the connector
-> -- ddc-i2c-bus: phandle to the i2c bus that is connected to DVI DDC
-> -- analog: the connector has DVI analog pins
-> -- digital: the connector has DVI digital pins
-> -- dual-link: the connector has pins for DVI dual-link
-> -- hpd-gpios: HPD GPIO number
-> -
-> -Required nodes:
-> -- Video port for DVI input
-> -
-> -Note: One (or both) of 'analog' or 'digital' must be set.
-> -
-> -Example
-> --------
-> -
-> -dvi0: connector@0 {
-> -	compatible = "dvi-connector";
-> -	label = "dvi";
-> -
-> -	digital;
-> -
-> -	ddc-i2c-bus = <&i2c3>;
-> -
-> -	port {
-> -		dvi_connector_in: endpoint {
-> -			remote-endpoint = <&tfp410_out>;
-> -		};
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/display/connector/dvi-connector.yaml b/Documentation/devicetree/bindings/display/connector/dvi-connector.yaml
-> new file mode 100644
-> index 000000000000..71cb9220fa59
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/connector/dvi-connector.yaml
-> @@ -0,0 +1,70 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/connector/dvi-connector.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: DVI Connector
-> +
-> +maintainers:
-> +  - Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: dvi-connector
-> +
-> +  label: true
-> +
-> +  hpd-gpios:
-> +    description: A GPIO line connected to HPD
-> +    maxItems: 1
-> +
-> +  ddc-i2c-bus:
-> +    description: phandle link to the I2C controller used for DDC EDID probing
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +
-> +  analog:
-> +    type: boolean
-> +    description: the connector has DVI analog pins
-> +
-> +  digital:
-> +    type: boolean
-> +    description: the connector has DVI digital pins
-> +
-> +  dual-link:
-> +    type: boolean
-> +    description: the connector has pins for DVI dual-link
-> +
-> +  port:
-> +    description: Connection to controller providing DVI signals
-> +
-> +required:
-> +  - compatible
-> +  - port
-> +
-> +anyOf:
-> +  - required:
-> +      - analog
-> +  - required:
-> +      - digital
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    connector {
-> +        compatible = "dvi-connector";
-> +        label = "dvi";
-> +
-> +        digital;
-> +
-> +        ddc-i2c-bus = <&i2c3>;
-> +
-> +        port {
-> +            dvi_connector_in: endpoint {
-> +                remote-endpoint = <&tfp410_out>;
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt b/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
-> deleted file mode 100644
-> index aeb07c4bd703..000000000000
-> --- a/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
-> +++ /dev/null
-> @@ -1,31 +0,0 @@
-> -HDMI Connector
-> -==============
-> -
-> -Required properties:
-> -- compatible: "hdmi-connector"
-> -- type: the HDMI connector type: "a", "b", "c", "d" or "e"
-> -
-> -Optional properties:
-> -- label: a symbolic name for the connector
-> -- hpd-gpios: HPD GPIO number
-> -- ddc-i2c-bus: phandle link to the I2C controller used for DDC EDID probing
-> -- ddc-en-gpios: signal to enable DDC bus
-> -
-> -Required nodes:
-> -- Video port for HDMI input
-> -
-> -Example
-> --------
-> -
-> -hdmi0: connector@1 {
-> -	compatible = "hdmi-connector";
-> -	label = "hdmi";
-> -
-> -	type = "a";
-> -
-> -	port {
-> -		hdmi_connector_in: endpoint {
-> -			remote-endpoint = <&tpd12s015_out>;
-> -		};
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/display/connector/hdmi-connector.yaml b/Documentation/devicetree/bindings/display/connector/hdmi-connector.yaml
-> new file mode 100644
-> index 000000000000..14d7128af592
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/connector/hdmi-connector.yaml
-> @@ -0,0 +1,64 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/connector/hdmi-connector.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: HDMI Connector
-> +
-> +maintainers:
-> +  - Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: hdmi-connector
-> +
-> +  type:
-> +    description: The HDMI connector type
-> +    enum:
-> +      - a   # Standard full size
-> +      - b   # Never deployed?
-> +      - c   # Mini
-> +      - d   # Micro
-> +      - e   # automotive
-> +
-> +  label: true
-> +
-> +  hpd-gpios:
-> +    description: A GPIO line connected to HPD
-> +    maxItems: 1
-> +
-> +  ddc-i2c-bus:
-> +    description: phandle link to the I2C controller used for DDC EDID probing
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +
-> +  ddc-en-gpios:
-> +    description: GPIO signal to enable DDC bus
-> +    maxItems: 1
-> +
-> +  port:
-> +    description: Connection to controller providing HDMI signals
-> +
-> +required:
-> +  - compatible
-> +  - port
-> +  - type
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    connector {
-> +        compatible = "hdmi-connector";
-> +        label = "hdmi";
-> +
-> +        type = "a";
-> +
-> +        port {
-> +            hdmi_connector_in: endpoint {
-> +                remote-endpoint = <&tpd12s015_out>;
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/display/connector/vga-connector.txt b/Documentation/devicetree/bindings/display/connector/vga-connector.txt
-> deleted file mode 100644
-> index c727f298e7ad..000000000000
-> --- a/Documentation/devicetree/bindings/display/connector/vga-connector.txt
-> +++ /dev/null
-> @@ -1,36 +0,0 @@
-> -VGA Connector
-> -=============
-> -
-> -Required properties:
-> -
-> -- compatible: "vga-connector"
-> -
-> -Optional properties:
-> -
-> -- label: a symbolic name for the connector corresponding to a hardware label
-> -- ddc-i2c-bus: phandle to the I2C bus that is connected to VGA DDC
-> -
-> -Required nodes:
-> -
-> -The VGA connector internal connections are modeled using the OF graph bindings
-> -specified in Documentation/devicetree/bindings/graph.txt.
-> -
-> -The VGA connector has a single port that must be connected to a video source
-> -port.
-> -
-> -
-> -Example
-> --------
-> -
-> -vga0: connector@0 {
-> -	compatible = "vga-connector";
-> -	label = "vga";
-> -
-> -	ddc-i2c-bus = <&i2c3>;
-> -
-> -	port {
-> -		vga_connector_in: endpoint {
-> -			remote-endpoint = <&adv7123_out>;
-> -		};
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/display/connector/vga-connector.yaml b/Documentation/devicetree/bindings/display/connector/vga-connector.yaml
-> new file mode 100644
-> index 000000000000..5782c4bb3252
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/connector/vga-connector.yaml
-> @@ -0,0 +1,46 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/connector/vga-connector.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: VGA Connector
-> +
-> +maintainers:
-> +  - Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: vga-connector
-> +
-> +  label: true
-> +
-> +  ddc-i2c-bus:
-> +    description: phandle link to the I2C controller used for DDC EDID probing
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +
-> +  port:
-> +    description: Connection to controller providing VGA signals
-> +
-> +required:
-> +  - compatible
-> +  - port
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    connector {
-> +        compatible = "vga-connector";
-> +        label = "vga";
-> +
-> +        ddc-i2c-bus = <&i2c3>;
-> +
-> +        port {
-> +            vga_connector_in: endpoint {
-> +                remote-endpoint = <&adv7123_out>;
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> -- 
-> 2.25.1
+>  		bus@32c00000 { /* AIPS4 */
+>  			compatible = "fsl,aips-bus", "simple-bus";
+>  			reg = <0x32c00000 0x400000>;
+> 
