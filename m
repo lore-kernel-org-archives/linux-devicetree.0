@@ -2,85 +2,159 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B303C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A569C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF30820780
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37CC62080D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:12:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731941AbgGAQH2 (ORCPT
+        id S1732158AbgGAQMl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:07:28 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:43212 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731751AbgGAQH2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 12:07:28 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id AE60A20025;
-        Wed,  1 Jul 2020 18:07:24 +0200 (CEST)
-Date:   Wed, 1 Jul 2020 18:07:23 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <guido.gunther@puri.sm>
-Cc:     Ondrej Jirman <megous@megous.com>, linux-sunxi@googlegroups.com,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Purism Kernel Team <kernel@puri.sm>,
+        Wed, 1 Jul 2020 12:12:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:54238 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730645AbgGAQMl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Jul 2020 12:12:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 713D631B;
+        Wed,  1 Jul 2020 09:12:40 -0700 (PDT)
+Received: from [10.57.21.32] (unknown [10.57.21.32])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 297AB3F68F;
+        Wed,  1 Jul 2020 09:12:37 -0700 (PDT)
+Subject: Re: [PATCH v2 01/12] ACPI/IORT: Make iort_match_node_callback walk
+ the ACPI namespace for NC
+To:     Hanjun Guo <guohanjun@huawei.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Will Deacon <will@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Samuel Holland <samuel@sholland.org>,
-        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>
-Subject: Re: [PATCH v6 02/13] dt-bindings: panel: Convert
- rocktech,jh057n00900 to yaml
-Message-ID: <20200701160723.GA675098@ravnborg.org>
-References: <20200701103126.1512615-1-megous@megous.com>
- <20200701103126.1512615-3-megous@megous.com>
- <20200701155857.GB174356@bogon.m.sigxcpu.org>
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
+ <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
+ <20200619082013.13661-2-lorenzo.pieralisi@arm.com>
+ <718cae1f-2f33-f6d9-f278-157300b73116@huawei.com>
+ <20200629090551.GA28873@e121166-lin.cambridge.arm.com>
+ <765078e7-b3ec-af5d-0405-7834ba0f120a@huawei.com>
+ <20200630102454.GA17556@e121166-lin.cambridge.arm.com>
+ <4817d766-0437-5356-a0b9-97b111d4cae2@huawei.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <952a6720-f401-1441-5548-5b40cfc76d3a@arm.com>
+Date:   Wed, 1 Jul 2020 17:12:35 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200701155857.GB174356@bogon.m.sigxcpu.org>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=8nJEP1OIZ-IA:10 a=J_fg_7IlAAAA:8 a=-sgrNTgQ70Twg4PVczQA:9
-        a=wPNLvfGTeEIA:10 a=zGOw-GkVl6h1W4ZARoUA:22
+In-Reply-To: <4817d766-0437-5356-a0b9-97b111d4cae2@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 05:58:57PM +0200, Guido Günther wrote:
-> Hi Ondrej,
-> On Wed, Jul 01, 2020 at 12:31:15PM +0200, Ondrej Jirman wrote:
-> > Convert Rocktech MIPI DSI panel driver from txt to yaml bindings.
-> > 
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > ---
-> >  .../display/panel/rocktech,jh057n00900.txt    | 23 -------
-> >  .../display/panel/rocktech,jh057n00900.yaml   | 66 +++++++++++++++++++
-> >  2 files changed, 66 insertions(+), 23 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
-> >  create mode 100644
-> > Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
+On 2020-06-30 14:04, Hanjun Guo wrote:
+> On 2020/6/30 18:24, Lorenzo Pieralisi wrote:
+>> On Tue, Jun 30, 2020 at 11:06:41AM +0800, Hanjun Guo wrote:
+>>
+>> [...]
+>>
+>>>> For devices that aren't described in the DSDT - IORT translations
+>>>> are determined by their ACPI parent device. Do you see/Have you
+>>>> found any issue with this approach ?
+>>>
+>>> The spec says "Describes the IO relationships between devices
+>>> represented in the ACPI namespace.", and in section 3.1.1.3 Named
+>>> component node, it says:
+>>
+>> PCI devices aren't necessarily described in the ACPI namespace and we
+>> still use IORT to describe them - through the RC node.
+>>
+>>> "Named component nodes are used to describe devices that are also
+>>> included in the Differentiated System Description Table (DSDT). See
+>>> [ACPI]."
+>>>
+>>> So from my understanding, the IORT spec for now, can only do ID
+>>> translations for devices in the DSDT.
+>>
+>> I think you can read this multiple ways but this patch does not
+>> change this concept. What changes, is applying parent's node IORT
+>> mapping to child nodes with no associated DSDT nodes, it is the
+>> same thing we do with PCI and the _DMA method - we could update
+>> the wording in the specs if that clarifies but I don't think this
+>> deliberately disregards the specifications.
 > 
-> Thanks for the conversion! Shouldn't we switch to `sitronix-st7703.yaml`
-> as well in this patch?
+> I agree, but it's better to update the wording of the spec.
+> 
+>>
+>>>>> For a platform device, if I use its parent's full path name for
+>>>>> its named component entry, then it will match, but this will violate
+>>>>> the IORT spec.
+>>>>
+>>>> Can you elaborate on this please I don't get the point you
+>>>> are making.
+>>>
+>>> For example, device A is not described in DSDT so can't represent
+>>> as a NC node in IORT. Device B can be described in DSDT and it
+>>> is the parent of device A, so device B can be represented in IORT
+>>> with memory access properties and node flags with Substream width
+>>> and Stall supported info.
+>>>
+>>> When we trying to translate device A's ID, we reuse all the memory
+>>> access properties and node flags from its parent (device B), but
+>>> will it the same?
+>>
+>> I assume so why wouldn't it be ? Why would be describe them in
+>> a parent-child relationship if that's not how the system looks like
+>> in HW ?
+> 
+> The point I'm making is that I'm not sure all the memory access and
+> stall properties are the same for the parent and the device itself.
 
-That would be good if this rename is included.
-Otherwise we will just have to do it later.
+Is that even a valid case though? The principal thing we want to 
+accommodate here is when device B *is* the one accessing memory, either 
+because it is a bridge with device A sat behind it, or because device A 
+is actually just some logical function or subset of physical device B.
 
-	Sam
+If the topology is such that device A is a completely independent device 
+with its own path to memory such that it could have different 
+properties, I would expect that it *should* be described in DSDT, and I 
+can't easily think of a good reason why it wouldn't be. I'm also 
+struggling to imagine how it might even have an ID that had to be 
+interpreted in the context of device B if it wasn't one of the cases 
+above :/
+
+I don't doubt that people could - or maybe even have - come up with crap 
+DSDT bindings that don't represent the hardware sufficiently accurately, 
+but I'm not sure that should be IORT's problem...
+
+Robin.
+
+>> Do you have a specific example in mind that we should be aware of ?
+>>
+>>> So the IORT spec don't support this, at least it's pretty vague
+>>> I think.
+>>
+>> I think that's a matter of wording, it can be updated if it needs be,
+>> reach out if you see any issue with the current approach please.
+> 
+> If the all the properties for parent and device itself are the same,
+> I have no strong opinion for this patch, but it's better to update
+> the wording of the spec as well.
+> 
+> Thanks
+> Hanjun
+> 
