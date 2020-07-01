@@ -4,72 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C592C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 13:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB179C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 13:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 769F6207F5
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 13:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6BAB206BE
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 13:45:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="OBhzkJtb"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="ypGT2oo5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730569AbgGANpH (ORCPT
+        id S1731211AbgGANpW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 09:45:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44326 "EHLO
+        Wed, 1 Jul 2020 09:45:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731149AbgGANpF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 09:45:05 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DEA4C08C5C1
-        for <devicetree@vger.kernel.org>; Wed,  1 Jul 2020 06:45:05 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id d27so18413479qtg.4
-        for <devicetree@vger.kernel.org>; Wed, 01 Jul 2020 06:45:05 -0700 (PDT)
+        with ESMTP id S1731196AbgGANpN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 09:45:13 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EFF2C08C5DC
+        for <devicetree@vger.kernel.org>; Wed,  1 Jul 2020 06:45:13 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id di5so6047881qvb.11
+        for <devicetree@vger.kernel.org>; Wed, 01 Jul 2020 06:45:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=marek-ca.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=YfOjKER5oMeevtyRUZwe3pNG9ZI07+gjbZp59KKuY2U=;
-        b=OBhzkJtbWpa+UZXIpLHFsaDeuNIVYk84EtsdkCL03Y9PddKwyzqCDxUicU2clXxRpa
-         l+bA5kl6aVU3kux4ptgHZv79AKWC00DeN+nhf0xM9LQMENzK7ypUZC77cfpS2P4pn+ow
-         0KjuCzZiFt3d+F4r3npqsdH9fcOSAyAZNJusyHxlD53R5nmwKC0yVaDd72BcYyFtP1HY
-         pupLp54VbmQ8xcRtczN6CYQ7QdflNUEz/KQyH60Je4q3hd8XYbP0iDcT/gTaFaEEEoZH
-         Wu02JB5IDuNCWyX18MJEoDgL+qffX92MJ8KngbAT0ld5IDVnYr2u8r2j22PNJkq9l+d8
-         2kvg==
+        bh=sihixmd7y65qhAkfrcCiJqiM1K3NJIfRiJWtLm6ve+w=;
+        b=ypGT2oo5BMx8h8U1DEuIXd3TFLjJbQ+P11ThIZRL8jDQUL3fy8V5yEQ0vehKc682LB
+         N/nqNz/4pEUZY2fisxWJppArRzltHQePeMSSjTkVKT0bzozwE+kzAjakWrO0rHHfC2ul
+         G9Qxnc/4ZzPcERnSe+FTAsBOqdtsvoTAo+d93uBY875MpehYnXq1qeOoMIS3qj8aqd7a
+         DCDIXfnxpHuZiaUPxOlMlT0ejaBaomeM/e04gi7A96Q/OOtLV8f6Mws7QXzpX1+D8Xk8
+         sZxiGxzvYdnyD18MK1nAFtxVh4A4+qRgeXksbL9/f00N/q8rt/CorQl2MIrhjU8o/YBF
+         cdHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=YfOjKER5oMeevtyRUZwe3pNG9ZI07+gjbZp59KKuY2U=;
-        b=gX2mLdVF1waNFJ3tHgloXVNrgVjmkMemyHo9NkAmXxwgeO/tSYeQo7QGn5hhbYL/mh
-         +mscRhv0D+FgBnEF2Jx/sVHoby58hBFJEqzmFENRuuGWLR3ac1fP4jj4FD+UbVvLYVeu
-         +aBDfx4aOYX2lVlm+sArk/vmMAx8gEbFaHeMqQBt5K+S11bIffmidb1G1Se+dIU0qZ/F
-         bu/ryoL7yEfT2xk2qa0sm7Kryq/0CXPFOVknSV6dG0H4bjZhTpJ0rQo/Hzs4dAFe4kub
-         hID8V4nUt/PdxvsDJtU8Ho2DID/Yf4UNdIFHRNibgEOuzmxPxvyMcTdYsNRCeAvpp7ij
-         myVw==
-X-Gm-Message-State: AOAM532hYni1rAxmG8qDrTbTcQ1GvGf81qMw2rN0Jmo6h5RyVn7tRsXq
-        bjkfLza2WL4vnNNfvmpn4l50Ow==
-X-Google-Smtp-Source: ABdhPJzlRzqAoCgskrJuxHrw4kKKuNKgDfuaCKHDwY5vGCG71aiqXTVhVJTp6K3cF2uCkrz1P8Tu0Q==
-X-Received: by 2002:ac8:6c36:: with SMTP id k22mr26422191qtu.288.1593611104217;
-        Wed, 01 Jul 2020 06:45:04 -0700 (PDT)
+        bh=sihixmd7y65qhAkfrcCiJqiM1K3NJIfRiJWtLm6ve+w=;
+        b=TsIgy8Oxr7b2pncU/uRXw3fBaHA0qamsbamWs8qIMaOfPK8BqNggFk3e9FJF7V9E9V
+         DNz2rOvQ94/dFo9QV8HNv83OTPlfCHo4T8jk544F/Nrh5CnnzjeGReqC2/DmP5ztxayz
+         gdOmGhHx2cZZcAMwxhe3iwdmTHjz/f00tb0JRifp3L9ppP/bv2ac40GgN88nb+TFbikW
+         jQ6IOdz7kyycR2gjyF/IMhOUoOvYdjT6gNkdayFV/ApZoOGWhgK4SKDyxS9sJyASzLWx
+         1rz9oGV0bMqK9eah4PwE3rFw7SUoYCw2B2YOHTyePDoWQufvW88zPVsvuhB33FrwmpXO
+         yd2A==
+X-Gm-Message-State: AOAM532Kubzg0Ujo7iXZUSaA+oWIo8hEfYIhtV3qSpzJfd5RwtzQI8bX
+        cwMgIZpZCowDwzonQrSE7RncEw==
+X-Google-Smtp-Source: ABdhPJw1StxecmRy8ucovZU0Ed9/qAHNkZQ7AxCR6utas4SBrzSeyyWUqIxmX0ZQ7iGogcqS4+fcvg==
+X-Received: by 2002:a05:6214:a0a:: with SMTP id dw10mr25719942qvb.200.1593611112618;
+        Wed, 01 Jul 2020 06:45:12 -0700 (PDT)
 Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id d136sm1444345qke.47.2020.07.01.06.45.03
+        by smtp.gmail.com with ESMTPSA id d136sm1444345qke.47.2020.07.01.06.45.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 06:45:03 -0700 (PDT)
+        Wed, 01 Jul 2020 06:45:12 -0700 (PDT)
 From:   Jonathan Marek <jonathan@marek.ca>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-pm@vger.kernel.org (open list:INTERCONNECT API),
         devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 1/6] dt-bindings: interconnect: Add Qualcomm SM8150 DT bindings
-Date:   Wed,  1 Jul 2020 09:42:50 -0400
-Message-Id: <20200701134259.8055-2-jonathan@marek.ca>
+Subject: [PATCH 6/6] arm64: dts: qcom: sm8250: add interconnect nodes
+Date:   Wed,  1 Jul 2020 09:42:55 -0400
+Message-Id: <20200701134259.8055-7-jonathan@marek.ca>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200701134259.8055-1-jonathan@marek.ca>
 References: <20200701134259.8055-1-jonathan@marek.ca>
@@ -80,291 +78,170 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Qualcomm SM8150 platform has several bus fabrics that could be
-controlled and tuned dynamically according to the bandwidth demand.
+Add the interconnect dts nodes for sm8250.
 
 Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 ---
- .../bindings/interconnect/qcom,sm8150.yaml    |  86 +++++++++
- .../dt-bindings/interconnect/qcom,sm8150.h    | 176 ++++++++++++++++++
- 2 files changed, 262 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sm8150.yaml
- create mode 100644 include/dt-bindings/interconnect/qcom,sm8150.h
+ arch/arm64/boot/dts/qcom/sm8250.dtsi | 118 +++++++++++++++++++++++++++
+ 1 file changed, 118 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sm8150.yaml b/Documentation/devicetree/bindings/interconnect/qcom,sm8150.yaml
-new file mode 100644
-index 000000000000..99fb881bc797
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interconnect/qcom,sm8150.yaml
-@@ -0,0 +1,86 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interconnect/qcom,sm8150.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+index c9b38dd88f43..b417523f1f1b 100644
+--- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+@@ -9,6 +9,7 @@
+ #include <dt-bindings/clock/qcom,rpmh.h>
+ #include <dt-bindings/power/qcom-rpmpd.h>
+ #include <dt-bindings/soc/qcom,rpmh-rsc.h>
++#include <dt-bindings/interconnect/qcom,sm8250.h>
+ 
+ / {
+ 	interrupt-parent = <&intc>;
+@@ -310,6 +311,61 @@ uart2: serial@a90000 {
+ 			};
+ 		};
+ 
++		config_noc: interconnect@1500000 {
++			compatible = "qcom,sm8250-config-noc";
++			reg = <0 0x01500000 0 0x1000>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
 +
-+title:  Qualcomm SM8150 Network-On-Chip Interconnect
++		ipa_virt: interconnect@1620000 {
++			compatible = "qcom,sm8250-ipa-virt";
++			reg = <0 0x01620000 0 0x1000>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
 +
-+maintainers:
-+  -
++		system_noc: interconnect@1632000 {
++			compatible = "qcom,sm8250-system-noc";
++			reg = <0 0x01632000 0 0x1000>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
 +
-+description: |
-+   SM8150 interconnect providers support system bandwidth requirements through
-+   RPMh hardware accelerators known as Bus Clock Manager (BCM). The provider is
-+   able to communicate with the BCM through the Resource State Coordinator (RSC)
-+   associated with each execution environment. Provider nodes must point to at
-+   least one RPMh device child node pertaining to their RSC and each provider
-+   can map to multiple RPMh resources.
++		aggre1_noc: interconnect@16e2000 {
++			compatible = "qcom,sm8250-aggre1-noc";
++			reg = <0 0x016e2000 0 0x1000>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
 +
-+properties:
-+  reg:
-+    maxItems: 1
++		aggre2_noc: interconnect@1703000 {
++			compatible = "qcom,sm8250-aggre2-noc";
++			reg = <0 0x01703000 0 0x1000>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
 +
-+  compatible:
-+    enum:
-+      - qcom,sm8150-aggre1-noc
-+      - qcom,sm8150-aggre2-noc
-+      - qcom,sm8150-camnoc-noc
-+      - qcom,sm8150-compute-noc
-+      - qcom,sm8150-config-noc
-+      - qcom,sm8150-dc-noc
-+      - qcom,sm8150-gem-noc
-+      - qcom,sm8150-ipa-virt
-+      - qcom,sm8150-mc-virt
-+      - qcom,sm8150-mmss-noc
-+      - qcom,sm8150-system-noc
-+      - qcom,sm8150-gem-noc-display
-+      - qcom,sm8150-mc-virt-display
-+      - qcom,sm8150-mmss-noc-display
++		compute_noc: interconnect@1733000 {
++			compatible = "qcom,sm8250-compute-noc";
++			reg = <0 0x01733000 0 0x1000>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
 +
-+  '#interconnect-cells':
-+    const: 1
++		mmss_noc: interconnect@174a000 {
++			compatible = "qcom,sm8250-mmss-noc";
++			reg = <0 0x0174a000 0 0x1000>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
 +
-+  qcom,bcm-voters:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description: |
-+      List of phandles to qcom,bcm-voter nodes that are required by
-+      this interconnect to send RPMh commands.
++		mmss_noc_display: interconnect-display@174a000 {
++			compatible = "qcom,sm8250-mmss-noc-display";
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&disp_bcm_voter>;
++		};
 +
-+  qcom,bcm-voter-names:
-+    $ref: /schemas/types.yaml#/definitions/string-array
-+    description: |
-+      Names for each of the qcom,bcm-voters specified.
+ 		ufs_mem_hc: ufshc@1d84000 {
+ 			compatible = "qcom,sm8250-ufshc", "qcom,ufshc",
+ 				     "jedec,ufs-2.0";
+@@ -620,6 +676,46 @@ usb_2_ssphy: lane@88eb200 {
+ 			};
+ 		};
+ 
++		dc_noc: interconnect@90c0000 {
++			compatible = "qcom,sm8250-dc-noc";
++			reg = <0 0x090c0000 0 0x1000>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
 +
-+required:
-+  - compatible
-+  - reg
-+  - '#interconnect-cells'
-+  - qcom,bcm-voters
++		mc_virt: interconnect@9100000 {
++			compatible = "qcom,sm8250-mc-virt";
++			reg = <0 0x09100000 0 0x1000>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
 +
-+additionalProperties: false
++		mc_virt_display: interconnect-display@9100000 {
++			compatible = "qcom,sm8250-mc-virt-display";
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&disp_bcm_voter>;
++		};
 +
-+examples:
-+  - |
-+      #include <dt-bindings/interconnect/qcom,sm8150.h>
++		gem_noc: interconnect@9121000 {
++			compatible = "qcom,sm8250-gem-noc";
++			reg = <0 0x09121000 0 0x1000>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
 +
-+      config_noc: interconnect@1500000 {
-+            compatible = "qcom,sm8150-config-noc";
-+            reg = <0x01500000 0x1000>;
-+            #interconnect-cells = <1>;
-+            qcom,bcm-voters = <&apps_bcm_voter>;
-+      };
++		gem_noc_display: interconnect-display@9121000 {
++			compatible = "qcom,sm8250-gem-noc-display";
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&disp_bcm_voter>;
++		};
 +
-+      system_noc: interconnect@1629000 {
-+            compatible = "qcom,sm8150-system-noc";
-+            reg = <0x01629000 0x1000>;
-+            #interconnect-cells = <1>;
-+            qcom,bcm-voters = <&apps_bcm_voter>;
-+      };
++		npu_noc: interconnect@9990000 {
++			compatible = "qcom,sm8250-npu-noc";
++			reg = <0 0x09990000 0 0x1000>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
 +
-+      mmss_noc: interconnect@1749000 {
-+            compatible = "qcom,sm8150-mmss-noc";
-+            reg = <0x01749000 0x1000>;
-+            #interconnect-cells = <1>;
-+            qcom,bcm-voters = <&apps_bcm_voter>;
-+      };
-diff --git a/include/dt-bindings/interconnect/qcom,sm8150.h b/include/dt-bindings/interconnect/qcom,sm8150.h
-new file mode 100644
-index 000000000000..0550d7313817
---- /dev/null
-+++ b/include/dt-bindings/interconnect/qcom,sm8150.h
-@@ -0,0 +1,176 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Qualcomm SM8150 interconnect IDs
-+ *
-+ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+ */
+ 		usb_1: usb@a6f8800 {
+ 			compatible = "qcom,sm8250-dwc3", "qcom,dwc3";
+ 			reg = <0 0x0a6f8800 0 0x400>;
+@@ -710,6 +806,24 @@ usb_2_dwc3: dwc3@a800000 {
+ 			};
+ 		};
+ 
++		disp_rsc: rsc@af20000 {
++			label = "disp_rsc";
++			compatible = "qcom,rpmh-rsc";
++			reg = <0x0 0xaf20000 0x0 0x10000>;
++			reg-names = "drv-0";
++			interrupts = <GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH>;
++			qcom,tcs-offset = <0x1c00>;
++			qcom,drv-id = <0>;
++			qcom,tcs-config = <ACTIVE_TCS  0>,
++					  <SLEEP_TCS   1>,
++					  <WAKE_TCS    1>,
++					  <CONTROL_TCS 0>;
 +
-+#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_SM8150_H
-+#define __DT_BINDINGS_INTERCONNECT_QCOM_SM8150_H
++			disp_bcm_voter: bcm_voter {
++				compatible = "qcom,bcm-voter";
++			};
++		};
 +
-+#define MASTER_A1NOC_CFG		0
-+#define MASTER_QUP_0			1
-+#define MASTER_EMAC			2
-+#define MASTER_UFS_MEM			3
-+#define MASTER_USB3			4
-+#define MASTER_USB3_1			5
-+#define A1NOC_SNOC_SLV			6
-+#define SLAVE_SERVICE_A1NOC		7
+ 		pdc: interrupt-controller@b220000 {
+ 			compatible = "qcom,sm8250-pdc", "qcom,pdc";
+ 			reg = <0 0x0b220000 0 0x30000>, <0 0x17c000f0 0 0x60>;
+@@ -997,6 +1111,10 @@ rpmhpd_opp_turbo_l1: opp10 {
+ 					};
+ 				};
+ 			};
 +
-+#define MASTER_A2NOC_CFG		0
-+#define MASTER_QDSS_BAM			1
-+#define MASTER_QSPI			2
-+#define MASTER_QUP_1			3
-+#define MASTER_QUP_2			4
-+#define MASTER_SENSORS_AHB		5
-+#define MASTER_TSIF			6
-+#define MASTER_CNOC_A2NOC		7
-+#define MASTER_CRYPTO_CORE_0		8
-+#define MASTER_IPA			9
-+#define MASTER_PCIE			10
-+#define MASTER_PCIE_1			11
-+#define MASTER_QDSS_ETR			12
-+#define MASTER_SDCC_2			13
-+#define MASTER_SDCC_4			14
-+#define A2NOC_SNOC_SLV			15
-+#define SLAVE_ANOC_PCIE_GEM_NOC		16
-+#define SLAVE_SERVICE_A2NOC		17
-+
-+#define MASTER_CAMNOC_HF0_UNCOMP	0
-+#define MASTER_CAMNOC_HF1_UNCOMP	1
-+#define MASTER_CAMNOC_SF_UNCOMP		2
-+#define SLAVE_CAMNOC_UNCOMP		3
-+
-+#define MASTER_NPU			0
-+#define SLAVE_CDSP_MEM_NOC		1
-+
-+#define MASTER_SPDM			0
-+#define SNOC_CNOC_MAS			1
-+#define MASTER_QDSS_DAP			2
-+#define SLAVE_A1NOC_CFG			3
-+#define SLAVE_A2NOC_CFG			4
-+#define SLAVE_AHB2PHY_SOUTH		5
-+#define SLAVE_AOP			6
-+#define SLAVE_AOSS			7
-+#define SLAVE_CAMERA_CFG		8
-+#define SLAVE_CLK_CTL			9
-+#define SLAVE_CDSP_CFG			10
-+#define SLAVE_RBCPR_CX_CFG		11
-+#define SLAVE_RBCPR_MMCX_CFG		12
-+#define SLAVE_RBCPR_MX_CFG		13
-+#define SLAVE_CRYPTO_0_CFG		14
-+#define SLAVE_CNOC_DDRSS		15
-+#define SLAVE_DISPLAY_CFG		16
-+#define SLAVE_EMAC_CFG			17
-+#define SLAVE_GLM			18
-+#define SLAVE_GRAPHICS_3D_CFG		19
-+#define SLAVE_IMEM_CFG			20
-+#define SLAVE_IPA_CFG			21
-+#define SLAVE_CNOC_MNOC_CFG		22
-+#define SLAVE_NPU_CFG			23
-+#define SLAVE_PCIE_0_CFG		24
-+#define SLAVE_PCIE_1_CFG		25
-+#define SLAVE_NORTH_PHY_CFG		26
-+#define SLAVE_PIMEM_CFG			27
-+#define SLAVE_PRNG			28
-+#define SLAVE_QDSS_CFG			29
-+#define SLAVE_QSPI			30
-+#define SLAVE_QUP_2			31
-+#define SLAVE_QUP_1			32
-+#define SLAVE_QUP_0			33
-+#define SLAVE_SDCC_2			34
-+#define SLAVE_SDCC_4			35
-+#define SLAVE_SNOC_CFG			36
-+#define SLAVE_SPDM_WRAPPER		37
-+#define SLAVE_SPSS_CFG			38
-+#define SLAVE_SSC_CFG			39
-+#define SLAVE_TCSR			40
-+#define SLAVE_TLMM_EAST			41
-+#define SLAVE_TLMM_NORTH		42
-+#define SLAVE_TLMM_SOUTH		43
-+#define SLAVE_TLMM_WEST			44
-+#define SLAVE_TSIF			45
-+#define SLAVE_UFS_CARD_CFG		46
-+#define SLAVE_UFS_MEM_CFG		47
-+#define SLAVE_USB3			48
-+#define SLAVE_USB3_1			49
-+#define SLAVE_VENUS_CFG			50
-+#define SLAVE_VSENSE_CTRL_CFG		51
-+#define SLAVE_CNOC_A2NOC		52
-+#define SLAVE_SERVICE_CNOC		53
-+
-+#define MASTER_CNOC_DC_NOC		0
-+#define SLAVE_LLCC_CFG			1
-+#define SLAVE_GEM_NOC_CFG		2
-+
-+#define MASTER_AMPSS_M0			0
-+#define MASTER_GPU_TCU			1
-+#define MASTER_SYS_TCU			2
-+#define MASTER_GEM_NOC_CFG		3
-+#define MASTER_COMPUTE_NOC		4
-+#define MASTER_GRAPHICS_3D		5
-+#define MASTER_MNOC_HF_MEM_NOC		6
-+#define MASTER_MNOC_SF_MEM_NOC		7
-+#define MASTER_GEM_NOC_PCIE_SNOC	8
-+#define MASTER_SNOC_GC_MEM_NOC		9
-+#define MASTER_SNOC_SF_MEM_NOC		10
-+#define MASTER_ECC			11
-+#define SLAVE_MSS_PROC_MS_MPU_CFG	12
-+#define SLAVE_ECC			13
-+#define SLAVE_GEM_NOC_SNOC		14
-+#define SLAVE_LLCC			15
-+#define SLAVE_SERVICE_GEM_NOC		16
-+
-+#define MASTER_IPA_CORE			0
-+#define SLAVE_IPA_CORE			1
-+
-+#define MASTER_LLCC			0
-+#define MASTER_ALC			1
-+#define SLAVE_EBI_CH0			2
-+
-+#define MASTER_CNOC_MNOC_CFG		0
-+#define MASTER_CAMNOC_HF0		1
-+#define MASTER_CAMNOC_HF1		2
-+#define MASTER_CAMNOC_SF		3
-+#define MASTER_MDP_PORT0		4
-+#define MASTER_MDP_PORT1		5
-+#define MASTER_ROTATOR			6
-+#define MASTER_VIDEO_P0			7
-+#define MASTER_VIDEO_P1			8
-+#define MASTER_VIDEO_PROC		9
-+#define SLAVE_MNOC_SF_MEM_NOC		10
-+#define SLAVE_MNOC_HF_MEM_NOC		11
-+#define SLAVE_SERVICE_MNOC		12
-+
-+#define MASTER_SNOC_CFG			0
-+#define A1NOC_SNOC_MAS			1
-+#define A2NOC_SNOC_MAS			2
-+#define MASTER_GEM_NOC_SNOC		3
-+#define MASTER_PIMEM			4
-+#define MASTER_GIC			5
-+#define SLAVE_APPSS			6
-+#define SNOC_CNOC_SLV			7
-+#define SLAVE_SNOC_GEM_NOC_GC		8
-+#define SLAVE_SNOC_GEM_NOC_SF		9
-+#define SLAVE_OCIMEM			10
-+#define SLAVE_PIMEM			11
-+#define SLAVE_SERVICE_SNOC		12
-+#define SLAVE_PCIE_0			13
-+#define SLAVE_PCIE_1			14
-+#define SLAVE_QDSS_STM			15
-+#define SLAVE_TCU			16
-+
-+#define MASTER_MNOC_HF_MEM_NOC_DISPLAY	0
-+#define MASTER_MNOC_SF_MEM_NOC_DISPLAY	1
-+#define SLAVE_LLCC_DISPLAY		2
-+
-+#define MASTER_LLCC_DISPLAY		0
-+#define SLAVE_EBI_CH0_DISPLAY		1
-+
-+#define MASTER_MDP_PORT0_DISPLAY	0
-+#define MASTER_MDP_PORT1_DISPLAY	1
-+#define MASTER_ROTATOR_DISPLAY		2
-+#define SLAVE_MNOC_SF_MEM_NOC_DISPLAY	3
-+#define SLAVE_MNOC_HF_MEM_NOC_DISPLAY	4
-+
-+#endif
++			apps_bcm_voter: bcm_voter {
++				compatible = "qcom,bcm-voter";
++			};
+ 		};
+ 
+ 		cpufreq_hw: cpufreq@18591000 {
 -- 
 2.26.1
 
