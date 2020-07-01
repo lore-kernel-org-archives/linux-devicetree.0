@@ -2,193 +2,116 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9085C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 06:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9E1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 06:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A6432074D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 06:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F13520663
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 06:51:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gfZa8LOi"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="cxLxSk93";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Thb2uVjh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbgGAGm6 (ORCPT
+        id S1727943AbgGAGvO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 02:42:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34302 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgGAGm5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 02:42:57 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FE90C061755;
-        Tue, 30 Jun 2020 23:42:57 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id 9so25594799ljv.5;
-        Tue, 30 Jun 2020 23:42:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NyiY6LCbJOGlJn7q4DsF++6lUZNdDAhhofQm6gmCEgE=;
-        b=gfZa8LOiRAlSm62lj9RtYmP3Tdvbt7VXnH8W1mmOJsHLME2QjEj0tNe6P6xB+RwGOJ
-         C5/Db+Dx4Hfc7jZxX29rqo+oSYwRwh6b2dGTJ7NSDStqI9RJ3vpRnjhH+A3SDD/XaDub
-         BRSuO9kWCq7XzO55zK+haH4wKH9hnETCrF94Nw1/3/iaBGklEPVTKyUEiFnXYwAEnxnN
-         lynyoFsfBGIe97HaqJ+8LhZXWo39KoKPSwWgn1/phkpmJ05ufRo0BDY+eOsWQ+652myh
-         Iul0Ney+yIjU+WQaxGnTROK8UXmiMuOLHnI33mKX4Ib5NC8e5H3kdr7pj+NDRruQfM9Y
-         Rsxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NyiY6LCbJOGlJn7q4DsF++6lUZNdDAhhofQm6gmCEgE=;
-        b=lr4lDvYEERhSg1GQ3sVv+oRoXbN5aNae+FdOPkKAgHpxmRiWh1hgEFi1bNosNbKxVr
-         yRly8zcFGCabgK2XWWWVnEyjWIcS93418fckY4gYdaktjrBGcNwO7bBz51v46/xOy5pD
-         kqmFMwulfph2k+oHXPEOCcvspC0f4kgeAl2U919o3wjDoPzHnrH5woEg5oHwsCc3qzBC
-         HP88dWfO3fwtirLQZY4ZZddm3q8jh/OtltKTLf7BXI4lW0siWluHuRAhSthR1EMAoJEM
-         plpzxtBbuRHvBsS1GGrSsMAfzsI0YDLL9IcFV73XhhCGRWi4j3k+43Ej5wsR7B+98ncn
-         L/fg==
-X-Gm-Message-State: AOAM531I6CUk5bdCjkNc3rIbCdZn06lw/moNHuhZQoMF84C/4xEz2e77
-        fcob4Z7dOsUjupF1mrDomE8kr2wOKGE=
-X-Google-Smtp-Source: ABdhPJwnfvPM9Z0IHOBuk3PCfnWLRD3JRcFcWBcZcFIo3AdmsHbEgbmJo49UPIN0jd10KhzPKCpqcQ==
-X-Received: by 2002:a2e:b04c:: with SMTP id d12mr11424580ljl.256.1593585774925;
-        Tue, 30 Jun 2020 23:42:54 -0700 (PDT)
-Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.googlemail.com with ESMTPSA id u7sm1874014lfi.45.2020.06.30.23.42.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jun 2020 23:42:53 -0700 (PDT)
-Subject: Re: [PATCH v9 1/2] of_graph: add of_graph_is_present()
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200701021617.12030-1-digetx@gmail.com>
- <20200701021617.12030-2-digetx@gmail.com>
- <20200701054543.GA5963@pendragon.ideasonboard.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <c39beae6-34d4-84c3-07c0-e6639ab0b367@gmail.com>
-Date:   Wed, 1 Jul 2020 09:42:51 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 1 Jul 2020 02:51:14 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:44489 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727817AbgGAGvN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 02:51:13 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id DC494AA7;
+        Wed,  1 Jul 2020 02:51:11 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 01 Jul 2020 02:51:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=DMlwC4LDZdJp/AElsdSkN7QDFdA
+        xaBzbT1BNfb3j+c0=; b=cxLxSk93t8J6dOd9wq+KFmXn34ZCBDSQqIKdR4Wb0yL
+        AIKvHg2d9TLY1njfPXqdbyId8+oRdwWGKfYlvRU8Dw0zdDSBSFlEPRbpDAzvG+qk
+        VcW+WwrBnCEfKDRG6Ne8GyvqEoUgV2SLIcNRN4xz5BgXqiDd4BxzbBZ1JMwIyRIJ
+        DvjUrIW0pkXRlsMoU48b8x+gdMhxa74miehgDWW6He23mwJpdgtpSGcg+Wf97Jic
+        I+4I2ifemhF/DdTiNw1mPrfqjlldNa2MpRBkhUS2ogAF16GbE5P5RKoMm0wTEB2P
+        TMJa70yPIhhtd6WhKr7ImA8hISsQ9f8AK9WicAd24hw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=DMlwC4
+        LDZdJp/AElsdSkN7QDFdAxaBzbT1BNfb3j+c0=; b=Thb2uVjhGDFYSOBdjBXJiP
+        3u+y5J53+9pRuUxU/eNw+cZVANLrLEyXbpP1gi8c61D+J6U0U6742MUlUwl1a8Yz
+        pi7i0OcwrDbjDuwyOrCRKOebG335obRy12b6DmZV0EDDpUAdYET1ml9y+23EAPLQ
+        tHMmAA+1gIum1iRzIyuibLTJnpIbi4n+Dle/2ozZkrIKTRntq5DIIqMjkeuHcByr
+        ZNH4kYqvUREJjZsm9Ddpbo556E6pwddXGBg1YcztLNbA5TCgVYlmzOLaPJ1K7ukW
+        eTQI1ec7dQ/KUIEPFJn3mcRSnjHVR6LDrzNlCsQBOvm4SJCq6FhYcPrBCulynbQQ
+        ==
+X-ME-Sender: <xms:XDL8Xmq0aaZWCwKkaWJfKNzsiK-nqXWWAxS5A5o1psW4xi9xgacQow>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrtddugdduudegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
+    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:XDL8Xkopx1jOmA49yAwBC3rc-9VW7Yr8xqo03MtoZug9NgM462_4Og>
+    <xmx:XDL8XrNofe-BCmqXUMGf01Hm3tgRMX_R-sUyFNUNQtzsRF5e7jEY2g>
+    <xmx:XDL8Xl7SXahVf5qVwJPf1hroEw3NXNxK709Aw9haqlEyaFyCXqdOEA>
+    <xmx:XzL8XlGFyaNxBpbCImJWUPj1CEyjT3kkOA4udqttLvAMOhQaU1a0ag>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1ABE7328005A;
+        Wed,  1 Jul 2020 02:51:08 -0400 (EDT)
+Date:   Wed, 1 Jul 2020 08:51:05 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2] dt-bindings: display: Convert connectors to DT schema
+Message-ID: <20200701065105.skz3ln54h3qo4div@gilmour.lan>
+References: <20200630200216.1172566-1-robh@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200701054543.GA5963@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="g3kj2uw52dmun5h6"
+Content-Disposition: inline
+In-Reply-To: <20200630200216.1172566-1-robh@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-01.07.2020 08:45, Laurent Pinchart пишет:
-> Hi Dmitry,
-> 
-> Thank you for the patch.
-> 
-> On Wed, Jul 01, 2020 at 05:16:16AM +0300, Dmitry Osipenko wrote:
->> In some case, like a DRM display code for example, it's useful to silently
->> check whether port node exists at all in a device-tree before proceeding
->> with parsing of the graph.
->>
->> This patch adds of_graph_is_present() which returns true if given
->> device-tree node contains OF graph port.
->>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/of/property.c    | 52 +++++++++++++++++++++++++++++++++-------
->>  include/linux/of_graph.h |  6 +++++
->>  2 files changed, 49 insertions(+), 9 deletions(-)
->>
->> diff --git a/drivers/of/property.c b/drivers/of/property.c
->> index 6a5760f0d6cd..e12b8b491837 100644
->> --- a/drivers/of/property.c
->> +++ b/drivers/of/property.c
->> @@ -29,6 +29,48 @@
->>  
->>  #include "of_private.h"
->>  
->> +/**
->> + * of_graph_get_first_local_port() - get first local port node
->> + * @node: pointer to a local endpoint device_node
-> 
-> It's not an endpoint.
 
-Alright, somehow I was reading this as a "device_node that contains
-endpoint (of the graph)". But after re-reading twice I can see that it's
-not the case.
+--g3kj2uw52dmun5h6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It should be a "pointer to device_node containing graph port", just like
-the of_graph_get_remote_node() says it. Thank you :)
+On Tue, Jun 30, 2020 at 02:02:16PM -0600, Rob Herring wrote:
+> Convert the analog TV, DVI, HDMI, and VGA connector bindings to DT schema
+> format.
+>=20
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
->> + *
->> + * Return: First local port node associated with local endpoint node linked
->> + *	   to @node. Use of_node_put() on it when done.
->> + */
->> +static struct device_node *
->> +of_graph_get_first_local_port(const struct device_node *node)
->> +{
->> +	struct device_node *ports, *port;
->> +
->> +	ports = of_get_child_by_name(node, "ports");
->> +	if (ports)
->> +		node = ports;
->> +
->> +	port = of_get_child_by_name(node, "port");
->> +	of_node_put(ports);
->> +
->> +	return port;
->> +}
->> +
->> +/**
->> + * of_graph_is_present() - check graph's presence
->> + * @node: pointer to a device_node checked for the graph's presence
->> + *
->> + * Return: True if @node has a port or ports sub-node, false otherwise.
->> + */
->> +bool of_graph_is_present(const struct device_node *node)
->> +{
->> +	struct device_node *local;
->> +
->> +	local = of_graph_get_first_local_port(node);
->> +	if (!local)
->> +		return false;
->> +
->> +	of_node_put(local);
->> +
->> +	return true;
->> +}
->> +EXPORT_SYMBOL(of_graph_is_present);
->> +
->>  /**
->>   * of_property_count_elems_of_size - Count the number of elements in a property
->>   *
->> @@ -608,15 +650,7 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
->>  	 * parent port node.
->>  	 */
->>  	if (!prev) {
->> -		struct device_node *node;
->> -
->> -		node = of_get_child_by_name(parent, "ports");
->> -		if (node)
->> -			parent = node;
->> -
->> -		port = of_get_child_by_name(parent, "port");
->> -		of_node_put(node);
->> -
->> +		port = of_graph_get_first_local_port(parent);
-> 
-> I think this introduces a bug below in the function, where parent is
-> used and is expected to point to the ports node if available. I'd leave
-> this part of the change out, and inline +of_graph_get_first_local_port()
-> in of_graph_is_present().
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
 
-Good catch! I'll correct this.
+Thanks!
+Maxime
 
-Thank you for the review :)
+--g3kj2uw52dmun5h6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXvwyWQAKCRDj7w1vZxhR
+xasDAP9r4tg1fgeE0OZMBPlT1tZ6mI4krecIcchC8sEDC0LnWwD/d6jfFt9QEnRZ
+Ekag5CaO0kUl1bT5fgnQxuhWYFlaRg0=
+=2psa
+-----END PGP SIGNATURE-----
+
+--g3kj2uw52dmun5h6--
