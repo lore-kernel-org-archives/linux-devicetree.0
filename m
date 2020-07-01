@@ -2,1330 +2,1048 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 738F1C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 04:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55638C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 05:35:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3528C2070C
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 04:17:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="j6An1C+7"
+	by mail.kernel.org (Postfix) with ESMTP id 19654206B6
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 05:35:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725287AbgGAERf (ORCPT
+        id S1726455AbgGAFf2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 00:17:35 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:41338 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725272AbgGAERf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 00:17:35 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0614HWwl018121;
-        Tue, 30 Jun 2020 23:17:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593577052;
-        bh=iPqoBzXE9chB0IGw9V2YdgbWISUUjDDsMlFpSRMsl/w=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=j6An1C+7xA0RQ6lfYlm1B/IK/8cvFVdhq0biuYctf38Zgfq7N0VhpCRmmdUUiPTIS
-         D8TIwG/joRk92G93vv5xtlMsPmcDqtgzTgNH0vO16BmA5MBITLq9p3t1G+C/Q/C2o9
-         4XZwvLU/q3W9sUkeAyj1a/xJKa+khjkAwo+AuFmo=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0614HVOJ021385
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 30 Jun 2020 23:17:31 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 30
- Jun 2020 23:17:31 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 30 Jun 2020 23:17:31 -0500
-Received: from [10.250.80.231] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0614HU3u061676;
-        Tue, 30 Jun 2020 23:17:31 -0500
-Subject: Re: [EXTERNAL] Re: [PATCH v14 4/4] power: supply: bq25150 introduce
- the bq25150
-To:     Sebastian Reichel <sre@kernel.org>
-CC:     <pali@kernel.org>, <robh@kernel.org>, <afd@ti.com>,
-        <dmurphy@ti.com>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <sspatil@android.com>
-References: <20200630215426.26450-1-r-rivera-matos@ti.com>
- <20200630215426.26450-5-r-rivera-matos@ti.com>
- <20200630233341.d5ztfv5rcbhjxi4r@earth.universe>
-From:   Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-Message-ID: <b22f4eed-6baf-604e-0953-d427407c904e@ti.com>
-Date:   Tue, 30 Jun 2020 23:17:30 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 1 Jul 2020 01:35:28 -0400
+Received: from smtprelay0077.hostedemail.com ([216.40.44.77]:38048 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725812AbgGAFf1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 01:35:27 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 879A91AB01;
+        Wed,  1 Jul 2020 05:35:23 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: step23_380ca6126e7e
+X-Filterd-Recvd-Size: 47585
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf04.hostedemail.com (Postfix) with ESMTPA;
+        Wed,  1 Jul 2020 05:35:18 +0000 (UTC)
+Message-ID: <707b05c95ae3292a6b9eb04e146b1f1f6d52c125.camel@perches.com>
+Subject: Re: PCI: Replace lkml.org, spinics, gmane with lore.kernel.org
+From:   Joe Perches <joe@perches.com>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        bhelgaas@google.com, robh+dt@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        kishon@ti.com, lorenzo.pieralisi@arm.com, hongxing.zhu@nxp.com,
+        l.stach@pengutronix.de, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, m-karicheri2@ti.com, songxiaowei@hisilicon.com,
+        wangbinghui@hisilicon.com, amurray@thegoodpenguin.co.uk,
+        sathyanarayanan.kuppuswamy@linux.intel.com, hkallweit1@gmail.com,
+        rafael.j.wysocki@intel.com, rdunlap@infradead.org,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Date:   Tue, 30 Jun 2020 22:35:17 -0700
+In-Reply-To: <20200630140417.3a2dba67@lwn.net>
+References: <20200627103050.71712-1-grandmaster@al2klimov.de>
+         <20200630180917.GA3455699@bjorn-Precision-5520>
+         <20200630140417.3a2dba67@lwn.net>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-In-Reply-To: <20200630233341.d5ztfv5rcbhjxi4r@earth.universe>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, 2020-06-30 at 14:04 -0600, Jonathan Corbet wrote:
+> On Tue, 30 Jun 2020 13:09:17 -0500
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
+> 
+> > PCI: Replace lkml.org, spinics, gmane with lore.kernel.org
+> > 
+> > The lkml.org, spinics.net, and gmane.org archives are not very reliable
+> > and, in some cases, not even easily accessible.  Replace links to them with
+> > links to lore.kernel.org, the archives hosted by kernel.org.
+> > 
+> > I found the gmane items via the Wayback Machine archive at
+> > https://web.archive.org/.
+> 
+> Heh...now *that* sounds like a project that could generate a lot of churn,
+> and perhaps even be worth it.  Settling on a consistent (and working!)
+> email archive would improve the docs quite a bit.  I'll add that to the
+> list...
 
-On 6/30/20 6:33 PM, Sebastian Reichel wrote:
-> Hi,
->
-> On Tue, Jun 30, 2020 at 04:54:26PM -0500, Ricardo Rivera-Matos wrote:
->> Introduce the bq2515x family of chargers.
->>
->> The BQ2515X family of devices are highly integrated battery management
->> ICs that integrate the most common functions for wearable devices
->> namely a charger, an output voltage rail, ADC for battery and system
->> monitoring, and a push-button controller.
->>
->> Datasheets:
->> 	bq25150 - http://www.ti.com/lit/ds/symlink/bq25150.pdf
->> 	bq25155 - http://www.ti.com/lit/ds/symlink/bq25155.pdf
->>
->> Signed-off-by: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
->> ---
->>   drivers/power/supply/Kconfig           |   13 +
->>   drivers/power/supply/Makefile          |    1 +
->>   drivers/power/supply/bq2515x_charger.c | 1158 ++++++++++++++++++++++++
->>   3 files changed, 1172 insertions(+)
->>   create mode 100644 drivers/power/supply/bq2515x_charger.c
->>
->> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
->> index 44d3c8512fb8..faf2830aa152 100644
->> --- a/drivers/power/supply/Kconfig
->> +++ b/drivers/power/supply/Kconfig
->> @@ -610,6 +610,19 @@ config CHARGER_BQ24735
->>   	help
->>   	  Say Y to enable support for the TI BQ24735 battery charger.
->>   
->> +config CHARGER_BQ2515X
->> +	tristate "TI BQ2515X battery charger family"
->> +	depends on I2C
->> +	depends on GPIOLIB || COMPILE_TEST
->> +	select REGMAP_I2C
->> +	help
->> +	  Say Y to enable support for the TI BQ2515X family of battery
->> +	  charging integrated circuits. The BQ2515X are highly integrated
->> +	  battery charge management ICs that integrate the most common
->> +	  functions for wearable devices, namely a charger, an output voltage
->> +	  rail, ADC for battery and system monitoring, and push-button
->> +	  controller.
->> +
->>   config CHARGER_BQ25890
->>   	tristate "TI BQ25890 battery charger driver"
->>   	depends on I2C
->> diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
->> index b9644663e435..b3c694a65114 100644
->> --- a/drivers/power/supply/Makefile
->> +++ b/drivers/power/supply/Makefile
->> @@ -82,6 +82,7 @@ obj-$(CONFIG_CHARGER_BQ2415X)	+= bq2415x_charger.o
->>   obj-$(CONFIG_CHARGER_BQ24190)	+= bq24190_charger.o
->>   obj-$(CONFIG_CHARGER_BQ24257)	+= bq24257_charger.o
->>   obj-$(CONFIG_CHARGER_BQ24735)	+= bq24735-charger.o
->> +obj-$(CONFIG_CHARGER_BQ2515X)	+= bq2515x_charger.o
->>   obj-$(CONFIG_CHARGER_BQ25890)	+= bq25890_charger.o
->>   obj-$(CONFIG_CHARGER_SMB347)	+= smb347-charger.o
->>   obj-$(CONFIG_CHARGER_TPS65090)	+= tps65090-charger.o
->> diff --git a/drivers/power/supply/bq2515x_charger.c b/drivers/power/supply/bq2515x_charger.c
->> new file mode 100644
->> index 000000000000..f386484b5035
->> --- /dev/null
->> +++ b/drivers/power/supply/bq2515x_charger.c
->> @@ -0,0 +1,1158 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +// BQ2515X Battery Charger Driver
->> +// Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
->> +
->> +#include <linux/err.h>
->> +#include <linux/i2c.h>
->> +#include <linux/init.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/gpio/consumer.h>
->> +#include <linux/power_supply.h>
->> +#include <linux/regmap.h>
->> +#include <linux/types.h>
->> +
->> +#define BQ2515X_MANUFACTURER "Texas Instruments"
->> +
->> +#define BQ2515X_STAT0		0x00
->> +#define BQ2515X_STAT1		0x01
->> +#define BQ2515X_STAT2		0x02
->> +#define BQ2515X_FLAG0		0x03
->> +#define BQ2515X_FLAG1		0x04
->> +#define BQ2515X_FLAG2		0x05
->> +#define BQ2515X_FLAG3		0x06
->> +#define BQ2515X_MASK0		0x07
->> +#define BQ2515X_MASK1		0x08
->> +#define BQ2515X_MASK2		0x09
->> +#define BQ2515X_MASK3		0x0a
->> +#define BQ2515X_VBAT_CTRL	0x12
->> +#define BQ2515X_ICHG_CTRL	0x13
->> +#define BQ2515X_PCHRGCTRL	0x14
->> +#define BQ2515X_TERMCTRL	0x15
->> +#define BQ2515X_BUVLO		0x16
->> +#define BQ2515X_CHARGERCTRL0	0x17
->> +#define BQ2515X_CHARGERCTRL1	0x18
->> +#define BQ2515X_ILIMCTRL	0x19
->> +#define BQ2515X_LDOCTRL		0x1d
->> +#define BQ2515X_MRCTRL		0x30
->> +#define BQ2515X_ICCTRL0		0x35
->> +#define BQ2515X_ICCTRL1		0x36
->> +#define BQ2515X_ICCTRL2		0x37
->> +#define BQ2515X_ADCCTRL0	0x40
->> +#define BQ2515X_ADCCTRL1	0x41
->> +#define BQ2515X_ADC_VBAT_M	0x42
->> +#define BQ2515X_ADC_VBAT_L	0x43
->> +#define BQ2515X_ADC_TS_M	0x44
->> +#define BQ2515X_ADC_TS_L	0x45
->> +#define BQ2515X_ADC_ICHG_M	0x46
->> +#define BQ2515X_ADC_ICHG_L	0x47
->> +#define BQ2515X_ADC_ADCIN_M	0x48
->> +#define BQ2515X_ADC_ADCIN_L	0x49
->> +#define BQ2515X_ADC_VIN_M	0x4a
->> +#define BQ2515X_ADC_VIN_L	0x4b
->> +#define BQ2515X_ADC_PMID_M	0x4c
->> +#define BQ2515X_ADC_PMID_L	0x4d
->> +#define BQ2515X_ADC_IIN_M	0x4e
->> +#define BQ2515X_ADC_IIN_L	0x4f
->> +#define BQ2515X_ADC_COMP1_M	0x52
->> +#define BQ2515X_ADC_COMP1_L	0X53
->> +#define BQ2515X_ADC_COMP2_M	0X54
->> +#define BQ2515X_ADC_COMP2_L	0x55
->> +#define BQ2515X_ADC_COMP3_M	0x56
->> +#define BQ2515X_ADC_COMP3_L	0x57
->> +#define BQ2515X_ADC_READ_EN	0x58
->> +#define BQ2515X_TS_FASTCHGCTRL	0x61
->> +#define BQ2515X_TS_COLD		0x62
->> +#define BQ2515X_TS_COOL		0x63
->> +#define BQ2515X_TS_WARM		0x64
->> +#define BQ2515X_TS_HOT		0x65
->> +#define BQ2515X_DEVICE_ID	0x6f
->> +
->> +#define BQ2515X_DEFAULT_ICHG_UA		10000
->> +#define BQ25150_DEFAULT_ILIM_UA		100000
->> +#define BQ25155_DEFAULT_ILIM_UA		500000
->> +#define BQ2515X_DEFAULT_VBAT_REG_UV	4200000
->> +#define BQ2515X_DEFAULT_IPRECHARGE_UA	2500
->> +
->> +#define BQ2515X_DIVISOR				65536
->> +#define BQ2515X_VBAT_BASE_VOLT			3600000
->> +#define BQ2515X_VBAT_REG_MAX			4600000
->> +#define BQ2515X_VBAT_REG_MIN			3600000
->> +#define BQ2515X_VBAT_STEP_UV			10000
->> +#define BQ2515X_UV_FACTOR			1000000
->> +#define BQ2515X_VBAT_MULTIPLIER			6
->> +#define BQ2515X_ICHG_DIVISOR			52429
->> +#define BQ2515X_ICHG_CURR_STEP_THRESH_UA	318750
->> +#define BQ2515X_ICHG_MIN_UA			0
->> +#define BQ2515X_ICHG_MAX_UA			500000
->> +#define BQ2515X_ICHG_RNG_1B0_UA			1250
->> +#define BQ2515X_ICHG_RNG_1B1_UA			2500
->> +#define BQ2515X_VLOWV_SEL_1B0_UV		3000000
->> +#define BQ2515X_VLOWV_SEL_1B1_UV		2800000
->> +#define BQ2515X_PRECHRG_ICHRG_RNGE_1875_UA	18750
->> +#define BQ2515X_PRECHRG_ICHRG_RNGE_3750_UA	37500
->> +#define BQ2515X_TWAKE2_MIN_US			1700000
->> +#define BQ2515X_TWAKE2_MAX_US			2300000
->> +
->> +#define BQ2515X_ILIM_150MA	0x2
->> +#define BQ2515X_ILIM_MASK	0x7
->> +#define BQ2515X_ILIM_MIN	50000
->> +#define BQ2515X_ILIM_MAX	600000
->> +#define BQ2515X_HEALTH_MASK	0xf
->> +#define BQ2515X_ICHGRNG_MASK	0x80
->> +#define BQ2515X_STAT0_MASK	0x0f
->> +#define BQ2515X_STAT1_MASK	0x1f
->> +#define BQ2515X_PRECHARGE_MASK	0x1f
->> +
->> +#define BQ2515X_TS_HOT_STAT		BIT(0)
->> +#define BQ2515X_TS_WARM_STAT		BIT(1)
->> +#define BQ2515X_TS_COOL_STAT		BIT(2)
->> +#define BQ2515X_TS_COLD_STAT		BIT(3)
->> +#define BQ2515X_SAFETY_TIMER_EXP	BIT(5)
->> +
->> +#define BQ2515X_EN_VBAT_READ		BIT(3)
->> +#define BQ2515X_EN_ICHG_READ		BIT(5)
->> +
->> +#define BQ2515X_VIN_GOOD		BIT(0)
->> +#define BQ2515X_CHRG_DONE		BIT(5)
->> +#define BQ2515X_CV_CHRG_MODE		BIT(6)
->> +
->> +#define BQ2515X_VIN_OVP_FAULT_STAT	BIT(7)
->> +
->> +#define BQ2515X_WATCHDOG_DISABLE	BIT(4)
->> +
->> +#define BQ2515X_ICHARGE_RANGE		BIT(7)
->> +
->> +#define BQ2515X_VLOWV_SEL		BIT(5)
->> +
->> +#define BQ2515X_CHARGER_DISABLE		BIT(0)
->> +
->> +#define BQ2515X_HWRESET_14S_WD		BIT(1)
->> +
->> +static const int bq2515x_ilim_lvl_values[] = {
->> +	50000, 100000, 150000, 200000, 300000, 400000, 500000, 600000
->> +};
->> +
->> +/**
->> + * struct bq2515x_init_data -
->> + * @ilim: input current limit
->> + */
->> +struct bq2515x_init_data {
->> +	int ilim;
->> +};
->> +
->> +enum bq2515x_id {
->> +	BQ25150,
->> +	BQ25155,
->> +};
->> +
->> +/**
->> + * struct bq2515x_device -
->> + * @mains: mains properties
->> + * @battery: battery properties
->> + * @regmap: register map structure
->> + * @dev: device structure
->> + *
->> + * @reset_gpio: manual reset (MR) pin
->> + * @powerdown_gpio: low power mode pin
->> + * @ac_detect_gpio: power good (PG) pin
->> + * @ce_gpio: charge enable (CE) pin
->> + *
->> + * @model_name: string value describing device model
->> + * @device_id: value of device_id
->> + * @mains_online: boolean value indicating power supply online
->> + *
->> + * @bq2515x_init_data init_data: charger initialization data structure
->> + */
->> +struct bq2515x_device {
->> +	struct power_supply *mains;
->> +	struct power_supply *battery;
->> +	struct regmap *regmap;
->> +	struct device *dev;
->> +
->> +	struct gpio_desc *reset_gpio;
->> +	struct gpio_desc *powerdown_gpio;
->> +	struct gpio_desc *ac_detect_gpio;
->> +	struct gpio_desc *ce_gpio;
->> +
->> +	char model_name[I2C_NAME_SIZE];
->> +	int device_id;
->> +	bool mains_online;
->> +
->> +	struct bq2515x_init_data init_data;
->> +};
->> +
->> +static struct reg_default bq25150_reg_defaults[] = {
->> +	{BQ2515X_FLAG0, 0x0},
->> +	{BQ2515X_FLAG1, 0x0},
->> +	{BQ2515X_FLAG2, 0x0},
->> +	{BQ2515X_FLAG3, 0x0},
->> +	{BQ2515X_MASK0, 0x0},
->> +	{BQ2515X_MASK1, 0x0},
->> +	{BQ2515X_MASK2, 0x71},
->> +	{BQ2515X_MASK3, 0x0},
->> +	{BQ2515X_VBAT_CTRL, 0x3C},
->> +	{BQ2515X_ICHG_CTRL, 0x8},
->> +	{BQ2515X_PCHRGCTRL, 0x2},
->> +	{BQ2515X_TERMCTRL, 0x14},
->> +	{BQ2515X_BUVLO, 0x0},
->> +	{BQ2515X_CHARGERCTRL0, 0x82},
->> +	{BQ2515X_CHARGERCTRL1, 0x42},
->> +	{BQ2515X_ILIMCTRL, 0x1},
->> +	{BQ2515X_LDOCTRL, 0xB0},
->> +	{BQ2515X_MRCTRL, 0x2A},
->> +	{BQ2515X_ICCTRL0, 0x10},
->> +	{BQ2515X_ICCTRL1, 0x0},
->> +	{BQ2515X_ICCTRL2, 0x0},
->> +	{BQ2515X_ADCCTRL0, 0x2},
->> +	{BQ2515X_ADCCTRL1, 0x40},
->> +	{BQ2515X_ADC_COMP1_M, 0x23},
->> +	{BQ2515X_ADC_COMP1_L, 0x20},
->> +	{BQ2515X_ADC_COMP2_M, 0x38},
->> +	{BQ2515X_ADC_COMP2_L, 0x90},
->> +	{BQ2515X_ADC_COMP3_M, 0x0},
->> +	{BQ2515X_ADC_COMP3_L, 0x0},
->> +	{BQ2515X_ADC_READ_EN, 0x0},
->> +	{BQ2515X_TS_FASTCHGCTRL, 0x34},
->> +	{BQ2515X_TS_COLD, 0x7C},
->> +	{BQ2515X_TS_COOL, 0x6D},
->> +	{BQ2515X_TS_WARM, 0x38},
->> +	{BQ2515X_TS_HOT, 0x27},
->> +	{BQ2515X_DEVICE_ID, 0x20},
->> +};
->> +
->> +static struct reg_default bq25155_reg_defaults[] = {
->> +	{BQ2515X_FLAG0, 0x0},
->> +	{BQ2515X_FLAG1, 0x0},
->> +	{BQ2515X_FLAG2, 0x0},
->> +	{BQ2515X_FLAG3, 0x0},
->> +	{BQ2515X_MASK0, 0x0},
->> +	{BQ2515X_MASK1, 0x0},
->> +	{BQ2515X_MASK2, 0x71},
->> +	{BQ2515X_MASK3, 0x0},
->> +	{BQ2515X_VBAT_CTRL, 0x3C},
->> +	{BQ2515X_ICHG_CTRL, 0x8},
->> +	{BQ2515X_PCHRGCTRL, 0x2},
->> +	{BQ2515X_TERMCTRL, 0x14},
->> +	{BQ2515X_BUVLO, 0x0},
->> +	{BQ2515X_CHARGERCTRL0, 0x82},
->> +	{BQ2515X_CHARGERCTRL1, 0xC2},
->> +	{BQ2515X_ILIMCTRL, 0x6},
->> +	{BQ2515X_LDOCTRL, 0xB0},
->> +	{BQ2515X_MRCTRL, 0x2A},
->> +	{BQ2515X_ICCTRL0, 0x10},
->> +	{BQ2515X_ICCTRL1, 0x0},
->> +	{BQ2515X_ICCTRL2, 0x40},
->> +	{BQ2515X_ADCCTRL0, 0x2},
->> +	{BQ2515X_ADCCTRL1, 0x40},
->> +	{BQ2515X_ADC_COMP1_M, 0x23},
->> +	{BQ2515X_ADC_COMP1_L, 0x20},
->> +	{BQ2515X_ADC_COMP2_M, 0x38},
->> +	{BQ2515X_ADC_COMP2_L, 0x90},
->> +	{BQ2515X_ADC_COMP3_M, 0x0},
->> +	{BQ2515X_ADC_COMP3_L, 0x0},
->> +	{BQ2515X_ADC_READ_EN, 0x0},
->> +	{BQ2515X_TS_FASTCHGCTRL, 0x34},
->> +	{BQ2515X_TS_COLD, 0x7C},
->> +	{BQ2515X_TS_COOL, 0x6D},
->> +	{BQ2515X_TS_WARM, 0x38},
->> +	{BQ2515X_TS_HOT, 0x27},
->> +	{BQ2515X_DEVICE_ID, 0x35},
->> +};
->> +
->> +static int bq2515x_wake_up(struct bq2515x_device *bq2515x)
->> +{
->> +	int ret;
->> +	int val;
->> +
->> +	/* Read the STAT register if we can read it then the device is out
->> +	 * of ship mode.  If the register cannot be read then attempt to wake
->> +	 * it up and enable the ADC.
->> +	 */
->> +	ret = regmap_read(bq2515x->regmap, BQ2515X_STAT0, &val);
->> +	if (ret)
->> +		return ret;
->> +
->> +	/* Need to toggle LP and bring device out of ship mode. The device
->> +	 * will exit the ship mode when the MR pin is held low for at least
->> +	 * t_WAKE2 as shown in section 8.3.7.1 of the datasheet.
->> +	 */
->> +	gpiod_set_value_cansleep(bq2515x->powerdown_gpio, 0);
->> +
->> +	gpiod_set_value_cansleep(bq2515x->reset_gpio, 0);
->> +	usleep_range(BQ2515X_TWAKE2_MIN_US, BQ2515X_TWAKE2_MAX_US);
->> +	gpiod_set_value_cansleep(bq2515x->reset_gpio, 1);
->> +
->> +	return regmap_write(bq2515x->regmap, BQ2515X_ADC_READ_EN,
->> +				(BQ2515X_EN_VBAT_READ | BQ2515X_EN_ICHG_READ));
->> +}
->> +
->> +static int bq2515x_update_ps_status(struct bq2515x_device *bq2515x)
->> +{
->> +	bool dc = false;
->> +	unsigned int val;
->> +	int ret;
->> +
->> +	if (bq2515x->ac_detect_gpio)
->> +		val = gpiod_get_value_cansleep(bq2515x->ac_detect_gpio);
->> +	else {
->> +		ret = regmap_read(bq2515x->regmap, BQ2515X_STAT0, &val);
->> +		if (ret)
->> +			return ret;
->> +	}
->> +
->> +	dc = val & BQ2515X_VIN_GOOD;
->> +
->> +	ret = bq2515x->mains_online != dc;
->> +
->> +	bq2515x->mains_online = dc;
->> +
->> +	return ret;
->> +}
->> +
->> +static int bq2515x_disable_watchdog_timers(struct bq2515x_device *bq2515x)
->> +{
->> +	int ret;
->> +
->> +	ret = regmap_update_bits(bq2515x->regmap, BQ2515X_CHARGERCTRL0,
->> +			BQ2515X_WATCHDOG_DISABLE, BQ2515X_WATCHDOG_DISABLE);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return regmap_update_bits(bq2515x->regmap, BQ2515X_ICCTRL2,
->> +						BQ2515X_HWRESET_14S_WD, 0);
->> +}
->> +
->> +static int bq2515x_get_battery_voltage_now(struct bq2515x_device *bq2515x)
->> +{
->> +	int ret;
->> +	int vbat_msb;
->> +	int vbat_lsb;
->> +	uint32_t vbat_measurement;
->> +
->> +	if (!bq2515x->mains_online)
->> +		bq2515x_wake_up(bq2515x);
->> +
->> +	ret = regmap_read(bq2515x->regmap, BQ2515X_ADC_VBAT_M, &vbat_msb);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = regmap_read(bq2515x->regmap, BQ2515X_ADC_VBAT_L, &vbat_lsb);
->> +	if (ret)
->> +		return ret;
->> +
->> +	vbat_measurement = (vbat_msb << 8) | vbat_lsb;
->> +
->> +	return vbat_measurement * (BQ2515X_UV_FACTOR / BQ2515X_DIVISOR) *
->> +						BQ2515X_VBAT_MULTIPLIER;
->> +}
->> +
->> +static int bq2515x_get_battery_current_now(struct bq2515x_device *bq2515x)
->> +{
->> +	int ret;
->> +	int ichg_msb;
->> +	int ichg_lsb;
->> +	uint32_t ichg_measurement;
->> +	u16 ichg_multiplier = BQ2515X_ICHG_RNG_1B0_UA;
->> +	unsigned int ichg_reg_code, reg_code;
->> +	unsigned int icharge_range = 0, pchrgctrl;
->> +	unsigned int buvlo, vlowv_sel, vlowv = BQ2515X_VLOWV_SEL_1B0_UV;
->> +
->> +	if (!bq2515x->mains_online)
->> +		return -ENODATA;
->> +
->> +	ret = regmap_read(bq2515x->regmap, BQ2515X_ADC_ICHG_M, &ichg_msb);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = regmap_read(bq2515x->regmap, BQ2515X_ADC_ICHG_L, &ichg_lsb);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ichg_measurement = (ichg_msb << 8) | ichg_lsb;
->> +
->> +	ret = regmap_read(bq2515x->regmap, BQ2515X_BUVLO, &buvlo);
->> +	if (ret)
->> +		return ret;
->> +
->> +	vlowv_sel = buvlo & BQ2515X_VLOWV_SEL;
->> +
->> +	if (vlowv_sel)
->> +		vlowv = BQ2515X_VLOWV_SEL_1B1_UV;
->> +
->> +	if (bq2515x_get_battery_voltage_now(bq2515x) < vlowv) {
->> +		ret = regmap_read(bq2515x->regmap, BQ2515X_PCHRGCTRL,
->> +								&pchrgctrl);
->> +		if (ret)
->> +			return ret;
->> +
->> +		reg_code = pchrgctrl & BQ2515X_PRECHARGE_MASK;
->> +	} else {
->> +		ret = regmap_read(bq2515x->regmap, BQ2515X_ICHG_CTRL,
->> +							&ichg_reg_code);
->> +		if (ret)
->> +			return ret;
->> +
->> +		reg_code = ichg_reg_code;
->> +	}
->> +
->> +	ret = regmap_read(bq2515x->regmap, BQ2515X_PCHRGCTRL, &pchrgctrl);
->> +	if (ret)
->> +		return ret;
->> +
->> +	icharge_range = pchrgctrl & BQ2515X_ICHARGE_RANGE;
->> +
->> +	if (icharge_range)
->> +		ichg_multiplier = BQ2515X_ICHG_RNG_1B1_UA;
->> +
->> +	return reg_code * (ichg_multiplier * ichg_measurement /
->> +							BQ2515X_ICHG_DIVISOR);
->> +}
->> +
->> +static bool bq2515x_get_charge_disable(struct bq2515x_device *bq2515x)
->> +{
->> +	int ret;
->> +	int ce_pin;
->> +	int icctrl2;
->> +	int charger_disable;
->> +
->> +	ce_pin = gpiod_get_value_cansleep(bq2515x->ce_gpio);
->> +
->> +	ret = regmap_read(bq2515x->regmap, BQ2515X_ICCTRL2, &icctrl2);
->> +	if (ret)
->> +		return ret;
->> +
->> +	charger_disable = icctrl2 & BQ2515X_CHARGER_DISABLE;
->> +
->> +	if (charger_disable || ce_pin)
->> +		return true;
->> +
->> +	return false;
->> +}
->> +
->> +static int bq2515x_set_charge_disable(struct bq2515x_device *bq2515x, int val)
->> +{
->> +	gpiod_set_value_cansleep(bq2515x->ce_gpio, val);
->> +
->> +	return regmap_update_bits(bq2515x->regmap, BQ2515X_ICCTRL2,
->> +					BQ2515X_CHARGER_DISABLE, val);
->> +}
->> +
->> +static int bq2515x_get_const_charge_current(struct bq2515x_device *bq2515x)
->> +{
->> +	int ret;
->> +	u16 ichg_multiplier = BQ2515X_ICHG_RNG_1B0_UA;
->> +	unsigned int ichg_reg_code;
->> +	unsigned int pchrgctrl;
->> +	unsigned int icharge_range;
->> +
->> +	ret = regmap_read(bq2515x->regmap, BQ2515X_ICHG_CTRL, &ichg_reg_code);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = regmap_read(bq2515x->regmap, BQ2515X_PCHRGCTRL, &pchrgctrl);
->> +	if (ret)
->> +		return ret;
->> +
->> +	icharge_range = pchrgctrl & BQ2515X_ICHARGE_RANGE;
->> +
->> +	if (icharge_range)
->> +		ichg_multiplier = BQ2515X_ICHG_RNG_1B1_UA;
->> +
->> +	return ichg_reg_code * ichg_multiplier;
->> +}
->> +
->> +static int bq2515x_set_const_charge_current(struct bq2515x_device *bq2515x,
->> +								int val)
->> +{
->> +	int ret;
->> +	unsigned int ichg_reg_code;
->> +	u16 ichg_multiplier = BQ2515X_ICHG_RNG_1B0_UA;
->> +	unsigned int icharge_range = 0;
->> +
->> +	if (val > BQ2515X_ICHG_MAX_UA || val < BQ2515X_ICHG_MIN_UA)
->> +		return -EINVAL;
->> +
->> +	if (val > BQ2515X_ICHG_CURR_STEP_THRESH_UA) {
->> +		ichg_multiplier = BQ2515X_ICHG_RNG_1B1_UA;
->> +		icharge_range = BQ2515X_ICHARGE_RANGE;
->> +	}
->> +
->> +	bq2515x_set_charge_disable(bq2515x, 1);
->> +
->> +	ret = regmap_update_bits(bq2515x->regmap, BQ2515X_PCHRGCTRL,
->> +					BQ2515X_ICHARGE_RANGE, icharge_range);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ichg_reg_code = val / ichg_multiplier;
->> +
->> +	ret = regmap_write(bq2515x->regmap, BQ2515X_ICHG_CTRL, ichg_reg_code);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return bq2515x_set_charge_disable(bq2515x, 0);
->> +}
->> +
->> +static int bq2515x_get_precharge_current(struct bq2515x_device *bq2515x)
->> +{
->> +	int ret;
->> +	unsigned int pchrgctrl;
->> +	unsigned int icharge_range;
->> +	u16 precharge_multiplier = BQ2515X_ICHG_RNG_1B0_UA;
->> +	unsigned int precharge_reg_code;
->> +
->> +	ret = regmap_read(bq2515x->regmap, BQ2515X_PCHRGCTRL, &pchrgctrl);
->> +	if (ret)
->> +		return ret;
->> +
->> +	icharge_range = pchrgctrl & BQ2515X_ICHARGE_RANGE;
->> +
->> +	if (icharge_range)
->> +		precharge_multiplier = BQ2515X_ICHG_RNG_1B1_UA;
->> +
->> +	precharge_reg_code = pchrgctrl & BQ2515X_PRECHARGE_MASK;
->> +
->> +	return precharge_reg_code * precharge_multiplier;
->> +}
->> +
->> +static int bq2515x_set_precharge_current(struct bq2515x_device *bq2515x,
->> +					int val)
->> +{
->> +	int ret;
->> +	unsigned int pchrgctrl;
->> +	unsigned int icharge_range;
->> +	unsigned int precharge_reg_code;
->> +	unsigned int precharge_multiplier = BQ2515X_ICHG_RNG_1B0_UA;
->> +	unsigned int precharge_max_ua = BQ2515X_PRECHRG_ICHRG_RNGE_1875_UA;
->> +
->> +	ret = regmap_read(bq2515x->regmap, BQ2515X_PCHRGCTRL, &pchrgctrl);
->> +	if (ret)
->> +		return ret;
->> +
->> +	icharge_range = pchrgctrl & BQ2515X_ICHARGE_RANGE;
->> +
->> +	if (icharge_range) {
->> +		precharge_max_ua = BQ2515X_PRECHRG_ICHRG_RNGE_3750_UA;
->> +		precharge_multiplier = BQ2515X_ICHG_RNG_1B1_UA;
->> +	} else {
->> +		precharge_max_ua = BQ2515X_PRECHRG_ICHRG_RNGE_1875_UA;
->> +		precharge_multiplier = BQ2515X_ICHG_RNG_1B0_UA;
->> +	}
->> +	if (val > precharge_max_ua || val < BQ2515X_ICHG_MIN_UA)
->> +		return -EINVAL;
->> +
->> +	precharge_reg_code = val / precharge_multiplier;
->> +
->> +	ret = bq2515x_set_charge_disable(bq2515x, 1);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = regmap_update_bits(bq2515x->regmap, BQ2515X_PCHRGCTRL,
->> +				BQ2515X_PRECHARGE_MASK, precharge_reg_code);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return bq2515x_set_charge_disable(bq2515x, 0);
->> +}
->> +
->> +static int bq2515x_charging_status(struct bq2515x_device *bq2515x,
->> +				   union power_supply_propval *val)
->> +{
->> +	bool status0_no_fault;
->> +	bool status1_no_fault;
->> +	bool ce_status;
->> +	bool charge_done;
->> +	unsigned int status;
->> +	int ret;
->> +
->> +	if (!bq2515x->mains_online) {
->> +		val->intval = POWER_SUPPLY_STATUS_DISCHARGING;
->> +		return 0;
->> +	}
->> +
->> +	ret = regmap_read(bq2515x->regmap, BQ2515X_STAT0, &status);
->> +	if (ret)
->> +		return ret;
->> +
->> +	/*
->> +	 * The code block below is used to determine if any faults from the
->> +	 * STAT0 register are disbaling charging or if the charge has completed
->> +	 * according to the CHARGE_DONE_STAT bit.
->> +	 */
->> +	if (((status & BQ2515X_STAT0_MASK) == true) &
->> +			((status & BQ2515X_CHRG_DONE) == false)) {
->> +		status0_no_fault = true;
->> +		charge_done = false;
->> +	} else if (status & BQ2515X_CHRG_DONE) {
->> +		charge_done = true;
->> +		status0_no_fault = false;
->> +	} else {
->> +		status0_no_fault = false;
->> +		charge_done = false;
->> +	}
->> +
->> +	ret = regmap_read(bq2515x->regmap, BQ2515X_STAT1, &status);
->> +	if (ret)
->> +		return ret;
->> +	/*
->> +	 * The code block below is used to determine if any faults from the
->> +	 * STAT1 register are disbaling charging
->> +	 */
->> +	if ((status & BQ2515X_STAT1_MASK) == false)
->> +		status1_no_fault = true;
->> +	else
->> +		status1_no_fault = false;
->> +
->> +	ce_status = (!bq2515x_get_charge_disable(bq2515x));
->> +
->> +	/*
->> +	 * If there are no faults and charging is enabled, then status is
->> +	 * charging. Otherwise, if charging is complete, then status is full.
->> +	 * Otherwise, if a fault exists or charging is disabled, then status is
->> +	 * not charging
->> +	 */
->> +	if (status0_no_fault & status1_no_fault & ce_status)
->> +		val->intval = POWER_SUPPLY_STATUS_CHARGING;
->> +	else if (charge_done)
->> +		val->intval = POWER_SUPPLY_STATUS_FULL;
->> +	else if (!(status0_no_fault & status1_no_fault & ce_status))
->> +		val->intval = POWER_SUPPLY_STATUS_NOT_CHARGING;
->> +
->> +	return 0;
->> +}
->> +
->> +static int bq2515x_get_batt_reg(struct bq2515x_device *bq2515x)
->> +{
->> +	int vbat_reg_code;
->> +	int ret;
->> +
->> +	ret = regmap_read(bq2515x->regmap, BQ2515X_VBAT_CTRL, &vbat_reg_code);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return BQ2515X_VBAT_BASE_VOLT + vbat_reg_code * BQ2515X_VBAT_STEP_UV;
->> +}
->> +
->> +static int bq2515x_set_batt_reg(struct bq2515x_device *bq2515x, int val)
->> +{
->> +	int vbat_reg_code;
->> +
->> +	if (val > BQ2515X_VBAT_REG_MAX || val < BQ2515X_VBAT_REG_MIN)
->> +		return -EINVAL;
->> +
->> +	vbat_reg_code = (val - BQ2515X_VBAT_BASE_VOLT) / BQ2515X_VBAT_STEP_UV;
->> +
->> +	return regmap_write(bq2515x->regmap, BQ2515X_VBAT_CTRL, vbat_reg_code);
->> +}
->> +
->> +static int bq2515x_get_ilim_lvl(struct bq2515x_device *bq2515x)
->> +{
->> +	int ret;
->> +	int ilimctrl;
->> +
->> +	ret = regmap_read(bq2515x->regmap, BQ2515X_ILIMCTRL, &ilimctrl);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return bq2515x_ilim_lvl_values[ilimctrl & BQ2515X_ILIM_MASK];
->> +}
->> +
->> +static int bq2515x_set_ilim_lvl(struct bq2515x_device *bq2515x, int val)
->> +{
->> +	int i = 0;
->> +	unsigned int array_size = ARRAY_SIZE(bq2515x_ilim_lvl_values);
->> +
->> +	for (i = array_size - 1; i > 0; i--) {
->> +		if (val >= bq2515x_ilim_lvl_values[i])
->> +			break;
->> +	}
->> +	return regmap_write(bq2515x->regmap, BQ2515X_ILIMCTRL, i);
->> +}
->> +
->> +static int bq2515x_power_supply_property_is_writeable(struct power_supply *psy,
->> +					enum power_supply_property prop)
->> +{
->> +	switch (prop) {
->> +	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
->> +	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE:
->> +	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:
->> +	case POWER_SUPPLY_PROP_PRECHARGE_CURRENT:
->> +		return true;
->> +	default:
->> +		return false;
->> +	}
->> +}
->> +
->> +static int bq2515x_charger_get_health(struct bq2515x_device *bq2515x,
->> +				      union power_supply_propval *val)
->> +{
->> +	int health = POWER_SUPPLY_HEALTH_GOOD;
->> +	int ret;
->> +	unsigned int stat1;
->> +	unsigned int flag3;
->> +
->> +	if (!bq2515x->mains_online)
->> +		bq2515x_wake_up(bq2515x);
->> +
->> +	ret = regmap_read(bq2515x->regmap, BQ2515X_FLAG3, &flag3);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = regmap_read(bq2515x->regmap, BQ2515X_STAT1, &stat1);
->> +	if (ret)
->> +		return ret;
->> +
->> +	if (stat1 & BQ2515X_HEALTH_MASK) {
->> +		switch (stat1 & BQ2515X_HEALTH_MASK) {
->> +		case BQ2515X_TS_HOT_STAT:
->> +			health = POWER_SUPPLY_HEALTH_HOT;
->> +			break;
->> +		case BQ2515X_TS_WARM_STAT:
->> +			health = POWER_SUPPLY_HEALTH_WARM;
->> +			break;
->> +		case BQ2515X_TS_COOL_STAT:
->> +			health = POWER_SUPPLY_HEALTH_COOL;
->> +			break;
->> +		case BQ2515X_TS_COLD_STAT:
->> +			health = POWER_SUPPLY_HEALTH_COLD;
->> +			break;
->> +		default:
->> +			health = POWER_SUPPLY_HEALTH_UNKNOWN;
->> +			break;
->> +		}
->> +	}
->> +
->> +	if (stat1 & BQ2515X_VIN_OVP_FAULT_STAT)
->> +		health = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
->> +
->> +	if (flag3 & BQ2515X_SAFETY_TIMER_EXP)
->> +		health = POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE;
->> +
->> +	val->intval = health;
->> +	return 0;
->> +}
->> +
->> +static int bq2515x_mains_set_property(struct power_supply *psy,
->> +		enum power_supply_property prop,
->> +		const union power_supply_propval *val)
->> +{
->> +	struct bq2515x_device *bq2515x = power_supply_get_drvdata(psy);
->> +	int ret;
->> +
->> +	switch (prop) {
->> +	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
->> +		ret = bq2515x_set_ilim_lvl(bq2515x, val->intval);
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	return ret;
->> +}
->> +
->> +static int bq2515x_battery_set_property(struct power_supply *psy,
->> +		enum power_supply_property prop,
->> +		const union power_supply_propval *val)
->> +{
->> +	struct bq2515x_device *bq2515x = power_supply_get_drvdata(psy);
->> +	int ret;
->> +
->> +	switch (prop) {
->> +	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE:
->> +		ret = bq2515x_set_batt_reg(bq2515x, val->intval);
->> +		break;
->> +	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:
->> +		ret = bq2515x_set_const_charge_current(bq2515x, val->intval);
->> +		break;
->> +	case POWER_SUPPLY_PROP_PRECHARGE_CURRENT:
->> +		ret = bq2515x_set_precharge_current(bq2515x, val->intval);
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	return ret;
->> +}
-> Expose those through the charger device. The battery device
-> can expose maximum data (e.g. POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX),
-> but should not control the charging itself.
-ACK. Just to confirm this would eliminate the need for the 
-bq2515x_battery_set_property altogether as these three properties should 
-be set in the charger device. There will only be a 
-bq2515x_battery_get_property to report the CONSTANT_CHARGE_VOLTAGE_MAX 
-and CONSTANT_CHARGE_CURRENT_MAX values captured from the devicetree.
->
->> +static int bq2515x_mains_get_property(struct power_supply *psy,
->> +				     enum power_supply_property prop,
->> +				     union power_supply_propval *val)
->> +{
->> +	struct bq2515x_device *bq2515x = power_supply_get_drvdata(psy);
->> +	int ret = 0;
->> +
->> +	switch (prop) {
->> +	case POWER_SUPPLY_PROP_ONLINE:
->> +		val->intval = bq2515x->mains_online;
->> +		break;
->> +	case POWER_SUPPLY_PROP_HEALTH:
->> +		ret = bq2515x_charger_get_health(bq2515x, val);
->> +		if (ret)
->> +			val->intval = POWER_SUPPLY_HEALTH_UNKNOWN;
->> +		break;
->> +	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
->> +		ret = bq2515x_get_ilim_lvl(bq2515x);
->> +		if (ret < 0)
->> +			return ret;
->> +
->> +		val->intval = ret;
->> +		break;
->> +	case POWER_SUPPLY_PROP_MODEL_NAME:
->> +		val->strval = bq2515x->model_name;
->> +		break;
->> +	case POWER_SUPPLY_PROP_MANUFACTURER:
->> +		val->strval = BQ2515X_MANUFACTURER;
->> +		break;
->> +	case POWER_SUPPLY_PROP_STATUS:
->> +		ret = bq2515x_charging_status(bq2515x, val);
->> +		if (ret)
->> +			return ret;
->> +		break;
->> +
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	return ret;
->> +}
->> +
->> +static int bq2515x_battery_get_property(struct power_supply *psy,
->> +				       enum power_supply_property prop,
->> +				       union power_supply_propval *val)
->> +{
->> +	struct bq2515x_device *bq2515x = power_supply_get_drvdata(psy);
->> +	int ret;
->> +
->> +	ret = bq2515x_update_ps_status(bq2515x);
->> +	if (ret)
->> +		return ret;
->> +
->> +	switch (prop) {
->> +
->> +	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
->> +		ret = bq2515x_get_battery_voltage_now(bq2515x);
->> +		if (ret < 0)
->> +			return ret;
->> +
->> +		val->intval = ret;
->> +		break;
->> +	case POWER_SUPPLY_PROP_CURRENT_NOW:
->> +		ret = bq2515x_get_battery_current_now(bq2515x);
->> +		if (ret < 0)
->> +			return ret;
->> +
->> +		val->intval = ret;
->> +		break;
->> +	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:
->> +		ret = bq2515x_get_const_charge_current(bq2515x);
->> +		if (ret < 0)
->> +			return ret;
->> +
->> +		val->intval = ret;
->> +		break;
->> +	case POWER_SUPPLY_PROP_PRECHARGE_CURRENT:
->> +		ret = bq2515x_get_precharge_current(bq2515x);
->> +		if (ret < 0)
->> +			return ret;
->> +
->> +		val->intval = ret;
->> +		break;
->> +	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE:
->> +		ret = bq2515x_get_batt_reg(bq2515x);
->> +		if (ret < 0)
->> +			return ret;
->> +
->> +		val->intval = ret;
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +	return 0;
->> +}
->> +
->> +static enum power_supply_property bq2515x_battery_properties[] = {
->> +	POWER_SUPPLY_PROP_VOLTAGE_NOW,
->> +	POWER_SUPPLY_PROP_CURRENT_NOW,
->> +	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT,
->> +	POWER_SUPPLY_PROP_PRECHARGE_CURRENT,
->> +	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE,
->> +};
->> +
->> +static enum power_supply_property bq2515x_mains_properties[] = {
->> +	POWER_SUPPLY_PROP_ONLINE,
->> +	POWER_SUPPLY_PROP_STATUS,
->> +	POWER_SUPPLY_PROP_HEALTH,
->> +	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
->> +	POWER_SUPPLY_PROP_MODEL_NAME,
->> +	POWER_SUPPLY_PROP_MANUFACTURER,
->> +};
->> +
->> +static struct power_supply_desc bq2515x_mains_desc = {
->> +	.name			= "bq2515x-mains",
->> +	.type			= POWER_SUPPLY_TYPE_MAINS,
->> +	.get_property		= bq2515x_mains_get_property,
->> +	.set_property		= bq2515x_mains_set_property,
->> +	.properties		= bq2515x_mains_properties,
->> +	.num_properties		= ARRAY_SIZE(bq2515x_mains_properties),
->> +	.property_is_writeable	= bq2515x_power_supply_property_is_writeable,
->> +};
->> +
->> +static struct power_supply_desc bq2515x_battery_desc = {
->> +	.name			= "bq2515x-battery",
->> +	.type			= POWER_SUPPLY_TYPE_BATTERY,
->> +	.get_property		= bq2515x_battery_get_property,
->> +	.set_property		= bq2515x_battery_set_property,
->> +	.properties		= bq2515x_battery_properties,
->> +	.num_properties		= ARRAY_SIZE(bq2515x_battery_properties),
->> +	.property_is_writeable	= bq2515x_power_supply_property_is_writeable,
->> +};
->> +
->> +static int bq2515x_power_supply_register(struct bq2515x_device *bq2515x,
->> +		struct device *dev, struct power_supply_config psy_cfg)
->> +{
->> +	bq2515x->mains = devm_power_supply_register(bq2515x->dev,
->> +						    &bq2515x_mains_desc,
->> +						    &psy_cfg);
->> +	if (IS_ERR(bq2515x->mains))
->> +		return -EINVAL;
->> +
->> +	bq2515x->battery = devm_power_supply_register(bq2515x->dev,
->> +						      &bq2515x_battery_desc,
->> +						      &psy_cfg);
->> +	if (IS_ERR(bq2515x->battery))
->> +		return -EINVAL;
->> +
->> +	return 0;
->> +}
->> +
->> +static int bq2515x_hw_init(struct bq2515x_device *bq2515x)
->> +{
->> +	int ret;
->> +	struct power_supply_battery_info bat_info = { };
->> +
->> +	ret = bq2515x_disable_watchdog_timers(bq2515x);
->> +	if (ret)
->> +		return ret;
->> +
->> +	if (bq2515x->init_data.ilim) {
->> +		ret = bq2515x_set_ilim_lvl(bq2515x, bq2515x->init_data.ilim);
->> +		if (ret)
->> +			return ret;
->> +	}
->> +
->> +	ret = power_supply_get_battery_info(bq2515x->mains, &bat_info);
->> +	if (ret) {
->> +		dev_warn(bq2515x->dev, "battery info missing, default values will be applied\n");
->> +
->> +		bat_info.constant_charge_current_max_ua =
->> +						BQ2515X_DEFAULT_ICHG_UA;
->> +
->> +		bat_info.constant_charge_voltage_max_uv =
->> +						BQ2515X_DEFAULT_VBAT_REG_UV;
->> +
->> +		bat_info.precharge_current_ua =
->> +						BQ2515X_DEFAULT_IPRECHARGE_UA;
->> +	}
->> +
->> +	ret = bq2515x_set_const_charge_current(bq2515x,
->> +			bat_info.constant_charge_current_max_ua);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = bq2515x_set_batt_reg(bq2515x,
->> +			bat_info.constant_charge_voltage_max_uv);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return bq2515x_set_precharge_current(bq2515x,
->> +			bat_info.precharge_current_ua);
->> +}
->> +
->> +static int bq2515x_read_properties(struct bq2515x_device *bq2515x)
->> +{
->> +	int ret;
->> +
->> +	ret = device_property_read_u32(bq2515x->dev,
->> +				      "input-current-limit-microamp",
->> +				      &bq2515x->init_data.ilim);
->> +	if (ret)
->> +		switch (bq2515x->device_id) {
->> +		case BQ25150:
->> +			bq2515x->init_data.ilim = BQ25150_DEFAULT_ILIM_UA;
->> +			break;
->> +		case BQ25155:
->> +			bq2515x->init_data.ilim = BQ25155_DEFAULT_ILIM_UA;
->> +			break;
->> +		}
-> Please add {} for the if.
-ACK
->
->> +	bq2515x->ac_detect_gpio = devm_gpiod_get_optional(bq2515x->dev,
->> +						   "ac-detect", GPIOD_IN);
->> +	if (IS_ERR(bq2515x->ac_detect_gpio)) {
->> +		ret = PTR_ERR(bq2515x->ac_detect_gpio);
->> +		if (ret != -ENODEV) {
->> +			dev_err(bq2515x->dev, "Failed to get ac detect");
->> +			return ret;
->> +		}
->> +		bq2515x->ac_detect_gpio = NULL;
-> All of this is not needed. If no GPIO is specified,
-> devm_gpiod_get_optional() will return NULL instead
-> of an error code. This is enough:
->
-> if (IS_ERR(bq2515x->ac_detect_gpio)) {
->      ret = PTR_ERR(bq2515x->ac_detect_gpio);
->      dev_err(bq2515x->dev, "Failed to get ac detect: %d\n", ret);
->      return ret;
-> }
-ACK
->
->> +	}
->> +
->> +	bq2515x->reset_gpio = devm_gpiod_get_optional(bq2515x->dev,
->> +						   "reset", GPIOD_OUT_LOW);
->> +	if (IS_ERR(bq2515x->reset_gpio)) {
->> +		ret = PTR_ERR(bq2515x->reset_gpio);
->> +		if (ret != -ENODEV) {
->> +			dev_err(bq2515x->dev, "Failed to get reset");
->> +			return ret;
->> +		}
->> +		bq2515x->reset_gpio = NULL;
->> +	}
-> The same as previous GPIO.
-ACK
->
->> +	bq2515x->powerdown_gpio = devm_gpiod_get_optional(bq2515x->dev,
->> +						"powerdown", GPIOD_OUT_LOW);
->> +	if (IS_ERR(bq2515x->powerdown_gpio)) {
->> +		ret = PTR_ERR(bq2515x->powerdown_gpio);
->> +		if (ret != -ENODEV) {
->> +			dev_err(bq2515x->dev, "Failed to get powerdown");
->> +			return ret;
->> +		}
->> +		bq2515x->powerdown_gpio = NULL;
->> +	}
-> The same as previous GPIO.
-ACK
->
->> +	bq2515x->ce_gpio = devm_gpiod_get_optional(bq2515x->dev,
->> +						   "charge-enable",
->> +						   GPIOD_OUT_LOW);
->> +	if (IS_ERR(bq2515x->ce_gpio)) {
->> +		ret = PTR_ERR(bq2515x->ce_gpio);
->> +		if (ret != -ENODEV) {
->> +			dev_err(bq2515x->dev, "Failed to get ce");
->> +			return ret;
->> +		}
->> +		bq2515x->ce_gpio = NULL;
->> +	}
-> The same as previous GPIO.
-ACK
->
->> +	return 0;
->> +}
->> +
->> +static bool bq2515x_volatile_register(struct device *dev, unsigned int reg)
->> +{
->> +	switch (reg) {
->> +	case BQ2515X_STAT0 ... BQ2515X_FLAG3:
->> +	case BQ2515X_ADC_VBAT_M ... BQ2515X_ADC_IIN_L:
->> +		return true;
->> +	default:
->> +		return false;
->> +	}
->> +}
->> +
->> +static const struct regmap_config bq25150_regmap_config = {
->> +	.reg_bits = 8,
->> +	.val_bits = 8,
->> +
->> +	.max_register		= BQ2515X_DEVICE_ID,
->> +	.reg_defaults		= bq25150_reg_defaults,
->> +	.num_reg_defaults	= ARRAY_SIZE(bq25150_reg_defaults),
->> +	.cache_type		= REGCACHE_RBTREE,
->> +	.volatile_reg		= bq2515x_volatile_register,
->> +};
->> +
->> +static const struct regmap_config bq25155_regmap_config = {
->> +	.reg_bits = 8,
->> +	.val_bits = 8,
->> +
->> +	.max_register		= BQ2515X_DEVICE_ID,
->> +	.reg_defaults		= bq25155_reg_defaults,
->> +	.num_reg_defaults	= ARRAY_SIZE(bq25155_reg_defaults),
->> +	.cache_type		= REGCACHE_RBTREE,
->> +	.volatile_reg		= bq2515x_volatile_register,
->> +};
->> +
->> +static int bq2515x_probe(struct i2c_client *client,
->> +			 const struct i2c_device_id *id)
->> +{
->> +	struct device *dev = &client->dev;
->> +	struct bq2515x_device *bq2515x;
->> +	struct power_supply_config charger_cfg = {};
->> +	int ret;
->> +
->> +	bq2515x = devm_kzalloc(dev, sizeof(*bq2515x), GFP_KERNEL);
->> +	if (!bq2515x)
->> +		return -ENOMEM;
->> +
->> +	bq2515x->dev = dev;
->> +
->> +	strncpy(bq2515x->model_name, id->name, I2C_NAME_SIZE);
->> +
->> +	bq2515x->device_id = id->driver_data;
->> +
->> +	switch (bq2515x->device_id) {
->> +	case BQ25150:
->> +		bq2515x->regmap = devm_regmap_init_i2c(client,
->> +						&bq25150_regmap_config);
->> +		break;
->> +	case BQ25155:
->> +		bq2515x->regmap = devm_regmap_init_i2c(client,
->> +						&bq25155_regmap_config);
->> +		break;
->> +	}
->> +
->> +	if (IS_ERR(bq2515x->regmap)) {
->> +		dev_err(dev, "failed to allocate register map\n");
->> +		return PTR_ERR(bq2515x->regmap);
->> +	}
->> +
->> +	i2c_set_clientdata(client, bq2515x);
->> +
->> +	charger_cfg.drv_data = bq2515x;
->> +	charger_cfg.of_node = dev->of_node;
->> +
->> +	ret = bq2515x_read_properties(bq2515x);
->> +	if (ret) {
->> +		dev_err(dev, "Failed to read device tree properties %d\n",
->> +									ret);
->> +		return ret;
->> +	}
->> +
->> +	ret = bq2515x_power_supply_register(bq2515x, dev, charger_cfg);
->> +	if (ret) {
->> +		dev_err(dev, "failed to register power supply\n");
->> +		return ret;
->> +	}
->> +
->> +	ret = bq2515x_hw_init(bq2515x);
->> +	if (ret) {
->> +		dev_err(dev, "Cannot initialize the chip\n");
->> +		return ret;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct i2c_device_id bq2515x_i2c_ids[] = {
->> +	{ "bq25150", BQ25150, },
->> +	{ "bq25155", BQ25155, },
->> +	{},
->> +};
->> +MODULE_DEVICE_TABLE(i2c, bq2515x_i2c_ids);
->> +
->> +static const struct of_device_id bq2515x_of_match[] = {
->> +	{ .compatible = "ti,bq25150", },
->> +	{ .compatible = "ti,bq25155", },
->> +	{ },
->> +};
->> +MODULE_DEVICE_TABLE(of, bq2515x_of_match);
->> +
->> +static struct i2c_driver bq2515x_driver = {
->> +	.driver = {
->> +		.name = "bq2515x-charger",
->> +		.of_match_table = bq2515x_of_match,
->> +	},
->> +	.probe = bq2515x_probe,
->> +	.id_table = bq2515x_i2c_ids,
->> +};
->> +module_i2c_driver(bq2515x_driver);
->> +
->> +MODULE_AUTHOR("Dan Murphy <dmurphy@ti.com>");
->> +MODULE_AUTHOR("Ricardo Rivera-Matos <r-rivera-matos@ti.com>");
->> +MODULE_DESCRIPTION("BQ2515X charger driver");
->> +MODULE_LICENSE("GPL v2");
-> Otherwise this looks good to me now. I hope I can merge the next
-> version :)
-Cool, I hope so too. We have some more patches ready. :)
->
-> -- Sebastian
+At least for the lkml.org/lkml links
+here's the current -next diff done by a
+cript that looks at the message-id of
+each lkml.org link.
+---
+ CREDITS                                            |  2 +-
+ Documentation/PCI/pci.rst                          |  2 +-
+ Documentation/RCU/RTFP.txt                         | 94 +++++++++++-----------
+ Documentation/accounting/cgroupstats.rst           |  4 +-
+ Documentation/admin-guide/cgroup-v1/memory.rst     | 14 ++--
+ Documentation/admin-guide/cpu-load.rst             |  2 +-
+ .../admin-guide/kernel-per-CPU-kthreads.rst        |  2 +-
+ Documentation/driver-api/gpio/driver.rst           |  4 +-
+ Documentation/gpu/todo.rst                         |  2 +-
+ Documentation/power/freezing-of-tasks.rst          |  2 +-
+ Documentation/process/adding-syscalls.rst          | 18 ++---
+ Documentation/process/submitting-patches.rst       |  4 +-
+ Documentation/scheduler/sched-deadline.rst         |  2 +-
+ Documentation/security/lsm-development.rst         |  2 +-
+ Documentation/timers/timers-howto.rst              |  2 +-
+ .../translations/it_IT/process/adding-syscalls.rst | 18 ++---
+ .../it_IT/process/submitting-patches.rst           |  4 +-
+ Documentation/translations/ja_JP/SubmittingPatches |  4 +-
+ .../zh_CN/process/submitting-patches.rst           |  4 +-
+ arch/arc/include/asm/irqflags-compact.h            |  4 +-
+ arch/arc/mm/dma.c                                  |  2 +-
+ arch/arc/plat-axs10x/axs10x.c                      |  2 +-
+ arch/arc/plat-hsdk/platform.c                      |  2 +-
+ arch/arm/kernel/hibernate.c                        |  2 +-
+ arch/arm64/kernel/hibernate.c                      |  2 +-
+ arch/mips/include/asm/page.h                       |  2 +-
+ drivers/block/aoe/aoecmd.c                         |  2 +-
+ drivers/pci/setup-res.c                            |  2 +-
+ drivers/staging/clocking-wizard/TODO               |  2 +-
+ drivers/staging/vc04_services/bcm2835-audio/TODO   |  2 +-
+ drivers/usb/serial/ark3116.c                       |  2 +-
+ drivers/xen/xen-acpi-processor.c                   |  2 +-
+ tools/perf/Documentation/examples.txt              |  2 +-
+ tools/perf/util/data-convert-bt.c                  |  2 +-
+ tools/scripts/Makefile.include                     |  2 +-
+ 35 files changed, 110 insertions(+), 110 deletions(-)
+
+diff --git a/CREDITS b/CREDITS
+index 0787b5872906..c4f051d2b35c 100644
+--- a/CREDITS
++++ b/CREDITS
+@@ -546,7 +546,7 @@ D: gadget layers, SPI subsystem, GPIO subsystem, and more than a few
+ D: device drivers.  His encouragement also helped many engineers get
+ D: started working on the Linux kernel.  David passed away in early
+ D: 2011, and will be greatly missed.
+-W: https://lkml.org/lkml/2011/4/5/36
++W: https://lore.kernel.org/r/20110405034819.GA7872@kroah.com
+ 
+ N: Gary Brubaker
+ E: xavyer@ix.netcom.com
+diff --git a/Documentation/PCI/pci.rst b/Documentation/PCI/pci.rst
+index d10d3fe604c5..d8c3df6d21af 100644
+--- a/Documentation/PCI/pci.rst
++++ b/Documentation/PCI/pci.rst
+@@ -214,7 +214,7 @@ the PCI device by calling pci_enable_device(). This will:
+    problem and unlikely to get fixed soon.
+ 
+    This has been discussed before but not changed as of 2.6.19:
+-   http://lkml.org/lkml/2006/3/2/194
++   https://lore.kernel.org/r/20060302180025.GC28895@flint.arm.linux.org.uk
+ 
+ 
+ pci_set_master() will enable DMA by setting the bus master bit
+diff --git a/Documentation/RCU/RTFP.txt b/Documentation/RCU/RTFP.txt
+index 9bccf16736f7..3b0876c77355 100644
+--- a/Documentation/RCU/RTFP.txt
++++ b/Documentation/RCU/RTFP.txt
+@@ -683,7 +683,7 @@ Orran Krieger and Rusty Russell and Dipankar Sarma and Maneesh Soni"
+ ,month="October"
+ ,year="2001"
+ ,note="Available:
+-\url{http://lkml.org/lkml/2001/10/13/105}
++\url{https://lore.kernel.org/r/Pine.LNX.4.33.0110131015410.8707-100000@penguin.transmeta.com}
+ [Viewed August 21, 2004]"
+ ,annotation={
+ }
+@@ -826,7 +826,7 @@ Symposium on Distributed Computing}
+ ,month="October"
+ ,year="2002"
+ ,note="Available:
+-\url{https://lkml.org/lkml/2002/10/24/262}
++\url{https://lore.kernel.org/r/3DB86B05.447E7410@us.ibm.com}
+ [Viewed February 15, 2014]"
+ ,annotation={
+ 	Mingming Cao's patch to introduce RCU to SysV IPC.
+@@ -839,7 +839,7 @@ Symposium on Distributed Computing}
+ ,month="March"
+ ,year="2003"
+ ,note="Available:
+-\url{http://lkml.org/lkml/2003/3/9/205}
++\url{https://lore.kernel.org/r/Pine.LNX.4.44.0303091831560.2129-100000@home.transmeta.com}
+ [Viewed March 13, 2006]"
+ ,annotation={
+ 	Linus suggests replacing brlock with RCU and/or seqlocks:
+@@ -1036,15 +1036,15 @@ Add per-cpu batch counter"
+ ,annotation={
+ 	RCU runs reasonably on a 512-CPU SGI using Manfred Spraul's patches,
+ 	which may be found at:
+-	https://lkml.org/lkml/2004/5/20/49 (split vars into cachelines)
+-	https://lkml.org/lkml/2004/5/22/114 (cpu_quiet() patch)
+-	https://lkml.org/lkml/2004/5/25/24 (0/5)
+-	https://lkml.org/lkml/2004/5/25/23 (1/5)
+-		https://lkml.org/lkml/2004/5/25/265 (works for Jack)
+-	https://lkml.org/lkml/2004/5/25/20 (2/5)
+-	https://lkml.org/lkml/2004/5/25/22 (3/5)
+-	https://lkml.org/lkml/2004/5/25/19 (4/5)
+-	https://lkml.org/lkml/2004/5/25/21 (5/5)
++	https://lore.kernel.org/r/40AC9823.6020709@colorfullife.com (split vars into cachelines)
++	https://lore.kernel.org/r/Pine.LNX.4.44.0405222141260.11106-100000@dbl.q-ag.de (cpu_quiet() patch)
++	https://lore.kernel.org/r/200405250535.i4P5ZJo8017583@dbl.q-ag.de (0/5)
++	https://lore.kernel.org/r/200405250535.i4P5ZKAQ017591@dbl.q-ag.de (1/5)
++		https://lore.kernel.org/r/20040525203215.GB5127@sgi.com (works for Jack)
++	https://lore.kernel.org/r/200405250535.i4P5ZLiR017599@dbl.q-ag.de (2/5)
++	https://lore.kernel.org/r/200405250535.i4P5ZMFt017607@dbl.q-ag.de (3/5)
++	https://lore.kernel.org/r/200405250535.i4P5ZN6g017615@dbl.q-ag.de (4/5)
++	https://lore.kernel.org/r/200405250535.i4P5ZO7I017623@dbl.q-ag.de (5/5)
+ }
+ }
+ 
+@@ -1106,7 +1106,7 @@ Oregon Health and Sciences University"
+ ,month="August"
+ ,year="2004"
+ ,note="Available:
+-\url{http://lkml.org/lkml/2004/8/6/237}
++\url{https://lore.kernel.org/r/20040807192424.GF3936@in.ibm.com}
+ [Viewed June 8, 2010]"
+ ,annotation={
+ 	Introduce rcu_dereference().
+@@ -1119,7 +1119,7 @@ Oregon Health and Sciences University"
+ ,month="August"
+ ,year="2004"
+ ,note="Available:
+-\url{http://lkml.org/lkml/2004/8/30/87}
++\url{https://lore.kernel.org/r/1093873222.984.12.camel@new.localdomain}
+ [Viewed February 17, 2005]"
+ ,annotation={
+ 	Uses active code in rcu_read_lock() and rcu_read_unlock() to
+@@ -1186,7 +1186,7 @@ Oregon Health and Sciences University"
+ ,month="October"
+ ,year="2004"
+ ,note="Available:
+-\url{http://lkml.org/lkml/2004/10/23/241}
++\url{https://lore.kernel.org/r/20041023202723.GA1930@us.ibm.com}
+ [Viewed June 8, 2010]"
+ ,annotation={
+ 	Introduce rcu_assign_pointer().
+@@ -1203,7 +1203,7 @@ Oregon Health and Sciences University"
+ ,annotation={
+ 	James Morris posts Kaigai Kohei's patch to LKML.
+ 	[Viewed December 10, 2004]
+-	Kaigai's patch is at https://lkml.org/lkml/2004/9/27/52
++	Kaigai's patch is at https://lore.kernel.org/r/200409271057.i8RAvcA1007873@mailsv.bs1.fc.nec.co.jp
+ }
+ }
+ 
+@@ -1241,7 +1241,7 @@ Oregon Health and Sciences University"
+ ,year="2005"
+ ,day="17"
+ ,note="Available:
+-\url{http://lkml.org/lkml/2005/3/17/199}
++\url{https://lore.kernel.org/r/20050318002026.GA2693@us.ibm.com}
+ [Viewed September 5, 2005]"
+ ,annotation={
+ 	First posting showing how RCU can be safely adapted for
+@@ -1256,7 +1256,7 @@ Oregon Health and Sciences University"
+ ,year="2005"
+ ,day="18"
+ ,note="Available:
+-\url{http://lkml.org/lkml/2005/3/18/122}
++\url{https://lore.kernel.org/r/Pine.OSF.4.05.10503181336310.2466-100000@da410.phys.au.dk}
+ [Viewed March 30, 2006]"
+ ,annotation={
+ 	Esben Neilsen suggests read-side suppression of grace-period
+@@ -1302,7 +1302,7 @@ Data Structures"
+ ,month="May"
+ ,year="2005"
+ ,note="Available:
+-\url{http://lkml.org/lkml/2005/5/9/185}
++\url{https://lore.kernel.org/r/20050510012444.GA3011@us.ibm.com}
+ [Viewed May 13, 2005]"
+ ,annotation={
+ 	First publication of working lock-based deferred free patches
+@@ -1385,7 +1385,7 @@ Data Structures"
+ ,day="1"
+ ,year="2005"
+ ,note="Available:
+-\url{http://lkml.org/lkml/2005/8/1/155}
++\url{https://lore.kernel.org/r/20050801171137.GA1754@us.ibm.com}
+ [Viewed March 14, 2006]"
+ ,annotation={
+ 	First operating counter-based realtime RCU patch posted to LKML.
+@@ -1399,7 +1399,7 @@ Data Structures"
+ ,day="8"
+ ,year="2005"
+ ,note="Available:
+-\url{http://lkml.org/lkml/2005/8/8/108}
++\url{https://lore.kernel.org/r/20050808144216.GA1307@us.ibm.com}
+ [Viewed March 14, 2006]"
+ ,annotation={
+ 	First operating counter-based realtime RCU patch posted to LKML,
+@@ -1415,7 +1415,7 @@ Data Structures"
+ ,day="1"
+ ,year="2005"
+ ,note="Available:
+-\url{http://lkml.org/lkml/2005/10/1/70}
++\url{https://lore.kernel.org/r/20051001182056.GA1613@us.ibm.com}
+ [Viewed March 14, 2006]"
+ ,annotation={
+ 	First rcutorture patch.
+@@ -1429,7 +1429,7 @@ Data Structures"
+ ,day="6"
+ ,year="2006"
+ ,note="Available:
+-\url{https://lkml.org/lkml/2006/1/7/22}
++\url{https://lore.kernel.org/r/20060106.231054.43576567.davem@davemloft.net}
+ [Viewed February 29, 2012]"
+ ,annotation={
+ 	David Miller's view on hashed arrays of locks: used to really
+@@ -1464,7 +1464,7 @@ Distributed Processing Symposium"
+ ,day="20"
+ ,year="2006"
+ ,note="Available:
+-\url{http://lkml.org/lkml/2006/6/20/238}
++\url{https://lore.kernel.org/r/20060408134707.22479.33814.sendpatchset@linux.site}
+ [Viewed March 25, 2008]"
+ ,annotation={
+ 	RCU-protected radix tree.
+@@ -1554,7 +1554,7 @@ Revised:
+ ,day="28"
+ ,year="2006"
+ ,note="Available:
+-\url{http://lkml.org/lkml/2006/9/28/160}
++\url{https://lore.kernel.org/r/20060928142616.GA20185@infradead.org}
+ [Viewed March 27, 2008]"
+ }
+ 
+@@ -1593,7 +1593,7 @@ Revised:
+ ,year="2006"
+ ,day=26
+ ,note="Available:
+-\url{http://lkml.org/lkml/2006/10/26/73}
++\url{https://lore.kernel.org/r/20061026105731.GE11803@in.ibm.com}
+ [Viewed January 26, 2009]"
+ ,annotation={
+ 	RCU-based reader-writer lock that allows readers to proceed with
+@@ -1612,12 +1612,12 @@ Revised:
+ ,year="2006"
+ ,day=17
+ ,note="Available:
+-\url{http://lkml.org/lkml/2006/11/17/56}
++\url{https://lore.kernel.org/r/20061117092925.GT7164@kernel.dk}
+ [Viewed May 28, 2007]"
+ ,annotation={
+ 	SRCU's grace periods are too slow for Jens, even after a
+ 	factor-of-three speedup.
+-	Sped-up version of SRCU at http://lkml.org/lkml/2006/11/17/359.
++	Sped-up version of SRCU at https://lore.kernel.org/r/20061118002845.GF2632@us.ibm.com.
+ }
+ }
+ 
+@@ -1629,7 +1629,7 @@ Revised:
+ ,year="2006"
+ ,day=19
+ ,note="Available:
+-\url{http://lkml.org/lkml/2006/11/19/69}
++\url{https://lore.kernel.org/r/20061119190027.GA3676@oleg}
+ [Viewed May 28, 2007]"
+ ,annotation={
+ 	First cut of QRCU.  Expanded/corrected versions followed.
+@@ -1644,7 +1644,7 @@ Revised:
+ ,year="2006"
+ ,day=30
+ ,note="Available:
+-\url{http://lkml.org/lkml/2006/11/29/330}
++\url{https://lore.kernel.org/r/20061130015714.GC1350@oleg}
+ [Viewed November 26, 2008]"
+ ,annotation={
+ 	Expanded/corrected version of QRCU.
+@@ -1709,7 +1709,7 @@ Revised:
+ ,year="2007"
+ ,day=3
+ ,note="Available:
+-\url{http://lkml.org/lkml/2007/1/3/112}
++\url{https://lore.kernel.org/r/20070103152738.GA16063@localdomain}
+ [Viewed May 28, 2007]"
+ ,annotation={
+ 	Patch for list_splice_rcu().
+@@ -1737,7 +1737,7 @@ Revised:
+ ,year="2007"
+ ,day=28
+ ,note="Available:
+-\url{http://lkml.org/lkml/2007/1/28/34}
++\url{https://lore.kernel.org/r/20070128120509.719287000@programming.kicks-ass.net}
+ [Viewed March 27, 2008]"
+ ,annotation={
+ 	RCU-like implementation for frequent updaters and rare readers(!).
+@@ -1767,7 +1767,7 @@ Revised:
+ ,year="2007"
+ ,day=24
+ ,note="Available:
+-\url{http://lkml.org/lkml/2007/2/25/18}
++\url{https://lore.kernel.org/r/20070225062349.GA17468@linux.vnet.ibm.com}
+ [Viewed March 27, 2008]"
+ ,annotation={
+ 	Patch for QRCU supplying lock-free fast path.
+@@ -1846,7 +1846,7 @@ Revised:
+ ,annotation={
+ 	LWN article describing Promela and spin, and also using Oleg
+ 	Nesterov's QRCU as an example (with Paul McKenney's fastpath).
+-	Merged patch at: http://lkml.org/lkml/2007/2/25/18
++	Merged patch at: https://lore.kernel.org/r/20070225062349.GA17468@linux.vnet.ibm.com
+ }
+ }
+ 
+@@ -1885,7 +1885,7 @@ Revised:
+ ,day="10"
+ ,year="2007"
+ ,note="Available:
+-\url{http://lkml.org/lkml/2007/9/10/213}
++\url{https://lore.kernel.org/r/20070910183004.GA3299@linux.vnet.ibm.com}
+ [Viewed October 25, 2007]"
+ ,annotation={
+ 	Final patch for preemptable RCU to -rt.  (Later patches were
+@@ -1933,7 +1933,7 @@ Revised:
+ ,day="20"
+ ,year="2007"
+ ,note="Available:
+-\url{http://lkml.org/lkml/2007/12/20/244}
++\url{https://lore.kernel.org/r/20071220142540.GB22523@Krystal}
+ [Viewed March 27, 2008]"
+ ,annotation={
+ 	Request for call_rcu_sched() and rcu_barrier_sched().
+@@ -2013,7 +2013,7 @@ Revised:
+ ,day="29"
+ ,year="2008"
+ ,note="Available:
+-\url{http://lkml.org/lkml/2008/1/29/208}
++\url{https://lore.kernel.org/r/Pine.LNX.4.58.0801291113350.20371@gandalf.stny.rr.com}
+ [Viewed March 27, 2008]"
+ ,annotation={
+ 	Patch that prevents preemptible RCU from unnecessarily waking
+@@ -2028,7 +2028,7 @@ Revised:
+ ,day="1"
+ ,year="2008"
+ ,note="Available:
+-\url{http://lkml.org/lkml/2008/2/2/255}
++\url{https://lore.kernel.org/r/20080202214124.GA28612@linux.vnet.ibm.com}
+ [Viewed October 18, 2008]"
+ ,annotation={
+ 	Explanation of compilers violating dependency ordering.
+@@ -2088,7 +2088,7 @@ lot of {Linux} into your technology!!!"
+ ,day="3"
+ ,year="2008"
+ ,note="Available:
+-\url{http://lkml.org/lkml/2008/6/2/539}
++\url{https://lore.kernel.org/r/4844BE83.5010401@cn.fujitsu.com}
+ [Viewed December 10, 2008]"
+ ,annotation={
+ 	Updated RCU classic algorithm.  Introduced multi-tailed list
+@@ -2122,7 +2122,7 @@ lot of {Linux} into your technology!!!"
+ ,day="21"
+ ,year="2008"
+ ,note="Available:
+-\url{http://lkml.org/lkml/2008/8/21/336}
++\url{https://lore.kernel.org/r/48AD8969.7060900@colorfullife.com}
+ [Viewed December 8, 2008]"
+ ,annotation={
+ 	State-based RCU.  One key thing that this patch does is to
+@@ -2137,7 +2137,7 @@ lot of {Linux} into your technology!!!"
+ ,day="6"
+ ,year="2008"
+ ,note="Available:
+-\url{http://lkml.org/lkml/2008/9/6/86}
++\url{https://lore.kernel.org/r/48C2B1D2.5070801@colorfullife.com}
+ [Viewed December 8, 2008]"
+ ,annotation={
+ 	Manfred notes a fix required to my attempt to separate irq
+@@ -2183,7 +2183,7 @@ lot of {Linux} into your technology!!!"
+ ,day="14"
+ ,year="2009"
+ ,note="Available:
+-\url{http://lkml.org/lkml/2009/1/14/449}
++\url{https://lore.kernel.org/r/20090114202044.GJ6734@linux.vnet.ibm.com}
+ [Viewed January 15, 2009]"
+ ,annotation={
+ 	Small-footprint implementation of RCU for uniprocessor
+@@ -2218,7 +2218,7 @@ lot of {Linux} into your technology!!!"
+ 	git://lttng.org/userspace-rcu.git
+ 	http://lttng.org/cgi-bin/gitweb.cgi?p=userspace-rcu.git
+ 	http://lttng.org/urcu
+-	http://lkml.org/lkml/2009/2/5/572
++	https://lore.kernel.org/r/20090206030543.GB8560@Krystal
+ }
+ }
+ 
+@@ -2258,7 +2258,7 @@ lot of {Linux} into your technology!!!"
+ ,day="25"
+ ,year="2009"
+ ,note="Available:
+-\url{http://lkml.org/lkml/2009/6/25/306}
++\url{https://lore.kernel.org/r/20090625160706.GA9467@linux.vnet.ibm.com}
+ [Viewed August 16, 2009]"
+ ,annotation={
+ 	First posting of expedited RCU to be accepted into -tip.
+@@ -2272,7 +2272,7 @@ lot of {Linux} into your technology!!!"
+ ,day="23"
+ ,year="2009"
+ ,note="Available:
+-\url{http://lkml.org/lkml/2009/7/23/294}
++\url{https://lore.kernel.org/r/20090724001429.GA17374@linux.vnet.ibm.com}
+ [Viewed August 15, 2009]"
+ ,annotation={
+ 	First posting of simple and fast preemptable RCU.
+@@ -2350,7 +2350,7 @@ lot of {Linux} into your technology!!!"
+ ,month="December"
+ ,year="2009"
+ ,note="Available:
+-\url{http://lkml.org/lkml/2009/10/18/129}
++\url{https://lore.kernel.org/r/20091018232918.GA7385@Krystal}
+ [Viewed December 29, 2009]"
+ ,annotation={
+ 	Mathieu proposed defer_rcu() with fixed-size per-thread pool
+@@ -2518,7 +2518,7 @@ lot of {Linux} into your technology!!!"
+ ,month="January"
+ ,year="2011"
+ ,note="Available:
+-\url{https://lkml.org/lkml/2011/1/18/322}
++\url{https://lore.kernel.org/r/AANLkTimajU0x1v6y3rH2+jr-bZ=tNLs1S_agXdGGAa3S@mail.gmail.com}
+ [Viewed March 4, 2011]"
+ ,annotation={
+ 	"The RCU-based name lookup is at the other end of the spectrum - the
+diff --git a/Documentation/accounting/cgroupstats.rst b/Documentation/accounting/cgroupstats.rst
+index b9afc48f4ea2..85186e7d4035 100644
+--- a/Documentation/accounting/cgroupstats.rst
++++ b/Documentation/accounting/cgroupstats.rst
+@@ -3,8 +3,8 @@ Control Groupstats
+ ==================
+ 
+ Control Groupstats is inspired by the discussion at
+-http://lkml.org/lkml/2007/4/11/187 and implements per cgroup statistics as
+-suggested by Andrew Morton in http://lkml.org/lkml/2007/4/11/263.
++https://lore.kernel.org/r/461CF883.2030308@sw.ru and implements per cgroup statistics as
++suggested by Andrew Morton in https://lore.kernel.org/r/20070411114927.1277d7c9.akpm@linux-foundation.org.
+ 
+ Per cgroup statistics infrastructure re-uses code from the taskstats
+ interface. A new set of cgroup operations are registered with commands
+diff --git a/Documentation/admin-guide/cgroup-v1/memory.rst b/Documentation/admin-guide/cgroup-v1/memory.rst
+index 12757e63b26c..d7759a832d1f 100644
+--- a/Documentation/admin-guide/cgroup-v1/memory.rst
++++ b/Documentation/admin-guide/cgroup-v1/memory.rst
+@@ -980,21 +980,21 @@ References
+ 2. Singh, Balbir. Memory Controller (RSS Control),
+    http://lwn.net/Articles/222762/
+ 3. Emelianov, Pavel. Resource controllers based on process cgroups
+-   http://lkml.org/lkml/2007/3/6/198
++   https://lore.kernel.org/r/45ED7DEC.7010403@sw.ru
+ 4. Emelianov, Pavel. RSS controller based on process cgroups (v2)
+-   http://lkml.org/lkml/2007/4/9/78
++   https://lore.kernel.org/r/461A3010.90403@sw.ru
+ 5. Emelianov, Pavel. RSS controller based on process cgroups (v3)
+-   http://lkml.org/lkml/2007/5/30/244
++   https://lore.kernel.org/r/465D9739.8070209@openvz.org
+ 6. Menage, Paul. Control Groups v10, http://lwn.net/Articles/236032/
+ 7. Vaidyanathan, Srinivasan, Control Groups: Pagecache accounting and control
+    subsystem (v3), http://lwn.net/Articles/235534/
+ 8. Singh, Balbir. RSS controller v2 test results (lmbench),
+-   http://lkml.org/lkml/2007/5/17/232
++   https://lore.kernel.org/r/464C95D4.7070806@linux.vnet.ibm.com
+ 9. Singh, Balbir. RSS controller v2 AIM9 results
+-   http://lkml.org/lkml/2007/5/18/1
++   https://lore.kernel.org/r/464D267A.50107@linux.vnet.ibm.com
+ 10. Singh, Balbir. Memory controller v6 test results,
+-    http://lkml.org/lkml/2007/8/19/36
++    https://lore.kernel.org/r/20070819094658.654.84837.sendpatchset@balbir-laptop
+ 11. Singh, Balbir. Memory controller introduction (v6),
+-    http://lkml.org/lkml/2007/8/17/69
++    https://lore.kernel.org/r/20070817084228.26003.12568.sendpatchset@balbir-laptop
+ 12. Corbet, Jonathan, Controlling memory use in cgroups,
+     http://lwn.net/Articles/243795/
+diff --git a/Documentation/admin-guide/cpu-load.rst b/Documentation/admin-guide/cpu-load.rst
+index ebdecf864080..5440952aa944 100644
+--- a/Documentation/admin-guide/cpu-load.rst
++++ b/Documentation/admin-guide/cpu-load.rst
+@@ -104,7 +104,7 @@ will lead to quite erratic information inside ``/proc/stat``::
+ References
+ ----------
+ 
+-- http://lkml.org/lkml/2007/2/12/6
++- https://lore.kernel.org/r/loom.20070212T063225-663@post.gmane.org
+ - Documentation/filesystems/proc.rst (1.8)
+ 
+ 
+diff --git a/Documentation/admin-guide/kernel-per-CPU-kthreads.rst b/Documentation/admin-guide/kernel-per-CPU-kthreads.rst
+index dc36aeb65d0a..531f689311f2 100644
+--- a/Documentation/admin-guide/kernel-per-CPU-kthreads.rst
++++ b/Documentation/admin-guide/kernel-per-CPU-kthreads.rst
+@@ -273,7 +273,7 @@ To reduce its OS jitter, do any of the following:
+ 		However, there is an RFC patch from Christoph Lameter
+ 		(based on an earlier one from Gilad Ben-Yossef) that
+ 		reduces or even eliminates vmstat overhead for some
+-		workloads at https://lkml.org/lkml/2013/9/4/379.
++		workloads at https://lore.kernel.org/r/00000140e9dfd6bd-40db3d4f-c1be-434f-8132-7820f81bb586-000000@email.amazonses.com.
+ 	e.	If running on high-end powerpc servers, build with
+ 		CONFIG_PPC_RTAS_DAEMON=n.  This prevents the RTAS
+ 		daemon from running on each CPU every second or so.
+diff --git a/Documentation/driver-api/gpio/driver.rst b/Documentation/driver-api/gpio/driver.rst
+index 9809f593c0ab..b7017149f649 100644
+--- a/Documentation/driver-api/gpio/driver.rst
++++ b/Documentation/driver-api/gpio/driver.rst
+@@ -619,8 +619,8 @@ compliance:
+   level and edge IRQs
+ 
+ * [1] http://www.spinics.net/lists/linux-omap/msg120425.html
+-* [2] https://lkml.org/lkml/2015/9/25/494
+-* [3] https://lkml.org/lkml/2015/9/25/495
++* [2] https://lore.kernel.org/r/1443209283-20781-2-git-send-email-grygorii.strashko@ti.com
++* [3] https://lore.kernel.org/r/1443209283-20781-3-git-send-email-grygorii.strashko@ti.com
+ 
+ 
+ Requesting self-owned GPIO pins
+diff --git a/Documentation/gpu/todo.rst b/Documentation/gpu/todo.rst
+index 7969f106877d..b28788f64a6f 100644
+--- a/Documentation/gpu/todo.rst
++++ b/Documentation/gpu/todo.rst
+@@ -571,7 +571,7 @@ for fbdev.
+   https://patchwork.freedesktop.org/patch/306579/
+ 
+ - [RFC PATCH v2 00/13] Kernel based bootsplash
+-  https://lkml.org/lkml/2017/12/13/764
++  https://lore.kernel.org/r/20171213194755.3409-1-mstaudt@suse.de
+ 
+ Contact: Sam Ravnborg
+ 
+diff --git a/Documentation/power/freezing-of-tasks.rst b/Documentation/power/freezing-of-tasks.rst
+index 8bd693399834..53b6a56c4635 100644
+--- a/Documentation/power/freezing-of-tasks.rst
++++ b/Documentation/power/freezing-of-tasks.rst
+@@ -134,7 +134,7 @@ Generally speaking, there is a couple of reasons to use the freezing of tasks:
+    safeguards against race conditions that might occur in such a case.
+ 
+ Although Linus Torvalds doesn't like the freezing of tasks, he said this in one
+-of the discussions on LKML (http://lkml.org/lkml/2007/4/27/608):
++of the discussions on LKML (https://lore.kernel.org/r/alpine.LFD.0.98.0704271801020.9964@woody.linux-foundation.org):
+ 
+ "RJW:> Why we freeze tasks at all or why we freeze kernel threads?
+ 
+diff --git a/Documentation/process/adding-syscalls.rst b/Documentation/process/adding-syscalls.rst
+index a3ecb236576c..02857b5ad2b5 100644
+--- a/Documentation/process/adding-syscalls.rst
++++ b/Documentation/process/adding-syscalls.rst
+@@ -548,18 +548,18 @@ References and Sources
+    https://lwn.net/Articles/486306/
+  - Recommendation from Andrew Morton that all related information for a new
+    system call should come in the same email thread:
+-   https://lkml.org/lkml/2014/7/24/641
++   https://lore.kernel.org/r/20140724144747.3041b208832bbdf9fbce5d96@linux-foundation.org
+  - Recommendation from Michael Kerrisk that a new system call should come with
+-   a man page: https://lkml.org/lkml/2014/6/13/309
++   a man page: https://lore.kernel.org/r/CAKgNAkgMA39AfoSoA5Pe1r9N+ZzfYQNvNPvcRN7tOvRb8+v06Q@mail.gmail.com
+  - Suggestion from Thomas Gleixner that x86 wire-up should be in a separate
+-   commit: https://lkml.org/lkml/2014/11/19/254
++   commit: https://lore.kernel.org/r/alpine.DEB.2.11.1411191249560.3909@nanos
+  - Suggestion from Greg Kroah-Hartman that it's good for new system calls to
+-   come with a man-page & selftest: https://lkml.org/lkml/2014/3/19/710
++   come with a man-page & selftest: https://lore.kernel.org/r/20140320025530.GA25469@kroah.com
+  - Discussion from Michael Kerrisk of new system call vs. :manpage:`prctl(2)` extension:
+-   https://lkml.org/lkml/2014/6/3/411
++   https://lore.kernel.org/r/CAHO5Pa3F2MjfTtfNxa8LbnkeeU8=YJ+9tDqxZpw7Gz59E-4AUg@mail.gmail.com
+  - Suggestion from Ingo Molnar that system calls that involve multiple
+    arguments should encapsulate those arguments in a struct, which includes a
+-   size field for future extensibility: https://lkml.org/lkml/2015/7/30/117
++   size field for future extensibility: https://lore.kernel.org/r/20150730083831.GA22182@gmail.com
+  - Numbering oddities arising from (re-)use of O_* numbering space flags:
+ 
+     - commit 75069f2b5bfb ("vfs: renumber FMODE_NONOTIFY and add to uniqueness
+@@ -569,9 +569,9 @@ References and Sources
+     - commit bb458c644a59 ("Safer ABI for O_TMPFILE")
+ 
+  - Discussion from Matthew Wilcox about restrictions on 64-bit arguments:
+-   https://lkml.org/lkml/2008/12/12/187
++   https://lore.kernel.org/r/20081212152929.GM26095@parisc-linux.org
+  - Recommendation from Greg Kroah-Hartman that unknown flags should be
+-   policed: https://lkml.org/lkml/2014/7/17/577
++   policed: https://lore.kernel.org/r/20140717193330.GB4703@kroah.com
+  - Recommendation from Linus Torvalds that x32 system calls should prefer
+    compatibility with 64-bit versions rather than 32-bit versions:
+-   https://lkml.org/lkml/2011/8/31/244
++   https://lore.kernel.org/r/CA+55aFxfmwfB7jbbrXxa=K7VBYPfAvmu3XOkGrLbB1UFjX1+Ew@mail.gmail.com
+diff --git a/Documentation/process/submitting-patches.rst b/Documentation/process/submitting-patches.rst
+index e58b2c541d25..6c2e42b51b25 100644
+--- a/Documentation/process/submitting-patches.rst
++++ b/Documentation/process/submitting-patches.rst
+@@ -911,13 +911,13 @@ Greg Kroah-Hartman, "How to piss off a kernel subsystem maintainer".
+   <http://www.kroah.com/log/linux/maintainer-06.html>
+ 
+ NO!!!! No more huge patch bombs to linux-kernel@vger.kernel.org people!
+-  <https://lkml.org/lkml/2005/7/11/336>
++  <https://lore.kernel.org/r/20050711.125305.08322243.davem@davemloft.net>
+ 
+ Kernel Documentation/process/coding-style.rst:
+   :ref:`Documentation/process/coding-style.rst <codingstyle>`
+ 
+ Linus Torvalds's mail on the canonical patch format:
+-  <http://lkml.org/lkml/2005/4/7/183>
++  <https://lore.kernel.org/r/Pine.LNX.4.58.0504071023190.28951@ppc970.osdl.org>
+ 
+ Andi Kleen, "On submitting kernel patches"
+   Some strategies to get difficult or controversial changes in.
+diff --git a/Documentation/scheduler/sched-deadline.rst b/Documentation/scheduler/sched-deadline.rst
+index 14a2f7bf63fe..9d9be52f221a 100644
+--- a/Documentation/scheduler/sched-deadline.rst
++++ b/Documentation/scheduler/sched-deadline.rst
+@@ -707,7 +707,7 @@ Deadline Task Scheduling
+     and how to prevent non-root users "cheat" the system?
+ 
+  As already discussed, we are planning also to merge this work with the EDF
+- throttling patches [https://lkml.org/lkml/2010/2/23/239] but we still are in
++ throttling patches [https://lore.kernel.org/r/cover.1266931410.git.fabio@helm.retis] but we still are in
+  the preliminary phases of the merge and we really seek feedback that would
+  help us decide on the direction it should take.
+ 
+diff --git a/Documentation/security/lsm-development.rst b/Documentation/security/lsm-development.rst
+index 31d92bc5fdd2..ac53e5065f79 100644
+--- a/Documentation/security/lsm-development.rst
++++ b/Documentation/security/lsm-development.rst
+@@ -2,7 +2,7 @@
+ Linux Security Module Development
+ =================================
+ 
+-Based on https://lkml.org/lkml/2007/10/26/215,
++Based on https://lore.kernel.org/r/20071026073721.618b4778@laptopd505.fenrus.org,
+ a new LSM is accepted into the kernel when its intent (a description of
+ what it tries to protect against and in what cases one would expect to
+ use it) has been appropriately documented in ``Documentation/admin-guide/LSM/``.
+diff --git a/Documentation/timers/timers-howto.rst b/Documentation/timers/timers-howto.rst
+index afb0a43b8cdf..5c169e3d29a8 100644
+--- a/Documentation/timers/timers-howto.rst
++++ b/Documentation/timers/timers-howto.rst
+@@ -75,7 +75,7 @@ NON-ATOMIC CONTEXT:
+ 
+ 		- Why not msleep for (1ms - 20ms)?
+ 			Explained originally here:
+-				http://lkml.org/lkml/2007/8/3/250
++				https://lore.kernel.org/r/15327.1186166232@lwn.net
+ 
+ 			msleep(1~20) may not do what the caller intends, and
+ 			will often sleep longer (~20 ms actual sleep for any
+diff --git a/Documentation/translations/it_IT/process/adding-syscalls.rst b/Documentation/translations/it_IT/process/adding-syscalls.rst
+index bff0a82bf127..c478b6e8c292 100644
+--- a/Documentation/translations/it_IT/process/adding-syscalls.rst
++++ b/Documentation/translations/it_IT/process/adding-syscalls.rst
+@@ -611,21 +611,21 @@ Riferimenti e fonti
+    https://lwn.net/Articles/486306/
+  - Raccomandazioni da Andrew Morton circa il fatto che tutte le informazioni
+    su una nuova chiamata di sistema dovrebbero essere contenute nello stesso
+-   filone di discussione di email: https://lkml.org/lkml/2014/7/24/641
++   filone di discussione di email: https://lore.kernel.org/r/20140724144747.3041b208832bbdf9fbce5d96@linux-foundation.org
+  - Raccomandazioni da Michael Kerrisk circa il fatto che le nuove chiamate di
+-   sistema dovrebbero avere una pagina man: https://lkml.org/lkml/2014/6/13/309
++   sistema dovrebbero avere una pagina man: https://lore.kernel.org/r/CAKgNAkgMA39AfoSoA5Pe1r9N+ZzfYQNvNPvcRN7tOvRb8+v06Q@mail.gmail.com
+  - Consigli da Thomas Gleixner sul fatto che il collegamento all'architettura
+    x86 dovrebbe avvenire in un *commit* differente:
+-   https://lkml.org/lkml/2014/11/19/254
++   https://lore.kernel.org/r/alpine.DEB.2.11.1411191249560.3909@nanos
+  - Consigli da Greg Kroah-Hartman circa la bontà d'avere una pagina man e un
+    programma di auto-verifica per le nuove chiamate di sistema:
+-   https://lkml.org/lkml/2014/3/19/710
++   https://lore.kernel.org/r/20140320025530.GA25469@kroah.com
+  - Discussione di Michael Kerrisk sulle nuove chiamate di sistema contro
+-   le estensioni :manpage:`prctl(2)`: https://lkml.org/lkml/2014/6/3/411
++   le estensioni :manpage:`prctl(2)`: https://lore.kernel.org/r/CAHO5Pa3F2MjfTtfNxa8LbnkeeU8=YJ+9tDqxZpw7Gz59E-4AUg@mail.gmail.com
+  - Consigli da Ingo Molnar che le chiamate di sistema con più argomenti
+    dovrebbero incapsularli in una struttura che includa un argomento
+    *size* per garantire l'estensibilità futura:
+-   https://lkml.org/lkml/2015/7/30/117
++   https://lore.kernel.org/r/20150730083831.GA22182@gmail.com
+  - Un certo numero di casi strani emersi dall'uso (riuso) dei flag O_*:
+ 
+     - commit 75069f2b5bfb ("vfs: renumber FMODE_NONOTIFY and add to uniqueness
+@@ -635,9 +635,9 @@ Riferimenti e fonti
+     - commit bb458c644a59 ("Safer ABI for O_TMPFILE")
+ 
+  - Discussion from Matthew Wilcox about restrictions on 64-bit arguments:
+-   https://lkml.org/lkml/2008/12/12/187
++   https://lore.kernel.org/r/20081212152929.GM26095@parisc-linux.org
+  - Raccomandazioni da Greg Kroah-Hartman sul fatto che i flag sconosciuti dovrebbero
+-   essere controllati: https://lkml.org/lkml/2014/7/17/577
++   essere controllati: https://lore.kernel.org/r/20140717193330.GB4703@kroah.com
+  - Raccomandazioni da Linus Torvalds che le chiamate di sistema x32 dovrebbero
+    favorire la compatibilità con le versioni a 64-bit piuttosto che quelle a 32-bit:
+-   https://lkml.org/lkml/2011/8/31/244
++   https://lore.kernel.org/r/CA+55aFxfmwfB7jbbrXxa=K7VBYPfAvmu3XOkGrLbB1UFjX1+Ew@mail.gmail.com
+diff --git a/Documentation/translations/it_IT/process/submitting-patches.rst b/Documentation/translations/it_IT/process/submitting-patches.rst
+index 7c23c08e4401..d8f7dd8a05e1 100644
+--- a/Documentation/translations/it_IT/process/submitting-patches.rst
++++ b/Documentation/translations/it_IT/process/submitting-patches.rst
+@@ -884,13 +884,13 @@ Greg Kroah-Hartman, "Come scocciare un manutentore di un sottosistema"
+   <http://www.kroah.com/log/linux/maintainer-06.html>
+ 
+ No!!!! Basta gigantesche bombe patch alle persone sulla lista linux-kernel@vger.kernel.org!
+-  <https://lkml.org/lkml/2005/7/11/336>
++  <https://lore.kernel.org/r/20050711.125305.08322243.davem@davemloft.net>
+ 
+ Kernel Documentation/translations/it_IT/process/coding-style.rst:
+   :ref:`Documentation/translations/it_IT/process/coding-style.rst <it_codingstyle>`
+ 
+ E-mail di Linus Torvalds sul formato canonico di una patch:
+-  <http://lkml.org/lkml/2005/4/7/183>
++  <https://lore.kernel.org/r/Pine.LNX.4.58.0504071023190.28951@ppc970.osdl.org>
+ 
+ Andi Kleen, "Su come sottomettere patch del kernel"
+   Alcune strategie su come sottomettere modifiche toste o controverse.
+diff --git a/Documentation/translations/ja_JP/SubmittingPatches b/Documentation/translations/ja_JP/SubmittingPatches
+index dd0c3280ba5a..6854f5add72e 100644
+--- a/Documentation/translations/ja_JP/SubmittingPatches
++++ b/Documentation/translations/ja_JP/SubmittingPatches
+@@ -702,13 +702,13 @@ Greg Kroah-Hartman, "How to piss off a kernel subsystem maintainer".
+   <http://www.kroah.com/log/2006/01/11/>
+ 
+ NO!!!! No more huge patch bombs to linux-kernel@vger.kernel.org people!
+-  <https://lkml.org/lkml/2005/7/11/336>
++  <https://lore.kernel.org/r/20050711.125305.08322243.davem@davemloft.net>
+ 
+ Kernel Documentation/process/coding-style.rst:
+   <http://users.sosdg.org/~qiyong/lxr/source/Documentation/process/coding-style.rst>
+ 
+ Linus Torvalds's mail on the canonical patch format:
+-  <http://lkml.org/lkml/2005/4/7/183>
++  <https://lore.kernel.org/r/Pine.LNX.4.58.0504071023190.28951@ppc970.osdl.org>
+ 
+ Andi Kleen, "On submitting kernel patches"
+   Some strategies to get difficult or controversial changes in.
+diff --git a/Documentation/translations/zh_CN/process/submitting-patches.rst b/Documentation/translations/zh_CN/process/submitting-patches.rst
+index 2e7dbaad4028..4fc6d16f5196 100644
+--- a/Documentation/translations/zh_CN/process/submitting-patches.rst
++++ b/Documentation/translations/zh_CN/process/submitting-patches.rst
+@@ -668,13 +668,13 @@ Greg Kroah-Hartman, "How to piss off a kernel subsystem maintainer".
+   <http://www.kroah.com/log/linux/maintainer-06.html>
+ 
+ NO!!!! No more huge patch bombs to linux-kernel@vger.kernel.org people!
+-  <https://lkml.org/lkml/2005/7/11/336>
++  <https://lore.kernel.org/r/20050711.125305.08322243.davem@davemloft.net>
+ 
+ Kernel Documentation/process/coding-style.rst:
+   :ref:`Documentation/translations/zh_CN/process/coding-style.rst <cn_codingstyle>`
+ 
+ Linus Torvalds's mail on the canonical patch format:
+-  <http://lkml.org/lkml/2005/4/7/183>
++  <https://lore.kernel.org/r/Pine.LNX.4.58.0504071023190.28951@ppc970.osdl.org>
+ 
+ Andi Kleen, "On submitting kernel patches"
+   Some strategies to get difficult or controversial changes in.
+diff --git a/arch/arc/include/asm/irqflags-compact.h b/arch/arc/include/asm/irqflags-compact.h
+index 863d63ad18d6..6f101ef850b8 100644
+--- a/arch/arc/include/asm/irqflags-compact.h
++++ b/arch/arc/include/asm/irqflags-compact.h
+@@ -50,8 +50,8 @@
+  * are redone after IRQs are re-enabled (and gcc doesn't reuse stale register)
+  *
+  * Noted at the time of Abilis Timer List corruption
+- *	Orig Bug + Rejected solution	: https://lkml.org/lkml/2013/3/29/67
+- *	Reasoning			: https://lkml.org/lkml/2013/4/8/15
++ *	Orig Bug + Rejected solution	: https://lore.kernel.org/r/1364553218-31255-1-git-send-email-vgupta@synopsys.com
++ *	Reasoning			: https://lore.kernel.org/r/CA+55aFyFWjpSVQM6M266tKrG_ZXJzZ-nYejpmXYQXbrr42mGPQ@mail.gmail.com
+  *
+  ******************************************************************/
+ 
+diff --git a/arch/arc/mm/dma.c b/arch/arc/mm/dma.c
+index e947572a521e..37c762610712 100644
+--- a/arch/arc/mm/dma.c
++++ b/arch/arc/mm/dma.c
+@@ -32,7 +32,7 @@ void arch_dma_prep_coherent(struct page *page, size_t size)
+ 
+ /*
+  * Cache operations depending on function and direction argument, inspired by
+- * https://lkml.org/lkml/2018/5/18/979
++ * https://lore.kernel.org/r/20180518175004.GF17671@n2100.armlinux.org.uk
+  * "dma_sync_*_for_cpu and direction=TO_DEVICE (was Re: [PATCH 02/20]
+  * dma-mapping: provide a generic dma-noncoherent implementation)"
+  *
+diff --git a/arch/arc/plat-axs10x/axs10x.c b/arch/arc/plat-axs10x/axs10x.c
+index 63ea5a606ecd..2381b97cda5c 100644
+--- a/arch/arc/plat-axs10x/axs10x.c
++++ b/arch/arc/plat-axs10x/axs10x.c
+@@ -50,7 +50,7 @@ static void __init axs10x_enable_gpio_intc_wire(void)
+ 	 * Current implementation of "irq-dw-apb-ictl" driver doesn't work well
+ 	 * with stacked INTCs. In particular problem happens if its master INTC
+ 	 * not yet instantiated. See discussion here -
+-	 * https://lkml.org/lkml/2015/3/4/755
++	 * https://lore.kernel.org/r/54F6FE2C.7020309@synopsys.com
+ 	 *
+ 	 * So setup the first gpio block as a passive pass thru and hide it from
+ 	 * DT hardware topology - connect MB intc directly to cpu intc
+diff --git a/arch/arc/plat-hsdk/platform.c b/arch/arc/plat-hsdk/platform.c
+index 0b961a2a10b8..f87183db78ba 100644
+--- a/arch/arc/plat-hsdk/platform.c
++++ b/arch/arc/plat-hsdk/platform.c
+@@ -68,7 +68,7 @@ static void __init hsdk_enable_gpio_intc_wire(void)
+ 	 * Current implementation of "irq-dw-apb-ictl" driver doesn't work well
+ 	 * with stacked INTCs. In particular problem happens if its master INTC
+ 	 * not yet instantiated. See discussion here -
+-	 * https://lkml.org/lkml/2015/3/4/755
++	 * https://lore.kernel.org/r/54F6FE2C.7020309@synopsys.com
+ 	 *
+ 	 * So setup the first gpio block as a passive pass thru and hide it from
+ 	 * DT hardware topology - connect intc directly to cpu intc
+diff --git a/arch/arm/kernel/hibernate.c b/arch/arm/kernel/hibernate.c
+index 2373020af965..5705bbc5c921 100644
+--- a/arch/arm/kernel/hibernate.c
++++ b/arch/arm/kernel/hibernate.c
+@@ -7,7 +7,7 @@
+  * Ubuntu project, hibernation support for mach-dove
+  * Copyright (C) 2010 Nokia Corporation (Hiroshi Doyu)
+  * Copyright (C) 2010 Texas Instruments, Inc. (Teerth Reddy et al.)
+- *  https://lkml.org/lkml/2010/6/18/4
++ *  https://lore.kernel.org/r/AANLkTimmvPMG0GFEXfgFlXgC7V4dIWmW8vEC5gegsKSE@mail.gmail.com
+  *  https://lists.linux-foundation.org/pipermail/linux-pm/2010-June/027422.html
+  *  https://patchwork.kernel.org/patch/96442/
+  *
+diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
+index 68e14152d6e9..39529b5edae3 100644
+--- a/arch/arm64/kernel/hibernate.c
++++ b/arch/arm64/kernel/hibernate.c
+@@ -7,7 +7,7 @@
+  * Ubuntu project, hibernation support for mach-dove
+  * Copyright (C) 2010 Nokia Corporation (Hiroshi Doyu)
+  * Copyright (C) 2010 Texas Instruments, Inc. (Teerth Reddy et al.)
+- *  https://lkml.org/lkml/2010/6/18/4
++ *  https://lore.kernel.org/r/AANLkTimmvPMG0GFEXfgFlXgC7V4dIWmW8vEC5gegsKSE@mail.gmail.com
+  *  https://lists.linux-foundation.org/pipermail/linux-pm/2010-June/027422.html
+  *  https://patchwork.kernel.org/patch/96442/
+  *
+diff --git a/arch/mips/include/asm/page.h b/arch/mips/include/asm/page.h
+index 6a77bc4a6eec..cba729756689 100644
+--- a/arch/mips/include/asm/page.h
++++ b/arch/mips/include/asm/page.h
+@@ -207,7 +207,7 @@ static inline unsigned long ___pa(unsigned long x)
+  * archived at http://lists.linuxcoding.com/kernel/2006-q3/msg17360.html
+  *
+  * It is unclear if the misscompilations mentioned in
+- * http://lkml.org/lkml/2010/8/8/138 also affect MIPS so we keep this one
++ * https://lore.kernel.org/r/1281303490-390-1-git-send-email-namhyung@gmail.com also affect MIPS so we keep this one
+  * until GCC 3.x has been retired before we can apply
+  * https://patchwork.linux-mips.org/patch/1541/
+  */
+diff --git a/drivers/block/aoe/aoecmd.c b/drivers/block/aoe/aoecmd.c
+index 3cf9bc5d8d95..be8f411c3d3f 100644
+--- a/drivers/block/aoe/aoecmd.c
++++ b/drivers/block/aoe/aoecmd.c
+@@ -1055,7 +1055,7 @@ aoe_end_request(struct aoedev *d, struct request *rq, int fastfail)
+ 
+ 	__blk_mq_end_request(rq, err);
+ 
+-	/* cf. http://lkml.org/lkml/2006/10/31/28 */
++	/* cf. https://lore.kernel.org/r/20061031071040.GS14055@kernel.dk */
+ 	if (!fastfail)
+ 		blk_mq_run_hw_queues(q, true);
+ }
+diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
+index d21fa04fa44d..7e472258828e 100644
+--- a/drivers/pci/setup-res.c
++++ b/drivers/pci/setup-res.c
+@@ -73,7 +73,7 @@ static void pci_std_update_resource(struct pci_dev *dev, int resno)
+ 		/*
+ 		 * Apparently some Matrox devices have ROM BARs that read
+ 		 * as zero when disabled, so don't update ROM BARs unless
+-		 * they're enabled.  See https://lkml.org/lkml/2005/8/30/138.
++		 * they're enabled.  See https://lore.kernel.org/r/43147B3D.1030309@vc.cvut.cz.
+ 		 */
+ 		if (!(res->flags & IORESOURCE_ROM_ENABLE))
+ 			return;
+diff --git a/drivers/staging/clocking-wizard/TODO b/drivers/staging/clocking-wizard/TODO
+index ebe99db7d153..7678a480aea7 100644
+--- a/drivers/staging/clocking-wizard/TODO
++++ b/drivers/staging/clocking-wizard/TODO
+@@ -2,7 +2,7 @@ TODO:
+ 	- support for fractional multiplier
+ 	- support for fractional divider (output 0 only)
+ 	- support for set_rate() operations (may benefit from Stephen Boyd's
+-	  refactoring of the clk primitives: https://lkml.org/lkml/2014/9/5/766)
++	  refactoring of the clk primitives: https://lore.kernel.org/r/1409957256-23729-1-git-send-email-sboyd@codeaurora.org)
+ 	- review arithmetic
+ 	  - overflow after multiplication?
+ 	  - maximize accuracy before divisions
+diff --git a/drivers/staging/vc04_services/bcm2835-audio/TODO b/drivers/staging/vc04_services/bcm2835-audio/TODO
+index cb8ead3e9108..72120441ca90 100644
+--- a/drivers/staging/vc04_services/bcm2835-audio/TODO
++++ b/drivers/staging/vc04_services/bcm2835-audio/TODO
+@@ -5,6 +5,6 @@
+ *****************************************************************************
+ 
+ 1) Revisit multi-cards options and PCM route mixer control (as per comment
+-https://lkml.org/lkml/2018/9/8/200)
++https://lore.kernel.org/r/s5hd0to5598.wl-tiwai@suse.de)
+ 
+ 2) Fix the remaining checkpatch.pl errors and warnings.
+diff --git a/drivers/usb/serial/ark3116.c b/drivers/usb/serial/ark3116.c
+index 71a9206ea1e2..7473a89b9e87 100644
+--- a/drivers/usb/serial/ark3116.c
++++ b/drivers/usb/serial/ark3116.c
+@@ -719,7 +719,7 @@ MODULE_DESCRIPTION(DRIVER_DESC);
+  * hardware bug or something.
+  *
+  * According to a patch provided here
+- * (http://lkml.org/lkml/2009/7/26/56), the ARK3116 can also be used
++ * (https://lore.kernel.org/r/200907261419.50702.linux@rainbow-software.org), the ARK3116 can also be used
+  * as an IrDA dongle. Since I do not have such a thing, I could not
+  * investigate that aspect. However, I can speculate ;-).
+  *
+diff --git a/drivers/xen/xen-acpi-processor.c b/drivers/xen/xen-acpi-processor.c
+index ce8ffb595a46..fa96b394d891 100644
+--- a/drivers/xen/xen-acpi-processor.c
++++ b/drivers/xen/xen-acpi-processor.c
+@@ -3,7 +3,7 @@
+  * Copyright 2012 by Oracle Inc
+  * Author: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+  *
+- * This code borrows ideas from https://lkml.org/lkml/2011/11/30/249
++ * This code borrows ideas from https://lore.kernel.org/r/1322673664-14642-6-git-send-email-konrad.wilk@oracle.com
+  * so many thanks go to Kevin Tian <kevin.tian@intel.com>
+  * and Yu Ke <ke.yu@intel.com>.
+  */
+diff --git a/tools/perf/Documentation/examples.txt b/tools/perf/Documentation/examples.txt
+index a4e392156488..a64d42db1c48 100644
+--- a/tools/perf/Documentation/examples.txt
++++ b/tools/perf/Documentation/examples.txt
+@@ -3,7 +3,7 @@
+ 		****** perf by examples ******
+ 		------------------------------
+ 
+-[ From an e-mail by Ingo Molnar, http://lkml.org/lkml/2009/8/4/346 ]
++[ From an e-mail by Ingo Molnar, https://lore.kernel.org/r/20090804195717.GA5998@elte.hu ]
+ 
+ 
+ First, discovery/enumeration of available counters can be done via
+diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
+index 5f36fc6a5578..f05510f15d01 100644
+--- a/tools/perf/util/data-convert-bt.c
++++ b/tools/perf/util/data-convert-bt.c
+@@ -945,7 +945,7 @@ static char *change_name(char *name, char *orig_name, int dup)
+ 		goto out;
+ 	/*
+ 	 * Add '_' prefix to potential keywork.  According to
+-	 * Mathieu Desnoyers (https://lkml.org/lkml/2015/1/23/652),
++	 * Mathieu Desnoyers (https://lore.kernel.org/r/1074266107.40857.1422045946295.JavaMail.zimbra@efficios.com),
+ 	 * futher CTF spec updating may require us to use '$'.
+ 	 */
+ 	if (dup < 0)
+diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
+index a7974638561c..8fd9d2ea7a2b 100644
+--- a/tools/scripts/Makefile.include
++++ b/tools/scripts/Makefile.include
+@@ -69,7 +69,7 @@ endif
+ # in newer systems.
+ # Needed for the __raw_cmpxchg in tools/arch/x86/include/asm/cmpxchg.h
+ #
+-# See https://lkml.org/lkml/2006/11/28/253 and https://gcc.gnu.org/gcc-4.8/changes.html,
++# See https://lore.kernel.org/r/9a8748490611281710g78402fbeh8ff7fcc162dbcbca@mail.gmail.com and https://gcc.gnu.org/gcc-4.8/changes.html,
+ # that takes into account Linus's comments (search for Wshadow) for the reasoning about
+ # -Wshadow not being interesting before gcc 4.8.
+ 
+
+
