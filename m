@@ -2,137 +2,152 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B87C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 18:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47685C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 19:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E24572082F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 18:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B5E02082F
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 19:39:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="E5fTkIrR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S69Z6hVz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725862AbgGAS5o (ORCPT
+        id S1726098AbgGATjZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 14:57:44 -0400
-Received: from vps.xff.cz ([195.181.215.36]:55362 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725812AbgGAS5o (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jul 2020 14:57:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593629862; bh=6Z4SBIMcF6Jx3VXG/1PL+4vEJ0Qm28Mfr5ilIHdjHfw=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=E5fTkIrR8oXuyozxosnFCsaP3zz8CaqTTmyfOX7Qq/Tk1+H7X2JPzVkAmx/hn4E1N
-         E9MS+7jieub7R3oXm9FLKUWyQ6aaFFHZhZvJ1zUkhYtTjLtfyZyqb+LQ+fQ8SO9+LR
-         6KtgZTk1FZE7J7E43U5231hKWXwLus06UJbm15vw=
-Date:   Wed, 1 Jul 2020 20:57:41 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     linux-sunxi@googlegroups.com,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
-        Purism Kernel Team <kernel@puri.sm>,
+        Wed, 1 Jul 2020 15:39:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42472 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbgGATjV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 15:39:21 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2979BC08C5DB
+        for <devicetree@vger.kernel.org>; Wed,  1 Jul 2020 12:39:21 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id d17so13951316ljl.3
+        for <devicetree@vger.kernel.org>; Wed, 01 Jul 2020 12:39:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uZLgRyeqLIrejgbskRWtUMI2dY4YQCIX+GY0py5r3AA=;
+        b=S69Z6hVz4wBbcWfEPDTLxOfydDlRKVUspZAmALfKiePq4efP4D6Zy/HnkTrZixiCmy
+         Ot40/jExbO/G56aM0fEZsfzeJIC3kCvsxrM7MHZqzW1HJEEA5UTAiUuuECa6C9aUljR+
+         zCe1fEdW+aHQAlQoaCXz6DY9c4jxfT6LcKyQivUp/xGtatGLTUNnwj6aAa/FWUWiG9K1
+         bWQfTOvQY0EpekmLmMomA0vYwaXO07Hu72AKOO1B90d4yUJX1W3dMZUDfX17J7iVY1pG
+         fllXRQrJrjqemB9c2daT5zN3LzqeuPJW/vRph40oc5de9fK+rU2K+xUO9rJc4nLbCpB6
+         ZJ1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uZLgRyeqLIrejgbskRWtUMI2dY4YQCIX+GY0py5r3AA=;
+        b=H1D73dZ3U5uEV/qto33RV1IJFoPT0HJsV1Ojef5g7g6LumcJzFreZ84uPZjoC2VEp3
+         C25wy3FLue6vVtjdieJdbJNqRRJ82EHMTJjsIWx2EA9AYUp01nLjJkPcaJR+CAe/Kv1B
+         k5EAqvKSn1bgg1Zm0m7cfSC5K3j7tvHDzyhpAtPmvthVQ5i5XJ2pJzCFo7DW0ITmMoms
+         1NyyNsCENNlBDwtRNilTzeaWdaRvlC6fj+rUi2JOumVMukTHOqSVTRGUsq4UUbP+8PU6
+         c8YLkLGY1a8Dx0U1Zirfnxpy5EBodVHskfpPkUFPN1wGwA0lS2Q4v16HZPfDojk7yZpd
+         QKpQ==
+X-Gm-Message-State: AOAM533XMN+Mns4Zm9GdyQVwl8GWcD+JhfFzyBZVydowunAWIy5vhrrs
+        whVE12Euxq3PRYsW7oCShqQ2OQ==
+X-Google-Smtp-Source: ABdhPJznwKrMubCqqzSMTK6VHjJjbQbSK8SWzIJNnS6XVefIEXAhs3wc0iBxGIMfRySbgrsw6uZjLQ==
+X-Received: by 2002:a2e:b4ce:: with SMTP id r14mr5133513ljm.88.1593632359481;
+        Wed, 01 Jul 2020 12:39:19 -0700 (PDT)
+Received: from [192.168.1.211] ([188.162.65.203])
+        by smtp.gmail.com with ESMTPSA id y24sm2126434ljy.91.2020.07.01.12.39.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Jul 2020 12:39:18 -0700 (PDT)
+Subject: Re: [PATCH v2 07/13] dt-bindings: clock: Introduce SM8250 QCOM
+ Graphics clock bindings
+To:     Jonathan Marek <jonathan@marek.ca>, linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Samuel Holland <samuel@sholland.org>,
-        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>
-Subject: Re: [PATCH v6 13/13] arm64: dts: sun50i-a64-pinephone: Add
- touchscreen support
-Message-ID: <20200701185741.z5cga3b7z4gmba6u@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Icenowy Zheng <icenowy@aosc.io>, linux-sunxi@googlegroups.com,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Samuel Holland <samuel@sholland.org>,
-        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>
-References: <20200701103126.1512615-1-megous@megous.com>
- <20200701103126.1512615-14-megous@megous.com>
- <78C72279-99DB-4FDE-81B3-1CF6BEF80BBF@aosc.io>
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200629172049.30452-1-jonathan@marek.ca>
+ <20200629172049.30452-8-jonathan@marek.ca>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Message-ID: <caa05cad-ff88-fbcb-ce13-9e43133afb7b@linaro.org>
+Date:   Wed, 1 Jul 2020 22:39:11 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <78C72279-99DB-4FDE-81B3-1CF6BEF80BBF@aosc.io>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+In-Reply-To: <20200629172049.30452-8-jonathan@marek.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Icenowy,
-
-On Wed, Jul 01, 2020 at 08:01:14PM +0800, Icenowy Zheng wrote:
+On 29/06/2020 20:20, Jonathan Marek wrote:
+> Add device tree bindings for graphics clock controller for
+> Qualcomm Technology Inc's SM8250 SoCs.
 > 
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> ---
+>   .../bindings/clock/qcom,sm8250-gpucc.yaml     | 74 +++++++++++++++++++
+>   include/dt-bindings/clock/qcom,gpucc-sm8250.h | 40 ++++++++++
+>   2 files changed, 114 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/clock/qcom,sm8250-gpucc.yaml
+>   create mode 100644 include/dt-bindings/clock/qcom,gpucc-sm8250.h
 > 
-> 于 2020年7月1日 GMT+08:00 下午6:31:26, Ondrej Jirman <megous@megous.com> 写到:
-> >Pinephone has a Goodix GT917S capacitive touchscreen controller on
-> >I2C0 bus. Add support for it.
-> >
-> >Signed-off-by: Ondrej Jirman <megous@megous.com>
-> >Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> >---
-> > .../dts/allwinner/sun50i-a64-pinephone.dtsi   | 19 +++++++++++++++++++
-> > 1 file changed, 19 insertions(+)
-> >
-> >diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-> >b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-> >index 85a7aa5efd32..2d5694446d17 100644
-> >--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-> >+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-> >@@ -123,6 +123,25 @@ &ehci1 {
-> > 	status = "okay";
-> > };
-> > 
-> >+&i2c0 {
-> >+	pinctrl-names = "default";
-> >+	pinctrl-0 = <&i2c0_pins>;
-> >+	status = "okay";
-> >+
-> >+	touchscreen@5d {
-> >+		compatible = "goodix,gt917s", "goodix,gt911";
-> 
-> Please drop gt911 here. GT917S belong to the GT1x product line, not the same line with GT911.
-> 
-> You will see this in the driver.
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,sm8250-gpucc.yaml b/Documentation/devicetree/bindings/clock/qcom,sm8250-gpucc.yaml
+> new file mode 100644
+> index 000000000000..2b9c8f97b76d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/qcom,sm8250-gpucc.yaml
+> @@ -0,0 +1,74 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/qcom,sm8250-gpucc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Graphics Clock & Reset Controller Binding for SM8250
+> +
+> +maintainers:
+> +  -
+> +
+> +description: |
+> +  Qualcomm graphics clock control module which supports the clocks, resets and
+> +  power domains on SM8250.
+> +
+> +  See also dt-bindings/clock/qcom,gpucc-sm8250.h.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,sm8250-gpucc
+> +
+> +  clocks:
+> +    items:
+> +      - description: Board XO source
+> +      - description: GPLL0 main branch source
+> +      - description: GPLL0 div branch source
+> +
+> +  clock-names:
+> +    items:
+> +      - const: bi_tcxo
+> +      - const: gcc_gpu_gpll0_clk_src
+> +      - const: gcc_gpu_gpll0_div_clk_src
 
-Right. I'll do so in v8.
+Missing qdss_qmp_clk here.
 
-thnk you and regards,
-	o.
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
 
-> >+		reg = <0x5d>;
-> >+		interrupt-parent = <&pio>;
-> >+		interrupts = <7 4 IRQ_TYPE_LEVEL_HIGH>; /* PH4 */
-> >+		irq-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
-> >+		reset-gpios = <&pio 7 11 GPIO_ACTIVE_HIGH>; /* PH11 */
-> >+		AVDD28-supply = <&reg_ldo_io0>;
-> >+		VDDIO-supply = <&reg_ldo_io0>;
-> >+		touchscreen-size-x = <720>;
-> >+		touchscreen-size-y = <1440>;
-> >+	};
-> >+};
-> >+
-> > &i2c1 {
-> > 	status = "okay";
-> > 
+
+
+-- 
+With best wishes
+Dmitry
