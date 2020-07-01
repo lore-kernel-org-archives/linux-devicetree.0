@@ -2,31 +2,32 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A58EFC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17512C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 817F72085B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:29:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7B3520781
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:29:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="G2zYEl85"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="VlBBBRxm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732328AbgGAQ3f (ORCPT
+        id S1732407AbgGAQ3j (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:29:35 -0400
-Received: from vps.xff.cz ([195.181.215.36]:51976 "EHLO vps.xff.cz"
+        Wed, 1 Jul 2020 12:29:39 -0400
+Received: from vps.xff.cz ([195.181.215.36]:52352 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731672AbgGAQ3e (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:29:34 -0400
+        id S1732391AbgGAQ3i (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Jul 2020 12:29:38 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593620970; bh=h41kKdP+3vto+kElOo0VDi6vKhbrYTeB/TfpQYG9yUo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=G2zYEl85biLHwyEiOFO/kaMcNraHZvQR4O65XcOkok8hz8sKy8bqo2ex81MDBezkl
-         tvKQoudL7UNeTi76xcQSLQWMQKqBaZTC24Su46akCky37oA1eD9IGVchCFdQkWYl5j
-         oWNpKKnFrX28UVUi9vO+xHVZyoR2Jk6FygSV2P5c=
+        t=1593620974; bh=zkODNCMULY1qflHx9pXN2q3BlZBV4YZQDDm3YdTOqMc=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=VlBBBRxm4dDrG8c8iIovoYlpXJu+hCvaSfB9J6AdHQbVWWGBO2bvdhfMmVvMC2EHw
+         Uqy0FqKroZVhout9bEXq4bvkuOj9owK0wfJTFenzrZhxZmPKIu0T/8a8tfsnZ2fgcs
+         +olWZv1pbU3QzvCoNqACDfZVI1nXZ+nC6PQW9wBo=
 From:   Ondrej Jirman <megous@megous.com>
 To:     linux-sunxi@googlegroups.com,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -46,9 +47,11 @@ Cc:     Ondrej Jirman <megous@megous.com>, dri-devel@lists.freedesktop.org,
         Samuel Holland <samuel@sholland.org>,
         Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
         Bhushan Shah <bshah@kde.org>
-Subject: [PATCH v7 00/13] Add support for PinePhone LCD panel
-Date:   Wed,  1 Jul 2020 18:29:15 +0200
-Message-Id: <20200701162928.1638874-1-megous@megous.com>
+Subject: [PATCH v7 08/13] drm/panel: st7703: Move generic part of init sequence to enable callback
+Date:   Wed,  1 Jul 2020 18:29:23 +0200
+Message-Id: <20200701162928.1638874-9-megous@megous.com>
+In-Reply-To: <20200701162928.1638874-1-megous@megous.com>
+References: <20200701162928.1638874-1-megous@megous.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -56,126 +59,82 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patchset adds support for the LCD panel of PinePhone.
+Calling sleep out and display on is a controller specific part
+of the initialization process. Move it out of the panel specific
+initialization function to the enable callback.
 
-I've tested this on PinePhone 1.0 and 1.2.
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/gpu/drm/panel/panel-sitronix-st7703.c | 33 ++++++++++---------
+ 1 file changed, 18 insertions(+), 15 deletions(-)
 
-Please take a look.
-
-thank you and regards,
-  Ondrej Jirman
-
-Changes in v7:
-- Removed mode.vrefresh, rebased onto next-20200701
-- v6->v7 diff: https://megous.com/dl/tmp/v6-v7.patch
-
-Changes in v6:
-- Fixed spacing in yaml
-- Fixed wrong vccio->iovcc supply name in the bindings doc
-- I noticed that the original driver uses a delay of 20ms in the init
-  function to achieve a combined total of 120ms required from post-reset
-  to display_on. I've added a similar delay to xbd599_init, so that
-  xbd599 panel also has the right timing. (patch 9)
-- v5->v6 diff: https://megous.com/dl/tmp/v5-v6.patch
-- Added review/ack tags
-- Learned to run dt_binding_check by myself ;)
-
-Changes in v5:
-- rewritten on top of rocktech-jh057n00900 driver
-- rocktech-jh057n00900 renamed to st7703 (controller name)
-- converted rocktech-jh057n00900 bindings to yaml and extended for xbd599
-
-Changes in v4:
-- use ->type from the mode instead of hardcoding (Samuel)
-- move init_sequence to ->prepare (Samuel)
-- move anti-flicker delay to ->enable, explain it (Samuel)
-- add enter_sleep after display_off (Samuel)
-- drop ->disable (move code to ->unprepare)
-- add ID bytes dumping (Linus)
-  (I can't test it since allwinner DSI driver has a broken
-   dcs_read function, and I didn't manage to fix it.)
-- document magic bytes (Linus)
-- assert reset during powerup
-- cleanup powerup timings according to the datasheet
-
-Changes in v3:
-- Panel driver renamed to the name of the LCD controller
-- Re-organize the driver slightly to more easily support more panels
-  based on the same controller.
-- Add patch to enable the touchscreen to complete the LCD support
-  on PinePhone.
-- Dropped the "DSI fix" patch (the driver seems to work for me without it)
-- Improved brightness levels handling:
-  - PinePhone 1.0 uses default levels generated by the driver
-  - On PinePhone 1.1 duty cycles < 20% lead to black screen, so
-    default levels can't be used. Martijn Braam came up with a
-    list of duty cycle values that lead to perception of linear
-    brigtness level <-> light intensity on PinePhone 1.1
-- There was some feedback on v2 about this being similar to st7701.
-  It's only similar in name. Most of the "user commands" are different,
-  so I opted to keep this in a new driver instead of creating st770x.
-  
-  Anyone who likes to check the differences, here are datasheets:
-
-  - https://megous.com/dl/tmp/ST7703_DS_v01_20160128.pdf
-  - https://megous.com/dl/tmp/ST7701.pdf
-
-Changes in v2:
-- DT Example fix.
-- DT Format fix.
-- Raised copyright info to 2020.
-- Sort panel operation functions.
-- Sort inclusion.
-
-
--- For phone owners: --
-
-There's an open question on how to set the backlight brightness values
-on post 1.0 revision phone, since lower duty cycles (< 10-20%) lead
-to backlight being black. It would be nice if more people can test
-the various backlight levels on 1.1 and 1.2 revision with this change
-in dts:
-
-       brightness-levels = <0 1000>;
-       num-interpolated-steps = <1000>;
-
-and report at what brightness level the backlight turns on. So far it
-seems this has a wide range. Lowest useable duty cycle for me is ~7%
-on 1.2 and for Martijn ~20% on 1.1.
-
-Icenowy Zheng (2):
-  dt-bindings: vendor-prefixes: Add Xingbangda
-  arm64: dts: sun50i-a64-pinephone: Enable LCD support on PinePhone
-
-Ondrej Jirman (11):
-  dt-bindings: panel: Convert rocktech,jh057n00900 to yaml
-  dt-bindings: panel: Add compatible for Xingbangda XBD599 panel
-  drm/panel: rocktech-jh057n00900: Rename the driver to st7703
-  drm/panel: st7703: Rename functions from jh057n prefix to st7703
-  drm/panel: st7703: Prepare for supporting multiple panels
-  drm/panel: st7703: Move code specific to jh057n closer together
-  drm/panel: st7703: Move generic part of init sequence to enable
-    callback
-  drm/panel: st7703: Add support for Xingbangda XBD599
-  drm/panel: st7703: Enter sleep after display off
-  drm/panel: st7703: Assert reset prior to powering down the regulators
-  arm64: dts: sun50i-a64-pinephone: Add touchscreen support
-
- .../display/panel/rocktech,jh057n00900.txt    |  23 -
- .../display/panel/rocktech,jh057n00900.yaml   |  70 ++
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- .../allwinner/sun50i-a64-pinephone-1.1.dts    |  19 +
- .../dts/allwinner/sun50i-a64-pinephone.dtsi   |  54 ++
- drivers/gpu/drm/panel/Kconfig                 |  26 +-
- drivers/gpu/drm/panel/Makefile                |   2 +-
- .../drm/panel/panel-rocktech-jh057n00900.c    | 423 -----------
- drivers/gpu/drm/panel/panel-sitronix-st7703.c | 654 ++++++++++++++++++
- 9 files changed, 813 insertions(+), 460 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
- delete mode 100644 drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
- create mode 100644 drivers/gpu/drm/panel/panel-sitronix-st7703.c
-
+diff --git a/drivers/gpu/drm/panel/panel-sitronix-st7703.c b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
+index 61872f623fff..96e39ec94900 100644
+--- a/drivers/gpu/drm/panel/panel-sitronix-st7703.c
++++ b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
+@@ -84,8 +84,6 @@ static inline struct st7703 *panel_to_st7703(struct drm_panel *panel)
+ static int jh057n_init_sequence(struct st7703 *ctx)
+ {
+ 	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+-	struct device *dev = ctx->dev;
+-	int ret;
+ 
+ 	/*
+ 	 * Init sequence was supplied by the panel vendor. Most of the commands
+@@ -136,20 +134,7 @@ static int jh057n_init_sequence(struct st7703 *ctx)
+ 			      0x18, 0x00, 0x09, 0x0E, 0x29, 0x2D, 0x3C, 0x41,
+ 			      0x37, 0x07, 0x0B, 0x0D, 0x10, 0x11, 0x0F, 0x10,
+ 			      0x11, 0x18);
+-	msleep(20);
+-
+-	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
+-	if (ret < 0) {
+-		DRM_DEV_ERROR(dev, "Failed to exit sleep mode: %d\n", ret);
+-		return ret;
+-	}
+-	/* Panel is operational 120 msec after reset */
+-	msleep(60);
+-	ret = mipi_dsi_dcs_set_display_on(dsi);
+-	if (ret)
+-		return ret;
+ 
+-	DRM_DEV_DEBUG_DRIVER(dev, "Panel init sequence done\n");
+ 	return 0;
+ }
+ 
+@@ -180,6 +165,7 @@ struct st7703_panel_desc jh057n00900_panel_desc = {
+ static int st7703_enable(struct drm_panel *panel)
+ {
+ 	struct st7703 *ctx = panel_to_st7703(panel);
++	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+ 	int ret;
+ 
+ 	ret = ctx->desc->init_sequence(ctx);
+@@ -189,6 +175,23 @@ static int st7703_enable(struct drm_panel *panel)
+ 		return ret;
+ 	}
+ 
++	msleep(20);
++
++	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
++	if (ret < 0) {
++		DRM_DEV_ERROR(ctx->dev, "Failed to exit sleep mode: %d\n", ret);
++		return ret;
++	}
++
++	/* Panel is operational 120 msec after reset */
++	msleep(60);
++
++	ret = mipi_dsi_dcs_set_display_on(dsi);
++	if (ret)
++		return ret;
++
++	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Panel init sequence done\n");
++
+ 	return 0;
+ }
+ 
 -- 
 2.27.0
 
