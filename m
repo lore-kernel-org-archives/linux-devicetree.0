@@ -6,72 +6,75 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C77C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 22:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3837FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 22:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32C6B2085B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 22:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09D87207E8
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 22:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593642209;
-	bh=fRMvfDs6J9ENx0nlOwqfVxCsvoO7J+T2mLixCLYaX1U=;
+	s=default; t=1593642231;
+	bh=y8h8rrj+eKW/ffxtmPfoCbuMIYXnOThq0lLnPdclPgM=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=F63G/YYfiNDSDaMa3mPIHsgPh9t002hgfrhocCqM5F8NStqZfzC91qwUzQ2DAYZya
-	 6NgXhOE9TCQHR4KCbMEryIi7dfsndDmZQ9p/ROmZmn6itFVxqIrxskqP9B7E6N66gl
-	 gv7Q4WTAed6hu0Os7WknM0v9niu0zuaeb7kYV5YY=
+	b=1ec3b3v12DiIN12SWOFUT83KvYXXQT89DLou4oMIW17JcTcONMm68QyzHd0Pe/w/l
+	 K5eeVOCKvuza4Nmp5FdjcKxvNxWTz5AdB1mDmxY7A3Fy5ecyJwmFMdp2+XmyvHm/Ue
+	 Sd0FlOI70zDmme+j+n/gEg4gQEuO43JW02VCuXOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgGAWX2 (ORCPT
+        id S1727057AbgGAWXu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 18:23:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50454 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 18:23:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726235AbgGAWX2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jul 2020 18:23:28 -0400
+        id S1726257AbgGAWXt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Jul 2020 18:23:49 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8126920853;
-        Wed,  1 Jul 2020 22:23:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7BC620780;
+        Wed,  1 Jul 2020 22:23:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593642208;
-        bh=fRMvfDs6J9ENx0nlOwqfVxCsvoO7J+T2mLixCLYaX1U=;
+        s=default; t=1593642229;
+        bh=y8h8rrj+eKW/ffxtmPfoCbuMIYXnOThq0lLnPdclPgM=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=pZXU4aHHTet5AzCAWDUUeFp7P8yNUdkhA9uczFmW9YbhWeEHuSHtBc1vNrXpzQD+8
-         3Th3pUvKqEa31N8xtDmQgH1LVj0iDOcK/24ghb9LgQ6clzH5dxsuRPp1LyGfbrXFLV
-         iliDuxpJtAFAbzGokZ1wmaGR1/clk8a1oYE/lOTk=
-Date:   Wed, 01 Jul 2020 23:23:25 +0100
+        b=WNS/v0nnbKNv8XZTKIRhAOSR7hoxnr9AT2AXP0wJW35BvCbRy86HuTnJIwEsj58JH
+         scwwE7Q7LAh7ZPh2eNM9HrJX68Rx1gZN/cHmm0nAgTAcQ3OPMYKpbuIAMnF1W/D5N0
+         HU9lhu96N6o8Gw/ZUQ4FXQxUVsvSrQP4Je0uiYkk=
+Date:   Wed, 01 Jul 2020 23:23:47 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        allen <allen.chen@ite.com.tw>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
-        devicetree@vger.kernel.org
-In-Reply-To: <87r1ub39hq.wl-kuninori.morimoto.gx@renesas.com>
-References: <87r1ub39hq.wl-kuninori.morimoto.gx@renesas.com>
-Subject: Re: ARM: dts: motorola-mapphone-common: remove unneeded "simple-graph-card"
-Message-Id: <159364215575.10630.11362467369859592043.b4-ty@kernel.org>
+To:     Luca Ceresoli <luca@lucaceresoli.net>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Keerthy <j-keerthy@ti.com>, linux-kernel@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Axel Lin <axel.lin@ingics.com>
+In-Reply-To: <20200622204329.11147-1-luca@lucaceresoli.net>
+References: <20200622204329.11147-1-luca@lucaceresoli.net>
+Subject: Re: [PATCH v3 0/4] mfd: lp87565: convert DT to yaml, ignore ENx pins and add LP87524-Q1
+Message-Id: <159364222730.10880.1510321534507247340.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 19 Jun 2020 14:33:36 +0900, Kuninori Morimoto wrote:
-> Audio Graph Card is using "audio-graph-card" prefix instead of
-> "simple-graph-card", and moreover "widgets / routing" doesn't need it.
-> This patch removes unsupported "simple-graph-card" prefix from
-> motorola-mapphone-common.dtsi and vendor-prefixes.yaml.
+On Mon, 22 Jun 2020 22:43:25 +0200, Luca Ceresoli wrote:
+> the first patch in this series is a small but significant variation in how
+> the lp87565 driver enables the output rails, to allow the kernel to always
+> know when it is enabling an output. However it can change existing
+> behaviour (depending on the hardware setup) and thus it should be carefully
+> evaluated.
+> 
+> The following patches are a fairly straightforward addition of a new chip
+> variant along DT bindings conversion to yaml.
+> 
+> [...]
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
 Thanks!
 
-[1/1] ARM: dts: motorola-mapphone-common: remove unneeded "simple-graph-card"
-      commit: eb83aa46dcb8198708787b969eee1ba0e5ca0be7
+[1/1] regulator: lp87565: enable voltage regardless of ENx pin
+      commit: 81fdcef3a615f5d4ef2a2bd87a65d46f6816d687
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
