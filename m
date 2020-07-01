@@ -2,133 +2,125 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C4BAC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 13:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4FAC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 13:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D7F920760
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 13:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 316CD20780
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 13:25:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="QJTqmhCO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730795AbgGANES (ORCPT
+        id S1730850AbgGANZl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 09:04:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37516 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730729AbgGANES (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 09:04:18 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCC79C03E979
-        for <devicetree@vger.kernel.org>; Wed,  1 Jul 2020 06:04:17 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jqcOk-0003Cb-4F; Wed, 01 Jul 2020 15:03:34 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jqcOj-0002Nq-BU; Wed, 01 Jul 2020 15:03:33 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: [PATCH v9 0/5] mainline Protonic boards
-Date:   Wed,  1 Jul 2020 15:03:25 +0200
-Message-Id: <20200701130330.9089-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.27.0
+        Wed, 1 Jul 2020 09:25:41 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:37747 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728392AbgGANZl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 09:25:41 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061DOnOH002515;
+        Wed, 1 Jul 2020 15:25:29 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=N34mf34zyNH9z+LguQ97xJdxyRAZPkEJBPLArQ3FE8Y=;
+ b=QJTqmhCOxZoThXwbTq++hh4KGoR/c3s9PepKJUzV6ZAJmNaavbNWbBvqg+WoYes1XzJO
+ o5l7J2GWYSSQRv87klZAtytpDpxg3anxGaHxrmHGCaXJeOJ94YEsZbNWr+qWd4Rk4736
+ Kov+noZnCruOg4Nl8OHPMYc6avk0hnBo3PTqJCiPXGDm2RbGgljDa8cdg0d4t4NJta9F
+ xYGyhyNROh9ExR3mIBdzklb71NqzrpPMSZsj5N22JA7mjG/h5hklWzqCcJxjfBLI2Qri
+ qJCBO8ZBaIFo1I/pdqHTrHdYtWI9u69HNYqpC3qEH8lbVL1931bo6lxvPmsLkadMUklF 9g== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31wuvwa82n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Jul 2020 15:25:29 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E3B6310002A;
+        Wed,  1 Jul 2020 15:25:27 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CFABD2B6DD8;
+        Wed,  1 Jul 2020 15:25:27 +0200 (CEST)
+Received: from localhost (10.75.127.51) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 1 Jul 2020 15:25:27
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <linus.walleij@linaro.org>,
+        <gregkh@linuxfoundation.org>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <stefano.stabellini@xilinx.com>,
+        <tomase@xilinx.com>, <devicetree@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH v4 0/5] STM32 ETZPC bus controller
+Date:   Wed, 1 Jul 2020 15:25:18 +0200
+Message-ID: <20200701132523.32533-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-01_08:2020-07-01,2020-07-01 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-changes v9:
-- rebase against kernel v5.8-rc3
-- prti6q: set index to default-brightness-level
-- prti6q: remove regulator-always-on
-- prti6q: rename mux_ssi1 and mux_pins3 to mux-ssi1, mux-pins3
-- prti6q: move can1 node out of dtsi and fix alphabetical order
-- prti6q: fix reg value for rgmii_phy
-- prti6q: fix pinctrl_can2 and pinctrl_can1
-- vt7: fix fsl,mode
-- vt7: rename mux_ssi1 and mux_pins3 to mux-ssi1, mux-pins3
-- vt7: remove regulator-always-on
-- wd2: remove pm-ignore-notify, it is not implemented and documented
-- wd2: remove duplicate non-removable
+STM32 Extended TrustZone Protection controller act like a firewall on the
+platform bus. Depending of its configuration devices could be accessible
+by the TrustZone, the co-processor or the non-secure world. ETZPC
+configuration could evolve at runtime for example to switch a device from
+non-secure world to co-processor.
 
-changes v8:
-- resend
+The series introduce 'firewall' helpers to handle the new devices-tree
+properties. These properties are not dedicated to ETZPC and will be reused
+for STM32 next generation of bus controller.
 
-changes v7:
-- VT7: reorder node alphabetically
-- VT7: rename "reg_12v_bl: regulator-bl-12v" to "reg_bl_12v0: regulator-bl-12v0"
-- VT7: remove panel and TS nodes. This drivers are currently not
-  mainline.
-- prti6q.dtsi: move reg_1v8 to prti6q.dts
-- prti6q.dtsi: remove pinctrl from the can1 node. It is done on almost
-  every board file.
+version 4:
+- use bus API
 
-changes v6:
-- move fsl.yaml changes to separate patch
-- remove partitions, they are provided by the bootloader
-- update flash compatible
-- rename can3 to can
-- fix fsl,mode
-- fix interrupt in the wlan node on PRTI6Q
+version 3:
+- add description in firewall consumer bindings
+- add Linus reviewed-by tag
 
-changes v5:
-- PRTI6Q: remove status from the pwm-backlight node
-- drop the vendor-prefixes patch, it is already taken by Rob
-- add Reviewed-by: Rob Herring <robh@kernel.org>
+version 2:
+- fix unit name into st,stm32-etzpc.yaml example and DT
 
-changes v4:
-- VT7: fix typo
 
-changes v3:
-- move compatible to the start of node
-- move status to the end
-- use generic names in compatible
-- refactor dts/dtsi
-- use alphabet order for pinctrl and phandels
-- remove unused or currently not supported nodes
+Benjamin Gaignard (5):
+  dt-bindings: bus: Add firewall bindings
+  bus: stm32: Introduce firewall controller helpers
+  dt-bindings: bus: Add STM32 ETZPC firewall controller
+  bus: stm32: Add stm32 ETZPC firewall bus controller
+  ARM: dts: stm32: Use ETZPC firewall bus
 
-changes v2:
-- squash PRTI6Q patches
-
-Oleksij Rempel (5):
-  dt-bindings: arm: fsl: add different Protonic boards
-  ARM: dts: add Protonic PRTI6Q board
-  ARM: dts: add Protonic WD2 board
-  ARM: dts: add Protonic VT7 board
-  ARM: dts: add Protonic RVT board
-
- .../devicetree/bindings/arm/fsl.yaml          |   4 +
- arch/arm/boot/dts/Makefile                    |   4 +
- arch/arm/boot/dts/imx6dl-prtrvt.dts           | 184 ++++++
- arch/arm/boot/dts/imx6dl-prtvt7.dts           | 410 +++++++++++++
- arch/arm/boot/dts/imx6q-prti6q.dts            | 542 ++++++++++++++++++
- arch/arm/boot/dts/imx6q-prtwd2.dts            | 188 ++++++
- arch/arm/boot/dts/imx6qdl-prti6q.dtsi         | 163 ++++++
- 7 files changed, 1496 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6dl-prtrvt.dts
- create mode 100644 arch/arm/boot/dts/imx6dl-prtvt7.dts
- create mode 100644 arch/arm/boot/dts/imx6q-prti6q.dts
- create mode 100644 arch/arm/boot/dts/imx6q-prtwd2.dts
- create mode 100644 arch/arm/boot/dts/imx6qdl-prti6q.dtsi
+ .../bindings/bus/stm32/firewall-consumer.yaml      |  36 +++
+ .../bindings/bus/stm32/firewall-provider.yaml      |  18 ++
+ .../bindings/bus/stm32/st,stm32-etzpc.yaml         |  46 ++++
+ arch/arm/boot/dts/stm32mp151.dtsi                  |   7 +-
+ drivers/bus/Kconfig                                |   2 +
+ drivers/bus/Makefile                               |   2 +
+ drivers/bus/stm32/Kconfig                          |  11 +
+ drivers/bus/stm32/Makefile                         |   2 +
+ drivers/bus/stm32/firewall.c                       | 251 +++++++++++++++++++++
+ drivers/bus/stm32/firewall.h                       |  66 ++++++
+ drivers/bus/stm32/stm32-etzpc.c                    | 163 +++++++++++++
+ include/dt-bindings/bus/stm32/stm32-etzpc.h        |  90 ++++++++
+ 12 files changed, 692 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml
+ create mode 100644 Documentation/devicetree/bindings/bus/stm32/firewall-provider.yaml
+ create mode 100644 Documentation/devicetree/bindings/bus/stm32/st,stm32-etzpc.yaml
+ create mode 100644 drivers/bus/stm32/Kconfig
+ create mode 100644 drivers/bus/stm32/Makefile
+ create mode 100644 drivers/bus/stm32/firewall.c
+ create mode 100644 drivers/bus/stm32/firewall.h
+ create mode 100644 drivers/bus/stm32/stm32-etzpc.c
+ create mode 100644 include/dt-bindings/bus/stm32/stm32-etzpc.h
 
 -- 
-2.27.0
+2.15.0
 
