@@ -2,121 +2,190 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A436C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 01:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F29AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 02:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3511520826
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 01:33:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="Ze5edmsz"
+	by mail.kernel.org (Postfix) with ESMTP id 8AFCA2078B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 02:15:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbgGABdz (ORCPT
+        id S1726029AbgGACPq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 21:33:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43258 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726244AbgGABdy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 21:33:54 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D047BC03E97A
-        for <devicetree@vger.kernel.org>; Tue, 30 Jun 2020 18:33:53 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id dr13so22738496ejc.3
-        for <devicetree@vger.kernel.org>; Tue, 30 Jun 2020 18:33:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zJ22qdC4RvZHdtMxJ8YYWILYunoa4ADbCDBJhh+M35c=;
-        b=Ze5edmszHxmHc+eoA3XPuNrJory3gisovndE6X2LIUGAgs7R+rm/wiwrUx+/NZ4nDv
-         MlW9lobaAbeZfQDHOVVeHB6gGZr3XIpDhsJDzU8ZKuSNl4P520bybbN+UVOBJq5cKfrT
-         2W4YyqS7MChAYDWrygjxus6SVOnqHtgSUKO8qHbQtIy9RFh2IvcUAw1HT+uS3xE8AuEX
-         TGtbH1+dlihzi4qyO2pJQgZU3FztFCbk10RLDxiwT7oUPaJYOLabSbf+l3JLPupZyvFj
-         od+0TgOoXJR3YH9kaH8tek0LF9MMhMEbSDVyvbZd/F5/WG1yz9e1YNHiWXwkZafTdX7R
-         hOJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zJ22qdC4RvZHdtMxJ8YYWILYunoa4ADbCDBJhh+M35c=;
-        b=YRP7drExqfohU1t/mivSpLn8wC19IM6q7RUdPeHNgkrTdYsSrwK5/MIGYdZl1OzUWr
-         s6uEf42AqA7Nir7C7XgHmqZIlov/6HJuTIkHgB+QZ3WziigalZQlWlkiWdxK/ByhXVm0
-         6VW9UoAnPP8u6zmnvXpJfnkUH+nY01nB3Za74pOxtCDWO0+CnZiV2CmJOMAcE/CwIaMe
-         6j+6Mx/mZ4zUwqvfaB07fUlYo4+b9in7heUACU+Dt7OlSbSQMfVo9/1PCQDyyhctCrCQ
-         r6tsekCqtv55R45AyxS8fQpFUwf3guXW4xkx4ZQ2zbV3BctqsFJg/TzY6Ks2C6IqyDZi
-         irMw==
-X-Gm-Message-State: AOAM530hzozOQsisxIBeqBjwpxUmkJbU9i/N/zVCK3FSU2nTWZGiOQ3Q
-        DyZagIc6L0MOUbcgObDSUN6/VA==
-X-Google-Smtp-Source: ABdhPJxI0WQk14+Ivo5cdeI8jHa73I3z+K18yjH+Q4Lpumd9g0c4kuF6XkdkxR7cidzvTjndU+H8pg==
-X-Received: by 2002:a17:906:b354:: with SMTP id cd20mr18663123ejb.296.1593567232608;
-        Tue, 30 Jun 2020 18:33:52 -0700 (PDT)
-Received: from localhost.localdomain ([2001:16b8:5c28:7601:2d3c:7dcb:fbf0:3875])
-        by smtp.gmail.com with ESMTPSA id d23sm3348571eja.27.2020.06.30.18.33.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 18:33:51 -0700 (PDT)
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        devicetree@vger.kernel.org, bcousson@baylibre.com,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Cc:     Drew Fustini <drew@beagleboard.org>
-Subject: [PATCH v4 2/2] ARM: dts: am33xx-l4: change #pinctrl-cells from 1 to 2
-Date:   Wed,  1 Jul 2020 03:33:20 +0200
-Message-Id: <20200701013320.130441-3-drew@beagleboard.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200701013320.130441-1-drew@beagleboard.org>
-References: <20200701013320.130441-1-drew@beagleboard.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 30 Jun 2020 22:15:46 -0400
+Received: from mga06.intel.com ([134.134.136.31]:43857 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725872AbgGACPq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 30 Jun 2020 22:15:46 -0400
+IronPort-SDR: y+xMnq2GAQgtEWDtmL4bmzkhkk4lXElI63eQuexne7YYr4sGuwOSIYc4WR7ewvbfrbfZ/l+wwf
+ nJJd6vFrfp0g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="207957550"
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="207957550"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 19:15:45 -0700
+IronPort-SDR: SEXxIdaiYrAS7dJAlg01lHMaS35WrigDFWIcLFw6W1gvezAyHk1k6v+hE5lueYNP61iRHnwB0+
+ Kt3w2PsxjQbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="481135399"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by fmsmga006.fm.intel.com with ESMTP; 30 Jun 2020 19:15:41 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, miquel.raynal@bootlin.com
+Cc:     richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
+        brendanhiggins@google.com, tglx@linutronix.de,
+        boris.brezillon@collabora.com, anders.roxell@linaro.org,
+        masonccyang@mxic.com.tw, robh+dt@kernel.org,
+        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v12 0/2] mtd: rawnand: Add NAND controller support on Intel LGM SoC
+Date:   Wed,  1 Jul 2020 10:13:44 +0800
+Message-Id: <20200701021346.54282-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Increase #pinctrl-cells to 2 so that mux and conf be kept separate. This
-requires the AM33XX_PADCONF macro in omap.h to also be modified to keep pin
-conf and pin mux values separate.
+This patch adds the new IP of Nand Flash Controller(NFC) support
+on Intel's Lightning Mountain(LGM) SoC.
 
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
+DMA is used for burst data transfer operation, also DMA HW supports
+aligned 32bit memory address and aligned data access by default.
+DMA burst of 8 supported. Data register used to support the read/write
+operation from/to device.
+
+NAND controller also supports in-built HW ECC engine.
+
+NAND controller driver implements ->exec_op() to replace legacy hooks,
+these specific call-back method to execute NAND operations.
+
+Thanks Miquel, Boris, Andy, Arnd and Rob for the review comments and suggestions.
 ---
- arch/arm/boot/dts/am33xx-l4.dtsi   | 2 +-
- include/dt-bindings/pinctrl/omap.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+v12:
+  - address Miquel Raynal review comments update
+  - add/modify the comments for better understanding
+  - handle the check_only variable
+  - update the ecc function based on the existing drivers
+  - add newline
+  - verify that mtd->name is set after nand_set_flash_node()
+  - add the check WARN_ON(ret);
+v11-resend:
+  - Rebase to v5.8-rc1
+v11:
+  - No Change
+v10:
+  - No Change
+v9:
+  - No change
+v8:
+  - fix the kbuild bot warnings
+  - correct the typo's
+v7:
+  - indentation issue is fixed
+  - add error check for retrieve the resource from dt
+v6:
+  - update EBU_ADDR_SELx register base value build it from DT
+  - Add tabs in in Kconfig
+v5:
+  - replace by 'HSNAND_CLE_OFFS | HSNAND_CS_OFFS' to NAND_WRITE_CMD and NAND_WRITE_ADDR
+  - remove the unused macros
+  - update EBU_ADDR_MASK(x) macro
+  - update the EBU_ADDR_SELx register values to be written
+v4:
+  - add ebu_nand_cs structure for multiple-CS support
+  - mask/offset encoding for 0x51 value
+  - update macro HSNAND_CTL_ENABLE_ECC
+  - drop the op argument and un-used macros.
+  - updated the datatype and macros
+  - add function disable nand module
+  - remove ebu_host->dma_rx = NULL;
+  - rename MMIO address range variables to ebu and hsnand
+  - implement ->setup_data_interface()
+  - update label err_cleanup_nand and err_cleanup_dma
+  - add return value check in the nand_remove function
+  - add/remove tabs and spaces as per coding standard
+  - encoded CS ids by reg property
+v3:
+  - Add depends on MACRO in Kconfig
+  - file name update in Makefile
+  - file name update to intel-nand-controller
+  - modification of MACRO divided like EBU, HSNAND and NAND
+  - add NAND_ALE_OFFS, NAND_CLE_OFFS and NAND_CS_OFFS
+  - rename lgm_ to ebu_ and _va suffix is removed in the whole file
+  - rename structure and varaibles as per review comments.
+  - remove lgm_read_byte(), lgm_dev_ready() and cmd_ctrl() un-used function
+  - update in exec_op() as per review comments
+  - rename function lgm_dma_exit() by lgm_dma_cleanup()
+  - hardcoded magic value  for base and offset replaced by MACRO defined
+  - mtd_device_unregister() + nand_cleanup() instead of nand_release()
+v2:
+  - implement the ->exec_op() to replaces the legacy hook-up.
+  - update the commit message
+  - add MIPS maintainers and xway_nand driver author in CC
 
-diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
-index a9cbefc80c0c..3141590e5889 100644
---- a/arch/arm/boot/dts/am33xx-l4.dtsi
-+++ b/arch/arm/boot/dts/am33xx-l4.dtsi
-@@ -278,7 +278,7 @@ scm: scm@0 {
- 				am33xx_pinmux: pinmux@800 {
- 					compatible = "pinctrl-single";
- 					reg = <0x800 0x238>;
--					#pinctrl-cells = <1>;
-+					#pinctrl-cells = <2>;
- 					pinctrl-single,register-width = <32>;
- 					pinctrl-single,function-mask = <0x7f>;
- 				};
-diff --git a/include/dt-bindings/pinctrl/omap.h b/include/dt-bindings/pinctrl/omap.h
-index 625718042413..2d2a8c737822 100644
---- a/include/dt-bindings/pinctrl/omap.h
-+++ b/include/dt-bindings/pinctrl/omap.h
-@@ -65,7 +65,7 @@
- #define DM814X_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
- #define DM816X_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
- #define AM33XX_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
--#define AM33XX_PADCONF(pa, dir, mux)	OMAP_IOPAD_OFFSET((pa), 0x0800) ((dir) | (mux))
-+#define AM33XX_PADCONF(pa, conf, mux)	OMAP_IOPAD_OFFSET((pa), 0x0800) (conf) (mux)
+v1:
+ - initial version
  
- /*
-  * Macros to allow using the offset from the padconf physical address
+dt-bindings: mtd: Add Nand Flash Controller support for Intel LGM SoC
+---
+v12:
+  - No change
+v11-resend:
+  - No change
+v11:
+  - Fixed the compatible issue with example
+10:
+  - fix bot errors
+v9:
+  - Rob's review comments address
+  - dual licensed
+  - compatible change
+  - add reg-names
+  - drop clock-names and clock-cells
+  - correct typo's
+v8:
+  No change
+v7:
+  - Rob's review comments addressed
+  - dt-schema build issue fixed with upgraded dt-schema
+v6:
+  - Rob's review comments addressed in YAML file
+  - add addr_sel0 and addr_sel1 reg-names in YAML example
+v5:
+  - add the example in YAML file
+v4:
+  - No change
+v3:
+  - No change
+v2:
+  YAML compatible string update to intel, lgm-nand-controller
+v1:
+  - initial version
+
+
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: mtd: Add Nand Flash Controller support for Intel LGM SoC
+  mtd: rawnand: Add NAND controller support on Intel LGM SoC
+
+ .../devicetree/bindings/mtd/intel,lgm-nand.yaml    |  99 +++
+ drivers/mtd/nand/raw/Kconfig                       |   8 +
+ drivers/mtd/nand/raw/Makefile                      |   1 +
+ drivers/mtd/nand/raw/intel-nand-controller.c       | 757 +++++++++++++++++++++
+ 4 files changed, 865 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+ create mode 100644 drivers/mtd/nand/raw/intel-nand-controller.c
+
 -- 
-2.25.1
+2.11.0
 
