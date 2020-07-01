@@ -2,293 +2,266 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 253E9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F03B4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE6FA2078A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C420F20771
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:55:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="ffQq/SEy"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="aA7ym/SR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732574AbgGAQy4 (ORCPT
+        id S1732514AbgGAQzi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:54:56 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:48503 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732563AbgGAQy4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 12:54:56 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id qg0Vji9RJ40yDqg0YjcTtf; Wed, 01 Jul 2020 18:54:52 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1593622492; bh=3JheUqnQKh25pAgfWhVQE5bBDzkbNv25CYMJniBVjoA=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=ffQq/SEyUNIbpPjIxzOGXKWO8+h9NMOUQp/CKdc+xiEQxkcemzVzUW6cQsmZCZrDR
-         pDtvt3KxYnu9JLvX60hVHEWACk059HlbBugZcjjWo8cYmkb3AW0FM1jC+et87qmLIL
-         GiVK7fDDq1EVdGvc+mEV3wy5svSnUhwddR2kEu5niAUHlrrxlmaHLIgGY8KIfDapwa
-         LaHf2Rcl01PsYSRBwtSqdTrlJnENctkK1VZMWyvB/4iVPfXc4zEFa3eXeQJe6xLU/8
-         V+Q8Cgj81B14ubmLGuEpQkQMLjYGnLDi1yx0yoJEvhRgAwjAWptITMemJMwCHyILpy
-         unE47uKy2o/DA==
-Subject: Re: [RFC PATCH v2 00/18] Support for Tegra video capture from
- external sensor
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com
-Cc:     digetx@gmail.com, sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
- <b3f63f3f-50b2-e818-2c59-8009c31a9825@xs4all.nl>
- <f5c84071-46ad-aa6f-0820-1813d4a907c9@nvidia.com>
- <a60d8f80-312d-fce3-61f5-328e7f2a7a64@xs4all.nl>
- <72ca3b09-7ca6-7421-4a9d-98326d1af087@nvidia.com>
- <e8a8a678-e9e8-e941-8dcb-0e747616ba59@nvidia.com>
- <a606ac84-e0bc-aa85-5799-eeeb544d130d@nvidia.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <92f25457-f4e5-78ea-d453-2b5cf8f272e8@xs4all.nl>
-Date:   Wed, 1 Jul 2020 18:54:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Wed, 1 Jul 2020 12:55:38 -0400
+Received: from mail-db8eur05on2061.outbound.protection.outlook.com ([40.107.20.61]:6048
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730955AbgGAQzh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Jul 2020 12:55:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l7FCy7fxV7UBDaNEyDX9zxQCchxTNulSc3MZvEx+uhMfVu0c+SSz/oj1CnUKUAeG165fleXK1hYXVzZ3bNtkwMT+oBvoN7ZTW6C82wUfOKTBHn+Tv2sMyFa59UpI+CM0OT8JQQ4MNKCfaFEQuOZEmBATOKH9gU/5h1Jc+VosixT9CS9zwN1ssd1sZI7Ifl4lMQmBb8LNVt9G6SnVBFk6CwkDq1TthnBRzivDWXfIHq18S9VJzxe1qAMB0lqM6PH6bSIcDSBZswMPURf8pby2M0e048UXE6KIQuRumx8qqP7IUUrc0S2t8OkQ/Q3e12GHFEl8pWxIj2I+t48TF8Ffdw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=snd5uQfa7o2zadXKR1T01ka6EzpdF/YzLN/8hBi6LcY=;
+ b=GSuo8R0rEFpZo4OI437eoYfSR/gQ3nBDuYVPdX/+NvzrYrF2Vxl/3hXOw0cM80iOYi6Tk5CC7u3DnwdnmlHR60vmLbfGoF2Q83Bji7lnz/hBwxWT3BtB8R2d7zOAm5y3AFmsiFmgQTq3Ha1fMh3qY3QMbtSpgi5ARIGSxD5n9WcPEoMJUSWUOoI5fa8pHnvOry0o7M0f4onvBV/5g6qZHL/lotn4YsNE64DSN7RkDiMZBYY6LLopG0+ESGAXdY6z1Y23R402BOtYa2jVQvZVr+kg9dUEeJYKlaSNXgqejQwZCwCSEGkfpka3cqf0lJBAYXbZohoLPZTy+UeuZDZxoQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=snd5uQfa7o2zadXKR1T01ka6EzpdF/YzLN/8hBi6LcY=;
+ b=aA7ym/SRmDtodcPUiBD52qe6OORUJOfh5GX9DN8sE09UJXXyv6Fk9bGNTk6ZrGIL9ikxvKmbX3bjTQ8WkbWETewe0K5zo5C9s6OlX3HmbcAtKUFup9Qqr3sixgh1B20ntiWJGUeqSzZPJXfaRlvYxAgDdWamSsuvACPoIj9ove8=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+Received: from VI1PR0402MB3405.eurprd04.prod.outlook.com (2603:10a6:803:3::26)
+ by VI1PR0402MB3421.eurprd04.prod.outlook.com (2603:10a6:803:5::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21; Wed, 1 Jul
+ 2020 16:55:32 +0000
+Received: from VI1PR0402MB3405.eurprd04.prod.outlook.com
+ ([fe80::b97a:64f0:3ab5:d7fa]) by VI1PR0402MB3405.eurprd04.prod.outlook.com
+ ([fe80::b97a:64f0:3ab5:d7fa%5]) with mapi id 15.20.3131.029; Wed, 1 Jul 2020
+ 16:55:32 +0000
+Subject: Re: [PATCH v2 12/12] bus: fsl-mc: Add ACPI support for fsl-mc
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Joerg Roedel <joro@8bytes.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>
+References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
+ <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
+ <20200619082013.13661-13-lorenzo.pieralisi@arm.com>
+From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Message-ID: <a7845603-9bc9-9099-dfc4-19b7bc4f4e44@nxp.com>
+Date:   Wed, 1 Jul 2020 19:55:28 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <a606ac84-e0bc-aa85-5799-eeeb544d130d@nvidia.com>
+In-Reply-To: <20200619082013.13661-13-lorenzo.pieralisi@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfPvLGuP4WB3X1eOKFzM4vKUcvprLLd9B95q67ByWk9PLr/06/kcnKA6M4hL1C6yGiisCH9W93rJw63mxQVmkiEeV6lmNeD7xQP+hIBUAhXEzQmWwq90L
- AaOiEOnrHUFQoaXTMIQlHmH9ymDlQOzw78NWHkhHS0yu3FO+FCiFh0VVMWds8/Y13bM/tn/7OPiVgJ68epKIyPfplerOoyBVqGgt3UihDtKRrgBTJSOmQe1S
- a/X0Q2u8XcsmNDQ0ZZb2djQeVB/5vxC6ctTcWH5DL4L5g5Y+sw7RxcifWgTAaJI35sGBM6VCK6BUxXL8JH0AdNAVezhvUPJ9fvAqfWXTllfZKm6iofq3CppS
- Jbiv7+N1GLBzFSUZSfEtgSIyP4AI4X8Hbhi4qnihJbL+IK5gx27Jk/uqXuxKebUEMJVq8bln8JJkoGTnRJ9T5qQS3btwZUzNpLuxuhiFPkiO33kWbPozeXJ3
- FWWiItfl6QnqF9oKu6w7pijTmw+AUT8GqCVf576xxY/qwMi1jO1tKAstPYGHkvliFkmHXFf+xPL4qsJTpEBLDxRae+p0Uu5RKWSIm4ntlq0aWD2TJ0DV/11z
- p0p3C0mPzcC87Z+/Zug7+rbpJlHqZwcmrtOr9/ysWFCk0Js6dFbDGz4XPupqeNDaKt0i+Lbi2kKoPOIqE/dkdN7Q
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM3PR05CA0130.eurprd05.prod.outlook.com
+ (2603:10a6:207:2::32) To VI1PR0402MB3405.eurprd04.prod.outlook.com
+ (2603:10a6:803:3::26)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.107] (86.120.184.194) by AM3PR05CA0130.eurprd05.prod.outlook.com (2603:10a6:207:2::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.20 via Frontend Transport; Wed, 1 Jul 2020 16:55:30 +0000
+X-Originating-IP: [86.120.184.194]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 6eff0799-edba-4680-d132-08d81ddf9121
+X-MS-TrafficTypeDiagnostic: VI1PR0402MB3421:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0402MB3421AD3EF1D816EA8DA1A2B3EC6C0@VI1PR0402MB3421.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2733;
+X-Forefront-PRVS: 04519BA941
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: KcEe1HcFIdTkKCkzJFOo0IHJ0lbqbrUY+xtrAel8ntX43WAsYLz1QhDyqCZCoDkQfyww26Yuks95qY9jUT2AH8Shqr430p8EFmtVwLnYo3Rgr3geCgjoNQroZZIcqPr7T8/ICKr7cn7c7avlNRB5l2+Zy6ietm40EMZBJ16A+bTe+zFy+FsXu3KanDMb0xToe2rClyiKUai6vko18uWRUNCsnKoqBpaFN+Pml7UGO1qfWVMlnEreQkC9stdKm6DGU6En3OUK73Su62SZrR839MEbKD099W4RYBSVZFmGfwgZ5fVH4GEekHz9phdv1fvxKVLvKaDjTg0t/NPvZP98q1dCzIhfl02+oimyBdUUflOmfUqHr5E5/mVh6DZquFfE
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3405.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(136003)(39860400002)(366004)(396003)(2906002)(44832011)(2616005)(16526019)(186003)(6486002)(8936002)(26005)(478600001)(66946007)(31686004)(66556008)(7416002)(66476007)(8676002)(83380400001)(54906003)(5660300002)(86362001)(52116002)(31696002)(16576012)(956004)(316002)(4326008)(36756003)(53546011)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 1ChIOIj7TuKXM2sJKP6OeZkQCNiPoispQnk7waHPyhejj2E2eDyWL9bZkdrTvaCy6sR4NVa+cega5oxbWj4ppTYkE2GND8+XeILuVKkgCHaxGKPvbZ60fP3NIQ8YRD35q5K92HNY6ZzI64qjU5U8URdE0yArcxcdNvNNmcZ3ymBdnmlazYLMLsvyd0v+FexTcKiUnj3Y3Imszv3YsbYpLQJ+d9m1VgaSd/fMhRznFZoV7ZynSlbyj3R7t3eA0G/RFqgnU36egV+/6AN7beVGOtWYazc4dXzNatiA54Rv45LpZCeC0yT7gDb0tDdPQJOIGSQNJ6gixu6k3KEVkQBPnUhXBvPT4u/4SUctx+QosuKybE2jgPWkWPSrekJiKu2++FPDwcuoQRVfkQP2Dukdn5Jztvfyf9J+Wgc3LhgjWgLVzIJQKOP7fNjHUYH0z0jwV/rXAPqHJnd7TuY9hr18Gd5l/cfJJgAHl9lXbPRzrbknptzmNUpi76QWmi6AFANx
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6eff0799-edba-4680-d132-08d81ddf9121
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3405.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2020 16:55:32.5774
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wyS3rYEksGEho9duiAyUvMNZiFkU93c/A1EJCMxcINX2QKzzuuHwD1aldHwY7nDNyaiRmL4EUDtTQzTn00m/BA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3421
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 30/06/2020 18:34, Sowjanya Komatineni wrote:
+
+
+On 6/19/2020 11:20 AM, Lorenzo Pieralisi wrote:
+> From: Makarand Pawagi <makarand.pawagi@nxp.com>
 > 
-> On 6/30/20 9:17 AM, Sowjanya Komatineni wrote:
->>
->> On 6/30/20 8:44 AM, Sowjanya Komatineni wrote:
->>>
->>> On 6/30/20 8:13 AM, Hans Verkuil wrote:
->>>> On 30/06/2020 16:58, Sowjanya Komatineni wrote:
->>>>> On 6/30/20 2:21 AM, Hans Verkuil wrote:
->>>>>> On 17/06/2020 03:41, Sowjanya Komatineni wrote:
->>>>>>> This series adds support for video capture from external camera 
->>>>>>> sensor to
->>>>>>> Tegra video driver.
->>>>>>>
->>>>>>> Jetson TX1 has camera expansion connector and supports custom 
->>>>>>> camera module
->>>>>>> designed as per TX1 design specification.
->>>>>>>
->>>>>>> This series also enables camera capture support for Jetson Nano 
->>>>>>> which has
->>>>>>> Raspberry PI camera header.
->>>>>>>
->>>>>>> This series is tested with IMX219 camera sensor.
->>>>>> Which tree did you base this on? The media_tree master? Or the 
->>>>>> mainline kernel?
->>>>> These patches are with linux-next base at the time I sent them out 
->>>>> which
->>>>> are on 20200616
->>>>>> I now have the imx219 detected, but if I try to stream I get this:
->>>>>>
->>>>>> $ v4l2-ctl --stream-mmap
->>>>>> <[  512.840944] video4linux video0: MW_ACK_DONE syncpt timeout: -11
->>>>>> [  512.972975] video4linux video0: frame start syncpt timeout: -11
->>>>>> <VIDIOC_DQBUF: failed: Input/output error
->>>>>> [  513.180770] video4linux video0: MW_ACK_DONE syncpt timeout: -11
->>>>>>
->>>>>> And then everything hangs and I need to reset.
->>>>>>
->>>>>> I'm testing with the media_tree master with your patches on top.
->>>>>>
->>>>>> Regards,
->>>>>>
->>>>>>     Hans
->>>>> Are you using same device tree as I sent offline? It uses CSI A for 
->>>>> IMX219.
->>>>>
->>>>> Does you setup also uses CSI-A as x2 for IMX219?
->>>>>
->>>>> I tested them on Jetson Nano + IMX219 rasp PI module and also on 
->>>>> Jetson
->>>>> TX1 + IMX274.
->>>>>
->>>>> I did not see any issue and am able to capture from both.
->>>>>
->>>>> Will try again on my side with today's latest linux-next and update 
->>>>> result.
->>>> Please use the media_tree master, that's what I use as well.
->>>>
->>>> I did some more testing and there is something weird going on.
->>>>
->>>> I have a Leopard Imaging camera expansion board (LI-JTX1-MIPI-ADPT) 
->>>> with
->>>> three camera connectors. See here for the datasheet:
->>>>
->>>> https://www.leopardimaging.com/uploads/LI-TX1-KIT-IMX274M12-T_datasheet.pdf 
->>>>
->>>>
->>>> The first connector (with an IMX274) causes this error:
->>>>
->>>> $ v4l2-ctl -d1 --stream-mmap
->>>> [  599.265885] video4linux video1: MW_ACK_DONE syncpt timeout: -11
->>>> [  599.473883] video4linux video1: MW_ACK_DONE syncpt timeout: -11
->>>> [  599.681904] video4linux video1: frame start syncpt timeout: -11
->>>> [  599.681909] video4linux video1: MW_ACK_DONE syncpt timeout: -11
->>>> <VIDIOC_DQBUF: failed: Input/output error
->>>> [  599.897884] video4linux video1: MW_ACK_DONE syncpt timeout: -11
->>>>
->>>> Similar to the test above where I had an IMX219 connected. Except it 
->>>> didn't
->>>> hang with the IMX274 (I'm beginning to suspect a locking issue in 
->>>> the imx219
->>>> driver that is causing the hang, I'll look at that tomorrow).
->>>>
->>>> If I connect the IMX219 to the middle camera connector, then it 
->>>> works fine.
->>>> I think I tested this with the IMX274 as well, but I'm not 100% 
->>>> certain, also
->>>> something to double check tomorrow.
->>>>
->>>> If I connect the IMX219 or IMX274 to the third camera connector, 
->>>> then I get this:
->>>
->>> Would like to know CSI port mapping to connectors as mipi calibrate 
->>> pads cells need to be updated in device tree based on CSI port in use.
->>>
->>> Will see if I can find that from DS link you sent above.
->>>
->>>>
->>>> $ v4l2-ctl -d0 --stream-mmap
->>>> [  820.513866] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>>
->>>> [  820.525354] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>>
->>>> [  820.536780] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>>
->>>> [  820.548222] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>>
->>>> [  820.559639] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> <[  820.646931] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> [  820.658355] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> [  820.669797] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> [  820.681216] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> [  820.692601] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> <<<<<<<<<<<<<<< 14.50 fps
->>>> <<<<<<<<<<<<<<< 14.75 fps
->>>> <<<<<<<<<<<<<<< 14.73 fps
->>>> <<<<<<<<<<<<<<< 14.80 fps
->>>> <<<<<<<<<<<<<[ 825.517854] tegra_mc_irq: 133437 callbacks suppressed
->>>> [  825.517874] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> [  825.534395] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> [  825.545833] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> [  825.557280] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> [  825.579346] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> [  825.590764] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> [  825.602188] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> [  825.613649] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> [  825.625075] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> [  825.645983] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> < 14.64 fps
->>>> <<<<<<<<<<<<<<<< 14.87 fps
->>>> <<<<<<<<<<<<<<< 14.89 fps
->>>>
->>>> Something is producing EMEM address decode errors. But it is streaming.
->>>
->>> above memory controller errors may be due to access faults and not 
->>> sure why these show up on your setup. I never have these with my 
->>> testing.
->>>
->>> Also I am using CMA alloc of 256MB and not sure if low CMA alloc size 
->>> is causing this. Can you try with CMA alloc size of 256MB?
->>>
->>>>
->>>> If I enable the TPG then everything is fine.
->>>>
->>>> So I have currently three different behaviors for three camera 
->>>> connectors.
->>>>
->>>> Do you have a datasheet for your Jetson TX1 camera board? It could 
->>>> be useful
->>>> to compare the two.
->>>
->>> Yeah we have and will send it offline.
->>>
->>> Also based on connector mapping to corresponding CSI port, 
->>> mipi-calibrate pad cell value also need to be changed.
->>>
->>> Below is for CSI-A
->>>
->>> nvidia,mipi-calibrate = <&mipi 0x001>
->>>> Regards,
->>>>
->>>>     Hans
->> Connector-1 is CSI-AB where you had timeouts.
->>
->> Connector-2 is CSI-CD and this works for you.
->>
->> Connector-3 is CSI-EF and this works for streaming from above but 
->> there's memory access fault errors (EMEM address decode errors)
->>
->> These EMEM decode errors are not related to connector but its just 
->> they showed up during connector-3 testing I believe. Can you also keep 
->> CMA size to 256MB and try?
->>
->> Not sure if CSI-AB issue with FS and MW_ACK sp timeouts are due to 
->> some HW/setup issue. Streaming should work on CSI-AB ports as well 
->> just like CSI-CD/EF with proper device tree change for port index and 
->> mipi calibrate cells for corresponding ports.
->>
->> On my setup that I tested IMX274 is on CSI-AB.
->>
->> Will update my side test results with today's linux-next
+> Add ACPI support in the fsl-mc driver. Driver parses MC DSDT table to
+> extract memory and other resources.
 > 
-> Hans,
+> Interrupt (GIC ITS) information is extracted from the MADT table
+> by drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c.
 > 
-> We have this module as well. Will try to get this today for testing and 
-> will update just to make sure of this combo as well on my side.
+> IORT table is parsed to configure DMA.
+> 
+> Signed-off-by: Makarand Pawagi <makarand.pawagi@nxp.com>
+> Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
+> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+> ---
+>  drivers/bus/fsl-mc/fsl-mc-bus.c             | 73 ++++++++++++----
+>  drivers/bus/fsl-mc/fsl-mc-msi.c             | 37 +++++----
+>  drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c | 92 ++++++++++++++++-----
+>  3 files changed, 150 insertions(+), 52 deletions(-)
+> 
+> diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
+> index 824ff77bbe86..324d49d6df89 100644
+> --- a/drivers/bus/fsl-mc/fsl-mc-bus.c
+> +++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
+> @@ -18,6 +18,8 @@
+>  #include <linux/bitops.h>
+>  #include <linux/msi.h>
+>  #include <linux/dma-mapping.h>
+> +#include <linux/acpi.h>
+> +#include <linux/iommu.h>
+>  
+>  #include "fsl-mc-private.h"
+>  
+> @@ -38,6 +40,7 @@ struct fsl_mc {
+>  	struct fsl_mc_device *root_mc_bus_dev;
+>  	u8 num_translation_ranges;
+>  	struct fsl_mc_addr_translation_range *translation_ranges;
+> +	void *fsl_mc_regs;
+>  };
+>  
+>  /**
+> @@ -56,6 +59,10 @@ struct fsl_mc_addr_translation_range {
+>  	phys_addr_t start_phys_addr;
+>  };
+>  
+> +#define FSL_MC_FAPR	0x28
+> +#define MC_FAPR_PL	BIT(18)
+> +#define MC_FAPR_BMT	BIT(17)
+> +
+>  /**
+>   * fsl_mc_bus_match - device to driver matching callback
+>   * @dev: the fsl-mc device to match against
+> @@ -124,7 +131,10 @@ static int fsl_mc_dma_configure(struct device *dev)
+>  	while (dev_is_fsl_mc(dma_dev))
+>  		dma_dev = dma_dev->parent;
+>  
+> -	return of_dma_configure_id(dev, dma_dev->of_node, 0, &input_id);
+> +	if (dev_of_node(dma_dev))
+> +		return of_dma_configure_id(dev, dma_dev->of_node, 0, &input_id);
+> +
+> +	return acpi_dma_configure_id(dev, DEV_DMA_COHERENT, &input_id);
+>  }
+>  
+>  static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
+> @@ -865,8 +875,11 @@ static int fsl_mc_bus_probe(struct platform_device *pdev)
+>  	struct fsl_mc_io *mc_io = NULL;
+>  	int container_id;
+>  	phys_addr_t mc_portal_phys_addr;
+> -	u32 mc_portal_size;
+> -	struct resource res;
+> +	u32 mc_portal_size, mc_stream_id;
+> +	struct resource *plat_res;
+> +
+> +	if (!iommu_present(&fsl_mc_bus_type))
+> +		return -EPROBE_DEFER;
+>  
+>  	mc = devm_kzalloc(&pdev->dev, sizeof(*mc), GFP_KERNEL);
+>  	if (!mc)
+> @@ -874,19 +887,33 @@ static int fsl_mc_bus_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, mc);
+>  
+> +	plat_res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +	mc->fsl_mc_regs = devm_ioremap_resource(&pdev->dev, plat_res);
+> +	if (IS_ERR(mc->fsl_mc_regs))
+> +		return PTR_ERR(mc->fsl_mc_regs);
+> +
+> +	if (IS_ENABLED(CONFIG_ACPI) && !dev_of_node(&pdev->dev)) {
+> +		mc_stream_id = readl(mc->fsl_mc_regs + FSL_MC_FAPR);
+> +		/*
+> +		 * HW ORs the PL and BMT bit, places the result in bit 15 of
+> +		 * the StreamID and ORs in the ICID. Calculate it accordingly.
+> +		 */
+> +		mc_stream_id = (mc_stream_id & 0xffff) |
+> +				((mc_stream_id & (MC_FAPR_PL | MC_FAPR_BMT)) ?
+> +					0x4000 : 0);
+> +		error = acpi_dma_configure_id(&pdev->dev, DEV_DMA_COHERENT,
+> +					      &mc_stream_id);
+> +		if (error)
+> +			dev_warn(&pdev->dev, "failed to configure dma: %d.\n",
+> +				 error);
+> +	}
+> +
+>  	/*
+>  	 * Get physical address of MC portal for the root DPRC:
+>  	 */
+> -	error = of_address_to_resource(pdev->dev.of_node, 0, &res);
+> -	if (error < 0) {
+> -		dev_err(&pdev->dev,
+> -			"of_address_to_resource() failed for %pOF\n",
+> -			pdev->dev.of_node);
+> -		return error;
+> -	}
+> -
+> -	mc_portal_phys_addr = res.start;
+> -	mc_portal_size = resource_size(&res);
+> +	plat_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	mc_portal_phys_addr = plat_res->start;
+> +	mc_portal_size = resource_size(plat_res);
+>  	error = fsl_create_mc_io(&pdev->dev, mc_portal_phys_addr,
+>  				 mc_portal_size, NULL,
+>  				 FSL_MC_IO_ATOMIC_CONTEXT_PORTAL, &mc_io);
+> @@ -903,11 +930,13 @@ static int fsl_mc_bus_probe(struct platform_device *pdev)
+>  	dev_info(&pdev->dev, "MC firmware version: %u.%u.%u\n",
+>  		 mc_version.major, mc_version.minor, mc_version.revision);
+>  
+> -	error = get_mc_addr_translation_ranges(&pdev->dev,
+> -					       &mc->translation_ranges,
+> -					       &mc->num_translation_ranges);
+> -	if (error < 0)
+> -		goto error_cleanup_mc_io;
+> +	if (dev_of_node(&pdev->dev)) {
+> +		error = get_mc_addr_translation_ranges(&pdev->dev,
+> +						&mc->translation_ranges,
+> +						&mc->num_translation_ranges);
+> +		if (error < 0)
+> +			goto error_cleanup_mc_io;
+> +	}
+>  
+>  	error = dprc_get_container_id(mc_io, 0, &container_id);
+>  	if (error < 0) {
+> @@ -934,6 +963,7 @@ static int fsl_mc_bus_probe(struct platform_device *pdev)
+>  		goto error_cleanup_mc_io;
+>  
+>  	mc->root_mc_bus_dev = mc_bus_dev;
+> +	mc_bus_dev->dev.fwnode = pdev->dev.fwnode;
 
-Sowjanya,
+Makarand, this looks a bit weird. Is there really a reason for it?
 
-A quick update: I had to update my u-boot and I ended up reinstalling everything.
-
-And now the problems I described just disappeared. Very strange.
-
-I have yet to verify if the issue with the third camera connector is also solved,
-I'll do that tomorrow.
-
-But for now you don't have to take any action.
-
-Regards,
-
-	Hans
+---
+Best Regards, Laurentiu
