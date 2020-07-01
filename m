@@ -2,226 +2,146 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 336ECC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 10:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54798C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 10:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0151C20747
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 10:49:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593600591;
-	bh=fBRyFwIDzERIG5z/DV53hFH9bjjSps7WeBweGXWWG4s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=J1AVPiHkHhiwGEc4VLzv2fM43kqeTzt04EwvAFiIc4qkz6bk/POzQQUUSmQzxXhPr
-	 6MMeEUknrTy+3ptu9hVquHZc75qeMav3CFpqXVZJjKyY+mRRqw2oeOOsiWhax0btCQ
-	 cADhLHcv92dkCE4QBXMuZS0IzP8xyLO4GKVjE8Ac=
+	by mail.kernel.org (Postfix) with ESMTP id 31EDB20702
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 10:56:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aYHAkQYk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729911AbgGAKtu (ORCPT
+        id S1730126AbgGAK4Q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 06:49:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729791AbgGAKtt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jul 2020 06:49:49 -0400
-Received: from localhost (p54b334c2.dip0.t-ipconnect.de [84.179.52.194])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F12B20722;
-        Wed,  1 Jul 2020 10:49:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593600589;
-        bh=fBRyFwIDzERIG5z/DV53hFH9bjjSps7WeBweGXWWG4s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ebE0Vf2T/zBLtKbZynYfabJnL5lBj/JDJU4CHge0TWuCuKWPH0US6US3G9F27OaDb
-         B8mqvU3vdsAmEMt9dXkqf7fVZUvqewJmbstaFVitY/qSDSf6gpC+wGMUUTHdLiLxiH
-         v7SBAZAPJSC8AZ3baoFZ3zEG1EteMkDqI3aCkFpY=
-Date:   Wed, 1 Jul 2020 12:49:46 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Alain Volmat <alain.volmat@st.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com
-Subject: Re: [PATCH v2 1/4] i2c: smbus: add core function handling SMBus
- host-notify
-Message-ID: <20200701104946.GH2261@ninjato>
-References: <1593070769-9106-1-git-send-email-alain.volmat@st.com>
- <1593070769-9106-2-git-send-email-alain.volmat@st.com>
+        Wed, 1 Jul 2020 06:56:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729791AbgGAK4P (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 06:56:15 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE857C061755
+        for <devicetree@vger.kernel.org>; Wed,  1 Jul 2020 03:56:15 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id j11so17546999oiw.12
+        for <devicetree@vger.kernel.org>; Wed, 01 Jul 2020 03:56:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9R1819T+AMdAOtCQQNpTxAKlBNbGEf7KSfYXQ+RjODU=;
+        b=aYHAkQYkS6JUqmaJPF5BVtaNalhoghvq/swOD0R3FZXxx7mUsV4ECOXfnvppWngu+R
+         9Z9Dh5k1WLPz7Vyk8L3ruAXXX1rV75XEYzFQHi0sHv353WD+DOUSpmHnPS0pc/gsVvEd
+         KYRrv7z57XqyisydWQUOZ5+OhtMmpXmrRbxqYuSrGyAWygKr5tFar35r1uEzWGQD9+KB
+         kSViPFnIiFmZ1beM9Cd69yd8pkLuOU4fSnFXKJwtHT45bP/6WVgEUxfOCy4Oopso12yO
+         6Ie1EjRAbSYb2AUj59lbogW+A4ezR3M9NEhRW7yiOHKcQG8o9RbCRNdHx9pXxmBJcg3/
+         3U/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9R1819T+AMdAOtCQQNpTxAKlBNbGEf7KSfYXQ+RjODU=;
+        b=bTpwxTmCjKE0nOvMmNT01jWUU+Tj/5UEi0THTXB+esPqFqjMseejCBVeUZwUN0L6bo
+         pG+sKkoy3k1tRAFwboEbXEzhjhXi4g3JYUUrH3F+oB5be2HNKOX6/SX/LIqmOYg+Xizp
+         tNJEB39rLB+gj7prLnEcktNXptpdWAI3s0GGSkL1tA1rjyiriQbQ30Rs0CXlBaODd+Jx
+         p4zGHu0lhV9XAz9heWyoueYtRGQ44QAQ4y6sq4YbNJgf643IDt2JkIwkSeqYR/lNeHPe
+         P3sp4BjANRkqZiU6qMKFgfBsJJrrh2atobK86EaWyH6PBZO36shgqWUAGOJcwe1AF6FZ
+         67hQ==
+X-Gm-Message-State: AOAM531WjqiwctwaeQBtLn2/3Vdj3OljihxAH0w3W+u9jaLu1NL8s0hm
+        JKBJEIuCI21f5Fqfax8v3pUkm/fx3YOr5nTxEfPOLQ==
+X-Google-Smtp-Source: ABdhPJwiMZdnEdNGjW368fqv2h6n7DhHfnsnINvnj5udm0TiFLaMmVcbKkxd2ebZrlhbN1BozXl0HotXeXWCkUe0k78=
+X-Received: by 2002:a54:4399:: with SMTP id u25mr20479018oiv.177.1593600975413;
+ Wed, 01 Jul 2020 03:56:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="XIiC+We3v3zHqZ6Z"
-Content-Disposition: inline
-In-Reply-To: <1593070769-9106-2-git-send-email-alain.volmat@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200621193549.2070434-1-dmitry.baryshkov@linaro.org>
+ <20200621193549.2070434-6-dmitry.baryshkov@linaro.org> <CAHLCerOqWWr3i32tRgGfep12YfDufw-WU80VWUsUNpDDZ13D-w@mail.gmail.com>
+ <CAA8EJppAQgmS7VVCjVe8QST2RQU46mXO2jtUPFY30mH9sVu_rQ@mail.gmail.com> <CAHLCerM8KwUhpossD=vyhU4q22FnrZse_zhiS0ZobZM0J9X8PA@mail.gmail.com>
+In-Reply-To: <CAHLCerM8KwUhpossD=vyhU4q22FnrZse_zhiS0ZobZM0J9X8PA@mail.gmail.com>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date:   Wed, 1 Jul 2020 13:56:03 +0300
+Message-ID: <CAA8EJprc4hET7MoTSj80==OdE-o-iho6vcrGgSPAQFaOLfFi2w@mail.gmail.com>
+Subject: Re: [PATCH 5/5] arm64: dts: sm8250-dts: add thermal zones using
+ pmic's adc-tm5
+To:     Amit Kucheria <amit.kucheria@verdurent.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        linux-iio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, 1 Jul 2020 at 09:06, Amit Kucheria <amit.kucheria@verdurent.com> wrote:
+>
+> On Tue, Jun 30, 2020 at 5:40 PM Dmitry Baryshkov
+> <dmitry.baryshkov@linaro.org> wrote:
+> >
+> > Hi,
+> >
+> > On Tue, 30 Jun 2020 at 08:06, Amit Kucheria <amit.kucheria@verdurent.com> wrote:
+> > > On Mon, Jun 22, 2020 at 1:06 AM Dmitry Baryshkov
+> > > <dmitry.baryshkov@linaro.org> wrote:
+> > > >
+> > > > Port thermal zones definitions from msm-4.19 tree. Enable and add
+> > > > channel configuration to PMIC's ADC-TM definitions. Declare thermal
+> > > > zones and respective trip points.
+> > > >
+> > > > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > > > ---
+> > > >  arch/arm64/boot/dts/qcom/sm8250-mtp.dts | 237 ++++++++++++++++++++++++
+> > > >  1 file changed, 237 insertions(+)
+> > > >
+> > > > diff --git a/arch/arm64/boot/dts/qcom/sm8250-mtp.dts b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
+> > >
+> > > IMO, this should be separated in the pmic dts file like we do for
+> > > other QC platforms since the PMICs tend to be used in multiple
+> > > platforms.
+> >
+> > Unlike other PMIC/tsens thermal zones, these definitions are quite
+> > specific to the board from my point of view.
+>
+> How so? Can you describe what is different about this PMIC?
 
---XIiC+We3v3zHqZ6Z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It is not about this PMIC, but rather about particular thermistors
+being placed up in different places on the board itself.
 
-On Thu, Jun 25, 2020 at 09:39:26AM +0200, Alain Volmat wrote:
-> SMBus Host-Notify protocol, from the adapter point of view
-> consist of receiving a message from a client, including the
-> client address and some other data.
->=20
-> It can be simply handled by creating a new slave device
-> and registering a callback performing the parsing of the
-> message received from the client.
->=20
-> This commit introduces two new core functions
->   * i2c_new_smbus_host_notify_device
->   * i2c_free_smbus_host_notify_device
-> that take care of registration of the new slave device and
-> callback and will call i2c_handle_smbus_host_notify once a
-> Host-Notify event is received.
->=20
-> Signed-off-by: Alain Volmat <alain.volmat@st.com>
-> ---
-> v2: remove useless dev_err message in case of hnotify handling error
->     prevent handling hnotify in case of a incomplete write
+> > > > index aa37eb112d85..78f0cf582a9a 100644
+> > > > --- a/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
+> > > > +++ b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
+> > > > @@ -24,6 +24,104 @@ chosen {
+> > > >                 stdout-path = "serial0:115200n8";
+> > > >         };
+> > > >
+> > > > +       thermal-zones {
+> > > > +               xo-therm {
+> > > > +                       polling-delay-passive = <0>;
+> > > > +                       polling-delay = <0>;
+> > > > +                       thermal-sensors = <&pm8150_adc_tm 0>;
+> > > > +                       trips {
+> > > > +                               active-config0 {
+> > > > +                                       temperature = <125000>;
+> > > > +                                       hysteresis = <1000>;
+> > > > +                                       type = "passive";
+> > > > +                               };
+> > > > +                       };
+> > > > +               };
+> > > > +
 
-Okay, now I got it to work, I also noted a few more issues.
 
-First, I'd suggest s/i2c_smbus_host_notify/i2c_slave_host_notify/g for
-all occurences in this patch. This makes a stronger distinction between
-the generic HostNotify support and the slave specific one.
 
-Also, I wonder if this shouldn't go to i2c-smbus.c instead but I haven't
-checked if we end up in dependency hell then. Second best thought: at
-least move to i2c-core-slave.c, then we could save the #ifdeffery in the
-c-file?
-
->=20
->  drivers/i2c/i2c-core-smbus.c | 110 +++++++++++++++++++++++++++++++++++++=
-++++++
->  include/linux/i2c-smbus.h    |   2 +
->  2 files changed, 112 insertions(+)
->=20
-> diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
-> index 56bb840142e3..3a37664fb5f6 100644
-> --- a/drivers/i2c/i2c-core-smbus.c
-> +++ b/drivers/i2c/i2c-core-smbus.c
-> @@ -708,3 +708,113 @@ int of_i2c_setup_smbus_alert(struct i2c_adapter *ad=
-apter)
->  }
->  EXPORT_SYMBOL_GPL(of_i2c_setup_smbus_alert);
->  #endif
-> +
-> +#if IS_ENABLED(CONFIG_I2C_SLAVE)
-> +struct i2c_smbus_host_notify_status {
-> +	bool notify_start;
-> +	u8 addr;
-> +};
-> +
-> +static int i2c_smbus_host_notify_cb(struct i2c_client *client,
-> +				    enum i2c_slave_event event, u8 *val)
-> +{
-> +	struct i2c_smbus_host_notify_status *status =3D client->dev.platform_da=
-ta;
-> +	int ret;
-> +
-> +	switch (event) {
-> +	case I2C_SLAVE_WRITE_REQUESTED:
-> +		status->notify_start =3D true;
-> +		break;
-> +	case I2C_SLAVE_WRITE_RECEIVED:
-> +		/* We only retrieve the first byte received (addr)
-> +		 * since there is currently no support to retrieve the data
-> +		 * parameter from the client.
-> +		 */
-> +		if (!status->notify_start)
-> +			break;
-> +		status->addr =3D *val;
-> +		status->notify_start =3D false;
-
-So, we are safe if the message is too short. Otherwise, we capture the
-first byte (=3D=3D address) only, right. Further bytes until STOP are
-discarded. So, we don't check if the message is too long and contains
-more than the status word. Maybe we should add that?
-
-> +		break;
-> +	case I2C_SLAVE_STOP:
-> +		/* In case of incomplete write, don't handle host-notify */
-> +		if (status->notify_start) {
-> +			status->notify_start =3D false;
-> +			break;
-> +		}
-> +
-> +		ret =3D i2c_handle_smbus_host_notify(client->adapter,
-> +						   status->addr);
-> +		if (ret < 0)
-> +			return ret;
-> +		break;
-> +	default:
-
-The missing cases are mandatory. From my testunit driver:
-
-        case I2C_SLAVE_READ_REQUESTED:
-        case I2C_SLAVE_READ_PROCESSED:
-                *val =3D 0xff;
-                break;
-
-> +		/* Only handle necessary events */
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-
-=2E..
-
-> --- a/include/linux/i2c-smbus.h
-> +++ b/include/linux/i2c-smbus.h
-> @@ -38,6 +38,8 @@ static inline int of_i2c_setup_smbus_alert(struct i2c_a=
-dapter *adap)
->  	return 0;
->  }
->  #endif
-> +struct i2c_client *i2c_new_smbus_host_notify_device(struct i2c_adapter *=
-adapter);
-> +void i2c_free_smbus_host_notify_device(struct i2c_client *client);
-
-Those need to be guarded with I2C_SLAVE as well. And an #else branch
-with empty/successful placeholders.
-
-> =20
->  #if IS_ENABLED(CONFIG_I2C_SMBUS) && IS_ENABLED(CONFIG_DMI)
->  void i2c_register_spd(struct i2c_adapter *adap);
-> --=20
-> 2.7.4
->=20
-
---XIiC+We3v3zHqZ6Z
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl78akUACgkQFA3kzBSg
-KbbHlRAAs1l3c2tSTqVOJVVbdpNSWj9cd9fgOQ5e7DrFZklEo+fWZusrPMYkSk9r
-q8HIUFiiAiEACt4r46NMdLoJguvcXhm5Hqlpi3B7EDAgIH6/eieb2MsFFkwd8Lh3
-HzdfVYY9fgsYmdpoXQlu+eXI7Q3U3kWaWfhFzWnTdOKgTSdflSDDpV+RJpqnXYAb
-j53W1o4RZTxH+PlyQJA+1kxwb4ij4XTE26KpWDeI4yknN0vFx+IqHJzwaF1niYzU
-6WsrXRBMmLOcBOdG0OQQFWCWH7YPORqqiUx7G9sgf21cZal/N3XfuVZdIZzgpaFi
-qCvcLckqrt7E0rE8UrJQwQigZMlgQNn5KARaux6ZisiCbZ5ncLzd91DBByxh53Au
-0FwKdnPWmmbU3OhFStt7JFXj64Q7kp28GPkASuW5fiGF0tpxBvDVtUYmKSx755qJ
-1Z7vRyTR0FpiqOEiUov3bkRIHtoJP6NIzD8LBcJBYjRAV/zKsDqDIeZmRRT6XUsf
-SxQKFTriO1xEXUXVnOI3YJrXwcyveTRxvq81LbDnDUZJ2wxhPVWMkUiDj80LJdm7
-Yzi53x0nT9AtzDgRmYRVglLIc+/ZjD9h++NpVivZD8bCOrjOb1SCDks4hPOyaUqa
-zWx9IDDq1g2VpATy+Erga6U6cSbrD5XxccOsgjunhoOdZLp8ZGE=
-=ODPH
------END PGP SIGNATURE-----
-
---XIiC+We3v3zHqZ6Z--
+-- 
+With best wishes
+Dmitry
