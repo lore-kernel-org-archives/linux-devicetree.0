@@ -2,136 +2,97 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C0D3C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 18:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB4DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 18:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B7702082F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 18:09:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593626957;
-	bh=oRoMkCtjdUg55KH56aj8mpptY7/t3IumKCMW0WzoHd0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yFmt/jvy0jqBmbiLE+FtWv0DbV9v5nS4+4PqWFkM6Z6Dqh6TCx3n0JsB9OVZw08mm
-	 43GD4lihDdFyn/AUDlYeqbJhdQz8IY1iUYE5tJLpK+icTyCJCBe5CXEjuMlGP1ObdI
-	 vdCSWbfxpmF3Zs1bsugOIJjLhkimSC7sQq+rcx+Y=
+	by mail.kernel.org (Postfix) with ESMTP id 425AF2085B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 18:48:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Of4+LTMW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732667AbgGASJQ (ORCPT
+        id S1726100AbgGASs4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 14:09:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46024 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 14:48:56 -0400
+Received: from vps.xff.cz ([195.181.215.36]:55212 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726449AbgGASJQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jul 2020 14:09:16 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25E80207F5;
-        Wed,  1 Jul 2020 18:09:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593626955;
-        bh=oRoMkCtjdUg55KH56aj8mpptY7/t3IumKCMW0WzoHd0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SQ3o1PnPswZBz/haPZrL4LB0SQ1An4nKpJPR55M96+NjSjI2gdan5iwXlZW6td/Qz
-         ziEFoDkOc4eE6a+w4Zpo8/MgSkCx3p1t6fYlS3Ot3X8VKPwT4RULNrF7VICH0k2esD
-         c17ACg3qA9KWbGLofFSehLPEEYOGBTE9dHjqG0ek=
-Date:   Wed, 1 Jul 2020 19:09:13 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Christoph Fritz <chf.fritz@googlemail.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] regulator: fan53880: Add initial support
-Message-ID: <20200701180913.GA22871@sirena.org.uk>
-References: <20200630185203.22882-1-chf.fritz@googlemail.com>
- <20200630185203.22882-2-chf.fritz@googlemail.com>
+        id S1726021AbgGASs4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Jul 2020 14:48:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1593629334; bh=8xaksKJGj1kAyua4g1oZLoaGS1nsYn93os3VmQbhpcI=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=Of4+LTMWpjkG2ehoruuK4JmL7d7HB7PhXFTHZ33AW5ALrUk/k1Oh5+Z+UOuyR5T/i
+         fXVYS/unoTwEOlZfbsAwP6ihWo19iEZdibHGy6qADnor1mvE9DJF8ZfdNKfV7zR+AE
+         +3+GfaRE3Shvu8Kg8V6sSvgFp/SRZ0lnPZU3Kwvw=
+Date:   Wed, 1 Jul 2020 20:48:53 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     linux-sunxi@googlegroups.com,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
+        Purism Kernel Team <kernel@puri.sm>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Samuel Holland <samuel@sholland.org>,
+        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
+        Bhushan Shah <bshah@kde.org>
+Subject: Re: [PATCH v7 00/13] Add support for PinePhone LCD panel
+Message-ID: <20200701184853.ctrowkdtdsqnlk2f@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Sam Ravnborg <sam@ravnborg.org>, linux-sunxi@googlegroups.com,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
+        Purism Kernel Team <kernel@puri.sm>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Icenowy Zheng <icenowy@aosc.io>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Samuel Holland <samuel@sholland.org>,
+        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
+        Bhushan Shah <bshah@kde.org>
+References: <20200701162928.1638874-1-megous@megous.com>
+ <20200701173018.GA1097230@ravnborg.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200630185203.22882-2-chf.fritz@googlemail.com>
-X-Cookie: fortune: No such file or directory
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200701173018.GA1097230@ravnborg.org>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hello Sam,
 
---bg08WKrSYDhXBjb5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jul 01, 2020 at 07:30:18PM +0200, Sam Ravnborg wrote:
+> Hi Ondrej.
+> 
+> On Wed, Jul 01, 2020 at 06:29:15PM +0200, Ondrej Jirman wrote:
+> > This patchset adds support for the LCD panel of PinePhone.
+> > 
+> > I've tested this on PinePhone 1.0 and 1.2.
+> 
+> Thanks for this nive sereis.
+> Applied the first 11 patches to drm-misc-next.
+> The DTS files needs to go in via another tree.
 
-On Tue, Jun 30, 2020 at 08:52:02PM +0200, Christoph Fritz wrote:
-> This patch adds support for ON Semiconductor FAN53880 regulator.
->=20
-> The FAN53880 is an I2C porgrammable power management IC (PMIC)
-> that contains a BUCK (step-down converter), four LDOs (low dropouts)
-> and one BOOST (step-up converter).  It is designed for mobile power
-> applications.
+Thank you very much, too. :)
 
-This doesn't build with current code, there are *many* errors in the
-form
+regards,
+	o.
 
-/mnt/kernel/drivers/regulator/fan53880.c:48:52: error: array type has incom=
-plete element type 'struct regulator_linear_range'
-   .linear_ranges =3D   (struct regulator_linear_range[]) { \
-                                                    ^
-/mnt/kernel/drivers/regulator/fan53880.c:63:2: note: in expansion of macro =
-'FAN53880_LDO'
-  FAN53880_LDO(1, "VIN12", 2800000),
-  ^~~~~~~~~~~~
-In file included from /mnt/kernel/drivers/regulator/fan53880.c:5:
-/mnt/kernel/include/linux/regulator/driver.h:46:2: error: field name not in=
- record or union initializer
-  .min  =3D _min_uV,     \
-  ^
-/mnt/kernel/drivers/regulator/fan53880.c:49:9: note: in expansion of macro =
-'REGULATOR_LINEAR_RANGE'
-         REGULATOR_LINEAR_RANGE(_default, 0x0, 0x0, 0), \
-         ^~~~~~~~~~~~~~~~~~~~~~
-/mnt/kernel/drivers/regulator/fan53880.c:63:2: note: in expansion of macro =
-'FAN53880_LDO'
-  FAN53880_LDO(1, "VIN12", 2800000),
-  ^~~~~~~~~~~~
-/mnt/kernel/include/linux/regulator/driver.h:46:2: note: (near initializati=
-on for '(anonymous)')
-  .min  =3D _min_uV,     \
-  ^
-/mnt/kernel/drivers/regulator/fan53880.c:49:9: note: in expansion of macro =
-'REGULATOR_LINEAR_RANGE'
-         REGULATOR_LINEAR_RANGE(_default, 0x0, 0x0, 0), \
-         ^~~~~~~~~~~~~~~~~~~~~~
-/mnt/kernel/drivers/regulator/fan53880.c:63:2: note: in expansion of macro =
-'FAN53880_LDO'
-  FAN53880_LDO(1, "VIN12", 2800000),
-  ^~~~~~~~~~~~
-/mnt/kernel/include/linux/regulator/driver.h:47:2: error: field name not in=
- record or union initializer
-  .min_sel =3D _min_sel,     \
-  ^
-
-most likely due to the conversion introduced in 60ab7f4153b6af46
-(regulator: use linear_ranges helper).  Please rebase against current
-code.
-
---bg08WKrSYDhXBjb5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl780UgACgkQJNaLcl1U
-h9AT8wf495r68vZKdK9avH8NnewD+DkphtHtdWLDgwWHgGUfGPmb+QzTFzE00v6W
-FdLMuOPaUfnBn/bKB6Dzzoh/qm2ZK37JkyQOLEQhOBtCbkutE6T/rFWRgMGJvBl0
-+BKye8EojxtIhOBD2qSinQ4pTWudULWCFFZoPOhm63IPDbOcdMQmLi3X+8EkXGqd
-YBIStS9+jfH9yCG9h4p3+VYlIG1OEwiZekjFgpFAgTT1E4vcJhhspC1NjP3XRMCD
-C/eqSRdAOjEy2GvOH0Dao7/UgEyZXvmOJ1kjQK4AN8ZpjvpgU0iee9pFDQkCoZfV
-1vJQajBaumpmIymOESyi1WndLydF
-=xM/a
------END PGP SIGNATURE-----
-
---bg08WKrSYDhXBjb5--
+> 	Sam
