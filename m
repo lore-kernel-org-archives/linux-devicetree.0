@@ -2,38 +2,33 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D5BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B303C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03F5C20780
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF30820780
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:07:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbgGAQEr (ORCPT
+        id S1731941AbgGAQH2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:04:47 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:34626 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726612AbgGAQEr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:04:47 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 0AA3BFB03;
-        Wed,  1 Jul 2020 18:04:46 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id d51v51hIpkHm; Wed,  1 Jul 2020 18:04:45 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id E33D740972; Wed,  1 Jul 2020 18:04:44 +0200 (CEST)
-Date:   Wed, 1 Jul 2020 18:04:44 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <guido.gunther@puri.sm>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi@googlegroups.com,
+        Wed, 1 Jul 2020 12:07:28 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:43212 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731751AbgGAQH2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 12:07:28 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id AE60A20025;
+        Wed,  1 Jul 2020 18:07:24 +0200 (CEST)
+Date:   Wed, 1 Jul 2020 18:07:23 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Guido =?iso-8859-1?Q?G=FCnther?= <guido.gunther@puri.sm>
+Cc:     Ondrej Jirman <megous@megous.com>, linux-sunxi@googlegroups.com,
         Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         Purism Kernel Team <kernel@puri.sm>,
@@ -47,47 +42,45 @@ Cc:     linux-sunxi@googlegroups.com,
         Samuel Holland <samuel@sholland.org>,
         Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
         Bhushan Shah <bshah@kde.org>
-Subject: Re: [PATCH v6 11/13] drm/panel: st7703: Assert reset prior to
- powering down the regulators
-Message-ID: <20200701160444.GJ174356@bogon.m.sigxcpu.org>
+Subject: Re: [PATCH v6 02/13] dt-bindings: panel: Convert
+ rocktech,jh057n00900 to yaml
+Message-ID: <20200701160723.GA675098@ravnborg.org>
 References: <20200701103126.1512615-1-megous@megous.com>
- <20200701103126.1512615-12-megous@megous.com>
+ <20200701103126.1512615-3-megous@megous.com>
+ <20200701155857.GB174356@bogon.m.sigxcpu.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200701103126.1512615-12-megous@megous.com>
+In-Reply-To: <20200701155857.GB174356@bogon.m.sigxcpu.org>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=8nJEP1OIZ-IA:10 a=J_fg_7IlAAAA:8 a=-sgrNTgQ70Twg4PVczQA:9
+        a=wPNLvfGTeEIA:10 a=zGOw-GkVl6h1W4ZARoUA:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-On Wed, Jul 01, 2020 at 12:31:24PM +0200, Ondrej Jirman wrote:
-> The reset pin is inverted, so if we don't assert reset, the actual gpio
-> will be high and may keep driving the IO port of the panel.
+On Wed, Jul 01, 2020 at 05:58:57PM +0200, Guido Günther wrote:
+> Hi Ondrej,
+> On Wed, Jul 01, 2020 at 12:31:15PM +0200, Ondrej Jirman wrote:
+> > Convert Rocktech MIPI DSI panel driver from txt to yaml bindings.
+> > 
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > ---
+> >  .../display/panel/rocktech,jh057n00900.txt    | 23 -------
+> >  .../display/panel/rocktech,jh057n00900.yaml   | 66 +++++++++++++++++++
+> >  2 files changed, 66 insertions(+), 23 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
+> >  create mode 100644
+> > Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
+> 
+> Thanks for the conversion! Shouldn't we switch to `sitronix-st7703.yaml`
+> as well in this patch?
 
-Reviewed-by: Guido Günther <agx@sigxcpu.org>
+That would be good if this rename is included.
+Otherwise we will just have to do it later.
 
-> 
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/gpu/drm/panel/panel-sitronix-st7703.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-sitronix-st7703.c b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
-> index 0c4167994d01..e303b7b1a215 100644
-> --- a/drivers/gpu/drm/panel/panel-sitronix-st7703.c
-> +++ b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
-> @@ -417,6 +417,7 @@ static int st7703_unprepare(struct drm_panel *panel)
->  	if (!ctx->prepared)
->  		return 0;
->  
-> +	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
->  	regulator_disable(ctx->iovcc);
->  	regulator_disable(ctx->vcc);
->  	ctx->prepared = false;
-> -- 
-> 2.27.0
-> 
+	Sam
