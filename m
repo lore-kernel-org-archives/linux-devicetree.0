@@ -2,128 +2,193 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4E5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 06:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9085C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 06:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E938220663
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 06:34:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A6432074D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 06:42:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gfZa8LOi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726169AbgGAGeG (ORCPT
+        id S1726806AbgGAGm6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 02:34:06 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:41000 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgGAGeG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 02:34:06 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: aratiu)
-        with ESMTPSA id 557662A4F88
-From:   Adrian Ratiu <adrian.ratiu@collabora.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Yannick FERTRE <yannick.fertre@st.com>,
-        Andrzej Hajda <a.hajda@samsung.com>, linux-imx@nxp.com,
-        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v9 00/11] Genericize DW MIPI DSI bridge and add i.MX 6
- driver
-In-Reply-To: <c6f10db1-7f56-a156-36a1-125e764c8c1a@baylibre.com>
-References: <20200609174959.955926-1-adrian.ratiu@collabora.com>
- <c6f10db1-7f56-a156-36a1-125e764c8c1a@baylibre.com>
-Date:   Wed, 01 Jul 2020 09:35:27 +0300
-Message-ID: <87lfk3kaj4.fsf@iwork.i-did-not-set--mail-host-address--so-tickle-me>
+        Wed, 1 Jul 2020 02:42:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34302 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgGAGm5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 02:42:57 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FE90C061755;
+        Tue, 30 Jun 2020 23:42:57 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id 9so25594799ljv.5;
+        Tue, 30 Jun 2020 23:42:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NyiY6LCbJOGlJn7q4DsF++6lUZNdDAhhofQm6gmCEgE=;
+        b=gfZa8LOiRAlSm62lj9RtYmP3Tdvbt7VXnH8W1mmOJsHLME2QjEj0tNe6P6xB+RwGOJ
+         C5/Db+Dx4Hfc7jZxX29rqo+oSYwRwh6b2dGTJ7NSDStqI9RJ3vpRnjhH+A3SDD/XaDub
+         BRSuO9kWCq7XzO55zK+haH4wKH9hnETCrF94Nw1/3/iaBGklEPVTKyUEiFnXYwAEnxnN
+         lynyoFsfBGIe97HaqJ+8LhZXWo39KoKPSwWgn1/phkpmJ05ufRo0BDY+eOsWQ+652myh
+         Iul0Ney+yIjU+WQaxGnTROK8UXmiMuOLHnI33mKX4Ib5NC8e5H3kdr7pj+NDRruQfM9Y
+         Rsxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NyiY6LCbJOGlJn7q4DsF++6lUZNdDAhhofQm6gmCEgE=;
+        b=lr4lDvYEERhSg1GQ3sVv+oRoXbN5aNae+FdOPkKAgHpxmRiWh1hgEFi1bNosNbKxVr
+         yRly8zcFGCabgK2XWWWVnEyjWIcS93418fckY4gYdaktjrBGcNwO7bBz51v46/xOy5pD
+         kqmFMwulfph2k+oHXPEOCcvspC0f4kgeAl2U919o3wjDoPzHnrH5woEg5oHwsCc3qzBC
+         HP88dWfO3fwtirLQZY4ZZddm3q8jh/OtltKTLf7BXI4lW0siWluHuRAhSthR1EMAoJEM
+         plpzxtBbuRHvBsS1GGrSsMAfzsI0YDLL9IcFV73XhhCGRWi4j3k+43Ej5wsR7B+98ncn
+         L/fg==
+X-Gm-Message-State: AOAM531I6CUk5bdCjkNc3rIbCdZn06lw/moNHuhZQoMF84C/4xEz2e77
+        fcob4Z7dOsUjupF1mrDomE8kr2wOKGE=
+X-Google-Smtp-Source: ABdhPJwnfvPM9Z0IHOBuk3PCfnWLRD3JRcFcWBcZcFIo3AdmsHbEgbmJo49UPIN0jd10KhzPKCpqcQ==
+X-Received: by 2002:a2e:b04c:: with SMTP id d12mr11424580ljl.256.1593585774925;
+        Tue, 30 Jun 2020 23:42:54 -0700 (PDT)
+Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.googlemail.com with ESMTPSA id u7sm1874014lfi.45.2020.06.30.23.42.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jun 2020 23:42:53 -0700 (PDT)
+Subject: Re: [PATCH v9 1/2] of_graph: add of_graph_is_present()
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200701021617.12030-1-digetx@gmail.com>
+ <20200701021617.12030-2-digetx@gmail.com>
+ <20200701054543.GA5963@pendragon.ideasonboard.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <c39beae6-34d4-84c3-07c0-e6639ab0b367@gmail.com>
+Date:   Wed, 1 Jul 2020 09:42:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
+In-Reply-To: <20200701054543.GA5963@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Neil,
+01.07.2020 08:45, Laurent Pinchart пишет:
+> Hi Dmitry,
+> 
+> Thank you for the patch.
+> 
+> On Wed, Jul 01, 2020 at 05:16:16AM +0300, Dmitry Osipenko wrote:
+>> In some case, like a DRM display code for example, it's useful to silently
+>> check whether port node exists at all in a device-tree before proceeding
+>> with parsing of the graph.
+>>
+>> This patch adds of_graph_is_present() which returns true if given
+>> device-tree node contains OF graph port.
+>>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/of/property.c    | 52 +++++++++++++++++++++++++++++++++-------
+>>  include/linux/of_graph.h |  6 +++++
+>>  2 files changed, 49 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/of/property.c b/drivers/of/property.c
+>> index 6a5760f0d6cd..e12b8b491837 100644
+>> --- a/drivers/of/property.c
+>> +++ b/drivers/of/property.c
+>> @@ -29,6 +29,48 @@
+>>  
+>>  #include "of_private.h"
+>>  
+>> +/**
+>> + * of_graph_get_first_local_port() - get first local port node
+>> + * @node: pointer to a local endpoint device_node
+> 
+> It's not an endpoint.
 
-On Mon, 29 Jun 2020, Neil Armstrong <narmstrong@baylibre.com> 
-wrote:
-> Hi Adrian, 
-> 
-> On 09/06/2020 19:49, Adrian Ratiu wrote: 
->> [Re-submitting to cc dri-devel, sorry about the noise]  Hello 
->> all,  v9 cleanly applies on top of latest next-20200609 tree. 
->> v9 does not depend on other patches as the last binding doc has 
->> been merged.   All feedback up to this point has been 
->> addressed. Specific details in individual patch changelogs. 
->> The biggest changes are the deprecation of the Synopsys DW 
->> bridge bind() API in favor of of_drm_find_bridge() and .attach 
->> callbacks, the addition of a TODO entry which outlines future 
->> planned bridge driver refactorings and a reordering of some 
->> i.MX 6 patches to appease checkpatch.   The idea behind the 
->> TODO is to get this regmap and i.MX 6 driver merged and then do 
->> the rest of refactorings in-tree because it's easier and the 
->> refactorings themselves are out-of-scope of this series which 
->> is adding i.MX 6 support and is quite big already, so please, 
->> if there are more refactoring ideas, let's add them to the TODO 
->> doc. :) I intend to tackle those after this series is merged to 
->> avoid two complex inter-dependent simultaneous series. 
-> 
-> This has been around here for a long time and you seem to have 
-> addressed all the reviews. 
-> 
->>  As always more testing is welcome especially on Rockchip and 
->> STM SoCs. 
-> 
-> It has been tested on STM, but I'd like a feedback on RK 
-> platform before applying the bridge parts. 
-> 
-> Can the imx & stm patches be applied separately ? 
->
+Alright, somehow I was reading this as a "device_node that contains
+endpoint (of the graph)". But after re-reading twice I can see that it's
+not the case.
 
-Yes the IMX and STM patches can be applied separately, they just 
-both depend on the common regmap patches.
+It should be a "pointer to device_node containing graph port", just like
+the of_graph_get_remote_node() says it. Thank you :)
 
-The binding API removal change which directly touches RK can also 
-be applied separately, but unfortunately I do not have access to a 
-RK board with a DSI display to test it (or the bridge regmap logic 
-on RK btw...), I just "eye-balled" the RK code based on the public 
-docs and it LGTM.
+>> + *
+>> + * Return: First local port node associated with local endpoint node linked
+>> + *	   to @node. Use of_node_put() on it when done.
+>> + */
+>> +static struct device_node *
+>> +of_graph_get_first_local_port(const struct device_node *node)
+>> +{
+>> +	struct device_node *ports, *port;
+>> +
+>> +	ports = of_get_child_by_name(node, "ports");
+>> +	if (ports)
+>> +		node = ports;
+>> +
+>> +	port = of_get_child_by_name(node, "port");
+>> +	of_node_put(ports);
+>> +
+>> +	return port;
+>> +}
+>> +
+>> +/**
+>> + * of_graph_is_present() - check graph's presence
+>> + * @node: pointer to a device_node checked for the graph's presence
+>> + *
+>> + * Return: True if @node has a port or ports sub-node, false otherwise.
+>> + */
+>> +bool of_graph_is_present(const struct device_node *node)
+>> +{
+>> +	struct device_node *local;
+>> +
+>> +	local = of_graph_get_first_local_port(node);
+>> +	if (!local)
+>> +		return false;
+>> +
+>> +	of_node_put(local);
+>> +
+>> +	return true;
+>> +}
+>> +EXPORT_SYMBOL(of_graph_is_present);
+>> +
+>>  /**
+>>   * of_property_count_elems_of_size - Count the number of elements in a property
+>>   *
+>> @@ -608,15 +650,7 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
+>>  	 * parent port node.
+>>  	 */
+>>  	if (!prev) {
+>> -		struct device_node *node;
+>> -
+>> -		node = of_get_child_by_name(parent, "ports");
+>> -		if (node)
+>> -			parent = node;
+>> -
+>> -		port = of_get_child_by_name(parent, "port");
+>> -		of_node_put(node);
+>> -
+>> +		port = of_graph_get_first_local_port(parent);
+> 
+> I think this introduces a bug below in the function, where parent is
+> used and is expected to point to the ports node if available. I'd leave
+> this part of the change out, and inline +of_graph_get_first_local_port()
+> in of_graph_is_present().
 
-> Neil
->
->> 
->> Big thank you to everyone who has contributed to this up to now,
->> Adrian
->> 
->> Adrian Ratiu (11):
->>   drm: bridge: dw_mipi_dsi: add initial regmap infrastructure
->>   drm: bridge: dw_mipi_dsi: abstract register access using reg_fields
->>   drm: bridge: dw_mipi_dsi: add dsi v1.01 support
->>   drm: bridge: dw_mipi_dsi: remove bind/unbind API
->>   dt-bindings: display: add i.MX6 MIPI DSI host controller doc
->>   ARM: dts: imx6qdl: add missing mipi dsi properties
->>   drm: imx: Add i.MX 6 MIPI DSI host platform driver
->>   drm: stm: dw-mipi-dsi: let the bridge handle the HW version check
->>   drm: bridge: dw-mipi-dsi: split low power cfg register into fields
->>   drm: bridge: dw-mipi-dsi: fix bad register field offsets
->>   Documentation: gpu: todo: Add dw-mipi-dsi consolidation plan
->> 
->>  .../display/imx/fsl,mipi-dsi-imx6.yaml        | 112 +++
->>  Documentation/gpu/todo.rst                    |  25 +
->>  arch/arm/boot/dts/imx6qdl.dtsi                |   8 +
->>  drivers/gpu/drm/bridge/synopsys/Kconfig       |   1 +
->>  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 713 ++++++++++++------
->>  drivers/gpu/drm/imx/Kconfig                   |   8 +
->>  drivers/gpu/drm/imx/Makefile                  |   1 +
->>  drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c        | 399 ++++++++++
->>  .../gpu/drm/rockchip/dw-mipi-dsi-rockchip.c   |   7 +-
->>  drivers/gpu/drm/stm/dw_mipi_dsi-stm.c         |  16 +-
->>  10 files changed, 1059 insertions(+), 231 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
->>  create mode 100644 drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c
->> 
+Good catch! I'll correct this.
+
+Thank you for the review :)
