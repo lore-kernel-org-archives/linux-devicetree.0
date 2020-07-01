@@ -2,207 +2,182 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA28C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 21:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E272C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 21:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4FA820853
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 21:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DE6D2085B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 21:22:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="KChSgt78"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="tEB1dOdB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726208AbgGAVVf (ORCPT
+        id S1727826AbgGAVWO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 17:21:35 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:57417 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725915AbgGAVVf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 17:21:35 -0400
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id C912122EDB;
-        Wed,  1 Jul 2020 23:21:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1593638492;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=FGEoESzqhbGl5sqazUSLjvfDz9FuASX78Vb4MriptvE=;
-        b=KChSgt78CKad7hUC7OaPaa1Dk0VP0qe78AWKnYwZRcTyR/NuL5ZB3U4CYa6Yhjw4kp0RO6
-        jthq7fDrc5tujgfStoE5/UJX7vdP1v2GT//HWuaLdwVgZy9Dw+idF0eV08LRZeXFdo35kk
-        Wv+eQtXxwxOmSem29GKPxBIINc11siQ=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Lee Jones <lee.jones@linaro.org>, robh+dt@kernel.org,
-        broonie@kernel.org, gregkh@linuxfoundation.org,
-        andriy.shevchenko@linux.intel.com, linus.walleij@linaro.org,
-        arnd@arndb.de, bgolaszewski@baylibre.com,
-        Michael Walle <michael@walle.cc>
-Subject: [RFC PATCH] mfd: add simple regmap based I2C driver
-Date:   Wed,  1 Jul 2020 23:21:00 +0200
-Message-Id: <20200701212100.6020-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam: Yes
+        Wed, 1 Jul 2020 17:22:14 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:43312 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726942AbgGAVWN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 17:22:13 -0400
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 66F4630C05C;
+        Wed,  1 Jul 2020 14:22:12 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 66F4630C05C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1593638532;
+        bh=GSqFzmHeOiSek+62bFpDJcfrtOQWQUrThlJG71lclKo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tEB1dOdB4mCMT/CINRpEULUdgrBzSMGdrPnFaguWD+zq2PGPPc2KRaPMxUJnM5BIE
+         8WfvQseprpaf1c62YJzJf5yn1keBiaxCazW3+mhdI5vNurr5GqXxSX7kk1ZOvvm/ga
+         HzWCJ5Vg3HtPXYEO1RGkVI4+1ceqFocOrzOv53dI=
+Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id A198514008B;
+        Wed,  1 Jul 2020 14:22:10 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
+Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
+        ARM ARCHITECTURE),
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v6 03/12] dt-bindings: PCI: Add bindings for more Brcmstb chips
+Date:   Wed,  1 Jul 2020 17:21:33 -0400
+Message-Id: <20200701212155.37830-4-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200701212155.37830-1-james.quinlan@broadcom.com>
+References: <20200701212155.37830-1-james.quinlan@broadcom.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There are I2C devices which contain several different functions but
-doesn't require any special access functions. For these kind of drivers
-an I2C regmap should be enough.
+From: Jim Quinlan <jquinlan@broadcom.com>
 
-Create an I2C driver which creates an I2C regmap and enumerates its
-children. If a device wants to use this as its MFD core driver, it has
-to add an individual compatible string. It may provide its own regmap
-configuration and a .pre_probe hook. The latter allows simple checks
-and abort probing, for example a version check.
+- Add compatible strings for three more Broadcom STB chips: 7278, 7216,
+  7211 (STB version of RPi4).
+- Add new property 'brcm,scb-sizes'.
+- Add new property 'resets'.
+- Add new property 'reset-names' for 7216 only.
+- Allow 'ranges' and 'dma-ranges' to have more than one item and update
+  the example to show this.
 
-Subdevices can use dev_get_regmap() on the parent to get their regmap
-instance.
-
-Signed-off-by: Michael Walle <michael@walle.cc>
+Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
+ .../bindings/pci/brcm,stb-pcie.yaml           | 56 ++++++++++++++++---
+ 1 file changed, 49 insertions(+), 7 deletions(-)
 
-I don't think the syscon-i2c is the way to go:
-
-   "TBC, while fine for a driver to bind on 'simple-mfd', a
-    DT compatible with that alone is not fine." [1]
-
-   "Yes, this is why specific compatible strings are
-    required." [1]
-
-   "No. I'd like to just kill off syscon and simple-mfd really. Those are
-	just hints meaning a specific compatible is still needed, but I see
-	them all the time alone (or combined like above). 'syscon' just serves
-	to create a regmap. This could be accomplished just with a list of
-	compatibles to register a regmap for. That might be a longish list, but
-	wanting a regmap is really a kernel implementation detail and
-	decision." [2]
-
-So I don't get it why we would now add another syscon type. Instead, here
-is a new try to generalize the idea to just have a simple driver which just
-have a bunch of compatible strings for supported devices (and thus can be
-added quirks to it without changing the DT) and just creates a regmap. A
-simple device can just add itself to the list of compatible strings. If
-quirks are needed later, they can either be added right to simple-mfd-i2c.c
-or split off to an own file, but time will tell.
-
-Right now, there is just a .pre_probe() hook which can be used to cancel
-the probing of the device or print some useful info to the kernel log. Yes,
-this is for "my" version check. And TBH I don't see a problem with adding
-that to this generic driver.
-
-[1] https://lore.kernel.org/linux-devicetree/CAL_JsqKr1aDVzgAMjwwK8E8O_f29vSrx1HXk81FF+rd3sEe==w@mail.gmail.com/
-[2] https://lore.kernel.org/linux-devicetree/20200609165401.GB1019634@bogus/
-
- drivers/mfd/Kconfig          |  9 ++++++
- drivers/mfd/Makefile         |  1 +
- drivers/mfd/simple-mfd-i2c.c | 57 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 67 insertions(+)
- create mode 100644 drivers/mfd/simple-mfd-i2c.c
-
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 7e72ed3441f1..96055c7e5c55 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -1162,6 +1162,15 @@ config MFD_SI476X_CORE
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called si476x-core.
+diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+index 8680a0f86c5a..807694b4f41f 100644
+--- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+@@ -9,12 +9,15 @@ title: Brcmstb PCIe Host Controller Device Tree Bindings
+ maintainers:
+   - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
  
-+config MFD_SIMPLE_MFD_I2C
-+	tristate "Simple regmap based I2C devices"
-+	depends on I2C
-+	select MFD_CORE
-+	select REGMAP_I2C
-+	help
-+	  This is a consolidated driver for all MFD devices which are
-+	  basically just a regmap bus driver.
-+
- config MFD_SM501
- 	tristate "Silicon Motion SM501"
- 	depends on HAS_DMA
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 7e26e7f98ac2..fa3a621a5a21 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -265,4 +265,5 @@ obj-$(CONFIG_MFD_KHADAS_MCU) 	+= khadas-mcu.o
+-allOf:
+-  - $ref: /schemas/pci/pci-bus.yaml#
+-
+ properties:
+   compatible:
+-    const: brcm,bcm2711-pcie # The Raspberry Pi 4
++    items:
++      - enum:
++          - brcm,bcm2711-pcie # The Raspberry Pi 4
++          - brcm,bcm7211-pcie # Broadcom STB version of RPi4
++          - brcm,bcm7278-pcie # Broadcom 7278 Arm
++          - brcm,bcm7216-pcie # Broadcom 7216 Arm
++          - brcm,bcm7445-pcie # Broadcom 7445 Arm
  
- obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
+   reg:
+     maxItems: 1
+@@ -34,10 +37,12 @@ properties:
+       - const: msi
  
-+obj-$(CONFIG_MFD_SIMPLE_MFD_I2C)	+= simple-mfd-i2c.o
- obj-$(CONFIG_MFD_SL28CPLD)	+= sl28cpld.o
-diff --git a/drivers/mfd/simple-mfd-i2c.c b/drivers/mfd/simple-mfd-i2c.c
-new file mode 100644
-index 000000000000..60708e95f1a0
---- /dev/null
-+++ b/drivers/mfd/simple-mfd-i2c.c
-@@ -0,0 +1,57 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <linux/i2c.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/core.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <linux/regmap.h>
+   ranges:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 4
+ 
+   dma-ranges:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 6
+ 
+   clocks:
+     maxItems: 1
+@@ -58,8 +63,31 @@ properties:
+ 
+   aspm-no-l0s: true
+ 
++  resets:
++    description: for "brcm,bcm7216-pcie", must be a valid reset
++      phandle pointing to the RESCAL reset controller provider node.
++    $ref: "/schemas/types.yaml#/definitions/phandle"
 +
-+struct simple_mfd_i2c_config {
-+	int (*pre_probe)(struct i2c_client *i2c, struct regmap *regmap);
-+	const struct regmap_config *regmap_config;
-+};
++  reset-names:
++    items:
++      - const: rescal
 +
-+static const struct regmap_config simple_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+};
++  brcm,scb-sizes:
++    description: u64 giving the 64bit PCIe memory
++      viewport size of a memory controller.  There may be up to
++      three controllers, and each size must be a power of two
++      with a size greater or equal to the amount of memory the
++      controller supports.  Note that each memory controller
++      may have two component regions -- base and extended -- so
++      this information cannot be deduced from the dma-ranges.
++    $ref: /schemas/types.yaml#/definitions/uint64-array
++    items:
++      minItems: 1
++      maxItems: 3
 +
-+static int simple_mfd_i2c_probe(struct i2c_client *i2c)
-+{
-+	const struct regmap_config *regmap_config = &simple_regmap_config;
-+	const struct simple_mfd_i2c_config *config;
-+	struct regmap *regmap;
-+	int ret;
+ required:
+   - reg
++  - ranges
+   - dma-ranges
+   - "#interrupt-cells"
+   - interrupts
+@@ -68,6 +96,18 @@ required:
+   - interrupt-map
+   - msi-controller
+ 
++allOf:
++  - $ref: /schemas/pci/pci-bus.yaml#
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: brcm,bcm7216-pcie
++    then:
++      required:
++        - resets
++        - reset-names
 +
-+	config = device_get_match_data(&i2c->dev);
-+
-+	if (config && config->regmap_config)
-+		regmap_config = config->regmap_config;
-+
-+	regmap = devm_regmap_init_i2c(i2c, regmap_config);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	if (config && config->pre_probe) {
-+		ret = config->pre_probe(i2c, regmap);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return devm_of_platform_populate(&i2c->dev);
-+}
-+
-+static const struct of_device_id simple_mfd_i2c_of_match[] = {
-+	{}
-+};
-+
-+static struct i2c_driver simple_mfd_i2c_driver = {
-+	.probe_new = simple_mfd_i2c_probe,
-+	.driver = {
-+		.name = "simple-mfd-i2c",
-+		.of_match_table = simple_mfd_i2c_of_match,
-+	},
-+};
-+builtin_i2c_driver(simple_mfd_i2c_driver);
+ unevaluatedProperties: false
+ 
+ examples:
+@@ -93,7 +133,9 @@ examples:
+                     msi-parent = <&pcie0>;
+                     msi-controller;
+                     ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
+-                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
++                    dma-ranges = <0x42000000 0x1 0x00000000 0x0 0x40000000 0x0 0x80000000>,
++                                 <0x42000000 0x1 0x80000000 0x3 0x00000000 0x0 0x80000000>;
+                     brcm,enable-ssc;
++                    brcm,scb-sizes =  <0x0000000080000000 0x0000000080000000>;
+             };
+     };
 -- 
-2.20.1
+2.17.1
 
