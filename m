@@ -1,115 +1,125 @@
-Return-Path: <SRS0=g9lS=AL=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C09C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 23:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A324CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 00:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40F4B206DA
-	for <linux-devicetree@archiver.kernel.org>; Tue, 30 Jun 2020 23:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D68D2074D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 00:53:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PP456qCv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D6edPSIM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbgF3X7R (ORCPT
+        id S1726047AbgGAAx5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 19:59:17 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17079 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbgF3X7R (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 19:59:17 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5efbd1c70001>; Tue, 30 Jun 2020 16:59:03 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 30 Jun 2020 16:59:16 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 30 Jun 2020 16:59:16 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Jun
- 2020 23:59:11 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 30 Jun 2020 23:59:11 +0000
-Received: from vdumpa-ubuntu.nvidia.com (Not Verified[172.17.173.140]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5efbd1cf0007>; Tue, 30 Jun 2020 16:59:11 -0700
-From:   Krishna Reddy <vdumpa@nvidia.com>
-To:     <joro@8bytes.org>, <will@kernel.org>, <robin.murphy@arm.com>,
-        <robh+dt@kernel.org>, <treding@nvidia.com>, <jonathanh@nvidia.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <yhsu@nvidia.com>,
-        <snikam@nvidia.com>, <praithatha@nvidia.com>, <talho@nvidia.com>,
-        <bbiswas@nvidia.com>, <mperttunen@nvidia.com>,
-        <nicolinc@nvidia.com>, <bhuntsman@nvidia.com>,
-        <nicoleotsuka@gmail.com>, Krishna Reddy <vdumpa@nvidia.com>
-Subject: [PATCH v9 1/4] iommu/arm-smmu: move TLB timeout and spin count macros
-Date:   Tue, 30 Jun 2020 16:57:49 -0700
-Message-ID: <20200630235752.8737-2-vdumpa@nvidia.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200630235752.8737-1-vdumpa@nvidia.com>
-References: <20200630235752.8737-1-vdumpa@nvidia.com>
-MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593561543; bh=wmP8aEJrSuDbPANLVhp+EMx58hwLpDh00JZdQDiNzyI=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=PP456qCveo+JyKZ6hK3+Igrag5/IXQnIgtjTKb971wTGHg4i7b+Z8N+hsfcncbA3L
-         QQU28XlFpSNr0SOfYAl9csul1/ZWV5bzdC63GisqbyL4+ff0ziA4puQDO6H2wcPPHY
-         EQnTtiMYb1QTPiZ5Ll8Xjq3ZNBbVwvZiL429HxCWqUyoGwFdrhJbCaV3pY4+i2vfKA
-         U8HtsOZsidlipphE0USUs/fzPUKdUqSq97rsjaQZ3hHNi9h5FJrqKBYvm9W+QgAuTR
-         AcxdJRiQ0FZZif+XjlxwiBI+l2mAbqt9vNGrvovMR25cQEAn2eXj9DAW1XbeQlA5tw
-         nX6HuRM+znKxA==
+        Tue, 30 Jun 2020 20:53:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgGAAx4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 30 Jun 2020 20:53:56 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A010C061755
+        for <devicetree@vger.kernel.org>; Tue, 30 Jun 2020 17:53:56 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id c139so20593883qkg.12
+        for <devicetree@vger.kernel.org>; Tue, 30 Jun 2020 17:53:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=DWfrsv+gYTRmvQeznQWMbo/Wt0pAT4kWAkv0yoG8Cg4=;
+        b=D6edPSIMaopOONYaDqlDIyHhCmTpfoUTkuf+ByPTuA1DIfgaz/tpP/9Tk1YxiNeNqT
+         +1ehsNI+FbzkW/NBIYdm1DR1dytZqUqpDpEGAU8eriCt3Ex7IR3MjjA4SgP4wXctY4lT
+         jOCrr+hxbZ7+DyLhPMulFuXfoazdSbbeUpRYqjOJNGA9vG+xmlPuwkGkFMNSuuE+/XTU
+         9sDceY0MVSgpLynqbH0hsO38O70/lRbfsAmwEfJs48DB1zEmbUnQJf4U4KwDvrd/9Gzq
+         MfrhZWzXqdg0t7es9vxQhQca6KVFevesOFXznV5PL1SpnvpE+ru/h+QH9lNEP+6IQ7tB
+         BxKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=DWfrsv+gYTRmvQeznQWMbo/Wt0pAT4kWAkv0yoG8Cg4=;
+        b=L+F2kemfNnZES4sxvrOlFG9ygHnVs46Dg4AVpdr0hkQPGzBwZOv/WKXiLUtVMnrjCC
+         5Vt9oSj/aJ816rcz2Xkpda6V26s0k+j3N8yOVyYgh3PdIL2LGP6rc/ynumaNvD1A3Qg5
+         BZothBTJlknkm9HVDFSHOstODvvUnYijoe8DxXJ/X8wcZfmiHuCmNGl/j8BmetLH4CkH
+         3iRbAzJlu5l5Q/S1pIUfnSSwXOUb74ariMl6/3YPV9MHc1xL13hnT1C6j0hUJDrWWjnh
+         oPzjaK/b3810cJXNOjNAqRArIXaDve/HiM9PlyTJNG0Fmjoeq2ixfo0IUDNN92NpodCf
+         PUQw==
+X-Gm-Message-State: AOAM5333FT1TX8WHKGkpQw4tigTE9sKqNAZnTvsnHQaBDz3dmsCsgDH+
+        N29sef352om1T02qw2H50UI=
+X-Google-Smtp-Source: ABdhPJwf33GvITHLbv9vt91a6G3ilvIRzzNfE65IpJvEkoIJqyp8P1bOL0KBbgx8NwupzkBK9udf3w==
+X-Received: by 2002:a05:620a:20db:: with SMTP id f27mr20759878qka.345.1593564835782;
+        Tue, 30 Jun 2020 17:53:55 -0700 (PDT)
+Received: from localhost.localdomain ([2804:14c:482:92b:d42f:2bc1:abe3:59f0])
+        by smtp.gmail.com with ESMTPSA id g22sm3896132qkm.97.2020.06.30.17.53.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 17:53:55 -0700 (PDT)
+From:   Fabio Estevam <festevam@gmail.com>
+To:     robh+dt@kernel.org
+Cc:     sboyd@kernel.org, devicetree@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH] dt-bindings: clock: imx: Fix e-mail address
+Date:   Tue, 30 Jun 2020 21:53:46 -0300
+Message-Id: <20200701005346.1008-1-festevam@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Move TLB timeout and spin count macros to header file to
-allow using the same values from vendor specific implementations.
+The freescale.com domain is gone for quite some time.
 
-Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
+Use the nxp.com domain instead.
+
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
 ---
- drivers/iommu/arm-smmu.c | 3 ---
- drivers/iommu/arm-smmu.h | 2 ++
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/clock/imx27-clock.yaml | 2 +-
+ Documentation/devicetree/bindings/clock/imx31-clock.yaml | 2 +-
+ Documentation/devicetree/bindings/clock/imx5-clock.yaml  | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 243bc4cb2705b..d2054178df357 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -52,9 +52,6 @@
-  */
- #define QCOM_DUMMY_VAL -1
-=20
--#define TLB_LOOP_TIMEOUT		1000000	/* 1s! */
--#define TLB_SPIN_COUNT			10
--
- #define MSI_IOVA_BASE			0x8000000
- #define MSI_IOVA_LENGTH			0x100000
-=20
-diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
-index d172c024be618..c7d0122a7c6ca 100644
---- a/drivers/iommu/arm-smmu.h
-+++ b/drivers/iommu/arm-smmu.h
-@@ -236,6 +236,8 @@ enum arm_smmu_cbar_type {
- /* Maximum number of context banks per SMMU */
- #define ARM_SMMU_MAX_CBS		128
-=20
-+#define TLB_LOOP_TIMEOUT		1000000	/* 1s! */
-+#define TLB_SPIN_COUNT			10
-=20
- /* Shared driver definitions */
- enum arm_smmu_arch_version {
---=20
-2.26.2
+diff --git a/Documentation/devicetree/bindings/clock/imx27-clock.yaml b/Documentation/devicetree/bindings/clock/imx27-clock.yaml
+index b5f3ed084ea0..a75365453dbc 100644
+--- a/Documentation/devicetree/bindings/clock/imx27-clock.yaml
++++ b/Documentation/devicetree/bindings/clock/imx27-clock.yaml
+@@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Clock bindings for Freescale i.MX27
+ 
+ maintainers:
+-  - Fabio Estevam <fabio.estevam@freescale.com>
++  - Fabio Estevam <fabio.estevam@nxp.com>
+ 
+ description: |
+   The clock consumer should specify the desired clock by having the clock
+diff --git a/Documentation/devicetree/bindings/clock/imx31-clock.yaml b/Documentation/devicetree/bindings/clock/imx31-clock.yaml
+index 1b6f75d3928a..a25a374b3b2a 100644
+--- a/Documentation/devicetree/bindings/clock/imx31-clock.yaml
++++ b/Documentation/devicetree/bindings/clock/imx31-clock.yaml
+@@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Clock bindings for Freescale i.MX31
+ 
+ maintainers:
+-  - Fabio Estevam <fabio.estevam@freescale.com>
++  - Fabio Estevam <fabio.estevam@nxp.com>
+ 
+ description: |
+   The clock consumer should specify the desired clock by having the clock
+diff --git a/Documentation/devicetree/bindings/clock/imx5-clock.yaml b/Documentation/devicetree/bindings/clock/imx5-clock.yaml
+index f5c2b3d7a910..4d9e7c73dce9 100644
+--- a/Documentation/devicetree/bindings/clock/imx5-clock.yaml
++++ b/Documentation/devicetree/bindings/clock/imx5-clock.yaml
+@@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Clock bindings for Freescale i.MX5
+ 
+ maintainers:
+-  - Fabio Estevam <fabio.estevam@freescale.com>
++  - Fabio Estevam <fabio.estevam@nxp.com>
+ 
+ description: |
+   The clock consumer should specify the desired clock by having the clock
+-- 
+2.17.1
 
