@@ -2,97 +2,83 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 170EFC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 09:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1D1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 09:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2DB02074D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 09:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 529D020722
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 09:16:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729014AbgGAJCp (ORCPT
+        id S1729183AbgGAJQY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:02:45 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:50270 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728780AbgGAJCp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 05:02:45 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 82B8680503;
-        Wed,  1 Jul 2020 11:02:41 +0200 (CEST)
-Date:   Wed, 1 Jul 2020 11:02:40 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 0/2] Silence missing-graph error for DRM bridges
-Message-ID: <20200701090240.GA22218@ravnborg.org>
-References: <20200701074232.13632-1-digetx@gmail.com>
+        Wed, 1 Jul 2020 05:16:24 -0400
+Received: from mga11.intel.com ([192.55.52.93]:21544 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728776AbgGAJQY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Jul 2020 05:16:24 -0400
+IronPort-SDR: ttru2E9b2dBHY+bbHvbro0c7gwP00b/HugUFSpEltYkNcOH7SOu/+dOKGNrPJFcAV5+y/ElKYw
+ YxEt7kQJepsQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="144689083"
+X-IronPort-AV: E=Sophos;i="5.75,299,1589266800"; 
+   d="scan'208";a="144689083"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 02:16:24 -0700
+IronPort-SDR: Nbl7zm0UC4Q0tOalM8IapjeJbZy3GvjOB3grt6wLAxXu6vAIm/hp2QstzuSPYNdFYsvvlTsHB0
+ ETX1pUk8u9sg==
+X-IronPort-AV: E=Sophos;i="5.75,299,1589266800"; 
+   d="scan'208";a="321182597"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 02:16:20 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 2AB0C20760; Wed,  1 Jul 2020 12:16:18 +0300 (EEST)
+Date:   Wed, 1 Jul 2020 12:16:18 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        mchehab@kernel.org, andriy.shevchenko@linux.intel.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, drinkcat@chromium.org,
+        tfiga@chromium.org, matthias.bgg@gmail.com, bingbu.cao@intel.com,
+        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        louis.kuo@mediatek.com, shengnan.wang@mediatek.com
+Subject: Re: [PATCH V9 0/2] media: i2c: Add support for DW9768 VCM
+Message-ID: <20200701091618.GN16711@paasikivi.fi.intel.com>
+References: <20200630062211.22988-1-dongchun.zhu@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200701074232.13632-1-digetx@gmail.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=voM4FWlXAAAA:8 a=laVpB__SBT07bHWVBRQA:9
-        a=CjuIK1q_8ugA:10 a=IC2XNlieTeVoXbcui8wp:22
+In-Reply-To: <20200630062211.22988-1-dongchun.zhu@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Dmitry
-On Wed, Jul 01, 2020 at 10:42:30AM +0300, Dmitry Osipenko wrote:
-> Hi!
-> 
-> This small series improves DRM bridges code by silencing a noisy error
-> coming from of-graph code for the device-trees that are missing a
-> display bridge graph.
-> 
->   graph: no port node found in ...
-> 
-> One example where this error happens is an older bridge-less DTB used
-> in conjunction with a newer kernel which has a display controller driver
-> that supports DRM bridges.
-> 
-> Changelog:
-> 
-> v10:- Corrected doc-comment, unbroke the of_graph_get_next_endpoint() and
->       improved commit's message in the "add of_graph_is_present()" patch.
->       Thanks to Laurent Pinchart for spotting the problems!
-> 
-> v9: - These two patches are factored out from [1] in order to ease applying
->       of the patches.
-> 
->     - The of_graph_presents() is renamed to of_graph_is_present() like it
->       was requested by Rob Herring in the review comment to [1].
-> 
->     - Added Rob's r-b.
-> 
->     [1] https://patchwork.ozlabs.org/project/linux-tegra/list/?series=184102
-> 
-> Dmitry Osipenko (2):
->   of_graph: add of_graph_is_present()
->   drm/of: Make drm_of_find_panel_or_bridge() to check graph's presence
+Dongchun,
 
-Thanks for your patience with these - applied to drm-misc-next now.
-
-	Sam
-
+On Tue, Jun 30, 2020 at 02:22:09PM +0800, Dongchun Zhu wrote:
+> Hello,
 > 
->  drivers/gpu/drm/drm_of.c |  9 +++++++++
->  drivers/of/property.c    | 23 +++++++++++++++++++++++
->  include/linux/of_graph.h |  6 ++++++
->  3 files changed, 38 insertions(+)
+> This series adds DT bindings and V4L2 sub-device driver for Dongwoon's DW9768,
+> which is a 10-bit DAC with 100mA output current sink capability.
 > 
-> -- 
-> 2.26.0
+> The driver is designed for linear control of voice coil motor(VCM).
+> It creates a V4L2 sub-device and provides control to set the desired focus.
+
+Thanks for the update.
+
+There seem to be trailing whitespaces at least in the first patch, and a
+conflict in MAINTAINERS vs. current media tree master.
+
+Could you address these, please?
+
+-- 
+Regards,
+
+Sakari Ailus
