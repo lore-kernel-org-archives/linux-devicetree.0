@@ -2,98 +2,105 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 327BDC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 09:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31469C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 09:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15F6120747
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 09:21:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="GCEP0SIz"
+	by mail.kernel.org (Postfix) with ESMTP id 0E21E20747
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 09:28:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593595739;
+	bh=FSnQ2a8GUJDvhomIUsm53eTUGDIgmLPigf6cM5vfcg8=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=h8gFnLPTnFR9rWXErki7keJh0zRp71319mmCrlTqX/bDRRPCwBLkq18GVtySBchSs
+	 0JWw66BL5Mzg++tk6MAhdaRXr35w9SK4QpsR9Rk58DoM5/+4DhI2ajPiJKFHGn23tF
+	 jfH6qk7Tv6cQsMpPPzfNP8r/1fKqX6xK/w3TkXbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728950AbgGAJVx (ORCPT
+        id S1729404AbgGAJ26 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:21:53 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:24032 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728776AbgGAJVw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 05:21:52 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0619BDjP023035;
-        Wed, 1 Jul 2020 11:21:42 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=STMicroelectronics;
- bh=+Zy5DDQ6neW7WZl6/peSwMUygFppp3WoiU0yXaaJpbA=;
- b=GCEP0SIzeIG1mHgGTwtgiKR9RWx7wQzNjnzmWb9N7YEIbzIw5Q7FVwQtUJndnvYtKKsK
- 7bHgKXs4nmIGb/wsxvpjrxDHyW7jfiK7aQXgd6NJif9U9Pm1J3TiT5Y5BrGjUSdpIwNx
- 2tXk6yWHBJIrZZUkwc1vvXfC6YCosXncgjSgNSIV4hvog4nJo1htXMemdd9cXuSReFgs
- 0Vlyubs6+BsZSmdSKtTlW6W5bCmhcYNCRegO25bu8YOVels9Tv3OnL7WRPeeBBfpZsmz
- tBvr6HsCrloHEM4kKC/dckQwWQGEub+6lHq21+BsrzSjU7L2ttKq7zALpXg8pdL44Qvi 8A== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31wu89s8fg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Jul 2020 11:21:42 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7396410002A;
-        Wed,  1 Jul 2020 11:21:40 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 39AFD2AA395;
-        Wed,  1 Jul 2020 11:21:40 +0200 (CEST)
-Received: from gnbcxd0016.gnb.st.com (10.75.127.47) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 1 Jul
- 2020 11:21:39 +0200
-Date:   Wed, 1 Jul 2020 11:21:38 +0200
-From:   Alain Volmat <alain.volmat@st.com>
-To:     Wolfram Sang <wsa@kernel.org>
-CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <pierre-yves.mordret@st.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
-Subject: Re: [PATCH v2 0/4] stm32-f7: Addition of SMBus Alert / Host-notify
- features
-Message-ID: <20200701092138.GB3457@gnbcxd0016.gnb.st.com>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>, robh+dt@kernel.org,
-        mark.rutland@arm.com, pierre-yves.mordret@st.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        Wed, 1 Jul 2020 05:28:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55580 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729371AbgGAJ26 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Jul 2020 05:28:58 -0400
+Received: from localhost (p54b334c2.dip0.t-ipconnect.de [84.179.52.194])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3C8A20722;
+        Wed,  1 Jul 2020 09:28:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593595737;
+        bh=FSnQ2a8GUJDvhomIUsm53eTUGDIgmLPigf6cM5vfcg8=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=1gDt5ZbBIXbOA73DhArXDo5CAeqAhAuw6gbRad41B77bWC3qpD+LfNtzWHIyVzd2r
+         uSuVHB7ZI1DUC8qwfHady2THrYQn/jsfEIRM6fivtJfphoc/QlhaRVMDAQwJCBC4he
+         IJq6F4NqiXlf858nImJukIifLhjXDOxQ9w7OtQM8=
+Date:   Wed, 1 Jul 2020 11:28:54 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     robh+dt@kernel.org, mark.rutland@arm.com,
+        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         fabrice.gasnier@st.com
+Subject: Re: [PATCH v2 0/4] stm32-f7: Addition of SMBus Alert / Host-notify
+ features
+Message-ID: <20200701092854.GE2261@ninjato>
 References: <1593070769-9106-1-git-send-email-alain.volmat@st.com>
  <20200630160500.GA2394@kunai>
+ <20200701092138.GB3457@gnbcxd0016.gnb.st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Uwl7UQhJk99r8jnw"
 Content-Disposition: inline
-In-Reply-To: <20200630160500.GA2394@kunai>
-X-Disclaimer: ce message est personnel / this message is private
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-01_04:2020-07-01,2020-07-01 signatures=0
+In-Reply-To: <20200701092138.GB3457@gnbcxd0016.gnb.st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 06:05:00PM +0200, Wolfram Sang wrote:
-> On Thu, Jun 25, 2020 at 09:39:25AM +0200, Alain Volmat wrote:
-> > This serie adds SMBus Alert and SMBus Host-Notify features for the i2c-stm32f7.
-> 
-> If it is not too much work for you, I think it makes sense to split the
-> series into two, i.e. HostNotify and SMBusAlert parts.
-> 
 
-I've just prepared the 1st new serie with only the HostNotify bits in it.
-(basically, the core part, the dt-bindings with the enable-host-notify, and
-the usage within i2c-stm32f7).
-You mentioned in the other thread that you still have some more review comment
-I believe. Is that right ? If that is so, I'll wait for those comment and
-then push that new serie for review.
+--Uwl7UQhJk99r8jnw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+
+> I've just prepared the 1st new serie with only the HostNotify bits in it.
+> (basically, the core part, the dt-bindings with the enable-host-notify, and
+> the usage within i2c-stm32f7).
+
+Cool, thanks!
+
+> You mentioned in the other thread that you still have some more review comment
+> I believe. Is that right ? If that is so, I'll wait for those comment and
+> then push that new serie for review.
+
+Yes, for the core part. Please wait for these comments.
+
+
+--Uwl7UQhJk99r8jnw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl78V1YACgkQFA3kzBSg
+KbbdKRAApTeTI+l9N3GO5hhdEtH3C/r7NIC7rj5lCU56vD4Z1/UP0QIQ9FoweiYL
+4f5BBOxcJdhK65aeXxhntHC3CBlcAKKAmhdBPY8fu/ha493odmvI4EZx3iF3TVwQ
+lVvhSJHXirwu4GNkS0cgdqWtypy1rari2fG2H0Ar5VcOn+imSu24KN4+gcs/3l/Q
+Ze+5ey5B/E4o8C2PbumRaAlYuObRRLsHY+z727s07uaEvgpCvBqmfMk+5+3/vIkA
+JCVrZ8lDzLaAy1vY3elqHFvlNaaUpMJMVLrnaCvte+Qj8fcE2aO6i/5DwAgivtYB
+z1yZbaHbOIVkgDY4PqfcZct7F6mkQXq8zjx/BNocKUeT+wKZYPwzRb6NaubuH/MB
+ukFjgQQ7Q0MS4TLdjey5GWbHG91bBjGbG1sCzMvqT6h0+Ik/UXCFZiPW0sRZ3voo
+cUQMYvD6BqawtldBkRlVtbqnhGtTCNU1FT8alH2LbesOwdKTlQzYIUxsZTHNnuwL
+CjJU2VX/AVrgE981dsE4N2YFhlmnZCJrjMFezsY6+zcWAxqb0WtQKamHuF6fbCYI
+4+Oy/1TVSGHtPf/B9kLHo+PyPDnaXofmiL7yC4HkbVVNwhjbHcV7+kbJLkEUv/hN
+1NVfAQQPJPrO0hYyJ70fjTeY9foxR3PDVy4chuB1IsLkbzKWziw=
+=szi4
+-----END PGP SIGNATURE-----
+
+--Uwl7UQhJk99r8jnw--
