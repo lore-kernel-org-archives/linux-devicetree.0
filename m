@@ -2,123 +2,92 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B14C433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 09:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16CABC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 09:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54EC520747
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 09:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7A9820747
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 09:36:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LPMgxzjf"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="M5+AqbU7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729246AbgGAJcA (ORCPT
+        id S1729175AbgGAJgA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:32:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726715AbgGAJcA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 05:32:00 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF4BDC061755;
-        Wed,  1 Jul 2020 02:31:59 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id o4so13198257lfi.7;
-        Wed, 01 Jul 2020 02:31:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+d2SRZpUuZWr1PMsXvidGGiJQELrujV0Qtt40StTl9g=;
-        b=LPMgxzjfikH+ekjnDGlTo5HiuTopob0mrOhZ1T/TKzKtXLxS0g4zBNmRe4QQhLRWCL
-         1okLKn+Jds1VZfA9DHmyLb+y/xGtwpQBIO1ZdlkPvO9N8WeoZMnfxvq3clumZ9GHv0Q0
-         aFO8jZ+cnyzkNl2SohOvL8XiWK5dCOphinB6XKDqGxlAIn1M7x7e6vHghvsHVFjsPAQL
-         b8SqBPJiyUBnXFq4723+bDoYT32KRtFpH3swa+46WMWAEGUMygpGz0oJc09WUQJzfhKr
-         QnIXNL234ZMfeU4c+si47EQIseg4quCNPhwJ/zonjU15pu7rYi1rD+0yIPDR+3rxechB
-         6/AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+d2SRZpUuZWr1PMsXvidGGiJQELrujV0Qtt40StTl9g=;
-        b=dIcz8fF2JOTOS/t12dA+6VaXxZcoIsRX7ie4TOVxHBgOaLrnKGYB8zIMYMO39iZ6QR
-         fR2EYN7Fr3W+Ww090C0LrPHHHxF7vHAsmqFk3h6/wDylrmWGf0Bz9GlIhIrOio/BrR73
-         zuzfnzXzRiCyczDAXOISOHkLuNZ65NJKEpBC4xNdwX4EYHWZ9xVk+gDzqznhrLes3L59
-         C0gqBtSEbzP0uKlN4dyHhkqYhbcn1CjbJQcxa+KxnLhtR/TWWlDjfR9vi94mUfXYpBvR
-         IBhRZizCdbdGAcc4UTSIgdn+CsTjLxtHk1AaMcOql8ZnA8q3J83nBkXthn5ICbtsvX2P
-         Av9A==
-X-Gm-Message-State: AOAM530NkUFwr+bClU12xiyv8T3Ovzolv9NUdh3VaAQC9K6I4beDcgwp
-        h5tLo2JEPmxvQQD+CldbTc/iZeFjS9A=
-X-Google-Smtp-Source: ABdhPJwN/668XQNGZmBOPiKhnbVfqe8RSFARvz44SINyM2X+GeJXU84pm9ni1lENZx3wdjXS8lutaw==
-X-Received: by 2002:a05:6512:49d:: with SMTP id v29mr14700624lfq.134.1593595918072;
-        Wed, 01 Jul 2020 02:31:58 -0700 (PDT)
-Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.googlemail.com with ESMTPSA id m11sm1621386ljj.122.2020.07.01.02.31.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Jul 2020 02:31:57 -0700 (PDT)
-Subject: Re: [PATCH v10 0/2] Silence missing-graph error for DRM bridges
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200701074232.13632-1-digetx@gmail.com>
- <20200701090240.GA22218@ravnborg.org>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <f4d50b9f-06e8-b6f7-ea5c-7a71f27ae953@gmail.com>
-Date:   Wed, 1 Jul 2020 12:31:56 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 1 Jul 2020 05:36:00 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:14631 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726715AbgGAJgA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 05:36:00 -0400
+X-UUID: af45b242b3df4cb99126d3925be38024-20200701
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=NCLao9xja/z/UOC7Zzg8iO34wroh+bPww07IWqMYaLk=;
+        b=M5+AqbU7Z2CzF+ADimNnNuC/fXnEWTSmmOiSlM8XlxrSiS2jVR4tDZcrlel/9foKKWvN//CING4jJa7IDoaOqww0B9RfhUnguF/bBwsyNHgl9lu65ruhzNPLZsFJqX/1WUy1GzqnOywnC44Q/+J4kOrUpzSG36OGb/Kx0JsaoYs=;
+X-UUID: af45b242b3df4cb99126d3925be38024-20200701
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <yunfei.dong@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 871960600; Wed, 01 Jul 2020 17:35:55 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 1 Jul 2020 17:35:51 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 1 Jul 2020 17:35:51 +0800
+From:   Yunfei Dong <yunfei.dong@mediatek.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Yunfei Dong <yunfei.dong@mediatek.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Alexandre Courbot <acourbot@chromium.org>
+Subject: [PATCH v3,1/2] media: v4l UAPI: add V4L2_BUF_CAP_SUPPORTS_RO_REQUESTS
+Date:   Wed, 1 Jul 2020 17:35:21 +0800
+Message-ID: <20200701093522.8521-2-yunfei.dong@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200701093522.8521-1-yunfei.dong@mediatek.com>
+References: <20200701093522.8521-1-yunfei.dong@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200701090240.GA22218@ravnborg.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-01.07.2020 12:02, Sam Ravnborg пишет:
-> Hi Dmitry
-> On Wed, Jul 01, 2020 at 10:42:30AM +0300, Dmitry Osipenko wrote:
->> Hi!
->>
->> This small series improves DRM bridges code by silencing a noisy error
->> coming from of-graph code for the device-trees that are missing a
->> display bridge graph.
->>
->>   graph: no port node found in ...
->>
->> One example where this error happens is an older bridge-less DTB used
->> in conjunction with a newer kernel which has a display controller driver
->> that supports DRM bridges.
->>
->> Changelog:
->>
->> v10:- Corrected doc-comment, unbroke the of_graph_get_next_endpoint() and
->>       improved commit's message in the "add of_graph_is_present()" patch.
->>       Thanks to Laurent Pinchart for spotting the problems!
->>
->> v9: - These two patches are factored out from [1] in order to ease applying
->>       of the patches.
->>
->>     - The of_graph_presents() is renamed to of_graph_is_present() like it
->>       was requested by Rob Herring in the review comment to [1].
->>
->>     - Added Rob's r-b.
->>
->>     [1] https://patchwork.ozlabs.org/project/linux-tegra/list/?series=184102
->>
->> Dmitry Osipenko (2):
->>   of_graph: add of_graph_is_present()
->>   drm/of: Make drm_of_find_panel_or_bridge() to check graph's presence
-> 
-> Thanks for your patience with these - applied to drm-misc-next now.
+VGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIHRoZSBWNEwyX0JVRl9DQVBfU1VQUE9SVFNfUk9f
+UkVRVUVTVFMNCmZsYWcuIFRoaXMgZmxhZyBpcyB1c2VkIGZvciBSZWFkLW9ubHkoUm8pIFJlcXVl
+c3QuDQoNClNpZ25lZC1vZmYtYnk6IFl1bmZlaSBEb25nIDx5dW5mZWkuZG9uZ0BtZWRpYXRlay5j
+b20+DQotLS0NCiBEb2N1bWVudGF0aW9uL3VzZXJzcGFjZS1hcGkvbWVkaWEvdjRsL3ZpZGlvYy1y
+ZXFidWZzLnJzdCB8IDQgKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKykNCg0K
+ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vdXNlcnNwYWNlLWFwaS9tZWRpYS92NGwvdmlkaW9j
+LXJlcWJ1ZnMucnN0IGIvRG9jdW1lbnRhdGlvbi91c2Vyc3BhY2UtYXBpL21lZGlhL3Y0bC92aWRp
+b2MtcmVxYnVmcy5yc3QNCmluZGV4IGI2ZDUyMDgzNzA3Yi4uN2M3NDUxNzczYjhlIDEwMDY0NA0K
+LS0tIGEvRG9jdW1lbnRhdGlvbi91c2Vyc3BhY2UtYXBpL21lZGlhL3Y0bC92aWRpb2MtcmVxYnVm
+cy5yc3QNCisrKyBiL0RvY3VtZW50YXRpb24vdXNlcnNwYWNlLWFwaS9tZWRpYS92NGwvdmlkaW9j
+LXJlcWJ1ZnMucnN0DQpAQCAtMTI2LDYgKzEyNiw3IEBAIGFib3J0aW5nIG9yIGZpbmlzaGluZyBh
+bnkgRE1BIGluIHByb2dyZXNzLCBhbiBpbXBsaWNpdA0KIC4uIF9WNEwyLUJVRi1DQVAtU1VQUE9S
+VFMtUkVRVUVTVFM6DQogLi4gX1Y0TDItQlVGLUNBUC1TVVBQT1JUUy1PUlBIQU5FRC1CVUZTOg0K
+IC4uIF9WNEwyLUJVRi1DQVAtU1VQUE9SVFMtTTJNLUhPTEQtQ0FQVFVSRS1CVUY6DQorLi4gX1Y0
+TDItQlVGLUNBUC1TVVBQT1JUUy1STy1SRVFVRVNUUzoNCiANCiAuLiBjc3NjbGFzczo6IGxvbmd0
+YWJsZQ0KIA0KQEAgLTE1Niw2ICsxNTcsOSBAQCBhYm9ydGluZyBvciBmaW5pc2hpbmcgYW55IERN
+QSBpbiBwcm9ncmVzcywgYW4gaW1wbGljaXQNCiAgICAgICAtIE9ubHkgdmFsaWQgZm9yIHN0YXRl
+bGVzcyBkZWNvZGVycy4gSWYgc2V0LCB0aGVuIHVzZXJzcGFjZSBjYW4gc2V0IHRoZQ0KICAgICAg
+ICAgYGBWNEwyX0JVRl9GTEFHX00yTV9IT0xEX0NBUFRVUkVfQlVGYGAgZmxhZyB0byBob2xkIG9m
+ZiBvbiByZXR1cm5pbmcgdGhlDQogCWNhcHR1cmUgYnVmZmVyIHVudGlsIHRoZSBPVVRQVVQgdGlt
+ZXN0YW1wIGNoYW5nZXMuDQorICAgICogLSBgYFY0TDJfQlVGX0NBUF9TVVBQT1JUU19ST19SRVFV
+RVNUU2BgDQorICAgICAgLSAweDAwMDAwMDQwDQorICAgICAgLSBUaGlzIGJ1ZmZlciB0eXBlIHN1
+cHBvcnRzIDpyZWY6YHJlcXVlc3RzIDxtZWRpYS1yZXF1ZXN0LWFwaT5gLg0KIA0KIFJldHVybiBW
+YWx1ZQ0KID09PT09PT09PT09PQ0KLS0gDQoyLjE4LjANCg==
 
-Thanks to you and Laurent!
