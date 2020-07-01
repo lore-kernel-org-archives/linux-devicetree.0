@@ -2,334 +2,369 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E138EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 13:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C592C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 13:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9E9C206BE
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 13:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 769F6207F5
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 13:45:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="OBhzkJtb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730727AbgGANlw (ORCPT
+        id S1730569AbgGANpH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 09:41:52 -0400
-Received: from mga07.intel.com ([134.134.136.100]:17360 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729332AbgGANlv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jul 2020 09:41:51 -0400
-IronPort-SDR: ogiZlWgCtkAG3dYQ5Ra77EuoLG+lPPocwvpVKhGii/u7277xgm01ymFKxOavk2MXvI+JCFQXHh
- AuxzcvQJ+jhA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="211624735"
-X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
-   d="scan'208";a="211624735"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 06:41:50 -0700
-IronPort-SDR: y78nLwfsdpJbnAS2IIQTIYDWwIwPPhqTyS2nGsXesMWmQ0ZxIrtmfHWQrSd9dMoD8gTlseDBAg
- qKu4zpnuE/BA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
-   d="scan'208";a="313776140"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
-  by fmsmga002.fm.intel.com with ESMTP; 01 Jul 2020 06:41:42 -0700
-Subject: Re: [PATCH v6 3/4] mmc: mediatek: command queue support
-To:     Chun-Hung Wu <chun-hung.wu@mediatek.com>, mirq-linux@rere.qmqm.pl,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Andy Gross <agross@kernel.org>,
+        Wed, 1 Jul 2020 09:45:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44326 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731149AbgGANpF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 09:45:05 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DEA4C08C5C1
+        for <devicetree@vger.kernel.org>; Wed,  1 Jul 2020 06:45:05 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id d27so18413479qtg.4
+        for <devicetree@vger.kernel.org>; Wed, 01 Jul 2020 06:45:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=YfOjKER5oMeevtyRUZwe3pNG9ZI07+gjbZp59KKuY2U=;
+        b=OBhzkJtbWpa+UZXIpLHFsaDeuNIVYk84EtsdkCL03Y9PddKwyzqCDxUicU2clXxRpa
+         l+bA5kl6aVU3kux4ptgHZv79AKWC00DeN+nhf0xM9LQMENzK7ypUZC77cfpS2P4pn+ow
+         0KjuCzZiFt3d+F4r3npqsdH9fcOSAyAZNJusyHxlD53R5nmwKC0yVaDd72BcYyFtP1HY
+         pupLp54VbmQ8xcRtczN6CYQ7QdflNUEz/KQyH60Je4q3hd8XYbP0iDcT/gTaFaEEEoZH
+         Wu02JB5IDuNCWyX18MJEoDgL+qffX92MJ8KngbAT0ld5IDVnYr2u8r2j22PNJkq9l+d8
+         2kvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=YfOjKER5oMeevtyRUZwe3pNG9ZI07+gjbZp59KKuY2U=;
+        b=gX2mLdVF1waNFJ3tHgloXVNrgVjmkMemyHo9NkAmXxwgeO/tSYeQo7QGn5hhbYL/mh
+         +mscRhv0D+FgBnEF2Jx/sVHoby58hBFJEqzmFENRuuGWLR3ac1fP4jj4FD+UbVvLYVeu
+         +aBDfx4aOYX2lVlm+sArk/vmMAx8gEbFaHeMqQBt5K+S11bIffmidb1G1Se+dIU0qZ/F
+         bu/ryoL7yEfT2xk2qa0sm7Kryq/0CXPFOVknSV6dG0H4bjZhTpJ0rQo/Hzs4dAFe4kub
+         hID8V4nUt/PdxvsDJtU8Ho2DID/Yf4UNdIFHRNibgEOuzmxPxvyMcTdYsNRCeAvpp7ij
+         myVw==
+X-Gm-Message-State: AOAM532hYni1rAxmG8qDrTbTcQ1GvGf81qMw2rN0Jmo6h5RyVn7tRsXq
+        bjkfLza2WL4vnNNfvmpn4l50Ow==
+X-Google-Smtp-Source: ABdhPJzlRzqAoCgskrJuxHrw4kKKuNKgDfuaCKHDwY5vGCG71aiqXTVhVJTp6K3cF2uCkrz1P8Tu0Q==
+X-Received: by 2002:ac8:6c36:: with SMTP id k22mr26422191qtu.288.1593611104217;
+        Wed, 01 Jul 2020 06:45:04 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id d136sm1444345qke.47.2020.07.01.06.45.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 06:45:03 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Pan Bian <bianpan2016@163.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Kuohong Wang <kuohong.wang@mediatek.com>
-Cc:     kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, wsd_upstream@mediatek.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org
-References: <1591665502-6573-1-git-send-email-chun-hung.wu@mediatek.com>
- <1591665502-6573-4-git-send-email-chun-hung.wu@mediatek.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <3c36a73a-a292-daae-baf6-19b3e3d7b208@intel.com>
-Date:   Wed, 1 Jul 2020 16:41:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        linux-pm@vger.kernel.org (open list:INTERCONNECT API),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/6] dt-bindings: interconnect: Add Qualcomm SM8150 DT bindings
+Date:   Wed,  1 Jul 2020 09:42:50 -0400
+Message-Id: <20200701134259.8055-2-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200701134259.8055-1-jonathan@marek.ca>
+References: <20200701134259.8055-1-jonathan@marek.ca>
 MIME-Version: 1.0
-In-Reply-To: <1591665502-6573-4-git-send-email-chun-hung.wu@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 9/06/20 4:18 am, Chun-Hung Wu wrote:
-> Support command queue for mt6779 platform.
-> a. Add msdc_set_busy_timeout() to calculate emmc write timeout.
-> b. Connect mtk msdc driver to cqhci driver through
->    host->cq_host->ops = &msdc_cmdq_ops;
-> c. msdc_cmdq_irq() will link up with cqchi_irq(). Besides, it provides
->    more irq error messages like RSPCRCERR/CMDTO/DATACRCERR/DATTMO.
-> d. Use the options below to separate support for CQHCI or not, because
->    some of our platform does not support CQHCI hence no kernel option:
->    CONFIG_MMC_CQHCI.
->    #if IS_ENABLED(CONFIG_MMC_CQHCI)
->    XXX //Support CQHCI
->    #else
->    XXX //Not support CQHCI
->    #endif
+The Qualcomm SM8150 platform has several bus fabrics that could be
+controlled and tuned dynamically according to the bandwidth demand.
 
-Other drivers "select MMC_CQHCI" in Kconfig even though they support
-hardware with or without CQHCI.
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+---
+ .../bindings/interconnect/qcom,sm8150.yaml    |  86 +++++++++
+ .../dt-bindings/interconnect/qcom,sm8150.h    | 176 ++++++++++++++++++
+ 2 files changed, 262 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sm8150.yaml
+ create mode 100644 include/dt-bindings/interconnect/qcom,sm8150.h
 
-> 
-> Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
-> ---
->  drivers/mmc/host/mtk-sd.c | 119 ++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 119 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-> index 84a7bd44..9d69269 100644
-> --- a/drivers/mmc/host/mtk-sd.c
-> +++ b/drivers/mmc/host/mtk-sd.c
-> @@ -31,6 +31,8 @@
->  #include <linux/mmc/sdio.h>
->  #include <linux/mmc/slot-gpio.h>
->  
-> +#include "cqhci.h"
-> +
->  #define MAX_BD_NUM          1024
->  
->  /*--------------------------------------------------------------------------*/
-> @@ -152,6 +154,7 @@
->  #define MSDC_INT_DMA_BDCSERR    (0x1 << 17)	/* W1C */
->  #define MSDC_INT_DMA_GPDCSERR   (0x1 << 18)	/* W1C */
->  #define MSDC_INT_DMA_PROTECT    (0x1 << 19)	/* W1C */
-> +#define MSDC_INT_CMDQ           (0x1 << 28)	/* W1C */
->  
->  /* MSDC_INTEN mask */
->  #define MSDC_INTEN_MMCIRQ       (0x1 << 0)	/* RW */
-> @@ -182,6 +185,7 @@
->  /* SDC_CFG mask */
->  #define SDC_CFG_SDIOINTWKUP     (0x1 << 0)	/* RW */
->  #define SDC_CFG_INSWKUP         (0x1 << 1)	/* RW */
-> +#define SDC_CFG_WRDTOC          (0x1fff  << 2)  /* RW */
->  #define SDC_CFG_BUSWIDTH        (0x3 << 16)	/* RW */
->  #define SDC_CFG_SDIO            (0x1 << 19)	/* RW */
->  #define SDC_CFG_SDIOIDE         (0x1 << 20)	/* RW */
-> @@ -230,6 +234,7 @@
->  #define MSDC_PATCH_BIT_DECRCTMO   (0x1 << 30)	/* RW */
->  
->  #define MSDC_PATCH_BIT1_CMDTA     (0x7 << 3)    /* RW */
-> +#define MSDC_PB1_BUSY_CHECK_SEL   (0x1 << 7)    /* RW */
->  #define MSDC_PATCH_BIT1_STOP_DLY  (0xf << 8)    /* RW */
->  
->  #define MSDC_PATCH_BIT2_CFGRESP   (0x1 << 15)   /* RW */
-> @@ -431,9 +436,11 @@ struct msdc_host {
->  				 /* cmd response sample selection for HS400 */
->  	bool hs400_mode;	/* current eMMC will run at hs400 mode */
->  	bool internal_cd;	/* Use internal card-detect logic */
-> +	bool cqhci;		/* support eMMC hw cmdq */
->  	struct msdc_save_para save_para; /* used when gate HCLK */
->  	struct msdc_tune_para def_tune_para; /* default tune setting */
->  	struct msdc_tune_para saved_tune_para; /* tune result of CMD21/CMD19 */
-> +	struct cqhci_host *cq_host;
->  };
->  
->  static const struct mtk_mmc_compatible mt8135_compat = {
-> @@ -764,6 +771,15 @@ static void msdc_set_timeout(struct msdc_host *host, u64 ns, u64 clks)
->  		      (u32)(timeout > 255 ? 255 : timeout));
->  }
->  
-> +static void msdc_set_busy_timeout(struct msdc_host *host, u64 ns, u64 clks)
-> +{
-> +	u64 timeout;
-> +
-> +	timeout = msdc_timeout_cal(host, ns, clks);
-> +	sdr_set_field(host->base + SDC_CFG, SDC_CFG_WRDTOC,
-> +		      (u32)(timeout > 8191 ? 8191 : timeout));
-> +}
-> +
->  static void msdc_gate_clock(struct msdc_host *host)
->  {
->  	clk_disable_unprepare(host->src_clk_cg);
-> @@ -1480,6 +1496,36 @@ static void msdc_enable_sdio_irq(struct mmc_host *mmc, int enb)
->  		pm_runtime_put_noidle(host->dev);
->  }
->  
-> +#if IS_ENABLED(CONFIG_MMC_CQHCI)
-> +static irqreturn_t msdc_cmdq_irq(struct msdc_host *host, u32 intsts)
-> +{
-> +	int cmd_err = 0, dat_err = 0;
-> +
-> +	if (intsts & MSDC_INT_RSPCRCERR) {
-> +		cmd_err = -EILSEQ;
-> +		dev_err(host->dev, "%s: CMD CRC ERR", __func__);
-> +	} else if (intsts & MSDC_INT_CMDTMO) {
-> +		cmd_err = -ETIMEDOUT;
-> +		dev_err(host->dev, "%s: CMD TIMEOUT ERR", __func__);
-> +	}
-> +
-> +	if (intsts & MSDC_INT_DATCRCERR) {
-> +		dat_err = -EILSEQ;
-> +		dev_err(host->dev, "%s: DATA CRC ERR", __func__);
-> +	} else if (intsts & MSDC_INT_DATTMO) {
-> +		dat_err = -ETIMEDOUT;
-> +		dev_err(host->dev, "%s: DATA TIMEOUT ERR", __func__);
-> +	}
-> +
-> +	if (cmd_err || dat_err) {
-> +		dev_err(host->dev, "cmd_err = %d, dat_err =%d, intsts = 0x%x",
-> +			cmd_err, dat_err, intsts);
-> +	}
-> +
-> +	return cqhci_irq(host->mmc, 0, cmd_err, dat_err);
-> +}
-> +#endif
-> +
->  static irqreturn_t msdc_irq(int irq, void *dev_id)
->  {
->  	struct msdc_host *host = (struct msdc_host *) dev_id;
-> @@ -1516,6 +1562,16 @@ static irqreturn_t msdc_irq(int irq, void *dev_id)
->  		if (!(events & (event_mask & ~MSDC_INT_SDIOIRQ)))
->  			break;
->  
-> +#if IS_ENABLED(CONFIG_MMC_CQHCI)
-> +		if ((host->mmc->caps2 & MMC_CAP2_CQE) &&
-> +		    (events & MSDC_INT_CMDQ)) {
-> +			msdc_cmdq_irq(host, events);
-> +			/* clear interrupts */
-> +			writel(events, host->base + MSDC_INT);
-> +			return IRQ_HANDLED;
-> +		}
-> +#endif
-> +
->  		if (!mrq) {
->  			dev_err(host->dev,
->  				"%s: MRQ=NULL; events=%08X; event_mask=%08X\n",
-> @@ -2200,6 +2256,36 @@ static int msdc_get_cd(struct mmc_host *mmc)
->  		return !val;
->  }
->  
-> +static void msdc_cqe_enable(struct mmc_host *mmc)
-> +{
-> +	struct msdc_host *host = mmc_priv(mmc);
-> +
-> +	/* enable cmdq irq */
-> +	writel(MSDC_INT_CMDQ, host->base + MSDC_INTEN);
-> +	/* enable busy check */
-> +	sdr_set_bits(host->base + MSDC_PATCH_BIT1, MSDC_PB1_BUSY_CHECK_SEL);
-> +	/* default write data / busy timeout 20s */
-> +	msdc_set_busy_timeout(host, 20 * 1000000000ULL, 0);
-> +	/* default read data timeout 1s */
-> +	msdc_set_timeout(host, 1000000000ULL, 0);
-> +}
-> +
-> +void msdc_cqe_disable(struct mmc_host *mmc, bool recovery)
-> +{
-> +	struct msdc_host *host = mmc_priv(mmc);
-> +
-> +	/* disable cmdq irq */
-> +	sdr_clr_bits(host->base + MSDC_INTEN, MSDC_INT_CMDQ);
-> +	/* disable busy check */
-> +	sdr_clr_bits(host->base + MSDC_PATCH_BIT1, MSDC_PB1_BUSY_CHECK_SEL);
-> +
-> +	if (recovery) {
-> +		sdr_set_field(host->base + MSDC_DMA_CTRL,
-> +			      MSDC_DMA_CTRL_STOP, 1);
-> +		msdc_reset_hw(host);
-> +	}
-> +}
-> +
->  static const struct mmc_host_ops mt_msdc_ops = {
->  	.post_req = msdc_post_req,
->  	.pre_req = msdc_pre_req,
-> @@ -2216,6 +2302,11 @@ static int msdc_get_cd(struct mmc_host *mmc)
->  	.hw_reset = msdc_hw_reset,
->  };
->  
-> +static const struct cqhci_host_ops msdc_cmdq_ops = {
-> +	.enable         = msdc_cqe_enable,
-> +	.disable        = msdc_cqe_disable,
-> +};
-> +
->  static void msdc_of_property_parse(struct platform_device *pdev,
->  				   struct msdc_host *host)
->  {
-> @@ -2236,6 +2327,12 @@ static void msdc_of_property_parse(struct platform_device *pdev,
->  		host->hs400_cmd_resp_sel_rising = true;
->  	else
->  		host->hs400_cmd_resp_sel_rising = false;
-> +
-> +	if (of_property_read_bool(pdev->dev.of_node,
-> +				  "mediatek,cqhci"))
-> +		host->cqhci = true;
-> +	else
-> +		host->cqhci = false;
->  }
->  
->  static int msdc_drv_probe(struct platform_device *pdev)
-> @@ -2351,6 +2448,8 @@ static int msdc_drv_probe(struct platform_device *pdev)
->  		mmc->caps2 |= MMC_CAP2_SDIO_IRQ_NOTHREAD;
->  
->  	mmc->caps |= MMC_CAP_ERASE | MMC_CAP_CMD23;
-> +	if (host->cqhci)
-> +		mmc->caps2 |= MMC_CAP2_CQE | MMC_CAP2_CQE_DCMD;
->  	/* MMC core transfer sizes tunable parameters */
->  	mmc->max_segs = MAX_BD_NUM;
->  	if (host->dev_comp->support_64g)
-> @@ -2366,6 +2465,26 @@ static int msdc_drv_probe(struct platform_device *pdev)
->  		host->dma_mask = DMA_BIT_MASK(32);
->  	mmc_dev(mmc)->dma_mask = &host->dma_mask;
->  
-> +#if IS_ENABLED(CONFIG_MMC_CQHCI)
-> +	if (mmc->caps2 & MMC_CAP2_CQE) {
-> +		host->cq_host = devm_kzalloc(host->mmc->parent,
-> +					     sizeof(*host->cq_host),
-> +					     GFP_KERNEL);
-> +		if (!host->cq_host) {
-> +			ret = -ENOMEM;
-> +			goto host_free;
-> +		}
-> +		host->cq_host->caps |= CQHCI_TASK_DESC_SZ_128;
-> +		host->cq_host->mmio = host->base + 0x800;
-> +		host->cq_host->ops = &msdc_cmdq_ops;
-> +		cqhci_init(host->cq_host, mmc, true);
-
-cqhci_init() can return an error.
-
-> +		mmc->max_segs = 128;
-> +		/* cqhci 16bit length */
-> +		/* 0 size, means 65536 so we don't have to -1 here */
-> +		mmc->max_seg_size = 64 * 1024;
-> +	}
-> +#endif
-> +
->  	host->timeout_clks = 3 * 1048576;
->  	host->dma.gpd = dma_alloc_coherent(&pdev->dev,
->  				2 * sizeof(struct mt_gpdma_desc),
-> 
+diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sm8150.yaml b/Documentation/devicetree/bindings/interconnect/qcom,sm8150.yaml
+new file mode 100644
+index 000000000000..99fb881bc797
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interconnect/qcom,sm8150.yaml
+@@ -0,0 +1,86 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/interconnect/qcom,sm8150.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title:  Qualcomm SM8150 Network-On-Chip Interconnect
++
++maintainers:
++  -
++
++description: |
++   SM8150 interconnect providers support system bandwidth requirements through
++   RPMh hardware accelerators known as Bus Clock Manager (BCM). The provider is
++   able to communicate with the BCM through the Resource State Coordinator (RSC)
++   associated with each execution environment. Provider nodes must point to at
++   least one RPMh device child node pertaining to their RSC and each provider
++   can map to multiple RPMh resources.
++
++properties:
++  reg:
++    maxItems: 1
++
++  compatible:
++    enum:
++      - qcom,sm8150-aggre1-noc
++      - qcom,sm8150-aggre2-noc
++      - qcom,sm8150-camnoc-noc
++      - qcom,sm8150-compute-noc
++      - qcom,sm8150-config-noc
++      - qcom,sm8150-dc-noc
++      - qcom,sm8150-gem-noc
++      - qcom,sm8150-ipa-virt
++      - qcom,sm8150-mc-virt
++      - qcom,sm8150-mmss-noc
++      - qcom,sm8150-system-noc
++      - qcom,sm8150-gem-noc-display
++      - qcom,sm8150-mc-virt-display
++      - qcom,sm8150-mmss-noc-display
++
++  '#interconnect-cells':
++    const: 1
++
++  qcom,bcm-voters:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: |
++      List of phandles to qcom,bcm-voter nodes that are required by
++      this interconnect to send RPMh commands.
++
++  qcom,bcm-voter-names:
++    $ref: /schemas/types.yaml#/definitions/string-array
++    description: |
++      Names for each of the qcom,bcm-voters specified.
++
++required:
++  - compatible
++  - reg
++  - '#interconnect-cells'
++  - qcom,bcm-voters
++
++additionalProperties: false
++
++examples:
++  - |
++      #include <dt-bindings/interconnect/qcom,sm8150.h>
++
++      config_noc: interconnect@1500000 {
++            compatible = "qcom,sm8150-config-noc";
++            reg = <0x01500000 0x1000>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      system_noc: interconnect@1629000 {
++            compatible = "qcom,sm8150-system-noc";
++            reg = <0x01629000 0x1000>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      mmss_noc: interconnect@1749000 {
++            compatible = "qcom,sm8150-mmss-noc";
++            reg = <0x01749000 0x1000>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
+diff --git a/include/dt-bindings/interconnect/qcom,sm8150.h b/include/dt-bindings/interconnect/qcom,sm8150.h
+new file mode 100644
+index 000000000000..0550d7313817
+--- /dev/null
++++ b/include/dt-bindings/interconnect/qcom,sm8150.h
+@@ -0,0 +1,176 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Qualcomm SM8150 interconnect IDs
++ *
++ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
++ */
++
++#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_SM8150_H
++#define __DT_BINDINGS_INTERCONNECT_QCOM_SM8150_H
++
++#define MASTER_A1NOC_CFG		0
++#define MASTER_QUP_0			1
++#define MASTER_EMAC			2
++#define MASTER_UFS_MEM			3
++#define MASTER_USB3			4
++#define MASTER_USB3_1			5
++#define A1NOC_SNOC_SLV			6
++#define SLAVE_SERVICE_A1NOC		7
++
++#define MASTER_A2NOC_CFG		0
++#define MASTER_QDSS_BAM			1
++#define MASTER_QSPI			2
++#define MASTER_QUP_1			3
++#define MASTER_QUP_2			4
++#define MASTER_SENSORS_AHB		5
++#define MASTER_TSIF			6
++#define MASTER_CNOC_A2NOC		7
++#define MASTER_CRYPTO_CORE_0		8
++#define MASTER_IPA			9
++#define MASTER_PCIE			10
++#define MASTER_PCIE_1			11
++#define MASTER_QDSS_ETR			12
++#define MASTER_SDCC_2			13
++#define MASTER_SDCC_4			14
++#define A2NOC_SNOC_SLV			15
++#define SLAVE_ANOC_PCIE_GEM_NOC		16
++#define SLAVE_SERVICE_A2NOC		17
++
++#define MASTER_CAMNOC_HF0_UNCOMP	0
++#define MASTER_CAMNOC_HF1_UNCOMP	1
++#define MASTER_CAMNOC_SF_UNCOMP		2
++#define SLAVE_CAMNOC_UNCOMP		3
++
++#define MASTER_NPU			0
++#define SLAVE_CDSP_MEM_NOC		1
++
++#define MASTER_SPDM			0
++#define SNOC_CNOC_MAS			1
++#define MASTER_QDSS_DAP			2
++#define SLAVE_A1NOC_CFG			3
++#define SLAVE_A2NOC_CFG			4
++#define SLAVE_AHB2PHY_SOUTH		5
++#define SLAVE_AOP			6
++#define SLAVE_AOSS			7
++#define SLAVE_CAMERA_CFG		8
++#define SLAVE_CLK_CTL			9
++#define SLAVE_CDSP_CFG			10
++#define SLAVE_RBCPR_CX_CFG		11
++#define SLAVE_RBCPR_MMCX_CFG		12
++#define SLAVE_RBCPR_MX_CFG		13
++#define SLAVE_CRYPTO_0_CFG		14
++#define SLAVE_CNOC_DDRSS		15
++#define SLAVE_DISPLAY_CFG		16
++#define SLAVE_EMAC_CFG			17
++#define SLAVE_GLM			18
++#define SLAVE_GRAPHICS_3D_CFG		19
++#define SLAVE_IMEM_CFG			20
++#define SLAVE_IPA_CFG			21
++#define SLAVE_CNOC_MNOC_CFG		22
++#define SLAVE_NPU_CFG			23
++#define SLAVE_PCIE_0_CFG		24
++#define SLAVE_PCIE_1_CFG		25
++#define SLAVE_NORTH_PHY_CFG		26
++#define SLAVE_PIMEM_CFG			27
++#define SLAVE_PRNG			28
++#define SLAVE_QDSS_CFG			29
++#define SLAVE_QSPI			30
++#define SLAVE_QUP_2			31
++#define SLAVE_QUP_1			32
++#define SLAVE_QUP_0			33
++#define SLAVE_SDCC_2			34
++#define SLAVE_SDCC_4			35
++#define SLAVE_SNOC_CFG			36
++#define SLAVE_SPDM_WRAPPER		37
++#define SLAVE_SPSS_CFG			38
++#define SLAVE_SSC_CFG			39
++#define SLAVE_TCSR			40
++#define SLAVE_TLMM_EAST			41
++#define SLAVE_TLMM_NORTH		42
++#define SLAVE_TLMM_SOUTH		43
++#define SLAVE_TLMM_WEST			44
++#define SLAVE_TSIF			45
++#define SLAVE_UFS_CARD_CFG		46
++#define SLAVE_UFS_MEM_CFG		47
++#define SLAVE_USB3			48
++#define SLAVE_USB3_1			49
++#define SLAVE_VENUS_CFG			50
++#define SLAVE_VSENSE_CTRL_CFG		51
++#define SLAVE_CNOC_A2NOC		52
++#define SLAVE_SERVICE_CNOC		53
++
++#define MASTER_CNOC_DC_NOC		0
++#define SLAVE_LLCC_CFG			1
++#define SLAVE_GEM_NOC_CFG		2
++
++#define MASTER_AMPSS_M0			0
++#define MASTER_GPU_TCU			1
++#define MASTER_SYS_TCU			2
++#define MASTER_GEM_NOC_CFG		3
++#define MASTER_COMPUTE_NOC		4
++#define MASTER_GRAPHICS_3D		5
++#define MASTER_MNOC_HF_MEM_NOC		6
++#define MASTER_MNOC_SF_MEM_NOC		7
++#define MASTER_GEM_NOC_PCIE_SNOC	8
++#define MASTER_SNOC_GC_MEM_NOC		9
++#define MASTER_SNOC_SF_MEM_NOC		10
++#define MASTER_ECC			11
++#define SLAVE_MSS_PROC_MS_MPU_CFG	12
++#define SLAVE_ECC			13
++#define SLAVE_GEM_NOC_SNOC		14
++#define SLAVE_LLCC			15
++#define SLAVE_SERVICE_GEM_NOC		16
++
++#define MASTER_IPA_CORE			0
++#define SLAVE_IPA_CORE			1
++
++#define MASTER_LLCC			0
++#define MASTER_ALC			1
++#define SLAVE_EBI_CH0			2
++
++#define MASTER_CNOC_MNOC_CFG		0
++#define MASTER_CAMNOC_HF0		1
++#define MASTER_CAMNOC_HF1		2
++#define MASTER_CAMNOC_SF		3
++#define MASTER_MDP_PORT0		4
++#define MASTER_MDP_PORT1		5
++#define MASTER_ROTATOR			6
++#define MASTER_VIDEO_P0			7
++#define MASTER_VIDEO_P1			8
++#define MASTER_VIDEO_PROC		9
++#define SLAVE_MNOC_SF_MEM_NOC		10
++#define SLAVE_MNOC_HF_MEM_NOC		11
++#define SLAVE_SERVICE_MNOC		12
++
++#define MASTER_SNOC_CFG			0
++#define A1NOC_SNOC_MAS			1
++#define A2NOC_SNOC_MAS			2
++#define MASTER_GEM_NOC_SNOC		3
++#define MASTER_PIMEM			4
++#define MASTER_GIC			5
++#define SLAVE_APPSS			6
++#define SNOC_CNOC_SLV			7
++#define SLAVE_SNOC_GEM_NOC_GC		8
++#define SLAVE_SNOC_GEM_NOC_SF		9
++#define SLAVE_OCIMEM			10
++#define SLAVE_PIMEM			11
++#define SLAVE_SERVICE_SNOC		12
++#define SLAVE_PCIE_0			13
++#define SLAVE_PCIE_1			14
++#define SLAVE_QDSS_STM			15
++#define SLAVE_TCU			16
++
++#define MASTER_MNOC_HF_MEM_NOC_DISPLAY	0
++#define MASTER_MNOC_SF_MEM_NOC_DISPLAY	1
++#define SLAVE_LLCC_DISPLAY		2
++
++#define MASTER_LLCC_DISPLAY		0
++#define SLAVE_EBI_CH0_DISPLAY		1
++
++#define MASTER_MDP_PORT0_DISPLAY	0
++#define MASTER_MDP_PORT1_DISPLAY	1
++#define MASTER_ROTATOR_DISPLAY		2
++#define SLAVE_MNOC_SF_MEM_NOC_DISPLAY	3
++#define SLAVE_MNOC_HF_MEM_NOC_DISPLAY	4
++
++#endif
+-- 
+2.26.1
 
