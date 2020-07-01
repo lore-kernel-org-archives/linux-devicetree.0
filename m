@@ -2,142 +2,68 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A02D5C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 13:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C8CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 14:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DDE320663
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 13:50:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rvVIaySq"
+	by mail.kernel.org (Postfix) with ESMTP id 9E9D320702
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 14:07:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593612454;
+	bh=jDUclDpj8mV8KImAtlH1CFivMXps1jDitGyJjc1qS3A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cPCNafbRODQI0dw7Ijom0Bugwzei0zJyzeDEPxEB6Kdgc5nUQmF0f+6LxDi6doq6J
+	 k3Ux+xYdtedrAOMBuSwc01bjTFxzCRZ0JJ2Aivcj9ScopcRlSv7GFDJzplwIo7EnuI
+	 WyAaD+nEw6q8HdEMDfe0gdS6ZgND9DCiXuqHSSNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731166AbgGANus (ORCPT
+        id S1731320AbgGAOHe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 09:50:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45244 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730408AbgGANus (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 09:50:48 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C282BC08C5C1;
-        Wed,  1 Jul 2020 06:50:47 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id dg28so19793263edb.3;
-        Wed, 01 Jul 2020 06:50:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=x6o1wkUwjMuIR89Ql/nev/CvdBqKZU3NdYKJFabOM+Y=;
-        b=rvVIaySq9mtTuhuIi+50y4YnttLRbH/7eWb3ro520avRBvTmtcMlkt+hn+Eki5xRMK
-         xjDAAqxGbBAPL4vrUpuuJagnSTGmvK52DjomFS4Ui8xj/89Jf5N7Y/9HyD6k6jgsOVeY
-         c4KWJWKUKu6VWx0Et+jBjsQ2gZc/lcI2c9zlfuege0n10g26xBKyUEwtjpIcvTc2cjUN
-         DRtJ+mWbAmxvjUAdADT6fAOFbCLK3NlJ+/1SJwE1NoyP7xOeKxjUeEh9SqnSo26j0PVg
-         soe5BlKucj5CVRNuGpuRfKb++UNJOhU5Mp55WQcWvAIGaTTpHLPm0KNY3FYeRr0hLnNY
-         oxJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=x6o1wkUwjMuIR89Ql/nev/CvdBqKZU3NdYKJFabOM+Y=;
-        b=ZkBtNHrCgSRwzUEA3UftBOzkiKSV61+R3TcdEPC/eeNLpDF8riAGNcfjLONNXyAvk5
-         n1klnvlj0+1KQZklZAHLNXrZtTwSZRwUg42+7oKsGo+yA7P2EnO9yElsvDW0pqxxbv6J
-         hbmWF6h1p51MopEEVrMGnJlxPdcigGqlSiA0lRgvF9Ii6Md9ULQgMt5IbKWiKWk3srsF
-         lX2UHMSLhP5rK4HK9aTGFdXN+KqFAshMeseUzlz4D88TUMfI2yVNL5tpx/d5YP6QVbeZ
-         Azt3TYX3us2hAkfJquV/M4FLt23d9R5WUCUTkW9FgqkEaVOEBV925sYLB9X6nHO9KtOi
-         JtKQ==
-X-Gm-Message-State: AOAM532VbTs6Haq9P7XYrCAcr5qhY7ndB/9wje5NEjXldt9jOrrhcFLX
-        K7zezDPygA8a48uKWVyZ8WGyaLKnKsc=
-X-Google-Smtp-Source: ABdhPJwVTHv/cW8OyFVqXrMuKBDBcr1ErMCL/gontOQJK/hpXYAxnQ5jriB9yEsF4o9YWv67PWbuqA==
-X-Received: by 2002:a50:f05d:: with SMTP id u29mr30155381edl.137.1593611445900;
-        Wed, 01 Jul 2020 06:50:45 -0700 (PDT)
-Received: from [192.168.86.31] ([213.191.183.145])
-        by smtp.gmail.com with ESMTPSA id o21sm4575872eja.37.2020.07.01.06.50.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Jul 2020 06:50:43 -0700 (PDT)
-Subject: Re: [PATCH 0/7] ARM: dts: qcom: msm8974: klte: Enable some hardware
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        linux-arm-msm@vger.kernel.org
-References: <20200630140912.260294-1-iskren.chernev@gmail.com>
- <20200701103041.GA3246@onstation.org>
-From:   Iskren Chernev <iskren.chernev@gmail.com>
-Message-ID: <9fb3c6b4-85fc-7528-a2c7-58a1350fa241@gmail.com>
-Date:   Wed, 1 Jul 2020 16:50:41 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 1 Jul 2020 10:07:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58870 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728021AbgGAOHe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Jul 2020 10:07:34 -0400
+Received: from localhost (unknown [122.182.251.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D938E2068F;
+        Wed,  1 Jul 2020 14:07:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593612453;
+        bh=jDUclDpj8mV8KImAtlH1CFivMXps1jDitGyJjc1qS3A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Qz70uUT0upQoGhjvozXuO8en3st9B+rMczbZLLJdq6aogZ3mb0mPYJzsnEfrDNYld
+         9UO7NrfVm9/HobD3/BG5ZV+wlrkc/QPgfJnAv85biivY8YIHL++cfK9oFTjiWct9G6
+         mkZeoVSi/2CDyptwdGkWPl1VR1Zdh9wD/n0KQnsE=
+Date:   Wed, 1 Jul 2020 19:37:29 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: phy: zynqmp-psgtr: Fix example's numbers of
+ cells in reg
+Message-ID: <20200701140729.GB2599@vkoul-mobl>
+References: <20200701134853.30656-1-laurent.pinchart@ideasonboard.com>
 MIME-Version: 1.0
-In-Reply-To: <20200701103041.GA3246@onstation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701134853.30656-1-laurent.pinchart@ideasonboard.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 01-07-20, 16:48, Laurent Pinchart wrote:
+> The DT examples are by default compiled in a parent that has
+>  #address-cells and #size-cells both set to 1. Fix the example
+> accordingly, even if it doesn't match the actual hardware, as this is
+> the recommended practice for DT bindings examples.
 
-On 7/1/20 1:30 PM, Brian Masney wrote:
-> Hi Iskren,
->
-> On Tue, Jun 30, 2020 at 05:09:05PM +0300, Iskren Chernev wrote:
->> Enable support for various hw found on the Samsung Galaxy S5:
->> - touchkey (the two buttons around the home button)
->> - touchscreen
->> - notification led
->> - wifi
->> - external SD card
->>
->> Please note that for working wifi the correct firmware is needed. Check [1]
->> for links and locations.
->>
->> Also note, that to actually run a mainline kernel on the klte, you'd need
->> to apply this patch [2]. Any feedback on getting this to run on pure
->> mainline are welcome.
->>
->> [1] https://gitlab.com/postmarketOS/pmaports/-/blob/master/firmware/firmware-samsung-klte/APKBUILD
->> [2] https://gitlab.com/postmarketOS/linux-postmarketos/-/commit/765f55b248cd3b231af8431fe2f2aeca263b4e4b
->
-> Good to see more msm8974 support upstream!
->
-> Regarding the second patch, that should only be needed in order to
-> use the GPU on these devices.
+Applied, thanks
 
-For the klte, without this delay rpm init patch, the device reboots soon
-after being booted. I tested with pure v5.8 and next-20200701 (both have
-basic klte support, including usb ethernet for ssh). With the patch
-applied, it works like a charm.
-
-Note that there is no GPU enabled in this setup (unless I'm missing some
-piece from the SOC dtsi).
-
-> I hope that patch won't be needed once
-> IOMMU support is added, which is the last major missing piece in order
-> to have the GPU working upstream. I posted a RFC patch [3] in January
-> but didn't get any suggestions. I suspect some kind of memory corruption
-> since the board gets unstable with that patch.
-
-If the IOMMU is only used for graphics, then the problem remains for klte.
-
-> If that hack patch is still needed to use the GPU once IOMMU support is
-> in place, then I planned to troubleshoot it further by adding some log
-> statements to various probe functions with and without that patch to see
-> the probe order between the various subsystems. I suspect the issue is
-> that a clock isn't ticking yet.
->
-> [3] https://lore.kernel.org/lkml/20200109002606.35653-1-masneyb@onstation.org/T/#u
-
-I'll be happy to help with that.
-
-> Brian
-
-Iskren
-
+-- 
+~Vinod
