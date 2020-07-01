@@ -2,159 +2,102 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A569C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E1FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:17:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37CC62080D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FCDF207BB
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:17:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593620240;
+	bh=5yCWPuDKKPBG+3wyVyrG68dBy5zQQVEAkJjSRZMx/r0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N3fRsvGdbl1EsJ05vklxHsvfK6dq1irpT1WgCh38bIX5mM29h4DgV/VED8m83eIjn
+	 yAPsiFWTSg4fr0+QqXi9SQgHtwYHXxQkIGfW08doWnt+xS1mWmD+kHUf6KygWdmEu7
+	 xBkAo9InbIfWPhBwU6yaRIw17iZc9g5/WZ82xet0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732158AbgGAQMl (ORCPT
+        id S1732230AbgGAQRQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:12:41 -0400
-Received: from foss.arm.com ([217.140.110.172]:54238 "EHLO foss.arm.com"
+        Wed, 1 Jul 2020 12:17:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730645AbgGAQMl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:12:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 713D631B;
-        Wed,  1 Jul 2020 09:12:40 -0700 (PDT)
-Received: from [10.57.21.32] (unknown [10.57.21.32])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 297AB3F68F;
-        Wed,  1 Jul 2020 09:12:37 -0700 (PDT)
-Subject: Re: [PATCH v2 01/12] ACPI/IORT: Make iort_match_node_callback walk
- the ACPI namespace for NC
-To:     Hanjun Guo <guohanjun@huawei.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Will Deacon <will@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>
-References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
- <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
- <20200619082013.13661-2-lorenzo.pieralisi@arm.com>
- <718cae1f-2f33-f6d9-f278-157300b73116@huawei.com>
- <20200629090551.GA28873@e121166-lin.cambridge.arm.com>
- <765078e7-b3ec-af5d-0405-7834ba0f120a@huawei.com>
- <20200630102454.GA17556@e121166-lin.cambridge.arm.com>
- <4817d766-0437-5356-a0b9-97b111d4cae2@huawei.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <952a6720-f401-1441-5548-5b40cfc76d3a@arm.com>
-Date:   Wed, 1 Jul 2020 17:12:35 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1726760AbgGAQRQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Jul 2020 12:17:16 -0400
+Received: from earth.universe (dyndsl-091-096-062-146.ewe-ip-backbone.de [91.96.62.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CF4E20760;
+        Wed,  1 Jul 2020 16:17:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593620235;
+        bh=5yCWPuDKKPBG+3wyVyrG68dBy5zQQVEAkJjSRZMx/r0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ko726iabypBH1VsVQwgsmGJP1Ucbw89m/xZTCOmYVcvQwMKF/tREOKGpu/6j0wiVb
+         eUx7KeszqMCWFz0w2EowceW+z9AMfFGjj+gGenLgPgNawDtrrKODlI5xt+tMJh3Hpn
+         VcHRO03+RxqZzomhATa9Rux5VMBXFAhIAoQ80q4o=
+Received: by earth.universe (Postfix, from userid 1000)
+        id A99323C08CE; Wed,  1 Jul 2020 18:17:13 +0200 (CEST)
+Date:   Wed, 1 Jul 2020 18:17:13 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+Cc:     pali@kernel.org, robh@kernel.org, afd@ti.com, dmurphy@ti.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, sspatil@android.com
+Subject: Re: [EXTERNAL] Re: [PATCH v14 4/4] power: supply: bq25150 introduce
+ the bq25150
+Message-ID: <20200701161713.f67htedosevy4oyp@earth.universe>
+References: <20200630215426.26450-1-r-rivera-matos@ti.com>
+ <20200630215426.26450-5-r-rivera-matos@ti.com>
+ <20200630233341.d5ztfv5rcbhjxi4r@earth.universe>
+ <b22f4eed-6baf-604e-0953-d427407c904e@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <4817d766-0437-5356-a0b9-97b111d4cae2@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b22f4eed-6baf-604e-0953-d427407c904e@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-06-30 14:04, Hanjun Guo wrote:
-> On 2020/6/30 18:24, Lorenzo Pieralisi wrote:
->> On Tue, Jun 30, 2020 at 11:06:41AM +0800, Hanjun Guo wrote:
->>
->> [...]
->>
->>>> For devices that aren't described in the DSDT - IORT translations
->>>> are determined by their ACPI parent device. Do you see/Have you
->>>> found any issue with this approach ?
->>>
->>> The spec says "Describes the IO relationships between devices
->>> represented in the ACPI namespace.", and in section 3.1.1.3 Named
->>> component node, it says:
->>
->> PCI devices aren't necessarily described in the ACPI namespace and we
->> still use IORT to describe them - through the RC node.
->>
->>> "Named component nodes are used to describe devices that are also
->>> included in the Differentiated System Description Table (DSDT). See
->>> [ACPI]."
->>>
->>> So from my understanding, the IORT spec for now, can only do ID
->>> translations for devices in the DSDT.
->>
->> I think you can read this multiple ways but this patch does not
->> change this concept. What changes, is applying parent's node IORT
->> mapping to child nodes with no associated DSDT nodes, it is the
->> same thing we do with PCI and the _DMA method - we could update
->> the wording in the specs if that clarifies but I don't think this
->> deliberately disregards the specifications.
-> 
-> I agree, but it's better to update the wording of the spec.
-> 
->>
->>>>> For a platform device, if I use its parent's full path name for
->>>>> its named component entry, then it will match, but this will violate
->>>>> the IORT spec.
->>>>
->>>> Can you elaborate on this please I don't get the point you
->>>> are making.
->>>
->>> For example, device A is not described in DSDT so can't represent
->>> as a NC node in IORT. Device B can be described in DSDT and it
->>> is the parent of device A, so device B can be represented in IORT
->>> with memory access properties and node flags with Substream width
->>> and Stall supported info.
->>>
->>> When we trying to translate device A's ID, we reuse all the memory
->>> access properties and node flags from its parent (device B), but
->>> will it the same?
->>
->> I assume so why wouldn't it be ? Why would be describe them in
->> a parent-child relationship if that's not how the system looks like
->> in HW ?
-> 
-> The point I'm making is that I'm not sure all the memory access and
-> stall properties are the same for the parent and the device itself.
+Hi,
 
-Is that even a valid case though? The principal thing we want to 
-accommodate here is when device B *is* the one accessing memory, either 
-because it is a bridge with device A sat behind it, or because device A 
-is actually just some logical function or subset of physical device B.
+On Tue, Jun 30, 2020 at 11:17:30PM -0500, Ricardo Rivera-Matos wrote:
+> [...]
+> > > +static int bq2515x_battery_set_property(struct power_supply *psy,
+> > > +		enum power_supply_property prop,
+> > > +		const union power_supply_propval *val)
+> > > +{
+> > > +	struct bq2515x_device *bq2515x = power_supply_get_drvdata(psy);
+> > > +	int ret;
+> > > +
+> > > +	switch (prop) {
+> > > +	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE:
+> > > +		ret = bq2515x_set_batt_reg(bq2515x, val->intval);
+> > > +		break;
+> > > +	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:
+> > > +		ret = bq2515x_set_const_charge_current(bq2515x, val->intval);
+> > > +		break;
+> > > +	case POWER_SUPPLY_PROP_PRECHARGE_CURRENT:
+> > > +		ret = bq2515x_set_precharge_current(bq2515x, val->intval);
+> > > +		break;
+> > > +	default:
+> > > +		return -EINVAL;
+> > > +	}
+> > > +
+> > > +	return ret;
+> > > +}
+> > Expose those through the charger device. The battery device
+> > can expose maximum data (e.g. POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX),
+> > but should not control the charging itself.
+> ACK. Just to confirm this would eliminate the need for the
+> bq2515x_battery_set_property altogether as these three properties should be
+> set in the charger device. There will only be a bq2515x_battery_get_property
+> to report the CONSTANT_CHARGE_VOLTAGE_MAX and CONSTANT_CHARGE_CURRENT_MAX
+> values captured from the devicetree.
 
-If the topology is such that device A is a completely independent device 
-with its own path to memory such that it could have different 
-properties, I would expect that it *should* be described in DSDT, and I 
-can't easily think of a good reason why it wouldn't be. I'm also 
-struggling to imagine how it might even have an ID that had to be 
-interpreted in the context of device B if it wasn't one of the cases 
-above :/
+Right.
 
-I don't doubt that people could - or maybe even have - come up with crap 
-DSDT bindings that don't represent the hardware sufficiently accurately, 
-but I'm not sure that should be IORT's problem...
-
-Robin.
-
->> Do you have a specific example in mind that we should be aware of ?
->>
->>> So the IORT spec don't support this, at least it's pretty vague
->>> I think.
->>
->> I think that's a matter of wording, it can be updated if it needs be,
->> reach out if you see any issue with the current approach please.
-> 
-> If the all the properties for parent and device itself are the same,
-> I have no strong opinion for this patch, but it's better to update
-> the wording of the spec as well.
-> 
-> Thanks
-> Hanjun
-> 
+-- Sebastian
