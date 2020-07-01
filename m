@@ -6,67 +6,58 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7E1C433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 22:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FC0C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 22:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E77252085B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 22:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00CB420853
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 22:24:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593642257;
-	bh=HguEhSuy+TQJwfPgAmeSVzUPU4XvdrCi4pUBHZc9nX0=;
+	s=default; t=1593642277;
+	bh=TW5PQPclJiwa+OQ6f0OZFhtat4XveCrFk1WVPM79oMc=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=C5qcuxytYnfDIvnsWax0psVMD5HRv08PTkn5fesb8daPp4DF/fNxG+qG9f2WwcgEY
-	 2z265VT8EPOrA7ea40xi1DlsAUHJ+89zB44sIac6nVPN+ktYE8NpUkSf2qc1xgUXUT
-	 xQ5sYx+08I6YbQWQeRVoIAGqHAG0O7Tn+Zbhqh9E=
+	b=TQwBlDtPPcEfnqSwpGPB4etEDzKmxAfQ6D7I133P/eQchECU2DGT6okMuQqnGIEgq
+	 WTRrptJa1/j2TFoRljonmhRU5VYIdxtZ5T1xFwXxzlfIFJMatOWARrWIq65hm6q4N6
+	 JaHfKGil+/VTKxD+bnd3lPbBIz/npJCmhQ8/8ZWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbgGAWYQ (ORCPT
+        id S1728107AbgGAWYc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 18:24:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51236 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 18:24:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726464AbgGAWYQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jul 2020 18:24:16 -0400
+        id S1728103AbgGAWYa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Jul 2020 18:24:30 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11AF8207E8;
-        Wed,  1 Jul 2020 22:24:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6B97207E8;
+        Wed,  1 Jul 2020 22:24:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593642255;
-        bh=HguEhSuy+TQJwfPgAmeSVzUPU4XvdrCi4pUBHZc9nX0=;
+        s=default; t=1593642270;
+        bh=TW5PQPclJiwa+OQ6f0OZFhtat4XveCrFk1WVPM79oMc=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=QnDFizlnL7MCgV5wrTnsU7SP536qZzWl81Skg2dTtNoDE1mD7h8OkeeTLzU+zJIp6
-         Ri5j2qRZuyWrNqSwLQASaB+PC7B8in5SjMeG/RzbZjDCQZnZgQ21GezocLLm6GZsQ8
-         /DyYPtilrzyb3VVFGimpzp+hCIE2HPamV7xBCMhM=
-Date:   Wed, 01 Jul 2020 23:24:13 +0100
+        b=BH5EJrNlTGmCRsvIJIBkzCqoy1EWY7FftdUKquE+FX+YQruobhe0qUZsbYBIk8lxe
+         ABQNEScug9B/MlIYyDTOGh5Hzbw1c8MydlRr9x7Rc1l2Z1FapVjwdGB/PUJzJMatUp
+         qTVGUiVeQblrW73/pqbhMQ4AuI1pFBpSPc4ktFkY=
+Date:   Wed, 01 Jul 2020 23:24:28 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        devicetree@vger.kernel.org
-Cc:     Mason Yang <masonccyang@mxic.com.tw>,
-        linux-mtd@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-spi@vger.kernel.org
-In-Reply-To: <9969c8a1-e6be-38a9-ced5-ce8c5ff07046@cogentembedded.com>
-References: <9969c8a1-e6be-38a9-ced5-ce8c5ff07046@cogentembedded.com>
-Subject: Re: [PATCH v5 0/2] Add Renesas RPC-IF support
-Message-Id: <159364224814.10988.6815822575560386098.b4-ty@kernel.org>
+To:     Leilk Liu <leilk.liu@mediatek.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-spi@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+In-Reply-To: <20200701090020.7935-1-leilk.liu@mediatek.com>
+References: <20200701090020.7935-1-leilk.liu@mediatek.com>
+Subject: Re: [PATCH] spi: mediatek: use correct SPI_CFG2_REG MACRO
+Message-Id: <159364224815.10988.5483931944893565732.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 16 Jun 2020 23:00:20 +0300, Sergei Shtylyov wrote:
-> Here's a set of 2 patches against Linus' repo. Renesas Reduced Pin Count
-> Interface (RPC-IF) allows a SPI flash or HyperFlash connected to the SoC
-> to be accessed via the external address space read mode or the manual mode.
-> The memory controller driver for RPC-IF registers either SPI or HyperFLash
-> subdevice, depending on the contents of the device tree subnode; it also
-> provides the abstract "back end" API that can be used by the "front end"
-> SPI/MTD drivers to talk to the real hardware...
-> 
-> [...]
+On Wed, 1 Jul 2020 17:00:20 +0800, Leilk Liu wrote:
+> this patch use correct SPI_CFG2_REG offset.
 
 Applied to
 
@@ -74,10 +65,8 @@ Applied to
 
 Thanks!
 
-[1/2] dt-bindings: memory: document Renesas RPC-IF bindings
-      commit: ab1c362061d92556bd96fd2c0b188f8e4223e3e3
-[2/2] memory: add Renesas RPC-IF driver
-      commit: ca7d8b980b67f133317525c4273e144116ee1ae5
+[1/1] spi: mediatek: use correct SPI_CFG2_REG MACRO
+      commit: 44b37eb79e16a56cb30ba55b2da452396b941e7a
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
