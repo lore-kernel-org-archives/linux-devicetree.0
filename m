@@ -2,77 +2,105 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C193C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 21:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27AA2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 22:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5063B20A8B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 21:48:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="hVYr7emw"
+	by mail.kernel.org (Postfix) with ESMTP id EEDE620780
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 22:22:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593642164;
+	bh=cJ/E7eJozKmA8owHe5A5Mzv6L3LI8x9nRfUS77HPINA=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=FG3yMJC5Tv1T6yzbCt0AJ4Ajy6FOp5aaLWAZzFVS4NRCRYO9POVkjvPxQrDUawmSj
+	 sL0Yw+sF3fRdRt8b0ThgvSoA14vYcPMJJLE9aSvOMk3ofNaX98pjE0hQr7V1GxMWXm
+	 Ypap5P3tJTGzW/BNj380njKVseZBnmqF1JYs8sB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgGAVsi (ORCPT
+        id S1726922AbgGAWWn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 17:48:38 -0400
-Received: from www.zeus03.de ([194.117.254.33]:57714 "EHLO mail.zeus03.de"
+        Wed, 1 Jul 2020 18:22:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726942AbgGAVsi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jul 2020 17:48:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=k1; bh=lV4rVEU06zzJo6BqacCA+LQtCQz
-        l4u3O5dvm7O9wVH8=; b=hVYr7emwsPHwtsEy8tCKkz2k5OsarQwkvNrtArv2KCw
-        ZgrXs/ETDWqIqefzbzUolHrFr3yAdPe625VcAOoZt6bx/7RHNsMXsdKgZ1aDTLUx
-        T/1x5nxKN8Dm75vmvEsaxTuZILlDWpgiOW8AjH0xq6d7yc9kVYMKGUnfoNK0BV0o
-        =
-Received: (qmail 678364 invoked from network); 1 Jul 2020 23:48:35 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 1 Jul 2020 23:48:35 +0200
-X-UD-Smtp-Session: l3s3148p1@/XICQWipVt8gAwDPXwRGAHjapuWXvfu/
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-i2c@vger.kernel.org
-Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        Alain Volmat <alain.volmat@st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: [PATCH] i2c: add binding to mark a bus as SMBus
-Date:   Wed,  1 Jul 2020 23:48:30 +0200
-Message-Id: <20200701214830.3174-1-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1726404AbgGAWWn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Jul 2020 18:22:43 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77574207E8;
+        Wed,  1 Jul 2020 22:22:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593642163;
+        bh=cJ/E7eJozKmA8owHe5A5Mzv6L3LI8x9nRfUS77HPINA=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=eoZetv183/MwvWt4g9XDdVjYYsLTKM3H+xWZ9H88Ciadikq8X5B7IjbZPxke7OytK
+         0khhZ0pQ70pTNdYl1Wko3KkJCe4bG+XwA2DNLuFlfOs/+1Oa5euSv4F5l2qhUSjjCZ
+         eYZ09tWNMNXg6H1ACS8jpDmejaNm2KrM+ZcGDXSU=
+Date:   Wed, 01 Jul 2020 23:22:40 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     lgirdwood@gmail.com, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        robh+dt@kernel.org
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+In-Reply-To: <20200630125843.11561-1-peter.ujfalusi@ti.com>
+References: <20200630125843.11561-1-peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v4 0/3] ASoC: ti: Add support for audio on J721e EVM
+Message-Id: <159364215574.10630.2058528286314798186.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SMBus is largely compatible with I2C but there are some specifics. In
-case we need them on a bus, we can now use this new binding.
+On Tue, 30 Jun 2020 15:58:40 +0300, Peter Ujfalusi wrote:
+> Changes since v3:
+> - Fix the single clock source handling and typo
+> 
+> Changes since v2:
+> - DT binding:
+>  - use proper (?) patch subject for the binding docuemtn patch
+>  - drop pll4 and pll15 from DT - driver should check the rate via
+>    clk_get_parent. If it is not available (as it is not currently) then use the
+>    match_data provided rates.
+>  - add simple explanation for the clocking setup
+>  - Use descriptive names for clocks: cpb/ivi-mcasp-auxclk and cpb/ivi-codec-scki
+>  - dt_binding_check shows no errors/warnings
+> - ASoC machine driver:
+>  - Try to read the PLL4/15 rate with clk API (parent of the two clock divider)
+>    if it is not available then use the match_data provided numbers.
+>  - Support for single PLL setup
+> 
+> [...]
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
- Documentation/devicetree/bindings/i2c/i2c.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+Applied to
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
-index 438ae123107e..d1f8cf3bd236 100644
---- a/Documentation/devicetree/bindings/i2c/i2c.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c.txt
-@@ -77,6 +77,11 @@ wants to support one of the below features, it should adapt these bindings.
- 	this information to detect a stalled bus more reliably, for example.
- 	Can not be combined with 'multi-master'.
- 
-+- smbus
-+	states that additional SMBus restrictions and features apply to this bus.
-+	Examples of features are SMBusHostNotify and SMBusAlert. Examples of
-+	restrictions are more reserved addresses and timeout definitions.
-+
- Required properties (per child device)
- --------------------------------------
- 
--- 
-2.27.0
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
+Thanks!
+
+[1/3] ASoC: ti: davinci-mcasp: Specify stream_name for playback/capture
+      commit: ef3ab250aad9920fa7fd6280051c92a488109b87
+[2/3] ASoC: dt-bindings: Add documentation for TI j721e EVM (CPB and IVI)
+      commit: 8142500e7dc0d214e3c7a22788116f71cd84f07b
+[3/3] ASoC: ti: Add custom machine driver for j721e EVM (CPB and IVI)
+      commit: 6748d05590594837e42dfa975879fb275099f0b2
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
