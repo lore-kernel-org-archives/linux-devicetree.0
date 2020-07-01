@@ -4,85 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FC0C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 22:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC87C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 22:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00CB420853
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 22:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B83320780
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 22:28:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593642277;
-	bh=TW5PQPclJiwa+OQ6f0OZFhtat4XveCrFk1WVPM79oMc=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=TQwBlDtPPcEfnqSwpGPB4etEDzKmxAfQ6D7I133P/eQchECU2DGT6okMuQqnGIEgq
-	 WTRrptJa1/j2TFoRljonmhRU5VYIdxtZ5T1xFwXxzlfIFJMatOWARrWIq65hm6q4N6
-	 JaHfKGil+/VTKxD+bnd3lPbBIz/npJCmhQ8/8ZWQ=
+	s=default; t=1593642510;
+	bh=CQoLjCvVWSNdm1wSu07odj4x0bP83pMXj6gR1QhYTA0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hg+P602Xl8n/EflwyCz5OP3LS1kDSjG8qSQvYoqsou+QFJTCwsUuqha4Xsu4AR8pY
+	 4wNe0eCJBvKA01HFziO2XF8eMgS/yOt6XntduEQTqJaBDpMf/btlRjPhJzQI8cmqxw
+	 N2r1Qii/MsTgkvqyuWuSEUuHSLke5+hyX4SVHojU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbgGAWYc (ORCPT
+        id S1726315AbgGAW2a (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 18:24:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51474 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 18:28:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728103AbgGAWYa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jul 2020 18:24:30 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725771AbgGAW23 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Jul 2020 18:28:29 -0400
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6B97207E8;
-        Wed,  1 Jul 2020 22:24:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8AEF20780
+        for <devicetree@vger.kernel.org>; Wed,  1 Jul 2020 22:28:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593642270;
-        bh=TW5PQPclJiwa+OQ6f0OZFhtat4XveCrFk1WVPM79oMc=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=BH5EJrNlTGmCRsvIJIBkzCqoy1EWY7FftdUKquE+FX+YQruobhe0qUZsbYBIk8lxe
-         ABQNEScug9B/MlIYyDTOGh5Hzbw1c8MydlRr9x7Rc1l2Z1FapVjwdGB/PUJzJMatUp
-         qTVGUiVeQblrW73/pqbhMQ4AuI1pFBpSPc4ktFkY=
-Date:   Wed, 01 Jul 2020 23:24:28 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Leilk Liu <leilk.liu@mediatek.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-spi@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
-In-Reply-To: <20200701090020.7935-1-leilk.liu@mediatek.com>
-References: <20200701090020.7935-1-leilk.liu@mediatek.com>
-Subject: Re: [PATCH] spi: mediatek: use correct SPI_CFG2_REG MACRO
-Message-Id: <159364224815.10988.5483931944893565732.b4-ty@kernel.org>
+        s=default; t=1593642508;
+        bh=CQoLjCvVWSNdm1wSu07odj4x0bP83pMXj6gR1QhYTA0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=rr6NyPFKuysi3BqpwA30/kvPI6XNFatjwE8VHD20QlyPn/NHa7Qy7MssJB4RLFzU4
+         or4iJTeNx6oobg6pS9A3iZFYtp4Fu6HsN+mHhd83JaKofy2V4jHV1enj2e+FWJVxvv
+         sNFgCtA+mEOg0IehUtdcGlM3NFL/5B2Bqt4ZrjFU=
+Received: by mail-ot1-f50.google.com with SMTP id 72so22680757otc.3
+        for <devicetree@vger.kernel.org>; Wed, 01 Jul 2020 15:28:28 -0700 (PDT)
+X-Gm-Message-State: AOAM531Rp9VmVV1gHpxgtyWJbMxMLnb3cNGsBDriDab9bfMqHjSm76kV
+        77x8qnsnPiWPqqmnmy8y3Ozu1vp+/3XPpC9Bhg==
+X-Google-Smtp-Source: ABdhPJzNc0YwqiAvVov7e4Lfkj5nA8eHsEAJmp5uOMLSsbhI8wcaqnnf2Dc6U3W9pLQJ2XIUTNtfDgEH5XByiXRy1hw=
+X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr24830173ots.192.1593642508080;
+ Wed, 01 Jul 2020 15:28:28 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200630223020.25546-1-festevam@gmail.com> <159364215574.10630.10014931369710772889.b4-ty@kernel.org>
+In-Reply-To: <159364215574.10630.10014931369710772889.b4-ty@kernel.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 1 Jul 2020 16:28:16 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLzae5qUJXF-otsUQqy+zyk9fD_AKd8b8F+PFWZBH1QDw@mail.gmail.com>
+Message-ID: <CAL_JsqLzae5qUJXF-otsUQqy+zyk9fD_AKd8b8F+PFWZBH1QDw@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: dt-bindings: simple-card: Fix 'make
+ dt_binding_check' warnings
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 1 Jul 2020 17:00:20 +0800, Leilk Liu wrote:
-> this patch use correct SPI_CFG2_REG offset.
+On Wed, Jul 1, 2020 at 4:22 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Tue, 30 Jun 2020 19:30:20 -0300, Fabio Estevam wrote:
+> > The following build warnings are seen with 'make dt_binding_check':
+> >
+> > Documentation/devicetree/bindings/sound/simple-card.example.dts:209.46-211.15: Warning (unit_address_vs_reg): /example-4/sound/simple-audio-card,cpu@0: node has a unit name, but no reg or ranges property
+> > Documentation/devicetree/bindings/sound/simple-card.example.dts:213.37-215.15: Warning (unit_address_vs_reg): /example-4/sound/simple-audio-card,cpu@1: node has a unit name, but no reg or ranges property
+> > Documentation/devicetree/bindings/sound/simple-card.example.dts:250.42-261.15: Warning (unit_address_vs_reg): /example-5/sound/simple-audio-card,dai-link@0: node has a unit name, but no reg or ranges property
+> > Documentation/devicetree/bindings/sound/simple-card.example.dts:263.42-288.15: Warning (unit_address_vs_reg): /example-5/sound/simple-audio-card,dai-link@1: node has a unit name, but no reg or ranges property
+> > Documentation/devicetree/bindings/sound/simple-card.example.dts:270.32-272.19: Warning (unit_address_vs_reg): /example-5/sound/simple-audio-card,dai-link@1/cpu@0: node has a unit name, but no reg or ranges property
+> > Documentation/devicetree/bindings/sound/simple-card.example.dts:273.23-275.19: Warning (unit_address_vs_reg): /example-5/sound/simple-audio-card,dai-link@1/cpu@1: node has a unit name, but no reg or ranges property
+> > Documentation/devicetree/bindings/sound/simple-card.example.dts:276.23-278.19: Warning (unit_address_vs_reg): /example-5/sound/simple-audio-card,dai-link@1/cpu@2: node has a unit name, but no reg or ranges property
+> > Documentation/devicetree/bindings/sound/simple-card.example.dts:279.23-281.19: Warning (unit_address_vs_reg): /example-5/sound/simple-audio-card,dai-link@1/cpu@3: node has a unit name, but no reg or ranges property
+> > Documentation/devicetree/bindings/sound/simple-card.example.dts:290.42-303.15: Warning (unit_address_vs_reg): /example-5/sound/simple-audio-card,dai-link@2: node has a unit name, but no reg or ranges property
+> >
+> > [...]
+>
+> Applied to
+>
+>    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-Applied to
+Can you apply this for v5.8 or drop and I can apply with all the other
+warning fixes I have queued. This is the last one.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
-
-Thanks!
-
-[1/1] spi: mediatek: use correct SPI_CFG2_REG MACRO
-      commit: 44b37eb79e16a56cb30ba55b2da452396b941e7a
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+Rob
