@@ -2,116 +2,209 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9E1C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 06:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E73C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 06:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F13520663
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 06:51:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="cxLxSk93";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Thb2uVjh"
+	by mail.kernel.org (Postfix) with ESMTP id 8562B20722
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 06:53:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593586398;
+	bh=dXBhHEPls7hLBapRWS5AGMEC2erUdD9Csqr28fSP9pw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HfffOws/SgteCqCCLAnYnlZqvWdTFpD8PxVVplVinznoXBowpzDnNnxIFHyXOC2kJ
+	 gKMjgTBO8+YYHEjj4KpjW1oiiCB+MUe1SbKKhIWY1foqAA8tJkx1RxhAsllB3kMGKu
+	 5SSuysbzpU3zlBWZD+CvdpG0BmDnXYUclxTi6gbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727943AbgGAGvO (ORCPT
+        id S1727975AbgGAGxS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 02:51:14 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:44489 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727817AbgGAGvN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 02:51:13 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id DC494AA7;
-        Wed,  1 Jul 2020 02:51:11 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 01 Jul 2020 02:51:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=DMlwC4LDZdJp/AElsdSkN7QDFdA
-        xaBzbT1BNfb3j+c0=; b=cxLxSk93t8J6dOd9wq+KFmXn34ZCBDSQqIKdR4Wb0yL
-        AIKvHg2d9TLY1njfPXqdbyId8+oRdwWGKfYlvRU8Dw0zdDSBSFlEPRbpDAzvG+qk
-        VcW+WwrBnCEfKDRG6Ne8GyvqEoUgV2SLIcNRN4xz5BgXqiDd4BxzbBZ1JMwIyRIJ
-        DvjUrIW0pkXRlsMoU48b8x+gdMhxa74miehgDWW6He23mwJpdgtpSGcg+Wf97Jic
-        I+4I2ifemhF/DdTiNw1mPrfqjlldNa2MpRBkhUS2ogAF16GbE5P5RKoMm0wTEB2P
-        TMJa70yPIhhtd6WhKr7ImA8hISsQ9f8AK9WicAd24hw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=DMlwC4
-        LDZdJp/AElsdSkN7QDFdAxaBzbT1BNfb3j+c0=; b=Thb2uVjhGDFYSOBdjBXJiP
-        3u+y5J53+9pRuUxU/eNw+cZVANLrLEyXbpP1gi8c61D+J6U0U6742MUlUwl1a8Yz
-        pi7i0OcwrDbjDuwyOrCRKOebG335obRy12b6DmZV0EDDpUAdYET1ml9y+23EAPLQ
-        tHMmAA+1gIum1iRzIyuibLTJnpIbi4n+Dle/2ozZkrIKTRntq5DIIqMjkeuHcByr
-        ZNH4kYqvUREJjZsm9Ddpbo556E6pwddXGBg1YcztLNbA5TCgVYlmzOLaPJ1K7ukW
-        eTQI1ec7dQ/KUIEPFJn3mcRSnjHVR6LDrzNlCsQBOvm4SJCq6FhYcPrBCulynbQQ
-        ==
-X-ME-Sender: <xms:XDL8Xmq0aaZWCwKkaWJfKNzsiK-nqXWWAxS5A5o1psW4xi9xgacQow>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrtddugdduudegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
-    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:XDL8Xkopx1jOmA49yAwBC3rc-9VW7Yr8xqo03MtoZug9NgM462_4Og>
-    <xmx:XDL8XrNofe-BCmqXUMGf01Hm3tgRMX_R-sUyFNUNQtzsRF5e7jEY2g>
-    <xmx:XDL8Xl7SXahVf5qVwJPf1hroEw3NXNxK709Aw9haqlEyaFyCXqdOEA>
-    <xmx:XzL8XlGFyaNxBpbCImJWUPj1CEyjT3kkOA4udqttLvAMOhQaU1a0ag>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1ABE7328005A;
-        Wed,  1 Jul 2020 02:51:08 -0400 (EDT)
-Date:   Wed, 1 Jul 2020 08:51:05 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2] dt-bindings: display: Convert connectors to DT schema
-Message-ID: <20200701065105.skz3ln54h3qo4div@gilmour.lan>
-References: <20200630200216.1172566-1-robh@kernel.org>
+        Wed, 1 Jul 2020 02:53:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53388 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726144AbgGAGxR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Jul 2020 02:53:17 -0400
+Received: from localhost (unknown [122.182.251.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8CF220663;
+        Wed,  1 Jul 2020 06:53:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593586396;
+        bh=dXBhHEPls7hLBapRWS5AGMEC2erUdD9Csqr28fSP9pw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=C8eB5xTvyZai8hXpd1pcdc0CHm9taDe6vDGfPYx7sXpwjVz6r8ExHPUmXgBS8QhTm
+         ayonsd3cJSSzuIZSGVuDce2UEWd0NYgViIxwqpz5gu0hKCi+y2ptcujuKz3Iv9h/aI
+         cAZ8r14PQlW36iTVEBtUIUWAPVvSOx26j3Ocs5gE=
+Date:   Wed, 1 Jul 2020 12:23:10 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Alim Akhtar <alim.akhtar@samsung.com>
+Cc:     robh+dt@kernel.org, krzk@kernel.org, kwmad.kim@samsung.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        kishon@ti.com
+Subject: Re: [RESEND PATCH v10 2/2] phy: samsung-ufs: add UFS PHY driver for
+ samsung SoC
+Message-ID: <20200701065310.GX2599@vkoul-mobl>
+References: <20200624235631.11232-1-alim.akhtar@samsung.com>
+ <CGME20200625001545epcas5p2127fb1fac70397d9c23a1246cc86f753@epcas5p2.samsung.com>
+ <20200624235631.11232-2-alim.akhtar@samsung.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="g3kj2uw52dmun5h6"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200630200216.1172566-1-robh@kernel.org>
+In-Reply-To: <20200624235631.11232-2-alim.akhtar@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Alim,
 
---g3kj2uw52dmun5h6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 25-06-20, 05:26, Alim Akhtar wrote:
 
-On Tue, Jun 30, 2020 at 02:02:16PM -0600, Rob Herring wrote:
-> Convert the analog TV, DVI, HDMI, and VGA connector bindings to DT schema
-> format.
->=20
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> +int samsung_ufs_phy_wait_for_lock_acq(struct phy *phy)
 
-Reviewed-by: Maxime Ripard <mripard@kernel.org>
+static ?
 
-Thanks!
-Maxime
+> +{
+> +	struct samsung_ufs_phy *ufs_phy = get_samsung_ufs_phy(phy);
+> +	const unsigned int timeout_us = 100000;
+> +	const unsigned int sleep_us = 10;
+> +	u32 val;
+> +	int err;
+> +
+> +	err = readl_poll_timeout(
+> +			ufs_phy->reg_pma + PHY_APB_ADDR(PHY_PLL_LOCK_STATUS),
+> +			val, (val & PHY_PLL_LOCK_BIT), sleep_us, timeout_us);
+> +	if (err) {
+> +		dev_err(ufs_phy->dev,
+> +			"failed to get phy pll lock acquisition %d\n", err);
+> +		goto out;
+> +	}
+> +
+> +	err = readl_poll_timeout(
+> +			ufs_phy->reg_pma + PHY_APB_ADDR(PHY_CDR_LOCK_STATUS),
+> +			val, (val & PHY_CDR_LOCK_BIT), sleep_us, timeout_us);
+> +	if (err) {
+> +		dev_err(ufs_phy->dev,
+> +			"failed to get phy cdr lock acquisition %d\n", err);
+> +		goto out;
 
---g3kj2uw52dmun5h6
-Content-Type: application/pgp-signature; name="signature.asc"
+this one can be dropped
 
------BEGIN PGP SIGNATURE-----
+> +	}
+> +
+> +out:
+> +	return err;
+> +}
+> +
+> +int samsung_ufs_phy_calibrate(struct phy *phy)
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXvwyWQAKCRDj7w1vZxhR
-xasDAP9r4tg1fgeE0OZMBPlT1tZ6mI4krecIcchC8sEDC0LnWwD/d6jfFt9QEnRZ
-Ekag5CaO0kUl1bT5fgnQxuhWYFlaRg0=
-=2psa
------END PGP SIGNATURE-----
+static?
 
---g3kj2uw52dmun5h6--
+> +{
+> +	struct samsung_ufs_phy *ufs_phy = get_samsung_ufs_phy(phy);
+> +	struct samsung_ufs_phy_cfg **cfgs = ufs_phy->cfg;
+> +	const struct samsung_ufs_phy_cfg *cfg;
+> +	int i;
+> +	int err = 0;
+
+err before i would make it look better
+
+> +
+> +	if (unlikely(ufs_phy->ufs_phy_state < CFG_PRE_INIT ||
+> +		     ufs_phy->ufs_phy_state >= CFG_TAG_MAX)) {
+> +		dev_err(ufs_phy->dev, "invalid phy config index %d\n",
+> +							ufs_phy->ufs_phy_state);
+
+single line now?
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (ufs_phy->is_pre_init)
+> +		ufs_phy->is_pre_init = false;
+
+that sounds bit strange, you clear it if set? Can you explain what is
+going on here, and add comments
+
+> +static int samsung_ufs_phy_symbol_clk_init(struct samsung_ufs_phy *phy)
+> +{
+> +	int ret = 0;
+
+superfluous init
+
+> +
+> +	phy->tx0_symbol_clk = devm_clk_get(phy->dev, "tx0_symbol_clk");
+> +	if (IS_ERR(phy->tx0_symbol_clk)) {
+> +		dev_err(phy->dev, "failed to get tx0_symbol_clk clock\n");
+> +		goto out;
+> +	}
+> +
+> +	phy->rx0_symbol_clk = devm_clk_get(phy->dev, "rx0_symbol_clk");
+> +	if (IS_ERR(phy->rx0_symbol_clk)) {
+> +		dev_err(phy->dev, "failed to get rx0_symbol_clk clock\n");
+> +		goto out;
+> +	}
+> +
+> +	phy->rx1_symbol_clk = devm_clk_get(phy->dev, "rx1_symbol_clk");
+> +	if (IS_ERR(phy->rx0_symbol_clk)) {
+> +		dev_err(phy->dev, "failed to get rx1_symbol_clk clock\n");
+> +		goto out;
+> +	}
+> +
+> +	ret = clk_prepare_enable(phy->tx0_symbol_clk);
+> +	if (ret) {
+> +		dev_err(phy->dev, "%s: tx0_symbol_clk enable failed %d\n",
+> +				__func__, ret);
+> +		goto out;
+> +	}
+> +	ret = clk_prepare_enable(phy->rx0_symbol_clk);
+> +	if (ret) {
+> +		dev_err(phy->dev, "%s: rx0_symbol_clk enable failed %d\n",
+> +				__func__, ret);
+
+so we keep tx0_symbol_clk enabled when bailing out?
+
+> +		goto out;
+> +	}
+> +	ret = clk_prepare_enable(phy->rx1_symbol_clk);
+> +	if (ret) {
+> +		dev_err(phy->dev, "%s: rx1_symbol_clk enable failed %d\n",
+> +				__func__, ret);
+
+here as well
+
+> +static int samsung_ufs_phy_init(struct phy *phy)
+> +{
+> +	struct samsung_ufs_phy *_phy = get_samsung_ufs_phy(phy);
+> +	int ret;
+> +
+> +	_phy->lane_cnt = phy->attrs.bus_width;
+> +	_phy->ufs_phy_state = CFG_PRE_INIT;
+> +
+> +	/**
+> +	 * In ufs, PHY need to be calibrated at different stages / state
+> +	 * mainly before Linkstartup, after Linkstartup, before power
+> +	 * mode change and after power mode change.
+> +	 * Below state machine initialize the initial state to handle
+> +	 * PHY calibration at various stages of UFS initialization and power
+> +	 * mode changes
+> +	 */
+> +	_phy->is_pre_init = true;
+> +	_phy->is_post_init = false;
+> +	_phy->is_pre_pmc = false;
+> +	_phy->is_post_pmc = false;
+
+hmm why not have phy_state and assign that
+pre_init/post_init/pre_pmc/post_pmc states?
+
+> +static int samsung_ufs_phy_set_mode(struct phy *generic_phy,
+> +					enum phy_mode mode, int submode)
+
+pls align this to preceding line opening brace (tip: checkpatch with
+--strict can tell you about these)
+-- 
+~Vinod
