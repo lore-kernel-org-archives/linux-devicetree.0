@@ -2,95 +2,106 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B37B5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 10:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A71C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 10:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86F5A20722
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 10:37:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="k/IMfhNW"
+	by mail.kernel.org (Postfix) with ESMTP id 4E15620722
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 10:41:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729960AbgGAKhU (ORCPT
+        id S1729834AbgGAKlB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 06:37:20 -0400
-Received: from onstation.org ([52.200.56.107]:45296 "EHLO onstation.org"
+        Wed, 1 Jul 2020 06:41:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34696 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729939AbgGAKhT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jul 2020 06:37:19 -0400
-X-Greylist: delayed 396 seconds by postgrey-1.27 at vger.kernel.org; Wed, 01 Jul 2020 06:37:18 EDT
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 48FFB3E8F8;
-        Wed,  1 Jul 2020 10:30:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1593599442;
-        bh=AfMnHuNqEFE1eiUXfPAPZcZ71kvTA3HP878CQfPF7ts=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k/IMfhNWmQ6NBOOlZ3+aH0ZSqT5p2sLBdcXiWAFZevUiEknrJ5Ec1X/PJdCdMmIry
-         qjvlc+VNsWJUYWbD4U70mHL5/SsRJrCUsshAkVFRXdDTckyP7UUI6iRZqiriucny6T
-         F8w3FHpaKymodReo+y62bolSB++U2keyCZlQJg34=
-Date:   Wed, 1 Jul 2020 06:30:41 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Iskren Chernev <iskren.chernev@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 0/7] ARM: dts: qcom: msm8974: klte: Enable some hardware
-Message-ID: <20200701103041.GA3246@onstation.org>
-References: <20200630140912.260294-1-iskren.chernev@gmail.com>
+        id S1729180AbgGAKlB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Jul 2020 06:41:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 4AD9EAD04;
+        Wed,  1 Jul 2020 10:40:59 +0000 (UTC)
+From:   Andreas Schwab <schwab@suse.de>
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     paul.walmsley@sifive.com, palmer@dabbelt.com, robh+dt@kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, sachin.ghadi@sifive.com,
+        aou@eecs.berkeley.edu, anup@brainfault.org, lollivier@baylibre.com,
+        green.wan@sifive.com, atish.patra@wdc.com,
+        alistair.francis@wdc.com, deepa.kernel@gmail.com,
+        bmeng.cn@gmail.com
+Subject: Re: [PATCH 0/3] Dynamic CPU frequency switching for the HiFive
+References: <1592308864-30205-1-git-send-email-yash.shah@sifive.com>
+X-Yow:  ..  over in west Philadelphia a puppy is vomiting..
+Date:   Wed, 01 Jul 2020 12:40:58 +0200
+In-Reply-To: <1592308864-30205-1-git-send-email-yash.shah@sifive.com> (Yash
+        Shah's message of "Tue, 16 Jun 2020 17:31:01 +0530")
+Message-ID: <mvmftabiklh.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.0.91 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200630140912.260294-1-iskren.chernev@gmail.com>
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Iskren,
+On Jun 16 2020, Yash Shah wrote:
 
-On Tue, Jun 30, 2020 at 05:09:05PM +0300, Iskren Chernev wrote:
-> Enable support for various hw found on the Samsung Galaxy S5:
-> - touchkey (the two buttons around the home button)
-> - touchscreen
-> - notification led
-> - wifi
-> - external SD card
-> 
-> Please note that for working wifi the correct firmware is needed. Check [1]
-> for links and locations.
-> 
-> Also note, that to actually run a mainline kernel on the klte, you'd need
-> to apply this patch [2]. Any feedback on getting this to run on pure
-> mainline are welcome.
-> 
-> [1] https://gitlab.com/postmarketOS/pmaports/-/blob/master/firmware/firmware-samsung-klte/APKBUILD
-> [2] https://gitlab.com/postmarketOS/linux-postmarketos/-/commit/765f55b248cd3b231af8431fe2f2aeca263b4e4b
+> The patch series adds the support for dynamic CPU frequency switching
+> for FU540-C000 SoC on the HiFive Unleashed board. All the patches are
+> based on Paul Walmsley's work.
+>
+> This series is based on Linux v5.7 and tested on HiFive unleashed board.
 
-Good to see more msm8974 support upstream!
+I'm using that patch with 5.7.5.
 
-Regarding the second patch, that should only be needed in order to
-use the GPU on these devices. I hope that patch won't be needed once
-IOMMU support is added, which is the last major missing piece in order
-to have the GPU working upstream. I posted a RFC patch [3] in January
-but didn't get any suggestions. I suspect some kind of memory corruption
-since the board gets unstable with that patch.
+It appears to interfer with serial output when using the ondemand
+governor.
 
-If that hack patch is still needed to use the GPU once IOMMU support is
-in place, then I planned to troubleshoot it further by adding some log
-statements to various probe functions with and without that patch to see
-the probe order between the various subsystems. I suspect the issue is
-that a clock isn't ticking yet.
+I also see soft lockups when using the performance governor:
 
-[3] https://lore.kernel.org/lkml/20200109002606.35653-1-masneyb@onstation.org/T/#u
+[  101.587527] rcu: INFO: rcu_sched self-detected stall on CPU
+[  101.592322] rcu:     0-...!: (932 ticks this GP) idle=11a/1/0x4000000000000004 softirq=4301/4301 fqs=4
+[  101.601432]  (t=6001 jiffies g=4017 q=859)
+[  101.605514] rcu: rcu_sched kthread starved for 5984 jiffies! g4017 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x0 ->cpu=2
+[  101.615494] rcu: RCU grace-period kthread stack dump:
+[  101.620530] rcu_sched       R  running task        0    10      2 0x00000000
+[  101.627560] Call Trace:
+[  101.630004] [<ffffffe00085a7e2>] __schedule+0x25c/0x616
+[  101.635205] [<ffffffe00085abde>] schedule+0x42/0xb2
+[  101.640070] [<ffffffe00085d0ba>] schedule_timeout+0x56/0xb8
+[  101.645626] [<ffffffe000263c34>] rcu_gp_fqs_loop+0x208/0x248
+[  101.651266] [<ffffffe0002666de>] rcu_gp_kthread+0xc2/0xcc
+[  101.656651] [<ffffffe00022654e>] kthread+0xda/0xec
+[  101.661426] [<ffffffe00020140a>] ret_from_exception+0x0/0xc
+[  101.666977] Task dump for CPU 0:
+[  101.670187] loop0           R  running task        0   655      2 0x00000008
+[  101.677218] Call Trace:
+[  101.679657] [<ffffffe0002028ae>] walk_stackframe+0x0/0xaa
+[  101.685036] [<ffffffe000202b76>] show_stack+0x2a/0x34
+[  101.690074] [<ffffffe0002319b0>] sched_show_task.part.0+0xc2/0xd2
+[  101.696154] [<ffffffe00022bb9c>] sched_show_task+0x64/0x66
+[  101.701618] [<ffffffe000231afe>] dump_cpu_task+0x3e/0x48
+[  101.706916] [<ffffffe000267762>] rcu_dump_cpu_stacks+0x94/0xce
+[  101.712731] [<ffffffe0002631f6>] print_cpu_stall+0x116/0x18a
+[  101.718375] [<ffffffe000264a46>] check_cpu_stall+0xcc/0x1a2
+[  101.723929] [<ffffffe000264b52>] rcu_pending.constprop.0+0x36/0xaa
+[  101.730094] [<ffffffe000266ab2>] rcu_sched_clock_irq+0xa6/0xea
+[  101.735913] [<ffffffe00026d1be>] update_process_times+0x1e/0x42
+[  101.741821] [<ffffffe0002793bc>] tick_sched_handle+0x26/0x52
+[  101.747456] [<ffffffe0002798fe>] tick_sched_timer+0x6a/0xd0
+[  101.753015] [<ffffffe00026d9be>] __run_hrtimer.constprop.0+0x50/0xe8
+[  101.759353] [<ffffffe00026da9e>] __hrtimer_run_queues+0x48/0x6c
+[  101.765254] [<ffffffe00026e410>] hrtimer_interrupt+0xca/0x1d4
+[  101.770985] [<ffffffe0006ceef8>] riscv_timer_interrupt+0x32/0x3a
+[  101.776976] [<ffffffe00085e17c>] do_IRQ+0xa4/0xb8
+[  101.781663] [<ffffffe00020140a>] ret_from_exception+0x0/0xc
 
-Brian
+Andreas.
+
+-- 
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
