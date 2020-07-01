@@ -2,216 +2,128 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A4EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DFCC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CADC2083E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:32:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C146920842
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:38:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="H/T1TXu+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NGc3nSr+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732313AbgGAQcb (ORCPT
+        id S1732425AbgGAQiI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:32:31 -0400
-Received: from vps.xff.cz ([195.181.215.36]:52930 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731770AbgGAQca (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:32:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593621147; bh=yQdyiwJG0A0w25TNt5S9+Tyx+rihJlmHrZ5Ch0iuRzo=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=H/T1TXu+32OpzHlT61UjI0935+8p6dAuEkqfx9vm7iFtVjPE4z/J+Zf3Eva+u61dD
-         lhphd6NgFd7dBXdwVuKBgneRowDJ2HWBkotWxkYXj6hEcv5K3Tm/bm1tAPiTooX6et
-         O7zdc3SpFdseCm+TyAwBulGGQ+w+KxdHGPvEHjFc=
-Date:   Wed, 1 Jul 2020 18:32:27 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Guido =?utf-8?Q?G=C3=BCnther?= <guido.gunther@puri.sm>
-Cc:     linux-sunxi@googlegroups.com,
-        Thierry Reding <thierry.reding@gmail.com>,
+        Wed, 1 Jul 2020 12:38:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42766 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731394AbgGAQiH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 12:38:07 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5475C08C5DB
+        for <devicetree@vger.kernel.org>; Wed,  1 Jul 2020 09:38:06 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id g2so14073484lfb.0
+        for <devicetree@vger.kernel.org>; Wed, 01 Jul 2020 09:38:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=b+AvB/0HQsEmT/6dVyBt3aUmExGSI3jLVgR9pfCU6xI=;
+        b=NGc3nSr+n0h4fP2ID26hOQgQ2mGQdX3utJApv6cBWQXcVI3h7Fc+D1QRBIQaXZnr11
+         YgeqOntiAqKrnsCCfaKpVcqsrtPXTzfVbTUkjmkkNrnOIPMZykmbNj/2u4WCkAliAREg
+         srt7gl91XjqmoYUp20v+a/dbguhGPKL1fabJgEWJI6T56t9/1CNQ8lqfXza8DolyiRh6
+         YxcJG9lxOqaRR4KuOUA6S0lwFg3/kr+z1P4eliDfSaqRZvBfkOqJO2GlrsIs8/2UUGY3
+         8VYcedkvX4qpBycLPBECUs7hYIk9hfSJ36kCPXDg9vPZk30LJD4yXA32EQ3JE1OeBAZY
+         JHcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=b+AvB/0HQsEmT/6dVyBt3aUmExGSI3jLVgR9pfCU6xI=;
+        b=JTY5xVzwFCL/93gZk/0XQgJHYlGk2dJ4cDlNwGoBggD503MpByVrC8TQ9+nQ0jh9Wq
+         foamMSF12MHiiDQqrAcqO8wg7ALyqfJm1E2XXbjvYk63Z5na6IzxnLnOS3w1x5t1oNqx
+         TqUW+h0Pr4knGk9y2TkZgyUf64KDopTEBZa+1spoVZxA+tQkS1xRkSDkzKSYXAJ22NyG
+         uKTTemxEqpLrouMqYF/Q4JvyyM22vvrL/dppkQbIxQck9mHekw9Dq55XcQiLyxTXx5Yp
+         tV2+Ke0ec/QbST9yrOsncAPdgpe7nnOKLL/ghdwbFMWcuc4h4fYViV3KOYbsys5e431N
+         Ozpg==
+X-Gm-Message-State: AOAM532LRnZO/SDWPThhVOl+BvPBmbfaOJyTOqbeIt6mBfbGVSqemgOF
+        G6Iyhe/eYx+vN2MGds9A/SbPodaV3Dr0YolAjCcrrA==
+X-Google-Smtp-Source: ABdhPJxK/nguThkBJd2Ux3XYuXE4KGHsrekK6XDG2RPUaVUVOzza6kVDTgWwFrm43mM2dign3+VsxQTsCovpxW3dEZ0=
+X-Received: by 2002:ac2:47ed:: with SMTP id b13mr15611694lfp.21.1593621485126;
+ Wed, 01 Jul 2020 09:38:05 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200701103126.1512615-1-megous@megous.com> <20200701152532.GA670324@ravnborg.org>
+ <20200701163018.cfweuzp76qx5nsew@core.my.home>
+In-Reply-To: <20200701163018.cfweuzp76qx5nsew@core.my.home>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 1 Jul 2020 18:37:53 +0200
+Message-ID: <CACRpkdYf87RymMwUFL=nXNs3dFVveLt7u0X3haL=SN+N6+V_vQ@mail.gmail.com>
+Subject: Re: [PATCH v6 00/13] Add support for PinePhone LCD panel
+To:     =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
         Sam Ravnborg <sam@ravnborg.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
+        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
         Purism Kernel Team <kernel@puri.sm>,
         Rob Herring <robh+dt@kernel.org>,
         Maxime Ripard <mripard@kernel.org>,
         Chen-Yu Tsai <wens@csie.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Icenowy Zheng <icenowy@aosc.io>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Samuel Holland <samuel@sholland.org>,
         Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
         Bhushan Shah <bshah@kde.org>
-Subject: Re: [PATCH v6 02/13] dt-bindings: panel: Convert
- rocktech,jh057n00900 to yaml
-Message-ID: <20200701163227.on7wo6fo5majket6@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Guido =?utf-8?Q?G=C3=BCnther?= <guido.gunther@puri.sm>,
-        linux-sunxi@googlegroups.com,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Icenowy Zheng <icenowy@aosc.io>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Samuel Holland <samuel@sholland.org>,
-        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>
-References: <20200701103126.1512615-1-megous@megous.com>
- <20200701103126.1512615-3-megous@megous.com>
- <20200701155857.GB174356@bogon.m.sigxcpu.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200701155857.GB174356@bogon.m.sigxcpu.org>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Guido,
+On Wed, Jul 1, 2020 at 6:30 PM Ond=C5=99ej Jirman <megous@megous.com> wrote=
+:
+> On Wed, Jul 01, 2020 at 05:25:32PM +0200, Sam Ravnborg wrote:
+> > Hi Ondrej.
+> >
+> > On Wed, Jul 01, 2020 at 12:31:13PM +0200, Ondrej Jirman wrote:
+> > > This patchset adds support for the LCD panel of PinePhone.
+> > >
+> > > I've tested this on PinePhone 1.0 and 1.2.
+> > >
+> > > Please take a look.
+> > >
+> > > thank you and regards,
+> > >   Ondrej Jirman
+> > >
+> > > Changes in v6:
+> > > - Fixed spacing in yaml
+> > > - Fixed wrong vccio->iovcc supply name in the bindings doc
+> > > - I noticed that the original driver uses a delay of 20ms in the init
+> > >   function to achieve a combined total of 120ms required from post-re=
+set
+> > >   to display_on. I've added a similar delay to xbd599_init, so that
+> > >   xbd599 panel also has the right timing. (patch 9)
+> > > - v5->v6 diff: https://megous.com/dl/tmp/v5-v6.patch
+> > > - Added review/ack tags
+> > > - Learned to run dt_binding_check by myself ;)
+> > The patch-set does not apply clean on top of drm-misc-next - due to
+> > vrefresh removal.
+> > Please re-spin.
+>
+> Sorry for that. Rebased and retested.
 
-On Wed, Jul 01, 2020 at 05:58:57PM +0200, Guido Günther wrote:
-> Hi Ondrej,
-> On Wed, Jul 01, 2020 at 12:31:15PM +0200, Ondrej Jirman wrote:
-> > Convert Rocktech MIPI DSI panel driver from txt to yaml bindings.
-> > 
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > ---
-> >  .../display/panel/rocktech,jh057n00900.txt    | 23 -------
-> >  .../display/panel/rocktech,jh057n00900.yaml   | 66 +++++++++++++++++++
-> >  2 files changed, 66 insertions(+), 23 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
-> >  create mode 100644
-> > Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
-> 
-> Thanks for the conversion! Shouldn't we switch to `sitronix-st7703.yaml`
-> as well in this patch?
+Sam will you apply it? I was in the middle of applying and ran into the sam=
+e
+issue :D
 
-Names of yaml files should be according to one of the compatibles.
-
-And thank you for your review of the patches.
-
-regards,
-	o.
-
-> Cheers,
->  -- Guido
-> 
-> > 
-> > diff --git a/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt b/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
-> > deleted file mode 100644
-> > index a372c5d84695..000000000000
-> > --- a/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
-> > +++ /dev/null
-> > @@ -1,23 +0,0 @@
-> > -Rocktech jh057n00900 5.5" 720x1440 TFT LCD panel
-> > -
-> > -Required properties:
-> > -- compatible: should be "rocktech,jh057n00900"
-> > -- reg: DSI virtual channel of the peripheral
-> > -- reset-gpios: panel reset gpio
-> > -- backlight: phandle of the backlight device attached to the panel
-> > -- vcc-supply: phandle of the regulator that provides the vcc supply voltage.
-> > -- iovcc-supply: phandle of the regulator that provides the iovcc supply
-> > -  voltage.
-> > -
-> > -Example:
-> > -
-> > -	&mipi_dsi {
-> > -		panel@0 {
-> > -			compatible = "rocktech,jh057n00900";
-> > -			reg = <0>;
-> > -			backlight = <&backlight>;
-> > -			reset-gpios = <&gpio3 13 GPIO_ACTIVE_LOW>;
-> > -			vcc-supply = <&reg_2v8_p>;
-> > -			iovcc-supply = <&reg_1v8_p>;
-> > -		};
-> > -	};
-> > diff --git a/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml b/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
-> > new file mode 100644
-> > index 000000000000..928ba42e7f8d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
-> > @@ -0,0 +1,66 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/display/panel/rocktech,jh057n00900.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Rocktech JH057N00900 5.5" 720x1440 TFT LCD panel
-> > +
-> > +maintainers:
-> > +  - Ondrej Jirman <megi@xff.cz>
-> > +
-> > +description: |
-> > +             Rocktech JH057N00900 is a 720x1440 TFT LCD panel
-> > +             connected using a MIPI-DSI video interface.
-> > +
-> > +allOf:
-> > +  - $ref: panel-common.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: rocktech,jh057n00900
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +    description: DSI virtual channel
-> > +
-> > +  vcc-supply:
-> > +    description: Panel power supply
-> > +
-> > +  iovcc-supply:
-> > +    description: I/O voltage supply
-> > +
-> > +  reset-gpios:
-> > +    description: GPIO used for the reset pin
-> > +    maxItems: 1
-> > +
-> > +  backlight:
-> > +    description: Backlight used by the panel
-> > +    $ref: "/schemas/types.yaml#/definitions/phandle"
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - vcc-supply
-> > +  - iovcc-supply
-> > +  - reset-gpios
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +
-> > +    dsi {
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +      panel@0 {
-> > +        compatible = "rocktech,jh057n00900";
-> > +        reg = <0>;
-> > +        vcc-supply = <&reg_2v8_p>;
-> > +        iovcc-supply = <&reg_1v8_p>;
-> > +        reset-gpios = <&gpio3 13 GPIO_ACTIVE_LOW>;
-> > +        backlight = <&backlight>;
-> > +      };
-> > +    };
-> > +...
-> > -- 
-> > 2.27.0
-> > 
+Yours,
+Linus Walleij
