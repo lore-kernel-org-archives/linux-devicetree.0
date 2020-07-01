@@ -2,152 +2,105 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47685C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 19:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87261C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 20:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B5E02082F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 19:39:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S69Z6hVz"
+	by mail.kernel.org (Postfix) with ESMTP id 6332420853
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 20:30:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726098AbgGATjZ (ORCPT
+        id S1726639AbgGAUa6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 15:39:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42472 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbgGATjV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 15:39:21 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2979BC08C5DB
-        for <devicetree@vger.kernel.org>; Wed,  1 Jul 2020 12:39:21 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id d17so13951316ljl.3
-        for <devicetree@vger.kernel.org>; Wed, 01 Jul 2020 12:39:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uZLgRyeqLIrejgbskRWtUMI2dY4YQCIX+GY0py5r3AA=;
-        b=S69Z6hVz4wBbcWfEPDTLxOfydDlRKVUspZAmALfKiePq4efP4D6Zy/HnkTrZixiCmy
-         Ot40/jExbO/G56aM0fEZsfzeJIC3kCvsxrM7MHZqzW1HJEEA5UTAiUuuECa6C9aUljR+
-         zCe1fEdW+aHQAlQoaCXz6DY9c4jxfT6LcKyQivUp/xGtatGLTUNnwj6aAa/FWUWiG9K1
-         bWQfTOvQY0EpekmLmMomA0vYwaXO07Hu72AKOO1B90d4yUJX1W3dMZUDfX17J7iVY1pG
-         fllXRQrJrjqemB9c2daT5zN3LzqeuPJW/vRph40oc5de9fK+rU2K+xUO9rJc4nLbCpB6
-         ZJ1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uZLgRyeqLIrejgbskRWtUMI2dY4YQCIX+GY0py5r3AA=;
-        b=H1D73dZ3U5uEV/qto33RV1IJFoPT0HJsV1Ojef5g7g6LumcJzFreZ84uPZjoC2VEp3
-         C25wy3FLue6vVtjdieJdbJNqRRJ82EHMTJjsIWx2EA9AYUp01nLjJkPcaJR+CAe/Kv1B
-         k5EAqvKSn1bgg1Zm0m7cfSC5K3j7tvHDzyhpAtPmvthVQ5i5XJ2pJzCFo7DW0ITmMoms
-         1NyyNsCENNlBDwtRNilTzeaWdaRvlC6fj+rUi2JOumVMukTHOqSVTRGUsq4UUbP+8PU6
-         c8YLkLGY1a8Dx0U1Zirfnxpy5EBodVHskfpPkUFPN1wGwA0lS2Q4v16HZPfDojk7yZpd
-         QKpQ==
-X-Gm-Message-State: AOAM533XMN+Mns4Zm9GdyQVwl8GWcD+JhfFzyBZVydowunAWIy5vhrrs
-        whVE12Euxq3PRYsW7oCShqQ2OQ==
-X-Google-Smtp-Source: ABdhPJznwKrMubCqqzSMTK6VHjJjbQbSK8SWzIJNnS6XVefIEXAhs3wc0iBxGIMfRySbgrsw6uZjLQ==
-X-Received: by 2002:a2e:b4ce:: with SMTP id r14mr5133513ljm.88.1593632359481;
-        Wed, 01 Jul 2020 12:39:19 -0700 (PDT)
-Received: from [192.168.1.211] ([188.162.65.203])
-        by smtp.gmail.com with ESMTPSA id y24sm2126434ljy.91.2020.07.01.12.39.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Jul 2020 12:39:18 -0700 (PDT)
-Subject: Re: [PATCH v2 07/13] dt-bindings: clock: Introduce SM8250 QCOM
- Graphics clock bindings
-To:     Jonathan Marek <jonathan@marek.ca>, linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200629172049.30452-1-jonathan@marek.ca>
- <20200629172049.30452-8-jonathan@marek.ca>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Message-ID: <caa05cad-ff88-fbcb-ce13-9e43133afb7b@linaro.org>
-Date:   Wed, 1 Jul 2020 22:39:11 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 1 Jul 2020 16:30:58 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:49504 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbgGAUa5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 16:30:57 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: aratiu)
+        with ESMTPSA id DEA832A5718
+From:   Adrian Ratiu <adrian.ratiu@collabora.com>
+To:     Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Philippe CORNU <philippe.cornu@st.com>,
+        Yannick FERTRE <yannick.fertre@st.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Jonas Karlman <jonas@kwiboo.se>, linux-imx@nxp.com,
+        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v9 00/11] Genericize DW MIPI DSI bridge and add i.MX 6
+ driver
+In-Reply-To: <6400388.H4HLtoO0Qf@diego>
+References: <20200609174959.955926-1-adrian.ratiu@collabora.com>
+ <6400388.H4HLtoO0Qf@diego>
+Date:   Wed, 01 Jul 2020 23:32:18 +0300
+Message-ID: <87imf7j7sd.fsf@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <20200629172049.30452-8-jonathan@marek.ca>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 29/06/2020 20:20, Jonathan Marek wrote:
-> Add device tree bindings for graphics clock controller for
-> Qualcomm Technology Inc's SM8250 SoCs.
+Hi Heiko,
+
+On Wed, 01 Jul 2020, Heiko Stübner <heiko@sntech.de> wrote:
+> Hi Adrian, 
 > 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> ---
->   .../bindings/clock/qcom,sm8250-gpucc.yaml     | 74 +++++++++++++++++++
->   include/dt-bindings/clock/qcom,gpucc-sm8250.h | 40 ++++++++++
->   2 files changed, 114 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/clock/qcom,sm8250-gpucc.yaml
->   create mode 100644 include/dt-bindings/clock/qcom,gpucc-sm8250.h
+> Am Dienstag, 9. Juni 2020, 19:49:48 CEST schrieb Adrian Ratiu: 
+>> [Re-submitting to cc dri-devel, sorry about the noise]  Hello 
+>> all,  v9 cleanly applies on top of latest next-20200609 tree. 
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,sm8250-gpucc.yaml b/Documentation/devicetree/bindings/clock/qcom,sm8250-gpucc.yaml
-> new file mode 100644
-> index 000000000000..2b9c8f97b76d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/qcom,sm8250-gpucc.yaml
-> @@ -0,0 +1,74 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/qcom,sm8250-gpucc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Graphics Clock & Reset Controller Binding for SM8250
-> +
-> +maintainers:
-> +  -
-> +
-> +description: |
-> +  Qualcomm graphics clock control module which supports the clocks, resets and
-> +  power domains on SM8250.
-> +
-> +  See also dt-bindings/clock/qcom,gpucc-sm8250.h.
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,sm8250-gpucc
-> +
-> +  clocks:
-> +    items:
-> +      - description: Board XO source
-> +      - description: GPLL0 main branch source
-> +      - description: GPLL0 div branch source
-> +
-> +  clock-names:
-> +    items:
-> +      - const: bi_tcxo
-> +      - const: gcc_gpu_gpll0_clk_src
-> +      - const: gcc_gpu_gpll0_div_clk_src
+> at least it doesn't apply on top of current drm-misc-next for me 
+> which I really don't understand. 
+> 
+> Like patch 2/11 does 
+> 
+> @@ -31,6 +31,7 @@ 
+>  #include <drm/drm_probe_helper.h> 
+> . 
+>  #define HWVER_131<----><------><------>0x31333100<---->/* IP 
+>  version 1.31 */ 
+> +#define HWVER_130<----><------><------>0x31333000<---->/* IP 
+> version 1.30 */ . 
+>  #define DSI_VERSION<--><------><------>0x00 #define 
+>  VERSION<------><------><------><------>GENMASK(31, 8) 
+> 
+> where the file currently looks like 
+> 
+> #include <drm/drm_atomic_helper.h> #include <drm/drm_bridge.h> 
+> #include <drm/drm_crtc.h> #include <drm/drm_mipi_dsi.h> #include 
+> <drm/drm_modes.h> #include <drm/drm_of.h> #include 
+> <drm/drm_print.h> 
+> 
+> #define HWVER_131			0x31333100	/* IP 
+> version 1.31 */ 
+> 
+> #define DSI_VERSION			0x00 #define VERSION 
+> GENMASK(31, 8) 
+>  
+> even in Linux-next 
+>  
+> So I guess ideally rebase on top of drm-misc-next
 
-Missing qdss_qmp_clk here.
+I will send a rebase on top of drm-misc-next soon (with the last 
+DTS nitpick fixed and the latest acks and reviewed-by tags added).
 
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +
+In the meantime I also found someone within Collabora who has a RK 
+with a DSI panel and found a bug (likely clock is not enabled 
+early enough to access the cfg registers to get the version for 
+regmap).
 
+I'm super happy this is getting tested on RK, thank you!
 
-
--- 
-With best wishes
-Dmitry
+>
+>
+> Thanks
+> Heiko
