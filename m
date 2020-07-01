@@ -2,121 +2,102 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B05C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 09:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC4AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 09:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CBFF2077D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 09:00:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3BF02077D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 09:02:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="f2/xqBMk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729298AbgGAJAv (ORCPT
+        id S1729466AbgGAJB5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:00:51 -0400
-Received: from mga03.intel.com ([134.134.136.65]:49658 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728969AbgGAJAs (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jul 2020 05:00:48 -0400
-IronPort-SDR: eYL4jsmg+qsjlNjhkAq3TraECbfKfrZQjTs/Dq8+vVPyPK9yURTUWBERMI7CRO3fsFyHtz9pG3
- X32DaV8di+TA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="146514040"
-X-IronPort-AV: E=Sophos;i="5.75,299,1589266800"; 
-   d="scan'208";a="146514040"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 02:00:46 -0700
-IronPort-SDR: CIaSBSHvgTLeEmOmt1MEf4rcE6RNmN/9/cAISr7Z/nOW5kSJD5SlVNWRjnEUq3UBAg2t1zIM87
- Fkc0J1NC0J7A==
-X-IronPort-AV: E=Sophos;i="5.75,299,1589266800"; 
-   d="scan'208";a="295498778"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 02:00:41 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id E3B1920760; Wed,  1 Jul 2020 12:00:39 +0300 (EEST)
-Date:   Wed, 1 Jul 2020 12:00:39 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
-Cc:     Tomasz Figa <tfiga@chromium.org>, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, mchehab@kernel.org,
-        andriy.shevchenko@linux.intel.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, drinkcat@chromium.org,
-        matthias.bgg@gmail.com, bingbu.cao@intel.com,
-        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        louis.kuo@mediatek.com, shengnan.wang@mediatek.com
-Subject: Re: [PATCH V11 2/2] media: i2c: ov02a10: Add OV02A10 image sensor
- driver
-Message-ID: <20200701090039.GM16711@paasikivi.fi.intel.com>
-References: <20200630024942.20891-1-dongchun.zhu@mediatek.com>
- <20200630024942.20891-3-dongchun.zhu@mediatek.com>
- <20200630170746.GD1212092@chromium.org>
- <20200630184702.GH16711@paasikivi.fi.intel.com>
- <1593593242.17166.48.camel@mhfsdcap03>
+        Wed, 1 Jul 2020 05:01:57 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:60583 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729463AbgGAJBz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 05:01:55 -0400
+X-UUID: 2bb6ab3a34c54340a0ca1ece1198699e-20200701
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=cp0uXdfNJp8Bg/Ghio0s4ftUhM/JfzKVMysMp8sxB/8=;
+        b=f2/xqBMk1N3YM89VXuPuezYAyapB/EXopcuyJHuxUwbt2lwXwUtsDRS4xR4aX31A8/SR3u54GEq6oB1LzorCROAV17sShAhcPY+jiTBtQXNTHJAeqq9dNFSEOan/jXdRukG41grqsMA2+akRv5ZZJbeALH2xW3zd4DbOw4zaRcY=;
+X-UUID: 2bb6ab3a34c54340a0ca1ece1198699e-20200701
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <eastl.lee@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1725838902; Wed, 01 Jul 2020 17:01:51 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 1 Jul 2020 17:01:47 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 1 Jul 2020 17:01:48 +0800
+Message-ID: <1593594109.26931.2.camel@mtkswgap22>
+Subject: Re: [PATCH v5 3/4] dmaengine: mediatek-cqdma: add dma mask for
+ capability
+From:   EastL <EastL.Lee@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Sean Wang <sean.wang@mediatek.com>, <vkoul@kernel.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>
+Date:   Wed, 1 Jul 2020 17:01:49 +0800
+In-Reply-To: <54703443-fb01-5aa2-089c-5c7616404b7a@gmail.com>
+References: <1592553902-30592-1-git-send-email-EastL.Lee@mediatek.com>
+         <1592553902-30592-4-git-send-email-EastL.Lee@mediatek.com>
+         <54703443-fb01-5aa2-089c-5c7616404b7a@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1593593242.17166.48.camel@mhfsdcap03>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 04:47:22PM +0800, Dongchun Zhu wrote:
-> Hi Tomasz, Sakari,
-> 
-> Thanks for the review.
-> 
-> On Tue, 2020-06-30 at 21:47 +0300, Sakari Ailus wrote:
-> > On Tue, Jun 30, 2020 at 05:07:46PM +0000, Tomasz Figa wrote:
-> > > Hi Dongchun,
-> > > 
-> > > On Tue, Jun 30, 2020 at 10:49:42AM +0800, Dongchun Zhu wrote:
-> > > > Add a V4L2 sub-device driver for OV02A10 image sensor.
-> > > > 
-> > > > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > > > ---
-> > > >  MAINTAINERS                 |    1 +
-> > > >  drivers/media/i2c/Kconfig   |   13 +
-> > > >  drivers/media/i2c/Makefile  |    1 +
-> > > >  drivers/media/i2c/ov02a10.c | 1052 +++++++++++++++++++++++++++++++++++++++++++
-> > > >  4 files changed, 1067 insertions(+)
-> > > >  create mode 100644 drivers/media/i2c/ov02a10.c
-> > > 
-> > > Thank you for the patch. Please see my comments inline.
-> > > 
-> > > [snip]
-> > > > +static int ov02a10_entity_init_cfg(struct v4l2_subdev *sd,
-> > > > +				   struct v4l2_subdev_pad_config *cfg)
-> > > > +{
-> > > > +	struct v4l2_subdev_format fmt = {
-> > > > +		.which = cfg ? V4L2_SUBDEV_FORMAT_TRY : V4L2_SUBDEV_FORMAT_ACTIVE,
-> > > 
-> > > As we discussed before, this function is never called with cfg == NULL.
-> > > Perhaps what we need here is to call ov02a10_set_fmt() twice, once for
-> > > V4L2_SUBDEV_FORMAT_ACTIVE and then for V4L2_SUBDEV_FORMAT_TRY?
-> > > 
-> > > Sakari, would that be a proper implementation of this function?
-> > 
-> > It's fine to test fmt, but it should be only done if the driver calls the
-> > function with ACTIVE format. I.e. it can be removed here, and always use
-> > TRY.
-> > 
-> 
-> Sorry for my late coming.
-> The implementation of this function should be common(similar to
-> OV2680/OV5645).
-> If it needs to update to be more proper or clear, as user always sets
-> format.which to ACTIVE when calling set_fmt, we could only reserve the
-> TRY format in init_cfg like this:
-> struct v4l2_subdev_format fmt = {
-> 	which = V4L2_SUBDEV_FORMAT_TRY,
+T24gRnJpLCAyMDIwLTA2LTE5IGF0IDExOjM5ICswMjAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
+Og0KPiANCj4gT24gMTkvMDYvMjAyMCAxMDowNSwgRWFzdEwgd3JvdGU6DQo+ID4gVGhpcyBwYXRj
+aCBhZGQgZG1hIG1hc2sgZm9yIGNhcGFiaWxpdHkuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTog
+RWFzdEwgPEVhc3RMLkxlZUBtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvZG1h
+L21lZGlhdGVrL210ay1jcWRtYS5jIHwgMTcgKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxl
+IGNoYW5nZWQsIDE3IGluc2VydGlvbnMoKykNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9kbWEvbWVkaWF0ZWsvbXRrLWNxZG1hLmMgYi9kcml2ZXJzL2RtYS9tZWRpYXRlay9tdGstY3Fk
+bWEuYw0KPiA+IGluZGV4IDkwNWJiY2IuLmVkMzNjNjQgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVy
+cy9kbWEvbWVkaWF0ZWsvbXRrLWNxZG1hLmMNCj4gPiArKysgYi9kcml2ZXJzL2RtYS9tZWRpYXRl
+ay9tdGstY3FkbWEuYw0KPiA+IEBAIC0xMTcsNiArMTE3LDcgQEAgc3RydWN0IG10a19jcWRtYV92
+Y2hhbiB7DQo+ID4gICAqIEBjbGs6ICAgICAgICAgICAgICAgICAgICBUaGUgY2xvY2sgdGhhdCBk
+ZXZpY2UgaW50ZXJuYWwgaXMgdXNpbmcNCj4gPiAgICogQGRtYV9yZXF1ZXN0czogICAgICAgICAg
+IFRoZSBudW1iZXIgb2YgVkNzIHRoZSBkZXZpY2Ugc3VwcG9ydHMgdG8NCj4gPiAgICogQGRtYV9j
+aGFubmVsczogICAgICAgICAgIFRoZSBudW1iZXIgb2YgUENzIHRoZSBkZXZpY2Ugc3VwcG9ydHMg
+dG8NCj4gPiArICogQGRtYV9tYXNrOiAgICAgICAgICAgICAgIEEgbWFzayBmb3IgRE1BIGNhcGFi
+aWxpdHkNCj4gPiAgICogQHZjOiAgICAgICAgICAgICAgICAgICAgIFRoZSBwb2ludGVyIHRvIGFs
+bCBhdmFpbGFibGUgVkNzDQo+ID4gICAqIEBwYzogICAgICAgICAgICAgICAgICAgICBUaGUgcG9p
+bnRlciB0byBhbGwgdGhlIHVuZGVybHlpbmcgUENzDQo+ID4gICAqLw0KPiA+IEBAIC0xMjYsNiAr
+MTI3LDcgQEAgc3RydWN0IG10a19jcWRtYV9kZXZpY2Ugew0KPiA+ICANCj4gPiAgCXUzMiBkbWFf
+cmVxdWVzdHM7DQo+ID4gIAl1MzIgZG1hX2NoYW5uZWxzOw0KPiA+ICsJdTMyIGRtYV9tYXNrOw0K
+PiA+ICAJc3RydWN0IG10a19jcWRtYV92Y2hhbiAqdmM7DQo+ID4gIAlzdHJ1Y3QgbXRrX2NxZG1h
+X3BjaGFuICoqcGM7DQo+ID4gIH07DQo+ID4gQEAgLTYwNyw2ICs2MDksMjEgQEAgc3RhdGljIGlu
+dCBtdGtfY3FkbWFfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiAgCQlj
+cWRtYS0+ZG1hX2NoYW5uZWxzID0gTVRLX0NRRE1BX05SX1BDSEFOUzsNCj4gPiAgCX0NCj4gPiAg
+DQo+ID4gKwlpZiAocGRldi0+ZGV2Lm9mX25vZGUpDQo+ID4gKwkJZXJyID0gb2ZfcHJvcGVydHlf
+cmVhZF91MzIocGRldi0+ZGV2Lm9mX25vZGUsDQo+ID4gKwkJCQkJICAgImRtYS1jaGFubmVsLW1h
+c2siLA0KPiA+ICsJCQkJCSAgICZjcWRtYS0+ZG1hX21hc2spOw0KPiA+ICsJaWYgKGVycikgew0K
+PiA+ICsJCWRldl93YXJuKCZwZGV2LT5kZXYsDQo+ID4gKwkJCSAiVXNpbmcgMCBhcyBtaXNzaW5n
+IGRtYS1jaGFubmVsLW1hc2sgcHJvcGVydHlcbiIpOw0KPiA+ICsJCWNxZG1hLT5kbWFfbWFzayA9
+IDA7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJaWYgKGRtYV9zZXRfbWFzaygmcGRldi0+ZGV2LCBE
+TUFfQklUX01BU0soY3FkbWEtPmRtYV9tYXNrKSkpIHsNCj4gPiArCQlkZXZfd2FybigmcGRldi0+
+ZGV2LCAiRE1BIHNldCBtYXNrIGZhaWxcbiIpOw0KPiANCj4gZmFpbCAtPiBmYWlsZWQNCj4gDQo+
+IFdpdGggdGhpczoNCj4gUmV2aWV3ZWQtYnk6IE1hdHRoaWFzIEJydWdnZXIgPG1hdHRoaWFzLmJn
+Z0BnbWFpbC5jb20+DQoNCk9LLg0KPiANCj4gPiArCQlyZXR1cm4gLUVJTlZBTDsNCj4gPiArCX0N
+Cj4gPiArDQo+ID4gIAljcWRtYS0+cGMgPSBkZXZtX2tjYWxsb2MoJnBkZXYtPmRldiwgY3FkbWEt
+PmRtYV9jaGFubmVscywNCj4gPiAgCQkJCSBzaXplb2YoKmNxZG1hLT5wYyksIEdGUF9LRVJORUwp
+Ow0KPiA+ICAJaWYgKCFjcWRtYS0+cGMpDQo+ID4gDQoNCg==
 
-Yes, please.
-
--- 
-Sakari Ailus
