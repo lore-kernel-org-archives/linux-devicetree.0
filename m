@@ -2,32 +2,31 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D66AC433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 10:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4A2C433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 10:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FF1F2074D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 10:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE3852067D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 10:32:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="LH5FZK+t"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="H6IDNyTt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730000AbgGAKcf (ORCPT
+        id S1729992AbgGAKbf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 06:32:35 -0400
-Received: from vps.xff.cz ([195.181.215.36]:42122 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729987AbgGAKbf (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Wed, 1 Jul 2020 06:31:35 -0400
+Received: from vps.xff.cz ([195.181.215.36]:41976 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729822AbgGAKbd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Jul 2020 06:31:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593599490; bh=Uj/PtNKs3+mkjVbPW0e4D6UAtrtq8nzQPPh5UoRwNE8=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=LH5FZK+tpQsQPfnm5tzP1VPDvNeWOgCjJupWFDbt+uWCLrrNmy6qcU9v9i5u6T5Pd
-         c7SVjOc3s373A4wyF7AMgn3kkpWnQFOiqTKs8aFke19jufaM1/Kdu9++ZGMSArGULJ
-         gbdxbtWGVRDXBMvDwY2bHMkDQver/T6zAG+8cUho=
+        t=1593599488; bh=DcIwYA7UiV2HZIT74/WIK+hRV/P3BCbOenueqgwjk/o=;
+        h=From:To:Cc:Subject:Date:From;
+        b=H6IDNyTtjqu60WUzYVWz23IzaUHz/Qq14fOs8WY9Jq439fSo8yYsgsSYlJByt0hDa
+         JlzlSPITb/Pwg1J4lrOr7bS1zBpw7PIvkgEIS9dnPlAWz4dLxPYUsC9zpzRTuCDVfs
+         y98wNsXhEPzillpUYTaWK/Af1ECW3nG9xro1dj9Y=
 From:   Ondrej Jirman <megous@megous.com>
 To:     linux-sunxi@googlegroups.com,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -47,11 +46,9 @@ Cc:     Ondrej Jirman <megous@megous.com>, dri-devel@lists.freedesktop.org,
         Samuel Holland <samuel@sholland.org>,
         Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
         Bhushan Shah <bshah@kde.org>
-Subject: [PATCH v6 04/13] drm/panel: rocktech-jh057n00900: Rename the driver to st7703
-Date:   Wed,  1 Jul 2020 12:31:17 +0200
-Message-Id: <20200701103126.1512615-5-megous@megous.com>
-In-Reply-To: <20200701103126.1512615-1-megous@megous.com>
-References: <20200701103126.1512615-1-megous@megous.com>
+Subject: [PATCH v6 00/13] Add support for PinePhone LCD panel
+Date:   Wed,  1 Jul 2020 12:31:13 +0200
+Message-Id: <20200701103126.1512615-1-megous@megous.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -59,89 +56,122 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This rename is done so that the driver matches the name of the
-display controller and in preparation for adding support for more
-panels to the driver.
+This patchset adds support for the LCD panel of PinePhone.
 
-This is just a basic file rename, with no code changes.
+I've tested this on PinePhone 1.0 and 1.2.
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/gpu/drm/panel/Kconfig                 | 26 +++++++++----------
- drivers/gpu/drm/panel/Makefile                |  2 +-
- ...-jh057n00900.c => panel-sitronix-st7703.c} |  0
- 3 files changed, 14 insertions(+), 14 deletions(-)
- rename drivers/gpu/drm/panel/{panel-rocktech-jh057n00900.c => panel-sitronix-st7703.c} (100%)
+Please take a look.
 
-diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-index 39055c1f0e2f..de2f2a452be5 100644
---- a/drivers/gpu/drm/panel/Kconfig
-+++ b/drivers/gpu/drm/panel/Kconfig
-@@ -283,19 +283,6 @@ config DRM_PANEL_RAYDIUM_RM68200
- 	  Say Y here if you want to enable support for Raydium RM68200
- 	  720x1280 DSI video mode panel.
- 
--config DRM_PANEL_ROCKTECH_JH057N00900
--	tristate "Rocktech JH057N00900 MIPI touchscreen panel"
--	depends on OF
--	depends on DRM_MIPI_DSI
--	depends on BACKLIGHT_CLASS_DEVICE
--	help
--	  Say Y here if you want to enable support for Rocktech JH057N00900
--	  MIPI DSI panel as e.g. used in the Librem 5 devkit. It has a
--	  resolution of 720x1440 pixels, a built in backlight and touch
--	  controller.
--	  Touch input support is provided by the goodix driver and needs to be
--	  selected separately.
--
- config DRM_PANEL_RONBO_RB070D30
- 	tristate "Ronbo Electronics RB070D30 panel"
- 	depends on OF
-@@ -395,6 +382,19 @@ config DRM_PANEL_SITRONIX_ST7701
- 	  ST7701 controller for 480X864 LCD panels with MIPI/RGB/SPI
- 	  system interfaces.
- 
-+config DRM_PANEL_SITRONIX_ST7703
-+	tristate "Sitronix ST7703 based MIPI touchscreen panels"
-+	depends on OF
-+	depends on DRM_MIPI_DSI
-+	depends on BACKLIGHT_CLASS_DEVICE
-+	help
-+	  Say Y here if you want to enable support for Sitronix ST7703 based
-+	  panels, souch as Rocktech JH057N00900 MIPI DSI panel as e.g. used in
-+	  the Librem 5 devkit. It has a resolution of 720x1440 pixels, a built
-+	  in backlight and touch controller.
-+	  Touch input support is provided by the goodix driver and needs to be
-+	  selected separately.
-+
- config DRM_PANEL_SITRONIX_ST7789V
- 	tristate "Sitronix ST7789V panel"
- 	depends on OF && SPI
-diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-index de74f282c433..e45ceac6286f 100644
---- a/drivers/gpu/drm/panel/Makefile
-+++ b/drivers/gpu/drm/panel/Makefile
-@@ -27,7 +27,6 @@ obj-$(CONFIG_DRM_PANEL_PANASONIC_VVX10F034N00) += panel-panasonic-vvx10f034n00.o
- obj-$(CONFIG_DRM_PANEL_RASPBERRYPI_TOUCHSCREEN) += panel-raspberrypi-touchscreen.o
- obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM67191) += panel-raydium-rm67191.o
- obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM68200) += panel-raydium-rm68200.o
--obj-$(CONFIG_DRM_PANEL_ROCKTECH_JH057N00900) += panel-rocktech-jh057n00900.o
- obj-$(CONFIG_DRM_PANEL_RONBO_RB070D30) += panel-ronbo-rb070d30.o
- obj-$(CONFIG_DRM_PANEL_SAMSUNG_LD9040) += panel-samsung-ld9040.o
- obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6D16D0) += panel-samsung-s6d16d0.o
-@@ -41,6 +40,7 @@ obj-$(CONFIG_DRM_PANEL_SHARP_LQ101R1SX01) += panel-sharp-lq101r1sx01.o
- obj-$(CONFIG_DRM_PANEL_SHARP_LS037V7DW01) += panel-sharp-ls037v7dw01.o
- obj-$(CONFIG_DRM_PANEL_SHARP_LS043T1LE01) += panel-sharp-ls043t1le01.o
- obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7701) += panel-sitronix-st7701.o
-+obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7703) += panel-sitronix-st7703.o
- obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7789V) += panel-sitronix-st7789v.o
- obj-$(CONFIG_DRM_PANEL_SONY_ACX424AKP) += panel-sony-acx424akp.o
- obj-$(CONFIG_DRM_PANEL_SONY_ACX565AKM) += panel-sony-acx565akm.o
-diff --git a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
-similarity index 100%
-rename from drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
-rename to drivers/gpu/drm/panel/panel-sitronix-st7703.c
+thank you and regards,
+  Ondrej Jirman
+
+Changes in v6:
+- Fixed spacing in yaml
+- Fixed wrong vccio->iovcc supply name in the bindings doc
+- I noticed that the original driver uses a delay of 20ms in the init
+  function to achieve a combined total of 120ms required from post-reset
+  to display_on. I've added a similar delay to xbd599_init, so that
+  xbd599 panel also has the right timing. (patch 9)
+- v5->v6 diff: https://megous.com/dl/tmp/v5-v6.patch
+- Added review/ack tags
+- Learned to run dt_binding_check by myself ;)
+
+Changes in v5:
+- rewritten on top of rocktech-jh057n00900 driver
+- rocktech-jh057n00900 renamed to st7703 (controller name)
+- converted rocktech-jh057n00900 bindings to yaml and extended for xbd599
+
+Changes in v4:
+- use ->type from the mode instead of hardcoding (Samuel)
+- move init_sequence to ->prepare (Samuel)
+- move anti-flicker delay to ->enable, explain it (Samuel)
+- add enter_sleep after display_off (Samuel)
+- drop ->disable (move code to ->unprepare)
+- add ID bytes dumping (Linus)
+  (I can't test it since allwinner DSI driver has a broken
+   dcs_read function, and I didn't manage to fix it.)
+- document magic bytes (Linus)
+- assert reset during powerup
+- cleanup powerup timings according to the datasheet
+
+Changes in v3:
+- Panel driver renamed to the name of the LCD controller
+- Re-organize the driver slightly to more easily support more panels
+  based on the same controller.
+- Add patch to enable the touchscreen to complete the LCD support
+  on PinePhone.
+- Dropped the "DSI fix" patch (the driver seems to work for me without it)
+- Improved brightness levels handling:
+  - PinePhone 1.0 uses default levels generated by the driver
+  - On PinePhone 1.1 duty cycles < 20% lead to black screen, so
+    default levels can't be used. Martijn Braam came up with a
+    list of duty cycle values that lead to perception of linear
+    brigtness level <-> light intensity on PinePhone 1.1
+- There was some feedback on v2 about this being similar to st7701.
+  It's only similar in name. Most of the "user commands" are different,
+  so I opted to keep this in a new driver instead of creating st770x.
+  
+  Anyone who likes to check the differences, here are datasheets:
+
+  - https://megous.com/dl/tmp/ST7703_DS_v01_20160128.pdf
+  - https://megous.com/dl/tmp/ST7701.pdf
+
+Changes in v2:
+- DT Example fix.
+- DT Format fix.
+- Raised copyright info to 2020.
+- Sort panel operation functions.
+- Sort inclusion.
+
+
+-- For phone owners: --
+
+There's an open question on how to set the backlight brightness values
+on post 1.0 revision phone, since lower duty cycles (< 10-20%) lead
+to backlight being black. It would be nice if more people can test
+the various backlight levels on 1.1 and 1.2 revision with this change
+in dts:
+
+       brightness-levels = <0 1000>;
+       num-interpolated-steps = <1000>;
+
+and report at what brightness level the backlight turns on. So far it
+seems this has a wide range. Lowest useable duty cycle for me is ~7%
+on 1.2 and for Martijn ~20% on 1.1.
+
+Icenowy Zheng (2):
+  dt-bindings: vendor-prefixes: Add Xingbangda
+  arm64: dts: sun50i-a64-pinephone: Enable LCD support on PinePhone
+
+Ondrej Jirman (11):
+  dt-bindings: panel: Convert rocktech,jh057n00900 to yaml
+  dt-bindings: panel: Add compatible for Xingbangda XBD599 panel
+  drm/panel: rocktech-jh057n00900: Rename the driver to st7703
+  drm/panel: st7703: Rename functions from jh057n prefix to st7703
+  drm/panel: st7703: Prepare for supporting multiple panels
+  drm/panel: st7703: Move code specific to jh057n closer together
+  drm/panel: st7703: Move generic part of init sequence to enable
+    callback
+  drm/panel: st7703: Add support for Xingbangda XBD599
+  drm/panel: st7703: Enter sleep after display off
+  drm/panel: st7703: Assert reset prior to powering down the regulators
+  arm64: dts: sun50i-a64-pinephone: Add touchscreen support
+
+ .../display/panel/rocktech,jh057n00900.txt    |  23 -
+ .../display/panel/rocktech,jh057n00900.yaml   |  70 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ .../allwinner/sun50i-a64-pinephone-1.1.dts    |  19 +
+ .../dts/allwinner/sun50i-a64-pinephone.dtsi   |  54 ++
+ drivers/gpu/drm/panel/Kconfig                 |  26 +-
+ drivers/gpu/drm/panel/Makefile                |   2 +-
+ .../drm/panel/panel-rocktech-jh057n00900.c    | 424 -----------
+ drivers/gpu/drm/panel/panel-sitronix-st7703.c | 656 ++++++++++++++++++
+ 9 files changed, 815 insertions(+), 461 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
+ delete mode 100644 drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
+ create mode 100644 drivers/gpu/drm/panel/panel-sitronix-st7703.c
+
 -- 
 2.27.0
 
