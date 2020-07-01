@@ -2,109 +2,95 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B34A8C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 10:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B37B5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 10:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81F332074D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 10:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86F5A20722
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 10:37:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="a/cVqSQJ"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="k/IMfhNW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729949AbgGAKez (ORCPT
+        id S1729960AbgGAKhU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 06:34:55 -0400
-Received: from vps.xff.cz ([195.181.215.36]:42944 "EHLO vps.xff.cz"
+        Wed, 1 Jul 2020 06:37:20 -0400
+Received: from onstation.org ([52.200.56.107]:45296 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729180AbgGAKey (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jul 2020 06:34:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593599692; bh=B7kWQsfpsGr8GvlX/z/EdaUkxTMac7sQsGSIptCqVQE=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=a/cVqSQJeci9mwW2INPMd6BuXqViGSBir/xjSPUR3Df3hcV+pzYZosoSHUHT0o2GX
-         Op3mZ9UoCxzoidvMK3P6lWYVlLNFONzbOF9a0NmK5IwJqY1ZJQPCynM7DKy7s118y3
-         SQ/7qhljisG3F7W8VnkQ3GND12mq3LLxvLaryu+8=
-Date:   Wed, 1 Jul 2020 12:34:51 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Samuel Holland <samuel@sholland.org>,
-        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>
-Subject: Re: [PATCH v5 09/13] drm/panel: st7703: Add support for Xingbangda
- XBD599
-Message-ID: <20200701103451.67worsg3wvupyuoh@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Samuel Holland <samuel@sholland.org>,
-        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>
-References: <20200626005601.241022-1-megous@megous.com>
- <20200626005601.241022-10-megous@megous.com>
- <CACRpkdZcMA_Y_eH8_TL09Z0_DADDcUy5s_S45UfrnoSKmNgtXw@mail.gmail.com>
+        id S1729939AbgGAKhT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Jul 2020 06:37:19 -0400
+X-Greylist: delayed 396 seconds by postgrey-1.27 at vger.kernel.org; Wed, 01 Jul 2020 06:37:18 EDT
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 48FFB3E8F8;
+        Wed,  1 Jul 2020 10:30:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1593599442;
+        bh=AfMnHuNqEFE1eiUXfPAPZcZ71kvTA3HP878CQfPF7ts=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=k/IMfhNWmQ6NBOOlZ3+aH0ZSqT5p2sLBdcXiWAFZevUiEknrJ5Ec1X/PJdCdMmIry
+         qjvlc+VNsWJUYWbD4U70mHL5/SsRJrCUsshAkVFRXdDTckyP7UUI6iRZqiriucny6T
+         F8w3FHpaKymodReo+y62bolSB++U2keyCZlQJg34=
+Date:   Wed, 1 Jul 2020 06:30:41 -0400
+From:   Brian Masney <masneyb@onstation.org>
+To:     Iskren Chernev <iskren.chernev@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 0/7] ARM: dts: qcom: msm8974: klte: Enable some hardware
+Message-ID: <20200701103041.GA3246@onstation.org>
+References: <20200630140912.260294-1-iskren.chernev@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdZcMA_Y_eH8_TL09Z0_DADDcUy5s_S45UfrnoSKmNgtXw@mail.gmail.com>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+In-Reply-To: <20200630140912.260294-1-iskren.chernev@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Linus,
+Hi Iskren,
 
-On Wed, Jul 01, 2020 at 09:50:40AM +0200, Linus Walleij wrote:
-> On Fri, Jun 26, 2020 at 2:56 AM Ondrej Jirman <megous@megous.com> wrote:
+On Tue, Jun 30, 2020 at 05:09:05PM +0300, Iskren Chernev wrote:
+> Enable support for various hw found on the Samsung Galaxy S5:
+> - touchkey (the two buttons around the home button)
+> - touchscreen
+> - notification led
+> - wifi
+> - external SD card
 > 
-> > Xingbangda XBD599 is a 5.99" 720x1440 MIPI-DSI LCD panel used in
-> > PinePhone. Add support for it.
-> >
-> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> Please note that for working wifi the correct firmware is needed. Check [1]
+> for links and locations.
 > 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Also note, that to actually run a mainline kernel on the klte, you'd need
+> to apply this patch [2]. Any feedback on getting this to run on pure
+> mainline are welcome.
+> 
+> [1] https://gitlab.com/postmarketOS/pmaports/-/blob/master/firmware/firmware-samsung-klte/APKBUILD
+> [2] https://gitlab.com/postmarketOS/linux-postmarketos/-/commit/765f55b248cd3b231af8431fe2f2aeca263b4e4b
 
-Thank you very much for the review. :)
+Good to see more msm8974 support upstream!
 
-I've sent v6 which should fix the currently remaining issues with dt bindings
-+ one timing issue I've found in this patch. I've kept your reviewed-by tag,
-because it's a fairly trivial issue. But feel free to complain.
+Regarding the second patch, that should only be needed in order to
+use the GPU on these devices. I hope that patch won't be needed once
+IOMMU support is added, which is the last major missing piece in order
+to have the GPU working upstream. I posted a RFC patch [3] in January
+but didn't get any suggestions. I suspect some kind of memory corruption
+since the board gets unstable with that patch.
 
-thank you again and regards,
-	o.
+If that hack patch is still needed to use the GPU once IOMMU support is
+in place, then I planned to troubleshoot it further by adding some log
+statements to various probe functions with and without that patch to see
+the probe order between the various subsystems. I suspect the issue is
+that a clock isn't ticking yet.
 
-> Yours,
-> Linus Walleij
+[3] https://lore.kernel.org/lkml/20200109002606.35653-1-masneyb@onstation.org/T/#u
+
+Brian
