@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C54C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 07:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA242C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 07:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 117D620775
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 07:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 893562074D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 07:49:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lA+NKOK7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VcehAVis"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728375AbgGAHsu (ORCPT
+        id S1728389AbgGAHtZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 03:48:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44754 "EHLO
+        Wed, 1 Jul 2020 03:49:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728327AbgGAHsu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 03:48:50 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA6D9C061755
-        for <devicetree@vger.kernel.org>; Wed,  1 Jul 2020 00:48:49 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id t25so21203764lji.12
-        for <devicetree@vger.kernel.org>; Wed, 01 Jul 2020 00:48:49 -0700 (PDT)
+        with ESMTP id S1728243AbgGAHtX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 03:49:23 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E22FDC03E97A
+        for <devicetree@vger.kernel.org>; Wed,  1 Jul 2020 00:49:22 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id q7so12544872ljm.1
+        for <devicetree@vger.kernel.org>; Wed, 01 Jul 2020 00:49:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=uHiWeHvIRTabhJTMwa3fxsZyuvaR5uB2s6b6XKCykyI=;
-        b=lA+NKOK7zcmXa+2MC1Gn+Y/TDNNdWs07VZI26+piRmWa5IgJ6SkoLWgnui5+oh39Q6
-         JI6t0CXi/MwfxhT8vihn8/G5X/LVpEvZMEq6tZoPu3lZavZG9S0OrLs90EX1D+5GNIjW
-         sn5HxzJnDf4UXKGwZsAkmMMGh/L0sPm18+UMSMM1eLMgNI1ScSZ7avbX4Jba1HNPFR01
-         Oz9jy9C52A6E2XL5BRjrUkpECbZ+e9Z0fJBkNwYFnAHSKnD0TULcsTh24JxIR23IbQ9B
-         1wfadENgJePUvcAFAQh88V1690Yckkn/btGB8V/wCG7M9ur0RaRMuVp1qacys1YinlL/
-         Kt6A==
+        bh=++uGLkdCf/60V7s9CDFLkDgLRpplORGsi+7jDmsg2a0=;
+        b=VcehAVisE+6s2+bxMOyJUI3XZCbK9Yqe1A5IAZ74+sXsRGf1//4lTfVXvEi90+ymhA
+         XLDA13LVc8yKXBNVrkEwfLG38vrVl1zaJNskU0H4dYNHnlcBml2CT/zODmOcu/Kbg13G
+         RN3JWAi4jsyLj0x2pb0JFbZCYjDCTT4oAmZ8FcZVyHnnjv7/arqZaE9Kvh9DM91qcZPu
+         b3CEEVEndnTMHN+ovKIZIzL1NDs+cjioV2ZLizrNYhkE86rMVj22ZPag9Wsw8pWFdHJY
+         RrNoEe2rMSRtz5HlSpgVjr76KN+8Be6U5GeXpjcCqYwVyGCaaguHqJjxsOWLHgRyYg01
+         8ktw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=uHiWeHvIRTabhJTMwa3fxsZyuvaR5uB2s6b6XKCykyI=;
-        b=megoCwFaoDdK5RvsJGULjRdcKaGheHhKw8qEjhsKuXIAtUI7YQNag0RiGSPeoNDcwe
-         u4cjg08ryQ1ltKmlmT3QcUZ4Z2jAU1v5zUasy3VJ12CWnQDcvICnFCnNtYO7SmwgQXVF
-         2zuu8iLNtLwJjhK4Hv7xDoXY2M7LYZRVs3zC1egvpVDaV3NDOjpie0C+SUowdwrWyV0t
-         SlrLmgAWlJYq/cEp/EnlRPOeANhrcCCsQoROesxNFS9jj8ZuUbILCyeUp4ldHeiAc9Bm
-         QQSjjKGpfwk8sWxtLrm06NkRsojpoWRwct78jAEpndOVQvRaDd9xEqjYMQZS4t0SKHZn
-         /nPQ==
-X-Gm-Message-State: AOAM532bTw/ABdLbmi2PhcBNehX6rR3TKAxFWI5OKX+Ump1ct1vgRJg7
-        Z8DcbU+ZOLeIMgBJseIJ2Cdd1FTQfE1o4uM/Eu/X3w==
-X-Google-Smtp-Source: ABdhPJxumtOUJ9MZZWWYdqUsVyvRBEAFzjv5D3L00fsCsWjbg4DvKg1etmzvpIC/d88ZkoLQjiDZIXHRS5fiu1kXPgs=
-X-Received: by 2002:a05:651c:112e:: with SMTP id e14mr11799081ljo.338.1593589728209;
- Wed, 01 Jul 2020 00:48:48 -0700 (PDT)
+        bh=++uGLkdCf/60V7s9CDFLkDgLRpplORGsi+7jDmsg2a0=;
+        b=GzyWgaUH/P5Z6a2BTveZLaWBPOGQXzSRNsu9oCLVSC3RydgaNJiiq07opz78Gl8usJ
+         5sfMjyKdYnkWgYB1kgalaJ4JSdpSgHeHwb7tgWV3J0TCCFefjhvdSl924R9ipBv7d6ys
+         gJ8GhrLayyU4ZVjUx1uVAMkwPgc4HeCtTmt+pe37Ep2oI909R2g8avnXhbyOuhrbFu9A
+         LtA7htGdEnUc+pDwR4bcnwHAVDw5zlnlJ+Blm2ADXPCMAMQigK/TZVHdDSt8RwEJey1V
+         u8XWf5esBOsJ3EzN/2Sk56YPxBVwwB55OO6eCxiKp+xUDqJ73C0L5q2S42OLzKZLasYq
+         cTvg==
+X-Gm-Message-State: AOAM531fCPbiZUEwUOnBQ3GpsdaX4darMhJImNqVCSoTyMe4G+bN0G0F
+        pm3Md1xeSBRu6ME9Q+cVsaACKV+104mU5nq+G8k0lQ==
+X-Google-Smtp-Source: ABdhPJw1FRf3UGjIm8Aw/1ssXYvNABKPHlodmDoTYJBWduHQRMKFH+GUhry8/4a3iTFlum0ADTfAg+Z+9PH8e1iUju4=
+X-Received: by 2002:a05:651c:284:: with SMTP id b4mr1764447ljo.283.1593589761445;
+ Wed, 01 Jul 2020 00:49:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200626005601.241022-1-megous@megous.com> <20200626005601.241022-7-megous@megous.com>
-In-Reply-To: <20200626005601.241022-7-megous@megous.com>
+References: <20200626005601.241022-1-megous@megous.com> <20200626005601.241022-8-megous@megous.com>
+In-Reply-To: <20200626005601.241022-8-megous@megous.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 1 Jul 2020 09:48:37 +0200
-Message-ID: <CACRpkdbWUW4AaZf3ZTvabdQ3SwwwBcdwYFOaE1ou4rbtUAUOEw@mail.gmail.com>
-Subject: Re: [PATCH v5 06/13] drm/panel: st7703: Prepare for supporting
- multiple panels
+Date:   Wed, 1 Jul 2020 09:49:10 +0200
+Message-ID: <CACRpkdZN2rEB9gSQiBiB5Fu8tUUt=DCfF3dpfOBTsUbCc7HUgw@mail.gmail.com>
+Subject: Re: [PATCH v5 07/13] drm/panel: st7703: Move code specific to jh057n
+ closer together
 To:     Ondrej Jirman <megous@megous.com>
 Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -89,8 +89,7 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Fri, Jun 26, 2020 at 2:56 AM Ondrej Jirman <megous@megous.com> wrote:
 
-> Parametrize the driver so that it can support more panels based
-> on st7703 controller.
+> It's better than having it spread around the driver.
 >
 > Signed-off-by: Ondrej Jirman <megous@megous.com>
 
