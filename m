@@ -2,318 +2,215 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5A2C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 07:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE24CC433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 07:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89F1320722
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 07:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCCAB2078D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 07:04:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NnxOQGwN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M5xx14Cv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbgGAHEY (ORCPT
+        id S1728119AbgGAHEl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 03:04:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37624 "EHLO
+        Wed, 1 Jul 2020 03:04:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727981AbgGAHEX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 03:04:23 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18E51C061755;
-        Wed,  1 Jul 2020 00:04:23 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id b92so10635476pjc.4;
-        Wed, 01 Jul 2020 00:04:23 -0700 (PDT)
+        with ESMTP id S1727981AbgGAHEj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 03:04:39 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BA86C03E979
+        for <devicetree@vger.kernel.org>; Wed,  1 Jul 2020 00:04:39 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id s10so22596399wrw.12
+        for <devicetree@vger.kernel.org>; Wed, 01 Jul 2020 00:04:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=gEzbAtWIsd1iT+azfZmBohV/AqNwaJqbCk/ZUwUKLT0=;
-        b=NnxOQGwN2fiVijkyKWMDRKyu6NhJ9XGf1RN8fCmtWJbYPFPZwt1E2v1y95ag2laVoz
-         JuRRtV/SSKcCUZ5IBPUmO4XZZOss80RdERJBx/cWm3TR/JNM8fcyzk79WbIqDxc2+8Um
-         6bAnewGJU/0QdRS1mj/C/NqEo5w4fF/ao5pT/Bfp2sMKKvlfNqt0xWNBGW4yy9TfKEQJ
-         UTMBlxfU8+DNUQ/I/lK0ONPLhCR47k9No8uQ6GRE8QF32H5caMOcNZ/GXPFSCQlPGX7p
-         vdMzvNa00shOqnPOB6rxqrSPoA6ueTsDPgqXItp09e21hATcW6yrktrPCXRbnsAO0lYZ
-         URfw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=e12F1suikdS3lGtBuyJAayumJr4O2+9e5bqVwPL0o7M=;
+        b=M5xx14CvYq83HbV1b8rfXttQ1GPSnY1Tk0KdGpXG8pGlUAlrg0sWDEnk8bzKkJ6r6k
+         2Aa0XA3apmz6vDJQ0V5lUPceHC4c95rjbZ0M/T1M/vH/i0zfizzW71uUJr+IuzrwnQru
+         9kTAGNbQv3W1fYpXuQhR+qoNUkjPUQnu2c/R1I+MTqIlj2BJoKllFFzmemkMhkrlTlo+
+         yiv1jOcJwAo7xFKUnGiVXrK0m4pTQpddkUlVJcbN5jtVBKnBeLEE62nGdLe64NtdU2hP
+         6P7VnvWOXc23r0ZP3HU6wwfGlrc8BLrfA2YlVx4xaX6aBozq60qV4YXQi72OtSGVKYUT
+         Y6Xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=gEzbAtWIsd1iT+azfZmBohV/AqNwaJqbCk/ZUwUKLT0=;
-        b=hy4nJOd4iJFyHi0RMpOLHbQEyAon/bm5qsRvbK/EhnrSs4oK0YgXrv/WSmQidYnghV
-         GPoDtylMVM5ZhlgreT4ICW79Dj6xqAYHjA0datPYXh6ntpSICdp52sK0jb3teCM/1tbJ
-         NJ9+X0wJ4HLvvZjTr3kccteV0rapWeYg1ANU3p7sB8+LuDFxR70pRQanSnkngnFOR4bd
-         bvVhaBUCE+UD0p7bh8oJMAff0mGW1TpLbh6+yIKJ6pxK2uuaOjgBRWgc30mOvIayPah5
-         mH804Xhlq9jW07z/wmd9hCooW983vUaUc/bitwrrDps+ox7NsS99qvyV9t+fLhw9NCnT
-         4Akg==
-X-Gm-Message-State: AOAM5305EP+J5NjBuU5aJDt9JgYF/8bVhCL4F7e+O711sJNQKrrs68Md
-        Pxhye5P9M8VM6m2vxdco9tqfWd7LnMc=
-X-Google-Smtp-Source: ABdhPJx/6lPBNeVtHwsvQ63vNg3gQTw0bGryosd9ftVV+EMIb/Bl718hMVuloKtYMtKlOW9lBXxOlQ==
-X-Received: by 2002:a17:902:9042:: with SMTP id w2mr11542065plz.8.1593587062534;
-        Wed, 01 Jul 2020 00:04:22 -0700 (PDT)
-Received: from in099003062.routereb3c90.com ([106.51.138.45])
-        by smtp.gmail.com with ESMTPSA id f2sm3623201pfb.184.2020.07.01.00.04.18
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=e12F1suikdS3lGtBuyJAayumJr4O2+9e5bqVwPL0o7M=;
+        b=To/OE9jWUbUiW2ZMv0oosSCSPxmFwkCmflVUr2HeAVeOtCAEx/VA2FnA0i0BHeiu1n
+         KQ1qh1y04uZL5JNyyJWLnn0klNQMJxjZyzG5sFtqCqymj/49U86y50oZnSTzm4IN4G2R
+         jlZJt544Wx9GU9Z3IgmV2bkhk0yPTUDdtdTjwX1vAqSOBIEF96pOD/FuAXp5NOTMjr+8
+         pILKb/cJnejVfUEBnDAxm5o/tsMs+OvScVgfgajbDy3Zp/vxRW1rs2BmPKJBmfLv39AS
+         d8rXyoENkDTP1r/hVazIwnkV8RZpdDVu7rnMIigDHYwvCagMoLbBxnTKLLFXeqzd7cEO
+         7igQ==
+X-Gm-Message-State: AOAM533xM3eho+sLWidzCQogZWgb9J4Mg3WCahAOuO/NeL4zGKI9cIYr
+        D+ZuYca0QfLqKYzayLfU1/YjWQ==
+X-Google-Smtp-Source: ABdhPJyZ0zCqVJ4yCEcYTanPmJiMHwO+RzvGh5qS/YdgNhZ3s59Ce3qt5dt+K7Lrub9MMzWPYdgvBA==
+X-Received: by 2002:a5d:66ca:: with SMTP id k10mr14794987wrw.244.1593587077069;
+        Wed, 01 Jul 2020 00:04:37 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id l18sm6294142wrm.52.2020.07.01.00.04.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 00:04:21 -0700 (PDT)
-From:   Vinay Simha BN <simhavcs@gmail.com>
-To:     narmstrong@baylibre.com, Ken-Sue.Tan@taec.toshiba.com,
-        Chris.Cheng@taec.toshiba.com, Bhushan.Patel@taec.toshiba.com
-Cc:     Vinay Simha BN <simhavcs@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v5 1/2] dt-binding: Add DSI/LVDS TC358775 bridge bindings
-Date:   Wed,  1 Jul 2020 12:33:36 +0530
-Message-Id: <20200701070344.6330-1-simhavcs@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 01 Jul 2020 00:04:36 -0700 (PDT)
+Date:   Wed, 1 Jul 2020 08:04:34 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     robh+dt@kernel.org, broonie@kernel.org, gregkh@linuxfoundation.org,
+        andriy.shevchenko@linux.intel.com, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com, arnd@arndb.de,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/1] mfd: Add I2C based System Configuaration (SYSCON)
+ access
+Message-ID: <20200701070434.GP1179328@dell>
+References: <20200622075145.1464020-1-lee.jones@linaro.org>
+ <e436fd60bf0ebb6d72a76034d0fc35de@walle.cc>
+ <f505c52d565ba7dbf05eef895782c410@walle.cc>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f505c52d565ba7dbf05eef895782c410@walle.cc>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This driver is tested with two panels with Apq8016-IFC6309 board
-https://www.inforcecomputing.com/products/single-board-computers-sbc/qualcomm-snapdragon-410-inforce-6309-micro-sbc
+On Wed, 01 Jul 2020, Michael Walle wrote:
 
-1. 1366x768@60 auo,b101xtn01 data-mapping = "jeida-24"
-2. 800x480@60 innolux,at070tn92 data-mapping = "vesa-24"
+> Hi Lee,
+> 
+> Am 2020-06-30 11:16, schrieb Michael Walle:
+> > I'm just trying to use this for my sl28 driver. Some remarks, see below.
+> > 
+> > Am 2020-06-22 09:51, schrieb Lee Jones:
+> > > The existing SYSCON implementation only supports MMIO (memory mapped)
+> > > accesses, facilitated by Regmap.  This extends support for registers
+> > > held behind I2C busses.
+> > > 
+> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > > ---
+> > > Changelog:
+> > > 
+> > > v3 => v4
+> > >   - Add ability to provide a non-default Regmap configuration
+> > > 
+> > > v2 => v3
+> > >   - Change 'is CONFIG' present check to include loadable modules
+> > >     - s/#ifdef CONFIG_MFD_SYSCON_I2C/#if
+> > > IS_ENABLED(CONFIG_MFD_SYSCON_I2C)/
+> > > 
+> > > v1 => v2
+> > >   - Remove legacy references to OF
+> > >   - Allow building as a module (fixes h8300 0-day issue)
+> > > 
+> > > drivers/mfd/Kconfig            |   7 +++
+> > >  drivers/mfd/Makefile           |   1 +
+> > >  drivers/mfd/syscon-i2c.c       | 104
+> > > +++++++++++++++++++++++++++++++++
+> > >  include/linux/mfd/syscon-i2c.h |  36 ++++++++++++
+> > >  4 files changed, 148 insertions(+)
+> > >  create mode 100644 drivers/mfd/syscon-i2c.c
+> > >  create mode 100644 include/linux/mfd/syscon-i2c.h
+> > > 
+> > 
+> > [..]
+> > 
+> > > +static struct regmap *syscon_i2c_get_regmap(struct i2c_client
+> > > *client,
+> > > +					    struct regmap_config *regmap_config)
+> > > +{
+> > > +	struct device *dev = &client->dev;
+> > > +	struct syscon *entry, *syscon = NULL;
+> > > +
+> > > +	spin_lock(&syscon_i2c_list_slock);
+> > > +
+> > > +	list_for_each_entry(entry, &syscon_i2c_list, list)
+> > > +		if (entry->dev == dev) {
+> > > +			syscon = entry;
+> > > +			break;
+> > > +		}
+> > > +
+> > > +	spin_unlock(&syscon_i2c_list_slock);
+> > > +
+> > > +	if (!syscon)
+> > > +		syscon = syscon_i2c_register(client, regmap_config);
+> > > +
+> > > +	if (IS_ERR(syscon))
+> > > +		return ERR_CAST(syscon);
+> > > +
+> > > +	return syscon->regmap;
+> > > +}
+> > > +
+> > > +struct regmap *syscon_i2c_to_regmap_config(struct i2c_client *client,
+> > > +					   struct regmap_config *regmap_config)
+> > > +{
+> > > +	return syscon_i2c_get_regmap(client, regmap_config);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(syscon_i2c_to_regmap_config);
+> > > +
+> > > +struct regmap *syscon_i2c_to_regmap(struct i2c_client *client)
+> > > +{
+> > > +	return syscon_i2c_get_regmap(client, &syscon_i2c_regmap_config);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(syscon_i2c_to_regmap);
+> > 
+> > What do you think about
+> > 
+> > struct regmap *syscon_i2c_to_regmap(struct device *dev)
+> > {
+> > 	struct i2c_client *client = i2c_verify_client(dev);
+> > 
+> > 	if (!client)
+> > 		return ERR_PTR(-EINVAL);
+> > 
+> > 	return syscon_i2c_get_regmap(client, &syscon_i2c_regmap_config);
+> > }
+> > 
+> > Or even move it to syscon_i2c_get_regmap().
+> > 
+> > This way, (a) a driver doesn't have to use "#include <linux/i2c.h>" just
+> > to call to_i2c_client() (or i2c_verify_client()) and (b) you won't do it
+> > all over again in all sub drivers.
+> > 
+> > So you could just do a
+> >   regmap = syscon_i2c_to_regmap(pdev->dev.parent);
+> > 
+> > I've also noticed that the mmio syscon uses device_node as parameter.
+> > What
+> > was the reason to divert from that? Just curious.
+> 
+> How is this supposed to be used?
+> 
+> I had something like the following in mind:
+> 
+> &i2c {
+>   cpld@4a {
+>     compatible = "simple-mfd";
+>     reg = <0x4a>;
+> 
+>     gpio@4 {
+>       compatible = "vendor,gpio";
+>       reg = <0x4>;
+>     };
+>   };
+> };
 
-Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
+Yes, that was the idea.
 
----
-v1:
- Initial version wast .txt file
+> But I think the childen are not enumerated if its an I2C device. And
+> the actual i2c driver is also missing.
 
-v2:
- From txt to yaml file format
+What do you mean?  Can you elaborate?
 
-v3:
-* Andrzej Hajda review comments incorporated
-  dual port lvds implemented
-
-* Laurent Pinchart review comments incorporated
-  dsi lanes property removed and it is dynamically
-  picked from the dsi ports
-  VESA/JEIDA format picked from panel-lvds dts
----
- .../display/bridge/toshiba,tc358775.yaml      | 204 ++++++++++++++++++
- 1 file changed, 204 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
-
-diff --git a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
-new file mode 100644
-index 000000000000..ec53d62d408b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
-@@ -0,0 +1,204 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/toshiba,tc358775.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Toshiba TC358775 DSI to LVDS bridge bindings
-+
-+maintainers:
-+ - Vinay Simha BN <simhavcs@gmail.com>
-+
-+description: |
-+ This binding supports DSI to LVDS bridge TC358775
-+
-+properties:
-+  compatible:
-+    const: toshiba,tc358775
-+
-+  reg:
-+    maxItems: 1
-+    description: i2c address of the bridge, 0x0f
-+
-+  vdd-supply:
-+    maxItems: 1
-+    description:  1.2V LVDS Power Supply
-+
-+  vddio-supply:
-+    maxItems: 1
-+    description: 1.8V IO Power Supply
-+
-+  stby-gpios:
-+    maxItems: 1
-+    description: Standby pin, Low active
-+
-+  reset-gpios:
-+    maxItems: 1
-+    description: Hardware reset, Low active
-+
-+  ports:
-+    type: object
-+    description:
-+      A node containing input and output port nodes with endpoint definitions
-+      as documented in
-+      Documentation/devicetree/bindings/media/video-interfaces.txt
-+    properties:
-+      "#address-cells":
-+        const: 1
-+
-+      "#size-cells":
-+        const: 0
-+
-+      port@0:
-+        type: object
-+        description: |
-+          DSI Input. The remote endpoint phandle should be a
-+          reference to a valid mipi_dsi_host device node.
-+
-+      port@1:
-+        type: object
-+        description: |
-+          Video port for LVDS output (panel or connector).
-+
-+      port@2:
-+        type: object
-+        description: |
-+          Video port for Dual link LVDS output (panel or connector).
-+
-+    required:
-+      - port@0
-+      - port@1
-+
-+required:
-+ - compatible
-+ - reg
-+ - vdd-supply
-+ - vddio-supply
-+ - stby-gpios
-+ - reset-gpios
-+ - ports
-+
-+examples:
-+ - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    i2c@78b8000 {
-+        /* On High speed expansion */
-+        label = "HS-I2C2";
-+        reg = <0x078b8000 0x500>;
-+        clock-frequency = <400000>; /* fastmode operation */
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        tc_bridge: bridge@f {
-+            compatible = "toshiba,tc358775";
-+            reg = <0x0f>;
-+
-+            vdd-supply = <&pm8916_l2>;
-+            vddio-supply = <&pm8916_l6>;
-+
-+            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
-+            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
-+
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                port@0 {
-+                    reg = <0>;
-+                    d2l_in_test: endpoint {
-+                        remote-endpoint = <&dsi0_out>;
-+                    };
-+                };
-+
-+                port@1 {
-+                    reg = <1>;
-+                    lvds_out: endpoint {
-+                        remote-endpoint = <&panel_in>;
-+                    };
-+                };
-+            };
-+        };
-+    };
-+
-+    dsi@1a98000 {
-+        reg = <0x1a98000 0x25c>;
-+        reg-names = "dsi_ctrl";
-+
-+        ports {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            port@1 {
-+                reg = <1>;
-+                dsi0_out: endpoint {
-+                    remote-endpoint = <&d2l_in_test>;
-+                        data-lanes = <0 1 2 3>;
-+                };
-+             };
-+         };
-+     };
-+
-+ - |
-+    i2c@78b8000 {
-+        /* On High speed expansion */
-+        label = "HS-I2C2";
-+        reg = <0x078b8000 0x500>;
-+        clock-frequency = <400000>; /* fastmode operation */
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        tc_bridge_dual: bridge@f {
-+            compatible = "toshiba,tc358775";
-+            reg = <0x0f>;
-+
-+            vdd-supply = <&pm8916_l2>;
-+            vddio-supply = <&pm8916_l6>;
-+
-+            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
-+            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
-+
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                port@0 {
-+                    reg = <0>;
-+                    d2l_in_dual: endpoint {
-+                        remote-endpoint = <&dsi0_out_dual>;
-+                    };
-+                };
-+
-+                port@1 {
-+                    reg = <1>;
-+                    lvds0_out: endpoint {
-+                        remote-endpoint = <&panel_in0>;
-+                    };
-+                };
-+
-+                port@2 {
-+                    reg = <2>;
-+                    lvds1_out: endpoint {
-+                        remote-endpoint = <&panel_in1>;
-+                    };
-+                };
-+            };
-+        };
-+    };
-+
-+    dsi@1a98000 {
-+        reg = <0x1a98000 0x25c>;
-+        reg-names = "dsi_ctrl";
-+
-+        ports {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            port@1 {
-+                reg = <1>;
-+                dsi0_out_dual: endpoint {
-+                    remote-endpoint = <&d2l_in_dual>;
-+                        data-lanes = <0 1 2 3>;
-+                };
-+             };
-+         };
-+     };
-+...
 -- 
-2.17.1
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
