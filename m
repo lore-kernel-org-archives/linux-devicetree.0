@@ -2,219 +2,571 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46535C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 02:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F01DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 02:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29CE72078B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 02:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25AAC20760
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 02:35:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbgGACSc (ORCPT
+        id S1725805AbgGACfm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 30 Jun 2020 22:18:32 -0400
-Received: from mx.socionext.com ([202.248.49.38]:48253 "EHLO mx.socionext.com"
+        Tue, 30 Jun 2020 22:35:42 -0400
+Received: from mga06.intel.com ([134.134.136.31]:45083 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725994AbgGACSc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 30 Jun 2020 22:18:32 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 01 Jul 2020 11:18:30 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 5330B180B81;
-        Wed,  1 Jul 2020 11:18:30 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 1 Jul 2020 11:18:30 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id DA0EF1A0507;
-        Wed,  1 Jul 2020 11:18:29 +0900 (JST)
-Received: from [10.213.31.247] (unknown [10.213.31.247])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 4D2D4120BB6;
-        Wed,  1 Jul 2020 11:18:29 +0900 (JST)
-Subject: Re: [PATCH v5 2/6] PCI: uniphier: Add misc interrupt handler to
- invoke PME and AER
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1592469493-1549-3-git-send-email-hayashi.kunihiko@socionext.com>
- <87v9jcet5h.wl-maz@kernel.org>
- <c09ceb2f-0bf3-a5de-f918-1ccd0dba1e0a@socionext.com>
- <2a2bb86a4afcbd60d3399953b5af8b69@kernel.org>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <95adf862-6c52-ddb9-b96a-e278a1925053@socionext.com>
-Date:   Wed, 1 Jul 2020 11:18:29 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <2a2bb86a4afcbd60d3399953b5af8b69@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        id S1725988AbgGACfm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 30 Jun 2020 22:35:42 -0400
+IronPort-SDR: TOKC821W06KDtC75S21eC7FuXsZqX1QMTahhNe/HJg7kMAAeO3OG9tFHLvKOAGls4/KGYWYE3i
+ Wu8PkFEL8qOw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="207959246"
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="207959246"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 19:35:39 -0700
+IronPort-SDR: lxEy9JqYUZsCAGkxl166Y1TxkvFePr8vlTtcz9sp3v/2SOyhr3Oqyd0bDhE2xjZq4fwwafGnw+
+ EwXmwF0xZd/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="481418476"
+Received: from wwanmoha-ilbpg2.png.intel.com ([10.88.227.42])
+  by fmsmga005.fm.intel.com with ESMTP; 30 Jun 2020 19:35:37 -0700
+From:   Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+To:     ulf.hansson@linaro.org, robh+dt@kernel.org,
+        adrian.hunter@intel.com, manish.narani@xilinx.com,
+        vadivel.muruganx.ramuthevar@linux.intel.com
+Cc:     linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        wan.ahmad.zainie.wan.mohamad@intel.com
+Subject: [PATCH] dt-bindings: mmc: convert arasan sdhci bindings to yaml
+Date:   Wed,  1 Jul 2020 10:33:46 +0800
+Message-Id: <20200701023346.3873-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Marc,
+Convert arasan,sdhci.txt file to yaml. The new file arasan,sdhci.yaml
+will inherit properties from mmc-controller.yaml. 'sdhci' is no longer
+a valid name for node and should be changed to 'mmc'.
 
-On 2020/06/30 22:23, Marc Zyngier wrote:
-> On 2020-06-29 10:49, Kunihiko Hayashi wrote:
->> Hi Marc,
->>
->> On 2020/06/27 18:48, Marc Zyngier wrote:
->>> On Thu, 18 Jun 2020 09:38:09 +0100,
->>> Kunihiko Hayashi <hayashi.kunihiko@socionext.com> wrote:
->>>>
->>>> The misc interrupts consisting of PME, AER, and Link event, is handled
->>>> by INTx handler, however, these interrupts should be also handled by
->>>> MSI handler.
->>>>
->>>> This adds the function uniphier_pcie_misc_isr() that handles misc
->>>> interrupts, which is called from both INTx and MSI handlers.
->>>> This function detects PME and AER interrupts with the status register,
->>>> and invoke PME and AER drivers related to MSI.
->>>>
->>>> And this sets the mask for misc interrupts from INTx if MSI is enabled
->>>> and sets the mask for misc interrupts from MSI if MSI is disabled.
->>>>
->>>> Cc: Marc Zyngier <maz@kernel.org>
->>>> Cc: Jingoo Han <jingoohan1@gmail.com>
->>>> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
->>>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->>>> ---
->>>>   drivers/pci/controller/dwc/pcie-uniphier.c | 57 ++++++++++++++++++++++++------
->>>>   1 file changed, 46 insertions(+), 11 deletions(-)
->>>>
->>>> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
->>>> index a5401a0..5ce2479 100644
->>>> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
->>>> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
->>>> @@ -44,7 +44,9 @@
->>>>   #define PCL_SYS_AUX_PWR_DET        BIT(8)
->>>>     #define PCL_RCV_INT            0x8108
->>>> +#define PCL_RCV_INT_ALL_INT_MASK    GENMASK(28, 25)
->>>>   #define PCL_RCV_INT_ALL_ENABLE        GENMASK(20, 17)
->>>> +#define PCL_RCV_INT_ALL_MSI_MASK    GENMASK(12, 9)
->>>>   #define PCL_CFG_BW_MGT_STATUS        BIT(4)
->>>>   #define PCL_CFG_LINK_AUTO_BW_STATUS    BIT(3)
->>>>   #define PCL_CFG_AER_RC_ERR_MSI_STATUS    BIT(2)
->>>> @@ -167,7 +169,15 @@ static void uniphier_pcie_stop_link(struct dw_pcie *pci)
->>>>     static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
->>>>   {
->>>> -    writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
->>>> +    u32 val;
->>>> +
->>>> +    val = PCL_RCV_INT_ALL_ENABLE;
->>>> +    if (pci_msi_enabled())
->>>> +        val |= PCL_RCV_INT_ALL_INT_MASK;
->>>> +    else
->>>> +        val |= PCL_RCV_INT_ALL_MSI_MASK;
->>>
->>> Does this affect endpoints? Or just the RC itself?
->>
->> These interrupts are asserted by RC itself, so this part affects only RC.
->>
->>>> +
->>>> +    writel(val, priv->base + PCL_RCV_INT);
->>>>       writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
->>>>   }
->>>>   @@ -231,32 +241,56 @@ static const struct irq_domain_ops uniphier_intx_domain_ops = {
->>>>       .map = uniphier_pcie_intx_map,
->>>>   };
->>>>   -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
->>>> +static void uniphier_pcie_misc_isr(struct pcie_port *pp, bool is_msi)
->>>>   {
->>>> -    struct pcie_port *pp = irq_desc_get_handler_data(desc);
->>>>       struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->>>>       struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
->>>> -    struct irq_chip *chip = irq_desc_get_chip(desc);
->>>> -    unsigned long reg;
->>>> -    u32 val, bit, virq;
->>>> +    u32 val, virq;
->>>>   -    /* INT for debug */
->>>>       val = readl(priv->base + PCL_RCV_INT);
->>>>         if (val & PCL_CFG_BW_MGT_STATUS)
->>>>           dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
->>>> +
->>>>       if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
->>>>           dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
->>>> -    if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
->>>> -        dev_dbg(pci->dev, "Root Error\n");
->>>> -    if (val & PCL_CFG_PME_MSI_STATUS)
->>>> -        dev_dbg(pci->dev, "PME Interrupt\n");
->>>> +
->>>> +    if (is_msi) {
->>>> +        if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
->>>> +            dev_dbg(pci->dev, "Root Error Status\n");
->>>> +
->>>> +        if (val & PCL_CFG_PME_MSI_STATUS)
->>>> +            dev_dbg(pci->dev, "PME Interrupt\n");
->>>> +
->>>> +        if (val & (PCL_CFG_AER_RC_ERR_MSI_STATUS |
->>>> +               PCL_CFG_PME_MSI_STATUS)) {
->>>> +            virq = irq_linear_revmap(pp->irq_domain, 0);
->>>> +            generic_handle_irq(virq);
->>>> +        }
->>>> +    }
->>>
->>> Please have two handlers: one for interrupts that are from the RC,
->>> another for interrupts coming from the endpoints.
->> I assume that this handler treats interrupts from the RC only and
->> this is set on the member ".msi_host_isr" added in the patch 1/6.
->> I think that the handler for interrupts coming from endpoints should be
->> treated as a normal case (after calling .msi_host_isr in
->> dw_handle_msi_irq()).
-> 
-> It looks pretty odd that you end-up dealing with both from the
-> same "parent" interrupt. I guess this is in keeping with the
-> rest of the DW PCIe hacks... :-/
-
-It might be odd, however, in case of UniPhier SoC,
-both MSI interrupts from endpoints and PME/AER interrupts from RC are
-asserted by same "parent" interrupt. In other words, PME/AER interrupts
-are notified using the parent interrupt for MSI.
-
-MSI interrupts are treated as child interrupts with reference to
-the status register in DW core. This is handled in a for-loop in
-dw_handle_msi_irq().
-
-PME/AER interrupts are treated with reference to the status register
-in UniPhier glue layer, however, this couldn't be handled in the same way
-directly.
-
-So I'm trying to add .msi_host_isr function to handle this
-with reference to the SoC-specific registers.
-
-This exported function asserts MSI-0 as a shared child interrupt.
-As a result, PME/AER are registered like the followings in dmesg:
-
-    pcieport 0000:00:00.0: PME: Signaling with IRQ 25
-    pcieport 0000:00:00.0: AER: enabled with IRQ 25
-
-And these interrupts are shared as MSI-0:
-
-    # cat /proc/interrupts | grep 25:
-     25:          0          0          0          0   PCI-MSI   0 Edge      PCIe PME, aerdrv
-
-This might be a special case, though, I think that this is needed to handle
-interrupts from RC sharing MSI parent.
-  
-> It is for Lorenzo to make up his mind about this anyway.
-
-I'd like to Lorenzo's opinion, too.
-
-Thank you,
-
+Suggested-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
 ---
-Best Regards
-Kunihiko Hayashi
+ .../devicetree/bindings/mmc/arasan,sdhci.txt  | 192 -----------
+ .../devicetree/bindings/mmc/arasan,sdhci.yaml | 299 ++++++++++++++++++
+ 2 files changed, 299 insertions(+), 192 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+ create mode 100644 Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml
+
+diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+deleted file mode 100644
+index f29bf7dd2ece..000000000000
+--- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
++++ /dev/null
+@@ -1,192 +0,0 @@
+-Device Tree Bindings for the Arasan SDHCI Controller
+-
+-  The bindings follow the mmc[1], clock[2], interrupt[3] and phy[4] bindings.
+-  Only deviations are documented here.
+-
+-  [1] Documentation/devicetree/bindings/mmc/mmc.txt
+-  [2] Documentation/devicetree/bindings/clock/clock-bindings.txt
+-  [3] Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+-  [4] Documentation/devicetree/bindings/phy/phy-bindings.txt
+-
+-Required Properties:
+-  - compatible: Compatibility string.  One of:
+-    - "arasan,sdhci-8.9a": generic Arasan SDHCI 8.9a PHY
+-    - "arasan,sdhci-4.9a": generic Arasan SDHCI 4.9a PHY
+-    - "arasan,sdhci-5.1": generic Arasan SDHCI 5.1 PHY
+-    - "rockchip,rk3399-sdhci-5.1", "arasan,sdhci-5.1": rk3399 eMMC PHY
+-      For this device it is strongly suggested to include arasan,soc-ctl-syscon.
+-    - "xlnx,zynqmp-8.9a": ZynqMP SDHCI 8.9a PHY
+-      For this device it is strongly suggested to include clock-output-names and
+-      #clock-cells.
+-    - "xlnx,versal-8.9a": Versal SDHCI 8.9a PHY
+-      For this device it is strongly suggested to include clock-output-names and
+-      #clock-cells.
+-    - "ti,am654-sdhci-5.1", "arasan,sdhci-5.1": TI AM654 MMC PHY
+-	Note: This binding has been deprecated and moved to [5].
+-    - "intel,lgm-sdhci-5.1-emmc", "arasan,sdhci-5.1": Intel LGM eMMC PHY
+-      For this device it is strongly suggested to include arasan,soc-ctl-syscon.
+-    - "intel,lgm-sdhci-5.1-sdxc", "arasan,sdhci-5.1": Intel LGM SDXC PHY
+-      For this device it is strongly suggested to include arasan,soc-ctl-syscon.
+-    - "intel,keembay-sdhci-5.1-emmc", "arasan,sdhci-5.1": Intel Keem Bay eMMC
+-      For this device it is strongly suggested to include arasan,soc-ctl-syscon.
+-    - "intel,keembay-sdhci-5.1-sd": Intel Keem Bay SD controller
+-      For this device it is strongly suggested to include arasan,soc-ctl-syscon.
+-    - "intel,keembay-sdhci-5.1-sdio": Intel Keem Bay SDIO controller
+-      For this device it is strongly suggested to include arasan,soc-ctl-syscon.
+-
+-  [5] Documentation/devicetree/bindings/mmc/sdhci-am654.txt
+-
+-  - reg: From mmc bindings: Register location and length.
+-  - clocks: From clock bindings: Handles to clock inputs.
+-  - clock-names: From clock bindings: Tuple including "clk_xin" and "clk_ahb"
+-  - interrupts: Interrupt specifier
+-
+-Required Properties for "arasan,sdhci-5.1":
+-  - phys: From PHY bindings: Phandle for the Generic PHY for arasan.
+-  - phy-names:  MUST be "phy_arasan".
+-
+-Optional Properties:
+-  - arasan,soc-ctl-syscon: A phandle to a syscon device (see ../mfd/syscon.txt)
+-    used to access core corecfg registers.  Offsets of registers in this
+-    syscon are determined based on the main compatible string for the device.
+-  - clock-output-names: If specified, this will be the name of the card clock
+-    which will be exposed by this device.  Required if #clock-cells is
+-    specified.
+-  - #clock-cells: If specified this should be the value <0> or <1>. With this
+-    property in place we will export one or two clocks representing the Card
+-    Clock. These clocks are expected to be consumed by our PHY.
+-  - xlnx,fails-without-test-cd: when present, the controller doesn't work when
+-    the CD line is not connected properly, and the line is not connected
+-    properly. Test mode can be used to force the controller to function.
+-  - xlnx,int-clock-stable-broken: when present, the controller always reports
+-    that the internal clock is stable even when it is not.
+-
+-  - xlnx,mio-bank: When specified, this will indicate the MIO bank number in
+-    which the command and data lines are configured. If not specified, driver
+-    will assume this as 0.
+-
+-Example:
+-	sdhci@e0100000 {
+-		compatible = "arasan,sdhci-8.9a";
+-		reg = <0xe0100000 0x1000>;
+-		clock-names = "clk_xin", "clk_ahb";
+-		clocks = <&clkc 21>, <&clkc 32>;
+-		interrupt-parent = <&gic>;
+-		interrupts = <0 24 4>;
+-	} ;
+-
+-	sdhci@e2800000 {
+-		compatible = "arasan,sdhci-5.1";
+-		reg = <0xe2800000 0x1000>;
+-		clock-names = "clk_xin", "clk_ahb";
+-		clocks = <&cru 8>, <&cru 18>;
+-		interrupt-parent = <&gic>;
+-		interrupts = <0 24 4>;
+-		phys = <&emmc_phy>;
+-		phy-names = "phy_arasan";
+-	} ;
+-
+-	sdhci: sdhci@fe330000 {
+-		compatible = "rockchip,rk3399-sdhci-5.1", "arasan,sdhci-5.1";
+-		reg = <0x0 0xfe330000 0x0 0x10000>;
+-		interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&cru SCLK_EMMC>, <&cru ACLK_EMMC>;
+-		clock-names = "clk_xin", "clk_ahb";
+-		arasan,soc-ctl-syscon = <&grf>;
+-		assigned-clocks = <&cru SCLK_EMMC>;
+-		assigned-clock-rates = <200000000>;
+-		clock-output-names = "emmc_cardclock";
+-		phys = <&emmc_phy>;
+-		phy-names = "phy_arasan";
+-		#clock-cells = <0>;
+-	};
+-
+-	sdhci: mmc@ff160000 {
+-		compatible = "xlnx,zynqmp-8.9a", "arasan,sdhci-8.9a";
+-		interrupt-parent = <&gic>;
+-		interrupts = <0 48 4>;
+-		reg = <0x0 0xff160000 0x0 0x1000>;
+-		clocks = <&clk200>, <&clk200>;
+-		clock-names = "clk_xin", "clk_ahb";
+-		clock-output-names = "clk_out_sd0", "clk_in_sd0";
+-		#clock-cells = <1>;
+-		clk-phase-sd-hs = <63>, <72>;
+-	};
+-
+-	sdhci: mmc@f1040000 {
+-		compatible = "xlnx,versal-8.9a", "arasan,sdhci-8.9a";
+-		interrupt-parent = <&gic>;
+-		interrupts = <0 126 4>;
+-		reg = <0x0 0xf1040000 0x0 0x10000>;
+-		clocks = <&clk200>, <&clk200>;
+-		clock-names = "clk_xin", "clk_ahb";
+-		clock-output-names = "clk_out_sd0", "clk_in_sd0";
+-		#clock-cells = <1>;
+-		clk-phase-sd-hs = <132>, <60>;
+-	};
+-
+-	emmc: sdhci@ec700000 {
+-		compatible = "intel,lgm-sdhci-5.1-emmc", "arasan,sdhci-5.1";
+-		reg = <0xec700000 0x300>;
+-		interrupt-parent = <&ioapic1>;
+-		interrupts = <44 1>;
+-		clocks = <&cgu0 LGM_CLK_EMMC5>, <&cgu0 LGM_CLK_NGI>,
+-			 <&cgu0 LGM_GCLK_EMMC>;
+-		clock-names = "clk_xin", "clk_ahb", "gate";
+-		clock-output-names = "emmc_cardclock";
+-		#clock-cells = <0>;
+-		phys = <&emmc_phy>;
+-		phy-names = "phy_arasan";
+-		arasan,soc-ctl-syscon = <&sysconf>;
+-	};
+-
+-	sdxc: sdhci@ec600000 {
+-		compatible = "arasan,sdhci-5.1", "intel,lgm-sdhci-5.1-sdxc";
+-		reg = <0xec600000 0x300>;
+-		interrupt-parent = <&ioapic1>;
+-		interrupts = <43 1>;
+-		clocks = <&cgu0 LGM_CLK_SDIO>, <&cgu0 LGM_CLK_NGI>,
+-			 <&cgu0 LGM_GCLK_SDXC>;
+-		clock-names = "clk_xin", "clk_ahb", "gate";
+-		clock-output-names = "sdxc_cardclock";
+-		#clock-cells = <0>;
+-		phys = <&sdxc_phy>;
+-		phy-names = "phy_arasan";
+-		arasan,soc-ctl-syscon = <&sysconf>;
+-	};
+-
+-	mmc: mmc@33000000 {
+-		compatible = "intel,keembay-sdhci-5.1-emmc", "arasan,sdhci-5.1";
+-		interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+-		reg = <0x0 0x33000000 0x0 0x300>;
+-		clock-names = "clk_xin", "clk_ahb";
+-		clocks = <&scmi_clk KEEM_BAY_PSS_AUX_EMMC>,
+-			 <&scmi_clk KEEM_BAY_PSS_EMMC>;
+-		phys = <&emmc_phy>;
+-		phy-names = "phy_arasan";
+-		assigned-clocks = <&scmi_clk KEEM_BAY_PSS_AUX_EMMC>;
+-		assigned-clock-rates = <200000000>;
+-		clock-output-names = "emmc_cardclock";
+-		#clock-cells = <0>;
+-		arasan,soc-ctl-syscon = <&mmc_phy_syscon>;
+-	};
+-
+-	sd0: mmc@31000000 {
+-		compatible = "intel,keembay-sdhci-5.1-sd";
+-		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
+-		reg = <0x0 0x31000000 0x0 0x300>;
+-		clock-names = "clk_xin", "clk_ahb";
+-		clocks = <&scmi_clk KEEM_BAY_PSS_AUX_SD0>,
+-			 <&scmi_clk KEEM_BAY_PSS_SD0>;
+-		arasan,soc-ctl-syscon = <&sd0_phy_syscon>;
+-	};
+-
+-	sd1: mmc@32000000 {
+-		compatible = "intel,keembay-sdhci-5.1-sdio";
+-		interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+-		reg = <0x0 0x32000000 0x0 0x300>;
+-		clock-names = "clk_xin", "clk_ahb";
+-		clocks = <&scmi_clk KEEM_BAY_PSS_AUX_SD1>,
+-			 <&scmi_clk KEEM_BAY_PSS_SD1>;
+-		arasan,soc-ctl-syscon = <&sd1_phy_syscon>;
+-	};
+diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml b/Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml
+new file mode 100644
+index 000000000000..5887c917d480
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml
+@@ -0,0 +1,299 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/mmc/arasan,sdhci.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Device Tree Bindings for the Arasan SDHCI Controller
++
++maintainers:
++  - Adrian Hunter <adrian.hunter@intel.com>
++
++allOf:
++  - $ref: "mmc-controller.yaml#"
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: arasan,sdhci-5.1
++    then:
++      required:
++        - phys
++        - phy-names
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - xlnx,zynqmp-8.9a
++              - xlnx,versal-8.9a
++    then:
++      properties:
++        clock-output-names:
++          items:
++            - const: clk_out_sd0
++            - const: clk_in_sd0
++
++properties:
++  compatible:
++    oneOf:
++      - const: arasan,sdhci-8.9a                # generic Arasan SDHCI 8.9a PHY
++      - const: arasan,sdhci-4.9a                # generic Arasan SDHCI 4.9a PHY
++      - const: arasan,sdhci-5.1                 # generic Arasan SDHCI 5.1 PHY
++      - items:
++          - const: rockchip,rk3399-sdhci-5.1    # rk3399 eMMC PHY
++          - const: arasan,sdhci-5.1
++        description:
++          For this device it is strongly suggested to include
++          arasan,soc-ctl-syscon.
++      - items:
++          - const: xlnx,zynqmp-8.9a             # ZynqMP SDHCI 8.9a PHY
++          - const: arasan,sdhci-8.9a
++        description:
++          For this device it is strongly suggested to include
++          clock-output-names and '#clock-cells'.
++      - items:
++          - const: xlnx,versal-8.9a             # Versal SDHCI 8.9a PHY
++          - const: arasan,sdhci-8.9a
++        description:
++          For this device it is strongly suggested to include
++          clock-output-names and '#clock-cells'.
++      - items:
++          - const: intel,lgm-sdhci-5.1-emmc     # Intel LGM eMMC PHY
++          - const: arasan,sdhci-5.1
++        description:
++          For this device it is strongly suggested to include
++          arasan,soc-ctl-syscon.
++      - items:
++          - const: intel,lgm-sdhci-5.1-sdxc     # Intel LGM SDXC PHY
++          - const: arasan,sdhci-5.1
++        description:
++          For this device it is strongly suggested to include
++          arasan,soc-ctl-syscon.
++      - items:
++          - const: intel,keembay-sdhci-5.1-emmc # Intel Keem Bay eMMC PHY
++          - const: arasan,sdhci-5.1
++        description:
++          For this device it is strongly suggested to include
++          arasan,soc-ctl-syscon.
++      - const: intel,keembay-sdhci-5.1-sd       # Intel Keem Bay SD controller
++        description:
++          For this device it is strongly suggested to include
++          arasan,soc-ctl-syscon.
++      - const: intel,keembay-sdhci-5.1-sdio     # Intel Keem Bay SDIO controller
++        description:
++          For this device it is strongly suggested to include
++          arasan,soc-ctl-syscon.
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    minItems: 2
++    maxItems: 3
++
++  clock-names:
++    minItems: 2
++    items:
++      - const: clk_xin
++      - const: clk_ahb
++      - const: gate
++
++  interrupts:
++    maxItems: 1
++
++  phys:
++    maxItems: 1
++
++  phy-names:
++    const: phy_arasan
++
++  arasan,soc-ctl-syscon:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      A phandle to a syscon device (see ../mfd/syscon.txt) used to access
++      core corecfg registers. Offsets of registers in this syscon are
++      determined based on the main compatible string for the device.
++
++  clock-output-names:
++    minItems: 1
++    maxItems: 2
++    description:
++      Name of the card clock which will be exposed by this device.
++
++  '#clock-cells':
++    enum: [0, 1]
++    description:
++      With this property in place we will export one or two clocks
++      representing the Card Clock. These clocks are expected to be
++      consumed by our PHY.
++
++  xlnx,fails-without-test-cd:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      When present, the controller doesn't work when the CD line is not
++      connected properly, and the line is not connected properly.
++      Test mode can be used to force the controller to function.
++
++  xlnx,int-clock-stable-broken:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      When present, the controller always reports that the internal clock
++      is stable even when it is not.
++
++  xlnx,mio-bank:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [0, 2]
++    default: 0
++    description:
++      The MIO bank number in which the command and data lines are configured.
++
++dependencies:
++  clock-output-names: [ '#clock-cells' ]
++  '#clock-cells': [ clock-output-names ]
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    mmc@e0100000 {
++          compatible = "arasan,sdhci-8.9a";
++          reg = <0xe0100000 0x1000>;
++          clock-names = "clk_xin", "clk_ahb";
++          clocks = <&clkc 21>, <&clkc 32>;
++          interrupt-parent = <&gic>;
++          interrupts = <0 24 4>;
++    };
++
++  - |
++    mmc@e2800000 {
++          compatible = "arasan,sdhci-5.1";
++          reg = <0xe2800000 0x1000>;
++          clock-names = "clk_xin", "clk_ahb";
++          clocks = <&cru 8>, <&cru 18>;
++          interrupt-parent = <&gic>;
++          interrupts = <0 24 4>;
++          phys = <&emmc_phy>;
++          phy-names = "phy_arasan";
++    };
++
++  - |
++    #include <dt-bindings/clock/rk3399-cru.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    mmc@fe330000 {
++          compatible = "rockchip,rk3399-sdhci-5.1", "arasan,sdhci-5.1";
++          reg = <0xfe330000 0x10000>;
++          interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
++          clocks = <&cru SCLK_EMMC>, <&cru ACLK_EMMC>;
++          clock-names = "clk_xin", "clk_ahb";
++          arasan,soc-ctl-syscon = <&grf>;
++          assigned-clocks = <&cru SCLK_EMMC>;
++          assigned-clock-rates = <200000000>;
++          clock-output-names = "emmc_cardclock";
++          phys = <&emmc_phy>;
++          phy-names = "phy_arasan";
++          #clock-cells = <0>;
++    };
++
++  - |
++    mmc@ff160000 {
++          compatible = "xlnx,zynqmp-8.9a", "arasan,sdhci-8.9a";
++          interrupt-parent = <&gic>;
++          interrupts = <0 48 4>;
++          reg = <0xff160000 0x1000>;
++          clocks = <&clk200>, <&clk200>;
++          clock-names = "clk_xin", "clk_ahb";
++          clock-output-names = "clk_out_sd0", "clk_in_sd0";
++          #clock-cells = <1>;
++          clk-phase-sd-hs = <63>, <72>;
++    };
++
++  - |
++    mmc@f1040000 {
++          compatible = "xlnx,versal-8.9a", "arasan,sdhci-8.9a";
++          interrupt-parent = <&gic>;
++          interrupts = <0 126 4>;
++          reg = <0xf1040000 0x10000>;
++          clocks = <&clk200>, <&clk200>;
++          clock-names = "clk_xin", "clk_ahb";
++          clock-output-names = "clk_out_sd0", "clk_in_sd0";
++          #clock-cells = <1>;
++          clk-phase-sd-hs = <132>, <60>;
++    };
++
++  - |
++    #define LGM_CLK_EMMC5
++    #define LGM_CLK_NGI
++    #define LGM_GCLK_EMMC
++    mmc@ec700000 {
++          compatible = "intel,lgm-sdhci-5.1-emmc", "arasan,sdhci-5.1";
++          reg = <0xec700000 0x300>;
++          interrupt-parent = <&ioapic1>;
++          interrupts = <44 1>;
++          clocks = <&cgu0 LGM_CLK_EMMC5>, <&cgu0 LGM_CLK_NGI>,
++                   <&cgu0 LGM_GCLK_EMMC>;
++          clock-names = "clk_xin", "clk_ahb", "gate";
++          clock-output-names = "emmc_cardclock";
++          #clock-cells = <0>;
++          phys = <&emmc_phy>;
++          phy-names = "phy_arasan";
++          arasan,soc-ctl-syscon = <&sysconf>;
++    };
++
++  - |
++    #define LGM_CLK_SDIO
++    #define LGM_GCLK_SDXC
++    mmc@ec600000 {
++          compatible = "intel,lgm-sdhci-5.1-sdxc", "arasan,sdhci-5.1";
++          reg = <0xec600000 0x300>;
++          interrupt-parent = <&ioapic1>;
++          interrupts = <43 1>;
++          clocks = <&cgu0 LGM_CLK_SDIO>, <&cgu0 LGM_CLK_NGI>,
++                   <&cgu0 LGM_GCLK_SDXC>;
++          clock-names = "clk_xin", "clk_ahb", "gate";
++          clock-output-names = "sdxc_cardclock";
++          #clock-cells = <0>;
++          phys = <&sdxc_phy>;
++          phy-names = "phy_arasan";
++          arasan,soc-ctl-syscon = <&sysconf>;
++    };
++
++  - |
++    #define KEEM_BAY_PSS_AUX_EMMC
++    #define KEEM_BAY_PSS_EMMC
++    mmc@33000000 {
++          compatible = "intel,keembay-sdhci-5.1-emmc", "arasan,sdhci-5.1";
++          interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
++          reg = <0x33000000 0x300>;
++          clock-names = "clk_xin", "clk_ahb";
++          clocks = <&scmi_clk KEEM_BAY_PSS_AUX_EMMC>,
++                   <&scmi_clk KEEM_BAY_PSS_EMMC>;
++          phys = <&emmc_phy>;
++          phy-names = "phy_arasan";
++          assigned-clocks = <&scmi_clk KEEM_BAY_PSS_AUX_EMMC>;
++          assigned-clock-rates = <200000000>;
++          clock-output-names = "emmc_cardclock";
++          #clock-cells = <0>;
++          arasan,soc-ctl-syscon = <&mmc_phy_syscon>;
++    };
++
++  - |
++    #define KEEM_BAY_PSS_AUX_SD0
++    #define KEEM_BAY_PSS_SD0
++    mmc@31000000 {
++          compatible = "intel,keembay-sdhci-5.1-sd";
++          interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
++          reg = <0x31000000 0x300>;
++          clock-names = "clk_xin", "clk_ahb";
++          clocks = <&scmi_clk KEEM_BAY_PSS_AUX_SD0>,
++                   <&scmi_clk KEEM_BAY_PSS_SD0>;
++          arasan,soc-ctl-syscon = <&sd0_phy_syscon>;
++    };
+-- 
+2.17.1
+
