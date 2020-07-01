@@ -6,61 +6,63 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFACFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 22:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C77C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 22:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9326C2082F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 22:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32C6B2085B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 22:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593642184;
-	bh=Q3eRPK687CJ1TD+vPYTtpnTYTLgMFnwzqhQyWhTTvfI=;
+	s=default; t=1593642209;
+	bh=fRMvfDs6J9ENx0nlOwqfVxCsvoO7J+T2mLixCLYaX1U=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=dbnyMSKn0b97a2TMjuC8f0W9Icp9U83fM67rgK6hg0E4bCXjlLJ4TlEziBLC+kaW2
-	 T3UgYwCMJBzmADdm6SOLOVTKDOLI1CkpcJb5M+IW8ZiSl4oks/Uo6F5jfeo7WkIv0r
-	 LdRStguvMJ62vIpA3LhaTzBaon2/I7DStfMJ0TuQ=
+	b=F63G/YYfiNDSDaMa3mPIHsgPh9t002hgfrhocCqM5F8NStqZfzC91qwUzQ2DAYZya
+	 6NgXhOE9TCQHR4KCbMEryIi7dfsndDmZQ9p/ROmZmn6itFVxqIrxskqP9B7E6N66gl
+	 gv7Q4WTAed6hu0Os7WknM0v9niu0zuaeb7kYV5YY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726119AbgGAWXE (ORCPT
+        id S1726767AbgGAWX2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 18:23:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50120 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 18:23:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727850AbgGAWXD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jul 2020 18:23:03 -0400
+        id S1726235AbgGAWX2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Jul 2020 18:23:28 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9E2620780;
-        Wed,  1 Jul 2020 22:23:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8126920853;
+        Wed,  1 Jul 2020 22:23:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593642183;
-        bh=Q3eRPK687CJ1TD+vPYTtpnTYTLgMFnwzqhQyWhTTvfI=;
+        s=default; t=1593642208;
+        bh=fRMvfDs6J9ENx0nlOwqfVxCsvoO7J+T2mLixCLYaX1U=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=AU0bGnUMeN653PjKqibdORxjLIr7pxXQi/6VJBzTn6KMk+xQNnfrQsFccxC9l4eEt
-         aC/T/aY2uhNS5CNEzSdTzfNFXX9qzBvokTqKf4PiCb3jn40gmzDLLgV5jpDvRk20Jr
-         ZAegaSYwl5SVbPfbutZW3TWnFnXh6BNlZb/oYFr0=
-Date:   Wed, 01 Jul 2020 23:23:01 +0100
+        b=pZXU4aHHTet5AzCAWDUUeFp7P8yNUdkhA9uczFmW9YbhWeEHuSHtBc1vNrXpzQD+8
+         3Th3pUvKqEa31N8xtDmQgH1LVj0iDOcK/24ghb9LgQ6clzH5dxsuRPp1LyGfbrXFLV
+         iliDuxpJtAFAbzGokZ1wmaGR1/clk8a1oYE/lOTk=
+Date:   Wed, 01 Jul 2020 23:23:25 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     alsa-devel@alsa-project.org, jee.heng.sia@intel.com,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
-In-Reply-To: <20200630224459.27174-1-festevam@gmail.com>
-References: <20200630224459.27174-1-festevam@gmail.com>
-Subject: Re: [PATCH] ASoC: dt-bindings: keembay-i2s: Fix reg descriptions
-Message-Id: <159364215574.10630.17562111847021411509.b4-ty@kernel.org>
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        allen <allen.chen@ite.com.tw>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
+        devicetree@vger.kernel.org
+In-Reply-To: <87r1ub39hq.wl-kuninori.morimoto.gx@renesas.com>
+References: <87r1ub39hq.wl-kuninori.morimoto.gx@renesas.com>
+Subject: Re: ARM: dts: motorola-mapphone-common: remove unneeded "simple-graph-card"
+Message-Id: <159364215575.10630.11362467369859592043.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 30 Jun 2020 19:44:59 -0300, Fabio Estevam wrote:
-> intel,keembay-i2s has two register regions:
-> - I2S registers
-> - I2S gen configuration
-> 
-> Describe these regions accordingly to fix the following warning seen
-> with 'make dt_binding_check':
-> 
-> [...]
+On 19 Jun 2020 14:33:36 +0900, Kuninori Morimoto wrote:
+> Audio Graph Card is using "audio-graph-card" prefix instead of
+> "simple-graph-card", and moreover "widgets / routing" doesn't need it.
+> This patch removes unsupported "simple-graph-card" prefix from
+> motorola-mapphone-common.dtsi and vendor-prefixes.yaml.
 
 Applied to
 
@@ -68,8 +70,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: dt-bindings: keembay-i2s: Fix reg descriptions
-      commit: 9308a3c92642cddb9ef89cc4014282cf14f2e2d2
+[1/1] ARM: dts: motorola-mapphone-common: remove unneeded "simple-graph-card"
+      commit: eb83aa46dcb8198708787b969eee1ba0e5ca0be7
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
