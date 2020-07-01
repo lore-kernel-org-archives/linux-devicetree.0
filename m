@@ -2,146 +2,112 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4AC3C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D3AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C29702082F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:30:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4E4F20781
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:30:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="p+1aoLdx"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="CqKMPGfG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732398AbgGAQ3g (ORCPT
+        id S1732504AbgGAQaV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:29:36 -0400
-Received: from vps.xff.cz ([195.181.215.36]:52120 "EHLO vps.xff.cz"
+        Wed, 1 Jul 2020 12:30:21 -0400
+Received: from vps.xff.cz ([195.181.215.36]:52700 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732255AbgGAQ3f (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:29:35 -0400
+        id S1732502AbgGAQaU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Jul 2020 12:30:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593620972; bh=Uj/PtNKs3+mkjVbPW0e4D6UAtrtq8nzQPPh5UoRwNE8=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=p+1aoLdxYlkQxDtBgUwtpH4clr0A+GJMhc1pDJtj8RF1HvvUe3xqXLij7mFyFHsUI
-         Qwgl0LDdF7sgGVfICOZoguRqLrlIiiDimEJCPp6hN8OZg/YnbPoxDbdAdse5lcJBty
-         D3a+Fjz1/JEk9gjLTGJ9LV/QcqW7a06xSQm0T/xQ=
-From:   Ondrej Jirman <megous@megous.com>
-To:     linux-sunxi@googlegroups.com,
+        t=1593621018; bh=S9sJvCFzXl3kRUEWnli4aokEH2QvfST8BIb1PIlWyhE=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=CqKMPGfG+ZJjZFaUD1dUbV5kVUWVCS7R5aZdNFpb5wdgXELQscUaejOgiiEwCNQ1d
+         8LU+q3KpyDQGV6ex0l/Vyg7KIZOxF4t0oeexWKdOWtia6k35AJ0KnYOk2jj/aBAo6F
+         LSNVSGFpCFfeGDtEg+xZ8fwR2kPMshbOjQ4UZjZA=
+Date:   Wed, 1 Jul 2020 18:30:18 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     linux-sunxi@googlegroups.com,
         Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
         Purism Kernel Team <kernel@puri.sm>,
         Rob Herring <robh+dt@kernel.org>,
         Maxime Ripard <mripard@kernel.org>,
         Chen-Yu Tsai <wens@csie.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Icenowy Zheng <icenowy@aosc.io>
-Cc:     Ondrej Jirman <megous@megous.com>, dri-devel@lists.freedesktop.org,
+        Icenowy Zheng <icenowy@aosc.io>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Samuel Holland <samuel@sholland.org>,
+        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
+        Bhushan Shah <bshah@kde.org>
+Subject: Re: [PATCH v6 00/13] Add support for PinePhone LCD panel
+Message-ID: <20200701163018.cfweuzp76qx5nsew@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Sam Ravnborg <sam@ravnborg.org>, linux-sunxi@googlegroups.com,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
+        Purism Kernel Team <kernel@puri.sm>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Icenowy Zheng <icenowy@aosc.io>, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Samuel Holland <samuel@sholland.org>,
         Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
         Bhushan Shah <bshah@kde.org>
-Subject: [PATCH v7 04/13] drm/panel: rocktech-jh057n00900: Rename the driver to st7703
-Date:   Wed,  1 Jul 2020 18:29:19 +0200
-Message-Id: <20200701162928.1638874-5-megous@megous.com>
-In-Reply-To: <20200701162928.1638874-1-megous@megous.com>
-References: <20200701162928.1638874-1-megous@megous.com>
+References: <20200701103126.1512615-1-megous@megous.com>
+ <20200701152532.GA670324@ravnborg.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701152532.GA670324@ravnborg.org>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This rename is done so that the driver matches the name of the
-display controller and in preparation for adding support for more
-panels to the driver.
+Hello Sam,
 
-This is just a basic file rename, with no code changes.
+On Wed, Jul 01, 2020 at 05:25:32PM +0200, Sam Ravnborg wrote:
+> Hi Ondrej.
+> 
+> On Wed, Jul 01, 2020 at 12:31:13PM +0200, Ondrej Jirman wrote:
+> > This patchset adds support for the LCD panel of PinePhone.
+> > 
+> > I've tested this on PinePhone 1.0 and 1.2.
+> > 
+> > Please take a look.
+> > 
+> > thank you and regards,
+> >   Ondrej Jirman
+> > 
+> > Changes in v6:
+> > - Fixed spacing in yaml
+> > - Fixed wrong vccio->iovcc supply name in the bindings doc
+> > - I noticed that the original driver uses a delay of 20ms in the init
+> >   function to achieve a combined total of 120ms required from post-reset
+> >   to display_on. I've added a similar delay to xbd599_init, so that
+> >   xbd599 panel also has the right timing. (patch 9)
+> > - v5->v6 diff: https://megous.com/dl/tmp/v5-v6.patch
+> > - Added review/ack tags
+> > - Learned to run dt_binding_check by myself ;)
+> The patch-set does not apply clean on top of drm-misc-next - due to
+> vrefresh removal.
+> Please re-spin.
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/gpu/drm/panel/Kconfig                 | 26 +++++++++----------
- drivers/gpu/drm/panel/Makefile                |  2 +-
- ...-jh057n00900.c => panel-sitronix-st7703.c} |  0
- 3 files changed, 14 insertions(+), 14 deletions(-)
- rename drivers/gpu/drm/panel/{panel-rocktech-jh057n00900.c => panel-sitronix-st7703.c} (100%)
+Sorry for that. Rebased and retested.
 
-diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-index 39055c1f0e2f..de2f2a452be5 100644
---- a/drivers/gpu/drm/panel/Kconfig
-+++ b/drivers/gpu/drm/panel/Kconfig
-@@ -283,19 +283,6 @@ config DRM_PANEL_RAYDIUM_RM68200
- 	  Say Y here if you want to enable support for Raydium RM68200
- 	  720x1280 DSI video mode panel.
- 
--config DRM_PANEL_ROCKTECH_JH057N00900
--	tristate "Rocktech JH057N00900 MIPI touchscreen panel"
--	depends on OF
--	depends on DRM_MIPI_DSI
--	depends on BACKLIGHT_CLASS_DEVICE
--	help
--	  Say Y here if you want to enable support for Rocktech JH057N00900
--	  MIPI DSI panel as e.g. used in the Librem 5 devkit. It has a
--	  resolution of 720x1440 pixels, a built in backlight and touch
--	  controller.
--	  Touch input support is provided by the goodix driver and needs to be
--	  selected separately.
--
- config DRM_PANEL_RONBO_RB070D30
- 	tristate "Ronbo Electronics RB070D30 panel"
- 	depends on OF
-@@ -395,6 +382,19 @@ config DRM_PANEL_SITRONIX_ST7701
- 	  ST7701 controller for 480X864 LCD panels with MIPI/RGB/SPI
- 	  system interfaces.
- 
-+config DRM_PANEL_SITRONIX_ST7703
-+	tristate "Sitronix ST7703 based MIPI touchscreen panels"
-+	depends on OF
-+	depends on DRM_MIPI_DSI
-+	depends on BACKLIGHT_CLASS_DEVICE
-+	help
-+	  Say Y here if you want to enable support for Sitronix ST7703 based
-+	  panels, souch as Rocktech JH057N00900 MIPI DSI panel as e.g. used in
-+	  the Librem 5 devkit. It has a resolution of 720x1440 pixels, a built
-+	  in backlight and touch controller.
-+	  Touch input support is provided by the goodix driver and needs to be
-+	  selected separately.
-+
- config DRM_PANEL_SITRONIX_ST7789V
- 	tristate "Sitronix ST7789V panel"
- 	depends on OF && SPI
-diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-index de74f282c433..e45ceac6286f 100644
---- a/drivers/gpu/drm/panel/Makefile
-+++ b/drivers/gpu/drm/panel/Makefile
-@@ -27,7 +27,6 @@ obj-$(CONFIG_DRM_PANEL_PANASONIC_VVX10F034N00) += panel-panasonic-vvx10f034n00.o
- obj-$(CONFIG_DRM_PANEL_RASPBERRYPI_TOUCHSCREEN) += panel-raspberrypi-touchscreen.o
- obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM67191) += panel-raydium-rm67191.o
- obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM68200) += panel-raydium-rm68200.o
--obj-$(CONFIG_DRM_PANEL_ROCKTECH_JH057N00900) += panel-rocktech-jh057n00900.o
- obj-$(CONFIG_DRM_PANEL_RONBO_RB070D30) += panel-ronbo-rb070d30.o
- obj-$(CONFIG_DRM_PANEL_SAMSUNG_LD9040) += panel-samsung-ld9040.o
- obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6D16D0) += panel-samsung-s6d16d0.o
-@@ -41,6 +40,7 @@ obj-$(CONFIG_DRM_PANEL_SHARP_LQ101R1SX01) += panel-sharp-lq101r1sx01.o
- obj-$(CONFIG_DRM_PANEL_SHARP_LS037V7DW01) += panel-sharp-ls037v7dw01.o
- obj-$(CONFIG_DRM_PANEL_SHARP_LS043T1LE01) += panel-sharp-ls043t1le01.o
- obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7701) += panel-sitronix-st7701.o
-+obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7703) += panel-sitronix-st7703.o
- obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7789V) += panel-sitronix-st7789v.o
- obj-$(CONFIG_DRM_PANEL_SONY_ACX424AKP) += panel-sony-acx424akp.o
- obj-$(CONFIG_DRM_PANEL_SONY_ACX565AKM) += panel-sony-acx565akm.o
-diff --git a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
-similarity index 100%
-rename from drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
-rename to drivers/gpu/drm/panel/panel-sitronix-st7703.c
--- 
-2.27.0
+thank you,
+	o.
 
+> 	Sam
