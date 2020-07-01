@@ -2,186 +2,207 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1556C433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 21:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA28C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 21:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94174208C7
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 21:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4FA820853
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 21:21:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HKDuh83v"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="KChSgt78"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgGAVLL (ORCPT
+        id S1726208AbgGAVVf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 17:11:11 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:55720 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgGAVLK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 17:11:10 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 061LB7rm047403;
-        Wed, 1 Jul 2020 16:11:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593637867;
-        bh=RLwIAehcXxgMONZs8WT0zyvf7kMDbvxzalt0l62/GGE=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=HKDuh83vylJH9vI6G9b8XYxsi6RB41MlZY8jQR1d9aGrk2DqTnH2otHOd3Pl0YhIH
-         2SLQM5V/2A+OzOz+TmOdM3OO53MdlSbPXopU+F5sJQpjQshNrS6+Pgfx3f+Dd7OCVE
-         EYiov2tS5/nmO9wBPKR5n9dVGqPYWkq2JZ2fYAbY=
-Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 061LB7iD113019
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 1 Jul 2020 16:11:07 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 1 Jul
- 2020 16:11:07 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 1 Jul 2020 16:11:07 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 061LB7w4063398;
-        Wed, 1 Jul 2020 16:11:07 -0500
-From:   Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-To:     <sre@kernel.org>, <pali@kernel.org>, <robh@kernel.org>
-CC:     <afd@ti.com>, <r-rivera-matos@ti.com>, <dmurphy@ti.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <sspatil@android.com>
-Subject: [PATCH v15 3/4] dt-bindings: power: Add the bindings for the bq2515x family of chargers.
-Date:   Wed, 1 Jul 2020 16:10:43 -0500
-Message-ID: <20200701211044.18590-4-r-rivera-matos@ti.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200701211044.18590-1-r-rivera-matos@ti.com>
-References: <20200701211044.18590-1-r-rivera-matos@ti.com>
+        Wed, 1 Jul 2020 17:21:35 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:57417 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725915AbgGAVVf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 17:21:35 -0400
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id C912122EDB;
+        Wed,  1 Jul 2020 23:21:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1593638492;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=FGEoESzqhbGl5sqazUSLjvfDz9FuASX78Vb4MriptvE=;
+        b=KChSgt78CKad7hUC7OaPaa1Dk0VP0qe78AWKnYwZRcTyR/NuL5ZB3U4CYa6Yhjw4kp0RO6
+        jthq7fDrc5tujgfStoE5/UJX7vdP1v2GT//HWuaLdwVgZy9Dw+idF0eV08LRZeXFdo35kk
+        Wv+eQtXxwxOmSem29GKPxBIINc11siQ=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Lee Jones <lee.jones@linaro.org>, robh+dt@kernel.org,
+        broonie@kernel.org, gregkh@linuxfoundation.org,
+        andriy.shevchenko@linux.intel.com, linus.walleij@linaro.org,
+        arnd@arndb.de, bgolaszewski@baylibre.com,
+        Michael Walle <michael@walle.cc>
+Subject: [RFC PATCH] mfd: add simple regmap based I2C driver
+Date:   Wed,  1 Jul 2020 23:21:00 +0200
+Message-Id: <20200701212100.6020-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam: Yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The BQ2515X family of devices are highly integrated battery management
-ICs that integrate the most common functions for wearable devices
-namely a charger, an output voltage rail, ADC for battery and system
-monitoring, and a push-button controller.
+There are I2C devices which contain several different functions but
+doesn't require any special access functions. For these kind of drivers
+an I2C regmap should be enough.
 
-Datasheets:
-http://www.ti.com/lit/ds/symlink/bq25150.pdf
-http://www.ti.com/lit/ds/symlink/bq25155.pdf
+Create an I2C driver which creates an I2C regmap and enumerates its
+children. If a device wants to use this as its MFD core driver, it has
+to add an individual compatible string. It may provide its own regmap
+configuration and a .pre_probe hook. The latter allows simple checks
+and abort probing, for example a version check.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+Subdevices can use dev_get_regmap() on the parent to get their regmap
+instance.
+
+Signed-off-by: Michael Walle <michael@walle.cc>
 ---
- .../bindings/power/supply/bq2515x.yaml        | 93 +++++++++++++++++++
- 1 file changed, 93 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/supply/bq2515x.yaml
 
-diff --git a/Documentation/devicetree/bindings/power/supply/bq2515x.yaml b/Documentation/devicetree/bindings/power/supply/bq2515x.yaml
+I don't think the syscon-i2c is the way to go:
+
+   "TBC, while fine for a driver to bind on 'simple-mfd', a
+    DT compatible with that alone is not fine." [1]
+
+   "Yes, this is why specific compatible strings are
+    required." [1]
+
+   "No. I'd like to just kill off syscon and simple-mfd really. Those are
+	just hints meaning a specific compatible is still needed, but I see
+	them all the time alone (or combined like above). 'syscon' just serves
+	to create a regmap. This could be accomplished just with a list of
+	compatibles to register a regmap for. That might be a longish list, but
+	wanting a regmap is really a kernel implementation detail and
+	decision." [2]
+
+So I don't get it why we would now add another syscon type. Instead, here
+is a new try to generalize the idea to just have a simple driver which just
+have a bunch of compatible strings for supported devices (and thus can be
+added quirks to it without changing the DT) and just creates a regmap. A
+simple device can just add itself to the list of compatible strings. If
+quirks are needed later, they can either be added right to simple-mfd-i2c.c
+or split off to an own file, but time will tell.
+
+Right now, there is just a .pre_probe() hook which can be used to cancel
+the probing of the device or print some useful info to the kernel log. Yes,
+this is for "my" version check. And TBH I don't see a problem with adding
+that to this generic driver.
+
+[1] https://lore.kernel.org/linux-devicetree/CAL_JsqKr1aDVzgAMjwwK8E8O_f29vSrx1HXk81FF+rd3sEe==w@mail.gmail.com/
+[2] https://lore.kernel.org/linux-devicetree/20200609165401.GB1019634@bogus/
+
+ drivers/mfd/Kconfig          |  9 ++++++
+ drivers/mfd/Makefile         |  1 +
+ drivers/mfd/simple-mfd-i2c.c | 57 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 67 insertions(+)
+ create mode 100644 drivers/mfd/simple-mfd-i2c.c
+
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 7e72ed3441f1..96055c7e5c55 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -1162,6 +1162,15 @@ config MFD_SI476X_CORE
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called si476x-core.
+ 
++config MFD_SIMPLE_MFD_I2C
++	tristate "Simple regmap based I2C devices"
++	depends on I2C
++	select MFD_CORE
++	select REGMAP_I2C
++	help
++	  This is a consolidated driver for all MFD devices which are
++	  basically just a regmap bus driver.
++
+ config MFD_SM501
+ 	tristate "Silicon Motion SM501"
+ 	depends on HAS_DMA
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index 7e26e7f98ac2..fa3a621a5a21 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -265,4 +265,5 @@ obj-$(CONFIG_MFD_KHADAS_MCU) 	+= khadas-mcu.o
+ 
+ obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
+ 
++obj-$(CONFIG_MFD_SIMPLE_MFD_I2C)	+= simple-mfd-i2c.o
+ obj-$(CONFIG_MFD_SL28CPLD)	+= sl28cpld.o
+diff --git a/drivers/mfd/simple-mfd-i2c.c b/drivers/mfd/simple-mfd-i2c.c
 new file mode 100644
-index 000000000000..75a56773be4a
+index 000000000000..60708e95f1a0
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/power/supply/bq2515x.yaml
-@@ -0,0 +1,93 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright (C) 2020 Texas Instruments Incorporated
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/power/supply/bq2515x.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++++ b/drivers/mfd/simple-mfd-i2c.c
+@@ -0,0 +1,57 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#include <linux/i2c.h>
++#include <linux/interrupt.h>
++#include <linux/kernel.h>
++#include <linux/mfd/core.h>
++#include <linux/mod_devicetable.h>
++#include <linux/module.h>
++#include <linux/of_platform.h>
++#include <linux/regmap.h>
 +
-+title: TI bq2515x 500-mA Linear charger family
++struct simple_mfd_i2c_config {
++	int (*pre_probe)(struct i2c_client *i2c, struct regmap *regmap);
++	const struct regmap_config *regmap_config;
++};
 +
-+maintainers:
-+  - Dan Murphy <dmurphy@ti.com>
-+  - Ricardo Rivera-Matos <r-rivera-matos@ti.com>
++static const struct regmap_config simple_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++};
 +
-+description: |
-+  The BQ2515x family is a highly integrated battery charge management IC that
-+  integrates the most common functions for wearable devices, namely a charger,
-+  an output voltage rail, ADC for battery and system monitoring, and
-+  push-button controller.
++static int simple_mfd_i2c_probe(struct i2c_client *i2c)
++{
++	const struct regmap_config *regmap_config = &simple_regmap_config;
++	const struct simple_mfd_i2c_config *config;
++	struct regmap *regmap;
++	int ret;
 +
-+  Specifications about the charger can be found at:
-+    http://www.ti.com/lit/ds/symlink/bq25150.pdf
-+    http://www.ti.com/lit/ds/symlink/bq25155.pdf
++	config = device_get_match_data(&i2c->dev);
 +
-+properties:
-+  compatible:
-+    enum:
-+      - ti,bq25150
-+      - ti,bq25155
++	if (config && config->regmap_config)
++		regmap_config = config->regmap_config;
 +
-+  reg:
-+    maxItems: 1
-+    description: I2C address of the charger.
++	regmap = devm_regmap_init_i2c(i2c, regmap_config);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
 +
-+  ac-detect-gpios:
-+    description: |
-+       GPIO used for connecting the bq2515x device PG (AC Detect)
-+       pin.
-+    maxItems: 1
++	if (config && config->pre_probe) {
++		ret = config->pre_probe(i2c, regmap);
++		if (ret)
++			return ret;
++	}
 +
-+  reset-gpios:
-+    description: GPIO used for hardware reset.
-+    maxItems: 1
++	return devm_of_platform_populate(&i2c->dev);
++}
 +
-+  powerdown-gpios:
-+    description: GPIO used for low power mode of IC.
-+    maxItems: 1
++static const struct of_device_id simple_mfd_i2c_of_match[] = {
++	{}
++};
 +
-+  charge-enable-gpios:
-+    description: GPIO used to turn on and off charging.
-+    maxItems: 1
-+
-+  input-current-limit-microamp:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Maximum input current in micro Amps.
-+    minimum: 50000
-+    maximum: 500000
-+
-+  monitored-battery:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: phandle to the battery node being monitored
-+
-+required:
-+  - compatible
-+  - reg
-+  - monitored-battery
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    bat: battery {
-+      compatible = "simple-battery";
-+      constant-charge-current-max-microamp = <50000>;
-+      precharge-current-microamp = <2500>;
-+      constant-charge-voltage-max-microvolt = <4000000>;
-+    };
-+    #include <dt-bindings/gpio/gpio.h>
-+    i2c0 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      bq25150: charger@6b {
-+        compatible = "ti,bq25150";
-+        reg = <0x6b>;
-+        monitored-battery = <&bat>;
-+        input-current-limit-microamp = <100000>;
-+
-+        ac-detect-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
-+        reset-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
-+        powerdown-gpios = <&gpio0 15 GPIO_ACTIVE_HIGH>;
-+        charge-enable-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
-+      };
-+    };
++static struct i2c_driver simple_mfd_i2c_driver = {
++	.probe_new = simple_mfd_i2c_probe,
++	.driver = {
++		.name = "simple-mfd-i2c",
++		.of_match_table = simple_mfd_i2c_of_match,
++	},
++};
++builtin_i2c_driver(simple_mfd_i2c_driver);
 -- 
-2.27.0
+2.20.1
 
