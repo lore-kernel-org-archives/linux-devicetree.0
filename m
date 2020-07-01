@@ -7,86 +7,211 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0B5C433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A4EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4B1520781
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CADC2083E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:32:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Dj897vDd"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="H/T1TXu+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732515AbgGAQa1 (ORCPT
+        id S1732313AbgGAQcb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:30:27 -0400
-Received: from vps.xff.cz ([195.181.215.36]:52012 "EHLO vps.xff.cz"
+        Wed, 1 Jul 2020 12:32:31 -0400
+Received: from vps.xff.cz ([195.181.215.36]:52930 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731951AbgGAQ3f (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:29:35 -0400
+        id S1731770AbgGAQca (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Jul 2020 12:32:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593620971; bh=V8lg3QrmlL/+ORB8+T8iagnNb4aO75aHpHs9Ov8wOuQ=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=Dj897vDdXK7CklO+4M1+BtXOE7/f2c1/pswxonoOE/HAmHoB+FBPjOQ9bX0KT1UBM
-         LTe5yh0H1XSG6rRnvXbQ/1a7e0z/63pkWrOUSqOtiCBPd656BC2TCxvaJ7+T1yTjGT
-         fuqXRvm/sWBCx9q/Kv4jNVTjBkUllPWuA6ODQWV4=
-From:   Ondrej Jirman <megous@megous.com>
-To:     linux-sunxi@googlegroups.com,
+        t=1593621147; bh=yQdyiwJG0A0w25TNt5S9+Tyx+rihJlmHrZ5Ch0iuRzo=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=H/T1TXu+32OpzHlT61UjI0935+8p6dAuEkqfx9vm7iFtVjPE4z/J+Zf3Eva+u61dD
+         lhphd6NgFd7dBXdwVuKBgneRowDJ2HWBkotWxkYXj6hEcv5K3Tm/bm1tAPiTooX6et
+         O7zdc3SpFdseCm+TyAwBulGGQ+w+KxdHGPvEHjFc=
+Date:   Wed, 1 Jul 2020 18:32:27 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Guido =?utf-8?Q?G=C3=BCnther?= <guido.gunther@puri.sm>
+Cc:     linux-sunxi@googlegroups.com,
         Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
         Purism Kernel Team <kernel@puri.sm>,
         Rob Herring <robh+dt@kernel.org>,
         Maxime Ripard <mripard@kernel.org>,
         Chen-Yu Tsai <wens@csie.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Icenowy Zheng <icenowy@aosc.io>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        Icenowy Zheng <icenowy@aosc.io>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Samuel Holland <samuel@sholland.org>,
         Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>,
-        Ondrej Jirman <megous@megous.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v7 01/13] dt-bindings: vendor-prefixes: Add Xingbangda
-Date:   Wed,  1 Jul 2020 18:29:16 +0200
-Message-Id: <20200701162928.1638874-2-megous@megous.com>
-In-Reply-To: <20200701162928.1638874-1-megous@megous.com>
-References: <20200701162928.1638874-1-megous@megous.com>
+        Bhushan Shah <bshah@kde.org>
+Subject: Re: [PATCH v6 02/13] dt-bindings: panel: Convert
+ rocktech,jh057n00900 to yaml
+Message-ID: <20200701163227.on7wo6fo5majket6@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Guido =?utf-8?Q?G=C3=BCnther?= <guido.gunther@puri.sm>,
+        linux-sunxi@googlegroups.com,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Purism Kernel Team <kernel@puri.sm>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Icenowy Zheng <icenowy@aosc.io>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Samuel Holland <samuel@sholland.org>,
+        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
+        Bhushan Shah <bshah@kde.org>
+References: <20200701103126.1512615-1-megous@megous.com>
+ <20200701103126.1512615-3-megous@megous.com>
+ <20200701155857.GB174356@bogon.m.sigxcpu.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200701155857.GB174356@bogon.m.sigxcpu.org>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.io>
+Hello Guido,
 
-Shenzhen Xingbangda Display Technology Co., Ltd is a company which
-produces LCD modules. It supplies the LCD panels for the PinePhone.
+On Wed, Jul 01, 2020 at 05:58:57PM +0200, Guido Günther wrote:
+> Hi Ondrej,
+> On Wed, Jul 01, 2020 at 12:31:15PM +0200, Ondrej Jirman wrote:
+> > Convert Rocktech MIPI DSI panel driver from txt to yaml bindings.
+> > 
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > ---
+> >  .../display/panel/rocktech,jh057n00900.txt    | 23 -------
+> >  .../display/panel/rocktech,jh057n00900.yaml   | 66 +++++++++++++++++++
+> >  2 files changed, 66 insertions(+), 23 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
+> >  create mode 100644
+> > Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
+> 
+> Thanks for the conversion! Shouldn't we switch to `sitronix-st7703.yaml`
+> as well in this patch?
 
-Add the vendor prefix of it.
+Names of yaml files should be according to one of the compatibles.
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+And thank you for your review of the patches.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 9aeab66be85f..740b116b179f 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -1157,6 +1157,8 @@ patternProperties:
-     description: Xiaomi Technology Co., Ltd.
-   "^xillybus,.*":
-     description: Xillybus Ltd.
-+  "^xingbangda,.*":
-+    description: Shenzhen Xingbangda Display Technology Co., Ltd
-   "^xinpeng,.*":
-     description: Shenzhen Xinpeng Technology Co., Ltd
-   "^xlnx,.*":
--- 
-2.27.0
+regards,
+	o.
 
+> Cheers,
+>  -- Guido
+> 
+> > 
+> > diff --git a/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt b/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
+> > deleted file mode 100644
+> > index a372c5d84695..000000000000
+> > --- a/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
+> > +++ /dev/null
+> > @@ -1,23 +0,0 @@
+> > -Rocktech jh057n00900 5.5" 720x1440 TFT LCD panel
+> > -
+> > -Required properties:
+> > -- compatible: should be "rocktech,jh057n00900"
+> > -- reg: DSI virtual channel of the peripheral
+> > -- reset-gpios: panel reset gpio
+> > -- backlight: phandle of the backlight device attached to the panel
+> > -- vcc-supply: phandle of the regulator that provides the vcc supply voltage.
+> > -- iovcc-supply: phandle of the regulator that provides the iovcc supply
+> > -  voltage.
+> > -
+> > -Example:
+> > -
+> > -	&mipi_dsi {
+> > -		panel@0 {
+> > -			compatible = "rocktech,jh057n00900";
+> > -			reg = <0>;
+> > -			backlight = <&backlight>;
+> > -			reset-gpios = <&gpio3 13 GPIO_ACTIVE_LOW>;
+> > -			vcc-supply = <&reg_2v8_p>;
+> > -			iovcc-supply = <&reg_1v8_p>;
+> > -		};
+> > -	};
+> > diff --git a/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml b/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
+> > new file mode 100644
+> > index 000000000000..928ba42e7f8d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
+> > @@ -0,0 +1,66 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/display/panel/rocktech,jh057n00900.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Rocktech JH057N00900 5.5" 720x1440 TFT LCD panel
+> > +
+> > +maintainers:
+> > +  - Ondrej Jirman <megi@xff.cz>
+> > +
+> > +description: |
+> > +             Rocktech JH057N00900 is a 720x1440 TFT LCD panel
+> > +             connected using a MIPI-DSI video interface.
+> > +
+> > +allOf:
+> > +  - $ref: panel-common.yaml#
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: rocktech,jh057n00900
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +    description: DSI virtual channel
+> > +
+> > +  vcc-supply:
+> > +    description: Panel power supply
+> > +
+> > +  iovcc-supply:
+> > +    description: I/O voltage supply
+> > +
+> > +  reset-gpios:
+> > +    description: GPIO used for the reset pin
+> > +    maxItems: 1
+> > +
+> > +  backlight:
+> > +    description: Backlight used by the panel
+> > +    $ref: "/schemas/types.yaml#/definitions/phandle"
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - vcc-supply
+> > +  - iovcc-supply
+> > +  - reset-gpios
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/gpio/gpio.h>
+> > +
+> > +    dsi {
+> > +      #address-cells = <1>;
+> > +      #size-cells = <0>;
+> > +      panel@0 {
+> > +        compatible = "rocktech,jh057n00900";
+> > +        reg = <0>;
+> > +        vcc-supply = <&reg_2v8_p>;
+> > +        iovcc-supply = <&reg_1v8_p>;
+> > +        reset-gpios = <&gpio3 13 GPIO_ACTIVE_LOW>;
+> > +        backlight = <&backlight>;
+> > +      };
+> > +    };
+> > +...
+> > -- 
+> > 2.27.0
+> > 
