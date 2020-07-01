@@ -2,147 +2,224 @@ Return-Path: <SRS0=V/11=AM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47EB2C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB0CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24F5B20781
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:39:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0E1020884
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jul 2020 16:42:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ePYUg6XT"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="esruAha9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgGAQjn (ORCPT
+        id S1732362AbgGAQmS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:39:43 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:32958 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732255AbgGAQjm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 12:39:42 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 061GddNU031024;
-        Wed, 1 Jul 2020 11:39:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593621579;
-        bh=xbBcjsRuj6VdBiPscvdL+9rTLp0gEqf+2hxn3Z6d4tU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ePYUg6XTP+wPLfdwmIh9352+UIumOXtAnllySUpF0m2zqpdhwJFoFI33pQtH5ncpt
-         8UB0DQSuAkJD+7vmhaH8JOSzBBY1Z6EklyEgSoRbT/zipSRwldcV1QVcfI+G3L/hC4
-         qmLnj87An9WR1Y4+GzLy0MtZG486N1D4wOxDv1aE=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 061GddhM095151
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 1 Jul 2020 11:39:39 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 1 Jul
- 2020 11:39:39 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 1 Jul 2020 11:39:39 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 061GddEm060242;
-        Wed, 1 Jul 2020 11:39:39 -0500
-Subject: Re: [PATCH v14 1/4] power_supply: Add additional health properties to
- the header
-To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>, <sre@kernel.org>,
-        <pali@kernel.org>, <robh@kernel.org>
-CC:     <afd@ti.com>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <sspatil@android.com>, Guru Das Srinagesh <gurus@codeaurora.org>
-References: <20200630215426.26450-1-r-rivera-matos@ti.com>
- <20200630215426.26450-2-r-rivera-matos@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <938bd51f-0551-38f0-c17c-19c7b42ec411@ti.com>
-Date:   Wed, 1 Jul 2020 11:39:33 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 1 Jul 2020 12:42:18 -0400
+Received: from vps.xff.cz ([195.181.215.36]:53200 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732161AbgGAQmS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Jul 2020 12:42:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1593621736; bh=KxUzxz7KwYwMf8rZUJNXWkDofCaDRZo8njkBzSnWVWE=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=esruAha9QuQvsYqjkikeeyljlKuqcM5Qoep+nmmhQzydZ3HF2nuZ4ryef+IsXPGtH
+         hNIKBAZSUn4LP2WSBklanuWaffu096QA80N9Nf1tdedGLlmV0kfCokBBxcWyvj29d8
+         cR2Fm2F0mn07Y4tPZQXotsjtYHH9t+fiFe00Biok=
+Date:   Wed, 1 Jul 2020 18:42:15 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Guido =?utf-8?Q?G=C3=BCnther?= <guido.gunther@puri.sm>
+Cc:     linux-sunxi@googlegroups.com,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Purism Kernel Team <kernel@puri.sm>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Samuel Holland <samuel@sholland.org>,
+        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
+        Bhushan Shah <bshah@kde.org>
+Subject: Re: [PATCH v6 00/13] Add support for PinePhone LCD panel
+Message-ID: <20200701164215.warjiiduzschibkt@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Guido =?utf-8?Q?G=C3=BCnther?= <guido.gunther@puri.sm>,
+        linux-sunxi@googlegroups.com,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Purism Kernel Team <kernel@puri.sm>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Icenowy Zheng <icenowy@aosc.io>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Samuel Holland <samuel@sholland.org>,
+        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
+        Bhushan Shah <bshah@kde.org>
+References: <20200701103126.1512615-1-megous@megous.com>
+ <20200701155405.GA174356@bogon.m.sigxcpu.org>
 MIME-Version: 1.0
-In-Reply-To: <20200630215426.26450-2-r-rivera-matos@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200701155405.GA174356@bogon.m.sigxcpu.org>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Sebastian
+Hello,
 
-On 6/30/20 4:54 PM, Ricardo Rivera-Matos wrote:
-> From: Dan Murphy <dmurphy@ti.com>
->
-> Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
->
-> HEALTH_WARM, HEALTH_COOL, and HEALTH_HOT properties are taken
-> from JEITA specification JISC8712:2015
->
-> Acked-by: Andrew F. Davis <afd@ti.com>
-> Tested-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->   Documentation/ABI/testing/sysfs-class-power | 3 ++-
->   drivers/power/supply/power_supply_sysfs.c   | 3 +++
->   include/linux/power_supply.h                | 3 +++
->   3 files changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-> index 216d61a22f1e..40213c73bc9c 100644
-> --- a/Documentation/ABI/testing/sysfs-class-power
-> +++ b/Documentation/ABI/testing/sysfs-class-power
-> @@ -205,7 +205,8 @@ Description:
->   		Valid values: "Unknown", "Good", "Overheat", "Dead",
->   			      "Over voltage", "Unspecified failure", "Cold",
->   			      "Watchdog timer expire", "Safety timer expire",
-> -			      "Over current", "Calibration required"
-> +			      "Over current", "Calibration required", "Warm",
-> +			      "Cool", "Hot"
->   
->   What:		/sys/class/power_supply/<supply_name>/precharge_current
->   Date:		June 2017
-> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-> index bc79560229b5..4d6e1d5015d6 100644
-> --- a/drivers/power/supply/power_supply_sysfs.c
-> +++ b/drivers/power/supply/power_supply_sysfs.c
-> @@ -101,6 +101,9 @@ static const char * const POWER_SUPPLY_HEALTH_TEXT[] = {
->   	[POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE]   = "Safety timer expire",
->   	[POWER_SUPPLY_HEALTH_OVERCURRENT]	    = "Over current",
->   	[POWER_SUPPLY_HEALTH_CALIBRATION_REQUIRED]  = "Calibration required",
-> +	[POWER_SUPPLY_HEALTH_WARM]		    = "Warm",
-> +	[POWER_SUPPLY_HEALTH_COOL]		    = "Cool",
-> +	[POWER_SUPPLY_HEALTH_HOT]		    = "Hot",
->   };
->   
->   static const char * const POWER_SUPPLY_TECHNOLOGY_TEXT[] = {
-> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> index ac1345a48ad0..b5ee35d3c304 100644
-> --- a/include/linux/power_supply.h
-> +++ b/include/linux/power_supply.h
-> @@ -62,6 +62,9 @@ enum {
->   	POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE,
->   	POWER_SUPPLY_HEALTH_OVERCURRENT,
->   	POWER_SUPPLY_HEALTH_CALIBRATION_REQUIRED,
-> +	POWER_SUPPLY_HEALTH_WARM,
-> +	POWER_SUPPLY_HEALTH_COOL,
-> +	POWER_SUPPLY_HEALTH_HOT,
->   };
->   
->   enum {
+On Wed, Jul 01, 2020 at 05:54:05PM +0200, Guido Günther wrote:
+> Hi,
+> On Wed, Jul 01, 2020 at 12:31:13PM +0200, Ondrej Jirman wrote:
+> > This patchset adds support for the LCD panel of PinePhone.
+> 
+> I gave this a quick spin on the Librem5 devkit so
+> 
+> Tested-by: Guido Günther <agx@sigxcpu.org>
+> 
+> but please also adjust MAINTAINERS so we stay in the loop on driver
+> changes.
 
+Ah, right. I'll send a quick followup patch[1] after this gets merged,
+or add it to v8 if there will be a need for v8. Thanks for noticing.
 
-Can you apply this patch?
+[1] https://megous.com/dl/tmp/0001-MAINTAINERS-Update-entry-for-st7703-driver-after-the.patch
 
-We have other charger drivers we want to submit for review but they all 
-depend on this single patch.
+And thanks for testing, too. :)
 
-If you do not want to apply this patch then please let us know how we 
-can submit our other drivers so that build bots don't start spamming us 
-with build failures
+regards,
+	o.
 
-Dan
-
+> Cheers,
+>  -- Guido
+> 
+> > 
+> > I've tested this on PinePhone 1.0 and 1.2.
+> > 
+> > Please take a look.
+> > 
+> > thank you and regards,
+> >   Ondrej Jirman
+> > 
+> > Changes in v6:
+> > - Fixed spacing in yaml
+> > - Fixed wrong vccio->iovcc supply name in the bindings doc
+> > - I noticed that the original driver uses a delay of 20ms in the init
+> >   function to achieve a combined total of 120ms required from post-reset
+> >   to display_on. I've added a similar delay to xbd599_init, so that
+> >   xbd599 panel also has the right timing. (patch 9)
+> > - v5->v6 diff: https://megous.com/dl/tmp/v5-v6.patch
+> > - Added review/ack tags
+> > - Learned to run dt_binding_check by myself ;)
+> > 
+> > Changes in v5:
+> > - rewritten on top of rocktech-jh057n00900 driver
+> > - rocktech-jh057n00900 renamed to st7703 (controller name)
+> > - converted rocktech-jh057n00900 bindings to yaml and extended for xbd599
+> > 
+> > Changes in v4:
+> > - use ->type from the mode instead of hardcoding (Samuel)
+> > - move init_sequence to ->prepare (Samuel)
+> > - move anti-flicker delay to ->enable, explain it (Samuel)
+> > - add enter_sleep after display_off (Samuel)
+> > - drop ->disable (move code to ->unprepare)
+> > - add ID bytes dumping (Linus)
+> >   (I can't test it since allwinner DSI driver has a broken
+> >    dcs_read function, and I didn't manage to fix it.)
+> > - document magic bytes (Linus)
+> > - assert reset during powerup
+> > - cleanup powerup timings according to the datasheet
+> > 
+> > Changes in v3:
+> > - Panel driver renamed to the name of the LCD controller
+> > - Re-organize the driver slightly to more easily support more panels
+> >   based on the same controller.
+> > - Add patch to enable the touchscreen to complete the LCD support
+> >   on PinePhone.
+> > - Dropped the "DSI fix" patch (the driver seems to work for me without it)
+> > - Improved brightness levels handling:
+> >   - PinePhone 1.0 uses default levels generated by the driver
+> >   - On PinePhone 1.1 duty cycles < 20% lead to black screen, so
+> >     default levels can't be used. Martijn Braam came up with a
+> >     list of duty cycle values that lead to perception of linear
+> >     brigtness level <-> light intensity on PinePhone 1.1
+> > - There was some feedback on v2 about this being similar to st7701.
+> >   It's only similar in name. Most of the "user commands" are different,
+> >   so I opted to keep this in a new driver instead of creating st770x.
+> >   
+> >   Anyone who likes to check the differences, here are datasheets:
+> > 
+> >   - https://megous.com/dl/tmp/ST7703_DS_v01_20160128.pdf
+> >   - https://megous.com/dl/tmp/ST7701.pdf
+> > 
+> > Changes in v2:
+> > - DT Example fix.
+> > - DT Format fix.
+> > - Raised copyright info to 2020.
+> > - Sort panel operation functions.
+> > - Sort inclusion.
+> > 
+> > 
+> > -- For phone owners: --
+> > 
+> > There's an open question on how to set the backlight brightness values
+> > on post 1.0 revision phone, since lower duty cycles (< 10-20%) lead
+> > to backlight being black. It would be nice if more people can test
+> > the various backlight levels on 1.1 and 1.2 revision with this change
+> > in dts:
+> > 
+> >        brightness-levels = <0 1000>;
+> >        num-interpolated-steps = <1000>;
+> > 
+> > and report at what brightness level the backlight turns on. So far it
+> > seems this has a wide range. Lowest useable duty cycle for me is ~7%
+> > on 1.2 and for Martijn ~20% on 1.1.
+> > 
+> > Icenowy Zheng (2):
+> >   dt-bindings: vendor-prefixes: Add Xingbangda
+> >   arm64: dts: sun50i-a64-pinephone: Enable LCD support on PinePhone
+> > 
+> > Ondrej Jirman (11):
+> >   dt-bindings: panel: Convert rocktech,jh057n00900 to yaml
+> >   dt-bindings: panel: Add compatible for Xingbangda XBD599 panel
+> >   drm/panel: rocktech-jh057n00900: Rename the driver to st7703
+> >   drm/panel: st7703: Rename functions from jh057n prefix to st7703
+> >   drm/panel: st7703: Prepare for supporting multiple panels
+> >   drm/panel: st7703: Move code specific to jh057n closer together
+> >   drm/panel: st7703: Move generic part of init sequence to enable
+> >     callback
+> >   drm/panel: st7703: Add support for Xingbangda XBD599
+> >   drm/panel: st7703: Enter sleep after display off
+> >   drm/panel: st7703: Assert reset prior to powering down the regulators
+> >   arm64: dts: sun50i-a64-pinephone: Add touchscreen support
+> > 
+> >  .../display/panel/rocktech,jh057n00900.txt    |  23 -
+> >  .../display/panel/rocktech,jh057n00900.yaml   |  70 ++
+> >  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+> >  .../allwinner/sun50i-a64-pinephone-1.1.dts    |  19 +
+> >  .../dts/allwinner/sun50i-a64-pinephone.dtsi   |  54 ++
+> >  drivers/gpu/drm/panel/Kconfig                 |  26 +-
+> >  drivers/gpu/drm/panel/Makefile                |   2 +-
+> >  .../drm/panel/panel-rocktech-jh057n00900.c    | 424 -----------
+> >  drivers/gpu/drm/panel/panel-sitronix-st7703.c | 656 ++++++++++++++++++
+> >  9 files changed, 815 insertions(+), 461 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
+> >  create mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
+> >  delete mode 100644 drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
+> >  create mode 100644 drivers/gpu/drm/panel/panel-sitronix-st7703.c
+> > 
+> > -- 
+> > 2.27.0
+> > 
