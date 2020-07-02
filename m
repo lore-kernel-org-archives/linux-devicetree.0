@@ -2,85 +2,229 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A212C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 08:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9133DC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 08:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D02920936
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 08:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6783E2088E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 08:55:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="j3li6J7x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbgGBI3B (ORCPT
+        id S1726630AbgGBIzh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 04:29:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47904 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbgGBI3B (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 04:29:01 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46E05C08C5C1
-        for <devicetree@vger.kernel.org>; Thu,  2 Jul 2020 01:29:01 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jquaR-0006dd-HM; Thu, 02 Jul 2020 10:28:51 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jquaR-0004KM-38; Thu, 02 Jul 2020 10:28:51 +0200
-Date:   Thu, 2 Jul 2020 10:28:51 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Martin Kaiser <martin@kaiser.cx>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] hwrng: imx-rngc: enable driver for i.MX6
-Message-ID: <20200702082851.cvlve35pirk3ym2k@pengutronix.de>
-References: <20200621145658.12528-1-horia.geanta@nxp.com>
- <20200621145658.12528-6-horia.geanta@nxp.com>
+        Thu, 2 Jul 2020 04:55:37 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:24831 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726042AbgGBIzg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Jul 2020 04:55:36 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593680136; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=6R0fs0rnnmdawC5ltF/lObSxGBvdioNRI/wjeKU4Swg=; b=j3li6J7x9XKKb3gi5kSX9bOQmuzhFsSRj9FafMgiQKJ/PuHV9FlWW6qzCZPZ6R62UeyqkKBh
+ niN0XyBz9Elk1u8wpfZpI1GzWDlwW8kj31Q6uOBCsGl4FOdvUJArkZw7YZLvEP+WdgB2bYf9
+ KWuS3EoFNCVLhxxcx/mvEZDIYGY=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n17.prod.us-west-2.postgun.com with SMTP id
+ 5efda106f3deea03f3b02596 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 02 Jul 2020 08:55:34
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2278BC433CA; Thu,  2 Jul 2020 08:55:34 +0000 (UTC)
+Received: from [192.168.1.11] (unknown [117.247.20.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4B818C433C6;
+        Thu,  2 Jul 2020 08:55:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4B818C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH 2/4] drm/msm: dsi: Use OPP API to set clk/perf state
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     robdclark@gmail.com, sean@poorly.run, agross@kernel.org,
+        bjorn.andersson@linaro.org, dri-devel@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1593518176-24450-1-git-send-email-rnayak@codeaurora.org>
+ <1593518176-24450-3-git-send-email-rnayak@codeaurora.org>
+ <20200701162726.GO39073@google.com>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <b67844d5-13d7-02c9-bed7-92be829677ed@codeaurora.org>
+Date:   Thu, 2 Jul 2020 14:25:27 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200621145658.12528-6-horia.geanta@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:27:55 up 229 days, 23:46, 232 users,  load average: 0.06, 0.10,
- 0.08
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <20200701162726.GO39073@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-06-21 17:56, Horia Geantă wrote:
-> i.MX6 SL, SLL, ULL, ULZ SoCs have an RNGB block.
-> 
-> Since imx-rngc driver supports also rngb,
-> let's enable it for these SoCs too.
-> 
-> Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
-> ---
 
-Reviewed-by: Marco Felsch <m.felsch@pengutronix.de> 
+On 7/1/2020 9:57 PM, Matthias Kaehlcke wrote:
+> On Tue, Jun 30, 2020 at 05:26:14PM +0530, Rajendra Nayak wrote:
+>> On SDM845 DSI needs to express a perforamnce state
+> 
+> nit: performance
+> 
+>> requirement on a power domain depending on the clock rates.
+>> Use OPP table from DT to register with OPP framework and use
+>> dev_pm_opp_set_rate() to set the clk/perf state.
+>>
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> ---
+>>   drivers/gpu/drm/msm/dsi/dsi.h      |  2 ++
+>>   drivers/gpu/drm/msm/dsi/dsi_cfg.c  |  4 +--
+>>   drivers/gpu/drm/msm/dsi/dsi_host.c | 58 ++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 62 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/msm/dsi/dsi.h b/drivers/gpu/drm/msm/dsi/dsi.h
+>> index 4de771d..ba7583c 100644
+>> --- a/drivers/gpu/drm/msm/dsi/dsi.h
+>> +++ b/drivers/gpu/drm/msm/dsi/dsi.h
+>> @@ -180,10 +180,12 @@ int msm_dsi_runtime_suspend(struct device *dev);
+>>   int msm_dsi_runtime_resume(struct device *dev);
+>>   int dsi_link_clk_set_rate_6g(struct msm_dsi_host *msm_host);
+>>   int dsi_link_clk_set_rate_v2(struct msm_dsi_host *msm_host);
+>> +int dsi_link_clk_set_rate_6g_v2(struct msm_dsi_host *msm_host);
+>>   int dsi_link_clk_enable_6g(struct msm_dsi_host *msm_host);
+>>   int dsi_link_clk_enable_v2(struct msm_dsi_host *msm_host);
+>>   void dsi_link_clk_disable_6g(struct msm_dsi_host *msm_host);
+>>   void dsi_link_clk_disable_v2(struct msm_dsi_host *msm_host);
+>> +void dsi_link_clk_disable_6g_v2(struct msm_dsi_host *msm_host);
+>>   int dsi_tx_buf_alloc_6g(struct msm_dsi_host *msm_host, int size);
+>>   int dsi_tx_buf_alloc_v2(struct msm_dsi_host *msm_host, int size);
+>>   void *dsi_tx_buf_get_6g(struct msm_dsi_host *msm_host);
+>> diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.c b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+>> index 813d69d..773c4fe 100644
+>> --- a/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+>> +++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+>> @@ -210,9 +210,9 @@ static const struct msm_dsi_host_cfg_ops msm_dsi_6g_host_ops = {
+>>   };
+>>   
+>>   static const struct msm_dsi_host_cfg_ops msm_dsi_6g_v2_host_ops = {
+>> -	.link_clk_set_rate = dsi_link_clk_set_rate_6g,
+>> +	.link_clk_set_rate = dsi_link_clk_set_rate_6g_v2,
+>>   	.link_clk_enable = dsi_link_clk_enable_6g,
+>> -	.link_clk_disable = dsi_link_clk_disable_6g,
+>> +	.link_clk_disable = dsi_link_clk_disable_6g_v2,
+>>   	.clk_init_ver = dsi_clk_init_6g_v2,
+>>   	.tx_buf_alloc = dsi_tx_buf_alloc_6g,
+>>   	.tx_buf_get = dsi_tx_buf_get_6g,
+>> diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
+>> index 11ae5b8..890531c 100644
+>> --- a/drivers/gpu/drm/msm/dsi/dsi_host.c
+>> +++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
+>> @@ -14,6 +14,7 @@
+>>   #include <linux/of_graph.h>
+>>   #include <linux/of_irq.h>
+>>   #include <linux/pinctrl/consumer.h>
+>> +#include <linux/pm_opp.h>
+>>   #include <linux/regmap.h>
+>>   #include <linux/regulator/consumer.h>
+>>   #include <linux/spinlock.h>
+>> @@ -111,6 +112,9 @@ struct msm_dsi_host {
+>>   	struct clk *pixel_clk_src;
+>>   	struct clk *byte_intf_clk;
+>>   
+>> +	struct opp_table *opp_table;
+>> +	bool has_opp_table;
+>> +
+>>   	u32 byte_clk_rate;
+>>   	u32 pixel_clk_rate;
+>>   	u32 esc_clk_rate;
+>> @@ -537,6 +541,38 @@ int dsi_link_clk_set_rate_6g(struct msm_dsi_host *msm_host)
+>>   	return 0;
+>>   }
+>>   
+>> +int dsi_link_clk_set_rate_6g_v2(struct msm_dsi_host *msm_host)
+>> +{
+>> +	int ret;
+>> +	struct device *dev = &msm_host->pdev->dev;
+>> +
+>> +	DBG("Set clk rates: pclk=%d, byteclk=%d",
+>> +		msm_host->mode->clock, msm_host->byte_clk_rate);
+>> +
+>> +	ret = dev_pm_opp_set_rate(dev, msm_host->byte_clk_rate);
+>> +	if (ret) {
+>> +		pr_err("%s: dev_pm_opp_set_rate failed %d\n", __func__, ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = clk_set_rate(msm_host->pixel_clk, msm_host->pixel_clk_rate);
+>> +	if (ret) {
+>> +		pr_err("%s: Failed to set rate pixel clk, %d\n", __func__, ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	if (msm_host->byte_intf_clk) {
+>> +		ret = clk_set_rate(msm_host->byte_intf_clk,
+>> +				   msm_host->byte_clk_rate / 2);
+>> +		if (ret) {
+>> +			pr_err("%s: Failed to set rate byte intf clk, %d\n",
+>> +			       __func__, ret);
+>> +			return ret;
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+> 
+> xThis function is essentially the same as dsi_link_clk_set_rate_6g(),
+> except for the use of dev_pm_opp_set_rate() instead of clk_set_rate().
+> 
+> IIUC dev_pm_opp_set_rate() just calls clk_set_rate() if the device has
+> no OPP table. If that's correct you could just call dev_pm_opp_set_rate()
+> in dsi_link_clk_set_rate_6g().
+> 
+> 	/*
+>      	* For IO devices which require an OPP on some platforms/SoCs
+>      	* while just needing to scale the clock on some others
+>      	* we look for empty OPP tables with just a clock handle and
+>      	* scale only the clk. This makes dev_pm_opp_set_rate()
+> 	* equivalent to a clk_set_rate()
+> 	*/
+> 	if (!_get_opp_count(opp_table)) {
+> 		ret = _generic_set_opp_clk_only(dev, clk, freq);
+> 		goto put_opp_table;
+> 	}
+
+ah, thats right, I think I had this code from before that support got
+added to dev_pm_opp_set_rate() and I just did not update this driver to
+make use of it. Thanks for catching it, I will fix it up and repost soon.
+
+> 
+> https://elixir.bootlin.com/linux/v5.7.6/source/drivers/opp/core.c#L855
+> 
+>>   int dsi_link_clk_enable_6g(struct msm_dsi_host *msm_host)
+>>   {
+>> @@ -665,6 +701,13 @@ void dsi_link_clk_disable_6g(struct msm_dsi_host *msm_host)
+>>   	clk_disable_unprepare(msm_host->byte_clk);
+>>   }
+>>   
+>> +void dsi_link_clk_disable_6g_v2(struct msm_dsi_host *msm_host)
+>> +{
+>> +	/* Drop the performance state vote */
+>> +	dev_pm_opp_set_rate(&msm_host->pdev->dev, 0);
+> 
+> Couldn't you just do this in dsi_link_clk_disable_6g() ?
+
+yes, looks like I can, I'll get rid of both of these additional functions.
+
+thanks,
+Rajendra
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
