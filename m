@@ -2,100 +2,91 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 558C1C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 13:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74747C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 13:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26C7120672
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 13:26:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="q7X5fDJE"
+	by mail.kernel.org (Postfix) with ESMTP id 4BA32208D5
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 13:44:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593697443;
+	bh=3MSMquasFAjnciVa57vrc8ovpDKT0aHiUA9DL1SWpI8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=r7VlzY/ONM7FI3ScLUIUWxEZ1CisrRN8/KYbqRpL2VzSR4My8BB2z8o4O2B6C3RNA
+	 jOlAIK23i6DLyzFe7mHFOUotPUAwi20XIqNWvhif6BOah32NuJOu9VFOUcW0RMDMCE
+	 cUE1EYkT5oKUiBu3WtotW4zh8FXIGnfV7j2pSi3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729177AbgGBN0a (ORCPT
+        id S1729171AbgGBNoC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 09:26:30 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:38062 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729271AbgGBN03 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 09:26:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1593696389; x=1625232389;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=fmDRosteDtE+IMlkhAt1snIWAZ0oO40wspsHahgvM4Q=;
-  b=q7X5fDJEdaqd9PQze7BDq2PDFGUAIFTmHNb0uBnYKvPpeHWrXFupEaxd
-   XxpV4KA9nE62Ad5cZFhDCJ3FNSdv0EvoSkKZkGiY2QNOyBRq7bpe6jA4Z
-   HdB9S5vDiaJgljN658Rlz49Vbfr9WuwrgjrpyhZE8sN9mkBaaWM1WGAsf
-   MOGPieLQsaEr/ztsWm4j9+zv1kuU6sxXdjJ5+tffNVU8awTt0W6Obpah/
-   7OOQV+b+KVFqhSAdrrSEejBYWpzF2mQIntjHUELJUrjNSwLyk4I1eNUUK
-   Dy6lzzIfdtUccOzlRTBIHMpJhDLUDfoISlGZC+nTzwdD1PWSxMzRNTy/u
-   w==;
-IronPort-SDR: 7jF5NsVHpGHDhyUheajoLhwDd4e8Wx4hjW6+TAz/HGbVFaT4DwEiEh16h7cJrdTxLzBmnEo/o4
- Gb04TIn0IAhpp27q4gFNXTWOjxvnkf11ZAM5mN4DoQfHsDrjiV7uE7p2GaFQ6IRsKoJdWaWHeq
- t4Qkusa78F9jXRfsYKw8YdS6MO++ZHaAUCOzgoFF++PxyO7lo1++C+xf3LekkBrCey2RNhmQeN
- STn7KeUo3T780DTMYhRAHbWwVf2AyxjUb2yBlPq3ioa0DDMl1nKcdBVDoEptPc6GBKsuJGxd51
- FQI=
-X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="82395154"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Jul 2020 06:26:28 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 2 Jul 2020 06:26:09 -0700
-Received: from ROB-ULT-M18282.microchip.com (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Thu, 2 Jul 2020 06:26:22 -0700
-From:   Eugen Hristev <eugen.hristev@microchip.com>
-To:     <mchehab@kernel.org>, <hverkuil@xs4all.nl>, <robh+dt@kernel.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     Eugen Hristev <eugen.hristev@microchip.com>
-Subject: [PATCH 4/4] MAINTAINERS: add microchip csi2dc
-Date:   Thu, 2 Jul 2020 16:23:59 +0300
-Message-ID: <20200702132359.122844-5-eugen.hristev@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702132359.122844-1-eugen.hristev@microchip.com>
-References: <20200702132359.122844-1-eugen.hristev@microchip.com>
+        Thu, 2 Jul 2020 09:44:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38070 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729293AbgGBNoA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Jul 2020 09:44:00 -0400
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59565208D5
+        for <devicetree@vger.kernel.org>; Thu,  2 Jul 2020 13:44:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593697440;
+        bh=3MSMquasFAjnciVa57vrc8ovpDKT0aHiUA9DL1SWpI8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=bvgK32p72fDSWie8VaIV4AsDZq8PqPB16wEnSplqMb8KnuL9LBCzL0/DG9bco5GPL
+         BST3oQhsE+sLn7s9/FJkBFBG5CEGcKpWVSHtdM5c7Uafdk1KoLi2xfUwtfsEGhmwoh
+         E4VWJySd5iLyQXDL10a52YycuQTYV9GNGrVNLsFs=
+Received: by mail-ot1-f54.google.com with SMTP id 5so22141439oty.11
+        for <devicetree@vger.kernel.org>; Thu, 02 Jul 2020 06:44:00 -0700 (PDT)
+X-Gm-Message-State: AOAM532xEse83O53nVc9Nw55We11lEEi2oAhpVOwTrst3KlzQMmMHSs3
+        qGGu8xJk2ZMDNfAPJXn9tJLawqThuWxT7Q34Vw==
+X-Google-Smtp-Source: ABdhPJxP9ySsJVKfJwG+UMovWOfxtv+Snj67Sfxn4ir4gfqlxAwfDrHeOiKxBwoJpo6+5RpBkmfjlNjsM6io2P+1Kzg=
+X-Received: by 2002:a9d:2646:: with SMTP id a64mr25256828otb.107.1593697439697;
+ Thu, 02 Jul 2020 06:43:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <20200630223020.25546-1-festevam@gmail.com> <159364215574.10630.10014931369710772889.b4-ty@kernel.org>
+ <CAL_JsqLzae5qUJXF-otsUQqy+zyk9fD_AKd8b8F+PFWZBH1QDw@mail.gmail.com> <87eepuzufl.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <87eepuzufl.wl-kuninori.morimoto.gx@renesas.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 2 Jul 2020 07:43:48 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+a+XvCU6GY0H0WV3BFyW1JncORdeMs5xpSHtcNbJyOrg@mail.gmail.com>
+Message-ID: <CAL_Jsq+a+XvCU6GY0H0WV3BFyW1JncORdeMs5xpSHtcNbJyOrg@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: dt-bindings: simple-card: Fix 'make
+ dt_binding_check' warnings
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add Microchip CSI2DC driver in the list.
+On Wed, Jul 1, 2020 at 5:29 PM Kuninori Morimoto
+<kuninori.morimoto.gx@renesas.com> wrote:
+>
+>
+> Hi Rob
+>
+> I'm posting same patch and waiting review/response.
+>
+>         Subject: [PATCH] ASoC: dt-bindings: simple-card: care missing address #address-cells
+>         Date: Thu, 21 May 2020 12:54:56 +0900
 
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+https://lore.kernel.org/linux-devicetree/20200528223916.GA804926@bogus/
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 791d2a862e41..a65b8d28c7d2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11069,6 +11069,13 @@ L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
- S:	Supported
- F:	sound/soc/atmel
- 
-+MICROCHIP CSI2DC DRIVER
-+M:	Eugen Hristev <eugen.hristev@microchip.com>
-+L:	linux-media@vger.kernel.org
-+S:	Supported
-+F:	Documentation/devicetree/bindings/media/microchip,csi2dc.yaml
-+F:	drivers/media/misc/microchip_csi2dc.c
-+
- MICROCHIP DMA DRIVER
- M:	Ludovic Desroches <ludovic.desroches@microchip.com>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
--- 
-2.25.1
+>
+> and am sending question mail accordingly
+>
+>         Subject: Question about "xxx,yyy" style property
+>         Date: Fri, 29 May 2020 11:41:53 +0900
+>
+> Nothing happen until now...
 
+Sorry, if it's not a patch queued in patchwork, I may or may not see it.
+
+Rob
