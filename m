@@ -2,175 +2,188 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE62AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 11:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69378C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 11:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4ACC2084C
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 11:06:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43A8D2084C
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 11:09:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Asg2/UQ2"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kXuOkC8+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725954AbgGBLGq (ORCPT
+        id S1728280AbgGBLJx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 07:06:46 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:36585 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726475AbgGBLGo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 07:06:44 -0400
-X-UUID: 83c88d5aa76a4475bb8525fa21e591c7-20200702
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=+4B3BW01TV9+2SP6lbnJU5Zv+3jreR1iD783yx5RyJE=;
-        b=Asg2/UQ2SUy+gLq1l3UiFG3+T98ecVOWQQuYlC4cYQml5cVKvUwhyELTA2Bt5OyO6TwpiDhTRCOXHlrZB6V4Gd/2i8zS54HYX4eNUSr6FcEaWht0rlEu+x2tVXtKtC4S3RTEuy699Ulgt7RoGCauu/t+95xhgFWSwtlD5Wvwt88=;
-X-UUID: 83c88d5aa76a4475bb8525fa21e591c7-20200702
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <dongchun.zhu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1749577032; Thu, 02 Jul 2020 19:06:31 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 2 Jul
- 2020 19:06:31 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 2 Jul 2020 19:06:30 +0800
-Message-ID: <1593687965.17166.73.camel@mhfsdcap03>
-Subject: Re: [PATCH V9 0/2] media: i2c: Add support for DW9768 VCM
-From:   Dongchun Zhu <dongchun.zhu@mediatek.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-CC:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "drinkcat@chromium.org" <drinkcat@chromium.org>,
-        "tfiga@chromium.org" <tfiga@chromium.org>,
-        Erin Lo =?UTF-8?Q?=28=E7=BE=85=E9=9B=85=E9=BD=A1=29?= 
-        <erin.lo@mediatek.com>,
-        "Louis Kuo =?UTF-8?Q?=28=E9=83=AD=E5=BE=B7=E5=AF=A7=29?=" 
-        <louis.kuo@mediatek.com>,
-        Sj Huang =?UTF-8?Q?=28=E9=BB=83=E4=BF=A1=E7=92=8B=29?= 
-        <sj.huang@mediatek.com>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "bingbu.cao@intel.com" <bingbu.cao@intel.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Shengnan Wang =?UTF-8?Q?=28=E7=8E=8B=E5=9C=A3=E7=94=B7=29?= 
-        <shengnan.wang@mediatek.com>, <dongchun.zhu@mediatek.com>
-Date:   Thu, 2 Jul 2020 19:06:05 +0800
-In-Reply-To: <20200702053449.GR16711@paasikivi.fi.intel.com>
-References: <20200630062211.22988-1-dongchun.zhu@mediatek.com>
-         <20200701091618.GN16711@paasikivi.fi.intel.com>
-         <bf610d1b13c74656b2ffeeb9cc2a96ac@MTKMBS31N1.mediatek.inc>
-         <20200701134416.GQ16711@paasikivi.fi.intel.com>
-         <e55e7b405a084a0298cd839c05b52c79@MTKMBS31N1.mediatek.inc>
-         <20200702053449.GR16711@paasikivi.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-TM-SNTS-SMTP: C4F67179E8F6F04CCBF91D9FD0161E07F6A083280D043F28D6A3DBA89FC8293E2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Thu, 2 Jul 2020 07:09:53 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:19051 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728074AbgGBLJx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 07:09:53 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593688192; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=ynoiVC9eHCY4O2EgkI4gN4XF0iVibmNBVQhfT4yn05I=; b=kXuOkC8+i/yweJ1gwpd/Ph8pOgT+5kUZKzusHICR791/o3p4mMDqS2KWu4Swu+T+PSbh9Ako
+ flrWepAEkx0upF35HyUpvsdb0hgSs9USm9v57Utx19a+EAl5yjRzmLjyjauWDmP9ReNac7vq
+ uHcmaXGu3VbnVerL/ExxRly95fE=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5efdc07f0206ad41d1c2f65a (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 02 Jul 2020 11:09:51
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 38AABC43391; Thu,  2 Jul 2020 11:09:51 +0000 (UTC)
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A2AE4C433A0;
+        Thu,  2 Jul 2020 11:09:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A2AE4C433A0
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     robdclark@gmail.com, sean@poorly.run, agross@kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v2 1/4] drm/msm/dpu: Use OPP API to set clk/perf state
+Date:   Thu,  2 Jul 2020 16:39:08 +0530
+Message-Id: <1593688151-22616-2-git-send-email-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1593688151-22616-1-git-send-email-rnayak@codeaurora.org>
+References: <1593688151-22616-1-git-send-email-rnayak@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgU2FrYXJpLA0KDQpTb3JyeSBJIGp1c3Qgc2VudCBlbWFpbCB1c2luZyBvdXRsb29rIHdoZXJl
-IGRlZmF1bHQgZm9ybWF0IGlzIEhUTUwsIG5vdw0KSSB1c2UgZXZvbHV0aW9uLCBvbmUgTGludXgg
-bWFpbCBjbGllbnQgdGhhdCBJIHVzZWQgdG8gc2VuZCB1cHN0cmVhbQ0KcGF0Y2ggcHJldmlvdXNs
-eS4NCg0KT24gVGh1LCAyMDIwLTA3LTAyIGF0IDA4OjM0ICswMzAwLCBTYWthcmkgQWlsdXMgd3Jv
-dGU6DQo+IERvbmdjaHVuLA0KPiANCj4gUGxlYXNlIGRvbid0IHNlbmQgSFRNTCBlLW1haWwgdG8g
-TGludXgga2VybmVsIHJlbGF0ZWQgbWFpbGluZyBsaXN0cy4NCj4gDQo+IE9uIFRodSwgSnVsIDAy
-LCAyMDIwIGF0IDAzOjQ4OjU2QU0gKzAwMDAsIERvbmdjaHVuIFpodSAo5pyx5Lic5pilKSB3cm90
-ZToNCj4gPiAgSGkgU2FrYXJpLA0KPiA+IA0KPiA+ICBTb3JyeSB0byBib3RoZXIgeW91IGFnYWlu
-LCBidXQgSSBhbSBzbyBjb25mdXNlZCBhYm91dCB0aGUgcXVlc3Rpb25zIHlvdSByYWlzZWQuDQo+
-ID4gIEkganVzdCBzeW5jZWQgbWFpbmxpbmU6IDUuOC1yYzMgdGFyYmFsbCBmcm9tIGh0dHBzOi8v
-d3d3Lmtlcm5lbC5vcmcvLCBvbiB3aGljaCBJIHJhbiB0aGUgZ2l0IGFtIDxwYXRjaD4gY29tbWFu
-ZC4NCj4gPiAgVGhlIHBhdGNoLWFwcGx5aW5nIHByb2Nlc3Mgc2hvd3Mgbm8gZXJyb3IuDQo+ID4g
-IC0tLS0tLS0tLS0tLS0tLS0tODwtLS0tLS0tLS0tLS0tLS0tLS0tDQo+ID4gIFttdGsxNTAxM0Bt
-dGtzbHQzMDcgbGludXhdJGdpdCBhcHBseSAtLWNoZWNrIG1lZGlhLWkyYy1BZGQtc3VwcG9ydC1m
-b3ItRFc5NzY4LVZDTS5wYXRjaA0KPiA+ICBbbXRrMTUwMTNAbXRrc2x0MzA3IGxpbnV4XSRnaXQg
-YW0gbWVkaWEtaTJjLUFkZC1zdXBwb3J0LWZvci1EVzk3NjgtVkNNLnBhdGNoDQo+ID4gIEFwcGx5
-aW5nOiBtZWRpYTogZHQtYmluZGluZ3M6IG1lZGlhOiBpMmM6IERvY3VtZW50IERXOTc2OCBiaW5k
-aW5ncw0KPiA+ICBBcHBseWluZzogbWVkaWE6IGkyYzogZHc5NzY4OiBBZGQgRFc5NzY4IFZDTSBk
-cml2ZXINCj4gPiAgLS0tLS0tLS0tLS0tLS0tLS04PC0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiAN
-Cj4gPiAgT24gdGhlIG90aGVyIGhhbmQsIEkgYWxzbyBjb21wYXJlZCBkb25nd29vbixkdzk3Njgu
-eWFtbCBmaWxlIHdpdGggb3RoZXIgbWVkaWEgZGV2aWNlIGR0LWJpbmRpbmdzKGxpa2UgaW14MjE5
-LnlhbWwgYW5kIG92ODg1Ni55YW1sKS4NCj4gPiAgSXQgc2VlbXMgdGhlcmUgYXJlIG5vIGFwcGFy
-ZW50IGRpZmZlcmVuY2VzIGJldHdlZW4gdGhlbS4NCj4gPiAgRXNwZWNpYWxseSwgdGhlIHNlbnRl
-bmNlICcjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiAoR1BMLTIuMCBPUiBCU0QtMi1DbGF1c2Up
-JyBzaGFsbCBiZSBjb21tb24uDQo+ID4gIEkgZHVubm8gd2h5IGhlcmUgZG9uZ3dvb24sZHc5NzY4
-LnlhbWwgcmVwb3J0cyB0cmFpbGluZyB3aGl0ZXNwYWNlIHdhcm5pbmdzIHdoaWxlIG92ODg1Ni55
-YW1sIGlzIHNpbGVudC4NCj4gPiANCj4gPiAgRm9yIHRoZSBwYXRjaCBmYWlsZWQgb24gTUFJTlRB
-SU5FUlMsIEkgYW0gc3RpbGwgY3VyaW91cyB3aGF0J3Mgd3JvbmcuDQo+ID4gIEluIGZhY3QsIEkg
-bG9jYWxseSBoYXZlIHJ1biBwYXJzZS1tYWludGFpbmVycy5wbCBzY3JpcHQgdG8gY2hlY2sgTUFJ
-TlRBSU5FUlMgZmlsZSBiZWZvcmUgc3VibWl0dGluZyBwYXRjaC4NCj4gPiAgVGhlIHJlc3VsdCBh
-bHNvIHJlcG9ydHMgbm8gZXJyb3JzLg0KPiA+ICAtLS0tLS0tLS0tLS0tLS0tLTg8LS0tLS0tLS0t
-LS0tLS0tLS0tLQ0KPiA+ICBbbXRrMTUwMTNAbXRrc2x0MzA3IGxpbnV4XSRwZXJsIHNjcmlwdHMv
-cGFyc2UtbWFpbnRhaW5lcnMucGwNCj4gPiAgW210azE1MDEzQG10a3NsdDMwNyBsaW51eF0kbHMN
-Cj4gPiAgLS0tLS0tLS0tLS0tLS0tLS04PC0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiANCj4gPiAg
-QXMgdG8gQmFzZTY0IGVuY29kaW5nLCBJIGNoZWNrZWQgZWFjaCBwYXRjaCBmaWxlIGFnYWluLiBU
-aGV5IGFyZSBhbGwgZW5jb2RlZCBpbiBVVEYtOC4NCj4gPiAgQXMgaHR0cHM6Ly93d3cuYmFzZTY0
-ZW5jb2RlLm9yZy8gc2F5cywgZm9yIGFuIGV4YW1wbGUsICc3NycgaW4gQVNDSUkgZm9ybWF0IHdv
-dWxkIGJlIGNoYW5nZWQgdG8gJ1QnIGluIEJhc2VkNjQtZW5jb2RlZCBmb3JtYXQuDQo+ID4gIFRo
-aXMgbWVhbnMgdGhlcmUgc2hhbGwgYmUgbWVzc3kgY29kZSBpZiB3ZSBhZHBvdGluZyBCYXNlZDY0
-LWVuY29kZWQgZm9ybWF0Lg0KPiA+ICBCdXQgSSBjYW5ub3Qgc2VlIGdhcmJsZWQgbWVzc2FnZXMg
-aW4gdGhlIGN1cnJlbnQgcGF0Y2hlcy4NCj4gPiANCj4gPiAgVGhlIERXOTc2OCBzZXJpYWxzLXBh
-dGNoIGlzIGF0dGFjaGVkLg0KPiA+ICBAVG9tYXN6IEBBbmR5IEBSb2IgY291bGQgYW55b25lIGhl
-bHAgdHJ5IHRvIHNlZSB3aGV0aGVyIHRoZSBwYXRjaCBjYW4gYmUgY2hlcnJ5LXBpY2tlZCBvbiBM
-aW51eCBtYXN0ZXIgYnJhbmNoIG9yIG5vdD8NCj4gPiAgUGF0Y2h3b3JrIGxpbms6DQo+ID4gIGh0
-dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvY292ZXIvMTE2MzMyOTEvDQo+IA0KPiBCb3RoIG9m
-IHRoZSBwYXRjaGVzIGFwcGVhciB0byBjb250YWluIG9ubHkgQVNDSUkgY2hhcmFjdGVycy4NCj4g
-DQo+IEkgZGlkIHNvbWUgcmVzZWFyY2ggb24gdGhpcy4gSXQgc2VlbXMgdGhhdCB0aGUgYmFzZTY0
-IGVuY29kZWQgbWVzc2FnZSBib2R5DQo+IGRvZXMgaGF2ZSBjYXJyaWFnZSByZXR1cm5zLCBpbiBi
-b3RoIGNhc2VzLiBHaXQgYW0gZG9lcyBub3QgYXR0ZW1wdCB0bw0KPiByZW1vdmUgdGhlbSBpbiB0
-aGF0IGNhc2UsIGJ1dCBQYXRjaHdvcmsgZG9lcy4gSGVuY2UgdGhlIGZpbGVzIGFyZSBmaW5lIGlm
-DQo+IHlvdSBkb3dubG9hZCB0aGVtIGZyb20gUGF0Y2h3b3JrIC0tLSB3aGVyZSB0aGUgbWJveCBm
-aWxlcyBoYXZlIG5laXRoZXINCj4gY2FycmlhZ2UgcmV0dXJucyBub3IgYmFzZTY0IGVuY29kaW5n
-Lg0KPiANCj4gV2hhdCBkb2VzIHRoZSBmaWxlIGNvbW1hbmQgc2F5IGFib3V0IHRoZSBwYXRjaCBm
-aWxlcyBwcm9kdWNlZCBieSBnaXQNCj4gZm9ybWF0LXBhdGNoPyBNeSBndWVzcyBpcyB0aGF0IHNv
-bWV0aGluZyBpbiBiZXR3ZWVuIHlvdXIgbG9jYWwgY29tcHV0ZXIgYW5kDQo+IExNTUwgKGFuZCBv
-dGhlciBtYWlsIHNlcnZlcnMpIGJhc2U2NCBlbmNvZGVzIHRoZSBtZXNzYWdlIGJvZHkuIEJ1dCB3
-aGVyZQ0KPiBhcmUgdGhlIGNhcnJpYWdlIHJldHVybnMgYWRkZWQ/IE5ldmVydGhlbGVzcyB0aGV5
-IHNlZW0gdG8gYmUgYWRkZWQgYmVmb3JlDQo+IHRoZSBiYXNlNjQgY29udmVyc2lvbi4NCj4gDQoN
-CkhtLi4uIEkgdXNlZCB0aGUgZmlsZSBjb21tYW5kIHRvIGNoZWNrIHRoZSBkaWZmIHBhdGNoIGdl
-bmVyYXRlZCBmcm9tIGdpdA0KZm9ybWF0LXBhdGNoIGFuZCB0aGF0IGRvd25sb2FkZWQgZnJvbSBQ
-YXRjaHdvcmssIHRoZXkgYXJlIGJvdGggQVNDSUkNCnRleHQuDQoNCkluIGZhY3QsIHdlIGNvdWxk
-IGFsc28gb3BlbiB0aGUgZGlmZiBwYXRjaCB3aXRoIG5vdGVwYWQrKyB0b29sLCBpZiB0aGUNCkVP
-TCBjb252ZXJzaW9uIGlzIFVOSVgvT1NYIEZvcm1hdCwgZW5kLW9mLWxpbmUgY2hhcmFjdGVyIHdv
-dWxkIGJlIExGLg0KRm9yIHRoZSBEVzk3NjggcGF0Y2gsIHdoZW4gd2UgY2xpY2sgdGhlIHRvb2xi
-YXIgYnV0dG9uICJTaG93IEFsbA0KQ2hhcmFjdGVycyIsIHRoZXJlIGlzIG5vIGNhcnJpYWdlIHJl
-dHVybihDUikgYXQgdGhlIGVuZCBvZiBlYWNoIGxpbmUsDQpidXQgTEYgaW5zdGVhZCBmb3IgYWxs
-IEVPTHMuDQoNCj4gSSB0aGluayB0aGlzIGlzIGFsc28gYSBnaXQgaXNzdWUsIGJ1dCBzb21ldGhp
-bmcgdGhhdCBpcyB2ZXJ5IGhhcmQgdG8NCj4gZW5jb3VudGVyLg0KPiANCj4gLi4uDQo+IA0KPiA+
-ICAqKioqKioqKioqKioqIE1FRElBVEVLIENvbmZpZGVudGlhbGl0eSBOb3RpY2UgKioqKioqKioq
-KioqKioqKioqKioNCj4gPiAgVGhlIGluZm9ybWF0aW9uIGNvbnRhaW5lZCBpbiB0aGlzIGUtbWFp
-bCBtZXNzYWdlIChpbmNsdWRpbmcgYW55DQo+ID4gIGF0dGFjaG1lbnRzKSBtYXkgYmUgY29uZmlk
-ZW50aWFsLCBwcm9wcmlldGFyeSwgcHJpdmlsZWdlZCwgb3Igb3RoZXJ3aXNlDQo+ID4gIGV4ZW1w
-dCBmcm9tIGRpc2Nsb3N1cmUgdW5kZXIgYXBwbGljYWJsZSBsYXdzLiBJdCBpcyBpbnRlbmRlZCB0
-byBiZQ0KPiA+ICBjb252ZXllZCBvbmx5IHRvIHRoZSBkZXNpZ25hdGVkIHJlY2lwaWVudChzKS4g
-QW55IHVzZSwgZGlzc2VtaW5hdGlvbiwNCj4gPiAgZGlzdHJpYnV0aW9uLCBwcmludGluZywgcmV0
-YWluaW5nIG9yIGNvcHlpbmcgb2YgdGhpcyBlLW1haWwgKGluY2x1ZGluZyBpdHMNCj4gPiAgYXR0
-YWNobWVudHMpIGJ5IHVuaW50ZW5kZWQgcmVjaXBpZW50KHMpIGlzIHN0cmljdGx5IHByb2hpYml0
-ZWQgYW5kIG1heQ0KPiA+ICBiZSB1bmxhd2Z1bC4gSWYgeW91IGFyZSBub3QgYW4gaW50ZW5kZWQg
-cmVjaXBpZW50IG9mIHRoaXMgZS1tYWlsLCBvciBiZWxpZXZlDQo+ID4gIHRoYXQgeW91IGhhdmUg
-cmVjZWl2ZWQgdGhpcyBlLW1haWwgaW4gZXJyb3IsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlcg0K
-PiA+ICBpbW1lZGlhdGVseSAoYnkgcmVwbHlpbmcgdG8gdGhpcyBlLW1haWwpLCBkZWxldGUgYW55
-IGFuZCBhbGwgY29waWVzIG9mDQo+ID4gIHRoaXMgZS1tYWlsIChpbmNsdWRpbmcgYW55IGF0dGFj
-aG1lbnRzKSBmcm9tIHlvdXIgc3lzdGVtLCBhbmQgZG8gbm90DQo+ID4gIGRpc2Nsb3NlIHRoZSBj
-b250ZW50IG9mIHRoaXMgZS1tYWlsIHRvIGFueSBvdGhlciBwZXJzb24uIFRoYW5rIHlvdSENCj4g
-DQo+IERpZCB5b3UgbWVhbiB0aGlzPw0KPiANCg0KVGhpcyBpcyBhdXRvLWdlbmVyYXRlZCBieSBz
-b21lIG1lY2hhbmlzbSB3aGVuIHNlbmRpbmcgZW1haWwgdG8gdGhlDQphZGRyZXNzIGJlbG9uZyB0
-byBhbiBleHRlcm5hbCBvcmdhbml6YXRpb24uDQpJdCBtYWlubHkgc2VydmVzIGFzIGEgcmVtaW5k
-ZXIsIHBsZWFzZSBkb24ndCBjYXJlIHRvbyBtdWNoIDogLSkNCg0K
+On some qualcomm platforms DPU needs to express a performance state
+requirement on a power domain depending on the clock rates.
+Use OPP table from DT to register with OPP framework and use
+dev_pm_opp_set_rate() to set the clk/perf state.
+
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+Reviewed-by: Rob Clark <robdclark@chromium.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c |  3 ++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c       | 26 +++++++++++++++++++++++++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h       |  4 ++++
+ 3 files changed, 31 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+index 7c230f7..b36919d 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+@@ -7,6 +7,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/errno.h>
+ #include <linux/mutex.h>
++#include <linux/pm_opp.h>
+ #include <linux/sort.h>
+ #include <linux/clk.h>
+ #include <linux/bitmap.h>
+@@ -218,7 +219,7 @@ static int _dpu_core_perf_set_core_clk_rate(struct dpu_kms *kms, u64 rate)
+ 		rate = core_clk->max_rate;
+ 
+ 	core_clk->rate = rate;
+-	return msm_dss_clk_set_rate(core_clk, 1);
++	return dev_pm_opp_set_rate(&kms->pdev->dev, core_clk->rate);
+ }
+ 
+ static u64 _dpu_core_perf_get_core_clk_rate(struct dpu_kms *kms)
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+index b8615d4..0bc8ec4 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+@@ -10,6 +10,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/dma-buf.h>
+ #include <linux/of_irq.h>
++#include <linux/pm_opp.h>
+ 
+ #include <drm/drm_crtc.h>
+ #include <drm/drm_file.h>
+@@ -1025,11 +1026,23 @@ static int dpu_bind(struct device *dev, struct device *master, void *data)
+ 	if (!dpu_kms)
+ 		return -ENOMEM;
+ 
++	dpu_kms->opp_table = dev_pm_opp_set_clkname(dev, "core");
++	if (IS_ERR(dpu_kms->opp_table))
++		return PTR_ERR(dpu_kms->opp_table);
++	/* OPP table is optional */
++	ret = dev_pm_opp_of_add_table(dev);
++	if (!ret) {
++		dpu_kms->has_opp_table = true;
++	} else if (ret != -ENODEV) {
++		dev_err(dev, "invalid OPP table in device tree\n");
++		return ret;
++	}
++
+ 	mp = &dpu_kms->mp;
+ 	ret = msm_dss_parse_clock(pdev, mp);
+ 	if (ret) {
+ 		DPU_ERROR("failed to parse clocks, ret=%d\n", ret);
+-		return ret;
++		goto err;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, dpu_kms);
+@@ -1043,6 +1056,11 @@ static int dpu_bind(struct device *dev, struct device *master, void *data)
+ 
+ 	priv->kms = &dpu_kms->base;
+ 	return ret;
++err:
++	if (dpu_kms->has_opp_table)
++		dev_pm_opp_of_remove_table(dev);
++	dev_pm_opp_put_clkname(dpu_kms->opp_table);
++	return ret;
+ }
+ 
+ static void dpu_unbind(struct device *dev, struct device *master, void *data)
+@@ -1057,6 +1075,10 @@ static void dpu_unbind(struct device *dev, struct device *master, void *data)
+ 
+ 	if (dpu_kms->rpm_enabled)
+ 		pm_runtime_disable(&pdev->dev);
++
++	if (dpu_kms->has_opp_table)
++		dev_pm_opp_of_remove_table(dev);
++	dev_pm_opp_put_clkname(dpu_kms->opp_table);
+ }
+ 
+ static const struct component_ops dpu_ops = {
+@@ -1082,6 +1104,8 @@ static int __maybe_unused dpu_runtime_suspend(struct device *dev)
+ 	struct dpu_kms *dpu_kms = platform_get_drvdata(pdev);
+ 	struct dss_module_power *mp = &dpu_kms->mp;
+ 
++	/* Drop the performance state vote */
++	dev_pm_opp_set_rate(dev, 0);
+ 	rc = msm_dss_enable_clk(mp->clk_config, mp->num_clk, false);
+ 	if (rc)
+ 		DPU_ERROR("clock disable failed rc:%d\n", rc);
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
+index a3b122b..7400cd7 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
+@@ -128,6 +128,10 @@ struct dpu_kms {
+ 
+ 	struct platform_device *pdev;
+ 	bool rpm_enabled;
++
++	struct opp_table *opp_table;
++	bool has_opp_table;
++
+ 	struct dss_module_power mp;
+ 
+ 	/* reference count bandwidth requests, so we know when we can
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
