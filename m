@@ -2,201 +2,161 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9683C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 08:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62453C433E2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 08:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94F5920772
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 08:18:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EOfkf3Dq"
+	by mail.kernel.org (Postfix) with ESMTP id 4D02820899
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 08:24:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgGBISa (ORCPT
+        id S1728275AbgGBIYw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 04:18:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46220 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbgGBIS3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 04:18:29 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 486CCC08C5C1
-        for <devicetree@vger.kernel.org>; Thu,  2 Jul 2020 01:18:29 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id z15so15794272wrl.8
-        for <devicetree@vger.kernel.org>; Thu, 02 Jul 2020 01:18:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Goqsrb7Ce7t40vY/t5X6+0ye6+OAJeYDs4AAa/eOL7M=;
-        b=EOfkf3Dq0/qSQcBte7Kp5ZdzPjUEc9vQk4vSMKSLpc2TSyuWMfTOgMK4lveup2EDNA
-         CIwH02j0g+zm8o0FrQATYK/Rdc4zb+UeuxONwsd55Q0ss/wpqb/vjBaHzznquUZWxDH7
-         t5G+XBrDVhOU0OzYQXdpJPhL/koIuoRj8p3rQ4nkR5oCcY1LGJcKDp6urhfzqaaqIgJf
-         hfHHZgdlb5q4v3CMvqVD/ZCqh+TWIsT7pO35h/cVFbOMATAQohgUwWKpmfU+ZsCNiaJL
-         JOfk8tZjjla+arEMcC60h1hMdOWCCSZWT3jq7beaxrhWxq0o+n2tJDZsYZelgO8ghY5K
-         gE8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Goqsrb7Ce7t40vY/t5X6+0ye6+OAJeYDs4AAa/eOL7M=;
-        b=ZnNBiXx77dUnYGBwphTJlIDR678IhWZN8y7W+VYbeUqAoehpJxb6/zIE+ghKF1BhaD
-         tH3CjVFpiexhTfPXx2a5eEslVMrQ/7b4wdCw4umKFWJsxk5l3jP2VpOncwonVQlehkhg
-         baW1r+QERs9dMx9cHwUnuqVCckG22qsHxdLPirFR9YDkF4+eN9NSRFW5frxN8mr47nPY
-         qLwBQpYjiPDzKDNUKW7K7Ntcqmr9RP54sK5qD576DFqHsfMBsleoa4f7tQr6PK36d7v0
-         nCC71Ps5+MmAOFQtZ5wVuyqZN8kFic4elL68haEABwOXwptot3d64LdlAOhZ+lqV2scL
-         Vv+A==
-X-Gm-Message-State: AOAM532S6kCiK03nI2pUBDuEZACurh/bBoAdvkORSv9+CZq7J5fTR4/t
-        HnY+NomO7I8Ajo9ybulO8duVcA==
-X-Google-Smtp-Source: ABdhPJyhoozqr8pXX2+XxVRRaH1+WgKxWUYGGjE+Uok9lR8yH3q9c5OeYs2CAar76E0ZDpmZ1DEpPQ==
-X-Received: by 2002:a5d:4bc8:: with SMTP id l8mr29831646wrt.159.1593677907893;
-        Thu, 02 Jul 2020 01:18:27 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id v7sm10166211wrp.45.2020.07.02.01.18.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 01:18:27 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 09:18:25 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>, Wolfram Sang <wsa@kernel.org>
-Cc:     robh+dt@kernel.org, broonie@kernel.org, gregkh@linuxfoundation.org,
-        andriy.shevchenko@linux.intel.com, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com, arnd@arndb.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/1] mfd: Add I2C based System Configuaration (SYSCON)
- access
-Message-ID: <20200702081825.GR1179328@dell>
-References: <20200622075145.1464020-1-lee.jones@linaro.org>
- <e436fd60bf0ebb6d72a76034d0fc35de@walle.cc>
- <f505c52d565ba7dbf05eef895782c410@walle.cc>
- <20200701070434.GP1179328@dell>
- <5d1d41504172d86d395b0135923f6f02@walle.cc>
- <20200702065412.GO1179328@dell>
- <c20e8009fadbdc032090a493074396c8@walle.cc>
+        Thu, 2 Jul 2020 04:24:52 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7346 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727043AbgGBIYu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Jul 2020 04:24:50 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 277E4617FD2BE7EE03F4;
+        Thu,  2 Jul 2020 16:22:03 +0800 (CST)
+Received: from [127.0.0.1] (10.174.179.33) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Thu, 2 Jul 2020
+ 16:22:01 +0800
+Subject: Re: [PATCH v2 01/12] ACPI/IORT: Make iort_match_node_callback walk
+ the ACPI namespace for NC
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        <iommu@lists.linux-foundation.org>, <linux-acpi@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
+ <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
+ <20200619082013.13661-2-lorenzo.pieralisi@arm.com>
+ <718cae1f-2f33-f6d9-f278-157300b73116@huawei.com>
+ <20200629090551.GA28873@e121166-lin.cambridge.arm.com>
+ <765078e7-b3ec-af5d-0405-7834ba0f120a@huawei.com>
+ <20200630102454.GA17556@e121166-lin.cambridge.arm.com>
+ <4817d766-0437-5356-a0b9-97b111d4cae2@huawei.com>
+ <952a6720-f401-1441-5548-5b40cfc76d3a@arm.com>
+From:   Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <0cbd1da8-e283-7e13-d2b3-4d14775fd870@huawei.com>
+Date:   Thu, 2 Jul 2020 16:22:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c20e8009fadbdc032090a493074396c8@walle.cc>
+In-Reply-To: <952a6720-f401-1441-5548-5b40cfc76d3a@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.179.33]
+X-CFilter-Loop: Reflected
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 02 Jul 2020, Michael Walle wrote:
+Hi Robin,
 
-> Am 2020-07-02 08:54, schrieb Lee Jones:
-> > On Wed, 01 Jul 2020, Michael Walle wrote:
-> > 
-> > > Am 2020-07-01 09:04, schrieb Lee Jones:
-> > > > On Wed, 01 Jul 2020, Michael Walle wrote:
-> > > >
-> > > > > Hi Lee,
-> > > > >
-> > > > > Am 2020-06-30 11:16, schrieb Michael Walle:
-> > > > > > I'm just trying to use this for my sl28 driver. Some remarks, see below.
-> > > > > >
-> > > > > > Am 2020-06-22 09:51, schrieb Lee Jones:
-> > > > > > > The existing SYSCON implementation only supports MMIO (memory mapped)
-> > > > > > > accesses, facilitated by Regmap.  This extends support for registers
-> > > > > > > held behind I2C busses.
-> > > > > > >
-> > > > > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > > > > > > ---
-> > > > > > > Changelog:
-> > > > > > >
-> > > > > > > v3 => v4
-> > > > > > >   - Add ability to provide a non-default Regmap configuration
-> > > > > > >
-> > > > > > > v2 => v3
-> > > > > > >   - Change 'is CONFIG' present check to include loadable modules
-> > > > > > >     - s/#ifdef CONFIG_MFD_SYSCON_I2C/#if
-> > > > > > > IS_ENABLED(CONFIG_MFD_SYSCON_I2C)/
-> > > > > > >
-> > > > > > > v1 => v2
-> > > > > > >   - Remove legacy references to OF
-> > > > > > >   - Allow building as a module (fixes h8300 0-day issue)
-> > > > > > >
-> > > > > > > drivers/mfd/Kconfig            |   7 +++
-> > > > > > >  drivers/mfd/Makefile           |   1 +
-> > > > > > >  drivers/mfd/syscon-i2c.c       | 104
-> > > > > > > +++++++++++++++++++++++++++++++++
-> > > > > > >  include/linux/mfd/syscon-i2c.h |  36 ++++++++++++
-> > > > > > >  4 files changed, 148 insertions(+)
-> > > > > > >  create mode 100644 drivers/mfd/syscon-i2c.c
-> > > > > > >  create mode 100644 include/linux/mfd/syscon-i2c.h
-> > 
-> > [...]
-> > 
-> > > > > > This way, (a) a driver doesn't have to use "#include <linux/i2c.h>" just
-> > > > > > to call to_i2c_client() (or i2c_verify_client()) and (b) you won't do it
-> > > > > > all over again in all sub drivers.
-> > > > > >
-> > > > > > So you could just do a
-> > > > > >   regmap = syscon_i2c_to_regmap(pdev->dev.parent);
-> > > > > >
-> > > > > > I've also noticed that the mmio syscon uses device_node as parameter.
-> > > > > > What
-> > > > > > was the reason to divert from that? Just curious.
-> > > > >
-> > > > > How is this supposed to be used?
-> > > > >
-> > > > > I had something like the following in mind:
-> > > > >
-> > > > > &i2c {
-> > > > >   cpld@4a {
-> > > > >     compatible = "simple-mfd";
-> > > > >     reg = <0x4a>;
-> > > > >
-> > > > >     gpio@4 {
-> > > > >       compatible = "vendor,gpio";
-> > > > >       reg = <0x4>;
-> > > > >     };
-> > > > >   };
-> > > > > };
-> > > >
-> > > > Yes, that was the idea.
-> > > >
-> > > > > But I think the childen are not enumerated if its an I2C device. And
-> > > > > the actual i2c driver is also missing.
-> > > >
-> > > > What do you mean?  Can you elaborate?
-> > > 
-> > > There is no i2c_driver instance who would create the regmap.
-> > 
-> > The regmap is created by the first caller of:
-> > 
-> >  syscon_i2c_to_regmap{_config}()
+On 2020/7/2 0:12, Robin Murphy wrote:
+> On 2020-06-30 14:04, Hanjun Guo wrote:
+>> On 2020/6/30 18:24, Lorenzo Pieralisi wrote:
+>>> On Tue, Jun 30, 2020 at 11:06:41AM +0800, Hanjun Guo wrote:
+>>>
+>>> [...]
+>>>
+>>>>> For devices that aren't described in the DSDT - IORT translations
+>>>>> are determined by their ACPI parent device. Do you see/Have you
+>>>>> found any issue with this approach ?
+>>>>
+>>>> The spec says "Describes the IO relationships between devices
+>>>> represented in the ACPI namespace.", and in section 3.1.1.3 Named
+>>>> component node, it says:
+>>>
+>>> PCI devices aren't necessarily described in the ACPI namespace and we
+>>> still use IORT to describe them - through the RC node.
+>>>
+>>>> "Named component nodes are used to describe devices that are also
+>>>> included in the Differentiated System Description Table (DSDT). See
+>>>> [ACPI]."
+>>>>
+>>>> So from my understanding, the IORT spec for now, can only do ID
+>>>> translations for devices in the DSDT.
+>>>
+>>> I think you can read this multiple ways but this patch does not
+>>> change this concept. What changes, is applying parent's node IORT
+>>> mapping to child nodes with no associated DSDT nodes, it is the
+>>> same thing we do with PCI and the _DMA method - we could update
+>>> the wording in the specs if that clarifies but I don't think this
+>>> deliberately disregards the specifications.
+>>
+>> I agree, but it's better to update the wording of the spec.
+>>
+>>>
+>>>>>> For a platform device, if I use its parent's full path name for
+>>>>>> its named component entry, then it will match, but this will violate
+>>>>>> the IORT spec.
+>>>>>
+>>>>> Can you elaborate on this please I don't get the point you
+>>>>> are making.
+>>>>
+>>>> For example, device A is not described in DSDT so can't represent
+>>>> as a NC node in IORT. Device B can be described in DSDT and it
+>>>> is the parent of device A, so device B can be represented in IORT
+>>>> with memory access properties and node flags with Substream width
+>>>> and Stall supported info.
+>>>>
+>>>> When we trying to translate device A's ID, we reuse all the memory
+>>>> access properties and node flags from its parent (device B), but
+>>>> will it the same?
+>>>
+>>> I assume so why wouldn't it be ? Why would be describe them in
+>>> a parent-child relationship if that's not how the system looks like
+>>> in HW ?
+>>
+>> The point I'm making is that I'm not sure all the memory access and
+>> stall properties are the same for the parent and the device itself.
 > 
-> But which one is an i2c_driver? All the sub devices are platform drivers
-> and there should be no need for them to know that they are behind an
-> i2c driver (or spi driver or just mmio). All they have to know is how
-> to access the registers.
+> Is that even a valid case though? The principal thing we want to 
+> accommodate here is when device B *is* the one accessing memory, either 
+> because it is a bridge with device A sat behind it, or because device A 
+> is actually just some logical function or subset of physical device B.
+
+Thanks for the clarify, for CCA attributes, child device should be the
+same as its parent and that was written in the ACPI spec, so it's better
+to make it clear for other properties in the spec as well.
+
 > 
-> > > If I'm
-> > > reading the I2C code correctly, it won't probe any i2c device of a
-> > > bus if there is no i2c_driver with an associated .probe() or
-> > > .probe_new().
-> > 
-> > Why wouldn't the children be registered using i2c_driver?
+> If the topology is such that device A is a completely independent device 
+> with its own path to memory such that it could have different 
+> properties, I would expect that it *should* be described in DSDT, and I 
+> can't easily think of a good reason why it wouldn't be. I'm also 
+> struggling to imagine how it might even have an ID that had to be 
+> interpreted in the context of device B if it wasn't one of the cases 
+> above :/
 > 
-> Where is the code which enumerates the children?
+> I don't doubt that people could - or maybe even have - come up with crap 
+> DSDT bindings that don't represent the hardware sufficiently accurately, 
+> but I'm not sure that should be IORT's problem...
 
-Yes, I see the problem now.  So I2C devices depend on a device
-registering with the i2c_driver framework, which then probes the
-device accordingly.  Thus a physical driver is required to convert I2C
-devices to platform devices.  So this stops being an MFD problem and
-starts being a 'simple-i2c' issue. :)
+As I said in previous email, I'm not against this patch, and seems
+have no regressions for platforms that using named component node
+such as D05/D06 (I will test it shortly to make sure), but it's better
+to update the wording of the spec (even after this patch set is merged).
 
-(not a genuine suggestion by the way)
+Thanks
+Hanjun
 
-Wolfram, do we have this correct?
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
