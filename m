@@ -2,27 +2,28 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00217C433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 16:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66555C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 17:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0043214D8
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 16:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49218206E2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 17:02:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgGBQzF (ORCPT
+        id S1726981AbgGBRCA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 12:55:05 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60958 "EHLO
+        Thu, 2 Jul 2020 13:02:00 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:32850 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgGBQzE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 12:55:04 -0400
+        with ESMTP id S1726667AbgGBRCA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 13:02:00 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: koike)
-        with ESMTPSA id 220CF2A6047
+        with ESMTPSA id 001DC2A0641
+Subject: Re: [PATCH v3 5/9] media: staging: rkisp1: remove unecessary clocks
 From:   Helen Koike <helen.koike@collabora.com>
 To:     devicetree@vger.kernel.org, linux-media@vger.kernel.org,
         linux-rockchip@lists.infradead.org
@@ -33,89 +34,136 @@ Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
         karthik.poduval@gmail.com, jbx6244@gmail.com, kishon@ti.com,
         tfiga@chromium.org, eddie.cai.linux@gmail.com,
         zhengsq@rock-chips.com
-Subject: [PATCH v3 8/9] arm64: dts: rockchip: add isp0 node for rk3399
-Date:   Thu,  2 Jul 2020 13:54:09 -0300
-Message-Id: <20200702165410.2583375-9-helen.koike@collabora.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200702165410.2583375-1-helen.koike@collabora.com>
 References: <20200702165410.2583375-1-helen.koike@collabora.com>
+ <20200702165410.2583375-6-helen.koike@collabora.com>
+Message-ID: <c70b55a4-c33c-226b-2596-a7bbba199346@collabora.com>
+Date:   Thu, 2 Jul 2020 14:01:50 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200702165410.2583375-6-helen.koike@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Shunqian Zheng <zhengsq@rock-chips.com>
 
-RK3399 has two ISPs, but only isp0 was tested.
-Add isp0 node in rk3399 dtsi
 
-Verified with:
-make ARCH=arm64 dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+On 7/2/20 1:54 PM, Helen Koike wrote:
+> aclk_isp_wrap is a child of aclk_isp, and hclk_isp_wrap is a child of
+> hclk_isp, thus we can remove parents from the list, with the goal to
+> cleanup the dt-bindings and remove it from staging.
+> 
+> For reference, this is the isp clock topology:
+> 
+>  xin24m
+>     pll_npll
+>        npll
+>           clk_isp1
+>           clk_isp0
+>     pll_cpll
+>        cpll
+>           aclk_isp1
+>              aclk_isp1_noc
+>              hclk_isp1
+>                 aclk_isp1_wrapper
+>                 hclk_isp1_noc
+>           aclk_isp0
+>              hclk_isp1_wrapper
+>              aclk_isp0_wrapper
+>              aclk_isp0_noc
+>              hclk_isp0
+>                 hclk_isp0_wrapper
+>                 hclk_isp0_noc
+>  pclkin_isp1_wrapper
+> 
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> ---
+> Changes in V3:
+> - this is a new patch in the series
+> ---
+>  .../bindings/media/rockchip-isp1.yaml         | 33 ++++++++++---------
+>  drivers/staging/media/rkisp1/rkisp1-dev.c     |  2 --
+>  2 files changed, 17 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> index 4d111ef2e89c7..f806820eb8153 100644
+> --- a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> +++ b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> @@ -24,20 +24,21 @@ properties:
+>      maxItems: 1
+>  
+>    clocks:
+> -    items:
+> -      - description: ISP clock
+> -      - description: ISP AXI clock clock
+> -      - description: ISP AXI clock  wrapper clock
+> -      - description: ISP AHB clock clock
+> -      - description: ISP AHB wrapper clock
+> +    maxItems: 5
+> +    minItems: 3
 
-Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
-Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
+Sorry, I forgot to mentioned that, as discussed previously on https://patchwork.kernel.org/patch/11475007/ ,
+this is prepared to add rk3288 support, this is why maxItems is 5 (since rk3288 has 5 clocks).
 
----
+> +    description:
+> +      rk3399 isp0 clocks
+> +        ISP clock
+> +        ISP AXI wrapper clock
+> +        ISP AHB wrapper clock
+>  
+>    clock-names:
+> -    items:
+> -      - const: clk_isp
+> -      - const: aclk_isp
+> -      - const: aclk_isp_wrap
+> -      - const: hclk_isp
+> -      - const: hclk_isp_wrap
+> +    oneOf:
 
-V3:
-- clean up clocks
+Same for this "oneOf", so we can add "rk3399 isp1 clocks" and "rk3288 clocks" later.
 
-V2:
-- re-order power-domains property
+Regards,
+Helen
 
-V1:
-This patch was originally part of this patchset:
-
-    https://patchwork.kernel.org/patch/10267431/
-
-The only difference is:
-- add phy properties
-- add ports
----
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 27 ++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 2581e9cc7a1de..a27c3ccf4bd08 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1710,6 +1710,33 @@ vopb_mmu: iommu@ff903f00 {
- 		status = "disabled";
- 	};
- 
-+	isp0: isp0@ff910000 {
-+		compatible = "rockchip,rk3399-cif-isp";
-+		reg = <0x0 0xff910000 0x0 0x4000>;
-+		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
-+		clocks = <&cru SCLK_ISP0>,
-+			 <&cru ACLK_ISP0_WRAPPER>,
-+			 <&cru HCLK_ISP0_WRAPPER>;
-+		clock-names = "clk_isp",
-+			      "aclk_isp_wrap",
-+			      "hclk_isp_wrap";
-+		iommus = <&isp0_mmu>;
-+		phys = <&mipi_dphy_rx0>;
-+		phy-names = "dphy";
-+		power-domains = <&power RK3399_PD_ISP0>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
-+		};
-+	};
-+
- 	isp0_mmu: iommu@ff914000 {
- 		compatible = "rockchip,iommu";
- 		reg = <0x0 0xff914000 0x0 0x100>, <0x0 0xff915000 0x0 0x100>;
--- 
-2.26.0
-
+> +      # rk3399 isp0 clocks
+> +      - items:
+> +        - const: clk_isp
+> +        - const: aclk_isp_wrap
+> +        - const: hclk_isp_wrap
+>  
+>    iommus:
+>      maxItems: 1
+> @@ -135,11 +136,11 @@ examples:
+>              reg = <0x0 0xff910000 0x0 0x4000>;
+>              interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
+>              clocks = <&cru SCLK_ISP0>,
+> -                     <&cru ACLK_ISP0>, <&cru ACLK_ISP0_WRAPPER>,
+> -                     <&cru HCLK_ISP0>, <&cru HCLK_ISP0_WRAPPER>;
+> +                     <&cru ACLK_ISP0_WRAPPER>,
+> +                     <&cru HCLK_ISP0_WRAPPER>;
+>              clock-names = "clk_isp",
+> -                          "aclk_isp", "aclk_isp_wrap",
+> -                          "hclk_isp", "hclk_isp_wrap";
+> +                          "aclk_isp_wrap",
+> +                          "hclk_isp_wrap";
+>              iommus = <&isp0_mmu>;
+>              phys = <&dphy>;
+>              phy-names = "dphy";
+> diff --git a/drivers/staging/media/rkisp1/rkisp1-dev.c b/drivers/staging/media/rkisp1/rkisp1-dev.c
+> index f38801fea10d9..36f5f3b97a9b9 100644
+> --- a/drivers/staging/media/rkisp1/rkisp1-dev.c
+> +++ b/drivers/staging/media/rkisp1/rkisp1-dev.c
+> @@ -407,8 +407,6 @@ static irqreturn_t rkisp1_isr(int irq, void *ctx)
+>  
+>  static const char * const rk3399_isp_clks[] = {
+>  	"clk_isp",
+> -	"aclk_isp",
+> -	"hclk_isp",
+>  	"aclk_isp_wrap",
+>  	"hclk_isp_wrap",
+>  };
+> 
