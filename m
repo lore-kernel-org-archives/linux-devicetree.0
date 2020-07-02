@@ -2,57 +2,58 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58497C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 10:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DC9C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 10:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30A0020772
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 10:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA82620874
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 10:15:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="KfANyhUP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="eibkzKtQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbgGBKO3 (ORCPT
+        id S1728235AbgGBKOy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 06:14:29 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:55396 "EHLO
+        Thu, 2 Jul 2020 06:14:54 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:55429 "EHLO
         esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728386AbgGBKO0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 06:14:26 -0400
+        with ESMTP id S1728404AbgGBKOl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 06:14:41 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1593684866; x=1625220866;
+  t=1593684881; x=1625220881;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=iPE5gEvbzPv714t49rjzo5uuNCL/Z830NpCtgF5Y0Vk=;
-  b=KfANyhUPZkkV0Pnz7CIlusbmV57SVn7I07tV8KZo3LVttK4PGknqLmxh
-   UAHQBXULD/vWehaJuZWwx/lRNXCnmKagOUqWzO3rRsl3aR0dIE5rfcXtv
-   v3y1LpFL6iRQI+OGQt5jrlT77MuHBOaEUV/E0HkgC5PfmyNzipF3aqpqk
-   tkuKAv9Fnz6ntjr4wj10B1WHPFyQ11h1AuotydhIKBq4zu3Rv8JQUmi8j
-   cyS0wosZjAz46MHwCRqWXg+CZ1HCj23+fz+8RioT5a1zqnTrW8OGXZQLx
-   LGmn7X0N21v9Rusoxc9sP3e6wmiUEgww3ohw2RuEZbXZBXqlSQxZbn+Ne
-   A==;
-IronPort-SDR: kuiPHNzBGqDhZofOtv5X5EisqPYVQadNGxuClk6vTdO/3rA+A5zdPgW2JGVei++na7Toal7Cm2
- gLn8X/1tdIk7hdKoeZ1jq17NVM1XvlTNA8M6xXXu6AF8b/njzPcJOwE10bXd1kSwCZpUtha/GM
- RfvCyk645cFwZcPjam5PSA48a7Os0R02HNE01oosgczEotItuq/BT/mljditAnrNi/udTrxH87
- MffuoSst67BaVFTboq+g5uC27mPwQ2qnTlvJBcGCTXcYlvrIEZRAMB2NACS9BF/8shY4oKklhp
- slk=
+  bh=p8ti72N/kPmTe//KJjZaDbS1jxKg9TXG3r5s9TRcE6E=;
+  b=eibkzKtQYY/B3FBSX4vWv0yieY1wikVNhjjUQ503v9cfL0LxZ4nX+zKh
+   mMoC22O+eqp+i+JecvFcPdBxF8nmUEBxNqKDmnJkCPzMQ0SPicdIRyWdq
+   RO6C2+mM7tlTwQhxmjQjN1WXzheQ6g0biEfqPS07RuezNChy0AGTv9mk3
+   BptWyFhXcb3HDJIKXPoko1VKk7iHYsZS4VSRdYfsyvte7CJB9Xb3MmbJV
+   3Fv63I5guiQTmVzyjFW91GjtSornzkZx3/pQvs4gM6OGveZM9zmbRGjdh
+   yAD0BF9CVY7Rk7ce6qkyeR6P03/BESC/kbMecFAAUNkN1TPbrkDRvs/iQ
+   w==;
+IronPort-SDR: FCIeI9nI6414nJ7ksSRxJS2d4awbwnDfmW5mcNChBuvks4bbmqF2IsOPpo6eXjXRwdRRxjSmaR
+ KAoH4M0zfg3ll5n7w3zPaD7UkhezRadn/zdwKLcZrkUF9WPBU7R8GAeXu42Eq7B4uTJjQ16/F1
+ IMXoeQNi7vqXj69PGAHVeMMibjwiw2sBBJ6bYWEs4+lfWVUjszomyASpWoSXACRi3nlu/a8zkb
+ 2lGs0UoRbWk8LIZ3cxRuzrKyo7uFG3+VJmiA5YeeVRQc9x16EJAbrRqaoPyF4auOXyJwg2/RpM
+ 2zY=
 X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="85979752"
+   d="scan'208";a="85979780"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Jul 2020 03:14:24 -0700
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Jul 2020 03:14:40 -0700
 Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 2 Jul 2020 03:14:24 -0700
+ 15.1.1979.3; Thu, 2 Jul 2020 03:14:40 -0700
 Received: from soft-dev15.microsemi.net (10.10.115.15) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Thu, 2 Jul 2020 03:14:02 -0700
+ 15.1.1979.3 via Frontend Transport; Thu, 2 Jul 2020 03:14:17 -0700
 From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Mark Brown <broonie@kernel.org>, Peter Rosin <peda@axentia.se>
+To:     Mark Brown <broonie@kernel.org>, Peter Rosin <peda@axentia.se>,
+        "Rob Herring" <robh+dt@kernel.org>
 CC:     Lars Povlsen <lars.povlsen@microchip.com>,
         Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
         <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
@@ -60,9 +61,9 @@ CC:     Lars Povlsen <lars.povlsen@microchip.com>,
         <linux-arm-kernel@lists.infradead.org>,
         Serge Semin <fancer.lancer@gmail.com>,
         Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Subject: [PATCH v3 4/8] mux: sparx5: Add Sparx5 SPI mux driver
-Date:   Thu, 2 Jul 2020 12:13:27 +0200
-Message-ID: <20200702101331.26375-5-lars.povlsen@microchip.com>
+Subject: [PATCH v3 6/8] dt-bindings: microchip,sparx5-spi-mux: Add Sparx5 SPI mux driver bindings
+Date:   Thu, 2 Jul 2020 12:13:29 +0200
+Message-ID: <20200702101331.26375-7-lars.povlsen@microchip.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200702101331.26375-1-lars.povlsen@microchip.com>
 References: <20200702101331.26375-1-lars.povlsen@microchip.com>
@@ -74,177 +75,92 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Sparx5 mux driver may be used to control selecting between two
-alternate SPI bus segments connected to the SPI controller
-(spi-dw-mmio).
+The Microchip Sparx5 SPI controller has two bus segments, and use this
+mux to control the bus interface mapping for any chip selects. This
+decribes the bindings used to configure the mux driver.
 
 Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
 ---
- drivers/mux/Makefile     |   2 +
- drivers/mux/sparx5-spi.c | 138 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 140 insertions(+)
- create mode 100644 drivers/mux/sparx5-spi.c
+ .../mux/microchip,sparx5-spi-mux.yaml         | 71 +++++++++++++++++++
+ 1 file changed, 71 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mux/microchip,sparx5-spi-mux.yaml
 
-diff --git a/drivers/mux/Makefile b/drivers/mux/Makefile
-index 6e9fa47daf566..18c3ae3582ece 100644
---- a/drivers/mux/Makefile
-+++ b/drivers/mux/Makefile
-@@ -8,9 +8,11 @@ mux-adg792a-objs		:= adg792a.o
- mux-adgs1408-objs		:= adgs1408.o
- mux-gpio-objs			:= gpio.o
- mux-mmio-objs			:= mmio.o
-+mux-sparx5-objs			:= sparx5-spi.o
- 
- obj-$(CONFIG_MULTIPLEXER)	+= mux-core.o
- obj-$(CONFIG_MUX_ADG792A)	+= mux-adg792a.o
- obj-$(CONFIG_MUX_ADGS1408)	+= mux-adgs1408.o
- obj-$(CONFIG_MUX_GPIO)		+= mux-gpio.o
- obj-$(CONFIG_MUX_MMIO)		+= mux-mmio.o
-+obj-$(CONFIG_SPI_DW_MMIO)	+= mux-sparx5.o
-diff --git a/drivers/mux/sparx5-spi.c b/drivers/mux/sparx5-spi.c
+diff --git a/Documentation/devicetree/bindings/mux/microchip,sparx5-spi-mux.yaml b/Documentation/devicetree/bindings/mux/microchip,sparx5-spi-mux.yaml
 new file mode 100644
-index 0000000000000..5fe9025b96a5e
+index 0000000000000..b0ce3b15a69e5
 --- /dev/null
-+++ b/drivers/mux/sparx5-spi.c
-@@ -0,0 +1,138 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Sparx5 SPI MUX driver
-+ *
-+ * Copyright (c) 2019 Microsemi Corporation
-+ *
-+ * Author: Lars Povlsen <lars.povlsen@microchip.com>
-+ */
++++ b/Documentation/devicetree/bindings/mux/microchip,sparx5-spi-mux.yaml
+@@ -0,0 +1,71 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mux/microchip,sparx5-spi-mux.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#include <linux/err.h>
-+#include <linux/module.h>
-+#include <linux/mux/driver.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/mux/driver.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/regmap.h>
-+#include <linux/bitfield.h>
++title: Microchip Sparx5 SPI mux
 +
-+#define MSCC_IF_SI_OWNER_SISL			0
-+#define MSCC_IF_SI_OWNER_SIBM			1
-+#define MSCC_IF_SI_OWNER_SIMC			2
++maintainers:
++  - Lars Povlsen <lars.povlsen@microchip.com>
 +
-+#define SPARX5_CPU_SYSTEM_CTRL_GENERAL_CTRL	0x88
-+#define SPARX5_IF_SI_OWNER			GENMASK(7, 6)
-+#define SPARX5_IF_SI2_OWNER			GENMASK(5, 4)
++description: |
++  The Microchip Sparx5 SPI controller has two bus segments. In order
++  to switch between the appropriate bus for any given SPI slave
++  (defined by a chip select), this mux driver is used. The device tree
++  node for the mux will define the bus mapping for any chip
++  selects. The default bus mapping for any chip select is "0", such
++  that only non-default mappings need to be explicitly defined.
 +
-+#define SPARX5_MAX_CS	16
++properties:
++  compatible:
++    enum:
++      - microchip,sparx5-spi-mux
 +
-+struct mux_sparx5 {
-+	struct regmap *syscon;
-+	u8 bus[SPARX5_MAX_CS];
-+	int cur_bus;
-+};
++  '#address-cells':
++    const: 1
 +
-+/*
-+ * Set the owner of the SPI interfaces
-+ */
-+static void mux_sparx5_set_owner(struct regmap *syscon,
-+				 u8 owner, u8 owner2)
-+{
-+	u32 val, msk;
++  '#size-cells':
++    const: 0
 +
-+	val = FIELD_PREP(SPARX5_IF_SI_OWNER, owner) |
-+		FIELD_PREP(SPARX5_IF_SI2_OWNER, owner2);
-+	msk = SPARX5_IF_SI_OWNER | SPARX5_IF_SI2_OWNER;
-+	regmap_update_bits(syscon,
-+			   SPARX5_CPU_SYSTEM_CTRL_GENERAL_CTRL,
-+			   msk, val);
-+}
++  '#mux-control-cells':
++    const: 0
 +
-+static void mux_sparx5_set_cs_owner(struct mux_sparx5 *mux_sparx5,
-+				    u8 cs, u8 owner)
-+{
-+	u8 other = (owner == MSCC_IF_SI_OWNER_SIBM ?
-+		    MSCC_IF_SI_OWNER_SIMC : MSCC_IF_SI_OWNER_SIBM);
-+	if (mux_sparx5->bus[cs])
-+		/* SPI2 */
-+		mux_sparx5_set_owner(mux_sparx5->syscon, other, owner);
-+	else
-+		/* SPI1 */
-+		mux_sparx5_set_owner(mux_sparx5->syscon, owner, other);
-+}
++required:
++  - compatible
 +
-+static int mux_sparx5_set(struct mux_control *mux, int state)
-+{
-+	struct mux_sparx5 *mux_sparx5 = mux_chip_priv(mux->chip);
++additionalProperties: false
 +
-+	mux_sparx5_set_cs_owner(mux_sparx5, state, MSCC_IF_SI_OWNER_SIMC);
++patternProperties:
++  "^mux@[0-9a-f]$":
++    type: object
 +
-+	return 0;
-+}
++    properties:
++      reg:
++        description:
++          Chip select to define bus mapping for.
++        minimum: 0
++        maximum: 15
 +
-+static const struct mux_control_ops mux_sparx5_ops = {
-+	.set = mux_sparx5_set,
-+};
++      microchip,bus-interface:
++        description:
++          The bus interface to use for this chip select.
++        $ref: /schemas/types.yaml#/definitions/uint32
++        enum: [0, 1]
 +
-+static const struct of_device_id mux_sparx5_dt_ids[] = {
-+	{ .compatible = "microchip,sparx5-spi-mux", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, mux_sparx5_dt_ids);
++    required:
++      - reg
++      - microchip,bus-interface
 +
-+static int mux_sparx5_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct mux_chip *mux_chip;
-+	struct mux_sparx5 *mux_sparx5;
-+	struct device_node *nc;
-+	const char *syscon_name = "microchip,sparx5-cpu-syscon";
-+	int ret;
-+
-+	mux_chip = devm_mux_chip_alloc(dev, 1, sizeof(*mux_sparx5));
-+	if (IS_ERR(mux_chip))
-+		return PTR_ERR(mux_chip);
-+
-+	mux_sparx5 = mux_chip_priv(mux_chip);
-+	mux_chip->ops = &mux_sparx5_ops;
-+
-+	mux_sparx5->syscon =
-+		syscon_regmap_lookup_by_compatible(syscon_name);
-+	if (IS_ERR(mux_sparx5->syscon)) {
-+		dev_err(dev, "No syscon map %s\n", syscon_name);
-+		return PTR_ERR(mux_sparx5->syscon);
-+	}
-+
-+	/* Get bus interface mapping */
-+	for_each_available_child_of_node(dev->of_node, nc) {
-+		u32 cs, bus;
-+
-+		if (of_property_read_u32(nc, "reg", &cs) == 0 &&
-+		    cs < SPARX5_MAX_CS &&
-+		    of_property_read_u32(nc, "microchip,bus-interface",
-+					 &bus) == 0)
-+			mux_sparx5->bus[cs] = bus;
-+	}
-+
-+	mux_chip->mux->states = SPARX5_MAX_CS;
-+
-+	ret = devm_mux_chip_register(dev, mux_chip);
-+	if (ret < 0)
-+		return ret;
-+
-+	dev_info(dev, "%u-way mux-controller registered\n",
-+		 mux_chip->mux->states);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver mux_sparx5_driver = {
-+	.driver = {
-+		.name = "sparx5-mux",
-+		.of_match_table	= of_match_ptr(mux_sparx5_dt_ids),
-+	},
-+	.probe = mux_sparx5_probe,
-+};
-+module_platform_driver(mux_sparx5_driver);
--- 
++examples:
++  - |
++    mux: mux-controller {
++      compatible = "microchip,sparx5-spi-mux";
++      #address-cells = <1>;
++      #size-cells = <0>;
++      #mux-control-cells = <0>;
++      mux@e {
++        reg = <14>;
++        microchip,bus-interface = <1>;
++      };
++    };
+--
 2.27.0
-
