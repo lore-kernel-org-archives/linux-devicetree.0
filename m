@@ -2,184 +2,250 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83AE7C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 07:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 231E2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 07:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DA622073E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 07:21:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F156F206BE
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 07:27:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="QW+gWvDD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CDqlQvdl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbgGBHVs (ORCPT
+        id S1726965AbgGBH1Z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 03:21:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37514 "EHLO
+        Thu, 2 Jul 2020 03:27:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbgGBHVs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 03:21:48 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C6DAC08C5C1;
-        Thu,  2 Jul 2020 00:21:48 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id DD6C522EEB;
-        Thu,  2 Jul 2020 09:21:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1593674506;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yYh2/aIFWhUNCc355H6HdrFH3gHWvQp1I0ovSaO/mqQ=;
-        b=QW+gWvDDGXW32OkPetPXQmwmoBHdnbvoMHEmol7FzAO6BYr41/MKv+DCCo0zCbpwZoq+kg
-        dOpbYm1g2XBrKRtuw2NpMfug4zS27QbuOjREIPQekpaGB+/wotQaQvuYSWiQaaBgC+2GnF
-        1hyTBcBy+7mkCs8Z4QWWpGE9TZPyK90=
+        with ESMTP id S1726630AbgGBH1Y (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 03:27:24 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CB56C08C5DC
+        for <devicetree@vger.kernel.org>; Thu,  2 Jul 2020 00:27:24 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id a6so19864460wmm.0
+        for <devicetree@vger.kernel.org>; Thu, 02 Jul 2020 00:27:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=7b1tr/YyHCmwp2+o1uDBijrmKA9zlZnOStRHRfWKMQU=;
+        b=CDqlQvdl/A8mBV1IC1Jn584KimECzuSlTi7t4L2yCZ6KwHWq/nL33nqHtenl8D6tYQ
+         aUyYiNCgeJVoz1PVbSwtIPySXXZc3xtOvC5S14dICu6pUCziiuC/YPod+Pp4pWpoqAsC
+         rlc5VBzk5aS3UC10+FwtXhl9FEFsmrZrAh3KGzALRf4GEx7cfPUWXiGR6x/ixElREHhM
+         d3iCHBnAnkJ+1dAWKMIOl9gXmsnqHJJPocdh1hVk1+j+ORaTqQs6Kt3AguuUZU0FxXOV
+         Qzmz7u/mLrqoqxMBpX5k7jrwWtIVYgh8HvzM+SKtmz83IpOOiamEcSngNB29Vcj+ANz0
+         de5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=7b1tr/YyHCmwp2+o1uDBijrmKA9zlZnOStRHRfWKMQU=;
+        b=XRFRTAwqDVUQTgEq0pno6ZIB2C1+qWq3hWmfy9rn6m+8cC9kOzz4RD13EdjLSNI7jE
+         8MB0P5s0HFtCKvzEgENE6AV641O4+8e1MJ3N/0gDBDP6nSTjXV+IBm5uSq5OlxnSSgzR
+         o6GHoO+Iwd1ruHced7XTXtHna2kmdW+vrxtaBwAmJB0rMn+chNlSM/DB02cM8+LIRA+/
+         Bu62j6RcwIerXtQEX4iNACfJUBvygtZIRUvYjY2T+tsEsh1Z5srAyYYLRJGCZpMCO+Qf
+         IMUC4C6WW1O+5ZgsmsBQJCduqtlUhnaZmP50OBqWaBKa/VXL7dwbQBlu1CeE5g80ffQq
+         xcPw==
+X-Gm-Message-State: AOAM532UiBi+UJZVwmOBu1/BeFR0GZ+HnZmRDAt3xxdgPGeu9ZS1rgd+
+        UTyELtw6HcDR0MHZFAiBJdaHFA==
+X-Google-Smtp-Source: ABdhPJx2VFf+GlmIZM8WrPHYsa0GQ70iQe9LRgZoBd+5ZiD4N1Rlt5fqDS4tiHF8UYtrXykEtU80fA==
+X-Received: by 2002:a1c:e0c4:: with SMTP id x187mr29427621wmg.153.1593674842790;
+        Thu, 02 Jul 2020 00:27:22 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id l8sm9982766wrq.15.2020.07.02.00.27.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 00:27:22 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 08:27:20 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, broonie@kernel.org, gregkh@linuxfoundation.org,
+        andriy.shevchenko@linux.intel.com, linus.walleij@linaro.org,
+        arnd@arndb.de, bgolaszewski@baylibre.com
+Subject: Re: [RFC PATCH] mfd: add simple regmap based I2C driver
+Message-ID: <20200702072720.GQ1179328@dell>
+References: <20200701212100.6020-1-michael@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 02 Jul 2020 09:21:45 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     robh+dt@kernel.org, broonie@kernel.org, gregkh@linuxfoundation.org,
-        andriy.shevchenko@linux.intel.com, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com, arnd@arndb.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/1] mfd: Add I2C based System Configuaration (SYSCON)
- access
-In-Reply-To: <20200702071402.GP1179328@dell>
-References: <20200622075145.1464020-1-lee.jones@linaro.org>
- <e436fd60bf0ebb6d72a76034d0fc35de@walle.cc> <20200702071402.GP1179328@dell>
-User-Agent: Roundcube Webmail/1.4.6
-Message-ID: <a8fc222a555f1b5bceb7405e94f7df0e@walle.cc>
-X-Sender: michael@walle.cc
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200701212100.6020-1-michael@walle.cc>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am 2020-07-02 09:14, schrieb Lee Jones:
-> On Tue, 30 Jun 2020, Michael Walle wrote:
+On Wed, 01 Jul 2020, Michael Walle wrote:
+
+> There are I2C devices which contain several different functions but
+> doesn't require any special access functions. For these kind of drivers
+> an I2C regmap should be enough.
 > 
->> Hi Lee,
->> 
->> I'm just trying to use this for my sl28 driver. Some remarks, see 
->> below.
->> 
->> Am 2020-06-22 09:51, schrieb Lee Jones:
->> > The existing SYSCON implementation only supports MMIO (memory mapped)
->> > accesses, facilitated by Regmap.  This extends support for registers
->> > held behind I2C busses.
->> >
->> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
->> > ---
->> > Changelog:
->> >
->> > v3 => v4
->> >   - Add ability to provide a non-default Regmap configuration
->> >
->> > v2 => v3
->> >   - Change 'is CONFIG' present check to include loadable modules
->> >     - s/#ifdef CONFIG_MFD_SYSCON_I2C/#if
->> > IS_ENABLED(CONFIG_MFD_SYSCON_I2C)/
->> >
->> > v1 => v2
->> >   - Remove legacy references to OF
->> >   - Allow building as a module (fixes h8300 0-day issue)
->> >
->> > drivers/mfd/Kconfig            |   7 +++
->> >  drivers/mfd/Makefile           |   1 +
->> >  drivers/mfd/syscon-i2c.c       | 104 +++++++++++++++++++++++++++++++++
->> >  include/linux/mfd/syscon-i2c.h |  36 ++++++++++++
->> >  4 files changed, 148 insertions(+)
->> >  create mode 100644 drivers/mfd/syscon-i2c.c
->> >  create mode 100644 include/linux/mfd/syscon-i2c.h
->> >
->> 
->> [..]
->> 
->> > +static struct regmap *syscon_i2c_get_regmap(struct i2c_client *client,
->> > +					    struct regmap_config *regmap_config)
->> > +{
->> > +	struct device *dev = &client->dev;
->> > +	struct syscon *entry, *syscon = NULL;
->> > +
->> > +	spin_lock(&syscon_i2c_list_slock);
->> > +
->> > +	list_for_each_entry(entry, &syscon_i2c_list, list)
->> > +		if (entry->dev == dev) {
->> > +			syscon = entry;
->> > +			break;
->> > +		}
->> > +
->> > +	spin_unlock(&syscon_i2c_list_slock);
->> > +
->> > +	if (!syscon)
->> > +		syscon = syscon_i2c_register(client, regmap_config);
->> > +
->> > +	if (IS_ERR(syscon))
->> > +		return ERR_CAST(syscon);
->> > +
->> > +	return syscon->regmap;
->> > +}
->> > +
->> > +struct regmap *syscon_i2c_to_regmap_config(struct i2c_client *client,
->> > +					   struct regmap_config *regmap_config)
->> > +{
->> > +	return syscon_i2c_get_regmap(client, regmap_config);
->> > +}
->> > +EXPORT_SYMBOL_GPL(syscon_i2c_to_regmap_config);
->> > +
->> > +struct regmap *syscon_i2c_to_regmap(struct i2c_client *client)
->> > +{
->> > +	return syscon_i2c_get_regmap(client, &syscon_i2c_regmap_config);
->> > +}
->> > +EXPORT_SYMBOL_GPL(syscon_i2c_to_regmap);
->> 
->> What do you think about
->> 
->> struct regmap *syscon_i2c_to_regmap(struct device *dev)
->> {
->> 	struct i2c_client *client = i2c_verify_client(dev);
->> 
->> 	if (!client)
->> 		return ERR_PTR(-EINVAL);
->> 
->> 	return syscon_i2c_get_regmap(client, &syscon_i2c_regmap_config);
->> }
->> 
->> Or even move it to syscon_i2c_get_regmap().
->> 
->> This way, (a) a driver doesn't have to use "#include <linux/i2c.h>" 
->> just
->> to call to_i2c_client() (or i2c_verify_client()) and (b) you won't do 
->> it
->> all over again in all sub drivers.
+> Create an I2C driver which creates an I2C regmap and enumerates its
+> children. If a device wants to use this as its MFD core driver, it has
+> to add an individual compatible string. It may provide its own regmap
+> configuration and a .pre_probe hook. The latter allows simple checks
+> and abort probing, for example a version check.
 > 
-> What is your use-case?
-
-Still my sl28 mfd driver. There the sub devices just need a regmap.
-
->  This is set-up for based I2C drivers to call
-> into.  'client' is given to them as their .probe() arg.
-
-Ok, I see. Then this doesn't fit.
-
--michael
-
->> So you could just do a
->>   regmap = syscon_i2c_to_regmap(pdev->dev.parent);
->> 
->> I've also noticed that the mmio syscon uses device_node as parameter. 
->> What
->> was the reason to divert from that? Just curious.
+> Subdevices can use dev_get_regmap() on the parent to get their regmap
+> instance.
 > 
-> This is a helper for I2C clients.  There aren't any OF helpers in here
-> (yet).  If you think they would be helpful we can add them.  How do
-> you see them being used?
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+> 
+> I don't think the syscon-i2c is the way to go:
+> 
+>    "TBC, while fine for a driver to bind on 'simple-mfd', a
+>     DT compatible with that alone is not fine." [1]
+> 
+>    "Yes, this is why specific compatible strings are
+>     required." [1]
+> 
+>    "No. I'd like to just kill off syscon and simple-mfd really. Those are
+> 	just hints meaning a specific compatible is still needed, but I see
+> 	them all the time alone (or combined like above). 'syscon' just serves
+> 	to create a regmap. This could be accomplished just with a list of
+> 	compatibles to register a regmap for. That might be a longish list, but
+> 	wanting a regmap is really a kernel implementation detail and
+> 	decision." [2]
+
+This is taken out of context.  Rob is suggesting that 'simple-mfd'
+and/or 'syscon' shouldn't be used as separate entities.  Instead they
+should be coupled with a real and descriptive compatible string.
+Either 'simple-mfd' nor 'syscon' is going away.
+
+> So I don't get it why we would now add another syscon type. Instead, here
+> is a new try to generalize the idea to just have a simple driver which just
+> have a bunch of compatible strings for supported devices (and thus can be
+> added quirks to it without changing the DT) and just creates a regmap. A
+> simple device can just add itself to the list of compatible strings. If
+> quirks are needed later, they can either be added right to simple-mfd-i2c.c
+> or split off to an own file, but time will tell.
+> 
+> Right now, there is just a .pre_probe() hook which can be used to cancel
+> the probing of the device or print some useful info to the kernel log. Yes,
+> this is for "my" version check. And TBH I don't see a problem with adding
+> that to this generic driver.
+> 
+> [1] https://lore.kernel.org/linux-devicetree/CAL_JsqKr1aDVzgAMjwwK8E8O_f29vSrx1HXk81FF+rd3sEe==w@mail.gmail.com/
+> [2] https://lore.kernel.org/linux-devicetree/20200609165401.GB1019634@bogus/
+> 
+>  drivers/mfd/Kconfig          |  9 ++++++
+>  drivers/mfd/Makefile         |  1 +
+>  drivers/mfd/simple-mfd-i2c.c | 57 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 67 insertions(+)
+>  create mode 100644 drivers/mfd/simple-mfd-i2c.c
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 7e72ed3441f1..96055c7e5c55 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1162,6 +1162,15 @@ config MFD_SI476X_CORE
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called si476x-core.
+>  
+> +config MFD_SIMPLE_MFD_I2C
+> +	tristate "Simple regmap based I2C devices"
+> +	depends on I2C
+> +	select MFD_CORE
+> +	select REGMAP_I2C
+> +	help
+> +	  This is a consolidated driver for all MFD devices which are
+> +	  basically just a regmap bus driver.
+> +
+>  config MFD_SM501
+>  	tristate "Silicon Motion SM501"
+>  	depends on HAS_DMA
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 7e26e7f98ac2..fa3a621a5a21 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -265,4 +265,5 @@ obj-$(CONFIG_MFD_KHADAS_MCU) 	+= khadas-mcu.o
+>  
+>  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
+>  
+> +obj-$(CONFIG_MFD_SIMPLE_MFD_I2C)	+= simple-mfd-i2c.o
+>  obj-$(CONFIG_MFD_SL28CPLD)	+= sl28cpld.o
+> diff --git a/drivers/mfd/simple-mfd-i2c.c b/drivers/mfd/simple-mfd-i2c.c
+> new file mode 100644
+> index 000000000000..60708e95f1a0
+> --- /dev/null
+> +++ b/drivers/mfd/simple-mfd-i2c.c
+> @@ -0,0 +1,57 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +#include <linux/i2c.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/regmap.h>
+> +
+> +struct simple_mfd_i2c_config {
+> +	int (*pre_probe)(struct i2c_client *i2c, struct regmap *regmap);
+
+This has the potential to get out of control.
+
+> +	const struct regmap_config *regmap_config;
+> +};
+> +
+> +static const struct regmap_config simple_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +};
+> +
+> +static int simple_mfd_i2c_probe(struct i2c_client *i2c)
+> +{
+> +	const struct regmap_config *regmap_config = &simple_regmap_config;
+> +	const struct simple_mfd_i2c_config *config;
+> +	struct regmap *regmap;
+> +	int ret;
+> +
+> +	config = device_get_match_data(&i2c->dev);
+> +
+> +	if (config && config->regmap_config)
+> +		regmap_config = config->regmap_config;
+> +
+> +	regmap = devm_regmap_init_i2c(i2c, regmap_config);
+> +	if (IS_ERR(regmap))
+> +		return PTR_ERR(regmap);
+> +
+> +	if (config && config->pre_probe) {
+> +		ret = config->pre_probe(i2c, regmap);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return devm_of_platform_populate(&i2c->dev);
+> +}
+> +
+> +static const struct of_device_id simple_mfd_i2c_of_match[] = {
+> +	{}
+> +};
+> +
+> +static struct i2c_driver simple_mfd_i2c_driver = {
+> +	.probe_new = simple_mfd_i2c_probe,
+> +	.driver = {
+> +		.name = "simple-mfd-i2c",
+> +		.of_match_table = simple_mfd_i2c_of_match,
+> +	},
+> +};
+> +builtin_i2c_driver(simple_mfd_i2c_driver);
+
+I'm not completely adverse to this idea.  There are a few things in
+here I'd change, but the template is reasonable enough, despite the
+opportunity for abuse.
+
+However, before exploring this I'd like to properly see out the I2C
+syscon conversation.
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
