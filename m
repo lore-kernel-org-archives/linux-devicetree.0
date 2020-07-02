@@ -2,129 +2,99 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 023D3C433E6
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 12:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F042EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 13:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D14F320772
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 12:58:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDAE3207CD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 13:13:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="HbpZpXSD"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TgRrVioX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729140AbgGBM5e (ORCPT
+        id S1729243AbgGBNNe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 08:57:34 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:25527 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728991AbgGBM5d (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 08:57:33 -0400
-X-UUID: 8aa1b68a6cfa4dad88604f01b4b98b99-20200702
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=5TKcrLGCtY1B7wgKh4ZcQSHuqGbEX2NNJvS+KYOZ5/Y=;
-        b=HbpZpXSDw6qV9gPdkohD/z1CON/FA18xs/TCagC+Kul+oeJBm6FIaiJkcrXRQ/UtkZDAyTL32mstaP3h8GtCdALmPkZ+0+F3xV84uOai23QtRmAYRo5b8fFcvFw2KZkLTBx4W84fN2rXIElOEpf2xH7i/LXY99K21G8re7izTWY=;
-X-UUID: 8aa1b68a6cfa4dad88604f01b4b98b99-20200702
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1285532543; Thu, 02 Jul 2020 20:57:28 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 2 Jul 2020 20:57:23 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 2 Jul 2020 20:57:25 +0800
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>
-CC:     mtk01761 <wendell.lin@mediatek.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>,
-        Hanks Chen <hanks.chen@mediatek.com>,
-        Mars Cheng <mars.cheng@mediatek.com>
-Subject: [PATCH v7 3/7] pinctrl: mediatek: avoid virtual gpio trying to set reg
-Date:   Thu, 2 Jul 2020 20:57:06 +0800
-Message-ID: <1593694630-26604-5-git-send-email-hanks.chen@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1593694630-26604-1-git-send-email-hanks.chen@mediatek.com>
-References: <1593694630-26604-1-git-send-email-hanks.chen@mediatek.com>
+        Thu, 2 Jul 2020 09:13:34 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:38938 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729238AbgGBNNd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 09:13:33 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 062DDUlP028111;
+        Thu, 2 Jul 2020 08:13:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593695610;
+        bh=WDMC1z6jzpUNYiGQWlUKYjUaAdNa/terAf9fLOG3fwk=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=TgRrVioXFdYzjUAP7HJIPnIJKbBcZ+s7oODDML8tchNxsOgEAC9gmCpsh+6U0Ag5h
+         24mS8rMtnOnr/lze6dHCXDvGGi0LZQLXS9ABEZPV/2m5te0E8ujhZLcHttsvR55f+A
+         /C50wji4Iith8l//qcwODFLbSAlIlhQNBBRZLpHw=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 062DDUG1108058
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 2 Jul 2020 08:13:30 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 2 Jul
+ 2020 08:13:29 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 2 Jul 2020 08:13:29 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 062DDOaq130577;
+        Thu, 2 Jul 2020 08:13:27 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <t-kristo@ti.com>, <nm@ti.com>
+CC:     <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <vigneshr@ti.com>
+Subject: [PATCH 1/2] arm64: dts: ti: k3-j721e-common-proc-board: Remove duplicated main_i2c1_exp4_pins_default
+Date:   Thu, 2 Jul 2020 16:14:23 +0300
+Message-ID: <20200702131424.21241-2-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200702131424.21241-1-peter.ujfalusi@ti.com>
+References: <20200702131424.21241-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Zm9yIHZpcnR1YWwgZ3Bpb3MsIHRoZXkgc2hvdWxkIG5vdCBkbyByZWcgc2V0dGluZyBhbmQNCnNo
-b3VsZCBiZWhhdmUgYXMgZXhwZWN0ZWQgZm9yIGVpbnQgZnVuY3Rpb24uDQoNClNpZ25lZC1vZmYt
-Ynk6IE1hcnMgQ2hlbmcgPG1hcnMuY2hlbmdAbWVkaWF0ZWsuY29tPg0KU2lnbmVkLW9mZi1ieTog
-SGFua3MgQ2hlbiA8aGFua3MuY2hlbkBtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL3BpbmN0
-cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmMgfCAgIDI1ICsrKysrKysrKysrKysr
-KysrKysrKysNCiBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYy
-LmggfCAgICAxICsNCiBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1wYXJpcy5jICAg
-ICAgICAgfCAgICA3ICsrKysrKw0KIDMgZmlsZXMgY2hhbmdlZCwgMzMgaW5zZXJ0aW9ucygrKQ0K
-DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1v
-bi12Mi5jIGIvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5j
-DQppbmRleCBiNzdiMThmLi5jNTNlMmMzIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9waW5jdHJsL21l
-ZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5jDQorKysgYi9kcml2ZXJzL3BpbmN0cmwvbWVk
-aWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmMNCkBAIC0yNDMsNiArMjQzLDI4IEBAIHN0YXRp
-YyBpbnQgbXRrX3h0X2ZpbmRfZWludF9udW0oc3RydWN0IG10a19waW5jdHJsICpodywgdW5zaWdu
-ZWQgbG9uZyBlaW50X24pDQogCXJldHVybiBFSU5UX05BOw0KIH0NCiANCisvKg0KKyAqIFZpcnR1
-YWwgR1BJTyBvbmx5IHVzZWQgaW5zaWRlIFNPQyBhbmQgbm90IGJlaW5nIGV4cG9ydGVkIHRvIG91
-dHNpZGUgU09DLg0KKyAqIFNvbWUgbW9kdWxlcyB1c2UgdmlydHVhbCBHUElPIGFzIGVpbnQgKGUu
-Zy4gcG1pZiBvciB1c2IpLg0KKyAqIEluIE1USyBwbGF0Zm9ybSwgZXh0ZXJuYWwgaW50ZXJydXB0
-IChFSU5UKSBhbmQgR1BJTyBpcyAxLTEgbWFwcGluZw0KKyAqIGFuZCB3ZSBjYW4gc2V0IEdQSU8g
-YXMgZWludC4NCisgKiBCdXQgc29tZSBtb2R1bGVzIHVzZSBzcGVjaWZpYyBlaW50IHdoaWNoIGRv
-ZXNuJ3QgaGF2ZSByZWFsIEdQSU8gcGluLg0KKyAqIFNvIHdlIHVzZSB2aXJ0dWFsIEdQSU8gdG8g
-bWFwIGl0Lg0KKyAqLw0KKw0KK2Jvb2wgbXRrX2lzX3ZpcnRfZ3BpbyhzdHJ1Y3QgbXRrX3BpbmN0
-cmwgKmh3LCB1bnNpZ25lZCBpbnQgZ3Bpb19uKQ0KK3sNCisJY29uc3Qgc3RydWN0IG10a19waW5f
-ZGVzYyAqZGVzYzsNCisJYm9vbCB2aXJ0X2dwaW8gPSBmYWxzZTsNCisNCisJZGVzYyA9IChjb25z
-dCBzdHJ1Y3QgbXRrX3Bpbl9kZXNjICopJmh3LT5zb2MtPnBpbnNbZ3Bpb19uXTsNCisNCisJaWYg
-KGRlc2MtPmZ1bmNzICYmICFkZXNjLT5mdW5jc1tkZXNjLT5laW50LmVpbnRfbV0ubmFtZSkNCisJ
-CXZpcnRfZ3BpbyA9IHRydWU7DQorDQorCXJldHVybiB2aXJ0X2dwaW87DQorfQ0KKw0KIHN0YXRp
-YyBpbnQgbXRrX3h0X2dldF9ncGlvX24odm9pZCAqZGF0YSwgdW5zaWduZWQgbG9uZyBlaW50X24s
-DQogCQkJICAgICB1bnNpZ25lZCBpbnQgKmdwaW9fbiwNCiAJCQkgICAgIHN0cnVjdCBncGlvX2No
-aXAgKipncGlvX2NoaXApDQpAQCAtMjk1LDYgKzMxNyw5IEBAIHN0YXRpYyBpbnQgbXRrX3h0X3Nl
-dF9ncGlvX2FzX2VpbnQodm9pZCAqZGF0YSwgdW5zaWduZWQgbG9uZyBlaW50X24pDQogCWlmIChl
-cnIpDQogCQlyZXR1cm4gZXJyOw0KIA0KKwlpZiAobXRrX2lzX3ZpcnRfZ3BpbyhodywgZ3Bpb19u
-KSkNCisJCXJldHVybiAwOw0KKw0KIAlkZXNjID0gKGNvbnN0IHN0cnVjdCBtdGtfcGluX2Rlc2Mg
-KikmaHctPnNvYy0+cGluc1tncGlvX25dOw0KIA0KIAllcnIgPSBtdGtfaHdfc2V0X3ZhbHVlKGh3
-LCBkZXNjLCBQSU5DVFJMX1BJTl9SRUdfTU9ERSwNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0
-cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmggYi9kcml2ZXJzL3BpbmN0cmwvbWVk
-aWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmgNCmluZGV4IDI3ZGYwODcuLmJkMDc5ZjRmIDEw
-MDY0NA0KLS0tIGEvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12
-Mi5oDQorKysgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYy
-LmgNCkBAIC0zMTUsNCArMzE1LDUgQEAgaW50IG10a19waW5jb25mX2Fkdl9kcml2ZV9zZXQoc3Ry
-dWN0IG10a19waW5jdHJsICpodywNCiBpbnQgbXRrX3BpbmNvbmZfYWR2X2RyaXZlX2dldChzdHJ1
-Y3QgbXRrX3BpbmN0cmwgKmh3LA0KIAkJCSAgICAgIGNvbnN0IHN0cnVjdCBtdGtfcGluX2Rlc2Mg
-KmRlc2MsIHUzMiAqdmFsKTsNCiANCitib29sIG10a19pc192aXJ0X2dwaW8oc3RydWN0IG10a19w
-aW5jdHJsICpodywgdW5zaWduZWQgaW50IGdwaW9fbik7DQogI2VuZGlmIC8qIF9fUElOQ1RSTF9N
-VEtfQ09NTU9OX1YyX0ggKi8NCmRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsv
-cGluY3RybC1wYXJpcy5jIGIvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtcGFyaXMu
-Yw0KaW5kZXggOTBhNDMyYi4uYTIzYzE4MiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvcGluY3RybC9t
-ZWRpYXRlay9waW5jdHJsLXBhcmlzLmMNCisrKyBiL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9w
-aW5jdHJsLXBhcmlzLmMNCkBAIC03NjksNiArNzY5LDEzIEBAIHN0YXRpYyBpbnQgbXRrX2dwaW9f
-Z2V0X2RpcmVjdGlvbihzdHJ1Y3QgZ3Bpb19jaGlwICpjaGlwLCB1bnNpZ25lZCBpbnQgZ3BpbykN
-CiAJaWYgKGdwaW8gPj0gaHctPnNvYy0+bnBpbnMpDQogCQlyZXR1cm4gLUVJTlZBTDsNCiANCisJ
-LyoNCisJICogIlZpcnR1YWwiIEdQSU9zIGFyZSBhbHdheXMgYW5kIG9ubHkgdXNlZCBmb3IgaW50
-ZXJydXB0cw0KKwkgKiBTaW5jZSB0aGV5IGFyZSBvbmx5IHVzZWQgZm9yIGludGVycnVwdHMsIHRo
-ZXkgYXJlIGFsd2F5cyBpbnB1dHMNCisJICovDQorCWlmIChtdGtfaXNfdmlydF9ncGlvKGh3LCBn
-cGlvKSkNCisJCXJldHVybiAxOw0KKw0KIAlkZXNjID0gKGNvbnN0IHN0cnVjdCBtdGtfcGluX2Rl
-c2MgKikmaHctPnNvYy0+cGluc1tncGlvXTsNCiANCiAJZXJyID0gbXRrX2h3X2dldF92YWx1ZSho
-dywgZGVzYywgUElOQ1RSTF9QSU5fUkVHX0RJUiwgJnZhbHVlKTsNCi0tIA0KMS43LjkuNQ0K
+Two pimux entry is present with the same name, remove one of them.
+
+Fixes: cb27354b38f3 ("arm64: dts: ti: k3-j721e: Add DT nodes for few peripherials")
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+index 6df823aaa37c..1f1fee85acca 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+@@ -102,12 +102,6 @@ J721E_IOPAD(0x1d0, PIN_INPUT_PULLUP, 2) /* (AA3) SPI0_D1.I2C6_SCL */
+ 			J721E_IOPAD(0x1e4, PIN_INPUT_PULLUP, 2) /* (Y2) SPI1_D1.I2C6_SDA */
+ 		>;
+ 	};
+-
+-	main_i2c1_exp4_pins_default: main-i2c1-exp4-pins-default {
+-		pinctrl-single,pins = <
+-			J721E_IOPAD(0x230, PIN_INPUT, 7) /* (U2) ECAP0_IN_APWM_OUT.GPIO1_11 */
+-		 >;
+-	};
+ };
+ 
+ &wkup_pmx0 {
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
