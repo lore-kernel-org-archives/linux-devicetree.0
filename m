@@ -2,204 +2,130 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBB6C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 17:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC73FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 17:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F21720771
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 17:26:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FhXBAjOq"
+	by mail.kernel.org (Postfix) with ESMTP id 91FAF20760
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 17:32:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgGBRZ7 (ORCPT
+        id S1727005AbgGBRc5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 13:25:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46730 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726829AbgGBRZ7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 13:25:59 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00FC7C08C5C1;
-        Thu,  2 Jul 2020 10:25:59 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id n26so16749212ejx.0;
-        Thu, 02 Jul 2020 10:25:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zKcCJcC7Q8PJoAnihwGAVpWoMYH3cBF0KesdV2Y/nys=;
-        b=FhXBAjOqlpaiC3ecnywt7k95es1/ZcfGA2/Gx5kmRKXUkyFJUnS9n9AKAKBNfVEFZu
-         l4kdLm+DrynoKo9ekZIcOqixss6+IcrN03lfi6UVV9JqFh/R1YHSDsOqvy/jfYgCjHKh
-         RKiNjq14ffb2BZZmdIxNh86k98oCaLiI8/jFJfWn/roJ6rhoYreJvRlffrGJ9NkM3UUA
-         8MgNfuJ+gvf3/B5eXepTWwLdO9ktFHxu2q7QJa6V+y1uAfTJ56RI4kUSD30d4pCKViaA
-         u5W5efPo+o5uI3Dkgkuovaxet2I4Nv2SZnvsdV1etAWmRwW/0NCntDejkYeoPlTiLNoC
-         cU5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zKcCJcC7Q8PJoAnihwGAVpWoMYH3cBF0KesdV2Y/nys=;
-        b=N6ivL5RZmyy31+9CEwA4O9bLS+XhRRxtkyJNFz3+hQqXxqoPBFFeixjr2TeW8e5DLI
-         Hu3XZjpSDQN3bLAC4L4YxrP+VJ19DwhkkJYNjZs3KLDv48iHOXDE3G/g2XKGEa7Hyyek
-         0a/mvj8y5r/WACHGoi56nb0aqFvZndUMSnjkDgNBJTqeFPz82cvu8NeSVlUpAzLi9GOe
-         cE86Veffp9bsUSVje9CoDvxes2HdKRLWdeDQ63CWTY1C61yaGGHKjhsSO1VFekQM0qYl
-         SIJf6W9B5TDbXY4mwTlmnej8Qi4InQGCa+K/LuXJoaiVQrw+JydsKYPRdJfR/vSA6031
-         OlTQ==
-X-Gm-Message-State: AOAM530PtaQGSUXWA4mRx8c8rL/vbzbcjNZq/6VJak75Gz+9KOHdCDZ7
-        /ycXkVtuK6vCRMycKInTkRU=
-X-Google-Smtp-Source: ABdhPJxtGmXlNc6yvDyDRwEnvG2TlYq3vDDk0QPmRiikQO1uJuM5hDhP7g7t9l1Vpp7ZexHL4J5WnQ==
-X-Received: by 2002:a17:907:426c:: with SMTP id nx20mr28068480ejb.548.1593710757680;
-        Thu, 02 Jul 2020 10:25:57 -0700 (PDT)
-Received: from localhost.localdomain ([2a04:2413:8140:6d80:2142:c138:da0:5086])
-        by smtp.gmail.com with ESMTPSA id p4sm7427033eji.123.2020.07.02.10.25.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 10:25:57 -0700 (PDT)
-From:   Adrian Pop <pop.adrian61@gmail.com>
-To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Adrian Pop <pop.adrian61@gmail.com>
-Subject: [PATCH v2 2/2] ARM: dts: stm32: Enable MIPI DSI display support.
-Date:   Thu,  2 Jul 2020 20:27:14 +0300
-Message-Id: <20200702172714.158786-2-pop.adrian61@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200702172714.158786-1-pop.adrian61@gmail.com>
-References: <20200702172714.158786-1-pop.adrian61@gmail.com>
+        Thu, 2 Jul 2020 13:32:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:46778 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726829AbgGBRc4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Jul 2020 13:32:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 59F73D6E;
+        Thu,  2 Jul 2020 10:32:56 -0700 (PDT)
+Received: from [10.57.21.32] (unknown [10.57.21.32])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 03E9C3F71E;
+        Thu,  2 Jul 2020 10:32:54 -0700 (PDT)
+Subject: Re: [PATCH v2 3/3] ARM: dts: rockchip: add rk3288 ISP and DPHY
+To:     Helen Koike <helen.koike@collabora.com>,
+        Johan Jonker <jbx6244@gmail.com>,
+        karthik poduval <karthik.poduval@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>, heiko@sntech.de,
+        devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+References: <karthik.poduval@gmail.com>
+ <20200406073017.19462-1-karthik.poduval@gmail.com>
+ <20200406073017.19462-4-karthik.poduval@gmail.com>
+ <2fc95890-f938-30a5-a163-bf3fa2e223df@gmail.com>
+ <CAFP0Ok-NxDDF8TMP4pN=xn6w3H=TYqN3DMfGW-vuiC5qB-Oj5g@mail.gmail.com>
+ <CAFP0Ok9XGzVbghbnOOyfXiOOc5-a94uFRu7sD5wXz9sr-+AYEA@mail.gmail.com>
+ <9407b6c3-b932-5904-18ff-7c6cbf6bcc8b@gmail.com>
+ <ec0e43f0-95af-c0b0-c51b-ea2db4194931@collabora.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <34801fe8-cc4f-ed52-674d-ee291f508e05@arm.com>
+Date:   Thu, 2 Jul 2020 18:32:53 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <ec0e43f0-95af-c0b0-c51b-ea2db4194931@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-STM32f769-disco features a 4" MIPI DSI display: add support for it.
-On Cortex-M7 DMA can't use cached memory. For this reason I use a dedicated
-memory pool for DMA with no-cache attribute which is located at the end of
- RAM.
+On 2020-07-02 17:27, Helen Koike wrote:
+[...]
+> I suggest this:
+> 
+>    clocks:
+>      maxItems: 5
+>      minItems: 3
+>      description:
+>        rk3288 clocks
+>          ISP clock
+>          ISP AXI clock
+>          ISP AHB clock
+>          ISP Pixel clock
+>          ISP JPEG source clock
+>        rk3399 isp0 clocks
+>          ISP clock
+>          ISP AXI wrapper clock
+>          ISP AHB wrapper clock
+>        rk3399 isp1 clocks
+>          ISP clock
+>          ISP AXI wrapper clock
+>          ISP AHB wrapper clock
+>          ISP Pixel wrapper clock
+> 
+>    clock-names:
+>      oneOf:
+>        # rk3288 clocks
+>        - items:
+>          - const: clk_isp
+>          - const: aclk_isp
+>          - const: hclk_isp
+>          - const: pclk_isp_in
+>          - const: sclk_isp_jpe
+>        # rk3399 isp0 clocks
+>        - items:
+>          - const: clk_isp
+>          - const: aclk_isp_wrap
+>          - const: hclk_isp_wrap
+>        # rk3399 isp1 clocks
+>        - items:
+>          - const: clk_isp
+>          - const: aclk_isp_wrap
+>          - const: hclk_isp_wrap
+>          - const: pclk_isp_wrap
 
-Signed-off-by: Adrian Pop <pop.adrian61@gmail.com>
----
- arch/arm/boot/dts/stm32f746.dtsi      | 34 +++++++++++++++++++
- arch/arm/boot/dts/stm32f769-disco.dts | 49 +++++++++++++++++++++++++++
- 2 files changed, 83 insertions(+)
+FWIW this looks a little more involved than it might need to be. Ideally 
+we're describing things from the point of view of what inputs the device 
+itself wants, so the details of exactly *how* a particular SoC's clock 
+tree delivers them shouldn't matter to the binding, only to the actual 
+clock specifier values ultimately given in the DT.
 
-diff --git a/arch/arm/boot/dts/stm32f746.dtsi b/arch/arm/boot/dts/stm32f746.dtsi
-index 93c063796780..577a812ca01c 100644
---- a/arch/arm/boot/dts/stm32f746.dtsi
-+++ b/arch/arm/boot/dts/stm32f746.dtsi
-@@ -48,6 +48,19 @@ / {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
- 
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		linux,dma {
-+			compatible = "shared-dma-pool";
-+			linux,dma-default;
-+			no-map;
-+			reg = <0xc0f00000 0x100000>;
-+		};
-+	};
-+
- 	clocks {
- 		clk_hse: clk-hse {
- 			#clock-cells = <0>;
-@@ -75,6 +88,27 @@ clk_i2s_ckin: clk-i2s-ckin {
- 	};
- 
- 	soc {
-+		ltdc: display-controller@40016800 {
-+			compatible = "st,stm32-ltdc";
-+			reg = <0x40016800 0x200>;
-+			interrupts = <88>, <89>;
-+			resets = <&rcc STM32F7_APB2_RESET(LTDC)>;
-+			clocks = <&rcc 1 CLK_LCD>;
-+			clock-names = "lcd";
-+			status = "disabled";
-+		};
-+
-+		dsi: dsi@40016c00 {
-+			compatible = "st,stm32-dsi";
-+			reg = <0x40016c00 0x800>;
-+			interrupts = <98>;
-+			clocks = <&rcc 1 CLK_F769_DSI>, <&clk_hse>;
-+			clock-names = "pclk", "ref";
-+			resets = <&rcc STM32F7_APB2_RESET(DSI)>;
-+			reset-names = "apb";
-+			status = "disabled";
-+		};
-+
- 		timer2: timer@40000000 {
- 			compatible = "st,stm32-timer";
- 			reg = <0x40000000 0x400>;
-diff --git a/arch/arm/boot/dts/stm32f769-disco.dts b/arch/arm/boot/dts/stm32f769-disco.dts
-index 1626e00bb2cb..a9e81b49809c 100644
---- a/arch/arm/boot/dts/stm32f769-disco.dts
-+++ b/arch/arm/boot/dts/stm32f769-disco.dts
-@@ -153,3 +153,52 @@ &usbotg_hs {
- 	pinctrl-names = "default";
- 	status = "okay";
- };
-+
-+&dsi {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+			dsi_in: endpoint {
-+				remote-endpoint = <&ltdc_out_dsi>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+			dsi_out: endpoint {
-+				remote-endpoint = <&dsi_in_panel>;
-+			};
-+		};
-+
-+	};
-+
-+	panel: panel {
-+		compatible = "orisetech,otm8009a";
-+		reg = <0>;
-+		reset-gpios = <&gpioj 15 GPIO_ACTIVE_LOW>;
-+		status = "okay";
-+
-+		port {
-+			dsi_in_panel: endpoint {
-+				remote-endpoint = <&dsi_out>;
-+			};
-+		};
-+	};
-+};
-+
-+&ltdc {
-+	status = "okay";
-+
-+	port {
-+		ltdc_out_dsi: endpoint {
-+			remote-endpoint = <&dsi_in>;
-+		};
-+	};
-+};
--- 
-2.27.0
+ From the ISP's PoV, it seems like we've got the fairly standard core 
+clock, ACLK and HCLK trio, plus a pixel clock for RK3288 and RK3399 
+ISP1, plus a JPEG source clock for RK3288. I'd be inclined to model that 
+as simply something like:
 
+     clock-names:
+       minItems: 3
+       maxItems: 5
+       items:
+       - const: isp
+       - const: aclk
+       - const: hclk
+       - const: pclk
+       - const: sclk_jpe
+
+Plus then not only do we have a nice clean binding, but we avoid all the 
+unnecessary faff of having to deal with the "same" clocks by different 
+names in drivers, and sidestep the conundrum of what to do when the next 
+SoC comes along providing the basic ISP clocks from yet again 
+slightly-differently-named branches of its clock tree.
+
+Robin.
