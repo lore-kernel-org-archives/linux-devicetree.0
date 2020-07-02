@@ -2,126 +2,171 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 049E1C433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 21:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7B7C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 21:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D531921707
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 21:29:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 218A120B1F
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 21:39:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593725968;
+	bh=xe9nQIr35mMCn3c7wpvqZxc+cExtXSyGYE78Yrb49lw=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=BNfZh1dUqAbKWCqoStCTrqnDamTLZyBJswydtASZ2feUvvFu4ShS/pbMfnCm2cZGR
+	 VxMz9/0LbpXumKpomEQltgZZGZlR21NgdaLqqbe5LBol8rkjvScBR1uNWmvlnXi5ZM
+	 X0Yt6ks5Y1yEQzUDrU7x5+cIPKjobRPSUeYj1id4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbgGBV26 (ORCPT
+        id S1726194AbgGBVj1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 17:28:58 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:49661 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726072AbgGBV26 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 17:28:58 -0400
-Received: from [88.147.89.201] (port=34632 helo=melee.dev.aim)
-        by hostingweb31.netsons.net with esmtpa (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1jr6lL-000AXd-46; Thu, 02 Jul 2020 23:28:55 +0200
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-To:     linux-clk@vger.kernel.org
-Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>
-Subject: [PATCH 4/5] dt-bindings: clk: versaclock5: add output drive mode property
-Date:   Thu,  2 Jul 2020 23:28:35 +0200
-Message-Id: <20200702212837.10657-4-luca@lucaceresoli.net>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200702212837.10657-1-luca@lucaceresoli.net>
-References: <20200702212837.10657-1-luca@lucaceresoli.net>
+        Thu, 2 Jul 2020 17:39:27 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:37166 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbgGBVj1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 17:39:27 -0400
+Received: by mail-io1-f68.google.com with SMTP id v6so16797463iob.4;
+        Thu, 02 Jul 2020 14:39:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=cnWwGTygPTxavzAiqzY7CKnWVGYSk3pYOsuHvvBZkC4=;
+        b=tDfwzChmc4pTzqZWFNLofhX55tvv/H+HFFFVCCm26A0Cv6egEHGWJgIgHwQ15q1oGB
+         Yo10PuhJZrYV+mZrbl1tCbF0jdix/rIRXoU0Mq7vIP4AKwOxd1glUGVXRIcDET++TKKI
+         4v/LorEBJ7DFrz+lUcB8I0ks9Fk3kY4gUXdD/2ObUNVyvRyL1i9HaDD+DffbqVxfGl2g
+         MBjKuTN/nHC5AmbJ59henf6m+LDqKv1DGYEK7oP3mR6zzLmyFc3HpXff11dDhm/dyv0Z
+         qKOkvkObdX+clgE2rDnR/z5/YaBCOu4xXYZR/aebAWiFK2IfIQoQ0YyqZtUtC1GZSoMq
+         BHfw==
+X-Gm-Message-State: AOAM531nlUGqf4u+KVi1WFzRqbPDJMpS9VHnOcw4VHmkC+WvpHmB6fti
+        Xf3K9u/bek1xhhwXw5I3Gw==
+X-Google-Smtp-Source: ABdhPJz0EK4pTjFCKLhVkHQ9QaNkHSgPeH3K7fHMeNcyRu216PqAp/vuwsnj4NIgwMWaFKovnxTJ8A==
+X-Received: by 2002:a05:6602:2f0f:: with SMTP id q15mr9550599iow.23.1593725966373;
+        Thu, 02 Jul 2020 14:39:26 -0700 (PDT)
+Received: from xps15 ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id v5sm4990834ios.54.2020.07.02.14.39.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 14:39:25 -0700 (PDT)
+Received: (nullmailer pid 1769713 invoked by uid 1000);
+        Thu, 02 Jul 2020 21:39:24 -0000
+Date:   Thu, 2 Jul 2020 15:39:24 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Frank Rowand <frowand.list@gmail.com>
+Subject: [GIT PULL] Devicetree fixes for 5.8, v2
+Message-ID: <20200702213924.GA1763915@bogus>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a node with properties for each output port, and a property inside it
-to describe the output drive mode.
+Linus,
 
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
----
- .../bindings/clock/idt,versaclock5.yaml       | 42 +++++++++++++++++++
- 1 file changed, 42 insertions(+)
+Please pull DT fixes for 5.8. I wouldn't normally update dtc at this 
+point in the cycle, but I've been waiting on fixes to land upstream for 
+a while now.
 
-diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml b/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
-index d8b8e35f16d2..f0ee612f573b 100644
---- a/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
-+++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
-@@ -50,6 +50,35 @@ properties:
-   '#clock-cells':
-     const: 1
- 
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-+patternProperties:
-+  "^out@[1-4]$":
-+    type: object
-+    description:
-+      Description of one of the outputs (OUT1..OUT4).
-+    properties:
-+      idt,drive-mode:
-+        description:
-+          The output drive mode. See "Clock1 Output Configuration" in the
-+          Versaclock 5/6/6E Family Register Description and Programming
-+          Guide.
-+          Allowed values are:-
-+            * 0 = LVPECL
-+            * 1 = CMOS
-+            * 2 = HCSL33
-+            * 3 = LVDS
-+            * 4 = CMOS2
-+            * 5 = CMOSD
-+            * 6 = HCSL25
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        minimum: 0
-+        maximum: 6
-+
- required:
-   - compatible
-   - reg
-@@ -107,6 +136,19 @@ examples:
-             /* Connect XIN input to 25MHz reference */
-             clocks = <&ref25m>;
-             clock-names = "xin";
-+
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            out@1 {
-+                reg = <1>; /* OUT1 */
-+                idt,drive-mode = <5>; /* CMOSD */
-+            };
-+
-+            out@4 {
-+                reg = <4>; /* OUT4 */
-+                idt,drive-mode = <3>; /* LVDS */
-+            };
-         };
-     };
- 
--- 
-2.27.0
+Rob
 
+
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.8-2
+
+for you to fetch changes up to 0115e6c98c22f3fc7ff7da2a41480483abe95b37:
+
+  dt-bindings: clock: imx: Fix e-mail address (2020-07-01 16:29:11 -0600)
+
+----------------------------------------------------------------
+Devicetree fixes for v5.8, take 2:
+
+- Sync dtc to upstream to pick up fixes for I2C bus checks and quiet
+  warnings
+
+- Various fixes for DT binding check warnings
+
+- A couple of build fixes/improvements for binding checks
+
+- ReST formatting improvements for writing-schema.rst
+
+- Document reference fixes
+
+----------------------------------------------------------------
+Fabio Estevam (5):
+      dt-bindings: usb: aspeed: Remove the leading zeroes
+      dt-bindings: display: arm: versatile: Pass the sysreg unit name
+      dt-bindings: thermal: Remove soc unit address
+      dt-bindings: thermal: k3: Fix the reg property
+      dt-bindings: clock: imx: Fix e-mail address
+
+Flavio Suligoi (1):
+      doc: devicetree: bindings: fix spelling mistake
+
+Kangmin Park (1):
+      dt-bindings: mailbox: zynqmp_ipi: fix unit address
+
+Masahiro Yamada (4):
+      dt-bindings: bus: uniphier-system-bus: fix warning in example
+      dt-bindings: fix error in 'make clean' after 'make dt_binding_check'
+      dt-bindings: do not build processed-schema.yaml for 'make dt_binding_check'
+      dt-bindings: copy process-schema-examples.yaml to process-schema.yaml
+
+Mauro Carvalho Chehab (5):
+      dt: update a reference for reneases pcar file renamed to yaml
+      dt: fix broken links due to txt->yaml renames
+      dt: Fix broken references to renamed docs
+      dt: fix reference to olpc,xo1.75-ec.txt
+      docs: dt: minor adjustments at writing-schema.rst
+
+Rob Herring (1):
+      scripts/dtc: Update to upstream version v1.6.0-11-g9d7888cbf19c
+
+ Documentation/devicetree/bindings/Makefile         | 38 +++++++++++++++------
+ .../devicetree/bindings/arm/freescale/fsl,scu.txt  |  2 +-
+ .../bus/socionext,uniphier-system-bus.yaml         |  4 +--
+ .../devicetree/bindings/clock/imx27-clock.yaml     |  2 +-
+ .../devicetree/bindings/clock/imx31-clock.yaml     |  2 +-
+ .../devicetree/bindings/clock/imx5-clock.yaml      |  2 +-
+ .../devicetree/bindings/display/bridge/sii902x.txt |  2 +-
+ .../bindings/display/imx/fsl-imx-drm.txt           |  4 +--
+ .../devicetree/bindings/display/imx/ldb.txt        |  4 +--
+ .../display/panel/arm,versatile-tft-panel.yaml     |  2 +-
+ .../bindings/display/rockchip/rockchip-drm.yaml    |  2 +-
+ .../bindings/gpio/mediatek,mt7621-gpio.txt         |  2 +-
+ .../bindings/interrupt-controller/csky,mpintc.txt  |  2 +-
+ .../bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt   |  2 +-
+ .../devicetree/bindings/misc/olpc,xo1.75-ec.txt    |  2 +-
+ .../devicetree/bindings/net/mediatek-bluetooth.txt |  2 +-
+ .../bindings/pinctrl/renesas,pfc-pinctrl.txt       |  2 +-
+ .../devicetree/bindings/sound/audio-graph-card.txt |  2 +-
+ .../devicetree/bindings/sound/st,sti-asoc-card.txt |  2 +-
+ .../devicetree/bindings/spi/qcom,spi-geni-qcom.txt |  2 +-
+ .../bindings/thermal/thermal-sensor.yaml           |  2 +-
+ .../devicetree/bindings/thermal/thermal-zones.yaml |  2 +-
+ .../bindings/thermal/ti,am654-thermal.yaml         |  2 +-
+ .../devicetree/bindings/timer/csky,mptimer.txt     |  2 +-
+ .../devicetree/bindings/usb/aspeed,usb-vhub.yaml   |  4 +--
+ Documentation/devicetree/writing-schema.rst        |  9 +++--
+ Documentation/mips/ingenic-tcu.rst                 |  2 +-
+ MAINTAINERS                                        |  8 ++---
+ scripts/Makefile.lib                               |  7 +++-
+ scripts/dtc/checks.c                               | 39 ++++++++++++++++++++--
+ scripts/dtc/dtc.h                                  | 31 +++++++++++++++++
+ scripts/dtc/flattree.c                             |  2 +-
+ scripts/dtc/libfdt/fdt_rw.c                        |  2 +-
+ scripts/dtc/libfdt/fdt_sw.c                        |  2 +-
+ scripts/dtc/libfdt/libfdt.h                        |  8 +++++
+ scripts/dtc/treesource.c                           |  8 ++---
+ scripts/dtc/version_gen.h                          |  2 +-
+ scripts/dtc/yamltree.c                             |  6 ++--
+ 38 files changed, 159 insertions(+), 61 deletions(-)
