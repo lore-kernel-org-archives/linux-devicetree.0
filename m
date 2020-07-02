@@ -2,119 +2,172 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34040C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 11:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A837DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 11:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DB5520780
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 11:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89D6B20884
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 11:23:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Nbj0ty8X"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="tK4jwZSo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728664AbgGBLU7 (ORCPT
+        id S1728516AbgGBLX1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 07:20:59 -0400
-Received: from vps.xff.cz ([195.181.215.36]:43346 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728071AbgGBLUs (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 2 Jul 2020 07:20:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593688846; bh=OH0uafqw3wiAiFdr3Xq7r48sm5oT4+qFhajRJjz8lvE=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=Nbj0ty8XPOyIPBt+Yk3OnUCyp8Vhl4W9EOcurV0TFZyviKtjf76Lv14HmUxOY34U4
-         iyCtX5sr8gWGwYgYpzmtjYbFuAQk0RhRsOQFTjy2xiUZswkMLaQeGA+GAdclfBN+5s
-         0tmbcBzmcczTBAMIiXert+DF/+3/JuX/+Y4KR5Lc=
-From:   Ondrej Jirman <megous@megous.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     Ondrej Jirman <megous@megous.com>, Luca Weiss <luca@z3ntu.xyz>,
-        Tomas Novotny <tomas@novotny.cz>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 2/4] input: gpio-vibra: Allow to use vcc-supply alone to control the vibrator
-Date:   Thu,  2 Jul 2020 13:20:39 +0200
-Message-Id: <20200702112041.1942707-3-megous@megous.com>
-In-Reply-To: <20200702112041.1942707-1-megous@megous.com>
-References: <20200702112041.1942707-1-megous@megous.com>
+        Thu, 2 Jul 2020 07:23:27 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:30974 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728009AbgGBLX0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 07:23:26 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 062BG4IJ003106;
+        Thu, 2 Jul 2020 13:23:15 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=STMicroelectronics;
+ bh=5WRolsP7RiTQVKYQWxXnd4r13bZrvjWmpEgS8eL44Vo=;
+ b=tK4jwZSoCzqQvFoTTJc/3BLffPTvaB6X2vqCxqU71etrfo3J3A2ZSnsgdX+Fi8F15yzP
+ 7x8RQDer+5OQrNS30yHcOjEEuqExVvYsoDcdYjuk0iS4gFDomdakmL/bT8eokV95ze2f
+ NW8tMbSonOUUqCG6ybcXoRCgaJO1NdtcUhjY+2WrHG1l0mrhqRf8onRqTLzXNo+8ICwJ
+ THtV4lEfmN0Tujg28nNYIkoJgS9FfBcZqYP0BVQMjM0epfycULeqRIAGiAsq4YgUY/Ti
+ srMoj3Bn92Wt04cY1yBX2370pLrB8GxsjGjJOrhxNj6wVl14hF5pA5Bl9VCYrVeDmrQg dg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31wuk1qqj0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Jul 2020 13:23:15 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D295C10002A;
+        Thu,  2 Jul 2020 13:23:14 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B88812AFEEF;
+        Thu,  2 Jul 2020 13:23:14 +0200 (CEST)
+Received: from gnbcxd0016.gnb.st.com (10.75.127.47) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 2 Jul
+ 2020 13:23:13 +0200
+Date:   Thu, 2 Jul 2020 13:23:13 +0200
+From:   Alain Volmat <alain.volmat@st.com>
+To:     Wolfram Sang <wsa@kernel.org>
+CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <pierre-yves.mordret@st.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
+Subject: Re: [PATCH v2 1/4] i2c: smbus: add core function handling SMBus
+ host-notify
+Message-ID: <20200702112313.GE6855@gnbcxd0016.gnb.st.com>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>, robh+dt@kernel.org,
+        mark.rutland@arm.com, pierre-yves.mordret@st.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com
+References: <1593070769-9106-1-git-send-email-alain.volmat@st.com>
+ <1593070769-9106-2-git-send-email-alain.volmat@st.com>
+ <20200701104946.GH2261@ninjato>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200701104946.GH2261@ninjato>
+X-Disclaimer: ce message est personnel / this message is private
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-02_05:2020-07-02,2020-07-02 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Make enable-gpio optional to allow using this driver with boards that
-have vibrator connected to a power supply without intermediate gpio
-based enable circuitry.
+Hi Wolfram,
 
-Also avoid a case where neither regulator nor enable gpio is specified,
-and bail out in probe in such a case.
+> Okay, now I got it to work, I also noted a few more issues.
+> 
+> First, I'd suggest s/i2c_smbus_host_notify/i2c_slave_host_notify/g for
+> all occurences in this patch. This makes a stronger distinction between
+> the generic HostNotify support and the slave specific one.
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
----
- drivers/input/misc/gpio-vibra.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+Ok with that.
 
-diff --git a/drivers/input/misc/gpio-vibra.c b/drivers/input/misc/gpio-vibra.c
-index f79f75595dd7..b3bb7e61ed1d 100644
---- a/drivers/input/misc/gpio-vibra.c
-+++ b/drivers/input/misc/gpio-vibra.c
-@@ -39,7 +39,7 @@ static int gpio_vibrator_start(struct gpio_vibrator *vibrator)
- 	struct device *pdev = vibrator->input->dev.parent;
- 	int err;
- 
--	if (!vibrator->vcc_on) {
-+	if (vibrator->vcc && !vibrator->vcc_on) {
- 		err = regulator_enable(vibrator->vcc);
- 		if (err) {
- 			dev_err(pdev, "failed to enable regulator: %d\n", err);
-@@ -57,7 +57,7 @@ static void gpio_vibrator_stop(struct gpio_vibrator *vibrator)
- {
- 	gpiod_set_value_cansleep(vibrator->gpio, 0);
- 
--	if (vibrator->vcc_on) {
-+	if (vibrator->vcc && vibrator->vcc_on) {
- 		regulator_disable(vibrator->vcc);
- 		vibrator->vcc_on = false;
- 	}
-@@ -112,7 +112,7 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
- 	if (!vibrator->input)
- 		return -ENOMEM;
- 
--	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
-+	vibrator->vcc = devm_regulator_get_optional(&pdev->dev, "vcc");
- 	err = PTR_ERR_OR_ZERO(vibrator->vcc);
- 	if (err) {
- 		if (err != -EPROBE_DEFER)
-@@ -121,7 +121,8 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
- 		return err;
- 	}
- 
--	vibrator->gpio = devm_gpiod_get(&pdev->dev, "enable", GPIOD_OUT_LOW);
-+	vibrator->gpio = devm_gpiod_get_optional(&pdev->dev, "enable",
-+						 GPIOD_OUT_LOW);
- 	err = PTR_ERR_OR_ZERO(vibrator->gpio);
- 	if (err) {
- 		if (err != -EPROBE_DEFER)
-@@ -130,6 +131,11 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
- 		return err;
- 	}
- 
-+	if (!vibrator->vcc && !vibrator->gpio) {
-+		dev_err(&pdev->dev, "Neither gpio nor regulator provided\n");
-+		return -EINVAL;
-+	}
-+
- 	INIT_WORK(&vibrator->play_work, gpio_vibrator_play_work);
- 
- 	vibrator->input->name = "gpio-vibrator";
--- 
-2.27.0
+> Also, I wonder if this shouldn't go to i2c-smbus.c instead but I haven't
+> checked if we end up in dependency hell then. Second best thought: at
+> least move to i2c-core-slave.c, then we could save the #ifdeffery in the
+> c-file?
 
+I have actually difficulties to understand clearly what should go within
+i2c-smbus.c vs i2c-core-smbus or i2c-core-slave. My feeling is that
+i2c-core-slave is more about the registering of a slave rather than one usage
+of the slave mechanism. Hence I am not sure those functions/cb belong there.
+But at the same time, I don't know about i2c-smbus vs i2c-core-smbus. I putted
+it within i2c-core-smbus considering that the creation of the alert device
+is also done there.
+
+....
+
+> > +{
+> > +	struct i2c_smbus_host_notify_status *status = client->dev.platform_data;
+> > +	int ret;
+> > +
+> > +	switch (event) {
+> > +	case I2C_SLAVE_WRITE_REQUESTED:
+> > +		status->notify_start = true;
+> > +		break;
+> > +	case I2C_SLAVE_WRITE_RECEIVED:
+> > +		/* We only retrieve the first byte received (addr)
+> > +		 * since there is currently no support to retrieve the data
+> > +		 * parameter from the client.
+> > +		 */
+> > +		if (!status->notify_start)
+> > +			break;
+> > +		status->addr = *val;
+> > +		status->notify_start = false;
+> 
+> So, we are safe if the message is too short. Otherwise, we capture the
+> first byte (== address) only, right. Further bytes until STOP are
+> discarded. So, we don't check if the message is too long and contains
+> more than the status word. Maybe we should add that?
+
+Yes I modified that.
+
+> > +		break;
+> > +	case I2C_SLAVE_STOP:
+> > +		/* In case of incomplete write, don't handle host-notify */
+> > +		if (status->notify_start) {
+> > +			status->notify_start = false;
+> > +			break;
+> > +		}
+> > +
+> > +		ret = i2c_handle_smbus_host_notify(client->adapter,
+> > +						   status->addr);
+> > +		if (ret < 0)
+> > +			return ret;
+> > +		break;
+> > +	default:
+> 
+> The missing cases are mandatory. From my testunit driver:
+> 
+>         case I2C_SLAVE_READ_REQUESTED:
+>         case I2C_SLAVE_READ_PROCESSED:
+>                 *val = 0xff;
+>                 break;
+
+Ok, done as well.
+
+> > --- a/include/linux/i2c-smbus.h
+> > +++ b/include/linux/i2c-smbus.h
+> > @@ -38,6 +38,8 @@ static inline int of_i2c_setup_smbus_alert(struct i2c_adapter *adap)
+> >  	return 0;
+> >  }
+> >  #endif
+> > +struct i2c_client *i2c_new_smbus_host_notify_device(struct i2c_adapter *adapter);
+> > +void i2c_free_smbus_host_notify_device(struct i2c_client *client);
+> 
+> Those need to be guarded with I2C_SLAVE as well. And an #else branch
+> with empty/successful placeholders.
+
+Ok understood.
