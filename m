@@ -2,153 +2,201 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD5FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 08:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9683C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 08:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7422D20720
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 08:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94F5920772
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 08:18:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="TuDIr0w+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EOfkf3Dq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbgGBIOw (ORCPT
+        id S1726812AbgGBISa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 04:14:52 -0400
-Received: from vps.xff.cz ([195.181.215.36]:39322 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725379AbgGBIOv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 2 Jul 2020 04:14:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593677688; bh=a2NHJHG5QFB78AfgGChp//7c+qQXotdIBgRIWgVfJDE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=TuDIr0w+fvaEOEp60tG2KqaKHJVb92lJc4yrQ0nKOjryG4ilZm9tHPPVcTCAzrkin
-         bpjLMe/r/Q0o8YvLMcIUnIgHLLLp98RTlQzymcEaHoX3N9OUW5servjpbjFikeAIQv
-         3beDDnDl50a/QmKRZ3/YbMhgduvkQVEyF8LHALLc=
-From:   Ondrej Jirman <megous@megous.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>
-Cc:     Ondrej Jirman <megous@megous.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Samuel Holland <samuel@sholland.org>,
-        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>
-Subject: [PATCH v8 0/2] Add support for PinePhone LCD panel
-Date:   Thu,  2 Jul 2020 10:14:30 +0200
-Message-Id: <20200702081432.1727696-1-megous@megous.com>
+        Thu, 2 Jul 2020 04:18:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46220 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbgGBIS3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 04:18:29 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 486CCC08C5C1
+        for <devicetree@vger.kernel.org>; Thu,  2 Jul 2020 01:18:29 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z15so15794272wrl.8
+        for <devicetree@vger.kernel.org>; Thu, 02 Jul 2020 01:18:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Goqsrb7Ce7t40vY/t5X6+0ye6+OAJeYDs4AAa/eOL7M=;
+        b=EOfkf3Dq0/qSQcBte7Kp5ZdzPjUEc9vQk4vSMKSLpc2TSyuWMfTOgMK4lveup2EDNA
+         CIwH02j0g+zm8o0FrQATYK/Rdc4zb+UeuxONwsd55Q0ss/wpqb/vjBaHzznquUZWxDH7
+         t5G+XBrDVhOU0OzYQXdpJPhL/koIuoRj8p3rQ4nkR5oCcY1LGJcKDp6urhfzqaaqIgJf
+         hfHHZgdlb5q4v3CMvqVD/ZCqh+TWIsT7pO35h/cVFbOMATAQohgUwWKpmfU+ZsCNiaJL
+         JOfk8tZjjla+arEMcC60h1hMdOWCCSZWT3jq7beaxrhWxq0o+n2tJDZsYZelgO8ghY5K
+         gE8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Goqsrb7Ce7t40vY/t5X6+0ye6+OAJeYDs4AAa/eOL7M=;
+        b=ZnNBiXx77dUnYGBwphTJlIDR678IhWZN8y7W+VYbeUqAoehpJxb6/zIE+ghKF1BhaD
+         tH3CjVFpiexhTfPXx2a5eEslVMrQ/7b4wdCw4umKFWJsxk5l3jP2VpOncwonVQlehkhg
+         baW1r+QERs9dMx9cHwUnuqVCckG22qsHxdLPirFR9YDkF4+eN9NSRFW5frxN8mr47nPY
+         qLwBQpYjiPDzKDNUKW7K7Ntcqmr9RP54sK5qD576DFqHsfMBsleoa4f7tQr6PK36d7v0
+         nCC71Ps5+MmAOFQtZ5wVuyqZN8kFic4elL68haEABwOXwptot3d64LdlAOhZ+lqV2scL
+         Vv+A==
+X-Gm-Message-State: AOAM532S6kCiK03nI2pUBDuEZACurh/bBoAdvkORSv9+CZq7J5fTR4/t
+        HnY+NomO7I8Ajo9ybulO8duVcA==
+X-Google-Smtp-Source: ABdhPJyhoozqr8pXX2+XxVRRaH1+WgKxWUYGGjE+Uok9lR8yH3q9c5OeYs2CAar76E0ZDpmZ1DEpPQ==
+X-Received: by 2002:a5d:4bc8:: with SMTP id l8mr29831646wrt.159.1593677907893;
+        Thu, 02 Jul 2020 01:18:27 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id v7sm10166211wrp.45.2020.07.02.01.18.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 01:18:27 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 09:18:25 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>, Wolfram Sang <wsa@kernel.org>
+Cc:     robh+dt@kernel.org, broonie@kernel.org, gregkh@linuxfoundation.org,
+        andriy.shevchenko@linux.intel.com, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com, arnd@arndb.de,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/1] mfd: Add I2C based System Configuaration (SYSCON)
+ access
+Message-ID: <20200702081825.GR1179328@dell>
+References: <20200622075145.1464020-1-lee.jones@linaro.org>
+ <e436fd60bf0ebb6d72a76034d0fc35de@walle.cc>
+ <f505c52d565ba7dbf05eef895782c410@walle.cc>
+ <20200701070434.GP1179328@dell>
+ <5d1d41504172d86d395b0135923f6f02@walle.cc>
+ <20200702065412.GO1179328@dell>
+ <c20e8009fadbdc032090a493074396c8@walle.cc>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <c20e8009fadbdc032090a493074396c8@walle.cc>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patchset adds support for the LCD panel of PinePhone.
+On Thu, 02 Jul 2020, Michael Walle wrote:
 
-I've tested this on PinePhone 1.0 and 1.2.
+> Am 2020-07-02 08:54, schrieb Lee Jones:
+> > On Wed, 01 Jul 2020, Michael Walle wrote:
+> > 
+> > > Am 2020-07-01 09:04, schrieb Lee Jones:
+> > > > On Wed, 01 Jul 2020, Michael Walle wrote:
+> > > >
+> > > > > Hi Lee,
+> > > > >
+> > > > > Am 2020-06-30 11:16, schrieb Michael Walle:
+> > > > > > I'm just trying to use this for my sl28 driver. Some remarks, see below.
+> > > > > >
+> > > > > > Am 2020-06-22 09:51, schrieb Lee Jones:
+> > > > > > > The existing SYSCON implementation only supports MMIO (memory mapped)
+> > > > > > > accesses, facilitated by Regmap.  This extends support for registers
+> > > > > > > held behind I2C busses.
+> > > > > > >
+> > > > > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > > > > > > ---
+> > > > > > > Changelog:
+> > > > > > >
+> > > > > > > v3 => v4
+> > > > > > >   - Add ability to provide a non-default Regmap configuration
+> > > > > > >
+> > > > > > > v2 => v3
+> > > > > > >   - Change 'is CONFIG' present check to include loadable modules
+> > > > > > >     - s/#ifdef CONFIG_MFD_SYSCON_I2C/#if
+> > > > > > > IS_ENABLED(CONFIG_MFD_SYSCON_I2C)/
+> > > > > > >
+> > > > > > > v1 => v2
+> > > > > > >   - Remove legacy references to OF
+> > > > > > >   - Allow building as a module (fixes h8300 0-day issue)
+> > > > > > >
+> > > > > > > drivers/mfd/Kconfig            |   7 +++
+> > > > > > >  drivers/mfd/Makefile           |   1 +
+> > > > > > >  drivers/mfd/syscon-i2c.c       | 104
+> > > > > > > +++++++++++++++++++++++++++++++++
+> > > > > > >  include/linux/mfd/syscon-i2c.h |  36 ++++++++++++
+> > > > > > >  4 files changed, 148 insertions(+)
+> > > > > > >  create mode 100644 drivers/mfd/syscon-i2c.c
+> > > > > > >  create mode 100644 include/linux/mfd/syscon-i2c.h
+> > 
+> > [...]
+> > 
+> > > > > > This way, (a) a driver doesn't have to use "#include <linux/i2c.h>" just
+> > > > > > to call to_i2c_client() (or i2c_verify_client()) and (b) you won't do it
+> > > > > > all over again in all sub drivers.
+> > > > > >
+> > > > > > So you could just do a
+> > > > > >   regmap = syscon_i2c_to_regmap(pdev->dev.parent);
+> > > > > >
+> > > > > > I've also noticed that the mmio syscon uses device_node as parameter.
+> > > > > > What
+> > > > > > was the reason to divert from that? Just curious.
+> > > > >
+> > > > > How is this supposed to be used?
+> > > > >
+> > > > > I had something like the following in mind:
+> > > > >
+> > > > > &i2c {
+> > > > >   cpld@4a {
+> > > > >     compatible = "simple-mfd";
+> > > > >     reg = <0x4a>;
+> > > > >
+> > > > >     gpio@4 {
+> > > > >       compatible = "vendor,gpio";
+> > > > >       reg = <0x4>;
+> > > > >     };
+> > > > >   };
+> > > > > };
+> > > >
+> > > > Yes, that was the idea.
+> > > >
+> > > > > But I think the childen are not enumerated if its an I2C device. And
+> > > > > the actual i2c driver is also missing.
+> > > >
+> > > > What do you mean?  Can you elaborate?
+> > > 
+> > > There is no i2c_driver instance who would create the regmap.
+> > 
+> > The regmap is created by the first caller of:
+> > 
+> >  syscon_i2c_to_regmap{_config}()
+> 
+> But which one is an i2c_driver? All the sub devices are platform drivers
+> and there should be no need for them to know that they are behind an
+> i2c driver (or spi driver or just mmio). All they have to know is how
+> to access the registers.
+> 
+> > > If I'm
+> > > reading the I2C code correctly, it won't probe any i2c device of a
+> > > bus if there is no i2c_driver with an associated .probe() or
+> > > .probe_new().
+> > 
+> > Why wouldn't the children be registered using i2c_driver?
+> 
+> Where is the code which enumerates the children?
 
-Please take a look.
+Yes, I see the problem now.  So I2C devices depend on a device
+registering with the i2c_driver framework, which then probes the
+device accordingly.  Thus a physical driver is required to convert I2C
+devices to platform devices.  So this stops being an MFD problem and
+starts being a 'simple-i2c' issue. :)
 
-thank you and regards,
-  Ondrej Jirman
+(not a genuine suggestion by the way)
 
-Changes in v8:
-- Drop goodix,gt911 fallback compatible (Icenowy)
-- Drop address/size-cells from &dsi node (Maxime)
-- Drop already applied patches
-- v7->v8 diff: https://megous.com/dl/tmp/v7-v8.patch
-
-Changes in v7:
-- Removed mode.vrefresh, rebased onto next-20200701
-- v6->v7 diff: https://megous.com/dl/tmp/v6-v7.patch
-
-Changes in v6:
-- Fixed spacing in yaml
-- Fixed wrong vccio->iovcc supply name in the bindings doc
-- I noticed that the original driver uses a delay of 20ms in the init
-  function to achieve a combined total of 120ms required from post-reset
-  to display_on. I've added a similar delay to xbd599_init, so that
-  xbd599 panel also has the right timing. (patch 9)
-- v5->v6 diff: https://megous.com/dl/tmp/v5-v6.patch
-- Added review/ack tags
-- Learned to run dt_binding_check by myself ;)
-
-Changes in v5:
-- rewritten on top of rocktech-jh057n00900 driver
-- rocktech-jh057n00900 renamed to st7703 (controller name)
-- converted rocktech-jh057n00900 bindings to yaml and extended for xbd599
-
-Changes in v4:
-- use ->type from the mode instead of hardcoding (Samuel)
-- move init_sequence to ->prepare (Samuel)
-- move anti-flicker delay to ->enable, explain it (Samuel)
-- add enter_sleep after display_off (Samuel)
-- drop ->disable (move code to ->unprepare)
-- add ID bytes dumping (Linus)
-  (I can't test it since allwinner DSI driver has a broken
-   dcs_read function, and I didn't manage to fix it.)
-- document magic bytes (Linus)
-- assert reset during powerup
-- cleanup powerup timings according to the datasheet
-
-Changes in v3:
-- Panel driver renamed to the name of the LCD controller
-- Re-organize the driver slightly to more easily support more panels
-  based on the same controller.
-- Add patch to enable the touchscreen to complete the LCD support
-  on PinePhone.
-- Dropped the "DSI fix" patch (the driver seems to work for me without it)
-- Improved brightness levels handling:
-  - PinePhone 1.0 uses default levels generated by the driver
-  - On PinePhone 1.1 duty cycles < 20% lead to black screen, so
-    default levels can't be used. Martijn Braam came up with a
-    list of duty cycle values that lead to perception of linear
-    brigtness level <-> light intensity on PinePhone 1.1
-- There was some feedback on v2 about this being similar to st7701.
-  It's only similar in name. Most of the "user commands" are different,
-  so I opted to keep this in a new driver instead of creating st770x.
-  
-  Anyone who likes to check the differences, here are datasheets:
-
-  - https://megous.com/dl/tmp/ST7703_DS_v01_20160128.pdf
-  - https://megous.com/dl/tmp/ST7701.pdf
-
-Changes in v2:
-- DT Example fix.
-- DT Format fix.
-- Raised copyright info to 2020.
-- Sort panel operation functions.
-- Sort inclusion.
-
-
--- For phone owners: --
-
-There's an open question on how to set the backlight brightness values
-on post 1.0 revision phone, since lower duty cycles (< 10-20%) lead
-to backlight being black. It would be nice if more people can test
-the various backlight levels on 1.1 and 1.2 revision with this change
-in dts:
-
-       brightness-levels = <0 1000>;
-       num-interpolated-steps = <1000>;
-
-and report at what brightness level the backlight turns on. So far it
-seems this has a wide range. Lowest useable duty cycle for me is ~7%
-on 1.2 and for Martijn ~20% on 1.1.
-
-Icenowy Zheng (1):
-  arm64: dts: sun50i-a64-pinephone: Enable LCD support on PinePhone
-
-Ondrej Jirman (1):
-  arm64: dts: sun50i-a64-pinephone: Add touchscreen support
-
- .../allwinner/sun50i-a64-pinephone-1.1.dts    | 19 +++++++
- .../dts/allwinner/sun50i-a64-pinephone.dtsi   | 52 +++++++++++++++++++
- 2 files changed, 71 insertions(+)
+Wolfram, do we have this correct?
 
 -- 
-2.27.0
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
