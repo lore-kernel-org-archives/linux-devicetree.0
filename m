@@ -4,60 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40843C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 05:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE9EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 05:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FD5A207CD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 05:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3351207CD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 05:06:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D4Y7fZEl"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YiIFU9Ez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726016AbgGBFFU (ORCPT
+        id S1726082AbgGBFGb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 01:05:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44890 "EHLO
+        Thu, 2 Jul 2020 01:06:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbgGBFFU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 01:05:20 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A85DC08C5DB
-        for <devicetree@vger.kernel.org>; Wed,  1 Jul 2020 22:05:20 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id e64so22618830iof.12
-        for <devicetree@vger.kernel.org>; Wed, 01 Jul 2020 22:05:20 -0700 (PDT)
+        with ESMTP id S1725872AbgGBFGa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 01:06:30 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9477CC08C5C1
+        for <devicetree@vger.kernel.org>; Wed,  1 Jul 2020 22:06:30 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id f6so11941141ioj.5
+        for <devicetree@vger.kernel.org>; Wed, 01 Jul 2020 22:06:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ePm8K1YrKTYlTFOwBCRGn4xw8mI3+0R5ZwHfAbLgLak=;
-        b=D4Y7fZElDuKkAbGQBTP7tnXJ9yxEYcJ1+lqoyHC2Q4j4RAG70CRzK84FdG5w43sSjw
-         9IIsyPC8XLWKN4+EuqWpOq7nDJ9OrCSROZZ9x30dtGEgEwPw08WBGqZzPGLDzO+HM52/
-         Ej5TSs+VoFSZkT1ZArqjX03JDC1rNspZXsfTA=
+        bh=DZ47ETVXzGHp5M4VIrOqjcpx5J2EPuzka+sNTw7UoLE=;
+        b=YiIFU9EzsHxMnSPRgJV+5hXTLBAIc4uJVIDYOxP1TgNAasD7ugmfudln9uslpxSqCo
+         bI8Be59+9bB0NM83obWqjiLQ/dztYsTfJyOFRHR/WaoV9SaJJQLAXLMvfyFi1iSbGqjf
+         tdiBbpWUqegEUpnwwR4dfHXAoBWk/tnXgKw6g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ePm8K1YrKTYlTFOwBCRGn4xw8mI3+0R5ZwHfAbLgLak=;
-        b=meTJoWiXOOsNjZg21G2EEEcPmLGY3WD7rY3/g3zElRwhoLaNg8xPH6GdDkscIIm2/J
-         1Gr/XQAoARKxyk5c0G3154R5BPKvL0YA1aYZsVGg6f40lxIOFLMPb34p6MotqNL6pkFu
-         EhYYJirgEpm5IXOPpraeoCXGLB0xuJxz+TyTTNiTej37vwqYucNU2ikZZZHvNsDkArQq
-         dtWOwi4+P5WHFnHSEa3tBLMBAaoKzXE1SVSwTV2JQ/mVRgMPeVAVtoobDiPAO1N5/DRQ
-         8+oYOrVdL0GUTREXeObovvm99rANNLRd8m7C+4NAenUvwgC0/t7FOJfDdTa5zkDD5Tp3
-         FZLg==
-X-Gm-Message-State: AOAM53316o4LNKmJdjQvbaRIGjNJ7M+CX/vK+YZIQeabFPco1Wh0+FzM
-        g33Td7BgeIxgxnkiAy5NEfVOHbUO/OBHUtKGV9W+LQ==
-X-Google-Smtp-Source: ABdhPJw2kPVQNy2tWis10zqAhHf5YpNiIQG11abVlOkUAhNPPsHAqxRbxQbJ1oKec7GIt0IdmyqCbGzt0U1S+2n9eq8=
-X-Received: by 2002:a05:6602:2295:: with SMTP id d21mr5736965iod.0.1593666319420;
- Wed, 01 Jul 2020 22:05:19 -0700 (PDT)
+        bh=DZ47ETVXzGHp5M4VIrOqjcpx5J2EPuzka+sNTw7UoLE=;
+        b=sL/qBkBRF+fgQi6OqmlyrLJyDjx+IwA60inTqAAMgcq2VlFYMfRLLpXAHWFcEunnJ4
+         TeR49bjuViCJbhkT/QIGi3tF9o3RNKfLfjMER1kAHbSEOrbx0CVceY6sXMArqZJXfDj9
+         iAK7qqM4ocSc0PlGEanVADjywIUA4fzqf1HtsZisZ3B88f/nA7dwcKb8JUUs+gTt632W
+         FQivtdUH/SXuMqWjmSUEENSNe1NAUlil7GzHtS1eJSUhz+iG4AM2rfMgjeqK1XpZ3YRo
+         w1HIcIy40M06pGOLVb6Du1bKIUuACGXGeaCzQcrPuiVpxt2TN0LooeeCVkGkF5SP3qyJ
+         jUuw==
+X-Gm-Message-State: AOAM533pxEBfIC/b+OBmqs4Ph9Ldq5w05Xf5vD7oVtoKJD94ww9dn8Wp
+        R3yv3HK5H/Ctprcu4YTW6wCx9+z7nKCgqVG3+XtRog==
+X-Google-Smtp-Source: ABdhPJzXw2DJHMGPSNP3awNApXu2clvWat6Vu+oQBLrbrBdFY9gePO9d3eY2YBFghqwYnLGIJTWjaNOpeeVxcJb0HU4=
+X-Received: by 2002:a05:6602:148d:: with SMTP id a13mr5868932iow.44.1593666389992;
+ Wed, 01 Jul 2020 22:06:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200625101757.101775-1-enric.balletbo@collabora.com> <20200625101757.101775-3-enric.balletbo@collabora.com>
-In-Reply-To: <20200625101757.101775-3-enric.balletbo@collabora.com>
+References: <20200625101757.101775-1-enric.balletbo@collabora.com> <20200625101757.101775-4-enric.balletbo@collabora.com>
+In-Reply-To: <20200625101757.101775-4-enric.balletbo@collabora.com>
 From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Thu, 2 Jul 2020 13:04:53 +0800
-Message-ID: <CAJMQK-hGg0QUjZsWN3rXzbZVD3DQEmOjkcoJixEn7YfKRMC==g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/7] arm64: dts: mt6358: Add the compatible for the regulators
+Date:   Thu, 2 Jul 2020 13:06:04 +0800
+Message-ID: <CAJMQK-iJsoZ-beetO58-d2tit0Oq22SGnBKuPY0jSfbtJVFLeQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/7] arm64: dts: mt8183: Add MediaTek's peripheral
+ configuration controller
 To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Cc:     lkml <linux-kernel@vger.kernel.org>,
         Collabora Kernel ML <kernel@collabora.com>,
@@ -78,9 +79,8 @@ X-Mailing-List: devicetree@vger.kernel.org
 On Thu, Jun 25, 2020 at 6:18 PM Enric Balletbo i Serra
 <enric.balletbo@collabora.com> wrote:
 >
-> The regulators are expected to be instantiated with matching the
-> device-tree compatible, so add the proper compatible name under the
-> regulators node.
+> The MediaTek's peripheral configuration controller is present on the
+> MT8183 SoC. Add the node for that controller.
 >
 > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Tested-by: Hsin-Yi Wang <hsinyi@chromium.org>
@@ -88,22 +88,26 @@ Tested-by: Hsin-Yi Wang <hsinyi@chromium.org>
 >
 > Changes in v2: None
 >
->  arch/arm64/boot/dts/mediatek/mt6358.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
+>  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
 >
-> diff --git a/arch/arm64/boot/dts/mediatek/mt6358.dtsi b/arch/arm64/boot/dts/mediatek/mt6358.dtsi
-> index 9361ada0c497e..fa159b20379e4 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt6358.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt6358.dtsi
-> @@ -16,6 +16,8 @@ mt6358codec: mt6358codec {
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> index 1e03c849dc5d6..00137ec61164d 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> @@ -285,6 +285,12 @@ infracfg: syscon@10001000 {
+>                         #reset-cells = <1>;
 >                 };
 >
->                 mt6358regulator: mt6358regulator {
-> +                       compatible = "mediatek,mt6358-regulator";
+> +               pericfg: syscon@10003000 {
+> +                       compatible = "mediatek,mt8183-pericfg", "syscon";
+> +                       reg = <0 0x10003000 0 0x1000>;
+> +                       #clock-cells = <1>;
+> +               };
 > +
->                         mt6358_vdram1_reg: buck_vdram1 {
->                                 regulator-name = "vdram1";
->                                 regulator-min-microvolt = <500000>;
+>                 pio: pinctrl@10005000 {
+>                         compatible = "mediatek,mt8183-pinctrl";
+>                         reg = <0 0x10005000 0 0x1000>,
 > --
 > 2.27.0
 >
