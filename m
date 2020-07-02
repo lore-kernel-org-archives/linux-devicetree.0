@@ -2,127 +2,185 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E45CFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 09:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 762F7C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 09:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3F842088E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 09:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5284B20702
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 09:13:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="ON/Ul8j0"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Z5NTFwts"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgGBJDe (ORCPT
+        id S1726756AbgGBJM7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 05:03:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53262 "EHLO
+        Thu, 2 Jul 2020 05:12:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbgGBJDe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 05:03:34 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C46EC08C5DC
-        for <devicetree@vger.kernel.org>; Thu,  2 Jul 2020 02:03:34 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id d194so9782842pga.13
-        for <devicetree@vger.kernel.org>; Thu, 02 Jul 2020 02:03:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YjUk73CIPNmxb/gdoNk6S5t7bf881nraTdpuxxoiTMI=;
-        b=ON/Ul8j0o0JNHF2o/1DvmtpFLhAUE8RtMf1CyujbGLJ/IZ/TdWmSeyQpdm68wMyz88
-         54AnCx5tqWP50x9DvQTOGkR2icvM5j4pw/hgMISV79yE7rngu6CkjpqgOyxWS0bf8aXd
-         /zXU9/Wp7OpjxGbcYPW8lCUzedugMJxnhFBsQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YjUk73CIPNmxb/gdoNk6S5t7bf881nraTdpuxxoiTMI=;
-        b=AUP+L7eLRwZytGM0CD8jarTCOOUFf2NelpkpP9xqd9Y2ZBTchCF8GCwcC3cz9VSIIo
-         4QKepR4TVRB/PPii4QV7K4eSEuX1sjLdDS/biHsBYVi3uRpfl4EPuRShTSmNgIqQ+4tO
-         DlnRXAMqAd/GaUxhwtQwQLR+wgP2ZywAi9kY+zwJyAL7+TsgunQPTey5HFK2yNT4siH0
-         KX01GKBMfhFvPrlB8DAMkW7OKuJw6LJ+EDbt2Vwcy1QYM9Bl9TNPOIn9ct0ji8gx2mp/
-         Y03nPQpILtdA4HowE0rJW29SXM4jo77xNIOVIZfKjjlOkCPghbQo8eJH4ggzG6qGVIx4
-         4hLw==
-X-Gm-Message-State: AOAM531OsT+fE3KkkX5pKfViqOd5HlN9nh8bRfGYM02Fib6PxNy7ZIYV
-        LxAwnTdruarhKyweBIbs722BBw==
-X-Google-Smtp-Source: ABdhPJw6Koh/B5/rpA4HQqjMOhYVzJ/2d/c9CUB3NCC7j0V6gZGi+4cBT5v8CIzZQiKZ+68ySxna8A==
-X-Received: by 2002:aa7:9a84:: with SMTP id w4mr16671552pfi.13.1593680613239;
-        Thu, 02 Jul 2020 02:03:33 -0700 (PDT)
-Received: from localhost.localdomain ([2405:201:c809:c7d5:a961:9b2e:1b93:8ca7])
-        by smtp.gmail.com with ESMTPSA id y7sm7594800pjy.21.2020.07.02.02.03.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 02:03:32 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        mylene.josserand@collabora.com
-Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        William Wu <william.wu@rock-chips.com>
-Subject: [PATCH] ARM: dts: rockchip: Add usb host0 ohci node for rk3288
-Date:   Thu,  2 Jul 2020 14:32:59 +0530
-Message-Id: <20200702090259.36595-1-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S1726183AbgGBJM7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 05:12:59 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8278C08C5C1;
+        Thu,  2 Jul 2020 02:12:58 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id AC46622EEB;
+        Thu,  2 Jul 2020 11:12:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1593681177;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=sYkGBHvaNTyBI74MG9qO6W/wGpDKi9edSCvGAhgdkmw=;
+        b=Z5NTFwtsFTYlze4XpyzMl067BvWkIbwhHTjSbiqKRE16dig9ea7I8Zhk/I9+hsAgGHhoHk
+        4pPkMKBrrjJp3+gbmZNXUe5DHCPV8JllhP1smmyGy3tt6bg4fn+kz2tky67/5dmfpzXYK1
+        eiaDSv/hOT3BDEbjpFFUsNa07btoD34=
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 02 Jul 2020 11:12:56 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Wolfram Sang <wsa@kernel.org>, robh+dt@kernel.org,
+        broonie@kernel.org, gregkh@linuxfoundation.org,
+        andriy.shevchenko@linux.intel.com, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com, arnd@arndb.de,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/1] mfd: Add I2C based System Configuaration (SYSCON)
+ access
+In-Reply-To: <20200702081825.GR1179328@dell>
+References: <20200622075145.1464020-1-lee.jones@linaro.org>
+ <e436fd60bf0ebb6d72a76034d0fc35de@walle.cc>
+ <f505c52d565ba7dbf05eef895782c410@walle.cc> <20200701070434.GP1179328@dell>
+ <5d1d41504172d86d395b0135923f6f02@walle.cc> <20200702065412.GO1179328@dell>
+ <c20e8009fadbdc032090a493074396c8@walle.cc> <20200702081825.GR1179328@dell>
+User-Agent: Roundcube Webmail/1.4.6
+Message-ID: <58ae64ebf22707ad1725987615b355c2@walle.cc>
+X-Sender: michael@walle.cc
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-rk3288 and rk3288w have a usb host0 ohci controller.
+Am 2020-07-02 10:18, schrieb Lee Jones:
+> On Thu, 02 Jul 2020, Michael Walle wrote:
+> 
+>> Am 2020-07-02 08:54, schrieb Lee Jones:
+>> > On Wed, 01 Jul 2020, Michael Walle wrote:
+>> >
+>> > > Am 2020-07-01 09:04, schrieb Lee Jones:
+>> > > > On Wed, 01 Jul 2020, Michael Walle wrote:
+>> > > >
+>> > > > > Hi Lee,
+>> > > > >
+>> > > > > Am 2020-06-30 11:16, schrieb Michael Walle:
+>> > > > > > I'm just trying to use this for my sl28 driver. Some remarks, see below.
+>> > > > > >
+>> > > > > > Am 2020-06-22 09:51, schrieb Lee Jones:
+>> > > > > > > The existing SYSCON implementation only supports MMIO (memory mapped)
+>> > > > > > > accesses, facilitated by Regmap.  This extends support for registers
+>> > > > > > > held behind I2C busses.
+>> > > > > > >
+>> > > > > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+>> > > > > > > ---
+>> > > > > > > Changelog:
+>> > > > > > >
+>> > > > > > > v3 => v4
+>> > > > > > >   - Add ability to provide a non-default Regmap configuration
+>> > > > > > >
+>> > > > > > > v2 => v3
+>> > > > > > >   - Change 'is CONFIG' present check to include loadable modules
+>> > > > > > >     - s/#ifdef CONFIG_MFD_SYSCON_I2C/#if
+>> > > > > > > IS_ENABLED(CONFIG_MFD_SYSCON_I2C)/
+>> > > > > > >
+>> > > > > > > v1 => v2
+>> > > > > > >   - Remove legacy references to OF
+>> > > > > > >   - Allow building as a module (fixes h8300 0-day issue)
+>> > > > > > >
+>> > > > > > > drivers/mfd/Kconfig            |   7 +++
+>> > > > > > >  drivers/mfd/Makefile           |   1 +
+>> > > > > > >  drivers/mfd/syscon-i2c.c       | 104
+>> > > > > > > +++++++++++++++++++++++++++++++++
+>> > > > > > >  include/linux/mfd/syscon-i2c.h |  36 ++++++++++++
+>> > > > > > >  4 files changed, 148 insertions(+)
+>> > > > > > >  create mode 100644 drivers/mfd/syscon-i2c.c
+>> > > > > > >  create mode 100644 include/linux/mfd/syscon-i2c.h
+>> >
+>> > [...]
+>> >
+>> > > > > > This way, (a) a driver doesn't have to use "#include <linux/i2c.h>" just
+>> > > > > > to call to_i2c_client() (or i2c_verify_client()) and (b) you won't do it
+>> > > > > > all over again in all sub drivers.
+>> > > > > >
+>> > > > > > So you could just do a
+>> > > > > >   regmap = syscon_i2c_to_regmap(pdev->dev.parent);
+>> > > > > >
+>> > > > > > I've also noticed that the mmio syscon uses device_node as parameter.
+>> > > > > > What
+>> > > > > > was the reason to divert from that? Just curious.
+>> > > > >
+>> > > > > How is this supposed to be used?
+>> > > > >
+>> > > > > I had something like the following in mind:
+>> > > > >
+>> > > > > &i2c {
+>> > > > >   cpld@4a {
+>> > > > >     compatible = "simple-mfd";
+>> > > > >     reg = <0x4a>;
+>> > > > >
+>> > > > >     gpio@4 {
+>> > > > >       compatible = "vendor,gpio";
+>> > > > >       reg = <0x4>;
+>> > > > >     };
+>> > > > >   };
+>> > > > > };
+>> > > >
+>> > > > Yes, that was the idea.
+>> > > >
+>> > > > > But I think the childen are not enumerated if its an I2C device. And
+>> > > > > the actual i2c driver is also missing.
+>> > > >
+>> > > > What do you mean?  Can you elaborate?
+>> > >
+>> > > There is no i2c_driver instance who would create the regmap.
+>> >
+>> > The regmap is created by the first caller of:
+>> >
+>> >  syscon_i2c_to_regmap{_config}()
+>> 
+>> But which one is an i2c_driver? All the sub devices are platform 
+>> drivers
+>> and there should be no need for them to know that they are behind an
+>> i2c driver (or spi driver or just mmio). All they have to know is how
+>> to access the registers.
+>> 
+>> > > If I'm
+>> > > reading the I2C code correctly, it won't probe any i2c device of a
+>> > > bus if there is no i2c_driver with an associated .probe() or
+>> > > .probe_new().
+>> >
+>> > Why wouldn't the children be registered using i2c_driver?
+>> 
+>> Where is the code which enumerates the children?
+> 
+> Yes, I see the problem now.  So I2C devices depend on a device
+> registering with the i2c_driver framework, which then probes the
+> device accordingly.  Thus a physical driver is required to convert I2C
+> devices to platform devices.  So this stops being an MFD problem and
+> starts being a 'simple-i2c' issue. :)
 
-Although rk3288 ohci doesn't actually work on hardware, but
-rk3288w ohci can work well.
+Yes, but this is still MFD specifc, because no other normal (in lack of
+a better word, think of one-function-devices) I2C device has sub-nodes.
+Thus my proposal for that simple-mfd-i2c driver. And keep in mind that
+this likely isn't specific to I2C but also to SPI (without having
+looked at it). So in theory that simple-mfd-i2c, could also register
+a spi_driver which then registers an SPI regmap and enumerates the
+children. So this is not only an I2C topic, but IMHO still MFD.
 
-So add usb host0 ohci node in rk3288 dtsi and the quirk in
-ohci platform driver will disable ohci on rk3288.
-
-The bootloader must update the compatible in order to bypass
-host0_ohci in legacy rk3288 platform.
-
-Cc: William Wu <william.wu@rock-chips.com>
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Note:
-- U-Boot patch for compatible update
-https://patchwork.ozlabs.org/project/uboot/patch/20200702084820.35942-1-jagan@amarulasolutions.com/
-
- arch/arm/boot/dts/rk3288.dtsi | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 0cd88774db95..fd0066d07dfc 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -614,7 +614,19 @@ usb_host0_ehci: usb@ff500000 {
- 		status = "disabled";
- 	};
- 
--	/* NOTE: ohci@ff520000 doesn't actually work on hardware */
-+	/**
-+	 * NOTE: ohci@ff520000 doesn't actually work on hardware
-+	 * hardware, but can work on rk3288w hardware.
-+	 */
-+	usb_host0_ohci: usb@ff520000 {
-+		compatible = "generic-ohci";
-+		reg = <0x0 0xff520000 0x0 0x100>;
-+		interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru HCLK_USBHOST0>;
-+		phys = <&usbphy1>;
-+		phy-names = "usb";
-+		status = "disabled";
-+	};
- 
- 	usb_host1: usb@ff540000 {
- 		compatible = "rockchip,rk3288-usb", "rockchip,rk3066-usb",
--- 
-2.25.1
-
+-michael
