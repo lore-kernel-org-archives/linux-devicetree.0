@@ -2,94 +2,193 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDCEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 07:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5A2C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 07:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 681BE2089D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 07:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5594220874
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 07:14:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="lwK4IVIn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bh3F4Uz6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727062AbgGBHGX (ORCPT
+        id S1726789AbgGBHOH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 03:06:23 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:13941 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727046AbgGBHGW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 03:06:22 -0400
-X-UUID: 890ff4b72342461bb52ca7766ec68252-20200702
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=rVJ/HR/KXQAiejqufqXGDKDnW4GEgj2c2Tw9QevZ/Sk=;
-        b=lwK4IVInQgeEFgsNLdTz42L61dgiWpsW+TA2LitjH5Lr9eiI2J9ItZN3tcuBXnZbSixq23BJQap+byi70nev7LT1Kjoo3LNCmDY5R2g2nffY7JERVAhevPMzz2u5TCGJUztQr9DLorlaAQ3ycUn0gF57w1rxcCCzscldtorwKE8=;
-X-UUID: 890ff4b72342461bb52ca7766ec68252-20200702
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <eastl.lee@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1715574752; Thu, 02 Jul 2020 15:06:17 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 2 Jul 2020 15:06:14 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 2 Jul 2020 15:06:09 +0800
-From:   EastL Lee <EastL.Lee@mediatek.com>
-To:     Sean Wang <sean.wang@mediatek.com>
-CC:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <matthias.bgg@gmail.com>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, <cc.hwang@mediatek.com>,
-        EastL Lee <EastL.Lee@mediatek.com>
-Subject: [PATCH v6 3/4] dmaengine: mediatek-cqdma: add dma mask for capability
-Date:   Thu, 2 Jul 2020 15:06:03 +0800
-Message-ID: <1593673564-4425-4-git-send-email-EastL.Lee@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1593673564-4425-1-git-send-email-EastL.Lee@mediatek.com>
-References: <1593673564-4425-1-git-send-email-EastL.Lee@mediatek.com>
+        Thu, 2 Jul 2020 03:14:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36342 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726092AbgGBHOG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 03:14:06 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2B5AC08C5C1
+        for <devicetree@vger.kernel.org>; Thu,  2 Jul 2020 00:14:05 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z13so26827486wrw.5
+        for <devicetree@vger.kernel.org>; Thu, 02 Jul 2020 00:14:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=o3u4LNhkJvyuHomAjDNCPqfO0iOI8WQ8Jc/N74gTZGE=;
+        b=Bh3F4Uz6YB/0oYpUDIgJJC26ObFmRQmCjUjz6QKfjTaHwZDtwvglp+SC3/lQmchtyx
+         Ugxzw+/Tu0aIpDjxxQGAFhIu2QXkvEgZo2eyES3kOcTdLjQ1iVg9a6ud9wONt2t+pEp6
+         UrP27DG1Wd/GaTShP0jJgUj0YKloJbkUGEO01JVOHfE6zZb4FT5uYBvek4DDbYMwXzOw
+         EG9wp9faC33NPccfRsuRKZHs7PwnFbxTwbgIOSSe2RfaVkqwFMODRq/K+TrItjJLu5o4
+         YCfE53/YeCPZelKwxN3NlLfFEmRcA24sIlCQ+O0cauFOPcpzLq91xkUKjsNjsUCi/7ZF
+         71+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=o3u4LNhkJvyuHomAjDNCPqfO0iOI8WQ8Jc/N74gTZGE=;
+        b=mws0dk0VXQVVS+qjV2Ya8CklvU7+aqnXm9QHbzCzTEGSnTeiDuQQMxadRcqcPkfq93
+         HEEMGY1/dSxjCT0bsIX+UA6AYz3iH3OYH99dCuE7CwwnVxZp44qDb5x/7allOeC6UkIM
+         PO1GvBbfE0kvwig9iVARiT3BfJZN6j+LVhGtHqtVlGSAumx3UxSys3faxTQYqO6FEgB1
+         cYqlE/022ZNdYoY0kRZmM0ajmj5Y8XPUvlW1vcaT4i/j2MTtyv1NYU0NjezKZHxdmz3v
+         NpcKV+UTtYD17Di6JG1ic52Ney6x1YtqgLp4uQM/oy+uPDiJmjGavbc0fXH/0kGRB7aJ
+         bmNA==
+X-Gm-Message-State: AOAM533cqVpBOvVTs7vo8/DwRgBX/0nqOZKvwuTdBUNDVi6Uo4QkQzyG
+        6UGaCiLlX2SOqEbiGLloBSrMJA==
+X-Google-Smtp-Source: ABdhPJyhSbGW5S3al7dh0ndzsIo6zEVlOOXxDH0ER4Uy/aPfzgwtUwutAHOtsWcSaMkhJYjFmfBFqQ==
+X-Received: by 2002:adf:c3c7:: with SMTP id d7mr29132402wrg.51.1593674044679;
+        Thu, 02 Jul 2020 00:14:04 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id 104sm10289770wrl.25.2020.07.02.00.14.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 00:14:04 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 08:14:02 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     robh+dt@kernel.org, broonie@kernel.org, gregkh@linuxfoundation.org,
+        andriy.shevchenko@linux.intel.com, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com, arnd@arndb.de,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/1] mfd: Add I2C based System Configuaration (SYSCON)
+ access
+Message-ID: <20200702071402.GP1179328@dell>
+References: <20200622075145.1464020-1-lee.jones@linaro.org>
+ <e436fd60bf0ebb6d72a76034d0fc35de@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e436fd60bf0ebb6d72a76034d0fc35de@walle.cc>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGQgZG1hIG1hc2sgZm9yIGNhcGFiaWxpdHkuDQoNClNpZ25lZC1vZmYtYnk6
-IEVhc3RMIExlZSA8RWFzdEwuTGVlQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvZG1hL21l
-ZGlhdGVrL210ay1jcWRtYS5jIHwgMTcgKysrKysrKysrKysrKysrKysNCiAxIGZpbGUgY2hhbmdl
-ZCwgMTcgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9kbWEvbWVkaWF0ZWsv
-bXRrLWNxZG1hLmMgYi9kcml2ZXJzL2RtYS9tZWRpYXRlay9tdGstY3FkbWEuYw0KaW5kZXggOTA1
-YmJjYi4uMTYxMDYzMiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZG1hL21lZGlhdGVrL210ay1jcWRt
-YS5jDQorKysgYi9kcml2ZXJzL2RtYS9tZWRpYXRlay9tdGstY3FkbWEuYw0KQEAgLTExNyw2ICsx
-MTcsNyBAQCBzdHJ1Y3QgbXRrX2NxZG1hX3ZjaGFuIHsNCiAgKiBAY2xrOiAgICAgICAgICAgICAg
-ICAgICAgVGhlIGNsb2NrIHRoYXQgZGV2aWNlIGludGVybmFsIGlzIHVzaW5nDQogICogQGRtYV9y
-ZXF1ZXN0czogICAgICAgICAgIFRoZSBudW1iZXIgb2YgVkNzIHRoZSBkZXZpY2Ugc3VwcG9ydHMg
-dG8NCiAgKiBAZG1hX2NoYW5uZWxzOiAgICAgICAgICAgVGhlIG51bWJlciBvZiBQQ3MgdGhlIGRl
-dmljZSBzdXBwb3J0cyB0bw0KKyAqIEBkbWFfbWFzazogICAgICAgICAgICAgICBBIG1hc2sgZm9y
-IERNQSBjYXBhYmlsaXR5DQogICogQHZjOiAgICAgICAgICAgICAgICAgICAgIFRoZSBwb2ludGVy
-IHRvIGFsbCBhdmFpbGFibGUgVkNzDQogICogQHBjOiAgICAgICAgICAgICAgICAgICAgIFRoZSBw
-b2ludGVyIHRvIGFsbCB0aGUgdW5kZXJseWluZyBQQ3MNCiAgKi8NCkBAIC0xMjYsNiArMTI3LDcg
-QEAgc3RydWN0IG10a19jcWRtYV9kZXZpY2Ugew0KIA0KIAl1MzIgZG1hX3JlcXVlc3RzOw0KIAl1
-MzIgZG1hX2NoYW5uZWxzOw0KKwl1MzIgZG1hX21hc2s7DQogCXN0cnVjdCBtdGtfY3FkbWFfdmNo
-YW4gKnZjOw0KIAlzdHJ1Y3QgbXRrX2NxZG1hX3BjaGFuICoqcGM7DQogfTsNCkBAIC02MDcsNiAr
-NjA5LDIxIEBAIHN0YXRpYyBpbnQgbXRrX2NxZG1hX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZp
-Y2UgKnBkZXYpDQogCQljcWRtYS0+ZG1hX2NoYW5uZWxzID0gTVRLX0NRRE1BX05SX1BDSEFOUzsN
-CiAJfQ0KIA0KKwlpZiAocGRldi0+ZGV2Lm9mX25vZGUpDQorCQllcnIgPSBvZl9wcm9wZXJ0eV9y
-ZWFkX3UzMihwZGV2LT5kZXYub2Zfbm9kZSwNCisJCQkJCSAgICJkbWEtY2hhbm5lbC1tYXNrIiwN
-CisJCQkJCSAgICZjcWRtYS0+ZG1hX21hc2spOw0KKwlpZiAoZXJyKSB7DQorCQlkZXZfd2Fybigm
-cGRldi0+ZGV2LA0KKwkJCSAiVXNpbmcgMCBhcyBtaXNzaW5nIGRtYS1jaGFubmVsLW1hc2sgcHJv
-cGVydHlcbiIpOw0KKwkJY3FkbWEtPmRtYV9tYXNrID0gMDsNCisJfQ0KKw0KKwlpZiAoZG1hX3Nl
-dF9tYXNrKCZwZGV2LT5kZXYsIERNQV9CSVRfTUFTSyhjcWRtYS0+ZG1hX21hc2spKSkgew0KKwkJ
-ZGV2X3dhcm4oJnBkZXYtPmRldiwgIkRNQSBzZXQgbWFzayBmYWlsZWRcbiIpOw0KKwkJcmV0dXJu
-IC1FSU5WQUw7DQorCX0NCisNCiAJY3FkbWEtPnBjID0gZGV2bV9rY2FsbG9jKCZwZGV2LT5kZXYs
-IGNxZG1hLT5kbWFfY2hhbm5lbHMsDQogCQkJCSBzaXplb2YoKmNxZG1hLT5wYyksIEdGUF9LRVJO
-RUwpOw0KIAlpZiAoIWNxZG1hLT5wYykNCi0tIA0KMS45LjENCg==
+On Tue, 30 Jun 2020, Michael Walle wrote:
 
+> Hi Lee,
+> 
+> I'm just trying to use this for my sl28 driver. Some remarks, see below.
+> 
+> Am 2020-06-22 09:51, schrieb Lee Jones:
+> > The existing SYSCON implementation only supports MMIO (memory mapped)
+> > accesses, facilitated by Regmap.  This extends support for registers
+> > held behind I2C busses.
+> > 
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> > Changelog:
+> > 
+> > v3 => v4
+> >   - Add ability to provide a non-default Regmap configuration
+> > 
+> > v2 => v3
+> >   - Change 'is CONFIG' present check to include loadable modules
+> >     - s/#ifdef CONFIG_MFD_SYSCON_I2C/#if
+> > IS_ENABLED(CONFIG_MFD_SYSCON_I2C)/
+> > 
+> > v1 => v2
+> >   - Remove legacy references to OF
+> >   - Allow building as a module (fixes h8300 0-day issue)
+> > 
+> > drivers/mfd/Kconfig            |   7 +++
+> >  drivers/mfd/Makefile           |   1 +
+> >  drivers/mfd/syscon-i2c.c       | 104 +++++++++++++++++++++++++++++++++
+> >  include/linux/mfd/syscon-i2c.h |  36 ++++++++++++
+> >  4 files changed, 148 insertions(+)
+> >  create mode 100644 drivers/mfd/syscon-i2c.c
+> >  create mode 100644 include/linux/mfd/syscon-i2c.h
+> > 
+> 
+> [..]
+> 
+> > +static struct regmap *syscon_i2c_get_regmap(struct i2c_client *client,
+> > +					    struct regmap_config *regmap_config)
+> > +{
+> > +	struct device *dev = &client->dev;
+> > +	struct syscon *entry, *syscon = NULL;
+> > +
+> > +	spin_lock(&syscon_i2c_list_slock);
+> > +
+> > +	list_for_each_entry(entry, &syscon_i2c_list, list)
+> > +		if (entry->dev == dev) {
+> > +			syscon = entry;
+> > +			break;
+> > +		}
+> > +
+> > +	spin_unlock(&syscon_i2c_list_slock);
+> > +
+> > +	if (!syscon)
+> > +		syscon = syscon_i2c_register(client, regmap_config);
+> > +
+> > +	if (IS_ERR(syscon))
+> > +		return ERR_CAST(syscon);
+> > +
+> > +	return syscon->regmap;
+> > +}
+> > +
+> > +struct regmap *syscon_i2c_to_regmap_config(struct i2c_client *client,
+> > +					   struct regmap_config *regmap_config)
+> > +{
+> > +	return syscon_i2c_get_regmap(client, regmap_config);
+> > +}
+> > +EXPORT_SYMBOL_GPL(syscon_i2c_to_regmap_config);
+> > +
+> > +struct regmap *syscon_i2c_to_regmap(struct i2c_client *client)
+> > +{
+> > +	return syscon_i2c_get_regmap(client, &syscon_i2c_regmap_config);
+> > +}
+> > +EXPORT_SYMBOL_GPL(syscon_i2c_to_regmap);
+> 
+> What do you think about
+> 
+> struct regmap *syscon_i2c_to_regmap(struct device *dev)
+> {
+> 	struct i2c_client *client = i2c_verify_client(dev);
+> 
+> 	if (!client)
+> 		return ERR_PTR(-EINVAL);
+> 
+> 	return syscon_i2c_get_regmap(client, &syscon_i2c_regmap_config);
+> }
+> 
+> Or even move it to syscon_i2c_get_regmap().
+> 
+> This way, (a) a driver doesn't have to use "#include <linux/i2c.h>" just
+> to call to_i2c_client() (or i2c_verify_client()) and (b) you won't do it
+> all over again in all sub drivers.
+
+What is your use-case?  This is set-up for based I2C drivers to call
+into.  'client' is given to them as their .probe() arg.
+
+> So you could just do a
+>   regmap = syscon_i2c_to_regmap(pdev->dev.parent);
+> 
+> I've also noticed that the mmio syscon uses device_node as parameter. What
+> was the reason to divert from that? Just curious.
+
+This is a helper for I2C clients.  There aren't any OF helpers in here
+(yet).  If you think they would be helpful we can add them.  How do
+you see them being used?
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
