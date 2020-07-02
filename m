@@ -2,165 +2,107 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40743C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 15:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6775C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 16:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DFCB20771
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 15:52:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593705151;
-	bh=I36yVrLD52E/RNQ64kKYCYzRpU8aZRVCVCHAH3Jt6To=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZTjGmTA6f51IIn6K3UZ7LTBk260RCT5hr9CKrUkuu/H5KOM6oRbtT/9SI2UbpgRow
-	 VpT2eZDILtMdDeD9hVdug6YX0tNdqBcSOwq9+Xl+cOsSIMVFvItG/2NGaPv/SNheb/
-	 vINBesz4eOdkqmDhL0RFbbHLeq55/0LDgG0nS39E=
+	by mail.kernel.org (Postfix) with ESMTP id ADF8A20720
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 16:20:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L5eD/yDv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbgGBPwa (ORCPT
+        id S1726140AbgGBQUl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 11:52:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33992 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726578AbgGBPw2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 2 Jul 2020 11:52:28 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.195])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 951392088E;
-        Thu,  2 Jul 2020 15:52:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593705147;
-        bh=I36yVrLD52E/RNQ64kKYCYzRpU8aZRVCVCHAH3Jt6To=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rdPw6mCwzH8sNJ1IKEERZj30LyaFqfuu1D/+fYhA841U3Rj9qCsBltZXGQVICjD9T
-         m78dIvqGCPo+D6KsOoArSyU3JcLRGqnUaTzm9QmTqp1zrQRNuH4y9mLE9uE10zVX7g
-         MNh5mpDTIEEUkYf1RhFeOUWNNy9cn/mZLMTeoMew=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: [PATCH v2 8/8] ARM: dts: exynos: Define fixed regulators in root node for consistency in SMDK5420
-Date:   Thu,  2 Jul 2020 17:51:49 +0200
-Message-Id: <20200702155149.12854-8-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200702155149.12854-1-krzk@kernel.org>
-References: <20200702155149.12854-1-krzk@kernel.org>
+        Thu, 2 Jul 2020 12:20:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36626 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbgGBQUl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 12:20:41 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAD88C08C5C1
+        for <devicetree@vger.kernel.org>; Thu,  2 Jul 2020 09:20:40 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id n23so33020747ljh.7
+        for <devicetree@vger.kernel.org>; Thu, 02 Jul 2020 09:20:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=to6+D5f8O6QjVCBzMxdSKQZOKqML3sVNgqs+L1fyNoo=;
+        b=L5eD/yDve1SL5FOrb16xd3UrwkLFF6E6YsAD55G8ud4Q/KznFilBy9mhPrFPdpt1nv
+         4Im+BKJR2iU1Be9kFT8M7JGRSONqYuH6cR2c5pQWxZLAaXRnaGlqHwtaw8p+Pcv1a3nT
+         27uAHbWlDOWuwa3m2lve8bSDeZlIr9VAvNjA20KZmAmzaPCyj6Bg8j+gfX6kli7hgu+e
+         orXFLoG8UU9XecllJKDlNia/VrnLNhx++aGJGWWD3P8DgP84VMGpzCxQAOCzvS6NJnt2
+         IxXZuySJh9glh3oVyt4lkkuIqKUr5Hee0BOxPWrUkUaEKA5CHBTOHtmeXQ8exHCcoIBc
+         eoyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=to6+D5f8O6QjVCBzMxdSKQZOKqML3sVNgqs+L1fyNoo=;
+        b=s61oKyczpybYdIQF+bzxFxQ5zrlsVfWlijCxLKTG5Zh3Bh6Ev24xMwNfzdFTMoiu+n
+         WErMs8aLCwSCuPdHLjsIumyqv/V4WK8wz+5ujxTeoTvcIOf4BhDN80d+Px3cG8IRRJI7
+         TUi+NexqEs+8Q5GU5AmasAzoaEmHMkF8zKrrWcg5kzyBf3ZYvHJr5FqXZZXbZee3tdfZ
+         GDVIEMsw0oYsbumtsBa2H5w2Vc0GFsX3KWFHpI0CaBmKptXoMFP2gXS/SF8bknvy6MO4
+         0g2zsOy8k2OvrYngcEJXzzdQNhNSPJIAoLYxlxqtseefKczMu5pW30qR9hWy6B5St83a
+         tpOw==
+X-Gm-Message-State: AOAM532imlOzBOXcgCmW0KoRE6+zkd81mzcxhYmuaOYJwYC2p3gknIku
+        0iV45WNNrRLamH8YcGdrOPvWYXP7G4IhunToMk5JAwnr4uY=
+X-Google-Smtp-Source: ABdhPJxdnw+YusE4W4778lHd/jw5nmBBjVAfjZaYgYILKa1NYaUwiRMdwnxufhPYa/KXqx8skFgdPKC7fiYai56DHSk=
+X-Received: by 2002:a2e:a375:: with SMTP id i21mr12651290ljn.403.1593706839118;
+ Thu, 02 Jul 2020 09:20:39 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAOMZO5B0DNuFfgYsiMLRg3eTvt7NsrvyznidwQzgQc=L_ThAxQ@mail.gmail.com>
+ <20200702143213.3ep7ol52wjgtfio3@gilmour.lan>
+In-Reply-To: <20200702143213.3ep7ol52wjgtfio3@gilmour.lan>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Thu, 2 Jul 2020 13:20:28 -0300
+Message-ID: <CAOMZO5DUe-qJL08iv7zw_Pj7mBTr211SWynm8UtUR6A7dbtExw@mail.gmail.com>
+Subject: Re: Warning coming from raspberrypi,bcm2835-firmware.yaml
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Remove the regulators node and define fixed regulators directly under
-the root node.  This makes SMDK5420 board consistent with other Exynos
-boards.
+Hi Maxime,
 
-Name the fixed regulator nodes consistently.
+On Thu, Jul 2, 2020 at 11:32 AM Maxime Ripard <maxime@cerno.tech> wrote:
 
-Suggested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> I've sent a patch for it
+>
+> https://lore.kernel.org/linux-devicetree/20200626115433.125735-1-maxime@cerno.tech/
 
----
+Thanks. Yes, this fixes the warning in
+Documentation/devicetree/bindings/soc/imx/fsl,aips-bus.yaml
 
-Changes since v1:
-1. New patch
----
- arch/arm/boot/dts/exynos5420-smdk5420.dts | 56 ++++++++++-------------
- 1 file changed, 25 insertions(+), 31 deletions(-)
+BTW, there are still warnings coming from bcm2835-firmware.example.yaml:
 
-diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-index e3f2afe8359a..d703c603c45a 100644
---- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
-+++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-@@ -32,40 +32,34 @@
- 		};
- 	};
- 
--	regulators {
--		compatible = "simple-bus";
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		vdd: fixed-regulator@0 {
--			compatible = "regulator-fixed";
--			reg = <0>;
--			regulator-name = "vdd-supply";
--			regulator-min-microvolt = <1800000>;
--			regulator-max-microvolt = <1800000>;
--			regulator-always-on;
--		};
-+	vdd: regulator-0 {
-+		compatible = "regulator-fixed";
-+		reg = <0>;
-+		regulator-name = "vdd-supply";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
- 
--		dbvdd: fixed-regulator@1 {
--			compatible = "regulator-fixed";
--			reg = <1>;
--			regulator-name = "dbvdd-supply";
--			regulator-min-microvolt = <3300000>;
--			regulator-max-microvolt = <3300000>;
--			regulator-always-on;
--		};
-+	dbvdd: regulator-1 {
-+		compatible = "regulator-fixed";
-+		reg = <1>;
-+		regulator-name = "dbvdd-supply";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
- 
--		spkvdd: fixed-regulator@2 {
--			compatible = "regulator-fixed";
--			reg = <2>;
--			regulator-name = "spkvdd-supply";
--			regulator-min-microvolt = <5000000>;
--			regulator-max-microvolt = <5000000>;
--			regulator-always-on;
--		};
-+	spkvdd: regulator-2 {
-+		compatible = "regulator-fixed";
-+		reg = <2>;
-+		regulator-name = "spkvdd-supply";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
- 	};
- 
--	usb300_vbus_reg: regulator-usb300 {
-+	usb300_vbus_reg: regulator-3 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "VBUS0";
- 		regulator-min-microvolt = <5000000>;
-@@ -76,7 +70,7 @@
- 		enable-active-high;
- 	};
- 
--	usb301_vbus_reg: regulator-usb301 {
-+	usb301_vbus_reg: regulator-4 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "VBUS1";
- 		regulator-min-microvolt = <5000000>;
--- 
-2.17.1
-
+$ make dt_binding_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+  SCHEMA  Documentation/devicetree/bindings/processed-schema-examples.yaml
+  DTC     Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.example.dt.yaml
+Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.example.dts:23.37-26.15:
+Warning (simple_bus_reg): /example-0/firmware/clocks: missing or empty
+reg/ranges property
+  CHECK   Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.example.dt.yaml
+/home/fabio/linux-next/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.example.dt.yaml:
+firmware: $nodename:0: 'firmware' does not match
+'^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+/home/fabio/linux-next/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.example.dt.yaml:
+firmware: '#address-cells' is a required property
+/home/fabio/linux-next/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.example.dt.yaml:
+firmware: '#size-cells' is a required property
+/home/fabio/linux-next/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.example.dt.yaml:
+firmware: 'ranges' is a required property
