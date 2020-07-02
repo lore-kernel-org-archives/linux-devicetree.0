@@ -2,275 +2,145 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF420C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 17:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D0DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 17:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9737E20885
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 17:44:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593711873;
-	bh=jvU81eMf9nFGcLoqw6ryzx8Tg8Jkc1RCkdQ6/wLR6e0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=VrH/FIxHmiLsdRwtJEB8UzxTFe3/+8r36brEQm0YNi+XSlSnpuX2pBLwJb3fLkCuF
-	 v7F7PG0LpmoehTH9NIveGetfo6jZt1ZZLZjOW5gizF5wiwX4ihdmYlIvUF+uc0IA8X
-	 QlZFPcd9+HHJikTEt0tHaLL8hp7Y1euItxvz9keQ=
+	by mail.kernel.org (Postfix) with ESMTP id D2F5F20885
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 17:53:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bb1PyoLT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgGBRoc (ORCPT
+        id S1727124AbgGBRx6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 13:44:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47682 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726754AbgGBRoc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 2 Jul 2020 13:44:32 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 855D22084C;
-        Thu,  2 Jul 2020 17:44:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593711871;
-        bh=jvU81eMf9nFGcLoqw6ryzx8Tg8Jkc1RCkdQ6/wLR6e0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Ch3hykzfMgu1Qo8zt4VSYuTyusuv1Lqco8D+TwHw9WyRPNntv3XRMHGrgYHe7LgO1
-         h173wZqkhm+wT8g/yJ+sa7y5wZTDvbsJfStZVxSbP03BEvY2w3baybXDXQJtvEHPI8
-         5z2C0OxIRiAW6fH0Klx1fRsUZYaRU7lglUYFLdeQ=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jr3GA-008V3N-21; Thu, 02 Jul 2020 18:44:30 +0100
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 02 Jul 2020 18:44:30 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-Cc:     tglx@linutronix.de, jason@lakedaemon.net, s-anna@ti.com,
-        robh+dt@kernel.org, lee.jones@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        david@lechnology.com, wmills@ti.com
-Subject: Re: [PATCHv3 3/6] irqchip/irq-pruss-intc: Add support for shared and
- invalid interrupts
-In-Reply-To: <1593699479-1445-4-git-send-email-grzegorz.jaszczyk@linaro.org>
-References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
- <1593699479-1445-4-git-send-email-grzegorz.jaszczyk@linaro.org>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <2a6b0391f1395eb0aa15ffee6769184e@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: grzegorz.jaszczyk@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, s-anna@ti.com, robh+dt@kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, david@lechnology.com, wmills@ti.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Thu, 2 Jul 2020 13:53:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51042 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726980AbgGBRx5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 13:53:57 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64710C08C5C1;
+        Thu,  2 Jul 2020 10:53:57 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id 80so26466416qko.7;
+        Thu, 02 Jul 2020 10:53:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=0/GQxXxfGsYnBic5/RL6CAFNUaN6B/gl7pdQ8fVaHoY=;
+        b=bb1PyoLTqgnmqpoyjiIqzjmgwRxbIg8/iGsNGwpirVNTcqI/GQWWEP9KFFNsCcQ10Y
+         Ni/imIv6X56JStRHswX9whmutnIkp9Jwpyw17nRT4ye+1zS2B8WHUkvehHf6HtkRirUr
+         zzJuHZC5HZrpJA0wVOqSeUSYAsh3oBtm0I5eOe8bKLXC8dpfaODBFsJFDB2Vn8gFNR/v
+         WdX5Squi+dYMgYQR2SYNp5wy2DwPLQaCVC2RpOSHbFUfVtMI/q97tPM2I/aAwfNXWWpB
+         imEUZFoBTZD10dU53SjxXkOV4t3X3K2X7Uq9ooGbmCV9xzi9qS/uULtffIR1Y/+AZ3qS
+         Mmew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=0/GQxXxfGsYnBic5/RL6CAFNUaN6B/gl7pdQ8fVaHoY=;
+        b=hv+9ayLtqIwGTYryFqBE4lxzVoWWLIzgE9AP3yBBZzHSnOdKtpklipRJkv52lecWH9
+         42yNcil/GdDyeWf+Zv2s4PSFcH/TdqbaIs2jSEefks77fe0nb2Td67/ktKv/pon9X0a2
+         alaRwnYGrs5k8PA8EaeN7if0Saawvra4CO5JBXHiSxYznKLwwJcjr6s3+ALNnLZ60I7w
+         uyBZC7J0NYZa7+eyIHNiuW6TjaD93iqmITGK2vPvhgT0hH+1CuZR+uY30XF3gWoUc7Ta
+         PsD0PFgIX8RFBxNIJvxh/8qgZ4zj54SpIKkJtGLGpe85/qDqDEhppBMbQpd8PGBEAwyf
+         aS5g==
+X-Gm-Message-State: AOAM532zxJ+PysimTj9ZOoXIaRIjcUw84LwmPH1RCoFfU7n/T3bbhnfN
+        QU4gzV/HfY8P3HWkrM6QFok=
+X-Google-Smtp-Source: ABdhPJyHl0z1SgQYig6I2fdY7EXsTetGozQfTeorJpNp1pG+z4UU5fykSc183B/FAVq+lx8x9BbPzQ==
+X-Received: by 2002:a37:689:: with SMTP id 131mr22871561qkg.468.1593712436222;
+        Thu, 02 Jul 2020 10:53:56 -0700 (PDT)
+Received: from localhost.localdomain ([72.53.229.195])
+        by smtp.gmail.com with ESMTPSA id w204sm9149937qka.41.2020.07.02.10.53.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 10:53:55 -0700 (PDT)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     shawnguo@kernel.org, fugang.duan@nxp.com, robh+dt@kernel.org
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 1/3] ARM: imx: mach-imx6q: Search for fsl,imx6q-iomuxc-gpr earlier
+Date:   Thu,  2 Jul 2020 13:53:50 -0400
+Message-Id: <20200702175352.19223-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-07-02 15:17, Grzegorz Jaszczyk wrote:
-> From: Suman Anna <s-anna@ti.com>
-> 
-> The PRUSS INTC has a fixed number of output interrupt lines that are
-> connected to a number of processors or other PRUSS instances or other
-> devices (like DMA) on the SoC. The output interrupt lines 2 through 9
-> are usually connected to the main Arm host processor and are referred
-> to as host interrupts 0 through 7 from ARM/MPU perspective.
-> 
-> All of these 8 host interrupts are not always exclusively connected
-> to the Arm interrupt controller. Some SoCs have some interrupt lines
-> not connected to the Arm interrupt controller at all, while a few 
-> others
-> have the interrupt lines connected to multiple processors in which they
-> need to be partitioned as per SoC integration needs. For example, 
-> AM437x
-> and 66AK2G SoCs have 2 PRUSS instances each and have the host interrupt 
-> 5
-> connected to the other PRUSS, while AM335x has host interrupt 0 shared
-> between MPU and TSC_ADC and host interrupts 6 & 7 shared between MPU 
-> and
-> a DMA controller.
-> 
-> Add support to the PRUSS INTC driver to allow both these shared and
-> invalid interrupts by not returning a failure if any of these 
-> interrupts
-> are skipped from the corresponding INTC DT node.
+From: Fabio Estevam <festevam@gmail.com>
 
-That's not exactly "adding support", is it? It really is "ignore these
-interrupts because they are useless from the main CPU's perspective",
-right?
+Check the presence of fsl,imx6q-iomuxc-gpr earlier and exit in case
+of failure.
 
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-> ---
-> v2->v3:
-> - Extra checks for (intc->irqs[i]) in error/remove path was moved from
->   "irqchip/irq-pruss-intc: Add a PRUSS irqchip driver for PRUSS
->   interrupts" to this patch
-> v1->v2:
-> - https://patchwork.kernel.org/patch/11069757/
-> ---
->  drivers/irqchip/irq-pruss-intc.c | 73 
-> +++++++++++++++++++++++++++++++++++++---
->  1 file changed, 68 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-pruss-intc.c 
-> b/drivers/irqchip/irq-pruss-intc.c
-> index fb3dda3..49c936f 100644
-> --- a/drivers/irqchip/irq-pruss-intc.c
-> +++ b/drivers/irqchip/irq-pruss-intc.c
-> @@ -65,11 +65,15 @@
->   * @irqs: kernel irq numbers corresponding to PRUSS host interrupts
->   * @base: base virtual address of INTC register space
->   * @domain: irq domain for this interrupt controller
-> + * @shared_intr: bit-map denoting if the MPU host interrupt is shared
+This is done in preparation for adding support for configuring the
+GPR5 register for i.MX6QP a bit easier.
 
-nit: bitmap
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+---
 
-> + * @invalid_intr: bit-map denoting if host interrupt is not connected 
-> to MPU
->   */
->  struct pruss_intc {
->  	unsigned int irqs[MAX_NUM_HOST_IRQS];
->  	void __iomem *base;
->  	struct irq_domain *domain;
-> +	u16 shared_intr;
-> +	u16 invalid_intr;
+Tree: v5.8-rc3
 
-Please represent bitmaps as an unsigned long.
+Patch history: see [PATCH v5 3/3]
 
->  };
-> 
->  static inline u32 pruss_intc_read_reg(struct pruss_intc *intc,
-> unsigned int reg)
-> @@ -222,7 +226,8 @@ static int pruss_intc_probe(struct platform_device 
-> *pdev)
->  		"host_intr4", "host_intr5", "host_intr6", "host_intr7", };
->  	struct device *dev = &pdev->dev;
->  	struct pruss_intc *intc;
-> -	int i, irq;
-> +	int i, irq, count;
-> +	u8 temp_intr[MAX_NUM_HOST_IRQS] = { 0 };
-> 
->  	intc = devm_kzalloc(dev, sizeof(*intc), GFP_KERNEL);
->  	if (!intc)
-> @@ -235,6 +240,52 @@ static int pruss_intc_probe(struct platform_device 
-> *pdev)
->  		return PTR_ERR(intc->base);
->  	}
-> 
-> +	count = of_property_read_variable_u8_array(dev->of_node,
-> +						   "ti,irqs-reserved",
-> +						   temp_intr, 0,
-> +						   MAX_NUM_HOST_IRQS);
-> +	/*
-> +	 * The irqs-reserved is used only for some SoC's therefore not having
-> +	 * this property is still valid
-> +	 */
-> +	if (count == -EINVAL)
-> +		count = 0;
-> +	if (count < 0)
-> +		return count;
-> +
-> +	for (i = 0; i < count; i++) {
-> +		if (temp_intr[i] >= MAX_NUM_HOST_IRQS) {
-> +			dev_warn(dev, "ignoring invalid reserved irq %d\n",
-> +				 temp_intr[i]);
-> +			continue;
-> +		}
-> +
-> +		intc->invalid_intr |= BIT(temp_intr[i]);
-> +	}
-> +
-> +	count = of_property_read_variable_u8_array(dev->of_node,
-> +						   "ti,irqs-shared",
-> +						   temp_intr, 0,
-> +						   MAX_NUM_HOST_IRQS);
-> +	/*
-> +	 * The irqs-shared is used only for some SoC's therefore not having
-> +	 * this property is still valid
-> +	 */
-> +	if (count == -EINVAL)
-> +		count = 0;
-> +	if (count < 0)
-> +		return count;
-> +
-> +	for (i = 0; i < count; i++) {
-> +		if (temp_intr[i] >= MAX_NUM_HOST_IRQS) {
-> +			dev_warn(dev, "ignoring invalid shared irq %d\n",
-> +				 temp_intr[i]);
-> +			continue;
-> +		}
-> +
-> +		intc->shared_intr |= BIT(temp_intr[i]);
-> +	}
-> +
+To: Shawn Guo <shawnguo@kernel.org>
+To: Andy Duan <fugang.duan@nxp.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
 
-You probably want to move this in a separate function, since you 
-populate a
-common structure.
+ arch/arm/mach-imx/mach-imx6q.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
->  	pruss_intc_init(intc);
-> 
->  	/* always 64 events */
-> @@ -244,8 +295,14 @@ static int pruss_intc_probe(struct platform_device 
-> *pdev)
->  		return -ENOMEM;
-> 
->  	for (i = 0; i < MAX_NUM_HOST_IRQS; i++) {
-> +		if (intc->invalid_intr & BIT(i))
-> +			continue;
-> +
->  		irq = platform_get_irq_byname(pdev, irq_names[i]);
->  		if (irq <= 0) {
-> +			if (intc->shared_intr & BIT(i))
-> +				continue;
-
-I don't really understand why you are treating these "shared" interrupts
-differently from the invalid ones. In all cases, they shouldn't be used.
-
-> +
->  			dev_err(dev, "platform_get_irq_byname failed for %s : %d\n",
->  				irq_names[i], irq);
->  			goto fail_irq;
-> @@ -259,8 +316,11 @@ static int pruss_intc_probe(struct platform_device 
-> *pdev)
->  	return 0;
-> 
->  fail_irq:
-> -	while (--i >= 0)
-> -		irq_set_chained_handler_and_data(intc->irqs[i], NULL, NULL);
-> +	while (--i >= 0) {
-> +		if (intc->irqs[i])
-> +			irq_set_chained_handler_and_data(intc->irqs[i], NULL,
-> +							 NULL);
-> +	}
-> 
->  	irq_domain_remove(intc->domain);
-> 
-> @@ -273,8 +333,11 @@ static int pruss_intc_remove(struct 
-> platform_device *pdev)
->  	unsigned int hwirq;
->  	int i;
-> 
-> -	for (i = 0; i < MAX_NUM_HOST_IRQS; i++)
-> -		irq_set_chained_handler_and_data(intc->irqs[i], NULL, NULL);
-> +	for (i = 0; i < MAX_NUM_HOST_IRQS; i++) {
-> +		if (intc->irqs[i])
-> +			irq_set_chained_handler_and_data(intc->irqs[i], NULL,
-> +							 NULL);
-> +	}
-> 
->  	for (hwirq = 0; hwirq < MAX_PRU_SYS_EVENTS; hwirq++)
->  		irq_dispose_mapping(irq_find_mapping(intc->domain, hwirq));
-
-Thanks,
-
-         M.
+diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
+index 85c084a716ab..ae89ad93ca83 100644
+--- a/arch/arm/mach-imx/mach-imx6q.c
++++ b/arch/arm/mach-imx/mach-imx6q.c
+@@ -169,6 +169,12 @@ static void __init imx6q_1588_init(void)
+ 	struct regmap *gpr;
+ 	u32 clksel;
+ 
++	gpr = syscon_regmap_lookup_by_compatible("fsl,imx6q-iomuxc-gpr");
++	if (IS_ERR(gpr)) {
++		pr_err("failed to find fsl,imx6q-iomuxc-gpr regmap\n");
++		return;
++	}
++
+ 	np = of_find_compatible_node(NULL, NULL, "fsl,imx6q-fec");
+ 	if (!np) {
+ 		pr_warn("%s: failed to find fec node\n", __func__);
+@@ -195,13 +201,8 @@ static void __init imx6q_1588_init(void)
+ 	clksel = clk_is_match(ptp_clk, enet_ref) ?
+ 				IMX6Q_GPR1_ENET_CLK_SEL_ANATOP :
+ 				IMX6Q_GPR1_ENET_CLK_SEL_PAD;
+-	gpr = syscon_regmap_lookup_by_compatible("fsl,imx6q-iomuxc-gpr");
+-	if (!IS_ERR(gpr))
+-		regmap_update_bits(gpr, IOMUXC_GPR1,
+-				IMX6Q_GPR1_ENET_CLK_SEL_MASK,
+-				clksel);
+-	else
+-		pr_err("failed to find fsl,imx6q-iomuxc-gpr regmap\n");
++	regmap_update_bits(gpr, IOMUXC_GPR1, IMX6Q_GPR1_ENET_CLK_SEL_MASK,
++			   clksel);
+ 
+ 	clk_put(enet_ref);
+ put_ptp_clk:
 -- 
-Jazz is not dead. It just smells funny...
+2.17.1
+
