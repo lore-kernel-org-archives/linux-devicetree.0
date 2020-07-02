@@ -2,185 +2,105 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC78C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 10:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A7FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 10:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A08B20771
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 10:05:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="PknMzdJw"
+	by mail.kernel.org (Postfix) with ESMTP id 9FBDE20A8B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 10:12:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728097AbgGBKFm (ORCPT
+        id S1727057AbgGBKMz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 06:05:42 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:17783 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbgGBKFm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 06:05:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1593684342; x=1625220342;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=RBWjTChbCjPvUe1E+aZiJAR02zh0ahhxuDu7LpVx5kc=;
-  b=PknMzdJwCv7TuAhf28UOgMZJbawmCE9ZdKQmfdWHnLKTJlHUDPfxSal1
-   ZD8igghzOqLm6ROAAvXRPQRVjKfbxgzlRFODmxwsU6tGy+yQZsODXUvcj
-   4lr61xxXjtuREXl6KeX9oPBUBvAEbk0qDwnsumR/fzyHEoslOwJgAe890
-   e7uJQXB+zg/nC2lTvTtVWTvza4fyT9XsIlZABcX9YBF+WEobj3HCZ+F4W
-   Ck7KgqVFenekofGQ8uYhfd/XFiWrESc8dFWorf69odg8QZ5VnqcQBUoDm
-   gb7hYvhp8xnwentBylyqqs6hvYrSFSFMM5a8aVvXNW35zXEX3ovEWCGDh
-   Q==;
-IronPort-SDR: VLUqmLLE5o47q9NlTPvtAiIaITBHkG8uGV4ylYG0DsMy6+P2erE9W/WtNilmUrJNwFm6GKCF53
- wP847YZnw82CvZmjPjH+0FK9hHwyefm7ayfXUwHRQ+LWwdZE7XhLgc1J4ivuk00UfHv83Z0j5j
- ox7fYWxHTVuhyQ6vuqwGN/Y+gG+kOYn5Zc5tM4ur/HWFTe2dCaa+5BGWqyRoUIYzoThudV4JW8
- yQi32t+6Ag/mBPrTGipK4A8Y8pN9K4QoCYU6QYtALLZ3GmQnCnx+Qn0cjNKp7L+EZXGI2nfjmp
- QgA=
-X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="82368183"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Jul 2020 03:05:41 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 2 Jul 2020 03:05:17 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
- via Frontend Transport; Thu, 2 Jul 2020 03:05:34 -0700
-References: <20200619113121.9984-1-lars.povlsen@microchip.com> <20200619113121.9984-4-lars.povlsen@microchip.com> <20200619121107.GE5396@sirena.org.uk> <87imfjxtrq.fsf@soft-dev15.microsemi.net> <20200622121706.GF4560@sirena.org.uk> <878sgddh2l.fsf@soft-dev15.microsemi.net> <20200623140815.GF5582@sirena.org.uk>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v2 3/6] spi: dw: Add Microchip Sparx5 support
-In-Reply-To: <20200623140815.GF5582@sirena.org.uk>
-Date:   Thu, 2 Jul 2020 12:05:32 +0200
-Message-ID: <874kqqkz9v.fsf@soft-dev15.microsemi.net>
+        Thu, 2 Jul 2020 06:12:55 -0400
+Received: from elvis.franken.de ([193.175.24.41]:46108 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728210AbgGBKMz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Jul 2020 06:12:55 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jqwD4-0001E1-00; Thu, 02 Jul 2020 12:12:50 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 151F3C0725; Thu,  2 Jul 2020 12:12:29 +0200 (CEST)
+Date:   Thu, 2 Jul 2020 12:12:29 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>, linux-mips@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        paul@crapouillou.net, dongsheng.qiu@ingenic.com,
+        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
+        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com
+Subject: Re: [PATCH v2 1/1] dt-bindings: MIPS: Document Ingenic SoCs binding.
+Message-ID: <20200702101229.GA9924@alpha.franken.de>
+References: <20200602183354.39707-1-zhouyanjie@wanyeetech.com>
+ <20200602183354.39707-2-zhouyanjie@wanyeetech.com>
+ <20200619110524.GA9391@alpha.franken.de>
+ <CAOMZO5CuxzMm+XFX6-mh55mcw5jgf5iYs-ej5NqjCsD6hSnr7Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOMZO5CuxzMm+XFX6-mh55mcw5jgf5iYs-ej5NqjCsD6hSnr7Q@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-Mark Brown writes:
-
-> On Tue, Jun 23, 2020 at 03:53:22PM +0200, Lars Povlsen wrote:
-> > Mark Brown writes:
+On Mon, Jun 29, 2020 at 04:28:31PM -0300, Fabio Estevam wrote:
+> On Fri, Jun 19, 2020 at 9:48 AM Thomas Bogendoerfer
+> <tsbogend@alpha.franken.de> wrote:
+> >
+> > On Wed, Jun 03, 2020 at 02:33:54AM +0800, 周琰杰 (Zhou Yanjie) wrote:
+> > > Document the available properties for the SoC root node and the
+> > > CPU nodes of the devicetree for the Ingenic XBurst SoCs.
+> > >
+> > > Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+> > > Tested-by: Paul Boddie <paul@boddie.org.uk>
+> > > Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> > > ---
+> > >
+> > > Notes:
+> > >     v1->v2:
+> > >     1.Remove unnecessary "items".
+> > >     2.Add "clocks" as suggested by Paul Cercueil.
+> > >
+> > >  .../bindings/mips/ingenic/ingenic,cpu.yaml         | 67 ++++++++++++++++++++++
+> > >  1 file changed, 67 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+> >
+> > applied to mips-next.
 > 
-> > >If there's a mux that needs to be handled specially that mux should be
-> > >described in DT on the relevant boards, there shouldn't just be
-> > >something hard coded in the controller driver.
+> This causes 'make dt_binding_check' to fail:
 > 
-> > I looked at the spi-mux driver, but that is more for muxing the CS's, as
-> > I understand - not the actual bus segment. I could use it, but it would
-> 
-> It doesn't matter that much exactly what signals get switched I think,
-> we can't really tell by the time we get back to the controller.
-> 
-> > require encoding the bus segment into the CS (double the normal
-> > range). Also, selecting the bus interface is tightly coupled to the
-> > controller - its not an externally constructed board mux.
-> 
-> It sounds like this controller should be describing a mux all the time -
-> if there's completely separate output buses that you can switch between
-> then we'll need to know about that if someone wires up a GPIO chip
-> select.
+> $ make dt_binding_check
+>   CHKDT   Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+> Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml:
+> while scanning a block scalar
+>   in "<unicode string>", line 42, column 5
+> found a tab character where an indentation space is expected
+>   in "<unicode string>", line 46, column 1
+> Documentation/devicetree/bindings/Makefile:20: recipe for target
+> 'Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.example.dts'
+> failed
+> make[1]: *** [Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.example.dts]
+> Error 1
+> Makefile:1343: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
 
-Mark,
 
-I had to tinker a bit with this to get my head around it.
+thank you for noticing. It's my fault, I've changed spaces into tabs while
+applying, which is of course wrong for yaml files... I've commited a fix
+for this to mips-next and 'make dt_binding_check' now passes for me.
 
-I added the mux driver, and made the cs/bus configuration reside here -
-all well and done.
-
-For our reference config we have something like:
-
-  mux: mux-controller {
-          compatible = "microchip,sparx5-spi-mux";
-          #mux-control-cells = <0>;
-          mux@0 {
-                  reg = <0>;
-                  microchip,bus-interface = <0>;
-          };
-          mux@e {
-                  reg = <14>;
-                  microchip,bus-interface = <1>;
-          };
-  };
-
-Then I tried to use the existing spi-mux as you suggested. But I
-realized as its really designed for CS muxing I had to instantiate each
-SPI device in its own spi-mux instance, repeating the CS (as we don't
-want that to change). The result was kinda bulky.
-
-An example would be:
-
-  spi0: spi@600104000 {
-          compatible = "microchip,sparx5-spi";
-          spi@0 {
-                  compatible = "spi-mux";
-                  mux-controls = <&mux>;
-                  reg = <0>;
-                  spi-flash@0 {
-                          compatible = "jedec,spi-nor";
-                          reg = <0>;
-                  };
-          };
-          spi@e {
-                  compatible = "spi-mux";
-                  mux-controls = <&mux>;
-                  reg = <14>;
-                  spi-flash@e {
-                          compatible = "spi-nand";
-                          reg = <14>;
-                  };
-          };
-  };
-
-I then looked a bit at other users of the mux framework,
-drivers/mtd/hyperbus/hbmc-am654.c specifically.
-
-I then added direct use of a mux, by the well-established "mux-controls"
-DT property. The result was much cleaner, IMHO, and allows the spi and
-mux to be connected directly in the base sparx5 DT. Code impact was
-really small.
-
-Both examples use the same mux configuration, and as the "mux-controls"
-is established by default in the base spi0 node, this (directly) yields:
-
-&spi0 {
-	spi-flash@0 {
-		compatible = "jedec,spi-nor";
-		reg = <0>;
-	};
-	spi-flash@e {
-		compatible = "spi-nand";
-		reg = <14>;
-	};
-};
-
-I will be sending the new revision of the patches shortly. I look
-forward to your comments.
-
-I also CC'ed Peter Rosin as the MUX subsystem maintainer. Peter, sorry
-for sticking you halfway into a conversation, but I thought you might
-want to be informed. You are also on the recipient list of the v3
-patches, so now you know why...
-
-Sincerely,
+Thomas.
 
 -- 
-Lars Povlsen,
-Microchip
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
