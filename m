@@ -7,87 +7,102 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B726C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 20:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1FDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 20:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14E8520884
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 20:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0E7D20884
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 20:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593722881;
-	bh=K1oPAo5Mz0TFFhjYrNCWMniNyQihghksZ0mQyVA3CDc=;
+	s=default; t=1593722939;
+	bh=e4ciOu9oUHI5yL+c1sto9jKwVb5p1bjw6Wl6l3yhd/w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=U+SkdK/0hWCGACX4QGe+GBs19oec8Kv3F2PbuD9qxzhh18r4NMbsmJ7wKEQXwLmpI
-	 SKYM6GE37pP4m5ns4VUVC2TOF97B+771c0of5iOw5AEouSAFwxgkEkT6yaXgL4T3DY
-	 jMltOP54T+N257USJqO7gSDSxuFh1gF4rKX02WNU=
+	b=VCiwgxAicgXUP6QgdPAqWUByNlgv4L9t0/9aMVDmmWAbrGJoLNYfzoEi90LU4a/7J
+	 aM0N7w7b5SnCDylPdDXbq5h5v9cMDZt8d3s9F2EzFnzoyoqnN+woaHwvlmA9ZNOver
+	 y6WvavR1CwYQNTNfoxwLFyPFK7lmXQs/I1q7ht8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726039AbgGBUsA (ORCPT
+        id S1726028AbgGBUs7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 16:48:00 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:43140 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbgGBUsA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 16:48:00 -0400
-Received: by mail-il1-f195.google.com with SMTP id i18so25450897ilk.10;
-        Thu, 02 Jul 2020 13:48:00 -0700 (PDT)
+        Thu, 2 Jul 2020 16:48:59 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36133 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbgGBUs6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 16:48:58 -0400
+Received: by mail-io1-f67.google.com with SMTP id y2so30366492ioy.3;
+        Thu, 02 Jul 2020 13:48:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=j1yxY9w2G0JH7eLYcGH9QwyTEXy3U6l8gD1SgwfkI04=;
-        b=AEbHIITstXE7khfgmafMWAuJaxqqfK0uC5Bg2NIx9V6erj5PXdj/TothOzBFiUHtGp
-         B06w9KK2LRY6hI5byj9fv5T1QTBSrQUUjf+aQHKBHFAaT2jTftINttXP/T+wxABRNfZI
-         Y2ABGMXlHty5yjYicQqWiLdviyWeyiyCGydG0IuAp5wjtAKm23ktrOGn3aCLf/oBFqyC
-         SompqvFovre6kO/uZ6iyIzuNR2WQwlpw6ZuXsdAOIjo4O9wzSvT4q7hDZJ2Jwr3/sGNV
-         yn7V2AaQ8PCq2T5WDlxElYw2R1v2e5gjpl333WqmIhbjLXht+Oig6DVkodNEFo8GtiPH
-         AaaQ==
-X-Gm-Message-State: AOAM533StEuCdkur2uwHy0Roq412Lw+UVJwx1pKUo4zzyDECY/61gS5W
-        Y1xK7F53h8PpP3zeRfCpxw==
-X-Google-Smtp-Source: ABdhPJy4b9+p/Hb1STLVnu17+0DErUUOFe1/yUfp0AF2GZxEa4Co/j7n7em7RC9H7qtWSAkf3s7C/Q==
-X-Received: by 2002:a92:5ecf:: with SMTP id f76mr13730600ilg.281.1593722879810;
-        Thu, 02 Jul 2020 13:47:59 -0700 (PDT)
+        bh=HmX76XVNFdnKdNstB4FEQ2AG2VQGUy0YrDhBLWg+PgM=;
+        b=dgxQ/cpqkJW6RTq2C3anEP0SFffv4kNfh0VBcKSVm+6AtBy8AiwkCnrVlRlNGrp7UE
+         XoackCD2FZFhzQI28tmc8vKvMGXbNLn+B5SdOIAS+cA3RqxgFp2YcI6+1dPjaVSOm3QG
+         8PHvvGaKob69LzlfxYRvtsADVOLBGwlVdc95KGIvPH0p1KygncOUE2ATJdfPSJrr6Oo1
+         ov57nCyc4yAAHQprqvE7pJ1ddhbHC9i2tgpmnxN/tkgKXoAf19qMqjaF+Z7tWl7O1qR3
+         EIkn8rdz1B60Bvtl27JbQDPX4MmsGnd+z+hIFkUw0whXjgt0iygDqzSzkuSi5sbYJxep
+         tIPA==
+X-Gm-Message-State: AOAM530Q6YHmTkqZ6G098222Eu/XKS5Fu8Q75P1F3TjwZnfeREYx9sTU
+        LGrCtITKj94kRmuhB7hmpD910fXjbg==
+X-Google-Smtp-Source: ABdhPJyWpYN6OwRJqIZaEkMX30sxRTZIy/tJA5Eq8b9+H5/O56nWoEuFhugPb7AijBkTbRKP8mhhdg==
+X-Received: by 2002:a6b:ba06:: with SMTP id k6mr9404438iof.101.1593722937715;
+        Thu, 02 Jul 2020 13:48:57 -0700 (PDT)
 Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id a24sm4949711ioe.46.2020.07.02.13.47.58
+        by smtp.gmail.com with ESMTPSA id u3sm4912873iol.41.2020.07.02.13.48.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 13:47:59 -0700 (PDT)
-Received: (nullmailer pid 1665628 invoked by uid 1000);
-        Thu, 02 Jul 2020 20:47:58 -0000
-Date:   Thu, 2 Jul 2020 14:47:58 -0600
+        Thu, 02 Jul 2020 13:48:57 -0700 (PDT)
+Received: (nullmailer pid 1667287 invoked by uid 1000);
+        Thu, 02 Jul 2020 20:48:55 -0000
+Date:   Thu, 2 Jul 2020 14:48:55 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Roger Quadros <rogerq@ti.com>
-Cc:     vigneshr@ti.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        kishon@ti.com, nsekhar@ti.com, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] dt-binding: phy: convert ti,omap-usb2 to YAML
-Message-ID: <20200702204758.GA1665250@bogus>
-References: <20200630092729.15346-1-rogerq@ti.com>
- <20200630092729.15346-2-rogerq@ti.com>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Andy Gross <agross@kernel.org>
+Subject: Re: [PATCH 1/6] dt-bindings: interconnect: Add Qualcomm SM8150 DT
+ bindings
+Message-ID: <20200702204855.GA1667062@bogus>
+References: <20200701134259.8055-1-jonathan@marek.ca>
+ <20200701134259.8055-2-jonathan@marek.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200630092729.15346-2-rogerq@ti.com>
+In-Reply-To: <20200701134259.8055-2-jonathan@marek.ca>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 30 Jun 2020 12:27:27 +0300, Roger Quadros wrote:
-> Move ti,omap-usb2 to its own YAML schema.
+On Wed, 01 Jul 2020 09:42:50 -0400, Jonathan Marek wrote:
+> The Qualcomm SM8150 platform has several bus fabrics that could be
+> controlled and tuned dynamically according to the bandwidth demand.
 > 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 > ---
->  .../devicetree/bindings/phy/ti,omap-usb2.yaml | 69 +++++++++++++++++++
->  .../devicetree/bindings/phy/ti-phy.txt        | 37 ----------
->  2 files changed, 69 insertions(+), 37 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
+>  .../bindings/interconnect/qcom,sm8150.yaml    |  86 +++++++++
+>  .../dt-bindings/interconnect/qcom,sm8150.h    | 176 ++++++++++++++++++
+>  2 files changed, 262 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sm8150.yaml
+>  create mode 100644 include/dt-bindings/interconnect/qcom,sm8150.h
 > 
 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/ti,omap-usb2.example.dt.yaml: example-0: phy@4100000:reg:0: [0, 68157440, 0, 84] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/interconnect/qcom,sm8150.yaml: maintainers:0: None is not of type 'string'
+Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/interconnect/qcom,sm8150.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/interconnect/qcom,sm8150.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/interconnect/qcom,sm8150.yaml: ignoring, error in schema: maintainers: 0
+warning: no schema found in file: ./Documentation/devicetree/bindings/interconnect/qcom,sm8150.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/interconnect/qcom,sm8150.yaml: ignoring, error in schema: maintainers: 0
+warning: no schema found in file: ./Documentation/devicetree/bindings/interconnect/qcom,sm8150.yaml
+Makefile:1347: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
 
-See https://patchwork.ozlabs.org/patch/1319665
+See https://patchwork.ozlabs.org/patch/1320475
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
