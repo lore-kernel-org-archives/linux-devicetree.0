@@ -2,226 +2,159 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92070C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 05:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDB8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 05:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 686A0207CD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 05:19:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pks2l2ph"
+	by mail.kernel.org (Postfix) with ESMTP id 8E22D207E8
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 05:34:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726033AbgGBFTn (ORCPT
+        id S1726003AbgGBFe5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 01:19:43 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:14467 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbgGBFTm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 01:19:42 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200702051939epoutp015f3ebfd65f2be90b60c5d42354b2f407~d19ssimD_0259902599epoutp01m
-        for <devicetree@vger.kernel.org>; Thu,  2 Jul 2020 05:19:39 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200702051939epoutp015f3ebfd65f2be90b60c5d42354b2f407~d19ssimD_0259902599epoutp01m
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593667179;
-        bh=zmF5QSVq5UDkoxb9qTSNo2o/MBAjk8aZ5xjOTRB3H8A=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=pks2l2phggkyoMEereq8AxmzSr0u5wyrjLvRTLhHllxwoEtCoxaxMerbFvIlfLPoG
-         0BD9BYJ0ZetlyM0peTf7ojmot6Ii8RYHJhiZjmt1zLKybEcS6ew6RvyqXJ7xlWOLwu
-         aZeSDZ1t2o5ZbNq3aDCWt6Fua4Xumvtd0q7ZE4T4=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200702051938epcas1p114a89014ed1c5753e604e8e55cef0b92~d19rWOBnO0552605526epcas1p1K;
-        Thu,  2 Jul 2020 05:19:38 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.153]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 49y5xg5f68zMqYlv; Thu,  2 Jul
-        2020 05:19:35 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        97.DC.28578.56E6DFE5; Thu,  2 Jul 2020 14:19:33 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200702051933epcas1p111c52c4ed9fa37e9a1648335dba5e479~d19m_21WD0520905209epcas1p1E;
-        Thu,  2 Jul 2020 05:19:33 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200702051933epsmtrp2102f67d785e96f30fcb2bae48e5ab982~d19m957ZE1271712717epsmtrp2e;
-        Thu,  2 Jul 2020 05:19:33 +0000 (GMT)
-X-AuditID: b6c32a39-e6f5da8000006fa2-9c-5efd6e65d48b
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        B7.BE.08382.56E6DFE5; Thu,  2 Jul 2020 14:19:33 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200702051932epsmtip25824646da779bcc1c979a726e713af94~d19mmeBft2184521845epsmtip2f;
-        Thu,  2 Jul 2020 05:19:32 +0000 (GMT)
-Subject: Re: [PATCH v4 12/37] PM / devfreq: tegra20: Use MC timings for
- building OPP table
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>
-Cc:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
-        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <2069fb51-f043-795d-7768-0024fc9a9f4e@samsung.com>
-Date:   Thu, 2 Jul 2020 14:30:48 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Thu, 2 Jul 2020 01:34:57 -0400
+Received: from mga17.intel.com ([192.55.52.151]:1625 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726015AbgGBFe4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Jul 2020 01:34:56 -0400
+IronPort-SDR: HiI8Apn5WpUK5uS8ekblShWXvWDarrbR3PLfYE4StHkLsG2PEA05h9l4oM2uw0+U7tufb0B7bd
+ Us5i1ZRVMQ3g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="126895553"
+X-IronPort-AV: E=Sophos;i="5.75,303,1589266800"; 
+   d="scan'208";a="126895553"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 22:34:55 -0700
+IronPort-SDR: Ty6atuWHu18imj2PkfQsFLeXd9jxknx1a6WObfleArNTDpkNQbemEAjQmFoDj7zmJm8iwU+7mD
+ oPEUA2MdJ1yQ==
+X-IronPort-AV: E=Sophos;i="5.75,303,1589266800"; 
+   d="scan'208";a="321980551"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 22:34:51 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 66818209B8; Thu,  2 Jul 2020 08:34:49 +0300 (EEST)
+Date:   Thu, 2 Jul 2020 08:34:49 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Dongchun Zhu =?utf-8?B?KOacseS4nOaYpSk=?= 
+        <Dongchun.Zhu@mediatek.com>
+Cc:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "drinkcat@chromium.org" <drinkcat@chromium.org>,
+        "tfiga@chromium.org" <tfiga@chromium.org>,
+        Erin Lo =?utf-8?B?KOe+hembhem9oSk=?= <erin.lo@mediatek.com>,
+        Louis Kuo =?utf-8?B?KOmDreW+t+Wvpyk=?= <louis.kuo@mediatek.com>,
+        Sj Huang =?utf-8?B?KOm7g+S/oeeSiyk=?= <sj.huang@mediatek.com>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "bingbu.cao@intel.com" <bingbu.cao@intel.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Shengnan Wang =?utf-8?B?KOeOi+Wco+eUtyk=?= 
+        <shengnan.wang@mediatek.com>
+Subject: Re: [PATCH V9 0/2] media: i2c: Add support for DW9768 VCM
+Message-ID: <20200702053449.GR16711@paasikivi.fi.intel.com>
+References: <20200630062211.22988-1-dongchun.zhu@mediatek.com>
+ <20200701091618.GN16711@paasikivi.fi.intel.com>
+ <bf610d1b13c74656b2ffeeb9cc2a96ac@MTKMBS31N1.mediatek.inc>
+ <20200701134416.GQ16711@paasikivi.fi.intel.com>
+ <e55e7b405a084a0298cd839c05b52c79@MTKMBS31N1.mediatek.inc>
 MIME-Version: 1.0
-In-Reply-To: <4b22d3ee-f303-d81d-e261-187d4a46e749@gmail.com>
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHJsWRmVeSWpSXmKPExsWy7bCmgW5q3t84g9OLbCzuz2tltHj36Smr
-        xfwj51gtVn98zGhx5et7NovpezexWbTMWsRicbbpDbvF5V1z2Cw+9x5htOj8MovN4uIpV4vb
-        jSvYLCatncpo0br3CLvFv2sbWSx+7prH4iDo8f5GK7vHzll32T0unfvD7LFpVSebx51re9g8
-        7ncfZ/LobX7H5tG3ZRWjx+dNcgGcUdk2GamJKalFCql5yfkpmXnptkrewfHO8aZmBoa6hpYW
-        5koKeYm5qbZKLj4Bum6ZOUC/KCmUJeaUAoUCEouLlfTtbIryS0tSFTLyi0tslVILUnIKLAv0
-        ihNzi0vz0vWS83OtDA0MjEyBChOyM27e/8decFuyYv1e9gbG1yJdjJwcEgImEjubbjJ2MXJx
-        CAnsYJTYcWoCG4TziVHiZM9JdgjnG6PEm/v32WBaHr27ygSR2Msoce/LRRYI5z2jxI8nW5lB
-        qoQFYiQmdc8AS4gIHGGWWN15HGwLs8BlRomzbV/AZrEJaEnsf3EDzOYXUJS4+uMxI4jNK2An
-        8eTGBRYQm0VARWL9qSawGlGBMImT21qgagQlTs58AlbDKWArcfX1PbAaZgFxiVtP5jNB2PIS
-        zVtnM0Pc3c4pse5EPoTtInHq3i8mCFtY4tXxLewQtpTE53d7of6sllh58gg4NCQEOhgltuy/
-        wAqRMJbYv3QyUDMH0AJNifW79CHCihI7f89lhNjLJ/Huaw8rSImEAK9ER5sQRImyxOUHd6HW
-        Skosbu9km8CoNAvJN7OQfDALyQezEJYtYGRZxSiWWlCcm55abFhgihzdmxjBCV3Lcgfj9Lcf
-        9A4xMnEwHmKU4GBWEuE9bfArTog3JbGyKrUoP76oNCe1+BCjKTB8JzJLiSbnA3NKXkm8oamR
-        sbGxhYmhmamhoZI4r5P1hTghgfTEktTs1NSC1CKYPiYOTqkGps1zXktMkLJsv+MR1nhC6viM
-        8KAPiokuS8L+/TieW27IxaR07lY2Y88yf/POZJMlU1UMnfrPvZvxotDjrX3DizWh75/9i/T8
-        Y3aUL/tz6JJD3vkaLItuyqnxPl5buDbXKcxcJP6BoKCvXOJ5zacXLXtk08VY1b8lvp5/33Xv
-        1ZbGXHVh3bOsO59mtm76YqPhU+q45FdIb+hUpcOrDa/dtPnyirOzi2nqj4uX5mpFOcgrZO0y
-        myl8rLnKplYx657d/zc7lmWtv+puqXd40sYjDNLMHL+uHu7343pZU7fzonVaM/sJI+4D/+Sv
-        JPIsPxywdq1dl8y5/ScKW48u2xTFe/Ua261df91dT27Zty4lWYmlOCPRUIu5qDgRACnbDORx
-        BAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBIsWRmVeSWpSXmKPExsWy7bCSvG5q3t84g0tzeS3uz2tltHj36Smr
-        xfwj51gtVn98zGhx5et7NovpezexWbTMWsRicbbpDbvF5V1z2Cw+9x5htOj8MovN4uIpV4vb
-        jSvYLCatncpo0br3CLvFv2sbWSx+7prH4iDo8f5GK7vHzll32T0unfvD7LFpVSebx51re9g8
-        7ncfZ/LobX7H5tG3ZRWjx+dNcgGcUVw2Kak5mWWpRfp2CVwZN+//Yy+4LVmxfi97A+NrkS5G
-        Tg4JAROJR++uMnUxcnEICexmlJi+tpURIiEpMe3iUeYuRg4gW1ji8OFikLCQwFtGib4H3CC2
-        sECMxKTuGSwgvSICx5glNp0+DTaIWeAyo8SOzq9sEFPnMUlcmH6fBaSFTUBLYv+LG2wgNr+A
-        osTVH4/BtvEK2Ek8uXEBrIZFQEVi/akmsBpRgTCJnUseM0HUCEqcnPkErIZTwFbi6ut7YDXM
-        AuoSf+ZdYoawxSVuPZnPBGHLSzRvnc08gVF4FpL2WUhaZiFpmYWkZQEjyypGydSC4tz03GLD
-        AsO81HK94sTc4tK8dL3k/NxNjODI1tLcwbh91Qe9Q4xMHIyHGCU4mJVEeE8b/IoT4k1JrKxK
-        LcqPLyrNSS0+xCjNwaIkznujcGGckEB6YklqdmpqQWoRTJaJg1OqgSl4mQOrZOLPdbOtygTZ
-        rO4t5fvAXum4c4Ho1qP9PwP6m+ReMfBuOCe7pmLfzeYDCUe0Tnm2M1+aoPwqUPuy/my9N6lb
-        p18vEHBlUpG3cFiTtsX2j9KOHOubYkVWzPV1k3nXnTl+1HZJlavx+UPKk/5eO/F2Dc/yOyHf
-        pqTdnTF1VY60g8dJ27uZG7dtCxTVmOCv3bDBKEl7lkJizUkOF2P+buNXy9iO5ubMTVGd/Nx3
-        qeC3C4kBdrs5f39KNHiiG6s4qdmsLValyqzzXH7Vtcbim+dCz/1b+nuiYcGOabP830Td26Qs
-        2R0a/n7lpOtMzlz2GRqmoXvmyMfsLFU5f0v20pXWrY/uJWn1H/ji1KTEUpyRaKjFXFScCACf
-        kFbgWwMAAA==
-X-CMS-MailID: 20200702051933epcas1p111c52c4ed9fa37e9a1648335dba5e479
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200609131458epcas1p2c774a0302bcef2c02790c2cb8cad57a0
-References: <20200609131404.17523-1-digetx@gmail.com>
-        <CGME20200609131458epcas1p2c774a0302bcef2c02790c2cb8cad57a0@epcas1p2.samsung.com>
-        <20200609131404.17523-13-digetx@gmail.com>
-        <4ea7fe00-7676-3186-8222-6e0d0eb8ed1f@samsung.com>
-        <4b22d3ee-f303-d81d-e261-187d4a46e749@gmail.com>
+In-Reply-To: <e55e7b405a084a0298cd839c05b52c79@MTKMBS31N1.mediatek.inc>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 7/2/20 2:07 PM, Dmitry Osipenko wrote:
-> 02.07.2020 07:18, Chanwoo Choi пишет:
->> Hi Dmitry,
->>
->> On 6/9/20 10:13 PM, Dmitry Osipenko wrote:
->>> The clk_round_rate() won't be usable for building OPP table once
->>> interconnect support will be added to the EMC driver because that CLK API
->>> function limits the rounded rate based on the clk rate that is imposed by
->>> active clk-users, and thus, the rounding won't work as expected if
->>> interconnect will set the minimum EMC clock rate before devfreq driver is
->>> loaded. The struct tegra_mc contains memory timings which could be used by
->>> the devfreq driver for building up OPP table instead of rounding clock
->>> rate, this patch implements this idea.
->>>
->>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>> ---
->>>  drivers/devfreq/tegra20-devfreq.c | 18 +++++++++++-------
->>>  1 file changed, 11 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/drivers/devfreq/tegra20-devfreq.c b/drivers/devfreq/tegra20-devfreq.c
->>> index 6469dc69c5e0..bf504ca4dea2 100644
->>> --- a/drivers/devfreq/tegra20-devfreq.c
->>> +++ b/drivers/devfreq/tegra20-devfreq.c
->>> @@ -123,8 +123,7 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->>>  {
->>>  	struct tegra_devfreq *tegra;
->>>  	struct tegra_mc *mc;
->>> -	unsigned long max_rate;
->>> -	unsigned long rate;
->>> +	unsigned int i;
->>>  	int err;
->>>  
->>>  	mc = tegra_get_memory_controller();
->>> @@ -151,12 +150,17 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->>>  
->>>  	tegra->regs = mc->regs;
->>>  
->>> -	max_rate = clk_round_rate(tegra->emc_clock, ULONG_MAX);
->>> -
->>> -	for (rate = 0; rate <= max_rate; rate++) {
->>> -		rate = clk_round_rate(tegra->emc_clock, rate);
->>> +	if (!mc->num_timings) {
->>
->> Could you explain what is meaning of 'num_timing?
+Dongchun,
+
+Please don't send HTML e-mail to Linux kernel related mailing lists.
+
+On Thu, Jul 02, 2020 at 03:48:56AM +0000, Dongchun Zhu (朱东春) wrote:
+>  Hi Sakari,
 > 
-> The num_timings is the number of memory timings defined in a
-> device-tree. One timing configuration per memory clock rate.
-
-OK. I understand.
-
+>  Sorry to bother you again, but I am so confused about the questions you raised.
+>  I just synced mainline: 5.8-rc3 tarball from https://www.kernel.org/, on which I ran the git am <patch> command.
+>  The patch-applying process shows no error.
+>  -----------------8<-------------------
+>  [mtk15013@mtkslt307 linux]$git apply --check media-i2c-Add-support-for-DW9768-VCM.patch
+>  [mtk15013@mtkslt307 linux]$git am media-i2c-Add-support-for-DW9768-VCM.patch
+>  Applying: media: dt-bindings: media: i2c: Document DW9768 bindings
+>  Applying: media: i2c: dw9768: Add DW9768 VCM driver
+>  -----------------8<-------------------
 > 
->> Also, why add the opp entry in case of mc->num_timings is zero?
+>  On the other hand, I also compared dongwoon,dw9768.yaml file with other media device dt-bindings(like imx219.yaml and ov8856.yaml).
+>  It seems there are no apparent differences between them.
+>  Especially, the sentence '# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)' shall be common.
+>  I dunno why here dongwoon,dw9768.yaml reports trailing whitespace warnings while ov8856.yaml is silent.
 > 
-> Timings may be not defined in some device-trees at all and in this case
-> memory always running on a fixed clock rate.
-
-You mean that 'timings' information is optional?
-
+>  For the patch failed on MAINTAINERS, I am still curious what's wrong.
+>  In fact, I locally have run parse-maintainers.pl script to check MAINTAINERS file before submitting patch.
+>  The result also reports no errors.
+>  -----------------8<-------------------
+>  [mtk15013@mtkslt307 linux]$perl scripts/parse-maintainers.pl
+>  [mtk15013@mtkslt307 linux]$ls
+>  -----------------8<-------------------
 > 
-> The devfreq driver won't be practically useful if mc->num_timings is
-> zero since memory frequency can't be changed, but anyways we'd want to
-> load the devfreq driver in order to prevent confusion about why it's not
-> loaded.
+>  As to Base64 encoding, I checked each patch file again. They are all encoded in UTF-8.
+>  As https://www.base64encode.org/ says, for an example, '77' in ASCII format would be changed to 'T' in Based64-encoded format.
+>  This means there shall be messy code if we adpoting Based64-encoded format.
+>  But I cannot see garbled messages in the current patches.
 > 
-> For example, you may ask somebody to show contents of
-> /sys/class/devfreq/tegra20-devfreq/trans_stat and the person says to you
-> that this file doesn't exist, now you'll have to figure out what
-> happened to the devfreq driver.
+>  The DW9768 serials-patch is attached.
+>  @Tomasz @Andy @Rob could anyone help try to see whether the patch can be cherry-picked on Linux master branch or not?
+>  Patchwork link:
+>  https://patchwork.kernel.org/cover/11633291/
 
-I understand why add OPP entry point when timing is not defined on DT.
-But, actually, I think that you better to change 'timings' info is mandatory
-instead of optional. Because the devfreq driver is for DVFS
-and the driver supporting DVFS have to have the frequency information
-like OPP.
+Both of the patches appear to contain only ASCII characters.
 
-Or, 
-If you want to keep 'timing' is optional on DT,
-I recommend that you add one timing data to tegra mc driver
-when DT doesn't include the any timing information
-I think that is it more clear.
+I did some research on this. It seems that the base64 encoded message body
+does have carriage returns, in both cases. Git am does not attempt to
+remove them in that case, but Patchwork does. Hence the files are fine if
+you download them from Patchwork --- where the mbox files have neither
+carriage returns nor base64 encoding.
+
+What does the file command say about the patch files produced by git
+format-patch? My guess is that something in between your local computer and
+LMML (and other mail servers) base64 encodes the message body. But where
+are the carriage returns added? Nevertheless they seem to be added before
+the base64 conversion.
+
+I think this is also a git issue, but something that is very hard to
+encounter.
+
+...
+
+>  ************* MEDIATEK Confidentiality Notice ********************
+>  The information contained in this e-mail message (including any
+>  attachments) may be confidential, proprietary, privileged, or otherwise
+>  exempt from disclosure under applicable laws. It is intended to be
+>  conveyed only to the designated recipient(s). Any use, dissemination,
+>  distribution, printing, retaining or copying of this e-mail (including its
+>  attachments) by unintended recipient(s) is strictly prohibited and may
+>  be unlawful. If you are not an intended recipient of this e-mail, or believe
+>  that you have received this e-mail in error, please notify the sender
+>  immediately (by replying to this e-mail), delete any and all copies of
+>  this e-mail (including any attachments) from your system, and do not
+>  disclose the content of this e-mail to any other person. Thank you!
+
+Did you mean this?
 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Kind regards,
+
+Sakari Ailus
