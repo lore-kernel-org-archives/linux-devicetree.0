@@ -3,90 +3,164 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74747C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 13:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5CCC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 13:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BA32208D5
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 13:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F65A20772
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 13:54:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593697443;
-	bh=3MSMquasFAjnciVa57vrc8ovpDKT0aHiUA9DL1SWpI8=;
+	s=default; t=1593698092;
+	bh=7f0we9ToVtC2sB/gdoGDHjfbF4K+7/v+D6292TCX25E=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=r7VlzY/ONM7FI3ScLUIUWxEZ1CisrRN8/KYbqRpL2VzSR4My8BB2z8o4O2B6C3RNA
-	 jOlAIK23i6DLyzFe7mHFOUotPUAwi20XIqNWvhif6BOah32NuJOu9VFOUcW0RMDMCE
-	 cUE1EYkT5oKUiBu3WtotW4zh8FXIGnfV7j2pSi3g=
+	b=BKrJ/iNQV6sp/RDLSm1K3lFyp+BO9evJf+iEHaunzf3po0W7gx4OA+2dnMS3z8CoO
+	 t4Ap4WGJZNHM9JNZkFSGo4fd2Qh7WlZpsDJs2K0k+z3FwSrQmPWRlpTIO7duhkoJpn
+	 eshuJpLW5U0fyZmRErEttKb9nuIm3ED1F8UEP92k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729171AbgGBNoC (ORCPT
+        id S1729506AbgGBNyv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 09:44:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38070 "EHLO mail.kernel.org"
+        Thu, 2 Jul 2020 09:54:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729293AbgGBNoA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 2 Jul 2020 09:44:00 -0400
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+        id S1729464AbgGBNyv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Jul 2020 09:54:51 -0400
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59565208D5
-        for <devicetree@vger.kernel.org>; Thu,  2 Jul 2020 13:44:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FDBE20772;
+        Thu,  2 Jul 2020 13:54:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593697440;
-        bh=3MSMquasFAjnciVa57vrc8ovpDKT0aHiUA9DL1SWpI8=;
+        s=default; t=1593698090;
+        bh=7f0we9ToVtC2sB/gdoGDHjfbF4K+7/v+D6292TCX25E=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bvgK32p72fDSWie8VaIV4AsDZq8PqPB16wEnSplqMb8KnuL9LBCzL0/DG9bco5GPL
-         BST3oQhsE+sLn7s9/FJkBFBG5CEGcKpWVSHtdM5c7Uafdk1KoLi2xfUwtfsEGhmwoh
-         E4VWJySd5iLyQXDL10a52YycuQTYV9GNGrVNLsFs=
-Received: by mail-ot1-f54.google.com with SMTP id 5so22141439oty.11
-        for <devicetree@vger.kernel.org>; Thu, 02 Jul 2020 06:44:00 -0700 (PDT)
-X-Gm-Message-State: AOAM532xEse83O53nVc9Nw55We11lEEi2oAhpVOwTrst3KlzQMmMHSs3
-        qGGu8xJk2ZMDNfAPJXn9tJLawqThuWxT7Q34Vw==
-X-Google-Smtp-Source: ABdhPJxP9ySsJVKfJwG+UMovWOfxtv+Snj67Sfxn4ir4gfqlxAwfDrHeOiKxBwoJpo6+5RpBkmfjlNjsM6io2P+1Kzg=
-X-Received: by 2002:a9d:2646:: with SMTP id a64mr25256828otb.107.1593697439697;
- Thu, 02 Jul 2020 06:43:59 -0700 (PDT)
+        b=TMhYWWiElbIT4MnoxMMc2yeXHbclF3cBqeSF6fmbCBYSbEO+aY+CbSdySqW0V8fvo
+         ycnjnEQa3WoARnXi7AxW76aPgELnTAMwpm5wPK+8fjG99FwJhNc1aX5pJatA6XlvNM
+         mtsabmyslhxC/JeAOsYyqei532h0UHDIMHuRYRQ0=
+Received: by mail-oi1-f177.google.com with SMTP id t4so5901737oij.9;
+        Thu, 02 Jul 2020 06:54:50 -0700 (PDT)
+X-Gm-Message-State: AOAM530MFN78fIHpJoMgo5M6OBy06Bt3NXwxoaAbd9UWVQu1kYQI+2gt
+        2ywIXS9AfuuXNihRuQZ6mGDBZGbXASwFL/rtog==
+X-Google-Smtp-Source: ABdhPJy7BdwSxiiHUlLu0FDHVe4/hH1/gMKwhpieAKy6KDx+1Ei/7xR4sh7fMT9qpGAHCKX7iWPY0s5PGl9LLdj/tRo=
+X-Received: by 2002:aca:6004:: with SMTP id u4mr24951403oib.106.1593698089642;
+ Thu, 02 Jul 2020 06:54:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200630223020.25546-1-festevam@gmail.com> <159364215574.10630.10014931369710772889.b4-ty@kernel.org>
- <CAL_JsqLzae5qUJXF-otsUQqy+zyk9fD_AKd8b8F+PFWZBH1QDw@mail.gmail.com> <87eepuzufl.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <87eepuzufl.wl-kuninori.morimoto.gx@renesas.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 2 Jul 2020 07:43:48 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+a+XvCU6GY0H0WV3BFyW1JncORdeMs5xpSHtcNbJyOrg@mail.gmail.com>
-Message-ID: <CAL_Jsq+a+XvCU6GY0H0WV3BFyW1JncORdeMs5xpSHtcNbJyOrg@mail.gmail.com>
-Subject: Re: [PATCH] ASoC: dt-bindings: simple-card: Fix 'make
- dt_binding_check' warnings
+References: <87pnay3ptb.wl-kuninori.morimoto.gx@renesas.com>
+ <20200528223916.GA804926@bogus> <87imgfzclq.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <87imgfzclq.wl-kuninori.morimoto.gx@renesas.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 2 Jul 2020 07:54:38 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+UX9c2rr+yj3E5HywhG5aWxDit1MObceVSp2UCL=MvnA@mail.gmail.com>
+Message-ID: <CAL_Jsq+UX9c2rr+yj3E5HywhG5aWxDit1MObceVSp2UCL=MvnA@mail.gmail.com>
+Subject: Re: Question about "xxx,yyy" style property
 To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
         Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree@vger.kernel.org
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 1, 2020 at 5:29 PM Kuninori Morimoto
+On Thu, May 28, 2020 at 8:41 PM Kuninori Morimoto
 <kuninori.morimoto.gx@renesas.com> wrote:
 >
 >
+> The Subject was "Re: [PATCH] ASoC: dt-bindings: simple-card: care missing address #address-cells"
+>
 > Hi Rob
 >
-> I'm posting same patch and waiting review/response.
+> I'm trying to create v2 of simple-card patch,
+> And got issue which I can't solve by myself.
 >
->         Subject: [PATCH] ASoC: dt-bindings: simple-card: care missing address #address-cells
->         Date: Thu, 21 May 2020 12:54:56 +0900
+> I think "xxx,yyy" (= which has "," at the property name)
+> needs special care, but it is very un-understandable...
+> Now, I'm give up.
+> So, can I ask you 2 things about Yaml Doc "xxx,yyy" type property ?
+>
+> ========================
+> 1) reference own definitions from "xxx,yyy"
+> ========================
+>
+> I guess "xxx,yyy" naming property needs to has "description", right ?
+>
+> But, it is OK if it references "/schemas/xxxx"
+>
+>         --- OK ------
+>         xxx,yyy:
+>           description: xxx
+>           $ref: /schemas/types.yaml#/definitions/phandle-array
+>         -------------
+>
+> but, will be error if it references own definitions
+>
+>         --- NG ------
+>         xxx,yyy:
+>           description: xxx
+>           $ref: "#/definitions/mydef"
+>         -------------
+>
+> This is the related error
+>
+>         -- error(?) --
+>         xxx.yaml: properties:xxx,yyy:\
+>           $ref: '#/definitions/mydef' does not match 'types.yaml#[/]{0,1}definitions/.*'
+>         --------------
+>
+> # but, there is no problem if it was defined as "patternProperties"
+>
+> Q. The "xxx,yyy" property can't references own definitions,
+>    or needs some magical extra settings ??
 
-https://lore.kernel.org/linux-devicetree/20200528223916.GA804926@bogus/
+No, it can't. The problem with definitions is we can't really check
+and do fixups on the definitions with the meta-schema.
 
+> ========================
+> 2) phandle for "xxx,yyy"
+> ========================
 >
-> and am sending question mail accordingly
+> I noticed that it seems "xxx,yyy" property can't be referenced.
+> Here, "xxx,yyy" has "type: object" and "additionalProperties: false"
+> (below didn't happen if it doesn't have "additionalProperties: false")
 >
->         Subject: Question about "xxx,yyy" style property
->         Date: Fri, 29 May 2020 11:41:53 +0900
+> If "xxx,yyy" has phandle, but not referenced,
+> This is not a problem.
 >
-> Nothing happen until now...
+>         --- OK ---
+>         ...
+>         foo = <&bar>;
+>         ...
+>         xxx_yyy: xxx,yyy {
+>           ...
+>         };
+>         --------------
+>
+> But will be error if it is referenced.
+>
+>         --- NG ---
+>         foo = <&xxx_yyy>;
+>         ...
+>         xxx_yyy: xxx,yyy {
+>           ...
+>         };
+>         ------------
+>
+> The error is
+>
+>         -- error ---
+>         xxx.yaml: xxx.yyy: \
+>         Additional properties are not allowed ('phandle' was unexpected)
+>         ------------
+>
+> Q. The "xxx,yyy" needs magical settings to be referenced, or can't be ?
 
-Sorry, if it's not a patch queued in patchwork, I may or may not see it.
+'phandle' (among other things) is automatically added by the tools. If
+'xxx,yyy' is defined thru a 'definitions' then that fix-up is not
+going to happen.
 
 Rob
