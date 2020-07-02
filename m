@@ -2,126 +2,200 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE45BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 17:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F395EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 17:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86E9920737
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 17:54:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZmldpPGG"
+	by mail.kernel.org (Postfix) with ESMTP id CF01320870
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 17:54:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593712469;
+	bh=CweWMMu7PLdPE/4i4jZuP/tEfhtGXtOLafsmlGCzXGg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=y4qugYRDLzDna/wF3tGWfUp3NZM9Q4GcjauBkfIx0t1Hb65hsCgVW7RQuNltjtRmF
+	 PfOtR1oz1PWULOUR3GCeM48mhfw7PAX+jd5/HSVrpZi0ebW/9/qsSyCfSG/MiqrsVd
+	 99FhDtf4iunZYV5c4NOyWVxlqDsqCVyGYI/Gy88Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbgGBRx7 (ORCPT
+        id S1727906AbgGBRy3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 13:53:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51048 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbgGBRx6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 13:53:58 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B094CC08C5C1;
-        Thu,  2 Jul 2020 10:53:58 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id z63so26420823qkb.8;
-        Thu, 02 Jul 2020 10:53:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=adUOUcaETQkVS7cnauVlN1+FIVTZhn7o3LTKSzYe1bc=;
-        b=ZmldpPGGAUupGOjBWcXeGZIszb+8n3NZchM0xyTr1Z5NPEb76YxCQFLl6o6dZN9GSC
-         TA1jf3ctAaiaoq8ZLPZU/WgKURo0KWp69XwkMuCvIJerC8NgvOfUCbG2HZorgBQcWOHc
-         /KtHoU4JW1J/kVrL7kLtBRV46H3Db9ysJizxf8jjehx3I2uvdmMN1GY1rrtQRc42ARJn
-         h5XtniBloV6rmeqvKUpOIUZOvDRfNZZC6+fHJDCY+/lyZtqPRw2rvSZJ4PAp2RzYggzx
-         o+G7m77jsgBgtsjWQKhRaNw3gxbM2L0s9F/ljFqLgGw550KGzvNBK95YTZ4qrCQP5Mfp
-         RecA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=adUOUcaETQkVS7cnauVlN1+FIVTZhn7o3LTKSzYe1bc=;
-        b=cOUDxyPIT+9+YMye3VleycM2DXxhOmHGuk4q3u6l2L8NoraRWLwl3VdM2g3irvzeEy
-         gD6/Fi7bF+++6UM9VXx6i90Ku5k43rK+oA6fdkcLHfGd/7miSyb7nvaXMrXMdy5uSkIQ
-         HJ0GEqKg7k9ZvP4QxhpaPGMR3GF3CaYVbYMsTxtlOts9FQOmU8bWZsYOHoWYyKi8Mb+o
-         BFUFwozZDVv0P2Jnyg64WVVfkt/qy1JnDOy8RoQxvTyaPYCKNmMYhleXCfxjyJmsn3fl
-         +JU/e40h6hoepzZ32fQ4njwiVTS6gsX/37OTv9Bijbxo6ZNc8FUrIw+XVyNsclPAaykh
-         6/3A==
-X-Gm-Message-State: AOAM533uEqV07MgC6bQeUhp6Z4gKvZdM459+SstX4Wo13maROOUXYAIg
-        HHIoEqcr/xQnKXXVNShaers=
-X-Google-Smtp-Source: ABdhPJzIHwAA0Q0Poo8Me3UUZPAvAoi/DLDdPOje48J0iSrJbC+Eib9upIcn4CvPceOSoRL1jothQg==
-X-Received: by 2002:a37:a785:: with SMTP id q127mr30241028qke.334.1593712437648;
-        Thu, 02 Jul 2020 10:53:57 -0700 (PDT)
-Received: from localhost.localdomain ([72.53.229.195])
-        by smtp.gmail.com with ESMTPSA id w204sm9149937qka.41.2020.07.02.10.53.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 10:53:57 -0700 (PDT)
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
-To:     shawnguo@kernel.org, fugang.duan@nxp.com, robh+dt@kernel.org
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 2/3] dt-bindings: fec: add fsl,ptpclk-bypass-pad boolean property
-Date:   Thu,  2 Jul 2020 13:53:51 -0400
-Message-Id: <20200702175352.19223-2-TheSven73@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200702175352.19223-1-TheSven73@gmail.com>
-References: <20200702175352.19223-1-TheSven73@gmail.com>
+        Thu, 2 Jul 2020 13:54:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51054 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727895AbgGBRy3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Jul 2020 13:54:29 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B76720737;
+        Thu,  2 Jul 2020 17:54:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593712468;
+        bh=CweWMMu7PLdPE/4i4jZuP/tEfhtGXtOLafsmlGCzXGg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Qbp6HwkcvfR1IULQwGE0aykzqd8vd3GG1GIp0bvJwDxiIepIbjRXXHCL6jxh4xzbD
+         ix2myEkw1+3AVtdXp0TMGhKs1Cyf4mDfZw7iWiqWlI4vghVLUEl5ggySHqa9TLr3Zj
+         E52sdBu8L/DeEg2MycTiE/hmvIzeRpVnWJs3iO8s=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jr3Pm-008VCD-KD; Thu, 02 Jul 2020 18:54:26 +0100
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 02 Jul 2020 18:54:26 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+Cc:     tglx@linutronix.de, jason@lakedaemon.net, s-anna@ti.com,
+        robh+dt@kernel.org, lee.jones@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        david@lechnology.com, wmills@ti.com
+Subject: Re: [PATCHv3 4/6] irqchip/irq-pruss-intc: Implement
+ irq_{get,set}_irqchip_state ops
+In-Reply-To: <1593699479-1445-5-git-send-email-grzegorz.jaszczyk@linaro.org>
+References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <1593699479-1445-5-git-send-email-grzegorz.jaszczyk@linaro.org>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <658e3a8d3374eca91387932a9a246add@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: grzegorz.jaszczyk@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, s-anna@ti.com, robh+dt@kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, david@lechnology.com, wmills@ti.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-If present, sources the fec's PTP clock straight from
-the enet PLL, instead of having to be routed via a SoC pad.
+On 2020-07-02 15:17, Grzegorz Jaszczyk wrote:
+> From: David Lechner <david@lechnology.com>
+> 
+> This implements the irq_get_irqchip_state and irq_set_irqchip_state
+> callbacks for the TI PRUSS INTC driver. The set callback can be used
+> by drivers to "kick" a PRU by enabling a PRU system event.
 
-This is only possible on certain SoCs, notably the imx6 (quad) plus.
+"enabling"? That'd be unmasking an interrupt, which isn't what this
+does. "injecting", maybe?
 
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
----
+> 
+> Example:
+>      irq_set_irqchip_state(irq, IRQCHIP_STATE_PENDING, true);
 
-Tree: v5.8-rc3
+Nice example.
 
-Patch history: see [PATCH v5 3/3]
+What this example does explain is how you are actually going to kick
+a PRU via this interface. For that to happen, you'd have to have on
+the Linux side an interrupt that is actually routed to a PRU.
+And from what I have understood of the previous patches, this can't
+be the case. What didi I miss?
 
-To: Shawn Guo <shawnguo@kernel.org>
-To: Andy Duan <fugang.duan@nxp.com>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
+> 
+> Signed-off-by: David Lechner <david@lechnology.com>
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+> Reviewed-by: Lee Jones <lee.jones@linaro.org>
+> ---
+> v2->v3:
+> - Get rid of unnecessary pruss_intc_check_write() and use
+>   pruss_intc_write_reg directly.
+> v1->v2:
+> - https://patchwork.kernel.org/patch/11069769/
+> ---
+>  drivers/irqchip/irq-pruss-intc.c | 43 
+> ++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 41 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-pruss-intc.c 
+> b/drivers/irqchip/irq-pruss-intc.c
+> index 49c936f..19b3d38 100644
+> --- a/drivers/irqchip/irq-pruss-intc.c
+> +++ b/drivers/irqchip/irq-pruss-intc.c
+> @@ -7,6 +7,7 @@
+>   *	Suman Anna <s-anna@ti.com>
+>   */
+> 
+> +#include <linux/interrupt.h>
+>  #include <linux/irq.h>
+>  #include <linux/irqchip/chained_irq.h>
+>  #include <linux/irqdomain.h>
+> @@ -39,8 +40,7 @@
+>  #define PRU_INTC_HIEISR		0x0034
+>  #define PRU_INTC_HIDISR		0x0038
+>  #define PRU_INTC_GPIR		0x0080
+> -#define PRU_INTC_SRSR0		0x0200
+> -#define PRU_INTC_SRSR1		0x0204
+> +#define PRU_INTC_SRSR(x)	(0x0200 + (x) * 4)
+>  #define PRU_INTC_SECR0		0x0280
+>  #define PRU_INTC_SECR1		0x0284
+>  #define PRU_INTC_ESR0		0x0300
+> @@ -145,6 +145,43 @@ static void pruss_intc_irq_relres(struct irq_data 
+> *data)
+>  	module_put(THIS_MODULE);
+>  }
+> 
+> +static int pruss_intc_irq_get_irqchip_state(struct irq_data *data,
+> +					    enum irqchip_irq_state which,
+> +					    bool *state)
+> +{
+> +	struct pruss_intc *intc = irq_data_get_irq_chip_data(data);
+> +	u32 reg, mask, srsr;
+> +
+> +	if (which != IRQCHIP_STATE_PENDING)
+> +		return -EINVAL;
+> +
+> +	reg = PRU_INTC_SRSR(data->hwirq / 32);
 
- Documentation/devicetree/bindings/net/fsl-fec.txt | 3 +++
- 1 file changed, 3 insertions(+)
+I assume the register file scales as more interrupts are added in the
+subsequent patch?
 
-diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
-index 9b543789cd52..e34df25a38f6 100644
---- a/Documentation/devicetree/bindings/net/fsl-fec.txt
-+++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
-@@ -39,6 +39,9 @@ Optional properties:
-   tx/rx queues 1 and 2. "int0" will be used for queue 0 and ENET_MII interrupts.
-   For imx6sx, "int0" handles all 3 queues and ENET_MII. "pps" is for the pulse
-   per second interrupt associated with 1588 precision time protocol(PTP).
-+- fsl,ptpclk-bypass-pad: If present, sources the fec's PTP clock straight from
-+  the enet PLL, instead of having to be routed via a SoC pad. This is only
-+  possible on certain SoCs, notably the imx6 (quad) plus.
- 
- Optional subnodes:
- - mdio : specifies the mdio bus in the FEC, used as a container for phy nodes
+> +	mask = BIT(data->hwirq % 32);
+> +
+> +	srsr = pruss_intc_read_reg(intc, reg);
+> +
+> +	*state = !!(srsr & mask);
+> +
+> +	return 0;
+> +}
+> +
+> +static int pruss_intc_irq_set_irqchip_state(struct irq_data *data,
+> +					    enum irqchip_irq_state which,
+> +					    bool state)
+> +{
+> +	struct pruss_intc *intc = irq_data_get_irq_chip_data(data);
+> +
+> +	if (which != IRQCHIP_STATE_PENDING)
+> +		return -EINVAL;
+> +
+> +	if (state)
+> +		pruss_intc_write_reg(intc, PRU_INTC_SISR, data->hwirq);
+> +	else
+> +		pruss_intc_write_reg(intc, PRU_INTC_SICR, data->hwirq);
+> +
+> +	return 0;
+> +}
+> +
+>  static struct irq_chip pruss_irqchip = {
+>  	.name = "pruss-intc",
+>  	.irq_ack = pruss_intc_irq_ack,
+> @@ -152,6 +189,8 @@ static struct irq_chip pruss_irqchip = {
+>  	.irq_unmask = pruss_intc_irq_unmask,
+>  	.irq_request_resources = pruss_intc_irq_reqres,
+>  	.irq_release_resources = pruss_intc_irq_relres,
+> +	.irq_get_irqchip_state = pruss_intc_irq_get_irqchip_state,
+> +	.irq_set_irqchip_state = pruss_intc_irq_set_irqchip_state,
+>  };
+> 
+>  static int pruss_intc_irq_domain_map(struct irq_domain *d, unsigned 
+> int virq,
+
+Thanks,
+
+         M.
 -- 
-2.17.1
-
+Jazz is not dead. It just smells funny...
