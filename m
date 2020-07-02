@@ -2,206 +2,166 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E489C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 07:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 682FEC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 07:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A89C720936
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 07:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E35E20936
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 07:48:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="onCcasIj";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uHSAlAsA"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="t2jT/Z09"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbgGBHqj (ORCPT
+        id S1728219AbgGBHsb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 03:46:39 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:43447 "EHLO
-        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726362AbgGBHqj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 03:46:39 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id DF820A96;
-        Thu,  2 Jul 2020 03:46:36 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 02 Jul 2020 03:46:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=XD7giw22ZmO7+jioYevux6e4A4V
-        ypAB+8F9PcAxqDzg=; b=onCcasIjj6hTu3WPuf4sGp6/uBj/24rWctvNGuHHyQP
-        iGIkq5cs6KYY6exKCz3iXR5EdwP6dWkoXl6thsoClOXo4/LeYsT5RJhO0PzS61+a
-        u1stq2r53l/8rRv+uHLF+vrJ7aiDaGLerafnb4EMwxsRzKjk7ZySAs/gSDFV8K4O
-        //HqGET1kB3hDcCkI4venIwe3XjS67w8J/URT5dRoVrA1K/+OMGIilKnBn8FDEHF
-        U4BbTf9XCLWgZf+OK6czrO9sLwZSkAam2l/AG4T5KnMX8H38ooOsDZIyrcYGY+tw
-        ObRp5CD9jFWZuFrFXbv46s7zk4YBjLDS9vVcbb620iw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=XD7giw
-        22ZmO7+jioYevux6e4A4VypAB+8F9PcAxqDzg=; b=uHSAlAsAhoZYXWd6OnEizh
-        vO+Xr7Xthpivedv8K2ygyrVsmHnBr+3XxwBk2YyKwXlIe5fQ2X/1ky1a0rqHMDEH
-        QMhNhe07CpiOg9iD952KgVdmy+lfI11JNZSSWslE9MbChMlVn4tY2PgAq+N3SyiG
-        M4aL4/7pEBw1+9xEE7ycWkT9ewJCBQn/SHAS3iXbceBZjF3QTzJaM6MV2GPeba/i
-        so1fHRPqUrkggVHamPlfO5CmRKGIQCUkoe2isukDNSRMB8c8y+TuE9sRkq9GPuYD
-        vH5YfOsq4XRwnkHXSpq4pWlF7RD1LgkOBrn4+x6sVMGOEHCv7BDGfL6CmhqSnSuA
-        ==
-X-ME-Sender: <xms:2pD9Xv_8DEDgYsgU4ENG14E5yt9ldfWo_anPvVHs_qZ0yXLuPdDwOw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrtdefgdduvdefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
-    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:2pD9Xrvu3pWSffdJhtROI1t-tC_B5UhUpwTimD6nZuNiPHYJM4DRWA>
-    <xmx:2pD9XtD_K1AzkRvfClc7dYbb_S_CavhwwUKrHjcYp2Ed25bJl_kLwQ>
-    <xmx:2pD9Xrc3NCP9DxAmkwGyNXTD6neeP4XTj98rN6TMLPcBj82KhsyJAA>
-    <xmx:3JD9XpcZA-4T6qtgUGGXqPCajd1anfIY-w08mJT3mAM8ZQXBG1goCZ04Vyg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D187D3280064;
-        Thu,  2 Jul 2020 03:46:33 -0400 (EDT)
-Date:   Thu, 2 Jul 2020 09:46:31 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi@googlegroups.com,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Samuel Holland <samuel@sholland.org>,
-        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>
-Subject: Re: [PATCH v7 12/13] arm64: dts: sun50i-a64-pinephone: Enable LCD
- support on PinePhone
-Message-ID: <20200702074631.oj54lreufm3fkhiu@gilmour.lan>
-References: <20200701162928.1638874-1-megous@megous.com>
- <20200701162928.1638874-13-megous@megous.com>
+        Thu, 2 Jul 2020 03:48:31 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:34036 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728206AbgGBHs2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 03:48:28 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200702074826euoutp01313aa20423db8bdd5753ad181250810d~d3-mkufS22613826138euoutp01S
+        for <devicetree@vger.kernel.org>; Thu,  2 Jul 2020 07:48:26 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200702074826euoutp01313aa20423db8bdd5753ad181250810d~d3-mkufS22613826138euoutp01S
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593676106;
+        bh=7YNN+9wShxeLt7CQ8t/PBpHhBfC5AdB9p0g33Egi1Xw=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=t2jT/Z097GlqnKV2yR8THlY2mbQsRyU/gpdvEaEDNXo8XgDkpLLpkxfnFWgwsO6IL
+         rViWvZ6GrFkuZdEPKYnAcesvwq86FmGVkYjVCnwciQLQiB8GqboDwKjH4WfCVs7drL
+         sd7/GEnnCbqjjxlAPg5YP5u2V4c67gQs7SeIbMlk=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200702074826eucas1p2bc51d4ea26094f6975b6132be0c06ede~d3-mTmFBh1699716997eucas1p2x;
+        Thu,  2 Jul 2020 07:48:26 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id D7.29.06318.A419DFE5; Thu,  2
+        Jul 2020 08:48:26 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200702074825eucas1p2791360695d10b4b3bd93046b42a7c0ec~d3-l6TOm11914919149eucas1p2r;
+        Thu,  2 Jul 2020 07:48:25 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200702074825eusmtrp2eeb230027eabaa274d49d234abcbf527~d3-l5Y9mI0980709807eusmtrp2H;
+        Thu,  2 Jul 2020 07:48:25 +0000 (GMT)
+X-AuditID: cbfec7f5-371ff700000018ae-e0-5efd914a9ac5
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 51.1B.06017.9419DFE5; Thu,  2
+        Jul 2020 08:48:25 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200702074825eusmtip13d90dba610361392a6aa8d5d1724dae5~d3-lOUFuN1440914409eusmtip1N;
+        Thu,  2 Jul 2020 07:48:24 +0000 (GMT)
+Subject: Re: [PATCH v2] ARM: dts: exynos: Fix missing empty reg/ranges
+ property regulators on Trats
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Sylwester Nawrocki <snawrocki@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Pankaj Dubey <pankaj.dubey@samsung.com>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <757ee654-e087-d660-2a9c-801743e83567@samsung.com>
+Date:   Thu, 2 Jul 2020 09:48:26 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4seei5k7uul7ogtm"
-Content-Disposition: inline
-In-Reply-To: <20200701162928.1638874-13-megous@megous.com>
+In-Reply-To: <20200702073913.GA1187@kozik-lap>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPKsWRmVeSWpSXmKPExsWy7djPc7peE//GGTx9zWzxYN42NouNM9az
+        Wlz/8pzVYv6Rc6wW/Y+BEufPb2C32PT4GqvF5V1z2CxmnN/HZLFo6xd2i9a9R9gt2p++ZHbg
+        8di0qpPNY/OSeo++LasYPT5vkgtgieKySUnNySxLLdK3S+DKmHXpAlPBZt6K9UsfsTYwLuPu
+        YuTkkBAwkVi4aDtTFyMXh5DACkaJy0eeM0I4Xxglzp7fxgLhfGaUeHq2kxWupW8uVMtyRonP
+        59ezQjjvGSVuHN/JAlIlLJAqca1pLTOILSKgKXH973ewbmaBlcwSr3dagthsAoYSXW+72EBs
+        XgE7ib1/DjCC2CwCKhLvm0+BzREViJNY/xLkQJAaQYmTM5+AxTkF9CT6Nr6Amikvsf3tHGYI
+        W1zi1pP5YNdJCFxil9jXcYMd4mwXiekTZ7NB2MISr45vgYrLSPzfCdPQzCjx8NxadginBxgc
+        TTMYIaqsJe6c+wXUzQG0QlNi/S59iLCjxJ2Jv9hBwhICfBI33gpCHMEnMWnbdGaIMK9ER5sQ
+        RLWaxKzj6+DWHrxwiXkCo9IsJK/NQvLOLCTvzELYu4CRZRWjeGppcW56arFxXmq5XnFibnFp
+        Xrpecn7uJkZgsjr97/jXHYz7/iQdYhTgYFTi4c2o+BMnxJpYVlyZe4hRgoNZSYTX6ezpOCHe
+        lMTKqtSi/Pii0pzU4kOM0hwsSuK8xotexgoJpCeWpGanphakFsFkmTg4pRoYw9Iv6oVUO2py
+        8drks1u0yK++yGJYxXhs1fWrS9arfe/eq77thaOZWuWJtPQtlb12+jadBzpURSpnpPfpRJ3d
+        6ZJxr2TF92oVFuGKkJkWE777nHJxVzOpXqm0fHvUYTvBxV90e9dKX2jZskF58R1HXXeg495P
+        Y0tf18jArll3ZgrXYUXuKCWW4oxEQy3mouJEABzL3vZSAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrEIsWRmVeSWpSXmKPExsVy+t/xu7qeE//GGfyZpGXxYN42NouNM9az
+        Wlz/8pzVYv6Rc6wW/Y9fM1ucP7+B3WLT42usFpd3zWGzmHF+H5PFoq1f2C1a9x5ht2h/+pLZ
+        gcdj06pONo/NS+o9+rasYvT4vEkugCVKz6Yov7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng8
+        1srIVEnfziYlNSezLLVI3y5BL2PWpQtMBZt5K9YvfcTawLiMu4uRk0NCwERiYd9cpi5GLg4h
+        gaWMEsunzGKHSMhInJzWwAphC0v8udbFBlH0llHiw9PXzCAJYYFUiWtNa8FsEQFNiet/v7OC
+        FDELrGSWeP2llRGio5lJ4v36y0wgVWwChhJdb0FGcXLwCthJ7P1zgBHEZhFQkXjffIoFxBYV
+        iJNYvmU+O0SNoMTJmU/A4pwCehJ9G1+AncQsYCYxb/NDZghbXmL72zlQtrjErSfzmSYwCs1C
+        0j4LScssJC2zkLQsYGRZxSiSWlqcm55bbKRXnJhbXJqXrpecn7uJERif24793LKDsetd8CFG
+        AQ5GJR7ejIo/cUKsiWXFlbmHGCU4mJVEeJ3Ono4T4k1JrKxKLcqPLyrNSS0+xGgK9NxEZinR
+        5Hxg6sgriTc0NTS3sDQ0NzY3NrNQEuftEDgYIySQnliSmp2aWpBaBNPHxMEp1cC4tUNmmd3K
+        7Zwf+brYDP9M3mXY/LlJu3iWe2y56fK5mSpbNIufnOLReyHpOO/StGmGc04+PcRw+PiCZe+z
+        u4JWPo1TZfr2Na1iWbcK05Q+LRvl4uBK6U/zF5x4c+NWi3lJocw1qxVff5s15n50ZTopt2Hl
+        ysa96p9Wd+g6xfk/SfivyCnitX+hEktxRqKhFnNRcSIAeG6IKuUCAAA=
+X-CMS-MailID: 20200702074825eucas1p2791360695d10b4b3bd93046b42a7c0ec
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200629210025eucas1p219a52e75ecce9e813aa80f0126780189
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200629210025eucas1p219a52e75ecce9e813aa80f0126780189
+References: <CGME20200629210025eucas1p219a52e75ecce9e813aa80f0126780189@eucas1p2.samsung.com>
+        <20200629205948.32250-1-krzk@kernel.org>
+        <97651868-30f3-6b91-1ea2-551ee1ebad8f@samsung.com>
+        <20200702061611.GC4175@kozik-lap> <20200702073913.GA1187@kozik-lap>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 02.07.2020 09:39, Krzysztof Kozlowski wrote:
+> On Thu, Jul 02, 2020 at 08:16:11AM +0200, Krzysztof Kozlowski wrote:
+>> On Tue, Jun 30, 2020 at 08:27:01AM +0200, Marek Szyprowski wrote:
+>>> On 29.06.2020 22:59, Krzysztof Kozlowski wrote:
+>>>> Remove the regulators node entirely because its children do not have any
+>>>> unit addresses.  This fixes DTC warning:
+>>>>
+>>>>       Warning (simple_bus_reg): /regulators/regulator-0: missing or empty reg/ranges property
+>>>>
+>>>> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>>> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>>>
+>>> What about removing the regulators node from other boards:
+>>> exynos4412-origen.dts, exynos5420-smdk5420.dts and exynos5250-arndale.dts?
+>>>
+>>> On the other hand, maybe it would be really easier to add missing
+>>> address/size-cells properties to exynos4210-trats.dts/regulators node?
+>> Indeed let's keep it consistent so in such case better to add here
+>> proper address/size-cells.
+> Actually more of DTSes put fixed regulators directly in root node, not
+> under "regulators" node:
+> exynos3250-monk.dts
+> exynos4210-i9100.dts
+> exynos4210-origen.dts
+> exynos4210-universal_c210.dts
+> exynos4412-galaxy-s3.dtsi
+> exynos4412-midas.dtsi
+> exynos4412-n710x.dts
+> exynos4412-odroidx.dts
+> exynos5250-smdk5250.dts
+> exynos5250-snow-common.dtsi
+> exynos5420-peach-pit.dts
+> exynos5800-peach-pi.dts
+>
+> If we want it to be consistent, it's easier to remove the regulator
+> nodes from exynos4412-origen.dts, exynos5420-smdk5420.dts and
+> exynos5250-arndale.dts.
 
---4seei5k7uul7ogtm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Feel free, I'm fine with both approaches.
 
-On Wed, Jul 01, 2020 at 06:29:27PM +0200, Ondrej Jirman wrote:
-> From: Icenowy Zheng <icenowy@aosc.io>
->=20
-> PinePhone uses PWM backlight and a XBD599 LCD panel over DSI for
-> display.
->=20
-> Backlight levels curve was optimized by Martijn Braam using a
-> lux meter.
->=20
-> Add its device nodes.
->=20
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Signed-off-by: Martijn Braam <martijn@brixit.nl>
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  .../allwinner/sun50i-a64-pinephone-1.1.dts    | 19 ++++++++++
->  .../dts/allwinner/sun50i-a64-pinephone.dtsi   | 35 +++++++++++++++++++
->  2 files changed, 54 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts b=
-/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
-> index 06a775c41664..3e99a87e9ce5 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
-> @@ -9,3 +9,22 @@ / {
->  	model =3D "Pine64 PinePhone Braveheart (1.1)";
->  	compatible =3D "pine64,pinephone-1.1", "allwinner,sun50i-a64";
->  };
-> +
-> +&backlight {
-> +	power-supply =3D <&reg_ldo_io0>;
-> +	/*
-> +	 * PWM backlight circuit on this PinePhone revision was changed since
-> +	 * 1.0, and the lowest PWM duty cycle that doesn't lead to backlight
-> +	 * being off is around 20%. Duty cycle for the lowest brightness level
-> +	 * also varries quite a bit between individual boards, so the lowest
-> +	 * value here was chosen as a safe default.
-> +	 */
-> +	brightness-levels =3D <
-> +		774  793  814  842
-> +		882  935  1003 1088
-> +		1192 1316 1462 1633
-> +		1830 2054 2309 2596
-> +		2916 3271 3664 4096>;
-> +	num-interpolated-steps =3D <50>;
-> +	default-brightness-level =3D <400>;
-> +};
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/ar=
-ch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-> index cefda145c3c9..85a7aa5efd32 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-> @@ -16,6 +16,13 @@ aliases {
->  		serial0 =3D &uart0;
->  	};
-> =20
-> +	backlight: backlight {
-> +		compatible =3D "pwm-backlight";
-> +		pwms =3D <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
-> +		enable-gpios =3D <&pio 7 10 GPIO_ACTIVE_HIGH>; /* PH10 */
-> +		/* Backlight configuration differs per PinePhone revision. */
-> +	};
-> +
->  	chosen {
->  		stdout-path =3D "serial0:115200n8";
->  	};
-> @@ -84,6 +91,30 @@ &dai {
->  	status =3D "okay";
->  };
-> =20
-> +&de {
-> +	status =3D "okay";
-> +};
-> +
-> +&dphy {
-> +	status =3D "okay";
-> +};
-> +
-> +&dsi {
-> +	vcc-dsi-supply =3D <&reg_dldo1>;
-> +	#address-cells =3D <1>;
-> +	#size-cells =3D <0>;
-> +	status =3D "okay";
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-If you're about to send a new version, you can remove #address-cells and
-#size-cells too, they're already set in the DTSI.
-
-Maxime
-
---4seei5k7uul7ogtm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXv2Q1wAKCRDj7w1vZxhR
-xRU3AP9/RU4o7gJkXULsYLNValRt6TkkGC1AIH6ty1GbeFVv2AD+NJYwDiC9CJxm
-iWn2yi4SWp4MZG0IKSMy8iATzq2rVgs=
-=mUin
------END PGP SIGNATURE-----
-
---4seei5k7uul7ogtm--
