@@ -2,141 +2,127 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1CE0C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 08:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E45CFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 09:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97D7B20772
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 08:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3F842088E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 09:03:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FbdtbuW4"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="ON/Ul8j0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgGBI4X (ORCPT
+        id S1727041AbgGBJDe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 04:56:23 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:43820 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726819AbgGBI4W (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 2 Jul 2020 04:56:22 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593680182; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=HtJyaDx29b1fnJMB/cy87u6Jgv4WnAhUPAzely5Z90E=; b=FbdtbuW4yOBz3aRScu2o3tOkNU63qptRkqXOa8K3tUAG+w8AJ06FhM6EMECJ0nLPEORXjZkB
- JPCmC900R5B3YjOn9WuOG8DvaeQtL3hijERsFL1xwZmrSH2kM6dlb+cMEkY0tkMNFiaSL8nU
- cW/K3R5A+rgKhG0xPaK5GiEr3ec=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n15.prod.us-east-1.postgun.com with SMTP id
- 5efda135a6e154319f438fbc (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 02 Jul 2020 08:56:21
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CA047C433CB; Thu,  2 Jul 2020 08:56:20 +0000 (UTC)
-Received: from [192.168.1.11] (unknown [117.247.20.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B59C3C433CA;
-        Thu,  2 Jul 2020 08:56:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B59C3C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH 3/3] arm64: dts: sc7180: Add OPP tables and power-domains
- for venus
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     stanimir.varbanov@linaro.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, linux-media@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1593603638-19296-1-git-send-email-rnayak@codeaurora.org>
- <1593603638-19296-4-git-send-email-rnayak@codeaurora.org>
- <20200701165414.GB3191083@google.com>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <1ce702e1-6deb-8f13-3e17-38170b136b2c@codeaurora.org>
-Date:   Thu, 2 Jul 2020 14:26:14 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 2 Jul 2020 05:03:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53262 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbgGBJDe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 05:03:34 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C46EC08C5DC
+        for <devicetree@vger.kernel.org>; Thu,  2 Jul 2020 02:03:34 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id d194so9782842pga.13
+        for <devicetree@vger.kernel.org>; Thu, 02 Jul 2020 02:03:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YjUk73CIPNmxb/gdoNk6S5t7bf881nraTdpuxxoiTMI=;
+        b=ON/Ul8j0o0JNHF2o/1DvmtpFLhAUE8RtMf1CyujbGLJ/IZ/TdWmSeyQpdm68wMyz88
+         54AnCx5tqWP50x9DvQTOGkR2icvM5j4pw/hgMISV79yE7rngu6CkjpqgOyxWS0bf8aXd
+         /zXU9/Wp7OpjxGbcYPW8lCUzedugMJxnhFBsQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YjUk73CIPNmxb/gdoNk6S5t7bf881nraTdpuxxoiTMI=;
+        b=AUP+L7eLRwZytGM0CD8jarTCOOUFf2NelpkpP9xqd9Y2ZBTchCF8GCwcC3cz9VSIIo
+         4QKepR4TVRB/PPii4QV7K4eSEuX1sjLdDS/biHsBYVi3uRpfl4EPuRShTSmNgIqQ+4tO
+         DlnRXAMqAd/GaUxhwtQwQLR+wgP2ZywAi9kY+zwJyAL7+TsgunQPTey5HFK2yNT4siH0
+         KX01GKBMfhFvPrlB8DAMkW7OKuJw6LJ+EDbt2Vwcy1QYM9Bl9TNPOIn9ct0ji8gx2mp/
+         Y03nPQpILtdA4HowE0rJW29SXM4jo77xNIOVIZfKjjlOkCPghbQo8eJH4ggzG6qGVIx4
+         4hLw==
+X-Gm-Message-State: AOAM531OsT+fE3KkkX5pKfViqOd5HlN9nh8bRfGYM02Fib6PxNy7ZIYV
+        LxAwnTdruarhKyweBIbs722BBw==
+X-Google-Smtp-Source: ABdhPJw6Koh/B5/rpA4HQqjMOhYVzJ/2d/c9CUB3NCC7j0V6gZGi+4cBT5v8CIzZQiKZ+68ySxna8A==
+X-Received: by 2002:aa7:9a84:: with SMTP id w4mr16671552pfi.13.1593680613239;
+        Thu, 02 Jul 2020 02:03:33 -0700 (PDT)
+Received: from localhost.localdomain ([2405:201:c809:c7d5:a961:9b2e:1b93:8ca7])
+        by smtp.gmail.com with ESMTPSA id y7sm7594800pjy.21.2020.07.02.02.03.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 02:03:32 -0700 (PDT)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        mylene.josserand@collabora.com
+Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        William Wu <william.wu@rock-chips.com>
+Subject: [PATCH] ARM: dts: rockchip: Add usb host0 ohci node for rk3288
+Date:   Thu,  2 Jul 2020 14:32:59 +0530
+Message-Id: <20200702090259.36595-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200701165414.GB3191083@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+rk3288 and rk3288w have a usb host0 ohci controller.
 
-On 7/1/2020 10:24 PM, Matthias Kaehlcke wrote:
-> On Wed, Jul 01, 2020 at 05:10:38PM +0530, Rajendra Nayak wrote:
->> Add the OPP tables in order to be able to vote on the performance state
->> of a power-domain
->>
->> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->> ---
->>   arch/arm64/boot/dts/qcom/sc7180.dtsi | 35 +++++++++++++++++++++++++++++++++--
->>   1 file changed, 33 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> index ad57df2..738a741 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> @@ -2392,8 +2392,10 @@
->>   			reg = <0 0x0aa00000 0 0xff000>;
->>   			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
->>   			power-domains = <&videocc VENUS_GDSC>,
->> -					<&videocc VCODEC0_GDSC>;
->> -			power-domain-names = "venus", "vcodec0";
->> +					<&videocc VCODEC0_GDSC>,
->> +					<&rpmhpd SC7180_CX>;
->> +			power-domain-names = "venus", "vcodec0", "opp-pd";
->> +			operating-points-v2 = <&venus_opp_table>;
->>   			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
->>   				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
->>   				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
->> @@ -2414,6 +2416,35 @@
->>   			video-encoder {
->>   				compatible = "venus-encoder";
->>   			};
->> +
->> +			venus_opp_table: venus-opp-table {
->> +				compatible = "operating-points-v2";
->> +
->> +				opp-200000000 {
->> +					opp-hz = /bits/ 64 <150000000>;
->> +					required-opps = <&rpmhpd_opp_low_svs>;
->> +				};
->> +
->> +				opp-320000000 {
->> +					opp-hz = /bits/ 64 <270000000>;
->> +					required-opps = <&rpmhpd_opp_svs>;
->> +				};
->> +
->> +				opp-380000000 {
->> +					opp-hz = /bits/ 64 <340000000>;
->> +					required-opps = <&rpmhpd_opp_svs_l1>;
->> +				};
->> +
->> +				opp-444000000 {
->> +					opp-hz = /bits/ 64 <434000000>;
->> +					required-opps = <&rpmhpd_opp_nom>;
->> +				};
->> +
->> +				opp-533000000 {
->> +					opp-hz = /bits/ 64 <500000000>;
->> +					required-opps = <&rpmhpd_opp_turbo>;
->> +				};
-> 
-> the labels of the OPP nodes don't match the specified frequencies
+Although rk3288 ohci doesn't actually work on hardware, but
+rk3288w ohci can work well.
 
-Oops, I'll fix and respin.
+So add usb host0 ohci node in rk3288 dtsi and the quirk in
+ohci platform driver will disable ohci on rk3288.
 
+The bootloader must update the compatible in order to bypass
+host0_ohci in legacy rk3288 platform.
+
+Cc: William Wu <william.wu@rock-chips.com>
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+Note:
+- U-Boot patch for compatible update
+https://patchwork.ozlabs.org/project/uboot/patch/20200702084820.35942-1-jagan@amarulasolutions.com/
+
+ arch/arm/boot/dts/rk3288.dtsi | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 0cd88774db95..fd0066d07dfc 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -614,7 +614,19 @@ usb_host0_ehci: usb@ff500000 {
+ 		status = "disabled";
+ 	};
+ 
+-	/* NOTE: ohci@ff520000 doesn't actually work on hardware */
++	/**
++	 * NOTE: ohci@ff520000 doesn't actually work on hardware
++	 * hardware, but can work on rk3288w hardware.
++	 */
++	usb_host0_ohci: usb@ff520000 {
++		compatible = "generic-ohci";
++		reg = <0x0 0xff520000 0x0 0x100>;
++		interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru HCLK_USBHOST0>;
++		phys = <&usbphy1>;
++		phy-names = "usb";
++		status = "disabled";
++	};
+ 
+ 	usb_host1: usb@ff540000 {
+ 		compatible = "rockchip,rk3288-usb", "rockchip,rk3066-usb",
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.25.1
+
