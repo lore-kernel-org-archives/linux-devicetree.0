@@ -2,587 +2,215 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3006FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 16:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 703CDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 16:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0127420720
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 16:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FE0620885
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 16:37:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qpFHFS7+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbgGBQ1l (ORCPT
+        id S1726751AbgGBQht (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 12:27:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37702 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbgGBQ1l (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 12:27:41 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFD16C08C5C1;
-        Thu,  2 Jul 2020 09:27:40 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: koike)
-        with ESMTPSA id 8EF4D2A6013
-Subject: Re: [PATCH v2 3/3] ARM: dts: rockchip: add rk3288 ISP and DPHY
-To:     Johan Jonker <jbx6244@gmail.com>,
-        karthik poduval <karthik.poduval@gmail.com>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        heiko@sntech.de, linux-rockchip@lists.infradead.org,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-References: <karthik.poduval@gmail.com>
- <20200406073017.19462-1-karthik.poduval@gmail.com>
- <20200406073017.19462-4-karthik.poduval@gmail.com>
- <2fc95890-f938-30a5-a163-bf3fa2e223df@gmail.com>
- <CAFP0Ok-NxDDF8TMP4pN=xn6w3H=TYqN3DMfGW-vuiC5qB-Oj5g@mail.gmail.com>
- <CAFP0Ok9XGzVbghbnOOyfXiOOc5-a94uFRu7sD5wXz9sr-+AYEA@mail.gmail.com>
- <9407b6c3-b932-5904-18ff-7c6cbf6bcc8b@gmail.com>
-From:   Helen Koike <helen.koike@collabora.com>
-Message-ID: <ec0e43f0-95af-c0b0-c51b-ea2db4194931@collabora.com>
-Date:   Thu, 2 Jul 2020 13:27:32 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 2 Jul 2020 12:37:49 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:36673 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgGBQhs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 12:37:48 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200702163747euoutp0200243705d7335568b86e0704b2cadd85~d-NyZ4QbA0802908029euoutp02F
+        for <devicetree@vger.kernel.org>; Thu,  2 Jul 2020 16:37:47 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200702163747euoutp0200243705d7335568b86e0704b2cadd85~d-NyZ4QbA0802908029euoutp02F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593707867;
+        bh=i9GtKm4WhJUsYZQ05oW3SlZXUj0Qjrx/Pp5bCy+19KQ=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=qpFHFS7+DUX9FL9a6ErWeYP543XRytezjtJdl41sJZDLVOZIHTR9y6VF8JS1REE2k
+         zIXhaNm7SpV9Yr8xKgxYLjVQ5YCTRRHQprcDg3GUWnPvweJ2Gw8olIczFePhn4TRoh
+         13OEr5uyEYe5nIECfMERvqkvl8x3T8FUGw5HmixU=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200702163746eucas1p22e462edeeaa7b44c660f9f64da1d31a7~d-NxxFd472646326463eucas1p2j;
+        Thu,  2 Jul 2020 16:37:46 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id EF.5A.06318.A5D0EFE5; Thu,  2
+        Jul 2020 17:37:46 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200702163746eucas1p2363251b3b6fb6084123cedd67fa132d5~d-NxZPRal2646326463eucas1p2i;
+        Thu,  2 Jul 2020 16:37:46 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200702163746eusmtrp118c2d8325d59fa423234d57a9276acf9~d-NxYffo21333013330eusmtrp1k;
+        Thu,  2 Jul 2020 16:37:46 +0000 (GMT)
+X-AuditID: cbfec7f5-38bff700000018ae-45-5efe0d5a798b
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id FC.9B.06314.A5D0EFE5; Thu,  2
+        Jul 2020 17:37:46 +0100 (BST)
+Received: from AMDC3061.digital.local (unknown [106.120.51.75]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200702163745eusmtip2c9eb3169ca506724fb79dd5218c7d0e4~d-NwqGR5g2242122421eusmtip2h;
+        Thu,  2 Jul 2020 16:37:45 +0000 (GMT)
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+To:     georgi.djakov@linaro.org, cw00.choi@samsung.com, krzk@kernel.org
+Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
+        a.swigon@samsung.com, myungjoo.ham@samsung.com,
+        inki.dae@samsung.com, sw0312.kim@samsung.com,
+        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, s.nawrocki@samsung.com
+Subject: [PATCH RFC v6 0/6] Exynos: Simple QoS for exynos-bus using
+ interconnect
+Date:   Thu,  2 Jul 2020 18:37:18 +0200
+Message-Id: <20200702163724.2218-1-s.nawrocki@samsung.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <9407b6c3-b932-5904-18ff-7c6cbf6bcc8b@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRjl3b27u65uXK+SD6YVy7CCNNPozSwq/DHwjxRGGFpLbyo6lU0r
+        +1HWmN+FKOQ0LRNTmZVzqZilia2WWVpYKula4LSU7IMpkZ+5Xfv4d57znPM+58BLE9w7sSed
+        kJzGq5IVSTJKSrY8+9W3PZJZjN7RPLATW29oEW7UNYjx4PQnMb5p6hXjtzPfKFzSbqRwkbWQ
+        xH19Bgk2jg6IcX9bOYXtV0wI6/o6RPiuySLBw5fqKKxtN0nwky/ZYqwrnqAOuMqN+lxKPjLw
+        iJJb880i+f3qi/KrTXoktxvXh1OR0pBYPinhDK/y339SGl9j/ypKzfc5V/96nspENd55yIUG
+        NgjyOicleUhKc2wdgvaCQSQM0wjMSwuUMNgR3FvUEnmIdlpqKn0FvhbBg6xx4q/jo8FCON6l
+        2AC48vQqcmB3NhSyxm6QDhHB5hDQ0lrkFLmxhyGn6rHIgUl2M/Rr50WOCwwbDL3fg4R8G6De
+        0OmUM6wrdJfaSAcmlnlN83XnYWDfS+CW8bNEMITCVNYgErAbTJqbVngv6CkuIAWDBkHBw2GJ
+        MBQisJorVxx7YaR3lnKkINit0NDmL9AHocJSvlJ/DQxNuQoh1kBRS8kKzUBOFieofWBOXyIS
+        sCfk25ZIActBX1rn7MKxUTBWMUQVoo1l/1Ur+69a2b8MlYjQIw8+Xa2M49WByfxZP7VCqU5P
+        jvOLSVEa0fJn61k0z7SijvlTXYilkWw187l7IZoTK86oM5RdCGhC5s4cetUTzTGxiozzvCrl
+        hCo9iVd3oXU0KfNgAqsmojg2TpHGJ/J8Kq/6sxXRLp6Z6Jp0oEnT9mKu373bUG46zr0xXKgb
+        7diSHeoZFJ+bu+nIy1sfdp+WBZPzjN+BCO/9FlX19x/htt3PbV4/TSENq/Y1Jkb3NrnrNLqv
+        yoN30mc711t3pd62VR0LO9rwQVOb6WsJ45YgQDse3jI4FlLvm7IponChYk/M2uKEqBpRt8dl
+        GamOVwRsI1RqxW8rOVu8aAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrHIsWRmVeSWpSXmKPExsVy+t/xe7pRvP/iDLYsFbO4P6+V0WLjjPWs
+        Fte/PGe1mH/kHKvFla/v2Sym793EZjHp/gQWi/PnN7BbbHp8jdXi8q45bBafe48wWsw4v4/J
+        Yu2Ru+wWtxtXsFm07j3CbnH4TTurxYzJL9kcBD02repk87hzbQ+bx/3u40wem5fUe/RtWcXo
+        8XmTXABblJ5NUX5pSapCRn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamSvp1NSmpOZllqkb5d
+        gl7Gss/vmAq6VSpWX/jD1sC4TLaLkYNDQsBEYtkC9S5GLg4hgaWMEhe332CCiEtJzG9R6mLk
+        BDKFJf5c62KDqPnEKLFr+ic2kASbgKFE79E+RhBbRMBD4lTrWlYQm1lgBrPE6VmmILawQIDE
+        gWOXmEBsFgFVicutf8Dm8wpYSZz7YAIxX15i9YYDzCA2r4CgxMmZT1hASpgF1CXWzxOCmCgv
+        0bx1NvMERv5ZSKpmIVTNQlK1gJF5FaNIamlxbnpusaFecWJucWleul5yfu4mRmDcbTv2c/MO
+        xksbgw8xCnAwKvHwTjj+N06INbGsuDL3EKMEB7OSCK/T2dNxQrwpiZVVqUX58UWlOanFhxhN
+        gT6YyCwlmpwPTAl5JfGGpobmFpaG5sbmxmYWSuK8HQIHY4QE0hNLUrNTUwtSi2D6mDg4pRoY
+        J3q388nfXL62N0gtesE5dlktYx1FVz7Wvz9nCH3f9n7jFKlGz9Dqip6nbOEP13rwllc8yFA8
+        fJ75nNiXO++Vdk6YHK/lKaszw+5sh0y87r93M5e9yCn2Xmm5ejXvh/sai7XaulV9fZbPnDP5
+        VZ/yun2H33FXv7AuD021a+hpEJRkv8n5gT9RiaU4I9FQi7moOBEAgL/8XdECAAA=
+X-CMS-MailID: 20200702163746eucas1p2363251b3b6fb6084123cedd67fa132d5
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200702163746eucas1p2363251b3b6fb6084123cedd67fa132d5
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200702163746eucas1p2363251b3b6fb6084123cedd67fa132d5
+References: <CGME20200702163746eucas1p2363251b3b6fb6084123cedd67fa132d5@eucas1p2.samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello all,
+This patchset adds interconnect API support for the Exynos SoC "samsung,
+exynos-bus" compatible devices, which already have their corresponding
+exynos-bus driver in the devfreq subsystem.  Complementing the devfreq
+driver with an interconnect functionality allows to ensure the QoS
+requirements of devices accessing the system memory (e.g. video processing
+devices) are fulfilled and aallows to avoid issues like the one discussed
+in thread [1].
 
-Sorry for my late reply, please see below,
+This patch series adds implementation of the interconnect provider per each
+"samsung,exynos-bus" compatible DT node, with one interconnect node per
+provider.  The interconnect code which was previously added as a part of
+the devfreq driver has been converted to a separate platform driver.
+In the devfreq a corresponding virtual child platform device is registered.
+Integration of devfreq and interconnect frameworks is achieved through
+the PM QoS API.
 
-On 4/23/20 8:12 AM, Johan Jonker wrote:
-> Hi robh, Heiko, Karthik, Helen and others,
-> 
-> See comments below.
-> Should we change Helen's patch serie a little bit to accommodate other
-> isp1 compatibles as well? Could you give advise here? Thanks!
-> 
-> Johan
-> 
-> 
-> On 4/23/20 7:10 AM, karthik poduval wrote:
->> Hi Johan/Helen,
->>
->> I was attempting to fix the yaml to work for both platforms rk3288 and
->> rk3399. I couldn't find any specific example in the existing yaml files
->> that deal with this exact scenario common driver but different clocks for
->> different chipsets. Could you point me to an appropriate example ?
->>
->> Meanwhile here is the patch I was trying out.
->> diff --git a/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
->> b/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
->> index af246b71eac6..4ca76a1bbb63 100644
->> --- a/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
->> +++ b/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
->> @@ -15,7 +15,11 @@ description: |
->>
->>  properties:
->>    compatible:
->> -    const: rockchip,rk3399-cif-isp
->> +    items:
->> +      - enum:
->> +        - rockchip,rk3288-cif-isp
->> +        - rockchip,rk3399-cif-isp
->> +      - const: rockchip,rk3399-cif-isp
->>
->>    reg:
->>      maxItems: 1
->> @@ -37,20 +41,38 @@ properties:
->>      const: dphy
->>
-> 
->>    clocks:
->> -    items:
->> -      - description: ISP clock
->> -      - description: ISP AXI clock clock
->> -      - description: ISP AXI clock  wrapper clock
->> -      - description: ISP AHB clock clock
->> -      - description: ISP AHB wrapper clock
->> +    oneOf:
->> +      # rk3399 clocks
->> +      - items:
->> +        - description: ISP clock
->> +        - description: ISP AXI clock clock
->> +        - description: ISP AXI clock  wrapper clock
->> +        - description: ISP AHB clock clock
->> +        - description: ISP AHB wrapper clock
->> +      # rk3288 clocks
->> +      - items:
->> +        - description: ISP clock
->> +        - description: ISP AXI clock clock
->> +        - description: ISP AHB clock clock
->> +        - description: ISP Pixel clock
->> +        - description: ISP JPEG source clock
->>
-> 
-> We can expect a few more clocks here, so just use:
-> 
->   clocks:
->     minItems: 4
->     maxItems: 5
-> 
-> or
-> 
-> See question for Helen about 'pclk_isp_wrap':
-> 
->   clocks:
->     minItems: 4
->     maxItems: 6
-> 
-> 
-> From Rockchip tree:
-> 
-> static const char * const rk1808_isp_clks[] = {
-> 	"clk_isp",
-> 	"aclk_isp",
-> 	"hclk_isp",
-> 	"pclk_isp",
-> };
-> 
-> static const char * const rk3288_isp_clks[] = {
-> 	"clk_isp",
-> 	"aclk_isp",
-> 	"hclk_isp",
-> 	"pclk_isp_in",
-> 	"sclk_isp_jpe",
-> };
-> 
-> static const char * const rk3326_isp_clks[] = {
-> 	"clk_isp",
-> 	"aclk_isp",
-> 	"hclk_isp",
-> 	"pclk_isp",
-> };
-> 
-> static const char * const rk3368_isp_clks[] = {
-> 	"clk_isp",
-> 	"aclk_isp",
-> 	"hclk_isp",
-> 	"pclk_isp",
-> };
-> 
-> static const char * const rk3399_isp_clks[] = {
-> 	"clk_isp",
-> 	"aclk_isp",
-> 	"hclk_isp",
-> 	"aclk_isp_wrap",
-> 	"hclk_isp_wrap",
-> 	"pclk_isp_wrap"
-> };
+A sample interconnect consumer for exynos-mixer is added in patches 5/6,
+6/6, it is currently added only for exynos4412 and allows to address the
+mixer DMA underrun error issues [1].
 
-I was checking the clock topology, and we don't need aclk_isp and hclk_isp,
-since they are parents of the "wrap" versions:
+Main changes since v5 [3] is an addition of "bus-width: DT property, which
+specifies data width of the interconnect bus (patches 1...2/6 and addition
+of synchronization of the interconnect bandwidth setting with VSYNC
+(patch 6/6).
 
- xin24m
-...
-    pll_npll
-       npll
-          clk_isp1
-          clk_isp0
-...
-    pll_cpll
-...
-       cpll
-          aclk_isp1
-             aclk_isp1_noc
-             hclk_isp1
-                aclk_isp1_wrapper
-                hclk_isp1_noc
-          aclk_isp0
-             hclk_isp1_wrapper
-             aclk_isp0_wrapper
-             aclk_isp0_noc
-             hclk_isp0
-                hclk_isp0_wrapper
-                hclk_isp0_noc
-...
- pclkin_isp1_wrapper
+The series has been tested on Odroid U3 board. It is based on icc-next
+branch, which already includes required patches [2]:
+ 26c205e interconnect: Allow inter-provider pairs to be configured
+ 0db4ee05 interconnect: Relax requirement in of_icc_get_from_provider()
+ 6998a7c interconnect: Export of_icc_get_from_provider()
 
-
-(it is a bit weird that hclk_isp1_wrapper is a child of aclk_isp0, but this is how
-is described in the SoC TRM)
-
-I tested with only:
-
-static const char * const rk3399_isp_clks[] = {
-	"clk_isp",
-	"aclk_isp_wrap",
-	"hclk_isp_wrap",
-};
-
-And it works, and it doesn't work when removing any of those.
-
-> 
-> Question for Helen:
-> 
-> Where did 'pclk_isp_wrap' go in your patch serie?
-
-There are two instances of the ISPv1 in the SoC (isp0 and isp1), but I can only test
-isp0 on rk3399
-
-It seems that isp1 requires pclk_isp_wrap, so we can add it as optional in the bindings (see below).
-
-> 
->>    clock-names:
->> -    items:
->> -      - const: clk_isp
->> -      - const: aclk_isp
->> -      - const: aclk_isp_wrap
->> -      - const: hclk_isp
->> -      - const: hclk_isp_wrap
->> +    oneOf:
->> +      # rk3399 clocks
-> 
-> sort on SoC
-> 
->> +      - items:
->> +        - const: clk_isp
->> +        - const: aclk_isp
->> +        - const: aclk_isp_wrap
->> +        - const: hclk_isp
->> +        - const: hclk_isp_wrap
->> +      # rk3288 clocks
-> 
-> sort on SoC
-> 
->> +      - items:
->> +        - const: clk_isp
->> +        - const: aclk_isp
->> +        - const: hclk_isp
->> +        - const: pclk_isp_in
->> +        - const: sclk_isp_jpe
-> 
->   clock-names:
->     oneOf:
->       # rk3288 clocks
->       - items:
->         - const: clk_isp
->           description: ISP clock
->         - const: aclk_isp
->           description: ISP AXI clock clock
->         - const: hclk_isp
->           description: ISP AHB clock clock
->         - const: pclk_isp_in
->           description: ISP Pixel clock
->         - const: sclk_isp_jpe
->           description: ISP JPEG source clock
->       # rk3399 clocks
->       - items:
->         - const: clk_isp
->           description: ISP clock
->         - const: aclk_isp
->           description: ISP AXI clock clock
->         - const: aclk_isp_wrap
->           description: ISP AXI clock  wrapper clock
->         - const: hclk_isp
->           description: ISP AHB clock clock
->         - const: hclk_isp_wrap
->           description: ISP AHB wrapper clock
-
-
-I suggest this:
-
-  clocks:
-    maxItems: 5
-    minItems: 3
-    description:
-      rk3288 clocks
-        ISP clock
-        ISP AXI clock
-        ISP AHB clock
-        ISP Pixel clock
-        ISP JPEG source clock
-      rk3399 isp0 clocks
-        ISP clock
-        ISP AXI wrapper clock
-        ISP AHB wrapper clock
-      rk3399 isp1 clocks
-        ISP clock
-        ISP AXI wrapper clock
-        ISP AHB wrapper clock
-        ISP Pixel wrapper clock
-
-  clock-names:
-    oneOf:
-      # rk3288 clocks
-      - items:
-        - const: clk_isp
-        - const: aclk_isp
-        - const: hclk_isp
-        - const: pclk_isp_in
-        - const: sclk_isp_jpe
-      # rk3399 isp0 clocks
-      - items:
-        - const: clk_isp
-        - const: aclk_isp_wrap
-        - const: hclk_isp_wrap
-      # rk3399 isp1 clocks
-      - items:
-        - const: clk_isp
-        - const: aclk_isp_wrap
-        - const: hclk_isp_wrap
-        - const: pclk_isp_wrap
-
-Where "# rk3288 clocks", "# rk3399 isp0 clocks" and "# rk3399 isp1 clocks" could be
-added in separated patchsets that are sure those works corretly.
-
+--
 Regards,
-Helen
+Sylwester
 
-> 
-> Question for robh:
-> Is this a proper way to add description or is there a beter way?
-> 
->>
->> on running command.
->> make ARCH=arm dtbs_check
->> DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
->>
->> I see following messages for dts nodes.
->>  DTC     arch/arm/boot/dts/rk3288-firefly-beta.dt.yaml
->>   CHECK   arch/arm/boot/dts/rk3288-firefly-beta.dt.yaml
->> /home/kpoduval/workspace/tinkerboard-yocto/build/tmp/work/tinker_board-poky-linux-gnueabi/linux-stable/5.5.7+gitAUTOINC+ceab3ac1e6-r0/linux-tinker_board-standard-build/arch/arm/boot/dts/rk3288-firefly-beta.dt.yaml:
->> isp@ff910000: clocks: [[7, 107], [7, 205], [7, 469], [7, 371], [7, 108]] is
->> valid under each of {'additionalItems': False, 'items': [{}, {}, {}, {},
->> {}], 'maxItems': 5, 'minItems': 5, 'type': 'array'}, {'additionalItems':
->> False, 'items': [{}, {}, {}, {}, {}], 'maxItems': 5, 'minItems': 5, 'type':
->> 'array'}
->> /home/kpoduval/workspace/tinkerboard-yocto/build/tmp/work/tinker_board-poky-linux-gnueabi/linux-stable/5.5.7+gitAUTOINC+ceab3ac1e6-r0/linux-tinker_board-standard-build/arch/arm/boot/dts/rk3288-firefly-beta.dt.yaml:
->> isp@ff910000: compatible: ['rockchip,rk3288-cif-isp'] is too short
->>
->> Are these cosidered as error messages ? The "too short" is being alerted
->> for the orgianl yaml for rk3399 without any of my chnages.
->> Kindly advise.
->>
->> --
->> Regards,
->> Karthik Poduval
->>
->> On Sat, Apr 11, 2020 at 10:13 PM karthik poduval <karthik.poduval@gmail.com>
->> wrote:
->>
->>> Thanks Johan for your valuable comments.
->>>
->>> On Wed, Apr 8, 2020 at 6:19 PM Johan Jonker <jbx6244@gmail.com> wrote:
->>>>
->>>> Hi Karthik and others,
->>>>
->>>> Include all mail lists found with:
->>>> ./scripts/get_maintainer.pl --nogit-fallback --nogit
->>>>
->>>> Helen is moving isp1 bindings out of staging.
->>>> Clocks and other things don't fit with her patch serie.
->>>> Maybe fix this while still in staging?
->>>>
->>>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
->>>> 'phys' is a required property
->>>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
->>>> 'phy-names' is a required property
->>>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
->>>> 'ports' is a required property
->>>>
->>>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
->>>> 'assigned-clock-rates', 'assigned-clocks'
->>>> do not match any of the regexes: 'pinctrl-[0-9]+'
->>>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
->>>> clock-names:2: 'aclk_isp_wrap' was expected
->>>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
->>>> clock-names:3: 'hclk_isp' was expected
->>>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
->>>> clock-names:4: 'hclk_isp_wrap' was expected
->>>>
->>>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: mipi-phy-rx0: 'power-domains'
->>>> is a required property
->>>>
->>>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: mipi-phy-rx0: clock-names:1:
->>>> 'dphy-cfg' was expected
->>>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: mipi-phy-rx0: clock-names:
->>>> ['dphy-ref', 'pclk'] is too short
->>>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: mipi-phy-rx0: clocks: [[7,
->>>> 126], [7, 358]] is too short
->>>>
->>>>
->>>> Inside yaml:
->>>> Use enum and sort.
->>>>>>  properties:
->>>>>>    compatible:
->>>>
->>>>>>      const: rockchip,rk3399-cif-isp
->>>>>> +    const: rockchip,rk3288-rkisp1
->>>>
->>>>     enum:
->>>>       - rockchip,rk3288-rkisp1
->>>>       - rockchip,rk3399-cif-isp
->>>>
->>>>>>  properties:
->>>>>>    compatible:
->>>>>>      const: rockchip,rk3399-mipi-dphy-rx0
->>>>>> +    const: rockchip,rk3288-mipi-dphy-rx0
->>>>
->>>>     enum:
->>>>       - rockchip,rk3288-mipi-dphy-rx0
->>>>       - rockchip,rk3399-mipi-dphy-rx0
->>>>
->>>>>
->>>>> Please, keep consistency, or rk3288-cif-isp, or we change
->>> rk3399-cif-isp to be rk3399-rkisp1.
->>>>
->>>>
->>>> On 4/6/20 9:30 AM, Karthik Poduval wrote:
->>>>> ISP and DPHY device entries missing so add them.
->>>>>
->>>>
->>>>> tested on tinkerbaord with ov5647 using command
->>>>> cam -c 1 -C -F cap
->>>>
->>>> Disclose dts node for ov5647 in cover letter, so people can reproduce
->>>> this experiment.
->>>>
->>>> Caution!
->>>> Without dts node this command doesn't work correct.
->>>>
->>>> make ARCH=arm dtbs_check
->>>>
->>> DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
->>>>
->>>> make ARCH=arm dtbs_check
->>>>
->>> DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy-rx0.yaml
->>>>
->>>> Needed to detect missing: phys, phy-names and ports ,etc.
->>>>
->>>> &isp {
->>>>         status = "okay";
->>>> };
->>>>
->>> Makes sense, that's why my kernel compilation passed and I didn't
->>> these errors. Thanks for the command, I will verify dts for
->>> correctness in next patch series.
->>>
->>>> Needed to detect missing: power-domains, etc.
->>>>
->>>> &mipi_phy_rx0 {
->>>>         status = "okay";
->>>> };
->>>>
->>>>>
->>>>> Reported-by: Karthik Poduval <karthik.poduval@gmail.com>
->>>>> Signed-off-by: Karthik Poduval <karthik.poduval@gmail.com>
->>>>> ---
->>>>>  arch/arm/boot/dts/rk3288.dtsi | 25 +++++++++++++++++++++++++
->>>>>  1 file changed, 25 insertions(+)
->>>>>
->>>>> diff --git a/arch/arm/boot/dts/rk3288.dtsi
->>> b/arch/arm/boot/dts/rk3288.dtsi
->>>>> index 9beb662166aa..adea8189abd9 100644
->>>>> --- a/arch/arm/boot/dts/rk3288.dtsi
->>>>> +++ b/arch/arm/boot/dts/rk3288.dtsi
->>>>> @@ -247,6 +247,23 @@
->>>>>               ports = <&vopl_out>, <&vopb_out>;
->>>>>       };
->>>>>
->>>>
->>>>> +     isp: isp@ff910000 {
->>>>
->>>> For nodes:
->>>> Sort things without reg alphabetical first,
->>>> then sort the rest by reg address.
->>>>
->>> Sure
->>>>> +             compatible = "rockchip,rk3288-rkisp1";
->>>>> +             reg = <0x0 0xff910000 0x0 0x4000>;
->>>>> +             interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
->>>>> +             clocks = <&cru SCLK_ISP>, <&cru ACLK_ISP>,
->>>>> +                      <&cru HCLK_ISP>, <&cru PCLK_ISP_IN>,
->>>>> +                      <&cru SCLK_ISP_JPE>;
->>>>> +             clock-names = "clk_isp", "aclk_isp",
->>>>> +                           "hclk_isp", "pclk_isp_in",
->>>>> +                           "sclk_isp_jpe";
->>>>> +             assigned-clocks = <&cru SCLK_ISP>, <&cru SCLK_ISP_JPE>;
->>>>> +             assigned-clock-rates = <400000000>, <400000000>;
->>>>
->>>>> +             power-domains = <&power RK3288_PD_VIO>;
->>>>> +             iommus = <&isp_mmu>;
->>>>
->>>> sort
->>>>
->>>> Something missing?
->>>> Where are the ports and port nodes?
->>>
->>> I was assuming that this would be a part of the board specific dtsi or
->>> dts entry where the isp node would be overriden and the i2c camera
->>> port
->>> and the isp port remote-endpoints would be connected. I had this as a
->>> part of my first patch series. However I was advised by Helen to not
->>> include the ov5647
->>> dtsi as it isn't hardwired to the SoC and resides on an camera adapter
->>> board.
->>>
->>> Should this be defined without the remote-endpoint phandle since we
->>> don't know exactly which sensor gets connected in this dtsi file ?
->>>
->>>>
->>>>> +             status = "disabled";
-> 
-> Question for Heiko:
-> Should we add status to Helen's serie as well?
-> 
->>>>> +     };
->>>>> +
->>>>>       sdmmc: mmc@ff0c0000 {
->>>>>               compatible = "rockchip,rk3288-dw-mshc";
->>>>>               max-frequency = <150000000>;
->>>>> @@ -891,6 +908,14 @@
->>>>>                       status = "disabled";
->>>>>               };
->>>>>
->>>>
->>>>> +             mipi_phy_rx0: mipi-phy-rx0 {
->>>>
->>>> Use separate patch.
->>>>
->>>> For nodes:
->>>> Sort things without reg alphabetical first,
->>>> then sort the rest by reg address.
->>>>
->>> Sure
->>>
->>>>> +                     compatible = "rockchip,rk3288-mipi-dphy-rx0";
->>>>> +                     clocks = <&cru SCLK_MIPIDSI_24M>, <&cru
->>> PCLK_MIPI_CSI>;
->>>>> +                     clock-names = "dphy-ref", "pclk";
->>>> Something missing?
->>>> Does this phy have a power domain?
->>> The tinkerboard debian kernel (where I referred to for this patch)
->>> didn't have it defined for the DPHY. I would guess that it would be
->>> the same as the ISP i.e. RK3288_PD_VIO,
->>> does anyone know the answer to this or do I have to reach out to
->>> Rockchip engineering ?
->>>>
->>>>> +                     #phy-cells = <0>;
->>>>> +                     status = "disabled";
->>>>> +             };
->>>>> +
->>>>>               io_domains: io-domains {
->>>>>                       compatible = "rockchip,rk3288-io-voltage-domain";
->>>>>                       status = "disabled";
->>>>>
->>>>
->>>
->>>
->>> --
->>> Regards,
->>> Karthik Poduval
->>>
->>
->>
-> 
+
+Changes since v3 [4] (v4 skipped to align with patchset [1]), detailed
+changes are listed in each patch:
+ - conversion to a separate interconnect (platform) driver,
+ - an update of the DT binding documenting new optional properties:
+   #interconnect-cells, samsung,interconnect-parent in "samsung,exynos-bus"
+   nodes,
+ - new DT properties added to the SoC, rather than to the board specific
+   files.
+
+Changes since v2 [5]:
+ - Use icc_std_aggregate().
+ - Implement a different modification of apply_constraints() in
+   drivers/interconnect/core.c (patch 03).
+ - Use 'exynos,interconnect-parent-node' in the DT instead of
+   'devfreq'/'parent', depending on the bus.
+ - Rebase on DT patches that deprecate the 'devfreq' DT property.
+ - Improve error handling, including freeing generated IDs on failure.
+ - Remove exynos_bus_icc_connect() and add exynos_bus_icc_get_parent().
+
+Changes since v1 [6]:
+ - Rebase on coupled regulators patches.
+ - Use dev_pm_qos_*() API instead of overriding frequency in
+   exynos_bus_target().
+ - Use IDR for node ID allocation.
+ - Reverse order of multiplication and division in
+   mixer_set_memory_bandwidth() (patch 07) to avoid integer overflow.
+
+
+References:
+[1] https://patchwork.kernel.org/patch/10861757/ (original issue)
+[2] https://www.spinics.net/lists/linux-samsung-soc/msg70014.html
+[3] https://www.spinics.net/lists/arm-kernel/msg810722.html
+[4] https://lore.kernel.org/linux-pm/20191220115653.6487-1-a.swigon@samsung.com
+[5] https://patchwork.kernel.org/cover/11054417/ (v1 of this RFC)
+[6] https://patchwork.kernel.org/cover/11152595/ (v2 of this RFC)
+
+
+Artur Świgoń (1):
+  ARM: dts: exynos: Add interconnects to Exynos4412 mixer
+
+Sylwester Nawrocki (5):
+  dt-bindings: exynos-bus: Add documentation for interconnect properties
+  interconnect: Add generic interconnect driver for Exynos SoCs
+  PM / devfreq: exynos-bus: Add registration of interconnect child
+    device
+  ARM: dts: exynos: Add interconnect properties to Exynos4412 bus nodes
+  drm: exynos: mixer: Add interconnect support
+
+ .../devicetree/bindings/devfreq/exynos-bus.txt     |  68 +++++++-
+ arch/arm/boot/dts/exynos4412.dtsi                  |   7 +
+ drivers/devfreq/exynos-bus.c                       |  17 ++
+ drivers/gpu/drm/exynos/exynos_mixer.c              | 150 +++++++++++++++-
+ drivers/interconnect/Kconfig                       |   1 +
+ drivers/interconnect/Makefile                      |   1 +
+ drivers/interconnect/exynos/Kconfig                |   6 +
+ drivers/interconnect/exynos/Makefile               |   4 +
+ drivers/interconnect/exynos/exynos.c               | 192 +++++++++++++++++++++
+ 9 files changed, 436 insertions(+), 10 deletions(-)
+ create mode 100644 drivers/interconnect/exynos/Kconfig
+ create mode 100644 drivers/interconnect/exynos/Makefile
+ create mode 100644 drivers/interconnect/exynos/exynos.c
+
+--
+2.7.4
+
