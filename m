@@ -2,171 +2,111 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7B7C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 21:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D11DAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 22:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 218A120B1F
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 21:39:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593725968;
-	bh=xe9nQIr35mMCn3c7wpvqZxc+cExtXSyGYE78Yrb49lw=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=BNfZh1dUqAbKWCqoStCTrqnDamTLZyBJswydtASZ2feUvvFu4ShS/pbMfnCm2cZGR
-	 VxMz9/0LbpXumKpomEQltgZZGZlR21NgdaLqqbe5LBol8rkjvScBR1uNWmvlnXi5ZM
-	 X0Yt6ks5Y1yEQzUDrU7x5+cIPKjobRPSUeYj1id4=
+	by mail.kernel.org (Postfix) with ESMTP id A857A20780
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 22:29:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H5Eg11Z9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726194AbgGBVj1 (ORCPT
+        id S1726300AbgGBW3m (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 17:39:27 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:37166 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbgGBVj1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 17:39:27 -0400
-Received: by mail-io1-f68.google.com with SMTP id v6so16797463iob.4;
-        Thu, 02 Jul 2020 14:39:26 -0700 (PDT)
+        Thu, 2 Jul 2020 18:29:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36976 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726110AbgGBW3m (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 18:29:42 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC1CFC08C5C1;
+        Thu,  2 Jul 2020 15:29:41 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id h22so27101620lji.9;
+        Thu, 02 Jul 2020 15:29:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xxQFr1BqDEffTMIbjj2nr78urbKnKQfjZ+rNpfgSt08=;
+        b=H5Eg11Z9hn0nAlgWO7xYNhfv0JqaLDjFb6T3TNFC4HAhEYM+NAykFGb40mVhLCEyP8
+         89J6eu0fEwy/nisaUDezq6zLhobof7rGWCcDy5p0cCVTOXcIu91LT30adquKyk1RDcpo
+         R5Za4WEURUdOtucQnivvJbaFYfMj1p1AiBdGYkZobOlKsMz4CJb9Ka5vqgX3hio6nEU4
+         LApjtLJ4mIuzgwD1Y67rCWqyTi0T9ViqnT9MwX/X1hWv+OdjGDDvjuKJNvyfqdALZyHz
+         0mSG7VtcmsjqA6JIA87D7xXr4IJ1fsqhQNS3ljpAHMYqKSLCfPIHnHNt2Yc6kXHAekRe
+         UYig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=cnWwGTygPTxavzAiqzY7CKnWVGYSk3pYOsuHvvBZkC4=;
-        b=tDfwzChmc4pTzqZWFNLofhX55tvv/H+HFFFVCCm26A0Cv6egEHGWJgIgHwQ15q1oGB
-         Yo10PuhJZrYV+mZrbl1tCbF0jdix/rIRXoU0Mq7vIP4AKwOxd1glUGVXRIcDET++TKKI
-         4v/LorEBJ7DFrz+lUcB8I0ks9Fk3kY4gUXdD/2ObUNVyvRyL1i9HaDD+DffbqVxfGl2g
-         MBjKuTN/nHC5AmbJ59henf6m+LDqKv1DGYEK7oP3mR6zzLmyFc3HpXff11dDhm/dyv0Z
-         qKOkvkObdX+clgE2rDnR/z5/YaBCOu4xXYZR/aebAWiFK2IfIQoQ0YyqZtUtC1GZSoMq
-         BHfw==
-X-Gm-Message-State: AOAM531nlUGqf4u+KVi1WFzRqbPDJMpS9VHnOcw4VHmkC+WvpHmB6fti
-        Xf3K9u/bek1xhhwXw5I3Gw==
-X-Google-Smtp-Source: ABdhPJz0EK4pTjFCKLhVkHQ9QaNkHSgPeH3K7fHMeNcyRu216PqAp/vuwsnj4NIgwMWaFKovnxTJ8A==
-X-Received: by 2002:a05:6602:2f0f:: with SMTP id q15mr9550599iow.23.1593725966373;
-        Thu, 02 Jul 2020 14:39:26 -0700 (PDT)
-Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id v5sm4990834ios.54.2020.07.02.14.39.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 14:39:25 -0700 (PDT)
-Received: (nullmailer pid 1769713 invoked by uid 1000);
-        Thu, 02 Jul 2020 21:39:24 -0000
-Date:   Thu, 2 Jul 2020 15:39:24 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>
-Subject: [GIT PULL] Devicetree fixes for 5.8, v2
-Message-ID: <20200702213924.GA1763915@bogus>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xxQFr1BqDEffTMIbjj2nr78urbKnKQfjZ+rNpfgSt08=;
+        b=CSibwBh/B0WsD7+B82rXM6+1vIXOLEhiI2gh5BrIOX1NRaPN87smcsBiA7oaIaK5KV
+         XeaUkL8flzwozIPN0oyDlz7q79aCFiGEwX8hjqoReYJ4BZEey5mHI7PvTuomkoay5Ahq
+         l6anU8UtU9LWyob9V00++5CfXGDqfX9+Ib/k2ZWFMmBe/AQbQccFuBbCQ1Qtrn9fFqDx
+         cWifNg/TzxJo4ly4oFISCoX5YwhZ48tYvMnEYN8C+gIpTO30YBvxXxyX6BKbH2ZkmAdO
+         LgL01WHbtkfAwH0qiacnm2NHXCE3R+VAMkDw+CsoC6rfsPKmKUN6s8M6Fa06McyKqCHO
+         82lg==
+X-Gm-Message-State: AOAM530smaHNs+5c0HEGujinBLUCOsoMgvL1xaihhLU/Q5gBtXJpbC7w
+        +VtW/QG37zujmIwL5LzEIYFatjCO4eA2nKCQtLU=
+X-Google-Smtp-Source: ABdhPJw63DHFOW+2oJ387eLmT45jEZ5gsdDYBXDveJ+O6iDUw8rDJqoTS4F60kuHr07mYRB3M3UDRSi7vwC3QvZSNpQ=
+X-Received: by 2002:a2e:9e87:: with SMTP id f7mr18422139ljk.44.1593728980418;
+ Thu, 02 Jul 2020 15:29:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20200702175352.19223-1-TheSven73@gmail.com> <20200702175352.19223-3-TheSven73@gmail.com>
+In-Reply-To: <20200702175352.19223-3-TheSven73@gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Thu, 2 Jul 2020 19:29:29 -0300
+Message-ID: <CAOMZO5DxUeXH8ZYxmKynA7xO3uF6SP_Kt-g=8MPgsF7tqkRvAA@mail.gmail.com>
+Subject: Re: [PATCH v5 3/3] ARM: imx6plus: optionally enable internal routing
+ of clk_enet_ref
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Fugang Duan <fugang.duan@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Linus,
+Hi Sven,
 
-Please pull DT fixes for 5.8. I wouldn't normally update dtc at this 
-point in the cycle, but I've been waiting on fixes to land upstream for 
-a while now.
+On Thu, Jul 2, 2020 at 2:53 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
 
-Rob
+> +       /*
+> +        * On imx6 plus, enet_ref from ANATOP/CCM can be internally routed to
+> +        * be the PTP clock source, instead of having to be routed through
+> +        * pads.
+> +        */
+> +       if (of_machine_is_compatible("fsl,imx6qp")) {
+> +               clksel = of_property_read_bool(np, "fsl,ptpclk-bypass-pad") ?
+> +                               IMX6Q_GPR5_ENET_TXCLK_SEL_PLL :
+> +                               IMX6Q_GPR5_ENET_TXCLK_SEL_PAD;
+> +               regmap_update_bits(gpr, IOMUXC_GPR5,
+> +                                  IMX6Q_GPR5_ENET_TXCLK_SEL_MASK, clksel);
+> +       }
 
+With the device tree approach, I think that a better place to touch
+GPR5 would be inside the fec driver.
 
-The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+You can refer to drivers/pci/controller/dwc/pci-imx6.c and follow the
+same approach for accessing the GPR register:
+...
+/* Grab GPR config register range */
+imx6_pcie->iomuxc_gpr =
+syscon_regmap_lookup_by_compatible("fsl,imx6q-iomuxc-gpr")
 
-  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.8-2
-
-for you to fetch changes up to 0115e6c98c22f3fc7ff7da2a41480483abe95b37:
-
-  dt-bindings: clock: imx: Fix e-mail address (2020-07-01 16:29:11 -0600)
-
-----------------------------------------------------------------
-Devicetree fixes for v5.8, take 2:
-
-- Sync dtc to upstream to pick up fixes for I2C bus checks and quiet
-  warnings
-
-- Various fixes for DT binding check warnings
-
-- A couple of build fixes/improvements for binding checks
-
-- ReST formatting improvements for writing-schema.rst
-
-- Document reference fixes
-
-----------------------------------------------------------------
-Fabio Estevam (5):
-      dt-bindings: usb: aspeed: Remove the leading zeroes
-      dt-bindings: display: arm: versatile: Pass the sysreg unit name
-      dt-bindings: thermal: Remove soc unit address
-      dt-bindings: thermal: k3: Fix the reg property
-      dt-bindings: clock: imx: Fix e-mail address
-
-Flavio Suligoi (1):
-      doc: devicetree: bindings: fix spelling mistake
-
-Kangmin Park (1):
-      dt-bindings: mailbox: zynqmp_ipi: fix unit address
-
-Masahiro Yamada (4):
-      dt-bindings: bus: uniphier-system-bus: fix warning in example
-      dt-bindings: fix error in 'make clean' after 'make dt_binding_check'
-      dt-bindings: do not build processed-schema.yaml for 'make dt_binding_check'
-      dt-bindings: copy process-schema-examples.yaml to process-schema.yaml
-
-Mauro Carvalho Chehab (5):
-      dt: update a reference for reneases pcar file renamed to yaml
-      dt: fix broken links due to txt->yaml renames
-      dt: Fix broken references to renamed docs
-      dt: fix reference to olpc,xo1.75-ec.txt
-      docs: dt: minor adjustments at writing-schema.rst
-
-Rob Herring (1):
-      scripts/dtc: Update to upstream version v1.6.0-11-g9d7888cbf19c
-
- Documentation/devicetree/bindings/Makefile         | 38 +++++++++++++++------
- .../devicetree/bindings/arm/freescale/fsl,scu.txt  |  2 +-
- .../bus/socionext,uniphier-system-bus.yaml         |  4 +--
- .../devicetree/bindings/clock/imx27-clock.yaml     |  2 +-
- .../devicetree/bindings/clock/imx31-clock.yaml     |  2 +-
- .../devicetree/bindings/clock/imx5-clock.yaml      |  2 +-
- .../devicetree/bindings/display/bridge/sii902x.txt |  2 +-
- .../bindings/display/imx/fsl-imx-drm.txt           |  4 +--
- .../devicetree/bindings/display/imx/ldb.txt        |  4 +--
- .../display/panel/arm,versatile-tft-panel.yaml     |  2 +-
- .../bindings/display/rockchip/rockchip-drm.yaml    |  2 +-
- .../bindings/gpio/mediatek,mt7621-gpio.txt         |  2 +-
- .../bindings/interrupt-controller/csky,mpintc.txt  |  2 +-
- .../bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt   |  2 +-
- .../devicetree/bindings/misc/olpc,xo1.75-ec.txt    |  2 +-
- .../devicetree/bindings/net/mediatek-bluetooth.txt |  2 +-
- .../bindings/pinctrl/renesas,pfc-pinctrl.txt       |  2 +-
- .../devicetree/bindings/sound/audio-graph-card.txt |  2 +-
- .../devicetree/bindings/sound/st,sti-asoc-card.txt |  2 +-
- .../devicetree/bindings/spi/qcom,spi-geni-qcom.txt |  2 +-
- .../bindings/thermal/thermal-sensor.yaml           |  2 +-
- .../devicetree/bindings/thermal/thermal-zones.yaml |  2 +-
- .../bindings/thermal/ti,am654-thermal.yaml         |  2 +-
- .../devicetree/bindings/timer/csky,mptimer.txt     |  2 +-
- .../devicetree/bindings/usb/aspeed,usb-vhub.yaml   |  4 +--
- Documentation/devicetree/writing-schema.rst        |  9 +++--
- Documentation/mips/ingenic-tcu.rst                 |  2 +-
- MAINTAINERS                                        |  8 ++---
- scripts/Makefile.lib                               |  7 +++-
- scripts/dtc/checks.c                               | 39 ++++++++++++++++++++--
- scripts/dtc/dtc.h                                  | 31 +++++++++++++++++
- scripts/dtc/flattree.c                             |  2 +-
- scripts/dtc/libfdt/fdt_rw.c                        |  2 +-
- scripts/dtc/libfdt/fdt_sw.c                        |  2 +-
- scripts/dtc/libfdt/libfdt.h                        |  8 +++++
- scripts/dtc/treesource.c                           |  8 ++---
- scripts/dtc/version_gen.h                          |  2 +-
- scripts/dtc/yamltree.c                             |  6 ++--
- 38 files changed, 159 insertions(+), 61 deletions(-)
+For the property name, what about fsl,txclk-from-pll?
