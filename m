@@ -2,416 +2,184 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A92C433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 00:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED757C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 00:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1BF22082F
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 00:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8AEE20B1F
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 00:45:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BW5hWve/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727867AbgGBALg (ORCPT
+        id S1726723AbgGBApH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 20:11:36 -0400
-Received: from mga03.intel.com ([134.134.136.65]:60622 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727811AbgGBALe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jul 2020 20:11:34 -0400
-IronPort-SDR: 07UqMuJqX/DOjhl9axr1tjq1a6HaS5tlUiaLhhHOp9+KburGPKG6GZ4qI0YzYx8BxuPvQtPV4t
- NO8H4rXdDCLQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="146734373"
-X-IronPort-AV: E=Sophos;i="5.75,302,1589266800"; 
-   d="scan'208";a="146734373"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 17:11:32 -0700
-IronPort-SDR: Mncba7ksVP/Ab9VlH86zTt8uFbw0OeEbMTO2rq6jN8RWuKKWXU5fxfw3gi6GSBa8ZneLuwWcpt
- tnF05i4nD3bg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,302,1589266800"; 
-   d="scan'208";a="313944385"
-Received: from wwanmoha-ilbpg2.png.intel.com ([10.88.227.42])
-  by fmsmga002.fm.intel.com with ESMTP; 01 Jul 2020 17:11:30 -0700
-From:   Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-To:     kishon@ti.com, vkoul@kernel.org, robh+dt@kernel.org,
-        andriy.shevchenko@intel.com
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        wan.ahmad.zainie.wan.mohamad@intel.com, sureshkumar.mp@intel.com,
-        lakshmi.bai.raja.subramanian@intel.com
-Subject: [PATCH v6 2/2] phy: intel: Add Keem Bay eMMC PHY support
-Date:   Thu,  2 Jul 2020 08:09:34 +0800
-Message-Id: <20200702000934.3258-3-wan.ahmad.zainie.wan.mohamad@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200702000934.3258-1-wan.ahmad.zainie.wan.mohamad@intel.com>
-References: <20200702000934.3258-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+        Wed, 1 Jul 2020 20:45:07 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:12628 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726161AbgGBApG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 20:45:06 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200702004504epoutp044707cb67a10214972275ca4734d4fc32~dyN9EM11e0268402684epoutp04b
+        for <devicetree@vger.kernel.org>; Thu,  2 Jul 2020 00:45:04 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200702004504epoutp044707cb67a10214972275ca4734d4fc32~dyN9EM11e0268402684epoutp04b
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593650704;
+        bh=cr1O3j0g2Qo31hxYu1nd+OKIhFic8UjzEN5/LrLf1Rg=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=BW5hWve/DGwbURL4rnA3BbmktMggL9hcf6OpJpX0ekc/FH42UcvsO4zWSdDpowEp9
+         hi6X75NDnOoq2AXT8B9NJWlhTkURU7yhEXB6l+HX9cN5eFRtBz20T5bsnke1XtWCHd
+         YxgtPJQEZesAoDw/gvQt+QuHXcmstGpwkBEeyttE=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20200702004503epcas1p487e96ff72e39c320da2c74cd5f44c81e~dyN8e4WAR1635916359epcas1p4L;
+        Thu,  2 Jul 2020 00:45:03 +0000 (GMT)
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.154]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 49xzrp6tKbzMqYkh; Thu,  2 Jul
+        2020 00:44:58 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        EB.C8.19033.A0E2DFE5; Thu,  2 Jul 2020 09:44:58 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200702004458epcas1p4fdfcf011b6e880ad886ad5022a51c6b5~dyN3RyhPq1281412814epcas1p46;
+        Thu,  2 Jul 2020 00:44:58 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200702004458epsmtrp244a74758c68d61794b2991b37abc29b9~dyN3Q1iT62661626616epsmtrp2k;
+        Thu,  2 Jul 2020 00:44:58 +0000 (GMT)
+X-AuditID: b6c32a36-16fff70000004a59-06-5efd2e0adc0c
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        2E.62.08382.A0E2DFE5; Thu,  2 Jul 2020 09:44:58 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200702004457epsmtip27c5c6690082e9279945405425055c242~dyN27uuPo0248402484epsmtip2Q;
+        Thu,  2 Jul 2020 00:44:57 +0000 (GMT)
+Subject: Re: [PATCH v4 10/37] PM / devfreq: tegra20: Silence deferred probe
+ error
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>
+Cc:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
+        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <14271aed-5fb6-14e1-3fe9-ef8d0c5013c4@samsung.com>
+Date:   Thu, 2 Jul 2020 09:56:13 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
+MIME-Version: 1.0
+In-Reply-To: <20200609131404.17523-11-digetx@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02TbUxbZRTH9/S2ty2xeCkwHnDOcl3MwFFaoOxiAGWWpRM/oE00EKVc6V1L
+        KG1ti3HDOOaAAXMbYAax4UVGpttFFBDYAEkVOhE7cIhuOEeQbEsWBmVQIEh5sZfrIt9+55z/
+        ec7zf14EiPguGibINdooi5E04Kgft3swQhblJ93Ikn21EE9MNZQAwr34gEc0Okd5RMvCPUD8
+        vjyPErX9HShRbL/IJUY+meUT4711KOE56wRE+ZIdJcZ+SSX+OnkZJapbLwCipN/JJzZvtXOJ
+        f3obuK8EqOYnSviqHvskX/Xb6Dqi6qDLUdXdW9+jqqkzQxzV2VNuVHWukwYqT8fedGFmXqKe
+        IrWURUIZc0zaXKMuCU9Ta17VKOJl8ih5AnEQlxjJfCoJV76eHnU41+Dzgks+IA0FvlQ6abXi
+        0cmJFlOBjZLoTVZbEk6ZtQZzgllqJfOtBUadNMeU/5JcJotR+ITZefqapla++cunPuw4uQ6K
+        wKqwAggFEIuDffQWtwL4CcTYNQCdS8UoGywCOOf91VcR+IIVAMvUTxoqr6zyWE2/T1Pv5rPB
+        PIDfVQ8CRhWIqWHVSBGHKQRhTgS2lA8BJkCwcQBHSpdQRoVikdDxcGKbn8bC4R+r9wAzToQl
+        w4keKYNcbB+kG3WMIhh7Cw53F2+vL8IC4PDn97kMC7GD8Mz1qm1GsBB4534jh+Xn4NW5OoQZ
+        C7HTQvhwbYbHWlDC881uhOVAODPUyWc5DHrc/SjLhfDKsBNlm8sA7HTc/K85FjoufcZhNodg
+        EfDb3mg2HQ57vPWAHewP3cuf8hgJxESwrFTMSp6H439PclgOhc2ny9FKgNt32LHvsGDfYcH+
+        /7AvAJcGuymzNV9HWeXmmJ2X3QG2n3lk/DVQPfdYOgA4AjAAoADBg0Qu2VqWWKQljx2nLCaN
+        pcBAWQeAwne+VUhYcI7J90+MNo1cERMbG0vEyeMVcjkeInphz80sMaYjbVQeRZkpy5M+jkAY
+        VsRRa7C2RbV4zLSnatKh/TlVeWgz5TD6zZvn0LU3dqXVuVxdqWl9ouQMerHtz0T/Gcsjmk//
+        uEA79tbMqh0es3+hVOPav//r68H2hEy361hpSfTK7refIT9W/FAW8K6iqcKgHFghpyOOntg4
+        HvJic1xzXebRef+Qxx6n9/bw7YQJfXpx60dHTsWk0jemKqcz0KbR0PRlUb9/xXsP4qPf2djQ
+        SW5o/Vyh2RcXa81Bms1pXeedjJSJ2Z9Wp5Nrsr319L7C9iOlDYFL3M2xwdcu99Ve0K8HeVu2
+        HmWEv9wGU94353SfuBqKHUAOrbRXI7s4q13K4vADEaEziZeehetb3ugunGvVk/JIxGIl/wX8
+        QUYkbwQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBIsWRmVeSWpSXmKPExsWy7bCSvC6X3t84gxOfmC3uz2tltHj36Smr
+        xfwj51gtVn98zGhx5et7NovpezexWbTMWsRicbbpDbvF5V1z2Cw+9x5htOj8MovN4uIpV4vb
+        jSvYLCatncpo0br3CLvFv2sbWSx+7prH4iDo8f5GK7vHzll32T0unfvD7LFpVSebx51re9g8
+        7ncfZ/LobX7H5tG3ZRWjx+dNcgGcUVw2Kak5mWWpRfp2CVwZ0xauZS9YxlOxqfEPYwPjD84u
+        Rk4OCQETiQkrf7B2MXJxCAnsZpR4eukuI0RCUmLaxaPMXYwcQLawxOHDxRA1bxkl7uzfDVYj
+        LBAsMfFsAxNIQkTgGLPEptOnwRxmgcuMEjs6v7JBtGxjlJh+ahkbSAubgJbE/hc3wGx+AUWJ
+        qz8eM4Ks4BWwk7ixUw/EZBFQkVg1Px2kQlQgTGLnksdMIDavgKDEyZlPWEBsTgFzie6jE8Fs
+        ZgF1iT/zLjFD2OISt57MZ4Kw5SW2v53DPIFReBaS9llIWmYhaZmFpGUBI8sqRsnUguLc9Nxi
+        wwLDvNRyveLE3OLSvHS95PzcTYzgyNbS3MG4fdUHvUOMTByMhxglOJiVRHhPG/yKE+JNSays
+        Si3Kjy8qzUktPsQozcGiJM57o3BhnJBAemJJanZqakFqEUyWiYNTqoFp+cSdUo++b9nbpR7J
+        8GTClhVp4jMu2T2dbmb32S2v+3+k9LHPzt6lLMVFPq/qPDyPvP4UPVNCZcVNeUm9Z/JH15fO
+        MsnJ0n78qfpisHD7zn0Xrgitdp5Q/f27d/wi81huBddtrBGJC2K0epkO5DZP81LIO8qs8Gum
+        M1NDySNe90iul6yXTnybu4LnbNKjydv109xCaxdc756SGzxPTPDJh6iT2/O4TudlZO6OutCd
+        xn/R6uzEI2E3JaU2FL32ifkdv1DuQNhNT80tM+Rac9mlYiRXXta4IFPxZ2n0kxUdjOlyM2dW
+        Xeq/rJA9Y76yz/e536XZX2jNUufS31pR++D8GaO485qXjv1JnsMokf5HiaU4I9FQi7moOBEA
+        1HYv0lsDAAA=
+X-CMS-MailID: 20200702004458epcas1p4fdfcf011b6e880ad886ad5022a51c6b5
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200609131843epcas1p352d1dfcbca81988d3363036d762dd47f
+References: <20200609131404.17523-1-digetx@gmail.com>
+        <CGME20200609131843epcas1p352d1dfcbca81988d3363036d762dd47f@epcas1p3.samsung.com>
+        <20200609131404.17523-11-digetx@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for eMMC PHY on Intel Keem Bay SoC.
+Hi Dmitry,
 
-Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
----
- drivers/phy/intel/Kconfig            |  12 +
- drivers/phy/intel/Makefile           |   1 +
- drivers/phy/intel/phy-keembay-emmc.c | 314 +++++++++++++++++++++++++++
- 3 files changed, 327 insertions(+)
- create mode 100644 drivers/phy/intel/phy-keembay-emmc.c
+On 6/9/20 10:13 PM, Dmitry Osipenko wrote:
+> Tegra EMC driver was turned into a regular kernel driver, it also could
+> be compiled as a loadable kernel module now. Hence EMC clock isn't
 
-diff --git a/drivers/phy/intel/Kconfig b/drivers/phy/intel/Kconfig
-index 7b47682a4e0e..8ddda4fb95d2 100644
---- a/drivers/phy/intel/Kconfig
-+++ b/drivers/phy/intel/Kconfig
-@@ -22,3 +22,15 @@ config PHY_INTEL_EMMC
- 	select GENERIC_PHY
- 	help
- 	  Enable this to support the Intel EMMC PHY
-+
-+config PHY_KEEMBAY_EMMC
-+	tristate "Intel Keem Bay EMMC PHY driver"
-+	depends on ARM64 || COMPILE_TEST
-+	depends on OF && HAS_IOMEM
-+	select GENERIC_PHY
-+	select REGMAP_MMIO
-+	help
-+	  Choose this option if you have an Intel Keem Bay SoC.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called phy-keembay-emmc.
-diff --git a/drivers/phy/intel/Makefile b/drivers/phy/intel/Makefile
-index 233d530dadde..6566334e7b77 100644
---- a/drivers/phy/intel/Makefile
-+++ b/drivers/phy/intel/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_PHY_INTEL_COMBO)		+= phy-intel-combo.o
- obj-$(CONFIG_PHY_INTEL_EMMC)            += phy-intel-emmc.o
-+obj-$(CONFIG_PHY_KEEMBAY_EMMC)		+= phy-keembay-emmc.o
-diff --git a/drivers/phy/intel/phy-keembay-emmc.c b/drivers/phy/intel/phy-keembay-emmc.c
-new file mode 100644
-index 000000000000..66b5931a749a
---- /dev/null
-+++ b/drivers/phy/intel/phy-keembay-emmc.c
-@@ -0,0 +1,314 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Intel Keem Bay eMMC PHY driver
-+ * Copyright (C) 2020 Intel Corporation
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+/* eMMC/SD/SDIO core/phy configuration registers */
-+#define PHY_CFG_0		0x24
-+#define  SEL_DLY_TXCLK_MASK	BIT(29)
-+#define  SEL_DLY_TXCLK(x)	(((x) << 29) & SEL_DLY_TXCLK_MASK)
-+#define  OTAP_DLY_ENA_MASK	BIT(27)
-+#define  OTAP_DLY_ENA(x)	(((x) << 27) & OTAP_DLY_ENA_MASK)
-+#define  OTAP_DLY_SEL_MASK	GENMASK(26, 23)
-+#define  OTAP_DLY_SEL(x)	(((x) << 23) & OTAP_DLY_SEL_MASK)
-+#define  DLL_EN_MASK		BIT(10)
-+#define  DLL_EN(x)		(((x) << 10) & DLL_EN_MASK)
-+#define  PWR_DOWN_MASK		BIT(0)
-+#define  PWR_DOWN(x)		(((x) << 0) & PWR_DOWN_MASK)
-+
-+#define PHY_CFG_2		0x2c
-+#define  SEL_FREQ_MASK		GENMASK(12, 10)
-+#define  SEL_FREQ(x)		(((x) << 10) & SEL_FREQ_MASK)
-+
-+#define PHY_STAT		0x40
-+#define  CAL_DONE_MASK		BIT(6)
-+#define  IS_CALDONE(x)		((x) & CAL_DONE_MASK)
-+#define  DLL_RDY_MASK		BIT(5)
-+#define  IS_DLLRDY(x)		((x) & DLL_RDY_MASK)
-+
-+/* From ACS_eMMC51_16nFFC_RO1100_Userguide_v1p0.pdf p17 */
-+#define FREQSEL_200M_170M	0x0
-+#define FREQSEL_170M_140M	0x1
-+#define FREQSEL_140M_110M	0x2
-+#define FREQSEL_110M_80M	0x3
-+#define FREQSEL_80M_50M		0x4
-+
-+struct keembay_emmc_phy {
-+	struct regmap *syscfg;
-+	struct clk *emmcclk;
-+};
-+
-+static const struct regmap_config keembay_regmap_config = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+};
-+
-+static int keembay_emmc_phy_power(struct phy *phy, bool on_off)
-+{
-+	struct keembay_emmc_phy *priv = phy_get_drvdata(phy);
-+	unsigned int caldone;
-+	unsigned int dllrdy;
-+	unsigned int freqsel;
-+	unsigned int mhz;
-+	int ret;
-+
-+	/*
-+	 * Keep phyctrl_pdb and phyctrl_endll low to allow
-+	 * initialization of CALIO state M/C DFFs
-+	 */
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, PWR_DOWN_MASK,
-+				 PWR_DOWN(0));
-+	if (ret) {
-+		dev_err(&phy->dev, "CALIO power down bar failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, DLL_EN_MASK,
-+				 DLL_EN(0));
-+	if (ret) {
-+		dev_err(&phy->dev, "turn off the dll failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Already finish power off above */
-+	if (!on_off)
-+		return 0;
-+
-+	mhz = DIV_ROUND_CLOSEST(clk_get_rate(priv->emmcclk), 1000000);
-+	if (mhz <= 200 && mhz >= 170)
-+		freqsel = FREQSEL_200M_170M;
-+	else if (mhz <= 170 && mhz >= 140)
-+		freqsel = FREQSEL_170M_140M;
-+	else if (mhz <= 140 && mhz >= 110)
-+		freqsel = FREQSEL_140M_110M;
-+	else if (mhz <= 110 && mhz >= 80)
-+		freqsel = FREQSEL_110M_80M;
-+	else if (mhz <= 80 && mhz >= 50)
-+		freqsel = FREQSEL_80M_50M;
-+	else
-+		freqsel = 0x0;
-+
-+	if (mhz < 50 || mhz > 200)
-+		dev_warn(&phy->dev, "Unsupported rate: %d MHz\n", mhz);
-+
-+	/*
-+	 * According to the user manual, calpad calibration
-+	 * cycle takes more than 2us without the minimal recommended
-+	 * value, so we may need a little margin here
-+	 */
-+	udelay(5);
-+
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, PWR_DOWN_MASK,
-+				 PWR_DOWN(1));
-+	if (ret) {
-+		dev_err(&phy->dev, "CALIO power down bar failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/*
-+	 * According to the user manual, it asks driver to wait 5us for
-+	 * calpad busy trimming. However it is documented that this value is
-+	 * PVT(A.K.A. process, voltage and temperature) relevant, so some
-+	 * failure cases are found which indicates we should be more tolerant
-+	 * to calpad busy trimming.
-+	 */
-+	ret = regmap_read_poll_timeout(priv->syscfg, PHY_STAT,
-+				       caldone, IS_CALDONE(caldone),
-+				       0, 50);
-+	if (ret) {
-+		dev_err(&phy->dev, "caldone failed, ret=%d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Set the frequency of the DLL operation */
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_2, SEL_FREQ_MASK,
-+				 SEL_FREQ(freqsel));
-+	if (ret) {
-+		dev_err(&phy->dev, "set the frequency of dll failed:%d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Turn on the DLL */
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, DLL_EN_MASK,
-+				 DLL_EN(1));
-+	if (ret) {
-+		dev_err(&phy->dev, "turn on the dll failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/*
-+	 * We turned on the DLL even though the rate was 0 because we the
-+	 * clock might be turned on later.  ...but we can't wait for the DLL
-+	 * to lock when the rate is 0 because it will never lock with no
-+	 * input clock.
-+	 *
-+	 * Technically we should be checking the lock later when the clock
-+	 * is turned on, but for now we won't.
-+	 */
-+	if (mhz == 0)
-+		return 0;
-+
-+	/*
-+	 * After enabling analog DLL circuits docs say that we need 10.2 us if
-+	 * our source clock is at 50 MHz and that lock time scales linearly
-+	 * with clock speed. If we are powering on the PHY and the card clock
-+	 * is super slow (like 100kHz) this could take as long as 5.1 ms as
-+	 * per the math: 10.2 us * (50000000 Hz / 100000 Hz) => 5.1 ms
-+	 * hopefully we won't be running at 100 kHz, but we should still make
-+	 * sure we wait long enough.
-+	 *
-+	 * NOTE: There appear to be corner cases where the DLL seems to take
-+	 * extra long to lock for reasons that aren't understood. In some
-+	 * extreme cases we've seen it take up to over 10ms (!). We'll be
-+	 * generous and give it 50ms.
-+	 */
-+	ret = regmap_read_poll_timeout(priv->syscfg, PHY_STAT,
-+				       dllrdy, IS_DLLRDY(dllrdy),
-+				       0, 50 * USEC_PER_MSEC);
-+	if (ret)
-+		dev_err(&phy->dev, "dllrdy failed, ret=%d\n", ret);
-+
-+	return ret;
-+}
-+
-+static int keembay_emmc_phy_init(struct phy *phy)
-+{
-+	struct keembay_emmc_phy *priv = phy_get_drvdata(phy);
-+
-+	/*
-+	 * We purposely get the clock here and not in probe to avoid the
-+	 * circular dependency problem. We expect:
-+	 * - PHY driver to probe
-+	 * - SDHCI driver to start probe
-+	 * - SDHCI driver to register it's clock
-+	 * - SDHCI driver to get the PHY
-+	 * - SDHCI driver to init the PHY
-+	 *
-+	 * The clock is optional, so upon any error just return it like
-+	 * any other error to user.
-+	 */
-+	priv->emmcclk = clk_get_optional(&phy->dev, "emmcclk");
-+
-+	return PTR_ERR_OR_ZERO(priv->emmcclk);
-+}
-+
-+static int keembay_emmc_phy_exit(struct phy *phy)
-+{
-+	struct keembay_emmc_phy *priv = phy_get_drvdata(phy);
-+
-+	clk_put(priv->emmcclk);
-+
-+	return 0;
-+};
-+
-+static int keembay_emmc_phy_power_on(struct phy *phy)
-+{
-+	struct keembay_emmc_phy *priv = phy_get_drvdata(phy);
-+	int ret;
-+
-+	/* Delay chain based txclk: enable */
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, SEL_DLY_TXCLK_MASK,
-+				 SEL_DLY_TXCLK(1));
-+	if (ret) {
-+		dev_err(&phy->dev, "ERROR: delay chain txclk set: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Output tap delay: enable */
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, OTAP_DLY_ENA_MASK,
-+				 OTAP_DLY_ENA(1));
-+	if (ret) {
-+		dev_err(&phy->dev, "ERROR: output tap delay set: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Output tap delay */
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, OTAP_DLY_SEL_MASK,
-+				 OTAP_DLY_SEL(2));
-+	if (ret) {
-+		dev_err(&phy->dev, "ERROR: output tap delay select: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Power up eMMC phy analog blocks */
-+	return keembay_emmc_phy_power(phy, true);
-+}
-+
-+static int keembay_emmc_phy_power_off(struct phy *phy)
-+{
-+	/* Power down eMMC phy analog blocks */
-+	return keembay_emmc_phy_power(phy, false);
-+}
-+
-+static const struct phy_ops ops = {
-+	.init		= keembay_emmc_phy_init,
-+	.exit		= keembay_emmc_phy_exit,
-+	.power_on	= keembay_emmc_phy_power_on,
-+	.power_off	= keembay_emmc_phy_power_off,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int keembay_emmc_phy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct keembay_emmc_phy *priv;
-+	struct phy *generic_phy;
-+	struct phy_provider *phy_provider;
-+	void __iomem *base;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	priv->syscfg = devm_regmap_init_mmio(dev, base, &keembay_regmap_config);
-+	if (IS_ERR(priv->syscfg))
-+		return PTR_ERR(priv->syscfg);
-+
-+	generic_phy = devm_phy_create(dev, np, &ops);
-+	if (IS_ERR(generic_phy)) {
-+		dev_err(dev, "failed to create PHY\n");
-+		return PTR_ERR(generic_phy);
-+	}
-+
-+	phy_set_drvdata(generic_phy, priv);
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+}
-+
-+static const struct of_device_id keembay_emmc_phy_dt_ids[] = {
-+	{ .compatible = "intel,keembay-emmc-phy" },
-+	{}
-+};
-+
-+MODULE_DEVICE_TABLE(of, keembay_emmc_phy_dt_ids);
-+
-+static struct platform_driver keembay_emmc_phy_driver = {
-+	.probe		= keembay_emmc_phy_probe,
-+	.driver		= {
-+		.name	= "keembay-emmc-phy",
-+		.of_match_table = keembay_emmc_phy_dt_ids,
-+	},
-+};
-+module_platform_driver(keembay_emmc_phy_driver);
-+
-+MODULE_AUTHOR("Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>");
-+MODULE_DESCRIPTION("Intel Keem Bay eMMC PHY driver");
-+MODULE_LICENSE("GPL v2");
+Looks good to me. But, you better to add the commit information
+about Tegra EMC driver with commit-id ("patch title") format
+into patch descritpion.
+
+> guaranteed to be available and clk_get("emc") may return -EPROBE_DEFER and
+> there is no good reason to spam KMSG with a error about missing EMC clock
+> in this case, so let's silence the deferred probe error.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/devfreq/tegra20-devfreq.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/devfreq/tegra20-devfreq.c b/drivers/devfreq/tegra20-devfreq.c
+> index ff82bac9ee4e..6469dc69c5e0 100644
+> --- a/drivers/devfreq/tegra20-devfreq.c
+> +++ b/drivers/devfreq/tegra20-devfreq.c
+> @@ -141,9 +141,11 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>  
+>  	/* EMC is a system-critical clock that is always enabled */
+>  	tegra->emc_clock = devm_clk_get(&pdev->dev, "emc");
+> -	if (IS_ERR(tegra->emc_clock)) {
+> -		err = PTR_ERR(tegra->emc_clock);
+> -		dev_err(&pdev->dev, "failed to get emc clock: %d\n", err);
+> +	err = PTR_ERR_OR_ZERO(tegra->emc_clock);
+> +	if (err) {
+> +		if (err != -EPROBE_DEFER)
+> +			dev_err(&pdev->dev, "failed to get emc clock: %d\n",
+> +				err);
+>  		return err;
+>  	}
+>  
+> 
+
+
 -- 
-2.17.1
-
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
