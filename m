@@ -2,194 +2,161 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9ED0C433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 06:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E97C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 06:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9F462085B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 06:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE2E12085B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 06:54:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uue4Ct1O"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="c2RO14Eq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgGBGyT (ORCPT
+        id S1727893AbgGBGy3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 02:54:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33306 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726669AbgGBGyS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 02:54:18 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B70C4C08C5C1
-        for <devicetree@vger.kernel.org>; Wed,  1 Jul 2020 23:54:15 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f7so23739202wrw.1
-        for <devicetree@vger.kernel.org>; Wed, 01 Jul 2020 23:54:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=jkGYYfe2hXwlfT92r1IHKv+smCrZ9H0RHjhvrcwG6RM=;
-        b=uue4Ct1O77dMDRlgPX47t639kQvvOkI806ekC1sY2KMQm/rN7jIHuIYUIwwRir6yGN
-         FC6aKbB50VTkvX/qj9HCtX/WgTnlI0Qp1Sfx0c+wMQI6cqxxg+h/1ZA8o9wiBgrJyKkC
-         qxQuGj0uCmb8q8EApRFYhieNgy0As6sq3kAmVyE1CRzMf4CgbINob/Ndo4KO176Y3NAF
-         PqlrE0ZpDDMIbmOI/qz+kDgDBslJmDVn9fcfn08kikjRMVB7gihB+3/zHA+GcFLp8pwE
-         PXHjdf20mEY55LmI0dUCXScOKEzMJIIIy7rBi6ouF1p15hFPiPsIQIv4OsVTLg6dk3Yy
-         dI+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=jkGYYfe2hXwlfT92r1IHKv+smCrZ9H0RHjhvrcwG6RM=;
-        b=NXy6tCkf4jtKwBtDIUMeR4tw9bbD5m1pQ5fMfVmHidftxSBSOvz7/xJ5zNLCkwfQfo
-         8rTPsFtf9Ql0YqAH/HAxii2V6AqEZRLnGqbZfMlejwi9QYhddv2l+j0Ru9GSomTG9f7X
-         ZsMW5lxXfwcMBnCtE9ccQsOPrzq91Rsf2eH9i3TWlEIwEaHCU6K/3PxuhwCYwGk8atYj
-         H07uW5NH7EtTbWQP+rox74De3eOMVv+WhbJJRPpQ5pOIZI96aw+ntpgedAb4Jr4AjdPK
-         mmgf+Of5XOF6Qq/32eSSF/s/ET+nuu4CFmLQ97HeWUNNXyMBdQIA4hmGa5e++l53WH2w
-         zp1w==
-X-Gm-Message-State: AOAM531VSLbxwggbsRLEBN5a1IIV2bnyqrkBozJhbKKk0NdhzavAbv+U
-        W4pmqIFZHhsGOiSlUCfZPtfbFw==
-X-Google-Smtp-Source: ABdhPJydX7owlhIb52/jlcBSck3LcH0Z4kO4QGJwnzYSBGCkzFe4tct2dW83VZ6L2kb1EOVAkOxFBg==
-X-Received: by 2002:adf:f20a:: with SMTP id p10mr31837380wro.41.1593672854471;
-        Wed, 01 Jul 2020 23:54:14 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id k11sm10540596wrd.23.2020.07.01.23.54.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 23:54:13 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 07:54:12 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     robh+dt@kernel.org, broonie@kernel.org, gregkh@linuxfoundation.org,
-        andriy.shevchenko@linux.intel.com, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com, arnd@arndb.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/1] mfd: Add I2C based System Configuaration (SYSCON)
- access
-Message-ID: <20200702065412.GO1179328@dell>
-References: <20200622075145.1464020-1-lee.jones@linaro.org>
- <e436fd60bf0ebb6d72a76034d0fc35de@walle.cc>
- <f505c52d565ba7dbf05eef895782c410@walle.cc>
- <20200701070434.GP1179328@dell>
- <5d1d41504172d86d395b0135923f6f02@walle.cc>
+        Thu, 2 Jul 2020 02:54:29 -0400
+Received: from mail-eopbgr60071.outbound.protection.outlook.com ([40.107.6.71]:12347
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727051AbgGBGyY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Jul 2020 02:54:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VEuXRCCB8RWSRNn0kW9ZIkw8eUW+bmxXEbSNjwouIc6As/QtWQCw/NzaAZDGY3D3qZwMcSNQFGrwz+f8aO8YgZdamg2A49vMSVG6L1q2hRx5lDXEjM8VFkftrqcJIWrtgHoMHBnAsoya+CblkM53O3GX4NI4+CNyjWuJDjGJGAw9ypP7J1HhwtxMDDLCeRkmZDigsjh/Q/TxSyA7pIYUKLQxSsyG5YV31BfXo/X9uW9LSzP0BYeFZISAhd8bCN5bge+CGakMtwNpDf9OoIRhOu9suQ6opA39k8NniPAqN1NHyv9iXe6qKdL9uCLscWeTSYiM2aIfYst678VODeymQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WyhlYTu0tRkFp9zbFDzlDAa/ti9lPivQitLRWGWiSXc=;
+ b=SaGmiv9jV/1eNQWU2I/1riBrA2vJXNONtCF3k8AwSBgZwCYOhd2WfowpBosNZZcsiFaBerBVkWr77XSuG+CKymEYwnko89dNwN/QfgPwvPkNdo92fVZZmpqjd7fS0hlunLh6aZ6+2Gg5s2joccCScoQZ7yupOWYMSUCAmm07JeNhP1nmDqG4EY5aGibvUdD9SjIOMa6uaZAsB3Xt5IaSS7JJs/v7JwCE3QmVaxhWFBS4cSXLBVdc6mASFfK3UEmyfRF2vWZp4y6y38Uzh/TOAZ3VKcj0x3Dt/dOUZoxEauqXzBjP3QGGcrTZl5QCGNIaECkYb8tknBfIMVbxJPBCZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WyhlYTu0tRkFp9zbFDzlDAa/ti9lPivQitLRWGWiSXc=;
+ b=c2RO14Eqjk9mJyhYg+SjStE38da4Ysrh9hzP65Jx/P2Y/RKDvs1dTj2Zw3tF9e55WysqfCQ2cM9I7/yXbV+SaP1qNjM779N3h3jAO13WeU/ZxdPWUo1GVlhYLgDr61nLGAc0vDNzME6Xydls5y64GERoYcpMew9TrISSH1CDPEE=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VI1PR04MB6943.eurprd04.prod.outlook.com (2603:10a6:803:13a::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.22; Thu, 2 Jul
+ 2020 06:54:16 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3153.024; Thu, 2 Jul 2020
+ 06:54:16 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     vkoul@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, festevam@gmail.com,
+        catalin.marinas@arm.com, will@kernel.org, dan.j.williams@intel.com,
+        angelo@sysam.it
+Cc:     kernel@pengutronix.de, linux-imx@nxp.com,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v1 8/9] arm64: dts: imx8qxp: add edma2
+Date:   Thu,  2 Jul 2020 23:08:08 +0800
+Message-Id: <1593702489-21648-9-git-send-email-yibin.gong@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1593702489-21648-1-git-send-email-yibin.gong@nxp.com>
+References: <1593702489-21648-1-git-send-email-yibin.gong@nxp.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR01CA0172.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:28::28) To VE1PR04MB6638.eurprd04.prod.outlook.com
+ (2603:10a6:803:119::15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5d1d41504172d86d395b0135923f6f02@walle.cc>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.67) by SG2PR01CA0172.apcprd01.prod.exchangelabs.com (2603:1096:4:28::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3153.24 via Frontend Transport; Thu, 2 Jul 2020 06:54:11 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.67]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 3a2f73a6-895a-42b6-60e3-08d81e54bc3f
+X-MS-TrafficTypeDiagnostic: VI1PR04MB6943:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR04MB694322A54EB67FE0E0F835E6896D0@VI1PR04MB6943.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:267;
+X-Forefront-PRVS: 0452022BE1
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Q+juFg+izG+CX7ilyzkPt8gVpGSu7TENJEd8Bd1IQNUViFc0GNEkTKpUezjdmJiPb7L/BBUhf6azt65NK3Df0f7+wv+QYzmMokkHY+QY7dHhnyui0i2+K8vBMFu95LqJ/M8YSIKppkFz+/n7xScAHPe2DgEiMzt0scfZiH52z1fzcIpM0cqRTnlh7M9FsMJlOnWphF+oAI8WUGuQpzG/QUgPt41N2ExKwAt8I73khYK2iw6QjrX+NYeJNyoJW4e7Jc6RCPzrSxxJ9ogwqX07hss3vhx3Xxo42D/EYuTJByCXtfWGf04Nib2XO+EtE8NKhjRYZf7Xkv5atBO2m2C8tPexOnDeVoaDAsA+BFmOPOn8xKMBXnKq3ohSKMYqeo7O
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(366004)(376002)(39860400002)(346002)(83380400001)(66476007)(6666004)(66946007)(66556008)(52116002)(36756003)(8936002)(2616005)(6486002)(956004)(6512007)(186003)(7416002)(4326008)(26005)(2906002)(8676002)(86362001)(16526019)(478600001)(6506007)(5660300002)(316002)(32563001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: G7GYLlKgQcy3Z7MDWvnZRXSfbhL9yvpIXc6zkoLGZJQyZ2CS33bL5Tg6iF75kZedpqa7VWaT54DDh5Sz6Flw3fTLLFPL+fMME8mogweC7MZj/QHYGeigQ2I20RhsGzvpljkfjILB+SnFDNdL6lMWIJ3fvUasrmcn5WkpuDpkZJT/A00S3uLKJP7i7lmn2Sr7VTgOoqDI/ja8wCiyS3RdqAXbmC05GwIF6/OXN6XK+vGCZBhF+SL+W3pnbu+wK+MXIbloC1VK1CsHHQBOqX8QorbRJDV8rbiaUU1DIdlhWwG4lnrjgKz2zZoLDmY9/sHgo+wJfhz+b+WMWraXmf/ebyrXWGMBSDB7QLdSanoG8TY1cxXjkkhWY2DesBBzZQOzXjDzcRxQ3QVlMUKUZBasJR6SybAew4GDq0teVxxcWX1BGc/ReBLi3twE50GFu7+bTAtyhx6TNqg6gmpkdd4cNJbYCnjbdKvOib8G8S4R6eg=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a2f73a6-895a-42b6-60e3-08d81e54bc3f
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6638.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2020 06:54:15.9620
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FmfEPpIsEx1wFV04Rs6K8qhiWYT+NZjayF8+TrcD+O4xImACX70kY6bbKrplBoTU6/kmbRwst+UqiXxapWgFuw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6943
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 01 Jul 2020, Michael Walle wrote:
+add edma2 on i.mx8qxp.
 
-> Am 2020-07-01 09:04, schrieb Lee Jones:
-> > On Wed, 01 Jul 2020, Michael Walle wrote:
-> > 
-> > > Hi Lee,
-> > > 
-> > > Am 2020-06-30 11:16, schrieb Michael Walle:
-> > > > I'm just trying to use this for my sl28 driver. Some remarks, see below.
-> > > >
-> > > > Am 2020-06-22 09:51, schrieb Lee Jones:
-> > > > > The existing SYSCON implementation only supports MMIO (memory mapped)
-> > > > > accesses, facilitated by Regmap.  This extends support for registers
-> > > > > held behind I2C busses.
-> > > > >
-> > > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > > > > ---
-> > > > > Changelog:
-> > > > >
-> > > > > v3 => v4
-> > > > >   - Add ability to provide a non-default Regmap configuration
-> > > > >
-> > > > > v2 => v3
-> > > > >   - Change 'is CONFIG' present check to include loadable modules
-> > > > >     - s/#ifdef CONFIG_MFD_SYSCON_I2C/#if
-> > > > > IS_ENABLED(CONFIG_MFD_SYSCON_I2C)/
-> > > > >
-> > > > > v1 => v2
-> > > > >   - Remove legacy references to OF
-> > > > >   - Allow building as a module (fixes h8300 0-day issue)
-> > > > >
-> > > > > drivers/mfd/Kconfig            |   7 +++
-> > > > >  drivers/mfd/Makefile           |   1 +
-> > > > >  drivers/mfd/syscon-i2c.c       | 104
-> > > > > +++++++++++++++++++++++++++++++++
-> > > > >  include/linux/mfd/syscon-i2c.h |  36 ++++++++++++
-> > > > >  4 files changed, 148 insertions(+)
-> > > > >  create mode 100644 drivers/mfd/syscon-i2c.c
-> > > > >  create mode 100644 include/linux/mfd/syscon-i2c.h
+Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 38 ++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-[...]
-
-> > > > This way, (a) a driver doesn't have to use "#include <linux/i2c.h>" just
-> > > > to call to_i2c_client() (or i2c_verify_client()) and (b) you won't do it
-> > > > all over again in all sub drivers.
-> > > >
-> > > > So you could just do a
-> > > >   regmap = syscon_i2c_to_regmap(pdev->dev.parent);
-> > > >
-> > > > I've also noticed that the mmio syscon uses device_node as parameter.
-> > > > What
-> > > > was the reason to divert from that? Just curious.
-> > > 
-> > > How is this supposed to be used?
-> > > 
-> > > I had something like the following in mind:
-> > > 
-> > > &i2c {
-> > >   cpld@4a {
-> > >     compatible = "simple-mfd";
-> > >     reg = <0x4a>;
-> > > 
-> > >     gpio@4 {
-> > >       compatible = "vendor,gpio";
-> > >       reg = <0x4>;
-> > >     };
-> > >   };
-> > > };
-> > 
-> > Yes, that was the idea.
-> > 
-> > > But I think the childen are not enumerated if its an I2C device. And
-> > > the actual i2c driver is also missing.
-> > 
-> > What do you mean?  Can you elaborate?
-> 
-> There is no i2c_driver instance who would create the regmap.
-
-The regmap is created by the first caller of:
-
- syscon_i2c_to_regmap{_config}()
-
-> If I'm
-> reading the I2C code correctly, it won't probe any i2c device of a
-> bus if there is no i2c_driver with an associated .probe() or
-> .probe_new().
-
-Why wouldn't the children be registered using i2c_driver?
-
-> And even if it is probed, its subnodes won't be
-> enumerated; the "simple-mfd" code only works for MMIO busses, right?
-> Or I'm getting something really wrong here..
-
-Then how are these I2C based devices able to call of_platform_populate()?
-
- drivers/mfd/gateworks-gsc.c
- drivers/mfd/lochnagar-i2c.c
- drivers/mfd/palmas.c
- drivers/mfd/smsc-ece1099.c
- drivers/mfd/stpmic1.c
- drivers/mfd/twl-core.c
-
-Might require some more research into where your use-case is breaking
-down.
-
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+index e46faac..3f4fa59d 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+@@ -300,6 +300,44 @@
+ 			status = "disabled";
+ 		};
+ 
++	edma2: dma-controller@5a1f0000 {
++		compatible = "fsl,imx8qm-edma";
++		reg = <0x5a280000 0x10000>, /* channel8 UART0 rx */
++		      <0x5a290000 0x10000>, /* channel9 UART0 tx */
++		      <0x5a2a0000 0x10000>, /* channel10 UART1 rx */
++		      <0x5a2b0000 0x10000>, /* channel11 UART1 tx */
++		      <0x5a2c0000 0x10000>, /* channel12 UART2 rx */
++		      <0x5a2d0000 0x10000>, /* channel13 UART2 tx */
++		      <0x5a2e0000 0x10000>, /* channel14 UART3 rx */
++		      <0x5a2f0000 0x10000>; /* channel15 UART3 tx */
++		#dma-cells = <3>;
++		dma-channels = <8>;
++		interrupts = <GIC_SPI 434 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 435 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 436 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 437 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 438 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 439 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 440 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 441 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "edma2-chan8-rx", "edma2-chan9-tx",
++				  "edma2-chan10-rx", "edma2-chan11-tx",
++				  "edma2-chan12-rx", "edma2-chan13-tx",
++				  "edma2-chan14-rx", "edma2-chan15-tx";
++		power-domains = <&pd IMX_SC_R_DMA_2_CH8>,
++				<&pd IMX_SC_R_DMA_2_CH9>,
++				<&pd IMX_SC_R_DMA_2_CH10>,
++				<&pd IMX_SC_R_DMA_2_CH11>,
++				<&pd IMX_SC_R_DMA_2_CH12>,
++				<&pd IMX_SC_R_DMA_2_CH13>,
++				<&pd IMX_SC_R_DMA_2_CH14>,
++				<&pd IMX_SC_R_DMA_2_CH15>;
++		power-domain-names = "edma2-chan8", "edma2-chan9",
++				     "edma2-chan10", "edma2-chan11",
++				     "edma2-chan12", "edma2-chan13",
++				     "edma2-chan14", "edma2-chan15";
++	};
++
+ 		adma_i2c0: i2c@5a800000 {
+ 			compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
+ 			reg = <0x5a800000 0x4000>;
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.7.4
+
