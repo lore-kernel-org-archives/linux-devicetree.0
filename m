@@ -2,118 +2,101 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A633C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 21:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50EF7C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 21:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F8A420EDD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 21:03:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 271DB20772
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 21:09:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="lX8T++fZ"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="dOC6J1Vc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726017AbgGBVD6 (ORCPT
+        id S1726015AbgGBVJo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 17:03:58 -0400
-Received: from vps.xff.cz ([195.181.215.36]:54796 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725994AbgGBVD6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 2 Jul 2020 17:03:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593723835; bh=qx6y7nV6jj3BHruvR1/CLbOoFCUwVFPgvliOfLPoSqI=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=lX8T++fZST2Y6z6GOVTS2C6MYo+cHeZtLwodiQKkKzvlxsrpj54vsDxGeAV1RCtI2
-         6bXixOpjS1KCD1AjK3ExUSJCaSiqmTDacRL67+zZ2DZqB74g45SyFzozPrOrkyU1j1
-         4AkV/S+Avm44Z2p+Rha3WY8m85QT5CtiQTNaMsW0=
-Date:   Thu, 2 Jul 2020 23:03:54 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     David Airlie <airlied@linux.ie>, Sam Ravnborg <sam@ravnborg.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
-        linux-kernel@vger.kernel.org, Purism Kernel Team <kernel@puri.sm>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Samuel Holland <samuel@sholland.org>,
-        devicetree@vger.kernel.org, Bhushan Shah <bshah@kde.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-sunxi@googlegroups.com, Luca Weiss <luca@z3ntu.xyz>,
-        Martijn Braam <martijn@brixit.nl>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Maxime Ripard <mripard@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v7 02/13] dt-bindings: panel: Convert rocktech,
- jh057n00900 to yaml
-Message-ID: <20200702210354.562wkzpdmyrlwojx@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Rob Herring <robh@kernel.org>, David Airlie <airlied@linux.ie>,
-        Sam Ravnborg <sam@ravnborg.org>, Daniel Vetter <daniel@ffwll.ch>,
-        Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
-        linux-kernel@vger.kernel.org, Purism Kernel Team <kernel@puri.sm>,
-        Chen-Yu Tsai <wens@csie.org>, Samuel Holland <samuel@sholland.org>,
-        devicetree@vger.kernel.org, Bhushan Shah <bshah@kde.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-sunxi@googlegroups.com, Luca Weiss <luca@z3ntu.xyz>,
-        Martijn Braam <martijn@brixit.nl>, Icenowy Zheng <icenowy@aosc.io>,
-        Maxime Ripard <mripard@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-References: <20200701162928.1638874-1-megous@megous.com>
- <20200701162928.1638874-3-megous@megous.com>
- <20200702205143.GA1670522@bogus>
+        Thu, 2 Jul 2020 17:09:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52878 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbgGBVJo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 17:09:44 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CD8FC08C5C1;
+        Thu,  2 Jul 2020 14:09:44 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id e15so25464267edr.2;
+        Thu, 02 Jul 2020 14:09:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=EkunRhJM+IkygFCZmaALMwwKbp/kSgWlsm+guHw4JbU=;
+        b=dOC6J1VcHKL5h0ZDOdlDfP/efShY2nX4Vy+8HFAKynlK3ugprnrqloghR9FDWGiORY
+         A43Ts1yJWRvMTyx0BXYPG4XiGCMToub9kNfstS3LXLqKCBm/JRxgeGJJJ7wlzUSoSY5/
+         PpP4CGZaM8HNXIsQrJF3CJCqPqwt2hyG+CDu5oWJ0uFXPkfC8mjF1uJeXtOzLqo+wUzQ
+         yBxbIye8KQ7wYm4EqiOnZfP+2R2pv56lkFlt18tQgzbPOGJr+5P6YM7e70+scy3+q0mI
+         8VTmx5oUpPRmo/tVjZhYbwufG2hE8HH6EcJb3uZ1hsD3S4HHvw0/PIx8DzISMUYIUtsT
+         Unag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc:date
+         :in-reply-to:references:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=EkunRhJM+IkygFCZmaALMwwKbp/kSgWlsm+guHw4JbU=;
+        b=D+6seRdzUspY9H2uWAeOPy+BTL3tgDaidx1Ew8xIdUo4aA3Pb7NGO14rwNVrXDh55f
+         UDZTvg8HQKBSUOt55hBIzrqD+xUR1mi5B0X/25TLWJvwG55+4oCnyROIn5mbAzVR8D6s
+         fL+EmePuFfGB7sssidbh6sYfDDq0VmT/yjkmnhA0cWS/Kpt7fDz8tO8MVZunyPCksOx8
+         zhEm1rb739qZ5NAoL3EZGKi4llH24045ZNPCsmebXvtHszgef974Emha1Cy9WdJRIjpc
+         bSnLfkSvI20zlVg/QDBYXT0gW1Uwc6g/rdtJ7HftLvjcFALoNG6jX2g6m1vW7QCEPEfo
+         x8Gg==
+X-Gm-Message-State: AOAM531uiMlxkEWblubxrNQjeatiWwFI6Mvxge8jThWXcQXZmgDlxSnL
+        lUEKLk4B3ke/f8hkGf50GsR9iFLd
+X-Google-Smtp-Source: ABdhPJyeWSXeYCuVNmTy9igyqXsTXNocb94mp7qBR8VLY897EGH+9Swx9Y4YSmQBYLvePnPP9W8czw==
+X-Received: by 2002:a50:b0a1:: with SMTP id j30mr37051783edd.387.1593724182913;
+        Thu, 02 Jul 2020 14:09:42 -0700 (PDT)
+Received: from ?IPv6:2a02:8070:bb9:bc00::fc? ([2a02:8070:bb9:bc00::fc])
+        by smtp.gmail.com with ESMTPSA id p20sm7663314ejy.107.2020.07.02.14.09.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 14:09:42 -0700 (PDT)
+Message-ID: <7ee7829c08f45f5b6907877e0f3b11320c178867.camel@googlemail.com>
+Subject: Re: [PATCH 1/2] regulator: fan53880: Add initial support
+From:   Christoph Fritz <chf.fritz@googlemail.com>
+Reply-To: chf.fritz@googlemail.com
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Date:   Thu, 02 Jul 2020 23:09:41 +0200
+In-Reply-To: <20200701180913.GA22871@sirena.org.uk>
+References: <20200630185203.22882-1-chf.fritz@googlemail.com>
+         <20200630185203.22882-2-chf.fritz@googlemail.com>
+         <20200701180913.GA22871@sirena.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702205143.GA1670522@bogus>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 02:51:43PM -0600, Rob Herring wrote:
-> On Wed, 01 Jul 2020 18:29:17 +0200, Ondrej Jirman wrote:
-> > Convert Rocktech MIPI DSI panel driver from txt to yaml bindings.
-> > 
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > ---
-> >  .../display/panel/rocktech,jh057n00900.txt    | 23 -------
-> >  .../display/panel/rocktech,jh057n00900.yaml   | 66 +++++++++++++++++++
-> >  2 files changed, 66 insertions(+), 23 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
-> >  create mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
-> > 
+On Wed, 2020-07-01 at 19:09 +0100, Mark Brown wrote:
+> /mnt/kernel/drivers/regulator/fan53880.c:63:2: note: in expansion of
+> macro 'FAN53880_LDO'
+>   FAN53880_LDO(1, "VIN12", 2800000),
+>   ^~~~~~~~~~~~
+> /mnt/kernel/include/linux/regulator/driver.h:47:2: error: field name
+> not in record or union initializer
+>   .min_sel = _min_sel,     \
+>   ^
 > 
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/nwl-dsi.example.dt.yaml: panel@0: '#address-cells', '#size-cells', 'port@0' do not match any of the regexes: 'pinctrl-[0-9]+'
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/nwl-dsi.example.dt.yaml: panel@0: 'vcc-supply' is a required property
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/nwl-dsi.example.dt.yaml: panel@0: 'iovcc-supply' is a required property
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/nwl-dsi.example.dt.yaml: panel@0: 'reset-gpios' is a required property
+> most likely due to the conversion introduced in 60ab7f4153b6af46
+> (regulator: use linear_ranges helper).  Please rebase against current
+> code.
 
-Paths look bogus ^^^^
+Thanks for the hint, yeah that's it. After picking up a recent linux-
+next and adapting it works on current too.
 
-It should be .../rocktech,jh057n00900.yaml: ...
+Please let me respin the patches in a v2.
 
-regards,
-	o.
-
-> 
-> See https://patchwork.ozlabs.org/patch/1320690
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure dt-schema is up to date:
-> 
-> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-> 
-> Please check and re-submit.
-> 
