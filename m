@@ -2,27 +2,26 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3FDC433E4
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 15:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0467DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 15:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4967621473
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 15:45:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA01C208B8
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 15:45:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726053AbgGBPp1 (ORCPT
+        id S1726068AbgGBPpV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 11:45:27 -0400
-Received: from muru.com ([72.249.23.125]:60328 "EHLO muru.com"
+        Thu, 2 Jul 2020 11:45:21 -0400
+Received: from muru.com ([72.249.23.125]:60300 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726129AbgGBPp0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 2 Jul 2020 11:45:26 -0400
+        id S1726014AbgGBPpU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Jul 2020 11:45:20 -0400
 Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 802A980BD;
-        Thu,  2 Jul 2020 15:46:17 +0000 (UTC)
+        by muru.com (Postfix) with ESMTP id 70BD18062;
+        Thu,  2 Jul 2020 15:46:11 +0000 (UTC)
 From:   Tony Lindgren <tony@atomide.com>
 To:     linux-omap@vger.kernel.org
 Cc:     "Andrew F . Davis" <afd@ti.com>,
@@ -30,12 +29,10 @@ Cc:     "Andrew F . Davis" <afd@ti.com>,
         Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH 4/6] soc: ti: omap-prm: Configure omap4 and 5 l4_abe power domain
-Date:   Thu,  2 Jul 2020 08:45:11 -0700
-Message-Id: <20200702154513.31859-5-tony@atomide.com>
+Subject: [PATCHv4 0/6] Add initial genpd support for omap PRM driver
+Date:   Thu,  2 Jul 2020 08:45:07 -0700
+Message-Id: <20200702154513.31859-1-tony@atomide.com>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200702154513.31859-1-tony@atomide.com>
-References: <20200702154513.31859-1-tony@atomide.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -43,66 +40,65 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Let's add omap4 and 5 l4_abe interconnect instance for the power
-domain.
+Hi all,
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- drivers/soc/ti/omap_prm.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+Here's v4 set of patches to add genpd support to the PRM (Power and Reset
+Module) driver.
 
-diff --git a/drivers/soc/ti/omap_prm.c b/drivers/soc/ti/omap_prm.c
---- a/drivers/soc/ti/omap_prm.c
-+++ b/drivers/soc/ti/omap_prm.c
-@@ -95,6 +95,13 @@ struct omap_reset_data {
- 
- #define PRM_ST_INTRANSITION	BIT(20)
- 
-+static const struct omap_prm_domain_map omap_prm_all = {
-+	.usable_modes = BIT(OMAP_PRMD_ON_ACTIVE) | BIT(OMAP_PRMD_ON_INACTIVE) |
-+			BIT(OMAP_PRMD_RETENTION) | BIT(OMAP_PRMD_OFF),
-+	.statechange = 1,
-+	.logicretstate = 1,
-+};
-+
- static const struct omap_prm_domain_map omap_prm_noinact = {
- 	.usable_modes = BIT(OMAP_PRMD_ON_ACTIVE) | BIT(OMAP_PRMD_RETENTION) |
- 			BIT(OMAP_PRMD_OFF),
-@@ -102,6 +109,13 @@ static const struct omap_prm_domain_map omap_prm_noinact = {
- 	.logicretstate = 1,
- };
- 
-+static const struct omap_prm_domain_map omap_prm_nooff = {
-+	.usable_modes = BIT(OMAP_PRMD_ON_ACTIVE) | BIT(OMAP_PRMD_ON_INACTIVE) |
-+			BIT(OMAP_PRMD_RETENTION),
-+	.statechange = 1,
-+	.logicretstate = 1,
-+};
-+
- static const struct omap_prm_domain_map omap_prm_onoff_noauto = {
- 	.usable_modes = BIT(OMAP_PRMD_ON_ACTIVE) | BIT(OMAP_PRMD_OFF),
- 	.statechange = 1,
-@@ -127,6 +141,10 @@ static const struct omap_rst_map rst_map_012[] = {
- 
- static const struct omap_prm_data omap4_prm_data[] = {
- 	{ .name = "tesla", .base = 0x4a306400, .rstctrl = 0x10, .rstst = 0x14, .rstmap = rst_map_01 },
-+	{
-+		.name = "abe", .base = 0x4a306500,
-+		.pwrstctrl = 0, .pwrstst = 0x4, .dmap = &omap_prm_all,
-+	},
- 	{ .name = "core", .base = 0x4a306700, .rstctrl = 0x210, .rstst = 0x214, .clkdm_name = "ducati", .rstmap = rst_map_012 },
- 	{ .name = "ivahd", .base = 0x4a306f00, .rstctrl = 0x10, .rstst = 0x14, .rstmap = rst_map_012 },
- 	{ .name = "device", .base = 0x4a307b00, .rstctrl = 0x0, .rstst = 0x4, .rstmap = rst_map_01, .flags = OMAP_PRM_HAS_RSTCTRL | OMAP_PRM_HAS_NO_CLKDM },
-@@ -135,6 +153,10 @@ static const struct omap_prm_data omap4_prm_data[] = {
- 
- static const struct omap_prm_data omap5_prm_data[] = {
- 	{ .name = "dsp", .base = 0x4ae06400, .rstctrl = 0x10, .rstst = 0x14, .rstmap = rst_map_01 },
-+	{
-+		.name = "abe", .base = 0x4ae06500,
-+		.pwrstctrl = 0, .pwrstst = 0x4, .dmap = &omap_prm_nooff,
-+	},
- 	{ .name = "core", .base = 0x4ae06700, .rstctrl = 0x210, .rstst = 0x214, .clkdm_name = "ipu", .rstmap = rst_map_012 },
- 	{ .name = "iva", .base = 0x4ae07200, .rstctrl = 0x10, .rstst = 0x14, .rstmap = rst_map_012 },
- 	{ .name = "device", .base = 0x4ae07c00, .rstctrl = 0x0, .rstst = 0x4, .rstmap = rst_map_01, .flags = OMAP_PRM_HAS_RSTCTRL | OMAP_PRM_HAS_NO_CLKDM },
+Initially we just add one hardware accelerator power domain for sgx,
+and one interconnect instance for l4_abe. The rest of the SoC specific
+domain data is probably best added one SoC at a time based on generated
+data.
+
+Regards,
+
+Tony
+
+Changes since v3:
+- Drop the unnecessary __maybe_unused as that's no longer needed
+
+Changes since v2:
+
+- Update binding to clarify a single power domain provider
+
+- Unwrap generic domain configrations for __maybe_unused
+
+Changes since v1:
+
+- Dropped clocks from the binding and prm driver as there's no need
+  for them as pointed out by Tero
+
+- Add checking for domain transition bit in pwrstst register as
+  pointed out by Tero
+
+- Add omap_prm_domain_show_state() for CONFIG_DEBUG
+
+
+Tony Lindgren (6):
+  dt-bindings: omap: Update PRM binding for genpd
+  soc: ti: omap-prm: Add basic power domain support
+  soc: ti: omap-prm: Configure sgx power domain for am3 and am4
+  soc: ti: omap-prm: Configure omap4 and 5 l4_abe power domain
+  ARM: dts: Configure am3 and am4 sgx for genpd and drop platform data
+  ARM: dts: Configure omap4 and 5 l4_abe for genpd and drop platform
+    data
+
+ .../devicetree/bindings/arm/omap/prm-inst.txt |   2 +
+ arch/arm/boot/dts/am33xx.dtsi                 |   2 +
+ arch/arm/boot/dts/am4372.dtsi                 |   2 +
+ arch/arm/boot/dts/omap4-l4-abe.dtsi           |   6 +-
+ arch/arm/boot/dts/omap4.dtsi                  |   6 +
+ arch/arm/boot/dts/omap5-l4-abe.dtsi           |   6 +-
+ arch/arm/boot/dts/omap5.dtsi                  |   6 +
+ arch/arm/mach-omap2/Kconfig                   |   1 +
+ .../omap_hwmod_33xx_43xx_interconnect_data.c  |  16 -
+ .../omap_hwmod_33xx_43xx_ipblock_data.c       |  40 ---
+ arch/arm/mach-omap2/omap_hwmod_33xx_data.c    |   2 -
+ arch/arm/mach-omap2/omap_hwmod_43xx_data.c    |   2 -
+ arch/arm/mach-omap2/omap_hwmod_44xx_data.c    |  33 ---
+ arch/arm/mach-omap2/omap_hwmod_54xx_data.c    |  31 --
+ drivers/soc/ti/omap_prm.c                     | 274 +++++++++++++++++-
+ 15 files changed, 298 insertions(+), 131 deletions(-)
+
 -- 
 2.27.0
