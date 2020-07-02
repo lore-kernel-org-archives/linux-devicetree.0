@@ -2,182 +2,121 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03818C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 14:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2A9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 15:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D18B620890
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 14:54:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="li/iRMGK"
+	by mail.kernel.org (Postfix) with ESMTP id A0A7E2073E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 15:28:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730171AbgGBOyF (ORCPT
+        id S1730183AbgGBP2J (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 10:54:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51422 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730146AbgGBOyD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 10:54:03 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA24DC08C5C1;
-        Thu,  2 Jul 2020 07:54:03 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id cm21so3227192pjb.3;
-        Thu, 02 Jul 2020 07:54:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=2wOYN/0g0f5pbtH8g7BnJjydy7AU6qktq0S+o7E8FNM=;
-        b=li/iRMGK1qmwA85z7TyIQB8rzEwcpW3lVJcAwYVcxGy4xXPWlYZow+e6hNmEH1nMaG
-         caz3keLrkucWhYLsNYp8n+S3KIGktp5D2yilmH9iggZS3ktNjMmxscQm2cAETwAqCOr0
-         uReKfSFCTZi0153Rr03CYwo0/xl6fhWtbqOIT0TU/WN5/2G2ykhCgwkq7hUyr+mVg0FT
-         eZ+kOMoKaIONivxGMmrqfeyTb3a7RzDLpsvzwDwCQBOSORNGB8LVNRCgIPTiMzxjRawu
-         CBflcAO7xFc/qbxsjUo5cFleKTk0qHiAwL/gRMM72HUtgzH+QpjER/jtDXxPD0j3wgUX
-         3b9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=2wOYN/0g0f5pbtH8g7BnJjydy7AU6qktq0S+o7E8FNM=;
-        b=GB/nnJv8IQvF0BVMyNHnzA+LEy61GiOVB/XWzWEk0+5331WLW6Z7HGYMFRLGWCHxBo
-         9xCJC0pMwfxWiPV0wRu7BjLnyF6qaNxuaozu/QlgRjHjt7HzACxQfd800lCb7bXQnV33
-         QHI20c4zBrpZgjX0PWhX5/jTFJSQI6i7zT2Qr+UP1UICNWn8y+3QdbG5yd+/xhshRkSh
-         TMzdvgUJQR/Clw4YjZcUqeDAaPlQ49BlBfhCbQIHLb2EKKv5MLFXpSUxMRw4sAgkaqBz
-         imMOU4AmVV0OAL47q4TAiBCygZD3vlX9LMnIWCSuYJSVIKzW8qioRE22JyZSf5FHni6o
-         oKmA==
-X-Gm-Message-State: AOAM533VKyd7lW7nZAr14MQemQHZ4GMhaPx8xqCQsKqP5LpWcSvPTEnA
-        w4mehUl5mjmLAZetV1O7C7w=
-X-Google-Smtp-Source: ABdhPJzteWrhGhXZLrpA2r7Wt2Dm1p8TiSi9Df05rcAtFbe3Dju+8vv5u638WNYUlvV80s05qtO+NA==
-X-Received: by 2002:a17:90b:4c91:: with SMTP id my17mr30750529pjb.81.1593701643332;
-        Thu, 02 Jul 2020 07:54:03 -0700 (PDT)
-Received: from localhost.localdomain ([223.190.0.253])
-        by smtp.gmail.com with ESMTPSA id 204sm9487891pfc.18.2020.07.02.07.53.58
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 Jul 2020 07:54:02 -0700 (PDT)
-From:   Amit Singh Tomar <amittomer25@gmail.com>
-To:     andre.przywara@arm.com, afaerber@suse.de,
-        manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
-Cc:     cristian.ciocaltea@gmail.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH v5 10/10] arm64: dts: actions: Add uSD support for Cubieboard7
-Date:   Thu,  2 Jul 2020 20:22:56 +0530
-Message-Id: <1593701576-28580-11-git-send-email-amittomer25@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593701576-28580-1-git-send-email-amittomer25@gmail.com>
-References: <1593701576-28580-1-git-send-email-amittomer25@gmail.com>
+        Thu, 2 Jul 2020 11:28:09 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60060 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728105AbgGBP2I (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 11:28:08 -0400
+Received: from [IPv6:2a01:e35:2fb5:1510:315a:ecf0:6250:a3ed] (unknown [IPv6:2a01:e35:2fb5:1510:315a:ecf0:6250:a3ed])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: aferraris)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id DF3732A5F5D;
+        Thu,  2 Jul 2020 16:28:05 +0100 (BST)
+Subject: Re: [PATCH 1/2] dt-bindings: sound: fsl-asoc-card: add new compatible
+ for I2S slave
+To:     Mark Brown <broonie@kernel.org>
+Cc:     kernel@collabora.com, Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+References: <20200702141114.232688-1-arnaud.ferraris@collabora.com>
+ <20200702141114.232688-2-arnaud.ferraris@collabora.com>
+ <20200702143145.GG4483@sirena.org.uk>
+From:   Arnaud Ferraris <arnaud.ferraris@collabora.com>
+Autocrypt: addr=arnaud.ferraris@collabora.com; keydata=
+ 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
+ xZQG6fKWuIur3RI=
+Message-ID: <5de5ea5b-0716-8ed1-28b0-9ad3da7a2d47@collabora.com>
+Date:   Thu, 2 Jul 2020 17:28:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200702143145.GG4483@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This commit adds uSD support for Cubieboard7 board based on Actions Semi
-S700 SoC. SD0 is connected to uSD slot. Since there is no PMIC support
-added yet, fixed regulator has been used as a regulator node.
+Hi Mark,
 
-Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
----
-Changes since v4:
-	* No change.
-Changes since v3:
-        * No change.
-Changes since v2:
-        * No change.
-Changes since v1:
-        * No change.
-Changes since RFC:
-        * No change.
----
- arch/arm64/boot/dts/actions/s700-cubieboard7.dts | 41 ++++++++++++++++++++++++
- arch/arm64/boot/dts/actions/s700.dtsi            |  1 +
- 2 files changed, 42 insertions(+)
+Le 02/07/2020 à 16:31, Mark Brown a écrit :
+> On Thu, Jul 02, 2020 at 04:11:14PM +0200, Arnaud Ferraris wrote:
+>> fsl-asoc-card currently doesn't support generic codecs with the SoC
+>> acting as I2S slave.
+>>
+>> This commit adds a new `fsl,imx-audio-i2s-slave` for this use-case, as
+>> well as the following mandatory properties:
+> 
+> Why require that the CODEC be clock master here - why not make this
+> configurable, reusing the properties from the generic and audio graph
+> cards?
 
-diff --git a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-index 63e375cd9eb4..ec117eb12f3a 100644
---- a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-+++ b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-@@ -13,6 +13,7 @@
- 
- 	aliases {
- 		serial3 = &uart3;
-+		mmc0 = &mmc0;
- 	};
- 
- 	chosen {
-@@ -28,6 +29,23 @@
- 		device_type = "memory";
- 		reg = <0x1 0xe0000000 0x0 0x0>;
- 	};
-+
-+	/* Fixed regulator used in the absence of PMIC */
-+	vcc_3v1: vcc-3v1 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "fixed-3.1V";
-+		regulator-min-microvolt = <3100000>;
-+		regulator-max-microvolt = <3100000>;
-+	};
-+
-+	/* Fixed regulator used in the absence of PMIC */
-+	sd_vcc: sd-vcc {
-+		compatible = "regulator-fixed";
-+		regulator-name = "fixed-3.1V";
-+		regulator-min-microvolt = <3100000>;
-+		regulator-max-microvolt = <3100000>;
-+		regulator-always-on;
-+	};
- };
- 
- &i2c0 {
-@@ -81,6 +99,14 @@
- 			bias-pull-up;
- 		};
- 	};
-+
-+	mmc0_default: mmc0_default {
-+		pinmux {
-+			groups = "sd0_d0_mfp", "sd0_d1_mfp", "sd0_d2_d3_mfp",
-+				 "sd0_cmd_mfp", "sd0_clk_mfp";
-+			function = "sd0";
-+		};
-+	};
- };
- 
- &timer {
-@@ -90,3 +116,18 @@
- &uart3 {
- 	status = "okay";
- };
-+
-+/* uSD */
-+&mmc0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_default>;
-+	cd-gpios = <&pinctrl 120 GPIO_ACTIVE_LOW>;
-+	no-sdio;
-+	no-mmc;
-+	no-1-8-v;
-+	bus-width = <4>;
-+	vmmc-supply = <&sd_vcc>;
-+	vqmmc-supply = <&sd_vcc>;
-+};
-+
-diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
-index 9ed88aafc2da..ba498cf9217d 100644
---- a/arch/arm64/boot/dts/actions/s700.dtsi
-+++ b/arch/arm64/boot/dts/actions/s700.dtsi
-@@ -4,6 +4,7 @@
-  */
- 
- #include <dt-bindings/clock/actions,s700-cmu.h>
-+#include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/power/owl-s700-powergate.h>
- #include <dt-bindings/reset/actions,s700-reset.h>
--- 
-2.7.4
+This is partly because I'm not sure how to do it (yet), but mostly
+because I don't have the hardware to test this (the 2 CODECs present on
+my only i.MX6 board are both clock master)
 
+Regards,
+Arnaud
