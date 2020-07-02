@@ -7,52 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DAAC433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 10:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CAAC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 10:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7D9920723
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 10:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEA5120723
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 10:15:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="XI8MSDB/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="07oSXWMf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbgGBKOs (ORCPT
+        id S1728448AbgGBKPc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 06:14:48 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:18722 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728389AbgGBKO2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 06:14:28 -0400
+        Thu, 2 Jul 2020 06:15:32 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:55417 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727847AbgGBKOg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 06:14:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1593684868; x=1625220868;
+  t=1593684876; x=1625220876;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=XQYsjl64zP8M+z5DPL3i21yoQTL0J6GAeocWD3p/Y0U=;
-  b=XI8MSDB/vTLuOB6l7WaDKKti/tG8kNs29NTAkFqHfxJHNCBcTtzQUTJt
-   shnFzMiyCetYH0Zl8fYrWvgszDcnGliKIHciSzWGm5GxCiLEukE3N3zP+
-   SMah+UpDi34LhUBtg94Es/XVZd7ygRPvszqidFEZkTsRkMAz2lEXqAxI3
-   giM4d0yIlS1Klx4o5+VM+DvJ150ngp+WK687RWLMffvFBSgYOEYZbWoMM
-   FXZjMiyVXM/EvMEVEnQN6u0j9XcNx3v/O818I0jFfLj9Ny+Ccmib5LuVf
-   XHhwsA/EVFkDIEhPXj8lwMw1mc9ggTUIDIn/XfCrdtR4TaBIUHn2laMTx
-   g==;
-IronPort-SDR: gZLwhB/KpHp6yFCVGg8pOL49wT1aT8GDV+EC8V+Br/gL4/h6AN7twm396y8TBd3uObNh4u1ket
- +bUjAgMRWpdUp4dupiTdV0h81KkcQjf65ADFWpOr4rVKryhoWX45t+ftjW3O+PmBzYoSsycDbL
- vfHomF7lpxpq9QpfhYrypTlzp6xWc5UCrX7px8f38CttkHzZ0kk+FNAlGdl1/psXG22SVNBV24
- oibG7Ze/vwap8GNEyo6pBc1D5+ixDvahygHBZiEOJP7Bv5RD2Pu1/9SMIYBqWC76AAw9PkVsZ/
- qFY=
+  bh=/fRQlCAqtmjl9D0MMfywPaDVRoYsm/XyLPUVVnHATv4=;
+  b=07oSXWMfJVz5YAmuPvMhJu/ikGI5+4Yy0IGG3IfrBhHXZp2FJZNpVrS4
+   s08Pvp6jhfVO1c6D/Qfn5p/HKR/UdCDV3TUR6AW62wDUd5WikBQzvvF3e
+   TaEF+1TV5MqswAilbyGkteBGLeBtt4Kj/2Rg+xxbY8ET/ij7h2qZ570p9
+   oTUTkKfRuB++1xUgVraiMiiofNhOdF6SzYpjhj9NfkiQ9F+1DTatbD69w
+   uLL5jyPhKTIc3Y4o+8F8L23pukAJJbEvGWIvhXjn/08z7G6A1b/x2JyKV
+   uW4mWOGFKTkYX1bEAiAC8sVImx2OPntl0vMHf1Y1ia6SHawGIAbT1y7n5
+   Q==;
+IronPort-SDR: AUxi5ygMh+VCaZXTiASENeY2b8P0ktt6TBi8nn6qn9d9o2aJ+xiJjfefObwTKQdIOvzTPXBR9F
+ 6El1DDNxl7IlteS63iPLLI+rJgbpSPN55yA/3yNwTpu1z2Nsb1h88+tzc4W3Yv+QqCMM3IpbzJ
+ fWyt4EoGlyeuFToyLW4mrWVUFYyGwFsEzQp0pNSfXUHC/CQRrSpb/EgohZuIGIdjDOn1Dh4e1/
+ UAUcVTot791wVC8mv0BCJy9++pZpWSyQOmEVCj+O9uNS7hxvP46siAzz4yRpvcKwbccNlsV5Lg
+ sNs=
 X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="82369319"
+   d="scan'208";a="85979770"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Jul 2020 03:14:19 -0700
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Jul 2020 03:14:35 -0700
 Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 2 Jul 2020 03:13:59 -0700
+ 15.1.1979.3; Thu, 2 Jul 2020 03:14:35 -0700
 Received: from soft-dev15.microsemi.net (10.10.115.15) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Thu, 2 Jul 2020 03:13:57 -0700
+ 15.1.1979.3 via Frontend Transport; Thu, 2 Jul 2020 03:14:12 -0700
 From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Mark Brown <broonie@kernel.org>, Peter Rosin <peda@axentia.se>
+To:     Mark Brown <broonie@kernel.org>, Peter Rosin <peda@axentia.se>,
+        "Rob Herring" <robh+dt@kernel.org>
 CC:     Lars Povlsen <lars.povlsen@microchip.com>,
         Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
         <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
@@ -60,9 +61,9 @@ CC:     Lars Povlsen <lars.povlsen@microchip.com>,
         <linux-arm-kernel@lists.infradead.org>,
         Serge Semin <fancer.lancer@gmail.com>,
         Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Subject: [PATCH v3 3/8] spi: dw: Add Microchip Sparx5 support
-Date:   Thu, 2 Jul 2020 12:13:26 +0200
-Message-ID: <20200702101331.26375-4-lars.povlsen@microchip.com>
+Subject: [PATCH v3 5/8] dt-bindings: snps,dw-apb-ssi: Add sparx5 support, plus snps,rx-sample-delay-ns property
+Date:   Thu, 2 Jul 2020 12:13:28 +0200
+Message-ID: <20200702101331.26375-6-lars.povlsen@microchip.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200702101331.26375-1-lars.povlsen@microchip.com>
 References: <20200702101331.26375-1-lars.povlsen@microchip.com>
@@ -74,161 +75,78 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds SPI support for the Sparx5 SoC, which is using the MMIO
-Designware SPI controller.
+This has the following changes for the snps,dw-apb-ss DT bindings:
 
-The Sparx5 differs from the Ocelot version in these areas:
+- Add "microchip,sparx5-spi" as the compatible for the Sparx5 SoC
+  controller
 
- * The Sparx5 SPI controller has 2 different SPI bus interfaces on the
-   same controller (don't ask...). The "mux-controls" property must be
-   set, and the mux should be configured with the bus/device mapping
-   information.
+- Add the property "mux-controls" for the above compatible string
 
- * The CS override is controlled by a new set of registers for
-   this purpose.
-
- * The Sparx5 SPI controller has the RX sample delay register, and it
-   must be configured for the (SPI NAND) device on SPI2.
-
-As Sparx5 requires CONFIG_MULTIPLEXER, this will automatically be
-enabled when this driver is selected.
+- Add the property "snps,rx-sample-delay-ns" for SPI slaves
 
 Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
 ---
- drivers/spi/Kconfig       |  1 +
- drivers/spi/spi-dw-mmio.c | 79 ++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 79 insertions(+), 1 deletion(-)
+ .../bindings/spi/snps,dw-apb-ssi.yaml         | 28 +++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 8f1f8fca79e37..2bc2d42b25120 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -237,6 +237,7 @@ config SPI_DW_PCI
- 
- config SPI_DW_MMIO
- 	tristate "Memory-mapped io interface driver for DW SPI core"
-+	select MULTIPLEXER
- 	depends on HAS_IOMEM
- 
- endif
-diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
-index 403403deae664..05bc09be4a8bd 100644
---- a/drivers/spi/spi-dw-mmio.c
-+++ b/drivers/spi/spi-dw-mmio.c
-@@ -20,6 +20,7 @@
- #include <linux/property.h>
- #include <linux/regmap.h>
- #include <linux/reset.h>
-+#include <linux/mux/consumer.h>
- 
- #include "spi-dw.h"
- 
-@@ -45,6 +46,9 @@ struct dw_spi_mmio {
- #define MSCC_SPI_MST_SW_MODE_SW_PIN_CTRL_MODE	BIT(13)
- #define MSCC_SPI_MST_SW_MODE_SW_SPI_CS(x)	(x << 5)
- 
-+#define SPARX5_FORCE_ENA			0xa4
-+#define SPARX5_FORCE_VAL			0xa8
+diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+index c62cbe79f00dd..9d9208391fae3 100644
+--- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
++++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+@@ -36,6 +36,8 @@ properties:
+               - mscc,ocelot-spi
+               - mscc,jaguar2-spi
+           - const: snps,dw-apb-ssi
++      - description: Microchip Sparx5 SoC SPI Controller
++        const: microchip,sparx5-spi
+       - description: Amazon Alpine SPI Controller
+         const: amazon,alpine-dw-apb-ssi
+       - description: Renesas RZ/N1 SPI Controller
+@@ -93,6 +95,19 @@ properties:
+       - const: tx
+       - const: rx
+
++if:
++  properties:
++    compatible:
++      contains:
++        const: microchip,sparx5-spi
 +
- /*
-  * For Keem Bay, CTRLR0[31] is used to select controller mode.
-  * 0: SSI is slave
-@@ -54,7 +58,8 @@ struct dw_spi_mmio {
- 
- struct dw_spi_mscc {
- 	struct regmap       *syscon;
--	void __iomem        *spi_mst;
-+	void __iomem        *spi_mst; /* Not sparx5 */
-+	struct mux_control  *spi_mux; /* Sparx5 bus interface */
- };
- 
- /*
-@@ -134,6 +139,77 @@ static int dw_spi_mscc_jaguar2_init(struct platform_device *pdev,
- 				JAGUAR2_IF_SI_OWNER_OFFSET);
- }
- 
-+/*
-+ * The Designware SPI controller (referred to as master in the
-+ * documentation) automatically deasserts chip select when the tx fifo
-+ * is empty. The chip selects then needs to be driven by a CS override
-+ * register. enable is an active low signal.
-+ */
-+static void dw_spi_sparx5_set_cs(struct spi_device *spi, bool enable)
-+{
-+	struct dw_spi *dws = spi_master_get_devdata(spi->master);
-+	struct dw_spi_mmio *dwsmmio = container_of(dws, struct dw_spi_mmio, dws);
-+	struct dw_spi_mscc *dwsmscc = dwsmmio->priv;
-+	u8 cs = spi->chip_select;
++then:
++  properties:
++    mux-controls:
++      description: A mux controller node for selecting SPI bus interface.
++      maxItems: 1
++      $ref: '/schemas/types.yaml#/definitions/phandle'
 +
-+	if (!enable) {
-+		/* Drive mux */
-+		if (mux_control_select(dwsmscc->spi_mux, cs))
-+			dev_err(&spi->dev, "Unable to drive SPI mux\n");
-+		/* CS override drive enable */
-+		regmap_write(dwsmscc->syscon, SPARX5_FORCE_ENA, 1);
-+		/* Now set CSx enabled */
-+		regmap_write(dwsmscc->syscon, SPARX5_FORCE_VAL, ~BIT(cs));
-+		/* Allow settle */
-+		usleep_range(1, 5);
-+	} else {
-+		/* CS value */
-+		regmap_write(dwsmscc->syscon, SPARX5_FORCE_VAL, ~0);
-+		/* Allow settle */
-+		usleep_range(1, 5);
-+		/* CS override drive disable */
-+		regmap_write(dwsmscc->syscon, SPARX5_FORCE_ENA, 0);
-+		/* Deselect mux */
-+		mux_control_deselect(dwsmscc->spi_mux);
-+	}
+ patternProperties:
+   "^.*@[0-9a-f]+$":
+     type: object
+@@ -107,6 +122,14 @@ patternProperties:
+       spi-tx-bus-width:
+         const: 1
+
++      snps,rx-sample-delay-ns:
++        description: SPI Rx sample delay offset, unit is nanoseconds.
++          The delay from the default sample time before the actual
++          sample of the rxd input signal occurs. The "rx_sample_delay"
++          is an optional feature of the designware controller, and the
++          upper limit is also subject to controller configuration.
++        $ref: /schemas/types.yaml#/definitions/uint32
 +
-+	dw_spi_set_cs(spi, enable);
-+}
-+
-+static int dw_spi_mscc_sparx5_init(struct platform_device *pdev,
-+				   struct dw_spi_mmio *dwsmmio)
-+{
-+	const char *syscon_name = "microchip,sparx5-cpu-syscon";
-+	struct device *dev = &pdev->dev;
-+	struct dw_spi_mscc *dwsmscc;
-+
-+	dwsmscc = devm_kzalloc(dev, sizeof(*dwsmscc), GFP_KERNEL);
-+	if (!dwsmscc)
-+		return -ENOMEM;
-+
-+	dwsmscc->syscon =
-+		syscon_regmap_lookup_by_compatible(syscon_name);
-+	if (IS_ERR(dwsmscc->syscon)) {
-+		dev_err(dev, "No syscon map %s\n", syscon_name);
-+		return PTR_ERR(dwsmscc->syscon);
-+	}
-+
-+	/* Get SPI mux */
-+	dwsmscc->spi_mux = devm_mux_control_get(dev, NULL);
-+	if (IS_ERR(dwsmscc->spi_mux)) {
-+		dev_err(dev, "SPI mux is required\n");
-+		return PTR_ERR(dwsmscc->spi_mux);
-+	}
-+
-+	dwsmmio->dws.set_cs = dw_spi_sparx5_set_cs;
-+	dwsmmio->priv = dwsmscc;
-+
-+	/* Register hook to configure CTRLR0 */
-+	dwsmmio->dws.update_cr0 = dw_spi_update_cr0;
-+
-+	return 0;
-+}
-+
- static int dw_spi_alpine_init(struct platform_device *pdev,
- 			      struct dw_spi_mmio *dwsmmio)
- {
-@@ -297,6 +373,7 @@ static const struct of_device_id dw_spi_mmio_of_match[] = {
- 	{ .compatible = "renesas,rzn1-spi", .data = dw_spi_dw_apb_init},
- 	{ .compatible = "snps,dwc-ssi-1.01a", .data = dw_spi_dwc_ssi_init},
- 	{ .compatible = "intel,keembay-ssi", .data = dw_spi_keembay_init},
-+	{ .compatible = "microchip,sparx5-spi", dw_spi_mscc_sparx5_init},
- 	{ /* end of table */}
- };
- MODULE_DEVICE_TABLE(of, dw_spi_mmio_of_match);
--- 
+ unevaluatedProperties: false
+
+ required:
+@@ -129,5 +152,10 @@ examples:
+       num-cs = <2>;
+       cs-gpios = <&gpio0 13 0>,
+                  <&gpio0 14 0>;
++      spi-flash@1 {
++        compatible = "spi-nand";
++        reg = <1>;
++        snps,rx-sample-delay-ns = <7>;
++      };
+     };
+ ...
+--
 2.27.0
-
