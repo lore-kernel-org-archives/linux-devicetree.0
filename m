@@ -7,22 +7,22 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3238C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 19:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED00C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 19:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 865872073E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 19:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19178208D5
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 19:13:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726015AbgGBTNl (ORCPT
+        id S1726194AbgGBTNp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 15:13:41 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:33860 "EHLO
+        Thu, 2 Jul 2020 15:13:45 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33868 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbgGBTNk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 15:13:40 -0400
+        with ESMTP id S1725878AbgGBTNp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 15:13:45 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: koike)
-        with ESMTPSA id 7E02D2A5FF2
+        with ESMTPSA id 4C4BF2A5FF5
 From:   Helen Koike <helen.koike@collabora.com>
 To:     devicetree@vger.kernel.org, linux-media@vger.kernel.org,
         linux-rockchip@lists.infradead.org
@@ -33,9 +33,9 @@ Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
         karthik.poduval@gmail.com, jbx6244@gmail.com, tfiga@chromium.org,
         eddie.cai.linux@gmail.com, zhengsq@rock-chips.com,
         robin.murphy@arm.com
-Subject: [PATCH v4 1/9] media: staging: dt-bindings: rkisp1: add missing required nodes
-Date:   Thu,  2 Jul 2020 16:13:14 -0300
-Message-Id: <20200702191322.2639681-2-helen.koike@collabora.com>
+Subject: [PATCH v4 2/9] media: staging: dt-bindings: rkisp1: add required items in i2c example
+Date:   Thu,  2 Jul 2020 16:13:15 -0300
+Message-Id: <20200702191322.2639681-3-helen.koike@collabora.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200702191322.2639681-1-helen.koike@collabora.com>
 References: <20200702191322.2639681-1-helen.koike@collabora.com>
@@ -46,42 +46,34 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add missing required nodes in json-schema yaml file for
-Rockchip ISP1 dt-bindings.
+Add missing required items in Rockchip ISP1 dt-bindings example for
+a complete i2c node.
 
 Signed-off-by: Helen Koike <helen.koike@collabora.com>
 ---
 
 Changes in v2:
-- New patch in the series
+- new patch in the series
 ---
- .../devicetree/bindings/media/rockchip-isp1.yaml          | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ .../devicetree/bindings/media/rockchip-isp1.yaml             | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-index af246b71eac6b..a77b6ec500c95 100644
+index a77b6ec500c95..8c7904845788d 100644
 --- a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
 +++ b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-@@ -94,11 +94,19 @@ properties:
+@@ -169,6 +169,11 @@ examples:
+         };
  
-               remote-endpoint: true
- 
-+        required:
-+          - reg
-+          - "#address-cells"
-+          - "#size-cells"
-+
-     required:
-+      - "#address-cells"
-+      - "#size-cells"
-       - port@0
- 
- required:
-   - compatible
-+  - reg
-   - interrupts
-   - clocks
-   - clock-names
+         i2c7: i2c@ff160000 {
++            compatible = "rockchip,rk3399-i2c";
++            reg = <0x0 0xff160000 0x0 0x1000>;
++            interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH 0>;
++            clocks = <&cru SCLK_I2C7>, <&cru PCLK_I2C7>;
++            clock-names = "i2c", "pclk";
+             clock-frequency = <400000>;
+             #address-cells = <1>;
+             #size-cells = <0>;
 -- 
 2.26.0
 
