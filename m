@@ -2,109 +2,175 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0AA9C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 01:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D25CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 01:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E599206BE
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 01:34:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653691;
-	bh=30HkcgXNjv8HHhen8WTqMInBwSDwJ9xryGRUgIxvElU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X7axK5ZmRHmd8dxEuKA9TebOBhc8M4rSArL8gxwtgPzmqOerKrGUSoZUU+nUtBmFR
-	 C7MBn0nr43XP6Tuc1aI36rbvc3KE6++EnLm+7o3OxRiFGje1XGgjPuSi/rQWDKL25W
-	 eBAj8eMdNqm9d++ngmy7u34R6OwOTruBO5H8mwIU=
+	by mail.kernel.org (Postfix) with ESMTP id 354922082F
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 01:59:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LUegyff6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728553AbgGBBei (ORCPT
+        id S1726792AbgGBB7a (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:34:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56388 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728189AbgGBBZa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:25:30 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E184D2145D;
-        Thu,  2 Jul 2020 01:25:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653129;
-        bh=30HkcgXNjv8HHhen8WTqMInBwSDwJ9xryGRUgIxvElU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gt2ZFrhGiR0G0khkKOEcNY6lCs7D69XLdOEK2r1XRdbhtik0gZkTuPFlA00Ib6yWo
-         Q21oCUy4iaPicit5ge0/0OEnxy73W3g7FqxFZxP/tvgmgrLy9swZ7KWZRfy/qzh3E/
-         w+gx2GmFcvOKjcmsx4mGJJLM7xdhiqp6mbsPuIwI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, maemo-leste@lists.dyne.org,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 04/40] ARM: dts: omap4-droid4: Fix spi configuration and increase rate
-Date:   Wed,  1 Jul 2020 21:23:25 -0400
-Message-Id: <20200702012402.2701121-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702012402.2701121-1-sashal@kernel.org>
-References: <20200702012402.2701121-1-sashal@kernel.org>
+        Wed, 1 Jul 2020 21:59:30 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:57259 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726397AbgGBB70 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 21:59:26 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200702015922epoutp04d56b38579b4735d646d9c810844e1277~dzO1Lvsj60446304463epoutp04A
+        for <devicetree@vger.kernel.org>; Thu,  2 Jul 2020 01:59:22 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200702015922epoutp04d56b38579b4735d646d9c810844e1277~dzO1Lvsj60446304463epoutp04A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593655162;
+        bh=lOHAZFZPS9+a73hijdym/L6Q0O9mYbyCPmsKNSs7qgg=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=LUegyff6IMYLE8WbGfPQDbJXWXv7YZEafhLnuGgONcvDDrv+pOL3vskjY6o4LRmUK
+         9ifxlsc/copNmdkj56iCQKffbd1WAcE7heUOyLGQ5khFjwOIQ+xRunFhAgoQ3a0Svq
+         bcLA7W0Q+VjqqtAurhOyvIXJeEZLyir3Ij7wzzbI=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200702015921epcas1p2c5bb12503dd757cf487768767648b8e3~dzOzykN_i0470704707epcas1p2O;
+        Thu,  2 Jul 2020 01:59:21 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.154]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 49y1Vb0fsMzMqYkw; Thu,  2 Jul
+        2020 01:59:19 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        35.4E.28578.27F3DFE5; Thu,  2 Jul 2020 10:59:14 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200702015913epcas1p3b00b299a3d73041a2d160e8b27288335~dzOsxxd1t2702827028epcas1p3w;
+        Thu,  2 Jul 2020 01:59:13 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200702015913epsmtrp1c32923219f33a07f6da520a92f68fa0d~dzOsw0LvC3265932659epsmtrp1k;
+        Thu,  2 Jul 2020 01:59:13 +0000 (GMT)
+X-AuditID: b6c32a39-e6f5da8000006fa2-bc-5efd3f724813
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        09.7C.08382.17F3DFE5; Thu,  2 Jul 2020 10:59:13 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200702015913epsmtip16246678cb1645396ad107b39799832fa~dzOsh0BLI0949609496epsmtip13;
+        Thu,  2 Jul 2020 01:59:13 +0000 (GMT)
+Subject: Re: [PATCH v4 17/37] PM / devfreq: tegra20: Relax Kconfig
+ dependency
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>
+Cc:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
+        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <876019c4-2dfa-b966-a6e7-573b5189d374@samsung.com>
+Date:   Thu, 2 Jul 2020 11:10:29 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200609131404.17523-18-digetx@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLJsWRmVeSWpSXmKPExsWy7bCmnm6R/d84g+51xhb357UyWrz79JTV
+        Yv6Rc6wWqz8+ZrS48vU9m8X0vZvYLFpmLWKxONv0ht3i8q45bBafe48wWnR+mcVmcfGUq8Xt
+        xhVsFpPWTmW0aN17hN3i37WNLBY/d81jcRD0eH+jld1j56y77B6Xzv1h9ti0qpPN4861PWwe
+        97uPM3n0Nr9j8+jbsorR4/MmuQDOqGybjNTElNQihdS85PyUzLx0WyXv4HjneFMzA0NdQ0sL
+        cyWFvMTcVFslF58AXbfMHKBflBTKEnNKgUIBicXFSvp2NkX5pSWpChn5xSW2SqkFKTkFlgV6
+        xYm5xaV56XrJ+blWhgYGRqZAhQnZGbuXTWAsWMdV8el/H0sD4w6OLkYODgkBE4kj2027GLk4
+        hAR2MEr87ZvCCuF8YpT4cvoKE4TzjVFi56+bQBlOsI4bu9+zQyT2Mkr8nnaEEcJ5zyjx9eJV
+        RpAqYQF/iQ8fT4C1iwgcYZZY3XkcrIpZ4DKjxNm2L2wgVWwCWhL7X9wAs/kFFCWu/ngM1s0r
+        YCdx9Ps5FpALWQRUJH58rgQJiwqESZzc1gJVIihxcuYTsBJOAXOJ76dVQMLMAuISt57MZ4Kw
+        5SW2v53DDLJWQqCZU2LflZXMEC+4SOza0s4IYQtLvDq+hR3ClpJ42d8GZVdLrDx5hA2iuYNR
+        Ysv+C1D/G0vsXzqZCWQxs4CmxPpd+hBhRYmdv+cyQizmk3j3tYcVEsC8Eh1tQhAlyhKXH9xl
+        grAlJRa3d7JNYFSaheSbWUhemIXkhVkIyxYwsqxiFEstKM5NTy02LDBFju1NjOB0rmW5g3H6
+        2w96hxiZOBgPMUpwMCuJ8J42+BUnxJuSWFmVWpQfX1Sak1p8iNEUGLwTmaVEk/OBGSWvJN7Q
+        1MjY2NjCxNDM1NBQSZzXyfpCnJBAemJJanZqakFqEUwfEwenVANTFaPhA4HPoX2vDv1Wefb3
+        7PJ9H0XXhb9g3zvvjl6ibcLXG8f9e7eX7uZ6ElD3nPmAgo6rilzXkv3853KexUw0z+P7LePx
+        UuuU5sXuyZ+7DHddKDx461kFM9+6oI2CG+78r5lissLS5NWjI/fKZ6jcu1F82eHi2hcvJr52
+        em24yifP6onA2+dOC0U+/tttL5VtrRJ68qAx56TLb1TSZ6ycXDnvxcymgz81fLT//zh8WvnW
+        xpo10vN2qJ0/WSwS+eBLsNzpE2t5yk0+RKzb7PX4/HTNqTJpy033VeXJmH1ZsTyoKcJph/JL
+        /vo7PPcUZNm6OJmFO6N3rNTfFrxEvu+3/MxsuWIdtmsaBQqfHrEtjlJiKc5INNRiLipOBADJ
+        3JN2cAQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Ra0hTYRzGfc85np0txo5z5eul1ZaQrZoKke+HsiiikyF2By2skYdpbbo2
+        tSyoLP0wu0liqxXOmWnMVJyXOe0CXsoaGcuKeUNj2gXKlStSKa05Ar/93ud5frwf/hQu7CHC
+        qIzMbFabqVBJSR7R0ikVrz2x6U9qTG1DJBopKwRoYnI8EJm6egNRzXc3QG9+ekhkeGQlUYGx
+        gkAvL3zhoL62OyTyXukCSP/DSCLni21oMP8+ia7XlgJU+KiLg2bfNRBouq2M2BzEeFyFHMZu
+        HOYwr3t/44zVoieZoXcPSWbk0jOMuXJxgmSuNlkA47WKd3FTeBvSWFVGLquNjj/CS2+vKgaa
+        Ot6pybmrxHnQShUBLgXpddDV7uEUAR4lpNsBLDEXB/qLUHjD2Y0XAeofB8POTp1/8xVA93Ar
+        5tsE04nw/Wcz6StE9FMcWh0OzPfA6T4AW/U/Sb/SAuCQcwL4FJKWwSefXKSPBbQEvp1yz+d8
+        Oh52/+olfN8RdCSc8ub54sX0AWivdGP+SRB8fmtsfsKl4+AvR6QvxumV8HfZa9zPIXBgzIT5
+        eRm0fb2DF4Ng4wLbuEAxLlCMC5RyQFhAKKvRqZVqXawmNpM9Kdcp1LqcTKX8aJbaCuaPLVvV
+        CmyWb/IOgFGgA0AKl4r4jpiZVCE/TZF3mtVmHdbmqFhdBwinCGkI33XCnCqklYps9jjLaljt
+        /xajuGHnsbyCyNtJH7c0SmT3Lg9F719Sl5AdkJRrNqzp2cNWyTv7aiKer073hI8eapTYCjZ4
+        JBrJbUZk608cVQ0mr+43nN2ZKAp34s66seVxR2TfKY1dcJDnnZzePicr2bep1IzlVpW2RSQv
+        AjtsMUMlPfbuS7tHlKbyLSmLalI+VCrN13num03ILTYmxCsyVIJ8A0mIlYJx9ZlhyzVxwMYm
+        pmLWYNe6qrYKwrk7o6IV67NMoWLw6il4MDlomT0mCtq7FBWaHAGfhTn1owEh/Hj5sRXeM3Np
+        2c1xYY/N5+5GFzfne+emUoMTHJdnyCh9jb6lOkI2ztVjWQN19dWD3VJCl66IleFaneIvbgKk
+        5FsDAAA=
+X-CMS-MailID: 20200702015913epcas1p3b00b299a3d73041a2d160e8b27288335
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200609131659epcas1p25e50d1a206229fefa3425740a476c989
+References: <20200609131404.17523-1-digetx@gmail.com>
+        <CGME20200609131659epcas1p25e50d1a206229fefa3425740a476c989@epcas1p2.samsung.com>
+        <20200609131404.17523-18-digetx@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+On 6/9/20 10:13 PM, Dmitry Osipenko wrote:
+> The Tegra EMC driver now could be compiled as a loadable kernel module.
+> Currently devfreq driver depends on the EMC/MC drivers in Kconfig, and
+> thus, devfreq is forced to be a kernel module if EMC is compiled as a
+> module. This build dependency could be relaxed since devfreq driver
+> checks MC/EMC presence on probe, allowing kernel configuration where
+> devfreq is a built-in driver and EMC driver is a loadable module.
+> This change puts Tegra20 devfreq Kconfig entry on a par with the Tegra30
+> devfreq entry.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/devfreq/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+> index 37dc40d1fcfb..0ee36ae2fa79 100644
+> --- a/drivers/devfreq/Kconfig
+> +++ b/drivers/devfreq/Kconfig
+> @@ -123,7 +123,7 @@ config ARM_TEGRA_DEVFREQ
+>  
+>  config ARM_TEGRA20_DEVFREQ
+>  	tristate "NVIDIA Tegra20 DEVFREQ Driver"
+> -	depends on (TEGRA_MC && TEGRA20_EMC) || COMPILE_TEST
+> +	depends on ARCH_TEGRA_2x_SOC || COMPILE_TEST
+>  	depends on COMMON_CLK
+>  	select DEVFREQ_GOV_SIMPLE_ONDEMAND
+>  	help
+> 
 
-[ Upstream commit 0df12a01f4857495816b05f048c4c31439446e35 ]
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-We can currently sometimes get "RXS timed out" errors and "EOT timed out"
-errors with spi transfers.
-
-These errors can be made easy to reproduce by reading the cpcap iio
-values in a loop while keeping the CPUs busy by also reading /dev/urandom.
-
-The "RXS timed out" errors we can fix by adding spi-cpol and spi-cpha
-in addition to the spi-cs-high property we already have.
-
-The "EOT timed out" errors we can fix by increasing the spi clock rate
-to 9.6 MHz. Looks similar MC13783 PMIC says it works at spi clock rates
-up to 20 MHz, so let's assume we can pick any rate up to 20 MHz also
-for cpcap.
-
-Cc: maemo-leste@lists.dyne.org
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-index 82f7ae030600d..ab91c4ebb1463 100644
---- a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-+++ b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-@@ -13,8 +13,10 @@ cpcap: pmic@0 {
- 		#interrupt-cells = <2>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--		spi-max-frequency = <3000000>;
-+		spi-max-frequency = <9600000>;
- 		spi-cs-high;
-+		spi-cpol;
-+		spi-cpha;
- 
- 		cpcap_adc: adc {
- 			compatible = "motorola,mapphone-cpcap-adc";
 -- 
-2.25.1
-
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
