@@ -2,116 +2,111 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B976C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 17:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0355C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 18:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E04E20885
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 17:59:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593712749;
-	bh=LiNf/oCR5xMtevLJEVXBqNNKcCAHHJBxiwRz04agoFc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=k7ytjr+N8TE56Vhlp3Cx0qkeo5jhBXNKcjbtnnYq4Hv5W6XAf7Mapv4TiEw4h/fK5
-	 o85d6R3e9sN8dOdrmgA2vq5ezxf+4NorVXrZKZROWpul9/mtSwDMqUW8sd8NqKLzJc
-	 W4/wWBgi9noAe1/k/JrXDtcrX6huzweEpBtruIB8=
+	by mail.kernel.org (Postfix) with ESMTP id 7FFBF208D5
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 18:42:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JsFN61eC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbgGBR7E (ORCPT
+        id S1726053AbgGBSme (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 13:59:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51986 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726349AbgGBR7E (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 2 Jul 2020 13:59:04 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52A9720737;
-        Thu,  2 Jul 2020 17:59:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593712743;
-        bh=LiNf/oCR5xMtevLJEVXBqNNKcCAHHJBxiwRz04agoFc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jMpwBH2mioxgNjTAwQkjJpfcUhIWXt5XWb5sP5oVkYJrQGOWeo/mDsBSAdUW8bYVt
-         SHUK1h9zjeZY8/04WvNLGrfO1ARjnvt/hkXzAZBd7rTxWVFX4sds6Va2oJRR3Qinsy
-         y1Z1l9rvas+7lJv5H4aNTynD1JdD9fMiINsNcW8Y=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jr3UD-008VH4-L0; Thu, 02 Jul 2020 18:59:01 +0100
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 02 Jul 2020 18:59:01 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-Cc:     tglx@linutronix.de, jason@lakedaemon.net, s-anna@ti.com,
-        robh+dt@kernel.org, lee.jones@linaro.org,
+        Thu, 2 Jul 2020 14:42:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58470 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbgGBSme (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 14:42:34 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DDEDC08C5C1;
+        Thu,  2 Jul 2020 11:42:34 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id g17so11638652plq.12;
+        Thu, 02 Jul 2020 11:42:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tbX9gnwNkjOzk/98d8BFqWlU3Yk39GHs2cPsD7jbrXM=;
+        b=JsFN61eCI+fVmsDGKjx3xNcUB9PTWSDRaIF3nEA7cb13QIkZmIqYDssIQvKF2ony9w
+         Bc/I8YIpo/DNOqg01APimdwuBKsysstKm3eNWmiCC3L/WkvKtEItiHdW/NHiV9JLIy2p
+         HHTSap5HMi/MV+wih89HXnkggCyyyijeIt1gDdczQXVBEUvk5m8LIl6T18qw1O504bYW
+         FNnUrxwdVjGvbXXZTLejVs98ZvwYFj8GJ/b87XNnMV+MkQ6DuZtq5a6uUyTj4NWjs7G1
+         JUrHAvMaz6Hoel+1vWArGEnqsSgZTzcuLoyH6nNKRM2GUj/N382/u5XK3EnAfr8XtJJE
+         FMlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tbX9gnwNkjOzk/98d8BFqWlU3Yk39GHs2cPsD7jbrXM=;
+        b=eWVyLVa9d5da4bvd0ygclpMrKmOFLQFCj1IjJMFsJrGVF9CpfIGUn3RTpxnv0AKoNN
+         zS4dRjm7akm9Jzu3AsmqBWorI2RA00LUIaErDAmkrpGel88Q1dIjzv+BdXC4GcZHL9o6
+         mJpO3QwYhFP7sZRliBiJLl26fLELDQLKXHQu5yMAaTYC25FgyI/lVWVA2L5icU/hJEkn
+         WdpCK/V9fYRGrlqgtfn/PVqz9yf9TMhPsabZ8I2yNLB0RmYbc4PnlkucHkhuaiZzuU4N
+         1pX6CY7DvZh1aPl7Ni8ZuvEvsqpJ8pN5niFB6i2nM4plZuU0odcY+/hr6SsF2RWJ5ToP
+         WJBg==
+X-Gm-Message-State: AOAM531hnmqVf+CvrGXOwnkcC8eC5uGScO68jv5dnqBUI1j1VDHXMQyu
+        yWJIClWUrTlDw4USXrs6m9A=
+X-Google-Smtp-Source: ABdhPJzmKId/+K9zaOkh/BstpizWZM6xvVYuyR3syVZrxtWMXg/kTWp1q3xysYJLElQ8cgvSAK8/BA==
+X-Received: by 2002:a17:90a:290e:: with SMTP id g14mr30210537pjd.85.1593715354041;
+        Thu, 02 Jul 2020 11:42:34 -0700 (PDT)
+Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id y7sm8819228pjy.21.2020.07.02.11.42.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 02 Jul 2020 11:42:33 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 11:42:26 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Arnaud Ferraris <arnaud.ferraris@collabora.com>
+Cc:     kernel@collabora.com, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        david@lechnology.com, wmills@ti.com
-Subject: Re: [PATCHv3 5/6] irqchip/irq-pruss-intc: Add support for ICSSG INTC
- on K3 SoCs
-In-Reply-To: <1593699479-1445-6-git-send-email-grzegorz.jaszczyk@linaro.org>
-References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
- <1593699479-1445-6-git-send-email-grzegorz.jaszczyk@linaro.org>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <d1b232c6f33a629117a2ecbd440622d0@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: grzegorz.jaszczyk@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, s-anna@ti.com, robh+dt@kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, david@lechnology.com, wmills@ti.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 0/4] ASoC: fsl_asrc: allow selecting arbitrary clocks
+Message-ID: <20200702184226.GA23935@Asurada-Nvidia>
+References: <20200702142235.235869-1-arnaud.ferraris@collabora.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702142235.235869-1-arnaud.ferraris@collabora.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-07-02 15:17, Grzegorz Jaszczyk wrote:
-> From: Suman Anna <s-anna@ti.com>
-> 
-> The K3 AM65x and J721E SoCs have the next generation of the PRU-ICSS 
-> IP,
-> commonly called ICSSG. The PRUSS INTC present within the ICSSG supports
-> more System Events (160 vs 64), more Interrupt Channels and Host 
-> Interrupts
-> (20 vs 10) compared to the previous generation PRUSS INTC instances. 
-> The
-> first 2 and the last 10 of these host interrupt lines are used by the
-> PRU and other auxiliary cores and sub-modules within the ICSSG, with 8
-> host interrupts connected to MPU. The host interrupts 5, 6, 7 are also
-> connected to the other ICSSG instances within the SoC and can be
-> partitioned as per system integration through the board dts files.
-> 
-> Enhance the PRUSS INTC driver to add support for this ICSSG INTC
-> instance. This support is added using specific compatible and match
-> data and updating the code to use this data instead of the current
-> hard-coded macros. The INTC config structure is updated to use the
-> higher events and channels on all SoCs, while limiting the actual
-> processing to only the relevant number of events/channels/interrupts.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-> ---
-> v2->v3:
-> - Change patch order: use it directly after "irqchip/irq-pruss-intc:
->   Implement irq_{get,set}_irqchip_state ops" and before new
->   "irqchip/irq-pruss-intc: Add event mapping support" in order to 
-> reduce
->   diff.
+Hi Arnaud,
 
-The diff would be even smaller if you introduced a variable number of
-inputs the first place, i.e. in patch #2. Most if this patch just
-retrofits it. Please squash these changes into that initial patch,
-and only add the platform stuff here.
+On Thu, Jul 02, 2020 at 04:22:31PM +0200, Arnaud Ferraris wrote:
+> The current ASRC driver hardcodes the input and output clocks used for
+> sample rate conversions. In order to allow greater flexibility and to
+> cover more use cases, it would be preferable to select the clocks using
+> device-tree properties.
 
-Thanks,
+We recent just merged a new change that auto-selecting internal
+clocks based on sample rates as the first option -- ideal ratio
+mode is the fallback mode now. Please refer to:
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20200702&id=d0250cf4f2abfbea64ed247230f08f5ae23979f0
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Having a quick review at your changes, I think the DT part may
+not be necessary as it's more likely a software configuration.
+I personally like the new auto-selecting solution more.
+
+> This series also fix register configuration and clock assignment so
+> conversion can be conducted effectively in both directions with a good
+> quality.
+
+If there's any further change that you feel you can improve on
+the top of mentioned change after rebasing, I'd like to review.
+
+Thanks
+Nic
