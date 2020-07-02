@@ -2,197 +2,139 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9086CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 05:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B75C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 06:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68926208D5
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 05:53:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FaeLrB1P"
+	by mail.kernel.org (Postfix) with ESMTP id 7251F2085B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 06:00:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593669612;
+	bh=pa1KsL0wFxiWclLRmFHMJNlSNaoiIY/uIWQHhzSE9PA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MKjALDqCCVl0fvkMNRJMMNtBY2XOY7oHcbY95GvPNbr49hO2nYOQD07wmwnYE6xLO
+	 uwiuw1wcwmvnnQF3XcWFac7EFGAS5Sz/fDMONhuatnITAW5BxXOV+Y7CtdkEBggI0n
+	 yFOF1HMTB/FFDjSaHivCpcvpZ76c4wTme0PdbQn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726048AbgGBFxM (ORCPT
+        id S1726236AbgGBGAI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 01:53:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52212 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgGBFxM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 01:53:12 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC53FC08C5C1;
-        Wed,  1 Jul 2020 22:53:11 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id y13so15207393lfe.9;
-        Wed, 01 Jul 2020 22:53:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cwHCT7cT5X5SdEciMo4uCbOZCo5n65PfdpAKlH+e0hw=;
-        b=FaeLrB1PxfX9Rsw/lPFjelWqksRrbsEITJFJeCizLaLwdP9ptRy3tMKhctrK9R6CYb
-         A8nh51VNmcK5plrXDtyDG9ONNrRVmwEZg4d5jOjyn1M7Zv4yuzv20vCqUTpCv/UN9reM
-         0J/Aazqbh2YVku/j72RTB/OKgDHo7woJWRAIO6VM/4mO7P4+I1UarkTpQJAEdcdm8IMv
-         PM2DtVEx29/IgoQkPD/+MH1lNZuzUFdPpgXpks+P8GcvoLFDytKBUI6boI6c9HtXeE9F
-         An8Rj/UTes1byT+HZCjUEHlF/XLw+3G/BRf8oiXykibH0xR8E5u9VsawaRpJJYhAdc4Z
-         X2wg==
+        Thu, 2 Jul 2020 02:00:08 -0400
+Received: from mail-ej1-f67.google.com ([209.85.218.67]:34524 "EHLO
+        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbgGBGAH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 02:00:07 -0400
+Received: by mail-ej1-f67.google.com with SMTP id y10so27771404eje.1;
+        Wed, 01 Jul 2020 23:00:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cwHCT7cT5X5SdEciMo4uCbOZCo5n65PfdpAKlH+e0hw=;
-        b=mDaSqwAt24kCEz1jxF2hpJCHZ+JunXKZbYkrttQvr12AcRcsBOafi9zNd28g2WKLCX
-         Z6rIqu8po591s+NG2fpHsCPDDg7DI/UMPaaCvxBSLC5EiJBw7GzXq5CPtxNgxiPsi0LY
-         dFyM7nOCLReE84wUeAAsF+DRFV+1nfddML38TsE5LLo2rz/1jT6Pc0O7c4gbvXXuM0Eg
-         dU99yMWbMlJJezml0ElUDWPl/tnpUyAqP+6DyzRtV0i9A+V0a2ZqxnqkSI/Yk93+WPAl
-         BHSJ6JU816w7s9XtqO5qcOsNXqDc34J6dPUpM7e1QVooCBdk/VRu6ajX8vzz2oRbI8u6
-         YMOQ==
-X-Gm-Message-State: AOAM532l+ZPBpk59ca0MWe+Xp5antRuR0WzGr0vE0CBphElXCg7GEbYU
-        a84Eubl+9e8ZNa0ni8wPxvOBCp0LN6E=
-X-Google-Smtp-Source: ABdhPJwavK+SIIiWOV66MVXkfysc7JQV+BS31nbzvmYL6xd58vIGpeeocZo16IZXV41yYLdjSkOmXw==
-X-Received: by 2002:a19:691c:: with SMTP id e28mr17498281lfc.131.1593669189870;
-        Wed, 01 Jul 2020 22:53:09 -0700 (PDT)
-Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.googlemail.com with ESMTPSA id c27sm2939944lfm.56.2020.07.01.22.53.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Jul 2020 22:53:09 -0700 (PDT)
-Subject: Re: [PATCH v4 12/37] PM / devfreq: tegra20: Use MC timings for
- building OPP table
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Chanwoo Choi <cw00.choi@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>
-Cc:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
-        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-References: <20200609131404.17523-1-digetx@gmail.com>
- <CGME20200609131458epcas1p2c774a0302bcef2c02790c2cb8cad57a0@epcas1p2.samsung.com>
- <20200609131404.17523-13-digetx@gmail.com>
- <4ea7fe00-7676-3186-8222-6e0d0eb8ed1f@samsung.com>
- <4b22d3ee-f303-d81d-e261-187d4a46e749@gmail.com>
- <2069fb51-f043-795d-7768-0024fc9a9f4e@samsung.com>
- <7988b6cf-e60c-7e5c-ffc3-8075c20af3d3@gmail.com>
-Message-ID: <388eef55-3452-064b-8560-e9d65b908525@gmail.com>
-Date:   Thu, 2 Jul 2020 08:53:08 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=k+0TJgtyGdUFAif3iB9nD6dvgm5MlSiy6/23tSnNTIE=;
+        b=Szt6ZAUsoH7wTylBmI4oLzLcqpYwmPiyPx17U3uC5RD97hpLmvIIOgSacZOnaJmGVj
+         ENXsM32uf0pCnh+dWved370AShpXNwCn1XNdvwkYU7CeFzpG9yEWLH+tYVShNp3Yl1Aj
+         OpsdSRl57F3jPiuZInPTAXeja98mSsAHTSI+oGvzkxKyT6noPoNiXCfOnl/09ObIMh5t
+         wqyocZKuPJ+aTNo7z7tzl4bOD0TDX//AGzPf8xdWt2hekBR9kx4k3JSwLBfdPipuIGnO
+         v3A7Mv1LKtl9TDJ+dLAc4khaITIybhITdpte08qG2LWsPvwwhQHXb/0Lwp7+ZG+jwYp/
+         0OAg==
+X-Gm-Message-State: AOAM531aMuwXT2rxao0sxRGZC+6CrnoR/bcx9GVfF5SBOplMfWpaVVe3
+        cwQV11oi8YbBdModKnWbh/Z6vyV1
+X-Google-Smtp-Source: ABdhPJx+92owXVBEj1k0uFeSCkezcOnNF9loDGUYXY+ITfPZQt/zwwOX52FKrdde00pwe9p9ip6TWQ==
+X-Received: by 2002:a17:906:a1c7:: with SMTP id bx7mr20452601ejb.388.1593669605407;
+        Wed, 01 Jul 2020 23:00:05 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.195])
+        by smtp.googlemail.com with ESMTPSA id a37sm8647592edf.86.2020.07.01.23.00.04
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 01 Jul 2020 23:00:04 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 08:00:02 +0200
+From:   'Krzysztof Kozlowski' <krzk@kernel.org>
+To:     Alim Akhtar <alim.akhtar@samsung.com>
+Cc:     'Rob Herring' <robh+dt@kernel.org>,
+        'Kukjin Kim' <kgene@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        'Marek Szyprowski' <m.szyprowski@samsung.com>,
+        'Bartlomiej Zolnierkiewicz' <b.zolnierkie@samsung.com>,
+        'Sylwester Nawrocki' <snawrocki@kernel.org>,
+        'Chanwoo Choi' <cw00.choi@samsung.com>,
+        'Pankaj Dubey' <pankaj.dubey@samsung.com>
+Subject: Re: [PATCH 1/4] arm64: dts: exynos: Add PWM interrupts on Exynos7
+Message-ID: <20200702060002.GA4175@kozik-lap>
+References: <CGME20200629205534epcas5p33eb7cbdff4aee986d2e509e0c79cf952@epcas5p3.samsung.com>
+ <20200629204442.17336-1-krzk@kernel.org>
+ <001101d64ef2$8f824620$ae86d260$@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <7988b6cf-e60c-7e5c-ffc3-8075c20af3d3@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <001101d64ef2$8f824620$ae86d260$@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-02.07.2020 08:43, Dmitry Osipenko пишет:
-> 02.07.2020 08:30, Chanwoo Choi пишет:
->> On 7/2/20 2:07 PM, Dmitry Osipenko wrote:
->>> 02.07.2020 07:18, Chanwoo Choi пишет:
->>>> Hi Dmitry,
->>>>
->>>> On 6/9/20 10:13 PM, Dmitry Osipenko wrote:
->>>>> The clk_round_rate() won't be usable for building OPP table once
->>>>> interconnect support will be added to the EMC driver because that CLK API
->>>>> function limits the rounded rate based on the clk rate that is imposed by
->>>>> active clk-users, and thus, the rounding won't work as expected if
->>>>> interconnect will set the minimum EMC clock rate before devfreq driver is
->>>>> loaded. The struct tegra_mc contains memory timings which could be used by
->>>>> the devfreq driver for building up OPP table instead of rounding clock
->>>>> rate, this patch implements this idea.
->>>>>
->>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>>> ---
->>>>>  drivers/devfreq/tegra20-devfreq.c | 18 +++++++++++-------
->>>>>  1 file changed, 11 insertions(+), 7 deletions(-)
->>>>>
->>>>> diff --git a/drivers/devfreq/tegra20-devfreq.c b/drivers/devfreq/tegra20-devfreq.c
->>>>> index 6469dc69c5e0..bf504ca4dea2 100644
->>>>> --- a/drivers/devfreq/tegra20-devfreq.c
->>>>> +++ b/drivers/devfreq/tegra20-devfreq.c
->>>>> @@ -123,8 +123,7 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->>>>>  {
->>>>>  	struct tegra_devfreq *tegra;
->>>>>  	struct tegra_mc *mc;
->>>>> -	unsigned long max_rate;
->>>>> -	unsigned long rate;
->>>>> +	unsigned int i;
->>>>>  	int err;
->>>>>  
->>>>>  	mc = tegra_get_memory_controller();
->>>>> @@ -151,12 +150,17 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->>>>>  
->>>>>  	tegra->regs = mc->regs;
->>>>>  
->>>>> -	max_rate = clk_round_rate(tegra->emc_clock, ULONG_MAX);
->>>>> -
->>>>> -	for (rate = 0; rate <= max_rate; rate++) {
->>>>> -		rate = clk_round_rate(tegra->emc_clock, rate);
->>>>> +	if (!mc->num_timings) {
->>>>
->>>> Could you explain what is meaning of 'num_timing?
->>>
->>> The num_timings is the number of memory timings defined in a
->>> device-tree. One timing configuration per memory clock rate.
->>
->> OK. I understand.
->>
->>>
->>>> Also, why add the opp entry in case of mc->num_timings is zero?
->>>
->>> Timings may be not defined in some device-trees at all and in this case
->>> memory always running on a fixed clock rate.
->>
->> You mean that 'timings' information is optional?
+On Tue, Jun 30, 2020 at 08:54:28PM +0530, Alim Akhtar wrote:
+> Hi Krzysztof,
 > 
-> Yes
-> 
-> Actually, looks like I missed to properly test this case where timings
-> are missing in DT and it shouldn't work with the current code. I'll fix
-> it in the next version.
-> 
->>>
->>> The devfreq driver won't be practically useful if mc->num_timings is
->>> zero since memory frequency can't be changed, but anyways we'd want to
->>> load the devfreq driver in order to prevent confusion about why it's not
->>> loaded.
->>>
->>> For example, you may ask somebody to show contents of
->>> /sys/class/devfreq/tegra20-devfreq/trans_stat and the person says to you
->>> that this file doesn't exist, now you'll have to figure out what
->>> happened to the devfreq driver.
->>
->> I understand why add OPP entry point when timing is not defined on DT.
->> But, actually, I think that you better to change 'timings' info is mandatory
->> instead of optional. Because the devfreq driver is for DVFS
->> and the driver supporting DVFS have to have the frequency information
->> like OPP.
+> > -----Original Message-----
+> > From: Krzysztof Kozlowski <krzk@kernel.org>
+> > Sent: 30 June 2020 02:15
+> > To: Rob Herring <robh+dt@kernel.org>; Kukjin Kim <kgene@kernel.org>;
+> > Krzysztof Kozlowski <krzk@kernel.org>; devicetree@vger.kernel.org;
+> linux-arm-
+> > kernel@lists.infradead.org; linux-samsung-soc@vger.kernel.org; linux-
+> > kernel@vger.kernel.org
+> > Cc: Marek Szyprowski <m.szyprowski@samsung.com>; Bartlomiej Zolnierkiewicz
+> > <b.zolnierkie@samsung.com>; Sylwester Nawrocki <snawrocki@kernel.org>;
+> > Alim Akhtar <alim.akhtar@samsung.com>; Chanwoo Choi
+> > <cw00.choi@samsung.com>; Pankaj Dubey <pankaj.dubey@samsung.com>
+> > Subject: [PATCH 1/4] arm64: dts: exynos: Add PWM interrupts on Exynos7
+> > 
+> > Add required interrupts to PWM node on Exynos7.  This fixes DT schema
+> > warning:
+> > 
+> >     pwm@136c0000: 'interrupts' is a required property
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > 
+> > ---
+> > 
+> > Not tested
+> > ---
+> >  arch/arm64/boot/dts/exynos/exynos7.dtsi | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> > b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> > index f590891efe25..523547b3d539 100644
+> > --- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> > +++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> > @@ -581,6 +581,11 @@
+> >  		pwm: pwm@136c0000 {
+> >  			compatible = "samsung,exynos4210-pwm";
+> >  			reg = <0x136c0000 0x100>;
+> > +			interrupts = <GIC_SPI 444 IRQ_TYPE_LEVEL_HIGH>,
+> > +				     <GIC_SPI 445 IRQ_TYPE_LEVEL_HIGH>,
+> > +				     <GIC_SPI 446 IRQ_TYPE_LEVEL_HIGH>,
+> > +				     <GIC_SPI 447 IRQ_TYPE_LEVEL_HIGH>,
+> > +				     <GIC_SPI 448 IRQ_TYPE_LEVEL_HIGH>;
+> PWM IRQs are from 449 ~ 453 for PWM[0] ~ PWM[4] on this SoC.
+> 444 ~ 447 are for HSI2C and 448 is for ADC.
 
-That's what I initially did by bailing out from driver's probe if
-timings info is missing, until ran into a situation described above :)
+Ah, indeed.
 
->> Or, 
->> If you want to keep 'timing' is optional on DT,
->> I recommend that you add one timing data to tegra mc driver
->> when DT doesn't include the any timing information
->> I think that is it more clear.
-> 
-> Okay, I'll move it into the MC driver in the next version.
-> 
-> Thank you for the review!
-> 
+> Please see the exynos7.dtsi
+> Also drivers/pwm/pwm-samsung.c does not uses interrupt at all, still we need
+> interrupts property to be added here?
+
+That's a good point. For S3C SoCs the PWM timer was used also as a
+clocksource so it required interrupts. But since Exynos this is not
+used.  I don't know why the bindings introduced required interrupts...
+It seems it would be better just to remove them from bindings and DTS.
+
+Best regards,
+Krzysztof
 
