@@ -2,115 +2,142 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3FFC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 06:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80341C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 06:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 320842089D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 06:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 589D42085B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 06:53:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kHYTzLii"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="aZUSyi07"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgGBGYH (ORCPT
+        id S1726803AbgGBGxl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 02:24:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56922 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbgGBGYH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 02:24:07 -0400
-Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB0B9C08C5C1
-        for <devicetree@vger.kernel.org>; Wed,  1 Jul 2020 23:24:06 -0700 (PDT)
-Received: by mail-qt1-x84a.google.com with SMTP id h24so2932228qtk.18
-        for <devicetree@vger.kernel.org>; Wed, 01 Jul 2020 23:24:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=iAAvm140uabXTl+jHo1MA3XpYMJqItzUT/T49Tq/jsE=;
-        b=kHYTzLiiwAcymrEuy2t4xpNOUScn5Lchdcc0t1JjYbvXgAyblfAUldguvPrFi7PLsL
-         OMO8k+MiyIOHXgBHn9cqSUo9/EL+vvY3zcwjjCrbIOXtzed3gWpla8EgWuFG7IaUyjUa
-         KpievEzGpDkxAuuwmZ5LtpmfMjXczIXZcHrlEmBSgrei3aOLWhrE45hATpoT6SKkg91x
-         hKlyrvyBHwteXHacR1PdKN+Hb+aLWoO1q0zUVJU35WVF50UbggaRcrDcPAfxl0RZtynv
-         lSE9bipkznoS52wS+CJHh9YCG4FxQUBzvEPX7iLtHBZcNH3lLYrk4b5BptcgTQwH4y1B
-         d3Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=iAAvm140uabXTl+jHo1MA3XpYMJqItzUT/T49Tq/jsE=;
-        b=E4rx/RKlVKF9P0yLa3fOR+35UWKAPtOE3h8JB0NUUNrzHnts0IePLr5r/vUzTpLo+e
-         RMwrpxJbq4/EWw7XODjQAlaJlbtOdPZSZtSc7gLvoI1gNb2qCtPB08ry+N/ptnikUp3/
-         czDaJZkVPrsC8yJOIrhTdvbzRw0CNruY4MLMbihO8qoUnZnoplwObmuP4+bKbmzEXLDc
-         39nC8ZEL3T5evez2mFRlfQbiVeWf/I3G4oF5w1gaB6HZCXJ4JMTsfkg2H2HVVK45OQzK
-         6qfuEimKFDBP3xPLhOsIyyKyEQvyCXnYx5UAMNhxSd1n6VPbQIQoEudfnl4tbO88mtTI
-         FDCA==
-X-Gm-Message-State: AOAM532K8yXi0XDFf03NI501B28dqc+TWKMG8zzIyuDSm9v9cLkmggSI
-        /mt4tQgCx3f6YLjL4GN7cJj+CXzubFUn
-X-Google-Smtp-Source: ABdhPJx5gWyUPIpirkdQ+kayP/qflMJSBQVvzakrGUJ3dxaXfYaUR0EhWXVX6sjNNxNRPVQuX/3W7A5g8oJn
-X-Received: by 2002:a0c:ab55:: with SMTP id i21mr29086666qvb.139.1593671046028;
- Wed, 01 Jul 2020 23:24:06 -0700 (PDT)
-Date:   Thu,  2 Jul 2020 16:23:20 +1000
-In-Reply-To: <20200702062320.2903147-1-amistry@google.com>
-Message-Id: <20200702162231.v2.4.Ia24db14ffcd7803db3a728e15fa9fb2e6ce83e0b@changeid>
-Mime-Version: 1.0
-References: <20200702062320.2903147-1-amistry@google.com>
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH v2 4/4] arm64: dts: mediatek: Update allowed mt6397 regulator
- modes for elm boards
-From:   Anand K Mistry <amistry@google.com>
-To:     linux-mediatek@lists.infradead.org
-Cc:     hsin-hsiung.wang@mediatek.com, drinkcat@chromium.org,
-        Anand K Mistry <amistry@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 2 Jul 2020 02:53:41 -0400
+Received: from mail-eopbgr70051.outbound.protection.outlook.com ([40.107.7.51]:51975
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726068AbgGBGxl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Jul 2020 02:53:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ylk3bjhE74PbhRvbYq7Z9/bJJQzXlY8Bvwm/m7zf4Z+CEIlVdOXZJGqwQFNA8pJW9tYyxplFsDC07HbfRhNNbHyxcLc3xGO/5DtuitSvtqgGxkKt7P/Do10blD+8R1WiHVQKaS6e5yaZaET//NwhTfvFPiNrAu/z3Q675rMForSLn7h4ayo96N5+B5TAt0+BU75rZ/kg+1A7cNd6enHuQ5q4CqJjlhJj2YWt2qsSviLALu/DDAT2Q5NhtRJbeIkDnmMrJVL4j8LK0bExjoAsbzplTKkWgkcObOu2K6Hc3ccwwKDyDBCN8Xg7t7FOOLbUNGk8It6dIRSRyHRoYKd9pg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GEwFDhbvzw+SwNzLA57qxwzxTZmYyID+lEWSpd209Sg=;
+ b=DrGOdRGuQCFZojdk2eLS1FcrRG0+DxRlMHnNgAiOjVg7cSr2t83B1/AcYoIk7CJUHFTfvOmtBqUOiWpvPWGzEYrc9V5fTuZ4dCIY3ZP1IQo6bWPg8MFaGWK/0ymFCR0g7VDaodx/XkSIyhiC3j2Slp2Uqm3/RP8qedaH5D6fuMng2Y2j6xm+dKs0IbVkd40LgISD+oYmVdJHXjNUfBCN2i0758KMYvVt6wWd673m/m9bf1E6W0coDFxDILsIjleMM2I6DqCeYOBWEnaKXQvsk4Hqb0DppLlAwS1W2f/fxYTh9Uzd708C4pwYw1YxUwn4KCpUBzU7/xU0ev/zw39mYg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GEwFDhbvzw+SwNzLA57qxwzxTZmYyID+lEWSpd209Sg=;
+ b=aZUSyi07CDzMRupH8jzKogZ7BwUv+OmrGfbI/9/ngfbG+GA6aVBNhYm8/E0NSuUJSnx1pUF2/DhzZvucsRJssKfrszHGPf4phz8tb7ix27DyLHyJNCKkjOHqHbzysewvdsSnDCfiEBWp/U14Omd0P/KMy2hhmvldi5uEt0mZtE0=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VI1PR04MB6943.eurprd04.prod.outlook.com (2603:10a6:803:13a::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.22; Thu, 2 Jul
+ 2020 06:53:36 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3153.024; Thu, 2 Jul 2020
+ 06:53:36 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     vkoul@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, festevam@gmail.com,
+        catalin.marinas@arm.com, will@kernel.org, dan.j.williams@intel.com,
+        angelo@sysam.it
+Cc:     kernel@pengutronix.de, linux-imx@nxp.com,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v1 0/9] add fsl-edma3 support
+Date:   Thu,  2 Jul 2020 23:08:00 +0800
+Message-Id: <1593702489-21648-1-git-send-email-yibin.gong@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR01CA0172.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:28::28) To VE1PR04MB6638.eurprd04.prod.outlook.com
+ (2603:10a6:803:119::15)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.67) by SG2PR01CA0172.apcprd01.prod.exchangelabs.com (2603:1096:4:28::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3153.24 via Frontend Transport; Thu, 2 Jul 2020 06:53:31 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.67]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 19c00ea1-79ca-4ebc-0c27-08d81e54a4cd
+X-MS-TrafficTypeDiagnostic: VI1PR04MB6943:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR04MB694352D360FCD7693F58C4D3896D0@VI1PR04MB6943.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-Forefront-PRVS: 0452022BE1
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: F50p6JGoAYuKhcIQMDNWrEo+iOcpHXAIVcQREboDXRAVYcIqNpf7cLHBBR052uHPY7gIRDjmNNchiuJiTcsqjxtzHLxDTNKG1YZbpJjOl84ssA6J0pI52X2n23YjDmxLB97fqJer4KepJynEiNMBkwufrRPiFyF7c4ozbAEXO7fWBCbGvweH/ZGNf6WmU2CY8day2KmufGOVTvL/JOrUvCdxRGz5tAksDHeXsz01cLJDW7IuBxdGCZH4PZ7q8ACtmiAyIkZ8X7qSMREiZur9FEGY3WKin/M77MG7Yyc2ke+CVYr2Rl7RYqGK2ZaOLOYp6Zg8KcT/pNkhselb5hKcAQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(366004)(376002)(39860400002)(346002)(83380400001)(66476007)(6666004)(66946007)(66556008)(52116002)(36756003)(8936002)(2616005)(6486002)(956004)(6512007)(186003)(7416002)(4326008)(26005)(2906002)(8676002)(86362001)(16526019)(478600001)(6506007)(5660300002)(316002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: LTWeDXTJa+HHHOY3JzNJJaQb82g3te/SmI2L+O2MjpRHqikJeHmsap69Yh3JYfQOB9OuqY/me3D+Ywc44kfOz9qkCxOFjI2SsZ3YuppiQBAxSek0lYekm+4ZkeFqwJmxeNejLO8Pk8MAd6DFcGXBVD/vB/rXgVgqxP1LumoVg5gGMychC3e0DKRjyZMAZ7diP7Wa7vHZVBLMzKp/2Fzo2f6C5Vmt5HCeLVxTRbLAZNtruRgY7z2c2JE8GDozaSrKN39WQzJEF6FLY5Kv8bCwADy/E83Vecaf+gMeTUjojvvtB9W23hwsiMPCqlYtKJbRKbdOmmxEgR3LhXrpv1KlHL07ieMA8nlKP3F9SSTst48te0ULTBPQOl44Hsk/aUw1NLSD6uDsnu+nMhMwetPPg/iz5I/KLTE0KZA+5iGAuJ6NLIKEnFpI27wQucjImNM+pq8P7lxJ6s/SNrw/jRo+KyWZXecXYjvtD9PzHqx66E0=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 19c00ea1-79ca-4ebc-0c27-08d81e54a4cd
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6638.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2020 06:53:36.6371
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OpCvgbb8u2oIwb2sOTuhDRqRgCjDCpXGpfpXXt37FRs0K6k5iTVXpMgZUY9W/SGj5CR4XWo3tZ1AXIFqonCbIg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6943
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This updates the allowed mt6397 regulator modes for elm (and derivative)
-boards to use named constants.
+This patchset enable fsl-edma3 which is used on i.mx8qxp/i.mx8qm. There
+are big changes on fsl-edma so that add indepent fsl-edma3 here:
 
-Signed-off-by: Anand K Mistry <amistry@google.com>
+1. split memory address for per channel, while all channels share the same
+   memory address and the same control registers CR/INT..etc.
+2. all TCD registers of channels are continuous on legacy edma but split on
+   edma3.
+3. per interrupt per channel on edma3.
+4. totally different register layer and add some register such as SBR
+5. power domain support, per domain per channel.
 
----
 
-Changes in v2:
-- Introduce constants in dt-bindings
-- Improve conditional readability
+The first 4 patches are used for preparing no any function changes involed.
 
- arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Robin Gong (9):
+  dmaengine: fsl-edma: move edma_request functions into drvdata
+  dmaengine: fsl-edma-common: add condition check for fsl_edma_chan_mux
+  dmaengine: fsl-edma-common: add fsl_chan into fsl_edma_fill_tcd
+  dmaengine: fsl-edma-common: export fsl_edma_set_tcd_regs
+  dmaengine: fsl-edma3: add fsl-edma3 driver
+  dt-bindings: dma: add fsl-edma3 yaml
+  firmware: imx: scu-pd: correct dma resource
+  arm64: dts: imx8qxp: add edma2
+  arm64: configs: defconfig: add CONFIG_FSL_EDMA3
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
-index a5a12b2599a4..e9cfded307b3 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
-@@ -6,6 +6,7 @@
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/input/linux-event-codes.h>
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/regulator/mediatek,mt6397-regulator.h>
- #include "mt8173.dtsi"
- 
- / {
-@@ -926,7 +927,8 @@ mt6397_vpca15_reg: buck_vpca15 {
- 				regulator-max-microvolt = <1350000>;
- 				regulator-ramp-delay = <12500>;
- 				regulator-always-on;
--				regulator-allowed-modes = <0 1>;
-+				regulator-allowed-modes = <MT6397_BUCK_MODE_AUTO
-+							   MT6397_BUCK_MODE_FORCE_PWM>;
- 			};
- 
- 			mt6397_vpca7_reg: buck_vpca7 {
+ .../devicetree/bindings/dma/nxp,fsl-edma3.yaml     | 129 ++++++
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |  38 ++
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/dma/Kconfig                                |  12 +
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/fsl-edma-common.c                      | 151 +++++--
+ drivers/dma/fsl-edma-common.h                      |  30 ++
+ drivers/dma/fsl-edma.c                             |  10 +-
+ drivers/dma/fsl-edma3.c                            | 493 +++++++++++++++++++++
+ drivers/dma/mcf-edma.c                             |   2 +
+ drivers/firmware/imx/scu-pd.c                      |   7 +-
+ 11 files changed, 844 insertions(+), 30 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/nxp,fsl-edma3.yaml
+ create mode 100644 drivers/dma/fsl-edma3.c
+
 -- 
-2.27.0.212.ge8ba1cc988-goog
+2.7.4
 
