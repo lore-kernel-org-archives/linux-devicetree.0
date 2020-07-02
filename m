@@ -2,172 +2,98 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A837DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 11:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D47C6C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 11:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89D6B20884
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 11:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7FEC20780
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 11:32:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="tK4jwZSo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B5m2sPJX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbgGBLX1 (ORCPT
+        id S1728502AbgGBLc6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 07:23:27 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:30974 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728009AbgGBLX0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 07:23:26 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 062BG4IJ003106;
-        Thu, 2 Jul 2020 13:23:15 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=STMicroelectronics;
- bh=5WRolsP7RiTQVKYQWxXnd4r13bZrvjWmpEgS8eL44Vo=;
- b=tK4jwZSoCzqQvFoTTJc/3BLffPTvaB6X2vqCxqU71etrfo3J3A2ZSnsgdX+Fi8F15yzP
- 7x8RQDer+5OQrNS30yHcOjEEuqExVvYsoDcdYjuk0iS4gFDomdakmL/bT8eokV95ze2f
- NW8tMbSonOUUqCG6ybcXoRCgaJO1NdtcUhjY+2WrHG1l0mrhqRf8onRqTLzXNo+8ICwJ
- THtV4lEfmN0Tujg28nNYIkoJgS9FfBcZqYP0BVQMjM0epfycULeqRIAGiAsq4YgUY/Ti
- srMoj3Bn92Wt04cY1yBX2370pLrB8GxsjGjJOrhxNj6wVl14hF5pA5Bl9VCYrVeDmrQg dg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31wuk1qqj0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Jul 2020 13:23:15 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D295C10002A;
-        Thu,  2 Jul 2020 13:23:14 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B88812AFEEF;
-        Thu,  2 Jul 2020 13:23:14 +0200 (CEST)
-Received: from gnbcxd0016.gnb.st.com (10.75.127.47) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 2 Jul
- 2020 13:23:13 +0200
-Date:   Thu, 2 Jul 2020 13:23:13 +0200
-From:   Alain Volmat <alain.volmat@st.com>
-To:     Wolfram Sang <wsa@kernel.org>
-CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <pierre-yves.mordret@st.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
-Subject: Re: [PATCH v2 1/4] i2c: smbus: add core function handling SMBus
- host-notify
-Message-ID: <20200702112313.GE6855@gnbcxd0016.gnb.st.com>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>, robh+dt@kernel.org,
-        mark.rutland@arm.com, pierre-yves.mordret@st.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com
-References: <1593070769-9106-1-git-send-email-alain.volmat@st.com>
- <1593070769-9106-2-git-send-email-alain.volmat@st.com>
- <20200701104946.GH2261@ninjato>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200701104946.GH2261@ninjato>
-X-Disclaimer: ce message est personnel / this message is private
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-02_05:2020-07-02,2020-07-02 signatures=0
+        Thu, 2 Jul 2020 07:32:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48064 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728489AbgGBLc5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 07:32:57 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAAA7C08C5C1;
+        Thu,  2 Jul 2020 04:32:57 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id c139so25189555qkg.12;
+        Thu, 02 Jul 2020 04:32:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=W7AlP+eA8SjThL4Tu3H/MzC59XsrBZF7Nd7uQUhGMq0=;
+        b=B5m2sPJXRFNRj9m1IAKGW5w88Xrt7xaddltd52qWHzI5K9RVpgwDQcq0uW3iOPNxV9
+         68fuOzxpGqJbJFQPBb6T3uKAO60HPGGyivA1Yr/Amz8faVf8CaVYuvBhdZohEeD2w/JC
+         sQbuQZAgJH1HpjN0UN8v9dD0MXF9oxHWk/8963iXHv4HQxIdmTKsr3tpHgFmLxlnlkxv
+         5frLFoN1UDxfzPho3vDw1sHH1dNQXyMnCT5Tst5A+o17ukJnXi6xaGi5Kdv8J8Z1doi4
+         Jie9QNhvMIBNq2WO0GKz9Gv/gIdDrPhhdAn7MYyFNEyI+PqlO89TmKxaQwi20zmQ7ckU
+         6UFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=W7AlP+eA8SjThL4Tu3H/MzC59XsrBZF7Nd7uQUhGMq0=;
+        b=q731vh6XwQQCjHwoisuSf60217V72xfZmndu53E6YDZZTOqo0oH1gaFosJi/wRU6lI
+         idnge/cQAg6G0tU0JpY38JJGlgjxk10fwO2z5LGGmxLLOPnF0YYSWlXTvwOtkF01x7G7
+         EFWNzZLVdqZP8dsAASgbD1knx+rB3kiWe8uuA9QpNhIdz7HaRY0y5gt92xotOeTJFmj7
+         2kvE0GGLxe2M0ZwU3pw4wsfAQsANxJTxILdppCVXVlRkcAJtAEjhVTZlRsp4I1A7/AD8
+         aIUk3e01I0daWIgU7f7wKoETV4CplJB7h8cw8nqrwbv+yGEAIfHpdO2QJk/bvnYpjOQ4
+         QDog==
+X-Gm-Message-State: AOAM533A1bFaJdD7u6DJpVZaLwrYk3xvHfHO/hhMyxuEOtc1w8pTIUID
+        ZnZccW6j874Dna0x6HQdi/4=
+X-Google-Smtp-Source: ABdhPJy0sUFttBRLwHCZQKChFUsgAn03L+qTOY8yXkoD8TvR5+IG6+8puGT/7qDXB+9CEKPcFqhR0A==
+X-Received: by 2002:a37:a056:: with SMTP id j83mr20924410qke.248.1593689576918;
+        Thu, 02 Jul 2020 04:32:56 -0700 (PDT)
+Received: from localhost.localdomain ([2804:14c:482:92b:d42f:2bc1:abe3:59f0])
+        by smtp.gmail.com with ESMTPSA id f22sm10474830qko.89.2020.07.02.04.32.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 04:32:56 -0700 (PDT)
+From:   Fabio Estevam <festevam@gmail.com>
+To:     lee.jones@linaro.org
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, benjamin.gaignard@st.com,
+        Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH] dt-bindings: mfd: st,stmfx: Remove I2C unit name
+Date:   Thu,  2 Jul 2020 08:32:33 -0300
+Message-Id: <20200702113233.5327-1-festevam@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Wolfram,
+Remove the I2C unit name to fix the following build warning with
+'make dt_binding_check':
 
-> Okay, now I got it to work, I also noted a few more issues.
-> 
-> First, I'd suggest s/i2c_smbus_host_notify/i2c_slave_host_notify/g for
-> all occurences in this patch. This makes a stronger distinction between
-> the generic HostNotify support and the slave specific one.
+Warning (unit_address_vs_reg): /example-0/i2c@0: node has a unit name, but no reg or ranges property
 
-Ok with that.
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+---
+ Documentation/devicetree/bindings/mfd/st,stmfx.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Also, I wonder if this shouldn't go to i2c-smbus.c instead but I haven't
-> checked if we end up in dependency hell then. Second best thought: at
-> least move to i2c-core-slave.c, then we could save the #ifdeffery in the
-> c-file?
+diff --git a/Documentation/devicetree/bindings/mfd/st,stmfx.yaml b/Documentation/devicetree/bindings/mfd/st,stmfx.yaml
+index bed22d4abffb..888ab4b5df45 100644
+--- a/Documentation/devicetree/bindings/mfd/st,stmfx.yaml
++++ b/Documentation/devicetree/bindings/mfd/st,stmfx.yaml
+@@ -93,7 +93,7 @@ required:
+ examples:
+   - |
+     #include <dt-bindings/interrupt-controller/arm-gic.h>
+-    i2c@0 {
++    i2c {
+       #address-cells = <1>;
+       #size-cells = <0>;
+       stmfx@42 {
+-- 
+2.17.1
 
-I have actually difficulties to understand clearly what should go within
-i2c-smbus.c vs i2c-core-smbus or i2c-core-slave. My feeling is that
-i2c-core-slave is more about the registering of a slave rather than one usage
-of the slave mechanism. Hence I am not sure those functions/cb belong there.
-But at the same time, I don't know about i2c-smbus vs i2c-core-smbus. I putted
-it within i2c-core-smbus considering that the creation of the alert device
-is also done there.
-
-....
-
-> > +{
-> > +	struct i2c_smbus_host_notify_status *status = client->dev.platform_data;
-> > +	int ret;
-> > +
-> > +	switch (event) {
-> > +	case I2C_SLAVE_WRITE_REQUESTED:
-> > +		status->notify_start = true;
-> > +		break;
-> > +	case I2C_SLAVE_WRITE_RECEIVED:
-> > +		/* We only retrieve the first byte received (addr)
-> > +		 * since there is currently no support to retrieve the data
-> > +		 * parameter from the client.
-> > +		 */
-> > +		if (!status->notify_start)
-> > +			break;
-> > +		status->addr = *val;
-> > +		status->notify_start = false;
-> 
-> So, we are safe if the message is too short. Otherwise, we capture the
-> first byte (== address) only, right. Further bytes until STOP are
-> discarded. So, we don't check if the message is too long and contains
-> more than the status word. Maybe we should add that?
-
-Yes I modified that.
-
-> > +		break;
-> > +	case I2C_SLAVE_STOP:
-> > +		/* In case of incomplete write, don't handle host-notify */
-> > +		if (status->notify_start) {
-> > +			status->notify_start = false;
-> > +			break;
-> > +		}
-> > +
-> > +		ret = i2c_handle_smbus_host_notify(client->adapter,
-> > +						   status->addr);
-> > +		if (ret < 0)
-> > +			return ret;
-> > +		break;
-> > +	default:
-> 
-> The missing cases are mandatory. From my testunit driver:
-> 
->         case I2C_SLAVE_READ_REQUESTED:
->         case I2C_SLAVE_READ_PROCESSED:
->                 *val = 0xff;
->                 break;
-
-Ok, done as well.
-
-> > --- a/include/linux/i2c-smbus.h
-> > +++ b/include/linux/i2c-smbus.h
-> > @@ -38,6 +38,8 @@ static inline int of_i2c_setup_smbus_alert(struct i2c_adapter *adap)
-> >  	return 0;
-> >  }
-> >  #endif
-> > +struct i2c_client *i2c_new_smbus_host_notify_device(struct i2c_adapter *adapter);
-> > +void i2c_free_smbus_host_notify_device(struct i2c_client *client);
-> 
-> Those need to be guarded with I2C_SLAVE as well. And an #else branch
-> with empty/successful placeholders.
-
-Ok understood.
