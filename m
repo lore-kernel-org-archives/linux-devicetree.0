@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F452C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 15:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C30C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 15:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 755832088E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 15:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73DDF20885
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 15:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593704821;
-	bh=GlMtWaaBQ7ayJajZsemgytwD68eNWl0Zn8s3Dn5PCck=;
+	s=default; t=1593704826;
+	bh=Como7h4+Ry8kLsYZ1X9gi5byJb2qZgeCFlN/M2p5GG4=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=aVFBpmXafumnnpGnmKcmqCZKvsKqUVKsn4onpnoDMLJA7widndN1V1xwFtiacXUuq
-	 UsT3KED1nvye26Q6GKPu2sxAQegxsur6JKGE/IVbVShvkC1o1NcwYf1lFMLraDiXyA
-	 dFvdVkyH+vm4iEydGIttVge4zqzglakATvMHSh70=
+	b=I9sPrBziZL/HHAsO4w0NvrqgSgdpAyCKtJZACQdxqSJu7ahh1twIio0MV8TPSWN0k
+	 ZghIajZ/s8VH2dec1VPQ9ttWNfTTbJQQPE0V0pHUkxkNLGTxzdQ3u+nf6i81ijUWZx
+	 mDc4MIQz+h1ZIXKlvvLzniT9n0aTYsuS9iNZ5I1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgGBPrA (ORCPT
+        id S1726428AbgGBPrG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 11:47:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59494 "EHLO mail.kernel.org"
+        Thu, 2 Jul 2020 11:47:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725878AbgGBPq7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 2 Jul 2020 11:46:59 -0400
+        id S1726117AbgGBPrF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Jul 2020 11:47:05 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDF0C20885;
-        Thu,  2 Jul 2020 15:46:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01A4A208B8;
+        Thu,  2 Jul 2020 15:47:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593704819;
-        bh=GlMtWaaBQ7ayJajZsemgytwD68eNWl0Zn8s3Dn5PCck=;
+        s=default; t=1593704824;
+        bh=Como7h4+Ry8kLsYZ1X9gi5byJb2qZgeCFlN/M2p5GG4=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=O/n8Worf/Aj21RCMin17umiYx/dtg6ZVsfLiUX8IjPr9N2aTWMyLxByg0LqTUxehL
-         UTR+gpezmReiPiXffDRibiWE11Nzl/qd23ijLq0DEA65Xj0LJ1BDlpjsuZbfmIo4Ux
-         R/9D9UU6KoaNVs9gKyIXf1tWXSzXtpl0it6wKW0I=
-Date:   Thu, 02 Jul 2020 16:46:57 +0100
+        b=ANxgymD0xohZ9Dsk8fIzDT0PigtHeLmkNg4BPY1aoaF6VTMH28s31Wn8gTJzyrsO3
+         enBOPXKmei5Qr3Tp+o+bb5gH0D9iv8lW6bz7b2/VLiPydaEIwW1klog8IAYsEk7aNa
+         w7MqxMxVioYL6spbp0f+41bRuBYWP3JnR5Funud4=
+Date:   Thu, 02 Jul 2020 16:47:02 +0100
 From:   Mark Brown <broonie@kernel.org>
 To:     linux-mediatek@lists.infradead.org,
         Anand K Mistry <amistry@google.com>
@@ -46,27 +46,30 @@ Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Liam Girdwood <lgirdwood@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        hsin-hsiung.wang@mediatek.com, drinkcat@chromium.org,
+        Support Opensource <support.opensource@diasemi.com>,
+        drinkcat@chromium.org, hsinyi@chromium.org,
         devicetree@vger.kernel.org
-In-Reply-To: <20200702062320.2903147-1-amistry@google.com>
-References: <20200702062320.2903147-1-amistry@google.com>
-Subject: Re: [PATCH v2 0/4] regulator: mt6397: Implement of_map_mode regulator_desc function
-Message-Id: <159370481231.5599.8673864657809351284.b4-ty@kernel.org>
+In-Reply-To: <20200702031525.2662441-1-amistry@google.com>
+References: <20200702031525.2662441-1-amistry@google.com>
+Subject: Re: [PATCH 0/4] regulator: da9211: support changing modes
+Message-Id: <159370481231.5599.4888173320266148214.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 2 Jul 2020 16:23:16 +1000, Anand K Mistry wrote:
+On Thu, 2 Jul 2020 13:15:21 +1000, Anand K Mistry wrote:
 > This patchset adds support for being able to change regulator modes for
-> the mt6397 regulator. This is needed to allow the voltage scaling
-> support in the MT8173 SoC to be used on the elm (Acer Chromebook R13)
+> the da9211 regulator. This is needed to allow the voltage scaling
+> support in the MT8173 SoC to be used in the elm (Acer Chromebook R13)
 > and hana (several Lenovo Chromebooks) devices.
 > 
-> Without a of_map_mode implementation, the regulator-allowed-modes
-> devicetree field is skipped, and attempting to change the regulator mode
-> results in an error:
-> [    1.439165] vpca15: mode operation not allowed
+> 
+> Anand K Mistry (4):
+>   regulator: da9211: Move buck modes into header file
+>   dt-bindings: regulator: da9211: Document allowed modes
+>   regulator: da9211: Implement of_map_mode
+>   arm64: dts: mediatek: Update allowed regulator modes for elm boards
 > 
 > [...]
 
@@ -76,12 +79,12 @@ Applied to
 
 Thanks!
 
-[1/3] regulator: mt6397: Move buck modes into header file
-      commit: 1c537b2d729698717f01fcea13721818be5adde7
-[2/3] regulator: mt6397: Document valid modes
-      commit: 347f12d573412cb7ba4781b58f42f0ca7eecde6d
-[3/3] regulator: mt6397: Implement of_map_mode
-      commit: 8096236db4349c43a2b19b8ceb11b0b997354223
+[1/3] regulator: da9211: Move buck modes into header file
+      commit: 6c8b65950b1c75b9e41b5bf314f5d7b81df91272
+[2/3] regulator: da9211: Document allowed modes
+      commit: 650e5adae0197bb9ecaa48b98b8ada1cc6772fb0
+[3/3] regulator: da9211: Implement of_map_mode
+      commit: 6f1f1a8039e5f7a61e932d6a9a50708c56e21033
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
