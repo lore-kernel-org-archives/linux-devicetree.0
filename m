@@ -2,160 +2,107 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED028C433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 01:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B417EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 01:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C609D20884
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 01:25:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mk2P/S1R"
+	by mail.kernel.org (Postfix) with ESMTP id 83E32212CC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 01:26:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593653218;
+	bh=5eXMQNhbrRFdB6JrQi+rLl3n4tIXKH8775zN6Y2Z2N8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Rb9CfCwSdLzIAKaNbX61BDjdxAmFWck3GlY9w36RMdsc+4IyOoZy81iibOEtL3+37
+	 KbKNf4RLXJ3auVbOixOuPkfd4E0U27lPirQtHNyHkz81q827S37yFUpCnWUeURdk0j
+	 i9/i9eParbG/KV5PskOBfb7tHcP4JhVWpy6bxtEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728497AbgGBBZN (ORCPT
+        id S1729327AbgGBB05 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:25:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728736AbgGBBZG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jul 2020 21:25:06 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 011BBC08C5C1;
-        Wed,  1 Jul 2020 18:25:06 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id q7so16284109ljm.1;
-        Wed, 01 Jul 2020 18:25:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OA49WuL0sThpD2AYuMtpdZGroGjS32Zzwhjd8yiNNuE=;
-        b=Mk2P/S1R51LjiHT7a52NIA3xKyA8UaSrakv3wRtyWYPe6BL3niPa/Dc/e4xhwoI/7y
-         qJCb9fIvWwDH+rLQCzB7ZXYtVgYJ17S079OzNbyqQDLIp0iyIOZCd2f/fXeMuCcMZLJt
-         /nXGZj42VSvsYShz0ll30Lyi6zGzcBWLqTeKBVrFClp61LhaHRGRo7AY9m0Pyg+rKlJg
-         leQR6wWLC+Ta3BChiNfVKYMnm6Cnijo3iVy35FtBvlPGz1TinVSDi5OeLq4ExN/pNSKk
-         HVnbRxh9g2dXkTgaTw8nTyxZK7+4+/oV5s4HURZiYG3wpDpJvgjBmRy+AXNHPlFQSHMp
-         sU+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OA49WuL0sThpD2AYuMtpdZGroGjS32Zzwhjd8yiNNuE=;
-        b=slZMJu6lAawQN/iCGs4dlR9wMT9bChNtotd7jbt18qWWpQgBtEpozvPhrYb6v98KTQ
-         p+sGjMzHCybZuAv5p7opDBBhO8eUVfIPNvhvwFLtgW7Ix3FwNx6eC2Co+cH6emM2lgG7
-         Aq4wvhdtZxuiU5jDBDGsdd7NQGHrOyZOhmTxXZvuuGbbfKSaJN6B+7nNVOpgrUji7FC8
-         bBBTtWKL4BFsPvMJG6IcVSKhwa/Djra3lfDWXTP0zQmOJNS7Pi11rbsodUsyYcBuIoYm
-         dlxGFzkkjbIUlvXyV2B6rIhfGzLDALvnexi6bzqSLLXq/UKI4nDOAph5QpAA1J2ECQM1
-         xImg==
-X-Gm-Message-State: AOAM532p/VGDQQmPt/R2Fs9r3rOXPcWcZ2mYCxqEBDAUihn6OOq/Tv0k
-        JL8Z7UshUhQb6DHBZaPflXkvvWXZcQM=
-X-Google-Smtp-Source: ABdhPJxhRnB8zlB9MEI6/ePrP8TdwiCvmtrvwqZ45jg4cOgOfkQ8DUYoWvB37U4c3CnwDzsMcLaC0A==
-X-Received: by 2002:a2e:9017:: with SMTP id h23mr10807112ljg.61.1593653104194;
-        Wed, 01 Jul 2020 18:25:04 -0700 (PDT)
-Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.googlemail.com with ESMTPSA id t4sm2704596lfp.21.2020.07.01.18.25.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Jul 2020 18:25:03 -0700 (PDT)
-Subject: Re: [PATCH v4 11/37] PM / devfreq: tegra30: Silence deferred probe
- error
-To:     Chanwoo Choi <cw00.choi@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>
-Cc:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
-        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-References: <20200609131404.17523-1-digetx@gmail.com>
- <CGME20200609131843epcas1p3a5b06308559ff03ef1b27521f412b656@epcas1p3.samsung.com>
- <20200609131404.17523-12-digetx@gmail.com>
- <136b430d-2097-7b2b-d7dd-b438deee8f5d@samsung.com>
- <fda8aa80-04f1-af00-7a0d-f9b589cdb37e@gmail.com>
- <8e941321-5da6-e9e7-6a4e-8c0477911ebd@samsung.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <3e30279c-0964-4dd8-e7ac-2066c8ccc902@gmail.com>
-Date:   Thu, 2 Jul 2020 04:25:02 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 1 Jul 2020 21:26:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58486 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729292AbgGBB0w (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:26:52 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C627420748;
+        Thu,  2 Jul 2020 01:26:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593653211;
+        bh=5eXMQNhbrRFdB6JrQi+rLl3n4tIXKH8775zN6Y2Z2N8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=CsgLhQdiK55/hHXuyyIVhTwdzk6LL/F002ACwnEYZmodDW8/yu/5dKmEec70cn62r
+         RRD/JZyF5K6GcrFKiuT99F3IhBX3CDSmQKlW04MUWlaPzN6VnAvZCpza9MD7Xvpww0
+         lQQXX7NZPP6UA9C3rAApq/5+cmRCrgCktA2Kjidg=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Tony Lindgren <tony@atomide.com>, maemo-leste@lists.dyne.org,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 01/17] ARM: dts: omap4-droid4: Fix spi configuration and increase rate
+Date:   Wed,  1 Jul 2020 21:26:33 -0400
+Message-Id: <20200702012649.2701799-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <8e941321-5da6-e9e7-6a4e-8c0477911ebd@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-02.07.2020 04:34, Chanwoo Choi пишет:
-> On 7/2/20 10:20 AM, Dmitry Osipenko wrote:
->> 02.07.2020 03:59, Chanwoo Choi пишет:
->>> Hi,
->>>
->>> On 6/9/20 10:13 PM, Dmitry Osipenko wrote:
->>>> Tegra EMC driver was turned into a regular kernel driver, it also could
->>>> be compiled as a loadable kernel module now. Hence EMC clock isn't
->>>> guaranteed to be available and clk_get("emc") may return -EPROBE_DEFER and
->>>> there is no good reason to spam KMSG with a error about missing EMC clock
->>>> in this case, so let's silence the deferred probe error.
->>>>
->>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>> ---
->>>>  drivers/devfreq/tegra30-devfreq.c | 9 ++++++---
->>>>  1 file changed, 6 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
->>>> index e94a27804c20..423dd35c95b3 100644
->>>> --- a/drivers/devfreq/tegra30-devfreq.c
->>>> +++ b/drivers/devfreq/tegra30-devfreq.c
->>>> @@ -801,9 +801,12 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->>>>  	}
->>>>  
->>>>  	tegra->emc_clock = devm_clk_get(&pdev->dev, "emc");
->>>> -	if (IS_ERR(tegra->emc_clock)) {
->>>> -		dev_err(&pdev->dev, "Failed to get emc clock\n");
->>>> -		return PTR_ERR(tegra->emc_clock);
->>>> +	err = PTR_ERR_OR_ZERO(tegra->emc_clock);
->>>> +	if (err) {
->>>> +		if (err != -EPROBE_DEFER)
->>>> +			dev_err(&pdev->dev, "Failed to get emc clock: %d\n",
->>>> +				err);
->>>> +		return err;
->>>>  	}
->>>>  
->>>>  	err = platform_get_irq(pdev, 0);
->>>>
->>>
->>> As I commented on patch10, I recommend that you add the Tegra EMC driver
->>> commit information into patch description and Looks good to me.
->>>
->>
->> Hello, Chanwoo!
->>
->> This patch11 and patch10 are depending on the patches 4/5 (the Tegra EMC
->> driver patches) of *this* series, hence there is no commit information.
->> I'm expecting that this whole series will go via tegra tree once all the
->> patches will be reviewed and collect all the necessary acks from you,
->> ICC and CLK subsystem maintainers.
->>
->> Please feel free to give yours ack to the patches 10/11 if they are good
->> to you :)
->>
->>
-> 
-> OK. Looks good to me
-> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-> 
+From: Tony Lindgren <tony@atomide.com>
 
-Thank you! :)
+[ Upstream commit 0df12a01f4857495816b05f048c4c31439446e35 ]
+
+We can currently sometimes get "RXS timed out" errors and "EOT timed out"
+errors with spi transfers.
+
+These errors can be made easy to reproduce by reading the cpcap iio
+values in a loop while keeping the CPUs busy by also reading /dev/urandom.
+
+The "RXS timed out" errors we can fix by adding spi-cpol and spi-cpha
+in addition to the spi-cs-high property we already have.
+
+The "EOT timed out" errors we can fix by increasing the spi clock rate
+to 9.6 MHz. Looks similar MC13783 PMIC says it works at spi clock rates
+up to 20 MHz, so let's assume we can pick any rate up to 20 MHz also
+for cpcap.
+
+Cc: maemo-leste@lists.dyne.org
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
+index bcced922b2807..b4779b0ece96d 100644
+--- a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
++++ b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
+@@ -16,8 +16,10 @@ cpcap: pmic@0 {
+ 		#interrupt-cells = <2>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+-		spi-max-frequency = <3000000>;
++		spi-max-frequency = <9600000>;
+ 		spi-cs-high;
++		spi-cpol;
++		spi-cpha;
+ 
+ 		cpcap_adc: adc {
+ 			compatible = "motorola,mapphone-cpcap-adc";
+-- 
+2.25.1
+
