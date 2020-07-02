@@ -2,94 +2,118 @@ Return-Path: <SRS0=wLM1=AN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D0DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 17:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 308FDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 17:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2F5F20885
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 17:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03FD820737
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jul 2020 17:54:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bb1PyoLT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="elhYe95R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgGBRx6 (ORCPT
+        id S1727988AbgGBRyF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 13:53:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51042 "EHLO
+        Thu, 2 Jul 2020 13:54:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbgGBRx5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 13:53:57 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64710C08C5C1;
-        Thu,  2 Jul 2020 10:53:57 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id 80so26466416qko.7;
-        Thu, 02 Jul 2020 10:53:57 -0700 (PDT)
+        with ESMTP id S1727963AbgGBRyA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 13:54:00 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17291C08C5C1;
+        Thu,  2 Jul 2020 10:54:00 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id x62so21933527qtd.3;
+        Thu, 02 Jul 2020 10:54:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=0/GQxXxfGsYnBic5/RL6CAFNUaN6B/gl7pdQ8fVaHoY=;
-        b=bb1PyoLTqgnmqpoyjiIqzjmgwRxbIg8/iGsNGwpirVNTcqI/GQWWEP9KFFNsCcQ10Y
-         Ni/imIv6X56JStRHswX9whmutnIkp9Jwpyw17nRT4ye+1zS2B8WHUkvehHf6HtkRirUr
-         zzJuHZC5HZrpJA0wVOqSeUSYAsh3oBtm0I5eOe8bKLXC8dpfaODBFsJFDB2Vn8gFNR/v
-         WdX5Squi+dYMgYQR2SYNp5wy2DwPLQaCVC2RpOSHbFUfVtMI/q97tPM2I/aAwfNXWWpB
-         imEUZFoBTZD10dU53SjxXkOV4t3X3K2X7Uq9ooGbmCV9xzi9qS/uULtffIR1Y/+AZ3qS
-         Mmew==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=ZKWKuZ/GqJQ2tlXnv5kEi5eyCWfh4Zy6tKRJWrUWoaM=;
+        b=elhYe95RAW43tw1m88MdkH7kBUzi2ZgOftqKEM9l9fBrUR+wpcM6JpeDVnUgXkmEvg
+         MjdNaswFysDTZb5Ogb9Gzi8XJil6h3Qr/G4xFrbeE5rTwc80GepH2raQTAZw5oOdZHHv
+         G+3lA2iAL0MrgKy8XV0CPVbtv8YFw98N7Sm21Aq10wvpAnPWvNuT6hh2VBft0Cw/cl/k
+         lk08LrNF3tDD62jegfVBQXJMWg6FW9Ew1/Zwm7aropH+ZbZtewjo3N/nAZ9MttWG58P9
+         arwAPDh6T+OAQIDjjnaouHW6EfGZ9YSq6TMkYUJBO3+ftnghUXqwTZ0/YOKQv1mhwGIT
+         5KnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=0/GQxXxfGsYnBic5/RL6CAFNUaN6B/gl7pdQ8fVaHoY=;
-        b=hv+9ayLtqIwGTYryFqBE4lxzVoWWLIzgE9AP3yBBZzHSnOdKtpklipRJkv52lecWH9
-         42yNcil/GdDyeWf+Zv2s4PSFcH/TdqbaIs2jSEefks77fe0nb2Td67/ktKv/pon9X0a2
-         alaRwnYGrs5k8PA8EaeN7if0Saawvra4CO5JBXHiSxYznKLwwJcjr6s3+ALNnLZ60I7w
-         uyBZC7J0NYZa7+eyIHNiuW6TjaD93iqmITGK2vPvhgT0hH+1CuZR+uY30XF3gWoUc7Ta
-         PsD0PFgIX8RFBxNIJvxh/8qgZ4zj54SpIKkJtGLGpe85/qDqDEhppBMbQpd8PGBEAwyf
-         aS5g==
-X-Gm-Message-State: AOAM532zxJ+PysimTj9ZOoXIaRIjcUw84LwmPH1RCoFfU7n/T3bbhnfN
-        QU4gzV/HfY8P3HWkrM6QFok=
-X-Google-Smtp-Source: ABdhPJyHl0z1SgQYig6I2fdY7EXsTetGozQfTeorJpNp1pG+z4UU5fykSc183B/FAVq+lx8x9BbPzQ==
-X-Received: by 2002:a37:689:: with SMTP id 131mr22871561qkg.468.1593712436222;
-        Thu, 02 Jul 2020 10:53:56 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=ZKWKuZ/GqJQ2tlXnv5kEi5eyCWfh4Zy6tKRJWrUWoaM=;
+        b=eeISvj9vxfEyYydyv5cX1K7M2HKEIqzOg8mJ5D8on6WE9QxMtRZ92MgAC/cc1I5Tt/
+         6mGvSm/0DDAH1PsFCKbhs4p9iXVvO+xu5iPQDvcLxTyJGBNxNpWtjv2FC1RWYxmQhsBv
+         h5cPaamuJu5tFL523TbhxpiecndXb2OQAhN0a5U8FoBzO7IYlKkGwjhl3drn24UhzKbZ
+         rvv3kB+XBNW75qkePhvLrCQzZixjYXs+LtwrJvaK9HZ72lwrqseJgupB96airZ6sYWhU
+         LBIXwSVxIYwW5STZST3P2PSURT2/g5WtDjMblGAijfdPsqXEyIf4BbgSDuVXQ78mNTUq
+         sabA==
+X-Gm-Message-State: AOAM533NU+Kce8HMcJ0UUX2HwCUjDlU28IhMNDJQe6JBncqS4iZPeZLn
+        4W6QGsfFgwubeL104/WTCFE=
+X-Google-Smtp-Source: ABdhPJxFIU3UKxBx6qN2dHiZNWiq9jLcasvtl0GEwPexqj0BW1YbvA10GOwT5IelBz2Hv/a92nrH0Q==
+X-Received: by 2002:ac8:429b:: with SMTP id o27mr21249400qtl.124.1593712438939;
+        Thu, 02 Jul 2020 10:53:58 -0700 (PDT)
 Received: from localhost.localdomain ([72.53.229.195])
-        by smtp.gmail.com with ESMTPSA id w204sm9149937qka.41.2020.07.02.10.53.54
+        by smtp.gmail.com with ESMTPSA id w204sm9149937qka.41.2020.07.02.10.53.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 10:53:55 -0700 (PDT)
+        Thu, 02 Jul 2020 10:53:58 -0700 (PDT)
 From:   Sven Van Asbroeck <thesven73@gmail.com>
 X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
 To:     shawnguo@kernel.org, fugang.duan@nxp.com, robh+dt@kernel.org
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+Cc:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
         devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
         NXP Linux Team <linux-imx@nxp.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 1/3] ARM: imx: mach-imx6q: Search for fsl,imx6q-iomuxc-gpr earlier
-Date:   Thu,  2 Jul 2020 13:53:50 -0400
-Message-Id: <20200702175352.19223-1-TheSven73@gmail.com>
+Subject: [PATCH v5 3/3] ARM: imx6plus: optionally enable internal routing of clk_enet_ref
+Date:   Thu,  2 Jul 2020 13:53:52 -0400
+Message-Id: <20200702175352.19223-3-TheSven73@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200702175352.19223-1-TheSven73@gmail.com>
+References: <20200702175352.19223-1-TheSven73@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+On imx6, the ethernet reference clock (clk_enet_ref) can be generated
+by either the imx6, or an external source (e.g. an oscillator or the
+PHY). When generated by the imx6, the clock source (from ANATOP)
+must be routed to the input of clk_enet_ref via two pads on the SoC,
+typically via a dedicated track on the PCB.
 
-Check the presence of fsl,imx6q-iomuxc-gpr earlier and exit in case
-of failure.
+On an imx6 plus however, there is a new setting which enables this
+clock to be routed internally on the SoC, from its ANATOP clock
+source, straight to clk_enet_ref, without having to go through
+the SoC pads.
 
-This is done in preparation for adding support for configuring the
-GPR5 register for i.MX6QP a bit easier.
+Enable internal routing if the fsl,ptpclk-bypass-pad boolean
+property is present in the "fsl,imx6q-fec" devicetree node.
 
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Link: https://lore.kernel.org/lkml/CAOMZO5BYC3DmE_G0XRwRH9vSJiVVvKbtznODyntsAuorF=HoqA@mail.gmail.com/
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
 ---
 
 Tree: v5.8-rc3
 
-Patch history: see [PATCH v5 3/3]
+v4 -> v5:
+  - identified that existing imx6q-plus boards could break ethernet if v4
+    patch is applied.
+    reached consensus: prevent breakage by requiring an explicit devicetree
+    property for internal ptp clk routing.
+    Link: https://lore.kernel.org/lkml/CAOMZO5BYC3DmE_G0XRwRH9vSJiVVvKbtznODyntsAuorF=HoqA@mail.gmail.com/
+v3 -> v4:
+  - avoid double-check for IS_ERR(gpr) by including Fabio Estevam's
+    patch.
+v2 -> v3:
+  - remove check for imx6q, which is already implied when
+    of_machine_is_compatible("fsl,imx6qp")
+v1 -> v2:
+  - Fabio Estevam: use of_machine_is_compatible() to determine if we
+    are running on an imx6 plus.
 
 To: Shawn Guo <shawnguo@kernel.org>
 To: Andy Duan <fugang.duan@nxp.com>
@@ -105,42 +129,49 @@ Cc: NXP Linux Team <linux-imx@nxp.com>
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 
- arch/arm/mach-imx/mach-imx6q.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ arch/arm/mach-imx/mach-imx6q.c              | 14 ++++++++++++++
+ include/linux/mfd/syscon/imx6q-iomuxc-gpr.h |  3 +++
+ 2 files changed, 17 insertions(+)
 
 diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
-index 85c084a716ab..ae89ad93ca83 100644
+index ae89ad93ca83..ac62994eb7ba 100644
 --- a/arch/arm/mach-imx/mach-imx6q.c
 +++ b/arch/arm/mach-imx/mach-imx6q.c
-@@ -169,6 +169,12 @@ static void __init imx6q_1588_init(void)
- 	struct regmap *gpr;
- 	u32 clksel;
+@@ -204,6 +204,20 @@ static void __init imx6q_1588_init(void)
+ 	regmap_update_bits(gpr, IOMUXC_GPR1, IMX6Q_GPR1_ENET_CLK_SEL_MASK,
+ 			   clksel);
  
-+	gpr = syscon_regmap_lookup_by_compatible("fsl,imx6q-iomuxc-gpr");
-+	if (IS_ERR(gpr)) {
-+		pr_err("failed to find fsl,imx6q-iomuxc-gpr regmap\n");
-+		return;
++	/*
++	 * On imx6 plus, enet_ref from ANATOP/CCM can be internally routed to
++	 * be the PTP clock source, instead of having to be routed through
++	 * pads.
++	 */
++	if (of_machine_is_compatible("fsl,imx6qp")) {
++		clksel = of_property_read_bool(np, "fsl,ptpclk-bypass-pad") ?
++				IMX6Q_GPR5_ENET_TXCLK_SEL_PLL :
++				IMX6Q_GPR5_ENET_TXCLK_SEL_PAD;
++		regmap_update_bits(gpr, IOMUXC_GPR5,
++				   IMX6Q_GPR5_ENET_TXCLK_SEL_MASK, clksel);
 +	}
 +
- 	np = of_find_compatible_node(NULL, NULL, "fsl,imx6q-fec");
- 	if (!np) {
- 		pr_warn("%s: failed to find fec node\n", __func__);
-@@ -195,13 +201,8 @@ static void __init imx6q_1588_init(void)
- 	clksel = clk_is_match(ptp_clk, enet_ref) ?
- 				IMX6Q_GPR1_ENET_CLK_SEL_ANATOP :
- 				IMX6Q_GPR1_ENET_CLK_SEL_PAD;
--	gpr = syscon_regmap_lookup_by_compatible("fsl,imx6q-iomuxc-gpr");
--	if (!IS_ERR(gpr))
--		regmap_update_bits(gpr, IOMUXC_GPR1,
--				IMX6Q_GPR1_ENET_CLK_SEL_MASK,
--				clksel);
--	else
--		pr_err("failed to find fsl,imx6q-iomuxc-gpr regmap\n");
-+	regmap_update_bits(gpr, IOMUXC_GPR1, IMX6Q_GPR1_ENET_CLK_SEL_MASK,
-+			   clksel);
- 
++
  	clk_put(enet_ref);
  put_ptp_clk:
+ 	clk_put(ptp_clk);
+diff --git a/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h b/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
+index d4b5e527a7a3..58377002427f 100644
+--- a/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
++++ b/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
+@@ -240,6 +240,9 @@
+ #define IMX6Q_GPR4_IPU_RD_CACHE_CTL		BIT(0)
+ 
+ #define IMX6Q_GPR5_L2_CLK_STOP			BIT(8)
++#define IMX6Q_GPR5_ENET_TXCLK_SEL_MASK		BIT(9)
++#define IMX6Q_GPR5_ENET_TXCLK_SEL_PAD		0
++#define IMX6Q_GPR5_ENET_TXCLK_SEL_PLL		BIT(9)
+ #define IMX6Q_GPR5_SATA_SW_PD			BIT(10)
+ #define IMX6Q_GPR5_SATA_SW_RST			BIT(11)
+ 
 -- 
 2.17.1
 
