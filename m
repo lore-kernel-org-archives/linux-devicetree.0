@@ -2,31 +2,32 @@ Return-Path: <SRS0=QVA0=AO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E58B6C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 11:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21298C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 11:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0ED920870
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 11:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3EA22100A
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 11:47:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="DbJowuWf"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="oU2ClTHl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726074AbgGCLrZ (ORCPT
+        id S1726310AbgGCLr3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jul 2020 07:47:25 -0400
-Received: from vps.xff.cz ([195.181.215.36]:41220 "EHLO vps.xff.cz"
+        Fri, 3 Jul 2020 07:47:29 -0400
+Received: from vps.xff.cz ([195.181.215.36]:41248 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725984AbgGCLrY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 3 Jul 2020 07:47:24 -0400
+        id S1726082AbgGCLrZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 3 Jul 2020 07:47:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593776842; bh=qqqmBER67TiL8jtm7bhHtg++KZK59EXYjjn1FFY2Hhw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=DbJowuWfMruGil3/tF0lPmG3d0y4hFQRLw+XYenolmZ/mzEj51epdT99Ct62ZSdde
-         Zn/toun/nuoisgRPpQPNppJZ4Zq1FtJUSEBIYfe8AeVmbCvM7nCicxuKAoQ6sCYPt6
-         ecnmG4VeSr+xvqt5hOH2L9eA71MRPZeQchnhipWc=
+        t=1593776843; bh=iqz2SX82vQtetbFnEof7dGer5tzzE9ATX0yvgwgpk/8=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=oU2ClTHlglcyU0j9mnqoG61AxuvwV+hEBrZf17i4C585S4K6RsH+soW4phZpuqwcr
+         g0U7u/DGfuukhjmXS+XWu+kCuV5+QTh6gDfeXJ01MY5q8TxylKE1bc4geaRXE8mO3e
+         CnJEIhcNm+dsDN4IVza9q5+HxsPgMhzo7Wd0MUsI=
 From:   Ondrej Jirman <megous@megous.com>
 To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
@@ -38,9 +39,11 @@ To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Robert Chiras <robert.chiras@nxp.com>
 Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] Fix warnings in display/bridge/nwl-dsi.yaml DT example
-Date:   Fri,  3 Jul 2020 13:47:15 +0200
-Message-Id: <20200703114717.2140832-1-megous@megous.com>
+Subject: [PATCH 2/2] dt-binding: display: Allow a single port node on rocktech,jh057n00900
+Date:   Fri,  3 Jul 2020 13:47:17 +0200
+Message-Id: <20200703114717.2140832-3-megous@megous.com>
+In-Reply-To: <20200703114717.2140832-1-megous@megous.com>
+References: <20200703114717.2140832-1-megous@megous.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -48,23 +51,25 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patchset fixes warnings in the example in display/bridge/nwl-dsi.yaml
-revealed during port of display/panel/rocktech,jh057n00900.yaml to
-yaml.
+The display has one port. Allow it in the binding.
 
-Please take a look.
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+---
+ .../devicetree/bindings/display/panel/rocktech,jh057n00900.yaml  | 1 +
+ 1 file changed, 1 insertion(+)
 
-thank you and regards,
-  Ondrej Jirman
-
-Ondrej Jirman (2):
-  dt-bindings: display: Fix example in nwl-dsi.yaml
-  dt-binding: display: Allow a single port node on rocktech,jh057n00900
-
- .../devicetree/bindings/display/bridge/nwl-dsi.yaml      | 9 +++++----
- .../bindings/display/panel/rocktech,jh057n00900.yaml     | 1 +
- 2 files changed, 6 insertions(+), 4 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml b/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
+index a6985cd947fb..d5733ef30954 100644
+--- a/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
++++ b/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
+@@ -24,6 +24,7 @@ properties:
+         # Xingbangda XBD599 5.99" 720x1440 TFT LCD panel
+       - xingbangda,xbd599
+ 
++  port: true
+   reg:
+     maxItems: 1
+     description: DSI virtual channel
 -- 
 2.27.0
 
