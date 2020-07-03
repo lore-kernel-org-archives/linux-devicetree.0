@@ -2,157 +2,461 @@ Return-Path: <SRS0=QVA0=AO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A0C9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 13:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8100C433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 13:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05A59214D8
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 13:20:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PDvabmQH"
+	by mail.kernel.org (Postfix) with ESMTP id AC0CC20760
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 13:30:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726236AbgGCNU5 (ORCPT
+        id S1726178AbgGCNaV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jul 2020 09:20:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60798 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726022AbgGCNU5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jul 2020 09:20:57 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4B16C08C5C1;
-        Fri,  3 Jul 2020 06:20:56 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id j18so32000095wmi.3;
-        Fri, 03 Jul 2020 06:20:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:subject:message-id:mime-version:content-disposition;
-        bh=UDQLMHGmElupBntrGo71j+LQRE1M2bBG0QfaH5u/2UI=;
-        b=PDvabmQH/TlzYDBZji9UhzOObimUx+VkJypuKVoBh4raJtzRvi7f4iFJaPq+gKIk0o
-         VJxotdmzIvE4R2/ImCePqMPyp8AHHMPVrumTDxoSQrT8pGi8FWnhUG6RiqeT5LWlY4Y1
-         J/zmXkbjAwOHpCt0RXOWttb+zWGYzWWsrN3P9oJLi8ZWtbsR1O45yEn545oIs6OGZi6h
-         WFtBJEISVIIM4vwsJEbPwl9/Vaul6qFoqXE5oxspjTVerSidYkWMni5ubc5caoc4CDCZ
-         TQhAzXo5kuS55XCqFHnKPXYmAxdcN7yoQDuWj+NX3aWUN8hVfLa4OOiNDhmiZCrAlBE2
-         lrGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:subject:message-id:mime-version
-         :content-disposition;
-        bh=UDQLMHGmElupBntrGo71j+LQRE1M2bBG0QfaH5u/2UI=;
-        b=gXQNiufu1UBpzvik8S9XjMs/CJo6252DGBYtyo/4E+O4fWMQe2HyXNxNuoXOZxsE6P
-         4XjLEftZVbYsrST2b1FsSZ3ED06wsNYXCOh6UfCRCJYlqtgxwcBc9LCL6imw/mcwglkt
-         oQr4JolQVX57+XcRtrS7pYEsCt4d6MH1w9X/x2r3NZT2IiwJcYKUjHxPzOueYQU27EF+
-         jhnJLtTkLRXo6IdzJW0rfhM66q5roXclz1lar+G/Dx7iT2kNbUVLJL6T0vdHUmqYuGHE
-         9TKtX0KWY2T/VgqwfsIdyZA1Yxbh0EnE64g34ham5Nt/Qf6WMpXpeboQvozespzQAQ+7
-         a3RQ==
-X-Gm-Message-State: AOAM533+qd26B5a1gU98NekMS0jD0lScLBo+wgSizZQ7ibwRdBrm24f/
-        HPHEPvH32HioQaV3DsIPRLM=
-X-Google-Smtp-Source: ABdhPJzUDArRZ0Z1kmAO2j6Dvh+OV4ibFKpmrj0wOyLq4RKklloeRCVsmLBNBd4sQzgxrlwvt9T1uA==
-X-Received: by 2002:a1c:a90d:: with SMTP id s13mr34755774wme.184.1593782455635;
-        Fri, 03 Jul 2020 06:20:55 -0700 (PDT)
-Received: from macmini.local (181.4.199.77.rev.sfr.net. [77.199.4.181])
-        by smtp.gmail.com with ESMTPSA id e5sm14476552wrs.33.2020.07.03.06.20.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 06:20:55 -0700 (PDT)
-From:   Willy Wolff <willy.mh.wolff.ml@gmail.com>
-X-Google-Original-From: Willy Wolff <willy.mh.wolff.mh@gmail.com>
-Date:   Fri, 3 Jul 2020 15:20:54 +0200
-To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        m.szyprowski@samsung.com
-Subject: [RFC PATCH] ARM: dts: exynos: partial revert of Adjust bus related
- OPPs to the values correct for Exynos5422 Odroids
-Message-ID: <20200703132054.re3kcgxrb7rciidy@macmini.local>
+        Fri, 3 Jul 2020 09:30:21 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:40031 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbgGCNaU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jul 2020 09:30:20 -0400
+Received: from uno.lan (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 6B415200017;
+        Fri,  3 Jul 2020 13:30:12 +0000 (UTC)
+From:   Jacopo Mondi <jacopo+renesas@jmondi.org>
+To:     linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        sakari.ailus@iki.fi, Rob Herring <robh@kernel.org>
+Cc:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Hyun Kwon <hyunk@xilinx.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+Subject: [PATCH v10.1] dt-bindings: media: i2c: Add bindings for Maxim Integrated MAX9286
+Date:   Fri,  3 Jul 2020 15:33:32 +0200
+Message-Id: <20200703133332.171912-1-jacopo+renesas@jmondi.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200612144713.502006-2-kieran.bingham+renesas@ideasonboard.com>
+References: <20200612144713.502006-2-kieran.bingham+renesas@ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi all,
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 
-On Odroid XU3/4 board, since 5.6 with 1019fe2c728003f89ee11482cf8ec81dbd8f15ba,
-the network is not working properly.
+The MAX9286 deserializes video data received on up to 4 Gigabit
+Multimedia Serial Links (GMSL) and outputs them on a CSI-2 port using up
+to 4 data lanes.
 
-After properly booting, when trying to connect to the board via ssh, the board
-hang for a while and this message happen:
-
-[  211.111967] ------------[ cut here ]------------
-[  211.117520] WARNING: CPU: 0 PID: 0 at net/sched/sch_generic.c:443 dev_watchdog+0x3ac/0x3e0
-[  211.125636] NETDEV WATCHDOG: eth0 (smsc95xx): transmit queue 0 timed out
-[  211.132058] Modules linked in:
-[  211.134815] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.8.0-rc3-00082-gcdd3bb54332f-dirty #1
-[  211.143518] Hardware name: Samsung Exynos (Flattened Device Tree)
-[  211.149458] [<c0112290>] (unwind_backtrace) from [<c010d1ac>] (show_stack+0x10/0x14)
-[  211.157287] [<c010d1ac>] (show_stack) from [<c051b93c>] (dump_stack+0xac/0xd8)
-[  211.164416] [<c051b93c>] (dump_stack) from [<c0127a50>] (__warn+0xd0/0x108)
-[  211.171301] [<c0127a50>] (__warn) from [<c0127e60>] (warn_slowpath_fmt+0x94/0xb8)
-[  211.178824] [<c0127e60>] (warn_slowpath_fmt) from [<c0929b38>] (dev_watchdog+0x3ac/0x3e0)
-[  211.187043] [<c0929b38>] (dev_watchdog) from [<c01c791c>] (call_timer_fn+0xd4/0x420)
-[  211.194698] [<c01c791c>] (call_timer_fn) from [<c01c86ec>] (run_timer_softirq+0x620/0x784)
-[  211.202980] [<c01c86ec>] (run_timer_softirq) from [<c0101408>] (__do_softirq+0x1e0/0x664)
-[  211.211123] [<c0101408>] (__do_softirq) from [<c0130924>] (irq_exit+0x158/0x16c)
-[  211.218467] [<c0130924>] (irq_exit) from [<c01a1ef0>] (__handle_domain_irq+0x80/0xec)
-[  211.226304] [<c01a1ef0>] (__handle_domain_irq) from [<c0536eac>] (gic_handle_irq+0x58/0x9c)
-[  211.234626] [<c0536eac>] (gic_handle_irq) from [<c0100af0>] (__irq_svc+0x70/0xb0)
-[  211.241982] Exception stack(0xc1101f10 to 0xc1101f58)
-[  211.246789] 1f00:                                     ffffffff ffffffff 00000001 0008f0bd
-[  211.255230] 1f20: ffffe000 c1108eec c1108f30 00000001 00000000 c0df311c 00000000 c1076028
-[  211.262303] exynos5-hsi2c 12ca0000.i2c: tx timeout
-[  211.263351] 1f40: 00000000 c1101f60 c01097f8 c01097fc 600f0113 ffffffff
-[  211.263649] [<c0100af0>] (__irq_svc) from [<c01097fc>] (arch_cpu_idle+0x24/0x44)
-[  211.263771] [<c01097fc>] (arch_cpu_idle) from [<c01640c8>] (do_idle+0x214/0x2c0)
-[  211.289414] [<c01640c8>] (do_idle) from [<c0164528>] (cpu_startup_entry+0x18/0x1c)
-[  211.296999] [<c0164528>] (cpu_startup_entry) from [<c1000e54>] (start_kernel+0x4e8/0x520)
-[  211.305822] irq event stamp: 585972
-[  211.308637] hardirqs last  enabled at (585984): [<c0100b0c>] __irq_svc+0x8c/0xb0
-[  211.316470] hardirqs last disabled at (585993): [<c019ed9c>] console_unlock+0xd4/0x654
-[  211.324282] softirqs last  enabled at (585920): [<c0130640>] irq_enter_rcu+0x7c/0x84
-[  211.332072] softirqs last disabled at (585921): [<c0130924>] irq_exit+0x158/0x16c
-[  211.339329] ---[ end trace 5726ca773f159ae9 ]---
-
-After that, the board continue working from serial console only, but the board
-doesn't pong anymore.
-
-Reverting some change fix the issue.
-
-Best Regards,
-Willy
-
-Signed-off-by: Willy Wolff <willy.mh.wolff.mh@gmail.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-index ab27ff8bc3dc..6f7807e82035 100644
---- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-@@ -81,6 +81,7 @@
- 
- 	bus_fsys_apb_opp_table: opp_table4 {
- 		compatible = "operating-points-v2";
-+		opp-shared;
- 
- 		/* derived from 666MHz CPLL */
- 		opp00 {
-@@ -412,7 +413,8 @@
- };
- 
- &bus_fsys {
--	operating-points-v2 = <&bus_fsys2_opp_table>;
-+	// operating-points-v2 = <&bus_fsys2_opp_table>;
-+	operating-points-v2 = <&bus_fsys_apb_opp_table>;
- 	devfreq = <&bus_wcore>;
- 	status = "okay";
- };
--- 
-2.20.1
+Small updated compared to v10 to silence a warning due to the reg property
+of the i2c node in example being 2 cells long
+
+
+-      reg = <0 0xe66d8000 0 0x40>;
++      reg = <0 0xe66d8000>;
+
+Documentation/devicetree/bindings/media/i2c/maxim,max9286.example.dt.yaml: example-0: i2c@e66d8000:reg:0: [0, 3865935872, 0, 64] is too long
+
+---
+ .../bindings/media/i2c/maxim,max9286.yaml     | 366 ++++++++++++++++++
+ 1 file changed, 366 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml
+new file mode 100644
+index 000000000000..e7b543159d15
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml
+@@ -0,0 +1,366 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright (C) 2019 Renesas Electronics Corp.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/i2c/maxim,max9286.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Maxim Integrated Quad GMSL Deserializer
++
++maintainers:
++  - Jacopo Mondi <jacopo+renesas@jmondi.org>
++  - Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
++  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
++  - Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
++
++description: |
++  The MAX9286 deserializer receives video data on up to 4 Gigabit Multimedia
++  Serial Links (GMSL) and outputs them on a CSI-2 D-PHY port using up to 4 data
++  lanes.
++
++  In addition to video data, the GMSL links carry a bidirectional control
++  channel that encapsulates I2C messages. The MAX9286 forwards all I2C traffic
++  not addressed to itself to the other side of the links, where a GMSL
++  serializer will output it on a local I2C bus. In the other direction all I2C
++  traffic received over GMSL by the MAX9286 is output on the local I2C bus.
++
++properties:
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++  compatible:
++    const: maxim,max9286
++
++  reg:
++    description: I2C device address
++    maxItems: 1
++
++  poc-supply:
++    description: Regulator providing Power over Coax to the cameras
++    maxItems: 1
++
++  enable-gpios:
++    description: GPIO connected to the \#PWDN pin with inverted polarity
++    maxItems: 1
++
++  gpio-controller: true
++
++  '#gpio-cells':
++      const: 2
++
++  ports:
++    type: object
++    description: |
++      The connections to the MAX9286 GMSL and its endpoint nodes are modelled
++      using the OF graph bindings in accordance with the video interface
++      bindings defined in
++      Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++      The following table lists the port number corresponding to each device
++      port.
++
++        Port            Description
++        ----------------------------------------
++        Port 0          GMSL Input 0
++        Port 1          GMSL Input 1
++        Port 2          GMSL Input 2
++        Port 3          GMSL Input 3
++        Port 4          CSI-2 Output
++
++    properties:
++      '#address-cells':
++        const: 1
++
++      '#size-cells':
++        const: 0
++
++      port@[0-3]:
++        type: object
++        properties:
++          reg:
++            enum: [ 0, 1, 2, 3 ]
++
++          endpoint:
++            type: object
++
++            properties:
++              remote-endpoint:
++                description: |
++                 phandle to the remote GMSL source endpoint subnode in the
++                 remote node port.
++
++            required:
++              - remote-endpoint
++
++        required:
++          - reg
++          - endpoint
++
++        additionalProperties: false
++
++      port@4:
++        type: object
++        properties:
++          reg:
++            const: 4
++
++          endpoint:
++            type: object
++
++            properties:
++              remote-endpoint:
++                description: phandle to the remote CSI-2 sink endpoint.
++
++              data-lanes:
++                description: array of physical CSI-2 data lane indexes.
++
++            required:
++              - remote-endpoint
++              - data-lanes
++
++        required:
++          - reg
++          - endpoint
++
++        additionalProperties: false
++
++    required:
++      - port@4
++
++  i2c-mux:
++    type: object
++    description: |
++      Each GMSL link is modelled as a child bus of an i2c bus
++      multiplexer/switch, in accordance with bindings described in
++      Documentation/devicetree/bindings/i2c/i2c-mux.txt.
++
++    properties:
++      '#address-cells':
++        const: 1
++
++      '#size-cells':
++        const: 0
++
++    patternProperties:
++      "^i2c@[0-3]$":
++        type: object
++        description: |
++          Child node of the i2c bus multiplexer which represents a GMSL link.
++          Each serializer device on the GMSL link remote end is represented with
++          an i2c-mux child node. The MAX9286 chip supports up to 4 GMSL
++          channels.
++
++        properties:
++          '#address-cells':
++            const: 1
++
++          '#size-cells':
++            const: 0
++
++          reg:
++            description: The index of the GMSL channel.
++            maxItems: 1
++
++        patternProperties:
++          "^camera@[a-f0-9]+$":
++            type: object
++            description: |
++              The remote camera device, composed by a GMSL serializer and a
++              connected video source.
++
++            properties:
++              compatible:
++                description: The remote device compatible string.
++
++              reg:
++                minItems: 2
++                maxItems: 3
++                description: |
++                  The I2C addresses to be assigned to the remote devices through
++                  address reprogramming. The number of entries depends on the
++                  requirements of the currently connected remote device.
++
++              port:
++                type: object
++
++                properties:
++                  endpoint:
++                    type: object
++
++                    properties:
++                      remote-endpoint:
++                        description: phandle to the MAX9286 sink endpoint.
++
++                    required:
++                      - remote-endpoint
++
++                    additionalProperties: false
++
++                required:
++                  - endpoint
++
++                additionalProperties: false
++
++            required:
++              - compatible
++              - reg
++              - port
++
++            additionalProperties: false
++
++        additionalProperties: false
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - ports
++  - i2c-mux
++  - gpio-controller
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    i2c@e66d8000 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      reg = <0 0xe66d8000>;
++
++      gmsl-deserializer@2c {
++        compatible = "maxim,max9286";
++        reg = <0x2c>;
++        poc-supply = <&camera_poc_12v>;
++        enable-gpios = <&gpio 13 GPIO_ACTIVE_HIGH>;
++
++        gpio-controller;
++        #gpio-cells = <2>;
++
++        ports {
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          port@0 {
++            reg = <0>;
++
++            max9286_in0: endpoint {
++              remote-endpoint = <&rdacm20_out0>;
++            };
++          };
++
++          port@1 {
++            reg = <1>;
++
++            max9286_in1: endpoint {
++              remote-endpoint = <&rdacm20_out1>;
++            };
++          };
++
++          port@2 {
++            reg = <2>;
++
++            max9286_in2: endpoint {
++              remote-endpoint = <&rdacm20_out2>;
++            };
++          };
++
++          port@3 {
++            reg = <3>;
++
++            max9286_in3: endpoint {
++              remote-endpoint = <&rdacm20_out3>;
++            };
++          };
++
++          port@4 {
++            reg = <4>;
++
++            max9286_out: endpoint {
++              data-lanes = <1 2 3 4>;
++              remote-endpoint = <&csi40_in>;
++            };
++          };
++        };
++
++        i2c-mux {
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          i2c@0 {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            reg = <0>;
++
++            camera@51 {
++              compatible = "imi,rdacm20";
++              reg = <0x51>, <0x61>;
++
++              port {
++                rdacm20_out0: endpoint {
++                  remote-endpoint = <&max9286_in0>;
++                };
++              };
++
++            };
++          };
++
++          i2c@1 {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            reg = <1>;
++
++            camera@52 {
++              compatible = "imi,rdacm20";
++              reg = <0x52>, <0x62>;
++
++              port {
++                rdacm20_out1: endpoint {
++                  remote-endpoint = <&max9286_in1>;
++                };
++              };
++            };
++          };
++
++          i2c@2 {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            reg = <2>;
++
++            camera@53 {
++              compatible = "imi,rdacm20";
++              reg = <0x53>, <0x63>;
++
++              port {
++                rdacm20_out2: endpoint {
++                  remote-endpoint = <&max9286_in2>;
++                };
++              };
++            };
++          };
++
++          i2c@3 {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            reg = <3>;
++
++            camera@54 {
++              compatible = "imi,rdacm20";
++              reg = <0x54>, <0x64>;
++
++              port {
++                rdacm20_out3: endpoint {
++                  remote-endpoint = <&max9286_in3>;
++                };
++              };
++            };
++          };
++        };
++      };
++    };
+--
+2.27.0
 
