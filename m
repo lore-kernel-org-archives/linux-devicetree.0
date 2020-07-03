@@ -2,100 +2,83 @@ Return-Path: <SRS0=QVA0=AO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 927D3C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 09:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 837D4C433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 09:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 786AD20723
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 09:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63481208E4
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 09:26:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="cvmjkqJe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725796AbgGCJXu (ORCPT
+        id S1726227AbgGCJ0i (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jul 2020 05:23:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52664 "EHLO
+        Fri, 3 Jul 2020 05:26:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725764AbgGCJXu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jul 2020 05:23:50 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE240C08C5C1;
-        Fri,  3 Jul 2020 02:23:49 -0700 (PDT)
-Received: from [IPv6:2a01:e35:2fb5:1510:1d94:e6f1:f819:f29f] (unknown [IPv6:2a01:e35:2fb5:1510:1d94:e6f1:f819:f29f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: aferraris)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 7F7042A62F5;
-        Fri,  3 Jul 2020 10:23:48 +0100 (BST)
-Subject: Re: [PATCH 1/2] dt-bindings: sound: fsl-asoc-card: add new compatible
- for I2S slave
-To:     Mark Brown <broonie@kernel.org>
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, Timur Tabi <timur@kernel.org>,
-        Xiubo Li <Xiubo.Lee@gmail.com>, linux-kernel@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, kernel@collabora.com,
-        Fabio Estevam <festevam@gmail.com>
-References: <20200702141114.232688-1-arnaud.ferraris@collabora.com>
- <20200702141114.232688-2-arnaud.ferraris@collabora.com>
- <20200702143145.GG4483@sirena.org.uk>
- <5de5ea5b-0716-8ed1-28b0-9ad3da7a2d47@collabora.com>
- <20200702154207.GK4483@sirena.org.uk>
-From:   Arnaud Ferraris <arnaud.ferraris@collabora.com>
-Autocrypt: addr=arnaud.ferraris@collabora.com; keydata=
- mQINBF6V3oEBEADExzr1s9YngScJ0KNMGen7k3cH1sn0h7tf7AFlXA94jXBgFyzIMT5lqey0
- 9LwcO6AIkFF+gRVAKIblkeacsy5W6OQXgdFMitx936oAcU0XYQ2X5NxCQHzEsWYzkLIZnFTB
- Ur3CW9HtAjAircED5KVJzA1GM8BEFfG3LoonWsw0CO9UN2arwT1uLARSPgL6LPpmo1IOSwJh
- D6vtOyzlRrLkw4KHzUobEiIjxzjXttH8TC3I6OSb8kavG08cmA+DMf/nLFxK0QbdOP2wSZ0w
- UTU6RBikuLmDBaT4PphuwtAgVwhO9l0PNRoYzugrXuRF0RCLpmJN05tz/o/w7Y8ieLgQE8Om
- xGKXJyo0T4wlUl9ARM9Y0ZIRhdI1alFspBcF63oyZmOAT+2fPLr6W0fEfmtMBhDaZun2ZdKR
- M1JwTTkh8jVLs3svM3Ch2JjiH0kgYA0oza5fXaB9s4Fa4fxpmacx8fawKR5r/BhmYNK15PPd
- YxIZJqnTJgCDI2G4tQ9K+Eev1rBo6i8n96rDqxTxdyQixMhxMmGtj6/bknpVIN947ABKDHdt
- UsWa4E+qwFrYDXT7RxhL+JGn4VrtIR1kpTJHfmVXnn+RW7JKdDkalvEuXJSOArszcgpDlYRq
- +ZT/ybdcmdtuz8+Ev0fig/9WdPBHwg5oKDlT6+iN0oISAzoFSQARAQABtC9Bcm5hdWQgRmVy
- cmFyaXMgPGFybmF1ZC5mZXJyYXJpc0Bjb2xsYWJvcmEuY29tPokCVAQTAQgAPhYhBHlts5Pc
- P/QCIrbqItPrtZZruZGWBQJeld7dAhsDBQkDwmcABQsJCAcDBRUKCQgLBRYCAwEAAh4BAheA
- AAoJENPrtZZruZGWvCwP/iJn8kooQetvJHGEoGe34ICPsoU6T25R+hysK1Nd2WyxxGSMKpCz
- l8NzoT2/Ij1yTsK0gqTIpl8++wNdlnTxFne0CsKB1G3R7DYoYl/FQQ32J13lA9zi01Q7CGW9
- XTdvIYAGlQBINXhRNCKQTqeIrdcr3kDqzzl4pwnZZpAis6+R9Du14ByPJeCi+LccTzHJHJka
- e2gTEBneyTFO8f6jatGK1PtAjgr/DIbHxWeCom47HjqmOuqfTrPqjPvB48uY3XzlnOwpTDN6
- /dbV4eV+Y+Wz9NphnKi2mOoyaAcMTm4JnT6AaYulus2w5Hrcn7oPZMSWXLLB4UhuiD9gdZMC
- SNjP0rtRIEEJLp5dJ0+ZYoVq9jI8wUVnX+Mo1kYSQHsiLBvpRQ8d5qoKdIfCAqJMYpu1DtuP
- QpBjP93Eit/V0SReB/z10calGC98u1sO2b9EsbglBO7wVKnltiKtPkBUmwCx9xUKUznQITte
- KKX+rQJKZpYUZbTKxPtVY7uwl9LR23ClIIMLD3ynGMRoHA0fLP4XgWEaEl1PXTUNhKgq0ze0
- ss4DQyDcGmvVzRvCSNuBBNqmnravY3xWepaZUS5ZW1UK3aM3elce1ROoSTJ7QeIDeqgZFghD
- QPHN/Mm+STVzWu7fdnwLtifM6cPxENbGooIcDxZxdCZJBTPs2MyGRTGkuQINBF6V3oEBEAC2
- wPaxEIKrqMR3f58Tj2j/fIaTxzqv5g449HN5+mkMzl05fNtlkWMpxDQhMPKaNDYgayaVBujP
- GSr0x3Na3nf7olOF1MWe396vhhHsOgsCglpdpZnOu6VBfUBjUnwtFr0GldBfGKsFQcC5/lOo
- FFLF6mUJgvXhfBEcaFkqBXjndRSIYI/6Jo3ryTbUZGuorOVlC97RZEZYOS8detm/MPyuoXMN
- Wp+UKXMrHe9b6+GW0r1qtoP9arCS0wVsE6pFsUnAXtjre4tsFf6CZIBZG9+JsQpHuk4ooeac
- hYKnYu+KN4cxbjozheeRQmLCcis6sZ3OnlwEroYKKzH88sAOJRSSlF2DtuyqEHJkzuhZxauR
- Qr1IV1zYQxVTncga7Qv18mOBhvQUoZHMbZUlKMlPgvEofzvim6mKWuMa7wrZEYpmwu4O+hv0
- cJiddomrfqjVJVXYOPL7Wln6B+2MSzx7tlkErGOzRqnaFURh4ozFj5MI/p4aFSjVnwvhm8bW
- ha26I4pEV2uwSiDWPuUN4DBwbic5HRB5/zM5tdKJ1k95NXAMShtdIR5095fc+4RgDYXWlSk4
- GO30TrRq79jWvwZM4Zi1UzdzQoQKx4CerOqKHsr2JgAcYhMZ2iIJeLanxfMhKPXm7gZSMBM9
- RbR+LbURmbUuBltRveD1u+W0u/hYoVk5jwARAQABiQI8BBgBCAAmFiEEeW2zk9w/9AIituoi
- 0+u1lmu5kZYFAl6V3oECGwwFCQPCZwAACgkQ0+u1lmu5kZbGmQ//dvuwymICHP7UfB7fdXyq
- CGaZAVKnr+6b1aTO1Zmxn7ptj47mIkA5oLA3eJLGIQsyEFas85Wj0A2l8ZrRz/brfB3zuR82
- wwm2ro/I5roO9IX0VexySb3fPgvsMTwYt1gHlUZbTojnm3DbUOuWhU4mHL9tVg1cKGZP92/Y
- LbOGYLgWFp9tn9gcTUEXoKFWbI3K/SunlD6Wr9FQxnHs9DLrJ/xCLPq/B2lnpR6ZqoUupn5G
- 2I0vcAW6SpT4A4cnIbTBNJVo2CaZFQZ5u9ZmPyQhUgTZmciNU2k2WJNEhVG46ym/Hfox0JCv
- 7ScUr/PdWlJnsiVHaKaVyA/nHZkd9xNKH9+fJezvkSWOODpOWgVhISFEpp6CQhqT4lukXJfg
- dGrHwajvp+i/iL9FcNZenpEMbYhu71wMQNSpbO7IU4njEuFNnPY7lxjxmFfCEQEqyDCwowD2
- cjsHzQk9aPtYl6dABevfk/Pv1EspBtkf8idYmtgZk/9daDd9NfDGVWZX2PZrHPkxiC6kJlq+
- 9skF89liUCOGeIbfT4Gp/GNOWPRp1q2lj/12AT3yh97E9PghVdOOkxdHfFRIxt6qfcinl3w0
- ihwz588Q48GmFzJw0LOidtCC5tW4m2CX01Gq7qdGd92R0+S36Zjxl8n2jhypQ1zRmrngf7M5
- xZQG6fKWuIur3RI=
-Message-ID: <fe4e71b2-2304-647d-f737-dd7e8f2e0657@collabora.com>
-Date:   Fri, 3 Jul 2020 11:23:45 +0200
+        with ESMTP id S1725764AbgGCJ0h (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jul 2020 05:26:37 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D4FEC08C5C1
+        for <devicetree@vger.kernel.org>; Fri,  3 Jul 2020 02:26:37 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id t74so18110424lff.2
+        for <devicetree@vger.kernel.org>; Fri, 03 Jul 2020 02:26:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zO0GcSjV+DoJTBjOrWxT1/ANl2QKnx4z2PRw1DUFok4=;
+        b=cvmjkqJen9Yiv5VkwBU8n4ik0P/2IHfyjUyCwY6lDqZFCgWfBHnT1yqGtbu8HM81vu
+         OdBKPFPAy+952G0+bi12xVtvgBtLNmoP27Ow3P2by0VXShv7xGeyYZewK730kb7AiMyk
+         YIwv4JtWVtKCtxQLlWxJJxgGkoHmssf41/A+qiKNmUrQxAB21CLMRuPmVHnHerziZE2x
+         isew032rkp6Bm1wzOaiTERyzwtIyOhqct7lz0t7ATel5rUwXG5m6zP9fVDrHXxd3aqTy
+         7wHIdpLOFRwt0qkEwan/O4mymPRLbNHxL/k0HLdsxtuRMtacVzyhOMs1Kf0TWTFhsbGh
+         y19A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zO0GcSjV+DoJTBjOrWxT1/ANl2QKnx4z2PRw1DUFok4=;
+        b=YaW1kgrNSp4LYzj6TaRTScJDxOIiQ8a7Bm7ieN21KRzH5SD5xJGvrQc1j8rNhfhMvP
+         VMI87xSgcjbqBZdfXIxqvjx8/UZbn3gnXdlu7TlWzysZOKtbqoDhBcch6mEhufl2AROr
+         MdqMis6CPKLIzUobLQ4oDt531HJw6JfUmxaFQtOXjf1NNgQ81P7609XHJZLzWYISBAXi
+         FYyKMoR+ydaO6gD3pLx+YUh91/v0BSEVjKbF+gCjX4qo1rDEls5ospYuz5JOHMQPJTDh
+         WglIxsmvZOaXpOivvEqPnW9LKMaDnMF7d+yOUntKlwgUnKdFqjCvlR8tzPkQKedA5rom
+         a3+Q==
+X-Gm-Message-State: AOAM5327XWiIKeBjZ52W+AjDYK6wDXjIyYm2/Gplb/JBEN6jQSXoyyOp
+        UVdsAv+fKCMDG06I9CRmcBx9ZQ==
+X-Google-Smtp-Source: ABdhPJyIGppCefmxj8fTRRtxz2K/PWcGR2BmqZOk0LbePzJxgW7tKvDo9qI60CWqvjE7deprzGXjKg==
+X-Received: by 2002:ac2:5e6c:: with SMTP id a12mr21462673lfr.35.1593768394546;
+        Fri, 03 Jul 2020 02:26:34 -0700 (PDT)
+Received: from [192.168.1.9] ([83.68.95.66])
+        by smtp.googlemail.com with ESMTPSA id j4sm4453721lfb.94.2020.07.03.02.26.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Jul 2020 02:26:33 -0700 (PDT)
+Subject: Re: [PATCH v3 3/4] dt-bindings: arm-smmu: add compatible string for
+ Marvell Armada-AP806 SMMU-500
+To:     Robin Murphy <robin.murphy@arm.com>, will@kernel.org,
+        joro@8bytes.org, gregory.clement@bootlin.com, robh+dt@kernel.org,
+        hannah@marvell.com
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        devicetree@vger.kernel.org, catalin.marinas@arm.com,
+        nadavh@marvell.com, linux-arm-kernel@lists.infradead.org,
+        mw@semihalf.com
+References: <20200702201633.22693-1-tn@semihalf.com>
+ <20200702201633.22693-4-tn@semihalf.com>
+ <3172ec21-d773-7fcb-f1ee-f557f72f20c5@arm.com>
+From:   Tomasz Nowicki <tn@semihalf.com>
+Message-ID: <972f5cbd-705b-e18a-7477-5f6922804361@semihalf.com>
+Date:   Fri, 3 Jul 2020 11:26:32 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200702154207.GK4483@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <3172ec21-d773-7fcb-f1ee-f557f72f20c5@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -103,27 +86,38 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-Le 02/07/2020 � 17:42, Mark Brown a �crit�:
-> On Thu, Jul 02, 2020 at 05:28:03PM +0200, Arnaud Ferraris wrote:
->> Le 02/07/2020 � 16:31, Mark Brown a �crit�:
+On 03.07.2020 11:05, Robin Murphy wrote:
+> On 2020-07-02 21:16, Tomasz Nowicki wrote:
+>> Add specific compatible string for Marvell usage due to errata of
+>> accessing 64bits registers of ARM SMMU, in AP806.
+>>
+>> AP806 SoC uses the generic ARM-MMU500, and there's no specific
+>> implementation of Marvell, this compatible is used for errata only.
+>>
+>> Signed-off-by: Hanna Hawa <hannah@marvell.com>
+>> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+>> Signed-off-by: Tomasz Nowicki <tn@semihalf.com>
+>> ---
+>>   Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml 
+>> b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+>> index d7ceb4c34423..7beca9c00b12 100644
+>> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+>> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+>> @@ -38,6 +38,11 @@ properties:
+>>                 - qcom,sc7180-smmu-500
+>>                 - qcom,sdm845-smmu-500
+>>             - const: arm,mmu-500
+>> +      - description: Marvell SoCs implementing "arm,mmu-500"
+>> +        items:
+>> +          - enum:
+>> +              - marvell,ap806-smmu-500
 > 
->>> Why require that the CODEC be clock master here - why not make this
->>> configurable, reusing the properties from the generic and audio graph
->>> cards?
-> 
->> This is partly because I'm not sure how to do it (yet), but mostly
->> because I don't have the hardware to test this (the 2 CODECs present on
->> my only i.MX6 board are both clock master)
-> 
-> Take a look at what the generic cards are doing, it's a library function 
-> asoc_simple_parse_daifmt().  It's not the end of the world if you can't
-> test it properly - if it turns out it's buggy somehow someone can always
-> fix the code later but an ABI is an ABI so we can't change it.
-> 
+> Isn't a single-valued enum just a constant? :P
 
-Thanks for the hints, I'll look into it.
+That's how copy-paste engineering ends up :)
 
-Regards,
-Arnaud
+Thanks,
+Tomasz
