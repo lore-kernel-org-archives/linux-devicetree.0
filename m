@@ -5,29 +5,29 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1237CC433E6
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 08:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D83A9C433EA
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 08:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2A9520826
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 08:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF0BD20836
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 08:59:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbgGCI7K (ORCPT
+        id S1726621AbgGCI7M (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jul 2020 04:59:10 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:25847 "EHLO
+        Fri, 3 Jul 2020 04:59:12 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:48185 "EHLO
         alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726228AbgGCI7J (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jul 2020 04:59:09 -0400
+        with ESMTP id S1725786AbgGCI7M (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jul 2020 04:59:12 -0400
 Received: from ironmsg-lv-alpha.qualcomm.com ([10.47.202.13])
-  by alexa-out.qualcomm.com with ESMTP; 03 Jul 2020 01:59:08 -0700
+  by alexa-out.qualcomm.com with ESMTP; 03 Jul 2020 01:59:11 -0700
 Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg-lv-alpha.qualcomm.com with ESMTP/TLS/AES256-SHA; 03 Jul 2020 01:59:06 -0700
+  by ironmsg-lv-alpha.qualcomm.com with ESMTP/TLS/AES256-SHA; 03 Jul 2020 01:59:09 -0700
 Received: from gokulsri-linux.qualcomm.com ([10.201.2.207])
   by ironmsg02-blr.qualcomm.com with ESMTP; 03 Jul 2020 14:28:44 +0530
 Received: by gokulsri-linux.qualcomm.com (Postfix, from userid 432570)
-        id 373C421691; Fri,  3 Jul 2020 14:28:43 +0530 (IST)
+        id 6433821696; Fri,  3 Jul 2020 14:28:43 +0530 (IST)
 From:   Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
 To:     bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org,
         sboyd@kernel.org, linux-clk@vger.kernel.org,
@@ -35,9 +35,9 @@ To:     bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org,
 Cc:     agross@kernel.org, linux-soc@vger.kernel.org,
         devicetree@vger.kernel.org, govinds@codeaurora.org,
         sricharan@codeaurora.org, gokulsri@codeaurora.org
-Subject: [v7 2/4] dt-bindings: remoteproc: qcom: Add Q6V5 Modem PIL binding for QCS404
-Date:   Fri,  3 Jul 2020 14:28:40 +0530
-Message-Id: <1593766722-28838-3-git-send-email-gokulsri@codeaurora.org>
+Subject: [v7 4/4] remoteproc: qcom: wcss: explicitly request exclusive reset control
+Date:   Fri,  3 Jul 2020 14:28:42 +0530
+Message-Id: <1593766722-28838-5-git-send-email-gokulsri@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1593766722-28838-1-git-send-email-gokulsri@codeaurora.org>
 References: <20190726092332.25202-1-govinds@codeaurora.org>
@@ -49,56 +49,42 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Govind Singh <govinds@codeaurora.org>
 
-Add a new modem compatible string for Qualcomm QCS404 SoCs
+Use request exclusive reset control for wcss reset controls.
 
 Signed-off-by: Govind Singh <govinds@codeaurora.org>
-[rebased on top of 5.8-rc3]
-Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
 ---
- Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/remoteproc/qcom_q6v5_wcss.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-index 1f9a62e..2f3838c 100644
---- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-+++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-@@ -9,6 +9,7 @@ on the Qualcomm Hexagon core.
- 	Definition: must be one of:
- 		    "qcom,q6v5-pil",
- 		    "qcom,ipq8074-wcss-pil"
-+		    "qcom,qcs404-wcss-pil"
- 		    "qcom,msm8916-mss-pil",
- 		    "qcom,msm8974-mss-pil"
- 		    "qcom,msm8996-mss-pil"
-@@ -39,6 +40,7 @@ on the Qualcomm Hexagon core.
- 		    string:
- 	qcom,q6v5-pil:
- 	qcom,ipq8074-wcss-pil:
-+	qcom,qcs404-wcss-pil:
- 	qcom,msm8916-mss-pil:
- 	qcom,msm8974-mss-pil:
- 		    must be "wdog", "fatal", "ready", "handover", "stop-ack"
-@@ -67,6 +69,11 @@ on the Qualcomm Hexagon core.
- 	Definition: The clocks needed depend on the compatible string:
- 	qcom,ipq8074-wcss-pil:
- 		    no clock names required
-+	qcom,qcs404-wcss-pil:
-+		    must be "xo", "gcc_abhs_cbcr", "gcc_abhs_cbcr",
-+		    "gcc_axim_cbcr", "lcc_ahbfabric_cbc", "tcsr_lcc_cbc",
-+		    "lcc_abhs_cbc", "lcc_tcm_slave_cbc", "lcc_abhm_cbc",
-+		    "lcc_axim_cbc", "lcc_bcr_sleep"
- 	qcom,q6v5-pil:
- 	qcom,msm8916-mss-pil:
- 	qcom,msm8974-mss-pil:
-@@ -154,6 +161,8 @@ For the compatible string below the following supplies are required:
- 	qcom,msm8916-mss-pil:
- 	qcom,msm8974-mss-pil:
- 		    no power-domain names required
-+	qcom,qcs404-wcss-pil:
-+		    must be "cx"
- 	qcom,msm8996-mss-pil:
- 	qcom,msm8998-mss-pil:
- 		    must be "cx", "mx"
+diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
+index 7c073c8..d5107c6 100644
+--- a/drivers/remoteproc/qcom_q6v5_wcss.c
++++ b/drivers/remoteproc/qcom_q6v5_wcss.c
+@@ -781,21 +781,21 @@ static int q6v5_wcss_init_reset(struct q6v5_wcss *wcss,
+ 	struct device *dev = wcss->dev;
+ 
+ 	if (desc->aon_reset_required) {
+-		wcss->wcss_aon_reset = devm_reset_control_get(dev, "wcss_aon_reset");
++		wcss->wcss_aon_reset = devm_reset_control_get_exclusive(dev, "wcss_aon_reset");
+ 		if (IS_ERR(wcss->wcss_aon_reset)) {
+ 			dev_err(wcss->dev, "fail to acquire wcss_aon_reset\n");
+ 			return PTR_ERR(wcss->wcss_aon_reset);
+ 		}
+ 	}
+ 
+-	wcss->wcss_reset = devm_reset_control_get(dev, "wcss_reset");
++	wcss->wcss_reset = devm_reset_control_get_exclusive(dev, "wcss_reset");
+ 	if (IS_ERR(wcss->wcss_reset)) {
+ 		dev_err(wcss->dev, "unable to acquire wcss_reset\n");
+ 		return PTR_ERR(wcss->wcss_reset);
+ 	}
+ 
+ 	if (desc->wcss_q6_reset_required) {
+-		wcss->wcss_q6_reset = devm_reset_control_get(dev, "wcss_q6_reset");
++		wcss->wcss_q6_reset = devm_reset_control_get_exclusive(dev, "wcss_q6_reset");
+ 		if (IS_ERR(wcss->wcss_q6_reset)) {
+ 			dev_err(wcss->dev, "unable to acquire wcss_q6_reset\n");
+ 			return PTR_ERR(wcss->wcss_q6_reset);
 -- 
 2.7.4
 
