@@ -7,69 +7,135 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21298C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 11:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6115C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 12:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3EA22100A
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 11:47:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E3520826
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 12:17:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="oU2ClTHl"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="RipJvTN4";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tp0tdt6/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbgGCLr3 (ORCPT
+        id S1726053AbgGCMRO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jul 2020 07:47:29 -0400
-Received: from vps.xff.cz ([195.181.215.36]:41248 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726082AbgGCLrZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 3 Jul 2020 07:47:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593776843; bh=iqz2SX82vQtetbFnEof7dGer5tzzE9ATX0yvgwgpk/8=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=oU2ClTHlglcyU0j9mnqoG61AxuvwV+hEBrZf17i4C585S4K6RsH+soW4phZpuqwcr
-         g0U7u/DGfuukhjmXS+XWu+kCuV5+QTh6gDfeXJ01MY5q8TxylKE1bc4geaRXE8mO3e
-         CnJEIhcNm+dsDN4IVza9q5+HxsPgMhzo7Wd0MUsI=
-From:   Ondrej Jirman <megous@megous.com>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Ondrej Jirman <megous@megous.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        Robert Chiras <robert.chiras@nxp.com>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] dt-binding: display: Allow a single port node on rocktech,jh057n00900
-Date:   Fri,  3 Jul 2020 13:47:17 +0200
-Message-Id: <20200703114717.2140832-3-megous@megous.com>
-In-Reply-To: <20200703114717.2140832-1-megous@megous.com>
-References: <20200703114717.2140832-1-megous@megous.com>
+        Fri, 3 Jul 2020 08:17:14 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:43557 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725984AbgGCMRN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jul 2020 08:17:13 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id CBC44580B40;
+        Fri,  3 Jul 2020 08:17:11 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Fri, 03 Jul 2020 08:17:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=rTAW5gwN1+eRVhnOurD7jQuXi4p
+        UqbQePveppBGQdEw=; b=RipJvTN4fMIJGnPXzaFbH2xdYeXlEM/TLctg/+dGVFw
+        hUE2Yj8IAutcexKEPxJj4fDjPLfOU6p6cR28VWPmXRUY7l3UcT3kIWwphonjaL8A
+        Qks3wiMJHd3qDBq0BOGkOpdiJr5GAm7SADf+i9Aub45Rr2xFm3CExJX0DYFd4Y6x
+        S1xVHZt/yDDmkWzhBDnpIHeoeoq4UrVcut4evC6/F4NzpePePCjC7sGRGNeBTSU8
+        ZU6y4zriP90AyZPumw4zEmArRs/wpGrV+x0YR1nowyno6HDdx6Z4vEvMlK4Xqvdc
+        UUrzm39uGrUysaBPACcEisxuVMFjGqDsc0nFveOlXxg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=rTAW5g
+        wN1+eRVhnOurD7jQuXi4pUqbQePveppBGQdEw=; b=tp0tdt6/H2GLCGlRnPCcSP
+        8rqvOJRVFL4dpHscL4XPeQNuA8C+Ik+UI48jSjPz2fbdb3ieehNukO29NdP5a5Gw
+        DOEqTWwlVCLYr7AVDcAnDO/2qqCaA9/rybp0a2AMSkH6e6Nh1iRQ9a/SM330IvAK
+        z3pYZi/FLNFXXD3dktC7sR43Uhb1hD6UrI0S15ZUwMkxk+hiqrPd6LAKWDPB/1FV
+        I8YxfhdfNw7TPuDeBOii2ef/YlhAMnRkiKY7St5GaLdzfAua8hxkfO3ngQ8CtJS3
+        bRQKD4ks/EWjr7loPth7ntGGuqnyH0qrBcOP3rE+kODCYLtar45LqQnAicFI17UA
+        ==
+X-ME-Sender: <xms:xCH_XpjujNdZw9ynwVpavu_25HyW7GdCPcx8nxWSGBfMuas_vkVtNg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrtdeigdehtdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
+    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
+    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:xCH_XuBCdHEGYbUJDSlkZD4IpyOL-G6J86mquzuvVEX1lu2v7MKOZA>
+    <xmx:xCH_XpERdqBFHoRf_K8JqMBhBNlTXBiJs636znioMFvF3nHP9DXl_Q>
+    <xmx:xCH_XuQsnZqfvfktYxQOBio_oBvNGbBlctzeJ21umTMIn5BqRzBEyw>
+    <xmx:xyH_XlmAgDeTfR89SNC-x3NNHz0TRSJ1B5vFcyRh8gMQ0922L-O51A>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 2A6DF306006D;
+        Fri,  3 Jul 2020 08:17:08 -0400 (EDT)
+Date:   Fri, 3 Jul 2020 14:17:06 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Ondrej Jirman <megous@megous.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Icenowy Zheng <icenowy@aosc.io>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Samuel Holland <samuel@sholland.org>,
+        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
+        Bhushan Shah <bshah@kde.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v8 2/2] arm64: dts: sun50i-a64-pinephone: Add touchscreen
+ support
+Message-ID: <20200703121706.gf2yxfe7crleatlm@gilmour.lan>
+References: <20200702081432.1727696-1-megous@megous.com>
+ <20200702081432.1727696-3-megous@megous.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cxgywaqrrd6jmrsp"
+Content-Disposition: inline
+In-Reply-To: <20200702081432.1727696-3-megous@megous.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The display has one port. Allow it in the binding.
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
----
- .../devicetree/bindings/display/panel/rocktech,jh057n00900.yaml  | 1 +
- 1 file changed, 1 insertion(+)
+--cxgywaqrrd6jmrsp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml b/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
-index a6985cd947fb..d5733ef30954 100644
---- a/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
-@@ -24,6 +24,7 @@ properties:
-         # Xingbangda XBD599 5.99" 720x1440 TFT LCD panel
-       - xingbangda,xbd599
- 
-+  port: true
-   reg:
-     maxItems: 1
-     description: DSI virtual channel
--- 
-2.27.0
+Hi,
 
+On Thu, Jul 02, 2020 at 10:14:32AM +0200, Ondrej Jirman wrote:
+> Pinephone has a Goodix GT917S capacitive touchscreen controller on
+> I2C0 bus. Add support for it.
+>=20
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  .../dts/allwinner/sun50i-a64-pinephone.dtsi   | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/ar=
+ch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+> index a89425ad3727..5c7386566053 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+> @@ -121,6 +121,25 @@ &ehci1 {
+>  	status =3D "okay";
+>  };
+> =20
+> +&i2c0 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&i2c0_pins>;
+> +	status =3D "okay";
+
+I didn't spot this earlier, but the pinctrl properties are already set
+in the DTSI. I've removed them while applying the patch.
+
+Thanks!
+Maxime
+
+--cxgywaqrrd6jmrsp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXv8hwQAKCRDj7w1vZxhR
+xZHoAQDeaPm5c6iWX8CcvBcL8Vrae7EAun13r2RrsQbElBt06AD/RGPN7dt9hGp8
+nvnWM3MC/4nwVVPKFdGRLOiTy6Tg1AI=
+=+CVs
+-----END PGP SIGNATURE-----
+
+--cxgywaqrrd6jmrsp--
