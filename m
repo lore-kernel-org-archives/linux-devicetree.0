@@ -2,115 +2,108 @@ Return-Path: <SRS0=QVA0=AO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F070C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 09:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B3BCC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 09:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA25B2073E
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 09:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CED8E2073E
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 09:55:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Wm94Yea6"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="xZIM+taB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726325AbgGCJpI (ORCPT
+        id S1726082AbgGCJzh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jul 2020 05:45:08 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:46420 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726244AbgGCJpG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 3 Jul 2020 05:45:06 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593769506; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=dl0rgC/HhlVxkyXbeJ+jwvTvXNECw4L3SLbh6WDhKSM=; b=Wm94Yea6UbRStRynjLEroYNbO2vhH/7k7NoHk7o+D6nKixUsIPMDxxuUlX5O4ZhvjTcFO7Hp
- nLtTlkQbScKOEScV9+pNohIIrDBD1qJ/KK8x+DTU2D2I3+SLTiFEkudV96itXecPrBWVfKHB
- tLjQ4wGB6XIYZ9RXmTpbLQZKOwA=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5efefe0d567385e8e707101a (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 03 Jul 2020 09:44:45
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 950E2C433AF; Fri,  3 Jul 2020 09:44:44 +0000 (UTC)
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D9747C433AD;
-        Fri,  3 Jul 2020 09:44:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D9747C433AD
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     bjorn.andersson@linaro.org, agross@kernel.org, broonie@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH 3/3] arm64: dts: sc7180: Add qspi opps and power-domains
-Date:   Fri,  3 Jul 2020 15:11:33 +0530
-Message-Id: <1593769293-6354-4-git-send-email-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593769293-6354-1-git-send-email-rnayak@codeaurora.org>
-References: <1593769293-6354-1-git-send-email-rnayak@codeaurora.org>
+        Fri, 3 Jul 2020 05:55:37 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:18218 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725891AbgGCJzh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jul 2020 05:55:37 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0639a9s6022705;
+        Fri, 3 Jul 2020 11:55:25 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=PVOnG26nR/CRWabuDYAL1Uq7FjpVqBMfgAQ38turMBg=;
+ b=xZIM+taBziWls9RDtsRA566QiuKlbGAzL1h8dt5RS2IV3CgPzFUc2g5nQAiC7df9+g6B
+ 6gnKiLUNI0zRLn0zBEUrmqQhYzcEkxFqkiHYi+4obzIRa36jYj6xyq6rn8HNmubGkCSh
+ oeT6LpTbSoxY6kY0pDYYT6zM0VZOPAcDmdQwCYZvlSfccT4PPXLbiLKbaRh1CZPwbSc8
+ 9OPGR6wgp2cLW9jYHm8N0626RFJf1XyzT/8ul5qaX6VCesN54sCH2HxN8plJG39n922f
+ gBDLGzIpccqal9RSoYf4Oyc8H5SKVVhsKr+dbg1iw0gQWRmcZlT/ygy1sYjC3LYRzjDB wA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31wuk1wsw2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Jul 2020 11:55:25 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 40CC6100038;
+        Fri,  3 Jul 2020 11:55:25 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 362852BAC64;
+        Fri,  3 Jul 2020 11:55:25 +0200 (CEST)
+Received: from localhost (10.75.127.51) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 3 Jul 2020 11:55:24
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <lee.jones@linaro.org>,
+        <benjamin.gaignard@st.com>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 2/5] ARM: dts: stm32: Add compatibles for syscon for stm32f426
+Date:   Fri, 3 Jul 2020 11:55:17 +0200
+Message-ID: <20200703095520.30264-3-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
+In-Reply-To: <20200703095520.30264-1-benjamin.gaignard@st.com>
+References: <20200703095520.30264-1-benjamin.gaignard@st.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-03_03:2020-07-02,2020-07-03 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the power domain supporting performance state and the corresponding
-OPP tables for the qspi device on sc7180
+Syscon nodes needs at least 2 compatibles to be compliant why yaml documentation.
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 ---
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ arch/arm/boot/dts/stm32f429.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 2be81a2..34a6d83 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -2407,6 +2407,25 @@
+diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+index 393f43c85a3c..f3a8d43993c9 100644
+--- a/arch/arm/boot/dts/stm32f429.dtsi
++++ b/arch/arm/boot/dts/stm32f429.dtsi
+@@ -586,8 +586,8 @@
  			status = "disabled";
  		};
  
-+		qspi_opp_table: qspi-opp-table {
-+			compatible = "operating-points-v2";
-+
-+			opp-75000000 {
-+				opp-hz = /bits/ 64 <75000000>;
-+				required-opps = <&rpmhpd_opp_low_svs>;
-+			};
-+
-+			opp-150000000 {
-+				opp-hz = /bits/ 64 <150000000>;
-+				required-opps = <&rpmhpd_opp_svs>;
-+			};
-+
-+			opp-300000000 {
-+				opp-hz = /bits/ 64 <300000000>;
-+				required-opps = <&rpmhpd_opp_nom>;
-+			};
-+		};
-+
- 		qspi: spi@88dc000 {
- 			compatible = "qcom,qspi-v1";
- 			reg = <0 0x088dc000 0 0x600>;
-@@ -2419,6 +2438,8 @@
- 			interconnects = <&gem_noc MASTER_APPSS_PROC
- 					&config_noc SLAVE_QSPI_0>;
- 			interconnect-names = "qspi-config";
-+			power-domains = <&rpmhpd SC7180_CX>;
-+			operating-points-v2 = <&qspi_opp_table>;
- 			status = "disabled";
+-		syscfg: system-config@40013800 {
+-			compatible = "syscon";
++		syscfg: syscon@40013800 {
++			compatible = "st,stm32-syscfg", "syscon";
+ 			reg = <0x40013800 0x400>;
+ 		};
+ 
+@@ -674,7 +674,7 @@
+ 		};
+ 
+ 		pwrcfg: power-config@40007000 {
+-			compatible = "syscon";
++			compatible = "st,stm32-power-config", "syscon";
+ 			reg = <0x40007000 0x400>;
  		};
  
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.15.0
 
