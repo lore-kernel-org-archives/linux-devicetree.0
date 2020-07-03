@@ -2,465 +2,373 @@ Return-Path: <SRS0=QVA0=AO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A4BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 14:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F10C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 14:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 937A7208E4
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 14:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1ADF208FE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 14:33:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b6X/bZVC"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="GgtgWYLM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726142AbgGCO2e (ORCPT
+        id S1726554AbgGCOdy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jul 2020 10:28:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42924 "EHLO
+        Fri, 3 Jul 2020 10:33:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726035AbgGCO2d (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jul 2020 10:28:33 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC4FEC08C5C1
-        for <devicetree@vger.kernel.org>; Fri,  3 Jul 2020 07:28:33 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id z2so24008847qts.5
-        for <devicetree@vger.kernel.org>; Fri, 03 Jul 2020 07:28:33 -0700 (PDT)
+        with ESMTP id S1726534AbgGCOdx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jul 2020 10:33:53 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58DF8C08C5DD
+        for <devicetree@vger.kernel.org>; Fri,  3 Jul 2020 07:33:53 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id j19so8319904pgm.11
+        for <devicetree@vger.kernel.org>; Fri, 03 Jul 2020 07:33:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=97EMK/c3+kijqcGQn6wBpHPcNDN3Z0aInjoogn42TTs=;
-        b=b6X/bZVCb9HDRNO94q+HPo+KdnnuhIDOwAOXKsYPpakXDibhfBokX139KPSI/L+027
-         nijtGAmTKeq/1qTmpDbxx57AmbMGB0d6JRib3Xc4oKZH25YazBA1X4R8erGPmxCJF63X
-         HXYR72MeZ+MmBxJZdZ2fieRGiMmmfmGGTh8Dh/F6oLxaTXvtCv+HfoGZTM0PjFb1krdX
-         DHWzFgZQ7bzpshc1/N8uRKHpyEjZ2yFbZbNvjepFWcAROj2Yzb2/JzShJ+lYb/M1E3c/
-         rzgOQazZzm8pu1OLnHY1P88syy4j51Kxg/6ducUZprQUYGbmFjE6baXpLRajQEFs8oR+
-         hgbw==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from:cc;
+        bh=7WvGi3ZWzZ6amDsfHb5k51P9HzBmGi89bs5PYzy6Mxs=;
+        b=GgtgWYLMzWh/a1jUS92H1aJ8rur1vg3pPP3+hotqIpRbf6wmlBBTBVNkzuhadRfrAP
+         EIcu/7/BoazS/XZNK6VRhlctZYSCnCRJz5TlsyP0G+lHmdKhavNz6KMOdlclRsQrXvF3
+         mx+J6Nkeugr+wThh5bhv1nDNarfuL/22Mrwd2Y0oci3aCWDJ90wCqrPxDB7nlW462I8S
+         oRlVeBUgwZiEWijL3iQtpLCyEIuugAv/0ZoHqhbeLhRjM+mTLGBRrEQ7M/FZg6fECxLz
+         vhHSjkAJJ+Fyu8gn3+CfdA8ed5QeSwQBPWAeyJeKuavWY7TO/MzqRdMdevuWpAezNYH7
+         1ybA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=97EMK/c3+kijqcGQn6wBpHPcNDN3Z0aInjoogn42TTs=;
-        b=V7VIHbLbWkpvDZaIlfPMPBy9qSyDoR8vn4PNWPgXzQTCfkG5u0BMTx+87Iuhi/mUP5
-         RLberXQnfkUN2SpRuzXH1kZ2nhqWW3CeadGLhmxTHrB0uG5l08AVLE2kGj821SDfodMt
-         o3DiC4mArg0HZl5tJ8BtAct8YtVWZyija+wxVk30+aaYakBxqjG72EHRjoZI1rPhSoL0
-         E+MWw2eX2rU8JGrzNe/cKXtwlK3q6JNy45EXzYtkQwWomQjFqKp6w3RQWA84s8QcKrCE
-         Mlp0ujL63M7T1uNTB1wg0CXGNok9w4LfGijN8/DHHCqDMdWEbozJmn13eu8Jg6ZuaXTQ
-         1o1w==
-X-Gm-Message-State: AOAM533XTy+dISHoOngIpxTLjel/mQe2ssWLaPMlqEJSUq6JSRIzC1nz
-        D4zzG903CBkxd8rTybFnF2KF9Qiq0fyO1bjJPs6g0g==
-X-Google-Smtp-Source: ABdhPJx8WsRkD+i7ruv9eWChrIE9lvTW1K1kLiWKr8lHuHkdBVSrwgd5PUqlAFoZyNFpsdm9HE2woyUX36Ey3NsDJbM=
-X-Received: by 2002:ac8:189c:: with SMTP id s28mr34565721qtj.97.1593786512688;
- Fri, 03 Jul 2020 07:28:32 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from:cc;
+        bh=7WvGi3ZWzZ6amDsfHb5k51P9HzBmGi89bs5PYzy6Mxs=;
+        b=jAdvs12YyCZFjoMEwH7yV+GjVaVNg0cDE6kBuuUyiyckamncHcPqsB13V2rjhobKXQ
+         /o5rFxx6OJnd2mGgZmzhkJEKnUi8lSn67VJR7C+OU9c5MWACxZxNJGTVyhAelPkN0yQW
+         4bxsSCUwa8tKBZbe465TeLw/vckm8hl0weHGZfjd/TocQJh69ZF9MOIOFE3TfdukildU
+         5j+W61nq1T144r+HCy1KJDAVQCzZGCu3CS5rsmKS+FY52zaYs2C9TYyvsQV1zqkLbQtG
+         7FFBVMFaEMyxvkHAmORgrARRZ6W78hzXLj/eXHjZQCP7nVsf6BaCe59SDrKQ+MW4f8Lg
+         94kQ==
+X-Gm-Message-State: AOAM532ekuaxI4ZmoCXef3Vm86qvHaP0VN2pMvruGpTWwtoGUwSjHhFp
+        onED79bIyGOgiP/qkB2ZlSrRUA==
+X-Google-Smtp-Source: ABdhPJxsbbwRX3oe8BINj7VF2EhM60Xud2ed2kZPHNTcnPgfXiScYc38MdSjHD9IzpZCFjGVs9OsSw==
+X-Received: by 2002:a63:564e:: with SMTP id g14mr28984034pgm.326.1593786832715;
+        Fri, 03 Jul 2020 07:33:52 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id r16sm11607347pfh.64.2020.07.03.07.33.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jul 2020 07:33:51 -0700 (PDT)
+Message-ID: <5eff41cf.1c69fb81.f3c05.e990@mx.google.com>
+Date:   Fri, 03 Jul 2020 07:33:51 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
- <1593699479-1445-3-git-send-email-grzegorz.jaszczyk@linaro.org> <f0d3f3224a1b8fa2be668dd2b8d9d84e@kernel.org>
-In-Reply-To: <f0d3f3224a1b8fa2be668dd2b8d9d84e@kernel.org>
-From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-Date:   Fri, 3 Jul 2020 16:28:21 +0200
-Message-ID: <CAMxfBF6A9702-rBOo0jHtfn4Ds1_G+nWG4O9-urNqU00dFXeww@mail.gmail.com>
-Subject: Re: [PATCHv3 2/6] irqchip/irq-pruss-intc: Add a PRUSS irqchip driver
- for PRUSS interrupts
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     tglx@linutronix.de, jason@lakedaemon.net,
-        "Anna, Suman" <s-anna@ti.com>, robh+dt@kernel.org,
-        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, david@lechnology.com,
-        "Mills, William" <wmills@ti.com>, "Andrew F . Davis" <afd@ti.com>,
-        Roger Quadros <rogerq@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.8-rc3-82-gcdd3bb54332f
+X-Kernelci-Report-Type: bisect
+X-Kernelci-Tree: mainline
+X-Kernelci-Branch: master
+X-Kernelci-Lab-Name: lab-cip
+Subject: mainline/master bisection: baseline.dmesg.crit on
+ qemu_arm-vexpress-a15
+To:     kernelci-results@groups.io, gtucker@collabora.com,
+        Andre Przywara <andre.przywara@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 2 Jul 2020 at 19:24, Marc Zyngier <maz@kernel.org> wrote:
->
-> On 2020-07-02 15:17, Grzegorz Jaszczyk wrote:
-> > From: Suman Anna <s-anna@ti.com>
-> >
-> > The Programmable Real-Time Unit Subsystem (PRUSS) contains a local
-> > interrupt controller (INTC) that can handle various system input events
-> > and post interrupts back to the device-level initiators. The INTC can
-> > support upto 64 input events with individual control configuration and
-> > hardware prioritization. These events are mapped onto 10 output
-> > interrupt
-> > lines through two levels of many-to-one mapping support. Different
-> > interrupt lines are routed to the individual PRU cores or to the host
-> > CPU, or to other devices on the SoC. Some of these events are sourced
-> > from peripherals or other sub-modules within that PRUSS, while a few
-> > others are sourced from SoC-level peripherals/devices.
-> >
-> > The PRUSS INTC platform driver manages this PRUSS interrupt controller
-> > and implements an irqchip driver to provide a Linux standard way for
-> > the PRU client users to enable/disable/ack/re-trigger a PRUSS system
-> > event. The system events to interrupt channels and output interrupts
-> > relies on the mapping configuration provided either through the PRU
-> > firmware blob or via the PRU application's device tree node. The
-> > mappings will be programmed during the boot/shutdown of a PRU core.
-> >
-> > The PRUSS INTC module is reference counted during the interrupt
-> > setup phase through the irqchip's irq_request_resources() and
-> > irq_release_resources() ops. This restricts the module from being
-> > removed as long as there are active interrupt users.
-> >
-> > The driver currently supports and can be built for OMAP architecture
-> > based AM335x, AM437x and AM57xx SoCs; Keystone2 architecture based
-> > 66AK2G SoCs and Davinci architecture based OMAP-L13x/AM18x/DA850 SoCs.
-> > All of these SoCs support 64 system events, 10 interrupt channels and
-> > 10 output interrupt lines per PRUSS INTC with a few SoC integration
-> > differences.
-> >
-> > NOTE:
-> > Each PRU-ICSS's INTC on AM57xx SoCs is preceded by a Crossbar that
-> > enables multiple external events to be routed to a specific number
-> > of input interrupt events. Any non-default external interrupt event
-> > directed towards PRUSS needs this crossbar to be setup properly.
-> >
-> > Signed-off-by: Suman Anna <s-anna@ti.com>
-> > Signed-off-by: Andrew F. Davis <afd@ti.com>
-> > Signed-off-by: Roger Quadros <rogerq@ti.com>
-> > Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-> > Reviewed-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> > v2->v3:
-> > - use single irqchip description instead of separately allocating it
-> > for
-> >   each pruss_intc
-> > - get rid of unused mutex
-> > - improve error handling
-> > v1->v2:
-> > - https://patchwork.kernel.org/patch/11069771/
-<snip>
-> > +static void pruss_intc_init(struct pruss_intc *intc)
-> > +{
-> > +     int i;
-> > +
-> > +     /* configure polarity to active high for all system interrupts */
-> > +     pruss_intc_write_reg(intc, PRU_INTC_SIPR0, 0xffffffff);
-> > +     pruss_intc_write_reg(intc, PRU_INTC_SIPR1, 0xffffffff);
-> > +
-> > +     /* configure type to pulse interrupt for all system interrupts */
-> > +     pruss_intc_write_reg(intc, PRU_INTC_SITR0, 0);
-> > +     pruss_intc_write_reg(intc, PRU_INTC_SITR1, 0);
->
-> So the default is to configure everything as edge...
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* This automated bisection report was sent to you on the basis  *
+* that you may be involved with the breaking commit it has      *
+* found.  No manual investigation has been done to verify it,   *
+* and the root cause of the problem may be somewhere else.      *
+*                                                               *
+* If you do send a fix, please include this trailer:            *
+*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+*                                                               *
+* Hope this helps!                                              *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-Sorry, the description is wrong - '0' indicates level and '1' edge. So
-the default configuration is level - I will fix the comment.
+mainline/master bisection: baseline.dmesg.crit on qemu_arm-vexpress-a15
 
->
-> > +
-> > +     /* clear all 16 interrupt channel map registers */
-> > +     for (i = 0; i < 16; i++)
-> > +             pruss_intc_write_reg(intc, PRU_INTC_CMR(i), 0);
-> > +
-> > +     /* clear all 3 host interrupt map registers */
-> > +     for (i = 0; i < 3; i++)
-> > +             pruss_intc_write_reg(intc, PRU_INTC_HMR(i), 0);
-> > +}
-> > +
-> > +static void pruss_intc_irq_ack(struct irq_data *data)
-> > +{
-> > +     struct pruss_intc *intc = irq_data_get_irq_chip_data(data);
-> > +     unsigned int hwirq = data->hwirq;
-> > +
-> > +     pruss_intc_write_reg(intc, PRU_INTC_SICR, hwirq);
-> > +}
-> > +
-> > +static void pruss_intc_irq_mask(struct irq_data *data)
-> > +{
-> > +     struct pruss_intc *intc = irq_data_get_irq_chip_data(data);
-> > +     unsigned int hwirq = data->hwirq;
-> > +
-> > +     pruss_intc_write_reg(intc, PRU_INTC_EICR, hwirq);
-> > +}
-> > +
-> > +static void pruss_intc_irq_unmask(struct irq_data *data)
-> > +{
-> > +     struct pruss_intc *intc = irq_data_get_irq_chip_data(data);
-> > +     unsigned int hwirq = data->hwirq;
-> > +
-> > +     pruss_intc_write_reg(intc, PRU_INTC_EISR, hwirq);
-> > +}
-> > +
-> > +static int pruss_intc_irq_reqres(struct irq_data *data)
-> > +{
-> > +     if (!try_module_get(THIS_MODULE))
-> > +             return -ENODEV;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static void pruss_intc_irq_relres(struct irq_data *data)
-> > +{
-> > +     module_put(THIS_MODULE);
-> > +}
-> > +
-> > +static struct irq_chip pruss_irqchip = {
-> > +     .name = "pruss-intc",
-> > +     .irq_ack = pruss_intc_irq_ack,
-> > +     .irq_mask = pruss_intc_irq_mask,
-> > +     .irq_unmask = pruss_intc_irq_unmask,
-> > +     .irq_request_resources = pruss_intc_irq_reqres,
-> > +     .irq_release_resources = pruss_intc_irq_relres,
-> > +};
-> > +
-> > +static int pruss_intc_irq_domain_map(struct irq_domain *d, unsigned
-> > int virq,
-> > +                                  irq_hw_number_t hw)
-> > +{
-> > +     struct pruss_intc *intc = d->host_data;
-> > +
-> > +     irq_set_chip_data(virq, intc);
-> > +     irq_set_chip_and_handler(virq, &pruss_irqchip, handle_level_irq);
->
-> ... and despite this edge-triggered default, you handle things as level.
-> This doesn't seem quite right.
+Summary:
+  Start:      cdd3bb54332f Merge tag 'm68knommu-for-v5.8-rc4' of git://git.=
+kernel.org/pub/scm/linux/kernel/git/gerg/m68knommu
+  Plain log:  https://storage.kernelci.org/mainline/master/v5.8-rc3-82-gcdd=
+3bb54332f/arm/vexpress_defconfig/gcc-8/lab-cip/baseline-vexpress-v2p-ca15-t=
+c1.txt
+  HTML log:   https://storage.kernelci.org/mainline/master/v5.8-rc3-82-gcdd=
+3bb54332f/arm/vexpress_defconfig/gcc-8/lab-cip/baseline-vexpress-v2p-ca15-t=
+c1.html
+  Result:     38ac46002d1d arm: dts: vexpress: Move mcc node back into moth=
+erboard node
 
-As above it is level. I will fix the comment
+Checks:
+  revert:     PASS
+  verify:     PASS
 
->
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static void pruss_intc_irq_domain_unmap(struct irq_domain *d,
-> > unsigned int virq)
-> > +{
-> > +     irq_set_chip_and_handler(virq, NULL, NULL);
-> > +     irq_set_chip_data(virq, NULL);
-> > +}
-> > +
-> > +static const struct irq_domain_ops pruss_intc_irq_domain_ops = {
-> > +     .xlate  = irq_domain_xlate_onecell,
-> > +     .map    = pruss_intc_irq_domain_map,
-> > +     .unmap  = pruss_intc_irq_domain_unmap,
-> > +};
-> > +
-> > +static void pruss_intc_irq_handler(struct irq_desc *desc)
-> > +{
-> > +     unsigned int irq = irq_desc_get_irq(desc);
-> > +     struct irq_chip *chip = irq_desc_get_chip(desc);
-> > +     struct pruss_intc *intc = irq_get_handler_data(irq);
-> > +     u32 hipir;
-> > +     unsigned int virq;
-> > +     int i, hwirq;
-> > +
-> > +     chained_irq_enter(chip, desc);
-> > +
-> > +     /* find our host irq number */
-> > +     for (i = 0; i < MAX_NUM_HOST_IRQS; i++)
-> > +             if (intc->irqs[i] == irq)
-> > +                     break;
->
-> This loop is pretty ugly. The way to do it would normally to
-> associate the right data structure to the chained interrupt,
-> and only that one, directly associating the input signal
-> with the correct mux. Using the Linux irq as a discriminant is
-> at best clumsy.
->
-> But it feels to me that the base data structure is not
-> exactly the right one here, see below.
->
+Parameters:
+  Tree:       mainline
+  URL:        https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linu=
+x.git
+  Branch:     master
+  Target:     qemu_arm-vexpress-a15
+  CPU arch:   arm
+  Lab:        lab-cip
+  Compiler:   gcc-8
+  Config:     vexpress_defconfig
+  Test case:  baseline.dmesg.crit
 
-Ok, you are right. I will introduce a new structure for host_irq data
-which will be associated with chained interrupt and get rid of this
-loop.
+Breaking commit found:
 
-> > +     if (i == MAX_NUM_HOST_IRQS)
-> > +             goto err;
-> > +
-> > +     i += MIN_PRU_HOST_INT;
-> > +
-> > +     /* get highest priority pending PRUSS system event */
-> > +     hipir = pruss_intc_read_reg(intc, PRU_INTC_HIPIR(i));
-> > +     while (!(hipir & INTC_HIPIR_NONE_HINT)) {
->
-> Please write this as a do { } while() loop, with a single instance
-> of the HW register read inside the loop (instead of one outside
-> and one inside.
+---------------------------------------------------------------------------=
+----
+commit 38ac46002d1df5707566a73486452851341028d2
+Author: Andre Przywara <andre.przywara@arm.com>
+Date:   Wed Jun 3 17:22:37 2020 +0100
 
-Ok, I will get rid of the outside HW register read, but I think it is
-better to use bellow instead of do {} while () loop:
-while (1) {
-  /* get highest priority pending PRUSS system event */
-  hipir = pruss_intc_read_reg(intc, PRU_INTC_HIPIR(host_irq));
-  if (hipir & INTC_HIPIR_NONE_HINT)
-    break;
-...
+    arm: dts: vexpress: Move mcc node back into motherboard node
+    =
 
-Hope it works for you.
+    Commit d9258898ad49 ("arm64: dts: arm: vexpress: Move fixed devices
+    out of bus node") moved the "mcc" DT node into the root node, because
+    it does not have any children using "reg" properties, so does violate
+    some dtc checks about "simple-bus" nodes.
+    =
 
->
-> > +             hwirq = hipir & GENMASK(9, 0);
-> > +             virq = irq_linear_revmap(intc->domain, hwirq);
->
-> And this is where I worry. You seems to have a single irqdomain
-> for all the muxes. Are you guaranteed that you will have no
-> overlap between muxes? And please use irq_find_mapping(), as
-> I have top-secret plans to kill irq_linear_revmap().
+    However this broke the vexpress config-bus code, which walks up the
+    device tree to find the first node with an "arm,vexpress,site" property.
+    This gave the wrong result (matching the root node instead of the
+    motherboard node), so broke the clocks and some other devices for
+    VExpress boards.
+    =
 
-Regarding irq_find_mapping - sure.
+    Move the whole node back into its original position. This re-introduces
+    the dtc warning, but is conceptually the right thing to do. The dtc
+    warning seems to be overzealous here, there are discussions on fixing or
+    relaxing this check instead.
+    =
 
-Regarding irqdomains:
-It is a single irqdomain since the hwirq (system event) can be mapped
-to different irq_host (muxes). Patch #6
-https://lkml.org/lkml/2020/7/2/616 implements and describes how input
-events can be mapped to some output host interrupts through 2 levels
-of many-to-one mapping i.e. events to channel mapping and channels to
-host interrupts. Mentioned implementation ensures that specific system
-event (hwirq) can be mapped through PRUSS specific channel into a
-single host interrupt.
+    Link: https://lore.kernel.org/r/20200603162237.16319-1-andre.przywara@a=
+rm.com
+    Fixes: d9258898ad49 ("arm64: dts: vexpress: Move fixed devices out of b=
+us node")
+    Reported-and-tested-by: Guenter Roeck <linux@roeck-us.net>
+    Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+    Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 
->
-> > +
-> > +             /*
-> > +              * NOTE: manually ACK any system events that do not have a
-> > +              * handler mapped yet
-> > +              */
-> > +             if (WARN_ON(!virq))
-> > +                     pruss_intc_write_reg(intc, PRU_INTC_SICR, hwirq);
->
-> How can this happen? If you really need it, you probable want to
-> warn once only.
+diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/ve=
+xpress-v2m-rs1.dtsi
+index e6308fb76183..a88ee5294d35 100644
+--- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
++++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+@@ -100,79 +100,6 @@
+ 		};
+ 	};
+ =
 
-Ideally it shouldn't happen but I prefer to keep it to catch any
-misuse. It is because the PRUSS INTC unit can be also accessed by PRU
-cores which use the same registers to ack the internal events. The
-current design is limited to only acking and triggering the interrupts
-from PRU firmwares while the entire mapping is done by Linux (patch #6
-https://lkml.org/lkml/2020/7/2/612).
+-	mcc {
+-		compatible =3D "arm,vexpress,config-bus";
+-		arm,vexpress,config-bridge =3D <&v2m_sysreg>;
+-
+-		oscclk0 {
+-			/* MCC static memory clock */
+-			compatible =3D "arm,vexpress-osc";
+-			arm,vexpress-sysreg,func =3D <1 0>;
+-			freq-range =3D <25000000 60000000>;
+-			#clock-cells =3D <0>;
+-			clock-output-names =3D "v2m:oscclk0";
+-		};
+-
+-		v2m_oscclk1: oscclk1 {
+-			/* CLCD clock */
+-			compatible =3D "arm,vexpress-osc";
+-			arm,vexpress-sysreg,func =3D <1 1>;
+-			freq-range =3D <23750000 65000000>;
+-			#clock-cells =3D <0>;
+-			clock-output-names =3D "v2m:oscclk1";
+-		};
+-
+-		v2m_oscclk2: oscclk2 {
+-			/* IO FPGA peripheral clock */
+-			compatible =3D "arm,vexpress-osc";
+-			arm,vexpress-sysreg,func =3D <1 2>;
+-			freq-range =3D <24000000 24000000>;
+-			#clock-cells =3D <0>;
+-			clock-output-names =3D "v2m:oscclk2";
+-		};
+-
+-		volt-vio {
+-			/* Logic level voltage */
+-			compatible =3D "arm,vexpress-volt";
+-			arm,vexpress-sysreg,func =3D <2 0>;
+-			regulator-name =3D "VIO";
+-			regulator-always-on;
+-			label =3D "VIO";
+-		};
+-
+-		temp-mcc {
+-			/* MCC internal operating temperature */
+-			compatible =3D "arm,vexpress-temp";
+-			arm,vexpress-sysreg,func =3D <4 0>;
+-			label =3D "MCC";
+-		};
+-
+-		reset {
+-			compatible =3D "arm,vexpress-reset";
+-			arm,vexpress-sysreg,func =3D <5 0>;
+-		};
+-
+-		muxfpga {
+-			compatible =3D "arm,vexpress-muxfpga";
+-			arm,vexpress-sysreg,func =3D <7 0>;
+-		};
+-
+-		shutdown {
+-			compatible =3D "arm,vexpress-shutdown";
+-			arm,vexpress-sysreg,func =3D <8 0>;
+-		};
+-
+-		reboot {
+-			compatible =3D "arm,vexpress-reboot";
+-			arm,vexpress-sysreg,func =3D <9 0>;
+-		};
+-
+-		dvimode {
+-			compatible =3D "arm,vexpress-dvimode";
+-			arm,vexpress-sysreg,func =3D <11 0>;
+-		};
+-	};
+-
+ 	bus@8000000 {
+ 		motherboard-bus {
+ 			model =3D "V2M-P1";
+@@ -435,6 +362,79 @@
+ 						};
+ 					};
+ 				};
++
++				mcc {
++					compatible =3D "arm,vexpress,config-bus";
++					arm,vexpress,config-bridge =3D <&v2m_sysreg>;
++
++					oscclk0 {
++						/* MCC static memory clock */
++						compatible =3D "arm,vexpress-osc";
++						arm,vexpress-sysreg,func =3D <1 0>;
++						freq-range =3D <25000000 60000000>;
++						#clock-cells =3D <0>;
++						clock-output-names =3D "v2m:oscclk0";
++					};
++
++					v2m_oscclk1: oscclk1 {
++						/* CLCD clock */
++						compatible =3D "arm,vexpress-osc";
++						arm,vexpress-sysreg,func =3D <1 1>;
++						freq-range =3D <23750000 65000000>;
++						#clock-cells =3D <0>;
++						clock-output-names =3D "v2m:oscclk1";
++					};
++
++					v2m_oscclk2: oscclk2 {
++						/* IO FPGA peripheral clock */
++						compatible =3D "arm,vexpress-osc";
++						arm,vexpress-sysreg,func =3D <1 2>;
++						freq-range =3D <24000000 24000000>;
++						#clock-cells =3D <0>;
++						clock-output-names =3D "v2m:oscclk2";
++					};
++
++					volt-vio {
++						/* Logic level voltage */
++						compatible =3D "arm,vexpress-volt";
++						arm,vexpress-sysreg,func =3D <2 0>;
++						regulator-name =3D "VIO";
++						regulator-always-on;
++						label =3D "VIO";
++					};
++
++					temp-mcc {
++						/* MCC internal operating temperature */
++						compatible =3D "arm,vexpress-temp";
++						arm,vexpress-sysreg,func =3D <4 0>;
++						label =3D "MCC";
++					};
++
++					reset {
++						compatible =3D "arm,vexpress-reset";
++						arm,vexpress-sysreg,func =3D <5 0>;
++					};
++
++					muxfpga {
++						compatible =3D "arm,vexpress-muxfpga";
++						arm,vexpress-sysreg,func =3D <7 0>;
++					};
++
++					shutdown {
++						compatible =3D "arm,vexpress-shutdown";
++						arm,vexpress-sysreg,func =3D <8 0>;
++					};
++
++					reboot {
++						compatible =3D "arm,vexpress-reboot";
++						arm,vexpress-sysreg,func =3D <9 0>;
++					};
++
++					dvimode {
++						compatible =3D "arm,vexpress-dvimode";
++						arm,vexpress-sysreg,func =3D <11 0>;
++					};
++				};
+ 			};
+ 		};
+ 	};
+---------------------------------------------------------------------------=
+----
 
-I will convert it to WARN_ON_ONCE.
 
->
-> > +             else
-> > +                     generic_handle_irq(virq);
-> > +
-> > +             /* get next system event */
-> > +             hipir = pruss_intc_read_reg(intc, PRU_INTC_HIPIR(i));
-> > +     }
-> > +err:
-> > +     chained_irq_exit(chip, desc);
-> > +}
-> > +
-> > +static int pruss_intc_probe(struct platform_device *pdev)
-> > +{
-> > +     static const char * const irq_names[MAX_NUM_HOST_IRQS] = {
-> > +             "host_intr0", "host_intr1", "host_intr2", "host_intr3",
-> > +             "host_intr4", "host_intr5", "host_intr6", "host_intr7", };
-> > +     struct device *dev = &pdev->dev;
-> > +     struct pruss_intc *intc;
-> > +     int i, irq;
-> > +
-> > +     intc = devm_kzalloc(dev, sizeof(*intc), GFP_KERNEL);
-> > +     if (!intc)
-> > +             return -ENOMEM;
-> > +     platform_set_drvdata(pdev, intc);
-> > +
-> > +     intc->base = devm_platform_ioremap_resource(pdev, 0);
-> > +     if (IS_ERR(intc->base)) {
-> > +             dev_err(dev, "failed to parse and map intc memory resource\n");
-> > +             return PTR_ERR(intc->base);
-> > +     }
-> > +
-> > +     pruss_intc_init(intc);
-> > +
-> > +     /* always 64 events */
-> > +     intc->domain = irq_domain_add_linear(dev->of_node,
-> > MAX_PRU_SYS_EVENTS,
-> > +                                          &pruss_intc_irq_domain_ops, intc);
-> > +     if (!intc->domain)
-> > +             return -ENOMEM;
-> > +
-> > +     for (i = 0; i < MAX_NUM_HOST_IRQS; i++) {
-> > +             irq = platform_get_irq_byname(pdev, irq_names[i]);
-> > +             if (irq <= 0) {
-> > +                     dev_err(dev, "platform_get_irq_byname failed for %s : %d\n",
-> > +                             irq_names[i], irq);
-> > +                     goto fail_irq;
-> > +             }
-> > +
-> > +             intc->irqs[i] = irq;
->
-> Are the output IRQs guaranteed to be contiguous? If so, that'd be
-> a much nicer way to work out which mux has fired (just store the
-> base, and use it as an offset on handling the chained interrupt).
+Git bisection log:
 
-How about doing something like below in order to get rid of the for()
-loop from the handler:
-
-struct pruss_host_irq_data *host_data[]
-...
-
-host_data[i]->intc = intc;
-host_data[i]->host_irq = i;
-
-irq_set_handler_data(irq, host_data[i]);
-irq_set_chained_handler(irq, pruss_intc_irq_handler);
-
->
-> > +             irq_set_handler_data(irq, intc);
-> > +             irq_set_chained_handler(irq, pruss_intc_irq_handler);
-> > +     }
-> > +
-> > +     return 0;
-> > +
-> > +fail_irq:
-> > +     while (--i >= 0)
-> > +             irq_set_chained_handler_and_data(intc->irqs[i], NULL, NULL);
-> > +
-> > +     irq_domain_remove(intc->domain);
-> > +
-> > +     return irq;
-> > +}
-> > +
-> > +static int pruss_intc_remove(struct platform_device *pdev)
-> > +{
-> > +     struct pruss_intc *intc = platform_get_drvdata(pdev);
-> > +     unsigned int hwirq;
-> > +     int i;
-> > +
-> > +     for (i = 0; i < MAX_NUM_HOST_IRQS; i++)
-> > +             irq_set_chained_handler_and_data(intc->irqs[i], NULL, NULL);
-> > +
-> > +     for (hwirq = 0; hwirq < MAX_PRU_SYS_EVENTS; hwirq++)
-> > +             irq_dispose_mapping(irq_find_mapping(intc->domain, hwirq));
-> > +
-> > +     irq_domain_remove(intc->domain);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct of_device_id pruss_intc_of_match[] = {
-> > +     { .compatible = "ti,pruss-intc", },
-> > +     { /* sentinel */ },
-> > +};
-> > +MODULE_DEVICE_TABLE(of, pruss_intc_of_match);
-> > +
-> > +static struct platform_driver pruss_intc_driver = {
-> > +     .driver = {
-> > +             .name = "pruss-intc",
-> > +             .of_match_table = pruss_intc_of_match,
-> > +             .suppress_bind_attrs = true,
-> > +     },
-> > +     .probe  = pruss_intc_probe,
-> > +     .remove = pruss_intc_remove,
-> > +};
-> > +module_platform_driver(pruss_intc_driver);
-> > +
-> > +MODULE_AUTHOR("Andrew F. Davis <afd@ti.com>");
-> > +MODULE_AUTHOR("Suman Anna <s-anna@ti.com>");
-> > +MODULE_DESCRIPTION("TI PRU-ICSS INTC Driver");
-> > +MODULE_LICENSE("GPL v2");
->
-> Thanks,
->
->          M.
-
-Thank you for your feedback and suggestions,
-Grzegorz
+---------------------------------------------------------------------------=
+----
+git bisect start
+# good: [719fdd32921fb7e3208db8832d32ae1c2d68900f] afs: Fix storage of cell=
+ names
+git bisect good 719fdd32921fb7e3208db8832d32ae1c2d68900f
+# bad: [cdd3bb54332f82295ed90cd0c09c78cd0c0ee822] Merge tag 'm68knommu-for-=
+v5.8-rc4' of git://git.kernel.org/pub/scm/linux/kernel/git/gerg/m68knommu
+git bisect bad cdd3bb54332f82295ed90cd0c09c78cd0c0ee822
+# bad: [f7db192b2d71ea42627a32349d59a5f99f2aafcc] Merge tag 'arm-omap-fixes=
+-5.8-1' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
+git bisect bad f7db192b2d71ea42627a32349d59a5f99f2aafcc
+# good: [ae71d4bf0074a81cc04255c96e3de0a49b1d95fa] Merge tag 'perf-urgent-2=
+020-06-28' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+git bisect good ae71d4bf0074a81cc04255c96e3de0a49b1d95fa
+# good: [d528945d7762be94beca4c111bb95dcc9a9f39c0] Merge tag 'omap-for-v5.8=
+/fixes-rc1-signed' of git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/=
+linux-omap into arm/omap-fixes
+git bisect good d528945d7762be94beca4c111bb95dcc9a9f39c0
+# bad: [2596ce4b4ded685b67fed407aed2bfe6ebcc39cb] Merge tag 'arm-soc/for-5.=
+8/drivers-fixes' of https://github.com/Broadcom/stblinux into arm/fixes
+git bisect bad 2596ce4b4ded685b67fed407aed2bfe6ebcc39cb
+# bad: [0f77ce26ebcf6ea384421d2dd47b924b83649692] Revert "ARM: sti: Impleme=
+nt dummy L2 cache's write_sec"
+git bisect bad 0f77ce26ebcf6ea384421d2dd47b924b83649692
+# bad: [d68ec1644dd546851d651787a638aead32a60a6f] Merge tag 'juno-fix-5.8' =
+of git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux into ar=
+m/fixes
+git bisect bad d68ec1644dd546851d651787a638aead32a60a6f
+# bad: [38ac46002d1df5707566a73486452851341028d2] arm: dts: vexpress: Move =
+mcc node back into motherboard node
+git bisect bad 38ac46002d1df5707566a73486452851341028d2
+# first bad commit: [38ac46002d1df5707566a73486452851341028d2] arm: dts: ve=
+xpress: Move mcc node back into motherboard node
+---------------------------------------------------------------------------=
+----
