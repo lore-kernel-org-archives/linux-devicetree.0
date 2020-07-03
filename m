@@ -2,242 +2,100 @@ Return-Path: <SRS0=QVA0=AO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F7DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 11:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F70BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 11:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9447C20674
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 11:24:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09D6820870
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 11:47:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="cNaVziwX"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="MuA9Noi6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgGCLYb (ORCPT
+        id S1726098AbgGCLrY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jul 2020 07:24:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42934 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726035AbgGCLYa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jul 2020 07:24:30 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AA88C08C5C1
-        for <devicetree@vger.kernel.org>; Fri,  3 Jul 2020 04:24:30 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id u25so18282524lfm.1
-        for <devicetree@vger.kernel.org>; Fri, 03 Jul 2020 04:24:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oitMqipLEPO2Yj5xL/dlzZEeDLyWSmeeByxlVNYyd1g=;
-        b=cNaVziwXP/FXl51uLD6P9SDqfM10xutFUrENHOk8xP7BmYZk+IWUPzeVhnaZQf9gvc
-         vxjGSLQIWpuBQfzo3o5bSoGUxFVJoZJ+ddZCWpOZTdGDg4ZTM6iHWWpMIycrEdxDjLOA
-         vmG5JZBPh8P6Kz+iwAHXiP4l9H8Z+T1SQpQa1c/s5/RCne8EgFXmQLHsH2L2jNGdkCz/
-         CX59J9EmjTO1g7YeQqxM/A0p57k3gU5y0rpUgm+GyfXUFvWU+HQJ6C7AvsG1olSZ5Wf2
-         RAH10ZnURTCqLtuTWy+hNEYQhv56R45INNiRlKhkTKPC2FJSuXDDeCOnYALAyOYuJ8NM
-         9Flw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oitMqipLEPO2Yj5xL/dlzZEeDLyWSmeeByxlVNYyd1g=;
-        b=LM6EwsJ5BXbaUkMMtV/WsR/82XrdvZokbSrQKhPEYgnPNQnAwSS6z12mko0fSgPOlZ
-         eBP0j0n0oGmuU8r6T6LULJL/mE5bCqA/MkyqEhccV5YovJ+tJTlyKDMwbJsoX3lw0HPe
-         QA6ZPgIbiw6rWlSIl/alFI5T7x+YEQjePSYXbUnjqCfrFEJItWkNxKS+ieBD5dnvIp+B
-         Yk+NeLJCqlfVqsl1bYndfKHzi09RNW1JFw/mECkU7Oi5b/ozH06djGV3NYzFKqoacl1L
-         cKtjlzGPtgximO8zruZYyzMvyuW3lrXOHAcW2MOdwQZG6v1CdKMv8Z5yrh4kBJx5a8Gr
-         wVvw==
-X-Gm-Message-State: AOAM531sL+pJKXvUCA1jwrakJ8zxAmJj9fHZbZyoUFBYduHqJluzHSQa
-        xq5+pUqpWvXhIvhIMOQNLW+Gkg==
-X-Google-Smtp-Source: ABdhPJwSnB2E+9qDy3UvGZ3TOCAmeByNzVFr4FH7BTY3Q5sjfcRDicXgAigg7pUSQRkrPg0kxImDPQ==
-X-Received: by 2002:ac2:5e29:: with SMTP id o9mr20757726lfg.196.1593775468529;
-        Fri, 03 Jul 2020 04:24:28 -0700 (PDT)
-Received: from [192.168.1.9] ([83.68.95.66])
-        by smtp.googlemail.com with ESMTPSA id g7sm4539921lfe.62.2020.07.03.04.24.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jul 2020 04:24:27 -0700 (PDT)
-Subject: Re: [PATCH v3 2/4] iommu/arm-smmu: Workaround for Marvell
- Armada-AP806 SoC erratum #582743
-To:     Robin Murphy <robin.murphy@arm.com>, will@kernel.org,
-        joro@8bytes.org, gregory.clement@bootlin.com, robh+dt@kernel.org,
-        hannah@marvell.com
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        devicetree@vger.kernel.org, catalin.marinas@arm.com,
-        nadavh@marvell.com, linux-arm-kernel@lists.infradead.org,
-        mw@semihalf.com
-References: <20200702201633.22693-1-tn@semihalf.com>
- <20200702201633.22693-3-tn@semihalf.com>
- <f8c3fea9-2bd7-e776-447e-54886cd61568@arm.com>
-From:   Tomasz Nowicki <tn@semihalf.com>
-Message-ID: <8fb0f73f-35ca-d8ec-43b8-ae89e9a21d0c@semihalf.com>
-Date:   Fri, 3 Jul 2020 13:24:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 3 Jul 2020 07:47:24 -0400
+Received: from vps.xff.cz ([195.181.215.36]:41236 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726074AbgGCLrY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 3 Jul 2020 07:47:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1593776842; bh=Mror7EhaRxvkBeJPmtCPvGSBofo331RIQIKcoOFqy6Y=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=MuA9Noi6uYlKU2CAFK1WTynrh42ZGRL7Tg8K7H1vyG8kWNPzuGLCruUbNWGfmOCU9
+         OWZBGyUs4yf6qYpa19lLPTYLtYrfT0OfyF8lrONoflImJXKxOSmYDyUGBQyJ1Y/Ck1
+         zUWj9XpA84Ujd+c37JTA/Q8748X7xbfwo9DPjvc8=
+From:   Ondrej Jirman <megous@megous.com>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Ondrej Jirman <megous@megous.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        Robert Chiras <robert.chiras@nxp.com>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] dt-bindings: display: Fix example in nwl-dsi.yaml
+Date:   Fri,  3 Jul 2020 13:47:16 +0200
+Message-Id: <20200703114717.2140832-2-megous@megous.com>
+In-Reply-To: <20200703114717.2140832-1-megous@megous.com>
+References: <20200703114717.2140832-1-megous@megous.com>
 MIME-Version: 1.0
-In-Reply-To: <f8c3fea9-2bd7-e776-447e-54886cd61568@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+The example is now validated against rocktech,jh057n00900 schema
+that was ported to yaml, and didn't validate with:
 
+- '#address-cells', '#size-cells', 'port@0' do not match any of
+  the regexes: 'pinctrl-[0-9]+'
+- 'vcc-supply' is a required property
+- 'iovcc-supply' is a required property
+- 'reset-gpios' is a required property
 
-On 03.07.2020 11:03, Robin Murphy wrote:
-> On 2020-07-02 21:16, Tomasz Nowicki wrote:
->> From: Hanna Hawa <hannah@marvell.com>
->>
->> Due to erratum #582743, the Marvell Armada-AP806 can't access 64bit to
->> ARM SMMUv2 registers.
->>
->> Provide implementation relevant hooks:
->> - split the writeq/readq to two accesses of writel/readl.
->> - mask the MMU_IDR2.PTFSv8 fields to not use AArch64 format (but
->> only AARCH32_L) since with AArch64 format 32 bits access is not 
->> supported.
->>
->> Note that separate writes/reads to 2 is not problem regards to
->> atomicity, because the driver use the readq/writeq while initialize
->> the SMMU, report for SMMU fault, and use spinlock in one
->> case (iova_to_phys).
-> 
-> The comment about the spinlock seems to be out of date, and TBH that 
-> whole sentence is a bit unclear - how about something like:
-> 
-> "Note that most 64-bit registers like TTBRn can be accessed as two 
-> 32-bit halves without issue, and AArch32 format ensures that the 
-> register writes which must be atomic (for TLBI etc.) need only be 32-bit."
-> 
->> Signed-off-by: Hanna Hawa <hannah@marvell.com>
->> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
->> Signed-off-by: Tomasz Nowicki <tn@semihalf.com>
->> ---
->>   Documentation/arm64/silicon-errata.rst |  3 ++
->>   drivers/iommu/arm-smmu-impl.c          | 52 ++++++++++++++++++++++++++
->>   2 files changed, 55 insertions(+)
->>
->> diff --git a/Documentation/arm64/silicon-errata.rst 
->> b/Documentation/arm64/silicon-errata.rst
->> index 936cf2a59ca4..157214d3abe1 100644
->> --- a/Documentation/arm64/silicon-errata.rst
->> +++ b/Documentation/arm64/silicon-errata.rst
->> @@ -125,6 +125,9 @@ stable kernels.
->>   | Cavium         | ThunderX2 Core  | #219            | 
->> CAVIUM_TX2_ERRATUM_219      |
->>   
->> +----------------+-----------------+-----------------+-----------------------------+ 
->>
->>   
->> +----------------+-----------------+-----------------+-----------------------------+ 
->>
->> +| Marvell        | ARM-MMU-500     | #582743         | 
->> N/A                         |
->> ++----------------+-----------------+-----------------+-----------------------------+ 
->>
->> ++----------------+-----------------+-----------------+-----------------------------+ 
->>
->>   | Freescale/NXP  | LS2080A/LS1043A | A-008585        | 
->> FSL_ERRATUM_A008585         |
->>   
->> +----------------+-----------------+-----------------+-----------------------------+ 
->>
->>   
->> +----------------+-----------------+-----------------+-----------------------------+ 
->>
->> diff --git a/drivers/iommu/arm-smmu-impl.c 
->> b/drivers/iommu/arm-smmu-impl.c
->> index c75b9d957b70..c1fc5e1b8193 100644
->> --- a/drivers/iommu/arm-smmu-impl.c
->> +++ b/drivers/iommu/arm-smmu-impl.c
->> @@ -147,6 +147,53 @@ static const struct arm_smmu_impl arm_mmu500_impl 
->> = {
->>       .reset = arm_mmu500_reset,
->>   };
->> +static u64 mrvl_mmu500_readq(struct arm_smmu_device *smmu, int page, 
->> int off)
->> +{
->> +    u64 val;
->> +
->> +    /*
->> +     * Marvell Armada-AP806 erratum #582743.
->> +     * Split all the readq to double readl
->> +     */
->> +    val = (u64)readl_relaxed(arm_smmu_page(smmu, page) + off + 4) << 32;
->> +    val |= readl_relaxed(arm_smmu_page(smmu, page) + off);
-> 
-> Even though io-64-nonatomic-hi-lo.h doesn't override readq() etc. for 
-> 64-bit builds, you can still use hi_lo_readq_relaxed() directly.
-> 
->> +
->> +    return val;
->> +}
->> +
->> +static void mrvl_mmu500_writeq(struct arm_smmu_device *smmu, int 
->> page, int off,
->> +                   u64 val)
->> +{
->> +    /*
->> +     * Marvell Armada-AP806 erratum #582743.
->> +     * Split all the writeq to double writel
->> +     */
->> +    writel_relaxed(upper_32_bits(val), arm_smmu_page(smmu, page) + 
->> off + 4);
->> +    writel_relaxed(lower_32_bits(val), arm_smmu_page(smmu, page) + off);
-> 
-> Similarly, hi_lo_writeq_relaxed().
-> 
->> +}
->> +
->> +static u32 mrvl_mmu500_cfg_id2_fixup(u32 id)
->> +{
->> +
->> +    /*
->> +     * Armada-AP806 erratum #582743.
->> +     * Hide the SMMU_IDR2.PTFSv8 fields to sidestep the AArch64
->> +     * formats altogether and allow using 32 bits access on the
->> +     * interconnect.
->> +     */
->> +    id &= ~(ARM_SMMU_ID2_PTFS_4K | ARM_SMMU_ID2_PTFS_16K |
->> +        ARM_SMMU_ID2_PTFS_64K);
->> +
->> +    return id;
->> +}
->> +
->> +static const struct arm_smmu_impl mrvl_mmu500_impl = {
->> +    .read_reg64 = mrvl_mmu500_readq,
->> +    .write_reg64 = mrvl_mmu500_writeq,
->> +    .cfg_id2_fixup = mrvl_mmu500_cfg_id2_fixup,
->> +    .reset = arm_mmu500_reset,
->> +};
->> +
->>   struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device 
->> *smmu)
->>   {
->> @@ -160,6 +207,11 @@ struct arm_smmu_device *arm_smmu_impl_init(struct 
->> arm_smmu_device *smmu)
->>        */
->>       switch (smmu->model) {
->>       case ARM_MMU500:
->> +        if (of_device_is_compatible(smmu->dev->of_node,
-> 
-> Nit: there's a local "np" variable now.
-> 
->> +                        "marvell,ap806-smmu-500")) {
->> +            smmu->impl = &mrvl_mmu500_impl;
->> +            return smmu;
->> +        }
-> 
-> Please put this with the other integration checks below the switch 
-> statement. Yes, it means we'll end up assigning smmu->impl twice for 
-> this particular case, but that's the intended pattern.
-> 
+Fix it.
 
-Thanks, all above comments do make sense and will be fixed in next spin.
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+---
+ .../devicetree/bindings/display/bridge/nwl-dsi.yaml      | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-Thanks,
-Tomasz
+diff --git a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+index 8aff2d68fc33..2c4c34e3bc29 100644
+--- a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
++++ b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+@@ -165,6 +165,7 @@ examples:
+  - |
+ 
+    #include <dt-bindings/clock/imx8mq-clock.h>
++   #include <dt-bindings/gpio/gpio.h>
+    #include <dt-bindings/interrupt-controller/arm-gic.h>
+    #include <dt-bindings/reset/imx8mq-reset.h>
+ 
+@@ -191,12 +192,12 @@ examples:
+               phy-names = "dphy";
+ 
+               panel@0 {
+-                      #address-cells = <1>;
+-                      #size-cells = <0>;
+                       compatible = "rocktech,jh057n00900";
+                       reg = <0>;
+-                      port@0 {
+-                           reg = <0>;
++                      vcc-supply = <&reg_2v8_p>;
++                      iovcc-supply = <&reg_1v8_p>;
++                      reset-gpios = <&gpio3 13 GPIO_ACTIVE_LOW>;
++                      port {
+                            panel_in: endpoint {
+                                      remote-endpoint = <&mipi_dsi_out>;
+                            };
+-- 
+2.27.0
+
