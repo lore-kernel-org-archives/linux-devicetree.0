@@ -2,305 +2,222 @@ Return-Path: <SRS0=QVA0=AO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ADD9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 01:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C47C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 01:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2EFB20A8B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 01:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FE75208FE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 01:51:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WCc9IJiW"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PnzoC5Gl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726017AbgGCB1k (ORCPT
+        id S1726488AbgGCBvQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jul 2020 21:27:40 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:43287 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbgGCB1i (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jul 2020 21:27:38 -0400
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200703012733epoutp041b3c709c6da49ba1799f86168b1aee2f~eGcU_a0JH1448714487epoutp04B
-        for <devicetree@vger.kernel.org>; Fri,  3 Jul 2020 01:27:33 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200703012733epoutp041b3c709c6da49ba1799f86168b1aee2f~eGcU_a0JH1448714487epoutp04B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593739653;
-        bh=486TETuF0TtY1Ijml+wVzO2TgvTJbcOwVIykt/LKFDM=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=WCc9IJiWhKxIp6C1hYPOVxrqn7x0zVd+yiAmOCYxTDAUmcjVZTTexgNag9B3g3sOX
-         CiMkO4N4id1E3qPsBjAdJ64r6qtiIFJjdTTP+3waspLvi1oDXrIuSXMSoGu52WZHJ8
-         LNkaCVqx1AZ0762KI5dNoAiqoaeLgV1j4DDxOWpo=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20200703012732epcas5p33664d44a9a4ac14ebda77b20ba141f3f~eGcUgxWe71327413274epcas5p3F;
-        Fri,  3 Jul 2020 01:27:32 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        5B.D5.09467.4898EFE5; Fri,  3 Jul 2020 10:27:32 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200703012731epcas5p487ad0c350f0bee1b424cf87ad70ba606~eGcT4AHLI0405204052epcas5p43;
-        Fri,  3 Jul 2020 01:27:31 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200703012731epsmtrp1881a8e8fef880fe95b0358e98e3a661b~eGcT3Dyxi0067500675epsmtrp1l;
-        Fri,  3 Jul 2020 01:27:31 +0000 (GMT)
-X-AuditID: b6c32a49-a29ff700000024fb-74-5efe8984bd1e
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        5F.22.08382.3898EFE5; Fri,  3 Jul 2020 10:27:31 +0900 (KST)
-Received: from alimakhtar02 (unknown [107.108.234.165]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200703012729epsmtip1ba9e44dc8c112f27b84de2e0a387f4fa~eGcRxBuF21996719967epsmtip1L;
-        Fri,  3 Jul 2020 01:27:29 +0000 (GMT)
-From:   "Alim Akhtar" <alim.akhtar@samsung.com>
-To:     "'Vinod Koul'" <vkoul@kernel.org>
-Cc:     <robh+dt@kernel.org>, <krzk@kernel.org>, <kwmad.kim@samsung.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-samsung-soc@vger.kernel.org>, <kishon@ti.com>
-In-Reply-To: <20200701065310.GX2599@vkoul-mobl>
-Subject: RE: [RESEND PATCH v10 2/2] phy: samsung-ufs: add UFS PHY driver for
- samsung SoC
-Date:   Fri, 3 Jul 2020 06:57:27 +0530
-Message-ID: <002701d650d9$1ee4ba40$5cae2ec0$@samsung.com>
+        Thu, 2 Jul 2020 21:51:16 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:10734 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726726AbgGCBvP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Jul 2020 21:51:15 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593741074; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=kXCuA32AqYN/5o8mlvhJtFtJfKRMwUgSpIUrb0rY8FA=; b=PnzoC5GlmUxavkyT2imzVIPQGUPsRRpebHar2Q/DbS9dBVdw7P+MoCy2VjERXLnA9Zp+vbCP
+ lta1o6nXj5zlbopwQ6f9ZeokWkQZ166Wb+B8f/ofp925id+rn6EUGXCkyVtPTkqTx0EV5ADL
+ jln/ZnVo5CvAuNcKQhkLQeeDryg=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n08.prod.us-east-1.postgun.com with SMTP id
+ 5efe8f10bfb34e631c761924 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 03 Jul 2020 01:51:12
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 42B98C4339C; Fri,  3 Jul 2020 01:51:11 +0000 (UTC)
+Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 83F0FC4339C;
+        Fri,  3 Jul 2020 01:51:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 83F0FC4339C
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+From:   Wesley Cheng <wcheng@codeaurora.org>
+To:     lgirdwood@gmail.com, mark.rutland@arm.com, agross@kernel.org,
+        broonie@kernel.org, heikki.krogerus@linux.intel.com,
+        robh+dt@kernel.org, gregkh@linuxfoundation.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jackp@codeaurora.org, rdunlap@infradead.org,
+        bryan.odonoghue@linaro.org, Wesley Cheng <wcheng@codeaurora.org>
+Subject: [PATCH v5 4/6] regulator: Add support for QCOM PMIC VBUS booster
+Date:   Thu,  2 Jul 2020 18:51:00 -0700
+Message-Id: <20200703015102.27295-5-wcheng@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200703015102.27295-1-wcheng@codeaurora.org>
+References: <20200703015102.27295-1-wcheng@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-in
-Thread-Index: AQJuMKyjv+9hLEX/NMXwBi+iiP5M1wIz1HEhAUr1ZGUBeyaBPqebjoTw
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOKsWRmVeSWpSXmKPExsWy7bCmlm5L5784g/n9Chbzj5xjtbjwtIfN
-        4vz5DewWN7ccZbHY9Pgaq8XlXXPYLGac38dk0br3CLvFzjsnmB04PTat6mTz2Lyk3qNvyypG
-        j+M3tjN5fN4kF8AaxWWTkpqTWZZapG+XwJXx88Z91oK7WhV7zuxia2BcqNjFyMkhIWAi8aun
-        ga2LkYtDSGA3o8THOa9YIJxPjBJtvXugnG+MErMadzDDtBz/tJERIrGXUeJlxy4mCOcNo8Sp
-        46cZQarYBHQldixuYwOxRQRUJbY8eQC2hFngGaPEmk0dYEWcAvoSS08uYQKxhQWiJG6t3QBm
-        swioSPQ3HwZax8HBK2ApcXWZK0iYV0BQ4uTMJywgNrOAvMT2t3OgLlKQ+Pl0GStEXFzi6M8e
-        Zoi9bhJTN1wFu1RCYCWHxInZy5hAZkoIuEicOSAK0Sss8er4FnYIW0riZX8bO0RJtkTPLmOI
-        cI3E0nnHWCBse4kDV+awgJQwC2hKrN+lD7GVT6L39xOo4bwSHW1CENWqEs3vrkJ1SktM7O5m
-        hbA9JM7cPcU6gVFxFpK/ZiH5axaSX2YhLFvAyLKKUTK1oDg3PbXYtMAwL7Vcrzgxt7g0L10v
-        OT93EyM4LWl57mC8++CD3iFGJg7GQ4wSHMxKIrwJqv/ihHhTEiurUovy44tKc1KLDzFKc7Ao
-        ifMq/TgTJySQnliSmp2aWpBaBJNl4uCUamAykNO+27r71/XAkua/35c/X/r4dVTr7j2iNp3h
-        24XthE71cbTPso7MvSrn4HdNfFfFjAurXQz/mctLN22warpUtsNJt0Bp+ak0zTCD1unqBrbr
-        +K8yLZP/++8D48mjxzdZKi22ql+cU3o2JaHOVvrq18nRE82P3PdYvM5z+ZQJhu1eLhqbj7kc
-        /mV+cdnS49e/Xbxqm28d6c+8fnVFU9qt367dHT/SDu9j2xBo/ii6TqNqh1xngd+B9qnLDnq+
-        7g8wvBN3zFG32ToijK/LuPtUc7DSZY6Zn3dK6lVtW3dSN/T3PPaYyN6Up3PmaerN/F3UkT1t
-        oqvfykcNe1Z2vmp5ptC3+jbX5AY2lSydA2xKLMUZiYZazEXFiQBBUVR5ugMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupmkeLIzCtJLcpLzFFi42LZdlhJTre581+cwewtRhbzj5xjtbjwtIfN
-        4vz5DewWN7ccZbHY9Pgaq8XlXXPYLGac38dk0br3CLvFzjsnmB04PTat6mTz2Lyk3qNvyypG
-        j+M3tjN5fN4kF8AaxWWTkpqTWZZapG+XwJXx88Z91oK7WhV7zuxia2BcqNjFyMkhIWAicfzT
-        RsYuRi4OIYHdjBIze06xQiSkJa5vnMAOYQtLrPz3nB2i6BWjxP/L95lBEmwCuhI7Frexgdgi
-        AqoSW548YAMpYhZ4xyixe99JNoiOR4wS7RfPMIJUcQroSyw9uYQJxBYWiJD4ce0SWJxFQEWi
-        v/kw0FQODl4BS4mry1xBwrwCghInZz5hAQkzC+hJtG0Eq2YWkJfY/nYOM8RxChI/ny5jhYiL
-        Sxz92cMMcY+bxNQNVxknMArPQjJpFsKkWUgmzULSvYCRZRWjZGpBcW56brFhgWFearlecWJu
-        cWleul5yfu4mRnB8aWnuYNy+6oPeIUYmDsZDjBIczEoivAmq/+KEeFMSK6tSi/Lji0pzUosP
-        MUpzsCiJ894oXBgnJJCeWJKanZpakFoEk2Xi4JRqYDLZcYj7vciDoEfnFv12/cv+Sv79uovb
-        EzcYO5y94TdDv76My8U/LbB5W4KJ+lY/gfJHxp4lz+fmr3gp1CL92Vvs+vN2Pf3X/y6dk2e+
-        FPUvwVbm0uOXer3H4x9PZ2o5vDizwfKcbbb6CdY5IXa8Af6eVidt7bstlBbuOx+727b0u78B
-        Z2XOwX5H+z9/35b/TZ3Ga/tyXdsWY7P0/0viGtqOWjJY15RvWVWzIemhdUTls52/VP3blwd3
-        l3LZHpeKmp+35pTDY2/z9VubJ/XNfhbwpPKE2cwji1xcJa3i84+8t9s0wehoB7PPCoczx6cK
-        yPFkzSlxCedrfqzHvqRsQqKX8Z9b/pFPuneqnfJrUGIpzkg01GIuKk4EALF4zGgeAwAA
-X-CMS-MailID: 20200703012731epcas5p487ad0c350f0bee1b424cf87ad70ba606
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200625001545epcas5p2127fb1fac70397d9c23a1246cc86f753
-References: <20200624235631.11232-1-alim.akhtar@samsung.com>
-        <CGME20200625001545epcas5p2127fb1fac70397d9c23a1246cc86f753@epcas5p2.samsung.com>
-        <20200624235631.11232-2-alim.akhtar@samsung.com>
-        <20200701065310.GX2599@vkoul-mobl>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Vinod
+Some Qualcomm PMICs have the capability to source the VBUS output to
+connected peripherals.  This driver will register a regulator to the
+regulator list to enable or disable this source by an external driver.
 
-> -----Original Message-----
-> From: Vinod Koul <vkoul@kernel.org>
-> Sent: 01 July 2020 12:23
-> To: Alim Akhtar <alim.akhtar@samsung.com>
-> Cc: robh+dt@kernel.org; krzk@kernel.org; kwmad.kim@samsung.com;
-> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> kernel@vger.kernel.org; linux-samsung-soc@vger.kernel.org; kishon@ti.com
-> Subject: Re: [RESEND PATCH v10 2/2] phy: samsung-ufs: add UFS PHY driver
-for
-> samsung SoC
-> 
-> Hi Alim,
-> 
-> On 25-06-20, 05:26, Alim Akhtar wrote:
-> 
-> > +int samsung_ufs_phy_wait_for_lock_acq(struct phy *phy)
-> 
-> static ?
-> 
-Sure, already got warning email from Kobot. Will fix this.
-> > +{
-> > +	struct samsung_ufs_phy *ufs_phy = get_samsung_ufs_phy(phy);
-> > +	const unsigned int timeout_us = 100000;
-> > +	const unsigned int sleep_us = 10;
-> > +	u32 val;
-> > +	int err;
-> > +
-> > +	err = readl_poll_timeout(
-> > +			ufs_phy->reg_pma +
-> PHY_APB_ADDR(PHY_PLL_LOCK_STATUS),
-> > +			val, (val & PHY_PLL_LOCK_BIT), sleep_us,
-timeout_us);
-> > +	if (err) {
-> > +		dev_err(ufs_phy->dev,
-> > +			"failed to get phy pll lock acquisition %d\n", err);
-> > +		goto out;
-> > +	}
-> > +
-> > +	err = readl_poll_timeout(
-> > +			ufs_phy->reg_pma +
-> PHY_APB_ADDR(PHY_CDR_LOCK_STATUS),
-> > +			val, (val & PHY_CDR_LOCK_BIT), sleep_us,
-timeout_us);
-> > +	if (err) {
-> > +		dev_err(ufs_phy->dev,
-> > +			"failed to get phy cdr lock acquisition %d\n", err);
-> > +		goto out;
-> 
-> this one can be dropped
-> 
-Sure, will update.
-> > +	}
-> > +
-> > +out:
-> > +	return err;
-> > +}
-> > +
-> > +int samsung_ufs_phy_calibrate(struct phy *phy)
-> 
-> static?
-> 
-Will fix
-> > +{
-> > +	struct samsung_ufs_phy *ufs_phy = get_samsung_ufs_phy(phy);
-> > +	struct samsung_ufs_phy_cfg **cfgs = ufs_phy->cfg;
-> > +	const struct samsung_ufs_phy_cfg *cfg;
-> > +	int i;
-> > +	int err = 0;
-> 
-> err before i would make it look better
-> 
-sure
-> > +
-> > +	if (unlikely(ufs_phy->ufs_phy_state < CFG_PRE_INIT ||
-> > +		     ufs_phy->ufs_phy_state >= CFG_TAG_MAX)) {
-> > +		dev_err(ufs_phy->dev, "invalid phy config index %d\n",
-> > +							ufs_phy-
-> >ufs_phy_state);
-> 
-> single line now?
-> 
-Yes, 
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	if (ufs_phy->is_pre_init)
-> > +		ufs_phy->is_pre_init = false;
-> 
-> that sounds bit strange, you clear it if set? Can you explain what is
-going on
-> here, and add comments
-> 
-Hmm, yes right, this is not needed, let me change this and will add a
-comment.
-The idea here is, before exiting phy calibration in one state, change the
-state to next state,
-So that when next time calibrate() is called, it will do the phy settings
-for the next stage.
+Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+---
+ drivers/regulator/Kconfig                   | 10 +++
+ drivers/regulator/Makefile                  |  1 +
+ drivers/regulator/qcom_usb_vbus-regulator.c | 97 +++++++++++++++++++++
+ 3 files changed, 108 insertions(+)
+ create mode 100644 drivers/regulator/qcom_usb_vbus-regulator.c
 
-> > +static int samsung_ufs_phy_symbol_clk_init(struct samsung_ufs_phy
-> > +*phy) {
-> > +	int ret = 0;
-> 
-> superfluous init
-> 
-ok
-> > +
-> > +	phy->tx0_symbol_clk = devm_clk_get(phy->dev, "tx0_symbol_clk");
-> > +	if (IS_ERR(phy->tx0_symbol_clk)) {
-> > +		dev_err(phy->dev, "failed to get tx0_symbol_clk clock\n");
-> > +		goto out;
-> > +	}
-> > +
-> > +	phy->rx0_symbol_clk = devm_clk_get(phy->dev, "rx0_symbol_clk");
-> > +	if (IS_ERR(phy->rx0_symbol_clk)) {
-> > +		dev_err(phy->dev, "failed to get rx0_symbol_clk clock\n");
-> > +		goto out;
-> > +	}
-> > +
-> > +	phy->rx1_symbol_clk = devm_clk_get(phy->dev, "rx1_symbol_clk");
-> > +	if (IS_ERR(phy->rx0_symbol_clk)) {
-> > +		dev_err(phy->dev, "failed to get rx1_symbol_clk clock\n");
-> > +		goto out;
-> > +	}
-> > +
-> > +	ret = clk_prepare_enable(phy->tx0_symbol_clk);
-> > +	if (ret) {
-> > +		dev_err(phy->dev, "%s: tx0_symbol_clk enable failed %d\n",
-> > +				__func__, ret);
-> > +		goto out;
-> > +	}
-> > +	ret = clk_prepare_enable(phy->rx0_symbol_clk);
-> > +	if (ret) {
-> > +		dev_err(phy->dev, "%s: rx0_symbol_clk enable failed %d\n",
-> > +				__func__, ret);
-> 
-> so we keep tx0_symbol_clk enabled when bailing out?
-> 
-Will add a clk_disable_unprepare()
-> > +		goto out;
-> > +	}
-> > +	ret = clk_prepare_enable(phy->rx1_symbol_clk);
-> > +	if (ret) {
-> > +		dev_err(phy->dev, "%s: rx1_symbol_clk enable failed %d\n",
-> > +				__func__, ret);
-> 
-> here as well
-> 
-Will add a clk_disable_unprepare()
-> > +static int samsung_ufs_phy_init(struct phy *phy) {
-> > +	struct samsung_ufs_phy *_phy = get_samsung_ufs_phy(phy);
-> > +	int ret;
-> > +
-> > +	_phy->lane_cnt = phy->attrs.bus_width;
-> > +	_phy->ufs_phy_state = CFG_PRE_INIT;
-> > +
-> > +	/**
-> > +	 * In ufs, PHY need to be calibrated at different stages / state
-> > +	 * mainly before Linkstartup, after Linkstartup, before power
-> > +	 * mode change and after power mode change.
-> > +	 * Below state machine initialize the initial state to handle
-> > +	 * PHY calibration at various stages of UFS initialization and power
-> > +	 * mode changes
-> > +	 */
-> > +	_phy->is_pre_init = true;
-> > +	_phy->is_post_init = false;
-> > +	_phy->is_pre_pmc = false;
-> > +	_phy->is_post_pmc = false;
-> 
-> hmm why not have phy_state and assign that
-> pre_init/post_init/pre_pmc/post_pmc states?
-> 
-These are not needed, ufs_phy_state is enough to handle various stages.
-Thanks, will remove and simplify this logic.
-
-> > +static int samsung_ufs_phy_set_mode(struct phy *generic_phy,
-> > +					enum phy_mode mode, int submode)
-> 
-> pls align this to preceding line opening brace (tip: checkpatch with
---strict can
-> tell you about these)
-Sure, will fix this, thanks for the tip.
-> --
-> ~Vinod
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 074a2ef55943..273d85a45263 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -797,6 +797,16 @@ config REGULATOR_QCOM_SPMI
+ 	  Qualcomm SPMI PMICs as a module. The module will be named
+ 	  "qcom_spmi-regulator".
+ 
++config REGULATOR_QCOM_USB_VBUS
++	tristate "Qualcomm USB Vbus regulator driver"
++	depends on SPMI || COMPILE_TEST
++	help
++	  If you say yes to this option, support will be included for the
++	  regulator used to enable the VBUS output.
++
++	  Say M here if you want to include support for enabling the VBUS output
++	  as a module. The module will be named "qcom_usb_vbus_regulator".
++
+ config REGULATOR_RC5T583
+ 	tristate "RICOH RC5T583 Power regulators"
+ 	depends on MFD_RC5T583
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index c0d6b96ebd78..cbab28aa7b56 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -89,6 +89,7 @@ obj-$(CONFIG_REGULATOR_QCOM_RPM) += qcom_rpm-regulator.o
+ obj-$(CONFIG_REGULATOR_QCOM_RPMH) += qcom-rpmh-regulator.o
+ obj-$(CONFIG_REGULATOR_QCOM_SMD_RPM) += qcom_smd-regulator.o
+ obj-$(CONFIG_REGULATOR_QCOM_SPMI) += qcom_spmi-regulator.o
++obj-$(CONFIG_REGULATOR_QCOM_USB_VBUS) += qcom_usb_vbus-regulator.o
+ obj-$(CONFIG_REGULATOR_PALMAS) += palmas-regulator.o
+ obj-$(CONFIG_REGULATOR_PFUZE100) += pfuze100-regulator.o
+ obj-$(CONFIG_REGULATOR_PV88060) += pv88060-regulator.o
+diff --git a/drivers/regulator/qcom_usb_vbus-regulator.c b/drivers/regulator/qcom_usb_vbus-regulator.c
+new file mode 100644
+index 000000000000..342d92373598
+--- /dev/null
++++ b/drivers/regulator/qcom_usb_vbus-regulator.c
+@@ -0,0 +1,97 @@
++// SPDX-License-Identifier: GPL-2.0-only
++//
++// Qualcomm PMIC VBUS output regulator driver
++//
++// Copyright (c) 2020, The Linux Foundation. All rights reserved.
++
++#include <linux/module.h>
++#include <linux/err.h>
++#include <linux/kernel.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/of_regulator.h>
++#include <linux/regmap.h>
++
++#define CMD_OTG				0x40
++#define OTG_EN				BIT(0)
++#define OTG_CFG				0x53
++#define OTG_EN_SRC_CFG			BIT(1)
++
++static const struct regulator_ops qcom_usb_vbus_reg_ops = {
++	.enable = regulator_enable_regmap,
++	.disable = regulator_disable_regmap,
++	.is_enabled = regulator_is_enabled_regmap,
++};
++
++static struct regulator_desc qcom_usb_vbus_rdesc = {
++	.name = "usb_vbus",
++	.ops = &qcom_usb_vbus_reg_ops,
++	.owner = THIS_MODULE,
++	.type = REGULATOR_VOLTAGE,
++};
++
++static int qcom_usb_vbus_regulator_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct regulator_dev *rdev;
++	struct regmap *regmap;
++	struct regulator_config config = { };
++	struct regulator_init_data *init_data;
++	int ret;
++	u32 base;
++
++	ret = of_property_read_u32(dev->of_node, "reg", &base);
++	if (ret < 0) {
++		dev_err(dev, "no base address found\n");
++		return ret;
++	}
++
++	regmap = dev_get_regmap(dev->parent, NULL);
++	if (regmap) {
++		dev_err(dev, "Failed to get regmap\n");
++		return -ENOENT;
++	}
++
++	init_data = of_get_regulator_init_data(dev, dev->of_node,
++					       &qcom_usb_vbus_rdesc);
++	if (!init_data)
++		return -ENOMEM;
++
++	qcom_usb_vbus_rdesc.enable_reg = base + CMD_OTG;
++	qcom_usb_vbus_rdesc.enable_mask = OTG_EN;
++	config.dev = dev;
++	config.init_data = init_data;
++	config.regmap = regmap;
++
++	rdev = devm_regulator_register(dev, &qcom_usb_vbus_rdesc, &config);
++	if (IS_ERR(rdev)) {
++		ret = PTR_ERR(rdev);
++		dev_err(dev, "not able to register vbus reg %d\n", ret);
++		return ret;
++	}
++
++	/* Disable HW logic for VBUS enable */
++	regmap_update_bits(regmap, base + OTG_CFG, OTG_EN_SRC_CFG, 0);
++
++	return 0;
++}
++
++static const struct of_device_id qcom_usb_vbus_regulator_match[] = {
++	{ .compatible = "qcom,pm8150b-vbus-reg" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, qcom_usb_vbus_regulator_match);
++
++static struct platform_driver qcom_usb_vbus_regulator_driver = {
++	.driver		= {
++		.name	= "qcom-usb-vbus-regulator",
++		.of_match_table = qcom_usb_vbus_regulator_match,
++	},
++	.probe		= qcom_usb_vbus_regulator_probe,
++};
++module_platform_driver(qcom_usb_vbus_regulator_driver);
++
++MODULE_DESCRIPTION("Qualcomm USB vbus regulator driver");
++MODULE_LICENSE("GPL v2");
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
