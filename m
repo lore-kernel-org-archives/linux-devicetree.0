@@ -2,192 +2,112 @@ Return-Path: <SRS0=QVA0=AO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 019DAC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 15:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D220CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 15:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D87872088E
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 15:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B079320737
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 15:45:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=danweeks.net header.i=@danweeks.net header.b="FMXGToUT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbgGCPnW (ORCPT
+        id S1726505AbgGCPpX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jul 2020 11:43:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:45726 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726108AbgGCPnW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 3 Jul 2020 11:43:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1FBF431B;
-        Fri,  3 Jul 2020 08:43:21 -0700 (PDT)
-Received: from [10.57.21.32] (unknown [10.57.21.32])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 47F303F73C;
-        Fri,  3 Jul 2020 08:43:19 -0700 (PDT)
-Subject: Re: [PATCH v4 1/2] clk: rockchip: rk3288: Handle clock tree for
- rk3288w
-To:     Heiko Stuebner <heiko@sntech.de>,
-        Jagan Teki <jagan@amarulasolutions.com>
-Cc:     =?UTF-8?Q?Myl=c3=a8ne_Josserand?= <mylene.josserand@collabora.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        kernel@collabora.com, linux-clk <linux-clk@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-References: <20200602080644.11333-1-mylene.josserand@collabora.com>
- <1793210.9Kb5SQUFvz@phil>
- <CAMty3ZB1n5uXmH=U4iXfgpyU-JZff74Rm2Mj+SS2LLtkM2fARQ@mail.gmail.com>
- <1847101.XIPLBOrDxk@phil>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <8ebc6a0d-1c88-cf74-e19d-dd9f3cef728e@arm.com>
-Date:   Fri, 3 Jul 2020 16:43:17 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 3 Jul 2020 11:45:23 -0400
+Received: from p-impout008aa.msg.pkvw.co.charter.net ([47.43.26.139]:49659
+        "EHLO p-impout001.msg.pkvw.co.charter.net" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726035AbgGCPpW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jul 2020 11:45:22 -0400
+X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Fri, 03 Jul 2020 11:45:22 EDT
+Received: from opius.danweeks.net ([74.70.107.6])
+        by cmsmtp with ESMTP
+        id rNlVjtwY2rzR3rNlWj41C8; Fri, 03 Jul 2020 15:38:14 +0000
+X-Authority-Analysis: v=2.3 cv=Ne6YKFL4 c=1 sm=1 tr=0
+ a=h7kw2a+/6g3zdzmQNwjrbw==:117 a=h7kw2a+/6g3zdzmQNwjrbw==:17
+ a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=_RQrkK6FrEwA:10 a=7kYe3NcsAAAA:8
+ a=noYv9r6eKZTnZH2xmfQA:9 a=CjuIK1q_8ugA:10 a=4VldaCG94jXMVy0yUZtu:22
+Received: from dev.danweeks.net (dev.danweeks.net [IPv6:2001:470:1f07:699::91])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by opius.danweeks.net (Postfix) with ESMTPSA id 083624410F;
+        Fri,  3 Jul 2020 11:37:54 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=danweeks.net;
+        s=opius.danweeks.net; t=1593790693;
+        bh=V2T+2N4lCCiebjUmaYDIhM8VGLdRvfUsoZG/BWe/uvY=;
+        h=Date:From:To:Cc:Subject;
+        b=FMXGToUTze8pdU99NXtup5gP8ln27pg5Sze2mTtacMLbZ18QtO0Phj15tOpE4y3oq
+         xD8YuO7vdX8OnBr+a9WJ144W146v83avFJ4MPqlGdy1GFVP7D4F+/dBP5vhjK0JOiA
+         4IChXZNY90RU7oZCCbzOXBBOE2Xg0ysNk4T1tgGQ=
+Date:   Fri, 3 Jul 2020 11:37:48 -0400
+From:   "Daniel M. Weeks" <dan@danweeks.net>
+To:     jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org
+Cc:     linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: hwmon: Correct vendor for mcp980x
+Message-ID: <20200703153748.GA16156@dev.danweeks.net>
 MIME-Version: 1.0
-In-Reply-To: <1847101.XIPLBOrDxk@phil>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-CMAE-Envelope: MS4wfD9asncUoSFNcBiXAB2gHJXmvbabag/zMKGlIzoo9k3WTWdB0wpT8dB8m7/cIaBridhqyOJZ4vaRLy/C4qfX3QFpRPGowuxWj5I1BcAQO4kRZLaju3oZ
+ s2pEKcPfIGD+DzLSSI+y950AXz+OfXrXYbnwlAepaXRcFrIriGTLcsmF+C7kq9xHiY0UG5MNDHDmrLCVMHj3rdw8CJ81b7fRbOsKdrOaiG94JUBwzdgVOB5V
+ 8bzhWh4CvZFMAPuU880e1DCBS0UlARlw9Elg6bDN5k5cBD1pn5l397hKb2F5Bfj/7czbFi+xHejDqdDJEVVtSR+sU7dQDguMDwb0rqhXB/IJ9CydMic1jcYJ
+ dPJrwtux
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-07-03 15:48, Heiko Stuebner wrote:
-> Am Freitag, 3. Juli 2020, 16:23:27 CEST schrieb Jagan Teki:
->> On Fri, Jul 3, 2020 at 7:41 PM Heiko Stuebner <heiko@sntech.de> wrote:
->>>
->>> Hi Jagan,
->>>
->>> Am Montag, 29. Juni 2020, 21:11:03 CEST schrieb Jagan Teki:
->>>> On Tue, Jun 2, 2020 at 1:37 PM Mylène Josserand
->>>> <mylene.josserand@collabora.com> wrote:
->>>>>
->>>>> The revision rk3288w has a different clock tree about "hclk_vio"
->>>>> clock, according to the BSP kernel code.
->>>>>
->>>>> This patch handles this difference by detecting which device-tree
->>>>> we are using. If it is a "rockchip,rk3288-cru", let's register
->>>>> the clock tree as it was before. If the device-tree node is
->>>>> "rockchip,rk3288w-cru", we will apply the difference with this
->>>>> version of this SoC.
->>>>>
->>>>> Noticed that this new device-tree compatible must be handled in
->>>>> bootloader such as u-boot.
->>>>>
->>>>> Signed-off-by: Mylène Josserand <mylene.josserand@collabora.com>
->>>>> ---
->>>>>   drivers/clk/rockchip/clk-rk3288.c | 20 ++++++++++++++++++--
->>>>>   1 file changed, 18 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
->>>>> index cc2a177bbdbf..204976e2d0cb 100644
->>>>> --- a/drivers/clk/rockchip/clk-rk3288.c
->>>>> +++ b/drivers/clk/rockchip/clk-rk3288.c
->>>>> @@ -425,8 +425,6 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
->>>>>          COMPOSITE(0, "aclk_vio0", mux_pll_src_cpll_gpll_usb480m_p, CLK_IGNORE_UNUSED,
->>>>>                          RK3288_CLKSEL_CON(31), 6, 2, MFLAGS, 0, 5, DFLAGS,
->>>>>                          RK3288_CLKGATE_CON(3), 0, GFLAGS),
->>>>> -       DIV(0, "hclk_vio", "aclk_vio0", 0,
->>>>> -                       RK3288_CLKSEL_CON(28), 8, 5, DFLAGS),
->>>>>          COMPOSITE(0, "aclk_vio1", mux_pll_src_cpll_gpll_usb480m_p, CLK_IGNORE_UNUSED,
->>>>>                          RK3288_CLKSEL_CON(31), 14, 2, MFLAGS, 8, 5, DFLAGS,
->>>>>                          RK3288_CLKGATE_CON(3), 2, GFLAGS),
->>>>> @@ -819,6 +817,16 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
->>>>>          INVERTER(0, "pclk_isp", "pclk_isp_in", RK3288_CLKSEL_CON(29), 3, IFLAGS),
->>>>>   };
->>>>>
->>>>> +static struct rockchip_clk_branch rk3288w_hclkvio_branch[] __initdata = {
->>>>> +       DIV(0, "hclk_vio", "aclk_vio1", 0,
->>>>> +                       RK3288_CLKSEL_CON(28), 8, 5, DFLAGS),
->>>>> +};
->>>>> +
->>>>> +static struct rockchip_clk_branch rk3288_hclkvio_branch[] __initdata = {
->>>>> +       DIV(0, "hclk_vio", "aclk_vio0", 0,
->>>>> +                       RK3288_CLKSEL_CON(28), 8, 5, DFLAGS),
->>>>> +};
->>>>> +
->>>>>   static const char *const rk3288_critical_clocks[] __initconst = {
->>>>>          "aclk_cpu",
->>>>>          "aclk_peri",
->>>>> @@ -936,6 +944,14 @@ static void __init rk3288_clk_init(struct device_node *np)
->>>>>                                     RK3288_GRF_SOC_STATUS1);
->>>>>          rockchip_clk_register_branches(ctx, rk3288_clk_branches,
->>>>>                                    ARRAY_SIZE(rk3288_clk_branches));
->>>>> +
->>>>> +       if (of_device_is_compatible(np, "rockchip,rk3288w-cru"))
->>>>> +               rockchip_clk_register_branches(ctx, rk3288w_hclkvio_branch,
->>>>> +                                              ARRAY_SIZE(rk3288w_hclkvio_branch));
->>>>> +       else
->>>>> +               rockchip_clk_register_branches(ctx, rk3288_hclkvio_branch,
->>>>> +                                              ARRAY_SIZE(rk3288_hclkvio_branch));
->>>>> +
->>>>
->>>> Sorry for the late query on this. I am a bit unclear about this
->>>> compatible change, does Linux expect to replace rockchip,rk3288-cru
->>>> with rockchip,rk3288w-cru in bootloader if the chip is RK3288w? or
->>>> append the existing cru compatible node with rockchip,rk3288w-cru?
->>>> because replace new cru node make clock never probe since the
->>>> CLK_OF_DECLARE checking rockchip,rk3288-cru
->>>
->>> I guess right now we'd expect "rockchip,rk3288w-cru", "rockchip,rk3288-cru",
->>>
->>> Thinking again about this, I'm wondering if we should switch to having
->>> only one per variant ... like on the two rk3188 variants,
->>> so declaring separate rk3288-cru and rk3288w-cru of-clks with shared
->>> common code.
->>
->> What if can check the root compatible instead cru compatible for revision W like
->>
->> -  if (of_device_is_compatible(np, "rockchip,rk3288w-cru"))
->> + if (of_device_is_compatible(np, "rockchip,rk3288w"))
-> 
-> you'd need to check against the root compatible.
-> 
->>
->> This way we can have a single compatible update at bootloader that
->> makes Linux adjust revision W chips code.
->>
->> Doesn't it make sense?
-> 
-> The compatible describes the block and the rk3288w's cru isn't the same as
-> the rk3288's ... as the clock routing is different, so it should have a
-> different compatible value, I think.
+Signed-off-by: Daniel M. Weeks <dan@danweeks.net>
+---
+ Documentation/devicetree/bindings/hwmon/lm75.txt | 2 +-
+ drivers/hwmon/lm75.c                             | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-Right, if two devices behave differently in a way that one behaviour is 
-not a strict superset of the other, and there's no way to tell which is 
-which by simply looking at the device itself, then by definition they 
-are not compatible.
-
-> As the DT sis supposed to be a _generic_ description of the hardware,
-> we don't want to cement hacks to other implementations would need to copy.
-
-Indeed it's a pain in the bum for driver developers to be given a new 
-thing that's 99.9% compatible with the old thing but the one tiny 
-difference fundamentally breaks it, and the temptation to look for an 
-easy way out is strong, but c'est la vie ;)
-
-The question I always bear in mind for cases like these is this: If a 
-kernel without the driver patch runs on the new system with the expected 
-new DTB, will it:
-
-A) work entirely correctly
-B) ignore the device (with or without an error), but the rest of the 
-system still works fine
-C) ignore the device and fail to boot at all (with or without an error) 
-because it's critical to operation of the rest of the system
-D) probe the device and superficially appear to be OK but actually be 
-broken in weird and subtle ways
-
-A and B are the ideal answers. C is a little unfortunate, but acceptable 
-if neither A nor B is possible. D is a sign that you're doing something 
-wrong, unless there are *very* specific circumstances that might justify 
-it (e.g. the SoC is exclusively deployed in embedded devices with a 
-controlled update mechanism such that users could never introduce this 
-mismatch in the first place).
-
-Robin.
+diff --git a/Documentation/devicetree/bindings/hwmon/lm75.txt b/Documentation/devicetree/bindings/hwmon/lm75.txt
+index 273616702c51..e5bb554cd2c3 100644
+--- a/Documentation/devicetree/bindings/hwmon/lm75.txt
++++ b/Documentation/devicetree/bindings/hwmon/lm75.txt
+@@ -14,10 +14,10 @@ Required properties:
+ 		"maxim,max6626",
+ 		"maxim,max31725",
+ 		"maxim,max31726",
+-		"maxim,mcp980x",
+ 		"nxp,pct2075",
+ 		"st,stds75",
+ 		"st,stlm75",
++		"microchip,mcp980x",
+ 		"microchip,tcn75",
+ 		"ti,tmp100",
+ 		"ti,tmp101",
+diff --git a/drivers/hwmon/lm75.c b/drivers/hwmon/lm75.c
+index ba0be48aeadd..a8cfc7e4a685 100644
+--- a/drivers/hwmon/lm75.c
++++ b/drivers/hwmon/lm75.c
+@@ -690,10 +690,6 @@ static const struct of_device_id __maybe_unused lm75_of_match[] = {
+ 		.compatible = "maxim,max31726",
+ 		.data = (void *)max31725
+ 	},
+-	{
+-		.compatible = "maxim,mcp980x",
+-		.data = (void *)mcp980x
+-	},
+ 	{
+ 		.compatible = "nxp,pct2075",
+ 		.data = (void *)pct2075
+@@ -706,6 +702,10 @@ static const struct of_device_id __maybe_unused lm75_of_match[] = {
+ 		.compatible = "st,stlm75",
+ 		.data = (void *)stlm75
+ 	},
++	{
++		.compatible = "microchip,mcp980x",
++		.data = (void *)mcp980x
++	},
+ 	{
+ 		.compatible = "microchip,tcn75",
+ 		.data = (void *)tcn75
+-- 
+Daniel M. Weeks
