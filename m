@@ -2,373 +2,159 @@ Return-Path: <SRS0=QVA0=AO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F10C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 14:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01677C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 14:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1ADF208FE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 14:33:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="GgtgWYLM"
+	by mail.kernel.org (Postfix) with ESMTP id DA04620899
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 14:48:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgGCOdy (ORCPT
+        id S1726142AbgGCOsq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jul 2020 10:33:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43748 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgGCOdx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jul 2020 10:33:53 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58DF8C08C5DD
-        for <devicetree@vger.kernel.org>; Fri,  3 Jul 2020 07:33:53 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id j19so8319904pgm.11
-        for <devicetree@vger.kernel.org>; Fri, 03 Jul 2020 07:33:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from:cc;
-        bh=7WvGi3ZWzZ6amDsfHb5k51P9HzBmGi89bs5PYzy6Mxs=;
-        b=GgtgWYLMzWh/a1jUS92H1aJ8rur1vg3pPP3+hotqIpRbf6wmlBBTBVNkzuhadRfrAP
-         EIcu/7/BoazS/XZNK6VRhlctZYSCnCRJz5TlsyP0G+lHmdKhavNz6KMOdlclRsQrXvF3
-         mx+J6Nkeugr+wThh5bhv1nDNarfuL/22Mrwd2Y0oci3aCWDJ90wCqrPxDB7nlW462I8S
-         oRlVeBUgwZiEWijL3iQtpLCyEIuugAv/0ZoHqhbeLhRjM+mTLGBRrEQ7M/FZg6fECxLz
-         vhHSjkAJJ+Fyu8gn3+CfdA8ed5QeSwQBPWAeyJeKuavWY7TO/MzqRdMdevuWpAezNYH7
-         1ybA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from:cc;
-        bh=7WvGi3ZWzZ6amDsfHb5k51P9HzBmGi89bs5PYzy6Mxs=;
-        b=jAdvs12YyCZFjoMEwH7yV+GjVaVNg0cDE6kBuuUyiyckamncHcPqsB13V2rjhobKXQ
-         /o5rFxx6OJnd2mGgZmzhkJEKnUi8lSn67VJR7C+OU9c5MWACxZxNJGTVyhAelPkN0yQW
-         4bxsSCUwa8tKBZbe465TeLw/vckm8hl0weHGZfjd/TocQJh69ZF9MOIOFE3TfdukildU
-         5j+W61nq1T144r+HCy1KJDAVQCzZGCu3CS5rsmKS+FY52zaYs2C9TYyvsQV1zqkLbQtG
-         7FFBVMFaEMyxvkHAmORgrARRZ6W78hzXLj/eXHjZQCP7nVsf6BaCe59SDrKQ+MW4f8Lg
-         94kQ==
-X-Gm-Message-State: AOAM532ekuaxI4ZmoCXef3Vm86qvHaP0VN2pMvruGpTWwtoGUwSjHhFp
-        onED79bIyGOgiP/qkB2ZlSrRUA==
-X-Google-Smtp-Source: ABdhPJxsbbwRX3oe8BINj7VF2EhM60Xud2ed2kZPHNTcnPgfXiScYc38MdSjHD9IzpZCFjGVs9OsSw==
-X-Received: by 2002:a63:564e:: with SMTP id g14mr28984034pgm.326.1593786832715;
-        Fri, 03 Jul 2020 07:33:52 -0700 (PDT)
-Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id r16sm11607347pfh.64.2020.07.03.07.33.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 07:33:51 -0700 (PDT)
-Message-ID: <5eff41cf.1c69fb81.f3c05.e990@mx.google.com>
-Date:   Fri, 03 Jul 2020 07:33:51 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.8-rc3-82-gcdd3bb54332f
-X-Kernelci-Report-Type: bisect
-X-Kernelci-Tree: mainline
-X-Kernelci-Branch: master
-X-Kernelci-Lab-Name: lab-cip
-Subject: mainline/master bisection: baseline.dmesg.crit on
- qemu_arm-vexpress-a15
-To:     kernelci-results@groups.io, gtucker@collabora.com,
-        Andre Przywara <andre.przywara@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Fri, 3 Jul 2020 10:48:46 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:40488 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726039AbgGCOsq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 3 Jul 2020 10:48:46 -0400
+Received: from p5b127e6f.dip0.t-ipconnect.de ([91.18.126.111] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jrMzY-0001ns-RC; Fri, 03 Jul 2020 16:48:40 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     =?ISO-8859-1?Q?Myl=E8ne?= Josserand 
+        <mylene.josserand@collabora.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        kernel@collabora.com, linux-clk <linux-clk@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        robin.murphy@arm.com
+Subject: Re: [PATCH v4 1/2] clk: rockchip: rk3288: Handle clock tree for rk3288w
+Date:   Fri, 03 Jul 2020 16:48:40 +0200
+Message-ID: <1847101.XIPLBOrDxk@phil>
+In-Reply-To: <CAMty3ZB1n5uXmH=U4iXfgpyU-JZff74Rm2Mj+SS2LLtkM2fARQ@mail.gmail.com>
+References: <20200602080644.11333-1-mylene.josserand@collabora.com> <1793210.9Kb5SQUFvz@phil> <CAMty3ZB1n5uXmH=U4iXfgpyU-JZff74Rm2Mj+SS2LLtkM2fARQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-* This automated bisection report was sent to you on the basis  *
-* that you may be involved with the breaking commit it has      *
-* found.  No manual investigation has been done to verify it,   *
-* and the root cause of the problem may be somewhere else.      *
-*                                                               *
-* If you do send a fix, please include this trailer:            *
-*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-*                                                               *
-* Hope this helps!                                              *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+Am Freitag, 3. Juli 2020, 16:23:27 CEST schrieb Jagan Teki:
+> On Fri, Jul 3, 2020 at 7:41 PM Heiko Stuebner <heiko@sntech.de> wrote:
+> >
+> > Hi Jagan,
+> >
+> > Am Montag, 29. Juni 2020, 21:11:03 CEST schrieb Jagan Teki:
+> > > On Tue, Jun 2, 2020 at 1:37 PM Mylène Josserand
+> > > <mylene.josserand@collabora.com> wrote:
+> > > >
+> > > > The revision rk3288w has a different clock tree about "hclk_vio"
+> > > > clock, according to the BSP kernel code.
+> > > >
+> > > > This patch handles this difference by detecting which device-tree
+> > > > we are using. If it is a "rockchip,rk3288-cru", let's register
+> > > > the clock tree as it was before. If the device-tree node is
+> > > > "rockchip,rk3288w-cru", we will apply the difference with this
+> > > > version of this SoC.
+> > > >
+> > > > Noticed that this new device-tree compatible must be handled in
+> > > > bootloader such as u-boot.
+> > > >
+> > > > Signed-off-by: Mylène Josserand <mylene.josserand@collabora.com>
+> > > > ---
+> > > >  drivers/clk/rockchip/clk-rk3288.c | 20 ++++++++++++++++++--
+> > > >  1 file changed, 18 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
+> > > > index cc2a177bbdbf..204976e2d0cb 100644
+> > > > --- a/drivers/clk/rockchip/clk-rk3288.c
+> > > > +++ b/drivers/clk/rockchip/clk-rk3288.c
+> > > > @@ -425,8 +425,6 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+> > > >         COMPOSITE(0, "aclk_vio0", mux_pll_src_cpll_gpll_usb480m_p, CLK_IGNORE_UNUSED,
+> > > >                         RK3288_CLKSEL_CON(31), 6, 2, MFLAGS, 0, 5, DFLAGS,
+> > > >                         RK3288_CLKGATE_CON(3), 0, GFLAGS),
+> > > > -       DIV(0, "hclk_vio", "aclk_vio0", 0,
+> > > > -                       RK3288_CLKSEL_CON(28), 8, 5, DFLAGS),
+> > > >         COMPOSITE(0, "aclk_vio1", mux_pll_src_cpll_gpll_usb480m_p, CLK_IGNORE_UNUSED,
+> > > >                         RK3288_CLKSEL_CON(31), 14, 2, MFLAGS, 8, 5, DFLAGS,
+> > > >                         RK3288_CLKGATE_CON(3), 2, GFLAGS),
+> > > > @@ -819,6 +817,16 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+> > > >         INVERTER(0, "pclk_isp", "pclk_isp_in", RK3288_CLKSEL_CON(29), 3, IFLAGS),
+> > > >  };
+> > > >
+> > > > +static struct rockchip_clk_branch rk3288w_hclkvio_branch[] __initdata = {
+> > > > +       DIV(0, "hclk_vio", "aclk_vio1", 0,
+> > > > +                       RK3288_CLKSEL_CON(28), 8, 5, DFLAGS),
+> > > > +};
+> > > > +
+> > > > +static struct rockchip_clk_branch rk3288_hclkvio_branch[] __initdata = {
+> > > > +       DIV(0, "hclk_vio", "aclk_vio0", 0,
+> > > > +                       RK3288_CLKSEL_CON(28), 8, 5, DFLAGS),
+> > > > +};
+> > > > +
+> > > >  static const char *const rk3288_critical_clocks[] __initconst = {
+> > > >         "aclk_cpu",
+> > > >         "aclk_peri",
+> > > > @@ -936,6 +944,14 @@ static void __init rk3288_clk_init(struct device_node *np)
+> > > >                                    RK3288_GRF_SOC_STATUS1);
+> > > >         rockchip_clk_register_branches(ctx, rk3288_clk_branches,
+> > > >                                   ARRAY_SIZE(rk3288_clk_branches));
+> > > > +
+> > > > +       if (of_device_is_compatible(np, "rockchip,rk3288w-cru"))
+> > > > +               rockchip_clk_register_branches(ctx, rk3288w_hclkvio_branch,
+> > > > +                                              ARRAY_SIZE(rk3288w_hclkvio_branch));
+> > > > +       else
+> > > > +               rockchip_clk_register_branches(ctx, rk3288_hclkvio_branch,
+> > > > +                                              ARRAY_SIZE(rk3288_hclkvio_branch));
+> > > > +
+> > >
+> > > Sorry for the late query on this. I am a bit unclear about this
+> > > compatible change, does Linux expect to replace rockchip,rk3288-cru
+> > > with rockchip,rk3288w-cru in bootloader if the chip is RK3288w? or
+> > > append the existing cru compatible node with rockchip,rk3288w-cru?
+> > > because replace new cru node make clock never probe since the
+> > > CLK_OF_DECLARE checking rockchip,rk3288-cru
+> >
+> > I guess right now we'd expect "rockchip,rk3288w-cru", "rockchip,rk3288-cru",
+> >
+> > Thinking again about this, I'm wondering if we should switch to having
+> > only one per variant ... like on the two rk3188 variants,
+> > so declaring separate rk3288-cru and rk3288w-cru of-clks with shared
+> > common code.
+> 
+> What if can check the root compatible instead cru compatible for revision W like
+> 
+> -  if (of_device_is_compatible(np, "rockchip,rk3288w-cru"))
+> + if (of_device_is_compatible(np, "rockchip,rk3288w"))
 
-mainline/master bisection: baseline.dmesg.crit on qemu_arm-vexpress-a15
+you'd need to check against the root compatible.
 
-Summary:
-  Start:      cdd3bb54332f Merge tag 'm68knommu-for-v5.8-rc4' of git://git.=
-kernel.org/pub/scm/linux/kernel/git/gerg/m68knommu
-  Plain log:  https://storage.kernelci.org/mainline/master/v5.8-rc3-82-gcdd=
-3bb54332f/arm/vexpress_defconfig/gcc-8/lab-cip/baseline-vexpress-v2p-ca15-t=
-c1.txt
-  HTML log:   https://storage.kernelci.org/mainline/master/v5.8-rc3-82-gcdd=
-3bb54332f/arm/vexpress_defconfig/gcc-8/lab-cip/baseline-vexpress-v2p-ca15-t=
-c1.html
-  Result:     38ac46002d1d arm: dts: vexpress: Move mcc node back into moth=
-erboard node
+> 
+> This way we can have a single compatible update at bootloader that
+> makes Linux adjust revision W chips code.
+> 
+> Doesn't it make sense?
 
-Checks:
-  revert:     PASS
-  verify:     PASS
+The compatible describes the block and the rk3288w's cru isn't the same as
+the rk3288's ... as the clock routing is different, so it should have a
+different compatible value, I think.
 
-Parameters:
-  Tree:       mainline
-  URL:        https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linu=
-x.git
-  Branch:     master
-  Target:     qemu_arm-vexpress-a15
-  CPU arch:   arm
-  Lab:        lab-cip
-  Compiler:   gcc-8
-  Config:     vexpress_defconfig
-  Test case:  baseline.dmesg.crit
-
-Breaking commit found:
-
----------------------------------------------------------------------------=
-----
-commit 38ac46002d1df5707566a73486452851341028d2
-Author: Andre Przywara <andre.przywara@arm.com>
-Date:   Wed Jun 3 17:22:37 2020 +0100
-
-    arm: dts: vexpress: Move mcc node back into motherboard node
-    =
-
-    Commit d9258898ad49 ("arm64: dts: arm: vexpress: Move fixed devices
-    out of bus node") moved the "mcc" DT node into the root node, because
-    it does not have any children using "reg" properties, so does violate
-    some dtc checks about "simple-bus" nodes.
-    =
-
-    However this broke the vexpress config-bus code, which walks up the
-    device tree to find the first node with an "arm,vexpress,site" property.
-    This gave the wrong result (matching the root node instead of the
-    motherboard node), so broke the clocks and some other devices for
-    VExpress boards.
-    =
-
-    Move the whole node back into its original position. This re-introduces
-    the dtc warning, but is conceptually the right thing to do. The dtc
-    warning seems to be overzealous here, there are discussions on fixing or
-    relaxing this check instead.
-    =
-
-    Link: https://lore.kernel.org/r/20200603162237.16319-1-andre.przywara@a=
-rm.com
-    Fixes: d9258898ad49 ("arm64: dts: vexpress: Move fixed devices out of b=
-us node")
-    Reported-and-tested-by: Guenter Roeck <linux@roeck-us.net>
-    Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-    Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-
-diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/ve=
-xpress-v2m-rs1.dtsi
-index e6308fb76183..a88ee5294d35 100644
---- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-+++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-@@ -100,79 +100,6 @@
- 		};
- 	};
- =
-
--	mcc {
--		compatible =3D "arm,vexpress,config-bus";
--		arm,vexpress,config-bridge =3D <&v2m_sysreg>;
--
--		oscclk0 {
--			/* MCC static memory clock */
--			compatible =3D "arm,vexpress-osc";
--			arm,vexpress-sysreg,func =3D <1 0>;
--			freq-range =3D <25000000 60000000>;
--			#clock-cells =3D <0>;
--			clock-output-names =3D "v2m:oscclk0";
--		};
--
--		v2m_oscclk1: oscclk1 {
--			/* CLCD clock */
--			compatible =3D "arm,vexpress-osc";
--			arm,vexpress-sysreg,func =3D <1 1>;
--			freq-range =3D <23750000 65000000>;
--			#clock-cells =3D <0>;
--			clock-output-names =3D "v2m:oscclk1";
--		};
--
--		v2m_oscclk2: oscclk2 {
--			/* IO FPGA peripheral clock */
--			compatible =3D "arm,vexpress-osc";
--			arm,vexpress-sysreg,func =3D <1 2>;
--			freq-range =3D <24000000 24000000>;
--			#clock-cells =3D <0>;
--			clock-output-names =3D "v2m:oscclk2";
--		};
--
--		volt-vio {
--			/* Logic level voltage */
--			compatible =3D "arm,vexpress-volt";
--			arm,vexpress-sysreg,func =3D <2 0>;
--			regulator-name =3D "VIO";
--			regulator-always-on;
--			label =3D "VIO";
--		};
--
--		temp-mcc {
--			/* MCC internal operating temperature */
--			compatible =3D "arm,vexpress-temp";
--			arm,vexpress-sysreg,func =3D <4 0>;
--			label =3D "MCC";
--		};
--
--		reset {
--			compatible =3D "arm,vexpress-reset";
--			arm,vexpress-sysreg,func =3D <5 0>;
--		};
--
--		muxfpga {
--			compatible =3D "arm,vexpress-muxfpga";
--			arm,vexpress-sysreg,func =3D <7 0>;
--		};
--
--		shutdown {
--			compatible =3D "arm,vexpress-shutdown";
--			arm,vexpress-sysreg,func =3D <8 0>;
--		};
--
--		reboot {
--			compatible =3D "arm,vexpress-reboot";
--			arm,vexpress-sysreg,func =3D <9 0>;
--		};
--
--		dvimode {
--			compatible =3D "arm,vexpress-dvimode";
--			arm,vexpress-sysreg,func =3D <11 0>;
--		};
--	};
--
- 	bus@8000000 {
- 		motherboard-bus {
- 			model =3D "V2M-P1";
-@@ -435,6 +362,79 @@
- 						};
- 					};
- 				};
-+
-+				mcc {
-+					compatible =3D "arm,vexpress,config-bus";
-+					arm,vexpress,config-bridge =3D <&v2m_sysreg>;
-+
-+					oscclk0 {
-+						/* MCC static memory clock */
-+						compatible =3D "arm,vexpress-osc";
-+						arm,vexpress-sysreg,func =3D <1 0>;
-+						freq-range =3D <25000000 60000000>;
-+						#clock-cells =3D <0>;
-+						clock-output-names =3D "v2m:oscclk0";
-+					};
-+
-+					v2m_oscclk1: oscclk1 {
-+						/* CLCD clock */
-+						compatible =3D "arm,vexpress-osc";
-+						arm,vexpress-sysreg,func =3D <1 1>;
-+						freq-range =3D <23750000 65000000>;
-+						#clock-cells =3D <0>;
-+						clock-output-names =3D "v2m:oscclk1";
-+					};
-+
-+					v2m_oscclk2: oscclk2 {
-+						/* IO FPGA peripheral clock */
-+						compatible =3D "arm,vexpress-osc";
-+						arm,vexpress-sysreg,func =3D <1 2>;
-+						freq-range =3D <24000000 24000000>;
-+						#clock-cells =3D <0>;
-+						clock-output-names =3D "v2m:oscclk2";
-+					};
-+
-+					volt-vio {
-+						/* Logic level voltage */
-+						compatible =3D "arm,vexpress-volt";
-+						arm,vexpress-sysreg,func =3D <2 0>;
-+						regulator-name =3D "VIO";
-+						regulator-always-on;
-+						label =3D "VIO";
-+					};
-+
-+					temp-mcc {
-+						/* MCC internal operating temperature */
-+						compatible =3D "arm,vexpress-temp";
-+						arm,vexpress-sysreg,func =3D <4 0>;
-+						label =3D "MCC";
-+					};
-+
-+					reset {
-+						compatible =3D "arm,vexpress-reset";
-+						arm,vexpress-sysreg,func =3D <5 0>;
-+					};
-+
-+					muxfpga {
-+						compatible =3D "arm,vexpress-muxfpga";
-+						arm,vexpress-sysreg,func =3D <7 0>;
-+					};
-+
-+					shutdown {
-+						compatible =3D "arm,vexpress-shutdown";
-+						arm,vexpress-sysreg,func =3D <8 0>;
-+					};
-+
-+					reboot {
-+						compatible =3D "arm,vexpress-reboot";
-+						arm,vexpress-sysreg,func =3D <9 0>;
-+					};
-+
-+					dvimode {
-+						compatible =3D "arm,vexpress-dvimode";
-+						arm,vexpress-sysreg,func =3D <11 0>;
-+					};
-+				};
- 			};
- 		};
- 	};
----------------------------------------------------------------------------=
-----
+As the DT sis supposed to be a _generic_ description of the hardware,
+we don't want to cement hacks to other implementations would need to copy.
 
 
-Git bisection log:
+Heiko
 
----------------------------------------------------------------------------=
-----
-git bisect start
-# good: [719fdd32921fb7e3208db8832d32ae1c2d68900f] afs: Fix storage of cell=
- names
-git bisect good 719fdd32921fb7e3208db8832d32ae1c2d68900f
-# bad: [cdd3bb54332f82295ed90cd0c09c78cd0c0ee822] Merge tag 'm68knommu-for-=
-v5.8-rc4' of git://git.kernel.org/pub/scm/linux/kernel/git/gerg/m68knommu
-git bisect bad cdd3bb54332f82295ed90cd0c09c78cd0c0ee822
-# bad: [f7db192b2d71ea42627a32349d59a5f99f2aafcc] Merge tag 'arm-omap-fixes=
--5.8-1' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
-git bisect bad f7db192b2d71ea42627a32349d59a5f99f2aafcc
-# good: [ae71d4bf0074a81cc04255c96e3de0a49b1d95fa] Merge tag 'perf-urgent-2=
-020-06-28' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-git bisect good ae71d4bf0074a81cc04255c96e3de0a49b1d95fa
-# good: [d528945d7762be94beca4c111bb95dcc9a9f39c0] Merge tag 'omap-for-v5.8=
-/fixes-rc1-signed' of git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/=
-linux-omap into arm/omap-fixes
-git bisect good d528945d7762be94beca4c111bb95dcc9a9f39c0
-# bad: [2596ce4b4ded685b67fed407aed2bfe6ebcc39cb] Merge tag 'arm-soc/for-5.=
-8/drivers-fixes' of https://github.com/Broadcom/stblinux into arm/fixes
-git bisect bad 2596ce4b4ded685b67fed407aed2bfe6ebcc39cb
-# bad: [0f77ce26ebcf6ea384421d2dd47b924b83649692] Revert "ARM: sti: Impleme=
-nt dummy L2 cache's write_sec"
-git bisect bad 0f77ce26ebcf6ea384421d2dd47b924b83649692
-# bad: [d68ec1644dd546851d651787a638aead32a60a6f] Merge tag 'juno-fix-5.8' =
-of git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux into ar=
-m/fixes
-git bisect bad d68ec1644dd546851d651787a638aead32a60a6f
-# bad: [38ac46002d1df5707566a73486452851341028d2] arm: dts: vexpress: Move =
-mcc node back into motherboard node
-git bisect bad 38ac46002d1df5707566a73486452851341028d2
-# first bad commit: [38ac46002d1df5707566a73486452851341028d2] arm: dts: ve=
-xpress: Move mcc node back into motherboard node
----------------------------------------------------------------------------=
-----
+
+
