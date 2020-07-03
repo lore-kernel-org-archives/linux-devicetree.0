@@ -2,82 +2,96 @@ Return-Path: <SRS0=QVA0=AO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 112C8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 09:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB2BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 09:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF528206A1
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 09:33:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="Pa5s69St"
+	by mail.kernel.org (Postfix) with ESMTP id 10D802073E
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jul 2020 09:38:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgGCJdY (ORCPT
+        id S1725796AbgGCJis (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jul 2020 05:33:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54132 "EHLO
+        Fri, 3 Jul 2020 05:38:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbgGCJdX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jul 2020 05:33:23 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CC64C08C5C1
-        for <devicetree@vger.kernel.org>; Fri,  3 Jul 2020 02:33:23 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id t25so31577049lji.12
-        for <devicetree@vger.kernel.org>; Fri, 03 Jul 2020 02:33:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FxORWevFMuPysEWqwp7nhsVM+UgCIl2L6xusN6h/tRo=;
-        b=Pa5s69StIWHqUszCnn7WyIkhL3j+RajqkShp8k3dvCEVibyOe0GMLFnbZpxTqORJbm
-         DQrixJG2YkDXrhh1sLs/XgxA5tes5bCbL1xR6BOYa7f6P9j7t5W5rlnNav4M4qA0/Asm
-         QXPh//FRRJNTzfHoQViYPLngKyafB6kAZB1SNlf8blPIcbpmEDr1WiIpFWf50KZA1AeA
-         E/0FtRT62fkshSeBqe5ahRC3LI+WU97GHJVErWiqarDYYZP0ZPuOCEX6F3R4q5W7PAJg
-         8h1ZRUYYKKCWxhgNbzQpXwjLneJmKBEFO5kPyCU3mowvLD6bQ24f5JSQooY2fj9cehSa
-         qB7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FxORWevFMuPysEWqwp7nhsVM+UgCIl2L6xusN6h/tRo=;
-        b=ieDE/XjZVh89t0gFb504FTVnhmOLl79wo7zIQm+gqsPoZwzgdGVzlJTyuLW7fZaTN4
-         Gv5vCouRzjsQpE613dpvuEJBjDEavt0viieb50UdQBDuKZsQ3sKX3g3XYM++qXbpRRGH
-         JsRjM/szQA7AgYiKKsgNkjCxQi5XmrqZeRnOW0IAUaWHOEaFwP+CsmsH1RlHyRWTXbP1
-         Bw+gMUMnF99ttzK44melNlB7h0g7fN90szmwpig35h/ihjhfrWKo4Mz58oe2HTr0g3Zg
-         LT/lVYe8/JBwzxFjfqErJMqnoIlaAtFEhlXd9cLoUfuWFnaH1ddUJeNNcOpZImdaN0Ye
-         aflA==
-X-Gm-Message-State: AOAM533cOVC2aDTkyppJvTY1IX7sSZT1d1XXhHIRt+VYWc9zQ/W2quKo
-        GbwB8/v1l3NFLkZaPhm68XGNFoXtaDo=
-X-Google-Smtp-Source: ABdhPJzd/ZgbHMgl58AU/eQVn4qA4l5hP0brJ3GW/SvYfHe/nK8939nIQ/LSupb0XRiMYcgIBwPmfA==
-X-Received: by 2002:a2e:b6d2:: with SMTP id m18mr699203ljo.341.1593768802134;
-        Fri, 03 Jul 2020 02:33:22 -0700 (PDT)
-Received: from [192.168.1.9] ([83.68.95.66])
-        by smtp.googlemail.com with ESMTPSA id c14sm3908884ljj.112.2020.07.03.02.33.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jul 2020 02:33:21 -0700 (PDT)
-Subject: Re: [PATCH v3 4/4] arm64: dts: marvell: add SMMU support
-To:     Robin Murphy <robin.murphy@arm.com>, will@kernel.org,
-        joro@8bytes.org, gregory.clement@bootlin.com, robh+dt@kernel.org,
-        hannah@marvell.com
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        devicetree@vger.kernel.org, catalin.marinas@arm.com,
-        nadavh@marvell.com, linux-arm-kernel@lists.infradead.org,
-        mw@semihalf.com
-References: <20200702201633.22693-1-tn@semihalf.com>
- <20200702201633.22693-5-tn@semihalf.com>
- <ba29e839-79e0-7189-f735-d457544135e4@arm.com>
-From:   Tomasz Nowicki <tn@semihalf.com>
-Message-ID: <3d9b3d16-00e4-d3b5-344b-8515c70fb83e@semihalf.com>
-Date:   Fri, 3 Jul 2020 11:33:20 +0200
+        with ESMTP id S1725786AbgGCJis (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jul 2020 05:38:48 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EB2EC08C5C1;
+        Fri,  3 Jul 2020 02:38:48 -0700 (PDT)
+Received: from [IPv6:2a01:e35:2fb5:1510:1d94:e6f1:f819:f29f] (unknown [IPv6:2a01:e35:2fb5:1510:1d94:e6f1:f819:f29f])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: aferraris)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 9571D2A066E;
+        Fri,  3 Jul 2020 10:38:46 +0100 (BST)
+Subject: Re: [PATCH 0/4] ASoC: fsl_asrc: allow selecting arbitrary clocks
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, Timur Tabi <timur@kernel.org>,
+        Xiubo Li <Xiubo.Lee@gmail.com>, linux-kernel@vger.kernel.org,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>, kernel@collabora.com,
+        Fabio Estevam <festevam@gmail.com>
+References: <20200702142235.235869-1-arnaud.ferraris@collabora.com>
+ <20200702184226.GA23935@Asurada-Nvidia>
+From:   Arnaud Ferraris <arnaud.ferraris@collabora.com>
+Autocrypt: addr=arnaud.ferraris@collabora.com; keydata=
+ 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
+ xZQG6fKWuIur3RI=
+Message-ID: <3f39a0bb-a766-f646-28b3-a51cf9983c6b@collabora.com>
+Date:   Fri, 3 Jul 2020 11:38:44 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <ba29e839-79e0-7189-f735-d457544135e4@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200702184226.GA23935@Asurada-Nvidia>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -85,99 +99,24 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 03.07.2020 11:16, Robin Murphy wrote:
-> On 2020-07-02 21:16, Tomasz Nowicki wrote:
->> From: Marcin Wojtas <mw@semihalf.com>
->>
->> Add IOMMU node for Marvell AP806 based SoCs together with platform
->> and PCI device Stream ID mapping.
->>
->> Signed-off-by: Marcin Wojtas <mw@semihalf.com>
->> Signed-off-by: Tomasz Nowicki <tn@semihalf.com>
->> ---
->>   arch/arm64/boot/dts/marvell/armada-8040.dtsi  | 36 +++++++++++++++++++
->>   arch/arm64/boot/dts/marvell/armada-ap80x.dtsi | 17 +++++++++
->>   2 files changed, 53 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/marvell/armada-8040.dtsi 
->> b/arch/arm64/boot/dts/marvell/armada-8040.dtsi
->> index 7699b19224c2..25c1df709f72 100644
->> --- a/arch/arm64/boot/dts/marvell/armada-8040.dtsi
->> +++ b/arch/arm64/boot/dts/marvell/armada-8040.dtsi
->> @@ -23,3 +23,39 @@
->>   &cp0_rtc {
->>       status = "disabled";
->>   };
->> +
->> +&cp0_usb3_0 {
->> +    iommus = <&smmu 0x440>;
->> +};
->> +
->> +&cp0_usb3_1 {
->> +    iommus = <&smmu 0x441>;
->> +};
->> +
->> +&cp0_sata0 {
->> +    iommus = <&smmu 0x444>;
->> +};
->> +
->> +&cp0_sdhci0 {
->> +    iommus = <&smmu 0x445>;
->> +};
->> +
->> +&cp1_sata0 {
->> +    iommus = <&smmu 0x454>;
->> +};
->> +
->> +&cp1_usb3_0 {
->> +    iommus = <&smmu 0x450>;
->> +};
->> +
->> +&cp1_usb3_1 {
->> +    iommus = <&smmu 0x451>;
->> +};
->> +
->> +&cp0_pcie0 {
->> +    iommu-map =
->> +        <0x0   &smmu 0x480 0x20>,
->> +        <0x100 &smmu 0x4a0 0x20>,
->> +        <0x200 &smmu 0x4c0 0x20>;
->> +    iommu-map-mask = <0x031f>;
-> 
-> Nice! I do like a good compressed mapping :D
-> 
->> +};
->> diff --git a/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi 
->> b/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi
->> index 7f9b9a647717..ded8b8082d79 100644
->> --- a/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi
->> +++ b/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi
->> @@ -56,6 +56,23 @@
->>               compatible = "simple-bus";
->>               ranges = <0x0 0x0 0xf0000000 0x1000000>;
->> +            smmu: iommu@5000000 {
->> +                compatible = "marvell,ap806-smmu-500", "arm,mmu-500";
->> +                reg = <0x100000 0x100000>;
->> +                dma-coherent;
->> +                #iommu-cells = <1>;
->> +                #global-interrupts = <1>;
->> +                interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-> 
-> I'd recommend you have the node disabled by default here, then 
-> explicitly enable it in armada-8040.dtsi where you add the Stream IDs. 
-> Otherwise it will also end up enabled for 8020, 70x0, etc. where 
-> disable_bypass will then catastrophically break everything.
-> 
+Hi Nic,
 
-Good point! I will fix this.
+Le 02/07/2020 à 20:42, Nicolin Chen a écrit :
+> Hi Arnaud,
+> 
+> On Thu, Jul 02, 2020 at 04:22:31PM +0200, Arnaud Ferraris wrote:
+>> The current ASRC driver hardcodes the input and output clocks used for
+>> sample rate conversions. In order to allow greater flexibility and to
+>> cover more use cases, it would be preferable to select the clocks using
+>> device-tree properties.
+> 
+> We recent just merged a new change that auto-selecting internal
+> clocks based on sample rates as the first option -- ideal ratio
+> mode is the fallback mode now. Please refer to:
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20200702&id=d0250cf4f2abfbea64ed247230f08f5ae23979f0
 
-Thanks,
-Tomasz
+That looks interesting, thanks for pointing this out!
+I'll rebase and see how it works for my use-case, will keep you informed.
+
+Regards,
+Arnaud
