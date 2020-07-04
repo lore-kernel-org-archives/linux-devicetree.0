@@ -2,146 +2,247 @@ Return-Path: <SRS0=KrzM=AP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E984C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 01:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C74C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 04:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1052B2075D
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 01:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AD41207D4
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 04:31:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="WH5S/C2a"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l7zgViNG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbgGDBQw (ORCPT
+        id S1725822AbgGDEb5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jul 2020 21:16:52 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:27439 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726455AbgGDBQw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jul 2020 21:16:52 -0400
-X-UUID: 412854032bf64e50bdfb8009928ded50-20200704
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=T1Dk7nQlgGGkbfMonA3Q9alxa/t5hffgX9wAPRQoUoI=;
-        b=WH5S/C2amh/rSe5qc+nFhFAD8yCxiYi+gHuMLW7UhoE2PkrBDacdIBXv1zhIjhfoXKBivSmqItCDWz7bx0zObf+tKXlTNHLBcg++Jm9ajgVFiydgGhQrWqGPSZ6VCWOczCK+sb8SpWXNJ/cIN7+kD2dSJrin8gjpzces9qUDn70=;
-X-UUID: 412854032bf64e50bdfb8009928ded50-20200704
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <yingjoe.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 77149489; Sat, 04 Jul 2020 09:16:46 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Sat, 4 Jul 2020 09:16:37 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Sat, 4 Jul 2020 09:16:38 +0800
-Message-ID: <1593825398.4355.1.camel@mtksdaap41>
-Subject: Re: [PATCH v6 03/10] iommu/mediatek: Use a u32 flags to describe
- different HW features
-From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
-To:     Chao Hao <chao.hao@mediatek.com>
-CC:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
+        Sat, 4 Jul 2020 00:31:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59640 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbgGDEb5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jul 2020 00:31:57 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B01EC061794
+        for <devicetree@vger.kernel.org>; Fri,  3 Jul 2020 21:31:57 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id d10so13298768pls.5
+        for <devicetree@vger.kernel.org>; Fri, 03 Jul 2020 21:31:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=3SL61dihAHKQ5Ht3JKZwsIf+MYk0kZQ06Zncr9exNUs=;
+        b=l7zgViNGAE4eZYVk4+Sw7TvzxvRKMwSpPdAnJfNUiIo7O3w+zJGM+P21SdWw3+X7Ia
+         KYInctHduZETzALNwe5C5eFieRl/rKZOGsdavHn+vrBDrmELWHOkPWrPP+7YAID6kB5+
+         6fHqVcX0D+O30NO7fADDzBzeZBwC+XVcX5m87Idi6/yq5lfZV2d6wdB1Xa7C2kz4Zl5y
+         Z2m6OMjXu5xtOuKqfxA7zM77jpxAdWxnECYv5FRZuzkFBmsjmQo7YySZPmKMJS2WOqXa
+         GJv89rwVbni5aZM7bvwF/L7alopxijd9VLxcSXqYT1KfM83hLCY11gy9RsCC6GQwNUxF
+         aBRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3SL61dihAHKQ5Ht3JKZwsIf+MYk0kZQ06Zncr9exNUs=;
+        b=T3aBydJ8LLkvUDSx7LXg7JgirwWlh9sE/xdq58ySv4evCWTUtGWuVVJzRHT72MqLQA
+         mujzd02XZltkXl7m5DV0sLeSoippHotTcnJNzq1q1iOCQ2y/BwqofI0rx1Sv8WzTQZRh
+         8qUvXkO29fo5KaSRZlVdeC/czs7ov4S5RFJYKt0lCz5OfJpNb7pKT9txW3jPft1hbTpH
+         G16M2JcEldacIqtbUGQwQDaOC+NGnl+raartru8QcLZo+S5ECQ5rsgnxqBs5aZv+adeb
+         iEdE86BRJowhx7H5eHcAvQNxUOMxwx7zWpOWLiIswqqaOYN0G6Wot5MpgcweSNq7WPN3
+         pAbA==
+X-Gm-Message-State: AOAM533/4kaRlnPZsZZE8qa1O+Ab2W8unYgSeZfPDIZtvFkHzj4LShLD
+        kLQv9ehNMnySjpAHD+7GVKzRkp3SysQ=
+X-Google-Smtp-Source: ABdhPJx6qZ++VxvND82KUcY+wG9CcOIJdvhTw8f8cxVRQRKJqV0eTfgYim4+pKaFj0BUUqjKw+1ANg==
+X-Received: by 2002:a17:90a:8a8b:: with SMTP id x11mr36781466pjn.127.1593837116541;
+        Fri, 03 Jul 2020 21:31:56 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id d9sm13759731pgv.45.2020.07.03.21.31.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jul 2020 21:31:55 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Yu Chen <chenyu56@huawei.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Wei Xu <xuwei5@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        YongQin Liu <yongqin.liu@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        <devicetree@vger.kernel.org>, "FY Yang" <fy.yang@mediatek.com>,
-        <wsd_upstream@mediatek.com>, <linux-kernel@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>, TH Yang <th.yang@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        Yong Wu <yong.wu@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Sat, 4 Jul 2020 09:16:38 +0800
-In-Reply-To: <20200703044127.27438-4-chao.hao@mediatek.com>
-References: <20200703044127.27438-1-chao.hao@mediatek.com>
-         <20200703044127.27438-4-chao.hao@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH] dts: hi3660: Add support for basic usb gadget on Hikey960
+Date:   Sat,  4 Jul 2020 04:31:51 +0000
+Message-Id: <20200704043151.100780-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTA3LTAzIGF0IDEyOjQxICswODAwLCBDaGFvIEhhbyB3cm90ZToNCj4gR2l2
-ZW4gdGhlIGZhY3QgdGhhdCB3ZSBhcmUgYWRkaW5nIG1vcmUgYW5kIG1vcmUgcGxhdF9kYXRhIGJv
-b2wgdmFsdWVzLA0KPiBpdCB3b3VsZCBtYWtlIHNlbnNlIHRvIHVzZSBhIHUzMiBmbGFncyByZWdp
-c3RlciBhbmQgYWRkIHRoZSBhcHByb3ByaWF0ZQ0KPiBtYWNybyBkZWZpbml0aW9ucyB0byBzZXQg
-YW5kIGNoZWNrIGZvciBhIGZsYWcgcHJlc2VudC4NCj4gTm8gZnVuY3Rpb25hbCBjaGFuZ2UuDQo+
-IA0KPiBDYzogWW9uZyBXdSA8eW9uZy53dUBtZWRpYXRlay5jb20+DQo+IFN1Z2dlc3RlZC1ieTog
-TWF0dGhpYXMgQnJ1Z2dlciA8bWF0dGhpYXMuYmdnQGdtYWlsLmNvbT4NCj4gU2lnbmVkLW9mZi1i
-eTogQ2hhbyBIYW8gPGNoYW8uaGFvQG1lZGlhdGVrLmNvbT4NCj4gUmV2aWV3ZWQtYnk6IE1hdHRo
-aWFzIEJydWdnZXIgPG1hdHRoaWFzLmJnZ0BnbWFpbC5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9p
-b21tdS9tdGtfaW9tbXUuYyB8IDI4ICsrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0NCj4gIGRy
-aXZlcnMvaW9tbXUvbXRrX2lvbW11LmggfCAgNyArLS0tLS0tDQo+ICAyIGZpbGVzIGNoYW5nZWQs
-IDE4IGluc2VydGlvbnMoKyksIDE3IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvaW9tbXUvbXRrX2lvbW11LmMgYi9kcml2ZXJzL2lvbW11L210a19pb21tdS5jDQo+IGlu
-ZGV4IDg4ZDNkZjViOTFjMi4uNDBjYTU2NGQ5N2FmIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2lv
-bW11L210a19pb21tdS5jDQo+ICsrKyBiL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmMNCj4gQEAg
-LTEwMCw2ICsxMDAsMTUgQEANCj4gICNkZWZpbmUgTVRLX000VV9UT19MQVJCKGlkKQkJKCgoaWQp
-ID4+IDUpICYgMHhmKQ0KPiAgI2RlZmluZSBNVEtfTTRVX1RPX1BPUlQoaWQpCQkoKGlkKSAmIDB4
-MWYpDQo+ICANCj4gKyNkZWZpbmUgSEFTXzRHQl9NT0RFCQkJQklUKDApDQo+ICsvKiBIVyB3aWxs
-IHVzZSB0aGUgRU1JIGNsb2NrIGlmIHRoZXJlIGlzbid0IHRoZSAiYmNsayIuICovDQo+ICsjZGVm
-aW5lIEhBU19CQ0xLCQkJQklUKDEpDQo+ICsjZGVmaW5lIEhBU19WTERfUEFfUk5HCQkJQklUKDIp
-DQo+ICsjZGVmaW5lIFJFU0VUX0FYSQkJCUJJVCgzKQ0KPiArDQo+ICsjZGVmaW5lIE1US19JT01N
-VV9IQVNfRkxBRyhwZGF0YSwgX3gpIFwNCj4gKwkJKCgoKHBkYXRhKS0+ZmxhZ3MpICYgKF94KSkg
-PT0gKF94KSkNCj4gKw0KPiAgc3RydWN0IG10a19pb21tdV9kb21haW4gew0KPiAgCXN0cnVjdCBp
-b19wZ3RhYmxlX2NmZwkJY2ZnOw0KPiAgCXN0cnVjdCBpb19wZ3RhYmxlX29wcwkJKmlvcDsNCj4g
-QEAgLTU2Myw3ICs1NzIsOCBAQCBzdGF0aWMgaW50IG10a19pb21tdV9od19pbml0KGNvbnN0IHN0
-cnVjdCBtdGtfaW9tbXVfZGF0YSAqZGF0YSkNCj4gIAkJCSB1cHBlcl8zMl9iaXRzKGRhdGEtPnBy
-b3RlY3RfYmFzZSk7DQo+ICAJd3JpdGVsX3JlbGF4ZWQocmVndmFsLCBkYXRhLT5iYXNlICsgUkVH
-X01NVV9JVlJQX1BBRERSKTsNCj4gIA0KPiAtCWlmIChkYXRhLT5lbmFibGVfNEdCICYmIGRhdGEt
-PnBsYXRfZGF0YS0+aGFzX3ZsZF9wYV9ybmcpIHsNCj4gKwlpZiAoZGF0YS0+ZW5hYmxlXzRHQiAm
-Jg0KPiArCSAgICBNVEtfSU9NTVVfSEFTX0ZMQUcoZGF0YS0+cGxhdF9kYXRhLCBIQVNfVkxEX1BB
-X1JORykpIHsNCj4gIAkJLyoNCj4gIAkJICogSWYgNEdCIG1vZGUgaXMgZW5hYmxlZCwgdGhlIHZh
-bGlkYXRlIFBBIHJhbmdlIGlzIGZyb20NCj4gIAkJICogMHgxXzAwMDBfMDAwMCB0byAweDFfZmZm
-Zl9mZmZmLiBoZXJlIHJlY29yZCBiaXRbMzI6MzBdLg0KPiBAQCAtNTczLDcgKzU4Myw3IEBAIHN0
-YXRpYyBpbnQgbXRrX2lvbW11X2h3X2luaXQoY29uc3Qgc3RydWN0IG10a19pb21tdV9kYXRhICpk
-YXRhKQ0KPiAgCX0NCj4gIAl3cml0ZWxfcmVsYXhlZCgwLCBkYXRhLT5iYXNlICsgUkVHX01NVV9E
-Q01fRElTKTsNCj4gIA0KPiAtCWlmIChkYXRhLT5wbGF0X2RhdGEtPnJlc2V0X2F4aSkgew0KPiAr
-CWlmIChNVEtfSU9NTVVfSEFTX0ZMQUcoZGF0YS0+cGxhdF9kYXRhLCBSRVNFVF9BWEkpKSB7DQo+
-ICAJCS8qIFRoZSByZWdpc3RlciBpcyBjYWxsZWQgU1RBTkRBUkRfQVhJX01PREUgaW4gdGhpcyBj
-YXNlICovDQo+ICAJCXdyaXRlbF9yZWxheGVkKDAsIGRhdGEtPmJhc2UgKyBSRUdfTU1VX01JU0Nf
-Q1RSTCk7DQo+ICAJfQ0KPiBAQCAtNjE4LDcgKzYyOCw3IEBAIHN0YXRpYyBpbnQgbXRrX2lvbW11
-X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICANCj4gIAkvKiBXaGV0aGVy
-IHRoZSBjdXJyZW50IGRyYW0gaXMgb3ZlciA0R0IgKi8NCj4gIAlkYXRhLT5lbmFibGVfNEdCID0g
-ISEobWF4X3BmbiA+IChCSVRfVUxMKDMyKSA+PiBQQUdFX1NISUZUKSk7DQo+IC0JaWYgKCFkYXRh
-LT5wbGF0X2RhdGEtPmhhc180Z2JfbW9kZSkNCj4gKwlpZiAoIU1US19JT01NVV9IQVNfRkxBRyhk
-YXRhLT5wbGF0X2RhdGEsIEhBU180R0JfTU9ERSkpDQo+ICAJCWRhdGEtPmVuYWJsZV80R0IgPSBm
-YWxzZTsNCj4gIA0KPiAgCXJlcyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2LCBJT1JFU09V
-UkNFX01FTSwgMCk7DQo+IEBAIC02MzEsNyArNjQxLDcgQEAgc3RhdGljIGludCBtdGtfaW9tbXVf
-cHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gIAlpZiAoZGF0YS0+aXJxIDwg
-MCkNCj4gIAkJcmV0dXJuIGRhdGEtPmlycTsNCj4gIA0KPiAtCWlmIChkYXRhLT5wbGF0X2RhdGEt
-Pmhhc19iY2xrKSB7DQo+ICsJaWYgKE1US19JT01NVV9IQVNfRkxBRyhkYXRhLT5wbGF0X2RhdGEs
-IEhBU19CQ0xLKSkgew0KPiAgCQlkYXRhLT5iY2xrID0gZGV2bV9jbGtfZ2V0KGRldiwgImJjbGsi
-KTsNCj4gIAkJaWYgKElTX0VSUihkYXRhLT5iY2xrKSkNCj4gIAkJCXJldHVybiBQVFJfRVJSKGRh
-dGEtPmJjbGspOw0KPiBAQCAtNzYzLDIzICs3NzMsMTkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBk
-ZXZfcG1fb3BzIG10a19pb21tdV9wbV9vcHMgPSB7DQo+ICANCj4gIHN0YXRpYyBjb25zdCBzdHJ1
-Y3QgbXRrX2lvbW11X3BsYXRfZGF0YSBtdDI3MTJfZGF0YSA9IHsNCj4gIAkubTR1X3BsYXQgICAg
-ID0gTTRVX01UMjcxMiwNCj4gLQkuaGFzXzRnYl9tb2RlID0gdHJ1ZSwNCj4gLQkuaGFzX2JjbGsg
-ICAgID0gdHJ1ZSwNCj4gLQkuaGFzX3ZsZF9wYV9ybmcgICA9IHRydWUsDQo+ICsJLmZsYWdzICAg
-ICAgICA9IEhBU180R0JfTU9ERSB8IEhBU19CQ0xLIHwgSEFTX1ZMRF9QQV9STkcsDQo+ICAJLmxh
-cmJpZF9yZW1hcCA9IHswLCAxLCAyLCAzLCA0LCA1LCA2LCA3LCA4LCA5fSwNCj4gIH07DQo+ICAN
-Cj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2lvbW11X3BsYXRfZGF0YSBtdDgxNzNfZGF0YSA9
-IHsNCj4gIAkubTR1X3BsYXQgICAgID0gTTRVX01UODE3MywNCj4gLQkuaGFzXzRnYl9tb2RlID0g
-dHJ1ZSwNCj4gLQkuaGFzX2JjbGsgICAgID0gdHJ1ZSwNCj4gLQkucmVzZXRfYXhpICAgID0gdHJ1
-ZSwNCj4gKwkuZmxhZ3MJICAgICAgPSBIQVNfNEdCX01PREUgfCBIQVNfQkNMSyB8IFJFU0VUX0FY
-SSwNCj4gIAkubGFyYmlkX3JlbWFwID0gezAsIDEsIDIsIDMsIDQsIDV9LCAvKiBMaW5lYXIgbWFw
-cGluZy4gKi8NCj4gIH07DQo+ICANCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2lvbW11X3Bs
-YXRfZGF0YSBtdDgxODNfZGF0YSA9IHsNCj4gIAkubTR1X3BsYXQgICAgID0gTTRVX01UODE4MywN
-Cj4gLQkucmVzZXRfYXhpICAgID0gdHJ1ZSwNCj4gKwkuZmxhZ3MgICAgICAgID0gUkVTRVRfQVhJ
-LA0KPiAgCS5sYXJiaWRfcmVtYXAgPSB7MCwgNCwgNSwgNiwgNywgMiwgMywgMX0sDQo+ICB9Ow0K
-PiAgDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L210a19pb21tdS5oIGIvZHJpdmVycy9p
-b21tdS9tdGtfaW9tbXUuaA0KPiBpbmRleCA3MjEyZTZmY2Y5ODIuLjUyMjVhOTE3MGFhYSAxMDA2
-NDQNCj4gLS0tIGEvZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuaA0KPiArKysgYi9kcml2ZXJzL2lv
-bW11L210a19pb21tdS5oDQo+IEBAIC0zOSwxMiArMzksNyBAQCBlbnVtIG10a19pb21tdV9wbGF0
-IHsNCj4gIA0KPiAgc3RydWN0IG10a19pb21tdV9wbGF0X2RhdGEgew0KPiAgCWVudW0gbXRrX2lv
-bW11X3BsYXQgbTR1X3BsYXQ7DQo+IC0JYm9vbCAgICAgICAgICAgICAgICBoYXNfNGdiX21vZGU7
-DQo+IC0NCj4gLQkvKiBIVyB3aWxsIHVzZSB0aGUgRU1JIGNsb2NrIGlmIHRoZXJlIGlzbid0IHRo
-ZSAiYmNsayIuICovDQo+IC0JYm9vbCAgICAgICAgICAgICAgICBoYXNfYmNsazsNCj4gLQlib29s
-ICAgICAgICAgICAgICAgIGhhc192bGRfcGFfcm5nOw0KPiAtCWJvb2wgICAgICAgICAgICAgICAg
-cmVzZXRfYXhpOw0KPiArCXUzMiAgICAgICAgICAgICAgICAgZmxhZ3M7DQoNCg0KSG93IGFib3V0
-IHVzaW5nIGJpdCBmaWVsZCBpbnN0ZWFkPyBlZw0KDQogIHUzMiBoYXNfYmNsazoxOw0KDQpJbiB0
-aGlzIHdheSwgd2UgZG9uJ3QgbmVlZCB0byBjaGFuZ2UgY29kZS4NCg0KSm9lLkMNCg0KDQo=
+This patch adds basic core dwc3, usb phy and rt1711h nodes for
+usb support on Hikey960.
+
+This does not enable the mux/hub functionality on the board, so
+the USB-A host ports will not function, but does allow the USB-C
+port to function in gadget mode (unfortunately not in host, as
+the hub/mux functionality is needed to enable vbus output to
+power devices in host mode).
+
+This is based on an old patch originally by Yu Chen.
+
+Cc: Yu Chen <chenyu56@huawei.com>
+Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Wei Xu <xuwei5@hisilicon.com>
+Cc: Binghui Wang <wangbinghui@hisilicon.com>
+Cc: YongQin Liu <yongqin.liu@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+ .../boot/dts/hisilicon/hi3660-hikey960.dts    | 72 +++++++++++++++++++
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi     | 34 +++++++++
+ 2 files changed, 106 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+index e035cf195b19..ff392a47562c 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+@@ -13,6 +13,7 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/usb/pd.h>
+ 
+ / {
+ 	model = "HiKey960";
+@@ -526,6 +527,48 @@
+ &i2c1 {
+ 	status = "okay";
+ 
++	rt1711h: rt1711h@4e {
++		compatible = "richtek,rt1711h";
++		reg = <0x4e>;
++		status = "ok";
++		interrupt-parent = <&gpio27>;
++		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&usb_cfg_func>;
++
++		usb_con: connector {
++			compatible = "usb-c-connector";
++			label = "USB-C";
++			data-role = "dual";
++			power-role = "dual";
++			try-power-role = "sink";
++			source-pdos = <PDO_FIXED(5000, 500, PDO_FIXED_USB_COMM)>;
++			sink-pdos = <PDO_FIXED(5000, 500, PDO_FIXED_USB_COMM)
++				PDO_VAR(5000, 5000, 1000)>;
++			op-sink-microwatt = <10000000>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				port@1 {
++					reg = <1>;
++					usb_con_ss: endpoint {
++						remote-endpoint = <&dwc3_ss>;
++					};
++				};
++			};
++		};
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			rt1711h_ep: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&dwc3_role_switch>;
++			};
++		};
++	};
++
+ 	adv7533: adv7533@39 {
+ 		status = "ok";
+ 		compatible = "adi,adv7533";
+@@ -612,3 +655,32 @@
+ 		interrupts = <3 IRQ_TYPE_EDGE_RISING>;
+ 	};
+ };
++
++&dwc3 { /* USB */
++	dr_mode = "otg";
++	maximum-speed = "super-speed";
++	phy_type = "utmi";
++	snps,dis-del-phy-power-chg-quirk;
++	snps,lfps_filter_quirk;
++	snps,dis_u2_susphy_quirk;
++	snps,dis_u3_susphy_quirk;
++	snps,tx_de_emphasis_quirk;
++	snps,tx_de_emphasis = <1>;
++	snps,dis_enblslpm_quirk;
++	snps,gctl-reset-quirk;
++	usb-role-switch;
++	role-switch-default-mode = "host";
++	port {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		dwc3_role_switch: endpoint@0 {
++			reg = <0>;
++			remote-endpoint = <&rt1711h_ep>;
++		};
++
++		dwc3_ss: endpoint@1 {
++			reg = <1>;
++			remote-endpoint = <&usb_con_ss>;
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+index c39b78989ff9..d25aac5e0bf8 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+@@ -1152,6 +1152,40 @@
+ 				};
+ 			};
+ 		};
++
++		usb3_otg_bc: usb3_otg_bc@ff200000 {
++			compatible = "syscon", "simple-mfd";
++			reg = <0x0 0xff200000 0x0 0x1000>;
++
++			usb_phy: usb-phy {
++				compatible = "hisilicon,hi3660-usb-phy";
++				#phy-cells = <0>;
++				hisilicon,pericrg-syscon = <&crg_ctrl>;
++				hisilicon,pctrl-syscon = <&pctrl>;
++				hisilicon,eye-diagram-param = <0x22466e4>;
++			};
++		};
++
++		dwc3: dwc3@ff100000 {
++			compatible = "snps,dwc3";
++			reg = <0x0 0xff100000 0x0 0x100000>;
++
++			clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
++				 <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
++			clock-names = "ref", "bus_early";
++
++			assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
++			assigned-clock-rates = <229000000>;
++
++			resets = <&crg_rst 0x90 8>,
++				 <&crg_rst 0x90 7>,
++				 <&crg_rst 0x90 6>,
++				 <&crg_rst 0x90 5>;
++
++			interrupts = <0 159 4>, <0 161 4>;
++			phys = <&usb_phy>;
++			phy-names = "usb3-phy";
++		};
+ 	};
+ };
+ 
+-- 
+2.17.1
 
