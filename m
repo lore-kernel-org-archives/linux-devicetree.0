@@ -5,115 +5,139 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F42CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 11:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B95A3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 12:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B034208D5
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 11:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 858822075D
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 12:28:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uLSRDPJx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hPhYRScc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728258AbgGDLkK (ORCPT
+        id S1726777AbgGDM2X (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Jul 2020 07:40:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40346 "EHLO
+        Sat, 4 Jul 2020 08:28:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727990AbgGDLjK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jul 2020 07:39:10 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A019C061794;
-        Sat,  4 Jul 2020 04:39:09 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id j4so32999596wrp.10;
-        Sat, 04 Jul 2020 04:39:09 -0700 (PDT)
+        with ESMTP id S1726738AbgGDM2X (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jul 2020 08:28:23 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34CB8C061794;
+        Sat,  4 Jul 2020 05:28:23 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id d16so23557969edz.12;
+        Sat, 04 Jul 2020 05:28:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=wM8K//a3jkdseqCAX2c7vevYvjhQJoc1FelDz72tbrA=;
-        b=uLSRDPJxTFQXZeoHyKDe5jl2kj0U+TGby3zgXWBnikqtT6iWF2HlxK66opO7RAlSaT
-         PlGtaqTqdSRH5fxRrcNbVqNexyGLLvRP60i+KX6k1qhMSGGY9dsvNC3LEVf1INfUi/p5
-         ye6D6sD2UHAIpmmf7aM/z87jqs1s877OgEWe+asl/0NtltxFcZb4Sbqp/TRmiSXAxSWb
-         hMeWglCBdNY1hf+OTXKA/zPoeoMreUO9Cj7gPjk+gsAYGUQruNFh3K4ZhxTXVI2CmmeP
-         adiQel92MTrYxYZqyyWgHE54DkcHH5zUbFyOnnofBty/t4XfBv/3DRt0FhdYIAMuHikg
-         RxSw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i+PMOq5Al6StIBzFo1wcc3naFIWV4JdGXcD4ZNngMYA=;
+        b=hPhYRSccHjEE/ShMqbPzxgOdCzDHXjA4b8SawVRhXNUUP+zf2Zwez4er/xTE1Ca5uj
+         mcfmRVtdHXqBvDsIXbwijSfi+FBiunNeXv8qhhPAbCPrXliUSZiDksu6/uj8i+7X9A9k
+         Qs0zcFPfSbKd9Te0JqUwW0M6A7p4KzfnrZjLnIalinkY2YDklLZst1m31vG+rxMTeuV4
+         Wj3yTiwBtFzM15NLWPa7JB0yeiAwRefq0LCBA8K9fDP3oiFoDW99RCzwMQ0kGw8rI+fe
+         kHsdHKBlGScRmD4f9yRo3O9gGuVemAbp1MrOdMKgtoWmxRKUDkLycxUZ4BSwznkz/Fbk
+         zuqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wM8K//a3jkdseqCAX2c7vevYvjhQJoc1FelDz72tbrA=;
-        b=PnapFxM00MgsCD45ymZzt6bfD3bz1qQrzNpcECG5BhrFOztq5Fv/3ktulxSwF9OsDp
-         F9cwqv43SIHYVhXHcbBC8HQfe4YwpMHnaqfMod7x8fU4w3C5m1ehXX9KblOy2SwqkPAF
-         6Qy4XRvu5SNK14nVVgVueiDCUitIEZ7Zc4ts1niE9+JXlUp7iQq0LctEjbqNRfYEQNbf
-         hgtVwL2BeeWb9fxdAxqcinhgicMGjpjnF+EXNVmsPmpC+Cj8IFfn7DS+3XtBSTxF20In
-         P1MorLesjQX1FD8t0Mtz5MV2ipN0iXS/Dg2yqvs2tSZH6ZrX8RFipXszgcxnChRq7SUi
-         X7AQ==
-X-Gm-Message-State: AOAM532ZpjaKB67qyAvVy62QCWz3NakvooDBdp4Ktub5NwCY2bGfbS7d
-        tOIrXtiJEpgqJztQZp6vnl8=
-X-Google-Smtp-Source: ABdhPJwuek4INGNtBBLyn1Xm7fiys3LCOLkRgtyoQjhb5oZz83S7qN2/HUPVrbJchM+9xFxxHAwRKA==
-X-Received: by 2002:adf:ea06:: with SMTP id q6mr39049381wrm.69.1593862748290;
-        Sat, 04 Jul 2020 04:39:08 -0700 (PDT)
-Received: from clement-Latitude-7490.numericable.fr (213-245-241-245.rev.numericable.fr. [213.245.241.245])
-        by smtp.gmail.com with ESMTPSA id j24sm18657373wrd.43.2020.07.04.04.39.07
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i+PMOq5Al6StIBzFo1wcc3naFIWV4JdGXcD4ZNngMYA=;
+        b=TsvdVxlyeFfv0JKv/bIZWAgvma4mNZsvcmXIz67jW+uMXaovX22uqZ9quhDsH9RYC9
+         K9RnJgKZQZTBRZ4Se0uKGqRteUb+agHFRRN4KDOp/uVjmJIymCvZhsXNccycHkGdRFF9
+         yJ3fccRfK/2CBIbyARO9ihgaoo3FFZzZyKjWLIYI1nBq7/aUphvOTTWaKrqGraAomyWX
+         D5wXFQPr8NONGGvLeeOLOA08poTAkYX9pajV2qKd0g6vRX+VUvepiHABuM32ar+skJrJ
+         0jJmI4LRjDCVNrQuLT5GwT8dACkmLDbE5F0xLjkguJUxVlEYuHoPCtGyb5nO4kZgHTjx
+         en7w==
+X-Gm-Message-State: AOAM5302QN/9OrKhngkUXG3eG/Eqx9v1UvHYEvcp9o9Q/9Rd8nhJ4uBv
+        B8J31R+oNQkHLbbWMRPLuX6VLsWPi3I=
+X-Google-Smtp-Source: ABdhPJxNoGpPWfHtk5GtUWgId+YmOEKnhvbIaHUdtxzXA+oC0iIVpg7GUe70uTMDbAHPmrfK5PCATw==
+X-Received: by 2002:a05:6402:1778:: with SMTP id da24mr33863987edb.126.1593865701817;
+        Sat, 04 Jul 2020 05:28:21 -0700 (PDT)
+Received: from localhost.localdomain (abab73.neoplus.adsl.tpnet.pl. [83.6.165.73])
+        by smtp.googlemail.com with ESMTPSA id be2sm15861831edb.92.2020.07.04.05.28.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jul 2020 04:39:07 -0700 (PDT)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Sat, 04 Jul 2020 05:28:21 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+To:     skrzynka@konradybcio.pl
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Marcus Cooper <codekipper@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH 02/16] ASoC: sun4i-i2s: Adjust LRCLK width
-Date:   Sat,  4 Jul 2020 13:38:48 +0200
-Message-Id: <20200704113902.336911-3-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200704113902.336911-1-peron.clem@gmail.com>
-References: <20200704113902.336911-1-peron.clem@gmail.com>
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] iommu/arm-smmu: Implement qcom,skip-init
+Date:   Sat,  4 Jul 2020 14:28:09 +0200
+Message-Id: <20200704122809.73794-1-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Marcus Cooper <codekipper@gmail.com>
+This adds the downstream property required to support
+SMMUs on SDM630 and other platforms (the need for it
+most likely depends on firmware configuration).
 
-Some codecs such as i2s based HDMI audio and the Pine64 DAC require
-a different amount of bit clocks per frame than what is calculated
-by the sample width. Use the values obtained by the tdm slot bindings
-to adjust the LRCLK width accordingly.
-
-Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
-Acked-by: Maxime Ripard <maxime@cerno.tech>
+Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- sound/soc/sunxi/sun4i-i2s.c | 3 +++
- 1 file changed, 3 insertions(+)
+ .../devicetree/bindings/iommu/arm,smmu.yaml       | 10 ++++++++++
+ drivers/iommu/arm-smmu.c                          | 15 +++++++++------
+ 2 files changed, 19 insertions(+), 6 deletions(-)
 
-diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index 9690389cb68e..8bae97efea30 100644
---- a/sound/soc/sunxi/sun4i-i2s.c
-+++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -470,6 +470,9 @@ static int sun8i_i2s_set_chan_cfg(const struct sun4i_i2s *i2s,
- 		return -EINVAL;
+diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+index d7ceb4c34423..9abd6d41a32c 100644
+--- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
++++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+@@ -102,6 +102,16 @@ properties:
+       access to SMMU configuration registers. In this case non-secure aliases of
+       secure registers have to be used during SMMU configuration.
+ 
++  qcom,skip-init:
++    description: |
++      Disable resetting configuration for all context banks
++      during device reset.  This is useful for targets where
++      some context banks are dedicated to other execution
++      environments outside of Linux and those other EEs are
++      programming their own stream match tables, SCTLR, etc.
++      Without setting this option we will trample on their
++      configuration.
++
+   stream-match-mask:
+     $ref: /schemas/types.yaml#/definitions/uint32
+     description: |
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index 243bc4cb2705..a5c623d4caf9 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -1655,13 +1655,16 @@ static void arm_smmu_device_reset(struct arm_smmu_device *smmu)
+ 	 * Reset stream mapping groups: Initial values mark all SMRn as
+ 	 * invalid and all S2CRn as bypass unless overridden.
+ 	 */
+-	for (i = 0; i < smmu->num_mapping_groups; ++i)
+-		arm_smmu_write_sme(smmu, i);
+ 
+-	/* Make sure all context banks are disabled and clear CB_FSR  */
+-	for (i = 0; i < smmu->num_context_banks; ++i) {
+-		arm_smmu_write_context_bank(smmu, i);
+-		arm_smmu_cb_write(smmu, i, ARM_SMMU_CB_FSR, ARM_SMMU_FSR_FAULT);
++	if (!of_find_property(smmu->dev->of_node, "qcom,skip-init", NULL)) {
++		for (i = 0; i < smmu->num_mapping_groups; ++i)
++			arm_smmu_write_sme(smmu, i);
++
++		/* Make sure all context banks are disabled and clear CB_FSR  */
++		for (i = 0; i < smmu->num_context_banks; ++i) {
++			arm_smmu_write_context_bank(smmu, i);
++			arm_smmu_cb_write(smmu, i, ARM_SMMU_CB_FSR, ARM_SMMU_FSR_FAULT);
++		}
  	}
  
-+	if (i2s->slot_width)
-+		lrck_period = i2s->slot_width;
-+
- 	regmap_update_bits(i2s->regmap, SUN4I_I2S_FMT0_REG,
- 			   SUN8I_I2S_FMT0_LRCK_PERIOD_MASK,
- 			   SUN8I_I2S_FMT0_LRCK_PERIOD(lrck_period));
+ 	/* Invalidate the TLB, just in case */
 -- 
-2.25.1
+2.27.0
 
