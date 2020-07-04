@@ -2,161 +2,159 @@ Return-Path: <SRS0=KrzM=AP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CB3C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 14:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9541C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 15:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6302120885
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 14:35:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RLpBGuIN"
+	by mail.kernel.org (Postfix) with ESMTP id 947642145D
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 15:33:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593876816;
+	bh=Cf8jYvmEMjlkd5Kh2lEDejZXr1RcS80lVl4jJtD+NU8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=lnK7bPxCRctfa723Y3QxjYo2JvpfMAZsEc3JtJYuilZlFZCTK9mNJb7tgxYedTJAW
+	 5eFb8RnrLuvfLwuVJFkTCvUJwSW0Miqe9i/bMq4sCBADcuCfSxODXE0w9MhKG8brN5
+	 26zRiQjjy+hLS/geUmWG6NG4TvHCrYa8JHL16QM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgGDOfz (ORCPT
+        id S1726632AbgGDPdf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Jul 2020 10:35:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726898AbgGDOfz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jul 2020 10:35:55 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B86E8C061794;
-        Sat,  4 Jul 2020 07:35:54 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id h19so40220666ljg.13;
-        Sat, 04 Jul 2020 07:35:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=RSyrJuSDknNeqRlmj8bIK5Vdtz9ftR4YhPWSIC5vrws=;
-        b=RLpBGuINGz2ZbLXoy4Vf+xPYxukzPyyNkyZPUXphO/NcTiHZr6EZiIzVfUz0eJB9S2
-         /EwTLsnPTdfEh9SrjKe8mufzhLkxu4gtDthSydKXdh84OV3U2P27lNzGuM+jpyboqZO5
-         7zYQUYdzu4FPoiT2YxMWm+5i5YEaKIdGkqAANYE+1ft0joETvBwJsXZbqiKnpVAGJlna
-         tNgakSH74CfB21LNALNjr2OIg8J+pUt2gBPAG3WGpRIRej0ylq/HRLwF0BkSF+IdG82B
-         rITznNiV11h706fwv4GhllZfTeR5AqW5NRdZ6LobmE9B4csHObfYMf6EMjnnZRCo3ZiN
-         Q/2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=RSyrJuSDknNeqRlmj8bIK5Vdtz9ftR4YhPWSIC5vrws=;
-        b=K/WYdBdufo1AJ/7DkfvOnSYleS2TMsfrvC0Wm3T2HQP6j8B0beaaaxpiIdXNn/pU7T
-         WqndAwiJnTx3G0LvKJ55U4veXtUV9h61Hc0TWEmVBXdScR/7gjYZ6D2QauTrmd1PrN9N
-         Bh6aO8JR1+7RhzE75ZtAXWKVxXgUYEdJv15EwOfsONyWXGslU5rlH0CHrPXn4XJ+S/G5
-         p+0eEaadJfdsovnCB5ehwStY/iQm1YZt/PUwTlTZ83WWwNpj8Hu6QBMwc4TnC5QAPq8k
-         YM2Eqm1xdY+7f/oDUGrODAJN3lp61aLs1647rRL6wFItKwB7aSiXf3PIQL1N8jc/zC66
-         rXDA==
-X-Gm-Message-State: AOAM530PMftDbJbHOBueXLP7wFy6KcjNCqGz+npPxie3tc6eA6T9bCIL
-        d3z3K82iXynw2l6iNapA7mU=
-X-Google-Smtp-Source: ABdhPJzbguWBoqpi25Z8FzFDM9eW6IcGJ+/Tpa4yANpYepPYeCKwCoc+EFIJ4dSuk161JDTB5tcogw==
-X-Received: by 2002:a2e:920e:: with SMTP id k14mr23393141ljg.430.1593873353261;
-        Sat, 04 Jul 2020 07:35:53 -0700 (PDT)
-Received: from saturn.lan ([2a00:fd00:805f:db00:4025:a614:1d5c:b7bc])
-        by smtp.gmail.com with ESMTPSA id 144sm6407556lfm.87.2020.07.04.07.35.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jul 2020 07:35:52 -0700 (PDT)
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-fbdev@vger.kernel.org
-Subject: [PATCH v1 1/1] dt-bindings: fix simple-framebuffer example
-Date:   Sat,  4 Jul 2020 16:35:44 +0200
-Message-Id: <20200704143544.789345-2-sam@ravnborg.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200704143544.789345-1-sam@ravnborg.org>
-References: <20200704143544.789345-1-sam@ravnborg.org>
+        Sat, 4 Jul 2020 11:33:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48170 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726405AbgGDPdf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 4 Jul 2020 11:33:35 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F26D20747;
+        Sat,  4 Jul 2020 15:33:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593876814;
+        bh=Cf8jYvmEMjlkd5Kh2lEDejZXr1RcS80lVl4jJtD+NU8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=TFKWC4yz+ixS0dy03DWb5vFl2OYdhXbpaAxlI8r/e1EcrUy/7J2mX6Lo2iMjAIuF5
+         umqiQwDc5HWU7ppHbY+OlHe7VqtpzQKuQvUpMJ0gizUmJBWUxzw+2F5j7ozccLqyUF
+         PjubUYNwMVADJRtg5GZdsF6sfX7N1lUbgLWUQLrI=
+Date:   Sat, 4 Jul 2020 16:33:30 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: iio: bmc150_magn: Document missing
+ compatibles
+Message-ID: <20200704163330.5d5973b1@archlinux>
+In-Reply-To: <20200629064925.GA5879@kozik-lap>
+References: <20200617101259.12525-1-krzk@kernel.org>
+        <20200620164049.5aa91365@archlinux>
+        <20200622051940.GA4021@kozik-lap>
+        <20200627155714.15478f60@archlinux>
+        <20200629064925.GA5879@kozik-lap>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Now that dt-extract-example gained support for using root nodes
-in examples, update the example for the simple-frambuffer binding to use it.
+On Mon, 29 Jun 2020 08:49:25 +0200
+Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-This gives us a better example and kill a long standing warning:
+> On Sat, Jun 27, 2020 at 03:57:14PM +0100, Jonathan Cameron wrote:
+> > On Mon, 22 Jun 2020 07:19:40 +0200
+> > Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >  =20
+> > > On Sat, Jun 20, 2020 at 04:40:49PM +0100, Jonathan Cameron wrote: =20
+> > > > On Wed, 17 Jun 2020 12:12:59 +0200
+> > > > Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > > >    =20
+> > > > > The driver supports also BMC156B and BMM150B so document the comp=
+atibles
+> > > > > for these devices.
+> > > > >=20
+> > > > > Fixes: 9d75db36df14 ("iio: magn: Add support for BMM150 magnetome=
+ter")
+> > > > > Cc: <stable@vger.kernel.org>
+> > > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > > >=20
+> > > > > ---
+> > > > >=20
+> > > > > The fixes tag is not accurate but at least offer some backporting=
+.   =20
+> > > >=20
+> > > > I'm not sure we generally bother backporting a missing section of b=
+inding
+> > > > documentation. Particularly as this doc isn't in yaml yet so it's n=
+ot
+> > > > as though any automated checking is likely to be occurring.
+> > > >=20
+> > > > Rob, any views on backporting this sort of missing id addition?
+> > > >=20
+> > > > One side comment here is that the devices that are magnetometers on=
+ly
+> > > > should never have had the _magn prefix in their compatibles. We only
+> > > > do that for devices in incorporating several sensors in one package
+> > > > (like the bmc150) where we have multiple drivers for the different
+> > > > sensors incorporated. We are too late to fix that now though.  It
+> > > > may make sense to mark the _magn variants deprecated though and
+> > > > add the ones without the _magn postfix.   =20
+> > >=20
+> > > I can add proper compatibles and mark these as deprecated but actually
+> > > the driver should not have additional compatibles in first place - all
+> > > devices are just compatible with bosch,bmc150. =20
+> >=20
+> > Why not?  Whilst the devices may be compatible in theory, it's not unus=
+ual
+> > for subtle differences to emerge later.   As such we tend to at least
+> > support the most specific compatible possible for a part - though we
+> > can use fallback compatibles. =20
+>=20
+> It does not strictly harm but have in mind that adding is always
+> possible (when you spot the difference between devices). But it is
+> entirely different with removal - it takes time to deprecate one and to
+> remove it.
+>=20
+> There is just no benefit for adding new compatibles for really
+> compatible devices. The module device table just grows. It makes sense
+> however to document in bindings that given compatible serves family of
+> devices.
+>=20
+> Somehow driver developers got impression that they need to make a commit
+> like "Add support for xyz123 device" adding only compatible, to bring
+> support for new device. But the support was already there so just
+> document that xyz001 is compatible with xyz123.
 
-simple-framebuffer.example.dts:23.16-39.11:
-Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+Whilst I agree the compatible is not really necessary, it is often
+non trivial to establish two parts are actual compatible. Manufacturers
+have an annoying habit of not actually saying so on their datasheets.
+So it is useful to add documentation for the support so that a grep
+will identify the driver supports it.
 
-Note: To get the update dt-extract-example execute:
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+I don't have a problem with people adding the ID particularly as they
+are often not entirely sure the parts are compatible.  I'm not fussed
+if they don't do so of course.
 
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: linux-fbdev@vger.kernel.org
----
- .../bindings/display/simple-framebuffer.yaml  | 45 ++++++++++---------
- 1 file changed, 23 insertions(+), 22 deletions(-)
+Ideal in my view is to list multiple compatibles in the dts files
+in this case to allow us to support any differences if any turn up
+in the future.=20
 
-diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer.yaml b/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
-index 1db608c9eef5..6f23ea14132b 100644
---- a/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
-+++ b/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
-@@ -152,28 +152,29 @@ additionalProperties: false
- 
- examples:
-   - |
--    aliases {
--      display0 = &lcdc0;
-+    / {
-+        compatible = "foo";
-+        model = "foo";
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+
-+        chosen {
-+            #address-cells = <1>;
-+            #size-cells = <1>;
-+            stdout-path = "display0";
-+            framebuffer0: framebuffer@1d385000 {
-+                compatible = "allwinner,simple-framebuffer", "simple-framebuffer";
-+                allwinner,pipeline = "de_be0-lcd0";
-+                reg = <0x1d385000 3840000>;
-+                width = <1600>;
-+                height = <1200>;
-+                stride = <3200>;
-+                format = "r5g6b5";
-+                clocks = <&ahb_gates 36>, <&ahb_gates 43>, <&ahb_gates 44>;
-+                lcd-supply = <&reg_dc1sw>;
-+                display = <&lcdc0>;
-+            };
-+        };
-     };
- 
--    chosen {
--      #address-cells = <1>;
--      #size-cells = <1>;
--      stdout-path = "display0";
--      framebuffer0: framebuffer@1d385000 {
--        compatible = "allwinner,simple-framebuffer", "simple-framebuffer";
--        allwinner,pipeline = "de_be0-lcd0";
--        reg = <0x1d385000 3840000>;
--        width = <1600>;
--        height = <1200>;
--        stride = <3200>;
--        format = "r5g6b5";
--        clocks = <&ahb_gates 36>, <&ahb_gates 43>, <&ahb_gates 44>;
--        lcd-supply = <&reg_dc1sw>;
--        display = <&lcdc0>;
--      };
--    };
--
--    lcdc0: lcdc { };
--
- ...
--- 
-2.25.1
+=46rom a purely practical basis, if I'm writing a DTS I'd much rather
+it matched up with my BOM rather than having to 'know' that two parts
+are compatible.
+
+Jonathan
+
+>=20
+> Best regards,
+> Krzysztof
+>=20
 
