@@ -2,187 +2,261 @@ Return-Path: <SRS0=KrzM=AP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F6C5C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 17:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2F3C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 19:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EF322070B
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 17:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6262C20771
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 19:24:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="bGJue6eF"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Hudxi7lV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgGDRml (ORCPT
+        id S1726953AbgGDTY0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Jul 2020 13:42:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39756 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgGDRml (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jul 2020 13:42:41 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13AEAC061794;
-        Sat,  4 Jul 2020 10:42:41 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id dm19so24361295edb.13;
-        Sat, 04 Jul 2020 10:42:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=s+WjqQhLnrBI9EZzuDqm8X/T4+BDu4Hvw8Pd6T2GP/0=;
-        b=bGJue6eFu/VA4Z82viDrc/TOb1htLvh2SOgSDczNVO7YU7sdfkKY28+EU8afJih10q
-         0N8YaAE/AmpRF6dp640fwh2aIEClOc56Zzav7IhwuCCIQMXGV6if3oeuYbKBWQu+ttlB
-         QSXNrork0ZteL5K5kxxc7oaaLoWxaN+xARlgoWRL6Cuv64rfoHyjMh980DsyvOLaynjR
-         K0UgWIugk+qbiApkZC9cKu2BfujP19Eu3jtymgrqJhYJR56xXgK8r/UgIHYnVhr8myrp
-         bd3Bb7hC2Gjq8H1hERABJXPPmgiFQpOD12As09QpFCPPWdVI1psRm4k36AKXbOJ5vNxk
-         EXYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=s+WjqQhLnrBI9EZzuDqm8X/T4+BDu4Hvw8Pd6T2GP/0=;
-        b=tVbzpDiLNbvt02kkKtppX6qjFIYSRFmUFtBJnKUxuMD1zMKBwqGnbu2TIkjwgBxwNH
-         BnLeA3CC0eS3ZWfzOtDdFTM6P+VeXfrFIXIZyiY1bQ91h84xA1A75pP6w5LwyZgId4n0
-         SA+gg3QoRjPwi8g6Z1IS+ugq0mUOJEKZWWL2Jl3O6tWrcyB59vkYaTk69bTzkXOjEeO5
-         J2c29jLYeWkQysSod38t7FofguD5nWO8IXwIuYRyqyDbfzAsSuNGM6KGbFroJjxpX3S0
-         SW7ft20N+hzXBcC/VHFrtqKQ/9rnxX6fAzCh8IAy0n7atDWm7m1neqCFxGoRm9Pv9EP4
-         04eA==
-X-Gm-Message-State: AOAM5334wtRk4ecCH7SGmCpQhO4wY/q70Wr6mYyXzpHwL5QfXbLDlmDx
-        HddsPAVAeoKIlNMkPxilB+4=
-X-Google-Smtp-Source: ABdhPJy0vTlYXslUqGyC33YSMiLi8X29/Je6nWzHxrmFVdZsP3IEJRoSrq69lLr/vXKxSdAkeSt+Cg==
-X-Received: by 2002:a05:6402:2c2:: with SMTP id b2mr46631661edx.184.1593884559571;
-        Sat, 04 Jul 2020 10:42:39 -0700 (PDT)
-Received: from localhost.localdomain (p200300f137244200428d5cfffeb99db8.dip0.t-ipconnect.de. [2003:f1:3724:4200:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id f17sm17671650edj.32.2020.07.04.10.42.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jul 2020 10:42:39 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     amelie.delaunay@st.com
-Cc:     alexandre.torgue@st.com, balbi@kernel.org,
-        devicetree@vger.kernel.org, fabrice.gasnier@st.com,
-        gregkh@linuxfoundation.org, hminas@synopsys.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-usb@vger.kernel.org, mcoquelin.stm32@gmail.com,
-        robh+dt@kernel.org
-Subject: RE: [PATCH 1/3] usb: dwc2: override PHY input signals with usb role switch support
-Date:   Sat,  4 Jul 2020 19:42:19 +0200
-Message-Id: <20200704174219.612060-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200616140717.28465-2-amelie.delaunay@st.com>
-References: <20200616140717.28465-2-amelie.delaunay@st.com>
+        Sat, 4 Jul 2020 15:24:26 -0400
+Received: from mout.gmx.net ([212.227.15.15]:32847 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726153AbgGDTYZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 4 Jul 2020 15:24:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1593890611;
+        bh=WAD5QQlP0LCkmso8s+gKUS7M0lXvNdxkqPNyUPummWA=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=Hudxi7lVx6oLzZwzuX2yubzy4m0dv217JY7GzTM9Dqbb2BEzYtC/6cUs+6tUEy6Kk
+         CcNSwucrKEXJooD1rf39qLnXKqxqGGzPokbCPJAqBPN1bVCrcIVCJpkryahKUQSc2h
+         2nLFmBYSIXgxXbf07YjRAeL/ix3Quwc+W8Azs3s4=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.195.26]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MWih0-1kOkyA3Zvs-00X0R7; Sat, 04
+ Jul 2020 21:23:31 +0200
+Date:   Sat, 4 Jul 2020 21:23:23 +0200
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Josua Mayer <josua.mayer@jm0.eu>,
+        Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [RFC PATCH 08/10] rtc: New driver for RTC in Netronix embedded
+ controller
+Message-ID: <20200704192323.GC2578@latitude>
+References: <20200620224222.1312520-1-j.neuschaefer@gmx.net>
+ <20200620224222.1312520-7-j.neuschaefer@gmx.net>
+ <20200621001106.GC131826@piout.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="eRtJSFbw+EEWtPj3"
+Content-Disposition: inline
+In-Reply-To: <20200621001106.GC131826@piout.net>
+X-Provags-ID: V03:K1:DMqWrUZO9WvfwP5GHEh60ZFeADf5FrliknlidT+JUvSoso7C0AO
+ 7MW0Tsc9rRZy85HRmMyausOcHHg5ACqV3x2iHCabh8I85A6vvvw+nQZNqTwQ8KwSFyvd3DY
+ qADu0PJkUy9H+ni38N2KVI3fhPnR6KEBZ9eTOiyHnsujTpSxcrQpTa6UayqX+6ezHFvxPy1
+ ceSsoyvzbC3cSZqkmvszA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:QK83j4q2tNY=:+A0whngEeVTzV/tycO7gcI
+ bI5ICj/isg0sLLNIvbg3VNB8/JY8pD1LY6qjM1djcWYsE9AzhDA9mvM0WhVbxqceofDwrMMfi
+ 8XL1iwuq7ThouwscRhBxeQ2bS8QTqBdllaskx7ZSi7kXSe38XMnjIqQtu8Egk8S7AaS9BkG++
+ jF+7DlEMXsATRtEMrask0IqgP1vMfaBnGVAycYQDA3/f7oLZwS+U7wU6tu31oFvEkP1QKCWqZ
+ mqEnpIzwVYyVjbGG2J+o8kW8yIq9DWiuHih0xF/4mLWXvV8jmERpDifnoYdr1KrOHqBFy3RSC
+ tk5Y8IS2+UMyaK9q2jgfSPQynu8SGRAxzvlH6a9quT1odKzNsxbIJZ4K05wBIIVB3Gk6zvl2V
+ XU5roBWYrAR7zw5xAzZxo+LlHPKL8+I+sxg09R0KDlWFlWPTOTwCfuGgcvd9li1w72E8pO2D9
+ h5AoTym78JKPCS/XBattrKrXDNxWUsNhhJ0uiPkMuVafPel2oxD+lghGTc6GE+T32a71yIXiA
+ YtC53K5Tm2uR5j0dmqXUi9nvIOtKhQRl9OEL/WhFvaluCc2NF7IAcw3KogMEcGWuFEvJJ4qcR
+ Pl+haqEKHh708fbZyRQfPu8yDJZTxPheSDmOZkgflGF6hRklJ25bvvxQmFGAa9vID0vvX6ij4
+ VxVCJJe5Ns5VptVwbbbIJy5ZfcptsMK1j7BtvT0VDwOn/8RgntYPByHsMsc6lPZuAwyA3x+Cn
+ ixvQUZUCId6tBJCBlhaakvhcGVergkOOSVn+dsQcZbFkbMM+QRh3U2uldv/mKKkH4djVwRQpp
+ JD8EHu7UGyItm0iN1cRRCJtn/cdanQscBwQRzuO26qVOp27Guq7AIn8LCPEhOLsjCweVHRQCG
+ niJ6QiUfjuc3y5+egOzgOSOWxBktK7zB19QoDle81LjRz4njn7U9dS6AvOo+13u2gu7TOQ760
+ zSZjPiEIBP7m02IusqJMD622oH7F8TjBwNQxc0UKoppdEQsqd8F+bv32+fR8l8575h1YbEuNS
+ Q4DoCfjrOwvEuVZDou/1b5b1aEgWuK9gQ9gBQVP7Tc9S0qo7cQcUSOGVzyfjyjDaFPq/kOFhL
+ PgegdZDvPtt2s+bnkVyqVwVMOvz5lPg0ccPRu96unD5Mlm8odgTUrBGX3LCX7bqOD50TXDc1R
+ c6O2P7aiCxAlcX9FmqMaYVbWUBhiMuNWjT4mm3nxo0NB3Nl2DoH5RmdilUzLhItHJ1/+0lQcE
+ +wmd9s/cZ/ItJZFW1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Amelie,
 
-thank you for this patch - I am hoping that it will help us on Amlogic
-Meson8, Meson8b, Meson8m2 and GXBB SoCs as well.
-On these SoCs the ID detection is performed by the PHY IP and needs to
-be polled.
-I think usb_role_switch is the perfect framework for this on dwc2 side.
-For the PHY driver I'm going to implement the cable state using the
-extcon framework and then having a new usb-conn-extcon driver. This is
-just to give you an overview why I'm interested in this.
+--eRtJSFbw+EEWtPj3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Sun, Jun 21, 2020 at 02:11:06AM +0200, Alexandre Belloni wrote:
+> On 21/06/2020 00:42:19+0200, Jonathan Neusch=C3=A4fer wrote:
+> > With this driver, mainline Linux can keep its time and date in sync with
+> > the vendor kernel.
+> >=20
+> > Advanced functionality like alarm and automatic power-on is not yet
+> > supported.
+> >=20
+>=20
+> Please report the results of rtctest (from the kernel tree) [...]
+
+  # ./rtctest
+  [=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D] Running 7 tests from 2 test cases.
+  [ RUN      ] rtc.date_read
+  ../../tools/testing/selftests/rtc/rtctest.c:49:date_read:Current RTC date=
+/time is 11/04/2006 23:11:23.
+  [       OK ] rtc.date_read
+  [ RUN      ] rtc.uie_read
+  [  180.651355] random: crng init done
+  uie_read: Test terminated by timeout
+  [     FAIL ] rtc.uie_read
+  [ RUN      ] rtc.uie_select
+  ../../tools/testing/selftests/rtc/rtctest.c:98:uie_select:Expected 0 (0) =
+!=3D rc (0)
+  uie_select: Test terminated by assertion
+  [     FAIL ] rtc.uie_select
+  [ RUN      ] rtc.alarm_alm_set
+  ../../tools/testing/selftests/rtc/rtctest.c:129:alarm_alm_set:skip alarms=
+ are not supported.
+  [       OK ] rtc.alarm_alm_set
+  [ RUN      ] rtc.alarm_wkalm_set
+  ../../tools/testing/selftests/rtc/rtctest.c:185:alarm_wkalm_set:skip alar=
+ms are not supported.
+  [       OK ] rtc.alarm_wkalm_set
+  [ RUN      ] rtc.alarm_alm_set_minute
+  ../../tools/testing/selftests/rtc/rtctest.c:231:alarm_alm_set_minute:skip=
+ alarms are not supported.
+  [       OK ] rtc.alarm_alm_set_minute
+  [ RUN      ] rtc.alarm_wkalm_set_minute
+  ../../tools/testing/selftests/rtc/rtctest.c:287:alarm_wkalm_set_minute:sk=
+ip alarms are not supported.
+  [       OK ] rtc.alarm_wkalm_set_minute
+  [=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D] 5 / 7 tests passed.
+  [  FAILED  ]
+
+> [...] and rtc-range
+> (https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/rtc-tools.git/t=
+ree/rtc-range.c)
+
+  # ./rtc-range
+ =20
+  Testing 1970-01-01 00:00:00.
+  KO  Read back 2226-01-01 00:01:00.
+ =20
+  Testing 2000-02-28 23:59:59.
+  KO  Read back 2000-02-28 23:28:23.
+ =20
+  Testing 2020-02-28 23:59:59.
+  KO  Read back 2020-02-28 23:28:23.
+ =20
+  Testing 2038-01-19 03:14:07.
+  KO  Read back 2038-01-19 03:19:03.
+ =20
+  Testing 2069-12-31 23:59:59.
+  KO  Read back 2069-12-31 23:31:23.
+ =20
+  Testing 2079-12-31 23:59:59.
+  KO  Read back 2079-12-31 23:31:23.
+ =20
+  Testing 2099-12-31 23:59:59.
+  KO  Read back 2099-12-31 23:31:23.
+ =20
+  Testing 2255-12-31 23:59:59.
+  KO  Read back 2255-12-31 23:31:23.
+ =20
+  Testing 2100-02-28 23:59:59.
+  KO  Read back 2100-02-28 23:28:23.
+ =20
+  Testing 2106-02-07 06:28:15.
+  KO  Read back 2106-02-07 06:07:06.
+ =20
+  Testing 2262-04-11 23:47:16.
+  KO  Read back 2006-04-11 23:11:23.
+
+
+Something is very wrong here.
+
+I'll try to fix the failures in rtctest and the problems in rtc-range
+before version 2 of the patchset.
+
+(The 2255 date was my addition, because I suspect this to be the upper
+limit of the RTC's range.)
+
 
 [...]
-> +static int dwc2_drd_role_sw_set(struct usb_role_switch *sw, enum usb_role role)
-> +{
-> +	struct dwc2_hsotg *hsotg = usb_role_switch_get_drvdata(sw);
-> +	unsigned long flags;
-> +
-> +	/* Skip session not in line with dr_mode */
-> +	if ((role == USB_ROLE_DEVICE && hsotg->dr_mode == USB_DR_MODE_HOST) ||
-> +	    (role == USB_ROLE_HOST && hsotg->dr_mode == USB_DR_MODE_PERIPHERAL))
-> +		return -EINVAL;
-> +
-> +	/* Skip session if core is in test mode */
-> +	if (role == USB_ROLE_NONE && hsotg->test_mode) {
-> +		dev_dbg(hsotg->dev, "Core is in test mode\n");
-> +		return -EBUSY;
-> +	}
-> +
-> +	spin_lock_irqsave(&hsotg->lock, flags);
-due to this spin_lock_irqsave() ...
+> > +config RTC_DRV_NTXEC
+> > +	tristate "Netronix embedded controller RTC driver"
+> > +	depends on MFD_NTXEC
+> > +
+>=20
+> This should get an help section.
 
-> +	if (role == USB_ROLE_HOST) {
-> +		if (dwc2_ovr_avalid(hsotg, true))
-> +			goto unlock;
-> +
-> +		if (hsotg->dr_mode == USB_DR_MODE_OTG)
-> +			/*
-> +			 * This will raise a Connector ID Status Change
-> +			 * Interrupt - connID A
-> +			 */
-> +			dwc2_force_mode(hsotg, true);
-... we cannot sleep in here. the call flow is:
-dwc2_drd_role_sw_set
-  spin_lock_irqsave
-  dwc2_force_mode
-    dwc2_wait_for_mode
-      usleep_range
+Ok, I'll add one.
 
-> +	} else if (role == USB_ROLE_DEVICE) {
-> +		if (dwc2_ovr_bvalid(hsotg, true))
-> +			goto unlock;
-> +
-> +		if (hsotg->dr_mode == USB_DR_MODE_OTG)
-> +			/*
-> +			 * This will raise a Connector ID Status Change
-> +			 * Interrupt - connID B
-> +			 */
-> +			dwc2_force_mode(hsotg, false);
-(same sleeping issue here)
 
 [...]
-+int dwc2_drd_init(struct dwc2_hsotg *hsotg)
-+{
-+	struct usb_role_switch_desc role_sw_desc = {0};
-+	struct usb_role_switch *role_sw;
-+	int ret;
-+
-+	if (!device_property_read_bool(hsotg->dev, "usb-role-switch"))
-+		return 0;
-should we also return early here if dr_mode != "otg"?
+> > +#include <linux/rtc.h>
+> > +#include <linux/mfd/ntxec.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/types.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of_device.h>
+>=20
+> Please sort the includes.
+
+Will do.
+
 
 [...]
-@@ -532,6 +534,13 @@ static int dwc2_driver_probe(struct platform_device *dev)
- 		dwc2_writel(hsotg, ggpio, GGPIO);
- 	}
- 
-+	retval = dwc2_drd_init(hsotg);
-+	if (retval) {
-+		if (retval != -EPROBE_DEFER)
-+			dev_err(hsotg->dev, "failed to initialize dual-role\n");
-+		goto error_init;
-+	}
-+
- 	if (hsotg->dr_mode != USB_DR_MODE_HOST) {
- 		retval = dwc2_gadget_init(hsotg);
- 		if (retval)
-I think dwc2_driver_probe() needs a new label (for example named
-error_drd) which then calls dwc2_drd_exit. See [0] which I have
-submitted as a patch for Linux 5.8, so it's not in usb-next yet.
+> > +	rtcdev =3D devm_rtc_device_register(&pdev->dev, "ntxec-rtc",
+> > +					  &ntxec_rtc_ops, THIS_MODULE);
+>=20
+> Please use devm_rtc_allocate_device and rtc_register_device. Also, set
+> the supported range (->range_min and ->range_max).
 
-Also in general I think you need to submit a dt-bindings patch that
-documents the usb-role-switch property. Personally I would use
-Documentation/devicetree/bindings/usb/renesas,usb3-peri.yaml as
-reference for that.
-
-Can you please keep me Cc'ed on a v2 because I'm not subscribed to the
-linux-usb mailing list?
-I am going to test this on Amlogic SoCs - once I made "everything else"
-work I can give my Tested-by as well.
+Ok, will do.
 
 
-Thank you!
-Martin
+Thanks for the review and the testing tips.
+Jonathan Neusch=C3=A4fer
 
+--eRtJSFbw+EEWtPj3
+Content-Type: application/pgp-signature; name="signature.asc"
 
-[0] https://patchwork.kernel.org/patch/11642957/
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl8A1yAACgkQCDBEmo7z
+X9tNnA/9H+BT9wwk5LCwgYRQGaCp/1zm7d962UhBAu5F59rAP2Ho8ioQNoJcCc0/
+xwAaeJYaRm7iOWjVdlL0wfnv8kJRDjYs4ml0arpTPFW4dmz4+zvFoZfIVIlUHy+1
+t/cY1k/KCTXqAXUmyVMMZ6b3Q7/mwjKYLQV2nRgW3sHiBoQI2q6cV69XQZM1JVo0
+NV+m7HGvL5AmPZGjLmbSC8PiOMlS35Tm6v0IKrYXHt3ASOF7ukMqTMT3+1aRCrzs
+zqtZHJdUfGA3DpkZTiLK+m8t5L4t6qsiyd+QX9jFg1KaSXapVF5nV+wNYgdebcqQ
+UqeA5ylgENA6WaYv5N8xl1MO6UZhYiH5Qw/mJZ0rG4pyf0Ad6nZJxd+l8eWseMFX
+LCOtTqRIKC6Oa2sKPUI/TN56GafA1cK+ZHljn/FjpI5CUQfHlcAz/QEkACPIs1S8
+WtMdsBfP3cjqGPapGbknlBi8KGnyL/qFj42PCOApXdNOczJAXMRfvvXYHfdnVxUx
+9pw9oAc06PijFOB72FUMYA3U2aiNz5Qk+zMmmsTFDAnRJmsnFc8hhooewHn4Ha3I
+AiJVhLvGrzVlSS8Yq7O2jm1SsRYKAO93YctBIxMfRJvd2a+72++4X7oPc1qKxCkQ
+U5YIMEbe4JyTCq0Bj6rbOd1k4+36LVMRT/jyGg7DK66PUgfB2dI=
+=jCx0
+-----END PGP SIGNATURE-----
+
+--eRtJSFbw+EEWtPj3--
