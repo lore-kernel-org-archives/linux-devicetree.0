@@ -2,342 +2,361 @@ Return-Path: <SRS0=KrzM=AP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A838C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 09:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AB1C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 09:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DCA420739
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 09:25:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d20+gBfF"
+	by mail.kernel.org (Postfix) with ESMTP id 9AB1720870
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 09:39:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593855565;
+	bh=ru7Wim8ULNNRbs65PwzKw+N/Udq6Cte1EZLY+Zq4j0M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=cFANG3L4YuckDfNz1XFv4/o1vXez45e2QinjFgVYzyLaY2DndAyFcTyiBf3SnMcuA
+	 tdKs4UdCROLEfnLxM1XB8GWA5b/qH/+IZXN2fV9DLR8z5j+VJ1K6P/JUuxc2RccO9B
+	 Bl3mCN4cjDT5Eac2gdSoOMltGpJQ0EKAQ8R2uXr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726259AbgGDJZ3 (ORCPT
+        id S1726452AbgGDJjV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Jul 2020 05:25:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48032 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbgGDJZ3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jul 2020 05:25:29 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D8D5C061794;
-        Sat,  4 Jul 2020 02:25:29 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id gc9so8284216pjb.2;
-        Sat, 04 Jul 2020 02:25:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=vPne7NFgJs6b8kzaJCb+n8aPS6rGBj37y5JN0ANKMsQ=;
-        b=d20+gBfF/A2+zaOZAnEAHqHn11JPIhWf78A/02VJ8cAhi52B1MDoOmBVUoCkwbAQIt
-         WL7EeHG4TQi5Jb8TEVtw2KUl8GvB5ofPW61yYWmJDXn/6237obVR4INx3TW5CXby8jxN
-         6kmCsnlCGfHqg1hZCPIFkwu82iQnhL1rb+g/opBQjwMnmU3iTRussoVfA8z2yN7YUTkh
-         ALxOp4p31NYJP0brJ83SJZcJhhotFuyHYfiYJXjLgL2MP41pctr+EGO+xF3izIFx+Rrl
-         8dLVY2NNrqvCOppXnEYyHBOLpAc9qZXAZBb6mVlh9ZWzRpfrrExtPbv5xJm4N7QnmzTL
-         Rtgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=vPne7NFgJs6b8kzaJCb+n8aPS6rGBj37y5JN0ANKMsQ=;
-        b=r3B2zo4ele/HhfLOeesCC9L6dKwIftUCTUVxISPT0eoeUwNzrV/fu4DNCGYBOt/9ap
-         wuqOwTKjeNV6wWvivqOXDUbdn39hTt+UluuI7wY1jbHjILxq/bBKZrxqxl5TSz7X4xeI
-         eGjsd3ayh3aWo+3sB6X708kWjnBQHn7GBShgDL/1CiIBlPOk/r0E9sMc1KvvNYIUZyQ2
-         WziPeQCrXXNqKUotav52evrMmAAqhr7fDwcOfw1JpLBdRMaB1sJYXPIAU6MJ88w5ynEF
-         U39Nih/yafeJi71qBUQSdok6TcE7PFxU9S0bLdbMO5WYfRo5RLwUYZ0ooTaMfNIAupw+
-         K39w==
-X-Gm-Message-State: AOAM533aR8rhhPfiJOSO+9FoglLemOG4P0YjsEwQaRRxo8PUNoa+8orY
-        r2b19jfFDqp2odeEwQxtqGUPEojI1qU=
-X-Google-Smtp-Source: ABdhPJztMwPJkf9gYnz5ynp9kd3hUkhpOC+Xkb747Q5eUfV87Ty5lmw+6nwRtRxCyBdj/iFeYUMDQA==
-X-Received: by 2002:a17:902:b40f:: with SMTP id x15mr31793800plr.164.1593854728531;
-        Sat, 04 Jul 2020 02:25:28 -0700 (PDT)
-Received: from localhost.localdomain ([122.172.219.189])
-        by smtp.gmail.com with ESMTPSA id s22sm13650917pfm.164.2020.07.04.02.25.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jul 2020 02:25:28 -0700 (PDT)
-From:   Vinay Simha BN <simhavcs@gmail.com>
-Cc:     Vinay Simha BN <simhavcs@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v7 1/2] dt-binding: Add DSI/LVDS TC358775 bridge bindings
-Date:   Sat,  4 Jul 2020 14:54:39 +0530
-Message-Id: <20200704092511.20856-1-simhavcs@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Sat, 4 Jul 2020 05:39:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726259AbgGDJjU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 4 Jul 2020 05:39:20 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AA61207CD;
+        Sat,  4 Jul 2020 09:39:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593855559;
+        bh=ru7Wim8ULNNRbs65PwzKw+N/Udq6Cte1EZLY+Zq4j0M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=wiT9mY2s+qHAU4aGtoynTXXzEXJYklH9Enw1Yx1BZ3llSUD7ZCD7kqm9Vu9rxLHXc
+         caDkumwR2y8AsKC7GFXPRVNsBHq8IaWpQ2HJdGZp6LnRqm3HwGhH9Cprdkq6auv/6p
+         Sxv6a7sYNoQMEFBDYJftM6UNVA5C6kIyoNHUkSnc=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jredh-008vUJ-S5; Sat, 04 Jul 2020 10:39:18 +0100
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sat, 04 Jul 2020 10:39:17 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+Cc:     tglx@linutronix.de, jason@lakedaemon.net,
+        "Anna, Suman" <s-anna@ti.com>, robh+dt@kernel.org,
+        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, david@lechnology.com,
+        "Mills, William" <wmills@ti.com>, "Andrew F . Davis" <afd@ti.com>,
+        Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCHv3 2/6] irqchip/irq-pruss-intc: Add a PRUSS irqchip driver
+ for PRUSS interrupts
+In-Reply-To: <CAMxfBF6A9702-rBOo0jHtfn4Ds1_G+nWG4O9-urNqU00dFXeww@mail.gmail.com>
+References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <1593699479-1445-3-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <f0d3f3224a1b8fa2be668dd2b8d9d84e@kernel.org>
+ <CAMxfBF6A9702-rBOo0jHtfn4Ds1_G+nWG4O9-urNqU00dFXeww@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <12db6d22c12369b6d64f410aa2434b03@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: grzegorz.jaszczyk@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, s-anna@ti.com, robh+dt@kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, david@lechnology.com, wmills@ti.com, afd@ti.com, rogerq@ti.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-- converted from .txt to .yaml
-- dual-link lvds port added and implemented
-- dsi data-lanes property removed, it will be picked
-  from dsi0 ports
-- VESA/JEIDA formats picked from panel-lvds dts
-- proper indentation
-- single-link and dual-link lvds description and
-  examples are added
-- license modified to (GPL-2.0-only OR BSD-2-Clause)
+On 2020-07-03 15:28, Grzegorz Jaszczyk wrote:
+> On Thu, 2 Jul 2020 at 19:24, Marc Zyngier <maz@kernel.org> wrote:
+>> 
+>> On 2020-07-02 15:17, Grzegorz Jaszczyk wrote:
+>> > From: Suman Anna <s-anna@ti.com>
+>> >
+>> > The Programmable Real-Time Unit Subsystem (PRUSS) contains a local
+>> > interrupt controller (INTC) that can handle various system input events
+>> > and post interrupts back to the device-level initiators. The INTC can
+>> > support upto 64 input events with individual control configuration and
+>> > hardware prioritization. These events are mapped onto 10 output
+>> > interrupt
+>> > lines through two levels of many-to-one mapping support. Different
+>> > interrupt lines are routed to the individual PRU cores or to the host
+>> > CPU, or to other devices on the SoC. Some of these events are sourced
+>> > from peripherals or other sub-modules within that PRUSS, while a few
+>> > others are sourced from SoC-level peripherals/devices.
+>> >
+>> > The PRUSS INTC platform driver manages this PRUSS interrupt controller
+>> > and implements an irqchip driver to provide a Linux standard way for
+>> > the PRU client users to enable/disable/ack/re-trigger a PRUSS system
+>> > event. The system events to interrupt channels and output interrupts
+>> > relies on the mapping configuration provided either through the PRU
+>> > firmware blob or via the PRU application's device tree node. The
+>> > mappings will be programmed during the boot/shutdown of a PRU core.
+>> >
+>> > The PRUSS INTC module is reference counted during the interrupt
+>> > setup phase through the irqchip's irq_request_resources() and
+>> > irq_release_resources() ops. This restricts the module from being
+>> > removed as long as there are active interrupt users.
+>> >
+>> > The driver currently supports and can be built for OMAP architecture
+>> > based AM335x, AM437x and AM57xx SoCs; Keystone2 architecture based
+>> > 66AK2G SoCs and Davinci architecture based OMAP-L13x/AM18x/DA850 SoCs.
+>> > All of these SoCs support 64 system events, 10 interrupt channels and
+>> > 10 output interrupt lines per PRUSS INTC with a few SoC integration
+>> > differences.
+>> >
+>> > NOTE:
+>> > Each PRU-ICSS's INTC on AM57xx SoCs is preceded by a Crossbar that
+>> > enables multiple external events to be routed to a specific number
+>> > of input interrupt events. Any non-default external interrupt event
+>> > directed towards PRUSS needs this crossbar to be setup properly.
+>> >
+>> > Signed-off-by: Suman Anna <s-anna@ti.com>
+>> > Signed-off-by: Andrew F. Davis <afd@ti.com>
+>> > Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> > Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+>> > Reviewed-by: Lee Jones <lee.jones@linaro.org>
+>> > ---
+>> > v2->v3:
+>> > - use single irqchip description instead of separately allocating it
+>> > for
+>> >   each pruss_intc
+>> > - get rid of unused mutex
+>> > - improve error handling
+>> > v1->v2:
+>> > - https://patchwork.kernel.org/patch/11069771/
+> <snip>
+>> > +static void pruss_intc_init(struct pruss_intc *intc)
+>> > +{
+>> > +     int i;
+>> > +
+>> > +     /* configure polarity to active high for all system interrupts */
+>> > +     pruss_intc_write_reg(intc, PRU_INTC_SIPR0, 0xffffffff);
+>> > +     pruss_intc_write_reg(intc, PRU_INTC_SIPR1, 0xffffffff);
+>> > +
+>> > +     /* configure type to pulse interrupt for all system interrupts */
+>> > +     pruss_intc_write_reg(intc, PRU_INTC_SITR0, 0);
+>> > +     pruss_intc_write_reg(intc, PRU_INTC_SITR1, 0);
+>> 
+>> So the default is to configure everything as edge...
+> 
+> Sorry, the description is wrong - '0' indicates level and '1' edge. So
+> the default configuration is level - I will fix the comment.
+> 
+>> 
+>> > +
+>> > +     /* clear all 16 interrupt channel map registers */
+>> > +     for (i = 0; i < 16; i++)
+>> > +             pruss_intc_write_reg(intc, PRU_INTC_CMR(i), 0);
+>> > +
+>> > +     /* clear all 3 host interrupt map registers */
+>> > +     for (i = 0; i < 3; i++)
+>> > +             pruss_intc_write_reg(intc, PRU_INTC_HMR(i), 0);
+>> > +}
+>> > +
+>> > +static void pruss_intc_irq_ack(struct irq_data *data)
+>> > +{
+>> > +     struct pruss_intc *intc = irq_data_get_irq_chip_data(data);
+>> > +     unsigned int hwirq = data->hwirq;
+>> > +
+>> > +     pruss_intc_write_reg(intc, PRU_INTC_SICR, hwirq);
+>> > +}
+>> > +
+>> > +static void pruss_intc_irq_mask(struct irq_data *data)
+>> > +{
+>> > +     struct pruss_intc *intc = irq_data_get_irq_chip_data(data);
+>> > +     unsigned int hwirq = data->hwirq;
+>> > +
+>> > +     pruss_intc_write_reg(intc, PRU_INTC_EICR, hwirq);
+>> > +}
+>> > +
+>> > +static void pruss_intc_irq_unmask(struct irq_data *data)
+>> > +{
+>> > +     struct pruss_intc *intc = irq_data_get_irq_chip_data(data);
+>> > +     unsigned int hwirq = data->hwirq;
+>> > +
+>> > +     pruss_intc_write_reg(intc, PRU_INTC_EISR, hwirq);
+>> > +}
+>> > +
+>> > +static int pruss_intc_irq_reqres(struct irq_data *data)
+>> > +{
+>> > +     if (!try_module_get(THIS_MODULE))
+>> > +             return -ENODEV;
+>> > +
+>> > +     return 0;
+>> > +}
+>> > +
+>> > +static void pruss_intc_irq_relres(struct irq_data *data)
+>> > +{
+>> > +     module_put(THIS_MODULE);
+>> > +}
+>> > +
+>> > +static struct irq_chip pruss_irqchip = {
+>> > +     .name = "pruss-intc",
+>> > +     .irq_ack = pruss_intc_irq_ack,
+>> > +     .irq_mask = pruss_intc_irq_mask,
+>> > +     .irq_unmask = pruss_intc_irq_unmask,
+>> > +     .irq_request_resources = pruss_intc_irq_reqres,
+>> > +     .irq_release_resources = pruss_intc_irq_relres,
+>> > +};
+>> > +
+>> > +static int pruss_intc_irq_domain_map(struct irq_domain *d, unsigned
+>> > int virq,
+>> > +                                  irq_hw_number_t hw)
+>> > +{
+>> > +     struct pruss_intc *intc = d->host_data;
+>> > +
+>> > +     irq_set_chip_data(virq, intc);
+>> > +     irq_set_chip_and_handler(virq, &pruss_irqchip, handle_level_irq);
+>> 
+>> ... and despite this edge-triggered default, you handle things as 
+>> level.
+>> This doesn't seem quite right.
+> 
+> As above it is level. I will fix the comment
 
-Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
+It still begs the question: if the HW can support both edge and level
+triggered interrupts, why isn't the driver supporting this diversity?
+I appreciate that your HW may only have level interrupts so far, but
+what guarantees that this will forever be true? It would imply a change
+in the DT binding, which isn't desirable.
 
----
-v1:
- Initial version wast .txt file
+> 
+>> 
+>> > +
+>> > +     return 0;
+>> > +}
+>> > +
+>> > +static void pruss_intc_irq_domain_unmap(struct irq_domain *d,
+>> > unsigned int virq)
+>> > +{
+>> > +     irq_set_chip_and_handler(virq, NULL, NULL);
+>> > +     irq_set_chip_data(virq, NULL);
+>> > +}
+>> > +
+>> > +static const struct irq_domain_ops pruss_intc_irq_domain_ops = {
+>> > +     .xlate  = irq_domain_xlate_onecell,
+>> > +     .map    = pruss_intc_irq_domain_map,
+>> > +     .unmap  = pruss_intc_irq_domain_unmap,
+>> > +};
+>> > +
+>> > +static void pruss_intc_irq_handler(struct irq_desc *desc)
+>> > +{
+>> > +     unsigned int irq = irq_desc_get_irq(desc);
+>> > +     struct irq_chip *chip = irq_desc_get_chip(desc);
+>> > +     struct pruss_intc *intc = irq_get_handler_data(irq);
+>> > +     u32 hipir;
+>> > +     unsigned int virq;
+>> > +     int i, hwirq;
+>> > +
+>> > +     chained_irq_enter(chip, desc);
+>> > +
+>> > +     /* find our host irq number */
+>> > +     for (i = 0; i < MAX_NUM_HOST_IRQS; i++)
+>> > +             if (intc->irqs[i] == irq)
+>> > +                     break;
+>> 
+>> This loop is pretty ugly. The way to do it would normally to
+>> associate the right data structure to the chained interrupt,
+>> and only that one, directly associating the input signal
+>> with the correct mux. Using the Linux irq as a discriminant is
+>> at best clumsy.
+>> 
+>> But it feels to me that the base data structure is not
+>> exactly the right one here, see below.
+>> 
+> 
+> Ok, you are right. I will introduce a new structure for host_irq data
+> which will be associated with chained interrupt and get rid of this
+> loop.
+> 
+>> > +     if (i == MAX_NUM_HOST_IRQS)
+>> > +             goto err;
+>> > +
+>> > +     i += MIN_PRU_HOST_INT;
+>> > +
+>> > +     /* get highest priority pending PRUSS system event */
+>> > +     hipir = pruss_intc_read_reg(intc, PRU_INTC_HIPIR(i));
+>> > +     while (!(hipir & INTC_HIPIR_NONE_HINT)) {
+>> 
+>> Please write this as a do { } while() loop, with a single instance
+>> of the HW register read inside the loop (instead of one outside
+>> and one inside.
+> 
+> Ok, I will get rid of the outside HW register read, but I think it is
+> better to use bellow instead of do {} while () loop:
+> while (1) {
+>   /* get highest priority pending PRUSS system event */
+>   hipir = pruss_intc_read_reg(intc, PRU_INTC_HIPIR(host_irq));
+>   if (hipir & INTC_HIPIR_NONE_HINT)
+>     break;
+> ...
+> 
+> Hope it works for you.
 
-v2:
- From txt to yaml file format
+Up to you. I don't understand your allergy to do {} while(), but
+as long as there is only a single read of the register to deal
+with, I'm fine with it.
 
-v3:
-* Andrzej Hajda review comments incorporated
-  dual port lvds implemented
+> 
+>> 
+>> > +             hwirq = hipir & GENMASK(9, 0);
+>> > +             virq = irq_linear_revmap(intc->domain, hwirq);
+>> 
+>> And this is where I worry. You seems to have a single irqdomain
+>> for all the muxes. Are you guaranteed that you will have no
+>> overlap between muxes? And please use irq_find_mapping(), as
+>> I have top-secret plans to kill irq_linear_revmap().
+> 
+> Regarding irq_find_mapping - sure.
+> 
+> Regarding irqdomains:
+> It is a single irqdomain since the hwirq (system event) can be mapped
+> to different irq_host (muxes). Patch #6
+> https://lkml.org/lkml/2020/7/2/616 implements and describes how input
+> events can be mapped to some output host interrupts through 2 levels
+> of many-to-one mapping i.e. events to channel mapping and channels to
+> host interrupts. Mentioned implementation ensures that specific system
+> event (hwirq) can be mapped through PRUSS specific channel into a
+> single host interrupt.
 
-* Laurent Pinchart review comments incorporated
-  dsi lanes property removed and it is dynamically
-  picked from the dsi ports
-  VESA/JEIDA format picked from panel-lvds dts
+Patch #6 is a nightmare of its own, and I haven't fully groked it yet.
+Also, this driver seems to totally ignore the 2-level routing. Where
+is it set up? map/unmap in this driver do exactly *nothing*, so
+something somewhere must set it up.
 
-v4:
-* Sam Ravnborg review comments incorporated
-  }' is indented properly in examples data-lanes
-  description for single-link and dual-link lvds
+>> 
+>> > +
+>> > +             /*
+>> > +              * NOTE: manually ACK any system events that do not have a
+>> > +              * handler mapped yet
+>> > +              */
+>> > +             if (WARN_ON(!virq))
+>> > +                     pruss_intc_write_reg(intc, PRU_INTC_SICR, hwirq);
+>> 
+>> How can this happen? If you really need it, you probable want to
+>> warn once only.
+> 
+> Ideally it shouldn't happen but I prefer to keep it to catch any
+> misuse. It is because the PRUSS INTC unit can be also accessed by PRU
+> cores which use the same registers to ack the internal events. The
+> current design is limited to only acking and triggering the interrupts
+> from PRU firmwares while the entire mapping is done by Linux (patch #6
+> https://lkml.org/lkml/2020/7/2/612).
 
-v5:
-* Sam Ravnborg review comments incorporated
-  license modified to (GPL-2.0-only OR BSD-2-Clause)
-  changelog added
----
- .../display/bridge/toshiba,tc358775.yaml      | 215 ++++++++++++++++++
- 1 file changed, 215 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+So patch #6 deals with routing of interrupts that are not aimed at Linux
+(humf...), but nothing deals with the routing of interrupts that Linux
+must handle. Why?
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
-new file mode 100644
-index 000000000000..31f085d8ab13
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
-@@ -0,0 +1,215 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/toshiba,tc358775.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Toshiba TC358775 DSI to LVDS bridge bindings
-+
-+maintainers:
-+ - Vinay Simha BN <simhavcs@gmail.com>
-+
-+description: |
-+ This binding supports DSI to LVDS bridge TC358775
-+
-+ MIPI DSI-RX Data 4-lane, CLK 1-lane with data rates up to 800 Mbps/lane.
-+ Video frame size:
-+ Up to 1600x1200 24-bit/pixel resolution for single-link LVDS display panel
-+ limited by 135 MHz LVDS speed
-+ Up to WUXGA (1920x1200 24-bit pixels) resolution for dual-link LVDS display
-+ panel, limited by 270 MHz LVDS speed.
-+
-+properties:
-+  compatible:
-+    const: toshiba,tc358775
-+
-+  reg:
-+    maxItems: 1
-+    description: i2c address of the bridge, 0x0f
-+
-+  vdd-supply:
-+    maxItems: 1
-+    description:  1.2V LVDS Power Supply
-+
-+  vddio-supply:
-+    maxItems: 1
-+    description: 1.8V IO Power Supply
-+
-+  stby-gpios:
-+    maxItems: 1
-+    description: Standby pin, Low active
-+
-+  reset-gpios:
-+    maxItems: 1
-+    description: Hardware reset, Low active
-+
-+  ports:
-+    type: object
-+    description:
-+      A node containing input and output port nodes with endpoint definitions
-+      as documented in
-+      Documentation/devicetree/bindings/media/video-interfaces.txt
-+    properties:
-+      "#address-cells":
-+        const: 1
-+
-+      "#size-cells":
-+        const: 0
-+
-+      port@0:
-+        type: object
-+        description: |
-+          DSI Input. The remote endpoint phandle should be a
-+          reference to a valid mipi_dsi_host device node.
-+
-+      port@1:
-+        type: object
-+        description: |
-+          Video port for LVDS output (panel or connector).
-+
-+      port@2:
-+        type: object
-+        description: |
-+          Video port for Dual link LVDS output (panel or connector).
-+
-+    required:
-+      - port@0
-+      - port@1
-+
-+required:
-+ - compatible
-+ - reg
-+ - vdd-supply
-+ - vddio-supply
-+ - stby-gpios
-+ - reset-gpios
-+ - ports
-+
-+examples:
-+ - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    /* For single-link LVDS display panel */
-+
-+    i2c@78b8000 {
-+        /* On High speed expansion */
-+        label = "HS-I2C2";
-+        reg = <0x078b8000 0x500>;
-+        clock-frequency = <400000>; /* fastmode operation */
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        tc_bridge: bridge@f {
-+            compatible = "toshiba,tc358775";
-+            reg = <0x0f>;
-+
-+            vdd-supply = <&pm8916_l2>;
-+            vddio-supply = <&pm8916_l6>;
-+
-+            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
-+            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
-+
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                port@0 {
-+                    reg = <0>;
-+                    d2l_in_test: endpoint {
-+                        remote-endpoint = <&dsi0_out>;
-+                    };
-+                };
-+
-+                port@1 {
-+                    reg = <1>;
-+                    lvds_out: endpoint {
-+                        remote-endpoint = <&panel_in>;
-+                    };
-+                };
-+            };
-+        };
-+    };
-+
-+    dsi@1a98000 {
-+        reg = <0x1a98000 0x25c>;
-+        reg-names = "dsi_ctrl";
-+
-+        ports {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            port@1 {
-+                reg = <1>;
-+                dsi0_out: endpoint {
-+                    remote-endpoint = <&d2l_in_test>;
-+                    data-lanes = <0 1 2 3>;
-+                };
-+             };
-+         };
-+     };
-+
-+ - |
-+    /* For dual-link LVDS display panel */
-+
-+    i2c@78b8000 {
-+        /* On High speed expansion */
-+        label = "HS-I2C2";
-+        reg = <0x078b8000 0x500>;
-+        clock-frequency = <400000>; /* fastmode operation */
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        tc_bridge_dual: bridge@f {
-+            compatible = "toshiba,tc358775";
-+            reg = <0x0f>;
-+
-+            vdd-supply = <&pm8916_l2>;
-+            vddio-supply = <&pm8916_l6>;
-+
-+            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
-+            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
-+
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                port@0 {
-+                    reg = <0>;
-+                    d2l_in_dual: endpoint {
-+                        remote-endpoint = <&dsi0_out_dual>;
-+                    };
-+                };
-+
-+                port@1 {
-+                    reg = <1>;
-+                    lvds0_out: endpoint {
-+                        remote-endpoint = <&panel_in0>;
-+                    };
-+                };
-+
-+                port@2 {
-+                    reg = <2>;
-+                    lvds1_out: endpoint {
-+                        remote-endpoint = <&panel_in1>;
-+                    };
-+                };
-+            };
-+        };
-+    };
-+
-+    dsi@1a98000 {
-+        reg = <0x1a98000 0x25c>;
-+        reg-names = "dsi_ctrl";
-+
-+        ports {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            port@1 {
-+                reg = <1>;
-+                dsi0_out_dual: endpoint {
-+                    remote-endpoint = <&d2l_in_dual>;
-+                    data-lanes = <0 1 2 3>;
-+                };
-+             };
-+         };
-+     };
-+...
+         M.
 -- 
-2.17.1
-
+Jazz is not dead. It just smells funny...
