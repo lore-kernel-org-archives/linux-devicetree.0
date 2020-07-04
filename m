@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D49C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 16:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ADEDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 16:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9714207D4
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 16:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5643820782
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 16:46:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593880506;
-	bh=xRdkOlLbDfNgaIOJu+m3hhpUDDNqCLE4MI0dkTFTEgk=;
+	s=default; t=1593881196;
+	bh=jx6BcDQqoU5gzBE7O7So04LZrR1uSY7zCUAFC7GLsnc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=JbA5s9cPrU7cmbPWJ3IwbYZt13Dj6icSFhD8jPYX6F0sGKBL4d9leUP95UdmJ93lg
-	 Az+gOQNxolGvOrGCurYyJX0DXmVRqKC5fX78jMyb6EB2rOe/0DyEM0GGhddUTzNBGq
-	 ExUKhNjenW/uu8aESMk0jnkq4plg5sG/KsYSdyj0=
+	b=GzUxltR04HoeMyCtVVeOUhbn8FEAxAWH0jAVE820fhkvN9XQoxaznUrTqvMqFZcHz
+	 YDNbzMfoRPL+Ncy3j0c5+u9bhiUMAZeIUQZtuU06ilqapPio2Ld5nQOPtMQ9bS5Xrv
+	 LOo8BG0zWMbB50VuppLpESdWReT1n0SsMOvWNZAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbgGDQfG (ORCPT
+        id S1726922AbgGDQqf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Jul 2020 12:35:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58954 "EHLO mail.kernel.org"
+        Sat, 4 Jul 2020 12:46:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726632AbgGDQfG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 4 Jul 2020 12:35:06 -0400
+        id S1726643AbgGDQqf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 4 Jul 2020 12:46:35 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABEDF20724;
-        Sat,  4 Jul 2020 16:35:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EB7C20724;
+        Sat,  4 Jul 2020 16:46:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593880505;
-        bh=xRdkOlLbDfNgaIOJu+m3hhpUDDNqCLE4MI0dkTFTEgk=;
+        s=default; t=1593881195;
+        bh=jx6BcDQqoU5gzBE7O7So04LZrR1uSY7zCUAFC7GLsnc=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=x9EBN5kpqIePXkJXZpE4GaJNPkIX/KCTNNuZCpIjjXi5Nl1AgEQQL5CvOzzWtkqVz
-         /q0HhF4pALuuP0oq8cTAjr/nNa2kyHafRdwwnYcbB7ehfnvGsLNTf50S0zEmnrXElB
-         IHs2ioP8unzngVrcS/fzf0CK7z0pOZTfedPmQYpw=
-Date:   Sat, 4 Jul 2020 17:34:59 +0100
+        b=Kd7eQUoNpcwZURqEHe3xfxO7zG0rQd1U+UnAneN4giuCjZkKUdgdZwIzsbXouK5AC
+         v6zNivIxziVX/pQfqCKsiokJQwEanb+FDvu30haMbfl06wKo4J9ShJ2q2uHAB5qE2G
+         3HLee4Bne0wq2XHdSPYkRbQ2xmtJEBvbvy2OSV7Q=
+Date:   Sat, 4 Jul 2020 17:46:30 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     michael.hennerich@analog.com, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, robh+dt@kernel.org, ribalda@kernel.org,
-        tomislav.denis@avl.com, broonie@kernel.org,
-        alexandru.ardelean@analog.com, sboyd@kernel.org, ak@it-klinger.de,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones:
- Documentation/devicetree/bindings/iio
-Message-ID: <20200704173459.78ceec60@archlinux>
-In-Reply-To: <20200703185725.15399-1-grandmaster@al2klimov.de>
-References: <20200703185725.15399-1-grandmaster@al2klimov.de>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] iio: magnetometer: bmc150: Add proper compatible
+ for BMM150
+Message-ID: <20200704174630.381cc2d3@archlinux>
+In-Reply-To: <20200629100537.20365-2-krzk@kernel.org>
+References: <20200629100537.20365-1-krzk@kernel.org>
+        <20200629100537.20365-2-krzk@kernel.org>
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -62,210 +62,45 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri,  3 Jul 2020 20:57:25 +0200
-"Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
+On Mon, 29 Jun 2020 12:05:37 +0200
+Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
+> The compatible for BMM150 should not have "_magn" suffix because, unlike
+> two other Bosch devices, it is only a magnetometer.
 > 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->           If both the HTTP and HTTPS versions
->           return 200 OK and serve the same content:
->             Replace HTTP with HTTPS.
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+Both applied to the togreg branch of iio.git and pushed out
+as testing for the autobuilders to ignore them.
+
+Thanks for tidying this up.
+
+Jonathan
+
 > 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 > ---
->  Continuing my work started at 93431e0607e5.
 > 
->  If there are any URLs to be removed completely or at least not HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also https://lkml.org/lkml/2020/6/27/64
+> Changes since v2:
+> 1. Add compatible only for bmm150.
 > 
->  If there are any valid, but yet not changed URLs:
->  See https://lkml.org/lkml/2020/6/26/837
+> Changes since v1:
+> 1. New patch.
+> ---
+>  drivers/iio/magnetometer/bmc150_magn_i2c.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
->  Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml  | 4 ++--
->  Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt      | 2 +-
->  Documentation/devicetree/bindings/iio/iio-bindings.txt        | 2 +-
->  Documentation/devicetree/bindings/iio/light/apds9300.txt      | 2 +-
->  Documentation/devicetree/bindings/iio/light/apds9960.txt      | 2 +-
->  Documentation/devicetree/bindings/iio/light/opt3001.txt       | 2 +-
->  Documentation/devicetree/bindings/iio/light/vl6180.txt        | 2 +-
->  .../devicetree/bindings/iio/potentiometer/mcp41010.txt        | 2 +-
->  .../devicetree/bindings/iio/potentiostat/lmp91000.txt         | 4 ++--
->  .../devicetree/bindings/iio/pressure/asc,dlhl60d.yaml         | 2 +-
->  .../devicetree/bindings/iio/proximity/devantech-srf04.yaml    | 4 ++--
->  Documentation/devicetree/bindings/iio/temperature/tmp007.txt  | 2 +-
->  12 files changed, 15 insertions(+), 15 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
-> index d124eba1ce54..fd4eaa3d0ab4 100644
-> --- a/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
-> +++ b/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
-> @@ -12,8 +12,8 @@ maintainers:
->  description: |
->    Analog Devices ADXL345/ADXL375 3-Axis Digital Accelerometers that supports
->    both I2C & SPI interfaces.
-> -    http://www.analog.com/en/products/mems/accelerometers/adxl345.html
-> -    http://www.analog.com/en/products/sensors-mems/accelerometers/adxl375.html
-> +    https://www.analog.com/en/products/mems/accelerometers/adxl345.html
-> +    https://www.analog.com/en/products/sensors-mems/accelerometers/adxl375.html
->  
->  properties:
->    compatible:
-> diff --git a/Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt b/Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt
-> index 639c94ed83e9..17af395b99d9 100644
-> --- a/Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt
-> +++ b/Documentation/devicetree/bindings/iio/dac/ti,dac7612.txt
-> @@ -6,7 +6,7 @@ Is is programmable through an SPI interface.
->  
->  The internal DACs are loaded when the LOADDACS pin is pulled down.
->  
-> -http://www.ti.com/lit/ds/sbas106/sbas106.pdf
-> +https://www.ti.com/lit/ds/sbas106/sbas106.pdf
->  
->  Required Properties:
->  - compatible: Should be one of:
-> diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt b/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> index af33267727f4..aa63cac7323e 100644
-> --- a/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> @@ -9,7 +9,7 @@ specifier is an array of one or more cells identifying the IIO
->  output on a device. The length of an IIO specifier is defined by the
->  value of a #io-channel-cells property in the IIO provider node.
->  
-> -[1] http://marc.info/?l=linux-iio&m=135902119507483&w=2
-> +[1] https://marc.info/?l=linux-iio&m=135902119507483&w=2
->  
->  ==IIO providers==
->  
-> diff --git a/Documentation/devicetree/bindings/iio/light/apds9300.txt b/Documentation/devicetree/bindings/iio/light/apds9300.txt
-> index aa199e09a493..3aa6db3ee99d 100644
-> --- a/Documentation/devicetree/bindings/iio/light/apds9300.txt
-> +++ b/Documentation/devicetree/bindings/iio/light/apds9300.txt
-> @@ -1,6 +1,6 @@
->  * Avago APDS9300 ambient light sensor
->  
-> -http://www.avagotech.com/docs/AV02-1077EN
-> +https://www.avagotech.com/docs/AV02-1077EN
->  
->  Required properties:
->  
-> diff --git a/Documentation/devicetree/bindings/iio/light/apds9960.txt b/Documentation/devicetree/bindings/iio/light/apds9960.txt
-> index 3af325ad194b..c53ddb81c4aa 100644
-> --- a/Documentation/devicetree/bindings/iio/light/apds9960.txt
-> +++ b/Documentation/devicetree/bindings/iio/light/apds9960.txt
-> @@ -1,6 +1,6 @@
->  * Avago APDS9960 gesture/RGB/ALS/proximity sensor
->  
-> -http://www.avagotech.com/docs/AV02-4191EN
-> +https://www.avagotech.com/docs/AV02-4191EN
->  
->  Required properties:
->  
-> diff --git a/Documentation/devicetree/bindings/iio/light/opt3001.txt b/Documentation/devicetree/bindings/iio/light/opt3001.txt
-> index 47b13eb8f4ec..9e6f2998e751 100644
-> --- a/Documentation/devicetree/bindings/iio/light/opt3001.txt
-> +++ b/Documentation/devicetree/bindings/iio/light/opt3001.txt
-> @@ -6,7 +6,7 @@ the optional generation of IIO events on rising/falling light threshold changes
->  requires the use of interrupts. Without interrupts, only the simple reading
->  of the current light value is supported through the IIO API.
->  
-> -http://www.ti.com/product/opt3001
-> +https://www.ti.com/product/opt3001
->  
->  Required properties:
->    - compatible: should be "ti,opt3001"
-> diff --git a/Documentation/devicetree/bindings/iio/light/vl6180.txt b/Documentation/devicetree/bindings/iio/light/vl6180.txt
-> index 2c52952715a0..fb9137d85df9 100644
-> --- a/Documentation/devicetree/bindings/iio/light/vl6180.txt
-> +++ b/Documentation/devicetree/bindings/iio/light/vl6180.txt
-> @@ -1,6 +1,6 @@
->  STMicro VL6180 -  ALS, range and proximity sensor
->  
-> -Link to datasheet: http://www.st.com/resource/en/datasheet/vl6180x.pdf
-> +Link to datasheet: https://www.st.com/resource/en/datasheet/vl6180x.pdf
->  
->  Required properties:
->  
-> diff --git a/Documentation/devicetree/bindings/iio/potentiometer/mcp41010.txt b/Documentation/devicetree/bindings/iio/potentiometer/mcp41010.txt
-> index 566711b9950c..4f245e8469fd 100644
-> --- a/Documentation/devicetree/bindings/iio/potentiometer/mcp41010.txt
-> +++ b/Documentation/devicetree/bindings/iio/potentiometer/mcp41010.txt
-> @@ -1,7 +1,7 @@
->  * Microchip MCP41010/41050/41100/42010/42050/42100 Digital Potentiometer
->  
->  Datasheet publicly available at:
-> -http://ww1.microchip.com/downloads/en/devicedoc/11195c.pdf
-> +https://ww1.microchip.com/downloads/en/devicedoc/11195c.pdf
->  
->  The node for this driver must be a child node of a SPI controller, hence
->  all mandatory properties described in
-> diff --git a/Documentation/devicetree/bindings/iio/potentiostat/lmp91000.txt b/Documentation/devicetree/bindings/iio/potentiostat/lmp91000.txt
-> index e6d0c2eb345c..f3ab02b0dd41 100644
-> --- a/Documentation/devicetree/bindings/iio/potentiostat/lmp91000.txt
-> +++ b/Documentation/devicetree/bindings/iio/potentiostat/lmp91000.txt
-> @@ -1,7 +1,7 @@
->  * Texas Instruments LMP91000 series of potentiostats
->  
-> -LMP91000: http://www.ti.com/lit/ds/symlink/lmp91000.pdf
-> -LMP91002: http://www.ti.com/lit/ds/symlink/lmp91002.pdf
-> +LMP91000: https://www.ti.com/lit/ds/symlink/lmp91000.pdf
-> +LMP91002: https://www.ti.com/lit/ds/symlink/lmp91002.pdf
->  
->  Required properties:
->  
-> diff --git a/Documentation/devicetree/bindings/iio/pressure/asc,dlhl60d.yaml b/Documentation/devicetree/bindings/iio/pressure/asc,dlhl60d.yaml
-> index 64c18f1693f0..be2be4b556db 100644
-> --- a/Documentation/devicetree/bindings/iio/pressure/asc,dlhl60d.yaml
-> +++ b/Documentation/devicetree/bindings/iio/pressure/asc,dlhl60d.yaml
-> @@ -13,7 +13,7 @@ description: |
->    Bindings for the All Sensors DLH series pressure sensors.
->  
->    Specifications about the sensors can be found at:
-> -    http://www.allsensors.com/cad/DS-0355_Rev_B.PDF
-> +    https://www.allsensors.com/cad/DS-0355_Rev_B.PDF
->  
->  properties:
->    compatible:
-> diff --git a/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml b/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
-> index f86f8b23ef18..ce795279839e 100644
-> --- a/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
-> +++ b/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
-> @@ -17,9 +17,9 @@ description: |
->      until it is received once again
->  
->    Specifications about the devices can be found at:
-> -  http://www.robot-electronics.co.uk/htm/srf04tech.htm
-> +  https://www.robot-electronics.co.uk/htm/srf04tech.htm
->  
-> -  http://www.maxbotix.com/documents/LV-MaxSonar-EZ_Datasheet.pdf
-> +  https://www.maxbotix.com/documents/LV-MaxSonar-EZ_Datasheet.pdf
->  
->  properties:
->    compatible:
-> diff --git a/Documentation/devicetree/bindings/iio/temperature/tmp007.txt b/Documentation/devicetree/bindings/iio/temperature/tmp007.txt
-> index da0af234a357..21952c140599 100644
-> --- a/Documentation/devicetree/bindings/iio/temperature/tmp007.txt
-> +++ b/Documentation/devicetree/bindings/iio/temperature/tmp007.txt
-> @@ -1,6 +1,6 @@
->  * TI TMP007 - IR thermopile sensor with integrated math engine
->  
-> -Link to datasheet: http://www.ti.com/lit/ds/symlink/tmp007.pdf
-> +Link to datasheet: https://www.ti.com/lit/ds/symlink/tmp007.pdf
-
-This one doesn't actually take us anywhere very useful. So probably best
-to just drop it.  The datasheet has been removed from TI's website it
-seems.
-
-
->  
->  Required properties:
->  
+> diff --git a/drivers/iio/magnetometer/bmc150_magn_i2c.c b/drivers/iio/magnetometer/bmc150_magn_i2c.c
+> index fb45b63c56e4..876e96005e33 100644
+> --- a/drivers/iio/magnetometer/bmc150_magn_i2c.c
+> +++ b/drivers/iio/magnetometer/bmc150_magn_i2c.c
+> @@ -58,7 +58,8 @@ MODULE_DEVICE_TABLE(i2c, bmc150_magn_i2c_id);
+>  static const struct of_device_id bmc150_magn_of_match[] = {
+>  	{ .compatible = "bosch,bmc150_magn" },
+>  	{ .compatible = "bosch,bmc156_magn" },
+> -	{ .compatible = "bosch,bmm150_magn" },
+> +	{ .compatible = "bosch,bmm150_magn" }, /* deprecated compatible */
+> +	{ .compatible = "bosch,bmm150" },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, bmc150_magn_of_match);
 
