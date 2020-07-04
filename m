@@ -2,91 +2,118 @@ Return-Path: <SRS0=KrzM=AP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38183C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 13:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E78C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 14:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 124AB208B8
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 13:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60CDC20885
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 14:08:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k0AQLqmB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bGGfNXsw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbgGDNUm (ORCPT
+        id S1726675AbgGDOIy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Jul 2020 09:20:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55852 "EHLO
+        Sat, 4 Jul 2020 10:08:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbgGDNUm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jul 2020 09:20:42 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5DB2C061794;
-        Sat,  4 Jul 2020 06:20:41 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id l12so37255104ejn.10;
-        Sat, 04 Jul 2020 06:20:41 -0700 (PDT)
+        with ESMTP id S1726258AbgGDOIy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jul 2020 10:08:54 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2858EC061794;
+        Sat,  4 Jul 2020 07:08:54 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id w17so27994411oie.6;
+        Sat, 04 Jul 2020 07:08:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=FxeWfdeiZs/rAf+ljgMaCrJoKxPAwF3x7YpavGdK0aI=;
-        b=k0AQLqmBs39X8hgGcZfrSBkkff33qKuj+PAa3/3V65/noDmQ9W9gBdNBEIm3GAiYWG
-         K6z6S2fEzf0frf6VKldY8Gd2e3labO3XqPacm0GwJL0ye56QlNoLrQvh71TI/xADk4Uh
-         ZkXB8LqAQ2QGY5G8fXCYj2K/pROMoNUc2tXHyIV+em8G8bX4fkC8m+EBzByr/hRBUdQc
-         RkNjsKRyV9TcZLk3EruvbcRuMlkJxEtQ34ZyIW5oxcPuvABduPtZpncxH7AvHqQCOqBX
-         JCEH2AQ0xqWNz0m0odvp1ziGDp9a0jNHZZakGHeTRWpHkhw8Wlo3hjBRgnzW4nZOzCKk
-         AK4Q==
+        bh=sruIXwAXhVbyB5irGxpmieYBkvT+Yh76sngiyp81DSY=;
+        b=bGGfNXswYZe14/cuzAmIfTCOrYwfHvCH4h2te1yO88pI7RbPNA7Czv4reMww8I8SbP
+         s7KT5FPP1bFRY4eFbAuO4gaa8m7yQVpHAYj/lMxb4yc97Az2qudXG0cbkRsYUUD3wZoF
+         VcfO/PuPPWvtKdkXdSKu7vcI1ir7FriWYlg+YA0IYCfpVJH0UvzY1LXnLM1XgzBP40WZ
+         jfTvdG/d7nzvQcNmMNtQZZGcTvo0v8HkU6ccy9hOpu+mYF/Sq7YbmlKkHIMZJk+UZhaH
+         yQZa/f4ADWlFCb+UE+CsDdnFeAWIn9DAei37pKrH6P/kqqxK70mAp9uaEyAIA+AGLOPT
+         fSIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FxeWfdeiZs/rAf+ljgMaCrJoKxPAwF3x7YpavGdK0aI=;
-        b=i/eBDyrujDQFc4aJUDVEmndn4BWwgOCCyfmB3Z99rox1sdPy3tq+5dzpqL1F3hZthO
-         OzHyeJP+VA5WwO/UpP0GotnK4aGt+o7XiFRytbuV8w1G1czBpMLfouSZwkZSAMODm2/p
-         dn3fsbe9/gkmDol+FxNybn1ueAAUxwt2j1I/84erRBhAaYe7JcIyW9vv+JLieL6Noxqq
-         08AyqrfaLgIVJ1ZkG1Vt+tM4W7pc/wOiToQ2g31b5C0FL4bJNyDY6MHklzia2nCiAEiw
-         amwmanDZQvRDG3UUgbmd64KrsLogkP4fXuOo0rZi55dhJcxhsE5iTI7OKUp6SXJWMqS9
-         VLWw==
-X-Gm-Message-State: AOAM532Itmt5/+rdo5c51nS/Ze5072k3yqICUq5Q43jVTab2MykB2t9n
-        ScnDlieabOa0KCuGJI8CpQ3exdP8CAe+js/f7pI=
-X-Google-Smtp-Source: ABdhPJyN0L6Lg+tDrvxAD4o3/ArnPQHIneDzLuy5Y3L9y8VnRCiaTHn+7cc8WOa3IbxOlmbcK4A+SFhO5NQmPPcgJZQ=
-X-Received: by 2002:a17:906:70d5:: with SMTP id g21mr19049076ejk.340.1593868840390;
- Sat, 04 Jul 2020 06:20:40 -0700 (PDT)
+        bh=sruIXwAXhVbyB5irGxpmieYBkvT+Yh76sngiyp81DSY=;
+        b=opqxa+FgwjmJqkAq856nfqoAgVdogaV50658Qsj9tBg0TB+7jGuFu9v+OkyHv69dZk
+         Yl7fa90kDXtefzmPwLOGxCspKyhlDFIdxae9Sfc7EgHEBvSuVJBIOkdsMPERd9fxEu1e
+         xaSfILW86HUKQjoDuHFKj4zzKrwnRCZZd+liWB7au2U2kFj7uu7qeKOqd2yNDg8jC5Cp
+         BTpLD8iWlNnrDDIuCbIQ8NaU6MV6yYTy7H6qAf8dBLAmNoKzvaqjsHKr5G02DKwxL4yh
+         wau5HJYUJXEMUyfXi0Q+H7+w+VwuEyFfcU42p7oLRcjxvT8eMCn9ynD7FZTd1KcjuM13
+         pNgA==
+X-Gm-Message-State: AOAM533rNVbfuEN2xltMvguTaJ9NoDKRWn7E0NftZRkdlxboxKr2lIxD
+        65Y9ld4j0NjkJ/g5G1DVZ61oG9fQrBbM0JNNiEA=
+X-Google-Smtp-Source: ABdhPJztoFfvdTLj2yMn1sCGZxmmBOCYmRIuPcHWgshbnsn/EhxPtETALm2xO46URFZ5cicFgCzGhlj5YWM8/IMYuUI=
+X-Received: by 2002:aca:b205:: with SMTP id b5mr32722874oif.103.1593871733367;
+ Sat, 04 Jul 2020 07:08:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200704122809.73794-1-konradybcio@gmail.com> <20200704130922.GB21333@willie-the-truck>
-In-Reply-To: <20200704130922.GB21333@willie-the-truck>
-From:   Konrad Dybcio <konradybcio@gmail.com>
-Date:   Sat, 4 Jul 2020 15:20:04 +0200
-Message-ID: <CAMS8qEU7owyk0ELmfE7f6Q_C0RT0cy3N=WtP0DzEUhV6KPnDhQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] iommu/arm-smmu: Implement qcom,skip-init
-To:     Will Deacon <will@kernel.org>
-Cc:     skrzynka@konradybcio.pl, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
+References: <20200702175352.19223-1-TheSven73@gmail.com> <20200702175352.19223-3-TheSven73@gmail.com>
+ <CAOMZO5DxUeXH8ZYxmKynA7xO3uF6SP_Kt-g=8MPgsF7tqkRvAA@mail.gmail.com>
+In-Reply-To: <CAOMZO5DxUeXH8ZYxmKynA7xO3uF6SP_Kt-g=8MPgsF7tqkRvAA@mail.gmail.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Sat, 4 Jul 2020 10:08:42 -0400
+Message-ID: <CAGngYiXGXDqCZeJme026uz5FjU56UojmQFFiJ5_CZ_AywdQiEw@mail.gmail.com>
+Subject: Re: [PATCH v5 3/3] ARM: imx6plus: optionally enable internal routing
+ of clk_enet_ref
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Fugang Duan <fugang.duan@nxp.com>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        jcrouse@codeaurora.org, john.stultz@linaro.org
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> It would probably be better to know _which_ context banks we shouldn't
-> touch, no? Otherwise what happens to the others?
+Hi Fabio, Andy,
 
-> Do we not need to worry about the SMRs as well?
+On Thu, Jul 2, 2020 at 6:29 PM Fabio Estevam <festevam@gmail.com> wrote:
+>
+> With the device tree approach, I think that a better place to touch
+> GPR5 would be inside the fec driver.
+>
 
-This was mimicked from CAF (think [1]) and the SMMUs don't make the
-hypervisor angry anymore, so I wouldn't be too picky on that if it works..
+Are we 100% sure this is the best way forward, though?
 
+All the FEC driver should care about is the FEC logic block
+inside the SoC. It should not concern itself with the way a SoC
+happens to bring a clock (PTP clock) to the input of the FEC
+logic block - that is purely a SoC implementation detail.
 
-[1] https://github.com/sonyxperiadev/kernel/blob/aosp/LA.UM.7.1.r1/drivers/iommu/arm-smmu.c#L4104-L4109
+It makes sense to add fsl,stop-mode (= a GPR bit) to the FEC driver,
+as this bit is a logic input to the FEC block, which the driver needs
+to dynamically flip.
 
-Regards
-Konrad
+But the PTP clock is different, because it's statically routed by
+the SoC.
+
+Maybe this problem needs a clock routing solution?
+Isn't there an imx6q plus clock mux we're not modelling?
+
+  enet_ref-o------>ext>---pad_clk--| \
+           |                       |M |----fec_ptp_clk
+           o-----------------------|_/
+
+Where M = mux controlled by GPR5[9]
+
+The issue here is that pad_clk is routed externally, so its parent
+could be any internal or external clock. I have no idea how to
+model this in the clock framework.
