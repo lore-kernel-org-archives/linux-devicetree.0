@@ -2,247 +2,342 @@ Return-Path: <SRS0=KrzM=AP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C74C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 04:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A838C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 09:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AD41207D4
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 04:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DCA420739
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 09:25:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l7zgViNG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d20+gBfF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725822AbgGDEb5 (ORCPT
+        id S1726259AbgGDJZ3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Jul 2020 00:31:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59640 "EHLO
+        Sat, 4 Jul 2020 05:25:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgGDEb5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jul 2020 00:31:57 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B01EC061794
-        for <devicetree@vger.kernel.org>; Fri,  3 Jul 2020 21:31:57 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id d10so13298768pls.5
-        for <devicetree@vger.kernel.org>; Fri, 03 Jul 2020 21:31:57 -0700 (PDT)
+        with ESMTP id S1726253AbgGDJZ3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jul 2020 05:25:29 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D8D5C061794;
+        Sat,  4 Jul 2020 02:25:29 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id gc9so8284216pjb.2;
+        Sat, 04 Jul 2020 02:25:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=3SL61dihAHKQ5Ht3JKZwsIf+MYk0kZQ06Zncr9exNUs=;
-        b=l7zgViNGAE4eZYVk4+Sw7TvzxvRKMwSpPdAnJfNUiIo7O3w+zJGM+P21SdWw3+X7Ia
-         KYInctHduZETzALNwe5C5eFieRl/rKZOGsdavHn+vrBDrmELWHOkPWrPP+7YAID6kB5+
-         6fHqVcX0D+O30NO7fADDzBzeZBwC+XVcX5m87Idi6/yq5lfZV2d6wdB1Xa7C2kz4Zl5y
-         Z2m6OMjXu5xtOuKqfxA7zM77jpxAdWxnECYv5FRZuzkFBmsjmQo7YySZPmKMJS2WOqXa
-         GJv89rwVbni5aZM7bvwF/L7alopxijd9VLxcSXqYT1KfM83hLCY11gy9RsCC6GQwNUxF
-         aBRw==
+        bh=vPne7NFgJs6b8kzaJCb+n8aPS6rGBj37y5JN0ANKMsQ=;
+        b=d20+gBfF/A2+zaOZAnEAHqHn11JPIhWf78A/02VJ8cAhi52B1MDoOmBVUoCkwbAQIt
+         WL7EeHG4TQi5Jb8TEVtw2KUl8GvB5ofPW61yYWmJDXn/6237obVR4INx3TW5CXby8jxN
+         6kmCsnlCGfHqg1hZCPIFkwu82iQnhL1rb+g/opBQjwMnmU3iTRussoVfA8z2yN7YUTkh
+         ALxOp4p31NYJP0brJ83SJZcJhhotFuyHYfiYJXjLgL2MP41pctr+EGO+xF3izIFx+Rrl
+         8dLVY2NNrqvCOppXnEYyHBOLpAc9qZXAZBb6mVlh9ZWzRpfrrExtPbv5xJm4N7QnmzTL
+         Rtgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=3SL61dihAHKQ5Ht3JKZwsIf+MYk0kZQ06Zncr9exNUs=;
-        b=T3aBydJ8LLkvUDSx7LXg7JgirwWlh9sE/xdq58ySv4evCWTUtGWuVVJzRHT72MqLQA
-         mujzd02XZltkXl7m5DV0sLeSoippHotTcnJNzq1q1iOCQ2y/BwqofI0rx1Sv8WzTQZRh
-         8qUvXkO29fo5KaSRZlVdeC/czs7ov4S5RFJYKt0lCz5OfJpNb7pKT9txW3jPft1hbTpH
-         G16M2JcEldacIqtbUGQwQDaOC+NGnl+raartru8QcLZo+S5ECQ5rsgnxqBs5aZv+adeb
-         iEdE86BRJowhx7H5eHcAvQNxUOMxwx7zWpOWLiIswqqaOYN0G6Wot5MpgcweSNq7WPN3
-         pAbA==
-X-Gm-Message-State: AOAM533/4kaRlnPZsZZE8qa1O+Ab2W8unYgSeZfPDIZtvFkHzj4LShLD
-        kLQv9ehNMnySjpAHD+7GVKzRkp3SysQ=
-X-Google-Smtp-Source: ABdhPJx6qZ++VxvND82KUcY+wG9CcOIJdvhTw8f8cxVRQRKJqV0eTfgYim4+pKaFj0BUUqjKw+1ANg==
-X-Received: by 2002:a17:90a:8a8b:: with SMTP id x11mr36781466pjn.127.1593837116541;
-        Fri, 03 Jul 2020 21:31:56 -0700 (PDT)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id d9sm13759731pgv.45.2020.07.03.21.31.55
+        bh=vPne7NFgJs6b8kzaJCb+n8aPS6rGBj37y5JN0ANKMsQ=;
+        b=r3B2zo4ele/HhfLOeesCC9L6dKwIftUCTUVxISPT0eoeUwNzrV/fu4DNCGYBOt/9ap
+         wuqOwTKjeNV6wWvivqOXDUbdn39hTt+UluuI7wY1jbHjILxq/bBKZrxqxl5TSz7X4xeI
+         eGjsd3ayh3aWo+3sB6X708kWjnBQHn7GBShgDL/1CiIBlPOk/r0E9sMc1KvvNYIUZyQ2
+         WziPeQCrXXNqKUotav52evrMmAAqhr7fDwcOfw1JpLBdRMaB1sJYXPIAU6MJ88w5ynEF
+         U39Nih/yafeJi71qBUQSdok6TcE7PFxU9S0bLdbMO5WYfRo5RLwUYZ0ooTaMfNIAupw+
+         K39w==
+X-Gm-Message-State: AOAM533aR8rhhPfiJOSO+9FoglLemOG4P0YjsEwQaRRxo8PUNoa+8orY
+        r2b19jfFDqp2odeEwQxtqGUPEojI1qU=
+X-Google-Smtp-Source: ABdhPJztMwPJkf9gYnz5ynp9kd3hUkhpOC+Xkb747Q5eUfV87Ty5lmw+6nwRtRxCyBdj/iFeYUMDQA==
+X-Received: by 2002:a17:902:b40f:: with SMTP id x15mr31793800plr.164.1593854728531;
+        Sat, 04 Jul 2020 02:25:28 -0700 (PDT)
+Received: from localhost.localdomain ([122.172.219.189])
+        by smtp.gmail.com with ESMTPSA id s22sm13650917pfm.164.2020.07.04.02.25.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 21:31:55 -0700 (PDT)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Yu Chen <chenyu56@huawei.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        YongQin Liu <yongqin.liu@linaro.org>,
+        Sat, 04 Jul 2020 02:25:28 -0700 (PDT)
+From:   Vinay Simha BN <simhavcs@gmail.com>
+Cc:     Vinay Simha BN <simhavcs@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH] dts: hi3660: Add support for basic usb gadget on Hikey960
-Date:   Sat,  4 Jul 2020 04:31:51 +0000
-Message-Id: <20200704043151.100780-1-john.stultz@linaro.org>
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v7 1/2] dt-binding: Add DSI/LVDS TC358775 bridge bindings
+Date:   Sat,  4 Jul 2020 14:54:39 +0530
+Message-Id: <20200704092511.20856-1-simhavcs@gmail.com>
 X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds basic core dwc3, usb phy and rt1711h nodes for
-usb support on Hikey960.
+- converted from .txt to .yaml
+- dual-link lvds port added and implemented
+- dsi data-lanes property removed, it will be picked
+  from dsi0 ports
+- VESA/JEIDA formats picked from panel-lvds dts
+- proper indentation
+- single-link and dual-link lvds description and
+  examples are added
+- license modified to (GPL-2.0-only OR BSD-2-Clause)
 
-This does not enable the mux/hub functionality on the board, so
-the USB-A host ports will not function, but does allow the USB-C
-port to function in gadget mode (unfortunately not in host, as
-the hub/mux functionality is needed to enable vbus output to
-power devices in host mode).
+Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
 
-This is based on an old patch originally by Yu Chen.
-
-Cc: Yu Chen <chenyu56@huawei.com>
-Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Wei Xu <xuwei5@hisilicon.com>
-Cc: Binghui Wang <wangbinghui@hisilicon.com>
-Cc: YongQin Liu <yongqin.liu@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
- .../boot/dts/hisilicon/hi3660-hikey960.dts    | 72 +++++++++++++++++++
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi     | 34 +++++++++
- 2 files changed, 106 insertions(+)
+v1:
+ Initial version wast .txt file
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-index e035cf195b19..ff392a47562c 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-@@ -13,6 +13,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/usb/pd.h>
- 
- / {
- 	model = "HiKey960";
-@@ -526,6 +527,48 @@
- &i2c1 {
- 	status = "okay";
- 
-+	rt1711h: rt1711h@4e {
-+		compatible = "richtek,rt1711h";
-+		reg = <0x4e>;
-+		status = "ok";
-+		interrupt-parent = <&gpio27>;
-+		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&usb_cfg_func>;
+v2:
+ From txt to yaml file format
+
+v3:
+* Andrzej Hajda review comments incorporated
+  dual port lvds implemented
+
+* Laurent Pinchart review comments incorporated
+  dsi lanes property removed and it is dynamically
+  picked from the dsi ports
+  VESA/JEIDA format picked from panel-lvds dts
+
+v4:
+* Sam Ravnborg review comments incorporated
+  }' is indented properly in examples data-lanes
+  description for single-link and dual-link lvds
+
+v5:
+* Sam Ravnborg review comments incorporated
+  license modified to (GPL-2.0-only OR BSD-2-Clause)
+  changelog added
+---
+ .../display/bridge/toshiba,tc358775.yaml      | 215 ++++++++++++++++++
+ 1 file changed, 215 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+
+diff --git a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+new file mode 100644
+index 000000000000..31f085d8ab13
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+@@ -0,0 +1,215 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/bridge/toshiba,tc358775.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+		usb_con: connector {
-+			compatible = "usb-c-connector";
-+			label = "USB-C";
-+			data-role = "dual";
-+			power-role = "dual";
-+			try-power-role = "sink";
-+			source-pdos = <PDO_FIXED(5000, 500, PDO_FIXED_USB_COMM)>;
-+			sink-pdos = <PDO_FIXED(5000, 500, PDO_FIXED_USB_COMM)
-+				PDO_VAR(5000, 5000, 1000)>;
-+			op-sink-microwatt = <10000000>;
++title: Toshiba TC358775 DSI to LVDS bridge bindings
 +
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				port@1 {
-+					reg = <1>;
-+					usb_con_ss: endpoint {
-+						remote-endpoint = <&dwc3_ss>;
-+					};
-+				};
-+			};
-+		};
-+		port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
++maintainers:
++ - Vinay Simha BN <simhavcs@gmail.com>
 +
-+			rt1711h_ep: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&dwc3_role_switch>;
-+			};
-+		};
-+	};
++description: |
++ This binding supports DSI to LVDS bridge TC358775
 +
- 	adv7533: adv7533@39 {
- 		status = "ok";
- 		compatible = "adi,adv7533";
-@@ -612,3 +655,32 @@
- 		interrupts = <3 IRQ_TYPE_EDGE_RISING>;
- 	};
- };
++ MIPI DSI-RX Data 4-lane, CLK 1-lane with data rates up to 800 Mbps/lane.
++ Video frame size:
++ Up to 1600x1200 24-bit/pixel resolution for single-link LVDS display panel
++ limited by 135 MHz LVDS speed
++ Up to WUXGA (1920x1200 24-bit pixels) resolution for dual-link LVDS display
++ panel, limited by 270 MHz LVDS speed.
 +
-+&dwc3 { /* USB */
-+	dr_mode = "otg";
-+	maximum-speed = "super-speed";
-+	phy_type = "utmi";
-+	snps,dis-del-phy-power-chg-quirk;
-+	snps,lfps_filter_quirk;
-+	snps,dis_u2_susphy_quirk;
-+	snps,dis_u3_susphy_quirk;
-+	snps,tx_de_emphasis_quirk;
-+	snps,tx_de_emphasis = <1>;
-+	snps,dis_enblslpm_quirk;
-+	snps,gctl-reset-quirk;
-+	usb-role-switch;
-+	role-switch-default-mode = "host";
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		dwc3_role_switch: endpoint@0 {
-+			reg = <0>;
-+			remote-endpoint = <&rt1711h_ep>;
-+		};
++properties:
++  compatible:
++    const: toshiba,tc358775
 +
-+		dwc3_ss: endpoint@1 {
-+			reg = <1>;
-+			remote-endpoint = <&usb_con_ss>;
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-index c39b78989ff9..d25aac5e0bf8 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -1152,6 +1152,40 @@
- 				};
- 			};
- 		};
++  reg:
++    maxItems: 1
++    description: i2c address of the bridge, 0x0f
 +
-+		usb3_otg_bc: usb3_otg_bc@ff200000 {
-+			compatible = "syscon", "simple-mfd";
-+			reg = <0x0 0xff200000 0x0 0x1000>;
++  vdd-supply:
++    maxItems: 1
++    description:  1.2V LVDS Power Supply
 +
-+			usb_phy: usb-phy {
-+				compatible = "hisilicon,hi3660-usb-phy";
-+				#phy-cells = <0>;
-+				hisilicon,pericrg-syscon = <&crg_ctrl>;
-+				hisilicon,pctrl-syscon = <&pctrl>;
-+				hisilicon,eye-diagram-param = <0x22466e4>;
-+			};
-+		};
++  vddio-supply:
++    maxItems: 1
++    description: 1.8V IO Power Supply
 +
-+		dwc3: dwc3@ff100000 {
-+			compatible = "snps,dwc3";
-+			reg = <0x0 0xff100000 0x0 0x100000>;
++  stby-gpios:
++    maxItems: 1
++    description: Standby pin, Low active
 +
-+			clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
-+				 <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
-+			clock-names = "ref", "bus_early";
++  reset-gpios:
++    maxItems: 1
++    description: Hardware reset, Low active
 +
-+			assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
-+			assigned-clock-rates = <229000000>;
++  ports:
++    type: object
++    description:
++      A node containing input and output port nodes with endpoint definitions
++      as documented in
++      Documentation/devicetree/bindings/media/video-interfaces.txt
++    properties:
++      "#address-cells":
++        const: 1
 +
-+			resets = <&crg_rst 0x90 8>,
-+				 <&crg_rst 0x90 7>,
-+				 <&crg_rst 0x90 6>,
-+				 <&crg_rst 0x90 5>;
++      "#size-cells":
++        const: 0
 +
-+			interrupts = <0 159 4>, <0 161 4>;
-+			phys = <&usb_phy>;
-+			phy-names = "usb3-phy";
-+		};
- 	};
- };
- 
++      port@0:
++        type: object
++        description: |
++          DSI Input. The remote endpoint phandle should be a
++          reference to a valid mipi_dsi_host device node.
++
++      port@1:
++        type: object
++        description: |
++          Video port for LVDS output (panel or connector).
++
++      port@2:
++        type: object
++        description: |
++          Video port for Dual link LVDS output (panel or connector).
++
++    required:
++      - port@0
++      - port@1
++
++required:
++ - compatible
++ - reg
++ - vdd-supply
++ - vddio-supply
++ - stby-gpios
++ - reset-gpios
++ - ports
++
++examples:
++ - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    /* For single-link LVDS display panel */
++
++    i2c@78b8000 {
++        /* On High speed expansion */
++        label = "HS-I2C2";
++        reg = <0x078b8000 0x500>;
++        clock-frequency = <400000>; /* fastmode operation */
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        tc_bridge: bridge@f {
++            compatible = "toshiba,tc358775";
++            reg = <0x0f>;
++
++            vdd-supply = <&pm8916_l2>;
++            vddio-supply = <&pm8916_l6>;
++
++            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
++            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
++
++            ports {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                port@0 {
++                    reg = <0>;
++                    d2l_in_test: endpoint {
++                        remote-endpoint = <&dsi0_out>;
++                    };
++                };
++
++                port@1 {
++                    reg = <1>;
++                    lvds_out: endpoint {
++                        remote-endpoint = <&panel_in>;
++                    };
++                };
++            };
++        };
++    };
++
++    dsi@1a98000 {
++        reg = <0x1a98000 0x25c>;
++        reg-names = "dsi_ctrl";
++
++        ports {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            port@1 {
++                reg = <1>;
++                dsi0_out: endpoint {
++                    remote-endpoint = <&d2l_in_test>;
++                    data-lanes = <0 1 2 3>;
++                };
++             };
++         };
++     };
++
++ - |
++    /* For dual-link LVDS display panel */
++
++    i2c@78b8000 {
++        /* On High speed expansion */
++        label = "HS-I2C2";
++        reg = <0x078b8000 0x500>;
++        clock-frequency = <400000>; /* fastmode operation */
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        tc_bridge_dual: bridge@f {
++            compatible = "toshiba,tc358775";
++            reg = <0x0f>;
++
++            vdd-supply = <&pm8916_l2>;
++            vddio-supply = <&pm8916_l6>;
++
++            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
++            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
++
++            ports {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                port@0 {
++                    reg = <0>;
++                    d2l_in_dual: endpoint {
++                        remote-endpoint = <&dsi0_out_dual>;
++                    };
++                };
++
++                port@1 {
++                    reg = <1>;
++                    lvds0_out: endpoint {
++                        remote-endpoint = <&panel_in0>;
++                    };
++                };
++
++                port@2 {
++                    reg = <2>;
++                    lvds1_out: endpoint {
++                        remote-endpoint = <&panel_in1>;
++                    };
++                };
++            };
++        };
++    };
++
++    dsi@1a98000 {
++        reg = <0x1a98000 0x25c>;
++        reg-names = "dsi_ctrl";
++
++        ports {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            port@1 {
++                reg = <1>;
++                dsi0_out_dual: endpoint {
++                    remote-endpoint = <&d2l_in_dual>;
++                    data-lanes = <0 1 2 3>;
++                };
++             };
++         };
++     };
++...
 -- 
 2.17.1
 
