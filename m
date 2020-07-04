@@ -2,119 +2,131 @@ Return-Path: <SRS0=KrzM=AP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4939AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 09:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7A4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 10:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01FC420885
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 09:56:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Dw2tzH9G"
+	by mail.kernel.org (Postfix) with ESMTP id 7F47E20870
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jul 2020 10:22:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593858173;
+	bh=5m8/7zS+1VBFKotYEfoawEAzm4yV5slnHduPy48fO2c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ezKiZMfw+yilfW8bbXc1hKPmOIdc7jXVSHqjHzM77PGRkdB88xSTVmpnHTP3XDNep
+	 gonm7p3NeOdQ9MDZ7o10I607tEuJ2y+gKtyEz1fWWnY86jLNRnZNkPCmag8WoOVGWz
+	 bpNJz84LdHRMffOF3AevflpY+fRXzAYgng1jUs/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726452AbgGDJ4k (ORCPT
+        id S1726253AbgGDKWw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Jul 2020 05:56:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52794 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbgGDJ4j (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jul 2020 05:56:39 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8916C061794
-        for <devicetree@vger.kernel.org>; Sat,  4 Jul 2020 02:56:39 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id a14so10355342pfi.2
-        for <devicetree@vger.kernel.org>; Sat, 04 Jul 2020 02:56:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DLjCzGoFPMdbYYDaSDjKoYN+kjyqA5RMXC52YJAeII8=;
-        b=Dw2tzH9GMo3t6v2OWZ2FKYd50INhuVgAYZ1RNNDAkmfjXIxgihFgvl5W0/JEsbpCfM
-         2I2pMwGx+TgY4MyXNoIZABQt8fDBH3vKxvGq8E7jkjhrpx/HK1uPL3Pgv3uR/spZBERO
-         5ZNV4b2Rebq9XiKdCHHOP9a6crADnQ6DvGrqo=
+        Sat, 4 Jul 2020 06:22:52 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:37766 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbgGDKWw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jul 2020 06:22:52 -0400
+Received: by mail-ed1-f68.google.com with SMTP id g20so29798539edm.4;
+        Sat, 04 Jul 2020 03:22:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DLjCzGoFPMdbYYDaSDjKoYN+kjyqA5RMXC52YJAeII8=;
-        b=SlwQO40Gekf9wBQmdCRUbW6HsftMJsFDgRQOiLtzWnecr9Xhcy/kiW+aQMmsQqQ1Az
-         z09/dwz0DRajS8z4+g2Ti7RdXXSYOw/yFhZg6aAnF+aLpxZbzUz+gbqfvAG/ZohKE9p1
-         WgN+eydJBJFwtMMoOFLjvWY08InkgPFv0n+9cX00Khp3MBIgBBbWAxo6x0pmuMHc/15V
-         Wydt563NRIHAGQQIuiSvENdyoNGLBluFr5wgShN1c47xn1v5QCPBSnw/64vSH8CIPlDR
-         340yVc/GX+UstVssKWhYv3COcOL54VyPfH7/f9Jc72KRKykLd5XMscBEJrS8sQOT3S7r
-         wf/A==
-X-Gm-Message-State: AOAM530RvosWsaoW9F8AFSpGsNV0ppAf/T1waXe7jGmIlKc46pKQ5woR
-        9gCtkEyNHE7xjei1TfD0YNV4/g==
-X-Google-Smtp-Source: ABdhPJx32emjYkDYX9utXROC3YKYNpVwdpnluoe5KD8t6o547/d5ZwrxwXPuuLtCp+COopbqa/lffQ==
-X-Received: by 2002:a62:5c02:: with SMTP id q2mr37304228pfb.232.1593856599134;
-        Sat, 04 Jul 2020 02:56:39 -0700 (PDT)
-Received: from localhost.localdomain ([2405:201:c809:c7d5:bdf4:3289:4b66:dcc0])
-        by smtp.gmail.com with ESMTPSA id t184sm14302575pfd.49.2020.07.04.02.56.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jul 2020 02:56:38 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        mylene.josserand@collabora.com, Robin Murphy <robin.murphy@arm.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Suniel Mahesh <sunil@amarulasolutions.com>,
-        William Wu <william.wu@rock-chips.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v2] ARM: dts: rockchip: Add usb host0 ohci node for rk3288
-Date:   Sat,  4 Jul 2020 15:26:18 +0530
-Message-Id: <20200704095618.72371-1-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+jrV0HqUbkt9Cx5rpAJlhzgehxEYGZ5fXXCayKBNA8w=;
+        b=qyOaGvEr2L8LFRXof5womsWD5GCZcG8QUeV1VebLNEzfjfHXddoWyFnAIlJpLeuEOl
+         MCSzQpciI4GKiCzcMe8YeTz18kpMlag0nw+DAjnPB2Iq3IYUiEoBcT+WnPByIfMVS8cF
+         qD7lXJGMs5ZGI5hmPCTTrGLgqNDtpllEzcAOW8Aespw1nH9bpNliRiWsg8vqXZesYB8G
+         qkrqY87NvKw78iKssLJ+G5yHzA6Xcq98DlvXH4qQje/QMuiI+lbxMkWkEEZiT5EjrCOy
+         9KILHC5jEsbWvTmz1UdM9aYL2uApuLpddeEcgjdiXu5VA/ounolYvMWD1y0xTlBb4FJL
+         H+Pg==
+X-Gm-Message-State: AOAM533ZScj8Ir/1X7bKqrK8bHA3gtLo/krDMuPAmJhCP0pk8KlNDK3l
+        rE+3YBJEZ3sxLmcv0pdyRrI=
+X-Google-Smtp-Source: ABdhPJydT2qa3CL2K8I9FiDko44uIMNxsxpERrU9lCToYFS85q0/39Ygxmz7gRja65rU5l2pJFMR+Q==
+X-Received: by 2002:a05:6402:31ad:: with SMTP id dj13mr2189528edb.88.1593858169754;
+        Sat, 04 Jul 2020 03:22:49 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.195])
+        by smtp.googlemail.com with ESMTPSA id ck6sm14236971edb.18.2020.07.04.03.22.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 04 Jul 2020 03:22:48 -0700 (PDT)
+Date:   Sat, 4 Jul 2020 12:22:46 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Alim Akhtar <alim.akhtar@samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org
+Subject: Re: [PATCH] arm64: dts: exynos: Add minimal bootargs
+Message-ID: <20200704102246.GA5975@kozik-lap>
+References: <CGME20200703184543epcas5p4adb3db7693094c72477b8469d9f205ba@epcas5p4.samsung.com>
+ <20200703182536.9190-1-alim.akhtar@samsung.com>
+ <000801d6516a$b6efcb40$24cf61c0$@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <000801d6516a$b6efcb40$24cf61c0$@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-rk3288 and rk3288w have a usb host0 ohci controller.
+On Sat, Jul 04, 2020 at 12:19:40AM +0530, Alim Akhtar wrote:
+> Adding Krzysztof's correct email address.
+> Sorry about noise.
+> 
+> > -----Original Message-----
+> > From: Alim Akhtar <alim.akhtar@samsung.com>
+> > Sent: 03 July 2020 23:56
+> > To: rzk@kernel.org
+> > Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> > samsung-soc@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > robh+dt@kernel.org; Alim Akhtar <alim.akhtar@samsung.com>
+> > Subject: [PATCH] arm64: dts: exynos: Add minimal bootargs
+> > 
+> > Add minimal bootargs to enable earlycon and console.
+> > This really useful in case kernel has crashed early in boot process.
+> > 
+> > Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+> > ---
+> >  arch/arm64/boot/dts/exynos/exynos7-espresso.dts | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+> > b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+> > index 790f12ca8981..d7b42d5a3b2d 100644
+> > --- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+> > +++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+> > @@ -24,6 +24,7 @@
+> > 
+> >  	chosen {
+> >  		stdout-path = &serial_2;
+> > +		bootargs = "earlycon=exynos4210,0x14c30000
+> > console=ttySAC0,115200n8";
 
-Although rk3288 ohci doesn't actually work on hardware, but
-rk3288w ohci can work well.
+Hi,
 
-So add usb host0 ohci node in rk3288 dtsi and the quirk in
-ohci platform driver will disable ohci on rk3288.
+The console is already chosen by stdout-path and earlycon would use it
+as well, so no need for the address. It should be just "earlycon" if you
+want to enable it unconditionally.
 
-Cc: William Wu <william.wu@rock-chips.com>
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Changes for v2:
-- Updated NOTE comments.
+Also, why did you use different serial for console?
 
- arch/arm/boot/dts/rk3288.dtsi | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+However the question is, are you sure you want earlycon on every,
+including successful boot? On most of the boards we do not enable by
+default. If developer needs, he can choose it for example via U-Boot
+"setenv opts earlycon".
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 0cd88774db95..f0774d9afb67 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -614,7 +614,16 @@ usb_host0_ehci: usb@ff500000 {
- 		status = "disabled";
- 	};
- 
--	/* NOTE: ohci@ff520000 doesn't actually work on hardware */
-+	/* NOTE: doesn't work on RK3288, but fixed on RK3288W */
-+	usb_host0_ohci: usb@ff520000 {
-+		compatible = "generic-ohci";
-+		reg = <0x0 0xff520000 0x0 0x100>;
-+		interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru HCLK_USBHOST0>;
-+		phys = <&usbphy1>;
-+		phy-names = "usb";
-+		status = "disabled";
-+	};
- 
- 	usb_host1: usb@ff540000 {
- 		compatible = "rockchip,rk3288-usb", "rockchip,rk3066-usb",
--- 
-2.25.1
+However it's a development kit so it could be enabled on default...
 
+Best regards,
+Krzysztof
+
+> >  	};
+> > 
+> >  	memory@40000000 {
+> > 
+> > base-commit: 9e50b94b3eb0d859a2586b5a40d7fd6e5afd9210
+> > --
+> > 2.17.1
+> 
+> 
