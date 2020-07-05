@@ -2,133 +2,149 @@ Return-Path: <SRS0=PeIc=AQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC83C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 19:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6453C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 20:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC3302074F
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 19:51:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rDPbtc8v"
+	by mail.kernel.org (Postfix) with ESMTP id 8D8AA20739
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 20:45:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593981939;
+	bh=PzWD9Q9qreaWguzKmtjZ782UP/42e9+9BUsUmRGeEjw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=J3kkB1cOUpL47kv4b9VhDxn8o1YzazLwvG+D8wC2ljHV+UnuHo1Ju5T/QqA6rUAeu
+	 PbdCgatP+yOqLMs4uh4YqOcELDsW1FQipXOPQVmOILTVgKeo1MX2llh4kEVgABNigG
+	 zKaI5kRbnzLzWKc3j1a+g2HL/cbVHokmcpGuI7Tg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbgGETvc (ORCPT
+        id S1728486AbgGEUpj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Jul 2020 15:51:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53866 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728006AbgGETvb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Jul 2020 15:51:31 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E865C061794;
-        Sun,  5 Jul 2020 12:51:31 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id q17so16080733pfu.8;
-        Sun, 05 Jul 2020 12:51:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7RJ6rE3+V5FkJZxVb3v+pVHBk2ZYQcboCzbdh+i0x+E=;
-        b=rDPbtc8vdEMGwEPSHOV5kjTzILxUmRSxurBdo2x2VNrnCmNg2CA4bK0En8Ox5voIVu
-         jflBYMA4ESDAWl5Z5xfAI1Z0QOsgQFDF+9EILJPiVkk7sbSYqF+PGpppNvj28yCpvV1e
-         J3uX+qBHX8q98F9wSaUQxa1WzQBoq7FP2jsovR3BMmfkY+GRu6HXMA0LRHtTJuZ1/KPr
-         ROQRuXbp4XcX2Cuj7m5cpn9QaxXC/kdiSpQdHsNsHVDwtHf009y0ToxFBFQ+AGfulJJ/
-         QWwblLBZYGdcv/RLUYKFXpvuuTg0YzYH0IAVca3Wb435JlEfrsATbmwoSu+6K0pgbVVU
-         jATg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7RJ6rE3+V5FkJZxVb3v+pVHBk2ZYQcboCzbdh+i0x+E=;
-        b=Vm4WrgtoYuITeKaybUxVTkYxyZ16McvAsD5pCaa6TI5N2OOa1MA2C2qNKjEYmS4non
-         2poRfp01eGf8TkxoEDFcJghEodLqnCYhek1t1gw3uT+Wos+2Mdo2elWG5LVjs3gjr5mf
-         XpVzSZgASBSHtUX50HCtD2mFhCoqgQeXXYl7djM+d4dUeKuINSgBycQQqW1iMsZPHOML
-         4WCoB4la8nxpt6rmpf4Cok4GBlF6Ntyz87uFsS45506/74NzjZFZesMfjj2cYS3MfLB6
-         xfZkRM9P9EBXvXaehXBJQnIMERMcNKyY4s13HP1vwHdOtm8c9IBeIAkS0suimO3uHmJi
-         Odnw==
-X-Gm-Message-State: AOAM532rpKkucXYOWH3VmXFQT9Qw1jCluizsZ/jVaqsY6edevOvpMZtn
-        xeyawXE2R4h9YMMHe2hRueY=
-X-Google-Smtp-Source: ABdhPJyx/0NFcW6FSUxmSN3DKYwTjkoKbr6mmBjMln0ATSOvaHAugjHxaxi03vs9u8Jiv8C8NEH4gQ==
-X-Received: by 2002:a63:4b04:: with SMTP id y4mr37299434pga.158.1593978690666;
-        Sun, 05 Jul 2020 12:51:30 -0700 (PDT)
-Received: from anarsoul-thinkpad.lan (216-71-213-236.dyn.novuscom.net. [216.71.213.236])
-        by smtp.gmail.com with ESMTPSA id g9sm16072879pfm.151.2020.07.05.12.51.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jul 2020 12:51:30 -0700 (PDT)
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-        Ondrej Jirman <megous@megous.com>
-Cc:     Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: [PATCH 1/3] Bluetooth: Add new quirk for broken local ext features max_page
-Date:   Sun,  5 Jul 2020 12:51:08 -0700
-Message-Id: <20200705195110.405139-2-anarsoul@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200705195110.405139-1-anarsoul@gmail.com>
-References: <20200705195110.405139-1-anarsoul@gmail.com>
+        Sun, 5 Jul 2020 16:45:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53372 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728326AbgGEUpi (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 5 Jul 2020 16:45:38 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E85012068F;
+        Sun,  5 Jul 2020 20:45:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593981938;
+        bh=PzWD9Q9qreaWguzKmtjZ782UP/42e9+9BUsUmRGeEjw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=wiVQ9fZXiEvK6iYxV3uu+0ZPPkTnV1ZHaQrQLHuSeweFITpQJFM/C3jpPqsviLrUv
+         NpvGv268nwsmfPFOREOzuVh1XoHSDSPJyyHXH5Z41YznUTDuVSghg9v9zfPrGQVppW
+         ovq36YQgJcNzfurQ3iqsL3VMyL80SUEsAFKuqxq4=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jsBW4-009Fhz-Ge; Sun, 05 Jul 2020 21:45:36 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sun, 05 Jul 2020 21:45:36 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+Cc:     tglx@linutronix.de, jason@lakedaemon.net,
+        "Anna, Suman" <s-anna@ti.com>, robh+dt@kernel.org,
+        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, david@lechnology.com,
+        "Mills, William" <wmills@ti.com>, "Andrew F . Davis" <afd@ti.com>,
+        Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCHv3 2/6] irqchip/irq-pruss-intc: Add a PRUSS irqchip driver
+ for PRUSS interrupts
+In-Reply-To: <CAMxfBF7pbH1LLE4fJnnCPnrqnQ-tdO+_xfoN1VerJcQ-ZyYM9Q@mail.gmail.com>
+References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <1593699479-1445-3-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <f0d3f3224a1b8fa2be668dd2b8d9d84e@kernel.org>
+ <CAMxfBF6A9702-rBOo0jHtfn4Ds1_G+nWG4O9-urNqU00dFXeww@mail.gmail.com>
+ <12db6d22c12369b6d64f410aa2434b03@kernel.org>
+ <CAMxfBF7pbH1LLE4fJnnCPnrqnQ-tdO+_xfoN1VerJcQ-ZyYM9Q@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <53d39d8fbd63c6638dbf0584c7016ee0@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: grzegorz.jaszczyk@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, s-anna@ti.com, robh+dt@kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, david@lechnology.com, wmills@ti.com, afd@ti.com, rogerq@ti.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some adapters (e.g. RTL8723CS) advertise that they have more than
-2 pages for local ext features, but they don't support any features
-declared in these pages. RTL8723CS reports max_page = 2 and declares
-support for sync train and secure connection, but it responds with
-either garbage or with error in status on corresponding commands.
+On 2020-07-05 14:26, Grzegorz Jaszczyk wrote:
+> On Sat, 4 Jul 2020 at 11:39, Marc Zyngier <maz@kernel.org> wrote:
+>> 
+>> On 2020-07-03 15:28, Grzegorz Jaszczyk wrote:
 
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
----
- include/net/bluetooth/hci.h | 7 +++++++
- net/bluetooth/hci_event.c   | 4 +++-
- 2 files changed, 10 insertions(+), 1 deletion(-)
+[...]
 
-diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-index 16ab6ce87883..8e4c16210d18 100644
---- a/include/net/bluetooth/hci.h
-+++ b/include/net/bluetooth/hci.h
-@@ -227,6 +227,13 @@ enum {
- 	 * supported.
- 	 */
- 	HCI_QUIRK_VALID_LE_STATES,
-+
-+	/* When this quirk is set, max_page for local extended features
-+	 * is set to 1, even if controller reports higher number. Some
-+	 * controllers (e.g. RTL8723CS) report more pages, but they
-+	 * don't actually support features declared there.
-+	 */
-+	HCI_QUIRK_BROKEN_LOCAL_EXT_FTR_MAX_PAGE,
- };
- 
- /* HCI device flags */
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index cfeaee347db3..df3232828978 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -700,7 +700,9 @@ static void hci_cc_read_local_ext_features(struct hci_dev *hdev,
- 	if (rp->status)
- 		return;
- 
--	if (hdev->max_page < rp->max_page)
-+	if (!test_bit(HCI_QUIRK_BROKEN_LOCAL_EXT_FTR_MAX_PAGE,
-+		      &hdev->quirks) &&
-+	    hdev->max_page < rp->max_page)
- 		hdev->max_page = rp->max_page;
- 
- 	if (rp->page < HCI_MAX_PAGES)
+>> It still begs the question: if the HW can support both edge and level
+>> triggered interrupts, why isn't the driver supporting this diversity?
+>> I appreciate that your HW may only have level interrupts so far, but
+>> what guarantees that this will forever be true? It would imply a 
+>> change
+>> in the DT binding, which isn't desirable.
+> 
+> Ok, I've got your point. I will try to come up with something later
+> on. Probably extending interrupt-cells by one and passing interrupt
+> type will be enough for now. Extending this driver to actually support
+> it can be handled later if needed. Hope it works for you.
+
+Writing a set_type callback to deal with this should be pretty easy.
+Don't delay doing the right thing.
+
+[...]
+
+>> >> > +             hwirq = hipir & GENMASK(9, 0);
+>> >> > +             virq = irq_linear_revmap(intc->domain, hwirq);
+>> >>
+>> >> And this is where I worry. You seems to have a single irqdomain
+>> >> for all the muxes. Are you guaranteed that you will have no
+>> >> overlap between muxes? And please use irq_find_mapping(), as
+>> >> I have top-secret plans to kill irq_linear_revmap().
+>> >
+>> > Regarding irq_find_mapping - sure.
+>> >
+>> > Regarding irqdomains:
+>> > It is a single irqdomain since the hwirq (system event) can be mapped
+>> > to different irq_host (muxes). Patch #6
+>> > https://lkml.org/lkml/2020/7/2/616 implements and describes how input
+>> > events can be mapped to some output host interrupts through 2 levels
+>> > of many-to-one mapping i.e. events to channel mapping and channels to
+>> > host interrupts. Mentioned implementation ensures that specific system
+>> > event (hwirq) can be mapped through PRUSS specific channel into a
+>> > single host interrupt.
+>> 
+>> Patch #6 is a nightmare of its own, and I haven't fully groked it yet.
+>> Also, this driver seems to totally ignore the 2-level routing. Where
+>> is it set up? map/unmap in this driver do exactly *nothing*, so
+>> something somewhere must set it up.
+> 
+> The map/unmap is updated in patch #6 and it deals with those 2-level
+> routing setup. Map is responsible for programming the Channel Map
+> Registers (CMRx) and Host-Interrupt Map Registers (HMRx) basing on
+> provided configuration from the one parsed in the xlate function.
+> Unmap undo whatever was done on the map. More details can be found in
+> patch #6.
+> 
+> Maybe it would be better to squash patch #6 with this one so it would
+> be less confusing. What is your advice?
+
+So am I right in understanding that without patch #6, this driver does
+exactly nothing? If so, it has been a waste of review time.
+
+Please split patch #6 so that this driver does something useful
+for Linux, without any of the PRU interrupt routing stuff. I want
+to see a Linux-only driver that works and doesn't rely on any other
+exotic feature.
+
+         M.
 -- 
-2.27.0
-
+Jazz is not dead. It just smells funny...
