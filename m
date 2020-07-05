@@ -2,163 +2,170 @@ Return-Path: <SRS0=PeIc=AQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9A9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 00:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 908CCC433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 00:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B9B820771
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 00:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69AA220870
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 00:59:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eZlCLHQs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728075AbgGEAmU (ORCPT
+        id S1728079AbgGEA7m (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Jul 2020 20:42:20 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:51550 "EHLO
-        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1727041AbgGEAmU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jul 2020 20:42:20 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 9283F201825A;
-        Sun,  5 Jul 2020 08:34:34 +0800 (HKT)
-X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
-Received: from mail.gtsys.com.hk ([127.0.0.1])
-        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id VKIWJqM_6dRp; Sun,  5 Jul 2020 08:34:34 +0800 (HKT)
-Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 6F8602016B15;
-        Sun,  5 Jul 2020 08:34:34 +0800 (HKT)
-Received: from [10.128.2.32] (unknown [124.217.189.122])
-        by s01.gtsys.com.hk (Postfix) with ESMTPSA id 328A0C01F9E;
-        Sun,  5 Jul 2020 08:34:34 +0800 (HKT)
-Subject: Re: [PATCH 1/2] hwmon: shtc1: add support for device tree bindings
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Jack Lo <jack.lo@gtsys.com.hk>, devicetree@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200703034856.12846-1-chris.ruehl@gtsys.com.hk>
- <20200703034856.12846-2-chris.ruehl@gtsys.com.hk>
- <94043e67-1899-8e80-064c-50489cf7e4b2@roeck-us.net>
-From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Message-ID: <83ed44a9-179e-f8c7-a712-e81302dd5d42@gtsys.com.hk>
-Date:   Sun, 5 Jul 2020 08:34:33 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sat, 4 Jul 2020 20:59:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50270 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727041AbgGEA7m (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jul 2020 20:59:42 -0400
+Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EA9DC061794;
+        Sat,  4 Jul 2020 17:59:42 -0700 (PDT)
+Received: by mail-il1-x12e.google.com with SMTP id q3so19415842ilt.8;
+        Sat, 04 Jul 2020 17:59:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=af+68LX+7N5jX5lERkACGcOUmlOtCRdKuZ9mViQ1zac=;
+        b=eZlCLHQs8tnMlHPDN59duTwiY/iWYszFLrBdNijv54ZPwGzk+cGBooRYX4UFfcZcQd
+         YaWexzbFrLO6P7M0/D02KvfxK8959bzhXkWJAtbCGUzrlGEsy1Ont8nxUHP3zmJ72Chr
+         EMqs6NkiZeqKhrNKGCWqmQudjhZ2/YaB0tl7XFhy37nd1R5RwyKGg/0CbBgl2hZ/Yl5w
+         L4YMd/J443CmqXNg3+8O6P0Ge0go9scMK2REEOw8L3UtteditNuLEp07Zbg3IXY5q198
+         kV9NP+75Swvqbsq39BzLXaGZC9y7LjC36RMZc1rEnFk8SOGXhOSPsLhO7McGjXf53EU9
+         Sfyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=af+68LX+7N5jX5lERkACGcOUmlOtCRdKuZ9mViQ1zac=;
+        b=mWSPE+2OBJ7Ky8GWiOWaXHeYBvUb8/C69u+qu0OQ569lrelmjWLgoUesjZORCXlBuM
+         QbGEAf5CYSo/gg5nHg6MAQot1/+BOfr1Ru5qESKcaFlpECisLg8A95tg/NjLpL3pT6KA
+         H6qRhg6Qkr/Zj3xh9h/TG9O53TtfO+2AF8/4CVpDsnMHBVNMQpNn4CCicvx2cqlm0S3V
+         KkQT6SUGgLTGhergxIpuLxjz3eqbr+qhH8NPmx6Bk4GXyDNICzY/GZ43gEFchh9Y6SPq
+         K83h3WAzO6li4i8ADDj0s1shq8ieRdAw4//7gmN6MhBCnfn2eSZyP4/1+GOYnUR9inxe
+         w0Hg==
+X-Gm-Message-State: AOAM5339M1PWe4AH5nHYXJEJBUScv0sTnmNy9i2fUvBYhl9Ays8TPRCA
+        aj7F2Mv0B1dvIdijoOG3CVC46/7IuUz0YkPjPy0=
+X-Google-Smtp-Source: ABdhPJy34w8YGYvJDmuTPQlRMZxb5FjObMfhkDGeWB5Ui0DrQ2QjeIZbZUdbinIaAF6OL60++yFuvxF8y0l2WkunGP0=
+X-Received: by 2002:a92:c78d:: with SMTP id c13mr24437159ilk.85.1593910781278;
+ Sat, 04 Jul 2020 17:59:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <94043e67-1899-8e80-064c-50489cf7e4b2@roeck-us.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   Chris Healy <cphealy@gmail.com>
+Date:   Sat, 4 Jul 2020 17:59:30 -0700
+Message-ID: <CAFXsbZoYyw6_zUJvR-aeELfixMTy5gJV37vxK+q4RPs6F8uSgw@mail.gmail.com>
+Subject: [PATCH] ARM: dts: update MDIO speed and preamble for zii devices
+To:     Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Guenter,
+Update MDIO configuration with zii devices to fully utilize
+MDIO endpoint capabilities.  All devices support 12.5MHz clock and
+don't require MDIO preamble.
 
-On 3/7/2020 1:48 pm, Guenter Roeck wrote:
-> On 7/2/20 8:48 PM, Chris Ruehl wrote:
->> Add support for DTS bindings to the shtc driver, use CONFIG_OF
->> to compile in the code if needed.
->>
-> 
-> Ah, here it is. The introducing patch should say something like "[PATCH 0/2]".
-> 
->> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
->> ---
->>   drivers/hwmon/shtc1.c | 30 ++++++++++++++++++++++++++++++
->>   1 file changed, 30 insertions(+)
->>
->> diff --git a/drivers/hwmon/shtc1.c b/drivers/hwmon/shtc1.c
->> index a0078ccede03..3bcabc1cbce8 100644
->> --- a/drivers/hwmon/shtc1.c
->> +++ b/drivers/hwmon/shtc1.c
->> @@ -14,6 +14,9 @@
->>   #include <linux/err.h>
->>   #include <linux/delay.h>
->>   #include <linux/platform_data/shtc1.h>
->> +#ifdef CONFIG_OF
-> 
-> No. Please no conditional includes.
+Signed-off-by: Chris Healy <cphealy@gmail.com>
+---
+ arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi   | 2 ++
+ arch/arm/boot/dts/vf610-zii-cfu1.dts      | 2 ++
+ arch/arm/boot/dts/vf610-zii-dev.dtsi      | 2 ++
+ arch/arm/boot/dts/vf610-zii-spb4.dts      | 2 ++
+ arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts  | 2 ++
+ arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts | 2 ++
+ 6 files changed, 12 insertions(+)
 
-OK, will be fixed and same for below.
+diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+index 20350e803377..58cc421042e1 100644
+--- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+@@ -720,6 +720,8 @@
+         #address-cells = <1>;
+         #size-cells = <0>;
+         status = "okay";
++        suppress-preamble = <1>;
++        clock-frequency = <12500000>;
 
-> 
->> +#include <linux/of.h>
->> +#endif
->>   
->>   /* commands (high precision mode) */
->>   static const unsigned char shtc1_cmd_measure_blocking_hpm[]    = { 0x7C, 0xA2 };
->> @@ -196,6 +199,10 @@ static int shtc1_probe(struct i2c_client *client,
->>   	enum shtcx_chips chip = id->driver_data;
->>   	struct i2c_adapter *adap = client->adapter;
->>   	struct device *dev = &client->dev;
->> +#ifdef CONFIG_OF
->> +	struct device_node *np = dev->of_node;
->> +	u8 value;
->> +#endif
->>   
->>   	if (!i2c_check_functionality(adap, I2C_FUNC_I2C)) {
->>   		dev_err(dev, "plain i2c transactions not supported\n");
->> @@ -235,6 +242,20 @@ static int shtc1_probe(struct i2c_client *client,
->>   
->>   	if (client->dev.platform_data)
->>   		data->setup = *(struct shtc1_platform_data *)dev->platform_data;
->> +
->> +#ifdef CONFIG_OF
-> 
-> Unnecessary ifdef. Selection of devicetree data or not can be made
-> based on np != NULL. Also, if devictree data is available, platform
-> data should be ignored to avoid confusion.
+         switch: switch@0 {
+             compatible = "marvell,mv88e6085";
+diff --git a/arch/arm/boot/dts/vf610-zii-cfu1.dts
+b/arch/arm/boot/dts/vf610-zii-cfu1.dts
+index ce1920c052fc..c27cacbe6a73 100644
+--- a/arch/arm/boot/dts/vf610-zii-cfu1.dts
++++ b/arch/arm/boot/dts/vf610-zii-cfu1.dts
+@@ -159,6 +159,8 @@
+         #address-cells = <1>;
+         #size-cells = <0>;
+         status = "okay";
++        suppress-preamble = <1>;
++        clock-frequency = <12500000>;
 
-Ok, I wasn't aware this rule. Will change it.
+         switch0: switch0@0 {
+             compatible = "marvell,mv88e6085";
+diff --git a/arch/arm/boot/dts/vf610-zii-dev.dtsi
+b/arch/arm/boot/dts/vf610-zii-dev.dtsi
+index 95d0060fb56c..9694d3b53607 100644
+--- a/arch/arm/boot/dts/vf610-zii-dev.dtsi
++++ b/arch/arm/boot/dts/vf610-zii-dev.dtsi
+@@ -138,6 +138,8 @@
+         #address-cells = <1>;
+         #size-cells = <0>;
+         status = "okay";
++        suppress-preamble = <1>;
++        clock-frequency = <12500000>;
+     };
+ };
 
-> 
->> +	if (np) {
->> +		if (of_property_read_bool(np, "sensirion,blocking_io")) {
->> +			of_property_read_u8(np, "sensirion,blocking_io", &value);
->> +			data->setup.blocking_io = (value > 0) ? true : false;
->> +		}
-> Why this complexity, and why not just make the property a boolean ?
-> 
->> +		if (of_property_read_bool(np, "sensicon,high_precision")) {
->> +			of_property_read_u8(np, "sensirion,high_precision", &value);
->> +			data->setup.high_precision = (value > 0) ? true : false;
-> 
-> "sensicon,high_precision" should also be a boolean.
-> 
->> +		}
->> +	}
->> +#endif
->> +
->>   	shtc1_select_command(data);
->>   	mutex_init(&data->update_lock);
->>   
->> @@ -257,6 +278,15 @@ static const struct i2c_device_id shtc1_id[] = {
->>   };
->>   MODULE_DEVICE_TABLE(i2c, shtc1_id);
->>   
->> +#ifdef CONFIG_OF
->> +static const struct of_device_id shtc1_of_match[] = {
->> +	{ .compatible = "sensirion,shtc1" },
->> +	{ .compatible = "sensirion,shtw1" },
->> +	{ .compatible = "sensirion,shtc3" },
->> +	{ }
->> +};
->> +MODULE_DEVICE_TABLE(of, shtc1_of_match);
->> +#endif
->>   static struct i2c_driver shtc1_i2c_driver = {
->>   	.driver.name  = "shtc1",
->>   	.probe        = shtc1_probe,
->>
-> Not sure how this works without setting of_match_table. I guess it just works
-> accidentally because .id_table also provides a devicetree match. Still,
-> of_match_table should be set.
+diff --git a/arch/arm/boot/dts/vf610-zii-spb4.dts
+b/arch/arm/boot/dts/vf610-zii-spb4.dts
+index 55b4201e27f6..d2ad07ed5318 100644
+--- a/arch/arm/boot/dts/vf610-zii-spb4.dts
++++ b/arch/arm/boot/dts/vf610-zii-spb4.dts
+@@ -120,6 +120,8 @@
+         #address-cells = <1>;
+         #size-cells = <0>;
+         status = "okay";
++        suppress-preamble = <1>;
++        clock-frequency = <12500000>;
 
-Thanks, I will take care of this in the v2 version.
+         switch0: switch0@0 {
+             compatible = "marvell,mv88e6190";
+diff --git a/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
+b/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
+index a6c22a79779e..0bb3dcff0b79 100644
+--- a/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
++++ b/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
+@@ -106,6 +106,8 @@
+         #address-cells = <1>;
+         #size-cells = <0>;
+         status = "okay";
++        suppress-preamble = <1>;
++        clock-frequency = <12500000>;
 
-> 
-> Guenter
-> 
+         switch0: switch0@0 {
+             compatible = "marvell,mv88e6190";
+diff --git a/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
+b/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
+index 3d05c894bdc0..e12e11805b71 100644
+--- a/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
++++ b/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
+@@ -134,6 +134,8 @@
+         #address-cells = <1>;
+         #size-cells = <0>;
+         status = "okay";
++        suppress-preamble = <1>;
++        clock-frequency = <12500000>;
 
+         switch0: switch0@0 {
+             compatible = "marvell,mv88e6190";
+-- 
+2.21.3
