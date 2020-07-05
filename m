@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA44C433E8
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 09:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FECC433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 09:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C2B920771
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 09:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E87B620772
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 09:19:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgGEJSZ (ORCPT
+        id S1726947AbgGEJTD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Jul 2020 05:18:25 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:47006 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726496AbgGEJSY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Jul 2020 05:18:24 -0400
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 05 Jul 2020 02:18:23 -0700
+        Sun, 5 Jul 2020 05:19:03 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:22188 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726491AbgGEJSR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Jul 2020 05:18:17 -0400
+Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 05 Jul 2020 02:18:17 -0700
 Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 05 Jul 2020 02:18:17 -0700
+  by ironmsg05-sd.qualcomm.com with ESMTP; 05 Jul 2020 02:18:11 -0700
 Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id F0F51213CC; Sun,  5 Jul 2020 14:48:09 +0530 (IST)
+        id 90DE9213B6; Sun,  5 Jul 2020 14:48:09 +0530 (IST)
 From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
         robh+dt@kernel.org, kishon@ti.com, vkoul@kernel.org,
@@ -36,9 +36,9 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org
 Cc:     Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-Subject: [PATCH 7/9] pci: dwc: qcom: do phy power on before pcie init
-Date:   Sun,  5 Jul 2020 14:47:58 +0530
-Message-Id: <1593940680-2363-8-git-send-email-sivaprak@codeaurora.org>
+Subject: [PATCH 3/9] clk: qcom: ipq8074: Add missing bindings for pcie
+Date:   Sun,  5 Jul 2020 14:47:54 +0530
+Message-Id: <1593940680-2363-4-git-send-email-sivaprak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
 References: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
@@ -47,63 +47,29 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Commit cc1e06f033af ("phy: qcom: qmp: Use power_on/off ops for PCIe")
-changed phy ops from init/deinit to power on/off, due to this phy enable
-is getting called after pcie init.
+Add missing clock bindings for pcie port0 of ipq8074.
 
-On some platforms like ipq8074 phy should be inited before accessing the
-pcie register space, otherwise the system would hang.
-
-So move phy_power_on API before pcie init API.
-
-Fixes: commit cc1e06f033af ("phy: qcom: qmp: Use power_on/off ops for PCIe")
 Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
 Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
 Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ include/dt-bindings/clock/qcom,gcc-ipq8074.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 138e1a2d21cc..aa52a2124760 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1222,18 +1222,18 @@ static int qcom_pcie_host_init(struct pcie_port *pp)
+diff --git a/include/dt-bindings/clock/qcom,gcc-ipq8074.h b/include/dt-bindings/clock/qcom,gcc-ipq8074.h
+index 4de4811a3540..e3e018565add 100644
+--- a/include/dt-bindings/clock/qcom,gcc-ipq8074.h
++++ b/include/dt-bindings/clock/qcom,gcc-ipq8074.h
+@@ -362,5 +362,9 @@
+ #define GCC_PCIE1_AXI_SLAVE_ARES		128
+ #define GCC_PCIE1_AHB_ARES			129
+ #define GCC_PCIE1_AXI_MASTER_STICKY_ARES	130
++#define GCC_PCIE0_AXI_SLAVE_STICKY_ARES		131
++#define GCC_PCIE0_AXI_S_BRIDGE_CLK		132
++#define GCC_PCIE0_RCHNG_CLK_SRC			133
++#define GCC_PCIE0_RCHNG_CLK			134
  
- 	qcom_ep_reset_assert(pcie);
- 
--	ret = pcie->ops->init(pcie);
-+	ret = phy_power_on(pcie->phy);
- 	if (ret)
- 		return ret;
- 
--	ret = phy_power_on(pcie->phy);
-+	ret = pcie->ops->init(pcie);
- 	if (ret)
--		goto err_deinit;
-+		goto err_disable_phy;
- 
- 	if (pcie->ops->post_init) {
- 		ret = pcie->ops->post_init(pcie);
- 		if (ret)
--			goto err_disable_phy;
-+			goto err_deinit;
- 	}
- 
- 	dw_pcie_setup_rc(pp);
-@@ -1252,10 +1252,10 @@ static int qcom_pcie_host_init(struct pcie_port *pp)
- 	qcom_ep_reset_assert(pcie);
- 	if (pcie->ops->post_deinit)
- 		pcie->ops->post_deinit(pcie);
--err_disable_phy:
--	phy_power_off(pcie->phy);
- err_deinit:
- 	pcie->ops->deinit(pcie);
-+err_disable_phy:
-+	phy_power_off(pcie->phy);
- 
- 	return ret;
- }
+ #endif
 -- 
 2.7.4
 
