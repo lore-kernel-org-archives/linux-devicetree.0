@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE771C433E6
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 09:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D81BC433E4
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 09:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B03D620772
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 09:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CBF020772
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 09:19:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbgGEJSw (ORCPT
+        id S1726597AbgGEJSS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Jul 2020 05:18:52 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:22188 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726629AbgGEJST (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Jul 2020 05:18:19 -0400
-Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 05 Jul 2020 02:18:18 -0700
+        Sun, 5 Jul 2020 05:18:18 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:46989 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726494AbgGEJSR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Jul 2020 05:18:17 -0400
+Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 05 Jul 2020 02:18:16 -0700
 Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg04-sd.qualcomm.com with ESMTP; 05 Jul 2020 02:18:11 -0700
+  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 05 Jul 2020 02:18:11 -0700
 Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id 5BA1721185; Sun,  5 Jul 2020 14:48:09 +0530 (IST)
+        id 6C0F6213B2; Sun,  5 Jul 2020 14:48:09 +0530 (IST)
 From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
         robh+dt@kernel.org, kishon@ti.com, vkoul@kernel.org,
@@ -36,9 +36,9 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org
 Cc:     Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-Subject: [PATCH 1/9] dt-bindings: pci: Add ipq8074 gen3 pci compatible
-Date:   Sun,  5 Jul 2020 14:47:52 +0530
-Message-Id: <1593940680-2363-2-git-send-email-sivaprak@codeaurora.org>
+Subject: [PATCH 2/9] dt-bindings: phy: qcom,qmp: Add dt-binding for ipq8074 gen3 pcie phy
+Date:   Sun,  5 Jul 2020 14:47:53 +0530
+Message-Id: <1593940680-2363-3-git-send-email-sivaprak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
 References: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
@@ -47,81 +47,29 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-ipq8074 has two PCIe ports while the support for gen2 pcie port is
-already available add the support for gen3 binding.
+ipq8074 has two different phy blocks for two pcie ports, with pcie gen2
+compatible already available, specify the pcie phy compatible
+for gen3 pcie port.
 
 Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
 Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
 Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 ---
- .../devicetree/bindings/pci/qcom,pcie.yaml         | 47 ++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+ Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-index b119ce4711b4..b5ec45df735e 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -22,6 +22,7 @@ properties:
-       - qcom,pcie-ipq4019
-       - qcom,pcie-ipq8064
-       - qcom,pcie-ipq8074
-+      - qcom,pcie-ipq8074-gen3
-       - qcom,pcie-msm8996
-       - qcom,pcie-qcs404
-       - qcom,pcie-sdm845
-@@ -330,6 +331,52 @@ allOf:
-        compatible:
-          contains:
-            enum:
-+             - qcom,pcie-ipq8074-gen3
-+   then:
-+     properties:
-+       clocks:
-+         items:
-+           - description: sys noc interface clock
-+           - description: AXI master clock
-+           - description: AXI slave clock
-+           - description: AHB clock
-+           - description: Auxilary clock
-+           - description: AXI slave bridge clock
-+           - description: PCIe rchng clock
-+       clock-names:
-+         items:
-+           - const: iface
-+           - const: axi_m
-+           - const: axi_s
-+           - const: ahb
-+           - const: aux
-+           - const: axi_bridge
-+           - const: rchng
-+       resets:
-+         items:
-+           - description: PIPE reset
-+           - description: PCIe sleep reset
-+           - description: PCIe sticky reset
-+           - description: AXI master reset
-+           - description: AXI slave reset
-+           - description: AHB reset
-+           - description: AXI master sticky reset
-+           - description: AXI Slave sticky reset
-+       reset-names:
-+         items:
-+           - const: pipe
-+           - const: sleep
-+           - const: sticky
-+           - const: axi_m
-+           - const: axi_s
-+           - const: ahb
-+           - const: axi_m_sticky
-+           - const: axi_s_sticky
-+ - if:
-+     properties:
-+       compatible:
-+         contains:
-+           enum:
-              - qcom,pcie-msm8996
-    then:
-      properties:
+diff --git a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+index f80f8896d527..3e8681679f53 100644
+--- a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+@@ -18,6 +18,7 @@ properties:
+   compatible:
+     enum:
+       - qcom,ipq8074-qmp-pcie-phy
++      - qcom,ipq8074-qmp-pcie-gen3-phy
+       - qcom,msm8996-qmp-pcie-phy
+       - qcom,msm8996-qmp-ufs-phy
+       - qcom,msm8996-qmp-usb3-phy
 -- 
 2.7.4
 
