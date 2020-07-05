@@ -2,113 +2,148 @@ Return-Path: <SRS0=PeIc=AQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DE5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 09:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0D1C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 09:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB24B20771
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 09:01:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fF9zYQi0"
+	by mail.kernel.org (Postfix) with ESMTP id 9866620771
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 09:18:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbgGEJBP (ORCPT
+        id S1726826AbgGEJSc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Jul 2020 05:01:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38902 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726597AbgGEJBO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Jul 2020 05:01:14 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 436B2C08C5DE
-        for <devicetree@vger.kernel.org>; Sun,  5 Jul 2020 02:01:14 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id j18so36019934wmi.3
-        for <devicetree@vger.kernel.org>; Sun, 05 Jul 2020 02:01:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=przTgcny48jd36+oUDZM5VqCUdMOADezAA8z959EYFc=;
-        b=fF9zYQi0OpwzjVvrADGQzgm2O41ekp6ploUjNNPvEqx5jng5xwHlHbfYptRi64sPpg
-         y9iYB7gdR12OKlD4m+vpzQ5HWVD/r2X/aXXkxecU8KXbkdyhQXG566LN+gYJJNhSfyS/
-         0kCQ3Zc84FPQ3TKpJDQDW4mVezKPtKnTDxmNkz5FM55PWSYtAqq+DqYEmgLh2V4jfrz2
-         JdqbhWl/ZYq2OW8Rw/xe0vw0KzeTxr7oWAN7tLvKB0oXTNY2y+LPpugCEZoIKz7Kqeug
-         BLRT93sRc2OPX/gEwNf1uRSW/pD/rDyhI4EEsmUjNRqk1kJ/8FPgzO0k1kNaBgIWS6kd
-         2VCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=przTgcny48jd36+oUDZM5VqCUdMOADezAA8z959EYFc=;
-        b=YZJFFulX57z9+YAMg0PtyjkisJJS0u7ZxwGwEuktfqLrNDeKjEvhD60M9lbWLO/huH
-         PgJFTRX9gvsZbm/Vlahx4nHwrvG2MPv9WOipih4XHBobmBT7iHh+qr7T0iok+LHs9WHA
-         Qveaz2XgT1+34FcGnBTWzJMqFW8fCxMbiQGKdfELjKFCPjGlIoZ2ov32cvCMVnKr38Nt
-         lI+Edp3V0e09UJOADagsRdR8MpnqngxasqPpCLOi7eMgk9oU/MriBQJl7qjCEgU2S55e
-         nAFyuS1zCRe6agTdmHGZ9JV78dVxHnVB2lDddD6iiF4aJdJk55Ya0GUdCkrqGDxFSR7/
-         t5ng==
-X-Gm-Message-State: AOAM532dT4UMkn59zb6ceVP7ID3fmEDAOPUZ4EJrdEC7ZdIDpIwDw0jG
-        lqlbRHnVYawUYSJbCEB51XlsJUwmqHOC/Mu2vsrlNQ==
-X-Google-Smtp-Source: ABdhPJynH7yvwhYRqBjAT6B2crW294fuviv7qzPIHYptEd/zWVZKZnYRZ8CfSV3sTGh2SAjw5YIHx6qxn3RjWJpV3bo=
-X-Received: by 2002:a7b:cf18:: with SMTP id l24mr17960976wmg.116.1593939672936;
- Sun, 05 Jul 2020 02:01:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200701013320.130441-1-drew@beagleboard.org>
-In-Reply-To: <20200701013320.130441-1-drew@beagleboard.org>
-From:   Haojian Zhuang <haojian.zhuang@linaro.org>
-Date:   Sun, 5 Jul 2020 17:01:02 +0800
-Message-ID: <CAD6h2NQWQj1frtfVNorc_wt7CqsOZS7PLaPHZxABFhvEPxkKzw@mail.gmail.com>
-Subject: Re: [PATCH v4 0/2] pinctrl: single: support #pinctrl-cells = 2
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org, bcousson@baylibre.com,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 5 Jul 2020 05:18:32 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:22208 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726809AbgGEJS2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Jul 2020 05:18:28 -0400
+Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 05 Jul 2020 02:18:26 -0700
+Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
+  by ironmsg04-sd.qualcomm.com with ESMTP; 05 Jul 2020 02:18:17 -0700
+Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
+        id B9B15213BD; Sun,  5 Jul 2020 14:48:09 +0530 (IST)
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
+        robh+dt@kernel.org, kishon@ti.com, vkoul@kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, svarbanov@mm-sol.com,
+        lorenzo.pieralisi@arm.com, p.zabel@pengutronix.de,
+        sivaprak@codeaurora.org, mgautam@codeaurora.org,
+        smuthayy@codeaurora.org, varada@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Cc:     stable@vger.kernel.org,
+        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+Subject: [PATCH 5/9] phy: qcom-qmp: use correct values for ipq8074 gen2 pcie phy init
+Date:   Sun,  5 Jul 2020 14:47:56 +0530
+Message-Id: <1593940680-2363-6-git-send-email-sivaprak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
+References: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 1 Jul 2020 at 09:33, Drew Fustini <drew@beagleboard.org> wrote:
->
-> Currently, pinctrl-single only allows #pinctrl-cells = 1.
->
-> This series will allow pinctrl-single to also support #pinctrl-cells = 2
->
-> If "pinctrl-single,pins" has 3 arguments (offset, conf, mux) then
-> pcs_parse_one_pinctrl_entry() does an OR operation on conf and mux to
-> get the value to store in the register.
->
-> To take advantage of #pinctrl-cells = 2, the AM33XX_PADCONF macro in
-> omap.h is modified to keep pin conf and pin mux values separate.
->
-> change log:
-> - v4: squash patches 2 and 3 together so that git biesct will not result
->   in a boot failure
->
-> - v3: change order of patches to make sure the pinctrl-single.c patch
->   does not break anything without the dts patches
->
-> - v2: remove outer parentheses from AM33XX_PADCONF macro as it causes a
->   compile error in dtc.  I had added it per suggestion from checkpatch
->   about having parentheses around complex values.
->
-> Drew Fustini (2):
->   pinctrl: single: parse #pinctrl-cells = 2
->   ARM: dts: am33xx-l4: change #pinctrl-cells from 1 to 2
->
->  arch/arm/boot/dts/am33xx-l4.dtsi   |  2 +-
->  drivers/pinctrl/pinctrl-single.c   | 11 +++++++++--
->  include/dt-bindings/pinctrl/omap.h |  2 +-
->  3 files changed, 11 insertions(+), 4 deletions(-)
->
-> --
-> 2.25.1
->
+There were some problem in ipq8074 gen2 pcie phy init sequence, fix
+these to make gen2 pcie port on ipq8074 to work.
 
-Acked-by: Haojian Zhuang <haojian.zhuang@linaro.org>
+Fixes: eef243d04b2b6 ("phy: qcom-qmp: Add support for IPQ8074")
+
+Cc: stable@vger.kernel.org
+Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+---
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 16 +++++++++-------
+ drivers/phy/qualcomm/phy-qcom-qmp.h |  2 ++
+ 2 files changed, 11 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index e91040af3394..ba277136f52b 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -504,8 +504,8 @@ static const struct qmp_phy_init_tbl ipq8074_pcie_serdes_tbl[] = {
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_BG_TRIM, 0xf),
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP_EN, 0x1),
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_MAP, 0x0),
+-	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_TIMER1, 0x1f),
+-	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_TIMER2, 0x3f),
++	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_TIMER1, 0xff),
++	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_TIMER2, 0x1f),
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_CMN_CONFIG, 0x6),
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_PLL_IVCO, 0xf),
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_HSCLK_SEL, 0x0),
+@@ -531,7 +531,6 @@ static const struct qmp_phy_init_tbl ipq8074_pcie_serdes_tbl[] = {
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_INTEGLOOP_GAIN1_MODE0, 0x0),
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_INTEGLOOP_GAIN0_MODE0, 0x80),
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_BIAS_EN_CTRL_BY_PSM, 0x1),
+-	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_CTRL, 0xa),
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_EN_CENTER, 0x1),
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_PER1, 0x31),
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_PER2, 0x1),
+@@ -540,7 +539,6 @@ static const struct qmp_phy_init_tbl ipq8074_pcie_serdes_tbl[] = {
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_STEP_SIZE1, 0x2f),
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_STEP_SIZE2, 0x19),
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_CLK_EP_DIV, 0x19),
+-	QMP_PHY_INIT_CFG(QSERDES_RX_SIGDET_CNTRL, 0x7),
+ };
+ 
+ static const struct qmp_phy_init_tbl ipq8074_pcie_tx_tbl[] = {
+@@ -548,6 +546,8 @@ static const struct qmp_phy_init_tbl ipq8074_pcie_tx_tbl[] = {
+ 	QMP_PHY_INIT_CFG(QSERDES_TX_LANE_MODE, 0x6),
+ 	QMP_PHY_INIT_CFG(QSERDES_TX_RES_CODE_LANE_OFFSET, 0x2),
+ 	QMP_PHY_INIT_CFG(QSERDES_TX_RCV_DETECT_LVL_2, 0x12),
++	QMP_PHY_INIT_CFG(QSERDES_TX_EMP_POST1_LVL, 0x36),
++	QMP_PHY_INIT_CFG(QSERDES_TX_SLEW_CNTL, 0x0a),
+ };
+ 
+ static const struct qmp_phy_init_tbl ipq8074_pcie_rx_tbl[] = {
+@@ -558,7 +558,6 @@ static const struct qmp_phy_init_tbl ipq8074_pcie_rx_tbl[] = {
+ 	QMP_PHY_INIT_CFG(QSERDES_RX_RX_EQU_ADAPTOR_CNTRL4, 0xdb),
+ 	QMP_PHY_INIT_CFG(QSERDES_RX_UCDR_SO_SATURATION_AND_ENABLE, 0x4b),
+ 	QMP_PHY_INIT_CFG(QSERDES_RX_UCDR_SO_GAIN, 0x4),
+-	QMP_PHY_INIT_CFG(QSERDES_RX_UCDR_SO_GAIN_HALF, 0x4),
+ };
+ 
+ static const struct qmp_phy_init_tbl ipq8074_pcie_pcs_tbl[] = {
+@@ -1673,6 +1672,9 @@ static const struct qmp_phy_cfg msm8996_usb3phy_cfg = {
+ 	.pwrdn_ctrl		= SW_PWRDN,
+ };
+ 
++static const char * const ipq8074_pciephy_clk_l[] = {
++	"aux", "cfg_ahb",
++};
+ /* list of resets */
+ static const char * const ipq8074_pciephy_reset_l[] = {
+ 	"phy", "common",
+@@ -1690,8 +1692,8 @@ static const struct qmp_phy_cfg ipq8074_pciephy_cfg = {
+ 	.rx_tbl_num		= ARRAY_SIZE(ipq8074_pcie_rx_tbl),
+ 	.pcs_tbl		= ipq8074_pcie_pcs_tbl,
+ 	.pcs_tbl_num		= ARRAY_SIZE(ipq8074_pcie_pcs_tbl),
+-	.clk_list		= NULL,
+-	.num_clks		= 0,
++	.clk_list		= ipq8074_pciephy_clk_l,
++	.num_clks		= ARRAY_SIZE(ipq8074_pciephy_clk_l),
+ 	.reset_list		= ipq8074_pciephy_reset_l,
+ 	.num_resets		= ARRAY_SIZE(ipq8074_pciephy_reset_l),
+ 	.vreg_list		= NULL,
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.h b/drivers/phy/qualcomm/phy-qcom-qmp.h
+index 6d017a0c0c8d..832b3d098403 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.h
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.h
+@@ -77,6 +77,8 @@
+ #define QSERDES_COM_CORECLK_DIV_MODE1			0x1bc
+ 
+ /* Only for QMP V2 PHY - TX registers */
++#define QSERDES_TX_EMP_POST1_LVL			0x018
++#define QSERDES_TX_SLEW_CNTL				0x040
+ #define QSERDES_TX_RES_CODE_LANE_OFFSET			0x054
+ #define QSERDES_TX_DEBUG_BUS_SEL			0x064
+ #define QSERDES_TX_HIGHZ_TRANSCEIVEREN_BIAS_DRVR_EN	0x068
+-- 
+2.7.4
+
