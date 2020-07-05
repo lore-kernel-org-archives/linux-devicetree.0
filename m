@@ -2,29 +2,29 @@ Return-Path: <SRS0=PeIc=AQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D81BC433E4
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 09:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A73C433E7
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 09:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CBF020772
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 09:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE41920772
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 09:19:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbgGEJSS (ORCPT
+        id S1726495AbgGEJSR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Jul 2020 05:18:18 -0400
+        Sun, 5 Jul 2020 05:18:17 -0400
 Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:46989 "EHLO
         alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726494AbgGEJSR (ORCPT
+        by vger.kernel.org with ESMTP id S1726434AbgGEJSR (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Sun, 5 Jul 2020 05:18:17 -0400
-Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
   by alexa-out-sd-01.qualcomm.com with ESMTP; 05 Jul 2020 02:18:16 -0700
 Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 05 Jul 2020 02:18:11 -0700
+  by ironmsg03-sd.qualcomm.com with ESMTP; 05 Jul 2020 02:18:11 -0700
 Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id 6C0F6213B2; Sun,  5 Jul 2020 14:48:09 +0530 (IST)
+        id 40AE721355; Sun,  5 Jul 2020 14:48:09 +0530 (IST)
 From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
         robh+dt@kernel.org, kishon@ti.com, vkoul@kernel.org,
@@ -35,41 +35,54 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org
-Cc:     Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-Subject: [PATCH 2/9] dt-bindings: phy: qcom,qmp: Add dt-binding for ipq8074 gen3 pcie phy
-Date:   Sun,  5 Jul 2020 14:47:53 +0530
-Message-Id: <1593940680-2363-3-git-send-email-sivaprak@codeaurora.org>
+Subject: [PATCH 0/9] Add PCIe support for IPQ8074
+Date:   Sun,  5 Jul 2020 14:47:51 +0530
+Message-Id: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
-References: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-ipq8074 has two different phy blocks for two pcie ports, with pcie gen2
-compatible already available, specify the pcie phy compatible
-for gen3 pcie port.
+IPQ8074 has two PCIe ports both are based on synopsis designware PCIe
+controller. while it was assumed that PCIe support for IPQ8074 was already
+available. PCIe was not functional until now.
 
-Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
----
- Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml | 1 +
- 1 file changed, 1 insertion(+)
+This patch series adds support for PCIe ports on IPQ8074.
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-index f80f8896d527..3e8681679f53 100644
---- a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-+++ b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-@@ -18,6 +18,7 @@ properties:
-   compatible:
-     enum:
-       - qcom,ipq8074-qmp-pcie-phy
-+      - qcom,ipq8074-qmp-pcie-gen3-phy
-       - qcom,msm8996-qmp-pcie-phy
-       - qcom,msm8996-qmp-ufs-phy
-       - qcom,msm8996-qmp-usb3-phy
+First PCIe port is of gen2 synposis version is 2_3_2 which has already been
+enabled. But it had some problems on phy init and needed dt updates.
+
+Second PCIe port is gen3 synopsis version is 2_9_0. This series adds
+support for this PCIe port while fixing dt nodes.
+
+Patch 1 on this series depends on qcom pcie bindings patch
+https://lkml.org/lkml/2020/6/24/162
+
+Sivaprakash Murugesan (9):
+  dt-bindings: pci: Add ipq8074 gen3 pci compatible
+  dt-bindings: phy: qcom,qmp: Add dt-binding for ipq8074 gen3 pcie phy
+  clk: qcom: ipq8074: Add missing bindings for pcie
+  clk: qcom: ipq8074: Add missing clocks for pcie
+  phy: qcom-qmp: use correct values for ipq8074 gen2 pcie phy init
+  phy: qcom-qmp: Add compatible for ipq8074 pcie gen3 qmp phy
+  pci: dwc: qcom: do phy power on before pcie init
+  pci: qcom: Add support for ipq8074 pci controller
+  arm64: dts: ipq8074: Fixup pcie dts nodes
+
+ .../devicetree/bindings/pci/qcom,pcie.yaml         |  47 ++++++
+ .../devicetree/bindings/phy/qcom,qmp-phy.yaml      |   1 +
+ arch/arm64/boot/dts/qcom/ipq8074-hk01.dts          |   8 +-
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi              | 109 ++++++++----
+ drivers/clk/qcom/gcc-ipq8074.c                     |  60 +++++++
+ drivers/pci/controller/dwc/pcie-qcom.c             | 187 +++++++++++++++++++-
+ drivers/phy/qualcomm/phy-qcom-pcie3-qmp.h          | 132 +++++++++++++++
+ drivers/phy/qualcomm/phy-qcom-qmp.c                | 188 ++++++++++++++++++++-
+ drivers/phy/qualcomm/phy-qcom-qmp.h                |   2 +
+ include/dt-bindings/clock/qcom,gcc-ipq8074.h       |   4 +
+ 10 files changed, 683 insertions(+), 55 deletions(-)
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-pcie3-qmp.h
+
 -- 
 2.7.4
 
