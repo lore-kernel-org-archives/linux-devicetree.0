@@ -3,105 +3,205 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D97C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 03:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B52C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 03:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 797F22070C
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 03:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 420F520890
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jul 2020 03:37:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pug4s0S7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O2lLgZzc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgGEDQW (ORCPT
+        id S1728183AbgGEDhg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Jul 2020 23:16:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42862 "EHLO
+        Sat, 4 Jul 2020 23:37:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728046AbgGEDQW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jul 2020 23:16:22 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C197C061794;
-        Sat,  4 Jul 2020 20:16:22 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id f23so36073636iof.6;
-        Sat, 04 Jul 2020 20:16:22 -0700 (PDT)
+        with ESMTP id S1728139AbgGEDhg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jul 2020 23:37:36 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 186C7C08C5DE
+        for <devicetree@vger.kernel.org>; Sat,  4 Jul 2020 20:37:36 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id t15so1157893pjq.5
+        for <devicetree@vger.kernel.org>; Sat, 04 Jul 2020 20:37:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=pq6LZ0E7Bbe02WCqYFQ2Y7llp3OJst3ScHaZ+npPW94=;
-        b=Pug4s0S7zgkeqG8WdFZf5sdT+D7ACy9YA9BfprDU6BfXwPOwBOht+0jrVB5d6CoaS4
-         h2noIH/RkP3AIEZ5qM5utgu7bkMGUKJsK18EWG1q49WoUlWY1CLhZu+m9mSFaDBLmVdi
-         epFBDHARQoDiy5yCUsZzi13EsYXAVusc5w3eRpuerobRDOWAdHI4LZuuuHwUH4e5a7XF
-         IbQQDUAkjM7p+PaPI7BIT/4B5Oftr2SmP8fwafvfz0h9jUOZDFn8zrlEkadcKxokwkiI
-         zJ6Hd78WooyIBoqrWxl7HPC6wV6B4gEHLcyJ1GpXapA/SKcBOlsS27trD66uqf5htCTa
-         gkQQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=M5ZbztlPkvw+9ErJFWw7Qbat+ZkMk081NbvPHaI46hs=;
+        b=O2lLgZzcbDRX8J92t5mKKUYXAwjo/sQXHSA3N7D4uuiEl8hO5WSoR/nmtz3zSlJyNz
+         H4tFAx0OhM+bYW5A2+HaVgdhP8n38fXZCTnw9ok2Aahub5NKT/tgPW+8b/SMC7izclFy
+         gYj2DhmS110EYhViIceJGIaX4DZMUPJkhNJ7o/feDHm78xBYlGfwCtuEq/mI08PXg5SN
+         e7GCRB0oJVvxKxFFy1DmJpa1rNquJg9FjMhmetGE81blw8bV6lsReGYMclOJpkdYsX8S
+         K8RbC0lFNrxBmYqQ9u2xuG964lHJL/qmc87VxTU6jwr5pmEiyqB01/PYLWoRyl/lHG8C
+         bamA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=pq6LZ0E7Bbe02WCqYFQ2Y7llp3OJst3ScHaZ+npPW94=;
-        b=hpawKKgr5RAjHC0zaFw0a5Llx4ZedxM4H8aE6VX05yS/ztuX1V1aUzLAMRgivuNeEH
-         2HOTDSZFNo0a4VNltnHzumvO/Q5mv5kTJi8/6RF2zo1e/HdOKvabi6wXd7JdEzN8/3Ww
-         1UiAdbaUPRr1ivYDjhtb+IRrwaPjDcRPY2J/mHlmq5Xd9SSb5CAZkSqW/TTzmU/w3730
-         vfTkruP4NrhsXgmw5VKxhw8irraM4BwXchJMQ1geytGfSvElZxPZTfz1ViGsf3yX15fG
-         92R4IgcdpSFutxKiv32yYcbTexDSQQUGzAAHOcV4qpzkQ/vJkX6xOTYx51B/FQsPssio
-         Ul3w==
-X-Gm-Message-State: AOAM531Ym81sV6/5h5AT0y+KGvhfq6WJ07w7GgE8rMyue8BaOFUqlwY4
-        HpnTAtGtbwlA2GFt8ZPTQrVHH1YRu1HQxRCYrvRNGjA5GXk=
-X-Google-Smtp-Source: ABdhPJwA/XogHq2OnFLpz0AQ0QkhXnA+lKdTCY+tUAsrEb/+5T39j8Ofyjq7ehc8k2B046APhttZNZjiraKP5M0ZU1c=
-X-Received: by 2002:a6b:b2d1:: with SMTP id b200mr18181008iof.137.1593918981042;
- Sat, 04 Jul 2020 20:16:21 -0700 (PDT)
-MIME-Version: 1.0
-From:   Chris Healy <cphealy@gmail.com>
-Date:   Sat, 4 Jul 2020 20:16:10 -0700
-Message-ID: <CAFXsbZoovWBavRFaEWEFcSkVjNx26BkKOkhcutNfzL8MrHwMTw@mail.gmail.com>
-Subject: [PATCH] ARM: dts: vf610-zii-ssmb-dtu: Pass "no-sdio"/"no-sd" properties
-To:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Stefan Agner <stefan@agner.ch>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=M5ZbztlPkvw+9ErJFWw7Qbat+ZkMk081NbvPHaI46hs=;
+        b=TVldrOyZtsPmHzwpRzb1kZ2D0n/aZ4mi0GKskfHg/Ioz4n3LMN9RpZzlo++gJJEYnK
+         K9KiAUU3uGSMQLFdgqYel9pbKi953XebkFsxyx0pTS754Pa5YuYRYMlI4H0wzYn3oSUe
+         PuLA5ecqXP7+D4xtE/9Gm93noj/0KwGKLt+5k96wbLNNWY4hqaQD8gR8RXEtAsvmJQfP
+         Xcd2ReM+/ZmifDuIWPDBZkkc87+bzEBvKjpC6BFACYJEMfHiJkxo5iZ3cOg7xFgcHVek
+         gUN1h02GwylT7w4pdPiQ1u/YHOZU7CkuaaljRLESfgRsSeCKCpuFTkJ/Yp4zEv/iO1N9
+         DRKg==
+X-Gm-Message-State: AOAM5305YMpVCdBfsC3YkLDuBf8dHKaPz8ge0Md7V8ibLBA6xYLWYyTA
+        TdFgkLKSVihu+sqtVdTxxHsSBA==
+X-Google-Smtp-Source: ABdhPJwYJ4bAkZPeI8sSzaQN9k6F5rcjd5JMGeKP/JEQ+CUkkHSBMoFuFc3gUDQ0nwnKd5YninLHog==
+X-Received: by 2002:a17:90a:db48:: with SMTP id u8mr14034064pjx.169.1593920255249;
+        Sat, 04 Jul 2020 20:37:35 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id x10sm15766727pfp.80.2020.07.04.20.37.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Jul 2020 20:37:34 -0700 (PDT)
+Date:   Sat, 4 Jul 2020 20:35:11 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Konrad Dybcio <konradybcio@gmail.com>, skrzynka@konradybcio.pl,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
         Rob Herring <robh+dt@kernel.org>,
-        linux ARM <linux-arm-kernel@lists.infradead.org>,
-        devicetree@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Fabio Estevam <festevam@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jcrouse@codeaurora.org,
+        john.stultz@linaro.org
+Subject: Re: [PATCH 1/1] iommu/arm-smmu: Implement qcom,skip-init
+Message-ID: <20200705033511.GR388985@builder.lan>
+References: <20200704122809.73794-1-konradybcio@gmail.com>
+ <20200704130922.GB21333@willie-the-truck>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200704130922.GB21333@willie-the-truck>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-esdhc0 is connected to an eMMC, so it is safe to pass the "no-sdio"/"no-sd"
-properties.
+On Sat 04 Jul 06:09 PDT 2020, Will Deacon wrote:
 
-esdhc1 is wired to a standard SD socket, so pass the "no-sdio" property.
+> [Adding Bjorn, Jordan and John because I really don't want a bunch of
+> different ways to tell the driver that the firmware is screwing things up]
+> 
 
-Signed-off-by: Chris Healy <cphealy@gmail.com>
----
- arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts | 3 +++
- 1 file changed, 3 insertions(+)
+Thanks Will.
 
-diff --git a/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
-b/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
-index 0bb3dcff0b79..7d4ddfb6b5b5 100644
---- a/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
-+++ b/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
-@@ -81,6 +81,8 @@
-     non-removable;
-     no-1-8-v;
-     keep-power-in-suspend;
-+    no-sdio;
-+    no-sd;
-     status = "okay";
- };
+> On Sat, Jul 04, 2020 at 02:28:09PM +0200, Konrad Dybcio wrote:
+> > This adds the downstream property required to support
+> > SMMUs on SDM630 and other platforms (the need for it
+> > most likely depends on firmware configuration).
+> > 
+> > Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+> > ---
+> >  .../devicetree/bindings/iommu/arm,smmu.yaml       | 10 ++++++++++
+> >  drivers/iommu/arm-smmu.c                          | 15 +++++++++------
+> >  2 files changed, 19 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> > index d7ceb4c34423..9abd6d41a32c 100644
+> > --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> > +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> > @@ -102,6 +102,16 @@ properties:
+> >        access to SMMU configuration registers. In this case non-secure aliases of
+> >        secure registers have to be used during SMMU configuration.
+> >  
+> > +  qcom,skip-init:
+> > +    description: |
+> > +      Disable resetting configuration for all context banks
+> > +      during device reset.  This is useful for targets where
+> > +      some context banks are dedicated to other execution
+> > +      environments outside of Linux and those other EEs are
+> > +      programming their own stream match tables, SCTLR, etc.
+> > +      Without setting this option we will trample on their
+> > +      configuration.
+> 
+> It would probably be better to know _which_ context banks we shouldn't
+> touch, no? Otherwise what happens to the others?
+> 
 
-@@ -88,6 +90,7 @@
-     pinctrl-names = "default";
-     pinctrl-0 = <&pinctrl_esdhc1>;
-     bus-width = <4>;
-+    no-sdio;
-     status = "okay";
- };
+From my investigations of the issue of maintaining the boot display
+through the initialization of arm-smmu I assume the reason for skipping
+this step don't want to flush out the SMR, S2CR and context bank
+initialization because it would disrupt the display hardware's access to
+memory.
 
--- 
-2.21.3
+And in itself I believe that this is quite certainly going to work -
+until you start attaching devices. Because in itself this does nothing
+to ensure that the driver won't overwrite stream mapping or context bank
+configuration as devices are attached.
+
+So on e.g. SDM845 we need to ensure that the driver doesn't stomp over
+the display mapping left by the bootloader.
+
+
+Further more, on platforms such as QCS405 (which are derived from
+platforms supported by qcom_iommu today), the stream mapping registers
+(SMR and S2CR) are write ignore, which means that without knowledge
+about the existing mappings the hardware and driver will be out of sync.
+
+NB. Compared to the platforms that is supported by qcom_iommu, the
+stream mapping registers are readable on these newer platforms, while on
+e.g. MSM8916 we get an access violation by attempting to read SMR/S2CR.
+
+> > +
+> >    stream-match-mask:
+> >      $ref: /schemas/types.yaml#/definitions/uint32
+> >      description: |
+> > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> > index 243bc4cb2705..a5c623d4caf9 100644
+> > --- a/drivers/iommu/arm-smmu.c
+> > +++ b/drivers/iommu/arm-smmu.c
+> > @@ -1655,13 +1655,16 @@ static void arm_smmu_device_reset(struct arm_smmu_device *smmu)
+> >  	 * Reset stream mapping groups: Initial values mark all SMRn as
+> >  	 * invalid and all S2CRn as bypass unless overridden.
+> >  	 */
+> > -	for (i = 0; i < smmu->num_mapping_groups; ++i)
+> > -		arm_smmu_write_sme(smmu, i);
+> >  
+> > -	/* Make sure all context banks are disabled and clear CB_FSR  */
+> > -	for (i = 0; i < smmu->num_context_banks; ++i) {
+> > -		arm_smmu_write_context_bank(smmu, i);
+> > -		arm_smmu_cb_write(smmu, i, ARM_SMMU_CB_FSR, ARM_SMMU_FSR_FAULT);
+> > +	if (!of_find_property(smmu->dev->of_node, "qcom,skip-init", NULL)) {
+> > +		for (i = 0; i < smmu->num_mapping_groups; ++i)
+> > +			arm_smmu_write_sme(smmu, i);
+> > +
+> > +		/* Make sure all context banks are disabled and clear CB_FSR  */
+> > +		for (i = 0; i < smmu->num_context_banks; ++i) {
+> > +			arm_smmu_write_context_bank(smmu, i);
+> > +			arm_smmu_cb_write(smmu, i, ARM_SMMU_CB_FSR, ARM_SMMU_FSR_FAULT);
+> > +		}
+> >  	}
+> 
+> Do we not need to worry about the SMRs as well?
+> 
+
+I don't think we should skip the actual initialization, because to avoid
+strange side effects we need to ensure that the driver and hardware are
+in sync (either for specific streams/banks or for all of them).
+
+I've continued my work on supporting boot display on e.g. SDM845, based
+on Thierry's patches, but still have some unresolved corner cases to
+fully resolve - e.g. how to ensure that the display hardware's stream
+mapping survives the probe deferral of the display driver. Hopefully I
+will be able to post something in a few days.
+
+
+
+That said, there's a generation of platforms between MSM8916 (which we
+support using qcom_iommu) and SDM845 (which can run with arm-smmu).
+AngeloGioacchino proposed a series last year to extend the qcom_iommu to
+support these [1]. If SD630 falls in this category, or in the newer
+SDM845/SM8150 category I don't know.
+
+It would be quite interesting to hear more about the exact behaviors
+seems on SDM630, to see how we can support this as well.
+
+[1] https://lore.kernel.org/linux-arm-msm/20191001155641.37117-1-kholk11@gmail.com/
+
+Regards,
+Bjorn
