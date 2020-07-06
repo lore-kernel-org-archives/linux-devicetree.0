@@ -2,98 +2,216 @@ Return-Path: <SRS0=knFt=AR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7BBC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 19:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F90C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 20:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5496E2084C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 19:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6911020702
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 20:03:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fNvr/6lN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgGFT6G (ORCPT
+        id S1726211AbgGFUDn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jul 2020 15:58:06 -0400
-Received: from mail-oo1-f67.google.com ([209.85.161.67]:38599 "EHLO
-        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbgGFT6F (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 15:58:05 -0400
-Received: by mail-oo1-f67.google.com with SMTP id x2so542943oog.5;
-        Mon, 06 Jul 2020 12:58:05 -0700 (PDT)
+        Mon, 6 Jul 2020 16:03:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51190 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbgGFUDm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 16:03:42 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70F35C061755;
+        Mon,  6 Jul 2020 13:03:42 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id t27so29048660ill.9;
+        Mon, 06 Jul 2020 13:03:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=U+sDylXaFSE2sg34x276nx5sDiqa0lgV7+O4OIQJIw4=;
+        b=fNvr/6lN8ZCxC6xudGpJIobVDSs6A74y2NubMmE/1C3KnzUJ/HtBKwU2GT60aXoJyg
+         kLkQfQmCQwiXKvOPZw0TQ1KUpPB7J9U9UunLoZWM4aWDLHw5+tZ6SCBjlIsC8GkNPQtb
+         TkLal2+sPWhQoIbyHpKZIt2CvBzXHe+/1khagy98FPDH1lqskRu73abAL72O3FQqfyUZ
+         jX/yhugHsRJE/waawFLgX79GeTR/hi+7kCxzYD3O51r+0Dq2H1wm0gLS4fyiEaXjR+wr
+         74V+aBDvIY0QGWtCeghT4HUMYVFX/JElfey6TzWnnd5uDjBVQlNH7g6p94D7rccLCJGp
+         sBww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yYBYeXEBi9fpsYu32+atWlfZWbFyTXeWl6rhYx6hhP0=;
-        b=nAdVwJQYqtZl0gK8YdUqI2xRxgY9AJ4GtrF7e/1K7fsTR3Oy26tHkEJTi9M2DjDEg+
-         4itBeZqR7aRzcwUW/AHxNnpdViEVkOGrrUGgKZ7GFdqvlCKi5wLJKAMx+JjwHwAN1Rsd
-         0RY/F+OunZPgV87KI8yIX/EyzG9ojc214gOYRUrGucf+R6rGP4CxJ2VJP+wN8MtLLZZ4
-         /HrDKEMZChjAnHR84GGvvclWlqBvTzxpPSRkDAax850AV87/RzdsF3YM2irS1pb6PcDN
-         qv2pWv7EbtIBnLokH3/8/F45aoLWvjuGG0xa5GD4S6g8JBXEYVbgb4bgWNQLiUiSKffQ
-         ciTA==
-X-Gm-Message-State: AOAM5319Xtaqf5jJmKd9Bw+aMmSbiGlSDRJVIFBv61gJofzhZjkPjBJz
-        88LFqDU3UZx5XLCRDJDClXBbRhT+Rz0VG20aMeM=
-X-Google-Smtp-Source: ABdhPJzX9ENYMNtWdtWLUsKiUIPey47XkLeKlUt0Fes8kpMgw+ZrL9CvfN/DkVMlEVyogx+972eLPoeQSqQNMaWSID4=
-X-Received: by 2002:a4a:5209:: with SMTP id d9mr26731507oob.40.1594065484626;
- Mon, 06 Jul 2020 12:58:04 -0700 (PDT)
+        bh=U+sDylXaFSE2sg34x276nx5sDiqa0lgV7+O4OIQJIw4=;
+        b=GSZ8v7tW8e9gs24xq3Od1zatQEyHZEOSRyvCg90UtbXpLVdf0/JFL4up6x1mLWtEUK
+         IBlw3MJY+7CJVgHJEkB/WUmEFTW3lbjDqV4fP5TI6ptWjBroQrVv5fKCqaUx9GRw1D8K
+         X+eSyVG5beSa4aO3dONaO/EPfrvk+eB51Pw6GbkVYZuM6Md2Go5Pr2zbIWepwFOPVqum
+         dK7JFdMB2cITLjR3eL14TsXMCr1q8Myr73hpnF6jTjeuxQD7GEUOSRGSvVnhkpM7Uedc
+         wiEipOAczSnJDW5oFpq8pEQ69FQaki4y14iiFUi+FrCsDZ3TKznIf0Z0mEHalApcIf1I
+         lNhQ==
+X-Gm-Message-State: AOAM530UUQQHYVTIp9rvqDS+Rclp+4fUDV8TvJppMAQz/ywxcfMqtS+T
+        h/CaRgaSJooJOsBdmXpHqNNdifZzViJ83JI1k1k=
+X-Google-Smtp-Source: ABdhPJynJcd3bkJkIceMB7JqgAd4y2d96M9VHAbRwYa4n23QwCNJHYfNksLSrJfyqrh+Veud561AmImV0syj4/IkkFk=
+X-Received: by 2002:a92:77c1:: with SMTP id s184mr32082188ilc.196.1594065821596;
+ Mon, 06 Jul 2020 13:03:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <202007040833.xIqR5rAw%lkp@intel.com> <20200706092247.20740-1-adrian.fiergolski@fastree3d.com>
- <20200706161810.GB6176@sirena.org.uk>
-In-Reply-To: <20200706161810.GB6176@sirena.org.uk>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 6 Jul 2020 21:57:53 +0200
-Message-ID: <CAMuHMdXK92qO8KB6ejc6LLmfFsy=dZY18vNJGh+CKRZBAov-JA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] spi: Add the SPI daisy chain support.
-To:     Adrian Fiergolski <adrian.fiergolski@fastree3d.com>
-Cc:     Lukas Wunner <lukas@wunner.de>, Mark Brown <broonie@kernel.org>,
-        kernel test robot <lkp@intel.com>,
+References: <20200702212837.10657-1-luca@lucaceresoli.net> <20200702212837.10657-5-luca@lucaceresoli.net>
+In-Reply-To: <20200702212837.10657-5-luca@lucaceresoli.net>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Mon, 6 Jul 2020 15:03:30 -0500
+Message-ID: <CAHCN7xLz-xuHgQRPmqRes7tKjcEjrnqpG9o-3Dee81UkSDfE-Q@mail.gmail.com>
+Subject: Re: [PATCH 5/5] clk: vc5: optionally configure the output drive mode
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     linux-clk <linux-clk@vger.kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Adrian,
-
-On Mon, Jul 6, 2020 at 6:18 PM Mark Brown <broonie@kernel.org> wrote:
-> On Mon, Jul 06, 2020 at 11:22:43AM +0200, Adrian Fiergolski wrote:
-> > The implementation is transparent for the SPI devices and doesn't require
-> > their modifications. It is based on a virtual SPI device (spi-daisy_chain)
-> > and defines two required device tree properties ('spi-daisy-chain-len' and
-> > 'spi-daisy-chain-noop') and one optional
+On Thu, Jul 2, 2020 at 5:40 PM Luca Ceresoli <luca@lucaceresoli.net> wrote:
 >
-> It would really help to have an example of how a client device will use
-> this, right now it's a bit hard to follow.  Overall it feels like this
-> should be better abstracted, right now there's lots of ifdefs throughout
-> the code which make things unclear and also seem like they're going to
-> be fragile long term since realistically very few systems will be using
-> this.
+> The Versaclock chips can drive the output pins in several modes: LVDS,
+> CMOS, LVPECL etc. Allow configuring the output mode from device tree.
+>
+> The configuration is optional. If not specified, the mode will not be
+> configured and the drive mode will be the chip default.
+>
+> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 
-Can't the ifdefs be avoided by implementing this as a new SPI controller?
-I.e. the daisy chain driver will operate as a slave of the parent SPI
-controller,
-but will expose a new SPI bus to the daisy-chained slaves.
+This might be duplicating what's been applied to linux-next already.
 
-> Perhaps this needs to be a library for devices that can daisy
-> chain?  It does feel like the instances should be aware of each other
-> since half the point with building the hardware like this is that it
-> enables operations on multiple devices to happen in sync.
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/clk/clk-versaclock5.c?h=next-20200706&id=260249f929e81d3d5764117fdd6b9e43eb8fb1d5
 
-Indeed. Exposing that functionality is the interesting, but hard part.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> ---
+>  drivers/clk/clk-versaclock5.c | 71 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 71 insertions(+)
+>
+> diff --git a/drivers/clk/clk-versaclock5.c b/drivers/clk/clk-versaclock5.c
+> index 60c7cf9acde3..eec57286fae0 100644
+> --- a/drivers/clk/clk-versaclock5.c
+> +++ b/drivers/clk/clk-versaclock5.c
+> @@ -89,6 +89,8 @@
+>
+>  /* Clock control register for clock 1,2 */
+>  #define VC5_CLK_OUTPUT_CFG(idx, n)     (0x60 + ((idx) * 0x2) + (n))
+> +#define VC5_CLK_OUTPUT_CFG0_MODE_SHIFT 5
+> +#define VC5_CLK_OUTPUT_CFG0_MODE_MASK  GENMASK(7, 5)
+>  #define VC5_CLK_OUTPUT_CFG1_EN_CLKBUF  BIT(0)
+>
+>  #define VC5_CLK_OE_SHDN                                0x68
+> @@ -117,6 +119,23 @@
+>  /* chip has PFD requency doubler */
+>  #define VC5_HAS_PFD_FREQ_DBL   BIT(1)
+>
+> +/*
+> + * Output modes. Values for VC5_CLK_OUTPUT_CFG(idx,0) bits [7:5].
+> + * IDT_VC5_OUT_UNKNOWN = keep the hardware default.
+> + */
+> +enum vc5_out_mode {
+> +       IDT_VC5_OUT_MODE_LVPECL   = 0,
+> +       IDT_VC5_OUT_MODE_CMOS     = 1,
+> +       IDT_VC5_OUT_MODE_HCSL33   = 2,
+> +       IDT_VC5_OUT_MODE_LVDS     = 3,
+> +       IDT_VC5_OUT_MODE_CMOS2    = 4,
+> +       IDT_VC5_OUT_MODE_CMOSD    = 5,
+> +       IDT_VC5_OUT_MODE_HCSL25   = 6,
+> +
+> +       IDT_VC5_OUT_NUM_MODES,
+> +       IDT_VC5_OUT_MODE_UNKNOWN  = 99,
+> +};
+> +
+>  /* Supported IDT VC5 models. */
+>  enum vc5_model {
+>         IDT_VC5_5P49V5923,
+> @@ -149,6 +168,7 @@ struct vc5_out_data {
+>         struct clk_hw           hw;
+>         struct vc5_driver_data  *vc5;
+>         unsigned int            num;
+> +       enum vc5_out_mode       mode:8;
+>  };
+>
+>  struct vc5_driver_data {
+> @@ -593,6 +613,13 @@ static int vc5_clk_out_prepare(struct clk_hw *hw)
+>                         return ret;
+>         }
+>
+> +       /* Set output drive mode */
+> +       if (hwdata->mode != IDT_VC5_OUT_MODE_UNKNOWN)
+> +               regmap_update_bits(vc5->regmap,
+> +                                  VC5_CLK_OUTPUT_CFG(hwdata->num, 0),
+> +                                  VC5_CLK_OUTPUT_CFG0_MODE_MASK,
+> +                                  (hwdata->mode << VC5_CLK_OUTPUT_CFG0_MODE_SHIFT));
+> +
+>         /* Enable the clock buffer */
+>         regmap_update_bits(vc5->regmap, VC5_CLK_OUTPUT_CFG(hwdata->num, 1),
+>                            VC5_CLK_OUTPUT_CFG1_EN_CLKBUF,
+> @@ -696,6 +723,46 @@ static int vc5_map_index_to_output(const enum vc5_model model,
+>         }
+>  }
+>
+> +static int vc5_parse_dt(struct vc5_driver_data *vc5)
+> +{
+> +       struct device *dev = &vc5->client->dev;
+> +       struct device_node *np = dev->of_node;
+> +       struct device_node *child;
+> +       u32 val;
+> +       int n;
+> +
+> +       for (n = 1; n < vc5->chip_info->clk_out_cnt; n++)
+> +               vc5->clk_out[n].mode = IDT_VC5_OUT_MODE_UNKNOWN;
+> +
+> +       for_each_child_of_node(np, child) {
+> +               if (of_property_read_u32(child, "reg", &n)) {
+> +                       dev_err(dev, "%pOF: missing reg property\n", child);
+> +                       break;
+> +               }
+> +
+> +               if (n == 0 || n >= vc5->chip_info->clk_out_cnt) {
+> +                       dev_err(dev, "%pOF: invalid reg %d\n", child, n);
+> +                       break;
+> +               }
+> +
+> +               if (!of_property_read_u32(child, "idt,drive-mode", &val)) {
+> +                       if (val >= IDT_VC5_OUT_NUM_MODES) {
+> +                               dev_err(dev, "%pOF: invalid idt,drive-mode %u\n",
+> +                                       child, val);
+> +                               break;
+> +                       }
+> +                       vc5->clk_out[n].mode = val;
+> +               }
+> +       }
+> +
+> +       if (child) {
+> +               of_node_put(child);
+> +               return -EINVAL;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  static const struct of_device_id clk_vc5_of_match[];
+>
+>  static int vc5_probe(struct i2c_client *client,
+> @@ -723,6 +790,10 @@ static int vc5_probe(struct i2c_client *client,
+>         if (PTR_ERR(vc5->pin_clkin) == -EPROBE_DEFER)
+>                 return -EPROBE_DEFER;
+>
+> +       ret = vc5_parse_dt(vc5);
+> +       if (ret)
+> +               return ret;
+> +
+>         vc5->regmap = devm_regmap_init_i2c(client, &vc5_regmap_config);
+>         if (IS_ERR(vc5->regmap)) {
+>                 dev_err(&client->dev, "failed to allocate register map\n");
+> --
+> 2.27.0
+>
