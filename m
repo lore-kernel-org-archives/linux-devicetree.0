@@ -2,86 +2,91 @@ Return-Path: <SRS0=knFt=AR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B284CC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 10:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B404C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 11:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92EE42074D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 10:46:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 154F02073E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 11:21:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbgGFKqq (ORCPT
+        id S1728845AbgGFLVI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jul 2020 06:46:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:56656 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728521AbgGFKqp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 6 Jul 2020 06:46:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CB54530E;
-        Mon,  6 Jul 2020 03:46:44 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 511D43F68F;
-        Mon,  6 Jul 2020 03:46:42 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 11:46:39 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     Zhiqiang.Hou@nxp.com, Minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
-        bhelgaas@google.com, robh+dt@kernel.org, shawnguo@kernel.org,
-        leoyang.li@nxp.com, kishon@ti.com, roy.zang@nxp.com,
-        amurray@thegoodpenguin.co.uk, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, andrew.murray@arm.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v6 00/11] Add the multiple PF support for DWC and
- Layerscape
-Message-ID: <20200706104639.GC26377@e121166-lin.cambridge.arm.com>
-References: <20200314033038.24844-1-xiaowei.bao@nxp.com>
-MIME-Version: 1.0
+        Mon, 6 Jul 2020 07:21:08 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.167]:30907 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728578AbgGFLVI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 07:21:08 -0400
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PvwDCqz4U="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.10.5 DYNA|AUTH)
+        with ESMTPSA id V07054w66BF5pdY
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Mon, 6 Jul 2020 13:15:05 +0200 (CEST)
+Subject: Re: [PATCH] MIPS: CI20: DTS: Correcting IW8103 Wifi binding
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200314033038.24844-1-xiaowei.bao@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200705103215.96672-1-agriveaux@deutnet.info>
+Date:   Mon, 6 Jul 2020 13:15:04 +0200
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        linux-mips <linux-mips@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <457C75ED-A033-4B46-A9D9-53B510C16F37@goldelico.com>
+References: <20200705103215.96672-1-agriveaux@deutnet.info>
+To:     agriveaux@deutnet.info
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Mar 14, 2020 at 11:30:27AM +0800, Xiaowei Bao wrote:
-> Add the PCIe EP multiple PF support for DWC and Layerscape, add
-> the doorbell MSIX function for DWC, use list to manage the PF of
-> one PCIe controller, and refactor the Layerscape EP driver due to
-> some platforms difference.
-> 
-> Xiaowei Bao (11):
->   PCI: designware-ep: Add multiple PFs support for DWC
->   PCI: designware-ep: Add the doorbell mode of MSI-X in EP mode
->   PCI: designware-ep: Move the function of getting MSI capability
->     forward
->   PCI: designware-ep: Modify MSI and MSIX CAP way of finding
->   dt-bindings: pci: layerscape-pci: Add compatible strings for ls1088a
->     and ls2088a
->   PCI: layerscape: Fix some format issue of the code
->   PCI: layerscape: Modify the way of getting capability with different
->     PEX
->   PCI: layerscape: Modify the MSIX to the doorbell mode
->   PCI: layerscape: Add EP mode support for ls1088a and ls2088a
->   arm64: dts: layerscape: Add PCIe EP node for ls1088a
->   misc: pci_endpoint_test: Add LS1088a in pci_device_id table
-> 
->  .../devicetree/bindings/pci/layerscape-pci.txt     |   2 +
->  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi     |  31 +++
->  drivers/misc/pci_endpoint_test.c                   |   2 +
->  drivers/pci/controller/dwc/pci-layerscape-ep.c     | 100 ++++++--
->  drivers/pci/controller/dwc/pcie-designware-ep.c    | 255 +++++++++++++++++----
->  drivers/pci/controller/dwc/pcie-designware.c       |  59 +++--
->  drivers/pci/controller/dwc/pcie-designware.h       |  48 +++-
->  7 files changed, 404 insertions(+), 93 deletions(-)
+Hi Alexandre,
 
-Can you rebase it against v5.8-rc1 please ?
+> Am 05.07.2020 um 12:32 schrieb agriveaux@deutnet.info:
+> 
+> From: Alexandre GRIVEAUX <agriveaux@deutnet.info>
+> 
+> Use brcm,bcm4329-fmac instead of brcm,bcm4330-fmac.
+> 
+> Signed-off-by: Alexandre GRIVEAUX <agriveaux@deutnet.info>
+> ---
+> arch/mips/boot/dts/ingenic/ci20.dts | 4 ++--
+> 1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
+> index 75f5bfbf2c37..82a1f126b778 100644
+> --- a/arch/mips/boot/dts/ingenic/ci20.dts
+> +++ b/arch/mips/boot/dts/ingenic/ci20.dts
+> @@ -116,8 +116,8 @@
+> 	pinctrl-0 = <&pins_mmc1>;
+> 
+> 	brcmf: wifi@1 {
+> -/*		reg = <4>;*/
+> -		compatible = "brcm,bcm4330-fmac";
+> +		reg = <1>;
+> +		compatible = "brcm,bcm4329-fmac";
+> 		vcc-supply = <&wlan0_power>;
+> 		device-wakeup-gpios = <&gpd 9 GPIO_ACTIVE_HIGH>;
+> 		shutdown-gpios = <&gpf 7 GPIO_ACTIVE_LOW>;
 
-Thanks,
-Lorenzo
+Do you have it working with a v5.8 kernel?
+
+I don't see any activity to detect the module or load firmware.
+
+Does it rely on some other patch?
+
+BR and thanks,
+Nikolaus
+
