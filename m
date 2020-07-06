@@ -2,107 +2,111 @@ Return-Path: <SRS0=knFt=AR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB0FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 14:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D30C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 14:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2617B2070C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 14:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28D4A206E6
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 14:53:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="taqKJ3OB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FG6yNBsd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729494AbgGFOuF (ORCPT
+        id S1729365AbgGFOxg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jul 2020 10:50:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59180 "EHLO
+        Mon, 6 Jul 2020 10:53:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729490AbgGFOuF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 10:50:05 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1787C061755
-        for <devicetree@vger.kernel.org>; Mon,  6 Jul 2020 07:50:04 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id v1so20726054vsb.10
-        for <devicetree@vger.kernel.org>; Mon, 06 Jul 2020 07:50:04 -0700 (PDT)
+        with ESMTP id S1729323AbgGFOxg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 10:53:36 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4665DC061755;
+        Mon,  6 Jul 2020 07:53:36 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id w17so31503717oie.6;
+        Mon, 06 Jul 2020 07:53:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=RWA25aZsg+amDOJvt4Y158PEbRGk+vCsxnKr+qd7EXU=;
-        b=taqKJ3OBsVxei3aYyQpx5E7jAO+c1xVScXydVxtz+3dHOGbroJQYL2n3DOlwxJKzKs
-         Ouh0ocprkUbxvvDhnFX3mOW7itQeN18QlyQPR9ViQuihWANWXVwzs0XcFq3Il0omKTd0
-         rnFJEXbqLgNILJf/LvtWVnER9c8BBEzTqmGHfUouCPej5YWpqxus3RAxsF+YRw4r7yeg
-         hstbRwZJNQ35po06x1VPte01xdU7/Krn8zqZR20t6O65tB0PaY4zxV2Mq/CQ+s9CrUdk
-         2uvqdo1jp7/DbNX8p+WrRWjuQvoWBcOLffugp10y9AwsF65NstPUP37Br1k/mHijY374
-         rnTQ==
+        bh=GFpfVj0m9GIjBHaPOWNr/J7dthCRMh3m8RTK3vZekkY=;
+        b=FG6yNBsdFyaLnOU8mBfBB/Q8Je3J9Eas3f8oj2nCD10CZkPUTBuNVP9U8M+fIaEKb6
+         nhKqT8qm22ivfb9lCGijiCLP+VL+cKM0JfVx9i2ziczDfH3cm8b6w9uguuTaPtDYzTGv
+         5qgwmBhNs223mkQP+r8ujZc27qYWMSJVJE9BEF5sqYKir+CEr+kerUWXpxslq7sEaZiS
+         KNoknGRBZJZz/j7I0NJ7pwrEirrh8rZ3FaRhGRa1hwWSB3pMhyFzZEMXw7LTdHQ6X9Iu
+         6DjHGByAClVQs7vBe4bBr5zImS0HpTYSyROQaeG3naIHVNlCV336B1q/uKOP+DGfn77C
+         rmbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=RWA25aZsg+amDOJvt4Y158PEbRGk+vCsxnKr+qd7EXU=;
-        b=IqdWm913IMi3KVaKqvUpPsSibpffjt+F2HKUMzCQAA4YA/qmHi5y5ekwRe1If7lpji
-         k2s2vBajSCUJXeHun3B3SWpBMqlONtwRHXXISHbJ/jVibSid0IGC2NcPhwLDv+51+9bw
-         Xntl0OeXmtWwwcuso8j9KY5t6mL3SsM1sMZuij0ilyUGloH1aga1mXn4cCeYfCTNhf8C
-         Nrk51LKCTwaOCM1C7JA6KXty/jaeOcduk/8fGWYUawazGlWyW4Q6vuKsNX7tVTKgm0l0
-         KW2b/+K6rQRLnPadGZcg7Da0uhFHxDdI2uNVWGFNK9ztIZ7DyaklskIQTveJYLJ0y6RS
-         DfkA==
-X-Gm-Message-State: AOAM531Q9C2XpnRGTGzksQV6lWcmDktHENsmM7hLDr9gUH7+pYfWfTL5
-        HAZG9DzDWwQMii9q0gZIhTyWlUrMSooTnaQRraorPBSUuG4=
-X-Google-Smtp-Source: ABdhPJxp7EQdsYXKyXmIwNKtH/jXmN/JFTTqCw29aNQ82/P1aOfsCs80wZaC7wnclqEWyJePDEkpHKIZfvV8xexmmqk=
-X-Received: by 2002:a05:6102:126a:: with SMTP id q10mr18466459vsg.35.1594047004092;
- Mon, 06 Jul 2020 07:50:04 -0700 (PDT)
+        bh=GFpfVj0m9GIjBHaPOWNr/J7dthCRMh3m8RTK3vZekkY=;
+        b=iNpxyx9nAKV1kpdbO2cwXcBokOglOXhK3C4Lyh+dnBdRMIw2j/HAdaYiLhJN+Jt3Gl
+         N3+YTM6Kzc8kk6sJsQH50VCn31ViJbrh4Bd2NPfv/cbk0RvKXm/Wl8cSi3jiMLpsKkZV
+         mg/eoI902cYuxqYdNtHBxMkrr+vurS8qkqAz1p+qgiwDxzp/4928GtzSMhodKhd97O5T
+         j3Pn3Yl9GmoawbCfL9IXxg+q7QnwILS9m5vT6UTBDmh7hqWuuDkC4Nr/VoxekapZm0H/
+         /AKGirV+DLwjQRSONJwpUqEjDZkkp7zcWJ+XJe3DBFKOacstJ++QE0mvHuXSjMtFsrgg
+         Zu9Q==
+X-Gm-Message-State: AOAM5301eSXfjHh4q5aCqcrWELD+mFICYTEwhvHxrs963civW1cNwTKX
+        Y6RIpmH1A8U+ym7TUEf6gjFutgFKv+6jOFN6Pl4=
+X-Google-Smtp-Source: ABdhPJzJN6n42s0UuWBiB0DP5cE1wqRwiFpGP9kCvAjBsDOjqYQv6xKtCp/mECIcHLh3snyruyuShOQylIS0S7sSex8=
+X-Received: by 2002:aca:ecc7:: with SMTP id k190mr34028677oih.92.1594047215580;
+ Mon, 06 Jul 2020 07:53:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200630223655.2627-1-l4stpr0gr4m@gmail.com>
-In-Reply-To: <20200630223655.2627-1-l4stpr0gr4m@gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 6 Jul 2020 16:49:26 +0200
-Message-ID: <CAPDyKFqS6Ew2Op1qx_YHMCd0qFmRm_XtUQrgdWLY_+v0kxr8pA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: mmc: sdhci-sirf
-To:     Kangmin Park <l4stpr0gr4m@gmail.com>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200702175352.19223-1-TheSven73@gmail.com> <20200702175352.19223-3-TheSven73@gmail.com>
+ <CAOMZO5DxUeXH8ZYxmKynA7xO3uF6SP_Kt-g=8MPgsF7tqkRvAA@mail.gmail.com>
+ <CAGngYiXGXDqCZeJme026uz5FjU56UojmQFFiJ5_CZ_AywdQiEw@mail.gmail.com>
+ <AM6PR0402MB360781DA3F738C2DF445E821FF680@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+ <CAGngYiWc8rNVEPC-8GK1yH4zXx7tgR9gseYaopu9GWDnSG1oyg@mail.gmail.com> <AM6PR0402MB36073F63D2DE2646B4F71081FF690@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+In-Reply-To: <AM6PR0402MB36073F63D2DE2646B4F71081FF690@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Mon, 6 Jul 2020 10:53:24 -0400
+Message-ID: <CAGngYiXY=0Q3MH+F6+5eeUy8-Wh2yNdUc2=fAQ=dZd3N2YaFow@mail.gmail.com>
+Subject: Re: [EXT] Re: [PATCH v5 3/3] ARM: imx6plus: optionally enable
+ internal routing of clk_enet_ref
+To:     Andy Duan <fugang.duan@nxp.com>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 1 Jul 2020 at 00:37, Kangmin Park <l4stpr0gr4m@gmail.com> wrote:
->
-> Fix unit address to match the first address specified in the reg
-> property of the node.
+Hi Andy,
 
-Rather than fixing legacy DT doc, can you please consider to convert
-the doc into the yaml format instead?
+On Mon, Jul 6, 2020 at 1:30 AM Andy Duan <fugang.duan@nxp.com> wrote:
+>
+> The clock depends on board design, HW refer guide can describe the clk
+> usage in detail and customer select one clk path as their board design.
+>
 
-Kind regards
-Uffe
+Yes, I agree. But how does a board designer practically describe this
+in the devicetree?
 
+Example: mac_gtx -> clk_pad (the default)
 
->
-> Signed-off-by: Kangmin Park <l4stpr0gr4m@gmail.com>
-> ---
->  Documentation/devicetree/bindings/mmc/sdhci-sirf.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-sirf.txt b/Documentation/devicetree/bindings/mmc/sdhci-sirf.txt
-> index dd6ed464bcb8..61185bbfdf9e 100644
-> --- a/Documentation/devicetree/bindings/mmc/sdhci-sirf.txt
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-sirf.txt
-> @@ -11,7 +11,7 @@ Optional properties:
->
->  Example:
->
-> -       sd0: sdhci@56000000 {
-> +       sd0: sdhci@cd000000 {
->                 compatible = "sirf,prima2-sdhc";
->                 reg = <0xcd000000 0x100000>;
->                 cd-gpios = <&gpio 6 0>;
-> --
-> 2.26.2
->
+Imagine I have a fixed oscillator on the board:
+
+phy_ref_clk: oscillator {
+    compatible = "fixed-clock";
+    #clock-cells = <0>;
+    clock-frequency = <50000000>;
+};
+
+How can I now make <&phy_ref_clk> the parent of
+<&clks CLK_PAD> ?
