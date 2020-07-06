@@ -2,149 +2,140 @@ Return-Path: <SRS0=knFt=AR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03AA1C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 19:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 639A9C433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 19:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1DBD206B6
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 19:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A18A206DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 19:50:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="k03cFx+8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HsJWl1n6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725929AbgGFT3X (ORCPT
+        id S1726867AbgGFTum (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jul 2020 15:29:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45892 "EHLO
+        Mon, 6 Jul 2020 15:50:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbgGFT3X (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 15:29:23 -0400
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C79AFC061755;
-        Mon,  6 Jul 2020 12:29:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=J+EsQQs1HUBrfOSzhNecD2M81XWwzO+HyRXgroFAxgk=; b=k03cFx+8mx+FJD/tl2s7IMVwiy
-        iNCJlj5ygc2kLSa91DasQzKXl8lSP7IFL+573UsRp13GRB1X0muGUbK5ZvzGrH3uO/yFRzvWTFyXN
-        1ryu+HMVt2tDCXop+i5hPiKFmoHQ2Dk3BHCemJqW7R7IKvGaRrKu1nCh8raJcYNokvW4=;
-Received: from p200300ccff0e48001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0e:4800:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1jsWnN-0003Yy-Tw; Mon, 06 Jul 2020 21:28:54 +0200
-Date:   Mon, 6 Jul 2020 21:28:48 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
-Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        with ESMTP id S1726799AbgGFTul (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 15:50:41 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E7FEC061794
+        for <devicetree@vger.kernel.org>; Mon,  6 Jul 2020 12:50:41 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id k17so10552788lfg.3
+        for <devicetree@vger.kernel.org>; Mon, 06 Jul 2020 12:50:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NCyDxdA9jbr8iFhSed0FBGtcvm2XFbja7uTb50VYerI=;
+        b=HsJWl1n6nz2NaVWTq/rj8cNLUuuf9ZutpSP2XhGHlIQ/D6yK7Apt0pFdMGWj8h2ev7
+         aXh5HYYGJIdKjPy2kTov6EuhdwlhJuWvT6m9FbbUnDuEyj2uav/MOmOhfb1Km5Jjh1DX
+         1VKyRRtPQfALLXobl9TIEbN5u8+7E8uY28oTN3ZMzGXcFLknH0G0vj9yB19PBq6Gtnst
+         lGB2pZiGQjz3GUCxRU3ZskiDMsaRMJhXawZPT71qryXLX+jkjpIYuffuFRis7D3smRO+
+         DePhXslskO2xsRfyNJIE8M/eTr6QYljBZf9HvE/RORYRzFXYrL9giS1QlewU29CM5LIL
+         PHcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NCyDxdA9jbr8iFhSed0FBGtcvm2XFbja7uTb50VYerI=;
+        b=XO6uhEKrp0ygqGVtNPiJgbhMgSCYkf6XOTXK7a51otVm8aiBnNEzueP5Mrh36cVDag
+         IF97+QD8+Rj6yrwHQAKuvkEb71UyY81k1VzQlEbLC3xZwl5rWK0tiwrDRGjHYZyf4IKD
+         4/J7IgUXSsKCzWXkB1eD3RVuQmqH+WoF4lQwc0IiTl5m+fBLlFy7NTRLIji5vRT6X+mX
+         6TJQK53k61635DE6FVcb+71+eBv1XAp9mtJFRRpQLS3oC3cjPHtT0Q52+PrztUwufS5Y
+         8XtZqTrAc9nrKdOn+IldwsAiR/7eUUaUGGiEYJ4BHkrNBElir2qyH4WAPDCSONjOuNTQ
+         NC7Q==
+X-Gm-Message-State: AOAM533AoWukT2S1dfrohdFHnJGKh6Bo86daMU0mJBkAqFMY+h/48sXV
+        u2UMiA6VFvQ3yef6UQZchzuZRQ==
+X-Google-Smtp-Source: ABdhPJxTjEEO35HzKrr2LIMwiPAI7yzu1DxL0zTecG7kI1hmtz7d2aU29lCEeEJ/RJbUqXJULxrfqg==
+X-Received: by 2002:a19:7407:: with SMTP id v7mr29481882lfe.4.1594065039708;
+        Mon, 06 Jul 2020 12:50:39 -0700 (PDT)
+Received: from [192.168.1.211] ([188.162.64.1])
+        by smtp.gmail.com with ESMTPSA id m15sm10604335ljp.45.2020.07.06.12.50.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Jul 2020 12:50:38 -0700 (PDT)
+Subject: Re: [RESEND PATCH v2 00/13] Enable GPU for SM8150 and SM8250
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To:     Jonathan Marek <jonathan@marek.ca>, linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Deepak Katragadda <dkatraga@codeaurora.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>
-Subject: Re: [RFC PATCH 00/10] Netronix embedded controller driver for Kobo
- and Tolino ebook readers
-Message-ID: <20200706212848.7e19886b@aktux>
-In-Reply-To: <20200704205808.GD2578@latitude>
-References: <20200620223915.1311485-1-j.neuschaefer@gmx.net>
-        <20200630084051.66feadea@aktux>
-        <20200630071523.GA2983@latitude>
-        <20200630221447.3e03ae28@aktux>
-        <20200704205808.GD2578@latitude>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Stephen Boyd <sboyd@kernel.org>,
+        Taniya Das <tdas@codeaurora.org>, Vinod Koul <vkoul@kernel.org>
+References: <20200629211725.2592-1-jonathan@marek.ca>
+ <011a1f99-46bb-12f2-ee07-8cd14d891947@linaro.org>
+Message-ID: <25c2015a-8a3b-4f21-cf75-0fbe729cf216@linaro.org>
+Date:   Mon, 6 Jul 2020 22:50:37 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <011a1f99-46bb-12f2-ee07-8cd14d891947@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 4 Jul 2020 22:58:08 +0200
-Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
+On 03/07/2020 18:03, Dmitry Baryshkov wrote:
+> On 30/06/2020 00:17, Jonathan Marek wrote:
+>> This series adds the missing clock drivers and dts nodes to enable
+>> the GPU on both SM8150 and SM8250.
+>>
+>> Note an extra patch [1] is still required for GPU to work on SM8250.
+>>
+>> Changes in V2:
+>> * Added "clk: qcom: gcc: fix sm8150 GPU and NPU clocks" to fix the 
+>> newly added
+>>    SM8150 GPU gcc clocks
+>> * Added "Fixes:" tag to "clk: qcom: clk-alpha-pll: remove 
+>> unused/incorrect PLL_CAL_VAL"
+>> * Added yaml schemas to gpucc dt-bindings patches
+>> * Added "clk: qcom: add common gdsc_gx_do_nothing_enable for gpucc 
+>> drivers" and changed
+>>    gpucc patches to use it.
+>> * Removed CLK_IS_CRITICAL from gpu_cc_ahb_clk
+>> * Added missing rpmh regulator level for sm8250 GPU clock levels
+>> * Use sm8150/sm8250 iommu compatibles in dts
+>> * Add gcc_gpu_gpll0_clk_src/gcc_gpu_gpll0_div_clk_src to gpucc clocks 
+>> in dts
+>>
+>> [1] https://gist.github.com/flto/784f1aca761ebf2fe6c105719a4a04ca
+> 
+> With your patches applied:
+> 
+> [   56.751977] msm msm: [drm:adreno_request_fw] loaded qcom/a650_sqe.fw 
+> from new location
+> [   56.760166] msm msm: [drm:adreno_request_fw] loaded qcom/a650_gmu.bin 
+> from new location
+> [   56.768485] arm-smmu 3da0000.iommu: genpd_runtime_resume()
+> [   56.774196] PM: gpu_cx_gdsc: Power-on latency exceeded, new value 
+> 49531 ns
+> [   56.781730] arm-smmu 3da0000.iommu: resume latency exceeded, 462604 ns
+> [   56.799559] platform 3d6a000.gmu: [drm:a6xx_gmu_resume] *ERROR* GMU 
+> firmware initialization timed out
+> [   56.809260] arm-smmu 3da0000.iommu: genpd_runtime_suspend()
+> [   56.813062] msm msm: [drm:adreno_load_gpu] *ERROR* Couldn't power up 
+> the GPU: -110
 
-> On Tue, Jun 30, 2020 at 10:14:47PM +0200, Andreas Kemnade wrote:
-> > On Tue, 30 Jun 2020 09:15:23 +0200
-> > Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
-> >  =20
-> > > On Tue, Jun 30, 2020 at 08:40:51AM +0200, Andreas Kemnade wrote:
-> > > [...] =20
-> > > > got a chance to test it on a Tolino Shine 2 HD.
-> > > > It uses the RTC from the RC5T619 but backlight seems to go via MSP4=
-30
-> > > > EC.
-> > > >=20
-> > > > I got this.
-> > > >=20
-> > > > [    1.453603] ntxec 0-0043: Netronix embedded controller version f=
-110 detected.
-> > > > [   10.723638] ntxec-rtc 21a0000.i2c:embedded-controller@43:rtc: re=
-gistered as rtc0
-> > > > [   10.775276] ntxec-pwm: probe of 21a0000.i2c:embedded-controller@=
-43:pwm failed with error -5   =20
-> > >=20
-> > > Hmm, -EIO from the PWM driver.
-> > >  =20
-> > turing debugging on: =20
->=20
-> (edited for compactness:)
-> > [  330.332971] i2c i2c-0: write slave address: addr=3D0x86   ACK receiv=
-ed
-> > [  330.334420] i2c i2c-0: write byte: B0=3D0xA3              ACK receiv=
-ed
-> > [  330.334790] i2c i2c-0: write byte: B1=3D0x0               No ACK =20
->=20
-> > [  330.352339] i2c i2c-0: write slave address: addr=3D0x86   ACK receiv=
-ed
-> > [  330.362208] i2c i2c-0: write byte: B0=3D0xA1              ACK receiv=
-ed
-> > [  330.362479] i2c i2c-0: write byte: B1=3D0xFF              No ACK =20
->=20
-> > [  330.363112] i2c i2c-0: write slave address: addr=3D0x86   ACK receiv=
-ed
-> > [  330.363362] i2c i2c-0: write byte: B0=3D0xA2              ACK receiv=
-ed
-> > [  330.363608] i2c i2c-0: write byte: B1=3D0xFF              No ACK =20
->=20
-> Hmm, it doesn't ack the writes to 0xA3, 0xA1 and 0xA2, which should
-> disable the PWM output and then disable the auto-off timer (according to
-> the vendor kernel).
->=20
-> And you said in your other mail that you can actually toggle the light
-> with writes to 0xA3, so I suspect a bug in the EC firmware here (which
-> may have gone unnoticed because the vendor kernel doesn't check if the
-> i2c transfers succeed). :/
->=20
-That is a also my theory.
 
-> IMHO we should get this driver merged first, and perhaps add a quirk to
-> deal with the missing ACKs later (unless a better solution is found).
->=20
-Yes, that can be done separately (after the Tolino Shine 2 HD dtb is
-in, I am polishing it right now).
+Confirmed to be a firmware issue. With older firmware proposed patches 
+work fine. A patch to support newer firmware releases will be submitted 
+separately.
 
-Regards,
-Andreas
+
+-- 
+With best wishes
+Dmitry
