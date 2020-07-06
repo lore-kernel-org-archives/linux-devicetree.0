@@ -5,84 +5,93 @@ X-Spam-Level:
 X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 515A0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 23:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5663C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 23:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13FCD205CB
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 23:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B0CD20739
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 23:17:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vgM0DpuA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EDOAtQyR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgGFXPP (ORCPT
+        id S1726805AbgGFXRu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jul 2020 19:15:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52512 "EHLO
+        Mon, 6 Jul 2020 19:17:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgGFXPP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 19:15:15 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2868C061755;
-        Mon,  6 Jul 2020 16:15:14 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id b25so44062921ljp.6;
-        Mon, 06 Jul 2020 16:15:14 -0700 (PDT)
+        with ESMTP id S1726366AbgGFXRt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 19:17:49 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46D6EC061755;
+        Mon,  6 Jul 2020 16:17:49 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id h19so47684248ljg.13;
+        Mon, 06 Jul 2020 16:17:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=aKp7IUGhbEzy43SIfD7SweirhPl6i6zvn0OzLbI7glY=;
-        b=vgM0DpuAkfl0GBtAWnLCoJ8STE1Rly8YT2Rp0pg+tcYGOL9SSExfdVLJk7WgPfZr1B
-         +gOGcryMDg7Z5f9ha5U9UQEqRY/vJF2tbQ9EAr24jXZM6OpoFg8TlbQdM7+nGgs2qxRv
-         gRhpogiWGczuoVD0pltHaxx3M83IAZsETaIn+HSnGBFt1M74Awgpvy1mTXSrlhcA7B++
-         cAp/siUpb6EmBRIYdzGqEU0iGRtMNavdlTqZ9ZBRsKolO+vRVVos4ohW1LC8sDLHExCw
-         ElrprKmwlbk7wq2rAHIC3EYuf0jTMaSz2+9X9D9vxT30lejQmS0SrcYoVLs00Av4LfOJ
-         yCpg==
+        bh=nEcvT0S80lShmAiUij3CBN+xqWJ51ORTb8sU2Ut1qgk=;
+        b=EDOAtQyReOU3AMpOSQgrhZLWhjVkCvI1UTEHEdKEHtr8NSJbLnu1Sa7qdcFgKt007H
+         AKgRtRRxae4uVduq8c/w4yDh3t6aPAm8i2qKeA/t6CGIFf+9qpJk1m4dTfdbz3ssnH+r
+         2PhNR5XvrwtWGXGzOuRhNXkiisBAySMpIZRzuCHjXgOn7oF4lOfCp1dRJhJc962mW36w
+         99Ww+gTDLQdzJSUkJ9Uj21pMp1Z6tr9zxObI8m/D2+7mGFmcENekh8kzHWg3w1yIvFUe
+         99dLd4GarZLXBk5ULsoynPUlEzK7MAwqGLPpndm0LtnXuAVY48nQ7MsMwQ03dSUCZxNR
+         vRRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=aKp7IUGhbEzy43SIfD7SweirhPl6i6zvn0OzLbI7glY=;
-        b=ZroFFSkQ/hO4BZyQBSE/ACPvZYg2V/lPaMDJaubz7c1cpG9y+V4y+b1aI4W6NZ5Xxg
-         CKJD3yngZPE4DoYy4zSo0luLYDrj9cph1pN+C0LPMCaRpwuh7V2xmN0y7XLVxeTI+oZm
-         ZqrgieMjjVk0upMZS4YeXkqgSR73s0y0ly9Oejvvmboyr7Ce8uPHSZVs8IPRIQ3a35ac
-         Kz4LyN/ZzXBsz4G4mK/WRkuk2JPvZLeuVF3ba1ZvO4/RToSbFjXdpbYdPoPi7+BBtosd
-         YVVlHNZTi1ob6gmRDMX4cVu7MRDfWiaGdxIAL39U6fd07FLY92LiPnq+57RgyK1PvTaq
-         gu9A==
-X-Gm-Message-State: AOAM533b9N0voXOGOrlc6UF2llWWgXUAJeB9SdqBbdFJQPgGirubO9Aa
-        mgCwf81RT83cuaopvvqm4iHWM1A97+fNS9rgXsQ=
-X-Google-Smtp-Source: ABdhPJx066ihdUOPCioWC6D3HKleTnGp64KJIpGzQ36rj0u9yljYKEATDgAfdVWSA84Y63zfBrMkIgBz6R7G/gYgIS4=
-X-Received: by 2002:a05:651c:200f:: with SMTP id s15mr16465014ljo.125.1594077313091;
- Mon, 06 Jul 2020 16:15:13 -0700 (PDT)
+        bh=nEcvT0S80lShmAiUij3CBN+xqWJ51ORTb8sU2Ut1qgk=;
+        b=W75of52UfGwHva9v7UR8C8wOMQ5pKZf+MQbS1wREC3LhNdcEu8tMINKYY7hpQ1I2kb
+         iUfVSMBOJkW0CjpJrOlCKH6UpP/9YwSiBuYEaN5gz4/OOVZOy+IiFpRFDtyVieIe8XHl
+         iI2IX0Yjmbw1Bdi3NZQY8x5rNhT+zIxbhKXTN6Ff0iisfMiX4u0NoxOQvufXq45MZ0WQ
+         PptgUrrw/xi6o3w82MMzxUjyvW3msNYwNJLYb0arT1JTuQe/FagrL3YVH9XDtcCqVEhT
+         5HxrJIgaeFS4LpXALs0cn6L/IYeeDzsml6qG8LrL+kzURomK5023THxfFZYvgDRgDhiY
+         WKww==
+X-Gm-Message-State: AOAM5336t7fbNSbhGjuhDiljvUlPXX73Sn20mnJQfJpFdvGk0SKUjSrY
+        RUJu6j8mivOHHx2ZfjxJqcHSU3ET9EkjXKxn5jo=
+X-Google-Smtp-Source: ABdhPJwlDCf9v0R98ITc7rx/wPBYFtbBwBAFbGagAwGeMmvKrxL+vLuj9lStCiDWbQSZjXgWx89Ph+NyMX800D7X8AQ=
+X-Received: by 2002:a2e:880e:: with SMTP id x14mr18185773ljh.218.1594077467685;
+ Mon, 06 Jul 2020 16:17:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAFXsbZoovWBavRFaEWEFcSkVjNx26BkKOkhcutNfzL8MrHwMTw@mail.gmail.com>
-In-Reply-To: <CAFXsbZoovWBavRFaEWEFcSkVjNx26BkKOkhcutNfzL8MrHwMTw@mail.gmail.com>
+References: <CAFXsbZo3xXXgCSd4AgDs8U46hBR0+HkQgzsvwJ=B6rUiondydA@mail.gmail.com>
+In-Reply-To: <CAFXsbZo3xXXgCSd4AgDs8U46hBR0+HkQgzsvwJ=B6rUiondydA@mail.gmail.com>
 From:   Fabio Estevam <festevam@gmail.com>
-Date:   Mon, 6 Jul 2020 20:15:01 -0300
-Message-ID: <CAOMZO5AMZoagB5JDxq-4_FbLXrJc-i112SW6NwxG5BdsogXm+A@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: vf610-zii-ssmb-dtu: Pass "no-sdio"/"no-sd" properties
+Date:   Mon, 6 Jul 2020 20:17:36 -0300
+Message-ID: <CAOMZO5C1TeUzTYtdBWvtcuc=U52SvC4RFmU8_RRDf6RprABD6w@mail.gmail.com>
+Subject: Re: [PATCH] arm: DT: vf610-zii-scu4-aib.dts: Configure fibre ports to 1000BaseX
 To:     Chris Healy <cphealy@gmail.com>
 Cc:     Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Stefan Agner <stefan@agner.ch>,
         Rob Herring <robh+dt@kernel.org>,
         linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        <devicetree@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Jul 5, 2020 at 12:16 AM Chris Healy <cphealy@gmail.com> wrote:
+Hi Chris,
+
+Subject style is usually:
+
+ARM: dts: vf610-zii-scu4-aib: Configure fibre ports to 1000BaseX
+
+On Sun, Jul 5, 2020 at 10:02 PM Chris Healy <cphealy@gmail.com> wrote:
 >
-> esdhc0 is connected to an eMMC, so it is safe to pass the "no-sdio"/"no-sd"
-> properties.
+> The SFF soldered onto the board expect the ports to use 1000BaseX.  It
+> makes no sense to have the ports set to SGMII, since they don't even
+> support that mode.
 >
-> esdhc1 is wired to a standard SD socket, so pass the "no-sdio" property.
->
+> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
 > Signed-off-by: Chris Healy <cphealy@gmail.com>
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Not clear here if the original Author is Andrew and you are forwarding
+his patch.
+
+If this is the case, then Andrew's name should appear in the From line.
