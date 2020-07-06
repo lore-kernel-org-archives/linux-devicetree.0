@@ -2,116 +2,121 @@ Return-Path: <SRS0=knFt=AR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A5BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 11:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70470C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 11:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4D152075B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 11:29:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="H4EH98DL"
+	by mail.kernel.org (Postfix) with ESMTP id 57039206E9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 11:44:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbgGFL3v (ORCPT
+        id S1728917AbgGFLoD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jul 2020 07:29:51 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:49641 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728836AbgGFL3v (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 6 Jul 2020 07:29:51 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594034990; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Date: Message-ID: From: References: Cc: To: Subject:
- Sender; bh=B4x/MNKnw7dNqtrqeARr2ZbfiWYvHwIO7a3zTHiX2RQ=; b=H4EH98DL+GHc4hPZehrYbX+ML77ClbmaiW10FZDiDLUA7BXF/5c7ddOAru2z6ymMcpiQdw2l
- vb/l226gmdgVrKGN1+tv90J41O2M9kDD0tShxqrCRg/lk2wfSfL803pfP62xXJvLrwUktEaa
- Tj3J8KBSkPKFXz+CK/zo9gQMWTw=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
- 5f030b2a86de6ccd44b789fd (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 06 Jul 2020 11:29:46
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 95BB1C43387; Mon,  6 Jul 2020 11:29:45 +0000 (UTC)
-Received: from [192.168.0.129] (unknown [183.83.142.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rohitkr)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 536EBC433C8;
-        Mon,  6 Jul 2020 11:29:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 536EBC433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
-Subject: Re: [PATCH v2 1/7] Documentation: device-tree: sound: Update
- lpass-cpu driver binding
-To:     Ajit Pandey <ajitp@codeaurora.org>, Mark Brown <broonie@kernel.org>
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        bgoswami@codeaurora.org, plai@codeaurora.org,
-        linux-kernel@vger.kernel.org, srinivas.kandagatla@linaro.org
-References: 
-From:   Rohit Kumar <rohitkr@codeaurora.org>
-Message-ID: <f44e2526-3497-7900-0db6-39b6b5af2d9b@codeaurora.org>
-Date:   Mon, 6 Jul 2020 16:59:39 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 6 Jul 2020 07:44:03 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:50463 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728845AbgGFLoD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 07:44:03 -0400
+X-Originating-IP: 86.202.118.225
+Received: from localhost (lfbn-lyo-1-23-225.w86-202.abo.wanadoo.fr [86.202.118.225])
+        (Authenticated sender: kamel.bouhara@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 204804000F;
+        Mon,  6 Jul 2020 11:44:00 +0000 (UTC)
+From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org,
+        Kamel Bouhara <kamel.bouhara@bootlin.com>
+Subject: [PATCH v6 0/5] Microchip TCB Capture driver
+Date:   Mon,  6 Jul 2020 13:43:42 +0200
+Message-Id: <20200706114347.174452-1-kamel.bouhara@bootlin.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hello,
 
-On 5/16/2020 11:07 PM, Ajit Pandey wrote:
-> On 5/14/2020 10:14 PM, Mark Brown wrote:
->> On Thu, May 14, 2020 at 10:08:12PM +0530, Ajit Pandey wrote:
->>> Done the required cleanups to update lpass-cpu binding with newer
->>> yaml formats.
->> Please do YAML conversions as the last thing in any patch series, there
->> is quite a big backlog of reviews of YAML conversions so they can slow
->> down the code development.  It's good to do them, just try to make sure
->> other patches don't depend on them.
->>
->> Please submit patches using subject lines reflecting the style for the
->> subsystem, this makes it easier for people to identify relevant patches.
->> Look at what existing commits in the area you're changing are doing and
->> make sure your subject lines visually resemble what they're doing.
->> There's no need to resubmit to fix this alone.
->
-> Ok.. we'll do the yaml conversion as a separate patch chain so that it 
-> won't block
->
-> merging of this feature in ASoC core.
+Here is a new counter driver to support Microchip TCB capture devices.
 
-@Mark, I was planning to post v3 patchset series for this and keep yaml 
-change as
+Each SoC has two TCB blocks, each one including three independent
+channels.The following series adds support for two counter modes:
+increase and quadrature decoder.
 
-last patch in the series as suggested. However, we have one update in 
-the driver to
+As for the atmel clocksource and pwm, the counter driver needs to fill
+some tcb capabilities in order to operate with the right configuration.
+This is achieved in first patch of this series.
 
-support another compatible string. If we keep Documentation change at 
-the last, the
+Please feel free to comment.
 
-driver change will have checkpatch errors. Can you please suggest if 
-should make
+Cheers,
 
-first Documentation change in text file itself before driver change and 
-finally have a
+Changes in v6:
+ - Rebased on top of v5.8-rc3
+ - Added Alexandre's ack
+ - Added Rob's ack
 
-patch to convert it to yaml at the end?
+Changes in v5:
+ - Fix duplicate keys errors in yaml dt-schema
 
+Changes in v4:
+ - Use existing binding to document capture mode of the Microchip TCBs.
 
-Thanks,
+Changes in v3:
+ - Updated the brand name: s/atmel/microchip/.
+ - Added missing kernel doc for new elements introduced in structure
+   atmel_tcb_config.
+ - Removed useless blank line
+ - Added an explicit clock removing path using devm_add_action_or_reset
 
-Rohit
+Changes in v2:
+ - Fixed first patch not applying on mainline
+ - Updated return code to -EINVAL when user is requesting qdec mode on
+   a counter device not supporting it.
+ - Added an error case returning -EINVAL when action edge is performed
+   in
+   qdec mode.
+ - Removed no need to explicity setting ops to NULL from static struct
+   as
+   it is the default value.
+ - Changed confusing code by using snprintf for the sake of clarity.
+ - Changed code to use ARRAY_SIZE so that future reviewers will know
+   that num_counts matches what's in the atmel_tc_count array without
+   having to check so themselves.
+ - Fixed errors reported by dt_binding_check
 
--- 
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the Linux Foundation.
+Alexandre Belloni (2):
+  dt-bindings: atmel-tcb: convert bindings to json-schema
+  dt-bindings: microchip: atmel,at91rm9200-tcb: add sama5d2 compatible
+
+Kamel Bouhara (3):
+  ARM: at91: add atmel tcb capabilities
+  dt-bindings: counter: microchip-tcb-capture counter
+  counter: Add microchip TCB capture counter
+
+ .../devicetree/bindings/mfd/atmel-tcb.txt     |  56 ---
+ .../soc/microchip/atmel,at91rm9200-tcb.yaml   | 181 ++++++++
+ drivers/counter/Kconfig                       |  11 +
+ drivers/counter/Makefile                      |   1 +
+ drivers/counter/microchip-tcb-capture.c       | 397 ++++++++++++++++++
+ include/soc/at91/atmel_tcb.h                  |   5 +
+ 6 files changed, 595 insertions(+), 56 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mfd/atmel-tcb.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
+ create mode 100644 drivers/counter/microchip-tcb-capture.c
+
+--
+2.26.2
 
