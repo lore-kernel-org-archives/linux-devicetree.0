@@ -2,119 +2,101 @@ Return-Path: <SRS0=knFt=AR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5976DC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 11:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0866C433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 11:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4290120E65
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 11:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B04A120760
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 11:44:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594035849;
+	bh=0H/Ci4Yl7iO19bQj63isObhR+3JKKIzIIzqXWiKHn4Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XNx5yQtGPjh/NHPWo0gE62CqTtMvWLmY3JczBAHpFR1NjlLugpAStX8x4HqwDQyRr
+	 Gj8yjUbcX2FRXNCCO34iXqI4w6q9gTPShF8234q/ocfLPiSC+AR+ViOXj0sfdBSmr5
+	 EcHBJ4Pt7MOETSXA4GjESvMpM8HNbQahU45ODWls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbgGFLoK (ORCPT
+        id S1728971AbgGFLoJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jul 2020 07:44:10 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:40573 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728967AbgGFLoK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 07:44:10 -0400
-X-Originating-IP: 86.202.118.225
-Received: from localhost (lfbn-lyo-1-23-225.w86-202.abo.wanadoo.fr [86.202.118.225])
-        (Authenticated sender: kamel.bouhara@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 8467AC0016;
-        Mon,  6 Jul 2020 11:44:06 +0000 (UTC)
-From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org,
-        Kamel Bouhara <kamel.bouhara@bootlin.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v6 4/5] dt-bindings: counter: microchip-tcb-capture counter
-Date:   Mon,  6 Jul 2020 13:43:46 +0200
-Message-Id: <20200706114347.174452-5-kamel.bouhara@bootlin.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200706114347.174452-1-kamel.bouhara@bootlin.com>
-References: <20200706114347.174452-1-kamel.bouhara@bootlin.com>
+        Mon, 6 Jul 2020 07:44:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43228 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728845AbgGFLoI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 6 Jul 2020 07:44:08 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2B082075B;
+        Mon,  6 Jul 2020 11:44:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594035848;
+        bh=0H/Ci4Yl7iO19bQj63isObhR+3JKKIzIIzqXWiKHn4Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bax21XBoYtg09OgqEwpKq8jl7FrAnaaM6FUk6WVqXijIL5akmKIvBQhpFh6OQ8sv9
+         y7yCyz/PlxGgpMzQELqP2le84UyWwo1CPdteZTAWGXx5Svg4xuRFwI++SAY5kW/z1a
+         Jv0+FLvidDsrEDJkTMY5BVSVUG1ZDprKMHKNZDII=
+Date:   Mon, 6 Jul 2020 12:44:03 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Rohit Kumar <rohitkr@codeaurora.org>
+Cc:     Ajit Pandey <ajitp@codeaurora.org>, devicetree@vger.kernel.org,
+        alsa-devel@alsa-project.org, bgoswami@codeaurora.org,
+        plai@codeaurora.org, linux-kernel@vger.kernel.org,
+        srinivas.kandagatla@linaro.org
+Subject: Re: [PATCH v2 1/7] Documentation: device-tree: sound: Update
+ lpass-cpu driver binding
+Message-ID: <20200706114403.GA6176@sirena.org.uk>
+References: <f44e2526-3497-7900-0db6-39b6b5af2d9b@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
+Content-Disposition: inline
+In-Reply-To: <f44e2526-3497-7900-0db6-39b6b5af2d9b@codeaurora.org>
+X-Cookie: You will be married within a year.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Describe the devicetree binding for the Microchip TCB module.
-Each counter blocks exposes three independent counters.
 
-However, when configured in quadrature decoder, both channel <0> and <1>
-are required for speed/position and rotation capture (yet only the
-position is captured).
+--G4iJoqBmSsgzjUCe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../soc/microchip/atmel,at91rm9200-tcb.yaml   | 32 +++++++++++++++++--
- 1 file changed, 29 insertions(+), 3 deletions(-)
+On Mon, Jul 06, 2020 at 04:59:39PM +0530, Rohit Kumar wrote:
 
-diff --git a/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml b/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
-index d226fd7d5258..3cd0b70cd6cf 100644
---- a/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
-+++ b/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
-@@ -52,14 +52,20 @@ properties:
- 
- patternProperties:
-   "^timer@[0-2]$":
--    description: The timer block channels that are used as timers.
-+    description: The timer block channels that are used as timers or counters.
-     type: object
-     properties:
-       compatible:
--        const: atmel,tcb-timer
-+        items:
-+          - enum:
-+              - atmel,tcb-timer
-+              - microchip,tcb-capture
-       reg:
-         description:
--          List of channels to use for this particular timer.
-+          List of channels to use for this particular timer. In Microchip TCB capture
-+          mode channels are registered as a counter devices, for the qdec mode TCB0's
-+          channel <0> and <1> are required.
-+
-         minItems: 1
-         maxItems: 3
- 
-@@ -153,3 +159,23 @@ examples:
-                         reg = <1>;
-                 };
-         };
-+    /* TCB0 Capture with QDEC: */
-+        timer@f800c000 {
-+                compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+                reg = <0xfff7c000 0x100>;
-+                interrupts = <18 4>;
-+                clocks = <&tcb0_clk>, <&clk32k>;
-+                clock-names = "t0_clk", "slow_clk";
-+
-+                timer@0 {
-+                        compatible = "microchip,tcb-capture";
-+                        reg = <0>, <1>;
-+                };
-+
-+                timer@2 {
-+                        compatible = "atmel,tcb-timer";
-+                        reg = <2>;
-+                };
-+        };
--- 
-2.26.2
+> @Mark, I was planning to post v3 patchset series for this and keep yaml
+> change as
 
+My name is Mark.
+
+> driver change will have checkpatch errors. Can you please suggest if should
+> make
+
+> first Documentation change in text file itself before driver change and
+> finally have a
+
+> patch to convert it to yaml at the end?
+
+As ever make the YAML conversion the very last thing you do in your
+series so it doesn't hold anything else up.
+
+--G4iJoqBmSsgzjUCe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8DDoMACgkQJNaLcl1U
+h9BXMgf8DNoFvq0IrXAIU2aU8cf2VGs/LC+PJRHbN66SiyRr5VQSchf5GjLi71k+
+BJ86YKPLly27ab3Xq/sDsHkNZ2nFi0LPQBJIdQxnm/cbY/iAnKYUxi3lj3OiPauA
+NvWjfiWa/qCuixLhj8UOF2zkuEg9bKtboZ986MBvdAmSYzYMuERaSYCwh2rsYsv3
+2/pBPzGieCWfQbTWEd8TTg17sgK0jPCwEePJlYlXZ6Rg2cF4MADj207FikGmS83O
+1baJtYl84UR3aynPIvzNjX9JIkG3Ffks00738Y6PQ/PQfvg48iEQx0kXFfQzgKHo
+2MRtuTCsphZrhghRuKAvOXsO04NkfQ==
+=HNKc
+-----END PGP SIGNATURE-----
+
+--G4iJoqBmSsgzjUCe--
