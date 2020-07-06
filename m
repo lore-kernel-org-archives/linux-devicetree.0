@@ -6,23 +6,24 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E36E2C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 11:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB455C433E5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 11:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD2E42075B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 11:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3814206E9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 11:44:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbgGFLoF (ORCPT
+        id S1728961AbgGFLoI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jul 2020 07:44:05 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:36879 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728845AbgGFLoF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 07:44:05 -0400
+        Mon, 6 Jul 2020 07:44:08 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:38725 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728845AbgGFLoI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 07:44:08 -0400
+X-Originating-IP: 86.202.118.225
 Received: from localhost (lfbn-lyo-1-23-225.w86-202.abo.wanadoo.fr [86.202.118.225])
         (Authenticated sender: kamel.bouhara@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 9F0AD240014;
-        Mon,  6 Jul 2020 11:44:01 +0000 (UTC)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 153292000A;
+        Mon,  6 Jul 2020 11:44:04 +0000 (UTC)
 From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
 To:     William Breathitt Gray <vilhelm.gray@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -35,9 +36,9 @@ Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         linux-input@vger.kernel.org, devicetree@vger.kernel.org,
         linux-iio@vger.kernel.org,
         Kamel Bouhara <kamel.bouhara@bootlin.com>
-Subject: [PATCH v6 1/5] ARM: at91: add atmel tcb capabilities
-Date:   Mon,  6 Jul 2020 13:43:43 +0200
-Message-Id: <20200706114347.174452-2-kamel.bouhara@bootlin.com>
+Subject: [PATCH v6 3/5] dt-bindings: microchip: atmel,at91rm9200-tcb: add sama5d2 compatible
+Date:   Mon,  6 Jul 2020 13:43:45 +0200
+Message-Id: <20200706114347.174452-4-kamel.bouhara@bootlin.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200706114347.174452-1-kamel.bouhara@bootlin.com>
 References: <20200706114347.174452-1-kamel.bouhara@bootlin.com>
@@ -48,34 +49,85 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some atmel socs have extra tcb capabilities that allow using a generic
-clock source or enabling a quadrature decoder.
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
+The sama5d2 TC block TIMER_CLOCK1 is different from the at91sam9x5 one.
+Instead of being MCK / 2, it is the TCB GCLK.
+
+Cc: Rob Herring <robh+dt@kernel.org>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- include/soc/at91/atmel_tcb.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../soc/microchip/atmel,at91rm9200-tcb.yaml   | 42 +++++++++++++++----
+ 1 file changed, 33 insertions(+), 9 deletions(-)
 
-diff --git a/include/soc/at91/atmel_tcb.h b/include/soc/at91/atmel_tcb.h
-index c3c7200ce151..1d7071dc0bca 100644
---- a/include/soc/at91/atmel_tcb.h
-+++ b/include/soc/at91/atmel_tcb.h
-@@ -36,9 +36,14 @@ struct clk;
- /**
-  * struct atmel_tcb_config - SoC data for a Timer/Counter Block
-  * @counter_width: size in bits of a timer counter register
-+ * @has_gclk: boolean indicating if a timer counter has a generic clock
-+ * @has_qdec: boolean indicating if a timer counter has a quadrature
-+ * decoder.
-  */
- struct atmel_tcb_config {
- 	size_t	counter_width;
-+	bool    has_gclk;
-+	bool    has_qdec;
- };
+diff --git a/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml b/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
+index 9d680e0b9109..d226fd7d5258 100644
+--- a/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
++++ b/Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
+@@ -19,6 +19,7 @@ properties:
+       - enum:
+           - atmel,at91rm9200-tcb
+           - atmel,at91sam9x5-tcb
++          - atmel,sama5d2-tcb
+       - const: simple-mfd
+       - const: syscon
  
- /**
+@@ -36,15 +37,6 @@ properties:
+     description:
+       List of clock names. Always includes t0_clk and slow clk. Also includes
+       t1_clk and t2_clk if a clock per channel is available.
+-    oneOf:
+-      - items:
+-        - const: t0_clk
+-        - const: slow_clk
+-      - items:
+-        - const: t0_clk
+-        - const: t1_clk
+-        - const: t2_clk
+-        - const: slow_clk
+     minItems: 2
+     maxItems: 4
+ 
+@@ -75,6 +67,38 @@ patternProperties:
+       - compatible
+       - reg
+ 
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: atmel,sama5d2-tcb
++    then:
++      properties:
++        clocks:
++          minItems: 3
++          maxItems: 3
++        clock-names:
++          items:
++            - const: t0_clk
++            - const: gclk
++            - const: slow_clk
++    else:
++      properties:
++        clocks:
++          minItems: 2
++          maxItems: 4
++        clock-names:
++          oneOf:
++            - items:
++              - const: t0_clk
++              - const: slow_clk
++            - items:
++              - const: t0_clk
++              - const: t1_clk
++              - const: t2_clk
++              - const: slow_clk
++
+ required:
+   - compatible
+   - reg
 -- 
 2.26.2
 
