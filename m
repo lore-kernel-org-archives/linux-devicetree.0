@@ -2,107 +2,193 @@ Return-Path: <SRS0=knFt=AR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A14C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 16:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BBAC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 16:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8125120708
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 16:13:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h9Wq9RrX"
+	by mail.kernel.org (Postfix) with ESMTP id 175B520723
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 16:18:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594052296;
+	bh=e7QX1v2cZu5ZSZ15ZN3H645wikiq3nLGGb5SNS7ZpVQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=o27KmkV+Z1NcBmnnwJKeq73mMsvzZw4XxqqwcRHnIW8MuDawDiCeri0l/iZQga+su
+	 KU0C0gX4IVLhKCnEw+UBPmj51YJoVIHsy6QiP7PoczQPi+gRQwQfLPeL9VBNZQKqEG
+	 tBZVbpGdJVvjySlhJh29j6hfkFiBCP/g91q8MW44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729456AbgGFQNX (ORCPT
+        id S1729589AbgGFQSP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jul 2020 12:13:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43898 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729377AbgGFQNX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 12:13:23 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75319C061755;
-        Mon,  6 Jul 2020 09:13:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=09RoxU92YpiyFpZjGA58GlY5VvI+xGq1TPjqAx/m+PA=; b=h9Wq9RrXAVog2t9KjanKEF/6JQ
-        UYC9ZjGxcBBW2cT32mHa0U50bCWLIuS+tbVqK1O64zY2AKOMdczgjQxbDj4gDV0CIi1EqeMrFvmEx
-        fb3hyUuWqjqSsQ3aSai9NsVbMweQnRBPEsCm08It7Qu+7zRWDyNpTQxYBajH1AChsDq8bzC9Ci1pF
-        N2eR+c9k7gNxWNjDewVLrAKXNQr6SkFvY3fbFC0+myqMPZMAxdBc0utoYRcSfHQTEZStRQgH7NOEi
-        6K9uozqOpTEPIw/Y6/qp4SOOLSAqFtygJo7Cl+XYCX/vSQxVT60o0TWs2Z5uRHIL3ZmcCPdodcrBV
-        hjhH+sLA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jsTk7-0007XD-V2; Mon, 06 Jul 2020 16:13:20 +0000
-Subject: Re: [PATCH 2/2] soc: mediatek: devapc: add devapc-mt6779 driver
-To:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        lkml <linux-kernel@vger.kernel.org>
-References: <1594027693-19530-1-git-send-email-neal.liu@mediatek.com>
- <1594027693-19530-3-git-send-email-neal.liu@mediatek.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <dd03ec1e-e511-4c13-4e12-a9f8ec407326@infradead.org>
-Date:   Mon, 6 Jul 2020 09:13:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 6 Jul 2020 12:18:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53798 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729403AbgGFQSP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 6 Jul 2020 12:18:15 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59E0D20708;
+        Mon,  6 Jul 2020 16:18:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594052294;
+        bh=e7QX1v2cZu5ZSZ15ZN3H645wikiq3nLGGb5SNS7ZpVQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QVu585+GkPv60Zfg3OgrPeismhWCEmPD1eHfRJC52g2F8CVXSXM4YQD5Tp6yvCajY
+         gcEi6IYMnPDOt7TwqAM0QSIKs30A7PqlbslStHTbMgEhEjHvsxlebpH1K6g2sRX1f+
+         /kh+85Hj20dV1uTkVUJsE/Rx8e4ZoYp7N6bq27JE=
+Date:   Mon, 6 Jul 2020 17:18:10 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Adrian Fiergolski <adrian.fiergolski@fastree3d.com>
+Cc:     geert@linux-m68k.org, lukas@wunner.de,
+        kernel test robot <lkp@intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] spi: Add the SPI daisy chain support.
+Message-ID: <20200706161810.GB6176@sirena.org.uk>
+References: <202007040833.xIqR5rAw%lkp@intel.com>
+ <20200706092247.20740-1-adrian.fiergolski@fastree3d.com>
 MIME-Version: 1.0
-In-Reply-To: <1594027693-19530-3-git-send-email-neal.liu@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="b5gNqxB1S1yM7hjW"
+Content-Disposition: inline
+In-Reply-To: <20200706092247.20740-1-adrian.fiergolski@fastree3d.com>
+X-Cookie: You will be married within a year.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 7/6/20 2:28 AM, Neal Liu wrote:
-> diff --git a/drivers/soc/mediatek/devapc/Kconfig b/drivers/soc/mediatek/devapc/Kconfig
-> new file mode 100644
-> index 0000000..b0f7d0e
-> --- /dev/null
-> +++ b/drivers/soc/mediatek/devapc/Kconfig
-> @@ -0,0 +1,17 @@
-> +config MTK_DEVAPC
-> +	tristate "Mediatek Device APC Support"
-> +	help
-> +	  Device APC is a HW IP controlling internal device security.
 
-preferably:               s/HW/hardware/
+--b5gNqxB1S1yM7hjW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +	  MediaTek bus frabric provides TrustZone security support and data
+On Mon, Jul 06, 2020 at 11:22:43AM +0200, Adrian Fiergolski wrote:
 
-	               fabric
+Please don't send new patches in reply to old threads, it buries them
+and can be confusing.
 
-> +	  protection to prevent slaves from being accessed by unexpected
-> +	  bus masters.
-> +	  Device APC prevents malicious access to internal devices.
+> The implementation is transparent for the SPI devices and doesn't require
+> their modifications. It is based on a virtual SPI device (spi-daisy_chain)
+> and defines two required device tree properties ('spi-daisy-chain-len' and
+> 'spi-daisy-chain-noop') and one optional
+
+It would really help to have an example of how a client device will use
+this, right now it's a bit hard to follow.  Overall it feels like this
+should be better abstracted, right now there's lots of ifdefs throughout
+the code which make things unclear and also seem like they're going to
+be fragile long term since realistically very few systems will be using
+this.  Perhaps this needs to be a library for devices that can daisy
+chain?  It does feel like the instances should be aware of each other
+since half the point with building the hardware like this is that it
+enables operations on multiple devices to happen in sync.
+
+There are also pervasive coding style issues which are really
+distracting.
+
+>  drivers/spi/spi-daisy_chain.c       | 428 ++++++++++++++++++++++++++++
+
+Please use - and _ consistently.
+
+> @@ -55,6 +55,14 @@ config SPI_MEM
+>  	  This extension is meant to simplify interaction with SPI memories
+>  	  by providing a high-level interface to send memory-like commands.
+> =20
+> +config SPI_DAISY_CHAIN
+> +	bool "SPI daisy chain support"
+> +	depends on OF
+
+Please keep Makefile and Kconfig sorted.
+
+> +++ b/drivers/spi/spi-daisy_chain.c
+> @@ -0,0 +1,428 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
 > +
-> +config DEVAPC_MT6779
-> +	tristate "Mediatek MT6779 Device APC driver"
-> +	select MTK_DEVAPC
-> +	help
-> +	  Say yes here to enable support Mediatek MT6779 Device APC driver.
+> +/*
+> + * A driver handling the SPI daisy chaines.
 
-	                         support for Mediatek
+Please make the entire comment block a C++ to make things look more
+intentional.
 
-> +	  This driver mainly used to handle the violation with 1 DEVAPC AO/PDs.
+> +	int rc;
+> +
+> +	//the device is not part of a daisy-chain
+> +	if (spi->daisy_chain_devs =3D=3D NULL)
 
-	  This driver is mainly used                           ^^^^^^^^^^^^^^^^
+Coding style for the comment here and throughout the code.  If your code
+doesn't visually resemble the normal coding style for the code base
+you're working on then that is a bit of a red flag when reviewing.
 
-	                      What is that meaningless string of chars? ^^^^^^^
+> +	if (!list_is_singular(&message->transfers)) {
+> +		dev_err(&spi->dev,
+> +			"Mutliple transfer segments are not support when on daisy chain");
+> +		return -EINVAL;
+> +	}
 
+That seems excessively restrictive?
 
-> +	  The violation information are logged for further analysis or
+> +			//check if frequency is not being changed
+> +			if (tr->speed_hz && tr->speed_hz !=3D spi->max_speed_hz) {
+> +				dev_err(&spi->dev,
+> +					"Change of SPI frequency not supported when on daisy chain");
+> +				return -EINVAL;
+> +			}
 
-	                            is
+Again this seems unreasonably restrictive, especially given the above
+single transfer restriction which means the speed can't change during a
+message?
 
-> +	  countermeasures.
+> +			if (tr->len =3D=3D spi_chain_dev->no_operation.len) {
+> +				tr->bits_per_word =3D spi_chain_dev->no_operation
+> +							    .bits_per_word;
+> +				tr->cs_change =3D 0;
+> +
+> +				list_add_tail(&tr->transfer_list,
+> +					      &message->transfers);
+> +			}
+> +			//daisy chain operation has different than regular length
+> +			else {
 
-thanks.
--- 
-~Randy
+Coding style on both the if () and placement of the comment.
 
+> +				//copy tx buffer
+> +				if (tr->tx_buf) {
+> +					ntr->tx_buf =3D
+> +						kmalloc(ntr->len, GFP_KERNEL);
+> +					if (!ntr->tx_buf) {
+> +						rc =3D -ENOMEM;
+> +						goto err_out;
+> +					}
+
+Why is this not a kmemdup()?
+
+> +					//The daisy-chain padding is assumed to be right-justified,
+> +					//so unused tx bits are transferred first
+> +					memcpy((void *)((char *)ntr->tx_buf +
+> +							ntr->len - tr->len),
+> +					       tr->tx_buf, tr->len);
+
+These casts shouldn't be needed, especially the cast to void * - if you
+need to cast to void * something bad is most likely happening.  Simiar
+issues apply in other places where you're casting.
+
+--b5gNqxB1S1yM7hjW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8DTsEACgkQJNaLcl1U
+h9A9GQf+PnOeur2uHEHqKLk/2qRct2ot5asMktV8CLeWeWzdKCdWgbdjYkhhT+Vn
+MTgjEf3xIGVMHoJGta1bFx/F/Uos/EqJAUmaXOAY2wRhzMzXFotc8i+obilvAwXf
+cgk32FTSOiwg14PuGjndRlvcfmSuZeiqeCucaRdPMxkqMQ9LT0x0aGVHGetrlPFI
+qiP1kgtM0Q0l91etZ2d1twBvrxya2xusRjVDYQV5wupfxwuIC+s/aTA/i30VRHQr
+LoD4CO/uQaCtrF9v+QtOUcXJ906F/hi28J593t7GAe1EwE5/cpxK8xtoCrwfzDQ1
+sAjXQ9mNPAi88WfggVX+655ocGylKA==
+=/5Y1
+-----END PGP SIGNATURE-----
+
+--b5gNqxB1S1yM7hjW--
