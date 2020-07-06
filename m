@@ -2,200 +2,87 @@ Return-Path: <SRS0=knFt=AR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D87CEC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 21:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 515A0C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 23:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B728D206BE
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 21:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13FCD205CB
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 23:15:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vgM0DpuA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725892AbgGFVNt (ORCPT
+        id S1726729AbgGFXPP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jul 2020 17:13:49 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:55272 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725860AbgGFVNt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 6 Jul 2020 17:13:49 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9C891200747;
-        Mon,  6 Jul 2020 23:13:47 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8F0A120057C;
-        Mon,  6 Jul 2020 23:13:47 +0200 (CEST)
-Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 20321203C3;
-        Mon,  6 Jul 2020 23:13:47 +0200 (CEST)
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Leonard Crestez <cdleonard@gmail.com>,
-        Rob Herring <robh@kernel.org>
-Cc:     NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>
-Subject: [RESEND v2] arm64: dts: imx8m: Add NOC nodes
-Date:   Tue,  7 Jul 2020 00:13:26 +0300
-Message-Id: <1594070006-816-1-git-send-email-abel.vesa@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 6 Jul 2020 19:15:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52512 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbgGFXPP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 19:15:15 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2868C061755;
+        Mon,  6 Jul 2020 16:15:14 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id b25so44062921ljp.6;
+        Mon, 06 Jul 2020 16:15:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aKp7IUGhbEzy43SIfD7SweirhPl6i6zvn0OzLbI7glY=;
+        b=vgM0DpuAkfl0GBtAWnLCoJ8STE1Rly8YT2Rp0pg+tcYGOL9SSExfdVLJk7WgPfZr1B
+         +gOGcryMDg7Z5f9ha5U9UQEqRY/vJF2tbQ9EAr24jXZM6OpoFg8TlbQdM7+nGgs2qxRv
+         gRhpogiWGczuoVD0pltHaxx3M83IAZsETaIn+HSnGBFt1M74Awgpvy1mTXSrlhcA7B++
+         cAp/siUpb6EmBRIYdzGqEU0iGRtMNavdlTqZ9ZBRsKolO+vRVVos4ohW1LC8sDLHExCw
+         ElrprKmwlbk7wq2rAHIC3EYuf0jTMaSz2+9X9D9vxT30lejQmS0SrcYoVLs00Av4LfOJ
+         yCpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aKp7IUGhbEzy43SIfD7SweirhPl6i6zvn0OzLbI7glY=;
+        b=ZroFFSkQ/hO4BZyQBSE/ACPvZYg2V/lPaMDJaubz7c1cpG9y+V4y+b1aI4W6NZ5Xxg
+         CKJD3yngZPE4DoYy4zSo0luLYDrj9cph1pN+C0LPMCaRpwuh7V2xmN0y7XLVxeTI+oZm
+         ZqrgieMjjVk0upMZS4YeXkqgSR73s0y0ly9Oejvvmboyr7Ce8uPHSZVs8IPRIQ3a35ac
+         Kz4LyN/ZzXBsz4G4mK/WRkuk2JPvZLeuVF3ba1ZvO4/RToSbFjXdpbYdPoPi7+BBtosd
+         YVVlHNZTi1ob6gmRDMX4cVu7MRDfWiaGdxIAL39U6fd07FLY92LiPnq+57RgyK1PvTaq
+         gu9A==
+X-Gm-Message-State: AOAM533b9N0voXOGOrlc6UF2llWWgXUAJeB9SdqBbdFJQPgGirubO9Aa
+        mgCwf81RT83cuaopvvqm4iHWM1A97+fNS9rgXsQ=
+X-Google-Smtp-Source: ABdhPJx066ihdUOPCioWC6D3HKleTnGp64KJIpGzQ36rj0u9yljYKEATDgAfdVWSA84Y63zfBrMkIgBz6R7G/gYgIS4=
+X-Received: by 2002:a05:651c:200f:: with SMTP id s15mr16465014ljo.125.1594077313091;
+ Mon, 06 Jul 2020 16:15:13 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAFXsbZoovWBavRFaEWEFcSkVjNx26BkKOkhcutNfzL8MrHwMTw@mail.gmail.com>
+In-Reply-To: <CAFXsbZoovWBavRFaEWEFcSkVjNx26BkKOkhcutNfzL8MrHwMTw@mail.gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Mon, 6 Jul 2020 20:15:01 -0300
+Message-ID: <CAOMZO5AMZoagB5JDxq-4_FbLXrJc-i112SW6NwxG5BdsogXm+A@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: vf610-zii-ssmb-dtu: Pass "no-sdio"/"no-sd" properties
+To:     Chris Healy <cphealy@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Stefan Agner <stefan@agner.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+On Sun, Jul 5, 2020 at 12:16 AM Chris Healy <cphealy@gmail.com> wrote:
+>
+> esdhc0 is connected to an eMMC, so it is safe to pass the "no-sdio"/"no-sd"
+> properties.
+>
+> esdhc1 is wired to a standard SD socket, so pass the "no-sdio" property.
+>
+> Signed-off-by: Chris Healy <cphealy@gmail.com>
 
-Add nodes for the main interconnect of the imx8m series chips.
-
-These nodes are bound to by devfreq and interconnect drivers.
-
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-Tested-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-Acked-by: Georgi Djakov <georgi.djakov@linaro.org>
----
-
-Changes since v1:
- - picked up the bindinds header which were part of the original patch
-   from Leonard
-
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 24 ++++++++++++++++++++++++
- arch/arm64/boot/dts/freescale/imx8mn.dtsi | 24 ++++++++++++++++++++++++
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 24 ++++++++++++++++++++++++
- 3 files changed, 72 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index 76f040e..970d132 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/thermal/thermal.h>
-+#include <dt-bindings/interconnect/imx8mm.h>
- 
- #include "imx8mm-pinfunc.h"
- 
-@@ -877,6 +878,29 @@
- 
- 		};
- 
-+		noc: interconnect@32700000 {
-+			compatible = "fsl,imx8mm-noc", "fsl,imx8m-noc";
-+			reg = <0x32700000 0x100000>;
-+			clocks = <&clk IMX8MM_CLK_NOC>;
-+			fsl,ddrc = <&ddrc>;
-+			#interconnect-cells = <1>;
-+			operating-points-v2 = <&noc_opp_table>;
-+
-+			noc_opp_table: opp-table {
-+				compatible = "operating-points-v2";
-+
-+				opp-150M {
-+					opp-hz = /bits/ 64 <150000000>;
-+				};
-+				opp-375M {
-+					opp-hz = /bits/ 64 <375000000>;
-+				};
-+				opp-750M {
-+					opp-hz = /bits/ 64 <750000000>;
-+				};
-+			};
-+		};
-+
- 		aips4: bus@32c00000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			reg = <0x32c00000 0x400000>;
-diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-index 9385dd7..cd38aae 100644
---- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/thermal/thermal.h>
-+#include <dt-bindings/interconnect/imx8mn.h>
- 
- #include "imx8mn-pinfunc.h"
- 
-@@ -764,6 +765,29 @@
- 
- 		};
- 
-+		noc: interconnect@32700000 {
-+			compatible = "fsl,imx8mn-noc", "fsl,imx8m-noc";
-+			reg = <0x32700000 0x100000>;
-+			clocks = <&clk IMX8MN_CLK_NOC>;
-+			fsl,ddrc = <&ddrc>;
-+			#interconnect-cells = <1>;
-+			operating-points-v2 = <&noc_opp_table>;
-+
-+			noc_opp_table: opp-table {
-+				compatible = "operating-points-v2";
-+
-+				opp-100M {
-+					opp-hz = /bits/ 64 <100000000>;
-+				};
-+				opp-600M {
-+					opp-hz = /bits/ 64 <600000000>;
-+				};
-+				opp-800M {
-+					opp-hz = /bits/ 64 <800000000>;
-+				};
-+			};
-+		};
-+
- 		aips4: bus@32c00000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			reg = <0x32c00000 0x400000>;
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index f70435c..d585650 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -11,6 +11,7 @@
- #include "dt-bindings/input/input.h"
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/thermal/thermal.h>
-+#include <dt-bindings/interconnect/imx8mq.h>
- #include "imx8mq-pinfunc.h"
- 
- / {
-@@ -1045,6 +1046,29 @@
- 			};
- 		};
- 
-+		noc: interconnect@32700000 {
-+			compatible = "fsl,imx8mq-noc", "fsl,imx8m-noc";
-+			reg = <0x32700000 0x100000>;
-+			clocks = <&clk IMX8MQ_CLK_NOC>;
-+			fsl,ddrc = <&ddrc>;
-+			#interconnect-cells = <1>;
-+			operating-points-v2 = <&noc_opp_table>;
-+
-+			noc_opp_table: opp-table {
-+				compatible = "operating-points-v2";
-+
-+				opp-133M {
-+					opp-hz = /bits/ 64 <133333333>;
-+				};
-+				opp-400M {
-+					opp-hz = /bits/ 64 <400000000>;
-+				};
-+				opp-800M {
-+					opp-hz = /bits/ 64 <800000000>;
-+				};
-+			};
-+		};
-+
- 		bus@32c00000 { /* AIPS4 */
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			reg = <0x32c00000 0x400000>;
--- 
-2.7.4
-
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
