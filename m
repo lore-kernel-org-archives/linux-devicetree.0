@@ -2,153 +2,84 @@ Return-Path: <SRS0=knFt=AR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CCAFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 09:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92490C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 09:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C90C20772
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 09:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ED1820760
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 09:28:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=fastree3d-com.20150623.gappssmtp.com header.i=@fastree3d-com.20150623.gappssmtp.com header.b="YSXvQNgx"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ApSbqI2Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728628AbgGFJXf (ORCPT
+        id S1728661AbgGFJ2Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jul 2020 05:23:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36672 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728603AbgGFJXe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 05:23:34 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D89AC08C5DF
-        for <devicetree@vger.kernel.org>; Mon,  6 Jul 2020 02:23:34 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id dr13so41634458ejc.3
-        for <devicetree@vger.kernel.org>; Mon, 06 Jul 2020 02:23:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastree3d-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=F6fo77lXw3Wa9Ww9ysq9BOqYKJ0fNyxAE2eRhCOsSNc=;
-        b=YSXvQNgxeN2qzLB+St45pcHZ/m81Pnb4zyDkQ6gegeYhVS1FY7bXxEqEocf0voPJJU
-         HKbqdCgjSddYDNZftx5Un7qw+elwZ3E/9wFERFyGKgxYtvL/QeAbUXnaPMSSjUEKKSRJ
-         HqT+QsznvXgR15DfoNIvc3SClvGwGQuyZ3bWPD1o4r31Lv7hvUCd9UClHA0NgMz/O/VQ
-         WJ8ukwPCwe6sn0vYfvKiIEYbr1B9mOYJCZSbnBIudMeL+lABv8K3O4E6YTLeJwBn4ZM7
-         2oisQMY8CXbrLw6VA96xX+P8O9XZk2fSJ3UWaMLalEY0QbKifD7Y8RdZ86AsSynSuqE0
-         hhVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=F6fo77lXw3Wa9Ww9ysq9BOqYKJ0fNyxAE2eRhCOsSNc=;
-        b=HlYUrPa19T6wLgN1nhqDuEABimh1ahLq+wM0mlkG1ew0s969lZkdm8j812dfqVmNa+
-         n7qI3NnZBmDMuK2S6pISiywKJvjoNUupSEfaVFjid55IwUloNfRDkNismiZZbHTRPOku
-         BsK9voSQe++OY6YN5kbdRStHywJ30xR3WzUFK4g92IP971NRjI1a1LH+z5DDtdOMwCmi
-         bn102UQpccfAYLVOU/L63sOUVzpfnpHbOUew0xd8GWCveh8O+Gw724a723RowTrOLkpD
-         mPmL6bieDl3Z2ojYocbGNAMQqjeVBTStNvo4eOW+yV3pbbWc2+otgfPY3qOYmufK9ein
-         3Gzg==
-X-Gm-Message-State: AOAM531JYVubV6AaoGM2tLdmy7QCdzerp9CoN7AAlRp0jJbH6ROTOPpI
-        qKx9IEk+dlIWGhM7fWi4wY1u
-X-Google-Smtp-Source: ABdhPJwpyAHaCGzluPP24M/BnJk1LROk9XKUZIbY7we5jc8pngCTX3YsRtf++tZzjXF0rmbzFu2NIg==
-X-Received: by 2002:a17:906:dbcf:: with SMTP id yc15mr32612198ejb.222.1594027412796;
-        Mon, 06 Jul 2020 02:23:32 -0700 (PDT)
-Received: from localhost.localdomain (fastree1.epfl.ch. [192.26.37.52])
-        by smtp.gmail.com with ESMTPSA id bm21sm15895244ejb.13.2020.07.06.02.23.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 02:23:32 -0700 (PDT)
-From:   Adrian Fiergolski <adrian.fiergolski@fastree3d.com>
-Cc:     geert@linux-m68k.org, lukas@wunner.de,
-        Adrian Fiergolski <adrian.fiergolski@fastree3d.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] dt-bindings: Add documentation for SPI daisy chain driver.
-Date:   Mon,  6 Jul 2020 11:22:44 +0200
-Message-Id: <20200706092247.20740-2-adrian.fiergolski@fastree3d.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200706092247.20740-1-adrian.fiergolski@fastree3d.com>
-References: <202007040833.xIqR5rAw%lkp@intel.com>
- <20200706092247.20740-1-adrian.fiergolski@fastree3d.com>
+        Mon, 6 Jul 2020 05:28:24 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:37617 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728381AbgGFJ2X (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 05:28:23 -0400
+X-UUID: eaa565ad2c714a31a042ac80f6ec7b01-20200706
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=u2Bkt9DjBrhYa1J0kIELWnKBokVBfauhP1saEFved5M=;
+        b=ApSbqI2ZyV2iX7VDysbEX2K+D1s+cG0yf/C25Nru260/rgVSe/TqGqMMZ7T0Dj1ijkCQUXeAw08wdF6g/Gi1yWuOATrY9r6OffkMFPiEGXT8EID1SkAIYYiFLrhz0UGzTqleb0JjqYIRhaR2YY05IBwsK5AM7NEqsPW4hV66GxU=;
+X-UUID: eaa565ad2c714a31a042ac80f6ec7b01-20200706
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 24518554; Mon, 06 Jul 2020 17:28:22 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 6 Jul 2020 17:28:11 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 6 Jul 2020 17:28:12 +0800
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Neal Liu <neal.liu@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Add MediaTek MT6779 devapc driver
+Date:   Mon, 6 Jul 2020 17:28:11 +0800
+Message-ID: <1594027693-19530-1-git-send-email-neal.liu@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add documentation for SPI daisy chain driver.
-
-Signed-off-by: Adrian Fiergolski <adrian.fiergolski@fastree3d.com>
----
- .../bindings/spi/spi-daisy_chain.txt          | 56 +++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-daisy_chain.txt
-
-diff --git a/Documentation/devicetree/bindings/spi/spi-daisy_chain.txt b/Documentation/devicetree/bindings/spi/spi-daisy_chain.txt
-new file mode 100644
-index 000000000000..1e5b046dda83
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-daisy_chain.txt
-@@ -0,0 +1,56 @@
-+spi-daisy_chain : The driver handling SPI daisy chains.
-+-----------------------------------------------------------
-+
-+Required properties:
-+- compatible		: Should be "spi,daisy_chain"
-+- reg			: Chip select assigned to the chain
-+
-+  For the SPI devices on a common SPI chain - nodes of daisy_chain):
-+- spi-daisy-chain-len  : Length (in bytes) of the SPI transfer,
-+		         when the SPI device is part of a device chain.
-+- spi-daisy-chain-noop : Byte string of no-operation command which should
-+		         be send when device is not addressed during the
-+			 given SPI transfer
-+
-+Optional properties:
-+  (for the SPI devices on a common SPI chain (nodes of daisy_chain):
-+- spi-daisy-chain-bits_per_word : no-operation transfers involve
-+                                  one or more words; word sizes like
-+				  eight or 12 bits are common.
-+				  In-memory wordsizes are powers of two
-+				  bytes (e.g. 20 bit samples use 32 bits).
-+				  If not defined, it is assumed to be 8.
-+
-+The daisy chain is a virtual device represented as a regular SPI device. Its
-+nodes define physical devices available on the chain. The order of the nodes
-+defines the order of the physical devices on the chain: MOSI pin of a device
-+represented by the first node is the last one on the MOSI daisy chain. The
-+daisy-chain functionality is transparent to the drivers of the physical devices
-+on the chain. All nodes share SPI mode, chip select and a max speed of the
-+virtual daisy chain device. Once one of the physical devices is being accessed,
-+the spi-daisy_chain driver combines this data with no-operation commands of all
-+other devices on the chain.
-+
-+Example:
-+
-+	daisy_chain0: daisy_chain@0 {
-+	        compatible = "spi,daisy_chain";
-+		spi-max-frequency = <10000000>;
-+		reg = <0>;
-+
-+		dac0: ltc2632@0 {
-+	              compatible = "lltc,ltc2634-l12";
-+		      spi-daisy-chain-len = <4>;
-+		      spi-daisy-chain-noop = [00 F0 00 00];
-+		};
-+		dac1: ltc2632@1 {
-+	              compatible = "lltc,ltc2634-l12";
-+		      spi-daisy-chain-len = <4>;
-+		      spi-daisy-chain-noop = [00 F0 00 00];
-+		};
-+		dac2: ltc2632@2 {
-+	              compatible = "lltc,ltc2634-l12";
-+		      spi-daisy-chain-len = <4>;
-+		      spi-daisy-chain-noop = [00 F0 00 00];
-+		};
-+	};
--- 
-2.27.0
+VGhlc2UgcGF0Y2ggc2VyaWVzIGludHJvZHVjZSBhIE1lZGlhVGVrIE1UNjc3OSBkZXZhcGMgZHJp
+dmVyLg0KDQpNVDY3NzkgYnVzIGZyYWJyaWMgcHJvdmlkZXMgVHJ1c3Rab25lIHNlY3VyaXR5IHN1
+cHBvcnQgYW5kIGRhdGENCnByb3RlY3Rpb24gdG8gcHJldmVudCBzbGF2ZXMgZnJvbSBiZWluZyBh
+Y2Nlc3NlZCBieSB1bmV4cGVjdGVkDQptYXN0ZXJzLg0KVGhlIHNlY3VyaXR5IHZpb2xhdGlvbnMg
+YXJlIGxvZ2dlZCBhbmQgc2VudCB0byB0aGUgcHJvY2Vzc29yIGZvcg0KZnVydGhlciBhbmFseXNp
+cyBvciBjb3VudGVybWVhc3VyZXMuDQoNCkFueSBvY2N1cnJlbmNlIG9mIHNlY3VyaXR5IHZpb2xh
+dGlvbiB3b3VsZCByYWlzZSBhbiBpbnRlcnJ1cHQsDQphbmQgaXQgd2lsbCBiZSBoYW5kbGVkIGJ5
+IGRldmFwYy1tdDY3NzkgZHJpdmVyLg0KVGhlIHZpb2xhdGlvbiBpbmZvcm1hdGlvbiBpcyBwcmlu
+dGVkIGluIG9yZGVyIHRvIGZpbmQgdGhlIG11cmRlcmVyLg0KDQoNCioqKiBCTFVSQiBIRVJFICoq
+Kg0KDQpOZWFsIExpdSAoMik6DQogIGR0LWJpbmRpbmdzOiBkZXZhcGM6IGFkZCBiaW5kaW5ncyBm
+b3IgZGV2YXBjLW10Njc3OQ0KICBzb2M6IG1lZGlhdGVrOiBkZXZhcGM6IGFkZCBkZXZhcGMtbXQ2
+Nzc5IGRyaXZlcg0KDQogLi4uL3NvYy9tZWRpYXRlay9kZXZhcGMvZGV2YXBjLW10Njc3OS55YW1s
+ICAgIHwgICA1OCArDQogZHJpdmVycy9zb2MvbWVkaWF0ZWsvS2NvbmZpZyAgICAgICAgICAgICAg
+ICAgIHwgICAgNiArDQogZHJpdmVycy9zb2MvbWVkaWF0ZWsvTWFrZWZpbGUgICAgICAgICAgICAg
+ICAgIHwgICAgMSArDQogZHJpdmVycy9zb2MvbWVkaWF0ZWsvZGV2YXBjL0tjb25maWcgICAgICAg
+ICAgIHwgICAxNyArDQogZHJpdmVycy9zb2MvbWVkaWF0ZWsvZGV2YXBjL01ha2VmaWxlICAgICAg
+ICAgIHwgICAxMCArDQogZHJpdmVycy9zb2MvbWVkaWF0ZWsvZGV2YXBjL2RldmFwYy1tdDY3Nzku
+YyAgIHwgMTExMSArKysrKysrKysrKysrKysrKw0KIGRyaXZlcnMvc29jL21lZGlhdGVrL2RldmFw
+Yy9kZXZhcGMtbXQ2Nzc5LmggICB8ICAgOTkgKysNCiA3IGZpbGVzIGNoYW5nZWQsIDEzMDIgaW5z
+ZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3Mvc29jL21lZGlhdGVrL2RldmFwYy9kZXZhcGMtbXQ2Nzc5LnlhbWwNCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9zb2MvbWVkaWF0ZWsvZGV2YXBjL0tjb25maWcNCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9zb2MvbWVkaWF0ZWsvZGV2YXBjL01ha2VmaWxlDQogY3JlYXRl
+IG1vZGUgMTAwNjQ0IGRyaXZlcnMvc29jL21lZGlhdGVrL2RldmFwYy9kZXZhcGMtbXQ2Nzc5LmMN
+CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9zb2MvbWVkaWF0ZWsvZGV2YXBjL2RldmFwYy1t
+dDY3NzkuaA0KDQotLSANCjIuMTguMA0K
 
