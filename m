@@ -2,179 +2,99 @@ Return-Path: <SRS0=knFt=AR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53AADC433E4
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 14:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D67EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 14:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D3E420715
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 14:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E632C2070C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 14:43:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594046620;
+	bh=mPDOwAUIsyMOqJhm0F0a70OGr4c9VVnVU1nOWYJWG3s=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=10H2HSrrXfRDl4a4i0dvgcC3AtoE49t2UOnMKZJwfQThKPh2g6dI0lSzSAdZAUbYr
+	 SdB0ecPTVuyX1TSVNNexegsblaDPmzFWXiF7xROSHOuz0js5B+yihI3a7WABOIAOgg
+	 +n6IqZrjq65mDdXx9nt6JO7V/lnT+yMpzU/et4sA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729438AbgGFOf5 (ORCPT
+        id S1729280AbgGFOnj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jul 2020 10:35:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56876 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729398AbgGFOfn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 10:35:43 -0400
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E96DC08C5F4
-        for <devicetree@vger.kernel.org>; Mon,  6 Jul 2020 07:35:42 -0700 (PDT)
-Received: from ramsan ([IPv6:2a02:1810:ac12:ed20:e012:1552:6e81:c371])
-        by andre.telenet-ops.be with bizsmtp
-        id zqbX2200N0tDR5Q01qbX5Y; Mon, 06 Jul 2020 16:35:39 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jsSDT-0004kV-Ey; Mon, 06 Jul 2020 16:35:31 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jsSDT-0004mM-D2; Mon, 06 Jul 2020 16:35:31 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Sergei Shtylyov <sergei.shtylyov@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Magnus Damm <magnus.damm@gmail.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 4/7] ravb: Add support for explicit internal clock delay configuration
-Date:   Mon,  6 Jul 2020 16:35:26 +0200
-Message-Id: <20200706143529.18306-5-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200706143529.18306-1-geert+renesas@glider.be>
-References: <20200706143529.18306-1-geert+renesas@glider.be>
+        Mon, 6 Jul 2020 10:43:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50920 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729148AbgGFOnj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 6 Jul 2020 10:43:39 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E3B8206CB;
+        Mon,  6 Jul 2020 14:43:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594046618;
+        bh=mPDOwAUIsyMOqJhm0F0a70OGr4c9VVnVU1nOWYJWG3s=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=CAvCS/P042jiNSgkQBNwZuMLm760/OMkDfbaqMGRIGppyj5wM6dhdORj135HGx119
+         zPdzuRis/bpm5rHNkj07y5anPEW6fC2nlUna9zOF6YTfm5cEeLaxwYu1f+6uIYivyt
+         EDZ9p3JgIdUTlFY2fcEeaFX1LkFfe6/7mEou3A+Q=
+Date:   Mon, 06 Jul 2020 15:43:34 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     catalin.marinas@arm.com, s.hauer@pengutronix.de,
+        shawnguo@kernel.org, Robin Gong <yibin.gong@nxp.com>,
+        lgirdwood@gmail.com, john.lee@nxp.com, will@kernel.org,
+        anson.huang@nxp.com, robh+dt@kernel.org, festevam@gmail.com,
+        frieder.schrempf@kontron.de
+Cc:     linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kernel@pengutronix.de
+In-Reply-To: <1593793178-9737-1-git-send-email-yibin.gong@nxp.com>
+References: <1593793178-9737-1-git-send-email-yibin.gong@nxp.com>
+Subject: Re: [PATCH v2 0/4] Add pca9450 driver
+Message-Id: <159404660937.36664.12870991491139405194.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some EtherAVB variants support internal clock delay configuration, which
-can add larger delays than the delays that are typically supported by
-the PHY (using an "rgmii-*id" PHY mode, and/or "[rt]xc-skew-ps"
-properties).
+On Sat, 4 Jul 2020 00:19:34 +0800, Robin Gong wrote:
+> Add pca9450 driver for i.mx8mn-evk board. PCA9450A/B/C supported now.
+> Please refer to below link for PCA9450 datasheet:
+> https://www.nxp.com/docs/en/data-sheet/PCA9450DS.pdf
+> 
+> v2:
+>   1. rebase with the latest code to use linear_ranges helper instead.
+>   2. address Frieder's comments, such as dulipcated buck4 description,
+>      debug info added etc.
+> 
+> [...]
 
-Historically, the EtherAVB driver configured these delays based on the
-"rgmii-*id" PHY mode.  This caused issues with PHY drivers that
-implement PHY internal delays properly[1].  Hence a backwards-compatible
-workaround was added by masking the PHY mode[2].
+Applied to
 
-Add proper support for explicit configuration of the MAC internal clock
-delays using the new "[rt]x-internal-delay-ps" properties.
-Fall back to the old handling if none of these properties is present.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
-[1] Commit bcf3440c6dd78bfe ("net: phy: micrel: add phy-mode support for
-    the KSZ9031 PHY")
-[2] Commit 9b23203c32ee02cd ("ravb: Mask PHY mode to avoid inserting
-    delays twice").
+Thanks!
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
----
-v2:
-  - Add Reviewed-by,
-  - Split long line,
-  - Replace "renesas,[rt]xc-delay-ps" by "[rt]x-internal-delay-ps",
-  - Use 1 instead of true when assigning to a single-bit bitfield.
----
- drivers/net/ethernet/renesas/ravb.h      |  1 +
- drivers/net/ethernet/renesas/ravb_main.c | 36 ++++++++++++++++++------
- 2 files changed, 28 insertions(+), 9 deletions(-)
+[1/2] regulator: pca9450: add pca9450 pmic driver
+      commit: 0935ff5f1f0a44f66a13e075ed49f97ad99d2fdc
+[2/2] dt-bindings: regulator: add pca9450 regulator yaml
+      commit: 7ae9e3a6bf3fb1b5a35a15d8a6e78fc42bed0867
 
-diff --git a/drivers/net/ethernet/renesas/ravb.h b/drivers/net/ethernet/renesas/ravb.h
-index e5ca12ce93c730a9..7453b17a37a2c8d0 100644
---- a/drivers/net/ethernet/renesas/ravb.h
-+++ b/drivers/net/ethernet/renesas/ravb.h
-@@ -1038,6 +1038,7 @@ struct ravb_private {
- 	unsigned wol_enabled:1;
- 	unsigned rxcidm:1;		/* RX Clock Internal Delay Mode */
- 	unsigned txcidm:1;		/* TX Clock Internal Delay Mode */
-+	unsigned rgmii_override:1;	/* Deprecated rgmii-*id behavior */
- 	int num_tx_desc;		/* TX descriptors per packet */
- };
- 
-diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-index 1337831eb9bff8f6..ad3bfa708c8cb799 100644
---- a/drivers/net/ethernet/renesas/ravb_main.c
-+++ b/drivers/net/ethernet/renesas/ravb_main.c
-@@ -1034,11 +1034,8 @@ static int ravb_phy_init(struct net_device *ndev)
- 		pn = of_node_get(np);
- 	}
- 
--	iface = priv->phy_interface;
--	if (priv->chip_id != RCAR_GEN2 && phy_interface_mode_is_rgmii(iface)) {
--		/* ravb_set_delay_mode() takes care of internal delay mode */
--		iface = PHY_INTERFACE_MODE_RGMII;
--	}
-+	iface = priv->rgmii_override ? PHY_INTERFACE_MODE_RGMII
-+				     : priv->phy_interface;
- 	phydev = of_phy_connect(ndev, pn, ravb_adjust_link, 0, iface);
- 	of_node_put(pn);
- 	if (!phydev) {
-@@ -1967,20 +1964,41 @@ static const struct soc_device_attribute ravb_delay_mode_quirk_match[] = {
- };
- 
- /* Set tx and rx clock internal delay modes */
--static void ravb_parse_delay_mode(struct net_device *ndev)
-+static void ravb_parse_delay_mode(struct device_node *np, struct net_device *ndev)
- {
- 	struct ravb_private *priv = netdev_priv(ndev);
-+	bool explicit_delay = false;
-+	u32 delay;
-+
-+	if (!of_property_read_u32(np, "rx-internal-delay-ps", &delay)) {
-+		/* Valid values are 0 and 1800, according to DT bindings */
-+		priv->rxcidm = !!delay;
-+		explicit_delay = true;
-+	}
-+	if (!of_property_read_u32(np, "tx-internal-delay-ps", &delay)) {
-+		/* Valid values are 0 and 2000, according to DT bindings */
-+		priv->txcidm = !!delay;
-+		explicit_delay = true;
-+	}
- 
-+	if (explicit_delay)
-+		return;
-+
-+	/* Fall back to legacy rgmii-*id behavior */
- 	if (priv->phy_interface == PHY_INTERFACE_MODE_RGMII_ID ||
--	    priv->phy_interface == PHY_INTERFACE_MODE_RGMII_RXID)
-+	    priv->phy_interface == PHY_INTERFACE_MODE_RGMII_RXID) {
- 		priv->rxcidm = 1;
-+		priv->rgmii_override = 1;
-+	}
- 
- 	if (priv->phy_interface == PHY_INTERFACE_MODE_RGMII_ID ||
- 	    priv->phy_interface == PHY_INTERFACE_MODE_RGMII_TXID) {
- 		if (!WARN(soc_device_match(ravb_delay_mode_quirk_match),
- 			  "phy-mode %s requires TX clock internal delay mode which is not supported by this hardware revision. Please update device tree",
--			  phy_modes(priv->phy_interface)))
-+			  phy_modes(priv->phy_interface))) {
- 			priv->txcidm = 1;
-+			priv->rgmii_override = 1;
-+		}
- 	}
- }
- 
-@@ -2126,7 +2144,7 @@ static int ravb_probe(struct platform_device *pdev)
- 	ravb_modify(ndev, GCCR, GCCR_LTI, GCCR_LTI);
- 
- 	if (priv->chip_id != RCAR_GEN2) {
--		ravb_parse_delay_mode(ndev);
-+		ravb_parse_delay_mode(np, ndev);
- 		ravb_set_delay_mode(ndev);
- 	}
- 
--- 
-2.17.1
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
