@@ -2,179 +2,118 @@ Return-Path: <SRS0=knFt=AR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DE2C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 01:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C717C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 01:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B4BB20786
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 01:02:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cu7P5pHO"
+	by mail.kernel.org (Postfix) with ESMTP id 034372070C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 01:27:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgGFBCp (ORCPT
+        id S1728652AbgGFB06 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Jul 2020 21:02:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44928 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbgGFBCp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Jul 2020 21:02:45 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C4F1C061794;
-        Sun,  5 Jul 2020 18:02:45 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id a12so37658297ion.13;
-        Sun, 05 Jul 2020 18:02:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=w9Yeb7gwy/GZ1b3/U19gbbXAoGkciXgijg+0bbd2Ohk=;
-        b=Cu7P5pHO4MUnblELFIqozSvLN3AdyVtb7SjJC9za6rYpER4A8GRt4pkx9SMzhEdaOO
-         PzVJ3+hP8UfZVfyN/QOu20AJ3Wca4P8lek/uaqzXu7niB0LjGXN6SkLfp6gaNrDiMdVv
-         jh26aw1fXPeRJvlAb24TQfxDzjhYvnPxvkuLBmTAcTCg5DinFsNLo6iZt8nc8e+V7NVS
-         +xQpD+rZAD3zBuE9VP1QsmjIo/BSW4ah92YGVcXbNYSRGeZ1y5wHyou9vIwA/dz2dwjq
-         ssFvXsh65PAMCpxi7oPvXzvj0HaH4wcwDYHbGuf0btLyEkjaMnQptdtmz32dRaAO4h/r
-         B5RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=w9Yeb7gwy/GZ1b3/U19gbbXAoGkciXgijg+0bbd2Ohk=;
-        b=KxkT8VfGLLQwtirOzuQmBKK7E0xRWefLkpMvJZvaJveNf8ykSyZd0LKSoe96IoKwxb
-         Fjnjcsd+MTzYM8uSAXrlKd6OLXxD67AL6xErd2KTCRAKpCTBKpMWqdg7dWSv1ebvW+zn
-         eFB7sTsamlBewbxxaD/TD/KgnwsE9kBDFi3LriSbfbdZv4T5+mvBLb6JccvXFCMVRkez
-         scAi3tJ6MxbCH/GJtuO5oKsma3vOW64/OVFjpg110VtCjwJowym2Ch0cPvTic2tbmqi4
-         xp4qqTOjHKcWM1hw2vFnzo8qlZwFqcKdk6AvEWcP0GMwppoaTdZQvDfb5PibazFv0b/Q
-         TUTg==
-X-Gm-Message-State: AOAM532lj/A///hiFAjuHqZYjWjo+yR6ylLuSFOW2k/AAAKW+OHl0Sbk
-        sopYOt1lmTQcdgmhn90JYtbM5BWg7y3Ib4wSVmc=
-X-Google-Smtp-Source: ABdhPJw0neuwPIyT4dt1aR40e5Kqmv9haPxUPYfkxMLm2fJ5PQtRUklWARQwoAwZqcQEhwmTLrBlhgOl7jmPFQ/Z8Lw=
-X-Received: by 2002:a5d:8f0b:: with SMTP id f11mr23113977iof.200.1593997364570;
- Sun, 05 Jul 2020 18:02:44 -0700 (PDT)
+        Sun, 5 Jul 2020 21:26:58 -0400
+Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:56658 "EHLO
+        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1728616AbgGFB04 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Jul 2020 21:26:56 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.gtsys.com.hk (Postfix) with ESMTP id 412992016B13;
+        Mon,  6 Jul 2020 09:26:51 +0800 (HKT)
+X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
+Received: from mail.gtsys.com.hk ([127.0.0.1])
+        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id MbPrCEWsKdKw; Mon,  6 Jul 2020 09:26:51 +0800 (HKT)
+Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
+        by mail.gtsys.com.hk (Postfix) with ESMTP id 1CF5220160D4;
+        Mon,  6 Jul 2020 09:26:51 +0800 (HKT)
+Received: from [10.128.2.32] (unknown [124.217.189.122])
+        by s01.gtsys.com.hk (Postfix) with ESMTPSA id D5450C01B74;
+        Mon,  6 Jul 2020 09:26:50 +0800 (HKT)
+Subject: Re: [PATCH v2 1/2] hwmon: shtc1: add support for device tree bindings
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Jack Lo <jack.lo@gtsys.com.hk>, devicetree@vger.kernel.org,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200705142515.GA1975@roeck-us.net>
+From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Message-ID: <0e3cc05b-2ae4-186b-d3b4-fa3ac201b128@gtsys.com.hk>
+Date:   Mon, 6 Jul 2020 09:26:50 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-From:   Chris Healy <cphealy@gmail.com>
-Date:   Sun, 5 Jul 2020 18:02:33 -0700
-Message-ID: <CAFXsbZo3xXXgCSd4AgDs8U46hBR0+HkQgzsvwJ=B6rUiondydA@mail.gmail.com>
-Subject: [PATCH] arm: DT: vf610-zii-scu4-aib.dts: Configure fibre ports to 1000BaseX
-To:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Stefan Agner <stefan@agner.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200705142515.GA1975@roeck-us.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The SFF soldered onto the board expect the ports to use 1000BaseX.  It
-makes no sense to have the ports set to SGMII, since they don't even
-support that mode.
+Hi
 
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Chris Healy <cphealy@gmail.com>
----
- arch/arm/boot/dts/vf610-zii-scu4-aib.dts | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+On 5/7/2020 10:25 pm, Guenter Roeck wrote:
+> On Sun, Jul 05, 2020 at 11:47:25AM +0800, Chris Ruehl wrote:
+>> Add support for DTS bindings for the sensirion shtc1,shtw1 and shtc3.
+>>
+>> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+>> ---
+>>   drivers/hwmon/shtc1.c | 22 ++++++++++++++++++++--
+>>   1 file changed, 20 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/hwmon/shtc1.c b/drivers/hwmon/shtc1.c
+>> index a0078ccede03..61e9275eb666 100644
+>> --- a/drivers/hwmon/shtc1.c
+>> +++ b/drivers/hwmon/shtc1.c
+>> @@ -14,6 +14,7 @@
+>>   #include <linux/err.h>
+>>   #include <linux/delay.h>
+>>   #include <linux/platform_data/shtc1.h>
+>> +#include <linux/of.h>
+>>   
+>>   /* commands (high precision mode) */
+>>   static const unsigned char shtc1_cmd_measure_blocking_hpm[]    = { 0x7C, 0xA2 };
+>> @@ -196,6 +197,7 @@ static int shtc1_probe(struct i2c_client *client,
+>>   	enum shtcx_chips chip = id->driver_data;
+>>   	struct i2c_adapter *adap = client->adapter;
+>>   	struct device *dev = &client->dev;
+>> +	struct device_node *np = dev->of_node;
+>>   
+>>   	if (!i2c_check_functionality(adap, I2C_FUNC_I2C)) {
+>>   		dev_err(dev, "plain i2c transactions not supported\n");
+>> @@ -233,8 +235,13 @@ static int shtc1_probe(struct i2c_client *client,
+>>   	data->client = client;
+>>   	data->chip = chip;
+>>   
+>> -	if (client->dev.platform_data)
+>> +	if (np) {
+>> +		data->setup.blocking_io = of_property_read_bool(np, "sensirion,blocking_io");
+>> +		data->setup.high_precision = of_property_read_bool(np, "sensicon,low_precision");
+>> +	}
+>> +	else if (client->dev.platform_data)
+>>   		data->setup = *(struct shtc1_platform_data *)dev->platform_data;
+> 
+> CHECK: braces {} should be used on all arms of this statement
+> #46: FILE: drivers/hwmon/shtc1.c:238:
+> +	if (np) {
+> [...]
+> +	else if (client->dev.platform_data)
+> [...]
+> 
+> ERROR: else should follow close brace '}'
+> #50: FILE: drivers/hwmon/shtc1.c:242:
+> +	}
+> +	else if (client->dev.platform_data)
+> 
 
-diff --git a/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
-b/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
-index b642520199ba..040a1f8b6130 100644
---- a/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
-+++ b/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
-@@ -186,7 +186,7 @@
-                     port@2 {
-                         reg = <2>;
-                         label = "eth_fc_1000_2";
--                        phy-mode = "sgmii";
-+                        phy-mode = "1000base-x";
-                         managed = "in-band-status";
-                         sfp = <&sff1>;
-                     };
-@@ -194,7 +194,7 @@
-                     port@3 {
-                         reg = <3>;
-                         label = "eth_fc_1000_3";
--                        phy-mode = "sgmii";
-+                        phy-mode = "1000base-x";
-                         managed = "in-band-status";
-                         sfp = <&sff2>;
-                     };
-@@ -202,7 +202,7 @@
-                     port@4 {
-                         reg = <4>;
-                         label = "eth_fc_1000_4";
--                        phy-mode = "sgmii";
-+                        phy-mode = "1000base-x";
-                         managed = "in-band-status";
-                         sfp = <&sff3>;
-                     };
-@@ -210,7 +210,7 @@
-                     port@5 {
-                         reg = <5>;
-                         label = "eth_fc_1000_5";
--                        phy-mode = "sgmii";
-+                        phy-mode = "1000base-x";
-                         managed = "in-band-status";
-                         sfp = <&sff4>;
-                     };
-@@ -218,7 +218,7 @@
-                     port@6 {
-                         reg = <6>;
-                         label = "eth_fc_1000_6";
--                        phy-mode = "sgmii";
-+                        phy-mode = "1000base-x";
-                         managed = "in-band-status";
-                         sfp = <&sff5>;
-                     };
-@@ -226,7 +226,7 @@
-                     port@7 {
-                         reg = <7>;
-                         label = "eth_fc_1000_7";
--                        phy-mode = "sgmii";
-+                        phy-mode = "1000base-x";
-                         managed = "in-band-status";
-                         sfp = <&sff6>;
-                     };
-@@ -234,7 +234,7 @@
-                     port@9 {
-                         reg = <9>;
-                         label = "eth_fc_1000_1";
--                        phy-mode = "sgmii";
-+                        phy-mode = "1000base-x";
-                         managed = "in-band-status";
-                         sfp = <&sff0>;
-                     };
-@@ -269,7 +269,7 @@
-                     port@2 {
-                         reg = <2>;
-                         label = "eth_fc_1000_8";
--                        phy-mode = "sgmii";
-+                        phy-mode = "1000base-x";
-                         managed = "in-band-status";
-                         sfp = <&sff7>;
-                     };
-@@ -277,7 +277,7 @@
-                     port@3 {
-                         reg = <3>;
-                         label = "eth_fc_1000_9";
--                        phy-mode = "sgmii";
-+                        phy-mode = "1000base-x";
-                         managed = "in-band-status";
-                         sfp = <&sff8>;
-                     };
-@@ -285,7 +285,7 @@
-                     port@4 {
-                         reg = <4>;
-                         label = "eth_fc_1000_10";
--                        phy-mode = "sgmii";
-+                        phy-mode = "1000base-x";
-                         managed = "in-band-status";
-                         sfp = <&sff9>;
-                     };
--- 
-2.21.3
+it bites back not using the check-patch script! I _should_ know better! :-(
+
+v3 then.
+
+But i will wait a moment to see if someone else lift a finger.
+
+Chris
