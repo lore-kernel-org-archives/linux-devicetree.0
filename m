@@ -2,75 +2,112 @@ Return-Path: <SRS0=knFt=AR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C858C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 12:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6E7C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 13:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72D6D2070C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 12:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC467206F5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 13:46:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tz4jIaQh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729119AbgGFMuB (ORCPT
+        id S1729140AbgGFNqi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jul 2020 08:50:01 -0400
-Received: from foss.arm.com ([217.140.110.172]:37392 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729095AbgGFMuB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 6 Jul 2020 08:50:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 156531FB;
-        Mon,  6 Jul 2020 05:50:01 -0700 (PDT)
-Received: from bogus (unknown [10.37.8.63])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D00673F71E;
-        Mon,  6 Jul 2020 05:49:57 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 13:49:51 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     "kernelci.org bot" <bot@kernelci.org>, gtucker@collabora.com,
-        kernelci-results@groups.io
-Cc:     Andre Przywara <andre.przywara@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        devicetree@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: mainline/master bisection: baseline.dmesg.crit on
- qemu_arm-vexpress-a15
-Message-ID: <20200706124951.GA32234@bogus>
-References: <5f0288aa.1c69fb81.b1c2a.eea4@mx.google.com>
+        Mon, 6 Jul 2020 09:46:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49252 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728961AbgGFNqi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 09:46:38 -0400
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C10B0C061755;
+        Mon,  6 Jul 2020 06:46:37 -0700 (PDT)
+Received: by mail-lj1-x229.google.com with SMTP id t25so40835051lji.12;
+        Mon, 06 Jul 2020 06:46:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ujWmFeI6Flmp+c/ywUJ1ekXf+PPGZevFkwBhKsOKkZ4=;
+        b=tz4jIaQhaEshDqBeV8lgZXacy8neCsIUEtB8PrcSndWYQM09hRLZxtkWLy1+VlciKC
+         vpOyb/4xTb/CZM++lUZzllbuM4pr8d8oykqgW20mN3Eww+N7nx7QTzmCs+ZaiTqZNRdl
+         Tbr1pMhMm4Ha0iEbtNc5hN2oVAqDhiZPt8mXcKMMBgNIh5VzmT5n9M4YzCNr0j7tMoKE
+         uf1+rtAdxiVt9IzqxMC5TyE2UuPVrBdVzbW6+6lT4xRTI/6bX42U/UZZ/gxq08ugrWj2
+         Cpb4nVTUQ9mHs+o8mKQDbiXw3hUwHk5c7EkXbbpgB5XtlVXgGct4Ha8CjT9+o90JHFrl
+         aACQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ujWmFeI6Flmp+c/ywUJ1ekXf+PPGZevFkwBhKsOKkZ4=;
+        b=ZgTI8XUxZqO5Aw2IStdTIaK1B3TOaAkFBVel9LcF+6MfoDa+wNqphQNzkl+nVfcslR
+         NT+WdJKOgfU5d6vSDlGfiq26Dek031+CJXUxUnK4Jy08e7VqZ7vjbx2C+OVzR+NPjEe5
+         aKg2HGd/XN67dz/bH+2E+ljBz0tpWHN0G88qYLRcSzSkE7HI4Xh8tZDXT92DawdAna3j
+         f3sioJhscdRZWibl772HPYymWyF12+RVYLUxQLKVlRNfcfS4lhcdzKCwmgvnMQnR0brT
+         BZ6crNWbixYyEjkje9ehK/kljDWeUAsKIesTkGiQgVxpnTl0yNTu2gt3yBVTfpAhwRRA
+         uZYw==
+X-Gm-Message-State: AOAM532YjId119q0uEKyQaYLRHQRIj1y/jQ4MYQZ5fSdhZF/RlA0WRUo
+        z0fem8SelTpujEezkcGfpgsGrI7pj3YWjI3KTFo=
+X-Google-Smtp-Source: ABdhPJxz5qKFA+dIJPADY0uxRaQOwVIv39lIoqD9qN87qufLAZPHvz+99eupHYq3qWL41O33rJVFQF5KF1C6m+TF8L0=
+X-Received: by 2002:a2e:808d:: with SMTP id i13mr24444142ljg.452.1594043196179;
+ Mon, 06 Jul 2020 06:46:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5f0288aa.1c69fb81.b1c2a.eea4@mx.google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200702175352.19223-1-TheSven73@gmail.com> <20200702175352.19223-3-TheSven73@gmail.com>
+ <CAOMZO5DxUeXH8ZYxmKynA7xO3uF6SP_Kt-g=8MPgsF7tqkRvAA@mail.gmail.com>
+ <CAGngYiXGXDqCZeJme026uz5FjU56UojmQFFiJ5_CZ_AywdQiEw@mail.gmail.com>
+ <AM6PR0402MB360781DA3F738C2DF445E821FF680@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+ <CAGngYiWc8rNVEPC-8GK1yH4zXx7tgR9gseYaopu9GWDnSG1oyg@mail.gmail.com> <AM6PR0402MB36073F63D2DE2646B4F71081FF690@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+In-Reply-To: <AM6PR0402MB36073F63D2DE2646B4F71081FF690@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Mon, 6 Jul 2020 10:46:24 -0300
+Message-ID: <CAOMZO5ATv9o197pH4O-7DV-ftsP7gGVuF1+r-sGd2j44x+n-Ug@mail.gmail.com>
+Subject: Re: [EXT] Re: [PATCH v5 3/3] ARM: imx6plus: optionally enable
+ internal routing of clk_enet_ref
+To:     Andy Duan <fugang.duan@nxp.com>
+Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Jul 6, 2020 at 2:30 AM Andy Duan <fugang.duan@nxp.com> wrote:
+>
+> From: Sven Van Asbroeck <thesven73@gmail.com> Sent: Sunday, July 5, 2020 11:34 PM
+> >
+> >   ext phy---------| \
+> >                   |  |
+> >   enet_ref-o------|M |----pad------| \
+> >            |      |_/              |  |
+> >            |                       |M |----mac_gtx
+> >            |                       |  |
+> >            o-----------------------|_/
+> >
+> >
+> > How do we tell the clock framework that clk_pad has a mux that can be
+> > connected to _any_ external clock? and also enet_ref?
+>
+> The clock depends on board design, HW refer guide can describe the clk
+> usage in detail and customer select one clk path as their board design.
+>
+> To make thing simple, we can just control the second "M" that is controlled
+> by gpr bit.
 
-On Sun, Jul 05, 2020 at 07:12:58PM -0700, kernelci.org bot wrote:
-> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> * This automated bisection report was sent to you on the basis  *
-> * that you may be involved with the breaking commit it has      *
-> * found.  No manual investigation has been done to verify it,   *
-> * and the root cause of the problem may be somewhere else.      *
-> *                                                               *
-> * If you do send a fix, please include this trailer:            *
-> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-> *                                                               *
-> * Hope this helps!                                              *
-> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> 
-
-Andre test and replied to one of the similar but earlier reports.
-Unless we get some response to that, we can't proceed and we can't
-do much other than ignoring these reports. Please respond to Andre's
-queries.
-
--- 
-Regards,
-Sudeep
+Would it make sense to use compatible = "mmio-mux"; like we do on
+imx7s, imx6qdl.dtsi and imx8mq.dtsi?
