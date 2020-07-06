@@ -2,36 +2,36 @@ Return-Path: <SRS0=knFt=AR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 630CFC433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 14:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 158A3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 14:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 486B6206CB
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 14:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3EEB206CB
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 14:35:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729412AbgGFOfv (ORCPT
+        id S1729399AbgGFOfn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jul 2020 10:35:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56884 "EHLO
+        Mon, 6 Jul 2020 10:35:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729405AbgGFOfn (ORCPT
+        with ESMTP id S1729381AbgGFOfn (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 10:35:43 -0400
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 222AEC08C5F9
+Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 667D8C08C5E1
         for <devicetree@vger.kernel.org>; Mon,  6 Jul 2020 07:35:42 -0700 (PDT)
 Received: from ramsan ([IPv6:2a02:1810:ac12:ed20:e012:1552:6e81:c371])
-        by baptiste.telenet-ops.be with bizsmtp
-        id zqbX2200L0tDR5Q01qbXHT; Mon, 06 Jul 2020 16:35:41 +0200
+        by michel.telenet-ops.be with bizsmtp
+        id zqbX2200F0tDR5Q06qbXVQ; Mon, 06 Jul 2020 16:35:40 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1jsSDT-0004kK-9w; Mon, 06 Jul 2020 16:35:31 +0200
+        id 1jsSDT-0004kR-Dm; Mon, 06 Jul 2020 16:35:31 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1jsSDT-0004mB-6R; Mon, 06 Jul 2020 16:35:31 +0200
+        id 1jsSDT-0004mJ-Bk; Mon, 06 Jul 2020 16:35:31 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Sergei Shtylyov <sergei.shtylyov@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
@@ -48,141 +48,100 @@ Cc:     Andrew Lunn <andrew@lunn.ch>,
         Magnus Damm <magnus.damm@gmail.com>, netdev@vger.kernel.org,
         devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 0/7] ravb: Add support for explicit internal clock delay configuration
-Date:   Mon,  6 Jul 2020 16:35:22 +0200
-Message-Id: <20200706143529.18306-1-geert+renesas@glider.be>
+Subject: [PATCH v2 3/7] ravb: Split delay handling in parsing and applying
+Date:   Mon,  6 Jul 2020 16:35:25 +0200
+Message-Id: <20200706143529.18306-4-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200706143529.18306-1-geert+renesas@glider.be>
+References: <20200706143529.18306-1-geert+renesas@glider.be>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-	Hi all,
+Currently, full delay handling is done in both the probe and resume
+paths.  Split it in two parts, so the resume path doesn't have to redo
+the parsing part over and over again.
 
-Some Renesas EtherAVB variants support internal clock delay
-configuration, which can add larger delays than the delays that are
-typically supported by the PHY (using an "rgmii-*id" PHY mode, and/or
-"[rt]xc-skew-ps" properties).
-
-Historically, the EtherAVB driver configured these delays based on the
-"rgmii-*id" PHY mode.  This caused issues with PHY drivers that
-implement PHY internal delays properly[1].  Hence a backwards-compatible
-workaround was added by masking the PHY mode[2].
-
-This patch series implements the next step of the plan outlined in [3],
-and adds proper support for explicit configuration of the MAC internal
-clock delays using new "[rt]x-internal-delay-ps" properties.  If none of
-these properties is present, the driver falls back to the old handling.
-
-This can be considered the MAC counterpart of commit 9150069bf5fc0e86
-("dt-bindings: net: Add tx and rx internal delays"), which applies to
-the PHY.  Note that unlike commit 92252eec913b2dd5 ("net: phy: Add a
-helper to return the index for of the internal delay"), no helpers are
-provided to parse the DT properties, as so far there is a single user
-only, which supports only zero or a single fixed value.  Of course such
-helpers can be added later, when the need arises, or when deemed useful
-otherwise.
-
-This series consists of 4 parts:
-  1. DT binding updates documenting the new properties, for both the
-     generic ethernet-controller and the EtherAVB-specific bindings.
-     => intended to be merged through net-next.
-  2. EtherAVB driver update implementing support for the new properties.
-     => intended to be merged through net-next.
-  3. DT updates, one for R-Car Gen3 and RZ/G2 SoC families each.
-     => intended to be merged through renesas-devel and arm-soc, but
-	only _after_ 2. has hit upstream.
-  4. Conversion to json-schema of the Renesas EtherAVB DT bindings.
-     Technically, the conversion is independent of all of the above.
-     I included it in this series, as it shows how all sanity checks on
-     "[rt]x-internal-delay-ps" values are implemented as DT binding
-     checks.
-     => intended to be merged through net-next, or devicetree (ignoring
-        any conflict due to 1.).
-
-Changes compared to v1[4] (more detail in the individual patch
-descriptions):
-  - Added "[PATCH 1/7] dt-bindings: net: ethernet-controller: Add
-    internal delay properties",
-  - Replace "renesas,[rt]xc-delay-ps" by "[rt]x-internal-delay-ps",
-  - Incorporated EtherAVB DT binding conversion to json-schema.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+---
+v2:
   - Add Reviewed-by,
+  - Use 1 instead of true when assigning to a single-bit bitfield.
+---
+ drivers/net/ethernet/renesas/ravb.h      |  4 +++-
+ drivers/net/ethernet/renesas/ravb_main.c | 21 ++++++++++++++++-----
+ 2 files changed, 19 insertions(+), 6 deletions(-)
 
-Impacted, tested:
-  - Salvator-X(S) with R-Car H3 ES1.0 and ES2.0, M3-W, and M3-N.
-
-Not impacted, tested:
-  - Ebisu with R-Car E3.
-
-Impacted, not tested:
-  - Salvator-X(S) with other SoC variants,
-  - ULCB with R-Car H3/M3-W/M3-N variants,
-  - V3MSK and Eagle with R-Car V3M,
-  - Draak with R-Car V3H,
-  - HiHope RZ/G2[MN] with RZ/G2M or RZ/G2N.
-
-To ease testing, I have pushed this series to the
-topic/ravb-internal-clock-delays-v2 branch of my renesas-drivers
-repository at
-git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git.
-
-Thanks for your comments!
-
-References:
-  [1] Commit bcf3440c6dd78bfe ("net: phy: micrel: add phy-mode support
-      for the KSZ9031 PHY")
-  [2] Commit 9b23203c32ee02cd ("ravb: Mask PHY mode to avoid inserting
-      delays twice").
-      https://lore.kernel.org/r/20200529122540.31368-1-geert+renesas@glider.be/
-  [3] https://lore.kernel.org/r/CAMuHMdU+MR-2tr3-pH55G0GqPG9HwH3XUd=8HZxprFDMGQeWUw@mail.gmail.com/
-  [4] https://lore.kernel.org/linux-devicetree/20200619191554.24942-1-geert+renesas@glider.be/
-
-Geert Uytterhoeven (7):
-  dt-bindings: net: ethernet-controller: Add internal delay properties
-  dt-bindings: net: renesas,ravb: Document internal clock delay
-    properties
-  ravb: Split delay handling in parsing and applying
-  ravb: Add support for explicit internal clock delay configuration
-  arm64: dts: renesas: rcar-gen3: Convert EtherAVB to explicit delay
-    handling
-  arm64: dts: renesas: rzg2: Convert EtherAVB to explicit delay handling
-  dt-bindings: net: renesas,etheravb: Convert to json-schema
-
- .../bindings/net/ethernet-controller.yaml     |  14 +
- .../bindings/net/renesas,etheravb.yaml        | 261 ++++++++++++++++++
- .../devicetree/bindings/net/renesas,ravb.txt  | 134 ---------
- .../boot/dts/renesas/hihope-rzg2-ex.dtsi      |   2 +-
- arch/arm64/boot/dts/renesas/r8a774a1.dtsi     |   2 +
- arch/arm64/boot/dts/renesas/r8a774b1.dtsi     |   2 +
- arch/arm64/boot/dts/renesas/r8a774c0.dtsi     |   1 +
- arch/arm64/boot/dts/renesas/r8a77951.dtsi     |   2 +
- arch/arm64/boot/dts/renesas/r8a77960.dtsi     |   2 +
- arch/arm64/boot/dts/renesas/r8a77961.dtsi     |   2 +
- arch/arm64/boot/dts/renesas/r8a77965.dtsi     |   2 +
- .../arm64/boot/dts/renesas/r8a77970-eagle.dts |   3 +-
- .../arm64/boot/dts/renesas/r8a77970-v3msk.dts |   3 +-
- arch/arm64/boot/dts/renesas/r8a77970.dtsi     |   2 +
- arch/arm64/boot/dts/renesas/r8a77980.dtsi     |   2 +
- arch/arm64/boot/dts/renesas/r8a77990.dtsi     |   1 +
- arch/arm64/boot/dts/renesas/r8a77995.dtsi     |   1 +
- .../boot/dts/renesas/salvator-common.dtsi     |   2 +-
- arch/arm64/boot/dts/renesas/ulcb.dtsi         |   2 +-
- drivers/net/ethernet/renesas/ravb.h           |   5 +-
- drivers/net/ethernet/renesas/ravb_main.c      |  53 +++-
- 21 files changed, 346 insertions(+), 152 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/renesas,etheravb.yaml
- delete mode 100644 Documentation/devicetree/bindings/net/renesas,ravb.txt
-
+diff --git a/drivers/net/ethernet/renesas/ravb.h b/drivers/net/ethernet/renesas/ravb.h
+index 9f88b5db4f89843a..e5ca12ce93c730a9 100644
+--- a/drivers/net/ethernet/renesas/ravb.h
++++ b/drivers/net/ethernet/renesas/ravb.h
+@@ -1036,7 +1036,9 @@ struct ravb_private {
+ 	unsigned no_avb_link:1;
+ 	unsigned avb_link_active_low:1;
+ 	unsigned wol_enabled:1;
+-	int num_tx_desc;	/* TX descriptors per packet */
++	unsigned rxcidm:1;		/* RX Clock Internal Delay Mode */
++	unsigned txcidm:1;		/* TX Clock Internal Delay Mode */
++	int num_tx_desc;		/* TX descriptors per packet */
+ };
+ 
+ static inline u32 ravb_read(struct net_device *ndev, enum ravb_reg reg)
+diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+index a442bcf64b9cd875..1337831eb9bff8f6 100644
+--- a/drivers/net/ethernet/renesas/ravb_main.c
++++ b/drivers/net/ethernet/renesas/ravb_main.c
+@@ -1967,23 +1967,32 @@ static const struct soc_device_attribute ravb_delay_mode_quirk_match[] = {
+ };
+ 
+ /* Set tx and rx clock internal delay modes */
+-static void ravb_set_delay_mode(struct net_device *ndev)
++static void ravb_parse_delay_mode(struct net_device *ndev)
+ {
+ 	struct ravb_private *priv = netdev_priv(ndev);
+-	int set = 0;
+ 
+ 	if (priv->phy_interface == PHY_INTERFACE_MODE_RGMII_ID ||
+ 	    priv->phy_interface == PHY_INTERFACE_MODE_RGMII_RXID)
+-		set |= APSR_DM_RDM;
++		priv->rxcidm = 1;
+ 
+ 	if (priv->phy_interface == PHY_INTERFACE_MODE_RGMII_ID ||
+ 	    priv->phy_interface == PHY_INTERFACE_MODE_RGMII_TXID) {
+ 		if (!WARN(soc_device_match(ravb_delay_mode_quirk_match),
+ 			  "phy-mode %s requires TX clock internal delay mode which is not supported by this hardware revision. Please update device tree",
+ 			  phy_modes(priv->phy_interface)))
+-			set |= APSR_DM_TDM;
++			priv->txcidm = 1;
+ 	}
++}
+ 
++static void ravb_set_delay_mode(struct net_device *ndev)
++{
++	struct ravb_private *priv = netdev_priv(ndev);
++	u32 set = 0;
++
++	if (priv->rxcidm)
++		set |= APSR_DM_RDM;
++	if (priv->txcidm)
++		set |= APSR_DM_TDM;
+ 	ravb_modify(ndev, APSR, APSR_DM, set);
+ }
+ 
+@@ -2116,8 +2125,10 @@ static int ravb_probe(struct platform_device *pdev)
+ 	/* Request GTI loading */
+ 	ravb_modify(ndev, GCCR, GCCR_LTI, GCCR_LTI);
+ 
+-	if (priv->chip_id != RCAR_GEN2)
++	if (priv->chip_id != RCAR_GEN2) {
++		ravb_parse_delay_mode(ndev);
+ 		ravb_set_delay_mode(ndev);
++	}
+ 
+ 	/* Allocate descriptor base address table */
+ 	priv->desc_bat_size = sizeof(struct ravb_desc) * DBAT_ENTRY_NUM;
 -- 
 2.17.1
 
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
