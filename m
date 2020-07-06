@@ -2,587 +2,149 @@ Return-Path: <SRS0=knFt=AR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC8DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 19:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03AA1C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 19:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A106120715
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 19:22:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1DBD206B6
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 19:29:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OfXPLxQh"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="k03cFx+8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbgGFTW3 (ORCPT
+        id S1725929AbgGFT3X (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jul 2020 15:22:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44836 "EHLO
+        Mon, 6 Jul 2020 15:29:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgGFTW2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 15:22:28 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76481C061755;
-        Mon,  6 Jul 2020 12:22:28 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id 6so4611601qtt.0;
-        Mon, 06 Jul 2020 12:22:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mSJURApmI0XDof06xJ/040FaP4Lsh5mGIGPGO2bsB/M=;
-        b=OfXPLxQhnN1C4VhJbywVpRV1QvyRFIivwpwKCYCtLxWJ0FER8CciLYtuQQtLlJtbaM
-         PNldACCzgmSsP2Qeq/GEVN9usr9z6caH5errs6HQdTImw3/gxSLigzrhm5ECARjepcv6
-         FJcBaHLl/CQQThwk/97qTzbClKLbs+v0B3HYo8a2s17QYVH8TRN+rji/ls3SU7nuEvDV
-         7W/boAtatzuWvFgDxjvVPXiKT5E7j01wbYeewyctQoUrYpBXJEbTSYecTYH8OjA/Cc7y
-         SZbchaRGs6iMJE9hdyiG7Uwz28JYLDUj8mYfwkEXeWLj3OzmfBMJ0k0FLYrvZ1d9NWcw
-         Z4HQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mSJURApmI0XDof06xJ/040FaP4Lsh5mGIGPGO2bsB/M=;
-        b=Wqht/l3q1gxZPmMq2nbSgG0kpK2bYiVJYynSi+q3A4o552zpKDmV94qAw9Fdeyzz5c
-         2znKsTVMFPoSe3QpJut+7pFfhIQajbN1Nkwb99xO2GFTVNMsiG2adVgk1ujhWY05EtDH
-         MOGqR0YPAqendUrl6YVbZX0S9HXRNk3Dc6Yc1fpBn6VVzcMsBAF7NIorw6yAJbg7A5sq
-         0owfcAB+jOCVfymd54YKDOgvytf/1YoAqqxyDhH2hTIzXkDU7NCo9S2vPBb6Pt95sP1p
-         k1mMHwssFjlK7luQZbDkpW6daYBSGBE3LSPIpZsilTg+ZGtsB6pDLSAsGxTPk3NQENuE
-         cBZQ==
-X-Gm-Message-State: AOAM530zZa3b/oFazOhRcZ5491PZ+ysJQW4XUkBNZ15lJs/2QpgXNOuO
-        71ZK82pvodJ+yyLdNtqAG4FWu9RoFB0WRw==
-X-Google-Smtp-Source: ABdhPJzaC9pIEkdr/4a1VWrNRAtcG8XjdiaWpw2EtWMDvYMvDQPNdXBwtpF7hclIQsJyDCNJf9r2Qg==
-X-Received: by 2002:ac8:1654:: with SMTP id x20mr37305665qtk.83.1594063347589;
-        Mon, 06 Jul 2020 12:22:27 -0700 (PDT)
-Received: from shinobu (072-189-064-225.res.spectrum.com. [72.189.64.225])
-        by smtp.gmail.com with ESMTPSA id u27sm20950782qkm.121.2020.07.06.12.22.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2020 12:22:26 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 15:22:12 -0400
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
-Cc:     jic23@kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        with ESMTP id S1725892AbgGFT3X (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 15:29:23 -0400
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C79AFC061755;
+        Mon,  6 Jul 2020 12:29:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=J+EsQQs1HUBrfOSzhNecD2M81XWwzO+HyRXgroFAxgk=; b=k03cFx+8mx+FJD/tl2s7IMVwiy
+        iNCJlj5ygc2kLSa91DasQzKXl8lSP7IFL+573UsRp13GRB1X0muGUbK5ZvzGrH3uO/yFRzvWTFyXN
+        1ryu+HMVt2tDCXop+i5hPiKFmoHQ2Dk3BHCemJqW7R7IKvGaRrKu1nCh8raJcYNokvW4=;
+Received: from p200300ccff0e48001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0e:4800:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jsWnN-0003Yy-Tw; Mon, 06 Jul 2020 21:28:54 +0200
+Date:   Mon, 6 Jul 2020 21:28:48 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
+Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH v6 5/5] counter: Add microchip TCB capture counter
-Message-ID: <20200706192212.GA12483@shinobu>
-References: <20200706114347.174452-1-kamel.bouhara@bootlin.com>
- <20200706114347.174452-6-kamel.bouhara@bootlin.com>
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Josua Mayer <josua.mayer@jm0.eu>
+Subject: Re: [RFC PATCH 00/10] Netronix embedded controller driver for Kobo
+ and Tolino ebook readers
+Message-ID: <20200706212848.7e19886b@aktux>
+In-Reply-To: <20200704205808.GD2578@latitude>
+References: <20200620223915.1311485-1-j.neuschaefer@gmx.net>
+        <20200630084051.66feadea@aktux>
+        <20200630071523.GA2983@latitude>
+        <20200630221447.3e03ae28@aktux>
+        <20200704205808.GD2578@latitude>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
-Content-Disposition: inline
-In-Reply-To: <20200706114347.174452-6-kamel.bouhara@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Sat, 4 Jul 2020 22:58:08 +0200
+Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
 
---nFreZHaLTZJo0R7j
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jul 06, 2020 at 01:43:47PM +0200, Kamel Bouhara wrote:
-> This drivers allows to use the capture mode of the Timer Counter Block
-> hardware block available in Microchip SoCs through the counter subsystem.
+> On Tue, Jun 30, 2020 at 10:14:47PM +0200, Andreas Kemnade wrote:
+> > On Tue, 30 Jun 2020 09:15:23 +0200
+> > Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
+> >  =20
+> > > On Tue, Jun 30, 2020 at 08:40:51AM +0200, Andreas Kemnade wrote:
+> > > [...] =20
+> > > > got a chance to test it on a Tolino Shine 2 HD.
+> > > > It uses the RTC from the RC5T619 but backlight seems to go via MSP4=
+30
+> > > > EC.
+> > > >=20
+> > > > I got this.
+> > > >=20
+> > > > [    1.453603] ntxec 0-0043: Netronix embedded controller version f=
+110 detected.
+> > > > [   10.723638] ntxec-rtc 21a0000.i2c:embedded-controller@43:rtc: re=
+gistered as rtc0
+> > > > [   10.775276] ntxec-pwm: probe of 21a0000.i2c:embedded-controller@=
+43:pwm failed with error -5   =20
+> > >=20
+> > > Hmm, -EIO from the PWM driver.
+> > >  =20
+> > turing debugging on: =20
 >=20
-> Two functions of the counter are supported for the moment: period
-> capture and quadrature decoder. The latter is only supported by the
-> SAMA5 series of SoCs.
+> (edited for compactness:)
+> > [  330.332971] i2c i2c-0: write slave address: addr=3D0x86   ACK receiv=
+ed
+> > [  330.334420] i2c i2c-0: write byte: B0=3D0xA3              ACK receiv=
+ed
+> > [  330.334790] i2c i2c-0: write byte: B1=3D0x0               No ACK =20
 >=20
-> For the period capture mode a basic setup has been chosen that will
-> reset the counter each time the period is actually reached. Of course
-> the device offers much more possibilities.
+> > [  330.352339] i2c i2c-0: write slave address: addr=3D0x86   ACK receiv=
+ed
+> > [  330.362208] i2c i2c-0: write byte: B0=3D0xA1              ACK receiv=
+ed
+> > [  330.362479] i2c i2c-0: write byte: B1=3D0xFF              No ACK =20
 >=20
-> For quadrature mode, both channel 0 and 1 must be configured even if we
-> only capture the position (no revolution/rotation).
+> > [  330.363112] i2c i2c-0: write slave address: addr=3D0x86   ACK receiv=
+ed
+> > [  330.363362] i2c i2c-0: write byte: B0=3D0xA2              ACK receiv=
+ed
+> > [  330.363608] i2c i2c-0: write byte: B1=3D0xFF              No ACK =20
 >=20
-> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-
-Hi Kamel,
-
-I wasn't sure if I had already signed off on this, but just in case I took
-another look over this patch and it seems good to me. Feel free to add my
-Signed-off-by line if there are no changes to this patch in the future.
-
-Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
-
-> ---
->  drivers/counter/Kconfig                 |  11 +
->  drivers/counter/Makefile                |   1 +
->  drivers/counter/microchip-tcb-capture.c | 397 ++++++++++++++++++++++++
->  3 files changed, 409 insertions(+)
->  create mode 100644 drivers/counter/microchip-tcb-capture.c
+> Hmm, it doesn't ack the writes to 0xA3, 0xA1 and 0xA2, which should
+> disable the PWM output and then disable the auto-off timer (according to
+> the vendor kernel).
 >=20
-> diff --git a/drivers/counter/Kconfig b/drivers/counter/Kconfig
-> index c80fa76bb531..2de53ab0dd25 100644
-> --- a/drivers/counter/Kconfig
-> +++ b/drivers/counter/Kconfig
-> @@ -70,4 +70,15 @@ config FTM_QUADDEC
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called ftm-quaddec.
-> =20
-> +config MICROCHIP_TCB_CAPTURE
-> +	tristate "Microchip Timer Counter Capture driver"
-> +	depends on HAS_IOMEM && OF
-> +	select REGMAP_MMIO
-> +	help
-> +	  Select this option to enable the Microchip Timer Counter Block
-> +	  capture driver.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called microchip-tcb-capture.
-> +
->  endif # COUNTER
-> diff --git a/drivers/counter/Makefile b/drivers/counter/Makefile
-> index 55142d1f4c43..0a393f71e481 100644
-> --- a/drivers/counter/Makefile
-> +++ b/drivers/counter/Makefile
-> @@ -10,3 +10,4 @@ obj-$(CONFIG_STM32_TIMER_CNT)	+=3D stm32-timer-cnt.o
->  obj-$(CONFIG_STM32_LPTIMER_CNT)	+=3D stm32-lptimer-cnt.o
->  obj-$(CONFIG_TI_EQEP)		+=3D ti-eqep.o
->  obj-$(CONFIG_FTM_QUADDEC)	+=3D ftm-quaddec.o
-> +obj-$(CONFIG_MICROCHIP_TCB_CAPTURE)	+=3D microchip-tcb-capture.o
-> diff --git a/drivers/counter/microchip-tcb-capture.c b/drivers/counter/mi=
-crochip-tcb-capture.c
-> new file mode 100644
-> index 000000000000..f7b7743ddb94
-> --- /dev/null
-> +++ b/drivers/counter/microchip-tcb-capture.c
-> @@ -0,0 +1,397 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/**
-> + * Copyright (C) 2020 Microchip
-> + *
-> + * Author: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> + */
-> +#include <linux/clk.h>
-> +#include <linux/counter.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <soc/at91/atmel_tcb.h>
-> +
-> +#define ATMEL_TC_CMR_MASK	(ATMEL_TC_LDRA_RISING | ATMEL_TC_LDRB_FALLING =
-| \
-> +				 ATMEL_TC_ETRGEDG_RISING | ATMEL_TC_LDBDIS | \
-> +				 ATMEL_TC_LDBSTOP)
-> +
-> +#define ATMEL_TC_QDEN			BIT(8)
-> +#define ATMEL_TC_POSEN			BIT(9)
-> +
-> +struct mchp_tc_data {
-> +	const struct atmel_tcb_config *tc_cfg;
-> +	struct counter_device counter;
-> +	struct regmap *regmap;
-> +	int qdec_mode;
-> +	int num_channels;
-> +	int channel[2];
-> +	bool trig_inverted;
-> +};
-> +
-> +enum mchp_tc_count_function {
-> +	MCHP_TC_FUNCTION_INCREASE,
-> +	MCHP_TC_FUNCTION_QUADRATURE,
-> +};
-> +
-> +static enum counter_count_function mchp_tc_count_functions[] =3D {
-> +	[MCHP_TC_FUNCTION_INCREASE] =3D COUNTER_COUNT_FUNCTION_INCREASE,
-> +	[MCHP_TC_FUNCTION_QUADRATURE] =3D COUNTER_COUNT_FUNCTION_QUADRATURE_X4,
-> +};
-> +
-> +enum mchp_tc_synapse_action {
-> +	MCHP_TC_SYNAPSE_ACTION_NONE =3D 0,
-> +	MCHP_TC_SYNAPSE_ACTION_RISING_EDGE,
-> +	MCHP_TC_SYNAPSE_ACTION_FALLING_EDGE,
-> +	MCHP_TC_SYNAPSE_ACTION_BOTH_EDGE
-> +};
-> +
-> +static enum counter_synapse_action mchp_tc_synapse_actions[] =3D {
-> +	[MCHP_TC_SYNAPSE_ACTION_NONE] =3D COUNTER_SYNAPSE_ACTION_NONE,
-> +	[MCHP_TC_SYNAPSE_ACTION_RISING_EDGE] =3D COUNTER_SYNAPSE_ACTION_RISING_=
-EDGE,
-> +	[MCHP_TC_SYNAPSE_ACTION_FALLING_EDGE] =3D COUNTER_SYNAPSE_ACTION_FALLIN=
-G_EDGE,
-> +	[MCHP_TC_SYNAPSE_ACTION_BOTH_EDGE] =3D COUNTER_SYNAPSE_ACTION_BOTH_EDGE=
-S,
-> +};
-> +
-> +static struct counter_signal mchp_tc_count_signals[] =3D {
-> +	{
-> +		.id =3D 0,
-> +		.name =3D "Channel A",
-> +	},
-> +	{
-> +		.id =3D 1,
-> +		.name =3D "Channel B",
-> +	}
-> +};
-> +
-> +static struct counter_synapse mchp_tc_count_synapses[] =3D {
-> +	{
-> +		.actions_list =3D mchp_tc_synapse_actions,
-> +		.num_actions =3D ARRAY_SIZE(mchp_tc_synapse_actions),
-> +		.signal =3D &mchp_tc_count_signals[0]
-> +	},
-> +	{
-> +		.actions_list =3D mchp_tc_synapse_actions,
-> +		.num_actions =3D ARRAY_SIZE(mchp_tc_synapse_actions),
-> +		.signal =3D &mchp_tc_count_signals[1]
-> +	}
-> +};
-> +
-> +static int mchp_tc_count_function_get(struct counter_device *counter,
-> +				      struct counter_count *count,
-> +				      size_t *function)
-> +{
-> +	struct mchp_tc_data *const priv =3D counter->priv;
-> +
-> +	if (priv->qdec_mode)
-> +		*function =3D MCHP_TC_FUNCTION_QUADRATURE;
-> +	else
-> +		*function =3D MCHP_TC_FUNCTION_INCREASE;
-> +
-> +	return 0;
-> +}
-> +
-> +static int mchp_tc_count_function_set(struct counter_device *counter,
-> +				      struct counter_count *count,
-> +				      size_t function)
-> +{
-> +	struct mchp_tc_data *const priv =3D counter->priv;
-> +	u32 bmr, cmr;
-> +
-> +	regmap_read(priv->regmap, ATMEL_TC_BMR, &bmr);
-> +	regmap_read(priv->regmap, ATMEL_TC_REG(priv->channel[0], CMR), &cmr);
-> +
-> +	/* Set capture mode */
-> +	cmr &=3D ~ATMEL_TC_WAVE;
-> +
-> +	switch (function) {
-> +	case MCHP_TC_FUNCTION_INCREASE:
-> +		priv->qdec_mode =3D 0;
-> +		/* Set highest rate based on whether soc has gclk or not */
-> +		bmr &=3D ~(ATMEL_TC_QDEN | ATMEL_TC_POSEN);
-> +		if (priv->tc_cfg->has_gclk)
-> +			cmr |=3D ATMEL_TC_TIMER_CLOCK2;
-> +		else
-> +			cmr |=3D ATMEL_TC_TIMER_CLOCK1;
-> +		/* Setup the period capture mode */
-> +		cmr |=3D  ATMEL_TC_CMR_MASK;
-> +		cmr &=3D ~(ATMEL_TC_ABETRG | ATMEL_TC_XC0);
-> +		break;
-> +	case MCHP_TC_FUNCTION_QUADRATURE:
-> +		if (!priv->tc_cfg->has_qdec)
-> +			return -EINVAL;
-> +		/* In QDEC mode settings both channels 0 and 1 are required */
-> +		if (priv->num_channels < 2 || priv->channel[0] !=3D 0 ||
-> +		    priv->channel[1] !=3D 1) {
-> +			pr_err("Invalid channels number or id for quadrature mode\n");
-> +			return -EINVAL;
-> +		}
-> +		priv->qdec_mode =3D 1;
-> +		bmr |=3D ATMEL_TC_QDEN | ATMEL_TC_POSEN;
-> +		cmr |=3D ATMEL_TC_ETRGEDG_RISING | ATMEL_TC_ABETRG | ATMEL_TC_XC0;
-> +		break;
-> +	}
-> +
-> +	regmap_write(priv->regmap, ATMEL_TC_BMR, bmr);
-> +	regmap_write(priv->regmap, ATMEL_TC_REG(priv->channel[0], CMR), cmr);
-> +
-> +	/* Enable clock and trigger counter */
-> +	regmap_write(priv->regmap, ATMEL_TC_REG(priv->channel[0], CCR),
-> +		     ATMEL_TC_CLKEN | ATMEL_TC_SWTRG);
-> +
-> +	if (priv->qdec_mode) {
-> +		regmap_write(priv->regmap,
-> +			     ATMEL_TC_REG(priv->channel[1], CMR), cmr);
-> +		regmap_write(priv->regmap,
-> +			     ATMEL_TC_REG(priv->channel[1], CCR),
-> +			     ATMEL_TC_CLKEN | ATMEL_TC_SWTRG);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int mchp_tc_count_signal_read(struct counter_device *counter,
-> +				     struct counter_signal *signal,
-> +				     enum counter_signal_value *val)
-> +{
-> +	struct mchp_tc_data *const priv =3D counter->priv;
-> +	bool sigstatus;
-> +	u32 sr;
-> +
-> +	regmap_read(priv->regmap, ATMEL_TC_REG(priv->channel[0], SR), &sr);
-> +
-> +	if (priv->trig_inverted)
-> +		sigstatus =3D (sr & ATMEL_TC_MTIOB);
-> +	else
-> +		sigstatus =3D (sr & ATMEL_TC_MTIOA);
-> +
-> +	*val =3D sigstatus ? COUNTER_SIGNAL_HIGH : COUNTER_SIGNAL_LOW;
-> +
-> +	return 0;
-> +}
-> +
-> +static int mchp_tc_count_action_get(struct counter_device *counter,
-> +				    struct counter_count *count,
-> +				    struct counter_synapse *synapse,
-> +				    size_t *action)
-> +{
-> +	struct mchp_tc_data *const priv =3D counter->priv;
-> +	u32 cmr;
-> +
-> +	regmap_read(priv->regmap, ATMEL_TC_REG(priv->channel[0], CMR), &cmr);
-> +
-> +	*action =3D MCHP_TC_SYNAPSE_ACTION_NONE;
-> +
-> +	if (cmr & ATMEL_TC_ETRGEDG_NONE)
-> +		*action =3D MCHP_TC_SYNAPSE_ACTION_NONE;
-> +	else if (cmr & ATMEL_TC_ETRGEDG_RISING)
-> +		*action =3D MCHP_TC_SYNAPSE_ACTION_RISING_EDGE;
-> +	else if (cmr & ATMEL_TC_ETRGEDG_FALLING)
-> +		*action =3D MCHP_TC_SYNAPSE_ACTION_FALLING_EDGE;
-> +	else if (cmr & ATMEL_TC_ETRGEDG_BOTH)
-> +		*action =3D MCHP_TC_SYNAPSE_ACTION_BOTH_EDGE;
-> +
-> +	return 0;
-> +}
-> +
-> +static int mchp_tc_count_action_set(struct counter_device *counter,
-> +				    struct counter_count *count,
-> +				    struct counter_synapse *synapse,
-> +				    size_t action)
-> +{
-> +	struct mchp_tc_data *const priv =3D counter->priv;
-> +	u32 edge =3D ATMEL_TC_ETRGEDG_NONE;
-> +
-> +	/* QDEC mode is rising edge only */
-> +	if (priv->qdec_mode)
-> +		return -EINVAL;
-> +
-> +	switch (action) {
-> +	case MCHP_TC_SYNAPSE_ACTION_NONE:
-> +		edge =3D ATMEL_TC_ETRGEDG_NONE;
-> +		break;
-> +	case MCHP_TC_SYNAPSE_ACTION_RISING_EDGE:
-> +		edge =3D ATMEL_TC_ETRGEDG_RISING;
-> +		break;
-> +	case MCHP_TC_SYNAPSE_ACTION_FALLING_EDGE:
-> +		edge =3D ATMEL_TC_ETRGEDG_FALLING;
-> +		break;
-> +	case MCHP_TC_SYNAPSE_ACTION_BOTH_EDGE:
-> +		edge =3D ATMEL_TC_ETRGEDG_BOTH;
-> +		break;
-> +	}
-> +
-> +	return regmap_write_bits(priv->regmap,
-> +				ATMEL_TC_REG(priv->channel[0], CMR),
-> +				ATMEL_TC_ETRGEDG, edge);
-> +}
-> +
-> +static int mchp_tc_count_read(struct counter_device *counter,
-> +			      struct counter_count *count,
-> +			      unsigned long *val)
-> +{
-> +	struct mchp_tc_data *const priv =3D counter->priv;
-> +	u32 cnt;
-> +
-> +	regmap_read(priv->regmap, ATMEL_TC_REG(priv->channel[0], CV), &cnt);
-> +	*val =3D cnt;
-> +
-> +	return 0;
-> +}
-> +
-> +static struct counter_count mchp_tc_counts[] =3D {
-> +	{
-> +		.id =3D 0,
-> +		.name =3D "Timer Counter",
-> +		.functions_list =3D mchp_tc_count_functions,
-> +		.num_functions =3D ARRAY_SIZE(mchp_tc_count_functions),
-> +		.synapses =3D mchp_tc_count_synapses,
-> +		.num_synapses =3D ARRAY_SIZE(mchp_tc_count_synapses),
-> +	},
-> +};
-> +
-> +static struct counter_ops mchp_tc_ops =3D {
-> +	.signal_read  =3D mchp_tc_count_signal_read,
-> +	.count_read   =3D mchp_tc_count_read,
-> +	.function_get =3D mchp_tc_count_function_get,
-> +	.function_set =3D mchp_tc_count_function_set,
-> +	.action_get   =3D mchp_tc_count_action_get,
-> +	.action_set   =3D mchp_tc_count_action_set
-> +};
-> +
-> +static const struct atmel_tcb_config tcb_rm9200_config =3D {
-> +		.counter_width =3D 16,
-> +};
-> +
-> +static const struct atmel_tcb_config tcb_sam9x5_config =3D {
-> +		.counter_width =3D 32,
-> +};
-> +
-> +static const struct atmel_tcb_config tcb_sama5d2_config =3D {
-> +		.counter_width =3D 32,
-> +		.has_gclk =3D true,
-> +		.has_qdec =3D true,
-> +};
-> +
-> +static const struct atmel_tcb_config tcb_sama5d3_config =3D {
-> +		.counter_width =3D 32,
-> +		.has_qdec =3D true,
-> +};
-> +
-> +static const struct of_device_id atmel_tc_of_match[] =3D {
-> +	{ .compatible =3D "atmel,at91rm9200-tcb", .data =3D &tcb_rm9200_config,=
- },
-> +	{ .compatible =3D "atmel,at91sam9x5-tcb", .data =3D &tcb_sam9x5_config,=
- },
-> +	{ .compatible =3D "atmel,sama5d2-tcb", .data =3D &tcb_sama5d2_config, },
-> +	{ .compatible =3D "atmel,sama5d3-tcb", .data =3D &tcb_sama5d3_config, },
-> +	{ /* sentinel */ }
-> +};
-> +
-> +static void mchp_tc_clk_remove(void *ptr)
-> +{
-> +	clk_disable_unprepare((struct clk *)ptr);
-> +}
-> +
-> +static int mchp_tc_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np =3D pdev->dev.of_node;
-> +	const struct atmel_tcb_config *tcb_config;
-> +	const struct of_device_id *match;
-> +	struct mchp_tc_data *priv;
-> +	char clk_name[7];
-> +	struct regmap *regmap;
-> +	struct clk *clk[3];
-> +	int channel;
-> +	int ret, i;
-> +
-> +	priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	match =3D of_match_node(atmel_tc_of_match, np->parent);
-> +	tcb_config =3D match->data;
-> +	if (!tcb_config) {
-> +		dev_err(&pdev->dev, "No matching parent node found\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	regmap =3D syscon_node_to_regmap(np->parent);
-> +	if (IS_ERR(priv->regmap))
-> +		return PTR_ERR(priv->regmap);
-> +
-> +	/* max. channels number is 2 when in QDEC mode */
-> +	priv->num_channels =3D of_property_count_u32_elems(np, "reg");
-> +	if (priv->num_channels < 0) {
-> +		dev_err(&pdev->dev, "Invalid or missing channel\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* Register channels and initialize clocks */
-> +	for (i =3D 0; i < priv->num_channels; i++) {
-> +		ret =3D of_property_read_u32_index(np, "reg", i, &channel);
-> +		if (ret < 0 || channel > 2)
-> +			return -ENODEV;
-> +
-> +		priv->channel[i] =3D channel;
-> +
-> +		snprintf(clk_name, sizeof(clk_name), "t%d_clk", channel);
-> +
-> +		clk[i] =3D of_clk_get_by_name(np->parent, clk_name);
-> +		if (IS_ERR(clk[i])) {
-> +			/* Fallback to t0_clk */
-> +			clk[i] =3D of_clk_get_by_name(np->parent, "t0_clk");
-> +			if (IS_ERR(clk[i]))
-> +				return PTR_ERR(clk[i]);
-> +		}
-> +
-> +		ret =3D clk_prepare_enable(clk[i]);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret =3D devm_add_action_or_reset(&pdev->dev,
-> +					       mchp_tc_clk_remove,
-> +					       clk[i]);
-> +		if (ret)
-> +			return ret;
-> +
-> +		dev_dbg(&pdev->dev,
-> +			"Initialized capture mode on channel %d\n",
-> +			channel);
-> +	}
-> +
-> +	priv->tc_cfg =3D tcb_config;
-> +	priv->regmap =3D regmap;
-> +	priv->counter.name =3D dev_name(&pdev->dev);
-> +	priv->counter.parent =3D &pdev->dev;
-> +	priv->counter.ops =3D &mchp_tc_ops;
-> +	priv->counter.num_counts =3D ARRAY_SIZE(mchp_tc_counts);
-> +	priv->counter.counts =3D mchp_tc_counts;
-> +	priv->counter.num_signals =3D ARRAY_SIZE(mchp_tc_count_signals);
-> +	priv->counter.signals =3D mchp_tc_count_signals;
-> +	priv->counter.priv =3D priv;
-> +
-> +	return devm_counter_register(&pdev->dev, &priv->counter);
-> +}
-> +
-> +static const struct of_device_id mchp_tc_dt_ids[] =3D {
-> +	{ .compatible =3D "microchip,tcb-capture", },
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, mchp_tc_dt_ids);
-> +
-> +static struct platform_driver mchp_tc_driver =3D {
-> +	.probe =3D mchp_tc_probe,
-> +	.driver =3D {
-> +		.name =3D "microchip-tcb-capture",
-> +		.of_match_table =3D mchp_tc_dt_ids,
-> +	},
-> +};
-> +module_platform_driver(mchp_tc_driver);
-> +
-> +MODULE_AUTHOR("Kamel Bouhara <kamel.bouhara@bootlin.com>");
-> +MODULE_DESCRIPTION("Microchip TCB Capture driver");
-> +MODULE_LICENSE("GPL v2");
-> --=20
-> 2.26.2
+> And you said in your other mail that you can actually toggle the light
+> with writes to 0xA3, so I suspect a bug in the EC firmware here (which
+> may have gone unnoticed because the vendor kernel doesn't check if the
+> i2c transfers succeed). :/
 >=20
+That is a also my theory.
 
---nFreZHaLTZJo0R7j
-Content-Type: application/pgp-signature; name="signature.asc"
+> IMHO we should get this driver merged first, and perhaps add a quirk to
+> deal with the missing ACKs later (unless a better solution is found).
+>=20
+Yes, that can be done separately (after the Tolino Shine 2 HD dtb is
+in, I am polishing it right now).
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl8DedwACgkQhvpINdm7
-VJKGZg//Wo+wIlG4tq14J2yfHAvWuWPu945hX6OjIFVqFc2L2V4f1Y8LslPt6SSL
-yRtiiscpk/pqQs69OR2VpYsOXGU+wWxPmStqeJBav2nKwqZsNczrSDPIvQaRdkPE
-CAxBuTG/3eE6W/indVHWP4i212kKDdYpC6+seOmotKpTwhniVNcRX7zaba5NFvep
-i6QMOrWCoh/fyViibMdSNIfNgwTV5IIQPaDNB6cOYB7zEFh+EkDf300Xx/+A7eoA
-8HgqyR3xuuZ2RHySg/RlAByyUdspWvjSngI8KlNFxFt05vvSaFjWiXusRRhkkif1
-0ed0CoIL1q3qGDG+HOAJ+mBj/qDLDalzBifV2rLYeSYCGjt2+c24ulLmFuBPY64p
-sRN0yORK9LosPheWRzIHHU7c8WErs4alGUmryJicmhxDdEtP0OtCxbyHFbHfvssd
-7wpt/YGXH5tLpSijI0U/0vAFSh9hoh/+ybt6EdjAxwOQdpSbwJahz3TQidvgjt5p
-Wla2cmNYe0YnRETpwMzEZ5b8ar3ze9IeFvO7/3pgJttLv3GMahLOXs5iU/j3hcfp
-HnxNFTQZm0GXG+G8DePMHPtOacQ0eApuKXRbEWXTydhpQbKrrwqMM9STlV8fNKuV
-mB4uAkLX0WI5zontjmyp5By7iZNrLkcUZzOlu/+u1T5kSSKQFao=
-=TAH2
------END PGP SIGNATURE-----
-
---nFreZHaLTZJo0R7j--
+Regards,
+Andreas
