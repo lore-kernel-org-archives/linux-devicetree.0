@@ -7,68 +7,69 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D30C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 14:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D29DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 14:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28D4A206E6
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 14:53:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 090D3206E6
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 14:58:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FG6yNBsd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GxaaLVUv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729365AbgGFOxg (ORCPT
+        id S1729268AbgGFO6M (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jul 2020 10:53:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59742 "EHLO
+        Mon, 6 Jul 2020 10:58:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729323AbgGFOxg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 10:53:36 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4665DC061755;
-        Mon,  6 Jul 2020 07:53:36 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id w17so31503717oie.6;
-        Mon, 06 Jul 2020 07:53:36 -0700 (PDT)
+        with ESMTP id S1729224AbgGFO6M (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 10:58:12 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37358C061755;
+        Mon,  6 Jul 2020 07:58:12 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id 95so21229766otw.10;
+        Mon, 06 Jul 2020 07:58:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=GFpfVj0m9GIjBHaPOWNr/J7dthCRMh3m8RTK3vZekkY=;
-        b=FG6yNBsdFyaLnOU8mBfBB/Q8Je3J9Eas3f8oj2nCD10CZkPUTBuNVP9U8M+fIaEKb6
-         nhKqT8qm22ivfb9lCGijiCLP+VL+cKM0JfVx9i2ziczDfH3cm8b6w9uguuTaPtDYzTGv
-         5qgwmBhNs223mkQP+r8ujZc27qYWMSJVJE9BEF5sqYKir+CEr+kerUWXpxslq7sEaZiS
-         KNoknGRBZJZz/j7I0NJ7pwrEirrh8rZ3FaRhGRa1hwWSB3pMhyFzZEMXw7LTdHQ6X9Iu
-         6DjHGByAClVQs7vBe4bBr5zImS0HpTYSyROQaeG3naIHVNlCV336B1q/uKOP+DGfn77C
-         rmbQ==
+        bh=0AQx4ILLvVzJy8XIP/Y7mxc5IgoWZcwRZZKrUnYA8Tc=;
+        b=GxaaLVUv2OEBe5fB1eBXiUEVxmGUoDle+PeupjIzb1dnLK8f8gW3TR3FDVBkTc4wsL
+         NSvTfXPSIEV+tRvQ+IUPty7CVJrS1oKFtpvCD3mDOBGFUTjuAZVoW4ZGurGl6C+gS4/U
+         sZvrJRff1z50bF1krucG91qwO5xKF2iPIxnURK/f4AN9/BdkcetQKoOSIIsP4a7LkB/f
+         3t3FgYr3tpsFC5xRCb3NBjkTu0DGnDqsB8MK5CelpxlpHaCaYyBktkGOcYS01IsoksUP
+         JmuhoSF3XASteXvW1LcvZx9yNRaIx7uxTUCq5pbMvfCG8xJbRsGbd+BgcVruH4nz9JVJ
+         x6Ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=GFpfVj0m9GIjBHaPOWNr/J7dthCRMh3m8RTK3vZekkY=;
-        b=iNpxyx9nAKV1kpdbO2cwXcBokOglOXhK3C4Lyh+dnBdRMIw2j/HAdaYiLhJN+Jt3Gl
-         N3+YTM6Kzc8kk6sJsQH50VCn31ViJbrh4Bd2NPfv/cbk0RvKXm/Wl8cSi3jiMLpsKkZV
-         mg/eoI902cYuxqYdNtHBxMkrr+vurS8qkqAz1p+qgiwDxzp/4928GtzSMhodKhd97O5T
-         j3Pn3Yl9GmoawbCfL9IXxg+q7QnwILS9m5vT6UTBDmh7hqWuuDkC4Nr/VoxekapZm0H/
-         /AKGirV+DLwjQRSONJwpUqEjDZkkp7zcWJ+XJe3DBFKOacstJ++QE0mvHuXSjMtFsrgg
-         Zu9Q==
-X-Gm-Message-State: AOAM5301eSXfjHh4q5aCqcrWELD+mFICYTEwhvHxrs963civW1cNwTKX
-        Y6RIpmH1A8U+ym7TUEf6gjFutgFKv+6jOFN6Pl4=
-X-Google-Smtp-Source: ABdhPJzJN6n42s0UuWBiB0DP5cE1wqRwiFpGP9kCvAjBsDOjqYQv6xKtCp/mECIcHLh3snyruyuShOQylIS0S7sSex8=
-X-Received: by 2002:aca:ecc7:: with SMTP id k190mr34028677oih.92.1594047215580;
- Mon, 06 Jul 2020 07:53:35 -0700 (PDT)
+        bh=0AQx4ILLvVzJy8XIP/Y7mxc5IgoWZcwRZZKrUnYA8Tc=;
+        b=nbbIiyGPHAlILa/YBEVunvgX7+7TKzjUPm5UZVjGHv8PjOBDYT14waYi+GrDl5NmxB
+         wXn8lz7hQvcARacqq21x2+IY3fWnKMzcEGDgnNA6aiMncAeLxLh+GwYGmmgtiz0qtXU4
+         bjLIVHkDd/jNZ9uCSYCCeADdvcwri2PGvV7ftpirQeL3weNxm7g+CrxXSbtFuuu69IA5
+         /nKHftuQOyElxxkDfHiPNaUaoZ0Pr1NBzuqWRKCCKYe2OI9kNs/2wfxODgWbPTKhsbe3
+         yilK6pKuyny8oCtNjwUnak+ueYGl2Ubh0aCxS47aZo1UdeWkvFlZQPUs8C4+EJym/xq1
+         XaIg==
+X-Gm-Message-State: AOAM531Hjd/qs4CMduyU7KerT1cwvdcldAlCpF7On8kDYyintFdI8tYY
+        Ov2bz9hYScq0x7K3pHZkxRrBcAMktoqmIkNK3GJ+dhMv
+X-Google-Smtp-Source: ABdhPJxKqJnossusAHMInEeVexkQKjxH68XgV3YATMgYQ+8o6YTE/YjHuzn3u/sTPHzvkHN3MCBzhw8QHonvJV2NooM=
+X-Received: by 2002:a9d:2c26:: with SMTP id f35mr43698324otb.232.1594047491587;
+ Mon, 06 Jul 2020 07:58:11 -0700 (PDT)
 MIME-Version: 1.0
 References: <20200702175352.19223-1-TheSven73@gmail.com> <20200702175352.19223-3-TheSven73@gmail.com>
  <CAOMZO5DxUeXH8ZYxmKynA7xO3uF6SP_Kt-g=8MPgsF7tqkRvAA@mail.gmail.com>
  <CAGngYiXGXDqCZeJme026uz5FjU56UojmQFFiJ5_CZ_AywdQiEw@mail.gmail.com>
  <AM6PR0402MB360781DA3F738C2DF445E821FF680@AM6PR0402MB3607.eurprd04.prod.outlook.com>
- <CAGngYiWc8rNVEPC-8GK1yH4zXx7tgR9gseYaopu9GWDnSG1oyg@mail.gmail.com> <AM6PR0402MB36073F63D2DE2646B4F71081FF690@AM6PR0402MB3607.eurprd04.prod.outlook.com>
-In-Reply-To: <AM6PR0402MB36073F63D2DE2646B4F71081FF690@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+ <CAGngYiWc8rNVEPC-8GK1yH4zXx7tgR9gseYaopu9GWDnSG1oyg@mail.gmail.com>
+ <AM6PR0402MB36073F63D2DE2646B4F71081FF690@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+ <CAOMZO5ATv9o197pH4O-7DV-ftsP7gGVuF1+r-sGd2j44x+n-Ug@mail.gmail.com>
+In-Reply-To: <CAOMZO5ATv9o197pH4O-7DV-ftsP7gGVuF1+r-sGd2j44x+n-Ug@mail.gmail.com>
 From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Mon, 6 Jul 2020 10:53:24 -0400
-Message-ID: <CAGngYiXY=0Q3MH+F6+5eeUy8-Wh2yNdUc2=fAQ=dZd3N2YaFow@mail.gmail.com>
+Date:   Mon, 6 Jul 2020 10:58:00 -0400
+Message-ID: <CAGngYiVeNQits4CXiXmN2ZBWyoN32zqUYtaxKCqwtKztm-Ky8A@mail.gmail.com>
 Subject: Re: [EXT] Re: [PATCH v5 3/3] ARM: imx6plus: optionally enable
  internal routing of clk_enet_ref
-To:     Andy Duan <fugang.duan@nxp.com>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Andy Duan <fugang.duan@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
@@ -87,26 +88,11 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andy,
+Hi Fabio,
 
-On Mon, Jul 6, 2020 at 1:30 AM Andy Duan <fugang.duan@nxp.com> wrote:
+On Mon, Jul 6, 2020 at 9:46 AM Fabio Estevam <festevam@gmail.com> wrote:
 >
-> The clock depends on board design, HW refer guide can describe the clk
-> usage in detail and customer select one clk path as their board design.
->
+> Would it make sense to use compatible = "mmio-mux"; like we do on
+> imx7s, imx6qdl.dtsi and imx8mq.dtsi?
 
-Yes, I agree. But how does a board designer practically describe this
-in the devicetree?
-
-Example: mac_gtx -> clk_pad (the default)
-
-Imagine I have a fixed oscillator on the board:
-
-phy_ref_clk: oscillator {
-    compatible = "fixed-clock";
-    #clock-cells = <0>;
-    clock-frequency = <50000000>;
-};
-
-How can I now make <&phy_ref_clk> the parent of
-<&clks CLK_PAD> ?
+Maybe "fixed-mmio-clock" is a better candidate ?
