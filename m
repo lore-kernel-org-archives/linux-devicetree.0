@@ -2,107 +2,75 @@ Return-Path: <SRS0=knFt=AR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2731C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 12:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C858C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 12:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C06C5206E6
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 12:32:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xHayLRE3"
+	by mail.kernel.org (Postfix) with ESMTP id 72D6D2070C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 12:50:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728917AbgGFMcT (ORCPT
+        id S1729119AbgGFMuB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jul 2020 08:32:19 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:60996 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728414AbgGFMcT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 08:32:19 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 066CW0dl027058;
-        Mon, 6 Jul 2020 07:32:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594038720;
-        bh=zFAm7cgzQI8dO5tnF4ApS2fDkJ0/QyQP2WUW5IlgemM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=xHayLRE3JMhI6U+jg58sUNv8RgyFElvL2pBV4IFewVr3n+hWPqBRQl0lyXumc9bbY
-         QoNCC8EQmJEYEUtB4csoqZuLFB76uEc1iYAzBYWFb4kCpzR9XKH22M9yjgFxeoJ9kA
-         2uXBRL9ro9kfulWHnwkgCg1IWlp2kKJgz6Gz6OHo=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 066CW0S9066434
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 6 Jul 2020 07:32:00 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 6 Jul
- 2020 07:32:00 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 6 Jul 2020 07:31:59 -0500
-Received: from [10.250.32.229] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 066CVx60070054;
-        Mon, 6 Jul 2020 07:31:59 -0500
-Subject: Re: [PATCH v29 00/16] Multicolor Framework v29
-To:     Pavel Machek <pavel@ucw.cz>, <marek.behun@nic.cz>
-CC:     <jacek.anaszewski@gmail.com>, <robh@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200622185919.2131-1-dmurphy@ti.com>
- <20200704124729.GA20088@amd>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <e25dd902-da3f-37ca-c9bc-f4ab42019281@ti.com>
-Date:   Mon, 6 Jul 2020 07:31:59 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 6 Jul 2020 08:50:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:37392 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729095AbgGFMuB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 6 Jul 2020 08:50:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 156531FB;
+        Mon,  6 Jul 2020 05:50:01 -0700 (PDT)
+Received: from bogus (unknown [10.37.8.63])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D00673F71E;
+        Mon,  6 Jul 2020 05:49:57 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 13:49:51 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     "kernelci.org bot" <bot@kernelci.org>, gtucker@collabora.com,
+        kernelci-results@groups.io
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        devicetree@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: mainline/master bisection: baseline.dmesg.crit on
+ qemu_arm-vexpress-a15
+Message-ID: <20200706124951.GA32234@bogus>
+References: <5f0288aa.1c69fb81.b1c2a.eea4@mx.google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200704124729.GA20088@amd>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5f0288aa.1c69fb81.b1c2a.eea4@mx.google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Pavel
+Hi,
 
-On 7/4/20 7:47 AM, Pavel Machek wrote:
-> Hi!
->
->> This is the multi color LED framework.   This framework presents clustered
->> colored LEDs into an array and allows the user space to adjust the brightness
->> of the cluster using a single file write.  The individual colored LEDs
->> intensities are controlled via a single file that is an array of LEDs
->>
->> Change to the LEDs Kconfig to fix dependencies on the LP55XX_COMMON.
->> Added update to the u8500_defconfig
-> Marek, would you be willing to look over this series?
->
-> Dan, can we please get it in the order
->
-> 1) fixes first
->
-> 2) changes needed for multicolor but not depending on dt acks
->
-> 3) dt changes
->
-> 4) rest?
->
-> This is the order it should have been in the first place, and I'd like
-> to get fixes applied, and perhaps some of the preparation.
+On Sun, Jul 05, 2020 at 07:12:58PM -0700, kernelci.org bot wrote:
+> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> * This automated bisection report was sent to you on the basis  *
+> * that you may be involved with the breaking commit it has      *
+> * found.  No manual investigation has been done to verify it,   *
+> * and the root cause of the problem may be somewhere else.      *
+> *                                                               *
+> * If you do send a fix, please include this trailer:            *
+> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+> *                                                               *
+> * Hope this helps!                                              *
+> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> 
 
-This will depend on if there are comments.  If I have to push a v30 then 
-I will reorder.
+Andre test and replied to one of the similar but earlier reports.
+Unless we get some response to that, we can't proceed and we can't
+do much other than ignoring these reports. Please respond to Andre's
+queries.
 
-If not then there would be no reason to re-order these.
-
-Dan
-
-
+-- 
+Regards,
+Sudeep
