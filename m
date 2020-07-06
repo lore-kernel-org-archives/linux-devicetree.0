@@ -2,110 +2,107 @@ Return-Path: <SRS0=knFt=AR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8531C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 11:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2731C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 12:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A26632075B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 11:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C06C5206E6
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jul 2020 12:32:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="pt6KGDZP"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xHayLRE3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728933AbgGFLwb (ORCPT
+        id S1728917AbgGFMcT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jul 2020 07:52:31 -0400
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:41455 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728414AbgGFLwa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 07:52:30 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id sPd3j8eCUBncFsPd6jvGUZ; Mon, 06 Jul 2020 13:52:28 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1594036348; bh=wPbqN09DUqoq1F6TV85LI76gqa+lhk27jZ43aOotfmw=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=pt6KGDZPMi8JHPbVsMr0qe2IlMQlR/cGG9kI0wp2jVT5AGFe3FW280LMEP5HVUxkr
-         sOv7a2KzWpKuZ3wgkY2mX8qBc9ZNPPyXU+ZnR0UNyDXL/MSxVGWhNcSORItQpxGIoV
-         tXtHxZq2XaSXILwyTSFuCwsi8EDyE5HgazW7H+MKfdmUYyS1I33zMcHrjns22+STCx
-         CrqKSfQxljDD58PIfKKNkM6Pp/FOORSjzKO4wIo7U91cWfd3nrcOjYTJ4CeD4DP5+9
-         qbUrEuUVphbrpP5YJ2U1eBSFbYkfQ2z07LyeOs/ZxXzo5eJDqoSZUWsHkwwrcEt7DA
-         5gfh8nQsrNYww==
-Subject: Re: [RFC PATCH v2 11/18] media: tegra-video: Add support for external
- sensor capture
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com
-Cc:     digetx@gmail.com, sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
- <1592358094-23459-12-git-send-email-skomatineni@nvidia.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <0e25a523-c911-0973-65ba-49883d2383fd@xs4all.nl>
-Date:   Mon, 6 Jul 2020 13:49:45 +0200
+        Mon, 6 Jul 2020 08:32:19 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:60996 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728414AbgGFMcT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 08:32:19 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 066CW0dl027058;
+        Mon, 6 Jul 2020 07:32:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594038720;
+        bh=zFAm7cgzQI8dO5tnF4ApS2fDkJ0/QyQP2WUW5IlgemM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=xHayLRE3JMhI6U+jg58sUNv8RgyFElvL2pBV4IFewVr3n+hWPqBRQl0lyXumc9bbY
+         QoNCC8EQmJEYEUtB4csoqZuLFB76uEc1iYAzBYWFb4kCpzR9XKH22M9yjgFxeoJ9kA
+         2uXBRL9ro9kfulWHnwkgCg1IWlp2kKJgz6Gz6OHo=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 066CW0S9066434
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 6 Jul 2020 07:32:00 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 6 Jul
+ 2020 07:32:00 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 6 Jul 2020 07:31:59 -0500
+Received: from [10.250.32.229] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 066CVx60070054;
+        Mon, 6 Jul 2020 07:31:59 -0500
+Subject: Re: [PATCH v29 00/16] Multicolor Framework v29
+To:     Pavel Machek <pavel@ucw.cz>, <marek.behun@nic.cz>
+CC:     <jacek.anaszewski@gmail.com>, <robh@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200622185919.2131-1-dmurphy@ti.com>
+ <20200704124729.GA20088@amd>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <e25dd902-da3f-37ca-c9bc-f4ab42019281@ti.com>
+Date:   Mon, 6 Jul 2020 07:31:59 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <1592358094-23459-12-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200704124729.GA20088@amd>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfMhGvfNQdbbFSvkix5vSPRd+I8BouJ5k7sjraltxZCW/i73BR+XvWsWG+LK/vagCGbnhHotLMqr7F12wUckqW2dDCYLI1WjfHwU6T8z58+I7/c5DSW5r
- GsZmRBk42bFNWH4byB0XAEw258h1xft3GbFKph8J+gb/EvKy3BgizZLARAEMNkSSO+1RL9vyT137dmsk+pdPontXZVNdRYfzWfhgFNAvRNz9vUJ0OLgjkBiL
- G0nA+IBDdLhdfZjysqQRJHZ0/VXWEc4ph+3wVmVOw5Xsi169OoU03m77VXdcA1nL5rMee0ZglYEHGYXmHuJMSPraRPPWel1PqshRUNzFaKJcqumHFbIZNuez
- IuXF1Crcj5rQyLzirwWZu41R4AlAD70ccmumPb3K+DQeYeuABYWJXk0cmb3G0QzEG5rMVHM600wWN7jYbxFIOgsCjSmdMCR2w9IjDf5CKS4n4kN8w1xUsH/g
- otxL1TDD7cKOw2YG9SJ+3Li/lquKUK9TWYRceMo3Kx54gzk66kIhHkb2qRPbbkV20lfzOy1+AvWCvkR5Ikf7DMjjSmGUX+dPSxwnZYtSqHNR0SsTOq6N6I8O
- /MpQJ31ZAAYlUsE0B2t2UMHZgqWPcS1uSk/qC/P6krIqArn+P2yPxq8zG2SdxS+r2mLGG37xf4+iJrFer+yVVUDG
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 17/06/2020 03:41, Sowjanya Komatineni wrote:
-> This patch adds support to capture from the external sensor
-> based on device graph in the device tree.
-> 
-> Driver walks through the device graph to create media links
-> between the entities and registers and unregisters video devices
-> when the corresponding sub-devices are bound and unbound.
-> 
-> Channel formats are enumerated based on available formats from
-> the sensor and the corresponding matched formats from the Tegra
-> supported video formats list.
-> 
-> Each Tegra CSI instance can be configured as 4-lane or 2-lane
-> based on supported lane configuration from the sensor through
-> the device tree.
-> 
-> Currently this driver supports V4L2 video node centric only.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/staging/media/tegra-video/Kconfig    |   1 +
->  drivers/staging/media/tegra-video/csi.c      | 128 +++++-
->  drivers/staging/media/tegra-video/csi.h      |   1 +
->  drivers/staging/media/tegra-video/tegra210.c |   2 +-
->  drivers/staging/media/tegra-video/vi.c       | 623 +++++++++++++++++++++++++--
->  drivers/staging/media/tegra-video/vi.h       |  23 +-
->  6 files changed, 726 insertions(+), 52 deletions(-)
-> 
+Pavel
 
-<snip>
+On 7/4/20 7:47 AM, Pavel Machek wrote:
+> Hi!
+>
+>> This is the multi color LED framework.   This framework presents clustered
+>> colored LEDs into an array and allows the user space to adjust the brightness
+>> of the cluster using a single file write.  The individual colored LEDs
+>> intensities are controlled via a single file that is an array of LEDs
+>>
+>> Change to the LEDs Kconfig to fix dependencies on the LP55XX_COMMON.
+>> Added update to the u8500_defconfig
+> Marek, would you be willing to look over this series?
+>
+> Dan, can we please get it in the order
+>
+> 1) fixes first
+>
+> 2) changes needed for multicolor but not depending on dt acks
+>
+> 3) dt changes
+>
+> 4) rest?
+>
+> This is the order it should have been in the first place, and I'd like
+> to get fixes applied, and perhaps some of the preparation.
 
-> +static int tegra_csi_channels_alloc(struct tegra_csi *csi)
-> +{
-> +	struct device_node *node = csi->dev->of_node;
-> +	struct v4l2_fwnode_endpoint v4l2_ep = { .bus_type = 0 };
+This will depend on if there are comments.  If I have to push a v30 then 
+I will reorder.
 
-A bus_type value of 0 is deprecated, this should be set to a valid
-bus_type (probably V4L2_MBUS_CSI2_DPHY).
+If not then there would be no reason to re-order these.
 
-Regards,
+Dan
 
-	Hans
+
