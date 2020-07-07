@@ -6,60 +6,60 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4500C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 12:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8D6C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 12:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4FEF206F6
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 12:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF993206F6
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 12:03:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jdKMJfCl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bgh1b8ln"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbgGGMCj (ORCPT
+        id S1728061AbgGGMDH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 08:02:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57816 "EHLO
+        Tue, 7 Jul 2020 08:03:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726951AbgGGMCi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 08:02:38 -0400
+        with ESMTP id S1728036AbgGGMDG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 08:03:06 -0400
 Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78629C08C5E2
-        for <devicetree@vger.kernel.org>; Tue,  7 Jul 2020 05:02:38 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id s9so49522820ljm.11
-        for <devicetree@vger.kernel.org>; Tue, 07 Jul 2020 05:02:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D28EC08C5E2
+        for <devicetree@vger.kernel.org>; Tue,  7 Jul 2020 05:03:06 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id q4so13844676lji.2
+        for <devicetree@vger.kernel.org>; Tue, 07 Jul 2020 05:03:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qUQcmH93QTvDmQbJjZbeKzTAZa2pMU0UcSehpTBZctg=;
-        b=jdKMJfClPxp5TF9uXx+oqo8TzEc6Evdih7SMSA2I6rJNR+F1Acvu8jU0XFIM9eVqUp
-         KqgqVb0skcKLFN0doaEQp/ez3Gidgorz3AAS+62/U6IcGKh4vMPslYNvWJuxZ12L0HH3
-         xv3iA6BcyUUcAUzwdMT4W+Bu7AnjghaDV8T4XEjCIsIUZZKe9/GYmnQwKLjVqEc8cUNi
-         YMZv0gKiJTEHFkj2K7KluUEt4HnY9MkunhOZzK9ReG69NloWB5yu6VgYs9cPctmcT16H
-         9xbQsU46cV7Jw6OQNDnVE7KDRdED8PO1EU3/hGeLuImjfg7Hylsa3OhgyLksRcloKCH2
-         yXUg==
+        bh=YH/VxHJ3AGs6CZr/wDufvaXGnXEL37As4napaZvmJwI=;
+        b=Bgh1b8lny6xvbW6+ct6t0vaU1Jiuk1+UbOS0d8piluPPBGIXBoT6fW7BVBSL7RHC63
+         fEwHuYtJRRgTOHhbS2rN6Tjv4NtcokJr8Fuoa7BvDxlhthTf17pY3yOCrhuNLV3gkrYG
+         Q4R3d+gPzj9akoo0jD0im55k7lI7uXK4QpdEzdJsmEJxDe4Nb2ojQJhKD+UQ+YtvdV8H
+         ZTjUu6RzuTMzq6LAahoT55UVyxUCAbEEUhKJ/VvC7TrN4hv/IrpXz4dTMVhhSmFMYZNM
+         xcw1PbLOYtWC79erbC2q965s5SZDvI1mznoOTC7Wo6tcIWKecnXnph1xJwDHHTVaozHM
+         aPBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qUQcmH93QTvDmQbJjZbeKzTAZa2pMU0UcSehpTBZctg=;
-        b=JaBMOpppd4ZtVBuWemHcIR/9drBdAX3j39HaOeSIIgv9nFn+u1oWfTPdXA13OsAaNe
-         K/hjO9x5hfOSgKXn+QHS5+mJHmJUemWT9xO+jxFFBJt49RLQ8q2Fk7JJwv5iLXP7R/I7
-         G5cZ6IWY1wSJVl/DnOvsqSb1X3UuHGXNPJ6uA8CPVuBpYF5ZSzyPvuVK3cfG399reCdi
-         VhLWLcX0PJCIBaxXDDlpj8uJlIg6HDkCitt/wqA21bZzoM3ay1JPfBr65jhVs3yqkCY3
-         Uic+VlgrXT3A1EJY0Vps4hLagy1fFW9Xde0x7/9wjEcL8LF7tnJKPygvsFAZNH7/h34w
-         8fAg==
-X-Gm-Message-State: AOAM532ZvwMxdYz/ndOjMA4I7l5VLdVyjqVa7Q/oPwuzKkwmGJBl1udT
-        /CU7+rrATwal5usb90Nnu5++RExonmcQpt6GnvSzQQ==
-X-Google-Smtp-Source: ABdhPJyoQQmnEXRQsOssY6B//fc0bqu3rkaC2C2dVvGuSLi6c/sP2pXenL4tDe7adDzLmfda5EnD2c4fWXfZBhH7QeI=
-X-Received: by 2002:a2e:7a1a:: with SMTP id v26mr14058132ljc.104.1594123356768;
- Tue, 07 Jul 2020 05:02:36 -0700 (PDT)
+        bh=YH/VxHJ3AGs6CZr/wDufvaXGnXEL37As4napaZvmJwI=;
+        b=ILvqr1rOSxECyxxlOhZJKt+gc03/aq+7VnIjgQP+rNDcbirkMngjQ4Tathix8NaBR4
+         NIrPIDm65cqpoMkyYA0LhLtGOxHNE3zLtjKDZCxu0ORSs++sMaEt6ehLKcyzEzG8zkuv
+         cqNQJiYS654G46h8VnyB8a7E95XYRkKNeW6zC1anRGY7j4FGtI+moGVn2GyGH9FcqxzY
+         Wp8zCwhzMaqHb89QHYK44ux0HNaUBxZOm2b+or/5GxnqGIQPZEcMmAK7a+pbJDO373LN
+         H8bOVWvwFjyeGqSy2Jc5nFKHKYHlRjxV3rBweR30I0wufpXlfr7+Q4twuWbMglTIZh8Q
+         wCww==
+X-Gm-Message-State: AOAM533dAnq6N/voixhf2tHssKEgjS7rKtUhhbbZqhWnTkxOE0e/X8W3
+        piqAOlSr2W1BTWf1Ah+mOtN6HyVXU3nb++9dbSlCew==
+X-Google-Smtp-Source: ABdhPJyR5v0EwI80g1kmy1SXVGsVqQpkid61MlRrKwlnDjYgLnU+qYwazQ3V+EyiCn9ABxFKleq7Kr5Bjuu2lykaDYY=
+X-Received: by 2002:a2e:8597:: with SMTP id b23mr14035216lji.338.1594123384691;
+ Tue, 07 Jul 2020 05:03:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200622192558.152828-1-konradybcio@gmail.com> <20200622192558.152828-2-konradybcio@gmail.com>
-In-Reply-To: <20200622192558.152828-2-konradybcio@gmail.com>
+References: <20200622192558.152828-1-konradybcio@gmail.com> <20200622192558.152828-3-konradybcio@gmail.com>
+In-Reply-To: <20200622192558.152828-3-konradybcio@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jul 2020 14:02:25 +0200
-Message-ID: <CACRpkdaBxYWKcm6b7HGL5XuyfjSVtV3ck4KE2q78mdSixqC6qw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/7] pinctrl: qcom: spmi-gpio: Add pm660(l) compatibility
+Date:   Tue, 7 Jul 2020 14:02:54 +0200
+Message-ID: <CACRpkda7b5a95ZpLmZ07awzSHenfxyzxFR46s0cUa_5JzYQ3tw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/7] Documentation: Document pm660(l) SPMI GPIOs compatible
 To:     Konrad Dybcio <konradybcio@gmail.com>
 Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -83,10 +83,6 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Mon, Jun 22, 2020 at 9:26 PM Konrad Dybcio <konradybcio@gmail.com> wrote:
 
-> Add support for pm660(l) SPMI GPIOs. The PMICs feature
-> 13 and 12 GPIOs respectively, though with a lot of
-> holes inbetween.
->
 > Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 
 Patch applied.
