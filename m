@@ -2,58 +2,129 @@ Return-Path: <SRS0=wVrF=AS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5AEC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 13:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD91C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 13:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CFBA20771
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 13:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4AFC20771
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 13:13:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IWoja15v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbgGGNHw (ORCPT
+        id S1728162AbgGGNNk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 09:07:52 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:50938 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726745AbgGGNHw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 7 Jul 2020 09:07:52 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jsnK1-0041HM-8R; Tue, 07 Jul 2020 15:07:41 +0200
-Date:   Tue, 7 Jul 2020 15:07:41 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     vineetha.g.jaya.kumaran@intel.com
-Cc:     davem@davemloft.net, kuba@kernel.org, mcoquelin.stm32@gmail.com,
-        robh+dt@kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, weifeng.voon@intel.com,
-        hock.leong.kweh@intel.com, boon.leong.ong@intel.com
-Subject: Re: [PATCH 1/2] dt-bindings: net: Add bindings for Intel Keem Bay
-Message-ID: <20200707130741.GA938746@lunn.ch>
-References: <1594097238-8827-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
- <1594097238-8827-2-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+        Tue, 7 Jul 2020 09:13:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40594 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728155AbgGGNNj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 09:13:39 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 578FFC061755
+        for <devicetree@vger.kernel.org>; Tue,  7 Jul 2020 06:13:39 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id u133so8936746vsc.0
+        for <devicetree@vger.kernel.org>; Tue, 07 Jul 2020 06:13:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nWUSZnUDWdgy+WbtH//6FxaifNRqqUrFryqs84wcO9M=;
+        b=IWoja15vEMKFg9nMsDxOz7rWuRLc3gLY9xgARmtxPUOXqcCUQSN3UNjAhvQjdzGpxx
+         4EG8Exl+bHRxg9Tx6XEvOYwP5oh79CbLuVkqLCOiuFMxWmAifI/w7CD+dqJl252+LWqz
+         PmeE2fv1qWLclaMekp9fiA+6I9jjk/wkA2hsvbUWKrZC1eSG1pmVUUnwanTJ5BRof8/n
+         NANxbEqAcl5/yGs76DVrQMj6AybY8Bnj4w8kmp4F7p/FgADwhMvHkrYWIar/mlopmF/n
+         bC/OEIjS2Zk3xuHk40pF6RgAcZuFfJa4jFFL6e//vTRR9GYhhM5u2r9h9p0YsnHQvj3T
+         dBtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nWUSZnUDWdgy+WbtH//6FxaifNRqqUrFryqs84wcO9M=;
+        b=SBrjR5A66eEoXiyapWK4MqplnL1IHr8/ZvCbGWcvzrWfRYu0UnZvoFjQlgkZ76fvmg
+         J3E+w+eZ2MlkfK1X3RNlmcIP0X1JV7KGdhJA9fhG+JeOI+NSeZl4MckQH4DScxL2ZAxW
+         AI9v8gA+rHLaz2axtnoh+IRQGbA8R0Q4v9V7bPx2rCLWH01RJqVv5YC+gl9llQap5o/q
+         uWbz7Y5h8Im1UlG90PEWinQ5w44pQRQq2uf4xTT/IkENCoroZbYei3yPS76+jEoc1GWG
+         3syyezq35Zm0F80zuDiqQwuZtOA/uC7dB50VFCr9Sk99CC+uI/C65E5I0iJ0P5N13Ics
+         +qXA==
+X-Gm-Message-State: AOAM533sHUBshqRQuFVYnBZlnq9ngTMq+zMrejxEBp43yJUWDSwjQZ8I
+        jpjzs4zVKAFP6rfg7zlgguTrAA3O4rU+/q3oP1sYLA==
+X-Google-Smtp-Source: ABdhPJx73evnNdVzt40tTug92o2sAFXLbpdL1bXynKIobqaoH6USTfBvhuEJ78yBmQUPPC6h5eElIikgj2pDQaYkrY8=
+X-Received: by 2002:a05:6102:22f3:: with SMTP id b19mr21412441vsh.191.1594127618469;
+ Tue, 07 Jul 2020 06:13:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594097238-8827-2-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+References: <1594123122-13156-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1594123122-13156-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 7 Jul 2020 15:13:02 +0200
+Message-ID: <CAPDyKFrGBO=0_yiFHQQqbBHSUdPFHR6snn85cJb9Sedga_e6PQ@mail.gmail.com>
+Subject: Re: [PATCH v5 0/2] mmc: core: add a new property/caps2
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> +        mdio0 {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +            compatible = "snps,dwmac-mdio";
-> +
-> +            ethernet-phy@0 {
-> +                compatible = "ethernet-phy-id0141.0dd0",
-> +                              "ethernet-phy-ieee802.3-c22";
+On Tue, 7 Jul 2020 at 13:59, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+>
+> Some environment (like r8a77951-salvator-xs) is possible
+> to perform a full power cycle of the card in suspend via firmware
+> (PSCI on arm-trusted-firmware). However, the current MMC core
+> cannot issue Power Off Notification. This patch series can do it.
+>
+> We discussed on the v3 email thread [1].
+>
+> [1]
+> https://lore.kernel.org/linux-renesas-soc/1592792699-24638-1-git-send-email-yoshihiro.shimoda.uh@renesas.com/T/#m9c25f35d7126b1c14ea431a773757652ad094341
+>
+>
+> Changes from v4:
+>  - Just add a new property/caps2 flag of MMC bindings to fix the issue.
+>  https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=308795
+>
+> Changes from v3:
+>  - Modify regulator subsytem and regulator/fixed driver.
+>  - Use regulator_is_enabled() instead of firmware API.
+>  - Update R-Car Gen3 related dts files for the reference.
+>    But, I have only tested on r8a779{5,61}-salvaltor-xs.dts.
+>  https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=306281
+>
+> Changes from v2:
+>  - Fix typo of function name in patch2.
+>  - Remove RFC.
+>  https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=305523
+>
+> Changes from v1:
+>  - Use pm_suspend_via_firmware() API instead of pm_suspend_target_state.
+>  - Modify the psci driver to call pm_set_suspend_via_firmware.
+>  https://patchwork.kernel.org/patch/11557505/
+>
+>
+> *** BLURB HERE ***
+>
+> Yoshihiro Shimoda (2):
+>   dt-bindings: mmc: Add full-pwr-cycle-in-suspend property
+>   mmc: core: Add MMC_CAP2_FULL_PWR_CYCLE_IN_SUSPEND
+>
+>  Documentation/devicetree/bindings/mmc/mmc-controller.yaml | 5 +++++
+>  drivers/mmc/core/host.c                                   | 2 ++
+>  drivers/mmc/core/mmc.c                                    | 3 ++-
+>  include/linux/mmc/host.h                                  | 1 +
+>  4 files changed, 10 insertions(+), 1 deletion(-)
+>
+> --
+> 2.7.4
+>
 
-You only need to provide the phy-id when the PHY is broken and
-registers 2 and 3 don't contain a valid ID. And c22 is the default, so
-also not needed. The Marvell 88E1510 will work without these
-compatible strings.
+The series looks good to me. However, I am awaiting Rob to comment on
+the DT binding for a while, before I queue this up.
 
-	   Andrew
+Kind regards
+Uffe
