@@ -2,122 +2,69 @@ Return-Path: <SRS0=wVrF=AS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 201A5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 07:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC38C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 08:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2E79206E2
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 07:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 380C42063A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 08:01:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgGGHq6 (ORCPT
+        id S1726757AbgGGIBI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 03:46:58 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:51980 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726540AbgGGHq6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 7 Jul 2020 03:46:58 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 13D731A09D1;
-        Tue,  7 Jul 2020 09:46:56 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D8C561A09EC;
-        Tue,  7 Jul 2020 09:46:52 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 84100402C8;
-        Tue,  7 Jul 2020 15:46:48 +0800 (SGT)
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH] arm64: dts: ls1043a: update USB nodes status to match board config
-Date:   Tue,  7 Jul 2020 15:40:31 +0800
-Message-Id: <20200707074031.13943-1-ran.wang_1@nxp.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 7 Jul 2020 04:01:08 -0400
+Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:50168 "EHLO
+        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbgGGIBI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 04:01:08 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.gtsys.com.hk (Postfix) with ESMTP id 5CBB92016B13;
+        Tue,  7 Jul 2020 16:01:06 +0800 (HKT)
+X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
+Received: from mail.gtsys.com.hk ([127.0.0.1])
+        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id YGDWKV1IyNuL; Tue,  7 Jul 2020 16:01:06 +0800 (HKT)
+Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
+        by mail.gtsys.com.hk (Postfix) with ESMTP id 3B4B220160D4;
+        Tue,  7 Jul 2020 16:01:06 +0800 (HKT)
+Received: from armhf2.gtsys.com.hk (unknown [10.128.4.15])
+        by s01.gtsys.com.hk (Postfix) with ESMTP id 2F307C01F9E;
+        Tue,  7 Jul 2020 16:01:06 +0800 (HKT)
+Received: by armhf2.gtsys.com.hk (Postfix, from userid 1000)
+        id 015CA2002E9; Tue,  7 Jul 2020 16:01:05 +0800 (HKT)
+From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
+To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Cc:     Jack Lo <jack.lo@gtsys.com.hk>, devicetree@vger.kernel.org,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] shtc1: add support for device tree bindings
+Date:   Tue,  7 Jul 2020 16:01:01 +0800
+Message-Id: <20200707080104.23711-1-chris.ruehl@gtsys.com.hk>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-ls1043a-rdb and ls1043a-qds board’s default HW config (such as
-pin mux selection) would not enable some USB controllers’
-data path, which causing over-current detected on those
-controllers. This will hit the case of ‘xhci driver prevent bus suspend
-if a root hub port detected over-current condition’, causing system
-failed to be suspended. So disable them in device tree to resolve this
-issue.
+Add support for DTS bindings to the shtc driver
+The patches add the compatible table and of_property_read_bool to the
+shtc1.c. Newly created Yaml document has been released to the
+Documentation/devicetree/hwmon/sensirion,shtc1.yaml
 
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts | 4 ++++
- arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts | 8 ++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi    | 3 +++
- 3 files changed, 15 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-index 1aac81d..fea167d 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-@@ -148,4 +148,8 @@
- 	};
- };
- 
-+&usb0 {
-+	status = "okay";
-+};
-+
- #include "fsl-ls1043-post.dtsi"
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-index bfa9d95..3516af4 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-@@ -209,3 +209,11 @@
- 		fsl,tdm-interface;
- 	};
- };
-+
-+&usb0 {
-+	status = "okay";
-+};
-+
-+&usb1 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 3b641bd..c6d8dcb 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -677,6 +677,7 @@
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
- 			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
-+			status = "disabled";
- 		};
- 
- 		usb1: usb3@3000000 {
-@@ -687,6 +688,7 @@
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
- 			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
-+			status = "disabled";
- 		};
- 
- 		usb2: usb3@3100000 {
-@@ -697,6 +699,7 @@
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
- 			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
-+			status = "disabled";
- 		};
- 
- 		sata: sata@3200000 {
--- 
-2.7.4
-
+ Version 3
+	Fix errors report with checkpatch.pl
+	Correct logic, add (!) when check for sensirion,low_precision
+ Version 2
+	remove the #ifdef CONFIG_OF
+	ignore platform data if dev->of_node is valid
+	use boolean only therefor use sensirion,low_precise to fit the logic
+	add missing driver.of_match_table entry
+ Version 1
+	initial version
