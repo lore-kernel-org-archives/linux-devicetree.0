@@ -2,295 +2,347 @@ Return-Path: <SRS0=wVrF=AS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 385E2C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 15:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8CDC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 16:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E10E2082F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 15:52:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EMBq4R+0"
+	by mail.kernel.org (Postfix) with ESMTP id C056120674
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 16:01:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbgGGPw2 (ORCPT
+        id S1728100AbgGGQBg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:52:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37150 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727886AbgGGPw2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 11:52:28 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B00DC08C5DC
-        for <devicetree@vger.kernel.org>; Tue,  7 Jul 2020 08:52:28 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id j20so2928105pfe.5
-        for <devicetree@vger.kernel.org>; Tue, 07 Jul 2020 08:52:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=EeGA6LB+HFNkoLBVE4aTa5jOaOZtyplY9EK/jYR+rwc=;
-        b=EMBq4R+0mEDvZ7sRMtIfaF8ZuLJ3wFPsdDywqeXwC4hmnDilo7dwuI4m002cYiZAN9
-         59/TTSsVyEKSFLGOUt+yzETCuqkrNl23eN0wOqnZnuT1i4Su6X4d8wzaTl0yQekNpkOO
-         MWO49LZXRE49hAWtZSZaw2Jvkb0IucDFk2AUk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=EeGA6LB+HFNkoLBVE4aTa5jOaOZtyplY9EK/jYR+rwc=;
-        b=jVnHWicTbQ+fsx7AMMA3+7WTQ70ABPb5F07oHmNpZHcLxnMhS5w77kBKh3JVt9wiT9
-         lAP1n4H4RWtjcog7qElrpfEdz+5AHan4uFAJZ+a0NQhKHl9HAOXtw2okm8rMIxdrplKJ
-         Jn/FvpRtKGrzsuQWrkqzfV3NY9AMfcgNV7u2M8RoSoLpVfbUJD9g5TtEafUeRNahwFB1
-         4/Da/Ot1Z+vL2LduS0WWGRFJHhdmKaHuL5nVxc9L6b65oiF56e3Gn9Jf1Iwt4hcwa8O/
-         /MbN6e9VDsaRn19r9bgQkh5Rl7vKKuxuFcNrlYHHfsXdxAjRx9thnrwlHawHDT7/kfdR
-         IDsw==
-X-Gm-Message-State: AOAM532E6ibEApAhtD/lfmK7v6T48eLHd1YbQNxWmDiUB7QOi3HqdV7/
-        TV1GFPozYd/Urbz0p8GBPjDuAQ==
-X-Google-Smtp-Source: ABdhPJwUKNNTZYK5tBGW2Vv+Xe/QTNA+mJCAgDGfed/vc07mJGvi2gMNFdtmPG0f5fhEyxjD36QY7g==
-X-Received: by 2002:a63:5fcc:: with SMTP id t195mr36538494pgb.56.1594137147111;
-        Tue, 07 Jul 2020 08:52:27 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id t19sm1345287pgg.19.2020.07.07.08.52.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jul 2020 08:52:26 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 08:52:25 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
- driver
-Message-ID: <20200707155225.GH3191083@google.com>
-References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
- <1585718145-29537-3-git-send-email-sanm@codeaurora.org>
- <159120577830.69627.13288547914742515702@swboyd.mtv.corp.google.com>
- <d9ccf188-4f00-d3ac-ba0f-73f06c087553@codeaurora.org>
- <159126939154.69627.13027312816468830595@swboyd.mtv.corp.google.com>
- <20200615194239.GW4525@google.com>
- <3f8fcb0e-387d-e902-9f6b-1fde9d6ae404@codeaurora.org>
- <20200616203849.GY4525@google.com>
- <20200630224243.GH39073@google.com>
- <8ac28471-7c0a-1850-6560-50da0d734445@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8ac28471-7c0a-1850-6560-50da0d734445@codeaurora.org>
+        Tue, 7 Jul 2020 12:01:36 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:40849 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728029AbgGGQBg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 12:01:36 -0400
+Received: from marcel-macbook.fritz.box (p5b3d2638.dip0.t-ipconnect.de [91.61.38.56])
+        by mail.holtmann.org (Postfix) with ESMTPSA id C6DF8CECED;
+        Tue,  7 Jul 2020 18:11:29 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH 2/3] Bluetooth: btrtl: add support for the RTL8723CS
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200705195110.405139-3-anarsoul@gmail.com>
+Date:   Tue, 7 Jul 2020 18:01:33 +0200
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        netdev@vger.kernel.org, Ondrej Jirman <megous@megous.com>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <99A48FC7-0DCB-42F9-A3E3-91292BB92100@holtmann.org>
+References: <20200705195110.405139-1-anarsoul@gmail.com>
+ <20200705195110.405139-3-anarsoul@gmail.com>
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 10:41:24AM +0530, Sandeep Maheswaram (Temp) wrote:
-> 
-> On 7/1/2020 4:12 AM, Matthias Kaehlcke wrote:
-> > On Tue, Jun 16, 2020 at 01:38:49PM -0700, Matthias Kaehlcke wrote:
-> > > On Tue, Jun 16, 2020 at 10:22:47AM +0530, Sandeep Maheswaram (Temp) wrote:
-> > > > On 6/16/2020 1:12 AM, Matthias Kaehlcke wrote:
-> > > > > On Thu, Jun 04, 2020 at 04:16:31AM -0700, Stephen Boyd wrote:
-> > > > > > Quoting Sandeep Maheswaram (Temp) (2020-06-04 02:43:09)
-> > > > > > > On 6/3/2020 11:06 PM, Stephen Boyd wrote:
-> > > > > > > > Quoting Sandeep Maheswaram (2020-03-31 22:15:43)
-> > > > > > > > > diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-> > > > > > > > > index 1dfd024..d33ae86 100644
-> > > > > > > > > --- a/drivers/usb/dwc3/dwc3-qcom.c
-> > > > > > > > > +++ b/drivers/usb/dwc3/dwc3-qcom.c
-> > > > > > > > > @@ -285,6 +307,101 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
-> > > > > > > > >            return 0;
-> > > > > > > > >     }
-> > > > > > > > > +
-> > > > > > > > > +/**
-> > > > > > > > > + * dwc3_qcom_interconnect_init() - Get interconnect path handles
-> > > > > > > > > + * @qcom:                      Pointer to the concerned usb core.
-> > > > > > > > > + *
-> > > > > > > > > + */
-> > > > > > > > > +static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
-> > > > > > > > > +{
-> > > > > > > > > +       struct device *dev = qcom->dev;
-> > > > > > > > > +       int ret;
-> > > > > > > > > +
-> > > > > > > > > +       if (!device_is_bound(&qcom->dwc3->dev))
-> > > > > > > > > +               return -EPROBE_DEFER;
-> > > > > > > > How is this supposed to work? I see that this was added in an earlier
-> > > > > > > > revision of this patch series but there isn't any mention of why
-> > > > > > > > device_is_bound() is used here. It would be great if there was a comment
-> > > > > > > > detailing why this is necessary. It sounds like maximum_speed is
-> > > > > > > > important?
-> > > > > > > > 
-> > > > > > > > Furthermore, dwc3_qcom_interconnect_init() is called by
-> > > > > > > > dwc3_qcom_probe() which is the function that registers the device for
-> > > > > > > > qcom->dwc3->dev. If that device doesn't probe between the time it is
-> > > > > > > > registered by dwc3_qcom_probe() and this function is called then we'll
-> > > > > > > > fail dwc3_qcom_probe() with -EPROBE_DEFER. And that will remove the
-> > > > > > > > qcom->dwc3->dev device from the platform bus because we call
-> > > > > > > > of_platform_depopulate() on the error path of dwc3_qcom_probe().
-> > > > > > > > 
-> > > > > > > > So isn't this whole thing racy and can potentially lead us to a driver
-> > > > > > > > probe loop where the wrapper (dwc3_qcom) and the core (dwc3) are probing
-> > > > > > > > and we're trying to time it just right so that driver for dwc3 binds
-> > > > > > > > before we setup interconnects? I don't know if dwc3 can communicate to
-> > > > > > > > the wrapper but that would be more of a direct way to do this. Or maybe
-> > > > > > > > the wrapper should try to read the DT property for maximum speed and
-> > > > > > > > fallback to a worst case high bandwidth value if it can't figure it out
-> > > > > > > > itself without help from dwc3 core.
-> > > > > > > > 
-> > > > > > > This was added in V4 to address comments from Matthias in V3
-> > > > > > > 
-> > > > > > > https://patchwork.kernel.org/patch/11148587/
-> > > > > > > 
-> > > > > > Yes, that why I said:
-> > > > > > 
-> > > > > > "I see that this was added in an earlier
-> > > > > >    revision of this patch series but there isn't any mention of why
-> > > > > >    device_is_bound() is used here. It would be great if there was a comment
-> > > > > >    detailing why this is necessary. It sounds like maximum_speed is
-> > > > > >    important?"
-> > > > > > 
-> > > > > > Can you please respond to the rest of my email?
-> > > > > I agree with Stephen that using device_is_bound() isn't a good option
-> > > > > in this case, when I suggested it I wasn't looking at the big picture
-> > > > > of how probing the core driver is triggered, sorry about that.
-> > > > > 
-> > > > > Reading the speed from the DT with usb_get_maximum_speed() as Stephen
-> > > > > suggests would be an option, the inconvenient is that we then
-> > > > > essentially require the property to be defined, while the core driver
-> > > > > gets a suitable value from hardware registers. Not sure if the wrapper
-> > > > > driver could read from the same registers.
-> > > > > 
-> > > > > One option could be to poll device_is_bound() for 100 ms (or so), with
-> > > > > sleeps between polls. It's not elegant but would probably work if we
-> > > > > don't find a better solution.
-> > > > if (np)
-> > > >          ret = dwc3_qcom_of_register_core(pdev);
-> > > >      else
-> > > >          ret = dwc3_qcom_acpi_register_core(pdev);
-> > > > 
-> > > >      if (ret) {
-> > > >          dev_err(dev, "failed to register DWC3 Core, err=%d\n", ret);
-> > > >          goto depopulate;
-> > > >      }
-> > > > 
-> > > >      ret = dwc3_qcom_interconnect_init(qcom);
-> > > >      if (ret)
-> > > >          goto depopulate;
-> > > > 
-> > > >      qcom->mode = usb_get_dr_mode(&qcom->dwc3->dev);
-> > > > 
-> > > > Before calling dwc3_qcom_interconnect_init we are checking
-> > > > 
-> > > >      if (ret) {
-> > > >          dev_err(dev, "failed to register DWC3 Core, err=%d\n", ret);
-> > > >          goto depopulate;
-> > > >      }
-> > > > 
-> > > > Doesn't  this condition confirm the core driver is probed?
-> > > Not really:
-> > > 
-> > > // called under the hood by of_platform_populate()
-> > > static int really_probe(struct device *dev, struct device_driver *drv)
-> > > {
-> > > 	...
-> > > 
-> > > 	if (dev->bus->probe) {
-> > > 		ret = dev->bus->probe(dev);
-> > > 		if (ret)
-> > > 			goto probe_failed;
-> > > 	} else if (drv->probe) {
-> > > 		ret = drv->probe(dev);
-> > > 	        if (ret)
-> > > 	       		goto probe_failed;
-> > >          }
-> > > 
-> > > 	...
-> > > 
-> > > probe_failed:
-> > > 	...
-> > > 
-> > > 	/*
-> > >           * Ignore errors returned by ->probe so that the next driver can try
-> > >           * its luck.
-> > >           */
-> > >          ret = 0;
-> > > 
-> > > 	...
-> > > 
-> > > 	return ret;
-> > > }
-> > > 
-> > > As a result of_platform_populate() in dwc3_qcom_of_register_core()
-> > > returns 0 even when probing the device failed:
-> > > 
-> > > [    0.244339] dwc3-qcom a6f8800.usb: DBG: populate
-> > > [    0.244772] dwc3 a600000.dwc3: DBG: dwc3_probe
-> > > [    0.245237] dwc3 a600000.dwc3: DBG: dwc3_probe err: -517
-> > > [    0.245264] dwc3-qcom a6f8800.usb: DBG: populate (done)
-> > > [    0.245317] dwc3-qcom a6f8800.usb: DBG: dwc3_qcom_interconnect_init() failed: -517
-> > > 
-> > > Probe fails because the interconnect stuff isn't ready yet, otherwise
-> > > it could access invalid data.
-> > > 
-> > > A later _populate() is successful and the probing of the core is done
-> > > synchronously, i.e. after _populate() the core driver is fully
-> > > initialized:
-> > > 
-> > > [    3.898106] dwc3-qcom a6f8800.usb: DBG: populate
-> > > [    3.908356] dwc3 a600000.dwc3: DBG: dwc3_probe
-> > > [    4.205104] dwc3 a600000.dwc3: DBG: dwc3_probe (done)
-> > > [    4.210305] dwc3-qcom a6f8800.usb: DBG: populate (done)
-> > > 
-> > > The synchronous probing in _populate() suggests that using device_is_bound()
-> > > would actually be a valid option, either the core device was successfully
-> > > probed or not, there should be no race.
-> > > 
-> > > I sent a patch that adds this check to dwc3_qcom_of_register_core(), which
-> > > is less confusing and makes clear that the core device is valid unless
-> > > this function returns an error:
-> > > 
-> > >    https://lore.kernel.org/patchwork/patch/1257279/
-> > > 
-> > > It might make sense to add your "driver core:Export the symbol
-> > > device_is_bound" patch, mine and this one to a single series.
-> >  From the discussion on "driver core:Export the symbol device_is_bound"
-> > (https://patchwork.kernel.org/patch/11584225/) it is clear that
-> > this won't fly. The split dwc3 driver is considered a broken
-> > design.
-> > 
-> > This is what Rob Herring said:
-> > 
-> >    We never should have had this split either in the DT binding nor
-> >    driver(s) as if the SoC wrapper crap and licensed IP block are
-> >    independent things. The thing to do here is either make the DWC3 code
-> >    a library which drivers call (e.g. SDHCI) or add hooks into the DWC3
-> >    driver for platform specifics (e.g. Designware PCI). Neither is a
-> >    simple solution though.
-> > 
-> > That seems to be the desirable solution in the longer term, but it
-> > doesn't seem reasonable to me to expect you to fix this design issue
-> > to add interconnect support.
-> > 
-> > Some possible options to move forward:
-> > 
-> > - try to determine the max speed without involving the core device
-> > - select a reasonable default when 'maximum-speed' is not specified
-> > - use the core device to determine the max speed and pray
-> 
-> Can we do as below to get speed
-> 
-> qcom->max_speed = usb_get_maximum_speed(&qcom->dwc3->dev);
+Hi Vasily,
 
-Yes, that would get the maximum speed from the DT if it is specified.
-In case of USB_SPEED_UNKNOWN you probably want to assume it's
-USB_SPEED_SUPER, which in the worst case would result in the ICC
-running at a higher speed than needed.
+> The Realtek RTL8723CS is SDIO WiFi chip. It also contains a Bluetooth
+> module which is connected via UART to the host.
+> 
+> It shares lmp subversion with 8703B, so Realtek's userspace
+> initialization tool (rtk_hciattach) differentiates varieties of RTL8723CS
+> (CG, VF, XX) with RTL8703B using vendor's command to read chip type.
+> 
+> Also this chip declares support for some features it doesn't support
+> so add a quirk to indicate that these features are broken.
+> 
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> ---
+> drivers/bluetooth/btrtl.c  | 128 ++++++++++++++++++++++++++++++++++++-
+> drivers/bluetooth/btrtl.h  |  12 ++++
+> drivers/bluetooth/hci_h5.c |   6 ++
+> 3 files changed, 143 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
+> index 3a9afc905f24..8c7b35abe492 100644
+> --- a/drivers/bluetooth/btrtl.c
+> +++ b/drivers/bluetooth/btrtl.c
+> @@ -17,8 +17,12 @@
+> 
+> #define VERSION "0.1"
+> 
+> +#define RTL_CHIP_8723CS_CG	3
+> +#define RTL_CHIP_8723CS_VF	4
+> +#define RTL_CHIP_8723CS_XX	5
+> #define RTL_EPATCH_SIGNATURE	"Realtech"
+> #define RTL_ROM_LMP_3499	0x3499
+> +#define RTL_ROM_LMP_8703B	0x8703
+> #define RTL_ROM_LMP_8723A	0x1200
+> #define RTL_ROM_LMP_8723B	0x8723
+> #define RTL_ROM_LMP_8723D	0x8873
+> @@ -31,6 +35,7 @@
+> #define IC_MATCH_FL_HCIREV	(1 << 1)
+> #define IC_MATCH_FL_HCIVER	(1 << 2)
+> #define IC_MATCH_FL_HCIBUS	(1 << 3)
+> +#define IC_MATCH_FL_CHIP_TYPE	(1 << 4)
+> #define IC_INFO(lmps, hcir) \
+> 	.match_flags = IC_MATCH_FL_LMPSUBV | IC_MATCH_FL_HCIREV, \
+> 	.lmp_subver = (lmps), \
+> @@ -42,6 +47,7 @@ struct id_table {
+> 	__u16 hci_rev;
+> 	__u8 hci_ver;
+> 	__u8 hci_bus;
+> +	__u8 chip_type;
+> 	bool config_needed;
+> 	bool has_rom_version;
+> 	char *fw_name;
+> @@ -89,6 +95,39 @@ static const struct id_table ic_id_table[] = {
+> 	  .fw_name  = "rtl_bt/rtl8723b_fw.bin",
+> 	  .cfg_name = "rtl_bt/rtl8723b_config" },
+> 
+> +	/* 8723CS-CG */
+> +	{ .match_flags = IC_MATCH_FL_LMPSUBV | IC_MATCH_FL_CHIP_TYPE |
+> +			 IC_MATCH_FL_HCIBUS,
+> +	  .lmp_subver = RTL_ROM_LMP_8703B,
+> +	  .chip_type = RTL_CHIP_8723CS_CG,
+> +	  .hci_bus = HCI_UART,
+> +	  .config_needed = true,
+> +	  .has_rom_version = true,
+> +	  .fw_name  = "rtl_bt/rtl8723cs_cg_fw.bin",
+> +	  .cfg_name = "rtl_bt/rtl8723cs_cg_config" },
+> +
+> +	/* 8723CS-VF */
+> +	{ .match_flags = IC_MATCH_FL_LMPSUBV | IC_MATCH_FL_CHIP_TYPE |
+> +			 IC_MATCH_FL_HCIBUS,
+> +	  .lmp_subver = RTL_ROM_LMP_8703B,
+> +	  .chip_type = RTL_CHIP_8723CS_VF,
+> +	  .hci_bus = HCI_UART,
+> +	  .config_needed = true,
+> +	  .has_rom_version = true,
+> +	  .fw_name  = "rtl_bt/rtl8723cs_vf_fw.bin",
+> +	  .cfg_name = "rtl_bt/rtl8723cs_vf_config" },
+> +
+> +	/* 8723CS-XX */
+> +	{ .match_flags = IC_MATCH_FL_LMPSUBV | IC_MATCH_FL_CHIP_TYPE |
+> +			 IC_MATCH_FL_HCIBUS,
+> +	  .lmp_subver = RTL_ROM_LMP_8703B,
+> +	  .chip_type = RTL_CHIP_8723CS_XX,
+> +	  .hci_bus = HCI_UART,
+> +	  .config_needed = true,
+> +	  .has_rom_version = true,
+> +	  .fw_name  = "rtl_bt/rtl8723cs_xx_fw.bin",
+> +	  .cfg_name = "rtl_bt/rtl8723cs_xx_config" },
+> +
+> 	/* 8723D */
+> 	{ IC_INFO(RTL_ROM_LMP_8723B, 0xd),
+> 	  .config_needed = true,
+> @@ -171,7 +210,8 @@ static const struct id_table ic_id_table[] = {
+> 	};
+> 
+> static const struct id_table *btrtl_match_ic(u16 lmp_subver, u16 hci_rev,
+> -					     u8 hci_ver, u8 hci_bus)
+> +					     u8 hci_ver, u8 hci_bus,
+> +					     u8 chip_type)
+> {
+> 	int i;
+> 
+> @@ -188,6 +228,9 @@ static const struct id_table *btrtl_match_ic(u16 lmp_subver, u16 hci_rev,
+> 		if ((ic_id_table[i].match_flags & IC_MATCH_FL_HCIBUS) &&
+> 		    (ic_id_table[i].hci_bus != hci_bus))
+> 			continue;
+> +		if ((ic_id_table[i].match_flags & IC_MATCH_FL_CHIP_TYPE) &&
+> +		    (ic_id_table[i].chip_type != chip_type))
+> +			continue;
+> 
+> 		break;
+> 	}
+> @@ -270,6 +313,7 @@ static int rtlbt_parse_firmware(struct hci_dev *hdev,
+> 		{ RTL_ROM_LMP_8723B, 1 },
+> 		{ RTL_ROM_LMP_8821A, 2 },
+> 		{ RTL_ROM_LMP_8761A, 3 },
+> +		{ RTL_ROM_LMP_8703B, 7 },
+> 		{ RTL_ROM_LMP_8822B, 8 },
+> 		{ RTL_ROM_LMP_8723B, 9 },	/* 8723D */
+> 		{ RTL_ROM_LMP_8821A, 10 },	/* 8821C */
+> @@ -545,6 +589,48 @@ static int btrtl_setup_rtl8723b(struct hci_dev *hdev,
+> 	return ret;
+> }
+> 
+> +static bool rtl_has_chip_type(u16 lmp_subver)
+> +{
+> +	switch (lmp_subver) {
+> +	case RTL_ROM_LMP_8703B:
+> +		return true;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return  false;
+> +}
+> +
+> +static int rtl_read_chip_type(struct hci_dev *hdev, u8 *type)
+> +{
+> +	struct rtl_chip_type_evt *chip_type;
+> +	struct sk_buff *skb;
+> +	const unsigned char cmd_buf[] = {0x00, 0x94, 0xa0, 0x00, 0xb0};
+> +
+> +	/* Read RTL chip type command */
+> +	skb = __hci_cmd_sync(hdev, 0xfc61, 5, cmd_buf, HCI_INIT_TIMEOUT);
+> +	if (IS_ERR(skb)) {
+> +		rtl_dev_err(hdev, "Read chip type failed (%ld)",
+> +			    PTR_ERR(skb));
+> +		return PTR_ERR(skb);
+> +	}
+> +
+> +	if (skb->len != sizeof(*chip_type)) {
+> +		rtl_dev_err(hdev, "RTL chip type event length mismatch");
+> +		kfree_skb(skb);
+> +		return -EIO;
+> +	}
+> +
+> +	chip_type = (struct rtl_chip_type_evt *)skb->data;
+> +	rtl_dev_info(hdev, "chip_type status=%x type=%x",
+> +		     chip_type->status, chip_type->type);
+> +
+> +	*type = chip_type->type & 0x0f;
+> +
+> +	kfree_skb(skb);
+> +	return 0;
+> +}
+> +
+> void btrtl_free(struct btrtl_device_info *btrtl_dev)
+> {
+> 	kvfree(btrtl_dev->fw_data);
+> @@ -561,7 +647,7 @@ struct btrtl_device_info *btrtl_initialize(struct hci_dev *hdev,
+> 	struct hci_rp_read_local_version *resp;
+> 	char cfg_name[40];
+> 	u16 hci_rev, lmp_subver;
+> -	u8 hci_ver;
+> +	u8 hci_ver, chip_type = 0;
+> 	int ret;
+> 
+> 	btrtl_dev = kzalloc(sizeof(*btrtl_dev), GFP_KERNEL);
+> @@ -586,8 +672,14 @@ struct btrtl_device_info *btrtl_initialize(struct hci_dev *hdev,
+> 	lmp_subver = le16_to_cpu(resp->lmp_subver);
+> 	kfree_skb(skb);
+> 
+> +	if (rtl_has_chip_type(lmp_subver)) {
+> +		ret = rtl_read_chip_type(hdev, &chip_type);
+> +		if (ret)
+> +			goto err_free;
+> +	}
+> +
+> 	btrtl_dev->ic_info = btrtl_match_ic(lmp_subver, hci_rev, hci_ver,
+> -					    hdev->bus);
+> +					    hdev->bus, chip_type);
+> 
+> 	if (!btrtl_dev->ic_info) {
+> 		rtl_dev_info(hdev, "unknown IC info, lmp subver %04x, hci rev %04x, hci ver %04x",
+> @@ -660,6 +752,7 @@ int btrtl_download_firmware(struct hci_dev *hdev,
+> 	case RTL_ROM_LMP_8821A:
+> 	case RTL_ROM_LMP_8761A:
+> 	case RTL_ROM_LMP_8822B:
+> +	case RTL_ROM_LMP_8703B:
+> 		return btrtl_setup_rtl8723b(hdev, btrtl_dev);
+> 	default:
+> 		rtl_dev_info(hdev, "assuming no firmware upload needed");
+> @@ -678,7 +771,12 @@ int btrtl_setup_realtek(struct hci_dev *hdev)
+> 		return PTR_ERR(btrtl_dev);
+> 
+> 	ret = btrtl_download_firmware(hdev, btrtl_dev);
+> +	if (ret)
+> +		goto out_free;
+> 
+> +	btrtl_apply_quirks(hdev, btrtl_dev);
+> +
+> +out_free:
+> 	btrtl_free(btrtl_dev);
+> 
+> 	/* Enable controller to do both LE scan and BR/EDR inquiry
+> @@ -818,6 +916,24 @@ int btrtl_get_uart_settings(struct hci_dev *hdev,
+> }
+> EXPORT_SYMBOL_GPL(btrtl_get_uart_settings);
+> 
+> +void btrtl_apply_quirks(struct hci_dev *hdev,
+> +			struct btrtl_device_info *btrtl_dev)
+> +{
+> +	switch (btrtl_dev->ic_info->lmp_subver) {
+> +	case RTL_ROM_LMP_8703B:
+> +		/* 8723CS reports two pages for local ext features,
+> +		 * but it doesn't support any features from page 2 -
+> +		 * it either responds with garbage or with error status
+> +		 */
+> +		set_bit(HCI_QUIRK_BROKEN_LOCAL_EXT_FTR_MAX_PAGE,
+> +			&hdev->quirks);
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(btrtl_apply_quirks);
+> +
+> MODULE_AUTHOR("Daniel Drake <drake@endlessm.com>");
+> MODULE_DESCRIPTION("Bluetooth support for Realtek devices ver " VERSION);
+> MODULE_VERSION(VERSION);
+> @@ -827,6 +943,12 @@ MODULE_FIRMWARE("rtl_bt/rtl8723b_fw.bin");
+> MODULE_FIRMWARE("rtl_bt/rtl8723b_config.bin");
+> MODULE_FIRMWARE("rtl_bt/rtl8723bs_fw.bin");
+> MODULE_FIRMWARE("rtl_bt/rtl8723bs_config.bin");
+> +MODULE_FIRMWARE("rtl_bt/rtl8723cs_cg_fw.bin");
+> +MODULE_FIRMWARE("rtl_bt/rtl8723cs_cg_config.bin");
+> +MODULE_FIRMWARE("rtl_bt/rtl8723cs_vf_fw.bin");
+> +MODULE_FIRMWARE("rtl_bt/rtl8723cs_vf_config.bin");
+> +MODULE_FIRMWARE("rtl_bt/rtl8723cs_xx_fw.bin");
+> +MODULE_FIRMWARE("rtl_bt/rtl8723cs_xx_config.bin");
+> MODULE_FIRMWARE("rtl_bt/rtl8723ds_fw.bin");
+> MODULE_FIRMWARE("rtl_bt/rtl8723ds_config.bin");
+> MODULE_FIRMWARE("rtl_bt/rtl8761a_fw.bin");
+> diff --git a/drivers/bluetooth/btrtl.h b/drivers/bluetooth/btrtl.h
+> index 2a582682136d..152ed2ece4c2 100644
+> --- a/drivers/bluetooth/btrtl.h
+> +++ b/drivers/bluetooth/btrtl.h
+> @@ -14,6 +14,11 @@
+> 
+> struct btrtl_device_info;
+> 
+> +struct rtl_chip_type_evt {
+> +	__u8 status;
+> +	__u8 type;
+> +} __packed;
+> +
+> struct rtl_download_cmd {
+> 	__u8 index;
+> 	__u8 data[RTL_FRAG_LEN];
+> @@ -60,6 +65,8 @@ int btrtl_get_uart_settings(struct hci_dev *hdev,
+> 			    struct btrtl_device_info *btrtl_dev,
+> 			    unsigned int *controller_baudrate,
+> 			    u32 *device_baudrate, bool *flow_control);
+> +void btrtl_apply_quirks(struct hci_dev *hdev,
+> +			struct btrtl_device_info *btrtl_dev);
+> 
+> #else
+> 
+> @@ -96,6 +103,11 @@ static inline int btrtl_get_uart_settings(struct hci_dev *hdev,
+> 					  bool *flow_control)
+> {
+> 	return -ENOENT;
+> +
+> +static inline void btrtl_apply_quirks(struct hci_dev *hdev,
+> +			struct btrtl_device_info *btrtl_dev)
+> +{
+> +}
+> }
+
+this hunk is fundamentally broken.
+
+Regards
+
+Marcel
+
