@@ -2,156 +2,140 @@ Return-Path: <SRS0=wVrF=AS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF0DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 14:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F057C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 14:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA7BD2078A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 14:54:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A3BA20775
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 14:57:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="eYlXbUd5";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VbRropzt"
+	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="IzX7U71p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbgGGOyr (ORCPT
+        id S1728100AbgGGO5f (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 10:54:47 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:46913 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727987AbgGGOyr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 10:54:47 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id B06515803FE;
-        Tue,  7 Jul 2020 10:54:45 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 07 Jul 2020 10:54:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=z
-        2MF8pM2yUhzEcAqtjG/BkSK1B6kF9HAsHHt2JjHLuc=; b=eYlXbUd5rBjRoIDgO
-        Ac1T/2aLAw3Q7djwyIkgIQ/pwVqIVfIr2z3WJZY83Ya0wIMTDJMeKhrCKphOlErR
-        V2MsPmOGqgtYqbSaGYLuK6TBmynzFgX9JdllVSJwGFQSk7rpTIotuH5S8SL8rKL4
-        pmD+QLJYk+pgiFf6h/4DeCPq+HjqSLpuSLVB24wq2EUcw0w3AtZVdV2mObZm2gJ7
-        QQgUrDhFXoVDICgURqP+h9AyRL+ITGkxU1KSlVzfbUyhEJ2mKi6VxPjWFNE0piTb
-        Nq1P/0BsYEjwNgMyN6c3kR8fMn3Y91s7lBagBdWjLLntZ1DMW0BwNkqqWC6LobKL
-        5bmzg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=z2MF8pM2yUhzEcAqtjG/BkSK1B6kF9HAsHHt2JjHL
-        uc=; b=VbRropztsuRUvmMR9Gly4Ig+dMb6KjWmOw2v3I0f1QAeuwbUXldQAq90s
-        kHUlIlURW7q75/piHuxcm+p+gHG1KJpvhnVKJ1QTV7BVfFKBaQXulFEnLRRz1sfo
-        w712f9lYvchiGBW1Oum6uVwAAamdRdfJdQ1sFvTzsGoF+qZxvXK87SbASKRXjXlT
-        kICpquzxdrebQvZCSCZXdh75HOjQgycyHjFCJl+m/b7L0xRlzQsjAx1DGnkAJD2h
-        ilpv/yWO0UQQdMQ5LEp7EIHfJxfilPbf6xT4Z+4jSDj9N55eRg7nIadZxtPZxDpz
-        8aAtT+i1PT9+RlPSWz7z41eLamY+Q==
-X-ME-Sender: <xms:sowEX1H0QJAO5L6cQdGRPW-LnVtsIsmhFw_xM7wuzo6UH2e2NttRyA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehgdejiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggugfgjsehtqhertddttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepkeeileetveejffegueetjeeigffgfefgkeeuueetfffhheegveefhfekheev
-    kedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepledtrdekledrieekrd
-    ejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehm
-    rgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:sowEX6Xoyoe1WyG76_Fdw1UgpF3BMlNJ3TroWzGckBq2lM8_EFtnZQ>
-    <xmx:sowEX3Kk5aNbOepYGJDA63OeocgrY_RWrDJFTFeVNPnWJpFA64VTQA>
-    <xmx:sowEX7HcgNQ5LdORDRy3MJdTydZuCOFXpwzXoW97cbmOzMk5ISi5jA>
-    <xmx:tYwEX3qN7uPJP8D3PESct64wdCiMceepEpRSQre8v34RdO7iicEFkw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 3D704328006F;
-        Tue,  7 Jul 2020 10:54:42 -0400 (EDT)
-Date:   Tue, 7 Jul 2020 16:54:40 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Antoine =?utf-8?Q?T=C3=A9nart?= <antoine.tenart@bootlin.com>
-Subject: Re: PHY reset handling during DT parsing
-Message-ID: <20200707145440.teimwt6kmsnyi5dz@gilmour.lan>
-References: <20200706181331.x2tn5cl5jn5kqmhx@gilmour.lan>
- <20200707141918.GA928075@lunn.ch>
+        Tue, 7 Jul 2020 10:57:35 -0400
+Received: from ns.mm-sol.com ([37.157.136.199]:42710 "EHLO extserv.mm-sol.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727987AbgGGO5f (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 7 Jul 2020 10:57:35 -0400
+Received: from [192.168.1.3] (212-5-158-112.ip.btc-net.bg [212.5.158.112])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id B1D24D019;
+        Tue,  7 Jul 2020 17:57:30 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1594133851; bh=RSbKmHXQ1I0GICjEJnnc9sR7lyOzh5WH8AD+NBKOMPg=;
+        h=Subject:To:Cc:From:Date:From;
+        b=IzX7U71pqTVHOUnO++yZULrFfzx0NWdP+5In4au3xOuwAHzgN50tzRmOF2xaIzmUJ
+         G9PizoDtcAOhIMgaGenRA66J0B2R75Esh/fsoyzvu5zFEAzAbGvgKl6bY9l2W+5161
+         Q9gyYl1CedHlDGb4qvvZhV64NHKjpPUy97UwAMNhmE0BZMYfimcGoyCAUiStqdMsbs
+         46MssHdcH4/EWGkiXUuH2eKT4xYOlXNy7wW2TQxcQ1EoXqyzD7870OlG8jSlDAOv4W
+         LiWPbN6fbZaIfRk8NGkx7ETJFs6XPrfJET8kSz7vQp8AH3JSQ8fKAgoPA5P8/WGca2
+         Kc+9h35OiNf0w==
+Subject: Re: [PATCH v7 00/12] Multiple fixes in PCIe qcom driver
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200615210608.21469-1-ansuelsmth@gmail.com>
+ <20200707140516.GC17163@e121166-lin.cambridge.arm.com>
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+Message-ID: <c4407d40-3b9b-5e79-9bf7-5947ce9178e3@mm-sol.com>
+Date:   Tue, 7 Jul 2020 17:57:28 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200707141918.GA928075@lunn.ch>
+In-Reply-To: <20200707140516.GC17163@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andrew,
+Hi Lorenzo,
 
-On Tue, Jul 07, 2020 at 04:19:18PM +0200, Andrew Lunn wrote:
-> On Mon, Jul 06, 2020 at 08:13:31PM +0200, Maxime Ripard wrote:
-> > I came across an issue today on an Allwinner board, but I believe it's a
-> > core issue.
-> >=20
-> > That board is using the stmac driver together with a phy that happens to
-> > have a reset GPIO, except that that GPIO will never be claimed, and the
-> > PHY will thus never work.
-> >=20
-> > You can find an example of such a board here:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/arch/arm/boot/dts/sun6i-a31-hummingbird.dts#n195
-> >=20
-> > It looks like when of_mdiobus_register() will parse the DT, it will then
-> > call of_mdiobus_register_phy() for each PHY it encounters [1].
-> > of_mdiobus_register_phy() will then if the phy doesn't have an
-> > ethernet-phy-id* compatible call get_phy_device() [2], and will later on
-> > call phy_register_device [3].
-> >=20
-> > get_phy_device() will then call get_phy_id() [4], that will try to
-> > access the PHY through the MDIO bus [5].
-> >=20
-> > The code that deals with the PHY reset line / GPIO is however only done
-> > in mdiobus_device_register, called through phy_device_register. Since
-> > this is happening way after the call to get_phy_device, our PHY might
-> > still very well be in reset if the bootloader hasn't put it out of reset
-> > and left it there.
->=20
-> Hi Maxime
->=20
-> If you look at the history of this code,
->=20
-> commit bafbdd527d569c8200521f2f7579f65a044271be
-> Author: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> Date:   Mon Dec 4 13:35:05 2017 +0100
->=20
->     phylib: Add device reset GPIO support
->=20
-> you will see there is an assumption the PHY can be detected while in
-> reset. The reset was originally handled inside the at803x PHY driver
-> probe function, before it got moved into the core.
->=20
-> What you are asking for it reasonable, but you have some history to
-> deal with, changing some assumptions as to what the reset is all
-> about.
+On 7/7/20 5:05 PM, Lorenzo Pieralisi wrote:
+> On Mon, Jun 15, 2020 at 11:05:56PM +0200, Ansuel Smith wrote:
+>> This contains multiple fix for PCIe qcom driver.
+>> Some optional reset and clocks were missing.
+>> Fix a problem with no PARF programming that cause kernel lock on load.
+>> Add support to force gen 1 speed if needed. (due to hardware limitation)
+>> Add ipq8064 rev 2 support that use a different tx termination offset.
+>>
+>> v7:
+>> * Rework GEN1 patch
+>>
+>> v6:
+>> * Replace custom define
+>> * Move define not used in 07 to 08
+>>
+>> v5:
+>> * Split PCI: qcom: Add ipq8064 rev2 variant and set tx term offset
+>>
+>> v4:
+>> * Fix grammar error across all patch subject
+>> * Use bulk api for clks
+>> * Program PARF only in ipq8064 SoC
+>> * Program tx term only in ipq8064 SoC
+>> * Drop configurable tx-dempth rx-eq
+>> * Make added clk optional
+>>
+>> v3:
+>> * Fix check reported by checkpatch --strict
+>> * Rename force_gen1 to gen
+>>
+>> v2:
+>> * Drop iATU programming (already done in pcie init)
+>> * Use max-link-speed instead of force-gen1 custom definition
+>> * Drop MRRS to 256B (Can't find a realy reason why this was suggested)
+>> * Introduce a new variant for different revision of ipq8064
+>>
+>> Abhishek Sahu (1):
+>>   PCI: qcom: Change duplicate PCI reset to phy reset
+>>
+>> Ansuel Smith (10):
+>>   PCI: qcom: Add missing ipq806x clocks in PCIe driver
+>>   dt-bindings: PCI: qcom: Add missing clks
+>>   PCI: qcom: Add missing reset for ipq806x
+>>   dt-bindings: PCI: qcom: Add ext reset
+>>   PCI: qcom: Use bulk clk api and assert on error
+>>   PCI: qcom: Define some PARF params needed for ipq8064 SoC
+>>   PCI: qcom: Add support for tx term offset for rev 2.1.0
+>>   PCI: qcom: Add ipq8064 rev2 variant
+>>   dt-bindings: PCI: qcom: Add ipq8064 rev 2 variant
+>>   PCI: qcom: Replace define with standard value
+>>
+>> Sham Muthayyan (1):
+>>   PCI: qcom: Support pci speed set for ipq806x
+>>
+>>  .../devicetree/bindings/pci/qcom,pcie.txt     |  15 +-
+>>  drivers/pci/controller/dwc/pcie-qcom.c        | 186 +++++++++++-------
+>>  2 files changed, 128 insertions(+), 73 deletions(-)
+> 
+> ACK missing on patches 8,9,12 please let me know how to proceed,
+> thanks.
 
-Thanks for the pointer.
+You could use my acked-by for them:
 
-It looks to me from the commit log that the assumption was that a
-bootloader could leave the PHY into reset though?
+Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
 
-It starts with:
+> 
+> Lorenzo
+> 
 
-> The PHY devices sometimes do have their reset signal (maybe even power
-> supply?) tied to some GPIO and sometimes it also does happen that a
-> boot loader does not leave it deasserted.
-
-This is exactly the case I was discussing. The bootloader hasn't used
-the PHY, and thus the PHY reset signal is still asserted?
-
-Maxime
+-- 
+regards,
+Stan
