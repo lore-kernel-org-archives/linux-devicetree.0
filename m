@@ -2,112 +2,123 @@ Return-Path: <SRS0=wVrF=AS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AFBC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 15:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAABC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 15:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43ED92065D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 15:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C72620663
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 15:36:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CTvNoaNi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728204AbgGGPPh (ORCPT
+        id S1728215AbgGGPgW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 11:15:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:56318 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728519AbgGGPPh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 7 Jul 2020 11:15:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E3F8C0A;
-        Tue,  7 Jul 2020 08:15:36 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 638773F68F;
-        Tue,  7 Jul 2020 08:15:34 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 16:15:28 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 00/12] Multiple fixes in PCIe qcom driver
-Message-ID: <20200707151528.GA18240@e121166-lin.cambridge.arm.com>
-References: <20200615210608.21469-1-ansuelsmth@gmail.com>
+        Tue, 7 Jul 2020 11:36:22 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:54540 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727079AbgGGPgV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 11:36:21 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 067Fa0oT026459;
+        Tue, 7 Jul 2020 10:36:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594136160;
+        bh=d4DsmzHbKkNBcX32YjQ2+lr3RY6d1aC3mMFb52eDm+w=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=CTvNoaNifJPJM/EL3sOYzRi2Usf370h3LDS6sZDfNMDq9Gh5xhBcmB7h1j3WEiVLH
+         laRqOJq16wutyTEZ26eHGrGQhMTDc76Fqw/g9Ci9CKZIBamNyzb8OX8JDveTvaQBzr
+         aj78BHCiJUVbWqtFGjSkIOVjw3b20g1znk2ojxOg=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 067Fa0Fc019368
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 7 Jul 2020 10:36:00 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 7 Jul
+ 2020 10:36:00 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 7 Jul 2020 10:36:00 -0500
+Received: from [10.250.32.229] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 067Fa0sW089681;
+        Tue, 7 Jul 2020 10:36:00 -0500
+Subject: Re: [PATCH v29 00/16] Multicolor Framework v29
+From:   Dan Murphy <dmurphy@ti.com>
+To:     Pavel Machek <pavel@ucw.cz>, <marek.behun@nic.cz>
+CC:     <jacek.anaszewski@gmail.com>, <robh@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200622185919.2131-1-dmurphy@ti.com>
+ <20200704124729.GA20088@amd> <e25dd902-da3f-37ca-c9bc-f4ab42019281@ti.com>
+Message-ID: <a21e8389-ba60-c341-d7bd-a0b166084be6@ti.com>
+Date:   Tue, 7 Jul 2020 10:36:00 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200615210608.21469-1-ansuelsmth@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <e25dd902-da3f-37ca-c9bc-f4ab42019281@ti.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 11:05:56PM +0200, Ansuel Smith wrote:
-> This contains multiple fix for PCIe qcom driver.
-> Some optional reset and clocks were missing.
-> Fix a problem with no PARF programming that cause kernel lock on load.
-> Add support to force gen 1 speed if needed. (due to hardware limitation)
-> Add ipq8064 rev 2 support that use a different tx termination offset.
-> 
-> v7:
-> * Rework GEN1 patch
-> 
-> v6:
-> * Replace custom define
-> * Move define not used in 07 to 08
-> 
-> v5:
-> * Split PCI: qcom: Add ipq8064 rev2 variant and set tx term offset
-> 
-> v4:
-> * Fix grammar error across all patch subject
-> * Use bulk api for clks
-> * Program PARF only in ipq8064 SoC
-> * Program tx term only in ipq8064 SoC
-> * Drop configurable tx-dempth rx-eq
-> * Make added clk optional
-> 
-> v3:
-> * Fix check reported by checkpatch --strict
-> * Rename force_gen1 to gen
-> 
-> v2:
-> * Drop iATU programming (already done in pcie init)
-> * Use max-link-speed instead of force-gen1 custom definition
-> * Drop MRRS to 256B (Can't find a realy reason why this was suggested)
-> * Introduce a new variant for different revision of ipq8064
-> 
-> Abhishek Sahu (1):
->   PCI: qcom: Change duplicate PCI reset to phy reset
-> 
-> Ansuel Smith (10):
->   PCI: qcom: Add missing ipq806x clocks in PCIe driver
->   dt-bindings: PCI: qcom: Add missing clks
->   PCI: qcom: Add missing reset for ipq806x
->   dt-bindings: PCI: qcom: Add ext reset
->   PCI: qcom: Use bulk clk api and assert on error
->   PCI: qcom: Define some PARF params needed for ipq8064 SoC
->   PCI: qcom: Add support for tx term offset for rev 2.1.0
->   PCI: qcom: Add ipq8064 rev2 variant
->   dt-bindings: PCI: qcom: Add ipq8064 rev 2 variant
->   PCI: qcom: Replace define with standard value
-> 
-> Sham Muthayyan (1):
->   PCI: qcom: Support pci speed set for ipq806x
-> 
->  .../devicetree/bindings/pci/qcom,pcie.txt     |  15 +-
->  drivers/pci/controller/dwc/pcie-qcom.c        | 186 +++++++++++-------
->  2 files changed, 128 insertions(+), 73 deletions(-)
+Pavel
 
-Applied to pci/dwc for v5.9, thanks.
+On 7/6/20 7:31 AM, Dan Murphy wrote:
+> Pavel
+>
+> On 7/4/20 7:47 AM, Pavel Machek wrote:
+>> Hi!
+>>
+>>> This is the multi color LED framework. This framework presents 
+>>> clustered
+>>> colored LEDs into an array and allows the user space to adjust the 
+>>> brightness
+>>> of the cluster using a single file write.  The individual colored LEDs
+>>> intensities are controlled via a single file that is an array of LEDs
+>>>
+>>> Change to the LEDs Kconfig to fix dependencies on the LP55XX_COMMON.
+>>> Added update to the u8500_defconfig
+>> Marek, would you be willing to look over this series?
+>>
+>> Dan, can we please get it in the order
+>>
+>> 1) fixes first
+>>
+>> 2) changes needed for multicolor but not depending on dt acks
+>>
+>> 3) dt changes
+>>
+>> 4) rest?
+>>
+>> This is the order it should have been in the first place, and I'd like
+>> to get fixes applied, and perhaps some of the preparation.
+>
+> This will depend on if there are comments.  If I have to push a v30 
+> then I will reorder.
+>
+> If not then there would be no reason to re-order these.
+>
+FYI I just reordered these locally and the fixes patches applied cleanly 
+to your for-next branch and the MC FW patches applied cleanly on top of 
+those.
 
-Lorenzo
+So you should be able to pull in the fixes with no dependency on the MC 
+FW patches.  If you can apply the fixes cleanly then if there are 
+conflicts with the MC FW patches then I will fix those as well.
+
+Dan
+
+
+> Dan
+>
+>
