@@ -2,164 +2,84 @@ Return-Path: <SRS0=wVrF=AS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DFC6C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 04:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D8FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 04:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0948620722
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 04:28:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xdNQHYrI"
+	by mail.kernel.org (Postfix) with ESMTP id 8844E20772
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 04:49:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgGGE2R (ORCPT
+        id S1726961AbgGGEtH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 00:28:17 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:64415 "EHLO m43-7.mailgun.net"
+        Tue, 7 Jul 2020 00:49:07 -0400
+Received: from mga17.intel.com ([192.55.52.151]:18686 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726933AbgGGE2R (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 7 Jul 2020 00:28:17 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594096097; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=hBwuuK2aRbrgFHjBZz5RaQYAa9SdTOUKi0y8gBqMwBk=; b=xdNQHYrIfPPFcuQWOnScC4l+tD5mkzynZoTgHZJPPwCfBBdCsdwPvmbLpuEb8DGfMGbCm4WH
- 8fQwD/d56fp4YzwiNKClAqgMdmJJCn+467rVXgC4W3HBiJglWx9Fs7wlTBU7cYEZ4taJf2Cr
- SMo3Zx8m0ADGAX5192WxIvp2f0A=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-west-2.postgun.com with SMTP id
- 5f03f9e00082b2784812b02e (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 07 Jul 2020 04:28:16
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 696C6C433A0; Tue,  7 Jul 2020 04:28:16 +0000 (UTC)
-Received: from [192.168.1.11] (unknown [61.3.20.137])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CBD46C433C6;
-        Tue,  7 Jul 2020 04:28:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CBD46C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v2 2/4] drm/msm: dsi: Use OPP API to set clk/perf state
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     robdclark@gmail.com, sean@poorly.run, agross@kernel.org,
-        bjorn.andersson@linaro.org, dri-devel@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1593688151-22616-1-git-send-email-rnayak@codeaurora.org>
- <1593688151-22616-3-git-send-email-rnayak@codeaurora.org>
- <20200706161057.GG3191083@google.com>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <7472e916-4cfa-6462-9d16-6d3dc5127a42@codeaurora.org>
-Date:   Tue, 7 Jul 2020 09:58:09 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200706161057.GG3191083@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1726889AbgGGEtG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 7 Jul 2020 00:49:06 -0400
+IronPort-SDR: EpaEcoGHdfrCfNbOFQmKVimyoThE4SmX2E7Hv41mGqlF57QeSeCZPaivjAxKqKaHnUmxEhoP+E
+ pD6PmdtRZ2VA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="127625362"
+X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
+   d="scan'208";a="127625362"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 21:49:06 -0700
+IronPort-SDR: ZziL/FOyVWI3UFNsNz29L18g0qIbRxyaZ5ZjeoMNUi2vZ6LkMAWlo7Rk5iCuf70J1+BTNXAq1c
+ SV8+ZQ9R1gRg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
+   d="scan'208";a="279485168"
+Received: from vgjayaku-ilbpg7.png.intel.com ([10.88.227.96])
+  by orsmga003.jf.intel.com with ESMTP; 06 Jul 2020 21:49:03 -0700
+From:   vineetha.g.jaya.kumaran@intel.com
+To:     davem@davemloft.net, kuba@kernel.org, mcoquelin.stm32@gmail.com,
+        robh+dt@kernel.org
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        weifeng.voon@intel.com, hock.leong.kweh@intel.com,
+        boon.leong.ong@intel.com
+Subject: [PATCH 0/2] Add Ethernet support for Intel Keem Bay SoC
+Date:   Tue,  7 Jul 2020 12:47:16 +0800
+Message-Id: <1594097238-8827-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: "Vineetha G. Jaya Kumaran" <vineetha.g.jaya.kumaran@intel.com>
 
+Hello,
 
-On 7/6/2020 9:40 PM, Matthias Kaehlcke wrote:
-> On Thu, Jul 02, 2020 at 04:39:09PM +0530, Rajendra Nayak wrote:
->> On SDM845 and SC7180 DSI needs to express a performance state
->> requirement on a power domain depending on the clock rates.
->> Use OPP table from DT to register with OPP framework and use
->> dev_pm_opp_set_rate() to set the clk/perf state.
->>
->> dev_pm_opp_set_rate() is designed to be equivalent to clk_set_rate()
->> for devices without an OPP table, hence the change works fine
->> on devices/platforms which only need to set a clock rate.
->>
->> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->> ---
->>   drivers/gpu/drm/msm/dsi/dsi_host.c | 26 ++++++++++++++++++++++++--
->>   1 file changed, 24 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
->> index 11ae5b8..09e16b8 100644
->> --- a/drivers/gpu/drm/msm/dsi/dsi_host.c
->> +++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
->> @@ -14,6 +14,7 @@
->>   #include <linux/of_graph.h>
->>   #include <linux/of_irq.h>
->>   #include <linux/pinctrl/consumer.h>
->> +#include <linux/pm_opp.h>
->>   #include <linux/regmap.h>
->>   #include <linux/regulator/consumer.h>
->>   #include <linux/spinlock.h>
->> @@ -111,6 +112,9 @@ struct msm_dsi_host {
->>   	struct clk *pixel_clk_src;
->>   	struct clk *byte_intf_clk;
->>   
->> +	struct opp_table *opp_table;
->> +	bool has_opp_table;
->> +
->>   	u32 byte_clk_rate;
->>   	u32 pixel_clk_rate;
->>   	u32 esc_clk_rate;
->> @@ -512,9 +516,10 @@ int dsi_link_clk_set_rate_6g(struct msm_dsi_host *msm_host)
->>   	DBG("Set clk rates: pclk=%d, byteclk=%d",
->>   		msm_host->mode->clock, msm_host->byte_clk_rate);
->>   
->> -	ret = clk_set_rate(msm_host->byte_clk, msm_host->byte_clk_rate);
->> +	ret = dev_pm_opp_set_rate(&msm_host->pdev->dev,
->> +				  msm_host->byte_clk_rate);
->>   	if (ret) {
->> -		pr_err("%s: Failed to set rate byte clk, %d\n", __func__, ret);
->> +		pr_err("%s: dev_pm_opp_set_rate failed %d\n", __func__, ret);
->>   		return ret;
->>   	}
->>   
->> @@ -658,6 +663,8 @@ int dsi_link_clk_enable_v2(struct msm_dsi_host *msm_host)
->>   
->>   void dsi_link_clk_disable_6g(struct msm_dsi_host *msm_host)
->>   {
->> +	/* Drop the performance state vote */
->> +	dev_pm_opp_set_rate(&msm_host->pdev->dev, 0);
->>   	clk_disable_unprepare(msm_host->esc_clk);
->>   	clk_disable_unprepare(msm_host->pixel_clk);
->>   	if (msm_host->byte_intf_clk)
->> @@ -1879,6 +1886,18 @@ int msm_dsi_host_init(struct msm_dsi *msm_dsi)
->>   		goto fail;
->>   	}
->>   
->> +	msm_host->opp_table = dev_pm_opp_set_clkname(&pdev->dev, "byte");
->> +	if (IS_ERR(msm_host->opp_table))
->> +		return PTR_ERR(msm_host->opp_table);
->> +	/* OPP table is optional */
->> +	ret = dev_pm_opp_of_add_table(&pdev->dev);
->> +	if (!ret) {
->> +		msm_host->has_opp_table = true;
->> +	} else if (ret != -ENODEV) {
->> +		dev_err(&pdev->dev, "invalid OPP table in device tree\n");
-> 
->    		dev_pm_opp_put_clkname(msm_host->opp_table);
-> 
->> +		return ret;
->> +	}
-> 
-> With the missing _put_clkname() fixed:
+This patch set enables support for Ethernet on the Intel Keem Bay SoC.
+The first patch contains the required Device Tree bindings documentation, 
+while the second patch adds the Intel platform glue layer for the stmmac
+device driver.
 
-Thanks, I'll fix and resend.
+This driver was tested on the Keem Bay evaluation module board.
 
-> 
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> 
+Thank you.
+
+Best regards,
+Vineetha
+
+Rusaimi Amira Ruslan (1):
+  net: stmmac: Add dwmac-intel-plat for GBE driver
+
+Vineetha G. Jaya Kumaran (1):
+  dt-bindings: net: Add bindings for Intel Keem Bay
+
+ .../devicetree/bindings/net/intel,dwmac-plat.yaml  | 123 +++++++++++++
+ drivers/net/ethernet/stmicro/stmmac/Kconfig        |  10 ++
+ drivers/net/ethernet/stmicro/stmmac/Makefile       |   1 +
+ .../net/ethernet/stmicro/stmmac/dwmac-intel-plat.c | 191 +++++++++++++++++++++
+ 4 files changed, 325 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/intel,dwmac-plat.yaml
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-intel-plat.c
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+1.9.1
+
