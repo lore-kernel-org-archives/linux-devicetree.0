@@ -2,94 +2,194 @@ Return-Path: <SRS0=wVrF=AS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B77CFC433ED
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 16:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC8DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 16:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0D7420674
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 16:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B695D206E2
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 16:39:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sVZwKe/y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbgGGQS2 (ORCPT
+        id S1728029AbgGGQjJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 12:18:28 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:43654 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728589AbgGGQSZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 12:18:25 -0400
-X-IronPort-AV: E=Sophos;i="5.75,324,1589209200"; 
-   d="scan'208";a="51540096"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 08 Jul 2020 01:18:23 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 312BE40164B2;
-        Wed,  8 Jul 2020 01:18:20 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
+        Tue, 7 Jul 2020 12:39:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44442 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726911AbgGGQjI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 12:39:08 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B40EC061755;
+        Tue,  7 Jul 2020 09:39:08 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id s10so45849954wrw.12;
+        Tue, 07 Jul 2020 09:39:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8WhRhUV0bxW5fKNsJJERRh/gn666x8wPbqXyJwg1M+Y=;
+        b=sVZwKe/yxmasMSn4W9LUauyzUsiKPNLiGPnRRvctW3J4at7s1qFoLq5WH7KiVEiO1X
+         eouoRbRhe6QRuz536A/mpikK0L7fNdq8QqQECAqiPu46t6KgKf5pxUJmcxN3sgMxaQwc
+         PBbG7gpL7O4WqebsWv8NW8f5+Gpcp0pR+Ffyk+Et4tsFS/qq/td4iTX9pCqx0ikxU3TK
+         Hfvp5mXJSGOiGU+wCIWx9q0ZUFdcGT55PzX3F7/xZsuucBAvq0fUYMhgEf1YGjRF/K8G
+         QtJH1c439l1PZcvOs7bjaHR+8oJhN5niFQWIC9OWZVeccrDKTcc+Kmdng2IUmhBGoZxt
+         KGhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8WhRhUV0bxW5fKNsJJERRh/gn666x8wPbqXyJwg1M+Y=;
+        b=T7ZQjVSwFeYw0bnkcuazcL4F9YEuCAbrs4O0T28c8RMw6s+BePZ2ZOxcudww40mIVZ
+         4LtAWWcmiNhGqq5LWA90cvu0Ayd+UiksomOHd6bpbk3ymWjfcW1NvwNfGUt3fRiO3H1m
+         XKC3yohilc7RTiz8FN5VkpWpNgC8oa1Fu3LtinCzQM0efL7/Q07ODmpzux/L7lIzSsOk
+         3o/0Ph5Qgv2ka/j2FIUEQ6Hv2NUIknto5j2agTa4thFTmGQ1q1SJxjvvStTFFqWvLNSd
+         ymRpi1EMSDFo4nXbcBeMNZC6cSawo/qT2OGMqzBr3xMZzlPdomS8tkw3HayWmJ9t+p53
+         C4vg==
+X-Gm-Message-State: AOAM532N7dYe3QbjKmIIqt1f5GMwIShQdC0GNfLIN+GqAqcTI7dlorsf
+        8en10y6dkKeUxGdsGQdjcpWBO9MF
+X-Google-Smtp-Source: ABdhPJxMK9hsl7HRkUBbUzfQV5ktnTNS1wWDpoX3tEAxYfgNSC9TtC5vLKTfcaJTGiL0O+sKDNR1kQ==
+X-Received: by 2002:adf:ed02:: with SMTP id a2mr53877459wro.110.1594139946830;
+        Tue, 07 Jul 2020 09:39:06 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id n16sm1674785wrq.39.2020.07.07.09.39.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jul 2020 09:39:06 -0700 (PDT)
+Subject: Re: PHY reset handling during DT parsing
+To:     Maxime Ripard <maxime@cerno.tech>, Andrew Lunn <andrew@lunn.ch>
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
         Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 04/14] soc: renesas: Add Renesas R8A774E1 config option
-Date:   Tue,  7 Jul 2020 17:18:02 +0100
-Message-Id: <1594138692-16816-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594138692-16816-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1594138692-16816-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Frank Rowand <frowand.list@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Antoine_T=c3=a9nart?= <antoine.tenart@bootlin.com>
+References: <20200706181331.x2tn5cl5jn5kqmhx@gilmour.lan>
+ <20200707141918.GA928075@lunn.ch>
+ <20200707145440.teimwt6kmsnyi5dz@gilmour.lan>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <82482500-d329-71d4-619a-7cb2eddaf9ad@gmail.com>
+Date:   Tue, 7 Jul 2020 09:39:02 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200707145440.teimwt6kmsnyi5dz@gilmour.lan>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-Add configuration option for the RZ/G2H (R8A774E1) SoC.
 
-Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- drivers/soc/renesas/Kconfig | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+On 7/7/2020 7:54 AM, Maxime Ripard wrote:
+> Hi Andrew,
+> 
+> On Tue, Jul 07, 2020 at 04:19:18PM +0200, Andrew Lunn wrote:
+>> On Mon, Jul 06, 2020 at 08:13:31PM +0200, Maxime Ripard wrote:
+>>> I came across an issue today on an Allwinner board, but I believe it's a
+>>> core issue.
+>>>
+>>> That board is using the stmac driver together with a phy that happens to
+>>> have a reset GPIO, except that that GPIO will never be claimed, and the
+>>> PHY will thus never work.
+>>>
+>>> You can find an example of such a board here:
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/sun6i-a31-hummingbird.dts#n195
+>>>
+>>> It looks like when of_mdiobus_register() will parse the DT, it will then
+>>> call of_mdiobus_register_phy() for each PHY it encounters [1].
+>>> of_mdiobus_register_phy() will then if the phy doesn't have an
+>>> ethernet-phy-id* compatible call get_phy_device() [2], and will later on
+>>> call phy_register_device [3].
+>>>
+>>> get_phy_device() will then call get_phy_id() [4], that will try to
+>>> access the PHY through the MDIO bus [5].
+>>>
+>>> The code that deals with the PHY reset line / GPIO is however only done
+>>> in mdiobus_device_register, called through phy_device_register. Since
+>>> this is happening way after the call to get_phy_device, our PHY might
+>>> still very well be in reset if the bootloader hasn't put it out of reset
+>>> and left it there.
+>>
+>> Hi Maxime
+>>
+>> If you look at the history of this code,
+>>
+>> commit bafbdd527d569c8200521f2f7579f65a044271be
+>> Author: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>> Date:   Mon Dec 4 13:35:05 2017 +0100
+>>
+>>     phylib: Add device reset GPIO support
+>>
+>> you will see there is an assumption the PHY can be detected while in
+>> reset. The reset was originally handled inside the at803x PHY driver
+>> probe function, before it got moved into the core.
+>>
+>> What you are asking for it reasonable, but you have some history to
+>> deal with, changing some assumptions as to what the reset is all
+>> about.
+> 
+> Thanks for the pointer.
+> 
+> It looks to me from the commit log that the assumption was that a
+> bootloader could leave the PHY into reset though?
+> 
+> It starts with:
+> 
+>> The PHY devices sometimes do have their reset signal (maybe even power
+>> supply?) tied to some GPIO and sometimes it also does happen that a
+>> boot loader does not leave it deasserted.
+> 
+> This is exactly the case I was discussing. The bootloader hasn't used
+> the PHY, and thus the PHY reset signal is still asserted?
 
-diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
-index 53cd8d2d0cd2..30984659df90 100644
---- a/drivers/soc/renesas/Kconfig
-+++ b/drivers/soc/renesas/Kconfig
-@@ -201,6 +201,13 @@ config ARCH_R8A774C0
- 	help
- 	  This enables support for the Renesas RZ/G2E SoC.
- 
-+config ARCH_R8A774E1
-+	bool "Renesas RZ/G2H SoC Platform"
-+	select ARCH_RCAR_GEN3
-+	select SYSC_R8A774E1
-+	help
-+	  This enables support for the Renesas RZ/G2H SoC.
-+
- config ARCH_R8A77950
- 	bool "Renesas R-Car H3 ES1.x SoC Platform"
- 	select ARCH_RCAR_GEN3
-@@ -296,6 +303,10 @@ config SYSC_R8A774C0
- 	bool "RZ/G2E System Controller support" if COMPILE_TEST
- 	select SYSC_RCAR
- 
-+config SYSC_R8A774E1
-+	bool "RZ/G2H System Controller support" if COMPILE_TEST
-+	select SYSC_RCAR
-+
- config SYSC_R8A7779
- 	bool "R-Car H1 System Controller support" if COMPILE_TEST
- 	select SYSC_RCAR
+The current solution to this problem would be to have a reset property
+specified for the MDIO bus controller node such that the reset would be
+de-asserted during mdiobus_register() and prior to scanning the MDIO bus.
+
+This has the nice property that for a 1:1 mapping between MDIO bus
+controller and device, it works (albeit maybe not being accurately
+describing hardware), but if you have multiple MDIO/PHY devices sitting
+on the bus, they might each have their own reset control and while we
+would attempt to manage that reset line from that call path:
+
+mdiobus_scan()
+ -> phy_device_register()
+    -> mdiobus_register_device()
+
+it would be too late because there is a preceding get_phy_device() which
+attempts to read the PHY device's OUI and it would fail if the PHY is
+still held in reset.
+
+We have had a similar discussion before with regulators:
+
+http://archive.lwn.net:8080/devicetree/20200622093744.13685-1-brgl@bgdev.pl/
+
+and so far we do not really have a good solution to this problem either.
+
+For your specific use case with resets you could do a couple of things:
+
+- if there is only one PHY on the MDIO bus you can describe the reset
+line to be within the MDIO bus controller node (explained above), this
+is not great but it is not necessarily too far from reality either
+
+- if you know the PHY OUI, you can put it as a compatible string in the
+form: ethernet-phy-id%4x.%4x and that will avoid the MDIO bus layer to
+try to read from the PHY but instead match it with a driver and create a
+phy_device instance right away
+
+I think we are open to a "pre probe" model where it is possible to have
+a phy_device instance created that would allow reset controller or
+regulator (or clocks, too) to be usable with a struct device reference,
+yet make no HW access until all of these resources have been enabled.
 -- 
-2.17.1
-
+Florian
