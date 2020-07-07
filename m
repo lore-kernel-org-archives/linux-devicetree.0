@@ -6,49 +6,49 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D85C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 06:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B0EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 06:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FC6120658
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 06:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1366220720
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 06:46:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594104328;
-	bh=RwBTl2jRSX+U3Hmlj6/PUYQx9At6FmD2req9Id2gQUY=;
+	s=default; t=1594104366;
+	bh=7vWpkwbpVurvhqJvg651ncehNiMGpNzfY8nAefCyU0Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xKjIIoShsoSA2156xfwWvVr98oBd7wY6ZC/KK9BWfuEV6efejepKjg6QWFtax2yeJ
-	 VfUJj/4rRHV69eU5Uws8Q6A1InAx57CT50AzviaPLOwnkjHGGKALUcVUEWx6FcX8Fr
-	 HZjkea4MiE/h2pBMq4KNGaFpGY0BbY9Zgd/+Aa/g=
+	b=1Mt8NQCdBXWV02GXMTnu7fdtJvI1ySDHc2mojwO3ZEiK7R+FKrp4qzR4qY0veQbHd
+	 Jp49mxMiCKHL6Lg+ZFy5GC/nQoFrAPlv35A19RrmtgQGYWDqb/WWPzZrhxk4h+n/NJ
+	 7mIdQTvBUPA3BKkZDEz64BjTqk2N5w74Agmlc+dY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgGGGp1 (ORCPT
+        id S1726889AbgGGGqF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 02:45:27 -0400
-Received: from mail-wr1-f49.google.com ([209.85.221.49]:36008 "EHLO
-        mail-wr1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbgGGGp1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 02:45:27 -0400
-Received: by mail-wr1-f49.google.com with SMTP id k6so43923765wrn.3;
-        Mon, 06 Jul 2020 23:45:25 -0700 (PDT)
+        Tue, 7 Jul 2020 02:46:05 -0400
+Received: from mail-wm1-f41.google.com ([209.85.128.41]:33692 "EHLO
+        mail-wm1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbgGGGqF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 02:46:05 -0400
+Received: by mail-wm1-f41.google.com with SMTP id a6so1028864wmm.0;
+        Mon, 06 Jul 2020 23:46:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ERqLpgfazVzIw/b9f5OpejET82CJrHcalCz0kjdAajo=;
-        b=CXnXL3jwiaoGSsD/91Xrbx9wVqJA5Tx6b+edF5wicjnXGoYMAdWUnICboAq9Iujiv1
-         MW/bYNCFEZ0BtK2E3rVq1oKz4BVGwrdbMxHwG2kqoD5HXZnbx1GBoCdlXjw18x0ZrJiU
-         FqDlfR5oYYNc8JpOsHM2Wfx3R9LWa3lfKRCL9FXRk3ATJ05ztKBO0i3GnckfDBTZNt1F
-         vSZkMMXrxszMd+/L857QOSieYGdrRyJM0sRYB+noWd4mm55+02hvYW9KGfvSkgMecJpf
-         6R6ITiOodKGphBeNWmTIKW6XTuNGgfNOGtr24rupBgNGH/vsf0lY5BEw24V1kp+ED6Ku
-         rdww==
-X-Gm-Message-State: AOAM531p9ZEX1nolP3vrl5IqM+JF0GtfjxxfgU1STrexVDF0TJg8Z7QL
-        odbQTaK0HpezUdevoTw8FTQLy7rD
-X-Google-Smtp-Source: ABdhPJyt6bbatltHwrOpH4eDbBJl7tfU7hG03iJoVsuknlfh4nEFVlOQ+d8AP38u/MFLWZGiBLeOkA==
-X-Received: by 2002:adf:e6c1:: with SMTP id y1mr25302092wrm.116.1594104325131;
-        Mon, 06 Jul 2020 23:45:25 -0700 (PDT)
+        bh=LZY4QYexNFxT6TqFL0Caw2AQdp+94mhDbGktkxzUk58=;
+        b=aRtzeXJoQq3zvtGUfShYA172LUEHdOCo5dyYJ2ccfSLsGjoJTJEL3yQlcx+sfUwfLW
+         CjUoEMhDmRbcvp1bMzKIKHaYx5/OuP/2sBAbCKohVGuGrH27QenaTlvL1mK7p6WDFnAR
+         za9CQ6er2rwM/i9UTiQ90LpSk6mD3h3WvB2tOyhk44p8WltT9kSjd94FAsthdlqoy7v3
+         I1qNVyUaTRsPkw93XKTrsXHQs2glNUJIawUVO44AFVSDXpcFQeuGHrwdPZtZtueLxQ2r
+         H8SFCX/eY081/5mm03Fw761rSCuclieVM/B2GsEBUHoWCLAbULLtx3TuvcFky4kE1BLU
+         OHyA==
+X-Gm-Message-State: AOAM533PulPs5R/IZx05Ll3g4E7sYZW/9uuror0JX5aIpGuuA0Ve/q8k
+        Oc0C3lslU+jU1S85jKBJhZ0=
+X-Google-Smtp-Source: ABdhPJziNI/S3TzI2xPuhc6soNVAjOlNsFWHMGrc0DQfWgB7P9NwL35zvKimFDVT4ifwVkQ5s668Ow==
+X-Received: by 2002:a1c:804c:: with SMTP id b73mr2530042wmd.59.1594104363178;
+        Mon, 06 Jul 2020 23:46:03 -0700 (PDT)
 Received: from kozik-lap ([194.230.155.195])
-        by smtp.googlemail.com with ESMTPSA id k126sm2232332wmf.3.2020.07.06.23.45.23
+        by smtp.googlemail.com with ESMTPSA id 51sm22103085wrc.44.2020.07.06.23.46.01
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 Jul 2020 23:45:24 -0700 (PDT)
-Date:   Tue, 7 Jul 2020 08:45:22 +0200
+        Mon, 06 Jul 2020 23:46:02 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 08:46:00 +0200
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
         Marek Szyprowski <m.szyprowski@samsung.com>,
@@ -59,26 +59,30 @@ Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sylwester Nawrocki <snawrocki@kernel.org>,
         Chanwoo Choi <cw00.choi@samsung.com>,
         Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: Re: [RFT 2/3] arm64: dts: exynos: Add unit address to soc node on
- Exynos5433
-Message-ID: <20200707064522.GC15031@kozik-lap>
+Subject: Re: [RFT 3/3] arm64: dts: exynos: Add unit address to soc node and
+ move thermal zones on Exynos7
+Message-ID: <20200707064600.GD15031@kozik-lap>
 References: <20200629193338.29540-1-krzk@kernel.org>
- <20200629193338.29540-2-krzk@kernel.org>
+ <20200629193338.29540-3-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200629193338.29540-2-krzk@kernel.org>
+In-Reply-To: <20200629193338.29540-3-krzk@kernel.org>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 09:33:37PM +0200, Krzysztof Kozlowski wrote:
-> Add @0 unit address to 'soc' node match its 'reg' property and silence
-> DTC warning:
+On Mon, Jun 29, 2020 at 09:33:38PM +0200, Krzysztof Kozlowski wrote:
+> Add @0 unit address to 'soc' node match its 'reg' property and move the
+> thermal zones out of 'soc' to main root as it this is usually not a
+> property of a Soc.
+> 
+> This silences DTC warnings:
 > 
 >     Warning (unit_address_vs_reg): /soc: node has a reg or ranges property, but no unit name
+>     Warning (simple_bus_reg): /soc/thermal-zones: missing or empty reg/ranges property
 > 
 > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > 
@@ -86,7 +90,7 @@ On Mon, Jun 29, 2020 at 09:33:37PM +0200, Krzysztof Kozlowski wrote:
 > 
 > Not tested on HW.
 > ---
->  arch/arm64/boot/dts/exynos/exynos5433.dtsi | 2 +-
+>  arch/arm64/boot/dts/exynos/exynos7.dtsi | 20 ++++++++++----------
 
 Applied.
 
