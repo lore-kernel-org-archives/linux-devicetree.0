@@ -2,61 +2,118 @@ Return-Path: <SRS0=wVrF=AS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F7FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 17:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C78EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 18:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0869207C4
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 17:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CA5420708
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 18:07:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Zv4ipbsf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgGGR5F (ORCPT
+        id S1728164AbgGGSHl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 13:57:05 -0400
-Received: from muru.com ([72.249.23.125]:32770 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728073AbgGGR5F (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 7 Jul 2020 13:57:05 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 2BD7F80FB;
-        Tue,  7 Jul 2020 17:57:56 +0000 (UTC)
-Date:   Tue, 7 Jul 2020 10:56:55 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Johnson CH Chen =?utf-8?B?KOmZs+aYreWLsyk=?= 
-        <JohnsonCH.Chen@moxa.com>
-Cc:     =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] ARM: dts: am335x: add support for Moxa UC-8100A-ME
- open platform
-Message-ID: <20200707175655.GA5849@atomide.com>
-References: <HK2PR01MB328129CEA1A9294A8715CE28FA660@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+        Tue, 7 Jul 2020 14:07:41 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:33564 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728036AbgGGSHl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 14:07:41 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 067I7dsp122688;
+        Tue, 7 Jul 2020 13:07:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594145259;
+        bh=tcG+3QfvQYtuz+moQPRntRSYLDtYJOO1r/4BMO3+5bI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Zv4ipbsfseRXYHLCKiWPZV5bHcwAJV63dS7QRwA8FLcswu9yTLyci8r5q+NNGzxvp
+         SbD2SzbGUjAwDtbxGfHP6ui2CppuNgxlG4BHspx5HmTAC1CeCwKx+gWqRBGpI/XM30
+         98AWdn7xdQfH8chUr/J7m/Xg0VhUb/FUwWGAgqrg=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 067I7d6J032245
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 7 Jul 2020 13:07:39 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 7 Jul
+ 2020 13:07:39 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 7 Jul 2020 13:07:39 -0500
+Received: from [10.250.43.45] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 067I7cGA011289;
+        Tue, 7 Jul 2020 13:07:38 -0500
+Subject: Re: [EXTERNAL] Re: [PATCH v15 2/4] dt-bindings: power: Convert
+ battery.txt to battery.yaml
+To:     Rob Herring <robh@kernel.org>
+CC:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Sandeep Patil <sspatil@android.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Andrew F. Davis" <afd@ti.com>, Dan Murphy <dmurphy@ti.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20200701211044.18590-1-r-rivera-matos@ti.com>
+ <20200701211044.18590-3-r-rivera-matos@ti.com>
+ <20200702205320.GA1672139@bogus>
+ <54914eed-4a65-745b-b61b-9515737023e3@ti.com>
+ <CAL_JsqKXC1TFFCq6HBqdbHNeWbA=SnCqHkTx+FQXiPYDLb6sNw@mail.gmail.com>
+From:   Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+Message-ID: <50e85766-08d2-f91e-a6a9-c4b4f8858dc4@ti.com>
+Date:   Tue, 7 Jul 2020 13:07:38 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <HK2PR01MB328129CEA1A9294A8715CE28FA660@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+In-Reply-To: <CAL_JsqKXC1TFFCq6HBqdbHNeWbA=SnCqHkTx+FQXiPYDLb6sNw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Johnson CH Chen (陳昭勳) <JohnsonCH.Chen@moxa.com> [200707 03:24]:
-> UC-8100A-ME is advanced of UC-8100-ME-T, and UC-8100-ME-T is deprecated.
-> 
-> UC-8100A-ME provides larger RAM and eMMC, better input current than
-> UC-8100-ME-T's, and it supports selectable LTE module for US/EU/APAC.
 
-So what about the existing users of UC-8100-ME-T?
-
-To me it seems you should just add am335x-moxa-uc-8100-common.dtsi
-or similar. And then have minimal dts files for each model. That way
-you can easily keep the support UC-8100-ME-T around.
-
-Regards,
-
-Tony
+On 7/7/20 9:40 AM, Rob Herring wrote:
+> On Mon, Jul 6, 2020 at 12:45 PM Ricardo Rivera-Matos
+> <r-rivera-matos@ti.com> wrote:
+>> Rob
+>>
+>> On 7/2/20 3:53 PM, Rob Herring wrote:
+>>> On Wed, 01 Jul 2020 16:10:42 -0500, Ricardo Rivera-Matos wrote:
+>>>> From: Dan Murphy <dmurphy@ti.com>
+>>>>
+>>>> Convert the battery.txt file to yaml and fix up the examples.
+>>>>
+>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>> ---
+>>>>    .../bindings/power/supply/battery.txt         |  86 +---------
+>>>>    .../bindings/power/supply/battery.yaml        | 157 ++++++++++++++++++
+>>>>    2 files changed, 158 insertions(+), 85 deletions(-)
+>>>>    create mode 100644 Documentation/devicetree/bindings/power/supply/battery.yaml
+>>>>
+>>> My bot found errors running 'make dt_binding_check' on your patch:
+>>>
+>>> Unknown file referenced: [Errno 2] No such file or directory: '/usr/local/lib/python3.6/dist-packages/dtschema/schema/types.yaml'
+>>> Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/power/supply/battery.example.dts' failed
+>>> make[1]: *** [Documentation/devicetree/bindings/power/supply/battery.example.dts] Error 255
+>>> make[1]: *** Waiting for unfinished jobs....
+>>> Makefile:1347: recipe for target 'dt_binding_check' failed
+>>> make: *** [dt_binding_check] Error 2
+>> I think your bot is looking for the types.yaml in the wrong place.
+> Really? Yet it works fine on thousands of other patches?
+>
+>> '/usr/local/lib/python3.6/dist-packages/dtschema/schema/types.yaml'
+>> should be
+>> '/usr/local/lib/python3.6/dist-packages/dtschema/schemas/types.yaml'. I
+>> renamed might 'schemas' directory to 'schema' and my battery.yaml passed
+>> the dt_binding_check.
+> Maybe fix the 'schema/' path in your schema file which is wrong.
+Oh I see. My apologies, Rob.
+>
+> Rob
