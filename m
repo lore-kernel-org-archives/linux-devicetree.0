@@ -2,86 +2,96 @@ Return-Path: <SRS0=wVrF=AS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53919C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 11:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA67C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 11:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA34206BE
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 11:51:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E2882075B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 11:59:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="m598dhiv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HKDcobdw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbgGGLvG (ORCPT
+        id S1727058AbgGGL7H (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:51:06 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:16322 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726540AbgGGLvG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 07:51:06 -0400
-X-UUID: 6ab93ad5c0504bb0a3ec9e4173deeb98-20200707
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=3DMwV/Z8QcDuKhf5FKYuKYw/6Ttsn7FiYmhH2inyuNw=;
-        b=m598dhivIyoCn7FiBFuIc58LWXG6u95+ulaNEoVwAOdRRF2akGZ6x42B7UGAFNAt9Jt8y2yXjjZGi1BkHdFZtQ7jGTkUXIwNSOCdAm7/niV24oBxpH2m7UHzky0m9M8K35e5iN3+fIdYViyb6eaNpBK1tVDDCiH0NJkDh+j/kwY=;
-X-UUID: 6ab93ad5c0504bb0a3ec9e4173deeb98-20200707
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1135623474; Tue, 07 Jul 2020 19:51:02 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 7 Jul 2020 19:50:58 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 7 Jul 2020 19:50:59 +0800
-Message-ID: <1594122662.24451.2.camel@mtkswgap22>
-Subject: Re: [PATCH v7] Add basic SoC Support for Mediatek MT6779 SoC
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
+        Tue, 7 Jul 2020 07:59:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57250 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbgGGL7F (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 07:59:05 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3297BC061755
+        for <devicetree@vger.kernel.org>; Tue,  7 Jul 2020 04:59:05 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id g2so24558373lfb.0
+        for <devicetree@vger.kernel.org>; Tue, 07 Jul 2020 04:59:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HTPmD5Tv5dUMriTVMEYPSE4aq44oEkYldNJx6iUd92U=;
+        b=HKDcobdwR59Fn4UPxGHRQ0tpAtbpLCJNsZlPMJ/sOiZyRbiNswsgF9jOe/BAk8id8l
+         /5EDjFn+j7IrqQI7DBI2n7Uq2bBWEf1LX5BO0SlioDHGovjRN/+aYEtpFSj1onhKowwd
+         Jyzt+IOCjBFb2xLwG5Ql2hJk4eWSyQElpoG1w08NxiRQ4BjeE4juggLuIqQZrxnUm4AW
+         wxJ5rCZerV2AejOoEFy2/ofH5gJdnEUHklmMBmyEWjepQYIJFNJR4M9pxxd22+ChBxqi
+         z7Y0JHiZJBtFRhUTWf6BA4ruLd/6iHkPnoKgZc0WXt+PJk9Ns+TyOPs2bDd4yFIVnyF9
+         qKqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HTPmD5Tv5dUMriTVMEYPSE4aq44oEkYldNJx6iUd92U=;
+        b=qAl2/WoF/jQpWnbZmTPQ9i+/iXe+W+Vv1J+sVNsloAQG5Kcwg4CJQgkWeXrFzRsWO7
+         Sg+aQ1tvqRHzj2gvsqXfwiGOrb51K0G0Pn10Y9lBiSsKf5zgg5f9/mQK9cf7Losf1KYm
+         wMI6xSkhV8+v7gVN1gfw6qQTPWXtXxUIRLWAGbOMdRlgNC/i745RN3gx6OSD08LsSGjw
+         e9Ap/0AZKvLOkmv5+IAeflewDIW62pBZ7NZEhYtYohHY7Sl3i4Imy5xfNfnug0YxQx2c
+         8a6S29M+pDUyL/Zk4mF38bABMNyzhko3yus3rZYjowPsr38eX745P5f0e6EivkurcIXH
+         s1DQ==
+X-Gm-Message-State: AOAM533wXtH8xmQ7Lk7fUqWyypI9Sk1Pd+2BK5uGuqwiOA1cJhIdhe6M
+        GZs308xDpPQCuaylMExdldR2U2jOB4fx1pylOgOWww==
+X-Google-Smtp-Source: ABdhPJy0TxaIe1Wz0GdlFd5FdxpVp2FOvGGrBFkEn0oi3CjP4qg2V304qTt6rBtZAznq91V/ed9yiUW+UN8gJyowQaY=
+X-Received: by 2002:a19:e05d:: with SMTP id g29mr32404950lfj.217.1594123143709;
+ Tue, 07 Jul 2020 04:59:03 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200615133242.24911-1-lars.povlsen@microchip.com> <20200615133242.24911-6-lars.povlsen@microchip.com>
+In-Reply-To: <20200615133242.24911-6-lars.povlsen@microchip.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 7 Jul 2020 13:58:52 +0200
+Message-ID: <CACRpkdaSVRg3F5FLKi=sGCFQDXXkiz2e1pT3H9dcoaPDSYKrXQ@mail.gmail.com>
+Subject: Re: [PATCH v3 05/10] pinctrl: ocelot: Add Sparx5 SoC support
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         Stephen Boyd <sboyd@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        Michael Turquette <mturquette@baylibre.com>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>
-Date:   Tue, 7 Jul 2020 19:51:02 +0800
-In-Reply-To: <CACRpkdY+N17VNdzidBdo-Z8rgvRGMh=576-WPULgCmmuSJyN7g@mail.gmail.com>
-References: <1593694630-26604-1-git-send-email-hanks.chen@mediatek.com>
-         <CACRpkdY+N17VNdzidBdo-Z8rgvRGMh=576-WPULgCmmuSJyN7g@mail.gmail.com>
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA3LTA3IGF0IDEzOjQxICswMjAwLCBMaW51cyBXYWxsZWlqIHdyb3RlOg0K
-PiBPbiBUaHUsIEp1bCAyLCAyMDIwIGF0IDI6NTcgUE0gSGFua3MgQ2hlbiA8aGFua3MuY2hlbkBt
-ZWRpYXRlay5jb20+IHdyb3RlOg0KPiANCj4gPiBDaGFuZ2Ugc2luY2Ugdjc6DQo+ID4gQ29tbWl0
-ICJkdC1iaW5kaW5nczogcGluY3RybDogYWRkIGJpbmRpbmdzIGZvciBNZWRpYVRlayINCj4gPiAt
-LSBmaXggdHlwbyBhbmQgY2hhbmdlIG9yZGVyIG9mIHBhdGNoDQo+ID4gQ29tbWl0ICJjbGs6IG1l
-ZGlhdGVrOiBhZGQgVUFSVDAgY2xvY2sgc3VwcG9ydCINCj4gPiAtLSBhZGQgZml4ZXMgdGFnIGFu
-ZCByZWFsIG5hbWUNCj4gPiBDb21taXQgImFybTY0OiBkdHM6IGFkZCBkdHMgbm9kZXMgZm9yIE1U
-Njc3OSINCj4gPiAtLSBleHBvc2UgYWxsIHRocmVlIFVBUlRzIGluIHRoZSBkdHNpDQo+IA0KPiBP
-aCBJIHNlZSB0aGVyZSBhcmUgc3RpbGwgZGV2ZWxvcG1lbnQgb24gdGhpcyBwYXRjaCBzZXQgc28g
-SSB0b29rIG91dA0KPiB0aGUgcGF0Y2hlcyBJIGFwcGxpZWQgYWdhaW4uDQo+IA0KPiBXYWl0aW5n
-IGZvciB0aGUgZmluYWwgcmV2aWV3ZWQgdmVyc2lvbi4NCj4gDQpUaGFuayB5b3UgZm9yIHRha2lu
-ZyBhIGxvb2sgb3ZlciB0aGVzZSBzbyBxdWlja2x5IQ0KDQpHb3QgaXQsIEknbGwgc2VuZCBhIG5l
-d2VyIHZlcnNpb24uDQoNClRoYW5rcyENCg0KPiBZb3VycywNCj4gTGludXMgV2FsbGVpag0KDQo=
+On Mon, Jun 15, 2020 at 3:33 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
 
+> This add support for Sparx5 pinctrl, using the ocelot drives as
+> basis. It adds pinconfig support as well, as supported by the
+> platform.
+>
+> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+
+This one patch applied to the pinctrl tree.
+
+Yours,
+Linus Walleij
