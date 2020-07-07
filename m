@@ -2,83 +2,93 @@ Return-Path: <SRS0=wVrF=AS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA492C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 12:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E55C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 12:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CEC620739
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 12:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A6CE20708
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 12:18:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rqxTBsFk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N/OvAqBu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgGGMO4 (ORCPT
+        id S1727044AbgGGMSS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 08:14:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59720 "EHLO
+        Tue, 7 Jul 2020 08:18:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbgGGMOz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 08:14:55 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 941F1C061755
-        for <devicetree@vger.kernel.org>; Tue,  7 Jul 2020 05:14:55 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id h19so49639568ljg.13
-        for <devicetree@vger.kernel.org>; Tue, 07 Jul 2020 05:14:55 -0700 (PDT)
+        with ESMTP id S1726540AbgGGMSS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 08:18:18 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02D26C08C5E0
+        for <devicetree@vger.kernel.org>; Tue,  7 Jul 2020 05:18:18 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id k17so11795593lfg.3
+        for <devicetree@vger.kernel.org>; Tue, 07 Jul 2020 05:18:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=eRo4bLjP+Yo12cNu7ZB66B2EpLUC900siQn20zUwpBA=;
-        b=rqxTBsFkNM2OgNp8euNVn2o6v7oMZsLp7LN5AYIkHREHJKtYg8+f2Jmb7KYPvSAQH0
-         gdLHvBbaC5FGu7DzhsSLr3rpDTG0o4lWOyIqHnY9y8IRR1e2gfmGhNhEtvW8MLPnnRhu
-         PWNs02d/R8Gs+0dG3pAw3do5FAHRK54GrvPItttQxJTn/flo6Bu5mRy31Qcf4uIWXtHg
-         2minpABLSOxj/fN7N7UfZmmPrb0YZuDeV5uoz7bdXBZKJlrnMSFe38ndu5pOMkfdyb/T
-         Wg2aZbEUm+i3eaYXsbNfIYinU9FHLPO9SDp58JZ6Buc8OMSBl6SUNr/FRJg9rq7iH+dL
-         6rDQ==
+        bh=SOnszkcT7TNdqVrzh07A8SyMxgSxeV8gTnMwaKIquLk=;
+        b=N/OvAqBuFoj3Pd62waZt9/FVEceVBKbXkq4lTVip5frbC/0py1e7qlSOX/CaOcJ9KN
+         0ebXE5iiaXIXyQ4zZoZ/VQWHhEOelXphjkuL5AH8WTrx3FrDh+7Lq7yQMGJnjPLYPGjf
+         JlYqdmHB0kc4EsvML9Dg+v5OpEY/f1e+X5c3iVVMyrMs/Vj8caqxoTOpjfK6uHf7rAxS
+         HCtI7caAC/hBKCsbr+Otirw4x55NLo9xlDxOyYY2pg0EfJv7aYkbVXr7eZT1NSwSEi88
+         XvcPSH8TDp6QBHWzKhtfH++wuwbFvJXZZ9qs7kic+y2B6FLOMsY3iYjf8g7y4gqTI4K1
+         nxMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=eRo4bLjP+Yo12cNu7ZB66B2EpLUC900siQn20zUwpBA=;
-        b=Eri1LF+OGHnKyFBTpyUVKx5RUkRPcbDM+NEYeQlINJVC6mzmB4QSNoTdh7hPLFJ/mI
-         f6lruKdhDYOPO7UcX22yZrr83AtsXlN2VvaTXDpPOyHRupVckOiQEeDskM+4AdSm3v6F
-         kWsrOdBM+QHQLNVhtAQRO9BibSX4cb+DM7KOz9l7iBwSmZkXk7wsQ0fF7JPFHt9oIRIM
-         rQTMxBOM/orGEAFtREKkPyaaGQTdbRI9G/t8sFayAMfuxIiGa9CEuItpE1b5tmQj9j2K
-         K+JwWkLHxVrhsSQtJmWFwFVvmrlqPWybJkrtfZbp6OjBo6GMoIfQrVckRvJkoihebESI
-         k/bQ==
-X-Gm-Message-State: AOAM531HzylvicmJQPplyCW6S6RmjIA3oxS2TK2G8slUHDt5+tkLxI77
-        CTePiVOYr0cQCCBKjQPjZQLVL5OWOCkovWZ71i9PDw==
-X-Google-Smtp-Source: ABdhPJxROxZERlqmDaOPnpnwJeoX3qd+DaxnyCj28HvilR27eVAiv/MQjpUwXcKcaZyzM88dD9mvFlGHKk9DDqFIVM8=
-X-Received: by 2002:a2e:810a:: with SMTP id d10mr24370039ljg.144.1594124094128;
- Tue, 07 Jul 2020 05:14:54 -0700 (PDT)
+        bh=SOnszkcT7TNdqVrzh07A8SyMxgSxeV8gTnMwaKIquLk=;
+        b=DwAALihZFiZ0PFUuhVqVlzw7hVK1mUGwhZeKJoTX9cl3XCxqg5TeofZK2qkDe4g3/p
+         Yg5COrGSFPe+BfwoHjspNubGzX29lqLW1tMXYkMLdB2OawQWwR64/NKDHjgfWs8rMT7f
+         I9kfKyvzxtfGDlZsyW8fKpjTQfMqLSHg0Z1pQTcnW70o5szqngg++QfacPcoCo0+udlW
+         8IP9OgBk1GO4QqXhzeZLy6+ol/gzKx+Hk81nRwm0GGFE6+LpdXkgxV5RNfit/k26coES
+         m0y5mYOENOr+HH6Qc7gaSfOViuWY/iF9BCqax7h38gUQHFPhu97DD94yd39KANfAtFCJ
+         zkCA==
+X-Gm-Message-State: AOAM530EN1nkXSBYOltGPAH8YLgcAKq7LLp5P2SeMjQOa1vifvJWMNU/
+        bmZIjUcyFJLDn8k/harljKE0xrejrhdo9T6XNOYZQVnVQpw=
+X-Google-Smtp-Source: ABdhPJxH0G4kh8NlF9pHPkG/HVOhx9RJ/tQnhLrHOKjaGWMKl3J+G1CqdUSXg1kIkjYFLaEAugmTgoODVIXAf9jL/7E=
+X-Received: by 2002:a19:745:: with SMTP id 66mr32931901lfh.77.1594124296456;
+ Tue, 07 Jul 2020 05:18:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200621193822.133683-1-nick.reitemeyer@web.de> <20200621193822.133683-2-nick.reitemeyer@web.de>
-In-Reply-To: <20200621193822.133683-2-nick.reitemeyer@web.de>
+References: <20200622113740.46450-1-paul@crapouillou.net>
+In-Reply-To: <20200622113740.46450-1-paul@crapouillou.net>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jul 2020 14:14:43 +0200
-Message-ID: <CACRpkdYPXSaqYsP-DO=uRxzb4OJwk6Zy81=dTAmgZn5f8+3QvQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ARM: dts: ux500: samsung-golden: Add touchkey
-To:     Nick Reitemeyer <nick.reitemeyer@web.de>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+Date:   Tue, 7 Jul 2020 14:18:05 +0200
+Message-ID: <CACRpkdYsH9B4_6XLuc-8koMsA6JdFSaMokcF+k9KK=mz-CtUBA@mail.gmail.com>
+Subject: Re: [PATCH RESEND v2] dt-bindings: pinctrl: Convert
+ ingenic,pinctrl.txt to YAML
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Rob Herring <robh+dt@kernel.org>, od@zcrc.me,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Rob Herring <robh+dt@kernel.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Jun 21, 2020 at 9:40 PM Nick Reitemeyer <nick.reitemeyer@web.de> wrote:
+On Mon, Jun 22, 2020 at 1:38 PM Paul Cercueil <paul@crapouillou.net> wrote:
 
-> Adds support for the back and menu keys on golden.
+> Convert the ingenic,pinctrl.txt doc file to ingenic,pinctrl.yaml.
 >
-> Signed-off-by: Nick Reitemeyer <nick.reitemeyer@web.de>
+> In the process, some compatible strings now require a fallback, as the
+> corresponding SoCs are pin-compatible with their fallback variant.
+>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>
+> Notes:
+>     v2: - Use 'pinctrl' instead of 'pin-controller' as the node name
+>         - remove 'additionalProperties: false' since we will have pin conf nodes
 
-Patch applied!
+Patch applied.
 
 Yours,
 Linus Walleij
