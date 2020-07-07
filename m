@@ -2,159 +2,107 @@ Return-Path: <SRS0=wVrF=AS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F2E4C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 09:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05230C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 09:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 292DB206E2
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 09:51:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="EJLYmExN"
+	by mail.kernel.org (Postfix) with ESMTP id D897C20708
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 09:54:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728006AbgGGJvh (ORCPT
+        id S1726883AbgGGJyQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 05:51:37 -0400
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:53993 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727989AbgGGJvg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 05:51:36 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id skG9ja2t7udYLskGCjDpn8; Tue, 07 Jul 2020 11:51:34 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1594115494; bh=wrW2ndMvRf9746t4gTaXirXlMPYiGUkGLJPp8M560NU=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=EJLYmExNdtwef0n2X4Oy/yBqwa+9+mStjwO1ogiCb1hlNRFJ732xldEH9FipyaKKO
-         wcrB0KOOF3HkuyHvSa/Ti0EuveBF2NnSi5rzo+RwSQDZsnIlbgudmIvd3rjzFhnTp0
-         M4lKD2P5Gf0tKQuD6jLsRtmo1LvRChlwrI4VXMdyNPXys3nI6th2ycfAXNXwoiMHzg
-         VcWcMnMi1GhyuXlQMCQbXIiiNQhEGoRI1yn1RCZXgmzMX5QMyMOxDTwuHo1GJpiipt
-         JMum+uf/NWg9mteUD2VrrOS0zYppV4xBKBORcwbTE3DjpRHKpU3W1S417iQ+KlS7xq
-         KEhc0t2IJhu2Q==
-Subject: Re: [RFC PATCH v2 11/18] media: tegra-video: Add support for external
- sensor capture
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com
-Cc:     digetx@gmail.com, sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
- <1592358094-23459-12-git-send-email-skomatineni@nvidia.com>
- <50deca28-c198-703c-96e2-82c53f48cd65@xs4all.nl>
- <6e09f5d3-85ca-5bf9-8617-b9c8bec36615@nvidia.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <64622861-c9e7-c158-a2c3-0db8c65fd29f@xs4all.nl>
-Date:   Tue, 7 Jul 2020 11:51:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 7 Jul 2020 05:54:16 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44496 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbgGGJyQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 05:54:16 -0400
+Received: by mail-oi1-f193.google.com with SMTP id k6so30516008oij.11;
+        Tue, 07 Jul 2020 02:54:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ML+IG31NmApHhHNaAv1AOruku3M5aZvabGp/gFt0CiI=;
+        b=UDObmA8OLzu6GvtTgFzJ71p+B1PQJKLQD4CCAtQmW7xJKeLDFKlN99b7NuWXBVEXWP
+         7tov35AYc6oCWV5qA3nP8UelVdiNoHnTW59TKtUJS5AtYiHQVvsvEZny83RxeMcZZH/g
+         X0fcJ6HRjk14kAApQLWMwEzweQak+jEa7EjG8dtR+rjH5Sgmn21V33LytLmbOt/m8V96
+         0ctZeDO6rybxW0Wu0UETkv2YWoTQj2gs96RMx7+T8TEmDleziWbYzHKdJhvmc4qbCNns
+         Pt7M+D/nm6KGP13KWcW5LAEcLGfgV+qA6F0S/12WlWz9EQDH9kn+wuQqcBPhnpzCcpJR
+         mCmA==
+X-Gm-Message-State: AOAM533dlZcVRJg3s+1ssa1d4jRisqYX6+cP3yhdl1dJYu9t00TA6/XT
+        w03hHXqCWKdQG5JTVo5cdRaiKD/yX3XhdvPhSK4=
+X-Google-Smtp-Source: ABdhPJzLOmIoxWl3hy3Vu0/WCWZBCG2GC2UQdRp7NKpTq9bVt9kyh+MbUhOP5PDCfKudTp36uLg5vNMsOKizoa64YCY=
+X-Received: by 2002:aca:5c41:: with SMTP id q62mr2498841oib.148.1594115655102;
+ Tue, 07 Jul 2020 02:54:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <6e09f5d3-85ca-5bf9-8617-b9c8bec36615@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfHR4Jx+ft4syIU+8bWlQadLr1VYDvYjXsOTuMjwrrwYY2Kz3r4xjX0PLOJfK5CxGpHbXMGybg/CVIFRxxmqO9Cr21dX7AhNAWoXHB61FF0YuSAMEyecw
- fj8OO2eZCOdhU6DRzs7MknM2mkeJBZpZZW9fsGD8Iw0vGAAhFG1NPFfzTgfF0GDBXa1XqlKwIokMUAhgxZqPq6HA8FO3wTP0oWi8vxUifQYibHu8QUiz9mC7
- HJF8SUnS3vP1WH6pA5TEHAwIced3F0YPGH2qM9IGyjKsur0h8ZfGpI6dXg9sySexTK905aCYnCDMWT89uWKkNjEJVpa0GVReCDG5i8N3qLcGXUtNTPjFUzw+
- Av1ChQzesb8gJMFDv+sU1EUc/NAAs+8BoJha7d6Zc76yFbod/+MCryRq5vJM2eCEpIPXApsshy0WtFi76MHo1Q1VhKkAimY7ePAEtBxvKF9w871mORaysguR
- dBn5XaXhG2WPwD4wjYkcZ0QVJQQKQGuFH1vux2s3/NAFCDesDKXDTlaFSxRWxIt7pwupXIdNkDpJ9eJegttdlUge9wQqAG00+jpiAvxUnRZFuEu6qG4NMMfu
- PzZIgyZG68UY1eM1SlKiU8COeEmVfUal0u/X+94pr2uIMEXZQVhgdatzZIQPQI1PhC85oUAhSYks6dSeaMPdnvb1
+References: <850d4a7b-4984-eb0f-de89-e5c39d61d19e@cogentembedded.com> <322ca212-a45f-cd2c-f1eb-737f0aa42d22@cogentembedded.com>
+In-Reply-To: <322ca212-a45f-cd2c-f1eb-737f0aa42d22@cogentembedded.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 7 Jul 2020 11:54:04 +0200
+Message-ID: <CAMuHMdUPyrJqibM2jScPa0QhP+h_pEO_YQe-qtAK2mFBEP29UA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] arm64: dts: renesas: r8a77980: condor/v3hsk: add
+ QSPI flash support
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 07/07/2020 11:40, Sowjanya Komatineni wrote:
-> 
-> On 7/6/20 2:10 AM, Hans Verkuil wrote:
->>> +static int tegra_vi_graph_notify_complete(struct v4l2_async_notifier *notifier)
->>> +{
->>> +	struct tegra_vi_graph_entity *entity;
->>> +	struct v4l2_async_subdev *asd;
->>> +	struct v4l2_subdev *subdev;
->>> +	struct tegra_vi_channel *chan;
->>> +	struct tegra_vi *vi;
->>> +	int ret;
->>> +
->>> +	chan = container_of(notifier, struct tegra_vi_channel, notifier);
->>> +	vi = chan->vi;
->>> +
->>> +	dev_dbg(vi->dev, "notify complete, all subdevs registered\n");
->>> +
->>> +	ret = video_register_device(&chan->video, VFL_TYPE_VIDEO, -1);
->> This should be done last after the tegra_vi_graph_build and tegra_channel_setup_ctrl_handler
->> calls. The video device is immediately accessible after this call, so don't
->> call it until everything is setup (i.e. until just before the 'return 0;' below).
->>
->>> +	if (ret < 0) {
->>> +		dev_err(vi->dev,
->>> +			"failed to register video device: %d\n", ret);
->>> +		goto unregister_video;
->>> +	}
->>> +
->>> +	/* create links between the entities */
->>> +	list_for_each_entry(asd, &chan->notifier.asd_list, asd_list) {
->>> +		entity = to_tegra_vi_graph_entity(asd);
->>> +		ret = tegra_vi_graph_build(chan, entity);
->>> +		if (ret < 0)
->>> +			goto unregister_video;
->>> +	}
->>> +
-> Hi Hans,
-> 
-> Currently Tegra video driver sets v4l2_dev->mdev prior to graph parse and building links to let media_device_register_entity() to happen
-> during video_register_device() -> video_register_media_controller() and media_device_unregister_entity() to happen during v4l2_device_release()
-> 
-> TPG also does the same of letting media entity register/unregister to happen during video device register and release callback.
-> 
-> So, registering video device prior to media links creation as media_device_register_entity() will happen during video_register_device()
-> 
-> To register video device after creating media links, it need to change for both TPG and Non-TPG to not set v4l2_dev->mdev and Tegra video
-> driver should explicitly take care of media_device_register_entity() and media_device_unregister_entity().
-> 
-> Prior to making this change to both TPG and Non-TPG, would like to understand on possibility of using video device node prior to finishing
-> complete driver probe()
-> 
-> As video device register happens during async notifier complete callback, and all the device graph build happens during video driver probe()
-> what exactly will be the issue of having video device node prior to creating media links?
+Hi Sergei,
 
-It's not the 'create links between the entities' bit that's the problem, it is what follows:
+On Tue, May 19, 2020 at 10:14 PM Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Define the Condor/V3HSK board dependent parts of the RPC-IF device node.
+> Add device nodes for Spansion S25FS512S SPI flash and MTD partitions on it.
+>
+> Based on the original patches by Dmitry Shifrin.
+>
+> Signed-off-by: Dmitry Shifrin <dmitry.shifrin@cogentembedded.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-+	ret = tegra_channel_setup_ctrl_handler(chan);
-+	if (ret < 0) {
-+		dev_err(vi->dev,
-+			"failed to setup channel controls: %d\n", ret);
-+		goto unregister_video;
-+	}
-+
-+	vi_fmts_bitmap_init(chan);
-+	subdev = tegra_channel_get_remote_subdev(chan, false);
-+	v4l2_set_subdev_hostdata(subdev, chan);
+Thanks for your patch!
 
-That should be done before the video_register_device call.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.9.
 
-Because otherwise the /dev/videoX doesn't have the full set of controls, and
-I am also not certain which ioctls might use the subdev hostdata.
+However, one question below...
 
-The core problem is really that video_register_device should have been split
-into an init function and a register function, so it is possible to set
-everything up before registering the video device. Oh well...
+> --- renesas-devel.orig/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
+> +++ renesas-devel/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
 
-Regards,
+> @@ -273,6 +278,68 @@
+>         };
+>  };
+>
+> +&rpc {
+> +       pinctrl-0 = <&qspi0_pins>;
+> +       pinctrl-names = "default";
+> +
+> +       status = "okay";
+> +
+> +       flash@0 {
+> +               compatible = "spansion,s25fs512s", "jedec,spi-nor";
+> +               reg = <0>;
+> +               spi-max-frequency = <50000000>;
+> +               spi-rx-bus-width = <4>;
 
-	Hans
+Why no "spi-tx-bus-width = <4>;"? Same for V3HSK.
 
-> 
-> I see some other drivers also doing the same order of registering video device prior to creating media links and also we are doing the same
-> in L4T driver as well.
-> 
-> Thanks
-> 
-> Sowjanya
-> 
-> 
+Gr{oetje,eeting}s,
 
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
