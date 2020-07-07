@@ -2,133 +2,107 @@ Return-Path: <SRS0=wVrF=AS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8562FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 10:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3041C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 10:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6028420708
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 10:04:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BF99206F6
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 10:12:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="PXysaG3X"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="cE0rViub"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgGGKEJ (ORCPT
+        id S1727096AbgGGKMS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 06:04:09 -0400
-Received: from smtpcmd14161.aruba.it ([62.149.156.161]:39660 "EHLO
-        smtpcmd14161.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726467AbgGGKEI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 06:04:08 -0400
-X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Tue, 07 Jul 2020 06:04:07 EDT
-Received: from [192.168.1.129] ([93.146.66.165])
-        by smtpcmd14.ad.aruba.it with bizsmtp
-        id 09wx2300z3Zw7e5019wyCE; Tue, 07 Jul 2020 11:56:59 +0200
-Subject: Re: [RFC] GPIO User I/O
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <01afcac0-bd34-3fd0-b991-a8b40d4b4561@enneenne.com>
- <CACRpkdbX9T9EuN-nxkMPC=sN74PEdoLuWurNLdGCzZJwwFrdpQ@mail.gmail.com>
- <1c4f1a83-835a-9317-3647-b55f6f39c0ba@enneenne.com>
- <CACRpkdZPjJSryJc+RtYjRN=X7xKMcao5pYek1fUM2+sE9xgdFQ@mail.gmail.com>
- <CAMuHMdUtguuu4FWU4nRS=pBUyEwKM1JZ8DYPdCQHXBYN0i_Frg@mail.gmail.com>
- <87efe96c-3679-14d5-4d79-569b6c047b00@enneenne.com>
- <CAMuHMdUght0hkJT1N8ub5xR5GB+U18MAhAg+zDmAAuxoRSRaYg@mail.gmail.com>
-From:   Rodolfo Giometti <giometti@enneenne.com>
-Message-ID: <d30e64c9-ad7f-7cd5-51a4-3f37d6f1e3d8@enneenne.com>
-Date:   Tue, 7 Jul 2020 11:56:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 7 Jul 2020 06:12:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40644 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbgGGKMS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 06:12:18 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65124C08C5DB
+        for <devicetree@vger.kernel.org>; Tue,  7 Jul 2020 03:12:17 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z15so33252077wrl.8
+        for <devicetree@vger.kernel.org>; Tue, 07 Jul 2020 03:12:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ox2ec9xKeqYNpU//N7D5LOrU5GweWdGDzS15Zrqp/JA=;
+        b=cE0rViubzmawGs+s2bNz/HYeJLyTK9UhluVB6bOjXJ+IEJTQNmNzLxv6o7WDhR99GJ
+         7O0NOspsGwaqUUZWZhOk2yYCw9Qgr6sNLKG7r0heK45wZDL45btcODXbBTjyPMAG/mwI
+         x3JLFhxPnnkSuU+jLELEtwEnFdPJS23UVx8g0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ox2ec9xKeqYNpU//N7D5LOrU5GweWdGDzS15Zrqp/JA=;
+        b=hPvc4hi4ZlvwBonYS4I/dqBcQGSuhXCkWXgKo/vv5JABFMcK0nWwAee7L6rSPbtV9M
+         /jfOCaP707Hbg30hXlND+6se65309rVIraVNL5FEYfd7PAHspv+tWXAyoGeEO10AfC1L
+         +UYo11sihghrQMQ/Ol4lqDCGPluZg2RFlJaLOEC5qyLpm9gNZxs11Qm+ghtO5HW7YsOU
+         sKZ/lMwkmw+keMeiZP9YC2SZqS81Rqkybn0ETCzFwnheMBpFOyR0Ip3Cm3dk3+11Gubi
+         OgiKSgIfcsoDfjHdzABwcUtp/NGaUOmrN+OWiaAhTvSogzCI59ZPW06xg/SqoeM+vhYm
+         kuGw==
+X-Gm-Message-State: AOAM531csZTJ4dtQE2nLVq37RSDFEktlbFIJHViKxs6u1znG8Ziqw/VL
+        2F5dc6b6NLiUNJJZfCYh8/uZuw==
+X-Google-Smtp-Source: ABdhPJxoBYAgdDhWiramJwYkHt3jHpGiUWv4+qul7we1FmarfIbbJjwEpFAWtIooatx3TBXa8a5ikA==
+X-Received: by 2002:a5d:55cb:: with SMTP id i11mr50329141wrw.28.1594116736051;
+        Tue, 07 Jul 2020 03:12:16 -0700 (PDT)
+Received: from panicking.lan (93-46-124-24.ip107.fastwebnet.it. [93.46.124.24])
+        by smtp.gmail.com with ESMTPSA id f12sm363053wrj.48.2020.07.07.03.12.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 03:12:15 -0700 (PDT)
+From:   Michael Trimarchi <michael@amarulasolutions.com>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: rockchip: Fix VBUS on rk3288-vyasa
+Date:   Tue,  7 Jul 2020 12:12:14 +0200
+Message-Id: <20200707101214.2301768-1-michael@amarulasolutions.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdUght0hkJT1N8ub5xR5GB+U18MAhAg+zDmAAuxoRSRaYg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aruba.it; s=a1;
-        t=1594115819; bh=iMxzmbAXPORie8pkdG5YzxTMnrq/UBvG98R/J9x/Zgo=;
-        h=Subject:To:From:Date:MIME-Version:Content-Type;
-        b=PXysaG3XMcA3HoMihAJhEede4iaDg8Oa1xrq/8tpYb9MhHbvO47WVbkI5coxEiX+8
-         KyYKeMkVLIARfKCn9bAP/PfKJe1UjiIHT88BmUdN3Zrkh4lxIVLZrCm0LL+0qH99+f
-         PuKfdBMt1700JYiBPabJZvJGyVtQzIT6+dOQ8ueWxxRwxaCB2NnmnRmCxJCDSx/d8F
-         bgAWCrXoyOZJkX5Twi6UD+IRRZXsmpl+rRl77Tyl6J9aqyFJEoIgGvL2LzgxDVN/Qh
-         2+ZWMDGTHOncdUWuzMsQUFLGzr//oMlfKO8vazmQCn0MQyM5/DwYGldcLOdTN3MptR
-         fArYo77cL1HPg==
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 07/07/2020 09:41, Geert Uytterhoeven wrote:
-> Hi Rodolfo,
-> 
-> CC devicetree
-> 
-> On Tue, Jul 7, 2020 at 9:17 AM Rodolfo Giometti <giometti@enneenne.com> wrote:
->> On 06/07/2020 23:00, Geert Uytterhoeven wrote:
->>> On Mon, Jul 6, 2020 at 10:38 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->>>> On Mon, Jul 6, 2020 at 5:33 PM Rodolfo Giometti <giometti@enneenne.com> wrote:
->>>>>> With Geert's GPIO aggregator userspace and device tree can conjure
->>>>>> special per-usecase gpio chips as pointed out by Drew: this is
->>>>>> very useful when you want some kernel-managed yet
->>>>>> usecase-specific GPIO lines in a special "container" chip.
->>>>>> To me this is the best of two worlds. (Kernelspace and userspace.)
->>>>>
->>>>> Maybe this is the "best of two worlds" as you say but the problem is that board
->>>>> manufactures need a way to well-define how a GPIO line must be used for within
->>>>> the device-tree and without the need of patches! In this point of view neither
->>>>> the "driver_override" way nor adding a compatible value to
->>>>> gpio_aggregator_dt_ids[] can help (this last solution requires a patch for each
->>>>> board!). That's why at the moment they prefer not specify these GPIO lines at
->>>>> all or (improperly) use the gpio-leds and gpio-uinput interfaces to keep it
->>>>> simple...
->>>>
->>>> I think the idea is to add a very generic DT compatible to the
->>>> gpio_aggregator_dt_ids[]. That way, any DT can use the aggregator
->>>> to create a new chip with named lines etc.
->>>>
->>>> But Geert can speak of that.
->>>
->>> The idea is to describe the real device in DT, and add it's compatible value
->>> to gpio_aggregator_dt_ids[], or enable support for it dynamically using
->>> driver_override.
->>> The former indeed requires modifying the driver.
->>
->> I see.
->>
->>> Note that if you ever want to write a pure kernelspace driver, you do need
->>> a proper compatible value anyway.
->>
->> OK, but for our purposes we need just one compatible value.
->>
->>> I do agree that it's annoying to have "gpio-leds", but not "gpio-motors"
->>> or "gpio-relays".  However, you can always propose bindings for the
->>> latter, and, when they have been accepted, add those compatible
->>> values to upstream gpio_aggregator_dt_ids[].
->>
->> Having gpio-uio with proper names within it as motor0, motor1, relay0, etc. as
->> in my solution would be suffice. However, after these discussions, are there any
->> chances my patch (with needed modifications and documentation) may be accepted? :)
->>
->> Thanks for your time and answers.
-> 
-> Let's ask the DT people...
+Connect the voltage regulator of vbus to the otg connector.
+Depending on the current mode this is enabled (in "host" mode")
+or disabled (in "peripheral" mode). The regulator must be updated
+if the controller is configured in "otg" mode and the status changes
+between "host" and "peripheral".
 
-I think I need an OK from GPIO SUBSYSTEM's maintainers first...
+Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
+---
+ arch/arm/boot/dts/rk3288-vyasa.dts | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Ciao,
-
-Rodolfo
-
+diff --git a/arch/arm/boot/dts/rk3288-vyasa.dts b/arch/arm/boot/dts/rk3288-vyasa.dts
+index ba06e9f97ddc..5b0263b1be73 100644
+--- a/arch/arm/boot/dts/rk3288-vyasa.dts
++++ b/arch/arm/boot/dts/rk3288-vyasa.dts
+@@ -87,8 +87,6 @@
+ 		pinctrl-0 = <&otg_vbus_drv>;
+ 		regulator-min-microvolt = <5000000>;
+ 		regulator-max-microvolt = <5000000>;
+-		regulator-always-on;
+-		regulator-boot-on;
+ 		vin-supply = <&vsus_5v>;
+ 	};
+ 
+@@ -405,6 +403,7 @@
+ 
+ &usb_otg {
+ 	status = "okay";
++	vbus-supply = <&vusb1_5v>;
+ };
+ 
+ &vopb {
 -- 
-GNU/Linux Solutions                  e-mail: giometti@enneenne.com
-Linux Device Driver                          giometti@linux.it
-Embedded Systems                     phone:  +39 349 2432127
-UNIX programming                     skype:  rodolfo.giometti
+2.25.1
+
