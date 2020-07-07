@@ -2,109 +2,133 @@ Return-Path: <SRS0=wVrF=AS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0DC8C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 09:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8562FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 10:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EE4B206DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 09:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6028420708
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 10:04:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastree3d-com.20150623.gappssmtp.com header.i=@fastree3d-com.20150623.gappssmtp.com header.b="QYe04Gp3"
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="PXysaG3X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbgGGJzw (ORCPT
+        id S1727090AbgGGKEJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 05:55:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38108 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727120AbgGGJzv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 05:55:51 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C03AC08C5DB
-        for <devicetree@vger.kernel.org>; Tue,  7 Jul 2020 02:55:51 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id h28so37883263edz.0
-        for <devicetree@vger.kernel.org>; Tue, 07 Jul 2020 02:55:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastree3d-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=/Ez/eNUFPCT1S8lswjEFBXmdJUzvT2sdIqH6wPm0/aY=;
-        b=QYe04Gp38RAEy6yPyNS14pK+XfQocLSDgJ5LEkRhAj7ABmY3kR3xx8qgc+u4Ry9uLZ
-         k7KwDZbKVUaqCo7UyJxkZneDWHjo4VIi7Myp8O0I5c2pu5SepM0Fi0OuDMrFOvYOQ0zT
-         MgkmuHp7x/wQGhMI/BKXWZyEgvQkHoZv5AWHVx3EeycrVCA6X3+sxTqWjP31srbxOqA5
-         yVtGbKBN4350Uuy3yZI1ZWcplnWdk0fBAZZ0ITq45nji+j8YX8rbkBvosF9UiyRasryu
-         hUST3Iy0F6nQyiIDl+ApwQ9pnqe7sV14ch5qEgADgY8wf41L455jHEpu1Dsym4MX3hrF
-         AZKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=/Ez/eNUFPCT1S8lswjEFBXmdJUzvT2sdIqH6wPm0/aY=;
-        b=WV/YOpD8jXVPU4t8AwBfqFAcPdeBSt9fvkRIWp4VlvCVO9Bz+V+JWODDbgzAYzUEvu
-         +6v3DPsocHvUSkdzL1hpHnnPN510iX0E04eD+ZVrFdbF1k1kVHYWBOxtY5Ork+TMZQ0w
-         M/iZSuRPlZN7LmKmKAlmGFYQM3EgqESXhnpO+5INGITe1DIoAqGWg6l97XAZBghTAcm7
-         aHksMVQxju2TC9/yjAGP55aP1MH4UcQ38VKo+QuBh5xGY63nmawJJ/o6yBniuCsgM5v3
-         MlGJZZ8ExH3U/2EWoW+wcSyPIE0xJZw8BcPSkLgkcb6taJvFCuTEE4AeHN0OdMIJJwTy
-         fvWQ==
-X-Gm-Message-State: AOAM531TrRdE6pfki5c4VcKp9nJvP7LdIbCMlkduZD5PahoQa5GH1ZYy
-        MV+Uu/ZZz2DeudiXxahzzvJesCJKoA==
-X-Google-Smtp-Source: ABdhPJzYEcxxIS7vSz9rt0N2e7MfND9YJ80TBhiJ+JQGtUro+WBaNmFEN1hYulHOJD1yWqfwad40/A==
-X-Received: by 2002:aa7:d50d:: with SMTP id y13mr60181703edq.230.1594115749762;
-        Tue, 07 Jul 2020 02:55:49 -0700 (PDT)
-Received: from [192.168.33.195] (fastree1.epfl.ch. [192.26.37.52])
-        by smtp.gmail.com with ESMTPSA id z22sm25865328edx.72.2020.07.07.02.55.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jul 2020 02:55:49 -0700 (PDT)
-From:   Adrian Fiergolski <adrian.fiergolski@fastree3d.com>
-X-Google-Original-From: Adrian Fiergolski <Adrian.Fiergolski@fastree3d.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: Add documentation for SPI daisy chain
- driver.
-To:     Mark Brown <broonie@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lukas Wunner <lukas@wunner.de>, Rob Herring <robh+dt@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
+        Tue, 7 Jul 2020 06:04:09 -0400
+Received: from smtpcmd14161.aruba.it ([62.149.156.161]:39660 "EHLO
+        smtpcmd14161.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726467AbgGGKEI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 06:04:08 -0400
+X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Tue, 07 Jul 2020 06:04:07 EDT
+Received: from [192.168.1.129] ([93.146.66.165])
+        by smtpcmd14.ad.aruba.it with bizsmtp
+        id 09wx2300z3Zw7e5019wyCE; Tue, 07 Jul 2020 11:56:59 +0200
+Subject: Re: [RFC] GPIO User I/O
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <202007040833.xIqR5rAw%lkp@intel.com>
- <20200706092247.20740-1-adrian.fiergolski@fastree3d.com>
- <20200706092247.20740-2-adrian.fiergolski@fastree3d.com>
- <CAMuHMdW_aTKtrUnGqf3DB=fr0ZxTsjoEjMmwSpPqhwjs-Tz7ig@mail.gmail.com>
- <d80b1b85-ee23-3244-9bb0-876986f6ff17@fastree3d.com>
- <CAMuHMdUV_2DbbUqp+0=XARyLCwPya1RqFCrr6VoTJjVAZiKJzg@mail.gmail.com>
- <20200706162246.GC6176@sirena.org.uk>
-Message-ID: <853fa4a4-ce2f-0503-2fe7-7b34b352b6e2@fastree3d.com>
-Date:   Tue, 7 Jul 2020 11:55:48 +0200
+        <devicetree@vger.kernel.org>
+References: <01afcac0-bd34-3fd0-b991-a8b40d4b4561@enneenne.com>
+ <CACRpkdbX9T9EuN-nxkMPC=sN74PEdoLuWurNLdGCzZJwwFrdpQ@mail.gmail.com>
+ <1c4f1a83-835a-9317-3647-b55f6f39c0ba@enneenne.com>
+ <CACRpkdZPjJSryJc+RtYjRN=X7xKMcao5pYek1fUM2+sE9xgdFQ@mail.gmail.com>
+ <CAMuHMdUtguuu4FWU4nRS=pBUyEwKM1JZ8DYPdCQHXBYN0i_Frg@mail.gmail.com>
+ <87efe96c-3679-14d5-4d79-569b6c047b00@enneenne.com>
+ <CAMuHMdUght0hkJT1N8ub5xR5GB+U18MAhAg+zDmAAuxoRSRaYg@mail.gmail.com>
+From:   Rodolfo Giometti <giometti@enneenne.com>
+Message-ID: <d30e64c9-ad7f-7cd5-51a4-3f37d6f1e3d8@enneenne.com>
+Date:   Tue, 7 Jul 2020 11:56:57 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200706162246.GC6176@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+In-Reply-To: <CAMuHMdUght0hkJT1N8ub5xR5GB+U18MAhAg+zDmAAuxoRSRaYg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aruba.it; s=a1;
+        t=1594115819; bh=iMxzmbAXPORie8pkdG5YzxTMnrq/UBvG98R/J9x/Zgo=;
+        h=Subject:To:From:Date:MIME-Version:Content-Type;
+        b=PXysaG3XMcA3HoMihAJhEede4iaDg8Oa1xrq/8tpYb9MhHbvO47WVbkI5coxEiX+8
+         KyYKeMkVLIARfKCn9bAP/PfKJe1UjiIHT88BmUdN3Zrkh4lxIVLZrCm0LL+0qH99+f
+         PuKfdBMt1700JYiBPabJZvJGyVtQzIT6+dOQ8ueWxxRwxaCB2NnmnRmCxJCDSx/d8F
+         bgAWCrXoyOZJkX5Twi6UD+IRRZXsmpl+rRl77Tyl6J9aqyFJEoIgGvL2LzgxDVN/Qh
+         2+ZWMDGTHOncdUWuzMsQUFLGzr//oMlfKO8vazmQCn0MQyM5/DwYGldcLOdTN3MptR
+         fArYo77cL1HPg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert and Mark,
+On 07/07/2020 09:41, Geert Uytterhoeven wrote:
+> Hi Rodolfo,
+> 
+> CC devicetree
+> 
+> On Tue, Jul 7, 2020 at 9:17 AM Rodolfo Giometti <giometti@enneenne.com> wrote:
+>> On 06/07/2020 23:00, Geert Uytterhoeven wrote:
+>>> On Mon, Jul 6, 2020 at 10:38 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>>>> On Mon, Jul 6, 2020 at 5:33 PM Rodolfo Giometti <giometti@enneenne.com> wrote:
+>>>>>> With Geert's GPIO aggregator userspace and device tree can conjure
+>>>>>> special per-usecase gpio chips as pointed out by Drew: this is
+>>>>>> very useful when you want some kernel-managed yet
+>>>>>> usecase-specific GPIO lines in a special "container" chip.
+>>>>>> To me this is the best of two worlds. (Kernelspace and userspace.)
+>>>>>
+>>>>> Maybe this is the "best of two worlds" as you say but the problem is that board
+>>>>> manufactures need a way to well-define how a GPIO line must be used for within
+>>>>> the device-tree and without the need of patches! In this point of view neither
+>>>>> the "driver_override" way nor adding a compatible value to
+>>>>> gpio_aggregator_dt_ids[] can help (this last solution requires a patch for each
+>>>>> board!). That's why at the moment they prefer not specify these GPIO lines at
+>>>>> all or (improperly) use the gpio-leds and gpio-uinput interfaces to keep it
+>>>>> simple...
+>>>>
+>>>> I think the idea is to add a very generic DT compatible to the
+>>>> gpio_aggregator_dt_ids[]. That way, any DT can use the aggregator
+>>>> to create a new chip with named lines etc.
+>>>>
+>>>> But Geert can speak of that.
+>>>
+>>> The idea is to describe the real device in DT, and add it's compatible value
+>>> to gpio_aggregator_dt_ids[], or enable support for it dynamically using
+>>> driver_override.
+>>> The former indeed requires modifying the driver.
+>>
+>> I see.
+>>
+>>> Note that if you ever want to write a pure kernelspace driver, you do need
+>>> a proper compatible value anyway.
+>>
+>> OK, but for our purposes we need just one compatible value.
+>>
+>>> I do agree that it's annoying to have "gpio-leds", but not "gpio-motors"
+>>> or "gpio-relays".  However, you can always propose bindings for the
+>>> latter, and, when they have been accepted, add those compatible
+>>> values to upstream gpio_aggregator_dt_ids[].
+>>
+>> Having gpio-uio with proper names within it as motor0, motor1, relay0, etc. as
+>> in my solution would be suffice. However, after these discussions, are there any
+>> chances my patch (with needed modifications and documentation) may be accepted? :)
+>>
+>> Thanks for your time and answers.
+> 
+> Let's ask the DT people...
 
-Thank you for your comments. I will try to address them in the next replies.
+I think I need an OK from GPIO SUBSYSTEM's maintainers first...
 
-On 06.07.2020 18:22, Mark Brown wrote:
-> On Mon, Jul 06, 2020 at 05:32:51PM +0200, Geert Uytterhoeven wrote:
->
->> However, that information would need to be added to each driver only once.
->> With your proposal, it has to be added to all affected nodes of all DTSes
->> of all users.
-> Right, these are fixed properties of the silicon which we know simply
-> from knowing which device we have - there is no need to put them in DT
-> at all.
+Ciao,
 
-I see. I agree with you. My concern was just the lack of compatibility
-with the existing drivers. I will try to add daisy_chain information to
-spi_driver struct in version v3 of the patch.
+Rodolfo
 
+-- 
+GNU/Linux Solutions                  e-mail: giometti@enneenne.com
+Linux Device Driver                          giometti@linux.it
+Embedded Systems                     phone:  +39 349 2432127
+UNIX programming                     skype:  rodolfo.giometti
