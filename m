@@ -2,302 +2,287 @@ Return-Path: <SRS0=wVrF=AS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E88A8C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 04:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC91C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 05:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C922720722
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 04:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88CDE20771
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 05:11:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aQX1ph7X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgGGEtU (ORCPT
+        id S1727046AbgGGFLq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 00:49:20 -0400
-Received: from mga02.intel.com ([134.134.136.20]:18745 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726889AbgGGEtU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 7 Jul 2020 00:49:20 -0400
-IronPort-SDR: mhyBj73LX15IczQsDt862UJFkIkW7l/xhcsjJgpTAB+vSLNwDYToICON/tVDOCBE9N3+Alzspk
- CSn943vuX6sQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="135783254"
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="135783254"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 21:49:18 -0700
-IronPort-SDR: NuFZVNkp3EvsE24oEL9//Fl7l+e30kGVLZL3Gq2xIWu7JS2DFCHpXncOg+ao2sqOKjYcpPHWzb
- tsxQ3C+toKyQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,321,1589266800"; 
-   d="scan'208";a="279485193"
-Received: from vgjayaku-ilbpg7.png.intel.com ([10.88.227.96])
-  by orsmga003.jf.intel.com with ESMTP; 06 Jul 2020 21:49:15 -0700
-From:   vineetha.g.jaya.kumaran@intel.com
-To:     davem@davemloft.net, kuba@kernel.org, mcoquelin.stm32@gmail.com,
-        robh+dt@kernel.org
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        weifeng.voon@intel.com, hock.leong.kweh@intel.com,
-        boon.leong.ong@intel.com
-Subject: [PATCH 2/2] net: stmmac: Add dwmac-intel-plat for GBE driver
-Date:   Tue,  7 Jul 2020 12:47:18 +0800
-Message-Id: <1594097238-8827-3-git-send-email-vineetha.g.jaya.kumaran@intel.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1594097238-8827-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
-References: <1594097238-8827-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+        Tue, 7 Jul 2020 01:11:46 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:48818 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727096AbgGGFLq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 01:11:46 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594098705; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=iJ1b9PLO/bxp0y4unq/jkiqf45yay0HTXCX57824wro=; b=aQX1ph7XSkk1SsVJGSpZh8E5ig+y/7L2rJBlOuAlci5wP43AIG0w+Kvhad0ZvPIl8cZfU/8/
+ YVGPGy9h76czusH3qf8NT5g6Xl4OIVF/MIRe6ZgbvigBpqiERKNE5XgSaOyV9l7PuigdZuVY
+ 4G2v3aix4c+r7k6eHIDWuYGNbUA=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-east-1.postgun.com with SMTP id
+ 5f04040419b27ae9ce6ec778 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 07 Jul 2020 05:11:32
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C4733C4339C; Tue,  7 Jul 2020 05:11:31 +0000 (UTC)
+Received: from [10.206.24.160] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sanm)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A1516C433C6;
+        Tue,  7 Jul 2020 05:11:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A1516C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sanm@codeaurora.org
+Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
+ driver
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
+ <1585718145-29537-3-git-send-email-sanm@codeaurora.org>
+ <159120577830.69627.13288547914742515702@swboyd.mtv.corp.google.com>
+ <d9ccf188-4f00-d3ac-ba0f-73f06c087553@codeaurora.org>
+ <159126939154.69627.13027312816468830595@swboyd.mtv.corp.google.com>
+ <20200615194239.GW4525@google.com>
+ <3f8fcb0e-387d-e902-9f6b-1fde9d6ae404@codeaurora.org>
+ <20200616203849.GY4525@google.com> <20200630224243.GH39073@google.com>
+From:   "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
+Message-ID: <8ac28471-7c0a-1850-6560-50da0d734445@codeaurora.org>
+Date:   Tue, 7 Jul 2020 10:41:24 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200630224243.GH39073@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Rusaimi Amira Ruslan <rusaimi.amira.rusaimi@intel.com>
 
-Add dwmac-intel-plat to enable the stmmac driver in Intel Keem Bay.
-Also add fix_mac_speed and tx_clk in order to change link speeds.
-This is required as mac_speed_o is not connected in the
-Intel Keem Bay SoC.
+On 7/1/2020 4:12 AM, Matthias Kaehlcke wrote:
+> On Tue, Jun 16, 2020 at 01:38:49PM -0700, Matthias Kaehlcke wrote:
+>> On Tue, Jun 16, 2020 at 10:22:47AM +0530, Sandeep Maheswaram (Temp) wrote:
+>>> On 6/16/2020 1:12 AM, Matthias Kaehlcke wrote:
+>>>> On Thu, Jun 04, 2020 at 04:16:31AM -0700, Stephen Boyd wrote:
+>>>>> Quoting Sandeep Maheswaram (Temp) (2020-06-04 02:43:09)
+>>>>>> On 6/3/2020 11:06 PM, Stephen Boyd wrote:
+>>>>>>> Quoting Sandeep Maheswaram (2020-03-31 22:15:43)
+>>>>>>>> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+>>>>>>>> index 1dfd024..d33ae86 100644
+>>>>>>>> --- a/drivers/usb/dwc3/dwc3-qcom.c
+>>>>>>>> +++ b/drivers/usb/dwc3/dwc3-qcom.c
+>>>>>>>> @@ -285,6 +307,101 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
+>>>>>>>>            return 0;
+>>>>>>>>     }
+>>>>>>>> +
+>>>>>>>> +/**
+>>>>>>>> + * dwc3_qcom_interconnect_init() - Get interconnect path handles
+>>>>>>>> + * @qcom:                      Pointer to the concerned usb core.
+>>>>>>>> + *
+>>>>>>>> + */
+>>>>>>>> +static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
+>>>>>>>> +{
+>>>>>>>> +       struct device *dev = qcom->dev;
+>>>>>>>> +       int ret;
+>>>>>>>> +
+>>>>>>>> +       if (!device_is_bound(&qcom->dwc3->dev))
+>>>>>>>> +               return -EPROBE_DEFER;
+>>>>>>> How is this supposed to work? I see that this was added in an earlier
+>>>>>>> revision of this patch series but there isn't any mention of why
+>>>>>>> device_is_bound() is used here. It would be great if there was a comment
+>>>>>>> detailing why this is necessary. It sounds like maximum_speed is
+>>>>>>> important?
+>>>>>>>
+>>>>>>> Furthermore, dwc3_qcom_interconnect_init() is called by
+>>>>>>> dwc3_qcom_probe() which is the function that registers the device for
+>>>>>>> qcom->dwc3->dev. If that device doesn't probe between the time it is
+>>>>>>> registered by dwc3_qcom_probe() and this function is called then we'll
+>>>>>>> fail dwc3_qcom_probe() with -EPROBE_DEFER. And that will remove the
+>>>>>>> qcom->dwc3->dev device from the platform bus because we call
+>>>>>>> of_platform_depopulate() on the error path of dwc3_qcom_probe().
+>>>>>>>
+>>>>>>> So isn't this whole thing racy and can potentially lead us to a driver
+>>>>>>> probe loop where the wrapper (dwc3_qcom) and the core (dwc3) are probing
+>>>>>>> and we're trying to time it just right so that driver for dwc3 binds
+>>>>>>> before we setup interconnects? I don't know if dwc3 can communicate to
+>>>>>>> the wrapper but that would be more of a direct way to do this. Or maybe
+>>>>>>> the wrapper should try to read the DT property for maximum speed and
+>>>>>>> fallback to a worst case high bandwidth value if it can't figure it out
+>>>>>>> itself without help from dwc3 core.
+>>>>>>>
+>>>>>> This was added in V4 to address comments from Matthias in V3
+>>>>>>
+>>>>>> https://patchwork.kernel.org/patch/11148587/
+>>>>>>
+>>>>> Yes, that why I said:
+>>>>>
+>>>>> "I see that this was added in an earlier
+>>>>>    revision of this patch series but there isn't any mention of why
+>>>>>    device_is_bound() is used here. It would be great if there was a comment
+>>>>>    detailing why this is necessary. It sounds like maximum_speed is
+>>>>>    important?"
+>>>>>
+>>>>> Can you please respond to the rest of my email?
+>>>> I agree with Stephen that using device_is_bound() isn't a good option
+>>>> in this case, when I suggested it I wasn't looking at the big picture
+>>>> of how probing the core driver is triggered, sorry about that.
+>>>>
+>>>> Reading the speed from the DT with usb_get_maximum_speed() as Stephen
+>>>> suggests would be an option, the inconvenient is that we then
+>>>> essentially require the property to be defined, while the core driver
+>>>> gets a suitable value from hardware registers. Not sure if the wrapper
+>>>> driver could read from the same registers.
+>>>>
+>>>> One option could be to poll device_is_bound() for 100 ms (or so), with
+>>>> sleeps between polls. It's not elegant but would probably work if we
+>>>> don't find a better solution.
+>>> if (np)
+>>>          ret = dwc3_qcom_of_register_core(pdev);
+>>>      else
+>>>          ret = dwc3_qcom_acpi_register_core(pdev);
+>>>
+>>>      if (ret) {
+>>>          dev_err(dev, "failed to register DWC3 Core, err=%d\n", ret);
+>>>          goto depopulate;
+>>>      }
+>>>
+>>>      ret = dwc3_qcom_interconnect_init(qcom);
+>>>      if (ret)
+>>>          goto depopulate;
+>>>
+>>>      qcom->mode = usb_get_dr_mode(&qcom->dwc3->dev);
+>>>
+>>> Before calling dwc3_qcom_interconnect_init we are checking
+>>>
+>>>      if (ret) {
+>>>          dev_err(dev, "failed to register DWC3 Core, err=%d\n", ret);
+>>>          goto depopulate;
+>>>      }
+>>>
+>>> Doesn't  this condition confirm the core driver is probed?
+>> Not really:
+>>
+>> // called under the hood by of_platform_populate()
+>> static int really_probe(struct device *dev, struct device_driver *drv)
+>> {
+>> 	...
+>>
+>> 	if (dev->bus->probe) {
+>> 		ret = dev->bus->probe(dev);
+>> 		if (ret)
+>> 			goto probe_failed;
+>> 	} else if (drv->probe) {
+>> 		ret = drv->probe(dev);
+>> 	        if (ret)
+>> 	       		goto probe_failed;
+>>          }
+>>
+>> 	...
+>>
+>> probe_failed:
+>> 	...
+>>
+>> 	/*
+>>           * Ignore errors returned by ->probe so that the next driver can try
+>>           * its luck.
+>>           */
+>>          ret = 0;
+>>
+>> 	...
+>>
+>> 	return ret;
+>> }
+>>
+>> As a result of_platform_populate() in dwc3_qcom_of_register_core()
+>> returns 0 even when probing the device failed:
+>>
+>> [    0.244339] dwc3-qcom a6f8800.usb: DBG: populate
+>> [    0.244772] dwc3 a600000.dwc3: DBG: dwc3_probe
+>> [    0.245237] dwc3 a600000.dwc3: DBG: dwc3_probe err: -517
+>> [    0.245264] dwc3-qcom a6f8800.usb: DBG: populate (done)
+>> [    0.245317] dwc3-qcom a6f8800.usb: DBG: dwc3_qcom_interconnect_init() failed: -517
+>>
+>> Probe fails because the interconnect stuff isn't ready yet, otherwise
+>> it could access invalid data.
+>>
+>> A later _populate() is successful and the probing of the core is done
+>> synchronously, i.e. after _populate() the core driver is fully
+>> initialized:
+>>
+>> [    3.898106] dwc3-qcom a6f8800.usb: DBG: populate
+>> [    3.908356] dwc3 a600000.dwc3: DBG: dwc3_probe
+>> [    4.205104] dwc3 a600000.dwc3: DBG: dwc3_probe (done)
+>> [    4.210305] dwc3-qcom a6f8800.usb: DBG: populate (done)
+>>
+>> The synchronous probing in _populate() suggests that using device_is_bound()
+>> would actually be a valid option, either the core device was successfully
+>> probed or not, there should be no race.
+>>
+>> I sent a patch that adds this check to dwc3_qcom_of_register_core(), which
+>> is less confusing and makes clear that the core device is valid unless
+>> this function returns an error:
+>>
+>>    https://lore.kernel.org/patchwork/patch/1257279/
+>>
+>> It might make sense to add your "driver core:Export the symbol
+>> device_is_bound" patch, mine and this one to a single series.
+>  From the discussion on "driver core:Export the symbol device_is_bound"
+> (https://patchwork.kernel.org/patch/11584225/) it is clear that
+> this won't fly. The split dwc3 driver is considered a broken
+> design.
+>
+> This is what Rob Herring said:
+>
+>    We never should have had this split either in the DT binding nor
+>    driver(s) as if the SoC wrapper crap and licensed IP block are
+>    independent things. The thing to do here is either make the DWC3 code
+>    a library which drivers call (e.g. SDHCI) or add hooks into the DWC3
+>    driver for platform specifics (e.g. Designware PCI). Neither is a
+>    simple solution though.
+>
+> That seems to be the desirable solution in the longer term, but it
+> doesn't seem reasonable to me to expect you to fix this design issue
+> to add interconnect support.
+>
+> Some possible options to move forward:
+>
+> - try to determine the max speed without involving the core device
+> - select a reasonable default when 'maximum-speed' is not specified
+> - use the core device to determine the max speed and pray
 
-Signed-off-by: Rusaimi Amira Ruslan <rusaimi.amira.rusaimi@intel.com>
-Signed-off-by: Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
----
- drivers/net/ethernet/stmicro/stmmac/Kconfig        |  10 ++
- drivers/net/ethernet/stmicro/stmmac/Makefile       |   1 +
- .../net/ethernet/stmicro/stmmac/dwmac-intel-plat.c | 191 +++++++++++++++++++++
- 3 files changed, 202 insertions(+)
- create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-intel-plat.c
+Can we do as below to get speed
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-index 9a47c5a..7572cea 100644
---- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
-+++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-@@ -209,6 +209,16 @@ config DWMAC_IMX8
- 	  device driver. This driver is used for i.MX8 series like
- 	  iMX8MP/iMX8DXL GMAC ethernet controller.
- 
-+config DWMAC_INTEL_PLAT
-+	tristate "Intel dwmac support"
-+	depends on OF && COMMON_CLK
-+	depends on STMMAC_ETH
-+	help
-+	  Support for ethernet controllers on Intel SoCs
-+
-+	  This selects the Intel platform specific glue layer support for
-+	  the stmmac device driver. This driver is used for the Intel Keem Bay
-+	  SoC.
- endif
- 
- config DWMAC_INTEL
-diff --git a/drivers/net/ethernet/stmicro/stmmac/Makefile b/drivers/net/ethernet/stmicro/stmmac/Makefile
-index 295615a..24e6145 100644
---- a/drivers/net/ethernet/stmicro/stmmac/Makefile
-+++ b/drivers/net/ethernet/stmicro/stmmac/Makefile
-@@ -26,6 +26,7 @@ obj-$(CONFIG_DWMAC_STM32)	+= dwmac-stm32.o
- obj-$(CONFIG_DWMAC_SUNXI)	+= dwmac-sunxi.o
- obj-$(CONFIG_DWMAC_SUN8I)	+= dwmac-sun8i.o
- obj-$(CONFIG_DWMAC_DWC_QOS_ETH)	+= dwmac-dwc-qos-eth.o
-+obj-$(CONFIG_DWMAC_INTEL_PLAT)	+= dwmac-intel-plat.o
- obj-$(CONFIG_DWMAC_GENERIC)	+= dwmac-generic.o
- obj-$(CONFIG_DWMAC_IMX8)	+= dwmac-imx.o
- stmmac-platform-objs:= stmmac_platform.o
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel-plat.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel-plat.c
-new file mode 100644
-index 0000000..ccac7bf
---- /dev/null
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel-plat.c
-@@ -0,0 +1,191 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Intel DWMAC platform driver
-+ *
-+ * Copyright(C) 2020 Intel Corporation
-+ */
-+
-+#include <linux/ethtool.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/stmmac.h>
-+
-+#include "stmmac.h"
-+#include "stmmac_platform.h"
-+
-+struct intel_dwmac {
-+	struct device *dev;
-+	struct clk *tx_clk;
-+	const struct intel_dwmac_data *data;
-+};
-+
-+struct intel_dwmac_data {
-+	void (*fix_mac_speed)(void *priv, unsigned int speed);
-+	unsigned long ptp_ref_clk_rate;
-+	unsigned long tx_clk_rate;
-+	bool tx_clk_en;
-+};
-+
-+static void kmb_eth_fix_mac_speed(void *priv, unsigned int speed)
-+{
-+	struct intel_dwmac *dwmac = priv;
-+	unsigned long rate;
-+	int ret;
-+
-+	rate = clk_get_rate(dwmac->tx_clk);
-+
-+	switch (speed) {
-+	case SPEED_1000:
-+		rate = 125000000;
-+		break;
-+
-+	case SPEED_100:
-+		rate = 25000000;
-+		break;
-+
-+	case SPEED_10:
-+		rate = 2500000;
-+		break;
-+
-+	default:
-+		dev_err(dwmac->dev, "Invalid speed\n");
-+		break;
-+	}
-+
-+	ret = clk_set_rate(dwmac->tx_clk, rate);
-+	if (ret)
-+		dev_err(dwmac->dev, "Failed to configure tx clock rate\n");
-+}
-+
-+static const struct intel_dwmac_data kmb_data = {
-+	.fix_mac_speed = kmb_eth_fix_mac_speed,
-+	.ptp_ref_clk_rate = 200000000,
-+	.tx_clk_rate = 125000000,
-+	.tx_clk_en = true,
-+};
-+
-+static const struct of_device_id intel_eth_plat_match[] = {
-+	{ .compatible = "intel,keembay-dwmac", .data = &kmb_data },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, intel_eth_plat_match);
-+
-+static int intel_eth_plat_probe(struct platform_device *pdev)
-+{
-+	struct net_device *ndev = platform_get_drvdata(pdev);
-+	struct stmmac_priv *priv = netdev_priv(ndev);
-+	struct plat_stmmacenet_data *plat_dat;
-+	struct stmmac_resources stmmac_res;
-+	const struct of_device_id *match;
-+	struct intel_dwmac *dwmac;
-+	unsigned long rate;
-+	int ret;
-+
-+	plat_dat = priv->plat;
-+	ret = stmmac_get_platform_resources(pdev, &stmmac_res);
-+	if (ret)
-+		return ret;
-+
-+	plat_dat = stmmac_probe_config_dt(pdev, &stmmac_res.mac);
-+	if (IS_ERR(plat_dat)) {
-+		dev_err(&pdev->dev, "dt configuration failed\n");
-+		return PTR_ERR(plat_dat);
-+	}
-+
-+	dwmac = devm_kzalloc(&pdev->dev, sizeof(*dwmac), GFP_KERNEL);
-+	if (!dwmac) {
-+		ret = -ENOMEM;
-+		goto err_remove_config_dt;
-+	}
-+
-+	dwmac->dev = &pdev->dev;
-+	dwmac->tx_clk = NULL;
-+
-+	match = of_match_device(intel_eth_plat_match, &pdev->dev);
-+	if (match && match->data) {
-+		dwmac->data = (const struct intel_dwmac_data *)match->data;
-+
-+		if (dwmac->data->fix_mac_speed)
-+			plat_dat->fix_mac_speed = dwmac->data->fix_mac_speed;
-+
-+		/* Enable TX clock */
-+		if (dwmac->data->tx_clk_en) {
-+			dwmac->tx_clk = devm_clk_get(&pdev->dev, "tx_clk");
-+			if (IS_ERR(dwmac->tx_clk))
-+				goto err_remove_config_dt;
-+
-+			clk_prepare_enable(dwmac->tx_clk);
-+
-+			/* Check and configure TX clock rate */
-+			rate = clk_get_rate(dwmac->tx_clk);
-+			if (dwmac->data->tx_clk_rate &&
-+			    rate != dwmac->data->tx_clk_rate) {
-+				rate = dwmac->data->tx_clk_rate;
-+				ret = clk_set_rate(dwmac->tx_clk, rate);
-+				if (ret) {
-+					dev_err(&pdev->dev,
-+						"Failed to set tx_clk\n");
-+					return ret;
-+				}
-+			}
-+		}
-+
-+		/* Check and configure PTP ref clock rate */
-+		rate = clk_get_rate(plat_dat->clk_ptp_ref);
-+		if (dwmac->data->ptp_ref_clk_rate &&
-+		    rate != dwmac->data->ptp_ref_clk_rate) {
-+			rate = dwmac->data->ptp_ref_clk_rate;
-+			ret = clk_set_rate(plat_dat->clk_ptp_ref, rate);
-+			if (ret) {
-+				dev_err(&pdev->dev,
-+					"Failed to set clk_ptp_ref\n");
-+				return ret;
-+			}
-+		}
-+	}
-+
-+	plat_dat->bsp_priv = dwmac;
-+
-+	ret = stmmac_dvr_probe(&pdev->dev, plat_dat, &stmmac_res);
-+	if (ret) {
-+		if (dwmac->tx_clk)
-+			clk_disable_unprepare(dwmac->tx_clk);
-+
-+		goto err_remove_config_dt;
-+	}
-+
-+	return 0;
-+
-+err_remove_config_dt:
-+	stmmac_remove_config_dt(pdev, plat_dat);
-+
-+	return ret;
-+}
-+
-+static int intel_eth_plat_remove(struct platform_device *pdev)
-+{
-+	struct intel_dwmac *dwmac = get_stmmac_bsp_priv(&pdev->dev);
-+	int ret;
-+
-+	ret = stmmac_pltfr_remove(pdev);
-+
-+	if (dwmac->tx_clk)
-+		clk_disable_unprepare(dwmac->tx_clk);
-+
-+	return ret;
-+}
-+
-+static struct platform_driver intel_eth_plat_driver = {
-+	.probe  = intel_eth_plat_probe,
-+	.remove = intel_eth_plat_remove,
-+	.driver = {
-+		.name		= "intel-eth-plat",
-+		.pm		= &stmmac_pltfr_pm_ops,
-+		.of_match_table = intel_eth_plat_match,
-+	},
-+};
-+module_platform_driver(intel_eth_plat_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Intel DWMAC platform driver");
+qcom->max_speed = usb_get_maximum_speed(&qcom->dwc3->dev);
+
+as they were doing similarly in below code to get mode
+
+qcom->mode = usb_get_dr_mode(&qcom->dwc3->dev);
+
 -- 
-1.9.1
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
