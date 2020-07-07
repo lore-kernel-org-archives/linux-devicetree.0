@@ -2,148 +2,93 @@ Return-Path: <SRS0=wVrF=AS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6649C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 03:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B67C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 04:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6F162053B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 03:53:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 159C420702
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 04:28:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GxLfwtp8"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vbqrz9o8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbgGGDx3 (ORCPT
+        id S1726681AbgGGE2F (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jul 2020 23:53:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38846 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727791AbgGGDx2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 23:53:28 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F6F6C061755;
-        Mon,  6 Jul 2020 20:53:28 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id t15so3527986pjq.5;
-        Mon, 06 Jul 2020 20:53:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DqpSOjTQuG5ymSzOUk0oJSbSIqIGYeuMo1AwRtryaSo=;
-        b=GxLfwtp8fc89kG3kTSi8OQO3CgvkVIBCvZMSP0JWgxAI6L2f7ByJM4Inbb0wQVPr+C
-         SU2+ABf7oOAtx/E+W1Cg2grVfXHx2VGjm8lZw49+Meg/bycrC3AbtggpQx6gUPRQOmZ7
-         EFNG8VcFa65rhqCHgO+lsXTvmIxJ1BhmT3ZKhndr27QqZijOVyFVxUInDIgC+2DaokoO
-         dRg8A8N0XCS/m0+Fna+Ua+V83ki7CnTqZ9cYMkM63HwVqzqYIZfSgfLLv7cdRFNvmuji
-         7rCrQjTf+6lF7LGblw+Y5HtsTGzlJzK0HRLZnsdlWB9pfpN+iyhP3oC+6A/IaE4G3mhf
-         FDrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DqpSOjTQuG5ymSzOUk0oJSbSIqIGYeuMo1AwRtryaSo=;
-        b=Sl2PXMS8+byYNUCw/dCfTK7I5l7DOQv+LwoQjUULHzHs2h8hRo42ROFd/d7X+61PiG
-         dLYRHxW/0rgMPTfjho11w66eSERxZ3ZUkg8PC0TwpslwcUKPs+oeVW1On9JVTxRlhm0l
-         VqxXxt4wdqF67TREHOOZhudvmgU2rkCLwavp1JIk+ejGqacmZwXFoZ4XMaJGrB1V6QDH
-         4Wrtn9CTNAxc+m3Blf40g5TFvKA2M4B70828V3Qqdl8wbefCtbGo9U+aZtySzzr8Cuck
-         PMrBpQnAQQtrFs+BagpIcbeffYw9lrUTjySweg/T0kK+qlhzv+17ceyw2sRSKJhmeezL
-         3xpQ==
-X-Gm-Message-State: AOAM5313mcvoObQePN/nVcS+SYiZCPGU6gSjxQtqDH/gpDcv2puZ9Ldp
-        z5GYxJIXzfZFBqhqTxB4RUY=
-X-Google-Smtp-Source: ABdhPJyywd+pfOapQUulsD5T/A6ysUBh2Xg10xFydCzg3m9sVazu7t8QGhlgTJKABVj4iJW6HkAUdg==
-X-Received: by 2002:a17:90a:26c6:: with SMTP id m64mr2196779pje.215.1594094008064;
-        Mon, 06 Jul 2020 20:53:28 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id ia13sm841874pjb.42.2020.07.06.20.53.27
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 Jul 2020 20:53:27 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 20:53:26 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Cc:     Jack Lo <jack.lo@gtsys.com.hk>, devicetree@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] hwmon: shtc1: add support for device tree bindings
-Message-ID: <20200707035326.GA212456@roeck-us.net>
-References: <20200705034727.1429-1-chris.ruehl@gtsys.com.hk>
- <20200705034727.1429-2-chris.ruehl@gtsys.com.hk>
+        Tue, 7 Jul 2020 00:28:05 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:14101 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726933AbgGGE2F (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 7 Jul 2020 00:28:05 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594096084; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=60Navhldv42+vmTmut42AtChOCPYqVL1BHt+i2yrzso=; b=vbqrz9o8vblw6JlDSSO75D1Dr29WiesmXS/4aZZ6XWyMUTijpeR50qKp+34Vk7x/SGfh1RIh
+ yfGAEFX70Ef8WzkG6es4l0nC+N9VROw/Z2F7v1F1WEdyxRrK3+zME6oFsPMMjWMxs7gfDk9Y
+ LwXmsFWNZlX6ytuK2b0emPMYaX0=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n14.prod.us-west-2.postgun.com with SMTP id
+ 5f03f9b7c9789fa906e6151b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 07 Jul 2020 04:27:35
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 96CE1C433CB; Tue,  7 Jul 2020 04:27:35 +0000 (UTC)
+Received: from [192.168.1.11] (unknown [61.3.20.137])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6E024C433C8;
+        Tue,  7 Jul 2020 04:27:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6E024C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH 1/3] spi: spi-qcom-qspi: Use OPP API to set clk/perf state
+To:     Mark Brown <broonie@kernel.org>
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        mka@chromium.org, Alok Chauhan <alokc@codeaurora.org>,
+        Akash Asthana <akashast@codeaurora.org>
+References: <1593769293-6354-1-git-send-email-rnayak@codeaurora.org>
+ <1593769293-6354-2-git-send-email-rnayak@codeaurora.org>
+ <20200703170157.GA54804@sirena.org.uk>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <c49404d6-d9e1-2d19-92f4-0b2e1e2187a8@codeaurora.org>
+Date:   Tue, 7 Jul 2020 09:57:29 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200705034727.1429-2-chris.ruehl@gtsys.com.hk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200703170157.GA54804@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Jul 05, 2020 at 11:47:25AM +0800, Chris Ruehl wrote:
-> Add support for DTS bindings for the sensirion shtc1,shtw1 and shtc3.
+
+On 7/3/2020 10:31 PM, Mark Brown wrote:
+> On Fri, Jul 03, 2020 at 03:11:31PM +0530, Rajendra Nayak wrote:
+>> QSPI needs to vote on a performance state of a power domain depending on
+>> the clock rate. Add support for it by specifying the perf state/clock rate
+>> as an OPP table in device tree.
 > 
-> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
-> ---
->  drivers/hwmon/shtc1.c | 22 ++++++++++++++++++++--
->  1 file changed, 20 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/hwmon/shtc1.c b/drivers/hwmon/shtc1.c
-> index a0078ccede03..61e9275eb666 100644
-> --- a/drivers/hwmon/shtc1.c
-> +++ b/drivers/hwmon/shtc1.c
-> @@ -14,6 +14,7 @@
->  #include <linux/err.h>
->  #include <linux/delay.h>
->  #include <linux/platform_data/shtc1.h>
-> +#include <linux/of.h>
->  
->  /* commands (high precision mode) */
->  static const unsigned char shtc1_cmd_measure_blocking_hpm[]    = { 0x7C, 0xA2 };
-> @@ -196,6 +197,7 @@ static int shtc1_probe(struct i2c_client *client,
->  	enum shtcx_chips chip = id->driver_data;
->  	struct i2c_adapter *adap = client->adapter;
->  	struct device *dev = &client->dev;
-> +	struct device_node *np = dev->of_node;
->  
->  	if (!i2c_check_functionality(adap, I2C_FUNC_I2C)) {
->  		dev_err(dev, "plain i2c transactions not supported\n");
-> @@ -233,8 +235,13 @@ static int shtc1_probe(struct i2c_client *client,
->  	data->client = client;
->  	data->chip = chip;
->  
-> -	if (client->dev.platform_data)
-> +	if (np) {
-> +		data->setup.blocking_io = of_property_read_bool(np, "sensirion,blocking_io");
-> +		data->setup.high_precision = of_property_read_bool(np, "sensicon,low_precision");
+> This doesn't apply against current code, please check and resend.
 
-Just noticed. Presumably that would have to be:
+Hey Mark, as mentioned in the cover letter I wanted this to land via the
+qcom tree, since Bjorn already has a patch in his tree which would otherwise
+conflict with this change, if you were to pull this.
+Hence I had this rebased on qcom for-next and requested Bjorn to pull it in,
+with your ACK. Hope thats fine with you.
 
-		data->setup.high_precision = !of_property_read_bool(np, "sensicon,low_precision");
+thanks,
+Rajendra
 
-> +	}
-> +	else if (client->dev.platform_data)
->  		data->setup = *(struct shtc1_platform_data *)dev->platform_data;
-> +
->  	shtc1_select_command(data);
->  	mutex_init(&data->update_lock);
->  
-> @@ -257,8 +264,19 @@ static const struct i2c_device_id shtc1_id[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, shtc1_id);
->  
-> +static const struct of_device_id shtc1_of_match[] = {
-> +	{ .compatible = "sensirion,shtc1" },
-> +	{ .compatible = "sensirion,shtw1" },
-> +	{ .compatible = "sensirion,shtc3" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, shtc1_of_match);
-> +
->  static struct i2c_driver shtc1_i2c_driver = {
-> -	.driver.name  = "shtc1",
-> +	.driver = {
-> +		.name = "shtc1",
-> +		.of_match_table = shtc1_of_match,
-> +	},
->  	.probe        = shtc1_probe,
->  	.id_table     = shtc1_id,
->  };
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
