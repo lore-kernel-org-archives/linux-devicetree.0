@@ -2,230 +2,403 @@ Return-Path: <SRS0=wVrF=AS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA776C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 10:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF48C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 10:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A9DF20720
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 10:53:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastree3d-com.20150623.gappssmtp.com header.i=@fastree3d-com.20150623.gappssmtp.com header.b="D2ypRy0O"
+	by mail.kernel.org (Postfix) with ESMTP id ABB6C206DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 10:58:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725941AbgGGKxm (ORCPT
+        id S1727120AbgGGK6o (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 06:53:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbgGGKxl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 06:53:41 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EE08C08C5DB
-        for <devicetree@vger.kernel.org>; Tue,  7 Jul 2020 03:53:41 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id y10so46071257eje.1
-        for <devicetree@vger.kernel.org>; Tue, 07 Jul 2020 03:53:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastree3d-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=xzMc8ThId2/X4pKYDkTZL/dvNCzrhOR7XnxySi0pc/s=;
-        b=D2ypRy0OeuE2marIBj8ZKQqaaGMNwz1Z/07MI2vPrWr2CVg1XoUmhv0A4s2UsgKShF
-         FK5shzg0FG5PT7LYECWo81PyDgnObHrIUuQhIkqVcziEzASHvIuy4k5MZF1/WftjKWI7
-         isILWoilv2u9zLkU8PBltwQ5aI75S7LeDk+ZKrDyIqB+B+dBMgJ2zVw3S3jfvg+3LvqB
-         zu+KiRmXc1HiNgWWXgl/++5nYre/06oALbccRHrp1VdcrdODQ9Q6Zpm1P2fM4dwufgr5
-         DufNmDk2pAJMlrY8XwbYXLIQ6PKMAifacFEI0Gz30KDwwek+j+YHeQLdXwhhEi2bMAKj
-         DFCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=xzMc8ThId2/X4pKYDkTZL/dvNCzrhOR7XnxySi0pc/s=;
-        b=KTuynPVtFbph6sS6OioPCpGNxeKG6A2+uYkRdHykqkJDXL7RFd8cRI+S2HD1FJdOjP
-         q76qDcxfB0Wh7FndA+X39cmzdyoYtdV8UzaKzbqoAQ441ILghHD2SOE5F6Rrbbh3v4cU
-         a6asYxh1AQnSzAF1SAf2ZBi+E+JSB/j+qZW5N2bC4vApCKGapKwPpjekFq/kYjkBXGHO
-         7tRtkpy9wgOYBadq9HXSBL/tYXWZ4H8dRtpWRyoLCcxPg9xjBGuU5Fq1xMVXzOD7LZXK
-         2fIWpcE8+50KZRL5BysSNYr2Iswu9ENyGwCHCp8CdXKAgU7XwqhvhG/xX1kPioMCfnhs
-         L1yw==
-X-Gm-Message-State: AOAM531wRpTCFMIAWQre1RAys50NGoRN+X5qB+/8h9MH0xXwtWvSVCDX
-        5BS6I14fRVVWG+gwz6Rb3y28
-X-Google-Smtp-Source: ABdhPJwJPMAgTxCR9XDqmuIUqppz4Gli6VJuXH7xTDCYIlqs2VT9w+p7iYuZmUzIkF1cpjcumfCK+w==
-X-Received: by 2002:a17:906:c943:: with SMTP id fw3mr46063060ejb.55.1594119219778;
-        Tue, 07 Jul 2020 03:53:39 -0700 (PDT)
-Received: from [192.168.33.195] (fastree1.epfl.ch. [192.26.37.52])
-        by smtp.gmail.com with ESMTPSA id x19sm24542135eds.43.2020.07.07.03.53.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jul 2020 03:53:39 -0700 (PDT)
-From:   Adrian Fiergolski <adrian.fiergolski@fastree3d.com>
-X-Google-Original-From: Adrian Fiergolski <Adrian.Fiergolski@fastree3d.com>
-Subject: Re: [PATCH v2 1/2] spi: Add the SPI daisy chain support.
-To:     Mark Brown <broonie@kernel.org>
-Cc:     geert@linux-m68k.org, lukas@wunner.de,
-        kernel test robot <lkp@intel.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <202007040833.xIqR5rAw%lkp@intel.com>
- <20200706092247.20740-1-adrian.fiergolski@fastree3d.com>
- <20200706161810.GB6176@sirena.org.uk>
-Message-ID: <0072bb03-d6ec-38b8-0c31-61571b77bf93@fastree3d.com>
-Date:   Tue, 7 Jul 2020 12:53:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        Tue, 7 Jul 2020 06:58:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:39968 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726911AbgGGK6o (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 7 Jul 2020 06:58:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B1E781FB;
+        Tue,  7 Jul 2020 03:58:42 -0700 (PDT)
+Received: from [10.37.12.65] (unknown [10.37.12.65])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C56DC3F71E;
+        Tue,  7 Jul 2020 03:58:38 -0700 (PDT)
+Subject: Re: [PATCH v6 3/6] thermal: Add generic power domain warming device
+ driver.
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     rui.zhang@intel.com, ulf.hansson@linaro.org,
+        bjorn.andersson@linaro.org, agross@kernel.org, robh@kernel.org,
+        amit.kucheria@verdurent.com, mark.rutland@arm.com,
+        rjw@rjwysocki.net, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200604015317.31389-1-thara.gopinath@linaro.org>
+ <20200604015317.31389-4-thara.gopinath@linaro.org>
+ <733d118d-45a3-b981-4820-5d841e921a8d@linaro.org>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <79a35aea-51c1-ed76-5107-35d2191b028f@arm.com>
+Date:   Tue, 7 Jul 2020 11:58:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200706161810.GB6176@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+In-Reply-To: <733d118d-45a3-b981-4820-5d841e921a8d@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Daniel and Thara
 
-On 06.07.2020 18:18, Mark Brown wrote:
-> On Mon, Jul 06, 2020 at 11:22:43AM +0200, Adrian Fiergolski wrote:
->
-> Please don't send new patches in reply to old threads, it buries them
-> and can be confusing.
+On 7/3/20 11:02 AM, Daniel Lezcano wrote:
+> 
+> Hi Thara,
+> 
+> sorry for the delay.
+> 
+> Added Lukasz.
 
-Ok, thanks. It's my debut in sharing a complete driver patch ;-)
+Thank you for adding me.
+I will go through the patches to understand them and build
+the context. I can see some interesting idea described below.
 
->
->> The implementation is transparent for the SPI devices and doesn't require
->> their modifications. It is based on a virtual SPI device (spi-daisy_chain)
->> and defines two required device tree properties ('spi-daisy-chain-len' and
->> 'spi-daisy-chain-noop') and one optional
-> It would really help to have an example of how a client device will use
-> this, right now it's a bit hard to follow.  Overall it feels like this
-> should be better abstracted, right now there's lots of ifdefs throughout
-> the code which make things unclear and also seem like they're going to
-> be fragile long term since realistically very few systems will be using
-> this.  Perhaps this needs to be a library for devices that can daisy
-> chain?  It does feel like the instances should be aware of each other
-> since half the point with building the hardware like this is that it
-> enables operations on multiple devices to happen in sync.
+Regards,
+Lukasz
 
-Well, I assume that one can connect completely different SPI devices on
-a single daisy chain. In order to address all devices in a single
-access, a controller would need to delay a transaction, wait for a
-certain moment (how long?), synchronise and then transfer the message. I
-think it adds unnecessary complexity, as MHO many engineers' issue at
-the moment, including myself, is hardware implementing SPI daisy chain
-without any support in the kernel. Usually, those are simple devices
-where performance is not critical, which need to be accessed only once
-or sporadically.
-
->
-> There are also pervasive coding style issues which are really
-> distracting.
->
->>  drivers/spi/spi-daisy_chain.c       | 428 ++++++++++++++++++++++++++++
-> Please use - and _ consistently.
-Basing on other drivers, I understood that the convention is 'spi-name'.
-My idea was that name is daisy_chain.
->
->> @@ -55,6 +55,14 @@ config SPI_MEM
->>  	  This extension is meant to simplify interaction with SPI memories
->>  	  by providing a high-level interface to send memory-like commands.
->>  
->> +config SPI_DAISY_CHAIN
->> +	bool "SPI daisy chain support"
->> +	depends on OF
-> Please keep Makefile and Kconfig sorted.
-To be done in v3.
->
->> +++ b/drivers/spi/spi-daisy_chain.c
->> @@ -0,0 +1,428 @@
->> +// SPDX-License-Identifier: GPL-2.0-or-later
+> 
+> On 04/06/2020 03:53, Thara Gopinath wrote:
+>> Resources modeled as power domains in linux kernel can  be used to warm the
+>> SoC(eg. mx power domain on sdm845).  To support this feature, introduce a
+>> generic power domain warming device driver that can be plugged into the
+>> thermal framework (The thermal framework itself requires further
+>> modifiction to support a warming device in place of a cooling device.
+>> Those extensions are not introduced in this patch series).
+> 
+> The patch itself looks fine but I'm not very convinced about using a
+> specific driver as a warming device.
+> 
+> It is all about changing the performance state of a device and the power
+> domain is a way to access the associated callback.
+> 
+> It could be used as a cooling device as well.
+> 
+> The cpufreq cooling device could be used as a warming device and the way
+> we access the performance state is the freq qos.
+> 
+> We end up with different ways to do the same thing : change the
+> performance state.
+> 
+> On the other side, the energy model is being moved to the struct device,
+> so we will have gpu and cpu using it to retrieve a performance state
+> given a power value.
+> 
+> My opinion is instead of multiplying the ways to do the same think, we
+> should find a way to unify all the passive cooling devices into a single
+> generic performance state based mitigation device.
+> 
+> It does not imply to make all the passive cooling device changes but
+> provide a generic one first.
+> 
+> The ideal would be to register a struct device as a performance state
+> capable device and use the energy model stored in it.
+> 
+> In the meantime, the energy model should embed a couple of callbacks
+> get_power / set_power to set the performance state.
+> 
+> That implies a bit of more work, but IMHO it is worth to do.
+> 
+> Does it make sense ?
+> 
+> 
+>> ---
+>>
+>> v3->v4:
+>> 	- Removed late_init hook pd_warming_device_ops.
+>> 	- Use of_genpd_add_device instead of pm_genpd_add_device to attach
+>> 	  device to the generic power domain.
+>> 	- Use thermal_of_cooling_device_parent_register to register the
+>> 	  cooling device so that the device with genpd attached can be
+>> 	  made parent of the cooling device.
+>> 	- With above changes, remove reference to generic_pm_domain in
+>> 	  pd_warming_device.
+>>
+>> v4->v5:
+>> 	- All the below changes are as per Ulf's review comments.
+>> 	- Renamed pwr_domain_warming.c and pwr_domain_warming.h to
+>> 	  pd_warming.c and pd_warming.h.
+>> 	- Renamed pwr_domain_warming_register API to
+>> 	  of_pd_warming_register.
+>> 	- Dropped in-param pd_name to of_pd_warming_register.
+>> 	- Introduced ID allocator to uniquely identify each power domain
+>> 	  warming device.
+>> 	- Introduced pd_warming_release to handle device kfree for
+>> 	  pd_warming_device.
+>> 	- Introduced pm_genpd_remove_device in the error exit path
+>> 	  of of_pd_warming_register.
+>> v5->v6:
+>> 	- Fixed issues with ->release() and kfree(dev) as pointed
+>> 	  out by Ulf.
+>>
+>>   drivers/thermal/Kconfig      |  10 +++
+>>   drivers/thermal/Makefile     |   4 +
+>>   drivers/thermal/pd_warming.c | 169 +++++++++++++++++++++++++++++++++++
+>>   include/linux/pd_warming.h   |  29 ++++++
+>>   4 files changed, 212 insertions(+)
+>>   create mode 100644 drivers/thermal/pd_warming.c
+>>   create mode 100644 include/linux/pd_warming.h
+>>
+>> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+>> index e53314ea9e25..3a0bcf3e8bd9 100644
+>> --- a/drivers/thermal/Kconfig
+>> +++ b/drivers/thermal/Kconfig
+>> @@ -206,6 +206,16 @@ config DEVFREQ_THERMAL
+>>   
+>>   	  If you want this support, you should say Y here.
+>>   
+>> +config PWR_DOMAIN_WARMING_THERMAL
+>> +	bool "Power Domain based warming device"
+>> +	depends on PM_GENERIC_DOMAINS_OF
+>> +	help
+>> +	  This implements the generic power domain based warming
+>> +	  mechanism through increasing the performance state of
+>> +	  a power domain.
 >> +
+>> +	  If you want this support, you should say Y here.
+>> +
+>>   config THERMAL_EMULATION
+>>   	bool "Thermal emulation mode support"
+>>   	help
+>> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+>> index 86c506410cc0..14fa696a08bd 100644
+>> --- a/drivers/thermal/Makefile
+>> +++ b/drivers/thermal/Makefile
+>> @@ -28,7 +28,11 @@ thermal_sys-$(CONFIG_CLOCK_THERMAL)	+= clock_cooling.o
+>>   # devfreq cooling
+>>   thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
+>>   
+>> +#pwr domain warming
+>> +thermal_sys-$(CONFIG_PWR_DOMAIN_WARMING_THERMAL)	+= pd_warming.o
+>> +
+>>   obj-$(CONFIG_K3_THERMAL)	+= k3_bandgap.o
+>> +
+>>   # platform thermal drivers
+>>   obj-y				+= broadcom/
+>>   obj-$(CONFIG_THERMAL_MMIO)		+= thermal_mmio.o
+>> diff --git a/drivers/thermal/pd_warming.c b/drivers/thermal/pd_warming.c
+>> new file mode 100644
+>> index 000000000000..1ea93481c79b
+>> --- /dev/null
+>> +++ b/drivers/thermal/pd_warming.c
+>> @@ -0,0 +1,169 @@
+>> +// SPDX-License-Identifier: GPL-2.0
 >> +/*
->> + * A driver handling the SPI daisy chaines.
-> Please make the entire comment block a C++ to make things look more
-> intentional.
-To be done in v3.
->
->> +	int rc;
+>> + * Copyright (c) 2019, Linaro Ltd
+>> + */
+>> +#include <linux/err.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/init.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/module.h>
+>> +#include <linux/pm_runtime.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/pd_warming.h>
 >> +
->> +	//the device is not part of a daisy-chain
->> +	if (spi->daisy_chain_devs == NULL)
-> Coding style for the comment here and throughout the code.  If your code
-> doesn't visually resemble the normal coding style for the code base
-> you're working on then that is a bit of a red flag when reviewing.
-Do you mean '//' vs '/*' ? In the spi.c I tried to follow the original
-style. In spi-daisy_chain.c, which is a new driver added by myself, I
-used '//' which is me personal preference. Is it wrong approach in your
-opinion?
->
->> +	if (!list_is_singular(&message->transfers)) {
->> +		dev_err(&spi->dev,
->> +			"Mutliple transfer segments are not support when on daisy chain");
->> +		return -EINVAL;
+>> +struct pd_warming_device {
+>> +	struct thermal_cooling_device *cdev;
+>> +	struct device dev;
+>> +	int id;
+>> +	int max_state;
+>> +	int cur_state;
+>> +	bool runtime_resumed;
+>> +};
+>> +
+>> +static DEFINE_IDA(pd_ida);
+>> +
+>> +static int pd_wdev_get_max_state(struct thermal_cooling_device *cdev,
+>> +				 unsigned long *state)
+>> +{
+>> +	struct pd_warming_device *pd_wdev = cdev->devdata;
+>> +
+>> +	*state = pd_wdev->max_state;
+>> +	return 0;
+>> +}
+>> +
+>> +static int pd_wdev_get_cur_state(struct thermal_cooling_device *cdev,
+>> +				 unsigned long *state)
+>> +{
+>> +	struct pd_warming_device *pd_wdev = cdev->devdata;
+>> +
+>> +	*state = dev_pm_genpd_get_performance_state(&pd_wdev->dev);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int pd_wdev_set_cur_state(struct thermal_cooling_device *cdev,
+>> +				 unsigned long state)
+>> +{
+>> +	struct pd_warming_device *pd_wdev = cdev->devdata;
+>> +	struct device *dev = &pd_wdev->dev;
+>> +	int ret;
+>> +
+>> +	ret = dev_pm_genpd_set_performance_state(dev, state);
+>> +
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (state && !pd_wdev->runtime_resumed) {
+>> +		ret = pm_runtime_get_sync(dev);
+>> +		pd_wdev->runtime_resumed = true;
+>> +	} else if (!state && pd_wdev->runtime_resumed) {
+>> +		ret = pm_runtime_put(dev);
+>> +		pd_wdev->runtime_resumed = false;
 >> +	}
-> That seems excessively restrictive?
-Well, with multiple transfers, drivers could request deactivation of SS
-in between them. That would break the daisy chain, as data is latched in
-all devices once SS is de-asserted. How such a transaction should be
-then handled? Do you know any example of drivers/devices using multiple
-transfers?
->
->> +			//check if frequency is not being changed
->> +			if (tr->speed_hz && tr->speed_hz != spi->max_speed_hz) {
->> +				dev_err(&spi->dev,
->> +					"Change of SPI frequency not supported when on daisy chain");
->> +				return -EINVAL;
->> +			}
-> Again this seems unreasonably restrictive, especially given the above
-> single transfer restriction which means the speed can't change during a
-> message?
-We could allow here also slower transfers.
-
-A person defining the daisy chain in the DT knowns the maximum frequency
-(aka propagation delays between different components on PCB + internal
-timing of the devices) at which the whole chain operates properly. Thus,
-the transfer speed of the message can't violate this upper limit.
->
->> +			if (tr->len == spi_chain_dev->no_operation.len) {
->> +				tr->bits_per_word = spi_chain_dev->no_operation
->> +							    .bits_per_word;
->> +				tr->cs_change = 0;
 >> +
->> +				list_add_tail(&tr->transfer_list,
->> +					      &message->transfers);
->> +			}
->> +			//daisy chain operation has different than regular length
->> +			else {
-> Coding style on both the if () and placement of the comment.
-It was corrected like that by clang-format-buffer in emacs which uses
-the format defined in the kernel source-tree.
->
->> +				//copy tx buffer
->> +				if (tr->tx_buf) {
->> +					ntr->tx_buf =
->> +						kmalloc(ntr->len, GFP_KERNEL);
->> +					if (!ntr->tx_buf) {
->> +						rc = -ENOMEM;
->> +						goto err_out;
->> +					}
-> Why is this not a kmemdup()?
-Not really. Due to SPI big-endiannes, one needs to apply padding
-(right-justification) properly at the beginning of the new buffer. I
-have been looking for some kernel function, which would copy the buffers
-from their ends in the reverse order. I haven't found a good candidate.
-Any suggestion?
->
->> +					//The daisy-chain padding is assumed to be right-justified,
->> +					//so unused tx bits are transferred first
->> +					memcpy((void *)((char *)ntr->tx_buf +
->> +							ntr->len - tr->len),
->> +					       tr->tx_buf, tr->len);
-> These casts shouldn't be needed, especially the cast to void * - if you
-> need to cast to void * something bad is most likely happening.  Simiar
-> issues apply in other places where you're casting.
-tx_buf is 'const void*' in spi_transfer. spi-daisy_chain could allocate
-a new spi_transfer with the extended tx_buffer, copy rest of fields from
-the original one, swap the transactions in the message and eventually
-(after transmission) copy back the rx buffer to the original transaction
-and swap the transfers again. I think though, it's a bit of unnecessary
-overhead. What do you think?
+>> +	return ret;
+>> +}
+>> +
+>> +static struct thermal_cooling_device_ops pd_warming_device_ops = {
+>> +	.get_max_state	= pd_wdev_get_max_state,
+>> +	.get_cur_state	= pd_wdev_get_cur_state,
+>> +	.set_cur_state	= pd_wdev_set_cur_state,
+>> +};
+>> +
+>> +static void pd_warming_release(struct device *dev)
+>> +{
+>> +	struct pd_warming_device *pd_wdev;
+>> +
+>> +	pd_wdev = container_of(dev, struct pd_warming_device, dev);
+>> +	kfree(pd_wdev);
+>> +}
+>> +
+>> +struct thermal_cooling_device *
+>> +of_pd_warming_register(struct device *parent, int pd_id)
+>> +{
+>> +	struct pd_warming_device *pd_wdev;
+>> +	struct of_phandle_args pd_args;
+>> +	char cdev_name[THERMAL_NAME_LENGTH];
+>> +	int ret;
+>> +
+>> +	pd_wdev = kzalloc(sizeof(*pd_wdev), GFP_KERNEL);
+>> +	if (!pd_wdev)
+>> +		return ERR_PTR(-ENOMEM);
+>> +
+>> +	dev_set_name(&pd_wdev->dev, "%s_%d_warming_dev",
+>> +		     dev_name(parent), pd_id);
+>> +	pd_wdev->dev.parent = parent;
+>> +	pd_wdev->dev.release = pd_warming_release;
+>> +
+>> +	ret = device_register(&pd_wdev->dev);
+>> +	if (ret) {
+>> +		put_device(&pd_wdev->dev);
+>> +		goto out;
+>> +	}
+>> +
+>> +	ret = ida_simple_get(&pd_ida, 0, 0, GFP_KERNEL);
+>> +	if (ret < 0)
+>> +		goto unregister_device;
+>> +
+>> +	pd_wdev->id = ret;
+>> +
+>> +	pd_args.np = parent->of_node;
+>> +	pd_args.args[0] = pd_id;
+>> +	pd_args.args_count = 1;
+>> +
+>> +	ret = of_genpd_add_device(&pd_args, &pd_wdev->dev);
+>> +
+>> +	if (ret)
+>> +		goto remove_ida;
+>> +
+>> +	ret = dev_pm_genpd_performance_state_count(&pd_wdev->dev);
+>> +	if (ret < 0)
+>> +		goto out_genpd;
+>> +
+>> +	pd_wdev->max_state = ret - 1;
+>> +	pm_runtime_enable(&pd_wdev->dev);
+>> +	pd_wdev->runtime_resumed = false;
+>> +
+>> +	snprintf(cdev_name, sizeof(cdev_name), "thermal-pd-%d", pd_wdev->id);
+>> +	pd_wdev->cdev = thermal_of_cooling_device_register
+>> +					(NULL, cdev_name, pd_wdev,
+>> +					 &pd_warming_device_ops);
+>> +	if (IS_ERR(pd_wdev->cdev)) {
+>> +		pr_err("unable to register %s cooling device\n", cdev_name);
+>> +		ret = PTR_ERR(pd_wdev->cdev);
+>> +		goto out_runtime_disable;
+>> +	}
+>> +
+>> +	return pd_wdev->cdev;
+>> +
+>> +out_runtime_disable:
+>> +	pm_runtime_disable(&pd_wdev->dev);
+>> +out_genpd:
+>> +	pm_genpd_remove_device(&pd_wdev->dev);
+>> +remove_ida:
+>> +	ida_simple_remove(&pd_ida, pd_wdev->id);
+>> +unregister_device:
+>> +	device_unregister(&pd_wdev->dev);
+>> +out:
+>> +	return ERR_PTR(ret);
+>> +}
+>> +EXPORT_SYMBOL_GPL(of_pd_warming_register);
+>> +
+>> +void pd_warming_unregister(struct thermal_cooling_device *cdev)
+>> +{
+>> +	struct pd_warming_device *pd_wdev = cdev->devdata;
+>> +	struct device *dev = &pd_wdev->dev;
+>> +
+>> +	if (pd_wdev->runtime_resumed) {
+>> +		dev_pm_genpd_set_performance_state(dev, 0);
+>> +		pm_runtime_put(dev);
+>> +		pd_wdev->runtime_resumed = false;
+>> +	}
+>> +	pm_runtime_disable(dev);
+>> +	pm_genpd_remove_device(dev);
+>> +	ida_simple_remove(&pd_ida, pd_wdev->id);
+>> +	thermal_cooling_device_unregister(cdev);
+>> +	device_unregister(dev);
+>> +}
+>> +EXPORT_SYMBOL_GPL(pd_warming_unregister);
+>> diff --git a/include/linux/pd_warming.h b/include/linux/pd_warming.h
+>> new file mode 100644
+>> index 000000000000..550a5683b56d
+>> --- /dev/null
+>> +++ b/include/linux/pd_warming.h
+>> @@ -0,0 +1,29 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (c) 2019, Linaro Ltd.
+>> + */
+>> +#ifndef __PWR_DOMAIN_WARMING_H__
+>> +#define __PWR_DOMAIN_WARMING_H__
+>> +
+>> +#include <linux/pm_domain.h>
+>> +#include <linux/thermal.h>
+>> +
+>> +#ifdef CONFIG_PWR_DOMAIN_WARMING_THERMAL
+>> +struct thermal_cooling_device *
+>> +of_pd_warming_register(struct device *parent, int pd_id);
+>> +
+>> +void pd_warming_unregister(struct thermal_cooling_device *cdev);
+>> +
+>> +#else
+>> +static inline struct thermal_cooling_device *
+>> +of_pd_warming_register(struct device *parent, int pd_id)
+>> +{
+>> +	return ERR_PTR(-ENOSYS);
+>> +}
+>> +
+>> +static inline void
+>> +pd_warming_unregister(struct thermal_cooling_device *cdev)
+>> +{
+>> +}
+>> +#endif /* CONFIG_PWR_DOMAIN_WARMING_THERMAL */
+>> +#endif /* __PWR_DOMAIN_WARMING_H__ */
+>>
+> 
+> 
