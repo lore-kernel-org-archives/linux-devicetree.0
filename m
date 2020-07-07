@@ -7,68 +7,66 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C1BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 11:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8D2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 11:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D35CB20738
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 11:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B187206DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 11:36:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dRxCuE1+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EEgzrmFO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728029AbgGGLeX (ORCPT
+        id S1728088AbgGGLgO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:34:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53346 "EHLO
+        Tue, 7 Jul 2020 07:36:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727875AbgGGLeW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 07:34:22 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB40BC08C5E1
-        for <devicetree@vger.kernel.org>; Tue,  7 Jul 2020 04:34:21 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id y13so24508524lfe.9
-        for <devicetree@vger.kernel.org>; Tue, 07 Jul 2020 04:34:21 -0700 (PDT)
+        with ESMTP id S1727999AbgGGLgO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 07:36:14 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DE95C08C5DF
+        for <devicetree@vger.kernel.org>; Tue,  7 Jul 2020 04:36:13 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id g139so24515348lfd.10
+        for <devicetree@vger.kernel.org>; Tue, 07 Jul 2020 04:36:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ZWFCdEUgk5dfzDM3fhNe+v2tWxrsCvDUWA3/QI1yjsA=;
-        b=dRxCuE1+l4lJyQ2YbJAaOdam3ofJb8lgOtEdWezxKOyRRyDMxmvt7gEf0x6w0E8JX6
-         zfj7ZoIxtLjX0RoOMTlhhp7h2JjwzRPmSlFeghxpjgBnoebMvd8IizTdR+RZTz7Tb7e8
-         GWLtSt2RMzfl/2xH9EXD3CfW9B5mBTWTW6Qi28YrmmDUD8WfYzAp+GMW/NX1sf2jcim9
-         p9TV40K9JWSp95sXcbLXnhApLLu0A0ABHN7alxdXkM1r9I/97RVRvjvbSl0rwCFDnrds
-         MgVQ5wl2VKBhy5HWTXFp0joV93UB52d4AMRaTt7+yi4p9Oni+yYVsyZGW1Ys135suUi7
-         NP0w==
+        bh=BaUdPMwTbym0/FOb53irCXsw858iJMpd+U7fSCxbrZw=;
+        b=EEgzrmFOPBRJPWSIHRYyePa9lAGoPCoxXqN3mLLCIQDZuRhWVmoWdIo9koYco7oq32
+         vFLlttQN2LTQr2685xKsPGTcpR+SI/aGR9ptBAspLpMDLtnyIVcelAgEmNvUgUNT3Aw2
+         5gDlCgfPKeKuRHTfhOvblO0quMu/M2GIaqhvEdyA4m0TtDrgBd9nLiKs+XRoNuQIxx5r
+         xFw4hBR6ouQOf264O3KjYNKNtoiN1ZXqrS8VAVcqrL9tKo7cEpwCl77SdvW1KJAEuA12
+         ZXDeXEgnbXWq7SkuqBrrVcROSIOaA257MsCDJHIFHBVIM8DlWdeE3/nbJvAeiXXL5aXt
+         fYRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ZWFCdEUgk5dfzDM3fhNe+v2tWxrsCvDUWA3/QI1yjsA=;
-        b=HEN/MWpzdCNhjixP9CyIdsDBw7Fe77XP2EJmkn1Bg3RndCZ2tGfjnmJBGdfSoDNVve
-         ah+sUG9fr0NTIgEqSqG7F0FIw/EBZ8eYMjD5vznJLs4rgNPhNJ88/p3X0wT7SRluXttE
-         szMwZArR6L3Ezv+jY2fQmelGn4PZ8wYT1uYTZIzkiuIEeFhQJ3MUFSvnz/0aBSZ4ozfi
-         JH3YjDt3Wd4Yn/LAxV/2VJI2WkMLbsrDsQCADZnYj/4VEAof6mryWzg1cERA04AWQX8s
-         BWGpE8Qwr5gc+xZoK01ErtoEkFWybiQLS/mFh1otzlMcp/LmcbbSLEQ1B7Hz4F+hwIAw
-         jCCQ==
-X-Gm-Message-State: AOAM531jhvOgEkmujKVjn0EFwtA0a4Tr6jDteD/8lTNLTXSpmJbJLB0l
-        TrPduqgYpCzUy0l3J9qk/qJaMFFlPLul1sGfZuFO6w==
-X-Google-Smtp-Source: ABdhPJyIiIuyUQqHN3zlh6wrnfN64GqNkLKnTcdf/MuoVjXEMgRphXgXP3Wlti/RgXHlE/J8tuuX/mMRGR2kcN3VA8g=
-X-Received: by 2002:a19:745:: with SMTP id 66mr32821101lfh.77.1594121660274;
- Tue, 07 Jul 2020 04:34:20 -0700 (PDT)
+        bh=BaUdPMwTbym0/FOb53irCXsw858iJMpd+U7fSCxbrZw=;
+        b=aYrEfUqiDzpc9Sqfu/6T50auOItK0sb8f2vuhSbaXam/j0YytXRmn5u88beDJrjyAD
+         17zEuzmT3cjRtkjV/ghDPkX2jd8gNJ7RRy0lVZ6nLC+Eo7SVD59osm7ZE+GULweNoM+q
+         qKAZXQWSMQwb5qm69e89vAaGczV8970V7zRMtZiuDWv3ZWEzwQUAheYhjOZ1aJpriGi1
+         lBHPdPF8nd0FwTRBbARS0JyUrrA0a52hz+I6sVQ5wqgRIlaE8J0OPZaiMubRiAEOg+qs
+         DfA4ucKgWOTlo13iI7uRa8OanBhrj3XLZq2SA41+V9dKmI6Qw7PVGHAxOr6pqbHfK/7N
+         Hj2Q==
+X-Gm-Message-State: AOAM533OM0qFzelGlWzZyGyuACYciBeflCjmY7GvB4VT6XtDRbVFzlSs
+        Z810iJFNwsntkAjqdSEe+XF5Xu7OHe2ZTP/Wnugf2g==
+X-Google-Smtp-Source: ABdhPJwURK8xxItk20LIQyik7OCxh3Na7DKcSEzSy2t02n+xFYxkh4Kdd3MsRtyCZLblZdRY6s0fjloV3UCAX3MmsHk=
+X-Received: by 2002:a19:7407:: with SMTP id v7mr31140846lfe.4.1594121771982;
+ Tue, 07 Jul 2020 04:36:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <1592480018-3340-1-git-send-email-hanks.chen@mediatek.com>
- <1592480018-3340-4-git-send-email-hanks.chen@mediatek.com> <CACRpkdavqjcma8A1y9Sh=WWLu-n0+mQOhyNw2dHenA8ZnQkvgg@mail.gmail.com>
-In-Reply-To: <CACRpkdavqjcma8A1y9Sh=WWLu-n0+mQOhyNw2dHenA8ZnQkvgg@mail.gmail.com>
+References: <1592480018-3340-1-git-send-email-hanks.chen@mediatek.com> <1592480018-3340-6-git-send-email-hanks.chen@mediatek.com>
+In-Reply-To: <1592480018-3340-6-git-send-email-hanks.chen@mediatek.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jul 2020 13:34:09 +0200
-Message-ID: <CACRpkdb5TyictD3j_PE5JtBJmxX87Bk04YkxF1ErsbHwO4TSOg@mail.gmail.com>
-Subject: Re: [PATCH v6 3/7] pinctrl: mediatek: avoid virtual gpio trying to
- set reg
-To:     Hanks Chen <hanks.chen@mediatek.com>,
-        Sean Wang <sean.wang@kernel.org>
+Date:   Tue, 7 Jul 2020 13:36:01 +0200
+Message-ID: <CACRpkdZc+PVGOXwba=ocs-VBh-sJT_1dpEVSxnjdwbmM_d0LFw@mail.gmail.com>
+Subject: Re: [PATCH v6 5/7] pinctrl: mediatek: add mt6779 eint support
+To:     Hanks Chen <hanks.chen@mediatek.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
         Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>,
         mtk01761 <wendell.lin@mediatek.com>,
         Andy Teng <andy.teng@mediatek.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -88,19 +86,15 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 1:31 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Thu, Jun 18, 2020 at 1:34 PM Hanks Chen <hanks.chen@mediatek.com> wrote:
->
-> > for virtual gpios, they should not do reg setting and
-> > should behave as expected for eint function.
-> >
-> > Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
-> > Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
->
-> Sean if you're OK with this patch I can just apply it separately.
+On Thu, Jun 18, 2020 at 1:34 PM Hanks Chen <hanks.chen@mediatek.com> wrote:
 
-Ah nevermind since the next patch has your ACK I just applied this
-too since it's a dependency. Yell if this is wrong.
+> add driver setting to support mt6779 eint
+>
+> Acked-by: Sean Wang <sean.wang@kernel.org>
+> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
+> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+
+Patch applied.
 
 Yours,
 Linus Walleij
