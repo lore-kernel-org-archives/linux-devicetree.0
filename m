@@ -7,71 +7,67 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B239C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 21:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E4BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 21:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5288B20663
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 21:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB667206C3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 21:54:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dw7yjM26"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f+pV7H/j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728337AbgGGVvO (ORCPT
+        id S1728528AbgGGVyr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 17:51:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36618 "EHLO
+        Tue, 7 Jul 2020 17:54:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726273AbgGGVvN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 17:51:13 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2963CC061755;
-        Tue,  7 Jul 2020 14:51:13 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id z24so26910604ljn.8;
-        Tue, 07 Jul 2020 14:51:13 -0700 (PDT)
+        with ESMTP id S1728001AbgGGVyq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 17:54:46 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83F24C061755;
+        Tue,  7 Jul 2020 14:54:46 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id f5so35953827ljj.10;
+        Tue, 07 Jul 2020 14:54:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=5j1Ui06AKqMGBn5Gjz9KT3GhGugXM0xrPlLDctFf2fM=;
-        b=dw7yjM26eD+SivZGQRsSZDI86YkEQwqjUt12OuUAE6YanGKEv//efPK8MbwCtGMxK2
-         Ou/3KrvoV5egqoRVXl0ZMhc7zEG+Oc5OThr9rsr5Pmbxaacgr+Rju+tujny9dBUAHF4R
-         x+/HgM0jgPC+wPSgQLeUNeGi2lSCY9wthNyQwpmUOW0SBMnpKys1XgXGRXTC/IUyJi5p
-         lc29CMXgRNek4RhD3nEECJyf966d2FW6xU3pCXXPRPZxeJ7TXHfbM5twqhQTkQDaQMr1
-         GS1mpzEQx2qk+hM0o1tAV2gvEvQgmYUwIsQ/QjXk7gx03csnqzzp8BSgm0sViAMPfE19
-         Npyg==
+        bh=Mw9ocWXI/3Winsjd/zdOzkKp5mXluvkjruXDIwHGnG8=;
+        b=f+pV7H/jxE5A09vwSKi25mWaiihc0xW+2LyKOKYlv/LaC3mO4H9vIezvnidmNHPMaG
+         hpchsJhFEsmfk0oLazYcoqh6UPVLkgwnSims1jnpGVeVshHqH3z5Sc3Gz1a4B5Y1Cgh1
+         7F2L7/PEATU7DhJj9/8OuzG53kjE3ABUn6RmBueXD0lB6qyZwjN8iBfm+l8H0yuKjpWw
+         4RTe78vdX+AfWfsK2YlVFcvXLstOFW7yno+KG/OE0iln2zyLKSA38kMiJsXI8J62HwTv
+         aFtCAkHwrzBTDIAzCkHLXVCT/keV1xSU/lHc3vlgEaQhSc0YxPm9Ob2bPRioK/2MpmLM
+         M56w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5j1Ui06AKqMGBn5Gjz9KT3GhGugXM0xrPlLDctFf2fM=;
-        b=r3GsmxeQmgiut4kByvB1KIqNB1CjD86R//3LcU/kCcTqfO3KSbXdNjVqFvqM4e+kN5
-         hJaGFR/6h287zqa/j8hXrA13zilbhEX7w1qNVrNSC+V7SsN9BaIVmQefYOh212DO9kVR
-         vq3gWrN2TYieK+QebH38g7Sy58sYaB+odl6gnNG+inZeNxUP+nVILmNURW/9vEknh4of
-         nFccUfgtVi5nkiThd8D4q9JKgm/MNfJLDV+F9udoadh/anHd0EUkmzT8DZUIwyVUlS4g
-         62sJuxu0dHLZI8hZn7LowTBo+ul3eKUcVTQFiO7EG0ZmNYGLh/+x5wOEI0c82hmSNIts
-         EeKQ==
-X-Gm-Message-State: AOAM5327HgIixxBUsZLFoMrq75aa66o4LnUOTTPhLOS01JXbfih6jwP1
-        +65mLK3LoJdJyxR+KPTZZtFAeDAYiKGJyyaw+MI=
-X-Google-Smtp-Source: ABdhPJyIqM6oobh1dSUh7r7X71tuzYBiuigwuPWRQWYnubENwrIRTWrX9CzJ9+Ebw6KRfrWkbLadPtj7KITj1K0fIbo=
-X-Received: by 2002:a2e:880e:: with SMTP id x14mr20930708ljh.218.1594158671507;
- Tue, 07 Jul 2020 14:51:11 -0700 (PDT)
+        bh=Mw9ocWXI/3Winsjd/zdOzkKp5mXluvkjruXDIwHGnG8=;
+        b=PmxVJM/ykm2Irj/MOZAR8pO7kBKr7FX+RuBvSzUoQdTEdr7iRwkfrLeZae4GNj2GGs
+         Ay5Z1zh9tSxyB5REaOwWorZA9C1aXOx27ruQemtLWqAoj0uoIMLvmh4GIIg+s0cBmZ5z
+         qvFQsDEnxIwE6nd3oHOTKmRfZgXtDdxYNN3X/V8EdXiy69EFA14JE/y7sLSTBjDeHNle
+         wNNJKOvDO1rtOytdZj8HSJrDew/r+nQNqNKlt0CktsP5cSnw42qfCu1XzkPD0Gm0gOJd
+         9SoUfdLz7pRA+pHHIWstHMKyX/iewk++XYXrLHffwe2P4kigTqVAvwVoq+vZEDCzaj1w
+         NhPg==
+X-Gm-Message-State: AOAM5310H1a9MI4kCLfGTMo5sGfNlFjzJ1i4PvsPkPhkPYdnt8RSrcTy
+        BThs9TTjj93bRbTT2x7FMXc4RTf2iKb6c5BZbQUxGSeBNUQ=
+X-Google-Smtp-Source: ABdhPJy/DPq/DWTnFO6suZ0QEd4jhHjniD95rpRqxsWkQ3qXaxxBDq5fHv8MdM3C8Z/5X5gofXFVCY2KR1NMS3oh0qo=
+X-Received: by 2002:a2e:a168:: with SMTP id u8mr2842548ljl.178.1594158884940;
+ Tue, 07 Jul 2020 14:54:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200707211359.29906-1-cphealy@gmail.com>
-In-Reply-To: <20200707211359.29906-1-cphealy@gmail.com>
+References: <CAFXsbZrVZjiyO_G6z6T82t0xT36Zi2gGo0kPnt6n58R-rO3TVg@mail.gmail.com>
+In-Reply-To: <CAFXsbZrVZjiyO_G6z6T82t0xT36Zi2gGo0kPnt6n58R-rO3TVg@mail.gmail.com>
 From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 7 Jul 2020 18:51:00 -0300
-Message-ID: <CAOMZO5CWv7S4iWLWMxQwRs_8qfVRGVgMX3YTkr8H01=6L_V25g@mail.gmail.com>
-Subject: Re: [PATCH v2] ARM: dts: vfxxx: Add node for CAAM
+Date:   Tue, 7 Jul 2020 18:54:33 -0300
+Message-ID: <CAOMZO5DctkSWri+6Zh1HfSWFJcz=nb8eUHZsvwFwRZ_B9ZCSTg@mail.gmail.com>
+Subject: Re: [PATCH] ARM64: dts: update MDIO speed and preamble for zii-ultra device
 To:     Chris Healy <cphealy@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Stefan Agner <stefan@agner.ch>,
+Cc:     Shawn Guo <shawnguo@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>
+        linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -80,21 +76,18 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hi Chris,
 
-On Tue, Jul 7, 2020 at 6:15 PM Chris Healy <cphealy@gmail.com> wrote:
+The subject pattern used for ARM64 i.MX patches is like:
+
+arm64: dts: zii-ultra: update MDIO speed and preamble
+
+On Sat, Jul 4, 2020 at 10:26 PM Chris Healy <cphealy@gmail.com> wrote:
 >
-> From: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Update MDIO configuration with zii-ultra device to fully utilize
+> MDIO endpoint capabilities.  Device supports 12.5MHz clock and
+> doesn't require MDIO preamble.
 >
-> Add node for CAAM device in NXP Vybrid SoC.
->
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 > Signed-off-by: Chris Healy <cphealy@gmail.com>
->
-> v2:
-> - fixup commit to show that this patch is from Andrey Smirnov.
 
-We usually put this information below the --- line.
+Other than that:
 
-Maybe Shawn could fix it while applying it.
-
-Other that that:
 Reviewed-by: Fabio Estevam <festevam@gmail.com>
