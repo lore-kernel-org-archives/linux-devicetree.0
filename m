@@ -2,96 +2,106 @@ Return-Path: <SRS0=wVrF=AS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA67C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 11:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA236C433E6
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 11:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E2882075B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 11:59:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HKDcobdw"
+	by mail.kernel.org (Postfix) with ESMTP id C4E5F2075B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 11:59:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbgGGL7H (ORCPT
+        id S1727945AbgGGL7J (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 07:59:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57250 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbgGGL7F (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 07:59:05 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3297BC061755
-        for <devicetree@vger.kernel.org>; Tue,  7 Jul 2020 04:59:05 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id g2so24558373lfb.0
-        for <devicetree@vger.kernel.org>; Tue, 07 Jul 2020 04:59:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HTPmD5Tv5dUMriTVMEYPSE4aq44oEkYldNJx6iUd92U=;
-        b=HKDcobdwR59Fn4UPxGHRQ0tpAtbpLCJNsZlPMJ/sOiZyRbiNswsgF9jOe/BAk8id8l
-         /5EDjFn+j7IrqQI7DBI2n7Uq2bBWEf1LX5BO0SlioDHGovjRN/+aYEtpFSj1onhKowwd
-         Jyzt+IOCjBFb2xLwG5Ql2hJk4eWSyQElpoG1w08NxiRQ4BjeE4juggLuIqQZrxnUm4AW
-         wxJ5rCZerV2AejOoEFy2/ofH5gJdnEUHklmMBmyEWjepQYIJFNJR4M9pxxd22+ChBxqi
-         z7Y0JHiZJBtFRhUTWf6BA4ruLd/6iHkPnoKgZc0WXt+PJk9Ns+TyOPs2bDd4yFIVnyF9
-         qKqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HTPmD5Tv5dUMriTVMEYPSE4aq44oEkYldNJx6iUd92U=;
-        b=qAl2/WoF/jQpWnbZmTPQ9i+/iXe+W+Vv1J+sVNsloAQG5Kcwg4CJQgkWeXrFzRsWO7
-         Sg+aQ1tvqRHzj2gvsqXfwiGOrb51K0G0Pn10Y9lBiSsKf5zgg5f9/mQK9cf7Losf1KYm
-         wMI6xSkhV8+v7gVN1gfw6qQTPWXtXxUIRLWAGbOMdRlgNC/i745RN3gx6OSD08LsSGjw
-         e9Ap/0AZKvLOkmv5+IAeflewDIW62pBZ7NZEhYtYohHY7Sl3i4Imy5xfNfnug0YxQx2c
-         8a6S29M+pDUyL/Zk4mF38bABMNyzhko3yus3rZYjowPsr38eX745P5f0e6EivkurcIXH
-         s1DQ==
-X-Gm-Message-State: AOAM533wXtH8xmQ7Lk7fUqWyypI9Sk1Pd+2BK5uGuqwiOA1cJhIdhe6M
-        GZs308xDpPQCuaylMExdldR2U2jOB4fx1pylOgOWww==
-X-Google-Smtp-Source: ABdhPJy0TxaIe1Wz0GdlFd5FdxpVp2FOvGGrBFkEn0oi3CjP4qg2V304qTt6rBtZAznq91V/ed9yiUW+UN8gJyowQaY=
-X-Received: by 2002:a19:e05d:: with SMTP id g29mr32404950lfj.217.1594123143709;
- Tue, 07 Jul 2020 04:59:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200615133242.24911-1-lars.povlsen@microchip.com> <20200615133242.24911-6-lars.povlsen@microchip.com>
-In-Reply-To: <20200615133242.24911-6-lars.povlsen@microchip.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jul 2020 13:58:52 +0200
-Message-ID: <CACRpkdaSVRg3F5FLKi=sGCFQDXXkiz2e1pT3H9dcoaPDSYKrXQ@mail.gmail.com>
-Subject: Re: [PATCH v3 05/10] pinctrl: ocelot: Add Sparx5 SoC support
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Olof Johansson <olof@lixom.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 7 Jul 2020 07:59:09 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:54798 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727827AbgGGL7I (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 07:59:08 -0400
+X-IronPort-AV: E=Sophos;i="5.75,323,1589209200"; 
+   d="scan'208";a="51316743"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 07 Jul 2020 20:59:06 +0900
+Received: from localhost.localdomain (unknown [10.166.252.89])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 820F642325F3;
+        Tue,  7 Jul 2020 20:59:06 +0900 (JST)
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     ulf.hansson@linaro.org, robh+dt@kernel.org
+Cc:     linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v5 2/2] mmc: core: Add MMC_CAP2_FULL_PWR_CYCLE_IN_SUSPEND
+Date:   Tue,  7 Jul 2020 20:58:42 +0900
+Message-Id: <1594123122-13156-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1594123122-13156-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1594123122-13156-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 3:33 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+The commit 5a36d6bcdf23 ("mmc: core: Add DT-bindings for
+MMC_CAP2_FULL_PWR_CYCLE") added the "full-pwr-cycle" property which
+is possible to perform a full power cycle of the card at any time.
 
-> This add support for Sparx5 pinctrl, using the ocelot drives as
-> basis. It adds pinconfig support as well, as supported by the
-> platform.
->
-> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+However, some environment (like r8a77951-salvator-xs) is possible
+to perform a full power cycle of the card in suspend via firmware
+(PSCI on arm-trusted-firmware). So, in worst case, since we are
+not doing a graceful shutdown of the eMMC device (just cut VCCQ
+while the eMMC is "sleeping") in suspend, it could lead to internal
+data corruptions. So, add MMC_CAP2_FULL_PWR_CYCLE_IN_SUSPEND
+to do a graceful shutdown which issues Power Off notification
+before entering system suspend.
 
-This one patch applied to the pinctrl tree.
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ drivers/mmc/core/host.c  | 2 ++
+ drivers/mmc/core/mmc.c   | 3 ++-
+ include/linux/mmc/host.h | 1 +
+ 3 files changed, 5 insertions(+), 1 deletion(-)
 
-Yours,
-Linus Walleij
+diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+index 6141a85..7f87f44 100644
+--- a/drivers/mmc/core/host.c
++++ b/drivers/mmc/core/host.c
+@@ -277,6 +277,8 @@ int mmc_of_parse(struct mmc_host *host)
+ 		host->caps |= MMC_CAP_SDIO_IRQ;
+ 	if (device_property_read_bool(dev, "full-pwr-cycle"))
+ 		host->caps2 |= MMC_CAP2_FULL_PWR_CYCLE;
++	if (device_property_read_bool(dev, "full-pwr-cycle-in-suspend"))
++		host->caps2 |= MMC_CAP2_FULL_PWR_CYCLE_IN_SUSPEND;
+ 	if (device_property_read_bool(dev, "keep-power-in-suspend"))
+ 		host->pm_caps |= MMC_PM_KEEP_POWER;
+ 	if (device_property_read_bool(dev, "wakeup-source") ||
+diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+index 4203303..b3fa193 100644
+--- a/drivers/mmc/core/mmc.c
++++ b/drivers/mmc/core/mmc.c
+@@ -2038,7 +2038,8 @@ static int _mmc_suspend(struct mmc_host *host, bool is_suspend)
+ 		goto out;
+ 
+ 	if (mmc_can_poweroff_notify(host->card) &&
+-		((host->caps2 & MMC_CAP2_FULL_PWR_CYCLE) || !is_suspend))
++	    ((host->caps2 & MMC_CAP2_FULL_PWR_CYCLE) || !is_suspend ||
++	     (host->caps2 & MMC_CAP2_FULL_PWR_CYCLE_IN_SUSPEND)))
+ 		err = mmc_poweroff_notify(host->card, notify_type);
+ 	else if (mmc_can_sleep(host->card))
+ 		err = mmc_sleep(host);
+diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+index 1fa4fa1..c5b6e97 100644
+--- a/include/linux/mmc/host.h
++++ b/include/linux/mmc/host.h
+@@ -352,6 +352,7 @@ struct mmc_host {
+ 
+ #define MMC_CAP2_BOOTPART_NOACC	(1 << 0)	/* Boot partition no access */
+ #define MMC_CAP2_FULL_PWR_CYCLE	(1 << 2)	/* Can do full power cycle */
++#define MMC_CAP2_FULL_PWR_CYCLE_IN_SUSPEND (1 << 3) /* Can do full power cycle in suspend */
+ #define MMC_CAP2_HS200_1_8V_SDR	(1 << 5)        /* can support */
+ #define MMC_CAP2_HS200_1_2V_SDR	(1 << 6)        /* can support */
+ #define MMC_CAP2_HS200		(MMC_CAP2_HS200_1_8V_SDR | \
+-- 
+2.7.4
+
