@@ -2,123 +2,111 @@ Return-Path: <SRS0=wVrF=AS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8378C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 19:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E73C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 20:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA73E206CD
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 19:35:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="TpFD7cKY"
+	by mail.kernel.org (Postfix) with ESMTP id 22D8D21582
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 20:15:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594152936;
+	bh=I9HbhhuzQLNHpA2LIgmLXf0xSkdCv3OLshOfoSE0EIY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=d7VY6pqngkLyF+Hpg2OJ9nSmm+WkoJOr1sLjXxWThiOBQl6dsOzCKuJUrKK4+89tZ
+	 mrQ5V17QnP/IMEL+t7fhxyRPDNpXqooL6pvNohcjKhIpugbpXNkPQv/BgN6FPmL5Nx
+	 q524XuXv0Qr2L2i4gXgioazBss7wYTR0NZqkNQas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgGGTfU (ORCPT
+        id S1728414AbgGGUPf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 15:35:20 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:33185 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726805AbgGGTfT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 15:35:19 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id stN2jdgqMudYLstN5jGBlk; Tue, 07 Jul 2020 21:35:16 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1594150516; bh=UOPB1MiDbf2BNt8huZ0O3vNz4hwNVClrWHPizzmlF6U=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=TpFD7cKY6Hc/29uAfk2e1LQcauw9XVNA3Y0xQcxRHpGmKEESaSC+9GLnz7zNeOA5v
-         AIvLXXDIiH+oqOZ9Lsy34a3NlYZaCJrqLaBF85W8IkJcSdwp0JdIVdW9r6Un5XWnXw
-         sAuI1ILMgBDSQCssXNJXdqjddwAd4oAuMX6eZldxgKFJ3lTHiBC0C7QQwzWcdG2xK/
-         3OZvQCj7d9wtTKuD8LYkGt9wy4avseaSBe2my61TxZ8wysZqcEmNT67lTIxvpZDMRf
-         FHikiise4P4oBwYQ1uVCGDDPh8Qcov2bYhcV8d+6EuDOE5XMW+JyBNUXt8W7DiZ1ds
-         0Y2eURCC1bd3w==
-Subject: Re: [RFC PATCH v2 11/18] media: tegra-video: Add support for external
- sensor capture
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com
-Cc:     digetx@gmail.com, sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
- <1592358094-23459-12-git-send-email-skomatineni@nvidia.com>
- <50deca28-c198-703c-96e2-82c53f48cd65@xs4all.nl>
- <6ee18b4d-b63b-8053-1b7e-c3ec7c1d4956@nvidia.com>
- <6846e5bb-db1d-c2ff-c52c-70a2094c5b50@nvidia.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <af11cb24-57b2-7326-ca29-e168dcbb8006@xs4all.nl>
-Date:   Tue, 7 Jul 2020 21:35:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 7 Jul 2020 16:15:35 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42828 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728325AbgGGUPf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 16:15:35 -0400
+Received: by mail-io1-f68.google.com with SMTP id c16so44581037ioi.9;
+        Tue, 07 Jul 2020 13:15:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=K966dzq3887Uzlyy0dRpEQhzNCgkZkq/ZzXqsSsdFE4=;
+        b=l+/w6iL4OQeCt/Gc7j4Pj8KcY7A9KbXxAPGD3UCOmyuObC/KrZuOj1exitXs0P7IFF
+         dN9eAysWQAodsbUo/D961Ou16JjNlOWc3urGI/g/77PBzFvkqkIGx4Kph4Njt3rL8ZZd
+         MzuZX4Zi3FnWBbL3j4xDMGLii0oA7rESj2gV7TqQ56tIIl5oElwO+e8ziwaKRM27NQBh
+         emf5ZiB/7BwrNJ0JT2b0oqMQOJyO8bblJ92eN8tXbO1Q76KG8/e5ApeX4alf2HFPsP3x
+         7MGwV3MaiFrIrMJbD3Rqz2drJgxB6++hS/SjUGFlu80xztZeCpdazv1H4i05iLOVrsnI
+         PS+g==
+X-Gm-Message-State: AOAM5311TnxfBG413LvxKp1TRg4pSRjJKWpfMSPBqsWxClHpTwQgBMH1
+        cp9BNCicya690VPhQdboRQ==
+X-Google-Smtp-Source: ABdhPJyyR0n/NJPHCUOxaun8dycLNdyQs4Era0rW43mycahPjoJooqZYSp6SyU9Cvr6sdhxGu1p8yQ==
+X-Received: by 2002:a05:6638:dd3:: with SMTP id m19mr63316901jaj.106.1594152934274;
+        Tue, 07 Jul 2020 13:15:34 -0700 (PDT)
+Received: from xps15 ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id d77sm13999482ill.67.2020.07.07.13.15.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 13:15:33 -0700 (PDT)
+Received: (nullmailer pid 558788 invoked by uid 1000);
+        Tue, 07 Jul 2020 20:15:32 -0000
+Date:   Tue, 7 Jul 2020 14:15:32 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Cc:     Rob Herring <robh+dt@kernel.org>, Jack Lo <jack.lo@gtsys.com.hk>,
+        Jean Delvare <jdelvare@suse.com>, linux-kernel@vger.kernel.org,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] devicetree: hwmon: shtc1: Add sensirion,shtc1.yaml
+Message-ID: <20200707201532.GA558059@bogus>
+References: <20200705034727.1429-1-chris.ruehl@gtsys.com.hk>
+ <20200705034727.1429-3-chris.ruehl@gtsys.com.hk>
 MIME-Version: 1.0
-In-Reply-To: <6846e5bb-db1d-c2ff-c52c-70a2094c5b50@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfEbKQ3MlxCTk+8kIzmdPmM9lsK3d2NWLAz8lS/LdblDynfg33nR4irTd97JEL1AAPqUF3Ry/Saa3Zn45IMAxwA7KFqlZ8xch9juTFQzB/8WZisg8h463
- ByFDJTrjCK5kf6QSaNpQjcCNZ94yl+uaBRnWV/5J2UEclZBPnN3rQ9w3aNpSrxy4nkjQC6UDcSLrmm8PO/fHx7RRy/eKteBwJlyDT/EuUEK/1jcixSGARCeG
- /3csdj7NYjZobrOgekpYl7XK7W2z6qso/HZJkCloxjFyjL6jrsihCVpzjFMDIvEwx1/yVY96GMcYI/WMNfBcKe+Oew5sAJji0BLV1zHu2RYOvem49Fzjbiq4
- ubNz6unUPQTq05a7Wjp4pdF76pjqKaP/ctzW8f4dkCic7QdsU2SCDVtGlyaA+iSg5OSTM1qnFkn89rjudpUAoUPgAFGbd83cOYC3V9lX9gXjfrWorHgFaeL5
- YXqMf+hH2kUah4wUjenKI8NLcX39C1erUNClXs3VH37tfr0ch6AHmwY2d/y266Jd7i3+aEdZP3Jz+I0ap/Q7k1rqFeVE3rkX5gwetNZixsYIkO0L3H5bIxk5
- 6ylMQ3awwEoh6TzbxCcc26+YpHYOQLSzMjUTt4/GOT++a20CmOEUsmkxfc4cBIDuLqK931We0WC8jHSQ4iQvWJ2q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200705034727.1429-3-chris.ruehl@gtsys.com.hk>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 07/07/2020 21:25, Sowjanya Komatineni wrote:
+On Sun, 05 Jul 2020 11:47:26 +0800, Chris Ruehl wrote:
+> Add documentation for the newly added DTS support in the shtc1 driver.
+> To align with the drivers logic to have high precision by default
+> a boolean sensirion,low_precision is used to switch to low precision.
 > 
-> On 7/7/20 12:01 PM, Sowjanya Komatineni wrote:
->>
->>
->> On 7/6/20 2:10 AM, Hans Verkuil wrote:
->>>> +static void tegra_vi_graph_cleanup(struct tegra_vi *vi)
->>>> +{
->>>> +	struct tegra_vi_channel *chan;
->>>> +
->>>> +	list_for_each_entry(chan, &vi->vi_chans, list) {
->>>> +		video_unregister_device(&chan->video);
->>>> +		mutex_lock(&chan->video_lock);
->>>> +		vb2_queue_release(&chan->queue);
->>> No need for this since this is done in vb2_fop_release().
->>>
->>> In fact, vb2_queue_release should never be called by drivers. Just using
->>> vb2_fop_release or __vb2_fop_release is sufficient.
->>>
->>> The confusion is due to the fact that the name suggests that vb2_queue_release
->>> has to be balanced with vb2_queue_init, but that's not the case. Perhaps
->>> vb2_queue_stop or something like that might be a better name. I'll have to
->>> think about this since I see that a lot of drivers do this wrong.
->>>
->>>> +		mutex_unlock(&chan->video_lock);
->>>> +		v4l2_async_notifier_unregister(&chan->notifier);
->>>> +		v4l2_async_notifier_cleanup(&chan->notifier);
->>>> +	}
->>>> +}
->>>> +
->>
->> vb2_queue_release() here is called to stop streaming a head before media links are removed in case of when driver unbind happens while
->> userspace application holds video device with active streaming in progress.
->>
->> Without vb2_queue_release() here streaming will be active during the driver unbind and by the time vb2_queue_release() happens from
->> vb2_fop_release(), async notifiers gets unregistered and media links will be removed which causes channel stop stream to crash as we can't
->> retrieve sensor subdev  thru media entity pads to execute s_stream on subdev.
->>
-> I think we don't need async notifier unbind. Currently media links are removed during unbind so during notifier unregister all subdevs gets
-> unbind and links removed.
-> 
-> media_device_unregister during video device release callback takes care of media entity unregister and removing links.
-> 
-> So, will try by removing notifier unbind along with removing vb2_queue_release during cleanup.
+> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+> ---
+>  .../bindings/hwmon/sensirion,shtc1.yaml       | 53 +++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
 > 
 
-I actually wonder if vb2_queue_release shouldn't be called from video_unregister_device.
 
-I'll look into this tomorrow.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Regards,
+Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml:  while parsing a flow mapping
+  in "<unicode string>", line 43, column 9
+did not find expected ',' or '}'
+  in "<unicode string>", line 47, column 14
+Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/hwmon/sensirion,shtc1.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/hwmon/sensirion,shtc1.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml: ignoring, error parsing file
+warning: no schema found in file: ./Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml: ignoring, error parsing file
+warning: no schema found in file: ./Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
+Makefile:1347: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-	Hans
+
+See https://patchwork.ozlabs.org/patch/1322963
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
