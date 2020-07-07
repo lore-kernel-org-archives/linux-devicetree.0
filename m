@@ -2,106 +2,109 @@ Return-Path: <SRS0=wVrF=AS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C380C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 14:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF7DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 14:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07B252063A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 14:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC65720672
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 14:40:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594132286;
-	bh=u9cHwcNir4o7CZoNQdiplIx+fI5Q1NadDlETdmWe2oc=;
+	s=default; t=1594132837;
+	bh=8v1IK9I/RiUHc4Y90iaoqpgiKdh/ulMwUOHQrlAkoW4=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0MGdttGaLLMNQ0Brnr3IPJ+r69k7SBEK4H3eh7N5ZH5+Z5SOi70FTbMfQL6Ov8fZx
-	 +45HdC5LBVHBm56F2Nu59P+U89Jxu/BITiUlFYk0LgHMp9hVKt4VgJ2vYuf1xsTfZ5
-	 ybsiPQotDDVffHZYe/5p1fxGaucPoD2kb7+R17zQ=
+	b=JfQiUlB88iQrBI7XxtRReZcv9Q2Dkp+E2dSZgdOFfely6Oeq2z91tmI95amhtfS05
+	 nw7Uwvegen0FYg+8Qcr8jwed5JZMj6+kJ5ouGyWM+TOeR/+dSa+fHXCaFJOyALKwU0
+	 hMquhjXUgLVE1moo3/y0umFDyNItnlFydgkM9z5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgGGObZ (ORCPT
+        id S1727793AbgGGOke (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 10:31:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60970 "EHLO mail.kernel.org"
+        Tue, 7 Jul 2020 10:40:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727895AbgGGObZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 7 Jul 2020 10:31:25 -0400
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+        id S1727090AbgGGOkd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 7 Jul 2020 10:40:33 -0400
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBBF22063A;
-        Tue,  7 Jul 2020 14:31:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 364F920738;
+        Tue,  7 Jul 2020 14:40:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594132284;
-        bh=u9cHwcNir4o7CZoNQdiplIx+fI5Q1NadDlETdmWe2oc=;
+        s=default; t=1594132833;
+        bh=8v1IK9I/RiUHc4Y90iaoqpgiKdh/ulMwUOHQrlAkoW4=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=lsF4Y6TI4se0MULQuP2J7GCVnVkZH1HtvKHRAViGf7AzJiw+Z7pLIT0vKpzmqS2u2
-         u49kEzWJOv9ebnbufCdyxWLBZVbDNSZLpNhQuVqmTnVv1hkGl0T+Wh/YcKmbonOIiS
-         pdBnkAjOP/MiWgYxipjjYW4FXbuzs5EyhC/TLFOI=
-Received: by mail-oi1-f170.google.com with SMTP id t198so22472079oie.7;
-        Tue, 07 Jul 2020 07:31:24 -0700 (PDT)
-X-Gm-Message-State: AOAM530fygOCNDFuGCiuE1o3lmvdZyp8+hCkV10NpKYERi6OhtqY1q3l
-        YxGxJOXZeMo9RPKKY4Q05rBcHCBOJVP3G/nJ2A==
-X-Google-Smtp-Source: ABdhPJxZpu3muVU1JSTu4HLqkdyNBb1nY6MBHbFPTUmS3FU1uehTPnYLfxZ3J02PgSTI2PbjH/Sgsk/bfoi+WKTi2sE=
-X-Received: by 2002:aca:30d2:: with SMTP id w201mr3517914oiw.147.1594132284171;
- Tue, 07 Jul 2020 07:31:24 -0700 (PDT)
+        b=oqB+OZTUNrkgAKgkfhXYl0/rKfMUPAA5iS13rf60xElNMqqDZQn1uK7ckHtmik4oD
+         VIV8fWaWJg6SYUYj2SPwU2dKCgeY2RU46lt7synIyQwh7c14RI6RlfE+qW2/yLAi40
+         CteJsoeQ2IkTv67lxdjBp5NQdDrbOi8fiBlKaNqU=
+Received: by mail-oi1-f173.google.com with SMTP id l63so33619614oih.13;
+        Tue, 07 Jul 2020 07:40:33 -0700 (PDT)
+X-Gm-Message-State: AOAM531nTUmKz9NYdN0TpsmjxaMHKg20075MI2OL5ff5V93n31fzWoZb
+        Uc3ZhjURBGI2YQJUeVt5ibP6vGgkIEIjK4Om0Q==
+X-Google-Smtp-Source: ABdhPJwvhd+sPbLV1cRDjV2wPZAm1TiF2oXKUXY0jL+TVjsRMtT3cOUq27c842rQNh2vpF21N7YOpN1MzRW9HiYJBKg=
+X-Received: by 2002:aca:30d2:: with SMTP id w201mr3554712oiw.147.1594132832575;
+ Tue, 07 Jul 2020 07:40:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <1593701576-28580-1-git-send-email-amittomer25@gmail.com>
- <1593701576-28580-2-git-send-email-amittomer25@gmail.com> <20200702210014.GA1685248@bogus>
- <CABHD4K8=8+fFu=ZjQHEgR44x+QsvLZ+LW7w=XKH7O4oXu+QY4A@mail.gmail.com> <CABHD4K-_jmC512_ckmw66FppJHitkU8j-M9TQ316+M9zou3Fmg@mail.gmail.com>
-In-Reply-To: <CABHD4K-_jmC512_ckmw66FppJHitkU8j-M9TQ316+M9zou3Fmg@mail.gmail.com>
+References: <20200701211044.18590-1-r-rivera-matos@ti.com> <20200701211044.18590-3-r-rivera-matos@ti.com>
+ <20200702205320.GA1672139@bogus> <54914eed-4a65-745b-b61b-9515737023e3@ti.com>
+In-Reply-To: <54914eed-4a65-745b-b61b-9515737023e3@ti.com>
 From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 7 Jul 2020 08:31:12 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKrdP_XzG_iSgJmdp=tj7mdhTZZFNaRuUwe=YgmELeAGg@mail.gmail.com>
-Message-ID: <CAL_JsqKrdP_XzG_iSgJmdp=tj7mdhTZZFNaRuUwe=YgmELeAGg@mail.gmail.com>
-Subject: Re: [PATCH v5 01/10] dt-bindings: dmaengine: convert Actions Semi Owl
- SoCs bindings to yaml
-To:     Amit Tomer <amittomer25@gmail.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Andre Przywara <andre.przywara@arm.com>,
-        cristian.ciocaltea@gmail.com, Vinod Koul <vkoul@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-actions@lists.infradead.org
+Date:   Tue, 7 Jul 2020 08:40:20 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKXC1TFFCq6HBqdbHNeWbA=SnCqHkTx+FQXiPYDLb6sNw@mail.gmail.com>
+Message-ID: <CAL_JsqKXC1TFFCq6HBqdbHNeWbA=SnCqHkTx+FQXiPYDLb6sNw@mail.gmail.com>
+Subject: Re: [EXTERNAL] Re: [PATCH v15 2/4] dt-bindings: power: Convert
+ battery.txt to battery.yaml
+To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+Cc:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Sandeep Patil <sspatil@android.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Andrew F. Davis" <afd@ti.com>, Dan Murphy <dmurphy@ti.com>,
+        Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 3, 2020 at 1:55 AM Amit Tomer <amittomer25@gmail.com> wrote:
+On Mon, Jul 6, 2020 at 12:45 PM Ricardo Rivera-Matos
+<r-rivera-matos@ti.com> wrote:
 >
-> On Fri, Jul 3, 2020 at 12:48 PM Amit Tomer <amittomer25@gmail.com> wrote:
-> >
-> > Hi Rob,
-> >
-> >
-> > > If you already ran 'make dt_binding_check' and didn't see the above
-> > > error(s), then make sure dt-schema is up to date:
-> > >
-> > > pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-> > >
-> > > Please check and re-submit.
-> >
-> > I wasn't able to reproduce it, even after updating the dt-schema.
-> > Kindly have a look at logs:
-> >
-> > https://pastebin.ubuntu.com/p/xTBNNyBdFv/
+> Rob
 >
-> Looks like, dtschema even after upgrade pointing to older commit "6a941d46b9f5".
-> Wondering why it has not been pointing to latest commit "6a941d46b9f5"
->
-> After upgrading the pip version for python3, and upgrading the dt-schema again
-> https://pastebin.ubuntu.com/p/Rd9knQgvKH/
->
-> Issue is still reproduced.
+> On 7/2/20 3:53 PM, Rob Herring wrote:
+> > On Wed, 01 Jul 2020 16:10:42 -0500, Ricardo Rivera-Matos wrote:
+> >> From: Dan Murphy <dmurphy@ti.com>
+> >>
+> >> Convert the battery.txt file to yaml and fix up the examples.
+> >>
+> >> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> >> ---
+> >>   .../bindings/power/supply/battery.txt         |  86 +---------
+> >>   .../bindings/power/supply/battery.yaml        | 157 ++++++++++++++++++
+> >>   2 files changed, 158 insertions(+), 85 deletions(-)
+> >>   create mode 100644 Documentation/devicetree/bindings/power/supply/battery.yaml
+> >>
+> >
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >
+> > Unknown file referenced: [Errno 2] No such file or directory: '/usr/local/lib/python3.6/dist-packages/dtschema/schema/types.yaml'
+> > Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/power/supply/battery.example.dts' failed
+> > make[1]: *** [Documentation/devicetree/bindings/power/supply/battery.example.dts] Error 255
+> > make[1]: *** Waiting for unfinished jobs....
+> > Makefile:1347: recipe for target 'dt_binding_check' failed
+> > make: *** [dt_binding_check] Error 2
+> I think your bot is looking for the types.yaml in the wrong place.
 
-If dtschema is changed, you need a clean tree as make doesn't track
-that changing. Specifically, processed-schema-examples.yaml needs to
-be removed.
+Really? Yet it works fine on thousands of other patches?
+
+> '/usr/local/lib/python3.6/dist-packages/dtschema/schema/types.yaml'
+> should be
+> '/usr/local/lib/python3.6/dist-packages/dtschema/schemas/types.yaml'. I
+> renamed might 'schemas' directory to 'schema' and my battery.yaml passed
+> the dt_binding_check.
+
+Maybe fix the 'schema/' path in your schema file which is wrong.
 
 Rob
