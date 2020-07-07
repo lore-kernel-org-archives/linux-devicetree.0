@@ -2,79 +2,109 @@ Return-Path: <SRS0=wVrF=AS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD4DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 08:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B6DC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 08:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F40AF2065F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 08:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66E1F207C4
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 08:12:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xWrw+neG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728421AbgGGIDw (ORCPT
+        id S1728126AbgGGIMB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 04:03:52 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:50360 "EHLO
-        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1728121AbgGGIDu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 04:03:50 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id AC3CD2016B15;
-        Tue,  7 Jul 2020 16:03:48 +0800 (HKT)
-X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
-Received: from mail.gtsys.com.hk ([127.0.0.1])
-        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id z6WMaQd-Zdfo; Tue,  7 Jul 2020 16:03:48 +0800 (HKT)
-Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 87C1C20160D4;
-        Tue,  7 Jul 2020 16:03:48 +0800 (HKT)
-Received: from [10.128.2.32] (unknown [124.217.189.79])
-        by s01.gtsys.com.hk (Postfix) with ESMTPSA id 0C3ECC01F9E;
-        Tue,  7 Jul 2020 16:03:47 +0800 (HKT)
-Subject: Re: [PATCH v3 0/2] shtc1: add support for device tree bindings
-Cc:     Jack Lo <jack.lo@gtsys.com.hk>, devicetree@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200707080104.23711-1-chris.ruehl@gtsys.com.hk>
-From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Message-ID: <c7f4805a-0cdf-ea5b-7557-c4f00fec6ee8@gtsys.com.hk>
-Date:   Tue, 7 Jul 2020 16:03:47 +0800
+        Tue, 7 Jul 2020 04:12:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbgGGIMB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 04:12:01 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE5D3C08C5DB
+        for <devicetree@vger.kernel.org>; Tue,  7 Jul 2020 01:12:00 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id z13so44157977wrw.5
+        for <devicetree@vger.kernel.org>; Tue, 07 Jul 2020 01:12:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Om/XPTjADVYkykZwGGFhhFw2NeXXFx1YufzyiN0meo4=;
+        b=xWrw+neGQIhWOVrb5t79sZctZYqc9AE6XcjS3FBux/54b/eC8cbjSLQa9KFB+RJg+N
+         oaCg0wLHKYUfcIU74uKd1Z6XwHIUYbHhfptA7+xShXddi/Ml7/2Te9sIpB+4D7+r6Yo7
+         6DPuwoU705hm0jcqPc9e0rVfcsfM6JViJXUwstRlgn6/F8/3MmIvbb+cru/4pJZB1fs+
+         t337Iv9MFUTTi/uFZmfj9IGhxT/Boj8h++Y+dACbPar4QahxNUXg3Oe08NuM3/nAgF0Y
+         xUw0b7ctgsWAE1vJPIZmYcW4Ca6lddpUTU5xa4tDiS5rj/VDWdAVANFajmNweEg45Lsr
+         091g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Om/XPTjADVYkykZwGGFhhFw2NeXXFx1YufzyiN0meo4=;
+        b=sLIxfK+kevncclyrVYrbXj4VcmwVSBL0zAepkIweIpx1v5Nsheo5D6ZEiu30w415iC
+         1cGtSvgnKpG/5scwYuLAqSOM49AuVc3365il6B5Xa61Urud1Pxmt/h5p7KhHTeR1/LMF
+         aLHRKnte8WgNmcvhCwTQ4+Gmb6nVl+FVn4nuC2ygz6zI5VUvyeYtULa5KalMra0VYTrU
+         BjVdeySK48yyu/CUiQigI9b6UceNYUQHvNLQVt1j0sROOsr3/+qVunR6L01jYcqhcQZC
+         kbEJfNzz/zEU9MRquW/KJu2KThZUgE6E5PsdauP2bwo12mw5CCnjTihEgPXHFI9YzdLC
+         lTNA==
+X-Gm-Message-State: AOAM533C3UliOLteZ8NN5I6lBgGFRZL8ZY2vwSTf6zGfse7XqIa2+TsZ
+        dfV1V93hRRcJFb+PelXqR49NSw==
+X-Google-Smtp-Source: ABdhPJyhQVBRWgi0ZALecoxb1nyzRu8gH7Pag6gT9p4aJ7+hhF2+R8SBeh7THJGM/p0LXX3DfDzelw==
+X-Received: by 2002:adf:f082:: with SMTP id n2mr55669814wro.326.1594109519219;
+        Tue, 07 Jul 2020 01:11:59 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:b4ff:29eb:619e:318? ([2a01:e34:ed2f:f020:b4ff:29eb:619e:318])
+        by smtp.googlemail.com with ESMTPSA id u15sm29087207wrm.64.2020.07.07.01.11.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jul 2020 01:11:58 -0700 (PDT)
+Subject: Re: [v4,7/7] thermal: mediatek: use spinlock to protect PTPCORESEL
+To:     Michael Kao <michael.kao@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        srv_heupstream@mediatek.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200323121537.22697-1-michael.kao@mediatek.com>
+ <20200323121537.22697-8-michael.kao@mediatek.com>
+ <1afbf412-fbeb-8abe-66d8-bd7ac4e9dd83@linaro.org>
+ <1591329023.12739.0.camel@mtksdccf07> <1594090621.20216.0.camel@mtksdccf07>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <e7a14d36-7bea-eb05-0573-66951b788e37@linaro.org>
+Date:   Tue, 7 Jul 2020 10:11:57 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200707080104.23711-1-chris.ruehl@gtsys.com.hk>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1594090621.20216.0.camel@mtksdccf07>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 07/07/2020 04:57, Michael Kao wrote:
 
-On 7/7/2020 4:01 pm, Chris Ruehl wrote:
-> Add support for DTS bindings to the shtc driver
-> The patches add the compatible table and of_property_read_bool to the
-> shtc1.c. Newly created Yaml document has been released to the
-> Documentation/devicetree/hwmon/sensirion,shtc1.yaml
-> 
-> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
-> ---
->   Version 3
-> 	Fix errors report with checkpatch.pl
-> 	Correct logic, add (!) when check for sensirion,low_precision
->   Version 2
-> 	remove the #ifdef CONFIG_OF
-> 	ignore platform data if dev->of_node is valid
-> 	use boolean only therefor use sensirion,low_precise to fit the logic
-> 	add missing driver.of_match_table entry
->   Version 1
-> 	initial version
-> 
+[ ... ]
 
-I didn't fix the WARNINGS coming up with checkpatch, they are initial commit 
-errors when added to the kernel.
-But I have a patch pending to fix the format issue , once this is accepted.
+> Gently ping.
+
+Michael,
+
+it is impossible to have this series merged if there is a so big delay
+between the comments / questions and the answers (or no answers at all).
+
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
