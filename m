@@ -2,227 +2,201 @@ Return-Path: <SRS0=wVrF=AS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9C6C433EB
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 18:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B1DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 18:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64000206E9
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 18:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A216F206E9
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 18:55:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="MSqOBX8i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728606AbgGGSyt (ORCPT
+        id S1728651AbgGGSzS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 14:54:49 -0400
-Received: from muru.com ([72.249.23.125]:32842 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728183AbgGGSyt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 7 Jul 2020 14:54:49 -0400
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id BC05E8198;
-        Tue,  7 Jul 2020 18:55:41 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     linux-omap@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        devicetree@vger.kernel.org
-Subject: [PATCH 6/6] ARM: OMAP2+: Drop legacy platform data for omap5 usb host
-Date:   Tue,  7 Jul 2020 11:54:39 -0700
-Message-Id: <20200707185439.18601-7-tony@atomide.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200707185439.18601-1-tony@atomide.com>
-References: <20200707185439.18601-1-tony@atomide.com>
+        Tue, 7 Jul 2020 14:55:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37592 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728029AbgGGSzR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 14:55:17 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CD8BC061755;
+        Tue,  7 Jul 2020 11:55:17 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id y10so47719109eje.1;
+        Tue, 07 Jul 2020 11:55:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RMd8tTCfjNB1oolYgjCGnbvueA8plaMd/4ysVp4hew8=;
+        b=MSqOBX8iZf3N6uIy8Wnm5L4m29/XEr8WCDGWKf500fbPsnl0xzYC6LVlONOf42h0CR
+         I4Rd/idVHgRuoGFtY+arKp+gSn5l1NRpVZPWVHS7fUt71j1qB3v2jBGggVQKiUaXawDQ
+         qNM+I9ABuRJwyg5qaqOAP2v7E/mgtgDyAf07ig2saLp6YrXGZCFFphghvpbv74afVMS8
+         hgukBbVyPl5VtFibxfDALfdkB8feg3dsrXD3cpQ8FTKR3WiUU7+WwLET7Fw8fB0Y9Ntx
+         fJHk1hgmFv1SXz42n9wzYn1nyBLlwu2BiOkVLXgOydApO9SPolevYiuOnuXVadp33hpE
+         sucw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RMd8tTCfjNB1oolYgjCGnbvueA8plaMd/4ysVp4hew8=;
+        b=EI62LqfxVmuWGRR0riabauCOYQMb4pWuSeGO6Vwy3Sm/tF38c1j1InDDIDN2+uYtRb
+         Bw2u14sPc85z2UnwPVqXcMP762pEF7XFlFRlDKRVmr43PcD5PHgtlas6Y9NY279IoKW8
+         7CLVIkWIC+D0EOnUXhmYpR/yYk8oL68LecFc7BVlIelTbzuY0S0IulqE6+ow+7FhzXRz
+         QnUD6FaaesDykqb84NymO7yoJDnvREnXIzp2GWoMtrfA986EyXqRZ8k4o/NcaC46Dmux
+         haieheaV1l4GWN0m2TKarMJfHzEyKg5R7rhJw6CGsWSo3SWFNyM4SVdM+OEkZbyLGEJa
+         083A==
+X-Gm-Message-State: AOAM532e/2irmO3SuowHNQiiybJuDkAjP0mmHGxNzzZue2q4SzFcudtR
+        rXr38tnsOduxVbKxFnVW+siAJuTZtjNgg4jdgtE=
+X-Google-Smtp-Source: ABdhPJyGaJyOnxq0gk8ybfmAthcx/e6Mw+KIY+a9E8de0FSUviN2dLI02eWmz8T4W3gH7eX3EhiPg+3nhWg5mmVWaSQ=
+X-Received: by 2002:a17:906:2287:: with SMTP id p7mr49705831eja.537.1594148115920;
+ Tue, 07 Jul 2020 11:55:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200616140717.28465-2-amelie.delaunay@st.com>
+ <20200704174219.612060-1-martin.blumenstingl@googlemail.com> <05a81997-5ddb-ea81-7a89-8078b8a2b610@st.com>
+In-Reply-To: <05a81997-5ddb-ea81-7a89-8078b8a2b610@st.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Tue, 7 Jul 2020 20:55:05 +0200
+Message-ID: <CAFBinCCVYJ=DuKbqhJJ8463Gs+GW0bgxyXSFiLXhUfvWV6AR0Q@mail.gmail.com>
+Subject: Re: [PATCH 1/3] usb: dwc2: override PHY input signals with usb role
+ switch support
+To:     Amelie DELAUNAY <amelie.delaunay@st.com>
+Cc:     Alexandre TORGUE <alexandre.torgue@st.com>,
+        "balbi@kernel.org" <balbi@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "hminas@synopsys.com" <hminas@synopsys.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-We can now probe devices with ti-sysc interconnect driver and dts
-data. Let's drop the related platform data and custom ti,hwmods
-dts property.
+Hi Amelie,
 
-As we're just dropping data, and the early platform data init
-is based on the custom ti,hwmods property, we want to drop both
-the platform data and ti,hwmods property in a single patch.
+On Tue, Jul 7, 2020 at 6:13 PM Amelie DELAUNAY <amelie.delaunay@st.com> wrote:
+>
+> Hi Martin,
+>
+> On 7/4/20 7:42 PM, Martin Blumenstingl wrote:
+> > Hello Amelie,
+> >
+> > thank you for this patch - I am hoping that it will help us on Amlogic
+> > Meson8, Meson8b, Meson8m2 and GXBB SoCs as well.
+> > On these SoCs the ID detection is performed by the PHY IP and needs to
+> > be polled.
+> > I think usb_role_switch is the perfect framework for this on dwc2 side.
+> > For the PHY driver I'm going to implement the cable state using the
+> > extcon framework and then having a new usb-conn-extcon driver. This is
+> > just to give you an overview why I'm interested in this.
+> >
+>
+> I'm wondering, why use extcon framework and not the usb role switch API
+> ? This patch on dwc2 is tested on STM32MP157C-DK2 board with STUSB160x
+> Type-C controller driver recently pushed with usb role switch. You can
+> have a look here https://lore.kernel.org/patchwork/patch/1256238/.
+one of the boards that I'm working on is for example the Odroid-C1. It
+has a Micro-USB port and there's no Type-C controller present.
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- arch/arm/boot/dts/omap5-l4.dtsi            |   2 -
- arch/arm/mach-omap2/omap_hwmod_54xx_data.c | 127 ---------------------
- 2 files changed, 129 deletions(-)
+in the next few days I'll try to send my idea as RFC, but this is the
+.dts I've come up with so far:
+&usb0 {
+    dr_mode = "otg";
+    usb-role-switch;
 
-diff --git a/arch/arm/boot/dts/omap5-l4.dtsi b/arch/arm/boot/dts/omap5-l4.dtsi
---- a/arch/arm/boot/dts/omap5-l4.dtsi
-+++ b/arch/arm/boot/dts/omap5-l4.dtsi
-@@ -268,7 +268,6 @@ target-module@5e000 {			/* 0x4a05e000, ap 69 2a.0 */
- 
- 		target-module@62000 {			/* 0x4a062000, ap 11 0e.0 */
- 			compatible = "ti,sysc-omap2", "ti,sysc";
--			ti,hwmods = "usb_tll_hs";
- 			reg = <0x62000 0x4>,
- 			      <0x62010 0x4>,
- 			      <0x62014 0x4>;
-@@ -297,7 +296,6 @@ usbhstll: usbhstll@0 {
- 
- 		target-module@64000 {			/* 0x4a064000, ap 71 1e.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
--			ti,hwmods = "usb_host_hs";
- 			reg = <0x64000 0x4>,
- 			      <0x64010 0x4>;
- 			reg-names = "rev", "sysc";
-diff --git a/arch/arm/mach-omap2/omap_hwmod_54xx_data.c b/arch/arm/mach-omap2/omap_hwmod_54xx_data.c
---- a/arch/arm/mach-omap2/omap_hwmod_54xx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_54xx_data.c
-@@ -266,115 +266,6 @@ static struct omap_hwmod omap54xx_mpu_hwmod = {
- 	},
- };
- 
--/*
-- * 'usb_host_hs' class
-- * high-speed multi-port usb host controller
-- */
--
--static struct omap_hwmod_class_sysconfig omap54xx_usb_host_hs_sysc = {
--	.rev_offs	= 0x0000,
--	.sysc_offs	= 0x0010,
--	.sysc_flags	= (SYSC_HAS_MIDLEMODE | SYSC_HAS_RESET_STATUS |
--			   SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET),
--	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
--			   SIDLE_SMART_WKUP | MSTANDBY_FORCE | MSTANDBY_NO |
--			   MSTANDBY_SMART | MSTANDBY_SMART_WKUP),
--	.sysc_fields	= &omap_hwmod_sysc_type2,
--};
--
--static struct omap_hwmod_class omap54xx_usb_host_hs_hwmod_class = {
--	.name	= "usb_host_hs",
--	.sysc	= &omap54xx_usb_host_hs_sysc,
--};
--
--static struct omap_hwmod omap54xx_usb_host_hs_hwmod = {
--	.name		= "usb_host_hs",
--	.class		= &omap54xx_usb_host_hs_hwmod_class,
--	.clkdm_name	= "l3init_clkdm",
--	/*
--	 * Errata: USBHOST Configured In Smart-Idle Can Lead To a Deadlock
--	 * id: i660
--	 *
--	 * Description:
--	 * In the following configuration :
--	 * - USBHOST module is set to smart-idle mode
--	 * - PRCM asserts idle_req to the USBHOST module ( This typically
--	 *   happens when the system is going to a low power mode : all ports
--	 *   have been suspended, the master part of the USBHOST module has
--	 *   entered the standby state, and SW has cut the functional clocks)
--	 * - an USBHOST interrupt occurs before the module is able to answer
--	 *   idle_ack, typically a remote wakeup IRQ.
--	 * Then the USB HOST module will enter a deadlock situation where it
--	 * is no more accessible nor functional.
--	 *
--	 * Workaround:
--	 * Don't use smart idle; use only force idle, hence HWMOD_SWSUP_SIDLE
--	 */
--
--	/*
--	 * Errata: USB host EHCI may stall when entering smart-standby mode
--	 * Id: i571
--	 *
--	 * Description:
--	 * When the USBHOST module is set to smart-standby mode, and when it is
--	 * ready to enter the standby state (i.e. all ports are suspended and
--	 * all attached devices are in suspend mode), then it can wrongly assert
--	 * the Mstandby signal too early while there are still some residual OCP
--	 * transactions ongoing. If this condition occurs, the internal state
--	 * machine may go to an undefined state and the USB link may be stuck
--	 * upon the next resume.
--	 *
--	 * Workaround:
--	 * Don't use smart standby; use only force standby,
--	 * hence HWMOD_SWSUP_MSTANDBY
--	 */
--
--	.flags		= HWMOD_SWSUP_SIDLE | HWMOD_SWSUP_MSTANDBY,
--	.main_clk	= "l3init_60m_fclk",
--	.prcm = {
--		.omap4 = {
--			.clkctrl_offs = OMAP54XX_CM_L3INIT_USB_HOST_HS_CLKCTRL_OFFSET,
--			.context_offs = OMAP54XX_RM_L3INIT_USB_HOST_HS_CONTEXT_OFFSET,
--			.modulemode   = MODULEMODE_SWCTRL,
--		},
--	},
--};
--
--/*
-- * 'usb_tll_hs' class
-- * usb_tll_hs module is the adapter on the usb_host_hs ports
-- */
--
--static struct omap_hwmod_class_sysconfig omap54xx_usb_tll_hs_sysc = {
--	.rev_offs	= 0x0000,
--	.sysc_offs	= 0x0010,
--	.syss_offs	= 0x0014,
--	.sysc_flags	= (SYSC_HAS_AUTOIDLE | SYSC_HAS_CLOCKACTIVITY |
--			   SYSC_HAS_ENAWAKEUP | SYSC_HAS_SIDLEMODE |
--			   SYSC_HAS_SOFTRESET | SYSS_HAS_RESET_STATUS),
--	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART),
--	.sysc_fields	= &omap_hwmod_sysc_type1,
--};
--
--static struct omap_hwmod_class omap54xx_usb_tll_hs_hwmod_class = {
--	.name	= "usb_tll_hs",
--	.sysc	= &omap54xx_usb_tll_hs_sysc,
--};
--
--static struct omap_hwmod omap54xx_usb_tll_hs_hwmod = {
--	.name		= "usb_tll_hs",
--	.class		= &omap54xx_usb_tll_hs_hwmod_class,
--	.clkdm_name	= "l3init_clkdm",
--	.main_clk	= "l4_root_clk_div",
--	.prcm = {
--		.omap4 = {
--			.clkctrl_offs = OMAP54XX_CM_L3INIT_USB_TLL_HS_CLKCTRL_OFFSET,
--			.context_offs = OMAP54XX_RM_L3INIT_USB_TLL_HS_CONTEXT_OFFSET,
--			.modulemode   = MODULEMODE_HWCTRL,
--		},
--	},
--};
--
- /*
-  * 'sata' class
-  * sata:  serial ata interface  gen2 compliant   ( 1 rx/ 1 tx)
-@@ -576,22 +467,6 @@ static struct omap_hwmod_ocp_if omap54xx_l4_cfg__mpu = {
- 	.user		= OCP_USER_MPU | OCP_USER_SDMA,
- };
- 
--/* l4_cfg -> usb_host_hs */
--static struct omap_hwmod_ocp_if omap54xx_l4_cfg__usb_host_hs = {
--	.master		= &omap54xx_l4_cfg_hwmod,
--	.slave		= &omap54xx_usb_host_hs_hwmod,
--	.clk		= "l3_iclk_div",
--	.user		= OCP_USER_MPU | OCP_USER_SDMA,
--};
--
--/* l4_cfg -> usb_tll_hs */
--static struct omap_hwmod_ocp_if omap54xx_l4_cfg__usb_tll_hs = {
--	.master		= &omap54xx_l4_cfg_hwmod,
--	.slave		= &omap54xx_usb_tll_hs_hwmod,
--	.clk		= "l4_root_clk_div",
--	.user		= OCP_USER_MPU | OCP_USER_SDMA,
--};
--
- static struct omap_hwmod_ocp_if *omap54xx_hwmod_ocp_ifs[] __initdata = {
- 	&omap54xx_l3_main_1__dmm,
- 	&omap54xx_l3_main_3__l3_instr,
-@@ -612,8 +487,6 @@ static struct omap_hwmod_ocp_if *omap54xx_hwmod_ocp_ifs[] __initdata = {
- 	&omap54xx_mpu__emif1,
- 	&omap54xx_mpu__emif2,
- 	&omap54xx_l4_cfg__mpu,
--	&omap54xx_l4_cfg__usb_host_hs,
--	&omap54xx_l4_cfg__usb_tll_hs,
- 	&omap54xx_l4_cfg__sata,
- 	NULL,
- };
--- 
-2.27.0
+    connector {
+        compatible = "extcon-usb-b-connector", "usb-b-connector";
+        type = "micro";
+        extcon = <&usb0_phy>;
+        vbus-supply = <&usb_vbus>;
+    };
+};
+
+I did this for two reasons:
+1. I think the PHY is not a connector and thus it's driver shouldn't
+implement any connector specific logic (managing VBUS)
+2. without the connector there would be a circular dependency: the USB
+controller needs the PHY to initialize but the PHY would need the USB
+controller so it can manage the role switch
+
+(or in other words: the connector replaces the Type-C controller in this case)
+
+> > [...]
+> >> +static int dwc2_drd_role_sw_set(struct usb_role_switch *sw, enum usb_role role)
+> >> +{
+> >> +     struct dwc2_hsotg *hsotg = usb_role_switch_get_drvdata(sw);
+> >> +     unsigned long flags;
+> >> +
+> >> +     /* Skip session not in line with dr_mode */
+> >> +     if ((role == USB_ROLE_DEVICE && hsotg->dr_mode == USB_DR_MODE_HOST) ||
+> >> +         (role == USB_ROLE_HOST && hsotg->dr_mode == USB_DR_MODE_PERIPHERAL))
+> >> +             return -EINVAL;
+> >> +
+> >> +     /* Skip session if core is in test mode */
+> >> +     if (role == USB_ROLE_NONE && hsotg->test_mode) {
+> >> +             dev_dbg(hsotg->dev, "Core is in test mode\n");
+> >> +             return -EBUSY;
+> >> +     }
+> >> +
+> >> +     spin_lock_irqsave(&hsotg->lock, flags);
+> > due to this spin_lock_irqsave() ...
+> >
+> >> +     if (role == USB_ROLE_HOST) {
+> >> +             if (dwc2_ovr_avalid(hsotg, true))
+> >> +                     goto unlock;
+> >> +
+> >> +             if (hsotg->dr_mode == USB_DR_MODE_OTG)
+> >> +                     /*
+> >> +                      * This will raise a Connector ID Status Change
+> >> +                      * Interrupt - connID A
+> >> +                      */
+> >> +                     dwc2_force_mode(hsotg, true);
+> > ... we cannot sleep in here. the call flow is:
+> > dwc2_drd_role_sw_set
+> >    spin_lock_irqsave
+> >    dwc2_force_mode
+> >      dwc2_wait_for_mode
+> >        usleep_range
+> >
+>
+> In fact, with the avalid or bvalid overriding + the debounce filter
+> bypass, GINTSTS_CURMOD is already in the expected mode, so that we exit
+> the loop directly, without running into usleep_range.
+on my Amlogic SoC this is not the case:
+The kernel complains because of that usleep_range from within the
+spinlock context
+
+Please let me know if/how I can help debug this.
+
+[...]
+> > +int dwc2_drd_init(struct dwc2_hsotg *hsotg)
+> > +{
+> > +       struct usb_role_switch_desc role_sw_desc = {0};
+> > +       struct usb_role_switch *role_sw;
+> > +       int ret;
+> > +
+> > +       if (!device_property_read_bool(hsotg->dev, "usb-role-switch"))
+> > +               return 0;
+> > should we also return early here if dr_mode != "otg"?
+> >
+>
+> No, because when VBUS is not connected to the controller, you also need
+> to get the usb_role_none from the usb-role-switch to catch the
+> unattached state (also in Peripheral or Host only mode).
+I see - thank you for the explanation!
+
+
+Best regards,
+Martin
