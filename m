@@ -2,118 +2,107 @@ Return-Path: <SRS0=wVrF=AS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C78EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 18:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB20AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 18:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CA5420708
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 18:07:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Zv4ipbsf"
+	by mail.kernel.org (Postfix) with ESMTP id BC74D206CD
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 18:50:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594147855;
+	bh=q1dR/jTPZVK8xl37KWCnPKEDb2AOMCbqOvChW4D47CU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=n2JeD9WngE9rbVNOT2i9CMGnh26EZP5yEjdEpOzjMzZeNcu3GT0bbr9Yh9H4YiYlB
+	 PyV+J4qkUCZ4rdprdJijc1coz2YgJefLPvKazgRWEEfBG/NRlFOhAwRzOAEZM5Ppxw
+	 2azzPNueAHUKeOdWeVRaGLuVPOjsjJSY3x3Hozrk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbgGGSHl (ORCPT
+        id S1728249AbgGGSuz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 14:07:41 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:33564 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728036AbgGGSHl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 14:07:41 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 067I7dsp122688;
-        Tue, 7 Jul 2020 13:07:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594145259;
-        bh=tcG+3QfvQYtuz+moQPRntRSYLDtYJOO1r/4BMO3+5bI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Zv4ipbsfseRXYHLCKiWPZV5bHcwAJV63dS7QRwA8FLcswu9yTLyci8r5q+NNGzxvp
-         SbD2SzbGUjAwDtbxGfHP6ui2CppuNgxlG4BHspx5HmTAC1CeCwKx+gWqRBGpI/XM30
-         98AWdn7xdQfH8chUr/J7m/Xg0VhUb/FUwWGAgqrg=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 067I7d6J032245
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 7 Jul 2020 13:07:39 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 7 Jul
- 2020 13:07:39 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 7 Jul 2020 13:07:39 -0500
-Received: from [10.250.43.45] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 067I7cGA011289;
-        Tue, 7 Jul 2020 13:07:38 -0500
-Subject: Re: [EXTERNAL] Re: [PATCH v15 2/4] dt-bindings: power: Convert
- battery.txt to battery.yaml
-To:     Rob Herring <robh@kernel.org>
-CC:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Sandeep Patil <sspatil@android.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Andrew F. Davis" <afd@ti.com>, Dan Murphy <dmurphy@ti.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20200701211044.18590-1-r-rivera-matos@ti.com>
- <20200701211044.18590-3-r-rivera-matos@ti.com>
- <20200702205320.GA1672139@bogus>
- <54914eed-4a65-745b-b61b-9515737023e3@ti.com>
- <CAL_JsqKXC1TFFCq6HBqdbHNeWbA=SnCqHkTx+FQXiPYDLb6sNw@mail.gmail.com>
-From:   Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-Message-ID: <50e85766-08d2-f91e-a6a9-c4b4f8858dc4@ti.com>
-Date:   Tue, 7 Jul 2020 13:07:38 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 7 Jul 2020 14:50:55 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36788 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728149AbgGGSuz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 14:50:55 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 17so193930wmo.1;
+        Tue, 07 Jul 2020 11:50:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=m/t4PDWucGx9E7+lQRxXkI+ujQ2IZO1RtvREvMleNek=;
+        b=XYeRo8UuqhamN5mxrIR+8yPg8YOy2sTA77fV1exURMx1f/eYvCpMashZ6MsTQuuxSq
+         PHZJSmm52aColg3xteJFnkDJf/HgMR8rKdDO5uwJjQUl3+DmssxODEEUiBbj/hqw+oDH
+         QlQgpqq7KITu7HjQZ/ogYmLgJjh8lH4ROPvzW/nfHBLLg8HEEZNGn1umScGjxw6H8E7Z
+         C9uJVG3UtIQsKDk4QDdEYPIBuMEuehWbkYjNkRZf4AvMC7WBw+JnDKY9gf+OT0cr0Xrv
+         VNRax9ytJOk+g1o5+ObsNcyq4uGDUri41NhY338KaaFDOMGTd8KVA+QNGEym3BHNkGd5
+         iFhw==
+X-Gm-Message-State: AOAM532YeTzozaK3JgBFKjDhy69Q02HaFCrToLi2I9r0a19YFQ77p2LN
+        e3iQEYSrkgFqNpc39fkLEhc=
+X-Google-Smtp-Source: ABdhPJyeYxQzWHl3HP96w4mkIZMaje9wIX3EMZDnNv2vf2IMnQnRi6Mcgqa62eD6LSqOcYGyqZ2I6A==
+X-Received: by 2002:a7b:cc08:: with SMTP id f8mr5884261wmh.106.1594147852592;
+        Tue, 07 Jul 2020 11:50:52 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.195])
+        by smtp.googlemail.com with ESMTPSA id p25sm1909109wmg.39.2020.07.07.11.50.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 Jul 2020 11:50:51 -0700 (PDT)
+Date:   Tue, 7 Jul 2020 20:50:49 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: Re: [PATCH v2 1/8] dt-bindings: pwm: samsung: Do not require
+ interrupts on Exynos SoCs
+Message-ID: <20200707185049.GA4698@kozik-lap>
+References: <20200702155149.12854-1-krzk@kernel.org>
+ <20200706094157.kyag7p5df3vo54wx@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqKXC1TFFCq6HBqdbHNeWbA=SnCqHkTx+FQXiPYDLb6sNw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200706094157.kyag7p5df3vo54wx@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, Jul 06, 2020 at 11:41:57AM +0200, Uwe Kleine-König wrote:
+> On Thu, Jul 02, 2020 at 05:51:42PM +0200, Krzysztof Kozlowski wrote:
+> > The bindings required interrupts for all SoCs but actually only the PWM
+> > timer clocksource (for S3C/S5P SoCs) was using them.  This PWM timer
+> > clocksource driver is not used on Exynos SoCs thus the interrupts can be
+> > marked as optional.
+> > 
+> > Reported-by: Alim Akhtar <alim.akhtar@samsung.com>
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> LGTM,
+> 
+> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> 
+> I'd expect it is ok to let this patch go in via whatever way the other
+> patches go. (But it's Thierry who has the authority here.)
 
-On 7/7/20 9:40 AM, Rob Herring wrote:
-> On Mon, Jul 6, 2020 at 12:45 PM Ricardo Rivera-Matos
-> <r-rivera-matos@ti.com> wrote:
->> Rob
->>
->> On 7/2/20 3:53 PM, Rob Herring wrote:
->>> On Wed, 01 Jul 2020 16:10:42 -0500, Ricardo Rivera-Matos wrote:
->>>> From: Dan Murphy <dmurphy@ti.com>
->>>>
->>>> Convert the battery.txt file to yaml and fix up the examples.
->>>>
->>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>>> ---
->>>>    .../bindings/power/supply/battery.txt         |  86 +---------
->>>>    .../bindings/power/supply/battery.yaml        | 157 ++++++++++++++++++
->>>>    2 files changed, 158 insertions(+), 85 deletions(-)
->>>>    create mode 100644 Documentation/devicetree/bindings/power/supply/battery.yaml
->>>>
->>> My bot found errors running 'make dt_binding_check' on your patch:
->>>
->>> Unknown file referenced: [Errno 2] No such file or directory: '/usr/local/lib/python3.6/dist-packages/dtschema/schema/types.yaml'
->>> Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/power/supply/battery.example.dts' failed
->>> make[1]: *** [Documentation/devicetree/bindings/power/supply/battery.example.dts] Error 255
->>> make[1]: *** Waiting for unfinished jobs....
->>> Makefile:1347: recipe for target 'dt_binding_check' failed
->>> make: *** [dt_binding_check] Error 2
->> I think your bot is looking for the types.yaml in the wrong place.
-> Really? Yet it works fine on thousands of other patches?
->
->> '/usr/local/lib/python3.6/dist-packages/dtschema/schema/types.yaml'
->> should be
->> '/usr/local/lib/python3.6/dist-packages/dtschema/schemas/types.yaml'. I
->> renamed might 'schemas' directory to 'schema' and my battery.yaml passed
->> the dt_binding_check.
-> Maybe fix the 'schema/' path in your schema file which is wrong.
-Oh I see. My apologies, Rob.
->
-> Rob
+This patch is independent so it can go either through PWM tree or DT
+bindings.  Usually the latter, so Rob was picking it up.
+
+Thanks for ack.
+
+Best regards,
+Krzysztof
+
