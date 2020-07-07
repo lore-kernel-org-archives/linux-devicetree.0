@@ -2,130 +2,107 @@ Return-Path: <SRS0=wVrF=AS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B09B8C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 03:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9F9C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 03:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8965820684
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 03:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0647920708
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 03:38:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NvJeHCRq"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Wz+x6l/j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbgGGDdI (ORCPT
+        id S1727963AbgGGDiU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jul 2020 23:33:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35734 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbgGGDdH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 23:33:07 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0867C061755;
-        Mon,  6 Jul 2020 20:33:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=vl6KXRcrocPNDZrmREX3V5N1vmHQHID4t2FGejDxCgc=; b=NvJeHCRqtpSeaNJDRjVwBsJm5Q
-        jySkdyljWzRDEmZVioCs/H6AEKMxaiOXD+fPzH713D2kdSGRL9GEwxQO4whMc8GQN4U9QcQpR8sgj
-        sRYmBbP/NwhbqzDKcT/GNcz90QAzYYy7OvOk7Ix8Tk0Lz3joEj8jtbMV0Z5x+Vl94YyWyKhI+qcZA
-        uL2quRo7w3XZ7uODPl93BGahhMyReZQvgGlKqWLsmaKM+KDS/o524yiXG4doBLxpb4gvc3KLKnHI6
-        z/iUTk0R9xoA7jlC8WNWcn2c1OxP29Ul8pltJoU45wTae4JIX6AqXvSLb7xObhCchW8WBdvMhVbGI
-        alL5m0zA==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jseLt-0003lY-1z; Tue, 07 Jul 2020 03:33:02 +0000
+        Mon, 6 Jul 2020 23:38:20 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:52643 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727871AbgGGDiU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jul 2020 23:38:20 -0400
+X-UUID: 512f442de6224b6b8b21880f38524bff-20200707
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=orN+U9b8rBcb3cgnPPXbg0k2d4sfceTMwEf/l9coVVs=;
+        b=Wz+x6l/jsyBe+FBkiPN2hT8GqrSImQDn0f2JcxNqRlPWZCbRcikFzRxh/J3wfHdni5y+Y96ad9XQ380/b8IreF1N6ewNatev8QcH6gbwDLyLqRm9AtMHx2NBD8/8sT9BA3YnSOeX3Tct5/JC4ezX+Y840t3FB7WpAhJJnHILfKk=;
+X-UUID: 512f442de6224b6b8b21880f38524bff-20200707
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 988155038; Tue, 07 Jul 2020 11:38:17 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 7 Jul 2020 11:38:13 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 7 Jul 2020 11:38:14 +0800
+Message-ID: <1594093094.20820.8.camel@mtkswgap22>
 Subject: Re: [PATCH 2/2] soc: mediatek: devapc: add devapc-mt6779 driver
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+CC:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
         lkml <linux-kernel@vger.kernel.org>,
-        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>
+Date:   Tue, 7 Jul 2020 11:38:14 +0800
+In-Reply-To: <eb2eaab3-1ecc-d2c8-fc40-5bbe51ee31c4@infradead.org>
 References: <1594027693-19530-1-git-send-email-neal.liu@mediatek.com>
- <1594027693-19530-3-git-send-email-neal.liu@mediatek.com>
- <dd03ec1e-e511-4c13-4e12-a9f8ec407326@infradead.org>
- <1594092631.20820.4.camel@mtkswgap22>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <eb2eaab3-1ecc-d2c8-fc40-5bbe51ee31c4@infradead.org>
-Date:   Mon, 6 Jul 2020 20:32:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+         <1594027693-19530-3-git-send-email-neal.liu@mediatek.com>
+         <dd03ec1e-e511-4c13-4e12-a9f8ec407326@infradead.org>
+         <1594092631.20820.4.camel@mtkswgap22>
+         <eb2eaab3-1ecc-d2c8-fc40-5bbe51ee31c4@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <1594092631.20820.4.camel@mtkswgap22>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: BAB8E2C131F09C2E8A131E9F69B010D851F56200AC2906895C4A3E2A86C556E62000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 7/6/20 8:30 PM, Neal Liu wrote:
-> Hi Randy,
-> 
-> Thanks for your review.
-> 
-> On Mon, 2020-07-06 at 09:13 -0700, Randy Dunlap wrote:
->> On 7/6/20 2:28 AM, Neal Liu wrote:
->>> diff --git a/drivers/soc/mediatek/devapc/Kconfig b/drivers/soc/mediatek/devapc/Kconfig
->>> new file mode 100644
->>> index 0000000..b0f7d0e
->>> --- /dev/null
->>> +++ b/drivers/soc/mediatek/devapc/Kconfig
->>> @@ -0,0 +1,17 @@
->>> +config MTK_DEVAPC
->>> +	tristate "Mediatek Device APC Support"
->>> +	help
->>> +	  Device APC is a HW IP controlling internal device security.
->>
->> preferably:               s/HW/hardware/
->>
->>> +	  MediaTek bus frabric provides TrustZone security support and data
->>
->> 	               fabric
->>
->>> +	  protection to prevent slaves from being accessed by unexpected
->>> +	  bus masters.
->>> +	  Device APC prevents malicious access to internal devices.
->>> +
->>> +config DEVAPC_MT6779
->>> +	tristate "Mediatek MT6779 Device APC driver"
->>> +	select MTK_DEVAPC
->>> +	help
->>> +	  Say yes here to enable support Mediatek MT6779 Device APC driver.
->>
->> 	                         support for Mediatek
->>
->>> +	  This driver mainly used to handle the violation with 1 DEVAPC AO/PDs.
->>
->> 	  This driver is mainly used                           ^^^^^^^^^^^^^^^^
->>
->> 	                      What is that meaningless string of chars? ^^^^^^^
-> 
-> I did not see any meaningless string of chars from my original patch.
-> Is there something wrong?
-
-To someone who is reading the Kconfig help text but is unfamiliar with this device,
-I would say that        "1 DEVAPC AO/PDs"                    is not helpful at all.
-
-> [1] https://lkml.org/lkml/2020/7/6/168
-> 
->>
->>> +	  The violation information are logged for further analysis or
->>
->> 	                            is
->>
->>> +	  countermeasures.
->>
->> thanks.
-> 
-
-
-thanks.
--- 
-~Randy
+T24gTW9uLCAyMDIwLTA3LTA2IGF0IDIwOjMyIC0wNzAwLCBSYW5keSBEdW5sYXAgd3JvdGU6DQo+
+IE9uIDcvNi8yMCA4OjMwIFBNLCBOZWFsIExpdSB3cm90ZToNCj4gPiBIaSBSYW5keSwNCj4gPiAN
+Cj4gPiBUaGFua3MgZm9yIHlvdXIgcmV2aWV3Lg0KPiA+IA0KPiA+IE9uIE1vbiwgMjAyMC0wNy0w
+NiBhdCAwOToxMyAtMDcwMCwgUmFuZHkgRHVubGFwIHdyb3RlOg0KPiA+PiBPbiA3LzYvMjAgMjoy
+OCBBTSwgTmVhbCBMaXUgd3JvdGU6DQo+ID4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVk
+aWF0ZWsvZGV2YXBjL0tjb25maWcgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9kZXZhcGMvS2NvbmZp
+Zw0KPiA+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPj4+IGluZGV4IDAwMDAwMDAuLmIwZjdk
+MGUNCj4gPj4+IC0tLSAvZGV2L251bGwNCj4gPj4+ICsrKyBiL2RyaXZlcnMvc29jL21lZGlhdGVr
+L2RldmFwYy9LY29uZmlnDQo+ID4+PiBAQCAtMCwwICsxLDE3IEBADQo+ID4+PiArY29uZmlnIE1U
+S19ERVZBUEMNCj4gPj4+ICsJdHJpc3RhdGUgIk1lZGlhdGVrIERldmljZSBBUEMgU3VwcG9ydCIN
+Cj4gPj4+ICsJaGVscA0KPiA+Pj4gKwkgIERldmljZSBBUEMgaXMgYSBIVyBJUCBjb250cm9sbGlu
+ZyBpbnRlcm5hbCBkZXZpY2Ugc2VjdXJpdHkuDQo+ID4+DQo+ID4+IHByZWZlcmFibHk6ICAgICAg
+ICAgICAgICAgcy9IVy9oYXJkd2FyZS8NCj4gPj4NCj4gPj4+ICsJICBNZWRpYVRlayBidXMgZnJh
+YnJpYyBwcm92aWRlcyBUcnVzdFpvbmUgc2VjdXJpdHkgc3VwcG9ydCBhbmQgZGF0YQ0KPiA+Pg0K
+PiA+PiAJICAgICAgICAgICAgICAgZmFicmljDQo+ID4+DQo+ID4+PiArCSAgcHJvdGVjdGlvbiB0
+byBwcmV2ZW50IHNsYXZlcyBmcm9tIGJlaW5nIGFjY2Vzc2VkIGJ5IHVuZXhwZWN0ZWQNCj4gPj4+
+ICsJICBidXMgbWFzdGVycy4NCj4gPj4+ICsJICBEZXZpY2UgQVBDIHByZXZlbnRzIG1hbGljaW91
+cyBhY2Nlc3MgdG8gaW50ZXJuYWwgZGV2aWNlcy4NCj4gPj4+ICsNCj4gPj4+ICtjb25maWcgREVW
+QVBDX01UNjc3OQ0KPiA+Pj4gKwl0cmlzdGF0ZSAiTWVkaWF0ZWsgTVQ2Nzc5IERldmljZSBBUEMg
+ZHJpdmVyIg0KPiA+Pj4gKwlzZWxlY3QgTVRLX0RFVkFQQw0KPiA+Pj4gKwloZWxwDQo+ID4+PiAr
+CSAgU2F5IHllcyBoZXJlIHRvIGVuYWJsZSBzdXBwb3J0IE1lZGlhdGVrIE1UNjc3OSBEZXZpY2Ug
+QVBDIGRyaXZlci4NCj4gPj4NCj4gPj4gCSAgICAgICAgICAgICAgICAgICAgICAgICBzdXBwb3J0
+IGZvciBNZWRpYXRlaw0KPiA+Pg0KPiA+Pj4gKwkgIFRoaXMgZHJpdmVyIG1haW5seSB1c2VkIHRv
+IGhhbmRsZSB0aGUgdmlvbGF0aW9uIHdpdGggMSBERVZBUEMgQU8vUERzLg0KPiA+Pg0KPiA+PiAJ
+ICBUaGlzIGRyaXZlciBpcyBtYWlubHkgdXNlZCAgICAgICAgICAgICAgICAgICAgICAgICAgIF5e
+Xl5eXl5eXl5eXl5eXl4NCj4gPj4NCj4gPj4gCSAgICAgICAgICAgICAgICAgICAgICBXaGF0IGlz
+IHRoYXQgbWVhbmluZ2xlc3Mgc3RyaW5nIG9mIGNoYXJzPyBeXl5eXl5eDQo+ID4gDQo+ID4gSSBk
+aWQgbm90IHNlZSBhbnkgbWVhbmluZ2xlc3Mgc3RyaW5nIG9mIGNoYXJzIGZyb20gbXkgb3JpZ2lu
+YWwgcGF0Y2guDQo+ID4gSXMgdGhlcmUgc29tZXRoaW5nIHdyb25nPw0KPiANCj4gVG8gc29tZW9u
+ZSB3aG8gaXMgcmVhZGluZyB0aGUgS2NvbmZpZyBoZWxwIHRleHQgYnV0IGlzIHVuZmFtaWxpYXIg
+d2l0aCB0aGlzIGRldmljZSwNCj4gSSB3b3VsZCBzYXkgdGhhdCAgICAgICAgIjEgREVWQVBDIEFP
+L1BEcyIgICAgICAgICAgICAgICAgICAgIGlzIG5vdCBoZWxwZnVsIGF0IGFsbC4NCg0KR290IGl0
+LCBJJ2xsIHRyeSB0byBtYWtlIGl0IG1vcmUgcmVhZGFibGUuDQoNCj4gDQo+ID4gWzFdIGh0dHBz
+Oi8vdXJsZGVmZW5zZS5jb20vdjMvX19odHRwczovL2xrbWwub3JnL2xrbWwvMjAyMC83LzYvMTY4
+X187ISFDVFJOS0E5d01nMEFSYnchMHBBbVZxVXJ0REVEUFQtUWtRRU5Yc28tX3VtT3oybmJlLURE
+SWxNYjFzRXNENTdCYUt0RFpGNDdRRlRmTVNQLSQgDQo+ID4gDQo+ID4+DQo+ID4+PiArCSAgVGhl
+IHZpb2xhdGlvbiBpbmZvcm1hdGlvbiBhcmUgbG9nZ2VkIGZvciBmdXJ0aGVyIGFuYWx5c2lzIG9y
+DQo+ID4+DQo+ID4+IAkgICAgICAgICAgICAgICAgICAgICAgICAgICAgaXMNCj4gPj4NCj4gPj4+
+ICsJICBjb3VudGVybWVhc3VyZXMuDQo+ID4+DQo+ID4+IHRoYW5rcy4NCj4gPiANCj4gDQo+IA0K
+PiB0aGFua3MuDQoNCg==
 
