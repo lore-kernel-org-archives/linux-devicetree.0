@@ -2,164 +2,186 @@ Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B691FC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD098C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B00B20775
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:00:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594191614;
-	bh=rIwQJ9XgMhIS4v7G1h7P96EkZRD4YP9JPOfTgw+cIoM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yclOXqUzv3RcMkspi3ejlvW2FkC7x2ompOqTBCZtycnPCz/22Qh3nGn8k0KlGZJqb
-	 gnI5qJ8ZMMIghDViGcmB7quwH/Xi103xkbEHK/wHQQYY2DI33nG2L9kMhRdMJAAosF
-	 zOcno9pneASX6M0K/U1TKOF1oA75ir/H2rOve6MM=
+	by mail.kernel.org (Postfix) with ESMTP id B6B2D20760
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:04:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Omi9/Ujy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729465AbgGHHAO (ORCPT
+        id S1730051AbgGHHEQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:00:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35752 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726194AbgGHHAN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 8 Jul 2020 03:00:13 -0400
-Received: from localhost.localdomain (unknown [122.182.251.219])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DEA920771;
-        Wed,  8 Jul 2020 07:00:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594191612;
-        bh=rIwQJ9XgMhIS4v7G1h7P96EkZRD4YP9JPOfTgw+cIoM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UuF6eIm83gFRGSPVdGCn1wDPNxbsmuI9l0gqDSBrKa6ohCKOxFMCc1sGCi2/1wrwS
-         RadZz5K3T7vb3jZJ4mSwf7jvzJOXLveNTDC9dTBvb08lVUhax18ZzA5Rw694Rsmu9q
-         KZ8p3DbvAz6U3A/ABXp1Z6cW6NXcukSqn+9UIhv0=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        Rob Clark <robdclark@gmail.com>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        John Stultz <john.stultz@linaro.org>
-Subject: [PATCH v4 4/4] drm/msm/dsi: attach external bridge with DRM_BRIDGE_ATTACH_NO_CONNECTOR
-Date:   Wed,  8 Jul 2020 12:29:24 +0530
-Message-Id: <20200708065924.59257-5-vkoul@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200708065924.59257-1-vkoul@kernel.org>
-References: <20200708065924.59257-1-vkoul@kernel.org>
+        Wed, 8 Jul 2020 03:04:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37012 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729859AbgGHHEP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 03:04:15 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB837C08C5DC
+        for <devicetree@vger.kernel.org>; Wed,  8 Jul 2020 00:04:15 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id u12so33696200qth.12
+        for <devicetree@vger.kernel.org>; Wed, 08 Jul 2020 00:04:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2iS8GNVus2oLt6BrJG806hhfOAQEc/axdhBS15zjWLo=;
+        b=Omi9/UjyrDM94m6Hn/9tGzuCwejaXFZixzxkS4l0YPmtw6UPjYdnkDbOX5Q2rV/lFr
+         u1TxIMxdxNTW4aT9NliJDUOzsqwMCfgBqv/GaB6/YcxP8D6m9dW9G1Q2A+k1AhXcnIcJ
+         YDBmI2aKHBzbPIgwQ/GLoCx1rqtpSxv5WBgRsVTLGi4tu0OSrcxmQGlKWX7U++jKCkNF
+         C7COudJTQnTpO/GUP94Li97jg42fApyQJxTH5GM9g+U2rK42Dat7lPNCxd5duQoADePp
+         vx27GRxaYe2rU7Vecb4trNeAPCLI/J4z3NdkXw3WZKnEZ10krHbJ+zMVgBT/BokdEoOk
+         LZWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2iS8GNVus2oLt6BrJG806hhfOAQEc/axdhBS15zjWLo=;
+        b=djmUSFd2IdWKG4lzDqsGv+Vga33jXur0R/rR1zLxOMGbH8TRrmCn5v8AiLUQrblP/c
+         XsrmRZAjVuMjKra00+gRWoBgReH/h/XZXVTfqpj80abyWpo5R0f8dwHJ61DQW9Xy43Vb
+         2/+vKZWTJlUErnjrbSIpKRGeN6qEzUcAaGn4IAOCJ26ltQzQJz+MSRtoeOnhOFH7qBYJ
+         VFW9LAI/kmW0AAnt2cjYSujCpp15bM3rpF1/MKtsSHHe7a9dKGcsttl+PNNLQZKHvmsh
+         yrDLjXp5fFb6hYnEQ0pCqRuZiUHpcQhVmKf52O3YlrUDkKsQKcxZRPcYDc6FFfsCc5Ey
+         PhMg==
+X-Gm-Message-State: AOAM532RQtbnxDdYaONnGO6ccELiRgkbG2kNuo4SxNYKgeMNpg1bDDe7
+        sAtwnEaRC/a7sUZBuq3lubj9LPVC/iHCcg1d7vLb8g==
+X-Google-Smtp-Source: ABdhPJyOpd9MCvJq83xKqOPDNKMak9gwDotLjA6QoKzbnEMOiGr9okynYLPyXCkNOJLEALP09uEV9N6WRvLQc4GN8+c=
+X-Received: by 2002:ac8:66d1:: with SMTP id m17mr58814731qtp.88.1594191854938;
+ Wed, 08 Jul 2020 00:04:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <1593699479-1445-3-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <f0d3f3224a1b8fa2be668dd2b8d9d84e@kernel.org> <CAMxfBF6A9702-rBOo0jHtfn4Ds1_G+nWG4O9-urNqU00dFXeww@mail.gmail.com>
+ <12db6d22c12369b6d64f410aa2434b03@kernel.org> <CAMxfBF7pbH1LLE4fJnnCPnrqnQ-tdO+_xfoN1VerJcQ-ZyYM9Q@mail.gmail.com>
+ <53d39d8fbd63c6638dbf0584c7016ee0@kernel.org>
+In-Reply-To: <53d39d8fbd63c6638dbf0584c7016ee0@kernel.org>
+From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+Date:   Wed, 8 Jul 2020 09:04:03 +0200
+Message-ID: <CAMxfBF6Th+zKOmogA5phkh21tSUzutokCgU+pv0Eh-sDk=1Hbg@mail.gmail.com>
+Subject: Re: [PATCHv3 2/6] irqchip/irq-pruss-intc: Add a PRUSS irqchip driver
+ for PRUSS interrupts
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     tglx@linutronix.de, jason@lakedaemon.net,
+        "Anna, Suman" <s-anna@ti.com>, robh+dt@kernel.org,
+        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, david@lechnology.com,
+        "Mills, William" <wmills@ti.com>, "Andrew F . Davis" <afd@ti.com>,
+        Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Modern bridges do not create the connector and expect the display driver
-to do so. Hence, create the drm connector in msm display driver and add
-use flag DRM_BRIDGE_ATTACH_NO_CONNECTOR to attach bridges
+On Sun, 5 Jul 2020 at 22:45, Marc Zyngier <maz@kernel.org> wrote:
+>
+> On 2020-07-05 14:26, Grzegorz Jaszczyk wrote:
+> > On Sat, 4 Jul 2020 at 11:39, Marc Zyngier <maz@kernel.org> wrote:
+> >>
+> >> On 2020-07-03 15:28, Grzegorz Jaszczyk wrote:
+>
+> [...]
+>
+> >> It still begs the question: if the HW can support both edge and level
+> >> triggered interrupts, why isn't the driver supporting this diversity?
+> >> I appreciate that your HW may only have level interrupts so far, but
+> >> what guarantees that this will forever be true? It would imply a
+> >> change
+> >> in the DT binding, which isn't desirable.
+> >
+> > Ok, I've got your point. I will try to come up with something later
+> > on. Probably extending interrupt-cells by one and passing interrupt
+> > type will be enough for now. Extending this driver to actually support
+> > it can be handled later if needed. Hope it works for you.
+>
+> Writing a set_type callback to deal with this should be pretty easy.
+> Don't delay doing the right thing.
 
-Tested-by: John Stultz <john.stultz@linaro.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- drivers/gpu/drm/msm/dsi/dsi.c         |  7 +------
- drivers/gpu/drm/msm/dsi/dsi_manager.c | 27 +++++++++++++--------------
- 2 files changed, 14 insertions(+), 20 deletions(-)
+Ok.
 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi.c b/drivers/gpu/drm/msm/dsi/dsi.c
-index 55ea4bc2ee9c..617075e3e3f0 100644
---- a/drivers/gpu/drm/msm/dsi/dsi.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi.c
-@@ -219,12 +219,7 @@ int msm_dsi_modeset_init(struct msm_dsi *msm_dsi, struct drm_device *dev,
- 		goto fail;
- 	}
- 
--	/*
--	 * check if the dsi encoder output is connected to a panel or an
--	 * external bridge. We create a connector only if we're connected to a
--	 * drm_panel device. When we're connected to an external bridge, we
--	 * assume that the drm_bridge driver will create the connector itself.
--	 */
-+	/* Initialize the internal panel or external bridge */
- 	ext_bridge = msm_dsi_host_get_bridge(msm_dsi->host);
- 
- 	if (ext_bridge)
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
-index 4b363bd7ddff..72cfd0a8187b 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
-@@ -3,6 +3,7 @@
-  * Copyright (c) 2015, The Linux Foundation. All rights reserved.
-  */
- 
-+#include <drm/drm_bridge_connector.h>
- #include "msm_kms.h"
- #include "dsi.h"
- 
-@@ -689,7 +690,7 @@ struct drm_bridge *msm_dsi_manager_bridge_init(u8 id)
- 	bridge = &dsi_bridge->base;
- 	bridge->funcs = &dsi_mgr_bridge_funcs;
- 
--	ret = drm_bridge_attach(encoder, bridge, NULL, 0);
-+	ret = drm_bridge_attach(encoder, bridge, NULL, DRM_BRIDGE_ATTACH_NO_CONNECTOR);
- 	if (ret)
- 		goto fail;
- 
-@@ -709,7 +710,6 @@ struct drm_connector *msm_dsi_manager_ext_bridge_init(u8 id)
- 	struct drm_encoder *encoder;
- 	struct drm_bridge *int_bridge, *ext_bridge;
- 	struct drm_connector *connector;
--	struct list_head *connector_list;
- 
- 	int_bridge = msm_dsi->bridge;
- 	ext_bridge = msm_dsi->external_bridge =
-@@ -717,22 +717,21 @@ struct drm_connector *msm_dsi_manager_ext_bridge_init(u8 id)
- 
- 	encoder = msm_dsi->encoder;
- 
--	/* link the internal dsi bridge to the external bridge */
--	drm_bridge_attach(encoder, ext_bridge, int_bridge, 0);
--
--	/*
--	 * we need the drm_connector created by the external bridge
--	 * driver (or someone else) to feed it to our driver's
--	 * priv->connector[] list, mainly for msm_fbdev_init()
-+	/* link the internal dsi bridge to the external bridge and attach
-+	 * the connector, we are supporting DRM_BRIDGE_ATTACH_NO_CONNECTOR
-+	 * so always create connector
- 	 */
--	connector_list = &dev->mode_config.connector_list;
-+	drm_bridge_attach(encoder, ext_bridge, int_bridge, DRM_BRIDGE_ATTACH_NO_CONNECTOR);
- 
--	list_for_each_entry(connector, connector_list, head) {
--		if (drm_connector_has_possible_encoder(connector, encoder))
--			return connector;
-+	connector = drm_bridge_connector_init(dev, encoder);
-+	if (IS_ERR(connector)) {
-+		DRM_DEV_ERROR(dev->dev, "drm_bridge_connector_init failed: %ld\n",
-+			      PTR_ERR(connector));
-+		return ERR_PTR(-ENODEV);
- 	}
- 
--	return ERR_PTR(-ENODEV);
-+	drm_connector_attach_encoder(connector, msm_dsi->encoder);
-+	return connector;
- }
- 
- void msm_dsi_manager_bridge_destroy(struct drm_bridge *bridge)
--- 
-2.26.2
+>
+> [...]
+>
+> >> >> > +             hwirq = hipir & GENMASK(9, 0);
+> >> >> > +             virq = irq_linear_revmap(intc->domain, hwirq);
+> >> >>
+> >> >> And this is where I worry. You seems to have a single irqdomain
+> >> >> for all the muxes. Are you guaranteed that you will have no
+> >> >> overlap between muxes? And please use irq_find_mapping(), as
+> >> >> I have top-secret plans to kill irq_linear_revmap().
+> >> >
+> >> > Regarding irq_find_mapping - sure.
+> >> >
+> >> > Regarding irqdomains:
+> >> > It is a single irqdomain since the hwirq (system event) can be mapped
+> >> > to different irq_host (muxes). Patch #6
+> >> > https://lkml.org/lkml/2020/7/2/616 implements and describes how input
+> >> > events can be mapped to some output host interrupts through 2 levels
+> >> > of many-to-one mapping i.e. events to channel mapping and channels to
+> >> > host interrupts. Mentioned implementation ensures that specific system
+> >> > event (hwirq) can be mapped through PRUSS specific channel into a
+> >> > single host interrupt.
+> >>
+> >> Patch #6 is a nightmare of its own, and I haven't fully groked it yet.
+> >> Also, this driver seems to totally ignore the 2-level routing. Where
+> >> is it set up? map/unmap in this driver do exactly *nothing*, so
+> >> something somewhere must set it up.
+> >
+> > The map/unmap is updated in patch #6 and it deals with those 2-level
+> > routing setup. Map is responsible for programming the Channel Map
+> > Registers (CMRx) and Host-Interrupt Map Registers (HMRx) basing on
+> > provided configuration from the one parsed in the xlate function.
+> > Unmap undo whatever was done on the map. More details can be found in
+> > patch #6.
+> >
+> > Maybe it would be better to squash patch #6 with this one so it would
+> > be less confusing. What is your advice?
+>
+> So am I right in understanding that without patch #6, this driver does
+> exactly nothing? If so, it has been a waste of review time.
+>
+> Please split patch #6 so that this driver does something useful
+> for Linux, without any of the PRU interrupt routing stuff. I want
+> to see a Linux-only driver that works and doesn't rely on any other
+> exotic feature.
+>
 
+Patch #6 provides PRU specific 2-level routing setup. This step is
+required and it is part of the entire patch-set. Theoretically routing
+setup could be done by other platform driver (not irq one) or e.g. by
+PRU firmware. In such case this driver would be functional without
+patch #6 but I do not think it would be proper. All this routing setup
+is done via PRUSS INTC unit and uses PRUSS INTC register set,
+therefore delegating it to another driver doesn't seem to be the best
+option. Furthermore delegating this step to PRU firmware is also
+problematic. First of all the PRU core tiny Instruction RAM space
+makes it difficult to fit it together with the code that is required
+for running a PRU specific application. Another issue that I see is
+splitting management of the PRUSS INTC unit to Linux (main CPU) and
+PRU firmware (PRU core).
+
+I am also not sure if splitting patch #6 makes sense. Mentioned patch
+allows to perform the entire 2-level routing setup. There is no
+distinction between routing setup for main CPU and PRU core, both use
+the same logic.The only difference between setting up the routing for
+main CPU (Linux) and PRU core is choosing different, so called, "host
+interrupt" in final level mapping.
+
+Discussion about previous approach of handling this 2-level routing
+setup can be found in v2 of this patch-set
+(https://patchwork.kernel.org/patch/11069751/) - mentioned approach
+wasn't good and was dropped but problem description made by Suman may
+be useful.
+
+I am open to any suggestion if there is a better way of handling
+2-level routing. I will also appreciate if you could elaborate about
+issues that you see with patch #6.
+
+Best regards,
+Grzegorz
