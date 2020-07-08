@@ -2,99 +2,276 @@ Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DF4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 21:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F16C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 21:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D36C4206DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 21:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6049E2078A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 21:53:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h+Hn5mDG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lghGwHTs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726107AbgGHVYg (ORCPT
+        id S1725903AbgGHVxr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 17:24:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58090 "EHLO
+        Wed, 8 Jul 2020 17:53:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgGHVYg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 17:24:36 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B99FC061A0B;
-        Wed,  8 Jul 2020 14:24:36 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id c30so39192550qka.10;
-        Wed, 08 Jul 2020 14:24:36 -0700 (PDT)
+        with ESMTP id S1725787AbgGHVxr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 17:53:47 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EBCAC061A0B;
+        Wed,  8 Jul 2020 14:53:47 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id i4so154866iov.11;
+        Wed, 08 Jul 2020 14:53:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=KHQ5iKe0jq8WM/GNa7lpcyF4GfRdcF49A/sQnJx33+A=;
-        b=h+Hn5mDG3YDTR0wRtwbL9cfjNvX5SdNeKvN20biY6Phc8KMCp251P8GdBNzKhXaWXN
-         eMWMmN/PhWC1091WUYsr0s79UFzFaRzyx270N56dfkLMGPhbSx1HVqy7Q3f9ZUVChuuD
-         M5oExPf0V2zUVMvp7BeZVdSRpG1pkniO/8p67UeoQ3ytqvFAAnmILhbU+/ZPAv3bHQjd
-         IQL//IUvNSFFa+qKoee/KIyoAjjvLaldtnaAnTxt+xVogxWEuL8E/L7cOQzBljISpRN0
-         vzE6MJ+n+nQamCcjKH0CeuG/TV8PZrQBBL5FT7nedzvHv1lNkQUBmSg9Fv6GUT4b33rd
-         Wfxg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+CW7beEWR0Pb7ROLSpU0nhqAUHLthMao4T7CzyDGi7g=;
+        b=lghGwHTsCwGCyoPa+9rmEJ3S5GtY7q5i1xeiRM2RR3MBWe64lRkMFY/PrdVKSnX8NZ
+         Yzlxl2zY0V/sXdfP8rTjuZn/gW8+31BAB1WQrESefLUjQBkugtdRCwZbmtsgQT6d4x4A
+         VbT0EZ+gXCJfssGHq9ekpjg/uBF263tzzy81r4bZWc1vZgyjrL4g69y/vkpkIW5UJekB
+         2tMnPIE/Pxvbc00qBMOADrtQJB+5LSmYs1pJnQZ1CU0K2uGyDO1O8mIS+dnyRm36ZYyA
+         8Y5NpaBoxG8EHXF08Wezudx9kRvonp1TvhnqRJxlnhAAiyp+VhQwTofhMEVYQhhNqMmN
+         2jSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=KHQ5iKe0jq8WM/GNa7lpcyF4GfRdcF49A/sQnJx33+A=;
-        b=rf/hjYnjQ/IVrCluOLYGkvqZIk5mN6ZjdAiO7IdYUnG2ebpB92K16POMz7aou8AP6b
-         kqAENNGbxDsoqDwx88k1ZMe78NLD9cwT4J5uk6FqnDkG3GxmHAAqBqtGs7Ed/Z6gGrwF
-         suXWsBi7szvx1qrhjdaPsEE57qFIiokqvC87ZC6AZGQoAo2pyl05DHEyS2byezmEWfBb
-         yVRJDBUkceD/mR+IpcGTgsXCrqVFwaNpeLz5RosRFNeGYluauY91APBfXJWch1lKpnPq
-         xke/iSRv4pzaKCiyAs9/uYsKkx+AD6mRTYu5wgml5WuHru6YI/n8YUTHnPCeI2hxdQQi
-         mfZA==
-X-Gm-Message-State: AOAM530jygopUHkZ4NRvo0qakR+rR0f51Cl3e4fCDhv1cbl6L0VivF/C
-        XAAjc07k+G0SJACKtxPVZOg=
-X-Google-Smtp-Source: ABdhPJz07cDeFqFR6QOObECZvAUgG5FOAMcQrXwEzIUFWtbKSid0LxB7SXZaCSh+fLs8+4m16tkrjQ==
-X-Received: by 2002:a37:b206:: with SMTP id b6mr59195318qkf.22.1594243475232;
-        Wed, 08 Jul 2020 14:24:35 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14c:482:92b:9d6d:2996:7c26:fb1d])
-        by smtp.gmail.com with ESMTPSA id f54sm1165848qte.76.2020.07.08.14.24.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 14:24:34 -0700 (PDT)
-From:   Fabio Estevam <festevam@gmail.com>
-To:     davem@davemloft.net
-Cc:     dmurphy@ti.com, robh+dt@kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH net-next 2/2] dt-bindings: dp83869: Fix the type of device
-Date:   Wed,  8 Jul 2020 18:24:22 -0300
-Message-Id: <20200708212422.7599-2-festevam@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200708212422.7599-1-festevam@gmail.com>
-References: <20200708212422.7599-1-festevam@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+CW7beEWR0Pb7ROLSpU0nhqAUHLthMao4T7CzyDGi7g=;
+        b=pwm7Q7ulOyJziDeA9xz15ILrdT2Dduf9BrR+F0aDgsdHZGakjVdko7rhVNqfmVrIBv
+         KO9fMDFOXO4l8llMr48/eYap+kBx6JWSy5RTy9hQQLJYzhmhkCTA8DAunYfuRlnSHZYU
+         nF2q1VK3j5Xr5izT7RObfn28kwl7OAEn25mFrW1X1f3ECDvXetZkkSdCCjyPlA+HwrCX
+         IzG1cQbnwHyNyQkFcQtRCI5NjxLKCSthj50fCNwlJH9dXggGhj5iYIH/mQc3cpCJsC6Y
+         KcJj/y2NwmZggDZxMP5dVGBmMyIZXMirpopHLcZJqcmI/IiLFHn7f7IpdiF6bPkrwPq7
+         I7sw==
+X-Gm-Message-State: AOAM533NmBM8O3uN6k8S3dS/8SA53iEvfoAPvmfuioMXS2r++MFXDUKG
+        zhwb+ajQD++jsDVH8GJPwq5xYvr1ghqnfXW3dR0=
+X-Google-Smtp-Source: ABdhPJzWDUaz5piMlQV0HXant7ReM+7ufFvRfoIb1d3rlp4myFcLfkmvRPbl31kMpL2rip/q7vj0I3hqA4BnKFICEGU=
+X-Received: by 2002:a05:6638:1483:: with SMTP id j3mr69836998jak.65.1594245226337;
+ Wed, 08 Jul 2020 14:53:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200617120510.25071-1-aford173@gmail.com> <CAMuHMdWjpyi6QiGTHkwXcepMzP8hN7MkXSJ=Xnxn40VkRU9OXg@mail.gmail.com>
+In-Reply-To: <CAMuHMdWjpyi6QiGTHkwXcepMzP8hN7MkXSJ=Xnxn40VkRU9OXg@mail.gmail.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Wed, 8 Jul 2020 16:53:35 -0500
+Message-ID: <CAHCN7xJWbP16SA-Ok-5syNnqOZAt8OFJo2_rtg5VrNVsN2-eiQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: Introduce r8a774a1-beacon-rzg2m-kit
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Adam Ford-BE <aford@beaconembedded.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DP83869 is an Ethernet PHY, not a charger, so fix the documentation
-accordingly.
+On Mon, Jun 22, 2020 at 8:20 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Adam,
+>
+> Thanks for your patch!
 
-Fixes: 4d66c56f7efe ("dt-bindings: net: dp83869: Add TI dp83869 phy")
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
----
- Documentation/devicetree/bindings/net/ti,dp83869.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for the review.  :-)
 
-diff --git a/Documentation/devicetree/bindings/net/ti,dp83869.yaml b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
-index 71e90a3e4652..cf40b469c719 100644
---- a/Documentation/devicetree/bindings/net/ti,dp83869.yaml
-+++ b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
-@@ -24,7 +24,7 @@ description: |
-   conversions.  The DP83869HM can also support Bridge Conversion from RGMII to
-   SGMII and SGMII to RGMII.
- 
--  Specifications about the charger can be found at:
-+  Specifications about the Ethernet PHY can be found at:
-     http://www.ti.com/lit/ds/symlink/dp83869hm.pdf
- 
- properties:
--- 
-2.17.1
+>
+> On Wed, Jun 17, 2020 at 2:05 PM Adam Ford <aford173@gmail.com> wrote:
+> > Beacon EmebddedWorks, formerly Logic PD is introducing a new
+>
+> EmbeddedWorks
 
+(facepalm)  I feel stupid.
+
+>
+> > SOM and development kit based on the RZ/G2M SoC from Renesas.
+> >
+> > The SOM supports eMMC, WiFi and Bluetooth, along with a Cat-M1
+> > cellular radio.
+> >
+> > The Baseboard has Ethernet, USB, HDMI, stereo audio in and out,
+> > along with a vareity of push buttons and LED's.
+>
+> variety
+>
+> Are schematics for this kit available? That would make it easier to review
+> the DTS.
+
+As of right now, we don't have them available publicly.  If you're
+willing to sign an NDA, I might be able get you access to them.
+
+>
+> Please add the DTB to arch/arm64/boot/dts/renesas/Makefile, else it
+> won't be built :-)
+
+oops.
+
+>
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/renesas/beacon-renesom-baseboard.dtsi
+> > @@ -0,0 +1,733 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright 2020, Compass Electronics Group, LLC
+> > + */
+> > +
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +#include <dt-bindings/input/input.h>
+> > +#include <dt-bindings/clk/versaclock.h>
+>
+> This depends on "[PATCH V3 2/3] dt: Add additional option bindings for
+> IDT VersaClock", which hasn't been accepted yet, AFAIK.
+>
+> > +
+> > +/ {
+> > +       aliases {
+> > +               serial0 = &scif2;
+> > +               serial1 = &hscif0;
+> > +               serial2 = &hscif1;
+> > +               serial3 = &scif0;
+> > +               serial4 = &hscif2;
+> > +               serial5 = &scif5;
+> > +               spi0 = &msiof0;
+> > +               spi1 = &msiof1;
+> > +               spi2 = &msiof2;
+> > +               spi3 = &msiof3;
+>
+> Please drop the spiX aliases, as they are not needed.
+
+OK.
+>
+> > +               ethernet0 = &avb;
+> > +       };
+>
+> > +       leds {
+> > +               compatible = "gpio-leds";
+> > +               pinctrl-0 = <&led_pins>;
+> > +               pinctrl-names = "default";
+> > +
+> > +               led0 {
+> > +                       gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>;
+> > +                       label = "LED0";
+> > +                       linux,default-trigger = "heartbeat";
+> > +               };
+> > +               led1 {
+> > +                       gpios = <&gpio7 0 GPIO_ACTIVE_HIGH>;
+> > +                       label = "LED1";
+> > +                       linux,default-trigger = "heartbeat";
+> > +               };
+> > +               led2 {
+> > +                       gpios = <&gpio7 1 GPIO_ACTIVE_HIGH>;
+> > +                       label = "LED2";
+> > +                       linux,default-trigger = "heartbeat";
+> > +               };
+> > +               led3 {
+> > +                       gpios = <&gpio7 3 GPIO_ACTIVE_HIGH>;
+> > +                       label = "LED3";
+> > +                       linux,default-trigger = "heartbeat";
+>
+> Lots of heartbeats ;-)
+
+Yeah, I cut than down to one.  We don't have a dedicated plan for what
+they need to do yet.  :-)
+
+>
+> > +               };
+> > +       };
+>
+> > +&ehci0 {
+> > +       dr_mode = "otg";
+> > +       status = "okay";
+> > +       clocks = <&cpg CPG_MOD 703>, <&cpg CPG_MOD 704>, <&versaclock5 3>, <&versaclock6_bb 4>;
+>
+> What's the purpose of the 3rd and 4th clock?
+
+We added a versaclock to drive something else, but that other thing
+didn't request the clocks, so they didn't ever turn on.  This was bad
+hack to get something to turn them on.  We've revised the hardware and
+device tree to eliminate this.
+
+>
+> > +};
+> > +
+> > +&ehci1 {
+> > +       status = "okay";
+> > +       clocks = <&cpg CPG_MOD 703>, <&cpg CPG_MOD 704>, <&versaclock5 4>;
+>
+> What's the purpose of the 3rd clock?
+
+Same as above, and it'll be gone in V2 as well.
+>
+> > +};
+>
+> > +       msiof1_pins: msiof1 {
+> > +               groups = "msiof1_clk_g", "msiof1_rxd_g", "msiof1_txd_g";
+> > +               function = "msiof1";
+> > +       };
+>
+> What is msiof1 connected to?
+
+There is a GPIO header on the main board with a SPI connector, but
+nothing actually on the SPI bus.  We can remove this.
+
+>
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/renesas/beacon-renesom-som.dtsi
+>
+> > +       eeprom@50 {
+> > +               compatible = "microchip, at24c64", "atmel,24c64";
+>
+> Bogus space after the first comma.
+
+Noted.
+
+>
+> > +               pagesize = <32>;
+> > +               read-only;      /* Manufacturing EEPROM programmed at factory */
+> > +               reg = <0x50>;
+> > +       };
+>
+> > new file mode 100644
+> > index 000000000000..e7ed5d480618
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/renesas/r8a774a1-beacon-rzg2m-kit.dts
+> > @@ -0,0 +1,15 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright 2020, Compass Electronics Group, LLC
+> > + */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "r8a774a1.dtsi"
+> > +#include "beacon-renesom-som.dtsi"
+> > +#include "beacon-renesom-baseboard.dtsi"
+> > +
+> > +/ {
+> > +       model = "Beacon Embedded Works RZ/G2M Development Kit";
+> > +       compatible =    "beacon,beacon-rzg2m", "renesas,r8a774a1";
+> > +};
+>
+> Please include a patch to add "beacon,beacon-rzg2m" to
+> Documentation/devicetree/bindings/arm/renesas.yaml.
+
+OK.
+
+adam
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
