@@ -2,342 +2,114 @@ Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A551FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 05:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED63FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 06:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7980A20720
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 05:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C85A02078A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 06:36:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Nit0+vbj"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="N2FhsoIC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725446AbgGHFPX (ORCPT
+        id S1729658AbgGHGgm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 01:15:23 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:43055 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728792AbgGHFPW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 8 Jul 2020 01:15:22 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594185321; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=DqngTMN8bZvP5c/5P7DMgEaEbgXzsIHVVYA1hFd9HjI=; b=Nit0+vbjjRNNIWr0WN2SR8+vu4cuVHgwmImUd0VDMzpIHBFOrdzdHtIhEpfOB0qdZSbRbxJy
- dImm0T7cBGaBbHXPvRohWVsLOcxnArn/P/T3KVg/5YdNRH0WJ0SKNZYZ3PZsmtf9B7S3tCe8
- nGDZaqHgeYQ+oAC45EY0ZwWhJa4=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 5f055658c431f7323b62c50c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 08 Jul 2020 05:15:04
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 957FDC43395; Wed,  8 Jul 2020 05:15:04 +0000 (UTC)
-Received: from rohkumar-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rohitkr)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 946A2C433C8;
-        Wed,  8 Jul 2020 05:14:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 946A2C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
-From:   Rohit kumar <rohitkr@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
-        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
-        srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Ajit Pandey <ajitp@codeaurora.org>,
-        Rohit kumar <rohitkr@codeaurora.org>
-Subject: [RESEND][PATCH v3 7/8] ASoC: qcom: lpass-sc7180: Add platform driver for lpass audio
-Date:   Wed,  8 Jul 2020 10:44:46 +0530
-Message-Id: <1594185286-11323-1-git-send-email-rohitkr@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Wed, 8 Jul 2020 02:36:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60980 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbgGHGgm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 02:36:42 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6522BC08C5DC
+        for <devicetree@vger.kernel.org>; Tue,  7 Jul 2020 23:36:41 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id a14so14951363pfi.2
+        for <devicetree@vger.kernel.org>; Tue, 07 Jul 2020 23:36:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IV3+uveO4NWQ+DzEhA8aJUinLEWctsxMHdF7wTb5EsU=;
+        b=N2FhsoICJdMy7FvrW7irqCM5djNZYTzp5ZN2PuMmjGHtG/u/GIOXG8wdfg4sZ6I4Li
+         0irBmCfAbuNGuLR6fd1S/M3kzh0QdCGN2/cYrxYsyeGUEan9+vZU6fk5EQiLBbhsZ/zE
+         sddUxfGVpSxfTSHII2qjmiZR++iXoR/67soME=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IV3+uveO4NWQ+DzEhA8aJUinLEWctsxMHdF7wTb5EsU=;
+        b=GZBFnI8/GLpsMchiD4MwzAipM+9nBMwXz/zEz+JWJ5djWQugXHGGNy1HdQiAmz9mg9
+         iEOpHD1nLWxjKSo5lOe6odKaJWpyJa1cNHGvrdFycLxZm5M2xAnKjZ4km25oiJiriko0
+         z1D4dmlI9TxsYb4OH2JjyAuIjZEEY1yiLAYFQKVqYwDpWVwnqIZmr61Xj/s9s5wfWsXH
+         4Kcc6C+yHSd9NCx5SLaNvMLcAfbA6SKy3dmJ7GLqHq4DoVI7K11A7zHvQg1KLOqPNd2O
+         t2PO5qGvc2qCh3CGcakzOFl70BqR3s2M9Ko0xkSnVRrOl3WJ1UAgq3GLx5nQOJrZQmFx
+         wZQA==
+X-Gm-Message-State: AOAM532In7ee3wsIWPSG6Hre5xphOOp61WT8gDYDsx1FBBfQsOQ/nBpp
+        bhGQ1awQ8KwBtElbwiT5ewo2NQ==
+X-Google-Smtp-Source: ABdhPJyByhHKXVQ0vuN0I4Ok0LYHgprFA72fKsMPOHyOpv9xYFodg73sWexQTqunUCY12sbHAhyfmQ==
+X-Received: by 2002:a63:1a16:: with SMTP id a22mr25024136pga.142.1594190200909;
+        Tue, 07 Jul 2020 23:36:40 -0700 (PDT)
+Received: from localhost.localdomain ([2405:201:c809:c7d5:ade2:f5f3:8cc0:52f9])
+        by smtp.gmail.com with ESMTPSA id c12sm24587898pfn.162.2020.07.07.23.36.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 23:36:40 -0700 (PDT)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
+Cc:     Tom Cubie <tom@radxa.com>,
+        Suniel Mahesh <sunil@amarulasolutions.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v4 0/4] ARM: dts: rockchip: Radxa Rock Pi N8 initial support
+Date:   Wed,  8 Jul 2020 12:06:23 +0530
+Message-Id: <20200708063627.8365-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Ajit Pandey <ajitp@codeaurora.org>
+Rock Pi N8 is a Rockchip RK3288 based SBC, which has
+- VMARC RK3288 SOM (as per SMARC standard) from Vamrs.
+- Compatible carrier board from Radxa.
 
-Add platform driver for configuring sc7180 lpass core I2S and
-DMA configuration to support playback & capture to external codecs
-connected over primary & secondary MI2S interfaces.
+VMARC RK3288 SOM need to mount on top of dalang carrier
+board for making Rock PI N8 SBC.
 
-Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
-Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
----
-Resending to update Signed-off mail id.
+This series moved i2c2 into rk3399pro dtsi and rest are 
+similar to v3.
 
- sound/soc/qcom/Kconfig        |   5 +
- sound/soc/qcom/Makefile       |   2 +
- sound/soc/qcom/lpass-sc7180.c | 216 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 223 insertions(+)
- create mode 100644 sound/soc/qcom/lpass-sc7180.c
+Changes for v4:
+- move i2c2 from carrier board to rk3399pro dtsi
+Changes for v3:
+- move hym8563_int pin to rk3399pro dtsi
+Changes for v2:
+- add more trivial cleanups
+- update commit message
 
-diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
-index 0ea4cde..87bec7f 100644
---- a/sound/soc/qcom/Kconfig
-+++ b/sound/soc/qcom/Kconfig
-@@ -24,6 +24,11 @@ config SND_SOC_LPASS_APQ8016
- 	select SND_SOC_LPASS_CPU
- 	select SND_SOC_LPASS_PLATFORM
- 
-+config SND_SOC_LPASS_SC7180
-+	tristate
-+	select SND_SOC_LPASS_CPU
-+	select SND_SOC_LPASS_PLATFORM
-+
- config SND_SOC_STORM
- 	tristate "ASoC I2S support for Storm boards"
- 	depends on SND_SOC_QCOM
-diff --git a/sound/soc/qcom/Makefile b/sound/soc/qcom/Makefile
-index 41b2c7a..7972c94 100644
---- a/sound/soc/qcom/Makefile
-+++ b/sound/soc/qcom/Makefile
-@@ -4,11 +4,13 @@ snd-soc-lpass-cpu-objs := lpass-cpu.o
- snd-soc-lpass-platform-objs := lpass-platform.o
- snd-soc-lpass-ipq806x-objs := lpass-ipq806x.o
- snd-soc-lpass-apq8016-objs := lpass-apq8016.o
-+snd-soc-lpass-sc7180-objs := lpass-sc7180.o
- 
- obj-$(CONFIG_SND_SOC_LPASS_CPU) += snd-soc-lpass-cpu.o
- obj-$(CONFIG_SND_SOC_LPASS_PLATFORM) += snd-soc-lpass-platform.o
- obj-$(CONFIG_SND_SOC_LPASS_IPQ806X) += snd-soc-lpass-ipq806x.o
- obj-$(CONFIG_SND_SOC_LPASS_APQ8016) += snd-soc-lpass-apq8016.o
-+obj-$(CONFIG_SND_SOC_LPASS_SC7180) += snd-soc-lpass-sc7180.o
- 
- # Machine
- snd-soc-storm-objs := storm.o
-diff --git a/sound/soc/qcom/lpass-sc7180.c b/sound/soc/qcom/lpass-sc7180.c
-new file mode 100644
-index 00000000..dd85a97
---- /dev/null
-+++ b/sound/soc/qcom/lpass-sc7180.c
-@@ -0,0 +1,216 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+ *
-+ * lpass-sc7180.c -- ALSA SoC platform-machine driver for QTi LPASS
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <dt-bindings/sound/sc7180-lpass.h>
-+#include <sound/pcm.h>
-+#include <sound/soc.h>
-+
-+#include "lpass-lpaif-reg.h"
-+#include "lpass.h"
-+
-+static struct snd_soc_dai_driver sc7180_lpass_cpu_dai_driver[] = {
-+	[MI2S_PRIMARY] = {
-+		.id = MI2S_PRIMARY,
-+		.name = "Primary MI2S",
-+		.playback = {
-+			.stream_name = "Primary Playback",
-+			.formats	= SNDRV_PCM_FMTBIT_S16,
-+			.rates = SNDRV_PCM_RATE_48000,
-+			.rate_min	= 48000,
-+			.rate_max	= 48000,
-+			.channels_min	= 2,
-+			.channels_max	= 2,
-+		},
-+		.capture = {
-+			.stream_name = "Primary Capture",
-+			.formats = SNDRV_PCM_FMTBIT_S16,
-+			.rates = SNDRV_PCM_RATE_48000,
-+			.rate_min	= 48000,
-+			.rate_max	= 48000,
-+			.channels_min	= 2,
-+			.channels_max	= 2,
-+		},
-+		.probe	= &asoc_qcom_lpass_cpu_dai_probe,
-+		.ops    = &asoc_qcom_lpass_cpu_dai_ops,
-+	},
-+
-+	[MI2S_SECONDARY] = {
-+		.id = MI2S_SECONDARY,
-+		.name = "Secondary MI2S",
-+		.playback = {
-+			.stream_name = "Secondary Playback",
-+			.formats	= SNDRV_PCM_FMTBIT_S16,
-+			.rates = SNDRV_PCM_RATE_48000,
-+			.rate_min	= 48000,
-+			.rate_max	= 48000,
-+			.channels_min	= 2,
-+			.channels_max	= 2,
-+		},
-+		.probe	= &asoc_qcom_lpass_cpu_dai_probe,
-+		.ops    = &asoc_qcom_lpass_cpu_dai_ops,
-+	},
-+};
-+
-+static int sc7180_lpass_alloc_dma_channel(struct lpass_data *drvdata,
-+					   int direction)
-+{
-+	struct lpass_variant *v = drvdata->variant;
-+	int chan = 0;
-+
-+	if (direction == SNDRV_PCM_STREAM_PLAYBACK) {
-+		chan = find_first_zero_bit(&drvdata->dma_ch_bit_map,
-+					v->rdma_channels);
-+
-+		if (chan >= v->rdma_channels)
-+			return -EBUSY;
-+	} else {
-+		chan = find_next_zero_bit(&drvdata->dma_ch_bit_map,
-+					v->wrdma_channel_start +
-+					v->wrdma_channels,
-+					v->wrdma_channel_start);
-+
-+		if (chan >=  v->wrdma_channel_start + v->wrdma_channels)
-+			return -EBUSY;
-+	}
-+
-+	set_bit(chan, &drvdata->dma_ch_bit_map);
-+
-+	return chan;
-+}
-+
-+static int sc7180_lpass_free_dma_channel(struct lpass_data *drvdata, int chan)
-+{
-+	clear_bit(chan, &drvdata->dma_ch_bit_map);
-+
-+	return 0;
-+}
-+
-+static int sc7180_lpass_init(struct platform_device *pdev)
-+{
-+	struct lpass_data *drvdata = platform_get_drvdata(pdev);
-+	struct lpass_variant *variant = drvdata->variant;
-+	struct device *dev = &pdev->dev;
-+	int ret, i;
-+
-+	drvdata->clks = devm_kcalloc(dev, variant->num_clks,
-+				     sizeof(*drvdata->clks), GFP_KERNEL);
-+	drvdata->num_clks = variant->num_clks;
-+
-+	for (i = 0; i < drvdata->num_clks; i++)
-+		drvdata->clks[i].id = variant->clk_name[i];
-+
-+	ret = devm_clk_bulk_get(dev, drvdata->num_clks, drvdata->clks);
-+	if (ret) {
-+		dev_err(dev, "Failed to get clocks %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = clk_bulk_prepare_enable(drvdata->num_clks, drvdata->clks);
-+	if (ret) {
-+		dev_err(dev, "sc7180 clk_enable failed\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int sc7180_lpass_exit(struct platform_device *pdev)
-+{
-+	struct lpass_data *drvdata = platform_get_drvdata(pdev);
-+
-+	clk_bulk_disable_unprepare(drvdata->num_clks, drvdata->clks);
-+
-+	return 0;
-+}
-+
-+static struct lpass_variant sc7180_data = {
-+	.i2sctrl_reg_base	= 0x1000,
-+	.i2sctrl_reg_stride	= 0x1000,
-+	.i2s_ports		= 3,
-+	.irq_reg_base		= 0x9000,
-+	.irq_reg_stride		= 0x1000,
-+	.irq_ports		= 3,
-+	.rdma_reg_base		= 0xC000,
-+	.rdma_reg_stride	= 0x1000,
-+	.rdma_channels		= 5,
-+	.dmactl_audif_start	= 1,
-+	.wrdma_reg_base		= 0x18000,
-+	.wrdma_reg_stride	= 0x1000,
-+	.wrdma_channel_start	= 5,
-+	.wrdma_channels		= 4,
-+
-+	.loopback		= REG_FIELD_ID(0x1000, 17, 17, 3, 0x1000),
-+	.spken			= REG_FIELD_ID(0x1000, 16, 16, 3, 0x1000),
-+	.spkmode		= REG_FIELD_ID(0x1000, 11, 15, 3, 0x1000),
-+	.spkmono		= REG_FIELD_ID(0x1000, 10, 10, 3, 0x1000),
-+	.micen			= REG_FIELD_ID(0x1000, 9, 9, 3, 0x1000),
-+	.micmode		= REG_FIELD_ID(0x1000, 4, 8, 3, 0x1000),
-+	.micmono		= REG_FIELD_ID(0x1000, 3, 3, 3, 0x1000),
-+	.wssrc			= REG_FIELD_ID(0x1000, 2, 2, 3, 0x1000),
-+	.bitwidth		= REG_FIELD_ID(0x1000, 0, 0, 3, 0x1000),
-+
-+	.rdma_dyncclk		= REG_FIELD_ID(0xC000, 21, 21, 5, 0x1000),
-+	.rdma_bursten		= REG_FIELD_ID(0xC000, 20, 20, 5, 0x1000),
-+	.rdma_wpscnt		= REG_FIELD_ID(0xC000, 16, 19, 5, 0x1000),
-+	.rdma_intf		= REG_FIELD_ID(0xC000, 12, 15, 5, 0x1000),
-+	.rdma_fifowm		= REG_FIELD_ID(0xC000, 1, 5, 5, 0x1000),
-+	.rdma_enable		= REG_FIELD_ID(0xC000, 0, 0, 5, 0x1000),
-+
-+	.wrdma_dyncclk		= REG_FIELD_ID(0x18000, 22, 22, 4, 0x1000),
-+	.wrdma_bursten		= REG_FIELD_ID(0x18000, 21, 21, 4, 0x1000),
-+	.wrdma_wpscnt		= REG_FIELD_ID(0x18000, 17, 20, 4, 0x1000),
-+	.wrdma_intf		= REG_FIELD_ID(0x18000, 12, 16, 4, 0x1000),
-+	.wrdma_fifowm		= REG_FIELD_ID(0x18000, 1, 5, 4, 0x1000),
-+	.wrdma_enable		= REG_FIELD_ID(0x18000, 0, 0, 4, 0x1000),
-+
-+	.clk_name		= (const char*[]) {
-+				   "noc",
-+				   "audio-core",
-+				   "sysnoc_mport",
-+				},
-+	.num_clks		= 3,
-+	.dai_driver		= sc7180_lpass_cpu_dai_driver,
-+	.num_dai		= ARRAY_SIZE(sc7180_lpass_cpu_dai_driver),
-+	.dai_osr_clk_names      = (const char *[]) {
-+				   "mclk0",
-+				   "null",
-+				},
-+	.dai_bit_clk_names      = (const char *[]) {
-+				   "pri_ibit",
-+				   "sec_ibit",
-+				},
-+	.init			= sc7180_lpass_init,
-+	.exit			= sc7180_lpass_exit,
-+	.alloc_dma_channel	= sc7180_lpass_alloc_dma_channel,
-+	.free_dma_channel	= sc7180_lpass_free_dma_channel,
-+};
-+
-+static const struct of_device_id sc7180_lpass_cpu_device_id[] = {
-+	{.compatible = "qcom,lpass-cpu-sc7180", .data = &sc7180_data},
-+	{}
-+};
-+
-+static struct platform_driver sc7180_lpass_cpu_platform_driver = {
-+	.driver = {
-+		.name = "sc7180-lpass-cpu",
-+		.of_match_table = of_match_ptr(sc7180_lpass_cpu_device_id),
-+	},
-+	.probe = asoc_qcom_lpass_cpu_platform_probe,
-+	.remove = asoc_qcom_lpass_cpu_platform_probe,
-+};
-+
-+module_platform_driver(sc7180_lpass_cpu_platform_driver);
-+
-+MODULE_DESCRIPTION("SC7180 LPASS CPU DRIVER");
-+MODULE_LICENSE("GPL v2");
+Jagan Teki (4):
+  arm64: dts: rockchip: Trivial cleanups for RockPI N10
+  dt-bindings: arm: rockchip: Add Rock Pi N8 binding
+  ARM: dts: rockchip: Add VMARC RK3288 SOM initial support
+  ARM: dts: rockchip: Add Radxa Rock Pi N8 initial support
+
+ .../devicetree/bindings/arm/rockchip.yaml     |   6 +
+ arch/arm/boot/dts/Makefile                    |   1 +
+ arch/arm/boot/dts/rk3288-rock-pi-n8.dts       |  17 ++
+ arch/arm/boot/dts/rk3288-vmarc-som.dtsi       | 270 ++++++++++++++++++
+ .../dts/rockchip-radxa-dalang-carrier.dtsi    |  67 +++--
+ .../dts/rockchip/rk3399pro-rock-pi-n10.dts    |   2 +-
+ .../dts/rockchip/rk3399pro-vmarc-som.dtsi     |  98 ++++---
+ 7 files changed, 379 insertions(+), 82 deletions(-)
+ create mode 100644 arch/arm/boot/dts/rk3288-rock-pi-n8.dts
+ create mode 100644 arch/arm/boot/dts/rk3288-vmarc-som.dtsi
+
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
-is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.25.1
 
