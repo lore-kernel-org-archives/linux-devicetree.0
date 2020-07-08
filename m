@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21208C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55573C43446
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F02A820760
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D7AB20760
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:20:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730315AbgGHHUK (ORCPT
+        id S1730277AbgGHHUB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:20:10 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:47088 "EHLO
+        Wed, 8 Jul 2020 03:20:01 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:48860 "EHLO
         smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730244AbgGHHUK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 03:20:10 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.5077057|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.00542553-0.000588226-0.993986;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03307;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=33;RT=33;SR=0;TI=SMTPD_---.I-8lwqE_1594192774;
+        by vger.kernel.org with ESMTP id S1730244AbgGHHUA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 03:20:00 -0400
+X-Alimail-AntiSpam: AC=SUSPECT;BC=0.6548809|-1;BR=01201311R181b1;CH=blue;DM=|SUSPECT|false|;DS=CONTINUE|ham_system_inform|0.0515633-0.00127515-0.947162;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07381;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=33;RT=33;SR=0;TI=SMTPD_---.I-8lwqE_1594192774;
 Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I-8lwqE_1594192774)
           by smtp.aliyun-inc.com(10.147.40.26);
-          Wed, 08 Jul 2020 15:20:02 +0800
+          Wed, 08 Jul 2020 15:19:51 +0800
 From:   Frank Lee <frank@allwinnertech.com>
 To:     robh+dt@kernel.org, mripard@kernel.org, wens@csie.org,
         mturquette@baylibre.com, sboyd@kernel.org,
@@ -40,9 +40,9 @@ Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-pm@vger.kernel.org, huangshuosheng@allwinnertech.com,
         liyong@allwinnertech.com, Frank Lee <frank@allwinnertech.com>
-Subject: [PATCH v3 07/16] dt-bindings: thermal: sun8i: Add binding for A100's THS controller
-Date:   Wed,  8 Jul 2020 15:19:33 +0800
-Message-Id: <20200708071942.22595-8-frank@allwinnertech.com>
+Subject: [PATCH v3 03/16] dt-bindings: pinctrl: sunxi: Add A100 pinctrl bindings
+Date:   Wed,  8 Jul 2020 15:19:29 +0800
+Message-Id: <20200708071942.22595-4-frank@allwinnertech.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200708071942.22595-1-frank@allwinnertech.com>
 References: <20200708071942.22595-1-frank@allwinnertech.com>
@@ -53,44 +53,152 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a binding for A100's ths controller.
+Add device tree binding Documentation details for A100 pinctrl driver,
+whic has an r pin controller and a pin controller with more irq lines.
 
 Signed-off-by: Frank Lee <frank@allwinnertech.com>
-Reviewed-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- .../devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml       | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ .../pinctrl/allwinner,sun4i-a10-pinctrl.yaml       | 74 +++++++++++++---------
+ 1 file changed, 44 insertions(+), 30 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-index 8736926..9d40fc7 100644
---- a/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-+++ b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-@@ -17,6 +17,7 @@ properties:
-       - allwinner,sun8i-h3-ths
-       - allwinner,sun8i-r40-ths
-       - allwinner,sun50i-a64-ths
-+      - allwinner,sun50i-a100-ths
-       - allwinner,sun50i-h5-ths
-       - allwinner,sun50i-h6-ths
+diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
+index bfefd09..226aba0 100644
+--- a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
+@@ -48,6 +48,8 @@ properties:
+       - allwinner,sun9i-a80-r-pinctrl
+       - allwinner,sun50i-a64-pinctrl
+       - allwinner,sun50i-a64-r-pinctrl
++      - allwinner,sun50i-a100-pinctrl
++      - allwinner,sun50i-a100-r-pinctrl
+       - allwinner,sun50i-h5-pinctrl
+       - allwinner,sun50i-h6-pinctrl
+       - allwinner,sun50i-h6-r-pinctrl
+@@ -59,7 +61,7 @@ properties:
  
-@@ -61,7 +62,9 @@ allOf:
+   interrupts:
+     minItems: 1
+-    maxItems: 5
++    maxItems: 7
+     description:
+       One interrupt per external interrupt bank supported on the
+       controller, sorted by bank number ascending order.
+@@ -144,75 +146,87 @@ allOf:
+   # FIXME: We should have the pin bank supplies here, but not a lot of
+   # boards are defining it at the moment so it would generate a lot of
+   # warnings.
+-
+   - if:
        properties:
          compatible:
-           contains:
--            const: allwinner,sun50i-h6-ths
-+            enum:
-+              - allwinner,sun50i-a100-ths
-+              - allwinner,sun50i-h6-ths
+           enum:
+-            - allwinner,sun9i-a80-pinctrl
++            - allwinner,sun50i-a100-pinctrl
  
      then:
        properties:
-@@ -103,6 +106,7 @@ allOf:
-               - const: allwinner,sun8i-h3-ths
-               - const: allwinner,sun8i-r40-ths
-               - const: allwinner,sun50i-a64-ths
-+              - const: allwinner,sun50i-a100-ths
-               - const: allwinner,sun50i-h5-ths
-               - const: allwinner,sun50i-h6-ths
+         interrupts:
+-          minItems: 5
+-          maxItems: 5
++          minItems: 7
++          maxItems: 7
+ 
+     else:
+       if:
+         properties:
+           compatible:
+             enum:
+-              - allwinner,sun6i-a31-pinctrl
+-              - allwinner,sun6i-a31s-pinctrl
+-              - allwinner,sun50i-h6-pinctrl
++              - allwinner,sun9i-a80-pinctrl
+ 
+       then:
+         properties:
+           interrupts:
+-            minItems: 4
+-            maxItems: 4
++            minItems: 5
++            maxItems: 5
+ 
+       else:
+         if:
+           properties:
+             compatible:
+               enum:
+-                - allwinner,sun8i-a23-pinctrl
+-                - allwinner,sun8i-a83t-pinctrl
+-                - allwinner,sun50i-a64-pinctrl
+-                - allwinner,sun50i-h5-pinctrl
+-                - allwinner,suniv-f1c100s-pinctrl
++                - allwinner,sun6i-a31-pinctrl
++                - allwinner,sun6i-a31s-pinctrl
++                - allwinner,sun50i-h6-pinctrl
+ 
+         then:
+           properties:
+             interrupts:
+-              minItems: 3
+-              maxItems: 3
++              minItems: 4
++              maxItems: 4
+ 
+         else:
+           if:
+             properties:
+               compatible:
+                 enum:
+-                  - allwinner,sun6i-a31-r-pinctrl
+-                  - allwinner,sun8i-a33-pinctrl
+-                  - allwinner,sun8i-h3-pinctrl
+-                  - allwinner,sun8i-v3-pinctrl
+-                  - allwinner,sun8i-v3s-pinctrl
+-                  - allwinner,sun9i-a80-r-pinctrl
+-                  - allwinner,sun50i-h6-r-pinctrl
++                  - allwinner,sun8i-a23-pinctrl
++                  - allwinner,sun8i-a83t-pinctrl
++                  - allwinner,sun50i-a64-pinctrl
++                  - allwinner,sun50i-h5-pinctrl
++                  - allwinner,suniv-f1c100s-pinctrl
+ 
+           then:
+             properties:
+               interrupts:
+-                minItems: 2
+-                maxItems: 2
++                minItems: 3
++                maxItems: 3
+ 
+           else:
+-            properties:
+-              interrupts:
+-                minItems: 1
+-                maxItems: 1
++            if:
++              properties:
++                compatible:
++                  enum:
++                    - allwinner,sun6i-a31-r-pinctrl
++                    - allwinner,sun8i-a33-pinctrl
++                    - allwinner,sun8i-h3-pinctrl
++                    - allwinner,sun8i-v3-pinctrl
++                    - allwinner,sun8i-v3s-pinctrl
++                    - allwinner,sun9i-a80-r-pinctrl
++                    - allwinner,sun50i-h6-r-pinctrl
++
++            then:
++              properties:
++                interrupts:
++                  minItems: 2
++                  maxItems: 2
++
++            else:
++              properties:
++                interrupts:
++                  minItems: 1
++                  maxItems: 1
+ 
+ additionalProperties: false
  
 -- 
 1.9.1
