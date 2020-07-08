@@ -2,262 +2,113 @@ Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E8EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 08:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D22C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 08:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4F9C20DD4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 08:28:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F393B20772
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 08:52:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbgGHI2U (ORCPT
+        id S1728106AbgGHIwF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 04:28:20 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:41316 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727818AbgGHI2U (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 04:28:20 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07509368|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.546935-0.000464198-0.452601;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03309;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=10;RT=10;SR=0;TI=SMTPD_---.I-BVxka_1594196890;
-Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I-BVxka_1594196890)
-          by smtp.aliyun-inc.com(10.147.42.198);
-          Wed, 08 Jul 2020 16:28:14 +0800
-From:   Frank Lee <frank@allwinnertech.com>
-To:     mripard@kernel.org, wens@csie.org, robh+dt@kernel.org,
-        tiny.windzz@gmail.com
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, huangshuosheng@allwinnertech.com,
-        liyong@allwinnertech.com, Frank Lee <frank@allwinnertech.com>
-Subject: [PATCH v3 16/16] arm64: allwinner: A100: add support for Allwinner Perf1 board
-Date:   Wed,  8 Jul 2020 16:28:21 +0800
-Message-Id: <20200708082821.13188-1-frank@allwinnertech.com>
-X-Mailer: git-send-email 2.24.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Wed, 8 Jul 2020 04:52:05 -0400
+Received: from mx.socionext.com ([202.248.49.38]:18877 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727903AbgGHIwF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 8 Jul 2020 04:52:05 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 08 Jul 2020 17:52:03 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 77ADC60060;
+        Wed,  8 Jul 2020 17:52:03 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 8 Jul 2020 17:52:03 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id CEB341A0507;
+        Wed,  8 Jul 2020 17:52:02 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH] ARM: dts: uniphier: Add PCIe endpoint and PHY node for Pro5
+Date:   Wed,  8 Jul 2020 17:52:00 +0900
+Message-Id: <1594198320-28900-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A100 perf1 is an Allwinner A100-based SBC, with the following features:
+This adds PCIe endpoint controller and PHY nodes for Pro5 SoC,
+and also adds pinctrl node for PCIe.
 
-- 1GiB DDR3 DRAM
-- AXP803 PMIC
-- 2 USB 2.0 ports
-- MicroSD slot and on-board eMMC module
-- on-board Nand flash
-- ···
-
-Adds initial support for it, including UART and PMU.
-
-Signed-off-by: Frank Lee <frank@allwinnertech.com>
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 ---
- arch/arm64/boot/dts/allwinner/Makefile             |   1 +
- .../dts/allwinner/sun50i-a100-allwinner-perf1.dts  | 180 +++++++++++++++++++++
- 2 files changed, 181 insertions(+)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
+ arch/arm/boot/dts/uniphier-pinctrl.dtsi |  5 +++++
+ arch/arm/boot/dts/uniphier-pro5.dtsi    | 30 ++++++++++++++++++++++++++++++
+ 2 files changed, 35 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-index e4d3cd0..ab780db 100644
---- a/arch/arm64/boot/dts/allwinner/Makefile
-+++ b/arch/arm64/boot/dts/allwinner/Makefile
-@@ -14,6 +14,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinephone-1.1.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinetab.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-sopine-baseboard.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-teres-i.dtb
-+dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a100-allwinner-perf1.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-bananapi-m2-plus.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-bananapi-m2-plus-v1.2.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-emlid-neutis-n5-devboard.dtb
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts b/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
-new file mode 100644
-index 0000000..38621bb
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
-@@ -0,0 +1,180 @@
-+// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-+/*
-+ * Copyright (c) 2020 Frank Lee <frank@allwinnertech.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "sun50i-a100.dtsi"
-+
-+/{
-+	model = "Allwinner A100 Perf1";
-+	compatible = "allwinner,a100-perf1", "allwinner,sun50i-a100";
-+
-+	aliases {
-+		serial0 = &uart0;
+diff --git a/arch/arm/boot/dts/uniphier-pinctrl.dtsi b/arch/arm/boot/dts/uniphier-pinctrl.dtsi
+index bfdfb76..c0fd029 100644
+--- a/arch/arm/boot/dts/uniphier-pinctrl.dtsi
++++ b/arch/arm/boot/dts/uniphier-pinctrl.dtsi
+@@ -126,6 +126,11 @@
+ 		function = "nand";
+ 	};
+ 
++	pinctrl_pcie: pcie {
++		groups = "pcie";
++		function = "pcie";
 +	};
 +
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
+ 	pinctrl_sd: sd {
+ 		groups = "sd";
+ 		function = "sd";
+diff --git a/arch/arm/boot/dts/uniphier-pro5.dtsi b/arch/arm/boot/dts/uniphier-pro5.dtsi
+index feadb4a..3525125 100644
+--- a/arch/arm/boot/dts/uniphier-pro5.dtsi
++++ b/arch/arm/boot/dts/uniphier-pro5.dtsi
+@@ -613,6 +613,36 @@
+ 			};
+ 		};
+ 
++		pcie_ep: pcie-ep@66000000 {
++			compatible = "socionext,uniphier-pro5-pcie-ep",
++				     "snps,dw-pcie-ep";
++			status = "disabled";
++			reg-names = "dbi", "dbi2", "link", "addr_space";
++			reg = <0x66000000 0x1000>, <0x66001000 0x1000>,
++			      <0x66010000 0x10000>, <0x67000000 0x400000>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_pcie>;
++			clock-names = "gio", "link";
++			clocks = <&sys_clk 12>, <&sys_clk 24>;
++			reset-names = "gio", "link";
++			resets = <&sys_rst 12>, <&sys_rst 24>;
++			num-ib-windows = <16>;
++			num-ob-windows = <16>;
++			num-lanes = <4>;
++			phy-names = "pcie-phy";
++			phys = <&pcie_phy>;
++		};
 +
-+&pio {
-+	vcc-pb-supply = <&reg_dcdc1>;
-+	vcc-pc-supply = <&reg_eldo1>;
-+	vcc-pd-supply = <&reg_dcdc1>;
-+	vcc-pe-supply = <&reg_dldo2>;
-+	vcc-pf-supply = <&reg_dcdc1>;
-+	vcc-pg-supply = <&reg_dldo1>;
-+	vcc-ph-supply = <&reg_dcdc1>;
-+};
++		pcie_phy: phy@66038000 {
++			compatible = "socionext,uniphier-pro5-pcie-phy";
++			reg = <0x66038000 0x4000>;
++			#phy-cells = <0>;
++			clock-names = "gio", "link";
++			clocks = <&sys_clk 12>, <&sys_clk 24>;
++			reset-names = "gio", "link";
++			resets = <&sys_rst 12>, <&sys_rst 24>;
++		};
 +
-+&r_pio {
-+	/*
-+	 * FIXME: We can't add that supply for now since it would
-+	 * create a circular dependency between pinctrl, the regulator
-+	 * and the RSB Bus.
-+	 *
-+	 * vcc-pl-supply = <&reg_aldo3>;
-+	 */
-+};
-+
-+&r_i2c0 {
-+	status = "okay";
-+
-+	axp803: pmic@34 {
-+		compatible = "x-powers,axp803";
-+		reg = <0x34>;
-+		interrupt-parent = <&r_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+		x-powers,drive-vbus-en; /* set N_VBUSEN as output pin */
-+	};
-+};
-+
-+#include "axp803.dtsi"
-+
-+&ac_power_supply {
-+	status = "okay";
-+};
-+
-+&reg_aldo1 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-name = "vcc-pll-avcc";
-+};
-+
-+&reg_aldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-name = "vcc-dram-1";
-+};
-+
-+&reg_aldo3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-usb-pl";
-+};
-+
-+&reg_dcdc1 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-pc-io-usb-pd-emmc-nand-card";
-+};
-+
-+&reg_dcdc2 {
-+	regulator-always-on;
-+	/*
-+	 * FIXME: update min and max before support dvfs.
-+	 */
-+	regulator-min-microvolt = <500000>;
-+	regulator-max-microvolt = <1300000>;
-+	regulator-name = "vdd-cpux";
-+};
-+
-+/* DCDC3 is polyphased with DCDC2 */
-+
-+&reg_dcdc4 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <950000>;
-+	regulator-max-microvolt = <950000>;
-+	regulator-name = "vdd-sys-usb-dram";
-+};
-+
-+&reg_dcdc5 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1500000>;
-+	regulator-max-microvolt = <1500000>;
-+	regulator-name = "vcc-dram-2";
-+};
-+
-+&reg_dldo1 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-pg-dcxo-wifi";
-+};
-+
-+&reg_dldo2 {
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <2800000>;
-+	regulator-name = "vcc-pe-csi";
-+};
-+
-+&reg_dldo3 {
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "ldo-avdd-csi";
-+};
-+
-+&reg_dldo4 {
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <2800000>;
-+	regulator-name = "avcc-csi";
-+};
-+
-+&reg_eldo1 {
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-name = "vcc-pc-lvds-csi-efuse-emmc-nand";
-+};
-+
-+&reg_eldo2 {
-+	regulator-min-microvolt = <1200000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-name = "dvdd-csi";
-+};
-+
-+&reg_eldo3 {
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-name = "vcc-mipi-lcd";
-+};
-+
-+&reg_fldo1 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <900000>;
-+	regulator-max-microvolt = <900000>;
-+	regulator-name = "vdd-cpus-usb";
-+};
-+
-+&reg_ldo_io0 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-ctp";
-+	status = "okay";
-+};
-+
-+&reg_drivevbus {
-+	regulator-name = "usb0-vbus";
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pb_pins>;
-+	status = "okay";
-+};
+ 		nand: nand-controller@68000000 {
+ 			compatible = "socionext,uniphier-denali-nand-v5b";
+ 			status = "disabled";
 -- 
-1.9.1
+2.7.4
 
