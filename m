@@ -2,219 +2,184 @@ Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9388C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 12:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF2EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 13:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77A7920720
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 12:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C87EF20578
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 13:12:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="HEnbOYKo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N6WdZ4Kx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728965AbgGHMrH (ORCPT
+        id S1729016AbgGHNMH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 08:47:07 -0400
-Received: from mail-bn8nam12on2069.outbound.protection.outlook.com ([40.107.237.69]:6058
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728941AbgGHMrH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 8 Jul 2020 08:47:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EKLMUlmACno8RUItxpYLh1jOiR9r/CKdc3OM4N0m3T+rJU3uCYWSztTx8wPRMlmMCan076FHR0u07ELDDA/z180p93PYJ2hGy7a0+Rm/N8yFObL0R9r71ZmsJoJ+nL/Up/6x1sGsPJK+2ndXLycCXu04mSev9JYVJxc3G+hPkD11MCwoyKx6hSLg9jwlmTBBjXGl6ZYZ60HjppNXIFkbqo82lNYn/nwbMdefZIXiJmE9bo+1QXQkl7yCM+LdllUa1ywTLFVBX28tnYuEu03X4BToZgltJ60rxu8k6p0zGeGWrGJO7nsQn1QnmEIraZl0b9q4lyzarJAxoJmpJ2avmA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yNLYKUlvJ4ZMa9bOBdwSHfPbwd5Q/AnwQJ4LGeV4EDY=;
- b=M0WO+IeXgDB/44A8MK7d1Urgegs2kBy8eMp5Ry5imYneuaemEiVLBmkIvsjxy23EkOCbtZcZS3tIvdPm1n8EygNPqJ+BNBETuQB1ONFFSQQh97VqhSd9Skt/ATb+/q79jM4Cc2DKB0xKRkcNcn94CxYrWqpgJVRwvUhcuJb0sj1PDvDjf3ZjbA3PKYxI3e8sLHxlnk9c7tC17sZds/YCeBXXEdyhBU6UhXtNFXeUzRruVNb4dslsRgeJoMFZgJF9F7mXtUw9O7zSvSM7389kpB0uWEWkfCQD3eNP68qrBqzDF3ZxmqzCbB5XbN6uPHoNwNxF72H8BG1YBMuEPaLcJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Wed, 8 Jul 2020 09:12:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38178 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728997AbgGHNMG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 09:12:06 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62A70C08C5DC;
+        Wed,  8 Jul 2020 06:12:06 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id l12so50428165ejn.10;
+        Wed, 08 Jul 2020 06:12:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yNLYKUlvJ4ZMa9bOBdwSHfPbwd5Q/AnwQJ4LGeV4EDY=;
- b=HEnbOYKoRrqCl3LVmlvCi7xJBWGPDNZ/ueLwCPkLJbKdMqhLp5CkwdHJVFNJT9lZ/H8BcZMa6jBOXQWVUTXi52LJnqmhOu98w4JB6DDWsAiG2bFYDo7Avn0XIpYCTfhIiHiBElUBcp9syzkaiZP1bSLWbbKRTivnBQ6JFcD//X4=
-Received: from MN2PR01CA0034.prod.exchangelabs.com (2603:10b6:208:10c::47) by
- BYAPR02MB5367.namprd02.prod.outlook.com (2603:10b6:a03:62::21) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3153.28; Wed, 8 Jul 2020 12:47:02 +0000
-Received: from BL2NAM02FT043.eop-nam02.prod.protection.outlook.com
- (2603:10b6:208:10c:cafe::f0) by MN2PR01CA0034.outlook.office365.com
- (2603:10b6:208:10c::47) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.24 via Frontend
- Transport; Wed, 8 Jul 2020 12:47:02 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT043.mail.protection.outlook.com (10.152.77.95) with Microsoft SMTP
- Server id 15.20.3174.21 via Frontend Transport; Wed, 8 Jul 2020 12:47:02
- +0000
-Received: from [149.199.38.66] (port=53302 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1jt9S5-0000kz-0F; Wed, 08 Jul 2020 05:45:29 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1jt9Ta-0007Pk-3K; Wed, 08 Jul 2020 05:47:02 -0700
-Received: from xsj-pvapsmtp01 (xsj-smtp1.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 068CkxSB007612;
-        Wed, 8 Jul 2020 05:46:59 -0700
-Received: from [172.30.17.109]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1jt9TW-0007OH-Ji; Wed, 08 Jul 2020 05:46:58 -0700
-Subject: Re: [PATCH] arm64: dts: xilinx: Align IOMMU nodename with dtschema
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vz7GdsV60WlH5Tliab73oe6u2+cpaoKJTOFlduCSiWQ=;
+        b=N6WdZ4Kx0w7q7n14fzrZldnkCDBojmyIB33dJkkjLTrYxVi1aamp5PcMr+2CWXabJk
+         HBwjM3JGIqt9JWfZf26iTtcSEYrXuBb1TPpkRWubKSYCTgbCLjmHuaAWRWE0rg+Uhiuu
+         J6TTq/AKiqW2HgCYa7OlLk2z+WBH/Xe3cfLaWzE+6v0DM5eI/X39CcjwsYDW7COjwl5G
+         UagqdT7R0GRrxRnTPagrAuL8t50NxLI4qirEE/xJ6Dn7tpwTWNS9v0nMfaZbIhm+EfBo
+         HhPkCTjF93yYm1UD+UMrlIitS/HTmWBQiVSo32cTis/ksVLy+ivwSuYAAMW8bes6B/8I
+         5rlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vz7GdsV60WlH5Tliab73oe6u2+cpaoKJTOFlduCSiWQ=;
+        b=rsUd4nrsFcT26pm8/IFdZ8FQPbZDv7pEelJg5xThqC+it4bJ41jo+K+Xp/YcpjMnJp
+         zc4qp/7Q8SeHD0UfuldR2H0F/+p8YBW8HOnTJ5wEdD8LUBfx9eREyJWxoSMKM6eDNgph
+         ezZ4qolRf61TqnxRo8/eT/gR+bT+iEJP1fG9gnpg9LZqsZ9J1uj0+fI6atJ6PoVXSZ9Y
+         Xd9f3SsPxvZUY9P5vgvNUOmeGOny6R/MvtIgdEVRTzx2Lchk6sOzosGk13aRCBf0l610
+         jyYqKyLOTbo3/hN/alYJBmR7EIzesM7koOLOi0aXEV4fovY7MS7lPMZ0KKIOZ4yXtirI
+         ITgw==
+X-Gm-Message-State: AOAM533h/BT3r1KiCQIFRpqMxdr/xPV96pJ0493ShJId1h2pJb1IUtrf
+        qUgg4g7LWqgYjbnrXxVOEjA=
+X-Google-Smtp-Source: ABdhPJxmWsfNuB7+zH2r4j4krbcGCx7zNSf0Hm7D1ZaLCQMQOVsTVuqiiDkP6dzVFcG6356GMsuAIg==
+X-Received: by 2002:a17:906:2b50:: with SMTP id b16mr54062334ejg.410.1594213925047;
+        Wed, 08 Jul 2020 06:12:05 -0700 (PDT)
+Received: from localhost (124-155-N1.p43.customer.vsm.sh. [91.106.155.124])
+        by smtp.gmail.com with ESMTPSA id a8sm1981388ejp.51.2020.07.08.06.12.03
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 Jul 2020 06:12:03 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 12:38:36 +0200
+From:   Oliver Graute <oliver.graute@gmail.com>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Neil Armstrong <narmstrong@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Nava kishore Manne <nava.manne@xilinx.com>,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Kalyani Akula <kalyani.akula@xilinx.com>,
-        Manish Narani <manish.narani@xilinx.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200629081744.13916-1-krzk@kernel.org>
-From:   Michal Simek <michal.simek@xilinx.com>
-Autocrypt: addr=michals@xilinx.com; keydata=
- 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
- 0Z1MQlmNcq2bhOMzTxuXX2NDzUZs4aqEyZQ=
-Message-ID: <3c28bb72-35ae-6c76-6935-624e90316f71@xilinx.com>
-Date:   Wed, 8 Jul 2020 14:46:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCHv7 2/3] ARM: dts: Add support for i.MX6 UltraLite DART
+ Variscite Customboard
+Message-ID: <20200708103836.GA20983@portage>
+References: <1573586526-15007-1-git-send-email-oliver.graute@gmail.com>
+ <1573586526-15007-3-git-send-email-oliver.graute@gmail.com>
+ <CAOMZO5DX_-zSHJjDigK2c=dVLEMxvfd_dFCu=0fbyjht1gsr=A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200629081744.13916-1-krzk@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(346002)(376002)(396003)(39860400002)(136003)(46966005)(426003)(70586007)(82740400003)(186003)(70206006)(478600001)(336012)(82310400002)(31686004)(2906002)(2616005)(44832011)(31696002)(47076004)(81166007)(8936002)(4744005)(8676002)(26005)(36756003)(316002)(6666004)(356005)(83380400001)(9786002)(110136005)(5660300002)(921003)(43740500002);DIR:OUT;SFP:1101;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b3eb2e72-bef4-4cd2-44f8-08d8233d0319
-X-MS-TrafficTypeDiagnostic: BYAPR02MB5367:
-X-Microsoft-Antispam-PRVS: <BYAPR02MB5367B2CB75BFAACE8511A1DBC6670@BYAPR02MB5367.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:901;
-X-Forefront-PRVS: 04583CED1A
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: dsS53n26PAL0q6/CvezifkBmDARQjKb0fFhNj7oI31N0woksjyd9hM2zU13CGK7I5jI47SXcMrrQkCvw/uaIZcD73IDWnN+LgtHnX7CNMnA8/voo6vWEAfvc3FLGPPEVfOHyxyA8c04Q18BEhZXFpZxBqZmTSJBm6/dtdiF98vPLyNJdAZoB4/po2Mk4gGYMxXdzJ07QV4aUXCbG+YZbSoqwtlBGiGF+XvrmWXuivOwjqF2fR6Y2HrJaoIeYNXLa99PFwq6QciKzwfkAupTGtF9xgxggB3xCHcc3eUUjxQ4HW4BbkWj4kX7ZAOwmcrWb0YJK0wbVDx/HETJP+Iq8JhdgwteVpPmVYTWlSPB/sgU/PRsBf4bpjDAHxGf+Ry60MBJFO0L+xCtlgY9Ume/cenYsPuqGV123A4b/5IQtJ7xizESlsU8D2DSaVWEBRv0A
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2020 12:47:02.4810
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b3eb2e72-bef4-4cd2-44f8-08d8233d0319
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-AuthSource: BL2NAM02FT043.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5367
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5DX_-zSHJjDigK2c=dVLEMxvfd_dFCu=0fbyjht1gsr=A@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 29. 06. 20 10:17, Krzysztof Kozlowski wrote:
-> Fix dtschema validator warnings like:
->     smmu@fd800000: $nodename:0: 'smmu@fd800000' does not match '^iommu@[0-9a-f]*'
+On 12/11/19, Fabio Estevam wrote:
+> Hi Oliver,
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> On Tue, Nov 12, 2019 at 4:22 PM Oliver Graute <oliver.graute@gmail.com> wrote:
 > 
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> index 9174ddc76bdc..2b82206eba02 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> @@ -601,7 +601,7 @@
->  			power-domains = <&zynqmp_firmware PD_SD_1>;
->  		};
->  
-> -		smmu: smmu@fd800000 {
-> +		smmu: iommu@fd800000 {
->  			compatible = "arm,mmu-500";
->  			reg = <0x0 0xfd800000 0x0 0x20000>;
->  			status = "disabled";
+> > +&lcdif {
+> > +       pinctrl-names = "default";
+> > +       pinctrl-0 = <&pinctrl_lcdif>;
+> > +       display = <&display0>;
+> > +       status = "okay";
+> > +
+> > +       display0: display0 {
+> > +               bits-per-pixel = <16>;
+> > +               bus-width = <24>;
+> > +
+> > +               display-timings {
+> > +                       native-mode = <&timing0>;
+> > +                       timing0: timing0 {
+> > +                               clock-frequency =<35000000>;
+> > +                               hactive = <800>;
+> > +                               vactive = <480>;
+> > +                               hfront-porch = <40>;
+> > +                               hback-porch = <40>;
+> > +                               hsync-len = <48>;
+> > +                               vback-porch = <29>;
+> > +                               vfront-porch = <13>;
+> > +                               vsync-len = <3>;
+> > +                               hsync-active = <0>;
+> > +                               vsync-active = <0>;
+> > +                               de-active = <1>;
+> > +                               pixelclk-active = <0>;
+> > +                       };
+> > +               };
+> > +       };
+> > +};
 > 
+> You are using the deprecated bindings.
+> 
+> Please switch to the DRM bindings as stated at
+> Documentation/devicetree/bindings/display/mxsfb.txt
+> 
+> You should also add your panel to the simple panel driver.
 
-Applied.
 
-Thanks,
-Michal
+ok thx for you comments, coming back to this. I now added this to
+panel-simple.c. Is this the way to go?
+
+Best Regards,
+
+Oliver
+
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index c1374be..c2f20ac 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -3139,6 +3139,29 @@ static const struct panel_desc satoz_sat050at40h12r2 = {
+ 	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+ };
+ 
++static const struct display_timing sgd_gktw70sdad1sd_timing = {
++	.pixelclock = {35000000, 35000000, 35000000},
++	.hactive = { 800, 800, 800},
++	.hfront_porch = {39, 39, 39},
++	.hback_porch = {39, 39, 39},
++	.hsync_len = {48, 48, 48},
++	.vactive = {480, 480, 480},
++	.vfront_porch = {13, 13, 13},
++	.vback_porch = {29, 29, 29},
++	.vsync_len = {3, 3, 3},
++};
++
++static const struct panel_desc sgd_gktw70sdad1sd = {
++	.timings = &sgd_gktw70sdad1sd_timing,
++	.num_timings = 1,
++	.bpc = 8,
++	.size = {
++		.width = 153,
++		.height = 86,
++	},
++	.connector_type = DRM_MODE_CONNECTOR_DPI,
++};
++
+ static const struct drm_display_mode sharp_ld_d5116z01b_mode = {
+ 	.clock = 168480,
+ 	.hdisplay = 1920,
+@@ -3999,6 +4022,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "satoz,sat050at40h12r2",
+ 		.data = &satoz_sat050at40h12r2,
+ 	}, {
++		.compatible = "sgd,gktw70sdad1sd",
++		.data = &sgd_gktw70sdad1sd,
++	}, {
+ 		.compatible = "sharp,ld-d5116z01b",
