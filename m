@@ -2,81 +2,101 @@ Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC236C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA062C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B68F20656
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 846DD20656
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:42:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bu3mPkLE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbgGHHkv (ORCPT
+        id S1726777AbgGHHmS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:40:51 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:54134 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726482AbgGHHkv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 03:40:51 -0400
-Received: from [78.134.117.153] (port=41602 helo=melee.fritz.box)
-        by hostingweb31.netsons.net with esmtpa (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1jt4hE-0009Wd-DB; Wed, 08 Jul 2020 09:40:48 +0200
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-To:     linux-clk@vger.kernel.org
-Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
-        Adam Ford <aford173@gmail.com>
-Subject: [PATCH v2 2/4] MAINTAINERS: take over IDT VersaClock 5 clock driver
-Date:   Wed,  8 Jul 2020 09:40:33 +0200
-Message-Id: <20200708074035.31595-2-luca@lucaceresoli.net>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200708074035.31595-1-luca@lucaceresoli.net>
-References: <20200708074035.31595-1-luca@lucaceresoli.net>
+        Wed, 8 Jul 2020 03:42:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43066 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgGHHmR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 03:42:17 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AEBCC08C5DC;
+        Wed,  8 Jul 2020 00:42:17 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id u25so26326464lfm.1;
+        Wed, 08 Jul 2020 00:42:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UqAXpdSgwMr5Q0tv/rDA6Pc9wCXswpuopjQuL6uRINM=;
+        b=Bu3mPkLEMaqO4Ao7xP8BUA3KUqBXVNmZAf4DE4ZuJCF3le9zlxBbYGTFVOnmd1L7Ge
+         o3CuBI/Fg6pPzwYudny138p4gnQlfG0KKclS/FmeuUTLY/R+qoMao+9SOuNFo0QNclQd
+         P+zZbAS+8yjyZIOh3DRV25W+BdU4NgFkun/+Jwn/Lesl1jTkRF//OtKfWpUa4MqRpWih
+         H+fWTffi2g03HL9bc/yg+IJkYSzgMZ0nMQPXEhG/KRYTDi3NGh/AxEm8/2Jpbal+Ns0L
+         SLjnf33opsSSexQOM9aZePS7vlI9Vv/rQXpI7902AczGGBemS+vROO8Bb38mewSEQKtF
+         92VA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UqAXpdSgwMr5Q0tv/rDA6Pc9wCXswpuopjQuL6uRINM=;
+        b=jImctvpayxlDrOhbUrl6ogNO2kG5IUe8b2inAO54IYWq7tSGS+e0gBXwjNAvnGs6QR
+         J7t24a5ost/IOkaPPa1wJSh92jDHiwQ0oAmUsBbpHhnZs0igSOhm49DWXxCx1+TcucLQ
+         IKUedLtAYs1sClbo5l8ga4eBL/k7c8wozNnjRx1Iz0eptOqHGisaxiPV9fvnWB8J2ggp
+         WLggMejsOLCfbMP/l5C4F8D9reMOetVPIxLUmLpIHl18cRFa5o8Rn+cvLZ5OFUqWPRH/
+         FUOYNhIcTeKRCbMxeW9hgQLKF7lstNknK607E0moaaR/HlnnF3cM+zCeVUdH++lMpKYh
+         Bj2A==
+X-Gm-Message-State: AOAM530QidUVbsz1++fVgHy9jrE/8Qo3xyDF8IgU80DkKKFcCpVeAFTA
+        sddaYecVjQJW7GGtlh3IUsQ=
+X-Google-Smtp-Source: ABdhPJwWcVMnG0BK0zdFrpR01ehZhg+qE/pgvLQLB7GCjsQN9LYcX7Yc6M0UYTUGPwEweDgmhKgq+A==
+X-Received: by 2002:a19:c4a:: with SMTP id 71mr35844362lfm.27.1594194135590;
+        Wed, 08 Jul 2020 00:42:15 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
+        by smtp.googlemail.com with ESMTPSA id v12sm10131186lfp.12.2020.07.08.00.42.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jul 2020 00:42:15 -0700 (PDT)
+Subject: Re: [PATCH v2 0/9] Summit SMB3xx driver & device-tree
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        David Heidelberg <david@ixit.cz>
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Jonghwa Lee <jonghwa3.lee@samsung.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Vinay Simha BN <simhavcs@gmail.com>
+References: <20200607144113.10202-1-digetx@gmail.com>
+Message-ID: <8480ea98-778e-d919-18e3-ab04609af914@gmail.com>
+Date:   Wed, 8 Jul 2020 10:42:14 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200607144113.10202-1-digetx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Marek has been the primary developer of this driver (thanks!). Now as
-he is not working on it anymore he suggested I take over maintainership.
+07.06.2020 17:41, Dmitry Osipenko пишет:
+> We gathered existing patches, fixed and improved what we could and
+> final result is an working charging driver with device-tree support
+> for Nexus 7.
+> 
+> At this moment charging works with:
+>  - Nexus 7 2012 (grouper and tilapia)
+>  - Nexus 7 2013 (flo and deb)
+>  - ... and there are more devices equipped with these chargers.
 
-Cc: Marek Vasut <marek.vasut@gmail.com>
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hello Sebastian and everyone!
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 68f21d46614c..5aa16c245c63 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8324,7 +8324,7 @@ W:	https://github.com/o2genum/ideapad-slidebar
- F:	drivers/input/misc/ideapad_slidebar.c
- 
- IDT VersaClock 5 CLOCK DRIVER
--M:	Marek Vasut <marek.vasut@gmail.com>
-+M:	Luca Ceresoli <luca@lucaceresoli.net>
- S:	Maintained
- F:	drivers/clk/clk-versaclock5.c
- 
--- 
-2.27.0
-
+Sebastian, do you have any comments to this series? Will be nice to get
+some progress :)
