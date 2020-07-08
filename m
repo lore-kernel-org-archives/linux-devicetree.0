@@ -2,102 +2,425 @@ Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46837C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1AF9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 08:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FA1520672
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:56:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="biSWOVAj"
+	by mail.kernel.org (Postfix) with ESMTP id BC9202089D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 08:25:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbgGHH4T (ORCPT
+        id S1726144AbgGHIZF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:56:19 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:53373 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbgGHH4T (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 03:56:19 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 3F86923078;
-        Wed,  8 Jul 2020 09:56:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1594194976;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vkAaApfhcYQrTtXHZ3DFw7xulIHI0rpYQDvfWCBnZm0=;
-        b=biSWOVAjbZvthb+/2JqDpUf5TrG64sWC75SF1s1Z9kEyywzchrxU3Iqy6tXIkUZtVhIPg2
-        abaMsAwWt4rVPYHYCytnRxorHIp1FA2W3FP3QKMrp3C5gwwGssdcUV38GWIS2O6vsBwp7x
-        l58Gj90dSpH5zagXo6jLY7W8llV9JPY=
+        Wed, 8 Jul 2020 04:25:05 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:39931 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726081AbgGHIZF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 04:25:05 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436283|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_alarm|0.53251-0.0003719-0.467118;FP=14053800116389257455|2|1|16|0|-1|-1|-1;HT=e02c03279;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=10;RT=10;SR=0;TI=SMTPD_---.I-BSrqQ_1594196694;
+Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I-BSrqQ_1594196694)
+          by smtp.aliyun-inc.com(10.147.44.129);
+          Wed, 08 Jul 2020 16:24:59 +0800
+From:   Frank Lee <frank@allwinnertech.com>
+To:     robh+dt@kernel.org, mripard@kernel.org, wens@csie.org,
+        tiny.windzz@gmail.com
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, huangshuosheng@allwinnertech.com,
+        liyong@allwinnertech.com, Frank Lee <frank@allwinnertech.com>
+Subject: [PATCH v3 14/16] arm64: allwinner: A100: add the basical Allwinner A100 DTSI file
+Date:   Wed,  8 Jul 2020 16:25:05 +0800
+Message-Id: <20200708082505.28910-1-frank@allwinnertech.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 08 Jul 2020 09:56:13 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v5 13/13] arm64: dts: freescale: sl28: enable fan support
-In-Reply-To: <CACRpkdaPO7CGNrxmjL5QH1cxP5wqku1oMtQaQgJfeKiKqiGAOg@mail.gmail.com>
-References: <20200706175353.16404-1-michael@walle.cc>
- <20200706175353.16404-14-michael@walle.cc>
- <CACRpkdaPO7CGNrxmjL5QH1cxP5wqku1oMtQaQgJfeKiKqiGAOg@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.6
-Message-ID: <d9a53ed9254a136a7bc161c2a93045b0@walle.cc>
-X-Sender: michael@walle.cc
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Linus,
+Allwinner A100 is a new SoC with Cortex-A53 cores, this commit adds
+the basical DTSI file of it, including the clock, i2c, pins, sid, ths,
+nmi, and UART support.
 
-Am 2020-07-08 09:39, schrieb Linus Walleij:
-> just a drive-by-comment:
-> 
-> On Mon, Jul 6, 2020 at 7:57 PM Michael Walle <michael@walle.cc> wrote:
-> 
->> Add a pwm-fan mapped to the PWM channel 0 which is connected to the
->> fan connector of the carrier.
->> 
->> Signed-off-by: Michael Walle <michael@walle.cc>
-> 
-> If you have a cooling device like this, do you also have a temperature
-> sensor? In that case it makes sense to add a thermal zone and a
-> policy, such as I did for a device in
-> 6e97f0aaca4ca778905dd1dc667cbf379f4cae15
+Signed-off-by: Frank Lee <frank@allwinnertech.com>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi | 364 +++++++++++++++++++++++++
+ 1 file changed, 364 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
 
-Yep, the CPU and DDR controller have temperatur sensors and there are
-already thermal zones for them. We have the fan linked to the policies
-in our vendor DTS overlay. For now I didn't want to include that here,
-mainly because there are no labels in the fsl-ls1028a.dtsi for the
-thermal zone/cooling maps/trips. But this is still on my TODO, when
-this series finally make it into the kernel ;)
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
+new file mode 100644
+index 0000000..38359c4
+--- /dev/null
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
+@@ -0,0 +1,364 @@
++// SPDX-License-Identifier: (GPL-2.0+ or MIT)
++/*
++ * Copyright (c) 2020 Frank Lee <frank@allwinnertech.com>
++ */
++
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/sun50i-a100-ccu.h>
++#include <dt-bindings/clock/sun50i-a100-r-ccu.h>
++#include <dt-bindings/reset/sun50i-a100-ccu.h>
++#include <dt-bindings/reset/sun50i-a100-r-ccu.h>
++
++/ {
++	interrupt-parent = <&gic>;
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			compatible = "arm,armv8";
++			device_type = "cpu";
++			reg = <0x0>;
++			enable-method = "psci";
++		};
++
++		cpu@1 {
++			compatible = "arm,armv8";
++			device_type = "cpu";
++			reg = <0x1>;
++			enable-method = "psci";
++		};
++
++		cpu@2 {
++			compatible = "arm,armv8";
++			device_type = "cpu";
++			reg = <0x2>;
++			enable-method = "psci";
++		};
++
++		cpu@3 {
++			compatible = "arm,armv8";
++			device_type = "cpu";
++			reg = <0x3>;
++			enable-method = "psci";
++		};
++	};
++
++	psci {
++		compatible = "arm,psci-1.0";
++		method = "smc";
++	};
++
++	dcxo24M: dcxo24M-clk {
++		compatible = "fixed-clock";
++		clock-frequency = <24000000>;
++		clock-output-names = "dcxo24M";
++		#clock-cells = <0>;
++	};
++
++	iosc: internal-osc-clk {
++		compatible = "fixed-clock";
++		clock-frequency = <16000000>;
++		clock-accuracy = <300000000>;
++		clock-output-names = "iosc";
++		#clock-cells = <0>;
++	};
++
++	osc32k: osc32k-clk {
++		compatible = "fixed-clock";
++		clock-frequency = <32768>;
++		clock-output-names = "osc32k";
++		#clock-cells = <0>;
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts = <GIC_PPI 13
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
++			     <GIC_PPI 14
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
++			     <GIC_PPI 11
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
++			     <GIC_PPI 10
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
++	};
++
++	soc {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0 0 0x3fffffff>;
++
++		ccu: clock@3001000 {
++			compatible = "allwinner,sun50i-a100-ccu";
++			reg = <0x03001000 0x1000>;
++			clocks = <&dcxo24M>, <&osc32k>, <&iosc>;
++			clock-names = "hosc", "losc", "iosc";
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++		};
++
++		gic: interrupt-controller@3021000 {
++			compatible = "arm,gic-400";
++			reg = <0x03021000 0x1000>, <0x03022000 0x2000>,
++			      <0x03024000 0x2000>, <0x03026000 0x2000>;
++			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) |
++						 IRQ_TYPE_LEVEL_HIGH)>;
++			interrupt-controller;
++			#interrupt-cells = <3>;
++		};
++
++		sid@3006000 {
++			compatible = "allwinner,sun50i-a100-sid",
++				     "allwinner,sun50i-a64-sid";
++			reg = <0x03006000 0x1000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			ths_calibration: calib@14 {
++				reg = <0x14 8>;
++			};
++		};
++
++		pio: pinctrl@300b000 {
++			compatible = "allwinner,sun50i-a100-pinctrl";
++			reg = <0x0300b000 0x400>;
++			interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_APB1>, <&dcxo24M>, <&osc32k>;
++			clock-names = "apb", "hosc", "losc";
++			gpio-controller;
++			#gpio-cells = <3>;
++			interrupt-controller;
++			#interrupt-cells = <3>;
++
++			uart0_pb_pins: uart0-pb-pins {
++				pins = "PB9", "PB10";
++				function = "uart0";
++			};
++		};
++
++		uart0: serial@5000000 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x05000000 0x400>;
++			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			clocks = <&ccu CLK_BUS_UART0>;
++			resets = <&ccu RST_BUS_UART0>;
++			status = "disabled";
++		};
++
++		uart1: serial@5000400 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x05000400 0x400>;
++			interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			clocks = <&ccu CLK_BUS_UART1>;
++			resets = <&ccu RST_BUS_UART1>;
++			status = "disabled";
++		};
++
++		uart2: serial@5000800 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x05000800 0x400>;
++			interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			clocks = <&ccu CLK_BUS_UART2>;
++			resets = <&ccu RST_BUS_UART2>;
++			status = "disabled";
++		};
++
++		uart3: serial@5000c00 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x05000c00 0x400>;
++			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			clocks = <&ccu CLK_BUS_UART3>;
++			resets = <&ccu RST_BUS_UART3>;
++			status = "disabled";
++		};
++
++		uart4: serial@5001000 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x05001000 0x400>;
++			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			clocks = <&ccu CLK_BUS_UART4>;
++			resets = <&ccu RST_BUS_UART4>;
++			status = "disabled";
++		};
++
++		i2c0: i2c@5002000 {
++			compatible = "allwinner,sun50i-a100-i2c",
++				     "allwinner,sun6i-a31-i2c";
++			reg = <0x05002000 0x400>;
++			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_I2C0>;
++			resets = <&ccu RST_BUS_I2C0>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c1: i2c@5002400 {
++			compatible = "allwinner,sun50i-a100-i2c",
++				     "allwinner,sun6i-a31-i2c";
++			reg = <0x05002400 0x400>;
++			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_I2C1>;
++			resets = <&ccu RST_BUS_I2C1>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c2: i2c@5002800 {
++			compatible = "allwinner,sun50i-a100-i2c",
++				     "allwinner,sun6i-a31-i2c";
++			reg = <0x05002800 0x400>;
++			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_I2C2>;
++			resets = <&ccu RST_BUS_I2C2>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c3: i2c@5002c00 {
++			compatible = "allwinner,sun50i-a100-i2c",
++				     "allwinner,sun6i-a31-i2c";
++			reg = <0x05002c00 0x400>;
++			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_I2C3>;
++			resets = <&ccu RST_BUS_I2C3>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		ths: thermal-sensor@5070400 {
++			compatible = "allwinner,sun50i-a100-ths";
++			reg = <0x05070400 0x100>;
++			interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_THS>;
++			clock-names = "bus";
++			resets = <&ccu RST_BUS_THS>;
++			nvmem-cells = <&ths_calibration>;
++			nvmem-cell-names = "calibration";
++			#thermal-sensor-cells = <1>;
++		};
++
++		r_ccu: clock@7010000 {
++			compatible = "allwinner,sun50i-a100-r-ccu";
++			reg = <0x07010000 0x300>;
++			clocks = <&dcxo24M>, <&osc32k>, <&iosc>,
++				 <&ccu CLK_PLL_PERIPH0>;
++			clock-names = "hosc", "losc", "iosc", "pll-periph";
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++		};
++
++		r_intc: interrupt-controller@7010320 {
++			compatible = "allwinner,sun50i-a100-nmi",
++				     "allwinner,sun9i-a80-nmi";
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			reg = <0x07010320 0xc>;
++			interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		r_pio: pinctrl@7022000 {
++			compatible = "allwinner,sun50i-a100-r-pinctrl";
++			reg = <0x07022000 0x400>;
++			interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&r_ccu CLK_R_APB1>, <&dcxo24M>, <&osc32k>;
++			clock-names = "apb", "hosc", "losc";
++			gpio-controller;
++			#gpio-cells = <3>;
++			interrupt-controller;
++			#interrupt-cells = <3>;
++
++			r_i2c0_pins: r-i2c0-pins {
++				pins = "PL0", "PL1";
++				function = "s_i2c0";
++			};
++
++			r_i2c1_pins: r-i2c1-pins {
++				pins = "PL8", "PL9";
++				function = "s_i2c1";
++			};
++		};
++
++		r_uart: serial@7080000 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x07080000 0x400>;
++			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			clocks = <&r_ccu CLK_R_APB2_UART>;
++			resets = <&r_ccu RST_R_APB2_UART>;
++			status = "disabled";
++		};
++
++		r_i2c0: i2c@7081400 {
++			compatible = "allwinner,sun50i-a100-i2c",
++				     "allwinner,sun6i-a31-i2c";
++			reg = <0x07081400 0x400>;
++			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&r_ccu CLK_R_APB2_I2C0>;
++			resets = <&r_ccu RST_R_APB2_I2C0>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&r_i2c0_pins>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		r_i2c1: i2c@7081800 {
++			compatible = "allwinner,sun50i-a100-i2c",
++				     "allwinner,sun6i-a31-i2c";
++			reg = <0x07081800 0x400>;
++			interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&r_ccu CLK_R_APB2_I2C1>;
++			resets = <&r_ccu RST_R_APB2_I2C1>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&r_i2c1_pins>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++	};
++
++	thermal-zones {
++		cpu_thermal_zone {
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
++			thermal-sensors = <&ths 0>;
++		};
++
++		gpu_thermal_zone {
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
++			thermal-sensors = <&ths 1>;
++		};
++
++		ddr_thermal_zone {
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
++			thermal-sensors = <&ths 2>;
++		};
++	};
++};
+-- 
+1.9.1
 
--michael
