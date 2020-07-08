@@ -2,100 +2,74 @@ Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CE4C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 10:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3581BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 11:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F306E2067D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 10:57:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iYtUxZGo"
+	by mail.kernel.org (Postfix) with ESMTP id 11100206F6
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 11:09:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbgGHK56 (ORCPT
+        id S1728810AbgGHLJw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 06:57:58 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:63167 "EHLO m43-7.mailgun.net"
+        Wed, 8 Jul 2020 07:09:52 -0400
+Received: from elvis.franken.de ([193.175.24.41]:54234 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728358AbgGHK55 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 8 Jul 2020 06:57:57 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594205876; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=XH6S1HvL7E7qoaCSA4Oa2h+z4LdFnJsuWn/J2aZDrbY=; b=iYtUxZGoH8wFbVFRKZCE46dpz2TmrATa8EA02mQPemff78bZZGgdNgcwlVoK0yWu/sAxbg1g
- R5BoJAyOxY9xvzhn1YuAfw1vNtJ5qGgEIE2o40NRGS84pU9kqSInzLNW6slmhTXsnW04nQqH
- fuk22RqtUih+5IzwleR36qnRqAQ=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5f05a6b355886724ffb1047c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 08 Jul 2020 10:57:55
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 605EFC43391; Wed,  8 Jul 2020 10:57:55 +0000 (UTC)
-Received: from [192.168.0.129] (unknown [183.83.142.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rohitkr)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7C084C433C8;
-        Wed,  8 Jul 2020 10:57:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7C084C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
-Subject: Re: [RESEND][PATCH v3 7/8] ASoC: qcom: lpass-sc7180: Add platform
- driver for lpass audio
-To:     Mark Brown <broonie@kernel.org>
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        bgoswami@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com,
-        robh+dt@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org,
-        srinivas.kandagatla@linaro.org, Ajit Pandey <ajitp@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-References: <1594185286-11323-1-git-send-email-rohitkr@codeaurora.org>
- <20200708103301.GG4655@sirena.org.uk>
-From:   Rohit Kumar <rohitkr@codeaurora.org>
-Message-ID: <e7986896-3ffd-f565-7590-0638eb6f7641@codeaurora.org>
-Date:   Wed, 8 Jul 2020 16:27:43 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1728700AbgGHLJw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 8 Jul 2020 07:09:52 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jt7xR-0008Fx-00; Wed, 08 Jul 2020 13:09:45 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id A20CDC07CE; Wed,  8 Jul 2020 11:33:30 +0200 (CEST)
+Date:   Wed, 8 Jul 2020 11:33:30 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Huacai Chen <chenhc@lemote.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, Huacai Chen <chenhuacai@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH 1/2] MIPS: Loongson: Rename CPU device-tree binding
+Message-ID: <20200708093330.GA9458@alpha.franken.de>
+References: <1592201057-28151-1-git-send-email-chenhc@lemote.com>
 MIME-Version: 1.0
-In-Reply-To: <20200708103301.GG4655@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592201057-28151-1-git-send-email-chenhc@lemote.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, Jun 15, 2020 at 02:04:16PM +0800, Huacai Chen wrote:
+> Loongson-3A R1/R2/R3 and Loongson-3B R1/R2 use the same package naming
+> in dts, and Loongson-3A R4 will be different. In cpu.h the classic 64bit
+> Loongson processors are called Loongson64C (C for classic, pre Loongson-
+> 3A R4), and the new 64bit Loongson processors are called Loongson64G (G
+> for generic, Loongson-3A R4+). To keep consistency and make extensible,
+> we rename the classic "loongson3" prefix to "loongson64c", and the new
+> prefix for Loongson-3A R4+ will be "loongson64g".
+> 
+> Signed-off-by: Huacai Chen <chenhc@lemote.com>
+> ---
+>  Documentation/devicetree/bindings/mips/loongson/devices.yaml      | 8 ++++----
+>  arch/mips/boot/dts/loongson/Makefile                              | 2 +-
+>  .../loongson/{loongson3-package.dtsi => loongson64c-package.dtsi} | 0
+>  .../{loongson3_4core_rs780e.dts => loongson64c_4core_rs780e.dts}  | 2 +-
+>  .../{loongson3_8core_rs780e.dts => loongson64c_8core_rs780e.dts}  | 2 +-
+>  arch/mips/include/asm/mach-loongson64/builtin_dtbs.h              | 4 ++--
+>  arch/mips/loongson64/env.c                                        | 4 ++--
+>  7 files changed, 11 insertions(+), 11 deletions(-)
+>  rename arch/mips/boot/dts/loongson/{loongson3-package.dtsi => loongson64c-package.dtsi} (100%)
+>  rename arch/mips/boot/dts/loongson/{loongson3_4core_rs780e.dts => loongson64c_4core_rs780e.dts} (93%)
+>  rename arch/mips/boot/dts/loongson/{loongson3_8core_rs780e.dts => loongson64c_8core_rs780e.dts} (93%)
 
-On 7/8/2020 4:03 PM, Mark Brown wrote:
-> On Wed, Jul 08, 2020 at 10:44:46AM +0530, Rohit kumar wrote:
->> From: Ajit Pandey <ajitp@codeaurora.org>
->>
->> Add platform driver for configuring sc7180 lpass core I2S and
->> DMA configuration to support playback & capture to external codecs
->> connected over primary & secondary MI2S interfaces.
-> I only have patch 7 here, no other patches or cover letter.  What is
-> going on?
+applied to mips-next.
 
-Hello Mark,
-
-Sorry for the confusion. I posted complete patchset and resend only 7th 
-patch as
-
-it had invalid mail id in Signed-off. I should have probably updated it 
-in Patch v4.
-
-Thanks,
-
-Rohit
+Thomas.
 
 -- 
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the Linux Foundation.
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
