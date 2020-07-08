@@ -2,300 +2,375 @@ Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFB8C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 22:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C7BEC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 22:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50AB5205CB
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 22:00:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42D7120708
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 22:10:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FSZ4kOD5"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="XdRp39V5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725915AbgGHWAV (ORCPT
+        id S1725978AbgGHWKP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 18:00:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35396 "EHLO
+        Wed, 8 Jul 2020 18:10:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbgGHWAV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 18:00:21 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77BACC061A0B;
-        Wed,  8 Jul 2020 15:00:21 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id f23so205372iof.6;
-        Wed, 08 Jul 2020 15:00:21 -0700 (PDT)
+        with ESMTP id S1725903AbgGHWKP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 18:10:15 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 439A8C061A0B
+        for <devicetree@vger.kernel.org>; Wed,  8 Jul 2020 15:10:15 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id gc15so2543209pjb.0
+        for <devicetree@vger.kernel.org>; Wed, 08 Jul 2020 15:10:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1dm9fopH59m7S7eQAUq6ILS9BZLbK7hO0ptLNImspiw=;
-        b=FSZ4kOD5iztGBBT4v/fUuGD54HvbOfUFqzUiiPY7cV8CT7lDOY/5ZbcZB8q7WUo5a3
-         lZ3/sdE8aRCJme6boE8efsF3QEzXyarCDXfO0e14x3shkw3QryZd1U8R2mfsteAoc0jQ
-         YveJ1OF2IIYQhfiTpm7y+lqvJ1R1JC2S4Y1FVwwyqx0oQdOOpvpe2arcY0rSbt553ltH
-         YyITrE39lYPa3wluuyloH0PQ4PFdESz5P511weBowRUFNHV14hBbDAO7BT7c0RX4zFVS
-         NQaxuwT9HOQ8YSLKzhzCWP7NDMgmXX5H5/RLWOEV9ytUS4BJh7Ga1QRL8EwI320rFLUd
-         GSeQ==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from:cc;
+        bh=cvnpO/lN76o3kfdC8/AknlyYBHw0310QmPdpMmkhMiE=;
+        b=XdRp39V5zmc/zgy26BZC6ZWH6NqYvg+Jau4lgYA1sFJvC7cDjsBX0F+66xO9yvVE7+
+         RNowObHF62ScSSlFzEI4wXxZcWOC+W/hNciobjrwgX/ixA5VCZj8GRTYRO+KO65ZKOQE
+         fUwpYD+qiEBdTkdeiriRMt/dA5AFcK4xoBxpuVOIBLGZ3XklqPss8/nYkImJR5xo4BCr
+         GnlhY1MSSIzCwQw/Hp2RQkayVK9BHxn18KyuYSTvGHJjbvtdrVxlduPvj47i0wP4vmxz
+         55f+fkC56C4V2eFkuiz/MapxjLdiT+IdFag9lprR1lGHNewQ2r69L+aR8H6ivb5lQCDf
+         PVGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1dm9fopH59m7S7eQAUq6ILS9BZLbK7hO0ptLNImspiw=;
-        b=b5Tr2TpOGY4Dff1QpuDoFY+NRzjQMjmN+vMA7grMLjUyr9a8j99/ZHonEgw7R7I6x1
-         9t/BfYUVFThe11GBgxCZtKdb2DHpsaL6hgO2+eKgtxa+yS0a6gLYcFdNWv67CkwFq1Sj
-         EHQS3X3dZL+CVTSr5Ks79YPtMAPNSC6Wa+8+sChzIZGMIX3AZLyefTFaLksJK2wLa+L/
-         F6+dEtycTZ+B8JZYAbBywXAES7jCj8iHZwLzgyD/VEtEvM8tsDisxlpDP5QbVktSIXlL
-         ccJYKuqAYsMFrNt/fbv3mNGbZFkMksvL52jMqAnDcDz2WWKMJ/6HkPYFRIEHlLX2hLoH
-         jCSA==
-X-Gm-Message-State: AOAM532nhaq4xMmBBPVnVxT5z9j+5eEcEVlHdWOk4J4mZGe1WiRgNo0q
-        xWIW7c30d0wGoTFH5FkoT3UzsJQiMz3jVsGxxxg=
-X-Google-Smtp-Source: ABdhPJyoh0d9wURD64sg0uuWfKZCt4sXDw/ehJfVXl5gmBhAAM0rLTLbZ0qrhy8YThk79+3L4Uc/Wvk/bqEzoLvoN1Q=
-X-Received: by 2002:a02:b006:: with SMTP id p6mr66695797jah.45.1594245620497;
- Wed, 08 Jul 2020 15:00:20 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from:cc;
+        bh=cvnpO/lN76o3kfdC8/AknlyYBHw0310QmPdpMmkhMiE=;
+        b=emgLCr/EFGSbeT5RyytaG09C/6jlYHxipLIbb56yvubch4KKTpHocy1lhQBi2WGPwy
+         nDSCAIn7oi2Qa5XkRJOlHlmVNu2KIS7scx5YAZyuHaJPu7kHfvOQPFE/Hs0JRo29UK63
+         QBm8hPhzLWGZr7kS22Q+ctF6mDdmIK8HSA+QwOq++fjoArpInHFoJcqyrZlfrNzhtQWZ
+         05g7q7HzUMWdlnlqtsBcSwL56ecnBruWZ96VUm5jNxxhDi/AehZ6Hv4f81CTQqxWb/B+
+         KgeS2W2SeVAl/mQZKvEf8av7OZJlt7N/Lrk0mHUe+xCSeFR0QlO22Q2ygwY1D7VQTypD
+         VDdA==
+X-Gm-Message-State: AOAM531HKR/NcgRMAzqcpuPp2lKjbnxGwAQUmy2rN3ObOzUY3y5Fcn0j
+        6PNGxtel3ZLbRd347yruYt7FsQ==
+X-Google-Smtp-Source: ABdhPJyTfPC7cSfRp6kgPzbXYErF5ehSVjfacTOp1rrJ8SDJl4RoNdlWTm76mg1pYB1RkcSsvae9JA==
+X-Received: by 2002:a17:902:b78a:: with SMTP id e10mr52272949pls.34.1594246214584;
+        Wed, 08 Jul 2020 15:10:14 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id f6sm702202pfe.174.2020.07.08.15.10.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 15:10:13 -0700 (PDT)
+Message-ID: <5f064445.1c69fb81.6ed1e.259e@mx.google.com>
+Date:   Wed, 08 Jul 2020 15:10:13 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200617120510.25071-1-aford173@gmail.com> <CAMuHMdWjpyi6QiGTHkwXcepMzP8hN7MkXSJ=Xnxn40VkRU9OXg@mail.gmail.com>
- <CAHCN7xJWbP16SA-Ok-5syNnqOZAt8OFJo2_rtg5VrNVsN2-eiQ@mail.gmail.com>
-In-Reply-To: <CAHCN7xJWbP16SA-Ok-5syNnqOZAt8OFJo2_rtg5VrNVsN2-eiQ@mail.gmail.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Wed, 8 Jul 2020 17:00:09 -0500
-Message-ID: <CAHCN7xLygG5YRG0wt0b9JWW3PHDwMV_kiLRpJqPdSAx7gOoc9w@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: Introduce r8a774a1-beacon-rzg2m-kit
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Adam Ford-BE <aford@beaconembedded.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.8-rc4-61-gdcde237b9b0e
+X-Kernelci-Report-Type: bisect
+X-Kernelci-Tree: mainline
+X-Kernelci-Branch: master
+X-Kernelci-Lab-Name: lab-collabora
+Subject: mainline/master bisection: baseline.dmesg.crit on
+ qemu_arm-vexpress-a15
+To:     kernelci-results@groups.io,
+        Andre Przywara <andre.przywara@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>, gtucker@collabora.com
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Liviu Dudau <liviu.dudau@arm.com>, devicetree@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 4:53 PM Adam Ford <aford173@gmail.com> wrote:
->
-> On Mon, Jun 22, 2020 at 8:20 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> >
-> > Hi Adam,
-> >
-> > Thanks for your patch!
->
-> Thanks for the review.  :-)
->
-> >
-> > On Wed, Jun 17, 2020 at 2:05 PM Adam Ford <aford173@gmail.com> wrote:
-> > > Beacon EmebddedWorks, formerly Logic PD is introducing a new
-> >
-> > EmbeddedWorks
->
-> (facepalm)  I feel stupid.
->
-> >
-> > > SOM and development kit based on the RZ/G2M SoC from Renesas.
-> > >
-> > > The SOM supports eMMC, WiFi and Bluetooth, along with a Cat-M1
-> > > cellular radio.
-> > >
-> > > The Baseboard has Ethernet, USB, HDMI, stereo audio in and out,
-> > > along with a vareity of push buttons and LED's.
-> >
-> > variety
-> >
-> > Are schematics for this kit available? That would make it easier to review
-> > the DTS.
->
-> As of right now, we don't have them available publicly.  If you're
-> willing to sign an NDA, I might be able get you access to them.
->
-> >
-> > Please add the DTB to arch/arm64/boot/dts/renesas/Makefile, else it
-> > won't be built :-)
->
-> oops.
->
-> >
-> > > --- /dev/null
-> > > +++ b/arch/arm64/boot/dts/renesas/beacon-renesom-baseboard.dtsi
-> > > @@ -0,0 +1,733 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Copyright 2020, Compass Electronics Group, LLC
-> > > + */
-> > > +
-> > > +#include <dt-bindings/gpio/gpio.h>
-> > > +#include <dt-bindings/input/input.h>
-> > > +#include <dt-bindings/clk/versaclock.h>
-> >
-> > This depends on "[PATCH V3 2/3] dt: Add additional option bindings for
-> > IDT VersaClock", which hasn't been accepted yet, AFAIK.
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* This automated bisection report was sent to you on the basis  *
+* that you may be involved with the breaking commit it has      *
+* found.  No manual investigation has been done to verify it,   *
+* and the root cause of the problem may be somewhere else.      *
+*                                                               *
+* If you do send a fix, please include this trailer:            *
+*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+*                                                               *
+* Hope this helps!                                              *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-Geert,
+mainline/master bisection: baseline.dmesg.crit on qemu_arm-vexpress-a15
 
-I forgot to ask.  What is the protocol for something when new bindings
-have been accepted in one branch, but another branch where I want to
-reference them hasn't merged with the other branch?  I'd really like
-to get this board into the next kernel.  I could remove these
-references and the calling functions, but that may cause instability
-due to undefined behaviour of some of the versaclock functions because
-they are not programmed.
+Summary:
+  Start:      dcde237b9b0e Merge tag 'perf-tools-fixes-2020-07-07' of git:/=
+/git.kernel.org/pub/scm/linux/kernel/git/acme/linux
+  Plain log:  https://storage.kernelci.org/mainline/master/v5.8-rc4-61-gdcd=
+e237b9b0e/arm/vexpress_defconfig/gcc-8/lab-collabora/baseline-vexpress-v2p-=
+ca15-tc1.txt
+  HTML log:   https://storage.kernelci.org/mainline/master/v5.8-rc4-61-gdcd=
+e237b9b0e/arm/vexpress_defconfig/gcc-8/lab-collabora/baseline-vexpress-v2p-=
+ca15-tc1.html
+  Result:     38ac46002d1d arm: dts: vexpress: Move mcc node back into moth=
+erboard node
 
-However, I would rather have the board mostly work if it means getting
-it accepted into the kernel.  Beacon hasn't shipped any outside of the
-company yet, so I am not really worried about people seeing problems.
-If the board gets accepted without these, I could apply some 'fixes'
-at a late date to correct the undefined behavior.  Let me know what
-the best way to proceed should be, and I'll send a V2 patch.
+Checks:
+  revert:     PASS
+  verify:     PASS
 
-thank you,
+Parameters:
+  Tree:       mainline
+  URL:        https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linu=
+x.git
+  Branch:     master
+  Target:     qemu_arm-vexpress-a15
+  CPU arch:   arm
+  Lab:        lab-collabora
+  Compiler:   gcc-8
+  Config:     vexpress_defconfig
+  Test case:  baseline.dmesg.crit
 
-adam
-> >
-> > > +
-> > > +/ {
-> > > +       aliases {
-> > > +               serial0 = &scif2;
-> > > +               serial1 = &hscif0;
-> > > +               serial2 = &hscif1;
-> > > +               serial3 = &scif0;
-> > > +               serial4 = &hscif2;
-> > > +               serial5 = &scif5;
-> > > +               spi0 = &msiof0;
-> > > +               spi1 = &msiof1;
-> > > +               spi2 = &msiof2;
-> > > +               spi3 = &msiof3;
-> >
-> > Please drop the spiX aliases, as they are not needed.
->
-> OK.
-> >
-> > > +               ethernet0 = &avb;
-> > > +       };
-> >
-> > > +       leds {
-> > > +               compatible = "gpio-leds";
-> > > +               pinctrl-0 = <&led_pins>;
-> > > +               pinctrl-names = "default";
-> > > +
-> > > +               led0 {
-> > > +                       gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>;
-> > > +                       label = "LED0";
-> > > +                       linux,default-trigger = "heartbeat";
-> > > +               };
-> > > +               led1 {
-> > > +                       gpios = <&gpio7 0 GPIO_ACTIVE_HIGH>;
-> > > +                       label = "LED1";
-> > > +                       linux,default-trigger = "heartbeat";
-> > > +               };
-> > > +               led2 {
-> > > +                       gpios = <&gpio7 1 GPIO_ACTIVE_HIGH>;
-> > > +                       label = "LED2";
-> > > +                       linux,default-trigger = "heartbeat";
-> > > +               };
-> > > +               led3 {
-> > > +                       gpios = <&gpio7 3 GPIO_ACTIVE_HIGH>;
-> > > +                       label = "LED3";
-> > > +                       linux,default-trigger = "heartbeat";
-> >
-> > Lots of heartbeats ;-)
->
-> Yeah, I cut than down to one.  We don't have a dedicated plan for what
-> they need to do yet.  :-)
->
-> >
-> > > +               };
-> > > +       };
-> >
-> > > +&ehci0 {
-> > > +       dr_mode = "otg";
-> > > +       status = "okay";
-> > > +       clocks = <&cpg CPG_MOD 703>, <&cpg CPG_MOD 704>, <&versaclock5 3>, <&versaclock6_bb 4>;
-> >
-> > What's the purpose of the 3rd and 4th clock?
->
-> We added a versaclock to drive something else, but that other thing
-> didn't request the clocks, so they didn't ever turn on.  This was bad
-> hack to get something to turn them on.  We've revised the hardware and
-> device tree to eliminate this.
->
-> >
-> > > +};
-> > > +
-> > > +&ehci1 {
-> > > +       status = "okay";
-> > > +       clocks = <&cpg CPG_MOD 703>, <&cpg CPG_MOD 704>, <&versaclock5 4>;
-> >
-> > What's the purpose of the 3rd clock?
->
-> Same as above, and it'll be gone in V2 as well.
-> >
-> > > +};
-> >
-> > > +       msiof1_pins: msiof1 {
-> > > +               groups = "msiof1_clk_g", "msiof1_rxd_g", "msiof1_txd_g";
-> > > +               function = "msiof1";
-> > > +       };
-> >
-> > What is msiof1 connected to?
->
-> There is a GPIO header on the main board with a SPI connector, but
-> nothing actually on the SPI bus.  We can remove this.
->
-> >
-> > > --- /dev/null
-> > > +++ b/arch/arm64/boot/dts/renesas/beacon-renesom-som.dtsi
-> >
-> > > +       eeprom@50 {
-> > > +               compatible = "microchip, at24c64", "atmel,24c64";
-> >
-> > Bogus space after the first comma.
->
-> Noted.
->
-> >
-> > > +               pagesize = <32>;
-> > > +               read-only;      /* Manufacturing EEPROM programmed at factory */
-> > > +               reg = <0x50>;
-> > > +       };
-> >
-> > > new file mode 100644
-> > > index 000000000000..e7ed5d480618
-> > > --- /dev/null
-> > > +++ b/arch/arm64/boot/dts/renesas/r8a774a1-beacon-rzg2m-kit.dts
-> > > @@ -0,0 +1,15 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Copyright 2020, Compass Electronics Group, LLC
-> > > + */
-> > > +
-> > > +/dts-v1/;
-> > > +
-> > > +#include "r8a774a1.dtsi"
-> > > +#include "beacon-renesom-som.dtsi"
-> > > +#include "beacon-renesom-baseboard.dtsi"
-> > > +
-> > > +/ {
-> > > +       model = "Beacon Embedded Works RZ/G2M Development Kit";
-> > > +       compatible =    "beacon,beacon-rzg2m", "renesas,r8a774a1";
-> > > +};
-> >
-> > Please include a patch to add "beacon,beacon-rzg2m" to
-> > Documentation/devicetree/bindings/arm/renesas.yaml.
->
-> OK.
->
-> adam
-> >
-> > Gr{oetje,eeting}s,
-> >
-> >                         Geert
-> >
-> > --
-> > Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> >
-> > In personal conversations with technical people, I call myself a hacker. But
-> > when I'm talking to journalists I just say "programmer" or something like that.
-> >                                 -- Linus Torvalds
+Breaking commit found:
+
+---------------------------------------------------------------------------=
+----
+commit 38ac46002d1df5707566a73486452851341028d2
+Author: Andre Przywara <andre.przywara@arm.com>
+Date:   Wed Jun 3 17:22:37 2020 +0100
+
+    arm: dts: vexpress: Move mcc node back into motherboard node
+    =
+
+    Commit d9258898ad49 ("arm64: dts: arm: vexpress: Move fixed devices
+    out of bus node") moved the "mcc" DT node into the root node, because
+    it does not have any children using "reg" properties, so does violate
+    some dtc checks about "simple-bus" nodes.
+    =
+
+    However this broke the vexpress config-bus code, which walks up the
+    device tree to find the first node with an "arm,vexpress,site" property.
+    This gave the wrong result (matching the root node instead of the
+    motherboard node), so broke the clocks and some other devices for
+    VExpress boards.
+    =
+
+    Move the whole node back into its original position. This re-introduces
+    the dtc warning, but is conceptually the right thing to do. The dtc
+    warning seems to be overzealous here, there are discussions on fixing or
+    relaxing this check instead.
+    =
+
+    Link: https://lore.kernel.org/r/20200603162237.16319-1-andre.przywara@a=
+rm.com
+    Fixes: d9258898ad49 ("arm64: dts: vexpress: Move fixed devices out of b=
+us node")
+    Reported-and-tested-by: Guenter Roeck <linux@roeck-us.net>
+    Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+    Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+
+diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/ve=
+xpress-v2m-rs1.dtsi
+index e6308fb76183..a88ee5294d35 100644
+--- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
++++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+@@ -100,79 +100,6 @@
+ 		};
+ 	};
+ =
+
+-	mcc {
+-		compatible =3D "arm,vexpress,config-bus";
+-		arm,vexpress,config-bridge =3D <&v2m_sysreg>;
+-
+-		oscclk0 {
+-			/* MCC static memory clock */
+-			compatible =3D "arm,vexpress-osc";
+-			arm,vexpress-sysreg,func =3D <1 0>;
+-			freq-range =3D <25000000 60000000>;
+-			#clock-cells =3D <0>;
+-			clock-output-names =3D "v2m:oscclk0";
+-		};
+-
+-		v2m_oscclk1: oscclk1 {
+-			/* CLCD clock */
+-			compatible =3D "arm,vexpress-osc";
+-			arm,vexpress-sysreg,func =3D <1 1>;
+-			freq-range =3D <23750000 65000000>;
+-			#clock-cells =3D <0>;
+-			clock-output-names =3D "v2m:oscclk1";
+-		};
+-
+-		v2m_oscclk2: oscclk2 {
+-			/* IO FPGA peripheral clock */
+-			compatible =3D "arm,vexpress-osc";
+-			arm,vexpress-sysreg,func =3D <1 2>;
+-			freq-range =3D <24000000 24000000>;
+-			#clock-cells =3D <0>;
+-			clock-output-names =3D "v2m:oscclk2";
+-		};
+-
+-		volt-vio {
+-			/* Logic level voltage */
+-			compatible =3D "arm,vexpress-volt";
+-			arm,vexpress-sysreg,func =3D <2 0>;
+-			regulator-name =3D "VIO";
+-			regulator-always-on;
+-			label =3D "VIO";
+-		};
+-
+-		temp-mcc {
+-			/* MCC internal operating temperature */
+-			compatible =3D "arm,vexpress-temp";
+-			arm,vexpress-sysreg,func =3D <4 0>;
+-			label =3D "MCC";
+-		};
+-
+-		reset {
+-			compatible =3D "arm,vexpress-reset";
+-			arm,vexpress-sysreg,func =3D <5 0>;
+-		};
+-
+-		muxfpga {
+-			compatible =3D "arm,vexpress-muxfpga";
+-			arm,vexpress-sysreg,func =3D <7 0>;
+-		};
+-
+-		shutdown {
+-			compatible =3D "arm,vexpress-shutdown";
+-			arm,vexpress-sysreg,func =3D <8 0>;
+-		};
+-
+-		reboot {
+-			compatible =3D "arm,vexpress-reboot";
+-			arm,vexpress-sysreg,func =3D <9 0>;
+-		};
+-
+-		dvimode {
+-			compatible =3D "arm,vexpress-dvimode";
+-			arm,vexpress-sysreg,func =3D <11 0>;
+-		};
+-	};
+-
+ 	bus@8000000 {
+ 		motherboard-bus {
+ 			model =3D "V2M-P1";
+@@ -435,6 +362,79 @@
+ 						};
+ 					};
+ 				};
++
++				mcc {
++					compatible =3D "arm,vexpress,config-bus";
++					arm,vexpress,config-bridge =3D <&v2m_sysreg>;
++
++					oscclk0 {
++						/* MCC static memory clock */
++						compatible =3D "arm,vexpress-osc";
++						arm,vexpress-sysreg,func =3D <1 0>;
++						freq-range =3D <25000000 60000000>;
++						#clock-cells =3D <0>;
++						clock-output-names =3D "v2m:oscclk0";
++					};
++
++					v2m_oscclk1: oscclk1 {
++						/* CLCD clock */
++						compatible =3D "arm,vexpress-osc";
++						arm,vexpress-sysreg,func =3D <1 1>;
++						freq-range =3D <23750000 65000000>;
++						#clock-cells =3D <0>;
++						clock-output-names =3D "v2m:oscclk1";
++					};
++
++					v2m_oscclk2: oscclk2 {
++						/* IO FPGA peripheral clock */
++						compatible =3D "arm,vexpress-osc";
++						arm,vexpress-sysreg,func =3D <1 2>;
++						freq-range =3D <24000000 24000000>;
++						#clock-cells =3D <0>;
++						clock-output-names =3D "v2m:oscclk2";
++					};
++
++					volt-vio {
++						/* Logic level voltage */
++						compatible =3D "arm,vexpress-volt";
++						arm,vexpress-sysreg,func =3D <2 0>;
++						regulator-name =3D "VIO";
++						regulator-always-on;
++						label =3D "VIO";
++					};
++
++					temp-mcc {
++						/* MCC internal operating temperature */
++						compatible =3D "arm,vexpress-temp";
++						arm,vexpress-sysreg,func =3D <4 0>;
++						label =3D "MCC";
++					};
++
++					reset {
++						compatible =3D "arm,vexpress-reset";
++						arm,vexpress-sysreg,func =3D <5 0>;
++					};
++
++					muxfpga {
++						compatible =3D "arm,vexpress-muxfpga";
++						arm,vexpress-sysreg,func =3D <7 0>;
++					};
++
++					shutdown {
++						compatible =3D "arm,vexpress-shutdown";
++						arm,vexpress-sysreg,func =3D <8 0>;
++					};
++
++					reboot {
++						compatible =3D "arm,vexpress-reboot";
++						arm,vexpress-sysreg,func =3D <9 0>;
++					};
++
++					dvimode {
++						compatible =3D "arm,vexpress-dvimode";
++						arm,vexpress-sysreg,func =3D <11 0>;
++					};
++				};
+ 			};
+ 		};
+ 	};
+---------------------------------------------------------------------------=
+----
+
+
+Git bisection log:
+
+---------------------------------------------------------------------------=
+----
+git bisect start
+# good: [719fdd32921fb7e3208db8832d32ae1c2d68900f] afs: Fix storage of cell=
+ names
+git bisect good 719fdd32921fb7e3208db8832d32ae1c2d68900f
+# bad: [dcde237b9b0eb1d19306e6f48c0a4e058907619f] Merge tag 'perf-tools-fix=
+es-2020-07-07' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux
+git bisect bad dcde237b9b0eb1d19306e6f48c0a4e058907619f
+# bad: [442ad2254ac56b39870c0cfed96d500921fea5d5] perf record: Fix duplicat=
+ed sideband events with Intel PT system wide tracing
+git bisect bad 442ad2254ac56b39870c0cfed96d500921fea5d5
+# bad: [f7db192b2d71ea42627a32349d59a5f99f2aafcc] Merge tag 'arm-omap-fixes=
+-5.8-1' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
+git bisect bad f7db192b2d71ea42627a32349d59a5f99f2aafcc
+# good: [ae71d4bf0074a81cc04255c96e3de0a49b1d95fa] Merge tag 'perf-urgent-2=
+020-06-28' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+git bisect good ae71d4bf0074a81cc04255c96e3de0a49b1d95fa
+# good: [d528945d7762be94beca4c111bb95dcc9a9f39c0] Merge tag 'omap-for-v5.8=
+/fixes-rc1-signed' of git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/=
+linux-omap into arm/omap-fixes
+git bisect good d528945d7762be94beca4c111bb95dcc9a9f39c0
+# bad: [2596ce4b4ded685b67fed407aed2bfe6ebcc39cb] Merge tag 'arm-soc/for-5.=
+8/drivers-fixes' of https://github.com/Broadcom/stblinux into arm/fixes
+git bisect bad 2596ce4b4ded685b67fed407aed2bfe6ebcc39cb
+# bad: [0f77ce26ebcf6ea384421d2dd47b924b83649692] Revert "ARM: sti: Impleme=
+nt dummy L2 cache's write_sec"
+git bisect bad 0f77ce26ebcf6ea384421d2dd47b924b83649692
+# bad: [d68ec1644dd546851d651787a638aead32a60a6f] Merge tag 'juno-fix-5.8' =
+of git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux into ar=
+m/fixes
+git bisect bad d68ec1644dd546851d651787a638aead32a60a6f
+# bad: [38ac46002d1df5707566a73486452851341028d2] arm: dts: vexpress: Move =
+mcc node back into motherboard node
+git bisect bad 38ac46002d1df5707566a73486452851341028d2
+# first bad commit: [38ac46002d1df5707566a73486452851341028d2] arm: dts: ve=
+xpress: Move mcc node back into motherboard node
+---------------------------------------------------------------------------=
+----
