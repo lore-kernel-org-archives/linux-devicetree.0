@@ -2,134 +2,122 @@ Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA753C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 04:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7DDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 05:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A193020720
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 04:08:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4915E207BB
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 05:00:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Vv35PyX4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729105AbgGHEH5 (ORCPT
+        id S1728885AbgGHFAR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 00:07:57 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:45412 "EHLO
-        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1728401AbgGHEH4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 00:07:56 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id B3B8C20001F5;
-        Wed,  8 Jul 2020 12:07:54 +0800 (HKT)
-X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
-Received: from mail.gtsys.com.hk ([127.0.0.1])
-        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 0TXAqsA29Xuz; Wed,  8 Jul 2020 12:07:54 +0800 (HKT)
-Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 99462200E20A;
-        Wed,  8 Jul 2020 12:07:54 +0800 (HKT)
-Received: from armhf2.gtsys.com.hk (unknown [10.128.4.15])
-        by s01.gtsys.com.hk (Postfix) with ESMTP id 96052C01B68;
-        Wed,  8 Jul 2020 12:07:54 +0800 (HKT)
-Received: by armhf2.gtsys.com.hk (Postfix, from userid 1000)
-        id 91DF820031F; Wed,  8 Jul 2020 12:07:54 +0800 (HKT)
-From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
-To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Cc:     Jack Lo <jack.lo@gtsys.com.hk>, devicetree@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/2] devicetree: hwmon: shtc1: Add sensirion,shtc1.yaml
-Date:   Wed,  8 Jul 2020 12:07:47 +0800
-Message-Id: <20200708040748.9014-3-chris.ruehl@gtsys.com.hk>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200708040748.9014-1-chris.ruehl@gtsys.com.hk>
-References: <20200708040748.9014-1-chris.ruehl@gtsys.com.hk>
+        Wed, 8 Jul 2020 01:00:17 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4006 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728234AbgGHFAR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 01:00:17 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0552ab0001>; Tue, 07 Jul 2020 21:59:23 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 07 Jul 2020 22:00:17 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 07 Jul 2020 22:00:17 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jul
+ 2020 05:00:14 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 8 Jul 2020 05:00:14 +0000
+Received: from vdumpa-ubuntu.nvidia.com (Not Verified[172.17.173.140]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f0552de0001>; Tue, 07 Jul 2020 22:00:14 -0700
+From:   Krishna Reddy <vdumpa@nvidia.com>
+To:     <joro@8bytes.org>, <will@kernel.org>, <robin.murphy@arm.com>,
+        <robh+dt@kernel.org>, <treding@nvidia.com>, <jonathanh@nvidia.com>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <yhsu@nvidia.com>,
+        <snikam@nvidia.com>, <praithatha@nvidia.com>, <talho@nvidia.com>,
+        <bbiswas@nvidia.com>, <mperttunen@nvidia.com>,
+        <nicolinc@nvidia.com>, <bhuntsman@nvidia.com>,
+        <nicoleotsuka@gmail.com>, Krishna Reddy <vdumpa@nvidia.com>
+Subject: [PATCH v10 4/5] dt-bindings: arm-smmu: add binding for Tegra194 SMMU
+Date:   Tue, 7 Jul 2020 22:00:16 -0700
+Message-ID: <20200708050017.31563-5-vdumpa@nvidia.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200708050017.31563-1-vdumpa@nvidia.com>
+References: <20200708050017.31563-1-vdumpa@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594184363; bh=6CQp2EndGAsHY5pa6z4bimVuwFcu5YXxg7pdSknaz1U=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=Vv35PyX4GM09po/mN/t4So3jMjaV0A+3RTQXJ3prkzwKp7XHgrR4e9Ad98RkoB+xc
+         az4hnTtvvZJqavTVeg2DwtrS1bVOGirdyWWFYJHcZTSFTrYUZExLPYqjrWEGwgXcH3
+         6Ix182QGpDqQLbaM24LG/cPEeLQ0mTOT3ws5hNlLKkQa7IgBRd4BCPHI9aE9iRGYgk
+         2F8etHa/pdEv0bO9vVXDfAGf1jSfgEpWNiicQcYKhBN466PL81oHDI3DKEZ4tzdAoS
+         KXwNq8GRLdyQ4GLGr4/3pxNKKsRzNFm09wSdYdyKYpvZjVZ6yAIDhn0sLPpkxIl6pM
+         Y4R0F9Nf8DVYQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add documentation for the newly added DTS support in the shtc1 driver.
-To align with the drivers logic to have high precision by default
-a boolean sensirion,low_precision is used to switch to low precision.
+Add binding for NVIDIA's Tegra194 SoC SMMU.
 
-Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
 ---
- .../bindings/hwmon/sensirion,shtc1.yaml       | 60 +++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
+ .../devicetree/bindings/iommu/arm,smmu.yaml    | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml b/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
-new file mode 100644
-index 000000000000..6725a7b646b7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
-@@ -0,0 +1,60 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hwmon/sensirion,shtc1.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Docume=
+ntation/devicetree/bindings/iommu/arm,smmu.yaml
+index d7ceb4c34423..ac1f526c3424 100644
+--- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
++++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+@@ -38,6 +38,11 @@ properties:
+               - qcom,sc7180-smmu-500
+               - qcom,sdm845-smmu-500
+           - const: arm,mmu-500
++      - description: NVIDIA SoCs that program two ARM MMU-500s identically
++        items:
++          - enum:
++              - nvidia,tegra194-smmu
++          - const: nvidia,smmu-500
+       - items:
+           - const: arm,mmu-500
+           - const: arm,smmu-v2
+@@ -138,6 +143,19 @@ required:
+=20
+ additionalProperties: false
+=20
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - nvidia,tegra194-smmu
++    then:
++      properties:
++        reg:
++          minItems: 2
++          maxItems: 2
 +
-+title: Sensirion SHTC1 Humidity and Temperature Sensor IC
-+
-+maintainers:
-+  - chris.ruehl@gtsys.com.hk
-+
-+description: |
-+  The SHTC1, SHTW1 and SHTC3 are digital humidity and temperature sensor
-+  designed especially for battery-driven high-volume consumer electronics
-+  applications.
-+  For further information refere to Documentation/hwmon/shtc1.rst
-+
-+  This binding document describes the binding for the hardware monitor
-+  portion of the driver.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - sensirion,shtc1
-+      - sensirion,shtw1
-+      - sensirion,shtc3
-+
-+  reg:
-+    maxItems: 1
-+    description: I2C address 0x70
-+
-+  sensirion,blocking_io:
-+    $ref: /schemas/types.yaml#definitions/flag
-+    description:
-+      If set the i2c bus hold until measure finished.
-+
-+  sensirion,low_precision:
-+    $ref: /schemas/types.yaml#definitions/flag
-+    description:
-+      If set aquire data with low precision (not recommended).
-+      The driver aquire data with high precision by default.
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    i2c1 {
-+      status = "okay";
-+      clock-frequency = <400000>;
-+
-+      shtc3@70 {
-+        compatible = "sensirion,shtc3";
-+        reg = <0x70>
-+        sensirion,blocking_io;
-+        status = "okay";
-+      };
-+    };
-+...
--- 
-2.20.1
+ examples:
+   - |+
+     /* SMMU with stream matching or stream indexing */
+--=20
+2.26.2
 
