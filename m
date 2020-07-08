@@ -1,89 +1,178 @@
-Return-Path: <SRS0=wVrF=AS=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC8BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 23:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 876F7C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 00:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA8E02067D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jul 2020 23:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5623020773
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 00:25:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UStH1tT7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GLSrvlvI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbgGGXot (ORCPT
+        id S1729112AbgGHAZS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 19:44:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54132 "EHLO
+        Tue, 7 Jul 2020 20:25:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727945AbgGGXot (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 19:44:49 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 011DDC061755;
-        Tue,  7 Jul 2020 16:44:49 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id a11so29315635ilk.0;
-        Tue, 07 Jul 2020 16:44:48 -0700 (PDT)
+        with ESMTP id S1728208AbgGHAZR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 20:25:17 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA054C08C5DC;
+        Tue,  7 Jul 2020 17:25:16 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id 1so1456599pfn.9;
+        Tue, 07 Jul 2020 17:25:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=any76awIeW3xlZvb4nwSImkAjsux+Sq2tCYpwBJX9BI=;
-        b=UStH1tT7hvP7+piQ+yHe/AKxPI/qHV3oEDpUVwWNf3ToDXgdDhHCtf5bt7DNb444zn
-         G6PVJLM6e7k35DJpy7agidx6CelZVtbwSh67CcQTPVXmJ4q3m2ry1cDlU8lpX5rWVHAh
-         8gT8635sHVAAROIuNmQ9IhZgrt/sYZBY6JGs423PBOqDjaXMCbHvfF89EwodZ+olWdHK
-         vgmG8VN0oDCJH+s9aM281iwAsILE13ZtEDBEBcdJ7vqzIyyBmFFDJmHoGe4qVXPNgR7g
-         D42dfV5cQsqQevyEUZ1ji+0h+PbpqvB8Z+T1Bql4Gh98hWO7L6kL76lDdWyJI4yy4Egm
-         7QsA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MQus+ljnUwyp1pGiCkRRbhhBIjxiQT+G6Qrn+SpwtG0=;
+        b=GLSrvlvIvN69TV7OxBzuq9TjyN4gshB1BWT6HHdopqFR45I3v4adMYnXsG6If64dYS
+         YuHTDhcAQBnEbQB9pAXgUl6ghLSqOnm0TnXL0YI6+qY4wXmYcXwp01TJWCPNbAD6iBj+
+         VGc7bXfxzDvimXwwLpDAMBl4YIrXaDatxpZsG7p3PltoPZfgwKj5HXOEPNznNxK0Dp6K
+         0Xt4o4UsQ2l5N63MPnaSigl9FWNH7htK4Emo5oByUWoErbPuZ2UH20BbRatBhBFr69un
+         aHD4Fd7Ss8MAzsMadu4ZxeY53UEeqpBCfUAgQQOMO4Q/2pHWJ7Ca+vscusSu8glveb97
+         ZsBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=any76awIeW3xlZvb4nwSImkAjsux+Sq2tCYpwBJX9BI=;
-        b=Q7jxjX+xfKR4mKBz3z8tZLRIs62lbTOwkWbLB+IezX4zqxYzQAdIMYkb4DdeKaoAb4
-         XvN7DpEf9X/rkgqKXa6Rzw3SYqXmB1hF3C+6QDmt9UeI5KgvwslqSFfIaLkake9APXM6
-         LAbK3w4glfMzl8vUyr0iZEqmyOUF4btEGXY38HtFox98FA5qU1nrEFbIhgAxSt0eVris
-         DgXdwyhXNskt4bBIRiLDuXXapmFrMvB4RMY6+rEkkefIbjVm9ODgf+VqMGK28bqrZMIN
-         vgQzAQdGLEMSZHiKF0CfKa69edD59VpBgJbhgMAcKkLA1sW4TGA112C2Lenbtchf0E/5
-         c1AQ==
-X-Gm-Message-State: AOAM5321fmTLdAmKasu7BQM/CzJcZTQxwkZFYV4D+EjZZy/RMC6ZaBp5
-        OwIVbU29ONdiI2b9h2xzoq+dDC/T7ta4fjSWZBo=
-X-Google-Smtp-Source: ABdhPJwEjktwNVlPsmXvdpqovQ3yOZTuUIAXof4OW/HwZCafqEi9TLsvQi09qf6HOEaEH3w9CryVlA2QHCQbYrktRns=
-X-Received: by 2002:a05:6e02:cc4:: with SMTP id c4mr38956956ilj.69.1594165488124;
- Tue, 07 Jul 2020 16:44:48 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MQus+ljnUwyp1pGiCkRRbhhBIjxiQT+G6Qrn+SpwtG0=;
+        b=Gw+5XKy5eycObooJg9yUFEZOZNwRzNQj4qiZveVNhdnRXK28i4/kEL2EBHt8YT0ITD
+         AUfR8GyQef+ZGSlXH5TkWdnKIinz88VL1SmHF8GSxcHzcngOFmvmdQdWvZpKBMKUbyiH
+         Tv7xkSv6NkFGd2qtUP0P3OAuoy7Y+RfPwrYY0n6Ie1pRcbBkI5fYgqa/1lG6w3IIH2WD
+         qBPHAiFnIg4CRYHQTMVNngqNYM+WQuyqvUqUxklTN6Gzjk7GOYTSAzmmcRdIEtOjdPfS
+         5PYWc5HFN3yje27RpepJr5XQGBdPjvLdd8WebM/B7Kj5pA8GyRSKhN6l6YbWBTd+9BUW
+         IXJg==
+X-Gm-Message-State: AOAM531miJsB01Xxyip4dYD7bvIN+bxQvtSUoeVKQ9z8XzZPJWxx3I3Y
+        TpaCBbZonyShiCxLOt4RiEg=
+X-Google-Smtp-Source: ABdhPJxL/NWGL8FAk9m3PwPtuvoeV3KDtNMvJGoqbcr1lcb+MgvRB1ymTTcfvb646iznVwm3dA3FpA==
+X-Received: by 2002:a63:757:: with SMTP id 84mr47654007pgh.275.1594167916427;
+        Tue, 07 Jul 2020 17:25:16 -0700 (PDT)
+Received: from localhost.localdomain.com ([2605:e000:160b:911f:a2ce:c8ff:fe03:6cb0])
+        by smtp.gmail.com with ESMTPSA id v197sm12430651pfc.35.2020.07.07.17.25.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 17:25:15 -0700 (PDT)
+From:   Chris Healy <cphealy@gmail.com>
+To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, stefan@agner.ch,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, andrew@lunn.ch
+Cc:     Chris Healy <cphealy@gmail.com>
+Subject: [PATCH v2] ARM: dts: ZII: update MDIO speed and preamble
+Date:   Tue,  7 Jul 2020 17:25:00 -0700
+Message-Id: <20200708002500.4563-1-cphealy@gmail.com>
+X-Mailer: git-send-email 2.21.3
 MIME-Version: 1.0
-References: <20200616155613.121242-1-daniele.alessandrelli@linux.intel.com>
- <CABb+yY0eUG=bxrQHP9-5gHk7SYF=c+EE+0LGKhnpxgfr078n6w@mail.gmail.com> <08b2713a6f87f78746c22e7168f4813eb753bb0e.camel@linux.intel.com>
-In-Reply-To: <08b2713a6f87f78746c22e7168f4813eb753bb0e.camel@linux.intel.com>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Tue, 7 Jul 2020 18:44:37 -0500
-Message-ID: <CABb+yY1_BjyL=oeYq_P++SjNnECq=nfP-CX5dENLB5oLkNjVxQ@mail.gmail.com>
-Subject: Re: [PATCH 0/7] Add initial Keem Bay SoC / Board support
-To:     Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Paul Murphy <paul.j.murphy@intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Daniele Alessandrelli <daniele.alessandrelli@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 4:18 PM Daniele Alessandrelli
-<daniele.alessandrelli@linux.intel.com> wrote:
+Update MDIO configuration with ZII devices to fully utilize
+MDIO endpoint capabilities.  All devices support 12.5MHz clock and
+don't require MDIO preable.
 
-> Just one question: should I remove the mailbox and scmi nodes from the
-> soc DT or can I keep them there even if the mailbox driver is not
-> available yet?
->
-A device node can not be merged before its dt-bindings are.
+Signed-off-by: Chris Healy <cphealy@gmail.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+---
+v2:
+- Fix subject line to reference ZII:
+- Get rid of "=<1>;" from suppress-preamble lines
+
+ arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi   | 2 ++
+ arch/arm/boot/dts/vf610-zii-cfu1.dts      | 2 ++
+ arch/arm/boot/dts/vf610-zii-dev.dtsi      | 2 ++
+ arch/arm/boot/dts/vf610-zii-spb4.dts      | 2 ++
+ arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts  | 2 ++
+ arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts | 2 ++
+ 6 files changed, 12 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+index 20350e803377..58cc421042e1 100644
+--- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+@@ -720,6 +720,8 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		status = "okay";
++		suppress-preamble;
++		clock-frequency = <12500000>;
+ 
+ 		switch: switch@0 {
+ 			compatible = "marvell,mv88e6085";
+diff --git a/arch/arm/boot/dts/vf610-zii-cfu1.dts b/arch/arm/boot/dts/vf610-zii-cfu1.dts
+index ce1920c052fc..c27cacbe6a73 100644
+--- a/arch/arm/boot/dts/vf610-zii-cfu1.dts
++++ b/arch/arm/boot/dts/vf610-zii-cfu1.dts
+@@ -159,6 +159,8 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		status = "okay";
++		suppress-preamble;
++		clock-frequency = <12500000>;
+ 
+ 		switch0: switch0@0 {
+ 			compatible = "marvell,mv88e6085";
+diff --git a/arch/arm/boot/dts/vf610-zii-dev.dtsi b/arch/arm/boot/dts/vf610-zii-dev.dtsi
+index 95d0060fb56c..9694d3b53607 100644
+--- a/arch/arm/boot/dts/vf610-zii-dev.dtsi
++++ b/arch/arm/boot/dts/vf610-zii-dev.dtsi
+@@ -138,6 +138,8 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		status = "okay";
++		suppress-preamble;
++		clock-frequency = <12500000>;
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/vf610-zii-spb4.dts b/arch/arm/boot/dts/vf610-zii-spb4.dts
+index 55b4201e27f6..d2ad07ed5318 100644
+--- a/arch/arm/boot/dts/vf610-zii-spb4.dts
++++ b/arch/arm/boot/dts/vf610-zii-spb4.dts
+@@ -120,6 +120,8 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		status = "okay";
++		suppress-preamble;
++		clock-frequency = <12500000>;
+ 
+ 		switch0: switch0@0 {
+ 			compatible = "marvell,mv88e6190";
+diff --git a/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts b/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
+index a6c22a79779e..0bb3dcff0b79 100644
+--- a/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
++++ b/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
+@@ -106,6 +106,8 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		status = "okay";
++		suppress-preamble;
++		clock-frequency = <12500000>;
+ 
+ 		switch0: switch0@0 {
+ 			compatible = "marvell,mv88e6190";
+diff --git a/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts b/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
+index 3d05c894bdc0..e12e11805b71 100644
+--- a/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
++++ b/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
+@@ -134,6 +134,8 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		status = "okay";
++		suppress-preamble;
++		clock-frequency = <12500000>;
+ 
+ 		switch0: switch0@0 {
+ 			compatible = "marvell,mv88e6190";
+-- 
+2.21.3
+
