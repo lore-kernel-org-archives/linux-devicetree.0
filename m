@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6895EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 06:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79ED3C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 06:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CBF9206E2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 06:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5544F206E2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 06:36:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="dZbc2VWp"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="hdYrRret"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729681AbgGHGgr (ORCPT
+        id S1729381AbgGHGgx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 02:36:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60996 "EHLO
+        Wed, 8 Jul 2020 02:36:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729679AbgGHGgr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 02:36:47 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 378E6C08C5DC
-        for <devicetree@vger.kernel.org>; Tue,  7 Jul 2020 23:36:47 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id k5so1904999plk.13
-        for <devicetree@vger.kernel.org>; Tue, 07 Jul 2020 23:36:47 -0700 (PDT)
+        with ESMTP id S1728544AbgGHGgw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 02:36:52 -0400
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DB80C08C5DC
+        for <devicetree@vger.kernel.org>; Tue,  7 Jul 2020 23:36:52 -0700 (PDT)
+Received: by mail-pg1-x533.google.com with SMTP id k27so5105518pgm.2
+        for <devicetree@vger.kernel.org>; Tue, 07 Jul 2020 23:36:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=LNhgJ2q2uo48GOrk8hWiL3C46b1eONoSiPmpkt6Yxqw=;
-        b=dZbc2VWp/X3vGNcaLW/o8W0lW4rDN3wY9bcdMM1u5qQCrqSwIUBGoJrzl4caFhCSDy
-         GHVYNYatnSN7XG93wkiOpULrChLB+gXxHqfej/iOcDY8+C8srjCdvyarUUIeai5xhw/n
-         1l9CwQVBGlPTB60g4C21IR/+hLGcC30+z2aXE=
+        bh=vTSYVuagsPVJ3arZC2dLSrcbPR3/Uq07aVivmBZDIrY=;
+        b=hdYrRretcQ5LdTIJlE2lDzR63sUOm/1OPnTs+ON1QbpLSTYnuI4WjQvyBEbw9d21BI
+         rAZ1dHBNjIk5h1au77R175NZfCr+riXzTQYuFugu8HZ3uNnRFxc9eeUevwBLqRvZyG6s
+         tVQ3tZB09roGkq5QU0/SdsRuAj3c7PgofGPq4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LNhgJ2q2uo48GOrk8hWiL3C46b1eONoSiPmpkt6Yxqw=;
-        b=AvpaFDksKfI67+MZ8FZ3nvGhfj85o7Gx34HAej5tvTnq5Gu6/GClyNxpe2pZydGrOp
-         zsNCy2yxFpRlgd9bwhvNBXNp/UdZ+LzoGX25b+bfH/2e/yyOmfAmAt1Wfv3TEjmM8WO/
-         WZtn5x/cuBJHPCL//Ui9akzcIRBHFmlePzmnPSJcZb+SotzKPrDeMqkPrzeNq0ayRo/o
-         cq2uebam3dAKE6X+ej2hLygsoVBAWmD0AhoLU4DI6IZ0AzLbnVCrdc3J0ul6X4BcKT/f
-         Ev7TcxCm0+HewwntjPD1lbKT3TosMZES9xJQ9OcAEGhrUmPxbV1mqwu2W5ckEtFJtItp
-         MqGg==
-X-Gm-Message-State: AOAM530sxYXHWQOEiFWnaZCwX3nLZWn2VWB1J0/oenZscNTQPQBHX7qQ
-        EWpKS9lSa0756SIbvvsjGkLBnA==
-X-Google-Smtp-Source: ABdhPJx75FE4alr260iEWmhSn8nqkTBTYak3jy/uNiGx58aha5IXimmuOZJ+lrt3YWU8gnrNm+YG2A==
-X-Received: by 2002:a17:90a:8c0e:: with SMTP id a14mr7974542pjo.75.1594190206594;
-        Tue, 07 Jul 2020 23:36:46 -0700 (PDT)
+        bh=vTSYVuagsPVJ3arZC2dLSrcbPR3/Uq07aVivmBZDIrY=;
+        b=qWZkvN0qzp3cekqLHMt4mZG6A0AN5oE87C2b7fEoz0umxBzlCfyvO2K+KEGo3eIszo
+         UPg3Mx231KsNeSQnnW7hjU/JJLuVB8B54YJzvLTIi+0sd/V9L9yhflRLR0XIQOthXWXV
+         5L2VFbczF6vdpeIbnndK6G9m2MfTc4vkg4RW6y3C0HUCvlFcCYTRpGDJ208QH4+8Xb6d
+         zBjeYpiGVd1bg91ZBaAkv1kXdO1kCpCvoFdtx9gP8YHRKeotNni3ABLzAFz2UCaY5a4f
+         /YFj70eu6bl730qN9pQTkGDJLJlWJtFgx5c4DU+AwgUDtxHYktcdmFMbzoEQANt0pDlf
+         wNRA==
+X-Gm-Message-State: AOAM533lG0mja/op/AbIaMxrcnS7w7roFuC+u6HVt/KjTm4+TJyl9cPP
+        PiMEkkTAWiLDoWgCnOdGYlcf8g==
+X-Google-Smtp-Source: ABdhPJwUU4427neVlZCpkn55ESlwB4P0L3vZsLOnF2iY0x/Qha/KVyGzhURpbdm1MBfwyGmX09kOIA==
+X-Received: by 2002:a65:63ca:: with SMTP id n10mr49013562pgv.252.1594190211959;
+        Tue, 07 Jul 2020 23:36:51 -0700 (PDT)
 Received: from localhost.localdomain ([2405:201:c809:c7d5:ade2:f5f3:8cc0:52f9])
-        by smtp.gmail.com with ESMTPSA id c12sm24587898pfn.162.2020.07.07.23.36.41
+        by smtp.gmail.com with ESMTPSA id c12sm24587898pfn.162.2020.07.07.23.36.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 23:36:45 -0700 (PDT)
+        Tue, 07 Jul 2020 23:36:51 -0700 (PDT)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
 Cc:     Tom Cubie <tom@radxa.com>,
@@ -65,9 +65,9 @@ Cc:     Tom Cubie <tom@radxa.com>,
         linux-kernel@vger.kernel.org,
         linux-amarula <linux-amarula@amarulasolutions.com>,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v4 1/4] arm64: dts: rockchip: Trivial cleanups for RockPI N10
-Date:   Wed,  8 Jul 2020 12:06:24 +0530
-Message-Id: <20200708063627.8365-2-jagan@amarulasolutions.com>
+Subject: [PATCH v4 2/4] dt-bindings: arm: rockchip: Add Rock Pi N8 binding
+Date:   Wed,  8 Jul 2020 12:06:25 +0530
+Message-Id: <20200708063627.8365-3-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200708063627.8365-1-jagan@amarulasolutions.com>
 References: <20200708063627.8365-1-jagan@amarulasolutions.com>
@@ -78,289 +78,40 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Radxa dalang carrier boards are used to mount vmarc SoM's
-of rk3399pro and rk3288 to make complete SBC.
+Rock Pi N8 is a Rockchip RK3288 based SBC, which has
+- VMARC RK3288 SOM (as per SMARC standard) from Vamrs.
+- Compatible carrier board from Radxa.
 
-So, this patch adds trivial changes to properties.
-- move common properties into radxa dalang carrier dtsi.
-- maintain ascending order for nodes, properties.
-- change the order of dtsi include so-that common properties
-  will reflect in main dts.
-- drop unnecessary header includes.
+VMARC RK3288 SOM need to mount on top of dalang carrier
+board for making Rock PI N8 SBC.
 
-No functionally changes.
+Add dt-bindings for it.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
-Changes for v4:
-- move i2c2 into rk3399pro dtsi
-Changes for v3:
-- move hym8563_int into rk3399pro dtsi
-Changes for v2:
-- updated commit message
-- add more trivial changes
+Changes for v4, v3, v2:
+- none
 
- .../dts/rockchip-radxa-dalang-carrier.dtsi    | 67 ++++++-------
- .../dts/rockchip/rk3399pro-rock-pi-n10.dts    |  2 +-
- .../dts/rockchip/rk3399pro-vmarc-som.dtsi     | 98 ++++++++++---------
- 3 files changed, 85 insertions(+), 82 deletions(-)
+ Documentation/devicetree/bindings/arm/rockchip.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rockchip-radxa-dalang-carrier.dtsi b/arch/arm/boot/dts/rockchip-radxa-dalang-carrier.dtsi
-index df3712aedf8a..450e5bb5af0b 100644
---- a/arch/arm/boot/dts/rockchip-radxa-dalang-carrier.dtsi
-+++ b/arch/arm/boot/dts/rockchip-radxa-dalang-carrier.dtsi
-@@ -8,36 +8,44 @@
- #include <dt-bindings/pwm/pwm.h>
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+index d4a4045092df..db2e35796795 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.yaml
++++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+@@ -435,6 +435,12 @@ properties:
+           - const: radxa,rockpi4
+           - const: rockchip,rk3399
  
- / {
--	chosen {
--		stdout-path = "serial2:1500000n8";
-+	clkin_gmac: external-gmac-clock {
-+		compatible = "fixed-clock";
-+		clock-frequency = <125000000>;
-+		clock-output-names = "clkin_gmac";
-+		#clock-cells = <0>;
- 	};
--};
- 
--&gmac {
--	status = "okay";
--};
-+	vcc12v_dcin: vcc12v-dcin-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc12v_dcin";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+	};
- 
--&i2c1 {
--	status = "okay";
--	i2c-scl-rising-time-ns = <140>;
--	i2c-scl-falling-time-ns = <30>;
-+	vcc5v0_sys: vcc5v0-sys-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc5v0_sys";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc12v_dcin>;
-+	};
- };
- 
--&i2c2 {
-+&gmac {
-+	assigned-clock-parents = <&clkin_gmac>;
-+	clock_in_out = "input";
-+	phy-mode = "rgmii";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&rgmii_pins>;
-+	snps,reset-active-low;
-+	snps,reset-delays-us = <0 10000 50000>;
-+	tx_delay = <0x28>;
-+	rx_delay = <0x11>;
- 	status = "okay";
--	clock-frequency = <400000>;
--
--	hym8563: hym8563@51 {
--		compatible = "haoyu,hym8563";
--		reg = <0x51>;
--		#clock-cells = <0>;
--		clock-frequency = <32768>;
--		clock-output-names = "hym8563";
--		pinctrl-names = "default";
--		pinctrl-0 = <&hym8563_int>;
--		interrupt-parent = <&gpio4>;
--		interrupts = <30 IRQ_TYPE_LEVEL_LOW>;
--	};
- };
- 
- &pwm0 {
-@@ -52,10 +60,8 @@ &sdmmc {
- 	bus-width = <4>;
- 	cap-mmc-highspeed;
- 	cap-sd-highspeed;
--	cd-gpios = <&gpio0 RK_PA7 GPIO_ACTIVE_LOW>;
- 	disable-wp;
- 	vqmmc-supply = <&vccio_sd>;
--	max-frequency = <150000000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
- 	status = "okay";
-@@ -70,12 +76,3 @@ &uart0 {
- &uart2 {
- 	status = "okay";
- };
--
--&pinctrl {
--	hym8563 {
--		hym8563_int: hym8563-int {
--			rockchip,pins =
--				<4 RK_PD6 0 &pcfg_pull_up>;
--		};
--	};
--};
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-rock-pi-n10.dts b/arch/arm64/boot/dts/rockchip/rk3399pro-rock-pi-n10.dts
-index a1783e7f769a..539f4005386d 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399pro-rock-pi-n10.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399pro-rock-pi-n10.dts
-@@ -8,8 +8,8 @@
- /dts-v1/;
- #include "rk3399.dtsi"
- #include "rk3399-opp.dtsi"
--#include "rk3399pro-vmarc-som.dtsi"
- #include <arm/rockchip-radxa-dalang-carrier.dtsi>
-+#include "rk3399pro-vmarc-som.dtsi"
- 
- / {
- 	model = "Radxa ROCK Pi N10";
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-index 0a516334f15f..63eb498b365e 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-@@ -7,35 +7,12 @@
- 
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/pinctrl/rockchip.h>
--#include <dt-bindings/pwm/pwm.h>
- 
- / {
- 	compatible = "vamrs,rk3399pro-vmarc-som", "rockchip,rk3399pro";
- 
--	clkin_gmac: external-gmac-clock {
--		compatible = "fixed-clock";
--		clock-frequency = <125000000>;
--		clock-output-names = "clkin_gmac";
--		#clock-cells = <0>;
--	};
--
--	vcc12v_dcin: vcc12v-dcin-regulator {
--		compatible = "regulator-fixed";
--		regulator-name = "vcc12v_dcin";
--		regulator-always-on;
--		regulator-boot-on;
--		regulator-min-microvolt = <12000000>;
--		regulator-max-microvolt = <12000000>;
--	};
--
--	vcc5v0_sys: vcc5v0-sys-regulator {
--		compatible = "regulator-fixed";
--		regulator-name = "vcc5v0_sys";
--		regulator-always-on;
--		regulator-boot-on;
--		regulator-min-microvolt = <5000000>;
--		regulator-max-microvolt = <5000000>;
--		vin-supply = <&vcc12v_dcin>;
-+	chosen {
-+		stdout-path = "serial2:1500000n8";
- 	};
- };
- 
-@@ -61,17 +38,13 @@ &emmc_phy {
- 
- &gmac {
- 	assigned-clocks = <&cru SCLK_RMII_SRC>;
--	assigned-clock-parents = <&clkin_gmac>;
--	clock_in_out = "input";
- 	phy-supply = <&vcc_lan>;
--	phy-mode = "rgmii";
--	pinctrl-names = "default";
--	pinctrl-0 = <&rgmii_pins>;
- 	snps,reset-gpio = <&gpio3 RK_PB7 GPIO_ACTIVE_LOW>;
--	snps,reset-active-low;
--	snps,reset-delays-us = <0 10000 50000>;
--	tx_delay = <0x28>;
--	rx_delay = <0x11>;
-+};
++      - description: Radxa ROCK Pi N8
++        items:
++          - const: radxa,rockpi-n8
++          - const: vamrs,rk3288-vmarc-som
++          - const: rockchip,rk3288
 +
-+&hym8563 {
-+	interrupt-parent = <&gpio4>;
-+	interrupts = <RK_PD6 IRQ_TYPE_LEVEL_LOW>;
- };
- 
- &i2c0 {
-@@ -297,16 +270,53 @@ regulator-state-mem {
- 	};
- };
- 
--&io_domains {
-+&i2c1 {
-+	i2c-scl-rising-time-ns = <140>;
-+	i2c-scl-falling-time-ns = <30>;
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	clock-frequency = <400000>;
- 	status = "okay";
-+
-+	hym8563: hym8563@51 {
-+		compatible = "haoyu,hym8563";
-+		reg = <0x51>;
-+		#clock-cells = <0>;
-+		clock-frequency = <32768>;
-+		clock-output-names = "hym8563";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&hym8563_int>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <RK_PD6 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
-+
-+&io_domains {
- 	bt656-supply = <&vcca_1v8>;
- 	sdmmc-supply = <&vccio_sd>;
- 	gpio1830-supply = <&vccio_3v0>;
-+	status = "okay";
-+};
-+
-+&pinctrl {
-+	hym8563 {
-+		hym8563_int: hym8563-int {
-+			rockchip,pins = <4 RK_PD6 0 &pcfg_pull_up>;
-+		};
-+	};
-+
-+	pmic {
-+		pmic_int_l: pmic-int-l {
-+			rockchip,pins = <1 RK_PC2 0 &pcfg_pull_up>;
-+		};
-+	};
- };
- 
- &pmu_io_domains {
--	status = "okay";
- 	pmu1830-supply = <&vcc_1v8>;
-+	status = "okay";
- };
- 
- &sdhci {
-@@ -317,17 +327,13 @@ &sdhci {
- 	status = "okay";
- };
- 
-+&sdmmc {
-+	cd-gpios = <&gpio0 RK_PA7 GPIO_ACTIVE_LOW>;
-+	max-frequency = <150000000>;
-+};
-+
- &tsadc {
--	status = "okay";
- 	rockchip,hw-tshut-mode = <1>;
- 	rockchip,hw-tshut-polarity = <1>;
--};
--
--&pinctrl {
--	pmic {
--		pmic_int_l: pmic-int-l {
--			rockchip,pins =
--				<1 RK_PC2 0 &pcfg_pull_up>;
--		};
--	};
-+	status = "okay";
- };
+       - description: Radxa ROCK Pi N10
+         items:
+           - const: radxa,rockpi-n10
 -- 
 2.25.1
 
