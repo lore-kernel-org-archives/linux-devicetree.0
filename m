@@ -2,118 +2,93 @@ Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B064C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 16:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08426C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 17:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 782F12078D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 16:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF779207D0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 17:00:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594227614;
+	bh=Z9DgEq3OumaTes4V1hG+JINH/hbtnJhyzZpunoO5NFo=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=GBXZLtwjU6aHqp8OCsg5bCyGtsSrqYlnyymRJQc9nIZgP9iSLHwlxYZXQpJufMtr/
+	 Q7kXktxnOwSCypfm71UrLF7yLQPhtxXXtYcoVGL5Zj1hHzQx+Ya34ERrbYD7VYEQim
+	 tSToWvNRJ2ueEJ4vjlORMNwyK2I7LWnozPbDYUj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730682AbgGHQ7H (ORCPT
+        id S1730085AbgGHRAO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:59:07 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:33820 "EHLO smtp.al2klimov.de"
+        Wed, 8 Jul 2020 13:00:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbgGHQ7G (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 8 Jul 2020 12:59:06 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 04350BC0CB;
-        Wed,  8 Jul 2020 16:59:02 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] Replace HTTP links with HTTPS ones: CLOCKSOURCE, CLOCKEVENT DRIVERS
-Date:   Wed,  8 Jul 2020 18:58:56 +0200
-Message-Id: <20200708165856.15322-1-grandmaster@al2klimov.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+        id S1725989AbgGHRAO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 8 Jul 2020 13:00:14 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66523206F6;
+        Wed,  8 Jul 2020 17:00:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594227614;
+        bh=Z9DgEq3OumaTes4V1hG+JINH/hbtnJhyzZpunoO5NFo=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=GV1WrsNDk1SRcL7vHjlpjNy2/KZPYLEEdru3NCYYeTT94vdMwrr6APK87YRjdrv0y
+         lzsIhNAEh0MFzWk5VWTE+hpIy3PVzNMtDx1SLUMJgDh4tD5DIsMZp2VY+UGDsGv/dC
+         luYzxe/daWNGwbKo19go8WuKpV285lmQ9nyiK7ts=
+Date:   Wed, 08 Jul 2020 18:00:08 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     robh+dt@kernel.org, Tzung-Bi Shih <tzungbi@google.com>
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+In-Reply-To: <20200708113233.3994206-1-tzungbi@google.com>
+References: <20200708113233.3994206-1-tzungbi@google.com>
+Subject: Re: [PATCH 0/3] ASoC: mediatek: mt8183: support machine driver for rt1015
+Message-Id: <159422758800.28431.1053466753613230176.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Wed, 8 Jul 2020 19:32:30 +0800, Tzung-Bi Shih wrote:
+> This series tries to reuse mt8183-mt6358-ts3a227-max98357.c for supporting
+> machine driver with rt1015 speaker amplifier.
+> 
+> The 1st patch is straightforward: re-order the header inclusions.
+> 
+> The 2nd patch adds document for the new proposed compatible string.
+> 
+> [...]
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+Applied to
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
- If there are any URLs to be removed completely or at least not HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+Thanks!
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
+[1/3] ASoC: mediatek: mt8183: sort header inclusions in alphabetical
+      commit: 4dae01c2e5df7beb8dfd5deb9560e42f19d3cfb7
+[2/3] ASoC: mt8183: add compatible string for using rt1015
+      commit: ab1ba5252f611c0efabca5fca81f5717445da47b
+[3/3] ASoC: mediatek: mt8183: support machine driver with rt1015
+      commit: f4fb4fef49664e64f4f40e9e8db11f785fbc79a4
 
- If you apply the patch, please let me know.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
- Documentation/devicetree/bindings/timer/ti,keystone-timer.txt | 2 +-
- drivers/clocksource/timer-ti-32k.c                            | 2 +-
- drivers/clocksource/timer-ti-dm.c                             | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-diff --git a/Documentation/devicetree/bindings/timer/ti,keystone-timer.txt b/Documentation/devicetree/bindings/timer/ti,keystone-timer.txt
-index 5fbe361252b4..d3905a5412b8 100644
---- a/Documentation/devicetree/bindings/timer/ti,keystone-timer.txt
-+++ b/Documentation/devicetree/bindings/timer/ti,keystone-timer.txt
-@@ -10,7 +10,7 @@ It is global timer is a free running up-counter and can generate interrupt
- when the counter reaches preset counter values.
- 
- Documentation:
--http://www.ti.com/lit/ug/sprugv5a/sprugv5a.pdf
-+https://www.ti.com/lit/ug/sprugv5a/sprugv5a.pdf
- 
- Required properties:
- 
-diff --git a/drivers/clocksource/timer-ti-32k.c b/drivers/clocksource/timer-ti-32k.c
-index ae12bbf3d68c..59b0be482f32 100644
---- a/drivers/clocksource/timer-ti-32k.c
-+++ b/drivers/clocksource/timer-ti-32k.c
-@@ -21,7 +21,7 @@
-  * Roughly modelled after the OMAP1 MPU timer code.
-  * Added OMAP4 support - Santosh Shilimkar <santosh.shilimkar@ti.com>
-  *
-- * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2015 Texas Instruments Incorporated - https://www.ti.com
-  */
- 
- #include <linux/clk.h>
-diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
-index 60aff087947a..33eeabf9c3d1 100644
---- a/drivers/clocksource/timer-ti-dm.c
-+++ b/drivers/clocksource/timer-ti-dm.c
-@@ -4,7 +4,7 @@
-  *
-  * OMAP Dual-Mode Timers
-  *
-- * Copyright (C) 2010 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2010 Texas Instruments Incorporated - https://www.ti.com/
-  * Tarun Kanti DebBarma <tarun.kanti@ti.com>
-  * Thara Gopinath <thara@ti.com>
-  *
--- 
-2.27.0
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
+Thanks,
+Mark
