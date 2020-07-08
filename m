@@ -2,113 +2,111 @@ Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E458C433E7
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 05:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14EF9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 05:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B8D6207C4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 05:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D92EB2078A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 05:08:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qgWKt/Hl"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZQK/LuNy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729309AbgGHFAS (ORCPT
+        id S1726139AbgGHFIc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 01:00:18 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4008 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728491AbgGHFAR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 01:00:17 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0552ab0002>; Tue, 07 Jul 2020 21:59:23 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 07 Jul 2020 22:00:17 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 07 Jul 2020 22:00:17 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jul
- 2020 05:00:13 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 8 Jul 2020 05:00:13 +0000
-Received: from vdumpa-ubuntu.nvidia.com (Not Verified[172.17.173.140]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f0552dd0001>; Tue, 07 Jul 2020 22:00:13 -0700
-From:   Krishna Reddy <vdumpa@nvidia.com>
-To:     <joro@8bytes.org>, <will@kernel.org>, <robin.murphy@arm.com>,
-        <robh+dt@kernel.org>, <treding@nvidia.com>, <jonathanh@nvidia.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <yhsu@nvidia.com>,
-        <snikam@nvidia.com>, <praithatha@nvidia.com>, <talho@nvidia.com>,
-        <bbiswas@nvidia.com>, <mperttunen@nvidia.com>,
-        <nicolinc@nvidia.com>, <bhuntsman@nvidia.com>,
-        <nicoleotsuka@gmail.com>, Krishna Reddy <vdumpa@nvidia.com>
-Subject: [PATCH v10 0/5] NVIDIA ARM SMMU Implementation
-Date:   Tue, 7 Jul 2020 22:00:12 -0700
-Message-ID: <20200708050017.31563-1-vdumpa@nvidia.com>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594184363; bh=+VIMULVcX/VU6BtBuWewZbJl68Bh+UrUfFfMcAm4UI4=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
-         Content-Type;
-        b=qgWKt/HlteNBV+Xgo/IPryofk7LkeQfjTY6lpdJ6OV//R8I1OutMYPX+GjWXuwkCV
-         JXwq2R7CgE1k3tgTZoCQraHRxz5Fnjxwg/wqbsWFCc4DdFiv70IU7UUF5CXWpCTi1A
-         dRSLY/QSLQATnzDTAEncddPo7o6ooPmHmTwffnCfhKVzi6mxHDseXQ7czVi47MkXtQ
-         6QynXZNc6Q9DokeafjZvk2ByvkHtIY1S1l0HwYQzkIsaTLFsOfpyibiYa2kunp61QO
-         L2lRiD/w6HMfj6dS9CD8kRiqfue9YHsP3XKc5y9fXCwinIVMg83WnfJmAhp19Mnhhh
-         0iLrz7b5ePFww==
+        Wed, 8 Jul 2020 01:08:32 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:35726 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725320AbgGHFIb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 01:08:31 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594184911; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=J/0rtb7ms4jKYAU3mSlVXiZ7/65ZzPwUSJ72i0ViAwU=; b=ZQK/LuNyqGU77DjrT7w1TyBNO1+7+lyh4SOe0XckxAGUJO/rHnt9lTUbGNUIiv2NHhBgmeWZ
+ dJXBky0FoPFwSzM7dav7eiHKjCIFhFwJC/gUA2H8BPR8dMs4y3Eg2+bhJLG4/Lvitn5Xavv3
+ kmIc1VemBlzyFn0pVaZH7uNcTy0=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
+ 5f0554ce0082b278486d6af6 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 08 Jul 2020 05:08:30
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 678F6C43391; Wed,  8 Jul 2020 05:08:30 +0000 (UTC)
+Received: from rohkumar-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rohitkr)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A2672C433C6;
+        Wed,  8 Jul 2020 05:08:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A2672C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
+From:   Rohit kumar <rohitkr@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
+        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
+        srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Rohit kumar <rohitkr@codeaurora.org>
+Subject: [PATCH v3 0/8] ASoC: qcom: Add support for SC7180 lpass variant
+Date:   Wed,  8 Jul 2020 10:38:08 +0530
+Message-Id: <1594184896-10629-1-git-send-email-rohitkr@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Changes in v10:
-Perform SMMU base ioremap before calling implementation init.
-Check for Global faults across both ARM MMU-500s during global interrupt.
-Check for context faults across all contexts of both ARM MMU-500s during co=
-ntext fault interrupt.
-Add new DT binding nvidia,smmu-500 for NVIDIA implementation.
+This patch chain add audio support for SC7180 soc by doing the required
+modification in existing common lpass-cpu/lpass-platform driver.
+Below is a brief summary of patch series:
 
-v9 - https://lkml.org/lkml/2020/6/30/1282
-v8 - https://lkml.org/lkml/2020/6/29/2385
-v7 - https://lkml.org/lkml/2020/6/28/347
-v6 - https://lkml.org/lkml/2020/6/4/1018
-v5 - https://lkml.org/lkml/2020/5/21/1114
-v4 - https://lkml.org/lkml/2019/10/30/1054
-v3 - https://lkml.org/lkml/2019/10/18/1601
-v2 - https://lkml.org/lkml/2019/9/2/980
-v1 - https://lkml.org/lkml/2019/8/29/1588
+PATCH v3 0001 ... 0005: Update lpass-cpu, lpass-platform drivers to make it more generic
+and support newer soc registers configuration. This also updates existing lpass-apq8096.c
+and lpass-ipq806x.c.
+PATCH v2 0005 ... 0007: Add documentation and platform driver for newer SC7180 SOC variant.
 
+Changes since v2:
+	- Moved yaml conversion of Documentation to the end of patch series
+	- Used REG_FIELD_ID instead of REG_FIELD for DMACTL and I2SCTL registers.
+Move reg_fields to struct lpass_variant as suggested by Srinivas.
 
-Krishna Reddy (5):
-  iommu/arm-smmu: move TLB timeout and spin count macros
-  iommu/arm-smmu: ioremap smmu mmio region before implementation init
-  iommu/arm-smmu: add NVIDIA implementation for ARM MMU-500 usage
-  dt-bindings: arm-smmu: add binding for Tegra194 SMMU
-  iommu/arm-smmu: Add global/context fault implementation hooks
+Ajit Pandey (5):
+  ASoC: qcom: Add common array to initialize soc based core clocks
+  include: dt-bindings: sound: Add sc7180-lpass bindings header
+  ASoC: qcom: lpass-platform: Replace card->dev with component->dev
+  ASoC: qcom: lpass-sc7180: Add platform driver for lpass audio
+  dt-bindings: sound: lpass-cpu: Move to yaml format
 
- .../devicetree/bindings/iommu/arm,smmu.yaml   |  18 ++
- MAINTAINERS                                   |   2 +
- drivers/iommu/Makefile                        |   2 +-
- drivers/iommu/arm-smmu-impl.c                 |   3 +
- drivers/iommu/arm-smmu-nvidia.c               | 278 ++++++++++++++++++
- drivers/iommu/arm-smmu.c                      |  29 +-
- drivers/iommu/arm-smmu.h                      |   6 +
- 7 files changed, 328 insertions(+), 10 deletions(-)
- create mode 100644 drivers/iommu/arm-smmu-nvidia.c
+Rohit kumar (3):
+  ASoC: qcom: lpass-cpu: Move ahbix clk to platform specific function
+  ASoC: qcom: lpass: Use regmap_field for i2sctl and dmactl registers
+  dt-bindings: sound: lpass-cpu: Add sc7180 lpass cpu node
 
+ .../devicetree/bindings/sound/qcom,lpass-cpu.txt   |  79 --------
+ .../devicetree/bindings/sound/qcom,lpass-cpu.yaml  | 154 +++++++++++++++
+ include/dt-bindings/sound/sc7180-lpass.h           |  10 +
+ sound/soc/qcom/Kconfig                             |   5 +
+ sound/soc/qcom/Makefile                            |   2 +
+ sound/soc/qcom/lpass-apq8016.c                     |  86 ++++++--
+ sound/soc/qcom/lpass-cpu.c                         | 193 +++++++++---------
+ sound/soc/qcom/lpass-ipq806x.c                     |  67 +++++++
+ sound/soc/qcom/lpass-lpaif-reg.h                   | 157 ++++++++-------
+ sound/soc/qcom/lpass-platform.c                    | 156 +++++++++++----
+ sound/soc/qcom/lpass-sc7180.c                      | 216 +++++++++++++++++++++
+ sound/soc/qcom/lpass.h                             |  63 +++++-
+ 12 files changed, 886 insertions(+), 302 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
+ create mode 100644 include/dt-bindings/sound/sc7180-lpass.h
+ create mode 100644 sound/soc/qcom/lpass-sc7180.c
 
-base-commit: e5640f21b63d2a5d3e4e0c4111b2b38e99fe5164
---=20
-2.26.2
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
+is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
