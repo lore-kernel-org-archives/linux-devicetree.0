@@ -2,93 +2,99 @@ Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29648C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 13:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5094DC433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 14:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E683920720
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 13:32:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QECDpTuJ"
+	by mail.kernel.org (Postfix) with ESMTP id 2DB942078B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 14:45:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594219545;
+	bh=cP+F+wz6n3hVoP8aNvSk5AWUDQcuCoNcjaP+vD3mi0c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=A3jhqPSsUoBasi7ii72b7t+WL3kAJtkFxtqdxoB+YZD+s/uxtI1RPC7p3PMJyF8L0
+	 wI1OcEg/LArSAX8K97swCqdeRqha6luGo/Qw8KA6zxAkd7LZddTZex9qEYY6N9qSL0
+	 bz/TIxT2PF6P6obBtrP3QKKWzF1TntRcH0ImZedc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729357AbgGHNcL (ORCPT
+        id S1729780AbgGHOpg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 09:32:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41352 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729323AbgGHNcL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 09:32:11 -0400
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0A8FC061A0B;
-        Wed,  8 Jul 2020 06:32:10 -0700 (PDT)
-Received: by mail-lj1-x22a.google.com with SMTP id e8so19997254ljb.0;
-        Wed, 08 Jul 2020 06:32:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FyWAeR1uTs/9fAF9wUmZ0OImawjeuUkpapCXR9PrAmA=;
-        b=QECDpTuJTwRzCzuhG2763IHEXgvtUskyyhE85TzGDu8hEBvLOFq/H5kFjfjK+xMnXJ
-         SC5szPi/O3K31QxF0W1dT8dGKt7pGPU6XrcaQ2KnKtm+eza62+fqot+fl6tVLwu87CN/
-         GsnPii3wl8QN8XHoBkxSfDgAO7E1FQENtrX6KRxty0Msh4HDbDHIitGVvuwN8KtwqzYO
-         a12Ad6Gacs6E6W2fGAsxOZSTZYTR8lITfbMtm2TJXhseUA6MXXZuVkLYuCn4JfK2uOtw
-         5x1WPQPKywsALH2J3aELblkKO1g3hpMliGZsqRhNPOySN04+QAwVy41LJPjx0PQgLL3b
-         I/Kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FyWAeR1uTs/9fAF9wUmZ0OImawjeuUkpapCXR9PrAmA=;
-        b=EO29uml7YecIVGds0E4B3CuJByBTADREjEBswfmXaMfneApkC98Vqyoq4f9ex5QpJj
-         XJD0P2/o/2+CzVaecQeXZr62dQNL88spDpB+lFV7TyarIYVlBnykvdNrp+3ymom/WRsM
-         HfP+jIlEa/YvBs6o6EOQ/DrJeDEqYw1q6pbaX2AlyiCzYnrcmdyA4IPUgNY7CjcwnCdS
-         OFbyTImidX6WnZjMBolatSnwwXbfetxIGRnNc5BMKguiscqGW89Ij2EAGKBUhgaliSK8
-         OcRJIgDdWOlhT6xUhJoPhX8H+09lLgGkN6MGC6zHidGqAMQ2e5gSoY+qbW6hrszdF9Ee
-         Yv3w==
-X-Gm-Message-State: AOAM531P6FbYJKLSee297UZjZTqxl09JaBClL97FCPB9pLRK2HyOChqW
-        ETRm9ix+yw1m9obLajtgn2DeJpvWABwXfez6VVA=
-X-Google-Smtp-Source: ABdhPJzFxYy8aKcybTu5lfAkoS0cN1dpUz/UH/XTyV+W+0pwpmYOnE7soZElzFfKoJQjn4vgvw4TUtuhQrGYfUC6/kk=
-X-Received: by 2002:a2e:880e:: with SMTP id x14mr23010681ljh.218.1594215129024;
- Wed, 08 Jul 2020 06:32:09 -0700 (PDT)
+        Wed, 8 Jul 2020 10:45:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55390 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729595AbgGHOpe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 8 Jul 2020 10:45:34 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9595820786;
+        Wed,  8 Jul 2020 14:45:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594219534;
+        bh=cP+F+wz6n3hVoP8aNvSk5AWUDQcuCoNcjaP+vD3mi0c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=p8p1ggFGPnEJteeBB95WXlg92wIy14eUukTWMJ98rTrbqwYdZcJBZGUYN+pWuCINt
+         XKR5p/f/qA4r7A8X87MfvonfgMpiHzjS6QYwHMdhNYNt4sQzTkKwBnR2ZBo6G1r8c6
+         /yDXSsapFaQp6Elc81pa5Frm12+eTa/cFMtCgq50=
+Date:   Wed, 8 Jul 2020 15:45:28 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Rohit kumar <rohitkr@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        robh+dt@kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org,
+        perex@perex.cz, tiwai@suse.com, srinivas.kandagatla@linaro.org,
+        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ajit Pandey <ajitp@codeaurora.org>
+Subject: Re: [PATCH v3 4/8] include: dt-bindings: sound: Add sc7180-lpass
+ bindings header
+Message-ID: <20200708144528.GT4655@sirena.org.uk>
+References: <1594184896-10629-1-git-send-email-rohitkr@codeaurora.org>
+ <1594184896-10629-5-git-send-email-rohitkr@codeaurora.org>
 MIME-Version: 1.0
-References: <1573586526-15007-1-git-send-email-oliver.graute@gmail.com>
- <1573586526-15007-3-git-send-email-oliver.graute@gmail.com>
- <CAOMZO5DX_-zSHJjDigK2c=dVLEMxvfd_dFCu=0fbyjht1gsr=A@mail.gmail.com> <20200708103836.GA20983@portage>
-In-Reply-To: <20200708103836.GA20983@portage>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 8 Jul 2020 10:31:57 -0300
-Message-ID: <CAOMZO5AddAHXs=dmvJtK4qi=khnNJDo0GZcWTXeWT4RVogz98g@mail.gmail.com>
-Subject: Re: [PATCHv7 2/3] ARM: dts: Add support for i.MX6 UltraLite DART
- Variscite Customboard
-To:     Oliver Graute <oliver.graute@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="e7jIye1Ygp5H0AIi"
+Content-Disposition: inline
+In-Reply-To: <1594184896-10629-5-git-send-email-rohitkr@codeaurora.org>
+X-Cookie: Oh Dad!  We're ALL Devo!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Oliver,
 
-On Wed, Jul 8, 2020 at 10:12 AM Oliver Graute <oliver.graute@gmail.com> wrote:
+--e7jIye1Ygp5H0AIi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> ok thx for you comments, coming back to this. I now added this to
-> panel-simple.c. Is this the way to go?
+On Wed, Jul 08, 2020 at 10:38:12AM +0530, Rohit kumar wrote:
+> From: Ajit Pandey <ajitp@codeaurora.org>
+>=20
+> Add header defining dai-id and mclk id for SC7180 lpass soc.
+>=20
+> Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
+> ---
 
-Yes, please submit it as a formal patch to the drm folks.
+This one is missing a signoff as well, and I can't seem to see any
+reference to this header in the bindings document patches?
+
+--e7jIye1Ygp5H0AIi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8F3AgACgkQJNaLcl1U
+h9CXIwf/dPOevjBguwkthEqzY8waDrI4Vr76oqQ/VwaDcPs5ms8WZBlIduTiQwHe
+LvggZGwuNjq49n6Yx7+vu+/uOJaTTRf99NF8bJ4FuS4aJK0VaCdUwLwwYE6xuSPq
+tGc5B3e4rzdzrs+FJMmRZZ+a55RNU8MXP3j5LuecI7xlxRMifHIx8Nmn52GSI4RD
+7YtEODCmd4xSh4KAEIydg9yzn8o/zMPqwv/jL8MNOEUol5x20FU4tnD2iRJ6E5Fx
+n+yak8arDbKsLRjZH4xtGxhTrl4pKyeGOVrN12XcbiZupG2dDzmJi6LOR9P3HXQ9
+ElQHfFZxIRiHgX9scCPEWtn0DlKV6Q==
+=qOBi
+-----END PGP SIGNATURE-----
+
+--e7jIye1Ygp5H0AIi--
