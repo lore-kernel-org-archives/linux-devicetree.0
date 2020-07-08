@@ -2,125 +2,117 @@ Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 828A0C433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 17:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B58F4C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 17:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69524207D0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 17:53:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594230822;
-	bh=ZXTVrAxt2BMAWE6jdwxSDmOlWWlY67skJb6anAFgFQs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=c9iMaHMZSf3sH1UsTXHn8HbOqS/NbF6LtQSkEk2WDR5A/OfycIt+5NdvEICWeaVcn
-	 yipoTjzcdOVDvFpyR0r6bEjwLkHDvh7id9adRaeWNePpoj8l8zcb/Um0mt5ZtYEfts
-	 eXlOUpgcVUnL7XIWx6G/QDXWdNESCisdzt7qETlk=
+	by mail.kernel.org (Postfix) with ESMTP id 97E19206F6
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 17:59:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P9+4sBCX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbgGHRxi (ORCPT
+        id S1726100AbgGHR7f (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 13:53:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57882 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbgGHRxi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 8 Jul 2020 13:53:38 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62219206E9;
-        Wed,  8 Jul 2020 17:53:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594230817;
-        bh=ZXTVrAxt2BMAWE6jdwxSDmOlWWlY67skJb6anAFgFQs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SK/e44KLdRfJM29yIStfOo7N8ICd0pwunnsQJIXgfumzLPch2QwpB2QHz9mBmw2xn
-         6xaAol7QCiZYkv8cMVtkv3AsX4AHhZXZhy14C5eY2zM1ED/InYBzdqvDoUcJCJKwie
-         ffhJ3RezTrRyIf6y1p8ootCJOKI+f62QSz63DCGQ=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jtEGF-00AAKr-Te; Wed, 08 Jul 2020 18:53:36 +0100
+        Wed, 8 Jul 2020 13:59:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbgGHR7e (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 13:59:34 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDA8BC08C5C1
+        for <devicetree@vger.kernel.org>; Wed,  8 Jul 2020 10:59:34 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id o15so24941985vsp.12
+        for <devicetree@vger.kernel.org>; Wed, 08 Jul 2020 10:59:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hiompu44sJmWIX0VHQ2p43N5hGspvrVdRKwV2/c7PTg=;
+        b=P9+4sBCXeroD/gl9lFaX0m06xjtx10agKSYwDQ+/NbcOaSqY89NkXRbgqBPgQRcOVj
+         2sE/15k5UksYrS6NLHG1qzC0R1PFVEXJFB/IoQuFPz8kRo7ozYT8rfPO1xJegBPdj20k
+         dgvGQbI7VTNxqtWycqUuFvVewZCIYxRbrTVJY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hiompu44sJmWIX0VHQ2p43N5hGspvrVdRKwV2/c7PTg=;
+        b=GYDgujSv+Y31i5R07PRKOshtENn+iIa+63EViRc9s+uppDTx9V6n2N1nxHu003d8O+
+         F7xPeqzdVfy5JWKEngIdZ5mmZtAYyBdhpFMeARW/g8VQHKJEgyb8vKKFFvK8y1QEAtVN
+         DRV84Bdjjfs/RyacVjbDaPm/cbYkt9oSE1OcVpX5UWodpgAepoxGAZO8UUtf+/+bSROF
+         8VML9GP3Jtk69BmAWbKCQ2XPB2waCuLKIWCx2v4uwZmk2B87uWdxSM1vjKSgndZfiwui
+         wKkZYhogwj16KZG5/giH2Gx0SY1xa0nsQBuTdTpvIDkwl5wm9QGfzLqKqsLjohZKgm8l
+         zPyQ==
+X-Gm-Message-State: AOAM531RnUPVAq806QAHE9WjPB0Jt5EZyd9+oGIFx/NKVXjDOGjwx3zQ
+        Ttbxp1eFqAHWqac5XhbZJr1v/le24Yo=
+X-Google-Smtp-Source: ABdhPJwAnRkycNs2LVRKyJhSmok4qD+06Z+1FoEBj9+zE1eOI/oeVqo76xByP5y6G3EAgldq/r9MnA==
+X-Received: by 2002:a05:6102:10c5:: with SMTP id t5mr45036153vsr.87.1594231173564;
+        Wed, 08 Jul 2020 10:59:33 -0700 (PDT)
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com. [209.85.221.180])
+        by smtp.gmail.com with ESMTPSA id q20sm45607vso.3.2020.07.08.10.59.32
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jul 2020 10:59:32 -0700 (PDT)
+Received: by mail-vk1-f180.google.com with SMTP id v26so7463130vkn.2
+        for <devicetree@vger.kernel.org>; Wed, 08 Jul 2020 10:59:32 -0700 (PDT)
+X-Received: by 2002:a1f:3f05:: with SMTP id m5mr18475983vka.92.1594231171733;
+ Wed, 08 Jul 2020 10:59:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 08 Jul 2020 18:53:35 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+References: <20200630081938.8131-1-sibis@codeaurora.org>
+In-Reply-To: <20200630081938.8131-1-sibis@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 8 Jul 2020 10:59:20 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=V2JyYaNBjkFgiKEuWpvNSyt+GP_kAbAtOkNizt136EFA@mail.gmail.com>
+Message-ID: <CAD=FV=V2JyYaNBjkFgiKEuWpvNSyt+GP_kAbAtOkNizt136EFA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Drop the unused non-MSA SID
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Will Deacon <will@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 6/8] arm64: dts: renesas: Initial r8a774e1 SoC device tree
-In-Reply-To: <1594230511-24790-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1594230511-24790-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594230511-24790-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <daf83dafc069b12b6a10205e5f93793a@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: prabhakar.mahadev-lad.rj@bp.renesas.com, geert+renesas@glider.be, magnus.damm@gmail.com, robh+dt@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, ulf.hansson@linaro.org, gregkh@linuxfoundation.org, catalin.marinas@arm.com, will@kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, prabhakar.csengg@gmail.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Evan Green <evgreen@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, "# 4.0+" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-07-08 18:48, Lad Prabhakar wrote:
-> From: Marian-Cristian Rotariu 
-> <marian-cristian.rotariu.rb@bp.renesas.com>
-> 
-> Basic support for the RZ/G2H SoC.
-> 
-> Signed-off-by: Marian-Cristian Rotariu
-> <marian-cristian.rotariu.rb@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Hi,
+
+On Tue, Jun 30, 2020 at 1:20 AM Sibi Sankar <sibis@codeaurora.org> wrote:
+>
+> Having a non-MSA (Modem Self-Authentication) SID bypassed breaks modem
+> sandboxing i.e if a transaction were to originate from it, the hardware
+> memory protections units (XPUs) would fail to flag them (any transaction
+> originating from modem are historically termed as an MSA transaction).
+> Drop the unused non-MSA modem SID on SC7180 SoCs and cheza so that SMMU
+> continues to block them.
+>
+> Fixes: bec71ba243e95 ("arm64: dts: qcom: sc7180: Update Q6V5 MSS node")
+> Fixes: 68aee4af5f620 ("arm64: dts: qcom: sdm845-cheza: Add iommus property")
+> Cc: stable@vger.kernel.org
+> Reported-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 > ---
->  arch/arm64/boot/dts/renesas/r8a774e1.dtsi | 652 ++++++++++++++++++++++
->  1 file changed, 652 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-> b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-> new file mode 100644
-> index 000000000000..6637e157ffcd
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts    | 2 +-
+>  arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 
-[...]
-> +		gic: interrupt-controller@f1010000 {
-> +			compatible = "arm,gic-400";
-> +			#interrupt-cells = <3>;
-> +			#address-cells = <0>;
-> +			interrupt-controller;
-> +			reg = <0x0 0xf1010000 0 0x1000>,
-> +			      <0x0 0xf1020000 0 0x20000>,
-> +			      <0x0 0xf1040000 0 0x20000>,
-> +			      <0x0 0xf1060000 0 0x20000>;
-> +			interrupts = <GIC_PPI 9
-> +					(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
+I'm not sure if my review is worth all that much since it's not my
+area of expertise, but as far as I can tell this is good / ready to go
+in.  I've confirmed that a similar on my sc7180 board doesn't seem to
+break anything for me so restricting things like this seems sane.
 
-You seem to have a bit more than only 2 CPUs in this system.
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Tested-by: Douglas Anderson <dianders@chromium.org>
 
-> +			clocks = <&cpg CPG_MOD 408>;
-> +			clock-names = "clk";
-> +			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
-> +			resets = <&cpg 408>;
-> +		};
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+-Doug
