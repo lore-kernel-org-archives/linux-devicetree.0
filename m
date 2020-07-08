@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32174C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E71C1C43445
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 159F420853
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFCAC20786
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:20:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730332AbgGHHUO (ORCPT
+        id S1730300AbgGHHUJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:20:14 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:55331 "EHLO
+        Wed, 8 Jul 2020 03:20:09 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:48299 "EHLO
         smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730316AbgGHHUN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 03:20:13 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1470665|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0450046-0.000476486-0.954519;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07447;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=33;RT=33;SR=0;TI=SMTPD_---.I-8lwqE_1594192774;
+        by vger.kernel.org with ESMTP id S1730298AbgGHHUG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 03:20:06 -0400
+X-Alimail-AntiSpam: AC=SUSPECT;BC=0.6642233|-1;BR=01201311R961b1;CH=blue;DM=|SUSPECT|false|;DS=CONTINUE|ham_system_inform|0.0308424-0.00184965-0.967308;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03306;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=33;RT=33;SR=0;TI=SMTPD_---.I-8lwqE_1594192774;
 Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I-8lwqE_1594192774)
           by smtp.aliyun-inc.com(10.147.40.26);
-          Wed, 08 Jul 2020 15:20:04 +0800
+          Wed, 08 Jul 2020 15:19:59 +0800
 From:   Frank Lee <frank@allwinnertech.com>
 To:     robh+dt@kernel.org, mripard@kernel.org, wens@csie.org,
         mturquette@baylibre.com, sboyd@kernel.org,
@@ -40,9 +40,9 @@ Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-pm@vger.kernel.org, huangshuosheng@allwinnertech.com,
         liyong@allwinnertech.com, Frank Lee <frank@allwinnertech.com>
-Subject: [PATCH v3 08/16] thermal: sun8i: add TEMP_CALIB_MASK for calibration data in sun50i_h6_ths_calibrate
-Date:   Wed,  8 Jul 2020 15:19:34 +0800
-Message-Id: <20200708071942.22595-9-frank@allwinnertech.com>
+Subject: [PATCH v3 06/16] dt-bindings: nvmem: SID: add binding for A100's SID controller
+Date:   Wed,  8 Jul 2020 15:19:32 +0800
+Message-Id: <20200708071942.22595-7-frank@allwinnertech.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200708071942.22595-1-frank@allwinnertech.com>
 References: <20200708071942.22595-1-frank@allwinnertech.com>
@@ -53,29 +53,26 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-For sun50i_h6_ths_calibrate(), the data read from nvmem needs a round of
-calculation. On the other hand, the newer SOC may store other data in
-the space other than 12bit sensor data. Add mask operation to read data
-to avoid conversion error.
+Add a binding for A100's SID controller.
 
 Signed-off-by: Frank Lee <frank@allwinnertech.com>
-Reviewed-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- drivers/thermal/sun8i_thermal.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-index 74d73be..f423d44 100644
---- a/drivers/thermal/sun8i_thermal.c
-+++ b/drivers/thermal/sun8i_thermal.c
-@@ -244,7 +244,7 @@ static int sun50i_h6_ths_calibrate(struct ths_device *tmdev,
- 	ft_temp = (caldata[0] & FT_TEMP_MASK) * 100;
- 
- 	for (i = 0; i < tmdev->chip->sensor_num; i++) {
--		int sensor_reg = caldata[i + 1];
-+		int sensor_reg = caldata[i + 1] & TEMP_CALIB_MASK;
- 		int cdata, offset;
- 		int sensor_temp = tmdev->chip->calc_temp(tmdev, i, sensor_reg);
+diff --git a/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml b/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
+index daf1321..f9d575b 100644
+--- a/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
++++ b/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
+@@ -21,6 +21,9 @@ properties:
+       - allwinner,sun8i-a83t-sid
+       - allwinner,sun8i-h3-sid
+       - allwinner,sun50i-a64-sid
++      - items:
++        - const: allwinner,sun50i-a100-sid
++        - const: allwinner,sun50i-a64-sid
+       - allwinner,sun50i-h5-sid
+       - allwinner,sun50i-h6-sid
  
 -- 
 1.9.1
