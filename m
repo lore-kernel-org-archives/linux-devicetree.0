@@ -8,67 +8,66 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9565C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 01:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3BDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 01:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E15820675
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 01:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92F1A20739
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 01:16:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajK68aMH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L+gI9X9C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbgGHBAY (ORCPT
+        id S1728716AbgGHBQs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jul 2020 21:00:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37516 "EHLO
+        Tue, 7 Jul 2020 21:16:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728061AbgGHBAX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 21:00:23 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0E54C061755;
-        Tue,  7 Jul 2020 18:00:23 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id x9so3793664plr.2;
-        Tue, 07 Jul 2020 18:00:23 -0700 (PDT)
+        with ESMTP id S1728231AbgGHBQr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jul 2020 21:16:47 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DBA5C061755;
+        Tue,  7 Jul 2020 18:16:47 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id 72so6898010ple.0;
+        Tue, 07 Jul 2020 18:16:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=KvpMciF86CSc7RkRJ7qW81+ZPWoK2hqTyP6YUhfAR/w=;
-        b=ajK68aMHC92DcsW97jFZ8MVFaVFFeraZayZ2LpJzwPhFzi5ytARAWzMoOs6W/Xq2KE
-         KflLR/vbh/zRonjNvQ66PrQzHc4IBqpq1PNnwl9ger7z09C/7NoEmFJj43vTIsiEfQPz
-         fdbvOlxE4lcRaR1+4G9+yL16x1LB1F4D/TC0edrytlTnjmMQset7SU46iSGhE7xub/Lv
-         HxZSof3bQ9XcdTgvjW/rtFOyparFwN6IoVcYHn2DIoWY4yY+exZTQhLRhuRvtYgzlIRx
-         QFIkvdtkD1/ZrYp56HvKp0ax0RofLIt8UWKPcb6G5SZ+p56q9+Nq5lb5oysp9Je8y4Y+
-         34KQ==
+        bh=Xf5xTa05S+axsSrxj9MJoIUBmqUzF79JlNFEIaAD9Ss=;
+        b=L+gI9X9CuifDWATtBY+AFUkVZ/bDXQki3Galc3UMNjDuzlIP2pctNM5MKq0eLXxVxh
+         +CY1Sdom3FBCbvBg2WW4xI2/jc6pMYV+HdVAH5dUWu33k70O8ECzunNHZFBejcdQlUJn
+         KnBmnWLlCDD3Ees8OqRNQGKPvjQFA+dkSFJgzGMXcCBxHK4KNfOHQvgan9G2GJpygxzl
+         VN2bROyH4Cct80n3WmSq9s87mHhRb6w7MsU4+QiRNKs8BadP+HESjHm9I4IKZqhZtvxV
+         tsIhqwymsBGKhJdio9f5Jdstai/57gXaWxq8d43lrRUIFFaRjI5IJUoIEWrOKsiqdM2U
+         myqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=KvpMciF86CSc7RkRJ7qW81+ZPWoK2hqTyP6YUhfAR/w=;
-        b=b3ccrGpKhpnZBWTs+kuzF8tUR1p6rMqKf2g6GU030nMdyGitorAkX3xDasALCP/E5n
-         f57PY8OUwlZFyE6Cag+ZJ3Nt8ftjjJslOVOR/EGj8BoxKlhnnKSxb8HOMqSj1ZzMH4xp
-         Nxm4Jhw2rrVAmLKi8ju2XstTdm9lxcjOgkgP0TS0MOb94eXeZwI7ojqMRG6lk85b9Ffm
-         UfPODYUC6KSL2QbSjzdZ/PLTaii7Awf2jGhgoIIOTFKTb0Enhv85otxYDFpYT+MhvpqK
-         tILsZVHOrwse4aPhE23OK+N0Kw/2vytojpKULlNWmF//FsfERUecvmmD9hsTDSBfrZkY
-         tzOg==
-X-Gm-Message-State: AOAM530rnUjQIdWo2fLBRVyE09/CfmqnDipKDSAGLeaw11hSyoXpNwLF
-        7sqw98006XEhZNOCC5Ji65jEauLYU8WyTg==
-X-Google-Smtp-Source: ABdhPJxGU2pVBPzPSip/FGX3f1RpJs/tI8PizP4jHpU4GJXresP6Vr5XwJXr6LWrF5eBglOHi3sA5g==
-X-Received: by 2002:a17:90a:d912:: with SMTP id c18mr6881603pjv.184.1594170023105;
-        Tue, 07 Jul 2020 18:00:23 -0700 (PDT)
+        bh=Xf5xTa05S+axsSrxj9MJoIUBmqUzF79JlNFEIaAD9Ss=;
+        b=NdB2FX2x4hQehGn6S/OsuYldzc/LU7rgXbf7klNtcqZ7rbc/IfUFZs1Ct/kf2bNfMM
+         MVkSi1s4x7srdA/fGAbWibtDeG0vpMAZHHnDhwsNoRpcUIwoNOFPFaTve4qwuSf/m9BE
+         GNWnSKcwjGTQx2davX/zUsZaK1JfQXenWh4XhyOuDq87V18J0HUtl+4AyIJ0hsJyZqt+
+         cXR10xQ/XAaW/qS5Cen7Sdo4oIOcjUJEZCmKMuqoCe/WYNjmqWkBsnPD8TRgtQd2RsiG
+         k90nIzPlzx0XyH8rWuAm6UwyZvFwgGJyHd6Uo+cBhvjtXhMzGnIV+Ph/72Beq2OYpGpn
+         5oGQ==
+X-Gm-Message-State: AOAM531xCMQM51vwA70FscyfGtw9hW11g4Qiva7tReklkMG+2YdcBmXR
+        KQ05c5KY/ez6KZPSG373I0w=
+X-Google-Smtp-Source: ABdhPJzVp85jZOQ2rQw+SSGENwOq7++PWabO5WNXLt1ji8aWVKb07Vk4UPBM+LUxaBPJlGEJ5QR9Xg==
+X-Received: by 2002:a17:90a:2dcb:: with SMTP id q11mr7147765pjm.135.1594171007146;
+        Tue, 07 Jul 2020 18:16:47 -0700 (PDT)
 Received: from localhost.localdomain.com ([2605:e000:160b:911f:a2ce:c8ff:fe03:6cb0])
-        by smtp.gmail.com with ESMTPSA id 191sm23361234pfw.150.2020.07.07.18.00.21
+        by smtp.gmail.com with ESMTPSA id s89sm3574967pjj.28.2020.07.07.18.16.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 18:00:22 -0700 (PDT)
+        Tue, 07 Jul 2020 18:16:46 -0700 (PDT)
 From:   Chris Healy <cphealy@gmail.com>
 To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com, andrew.smirnov@gmail.com,
-        l.stach@pengutronix.de, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        andrew@lunn.ch
+        festevam@gmail.com, linux-imx@nxp.com, stefan@agner.ch,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, andrew@lunn.ch
 Cc:     Chris Healy <cphealy@gmail.com>
-Subject: [PATCH v3] arm64: dts: zii-ultra: update MDIO speed and preamble
-Date:   Tue,  7 Jul 2020 18:00:05 -0700
-Message-Id: <20200708010005.6366-1-cphealy@gmail.com>
+Subject: [PATCH v3] arm: dts: ZII: update MDIO speed and preamble
+Date:   Tue,  7 Jul 2020 18:16:27 -0700
+Message-Id: <20200708011627.7427-1-cphealy@gmail.com>
 X-Mailer: git-send-email 2.21.3
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -77,26 +76,32 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Update MDIO configuration with zii-ultra device to fully utilize
-MDIO endpoint capabilities.  Device supports 12.5MHz clock and
-doesn't require MDIO preamble.
+Update MDIO configuration with ZII devices to fully utilize
+MDIO endpoint capabilities.  All devices support 12.5MHz clock and
+don't require MDIO preable.
 
 Signed-off-by: Chris Healy <cphealy@gmail.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
 ---
 v3:
 - make "status = okay" the last property
 v2:
-- Fix subject line to reference zii-ultra:
+- Fix subject line to reference ZII:
 - Get rid of "=<1>;" from suppress-preamble lines
 
- arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi   | 2 ++
+ arch/arm/boot/dts/vf610-zii-cfu1.dts      | 2 ++
+ arch/arm/boot/dts/vf610-zii-dev.dtsi      | 2 ++
+ arch/arm/boot/dts/vf610-zii-spb4.dts      | 2 ++
+ arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts  | 2 ++
+ arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts | 2 ++
+ 6 files changed, 12 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi b/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi
-index 6a55165bd76a..0d1088dcaa02 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi
-@@ -131,6 +131,8 @@
+diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+index 20350e803377..5af9ce977b12 100644
+--- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+@@ -719,6 +719,8 @@
  	mdio {
  		#address-cells = <1>;
  		#size-cells = <0>;
@@ -105,6 +110,71 @@ index 6a55165bd76a..0d1088dcaa02 100644
  		status = "okay";
  
  		switch: switch@0 {
+diff --git a/arch/arm/boot/dts/vf610-zii-cfu1.dts b/arch/arm/boot/dts/vf610-zii-cfu1.dts
+index ce1920c052fc..64e0e9509226 100644
+--- a/arch/arm/boot/dts/vf610-zii-cfu1.dts
++++ b/arch/arm/boot/dts/vf610-zii-cfu1.dts
+@@ -158,6 +158,8 @@
+ 	mdio1: mdio {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		clock-frequency = <12500000>;
++		suppress-preamble;
+ 		status = "okay";
+ 
+ 		switch0: switch0@0 {
+diff --git a/arch/arm/boot/dts/vf610-zii-dev.dtsi b/arch/arm/boot/dts/vf610-zii-dev.dtsi
+index 95d0060fb56c..f8299f33a692 100644
+--- a/arch/arm/boot/dts/vf610-zii-dev.dtsi
++++ b/arch/arm/boot/dts/vf610-zii-dev.dtsi
+@@ -137,6 +137,8 @@
+ 	mdio1: mdio {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		clock-frequency = <12500000>;
++		suppress-preamble;
+ 		status = "okay";
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/vf610-zii-spb4.dts b/arch/arm/boot/dts/vf610-zii-spb4.dts
+index 55b4201e27f6..a68eae88174a 100644
+--- a/arch/arm/boot/dts/vf610-zii-spb4.dts
++++ b/arch/arm/boot/dts/vf610-zii-spb4.dts
+@@ -119,6 +119,8 @@
+ 	mdio1: mdio {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		clock-frequency = <12500000>;
++		suppress-preamble;
+ 		status = "okay";
+ 
+ 		switch0: switch0@0 {
+diff --git a/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts b/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
+index a6c22a79779e..fa5ac9125af7 100644
+--- a/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
++++ b/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
+@@ -105,6 +105,8 @@
+ 	mdio1: mdio {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		clock-frequency = <12500000>;
++		suppress-preamble;
+ 		status = "okay";
+ 
+ 		switch0: switch0@0 {
+diff --git a/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts b/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
+index 3d05c894bdc0..801133154e3d 100644
+--- a/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
++++ b/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
+@@ -133,6 +133,8 @@
+ 	mdio1: mdio {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		clock-frequency = <12500000>;
++		suppress-preamble;
+ 		status = "okay";
+ 
+ 		switch0: switch0@0 {
 -- 
 2.21.3
 
