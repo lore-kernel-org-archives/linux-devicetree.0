@@ -7,65 +7,257 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F063C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 08:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E8EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 08:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5225D20DD4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 08:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4F9C20DD4
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 08:28:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727918AbgGHI1S (ORCPT
+        id S1726408AbgGHI2U (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 04:27:18 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:40435 "EHLO
+        Wed, 8 Jul 2020 04:28:20 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:41316 "EHLO
         smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726006AbgGHI1S (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 04:27:18 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.3919662|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.05864-0.00417621-0.937184;FP=16269809178823979455|2|1|16|0|-1|-1|-1;HT=e02c03268;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=14;RT=14;SR=0;TI=SMTPD_---.I-BX2cf_1594196829;
-Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I-BX2cf_1594196829)
-          by smtp.aliyun-inc.com(10.147.40.2);
-          Wed, 08 Jul 2020 16:27:14 +0800
+        by vger.kernel.org with ESMTP id S1727818AbgGHI2U (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 04:28:20 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07509368|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.546935-0.000464198-0.452601;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03309;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=10;RT=10;SR=0;TI=SMTPD_---.I-BVxka_1594196890;
+Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I-BVxka_1594196890)
+          by smtp.aliyun-inc.com(10.147.42.198);
+          Wed, 08 Jul 2020 16:28:14 +0800
 From:   Frank Lee <frank@allwinnertech.com>
-To:     robh+dt@kernel.org, mripard@kernel.org, wens@csie.org,
-        icenowy@aosc.io, clabbe@baylibre.com, megous@megous.com,
-        frank@allwinnertech.com, georgii.staroselskii@emlid.com,
+To:     mripard@kernel.org, wens@csie.org, robh+dt@kernel.org,
         tiny.windzz@gmail.com
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, huangshuosheng@allwinnertech.com,
-        liyong@allwinnertech.com
-Subject: [PATCH v3 15/16] dt-bindings: arm: sunxi: Add Allwinner A100 Perf1 Board bindings
-Date:   Wed,  8 Jul 2020 16:27:19 +0800
-Message-Id: <20200708082719.5644-1-frank@allwinnertech.com>
+        liyong@allwinnertech.com, Frank Lee <frank@allwinnertech.com>
+Subject: [PATCH v3 16/16] arm64: allwinner: A100: add support for Allwinner Perf1 board
+Date:   Wed,  8 Jul 2020 16:28:21 +0800
+Message-Id: <20200708082821.13188-1-frank@allwinnertech.com>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document board compatible names for Allwinner A100 Perf1 Board.
+A100 perf1 is an Allwinner A100-based SBC, with the following features:
+
+- 1GiB DDR3 DRAM
+- AXP803 PMIC
+- 2 USB 2.0 ports
+- MicroSD slot and on-board eMMC module
+- on-board Nand flash
+- ···
+
+Adds initial support for it, including UART and PMU.
 
 Signed-off-by: Frank Lee <frank@allwinnertech.com>
 ---
- Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm64/boot/dts/allwinner/Makefile             |   1 +
+ .../dts/allwinner/sun50i-a100-allwinner-perf1.dts  | 180 +++++++++++++++++++++
+ 2 files changed, 181 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
 
-diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
-index abf2d97..8cdc677 100644
---- a/Documentation/devicetree/bindings/arm/sunxi.yaml
-+++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
-@@ -16,6 +16,11 @@ properties:
-   compatible:
-     oneOf:
- 
-+      - description: Allwinner A100 Perf1 Board
-+        items:
-+          - const: allwinner,a100-perf1
-+          - const: allwinner,sun50i-a100
+diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+index e4d3cd0..ab780db 100644
+--- a/arch/arm64/boot/dts/allwinner/Makefile
++++ b/arch/arm64/boot/dts/allwinner/Makefile
+@@ -14,6 +14,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinephone-1.1.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinetab.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-sopine-baseboard.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-teres-i.dtb
++dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a100-allwinner-perf1.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-bananapi-m2-plus.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-bananapi-m2-plus-v1.2.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-emlid-neutis-n5-devboard.dtb
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts b/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
+new file mode 100644
+index 0000000..38621bb
+--- /dev/null
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
+@@ -0,0 +1,180 @@
++// SPDX-License-Identifier: (GPL-2.0+ or MIT)
++/*
++ * Copyright (c) 2020 Frank Lee <frank@allwinnertech.com>
++ */
 +
-       - description: Allwinner A23 Evaluation Board
-         items:
-           - const: allwinner,sun8i-a23-evb
++/dts-v1/;
++
++#include "sun50i-a100.dtsi"
++
++/{
++	model = "Allwinner A100 Perf1";
++	compatible = "allwinner,a100-perf1", "allwinner,sun50i-a100";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&pio {
++	vcc-pb-supply = <&reg_dcdc1>;
++	vcc-pc-supply = <&reg_eldo1>;
++	vcc-pd-supply = <&reg_dcdc1>;
++	vcc-pe-supply = <&reg_dldo2>;
++	vcc-pf-supply = <&reg_dcdc1>;
++	vcc-pg-supply = <&reg_dldo1>;
++	vcc-ph-supply = <&reg_dcdc1>;
++};
++
++&r_pio {
++	/*
++	 * FIXME: We can't add that supply for now since it would
++	 * create a circular dependency between pinctrl, the regulator
++	 * and the RSB Bus.
++	 *
++	 * vcc-pl-supply = <&reg_aldo3>;
++	 */
++};
++
++&r_i2c0 {
++	status = "okay";
++
++	axp803: pmic@34 {
++		compatible = "x-powers,axp803";
++		reg = <0x34>;
++		interrupt-parent = <&r_intc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++		x-powers,drive-vbus-en; /* set N_VBUSEN as output pin */
++	};
++};
++
++#include "axp803.dtsi"
++
++&ac_power_supply {
++	status = "okay";
++};
++
++&reg_aldo1 {
++	regulator-always-on;
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <1800000>;
++	regulator-name = "vcc-pll-avcc";
++};
++
++&reg_aldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <1800000>;
++	regulator-name = "vcc-dram-1";
++};
++
++&reg_aldo3 {
++	regulator-always-on;
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-usb-pl";
++};
++
++&reg_dcdc1 {
++	regulator-always-on;
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-pc-io-usb-pd-emmc-nand-card";
++};
++
++&reg_dcdc2 {
++	regulator-always-on;
++	/*
++	 * FIXME: update min and max before support dvfs.
++	 */
++	regulator-min-microvolt = <500000>;
++	regulator-max-microvolt = <1300000>;
++	regulator-name = "vdd-cpux";
++};
++
++/* DCDC3 is polyphased with DCDC2 */
++
++&reg_dcdc4 {
++	regulator-always-on;
++	regulator-min-microvolt = <950000>;
++	regulator-max-microvolt = <950000>;
++	regulator-name = "vdd-sys-usb-dram";
++};
++
++&reg_dcdc5 {
++	regulator-always-on;
++	regulator-min-microvolt = <1500000>;
++	regulator-max-microvolt = <1500000>;
++	regulator-name = "vcc-dram-2";
++};
++
++&reg_dldo1 {
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-pg-dcxo-wifi";
++};
++
++&reg_dldo2 {
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <2800000>;
++	regulator-name = "vcc-pe-csi";
++};
++
++&reg_dldo3 {
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "ldo-avdd-csi";
++};
++
++&reg_dldo4 {
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <2800000>;
++	regulator-name = "avcc-csi";
++};
++
++&reg_eldo1 {
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <1800000>;
++	regulator-name = "vcc-pc-lvds-csi-efuse-emmc-nand";
++};
++
++&reg_eldo2 {
++	regulator-min-microvolt = <1200000>;
++	regulator-max-microvolt = <1800000>;
++	regulator-name = "dvdd-csi";
++};
++
++&reg_eldo3 {
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <1800000>;
++	regulator-name = "vcc-mipi-lcd";
++};
++
++&reg_fldo1 {
++	regulator-always-on;
++	regulator-min-microvolt = <900000>;
++	regulator-max-microvolt = <900000>;
++	regulator-name = "vdd-cpus-usb";
++};
++
++&reg_ldo_io0 {
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-ctp";
++	status = "okay";
++};
++
++&reg_drivevbus {
++	regulator-name = "usb0-vbus";
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pb_pins>;
++	status = "okay";
++};
 -- 
 1.9.1
 
