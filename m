@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C163EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 05:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B57AEC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 05:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A12AE20720
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 05:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B3632078A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 05:09:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RDJ7c8BD"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wrWv82As"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbgGHFJX (ORCPT
+        id S1729493AbgGHFJa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 01:09:23 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:20796 "EHLO m43-7.mailgun.net"
+        Wed, 8 Jul 2020 01:09:30 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:37093 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729209AbgGHFJU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 8 Jul 2020 01:09:20 -0400
+        id S1729320AbgGHFJW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 8 Jul 2020 01:09:22 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594184959; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1594184962; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=VSHM2/YV7ANiTjEG5pC2jzezjdMwYMdReakR4aD7eD8=; b=RDJ7c8BDk96FJnJCMwCHyqQ0/LQSDJWa1n/DM4iJzKn3jYs0wmxspl519u7+sEF85kQZS1bC
- 5KeHwkEVxKw2iNepgX7NLUk4VMkuyHAhorFZR7wXjYQL2DRcKwSmJTCAdm2faDdO4jUA1bAD
- qSOwdlicF30I2tNG5LnXRAZKcDg=
+ bh=lB89iK3tJ1IYtY/wkQuoTXpZTXQ1oYnOZdhjFlIZSCQ=; b=wrWv82AsSKO4+01csqJ4qhhqpuE9WyYMBFUtrtNYdvD0VcKFqOWQq2SzMYrBXufwpfTYlLoE
+ 7GXQ23If3W8cbr7kQoOBUeHAeQ7L8Tsfm6MrTTWpuV8zJNGdirSXHMi+DsdZAtLeHP7VNiH5
+ nr0faaH0dh2sr1hcZrYvBCUqE+g=
 X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n16.prod.us-west-2.postgun.com with SMTP id
- 5f0554f36e56afc68d8b5fee (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 08 Jul 2020 05:09:07
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5f0554ec6e56afc68d8b5a45 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 08 Jul 2020 05:09:00
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 30D5DC433C6; Wed,  8 Jul 2020 05:09:07 +0000 (UTC)
+        id A7F0DC433C8; Wed,  8 Jul 2020 05:09:00 +0000 (UTC)
 Received: from rohkumar-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: rohitkr)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DAD57C433C8;
-        Wed,  8 Jul 2020 05:09:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DAD57C433C8
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E308FC433C6;
+        Wed,  8 Jul 2020 05:08:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E308FC433C6
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
 From:   Rohit kumar <rohitkr@codeaurora.org>
@@ -55,9 +55,9 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
         alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Ajit Pandey <ajitp@codeaurora.org>
-Subject: [PATCH v3 5/8] ASoC: qcom: lpass-platform: Replace card->dev with component->dev
-Date:   Wed,  8 Jul 2020 10:38:13 +0530
-Message-Id: <1594184896-10629-6-git-send-email-rohitkr@codeaurora.org>
+Subject: [PATCH v3 4/8] include: dt-bindings: sound: Add sc7180-lpass bindings header
+Date:   Wed,  8 Jul 2020 10:38:12 +0530
+Message-Id: <1594184896-10629-5-git-send-email-rohitkr@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1594184896-10629-1-git-send-email-rohitkr@codeaurora.org>
 References: <1594184896-10629-1-git-send-email-rohitkr@codeaurora.org>
@@ -68,31 +68,30 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Ajit Pandey <ajitp@codeaurora.org>
 
-We are allocating dma memory for component->dev but trying to mmap
-such memory for substream->pcm->card->dev. Replace device argument
-in mmap with component->dev to fix this.
+Add header defining dai-id and mclk id for SC7180 lpass soc.
 
 Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
 ---
- sound/soc/qcom/lpass-platform.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ include/dt-bindings/sound/sc7180-lpass.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+ create mode 100644 include/dt-bindings/sound/sc7180-lpass.h
 
-diff --git a/sound/soc/qcom/lpass-platform.c b/sound/soc/qcom/lpass-platform.c
-index 445ca193..f9424cc 100644
---- a/sound/soc/qcom/lpass-platform.c
-+++ b/sound/soc/qcom/lpass-platform.c
-@@ -472,9 +472,8 @@ static int lpass_platform_pcmops_mmap(struct snd_soc_component *component,
- {
- 	struct snd_pcm_runtime *runtime = substream->runtime;
- 
--	return dma_mmap_coherent(substream->pcm->card->dev, vma,
--			runtime->dma_area, runtime->dma_addr,
--			runtime->dma_bytes);
-+	return dma_mmap_coherent(component->dev, vma, runtime->dma_area,
-+				 runtime->dma_addr, runtime->dma_bytes);
- }
- 
- static irqreturn_t lpass_dma_interrupt_handler(
+diff --git a/include/dt-bindings/sound/sc7180-lpass.h b/include/dt-bindings/sound/sc7180-lpass.h
+new file mode 100644
+index 00000000..7d988f6
+--- /dev/null
++++ b/include/dt-bindings/sound/sc7180-lpass.h
+@@ -0,0 +1,10 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __DT_SC7180_LPASS_H
++#define __DT_SC7180_LPASS_H
++
++#define MI2S_PRIMARY	0
++#define MI2S_SECONDARY	1
++
++#define LPASS_MCLK0	0
++
++#endif /* __DT_APQ8016_LPASS_H */
 -- 
 Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
 is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
