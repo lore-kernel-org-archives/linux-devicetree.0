@@ -2,195 +2,182 @@ Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC1DC433E6
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 19:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E063C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 19:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0463207C4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 19:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4C50206E2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 19:32:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Fjjm6yGj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726247AbgGHTRG (ORCPT
+        id S1726315AbgGHTcb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 15:17:06 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:42149 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbgGHTRG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 15:17:06 -0400
-X-Greylist: delayed 364 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Jul 2020 15:17:05 EDT
-Received: from ironmsg-lv-alpha.qualcomm.com ([10.47.202.13])
-  by alexa-out.qualcomm.com with ESMTP; 08 Jul 2020 12:11:00 -0700
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg-lv-alpha.qualcomm.com with ESMTP/TLS/AES256-SHA; 08 Jul 2020 12:10:58 -0700
-Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 09 Jul 2020 00:40:35 +0530
-Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id 4A7372BFB; Thu,  9 Jul 2020 00:40:34 +0530 (IST)
-From:   Sandeep Maheswaram <sanm@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wed, 8 Jul 2020 15:32:31 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:60826 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726306AbgGHTca (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 15:32:30 -0400
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id ADFE630C0CF;
+        Wed,  8 Jul 2020 12:32:29 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com ADFE630C0CF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1594236749;
+        bh=GSqFzmHeOiSek+62bFpDJcfrtOQWQUrThlJG71lclKo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Fjjm6yGjDqgWxwo0/bd5D6sxckGgaH6BhuJG/giLwVDgZC3ns2lc/ZZItLPrMGOh7
+         OBczFNQaXDQPdTjnCklq2ncukUSRj1nWsQCbq+keQzapTvKhcKZYJSdIcwvhVe/+3p
+         04joFOn5iYCFEELNDRH+Nj5h0HKjsa2m+us9IDOk=
+Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 38EA014008B;
+        Wed,  8 Jul 2020 12:32:28 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
+Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v2 2/3] usb: dwc3: qcom: Configure wakeup interrupts and set genpd active wakeup flag
-Date:   Thu,  9 Jul 2020 00:40:16 +0530
-Message-Id: <1594235417-23066-3-git-send-email-sanm@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594235417-23066-1-git-send-email-sanm@codeaurora.org>
-References: <1594235417-23066-1-git-send-email-sanm@codeaurora.org>
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
+        ARM ARCHITECTURE),
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v7 03/12] dt-bindings: PCI: Add bindings for more Brcmstb chips
+Date:   Wed,  8 Jul 2020 15:31:56 -0400
+Message-Id: <20200708193219.47134-4-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200708193219.47134-1-james.quinlan@broadcom.com>
+References: <20200708193219.47134-1-james.quinlan@broadcom.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-configure interrupts based on hs_phy_flag. Set genpd active wakeup flag
-for usb gdsc if wakeup capable devices are connected.
+From: Jim Quinlan <jquinlan@broadcom.com>
 
-Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+- Add compatible strings for three more Broadcom STB chips: 7278, 7216,
+  7211 (STB version of RPi4).
+- Add new property 'brcm,scb-sizes'.
+- Add new property 'resets'.
+- Add new property 'reset-names' for 7216 only.
+- Allow 'ranges' and 'dma-ranges' to have more than one item and update
+  the example to show this.
+
+Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/usb/dwc3/dwc3-qcom.c | 73 ++++++++++++++++++++++++++++++++++----------
- 1 file changed, 57 insertions(+), 16 deletions(-)
+ .../bindings/pci/brcm,stb-pcie.yaml           | 56 ++++++++++++++++---
+ 1 file changed, 49 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-index 1dfd024..8902670 100644
---- a/drivers/usb/dwc3/dwc3-qcom.c
-+++ b/drivers/usb/dwc3/dwc3-qcom.c
-@@ -16,9 +16,11 @@
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
- #include <linux/phy/phy.h>
-+#include <linux/pm_domain.h>
- #include <linux/usb/of.h>
- #include <linux/reset.h>
- #include <linux/iopoll.h>
-+#include <linux/usb/hcd.h>
+diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+index 8680a0f86c5a..807694b4f41f 100644
+--- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+@@ -9,12 +9,15 @@ title: Brcmstb PCIe Host Controller Device Tree Bindings
+ maintainers:
+   - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
  
- #include "core.h"
- 
-@@ -192,21 +194,34 @@ static int dwc3_qcom_register_extcon(struct dwc3_qcom *qcom)
- 
- static void dwc3_qcom_disable_interrupts(struct dwc3_qcom *qcom)
- {
-+	struct dwc3 *dwc = platform_get_drvdata(qcom->dwc3);
-+
- 	if (qcom->hs_phy_irq) {
- 		disable_irq_wake(qcom->hs_phy_irq);
- 		disable_irq_nosync(qcom->hs_phy_irq);
- 	}
-+	if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_LS) {
-+		if (qcom->dp_hs_phy_irq) {
-+			disable_irq_wake(qcom->dp_hs_phy_irq);
-+			disable_irq_nosync(qcom->dp_hs_phy_irq);
-+		}
-+	} else if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_HS) {
-+		if (qcom->dm_hs_phy_irq) {
-+			disable_irq_wake(qcom->dm_hs_phy_irq);
-+			disable_irq_nosync(qcom->dm_hs_phy_irq);
-+		}
-+	} else {
- 
--	if (qcom->dp_hs_phy_irq) {
--		disable_irq_wake(qcom->dp_hs_phy_irq);
--		disable_irq_nosync(qcom->dp_hs_phy_irq);
--	}
-+		if (qcom->dp_hs_phy_irq) {
-+			disable_irq_wake(qcom->dp_hs_phy_irq);
-+			disable_irq_nosync(qcom->dp_hs_phy_irq);
-+		}
- 
--	if (qcom->dm_hs_phy_irq) {
--		disable_irq_wake(qcom->dm_hs_phy_irq);
--		disable_irq_nosync(qcom->dm_hs_phy_irq);
-+		if (qcom->dm_hs_phy_irq) {
-+			disable_irq_wake(qcom->dm_hs_phy_irq);
-+			disable_irq_nosync(qcom->dm_hs_phy_irq);
-+		}
- 	}
+-allOf:
+-  - $ref: /schemas/pci/pci-bus.yaml#
 -
- 	if (qcom->ss_phy_irq) {
- 		disable_irq_wake(qcom->ss_phy_irq);
- 		disable_irq_nosync(qcom->ss_phy_irq);
-@@ -215,21 +230,34 @@ static void dwc3_qcom_disable_interrupts(struct dwc3_qcom *qcom)
+ properties:
+   compatible:
+-    const: brcm,bcm2711-pcie # The Raspberry Pi 4
++    items:
++      - enum:
++          - brcm,bcm2711-pcie # The Raspberry Pi 4
++          - brcm,bcm7211-pcie # Broadcom STB version of RPi4
++          - brcm,bcm7278-pcie # Broadcom 7278 Arm
++          - brcm,bcm7216-pcie # Broadcom 7216 Arm
++          - brcm,bcm7445-pcie # Broadcom 7445 Arm
  
- static void dwc3_qcom_enable_interrupts(struct dwc3_qcom *qcom)
- {
-+	struct dwc3 *dwc = platform_get_drvdata(qcom->dwc3);
+   reg:
+     maxItems: 1
+@@ -34,10 +37,12 @@ properties:
+       - const: msi
+ 
+   ranges:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 4
+ 
+   dma-ranges:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 6
+ 
+   clocks:
+     maxItems: 1
+@@ -58,8 +63,31 @@ properties:
+ 
+   aspm-no-l0s: true
+ 
++  resets:
++    description: for "brcm,bcm7216-pcie", must be a valid reset
++      phandle pointing to the RESCAL reset controller provider node.
++    $ref: "/schemas/types.yaml#/definitions/phandle"
 +
- 	if (qcom->hs_phy_irq) {
- 		enable_irq(qcom->hs_phy_irq);
- 		enable_irq_wake(qcom->hs_phy_irq);
- 	}
-+	if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_LS) {
-+		if (qcom->dp_hs_phy_irq) {
-+			enable_irq(qcom->dp_hs_phy_irq);
-+			enable_irq_wake(qcom->dp_hs_phy_irq);
-+		}
-+	} else if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_HS) {
-+		if (qcom->dm_hs_phy_irq) {
-+			enable_irq(qcom->dm_hs_phy_irq);
-+			enable_irq_wake(qcom->dm_hs_phy_irq);
-+		}
-+	} else {
- 
--	if (qcom->dp_hs_phy_irq) {
--		enable_irq(qcom->dp_hs_phy_irq);
--		enable_irq_wake(qcom->dp_hs_phy_irq);
--	}
-+		if (qcom->dp_hs_phy_irq) {
-+			enable_irq(qcom->dp_hs_phy_irq);
-+			enable_irq_wake(qcom->dp_hs_phy_irq);
-+		}
- 
--	if (qcom->dm_hs_phy_irq) {
--		enable_irq(qcom->dm_hs_phy_irq);
--		enable_irq_wake(qcom->dm_hs_phy_irq);
-+		if (qcom->dm_hs_phy_irq) {
-+			enable_irq(qcom->dm_hs_phy_irq);
-+			enable_irq_wake(qcom->dm_hs_phy_irq);
-+		}
- 	}
--
- 	if (qcom->ss_phy_irq) {
- 		enable_irq(qcom->ss_phy_irq);
- 		enable_irq_wake(qcom->ss_phy_irq);
-@@ -240,6 +268,14 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
- {
- 	u32 val;
- 	int i;
-+	struct dwc3 *dwc = platform_get_drvdata(qcom->dwc3);
-+	struct usb_hcd  *hcd = platform_get_drvdata(dwc->xhci);
-+	struct generic_pm_domain *genpd;
++  reset-names:
++    items:
++      - const: rescal
 +
-+	genpd = pd_to_genpd(qcom->dev->pm_domain);
++  brcm,scb-sizes:
++    description: u64 giving the 64bit PCIe memory
++      viewport size of a memory controller.  There may be up to
++      three controllers, and each size must be a power of two
++      with a size greater or equal to the amount of memory the
++      controller supports.  Note that each memory controller
++      may have two component regions -- base and extended -- so
++      this information cannot be deduced from the dma-ranges.
++    $ref: /schemas/types.yaml#/definitions/uint64-array
++    items:
++      minItems: 1
++      maxItems: 3
 +
-+	if (genpd && usb_wakeup_enabled_descendants(hcd->self.root_hub))
-+		genpd->flags |= GENPD_FLAG_ACTIVE_WAKEUP;
+ required:
+   - reg
++  - ranges
+   - dma-ranges
+   - "#interrupt-cells"
+   - interrupts
+@@ -68,6 +96,18 @@ required:
+   - interrupt-map
+   - msi-controller
  
- 	if (qcom->is_suspended)
- 		return 0;
-@@ -261,6 +297,11 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
- {
- 	int ret;
- 	int i;
-+	struct generic_pm_domain *genpd;
++allOf:
++  - $ref: /schemas/pci/pci-bus.yaml#
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: brcm,bcm7216-pcie
++    then:
++      required:
++        - resets
++        - reset-names
 +
-+	genpd = pd_to_genpd(qcom->dev->pm_domain);
-+	if (genpd)
-+		genpd->flags &= !GENPD_FLAG_ACTIVE_WAKEUP;
+ unevaluatedProperties: false
  
- 	if (!qcom->is_suspended)
- 		return 0;
+ examples:
+@@ -93,7 +133,9 @@ examples:
+                     msi-parent = <&pcie0>;
+                     msi-controller;
+                     ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
+-                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
++                    dma-ranges = <0x42000000 0x1 0x00000000 0x0 0x40000000 0x0 0x80000000>,
++                                 <0x42000000 0x1 0x80000000 0x3 0x00000000 0x0 0x80000000>;
+                     brcm,enable-ssc;
++                    brcm,scb-sizes =  <0x0000000080000000 0x0000000080000000>;
+             };
+     };
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.17.1
 
