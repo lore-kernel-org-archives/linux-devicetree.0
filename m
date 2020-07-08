@@ -2,31 +2,32 @@ Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E79C433E5
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC1DC433E6
 	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 19:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37AB8207D0
+	by mail.kernel.org (Postfix) with ESMTP id A0463207C4
 	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 19:17:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726044AbgGHTRU (ORCPT
+        id S1726247AbgGHTRG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 15:17:20 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:32750 "EHLO
+        Wed, 8 Jul 2020 15:17:06 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:42149 "EHLO
         alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbgGHTRG (ORCPT
+        with ESMTP id S1726044AbgGHTRG (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 15:17:06 -0400
+X-Greylist: delayed 364 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Jul 2020 15:17:05 EDT
 Received: from ironmsg-lv-alpha.qualcomm.com ([10.47.202.13])
-  by alexa-out.qualcomm.com with ESMTP; 08 Jul 2020 12:11:03 -0700
+  by alexa-out.qualcomm.com with ESMTP; 08 Jul 2020 12:11:00 -0700
 Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg-lv-alpha.qualcomm.com with ESMTP/TLS/AES256-SHA; 08 Jul 2020 12:11:01 -0700
+  by ironmsg-lv-alpha.qualcomm.com with ESMTP/TLS/AES256-SHA; 08 Jul 2020 12:10:58 -0700
 Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 09 Jul 2020 00:40:31 +0530
+  by ironmsg02-blr.qualcomm.com with ESMTP; 09 Jul 2020 00:40:35 +0530
 Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id 58EE52BFB; Thu,  9 Jul 2020 00:40:30 +0530 (IST)
+        id 4A7372BFB; Thu,  9 Jul 2020 00:40:34 +0530 (IST)
 From:   Sandeep Maheswaram <sanm@codeaurora.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -41,46 +42,154 @@ Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Manu Gautam <mgautam@codeaurora.org>,
         Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v2 0/3] usb: dwc3: Host wake up support from system suspend 
-Date:   Thu,  9 Jul 2020 00:40:14 +0530
-Message-Id: <1594235417-23066-1-git-send-email-sanm@codeaurora.org>
+Subject: [PATCH v2 2/3] usb: dwc3: qcom: Configure wakeup interrupts and set genpd active wakeup flag
+Date:   Thu,  9 Jul 2020 00:40:16 +0530
+Message-Id: <1594235417-23066-3-git-send-email-sanm@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1594235417-23066-1-git-send-email-sanm@codeaurora.org>
+References: <1594235417-23066-1-git-send-email-sanm@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Avoiding phy powerdown in host mode so that it can be wake up by devices.
-Set GENPD_FLAG_ACTIVE_WAKEUP flag to keep usb30_prim gdsc active
-when wakeup capable devices are connected to the host.
-Using PDC interrupts instead of GIC interrupst to support wakeup in
-xo shutdown case.
+configure interrupts based on hs_phy_flag. Set genpd active wakeup flag
+for usb gdsc if wakeup capable devices are connected.
 
-Changes in v2:
-Dropped the patch in clock to set GENPD_FLAG_ACTIVE_WAKEUP flag and 
-setting in usb dwc3 driver.
-Separated the core patch and glue driver patch.
-Made need_phy_for_wakeup flag part of dwc structure and 
-hs_phy_flags as unsgined int.
-Adrressed the comment on device_init_wakeup call.
-Corrected offset for reading portsc register.
-Added pacth to support wakeup in xo shutdown case.
+Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+---
+ drivers/usb/dwc3/dwc3-qcom.c | 73 ++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 57 insertions(+), 16 deletions(-)
 
-
-
-Sandeep Maheswaram (3):
-  usb: dwc3: core: Host wake up support from system suspend
-  usb: dwc3: qcom: Configure wakeup interrupts and set genpd active
-    wakeup flag
-  arm64: dts: qcom: sc7180: Use pdc interrupts for USB instead of GIC
-    interrupts
-
- arch/arm64/boot/dts/qcom/sc7180.dtsi |  8 ++--
- drivers/usb/dwc3/core.c              | 47 +++++++++++++++++++----
- drivers/usb/dwc3/core.h              |  2 +
- drivers/usb/dwc3/dwc3-qcom.c         | 73 ++++++++++++++++++++++++++++--------
- 4 files changed, 103 insertions(+), 27 deletions(-)
-
+diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+index 1dfd024..8902670 100644
+--- a/drivers/usb/dwc3/dwc3-qcom.c
++++ b/drivers/usb/dwc3/dwc3-qcom.c
+@@ -16,9 +16,11 @@
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/phy/phy.h>
++#include <linux/pm_domain.h>
+ #include <linux/usb/of.h>
+ #include <linux/reset.h>
+ #include <linux/iopoll.h>
++#include <linux/usb/hcd.h>
+ 
+ #include "core.h"
+ 
+@@ -192,21 +194,34 @@ static int dwc3_qcom_register_extcon(struct dwc3_qcom *qcom)
+ 
+ static void dwc3_qcom_disable_interrupts(struct dwc3_qcom *qcom)
+ {
++	struct dwc3 *dwc = platform_get_drvdata(qcom->dwc3);
++
+ 	if (qcom->hs_phy_irq) {
+ 		disable_irq_wake(qcom->hs_phy_irq);
+ 		disable_irq_nosync(qcom->hs_phy_irq);
+ 	}
++	if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_LS) {
++		if (qcom->dp_hs_phy_irq) {
++			disable_irq_wake(qcom->dp_hs_phy_irq);
++			disable_irq_nosync(qcom->dp_hs_phy_irq);
++		}
++	} else if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_HS) {
++		if (qcom->dm_hs_phy_irq) {
++			disable_irq_wake(qcom->dm_hs_phy_irq);
++			disable_irq_nosync(qcom->dm_hs_phy_irq);
++		}
++	} else {
+ 
+-	if (qcom->dp_hs_phy_irq) {
+-		disable_irq_wake(qcom->dp_hs_phy_irq);
+-		disable_irq_nosync(qcom->dp_hs_phy_irq);
+-	}
++		if (qcom->dp_hs_phy_irq) {
++			disable_irq_wake(qcom->dp_hs_phy_irq);
++			disable_irq_nosync(qcom->dp_hs_phy_irq);
++		}
+ 
+-	if (qcom->dm_hs_phy_irq) {
+-		disable_irq_wake(qcom->dm_hs_phy_irq);
+-		disable_irq_nosync(qcom->dm_hs_phy_irq);
++		if (qcom->dm_hs_phy_irq) {
++			disable_irq_wake(qcom->dm_hs_phy_irq);
++			disable_irq_nosync(qcom->dm_hs_phy_irq);
++		}
+ 	}
+-
+ 	if (qcom->ss_phy_irq) {
+ 		disable_irq_wake(qcom->ss_phy_irq);
+ 		disable_irq_nosync(qcom->ss_phy_irq);
+@@ -215,21 +230,34 @@ static void dwc3_qcom_disable_interrupts(struct dwc3_qcom *qcom)
+ 
+ static void dwc3_qcom_enable_interrupts(struct dwc3_qcom *qcom)
+ {
++	struct dwc3 *dwc = platform_get_drvdata(qcom->dwc3);
++
+ 	if (qcom->hs_phy_irq) {
+ 		enable_irq(qcom->hs_phy_irq);
+ 		enable_irq_wake(qcom->hs_phy_irq);
+ 	}
++	if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_LS) {
++		if (qcom->dp_hs_phy_irq) {
++			enable_irq(qcom->dp_hs_phy_irq);
++			enable_irq_wake(qcom->dp_hs_phy_irq);
++		}
++	} else if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_HS) {
++		if (qcom->dm_hs_phy_irq) {
++			enable_irq(qcom->dm_hs_phy_irq);
++			enable_irq_wake(qcom->dm_hs_phy_irq);
++		}
++	} else {
+ 
+-	if (qcom->dp_hs_phy_irq) {
+-		enable_irq(qcom->dp_hs_phy_irq);
+-		enable_irq_wake(qcom->dp_hs_phy_irq);
+-	}
++		if (qcom->dp_hs_phy_irq) {
++			enable_irq(qcom->dp_hs_phy_irq);
++			enable_irq_wake(qcom->dp_hs_phy_irq);
++		}
+ 
+-	if (qcom->dm_hs_phy_irq) {
+-		enable_irq(qcom->dm_hs_phy_irq);
+-		enable_irq_wake(qcom->dm_hs_phy_irq);
++		if (qcom->dm_hs_phy_irq) {
++			enable_irq(qcom->dm_hs_phy_irq);
++			enable_irq_wake(qcom->dm_hs_phy_irq);
++		}
+ 	}
+-
+ 	if (qcom->ss_phy_irq) {
+ 		enable_irq(qcom->ss_phy_irq);
+ 		enable_irq_wake(qcom->ss_phy_irq);
+@@ -240,6 +268,14 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
+ {
+ 	u32 val;
+ 	int i;
++	struct dwc3 *dwc = platform_get_drvdata(qcom->dwc3);
++	struct usb_hcd  *hcd = platform_get_drvdata(dwc->xhci);
++	struct generic_pm_domain *genpd;
++
++	genpd = pd_to_genpd(qcom->dev->pm_domain);
++
++	if (genpd && usb_wakeup_enabled_descendants(hcd->self.root_hub))
++		genpd->flags |= GENPD_FLAG_ACTIVE_WAKEUP;
+ 
+ 	if (qcom->is_suspended)
+ 		return 0;
+@@ -261,6 +297,11 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
+ {
+ 	int ret;
+ 	int i;
++	struct generic_pm_domain *genpd;
++
++	genpd = pd_to_genpd(qcom->dev->pm_domain);
++	if (genpd)
++		genpd->flags &= !GENPD_FLAG_ACTIVE_WAKEUP;
+ 
+ 	if (!qcom->is_suspended)
+ 		return 0;
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
