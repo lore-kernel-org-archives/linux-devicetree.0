@@ -2,149 +2,74 @@ Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B22C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 19:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6ED6C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 20:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76EDB206E2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 19:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B237320775
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 20:34:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbgGHToL (ORCPT
+        id S1725972AbgGHUef (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 15:44:11 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:57956 "EHLO smtp.al2klimov.de"
+        Wed, 8 Jul 2020 16:34:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:36310 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbgGHToK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 8 Jul 2020 15:44:10 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 0322FBC0EE;
-        Wed,  8 Jul 2020 19:44:06 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     broonie@kernel.org, robh+dt@kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] SPI SUBSYSTEM: Replace HTTP links with HTTPS ones
-Date:   Wed,  8 Jul 2020 21:44:00 +0200
-Message-Id: <20200708194400.22213-1-grandmaster@al2klimov.de>
+        id S1725848AbgGHUef (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 8 Jul 2020 16:34:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9640A1FB;
+        Wed,  8 Jul 2020 13:34:34 -0700 (PDT)
+Received: from bogus (unknown [10.37.8.63])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 737313F66E;
+        Wed,  8 Jul 2020 13:34:31 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 21:34:28 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Paul Murphy <paul.j.murphy@intel.com>,
+        Daniele Alessandrelli <daniele.alessandrelli@intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/7] mailbox: keembay-scmi-mailbox: Add support for Keem
+ Bay mailbox
+Message-ID: <20200708203428.GB31671@bogus>
+References: <20200616155613.121242-1-daniele.alessandrelli@linux.intel.com>
+ <20200616155613.121242-3-daniele.alessandrelli@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spam: Yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616155613.121242-3-daniele.alessandrelli@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Tue, Jun 16, 2020 at 04:56:08PM +0100, Daniele Alessandrelli wrote:
+> From: Paul Murphy <paul.j.murphy@intel.com>
+> 
+> Keem Bay SoC has a ARM trusted firmware-based secure monitor which acts
+> as the SCP for the purposes of power management over SCMI.
+> 
+> This driver implements the transport layer for SCMI to function.
+>
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+Please use the smc transport support in driver/firmware/arm_scmi/smc.c
+for this. You don't need mailbox support for SMC/HVC. Basically you
+don't need this driver at all and you have everything you need to support
+what you want.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+Let me know if you face issues.
 
- If there are any URLs to be removed completely or at least not HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
-
- Documentation/devicetree/bindings/spi/spi-davinci.txt | 4 ++--
- Documentation/spi/spi-sc18is602.rst                   | 2 +-
- drivers/spi/spi-ep93xx.c                              | 2 +-
- drivers/spi/spi-oc-tiny.c                             | 2 +-
- drivers/spi/spi-ti-qspi.c                             | 2 +-
- 5 files changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/spi/spi-davinci.txt b/Documentation/devicetree/bindings/spi/spi-davinci.txt
-index 9f5b4c7c0c08..e2198a389484 100644
---- a/Documentation/devicetree/bindings/spi/spi-davinci.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-davinci.txt
-@@ -1,8 +1,8 @@
- Davinci SPI controller device bindings
- 
- Links on DM:
--Keystone 2 - http://www.ti.com/lit/ug/sprugp2a/sprugp2a.pdf
--dm644x - http://www.ti.com/lit/ug/sprue32a/sprue32a.pdf
-+Keystone 2 - https://www.ti.com/lit/ug/sprugp2a/sprugp2a.pdf
-+dm644x - https://www.ti.com/lit/ug/sprue32a/sprue32a.pdf
- OMAP-L138/da830 - http://www.ti.com/lit/ug/spruh77a/spruh77a.pdf
- 
- Required properties:
-diff --git a/Documentation/spi/spi-sc18is602.rst b/Documentation/spi/spi-sc18is602.rst
-index 2a31dc722321..4ab9ca346b44 100644
---- a/Documentation/spi/spi-sc18is602.rst
-+++ b/Documentation/spi/spi-sc18is602.rst
-@@ -6,7 +6,7 @@ Supported chips:
- 
-   * NXP SI18IS602/602B/603
- 
--    Datasheet: http://www.nxp.com/documents/data_sheet/SC18IS602_602B_603.pdf
-+    Datasheet: https://www.nxp.com/documents/data_sheet/SC18IS602_602B_603.pdf
- 
- Author:
-         Guenter Roeck <linux@roeck-us.net>
-diff --git a/drivers/spi/spi-ep93xx.c b/drivers/spi/spi-ep93xx.c
-index 8c854b187b1d..ae7c79a06208 100644
---- a/drivers/spi/spi-ep93xx.c
-+++ b/drivers/spi/spi-ep93xx.c
-@@ -10,7 +10,7 @@
-  *
-  * For more information about the SPI controller see documentation on Cirrus
-  * Logic web site:
-- *     http://www.cirrus.com/en/pubs/manual/EP93xx_Users_Guide_UM1.pdf
-+ *     https://www.cirrus.com/en/pubs/manual/EP93xx_Users_Guide_UM1.pdf
-  */
- 
- #include <linux/io.h>
-diff --git a/drivers/spi/spi-oc-tiny.c b/drivers/spi/spi-oc-tiny.c
-index 9df7c5979c29..f3843f0ff260 100644
---- a/drivers/spi/spi-oc-tiny.c
-+++ b/drivers/spi/spi-oc-tiny.c
-@@ -2,7 +2,7 @@
- /*
-  * OpenCores tiny SPI master driver
-  *
-- * http://opencores.org/project,tiny_spi
-+ * https://opencores.org/project,tiny_spi
-  *
-  * Copyright (C) 2011 Thomas Chou <thomas@wytron.com.tw>
-  *
-diff --git a/drivers/spi/spi-ti-qspi.c b/drivers/spi/spi-ti-qspi.c
-index 366a3e5cca6b..3c41649698a5 100644
---- a/drivers/spi/spi-ti-qspi.c
-+++ b/drivers/spi/spi-ti-qspi.c
-@@ -2,7 +2,7 @@
- /*
-  * TI QSPI driver
-  *
-- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com
-  * Author: Sourav Poddar <sourav.poddar@ti.com>
-  */
- 
 -- 
-2.27.0
-
+Regards,
+Sudeep
