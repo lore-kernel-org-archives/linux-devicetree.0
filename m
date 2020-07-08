@@ -6,94 +6,95 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB1EC433E6
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 17:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B97C3C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 17:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8175E206E9
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 17:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 999FC206E9
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 17:50:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbgGHRsj (ORCPT
+        id S1726174AbgGHRun (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 13:48:39 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:48841 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725953AbgGHRsj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 13:48:39 -0400
-X-IronPort-AV: E=Sophos;i="5.75,328,1589209200"; 
-   d="scan'208";a="51641764"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 09 Jul 2020 02:48:36 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id E89474005E3D;
-        Thu,  9 Jul 2020 02:48:32 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
+        Wed, 8 Jul 2020 13:50:43 -0400
+Received: from mga05.intel.com ([192.55.52.43]:31319 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726100AbgGHRum (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 8 Jul 2020 13:50:42 -0400
+IronPort-SDR: WllNX5RC/mK+MeIPawjzjZ9DPX0WLlE395OKgm9AwNumLKy8K+6iENrTuwI2uaXGWlhdJhkgFP
+ fiHAa3KbFj4Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="232753512"
+X-IronPort-AV: E=Sophos;i="5.75,328,1589266800"; 
+   d="scan'208";a="232753512"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 10:50:42 -0700
+IronPort-SDR: VZ9GFeLDbkCynhnB5XBEGm94Mvjvl1gYqGh27J3Q+nnaOJKZVqiFBxTOrYUGUBjM4C+CELdZNk
+ Qwm2XnLrr86w==
+X-IronPort-AV: E=Sophos;i="5.75,328,1589266800"; 
+   d="scan'208";a="457591788"
+Received: from sgyanama-mobl1.gar.corp.intel.com (HELO dalessan-mobl1.ir.intel.com) ([10.252.5.67])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 10:50:37 -0700
+From:   Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
+List-Id: <soc.lore.kernel.org>
+To:     linux-arm-kernel@lists.infradead.org, SoC Team <soc@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc:     devicetree@vger.kernel.org,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 0/8] Add basic DT support for R8A774E1 SoC enabling HiHope RZ/G2H board
-Date:   Wed,  8 Jul 2020 18:48:23 +0100
-Message-Id: <1594230511-24790-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
+        linux-kernel@vger.kernel.org, Dinh Nguyen <dinguyen@kernel.org>,
+        Paul Murphy <paul.j.murphy@intel.com>,
+        Will Deacon <will@kernel.org>,
+        Daniele Alessandrelli <daniele.alessandrelli@intel.com>
+Subject: [PATCH v2 0/5] Add initial Keem Bay SoC / Board support
+Date:   Wed,  8 Jul 2020 18:50:15 +0100
+Message-Id: <20200708175020.194436-1-daniele.alessandrelli@linux.intel.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi All,
+Hi,
 
-This patch series adds basic SOC DT support for RZ/G2H and enabling
-HiHope RZ/G2H board. With these minimalist DT the HiHope RZ/G2H
-board can be booted from initramfs/eMMC.
+This patch-set adds initial support for a new Intel Movidius SoC code-named
+Keem Bay. The SoC couples an ARM Cortex A53 CPU with an Intel Movidius VPU.
 
-This patch series is dependent [1].
+This initial patch-set enables only the minimal set of components required
+to make the Keem Bay EVM board boot into initramfs.
 
-[1] https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=314235
+Changes from v1 to v2:
+* Moved keembay-scmi-mailbox driver to a separate patchset
+* Removed Keem Bay SCMI mailbox and SCMI node from Keem Bay SoC device tree
 
-Cheers,
-Prabhakar
+Regards,
+Daniele
 
 
-Lad Prabhakar (3):
-  dt-bindings: serial: renesas,scif: Document r8a774e1 bindings
-  dt-bindings: serial: renesas,hscif: Document r8a774e1 bindings
-  dt-bindings: mmc: renesas,sdhi: Add r8a774e1 support
+Daniele Alessandrelli (5):
+  arm64: Add config for Keem Bay SoC
+  dt-bindings: arm: Add Keem Bay bindings
+  MAINTAINERS: Add maintainers for Keem Bay SoC
+  arm64: dts: keembay: Add device tree for Keem Bay SoC
+  arm64: dts: keembay: Add device tree for Keem Bay EVM board
 
-Marian-Cristian Rotariu (5):
-  dt-bindings: irqchip: renesas-irqc: Document r8a774e1 bindings
-  arm64: defconfig: Enable R8A774E1 SoC
-  arm64: dts: renesas: Initial r8a774e1 SoC device tree
-  arm64: dts: renesas: Add HiHope RZ/G2H main board support
-  arm64: dts: renesas: Add HiHope RZ/G2H sub board support
-
- .../interrupt-controller/renesas,irqc.yaml    |   1 +
- .../devicetree/bindings/mmc/renesas,sdhi.txt  |   1 +
- .../bindings/serial/renesas,hscif.yaml        |   1 +
- .../bindings/serial/renesas,scif.yaml         |   1 +
- arch/arm64/boot/dts/renesas/Makefile          |   2 +
- .../arm64/boot/dts/renesas/hihope-common.dtsi |   4 +-
- arch/arm64/boot/dts/renesas/hihope-rev4.dtsi  |   4 +-
- .../boot/dts/renesas/hihope-rzg2-ex.dtsi      |   2 +-
- .../dts/renesas/r8a774e1-hihope-rzg2h-ex.dts  |  15 +
- .../dts/renesas/r8a774e1-hihope-rzg2h.dts     |  26 +
- arch/arm64/boot/dts/renesas/r8a774e1.dtsi     | 652 ++++++++++++++++++
- arch/arm64/configs/defconfig                  |   1 +
- 12 files changed, 705 insertions(+), 5 deletions(-)
- create mode 100644 arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h-ex.dts
- create mode 100644 arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h.dts
- create mode 100644 arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+ .../devicetree/bindings/arm/keembay.yaml      |  19 ++
+ MAINTAINERS                                   |  10 +
+ arch/arm64/Kconfig.platforms                  |   5 +
+ arch/arm64/boot/dts/intel/Makefile            |   1 +
+ arch/arm64/boot/dts/intel/keembay-evm.dts     |  39 ++++
+ arch/arm64/boot/dts/intel/keembay-soc.dtsi    | 125 ++++++++++++
+ include/dt-bindings/clock/keembay-clocks.h    | 188 ++++++++++++++++++
+ include/dt-bindings/power/keembay-power.h     |  19 ++
+ 8 files changed, 406 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/keembay.yaml
+ create mode 100644 arch/arm64/boot/dts/intel/keembay-evm.dts
+ create mode 100644 arch/arm64/boot/dts/intel/keembay-soc.dtsi
+ create mode 100644 include/dt-bindings/clock/keembay-clocks.h
+ create mode 100644 include/dt-bindings/power/keembay-power.h
 
 -- 
-2.17.1
+2.26.2
 
