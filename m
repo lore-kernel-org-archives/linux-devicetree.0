@@ -2,108 +2,86 @@ Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C93CFC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 105ABC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4C9C2082F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:39:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kf6x43ay"
+	by mail.kernel.org (Postfix) with ESMTP id E4ADF2084C
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:40:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726278AbgGHHj7 (ORCPT
+        id S1726541AbgGHHkv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:39:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42700 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726297AbgGHHj6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 03:39:58 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7093DC08E81A
-        for <devicetree@vger.kernel.org>; Wed,  8 Jul 2020 00:39:57 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id j11so4252851ljo.7
-        for <devicetree@vger.kernel.org>; Wed, 08 Jul 2020 00:39:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+HxgH6sad3gU6leW7SDh/gf8Hzfs0/fhZcOEjnvGhWs=;
-        b=kf6x43aymox0RXHGLm8aA9SdFQARFjcUUTid1nkeg9ibekZJqFjhwH23OVWjfAOjVS
-         PIyKh85DWMiQQ7vV4MPU9N/PHWMBXsW8ALCT0jUDOBYiRrEm93dNmyBY2QKLC8e59uXU
-         rF/LbFEzhwf7Hh9D0M9LGkfmU1uXbWrbwnSzZ8YxxZR5BL7KxyZLYny+CUf+LF90Q6OB
-         gITnA0TUKecjikeYVz6qOheu9mHlpVGZsqJgXhFyS2gl3mAaueYbWpptMe/oEQAYYllA
-         zsUp2xKjkGd9Lw4e7zUScEK+4AP896Zl4fGx27sAKWpJkoT11s4X/JaSJFPzE8k8XuwU
-         CRkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+HxgH6sad3gU6leW7SDh/gf8Hzfs0/fhZcOEjnvGhWs=;
-        b=MMIAv3HppZBCPZjacrRbTaco8CscOiGu1qYeJLVJWl0z84P6tFiQM8qzciZPVXYchO
-         QzfHxMMZCvNkZWuoST3dKUD1Ka0SxriaQjWtbs6P5Q1n0HN2+Vj9ZXKiePN2BfvgjF8e
-         9po14ftO743z3CptZ4Ak5Y7m8DTd/FBBTfnRuwgdumskzQ67xOfyNSfDRGcbw3Km81Nl
-         82+jJVMOSpAUHsvLwCVlcWCSjEWadoJpRbbDOHIqXMw+00UZwP0rQe+upSq+NgHdfaR6
-         s2Ud+MFeQ9SaoVW6NpV1OjYs5v9p/kawlvbYHF6OftuSc0oyLOwd6Cj4XVkWqwsD23h3
-         fFLA==
-X-Gm-Message-State: AOAM530WWNZnNauT4eeJg/7wX0j2CxO3CeJx3Kh0WZf43hsZxNklVY4U
-        q6woJLPr2sDlxFeMx8I5rNKFI3/uaksUanGRMX4JRg==
-X-Google-Smtp-Source: ABdhPJxTYp6lBnboAKIMoKnmPkXV27lA7iN1d1K5nRqP4hkVKmZacGWC0DDRGgpoKAE/wWfaRt/VjtFi95icB142swA=
-X-Received: by 2002:a2e:9c3:: with SMTP id 186mr33775780ljj.293.1594193995825;
- Wed, 08 Jul 2020 00:39:55 -0700 (PDT)
+        Wed, 8 Jul 2020 03:40:51 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:54293 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726325AbgGHHkv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 03:40:51 -0400
+Received: from [78.134.117.153] (port=41602 helo=melee.fritz.box)
+        by hostingweb31.netsons.net with esmtpa (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1jt4hD-0009Wd-QF; Wed, 08 Jul 2020 09:40:47 +0200
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+To:     linux-clk@vger.kernel.org
+Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
+        Adam Ford <aford173@gmail.com>
+Subject: [PATCH v2 1/4] dt-bindings: clk: versaclock5: fix 'idt' prefix typos
+Date:   Wed,  8 Jul 2020 09:40:32 +0200
+Message-Id: <20200708074035.31595-1-luca@lucaceresoli.net>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200706175353.16404-1-michael@walle.cc> <20200706175353.16404-14-michael@walle.cc>
-In-Reply-To: <20200706175353.16404-14-michael@walle.cc>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 8 Jul 2020 09:39:45 +0200
-Message-ID: <CACRpkdaPO7CGNrxmjL5QH1cxP5wqku1oMtQaQgJfeKiKqiGAOg@mail.gmail.com>
-Subject: Re: [PATCH v5 13/13] arm64: dts: freescale: sl28: enable fan support
-To:     Michael Walle <michael@walle.cc>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Michael,
+'idt' is misspelled 'itd' in a few places, fix it.
 
-just a drive-by-comment:
+Fixes: 34662f6e3084 ("dt: Add additional option bindings for IDT VersaClock")
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+---
+ Documentation/devicetree/bindings/clock/idt,versaclock5.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On Mon, Jul 6, 2020 at 7:57 PM Michael Walle <michael@walle.cc> wrote:
+diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+index 6165b6ddb1a9..9656d4cf221c 100644
+--- a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
++++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+@@ -35,7 +35,7 @@ For all output ports, a corresponding, optional child node named OUT1,
+ OUT2, etc. can represent a each output, and the node can be used to
+ specify the following:
+ 
+-- itd,mode: can be one of the following:
++- idt,mode: can be one of the following:
+                  - VC5_LVPECL
+                  - VC5_CMOS
+                  - VC5_HCSL33
+@@ -106,7 +106,7 @@ i2c-master-node {
+ 		clock-names = "xin";
+ 
+ 		OUT1 {
+-			itd,mode = <VC5_CMOS>;
++			idt,mode = <VC5_CMOS>;
+ 			idt,voltage-microvolts = <1800000>;
+ 			idt,slew-percent = <80>;
+ 		};
+-- 
+2.27.0
 
-> Add a pwm-fan mapped to the PWM channel 0 which is connected to the
-> fan connector of the carrier.
->
-> Signed-off-by: Michael Walle <michael@walle.cc>
-
-If you have a cooling device like this, do you also have a temperature
-sensor? In that case it makes sense to add a thermal zone and a
-policy, such as I did for a device in
-6e97f0aaca4ca778905dd1dc667cbf379f4cae15
-
-Yours,
-Linus Walleij
