@@ -2,130 +2,117 @@ Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61722C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 09:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A84C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 09:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4305420771
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 09:37:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594201063;
-	bh=FMfBPrKkg56I41HR/oz9HArqZ/nbHhmy/CTSfaxeBGo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=wKum42LSTS7MoOedtIFO4uBK5obMwbfyJbhUiw/+XAU3t7mMfckMbcy5lbaZ72Yh1
-	 4glND1VzEsr2dpzhl16J7uopaR1Gqa3Oz8TUu0fb/4RARz9Ho2W4SqMO1UyToCf3qT
-	 F79YJ6HRkI0CnxYLEcck0Hk4HNrOQB1o/lbIZA/o=
+	by mail.kernel.org (Postfix) with ESMTP id 3EF60206F6
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 09:46:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=moxa.com header.i=@moxa.com header.b="PMTwEesk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbgGHJhm (ORCPT
+        id S1728188AbgGHJqA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 05:37:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49024 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727889AbgGHJhm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:37:42 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43645206C3;
-        Wed,  8 Jul 2020 09:37:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594201061;
-        bh=FMfBPrKkg56I41HR/oz9HArqZ/nbHhmy/CTSfaxeBGo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=sbfNACTpkqCbWD5aa302J26Zs8H/6wJy04I81wZIXqHfv+8h6aPihY0skXI9Ws3xT
-         uAQODNbO+TB96nVJfyWxe4AJMxm3KcaEVeT2NPqd0QsMsw08Ymc9EpHUlZBqYUpSVe
-         odhxBTqdT7vgRn7mxOsVMthPOc9wK/pckWYf0oao=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jt6WJ-00A2JK-Qa; Wed, 08 Jul 2020 10:37:39 +0100
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 08 Jul 2020 10:37:39 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wed, 8 Jul 2020 05:46:00 -0400
+Received: from mail-eopbgr1310073.outbound.protection.outlook.com ([40.107.131.73]:38196
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728041AbgGHJqA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 8 Jul 2020 05:46:00 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=A1ozSssE5jHsfCRSSARqi/XXCe8dsPVXepGEtnNpeyFM2MwK2H6hxujIfuQms7Vpi9LP+MtRv5yYTKavjLaweWST1Coq/smkkPD+1oBg6B1jZ234iFp66GQfHSYn9Ccu4z8NtoE1ywxmkFKUVFtD2FSDaIFO3x7JlQ+nRn+G9cCZ5QRu2xXgVhN8pOz7c0ILZU4FxwOhrbdxYh19q2r9pPwckVkq61UTleyj8THBqbz54d96K2OnFdKLkdgFrpX6hDUdCr0SpRL5ZxNOiFHHTntAeNrWZCa1c3q2NyMwfErGkTjRgg3pOOFqgsY+FseGia+A3leNWj8VFkk/YwWKeg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xe7DPebEyz9uzBOgAvDp5r3SLssuuMtuJLUR5qSm6sw=;
+ b=PF0G3RIe7bShiX0xmdmMPYkrtLB3fbYghCTJuAO1KiXsGsEmenoMQ750kOwaRsjJ7YdwIDOycr5jSUSauB7m9ajtwMpV/H8sYGynduBiwFVT3LL6woInZUnASBPRvrY/6o/kBMNen70yBGV9yBtOokUqbpM+DbMgGhrXxN7WDQ3/kalKjth+8NhzMniKvCaQOGWM+Bzv9c7MfLFuSWNH7NHlbxDiQhqOan5hhbPpu9/UE4cQqOanm3/ACPO89oj5yVRSeRUP4Zuqb8fwc5EEQHNQk4+yb7j+co1Umd4Cd0pNvi0arhg0GQ0z3bE8OK3g1JxtiVDPPjiu3fXDuK+Few==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=moxa.com; dmarc=pass action=none header.from=moxa.com;
+ dkim=pass header.d=moxa.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=moxa.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xe7DPebEyz9uzBOgAvDp5r3SLssuuMtuJLUR5qSm6sw=;
+ b=PMTwEesk/CIf98z6Wn7Ouc1p3CYmwKvZmWo9P7T04v1ZfZ4pqAd4WFZu5dzTJZ/cgcRR+hUWe//w5vwrNtKH8444CeuC0zqYrpRgzfgdOJvRAGkitrDZX9c+1tUk1IlSYCSoKtWXioPiyDQjW6icvxoRvZ1eWAmh0U2OEFoOjgU=
+Received: from HK2PR01MB3281.apcprd01.prod.exchangelabs.com
+ (2603:1096:202:22::12) by HKAPR01MB3570.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:c6::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.23; Wed, 8 Jul
+ 2020 09:45:56 +0000
+Received: from HK2PR01MB3281.apcprd01.prod.exchangelabs.com
+ ([fe80::dce:9650:6c58:8b77]) by HK2PR01MB3281.apcprd01.prod.exchangelabs.com
+ ([fe80::dce:9650:6c58:8b77%4]) with mapi id 15.20.3153.030; Wed, 8 Jul 2020
+ 09:45:56 +0000
+From:   =?utf-8?B?Sm9obnNvbiBDSCBDaGVuICjpmbPmmK3li7Mp?= 
+        <JohnsonCH.Chen@moxa.com>
+To:     Tony Lindgren <tony@atomide.com>
+CC:     =?utf-8?B?QmVub8OudCBDb3Vzc29u?= <bcousson@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v5 05/13] irqchip: add sl28cpld interrupt controller
- support
-In-Reply-To: <20200706175353.16404-6-michael@walle.cc>
-References: <20200706175353.16404-1-michael@walle.cc>
- <20200706175353.16404-6-michael@walle.cc>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <30c8a3b40003f8805ba8ebacd328583c@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: michael@walle.cc, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, robh+dt@kernel.org, jdelvare@suse.com, linux@roeck-us.net, lee.jones@linaro.org, thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de, wim@linux-watchdog.org, shawnguo@kernel.org, leoyang.li@nxp.com, tglx@linutronix.de, jason@lakedaemon.net, broonie@kernel.org, gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 2/2] ARM: dts: am335x: add support for Moxa UC-8100A-ME
+ open platform
+Thread-Topic: [PATCH 2/2] ARM: dts: am335x: add support for Moxa UC-8100A-ME
+ open platform
+Thread-Index: AQHWVIgIYQwC0/nPRUKB94S+FbD0mqj9bd7A
+Date:   Wed, 8 Jul 2020 09:45:56 +0000
+Message-ID: <HK2PR01MB32816EAA7257124DD4A4CB6EFA670@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+References: <HK2PR01MB328129CEA1A9294A8715CE28FA660@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+ <20200707175655.GA5849@atomide.com>
+In-Reply-To: <20200707175655.GA5849@atomide.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: atomide.com; dkim=none (message not signed)
+ header.d=none;atomide.com; dmarc=none action=none header.from=moxa.com;
+x-originating-ip: [123.51.145.16]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 067b3221-7153-4a61-c883-08d82323b65a
+x-ms-traffictypediagnostic: HKAPR01MB3570:
+x-microsoft-antispam-prvs: <HKAPR01MB357032EDB9291EB57C5C61A0FA670@HKAPR01MB3570.apcprd01.prod.exchangelabs.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 04583CED1A
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Wm8t3pT+MdQmF4VpcLdcZYXLkxXf9RmrwvNrExrnP2E/Lzkopoj6luUwm3hHropvIU0yz/F3aF8ge6LzQszgl8hCelVMCVpWjVE0WY/b1yGwv3DHycjPdZjHAGItHOJmmN9Xc6upsoK6YQJQTXxpdyTbhb655knfOuIEoQAY2z0p0UziD4SkCq+ilWYI4b5piAe8VLYA7cmWTTjgJ8FrdkEtBeZ0Xszy6Kzic7U1P/fCSlYXVLtvgA3UIM0ThELwrOOVImFUcdEe1OamYqvgRf2etYRIyRCzIc2e/tFVIG2+Slq43h2wXVMKmA49Bdvd2amKrZIYlCRvpSS6sRouFQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK2PR01MB3281.apcprd01.prod.exchangelabs.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(39850400004)(346002)(366004)(376002)(4744005)(7696005)(26005)(52536014)(186003)(85182001)(478600001)(8936002)(8676002)(2906002)(4326008)(6916009)(55016002)(33656002)(316002)(54906003)(6506007)(9686003)(76116006)(71200400001)(66476007)(86362001)(66446008)(66556008)(64756008)(5660300002)(66946007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: p3eWaLdwgTGu8PV00gTbuuOMzAU7TWa2sit7VgBxvRVAagKyVp3vKUXowqz4UKkP/MdvkF7RANM9ZBw4NugHT3eyFvu7TnNZKl9mM7KIk6lGsh67oj7jSnEyO4LoD80H88eiDxSLGWXNfanzrcsYxJMD6aihLC+eSEyX/PUfR83TOzzJ9RhI3AZc+JXEEPK32R+w9vsT624lVhzGjXlV/bsGCZ9+cI86wn+PGMVr/NbR06vtZhtw95Dry6d1MziRycM8/g4dvUywxnbHBk6kF4EabBjM+3PRj37NzINfSkQR2SIn1MpoBYWa1jVPc/81TNBCITSEpitrK5oZeGYO1CnynWnpZXp3B2BDkBAyjpTy41vv227//H0jioxxccNG6Xn6pJUSHlRlQ7xLilYMnkTJa7rOKfXP2WysiixGFYvS2oKEFtJO3azjmYwItGLj/Eo1frweaKoheZd/sw86V0C4zZho6s9ay3ZsGfisnkY=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: moxa.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: HK2PR01MB3281.apcprd01.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 067b3221-7153-4a61-c883-08d82323b65a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2020 09:45:56.1766
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5571c7d4-286b-47f6-9dd5-0aa688773c8e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: g3AVsQ/9Dxh8VHP/2UXq1bUwC4bpeiFUhp3Wx4rz8Pee1+f4c2IaD0/NYt9oX3SC97bkSdSq0zUJ/1861Th84w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HKAPR01MB3570
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-07-06 18:53, Michael Walle wrote:
-> Add support for the interrupt controller inside the sl28 CPLD 
-> management
-> controller.
-> 
-> The interrupt controller can handle at most 8 interrupts and is really
-> simplistic and consists only of an interrupt mask and an interrupt
-> pending register.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
-> Changes since v4:
->  - update copyright year
->  - don't use "int irq" instead of "unsigne int irq", because
->    platform_get_irq() might return a negative error code. Found by 
-> "kernel
->    test robot <lkp@intel.com>
->  - remove comma in terminator line of the compatible strings list,
->    suggested by Andy
->  - use newer devm_regmap_add_irq_chip_fwnode()
->  - don't use KBUID_MODNAME, suggested by Andy
->  - remove the platform device table
-> 
-> Changes since v3:
->  - see cover letter
-> 
->  drivers/irqchip/Kconfig        |  8 +++
->  drivers/irqchip/Makefile       |  1 +
->  drivers/irqchip/irq-sl28cpld.c | 96 ++++++++++++++++++++++++++++++++++
->  3 files changed, 105 insertions(+)
->  create mode 100644 drivers/irqchip/irq-sl28cpld.c
-
-Acked-by: Marc Zyngier <maz@kernel.org>
-
-Given the dependency on the MFD patches, I assume this will
-be routed to that subsystem. Please let me know if you want
-it to be handled differently.
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+SGksDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAyLzJdIEFSTTogZHRzOiBhbTMzNXg6IGFkZCBz
+dXBwb3J0IGZvciBNb3hhDQo+IFVDLTgxMDBBLU1FIG9wZW4gcGxhdGZvcm0NCj4gDQo+ICogSm9o
+bnNvbiBDSCBDaGVuICjpmbPmmK3li7MpIDxKb2huc29uQ0guQ2hlbkBtb3hhLmNvbT4gWzIwMDcw
+NyAwMzoyNF06DQo+ID4gVUMtODEwMEEtTUUgaXMgYWR2YW5jZWQgb2YgVUMtODEwMC1NRS1ULCBh
+bmQgVUMtODEwMC1NRS1UIGlzDQo+IGRlcHJlY2F0ZWQuDQo+ID4NCj4gPiBVQy04MTAwQS1NRSBw
+cm92aWRlcyBsYXJnZXIgUkFNIGFuZCBlTU1DLCBiZXR0ZXIgaW5wdXQgY3VycmVudCB0aGFuDQo+
+ID4gVUMtODEwMC1NRS1UJ3MsIGFuZCBpdCBzdXBwb3J0cyBzZWxlY3RhYmxlIExURSBtb2R1bGUg
+Zm9yIFVTL0VVL0FQQUMuDQo+IA0KPiBTbyB3aGF0IGFib3V0IHRoZSBleGlzdGluZyB1c2VycyBv
+ZiBVQy04MTAwLU1FLVQ/DQo+IA0KPiBUbyBtZSBpdCBzZWVtcyB5b3Ugc2hvdWxkIGp1c3QgYWRk
+IGFtMzM1eC1tb3hhLXVjLTgxMDAtY29tbW9uLmR0c2kgb3INCj4gc2ltaWxhci4gQW5kIHRoZW4g
+aGF2ZSBtaW5pbWFsIGR0cyBmaWxlcyBmb3IgZWFjaCBtb2RlbC4gVGhhdCB3YXkgeW91IGNhbg0K
+PiBlYXNpbHkga2VlcCB0aGUgc3VwcG9ydCBVQy04MTAwLU1FLVQgYXJvdW5kLg0KDQpUaGFua3Mg
+Zm9yIHlvdXIgZ29vZCBzdWdnZXN0aW9uLCBJJ2xsIHRha2UgdGhpcyBpbmZvIGZvciBvdXIgaW50
+ZXJuYWwgZGlzY3Vzc2lvbi4NCg0KQmVzdCByZWdhcmRzLA0KSm9obnNvbg0KDQo+IA0KPiBSZWdh
+cmRzLA0KPiANCj4gVG9ueQ0K
