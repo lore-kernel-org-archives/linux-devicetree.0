@@ -2,89 +2,118 @@ Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B98CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 10:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C56DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 10:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AADB20772
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 10:03:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D62C20772
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 10:04:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iq5umJlQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbgGHKC4 (ORCPT
+        id S1728509AbgGHKEJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 06:02:56 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44165 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726110AbgGHKC4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 06:02:56 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 5so34495247oty.11;
-        Wed, 08 Jul 2020 03:02:55 -0700 (PDT)
+        Wed, 8 Jul 2020 06:04:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36848 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgGHKEJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 06:04:09 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99DAEC08C5DC;
+        Wed,  8 Jul 2020 03:04:08 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id 9so53414857ljv.5;
+        Wed, 08 Jul 2020 03:04:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=p3PCjrGEb1SE194xmBZMMpyZF/VWXlP8HwS7wSkYeao=;
+        b=iq5umJlQKHxHV8mj42vsFJN601icTnUbn8VZKWxj+YDKQvvRjjc7MUWrZdazVUaibX
+         uttIPbfWha4Or0td23k8ubJvqmCKbe5Ne+uElkx03tfgnS6tfiPnwqYfQg1D2zcI1rcm
+         VlzTPSnmOR3vXg7S/Xp5saWOfIKEA5VykReOr17kFxubEtJ9g9qHeX/wHh2lWz2+pWtc
+         s40KiZQxdV49k65Qb+Uvr16bAUdUHywnVQHzEq5RDXlZW3LnrmThwrsx3DB4wbyPlrYf
+         yWEfLRRqe3yx7idiWOOhE8Hh4jANKnReiCela+nDk3D8aUraVAFaQGtOoPXx0Yvzfi9c
+         GEqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c3qpgK68Rp80hw3W1gABSA6K3TvekJse681LfvBNyDQ=;
-        b=rkGZMrj0rYGLQMgNTx8Y/Qy7vwQ4a5+xePsm+QBFUHZnXdKyY4tqqARsaSx7MH/Pw9
-         6RxoJs/hBFIw6F1x80bN2iPr3BaTVChtaVyxgFzg6vzOHhEiRD6HWxTwxFaOc4UsJmId
-         IpAHGZYKYgvdI4hpi5OhkuIYWhPcuXz/MVdUsFLhSr/20YS1LRlQkpcmUxRAHOPHY2eC
-         UtOoxBz3FxViMEaQeuyCcoYmGJXwAIW1c58enLx5ZmB79mxPUSIweI2xhujrPTCvBuVx
-         31rKfrVvl/E5Kk/4hgWX+C6/OwzItWKmEriMNd6VavSxFGASChRQaLzR8PIMIglTNqtE
-         AiPQ==
-X-Gm-Message-State: AOAM533MqCiOXbOO2lWgiBDqt+89johBNZhtGHpwSAgnRFq77RhJSR0/
-        oDFZuhGwPL0ep8wOAUs4K/n3EA3EPvrzV/2rW2k=
-X-Google-Smtp-Source: ABdhPJwxhiElFlvm/0jTBOJjfNwT7dkjs4nWz5ph6kD5CcLj74x1KkLxA+TcUH+k5v7ww7MVFV7rNnCldQAneZprAtk=
-X-Received: by 2002:a9d:1b0d:: with SMTP id l13mr16424471otl.145.1594202575277;
- Wed, 08 Jul 2020 03:02:55 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=p3PCjrGEb1SE194xmBZMMpyZF/VWXlP8HwS7wSkYeao=;
+        b=jwQnhmTKqHujAwmX0nsaYiqCCjU3UCLHODwoAUAa/oRZeGrmf1uu+ZJfCS+O7z/SQ2
+         ogKk33QLkhNpJf0YSf5cgs1VyyXjLvUTO/n/aB9n98UI1jP6CIhvSU5VU4NcsMktHMBA
+         FlA36hd1WGIvSdxMNkkAypJOcMpPcVU8bXNUOls5AZ9whDN9OId2+Pm3F8ZhLsFkZnWP
+         f6Uk2c3uXHcOTejg976QKkjPnUnZprXz/4a/VpcZi7gIEGYdlXhg93SWnyZALeEfMDyD
+         Y06Eeo71XR8tAIkaoB7NzRNCWlAJ25VyLzFLnOL5zbYJxLYz7MNqM2OnbJaQuVwfGbpv
+         u9dQ==
+X-Gm-Message-State: AOAM532K+z7bjpC6ZaXxAJ/otQueiOrBvyftGclHBuufP2qnQTYL5Uui
+        qz6pBeGh6Q6FkMccIKaVaAPhErvv7gc=
+X-Google-Smtp-Source: ABdhPJywUWrfVESenofUIgF5HgLJ7shdt3nonV/r6qE8P2qbwijrzP46EPqHorRfqikaoUieU3DVxw==
+X-Received: by 2002:a2e:a484:: with SMTP id h4mr33520517lji.468.1594202646990;
+        Wed, 08 Jul 2020 03:04:06 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:4297:b781:8ad:e985:513e:5609? ([2a00:1fa0:4297:b781:8ad:e985:513e:5609])
+        by smtp.gmail.com with ESMTPSA id n4sm10209645lfl.40.2020.07.08.03.04.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jul 2020 03:04:05 -0700 (PDT)
+Subject: Re: [PATCH v2 2/7] dt-bindings: net: renesas,ravb: Document internal
+ clock delay properties
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>,
+        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Magnus Damm <magnus.damm@gmail.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+References: <20200706143529.18306-1-geert+renesas@glider.be>
+ <20200706143529.18306-3-geert+renesas@glider.be>
+From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Organization: Brain-dead Software
+Message-ID: <df4affe7-922c-968d-6aa9-b92072aade4f@gmail.com>
+Date:   Wed, 8 Jul 2020 13:03:58 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <1594138692-16816-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594138692-16816-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594138692-16816-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 8 Jul 2020 12:02:44 +0200
-Message-ID: <CAMuHMdXr+_Waf2rsk41LXta567ryibgzREz+5aJbTx19fqtJ=A@mail.gmail.com>
-Subject: Re: [PATCH 10/14] dt-bindings: clock: renesas,cpg-mssr: Document r8a774e1
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200706143529.18306-3-geert+renesas@glider.be>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 6:18 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
->
-> Add binding documentation for the RZ/G2H (R8A774E1) Clock Pulse Generator
-> driver.
->
-> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Hello!
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in clk-renesas-for-v5.9.
+On 06.07.2020 17:35, Geert Uytterhoeven wrote:
 
-Gr{oetje,eeting}s,
+> Some EtherAVB variants support internal clock delay configuration, which
+> can add larger delays than the delays that are typically supported by
+> the PHY (using an "rgmii-*id" PHY mode, and/or "[rt]xc-skew-ps"
+> properties).
+> 
+> Add properties for configuring the internal MAC delays.
+> These properties are mandatory, even when specified as zero, to
+> distinguish between old and new DTBs.
+> 
+> Update the (bogus) example accordingly.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-                        Geert
+Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+[...]
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+MBR, Sergei
