@@ -2,89 +2,91 @@ Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BE9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 11:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2035C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 11:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C835420772
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 11:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4D4120772
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 11:32:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tPhU/g97"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbgGHLbZ (ORCPT
+        id S1728706AbgGHLcq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 07:31:25 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:44288 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728385AbgGHLbZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 07:31:25 -0400
-Received: by mail-oi1-f194.google.com with SMTP id k6so33619667oij.11;
-        Wed, 08 Jul 2020 04:31:22 -0700 (PDT)
+        Wed, 8 Jul 2020 07:32:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50572 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728410AbgGHLcq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 07:32:46 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E498DC08C5DC
+        for <devicetree@vger.kernel.org>; Wed,  8 Jul 2020 04:32:45 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id s7so50885408ybg.10
+        for <devicetree@vger.kernel.org>; Wed, 08 Jul 2020 04:32:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=YgBvzWR/6mpx68PUV0u/0UmSPzbBc/aq4zhlyxD89Lg=;
+        b=tPhU/g97C2Z9SoM8ukg3lyY+3LzQapj8WUc18iKxxIvFIPIBVYsImiZZTksfXNn0Rp
+         /u6MVD8RMLKN4oTgFKBWgkrPq2rchoAerhtQugqBXsWQ1mk88GWSFlEw3PRwCm7UnLHk
+         hPtY06QOpF0a/mfdYHGH9u+h3e+3EcKLjrZauYyYRCLWHbZmmK4mgWNCiCGk8RO6S9Li
+         sYog2Ghm34YtGC1ehfzdKSHJ7zi31GisiZyyiaLy8JSBuIlBJcyo95nU7jRU3m3n5ddt
+         oMSc4gO25rUxH0TolfImhu386WOMWG61g0d5Vt9eIVrw5mbgX+4UkJ2Wq46c3kyC1kjE
+         DGVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8e4hZ651cVQvM3D1punaVKh1Yt9HoxZQTsJcXMEqkDA=;
-        b=m4CeBAmYjBTwDcD5+n6LdHoOdyrGoKD5rg+xLWEASq3yMMJWNZnsqQex+A1CYd08lB
-         wVuROSHYLeY8QFmTZSIYGQG3ePHI+qSqRY9XyXhcjV+B5opgXTRIdlCW1Kxd4jrvQ/VJ
-         hSiVws5i/5XsME+1TZ4bPSqqfMWEF5/bg4nl8jhL86oCN1f88LOOm93vgE/xQ970chxc
-         s4Pyg8iEvxLTVkE3bgbW+Tp4OxITXkH++TLJ74Zo0FDV+WpT/N7Nyl7UflUN1ypyc9bR
-         xvkXJyVs6VZYTajYUu4jmEZtgZ3py4STQZ8I02glj5jqpVAkPTFDBeJgUZ+AONp3uDYA
-         Qx4g==
-X-Gm-Message-State: AOAM53243vR3RuZw5DwLZ0/WhQ9pHpKr9yx8YqbKL+iRBUnkIr+MOKyV
-        4kp4w+6k1J63Cpgvyud4rOqhAbIhZ8RmlUOfkmQ=
-X-Google-Smtp-Source: ABdhPJwafYtlIK3JfqVod814xS1tHS++kFtnvZz6/F9NZ7RsO086oPA3TeNASTK81u1+qTWjwuY65ewtSNE84DDJois=
-X-Received: by 2002:aca:5c41:: with SMTP id q62mr6476331oib.148.1594207882458;
- Wed, 08 Jul 2020 04:31:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <1594138692-16816-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594138692-16816-12-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594138692-16816-12-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 8 Jul 2020 13:31:11 +0200
-Message-ID: <CAMuHMdU92mn8cYT2hb-f=e8ob7M52=uJkEAwAwnGyRKymg=eRA@mail.gmail.com>
-Subject: Re: [PATCH 13/14] dt-bindings: pinctrl: renesas,pfc-pinctrl: Document
- r8a774e1 PFC support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=YgBvzWR/6mpx68PUV0u/0UmSPzbBc/aq4zhlyxD89Lg=;
+        b=Gc56ciZ749SYYGSR0KTRtS1PyeT7z6lvEXbsPzx0mGUokN3gDbiiZTX4tM20jQdcVo
+         aDheVwmqBJIEIFWneThgiPHsUDl04OR8sGNnvfPovlbw31vUwEtFmU7NDCTNtInQ+vOz
+         CkwHEA5l+M/L8NQBq0T5YOUejXNgg8sdft3TPN2wKcP2b1AslbJqckpcDIbB6eg1or78
+         uwerGRshxp0z6n+YDFagTOr3+isUFhlAzhk6NgEcvuHqXEKnD8K+htHMlg9nAHt289rQ
+         0gbyeng038LYls6aRPawROeCMgWTxcKTSE8U1ytsAFi9QkBb0Ff4xpVGamIXD6gGrTvD
+         L/jg==
+X-Gm-Message-State: AOAM531Im0iCY+MK5GKw17pz/FgDJMpNOeGGxyeBmGq74a5ntaLHhgji
+        DQWUl4qDJCFenHST/q2V98DMJ2xmARlA
+X-Google-Smtp-Source: ABdhPJwU4spJyyoGNxb4Jb/Nayvl3kBlAxo/YfV/UKlWZ45gyrvKZTUsEkc+OeRI3n3s+NQ3+Y/0sJm9ITXu
+X-Received: by 2002:a25:2e43:: with SMTP id b3mr95187736ybn.190.1594207965184;
+ Wed, 08 Jul 2020 04:32:45 -0700 (PDT)
+Date:   Wed,  8 Jul 2020 19:32:30 +0800
+Message-Id: <20200708113233.3994206-1-tzungbi@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
+Subject: [PATCH 0/3] ASoC: mediatek: mt8183: support machine driver for rt1015
+From:   Tzung-Bi Shih <tzungbi@google.com>
+To:     broonie@kernel.org, robh+dt@kernel.org
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        tzungbi@google.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 6:18 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
->
-> Document PFC support for the RZ/G2H (R8A774E1) SoC.
->
-> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+This series tries to reuse mt8183-mt6358-ts3a227-max98357.c for supporting
+machine driver with rt1015 speaker amplifier.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in sh-pfc-for-v5.9.
+The 1st patch is straightforward: re-order the header inclusions.
 
-Gr{oetje,eeting}s,
+The 2nd patch adds document for the new proposed compatible string.
 
-                        Geert
+The 3rd patch changes the machine driver to support either "MAX98357A" or
+"RT1015" codecs.
+
+Tzung-Bi Shih (3):
+  ASoC: mediatek: mt8183: sort header inclusions in alphabetical
+  dt-bindings: mt8183: add compatible string for using rt1015
+  ASoC: mediatek: mt8183: support machine driver with rt1015
+
+ .../sound/mt8183-mt6358-ts3a227-max98357.txt  |   5 +-
+ sound/soc/mediatek/Kconfig                    |   5 +-
+ .../mt8183/mt8183-mt6358-ts3a227-max98357.c   | 171 +++++++++++++++---
+ 3 files changed, 153 insertions(+), 28 deletions(-)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.27.0.383.g050319c2ae-goog
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
