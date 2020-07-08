@@ -2,75 +2,61 @@ Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64521C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 06:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79897C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 06:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A14E206E2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 06:37:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="EvVxKg8S"
+	by mail.kernel.org (Postfix) with ESMTP id 4E7022078C
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 06:59:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594191585;
+	bh=XJuInuxOHD6Yk8crXfvZ8un1d/Cyt8V78YS8TieLKLc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=BUhpO8MJAne/NExQ70G4gtK7KhAxd8sOc7z0/NNxEIvvUE0J+NDerylT07W7en1js
+	 h9GxWLd2PpS7FGhJ/bBdVeCadH/DSuW/BVDVc081d6gUW7whbuAKmESbIg+Jcjm6g+
+	 9NeR3wv7ALxdpH0a9Hhgc+bHbS15+1VZa3shBoG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729763AbgGHGhE (ORCPT
+        id S1729863AbgGHG7o (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 02:37:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729762AbgGHGhE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 02:37:04 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45708C08C5DC
-        for <devicetree@vger.kernel.org>; Tue,  7 Jul 2020 23:37:04 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id u185so17489898pfu.1
-        for <devicetree@vger.kernel.org>; Tue, 07 Jul 2020 23:37:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ck5aijhNng/ZXTjfuRPiw9zt4tyG0HNHaHu36lpohaw=;
-        b=EvVxKg8SmOXYYxSKF0LAEHL0ilmOXKMGIk1SJmXFRrW0410UUsrxxXjefx2ki89rM/
-         Eo9IeiL0prPgsHdgFNteVzXwGzVqYHK92zbKquNTwJgewAKQzoLMsTys4SwAa0tzWNCy
-         cebRZ8igu6gkcDkgemmQo4AHIAH4sV19lyVU8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ck5aijhNng/ZXTjfuRPiw9zt4tyG0HNHaHu36lpohaw=;
-        b=DmUdTOafNN6vW7wmAU6CY3Qg2hVKI/ErTGkm95tQJCaf6zA7gC9NRgJsR1jwAYnMxz
-         R2tl2itmSE+4eNoRDjP76VVIRwkif3qfBnj7B9+oytQoGjMnW/Pk04i1E9VdUyMVAxL+
-         Kvdde+UDcshVunbXeJfc5PVgLyCVqdFbSVkPsYpGWKt9nA+J2XbeEP2yExYME5av3sNH
-         3Jy0bnozwjm8K3naLpIarOfkE9g6sR0PhNW6TIXLiEh9HtRV822n0sPk4cv8MwlJvQog
-         zwW+GY0qZg1ntl4LALvdXRekiDkboHxWKa1ZJ4TJqIZTyVLx6ExNAX5QFxZLymsrC8Y8
-         bjQg==
-X-Gm-Message-State: AOAM531olfvqE7WkHeGq47cPm+Q3k12gtlnyAndjTcpdbWfnhFqA4KZk
-        Fd72p46RrXPN7muKfsnkb/cHuQrvaqPGRg==
-X-Google-Smtp-Source: ABdhPJzBHlW3PuvdsPhv5uf7FnA7hzZ/I3s16xAlnqqWmp4EsuILLYatSDBXsuBboI189BH4yRuRDQ==
-X-Received: by 2002:a63:a84d:: with SMTP id i13mr46447892pgp.342.1594190223800;
-        Tue, 07 Jul 2020 23:37:03 -0700 (PDT)
-Received: from localhost.localdomain ([2405:201:c809:c7d5:ade2:f5f3:8cc0:52f9])
-        by smtp.gmail.com with ESMTPSA id c12sm24587898pfn.162.2020.07.07.23.36.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 23:37:03 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
-Cc:     Tom Cubie <tom@radxa.com>,
-        Suniel Mahesh <sunil@amarulasolutions.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v4 4/4] ARM: dts: rockchip: Add Radxa Rock Pi N8 initial support
-Date:   Wed,  8 Jul 2020 12:06:27 +0530
-Message-Id: <20200708063627.8365-5-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200708063627.8365-1-jagan@amarulasolutions.com>
-References: <20200708063627.8365-1-jagan@amarulasolutions.com>
+        Wed, 8 Jul 2020 02:59:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35020 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726194AbgGHG7o (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 8 Jul 2020 02:59:44 -0400
+Received: from localhost.localdomain (unknown [122.182.251.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36DCA2075B;
+        Wed,  8 Jul 2020 06:59:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594191583;
+        bh=XJuInuxOHD6Yk8crXfvZ8un1d/Cyt8V78YS8TieLKLc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=g3Xwsem7Pst2P3nEtC/CFj0f40mHZwdIY6kqx26B9FwEev7lyTd28eQJ7W1sXsMnA
+         16ocXKNteZYT3HtEFA2T6PvrhDFXHixTY6TBBodUDfxcobgxryq4o5Uo+E0KD+lvJU
+         lLrmnNzTg7S0Y9Vu44EOdbsOXP0JuW8Ja0dlaYWg=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        Rob Clark <robdclark@gmail.com>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: [PATCH v4 0/4] Add LT9611 DSI to HDMI bridge
+Date:   Wed,  8 Jul 2020 12:29:20 +0530
+Message-Id: <20200708065924.59257-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -78,64 +64,46 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rock Pi N8 is a Rockchip RK3288 based SBC, which has
-- VMARC RK3288 SOM (as per SMARC standard) from Vamrs.
-- Compatible carrier board from Radxa.
+Hi,
 
-VAMRC RK3288 SOM need to mount on top of radxa dalang
-carrier board for making Rock Pi N8 SBC.
+This series adds driver and bindings for Lontium LT9611 bridge chip which
+takes MIPI DSI as input and HDMI as output.
 
-So, add initial support for Rock Pi N8 by including rk3288,
-rk3288 vamrc-som and raxda dalang carrier board dtsi files.
+This chip can be found in 96boards RB3 platform [1] commonly called DB845c.
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Changes for v4, v3:
-- none
-Changes for v2:
-- reorder dtsi include so-that common properties will
-  visible to main dts.
+[1]: https://www.96boards.org/product/rb3-platform/
 
- arch/arm/boot/dts/Makefile              |  1 +
- arch/arm/boot/dts/rk3288-rock-pi-n8.dts | 17 +++++++++++++++++
- 2 files changed, 18 insertions(+)
- create mode 100644 arch/arm/boot/dts/rk3288-rock-pi-n8.dts
+Changes in v4:
+ - Add msm/dsi patch to create connector and support DRM_BRIDGE_ATTACH_NO_CONNECTOR
+ - Fix comments provided by Sam
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e8dd99201397..1d1b6ac26394 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -964,6 +964,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
- 	rk3288-popmetal.dtb \
- 	rk3288-r89.dtb \
- 	rk3288-rock2-square.dtb \
-+	rk3288-rock-pi-n8.dtb \
- 	rk3288-tinker.dtb \
- 	rk3288-tinker-s.dtb \
- 	rk3288-veyron-brain.dtb \
-diff --git a/arch/arm/boot/dts/rk3288-rock-pi-n8.dts b/arch/arm/boot/dts/rk3288-rock-pi-n8.dts
-new file mode 100644
-index 000000000000..b19593021713
---- /dev/null
-+++ b/arch/arm/boot/dts/rk3288-rock-pi-n8.dts
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd
-+ * Copyright (c) 2019 Vamrs Limited
-+ * Copyright (c) 2019 Amarula Solutions(India)
-+ */
-+
-+/dts-v1/;
-+#include "rk3288.dtsi"
-+#include <arm/rockchip-radxa-dalang-carrier.dtsi>
-+#include "rk3288-vmarc-som.dtsi"
-+
-+/ {
-+	model = "Radxa ROCK Pi N8";
-+	compatible = "radxa,rockpi-n8", "vamrs,rk3288-vmarc-som",
-+		     "rockchip,rk3288";
-+};
+Changes in v3:
+ - fix kbuild reported error
+ - rebase on v5.8-rc1
+
+Changes in v2:
+ - Add acks by Rob
+ - Fix comments reported by Emil and rename the file to lontium-lt9611.c
+ - Fix comments reported by Laurent on binding and driver
+ - Add HDMI audio support
+
+Vinod Koul (4):
+  dt-bindings: vendor-prefixes: Add Lontium vendor prefix
+  dt-bindings: display: bridge: Add documentation for LT9611
+  drm/bridge: Introduce LT9611 DSI to HDMI bridge
+  drm/msm/dsi: attach external bridge with DRM_BRIDGE_ATTACH_NO_CONNECTOR
+
+ .../display/bridge/lontium,lt9611.yaml        |  176 +++
+ .../devicetree/bindings/vendor-prefixes.yaml  |    2 +
+ drivers/gpu/drm/bridge/Kconfig                |   13 +
+ drivers/gpu/drm/bridge/Makefile               |    1 +
+ drivers/gpu/drm/bridge/lontium-lt9611.c       | 1174 +++++++++++++++++
+ drivers/gpu/drm/msm/dsi/dsi.c                 |    7 +-
+ drivers/gpu/drm/msm/dsi/dsi_manager.c         |   27 +-
+ 7 files changed, 1380 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
+ create mode 100644 drivers/gpu/drm/bridge/lontium-lt9611.c
+
 -- 
-2.25.1
+2.26.2
 
