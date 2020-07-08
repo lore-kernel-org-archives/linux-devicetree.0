@@ -2,204 +2,233 @@ Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55573C43446
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 987F2C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D7AB20760
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 754CB2067D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:26:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730277AbgGHHUB (ORCPT
+        id S1730424AbgGHH0U (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:20:01 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:48860 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730244AbgGHHUA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 03:20:00 -0400
-X-Alimail-AntiSpam: AC=SUSPECT;BC=0.6548809|-1;BR=01201311R181b1;CH=blue;DM=|SUSPECT|false|;DS=CONTINUE|ham_system_inform|0.0515633-0.00127515-0.947162;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07381;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=33;RT=33;SR=0;TI=SMTPD_---.I-8lwqE_1594192774;
-Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I-8lwqE_1594192774)
-          by smtp.aliyun-inc.com(10.147.40.26);
-          Wed, 08 Jul 2020 15:19:51 +0800
-From:   Frank Lee <frank@allwinnertech.com>
-To:     robh+dt@kernel.org, mripard@kernel.org, wens@csie.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        gregory.clement@bootlin.com, tglx@linutronix.de,
-        jason@lakedaemon.net, maz@kernel.org,
-        srinivas.kandagatla@linaro.org, linus.walleij@linaro.org,
-        anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        lee.jones@linaro.org, p.zabel@pengutronix.de, clabbe@baylibre.com,
-        icenowy@aosc.io, megous@megous.com, stefan@olimex.com,
-        bage@linutronix.de
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pm@vger.kernel.org, huangshuosheng@allwinnertech.com,
-        liyong@allwinnertech.com, Frank Lee <frank@allwinnertech.com>
-Subject: [PATCH v3 03/16] dt-bindings: pinctrl: sunxi: Add A100 pinctrl bindings
-Date:   Wed,  8 Jul 2020 15:19:29 +0800
-Message-Id: <20200708071942.22595-4-frank@allwinnertech.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200708071942.22595-1-frank@allwinnertech.com>
-References: <20200708071942.22595-1-frank@allwinnertech.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 8 Jul 2020 03:26:20 -0400
+Received: from mga03.intel.com ([134.134.136.65]:15287 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730279AbgGHH0T (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 8 Jul 2020 03:26:19 -0400
+IronPort-SDR: O/Zj2jhczkMT+IPYKJbJ8lydDTB12RJQbgbOdBGksUTf/aWpNIkgJJHSPW8ub9XsTQKcij18uo
+ ObtV1atO0B1Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9675"; a="147759450"
+X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
+   d="scan'208";a="147759450"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 00:26:18 -0700
+IronPort-SDR: CByh53ZrPYft6rgu4wbs/3b47Nhg62pvQHmCrzrbS8h48mg30/3rTZWZT+sgEkTpkxinwS1ycE
+ +3sXROn1fXkQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
+   d="scan'208";a="358025287"
+Received: from pg-nxl3.altera.com ([10.142.129.93])
+  by orsmga001.jf.intel.com with ESMTP; 08 Jul 2020 00:26:15 -0700
+From:   "Ooi, Joyce" <joyce.ooi@intel.com>
+To:     Thor Thayer <thor.thayer@linux.intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
+        Joyce Ooi <joyce.ooi@intel.com>,
+        Tan Ley Foon <ley.foon.tan@intel.com>,
+        See Chin Liang <chin.liang.see@intel.com>,
+        Dinh Nguyen <dinh.nguyen@intel.com>,
+        Dalon Westergreen <dalon.westergreen@intel.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH v4 10/10] net: eth: altera: update devicetree bindings documentation
+Date:   Wed,  8 Jul 2020 15:24:01 +0800
+Message-Id: <20200708072401.169150-11-joyce.ooi@intel.com>
+X-Mailer: git-send-email 2.13.0
+In-Reply-To: <20200708072401.169150-1-joyce.ooi@intel.com>
+References: <20200708072401.169150-1-joyce.ooi@intel.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add device tree binding Documentation details for A100 pinctrl driver,
-whic has an r pin controller and a pin controller with more irq lines.
+From: Dalon Westergreen <dalon.westergreen@intel.com>
 
-Signed-off-by: Frank Lee <frank@allwinnertech.com>
+Update devicetree bindings documentation to include msgdma
+prefetcher and ptp bindings.
+
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
+Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../pinctrl/allwinner,sun4i-a10-pinctrl.yaml       | 74 +++++++++++++---------
- 1 file changed, 44 insertions(+), 30 deletions(-)
+v2: no change
+v3: no change
+v4: no change
+---
+ .../devicetree/bindings/net/altera_tse.txt         | 103 +++++++++++++++++----
+ 1 file changed, 84 insertions(+), 19 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
-index bfefd09..226aba0 100644
---- a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
-@@ -48,6 +48,8 @@ properties:
-       - allwinner,sun9i-a80-r-pinctrl
-       - allwinner,sun50i-a64-pinctrl
-       - allwinner,sun50i-a64-r-pinctrl
-+      - allwinner,sun50i-a100-pinctrl
-+      - allwinner,sun50i-a100-r-pinctrl
-       - allwinner,sun50i-h5-pinctrl
-       - allwinner,sun50i-h6-pinctrl
-       - allwinner,sun50i-h6-r-pinctrl
-@@ -59,7 +61,7 @@ properties:
+diff --git a/Documentation/devicetree/bindings/net/altera_tse.txt b/Documentation/devicetree/bindings/net/altera_tse.txt
+index 0b7d4d3758ea..2f2d12603907 100644
+--- a/Documentation/devicetree/bindings/net/altera_tse.txt
++++ b/Documentation/devicetree/bindings/net/altera_tse.txt
+@@ -2,53 +2,86 @@
  
-   interrupts:
-     minItems: 1
--    maxItems: 5
-+    maxItems: 7
-     description:
-       One interrupt per external interrupt bank supported on the
-       controller, sorted by bank number ascending order.
-@@ -144,75 +146,87 @@ allOf:
-   # FIXME: We should have the pin bank supplies here, but not a lot of
-   # boards are defining it at the moment so it would generate a lot of
-   # warnings.
+ Required properties:
+ - compatible: Should be "altr,tse-1.0" for legacy SGDMA based TSE, and should
+-		be "altr,tse-msgdma-1.0" for the preferred MSGDMA based TSE.
++		be "altr,tse-msgdma-1.0" for the preferred MSGDMA based TSE,
++		and "altr,tse-msgdma-2.0" for MSGDMA with prefetcher based
++		implementations.
+ 		ALTR is supported for legacy device trees, but is deprecated.
+ 		altr should be used for all new designs.
+ - reg: Address and length of the register set for the device. It contains
+   the information of registers in the same order as described by reg-names
+ - reg-names: Should contain the reg names
+-  "control_port": MAC configuration space region
+-  "tx_csr":       xDMA Tx dispatcher control and status space region
+-  "tx_desc":      MSGDMA Tx dispatcher descriptor space region
+-  "rx_csr" :      xDMA Rx dispatcher control and status space region
+-  "rx_desc":      MSGDMA Rx dispatcher descriptor space region
+-  "rx_resp":      MSGDMA Rx dispatcher response space region
+-  "s1":		  SGDMA descriptor memory
+ - interrupts: Should contain the TSE interrupts and it's mode.
+ - interrupt-names: Should contain the interrupt names
+-  "rx_irq":       xDMA Rx dispatcher interrupt
+-  "tx_irq":       xDMA Tx dispatcher interrupt
++  "rx_irq":       DMA Rx dispatcher interrupt
++  "tx_irq":       DMA Tx dispatcher interrupt
+ - rx-fifo-depth: MAC receive FIFO buffer depth in bytes
+ - tx-fifo-depth: MAC transmit FIFO buffer depth in bytes
+ - phy-mode: See ethernet.txt in the same directory.
+ - phy-handle: See ethernet.txt in the same directory.
+ - phy-addr: See ethernet.txt in the same directory. A configuration should
+ 		include phy-handle or phy-addr.
+-- altr,has-supplementary-unicast:
+-		If present, TSE supports additional unicast addresses.
+-		Otherwise additional unicast addresses are not supported.
+-- altr,has-hash-multicast-filter:
+-		If present, TSE supports a hash based multicast filter.
+-		Otherwise, hash-based multicast filtering is not supported.
 -
-   - if:
-       properties:
-         compatible:
-           enum:
--            - allwinner,sun9i-a80-pinctrl
-+            - allwinner,sun50i-a100-pinctrl
+ - mdio device tree subnode: When the TSE has a phy connected to its local
+ 		mdio, there must be device tree subnode with the following
+ 		required properties:
+-
+ 	- compatible: Must be "altr,tse-mdio".
+ 	- #address-cells: Must be <1>.
+ 	- #size-cells: Must be <0>.
  
-     then:
-       properties:
-         interrupts:
--          minItems: 5
--          maxItems: 5
-+          minItems: 7
-+          maxItems: 7
+ 	For each phy on the mdio bus, there must be a node with the following
+ 	fields:
+-
+ 	- reg: phy id used to communicate to phy.
+ 	- device_type: Must be "ethernet-phy".
  
-     else:
-       if:
-         properties:
-           compatible:
-             enum:
--              - allwinner,sun6i-a31-pinctrl
--              - allwinner,sun6i-a31s-pinctrl
--              - allwinner,sun50i-h6-pinctrl
-+              - allwinner,sun9i-a80-pinctrl
+ The MAC address will be determined using the optional properties defined in
+ ethernet.txt.
  
-       then:
-         properties:
-           interrupts:
--            minItems: 4
--            maxItems: 4
-+            minItems: 5
-+            maxItems: 5
- 
-       else:
-         if:
-           properties:
-             compatible:
-               enum:
--                - allwinner,sun8i-a23-pinctrl
--                - allwinner,sun8i-a83t-pinctrl
--                - allwinner,sun50i-a64-pinctrl
--                - allwinner,sun50i-h5-pinctrl
--                - allwinner,suniv-f1c100s-pinctrl
-+                - allwinner,sun6i-a31-pinctrl
-+                - allwinner,sun6i-a31s-pinctrl
-+                - allwinner,sun50i-h6-pinctrl
- 
-         then:
-           properties:
-             interrupts:
--              minItems: 3
--              maxItems: 3
-+              minItems: 4
-+              maxItems: 4
- 
-         else:
-           if:
-             properties:
-               compatible:
-                 enum:
--                  - allwinner,sun6i-a31-r-pinctrl
--                  - allwinner,sun8i-a33-pinctrl
--                  - allwinner,sun8i-h3-pinctrl
--                  - allwinner,sun8i-v3-pinctrl
--                  - allwinner,sun8i-v3s-pinctrl
--                  - allwinner,sun9i-a80-r-pinctrl
--                  - allwinner,sun50i-h6-r-pinctrl
-+                  - allwinner,sun8i-a23-pinctrl
-+                  - allwinner,sun8i-a83t-pinctrl
-+                  - allwinner,sun50i-a64-pinctrl
-+                  - allwinner,sun50i-h5-pinctrl
-+                  - allwinner,suniv-f1c100s-pinctrl
- 
-           then:
-             properties:
-               interrupts:
--                minItems: 2
--                maxItems: 2
-+                minItems: 3
-+                maxItems: 3
- 
-           else:
--            properties:
--              interrupts:
--                minItems: 1
--                maxItems: 1
-+            if:
-+              properties:
-+                compatible:
-+                  enum:
-+                    - allwinner,sun6i-a31-r-pinctrl
-+                    - allwinner,sun8i-a33-pinctrl
-+                    - allwinner,sun8i-h3-pinctrl
-+                    - allwinner,sun8i-v3-pinctrl
-+                    - allwinner,sun8i-v3s-pinctrl
-+                    - allwinner,sun9i-a80-r-pinctrl
-+                    - allwinner,sun50i-h6-r-pinctrl
++- altr,has-supplementary-unicast:
++		If present, TSE supports additional unicast addresses.
++		Otherwise additional unicast addresses are not supported.
++- altr,has-hash-multicast-filter:
++		If present, TSE supports a hash based multicast filter.
++		Otherwise, hash-based multicast filtering is not supported.
++- altr,has-ptp:
++		If present, TSE supports 1588 timestamping.  Currently only
++		supported with the msgdma prefetcher.
++- altr,tx-poll-cnt:
++		Optional cycle count for Tx prefetcher to poll descriptor
++		list.  If not present, defaults to 128, which at 125MHz is
++		roughly 1usec. Only for "altr,tse-msgdma-2.0".
++- altr,rx-poll-cnt:
++		Optional cycle count for Tx prefetcher to poll descriptor
++		list.  If not present, defaults to 128, which at 125MHz is
++		roughly 1usec. Only for "altr,tse-msgdma-2.0".
 +
-+            then:
-+              properties:
-+                interrupts:
-+                  minItems: 2
-+                  maxItems: 2
++Required registers by compatibility string:
++ - "altr,tse-1.0"
++	"control_port": MAC configuration space region
++	"tx_csr":       DMA Tx dispatcher control and status space region
++	"rx_csr" :      DMA Rx dispatcher control and status space region
++	"s1":		DMA descriptor memory
 +
-+            else:
-+              properties:
-+                interrupts:
-+                  minItems: 1
-+                  maxItems: 1
++ - "altr,tse-msgdma-1.0"
++	"control_port": MAC configuration space region
++	"tx_csr":       DMA Tx dispatcher control and status space region
++	"tx_desc":      DMA Tx dispatcher descriptor space region
++	"rx_csr" :      DMA Rx dispatcher control and status space region
++	"rx_desc":      DMA Rx dispatcher descriptor space region
++	"rx_resp":      DMA Rx dispatcher response space region
++
++ - "altr,tse-msgdma-2.0"
++	"control_port": MAC configuration space region
++	"tx_csr":       DMA Tx dispatcher control and status space region
++	"tx_pref":      DMA Tx prefetcher configuration space region
++	"rx_csr" :      DMA Rx dispatcher control and status space region
++	"rx_pref":      DMA Rx prefetcher configuration space region
++	"tod_ctrl":     Time of Day Control register only required when
++			timestamping support is enabled.  Timestamping is
++			only supported with the msgdma-2.0 implementation.
++
++Optional properties:
++- local-mac-address: See ethernet.txt in the same directory.
++- max-frame-size: See ethernet.txt in the same directory.
++
+ Example:
  
- additionalProperties: false
+ 	tse_sub_0_eth_tse_0: ethernet@1,00000000 {
+@@ -86,6 +119,11 @@ Example:
+ 				device_type = "ethernet-phy";
+ 			};
  
++			phy2: ethernet-phy@2 {
++				reg = <0x2>;
++				device_type = "ethernet-phy";
++			};
++
+ 		};
+ 	};
+ 
+@@ -111,3 +149,30 @@ Example:
+ 		altr,has-hash-multicast-filter;
+ 		phy-handle = <&phy1>;
+ 	};
++
++
++	tse_sub_2_eth_tse_0: ethernet@1,00002000 {
++		compatible = "altr,tse-msgdma-2.0";
++		reg = 	<0x00000001 0x00002000 0x00000400>,
++			<0x00000001 0x00002400 0x00000020>,
++			<0x00000001 0x00002420 0x00000020>,
++			<0x00000001 0x00002440 0x00000020>,
++			<0x00000001 0x00002460 0x00000020>,
++			<0x00000001 0x00002480 0x00000040>;
++		reg-names = "control_port", "rx_csr", "rx_pref","tx_csr", "tx_pref", "tod_ctrl";
++		interrupt-parent = <&hps_0_arm_gic_0>;
++		interrupts = <0 45 4>, <0 44 4>;
++		interrupt-names = "rx_irq", "tx_irq";
++		rx-fifo-depth = <2048>;
++		tx-fifo-depth = <2048>;
++		address-bits = <48>;
++		max-frame-size = <1500>;
++		local-mac-address = [ 00 00 00 00 00 00 ];
++		phy-mode = "sgmii";
++		altr,has-supplementary-unicast;
++		altr,has-hash-multicast-filter;
++		altr,has-ptp;
++		altr,tx-poll-cnt = <128>;
++		altr,rx-poll-cnt = <32>;
++		phy-handle = <&phy2>;
++	};
 -- 
-1.9.1
+2.13.0
 
