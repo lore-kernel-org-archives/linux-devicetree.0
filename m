@@ -2,97 +2,76 @@ Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4CCC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 16:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B29C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 16:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9E5C20786
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 16:50:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594227053;
-	bh=AqMKtqS/OXQk+rhorj+lXzo8EwOOu2YsoGozE3DRg5U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lTV8DcsrmOmxugZwA8VyNbkMglUXHmBkKCVKwPZ8coPwj8/9Oxl/5rd+fzmoMqa8m
-	 5rHC8/2dd6i67A9BIdk+rmfQ1jezBEM8HS7Tkm3cK/E0vmTt17SCIM+GEBfp/ofaQQ
-	 EAVq5OjkfK9ttFL+oevQS57/K8z12uNbXAB+n0YQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8A3E22063A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 16:56:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730662AbgGHQur (ORCPT
+        id S1728967AbgGHQ4V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:50:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60006 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730634AbgGHQur (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 8 Jul 2020 12:50:47 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 800802063A;
-        Wed,  8 Jul 2020 16:50:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594227047;
-        bh=AqMKtqS/OXQk+rhorj+lXzo8EwOOu2YsoGozE3DRg5U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=g+siRc6bJy6ezH6ZeNdz2UGNlovQfefe94DX3Ol9cFvhEvJwUWscErEJuSZWseQZS
-         esTenErVulATOMRJI3KaxHGJEZgA7pGTm/tJE0yl+fLtEBEDoedT1KdWyg5i+z02jA
-         31gZNcFQy7WDA+YJFJGBMkhp39cfu1zw3ooqG5XE=
-Date:   Wed, 8 Jul 2020 17:50:41 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Rohit kumar <rohitkr@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        robh+dt@kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org,
-        perex@perex.cz, tiwai@suse.com, srinivas.kandagatla@linaro.org,
-        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ajit Pandey <ajitp@codeaurora.org>
-Subject: Re: [PATCH v3 5/8] ASoC: qcom: lpass-platform: Replace card->dev
- with component->dev
-Message-ID: <20200708165041.GX4655@sirena.org.uk>
-References: <1594184896-10629-1-git-send-email-rohitkr@codeaurora.org>
- <1594184896-10629-6-git-send-email-rohitkr@codeaurora.org>
+        Wed, 8 Jul 2020 12:56:21 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:48234 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726124AbgGHQ4V (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 12:56:21 -0400
+Received: from [78.134.117.153] (port=33222 helo=[192.168.77.66])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1jtDMm-000BDX-FZ; Wed, 08 Jul 2020 18:56:16 +0200
+Subject: Re: [PATCH v2 1/4] dt-bindings: clk: versaclock5: fix 'idt' prefix
+ typos
+To:     linux-clk@vger.kernel.org
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
+        Adam Ford <aford173@gmail.com>
+References: <20200708074035.31595-1-luca@lucaceresoli.net>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <84f1800d-e8a4-52d8-e7f7-a199601c2fea@lucaceresoli.net>
+Date:   Wed, 8 Jul 2020 18:56:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="aBaYPhOdNx+t7mr3"
-Content-Disposition: inline
-In-Reply-To: <1594184896-10629-6-git-send-email-rohitkr@codeaurora.org>
-X-Cookie: Oh Dad!  We're ALL Devo!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200708074035.31595-1-luca@lucaceresoli.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi,
 
---aBaYPhOdNx+t7mr3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 08/07/20 09:40, Luca Ceresoli wrote:
+> 'idt' is misspelled 'itd' in a few places, fix it.
+> 
+> Fixes: 34662f6e3084 ("dt: Add additional option bindings for IDT VersaClock")
 
-On Wed, Jul 08, 2020 at 10:38:13AM +0530, Rohit kumar wrote:
-> From: Ajit Pandey <ajitp@codeaurora.org>
->=20
-> We are allocating dma memory for component->dev but trying to mmap
-> such memory for substream->pcm->card->dev. Replace device argument
-> in mmap with component->dev to fix this.
+This line triggers a warning in patchwork:
 
-This is a bug fix and should've been at the start of the series (or sent
-separately) so that it can be applied without the rest of the series.
+WARNING: Unknown commit id '34662f6e3084', maybe rebased or not pulled?
 
---aBaYPhOdNx+t7mr3
-Content-Type: application/pgp-signature; name="signature.asc"
+The commit is in the clk-next branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git, and thus
+supposed to be merged into mainline.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8F+WAACgkQJNaLcl1U
-h9DYdwf/TP/V9rRaqchmnuoLr81D+iZWagfBza40aZnj6L9DmzYz9ujUAXhBwLE3
-m0qzU/Y80YabOhh+GByaGdPSPAT+34xYOcFVym6e2Iqq6iJHSIY9OWeChI+ieCKv
-1JxhQzQgOBoHjSLmCG/IM6/DaP8Gcab0uEakRbI6wzuhKbZtQ8TmCLD90Igv2Y36
-bFNfao34+aQxdmGpe1lLqScooepCZzYeL47nFGlVoXFSG9phR0h+Qwj/ed/5alhn
-ntxODL3WdwurRO+1L/TZrPhfrmMolsda9pU0G6Mm4vO2NwXK/bZuYixvckCT7H3S
-5frOF/gMTdki5Wl3SDrE8GDvOrX9/w==
-=exLA
------END PGP SIGNATURE-----
-
---aBaYPhOdNx+t7mr3--
+-- 
+Luca
