@@ -2,99 +2,102 @@ Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E116CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46837C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE2F620786
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FA1520672
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 07:56:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c8zH5rhP"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="biSWOVAj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbgGHHpw (ORCPT
+        id S1728087AbgGHH4T (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 03:45:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbgGHHpv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 03:45:51 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3203FC08C5DC;
-        Wed,  8 Jul 2020 00:45:51 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id q15so1857423wmj.2;
-        Wed, 08 Jul 2020 00:45:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=yvlYiPks6mhJ8cxYaoK6/i2US4+IgEbdzDKr7+cJ8uU=;
-        b=c8zH5rhPF+phZfOSXO2gDlN1DVl+v/Cx3tp71GVcxczbkc9prklYE502HeCl0glvy6
-         Z09D+iEq9UGcfSb1a+Mf5hdFW2kSYRq5dFk3pMDdgASp3i31c8uUpF2gg1s3hlAvH+JR
-         UeHsGHrHrBE9C3c8ngoZ2Sc51llOQhaNDHXJkEM/60yS52jr1OJuqKH4ujGoY5Fnxl7u
-         zJE1L7f98lSbSh0wJSbFRdGexe0fXqxTc3uScLviud8SaxkjPBP6jfRrR0P3n6lfLIYo
-         bMXKLmGeXt/PYevPZZYiYsE61OdxNMFgYvN0X9WtE1addVd/85HbCIuEl7p82T+E/g0e
-         4vBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yvlYiPks6mhJ8cxYaoK6/i2US4+IgEbdzDKr7+cJ8uU=;
-        b=kNqbzBNMrbd148eY2ayj8oOvhv6iUoanWYk8hsFBSdPqWDJjiey7QiKfrCyJRFfL29
-         X4sFRNyisGz6LyNmKQ9VwJ732ESuZk81roe3SYT5pyLBKlXcSKZKVsQUMAiqoLis3fiH
-         xDmC699gVZozV2GU/u840fe4YV/hS1wSBAH/ocmraS3aB2lSvueR8opqGUjN5nfV0sip
-         FLmN7Larqtw9UHDJrndIOTcoksXNYDYzQvspgJZ/e7I7nZscRkkEsaIs450ffimy4emm
-         U35iBSvCu72lkQiyPvIyKzKNlyftp2OQxQdveZB8bab85C095GUuMDJX3gjs5XUn2/bZ
-         lJSg==
-X-Gm-Message-State: AOAM530fm/F5Md6ZfH1CybysJWkXIdfXDjjAke66EFw1AmbZ3DT8Q7xh
-        CREu5KS4doGftS0CQgYNQBs=
-X-Google-Smtp-Source: ABdhPJyfCRKV9aKG3yjwH2QZVnVF+A1H/3zVPGdu0ei4zSGkOGEIMvWFCSdjaZrYu71+eOEVdiEAug==
-X-Received: by 2002:a05:600c:2249:: with SMTP id a9mr7625316wmm.163.1594194349997;
-        Wed, 08 Jul 2020 00:45:49 -0700 (PDT)
-Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id 65sm5495212wre.6.2020.07.08.00.45.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 00:45:49 -0700 (PDT)
-Date:   Wed, 8 Jul 2020 09:45:47 +0200
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     Frank Lee <frank@allwinnertech.com>
-Cc:     robh+dt@kernel.org, mripard@kernel.org, wens@csie.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        gregory.clement@bootlin.com, tglx@linutronix.de,
-        jason@lakedaemon.net, maz@kernel.org,
-        srinivas.kandagatla@linaro.org, linus.walleij@linaro.org,
-        anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        lee.jones@linaro.org, p.zabel@pengutronix.de, clabbe@baylibre.com,
-        icenowy@aosc.io, megous@megous.com, stefan@olimex.com,
-        bage@linutronix.de, devicetree@vger.kernel.org,
-        linux-pm@vger.kernel.org, liyong@allwinnertech.com,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        huangshuosheng@allwinnertech.com, linux-i2c@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 00/16] Allwinner A100 Initial support
-Message-ID: <20200708074547.GA19609@Red>
-References: <20200708071942.22595-1-frank@allwinnertech.com>
+        Wed, 8 Jul 2020 03:56:19 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:53373 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbgGHH4T (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 03:56:19 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 3F86923078;
+        Wed,  8 Jul 2020 09:56:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1594194976;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vkAaApfhcYQrTtXHZ3DFw7xulIHI0rpYQDvfWCBnZm0=;
+        b=biSWOVAjbZvthb+/2JqDpUf5TrG64sWC75SF1s1Z9kEyywzchrxU3Iqy6tXIkUZtVhIPg2
+        abaMsAwWt4rVPYHYCytnRxorHIp1FA2W3FP3QKMrp3C5gwwGssdcUV38GWIS2O6vsBwp7x
+        l58Gj90dSpH5zagXo6jLY7W8llV9JPY=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708071942.22595-1-frank@allwinnertech.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 08 Jul 2020 09:56:13 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v5 13/13] arm64: dts: freescale: sl28: enable fan support
+In-Reply-To: <CACRpkdaPO7CGNrxmjL5QH1cxP5wqku1oMtQaQgJfeKiKqiGAOg@mail.gmail.com>
+References: <20200706175353.16404-1-michael@walle.cc>
+ <20200706175353.16404-14-michael@walle.cc>
+ <CACRpkdaPO7CGNrxmjL5QH1cxP5wqku1oMtQaQgJfeKiKqiGAOg@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.6
+Message-ID: <d9a53ed9254a136a7bc161c2a93045b0@walle.cc>
+X-Sender: michael@walle.cc
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 03:19:26PM +0800, Frank Lee wrote:
-> This patch set adds initial support for allwinner a100 soc,
-> which is a 64-bit tablet chip.
+Hi Linus,
+
+Am 2020-07-08 09:39, schrieb Linus Walleij:
+> just a drive-by-comment:
 > 
+> On Mon, Jul 6, 2020 at 7:57 PM Michael Walle <michael@walle.cc> wrote:
+> 
+>> Add a pwm-fan mapped to the PWM channel 0 which is connected to the
+>> fan connector of the carrier.
+>> 
+>> Signed-off-by: Michael Walle <michael@walle.cc>
+> 
+> If you have a cooling device like this, do you also have a temperature
+> sensor? In that case it makes sense to add a thermal zone and a
+> policy, such as I did for a device in
+> 6e97f0aaca4ca778905dd1dc667cbf379f4cae15
 
-Hello
+Yep, the CPU and DDR controller have temperatur sensors and there are
+already thermal zones for them. We have the fan linked to the policies
+in our vendor DTS overlay. For now I didn't want to include that here,
+mainly because there are no labels in the fsl-ls1028a.dtsi for the
+thermal zone/cooling maps/trips. But this is still on my TODO, when
+this series finally make it into the kernel ;)
 
-Does a product already exists with it ? I couldnt found any.
-Does a datasheet is availlable ?
-
-Regards
+-michael
