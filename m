@@ -2,128 +2,93 @@ Return-Path: <SRS0=Vyee=AT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC28C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 16:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF03AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 16:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E8132078D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 16:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8F8C206F6
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jul 2020 16:20:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730243AbgGHQSB convert rfc822-to-8bit (ORCPT
+        id S1730395AbgGHQUX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 12:18:01 -0400
-Received: from mailoutvs24.siol.net ([185.57.226.215]:40617 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730093AbgGHQSA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 12:18:00 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 4A96C524C57;
-        Wed,  8 Jul 2020 18:17:58 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id oLEpCQVAM4I0; Wed,  8 Jul 2020 18:17:57 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id D452E524C76;
-        Wed,  8 Jul 2020 18:17:57 +0200 (CEST)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id 47E03524BD7;
-        Wed,  8 Jul 2020 18:17:57 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     =?ISO-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Marcus Cooper <codekipper@gmail.com>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 08/16] arm64: dts: allwinner: h6: Add HDMI audio node
-Date:   Wed, 08 Jul 2020 18:17:57 +0200
-Message-ID: <4073007.RJdR9ZcIkj@jernej-laptop>
-In-Reply-To: <20200706052937.ygjjllrsj7rvynkq@gilmour.lan>
-References: <20200704113902.336911-1-peron.clem@gmail.com> <20200704113902.336911-9-peron.clem@gmail.com> <20200706052937.ygjjllrsj7rvynkq@gilmour.lan>
+        Wed, 8 Jul 2020 12:20:23 -0400
+Received: from mga06.intel.com ([134.134.136.31]:21896 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730278AbgGHQUW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 8 Jul 2020 12:20:22 -0400
+IronPort-SDR: OC2kW4fLquX+oPNMLHJf/9msQBZDYEEqnWInFz4Vtsh91B42yP65AU5hJAS/h+bVU7VN3XINJC
+ Y9phUg9/4qqQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="209379719"
+X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
+   d="scan'208";a="209379719"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2020 09:20:22 -0700
+IronPort-SDR: gNf7C9Z2YX16Oxep5C8FDryKYcNh04YCXz9q1EE5RqNXBD0PzTqhyFoji8C62lK+bDl3ZWfBux
+ m0qh6WBLiqrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,327,1589266800"; 
+   d="scan'208";a="283846524"
+Received: from jschirra-mobl.ger.corp.intel.com (HELO localhost) ([10.249.47.201])
+  by orsmga006.jf.intel.com with ESMTP; 08 Jul 2020 09:20:18 -0700
+Date:   Wed, 8 Jul 2020 19:20:17 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Masahisa Kojima <masahisa.kojima@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        ardb@kernel.org, devicetree@vger.kernel.org,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca
+Subject: Re: [PATCH v3 0/2] synquacer: add TPM support
+Message-ID: <20200708162017.GB549022@linux.intel.com>
+References: <20200708131424.18729-1-masahisa.kojima@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200708131424.18729-1-masahisa.kojima@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi!
-
-Dne ponedeljek, 06. julij 2020 ob 07:29:37 CEST je Maxime Ripard napisal(a):
-> Hi,
+On Wed, Jul 08, 2020 at 10:14:22PM +0900, Masahisa Kojima wrote:
+> This adds support for driving the TPM on Socionext SynQuacer platform
+> using the driver for a memory mapped TIS frame.
 > 
-> On Sat, Jul 04, 2020 at 01:38:54PM +0200, Clément Péron wrote:
-> > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> > 
-> > Add a simple-soundcard to link audio between HDMI and I2S.
-> > 
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> > Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> > ---
-> > 
-> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 33 ++++++++++++++++++++
-> >  1 file changed, 33 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi index
-> > 78b1361dfbb9..ae169d07b939 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > @@ -67,6 +67,25 @@ de: display-engine {
-> > 
-> >  		status = "disabled";
-> >  	
-> >  	};
-> > 
-> > +	hdmi_sound: hdmi-sound {
-> > +		compatible = "simple-audio-card";
-> > +		simple-audio-card,format = "i2s";
-> > +		simple-audio-card,name = "sun50i-h6-hdmi";
-> > +		simple-audio-card,mclk-fs = <128>;
-> > +		simple-audio-card,frame-inversion;
+> v3:
+> - prepare new module to handle TPM MMIO access on SynQuacer platform
 > 
-> Have you figured that one out?
+> v2:
+> - don't use read/write_bytes() to implement read/write16/32 since that uses
+>   the wrong address
 > 
-> > +		status = "disabled";
-> > +
-> > +		simple-audio-card,codec {
-> > +			sound-dai = <&hdmi>;
-> > +		};
-> > +
-> > +		simple-audio-card,cpu {
-> > +			sound-dai = <&i2s1>;
-> > +			dai-tdm-slot-num = <2>;
-> > +			dai-tdm-slot-width = <32>;
+> Cc: jarkko.sakkinen@linux.intel.com
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: ardb@kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-integrity@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: peterhuewe@gmx.de
+> Cc: jgg@ziepe.ca
 > 
-> I'm not sure why you need to use the TDM stuff here. IIRC the HDMI
-> controller can output on up to 6 channels, so how would that work out?
+> Masahisa Kojima (2):
+>   tpm: tis: add support for MMIO TPM on SynQuacer
+>   dt-bindings: Add SynQucer TPM MMIO as a trivial device
+> 
+>  .../devicetree/bindings/trivial-devices.yaml  |   2 +
+>  drivers/char/tpm/Kconfig                      |  12 ++
+>  drivers/char/tpm/Makefile                     |   1 +
+>  drivers/char/tpm/tpm_tis_synquacer.c          | 196 ++++++++++++++++++
+>  4 files changed, 211 insertions(+)
+>  create mode 100644 drivers/char/tpm/tpm_tis_synquacer.c
+> 
+> -- 
+> 2.20.1
+> 
 
-dai-tdm-slot-width is needed to override automatic slot width selection. It 
-should always be 32 for HDMI, no matter what is actual physical sample width. 
-In this case this property is abused to set width also for I2S mode of 
-operation. IMO there is no sense to duplicate code because I2S variant would 
-work exactly the same, except name would be different.
+Overally the code looks great. You've run it through checkpatch.pl?
 
-I'm not sure about dai-tdm-slot-num. Marcus, can you explain the need for this 
-property?
-
-Would it be better to implement separate link driver instead of using simple-
-card to hide all this properties into the code?
-
-Best regards,
-Jernej
-
-
-
+/Jarkko
