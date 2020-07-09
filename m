@@ -7,56 +7,57 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D89C433E6
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BB8C433F2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D91112078B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2069220578
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:20:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CGgXIqVA"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uQrDfkRX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgGIXUR (ORCPT
+        id S1726908AbgGIXUS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 19:20:17 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:49314 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726856AbgGIXUQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 19:20:16 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 069NK9dI122954;
-        Thu, 9 Jul 2020 18:20:09 -0500
+        Thu, 9 Jul 2020 19:20:18 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:55410 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726894AbgGIXUS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 19:20:18 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 069NKB28019098;
+        Thu, 9 Jul 2020 18:20:11 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594336809;
-        bh=Q2UknZFZp0eYO410jfQeNU8OelHDDnS7sGKVXVirJAw=;
+        s=ti-com-17Q1; t=1594336811;
+        bh=hoL0x9O1kvkaT4prL5tfXltZY55PUwkw/Roc9kLuZoA=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=CGgXIqVAYgv0t9mlMOJSAhp3bcCTAObcPuolH/YYwPfRndyjIEd19nZkY+RFi5RtO
-         e9nT4yrN9LmMgaiHyq2fZwIUptudm5aT9+KqXmz+lErU9IIAVStR9TM42hMZhGfCUf
-         alkRlgoppxtOTjpcn7Qe+auyAEYjyOcBXKvuw77I=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 069NK9ZP099442;
-        Thu, 9 Jul 2020 18:20:09 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+        b=uQrDfkRX1E7dRRpd+FVkx8e9aDd0eG5JNkddM8kTRSJcGB8SYCakzom7KEQaasN6P
+         z+8aqRnjO5MOOA7bgMXm+ROFz96mOjsz4MAn7ESQ0ppXy9m60CayKsFPRsUiiiO1jZ
+         kGr85dwwFamhgdNTrFHDMDz605ciqbUQNwhrdqrE=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 069NKBoo012138
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 9 Jul 2020 18:20:11 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 9 Jul
- 2020 18:20:08 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 18:20:10 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 9 Jul 2020 18:20:08 -0500
+ Frontend Transport; Thu, 9 Jul 2020 18:20:10 -0500
 Received: from fllv0103.dal.design.ti.com (fllv0103.dal.design.ti.com [10.247.120.73])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 069NK7Ds119283;
-        Thu, 9 Jul 2020 18:20:08 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 069NKAtp032199;
+        Thu, 9 Jul 2020 18:20:10 -0500
 Received: from localhost ([10.250.34.57])
-        by fllv0103.dal.design.ti.com (8.14.7/8.14.7) with ESMTP id 069NK7ex124457;
-        Thu, 9 Jul 2020 18:20:07 -0500
+        by fllv0103.dal.design.ti.com (8.14.7/8.14.7) with ESMTP id 069NKAmV124485;
+        Thu, 9 Jul 2020 18:20:10 -0500
 From:   Suman Anna <s-anna@ti.com>
 To:     Tony Lindgren <tony@atomide.com>
 CC:     <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Tero Kristo <t-kristo@ti.com>, Suman Anna <s-anna@ti.com>
-Subject: [PATCH 09/13] ARM: dts: omap5: Add aliases for rproc nodes
-Date:   Thu, 9 Jul 2020 18:19:50 -0500
-Message-ID: <20200709231954.1973-10-s-anna@ti.com>
+Subject: [PATCH 13/13] ARM: dts: omap5-uevm: Add watchdog timers for IPU and DSP
+Date:   Thu, 9 Jul 2020 18:19:54 -0500
+Message-ID: <20200709231954.1973-14-s-anna@ti.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200709231954.1973-1-s-anna@ti.com>
 References: <20200709231954.1973-1-s-anna@ti.com>
@@ -69,32 +70,42 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add aliases for the DSP and IPU remoteproc processor
-nodes common to all OMAP5 boards. The aliases uses
-the stem "rproc", and are identical to the values
-chosen on OMAP4 boards.
+The watchdog timers have been added for the IPU and DSP remoteproc
+devices for the OMAP5 uEVM board. The following timers (same as the
+timers on OMAP4 Panda boards) are used as the watchdog timers,
+        DSP : GPT6
+        IPU : GPT9 & GPT11 (one for each Cortex-M4 core)
 
-The aliases can be overridden, if needed, in the
-respective board files.
+The MPU-side drivers will use this data to initialize the watchdog
+timers, and listen for any watchdog triggers. The BIOS-side code
+needs to configure and refresh these timers properly to not throw
+a watchdog error.
+
+These timers can be changed or removed as per the system integration
+needs, alongside appropriate equivalent changes on the firmware side.
 
 Signed-off-by: Suman Anna <s-anna@ti.com>
 ---
- arch/arm/boot/dts/omap5.dtsi | 2 ++
+ arch/arm/boot/dts/omap5-uevm.dts | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index 116150ded018..adffc48a6d55 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -31,6 +31,8 @@ aliases {
- 		serial3 = &uart4;
- 		serial4 = &uart5;
- 		serial5 = &uart6;
-+		rproc0 = &dsp;
-+		rproc1 = &ipu;
- 	};
+diff --git a/arch/arm/boot/dts/omap5-uevm.dts b/arch/arm/boot/dts/omap5-uevm.dts
+index bb016419ef61..9b9e9ee51b5c 100644
+--- a/arch/arm/boot/dts/omap5-uevm.dts
++++ b/arch/arm/boot/dts/omap5-uevm.dts
+@@ -223,10 +223,12 @@ &dsp {
+ 	status = "okay";
+ 	memory-region = <&dsp_memory_region>;
+ 	ti,timers = <&timer5>;
++	ti,watchdog-timers = <&timer6>;
+ };
  
- 	cpus {
+ &ipu {
+ 	status = "okay";
+ 	memory-region = <&ipu_memory_region>;
+ 	ti,timers = <&timer3>;
++	ti,watchdog-timers = <&timer9>, <&timer11>;
+ };
 -- 
 2.26.0
 
