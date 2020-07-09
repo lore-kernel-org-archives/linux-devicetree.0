@@ -2,90 +2,128 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43456C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 20:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2C8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 20:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15EF2207DD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 20:04:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594325055;
-	bh=WF1+FgtoUoyqTTIsXOucloJan4kTB/Ertyt18neS6Ew=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FcQdY2bj4cTO8Rxl33FBrsLGCcqGAXFEpbjJqWsgHLe/QxVcU3UfRny2b86SKl7BG
-	 qEPkmDNpnUoSxlVCp2eHDt/tAh1vx/5Tg+vLrnlYDvclOf6/1w+FDYUJBIKZdflow3
-	 9GCU31u67XBRuZRNzS6TPCscvVbkphnBBVZiMjLk=
+	by mail.kernel.org (Postfix) with ESMTP id D56EA20748
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 20:05:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="AhNQ3fbw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726306AbgGIUEO (ORCPT
+        id S1726324AbgGIUFs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 16:04:14 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:33231 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbgGIUEO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 16:04:14 -0400
-Received: by mail-io1-f66.google.com with SMTP id d18so3693317ion.0;
-        Thu, 09 Jul 2020 13:04:13 -0700 (PDT)
+        Thu, 9 Jul 2020 16:05:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbgGIUFr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 16:05:47 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 688ADC08C5CE
+        for <devicetree@vger.kernel.org>; Thu,  9 Jul 2020 13:05:47 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id ed14so1552293qvb.2
+        for <devicetree@vger.kernel.org>; Thu, 09 Jul 2020 13:05:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PycHeytyEXnAfxuN7qqf3DZk4rAs+Sr/OQVpihKvwZY=;
+        b=AhNQ3fbwpzkEIcm+5ODN2ebHaNffsSaihE9J64OOIAKCSrPOSi8UTKlTBg+IOFXo9t
+         5bjjk0weUCuGjLom8mO3n25mxkCZmksLojflbh+6QCihWuuzCh0ut7Do9/4MUH9uccBR
+         bBPDd5Twd+Cbygxijcpwr3A11Rjp0BYBxDFWkVNH+XYp6OstTJeK2RnMGDUNmPdn9/pC
+         C5py86ce/WHUUfwQNnkMrv0D5p/H4i/o21HHeP9NzG5bCDisxZgP7a9fEfN1lP29epEn
+         E5qBcFQSAVhLpxnKd+CBvjfwNG6AgFsvOtC7UZuWlI5TTwoOj9pJVUXPhZS7mVHl0uAX
+         sd+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ws0i2CrqY6pD3P73//8FyL2EApZ5BXXOhJZ2Q0taym4=;
-        b=KVtNxa8k+q8TIDSPCrZ3ntuFP1OdXNQRPtulsV7hCbNbuLM0IKCWEUHbNP4qvHXIxm
-         jOmjsBdPoJQbjHE7B0uds6vsmebVAKJc/AntB4H8kSlk+/swJJ8z5EFQKaoa9gs9uVCk
-         aXJVPFmoBNYemfmqTYfqhaTuOi3BUdHJt1mNAXY6f/cLkyRSBSJW0KwZwRBvtgd/f6XH
-         Qg7l0KL8bUbtKTamHIGPZsQsLd8OuSLJ/Cb3QH8SebQfH3uSxGlRh3Fh5J19uPjxiCl/
-         8ZjdUf8GhkUOW/bng5699QggujBJTlOtSxyyChwYpy/lGhx1Zzlp1UwLIAgDNGFBfkEg
-         40ew==
-X-Gm-Message-State: AOAM532/1zDnTZxiavHmS7S7i2rA5jvgj5PvzyE3lDVAhjp+au96okh5
-        PO7rE+KAf0QDPb/WlHHF0A==
-X-Google-Smtp-Source: ABdhPJy5U3mHVxmJOTUHKoiDc1k/A6c2wX0Pp1z/J6O2LJznpvgIyHxe7LJcVtvRNHWYjrLa6wChdA==
-X-Received: by 2002:a6b:6c09:: with SMTP id a9mr43481210ioh.178.1594325053494;
-        Thu, 09 Jul 2020 13:04:13 -0700 (PDT)
-Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id z20sm2649443iot.15.2020.07.09.13.04.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 13:04:12 -0700 (PDT)
-Received: (nullmailer pid 801025 invoked by uid 1000);
-        Thu, 09 Jul 2020 20:04:11 -0000
-Date:   Thu, 9 Jul 2020 14:04:11 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
-Cc:     mchehab@kernel.org, linux-mediatek@lists.infradead.org,
-        tfiga@chromium.org, robh+dt@kernel.org, matthias.bgg@gmail.com,
-        bingbu.cao@intel.com, andriy.shevchenko@linux.intel.com,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, srv_heupstream@mediatek.com,
-        sj.huang@mediatek.com, mark.rutland@arm.com,
-        bgolaszewski@baylibre.com, shengnan.wang@mediatek.com,
-        drinkcat@chromium.org, louis.kuo@mediatek.com,
-        linus.walleij@linaro.org, sakari.ailus@linux.intel.com
-Subject: Re: [PATCH V12 1/2] media: dt-bindings: media: i2c: Document OV02A10
- bindings
-Message-ID: <20200709200411.GA800946@bogus>
-References: <20200702115223.21507-1-dongchun.zhu@mediatek.com>
- <20200702115223.21507-2-dongchun.zhu@mediatek.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PycHeytyEXnAfxuN7qqf3DZk4rAs+Sr/OQVpihKvwZY=;
+        b=Fpp+I4vj3BkPdf2XyVj3nhIxmwxKBV7dV3nGQPdSnzUx18/uPg1MbYWpj334i9ntTq
+         qv2PIq6b9fvHn40T9mRwBLVsy48Zw9GmixpSWJl8p9NiHVsqDHMlPTFlPJEywg8zAHMw
+         5sHgyjndFsavxwU50LbNMeOKqjCfDgrxXBAwqWq8H99iM4TLVZdK+MZ1fRLT7FQ0FpMo
+         uedtOCsy3ZTJ4G4P+q445DgRDyXfhbQDaglnvsZ7MFOrTm/TLe840sWHdfIG1fRQbp+B
+         w9MG05RcuP4JSTJIqAxBne4AcS+NrR3HxFfmZCxL5/dhnIP0QtliCVie5V42TJJOKmHW
+         LScw==
+X-Gm-Message-State: AOAM533ugwsQbdFClbD5SkDH+AHDjjUdGSfks9Mrg9ZKYr9YY6xO+Mq7
+        Hb05Gg0OVt8X0DVhvXkAGYk7rA==
+X-Google-Smtp-Source: ABdhPJxcQip3en72uHZuZNYNwMWZgp8T1yNScrJF7eAeMu6gqoKUSdmJo+0p2Tl8FLdWhxkvOaeMpQ==
+X-Received: by 2002:a0c:fa84:: with SMTP id o4mr64584468qvn.186.1594325146682;
+        Thu, 09 Jul 2020 13:05:46 -0700 (PDT)
+Received: from [192.168.0.189] ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id a185sm4702422qkg.3.2020.07.09.13.05.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 13:05:46 -0700 (PDT)
+Subject: Re: [PATCH v4 3/7] drm: msm: a6xx: set gpu freq through hfi
+To:     Akhil P Oommen <akhilpo@codeaurora.org>,
+        freedreno@lists.freedesktop.org
+Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jcrouse@codeaurora.org,
+        smasetty@codeaurora.org, devicetree@vger.kernel.org,
+        mka@chromium.org, saravanak@google.com, sibis@codeaurora.org,
+        viresh.kumar@linaro.org
+References: <1594324828-9571-1-git-send-email-akhilpo@codeaurora.org>
+ <1594324828-9571-4-git-send-email-akhilpo@codeaurora.org>
+From:   Jonathan Marek <jonathan@marek.ca>
+Message-ID: <322c921f-7c8f-7052-b191-44f0dade742e@marek.ca>
+Date:   Thu, 9 Jul 2020 16:04:31 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702115223.21507-2-dongchun.zhu@mediatek.com>
+In-Reply-To: <1594324828-9571-4-git-send-email-akhilpo@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 02 Jul 2020 19:52:22 +0800, Dongchun Zhu wrote:
-> Add DT bindings documentation for OmniVision OV02A10 image sensor.
-> 
-> Reviewed-by: Tomasz Figa <tfiga@chromium.org>
-> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> ---
->  .../bindings/media/i2c/ovti,ov02a10.yaml           | 172 +++++++++++++++++++++
->  MAINTAINERS                                        |   7 +
->  2 files changed, 179 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ovti,ov02a10.yaml
+On 7/9/20 4:00 PM, Akhil P Oommen wrote:
+> Newer targets support changing gpu frequency through HFI. So
+> use that wherever supported instead of the legacy method.
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+It was already using HFI on newer targets. Don't break it in one commit 
+then fix it in the next.
+
+> Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
+> ---
+>   drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 11 +++++++----
+>   1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> index 233afea..b547339 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> @@ -121,6 +121,12 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
+>   		if (gpu_freq == gmu->gpu_freqs[perf_index])
+>   			break;
+>   
+> +	if (!gmu->legacy) {
+> +		a6xx_hfi_set_freq(gmu, gmu->current_perf_index);
+> +		icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
+> +		return;
+> +	}
+> +
+>   	gmu->current_perf_index = perf_index;
+>   	gmu->freq = gmu->gpu_freqs[perf_index];
+>   
+> @@ -893,10 +899,7 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
+>   	enable_irq(gmu->hfi_irq);
+>   
+>   	/* Set the GPU to the current freq */
+> -	if (gmu->legacy)
+> -		a6xx_gmu_set_initial_freq(gpu, gmu);
+> -	else
+> -		a6xx_hfi_set_freq(gmu, gmu->current_perf_index);
+> +	a6xx_gmu_set_initial_freq(gpu, gmu);
+>   
+>   	/*
+>   	 * "enable" the GX power domain which won't actually do anything but it
+> 
