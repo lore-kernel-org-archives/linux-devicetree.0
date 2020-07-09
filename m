@@ -6,77 +6,77 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E57CAC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 750D3C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB3F020720
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5206E20672
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:01:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594335645;
-	bh=vC3IC1ErPjW/Jj7oSiwuaGCvO5QikWs4XcZWfnFC2oY=;
+	s=default; t=1594335692;
+	bh=hgZ6fUwSyup8OQl1Be04FasW6YPDIbgu1IB2avFxiSc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=prc913FiwXCjOsdN5gg+MEH9mu0oZ67oCBR2ZUwdgDZ31EOXpwaPZddeniPaHTVlD
-	 YfrunrMUF0JCdwD0NEbN27zTXbnPE/ynoJZB2QjV2kyctKmZw8SbTBb5JvarbOdkP/
-	 mIqku+RD4+3m3EV28thhFRrlPIa8PqH1lwinFk0E=
+	b=y1eyfBYsMKgjjHSYZA+F2c7a8pyqHVmkP1tW4K6dJQczcLXnzhxoV/sODT8+BrpQy
+	 qR4TIEjDyI/Et8HAn+c058n/h+k6iCV9Tu8r4OVnL30fVD6yXPMkfp2WiSiyRDLMzF
+	 Km1M+V/ChkSvkaF5fpPPaEaVjWMOXNLuaYor2X5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727062AbgGIXAp (ORCPT
+        id S1726819AbgGIXBb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 19:00:45 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:34132 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbgGIXAp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 19:00:45 -0400
-Received: by mail-il1-f195.google.com with SMTP id t4so3503886iln.1;
-        Thu, 09 Jul 2020 16:00:44 -0700 (PDT)
+        Thu, 9 Jul 2020 19:01:31 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33003 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbgGIXBb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 19:01:31 -0400
+Received: by mail-io1-f66.google.com with SMTP id d18so4138354ion.0;
+        Thu, 09 Jul 2020 16:01:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=MtB7J5NbFVzODA5r23GZJOZvqWcvN6kX66b6U57wwzo=;
-        b=IkGXwKVIDC5DrCiyvfxWZXEExJ9T2wCqezlU4t/38ZtnPvHiYhYk3NIj4GJZ/GNthS
-         86ZMK7amewnYWp+W1jWdireQq4dCm1T1LzedzIkXtD6RVAVdhNN6RiA2Cs5PRMHpHEZ2
-         A+1aDs9AdWRTfaD58lo7z9u/yquQBeKhIHqmA8j1lUtzg8BJEVSPLuSiVNz6etTSkI4D
-         wlySS/yhJymaI0J8oF/YsUFsRxxjDOB6kQbM8j6YlDbOh2TrFCUM+v1cGjnvwjRY4tqv
-         amgvpwxc4PMkwQkh7xHeS6qF2iXpAZAysLrfLyEIHQqMQyfeLH0xJGDGTBemarlWTtYn
-         0sVQ==
-X-Gm-Message-State: AOAM533CbNzxNrdbGeAIOrtu7BI9aiNPvTzOlnuSAVlJ5BOnng0ML+yI
-        eoFQuAwvSrpXZo91iZn6qQ==
-X-Google-Smtp-Source: ABdhPJwL1TS1R3rxNHfGQnDWQ6ldcEtrnDDG2h1hsAeydYos4lD/JFRGwYuot0sfEw9DkNsOE90R9Q==
-X-Received: by 2002:a92:502:: with SMTP id q2mr46375703ile.61.1594335644048;
-        Thu, 09 Jul 2020 16:00:44 -0700 (PDT)
+        bh=do47ZWBYWd84imqTZeOn2NfoIN1AnvEBXVl3Hhhovg4=;
+        b=k8SMX/MEyyk438K54glIyWtLsnKTADQJi2VsLpovr2huUMpd75T5CUF+Afh6HMXZMf
+         gnMTKV/BQSYgmL4RXxpll9sAiRhM+nflv8G11/awhdyUUTG+LtYkgmNcAJGi0A/7W0tm
+         iwz+8suax0RAidL8ARxg/ib5OwLHS1OZvYTwA6G55aKgzBPB0/g5M18txx51AF4Qu5H0
+         BI9GlYGjQBMDvmHJFO78WC+e0NzWvQXVp1P80V4Mzd5e4qgbyyrkTUlsignV9c3uCMSX
+         ms21Cob6GodxQAJxdLyrPkBJh7Ur9tDqk7U0yeaN+BXRARE7e9y6xr/4zIHzYyHuc4hG
+         ELOA==
+X-Gm-Message-State: AOAM531Ac+fdrOOioavb3t3rnAQ1COKxyf0T2Kwo6VQK6jwVHodD8VgT
+        tFptke8SKTuL005LhKzQAPXK0ekztw==
+X-Google-Smtp-Source: ABdhPJw9FUKpB9X0nNwu3Q/Warw6uTLpUeICn06hHAjP0DEUa/C1UxzF5Lq80AoxUT6ct+su9R7efQ==
+X-Received: by 2002:a05:6638:14d3:: with SMTP id l19mr74532622jak.25.1594335690503;
+        Thu, 09 Jul 2020 16:01:30 -0700 (PDT)
 Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id u15sm2825963iog.18.2020.07.09.16.00.43
+        by smtp.gmail.com with ESMTPSA id m6sm2700971ilb.39.2020.07.09.16.01.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 16:00:43 -0700 (PDT)
-Received: (nullmailer pid 1052260 invoked by uid 1000);
-        Thu, 09 Jul 2020 23:00:42 -0000
-Date:   Thu, 9 Jul 2020 17:00:42 -0600
+        Thu, 09 Jul 2020 16:01:29 -0700 (PDT)
+Received: (nullmailer pid 1053566 invoked by uid 1000);
+        Thu, 09 Jul 2020 23:01:28 -0000
+Date:   Thu, 9 Jul 2020 17:01:28 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
-Cc:     f.fainelli@gmail.com, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, tsbogend@alpha.franken.de,
-        hauke@hauke-m.de, zajec5@gmail.com, jonas.gorski@gmail.com,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/9] mips: bmips: add BCM6362 power domain definitions
-Message-ID: <20200709230042.GA1052174@bogus>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        zajec5@gmail.com, robh+dt@kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, f.fainelli@gmail.com,
+        hauke@hauke-m.de, linux-mips@vger.kernel.org,
+        jonas.gorski@gmail.com, tsbogend@alpha.franken.de
+Subject: Re: [PATCH v4 4/9] mips: bmips: add BCM63268 power domain definitions
+Message-ID: <20200709230128.GA1053536@bogus>
 References: <20200610171630.465579-1-noltari@gmail.com>
  <20200613082140.2009461-1-noltari@gmail.com>
- <20200613082140.2009461-4-noltari@gmail.com>
+ <20200613082140.2009461-5-noltari@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200613082140.2009461-4-noltari@gmail.com>
+In-Reply-To: <20200613082140.2009461-5-noltari@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 13 Jun 2020 10:21:34 +0200, Álvaro Fernández Rojas wrote:
-> BCM6362 SoCs have a power domain controller to enable/disable certain
+On Sat, 13 Jun 2020 10:21:35 +0200, Álvaro Fernández Rojas wrote:
+> BCM63268 SoCs have a power domain controller to enable/disable certain
 > components in order to save power.
 > 
 > Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
@@ -84,9 +84,9 @@ On Sat, 13 Jun 2020 10:21:34 +0200, Álvaro Fernández Rojas wrote:
 >  v4: Remove "dts: " from commit title.
 >  v3: Separate dt-bindings definitions from power domain .dtsi support.
 > 
->  include/dt-bindings/soc/bcm6362-pm.h | 21 +++++++++++++++++++++
+>  include/dt-bindings/soc/bcm63268-pm.h | 21 +++++++++++++++++++++
 >  1 file changed, 21 insertions(+)
->  create mode 100644 include/dt-bindings/soc/bcm6362-pm.h
+>  create mode 100644 include/dt-bindings/soc/bcm63268-pm.h
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
