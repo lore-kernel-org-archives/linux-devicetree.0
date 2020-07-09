@@ -2,115 +2,118 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8A2C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 22:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C353C433E2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 22:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C978D20720
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 22:31:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cImLMlFI"
+	by mail.kernel.org (Postfix) with ESMTP id 10AD4206E2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 22:46:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726213AbgGIWbc (ORCPT
+        id S1727780AbgGIWq3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 18:31:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbgGIWbc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 18:31:32 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBDD1C08C5CE;
-        Thu,  9 Jul 2020 15:31:31 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f7so3968187wrw.1;
-        Thu, 09 Jul 2020 15:31:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=zY9V6Q3cp9Ejuq5yzEe1CvgO+fVEi0Px3E1AXVo2FFI=;
-        b=cImLMlFIrLsWw3MsnnRCbl5JSMoGQLUAnCOBtrACG0arSWgMpoHcYBk1XXy21aNTCP
-         r3PzU643A+XXC8xCdhoDhRKkQo2gStV0YQeiCMkY3uRqRlZjNfXY8MnQ6zO9Rv/0SY+j
-         ZtGTdbNbbo20/60kQlR+uV1n750ymmvAlu/yzanlG6aXOiOUFMs1k51BFYDEQY//4E1I
-         iqho+Dp0CFyVuu4Q8CGt/qPOi4T4EU1n4SjhxBMXzfG+5innydYvEuZItdopApuJErOm
-         hpmCbfqy2odI8xIi5Aof0b6C+yZHaRHVIqz67gfB1Ict+1J/JDlWLbYGsKY64dwzJeXy
-         /4bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=zY9V6Q3cp9Ejuq5yzEe1CvgO+fVEi0Px3E1AXVo2FFI=;
-        b=AoQH0WXVlw6q0Qq3dne4Y8/2gFimW79pFvrTLGreKa6Jo8vq5F7iy0EpKYKjtRl5v1
-         sEW0sKcmZDOaFBHJDH4ygnl+Ex0n2L2e4SXB5M81GK4ApRYbpoR6O5CMNiC1JKMFkDS2
-         WnlPuHr/gCIyVfxD6lTWyYhS6ARx2i5XADmqBh+pGbJrpVhw8iqC3PNEuNIfP3qqTm0w
-         pftg82mFMboKTVZemUONraNcgb4ZvmazCRawxiFQwvydZDRxtHINnRsQVwJm9tiaDfSI
-         Egrijdno4FMssWcrG0suddczVoDVdgP4mHHv9iLyqD5wzQS+jg/aiATM5Dcu9yyzxTmy
-         3ZOw==
-X-Gm-Message-State: AOAM532W+zi9UHU4ZfQFAxHSW/DKmUaA7WqyYUp9awbhIJGnnCGLbx3r
-        Mu3YJATrdDkiwUiTmWedHhAWqR6v
-X-Google-Smtp-Source: ABdhPJxkPZr8PeEfJzsYSRoQlSstk4vRE7fKzuYOZp8dMuLReXXilJ+NrEtS1+0E57/V1+ix2/15zg==
-X-Received: by 2002:adf:c44d:: with SMTP id a13mr67047291wrg.205.1594333890142;
-        Thu, 09 Jul 2020 15:31:30 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id m10sm7375267wru.4.2020.07.09.15.31.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 15:31:29 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Justin Chen <justinpopo6@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM7XXX ARM
-        ARCHITECTURE),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-mips@vger.kernel.org (open list:BROADCOM BMIPS MIPS ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
-        ARM ARCHITECTURE)
-Subject: [PATCH 2/6] irqchip/brcmstb-l2: Set controller as wake-up source
-Date:   Thu,  9 Jul 2020 15:30:12 -0700
-Message-Id: <20200709223016.989-3-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200709223016.989-1-f.fainelli@gmail.com>
-References: <20200709223016.989-1-f.fainelli@gmail.com>
+        Thu, 9 Jul 2020 18:46:29 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:48196 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727078AbgGIWqU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 18:46:20 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 7E5CF8040A6B;
+        Thu,  9 Jul 2020 22:46:15 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id hmBHIJvAoxUb; Fri, 10 Jul 2020 01:46:14 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v7 09/11] dmaengine: dw: Initialize min and max burst DMA device capability
+Date:   Fri, 10 Jul 2020 01:45:48 +0300
+Message-ID: <20200709224550.15539-10-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Justin Chen <justinpopo6@gmail.com>
+According to the DW APB DMAC data book the minimum burst transaction
+length is 1 and it's true for any version of the controller since
+isn't parametrised in the coreAssembler so can't be changed at the
+IP-core synthesis stage. The maximum burst transaction can vary from
+channel to channel and from controller to controller depending on a
+IP-core parameter the system engineer activated during the IP-core
+synthesis. Let's initialise both min_burst and max_burst members of the
+DMA controller descriptor with extreme values so the DMA clients could
+use them to properly optimize the DMA requests. The channels and
+controller-specific max_burst length initialization will be introduced
+by the follow-up patches.
 
-Utilize the Broadcom interrupt controller standard property
-"brcm,irq-can-wake" to flag whether this particular interrupt controller
-instance is wake-up capable.
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: devicetree@vger.kernel.org
 
-Since we do not know what type of parent interrupt controller we are
-interfaced with, ensure that enable_irq_wake() is called early on.
-
-Signed-off-by: Justin Chen <justinpopo6@gmail.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/irqchip/irq-brcmstb-l2.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/irqchip/irq-brcmstb-l2.c b/drivers/irqchip/irq-brcmstb-l2.c
-index 0298ede67e51..157fad184bdc 100644
---- a/drivers/irqchip/irq-brcmstb-l2.c
-+++ b/drivers/irqchip/irq-brcmstb-l2.c
-@@ -254,6 +254,7 @@ static int __init brcmstb_l2_intc_of_init(struct device_node *np,
- 		 */
- 		data->gc->wake_enabled = 0xffffffff;
- 		ct->chip.irq_set_wake = irq_gc_set_wake;
-+		enable_irq_wake(parent_irq);
- 	}
+Changelog v4:
+- This is a new patch suggested by Andy.
+
+Changelog v5:
+- Introduce macro with extreme min and max burst length supported by the
+  DW DMA controller.
+- Initialize max_burst length capability with extreme burst length supported
+  by the DW DMAC IP-core.
+---
+ drivers/dma/dw/core.c                | 2 ++
+ include/linux/platform_data/dma-dw.h | 2 ++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
+index ceded21537e2..4887aa2fc73c 100644
+--- a/drivers/dma/dw/core.c
++++ b/drivers/dma/dw/core.c
+@@ -1229,6 +1229,8 @@ int do_dma_probe(struct dw_dma_chip *chip)
+ 	dw->dma.device_issue_pending = dwc_issue_pending;
  
- 	pr_info("registered L2 intc (%pOF, parent irq: %d)\n", np, parent_irq);
+ 	/* DMA capabilities */
++	dw->dma.min_burst = DW_DMA_MIN_BURST;
++	dw->dma.max_burst = DW_DMA_MAX_BURST;
+ 	dw->dma.src_addr_widths = DW_DMA_BUSWIDTHS;
+ 	dw->dma.dst_addr_widths = DW_DMA_BUSWIDTHS;
+ 	dw->dma.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV) |
+diff --git a/include/linux/platform_data/dma-dw.h b/include/linux/platform_data/dma-dw.h
+index f3eaf9ec00a1..369e41e9dcc9 100644
+--- a/include/linux/platform_data/dma-dw.h
++++ b/include/linux/platform_data/dma-dw.h
+@@ -12,6 +12,8 @@
+ 
+ #define DW_DMA_MAX_NR_MASTERS	4
+ #define DW_DMA_MAX_NR_CHANNELS	8
++#define DW_DMA_MIN_BURST	1
++#define DW_DMA_MAX_BURST	256
+ 
+ /**
+  * struct dw_dma_slave - Controller-specific information about a slave
 -- 
-2.17.1
+2.26.2
 
