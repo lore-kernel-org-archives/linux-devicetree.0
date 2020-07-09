@@ -2,103 +2,115 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04493C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 17:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 021FEC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 17:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9F412078B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 17:04:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594314268;
-	bh=IwKCTQQXrFHxNTBTAQmV6GhJe3H+h3CsMgHsOwMP1tM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L985IzjVsFz5F0q4vDok+DMBqwCXNKIval1qRX40H2iQksT6q6xaR+XCzTbz29Pc4
-	 qrqRcI/cDV5IQVa7hfW1bknLbK2ZqIw6GWAuORfKIcINzS/NlrRCRoRqn53fo26ciQ
-	 V6zucOVFWWC5ioAgX5H8NrVtuQGgxO8kFzy5J8z0=
+	by mail.kernel.org (Postfix) with ESMTP id CE95D2077D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 17:17:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="T8w15sga"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbgGIRE2 (ORCPT
+        id S1727963AbgGIRRR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 13:04:28 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:41056 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726708AbgGIRE2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 13:04:28 -0400
-Received: by mail-io1-f66.google.com with SMTP id o5so3057344iow.8;
-        Thu, 09 Jul 2020 10:04:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6rPAal+mCKD1RasPvCnP9R4UBzZrvC6ReDEPohFK+PY=;
-        b=Q0JHPa38p9kqbits7C1aHENojvOEmr4WlftvVr1cbgiEU1Jc4Fo2mwg8OLeZsFtsF7
-         Md3oYZJp0UlkhTKYJLELSAuqMyV6AQQJlqC/2g1hEIuHFTzZbaPMApjCqvbRAzvJ78Q5
-         q4z+enP9ceiyoTeiGIsGHPiYyF3wGiJ24xbBZa5MZq7Fps30E3tFO1S8BOEJcdBfXuSV
-         rtymAr2fXYY0gggvYsvv1SIxgeFtBACfX76p7gH/KVRHEilUFF0SOmCNZ+YutWD/D2Xw
-         PNwgiH59P1j3zIiF5Qg1VHDzW5YcgmNKlotHWBPIOKWt5g+SZ7curTpwVxdyLPbe5Oxj
-         zu9w==
-X-Gm-Message-State: AOAM5302Q6r+DO5dn1iKY5gsPl3M4Y39PcgXApqPE/Vg3BT0C/BN76TH
-        OsKsB0/tiy2g66NHbqvz6AO3xMNScg==
-X-Google-Smtp-Source: ABdhPJxcDPa2tPUnhuBohvevfmSj6UngPYNU7IBK1nJG52EbsFCNEeMqhNHXUml2E//n3ivhfutJTA==
-X-Received: by 2002:a05:6638:2649:: with SMTP id n9mr37848979jat.126.1594314267183;
-        Thu, 09 Jul 2020 10:04:27 -0700 (PDT)
-Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id f18sm2414188ion.47.2020.07.09.10.04.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 10:04:26 -0700 (PDT)
-Received: (nullmailer pid 523550 invoked by uid 1000);
-        Thu, 09 Jul 2020 17:04:25 -0000
-Date:   Thu, 9 Jul 2020 11:04:25 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Rajeev Huralikoppi <rajeev.huralikoppi@silvaco.com>,
-        Conor Culhane <conor.culhane@silvaco.com>,
-        linux-kernel@vger.kernel.org,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        linux-i3c@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/4] dt-bindings: i3c: Describe Silvaco master binding
-Message-ID: <20200709170425.GA523194@bogus>
-References: <20200709080159.2178-1-miquel.raynal@bootlin.com>
- <20200709080159.2178-2-miquel.raynal@bootlin.com>
+        Thu, 9 Jul 2020 13:17:17 -0400
+Received: from vps.xff.cz ([195.181.215.36]:52446 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727110AbgGIRRR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Jul 2020 13:17:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1594315034; bh=3gV7jbp/PfKuXvsiiUXQuSbzC+4R90WKkgDUbSbOroA=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=T8w15sgaUVglRVUStLjyOBe5kD6r6ILjnGJfRaIwX30oPX3HkV/WG0tir90B7u8Tn
+         cwaI33E1ldqktkSPsiixkN2P9H9gkRxRVczxvTT/cGA3ybOv6S8vs2mflJ4EGQLURd
+         IdchOT3qguFiAcjCF1YgaUueWR3ccklPvnTELtUM=
+Date:   Thu, 9 Jul 2020 19:17:13 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Frank Lee <frank@allwinnertech.com>
+Cc:     robh+dt@kernel.org, mripard@kernel.org, wens@csie.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        gregory.clement@bootlin.com, tglx@linutronix.de,
+        jason@lakedaemon.net, maz@kernel.org,
+        srinivas.kandagatla@linaro.org, linus.walleij@linaro.org,
+        anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        lee.jones@linaro.org, p.zabel@pengutronix.de, clabbe@baylibre.com,
+        icenowy@aosc.io, stefan@olimex.com, bage@linutronix.de,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        liyong@allwinnertech.com, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, huangshuosheng@allwinnertech.com,
+        linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 04/16] dt-bindings: pinctrl: sunxi: make gpio banks
+ supplies required
+Message-ID: <20200709171713.tutnlchji4e6i5pv@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Frank Lee <frank@allwinnertech.com>, robh+dt@kernel.org,
+        mripard@kernel.org, wens@csie.org, mturquette@baylibre.com,
+        sboyd@kernel.org, gregory.clement@bootlin.com, tglx@linutronix.de,
+        jason@lakedaemon.net, maz@kernel.org,
+        srinivas.kandagatla@linaro.org, linus.walleij@linaro.org,
+        anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        lee.jones@linaro.org, p.zabel@pengutronix.de, clabbe@baylibre.com,
+        icenowy@aosc.io, stefan@olimex.com, bage@linutronix.de,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        liyong@allwinnertech.com, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, huangshuosheng@allwinnertech.com,
+        linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200708071942.22595-1-frank@allwinnertech.com>
+ <20200708071942.22595-5-frank@allwinnertech.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200709080159.2178-2-miquel.raynal@bootlin.com>
+In-Reply-To: <20200708071942.22595-5-frank@allwinnertech.com>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 09 Jul 2020 10:01:57 +0200, Miquel Raynal wrote:
-> Silvaco provide a dual-role I3C master.
-> 
-> Description is rather simple: it needs a register mapping, three
-> clocks and an interrupt.
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Hello,
+
+On Wed, Jul 08, 2020 at 03:19:30PM +0800, Frank Lee wrote:
+> Since we don't really have to care about the existing DT for boards,
+> it would be great to make the gpio banks supplies required.
+
+What if the borad doesn't use one of the banks? How would
+I describe such a board if defining supplies for all banks
+is required?
+
+regards,
+	o.
+
+> Signed-off-by: Frank Lee <frank@allwinnertech.com>
 > ---
->  .../bindings/i3c/svc,i3c-master.yaml          | 59 +++++++++++++++++++
->  1 file changed, 59 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i3c/svc,i3c-master.yaml
+>  .../devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml         | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-
-
-My bot found errors running 'make dt_binding_check' on your patch:
-
-builds/robherring/linux-dt-review/Documentation/devicetree/bindings/i3c/svc,i3c-master.example.dt.yaml: example-0: i3c-master@a0000000:reg:0: [0, 2684354560, 0, 4096] is too long
-
-
-See https://patchwork.ozlabs.org/patch/1325811
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+> diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
+> index 226aba0..c30a7b7 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
+> @@ -134,6 +134,7 @@ patternProperties:
+>  required:
+>    - "#gpio-cells"
+>    - "#interrupt-cells"
+> +  - "^vcc-p[a-hlm]-supply$"
+>    - compatible
+>    - reg
+>    - interrupts
+> -- 
+> 1.9.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
