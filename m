@@ -2,114 +2,111 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01048C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 17:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B486BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 17:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D13D820767
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 17:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B9D72078B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 17:41:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="oh/vaVMf"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MbbxQMO8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbgGIRan (ORCPT
+        id S1727827AbgGIRlw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 13:30:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46516 "EHLO
+        Thu, 9 Jul 2020 13:41:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbgGIRan (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 13:30:43 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EC7CC08C5DC
-        for <devicetree@vger.kernel.org>; Thu,  9 Jul 2020 10:30:43 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id g37so2240965otb.9
-        for <devicetree@vger.kernel.org>; Thu, 09 Jul 2020 10:30:43 -0700 (PDT)
+        with ESMTP id S1726722AbgGIRlv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 13:41:51 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA5AFC08C5CE
+        for <devicetree@vger.kernel.org>; Thu,  9 Jul 2020 10:41:51 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id t6so1287731pgq.1
+        for <devicetree@vger.kernel.org>; Thu, 09 Jul 2020 10:41:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3m60qlJpb4zSVwjX3KfuFM5A8w6HuVKnF0CMOiaKyO0=;
-        b=oh/vaVMffz6NBpk57JhA0bccxQ+CgY2N8B2O4IVgQU4KbWtY9xo9fUav21zjzPGRFu
-         XzNKfFHDPNOfIkq/8qYU7rpnUPPTFWELncvRei93tj7/zkq1Y7dFa7rEUaMclB0JOBqV
-         OUtatGCohXqF1J7LdbhoOA84aqKaifMwZaw74=
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8cYRIN56Hfij3RW2GD+DjFbyhFBnKCKVpV/5GtjC11c=;
+        b=MbbxQMO8S/5hsh+8k/hugybr95tK+sIBoC5bCnrad8LpeZHlQCG7ysKf/Mzyh8m/5C
+         YmvGbOliTnA0TTE7HO2QTZNsx/uicr0aOx5YMzte6uoTvfMkg1aDMusXw0EHYdnyI3cG
+         nJeSp3WSP7VswZ6BZr/r1KeQzKyicnpA7O47M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3m60qlJpb4zSVwjX3KfuFM5A8w6HuVKnF0CMOiaKyO0=;
-        b=oIRwgRhErGoxv9mr7jz/WodadvHhXD/FxcW26HaM0BeblWvyKQ8eWYeQlDJ5q+Spmf
-         c+3Cj+OY/TVtKt1UIGczgBlbe+fpVkgMyOxEu/yEc4LfIHdQW59WjMf36nycM0dJcnS3
-         WeULGwMHnPrxaA2pJdV4x+oreB2mteOG8Hhj9bdn6nxjgMHwlht9mgnXjlcDxNEseGel
-         Xhpl2RQbqFBX3KiNGuL45lk/q7OVOAFsRw5tAl3ulJCyqdhBM45XjyXQKTnOTmPUZbpI
-         WkG41KTn+CAgTIO5i3z+rKz9x9EQuFoYqMyI+xpkKMlnFxw1sRrt3/YQUkyle1ZyDFvG
-         2YdA==
-X-Gm-Message-State: AOAM531QQ8x60kocMg6DIvTpAE9t93YUQIbMPzkwNmdHmreb93pVD4yb
-        Elef9o2xVY9VIQw9dfXZTON2AZMg0CehCG304GmOlA==
-X-Google-Smtp-Source: ABdhPJw7G6FF2diX1q8cHlRwPzJnbtDmb9sO/T7kW+epnUE2deow+2VW1fqrGUJP7FP/wVSXruBBnpkZ0T81v6/XMvw=
-X-Received: by 2002:a9d:674a:: with SMTP id w10mr49598426otm.305.1594315842379;
- Thu, 09 Jul 2020 10:30:42 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8cYRIN56Hfij3RW2GD+DjFbyhFBnKCKVpV/5GtjC11c=;
+        b=Ih9pjlm9Ph8QRhTe6jbvovtJcB3zu2Wgcw516+PbMWa4DYWDK4I0zdrqz9qGNuZ6Hc
+         f2oPCTISLAFRActj41Lfbv9N920KwwZir4DK7iDgXhY+4qBMGQMwwzSCiRe4YTc2Zvbc
+         islVgOX7y4FfQ4kBzfu/9mQ1AvhCz3DFGeHHJydJQgJ0Ia4uPcr5a5GwNzvjvXkrpNBp
+         4oiw+oHSrrAH/HNCA2l+RpJSKalTT15VoPfnUOoyHvcnkOajBLT06rbQmN+O7KVTKaR9
+         YzcZJ6GF5TsLaqO02MkKzqtyQC4PGS6MZ8aj3Scxct0jyCXgQfrPu+uYptB/ysPOKCj0
+         AfvA==
+X-Gm-Message-State: AOAM533iIHh2mSZx9VmuIl4YrTOI13r1AN6zdqnOpl86Tm0NgxYcQdru
+        DVJsTNv2UbpiMW2S8dPTR2REKw==
+X-Google-Smtp-Source: ABdhPJwaRFIKuzRY/WaSqwBDVlSrCc6/yms2+/eGLAG32MYRnXLrjbcC/YNzWraWpr38Uy7POBn/yw==
+X-Received: by 2002:aa7:842c:: with SMTP id q12mr16879058pfn.209.1594316511418;
+        Thu, 09 Jul 2020 10:41:51 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
+        by smtp.gmail.com with ESMTPSA id p10sm3565791pgn.6.2020.07.09.10.41.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 10:41:50 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 10:41:49 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Sandeep Maheswaram <sanm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>
+Subject: Re: [PATCH v8 2/2] arm64: dts: qcom: sc7180: Add maximum speed
+ property for DWC3 USB node
+Message-ID: <20200709174149.GM3191083@google.com>
+References: <1594310413-14577-1-git-send-email-sanm@codeaurora.org>
+ <1594310413-14577-3-git-send-email-sanm@codeaurora.org>
 MIME-Version: 1.0
-References: <20200709144527.23528-1-uwe@kleine-koenig.org>
-In-Reply-To: <20200709144527.23528-1-uwe@kleine-koenig.org>
-From:   Paul Barker <pbarker@konsulko.com>
-Date:   Thu, 9 Jul 2020 18:30:31 +0100
-Message-ID: <CAM9ZRVt8V9mPwAtQ3pvPqGc-Zuxs-SkcoSNk49JipwvERByGdw@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx: default to #pwm-cells = <3> in the SoC
- dtsi files
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>
-Cc:     Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        Matt Ranostay <matt.ranostay@konsulko.com>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        kernel@pengutronix.de,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1594310413-14577-3-git-send-email-sanm@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 9 Jul 2020 at 15:45, Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig.org> =
-wrote:
->
-> From: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
->
-> The imx-pwm driver supports 3 cells and this is the more flexible setting=
-.
-> So use it by default and overwrite it back to two for the files that
-> reference the PWMs with just 2 cells to minimize changes.
->
-> This allows to drop explicit setting to 3 cells for the boards that alrea=
-dy
-> depend on this.
->
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+On Thu, Jul 09, 2020 at 09:30:12PM +0530, Sandeep Maheswaram wrote:
+> Adding maximum speed property for DWC3 USB node which can be used
+> for setting interconnect bandwidth.
+> 
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
 > ---
-> Hello,
->
-> this picks up an old mail thread where Paul Barker started to work on
-> this in March. He got some feedback but didn't come up with a new
-> approach.
->
-> Compared to his patch (Message-Id:
-> 20200309145558.16098-1-pbarker@konsulko.com) I overwrite back to
-> #pwm-cells =3D <2> in the board .dts files to minimize changes there.
->
-> Best regards
-> Uwe
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 2be81a2..753e1a1 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -2544,6 +2544,7 @@
+>  				snps,dis_enblslpm_quirk;
+>  				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
+>  				phy-names = "usb2-phy", "usb3-phy";
+> +				maximum-speed = "super-speed";
+>  			};
+>  		};
 
-Thanks for picking this up Uwe, I must admit it fell off my todo list
-due to the coronavirus situation.
+It shouldn't be strictly necessary if you use super-speed as default
+max-speed in the driver, but it also does no harm.
 
-Is there a reason why imx23.dtsi, imx28.dtsi and imx51.dtsi have not
-been changed?
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
 
---=20
-Paul Barker
-Konsulko Group
+You might want to add it for other platforms too.
