@@ -2,116 +2,88 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3689C433ED
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 694A2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 988022080D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:20:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EI1DT7UC"
+	by mail.kernel.org (Postfix) with ESMTP id 41A4C2064B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:24:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594337054;
+	bh=i6NFXw74YClD2vqFZV10d5ooVgEJrPI6Qk2fexK98sY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=v/lpqRpbX4z0tzHPJ4g5yl6mpgmliDwpMwXWArqVDmKW5MrvI3p7ZN49dWT/H2aec
+	 a5kLaBYdm5+kOjKQrW7sTCV6rvAmkPlR5jKKAG62o6p9KxgQcllzxNnXNuDEfSe+hm
+	 7XZHRsOSAGRWSh2wnNvzXQ9PfSAIRk1IERZ5i/Os=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgGIXUR (ORCPT
+        id S1726272AbgGIXYN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 19:20:17 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:49310 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbgGIXUP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 19:20:15 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 069NK92I122950;
-        Thu, 9 Jul 2020 18:20:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594336809;
-        bh=9DEjoc4nTb8pIGGuDBB5IWvIfClSK8JgplovScBDMdE=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=EI1DT7UCQe+5y2Z2H0H3Ms6mWNwnsOmiNqNZrQfmXai4vdSHIytN+/4vgKUru0E+X
-         O6jRE4r/LbvMpwfBOx3JInzdQCC6dTdG3DhC+TmFowc8r0pB8A2peEjX/Ty8sqohbz
-         sxtMt354IkXx6hNSd3WjtOYa7ikHHicYe4OfEavA=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 069NK9CA051639
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 9 Jul 2020 18:20:09 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 9 Jul
- 2020 18:20:08 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 9 Jul 2020 18:20:08 -0500
-Received: from fllv0103.dal.design.ti.com (fllv0103.dal.design.ti.com [10.247.120.73])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 069NK8WX096146;
-        Thu, 9 Jul 2020 18:20:08 -0500
-Received: from localhost ([10.250.34.57])
-        by fllv0103.dal.design.ti.com (8.14.7/8.14.7) with ESMTP id 069NK8oc124475;
-        Thu, 9 Jul 2020 18:20:08 -0500
-From:   Suman Anna <s-anna@ti.com>
-To:     Tony Lindgren <tony@atomide.com>
-CC:     <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Tero Kristo <t-kristo@ti.com>, Suman Anna <s-anna@ti.com>
-Subject: [PATCH 11/13] ARM: dts: omap5-uevm: Add system timers to DSP and IPU
-Date:   Thu, 9 Jul 2020 18:19:52 -0500
-Message-ID: <20200709231954.1973-12-s-anna@ti.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200709231954.1973-1-s-anna@ti.com>
-References: <20200709231954.1973-1-s-anna@ti.com>
+        Thu, 9 Jul 2020 19:24:13 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:34166 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbgGIXYN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 19:24:13 -0400
+Received: by mail-il1-f196.google.com with SMTP id t4so3543761iln.1;
+        Thu, 09 Jul 2020 16:24:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=C6gSA0EI8NAhedbaWCpzy+MxtCmLEWdTx98rM6v2aJ4=;
+        b=OEw4z0ZrvKIeE86PaNyqbgvHrD2gdadNMMYvMKKJFXFJZNBAvJeYGhDum3diHVYbkt
+         1TaeJedpGot0NUU6GJjlGSpa7iItiTsZ0QVYIZpba318wfdVLmuG2RvurrKhU0txQ5W9
+         4Q3iUfnV4+wnq7MMVL2zBa0q5ruwyHQGkZB7KyXqX7Ov9SOdiDPRn+XNGMxYo5HeTXHV
+         v5E+gvZW6xOz2QDBvv+x8jTeY2pa4kFxvVaCnjsZfjvmtJUixHhJfez1gKb+MwDcgESB
+         VkLWe7RgIS5lGH1rIYyIgzVZfFxkPKmbJJ9oIqrbBuEOC+KhVyLvNRI/w1/pRi4lVDC9
+         g81g==
+X-Gm-Message-State: AOAM533+cB1nG+ymjNsxX0zYe4gg68RuhdlcmdIx1alA/1J2K34NFf+e
+        wNtTQvarLFJPRF1XtQ7SEpnDqzpaQw+A
+X-Google-Smtp-Source: ABdhPJwEi7a4BGxBFM0+WHbiO9IAQ/fGgukfTCWRV9BsdyHWsYFlnELlOQw3UQTchsNsqcLRiabjUA==
+X-Received: by 2002:a92:8585:: with SMTP id f127mr48293818ilh.207.1594337052516;
+        Thu, 09 Jul 2020 16:24:12 -0700 (PDT)
+Received: from xps15 ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id w15sm2743064ila.65.2020.07.09.16.24.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 16:24:11 -0700 (PDT)
+Received: (nullmailer pid 1091574 invoked by uid 1000);
+        Thu, 09 Jul 2020 23:24:09 -0000
+Date:   Thu, 9 Jul 2020 17:24:09 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     wolfram@the-dreams.de, linux@rempel-privat.de, shawnguo@kernel.org,
+        festevam@gmail.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, Linux-imx@nxp.com,
+        kernel@pengutronix.de, linux-i2c@vger.kernel.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org,
+        s.hauer@pengutronix.de
+Subject: Re: [PATCH V3 1/2] dt-bindings: i2c: Convert mxs i2c to json-schema
+Message-ID: <20200709232409.GA1091519@bogus>
+References: <1592279454-32551-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592279454-32551-1-git-send-email-Anson.Huang@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The BIOS System Tick timers have been added for the IPU and DSP
-remoteproc devices for the OMAP5 uEVM boards. The following timers
-(same as the timers on OMAP4 Panda boards) are chosen:
-        IPU : GPT3 (SMP-mode)
-        DSP : GPT5
+On Tue, 16 Jun 2020 11:50:53 +0800, Anson Huang wrote:
+> Convert the MXS I2C binding to DT schema format using json-schema
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V2:
+> 	- remove 'clock-frequency' property's typs and use enum for it, as it ONLY support 100KHz/400KHz.
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-mxs.txt  | 25 -----------
+>  Documentation/devicetree/bindings/i2c/i2c-mxs.yaml | 51 ++++++++++++++++++++++
+>  2 files changed, 51 insertions(+), 25 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-mxs.txt
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mxs.yaml
+> 
 
-IPU has two Cortex-M4 processors, and is currently expected to be
-running in SMP-mode, so only a single timer suffices to provide
-the BIOS tick timer. An additional timer should be added for the
-second processor in IPU if it were to be run in non-SMP mode. The
-timer value also needs to be unique from the ones used by other
-processors so that they can be run simultaneously.
-
-The timers are optional, but are mandatory to support device
-management features such as power management and watchdog support.
-The above are added to successfully boot and execute firmware images
-configured with the respective timers, images that use internal
-processor subsystem timers are not affected. The timers can be
-changed or removed as per the system integration needs, alongside
-equivalent changes on the firmware side.
-
-Signed-off-by: Suman Anna <s-anna@ti.com>
----
- arch/arm/boot/dts/omap5-uevm.dts | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm/boot/dts/omap5-uevm.dts b/arch/arm/boot/dts/omap5-uevm.dts
-index 251885656697..bb016419ef61 100644
---- a/arch/arm/boot/dts/omap5-uevm.dts
-+++ b/arch/arm/boot/dts/omap5-uevm.dts
-@@ -222,9 +222,11 @@ &wlcore {
- &dsp {
- 	status = "okay";
- 	memory-region = <&dsp_memory_region>;
-+	ti,timers = <&timer5>;
- };
- 
- &ipu {
- 	status = "okay";
- 	memory-region = <&ipu_memory_region>;
-+	ti,timers = <&timer3>;
- };
--- 
-2.26.0
-
+Applied, thanks!
