@@ -4,234 +4,205 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DAE8C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 20:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0F6C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 21:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 261CF20772
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 20:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FD6320772
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 21:04:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594328364;
-	bh=hdl5vLIXdN/DqrdtjtQ2V6wbMQ43599XFBbNtCqqK5g=;
+	s=default; t=1594328696;
+	bh=FEalt9eXC1vsK4wuxaFcsK1DhBBbQM4hzPWdy1gRjH8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BKDGJESAdnObVGqdhGkTTEsRWw9VtIBA6wSlIbdNM0i0LezVcxHwNslksCLi/bKPU
-	 agRdTD9tDZ5IVyFI6lMoU853UI6HA/Vmreg2czBaQI1WDqo9tJtHJfG98PHpaQPVOQ
-	 hmO2oZHr1/Mn09yB60bYFHQ7AQwADTCsAccIcErU=
+	b=VvCivNCyDo9eGfNokLcUhpDVcDTUEyeoOMdTG7CODMA55MsTmUQ3dXhdNT8vJTID7
+	 lo9/URlnma8oR5ZnPw7v/U7ejKl1LPL7ITi+NC6gxkMeZaKv9VRmBIP0sOWAf5SCQe
+	 Q0i1X0F7KdEnWaxvhYsmkAmVRhZrbZ330MpDohy4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbgGIU7T (ORCPT
+        id S1726260AbgGIVEw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 16:59:19 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36025 "EHLO
+        Thu, 9 Jul 2020 17:04:52 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:40453 "EHLO
         mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbgGIU7S (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 16:59:18 -0400
-Received: by mail-io1-f67.google.com with SMTP id y2so3825941ioy.3;
-        Thu, 09 Jul 2020 13:59:18 -0700 (PDT)
+        with ESMTP id S1726196AbgGIVEw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 17:04:52 -0400
+Received: by mail-io1-f67.google.com with SMTP id q8so3830856iow.7;
+        Thu, 09 Jul 2020 14:04:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=59KG2c36B73L5TCxEaW5iyr7aT9GnhJz2toja/ityzo=;
-        b=A1DDDAX8Of3VAYBaf5twc9L3XAzTOwb8mXv8uAzBCMGPIAuz7djXDfiiweblJOExEA
-         kPUbdFROFs7zMbzXJQRskMPGTuo9r2RYTePoC938ZqEzIj9e2yPYJucnQKWtzOJ5Rs0e
-         r14HuxWiZ/Kvg95r0FACgJQCkKCt03d/xUd/omx8m4k+pmMB17b4idrkVJzi+qHXvTji
-         m3DX6qgsSBc5y2wqsxXLT7SP0EdbovAt9QfUZM9jYqMSd5Jfc4Bno6Ug+DKS9EDij/w2
-         m7j81Q8Di84WXWOngb/VaQ5Gt4dx50TLwHrdMeUUCfod2M/5sO/zliVjNPU81l8iuxVi
-         ScdA==
-X-Gm-Message-State: AOAM5337FGLQV5VppFRuB+Qpjt6U9OCctpV1r4plx0bIYI1p6K69xziu
-        +XjP7a/VfPcTszb9Go906g==
-X-Google-Smtp-Source: ABdhPJz1XtipgZZTRvbo4upYYiZEu374WcNQ5YcX9yvzP6F343WQAYYz7MPsvmWiJt7sYOukO69ulw==
-X-Received: by 2002:a05:6638:2591:: with SMTP id s17mr23248116jat.23.1594328357549;
-        Thu, 09 Jul 2020 13:59:17 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ep2BUalGoUDMYiRgPfHR0K5E7uXRpZtzmzl5wMZRFHs=;
+        b=AA7h/I7bauQk7abixJNncQ1aG7YAueNZEsj/fiA9sBsdq8245RqKrRTJXTgoMUIpt/
+         4Q0TW0wHHs2hzkI0D3HXUx4wFAu4sx4o3u0reOT40nu4PXaORKVn93G4ZbnXmHkdWwFI
+         96JGzwoXWFMIOgcWw9OuYKNvZCXs9SfW0lwIFruNsQvymFgAHmxyK1Gd+qUQvURqrkZ+
+         M93nafNiQ2jRwcG+6WXqtSCEubJsrFGz6VkxmwsdbsoqzaqqwO1/qjPIn5Aa3dRumZ82
+         g+ec7sAabgIemW01IlMMyncuBLa8tmtHzUqFPU0Y56G9pOF10VAtTjdsVNo44Q1zvWBy
+         1jFw==
+X-Gm-Message-State: AOAM530528xuNMhoaWv0viItMQMdr+5m0B0qkWYTD3O+DpAVGb+bI66Q
+        SS3j0oTEqEvXfdqtvNqiiw==
+X-Google-Smtp-Source: ABdhPJzzckh793p74m62K2t6bgxJyhqTwep2hglKcjMTiXCsSoxr/OlqW/k8gyAtxdeWk6fveOx07A==
+X-Received: by 2002:a02:cd06:: with SMTP id g6mr43286633jaq.37.1594328690447;
+        Thu, 09 Jul 2020 14:04:50 -0700 (PDT)
 Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id h11sm2372624ilh.69.2020.07.09.13.59.16
+        by smtp.gmail.com with ESMTPSA id g8sm2399655ilq.49.2020.07.09.14.04.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 13:59:16 -0700 (PDT)
-Received: (nullmailer pid 875925 invoked by uid 1000);
-        Thu, 09 Jul 2020 20:59:15 -0000
-Date:   Thu, 9 Jul 2020 14:59:15 -0600
+        Thu, 09 Jul 2020 14:04:49 -0700 (PDT)
+Received: (nullmailer pid 883283 invoked by uid 1000);
+        Thu, 09 Jul 2020 21:04:48 -0000
+Date:   Thu, 9 Jul 2020 15:04:48 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     EastL Lee <EastL.Lee@mediatek.com>
-Cc:     Sean Wang <sean.wang@mediatek.com>, vkoul@kernel.org,
-        mark.rutland@arm.com, matthias.bgg@gmail.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        wsd_upstream@mediatek.com, cc.hwang@mediatek.com
-Subject: Re: [PATCH v6 1/4] dt-bindings: dmaengine: Add MediaTek
- Command-Queue DMA controller bindings
-Message-ID: <20200709205915.GA865123@bogus>
-References: <1593673564-4425-1-git-send-email-EastL.Lee@mediatek.com>
- <1593673564-4425-2-git-send-email-EastL.Lee@mediatek.com>
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc:     georgi.djakov@linaro.org, cw00.choi@samsung.com, krzk@kernel.org,
+        devicetree@vger.kernel.org, a.swigon@samsung.com,
+        myungjoo.ham@samsung.com, inki.dae@samsung.com,
+        sw0312.kim@samsung.com, b.zolnierkie@samsung.com,
+        m.szyprowski@samsung.com, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH RFC v6 1/6] dt-bindings: exynos-bus: Add documentation
+ for interconnect properties
+Message-ID: <20200709210448.GA876103@bogus>
+References: <20200702163724.2218-1-s.nawrocki@samsung.com>
+ <CGME20200702163748eucas1p2cf7eab70bc072dea9a95183018b38ad3@eucas1p2.samsung.com>
+ <20200702163724.2218-2-s.nawrocki@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1593673564-4425-2-git-send-email-EastL.Lee@mediatek.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200702163724.2218-2-s.nawrocki@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 03:06:01PM +0800, EastL Lee wrote:
-> Document the devicetree bindings for MediaTek Command-Queue DMA controller
-> which could be found on MT6779 SoC or other similar Mediatek SoCs.
+On Thu, Jul 02, 2020 at 06:37:19PM +0200, Sylwester Nawrocki wrote:
+> Add documentation for new optional properties in the exynos bus nodes:
+> samsung,interconnect-parent, #interconnect-cells, bus-width.
+> These properties allow to specify the SoC interconnect structure which
+> then allows the interconnect consumer devices to request specific
+> bandwidth requirements.
 > 
-> Signed-off-by: EastL Lee <EastL.Lee@mediatek.com>
+> Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 > ---
->  .../devicetree/bindings/dma/mtk-cqdma.yaml         | 113 +++++++++++++++++++++
->  1 file changed, 113 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
+> Changes for v6:
+>  - added dts example of bus hierarchy definition and the interconnect
+>    consumer,
+>  - added new bus-width property.
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml b/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
-> new file mode 100644
-> index 0000000..83ed742
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
-> @@ -0,0 +1,113 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/mtk-cqdma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MediaTek Command-Queue DMA controller Device Tree Binding
-> +
-> +maintainers:
-> +  - EastL Lee <EastL.Lee@mediatek.com>
-> +
-> +description:
-> +  MediaTek Command-Queue DMA controller (CQDMA) on Mediatek SoC
-> +  is dedicated to memory-to-memory transfer through queue based
-> +  descriptor management.
-> +
-> +allOf:
-> +  - $ref: "dma-controller.yaml#"
-> +
-> +properties:
-> +  "#dma-cells":
-> +    minimum: 1
-> +    maximum: 255
-> +    description:
-> +      Used to provide DMA controller specific information.
+> Changes for v5:
+>  - exynos,interconnect-parent-node renamed to samsung,interconnect-parent
+> ---
+>  .../devicetree/bindings/devfreq/exynos-bus.txt     | 68 +++++++++++++++++++++-
+>  1 file changed, 66 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+> index e71f752..4035e3e 100644
+> --- a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+> +++ b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+> @@ -51,6 +51,13 @@ Optional properties only for parent bus device:
+>  - exynos,saturation-ratio: the percentage value which is used to calibrate
+>  			the performance count against total cycle count.
+>  
+> +Optional properties for interconnect functionality (QoS frequency constraints):
+> +- samsung,interconnect-parent: phandle to the parent interconnect node; for
+> +  passive devices should point to same node as the exynos,parent-bus property.
 
-No, for a specific binding like this, it should be 1 defined value.
+Adding vendor specific properties for a common binding defeats the 
+point.
+
+> +- #interconnect-cells: should be 0.
+> +- bus-width: the interconnect bus width in bits, default value is 8 when this
+> +  property is missing.
+
+Your bus is 8-bits or 4-bits as the example?
 
 > +
-> +  compatible:
-> +    oneOf:
-> +      - const: mediatek,mt6765-cqdma
-> +      - const: mediatek,mt6779-cqdma
+>  Detailed correlation between sub-blocks and power line according to Exynos SoC:
+>  - In case of Exynos3250, there are two power line as following:
+>  	VDD_MIF |--- DMC
+> @@ -135,7 +142,7 @@ Detailed correlation between sub-blocks and power line according to Exynos SoC:
+>  		|--- PERIC (Fixed clock rate)
+>  		|--- FSYS  (Fixed clock rate)
+>  
+> -Example1:
+> +Example 1:
+>  	Show the AXI buses of Exynos3250 SoC. Exynos3250 divides the buses to
+>  	power line (regulator). The MIF (Memory Interface) AXI bus is used to
+>  	transfer data between DRAM and CPU and uses the VDD_MIF regulator.
+> @@ -184,7 +191,7 @@ Example1:
+>  	|L5   |200000 |200000  |400000 |300000 |       ||1000000 |
+>  	----------------------------------------------------------
+>  
+> -Example2 :
+> +Example 2:
+>  	The bus of DMC (Dynamic Memory Controller) block in exynos3250.dtsi
+>  	is listed below:
+>  
+> @@ -419,3 +426,60 @@ Example2 :
+>  		devfreq = <&bus_leftbus>;
+>  		status = "okay";
+>  	};
 > +
-> +  reg:
-> +    minItems: 1
-> +    maxItems: 5
-> +    description:
-> +        A base address of MediaTek Command-Queue DMA controller,
-> +        a channel will have a set of base address.
+> +Example 3:
+> +	An interconnect path "bus_display -- bus_leftbus -- bus_dmc" on
+> +	Exynos4412 SoC with video mixer as an interconnect consumer device.
 > +
-> +  interrupts:
-> +    minItems: 1
-> +    maxItems: 5
-> +    description:
-> +        A interrupt number of MediaTek Command-Queue DMA controller,
-> +        one interrupt number per dma-channels.
+> +	soc {
+> +		bus_dmc: bus_dmc {
+> +			compatible = "samsung,exynos-bus";
+> +			clocks = <&clock CLK_DIV_DMC>;
+> +			clock-names = "bus";
+> +			operating-points-v2 = <&bus_dmc_opp_table>;
+> +			bus-width = <4>;
+> +			#interconnect-cells = <0>;
+> +			status = "disabled";
+> +		};
 > +
-> +  clocks:
-> +    maxItems: 1
+> +		bus_leftbus: bus_leftbus {
+> +			compatible = "samsung,exynos-bus";
+> +			clocks = <&clock CLK_DIV_GDL>;
+> +			clock-names = "bus";
+> +			operating-points-v2 = <&bus_leftbus_opp_table>;
+> +			samsung,interconnect-parent = <&bus_dmc>;
+> +			#interconnect-cells = <0>;
+> +			status = "disabled";
+> +		};
 > +
-> +  clock-names:
-> +    const: cqdma
+> +		bus_display: bus_display {
+> +			compatible = "samsung,exynos-bus";
+> +			clocks = <&clock CLK_ACLK160>;
+> +			clock-names = "bus";
+> +			operating-points-v2 = <&bus_display_opp_table>;
+> +			samsung,interconnect-parent = <&bus_leftbus>;
+> +			#interconnect-cells = <0>;
+> +			status = "disabled";
+> +		};
 > +
-> +  dma-channel-mask:
-> +    $ref: /schemas/types.yaml#definitions/uint32
-
-Alreay has a type, don't redefine it here.
-
-> +    description:
-> +       For DMA capability, We will know the addressing capability of
-> +       MediaTek Command-Queue DMA controller through dma-channel-mask.
-
-This sounds like the kernel's DMA masks which is not what this property 
-is.
-
-> +    items:
-> +      minItems: 1
-> +      maxItems: 63
-
-An array of 63 elements?
-
-I think you want:
-
-minimum: 1
-maximum: 63
-
-Or:
-
-enum: [ 1, 3, 7, 0xf, 0x1f, 0x3f ]
-
-(Though if this works, then just 'dma-channels' is enough.)
-
+> +		bus_dmc_opp_table: opp_table1 {
+> +			compatible = "operating-points-v2";
+> +			/* ... */
+> +		}
 > +
-> +  dma-channels:
-> +    $ref: /schemas/types.yaml#definitions/uint32
-> +    description:
-> +      Number of DMA channels supported by MediaTek Command-Queue DMA
-> +      controller, support up to five.
-
-Is it 5 or 6 channels? You're off by one somewhere.
-
-> +    items:
-> +      minItems: 1
-> +      maxItems: 5
+> +		bus_leftbus_opp_table: opp_table3 {
+> +			compatible = "operating-points-v2";
+> +			/* ... */
+> +		};
 > +
-> +  dma-requests:
-> +    $ref: /schemas/types.yaml#definitions/uint32
-> +    description:
-> +      Number of DMA request (virtual channel) supported by MediaTek
-> +      Command-Queue DMA controller, support up to 32.
-> +    items:
-> +      minItems: 1
-> +      maxItems: 32
-
-You are describing how many elements in an array and this is a scalar.
-
+> +		bus_display_opp_table: opp_table4 {
+> +			compatible = "operating-points-v2";
+> +			/* .. */
+> +		};
 > +
-> +required:
-> +  - "#dma-cells"
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - dma-channel-mask
-> +  - dma-channels
-> +  - dma-requests
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/mt6779-clk.h>
-> +    cqdma: dma-controller@10212000 {
-> +        compatible = "mediatek,mt6779-cqdma";
-> +        reg = <0x10212000 0x80>,
-> +            <0x10212080 0x80>,
-> +            <0x10212100 0x80>;
-> +        interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_LOW>,
-> +            <GIC_SPI 140 IRQ_TYPE_LEVEL_LOW>,
-> +            <GIC_SPI 141 IRQ_TYPE_LEVEL_LOW>;
-> +        clocks = <&infracfg_ao CLK_INFRA_CQ_DMA>;
-> +        clock-names = "cqdma";
-> +        dma-channel-mask = <63>;
-> +        dma-channels = <3>;
-> +        dma-requests = <32>;
-> +        #dma-cells = <1>;
-> +    };
-> +
-> +...
+> +		&mixer {
+> +			compatible = "samsung,exynos4212-mixer";
+> +			interconnects = <&bus_display &bus_dmc>;
+> +			/* ... */
+> +		};
+> +	};
 > -- 
-> 1.9.1
+> 2.7.4
+> 
