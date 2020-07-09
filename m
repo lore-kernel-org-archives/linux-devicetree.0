@@ -2,200 +2,88 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91934C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 22:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9686C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 22:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 682C5206E2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 22:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F60C20786
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 22:52:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594334966;
-	bh=ZERvbEu3oP+8uFS+ohcuN+W19cPMgieB6CxNafaOMqA=;
+	s=default; t=1594335147;
+	bh=uyh84sNjd3MyHxEmWcRrWmzb1vGVuR90g1bgfEidygI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Hs/sXcMevNDwj5kx7nIcjG1q2fwGNR8q9Z9vQsocHJgEVwgm6bvng6DgLFihnkQYH
-	 ttVi0BXhKfr3FfU5Y7AnGkv/Xsu2hPOhhZC4TnGEPkiOFTH2tQlz8/Qqb3Bxz3Pjr+
-	 xGpLippRUnQKgNpdYMJEHunUd+XhkXNFfp/tLVi4=
+	b=cVZQwpvthL5zvluSIO3zZ6Kn5Ux4+4rDwyZxS/CFmZXdN3O5BEUsvvJOAw4coSde0
+	 9MsWTmNREa+PgDzDMvwdx1gSVBxaGQzqk6gKln+vfkcgB5Po4SPvI+dIvBndi53Omk
+	 efd3fOxbQDmoCYC5MJZXr8UdwYDG8JR8Aum1xdtw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbgGIWt0 (ORCPT
+        id S1726509AbgGIWw1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 18:49:26 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39586 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726228AbgGIWtZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 18:49:25 -0400
-Received: by mail-io1-f67.google.com with SMTP id f23so4085771iof.6;
-        Thu, 09 Jul 2020 15:49:25 -0700 (PDT)
+        Thu, 9 Jul 2020 18:52:27 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:36624 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726228AbgGIWw0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 18:52:26 -0400
+Received: by mail-io1-f66.google.com with SMTP id y2so4095051ioy.3;
+        Thu, 09 Jul 2020 15:52:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=on6I1QaqksTzTjlk5LO0XNZUtfYL91/HKW7wZAJpRps=;
-        b=X9Fni4qy1ScpWGGNSFSsKQrdETImTZ5Y+zcLhH8CATmuMZclhRTlieqHevm+9OzJ2/
-         ZeFMIbaoctiOa87wn9jFT2GXT4a1XuL2sa62eFD3sSlVnyqJD0ZgYJ+SB4WhzSQOyDgN
-         TkrDfCf+tdvipieitTivLbsVt0Sv4Z4cLe6DivVtYEIWU/enxuQ3mP6n2rmkNjc3qbPC
-         NdQdHgRVYd1EiF4N7/KOXrOy9BDaoLbW98oJ0hDtFtfilMUbezfXtIQxDo3IV0ztxo//
-         1QxvNpFq3MvloemtF1+/C5b6AKxvBpzya4Kb2q4YZMiIT93w7Kfe46gNMU9Z3v9+aQL6
-         Q46Q==
-X-Gm-Message-State: AOAM5316gUiVdEEX2QN/cWx0qp396MynMXfGHlcPuwN4ABIBZnXgIbe0
-        DptKx3VRzH3SwsWRCV+IJw==
-X-Google-Smtp-Source: ABdhPJwmhaOV9WAsplbi/ssPpb80zMM6ajMx8LL+irUXuxYUPiVWDy14EPJ4V7O8B0jvp25RjJRaag==
-X-Received: by 2002:a6b:440d:: with SMTP id r13mr43363375ioa.114.1594334964718;
-        Thu, 09 Jul 2020 15:49:24 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to;
+        bh=6LfjAawJFtBDH4x+516uZv85LV5FkHlGr9GJK4wgdsc=;
+        b=lGShhl7hMuhEmqY/MJs3ILm8BXiNuWzt18Oo6NjrxD60SSVzcqlDnmysnvxZaqTZey
+         kzbuAsg1A52b2p8jRytjKHzb7RRQSkWsigKSBipJFyrNBhSDPf1llQRhBEB0KQO+PPzO
+         OJ7LrtWCMMDd1lgUzP8senlE7rEgO1ngQalV3M+Z4at3qUTVeFaVLxeCYr4IPlj7aKfx
+         i+Gwa7pxCJFlvMVLeZlipG4qstCMePtMUdB1qFuAb2AGUGTUmiXPAiRrPRsVRNarC2Z5
+         qf1alVgd0oPn34VESv8zqqhMnlwWNPagywEn7m70AZKeoiealuaX1hfgPnHHB06i5Bqw
+         3UlA==
+X-Gm-Message-State: AOAM533pX8BMWP8Xs0QRqRdCLr1dTvCVGvpmiDTY4aAdQX6hdEvxG0Je
+        7GavSSjj203U0u5Y+DdDSddE5aqSCA==
+X-Google-Smtp-Source: ABdhPJzqId51TrJ5MSjMXnyhtyG45cZkMTMbHXKT/zLRTAVjRtl4TmYH228tsm2hY9hn3udwdQvwYQ==
+X-Received: by 2002:a05:6602:2d89:: with SMTP id k9mr44309105iow.41.1594335145902;
+        Thu, 09 Jul 2020 15:52:25 -0700 (PDT)
 Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id p11sm2595327ilb.55.2020.07.09.15.49.23
+        by smtp.gmail.com with ESMTPSA id d77sm2633769ill.67.2020.07.09.15.52.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 15:49:24 -0700 (PDT)
-Received: (nullmailer pid 1033224 invoked by uid 1000);
-        Thu, 09 Jul 2020 22:49:23 -0000
-Date:   Thu, 9 Jul 2020 16:49:23 -0600
+        Thu, 09 Jul 2020 15:52:25 -0700 (PDT)
+Received: (nullmailer pid 1038901 invoked by uid 1000);
+        Thu, 09 Jul 2020 22:52:24 -0000
+Date:   Thu, 9 Jul 2020 16:52:24 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        tglx@linutronix.de, daniel.lezcano@linaro.org,
-        paul@crapouillou.net, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com
-Subject: Re: [PATCH v5 1/2] dt-bindings: timer: Add Ingenic X1000 OST
- bindings.
-Message-ID: <20200709224923.GA1029808@bogus>
-References: <20200705140353.53093-1-zhouyanjie@wanyeetech.com>
- <20200705140353.53093-2-zhouyanjie@wanyeetech.com>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        ulf.hansson@linaro.org, robh+dt@kernel.org,
+        linux-mmc@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] dt-bindings: mmc: Add full-pwr-cycle-in-suspend
+ property
+Message-ID: <20200709225224.GA1038850@bogus>
+References: <1594123122-13156-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1594123122-13156-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200705140353.53093-2-zhouyanjie@wanyeetech.com>
+In-Reply-To: <1594123122-13156-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Jul 05, 2020 at 10:03:52PM +0800, 周琰杰 (Zhou Yanjie) wrote:
-> Add the OST bindings for the X10000 SoC from Ingenic.
+On Tue, 07 Jul 2020 20:58:41 +0900, Yoshihiro Shimoda wrote:
+> The commit 5a36d6bcdf23 ("mmc: core: Add DT-bindings for
+> MMC_CAP2_FULL_PWR_CYCLE") added the "full-pwr-cycle" property which
+> is possible to perform a full power cycle of the card at any time.
 > 
-> Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+> However, some environment (like r8a77951-salvator-xs) is possible
+> to perform a full power cycle of the card in suspend via firmware
+> (PSCI on arm-trusted-firmware). So, add a new property for such
+> environment.
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 > ---
+>  Documentation/devicetree/bindings/mmc/mmc-controller.yaml | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> Notes:
->     v1->v2:
->     No change.
->     
->     v2->v3:
->     Fix wrong parameters in "clocks".
->     
->     v3->v4:
->     1.Rename "ingenic,ost.yaml" to "ingenic,sysost.yaml".
->     2.Rename "ingenic,ost.h" to "ingenic,sysost.h".
->     3.Modify the description in "ingenic,sysost.yaml".
->     
->     v4->v5:
->     No change.
-> 
->  .../devicetree/bindings/timer/ingenic,sysost.yaml  | 60 ++++++++++++++++++++++
->  include/dt-bindings/clock/ingenic,sysost.h         | 12 +++++
->  2 files changed, 72 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
->  create mode 100644 include/dt-bindings/clock/ingenic,sysost.h
-> 
-> diff --git a/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml b/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
-> new file mode 100644
-> index 000000000000..03257ed806fc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
-> @@ -0,0 +1,60 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/timer/ingenic,sysost.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Bindings for SYSOST in Ingenic XBurst family SoCs
-> +
-> +maintainers:
-> +  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> +
-> +description:
-> +  The SYSOST in an Ingenic SoC provides one 64bit timer for clocksource
-> +  and one or more 32bit timers for clockevent.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +
-> +      - enum:
 
-Only 1 entry, drop 'oneOf' and the blank line.
-
-> +          - ingenic,x1000-ost
-> +          - ingenic,x2000-ost
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: ost
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - "#clock-cells"
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-
-additionalProperties: false
-
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/x1000-cgu.h>
-> +
-> +    ost: timer@12000000 {
-> +    		compatible = "ingenic,x1000-ost";
-> +    		reg = <0x12000000 0x3c>;
-> +
-> +    		#clock-cells = <1>;
-> +
-> +    		clocks = <&cgu X1000_CLK_OST>;
-> +    		clock-names = "ost";
-> +
-> +    		interrupt-parent = <&cpuintc>;
-> +    		interrupts = <3>;
-> +    	};
-> +...
-> diff --git a/include/dt-bindings/clock/ingenic,sysost.h b/include/dt-bindings/clock/ingenic,sysost.h
-> new file mode 100644
-> index 000000000000..9ac88e90babf
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/ingenic,sysost.h
-> @@ -0,0 +1,12 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * This header provides clock numbers for the ingenic,tcu DT binding.
-> + */
-> +
-> +#ifndef __DT_BINDINGS_CLOCK_INGENIC_OST_H__
-> +#define __DT_BINDINGS_CLOCK_INGENIC_OST_H__
-> +
-> +#define OST_CLK_PERCPU_TIMER	0
-> +#define OST_CLK_GLOBAL_TIMER	1
-> +
-> +#endif /* __DT_BINDINGS_CLOCK_INGENIC_OST_H__ */
-> -- 
-> 2.11.0
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
