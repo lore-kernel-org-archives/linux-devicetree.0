@@ -2,128 +2,204 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 463E4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 21:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A6BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 21:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BCB120774
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 21:45:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594331159;
-	bh=+RssMVtEkTTV+VIeflNjuFnmtDfFnF7OA/q9gx97MSk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pBhfUowNrAfAKClbTrzbdqhu7yU3FpKEt/LwRvElUc7iqf4vu6d4bwq+gN93C1XAI
-	 yv4UHoRNtwtwpZ/sKAwuofzoBqmYz+WwmCEDYzkwlxuom7k5lCNbIyJrV4KLjogq8o
-	 B9BXb770XKvw5K4hOqjqYvVj/Ol8bogslp+e2n7k=
+	by mail.kernel.org (Postfix) with ESMTP id A3DEE20708
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 21:52:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZxPgT4AU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbgGIVp6 (ORCPT
+        id S1727007AbgGIVv6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 17:45:58 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40872 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbgGIVp6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 17:45:58 -0400
-Received: by mail-io1-f66.google.com with SMTP id q8so3934712iow.7;
-        Thu, 09 Jul 2020 14:45:57 -0700 (PDT)
+        Thu, 9 Jul 2020 17:51:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59664 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726989AbgGIVv4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 17:51:56 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66D7EC08C5DC;
+        Thu,  9 Jul 2020 14:51:56 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id d15so2997801edm.10;
+        Thu, 09 Jul 2020 14:51:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ItfQ8L/Er3Hk4c2uSxofOAEu4o/bM64EAYLfz2K5ECQ=;
+        b=ZxPgT4AUp2+vo6mZ57j8c7IbaQnpm3m6ie3CigiT9z5eT/38nTYREAtriLTnkq8Lwf
+         4GpfBUCR+F4TwwtJDKmTMikAA1mYDkCtZnvenE0cd5r25is63mIL2oMDAwCJfIi7kttm
+         J/1DTMkeonJSRMV9ua+TFSTSS1Y8Qjsr5GUALrcsfDmNmX1QW7LyP6AxMSx3wp04RxdP
+         nTHeNyEh7Yd7TMelPlk+WfgjOwiAjrEYG2zHWnWX+mIMjXc7maFTPWUgQnKpQMV70x+o
+         IYPo6KlxpBxCqrrTZAcNZconvzQTlE3xHJpZbTfvic42kgu5iYu35H+grluIU4UdG/M8
+         DvgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cm4M9dwes8x03niEEdU7bFOP7a6MNWa2UIuDCHSOETA=;
-        b=fg4qaRmWeRM8GTogI0OfWx9OnPQHO+x6FhWY5D7zDPJP8l9WXBOGXVcI60VfszqSxo
-         I8Aj1TWav1yXZXQ4FiXDVJEIJlrO2OSLs+DWCTQluLKgUFAofynl8zPeamULGUmw405q
-         dFq/NrmFYeVFWYkC7ww63DQgg0YO4FeQ31gcLKiQ1dOFc3rYWqL8nHv/Qj4vQ//3FrUR
-         AatVarlX1hcBGQuYku1hHfyFmOXvCLLslwK+wvj31uxB4x4VBu4VVoVniHm6m2lIaHLj
-         03d9dVPmVmYbVkcxiSu+xmWP2k/0q52kB7U+wDqj4DTmBbHjMb00vmrs+s+ydRUIWGaf
-         4WPA==
-X-Gm-Message-State: AOAM532Rfw7Dz8QO/UuXI1geGG7c9hApSTyBUM6WmQGzNctvd18rdYVu
-        FAb5zjVjaxWE5wmxmLG+ew==
-X-Google-Smtp-Source: ABdhPJxMyLOsUDzCdfKL53+BYbKXk7Kr9ScXgbUfbqOa4CSYjACMyINv95ZFOb6Qxjd9sFBEAddj1Q==
-X-Received: by 2002:a05:6638:25cf:: with SMTP id u15mr65297352jat.19.1594331156767;
-        Thu, 09 Jul 2020 14:45:56 -0700 (PDT)
-Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id t6sm2725359ioi.20.2020.07.09.14.45.55
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ItfQ8L/Er3Hk4c2uSxofOAEu4o/bM64EAYLfz2K5ECQ=;
+        b=oDoHhkjQIHTQzV/vPY3ZGXH0mFSut5L6Jumyy9ANpZmhdiKPYw93K5ZqsZoYXCXdTx
+         fwGYNtRyFX/+2InFzypRkV0VyB3EFZ8X8geuVSC5pPvmKrfw7h79bUmvkxgcrKGyVCHT
+         5hSIgTJ0Sx7o+1QAObc22j31L7l/+dYdDfV4bTNLXez3tys+Tgz9sZfSziWrxokYhSVu
+         io5FJGii7O+jADOGTVYMH2CQFatFBHg7ZNjTPNRKOWs51Xtpp8VWHVyn+7MnNwk8rqtk
+         S+sTIPnlIjao0/WaXkO/mUp97Cqx5DWIZkaLH34fImEmaoAKF84n/yTM+hQKE5HeSghx
+         kIsQ==
+X-Gm-Message-State: AOAM531wbWz/FEjk/K2ZyfLJTRndWVT8aUcxFYJOj0fCTjUS+tsEV3fg
+        qZuIsBbV/CvaYVdtuiPvlME=
+X-Google-Smtp-Source: ABdhPJz3P5Adz2dZxyYUEZXHp3Fcl0wTBk1V3i80J7DWD2gRIAxKKfpvDMvc+IKU01B3QLekYTH+sA==
+X-Received: by 2002:aa7:d285:: with SMTP id w5mr46413518edq.174.1594331515142;
+        Thu, 09 Jul 2020 14:51:55 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host-87-16-250-164.retail.telecomitalia.it. [87.16.250.164])
+        by smtp.googlemail.com with ESMTPSA id e16sm2498260ejt.14.2020.07.09.14.51.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 14:45:56 -0700 (PDT)
-Received: (nullmailer pid 942496 invoked by uid 1000);
-        Thu, 09 Jul 2020 21:45:55 -0000
-Date:   Thu, 9 Jul 2020 15:45:55 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v6 08/14] PCI: cadence: Fix updating Vendor ID and
- Subsystem Vendor ID register
-Message-ID: <20200709214555.GA939109@bogus>
-References: <20200708093018.28474-1-kishon@ti.com>
- <20200708093018.28474-9-kishon@ti.com>
+        Thu, 09 Jul 2020 14:51:54 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 6/6] drivers: thermal: tsens: add set_trip support for 8960
+Date:   Thu,  9 Jul 2020 23:51:36 +0200
+Message-Id: <20200709215136.28044-7-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200709215136.28044-1-ansuelsmth@gmail.com>
+References: <20200709215136.28044-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708093018.28474-9-kishon@ti.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 03:00:12PM +0530, Kishon Vijay Abraham I wrote:
-> Commit 1b79c5284439 ("PCI: cadence: Add host driver for Cadence PCIe
-> controller") in order to update Vendor ID, directly wrote to
-> PCI_VENDOR_ID register. However PCI_VENDOR_ID in root port configuration
-> space is read-only register and writing to it will have no effect.
-> Use local management register to configure Vendor ID and Subsystem Vendor
-> ID.
-> 
-> Fixes: 1b79c5284439 ("PCI: cadence: Add host driver for Cadence PCIe controller")
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/controller/cadence/pcie-cadence-host.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index 10127ea71b83..8935f7a37e5a 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -82,6 +82,7 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
->  {
->  	struct cdns_pcie *pcie = &rc->pcie;
->  	u32 value, ctrl;
-> +	u32 id;
->  
->  	/*
->  	 * Set the root complex BAR configuration register:
-> @@ -101,8 +102,12 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
->  	cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
->  
->  	/* Set root port configuration space */
-> -	if (rc->vendor_id != 0xffff)
-> -		cdns_pcie_rp_writew(pcie, PCI_VENDOR_ID, rc->vendor_id);
+Add custom set_trip function for 8960 needed to set trip point to the
+tsens driver for 8960 driver.
 
-If this is read-only, then...
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+ drivers/thermal/qcom/tsens-8960.c | 78 +++++++++++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
 
-> +	if (rc->vendor_id != 0xffff) {
-> +		id = CDNS_PCIE_LM_ID_VENDOR(rc->vendor_id) |
-> +			CDNS_PCIE_LM_ID_SUBSYS(rc->vendor_id);
-> +		cdns_pcie_writel(pcie, CDNS_PCIE_LM_ID, id);
-> +	}
-> +
->  	if (rc->device_id != 0xffff)
->  		cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, rc->device_id);
+diff --git a/drivers/thermal/qcom/tsens-8960.c b/drivers/thermal/qcom/tsens-8960.c
+index 2dc670206896..321791b8aabf 100644
+--- a/drivers/thermal/qcom/tsens-8960.c
++++ b/drivers/thermal/qcom/tsens-8960.c
+@@ -93,6 +93,15 @@
+ 						TSENS_8064_SENSOR9_EN | \
+ 						TSENS_8064_SENSOR10_EN)
+ 
++/* Trips: from very hot to very cold */
++enum tsens_trip_type {
++	TSENS_TRIP_STAGE3 = 0,
++	TSENS_TRIP_STAGE2,
++	TSENS_TRIP_STAGE1,
++	TSENS_TRIP_STAGE0,
++	TSENS_TRIP_NUM,
++};
++
+ u32 tsens_8960_slope[] = {
+ 			1176, 1176, 1154, 1176,
+ 			1111, 1132, 1132, 1199,
+@@ -110,6 +119,16 @@ static inline int code_to_mdegC(u32 adc_code, const struct tsens_sensor *s)
+ 	return adc_code * slope + offset;
+ }
+ 
++static int mdegC_to_code(int degC, const struct tsens_sensor *s)
++{
++	int slope, offset;
++
++	slope = thermal_zone_get_slope(s->tzd);
++	offset = CAL_MDEGC - slope * s->offset;
++
++	return degC / slope - offset;
++}
++
+ static void notify_uspace_tsens_fn(struct work_struct *work)
+ {
+ 	struct tsens_sensor *s = container_of(work, struct tsens_sensor,
+@@ -442,6 +461,64 @@ static int get_temp_8960(const struct tsens_sensor *s, int *temp)
+ 	return -ETIMEDOUT;
+ }
+ 
++static int set_trip_temp_ipq8064(void *data, int trip, int temp)
++{
++	unsigned int reg_th, reg_cntl;
++	int ret, code, code_chk, hi_code, lo_code;
++	const struct tsens_sensor *s = data;
++	struct tsens_priv *priv = s->priv;
++
++	code = mdegC_to_code(temp, s);
++	code_chk = code;
++
++	if (code < THRESHOLD_MIN_CODE || code > THRESHOLD_MAX_CODE)
++		return -EINVAL;
++
++	ret = regmap_read(priv->tm_map, STATUS_CNTL_ADDR_8064, &reg_cntl);
++	if (ret)
++		return ret;
++
++	ret = regmap_read(priv->tm_map, THRESHOLD_ADDR, &reg_th);
++	if (ret)
++		return ret;
++
++	hi_code = (reg_th & THRESHOLD_UPPER_LIMIT_MASK)
++			>> THRESHOLD_UPPER_LIMIT_SHIFT;
++	lo_code = (reg_th & THRESHOLD_LOWER_LIMIT_MASK)
++			>> THRESHOLD_LOWER_LIMIT_SHIFT;
++
++	switch (trip) {
++	case TSENS_TRIP_STAGE3:
++		code <<= THRESHOLD_MAX_LIMIT_SHIFT;
++		reg_th &= ~THRESHOLD_MAX_LIMIT_MASK;
++		break;
++	case TSENS_TRIP_STAGE2:
++		if (code_chk <= lo_code)
++			return -EINVAL;
++		code <<= THRESHOLD_UPPER_LIMIT_SHIFT;
++		reg_th &= ~THRESHOLD_UPPER_LIMIT_MASK;
++		break;
++	case TSENS_TRIP_STAGE1:
++		if (code_chk >= hi_code)
++			return -EINVAL;
++		code <<= THRESHOLD_LOWER_LIMIT_SHIFT;
++		reg_th &= ~THRESHOLD_LOWER_LIMIT_MASK;
++		break;
++	case TSENS_TRIP_STAGE0:
++		code <<= THRESHOLD_MIN_LIMIT_SHIFT;
++		reg_th &= ~THRESHOLD_MIN_LIMIT_MASK;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	ret = regmap_write(priv->tm_map, THRESHOLD_ADDR, reg_th | code);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
+ static const struct tsens_ops ops_8960 = {
+ 	.init		= init_8960,
+ 	.calibrate	= calibrate_8960,
+@@ -450,6 +527,7 @@ static const struct tsens_ops ops_8960 = {
+ 	.disable	= disable_8960,
+ 	.suspend	= suspend_8960,
+ 	.resume		= resume_8960,
++	.set_trip_temp	= set_trip_temp_ipq8064,
+ };
+ 
+ struct tsens_plat_data data_8960 = {
+-- 
+2.27.0
 
-...isn't this read-only too?
-
->  
-> -- 
-> 2.17.1
-> 
