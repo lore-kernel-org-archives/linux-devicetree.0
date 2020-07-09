@@ -2,2287 +2,1564 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3605AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 18:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA7E7C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 18:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF5E120767
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 18:06:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 659B7207DA
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 18:11:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ypOKaGKo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726629AbgGISGZ (ORCPT
+        id S1726859AbgGISLC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 14:06:25 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:32858 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgGISGZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 14:06:25 -0400
-Received: from [IPv6:2003:cb:8737:cf00:f5ff:2fff:89f:f3f4] (p200300cb8737cf00f5ff2fff089ff3f4.dip0.t-ipconnect.de [IPv6:2003:cb:8737:cf00:f5ff:2fff:89f:f3f4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: dafna)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id C57752A65CE;
-        Thu,  9 Jul 2020 19:06:16 +0100 (BST)
-Subject: Re: [PATCH v2 2/3] media: rockchip: Introduce driver for Rockhip's
- camera interface
-To:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
+        Thu, 9 Jul 2020 14:11:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52804 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbgGISLB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 14:11:01 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0FEDC08C5CE
+        for <devicetree@vger.kernel.org>; Thu,  9 Jul 2020 11:11:01 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id k4so1137545pld.12
+        for <devicetree@vger.kernel.org>; Thu, 09 Jul 2020 11:11:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zj4avAekfDtoqxyOVaGbnwIHAunVj44x7ZjKMu89HXU=;
+        b=ypOKaGKoOfUOJpaOpquEAsbfH+QoY53lWi3xxwOzf7qE3flaJkACRlb+8cKaBk4TLj
+         AUk+z89u7/9UyaXrdLCKhJzzAsQLbYEOYzkbcSJDCD6bFbyyj7tPIDVPOlAA6Ns4S2e3
+         2Q1Hne2F2QWS8wDRX0bLXjL0WDoGfPfa53sUEEKecXbFjNMvdbsKvNycKVFldQrCf/n7
+         Ovq176ntRrzEM3crt1x7xz739oUPLYpwIbVlUcWCrGpY8EJZTm6ztqiN1nHj1dCn0qA7
+         Gl159lgWop8BoFN+60fWOam988B9UVtqawX5Jf7c+EhmF2lg+0TX06NanhkKtJQ7Mpr8
+         j8xQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zj4avAekfDtoqxyOVaGbnwIHAunVj44x7ZjKMu89HXU=;
+        b=k926qStKwu/Asom2BI0FBGEp56rIQ1hAzwQsx4pEqHQ4BSxH0hKCeEAdm5VeR2yYBg
+         GyxLRH4yn+YawSxTq8C9LbiESboV//oPxR0q4wFSGgdXl/8f4AfN3jgszSHfJBjnsoXq
+         m8wfAV0yyqk75qym77IaLPcES/hi5LjfT3tOqiVEtx4RNF4FtWY7Exty1PyYiTanL3Ib
+         GaX9y1SkK5McFftaXZUtz8LCPMCaHlfwNaiRp1F3gh5B0XY0V3rdrGgs91aTHAUQCvuc
+         MZ5I5zmyin1qZ3jWX8ki2omh6SleFtSQo77gNiC0DXRi1RIyVCtMaP1n1rfURuiE30X2
+         hoPw==
+X-Gm-Message-State: AOAM532zsQTJFz/3EWNXuIG6Pjb78PcD2RbwlzeXiMMuqxSzR8UzQ1sp
+        ZLk/jHJVywZ64w+35Xu4ASmBSQ==
+X-Google-Smtp-Source: ABdhPJzSHMpRLyxi3j82Ju+C6Km4b0yZJvAaSecKnQUKtKPL6RoCY2sxQZLvobYCzaNw6OkfF3sodA==
+X-Received: by 2002:a17:90a:ce0c:: with SMTP id f12mr1405467pju.19.1594318260629;
+        Thu, 09 Jul 2020 11:11:00 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id s68sm3514940pjb.38.2020.07.09.11.10.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 11:10:59 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 12:10:57 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-References: <20200529130405.929429-1-maxime.chevallier@bootlin.com>
- <20200529130405.929429-3-maxime.chevallier@bootlin.com>
-From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Message-ID: <e2b7b23a-6b81-3386-d40b-d972f7a41c93@collabora.com>
-Date:   Thu, 9 Jul 2020 20:06:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] remoteproc: k3-r5: Add a remoteproc driver for
+ R5F subsystem
+Message-ID: <20200709181057.GA948668@xps15>
+References: <20200630024922.32491-1-s-anna@ti.com>
+ <20200630024922.32491-3-s-anna@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200529130405.929429-3-maxime.chevallier@bootlin.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630024922.32491-3-s-anna@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-hi,
+Good day Suman,
 
-
-On 29.05.20 15:04, Maxime Chevallier wrote:
-> Introduce a driver for the camera interface on some Rockchip platforms.
+On Mon, Jun 29, 2020 at 09:49:20PM -0500, Suman Anna wrote:
+> The TI K3 family of SoCs typically have one or more dual-core Arm Cortex
+> R5F processor clusters/subsystems (R5FSS). This R5F subsystem/cluster
+> can be configured at boot time to be either run in a LockStep mode or in
+> an Asymmetric Multi Processing (AMP) fashion in Split-mode. This subsystem
+> has 64 KB each Tightly-Coupled Memory (TCM) internal memories for each
+> core split between two banks - TCMA and TCMB (further interleaved into
+> two banks). The subsystem does not have an MMU, but has a Region Address
+> Translater (RAT) module that is accessible only from the R5Fs for providing
+> translations between 32-bit CPU addresses into larger system bus addresses.
 > 
-> This controller supports CSI2, Parallel and BT656 interfaces, but for
-> now only the parallel interface could be tested, hence it's the only one
-> that's supported in the first version of this driver.
+> Add a remoteproc driver to support this subsystem to be able to load and
+> boot the R5F cores primarily in LockStep mode. The code also includes the
+> base support for Split mode. Error Recovery and Power Management features
+> are not currently supported. Loading support includes the internal TCMs
+> and DDR. RAT support is left for a future patch, and as such the reserved
+> memory carveout regions are all expected to be using memory regions within
+> the first 2 GB.
 > 
-> This controller can be fond on PX30, RK1808, RK3128, RK3288 and RK3288,
-> but for now it's only be tested on PX30.
+> The R5F remote processors do not have an MMU, and so require fixed memory
+> carveout regions matching the firmware image addresses. Support for this
+> is provided by mandating multiple memory regions to be attached to the
+> remoteproc device. The first memory region will be used to serve as the
+> DMA pool for all dynamic allocations like the vrings and vring buffers.
+> The remaining memory regions are mapped into the kernel at device probe
+> time, and are used to provide address translations for firmware image
+> segments without the need for any RSC_CARVEOUT entries. Any firmware
+> image using memory outside of the supplied reserved memory carveout
+> regions will be errored out.
 > 
-> Most of this driver was written follwing the BSP driver from rockchip,
-> removing the parts that either didn't fit correctly the guidelines, or
-> that couldn't be tested.
+> The R5F processors on TI K3 SoCs require a specific sequence for booting
+> and shutting down the processors. This sequence is also dependent on the
+> mode (LockStep or Split) the R5F cluster is configured for. The R5F cores
+> have a Memory Protection Unit (MPU) that has a default configuration that
+> does not allow the cores to run out of DDR out of reset. This is resolved
+> by using the TCMs for boot-strapping code that applies the appropriate
+> executable permissions on desired DDR memory. The loading into the TCMs
+> requires that the resets be released first with the cores in halted state.
+> The Power Sleep Controller (PSC) module on K3 SoCs requires that the cores
+> be in WFI/WFE states with no active bus transactions before the cores can
+> be put back into reset. Support for this is provided by using the newly
+> introduced .prepare() and .unprepare() ops in the remoteproc core. The
+> .prepare() ops is invoked before any loading, and the .unprepare() ops
+> is invoked after the remoteproc resource cleanup. The R5F core resets
+> are deasserted in .prepare() and asserted in .unprepare(), and the cores
+> themselves are started and halted in .start() and .stop() ops. This
+> ensures symmetric usage and allows the R5F cores state machine to be
+> maintained properly between using the sysfs 'state' variable, bind/unbind
+> and regular module load/unload flows.
 > 
-> This basic version doesn't support cropping nor scaling, and is only
-> designed with one sensor being attached to it a any time.
+> The subsystem is represented as a single remoteproc in LockStep mode, and
+> as two remoteprocs in Split mode. The driver uses various TI-SCI interfaces
+> to talk to the System Controller (DMSC) for managing configuration, power
+> and reset management of these cores. IPC between the A53 cores and the R5
+> cores is supported through the virtio rpmsg stack using shared memory and
+> OMAP Mailboxes.
 > 
-> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> The AM65x SoCs typically have a single R5FSS in the MCU voltage domain. The
+> J721E SoCs uses a slightly revised IP and typically have three R5FSSs, with
+> one cluster present within the MCU voltage domain (MCU_R5FSS0), and the
+> remaining two clusters present in the MAIN voltage domain (MAIN_R5FSS0 and
+> MAIN_R5FSS1). The integration of these clusters on J721E SoC is also
+> slightly different in that these IPs do support an actual local reset line,
+> while they are a no-op on AM65x SoCs.
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
 > ---
+> v2:
+>  - k3_r5_probe() adapted to use devm_ API completely eliminating
+>    k3_r5_remove()
+>  - k3_r5_cluster_of_init() and k3_r5_cluster_rproc_init() leverage
+>    devm_add_action_or_reset() to perform corresponding cleanup
+>  - Reordered k3_r5_cluster_of_exit() before k3_r5_cluster_of_init()
+>    to use it in the latter's failure path cleanup
+>  - Leverage devres groups in k3_r5_core_of_init() to use all devm_ API
+>    and simplify k3_r5_core_of_exit() greatly
+>  - k3_r5_core_of_get_internal_memories() failure path code cleaned up
+>    due to the devm_ adaptation
+>  - Added a function description around k3_r5_rproc_configure() and fixed
+>    up the halt logic for LockStep mode
+>  - Replaced the private k3_r5_rproc_get_firmware() with the common
+>    rproc_of_parse_firmware()
+>  - Adjusted to use the renamed properties for "lockstep-mode", 
+>    "atcm-enable", "btcm-enable" and "loczrama"
+>  - Use dev_of_node() instead of direct dereferences for of_node
+>  - Addressed all other minor review comments from Mathieu. These include:
+>    1. Fix the few headers that were not sorted in alphabetical order
+>    2. Use enum in cluster->mode expressions
+>    3. Adjust some dev_dbg traces and add comments around unsupported 
+>       64-bit addresses
+>  - Revised the patch title to move away from remoteproc/k3-r5
+>  - Cleanup the Kconfig help
+> v1: https://patchwork.kernel.org/patch/11456375/
 > 
-> Changes since V1 :
+>  drivers/remoteproc/Kconfig               |   13 +
+>  drivers/remoteproc/Makefile              |    1 +
+>  drivers/remoteproc/ti_k3_r5_remoteproc.c | 1304 ++++++++++++++++++++++
+>  3 files changed, 1318 insertions(+)
+>  create mode 100644 drivers/remoteproc/ti_k3_r5_remoteproc.c
 > 
->   - Convert to the bulk APIs for clocks and resets
->   - remove useless references to priv data
->   - Move around some init functions at probe time
->   - Upate some helpers to more suitable ones
-> 
-> Here is the output from v4l2-compliance. There are no fails in the final
-> summary, but there is one in the output that I didn't catch previously.
-> 
-> Still, here's the V2 in the meantime, if you have any further reviews
-> ompliance SHA: not available, 64 bits
-> 
-> Compliance test for rkcif device /dev/video0:
-> 
-> Driver Info:
-> 	Driver name      : rkcif
-> 	Card type        : rkcif
-> 	Bus info         : platform:ff490000.cif
-> 	Driver version   : 5.7.0
-> 	Capabilities     : 0x84201000
-> 		Video Capture Multiplanar
-> 		Streaming
-> 		Extended Pix Format
-> 		Device Capabilities
-> 	Device Caps      : 0x04201000
-> 		Video Capture Multiplanar
-> 		Streaming
-> 		Extended Pix Format
-> Media Driver Info:
-> 	Driver name      : rkcif
-> 	Model            : rkcif
-> 	Serial           :
-> 	Bus info         :
-> 	Media version    : 5.7.0
-> 	Hardware revision: 0x00000000 (0)
-> 	Driver version   : 5.7.0
-> Interface Info:
-> 	ID               : 0x03000002
-> 	Type             : V4L Video
-> Entity Info:
-> 	ID               : 0x00000001 (1)
-> 	Name             : video_rkcif
-> 	Function         : V4L2 I/O
-> 	Pad 0x01000004   : 0: Sink
-> 	  Link 0x02000007: from remote pad 0x1000006 of entity 'tw9900 2-0044': Data, Enabled
-> 
-> Required ioctls:
-> 	test MC information (see 'Media Driver Info' above): OK
-> 	test VIDIOC_QUERYCAP: OK
-> 
-> Allow for multiple opens:
-> 	test second /dev/video0 open: OK
-> 	test VIDIOC_QUERYCAP: OK
-> 	test VIDIOC_G/S_PRIORITY: OK
-> 	test for unlimited opens: OK
-> 
-> Debug ioctls:
-> 	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-> 	test VIDIOC_LOG_STATUS: OK (Not Supported)
-> 
-> Input ioctls:
-> 	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> 	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-> 	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-> 	test VIDIOC_G/S/ENUMINPUT: OK
-> 	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-> 	Inputs: 1 Audio Inputs: 0 Tuners: 0
-> 
-> Output ioctls:
-> 	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> 	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-> 	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-> 	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-> 	Outputs: 0 Audio Outputs: 0 Modulators: 0
-> 
-> Input/Output configuration ioctls:
-> 	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-> 	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-> 	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-> 	test VIDIOC_G/S_EDID: OK (Not Supported)
-> 
-> Control ioctls (Input 0):
-> 	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-> 	test VIDIOC_QUERYCTRL: OK
-> 	test VIDIOC_G/S_CTRL: OK
-> 	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-> 	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
-> 	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-> 	Standard Controls: 0 Private Controls: 0
-> 
-> Format ioctls (Input 0):
-> 	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-> 	test VIDIOC_G/S_PARM: OK (Not Supported)
-> 	test VIDIOC_G_FBUF: OK (Not Supported)
-> 	test VIDIOC_G_FMT: OK
-> 	test VIDIOC_TRY_FMT: OK
-> 	test VIDIOC_S_FMT: OK
-> 	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-> 	test Cropping: OK (Not Supported)
-> 	test Composing: OK (Not Supported)
-> 		fail: v4l2-test-formats.cpp(1772): node->can_scale && node->frmsizes_count[v4l_format_g_pixelformat(&cur)]
-> 	test Scaling: OK
-> 
-> Codec ioctls (Input 0):
-> 	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-> 	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-> 	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-> 
-> Buffer ioctls (Input 0):
-> 	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-> 	test VIDIOC_EXPBUF: OK
-> 	test Requests: OK (Not Supported)
-> 
-> Total for rkcif device /dev/video0: 45, Succeeded: 45, Failed: 0, Warnings: 0
-> 
->   drivers/media/platform/Kconfig                |   13 +
->   drivers/media/platform/Makefile               |    1 +
->   drivers/media/platform/rockchip/cif/Makefile  |    3 +
->   drivers/media/platform/rockchip/cif/capture.c | 1170 +++++++++++++++++
->   drivers/media/platform/rockchip/cif/dev.c     |  358 +++++
->   drivers/media/platform/rockchip/cif/dev.h     |  213 +++
->   drivers/media/platform/rockchip/cif/regs.h    |  256 ++++
->   7 files changed, 2014 insertions(+)
->   create mode 100644 drivers/media/platform/rockchip/cif/Makefile
->   create mode 100644 drivers/media/platform/rockchip/cif/capture.c
->   create mode 100644 drivers/media/platform/rockchip/cif/dev.c
->   create mode 100644 drivers/media/platform/rockchip/cif/dev.h
->   create mode 100644 drivers/media/platform/rockchip/cif/regs.h
-> 
-> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-> index e01bbb9dd1c1..d4ec5e36bca7 100644
-> --- a/drivers/media/platform/Kconfig
-> +++ b/drivers/media/platform/Kconfig
-> @@ -460,6 +460,19 @@ config VIDEO_ROCKCHIP_RGA
->   
->   	  To compile this driver as a module choose m here.
->   
-> +config VIDEO_ROCKCHIP_CIF
-> +	tristate "Rockchip Camera Interface"
-> +	depends on VIDEO_DEV && VIDEO_V4L2
-> +	depends on ARCH_ROCKCHIP || COMPILE_TEST
-> +	select VIDEOBUF2_DMA_SG
-> +	select VIDEOBUF2_DMA_CONTIG
-> +	select V4L2_FWNODE
-> +	select V4L2_MEM2MEM_DEV
+> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+> index 74b818b25068..6e02cbcf8032 100644
+> --- a/drivers/remoteproc/Kconfig
+> +++ b/drivers/remoteproc/Kconfig
+> @@ -262,6 +262,19 @@ config TI_K3_DSP_REMOTEPROC
+>  	  It's safe to say N here if you're not interested in utilizing
+>  	  the DSP slave processors.
+>  
+> +config TI_K3_R5_REMOTEPROC
+> +	tristate "TI K3 R5 remoteproc support"
+> +	depends on ARCH_K3
+> +	select MAILBOX
+> +	select OMAP2PLUS_MBOX
 > +	help
-> +	  This is a v4l2 driver for Rockchip SOC Camera interface.
+> +	  Say m here to support TI's R5F remote processor subsystems
+> +	  on various TI K3 family of SoCs through the remote processor
+> +	  framework.
 > +
-> +	  To compile this driver as a module choose m here.
+> +	  It's safe to say N here if you're not interested in utilizing
+> +	  a slave processor.
 > +
->   config VIDEO_TI_VPE
->   	tristate "TI VPE (Video Processing Engine) driver"
->   	depends on VIDEO_DEV && VIDEO_V4L2
-> diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
-> index d13db96e3015..67e7ac034be1 100644
-> --- a/drivers/media/platform/Makefile
-> +++ b/drivers/media/platform/Makefile
-> @@ -68,6 +68,7 @@ obj-$(CONFIG_VIDEO_RENESAS_JPU)		+= rcar_jpu.o
->   obj-$(CONFIG_VIDEO_RENESAS_VSP1)	+= vsp1/
->   
->   obj-$(CONFIG_VIDEO_ROCKCHIP_RGA)	+= rockchip/rga/
-> +obj-$(CONFIG_VIDEO_ROCKCHIP_CIF)	+= rockchip/cif/
->   
->   obj-y	+= omap/
->   
-> diff --git a/drivers/media/platform/rockchip/cif/Makefile b/drivers/media/platform/rockchip/cif/Makefile
+>  endif # REMOTEPROC
+>  
+>  endmenu
+> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+> index d457d0f87ada..ebc7003b4bbf 100644
+> --- a/drivers/remoteproc/Makefile
+> +++ b/drivers/remoteproc/Makefile
+> @@ -31,3 +31,4 @@ obj-$(CONFIG_ST_REMOTEPROC)		+= st_remoteproc.o
+>  obj-$(CONFIG_ST_SLIM_REMOTEPROC)	+= st_slim_rproc.o
+>  obj-$(CONFIG_STM32_RPROC)		+= stm32_rproc.o
+>  obj-$(CONFIG_TI_K3_DSP_REMOTEPROC)	+= ti_k3_dsp_remoteproc.o
+> +obj-$(CONFIG_TI_K3_R5_REMOTEPROC)	+= ti_k3_r5_remoteproc.o
+> diff --git a/drivers/remoteproc/ti_k3_r5_remoteproc.c b/drivers/remoteproc/ti_k3_r5_remoteproc.c
 > new file mode 100644
-> index 000000000000..727990824316
+> index 000000000000..c4f99e59dc2f
 > --- /dev/null
-> +++ b/drivers/media/platform/rockchip/cif/Makefile
-> @@ -0,0 +1,3 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +obj-$(CONFIG_VIDEO_ROCKCHIP_CIF) += video_rkcif.o
-> +video_rkcif-objs += dev.o capture.o
-> diff --git a/drivers/media/platform/rockchip/cif/capture.c b/drivers/media/platform/rockchip/cif/capture.c
-> new file mode 100644
-> index 000000000000..adab6704129f
-> --- /dev/null
-> +++ b/drivers/media/platform/rockchip/cif/capture.c
-> @@ -0,0 +1,1170 @@
-> +// SPDX-License-Identifier: GPL-2.0
+> +++ b/drivers/remoteproc/ti_k3_r5_remoteproc.c
+> @@ -0,0 +1,1304 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
 > +/*
-> + * Rockchip CIF Driver
+> + * TI K3 R5F (MCU) Remote Processor driver
 > + *
-> + * Copyright (C) 2018 Rockchip Electronics Co., Ltd.
-> + * Copyright (C) 2020 Maxime Chevallier <maxime.chevallier@bootlin.com>
+> + * Copyright (C) 2017-2020 Texas Instruments Incorporated - http://www.ti.com/
+
+You probably want to make this https to keep Alexander Kilmov's script happy.
+
+> + *	Suman Anna <s-anna@ti.com>
 > + */
 > +
-> +#include <linux/delay.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/err.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mailbox_client.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_reserved_mem.h>
+> +#include <linux/omap-mailbox.h>
+> +#include <linux/platform_device.h>
 > +#include <linux/pm_runtime.h>
+> +#include <linux/remoteproc.h>
 > +#include <linux/reset.h>
-> +#include <media/v4l2-common.h>
-> +#include <media/v4l2-event.h>
-> +#include <media/v4l2-fh.h>
-> +#include <media/v4l2-fwnode.h>
-> +#include <media/v4l2-ioctl.h>
-> +#include <media/v4l2-mc.h>
-> +#include <media/v4l2-subdev.h>
-> +#include <media/videobuf2-dma-contig.h>
+> +#include <linux/slab.h>
+> +#include <linux/soc/ti/ti_sci_protocol.h>
 > +
-> +#include "dev.h"
-> +#include "regs.h"
+> +#include "omap_remoteproc.h"
+> +#include "remoteproc_internal.h"
+> +#include "ti_sci_proc.h"
 > +
-> +#define CIF_REQ_BUFS_MIN	1
-> +#define CIF_MIN_WIDTH		64
-> +#define CIF_MIN_HEIGHT		64
-> +#define CIF_MAX_WIDTH		8192
-> +#define CIF_MAX_HEIGHT		8192
+> +/* This address can either be for ATCM or BTCM with the other at address 0x0 */
+> +#define K3_R5_TCM_DEV_ADDR	0x41010000
 > +
-> +#define RKCIF_PLANE_Y			0
-> +#define RKCIF_PLANE_CBCR		1
+> +/* R5 TI-SCI Processor Configuration Flags */
+> +#define PROC_BOOT_CFG_FLAG_R5_DBG_EN			0x00000001
+> +#define PROC_BOOT_CFG_FLAG_R5_DBG_NIDEN			0x00000002
+> +#define PROC_BOOT_CFG_FLAG_R5_LOCKSTEP			0x00000100
+> +#define PROC_BOOT_CFG_FLAG_R5_TEINIT			0x00000200
+> +#define PROC_BOOT_CFG_FLAG_R5_NMFI_EN			0x00000400
+> +#define PROC_BOOT_CFG_FLAG_R5_TCM_RSTBASE		0x00000800
+> +#define PROC_BOOT_CFG_FLAG_R5_BTCM_EN			0x00001000
+> +#define PROC_BOOT_CFG_FLAG_R5_ATCM_EN			0x00002000
 > +
-> +#define CIF_FETCH_Y_LAST_LINE(VAL) ((VAL) & 0x1fff)
-> +/* Check if swap y and c in bt1120 mode */
-> +#define CIF_FETCH_IS_Y_FIRST(VAL) ((VAL) & 0xf)
+> +/* R5 TI-SCI Processor Control Flags */
+> +#define PROC_BOOT_CTRL_FLAG_R5_CORE_HALT		0x00000001
 > +
-> +/* Get xsubs and ysubs for fourcc formats
-> + *
-> + * @xsubs: horizontal color samples in a 4*4 matrix, for yuv
-> + * @ysubs: vertical color samples in a 4*4 matrix, for yuv
+> +/* R5 TI-SCI Processor Status Flags */
+> +#define PROC_BOOT_STATUS_FLAG_R5_WFE			0x00000001
+> +#define PROC_BOOT_STATUS_FLAG_R5_WFI			0x00000002
+> +#define PROC_BOOT_STATUS_FLAG_R5_CLK_GATED		0x00000004
+> +#define PROC_BOOT_STATUS_FLAG_R5_LOCKSTEP_PERMITTED	0x00000100
+> +
+> +/**
+> + * struct k3_r5_mem - internal memory structure
+> + * @cpu_addr: MPU virtual address of the memory region
+> + * @bus_addr: Bus address used to access the memory region
+> + * @dev_addr: Device address from remoteproc view
+> + * @size: Size of the memory region
 > + */
-> +static int fcc_xysubs(u32 fcc, u32 *xsubs, u32 *ysubs)
+> +struct k3_r5_mem {
+> +	void __iomem *cpu_addr;
+> +	phys_addr_t bus_addr;
+> +	u32 dev_addr;
+> +	size_t size;
+> +};
+> +
+> +enum cluster_mode {
+> +	CLUSTER_MODE_SPLIT = 0,
+> +	CLUSTER_MODE_LOCKSTEP,
+> +};
+> +
+> +/**
+> + * struct k3_r5_cluster - K3 R5F Cluster structure
+> + * @dev: cached device pointer
+> + * @mode: Mode to configure the Cluster - Split or LockStep
+> + * @cores: list of R5 cores within the cluster
+> + */
+> +struct k3_r5_cluster {
+> +	struct device *dev;
+> +	enum cluster_mode mode;
+> +	struct list_head cores;
+> +};
+> +
+> +/**
+> + * struct k3_r5_core - K3 R5 core structure
+> + * @elem: linked list item
+> + * @dev: cached device pointer
+> + * @rproc: rproc handle representing this core
+> + * @mem: internal memory regions data
+> + * @num_mems: number of internal memory regions
+> + * @reset: reset control handle
+> + * @tsp: TI-SCI processor control handle
+> + * @ti_sci: TI-SCI handle
+> + * @ti_sci_id: TI-SCI device identifier
+> + * @atcm_enable: flag to control ATCM enablement
+> + * @btcm_enable: flag to control BTCM enablement
+> + * @loczrama: flag to dictate which TCM is at device address 0x0
+> + */
+> +struct k3_r5_core {
+> +	struct list_head elem;
+> +	struct device *dev;
+> +	struct rproc *rproc;
+> +	struct k3_r5_mem *mem;
+> +	int num_mems;
+> +	struct reset_control *reset;
+> +	struct ti_sci_proc *tsp;
+> +	const struct ti_sci_handle *ti_sci;
+> +	u32 ti_sci_id;
+> +	u32 atcm_enable;
+> +	u32 btcm_enable;
+> +	u32 loczrama;
+> +};
+> +
+> +/**
+> + * struct k3_r5_rproc - K3 remote processor state
+> + * @dev: cached device pointer
+> + * @cluster: cached pointer to parent cluster structure
+> + * @mbox: mailbox channel handle
+> + * @client: mailbox client to request the mailbox channel
+> + * @rproc: rproc handle
+> + * @core: cached pointer to r5 core structure being used
+> + * @rmem: reserved memory regions data
+> + * @num_rmems: number of reserved memory regions
+> + */
+> +struct k3_r5_rproc {
+> +	struct device *dev;
+> +	struct k3_r5_cluster *cluster;
+> +	struct mbox_chan *mbox;
+> +	struct mbox_client client;
+> +	struct rproc *rproc;
+> +	struct k3_r5_core *core;
+> +	struct k3_r5_mem *rmem;
+> +	int num_rmems;
+> +};
+> +
+> +/**
+> + * k3_r5_rproc_mbox_callback() - inbound mailbox message handler
+> + * @client: mailbox client pointer used for requesting the mailbox channel
+> + * @data: mailbox payload
+> + *
+> + * This handler is invoked by the OMAP mailbox driver whenever a mailbox
+> + * message is received. Usually, the mailbox payload simply contains
+> + * the index of the virtqueue that is kicked by the remote processor,
+> + * and we let remoteproc core handle it.
+> + *
+> + * In addition to virtqueue indices, we also have some out-of-band values
+> + * that indicate different events. Those values are deliberately very
+> + * large so they don't coincide with virtqueue indices.
+> + */
+> +static void k3_r5_rproc_mbox_callback(struct mbox_client *client, void *data)
 > +{
-> +	switch (fcc) {
-> +	case V4L2_PIX_FMT_NV16:
-> +	case V4L2_PIX_FMT_NV61:
-> +		*xsubs = 2;
-> +		*ysubs = 1;
+> +	struct k3_r5_rproc *kproc = container_of(client, struct k3_r5_rproc,
+> +						client);
+> +	struct device *dev = kproc->rproc->dev.parent;
+> +	const char *name = kproc->rproc->name;
+> +	u32 msg = omap_mbox_message(data);
+> +
+> +	dev_dbg(dev, "mbox msg: 0x%x\n", msg);
+> +
+> +	switch (msg) {
+> +	case RP_MBOX_CRASH:
+> +		/*
+> +		 * remoteproc detected an exception, but error recovery is not
+> +		 * supported. So, just log this for now
+> +		 */
+> +		dev_err(dev, "K3 R5F rproc %s crashed\n", name);
 > +		break;
-> +	case V4L2_PIX_FMT_NV21:
-> +	case V4L2_PIX_FMT_NV12:
-> +		*xsubs = 2;
-> +		*ysubs = 2;
+> +	case RP_MBOX_ECHO_REPLY:
+> +		dev_info(dev, "received echo reply from %s\n", name);
 > +		break;
 > +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct cif_output_fmt out_fmts[] = {
-> +	{
-> +		.fourcc = V4L2_PIX_FMT_NV16,
-> +		.cplanes = 2,
-> +		.mplanes = 1,
-> +		.fmt_val = YUV_OUTPUT_422 | UV_STORAGE_ORDER_UVUV,
-> +		.bpp = { 8, 16 },
-> +	}, {
-> +		.fourcc = V4L2_PIX_FMT_NV61,
-> +		.fmt_val = YUV_OUTPUT_422 | UV_STORAGE_ORDER_VUVU,
-> +		.cplanes = 2,
-> +		.mplanes = 1,
-> +		.bpp = { 8, 16 },
-> +	},
-> +	{
-> +		.fourcc = V4L2_PIX_FMT_NV12,
-> +		.fmt_val = YUV_OUTPUT_420 | UV_STORAGE_ORDER_UVUV,
-> +		.cplanes = 2,
-> +		.mplanes = 1,
-> +		.bpp = { 8, 16 },
-> +		.mbus = MEDIA_BUS_FMT_UYVY8_2X8,
-> +	},
-> +	{
-> +		.fourcc = V4L2_PIX_FMT_NV21,
-> +		.fmt_val = YUV_OUTPUT_420 | UV_STORAGE_ORDER_VUVU,
-> +		.cplanes = 2,
-> +		.mplanes = 1,
-> +		.bpp = { 8, 16 },
-> +	}, {
-> +		.fourcc = V4L2_PIX_FMT_RGB24,
-> +		.cplanes = 1,
-> +		.mplanes = 1,
-> +		.bpp = { 24 },
-> +	}, {
-> +		.fourcc = V4L2_PIX_FMT_RGB565,
-> +		.cplanes = 1,
-> +		.mplanes = 1,
-> +		.bpp = { 16 },
-> +	}, {
-> +		.fourcc = V4L2_PIX_FMT_BGR666,
-> +		.cplanes = 1,
-> +		.mplanes = 1,
-> +		.bpp = { 18 },
-> +	}, {
-> +		.fourcc = V4L2_PIX_FMT_SRGGB8,
-> +		.cplanes = 1,
-> +		.mplanes = 1,
-> +		.bpp = { 8 },
-> +	}, {
-> +		.fourcc = V4L2_PIX_FMT_SGRBG8,
-> +		.cplanes = 1,
-> +		.mplanes = 1,
-> +		.bpp = { 8 },
-> +	}, {
-> +		.fourcc = V4L2_PIX_FMT_SGBRG8,
-> +		.cplanes = 1,
-> +		.mplanes = 1,
-> +		.bpp = { 8 },
-> +	}, {
-> +		.fourcc = V4L2_PIX_FMT_SBGGR8,
-> +		.cplanes = 1,
-> +		.mplanes = 1,
-> +		.bpp = { 8 },
-> +	}, {
-> +		.fourcc = V4L2_PIX_FMT_SRGGB10,
-> +		.cplanes = 1,
-> +		.mplanes = 1,
-> +		.bpp = { 16 },
-> +	}, {
-> +		.fourcc = V4L2_PIX_FMT_SGRBG10,
-> +		.cplanes = 1,
-> +		.mplanes = 1,
-> +		.bpp = { 16 },
-> +	}, {
-> +		.fourcc = V4L2_PIX_FMT_SGBRG10,
-> +		.cplanes = 1,
-> +		.mplanes = 1,
-> +		.bpp = { 16 },
-> +	}, {
-> +		.fourcc = V4L2_PIX_FMT_SBGGR10,
-> +		.cplanes = 1,
-> +		.mplanes = 1,
-> +		.bpp = { 16 },
-> +	}, {
-> +		.fourcc = V4L2_PIX_FMT_SRGGB12,
-> +		.cplanes = 1,
-> +		.mplanes = 1,
-> +		.bpp = { 16 },
-> +	}, {
-> +		.fourcc = V4L2_PIX_FMT_SGRBG12,
-> +		.cplanes = 1,
-> +		.mplanes = 1,
-> +		.bpp = { 16 },
-> +	}, {
-> +		.fourcc = V4L2_PIX_FMT_SGBRG12,
-> +		.cplanes = 1,
-> +		.mplanes = 1,
-> +		.bpp = { 16 },
-> +	}, {
-> +		.fourcc = V4L2_PIX_FMT_SBGGR12,
-> +		.cplanes = 1,
-> +		.mplanes = 1,
-> +		.bpp = { 16 },
-> +	}, {
-> +		.fourcc = V4L2_PIX_FMT_SBGGR16,
-> +		.cplanes = 1,
-> +		.mplanes = 1,
-> +		.bpp = { 16 },
-> +	}, {
-> +		.fourcc = V4L2_PIX_FMT_Y16,
-> +		.cplanes = 1,
-> +		.mplanes = 1,
-> +		.bpp = { 16 },
-> +	}
-> +};
-> +
-> +static const struct cif_input_fmt in_fmts[] = {
-> +	{
-> +		.mbus_code	= MEDIA_BUS_FMT_YUYV8_2X8,
-> +		.dvp_fmt_val	= YUV_INPUT_422 | YUV_INPUT_ORDER_YUYV,
-> +		.csi_fmt_val	= CSI_WRDDR_TYPE_YUV422,
-> +		.fmt_type	= CIF_FMT_TYPE_YUV,
-> +		.field		= V4L2_FIELD_NONE,
-> +	}, {
-> +		.mbus_code	= MEDIA_BUS_FMT_YUYV8_2X8,
-> +		.dvp_fmt_val	= YUV_INPUT_422 | YUV_INPUT_ORDER_YUYV,
-> +		.csi_fmt_val	= CSI_WRDDR_TYPE_YUV422,
-> +		.fmt_type	= CIF_FMT_TYPE_YUV,
-> +		.field		= V4L2_FIELD_INTERLACED,
-> +	}, {
-> +		.mbus_code	= MEDIA_BUS_FMT_YVYU8_2X8,
-> +		.dvp_fmt_val	= YUV_INPUT_422 | YUV_INPUT_ORDER_YVYU,
-> +		.csi_fmt_val	= CSI_WRDDR_TYPE_YUV422,
-> +		.fmt_type	= CIF_FMT_TYPE_YUV,
-> +		.field		= V4L2_FIELD_NONE,
-> +	}, {
-> +		.mbus_code	= MEDIA_BUS_FMT_YVYU8_2X8,
-> +		.dvp_fmt_val	= YUV_INPUT_422 | YUV_INPUT_ORDER_YVYU,
-> +		.csi_fmt_val	= CSI_WRDDR_TYPE_YUV422,
-> +		.fmt_type	= CIF_FMT_TYPE_YUV,
-> +		.field		= V4L2_FIELD_INTERLACED,
-> +	}, {
-> +		.mbus_code	= MEDIA_BUS_FMT_UYVY8_2X8,
-> +		.dvp_fmt_val	= YUV_INPUT_422 | YUV_INPUT_ORDER_UYVY,
-> +		.csi_fmt_val	= CSI_WRDDR_TYPE_YUV422,
-> +		.fmt_type	= CIF_FMT_TYPE_YUV,
-> +		.field		= V4L2_FIELD_NONE,
-> +	}, {
-> +		.mbus_code	= MEDIA_BUS_FMT_UYVY8_2X8,
-> +		.dvp_fmt_val	= YUV_INPUT_422 | YUV_INPUT_ORDER_UYVY,
-> +		.csi_fmt_val	= CSI_WRDDR_TYPE_YUV422,
-> +		.fmt_type	= CIF_FMT_TYPE_YUV,
-> +		.field		= V4L2_FIELD_INTERLACED,
-> +	}, {
-> +		.mbus_code	= MEDIA_BUS_FMT_VYUY8_2X8,
-> +		.dvp_fmt_val	= YUV_INPUT_422 | YUV_INPUT_ORDER_VYUY,
-> +		.csi_fmt_val	= CSI_WRDDR_TYPE_YUV422,
-> +		.fmt_type	= CIF_FMT_TYPE_YUV,
-> +		.field		= V4L2_FIELD_NONE,
-> +	}, {
-> +		.mbus_code	= MEDIA_BUS_FMT_VYUY8_2X8,
-> +		.dvp_fmt_val	= YUV_INPUT_422 | YUV_INPUT_ORDER_VYUY,
-> +		.csi_fmt_val	= CSI_WRDDR_TYPE_YUV422,
-> +		.fmt_type	= CIF_FMT_TYPE_YUV,
-> +		.field		= V4L2_FIELD_INTERLACED,
-> +	}, {
-> +		.mbus_code	= MEDIA_BUS_FMT_SBGGR8_1X8,
-> +		.dvp_fmt_val	= INPUT_MODE_RAW | RAW_DATA_WIDTH_8,
-> +		.csi_fmt_val	= CSI_WRDDR_TYPE_RAW8,
-> +		.fmt_type	= CIF_FMT_TYPE_RAW,
-> +		.field		= V4L2_FIELD_NONE,
-> +	}, {
-> +		.mbus_code	= MEDIA_BUS_FMT_SGBRG8_1X8,
-> +		.dvp_fmt_val	= INPUT_MODE_RAW | RAW_DATA_WIDTH_8,
-> +		.csi_fmt_val	= CSI_WRDDR_TYPE_RAW8,
-> +		.fmt_type	= CIF_FMT_TYPE_RAW,
-> +		.field		= V4L2_FIELD_NONE,
-> +	}, {
-> +		.mbus_code	= MEDIA_BUS_FMT_SGRBG8_1X8,
-> +		.dvp_fmt_val	= INPUT_MODE_RAW | RAW_DATA_WIDTH_8,
-> +		.csi_fmt_val	= CSI_WRDDR_TYPE_RAW8,
-> +		.fmt_type	= CIF_FMT_TYPE_RAW,
-> +		.field		= V4L2_FIELD_NONE,
-> +	}, {
-> +		.mbus_code	= MEDIA_BUS_FMT_SRGGB8_1X8,
-> +		.dvp_fmt_val	= INPUT_MODE_RAW | RAW_DATA_WIDTH_8,
-> +		.csi_fmt_val	= CSI_WRDDR_TYPE_RAW8,
-> +		.fmt_type	= CIF_FMT_TYPE_RAW,
-> +		.field		= V4L2_FIELD_NONE,
-> +	}, {
-> +		.mbus_code	= MEDIA_BUS_FMT_SBGGR10_1X10,
-> +		.dvp_fmt_val	= INPUT_MODE_RAW | RAW_DATA_WIDTH_10,
-> +		.csi_fmt_val	= CSI_WRDDR_TYPE_RAW10,
-> +		.fmt_type	= CIF_FMT_TYPE_RAW,
-> +		.field		= V4L2_FIELD_NONE,
-> +	}, {
-> +		.mbus_code	= MEDIA_BUS_FMT_SGBRG10_1X10,
-> +		.dvp_fmt_val	= INPUT_MODE_RAW | RAW_DATA_WIDTH_10,
-> +		.csi_fmt_val	= CSI_WRDDR_TYPE_RAW10,
-> +		.fmt_type	= CIF_FMT_TYPE_RAW,
-> +		.field		= V4L2_FIELD_NONE,
-> +	}, {
-> +		.mbus_code	= MEDIA_BUS_FMT_SGRBG10_1X10,
-> +		.dvp_fmt_val	= INPUT_MODE_RAW | RAW_DATA_WIDTH_10,
-> +		.csi_fmt_val	= CSI_WRDDR_TYPE_RAW10,
-> +		.fmt_type	= CIF_FMT_TYPE_RAW,
-> +		.field		= V4L2_FIELD_NONE,
-> +	}, {
-> +		.mbus_code	= MEDIA_BUS_FMT_SRGGB10_1X10,
-> +		.dvp_fmt_val	= INPUT_MODE_RAW | RAW_DATA_WIDTH_10,
-> +		.csi_fmt_val	= CSI_WRDDR_TYPE_RAW10,
-> +		.fmt_type	= CIF_FMT_TYPE_RAW,
-> +		.field		= V4L2_FIELD_NONE,
-> +	}, {
-> +		.mbus_code	= MEDIA_BUS_FMT_SBGGR12_1X12,
-> +		.dvp_fmt_val	= INPUT_MODE_RAW | RAW_DATA_WIDTH_12,
-> +		.csi_fmt_val	= CSI_WRDDR_TYPE_RAW12,
-> +		.fmt_type	= CIF_FMT_TYPE_RAW,
-> +		.field		= V4L2_FIELD_NONE,
-> +	}, {
-> +		.mbus_code	= MEDIA_BUS_FMT_SGBRG12_1X12,
-> +		.dvp_fmt_val	= INPUT_MODE_RAW | RAW_DATA_WIDTH_12,
-> +		.csi_fmt_val	= CSI_WRDDR_TYPE_RAW12,
-> +		.fmt_type	= CIF_FMT_TYPE_RAW,
-> +		.field		= V4L2_FIELD_NONE,
-> +	}, {
-> +		.mbus_code	= MEDIA_BUS_FMT_SGRBG12_1X12,
-> +		.dvp_fmt_val	= INPUT_MODE_RAW | RAW_DATA_WIDTH_12,
-> +		.csi_fmt_val	= CSI_WRDDR_TYPE_RAW12,
-> +		.fmt_type	= CIF_FMT_TYPE_RAW,
-> +		.field		= V4L2_FIELD_NONE,
-> +	}, {
-> +		.mbus_code	= MEDIA_BUS_FMT_SRGGB12_1X12,
-> +		.dvp_fmt_val	= INPUT_MODE_RAW | RAW_DATA_WIDTH_12,
-> +		.csi_fmt_val	= CSI_WRDDR_TYPE_RAW12,
-> +		.fmt_type	= CIF_FMT_TYPE_RAW,
-> +		.field		= V4L2_FIELD_NONE,
-> +	}, {
-> +		.mbus_code	= MEDIA_BUS_FMT_RGB888_1X24,
-> +		.csi_fmt_val	= CSI_WRDDR_TYPE_RGB888,
-> +		.field		= V4L2_FIELD_NONE,
-> +	}, {
-> +		.mbus_code	= MEDIA_BUS_FMT_Y8_1X8,
-> +		.dvp_fmt_val	= INPUT_MODE_RAW | RAW_DATA_WIDTH_8,
-> +		.csi_fmt_val	= CSI_WRDDR_TYPE_RAW8,
-> +		.fmt_type	= CIF_FMT_TYPE_RAW,
-> +		.field		= V4L2_FIELD_NONE,
-> +	}, {
-> +		.mbus_code	= MEDIA_BUS_FMT_Y10_1X10,
-> +		.dvp_fmt_val	= INPUT_MODE_RAW | RAW_DATA_WIDTH_10,
-> +		.csi_fmt_val	= CSI_WRDDR_TYPE_RAW10,
-> +		.fmt_type	= CIF_FMT_TYPE_RAW,
-> +		.field		= V4L2_FIELD_NONE,
-> +	}, {
-> +		.mbus_code	= MEDIA_BUS_FMT_Y12_1X12,
-> +		.dvp_fmt_val	= INPUT_MODE_RAW | RAW_DATA_WIDTH_12,
-> +		.csi_fmt_val	= CSI_WRDDR_TYPE_RAW12,
-> +		.fmt_type	= CIF_FMT_TYPE_RAW,
-> +		.field		= V4L2_FIELD_NONE,
-> +	}
-> +};
-> +
-> +static const struct
-> +cif_input_fmt *get_input_fmt(struct v4l2_subdev *sd)
-> +{
-> +	struct v4l2_subdev_format fmt;
-> +	int ret;
-> +	u32 i;
-> +
-> +	fmt.which = V4L2_SUBDEV_FORMAT_ACTIVE;
-> +	fmt.pad = 0;
-> +	ret = v4l2_subdev_call(sd, pad, get_fmt, NULL, &fmt);
-> +	if (ret < 0) {
-> +		v4l2_warn(sd->v4l2_dev,
-> +			  "sensor fmt invalid, set to default size\n");
-> +		goto set_default;
-> +	}
-> +
-> +	for (i = 0; i < ARRAY_SIZE(in_fmts); i++)
-> +		if (fmt.format.code == in_fmts[i].mbus_code &&
-> +		    fmt.format.field == in_fmts[i].field)
-> +			return &in_fmts[i];
-> +
-> +	v4l2_err(sd->v4l2_dev, "remote sensor mbus code not supported\n");
-> +
-> +set_default:
-> +	return NULL;
-> +}
-> +
-> +	static const struct
-> +cif_output_fmt *find_output_fmt(struct rkcif_stream *stream, u32 pixelfmt)
-> +{
-> +	const struct cif_output_fmt *fmt;
-> +	u32 i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(out_fmts); i++) {
-> +		fmt = &out_fmts[i];
-> +		if (fmt->fourcc == pixelfmt)
-> +			return fmt;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +/***************************** stream operations ******************************/
-> +static void rkcif_assign_new_buffer_oneframe(struct rkcif_stream *stream)
-> +{
-> +	struct rkcif_dummy_buffer *dummy_buf = &stream->dummy_buf;
-> +	struct rkcif_device *dev = stream->cifdev;
-> +	void __iomem *base = dev->base_addr;
-> +
-> +	/* Set up an empty buffer for the next frame */
-> +	spin_lock(&stream->vbq_lock);
-> +	if (!list_empty(&stream->buf_head)) {
-> +		stream->curr_buf = list_first_entry(&stream->buf_head,
-> +					struct rkcif_buffer, queue);
-> +		list_del(&stream->curr_buf->queue);
-> +	} else {
-> +		stream->curr_buf = NULL;
-> +	}
-> +	spin_unlock(&stream->vbq_lock);
-> +
-> +	if (stream->curr_buf) {
-> +		write_cif_reg(base, CIF_FRM0_ADDR_Y,
-> +			      stream->curr_buf->buff_addr[RKCIF_PLANE_Y]);
-> +		write_cif_reg(base, CIF_FRM0_ADDR_UV,
-> +			      stream->curr_buf->buff_addr[RKCIF_PLANE_CBCR]);
-> +		write_cif_reg(base, CIF_FRM1_ADDR_Y,
-> +			      stream->curr_buf->buff_addr[RKCIF_PLANE_Y]);
-> +		write_cif_reg(base, CIF_FRM1_ADDR_UV,
-> +			      stream->curr_buf->buff_addr[RKCIF_PLANE_CBCR]);
-> +	} else {
-> +		write_cif_reg(base, CIF_FRM0_ADDR_Y, dummy_buf->dma_addr);
-> +		write_cif_reg(base, CIF_FRM0_ADDR_UV, dummy_buf->dma_addr);
-> +		write_cif_reg(base, CIF_FRM1_ADDR_Y, dummy_buf->dma_addr);
-> +		write_cif_reg(base, CIF_FRM1_ADDR_UV, dummy_buf->dma_addr);
-> +	}
-> +}
-> +
-> +static void rkcif_stream_stop(struct rkcif_stream *stream)
-> +{
-> +	struct rkcif_device *cif_dev = stream->cifdev;
-> +	void __iomem *base = cif_dev->base_addr;
-> +	u32 val;
-> +
-> +	val = read_cif_reg(base, CIF_CTRL);
-> +	write_cif_reg(base, CIF_CTRL, val & (~ENABLE_CAPTURE));
-> +	write_cif_reg(base, CIF_INTEN, 0x0);
-> +	write_cif_reg(base, CIF_INTSTAT, 0x3ff);
-> +	write_cif_reg(base, CIF_FRAME_STATUS, 0x0);
-> +
-> +	stream->state = RKCIF_STATE_READY;
-> +}
-> +
-> +static int rkcif_queue_setup(struct vb2_queue *queue,
-> +			     unsigned int *num_buffers,
-> +			     unsigned int *num_planes,
-> +			     unsigned int sizes[],
-> +			     struct device *alloc_devs[])
-> +{
-> +	struct rkcif_stream *stream = queue->drv_priv;
-> +	const struct v4l2_pix_format_mplane *pixm;
-> +	const struct cif_output_fmt *cif_fmt;
-> +	u32 i;
-> +
-> +	pixm = &stream->pixm;
-> +	cif_fmt = stream->cif_fmt_out;
-> +
-> +	if (*num_planes) {
-> +		if (*num_planes != cif_fmt->mplanes)
-> +			return -EINVAL;
-> +
-> +		for (i = 0; i < cif_fmt->mplanes; i++)
-> +			if (sizes[i] < pixm->plane_fmt[i].sizeimage)
-> +				return -EINVAL;
-> +		return 0;
-> +	}
-> +
-> +	*num_planes = cif_fmt->mplanes;
-> +
-> +	for (i = 0; i < cif_fmt->mplanes; i++) {
-> +		const struct v4l2_plane_pix_format *plane_fmt;
-> +
-> +		plane_fmt = &pixm->plane_fmt[i];
-> +		sizes[i] = plane_fmt->sizeimage;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * The vb2_buffer are stored in rkcif_buffer, in order to unify
-> + * mplane buffer and none-mplane buffer.
-> + */
-> +static void rkcif_buf_queue(struct vb2_buffer *vb)
-> +{
-> +	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
-> +	struct rkcif_buffer *cifbuf = to_rkcif_buffer(vbuf);
-> +	struct vb2_queue *queue = vb->vb2_queue;
-> +	struct rkcif_stream *stream = queue->drv_priv;
-> +	struct v4l2_pix_format_mplane *pixm = &stream->pixm;
-> +	const struct cif_output_fmt *fmt = stream->cif_fmt_out;
-> +	unsigned long lock_flags = 0;
-> +	int i;
-> +
-> +	memset(cifbuf->buff_addr, 0, sizeof(cifbuf->buff_addr));
-> +	/* If mplanes > 1, every c-plane has its own m-plane,
-> +	 * otherwise, multiple c-planes are in the same m-plane
-> +	 */
-> +	for (i = 0; i < fmt->mplanes; i++)
-> +		cifbuf->buff_addr[i] = vb2_dma_contig_plane_dma_addr(vb, i);
-> +
-> +	if (fmt->mplanes == 1) {
-> +		for (i = 0; i < fmt->cplanes - 1; i++)
-> +			cifbuf->buff_addr[i + 1] = cifbuf->buff_addr[i] +
-> +				pixm->plane_fmt[i].bytesperline * pixm->height;
-> +	}
-> +
-> +	spin_lock_irqsave(&stream->vbq_lock, lock_flags);
-> +	list_add_tail(&cifbuf->queue, &stream->buf_head);
-> +	spin_unlock_irqrestore(&stream->vbq_lock, lock_flags);
-> +}
-> +
-> +static int rkcif_create_dummy_buf(struct rkcif_stream *stream)
-> +{
-> +	struct rkcif_dummy_buffer *dummy_buf = &stream->dummy_buf;
-> +	struct rkcif_device *dev = stream->cifdev;
-> +
-> +	/* get a maximum plane size */
-> +	dummy_buf->size = max3(stream->pixm.plane_fmt[0].bytesperline *
-> +		stream->pixm.height,
-> +		stream->pixm.plane_fmt[1].sizeimage,
-> +		stream->pixm.plane_fmt[2].sizeimage);
-> +
-> +	dummy_buf->vaddr = dma_alloc_coherent(dev->dev, dummy_buf->size,
-> +					      &dummy_buf->dma_addr,
-> +					      GFP_KERNEL);
-> +	if (!dummy_buf->vaddr) {
-> +		v4l2_err(&dev->v4l2_dev,
-> +			 "Failed to allocate the memory for dummy buffer\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	v4l2_info(&dev->v4l2_dev, "Allocate dummy buffer, size: 0x%08x\n",
-> +		  dummy_buf->size);
-> +
-> +	return 0;
-> +}
-> +
-> +static void rkcif_destroy_dummy_buf(struct rkcif_stream *stream)
-> +{
-> +	struct rkcif_dummy_buffer *dummy_buf = &stream->dummy_buf;
-> +	struct rkcif_device *dev = stream->cifdev;
-> +
-> +	dma_free_coherent(dev->dev, dummy_buf->size,
-> +			  dummy_buf->vaddr, dummy_buf->dma_addr);
-> +}
-> +
-> +static void rkcif_stop_streaming(struct vb2_queue *queue)
-> +{
-> +	struct rkcif_stream *stream = queue->drv_priv;
-> +	struct rkcif_device *dev = stream->cifdev;
-> +	struct rkcif_buffer *buf;
-> +	struct v4l2_subdev *sd;
-> +	int ret;
-> +
-> +	stream->stopping = true;
-> +	ret = wait_event_timeout(stream->wq_stopped,
-> +				 stream->state != RKCIF_STATE_STREAMING,
-> +				 msecs_to_jiffies(1000));
-> +	if (!ret) {
-> +		rkcif_stream_stop(stream);
-> +		stream->stopping = false;
-> +	}
-> +	pm_runtime_put(dev->dev);
-> +
-> +	/* stop the sub device*/
-> +	sd = dev->sensor.sd;
-> +	v4l2_subdev_call(sd, video, s_stream, 0);
-> +	v4l2_subdev_call(sd, core, s_power, 0);
-> +
-> +	/* release buffers */
-> +	if (stream->curr_buf) {
-> +		list_add_tail(&stream->curr_buf->queue, &stream->buf_head);
-> +		stream->curr_buf = NULL;
-> +	}
-> +	if (stream->next_buf) {
-> +		list_add_tail(&stream->next_buf->queue, &stream->buf_head);
-> +		stream->next_buf = NULL;
-> +	}
-> +
-> +	while (!list_empty(&stream->buf_head)) {
-> +		buf = list_first_entry(&stream->buf_head,
-> +				       struct rkcif_buffer, queue);
-> +		list_del(&buf->queue);
-> +		vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_ERROR);
-> +	}
-> +
-> +	rkcif_destroy_dummy_buf(stream);
-> +}
-> +
-> +static u32 rkcif_determine_input_mode(struct rkcif_device *dev)
-> +{
-> +	struct rkcif_sensor_info *sensor_info = &dev->sensor;
-> +	struct rkcif_stream *stream = &dev->stream;
-> +	v4l2_std_id std;
-> +	u32 mode = INPUT_MODE_YUV;
-> +	int ret;
-> +
-> +	ret = v4l2_subdev_call(sensor_info->sd, video, querystd, &std);
-> +	if (ret == 0) {
-> +		/* retrieve std from sensor if exist */
-> +		switch (std) {
-> +		case V4L2_STD_NTSC:
-> +			mode = INPUT_MODE_NTSC;
-> +			break;
-> +		case V4L2_STD_PAL:
-> +			mode = INPUT_MODE_PAL;
-> +			break;
-> +		case V4L2_STD_ATSC:
-> +			mode = INPUT_MODE_BT1120;
-> +			break;
-> +		default:
-> +			v4l2_err(&dev->v4l2_dev,
-> +				 "std: %lld is not supported", std);
-> +		}
-> +	} else {
-> +		/* determine input mode by mbus_code (fmt_type) */
-> +		switch (stream->cif_fmt_in->fmt_type) {
-> +		case CIF_FMT_TYPE_YUV:
-> +			mode = INPUT_MODE_YUV;
-> +			break;
-> +		case CIF_FMT_TYPE_RAW:
-> +			mode = INPUT_MODE_RAW;
-> +			break;
-> +		}
-> +	}
-> +
-> +	return mode;
-> +}
-> +
-> +static inline u32 rkcif_scl_ctl(struct rkcif_stream *stream)
-> +{
-> +	u32 fmt_type = stream->cif_fmt_in->fmt_type;
-> +
-> +	return (fmt_type == CIF_FMT_TYPE_YUV) ?
-> +		ENABLE_YUV_16BIT_BYPASS : ENABLE_RAW_16BIT_BYPASS;
-> +}
-> +
-> +static int rkcif_stream_start(struct rkcif_stream *stream)
-> +{
-> +	u32 val, mbus_flags, href_pol, vsync_pol,
-> +	    xfer_mode = 0, yc_swap = 0, skip_top = 0;
-> +	struct rkcif_device *dev = stream->cifdev;
-> +	struct rkcif_sensor_info *sensor_info;
-> +	void __iomem *base = dev->base_addr;
-> +
-> +	sensor_info = &dev->sensor;
-> +	stream->frame_idx = 0;
-> +
-> +	mbus_flags = sensor_info->mbus.flags;
-> +	href_pol = (mbus_flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH) ?
-> +			HSY_HIGH_ACTIVE : HSY_LOW_ACTIVE;
-> +	vsync_pol = (mbus_flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH) ?
-> +			VSY_HIGH_ACTIVE : VSY_LOW_ACTIVE;
-> +
-> +	if (rkcif_determine_input_mode(dev) == INPUT_MODE_BT1120) {
-> +		if (stream->cif_fmt_in->field == V4L2_FIELD_NONE)
-> +			xfer_mode = BT1120_TRANSMIT_PROGRESS;
-> +		else
-> +			xfer_mode = BT1120_TRANSMIT_INTERFACE;
-> +		if (!CIF_FETCH_IS_Y_FIRST(stream->cif_fmt_in->dvp_fmt_val))
-> +			yc_swap = BT1120_YC_SWAP;
-> +	}
-> +
-> +	val = vsync_pol | href_pol | rkcif_determine_input_mode(dev) |
-> +	      stream->cif_fmt_out->fmt_val | stream->cif_fmt_in->dvp_fmt_val |
-> +	      xfer_mode | yc_swap;
-> +	write_cif_reg(base, CIF_FOR, val);
-> +	val = stream->pixm.width;
-> +	if (stream->cif_fmt_in->fmt_type == CIF_FMT_TYPE_RAW)
-> +		val = stream->pixm.width * 2;
-> +	write_cif_reg(base, CIF_VIR_LINE_WIDTH, val);
-> +	write_cif_reg(base, CIF_SET_SIZE,
-> +		      stream->pixm.width | (stream->pixm.height << 16));
-> +
-> +	v4l2_subdev_call(sensor_info->sd, sensor, g_skip_top_lines, &skip_top);
-> +
-> +	write_cif_reg(base, CIF_CROP, skip_top << CIF_CROP_Y_SHIFT);
-> +	write_cif_reg(base, CIF_FRAME_STATUS, FRAME_STAT_CLS);
-> +	write_cif_reg(base, CIF_INTSTAT, INTSTAT_CLS);
-> +	write_cif_reg(base, CIF_SCL_CTRL, rkcif_scl_ctl(stream));
-> +
-> +	rkcif_assign_new_buffer_oneframe(stream);
-> +
-> +	write_cif_reg(base, CIF_INTEN, FRAME_END_EN | LINE_ERR_EN |
-> +			    PST_INF_FRAME_END);
-> +
-> +	if (dev->data->chip_id == CHIP_RK1808_CIF &&
-> +	    rkcif_determine_input_mode(dev) == INPUT_MODE_BT1120)
-> +		write_cif_reg(base, CIF_CTRL,
-> +			      AXI_BURST_16 | MODE_PINGPONG | ENABLE_CAPTURE);
-> +	else
-> +		write_cif_reg(base, CIF_CTRL,
-> +			      AXI_BURST_16 | MODE_ONEFRAME | ENABLE_CAPTURE);
-> +
-> +	stream->state = RKCIF_STATE_STREAMING;
-> +
-> +	return 0;
-> +}
-> +
-> +static int rkcif_start_streaming(struct vb2_queue *queue, unsigned int count)
-> +{
-> +	struct rkcif_stream *stream = queue->drv_priv;
-> +	struct rkcif_device *dev = stream->cifdev;
-> +	struct v4l2_device *v4l2_dev = &dev->v4l2_dev;
-> +	struct v4l2_subdev *sd;
-> +	int ret;
-> +
-> +	if (WARN_ON(stream->state != RKCIF_STATE_READY)) {
-> +		ret = -EBUSY;
-> +		v4l2_err(v4l2_dev, "stream in busy state\n");
-> +		goto destroy_buf;
-> +	}
-> +
-> +	stream->cif_fmt_in = get_input_fmt(dev->sensor.sd);
-> +
-> +	ret = rkcif_create_dummy_buf(stream);
-> +	if (ret < 0) {
-> +		v4l2_err(v4l2_dev, "Failed to create dummy_buf, %d\n", ret);
-> +		goto destroy_buf;
-> +	}
-> +
-> +	ret = pm_runtime_get_sync(dev->dev);
-> +	if (ret < 0) {
-> +		v4l2_err(v4l2_dev, "Failed to get runtime pm, %d\n", ret);
-> +		goto destroy_dummy_buf;
-> +	}
-> +
-> +	/* start sub-devices */
-> +	sd = dev->sensor.sd;
-> +	ret = v4l2_subdev_call(sd, core, s_power, 1);
-> +	if (ret < 0 && ret != -ENOIOCTLCMD)
-> +		goto runtime_put;
-> +	ret = v4l2_subdev_call(sd, video, s_stream, 1);
-> +	if (ret < 0)
-> +		goto subdev_poweroff;
-> +
-> +	ret = rkcif_stream_start(stream);
-> +	if (ret < 0)
-> +		goto stop_stream;
-> +
-> +	return 0;
-> +
-> +stop_stream:
-> +	rkcif_stream_stop(stream);
-> +subdev_poweroff:
-> +	v4l2_subdev_call(sd, core, s_power, 0);
-> +runtime_put:
-> +	pm_runtime_put(dev->dev);
-> +destroy_dummy_buf:
-> +	rkcif_destroy_dummy_buf(stream);
-> +destroy_buf:
-> +	while (!list_empty(&stream->buf_head)) {
-> +		struct rkcif_buffer *buf;
-> +
-> +		buf = list_first_entry(&stream->buf_head,
-> +				       struct rkcif_buffer, queue);
-> +		list_del(&buf->queue);
-> +		vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_QUEUED);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static struct vb2_ops rkcif_vb2_ops = {
-> +	.queue_setup = rkcif_queue_setup,
-> +	.buf_queue = rkcif_buf_queue,
-> +	.wait_prepare = vb2_ops_wait_prepare,
-> +	.wait_finish = vb2_ops_wait_finish,
-> +	.stop_streaming = rkcif_stop_streaming,
-> +	.start_streaming = rkcif_start_streaming,
-> +};
-> +
-> +static int rkcif_init_vb2_queue(struct vb2_queue *q,
-> +				struct rkcif_stream *stream,
-> +				enum v4l2_buf_type buf_type)
-> +{
-> +	q->type = buf_type;
-> +	q->io_modes = VB2_MMAP | VB2_DMABUF;
-> +	q->drv_priv = stream;
-> +	q->ops = &rkcif_vb2_ops;
-> +	q->mem_ops = &vb2_dma_contig_memops;
-> +	q->buf_struct_size = sizeof(struct rkcif_buffer);
-> +	q->min_buffers_needed = CIF_REQ_BUFS_MIN;
-> +	q->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
-> +	q->lock = &stream->vlock;
-> +	q->dev = stream->cifdev->dev;
-> +
-> +	return vb2_queue_init(q);
-> +}
-> +
-> +static void rkcif_set_fmt(struct rkcif_stream *stream,
-> +			  struct v4l2_pix_format_mplane *pixm,
-> +			  bool try)
-> +{
-> +	const struct cif_output_fmt *fmt;
-> +	struct v4l2_rect input_rect;
-> +	unsigned int imagesize = 0, planes;
-> +	u32 xsubs = 1, ysubs = 1, i;
-> +
-> +	fmt = find_output_fmt(stream, pixm->pixelformat);
-> +	if (!fmt)
-> +		fmt = &out_fmts[0];
-> +
-> +	input_rect.width = CIF_MAX_WIDTH;
-> +	input_rect.height = CIF_MAX_HEIGHT;
-> +
-> +	pixm->width = clamp_t(u32, pixm->width,
-> +				CIF_MIN_WIDTH, input_rect.width);
-> +	pixm->height = clamp_t(u32, pixm->height,
-> +				CIF_MIN_HEIGHT, input_rect.height);
-> +
-> +	pixm->num_planes = fmt->mplanes;
-> +	pixm->quantization = V4L2_QUANTIZATION_DEFAULT;
-> +	pixm->colorspace = V4L2_COLORSPACE_SRGB;
-> +
-> +	pixm->xfer_func = V4L2_MAP_XFER_FUNC_DEFAULT(pixm->colorspace);
-> +	pixm->ycbcr_enc = V4L2_MAP_YCBCR_ENC_DEFAULT(pixm->colorspace);
-> +
-> +	pixm->pixelformat = fmt->fourcc;
-> +	pixm->field = V4L2_FIELD_NONE;
-> +
-> +	/* calculate plane size and image size */
-> +	fcc_xysubs(fmt->fourcc, &xsubs, &ysubs);
-> +
-> +	planes = fmt->cplanes ? fmt->cplanes : fmt->mplanes;
-> +
-> +	for (i = 0; i < planes; i++) {
-> +		struct v4l2_plane_pix_format *plane_fmt;
-> +		int width, height, bpl, size;
-> +
-> +		if (i == 0) {
-> +			width = pixm->width;
-> +			height = pixm->height;
-> +		} else {
-> +			width = pixm->width / xsubs;
-> +			height = pixm->height / ysubs;
-> +		}
-> +
-> +		bpl = width * fmt->bpp[i] / 8;
-> +		size = bpl * height;
-> +		imagesize += size;
-> +
-> +		if (fmt->mplanes > i) {
-> +			/* Set bpl and size for each mplane */
-> +			plane_fmt = pixm->plane_fmt + i;
-> +			plane_fmt->bytesperline = bpl;
-> +			plane_fmt->sizeimage = size;
-> +		}
-> +	}
-> +
-> +	/* convert to non-MPLANE format.
-> +	 * It's important since we want to unify non-MPLANE
-> +	 * and MPLANE.
-> +	 */
-> +	if (fmt->mplanes == 1)
-> +		pixm->plane_fmt[0].sizeimage = imagesize;
-> +
-> +	if (!try) {
-> +		stream->cif_fmt_out = fmt;
-> +		stream->pixm = *pixm;
-> +	}
-> +}
-> +
-> +void rkcif_stream_init(struct rkcif_device *dev)
-> +{
-> +	struct rkcif_stream *stream = &dev->stream;
-> +	struct v4l2_pix_format_mplane pixm;
-> +
-> +	memset(stream, 0, sizeof(*stream));
-> +	memset(&pixm, 0, sizeof(pixm));
-> +	stream->cifdev = dev;
-> +
-> +	INIT_LIST_HEAD(&stream->buf_head);
-> +	spin_lock_init(&stream->vbq_lock);
-> +	stream->state = RKCIF_STATE_READY;
-> +	init_waitqueue_head(&stream->wq_stopped);
-> +
-> +	/* Set default format */
-> +	pixm.pixelformat = V4L2_PIX_FMT_NV12;
-> +	pixm.width = RKCIF_DEFAULT_WIDTH;
-> +	pixm.height = RKCIF_DEFAULT_HEIGHT;
-> +	rkcif_set_fmt(stream, &pixm, false);
-> +
-> +	stream->crop.left = 0;
-> +	stream->crop.top = 0;
-> +	stream->crop.width = 10;
-> +	stream->crop.height = 10;
-> +}
-> +
-> +static int rkcif_fh_open(struct file *filp)
-> +{
-> +	struct video_device *vdev = video_devdata(filp);
-> +	struct rkcif_stream *stream = to_rkcif_stream(vdev);
-> +	struct rkcif_device *cifdev = stream->cifdev;
-> +
-> +	rkcif_soft_reset(cifdev);
-> +
-> +	return v4l2_fh_open(filp);
-> +}
-> +
-> +static const struct v4l2_file_operations rkcif_fops = {
-> +	.open = rkcif_fh_open,
-> +	.release = vb2_fop_release,
-> +	.unlocked_ioctl = video_ioctl2,
-> +	.poll = vb2_fop_poll,
-> +	.mmap = vb2_fop_mmap,
-> +};
-> +
-> +static int rkcif_enum_input(struct file *file, void *priv,
-> +			    struct v4l2_input *input)
-> +{
-> +	if (input->index > 0)
-> +		return -EINVAL;
-> +
-> +	input->type = V4L2_INPUT_TYPE_CAMERA;
-> +	strlcpy(input->name, "Camera", sizeof(input->name));
-> +
-> +	return 0;
-> +}
-> +
-> +static int rkcif_try_fmt_vid_cap_mplane(struct file *file, void *fh,
-> +					struct v4l2_format *f)
-> +{
-> +	struct rkcif_stream *stream = video_drvdata(file);
-> +
-> +	rkcif_set_fmt(stream, &f->fmt.pix_mp, true);
-> +
-> +	return 0;
-> +}
-> +
-> +static int rkcif_enum_fmt_vid_cap(struct file *file, void *priv,
-> +					 struct v4l2_fmtdesc *f)
-> +{
-> +	const struct cif_output_fmt *fmt = NULL;
-> +
-> +	if (f->index >= ARRAY_SIZE(out_fmts))
-> +		return -EINVAL;
-> +
-> +	fmt = &out_fmts[f->index];
-> +	f->pixelformat = fmt->fourcc;
-> +
-> +	return 0;
-> +}
-> +
-> +static int rkcif_s_fmt_vid_cap_mplane(struct file *file,
-> +				      void *priv, struct v4l2_format *f)
-> +{
-> +	struct rkcif_stream *stream = video_drvdata(file);
-> +
-> +	rkcif_set_fmt(stream, &f->fmt.pix_mp, false);
-> +
-> +	return 0;
-> +}
-> +
-> +static int rkcif_g_fmt_vid_cap_mplane(struct file *file, void *fh,
-> +				      struct v4l2_format *f)
-> +{
-> +	struct rkcif_stream *stream = video_drvdata(file);
-> +
-> +	f->fmt.pix_mp = stream->pixm;
-> +
-> +	return 0;
-> +}
-> +
-> +static int rkcif_querycap(struct file *file, void *priv,
-> +			  struct v4l2_capability *cap)
-> +{
-> +	struct rkcif_stream *stream = video_drvdata(file);
-> +	struct device *dev = stream->cifdev->dev;
-> +
-> +	strlcpy(cap->driver, dev->driver->name, sizeof(cap->driver));
-> +	strlcpy(cap->card, dev->driver->name, sizeof(cap->card));
-> +	snprintf(cap->bus_info, sizeof(cap->bus_info),
-> +		 "platform:%s", dev_name(dev));
-> +
-> +	return 0;
-> +}
-> +
-> +static int rkcif_enum_framesizes(struct file *file, void *fh,
-> +				 struct v4l2_frmsizeenum *fsize)
-> +{
-> +	struct rkcif_stream *stream = video_drvdata(file);
-> +	struct rkcif_device *dev = stream->cifdev;
-> +	struct v4l2_subdev_frame_size_enum fse = {
-> +		.index = fsize->index,
-> +		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
-> +	};
-> +	const struct cif_output_fmt *fmt;
-> +	int ret;
-> +
-> +	if (!dev->sensor.sd)
-> +		return -EINVAL;
-> +
-> +	fmt = find_output_fmt(stream, fsize->pixel_format);
-> +	if (!fmt)
-> +		return -EINVAL;
-> +
-> +	fse.code = fmt->mbus;
-> +
-> +	ret = v4l2_subdev_call(dev->sensor.sd, pad, enum_frame_size,
-> +			       NULL, &fse);
-> +	if (ret)
-> +		return ret;
-> +
-> +	fsize->type = V4L2_FRMSIZE_TYPE_DISCRETE;
-> +	fsize->discrete.width = fse.max_width;
-> +	fsize->discrete.height = fse.max_height;
-> +
-> +	return 0;
-> +}
-> +
-> +static int rkcif_g_input(struct file *file, void *fh, unsigned int *i)
-> +{
-> +	*i = 0;
-> +	return 0;
-> +}
-> +
-> +static int rkcif_s_input(struct file *file, void *fh, unsigned int i)
-> +{
-> +	if (i)
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct v4l2_ioctl_ops rkcif_v4l2_ioctl_ops = {
-> +	.vidioc_reqbufs = vb2_ioctl_reqbufs,
-> +	.vidioc_querybuf = vb2_ioctl_querybuf,
-> +	.vidioc_create_bufs = vb2_ioctl_create_bufs,
-> +	.vidioc_qbuf = vb2_ioctl_qbuf,
-> +	.vidioc_expbuf = vb2_ioctl_expbuf,
-> +	.vidioc_dqbuf = vb2_ioctl_dqbuf,
-> +	.vidioc_prepare_buf = vb2_ioctl_prepare_buf,
-> +	.vidioc_streamon = vb2_ioctl_streamon,
-> +	.vidioc_streamoff = vb2_ioctl_streamoff,
-> +
-> +	.vidioc_enum_fmt_vid_cap = rkcif_enum_fmt_vid_cap,
-> +	.vidioc_try_fmt_vid_cap_mplane = rkcif_try_fmt_vid_cap_mplane,
-> +	.vidioc_s_fmt_vid_cap_mplane = rkcif_s_fmt_vid_cap_mplane,
-> +	.vidioc_g_fmt_vid_cap_mplane = rkcif_g_fmt_vid_cap_mplane,
-> +	.vidioc_querycap = rkcif_querycap,
-> +	.vidioc_enum_framesizes = rkcif_enum_framesizes,
-> +
-> +	.vidioc_enum_input = rkcif_enum_input,
-> +	.vidioc_g_input = rkcif_g_input,
-> +	.vidioc_s_input = rkcif_s_input,
-> +};
-> +
-> +void rkcif_unregister_stream_vdev(struct rkcif_device *dev)
-> +{
-> +	struct rkcif_stream *stream = &dev->stream;
-> +
-> +	media_entity_cleanup(&stream->vdev.entity);
-> +	video_unregister_device(&stream->vdev);
-> +}
-> +
-> +int rkcif_register_stream_vdev(struct rkcif_device *dev)
-> +{
-> +	struct rkcif_stream *stream = &dev->stream;
-> +	struct v4l2_device *v4l2_dev = &dev->v4l2_dev;
-> +	struct video_device *vdev = &stream->vdev;
-> +	int ret;
-> +
-> +	strlcpy(vdev->name, CIF_VIDEODEVICE_NAME, sizeof(vdev->name));
-> +	mutex_init(&stream->vlock);
-> +
-> +	vdev->ioctl_ops = &rkcif_v4l2_ioctl_ops;
-> +	vdev->release = video_device_release_empty;
-> +	vdev->fops = &rkcif_fops;
-> +	vdev->minor = -1;
-> +	vdev->v4l2_dev = v4l2_dev;
-> +	vdev->lock = &stream->vlock;
-> +	vdev->device_caps = V4L2_CAP_VIDEO_CAPTURE_MPLANE |
-> +			    V4L2_CAP_STREAMING;
-> +	video_set_drvdata(vdev, stream);
-> +	vdev->vfl_dir = VFL_DIR_RX;
-> +	stream->pad.flags = MEDIA_PAD_FL_SINK;
-> +
-> +	rkcif_init_vb2_queue(&stream->buf_queue, stream,
-> +			V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE |
-> +			V4L2_BUF_TYPE_VIDEO_CAPTURE);
-> +	vdev->queue = &stream->buf_queue;
-> +	strscpy(vdev->name, KBUILD_MODNAME, sizeof(vdev->name));
-> +
-> +	ret = video_register_device(vdev, VFL_TYPE_VIDEO, -1);
-> +	if (ret < 0) {
-> +		v4l2_err(v4l2_dev,
-> +			 "video_register_device failed with error %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = media_entity_pads_init(&vdev->entity, 1, &stream->pad);
-> +	if (ret < 0)
-> +		goto unreg;
-> +
-> +	return 0;
-> +unreg:
-> +	video_unregister_device(vdev);
-> +	return ret;
-> +}
-> +
-> +static void rkcif_vb_done_oneframe(struct rkcif_stream *stream,
-> +				   struct vb2_v4l2_buffer *vb_done)
-> +{
-> +	const struct cif_output_fmt *fmt = stream->cif_fmt_out;
-> +	u32 i;
-> +
-> +	/* Dequeue a filled buffer */
-> +	for (i = 0; i < fmt->mplanes; i++) {
-> +		vb2_set_plane_payload(&vb_done->vb2_buf, i,
-> +			stream->pixm.plane_fmt[i].sizeimage);
-> +	}
-> +	vb_done->vb2_buf.timestamp = ktime_get_ns();
-> +	vb2_buffer_done(&vb_done->vb2_buf, VB2_BUF_STATE_DONE);
-> +}
-> +
-> +void rkcif_irq_oneframe(struct rkcif_device *cif_dev)
-> +{
-> +	struct rkcif_stream *stream = &cif_dev->stream;
-> +	u32 lastline, lastpix, ctl, cif_frmst, intstat;
-> +	void __iomem *base = cif_dev->base_addr;
-> +
-> +	intstat = read_cif_reg(base, CIF_INTSTAT);
-> +	cif_frmst = read_cif_reg(base, CIF_FRAME_STATUS);
-> +	lastline = CIF_FETCH_Y_LAST_LINE(read_cif_reg(base, CIF_LAST_LINE));
-> +	lastpix = read_cif_reg(base, CIF_LAST_PIX);
-> +	ctl = read_cif_reg(base, CIF_CTRL);
-> +
-> +	/* There are two irqs enabled:
-> +	 *  - PST_INF_FRAME_END: cif FIFO is ready, this is prior to FRAME_END
-> +	 *  -         FRAME_END: cif has saved frame to memory, a frame ready
-> +	 */
-> +
-> +	if ((intstat & PST_INF_FRAME_END)) {
-> +		write_cif_reg(base, CIF_INTSTAT, PST_INF_FRAME_END_CLR);
-> +
-> +		if (stream->stopping)
-> +			/* To stop CIF ASAP, before FRAME_END irq */
-> +			write_cif_reg(base, CIF_CTRL, ctl & (~ENABLE_CAPTURE));
-> +	}
-> +
-> +	if ((intstat & LINE_ERR)) {
-> +		write_cif_reg(base, CIF_INTSTAT, LINE_ERR_CLR);
-> +
-> +		if (stream->stopping) {
-> +			rkcif_stream_stop(stream);
-> +			stream->stopping = false;
-> +			wake_up(&stream->wq_stopped);
+> +		/* silently handle all other valid messages */
+> +		if (msg >= RP_MBOX_READY && msg < RP_MBOX_END_MSG)
+> +			return;
+> +		if (msg > kproc->rproc->max_notifyid) {
+> +			dev_dbg(dev, "dropping unknown message 0x%x", msg);
 > +			return;
 > +		}
-> +
-> +		v4l2_err(&cif_dev->v4l2_dev,
-> +			 "Bad frame, irq:0x%x frmst:0x%x size:%dx%d\n",
-> +			 intstat, cif_frmst, lastline, lastpix);
-> +		/* Clear status to receive into the same buffer */
-> +		write_cif_reg(base, CIF_FRAME_STATUS, FRM0_STAT_CLS);
-> +		return;
-> +	}
-> +
-> +
-> +	if ((intstat & FRAME_END)) {
-> +		struct vb2_v4l2_buffer *vb_done = NULL;
-> +
-> +		write_cif_reg(base, CIF_INTSTAT, FRAME_END_CLR);
-> +
-> +		if (stream->stopping) {
-> +			rkcif_stream_stop(stream);
-> +			stream->stopping = false;
-> +			wake_up(&stream->wq_stopped);
-> +			return;
-> +		}
-> +
-> +		if (lastline != stream->pixm.height ||
-> +		    !(cif_frmst & CIF_F0_READY)) {
-> +			v4l2_err(&cif_dev->v4l2_dev,
-> +				 "Bad frame, irq:0x%x frmst:0x%x size:%dx%d\n",
-> +				 intstat, cif_frmst, lastline, lastpix);
-> +			/* Clear status to receive into the same buffer */
-> +			write_cif_reg(base, CIF_FRAME_STATUS, FRM0_STAT_CLS);
-> +			return;
-> +		}
-> +
-> +		if (stream->curr_buf)
-> +			vb_done = &stream->curr_buf->vb;
-> +		rkcif_assign_new_buffer_oneframe(stream);
-> +
-> +		/* In one-frame mode, must clear status manually to enable
-> +		 * the next frame end irq
-> +		 */
-> +		write_cif_reg(base, CIF_FRAME_STATUS, FRM0_STAT_CLS);
-> +
-> +		if (vb_done)
-> +			rkcif_vb_done_oneframe(stream, vb_done);
-> +
-> +		stream->frame_idx++;
+> +		/* msg contains the index of the triggered vring */
+> +		if (rproc_vq_interrupt(kproc->rproc, msg) == IRQ_NONE)
+> +			dev_dbg(dev, "no message was found in vqid %d\n", msg);
 > +	}
 > +}
-> diff --git a/drivers/media/platform/rockchip/cif/dev.c b/drivers/media/platform/rockchip/cif/dev.c
-> new file mode 100644
-> index 000000000000..dbd5fdbd1cef
-> --- /dev/null
-> +++ b/drivers/media/platform/rockchip/cif/dev.c
-> @@ -0,0 +1,358 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Rockchip CIF Driver
-> + *
-> + * Copyright (C) 2018 Rockchip Electronics Co., Ltd.
-> + */
 > +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_graph.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_reserved_mem.h>
-> +#include <linux/reset.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/pinctrl/consumer.h>
-> +#include <media/v4l2-fwnode.h>
-> +
-> +#include "dev.h"
-> +#include "regs.h"
-> +
-> +#define RKCIF_VERNO_LEN		10
-> +
-> +static int rkcif_create_links(struct rkcif_device *dev)
+> +/* kick a virtqueue */
+> +static void k3_r5_rproc_kick(struct rproc *rproc, int vqid)
 > +{
-> +	struct v4l2_subdev *sd = dev->sensor.sd;
+> +	struct k3_r5_rproc *kproc = rproc->priv;
+> +	struct device *dev = rproc->dev.parent;
+> +	mbox_msg_t msg = (mbox_msg_t)vqid;
 > +	int ret;
 > +
-> +	ret = media_entity_get_fwnode_pad(&sd->entity, sd->fwnode,
-> +					  MEDIA_PAD_FL_SOURCE);
-> +	if (ret)
-> +		return ret;
+> +	/* send the index of the triggered virtqueue in the mailbox payload */
+> +	ret = mbox_send_message(kproc->mbox, (void *)msg);
+> +	if (ret < 0)
+> +		dev_err(dev, "failed to send mailbox message, status = %d\n",
+> +			ret);
+> +}
 > +
-> +	ret = media_create_pad_link(&sd->entity, 0,
-> +				    &dev->stream.vdev.entity, 0,
-> +				    MEDIA_LNK_FL_ENABLED);
+> +static int k3_r5_split_reset(struct k3_r5_core *core)
+> +{
+> +	int ret;
+> +
+> +	ret = reset_control_assert(core->reset);
 > +	if (ret) {
-> +		dev_err(dev->dev, "failed to create link");
+> +		dev_err(core->dev, "local-reset assert failed, ret = %d\n",
+> +			ret);
 > +		return ret;
 > +	}
 > +
-> +	return 0;
-> +}
+> +	ret = core->ti_sci->ops.dev_ops.put_device(core->ti_sci,
+> +						   core->ti_sci_id);
+> +	if (ret) {
+> +		dev_err(core->dev, "module-reset assert failed, ret = %d\n",
+> +			ret);
+> +		if (reset_control_deassert(core->reset))
+> +			dev_warn(core->dev, "local-reset deassert back failed\n");
+> +	}
 > +
-> +static int subdev_notifier_complete(struct v4l2_async_notifier *notifier)
-> +{
-> +	struct rkcif_device *dev;
-> +	int ret;
-> +
-> +	dev = container_of(notifier, struct rkcif_device, notifier);
-> +
-> +	mutex_lock(&dev->media_dev.graph_mutex);
-> +
-> +	ret = rkcif_create_links(dev);
-> +	if (ret < 0)
-> +		goto unlock;
-> +
-> +	ret = v4l2_device_register_subdev_nodes(&dev->v4l2_dev);
-> +	if (ret < 0)
-> +		goto unlock;
-> +
-> +unlock:
-> +	mutex_unlock(&dev->media_dev.graph_mutex);
 > +	return ret;
 > +}
 > +
-> +static int subdev_notifier_bound(struct v4l2_async_notifier *notifier,
-> +				 struct v4l2_subdev *subdev,
-> +				 struct v4l2_async_subdev *asd)
+> +static int k3_r5_split_release(struct k3_r5_core *core)
 > +{
-> +	struct rkcif_device *cif_dev = container_of(notifier,
-> +					struct rkcif_device, notifier);
+> +	int ret;
 > +
-> +	int pad;
+> +	ret = core->ti_sci->ops.dev_ops.get_device(core->ti_sci,
+> +						   core->ti_sci_id);
+> +	if (ret) {
+> +		dev_err(core->dev, "module-reset deassert failed, ret = %d\n",
+> +			ret);
+> +		return ret;
+> +	}
 > +
-> +	cif_dev->sensor.sd = subdev;
-> +	pad = media_entity_get_fwnode_pad(&subdev->entity, subdev->fwnode,
-> +					  MEDIA_PAD_FL_SOURCE);
-> +	if (pad < 0)
-> +		return pad;
+> +	ret = reset_control_deassert(core->reset);
+> +	if (ret) {
+> +		dev_err(core->dev, "local-reset deassert failed, ret = %d\n",
+> +			ret);
+> +		if (core->ti_sci->ops.dev_ops.put_device(core->ti_sci,
+> +							 core->ti_sci_id))
+> +			dev_warn(core->dev, "module-reset assert back failed\n");
+> +	}
 > +
-> +	cif_dev->sensor.pad = pad;
+> +	return ret;
+> +}
+> +
+> +static int k3_r5_lockstep_reset(struct k3_r5_cluster *cluster)
+> +{
+> +	struct k3_r5_core *core;
+> +	int ret;
+> +
+> +	/* assert local reset on all applicable cores */
+> +	list_for_each_entry(core, &cluster->cores, elem) {
+> +		ret = reset_control_assert(core->reset);
+> +		if (ret) {
+> +			dev_err(core->dev, "local-reset assert failed, ret = %d\n",
+> +				ret);
+> +			core = list_prev_entry(core, elem);
+> +			goto unroll_local_reset;
+> +		}
+> +	}
+> +
+> +	/* disable PSC modules on all applicable cores */
+> +	list_for_each_entry(core, &cluster->cores, elem) {
+> +		ret = core->ti_sci->ops.dev_ops.put_device(core->ti_sci,
+> +							   core->ti_sci_id);
+> +		if (ret) {
+> +			dev_err(core->dev, "module-reset assert failed, ret = %d\n",
+> +				ret);
+> +			goto unroll_module_reset;
+> +		}
+> +	}
 > +
 > +	return 0;
-> +}
 > +
-> +static const struct v4l2_async_notifier_operations subdev_notifier_ops = {
-> +	.bound = subdev_notifier_bound,
-> +	.complete = subdev_notifier_complete,
-> +};
+> +unroll_module_reset:
+> +	list_for_each_entry_continue_reverse(core, &cluster->cores, elem) {
+> +		if (core->ti_sci->ops.dev_ops.put_device(core->ti_sci,
+> +							 core->ti_sci_id))
+> +			dev_warn(core->dev, "module-reset assert back failed\n");
+> +	}
+> +	core = list_last_entry(&cluster->cores, struct k3_r5_core, elem);
+> +unroll_local_reset:
+> +	list_for_each_entry_from_reverse(core, &cluster->cores, elem) {
+> +		if (reset_control_deassert(core->reset))
+> +			dev_warn(core->dev, "local-reset deassert back failed\n");
+> +	}
 > +
-> +static int cif_subdev_notifier(struct rkcif_device *cif_dev)
-> +{
-> +	struct v4l2_async_notifier *ntf = &cif_dev->notifier;
-> +	struct device *dev = cif_dev->dev;
-> +	struct v4l2_fwnode_endpoint vep = {
-> +		.bus_type = V4L2_MBUS_PARALLEL,
-> +	};
-> +	struct fwnode_handle *ep;
-> +	int ret;
-> +
-> +	v4l2_async_notifier_init(ntf);
-> +
-> +	ep = fwnode_graph_get_endpoint_by_id(dev_fwnode(dev), 0, 0,
-> +			FWNODE_GRAPH_ENDPOINT_NEXT);
-> +	if (!ep)
-> +		return -EINVAL;
-> +
-> +	ret = v4l2_fwnode_endpoint_parse(ep, &vep);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = v4l2_async_notifier_add_fwnode_remote_subdev(ntf, ep,
-> +							   &cif_dev->asd);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ntf->ops = &subdev_notifier_ops;
-> +
-> +	fwnode_handle_put(ep);
-> +
-> +	ret = v4l2_async_notifier_register(&cif_dev->v4l2_dev, ntf);
 > +	return ret;
-you can replace the two lines above with 'return v4l2_async_notifier_register(&cif_dev->v4l2_dev, ntf);'
 > +}
 > +
-> +static int rkcif_register_platform_subdevs(struct rkcif_device *cif_dev)
+> +static int k3_r5_lockstep_release(struct k3_r5_cluster *cluster)
 > +{
+> +	struct k3_r5_core *core;
 > +	int ret;
 > +
-> +	ret = rkcif_register_stream_vdev(cif_dev);
-> +	if (ret < 0)
-> +		return ret;
+> +	/* enable PSC modules on all applicable cores */
+> +	list_for_each_entry_reverse(core, &cluster->cores, elem) {
+> +		ret = core->ti_sci->ops.dev_ops.get_device(core->ti_sci,
+> +							   core->ti_sci_id);
+> +		if (ret) {
+> +			dev_err(core->dev, "module-reset deassert failed, ret = %d\n",
+> +				ret);
+> +			core = list_next_entry(core, elem);
+> +			goto unroll_module_reset;
+> +		}
+> +	}
 > +
-> +	ret = cif_subdev_notifier(cif_dev);
+> +	/* deassert local reset on all applicable cores */
+> +	list_for_each_entry_reverse(core, &cluster->cores, elem) {
+> +		ret = reset_control_deassert(core->reset);
+> +		if (ret) {
+> +			dev_err(core->dev, "module-reset deassert failed, ret = %d\n",
+> +				ret);
+> +			goto unroll_local_reset;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +
+> +unroll_local_reset:
+> +	list_for_each_entry_continue(core, &cluster->cores, elem) {
+> +		if (reset_control_assert(core->reset))
+> +			dev_warn(core->dev, "local-reset assert back failed\n");
+> +	}
+> +	core = list_first_entry(&cluster->cores, struct k3_r5_core, elem);
+> +unroll_module_reset:
+> +	list_for_each_entry_from(core, &cluster->cores, elem) {
+> +		if (core->ti_sci->ops.dev_ops.put_device(core->ti_sci,
+> +							 core->ti_sci_id))
+> +			dev_warn(core->dev, "module-reset assert back failed\n");
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static inline int k3_r5_core_halt(struct k3_r5_core *core)
+> +{
+> +	return ti_sci_proc_set_control(core->tsp,
+> +				       PROC_BOOT_CTRL_FLAG_R5_CORE_HALT, 0);
+> +}
+> +
+> +static inline int k3_r5_core_run(struct k3_r5_core *core)
+> +{
+> +	return ti_sci_proc_set_control(core->tsp,
+> +				       0, PROC_BOOT_CTRL_FLAG_R5_CORE_HALT);
+> +}
+> +
+> +/*
+> + * The R5F cores have controls for both a reset and a halt/run. The code
+> + * execution from DDR requires the initial boot-strapping code to be run
+> + * from the internal TCMs. This function is used to release the resets on
+> + * applicable cores to allow loading into the TCMs. The .prepare() ops is
+> + * invoked by remoteproc core before any firmware loading, and is followed
+> + * by the .start() ops after loading to actually let the R5 cores run.
+> + */
+> +static int k3_r5_rproc_prepare(struct rproc *rproc)
+> +{
+> +	struct k3_r5_rproc *kproc = rproc->priv;
+> +	struct k3_r5_cluster *cluster = kproc->cluster;
+> +	struct k3_r5_core *core = kproc->core;
+> +	struct device *dev = kproc->dev;
+> +	int ret;
+> +
+> +	ret = (cluster->mode == CLUSTER_MODE_LOCKSTEP) ?
+> +		k3_r5_lockstep_release(cluster) : k3_r5_split_release(core);
+> +	if (ret)
+> +		dev_err(dev, "unable to enable cores for TCM loading, ret = %d\n",
+> +			ret);
+> +
+> +	return ret;
+> +}
+> +
+> +/*
+> + * This function implements the .unprepare() ops and performs the complimentary
+> + * operations to that of the .prepare() ops. The function is used to assert the
+> + * resets on all applicable cores for the rproc device (depending on LockStep
+> + * or Split mode). This completes the second portion of powering down the R5F
+> + * cores. The cores themselves are only halted in the .stop() ops, and the
+> + * .unprepare() ops is invoked by the remoteproc core after the remoteproc is
+> + * stopped.
+> + */
+> +static int k3_r5_rproc_unprepare(struct rproc *rproc)
+> +{
+> +	struct k3_r5_rproc *kproc = rproc->priv;
+> +	struct k3_r5_cluster *cluster = kproc->cluster;
+> +	struct k3_r5_core *core = kproc->core;
+> +	struct device *dev = kproc->dev;
+> +	int ret;
+> +
+> +	ret = (cluster->mode == CLUSTER_MODE_LOCKSTEP) ?
+> +		k3_r5_lockstep_reset(cluster) : k3_r5_split_reset(core);
+> +	if (ret)
+> +		dev_err(dev, "unable to disable cores, ret = %d\n", ret);
+> +
+> +	return ret;
+> +}
+> +
+> +/*
+> + * The R5F start sequence includes two different operations
+> + * 1. Configure the boot vector for R5F core(s)
+> + * 2. Unhalt/Run the R5F core(s)
+> + *
+> + * The sequence is different between LockStep and Split modes. The LockStep
+> + * mode requires the boot vector to be configured only for Core0, and then
+> + * unhalt both the cores to start the execution - Core1 needs to be unhalted
+> + * first followed by Core0. The Split-mode requires that Core0 to be maintained
+> + * always in a higher power state that Core1 (implying Core1 needs to be started
+> + * always only after Core0 is started).
+
+I'm very puzzled by the last sentence.  In split mode the code is
+instantiating two independent rproc but above the comment claim that in fact
+they are not since Core0 needs to be started first.  Moreover I don't see that
+rule being enforced in the code - the split mode path only takes care of the
+single core.  Since you took the time to write the comment (and also for
+k3_r5_rproc_sto()) I suspect that I'm missing information somewhere.
+
+> + */
+> +static int k3_r5_rproc_start(struct rproc *rproc)
+> +{
+> +	struct k3_r5_rproc *kproc = rproc->priv;
+> +	struct k3_r5_cluster *cluster = kproc->cluster;
+> +	struct mbox_client *client = &kproc->client;
+> +	struct device *dev = kproc->dev;
+> +	struct k3_r5_core *core;
+> +	u32 boot_addr;
+> +	int ret;
+> +
+> +	client->dev = dev;
+> +	client->tx_done = NULL;
+> +	client->rx_callback = k3_r5_rproc_mbox_callback;
+> +	client->tx_block = false;
+> +	client->knows_txdone = false;
+> +
+> +	kproc->mbox = mbox_request_channel(client, 0);
+> +	if (IS_ERR(kproc->mbox)) {
+> +		ret = -EBUSY;
+> +		dev_err(dev, "mbox_request_channel failed: %ld\n",
+> +			PTR_ERR(kproc->mbox));
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * Ping the remote processor, this is only for sanity-sake for now;
+> +	 * there is no functional effect whatsoever.
+> +	 *
+> +	 * Note that the reply will _not_ arrive immediately: this message
+> +	 * will wait in the mailbox fifo until the remote processor is booted.
+> +	 */
+> +	ret = mbox_send_message(kproc->mbox, (void *)RP_MBOX_ECHO_REQUEST);
 > +	if (ret < 0) {
-> +		v4l2_err(&cif_dev->v4l2_dev,
-> +			 "Failed to register subdev notifier(%d)\n", ret);
-> +		rkcif_unregister_stream_vdev(cif_dev);
-
-maybe forgot to return 'ret' here?
-
-Thanks,
-Dafna
-
+> +		dev_err(dev, "mbox_send_message failed: %d\n", ret);
+> +		goto put_mbox;
+> +	}
+> +
+> +	boot_addr = rproc->bootaddr;
+> +	/* TODO: add boot_addr sanity checking */
+> +	dev_dbg(dev, "booting R5F core using boot addr = 0x%x\n", boot_addr);
+> +
+> +	/* boot vector need not be programmed for Core1 in LockStep mode */
+> +	core = kproc->core;
+> +	ret = ti_sci_proc_set_config(core->tsp, boot_addr, 0, 0);
+> +	if (ret)
+> +		goto put_mbox;
+> +
+> +	/* unhalt/run all applicable cores */
+> +	if (cluster->mode == CLUSTER_MODE_LOCKSTEP) {
+> +		list_for_each_entry_reverse(core, &cluster->cores, elem) {
+> +			ret = k3_r5_core_run(core);
+> +			if (ret)
+> +				goto unroll_core_run;
+> +		}
+> +	} else {
+> +		ret = k3_r5_core_run(core);
+> +		if (ret)
+> +			goto put_mbox;
 > +	}
 > +
 > +	return 0;
+> +
+> +unroll_core_run:
+> +	list_for_each_entry_continue(core, &cluster->cores, elem) {
+> +		if (k3_r5_core_halt(core))
+> +			dev_warn(core->dev, "core halt back failed\n");
+> +	}
+> +put_mbox:
+> +	mbox_free_channel(kproc->mbox);
+> +	return ret;
 > +}
 > +
-> +static struct clk_bulk_data px30_cif_clks[] = {
-> +	{ .id = "aclk" },
-> +	{ .id = "hclk" },
-> +	{ .id = "pclkin" },
-> +};
-> +
-> +static const struct cif_match_data px30_cif_match_data = {
-> +	.chip_id = CHIP_PX30_CIF,
-> +	.clks = px30_cif_clks,
-> +	.clks_num = ARRAY_SIZE(px30_cif_clks),
-> +};
-> +
-> +static const struct of_device_id rkcif_plat_of_match[] = {
-> +	{
-> +		.compatible = "rockchip,px30-cif",
-> +		.data = &px30_cif_match_data,
-> +	},
-> +	{},
-> +};
-> +
-> +static irqreturn_t rkcif_irq_handler(int irq, void *ctx)
+> +/*
+> + * The R5F stop function includes the following operations
+> + * 1. Halt R5F core(s)
+> + *
+> + * The sequence is different between LockStep and Split modes, and the order
+> + * of cores the operations are performed are also in general reverse to that
+> + * of the start function. The LockStep mode requires each operation to be
+> + * performed first on Core0 followed by Core1. The Split-mode requires that
+> + * Core0 to be maintained always in a higher power state that Core1 (implying
+> + * Core1 needs to be stopped first before Core0).
+> + *
+> + * Note that the R5F halt operation in general is not effective when the R5F
+> + * core is running, but is needed to make sure the core won't run after
+> + * deasserting the reset the subsequent time. The asserting of reset can
+> + * be done here, but is preferred to be done in the .unprepare() ops - this
+> + * maintains the symmetric behavior between the .start(), .stop(), .prepare()
+> + * and .unprepare() ops, and also balances them well between sysfs 'state'
+> + * flow and device bind/unbind or module removal.
+> + */
+> +static int k3_r5_rproc_stop(struct rproc *rproc)
 > +{
-> +	struct device *dev = ctx;
-> +	struct rkcif_device *cif_dev = dev_get_drvdata(dev);
+> +	struct k3_r5_rproc *kproc = rproc->priv;
+> +	struct k3_r5_cluster *cluster = kproc->cluster;
+> +	struct k3_r5_core *core = kproc->core;
+> +	int ret;
 > +
-> +	rkcif_irq_oneframe(cif_dev);
+> +	/* halt all applicable cores */
+> +	if (cluster->mode == CLUSTER_MODE_LOCKSTEP) {
+> +		list_for_each_entry(core, &cluster->cores, elem) {
+> +			ret = k3_r5_core_halt(core);
+> +			if (ret) {
+> +				core = list_prev_entry(core, elem);
+> +				goto unroll_core_halt;
+> +			}
+> +		}
+> +	} else {
+> +		ret = k3_r5_core_halt(core);
+> +		if (ret)
+> +			goto out;
+> +	}
 > +
-> +	return IRQ_HANDLED;
+> +	mbox_free_channel(kproc->mbox);
+> +
+> +	return 0;
+> +
+> +unroll_core_halt:
+> +	list_for_each_entry_from_reverse(core, &cluster->cores, elem) {
+> +		if (k3_r5_core_run(core))
+> +			dev_warn(core->dev, "core run back failed\n");
+> +	}
+> +out:
+> +	return ret;
+> +}
+
+All of the above is very platform specific and I certainly won't claim to
+understand all the details.  That being said the logic and error control path
+are done properly. 
+
+> +
+> +/*
+> + * Internal Memory translation helper
+> + *
+> + * Custom function implementing the rproc .da_to_va ops to provide address
+> + * translation (device address to kernel virtual address) for internal RAMs
+> + * present in a DSP or IPU device). The translated addresses can be used
+> + * either by the remoteproc core for loading, or by any rpmsg bus drivers.
+> + */
+> +static void *k3_r5_rproc_da_to_va(struct rproc *rproc, u64 da, size_t len)
+> +{
+> +	struct k3_r5_rproc *kproc = rproc->priv;
+> +	struct k3_r5_core *core = kproc->core;
+> +	void __iomem *va = NULL;
+> +	phys_addr_t bus_addr;
+> +	u32 dev_addr, offset;
+> +	size_t size;
+> +	int i;
+> +
+> +	if (len == 0)
+> +		return NULL;
+> +
+> +	/* handle both R5 and SoC views of ATCM and BTCM */
+> +	for (i = 0; i < core->num_mems; i++) {
+> +		bus_addr = core->mem[i].bus_addr;
+> +		dev_addr = core->mem[i].dev_addr;
+> +		size = core->mem[i].size;
+> +
+> +		/* handle R5-view addresses of TCMs */
+> +		if (da >= dev_addr && ((da + len) <= (dev_addr + size))) {
+> +			offset = da - dev_addr;
+> +			va = core->mem[i].cpu_addr + offset;
+> +			return (__force void *)va;
+> +		}
+> +
+> +		/* handle SoC-view addresses of TCMs */
+> +		if (da >= bus_addr && ((da + len) <= (bus_addr + size))) {
+> +			offset = da - bus_addr;
+> +			va = core->mem[i].cpu_addr + offset;
+> +			return (__force void *)va;
+> +		}
+> +	}
+> +
+> +	/* handle static DDR reserved memory regions */
+> +	for (i = 0; i < kproc->num_rmems; i++) {
+> +		dev_addr = kproc->rmem[i].dev_addr;
+> +		size = kproc->rmem[i].size;
+> +
+> +		if (da >= dev_addr && ((da + len) <= (dev_addr + size))) {
+> +			offset = da - dev_addr;
+> +			va = kproc->rmem[i].cpu_addr + offset;
+> +			return (__force void *)va;
+> +		}
+> +	}
+> +
+> +	return NULL;
 > +}
 > +
-> +static void rkcif_disable_sys_clk(struct rkcif_device *cif_dev)
+> +static const struct rproc_ops k3_r5_rproc_ops = {
+> +	.prepare	= k3_r5_rproc_prepare,
+> +	.unprepare	= k3_r5_rproc_unprepare,
+> +	.start		= k3_r5_rproc_start,
+> +	.stop		= k3_r5_rproc_stop,
+> +	.kick		= k3_r5_rproc_kick,
+> +	.da_to_va	= k3_r5_rproc_da_to_va,
+> +};
+> +
+> +/*
+> + * Internal R5F Core configuration
+> + *
+> + * Each R5FSS has a cluster-level setting for configuring the processor
+> + * subsystem either in a safety/fault-tolerant LockStep mode or a performance
+> + * oriented Split mode. Each R5F core has a number of settings to either
+> + * enable/disable each of the TCMs, control which TCM appears at the R5F core's
+> + * address 0x0. These settings need to be configured before the resets for the
+> + * corresponding core are released. These settings are all protected and managed
+> + * by the System Processor.
+> + *
+> + * This function is used to pre-configure these settings for each R5F core, and
+> + * the configuration is all done through various ti_sci_proc functions that
+> + * communicate with the System Processor. The function also ensures that both
+> + * the cores are halted before the .prepare() step.
+> + *
+> + * The function is called from k3_r5_cluster_rproc_init() and is invoked either
+> + * once (in LockStep mode) or twice (in Split mode). Support for LockStep-mode
+> + * is dictated by an eFUSE register bit, and the config settings retrieved from
+> + * DT are adjusted accordingly as per the permitted cluster mode. All cluster
+> + * level settings like Cluster mode and TEINIT (exception handling state
+> + * dictating ARM or Thumb mode) can only be set and retrieved using Core0.
+> + *
+> + * The function behavior is different based on the cluster mode. The R5F cores
+> + * are configured independently as per their individual settings in Split mode.
+> + * They are identically configured in LockStep mode using the primary Core0
+> + * settings. However, some individual settings cannot be set in LockStep mode.
+> + * This is overcome by switching to Split-mode initially and then programming
+> + * both the cores with the same settings, before reconfiguing again for
+> + * LockStep mode.
+> + */
+> +static int k3_r5_rproc_configure(struct k3_r5_rproc *kproc)
+> +{
+> +	struct k3_r5_cluster *cluster = kproc->cluster;
+> +	struct device *dev = kproc->dev;
+> +	struct k3_r5_core *core0, *core, *temp;
+> +	u32 ctrl = 0, cfg = 0, stat = 0;
+> +	u32 set_cfg = 0, clr_cfg = 0;
+> +	u64 boot_vec = 0;
+> +	bool lockstep_en;
+> +	int ret;
+> +
+> +	core0 = list_first_entry(&cluster->cores, struct k3_r5_core, elem);
+> +	core = (cluster->mode == CLUSTER_MODE_LOCKSTEP) ? core0 : kproc->core;
+> +
+> +	ret = ti_sci_proc_get_status(core->tsp, &boot_vec, &cfg, &ctrl,
+> +				     &stat);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	dev_dbg(dev, "boot_vector = 0x%llx, cfg = 0x%x ctrl = 0x%x stat = 0x%x\n",
+> +		boot_vec, cfg, ctrl, stat);
+> +
+> +	lockstep_en = !!(stat & PROC_BOOT_STATUS_FLAG_R5_LOCKSTEP_PERMITTED);
+> +	if (!lockstep_en && cluster->mode == CLUSTER_MODE_LOCKSTEP) {
+> +		dev_err(cluster->dev, "lockstep mode not permitted, force configuring for split-mode\n");
+> +		cluster->mode = CLUSTER_MODE_SPLIT;
+> +	}
+> +
+> +	/* always enable ARM mode and set boot vector to 0 */
+> +	boot_vec = 0x0;
+> +	if (core == core0) {
+> +		clr_cfg = PROC_BOOT_CFG_FLAG_R5_TEINIT;
+> +		/*
+> +		 * LockStep configuration bit is Read-only on Split-mode _only_
+> +		 * devices and system firmware will NACK any requests with the
+> +		 * bit configured, so program it only on permitted devices
+> +		 */
+> +		if (lockstep_en)
+> +			clr_cfg |= PROC_BOOT_CFG_FLAG_R5_LOCKSTEP;
+> +	}
+> +
+> +	if (core->atcm_enable)
+> +		set_cfg |= PROC_BOOT_CFG_FLAG_R5_ATCM_EN;
+> +	else
+> +		clr_cfg |= PROC_BOOT_CFG_FLAG_R5_ATCM_EN;
+> +
+> +	if (core->btcm_enable)
+> +		set_cfg |= PROC_BOOT_CFG_FLAG_R5_BTCM_EN;
+> +	else
+> +		clr_cfg |= PROC_BOOT_CFG_FLAG_R5_BTCM_EN;
+> +
+> +	if (core->loczrama)
+> +		set_cfg |= PROC_BOOT_CFG_FLAG_R5_TCM_RSTBASE;
+> +	else
+> +		clr_cfg |= PROC_BOOT_CFG_FLAG_R5_TCM_RSTBASE;
+> +
+> +	if (cluster->mode == CLUSTER_MODE_LOCKSTEP) {
+> +		/*
+> +		 * work around system firmware limitations to make sure both
+> +		 * cores are programmed symmetrically in LockStep. LockStep
+> +		 * and TEINIT config is only allowed with Core0.
+> +		 */
+> +		list_for_each_entry(temp, &cluster->cores, elem) {
+> +			ret = k3_r5_core_halt(temp);
+> +			if (ret)
+> +				goto out;
+> +
+> +			if (temp != core) {
+> +				clr_cfg &= ~PROC_BOOT_CFG_FLAG_R5_LOCKSTEP;
+> +				clr_cfg &= ~PROC_BOOT_CFG_FLAG_R5_TEINIT;
+> +			}
+> +			ret = ti_sci_proc_set_config(temp->tsp, boot_vec,
+> +						     set_cfg, clr_cfg);
+> +			if (ret)
+> +				goto out;
+> +		}
+> +
+> +		set_cfg = PROC_BOOT_CFG_FLAG_R5_LOCKSTEP;
+> +		clr_cfg = 0;
+> +		ret = ti_sci_proc_set_config(core->tsp, boot_vec,
+> +					     set_cfg, clr_cfg);
+> +	} else {
+> +		ret = k3_r5_core_halt(core);
+> +		if (ret)
+> +			goto out;
+> +
+> +		ret = ti_sci_proc_set_config(core->tsp, boot_vec,
+> +					     set_cfg, clr_cfg);
+> +	}
+> +
+> +out:
+> +	return ret;
+> +}
+> +
+> +static int k3_r5_reserved_mem_init(struct k3_r5_rproc *kproc)
+> +{
+> +	struct device *dev = kproc->dev;
+> +	struct device_node *np = dev_of_node(dev);
+> +	struct device_node *rmem_np;
+> +	struct reserved_mem *rmem;
+> +	int num_rmems;
+> +	int ret, i;
+> +
+> +	num_rmems = of_property_count_elems_of_size(np, "memory-region",
+> +						    sizeof(phandle));
+> +	if (num_rmems <= 0) {
+> +		dev_err(dev, "device does not have reserved memory regions, ret = %d\n",
+> +			num_rmems);
+> +		return -EINVAL;
+> +	}
+> +	if (num_rmems < 2) {
+> +		dev_err(dev, "device needs atleast two memory regions to be defined, num = %d\n",
+> +			num_rmems);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* use reserved memory region 0 for vring DMA allocations */
+> +	ret = of_reserved_mem_device_init_by_idx(dev, np, 0);
+> +	if (ret) {
+> +		dev_err(dev, "device cannot initialize DMA pool, ret = %d\n",
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	num_rmems--;
+> +	kproc->rmem = kcalloc(num_rmems, sizeof(*kproc->rmem), GFP_KERNEL);
+> +	if (!kproc->rmem) {
+> +		ret = -ENOMEM;
+> +		goto release_rmem;
+> +	}
+> +
+> +	/* use remaining reserved memory regions for static carveouts */
+> +	for (i = 0; i < num_rmems; i++) {
+> +		rmem_np = of_parse_phandle(np, "memory-region", i + 1);
+> +		if (!rmem_np) {
+> +			ret = -EINVAL;
+> +			goto unmap_rmem;
+> +		}
+> +
+> +		rmem = of_reserved_mem_lookup(rmem_np);
+> +		if (!rmem) {
+> +			of_node_put(rmem_np);
+> +			ret = -EINVAL;
+> +			goto unmap_rmem;
+> +		}
+> +		of_node_put(rmem_np);
+> +
+> +		kproc->rmem[i].bus_addr = rmem->base;
+> +		/*
+> +		 * R5Fs do not have an MMU, but have a Region Address Translator
+> +		 * (RAT) module that provides a fixed entry translation between
+> +		 * the 32-bit processor addresses to 64-bit bus addresses. The
+> +		 * RAT is programmable only by the R5F cores. Support for RAT
+> +		 * is currently not supported, so 64-bit address regions are not
+> +		 * supported. The absence of MMUs implies that the R5F device
+> +		 * addresses/supported memory regions are restricted to 32-bit
+> +		 * bus addresses, and are identical
+> +		 */
+> +		kproc->rmem[i].dev_addr = (u32)rmem->base;
+> +		kproc->rmem[i].size = rmem->size;
+> +		kproc->rmem[i].cpu_addr = ioremap_wc(rmem->base, rmem->size);
+> +		if (!kproc->rmem[i].cpu_addr) {
+> +			dev_err(dev, "failed to map reserved memory#%d at %pa of size %pa\n",
+> +				i + 1, &rmem->base, &rmem->size);
+> +			ret = -ENOMEM;
+> +			goto unmap_rmem;
+> +		}
+> +
+> +		dev_dbg(dev, "reserved memory%d: bus addr %pa size 0x%zx va %pK da 0x%x\n",
+> +			i + 1, &kproc->rmem[i].bus_addr,
+> +			kproc->rmem[i].size, kproc->rmem[i].cpu_addr,
+> +			kproc->rmem[i].dev_addr);
+> +	}
+> +	kproc->num_rmems = num_rmems;
+> +
+> +	return 0;
+> +
+> +unmap_rmem:
+> +	for (i--; i >= 0; i--) {
+> +		if (kproc->rmem[i].cpu_addr)
+
+Did you find a code path where cpu_addr is not valid?  As far as I can tell
+current memory regions are not processed because of the i-- as a start condition
+in the for loop and previous allocations were successful.
+
+> +			iounmap(kproc->rmem[i].cpu_addr);
+> +	}
+> +	kfree(kproc->rmem);
+> +release_rmem:
+> +	of_reserved_mem_device_release(dev);
+> +	return ret;
+> +}
+> +
+> +static void k3_r5_reserved_mem_exit(struct k3_r5_rproc *kproc)
 > +{
 > +	int i;
 > +
-> +	for (i = cif_dev->data->clks_num - 1; i >= 0; i--)
-> +		clk_disable_unprepare(cif_dev->clks[i]);
+> +	for (i = 0; i < kproc->num_rmems; i++)
+> +		iounmap(kproc->rmem[i].cpu_addr);
+> +	kfree(kproc->rmem);
+> +
+> +	of_reserved_mem_device_release(kproc->dev);
 > +}
 > +
-> +static int rkcif_enable_sys_clk(struct rkcif_device *cif_dev)
+> +static int k3_r5_cluster_rproc_init(struct platform_device *pdev)
 > +{
-> +	int i, ret = -EINVAL;
+> +	struct k3_r5_cluster *cluster = platform_get_drvdata(pdev);
+> +	struct device *dev = &pdev->dev;
+> +	struct k3_r5_rproc *kproc;
+> +	struct k3_r5_core *core, *core1;
+> +	struct device *cdev;
+> +	const char *fw_name;
+> +	struct rproc *rproc;
+> +	int ret;
 > +
-> +	for (i = 0; i < cif_dev->data->clks_num; i++) {
-> +		ret = clk_prepare_enable(cif_dev->clks[i]);
+> +	core1 = list_last_entry(&cluster->cores, struct k3_r5_core, elem);
+> +	list_for_each_entry(core, &cluster->cores, elem) {
+> +		cdev = core->dev;
+> +		ret = rproc_of_parse_firmware(cdev, 0, &fw_name);
+> +		if (ret) {
+> +			dev_err(dev, "failed to parse firmware-name property, ret = %d\n",
+> +				ret);
+> +			goto out;
+> +		}
 > +
-> +		if (ret < 0)
-> +			goto err;
+> +		rproc = rproc_alloc(cdev, dev_name(cdev), &k3_r5_rproc_ops,
+> +				    fw_name, sizeof(*kproc));
+> +		if (!rproc) {
+> +			ret = -ENOMEM;
+> +			goto out;
+> +		}
+> +
+> +		/* K3 R5s have a Region Address Translator (RAT) but no MMU */
+> +		rproc->has_iommu = false;
+> +		/* error recovery is not supported at present */
+> +		rproc->recovery_disabled = true;
+> +
+> +		kproc = rproc->priv;
+> +		kproc->cluster = cluster;
+> +		kproc->core = core;
+> +		kproc->dev = cdev;
+> +		kproc->rproc = rproc;
+> +		core->rproc = rproc;
+> +
+> +		ret = k3_r5_rproc_configure(kproc);
+> +		if (ret) {
+> +			dev_err(dev, "initial configure failed, ret = %d\n",
+> +				ret);
+> +			goto err_config;
+> +		}
+> +
+> +		ret = k3_r5_reserved_mem_init(kproc);
+> +		if (ret) {
+> +			dev_err(dev, "reserved memory init failed, ret = %d\n",
+> +				ret);
+> +			goto err_config;
+> +		}
+> +
+> +		ret = rproc_add(rproc);
+> +		if (ret) {
+> +			dev_err(dev, "rproc_add failed, ret = %d\n", ret);
+> +			goto err_add;
+> +		}
+> +
+> +		/* create only one rproc in lockstep mode */
+> +		if (cluster->mode == CLUSTER_MODE_LOCKSTEP)
+> +			break;
 > +	}
+> +
+> +	return 0;
+> +
+> +err_split:
+> +	rproc_del(rproc);
+> +err_add:
+> +	k3_r5_reserved_mem_exit(kproc);
+> +err_config:
+> +	rproc_free(rproc);
+> +	core->rproc = NULL;
+> +out:
+> +	/* undo core0 upon any failures on core1 in split-mode */
+> +	if (cluster->mode == CLUSTER_MODE_SPLIT && core == core1) {
+> +		core = list_prev_entry(core, elem);
+> +		rproc = core->rproc;
+> +		kproc = rproc->priv;
+> +		goto err_split;
+> +	}
+> +	return ret;
+> +}
+> +
+> +static int k3_r5_cluster_rproc_exit(struct platform_device *pdev)
+> +{
+> +	struct k3_r5_cluster *cluster = platform_get_drvdata(pdev);
+> +	struct k3_r5_rproc *kproc;
+> +	struct k3_r5_core *core;
+> +	struct rproc *rproc;
+> +
+> +	/*
+> +	 * lockstep mode has only one rproc associated with first core, whereas
+> +	 * split-mode has two rprocs associated with each core, and requires
+> +	 * that core1 be powered down first
+> +	 */
+> +	core = (cluster->mode == CLUSTER_MODE_LOCKSTEP) ?
+> +		list_first_entry(&cluster->cores, struct k3_r5_core, elem) :
+> +		list_last_entry(&cluster->cores, struct k3_r5_core, elem);
+> +
+> +	list_for_each_entry_from_reverse(core, &cluster->cores, elem) {
+> +		rproc = core->rproc;
+> +		kproc = rproc->priv;
+> +
+> +		rproc_del(rproc);
+> +
+> +		k3_r5_reserved_mem_exit(kproc);
+> +
+> +		rproc_free(rproc);
+> +		core->rproc = NULL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int k3_r5_core_of_get_internal_memories(struct platform_device *pdev,
+> +					       struct k3_r5_core *core)
+> +{
+> +	static const char * const mem_names[] = {"atcm", "btcm"};
+> +	struct device *dev = &pdev->dev;
+> +	struct resource *res;
+> +	int num_mems;
+> +	int i;
+> +
+> +	num_mems = ARRAY_SIZE(mem_names);
+> +	core->mem = devm_kcalloc(dev, num_mems, sizeof(*core->mem), GFP_KERNEL);
+> +	if (!core->mem)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < num_mems; i++) {
+> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> +						   mem_names[i]);
+> +		if (!res) {
+> +			dev_err(dev, "found no memory resource for %s\n",
+> +				mem_names[i]);
+> +			return -EINVAL;
+> +		}
+> +		if (!devm_request_mem_region(dev, res->start,
+> +					     resource_size(res),
+> +					     dev_name(dev))) {
+> +			dev_err(dev, "could not request %s region for resource\n",
+> +				mem_names[i]);
+> +			return -EBUSY;
+> +		}
+> +
+> +		/*
+> +		 * TCMs are designed in general to support RAM-like backing
+> +		 * memories. So, map these as Normal Non-Cached memories. This
+> +		 * also avoids/fixes any potential alignment faults due to
+> +		 * unaligned data accesses when using memcpy() or memset()
+> +		 * functions (normally seen with device type memory).
+> +		 */
+> +		core->mem[i].cpu_addr = devm_ioremap_wc(dev, res->start,
+> +							resource_size(res));
+> +		if (IS_ERR(core->mem[i].cpu_addr)) {
+> +			dev_err(dev, "failed to map %s memory\n", mem_names[i]);
+> +			return PTR_ERR(core->mem[i].cpu_addr);
+> +		}
+> +		core->mem[i].bus_addr = res->start;
+> +
+> +		/*
+> +		 * TODO:
+> +		 * The R5F cores can place ATCM & BTCM anywhere in its address
+> +		 * based on the corresponding Region Registers in the System
+> +		 * Control coprocessor. For now, place ATCM and BTCM at
+> +		 * addresses 0 and 0x41010000 (same as the bus address on AM65x
+> +		 * SoCs) based on loczrama setting
+> +		 */
+> +		if (!strcmp(mem_names[i], "atcm")) {
+> +			core->mem[i].dev_addr = core->loczrama ?
+> +							0 : K3_R5_TCM_DEV_ADDR;
+> +		} else {
+> +			core->mem[i].dev_addr = core->loczrama ?
+> +							K3_R5_TCM_DEV_ADDR : 0;
+> +		}
+> +		core->mem[i].size = resource_size(res);
+> +
+> +		dev_dbg(dev, "memory %5s: bus addr %pa size 0x%zx va %pK da 0x%x\n",
+> +			mem_names[i], &core->mem[i].bus_addr,
+> +			core->mem[i].size, core->mem[i].cpu_addr,
+> +			core->mem[i].dev_addr);
+> +	}
+> +	core->num_mems = num_mems;
+> +
+> +	return 0;
+> +}
+> +
+> +static
+> +struct ti_sci_proc *k3_r5_core_of_get_tsp(struct device *dev,
+> +					  const struct ti_sci_handle *sci)
+> +{
+> +	struct ti_sci_proc *tsp;
+> +	u32 temp[2];
+> +	int ret;
+> +
+> +	ret = of_property_read_u32_array(dev_of_node(dev), "ti,sci-proc-ids",
+> +					 temp, 2);
+> +	if (ret < 0)
+> +		return ERR_PTR(ret);
+> +
+> +	tsp = devm_kzalloc(dev, sizeof(*tsp), GFP_KERNEL);
+> +	if (!tsp)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	tsp->dev = dev;
+> +	tsp->sci = sci;
+> +	tsp->ops = &sci->ops.proc_ops;
+> +	tsp->proc_id = temp[0];
+> +	tsp->host_id = temp[1];
+> +
+> +	return tsp;
+> +}
+> +
+> +static int k3_r5_core_of_init(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev_of_node(dev);
+> +	struct k3_r5_core *core;
+> +	int ret;
+> +
+> +	if (!devres_open_group(dev, k3_r5_core_of_init, GFP_KERNEL))
+> +		return -ENOMEM;
+> +
+> +	core = devm_kzalloc(dev, sizeof(*core), GFP_KERNEL);
+> +	if (!core) {
+> +		ret = -ENOMEM;
+> +		goto err;
+> +	}
+> +
+> +	core->dev = dev;
+> +	/*
+> +	 * Use SoC Power-on-Reset values as default if no DT properties are
+> +	 * used to dictate the TCM configurations
+> +	 */
+> +	core->atcm_enable = 0;
+> +	core->btcm_enable = 1;
+> +	core->loczrama = 1;
+> +
+> +	ret = of_property_read_u32(np, "ti,atcm-enable", &core->atcm_enable);
+> +	if (ret < 0 && ret != -EINVAL) {
+> +		dev_err(dev, "invalid format for ti,atcm-enable, ret = %d\n",
+> +			ret);
+> +		goto err;
+> +	}
+> +
+> +	ret = of_property_read_u32(np, "ti,btcm-enable", &core->btcm_enable);
+> +	if (ret < 0 && ret != -EINVAL) {
+> +		dev_err(dev, "invalid format for ti,btcm-enable, ret = %d\n",
+> +			ret);
+> +		goto err;
+> +	}
+> +
+> +	ret = of_property_read_u32(np, "ti,loczrama", &core->loczrama);
+> +	if (ret < 0 && ret != -EINVAL) {
+> +		dev_err(dev, "invalid format for ti,loczrama, ret = %d\n", ret);
+> +		goto err;
+> +	}
+> +
+> +	core->ti_sci = devm_ti_sci_get_by_phandle(dev, "ti,sci");
+> +	if (IS_ERR(core->ti_sci)) {
+> +		ret = PTR_ERR(core->ti_sci);
+> +		if (ret != -EPROBE_DEFER) {
+> +			dev_err(dev, "failed to get ti-sci handle, ret = %d\n",
+> +				ret);
+> +		}
+> +		core->ti_sci = NULL;
+> +		goto err;
+> +	}
+> +
+> +	ret = of_property_read_u32(np, "ti,sci-dev-id", &core->ti_sci_id);
+> +	if (ret) {
+> +		dev_err(dev, "missing 'ti,sci-dev-id' property\n");
+> +		goto err;
+> +	}
+> +
+> +	core->reset = devm_reset_control_get_exclusive(dev, NULL);
+> +	if (IS_ERR(core->reset)) {
+
+IS_ERR_OR_NULL() since devm_reset_control_get_exclusive() can return NULL.
+
+
+Otherwise I am pleased with how you have refactored this driver to use the device
+management mechanic to take care of tedious error paths.  Aside from the above
+minor details I haven't found much to frown at.  With this much code I could
+find things to pick at but nothing serious enough to delay this set. 
+
+With the above:
+
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+
+
+> +		ret = PTR_ERR(core->reset);
+> +		if (ret != -EPROBE_DEFER) {
+> +			dev_err(dev, "failed to get reset handle, ret = %d\n",
+> +				ret);
+> +		}
+> +		goto err;
+> +	}
+> +
+> +	core->tsp = k3_r5_core_of_get_tsp(dev, core->ti_sci);
+> +	if (IS_ERR(core->tsp)) {
+> +		dev_err(dev, "failed to construct ti-sci proc control, ret = %d\n",
+> +			ret);
+> +		ret = PTR_ERR(core->tsp);
+> +		goto err;
+> +	}
+> +
+> +	ret = k3_r5_core_of_get_internal_memories(pdev, core);
+> +	if (ret) {
+> +		dev_err(dev, "failed to get internal memories, ret = %d\n",
+> +			ret);
+> +		goto err;
+> +	}
+> +
+> +	ret = ti_sci_proc_request(core->tsp);
+> +	if (ret < 0) {
+> +		dev_err(dev, "ti_sci_proc_request failed, ret = %d\n", ret);
+> +		goto err;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, core);
+> +	devres_close_group(dev, k3_r5_core_of_init);
 > +
 > +	return 0;
 > +
 > +err:
-> +	for (--i; i >= 0; --i)
-> +		clk_disable_unprepare(cif_dev->clks[i]);
-> +
+> +	devres_release_group(dev, k3_r5_core_of_init);
 > +	return ret;
 > +}
 > +
-> +void rkcif_soft_reset(struct rkcif_device *cif_dev)
+> +/*
+> + * free the resources explicitly since driver model is not being used
+> + * for the child R5F devices
+> + */
+> +static void k3_r5_core_of_exit(struct platform_device *pdev)
 > +{
-> +	reset_control_assert(cif_dev->cif_rst);
-> +
-> +	udelay(5);
-> +
-> +	reset_control_deassert(cif_dev->cif_rst);
-> +}
-> +
-> +static int rkcif_plat_probe(struct platform_device *pdev)
-> +{
+> +	struct k3_r5_core *core = platform_get_drvdata(pdev);
 > +	struct device *dev = &pdev->dev;
-> +	struct v4l2_device *v4l2_dev;
-> +	struct rkcif_device *cif_dev;
-> +	const struct cif_match_data *data;
-> +	int ret, irq;
-> +
-> +	cif_dev = devm_kzalloc(dev, sizeof(*cif_dev), GFP_KERNEL);
-> +	if (!cif_dev)
-> +		return -ENOMEM;
-> +
-> +	dev_set_drvdata(dev, cif_dev);
-> +	cif_dev->dev = dev;
-> +
-> +	data = of_device_get_match_data(&pdev->dev);
-> +	if (!data)
-> +		return -EINVAL;
-> +
-> +	cif_dev->data = data;
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0)
-> +		return irq;
-> +
-> +	ret = devm_request_irq(dev, irq, rkcif_irq_handler, IRQF_SHARED,
-> +			       dev_driver_string(dev), dev);
-> +	if (ret < 0) {
-> +		dev_err(dev, "request irq failed: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	cif_dev->irq = irq;
-> +
-> +	cif_dev->base_addr = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(cif_dev->base_addr))
-> +		return PTR_ERR(cif_dev->base_addr);
-> +
-> +	ret = of_reserved_mem_device_init(dev);
-> +	if (ret)
-> +		v4l2_info(v4l2_dev, "No reserved memory region assign to CIF\n");
-> +
-> +	ret = devm_clk_bulk_get(dev, data->clks_num, data->clks);
-> +	if (ret)
-> +		return ret;
-> +
-> +	cif_dev->cif_rst = devm_reset_control_array_get(dev, false, false);
-> +	if (IS_ERR(cif_dev->cif_rst))
-> +		return PTR_ERR(cif_dev->cif_rst);
-> +
-> +	/* Initialize the stream */
-> +	rkcif_stream_init(cif_dev);
-> +
-> +	strlcpy(cif_dev->media_dev.model, "rkcif",
-> +		sizeof(cif_dev->media_dev.model));
-> +	cif_dev->media_dev.dev = &pdev->dev;
-> +	v4l2_dev = &cif_dev->v4l2_dev;
-> +	v4l2_dev->mdev = &cif_dev->media_dev;
-> +	strlcpy(v4l2_dev->name, "rkcif", sizeof(v4l2_dev->name));
-> +	v4l2_ctrl_handler_init(&cif_dev->ctrl_handler, 8);
-> +	v4l2_dev->ctrl_handler = &cif_dev->ctrl_handler;
-> +
-> +	ret = v4l2_device_register(cif_dev->dev, &cif_dev->v4l2_dev);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	media_device_init(&cif_dev->media_dev);
-> +
-> +	ret = media_device_register(&cif_dev->media_dev);
-> +	if (ret < 0) {
-> +		v4l2_err(v4l2_dev, "Failed to register media device: %d\n",
-> +			 ret);
-> +		goto err_unreg_v4l2_dev;
-> +	}
-> +
-> +	/* create & register platefom subdev (from of_node) */
-> +	ret = rkcif_register_platform_subdevs(cif_dev);
-> +	if (ret < 0)
-> +		goto err_unreg_media_dev;
-> +
-> +	pm_runtime_enable(&pdev->dev);
-> +
-> +	return 0;
-> +
-> +err_unreg_media_dev:
-> +	media_device_unregister(&cif_dev->media_dev);
-> +err_unreg_v4l2_dev:
-> +	v4l2_device_unregister(&cif_dev->v4l2_dev);
-> +	return ret;
-> +}
-> +
-> +static int rkcif_plat_remove(struct platform_device *pdev)
-> +{
-> +	struct rkcif_device *cif_dev = platform_get_drvdata(pdev);
-> +
-> +	pm_runtime_disable(&pdev->dev);
-> +
-> +	media_device_unregister(&cif_dev->media_dev);
-> +	v4l2_device_unregister(&cif_dev->v4l2_dev);
-> +	rkcif_unregister_stream_vdev(cif_dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused rkcif_runtime_suspend(struct device *dev)
-> +{
-> +	struct rkcif_device *cif_dev = dev_get_drvdata(dev);
-> +
-> +	rkcif_disable_sys_clk(cif_dev);
-> +
-> +	return pinctrl_pm_select_sleep_state(dev);
-> +}
-> +
-> +static int __maybe_unused rkcif_runtime_resume(struct device *dev)
-> +{
-> +	struct rkcif_device *cif_dev = dev_get_drvdata(dev);
 > +	int ret;
 > +
-> +	ret = pinctrl_pm_select_default_state(dev);
-> +	if (ret < 0)
+> +	ret = ti_sci_proc_release(core->tsp);
+> +	if (ret)
+> +		dev_err(dev, "failed to release proc, ret = %d\n", ret);
+> +
+> +	platform_set_drvdata(pdev, NULL);
+> +	devres_release_group(dev, k3_r5_core_of_init);
+> +}
+> +
+> +static void k3_r5_cluster_of_exit(struct platform_device *pdev)
+> +{
+> +	struct k3_r5_cluster *cluster = platform_get_drvdata(pdev);
+> +	struct platform_device *cpdev;
+> +	struct k3_r5_core *core, *temp;
+> +
+> +	list_for_each_entry_safe_reverse(core, temp, &cluster->cores, elem) {
+> +		list_del(&core->elem);
+> +		cpdev = to_platform_device(core->dev);
+> +		k3_r5_core_of_exit(cpdev);
+> +	}
+> +}
+> +
+> +static int k3_r5_cluster_of_init(struct platform_device *pdev)
+> +{
+> +	struct k3_r5_cluster *cluster = platform_get_drvdata(pdev);
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev_of_node(dev);
+> +	struct platform_device *cpdev;
+> +	struct device_node *child;
+> +	struct k3_r5_core *core;
+> +	int ret;
+> +
+> +	for_each_available_child_of_node(np, child) {
+> +		cpdev = of_find_device_by_node(child);
+> +		if (!cpdev) {
+> +			ret = -ENODEV;
+> +			dev_err(dev, "could not get R5 core platform device\n");
+> +			goto fail;
+> +		}
+> +
+> +		ret = k3_r5_core_of_init(cpdev);
+> +		if (ret) {
+> +			dev_err(dev, "k3_r5_core_of_init failed, ret = %d\n",
+> +				ret);
+> +			put_device(&cpdev->dev);
+> +			goto fail;
+> +		}
+> +
+> +		core = platform_get_drvdata(cpdev);
+> +		put_device(&cpdev->dev);
+> +		list_add_tail(&core->elem, &cluster->cores);
+> +	}
+> +
+> +	return 0;
+> +
+> +fail:
+> +	k3_r5_cluster_of_exit(pdev);
+> +	return ret;
+> +}
+> +
+> +static int k3_r5_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev_of_node(dev);
+> +	struct k3_r5_cluster *cluster;
+> +	int ret;
+> +	int num_cores;
+> +
+> +	cluster = devm_kzalloc(dev, sizeof(*cluster), GFP_KERNEL);
+> +	if (!cluster)
+> +		return -ENOMEM;
+> +
+> +	cluster->dev = dev;
+> +	cluster->mode = CLUSTER_MODE_LOCKSTEP;
+> +	INIT_LIST_HEAD(&cluster->cores);
+> +
+> +	ret = of_property_read_u32(np, "ti,cluster-mode", &cluster->mode);
+> +	if (ret < 0 && ret != -EINVAL) {
+> +		dev_err(dev, "invalid format for ti,cluster-mode, ret = %d\n",
+> +			ret);
 > +		return ret;
-> +	rkcif_enable_sys_clk(cif_dev);
+> +	}
+> +
+> +	num_cores = of_get_available_child_count(np);
+> +	if (num_cores != 2) {
+> +		dev_err(dev, "MCU cluster requires both R5F cores to be enabled, num_cores = %d\n",
+> +			num_cores);
+> +		return -ENODEV;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, cluster);
+> +
+> +	ret = devm_of_platform_populate(dev);
+> +	if (ret) {
+> +		dev_err(dev, "devm_of_platform_populate failed, ret = %d\n",
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = k3_r5_cluster_of_init(pdev);
+> +	if (ret) {
+> +		dev_err(dev, "k3_r5_cluster_of_init failed, ret = %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = devm_add_action_or_reset(dev,
+> +				       (void(*)(void *))k3_r5_cluster_of_exit,
+> +				       pdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = k3_r5_cluster_rproc_init(pdev);
+> +	if (ret) {
+> +		dev_err(dev, "k3_r5_cluster_rproc_init failed, ret = %d\n",
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = devm_add_action_or_reset(dev,
+> +				       (void(*)(void *))k3_r5_cluster_rproc_exit,
+> +				       pdev);
+> +	if (ret)
+> +		return ret;
 > +
 > +	return 0;
 > +}
 > +
-> +static const struct dev_pm_ops rkcif_plat_pm_ops = {
-> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> +				pm_runtime_force_resume)
-> +	SET_RUNTIME_PM_OPS(rkcif_runtime_suspend, rkcif_runtime_resume, NULL)
+> +static const struct of_device_id k3_r5_of_match[] = {
+> +	{ .compatible = "ti,am654-r5fss", },
+> +	{ .compatible = "ti,j721e-r5fss", },
+> +	{ /* sentinel */ },
 > +};
+> +MODULE_DEVICE_TABLE(of, k3_r5_of_match);
 > +
-> +static struct platform_driver rkcif_plat_drv = {
+> +static struct platform_driver k3_r5_rproc_driver = {
+> +	.probe = k3_r5_probe,
 > +	.driver = {
-> +		   .name = CIF_DRIVER_NAME,
-> +		   .of_match_table = of_match_ptr(rkcif_plat_of_match),
-> +		   .pm = &rkcif_plat_pm_ops,
+> +		.name = "k3_r5_rproc",
+> +		.of_match_table = k3_r5_of_match,
 > +	},
-> +	.probe = rkcif_plat_probe,
-> +	.remove = rkcif_plat_remove,
 > +};
 > +
-> +module_platform_driver(rkcif_plat_drv);
-> +MODULE_AUTHOR("Rockchip Camera/ISP team");
-> +MODULE_DESCRIPTION("Rockchip CIF platform driver");
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/media/platform/rockchip/cif/dev.h b/drivers/media/platform/rockchip/cif/dev.h
-> new file mode 100644
-> index 000000000000..2126c2220ad2
-> --- /dev/null
-> +++ b/drivers/media/platform/rockchip/cif/dev.h
-> @@ -0,0 +1,213 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Rockchip CIF Driver
-> + *
-> + * Copyright (C) 2018 Rockchip Electronics Co., Ltd.
-> + */
+> +module_platform_driver(k3_r5_rproc_driver);
 > +
-> +#ifndef _RKCIF_DEV_H
-> +#define _RKCIF_DEV_H
-> +
-> +#include <linux/mutex.h>
-> +#include <media/media-device.h>
-> +#include <media/media-entity.h>
-> +#include <media/v4l2-ctrls.h>
-> +#include <media/v4l2-device.h>
-> +#include <media/videobuf2-v4l2.h>
-> +
-> +#define CIF_DRIVER_NAME		"rkcif"
-> +#define CIF_VIDEODEVICE_NAME	"stream_cif"
-> +
-> +#define RKCIF_MAX_BUS_CLK	8
-> +#define RKCIF_MAX_SENSOR	2
-> +#define RKCIF_MAX_RESET		5
-> +#define RKCIF_MAX_CSI_CHANNEL	4
-> +
-> +#define RKCIF_DEFAULT_WIDTH	640
-> +#define RKCIF_DEFAULT_HEIGHT	480
-> +
-> +#define write_cif_reg(base, addr, val)  writel(val, (addr) + (base))
-> +#define read_cif_reg(base, addr) readl((addr) + (base))
-> +
-> +#define write_csihost_reg(base, addr, val)  writel(val, (addr) + (base))
-> +#define read_csihost_reg(base, addr) readl((addr) + (base))
-> +
-> +enum rkcif_state {
-> +	RKCIF_STATE_DISABLED,
-> +	RKCIF_STATE_READY,
-> +	RKCIF_STATE_STREAMING
-> +};
-> +
-> +enum rkcif_chip_id {
-> +	CHIP_PX30_CIF,
-> +	CHIP_RK1808_CIF,
-> +	CHIP_RK3128_CIF,
-> +	CHIP_RK3288_CIF
-> +};
-> +
-> +enum host_type_t {
-> +	RK_CSI_RXHOST,
-> +	RK_DSI_RXHOST
-> +};
-> +
-> +struct rkcif_buffer {
-> +	struct vb2_v4l2_buffer vb;
-> +	struct list_head queue;
-> +	union {
-> +		u32 buff_addr[VIDEO_MAX_PLANES];
-> +		void *vaddr[VIDEO_MAX_PLANES];
-> +	};
-> +};
-> +
-> +struct rkcif_dummy_buffer {
-> +	void *vaddr;
-> +	dma_addr_t dma_addr;
-> +	u32 size;
-> +};
-> +
-> +extern int rkcif_debug;
-> +
-> +static inline struct rkcif_buffer *to_rkcif_buffer(struct vb2_v4l2_buffer *vb)
-> +{
-> +	return container_of(vb, struct rkcif_buffer, vb);
-> +}
-> +
-> +/*
-> + * struct rkcif_sensor_info - Sensor infomations
-> + * @mbus: media bus configuration
-> + */
-> +struct rkcif_sensor_info {
-> +	struct v4l2_subdev *sd;
-> +	int pad;
-> +	struct v4l2_mbus_config mbus;
-> +	int lanes;
-> +};
-> +
-> +/*
-> + * struct cif_output_fmt - The output format
-> + *
-> + * @fourcc: pixel format in fourcc
-> + * @cplanes: number of colour planes
-> + * @fmt_val: the fmt val corresponding to CIF_FOR register
-> + * @bpp: bits per pixel for each cplanes
-> + */
-> +struct cif_output_fmt {
-> +	u32 fourcc;
-> +	u32 mbus;
-> +	u8 cplanes;
-> +	u8 mplanes;
-> +	u32 fmt_val;
-> +	u8 bpp[VIDEO_MAX_PLANES];
-> +};
-> +
-> +enum cif_fmt_type {
-> +	CIF_FMT_TYPE_YUV = 0,
-> +	CIF_FMT_TYPE_RAW,
-> +};
-> +
-> +/*
-> + * struct cif_input_fmt - The input mbus format from sensor
-> + *
-> + * @mbus_code: mbus format
-> + * @dvp_fmt_val: the fmt val corresponding to CIF_FOR register
-> + * @csi_fmt_val: the fmt val corresponding to CIF_CSI_ID_CTRL
-> + * @field: the field type of the input from sensor
-> + */
-> +struct cif_input_fmt {
-> +	u32 mbus_code;
-> +	u32 dvp_fmt_val;
-> +	u32 csi_fmt_val;
-> +	enum cif_fmt_type fmt_type;
-> +	enum v4l2_field field;
-> +};
-> +
-> +/*
-> + * struct rkcif_stream - Stream states TODO
-> + *
-> + * @vbq_lock: lock to protect buf_queue
-> + * @buf_queue: queued buffer list
-> + * @dummy_buf: dummy space to store dropped data
-> + *
-> + * rkcif use shadowsock registers, so it need two buffer at a time
-> + * @curr_buf: the buffer used for current frame
-> + * @next_buf: the buffer used for next frame
-> + */
-> +struct rkcif_stream {
-> +	struct rkcif_device		*cifdev;
-> +	enum rkcif_state		state;
-> +	bool				stopping;
-> +	wait_queue_head_t		wq_stopped;
-> +	int				frame_idx;
-> +	int				frame_phase;
-> +
-> +	/* lock between irq and buf_queue */
-> +	spinlock_t			vbq_lock;
-> +	struct vb2_queue		buf_queue;
-> +	struct list_head		buf_head;
-> +	struct rkcif_dummy_buffer	dummy_buf;
-> +	struct rkcif_buffer		*curr_buf;
-> +	struct rkcif_buffer		*next_buf;
-> +
-> +	/* vfd lock */
-> +	struct mutex			vlock;
-> +	struct video_device		vdev;
-> +	/* TODO: pad for dvp and mipi separately? */
-> +	struct media_pad		pad;
-> +
-> +	const struct cif_output_fmt	*cif_fmt_out;
-> +	const struct cif_input_fmt	*cif_fmt_in;
-> +	struct v4l2_pix_format_mplane	pixm;
-> +	struct v4l2_rect		crop;
-> +	int				crop_enable;
-> +};
-> +
-> +static inline struct rkcif_stream *to_rkcif_stream(struct video_device *vdev)
-> +{
-> +	return container_of(vdev, struct rkcif_stream, vdev);
-> +}
-> +
-> +struct cif_match_data {
-> +	int chip_id;
-> +	struct clk_bulk_data *clks;
-> +	int clks_num;
-> +};
-> +
-> +/*
-> + * struct rkcif_device - ISP platform device
-> + * @base_addr: base register address
-> + * @active_sensor: sensor in-use, set when streaming on
-> + * @stream: capture video device
-> + */
-> +struct rkcif_device {
-> +	struct list_head		list;
-> +	struct device			*dev;
-> +	int				irq;
-> +	void __iomem			*base_addr;
-> +	void __iomem			*csi_base;
-> +	struct clk			*clks[RKCIF_MAX_BUS_CLK];
-> +	int				clk_size;
-> +	struct vb2_alloc_ctx		*alloc_ctx;
-> +	bool				iommu_en;
-> +	struct iommu_domain		*domain;
-> +	struct reset_control		*cif_rst;
-> +
-> +	struct v4l2_device		v4l2_dev;
-> +	struct media_device		media_dev;
-> +	struct v4l2_ctrl_handler	ctrl_handler;
-> +	struct v4l2_async_notifier	notifier;
-> +	struct v4l2_async_subdev	asd;
-> +	struct rkcif_sensor_info	sensor;
-> +
-> +	struct rkcif_stream		stream;
-> +	const struct cif_match_data	*data;
-> +};
-> +
-> +void rkcif_unregister_stream_vdev(struct rkcif_device *dev);
-> +int rkcif_register_stream_vdev(struct rkcif_device *dev);
-> +void rkcif_stream_init(struct rkcif_device *dev);
-> +
-> +void rkcif_irq_oneframe(struct rkcif_device *cif_dev);
-> +void rkcif_irq_pingpong(struct rkcif_device *cif_dev);
-> +void rkcif_soft_reset(struct rkcif_device *cif_dev);
-> +
-> +#endif
-> diff --git a/drivers/media/platform/rockchip/cif/regs.h b/drivers/media/platform/rockchip/cif/regs.h
-> new file mode 100644
-> index 000000000000..5e0f926c70d3
-> --- /dev/null
-> +++ b/drivers/media/platform/rockchip/cif/regs.h
-> @@ -0,0 +1,256 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Rockchip CIF Driver
-> + *
-> + * Copyright (C) 2018 Rockchip Electronics Co., Ltd.
-> + */
-> +
-> +#ifndef _RKCIF_REGS_H
-> +#define _RKCIF_REGS_H
-> +
-> +/* CIF Reg Offset */
-> +#define CIF_CTRL			0x00
-> +#define CIF_INTEN			0x04
-> +#define CIF_INTSTAT			0x08
-> +#define CIF_FOR				0x0c
-> +#define CIF_LINE_NUM_ADDR		0x10
-> +#define CIF_FRM0_ADDR_Y			0x14
-> +#define CIF_FRM0_ADDR_UV		0x18
-> +#define CIF_FRM1_ADDR_Y			0x1c
-> +#define CIF_FRM1_ADDR_UV		0x20
-> +#define CIF_VIR_LINE_WIDTH		0x24
-> +#define CIF_SET_SIZE			0x28
-> +#define CIF_SCM_ADDR_Y			0x2c
-> +#define CIF_SCM_ADDR_U			0x30
-> +#define CIF_SCM_ADDR_V			0x34
-> +#define CIF_WB_UP_FILTER		0x38
-> +#define CIF_WB_LOW_FILTER		0x3c
-> +#define CIF_WBC_CNT			0x40
-> +#define CIF_CROP			0x44
-> +#define CIF_SCL_CTRL			0x48
-> +#define CIF_SCL_DST			0x4c
-> +#define CIF_SCL_FCT			0x50
-> +#define CIF_SCL_VALID_NUM		0x54
-> +#define CIF_LINE_LOOP_CTR		0x58
-> +#define CIF_FRAME_STATUS		0x60
-> +#define CIF_CUR_DST			0x64
-> +#define CIF_LAST_LINE			0x68
-> +#define CIF_LAST_PIX			0x6c
-> +
-> +/* RK1808 CIF CSI Registers Offset */
-> +#define CIF_CSI_ID0_CTRL0		0x80
-> +#define CIF_CSI_ID0_CTRL1		0x84
-> +#define CIF_CSI_ID1_CTRL0		0x88
-> +#define CIF_CSI_ID1_CTRL1		0x8c
-> +#define CIF_CSI_ID2_CTRL0		0x90
-> +#define CIF_CSI_ID2_CTRL1		0x94
-> +#define CIF_CSI_ID3_CTRL0		0x98
-> +#define CIF_CSI_ID3_CTRL1		0x9c
-> +#define CIF_CSI_WATER_LINE		0xa0
-> +#define CIF_CSI_FRM0_ADDR_Y_ID0		0xa4
-> +#define CIF_CSI_FRM1_ADDR_Y_ID0		0xa8
-> +#define CIF_CSI_FRM0_ADDR_UV_ID0	0xac
-> +#define CIF_CSI_FRM1_ADDR_UV_ID0	0xb0
-> +#define CIF_CSI_FRM0_VLW_Y_ID0		0xb4
-> +#define CIF_CSI_FRM1_VLW_Y_ID0		0xb8
-> +#define CIF_CSI_FRM0_VLW_UV_ID0		0xbc
-> +#define CIF_CSI_FRM1_VLW_UV_ID0		0xc0
-> +#define CIF_CSI_FRM0_ADDR_Y_ID1		0xc4
-> +#define CIF_CSI_FRM1_ADDR_Y_ID1		0xc8
-> +#define CIF_CSI_FRM0_ADDR_UV_ID1	0xcc
-> +#define CIF_CSI_FRM1_ADDR_UV_ID1	0xd0
-> +#define CIF_CSI_FRM0_VLW_Y_ID1		0xd4
-> +#define CIF_CSI_FRM1_VLW_Y_ID1		0xd8
-> +#define CIF_CSI_FRM0_VLW_UV_ID1		0xdc
-> +#define CIF_CSI_FRM1_VLW_UV_ID1		0xe0
-> +#define CIF_CSI_FRM0_ADDR_Y_ID2		0xe4
-> +#define CIF_CSI_FRM1_ADDR_Y_ID2		0xe8
-> +#define CIF_CSI_FRM0_ADDR_UV_ID2	0xec
-> +#define CIF_CSI_FRM1_ADDR_UV_ID2	0xf0
-> +#define CIF_CSI_FRM0_VLW_Y_ID2		0xf4
-> +#define CIF_CSI_FRM1_VLW_Y_ID2		0xf8
-> +#define CIF_CSI_FRM0_VLW_UV_ID2		0xfc
-> +#define CIF_CSI_FRM1_VLW_UV_ID2		0x100
-> +#define CIF_CSI_FRM0_ADDR_Y_ID3		0x104
-> +#define CIF_CSI_FRM1_ADDR_Y_ID3		0x108
-> +#define CIF_CSI_FRM0_ADDR_UV_ID3	0x10c
-> +#define CIF_CSI_FRM1_ADDR_UV_ID3	0x110
-> +#define CIF_CSI_FRM0_VLW_Y_ID3		0x114
-> +#define CIF_CSI_FRM1_VLW_Y_ID3		0x118
-> +#define CIF_CSI_FRM0_VLW_UV_ID3		0x11c
-> +#define CIF_CSI_FRM1_VLW_UV_ID3		0x120
-> +#define CIF_CSI_INTEN			0x124
-> +#define CIF_CSI_INTSTAT			0x128
-> +#define CIF_CSI_LINE_INT_NUM_ID0_1	0x12c
-> +#define CIF_CSI_LINE_INT_NUM_ID2_3	0x130
-> +#define CIF_CSI_LINE_CNT_ID0_1		0x134
-> +#define CIF_CSI_LINE_CNT_ID2_3		0x138
-> +#define CIF_CSI_ID0_CROP_START		0x13c
-> +#define CIF_CSI_ID1_CROP_START		0x140
-> +#define CIF_CSI_ID2_CROP_START		0x144
-> +#define CIF_CSI_ID3_CROP_START		0x148
-> +
-> +/* The key register bit description */
-> +
-> +/* CIF_CTRL Reg */
-> +#define DISABLE_CAPTURE			(0x0 << 0)
-> +#define ENABLE_CAPTURE			(0x1 << 0)
-> +#define MODE_ONEFRAME			(0x0 << 1)
-> +#define MODE_PINGPONG			(0x1 << 1)
-> +#define MODE_LINELOOP			(0x2 << 1)
-> +#define AXI_BURST_16			(0xF << 12)
-> +
-> +/* CIF_INTEN */
-> +#define INTEN_DISABLE			(0x0 << 0)
-> +#define FRAME_END_EN			(0x1 << 0)
-> +#define LINE_ERR_EN			(0x1 << 2)
-> +#define BUS_ERR_EN			(0x1 << 6)
-> +#define SCL_ERR_EN			(0x1 << 7)
-> +#define PST_INF_FRAME_END_EN		(0x1 << 9)
-> +
-> +/* CIF INTSTAT */
-> +#define INTSTAT_CLS			(0x3FF)
-> +#define FRAME_END			(0x01 << 0)
-> +#define LINE_ERR			(0x01 << 2)
-> +#define PST_INF_FRAME_END		(0x01 << 9)
-> +#define FRAME_END_CLR			(0x01 << 0)
-> +#define LINE_ERR_CLR			(0x01 << 2)
-> +#define PST_INF_FRAME_END_CLR		(0x01 << 9)
-> +#define INTSTAT_ERR			(0xFC)
-> +
-> +/* FRAME STATUS */
-> +#define FRAME_STAT_CLS			0x00
-> +#define FRM0_STAT_CLS			0x20	/* write 0 to clear frame 0 */
-> +
-> +/* CIF FORMAT */
-> +#define VSY_HIGH_ACTIVE			(0x01 << 0)
-> +#define VSY_LOW_ACTIVE			(0x00 << 0)
-> +#define HSY_LOW_ACTIVE			(0x01 << 1)
-> +#define HSY_HIGH_ACTIVE			(0x00 << 1)
-> +#define INPUT_MODE_YUV			(0x00 << 2)
-> +#define INPUT_MODE_PAL			(0x02 << 2)
-> +#define INPUT_MODE_NTSC			(0x03 << 2)
-> +#define INPUT_MODE_BT1120		(0x07 << 2)
-> +#define INPUT_MODE_RAW			(0x04 << 2)
-> +#define INPUT_MODE_JPEG			(0x05 << 2)
-> +#define INPUT_MODE_MIPI			(0x06 << 2)
-> +#define YUV_INPUT_ORDER_UYVY		(0x00 << 5)
-> +#define YUV_INPUT_ORDER_YVYU		(0x01 << 5)
-> +#define YUV_INPUT_ORDER_VYUY		(0x10 << 5)
-> +#define YUV_INPUT_ORDER_YUYV		(0x03 << 5)
-> +#define YUV_INPUT_422			(0x00 << 7)
-> +#define YUV_INPUT_420			(0x01 << 7)
-> +#define INPUT_420_ORDER_EVEN		(0x00 << 8)
-> +#define INPUT_420_ORDER_ODD		(0x01 << 8)
-> +#define CCIR_INPUT_ORDER_ODD		(0x00 << 9)
-> +#define CCIR_INPUT_ORDER_EVEN		(0x01 << 9)
-> +#define RAW_DATA_WIDTH_8		(0x00 << 11)
-> +#define RAW_DATA_WIDTH_10		(0x01 << 11)
-> +#define RAW_DATA_WIDTH_12		(0x02 << 11)
-> +#define YUV_OUTPUT_422			(0x00 << 16)
-> +#define YUV_OUTPUT_420			(0x01 << 16)
-> +#define OUTPUT_420_ORDER_EVEN		(0x00 << 17)
-> +#define OUTPUT_420_ORDER_ODD		(0x01 << 17)
-> +#define RAWD_DATA_LITTLE_ENDIAN		(0x00 << 18)
-> +#define RAWD_DATA_BIG_ENDIAN		(0x01 << 18)
-> +#define UV_STORAGE_ORDER_UVUV		(0x00 << 19)
-> +#define UV_STORAGE_ORDER_VUVU		(0x01 << 19)
-> +#define BT1120_CLOCK_SINGLE_EDGES	(0x00 << 24)
-> +#define BT1120_CLOCK_DOUBLE_EDGES	(0x01 << 24)
-> +#define BT1120_TRANSMIT_INTERFACE	(0x00 << 25)
-> +#define BT1120_TRANSMIT_PROGRESS	(0x01 << 25)
-> +#define BT1120_YC_SWAP			(0x01 << 26)
-> +
-> +/* CIF_SCL_CTRL */
-> +#define ENABLE_SCL_DOWN			(0x01 << 0)
-> +#define DISABLE_SCL_DOWN		(0x00 << 0)
-> +#define ENABLE_SCL_UP			(0x01 << 1)
-> +#define DISABLE_SCL_UP			(0x00 << 1)
-> +#define ENABLE_YUV_16BIT_BYPASS		(0x01 << 4)
-> +#define DISABLE_YUV_16BIT_BYPASS	(0x00 << 4)
-> +#define ENABLE_RAW_16BIT_BYPASS		(0x01 << 5)
-> +#define DISABLE_RAW_16BIT_BYPASS	(0x00 << 5)
-> +#define ENABLE_32BIT_BYPASS		(0x01 << 6)
-> +#define DISABLE_32BIT_BYPASS		(0x00 << 6)
-> +
-> +/* CIF_INTSTAT */
-> +#define CIF_F0_READY			(0x01 << 0)
-> +#define CIF_F1_READY			(0x01 << 1)
-> +
-> +/* CIF CROP */
-> +#define CIF_CROP_Y_SHIFT		16
-> +#define CIF_CROP_X_SHIFT		0
-> +
-> +/* CIF_CSI_ID_CTRL0 */
-> +#define CSI_DISABLE_CAPTURE		(0x0 << 0)
-> +#define CSI_ENABLE_CAPTURE		(0x1 << 0)
-> +#define CSI_WRDDR_TYPE_RAW8		(0x0 << 1)
-> +#define CSI_WRDDR_TYPE_RAW10		(0x1 << 1)
-> +#define CSI_WRDDR_TYPE_RAW12		(0x2 << 1)
-> +#define CSI_WRDDR_TYPE_RGB888		(0x3 << 1)
-> +#define CSI_WRDDR_TYPE_YUV422		(0x4 << 1)
-> +#define CSI_DISABLE_COMMAND_MODE	(0x0 << 4)
-> +#define CSI_ENABLE_COMMAND_MODE		(0x1 << 4)
-> +#define CSI_DISABLE_CROP		(0x0 << 5)
-> +#define CSI_ENABLE_CROP			(0x1 << 5)
-> +
-> +/* CIF_CSI_INTEN */
-> +#define CSI_FRAME0_START_INTEN(id)	(0x1 << ((id) * 2))
-> +#define CSI_FRAME1_START_INTEN(id)	(0x1 << ((id) * 2 + 1))
-> +#define CSI_FRAME0_END_INTEN(id)	(0x1 << ((id) * 2 + 8))
-> +#define CSI_FRAME1_END_INTEN(id)	(0x1 << ((id) * 2 + 9))
-> +#define CSI_DMA_Y_FIFO_OVERFLOW_INTEN	(0x1 << 16)
-> +#define CSI_DMA_UV_FIFO_OVERFLOW_INTEN	(0x1 << 17)
-> +#define CSI_CONFIG_FIFO_OVERFLOW_INTEN	(0x1 << 18)
-> +#define CSI_BANDWIDTH_LACK_INTEN	(0x1 << 19)
-> +#define CSI_RX_FIFO_OVERFLOW_INTEN	(0x1 << 20)
-> +#define CSI_ALL_FRAME_START_INTEN	(0xff << 0)
-> +#define CSI_ALL_FRAME_END_INTEN		(0xff << 8)
-> +#define CSI_ALL_ERROR_INTEN		(0x1f << 16)
-> +
-> +/* CIF_CSI_INTSTAT */
-> +#define CSI_FRAME0_START_ID0		(0x1 << 0)
-> +#define CSI_FRAME1_START_ID0		(0x1 << 1)
-> +#define CSI_FRAME0_START_ID1		(0x1 << 2)
-> +#define CSI_FRAME1_START_ID1		(0x1 << 3)
-> +#define CSI_FRAME0_START_ID2		(0x1 << 4)
-> +#define CSI_FRAME1_START_ID2		(0x1 << 5)
-> +#define CSI_FRAME0_START_ID3		(0x1 << 6)
-> +#define CSI_FRAME1_START_ID3		(0x1 << 7)
-> +#define CSI_FRAME0_END_ID0		(0x1 << 8)
-> +#define CSI_FRAME1_END_ID0		(0x1 << 9)
-> +#define CSI_FRAME0_END_ID1		(0x1 << 10)
-> +#define CSI_FRAME1_END_ID1		(0x1 << 11)
-> +#define CSI_FRAME0_END_ID2		(0x1 << 12)
-> +#define CSI_FRAME1_END_ID2		(0x1 << 13)
-> +#define CSI_FRAME0_END_ID3		(0x1 << 14)
-> +#define CSI_FRAME1_END_ID3		(0x1 << 15)
-> +#define CSI_DMA_Y_FIFO_OVERFLOW		(0x1 << 16)
-> +#define CSI_DMA_UV_FIFO_OVERFLOW	(0x1 << 17)
-> +#define CSI_CONFIG_FIFO_OVERFLOW	(0x1 << 18)
-> +#define CSI_BANDWIDTH_LACK		(0x1 << 19)
-> +#define CSI_RX_FIFO_OVERFLOW		(0x1 << 20)
-> +
-> +#define CSI_FIFO_OVERFLOW	(CSI_DMA_Y_FIFO_OVERFLOW |	\
-> +				 CSI_DMA_UV_FIFO_OVERFLOW |	\
-> +				 CSI_CONFIG_FIFO_OVERFLOW |	\
-> +				 CSI_RX_FIFO_OVERFLOW)
-> +
-> +/* CSI Host Registers Define */
-> +#define CSIHOST_N_LANES		0x04
-> +#define CSIHOST_PHY_RSTZ	0x0c
-> +#define CSIHOST_RESETN		0x10
-> +#define CSIHOST_ERR1		0x20
-> +#define CSIHOST_ERR2		0x24
-> +#define CSIHOST_MSK1		0x28
-> +#define CSIHOST_MSK2		0x2c
-> +#define CSIHOST_CONTROL		0x40
-> +
-> +#define SW_CPHY_EN(x)		((x) << 0)
-> +#define SW_DSI_EN(x)		((x) << 4)
-> +#define SW_DATATYPE_FS(x)	((x) << 8)
-> +#define SW_DATATYPE_FE(x)	((x) << 14)
-> +#define SW_DATATYPE_LS(x)	((x) << 20)
-> +#define SW_DATATYPE_LE(x)	((x) << 26)
-> +
-> +#endif
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_DESCRIPTION("TI K3 R5F remote processor driver");
+> +MODULE_AUTHOR("Suman Anna <s-anna@ti.com>");
+> -- 
+> 2.26.0
 > 
