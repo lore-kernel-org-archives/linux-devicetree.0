@@ -6,82 +6,93 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11534C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76332C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D67662070E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:14:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D6E920720
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:14:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594336472;
-	bh=wIqcbR+39ogug0lWff1xIiHr6TVM4ts9aZ//2HntW/8=;
+	s=default; t=1594336491;
+	bh=d1uVvdO/dNHtLZWEqpN7n/n5kfvrdtFCU99/atKL+dk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YigRzTF+UsulLC0mdzdOcHcL0L0bCgrsiMsNaPAZdSWnCUenApqFJRldZTxjePALU
-	 O9LhxCVdopyiTtpju1Xq6x0o/e/BYzy0IK8tZIS7n9fNPdYDxu9BhEwk/gkQONKDf/
-	 Njp47Yq4hJ2PhNBH1BgH7D7/cusBkR6tvq5EeEOw=
+	b=hYYVHNyCLicGVPz+lrDu3NDFQOuAq6EucQWSiGpQnJAgVYz/4VGohqp0v92QvMt+W
+	 ILeH/eBzZOEbsPASNpRR7MK2RPI85yRRkvDYLk35vwcNs9fQIf4P1tvgruMzx9oNfW
+	 +yFNKd9t+wRdY0ZtXOaEfiTOOVeKCmgnLQpjDDhg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbgGIXOc (ORCPT
+        id S1726820AbgGIXOr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 19:14:32 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:37174 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbgGIXOc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 19:14:32 -0400
-Received: by mail-il1-f196.google.com with SMTP id r12so3517035ilh.4;
-        Thu, 09 Jul 2020 16:14:31 -0700 (PDT)
+        Thu, 9 Jul 2020 19:14:47 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:40867 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbgGIXOq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 19:14:46 -0400
+Received: by mail-il1-f194.google.com with SMTP id e18so3481689ilr.7;
+        Thu, 09 Jul 2020 16:14:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=YOfTosWvdo/xUF8oXi8DuuP0nOY85fYAm5dv/zsRHUo=;
-        b=A6OlYEVHxsFJM2LoOnURehjQphL47R/YjVmfC5kN1Aj45FVGWD734g8A5wbpEj84cF
-         MocudeJduJ4Xa0f4iYcIDU89NFJIYNC8xsdncPLL73AP6fZ7eiofoIDQ48sMlstqzNK7
-         zP0zFIIJK1wAu5Ghg5lC1YKpDI1PuYovVaCJcPeAnGuQHwVtti6K1xZ8+0E2CJolpDNh
-         QTs4HJKcOpGqTCLgnp4+ru6YAkiPVuZGfukCsY4oKc6+ZBF5/6lK5OlTo4pWMls3zsvA
-         ai7HkYr7Ge1M6cqmsCEZVc0lenDWcjPGMPyBAVH/fvg5mKiK4NYxun5DF83vIEXbzxfZ
-         ki6w==
-X-Gm-Message-State: AOAM533+JMSyENM5c4IwTe4SXg0vCWtEzmm4aHpt2LhuspXyKFKcfKPg
-        yFXXxm8Ln04CO/DbumQdnwcQwosYUg==
-X-Google-Smtp-Source: ABdhPJz0uu3TJ4en/Ngt17u9+MVLk0V/LawcM6Pb0ptKIvYPbUY6rXhbu6u3d20kp4aH+qcfsndMzg==
-X-Received: by 2002:a92:cc06:: with SMTP id s6mr50617518ilp.86.1594336471216;
-        Thu, 09 Jul 2020 16:14:31 -0700 (PDT)
+        bh=9/pD7cr8lRFB2QR/pjn1SXMs9QW8l4vbXZ+8xQ3OLzc=;
+        b=DuqAGoWVbz02/y6hIm9mdF/kV2wJoLc9jT+rQyubEIz0wMDUkyhGyJuIQcx3hwtX+l
+         mCU2tO4sn439CNB7kpDcFardN7cGeoPOSeW9PDBvQo16svOvHlWjT4rRoGpTOjGU2Ucd
+         4X+O2R8ZkVGwgxSjfYQbD3w2WuzaoNDkiCGNBxwpLsFpXGntstkJLMoUeWIa65mRxVH3
+         VDqGNXjm6Or0yg6uIp4hI4O2JHbZxa4PJkJOCuATXFI68OXEylaghuIOFcnFbJWxHLy4
+         yBTVuz34eyAf5g4kQlLemYS9u+w2PwaQd0+bMzm43gNOhKePo7qGtAoNbtORXpG9J6bJ
+         XaQg==
+X-Gm-Message-State: AOAM533B3YbhhYziEhzOeX7wHGE7/kwx6cxZs9Ba/u2k8dXyz2Ne7+DR
+        AO9zPXVgVt6CtCKlsPUCNg==
+X-Google-Smtp-Source: ABdhPJx0VFnhwAIiq029Kxet6kqjRJ18m1i4k1getuY7Fb791BR8UoU+iRoeP8rmdEcDCahafE0TQw==
+X-Received: by 2002:a92:794f:: with SMTP id u76mr45321103ilc.215.1594336485400;
+        Thu, 09 Jul 2020 16:14:45 -0700 (PDT)
 Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id w82sm2678159ili.42.2020.07.09.16.14.30
+        by smtp.gmail.com with ESMTPSA id m16sm2535338ili.26.2020.07.09.16.14.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 16:14:30 -0700 (PDT)
-Received: (nullmailer pid 1075154 invoked by uid 1000);
-        Thu, 09 Jul 2020 23:14:29 -0000
-Date:   Thu, 9 Jul 2020 17:14:29 -0600
+        Thu, 09 Jul 2020 16:14:44 -0700 (PDT)
+Received: (nullmailer pid 1075615 invoked by uid 1000);
+        Thu, 09 Jul 2020 23:14:44 -0000
+Date:   Thu, 9 Jul 2020 17:14:44 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-realtek-soc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+Cc:     linux-realtek-soc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, James Tai <james.tai@realtek.com>,
         Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v4 1/3] dt-bindings: arm: realtek: Convert comments to
- descriptions
-Message-ID: <20200709231429.GA1075098@bogus>
+Subject: Re: [PATCH v4 2/3] dt-bindings: arm: realtek: Document RTD1319 and
+ Realtek Pym Particles EVB
+Message-ID: <20200709231444.GA1075562@bogus>
 References: <20200622125527.24207-1-afaerber@suse.de>
- <20200622125527.24207-2-afaerber@suse.de>
+ <20200622125527.24207-3-afaerber@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200622125527.24207-2-afaerber@suse.de>
+In-Reply-To: <20200622125527.24207-3-afaerber@suse.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 22 Jun 2020 14:55:24 +0200, Andreas Färber wrote:
-> Turn the SoC-level comments into description properties.
+On Mon, 22 Jun 2020 14:55:25 +0200, Andreas Färber wrote:
+> From: James Tai <james.tai@realtek.com>
 > 
+> Define compatible strings for Realtek RTD1319 SoC and Realtek Pym Particles
+> EVB.
+> 
+> Signed-off-by: James Tai <james.tai@realtek.com>
 > Signed-off-by: Andreas Färber <afaerber@suse.de>
 > ---
->  v4: New
+>  v3 -> v4:
+>  * Renamed compatible from pymparticle to pym-particles
+>  * Turned SoC comment into description
 > 
->  .../devicetree/bindings/arm/realtek.yaml      | 24 +++++++++----------
->  1 file changed, 12 insertions(+), 12 deletions(-)
+>  v2 -> v3: Unchanged
+> 
+>  v1 -> v2:
+>  * Put string in alphabetical order
+> 
+>  Documentation/devicetree/bindings/arm/realtek.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
