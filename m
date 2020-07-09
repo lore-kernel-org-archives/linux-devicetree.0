@@ -7,228 +7,125 @@ X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E46C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 10:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B02C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 10:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2308C2065F
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 10:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 144E1206DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 10:29:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Y3ropLhK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ZBimqe3Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726367AbgGIKPR (ORCPT
+        id S1726343AbgGIK3N (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 06:15:17 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:19216 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726357AbgGIKPR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 9 Jul 2020 06:15:17 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594289715; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: To:
- Subject: Sender; bh=R96k3NJkJXHArnjayQMtO7eaVw9xfD/00FOqn9uud7M=; b=Y3ropLhK56zPOGEuvlL/0RVlfIdbARvb73Fc2VSZKXZKtXXDjm3dgficdf66LZ1Lwfx2F6fC
- f4lVUSFlJlOnn5n4dMFXmh+d59A6kujV3qnNLKTpyp6DVxvRbujqfwM9um3M+v3jgPorOx2e
- S7HLvnM98Zxbgk806VInj3LAKFw=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n20.prod.us-west-2.postgun.com with SMTP id
- 5f06ee2c0082b2784837d1c7 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 10:15:08
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0C0B4C433A1; Thu,  9 Jul 2020 10:15:08 +0000 (UTC)
-Received: from [192.168.0.129] (unknown [183.83.142.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rohitkr)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0FFF2C43387;
-        Thu,  9 Jul 2020 10:15:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0FFF2C43387
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
-Subject: Re: [PATCH v3 3/8] ASoC: qcom: lpass: Use regmap_field for i2sctl and
- dmactl registers
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
-        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
-        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1594184896-10629-1-git-send-email-rohitkr@codeaurora.org>
- <1594184896-10629-4-git-send-email-rohitkr@codeaurora.org>
- <a59dc25f-cac2-5540-f1f4-78fd749c65c9@linaro.org>
- <3b849440-091e-bbd3-4944-8a196e181af7@codeaurora.org>
- <ac634d4d-527a-7262-2744-203c04ee0982@linaro.org>
-From:   Rohit Kumar <rohitkr@codeaurora.org>
-Message-ID: <4c5cb96c-9423-67a5-0da6-ee7cf9b1ea32@codeaurora.org>
-Date:   Thu, 9 Jul 2020 15:44:59 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 9 Jul 2020 06:29:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37666 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbgGIK3N (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 06:29:13 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F8D4C061A0B
+        for <devicetree@vger.kernel.org>; Thu,  9 Jul 2020 03:29:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=JLP9vuUZgJF4vfIDO5Sksc0eKG106jzUub4CiM22AOI=; b=ZBimqe3Ym8NJlNPzjomxPxDGx
+        EUy2IItrkhRm5FC39h74ART0BNXIV9vepBrC6QNVkMnCA4X/5MRFRfKLeSq9BqV2Ri3mk/o9U5nHA
+        Xbl5Ei0WvjGYU4lSjqS0by07HuuYziPmUbbzxjKg1SCk9DgVGRqwEATJVkBS4FCZ/ZbV3upHVXX8f
+        6jJyy8NFoPpDTTu5zBb2dqHhpDTmzsG2axtN217RnmjNhcSQk6tM54888U9xXmEb4QRE3LrVOigp/
+        I9DB5/wmI5jTnSLcnma0U+r4fivFNM8ZYzCUvYI+4S70QRRawhTaq25wON6ZpxbKhOv0vQ1KKHXU9
+        VayCn+Wvw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:37266)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jtTnY-0000ax-5A; Thu, 09 Jul 2020 11:29:00 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jtTnX-0002A7-9a; Thu, 09 Jul 2020 11:28:59 +0100
+Date:   Thu, 9 Jul 2020 11:28:59 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] dt: update Marvell Armada 38x COMPHY binding
+Message-ID: <20200709102859.GG1551@shell.armlinux.org.uk>
+References: <20200630160452.GD1551@shell.armlinux.org.uk>
+ <E1jqIlJ-0007rM-Oe@rmk-PC.armlinux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <ac634d4d-527a-7262-2744-203c04ee0982@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <E1jqIlJ-0007rM-Oe@rmk-PC.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Rob?
 
-On 7/9/2020 3:36 PM, Srinivas Kandagatla wrote:
->
->
-> On 09/07/2020 10:57, Rohit Kumar wrote:
->> Thanks Srini for reviewing.
->>
->> On 7/9/2020 2:56 PM, Srinivas Kandagatla wrote:
->>>
->>>
->>> On 08/07/2020 06:08, Rohit kumar wrote:
->>>> I2SCTL and DMACTL registers has different bits alignment for newer
->>>> LPASS variants of SC7180 soc. Use REG_FIELD_ID() to define the
->>>> reg_fields in platform specific file and removed shifts and mask
->>>> macros for such registers from header file.
->>>>
->>>> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
->>>
->>> Thanks Rohit for doing this, this looks much better now!
->>> I have few minor comments..
->>>
->>>> ---
->>>>   sound/soc/qcom/lpass-apq8016.c   |  24 ++++++
->>>>   sound/soc/qcom/lpass-cpu.c       | 163 
->>>> +++++++++++++++++++++++----------------
->>>>   sound/soc/qcom/lpass-ipq806x.c   |  24 ++++++
->>>>   sound/soc/qcom/lpass-lpaif-reg.h | 157 
->>>> +++++++++++++++++++------------------
->>>>   sound/soc/qcom/lpass-platform.c  | 151 
->>>> +++++++++++++++++++++++++++---------
->>>>   sound/soc/qcom/lpass.h           |  53 +++++++++++++
->>>>   6 files changed, 398 insertions(+), 174 deletions(-)
->>>>
->>>
->>> index f0c7e93..f358d12 100644
->>>> --- a/sound/soc/qcom/lpass-cpu.c
->>>> +++ b/sound/soc/qcom/lpass-cpu.c
->>>> @@ -29,6 +29,32 @@
->>>>   #define LPASS_CPU_I2S_SD0_1_2_MASK    GENMASK(2, 0)
->>>>   #define LPASS_CPU_I2S_SD0_1_2_3_MASK    GENMASK(3, 0)
->>>
->>>
->>>>   }
->>>>   -static int lpass_cpu_daiops_hw_free(struct snd_pcm_substream 
->>>> *substream,
->>>> -        struct snd_soc_dai *dai)
->>>> -{
->>>> -    struct lpass_data *drvdata = snd_soc_dai_get_drvdata(dai);
->>>> -    int ret;
->>>> -
->>>> -    ret = regmap_write(drvdata->lpaif_map,
->>>> -               LPAIF_I2SCTL_REG(drvdata->variant, dai->driver->id),
->>>> -               0);
->>>> -    if (ret)
->>>> -        dev_err(dai->dev, "error writing to i2sctl reg: %d\n", ret);
->>>> -
->>>> -    return ret;
->>>> -}
->>>
->>> Any particular reason why this function remove
->>
->> This was causing issue in playback/capture concurrency. It sets 
->> I2SCTL register value to 0
->>
->> when usecase ends. However, playback/capture specific bits are 
->> already cleared during trigger() stop
->>
->> function. So, this is not needed.
->
-> This should be sent as separate fix with fixes tag!
-Ok. Will create separate patch with fixes tag and post.
->
->>
->>
->>>
->>>> diff --git a/sound/soc/qcom/lpass-lpaif-reg.h 
->>>> b/sound/soc/qcom/lpass-lpaif-reg.h
->>>> index 72a3e2f..5258e60 100644
->>>> --- a/sound/soc/qcom/lpass-lpaif-reg.h
->>>> +++ b/sound/soc/qcom/lpass-lpaif-reg.h
->>>> @@ -12,15 +12,12 @@
->>> ...
->>>>   #endif /* __LPASS_LPAIF_REG_H__ */
->>>> diff --git a/sound/soc/qcom/lpass-platform.c 
->>>> b/sound/soc/qcom/lpass-platform.c
->>>> index 34f7fd1..445ca193 100644
->>>> --- a/sound/soc/qcom/lpass-platform.c
->>>> +++ b/sound/soc/qcom/lpass-platform.c
->>>> @@ -50,6 +50,53 @@ static const struct snd_pcm_hardware 
->>>> lpass_platform_pcm_hardware = {
->>>>       .fifo_size        =    0,
->>>>   };
->>> ...
->>>>   static int lpass_platform_pcmops_open(struct snd_soc_component 
->>>> *component,
->>>>                         struct snd_pcm_substream *substream)
->>>>   {
->>>> @@ -59,9 +106,9 @@ static int lpass_platform_pcmops_open(struct 
->>>> snd_soc_component *component,
->>>>       struct lpass_data *drvdata = 
->>>> snd_soc_component_get_drvdata(component);
->>>>       struct lpass_variant *v = drvdata->variant;
->>>>       int ret, dma_ch, dir = substream->stream;
->>>> -    struct lpass_pcm_data *data;
->>>> +    struct lpass_pcm_data *data = NULL;
->>>>   -    data = devm_kzalloc(soc_runtime->dev, sizeof(*data), 
->>>> GFP_KERNEL);
->>>> +    data = kzalloc(sizeof(*data), GFP_KERNEL);
->>>
->>> Does this change belong in this patch?
->>
->>
->> As part of this change, I fixed memory leak too by adding kfree() in 
->> close()
->>
->> However, this was causing issue as memory was allocated using 
->> devm_kzalloc().
->>
->> Should I move it to different patch?
->
-> That would be the right thing to do, can also add fixes tag!
-
-
-Sure, Will do that in next spin.
-
->
->
->>
->>>
->>>>       if (!data)
->>>>           return -ENOMEM;
->>>>   @@ -111,13 +158,13 @@ static int 
->>>> lpass_platform_pcmops_close(struct snd_soc_component *component,
->>>>       struct snd_pcm_runtime *runtime = substream->runtime;
->>>>       struct lpass_data *drvdata = 
->>>> snd_soc_component_get_drvdata(component);
->>>>       struct lpass_variant *v = drvdata->variant;
->
->>>
->>> Above two along with rddma members can be removed, these become 
->>> redundant after adding regmap field!
->>>
->> wrdma_channels is used in alloc_dma_channel() to get the channel id.
->>
->> Also, both are used for other DMA registers such as LPAIF_RDMABASE_REG,
->>
->> LPAIF_RDMABUFF_REG, LPAIF_RDMACURR_REG, etc.
->>
-> Ah I see we are still using this in lpass_cpu_regmap_writeable!
-> ignore my previous comments about removing them!
->
-> --srini
+On Tue, Jun 30, 2020 at 05:05:33PM +0100, Russell King wrote:
+> Update the Marvell Armada 38x COMPHY binding with an additional
+> optional register pair describing the location of an undocumented
+> system register controlling something to do with the Gigabit Ethernet
+> and COMPHY.  There is one bit for each COMPHY lane that may be using
+> the serdes, but exactly what this register does is completely unknown.
+> 
+> This register only appears to exist on Armada 38x devices, and not
+> other SoCs using the NETA ethernet block, so it seems logical that it
+> should be part of the COMPHY.
+> 
+> This is also how u-boot groups this register; it is dealt with as part
+> of the COMPHY initialisation there.
+> 
+> However, at the end of the day, due to the undocumented nature of this
+> register, we can only guess.
+> 
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> ---
+>  .../devicetree/bindings/phy/phy-armada38x-comphy.txt   | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/phy-armada38x-comphy.txt b/Documentation/devicetree/bindings/phy/phy-armada38x-comphy.txt
+> index ad49e5c01334..8b5a7a28a35b 100644
+> --- a/Documentation/devicetree/bindings/phy/phy-armada38x-comphy.txt
+> +++ b/Documentation/devicetree/bindings/phy/phy-armada38x-comphy.txt
+> @@ -12,6 +12,13 @@ PCIe...).
+>  - #address-cells: should be 1.
+>  - #size-cells: should be 0.
+>  
+> +Optional properties:
+> +
+> +- reg-names: must be "comphy" as the first name, and "conf".
+> +- reg: must contain the comphy register location and length as the first
+> +    pair, followed by an optional configuration register address and
+> +    length pair.
+> +
+>  A sub-node is required for each comphy lane provided by the comphy.
+>  
+>  Required properties (child nodes):
+> @@ -24,7 +31,8 @@ A sub-node is required for each comphy lane provided by the comphy.
+>  
+>  	comphy: phy@18300 {
+>  		compatible = "marvell,armada-380-comphy";
+> -		reg = <0x18300 0x100>;
+> +		reg-names = "comphy", "conf";
+> +		reg = <0x18300 0x100>, <0x18460 4>;
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+>  
+> -- 
+> 2.20.1
+> 
+> 
 
 -- 
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the Linux Foundation.
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
