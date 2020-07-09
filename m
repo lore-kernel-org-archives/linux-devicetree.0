@@ -2,78 +2,113 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DA9C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 16:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B16A2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 16:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CC66207DA
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 16:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88EBE207DA
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 16:05:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728006AbgGIQAz (ORCPT
+        id S1726480AbgGIQFQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 12:00:55 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:41695 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726856AbgGIQAy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 12:00:54 -0400
-Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
-  by alexa-out.qualcomm.com with ESMTP; 09 Jul 2020 09:00:54 -0700
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 09 Jul 2020 09:00:52 -0700
-Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 09 Jul 2020 21:30:38 +0530
-Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id F16DD2C1F; Thu,  9 Jul 2020 21:30:37 +0530 (IST)
-From:   Sandeep Maheswaram <sanm@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thu, 9 Jul 2020 12:05:16 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:54543 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726357AbgGIQFQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 12:05:16 -0400
+Received: from webmail.gandi.net (webmail15.sd4.0x35.net [10.200.201.15])
+        (Authenticated sender: contact@artur-rojek.eu)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPA id 9DA5B1BF20B;
+        Thu,  9 Jul 2020 16:05:11 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 09 Jul 2020 18:05:11 +0200
+From:   Artur Rojek <contact@artur-rojek.eu>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v8 2/2] arm64: dts: qcom: sc7180: Add maximum speed property for DWC3 USB node
-Date:   Thu,  9 Jul 2020 21:30:12 +0530
-Message-Id: <1594310413-14577-3-git-send-email-sanm@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594310413-14577-1-git-send-email-sanm@codeaurora.org>
-References: <1594310413-14577-1-git-send-email-sanm@codeaurora.org>
+        Jonathan Cameron <jic23@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8 0/6] iio/adc: ingenic: Cleanups & add touchscreen mode.
+In-Reply-To: <CAHp75VcwgL8pH+pH9TnsuwbWr=wSFu37sX8sTkbkfk+iBv7Jng@mail.gmail.com>
+References: <20200709152200.10039-1-contact@artur-rojek.eu>
+ <CAHp75VcwgL8pH+pH9TnsuwbWr=wSFu37sX8sTkbkfk+iBv7Jng@mail.gmail.com>
+Message-ID: <9865deba48fdb1b5bb522ae7cabef7bc@artur-rojek.eu>
+X-Sender: contact@artur-rojek.eu
+User-Agent: Roundcube Webmail/1.3.13
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Adding maximum speed property for DWC3 USB node which can be used
-for setting interconnect bandwidth.
+Hey Andy,
 
-Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+On 2020-07-09 17:43, Andy Shevchenko wrote:
+> On Thu, Jul 9, 2020 at 6:22 PM Artur Rojek <contact@artur-rojek.eu> 
+> wrote:
+>> 
+>> Hi all,
+>> 
+>> v8 of this patchset introduces some structural changes, which I deemed
+>> worthy highlighting here:
+> 
+> Can you remind me if I gave you tags on the previous version?
+I received no tags from you on this patchset so far.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 2be81a2..753e1a1 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -2544,6 +2544,7 @@
- 				snps,dis_enblslpm_quirk;
- 				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
- 				phy-names = "usb2-phy", "usb3-phy";
-+				maximum-speed = "super-speed";
- 			};
- 		};
- 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Cheers,
+Artur
 
+> If so, is the above the reason to drop them?
+> 
+>> 
+>>  - adc-joystick related changes have been dropped from this patchset 
+>> and
+>>    will be upstreamed separately. Their only connection to this 
+>> patchset
+>>    was that they used INGENIC_ADC_TOUCH_* defines in the DTS example,
+>>    causing trouble to Rob's scripts.
+>> 
+>>  - Integrated Paul's changes, which introduce an ADCMD low-level 
+>> command
+>>    feature. These changes affect patches 5/6 and 6/6, with the former
+>>    requiring Rob to re-ack.
+>> 
+>> Cheers,
+>> Artur
+>> 
+>> Artur Rojek (5):
+>>   dt-bindings: iio/adc: Convert ingenic-adc docs to YAML.
+>>   IIO: Ingenic JZ47xx: Error check clk_enable calls.
+>>   IIO: Ingenic JZ47xx: Add xlate cb to retrieve correct channel idx
+>>   dt-bindings: iio/adc: Add touchscreen idx for JZ47xx SoC ADC
+>>   IIO: Ingenic JZ47xx: Add touchscreen mode.
+>> 
+>> Paul Cercueil (1):
+>>   iio/adc: ingenic: Retrieve channels list from soc data struct
+>> 
+>>  .../bindings/iio/adc/ingenic,adc.txt          |  49 ---
+>>  .../bindings/iio/adc/ingenic,adc.yaml         |  71 ++++
+>>  drivers/iio/adc/Kconfig                       |   1 +
+>>  drivers/iio/adc/ingenic-adc.c                 | 386 
+>> ++++++++++++++++--
+>>  include/dt-bindings/iio/adc/ingenic,adc.h     |   6 +
+>>  5 files changed, 426 insertions(+), 87 deletions(-)
+>>  delete mode 100644 
+>> Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
+>> 
+>> --
+>> 2.27.0
+>> 
