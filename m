@@ -2,142 +2,284 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D759C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 22:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96303C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 22:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 461DF20672
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 22:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 662712070E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 22:23:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="n+038Tjh"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="gek9YbhY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbgGIWPm (ORCPT
+        id S1726496AbgGIWXA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 18:15:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35120 "EHLO
+        Thu, 9 Jul 2020 18:23:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726228AbgGIWPm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 18:15:42 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49D5EC08C5DC
-        for <devicetree@vger.kernel.org>; Thu,  9 Jul 2020 15:15:42 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id 22so3685107wmg.1
-        for <devicetree@vger.kernel.org>; Thu, 09 Jul 2020 15:15:42 -0700 (PDT)
+        with ESMTP id S1726213AbgGIWW7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 18:22:59 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63AF3C08C5CE
+        for <devicetree@vger.kernel.org>; Thu,  9 Jul 2020 15:22:59 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id e11so3471521qkm.3
+        for <devicetree@vger.kernel.org>; Thu, 09 Jul 2020 15:22:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=YV5ok+j1ZT/dco3d+Nz0ZXx9+BHs9rHibjoQkrG+QM8=;
-        b=n+038Tjhb71ibRD55ko60vZKGBkLBpa+5u0uCzn4SkeTo4zPrf7hwntZ4bM0cj8EIB
-         2fGAZWjNqSc4p/WtfrXL7RG/k2uPkp3NG2Be0yhpP38voG6zUT/NLMz+JSx2EpDp8GEY
-         wKcHtFBDkEFEu5vrMCLf60wAYuDGXNcHesd9c0GwbNxbnKHRum2lVXi9JEqYO/uDXLWl
-         x8WSGDkwlrNcLbxXnkD9Xo3THr+Xq7sHTbtxOTXCAnHC1ap0pi90iNBa+JDGKxB8ofsx
-         xcrt6qzrKbnkRvIqolYaHMxCnlJUnfdh7hKs8ZbSHbAR6ME9yR43A18lRVp2tFUGB0Nu
-         tc/w==
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=koe0tsEEzxlulMarN5X6kYpD8a6vH5rO2bSz1lhWIkM=;
+        b=gek9YbhY3M5GLr96Dui7RSb0kBIx5jGk+UJ3SP8oui5fnlBk/JUa+9UoHUaTzIR2BE
+         XZXA3Ca28KQ+AeyR+/vlYwnElM1gyxmNzG1ZZUlj8lCg+R2EpPX5BPs/MHcxIlv6TFbD
+         gguqh1PpPyrpoQEM7NU2NPG/dgERFJd2vBnSr1Nvhuuj7D3W649w/o5jScJJ4G9eNrxp
+         Q50apqqI2EBc+I/hVlmvqcjkakWviZsr1XRv88pwj5r/lHsrtKHHOpEWBXCdUn7UNGl6
+         KVKIoSKjRjPVx52wCJKiXFN1aMUP6GX9+tCud3ghhBLP1gva3FboSXCLYYQkNjHp5ToX
+         Yr+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YV5ok+j1ZT/dco3d+Nz0ZXx9+BHs9rHibjoQkrG+QM8=;
-        b=Ogzt0/maCN7MJya64P0osmaNgcZu7bIQxszSZ7nWm01n0o958d+FDP01pKTllQCban
-         fTqGciXK8yECAqvmlnpA1a4tzkXGukjmaP0GZjBSNHe+vfkNEW9edsUv2N6zxxYsiyda
-         CbKIBAvXHy2jD5rfptfyGkkgrjJAXkf94VtfTuqifNL+AzUT9LMZ6XbFslxD4EqLXh+V
-         LFrOgV2m3mgrLNSOn5eLL+c0baeAzdditdSznPU4oJL2IyUSTI76qmUgjdF67SuA2lPc
-         oUAmMVz7cMPKrk4H9XRotgOxYOGxmI3UiQL3WOprwrM/Ad8DDigVaKLAnywSwic2DrzR
-         ghLA==
-X-Gm-Message-State: AOAM531y51eDOOHmlL2QSwjYFHK1EidHromDAeGwaUwkSpAJAwt6rGyu
-        UZmTGSYBefTazacWCFcjZJYmgp3c34B++fginfuITw==
-X-Google-Smtp-Source: ABdhPJzBUPiaq/koBIaJnoNmCkU+vD75nXFOBaObB5XKrr17oXCtBX8QKANnTp1E5WZxyvfMV76bEU3icd2omVveNeM=
-X-Received: by 2002:a7b:cf2b:: with SMTP id m11mr2024013wmg.110.1594332940934;
- Thu, 09 Jul 2020 15:15:40 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=koe0tsEEzxlulMarN5X6kYpD8a6vH5rO2bSz1lhWIkM=;
+        b=OGZef9N2AgLqlij1E/NyDV8KSFjvMNAxskgYauhmXv9CS9U06JUpZ9x1WnH7qtBpa3
+         dP6JYwUIEKPNXNo/It3FZED3TJIzJnJf/UCJLvIukBi4CxLDKCnlYJ/pznowf38qTONk
+         h70OdHuGJf+hldzb8GKwpRb8G8xMh1wJYK/o/YNvr3xAoSOzu+vGj5oAF9kqcW2xiJpS
+         wCTaHs1Uv0MMJXdLJRVJsx/8p+YO4//suj7q1c6MXUF89u0wh4zv09hfak6qCJ+9ty4v
+         g55JnRXQfejbJGXl0Cm6n3T0082C0SEkr8mH+Dixx45V/LhB5ZX+IkYegXzbVwKwx7W3
+         GRyQ==
+X-Gm-Message-State: AOAM531PYmJrwHvu1X/CibIpZYdh90T4AaHEEuVzDSNTzWpfWnkCJOC0
+        gE7g1m/NgbXOFfJCIyD0M+b3xg==
+X-Google-Smtp-Source: ABdhPJzhZmW8DVQkxD3Fke0N4O4/hFJVez7aPsUfMLK5qvJA678NPZ+xbVdKRTn5g3hFY1XlI4DTMw==
+X-Received: by 2002:a05:620a:91b:: with SMTP id v27mr62308767qkv.499.1594333378548;
+        Thu, 09 Jul 2020 15:22:58 -0700 (PDT)
+Received: from localhost.localdomain ([196.52.2.97])
+        by smtp.gmail.com with ESMTPSA id w44sm5682556qtj.86.2020.07.09.15.22.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 15:22:57 -0700 (PDT)
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
+        bcousson@baylibre.com, Linus Walleij <linus.walleij@linaro.org>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Drew Fustini <drew@beagleboard.org>
+Subject: [PATCH v3] ARM: dts: am335x-pocketbeagle: set default mux for gpio pins
+Date:   Fri, 10 Jul 2020 00:22:44 +0200
+Message-Id: <20200709222244.776817-1-drew@beagleboard.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200601094512.50509-1-sudeep.holla@arm.com> <20200601094512.50509-3-sudeep.holla@arm.com>
-In-Reply-To: <20200601094512.50509-3-sudeep.holla@arm.com>
-From:   =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>
-Date:   Thu, 9 Jul 2020 15:15:29 -0700
-Message-ID: <CAMP5XgdMqJSd6B+q+WpjEsnVXXMam12Ji7R2-szS2_miGzdNEg@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/3] firmware: Add support for PSA FF-A transport for
- VM partitions
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 1, 2020 at 2:45 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> Initial support for PSA FF-A interface providing APIs for non-secure VM
-> partitions.
->
-...
-> diff --git a/drivers/firmware/arm_psa_ffa/Kconfig b/drivers/firmware/arm_=
-psa_ffa/Kconfig
-> new file mode 100644
-> index 000000000000..ba699ec68ec4
-> --- /dev/null
-> +++ b/drivers/firmware/arm_psa_ffa/Kconfig
-> @@ -0,0 +1,15 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +config ARM_PSA_FFA_TRANSPORT
-> +       tristate "Arm Platform Security Architecture Firmware Framework f=
-or Armv8-A"
-> +       depends on ARM64 && HAVE_ARM_SMCCC_DISCOVERY
+These pins on the PocketBeagle P1 and P2 headers are connected to AM3358
+balls with gpio lines, and these pins are not used for any other
+peripherals by default. These GPIO lines are unclaimed and could be used
+by userspace program through the gpiod ABI.
 
-Most of this driver should be usable on any platform, so it would be
-better to only depend on ARM64 in the component that has the arm64
-specific implementation of your low level conduit.
+This patch adds a "default" state in the am33xx_pinmux node and sets the
+mux for those pins to gpio (mode 7) and input enable.
 
-...
-> diff --git a/drivers/firmware/arm_psa_ffa/driver.c b/drivers/firmware/arm=
-_psa_ffa/driver.c
-> new file mode 100644
-> index 000000000000..700bd5850746
-> --- /dev/null
-> +++ b/drivers/firmware/arm_psa_ffa/driver.c
-...
-> +
-> +typedef struct arm_smccc_res
-> +(arm_psa_ffa_fn)(unsigned long, unsigned long, unsigned long, unsigned l=
-ong,
-> +                unsigned long, unsigned long, unsigned long, unsigned lo=
-ng);
-> +static arm_psa_ffa_fn *invoke_arm_psa_ffa_fn;
-> +
-...
-> +struct arm_smccc_res
-> +__arm_psa_ffa_fn_smc(unsigned long function_id,unsigned long arg0,
-...
-> +struct arm_smccc_res
-> +__arm_psa_ffa_fn_hvc(unsigned long function_id,unsigned long arg0,
+The "pinctrl-single,bias-pullup" and "pinctrl-single,bias-pulldown"
+pinconf properties are also set for each pin per the ball reset state in
+section 4.2 of the datasheet [0].
 
-Can these two functions move out of this file so this driver only
-depends on a function matching the arm_psa_ffa_fn type?
+This is the AM335x pin conf register format in Table 9-60 [1]:
 
-...
-> +static int psa_ffa_probe(struct platform_device *pdev)
-> +{
-> +       int ret;
-> +       enum arm_smccc_conduit conduit;
-> +
-> +       if (arm_smccc_get_version() < ARM_SMCCC_VERSION_1_2)
-> +               return 0;
-> +
-> +       conduit =3D arm_smccc_1_1_get_conduit();
+bit	attribute      value
+  6	slew           { 0: fast, 1: slow }
+  5     rx_active      { 0: rx disable, 1: rx enabled }
+  4     pu_typesel     { 0: pulldown select, 1: pullup select }
+  3     puden          { 0: pud enable, 1: disabled }
+  2     mode           3 bits to selec mode 0 to 7
+  1     mode
+  0     mode
 
-If you make this device a child device of the conduit, then you don't
-need this here. Other conduits can be added to for instance support
-other architectures without adding entries to this enum and modifying
-this driver.
+The values for the bias pinconf properties are derived as follows:
 
---
-Arve Hj=C3=B8nnev=C3=A5g
+pinctrl-single,bias-pullup   = <[input] [enabled] [disable] [mask]>;
+pinctrl-single,bias-pullup   = <     8        16        8      24 >;
+
+          2^5    2^4    2^3    2^2    2^1    2^0  |
+         0x20   0x10   0x08   0x04   0x02   0x01  |
+           32     16      8      4      2      1  |
+-------------------------------------------------------
+input       x      0      1     x      x      x   |   8
+enabled     x      1      0     x      x      x   |  16
+disabled    x      0      1     x      x      x   |   8
+mask        x      1      1     x      x      x   |  24
+
+pinctrl-single,bias-pulldown = <[input] [enabled] [disable] [mask]>;
+pinctrl-single,bias-pulldown = <     8         0        8      24 >;
+
+          2^5    2^4    2^3    2^2    2^1    2^0  |
+         0x20   0x10   0x08   0x04   0x02   0x01  |
+           32     16      8      4      2      1  |
+-------------------------------------------------------
+input       x      0      1     x      x      x   |   8
+enabled     x      0      0     x      x      x   |   0
+disabled    x      0      1     x      x      x   |   8
+mask        x      1      1     x      x      x   |  24
+
+[0] http://www.ti.com/lit/ds/symlink/am3358.pdf
+[1] https://www.ti.com/lit/ug/spruh73q/spruh73q.pdf
+
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
+---
+v3 changes:
+- add pinconf bias properties as it is necessary for pcs_pinconf_set()
+  to find the requested bias parameter in the PIN_MAP_TYPE_CONFIGS_GROUP
+  pinctrl map.
+
+v2 changes:
+- change default mux from output to input.  Input is safer as it does
+  not drive the line.  If the user wants output, they will need to edit
+  this device tree.
+
+ arch/arm/boot/dts/am335x-pocketbeagle.dts | 124 ++++++++++++++++++++++
+ 1 file changed, 124 insertions(+)
+
+diff --git a/arch/arm/boot/dts/am335x-pocketbeagle.dts b/arch/arm/boot/dts/am335x-pocketbeagle.dts
+index e08b5f73ccb5..4e7ba9872d2a 100644
+--- a/arch/arm/boot/dts/am335x-pocketbeagle.dts
++++ b/arch/arm/boot/dts/am335x-pocketbeagle.dts
+@@ -204,6 +204,130 @@ &gpio3 {
+ };
+ 
+ &am33xx_pinmux {
++
++	pinctrl-names = "default";
++	pinctrl-0 =   <	&P2_03_gpio &P1_34_gpio &P2_19_gpio &P2_24_gpio
++			&P2_33_gpio &P2_22_gpio &P2_18_gpio &P2_10_gpio
++			&P2_06_gpio &P2_04_gpio &P2_02_gpio &P2_08_gpio
++			&P2_17_gpio >;
++
++	/* P2_03 (ZCZ ball T10) gpio0_23 0x824 */
++	P2_03_gpio: pinmux_P2_03_gpio {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_AD9, PIN_INPUT_PULLUP, MUX_MODE7)
++		>;
++		pinctrl-single,bias-pullup   = <  8 16  8 24>;
++		pinctrl-single,bias-pulldown = <  8  0  8 24>;
++	};
++
++	/* P1_34 (ZCZ ball T11) gpio0_26 0x828 */
++	P1_34_gpio: pinmux_P1_34_gpio {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_AD10, PIN_INPUT_PULLUP, MUX_MODE7)
++		>;
++		pinctrl-single,bias-pullup   = <  8 16  8 24>;
++		pinctrl-single,bias-pulldown = <  8  0  8 24>;
++	};
++
++		/* P2_19 (ZCZ ball U12) gpio0_27 0x82c */
++	P2_19_gpio: pinmux_P2_19_gpio {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_AD11, PIN_INPUT_PULLUP, MUX_MODE7)
++		>;
++		pinctrl-single,bias-pullup   = <  8 16  8 24>;
++		pinctrl-single,bias-pulldown = <  8  0  8 24>;
++	};
++
++	/* P2_24 (ZCZ ball T12) gpio1_12 0x830 */
++	P2_24_gpio: pinmux_P2_24_gpio {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_AD12, PIN_INPUT_PULLUP, MUX_MODE7)
++		>;
++		pinctrl-single,bias-pullup   = <  8 16  8 24>;
++		pinctrl-single,bias-pulldown = <  8  0  8 24>;
++	};
++
++	/* P2_33 (ZCZ ball R12) gpio1_13 0x834 */
++	P2_33_gpio: pinmux_P2_33_gpio {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_AD13, PIN_INPUT_PULLUP, MUX_MODE7)
++		>;
++		pinctrl-single,bias-pullup   = <  8 16  8 24>;
++		pinctrl-single,bias-pulldown = <  8  0  8 24>;
++	};
++
++	/* P2_22 (ZCZ ball V13) gpio1_14 0x838 */
++	P2_22_gpio: pinmux_P2_22_gpio {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_AD14, PIN_INPUT_PULLUP, MUX_MODE7)
++		>;
++		pinctrl-single,bias-pullup   = <  8 16  8 24>;
++		pinctrl-single,bias-pulldown = <  8  0  8 24>;
++	};
++
++	/* P2_18 (ZCZ ball U13) gpio1_15 0x83c */
++	P2_18_gpio: pinmux_P2_18_gpio {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_AD15, PIN_INPUT_PULLUP, MUX_MODE7)
++		>;
++		pinctrl-single,bias-pullup   = <  8 16  8 24>;
++		pinctrl-single,bias-pulldown = <  8  0  8 24>;
++	};
++
++	/* P2_10 (ZCZ ball R14) gpio1_20 0x850 */
++	P2_10_gpio: pinmux_P2_10_gpio {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_A4, PIN_INPUT_PULLUP, MUX_MODE7)
++		>;
++		pinctrl-single,bias-pullup   = <  8 16  8 24>;
++		pinctrl-single,bias-pulldown = <  8  0  8 24>;
++	};
++
++	/* P2_06 (ZCZ ball U16) gpio1_25 0x864 */
++	P2_06_gpio: pinmux_P2_06_gpio {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_A9, PIN_INPUT_PULLUP, MUX_MODE7)
++		>;
++		pinctrl-single,bias-pullup   = <  8 16  8 24>;
++		pinctrl-single,bias-pulldown = <  8  0  8 24>;
++	};
++
++	/* P2_04 (ZCZ ball T16) gpio1_26 0x868 */
++	P2_04_gpio: pinmux_P2_04_gpio {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_A10, PIN_INPUT_PULLUP, MUX_MODE7)
++		>;
++		pinctrl-single,bias-pullup   = <  8 16  8 24>;
++		pinctrl-single,bias-pulldown = <  8  0  8 24>;
++	};
++
++	/* P2_02 (ZCZ ball V17) gpio1_27 0x86c */
++	P2_02_gpio: pinmux_P2_02_gpio {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_A11, PIN_INPUT_PULLUP, MUX_MODE7)
++		>;
++		pinctrl-single,bias-pullup   = <  8 16  8 24>;
++		pinctrl-single,bias-pulldown = <  8  0  8 24>;
++	};
++
++	/* P2_08 (ZCZ ball U18) gpio1_28 0x878 */
++	P2_08_gpio: pinmux_P2_08_gpio {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_BEN1, PIN_INPUT_PULLDOWN, MUX_MODE7)
++		>;
++		pinctrl-single,bias-pullup   = <  8 16  8 24>;
++		pinctrl-single,bias-pulldown = <  8  0  8 24>;
++	};
++
++	/* P2_17 (ZCZ ball V12) gpio2_1 0x88c */
++	P2_17_gpio: pinmux_P2_17_gpio {
++		pinctrl-single,pins = <
++			AM33XX_PADCONF(AM335X_PIN_GPMC_CLK, PIN_INPUT_PULLUP, MUX_MODE7)
++		>;
++		pinctrl-single,bias-pullup   = <  8 16  8 24>;
++		pinctrl-single,bias-pulldown = <  8  0  8 24>;
++	};
++
+ 	i2c2_pins: pinmux-i2c2-pins {
+ 		pinctrl-single,pins = <
+ 			AM33XX_PADCONF(AM335X_PIN_UART1_RTSN, PIN_INPUT_PULLUP, MUX_MODE3)	/* (D17) uart1_rtsn.I2C2_SCL */
+-- 
+2.25.1
+
