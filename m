@@ -2,87 +2,116 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE79C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 00:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2012FC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 02:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 346A120772
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 00:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F297420775
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 02:22:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XpkdGxGr"
+	dkim=pass (2048-bit key) header.d=kali.org header.i=@kali.org header.b="nCRjBy6r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725982AbgGIAMH (ORCPT
+        id S1726290AbgGICW1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 20:12:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55832 "EHLO
+        Wed, 8 Jul 2020 22:22:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgGIAMH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 20:12:07 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A326DC061A0B;
-        Wed,  8 Jul 2020 17:12:06 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id q7so338889ljm.1;
-        Wed, 08 Jul 2020 17:12:06 -0700 (PDT)
+        with ESMTP id S1726285AbgGICW0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 22:22:26 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AB0CC08C5C1
+        for <devicetree@vger.kernel.org>; Wed,  8 Jul 2020 19:22:26 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id 12so685927oir.4
+        for <devicetree@vger.kernel.org>; Wed, 08 Jul 2020 19:22:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V0QuEy94Oqtv5Hq07Ru2rABdbi+qMx9R/lannai1iIU=;
-        b=XpkdGxGrTssyStH4hPr9o39/wGfwxJOKn8aISQ/OnLCcepLWPR1w4pIMHeafrZI1EV
-         DjDtwpk/5SSxwSZZR2momLv97Fbf4Jfk0CjkaqsnCH3LBRNJ45TfAeASwq48kQy+o5aR
-         Avbgpj19UhQgfIKDeXEh6Mp2X6FEXY3T+J3phIQykb0jwdJroGJ17NSLjLWQdZ8Kz725
-         8MdO93M/8TTUjiTGEhJQs+mRsItVcF7ordRMR6p79PaEQFbEcXMIhsqfucLnBEmnQMpF
-         9GAQR48c/4Y5Tu6XGZ1BXY/q9aVaN1jhF2KOdjOO02xIXXXBwz3U245VW/2mFAnKjGye
-         v4SA==
+        d=kali.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=DRE+AnxDTPA67RRsyblsDnMJP7GCjkB5PLB0tWpdoQE=;
+        b=nCRjBy6rCZO4tPcusHqvk8I+q8WHCq+AFq8rirKjSah3x23m7XVXGu+vNcFW92y9y7
+         xEhpHOfRp6MpBnynd88ykJtbWvcflOLOnsyQWNTRsMqI1CaqRtcF0EnByTqUhJ8sQ8NQ
+         o25Hd8Nz0k8StgQqM7qU9DzS36rrlze9fWOx6SKlUeKXvI5a0kTfjChPAzqA7AvGciKv
+         GV1xFmOHR6xgXdIVx1mk8jQIyTZIwiphkIwY+k0YJaOlWcUgURjjdHKT4iQhbD0KnWJZ
+         wqySEbUIeroyGlYU2KpcCkrPrhgA6L+7SFD12PLRIs1M8dz3Eyb+x19TnUz1EyYzSgpZ
+         pAUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V0QuEy94Oqtv5Hq07Ru2rABdbi+qMx9R/lannai1iIU=;
-        b=dvhL14rRqRAEhO5DIFjOEDRJRbcUkGSgcLWI2k24DCJVRs/vBOIk0fr2Zlohebm2vC
-         Q0ObedXVg77kLqmZMZN3lWzKgzYUEe8qRDQZGNRgKCFvncF76WoIfGZNqtiMBDZmsrI+
-         3BWGRO78cJZLnMRRFh7VahTUYnLgyDx7Asv0dT4pTZaJlwOp774GY4OcUtdimDyrr5Bq
-         9fFP4CHy/J7OCihhCLhYyrbZDq6rjXBa3Vmo8d8LlM+aFC7CWQWvzaRdUIRmN4QRyMsN
-         +RIU2GzPcRtscooQkIAdtpjVeu09qVhs6llEC/0Hbjzfe+BgbmoHu8uzg2Xeus221Sdx
-         I1Gw==
-X-Gm-Message-State: AOAM531NZMbzKEg+umbrjQBiaeHzvOerI4EcKvwTEbdvntabcAWaI63G
-        9KFRbgLTLzpb+m31nRb8vqvzNfJIme4a9pUrgkI=
-X-Google-Smtp-Source: ABdhPJwdaVK1ZOVAijaz2w1HJRm3OeUKV77sdjHcARzAwDpy0T3UAGzu/yH7+moDerWi3jJvwg2ZVTh+CwkjndQdrOs=
-X-Received: by 2002:a2e:808d:: with SMTP id i13mr32283739ljg.452.1594253525115;
- Wed, 08 Jul 2020 17:12:05 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=DRE+AnxDTPA67RRsyblsDnMJP7GCjkB5PLB0tWpdoQE=;
+        b=ANhVMq4xA738A0/lOE0LKuyWraoHtpFKYG8X+FTO77Z3XxkKI9Ck8KZqP7CtXJx3WG
+         cjAKiEDVbr3oRQ+6GFoKqfeivtcF2M1X9Mu0DlaHpr8Ln8fWynsP15/FoRL5pzHiFC/y
+         7WQQVoKtdonzkG1Ee8ablUDjPBGzoJKqwM2h267BWIbkNQIztN/Qg+jhEpy3Gyksl+AV
+         4v2bvqh99RBxk6FFJSIXDwAD8pwPuLhy544P5ALBNz4OrOC97ji4zM+b1yVbftEPcdJR
+         vJlb2VZjunwJpFjACYApty/UmR7PfZASzzwAUpttOicXv67dMvm1tBY1zI4SdDElpg1q
+         jxFg==
+X-Gm-Message-State: AOAM533tuth9k6qnGZITo3WAE1o2hbH9oxKw5+64/XqmggQPckqiITNk
+        fjqOaQzoRkCLdZa77dxZ8nCb/w==
+X-Google-Smtp-Source: ABdhPJzZ3KYDuqCl2pBVz6ZKWW75HF5fDGCk1N4x5FT6TuFs7kUO2+NXH3DohJjIcwdkm+vq6Qbhew==
+X-Received: by 2002:aca:3307:: with SMTP id z7mr6660836oiz.171.1594261345319;
+        Wed, 08 Jul 2020 19:22:25 -0700 (PDT)
+Received: from Steevs-MBP.hackershack.net (cpe-173-175-113-3.satx.res.rr.com. [173.175.113.3])
+        by smtp.gmail.com with ESMTPSA id r19sm290459otn.28.2020.07.08.19.22.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jul 2020 19:22:24 -0700 (PDT)
+Subject: Re: [PATCH v2] arm64: dts: qcom: sdm845: Add cpu OPP tables
+To:     Sibi Sankar <sibis@codeaurora.org>, bjorn.andersson@linaro.org
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, agross@kernel.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, saravanak@google.com,
+        dianders@chromium.org, vincent.guittot@linaro.org,
+        amit.kucheria@linaro.org, robdclark@chromium.org
+References: <20200702204643.25785-1-sibis@codeaurora.org>
+From:   Steev Klimaszewski <steev@kali.org>
+Message-ID: <a61c5656-e21f-f071-1149-a3357fe2684e@kali.org>
+Date:   Wed, 8 Jul 2020 21:22:23 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200708232501.6200-1-cphealy@gmail.com>
-In-Reply-To: <20200708232501.6200-1-cphealy@gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 8 Jul 2020 21:11:53 -0300
-Message-ID: <CAOMZO5Dshsx++kdd3rdew8CJXTA7ktKnpaoJjtTGW9pfvDeHEQ@mail.gmail.com>
-Subject: Re: [PATCH v2] ARM: dts: vf610-zii-dev-rev-c: Configure fiber port to 1000BaseX
-To:     Chris Healy <cphealy@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Stefan Agner <stefan@agner.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200702204643.25785-1-sibis@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 8:25 PM Chris Healy <cphealy@gmail.com> wrote:
->
-> The SFF soldered onto the board expects the port to use 1000BaseX.  It
-> makes no sense to have the port set to SGMII, since it doesn't even
-> support that mode.
->
-> Signed-off-by: Chris Healy <cphealy@gmail.com>
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+On 7/2/20 3:46 PM, Sibi Sankar wrote:
+> Add OPP tables required to scale DDR/L3 per freq-domain on SDM845 SoCs.
+>
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+
+
+Hi Sibi,
+
+
+Bjorn asked me to give this patch a whirl, and I have to say, I like it
+but I'm not sure if I'm missing a dependency somewhere...
+
+
+In 5.8.0-rc4, I'm seeing a couple probe defers
+
+[    0.131341] cpu cpu0: _allocate_opp_table: Error finding interconnect
+paths: -517
+
+[    0.132694] cpu cpu4: _allocate_opp_table: Error finding interconnect
+paths: -517
+
+And then a bit later on,
+
+[    0.625837] cpu cpu0: failed to get clock: -2
+
+
+If these aren't anything to worry about, you can throw my Tested-by on
+
+Tested-by: Steev Klimaszewski <steev@kali.org>
+
