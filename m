@@ -2,165 +2,141 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 419D6C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 08:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0EDBC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 08:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21AAC20708
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 08:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6BDA20708
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 08:39:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uMMsIDA0"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="xdQxcznW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726228AbgGIIgP (ORCPT
+        id S1726286AbgGIIjU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 04:36:15 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:56310 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726245AbgGIIgO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 9 Jul 2020 04:36:14 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594283773; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
- To: From: Sender; bh=VNqNnxgafwr7RYkJ1Yf6GjVmu/dHflZjtsDnh57E44U=; b=uMMsIDA0Ko8xCBC/Ik8OBn50b/CuopdoyafdcFwSvSPVwjn3Rv3AjRhKaNdjv9TXXfd4SmJ6
- jA+JQvaRvWRqUztYa/uJqgv8zXUzmVOyZWkLl0C8BVTX6uChh7vuRV4EqLDGOhvjM12/NGD/
- zK7ngD6odLb0BAZ3CrGlbYXK2MQ=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 5f06d6fc71d7ca1d3aa277fe (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 08:36:12
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7F494C43391; Thu,  9 Jul 2020 08:36:11 +0000 (UTC)
-Received: from Pillair (unknown [183.83.71.149])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: pillair)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 04226C433C6;
-        Thu,  9 Jul 2020 08:36:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 04226C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
-From:   "Rakesh Pillai" <pillair@codeaurora.org>
-To:     "'Douglas Anderson'" <dianders@chromium.org>,
-        "'Andy Gross'" <agross@kernel.org>,
-        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>
-Cc:     "'Evan Green'" <evgreen@chromium.org>,
-        "'Sibi Sankar'" <sibis@codeaurora.org>,
-        "'Rob Herring'" <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200625131658.REPOST.1.I32960cd32bb84d6db4127c906d7e371fa29caebf@changeid> 
-In-Reply-To: 
-Subject: RE: [REPOST PATCH] arm64: dts: qcom: Fix WiFi supplies on sc7180-idp
-Date:   Thu, 9 Jul 2020 14:06:04 +0530
-Message-ID: <001501d655cb$ff5b8bc0$fe12a340$@codeaurora.org>
+        Thu, 9 Jul 2020 04:39:20 -0400
+Received: from mail-am6eur05on2070.outbound.protection.outlook.com ([40.107.22.70]:6052
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726247AbgGIIjT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Jul 2020 04:39:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cnjIbPZSsoS3fLX4acqWunnwOl3FejVoFM7tYtsmZF2rk0R3pBqjM7EnhOHjkRwzy5jBBbGoNR+VAoAe5FTFov3hyZ/NB+CqGZVgt18juo6P5iTSKDTDhERhSZ5i4q8e3PCj0q4hi0qnzsPBkOMfaNk0iCQbd1mbyZZisF3VtgsnJNawp/SGnZpeSgBpOh4fW5aOAKxSFe+6evhnsSREQtwwI0IES/7kS5z17hT7yGIARl72a9VTFuR8M1VtQeNnD798mdO7ETe9o6e/gjTCqoiH8L3eUeBzgXzhDazYHMgb03fMxt3JshEWr6hhNiYpU74SuqbQcEESsbloHzs/aA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qIvyGeHCyZRaPF7fqL3zCZXBuRBaraW8IgyKnBkX4i8=;
+ b=CC2PSNHYfqFTsyH+lgQ+L+g3TBCufPZTUJh1XU/jiTmXhfc4RhyR+HZjXnJAsTKRzzmv4EksXfjj+oHv4Za9xIiA865oPiz/FRYko6r0oqJ5nMItjZSfq1p3Nzmet/VhFC+ry+SE22yZM/a+lpXT46njJkK7zi51U2rP0VDeDyr/CZjO310Y7JwEB24RC5ORRNxE0GwKv7/YabpT5/xVeqpYiHQUZX6urK0Sz1gDjM6CNscCDt+lp6dJ1ygdNzDuoTPkoUyJlF8xBPGDaiNlbxgS/jvs/qCqqtDKji/uqtdkp6JPyD7QkWSEMaoVHG7J5DKqGu8XB7/fBAEm31ZGEA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 193.240.239.45) smtp.rcpttodomain=linuxfoundation.org
+ smtp.mailfrom=diasemi.com; dmarc=fail (p=none sp=none pct=100) action=none
+ header.from=diasemi.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qIvyGeHCyZRaPF7fqL3zCZXBuRBaraW8IgyKnBkX4i8=;
+ b=xdQxcznWmM6WlhNU8M/TbDL/WKPtsoGzMyuow/hne5WroxZB30CmwP1UwRGiyFHn60eR0+ll+0JYgq9piPXqo7wnPFjSp9d7wYc+9NucTd3XSuMRmWjA35tQz1+wZGwkkR8SB+6YbLwn1240fmqMxHSXf+crlPg8EsYmtEkA33Y=
+Received: from AM6P191CA0075.EURP191.PROD.OUTLOOK.COM (2603:10a6:209:8a::16)
+ by VE1PR10MB3901.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:800:164::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.24; Thu, 9 Jul
+ 2020 08:39:15 +0000
+Received: from VE1EUR02FT054.eop-EUR02.prod.protection.outlook.com
+ (2603:10a6:209:8a:cafe::ad) by AM6P191CA0075.outlook.office365.com
+ (2603:10a6:209:8a::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20 via Frontend
+ Transport; Thu, 9 Jul 2020 08:39:15 +0000
+X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
+ 193.240.239.45) smtp.mailfrom=diasemi.com; linuxfoundation.org; dkim=none
+ (message not signed) header.d=none;linuxfoundation.org; dmarc=fail
+ action=none header.from=diasemi.com;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ diasemi.com discourages use of 193.240.239.45 as permitted sender)
+Received: from mailrelay1.diasemi.com (193.240.239.45) by
+ VE1EUR02FT054.mail.protection.outlook.com (10.152.13.218) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.3174.21 via Frontend Transport; Thu, 9 Jul 2020 08:39:15 +0000
+Received: from krsrvapps-03.diasemi.com (10.95.17.51) by
+ NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
+ 14.3.468.0; Thu, 9 Jul 2020 10:39:14 +0200
+Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
+ 9C1B113F671; Thu,  9 Jul 2020 17:39:12 +0900 (KST)
+Message-ID: <cover.1594279649.git.Roy.Im@diasemi.com>
+From:   Roy Im <roy.im.opensource@diasemi.com>
+Date:   Thu, 9 Jul 2020 16:27:29 +0900
+Subject: [PATCH v16 0/3]  da7280: haptic driver submission
+To:     "David S. Miller" <davem@davemloft.net>,
+        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     Support Opensource <support.opensource@diasemi.com>,
+        <devicetree@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQIJkvzNJ2GrKQD23Wa0Ucd2+v4DjgEVOFggqI++GJA=
-Content-Language: en-us
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:193.240.239.45;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mailrelay1.diasemi.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(376002)(39860400002)(346002)(46966005)(7416002)(82310400002)(86362001)(26005)(5660300002)(33310700002)(186003)(81166007)(6266002)(54906003)(110136005)(82740400003)(2906002)(8936002)(2616005)(356005)(70586007)(42186006)(316002)(8676002)(6666004)(83380400001)(36906005)(47076004)(478600001)(36756003)(4744005)(70206006)(426003)(336012)(4326008)(921003);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3b224420-d248-4667-a862-08d823e39005
+X-MS-TrafficTypeDiagnostic: VE1PR10MB3901:
+X-Microsoft-Antispam-PRVS: <VE1PR10MB3901DC8ABCE7F789F1AF8217A2640@VE1PR10MB3901.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 04599F3534
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: RrqiuF+r2t7qgnckMfiSE3MFOywonM+tXYr0Ce6HRpvCKXPPdTLMNjtaEmG8tuZca8AhsO6yeY6C1RI5CpUCRbkyPn59/ESIHgXT562BWWBCw1I3FzJsiMQiUx+DRTYG8D7sU4kGVbaiIRl46FkvySbjPdI08moSl94ykCKIIf7U+tGHC6L5zp1Cq/32ZqspUq+YOHyBFFpwEIvuyR460hEKSk8sYyb8eROq32zWB5npygamf5//o64K4dcY6XG6Wv20LEgP+nF8V1iux/LB5lnTVXRtj2B0FT0zGWphLzDE4VuNbP7rEOiNJOWXiV0KRy8wZVrFVMtKOT8RjXcTtRMne14QRg3h36gGRAFHCchgMnDJ698ENIgVPamjxSXNddb4kfoVyB6tVPC6obHCx6sjsk+fBQMrLEy80YoF295bAvHbpq1PsfEmkkjCEWm7
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2020 08:39:15.1214
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b224420-d248-4667-a862-08d823e39005
+X-MS-Exchange-CrossTenant-Id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=511e3c0e-ee96-486e-a2ec-e272ffa37b7c;Ip=[193.240.239.45];Helo=[mailrelay1.diasemi.com]
+X-MS-Exchange-CrossTenant-AuthSource: VE1EUR02FT054.eop-EUR02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR10MB3901
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+This patch adds support for the Dialog DA7280 Haptic driver IC.
 
+In this patch set the following is provided:
 
-> -----Original Message-----
-> From: Rakesh Pillai <pillair@codeaurora.org>
-> Sent: Friday, June 26, 2020 2:14 PM
-> To: 'Douglas Anderson' <dianders@chromium.org>; 'Andy Gross'
-> <agross@kernel.org>; 'Bjorn Andersson' <bjorn.andersson@linaro.org>
-> Cc: 'Evan Green' <evgreen@chromium.org>; 'Sibi Sankar'
-> <sibis@codeaurora.org>; 'Rob Herring' <robh+dt@kernel.org>;
-> 'devicetree@vger.kernel.org' <devicetree@vger.kernel.org>; 'linux-arm-
-> msm@vger.kernel.org' <linux-arm-msm@vger.kernel.org>; 'linux-
-> kernel@vger.kernel.org' <linux-kernel@vger.kernel.org>
-> Subject: RE: [REPOST PATCH] arm64: dts: qcom: Fix WiFi supplies on sc7180-
-> idp
-> 
-> 
-> 
-> > -----Original Message-----
-> > From: Douglas Anderson <dianders@chromium.org>
-> > Sent: Friday, June 26, 2020 1:47 AM
-> > To: Andy Gross <agross@kernel.org>; Bjorn Andersson
-> > <bjorn.andersson@linaro.org>
-> > Cc: Evan Green <evgreen@chromium.org>; Sibi Sankar
-> > <sibis@codeaurora.org>; Rakesh Pillai <pillair@codeaurora.org>; Douglas
-> > Anderson <dianders@chromium.org>; Rob Herring <robh+dt@kernel.org>;
-> > devicetree@vger.kernel.org; linux-arm-msm@vger.kernel.org; linux-
-> > kernel@vger.kernel.org
-> > Subject: [REPOST PATCH] arm64: dts: qcom: Fix WiFi supplies on
-sc7180-idp
-> >
-> > The WiFi supplies that were added recently can't have done anything
-> > useful because they were missing the "-supply" suffix.  Booting
-> > without the "-supply" suffix would give these messages:
-> >
-> > ath10k_snoc 18800000.wifi: 18800000.wifi supply vdd-0.8-cx-mx not found,
-> > using dummy regulator
-> > ath10k_snoc 18800000.wifi: 18800000.wifi supply vdd-1.8-xo not found,
-> using
-> > dummy regulator
-> > ath10k_snoc 18800000.wifi: 18800000.wifi supply vdd-1.3-rfa not found,
-> using
-> > dummy regulator
-> > ath10k_snoc 18800000.wifi: 18800000.wifi supply vdd-3.3-ch0 not found,
-> > using dummy regulator
-> >
-> > Let's add the "-supply" suffix.
-> >
-> > Fixes: 1e7594a38f37 ("arm64: dts: qcom: sc7180: Add WCN3990 WLAN
-> > module device node")
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > ---
-> Reviewed-by: Rakesh Pillai <pillair@codeaurora.org>
+[PATCH v16 1/3] MAINTAINERS file update for DA7280
+[PATCH v16 2/3] DA7280 DT Binding
+[PATCH v16 3/3] DA7280 Driver
 
+This patch applies against linux-next and v5.8-rc4
 
-Tested-by: Rakesh Pillai <pillair@codeaurora.org>
+Thank you,
+Roy Im, Dialog Semiconductor Ltd.
 
-> 
-> I missed this in the DTSI patch, while manually rebasing to the kernel
-tip.
-> 
-> > I don't have an IDP setup but I have a similar board.  Testing on IDP
-> > would, of course, be appreciated.
-> >
-> > Repost because I screwed up the "after-the-cut" notes on first post.
-> >
-> >  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > index 39dbfc89689e..472f7f41cc93 100644
-> > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > @@ -391,10 +391,10 @@ video-firmware {
-> >
-> >  &wifi {
-> >  	status = "okay";
-> > -	vdd-0.8-cx-mx = <&vreg_l9a_0p6>;
-> > -	vdd-1.8-xo = <&vreg_l1c_1p8>;
-> > -	vdd-1.3-rfa = <&vreg_l2c_1p3>;
-> > -	vdd-3.3-ch0 = <&vreg_l10c_3p3>;
-> > +	vdd-0.8-cx-mx-supply = <&vreg_l9a_0p6>;
-> > +	vdd-1.8-xo-supply = <&vreg_l1c_1p8>;
-> > +	vdd-1.3-rfa-supply = <&vreg_l2c_1p3>;
-> > +	vdd-3.3-ch0-supply = <&vreg_l10c_3p3>;
-> >  	wifi-firmware {
-> >  		iommus = <&apps_smmu 0xc2 0x1>;
-> >  	};
-> > --
-> > 2.27.0.212.ge8ba1cc988-goog
+Roy Im (3):
+  MAINTAINERS: da7280 updates to the Dialog Semiconductor search terms
+  dt-bindings: input: Add document bindings for DA7280
+  Input: new da7280 haptic driver
 
+ .../devicetree/bindings/input/dlg,da7280.txt       |  109 ++
+ MAINTAINERS                                        |    2 +
+ drivers/input/misc/Kconfig                         |   13 +
+ drivers/input/misc/Makefile                        |    1 +
+ drivers/input/misc/da7280.c                        | 1840 ++++++++++++++++++++
+ 5 files changed, 1965 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
+ create mode 100644 drivers/input/misc/da7280.c
+
+-- 
+end-of-patch for PATCH v16
 
