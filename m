@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BB8C433F2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC157C433EA
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2069220578
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:20:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 938FE2078B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:20:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uQrDfkRX"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xQFv0l7E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbgGIXUS (ORCPT
+        id S1726872AbgGIXUQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 19:20:18 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:55410 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726894AbgGIXUS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 19:20:18 -0400
+        Thu, 9 Jul 2020 19:20:16 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:49312 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726852AbgGIXUP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 19:20:15 -0400
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 069NKB28019098;
-        Thu, 9 Jul 2020 18:20:11 -0500
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 069NK7px122934;
+        Thu, 9 Jul 2020 18:20:07 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594336811;
-        bh=hoL0x9O1kvkaT4prL5tfXltZY55PUwkw/Roc9kLuZoA=;
+        s=ti-com-17Q1; t=1594336807;
+        bh=N+YPQiYfbFNBgXuAu/fQKZpj4xm9HZyt3OSvcyZWSpc=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=uQrDfkRX1E7dRRpd+FVkx8e9aDd0eG5JNkddM8kTRSJcGB8SYCakzom7KEQaasN6P
-         z+8aqRnjO5MOOA7bgMXm+ROFz96mOjsz4MAn7ESQ0ppXy9m60CayKsFPRsUiiiO1jZ
-         kGr85dwwFamhgdNTrFHDMDz605ciqbUQNwhrdqrE=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 069NKBoo012138
+        b=xQFv0l7EnEZq8iUhXRPo+XXw0aUUqUkTtZF9D9cEpsMvJxcwuCWncWK3FJo397xgo
+         S4pYXTIT2xx5qXa4f2Ew5aKLHX6pp4vz8ghBfS/31LbRka2JZ3ZO5A97Ny7xQf1EdU
+         SwDReNJTsfAuY9XUzr6KGCLnga3SvF1qsTmiuKy0=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 069NK75S012024
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 9 Jul 2020 18:20:11 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 9 Jul 2020 18:20:07 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 9 Jul
- 2020 18:20:10 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
+ 2020 18:20:06 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
  (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 9 Jul 2020 18:20:10 -0500
+ Frontend Transport; Thu, 9 Jul 2020 18:20:06 -0500
 Received: from fllv0103.dal.design.ti.com (fllv0103.dal.design.ti.com [10.247.120.73])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 069NKAtp032199;
-        Thu, 9 Jul 2020 18:20:10 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 069NK6Y7096058;
+        Thu, 9 Jul 2020 18:20:06 -0500
 Received: from localhost ([10.250.34.57])
-        by fllv0103.dal.design.ti.com (8.14.7/8.14.7) with ESMTP id 069NKAmV124485;
-        Thu, 9 Jul 2020 18:20:10 -0500
+        by fllv0103.dal.design.ti.com (8.14.7/8.14.7) with ESMTP id 069NK6CO124440;
+        Thu, 9 Jul 2020 18:20:06 -0500
 From:   Suman Anna <s-anna@ti.com>
 To:     Tony Lindgren <tony@atomide.com>
 CC:     <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Tero Kristo <t-kristo@ti.com>, Suman Anna <s-anna@ti.com>
-Subject: [PATCH 13/13] ARM: dts: omap5-uevm: Add watchdog timers for IPU and DSP
-Date:   Thu, 9 Jul 2020 18:19:54 -0500
-Message-ID: <20200709231954.1973-14-s-anna@ti.com>
+Subject: [PATCH 07/13] ARM: dts: omap4-panda-common:: Add system timers to DSP and IPU
+Date:   Thu, 9 Jul 2020 18:19:48 -0500
+Message-ID: <20200709231954.1973-8-s-anna@ti.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200709231954.1973-1-s-anna@ti.com>
 References: <20200709231954.1973-1-s-anna@ti.com>
@@ -70,41 +70,47 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The watchdog timers have been added for the IPU and DSP remoteproc
-devices for the OMAP5 uEVM board. The following timers (same as the
-timers on OMAP4 Panda boards) are used as the watchdog timers,
-        DSP : GPT6
-        IPU : GPT9 & GPT11 (one for each Cortex-M4 core)
+The BIOS System Tick timers have been added for the IPU and DSP
+remoteproc devices on all the OMAP4-based Panda boards. The
+following DMTimers are chosen:
+	IPU : GPT3 (SMP-mode)
+	DSP : GPT5
 
-The MPU-side drivers will use this data to initialize the watchdog
-timers, and listen for any watchdog triggers. The BIOS-side code
-needs to configure and refresh these timers properly to not throw
-a watchdog error.
+IPU has two Cortex-M3 processors, and is currently expected to be
+running in SMP-mode, so only a single timer suffices to provide
+the BIOS tick timer. An additional timer should be added for the
+second processor in IPU if it were to be run in non-SMP mode. The
+timer value also needs to be unique from the ones used by other
+processors so that they can be run simultaneously.
 
-These timers can be changed or removed as per the system integration
-needs, alongside appropriate equivalent changes on the firmware side.
+The timers are optional, but are mandatory to support device
+management features such as power management and watchdog support.
+The above are added to successfully boot and execute firmware images
+configured with the respective timers, images that use internal
+processor subsystem timers are not affected. The timers can be
+changed or removed as per the system integration needs, alongside
+equivalent changes on the firmware side.
 
 Signed-off-by: Suman Anna <s-anna@ti.com>
 ---
- arch/arm/boot/dts/omap5-uevm.dts | 2 ++
+ arch/arm/boot/dts/omap4-panda-common.dtsi | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/omap5-uevm.dts b/arch/arm/boot/dts/omap5-uevm.dts
-index bb016419ef61..9b9e9ee51b5c 100644
---- a/arch/arm/boot/dts/omap5-uevm.dts
-+++ b/arch/arm/boot/dts/omap5-uevm.dts
-@@ -223,10 +223,12 @@ &dsp {
+diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
+index ef79028fc95f..db0b7e9264f9 100644
+--- a/arch/arm/boot/dts/omap4-panda-common.dtsi
++++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+@@ -595,9 +595,11 @@ hdmi_out: endpoint {
+ &dsp {
  	status = "okay";
  	memory-region = <&dsp_memory_region>;
- 	ti,timers = <&timer5>;
-+	ti,watchdog-timers = <&timer6>;
++	ti,timers = <&timer5>;
  };
  
  &ipu {
  	status = "okay";
  	memory-region = <&ipu_memory_region>;
- 	ti,timers = <&timer3>;
-+	ti,watchdog-timers = <&timer9>, <&timer11>;
++	ti,timers = <&timer3>;
  };
 -- 
 2.26.0
