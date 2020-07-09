@@ -2,124 +2,129 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C43C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 15:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A84F6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 15:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20A4920720
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 15:35:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82A9120720
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 15:43:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OWbz3/Cq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="roDisFVP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727971AbgGIPfa (ORCPT
+        id S1726715AbgGIPn5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 11:35:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57038 "EHLO
+        Thu, 9 Jul 2020 11:43:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727848AbgGIPf3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 11:35:29 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7AE3C08C5DC
-        for <devicetree@vger.kernel.org>; Thu,  9 Jul 2020 08:35:29 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id z5so1133044pgb.6
-        for <devicetree@vger.kernel.org>; Thu, 09 Jul 2020 08:35:29 -0700 (PDT)
+        with ESMTP id S1726339AbgGIPn5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 11:43:57 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 772CDC08C5CE;
+        Thu,  9 Jul 2020 08:43:57 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id mn17so1292274pjb.4;
+        Thu, 09 Jul 2020 08:43:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=0q/rCvNt3k405F9K/TajOpXPAtgojFFtnqWJkLPEMF4=;
-        b=OWbz3/CqrDpo/Wcvq2r+CzFCtoWft8EU3UQBsM0iXshdZeW30DCs/+vWW/pDAXePHh
-         2oLzG8kSev55DDnOpuoGAbRzEEmpYfdKukcFXVxGuDNbCFFMWbv25beCD/NtvTEk6R1c
-         g7W7jqGUm4nzWI01J6Ul1JxZcEbMXqtZSar7Q=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5aSR39Y673gK4LGy+pomYrdhftpjF5NzAVJPOxgGDA8=;
+        b=roDisFVPKLpYmdVp11RgxCQVrZnqxRmEM5k2L+abqUHYtxCJKkeCwNctIul+/pax8W
+         Mbe2HIMo63hDHBD221lNxo4JQifsrDKRyBYOSXgNibMyXSHrWouzA/eV5WSNnXNDACOE
+         dlIhnaVD31AD+hRu2cmd91xSo4JK+GbKdDjUoegM60F3us7yUeAVc/XwhwIiRViW1gEJ
+         21YJxdwTRjrKqEpQz3Drr77ZV3DlEJEuelFNLRM6I74+pk+A+Pne1wwrg6jS7jzVloAB
+         ckNUkhVbfz34eovP+IOBlBpKnh0Wm+j//BobyB0Oh0Ab6CffALrkReGnSw/oWDdGhqQE
+         yCSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0q/rCvNt3k405F9K/TajOpXPAtgojFFtnqWJkLPEMF4=;
-        b=ME/rUQj3mVAQHpMnwQRQ5R0xNrWMxVe24Fiqrn6GzfBmOQ4QZlAmZDd7o90wn+ylqy
-         hakn1W5rmov5gcL4lcDwlRf0P4hmDpEJ93/vmAEmWI13Sl4l+b8CfjJCm907Q9p/FSqk
-         C/7+r4nBs72fAXqN4DBmpaBjgCdT73tCLvBl5Q4lZ+oUQ6/XnLLupIilFVXfoZD+pyLM
-         3I67Qplkek7tKraYCA2VgKWKxEfsRunwkiHq68E37jkupiKUAUYwPRO7/ISH4BhLd/Es
-         oH00YasbT4dBWS+qvPa4G5SWAPmMynNsWXi5LEghozo7h+w6504+u1Yl0qhQaZHppZ1F
-         rZHQ==
-X-Gm-Message-State: AOAM530ge87QYzih6uO6WGVzT0k4Z81jqB0hObRcKeVrjerzi/Q0A1It
-        ZJe+8E8biG+BoaOeASNMRv1JPg==
-X-Google-Smtp-Source: ABdhPJxezNzU/FHc9DH0NCqtmmgu7yFn9tCxihSQrSv2FyCRlXKSWOfUQMA/NNJhOf+7Z3KfioxOBA==
-X-Received: by 2002:a62:a217:: with SMTP id m23mr27037150pff.291.1594308929281;
-        Thu, 09 Jul 2020 08:35:29 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id b8sm3221741pjm.31.2020.07.09.08.35.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2020 08:35:28 -0700 (PDT)
-Date:   Thu, 9 Jul 2020 08:35:27 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Mike Tipton <mdtipton@codeaurora.org>
-Cc:     georgi.djakov@linaro.org, bjorn.andersson@linaro.org,
-        robh+dt@kernel.org, agross@kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: interconnect: Add generic qcom bindings
-Message-ID: <20200709153527.GJ3191083@google.com>
-References: <20200623040515.23317-1-mdtipton@codeaurora.org>
- <20200623040515.23317-2-mdtipton@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5aSR39Y673gK4LGy+pomYrdhftpjF5NzAVJPOxgGDA8=;
+        b=Mow9gznm8Grl9RUa1Qcu6hxVHd/erqB6zK1d4aVxiapuvz/UzXV3QVRKuiN5R8siee
+         D9VhFTz2ef7h1XbGCPfXgxvZDrPrvmsbh3tXqJbYPPxcz0c8us19ctFS4TcUQontJUjC
+         26vAahzYSbsg9IpakwKqPvurIMf2ldwcVVoX8nAYcH9j7F1USF4VejNXNshe7YBMzsLX
+         t9hqNX08LbovK1Qn9cxVVppm/2HZHCyDtXGk77oN+UdYSUZaz0TfZ6DjHpOLGBLYWUTE
+         5ElTQvkVCM3gis3YvT1Q/BUkRjDbonTUOm2PSq9Y/vmsnvkNp9yTWUfNBzYNHs9KDS8I
+         q7Hw==
+X-Gm-Message-State: AOAM530i9JPzrR7YmJA/o5n2fI+F0ZD2bISdd+7g/YNRuDLrucSbQIwM
+        F1j11jB2ogNcxymtDb1RFuCw/nydJ5VM3cNrrjo=
+X-Google-Smtp-Source: ABdhPJymrDoI28s7I5KmpXMuqSAKOHB4T6Mn8hum7vi5/FRCdzLui7I/tE3BYrOAP4DxBG27lCVshjmLSxleGLqiP3E=
+X-Received: by 2002:a17:90b:1b52:: with SMTP id nv18mr673895pjb.129.1594309436972;
+ Thu, 09 Jul 2020 08:43:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200623040515.23317-2-mdtipton@codeaurora.org>
+References: <20200709152200.10039-1-contact@artur-rojek.eu>
+In-Reply-To: <20200709152200.10039-1-contact@artur-rojek.eu>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 9 Jul 2020 18:43:40 +0300
+Message-ID: <CAHp75VcwgL8pH+pH9TnsuwbWr=wSFu37sX8sTkbkfk+iBv7Jng@mail.gmail.com>
+Subject: Re: [PATCH v8 0/6] iio/adc: ingenic: Cleanups & add touchscreen mode.
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 09:05:14PM -0700, Mike Tipton wrote:
-> Add generic qcom interconnect bindings that are common across platforms. In
-> particular, these include QCOM_ICC_TAG_* macros that clients can use when
-> calling icc_set_tag().
-> 
-> Signed-off-by: Mike Tipton <mdtipton@codeaurora.org>
-> ---
->  include/dt-bindings/interconnect/qcom,icc.h | 26 +++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 include/dt-bindings/interconnect/qcom,icc.h
-> 
-> diff --git a/include/dt-bindings/interconnect/qcom,icc.h b/include/dt-bindings/interconnect/qcom,icc.h
-> new file mode 100644
-> index 000000000000..cd34f36daaaa
-> --- /dev/null
-> +++ b/include/dt-bindings/interconnect/qcom,icc.h
-> @@ -0,0 +1,26 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_ICC_H
-> +#define __DT_BINDINGS_INTERCONNECT_QCOM_ICC_H
-> +
-> +/*
-> + * The AMC bucket denotes constraints that are applied to hardware when
-> + * icc_set_bw() completes, whereas the WAKE and SLEEP constraints are applied
-> + * when the execution environment transitions between active and low power mode.
-> + */
-> +#define QCOM_ICC_BUCKET_AMC		0
-> +#define QCOM_ICC_BUCKET_WAKE		1
-> +#define QCOM_ICC_BUCKET_SLEEP		2
-> +#define QCOM_ICC_NUM_BUCKETS		3
-> +
-> +#define QCOM_ICC_TAG_AMC		(1 << QCOM_ICC_BUCKET_AMC)
-> +#define QCOM_ICC_TAG_WAKE		(1 << QCOM_ICC_BUCKET_WAKE)
-> +#define QCOM_ICC_TAG_SLEEP		(1 << QCOM_ICC_BUCKET_SLEEP)
-> +#define QCOM_ICC_TAG_ACTIVE_ONLY	(QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE)
-> +#define QCOM_ICC_TAG_ALWAYS		(QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE |\
-> +					 QCOM_ICC_TAG_SLEEP)
-> +
-> +#endif
+On Thu, Jul 9, 2020 at 6:22 PM Artur Rojek <contact@artur-rojek.eu> wrote:
+>
+> Hi all,
+>
+> v8 of this patchset introduces some structural changes, which I deemed
+> worthy highlighting here:
 
-Would it make sense to squash the two patches of this series into a
-single patch? This would make it more evident that this was moved
-from drivers/interconnect/qcom/icc-rpmh.h and avoid duplicate
-definitions if only this patch was applied.
+Can you remind me if I gave you tags on the previous version?
+If so, is the above the reason to drop them?
+
+>
+>  - adc-joystick related changes have been dropped from this patchset and
+>    will be upstreamed separately. Their only connection to this patchset
+>    was that they used INGENIC_ADC_TOUCH_* defines in the DTS example,
+>    causing trouble to Rob's scripts.
+>
+>  - Integrated Paul's changes, which introduce an ADCMD low-level command
+>    feature. These changes affect patches 5/6 and 6/6, with the former
+>    requiring Rob to re-ack.
+>
+> Cheers,
+> Artur
+>
+> Artur Rojek (5):
+>   dt-bindings: iio/adc: Convert ingenic-adc docs to YAML.
+>   IIO: Ingenic JZ47xx: Error check clk_enable calls.
+>   IIO: Ingenic JZ47xx: Add xlate cb to retrieve correct channel idx
+>   dt-bindings: iio/adc: Add touchscreen idx for JZ47xx SoC ADC
+>   IIO: Ingenic JZ47xx: Add touchscreen mode.
+>
+> Paul Cercueil (1):
+>   iio/adc: ingenic: Retrieve channels list from soc data struct
+>
+>  .../bindings/iio/adc/ingenic,adc.txt          |  49 ---
+>  .../bindings/iio/adc/ingenic,adc.yaml         |  71 ++++
+>  drivers/iio/adc/Kconfig                       |   1 +
+>  drivers/iio/adc/ingenic-adc.c                 | 386 ++++++++++++++++--
+>  include/dt-bindings/iio/adc/ingenic,adc.h     |   6 +
+>  5 files changed, 426 insertions(+), 87 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
+>
+> --
+> 2.27.0
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
