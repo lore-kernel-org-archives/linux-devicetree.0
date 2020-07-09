@@ -4,115 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A81BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 20:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55086C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 20:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8581207DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 20:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29859207FC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 20:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594327375;
-	bh=RgBt8z6Oy8lJFig7s7Mb1k0GThuXtTthaVvtmzqcdz8=;
+	s=default; t=1594327626;
+	bh=IhRb+wK6oeczzKVvOA1+mTV6NPu7hrIjJLGpbsqyK48=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZBRMsk8IXOpFyLVsb4KTnlweeXLXnTFsGyeeqVM296p3oRMVZ/NpOgUxGeOr8vmA9
-	 u+UFDqQEODa0W5L8vuJcTJR+Ail/M3hij3JErXY7sTVYl/KlUEdWx4uvQue6bvVKt3
-	 KKHfhn3XPEfOr9m+rjkSz815Ak+WX2Gf7MsY7cu4=
+	b=N6+4Z6g2ZwBDAv8NgZuiKhwfRgV9ZGr/+FnsPHWJ9ECL6G+erkFnnQVR8ZVJxsE3c
+	 58q51n9i4gPNUZ4qs4usy9fPwG7LNIaVWKRKmWLQ+HFInhhvm2Dezlpaps0Y3ZJHe1
+	 f1W9hTOYRf3Ir5ZmK0OwfnSF07QRqDkvlMLxqj4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbgGIUmz (ORCPT
+        id S1726367AbgGIUrF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 16:42:55 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:38163 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgGIUmy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 16:42:54 -0400
-Received: by mail-il1-f196.google.com with SMTP id s21so3203607ilk.5;
-        Thu, 09 Jul 2020 13:42:54 -0700 (PDT)
+        Thu, 9 Jul 2020 16:47:05 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:41277 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbgGIUrF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 16:47:05 -0400
+Received: by mail-io1-f65.google.com with SMTP id o5so3750500iow.8;
+        Thu, 09 Jul 2020 13:47:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QRIStQyCkIoaSqHfpji8UZGXhFbUGYsTTZ730xKq2G4=;
-        b=mERc9sediT+ELm9iH+xv/CZc/dtlBFP2GYQFVe5pzzACuJQX6ZeZzn5EUfuEpcqyVd
-         MQx3uHfXOOceVt4HblrE6SieMTCgi2B8fPcO6Bo8L2CiuANOb2q1oMBAY/c3rGGcF1zS
-         SuMxwXpIYBLPjaxqj/3rbeOFEl9hrA9dVyjbO1t2ET5po+1w6nlScTAK54YYTV2fyLit
-         2eNt73jm0RiUtOewSC13WUvLwBULKhuRF+b+y3YlDL59T8F4kGM4Q3BC/rbp83xX3vQz
-         HfWBAZHUfQckH9D/ICbKhWNAFBBbmlMbbK1cwUW80FV7dpOubkDYZxEg4O8KYO/mcUjU
-         nyyA==
-X-Gm-Message-State: AOAM531MhpWYRl684Gj5zc5hp8npcc1uY11doBjC+uBOhiBfF7FhiLOi
-        dzkoJsQQEUIEPlgfVjLDPw==
-X-Google-Smtp-Source: ABdhPJxRpTkSd/WJSCFIsf6B49REhAYLdyj/koXazQPOq/svM5+yEgb4ot3AwlT930+WE7ERTMlHLg==
-X-Received: by 2002:a92:1805:: with SMTP id 5mr45546138ily.127.1594327373701;
-        Thu, 09 Jul 2020 13:42:53 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=wXXetMyLt/JXq+hf7AG79iHe84M94giegFW5eS3ahKs=;
+        b=OxLrrmW5tVTj0PNeeMnqvCCciUqpmk3j7n+vHHBWkGN3TECy/tFoUx/et2flAIBSyD
+         sqYUx/LC116hlwh2cpdp9Um/qpmsq1jNGtCMoJ0MonyN3PhljappnSrELWkzmrYE9mGk
+         pdwBZ6N8R4ZodLVH3MfiM3yBVzP3MSlx+J1cR9LQFnH5XH/RMp/ditdeVa474pHzIpCC
+         mbZRNSC6FhnXLLDAex+mT8jxILrv59SFGI+6RLjlDATY65WQP89scUwG57iwD23CobLc
+         b3bxtITfIqkKHCTV96dHQP4x3OnH4DjNhzYnX5K9Z+NJBh/VSs2HRXHgZbppH0O1R16u
+         PdDA==
+X-Gm-Message-State: AOAM532ub/XT5Y4t3zWBnvRyDTihXMco7LTGQJlJN7pO4AWI7qjoMzgS
+        JOH4uOQ4TZYHfHlulqiC5g==
+X-Google-Smtp-Source: ABdhPJxJwu/bLkwKh1Qj4fGMPW6l0RUYJssfxN/DYQHYqD3aqKgdw2S8XdoTT0TXkLkuh9TaCWkqZw==
+X-Received: by 2002:a02:854a:: with SMTP id g68mr17132692jai.24.1594327624709;
+        Thu, 09 Jul 2020 13:47:04 -0700 (PDT)
 Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id z20sm2690327iot.15.2020.07.09.13.42.52
+        by smtp.gmail.com with ESMTPSA id p22sm2563681ili.88.2020.07.09.13.47.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 13:42:53 -0700 (PDT)
-Received: (nullmailer pid 853786 invoked by uid 1000);
-        Thu, 09 Jul 2020 20:42:51 -0000
-Date:   Thu, 9 Jul 2020 14:42:51 -0600
+        Thu, 09 Jul 2020 13:47:04 -0700 (PDT)
+Received: (nullmailer pid 859528 invoked by uid 1000);
+        Thu, 09 Jul 2020 20:47:03 -0000
+Date:   Thu, 9 Jul 2020 14:47:03 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Vinay Simha BN <simhavcs@gmail.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v7 1/2] dt-binding: Add DSI/LVDS TC358775 bridge bindings
-Message-ID: <20200709204251.GA853727@bogus>
-References: <20200704092511.20856-1-simhavcs@gmail.com>
+To:     Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+Cc:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-renesas-soc@vger.kernel.org,
+        Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH 1/2] dt-bindings: adv7180: Convert bindings to json-schema
+Message-ID: <20200709204703.GA859433@bogus>
+References: <20200704160644.3040636-1-niklas.soderlund+renesas@ragnatech.se>
+ <20200704160644.3040636-2-niklas.soderlund+renesas@ragnatech.se>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200704092511.20856-1-simhavcs@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200704160644.3040636-2-niklas.soderlund+renesas@ragnatech.se>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 04 Jul 2020 14:54:39 +0530, Vinay Simha BN wrote:
-> - converted from .txt to .yaml
-> - dual-link lvds port added and implemented
-> - dsi data-lanes property removed, it will be picked
->   from dsi0 ports
-> - VESA/JEIDA formats picked from panel-lvds dts
-> - proper indentation
-> - single-link and dual-link lvds description and
->   examples are added
-> - license modified to (GPL-2.0-only OR BSD-2-Clause)
+On Sat, 04 Jul 2020 18:06:43 +0200, Niklas Söderlund wrote:
+> Convert ADV7180 analog video decoder documentation to json-schema.
 > 
-> Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
+> As the examples in the bindings can be tested add another example to
+> test the more advance adv7180cp binding description.
 > 
+> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 > ---
-> v1:
->  Initial version wast .txt file
-> 
-> v2:
->  From txt to yaml file format
-> 
-> v3:
-> * Andrzej Hajda review comments incorporated
->   dual port lvds implemented
-> 
-> * Laurent Pinchart review comments incorporated
->   dsi lanes property removed and it is dynamically
->   picked from the dsi ports
->   VESA/JEIDA format picked from panel-lvds dts
-> 
-> v4:
-> * Sam Ravnborg review comments incorporated
->   }' is indented properly in examples data-lanes
->   description for single-link and dual-link lvds
-> 
-> v5:
-> * Sam Ravnborg review comments incorporated
->   license modified to (GPL-2.0-only OR BSD-2-Clause)
->   changelog added
-> ---
->  .../display/bridge/toshiba,tc358775.yaml      | 215 ++++++++++++++++++
->  1 file changed, 215 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+>  .../devicetree/bindings/media/i2c/adv7180.txt |  49 -----
+>  .../bindings/media/i2c/adv7180.yaml           | 184 ++++++++++++++++++
+>  2 files changed, 184 insertions(+), 49 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/media/i2c/adv7180.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/adv7180.yaml
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied, thanks!
