@@ -2,170 +2,185 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA3EFC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 12:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01446C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 13:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE9B207DD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 12:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB27B2077D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 13:01:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594299718;
+	bh=svdZb33Y7t1B2vg6ybn6AQgGBJfX7TqitPVoZxOAkL4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Z31+EP//KM62HZzGxRdS/haCXcUDnXyuHtNL+MEhgstf2sH2KiM4xqOFweroBYNoF
+	 gTdLaX5btpUCYg/BINGBC4zQNtCjhE94pozTFYfrPmtIWox9myLuAM9q76j73KqUia
+	 Ia4L9sf2wC/YmiENJHw96ds12AXkID6R2Wu64TNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726433AbgGIMs6 (ORCPT
+        id S1726694AbgGINB6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 08:48:58 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35268 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726347AbgGIMs5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 9 Jul 2020 08:48:57 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6541FE4150B6AE26B07F;
-        Thu,  9 Jul 2020 20:48:54 +0800 (CST)
-Received: from [127.0.0.1] (10.174.179.33) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Thu, 9 Jul 2020
- 20:48:53 +0800
-Subject: Re: [PATCH v2 01/12] ACPI/IORT: Make iort_match_node_callback walk
- the ACPI namespace for NC
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Robin Murphy <robin.murphy@arm.com>, <devicetree@vger.kernel.org>,
-        "Marc Zyngier" <maz@kernel.org>, <linux-pci@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        <linux-acpi@vger.kernel.org>, <iommu@lists.linux-foundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Sudeep Holla" <sudeep.holla@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Will Deacon" <will@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        "Laurentiu Tudor" <laurentiu.tudor@nxp.com>
-References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
- <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
- <20200619082013.13661-2-lorenzo.pieralisi@arm.com>
- <718cae1f-2f33-f6d9-f278-157300b73116@huawei.com>
- <20200629090551.GA28873@e121166-lin.cambridge.arm.com>
- <765078e7-b3ec-af5d-0405-7834ba0f120a@huawei.com>
- <20200630102454.GA17556@e121166-lin.cambridge.arm.com>
- <4817d766-0437-5356-a0b9-97b111d4cae2@huawei.com>
- <952a6720-f401-1441-5548-5b40cfc76d3a@arm.com>
- <0cbd1da8-e283-7e13-d2b3-4d14775fd870@huawei.com>
- <20200709092156.GB18149@e121166-lin.cambridge.arm.com>
-From:   Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <04f3d761-6ee0-6062-1970-3d5f506d8305@huawei.com>
-Date:   Thu, 9 Jul 2020 20:48:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 9 Jul 2020 09:01:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41530 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726358AbgGINB6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Jul 2020 09:01:58 -0400
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18A602074B;
+        Thu,  9 Jul 2020 13:01:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594299717;
+        bh=svdZb33Y7t1B2vg6ybn6AQgGBJfX7TqitPVoZxOAkL4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Tfp0iRBHR5aRvFS09s+qOKpZQFFKbB2kScnHzox4/rJKRdocXBIsmZ28HBb3wD6CE
+         fKw6nsoiJUi2ZgfsRnVpWaI7fWnNz2BK3OkaPyeUML/jj6UJmVbe7il6EwRsOjeAHl
+         W+g1fWQZWJ2nrfLleVShsmjfFnoDtyXOcL1gBhhc=
+Received: by mail-ed1-f54.google.com with SMTP id n2so1730626edr.5;
+        Thu, 09 Jul 2020 06:01:57 -0700 (PDT)
+X-Gm-Message-State: AOAM531XottZPZ54EVzF+PXn3u8/ydbF+5YVDQ6YqPFAoZzBubK2eANN
+        a87iVplwo2Gv7sMR0YpOrIXSUv7qGWwoOLbdBQ==
+X-Google-Smtp-Source: ABdhPJwXcokw3x2lqWpS4cVqHBkCVCiRJ+sqhgLCVDH335FOjvxmmxIFTWC0erzNbub7XMGUoCnGTGG4fug7NRxffhU=
+X-Received: by 2002:a05:6402:1766:: with SMTP id da6mr69654748edb.48.1594299715658;
+ Thu, 09 Jul 2020 06:01:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200709092156.GB18149@e121166-lin.cambridge.arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.179.33]
-X-CFilter-Loop: Reflected
+References: <1594285927-1840-1-git-send-email-neal.liu@mediatek.com> <1594285927-1840-3-git-send-email-neal.liu@mediatek.com>
+In-Reply-To: <1594285927-1840-3-git-send-email-neal.liu@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Thu, 9 Jul 2020 21:01:44 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_-7PwoPG_0ce2p4BCNQ3rundg40Bsni14XSmVETExkKkw@mail.gmail.com>
+Message-ID: <CAAOTY_-7PwoPG_0ce2p4BCNQ3rundg40Bsni14XSmVETExkKkw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] soc: mediatek: add mtk-devapc driver
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020/7/9 17:21, Lorenzo Pieralisi wrote:
-> On Thu, Jul 02, 2020 at 04:22:00PM +0800, Hanjun Guo wrote:
->> Hi Robin,
->>
->> On 2020/7/2 0:12, Robin Murphy wrote:
->>> On 2020-06-30 14:04, Hanjun Guo wrote:
->>>> On 2020/6/30 18:24, Lorenzo Pieralisi wrote:
->>>>> On Tue, Jun 30, 2020 at 11:06:41AM +0800, Hanjun Guo wrote:
->>>>>
->>>>> [...]
->>>>>
->>>>>>> For devices that aren't described in the DSDT - IORT translations
->>>>>>> are determined by their ACPI parent device. Do you see/Have you
->>>>>>> found any issue with this approach ?
->>>>>>
->>>>>> The spec says "Describes the IO relationships between devices
->>>>>> represented in the ACPI namespace.", and in section 3.1.1.3 Named
->>>>>> component node, it says:
->>>>>
->>>>> PCI devices aren't necessarily described in the ACPI namespace and we
->>>>> still use IORT to describe them - through the RC node.
->>>>>
->>>>>> "Named component nodes are used to describe devices that are also
->>>>>> included in the Differentiated System Description Table (DSDT). See
->>>>>> [ACPI]."
->>>>>>
->>>>>> So from my understanding, the IORT spec for now, can only do ID
->>>>>> translations for devices in the DSDT.
->>>>>
->>>>> I think you can read this multiple ways but this patch does not
->>>>> change this concept. What changes, is applying parent's node IORT
->>>>> mapping to child nodes with no associated DSDT nodes, it is the
->>>>> same thing we do with PCI and the _DMA method - we could update
->>>>> the wording in the specs if that clarifies but I don't think this
->>>>> deliberately disregards the specifications.
->>>>
->>>> I agree, but it's better to update the wording of the spec.
->>>>
->>>>>
->>>>>>>> For a platform device, if I use its parent's full path name for
->>>>>>>> its named component entry, then it will match, but this will violate
->>>>>>>> the IORT spec.
->>>>>>>
->>>>>>> Can you elaborate on this please I don't get the point you
->>>>>>> are making.
->>>>>>
->>>>>> For example, device A is not described in DSDT so can't represent
->>>>>> as a NC node in IORT. Device B can be described in DSDT and it
->>>>>> is the parent of device A, so device B can be represented in IORT
->>>>>> with memory access properties and node flags with Substream width
->>>>>> and Stall supported info.
->>>>>>
->>>>>> When we trying to translate device A's ID, we reuse all the memory
->>>>>> access properties and node flags from its parent (device B), but
->>>>>> will it the same?
->>>>>
->>>>> I assume so why wouldn't it be ? Why would be describe them in
->>>>> a parent-child relationship if that's not how the system looks like
->>>>> in HW ?
->>>>
->>>> The point I'm making is that I'm not sure all the memory access and
->>>> stall properties are the same for the parent and the device itself.
->>>
->>> Is that even a valid case though? The principal thing we want to
->>> accommodate here is when device B *is* the one accessing memory, either
->>> because it is a bridge with device A sat behind it, or because device A
->>> is actually just some logical function or subset of physical device B.
->>
->> Thanks for the clarify, for CCA attributes, child device should be the
->> same as its parent and that was written in the ACPI spec, so it's better
->> to make it clear for other properties in the spec as well.
->>
->>>
->>> If the topology is such that device A is a completely independent device
->>> with its own path to memory such that it could have different
->>> properties, I would expect that it *should* be described in DSDT, and I
->>> can't easily think of a good reason why it wouldn't be. I'm also
->>> struggling to imagine how it might even have an ID that had to be
->>> interpreted in the context of device B if it wasn't one of the cases
->>> above :/
->>>
->>> I don't doubt that people could - or maybe even have - come up with crap
->>> DSDT bindings that don't represent the hardware sufficiently accurately,
->>> but I'm not sure that should be IORT's problem...
->>
->> As I said in previous email, I'm not against this patch, and seems
->> have no regressions for platforms that using named component node
->> such as D05/D06 (I will test it shortly to make sure), but it's better
->> to update the wording of the spec (even after this patch set is merged).
-> 
-> Have you managed to test this series ?
+Hi, Neal:
 
-Sorry, I forgot to reply the email after the testing, adding this patch
-set on top of 5.8-rc3 and test it on D06, it worked well, and I printed
-every match device's name to confirm that there are no regressions.
+Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=889=E6=97=
+=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=885:13=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> MediaTek bus fabric provides TrustZone security support and data
+> protection to prevent slaves from being accessed by unexpected
+> masters.
+> The security violation is logged and sent to the processor for
+> further analysis or countermeasures.
+>
+> Any occurrence of security violation would raise an interrupt, and
+> it will be handled by mtk-devapc driver. The violation
+> information is printed in order to find the murderer.
+>
+> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
 
-Thanks
-Hanjun
+[snip]
 
+> +
+> +static u32 get_shift_group(struct mtk_devapc_context *devapc_ctx,
+> +                          int slave_type, int vio_idx)
+
+vio_idx  is useless, so remove it.
+
+> +{
+> +       u32 vio_shift_sta;
+> +       void __iomem *reg;
+> +       int bit;
+> +
+> +       reg =3D mtk_devapc_pd_get(devapc_ctx, slave_type, VIO_SHIFT_STA, =
+0);
+> +       vio_shift_sta =3D readl(reg);
+> +
+> +       for (bit =3D 0; bit < 32; bit++) {
+> +               if ((vio_shift_sta >> bit) & 0x1)
+> +                       break;
+> +       }
+> +
+> +       return bit;
+> +}
+> +
+
+[snip]
+
+> +
+> +/*
+> + * devapc_violation_irq - the devapc Interrupt Service Routine (ISR) wil=
+l dump
+> + *                       violation information including which master vi=
+olates
+> + *                       access slave.
+> + */
+> +static irqreturn_t devapc_violation_irq(int irq_number,
+> +                                       struct mtk_devapc_context *devapc=
+_ctx)
+> +{
+> +       const struct mtk_device_info **device_info;
+> +       int slave_type_num;
+> +       int vio_idx =3D -1;
+> +       int slave_type;
+> +
+> +       slave_type_num =3D devapc_ctx->slave_type_num;
+> +       device_info =3D devapc_ctx->device_info;
+> +
+> +       for (slave_type =3D 0; slave_type < slave_type_num; slave_type++)=
+ {
+
+If slave_type_num is 1, I think the code should be simpler.
+
+> +               if (!mtk_devapc_dump_vio_dbg(devapc_ctx, slave_type, &vio=
+_idx))
+> +                       continue;
+> +
+> +               /* Ensure that violation info are written before
+> +                * further operations
+> +                */
+> +               smp_mb();
+> +
+> +               mask_module_irq(devapc_ctx, slave_type, vio_idx, true);
+
+Why do you mask irq?
+
+> +
+> +               clear_vio_status(devapc_ctx, slave_type, vio_idx);
+> +
+> +               mask_module_irq(devapc_ctx, slave_type, vio_idx, false);
+> +       }
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +/*
+> + * start_devapc - initialize devapc status and start receiving interrupt
+> + *               while devapc violation is triggered.
+> + */
+
+[snip]
+
+> +
+> +struct mtk_device_info {
+> +       int sys_index;
+
+Useless, so remove it.
+
+> +       int ctrl_index;
+
+Ditto.
+
+Regards,
+Chun-Kuang.
+
+> +       int vio_index;
+> +};
+> +
