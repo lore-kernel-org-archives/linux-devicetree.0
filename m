@@ -2,103 +2,115 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2662EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 16:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91955C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 16:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0698F2078B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 16:42:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZhpHog7T"
+	by mail.kernel.org (Postfix) with ESMTP id 685D42077D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 16:44:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594313046;
+	bh=L7QAL8lLLumFtYMjQECXrFQsCftj7J1a3RLe7kGg4jE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xGl7tupi7doqpBexHzYm6NqLLG9v4d8PDKYxRm1JQfUOKNyO94FMu/736jsiom3zy
+	 ZButDIQSDQxBctL4fs3pNCNuEzGiW+cTs6eGtenWIMkddq6Ap+2JS27RJTUfDQSO8U
+	 rsz2T0ZpgT3DtLK5qadlSmIrT9Wpp3pIzlwVQ8pI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgGIQmU (ORCPT
+        id S1726729AbgGIQoG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 12:42:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39064 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgGIQmU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 12:42:20 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FADCC08C5CE;
-        Thu,  9 Jul 2020 09:42:20 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id t11so1238263pfq.11;
-        Thu, 09 Jul 2020 09:42:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yOR+9StZCul8bBrAKPaQ/GhvI1UNu403RqQyrxCjABU=;
-        b=ZhpHog7Tu/i8/tgWaUMQD64GTbdNqncLqvCVWer/FpGbv/EGa9YX6Mw8GPxHjeAi85
-         3wyc7Yutd6qnfW7sv/rL9V61c2QcD86CkVOU1Ouu/dLe3ophdzSTtlPV0uBeK+HI0Ucv
-         0ttI8oLisoICRbDk8EqkNv4v4dwZrfw4+vodF87rEMAjxBwMXy/xcA86xipt0GuTSuyN
-         pNCDDySpI45N3ubEhJSxcOmrd91DxJv6bHPlhHTYqf43nZWICfMgMS8YyujkcQ/HaHVA
-         +KY9aIHp+HTxSFjtQt0QyMjFa0x7YNz5Y+DwquUysDNT1ryIjKq4AXhiM1IrqBS7r6uK
-         hO6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yOR+9StZCul8bBrAKPaQ/GhvI1UNu403RqQyrxCjABU=;
-        b=ldqwir1yjigJcG4nUytyqT2Obrdt/vO7uvwMM+28xkc+JVLBNy45TJcYmqx5amLb4Y
-         HsQQ0mFkr07sHvrJkD6e5461JU8kzOz4F0GLBdbGCI7V1QGlhxU+zYKydPCMFj3JhMD6
-         qfSlOQEHWzaOJiDU6R3OiLluN31AsTY5OFpKCCVJTRzfBB2TiZM/5DUH5JKyHkCYq/I6
-         ta1+feweJSwubsPCGz3sfYzB1TmUvRBbnt4mkeYqBygLtbp3whKS9q5160Y4o/PCYZik
-         2DrGOY/ZuJrZ9aryy80L79JANwouv7gyHxcW8WbpwEv049KTbpouM9+QJt/wE2QwSkQp
-         RKgg==
-X-Gm-Message-State: AOAM53114vuq7gcTC2kdvRDV1Mjc/i01E4q5MKGgdNVPZglbsjITqn1k
-        KFjG4A9CPFmpfM44AN09ARFGVtEKV/xMYYfteUk=
-X-Google-Smtp-Source: ABdhPJwrdtkru6pbIR5By3jq9i0VIVHJXJHGbH/RZB1O3LCipYHDkjz6NIdmtD5Y49jn25sM2VgPcpS5g7X79nd4N70=
-X-Received: by 2002:a05:6a00:790:: with SMTP id g16mr23296458pfu.36.1594312939767;
- Thu, 09 Jul 2020 09:42:19 -0700 (PDT)
+        Thu, 9 Jul 2020 12:44:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39250 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726339AbgGIQoF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Jul 2020 12:44:05 -0400
+Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BF19207FC;
+        Thu,  9 Jul 2020 16:44:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594313045;
+        bh=L7QAL8lLLumFtYMjQECXrFQsCftj7J1a3RLe7kGg4jE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Sr9bqUrUJxcwi5HS1CgSWWGaqFMTqqcOY8byhe06CPkksoKQvMLzFgC0iVZoWUGuC
+         12SSqbhZNMN7Edmkf4m/TDZaS+lNdJ9L1nca37gu9xoki6klAu+9wmNMFD2hgTEFTR
+         H5I1clHpa4/DGUI+mNJmjebu7pVIGSaiopXDA0Go=
+Received: by mail-oi1-f175.google.com with SMTP id w17so2400652oie.6;
+        Thu, 09 Jul 2020 09:44:05 -0700 (PDT)
+X-Gm-Message-State: AOAM5330tTrmN3JmBxL45io0ss5ajk/TKzQK5rutVw9gwgGrtLjjI7Xy
+        wt75z7OcpNwDKcZ3LUMgVv9900aCHK5nVZQIhg==
+X-Google-Smtp-Source: ABdhPJwuJLOgE4dZrJb/0wVo3GpaQESIDFZRLbjdN78LiqQVgkh5D4In9QEr2TPSL5gQzegA25PHztiQWy7EmbrkWy4=
+X-Received: by 2002:aca:30d2:: with SMTP id w201mr810251oiw.147.1594313044489;
+ Thu, 09 Jul 2020 09:44:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200709152200.10039-1-contact@artur-rojek.eu>
- <CAHp75VcwgL8pH+pH9TnsuwbWr=wSFu37sX8sTkbkfk+iBv7Jng@mail.gmail.com> <9865deba48fdb1b5bb522ae7cabef7bc@artur-rojek.eu>
-In-Reply-To: <9865deba48fdb1b5bb522ae7cabef7bc@artur-rojek.eu>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 9 Jul 2020 19:42:03 +0300
-Message-ID: <CAHp75Vd51z_MDRno_wSXpSS9zj0kCntmFqYSHbOr-dds7NhPsw@mail.gmail.com>
-Subject: Re: [PATCH v8 0/6] iio/adc: ingenic: Cleanups & add touchscreen mode.
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200704143544.789345-1-sam@ravnborg.org> <20200704143544.789345-2-sam@ravnborg.org>
+ <CAMuHMdXWXk=QUbpFeX6bjwp+JWKgHqiQALTdQJgSgwBRkyvkRA@mail.gmail.com> <20200704212615.GA1693435@ravnborg.org>
+In-Reply-To: <20200704212615.GA1693435@ravnborg.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 9 Jul 2020 10:43:53 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+T8QZmH3RSx-mj_HPE0qW0pemRE6rYV9-QEbooa-oiVg@mail.gmail.com>
+Message-ID: <CAL_Jsq+T8QZmH3RSx-mj_HPE0qW0pemRE6rYV9-QEbooa-oiVg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] dt-bindings: fix simple-framebuffer example
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 9, 2020 at 7:05 PM Artur Rojek <contact@artur-rojek.eu> wrote:
+On Sat, Jul 4, 2020 at 3:26 PM Sam Ravnborg <sam@ravnborg.org> wrote:
 >
-> Hey Andy,
->
-> On 2020-07-09 17:43, Andy Shevchenko wrote:
-> > On Thu, Jul 9, 2020 at 6:22 PM Artur Rojek <contact@artur-rojek.eu>
-> > wrote:
-> >>
-> >> Hi all,
-> >>
-> >> v8 of this patchset introduces some structural changes, which I deemed
-> >> worthy highlighting here:
+> On Sat, Jul 04, 2020 at 11:03:21PM +0200, Geert Uytterhoeven wrote:
+> > Hi Sam,
 > >
-> > Can you remind me if I gave you tags on the previous version?
-> I received no tags from you on this patchset so far.
+> > Thanks for your patch!
+> >
+> > On Sat, Jul 4, 2020 at 4:37 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+> > > Now that dt-extract-example gained support for using root nodes
+> > > in examples, update the example for the simple-frambuffer binding to use it.
+> >
+> > simple-framebuffer
+> Thanks, will fix.
+>
+> >
+> > > This gives us a better example and kill a long standing warning:
+> > >
+> > > simple-framebuffer.example.dts:23.16-39.11:
+> > > Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+> > >
+> > > Note: To get the update dt-extract-example execute:
+> > > pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+> > >
+> > > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> >
+> > > --- a/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
+> > > +++ b/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
+> > > @@ -152,28 +152,29 @@ additionalProperties: false
+> > >
+> > >  examples:
+> > >    - |
+> > > -    aliases {
+> > > -      display0 = &lcdc0;
+> >
+> > Why drop the aliases example?
+> I did not see it had any value for the binding that the example shall
+> demonstrate. But it was not somthing I have given much thought of.
 
-Thanks for reminding me!
+I don't think anything actually supports 'display' aliases and it is
+beyond the scope of this binding, so I'd drop.
 
+stdout-path should be dropped too as it points to this.
 
-
--- 
-With Best Regards,
-Andy Shevchenko
+Rob
