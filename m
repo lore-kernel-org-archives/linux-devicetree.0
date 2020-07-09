@@ -2,209 +2,115 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FORGED_MUA_MOZILLA,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED053C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 13:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE12C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 13:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2C8420772
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 13:13:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594300384;
-	bh=WBbJU/KkFXQZfDG744P7nPPYpZA0DJCr2tyu1VZTvTA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WnW0wRFBYRPw65K317aVNpZUYuyMdKRcOUBvFv1ZuvMk/rg/s8kUJ2Jw2bZMT+kWr
-	 lsm+skab2NdtoNJuf7HD4ISd3Abtxt7TALr4vcGWVpd7eCiKO3yAqEw06OXNQff+xf
-	 uxTxyjdu/b7biRSg0/Z2RpIQ8I0xrNM2Kb5hW4ZU=
+	by mail.kernel.org (Postfix) with ESMTP id A42B12065D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 13:28:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbgGINND (ORCPT
+        id S1727790AbgGIN2P (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 09:13:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46932 "EHLO mail.kernel.org"
+        Thu, 9 Jul 2020 09:28:15 -0400
+Received: from mga11.intel.com ([192.55.52.93]:64525 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726768AbgGINNC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 9 Jul 2020 09:13:02 -0400
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D15B8207DA;
-        Thu,  9 Jul 2020 13:13:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594300382;
-        bh=WBbJU/KkFXQZfDG744P7nPPYpZA0DJCr2tyu1VZTvTA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0mv/pzeQI/VIqe/m3D1mkdxV2+NosLJryzznIod0FRcZUjdfL6KjoJOTpqw9hFq0S
-         ClUfzGM/2GSP4XyiYW7fbv2+gCv4HwSKXyhchJZS1fmPpOS7poh7q4Pn2KlgPd0JwP
-         v0RFSJ1EuKrFu99hrIFt2WOf6W3JlJFEH78CkQmM=
-Received: by mail-ej1-f42.google.com with SMTP id o18so2202894eje.7;
-        Thu, 09 Jul 2020 06:13:01 -0700 (PDT)
-X-Gm-Message-State: AOAM532h6sXEpBPR6EQ3h5LsV8glocHkPaNHLxz/EFlE1q+vptM/o912
-        n/++aw5ARBcwHQrnovv9o3vXeOf/X69cdj4V8Q==
-X-Google-Smtp-Source: ABdhPJyUxRrhc1z4ZHhofevSZxzBYzCXYv8JpRTyGRhKckyUoVMmTH4L7nw7p3INYz0y0YJL3aK6Bg1WNoVpWz1+8Do=
-X-Received: by 2002:a17:906:856:: with SMTP id f22mr53938906ejd.245.1594300380228;
- Thu, 09 Jul 2020 06:13:00 -0700 (PDT)
+        id S1726444AbgGIN2P (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Jul 2020 09:28:15 -0400
+IronPort-SDR: k9RpCPMVYpOyPf5yfgokqH/ZHqXV9LTovVgr17raHSiZP4mD+VGsJVGvlATqbnf35G8aEEriCw
+ Ek15ZpJqNCfg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="146077737"
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="146077737"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 06:28:15 -0700
+Message-Id: <537a4c$cobr4j@orsmga004-auth.jf.intel.com>
+IronPort-SDR: lbGftqsvxRyXOACOGBHSm1In1Skp/KaIfrSFiKY6OurNhCBCCg5UvS81aWet1lIxbq8nWff6dl
+ iJLteg35tBRA==
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="428207258"
+Received: from paulmurp-mobl.ger.corp.intel.com (HELO [192.168.153.164]) ([10.213.225.132])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 06:28:12 -0700
+Subject: Re: [PATCH 2/7] mailbox: keembay-scmi-mailbox: Add support for Keem
+ Bay mailbox
+To:     Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Paul Murphy <paul.j.murphy@intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20200616155613.121242-1-daniele.alessandrelli@linux.intel.com>
+ <20200616155613.121242-3-daniele.alessandrelli@linux.intel.com>
+ <20200708203428.GB31671@bogus>
+ <491f994c6f87a542e49fe37c8a75ab46f1b3712b.camel@linux.intel.com>
+From:   Paul Murphy <paul.j.murphy@linux.intel.com>
+Date:   Thu, 9 Jul 2020 14:28:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200708104023.3225-1-louis.kuo@mediatek.com> <20200708104023.3225-2-louis.kuo@mediatek.com>
-In-Reply-To: <20200708104023.3225-2-louis.kuo@mediatek.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Thu, 9 Jul 2020 21:12:48 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_-+v_t3Vv-Ms7k9jCxJ+0B9qb93tBkL=3OmpMLeyAdV-g@mail.gmail.com>
-Message-ID: <CAAOTY_-+v_t3Vv-Ms7k9jCxJ+0B9qb93tBkL=3OmpMLeyAdV-g@mail.gmail.com>
-Subject: Re: [RFC PATCH V7 1/3] media: platform: mtk-isp: Add Mediatek sensor
- interface driver
-To:     Louis Kuo <louis.kuo@mediatek.com>
-Cc:     hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com,
-        Tomasz Figa <tfiga@chromium.org>, keiichiw@chromium.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        devicetree@vger.kernel.org,
-        =?UTF-8?B?U2VhbiBDaGVuZyAo6YSt5piH5byYKQ==?= 
-        <Sean.Cheng@mediatek.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        =?UTF-8?B?SmVycnktY2ggQ2hlbiAo6Zmz5pWs5oayKQ==?= 
-        <Jerry-ch.Chen@mediatek.com>,
-        =?UTF-8?B?SnVuZ28gTGluICjmnpfmmI7kv4op?= <jungo.lin@mediatek.com>,
-        =?UTF-8?B?U2ogSHVhbmcgKOm7g+S/oeeSiyk=?= <sj.huang@mediatek.com>,
-        yuzhao@chromium.org,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>, zwisler@chromium.org,
-        =?UTF-8?B?Q2hyaXN0aWUgWXUgKOa4uOmbheaDoCk=?= 
-        <christie.yu@mediatek.com>,
-        =?UTF-8?B?RnJlZGVyaWMgQ2hlbiAo6Zmz5L+K5YWDKQ==?= 
-        <frederic.chen@mediatek.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-media@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <491f994c6f87a542e49fe37c8a75ab46f1b3712b.camel@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Louis:
 
-Louis Kuo <louis.kuo@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=888=E6=97=
-=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=886:41=E5=AF=AB=E9=81=93=EF=BC=9A
+On 7/9/20 13:23, Daniele Alessandrelli wrote:
+> Hi Sudeep,
 >
-> This patch adds Mediatek's sensor interface driver. Sensor interface
-> driver is a MIPI-CSI2 host driver, namely, a HW camera interface controll=
-er.
-> It support a widely adopted, simple, high-speed protocol primarily intend=
-ed
-> for point-to-point image and video transmission between cameras and host
-> devices. The mtk-isp directory will contain drivers for multiple IP block=
-s
-> found in Mediatek ISP system. It will include ISP Pass 1 driver, sensor
-> interface driver, DIP driver and face detection driver.
+> Thanks for your review.
 >
-> Signed-off-by: Louis Kuo <louis.kuo@mediatek.com>
-> ---
->  drivers/media/platform/Makefile               |    1 +
->  drivers/media/platform/mtk-isp/Kconfig        |   18 +
->  drivers/media/platform/mtk-isp/Makefile       |    3 +
->  .../media/platform/mtk-isp/seninf/Makefile    |    7 +
->  .../platform/mtk-isp/seninf/mtk_seninf.c      |  974 +++++++++++
->  .../platform/mtk-isp/seninf/mtk_seninf_dphy.c |  353 ++++
-
-I think phy driver should be placed in drivers/phy/mediatek and
-separate phy driver to an independent patch.
-
->  .../platform/mtk-isp/seninf/mtk_seninf_reg.h  | 1491 +++++++++++++++++
->  .../mtk-isp/seninf/mtk_seninf_rx_reg.h        |  515 ++++++
->  8 files changed, 3362 insertions(+)
->  create mode 100644 drivers/media/platform/mtk-isp/Kconfig
->  create mode 100644 drivers/media/platform/mtk-isp/Makefile
->  create mode 100644 drivers/media/platform/mtk-isp/seninf/Makefile
->  create mode 100644 drivers/media/platform/mtk-isp/seninf/mtk_seninf.c
->  create mode 100644 drivers/media/platform/mtk-isp/seninf/mtk_seninf_dphy=
-.c
->  create mode 100644 drivers/media/platform/mtk-isp/seninf/mtk_seninf_reg.=
-h
->  create mode 100644 drivers/media/platform/mtk-isp/seninf/mtk_seninf_rx_r=
-eg.h
+> On Wed, 2020-07-08 at 21:34 +0100, Sudeep Holla wrote:
+>> On Tue, Jun 16, 2020 at 04:56:08PM +0100, Daniele Alessandrelli
+>> wrote:
+>>> From: Paul Murphy <paul.j.murphy@intel.com>
+>>>
+>>> Keem Bay SoC has a ARM trusted firmware-based secure monitor which
+>>> acts
+>>> as the SCP for the purposes of power management over SCMI.
+>>>
+>>> This driver implements the transport layer for SCMI to function.
+>>>
+>> Please use the smc transport support in
+>> driver/firmware/arm_scmi/smc.c
+>> for this. You don't need mailbox support for SMC/HVC. Basically you
+>> don't need this driver at all and you have everything you need to
+>> support
+>> what you want.
+>>
+>> Let me know if you face issues.
+>>
+> Sorry, we didn't know about the SMC transport support for SCMI. Looks
+> like it was added only recently, while our driver was already developed
+> and waiting to be upstreamed.
+>
+> I agree that we can drop this driver and switch to the SMC transport as
+> you suggested, but I think we'll have to modify our bootloader SiP
+> service slightly. Paul, can you elaborate?
 >
 
-[snip]
+Just one question.
 
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/module.h>
-> +#include <linux/of_graph.h>
-> +#include <linux/of_irq.h>
+In our patch, we pass the shared memory address as the second argument 
+of the SiP service, as it means we don't have to hardcode that in our 
+firmware. Sudeep, do you know if it was intentional in 
+smc_send_message() to leave that out? If we leave it out, we are 
+requiring the secure monitor to hardcode the shared memory address.
 
-No irq handler, so remove this.
-
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/slab.h>
-> +#include <linux/videodev2.h>
-> +#include <media/v4l2-async.h>
-> +#include <media/v4l2-ctrls.h>
-> +#include <media/v4l2-event.h>
-> +#include <media/v4l2-fwnode.h>
-> +#include <media/v4l2-subdev.h>
-> +#include <linux/phy/phy.h>
-> +#include "mtk_seninf_reg.h"
-> +
-
-[snip]
-
-> +
-> +static int seninf_set_ctrl(struct v4l2_ctrl *ctrl)
-> +{
-> +       struct mtk_seninf *priv =3D container_of(ctrl->handler,
-> +                                            struct mtk_seninf, ctrl_hand=
-ler);
-> +
-> +       switch (ctrl->id) {
-> +       case V4L2_CID_TEST_PATTERN:
-> +               if (ctrl->val =3D=3D TEST_GEN_PATTERN)
-> +                       return seninf_enable_test_pattern(priv);
-
-Without this, this driver still works, so move this to an independent patch=
-.
-
-> +               else if (ctrl->val =3D=3D TEST_DUMP_DEBUG_INFO)
-> +                       return seninf_dump_debug_info(priv);
-
-Ditto.
-
-> +               else
-> +                       return -EINVAL;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-
-[snip]
-
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id mtk_mipi_dphy_of_match[] =3D {
-> +       {.compatible =3D "mediatek,mt8183-mipi_dphy"},
-
-Where is the definition of "mediatek,mt8183-mipi_dphy"?
 
 Regards,
-Chun-Kuang.
+Paul
 
-> +       {},
-> +};
-> +MODULE_DEVICE_TABLE(of, mtk_mipi_dphy_of_match);
-> +#endif
-> +
-> +static struct platform_driver mipi_dphy_pdrv =3D {
-> +       .probe  =3D mipi_dphy_probe,
-> +       .driver =3D {
-> +               .name   =3D "mipi_dphy",
-> +               .of_match_table =3D of_match_ptr(mtk_mipi_dphy_of_match),
-> +       },
-> +};
-> +
-> +module_platform_driver(mipi_dphy_pdrv);
-> +
