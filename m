@@ -2,93 +2,83 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAFD3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 20:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5ECDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 20:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 876D9207DA
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 20:01:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BpJOy4Gw"
+	by mail.kernel.org (Postfix) with ESMTP id 98959207DD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 20:01:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594324914;
+	bh=tcUqstTXSz/wlzdeIGfXp/bUt72WPvDKyU1BFIurK9E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=n0bRyRm04Bi60Bd/ME9j9YXi/Qclew/EYJOFarehsvC92qZ0yhTRJavVLzhVbxpcR
+	 lP90A7LxL+r3OVkZwA81DMRbNzkMt/UPNNZrrRYGfDHOq5sa5IrUkIsx3mUWvn9S2w
+	 mZgaPfRJ2H7I8yOLczqcH1BLs/GiYOcBPFXxhd44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgGIUBo (ORCPT
+        id S1726845AbgGIUBy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 16:01:44 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:43573 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726789AbgGIUBn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 16:01:43 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594324903; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=8iidDXtODABGvQpH1ZOjB+bZqANOW83DMaIoVI6ViP4=; b=BpJOy4GwLZpC6cSV4SL6sbaGMiQD3uHX+mCeZsuPEEo9qGkSpSY6CzlUG1nqs0/Cn6eyx/QY
- ZoAupnQ4v+wBnLBCY3kCaPj++qu0ifmL6d34jJ8T3P3JxtAlKk58LqXmiWOcmrUTw6sCfBas
- uxC2Gvor1K/qYCPVHKXXo7bQaBw=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n14.prod.us-east-1.postgun.com with SMTP id
- 5f07778c9f03943e5cec6c05 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 20:01:16
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 85D56C43395; Thu,  9 Jul 2020 20:01:15 +0000 (UTC)
-Received: from akhilpo-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akhilpo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 81213C433C6;
-        Thu,  9 Jul 2020 20:01:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 81213C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akhilpo@codeaurora.org
-From:   Akhil P Oommen <akhilpo@codeaurora.org>
-To:     freedreno@lists.freedesktop.org
-Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jcrouse@codeaurora.org,
-        smasetty@codeaurora.org, devicetree@vger.kernel.org,
-        mka@chromium.org, saravanak@google.com, sibis@codeaurora.org,
-        viresh.kumar@linaro.org, jonathan@marek.ca
-Subject: [PATCH v4 6/7] arm64: dts: qcom: sc7180: Add interconnects property for GPU
-Date:   Fri, 10 Jul 2020 01:30:26 +0530
-Message-Id: <1594324828-9571-7-git-send-email-akhilpo@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594324828-9571-1-git-send-email-akhilpo@codeaurora.org>
-References: <1594324828-9571-1-git-send-email-akhilpo@codeaurora.org>
+        Thu, 9 Jul 2020 16:01:54 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:42804 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbgGIUBx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 16:01:53 -0400
+Received: by mail-io1-f67.google.com with SMTP id c16so3631819ioi.9;
+        Thu, 09 Jul 2020 13:01:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xeNIzCxecgmXImhaJRqvLh/KGwYG57ukd7yr//dknS0=;
+        b=h5waMCer0qdhoM15Hq84gXnUk3t1XktCUSAsuht2POUl/y2wgqY6Kk72k3MObB0loS
+         mkIaL/9DHHAq+csSr3FF3nG+OdTEMgBEIHLtyErtaB7qt/xpx30S/U8Kv0yrJ5/gCWgC
+         eo1do5SluhXjIuXhFL/lGX2WLSfIJfUP4sOobmBqMyrfzD/sJaKANhw7a6LC19KulTOc
+         yyE8SoSnw80MV2KJWICYEu3qbs0LPoFgBowjuqnYho8FXCy18a1CbbqbUe8XZfJuQ3px
+         sNfBxvQKUXJfAPh0NkD4KBk9CjMu3kskQs7/FcOs3jRCMC8vv5br0NAdwq6+Ncb+i5dz
+         v9gQ==
+X-Gm-Message-State: AOAM533Xq/d6YxlGELXpsmAH3tDyePneg/WKUyQJATe/1NbLkU2fRmt4
+        Y1SQpqfYYiXZdHlRvYRkLg==
+X-Google-Smtp-Source: ABdhPJwl/rtDoU9qekYtssM+1MFvQTDBJOuByIVOO84pDJxlZ6+xotQF5w5V++TMgcCWgVWVB+UOmg==
+X-Received: by 2002:a02:9109:: with SMTP id a9mr38571889jag.130.1594324912994;
+        Thu, 09 Jul 2020 13:01:52 -0700 (PDT)
+Received: from xps15 ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id x71sm2478937ilk.43.2020.07.09.13.01.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 13:01:52 -0700 (PDT)
+Received: (nullmailer pid 797627 invoked by uid 1000);
+        Thu, 09 Jul 2020 20:01:51 -0000
+Date:   Thu, 9 Jul 2020 14:01:51 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Daire.McNamara@microchip.com
+Cc:     lorenzo.pieralisi@arm.com, devicetree@vger.kernel.org,
+        david.abdurachmanov@gmail.com, bhelgaas@google.com,
+        robh+dt@kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v13 1/2] dt-bindings: PCI: microchip: Add Microchip
+ PolarFire host binding
+Message-ID: <20200709200151.GA797573@bogus>
+References: <56d2a9855f93455c6150b92682178c93fe70ed72.camel@microchip.com>
+ <c769cbe749bc815922d5da3ece0f378bc01f532a.camel@microchip.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c769cbe749bc815922d5da3ece0f378bc01f532a.camel@microchip.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Sharat Masetty <smasetty@codeaurora.org>
+On Wed, 08 Jul 2020 14:59:22 +0000, Daire.McNamara@microchip.com wrote:
+> Add device tree bindings for the Microchip PolarFire PCIe controller
+> when configured in host (Root Complex) mode.
+> 
+> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
+> ---
+>  .../bindings/pci/microchip,pcie-host.yaml     | 93 +++++++++++++++++++
+>  1 file changed, 93 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+> 
 
-This patch adds the interconnects property to the GPU node. This enables
-the GPU->DDR path bandwidth voting.
-
-Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 31b9217..a567297 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -1470,6 +1470,8 @@
- 			operating-points-v2 = <&gpu_opp_table>;
- 			qcom,gmu = <&gmu>;
- 
-+			interconnects = <&gem_noc MASTER_GFX3D &mc_virt SLAVE_EBI1>;
-+
- 			gpu_opp_table: opp-table {
- 				compatible = "operating-points-v2";
- 
--- 
-2.7.4
-
+Reviewed-by: Rob Herring <robh@kernel.org>
