@@ -2,69 +2,101 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB10C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 12:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F08EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 12:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E69C8207BB
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 12:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68F8E2074B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 12:24:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgGIMAN (ORCPT
+        id S1726407AbgGIMYG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 08:00:13 -0400
-Received: from mga09.intel.com ([134.134.136.24]:64922 "EHLO mga09.intel.com"
+        Thu, 9 Jul 2020 08:24:06 -0400
+Received: from mga17.intel.com ([192.55.52.151]:9232 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726599AbgGIMAN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 9 Jul 2020 08:00:13 -0400
-IronPort-SDR: VoXYPPbBcEogUJ3D8gFVzaH3n/DU1Qs/z5xPb4Ptnggq3TyfVUKJtRATsN+zg2+ZsrehSeGIEP
- IWef8HzfL88Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="149467367"
+        id S1726327AbgGIMYF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Jul 2020 08:24:05 -0400
+IronPort-SDR: RiZqg/TZoIsx8K3kehihIpnYtvk2jFUwAmrLfVZixk6GKfbaVbQ8DHSG2ax1Pu97xKRdlrEasI
+ fAw86KDxbugw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="128052799"
 X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="149467367"
+   d="scan'208";a="128052799"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 05:00:11 -0700
-IronPort-SDR: yeTdKlI4dprMjnusNpvYhmX12shyjq70DohI/oNO837KzfmT0OT9kjR1/KQ0YEmhGyDNEI9hPI
- 5sSeqAjVJMvA==
-X-ExtLoop1: 1
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 05:24:05 -0700
+IronPort-SDR: y4vJ4FSs9Z6jcJbUsoaKk2oiO26qlStbYq75/4DVBLgd7FD/0d0q/yAHnvQa53UgJnyEX3cm2y
+ JZvKe7vq82Gw==
 X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="316205409"
-Received: from nk4-mobl1.gar.corp.intel.com (HELO localhost) ([10.252.52.252])
-  by fmsmga002.fm.intel.com with ESMTP; 09 Jul 2020 05:00:07 -0700
-Date:   Thu, 9 Jul 2020 15:00:06 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Masahisa Kojima <masahisa.kojima@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        ardb@kernel.org, devicetree <devicetree@vger.kernel.org>,
-        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca
-Subject: Re: [PATCH v3 0/2] synquacer: add TPM support
-Message-ID: <20200709120006.GC683620@linux.intel.com>
-References: <20200708131424.18729-1-masahisa.kojima@linaro.org>
- <20200708162017.GB549022@linux.intel.com>
- <CADQ0-X9im8yVVVJbJL5Ssaa49UTOw+M=tYrfhNoODUaY723O8A@mail.gmail.com>
- <CADQ0-X8xF0NpMakEB_Kqd2hVSrMsMB5FqFd7V9F1eLryJbEeFA@mail.gmail.com>
+   d="scan'208";a="484256280"
+Received: from unknown (HELO dalessan-mobl1.ir.intel.com) ([10.252.6.39])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 05:24:01 -0700
+Message-ID: <491f994c6f87a542e49fe37c8a75ab46f1b3712b.camel@linux.intel.com>
+Subject: Re: [PATCH 2/7] mailbox: keembay-scmi-mailbox: Add support for Keem
+ Bay mailbox
+From:   Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>, paul.j.murphy@linux.intel.com
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Paul Murphy <paul.j.murphy@intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Date:   Thu, 09 Jul 2020 13:23:56 +0100
+In-Reply-To: <20200708203428.GB31671@bogus>
+References: <20200616155613.121242-1-daniele.alessandrelli@linux.intel.com>
+         <20200616155613.121242-3-daniele.alessandrelli@linux.intel.com>
+         <20200708203428.GB31671@bogus>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADQ0-X8xF0NpMakEB_Kqd2hVSrMsMB5FqFd7V9F1eLryJbEeFA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 08:46:35AM +0900, Masahisa Kojima wrote:
-> Hi Jarkko,
+Hi Sudeep,
+
+Thanks for your review.
+
+On Wed, 2020-07-08 at 21:34 +0100, Sudeep Holla wrote:
+> On Tue, Jun 16, 2020 at 04:56:08PM +0100, Daniele Alessandrelli
+> wrote:
+> > From: Paul Murphy <paul.j.murphy@intel.com>
+> > 
+> > Keem Bay SoC has a ARM trusted firmware-based secure monitor which
+> > acts
+> > as the SCP for the purposes of power management over SCMI.
+> > 
+> > This driver implements the transport layer for SCMI to function.
+> > 
 > 
-> > Hi Jakko,
-> I apologize for mis-spelling of your name.
-> Same mistake also appears in my another reply to "[PATCH v3 1/2] tpm:
-> tis: add support for MMIO TPM on SynQuacer"
+> Please use the smc transport support in
+> driver/firmware/arm_scmi/smc.c
+> for this. You don't need mailbox support for SMC/HVC. Basically you
+> don't need this driver at all and you have everything you need to
+> support
+> what you want.
+> 
+> Let me know if you face issues.
+> 
 
-No worries :-)
+Sorry, we didn't know about the SMC transport support for SCMI. Looks
+like it was added only recently, while our driver was already developed
+and waiting to be upstreamed.
 
-/Jarkko
+I agree that we can drop this driver and switch to the SMC transport as
+you suggested, but I think we'll have to modify our bootloader SiP
+service slightly. Paul, can you elaborate?
+
+Regards,
+Daniele
+
+
