@@ -2,207 +2,93 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0F6C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 21:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFC3C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 21:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FD6320772
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 21:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58A2520672
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 21:05:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594328696;
-	bh=FEalt9eXC1vsK4wuxaFcsK1DhBBbQM4hzPWdy1gRjH8=;
+	s=default; t=1594328747;
+	bh=dCF2wi5Z4TPh+ztUMXQ128ddiOBwqKGfCnvoQ0uW6rA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VvCivNCyDo9eGfNokLcUhpDVcDTUEyeoOMdTG7CODMA55MsTmUQ3dXhdNT8vJTID7
-	 lo9/URlnma8oR5ZnPw7v/U7ejKl1LPL7ITi+NC6gxkMeZaKv9VRmBIP0sOWAf5SCQe
-	 Q0i1X0F7KdEnWaxvhYsmkAmVRhZrbZ330MpDohy4=
+	b=gLblY3ZZcra5Anpyu6AXecVCtE3ofgRTskpobyEzjZzjWPjC84wcfCkEQCnqjlv+j
+	 u7KFtHiiw382qEZPP7YwBSV/H4v2RZBTnUbh5vi/IgL9lvY1lnJWyPd809z04EBcf+
+	 fcqQEGpaj53dPThytPLeVEp8GYHvKQVynGXio7/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726260AbgGIVEw (ORCPT
+        id S1726449AbgGIVFq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 17:04:52 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40453 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgGIVEw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 17:04:52 -0400
-Received: by mail-io1-f67.google.com with SMTP id q8so3830856iow.7;
-        Thu, 09 Jul 2020 14:04:50 -0700 (PDT)
+        Thu, 9 Jul 2020 17:05:46 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33952 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgGIVFq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 17:05:46 -0400
+Received: by mail-io1-f65.google.com with SMTP id q74so3859762iod.1;
+        Thu, 09 Jul 2020 14:05:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ep2BUalGoUDMYiRgPfHR0K5E7uXRpZtzmzl5wMZRFHs=;
-        b=AA7h/I7bauQk7abixJNncQ1aG7YAueNZEsj/fiA9sBsdq8245RqKrRTJXTgoMUIpt/
-         4Q0TW0wHHs2hzkI0D3HXUx4wFAu4sx4o3u0reOT40nu4PXaORKVn93G4ZbnXmHkdWwFI
-         96JGzwoXWFMIOgcWw9OuYKNvZCXs9SfW0lwIFruNsQvymFgAHmxyK1Gd+qUQvURqrkZ+
-         M93nafNiQ2jRwcG+6WXqtSCEubJsrFGz6VkxmwsdbsoqzaqqwO1/qjPIn5Aa3dRumZ82
-         g+ec7sAabgIemW01IlMMyncuBLa8tmtHzUqFPU0Y56G9pOF10VAtTjdsVNo44Q1zvWBy
-         1jFw==
-X-Gm-Message-State: AOAM530528xuNMhoaWv0viItMQMdr+5m0B0qkWYTD3O+DpAVGb+bI66Q
-        SS3j0oTEqEvXfdqtvNqiiw==
-X-Google-Smtp-Source: ABdhPJzzckh793p74m62K2t6bgxJyhqTwep2hglKcjMTiXCsSoxr/OlqW/k8gyAtxdeWk6fveOx07A==
-X-Received: by 2002:a02:cd06:: with SMTP id g6mr43286633jaq.37.1594328690447;
-        Thu, 09 Jul 2020 14:04:50 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to;
+        bh=ciOCqx+pAUOAXkMzh0J3FjQTCHj6Fd5iCNLqebgsDgU=;
+        b=Gvs2fV2bO6x3CB44xl1nvtx1nl2LTaIM1Lr7ntZTq+sQvhXcpVkciL6gGuCYKFt8Bl
+         sj3+AaZG1UqKAmq6B9EL8nuiITAi3j/3/hox47hjMPyZz1zeZz0mr6cI9RfdRJhC5J7+
+         SKPl/7FF6EczzqtI8O8ZcMiu7Yg3ya1gcSZFwm2MaAKcVMM0A9pwSQY9x4PJox9nQgTk
+         bBkxcKR27LykZPc6+W3q0HYvY3pEjuL3SVT2Aq1X41va4bynouu7ptO8PlOl+/12JK03
+         z+4fIq4bEk9EsrCEsyFWOSHttocuB0Y9zIehgM36PmdztWLPy3IPSfLsCGgeliFcB2ej
+         nE2A==
+X-Gm-Message-State: AOAM531NroD/mlpesDpPZRg7eLDxnt4iKxs9W52UYziu/zL3tu7pjHUL
+        ydIYIzD+w0eBq8Ow5aGp9g==
+X-Google-Smtp-Source: ABdhPJxnuXjSuIY5ztk9nt9DROEKLr7d42biy9Xnb6UFa5gqju6Td/lGBeURmolKL3CIcMJNVa6suA==
+X-Received: by 2002:a05:6638:dcf:: with SMTP id m15mr75131676jaj.86.1594328745143;
+        Thu, 09 Jul 2020 14:05:45 -0700 (PDT)
 Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id g8sm2399655ilq.49.2020.07.09.14.04.49
+        by smtp.gmail.com with ESMTPSA id v5sm2709848ios.54.2020.07.09.14.05.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 14:04:49 -0700 (PDT)
-Received: (nullmailer pid 883283 invoked by uid 1000);
-        Thu, 09 Jul 2020 21:04:48 -0000
-Date:   Thu, 9 Jul 2020 15:04:48 -0600
+        Thu, 09 Jul 2020 14:05:44 -0700 (PDT)
+Received: (nullmailer pid 884608 invoked by uid 1000);
+        Thu, 09 Jul 2020 21:05:43 -0000
+Date:   Thu, 9 Jul 2020 15:05:43 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     georgi.djakov@linaro.org, cw00.choi@samsung.com, krzk@kernel.org,
-        devicetree@vger.kernel.org, a.swigon@samsung.com,
-        myungjoo.ham@samsung.com, inki.dae@samsung.com,
-        sw0312.kim@samsung.com, b.zolnierkie@samsung.com,
-        m.szyprowski@samsung.com, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH RFC v6 1/6] dt-bindings: exynos-bus: Add documentation
- for interconnect properties
-Message-ID: <20200709210448.GA876103@bogus>
-References: <20200702163724.2218-1-s.nawrocki@samsung.com>
- <CGME20200702163748eucas1p2cf7eab70bc072dea9a95183018b38ad3@eucas1p2.samsung.com>
- <20200702163724.2218-2-s.nawrocki@samsung.com>
+To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
+Cc:     linux-iio@vger.kernel.org,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v6 3/5] dt-bindings: microchip: atmel, at91rm9200-tcb:
+ add sama5d2 compatible
+Message-ID: <20200709210543.GA884561@bogus>
+References: <20200706114347.174452-1-kamel.bouhara@bootlin.com>
+ <20200706114347.174452-4-kamel.bouhara@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200702163724.2218-2-s.nawrocki@samsung.com>
+In-Reply-To: <20200706114347.174452-4-kamel.bouhara@bootlin.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 06:37:19PM +0200, Sylwester Nawrocki wrote:
-> Add documentation for new optional properties in the exynos bus nodes:
-> samsung,interconnect-parent, #interconnect-cells, bus-width.
-> These properties allow to specify the SoC interconnect structure which
-> then allows the interconnect consumer devices to request specific
-> bandwidth requirements.
+On Mon, 06 Jul 2020 13:43:45 +0200, Kamel Bouhara wrote:
+> From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 > 
-> Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> The sama5d2 TC block TIMER_CLOCK1 is different from the at91sam9x5 one.
+> Instead of being MCK / 2, it is the TCB GCLK.
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
 > ---
-> Changes for v6:
->  - added dts example of bus hierarchy definition and the interconnect
->    consumer,
->  - added new bus-width property.
+>  .../soc/microchip/atmel,at91rm9200-tcb.yaml   | 42 +++++++++++++++----
+>  1 file changed, 33 insertions(+), 9 deletions(-)
 > 
-> Changes for v5:
->  - exynos,interconnect-parent-node renamed to samsung,interconnect-parent
-> ---
->  .../devicetree/bindings/devfreq/exynos-bus.txt     | 68 +++++++++++++++++++++-
->  1 file changed, 66 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
-> index e71f752..4035e3e 100644
-> --- a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
-> +++ b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
-> @@ -51,6 +51,13 @@ Optional properties only for parent bus device:
->  - exynos,saturation-ratio: the percentage value which is used to calibrate
->  			the performance count against total cycle count.
->  
-> +Optional properties for interconnect functionality (QoS frequency constraints):
-> +- samsung,interconnect-parent: phandle to the parent interconnect node; for
-> +  passive devices should point to same node as the exynos,parent-bus property.
 
-Adding vendor specific properties for a common binding defeats the 
-point.
-
-> +- #interconnect-cells: should be 0.
-> +- bus-width: the interconnect bus width in bits, default value is 8 when this
-> +  property is missing.
-
-Your bus is 8-bits or 4-bits as the example?
-
-> +
->  Detailed correlation between sub-blocks and power line according to Exynos SoC:
->  - In case of Exynos3250, there are two power line as following:
->  	VDD_MIF |--- DMC
-> @@ -135,7 +142,7 @@ Detailed correlation between sub-blocks and power line according to Exynos SoC:
->  		|--- PERIC (Fixed clock rate)
->  		|--- FSYS  (Fixed clock rate)
->  
-> -Example1:
-> +Example 1:
->  	Show the AXI buses of Exynos3250 SoC. Exynos3250 divides the buses to
->  	power line (regulator). The MIF (Memory Interface) AXI bus is used to
->  	transfer data between DRAM and CPU and uses the VDD_MIF regulator.
-> @@ -184,7 +191,7 @@ Example1:
->  	|L5   |200000 |200000  |400000 |300000 |       ||1000000 |
->  	----------------------------------------------------------
->  
-> -Example2 :
-> +Example 2:
->  	The bus of DMC (Dynamic Memory Controller) block in exynos3250.dtsi
->  	is listed below:
->  
-> @@ -419,3 +426,60 @@ Example2 :
->  		devfreq = <&bus_leftbus>;
->  		status = "okay";
->  	};
-> +
-> +Example 3:
-> +	An interconnect path "bus_display -- bus_leftbus -- bus_dmc" on
-> +	Exynos4412 SoC with video mixer as an interconnect consumer device.
-> +
-> +	soc {
-> +		bus_dmc: bus_dmc {
-> +			compatible = "samsung,exynos-bus";
-> +			clocks = <&clock CLK_DIV_DMC>;
-> +			clock-names = "bus";
-> +			operating-points-v2 = <&bus_dmc_opp_table>;
-> +			bus-width = <4>;
-> +			#interconnect-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		bus_leftbus: bus_leftbus {
-> +			compatible = "samsung,exynos-bus";
-> +			clocks = <&clock CLK_DIV_GDL>;
-> +			clock-names = "bus";
-> +			operating-points-v2 = <&bus_leftbus_opp_table>;
-> +			samsung,interconnect-parent = <&bus_dmc>;
-> +			#interconnect-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		bus_display: bus_display {
-> +			compatible = "samsung,exynos-bus";
-> +			clocks = <&clock CLK_ACLK160>;
-> +			clock-names = "bus";
-> +			operating-points-v2 = <&bus_display_opp_table>;
-> +			samsung,interconnect-parent = <&bus_leftbus>;
-> +			#interconnect-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		bus_dmc_opp_table: opp_table1 {
-> +			compatible = "operating-points-v2";
-> +			/* ... */
-> +		}
-> +
-> +		bus_leftbus_opp_table: opp_table3 {
-> +			compatible = "operating-points-v2";
-> +			/* ... */
-> +		};
-> +
-> +		bus_display_opp_table: opp_table4 {
-> +			compatible = "operating-points-v2";
-> +			/* .. */
-> +		};
-> +
-> +		&mixer {
-> +			compatible = "samsung,exynos4212-mixer";
-> +			interconnects = <&bus_display &bus_dmc>;
-> +			/* ... */
-> +		};
-> +	};
-> -- 
-> 2.7.4
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
