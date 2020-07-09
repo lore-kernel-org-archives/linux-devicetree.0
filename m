@@ -4,108 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD02C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 16:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AE6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 17:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A9BF207DA
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 16:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AEC42065D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 17:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594313691;
-	bh=UznyOtaaICUoaaWynB3yxRxzQn6NRwVtjLug1/AzdeE=;
+	s=default; t=1594314042;
+	bh=eNWh+xJ0w6fGSzbqMlj+EBp07y7zWG4d0STd9iVep/o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jJoTo0UBeagh9SHZPCIiExDvcIapGr9oqqfhd+YCcsj5iEN9mHaJRp8kIo2xgM8/n
-	 TSNohSZ7Mx+nTp63Su7WZc6mAFqW9S5aM6qEhL/y1JQTA2i6e4t6QLMpr6nerHp5v9
-	 e1mxSdDEkAjRTylwGR4vZEQOa1CpmHUAgQC7b7d4=
+	b=lOcGqUXEbA0Y4bKocwTwwd6Bp/sHyBkUNedaHE/FYWyTCrz+7hYnIwROBhhaCnDsW
+	 jkZecN92v1UBMb/kF6ZivSgGqxk4pla0QUQTSojaQtAqJ1dObWUXh0Hm3Ai4hG3Skw
+	 1mpA7ZfsLhz6axfkYH8cGro+GzKnFvZXsEnlACHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgGIQyv (ORCPT
+        id S1728066AbgGIRAl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 12:54:51 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:37725 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgGIQyu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 12:54:50 -0400
-Received: by mail-io1-f68.google.com with SMTP id v6so3065896iob.4;
-        Thu, 09 Jul 2020 09:54:49 -0700 (PDT)
+        Thu, 9 Jul 2020 13:00:41 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38565 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726722AbgGIRAl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 13:00:41 -0400
+Received: by mail-io1-f66.google.com with SMTP id l1so3084655ioh.5;
+        Thu, 09 Jul 2020 10:00:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=LGz/Zlxj80AaON4ZExXC6wPffqBZf12wYIQFvRvtTFU=;
-        b=mjhxfGcDLXIH8n2jNgt6RvjU2fPWiJOC3gZMPuiDMa22/KsJ7O5RxItOEfwjW5ojnz
-         a/loPK+quPsnxKPynDknLb9Cn9EUxlIryCr3NF+Sj+lcuQHQlyXFI6pEpFpp1/lsqT2p
-         D6WiAXaXBxC5I8hjrxjJKrtQxAjYV7JfNIo4jeaQEqCRXS49Vp8uuZ9idpJPNUHGb9dR
-         Jx3u1Fk/727u4zbNiuF+Jz1/1oqMsCLOkCC9BG74u68scjEESQtC2WMHcVdz6AqaT+K5
-         1/DR9sQvCKXkLq+8CAqhzz83UA2Jy2jWavEQ8F3+c6be4RHJzeLY6mwsq5/1UJwQu0jH
-         SX2A==
-X-Gm-Message-State: AOAM530yrTBGMg5b9VbXL+uQ4tAL4H3oCwFJZuOTHpp6UpyX0kBdQVLY
-        aZnxFCis3glcTa0M9LcEuw==
-X-Google-Smtp-Source: ABdhPJwVHnWKGBfcmnHMtMLi5T9+D6bkCcY8zGSjmNL+jbQ/Q/bEuXfltsJTV1Viqjq6/RURN8zfZg==
-X-Received: by 2002:a05:6638:252:: with SMTP id w18mr60811098jaq.42.1594313689499;
-        Thu, 09 Jul 2020 09:54:49 -0700 (PDT)
+        bh=J57B4SYSeZSds0MiAw/eWQKxFfmLvKjSluZG4Rx7dM0=;
+        b=m4YRvSMUURKSZ5R7Js7iwtbdrlp9PDTmPRbU/+sRmokivsT+Rd7i9aUKXS6iyHb5nf
+         BilinT6rXc6++EgqnZRyaTMbehJB0tCngqzQr9Ut3MUqCfrOn9E1KFrIwaLY3fcoLIR+
+         Ef1inw062uVbLNMdTuDacU3p5qAW1L/4HIbyzS6Vz6ThR8Bm3GF032q0OGl/PybAcydt
+         rfPbUUk3ImtGujVLLsX9s8cX4ltWxM5qM+qTwQfelt+gJB2cKPQ7gqn4fXyZmr8zvXF1
+         X/CTXSS2nSDFOzFsHOKLJgODU1cqY6kPgeEDvQDFA7wtfZKfyetlaDgWErixwq4NPPB7
+         WIkw==
+X-Gm-Message-State: AOAM532kQx2wp3eDbY3yLCO8vOfGs6ZxlA+M7RMFNsXQICgdl9chkkd5
+        MvyYYhuYtJMREWLpgQHplL6xHdJJjg==
+X-Google-Smtp-Source: ABdhPJym5BpBPRGl0IaG+oewAoSKHMUJvqWWhGsC8UTGI1GS5iPctaV9bpzLjDfYKxDsWZrvRq4bOQ==
+X-Received: by 2002:a05:6638:2649:: with SMTP id n9mr37825758jat.126.1594314040162;
+        Thu, 09 Jul 2020 10:00:40 -0700 (PDT)
 Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id l17sm1999262ilm.70.2020.07.09.09.54.38
+        by smtp.gmail.com with ESMTPSA id c25sm2438583ioi.13.2020.07.09.10.00.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 09:54:48 -0700 (PDT)
-Received: (nullmailer pid 510212 invoked by uid 1000);
-        Thu, 09 Jul 2020 16:54:37 -0000
-Date:   Thu, 9 Jul 2020 10:54:37 -0600
+        Thu, 09 Jul 2020 10:00:39 -0700 (PDT)
+Received: (nullmailer pid 518350 invoked by uid 1000);
+        Thu, 09 Jul 2020 17:00:35 -0000
+Date:   Thu, 9 Jul 2020 11:00:35 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Frank Lee <frank@allwinnertech.com>
-Cc:     linux-gpio@vger.kernel.org, amit.kucheria@verdurent.com,
-        linux-arm-kernel@lists.infradead.org, gregory.clement@bootlin.com,
-        linux-clk@vger.kernel.org, robh+dt@kernel.org,
-        huangshuosheng@allwinnertech.com, devicetree@vger.kernel.org,
-        daniel.lezcano@linaro.org, wens@csie.org, lee.jones@linaro.org,
-        clabbe@baylibre.com, p.zabel@pengutronix.de, icenowy@aosc.io,
-        tiny.windzz@gmail.com, linux-kernel@vger.kernel.org,
-        jason@lakedaemon.net, liyong@allwinnertech.com,
-        linux-i2c@vger.kernel.org, bage@linutronix.de, stefan@olimex.com,
-        linus.walleij@linaro.org, rui.zhang@intel.com, tglx@linutronix.de,
-        megous@megous.com, linux-pm@vger.kernel.org, mripard@kernel.org,
-        anarsoul@gmail.com, mturquette@baylibre.com,
-        srinivas.kandagatla@linaro.org, maz@kernel.org, sboyd@kernel.org
-Subject: Re: [PATCH v3 06/16] dt-bindings: nvmem: SID: add binding for A100's
- SID controller
-Message-ID: <20200709165437.GA509792@bogus>
-References: <20200708071942.22595-1-frank@allwinnertech.com>
- <20200708071942.22595-7-frank@allwinnertech.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-omap@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 11/14] dt-bindings: PCI: Add EP mode dt-bindings for
+ TI's J721E SoC
+Message-ID: <20200709170035.GA518075@bogus>
+References: <20200708093018.28474-1-kishon@ti.com>
+ <20200708093018.28474-12-kishon@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200708071942.22595-7-frank@allwinnertech.com>
+In-Reply-To: <20200708093018.28474-12-kishon@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 08 Jul 2020 15:19:32 +0800, Frank Lee wrote:
-> Add a binding for A100's SID controller.
+On Wed, 08 Jul 2020 15:00:15 +0530, Kishon Vijay Abraham I wrote:
+> Add PCIe EP mode dt-bindings for TI's J721E SoC.
 > 
-> Signed-off-by: Frank Lee <frank@allwinnertech.com>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
->  Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml | 3 +++
->  1 file changed, 3 insertions(+)
+>  .../bindings/pci/ti,j721e-pci-ep.yaml         | 89 +++++++++++++++++++
+>  1 file changed, 89 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
 > 
 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml: properties:compatible:enum:5: {'items': [{'const': 'allwinner,sun50i-a100-sid'}, {'const': 'allwinner,sun50i-a64-sid'}]} is not of type 'string'
-Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml: ignoring, error in schema: properties: compatible: enum: 5
-warning: no schema found in file: ./Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml: ignoring, error in schema: properties: compatible: enum: 5
-warning: no schema found in file: ./Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
-Makefile:1347: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.example.dt.yaml: example-0: pcie-ep@d000000:reg:0: [0, 42991616, 0, 4096] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.example.dt.yaml: example-0: pcie-ep@d000000:reg:1: [0, 43020288, 0, 1024] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.example.dt.yaml: example-0: pcie-ep@d000000:reg:2: [0, 218103808, 0, 8388608] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.example.dt.yaml: example-0: pcie-ep@d000000:reg:3: [0, 268435456, 0, 134217728] is too long
 
 
-See https://patchwork.ozlabs.org/patch/1325053
+See https://patchwork.ozlabs.org/patch/1325133
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
