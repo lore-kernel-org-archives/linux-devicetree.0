@@ -2,102 +2,96 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CA0C433E5
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 21:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FCDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 22:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F16EF20708
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 21:52:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UHBdHivV"
+	by mail.kernel.org (Postfix) with ESMTP id 1B4BB20672
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 22:01:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594332074;
+	bh=5465ewyg8MdvQtK6kDkNf3vR6jyKNYnfzaqI7TcJus0=;
+	h=Date:From:To:In-Reply-To:References:Subject:List-ID:From;
+	b=QIGts6qitGdH9CFM/cFk160Asjm6YC74Gbxg1B6COoQ6Z7bVYGJbQi9/31ipmY9Zo
+	 Pksmps0FG7swrxJZNKOgb53eTNgNIzy0AxgpR+ptDYky98LRB5wZqLeEhbvC4qUaKD
+	 ZXBhAFMJbIa8t2tPtHQOqT8A2BlOR2EmFTrJVheY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgGIVvp (ORCPT
+        id S1727031AbgGIWBK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 17:51:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbgGIVvo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 17:51:44 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A700C08C5CE;
-        Thu,  9 Jul 2020 14:51:44 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id d18so3013618edv.6;
-        Thu, 09 Jul 2020 14:51:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sZgQ/rgXy0f1txD21I1WuNSsdShPGwMiyPEgQmV+/ng=;
-        b=UHBdHivVFTxqrWLNtuH5PWVTxCNw8Jb1ou33pWpC5DrQOgMMeEokn33wlzUDwHL8dm
-         kBRzkfgS7VTxZihteeaPs9vGGEY25tPYkWZO4O3IRerLWcJeebM85HNi0U6BXZsALVDF
-         qdYQ5nt34k68KaXEEc/VUYQkKT6da79x+OJtKQcPTdnBrHJbzH8hGWZs2is9rHf3PSsy
-         I8/g/Fv8GvG01ozf6SohmC/g/1NtvyOeWgRyMWIUuDh1MWVI+Kkd6PyoixFAGSV2Hanv
-         ZpsSLqhlS3noQeaoAmvkKrhxFGZDElpu6CYzCBkp4mrYkEbpOiv1kEpZu3EL/TCZumEH
-         cNYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sZgQ/rgXy0f1txD21I1WuNSsdShPGwMiyPEgQmV+/ng=;
-        b=qmTrJeCBkMT1KTe2Ec3VvAwGIedhrKnCyjPfy9zrBkPXUNiWlONQO4xq+/KG82sHh1
-         FsEQBZByY8Phnm15h6SjC3VRlvdJ/UHbtNAbIrqe0VLyK1wD+v1ONyLgTEdt386P05kM
-         UoYMMbpsezoFpRBEKl+Swrl9t92KhxtD1Np30huoDybknUfBNlq7I0XL6cAnJx5v9DvE
-         lxppOSxgMtW9BZCWRuSdGkrCRLLBbMOQNLk1wbkc/zmstZ2DxnxmOXy4TKj4x6RNtm/a
-         xASvvdEn9P0mnPtrlP4My3Gw1lzPriNGzK9wC3UkrXIbiyez25pa0GXBKRsnw82289fe
-         79Aw==
-X-Gm-Message-State: AOAM533fBBbVsUCMAcHxcNsKjDJESqvTNMZdlHaTPJp4Gr/BqF1kv+tb
-        WhyDpeuZHTaW2s3+6ypRya4=
-X-Google-Smtp-Source: ABdhPJzw5f9c5v4M+O9fs6KhEgVVMRq60AaVUtOw7FiwE0aMNnXhOAKEjnViVMxPCjDxi3fsU2kQIA==
-X-Received: by 2002:a50:cd53:: with SMTP id d19mr75655835edj.300.1594331502912;
-        Thu, 09 Jul 2020 14:51:42 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host-87-16-250-164.retail.telecomitalia.it. [87.16.250.164])
-        by smtp.googlemail.com with ESMTPSA id e16sm2498260ejt.14.2020.07.09.14.51.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 14:51:42 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        Thu, 9 Jul 2020 18:01:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44724 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726213AbgGIWBK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Jul 2020 18:01:10 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C08A20720;
+        Thu,  9 Jul 2020 22:01:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594332070;
+        bh=5465ewyg8MdvQtK6kDkNf3vR6jyKNYnfzaqI7TcJus0=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=xO8luKZhOq9teQnCJytYCt+xVlwCKKoErVl9+n5hrXinAiS6rw/rHfQPGdJRBy3VO
+         kxYqKZQEAZd3byucZCx/SbIyRjeLrMwDV8fd5ohLFcxwFr+8zcz2xfhD8Tr+eMGjea
+         goOddP84IZZ4p012xFPfWXk0XblS/HCvjvP98Nd4=
+Date:   Thu, 09 Jul 2020 23:01:04 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     robh+dt@kernel.org, linux-spi@vger.kernel.org,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/6] Add support for ipq8064 tsens
-Date:   Thu,  9 Jul 2020 23:51:30 +0200
-Message-Id: <20200709215136.28044-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200708194400.22213-1-grandmaster@al2klimov.de>
+References: <20200708194400.22213-1-grandmaster@al2klimov.de>
+Subject: Re: [PATCH] SPI SUBSYSTEM: Replace HTTP links with HTTPS ones
+Message-Id: <159433204447.479.16639997538518023197.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Ipq8064 SoCs tsens driver is based on 8960 tsens driver. This patchset expand
-the 8960 unused driver with interrupt support and set_trip point.
-Ipq8064 needs to registed with a syscon phandle as the tsens regs on
-this platform are shared with the gcc controller.
+On Wed, 8 Jul 2020 21:44:00 +0200, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+> 
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
 
-Ansuel Smith (6):
-  drivers: thermal: tsens: load regmap from phandle for 8960
-  drivers: thermal: tsens: add ipq8064 support
-  dt-bindings: thermal: tsens: document ipq8064 bindings
-  drivers: thermal: tsens: add interrupt support for 9860 driver
-  drivers: thermal: tsens: add support for custom set_trip function
-  drivers: thermal: tsens: add set_trip support for 8960
+Applied to
 
- .../bindings/thermal/qcom-tsens.yaml          |  51 +++-
- drivers/thermal/qcom/tsens-8960.c             | 283 +++++++++++++++++-
- drivers/thermal/qcom/tsens.c                  |   7 +
- drivers/thermal/qcom/tsens.h                  |   3 +
- 4 files changed, 321 insertions(+), 23 deletions(-)
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
--- 
-2.27.0
+Thanks!
 
+[1/1] SPI SUBSYSTEM: Replace HTTP links with HTTPS ones
+      commit: 3ea4eac3e29f8a63646ddc1bdf90f2efce7d082c
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
