@@ -2,129 +2,289 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A84F6C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 15:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F38DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 16:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82A9120720
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 15:43:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="roDisFVP"
+	by mail.kernel.org (Postfix) with ESMTP id 7E7802078B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 16:00:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgGIPn5 (ORCPT
+        id S1726710AbgGIQAx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 11:43:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58352 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgGIPn5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 11:43:57 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 772CDC08C5CE;
-        Thu,  9 Jul 2020 08:43:57 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id mn17so1292274pjb.4;
-        Thu, 09 Jul 2020 08:43:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5aSR39Y673gK4LGy+pomYrdhftpjF5NzAVJPOxgGDA8=;
-        b=roDisFVPKLpYmdVp11RgxCQVrZnqxRmEM5k2L+abqUHYtxCJKkeCwNctIul+/pax8W
-         Mbe2HIMo63hDHBD221lNxo4JQifsrDKRyBYOSXgNibMyXSHrWouzA/eV5WSNnXNDACOE
-         dlIhnaVD31AD+hRu2cmd91xSo4JK+GbKdDjUoegM60F3us7yUeAVc/XwhwIiRViW1gEJ
-         21YJxdwTRjrKqEpQz3Drr77ZV3DlEJEuelFNLRM6I74+pk+A+Pne1wwrg6jS7jzVloAB
-         ckNUkhVbfz34eovP+IOBlBpKnh0Wm+j//BobyB0Oh0Ab6CffALrkReGnSw/oWDdGhqQE
-         yCSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5aSR39Y673gK4LGy+pomYrdhftpjF5NzAVJPOxgGDA8=;
-        b=Mow9gznm8Grl9RUa1Qcu6hxVHd/erqB6zK1d4aVxiapuvz/UzXV3QVRKuiN5R8siee
-         D9VhFTz2ef7h1XbGCPfXgxvZDrPrvmsbh3tXqJbYPPxcz0c8us19ctFS4TcUQontJUjC
-         26vAahzYSbsg9IpakwKqPvurIMf2ldwcVVoX8nAYcH9j7F1USF4VejNXNshe7YBMzsLX
-         t9hqNX08LbovK1Qn9cxVVppm/2HZHCyDtXGk77oN+UdYSUZaz0TfZ6DjHpOLGBLYWUTE
-         5ElTQvkVCM3gis3YvT1Q/BUkRjDbonTUOm2PSq9Y/vmsnvkNp9yTWUfNBzYNHs9KDS8I
-         q7Hw==
-X-Gm-Message-State: AOAM530i9JPzrR7YmJA/o5n2fI+F0ZD2bISdd+7g/YNRuDLrucSbQIwM
-        F1j11jB2ogNcxymtDb1RFuCw/nydJ5VM3cNrrjo=
-X-Google-Smtp-Source: ABdhPJymrDoI28s7I5KmpXMuqSAKOHB4T6Mn8hum7vi5/FRCdzLui7I/tE3BYrOAP4DxBG27lCVshjmLSxleGLqiP3E=
-X-Received: by 2002:a17:90b:1b52:: with SMTP id nv18mr673895pjb.129.1594309436972;
- Thu, 09 Jul 2020 08:43:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200709152200.10039-1-contact@artur-rojek.eu>
-In-Reply-To: <20200709152200.10039-1-contact@artur-rojek.eu>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 9 Jul 2020 18:43:40 +0300
-Message-ID: <CAHp75VcwgL8pH+pH9TnsuwbWr=wSFu37sX8sTkbkfk+iBv7Jng@mail.gmail.com>
-Subject: Re: [PATCH v8 0/6] iio/adc: ingenic: Cleanups & add touchscreen mode.
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Thu, 9 Jul 2020 12:00:53 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:41695 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgGIQAx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 12:00:53 -0400
+Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
+  by alexa-out.qualcomm.com with ESMTP; 09 Jul 2020 09:00:52 -0700
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 09 Jul 2020 09:00:50 -0700
+Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 09 Jul 2020 21:30:33 +0530
+Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
+        id 422A22C1E; Thu,  9 Jul 2020 21:30:32 +0530 (IST)
+From:   Sandeep Maheswaram <sanm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+Subject: [PATCH v8 1/2] usb: dwc3: qcom: Add interconnect support in dwc3 driver
+Date:   Thu,  9 Jul 2020 21:30:11 +0530
+Message-Id: <1594310413-14577-2-git-send-email-sanm@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1594310413-14577-1-git-send-email-sanm@codeaurora.org>
+References: <1594310413-14577-1-git-send-email-sanm@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 9, 2020 at 6:22 PM Artur Rojek <contact@artur-rojek.eu> wrote:
->
-> Hi all,
->
-> v8 of this patchset introduces some structural changes, which I deemed
-> worthy highlighting here:
+Add interconnect support in dwc3-qcom driver to vote for bus
+bandwidth.
 
-Can you remind me if I gave you tags on the previous version?
-If so, is the above the reason to drop them?
+This requires for two different paths - from USB master to
+DDR slave. The other is from APPS master to USB slave.
 
->
->  - adc-joystick related changes have been dropped from this patchset and
->    will be upstreamed separately. Their only connection to this patchset
->    was that they used INGENIC_ADC_TOUCH_* defines in the DTS example,
->    causing trouble to Rob's scripts.
->
->  - Integrated Paul's changes, which introduce an ADCMD low-level command
->    feature. These changes affect patches 5/6 and 6/6, with the former
->    requiring Rob to re-ack.
->
-> Cheers,
-> Artur
->
-> Artur Rojek (5):
->   dt-bindings: iio/adc: Convert ingenic-adc docs to YAML.
->   IIO: Ingenic JZ47xx: Error check clk_enable calls.
->   IIO: Ingenic JZ47xx: Add xlate cb to retrieve correct channel idx
->   dt-bindings: iio/adc: Add touchscreen idx for JZ47xx SoC ADC
->   IIO: Ingenic JZ47xx: Add touchscreen mode.
->
-> Paul Cercueil (1):
->   iio/adc: ingenic: Retrieve channels list from soc data struct
->
->  .../bindings/iio/adc/ingenic,adc.txt          |  49 ---
->  .../bindings/iio/adc/ingenic,adc.yaml         |  71 ++++
->  drivers/iio/adc/Kconfig                       |   1 +
->  drivers/iio/adc/ingenic-adc.c                 | 386 ++++++++++++++++--
->  include/dt-bindings/iio/adc/ingenic,adc.h     |   6 +
->  5 files changed, 426 insertions(+), 87 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
->
-> --
-> 2.27.0
->
+Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+---
+ drivers/usb/dwc3/dwc3-qcom.c | 127 ++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 125 insertions(+), 2 deletions(-)
 
-
+diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+index 1dfd024..5532988 100644
+--- a/drivers/usb/dwc3/dwc3-qcom.c
++++ b/drivers/usb/dwc3/dwc3-qcom.c
+@@ -13,6 +13,7 @@
+ #include <linux/module.h>
+ #include <linux/kernel.h>
+ #include <linux/extcon.h>
++#include <linux/interconnect.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/phy/phy.h>
+@@ -43,6 +44,14 @@
+ #define SDM845_QSCRATCH_SIZE			0x400
+ #define SDM845_DWC3_CORE_SIZE			0xcd00
+ 
++/* Interconnect path bandwidths in MBps */
++#define USB_MEMORY_AVG_HS_BW MBps_to_icc(240)
++#define USB_MEMORY_PEAK_HS_BW MBps_to_icc(700)
++#define USB_MEMORY_AVG_SS_BW  MBps_to_icc(1000)
++#define USB_MEMORY_PEAK_SS_BW MBps_to_icc(2500)
++#define APPS_USB_AVG_BW 0
++#define APPS_USB_PEAK_BW MBps_to_icc(40)
++
+ struct dwc3_acpi_pdata {
+ 	u32			qscratch_base_offset;
+ 	u32			qscratch_base_size;
+@@ -73,9 +82,12 @@ struct dwc3_qcom {
+ 
+ 	const struct dwc3_acpi_pdata *acpi_pdata;
+ 
++	enum usb_device_speed   max_speed;
+ 	enum usb_dr_mode	mode;
+ 	bool			is_suspended;
+ 	bool			pm_suspended;
++	struct icc_path		*usb_ddr_icc_path;
++	struct icc_path		*apps_usb_icc_path;
+ };
+ 
+ static inline void dwc3_qcom_setbits(void __iomem *base, u32 offset, u32 val)
+@@ -190,6 +202,99 @@ static int dwc3_qcom_register_extcon(struct dwc3_qcom *qcom)
+ 	return 0;
+ }
+ 
++/* Currently we only use bandwidth level, so just "enable" interconnects */
++static int dwc3_qcom_interconnect_enable(struct dwc3_qcom *qcom)
++{
++	int ret;
++
++	if (qcom->max_speed >= USB_SPEED_SUPER)
++		ret = icc_set_bw(qcom->usb_ddr_icc_path,
++			USB_MEMORY_AVG_SS_BW, USB_MEMORY_PEAK_SS_BW);
++	else
++		ret = icc_set_bw(qcom->usb_ddr_icc_path,
++			USB_MEMORY_AVG_HS_BW, USB_MEMORY_PEAK_HS_BW);
++
++	if (ret)
++		return ret;
++
++	ret = icc_set_bw(qcom->apps_usb_icc_path,
++		APPS_USB_AVG_BW, APPS_USB_PEAK_BW);
++	if (ret)
++		icc_set_bw(qcom->usb_ddr_icc_path, 0, 0);
++
++	return ret;
++}
++
++/* To disable an interconnect, we just set its bandwidth to 0 */
++static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom)
++{
++	int ret;
++
++	ret = icc_set_bw(qcom->usb_ddr_icc_path, 0, 0);
++	if (ret)
++		return ret;
++
++	ret = icc_set_bw(qcom->apps_usb_icc_path, 0, 0);
++	if (ret)
++		goto err_reenable_memory_path;
++
++	return 0;
++
++	/* Re-enable things in the event of an error */
++err_reenable_memory_path:
++	dwc3_qcom_interconnect_enable(qcom);
++
++	return ret;
++}
++
++/**
++ * dwc3_qcom_interconnect_init() - Get interconnect path handles
++ * @qcom:			Pointer to the concerned usb core.
++ *
++ */
++static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
++{
++	struct device *dev = qcom->dev;
++	int ret;
++
++	if (!device_is_bound(&qcom->dwc3->dev))
++		return -EPROBE_DEFER;
++
++	qcom->usb_ddr_icc_path = of_icc_get(dev, "usb-ddr");
++	if (IS_ERR(qcom->usb_ddr_icc_path)) {
++		dev_err(dev, "Error: (%ld) failed getting usb-ddr path\n",
++			PTR_ERR(qcom->usb_ddr_icc_path));
++		return PTR_ERR(qcom->usb_ddr_icc_path);
++	}
++
++	qcom->apps_usb_icc_path = of_icc_get(dev, "apps-usb");
++	if (IS_ERR(qcom->apps_usb_icc_path)) {
++		dev_err(dev, "Error: (%ld) failed getting apps-usb path\n",
++				PTR_ERR(qcom->apps_usb_icc_path));
++		return PTR_ERR(qcom->apps_usb_icc_path);
++	}
++
++	ret = dwc3_qcom_interconnect_enable(qcom);
++	if (ret) {
++		dev_err(dev, "failed to enable interconnect %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++/**
++ * dwc3_qcom_interconnect_exit() - Release interconnect path handles
++ * @qcom:			Pointer to the concerned usb core.
++ *
++ * This function is used to release interconnect path handle.
++ */
++static void dwc3_qcom_interconnect_exit(struct dwc3_qcom *qcom)
++{
++	icc_put(qcom->usb_ddr_icc_path);
++	icc_put(qcom->apps_usb_icc_path);
++}
++
+ static void dwc3_qcom_disable_interrupts(struct dwc3_qcom *qcom)
+ {
+ 	if (qcom->hs_phy_irq) {
+@@ -239,7 +344,7 @@ static void dwc3_qcom_enable_interrupts(struct dwc3_qcom *qcom)
+ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
+ {
+ 	u32 val;
+-	int i;
++	int i, ret;
+ 
+ 	if (qcom->is_suspended)
+ 		return 0;
+@@ -251,6 +356,10 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
+ 	for (i = qcom->num_clocks - 1; i >= 0; i--)
+ 		clk_disable_unprepare(qcom->clks[i]);
+ 
++	ret = dwc3_qcom_interconnect_disable(qcom);
++	if (ret)
++		dev_warn(qcom->dev, "failed to disable interconnect %d\n", ret);
++
+ 	qcom->is_suspended = true;
+ 	dwc3_qcom_enable_interrupts(qcom);
+ 
+@@ -276,6 +385,10 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
+ 		}
+ 	}
+ 
++	ret = dwc3_qcom_interconnect_enable(qcom);
++	if (ret)
++		dev_warn(qcom->dev, "failed to enable interconnect %d\n", ret);
++
+ 	/* Clear existing events from PHY related to L2 in/out */
+ 	dwc3_qcom_setbits(qcom->qscratch_base, PWR_EVNT_IRQ_STAT_REG,
+ 			  PWR_EVNT_LPM_IN_L2_MASK | PWR_EVNT_LPM_OUT_L2_MASK);
+@@ -285,6 +398,8 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
+ 	return 0;
+ }
+ 
++
++
+ static irqreturn_t qcom_dwc3_resume_irq(int irq, void *data)
+ {
+ 	struct dwc3_qcom *qcom = data;
+@@ -648,6 +763,11 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
+ 		goto depopulate;
+ 	}
+ 
++	qcom->max_speed = usb_get_maximum_speed(&qcom->dwc3->dev);
++	ret = dwc3_qcom_interconnect_init(qcom);
++	if (ret)
++		goto depopulate;
++
+ 	qcom->mode = usb_get_dr_mode(&qcom->dwc3->dev);
+ 
+ 	/* enable vbus override for device mode */
+@@ -657,7 +777,7 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
+ 	/* register extcon to override sw_vbus on Vbus change later */
+ 	ret = dwc3_qcom_register_extcon(qcom);
+ 	if (ret)
+-		goto depopulate;
++		goto interconnect_exit;
+ 
+ 	device_init_wakeup(&pdev->dev, 1);
+ 	qcom->is_suspended = false;
+@@ -667,6 +787,8 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
+ 
+ 	return 0;
+ 
++interconnect_exit:
++	dwc3_qcom_interconnect_exit(qcom);
+ depopulate:
+ 	if (np)
+ 		of_platform_depopulate(&pdev->dev);
+@@ -697,6 +819,7 @@ static int dwc3_qcom_remove(struct platform_device *pdev)
+ 	}
+ 	qcom->num_clocks = 0;
+ 
++	dwc3_qcom_interconnect_exit(qcom);
+ 	reset_control_assert(qcom->resets);
+ 
+ 	pm_runtime_allow(dev);
 -- 
-With Best Regards,
-Andy Shevchenko
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
