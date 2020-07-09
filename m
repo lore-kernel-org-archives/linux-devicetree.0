@@ -2,447 +2,129 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE79C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 14:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2362CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 14:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76FC52073A
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 14:11:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F196A206C3
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 14:28:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="R/GU4pKz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pUlRLM/G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgGIOL0 (ORCPT
+        id S1726820AbgGIO2x (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 10:11:26 -0400
-Received: from smtpcmd0871.aruba.it ([62.149.156.71]:35599 "EHLO
-        smtpcmd0871.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbgGIOLZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 10:11:25 -0400
-Received: from [192.168.1.129] ([93.146.66.165])
-        by smtpcmd08.ad.aruba.it with bizsmtp
-        id 12BL2300W3Zw7e5012BL0F; Thu, 09 Jul 2020 16:11:22 +0200
-Subject: [RFC] GPIO lines [was: GPIO User I/O]
-From:   Rodolfo Giometti <giometti@enneenne.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <01afcac0-bd34-3fd0-b991-a8b40d4b4561@enneenne.com>
- <CACRpkdbX9T9EuN-nxkMPC=sN74PEdoLuWurNLdGCzZJwwFrdpQ@mail.gmail.com>
- <1c4f1a83-835a-9317-3647-b55f6f39c0ba@enneenne.com>
- <CACRpkdZPjJSryJc+RtYjRN=X7xKMcao5pYek1fUM2+sE9xgdFQ@mail.gmail.com>
- <CAMuHMdUtguuu4FWU4nRS=pBUyEwKM1JZ8DYPdCQHXBYN0i_Frg@mail.gmail.com>
- <87efe96c-3679-14d5-4d79-569b6c047b00@enneenne.com>
- <CAMuHMdUght0hkJT1N8ub5xR5GB+U18MAhAg+zDmAAuxoRSRaYg@mail.gmail.com>
- <d30e64c9-ad7f-7cd5-51a4-3f37d6f1e3d8@enneenne.com>
-Message-ID: <070fa558-6e20-0fbf-d3e4-0a0eca4fe82c@enneenne.com>
-Date:   Thu, 9 Jul 2020 16:11:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 9 Jul 2020 10:28:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46644 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726819AbgGIO2x (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 10:28:53 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29EC4C08C5DD
+        for <devicetree@vger.kernel.org>; Thu,  9 Jul 2020 07:28:53 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id d10so911176pll.3
+        for <devicetree@vger.kernel.org>; Thu, 09 Jul 2020 07:28:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=HWC78hpJQQDCeHA6IuilFEneJMSNBCuYQgG09IJpy9s=;
+        b=pUlRLM/GeGFm+ciW2dDWqMTNeSAi+EfSiV9WiHR0x0tV4bi54L9WkTBO6dlp+YfGAM
+         kbp3sjr986yeTK91dFmwiESmK5roKf3zaySaS6xAcxrs4xnZfgqRZTKcD03Iz6AWv1TR
+         OrcmG09LtnRRAO0BSTfqwA8VUmPeoFsSCb7i7VlY9Xc2HQE8ho6s3sgEIW5CRUK9Ijca
+         5srPrm++J4nSrkaPgy32pJsX+F1ND+DPR76o5JQVvEegUhRh/KNvCe03Rll6HaUm2b6N
+         sDxYW1fd0fXkNtex6LG55EjJtiYmN+G9YEdA0+/0vSd1vhrTgqAeD4/g2HlyHJdjsCFV
+         GNog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=HWC78hpJQQDCeHA6IuilFEneJMSNBCuYQgG09IJpy9s=;
+        b=O8KarN5JyK3owVtytnhkhLdrSRyklBjA7MllvDnYqi/rBoISa7CA0Yh2wDGhdTs5F8
+         EB/Dsr2/PCKZH1auhmnVwja4GyIP9IKlzSEMk9ES2pL0JXRkFDmtITed7hWcXntOKVZE
+         TOd05gJbvVVGN2J8O43Eu8GgZnzma7JMSWPxv4N0dbvEhmzwGSKcSH3eSYQHGiK7g1gh
+         xHS0DipVTBDiOgvr66QwLoFnHZot2Nw89bd/74ODUhUWOazZJt92oSH/8D8tsxmVHrjp
+         0BuJoW28w6du5em2hAQOikPZC9iLIAMOVK0vgevrmuXscFFA5/f2AipEQ1ruMuGaVaZT
+         ZNlw==
+X-Gm-Message-State: AOAM532oxZJkHUOycT31BhI3J260iuLGpN66cwIwjTqk4HS0bWiZcWPU
+        CgRgu1o956VRy7funno5kTjdHw==
+X-Google-Smtp-Source: ABdhPJx97HWjYNHwiwwN3GUeiKldr7LAIlxI7ISxb8HW+KyBLZ+xDyPE49kRA2Vi7Iz0sTwD1sKmwQ==
+X-Received: by 2002:a17:90a:9d84:: with SMTP id k4mr246096pjp.227.1594304932578;
+        Thu, 09 Jul 2020 07:28:52 -0700 (PDT)
+Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id x10sm2898644pgp.47.2020.07.09.07.28.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 07:28:51 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 07:29:18 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Steev Klimaszewski <steev@kali.org>
+Cc:     Sibi Sankar <sibis@codeaurora.org>, viresh.kumar@linaro.org,
+        sboyd@kernel.org, georgi.djakov@linaro.org, agross@kernel.org,
+        robh+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        saravanak@google.com, dianders@chromium.org,
+        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
+        robdclark@chromium.org
+Subject: Re: [PATCH v2] arm64: dts: qcom: sdm845: Add cpu OPP tables
+Message-ID: <20200709142918.GA3521288@ripper>
+References: <20200702204643.25785-1-sibis@codeaurora.org>
+ <a61c5656-e21f-f071-1149-a3357fe2684e@kali.org>
 MIME-Version: 1.0
-In-Reply-To: <d30e64c9-ad7f-7cd5-51a4-3f37d6f1e3d8@enneenne.com>
-Content-Type: multipart/mixed;
- boundary="------------349B4E7446A5F5834C3D4114"
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aruba.it; s=a1;
-        t=1594303882; bh=LOxFIL0PHXNvH1kGqXseY7KgCXD1XJDLmod1oNyXSNg=;
-        h=Subject:From:To:Date:MIME-Version:Content-Type;
-        b=R/GU4pKzwwYt2C2bpISsg9knuRBDqcSFK9BiLnZaNO/SmfKeex8FcqK2tg/eyWmPB
-         wPz8mn6l8DWJbMapjZG6Sj400EejmryTw7kxN6ikqNDsATDvwcRGxPHL+96vvKQ7wL
-         TwIU5OdGK9NX7gyO9iytMim+PW9FtrGGsDJknjcOEgGnATqhVo7M3SAKVU9anBLgOg
-         xMC1SX6qMnWysI05LV87atW5NQtGzk/oitUR8mNKvLlrC3RdgheNxQ7cIsdhZq1cdC
-         3UurcZ8NJnyMQpgOPW4SK+9nNfbHkqsHNTYThrR7M6W/KH9N2Y7U++1Mk+na5NwpR0
-         4D6Lnygdhn7sQ==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a61c5656-e21f-f071-1149-a3357fe2684e@kali.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------349B4E7446A5F5834C3D4114
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+On Wed 08 Jul 19:22 PDT 2020, Steev Klimaszewski wrote:
 
-Hello,
+> 
+> On 7/2/20 3:46 PM, Sibi Sankar wrote:
+> > Add OPP tables required to scale DDR/L3 per freq-domain on SDM845 SoCs.
+> >
+> > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> > ---
+> 
+> 
+> Hi Sibi,
+> 
+> 
+> Bjorn asked me to give this patch a whirl, and I have to say, I like it
+> but I'm not sure if I'm missing a dependency somewhere...
+> 
+> 
+> In 5.8.0-rc4, I'm seeing a couple probe defers
+> 
+> [    0.131341] cpu cpu0: _allocate_opp_table: Error finding interconnect
+> paths: -517
+> 
+> [    0.132694] cpu cpu4: _allocate_opp_table: Error finding interconnect
+> paths: -517
+> 
+> And then a bit later on,
+> 
+> [    0.625837] cpu cpu0: failed to get clock: -2
+> 
+> 
+> If these aren't anything to worry about, you can throw my Tested-by on
+> 
+> Tested-by: Steev Klimaszewski <steev@kali.org>
+> 
 
-I reworked a bit my proposal due to the fact that the name "GPIO User I/O" is
-not so clear as I supposed to be... so I renamed it as "GPIO lines". :)
+You need to enable:
+CONFIG_INTERCONNECT=y
+CONFIG_INTERCONNECT_QCOM=y
+CONFIG_INTERCONNECT_QCOM_OSM_L3=m
+CONFIG_INTERCONNECT_QCOM_SDM845=m
 
-Since this support is intended to allow boards developers to easily define their
-GPIO lines for a well defined purpose from the userspace I thing this last name
-is more appropriate.
+With this I can see the interconnect_summary in debugfs change with the
+CPU frequency.
 
-Within the device tree we have to specify each line:
-
-        gpio_lines {
-                compatible = "gpio-line";
-
-                bypass0 {
-                        gpios = <&gpionb 10 GPIO_ACTIVE_HIGH>;
-                        mode = "out-low";
-                };
-
-                bypass1 {
-                        gpios = <&gpiosb 11 GPIO_ACTIVE_HIGH>;
-                        mode = "out-low";
-                };
-
-                key {
-                        gpios = <&gpionb 4 GPIO_ACTIVE_HIGH>;
-                        mode = "input";
-                };
-
-                motor {
-                        gpios = <&gpionb 8 GPIO_ACTIVE_HIGH>;
-                        mode = "out-high-open-drain";
-                };
-        };
-
-Then we enable the configuration settings CONFIG_GPIO_LINE so at boot we have:
-
-[    2.377401] line bypass0: added
-[    2.411496] line bypass1: added
-[    2.416141] line key: added
-[    2.419758] line motor: added
-
-Then, when the boot is finished, we have the following entries in the new "line"
-class:
-
-# ls /sys/class/line/
-bypass0  bypass1  key  motor
-
-Now each line can be read and written by using the "state" attribute:
-
-# cat /sys/class/line/bypass0/state
-0
-# echo 1 > /sys/class/line/bypass0/state
-# cat /sys/class/line/bypass0/state
-1
-
-Hope it could be more acceptable now.
-
-Please, let me know if should I propose a proper patch for inclusion or
-something must be changed/added/fixed.
-
-Ciao,
-
-Rodolfo
-
--- 
-GNU/Linux Solutions                  e-mail: giometti@enneenne.com
-Linux Device Driver                          giometti@linux.it
-Embedded Systems                     phone:  +39 349 2432127
-UNIX programming                     skype:  rodolfo.giometti
-
---------------349B4E7446A5F5834C3D4114
-Content-Type: text/x-patch; charset=UTF-8;
- name="gpio-lines.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline;
- filename="gpio-lines.patch"
-
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 4f52c3a8ec99..f117b0b9d33e 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -73,6 +73,16 @@ config GPIO_SYSFS
- 	  Kernel drivers may also request that a particular GPIO be
- 	  exported to userspace; this can be useful when debugging.
- 
-+config GPIO_LINE
-+	bool "/sys/class/line/... (GPIO lines interface)"
-+	depends on SYSFS
-+	help
-+	  Say Y here to add a sysfs interface to manage system's GPIO lines.
-+
-+	  Instead of the GPIO_SYSFS support, by using this support, you'll be
-+	  able to use GPIOs from userspace as stated in the device-tree
-+	  for well defined pourposes and by using proper names.
-+
- config GPIO_GENERIC
- 	depends on HAS_IOMEM # Only for IOMEM drivers
- 	tristate
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index c256aff66a65..033a6b836dec 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -9,6 +9,7 @@ obj-$(CONFIG_GPIOLIB)		+= gpiolib-legacy.o
- obj-$(CONFIG_GPIOLIB)		+= gpiolib-devprop.o
- obj-$(CONFIG_OF_GPIO)		+= gpiolib-of.o
- obj-$(CONFIG_GPIO_SYSFS)	+= gpiolib-sysfs.o
-+obj-$(CONFIG_GPIO_LINE)		+= gpiolib-line.o
- obj-$(CONFIG_GPIO_ACPI)		+= gpiolib-acpi.o
- 
- # Device drivers. Generally keep list sorted alphabetically
-diff --git a/drivers/gpio/gpiolib-line.c b/drivers/gpio/gpiolib-line.c
-new file mode 100644
-index 000000000000..8abd08c1a5e3
---- /dev/null
-+++ b/drivers/gpio/gpiolib-line.c
-@@ -0,0 +1,256 @@
-+/*
-+ * GPIOlib - userspace I/O line interface
-+ *
-+ *
-+ * Copyright (C) 2020   Rodolfo Giometti <giometti@enneenne.com>
-+ *
-+ *   This program is free software; you can redistribute it and/or modify
-+ *   it under the terms of the GNU General Public License as published by
-+ *   the Free Software Foundation; either version 2 of the License, or
-+ *   (at your option) any later version.
-+ *
-+ *   This program is distributed in the hope that it will be useful,
-+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *   GNU General Public License for more details.
-+ *
-+ *   You should have received a copy of the GNU General Public License
-+ *   along with this program; if not, write to the Free Software
-+ *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/device.h>
-+#include <linux/idr.h>
-+#include <linux/kdev_t.h>
-+#include <linux/mutex.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
-+
-+#define GPIO_LINE_MAX_SOURCES       128      /* should be enough... */
-+
-+/*
-+ * Local variables
-+ */
-+
-+static dev_t gpio_line_devt;
-+static struct class *gpio_line_class;
-+
-+static DEFINE_MUTEX(gpio_line_idr_lock);
-+static DEFINE_IDR(gpio_line_idr);
-+
-+struct gpio_line_device {
-+	struct gpio_desc *gpiod;
-+        const char *name;
-+        unsigned int id;
-+        struct device *dev;
-+};
-+
-+/*
-+ * sysfs methods
-+ */
-+
-+static ssize_t state_store(struct device *dev,
-+                                struct device_attribute *attr,
-+                                const char *buf, size_t count)
-+{
-+        struct gpio_line_device *gpio_line = dev_get_drvdata(dev);
-+        int status, ret;
-+
-+        ret = sscanf(buf, "%d", &status);
-+        if (ret != 1 && status != 0 && status != 1)
-+                return -EINVAL;
-+
-+	gpiod_set_value_cansleep(gpio_line->gpiod, status);
-+
-+        return count;
-+}
-+
-+static ssize_t state_show(struct device *dev,
-+				struct device_attribute *attr, char *buf)
-+{
-+	struct gpio_line_device *gpio_line = dev_get_drvdata(dev);
-+	int status = gpiod_get_value_cansleep(gpio_line->gpiod);
-+
-+	return sprintf(buf, "%d\n", status);
-+}
-+static DEVICE_ATTR_RW(state);
-+
-+/*
-+ * Class attributes
-+ */
-+
-+static struct attribute *gpio_line_attrs[] = {
-+        &dev_attr_state.attr,
-+        NULL,
-+};
-+
-+static const struct attribute_group gpio_line_group = {
-+        .attrs = gpio_line_attrs,
-+};
-+
-+static const struct attribute_group *gpio_line_groups[] = {
-+        &gpio_line_group,
-+        NULL,
-+};
-+
-+/*
-+ * Driver stuff
-+ */
-+
-+static int gpio_line_create_entry(const char *name,
-+				struct gpio_desc *gpiod,
-+				struct device *parent)
-+{
-+	struct gpio_line_device *gpio_line;
-+	dev_t devt;
-+	int ret;
-+
-+	/* First allocate a new gpio_line device */
-+	gpio_line = kmalloc(sizeof(struct gpio_line_device), GFP_KERNEL);
-+	if (!gpio_line)
-+		return -ENOMEM;
-+
-+        mutex_lock(&gpio_line_idr_lock);
-+        /*
-+         * Get new ID for the new gpio_line source.  After idr_alloc() calling
-+         * the new source will be freely available into the kernel.
-+         */
-+        ret = idr_alloc(&gpio_line_idr, gpio_line, 0,
-+			GPIO_LINE_MAX_SOURCES, GFP_KERNEL);
-+        if (ret < 0) {
-+                if (ret == -ENOSPC) {
-+                        pr_err("%s: too many GPIO lines in the system\n",
-+                               name);
-+                        ret = -EBUSY;
-+                }
-+                goto error_device_create;
-+        }
-+        gpio_line->id = ret;
-+        mutex_unlock(&gpio_line_idr_lock);
-+
-+	/* Create the device and init the device's data */
-+        devt = MKDEV(MAJOR(gpio_line_devt), gpio_line->id);
-+	gpio_line->dev = device_create(gpio_line_class, parent, devt, gpio_line,
-+				   "%s", name);
-+	if (IS_ERR(gpio_line->dev)) {
-+		dev_err(gpio_line->dev, "unable to create device %s\n", name);
-+		ret = PTR_ERR(gpio_line->dev);
-+		goto error_idr_remove;
-+	}
-+	dev_set_drvdata(gpio_line->dev, gpio_line);
-+
-+	/* Init the gpio_line data */
-+	gpio_line->gpiod = gpiod;
-+	gpio_line->name = name;
-+
-+	dev_info(gpio_line->dev, "added\n");
-+
-+	return 0;
-+
-+error_idr_remove:
-+	mutex_lock(&gpio_line_idr_lock);
-+        idr_remove(&gpio_line_idr, gpio_line->id);
-+
-+error_device_create:
-+	mutex_unlock(&gpio_line_idr_lock);
-+	kfree(gpio_line);
-+
-+	return ret;
-+}
-+
-+static int gpio_line_gpio_probe(struct platform_device *pdev)
-+{
-+        struct device *dev = &pdev->dev;
-+        struct fwnode_handle *child;
-+        int ret;
-+
-+        device_for_each_child_node(dev, child) {
-+		struct device_node *np = to_of_node(child);
-+                const char *label;
-+		enum gpiod_flags flags = GPIOD_ASIS;
-+                const char *mode = "as-is";
-+		struct gpio_desc *gpiod;
-+
-+                ret = fwnode_property_read_string(child, "label", &label);
-+                if (ret && IS_ENABLED(CONFIG_OF) && np)
-+                        label = np->name;
-+                if (!label) {
-+                        dev_err(dev,
-+				"label property not defined or invalid!\n");
-+                        goto skip;
-+                }
-+
-+		ret = fwnode_property_read_string(child, "mode", &mode);
-+		if ((ret == 0) && mode) {
-+			if (strcmp("as-is", mode) == 0)
-+				flags = GPIOD_ASIS;
-+			else if (strcmp("input", mode) == 0)
-+				flags = GPIOD_IN;
-+			else if (strcmp("out-low", mode) == 0)
-+				flags = GPIOD_OUT_LOW;
-+			else if (strcmp("out-high", mode) == 0)
-+				flags = GPIOD_OUT_HIGH;
-+			else if (strcmp("out-low-open-drain", mode) == 0)
-+				flags = GPIOD_OUT_LOW_OPEN_DRAIN;
-+			else if (strcmp("out-high-open-drain", mode) == 0)
-+				flags = GPIOD_OUT_HIGH_OPEN_DRAIN;
-+		}
-+
-+                gpiod = devm_fwnode_get_gpiod_from_child(dev, NULL, child,
-+                                                         flags, label);
-+                if (IS_ERR(gpiod)) {
-+                        dev_err(dev, "gpios property not defined!\n");
-+                        goto skip;
-+                }
-+
-+                ret = gpio_line_create_entry(label, gpiod, dev);
-+                if (ret)
-+                        goto skip;
-+
-+		/* Success, now go to the next child */
-+		continue;
-+
-+skip:		/* Error, skip the child */
-+		fwnode_handle_put(child);
-+		dev_err(dev, "failed to register GPIO lines interface\n");
-+        }
-+
-+        return 0;
-+}
-+
-+static const struct of_device_id of_gpio_gpio_line_match[] = {
-+        { .compatible = "gpio-line", },
-+        { /* sentinel */ }
-+};
-+
-+static struct platform_driver gpio_line_gpio_driver = {
-+        .driver         = {
-+                .name   = "gpio-line",
-+                .of_match_table = of_gpio_gpio_line_match,
-+        },
-+};
-+
-+builtin_platform_driver_probe(gpio_line_gpio_driver, gpio_line_gpio_probe);
-+
-+/*
-+ * Module stuff
-+ */
-+
-+static int __init gpiolib_line_init(void)
-+{
-+	/* Create the new class */
-+	gpio_line_class = class_create(THIS_MODULE, "line");
-+	if (!gpio_line_class) {
-+		printk(KERN_ERR "gpio_line: failed to create class\n");
-+		return -ENOMEM;
-+	}
-+	gpio_line_class->dev_groups = gpio_line_groups;
-+
-+	return 0;
-+}
-+
-+postcore_initcall(gpiolib_line_init);
-
---------------349B4E7446A5F5834C3D4114--
+Regards,
+Bjorn
