@@ -2,328 +2,103 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A15C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 17:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04493C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 17:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6CB42078B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 17:04:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9F412078B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 17:04:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594314241;
-	bh=slBzJU+qTcmfmT0zKaIlIfdfIwSxk6ho1A4IIWQ/shY=;
+	s=default; t=1594314268;
+	bh=IwKCTQQXrFHxNTBTAQmV6GhJe3H+h3CsMgHsOwMP1tM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IMFYfCOnkRmxkifwClw5mr6a0AinraAK6NL9rzzJy6MWJsmn+RVbE/WkZNG5cN9NN
-	 hwF8sO4ecYNRYdQIAB52AU0b05Sso8DeJ9q614y9TwnFmy6fDce/67E3UzcfFKAudG
-	 rT1xS74XNJaCqYG62EFyLxxKtUfCvEQNaGPRB2kU=
+	b=L985IzjVsFz5F0q4vDok+DMBqwCXNKIval1qRX40H2iQksT6q6xaR+XCzTbz29Pc4
+	 qrqRcI/cDV5IQVa7hfW1bknLbK2ZqIw6GWAuORfKIcINzS/NlrRCRoRqn53fo26ciQ
+	 V6zucOVFWWC5ioAgX5H8NrVtuQGgxO8kFzy5J8z0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgGIREA (ORCPT
+        id S1726996AbgGIRE2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 13:04:00 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:40871 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726708AbgGIREA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 13:04:00 -0400
-Received: by mail-il1-f193.google.com with SMTP id e18so2630060ilr.7;
-        Thu, 09 Jul 2020 10:03:59 -0700 (PDT)
+        Thu, 9 Jul 2020 13:04:28 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41056 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726708AbgGIRE2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 13:04:28 -0400
+Received: by mail-io1-f66.google.com with SMTP id o5so3057344iow.8;
+        Thu, 09 Jul 2020 10:04:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=pkrDLfGLudjLQj1h2RUgdB9tGJKsaJLadQNww1tytnA=;
-        b=Mq3mCjJexlpkjoeK4XD6umutEEsR/tcyEPi1SMuXmAesS+ikmphLvWkMYyx/F9E0tW
-         EiFiPSx51Xy7FbXN1uGvUXqAoanpOjQAMxcVSZ/0Oa/G3rWfdWgx9WThmDgN1JKwNYOT
-         uvpdWIsT1/wC7TYQslkczXolCu9uJuotZdESOd2YPVa+cLWpDQghqIZdbgg7sfah+JA3
-         gRDJhetoL0R863oJwa+pg+bzFScBwWBoLH3tNqUrJ1ogkWN/sFZsNJrLJ1Y/OYV8NRIF
-         5XTiRypkhFUwg5PkzCspg/QGeL+8AFGDQxVTnY8y0pZRi7yGI1v05eu242ljKFvuZOS8
-         tgNw==
-X-Gm-Message-State: AOAM5308K/Qu5rVNUHQ0apfIi3xiVmvslFjayuKEdSGcSCuDAsu2ngkD
-        O5wqyMbaiDZhdXArXFLU3Q==
-X-Google-Smtp-Source: ABdhPJxHycLVJ2nL1OWPoCsazDiCpUpx+FrNGz77p+igr770N6ywBBhW5XwbHwq/C1hofPtyA4Xj0g==
-X-Received: by 2002:a92:5a56:: with SMTP id o83mr48108659ilb.71.1594314238900;
-        Thu, 09 Jul 2020 10:03:58 -0700 (PDT)
+        bh=6rPAal+mCKD1RasPvCnP9R4UBzZrvC6ReDEPohFK+PY=;
+        b=Q0JHPa38p9kqbits7C1aHENojvOEmr4WlftvVr1cbgiEU1Jc4Fo2mwg8OLeZsFtsF7
+         Md3oYZJp0UlkhTKYJLELSAuqMyV6AQQJlqC/2g1hEIuHFTzZbaPMApjCqvbRAzvJ78Q5
+         q4z+enP9ceiyoTeiGIsGHPiYyF3wGiJ24xbBZa5MZq7Fps30E3tFO1S8BOEJcdBfXuSV
+         rtymAr2fXYY0gggvYsvv1SIxgeFtBACfX76p7gH/KVRHEilUFF0SOmCNZ+YutWD/D2Xw
+         PNwgiH59P1j3zIiF5Qg1VHDzW5YcgmNKlotHWBPIOKWt5g+SZ7curTpwVxdyLPbe5Oxj
+         zu9w==
+X-Gm-Message-State: AOAM5302Q6r+DO5dn1iKY5gsPl3M4Y39PcgXApqPE/Vg3BT0C/BN76TH
+        OsKsB0/tiy2g66NHbqvz6AO3xMNScg==
+X-Google-Smtp-Source: ABdhPJxcDPa2tPUnhuBohvevfmSj6UngPYNU7IBK1nJG52EbsFCNEeMqhNHXUml2E//n3ivhfutJTA==
+X-Received: by 2002:a05:6638:2649:: with SMTP id n9mr37848979jat.126.1594314267183;
+        Thu, 09 Jul 2020 10:04:27 -0700 (PDT)
 Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id h84sm2540067iof.31.2020.07.09.10.03.57
+        by smtp.gmail.com with ESMTPSA id f18sm2414188ion.47.2020.07.09.10.04.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 10:03:58 -0700 (PDT)
-Received: (nullmailer pid 522839 invoked by uid 1000);
-        Thu, 09 Jul 2020 17:03:56 -0000
-Date:   Thu, 9 Jul 2020 11:03:56 -0600
+        Thu, 09 Jul 2020 10:04:26 -0700 (PDT)
+Received: (nullmailer pid 523550 invoked by uid 1000);
+        Thu, 09 Jul 2020 17:04:25 -0000
+Date:   Thu, 9 Jul 2020 11:04:25 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Louis Kuo <louis.kuo@mediatek.com>
-Cc:     hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com,
-        tfiga@chromium.org, keiichiw@chromium.org, matthias.bgg@gmail.com,
-        mchehab@kernel.org, yuzhao@chromium.org, zwisler@chromium.org,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, Sean.Cheng@mediatek.com,
-        sj.huang@mediatek.com, christie.yu@mediatek.com,
-        frederic.chen@mediatek.com, Jerry-ch.Chen@mediatek.com,
-        jungo.lin@mediatek.com, linux-media@vger.kernel.org,
-        srv_heupstream@mediatek.com, devicetree@vger.kernel.org
-Subject: Re: [RFC PATCH V7 2/3] dt-bindings: mt8183: Add sensor interface
- dt-bindings
-Message-ID: <20200709170356.GB519166@bogus>
-References: <20200708104023.3225-1-louis.kuo@mediatek.com>
- <20200708104023.3225-3-louis.kuo@mediatek.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Rajeev Huralikoppi <rajeev.huralikoppi@silvaco.com>,
+        Conor Culhane <conor.culhane@silvaco.com>,
+        linux-kernel@vger.kernel.org,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        linux-i3c@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/4] dt-bindings: i3c: Describe Silvaco master binding
+Message-ID: <20200709170425.GA523194@bogus>
+References: <20200709080159.2178-1-miquel.raynal@bootlin.com>
+ <20200709080159.2178-2-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200708104023.3225-3-louis.kuo@mediatek.com>
+In-Reply-To: <20200709080159.2178-2-miquel.raynal@bootlin.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 06:40:22PM +0800, Louis Kuo wrote:
-> This patch adds the DT binding documentation for the sensor interface
-> module in Mediatek SoCs.
+On Thu, 09 Jul 2020 10:01:57 +0200, Miquel Raynal wrote:
+> Silvaco provide a dual-role I3C master.
 > 
-> Signed-off-by: Louis Kuo <louis.kuo@mediatek.com>
+> Description is rather simple: it needs a register mapping, three
+> clocks and an interrupt.
+> 
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 > ---
->  .../bindings/media/mediatek-seninf.yaml       | 223 ++++++++++++++++++
->  1 file changed, 223 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/mediatek-seninf.yaml
+>  .../bindings/i3c/svc,i3c-master.yaml          | 59 +++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i3c/svc,i3c-master.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/media/mediatek-seninf.yaml b/Documentation/devicetree/bindings/media/mediatek-seninf.yaml
-> new file mode 100644
-> index 000000000000..917b393acc0c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/mediatek-seninf.yaml
-> @@ -0,0 +1,223 @@
-> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 
-Not the right choice:
 
-(GPL-2.0-only OR BSD-2-Clause)
+My bot found errors running 'make dt_binding_check' on your patch:
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/mediatek-seninf.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Mediatek Sensor Interface (CSI) Device Tree Bindings
-> +
-> +maintainers:
-> +  - Louis Kuo <louis.kuo@mediatek.com>
-> +
-> +description: |
-> +  Seninf MIPI-CSI2 host driver is a HW camera interface controller. It support
-> +  a widely adopted, simple, high-speed protocol primarily intended for
-> +  point-to-point image and video transmission between cameras and host devices.
-> +
-> +properties:
-> +  compatible:
-> +    const: mediatek,mt8183-seninf
-> +
-> +  reg:
-> +    minItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: Seninf camsys clock
-> +      - description: Seninf top mux clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: cam_seninf
-> +      - const: top_mux_seninf
-> +
-> +  phys:
-> +    items:
-> +      - description: Seninf mipi dphy
-> +
-> +  phy-names:
-> +    items:
-> +      - const: seninf
-> +
-> +  # See ./video-interfaces.txt for details
-> +  ports:
-> +    type: object
-> +    additionalProperties: false
-> +
-> +    properties:
-> +      port@0:
-> +        type: object
-> +        description: connection point for sensor at port 0
-> +        additionalProperties: false
-> +
-> +        properties:
-> +          reg:
-> +            const: 0
-> +
-> +        patternProperties:
-> +          endpoint:
-> +            type: object
-> +            additionalProperties: false
-> +
-> +            properties:
-> +              data-lanes:
-> +                minItems: 1
-> +                maxItems: 4
-> +
-> +              remote-endpoint: true
-> +
-> +      port@1:
-> +        type: object
-> +        description: connection point for sensor at port 1
-> +        additionalProperties: false
-> +
-> +        properties:
-> +          reg:
-> +            const: 1
-> +
-> +        patternProperties:
-> +          endpoint:
-> +            type: object
-> +            additionalProperties: false
-> +
-> +            properties:
-> +              data-lanes:
-> +                minItems: 1
-> +                maxItems: 4
-> +
-> +              remote-endpoint: true
-> +
-> +      port@4:
-> +        type: object
-> +        description: connection point for camsys
-> +        additionalProperties: false
-> +
-> +        properties:
-> +          reg:
-> +            const: 4
-> +
-> +        patternProperties:
-> +          endpoint:
-> +            type: object
-> +            additionalProperties: false
-> +
-> +            properties:
-> +              remote-endpoint: true
-> +
-> +    required:
-> +      - port@0
-> +      - port@1
-> +      - port@4
-> +
-> +required:
-> +  - compatible
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - power-domains
-> +  - ports
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +
-> +    #include <dt-bindings/clock/mt8183-clk.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/power/mt8183-power.h>
-> +
-> +    parent {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        seninf: seninf@1a040000 {
-> +            compatible = "mediatek,mt8183-seninf";
-> +            reg = <0 0x1a040000 0 0x8000>;
-> +            interrupts = <GIC_SPI 251 IRQ_TYPE_LEVEL_LOW>;
-> +            power-domains = <&scpsys MT8183_POWER_DOMAIN_CAM>;
-> +            clocks = <&camsys CLK_CAM_SENINF>,
-> +                <&topckgen CLK_TOP_MUX_SENINF>;
-> +            clock-names = "cam_seninf", "top_mux_seninf";
-> +            phys = <&mipi_dphy 0>;
-> +            phy-names = "seninf";
-> +
-> +            ports {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                port@0 {
-> +                    reg = <0>;
-> +                    mipi_in_bcam: endpoint {
-> +                        data-lanes = <0 1 3 4>;
-> +                        remote-endpoint = <&bcam_out>;
-> +                    };
-> +                };
-> +
-> +                port@1 {
-> +                    reg = <1>;
-> +                    mipi_in_fcam: endpoint {
-> +                        data-lanes = <1>;
-> +                        remote-endpoint = <&fcam_out>;
-> +                    };
-> +                };
-> +
-> +                port@4 {
-> +                    reg = <4>;
-> +                    seninf_camisp_endpoint: endpoint {
-> +                        remote-endpoint = <&camisp_endpoint>;
-> +                    };
-> +                };
-> +            };
-> +        };
-> +
-> +        mipi_dphy: mipi_dphy@11c80000 {
+builds/robherring/linux-dt-review/Documentation/devicetree/bindings/i3c/svc,i3c-master.example.dt.yaml: example-0: i3c-master@a0000000:reg:0: [0, 2684354560, 0, 4096] is too long
 
-phy@...
 
-> +            compatible = "mediatek,mt8183-mipi_dphy";
-> +            reg = <0 0x11C80000 0 0x6000>;
-> +            #phy-cells = <1>;
-> +        };
-> +
-> +        i2c2: i2c@11009000 {
-> +            reg = <0 0x11009000 0 0x1000>;
-> +            clock-frequency = <400000>;
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            wcam: camera@36 {
-> +                compatible = "ovti,ov5695";
-> +                reg = <0x36>;
-> +
-> +                port {
-> +                    bcam_out: endpoint {
-> +                        remote-endpoint = <&mipi_in_bcam>;
-> +                        data-lanes = <0 1 3 4>;
-> +                    };
-> +                };
-> +            };
-> +        };
-> +
-> +        i2c4: i2c@11008000 {
-> +            reg = <0 0x11008000 0 0x1000>;
-> +            clock-frequency = <400000>;
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            ucam: camera@3c {
-> +                compatible = "ovti,ov2685";
-> +                reg = <0x3c>;
-> +
-> +                port {
-> +                    fcam_out: endpoint {
-> +                        remote-endpoint = <&mipi_in_fcam>;
-> +                        data-lanes = <1>;
-> +                    };
-> +                };
-> +            };
-> +        };
-> +    };
-> \ No newline at end of file
-> --
-> 2.18.0
+See https://patchwork.ozlabs.org/patch/1325811
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
