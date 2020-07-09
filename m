@@ -2,115 +2,155 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FORGED_MUA_MOZILLA,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE12C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 13:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3CDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 13:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A42B12065D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 13:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DFAD20772
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 13:54:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="Z6NRe/KH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbgGIN2P (ORCPT
+        id S1727948AbgGINy1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 09:28:15 -0400
-Received: from mga11.intel.com ([192.55.52.93]:64525 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726444AbgGIN2P (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 9 Jul 2020 09:28:15 -0400
-IronPort-SDR: k9RpCPMVYpOyPf5yfgokqH/ZHqXV9LTovVgr17raHSiZP4mD+VGsJVGvlATqbnf35G8aEEriCw
- Ek15ZpJqNCfg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="146077737"
-X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="146077737"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 06:28:15 -0700
-Message-Id: <537a4c$cobr4j@orsmga004-auth.jf.intel.com>
-IronPort-SDR: lbGftqsvxRyXOACOGBHSm1In1Skp/KaIfrSFiKY6OurNhCBCCg5UvS81aWet1lIxbq8nWff6dl
- iJLteg35tBRA==
-X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
-   d="scan'208";a="428207258"
-Received: from paulmurp-mobl.ger.corp.intel.com (HELO [192.168.153.164]) ([10.213.225.132])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 06:28:12 -0700
-Subject: Re: [PATCH 2/7] mailbox: keembay-scmi-mailbox: Add support for Keem
- Bay mailbox
-To:     Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
+        Thu, 9 Jul 2020 09:54:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41186 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727831AbgGINy0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 09:54:26 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54BF8C08C5DD
+        for <devicetree@vger.kernel.org>; Thu,  9 Jul 2020 06:54:26 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id w27so1672255qtb.7
+        for <devicetree@vger.kernel.org>; Thu, 09 Jul 2020 06:54:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FoYroevO5aBBa1iVjvsDAiRUR6Hq4gmMuR8nLzos3mw=;
+        b=Z6NRe/KH8bncXG4w++4ecKr3wqovwnlWL54aD5Nzi9+BB7vjICb9LcPIGeiPYFNJVo
+         Y/AQ6/wFhrzsBGDSIqFehClvUY0W6XyunhSG+cdNJhm6FQ6Q0D1+GGGDV5SAGpGvs35X
+         zAq7AyAI7DqKTEHXRzXPVTE56RnZj59V6uUK5lOM+IGn5tAhi9U6Cfyk5g2zpt3KZzaP
+         gq+urnDQkd/kAar89rPeSp5ndT15f7TJwZSdPRcp74qc7i+aIjJ4YF9EFC+us5EiP/NV
+         VX8vfcNp6enxaHd4lSfsIM+qpUnUMnXtYmEoWWC0nTXNwCHAjoB1sA5zEKiLDy2THgFB
+         YG8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FoYroevO5aBBa1iVjvsDAiRUR6Hq4gmMuR8nLzos3mw=;
+        b=a/wGLepbzTfSdKWyzWqzzNSYSdvJLJMksKviHsyGGFx4037FzDAqRp2tN8SjDTEiKf
+         T5qe2F1BfSYoXUAkIUpTGvJe5deKF2dkFqtOkxmmsqOeFwXhrdpzO0iNBkNrOPwJtPYG
+         S1HHGzUYWqdl6MY7Hb6g9YVTAGbL6ZkF26cM6vcrJSKdJnzGmgyzAxwNpTCQW5q7/ixH
+         v4HN3ERf2qIXWD/u2iGZEXZfwCyRuai48iMxifHj7/nBIjYZRHcgpLmtH9AD6YWZPAJ8
+         mqotivRWtuQ+SPZmLXqmoMCBNkWTaQoNVDX/8rTSZxXb0kfoTC9QcLlBXETbnVZ8hRFl
+         2khw==
+X-Gm-Message-State: AOAM531nRLRNuh4Ytu4hRn7cvI7MjeUuwjGynf9svznWcdpgEly7maB/
+        KE1nRMc6JRfV973Fkpky0SsRrg==
+X-Google-Smtp-Source: ABdhPJxhiX3tijNbdyq0oIUQJC6u0JCpsZSHVAijeTfA7RTEUJdj+vBHVcFpY3YlG+naGt9YwyptvA==
+X-Received: by 2002:ac8:7208:: with SMTP id a8mr68813599qtp.355.1594302865515;
+        Thu, 09 Jul 2020 06:54:25 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id 130sm3632735qkn.82.2020.07.09.06.54.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 06:54:25 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Deepak Katragadda <dkatraga@codeaurora.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-clk@vger.kernel.org (open list:COMMON CLK FRAMEWORK),
+        linux-kernel@vger.kernel.org (open list),
+        Michael Turquette <mturquette@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Paul Murphy <paul.j.murphy@intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20200616155613.121242-1-daniele.alessandrelli@linux.intel.com>
- <20200616155613.121242-3-daniele.alessandrelli@linux.intel.com>
- <20200708203428.GB31671@bogus>
- <491f994c6f87a542e49fe37c8a75ab46f1b3712b.camel@linux.intel.com>
-From:   Paul Murphy <paul.j.murphy@linux.intel.com>
-Date:   Thu, 9 Jul 2020 14:28:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Stephen Boyd <sboyd@kernel.org>,
+        Taniya Das <tdas@codeaurora.org>, Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH v3 00/14] Enable GPU for SM8150 and SM8250
+Date:   Thu,  9 Jul 2020 09:52:31 -0400
+Message-Id: <20200709135251.643-1-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-In-Reply-To: <491f994c6f87a542e49fe37c8a75ab46f1b3712b.camel@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+This series adds the missing clock drivers and dts nodes to enable
+the GPU on both SM8150 and SM8250.
 
-On 7/9/20 13:23, Daniele Alessandrelli wrote:
-> Hi Sudeep,
->
-> Thanks for your review.
->
-> On Wed, 2020-07-08 at 21:34 +0100, Sudeep Holla wrote:
->> On Tue, Jun 16, 2020 at 04:56:08PM +0100, Daniele Alessandrelli
->> wrote:
->>> From: Paul Murphy <paul.j.murphy@intel.com>
->>>
->>> Keem Bay SoC has a ARM trusted firmware-based secure monitor which
->>> acts
->>> as the SCP for the purposes of power management over SCMI.
->>>
->>> This driver implements the transport layer for SCMI to function.
->>>
->> Please use the smc transport support in
->> driver/firmware/arm_scmi/smc.c
->> for this. You don't need mailbox support for SMC/HVC. Basically you
->> don't need this driver at all and you have everything you need to
->> support
->> what you want.
->>
->> Let me know if you face issues.
->>
-> Sorry, we didn't know about the SMC transport support for SCMI. Looks
-> like it was added only recently, while our driver was already developed
-> and waiting to be upstreamed.
->
-> I agree that we can drop this driver and switch to the SMC transport as
-> you suggested, but I think we'll have to modify our bootloader SiP
-> service slightly. Paul, can you elaborate?
->
+Note an extra drm/msm patch [1] is required for SM8250.
 
-Just one question.
+As noted by Dmitry, GMU init fails with newer firmware, needs this patch [2].
 
-In our patch, we pass the shared memory address as the second argument 
-of the SiP service, as it means we don't have to hardcode that in our 
-firmware. Sudeep, do you know if it was intentional in 
-smc_send_message() to leave that out? If we leave it out, we are 
-requiring the secure monitor to hardcode the shared memory address.
+[1] https://patchwork.freedesktop.org/series/78968/
+[2] https://git.linaro.org/landing-teams/working/qualcomm/kernel.git/commit/?h=tracking-qcomlt-sm8250&id=01331f2ccbe7e6c4719dbe038a5fb496db32646d
 
+Changes in V2:
+* Added "clk: qcom: gcc: fix sm8150 GPU and NPU clocks" to fix the newly added
+  SM8150 GPU gcc clocks
+* Added "Fixes:" tag to "clk: qcom: clk-alpha-pll: remove unused/incorrect PLL_CAL_VAL"
+* Added yaml schemas to gpucc dt-bindings patches
+* Added "clk: qcom: add common gdsc_gx_do_nothing_enable for gpucc drivers" and changed
+  gpucc patches to use it.
+* Removed CLK_IS_CRITICAL from gpu_cc_ahb_clk
+* Added missing rpmh regulator level for sm8250 GPU clock levels
+* Use sm8150/sm8250 iommu compatibles in dts
+* Add gcc_gpu_gpll0_clk_src/gcc_gpu_gpll0_div_clk_src to gpucc clocks in dts
 
-Regards,
-Paul
+Changes in V3:
+* Combined gpucc yaml bindings into one
+* Removed some unused clocks from gpucc drivers to move closely match other gpucc
+* Use parent_data instead of parent_names
+
+Jonathan Marek (14):
+  clk: qcom: gcc: fix sm8150 GPU and NPU clocks
+  clk: qcom: clk-alpha-pll: remove unused/incorrect PLL_CAL_VAL
+  clk: qcom: clk-alpha-pll: same regs and ops for trion and lucid
+  clk: qcom: clk-alpha-pll: use the right PCAL_DONE value for lucid pll
+  clk: qcom: gcc: remove unnecessary vco_table from SM8150
+  dt-bindings: clock: combine qcom,sdm845-gpucc and qcom,sc7180-gpucc
+  dt-bindings: clock: add SM8150 QCOM Graphics clock bindings
+  dt-bindings: clock: add SM8250 QCOM Graphics clock bindings
+  clk: qcom: add common gdsc_gx_do_nothing_enable for gpucc drivers
+  clk: qcom: Add graphics clock controller driver for SM8150
+  clk: qcom: Add graphics clock controller driver for SM8250
+  dt-bindings: power: Add missing rpmpd rpmh regulator level
+  arm64: dts: qcom: add sm8150 GPU nodes
+  arm64: dts: qcom: add sm8250 GPU nodes
+
+ ...qcom,sdm845-gpucc.yaml => qcom,gpucc.yaml} |  18 +-
+ .../bindings/clock/qcom,sc7180-gpucc.yaml     |  74 ----
+ arch/arm64/boot/dts/qcom/sm8150.dtsi          | 136 +++++++
+ arch/arm64/boot/dts/qcom/sm8250.dtsi          | 143 +++++++
+ drivers/clk/qcom/Kconfig                      |  16 +
+ drivers/clk/qcom/Makefile                     |   2 +
+ drivers/clk/qcom/clk-alpha-pll.c              |  70 ++--
+ drivers/clk/qcom/clk-alpha-pll.h              |  15 +-
+ drivers/clk/qcom/gcc-sm8150.c                 |  26 +-
+ drivers/clk/qcom/gdsc.c                       |  25 ++
+ drivers/clk/qcom/gdsc.h                       |   1 +
+ drivers/clk/qcom/gpucc-sc7180.c               |  27 +-
+ drivers/clk/qcom/gpucc-sdm845.c               |  27 +-
+ drivers/clk/qcom/gpucc-sm8150.c               | 320 ++++++++++++++++
+ drivers/clk/qcom/gpucc-sm8250.c               | 348 ++++++++++++++++++
+ include/dt-bindings/clock/qcom,gpucc-sm8150.h |  33 ++
+ include/dt-bindings/clock/qcom,gpucc-sm8250.h |  34 ++
+ include/dt-bindings/power/qcom-rpmpd.h        |   1 +
+ 18 files changed, 1128 insertions(+), 188 deletions(-)
+ rename Documentation/devicetree/bindings/clock/{qcom,sdm845-gpucc.yaml => qcom,gpucc.yaml} (75%)
+ delete mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-gpucc.yaml
+ create mode 100644 drivers/clk/qcom/gpucc-sm8150.c
+ create mode 100644 drivers/clk/qcom/gpucc-sm8250.c
+ create mode 100644 include/dt-bindings/clock/qcom,gpucc-sm8150.h
+ create mode 100644 include/dt-bindings/clock/qcom,gpucc-sm8250.h
+
+-- 
+2.26.1
 
