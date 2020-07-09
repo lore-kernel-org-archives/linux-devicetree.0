@@ -2,98 +2,236 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6715C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 20:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DAE8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 20:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B158C20772
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 20:51:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QLAM8adN"
+	by mail.kernel.org (Postfix) with ESMTP id 261CF20772
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 20:59:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594328364;
+	bh=hdl5vLIXdN/DqrdtjtQ2V6wbMQ43599XFBbNtCqqK5g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BKDGJESAdnObVGqdhGkTTEsRWw9VtIBA6wSlIbdNM0i0LezVcxHwNslksCLi/bKPU
+	 agRdTD9tDZ5IVyFI6lMoU853UI6HA/Vmreg2czBaQI1WDqo9tJtHJfG98PHpaQPVOQ
+	 hmO2oZHr1/Mn09yB60bYFHQ7AQwADTCsAccIcErU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbgGIUvR (ORCPT
+        id S1726272AbgGIU7T (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 16:51:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50306 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726260AbgGIUvQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 16:51:16 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B7DAC08C5CE;
-        Thu,  9 Jul 2020 13:51:16 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id m16so108191pls.5;
-        Thu, 09 Jul 2020 13:51:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6aAUMrDgu/dRMO1PKFcJzl15krQUj9/NrmpmX2igbSU=;
-        b=QLAM8adNoWwlxAY3sKExkNjz7ranKdOekEgyi9t/Sjm1NULpynsg98SCvqGKj++2my
-         IK6ockcKb2udy/ZF5A5MSGWuMXga8YnRQfwMlegNJLeMokYho+ff0W/PU+kagdruvlXN
-         9gkP+eAM5WjaKP96HoniGYjaNKLpDPvFyQT2H1OFmpiP/4SzVsYo3F9vJoOESX7nhgHg
-         z1uJVBFWOPaPNtXVby+4aZ67Ytn5WneI4d5WL6X2FVAZoECT+cfFbRB0DPMAY+V7JMGo
-         ohQCrGq+5zpYfdb5EivFa/KEV6oa4C/xLRl7xx7z5q04HZE18PRyhet427kCuxzbd+PE
-         IBKg==
+        Thu, 9 Jul 2020 16:59:19 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36025 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbgGIU7S (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 16:59:18 -0400
+Received: by mail-io1-f67.google.com with SMTP id y2so3825941ioy.3;
+        Thu, 09 Jul 2020 13:59:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6aAUMrDgu/dRMO1PKFcJzl15krQUj9/NrmpmX2igbSU=;
-        b=ZWHl+OHnnrviZisTXNCcx1BccUg1ffmY1YZn4XV3+zxDoBiLm/fAsmexMITtX9j09+
-         e5Xr2IE+07KArNUGlee6XKDVOC/rQw6jocho1zo5SiEhmBkZ/qicrpox/T6Uaa/2q2vd
-         pf/aTaLRUvxoT9yCufCjVpDcdTecaoieP+EMf9I/gyXXZ/m+culCsHrACAMweTv71QLS
-         PkkqYa05RREOCNXdrdvAO8WSlI2A6JoPvViU5EpP1+SMMTRqXNRvx4TdA3fFn2EeT56c
-         p4vP5p4SKEc37YvuP0TLDcYRiL90ktO+VRnv2ueP59IP/5CHhdSZRk0GGMbrQkTIHpp9
-         bBOQ==
-X-Gm-Message-State: AOAM530UOZHZrlWBV+DG7rCMbvBRB73HsUvRRXf/ZXwa8wqAwnXWyP4E
-        4sJPtgNzWDhnP7Yxh+Hiqwm0ZCTbHuyUZH4Gpxe5gidE
-X-Google-Smtp-Source: ABdhPJxsjKxantzTRftMX6bNh0Ka3ytqBm/pi7VsMJfjHY2qg0YOKAp3gqWXkrp8PGXSVI7piz191sxizMiURXgpxig=
-X-Received: by 2002:a17:902:8491:: with SMTP id c17mr47735913plo.262.1594327876126;
- Thu, 09 Jul 2020 13:51:16 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=59KG2c36B73L5TCxEaW5iyr7aT9GnhJz2toja/ityzo=;
+        b=A1DDDAX8Of3VAYBaf5twc9L3XAzTOwb8mXv8uAzBCMGPIAuz7djXDfiiweblJOExEA
+         kPUbdFROFs7zMbzXJQRskMPGTuo9r2RYTePoC938ZqEzIj9e2yPYJucnQKWtzOJ5Rs0e
+         r14HuxWiZ/Kvg95r0FACgJQCkKCt03d/xUd/omx8m4k+pmMB17b4idrkVJzi+qHXvTji
+         m3DX6qgsSBc5y2wqsxXLT7SP0EdbovAt9QfUZM9jYqMSd5Jfc4Bno6Ug+DKS9EDij/w2
+         m7j81Q8Di84WXWOngb/VaQ5Gt4dx50TLwHrdMeUUCfod2M/5sO/zliVjNPU81l8iuxVi
+         ScdA==
+X-Gm-Message-State: AOAM5337FGLQV5VppFRuB+Qpjt6U9OCctpV1r4plx0bIYI1p6K69xziu
+        +XjP7a/VfPcTszb9Go906g==
+X-Google-Smtp-Source: ABdhPJz1XtipgZZTRvbo4upYYiZEu374WcNQ5YcX9yvzP6F343WQAYYz7MPsvmWiJt7sYOukO69ulw==
+X-Received: by 2002:a05:6638:2591:: with SMTP id s17mr23248116jat.23.1594328357549;
+        Thu, 09 Jul 2020 13:59:17 -0700 (PDT)
+Received: from xps15 ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id h11sm2372624ilh.69.2020.07.09.13.59.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 13:59:16 -0700 (PDT)
+Received: (nullmailer pid 875925 invoked by uid 1000);
+        Thu, 09 Jul 2020 20:59:15 -0000
+Date:   Thu, 9 Jul 2020 14:59:15 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     EastL Lee <EastL.Lee@mediatek.com>
+Cc:     Sean Wang <sean.wang@mediatek.com>, vkoul@kernel.org,
+        mark.rutland@arm.com, matthias.bgg@gmail.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        wsd_upstream@mediatek.com, cc.hwang@mediatek.com
+Subject: Re: [PATCH v6 1/4] dt-bindings: dmaengine: Add MediaTek
+ Command-Queue DMA controller bindings
+Message-ID: <20200709205915.GA865123@bogus>
+References: <1593673564-4425-1-git-send-email-EastL.Lee@mediatek.com>
+ <1593673564-4425-2-git-send-email-EastL.Lee@mediatek.com>
 MIME-Version: 1.0
-References: <20200709201220.13736-1-eajames@linux.ibm.com> <20200709201220.13736-3-eajames@linux.ibm.com>
-In-Reply-To: <20200709201220.13736-3-eajames@linux.ibm.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 9 Jul 2020 23:50:59 +0300
-Message-ID: <CAHp75VcE9skpqa32bZ4AAcOa08WYSqqZodnveLSF+sZej5KnWw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] leds: pca955x: Add an IBM software implementation of
- the PCA9552 chip
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Dan Murphy <dmurphy@ti.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        vishwa@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1593673564-4425-2-git-send-email-EastL.Lee@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 9, 2020 at 11:16 PM Eddie James <eajames@linux.ibm.com> wrote:
->
-> IBM created an implementation of the PCA9552 on a PIC16F
-> microcontroller. The I2C device addresses are different from the
-> hardware PCA9552, so add a new compatible string and associated
-> platform data to be able to probe this device.
+On Thu, Jul 02, 2020 at 03:06:01PM +0800, EastL Lee wrote:
+> Document the devicetree bindings for MediaTek Command-Queue DMA controller
+> which could be found on MT6779 SoC or other similar Mediatek SoCs.
+> 
+> Signed-off-by: EastL Lee <EastL.Lee@mediatek.com>
+> ---
+>  .../devicetree/bindings/dma/mtk-cqdma.yaml         | 113 +++++++++++++++++++++
+>  1 file changed, 113 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml b/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
+> new file mode 100644
+> index 0000000..83ed742
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
+> @@ -0,0 +1,113 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/mtk-cqdma.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: MediaTek Command-Queue DMA controller Device Tree Binding
+> +
+> +maintainers:
+> +  - EastL Lee <EastL.Lee@mediatek.com>
+> +
+> +description:
+> +  MediaTek Command-Queue DMA controller (CQDMA) on Mediatek SoC
+> +  is dedicated to memory-to-memory transfer through queue based
+> +  descriptor management.
+> +
+> +allOf:
+> +  - $ref: "dma-controller.yaml#"
+> +
+> +properties:
+> +  "#dma-cells":
+> +    minimum: 1
+> +    maximum: 255
+> +    description:
+> +      Used to provide DMA controller specific information.
 
-This is weird. I would rather expect ibm prefix with corresponding part number.
+No, for a specific binding like this, it should be 1 defined value.
 
-> +       pca9552_ibm,
+> +
+> +  compatible:
+> +    oneOf:
+> +      - const: mediatek,mt6765-cqdma
+> +      - const: mediatek,mt6779-cqdma
+> +
+> +  reg:
+> +    minItems: 1
+> +    maxItems: 5
+> +    description:
+> +        A base address of MediaTek Command-Queue DMA controller,
+> +        a channel will have a set of base address.
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    maxItems: 5
+> +    description:
+> +        A interrupt number of MediaTek Command-Queue DMA controller,
+> +        one interrupt number per dma-channels.
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: cqdma
+> +
+> +  dma-channel-mask:
+> +    $ref: /schemas/types.yaml#definitions/uint32
 
-> +       [pca9552_ibm] = {
+Alreay has a type, don't redefine it here.
 
-> +       { "pca9552-ibm", pca9552_ibm },
+> +    description:
+> +       For DMA capability, We will know the addressing capability of
+> +       MediaTek Command-Queue DMA controller through dma-channel-mask.
 
-> +       { .compatible = "nxp,pca9552-ibm", .data = (void *)pca9552_ibm },
+This sounds like the kernel's DMA masks which is not what this property 
+is.
 
+> +    items:
+> +      minItems: 1
+> +      maxItems: 63
 
--- 
-With Best Regards,
-Andy Shevchenko
+An array of 63 elements?
+
+I think you want:
+
+minimum: 1
+maximum: 63
+
+Or:
+
+enum: [ 1, 3, 7, 0xf, 0x1f, 0x3f ]
+
+(Though if this works, then just 'dma-channels' is enough.)
+
+> +
+> +  dma-channels:
+> +    $ref: /schemas/types.yaml#definitions/uint32
+> +    description:
+> +      Number of DMA channels supported by MediaTek Command-Queue DMA
+> +      controller, support up to five.
+
+Is it 5 or 6 channels? You're off by one somewhere.
+
+> +    items:
+> +      minItems: 1
+> +      maxItems: 5
+> +
+> +  dma-requests:
+> +    $ref: /schemas/types.yaml#definitions/uint32
+> +    description:
+> +      Number of DMA request (virtual channel) supported by MediaTek
+> +      Command-Queue DMA controller, support up to 32.
+> +    items:
+> +      minItems: 1
+> +      maxItems: 32
+
+You are describing how many elements in an array and this is a scalar.
+
+> +
+> +required:
+> +  - "#dma-cells"
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - dma-channel-mask
+> +  - dma-channels
+> +  - dma-requests
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/mt6779-clk.h>
+> +    cqdma: dma-controller@10212000 {
+> +        compatible = "mediatek,mt6779-cqdma";
+> +        reg = <0x10212000 0x80>,
+> +            <0x10212080 0x80>,
+> +            <0x10212100 0x80>;
+> +        interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_LOW>,
+> +            <GIC_SPI 140 IRQ_TYPE_LEVEL_LOW>,
+> +            <GIC_SPI 141 IRQ_TYPE_LEVEL_LOW>;
+> +        clocks = <&infracfg_ao CLK_INFRA_CQ_DMA>;
+> +        clock-names = "cqdma";
+> +        dma-channel-mask = <63>;
+> +        dma-channels = <3>;
+> +        dma-requests = <32>;
+> +        #dma-cells = <1>;
+> +    };
+> +
+> +...
+> -- 
+> 1.9.1
