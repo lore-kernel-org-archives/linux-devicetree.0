@@ -2,87 +2,125 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A935C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2219DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05A1520775
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:19:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594336777;
-	bh=hNVl4MWznyMfS8GySJsgugZ/zhrGnUF7yLAPCn/w1OU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Fgluyp6VOLSx5Vn47ZgJcafoUOP9fJ3xTVIbc0rO1RsNslaC6ANnxbYL+U/X6vnTL
-	 VqcsXnWcpf67tB84ZLEjYuKHnqTq0zWsbnJhonoAdHFCwxavHQmScqOVv6Kz4HWHGx
-	 MSCE1HlyNt1GGNwdeUS8s3KrUHXUoeKhc8Jh4I+c=
+	by mail.kernel.org (Postfix) with ESMTP id E907420786
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:20:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="P3DaTpWO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726311AbgGIXTg (ORCPT
+        id S1726546AbgGIXUH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 19:19:36 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:33967 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbgGIXTg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 19:19:36 -0400
-Received: by mail-io1-f67.google.com with SMTP id q74so4170919iod.1;
-        Thu, 09 Jul 2020 16:19:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=420yMXhBf21AgrF9OyTg/NVRUT5NXpwkF7oK2H8zSmE=;
-        b=DdfzghdxZ4aZt40WaxYmcGIBrJMmC+WBnC0IPTfOj4+eJ1SLhuNQV0oKIbO5IsgG9H
-         0+GVVZBoN2vwz2Mtn0VsuB4uUDFTYhOb4whpkwK58GDJfgPT5Rdy3eIVzD3sTnNuB/2B
-         1KG1i1Xb7YKyZyk0ZfiCdl7wsOE+KbmHj5TJbBhAqlP6pwLjEo3/a6qgXAVqL/fNvP+C
-         EzMY6K68jY9f/2gCqKx5IRgTrZaoKlYwcu44w7QQu83RHkoP1dWN/KmHgHKf9LSQ0JN2
-         ZYsmFuelb0gTYvHZ75LuReLecofFZH5aP7E4eWDXMR8YJ/ZVzf90DIwJKkfuwm3b3NYt
-         pShA==
-X-Gm-Message-State: AOAM530rdFxuU5rT6W0vyTR8ue8kZfnL7LLiNXkxpd7DuXcs+HcI3+OC
-        XnIGrWxZhHlrZJjpVDdg+Q==
-X-Google-Smtp-Source: ABdhPJy6SVfqLGFLbMKsYIRFUYjf2S/5bFNmf+t797DpfD0y5B/NUOXz4NHISeqWaPt442qO7JyHTg==
-X-Received: by 2002:a05:6602:2555:: with SMTP id j21mr24877145ioe.11.1594336775496;
-        Thu, 09 Jul 2020 16:19:35 -0700 (PDT)
-Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id u6sm2489573ilg.32.2020.07.09.16.19.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 16:19:35 -0700 (PDT)
-Received: (nullmailer pid 1083622 invoked by uid 1000);
-        Thu, 09 Jul 2020 23:19:33 -0000
-Date:   Thu, 9 Jul 2020 17:19:33 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Roger Quadros <rogerq@ti.com>
-Cc:     kishon@ti.com, nm@ti.com, t-kristo@ti.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vigneshr@ti.com
-Subject: Re: [PATCH v4 3/6] arm64: dts: ti: k3-j721e-main: Add system
- controller node and SERDES lane mux
-Message-ID: <20200709231933.GA1083562@bogus>
-References: <20200629125254.28754-1-rogerq@ti.com>
- <20200629125254.28754-4-rogerq@ti.com>
+        Thu, 9 Jul 2020 19:20:07 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:34574 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbgGIXUG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 19:20:06 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 069NK0Or053680;
+        Thu, 9 Jul 2020 18:20:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594336800;
+        bh=L6EHhTZGwkAXNqimgQyMdIJygzgCJ7uhT1WiATJtN/Q=;
+        h=From:To:CC:Subject:Date;
+        b=P3DaTpWOquXEgY00eRYlAykrdNUdCGy/POvMQW0glO6lr8SqS/ztmG6AtLMrVOTVW
+         GvuUyNxAqAFhV7K3m3Fb/eweRtxv72L/yOsx3Xi9r0jqh0GrtZLOr0hGVHuNMtkcPI
+         kw6t2FOECQhCwJGsI6EM53p0JXoy7ZndqUmUf3Po=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 069NK0ph011329
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 9 Jul 2020 18:20:00 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 9 Jul
+ 2020 18:19:59 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 9 Jul 2020 18:19:59 -0500
+Received: from fllv0103.dal.design.ti.com (fllv0103.dal.design.ti.com [10.247.120.73])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 069NJxOC030895;
+        Thu, 9 Jul 2020 18:19:59 -0500
+Received: from localhost ([10.250.34.57])
+        by fllv0103.dal.design.ti.com (8.14.7/8.14.7) with ESMTP id 069NJxOY124312;
+        Thu, 9 Jul 2020 18:19:59 -0500
+From:   Suman Anna <s-anna@ti.com>
+To:     Tony Lindgren <tony@atomide.com>
+CC:     <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Tero Kristo <t-kristo@ti.com>, Suman Anna <s-anna@ti.com>
+Subject: [PATCH 00/13] Add IPU & DSP remoteprocs on OMAP4 and OMAP5
+Date:   Thu, 9 Jul 2020 18:19:41 -0500
+Message-ID: <20200709231954.1973-1-s-anna@ti.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629125254.28754-4-rogerq@ti.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 29 Jun 2020 15:52:51 +0300, Roger Quadros wrote:
-> From: Kishon Vijay Abraham I <kishon@ti.com>
-> 
-> The system controller node manages the CTRL_MMR0 region.
-> Add serdes_ln_ctrl node which is used for controlling the SERDES lane mux.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
->  arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 27 ++++++++++++
->  include/dt-bindings/mux/mux-j721e-wiz.h   | 53 +++++++++++++++++++++++
->  2 files changed, 80 insertions(+)
->  create mode 100644 include/dt-bindings/mux/mux-j721e-wiz.h
-> 
+Hi Tony,
 
-Acked-by: Rob Herring <robh@kernel.org>
+The following series contains all the necessary DT pieces to boot the
+IPU and DSP remote processors on OMAP4 and OMAP5 SoCs. They are
+enabled specifically on the TI OMAP4 PandaBoard and OMAP5 uEVM boards.
+This is the last DT piece that now completes the support for IPUs and
+DSPs on all OMAP4+ SoCs, similar patches were merged for 5.8 covering
+the DRA7xx/AM57xx SoCs. Appreciate it if you can pick up the series for
+5.9 if it isn't too late.
+
+There is one issue that I have run into while testing this series on
+the latest kernel. I am seeing a l3_noc error for OMAP4 DSP when it
+attempts to auto-suspend or stop after it is booted. The issue is a
+L4CFG read error that happens in the sysc_disable_module() function
+in ti-sysc code.
+
+I do not have any issues on my downstream 5.4 based SDK kernel. I have
+root-caused this to the OMAP4 voltage controller patches you added for
+5.5 kernel through your omap-for-v5.5/pm branch, specifically the
+commit 4873843718f9 ("ARM: OMAP2+: Initialize voltage controller for omap4").
+The VOLTCTRL register value is 0x300 before that patch, and modifying
+this register either through  omap4_vc_init_pmic_signaling() or
+omap4_vc_set_pmic_signaling() will trigger this. A debug print in
+sysc_disable_module() also seems to help.
+
+regards
+Suman
+
+Suman Anna (13):
+  ARM: dts: omap4: Add timer_sys_ck clocks for timers
+  ARM: dts: omap5: Add timer_sys_ck clocks for timers
+  ARM: dts: omap4: Update the DSP node
+  ARM: dts: omap4: Add IPU DT node
+  ARM: dts: omap4: Add aliases for rproc nodes
+  ARM: dts: omap4-panda-common: Add CMA pools and enable IPU & DSP
+  ARM: dts: omap4-panda-common:: Add system timers to DSP and IPU
+  ARM: dts: omap5: Add DSP and IPU nodes
+  ARM: dts: omap5: Add aliases for rproc nodes
+  ARM: dts: omap5-uevm: Add CMA pools and enable IPU & DSP
+  ARM: dts: omap5-uevm: Add system timers to DSP and IPU
+  ARM: dts: omap4-panda-common: Add watchdog timers for IPU and DSP
+  ARM: dts: omap5-uevm: Add watchdog timers for IPU and DSP
+
+ arch/arm/boot/dts/omap4-l4-abe.dtsi       | 20 +++++++------
+ arch/arm/boot/dts/omap4-l4.dtsi           | 35 ++++++++++++++---------
+ arch/arm/boot/dts/omap4-panda-common.dtsi | 34 ++++++++++++++++++++++
+ arch/arm/boot/dts/omap4.dtsi              | 29 ++++++++++++++++---
+ arch/arm/boot/dts/omap5-l4-abe.dtsi       | 20 +++++++------
+ arch/arm/boot/dts/omap5-l4.dtsi           | 35 ++++++++++++++---------
+ arch/arm/boot/dts/omap5-uevm.dts          | 34 ++++++++++++++++++++++
+ arch/arm/boot/dts/omap5.dtsi              | 25 ++++++++++++++++
+ 8 files changed, 184 insertions(+), 48 deletions(-)
+
+-- 
+2.26.0
+
