@@ -2,106 +2,219 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A28F1C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 16:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 288CCC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 16:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8EF20720
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 16:46:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594313176;
-	bh=JfFF8+CMKABCuPn0K8Tniqu0lfWES1uKahWsojmYWHA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CPwIC2UaXenDBGW9xwppEKMYTVrmhTgshVfsFU8V0z/44v6C9lTyxhrCBTNYyj5eW
-	 sERdlfs/Bobr/AdNbO58PT723wHwG0xPW5ASyQDzNhD8CPuHrDtRFDH5j70oaSOION
-	 653F9AxftmtVMmIuufuct3KB1a0Gaiz/qNjYpVeo=
+	by mail.kernel.org (Postfix) with ESMTP id E3B402077D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 16:47:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="MnN/Ec1D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbgGIQqQ (ORCPT
+        id S1727983AbgGIQrw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 12:46:16 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:44042 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgGIQqP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 12:46:15 -0400
-Received: by mail-il1-f193.google.com with SMTP id h16so2569547ilj.11;
-        Thu, 09 Jul 2020 09:46:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dYgb8/mkuUxIt2m5PD9T5anmcR08HvFF0Uc/2CHjdPQ=;
-        b=He1m/PsIVb5tKHHq8mBC69c7AEDk6NE5Pi0/2neqZ3zXdqZ5rgIkM7Jp6pFrhkjrxY
-         fMxwWS0nHtdWh8Irsf89PETwv5mLhAOjMoCgfu1G8AWQOcWQMOysUahrPpAIvz8rqhv1
-         zwOIWUj35dpPapdZkxnwLTktPgqVyPzs4XmYzSpQxRqDY6XTFu7/b8lmIjyC5v7zQ0RF
-         Mf+is7A+4/zCbMouNYcSMadMkmsY6unfZtnX/UFvGCfLOiC5BI5isQETu6v5HZLPhiFb
-         8MfO1/gyHtlro4zkNxsNGP83tC04kIoJAzJhmiX1c6T5nFwTDSLom8/jxXi/50VFSdmy
-         KUfw==
-X-Gm-Message-State: AOAM533sHhRPAs1k/2x8ZwAGEiMBrjSkggKwT4vB1A6EkNmF46T98p1e
-        ocolo75F6FyJzvppvetYSw==
-X-Google-Smtp-Source: ABdhPJwYm6C3eOH7D/4rieFBCAyN9fWZOQE2mUBpGjJ9eTOUprMXR7+3CRFw2hY7dFeVrVSISj+QSA==
-X-Received: by 2002:a92:4810:: with SMTP id v16mr47587387ila.75.1594313174582;
-        Thu, 09 Jul 2020 09:46:14 -0700 (PDT)
-Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id j28sm2264580ili.76.2020.07.09.09.46.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 09:46:14 -0700 (PDT)
-Received: (nullmailer pid 498959 invoked by uid 1000);
-        Thu, 09 Jul 2020 16:46:09 -0000
-Date:   Thu, 9 Jul 2020 10:46:09 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Cc:     linux-hwmon@vger.kernel.org, Jack Lo <jack.lo@gtsys.com.hk>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v4 2/2] devicetree: hwmon: shtc1: Add sensirion,shtc1.yaml
-Message-ID: <20200709164609.GA498064@bogus>
-References: <20200708040748.9014-1-chris.ruehl@gtsys.com.hk>
- <20200708040748.9014-3-chris.ruehl@gtsys.com.hk>
+        Thu, 9 Jul 2020 12:47:52 -0400
+Received: from mail-eopbgr80070.outbound.protection.outlook.com ([40.107.8.70]:20362
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726339AbgGIQrw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Jul 2020 12:47:52 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XwSsJLbwG1KPUpl/2gkKQ8mCsrjczn277KuO/4a2tg66rTpmNjyj1h1hoCBikEvsh27iRqcB+cP7SFEkYZlXaYn2Dvf2TWVg7BKY9kkvkyseSsR9LGb4KaTHqvdl7iuiWJbPVx99A44BO3veXXLO/vBxygaHyM1i99uy3dSIUShN43BCUEhWQNmx+nEt9giO+APa73Rm5kb3u6R/T8fJ5YVqW09VlhwfKX8uUCd825luY+ku65boPd7xXi6KS5sbBFjdda8ml84Rm/L3IQBiT1aaq65G+x3T40bqx9H/j3uxn39Th/5c+qoYDf+o8r9Lq2uIOHjq9Ps00aBKxlt3wQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MXQ1KIMeXyL4D/+BwoIpZV2QH+ZEdb6xT7iWybXhfVQ=;
+ b=lS+lOGS46EsHvH143IsDeNE6Xg8Rqdz4FAQo7eUFD/QlO2uWnab5A1sD70TfXR9CeEPMFUipobhm0TpJZxyV/U5Oo2S1nMHRFvZrzdVOIvsJzfab8eyS2zPrHYS0Ez2f+SjdcGsdAoU9sFJzmnSnW211SyG0woX3Xz0J3t/KpIh0YXFbIw9zysgINeehH8Zj9frTvUb5psmX7F9DDleS/38cqqWvWpkAu8XSmmHnKmDjS0RWldA7o6fY+cvviUzqTf4uXBreTt8Uhu6pbesCMZJrGsXs5qozQC3rPzKPGhRHz37Abtqerhc1BgOQFxMZkeZFhQT9Kr8Y3hi+BgyZ2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MXQ1KIMeXyL4D/+BwoIpZV2QH+ZEdb6xT7iWybXhfVQ=;
+ b=MnN/Ec1DuvenO8FL9Om7pH13VUkxaTVL4XBkbUb9qSIZ4/iHCMYSCMxhOOZl+Dy4q3y1x4w9jA4pDZYdYSikQPOBml0SccjF8eE8u4gFe80NwxfCIwtwBkq4rTJGCd/FirCY7uOCBlXvBVZKNz+rx8JDNciqrxCfSWB/bgutdws=
+Authentication-Results: pengutronix.de; dkim=none (message not signed)
+ header.d=none;pengutronix.de; dmarc=none action=none header.from=oss.nxp.com;
+Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
+ (2603:10a6:803:22::27) by VI1PR04MB6239.eurprd04.prod.outlook.com
+ (2603:10a6:803:fd::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Thu, 9 Jul
+ 2020 16:47:48 +0000
+Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
+ ([fe80::4c0:79dd:b734:9ea7]) by VI1PR0402MB3902.eurprd04.prod.outlook.com
+ ([fe80::4c0:79dd:b734:9ea7%5]) with mapi id 15.20.3153.029; Thu, 9 Jul 2020
+ 16:47:48 +0000
+From:   Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+To:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     l.stach@pengutronix.de, lukas@mntmn.com, agx@sigxcpu.org,
+        linux-kernel@vger.kernel.org, laurentiu.palcu@oss.nxp.com,
+        devicetree@vger.kernel.org
+Subject: [PATCH v5 0/4] Add support for iMX8MQ Display Controller Subsystem
+Date:   Thu,  9 Jul 2020 19:47:28 +0300
+Message-Id: <20200709164736.18291-1-laurentiu.palcu@oss.nxp.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain; charset="us-ascii"
+X-ClientProxiedBy: AM0PR03CA0041.eurprd03.prod.outlook.com (2603:10a6:208::18)
+ To VI1PR0402MB3902.eurprd04.prod.outlook.com (2603:10a6:803:22::27)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708040748.9014-3-chris.ruehl@gtsys.com.hk>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from fsr-ub1864-141.ea.freescale.net (83.217.231.2) by AM0PR03CA0041.eurprd03.prod.outlook.com (2603:10a6:208::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21 via Frontend Transport; Thu, 9 Jul 2020 16:47:47 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [83.217.231.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 0fcffaaf-38a4-4e0b-fd4a-08d82427cfc4
+X-MS-TrafficTypeDiagnostic: VI1PR04MB6239:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR04MB62395D95770DA5C58C921C8FBE640@VI1PR04MB6239.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: IQgPDT+J7/+H7Mf1bYpZ6KauiLB8qxdFQycw3MLStEgKt1zhddqPL826Rx0SIXHryCUPZWOfUvcrU6HEVRtSnP836wx/v+Iy5NKORqPT0zZJpzhEwVoNvIVvQDHXSXViCb07n2Dp06qI49oZv1bBVeAVQGx0ipjLBMsBErXzZbGOqxibm9tlbTDCpEIWZ6//xq7+IkZK6NQsnjvGKQx9DFNjGce6jx51CmnhguaXR8brUYIFIXIU9DmSdg1rEYtLysb0RgSHA4BmBXkvrZ5nvVsJAXeaZBwUee3k0jewrWGEUTyTzXP2khZ5f9WLbHc37GfbjXHc5eNL13nb3nyCo+L5xiNFPyd5ey+Y3Kbr3YB45pYB8wqKf0U5iYP8LHrN
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3902.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(136003)(376002)(366004)(39860400002)(8936002)(66556008)(66476007)(186003)(16526019)(6666004)(52116002)(1076003)(86362001)(6486002)(6506007)(66946007)(4326008)(5660300002)(2616005)(26005)(956004)(2906002)(83380400001)(110136005)(478600001)(316002)(44832011)(8676002)(6512007)(32563001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: nboJWOUqau1p0sLV0r8mXYa7HCLMvSD4cM7nGGyPk3wMsdplIMe8yiZgkpoSu0odDXIofRhSY8e9OZTPQ1HBrSGrnFn5+20mGiLi4kYvjZDigPCpqNIv8ZdA89Ri4cxIbLDRN0rXodthULh0gu0PQhuvi2kxWjvgRGN8X1aGqmymfQCWsOv6LQ8POY51T40uF7Q18uLhNv+5aEp3iww6YOltQgJ5u9VYR0V5mHTKQSJrrzT0YK+vUx79ggmq7UxbWWjD9S2VZg0ZEP8m40FYptMLcGrSXWYVwGayz+O98WI6xhvO3cUHwskX842/1unJuvkOoVNFIKbPs+vossaWmxuCQDSzpV/XKBwTKuhhn6R9mTKrJ3T0ZlFbxFtHcr2wRl+8n7qxqdu2qtS5GzTkWKFT6jI9nyDLQtHSM7CaHj9n6xD/D01bRbn0S7d3kmtiY4GFArBiEWgcwfJv5qlkpfUDn75pDnVKWciepVrt64k=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0fcffaaf-38a4-4e0b-fd4a-08d82427cfc4
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3902.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2020 16:47:48.3601
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OI7T9cBYEbiKT69NBYLgQA10YEIRqEspoUcOP/nJSlNWgtnYSvH92ka15CS1smFmD/jB/QfAxNGjGGZVEOMhgw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6239
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 08 Jul 2020 12:07:47 +0800, Chris Ruehl wrote:
-> Add documentation for the newly added DTS support in the shtc1 driver.
-> To align with the drivers logic to have high precision by default
-> a boolean sensirion,low_precision is used to switch to low precision.
-> 
-> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
-> ---
->  .../bindings/hwmon/sensirion,shtc1.yaml       | 60 +++++++++++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
-> 
+From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
 
+Hi,
 
-My bot found errors running 'make dt_binding_check' on your patch:
+This patchset adds initial DCSS support for iMX8MQ chip. Initial support
+includes only graphics plane support (no video planes), no HDR10 capabilities,
+no graphics decompression (only linear, tiled and super-tiled buffers allowed).
 
-Error: Documentation/devicetree/bindings/hwmon/sensirion,shtc1.example.dts:26.13-14 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:315: recipe for target 'Documentation/devicetree/bindings/hwmon/sensirion,shtc1.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/hwmon/sensirion,shtc1.example.dt.yaml] Error 1
-make[1]: *** Waiting for unfinished jobs....
-Makefile:1347: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+Support for the rest of the features will be added incrementally, in subsequent
+patches.
 
+The patchset was tested with both HDP driver (in the downstream tree) and the upstream
+MIPI-DSI driver (with a couple of patches on top, to make it work correctly with DCSS).
 
-See https://patchwork.ozlabs.org/patch/1324936
+Thanks,
+Laurentiu
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
+Changes in v5:
+ * Rebased to latest;
+ * Took out component framework support and made it a separate patch so
+   that people can still test with HDP driver, which makes use of it.
+   But the idea is to get rid of it once HDP driver's next versions
+   will remove component framework as well;
+ * Slight improvement to modesetting: avoid cutting off the pixel clock
+   if the new mode and the old one are equal. Also, in this case, is
+   not necessary to wait for DTG to shut off. This would allow to switch
+   from 8b RGB to 12b YUV422, for example, with no interruptions (at least
+   from DCSS point of view);
+ * Do not fire off CTXLD when going to suspend, unless it still has
+   entries that need to be committed to DCSS;
+ * Addressed Rob's comments on bindings;
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+Changes in v4:
+ * Addressed Lucas and Philipp's comments:
+   * Added DRM_KMS_CMA_HELPER dependency in Kconfig;
+   * Removed usage of devm_ functions since I'm already doing all the
+     clean-up in the submodules_deinit();
+   * Moved the drm_crtc_arm_vblank_event() in dcss_crtc_atomic_flush();
+   * Removed en_completion variable from dcss_crtc since this was
+     introduced mainly to avoid vblank timeout warnings which were fixed
+     by arming the vblank event in flush() instead of begin();
+   * Removed clks_on and irq_enabled flags since all the calls to
+     enabling/disabling clocks and interrupts were balanced;
+   * Removed the custom atomic_commit callback and used the DRM core
+     helper and, in the process, got rid of a workqueue that wasn't
+     necessary anymore;
+   * Fixed some minor DT binding issues flagged by Philipp;
+   * Some other minor changes suggested by Lucas;
+ * Removed YUV formats from the supported formats as these cannot work
+   without the HDR10 module CSCs and LUTs. Will add them back when I
+   will add support for video planes;
 
-Please check and re-submit.
+Changes in v3:
+ * rebased to latest linux-next and made it compile as drmP.h was
+   removed;
+ * removed the patch adding the VIDEO2_PLL clock. It's already applied;
+ * removed an unnecessary 50ms sleep in the dcss_dtg_sync_set();
+ * fixed a a spurious hang reported by Lukas Hartmann and encountered
+   by me several times;
+ * mask DPR and DTG interrupts by default, as they may come enabled from
+   U-boot;
+
+Changes in v2:
+ * Removed '0x' in node's unit-address both in DT and yaml;
+ * Made the address region size lowercase, to be consistent;
+ * Removed some left-over references to P010;
+ * Added a Kconfig dependency of DRM && ARCH_MXC. This will also silence compilation
+   issues reported by kbuild for other architectures;
+
+Laurentiu Palcu (5):
+  drm/imx: compile imx directory by default
+  drm/imx: Add initial support for DCSS on iMX8MQ
+  drm/imx/dcss: add component framework functionality
+  dt-bindings: display: imx: add bindings for DCSS
+  arm64: dts: imx8mq: add DCSS node
+
+ .../bindings/display/imx/nxp,imx8mq-dcss.yaml |  84 ++
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi     |  23 +
+ drivers/gpu/drm/Makefile                      |   2 +-
+ drivers/gpu/drm/imx/Kconfig                   |   2 +
+ drivers/gpu/drm/imx/Makefile                  |   1 +
+ drivers/gpu/drm/imx/dcss/Kconfig              |   9 +
+ drivers/gpu/drm/imx/dcss/Makefile             |   6 +
+ drivers/gpu/drm/imx/dcss/dcss-blkctl.c        |  70 ++
+ drivers/gpu/drm/imx/dcss/dcss-crtc.c          | 219 +++++
+ drivers/gpu/drm/imx/dcss/dcss-ctxld.c         | 424 +++++++++
+ drivers/gpu/drm/imx/dcss/dcss-dev.c           | 314 +++++++
+ drivers/gpu/drm/imx/dcss/dcss-dev.h           | 177 ++++
+ drivers/gpu/drm/imx/dcss/dcss-dpr.c           | 562 ++++++++++++
+ drivers/gpu/drm/imx/dcss/dcss-drv.c           | 183 ++++
+ drivers/gpu/drm/imx/dcss/dcss-dtg.c           | 409 +++++++++
+ drivers/gpu/drm/imx/dcss/dcss-kms.c           | 185 ++++
+ drivers/gpu/drm/imx/dcss/dcss-kms.h           |  43 +
+ drivers/gpu/drm/imx/dcss/dcss-plane.c         | 405 +++++++++
+ drivers/gpu/drm/imx/dcss/dcss-scaler.c        | 826 ++++++++++++++++++
+ drivers/gpu/drm/imx/dcss/dcss-ss.c            | 180 ++++
+ 20 files changed, 4123 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+ create mode 100644 drivers/gpu/drm/imx/dcss/Kconfig
+ create mode 100644 drivers/gpu/drm/imx/dcss/Makefile
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-blkctl.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-crtc.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ctxld.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.h
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dpr.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-drv.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dtg.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.h
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-plane.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-scaler.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ss.c
+
+-- 
+2.23.0
 
