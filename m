@@ -2,110 +2,200 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 165B6C433E6
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 22:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91934C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 22:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1522206E2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 22:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 682C5206E2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 22:49:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594334966;
+	bh=ZERvbEu3oP+8uFS+ohcuN+W19cPMgieB6CxNafaOMqA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Hs/sXcMevNDwj5kx7nIcjG1q2fwGNR8q9Z9vQsocHJgEVwgm6bvng6DgLFihnkQYH
+	 ttVi0BXhKfr3FfU5Y7AnGkv/Xsu2hPOhhZC4TnGEPkiOFTH2tQlz8/Qqb3Bxz3Pjr+
+	 xGpLippRUnQKgNpdYMJEHunUd+XhkXNFfp/tLVi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbgGIWqP (ORCPT
+        id S1726496AbgGIWt0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 18:46:15 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:48090 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726889AbgGIWqP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 18:46:15 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id DE4E780045E4;
-        Thu,  9 Jul 2020 22:46:10 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id GfUmouGNyPhz; Fri, 10 Jul 2020 01:46:10 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        <linux-mips@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v7 02/11] dt-bindings: dma: dw: Add max burst transaction length property
-Date:   Fri, 10 Jul 2020 01:45:41 +0300
-Message-ID: <20200709224550.15539-3-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+        Thu, 9 Jul 2020 18:49:26 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39586 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726228AbgGIWtZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 18:49:25 -0400
+Received: by mail-io1-f67.google.com with SMTP id f23so4085771iof.6;
+        Thu, 09 Jul 2020 15:49:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=on6I1QaqksTzTjlk5LO0XNZUtfYL91/HKW7wZAJpRps=;
+        b=X9Fni4qy1ScpWGGNSFSsKQrdETImTZ5Y+zcLhH8CATmuMZclhRTlieqHevm+9OzJ2/
+         ZeFMIbaoctiOa87wn9jFT2GXT4a1XuL2sa62eFD3sSlVnyqJD0ZgYJ+SB4WhzSQOyDgN
+         TkrDfCf+tdvipieitTivLbsVt0Sv4Z4cLe6DivVtYEIWU/enxuQ3mP6n2rmkNjc3qbPC
+         NdQdHgRVYd1EiF4N7/KOXrOy9BDaoLbW98oJ0hDtFtfilMUbezfXtIQxDo3IV0ztxo//
+         1QxvNpFq3MvloemtF1+/C5b6AKxvBpzya4Kb2q4YZMiIT93w7Kfe46gNMU9Z3v9+aQL6
+         Q46Q==
+X-Gm-Message-State: AOAM5316gUiVdEEX2QN/cWx0qp396MynMXfGHlcPuwN4ABIBZnXgIbe0
+        DptKx3VRzH3SwsWRCV+IJw==
+X-Google-Smtp-Source: ABdhPJwmhaOV9WAsplbi/ssPpb80zMM6ajMx8LL+irUXuxYUPiVWDy14EPJ4V7O8B0jvp25RjJRaag==
+X-Received: by 2002:a6b:440d:: with SMTP id r13mr43363375ioa.114.1594334964718;
+        Thu, 09 Jul 2020 15:49:24 -0700 (PDT)
+Received: from xps15 ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id p11sm2595327ilb.55.2020.07.09.15.49.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 15:49:24 -0700 (PDT)
+Received: (nullmailer pid 1033224 invoked by uid 1000);
+        Thu, 09 Jul 2020 22:49:23 -0000
+Date:   Thu, 9 Jul 2020 16:49:23 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        tglx@linutronix.de, daniel.lezcano@linaro.org,
+        paul@crapouillou.net, dongsheng.qiu@ingenic.com,
+        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
+        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com
+Subject: Re: [PATCH v5 1/2] dt-bindings: timer: Add Ingenic X1000 OST
+ bindings.
+Message-ID: <20200709224923.GA1029808@bogus>
+References: <20200705140353.53093-1-zhouyanjie@wanyeetech.com>
+ <20200705140353.53093-2-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200705140353.53093-2-zhouyanjie@wanyeetech.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This array property is used to indicate the maximum burst transaction
-length supported by each DMA channel.
+On Sun, Jul 05, 2020 at 10:03:52PM +0800, 周琰杰 (Zhou Yanjie) wrote:
+> Add the OST bindings for the X10000 SoC from Ingenic.
+> 
+> Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
+> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+> 
+> Notes:
+>     v1->v2:
+>     No change.
+>     
+>     v2->v3:
+>     Fix wrong parameters in "clocks".
+>     
+>     v3->v4:
+>     1.Rename "ingenic,ost.yaml" to "ingenic,sysost.yaml".
+>     2.Rename "ingenic,ost.h" to "ingenic,sysost.h".
+>     3.Modify the description in "ingenic,sysost.yaml".
+>     
+>     v4->v5:
+>     No change.
+> 
+>  .../devicetree/bindings/timer/ingenic,sysost.yaml  | 60 ++++++++++++++++++++++
+>  include/dt-bindings/clock/ingenic,sysost.h         | 12 +++++
+>  2 files changed, 72 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
+>  create mode 100644 include/dt-bindings/clock/ingenic,sysost.h
+> 
+> diff --git a/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml b/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
+> new file mode 100644
+> index 000000000000..03257ed806fc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
+> @@ -0,0 +1,60 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/timer/ingenic,sysost.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Bindings for SYSOST in Ingenic XBurst family SoCs
+> +
+> +maintainers:
+> +  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> +
+> +description:
+> +  The SYSOST in an Ingenic SoC provides one 64bit timer for clocksource
+> +  and one or more 32bit timers for clockevent.
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +
+> +      - enum:
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-mips@vger.kernel.org
+Only 1 entry, drop 'oneOf' and the blank line.
 
----
+> +          - ingenic,x1000-ost
+> +          - ingenic,x2000-ost
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: ost
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +required:
+> +  - "#clock-cells"
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
 
-Changelog v2:
-- Rearrange SoBs.
-- Move $ref to the root level of the properties. So do with the
-  constraints.
-- Set default max-burst-len to 256 TR-WIDTH words.
+additionalProperties: false
 
-Changelog v3:
-- Add more details into the property description about what limitations
-  snps,max-burst-len defines.
----
- .../bindings/dma/snps,dma-spear1340.yaml          | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
-index e7611840a7cf..20870f5c14dd 100644
---- a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
-+++ b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
-@@ -120,6 +120,21 @@ properties:
-         enum: [0, 1]
-         default: 1
- 
-+  snps,max-burst-len:
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    description: |
-+      Maximum length of the burst transactions supported by the controller.
-+      This property defines the upper limit of the run-time burst setting
-+      (CTLx.SRC_MSIZE/CTLx.DST_MSIZE fields) so the allowed burst length
-+      will be from 1 to max-burst-len words. It's an array property with one
-+      cell per channel in the units determined by the value set in the
-+      CTLx.SRC_TR_WIDTH/CTLx.DST_TR_WIDTH fields (data width).
-+    items:
-+      maxItems: 8
-+      items:
-+        enum: [4, 8, 16, 32, 64, 128, 256]
-+        default: 256
-+
-   snps,dma-protection-control:
-     $ref: /schemas/types.yaml#definitions/uint32
-     description: |
--- 
-2.26.2
-
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/x1000-cgu.h>
+> +
+> +    ost: timer@12000000 {
+> +    		compatible = "ingenic,x1000-ost";
+> +    		reg = <0x12000000 0x3c>;
+> +
+> +    		#clock-cells = <1>;
+> +
+> +    		clocks = <&cgu X1000_CLK_OST>;
+> +    		clock-names = "ost";
+> +
+> +    		interrupt-parent = <&cpuintc>;
+> +    		interrupts = <3>;
+> +    	};
+> +...
+> diff --git a/include/dt-bindings/clock/ingenic,sysost.h b/include/dt-bindings/clock/ingenic,sysost.h
+> new file mode 100644
+> index 000000000000..9ac88e90babf
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/ingenic,sysost.h
+> @@ -0,0 +1,12 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * This header provides clock numbers for the ingenic,tcu DT binding.
+> + */
+> +
+> +#ifndef __DT_BINDINGS_CLOCK_INGENIC_OST_H__
+> +#define __DT_BINDINGS_CLOCK_INGENIC_OST_H__
+> +
+> +#define OST_CLK_PERCPU_TIMER	0
+> +#define OST_CLK_GLOBAL_TIMER	1
+> +
+> +#endif /* __DT_BINDINGS_CLOCK_INGENIC_OST_H__ */
+> -- 
+> 2.11.0
+> 
