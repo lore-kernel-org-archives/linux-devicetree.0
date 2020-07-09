@@ -2,2005 +2,400 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBEAC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 07:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B04C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 07:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA5AA20720
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 07:36:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B0ED20767
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 07:55:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="jZQ/FDMu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726163AbgGIHgK (ORCPT
+        id S1726267AbgGIHzE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 03:36:10 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:57703 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgGIHgJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 03:36:09 -0400
-Received: from bootlin.com (abordeaux-654-1-227-58.w90-55.abo.wanadoo.fr [90.55.126.58])
-        (Authenticated sender: maxime.chevallier@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 0782C24000B;
-        Thu,  9 Jul 2020 07:35:52 +0000 (UTC)
-Date:   Thu, 9 Jul 2020 09:35:46 +0200
-From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
-To:     Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-media <linux-media@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] media: rockchip: Introduce driver for Rockhip's
- camera interface
-Message-ID: <20200709093546.0f3d5d24@bootlin.com>
-In-Reply-To: <CAAEAJfBWM1sdJFijsCrSVg-rGa9=hjszaSyv+E6evfK2dOJzmw@mail.gmail.com>
-References: <20200529130405.929429-1-maxime.chevallier@bootlin.com>
-        <20200529130405.929429-3-maxime.chevallier@bootlin.com>
-        <CAAEAJfBWM1sdJFijsCrSVg-rGa9=hjszaSyv+E6evfK2dOJzmw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 9 Jul 2020 03:55:04 -0400
+Received: from mga11.intel.com ([192.55.52.93]:32858 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726220AbgGIHzE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Jul 2020 03:55:04 -0400
+IronPort-SDR: DoO1jGLy7qn97OYrn4oJoO/hddFeiaQ178dVZ/9HeW0I2g+eeu3hFVKlrqZPHOIO/6V8+LTa+r
+ v/knHnj0ihKQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="146043426"
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="146043426"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 00:55:01 -0700
+IronPort-SDR: 8q1LGGyA0HFB/WEktw0kfjZ3HKMgAmyUmbuwmSp9DyYeo0v2Rbin1GR9po6uh+xE61zIlnwpN1
+ 8rwcg4ji/l7Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="324142545"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by orsmga007.jf.intel.com with ESMTP; 09 Jul 2020 00:55:01 -0700
+Received: from fmsmsx607.amr.corp.intel.com (10.18.126.87) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 9 Jul 2020 00:55:00 -0700
+Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
+ fmsmsx607.amr.corp.intel.com (10.18.126.87) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 9 Jul 2020 00:54:59 -0700
+Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
+ fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 9 Jul 2020 00:54:59 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.175)
+ by edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Thu, 9 Jul 2020 00:54:59 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Gz+l1bHbLTExaqDfn4hZMIKh6JAmF9GadV7qpnb2IxuBMWaAld7YKcw8gnO6btVckm7LBqi9INHSq7mYYzHeVyoja5YCkG/0+7yv2rv+AfmsN2DpFQQnwUssKzi8P3mEcok2TckjnEtjq2xcqLg5KYQ8KbYynQY/YgPq9uYTn7oXdwrzKJObPEnSmmolMpgkpbmH+Xqm4z/NVigY5e20+pYvLwOthIRv1ql1m0Hry5nCaZuZanHRC2gpkG9LWr8CfL2kCKuodRt8HQ7npmjBVy8n1ljjOsKSQNv4IpUgvHSgiTS8C04bVP6umcDXJQFbcFYXnFr2sGeyDT370h5zzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2vFlNvQsIqV4LhbpEM7tEZd8QrkObaQE46Jt2WMflp4=;
+ b=Fu0kIz/50vNkHhq3Zu47zvlZKZ6db4GNUJGqObluN//LT9PqNicttEiKAYLe7kEkqNJpNNnG92u0daPlrzZea60HDKZVszZF+3q1+StYLWg3eyjP4Djt05TzAbb55VPKSldCg+eQ8fv91LhxZLMEOrgWujHTJFpMUtuwqCi9wsV4swtag2uaqlJlnfAn38fvhY87aWNEBEM2EakIRTeHf6zvtp4T/wqW4nUdRlsPwHMIXETAEuuLKfyDBlQtv/VJFiFrVmEWIJ+0BU+xvk1H8N0kTQwNL0eV/xKirbCk4sR2pFrIJghukuKZlp2rHHqJGN/5nxlagMrIjBcSzWmIyQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2vFlNvQsIqV4LhbpEM7tEZd8QrkObaQE46Jt2WMflp4=;
+ b=jZQ/FDMu5C6TrzqT16fc9uFpLt8X1aFGQO8SiS2ahhI3aGu8fbJR9UR4w0j2DDeGEJBu9JXnT4ZcGLOZkYHzzAgdMZRZh0qMzFJV37A/nH4kOWH7ra+b+OMZIj9fB4pYZ8E7lhQuX8PVWOhOKAeTrM7iM3REqWvPHUejG9hFohs=
+Received: from DM6PR11MB3227.namprd11.prod.outlook.com (2603:10b6:5:5d::16) by
+ DM6PR11MB3225.namprd11.prod.outlook.com (2603:10b6:5:5b::32) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3174.20; Thu, 9 Jul 2020 07:54:56 +0000
+Received: from DM6PR11MB3227.namprd11.prod.outlook.com
+ ([fe80::414b:2619:c183:5662]) by DM6PR11MB3227.namprd11.prod.outlook.com
+ ([fe80::414b:2619:c183:5662%4]) with mapi id 15.20.3174.021; Thu, 9 Jul 2020
+ 07:54:56 +0000
+From:   "Langer, Thomas" <thomas.langer@intel.com>
+To:     Amireddy Mallikarjuna reddy <mallikarjunax.reddy@linux.intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
+        "Kim, Cheol Yong" <cheol.yong.kim@intel.com>,
+        "Wu, Qiming" <qi-ming.wu@intel.com>,
+        "malliamireddy009@gmail.com" <malliamireddy009@gmail.com>
+Subject: RE: [PATCH v4 1/2] dt-bindings: dma: Add bindings for intel LGM SOC
+Thread-Topic: [PATCH v4 1/2] dt-bindings: dma: Add bindings for intel LGM SOC
+Thread-Index: AQHWVbauHOZ3h3CoKUq4eCxMNlFQ/qj+4CFQ
+Date:   Thu, 9 Jul 2020 07:54:56 +0000
+Message-ID: <DM6PR11MB3227DE41730A08B57B9C14DCFE640@DM6PR11MB3227.namprd11.prod.outlook.com>
+References: <cover.1594273437.git.mallikarjunax.reddy@linux.intel.com>
+ <ad6c511dc027b7989acebbce77ca739e22e2123e.1594273437.git.mallikarjunax.reddy@linux.intel.com>
+In-Reply-To: <ad6c511dc027b7989acebbce77ca739e22e2123e.1594273437.git.mallikarjunax.reddy@linux.intel.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-reaction: no-action
+dlp-version: 11.5.1.3
+dlp-product: dlpe-windows
+authentication-results: linux.intel.com; dkim=none (message not signed)
+ header.d=none;linux.intel.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [134.191.221.117]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: eaeab767-27c9-4ff8-7310-08d823dd5f03
+x-ms-traffictypediagnostic: DM6PR11MB3225:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB322507E1C5707BEBC159ABD0FE640@DM6PR11MB3225.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +Zu9UhncnGhcVUCOvOF12piK03XVt1csGCKFxVenNT3jdSo840Je91ijjJ39R3UysBTnfNltLYzEUMkh2cYfCoX+KWb7Jdgk05d6/PYsRJCsufqY01T/Oe/BW/XoTfenyknz4MQk6RRH/MWrVLkYWXT4zVq0a9M+NKvEBvnhopurv7KC4oVMxP+AOwdUJTBneM3YfVVV5NdjwgQJ87NIt+hmfOvrwOJlbxsOhLI2sW3MD8HHQ7N0SuhZ7w2uRsyClCZLeez4KfgB9d3OCzVppDZwZmxyhzIAo/TSi/zN95uPOJytgZU9gH6jT+tW5kKwDdH1IUSKr5YTzKIBYvgXVE0dQb/UN5mCTy3EkNRqJP8JkxvxDc/pCjTcs40I81j5DL+V9B1iDG70Qkoe0YK04Ywq6RqGOyvJCzlyvoSa0wJ7HcflxBVN9zyzioJ8OkUxj530vJ4bOhUWQKqYvhhZwg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3227.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(366004)(346002)(376002)(136003)(8936002)(6506007)(64756008)(66946007)(26005)(30864003)(53546011)(478600001)(66446008)(66556008)(4326008)(186003)(83380400001)(2906002)(966005)(66476007)(110136005)(54906003)(9686003)(76116006)(316002)(55016002)(86362001)(5660300002)(8676002)(7696005)(71200400001)(33656002)(52536014)(473944003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: H7HdJ81lWsDV9URZxCDGQEdnZlFbqRDq7aq8xdnK91jEiHzojnGB4fmbQCenmztbDFguqWoViYVi56t/s8UrYWxaujPm/zs+fZ1kV6kgfuL2my+9//Bp2U+y/R8uGE8M5p3Ik4j+0PptQe9N0+n6ekP6K6cic6B6wcwoDVS2w9WmC8a3/G1NjKD0coUDSB4auP4zVvDcipzdNLgfnXt3+P/MXd5n+EgvZ5D5oIonrs3ILA1JAxYscfX2Vch97BIiqrCeWjzJ6wA9eTzQPvYQN1sCebRD+Pj9xydRLf2zZ0kgLj/+qV14dvSj3dyFiS7oEEcmeP1yxsxdNwsCkOYNyZKbKHytEJ+FwdGpFBolECFuRNhlIKDdwX54CMPQFtrTL3HYmm8g/QaQu3klUEL0u0GIHXuQqM5xt9PuvvvRy/IhAUOSL4X4s1A9bKvzXxRLDh5IJ17JvF4nz6hEC/ksEnkld+uytmcQhWDAYkVd68bRPeQriB3v4jyr4feKnQl0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3227.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eaeab767-27c9-4ff8-7310-08d823dd5f03
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2020 07:54:56.0252
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7sbkWcVKnjNl0yUTw6+Oq3eu5IySFdqmAyI+KfGVr5ND7B3S/UaAZkudkDgFe3HUg4wCVpNUVMqvvD+1/o3dZQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3225
+X-OriginatorOrg: intel.com
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Ezequiel,
-
-Sorry for the late reply, some answers to your very useful comments
-below :)
-
-On Sun, 31 May 2020 10:40:14 -0300
-Ezequiel Garcia <ezequiel@vanguardiasur.com.ar> wrote:
-
->Hi Maxime,
->
->Thanks for posting this patch. I think you can still improve it,
->but it's a neat first try! :-)
->
->On Fri, 29 May 2020 at 10:05, Maxime Chevallier
-><maxime.chevallier@bootlin.com> wrote:
->>
->> Introduce a driver for the camera interface on some Rockchip platforms.
->>
->> This controller supports CSI2, Parallel and BT656 interfaces, but for
->> now only the parallel interface could be tested, hence it's the only one
->> that's supported in the first version of this driver.
->>  
->
->I'm confused, you mention parallel as the only tested interface,
->but the cover letters mentions PAL. Doesn't PAL mean BT.656
->or am I completely lost?
-
-No you are correct, this is a misunderstanding on my part about the
-various formats and naming schemes.
-
-The main point I wanted to outline is that the hardware supports a CSI2
-interface, which this version of the driver doesn't implement.
-
->(I am not super familiar with parallel sensors).
->
->> This controller can be fond on PX30, RK1808, RK3128, RK3288 and RK3288,
->> but for now it's only be tested on PX30.
->>  
->
->My RK3288 and RK3326 (i.e. PX30) refer to this IP block as "Video
->Input interface".
->I am wondering if it won't be clearer for developers / users if we
->rename the driver
->to rockchip-vip (and of course s/cif/vip and s/CIF/VIP).
-
-After looking into the datasheets for these SoCs, it's clear that the
-denomination should indeed be "VIP" and not "CIF", thanks !
-
->> Most of this driver was written follwing the BSP driver from rockchip,
->> removing the parts that either didn't fit correctly the guidelines, or
->> that couldn't be tested.
->>
->> This basic version doesn't support cropping nor scaling, and is only
->> designed with one sensor being attached to it a any time.
->>
->> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
->> ---
->>
->> Changes since V1 :
->>
->>  - Convert to the bulk APIs for clocks and resets  
->
->Note that the bulk API clock conversion was not
->properly done.
->
->>  - remove useless references to priv data
->>  - Move around some init functions at probe time
->>  - Upate some helpers to more suitable ones
->>
->> Here is the output from v4l2-compliance. There are no fails in the final
->> summary, but there is one in the output that I didn't catch previously.
->>
->> Still, here's the V2 in the meantime, if you have any further reviews
->> ompliance SHA: not available, 64 bits
->>
->> Compliance test for rkcif device /dev/video0:
->>
->> Driver Info:
->>         Driver name      : rkcif
->>         Card type        : rkcif
->>         Bus info         : platform:ff490000.cif
->>         Driver version   : 5.7.0
->>         Capabilities     : 0x84201000
->>                 Video Capture Multiplanar
->>                 Streaming
->>                 Extended Pix Format
->>                 Device Capabilities
->>         Device Caps      : 0x04201000
->>                 Video Capture Multiplanar
->>                 Streaming
->>                 Extended Pix Format
->> Media Driver Info:
->>         Driver name      : rkcif
->>         Model            : rkcif
->>         Serial           :
->>         Bus info         :
->>         Media version    : 5.7.0
->>         Hardware revision: 0x00000000 (0)
->>         Driver version   : 5.7.0
->> Interface Info:
->>         ID               : 0x03000002
->>         Type             : V4L Video
->> Entity Info:
->>         ID               : 0x00000001 (1)
->>         Name             : video_rkcif
->>         Function         : V4L2 I/O
->>         Pad 0x01000004   : 0: Sink
->>           Link 0x02000007: from remote pad 0x1000006 of entity 'tw9900 2-0044': Data, Enabled
->>
->> Required ioctls:
->>         test MC information (see 'Media Driver Info' above): OK
->>         test VIDIOC_QUERYCAP: OK
->>
->> Allow for multiple opens:
->>         test second /dev/video0 open: OK
->>         test VIDIOC_QUERYCAP: OK
->>         test VIDIOC_G/S_PRIORITY: OK
->>         test for unlimited opens: OK
->>
->> Debug ioctls:
->>         test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
->>         test VIDIOC_LOG_STATUS: OK (Not Supported)
->>
->> Input ioctls:
->>         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
->>         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->>         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
->>         test VIDIOC_ENUMAUDIO: OK (Not Supported)
->>         test VIDIOC_G/S/ENUMINPUT: OK
->>         test VIDIOC_G/S_AUDIO: OK (Not Supported)
->>         Inputs: 1 Audio Inputs: 0 Tuners: 0
->>
->> Output ioctls:
->>         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
->>         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->>         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
->>         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
->>         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
->>         Outputs: 0 Audio Outputs: 0 Modulators: 0
->>
->> Input/Output configuration ioctls:
->>         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
->>         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
->>         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
->>         test VIDIOC_G/S_EDID: OK (Not Supported)
->>
->> Control ioctls (Input 0):
->>         test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
->>         test VIDIOC_QUERYCTRL: OK
->>         test VIDIOC_G/S_CTRL: OK
->>         test VIDIOC_G/S/TRY_EXT_CTRLS: OK
->>         test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
->>         test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
->>         Standard Controls: 0 Private Controls: 0
->>
->> Format ioctls (Input 0):
->>         test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
->>         test VIDIOC_G/S_PARM: OK (Not Supported)
->>         test VIDIOC_G_FBUF: OK (Not Supported)
->>         test VIDIOC_G_FMT: OK
->>         test VIDIOC_TRY_FMT: OK
->>         test VIDIOC_S_FMT: OK
->>         test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
->>         test Cropping: OK (Not Supported)
->>         test Composing: OK (Not Supported)
->>                 fail: v4l2-test-formats.cpp(1772): node->can_scale && node->frmsizes_count[v4l_format_g_pixelformat(&cur)]
->>         test Scaling: OK
->>
->> Codec ioctls (Input 0):
->>         test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
->>         test VIDIOC_G_ENC_INDEX: OK (Not Supported)
->>         test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
->>
->> Buffer ioctls (Input 0):
->>         test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
->>         test VIDIOC_EXPBUF: OK
->>         test Requests: OK (Not Supported)
->>
->> Total for rkcif device /dev/video0: 45, Succeeded: 45, Failed: 0, Warnings: 0
->>
->>  drivers/media/platform/Kconfig                |   13 +
->>  drivers/media/platform/Makefile               |    1 +
->>  drivers/media/platform/rockchip/cif/Makefile  |    3 +
->>  drivers/media/platform/rockchip/cif/capture.c | 1170 +++++++++++++++++
->>  drivers/media/platform/rockchip/cif/dev.c     |  358 +++++
->>  drivers/media/platform/rockchip/cif/dev.h     |  213 +++
->>  drivers/media/platform/rockchip/cif/regs.h    |  256 ++++
->>  7 files changed, 2014 insertions(+)
->>  create mode 100644 drivers/media/platform/rockchip/cif/Makefile
->>  create mode 100644 drivers/media/platform/rockchip/cif/capture.c
->>  create mode 100644 drivers/media/platform/rockchip/cif/dev.c
->>  create mode 100644 drivers/media/platform/rockchip/cif/dev.h
->>  create mode 100644 drivers/media/platform/rockchip/cif/regs.h
->>
->> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
->> index e01bbb9dd1c1..d4ec5e36bca7 100644
->> --- a/drivers/media/platform/Kconfig
->> +++ b/drivers/media/platform/Kconfig
->> @@ -460,6 +460,19 @@ config VIDEO_ROCKCHIP_RGA
->>
->>           To compile this driver as a module choose m here.
->>
->> +config VIDEO_ROCKCHIP_CIF
->> +       tristate "Rockchip Camera Interface"
->> +       depends on VIDEO_DEV && VIDEO_V4L2
->> +       depends on ARCH_ROCKCHIP || COMPILE_TEST
->> +       select VIDEOBUF2_DMA_SG
->> +       select VIDEOBUF2_DMA_CONTIG
->> +       select V4L2_FWNODE
->> +       select V4L2_MEM2MEM_DEV
->> +       help
->> +         This is a v4l2 driver for Rockchip SOC Camera interface.
->> +
->> +         To compile this driver as a module choose m here.
->> +
->>  config VIDEO_TI_VPE
->>         tristate "TI VPE (Video Processing Engine) driver"
->>         depends on VIDEO_DEV && VIDEO_V4L2
->> diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
->> index d13db96e3015..67e7ac034be1 100644
->> --- a/drivers/media/platform/Makefile
->> +++ b/drivers/media/platform/Makefile
->> @@ -68,6 +68,7 @@ obj-$(CONFIG_VIDEO_RENESAS_JPU)               += rcar_jpu.o
->>  obj-$(CONFIG_VIDEO_RENESAS_VSP1)       += vsp1/
->>
->>  obj-$(CONFIG_VIDEO_ROCKCHIP_RGA)       += rockchip/rga/
->> +obj-$(CONFIG_VIDEO_ROCKCHIP_CIF)       += rockchip/cif/
->>
->>  obj-y  += omap/
->>
->> diff --git a/drivers/media/platform/rockchip/cif/Makefile b/drivers/media/platform/rockchip/cif/Makefile
->> new file mode 100644
->> index 000000000000..727990824316
->> --- /dev/null
->> +++ b/drivers/media/platform/rockchip/cif/Makefile
->> @@ -0,0 +1,3 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +obj-$(CONFIG_VIDEO_ROCKCHIP_CIF) += video_rkcif.o
->> +video_rkcif-objs += dev.o capture.o
->> diff --git a/drivers/media/platform/rockchip/cif/capture.c b/drivers/media/platform/rockchip/cif/capture.c
->> new file mode 100644
->> index 000000000000..adab6704129f
->> --- /dev/null
->> +++ b/drivers/media/platform/rockchip/cif/capture.c
->> @@ -0,0 +1,1170 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Rockchip CIF Driver
->> + *
->> + * Copyright (C) 2018 Rockchip Electronics Co., Ltd.
->> + * Copyright (C) 2020 Maxime Chevallier <maxime.chevallier@bootlin.com>
->> + */
->> +
->> +#include <linux/delay.h>
->> +#include <linux/pm_runtime.h>
->> +#include <linux/reset.h>
->> +#include <media/v4l2-common.h>
->> +#include <media/v4l2-event.h>
->> +#include <media/v4l2-fh.h>
->> +#include <media/v4l2-fwnode.h>
->> +#include <media/v4l2-ioctl.h>
->> +#include <media/v4l2-mc.h>
->> +#include <media/v4l2-subdev.h>
->> +#include <media/videobuf2-dma-contig.h>
->> +
->> +#include "dev.h"
->> +#include "regs.h"
->> +
->> +#define CIF_REQ_BUFS_MIN       1
->> +#define CIF_MIN_WIDTH          64
->> +#define CIF_MIN_HEIGHT         64
->> +#define CIF_MAX_WIDTH          8192
->> +#define CIF_MAX_HEIGHT         8192
->> +
->> +#define RKCIF_PLANE_Y                  0
->> +#define RKCIF_PLANE_CBCR               1
->> +
->> +#define CIF_FETCH_Y_LAST_LINE(VAL) ((VAL) & 0x1fff)
->> +/* Check if swap y and c in bt1120 mode */
->> +#define CIF_FETCH_IS_Y_FIRST(VAL) ((VAL) & 0xf)
->> +
->> +/* Get xsubs and ysubs for fourcc formats
->> + *
->> + * @xsubs: horizontal color samples in a 4*4 matrix, for yuv
->> + * @ysubs: vertical color samples in a 4*4 matrix, for yuv
->> + */
->> +static int fcc_xysubs(u32 fcc, u32 *xsubs, u32 *ysubs)  
->
->You should avoid doing this math in the driver,
->and instead use the nice core helpers
->v4l2_fill_pixfmt_mp and v4l2_fill_pixfmt.
-
-Thanks for the pointer, I didn't know about this helper. I'll add that !
-
->> +{
->> +       switch (fcc) {
->> +       case V4L2_PIX_FMT_NV16:
->> +       case V4L2_PIX_FMT_NV61:
->> +               *xsubs = 2;
->> +               *ysubs = 1;
->> +               break;
->> +       case V4L2_PIX_FMT_NV21:
->> +       case V4L2_PIX_FMT_NV12:
->> +               *xsubs = 2;
->> +               *ysubs = 2;
->> +               break;
->> +       default:
->> +               return -EINVAL;
->> +       }
->> +
->> +       return 0;
->> +}
->> +
->> +static const struct cif_output_fmt out_fmts[] = {
->> +       {
->> +               .fourcc = V4L2_PIX_FMT_NV16,
->> +               .cplanes = 2,
->> +               .mplanes = 1,  
->
->Only mplanes = 1 formats are supported, please
->drop it here, and drop any handling due to mplanes > 1.
-
-Yes you're correct, I'll drop that for now.
-
->> +               .fmt_val = YUV_OUTPUT_422 | UV_STORAGE_ORDER_UVUV,
->> +               .bpp = { 8, 16 },
->> +       }, {
->> +               .fourcc = V4L2_PIX_FMT_NV61,
->> +               .fmt_val = YUV_OUTPUT_422 | UV_STORAGE_ORDER_VUVU,
->> +               .cplanes = 2,
->> +               .mplanes = 1,
->> +               .bpp = { 8, 16 },
->> +       },
->> +       {
->> +               .fourcc = V4L2_PIX_FMT_NV12,
->> +               .fmt_val = YUV_OUTPUT_420 | UV_STORAGE_ORDER_UVUV,
->> +               .cplanes = 2,
->> +               .mplanes = 1,
->> +               .bpp = { 8, 16 },
->> +               .mbus = MEDIA_BUS_FMT_UYVY8_2X8,
->> +       },
->> +       {
->> +               .fourcc = V4L2_PIX_FMT_NV21,
->> +               .fmt_val = YUV_OUTPUT_420 | UV_STORAGE_ORDER_VUVU,
->> +               .cplanes = 2,
->> +               .mplanes = 1,
->> +               .bpp = { 8, 16 },
->> +       }, {
->> +               .fourcc = V4L2_PIX_FMT_RGB24,
->> +               .cplanes = 1,
->> +               .mplanes = 1,
->> +               .bpp = { 24 },
->> +       }, {
->> +               .fourcc = V4L2_PIX_FMT_RGB565,
->> +               .cplanes = 1,
->> +               .mplanes = 1,
->> +               .bpp = { 16 },
->> +       }, {
->> +               .fourcc = V4L2_PIX_FMT_BGR666,
->> +               .cplanes = 1,
->> +               .mplanes = 1,
->> +               .bpp = { 18 },
->> +       }, {
->> +               .fourcc = V4L2_PIX_FMT_SRGGB8,
->> +               .cplanes = 1,
->> +               .mplanes = 1,
->> +               .bpp = { 8 },
->> +       }, {
->> +               .fourcc = V4L2_PIX_FMT_SGRBG8,  
->
->That is odd: how does the driver distinguish
->V4L2_PIX_FMT_SGRBG8 from V4L2_PIX_FMT_SRGGB8?
-
-Hmm I don't really know TBH, I'm not super familiar yet with all the
-specific formats, and this was taken maybe a bit too "raw" from the
-original BSP driver this is based on...
-
->> +               .cplanes = 1,
->> +               .mplanes = 1,
->> +               .bpp = { 8 },
->> +       }, {
->> +               .fourcc = V4L2_PIX_FMT_SGBRG8,
->> +               .cplanes = 1,
->> +               .mplanes = 1,
->> +               .bpp = { 8 },
->> +       }, {
->> +               .fourcc = V4L2_PIX_FMT_SBGGR8,
->> +               .cplanes = 1,
->> +               .mplanes = 1,
->> +               .bpp = { 8 },
->> +       }, {
->> +               .fourcc = V4L2_PIX_FMT_SRGGB10,
->> +               .cplanes = 1,
->> +               .mplanes = 1,
->> +               .bpp = { 16 },
->> +       }, {
->> +               .fourcc = V4L2_PIX_FMT_SGRBG10,
->> +               .cplanes = 1,
->> +               .mplanes = 1,
->> +               .bpp = { 16 },
->> +       }, {
->> +               .fourcc = V4L2_PIX_FMT_SGBRG10,
->> +               .cplanes = 1,
->> +               .mplanes = 1,
->> +               .bpp = { 16 },
->> +       }, {
->> +               .fourcc = V4L2_PIX_FMT_SBGGR10,
->> +               .cplanes = 1,
->> +               .mplanes = 1,
->> +               .bpp = { 16 },
->> +       }, {
->> +               .fourcc = V4L2_PIX_FMT_SRGGB12,
->> +               .cplanes = 1,
->> +               .mplanes = 1,
->> +               .bpp = { 16 },
->> +       }, {
->> +               .fourcc = V4L2_PIX_FMT_SGRBG12,
->> +               .cplanes = 1,
->> +               .mplanes = 1,
->> +               .bpp = { 16 },
->> +       }, {
->> +               .fourcc = V4L2_PIX_FMT_SGBRG12,
->> +               .cplanes = 1,
->> +               .mplanes = 1,
->> +               .bpp = { 16 },
->> +       }, {
->> +               .fourcc = V4L2_PIX_FMT_SBGGR12,
->> +               .cplanes = 1,
->> +               .mplanes = 1,
->> +               .bpp = { 16 },
->> +       }, {
->> +               .fourcc = V4L2_PIX_FMT_SBGGR16,
->> +               .cplanes = 1,
->> +               .mplanes = 1,
->> +               .bpp = { 16 },
->> +       }, {
->> +               .fourcc = V4L2_PIX_FMT_Y16,
->> +               .cplanes = 1,
->> +               .mplanes = 1,
->> +               .bpp = { 16 },
->> +       }
->> +};
->> +
->> +static const struct cif_input_fmt in_fmts[] = {
->> +       {
->> +               .mbus_code      = MEDIA_BUS_FMT_YUYV8_2X8,
->> +               .dvp_fmt_val    = YUV_INPUT_422 | YUV_INPUT_ORDER_YUYV,
->> +               .csi_fmt_val    = CSI_WRDDR_TYPE_YUV422,
->> +               .fmt_type       = CIF_FMT_TYPE_YUV,
->> +               .field          = V4L2_FIELD_NONE,
->> +       }, {
->> +               .mbus_code      = MEDIA_BUS_FMT_YUYV8_2X8,
->> +               .dvp_fmt_val    = YUV_INPUT_422 | YUV_INPUT_ORDER_YUYV,
->> +               .csi_fmt_val    = CSI_WRDDR_TYPE_YUV422,
->> +               .fmt_type       = CIF_FMT_TYPE_YUV,
->> +               .field          = V4L2_FIELD_INTERLACED,
->> +       }, {
->> +               .mbus_code      = MEDIA_BUS_FMT_YVYU8_2X8,
->> +               .dvp_fmt_val    = YUV_INPUT_422 | YUV_INPUT_ORDER_YVYU,
->> +               .csi_fmt_val    = CSI_WRDDR_TYPE_YUV422,
->> +               .fmt_type       = CIF_FMT_TYPE_YUV,
->> +               .field          = V4L2_FIELD_NONE,
->> +       }, {
->> +               .mbus_code      = MEDIA_BUS_FMT_YVYU8_2X8,
->> +               .dvp_fmt_val    = YUV_INPUT_422 | YUV_INPUT_ORDER_YVYU,
->> +               .csi_fmt_val    = CSI_WRDDR_TYPE_YUV422,
->> +               .fmt_type       = CIF_FMT_TYPE_YUV,
->> +               .field          = V4L2_FIELD_INTERLACED,
->> +       }, {
->> +               .mbus_code      = MEDIA_BUS_FMT_UYVY8_2X8,
->> +               .dvp_fmt_val    = YUV_INPUT_422 | YUV_INPUT_ORDER_UYVY,
->> +               .csi_fmt_val    = CSI_WRDDR_TYPE_YUV422,
->> +               .fmt_type       = CIF_FMT_TYPE_YUV,
->> +               .field          = V4L2_FIELD_NONE,
->> +       }, {
->> +               .mbus_code      = MEDIA_BUS_FMT_UYVY8_2X8,
->> +               .dvp_fmt_val    = YUV_INPUT_422 | YUV_INPUT_ORDER_UYVY,
->> +               .csi_fmt_val    = CSI_WRDDR_TYPE_YUV422,
->> +               .fmt_type       = CIF_FMT_TYPE_YUV,
->> +               .field          = V4L2_FIELD_INTERLACED,
->> +       }, {
->> +               .mbus_code      = MEDIA_BUS_FMT_VYUY8_2X8,
->> +               .dvp_fmt_val    = YUV_INPUT_422 | YUV_INPUT_ORDER_VYUY,
->> +               .csi_fmt_val    = CSI_WRDDR_TYPE_YUV422,
->> +               .fmt_type       = CIF_FMT_TYPE_YUV,
->> +               .field          = V4L2_FIELD_NONE,
->> +       }, {
->> +               .mbus_code      = MEDIA_BUS_FMT_VYUY8_2X8,
->> +               .dvp_fmt_val    = YUV_INPUT_422 | YUV_INPUT_ORDER_VYUY,
->> +               .csi_fmt_val    = CSI_WRDDR_TYPE_YUV422,
->> +               .fmt_type       = CIF_FMT_TYPE_YUV,
->> +               .field          = V4L2_FIELD_INTERLACED,
->> +       }, {
->> +               .mbus_code      = MEDIA_BUS_FMT_SBGGR8_1X8,
->> +               .dvp_fmt_val    = INPUT_MODE_RAW | RAW_DATA_WIDTH_8,
->> +               .csi_fmt_val    = CSI_WRDDR_TYPE_RAW8,
->> +               .fmt_type       = CIF_FMT_TYPE_RAW,
->> +               .field          = V4L2_FIELD_NONE,
->> +       }, {
->> +               .mbus_code      = MEDIA_BUS_FMT_SGBRG8_1X8,
->> +               .dvp_fmt_val    = INPUT_MODE_RAW | RAW_DATA_WIDTH_8,
->> +               .csi_fmt_val    = CSI_WRDDR_TYPE_RAW8,
->> +               .fmt_type       = CIF_FMT_TYPE_RAW,
->> +               .field          = V4L2_FIELD_NONE,
->> +       }, {
->> +               .mbus_code      = MEDIA_BUS_FMT_SGRBG8_1X8,
->> +               .dvp_fmt_val    = INPUT_MODE_RAW | RAW_DATA_WIDTH_8,
->> +               .csi_fmt_val    = CSI_WRDDR_TYPE_RAW8,
->> +               .fmt_type       = CIF_FMT_TYPE_RAW,
->> +               .field          = V4L2_FIELD_NONE,
->> +       }, {
->> +               .mbus_code      = MEDIA_BUS_FMT_SRGGB8_1X8,
->> +               .dvp_fmt_val    = INPUT_MODE_RAW | RAW_DATA_WIDTH_8,
->> +               .csi_fmt_val    = CSI_WRDDR_TYPE_RAW8,
->> +               .fmt_type       = CIF_FMT_TYPE_RAW,
->> +               .field          = V4L2_FIELD_NONE,
->> +       }, {
->> +               .mbus_code      = MEDIA_BUS_FMT_SBGGR10_1X10,
->> +               .dvp_fmt_val    = INPUT_MODE_RAW | RAW_DATA_WIDTH_10,
->> +               .csi_fmt_val    = CSI_WRDDR_TYPE_RAW10,
->> +               .fmt_type       = CIF_FMT_TYPE_RAW,
->> +               .field          = V4L2_FIELD_NONE,
->> +       }, {
->> +               .mbus_code      = MEDIA_BUS_FMT_SGBRG10_1X10,
->> +               .dvp_fmt_val    = INPUT_MODE_RAW | RAW_DATA_WIDTH_10,
->> +               .csi_fmt_val    = CSI_WRDDR_TYPE_RAW10,
->> +               .fmt_type       = CIF_FMT_TYPE_RAW,
->> +               .field          = V4L2_FIELD_NONE,
->> +       }, {
->> +               .mbus_code      = MEDIA_BUS_FMT_SGRBG10_1X10,
->> +               .dvp_fmt_val    = INPUT_MODE_RAW | RAW_DATA_WIDTH_10,
->> +               .csi_fmt_val    = CSI_WRDDR_TYPE_RAW10,
->> +               .fmt_type       = CIF_FMT_TYPE_RAW,
->> +               .field          = V4L2_FIELD_NONE,
->> +       }, {
->> +               .mbus_code      = MEDIA_BUS_FMT_SRGGB10_1X10,
->> +               .dvp_fmt_val    = INPUT_MODE_RAW | RAW_DATA_WIDTH_10,
->> +               .csi_fmt_val    = CSI_WRDDR_TYPE_RAW10,
->> +               .fmt_type       = CIF_FMT_TYPE_RAW,
->> +               .field          = V4L2_FIELD_NONE,
->> +       }, {
->> +               .mbus_code      = MEDIA_BUS_FMT_SBGGR12_1X12,
->> +               .dvp_fmt_val    = INPUT_MODE_RAW | RAW_DATA_WIDTH_12,
->> +               .csi_fmt_val    = CSI_WRDDR_TYPE_RAW12,
->> +               .fmt_type       = CIF_FMT_TYPE_RAW,
->> +               .field          = V4L2_FIELD_NONE,
->> +       }, {
->> +               .mbus_code      = MEDIA_BUS_FMT_SGBRG12_1X12,
->> +               .dvp_fmt_val    = INPUT_MODE_RAW | RAW_DATA_WIDTH_12,
->> +               .csi_fmt_val    = CSI_WRDDR_TYPE_RAW12,
->> +               .fmt_type       = CIF_FMT_TYPE_RAW,
->> +               .field          = V4L2_FIELD_NONE,
->> +       }, {
->> +               .mbus_code      = MEDIA_BUS_FMT_SGRBG12_1X12,
->> +               .dvp_fmt_val    = INPUT_MODE_RAW | RAW_DATA_WIDTH_12,
->> +               .csi_fmt_val    = CSI_WRDDR_TYPE_RAW12,
->> +               .fmt_type       = CIF_FMT_TYPE_RAW,
->> +               .field          = V4L2_FIELD_NONE,
->> +       }, {
->> +               .mbus_code      = MEDIA_BUS_FMT_SRGGB12_1X12,
->> +               .dvp_fmt_val    = INPUT_MODE_RAW | RAW_DATA_WIDTH_12,
->> +               .csi_fmt_val    = CSI_WRDDR_TYPE_RAW12,
->> +               .fmt_type       = CIF_FMT_TYPE_RAW,
->> +               .field          = V4L2_FIELD_NONE,
->> +       }, {
->> +               .mbus_code      = MEDIA_BUS_FMT_RGB888_1X24,
->> +               .csi_fmt_val    = CSI_WRDDR_TYPE_RGB888,
->> +               .field          = V4L2_FIELD_NONE,
->> +       }, {
->> +               .mbus_code      = MEDIA_BUS_FMT_Y8_1X8,
->> +               .dvp_fmt_val    = INPUT_MODE_RAW | RAW_DATA_WIDTH_8,
->> +               .csi_fmt_val    = CSI_WRDDR_TYPE_RAW8,
->> +               .fmt_type       = CIF_FMT_TYPE_RAW,
->> +               .field          = V4L2_FIELD_NONE,
->> +       }, {
->> +               .mbus_code      = MEDIA_BUS_FMT_Y10_1X10,
->> +               .dvp_fmt_val    = INPUT_MODE_RAW | RAW_DATA_WIDTH_10,
->> +               .csi_fmt_val    = CSI_WRDDR_TYPE_RAW10,
->> +               .fmt_type       = CIF_FMT_TYPE_RAW,
->> +               .field          = V4L2_FIELD_NONE,
->> +       }, {
->> +               .mbus_code      = MEDIA_BUS_FMT_Y12_1X12,
->> +               .dvp_fmt_val    = INPUT_MODE_RAW | RAW_DATA_WIDTH_12,
->> +               .csi_fmt_val    = CSI_WRDDR_TYPE_RAW12,
->> +               .fmt_type       = CIF_FMT_TYPE_RAW,
->> +               .field          = V4L2_FIELD_NONE,
->> +       }
->> +};
->> +
->> +static const struct
->> +cif_input_fmt *get_input_fmt(struct v4l2_subdev *sd)
->> +{
->> +       struct v4l2_subdev_format fmt;
->> +       int ret;
->> +       u32 i;
->> +
->> +       fmt.which = V4L2_SUBDEV_FORMAT_ACTIVE;
->> +       fmt.pad = 0;
->> +       ret = v4l2_subdev_call(sd, pad, get_fmt, NULL, &fmt);
->> +       if (ret < 0) {
->> +               v4l2_warn(sd->v4l2_dev,
->> +                         "sensor fmt invalid, set to default size\n");
->> +               goto set_default;
->> +       }
->> +
->> +       for (i = 0; i < ARRAY_SIZE(in_fmts); i++)
->> +               if (fmt.format.code == in_fmts[i].mbus_code &&
->> +                   fmt.format.field == in_fmts[i].field)
->> +                       return &in_fmts[i];
->> +
->> +       v4l2_err(sd->v4l2_dev, "remote sensor mbus code not supported\n");
->> +
->> +set_default:
->> +       return NULL;
->> +}
->> +
->> +       static const struct  
->
->Tab is off. Note that Hans already mentioned this on v1.
->
->> +cif_output_fmt *find_output_fmt(struct rkcif_stream *stream, u32 pixelfmt)
->> +{
->> +       const struct cif_output_fmt *fmt;
->> +       u32 i;
->> +
->> +       for (i = 0; i < ARRAY_SIZE(out_fmts); i++) {
->> +               fmt = &out_fmts[i];
->> +               if (fmt->fourcc == pixelfmt)
->> +                       return fmt;
->> +       }
->> +
->> +       return NULL;
->> +}
->> +
->> +/***************************** stream operations ******************************/
->> +static void rkcif_assign_new_buffer_oneframe(struct rkcif_stream *stream)
->> +{
->> +       struct rkcif_dummy_buffer *dummy_buf = &stream->dummy_buf;
->> +       struct rkcif_device *dev = stream->cifdev;
->> +       void __iomem *base = dev->base_addr;
->> +
->> +       /* Set up an empty buffer for the next frame */
->> +       spin_lock(&stream->vbq_lock);
->> +       if (!list_empty(&stream->buf_head)) {
->> +               stream->curr_buf = list_first_entry(&stream->buf_head,
->> +                                       struct rkcif_buffer, queue);
->> +               list_del(&stream->curr_buf->queue);
->> +       } else {
->> +               stream->curr_buf = NULL;
->> +       }
->> +       spin_unlock(&stream->vbq_lock);
->> +
->> +       if (stream->curr_buf) {
->> +               write_cif_reg(base, CIF_FRM0_ADDR_Y,
->> +                             stream->curr_buf->buff_addr[RKCIF_PLANE_Y]);
->> +               write_cif_reg(base, CIF_FRM0_ADDR_UV,
->> +                             stream->curr_buf->buff_addr[RKCIF_PLANE_CBCR]);
->> +               write_cif_reg(base, CIF_FRM1_ADDR_Y,
->> +                             stream->curr_buf->buff_addr[RKCIF_PLANE_Y]);
->> +               write_cif_reg(base, CIF_FRM1_ADDR_UV,
->> +                             stream->curr_buf->buff_addr[RKCIF_PLANE_CBCR]);
->> +       } else {
->> +               write_cif_reg(base, CIF_FRM0_ADDR_Y, dummy_buf->dma_addr);
->> +               write_cif_reg(base, CIF_FRM0_ADDR_UV, dummy_buf->dma_addr);
->> +               write_cif_reg(base, CIF_FRM1_ADDR_Y, dummy_buf->dma_addr);
->> +               write_cif_reg(base, CIF_FRM1_ADDR_UV, dummy_buf->dma_addr);  
->
->Frame 0 and 1 would seem to indicate you can do better
->by implementing some double buffering. Have you tried that?
-
-Yes actually, since this last revision, I've been workign on having the
-double-buffering working, which gives some nice perf improvements, so
-I'll probably include that in the next round for this series !
-
->
->> +       }
->> +}
->> +
->> +static void rkcif_stream_stop(struct rkcif_stream *stream)
->> +{
->> +       struct rkcif_device *cif_dev = stream->cifdev;
->> +       void __iomem *base = cif_dev->base_addr;
->> +       u32 val;
->> +
->> +       val = read_cif_reg(base, CIF_CTRL);
->> +       write_cif_reg(base, CIF_CTRL, val & (~ENABLE_CAPTURE));
->> +       write_cif_reg(base, CIF_INTEN, 0x0);
->> +       write_cif_reg(base, CIF_INTSTAT, 0x3ff);
->> +       write_cif_reg(base, CIF_FRAME_STATUS, 0x0);
->> +
->> +       stream->state = RKCIF_STATE_READY;
->> +}
->> +
->> +static int rkcif_queue_setup(struct vb2_queue *queue,
->> +                            unsigned int *num_buffers,
->> +                            unsigned int *num_planes,
->> +                            unsigned int sizes[],
->> +                            struct device *alloc_devs[])
->> +{
->> +       struct rkcif_stream *stream = queue->drv_priv;
->> +       const struct v4l2_pix_format_mplane *pixm;
->> +       const struct cif_output_fmt *cif_fmt;
->> +       u32 i;
->> +  
->
->Better to use u32 for variables that really need a fixed width,
->and so use e.g. unsigned int here.
-
-Ah yes, thanks !
-
->> +       pixm = &stream->pixm;
->> +       cif_fmt = stream->cif_fmt_out;
->> +
->> +       if (*num_planes) {
->> +               if (*num_planes != cif_fmt->mplanes)
->> +                       return -EINVAL;
->> +
->> +               for (i = 0; i < cif_fmt->mplanes; i++)
->> +                       if (sizes[i] < pixm->plane_fmt[i].sizeimage)
->> +                               return -EINVAL;
->> +               return 0;
->> +       }
->> +
->> +       *num_planes = cif_fmt->mplanes;
->> +
->> +       for (i = 0; i < cif_fmt->mplanes; i++) {
->> +               const struct v4l2_plane_pix_format *plane_fmt;
->> +
->> +               plane_fmt = &pixm->plane_fmt[i];
->> +               sizes[i] = plane_fmt->sizeimage;
->> +       }
->> +
->> +       return 0;
->> +}
->> +
->> +/*
->> + * The vb2_buffer are stored in rkcif_buffer, in order to unify
->> + * mplane buffer and none-mplane buffer.
->> + */
->> +static void rkcif_buf_queue(struct vb2_buffer *vb)
->> +{
->> +       struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
->> +       struct rkcif_buffer *cifbuf = to_rkcif_buffer(vbuf);
->> +       struct vb2_queue *queue = vb->vb2_queue;
->> +       struct rkcif_stream *stream = queue->drv_priv;
->> +       struct v4l2_pix_format_mplane *pixm = &stream->pixm;
->> +       const struct cif_output_fmt *fmt = stream->cif_fmt_out;
->> +       unsigned long lock_flags = 0;
->> +       int i;
->> +
->> +       memset(cifbuf->buff_addr, 0, sizeof(cifbuf->buff_addr));
->> +       /* If mplanes > 1, every c-plane has its own m-plane,
->> +        * otherwise, multiple c-planes are in the same m-plane
->> +        */
->> +       for (i = 0; i < fmt->mplanes; i++)
->> +               cifbuf->buff_addr[i] = vb2_dma_contig_plane_dma_addr(vb, i);
->> +
->> +       if (fmt->mplanes == 1) {
->> +               for (i = 0; i < fmt->cplanes - 1; i++)
->> +                       cifbuf->buff_addr[i + 1] = cifbuf->buff_addr[i] +
->> +                               pixm->plane_fmt[i].bytesperline * pixm->height;
->> +       }
->> +
->> +       spin_lock_irqsave(&stream->vbq_lock, lock_flags);
->> +       list_add_tail(&cifbuf->queue, &stream->buf_head);
->> +       spin_unlock_irqrestore(&stream->vbq_lock, lock_flags);
->> +}
->> +
->> +static int rkcif_create_dummy_buf(struct rkcif_stream *stream)
->> +{  
->
->As Hans pointed out, dummy buffer needs some explanation
->and details.
-
-Yes I'll be commenting on that, basically the goal is that when the
-queue is empty and we don't have any buffer available, we use that
-dummy buffer as a destination buffer for the controller.
-
-I'm not very familiar with how other drivers implement such scenarios,
-and if this practise is very common... sorry if it's not the case.
-
->> +       struct rkcif_dummy_buffer *dummy_buf = &stream->dummy_buf;
->> +       struct rkcif_device *dev = stream->cifdev;
->> +
->> +       /* get a maximum plane size */
->> +       dummy_buf->size = max3(stream->pixm.plane_fmt[0].bytesperline *
->> +               stream->pixm.height,
->> +               stream->pixm.plane_fmt[1].sizeimage,
->> +               stream->pixm.plane_fmt[2].sizeimage);
->> +
->> +       dummy_buf->vaddr = dma_alloc_coherent(dev->dev, dummy_buf->size,
->> +                                             &dummy_buf->dma_addr,
->> +                                             GFP_KERNEL);
->> +       if (!dummy_buf->vaddr) {
->> +               v4l2_err(&dev->v4l2_dev,
->> +                        "Failed to allocate the memory for dummy buffer\n");
->> +               return -ENOMEM;
->> +       }
->> +
->> +       v4l2_info(&dev->v4l2_dev, "Allocate dummy buffer, size: 0x%08x\n",
->> +                 dummy_buf->size);
->> +  
->
->Drop this v4l2_info.
->
->> +       return 0;
->> +}
->> +
->> +static void rkcif_destroy_dummy_buf(struct rkcif_stream *stream)
->> +{
->> +       struct rkcif_dummy_buffer *dummy_buf = &stream->dummy_buf;
->> +       struct rkcif_device *dev = stream->cifdev;
->> +
->> +       dma_free_coherent(dev->dev, dummy_buf->size,
->> +                         dummy_buf->vaddr, dummy_buf->dma_addr);
->> +}
->> +
->> +static void rkcif_stop_streaming(struct vb2_queue *queue)
->> +{
->> +       struct rkcif_stream *stream = queue->drv_priv;
->> +       struct rkcif_device *dev = stream->cifdev;
->> +       struct rkcif_buffer *buf;
->> +       struct v4l2_subdev *sd;
->> +       int ret;
->> +
->> +       stream->stopping = true;
->> +       ret = wait_event_timeout(stream->wq_stopped,
->> +                                stream->state != RKCIF_STATE_STREAMING,
->> +                                msecs_to_jiffies(1000));
->> +       if (!ret) {
->> +               rkcif_stream_stop(stream);
->> +               stream->stopping = false;
->> +       }
->> +       pm_runtime_put(dev->dev);
->> +
->> +       /* stop the sub device*/
->> +       sd = dev->sensor.sd;
->> +       v4l2_subdev_call(sd, video, s_stream, 0);
->> +       v4l2_subdev_call(sd, core, s_power, 0);
->> +
->> +       /* release buffers */
->> +       if (stream->curr_buf) {
->> +               list_add_tail(&stream->curr_buf->queue, &stream->buf_head);
->> +               stream->curr_buf = NULL;
->> +       }
->> +       if (stream->next_buf) {  
->
->Next buffer would seem to indicate some attempt at double-buffering,
->but it's not really used.
->
->> +               list_add_tail(&stream->next_buf->queue, &stream->buf_head);
->> +               stream->next_buf = NULL;
->> +       }
->> +
->> +       while (!list_empty(&stream->buf_head)) {
->> +               buf = list_first_entry(&stream->buf_head,
->> +                                      struct rkcif_buffer, queue);
->> +               list_del(&buf->queue);
->> +               vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_ERROR);
->> +       }
->> +
->> +       rkcif_destroy_dummy_buf(stream);
->> +}
->> +
->> +static u32 rkcif_determine_input_mode(struct rkcif_device *dev)
->> +{
->> +       struct rkcif_sensor_info *sensor_info = &dev->sensor;
->> +       struct rkcif_stream *stream = &dev->stream;
->> +       v4l2_std_id std;
->> +       u32 mode = INPUT_MODE_YUV;
->> +       int ret;
->> +
->> +       ret = v4l2_subdev_call(sensor_info->sd, video, querystd, &std);
->> +       if (ret == 0) {
->> +               /* retrieve std from sensor if exist */
->> +               switch (std) {
->> +               case V4L2_STD_NTSC:
->> +                       mode = INPUT_MODE_NTSC;
->> +                       break;
->> +               case V4L2_STD_PAL:
->> +                       mode = INPUT_MODE_PAL;
->> +                       break;
->> +               case V4L2_STD_ATSC:
->> +                       mode = INPUT_MODE_BT1120;
->> +                       break;
->> +               default:
->> +                       v4l2_err(&dev->v4l2_dev,
->> +                                "std: %lld is not supported", std);
->> +               }
->> +       } else {
->> +               /* determine input mode by mbus_code (fmt_type) */
->> +               switch (stream->cif_fmt_in->fmt_type) {
->> +               case CIF_FMT_TYPE_YUV:
->> +                       mode = INPUT_MODE_YUV;
->> +                       break;
->> +               case CIF_FMT_TYPE_RAW:
->> +                       mode = INPUT_MODE_RAW;
->> +                       break;
->> +               }
->> +       }
->> +
->> +       return mode;
->> +}
->> +
->> +static inline u32 rkcif_scl_ctl(struct rkcif_stream *stream)
->> +{
->> +       u32 fmt_type = stream->cif_fmt_in->fmt_type;
->> +
->> +       return (fmt_type == CIF_FMT_TYPE_YUV) ?
->> +               ENABLE_YUV_16BIT_BYPASS : ENABLE_RAW_16BIT_BYPASS;
->> +}
->> +
->> +static int rkcif_stream_start(struct rkcif_stream *stream)
->> +{
->> +       u32 val, mbus_flags, href_pol, vsync_pol,
->> +           xfer_mode = 0, yc_swap = 0, skip_top = 0;  
->
->Tab is off here.
->
->> +       struct rkcif_device *dev = stream->cifdev;
->> +       struct rkcif_sensor_info *sensor_info;
->> +       void __iomem *base = dev->base_addr;
->> +
->> +       sensor_info = &dev->sensor;
->> +       stream->frame_idx = 0;
->> +
->> +       mbus_flags = sensor_info->mbus.flags;
->> +       href_pol = (mbus_flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH) ?
->> +                       HSY_HIGH_ACTIVE : HSY_LOW_ACTIVE;
->> +       vsync_pol = (mbus_flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH) ?
->> +                       VSY_HIGH_ACTIVE : VSY_LOW_ACTIVE;
->> +
->> +       if (rkcif_determine_input_mode(dev) == INPUT_MODE_BT1120) {
->> +               if (stream->cif_fmt_in->field == V4L2_FIELD_NONE)
->> +                       xfer_mode = BT1120_TRANSMIT_PROGRESS;
->> +               else
->> +                       xfer_mode = BT1120_TRANSMIT_INTERFACE;
->> +               if (!CIF_FETCH_IS_Y_FIRST(stream->cif_fmt_in->dvp_fmt_val))
->> +                       yc_swap = BT1120_YC_SWAP;
->> +       }
->> +
->> +       val = vsync_pol | href_pol | rkcif_determine_input_mode(dev) |
->> +             stream->cif_fmt_out->fmt_val | stream->cif_fmt_in->dvp_fmt_val |
->> +             xfer_mode | yc_swap;
->> +       write_cif_reg(base, CIF_FOR, val);
->> +       val = stream->pixm.width;
->> +       if (stream->cif_fmt_in->fmt_type == CIF_FMT_TYPE_RAW)
->> +               val = stream->pixm.width * 2;
->> +       write_cif_reg(base, CIF_VIR_LINE_WIDTH, val);
->> +       write_cif_reg(base, CIF_SET_SIZE,
->> +                     stream->pixm.width | (stream->pixm.height << 16));
->> +
->> +       v4l2_subdev_call(sensor_info->sd, sensor, g_skip_top_lines, &skip_top);
->> +
->> +       write_cif_reg(base, CIF_CROP, skip_top << CIF_CROP_Y_SHIFT);
->> +       write_cif_reg(base, CIF_FRAME_STATUS, FRAME_STAT_CLS);
->> +       write_cif_reg(base, CIF_INTSTAT, INTSTAT_CLS);
->> +       write_cif_reg(base, CIF_SCL_CTRL, rkcif_scl_ctl(stream));
->> +
->> +       rkcif_assign_new_buffer_oneframe(stream);
->> +
->> +       write_cif_reg(base, CIF_INTEN, FRAME_END_EN | LINE_ERR_EN |
->> +                           PST_INF_FRAME_END);
->> +
->> +       if (dev->data->chip_id == CHIP_RK1808_CIF &&
->> +           rkcif_determine_input_mode(dev) == INPUT_MODE_BT1120)
->> +               write_cif_reg(base, CIF_CTRL,
->> +                             AXI_BURST_16 | MODE_PINGPONG | ENABLE_CAPTURE);
->> +       else
->> +               write_cif_reg(base, CIF_CTRL,
->> +                             AXI_BURST_16 | MODE_ONEFRAME | ENABLE_CAPTURE);
->> +
->> +       stream->state = RKCIF_STATE_STREAMING;
->> +
->> +       return 0;
->> +}
->> +
->> +static int rkcif_start_streaming(struct vb2_queue *queue, unsigned int count)
->> +{
->> +       struct rkcif_stream *stream = queue->drv_priv;
->> +       struct rkcif_device *dev = stream->cifdev;
->> +       struct v4l2_device *v4l2_dev = &dev->v4l2_dev;
->> +       struct v4l2_subdev *sd;
->> +       int ret;
->> +
->> +       if (WARN_ON(stream->state != RKCIF_STATE_READY)) {  
->
->This check should not be needed.
->
->> +               ret = -EBUSY;
->> +               v4l2_err(v4l2_dev, "stream in busy state\n");
->> +               goto destroy_buf;
->> +       }
->> +
->> +       stream->cif_fmt_in = get_input_fmt(dev->sensor.sd);
->> +
->> +       ret = rkcif_create_dummy_buf(stream);
->> +       if (ret < 0) {
->> +               v4l2_err(v4l2_dev, "Failed to create dummy_buf, %d\n", ret);
->> +               goto destroy_buf;
->> +       }
->> +
->> +       ret = pm_runtime_get_sync(dev->dev);
->> +       if (ret < 0) {
->> +               v4l2_err(v4l2_dev, "Failed to get runtime pm, %d\n", ret);
->> +               goto destroy_dummy_buf;
->> +       }
->> +
->> +       /* start sub-devices */
->> +       sd = dev->sensor.sd;
->> +       ret = v4l2_subdev_call(sd, core, s_power, 1);
->> +       if (ret < 0 && ret != -ENOIOCTLCMD)
->> +               goto runtime_put;
->> +       ret = v4l2_subdev_call(sd, video, s_stream, 1);
->> +       if (ret < 0)
->> +               goto subdev_poweroff;
->> +
->> +       ret = rkcif_stream_start(stream);
->> +       if (ret < 0)
->> +               goto stop_stream;
->> +
->> +       return 0;
->> +
->> +stop_stream:
->> +       rkcif_stream_stop(stream);
->> +subdev_poweroff:
->> +       v4l2_subdev_call(sd, core, s_power, 0);
->> +runtime_put:
->> +       pm_runtime_put(dev->dev);
->> +destroy_dummy_buf:
->> +       rkcif_destroy_dummy_buf(stream);
->> +destroy_buf:
->> +       while (!list_empty(&stream->buf_head)) {  
->
->Move this to a helper?
-
-Yes, this will be cleaner :)
-
->> +               struct rkcif_buffer *buf;
->> +
->> +               buf = list_first_entry(&stream->buf_head,
->> +                                      struct rkcif_buffer, queue);
->> +               list_del(&buf->queue);
->> +               vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_QUEUED);
->> +       }
->> +
->> +       return ret;
->> +}
->> +
->> +static struct vb2_ops rkcif_vb2_ops = {
->> +       .queue_setup = rkcif_queue_setup,
->> +       .buf_queue = rkcif_buf_queue,
->> +       .wait_prepare = vb2_ops_wait_prepare,
->> +       .wait_finish = vb2_ops_wait_finish,
->> +       .stop_streaming = rkcif_stop_streaming,
->> +       .start_streaming = rkcif_start_streaming,
->> +};
->> +
->> +static int rkcif_init_vb2_queue(struct vb2_queue *q,
->> +                               struct rkcif_stream *stream,
->> +                               enum v4l2_buf_type buf_type)
->> +{
->> +       q->type = buf_type;
->> +       q->io_modes = VB2_MMAP | VB2_DMABUF;
->> +       q->drv_priv = stream;
->> +       q->ops = &rkcif_vb2_ops;
->> +       q->mem_ops = &vb2_dma_contig_memops;  
->
->I can't find any CPU mapping, so maybe you'll want to
->have q->dma_attrs = DMA_ATTR_NO_KERNEL_MAPPING.
-
-Ok nice catch, I'll try that
-
->> +       q->buf_struct_size = sizeof(struct rkcif_buffer);
->> +       q->min_buffers_needed = CIF_REQ_BUFS_MIN;
->> +       q->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
->> +       q->lock = &stream->vlock;
->> +       q->dev = stream->cifdev->dev;
->> +
->> +       return vb2_queue_init(q);
->> +}
->> +
->> +static void rkcif_set_fmt(struct rkcif_stream *stream,
->> +                         struct v4l2_pix_format_mplane *pixm,
->> +                         bool try)
->> +{
->> +       const struct cif_output_fmt *fmt;
->> +       struct v4l2_rect input_rect;
->> +       unsigned int imagesize = 0, planes;
->> +       u32 xsubs = 1, ysubs = 1, i;
->> +
->> +       fmt = find_output_fmt(stream, pixm->pixelformat);
->> +       if (!fmt)
->> +               fmt = &out_fmts[0];
->> +
->> +       input_rect.width = CIF_MAX_WIDTH;
->> +       input_rect.height = CIF_MAX_HEIGHT;
->> +
->> +       pixm->width = clamp_t(u32, pixm->width,
->> +                               CIF_MIN_WIDTH, input_rect.width);
->> +       pixm->height = clamp_t(u32, pixm->height,
->> +                               CIF_MIN_HEIGHT, input_rect.height);
->> +
->> +       pixm->num_planes = fmt->mplanes;
->> +       pixm->quantization = V4L2_QUANTIZATION_DEFAULT;
->> +       pixm->colorspace = V4L2_COLORSPACE_SRGB;
->> +  
->
->See Hans' comment on v1.
->
->> +       pixm->xfer_func = V4L2_MAP_XFER_FUNC_DEFAULT(pixm->colorspace);
->> +       pixm->ycbcr_enc = V4L2_MAP_YCBCR_ENC_DEFAULT(pixm->colorspace);
->> +
->> +       pixm->pixelformat = fmt->fourcc;
->> +       pixm->field = V4L2_FIELD_NONE;
->> +
->> +       /* calculate plane size and image size */
->> +       fcc_xysubs(fmt->fourcc, &xsubs, &ysubs);
->> +
->> +       planes = fmt->cplanes ? fmt->cplanes : fmt->mplanes;
->> +
->> +       for (i = 0; i < planes; i++) {
->> +               struct v4l2_plane_pix_format *plane_fmt;
->> +               int width, height, bpl, size;
->> +
->> +               if (i == 0) {
->> +                       width = pixm->width;
->> +                       height = pixm->height;
->> +               } else {
->> +                       width = pixm->width / xsubs;
->> +                       height = pixm->height / ysubs;
->> +               }
->> +
->> +               bpl = width * fmt->bpp[i] / 8;
->> +               size = bpl * height;
->> +               imagesize += size;
->> +
->> +               if (fmt->mplanes > i) {
->> +                       /* Set bpl and size for each mplane */
->> +                       plane_fmt = pixm->plane_fmt + i;
->> +                       plane_fmt->bytesperline = bpl;
->> +                       plane_fmt->sizeimage = size;
->> +               }
->> +       }
->> +
->> +       /* convert to non-MPLANE format.
->> +        * It's important since we want to unify non-MPLANE  
->
->I suggest to only support MPLANE API and make your life simpler.
-
-Yes definitely, this will be simplified
-
->> +        * and MPLANE.
->> +        */
->> +       if (fmt->mplanes == 1)
->> +               pixm->plane_fmt[0].sizeimage = imagesize;
->> +
->> +       if (!try) {
->> +               stream->cif_fmt_out = fmt;
->> +               stream->pixm = *pixm;
->> +       }
->> +}
->> +
->> +void rkcif_stream_init(struct rkcif_device *dev)
->> +{
->> +       struct rkcif_stream *stream = &dev->stream;
->> +       struct v4l2_pix_format_mplane pixm;
->> +
->> +       memset(stream, 0, sizeof(*stream));
->> +       memset(&pixm, 0, sizeof(pixm));
->> +       stream->cifdev = dev;
->> +
->> +       INIT_LIST_HEAD(&stream->buf_head);
->> +       spin_lock_init(&stream->vbq_lock);
->> +       stream->state = RKCIF_STATE_READY;
->> +       init_waitqueue_head(&stream->wq_stopped);
->> +
->> +       /* Set default format */
->> +       pixm.pixelformat = V4L2_PIX_FMT_NV12;
->> +       pixm.width = RKCIF_DEFAULT_WIDTH;
->> +       pixm.height = RKCIF_DEFAULT_HEIGHT;
->> +       rkcif_set_fmt(stream, &pixm, false);
->> +
->> +       stream->crop.left = 0;
->> +       stream->crop.top = 0;
->> +       stream->crop.width = 10;
->> +       stream->crop.height = 10;  
->
->As already mentioned by Hans on the v1, please drop.
->
->> +}
->> +
->> +static int rkcif_fh_open(struct file *filp)
->> +{
->> +       struct video_device *vdev = video_devdata(filp);
->> +       struct rkcif_stream *stream = to_rkcif_stream(vdev);
->> +       struct rkcif_device *cifdev = stream->cifdev;
->> +
->> +       rkcif_soft_reset(cifdev);
->> +  
->
->As already mentioned by Hans, looks problematic.
->
->> +       return v4l2_fh_open(filp);
->> +}
->> +
->> +static const struct v4l2_file_operations rkcif_fops = {
->> +       .open = rkcif_fh_open,
->> +       .release = vb2_fop_release,
->> +       .unlocked_ioctl = video_ioctl2,
->> +       .poll = vb2_fop_poll,
->> +       .mmap = vb2_fop_mmap,
->> +};
->> +
->> +static int rkcif_enum_input(struct file *file, void *priv,
->> +                           struct v4l2_input *input)  
->
->Why supporting the Input ioctls?
->
->> +{
->> +       if (input->index > 0)
->> +               return -EINVAL;
->> +
->> +       input->type = V4L2_INPUT_TYPE_CAMERA;
->> +       strlcpy(input->name, "Camera", sizeof(input->name));
->> +
->> +       return 0;
->> +}
->> +
->> +static int rkcif_try_fmt_vid_cap_mplane(struct file *file, void *fh,
->> +                                       struct v4l2_format *f)
->> +{
->> +       struct rkcif_stream *stream = video_drvdata(file);
->> +
->> +       rkcif_set_fmt(stream, &f->fmt.pix_mp, true);
->> +
->> +       return 0;
->> +}
->> +
->> +static int rkcif_enum_fmt_vid_cap(struct file *file, void *priv,
->> +                                        struct v4l2_fmtdesc *f)
->> +{
->> +       const struct cif_output_fmt *fmt = NULL;
->> +
->> +       if (f->index >= ARRAY_SIZE(out_fmts))
->> +               return -EINVAL;
->> +
->> +       fmt = &out_fmts[f->index];
->> +       f->pixelformat = fmt->fourcc;
->> +
->> +       return 0;
->> +}
->> +
->> +static int rkcif_s_fmt_vid_cap_mplane(struct file *file,
->> +                                     void *priv, struct v4l2_format *f)
->> +{
->> +       struct rkcif_stream *stream = video_drvdata(file);
->> +
->> +       rkcif_set_fmt(stream, &f->fmt.pix_mp, false);
->> +
->> +       return 0;
->> +}
->> +
->> +static int rkcif_g_fmt_vid_cap_mplane(struct file *file, void *fh,
->> +                                     struct v4l2_format *f)
->> +{
->> +       struct rkcif_stream *stream = video_drvdata(file);
->> +
->> +       f->fmt.pix_mp = stream->pixm;
->> +
->> +       return 0;
->> +}
->> +
->> +static int rkcif_querycap(struct file *file, void *priv,
->> +                         struct v4l2_capability *cap)
->> +{
->> +       struct rkcif_stream *stream = video_drvdata(file);
->> +       struct device *dev = stream->cifdev->dev;
->> +
->> +       strlcpy(cap->driver, dev->driver->name, sizeof(cap->driver));
->> +       strlcpy(cap->card, dev->driver->name, sizeof(cap->card));
->> +       snprintf(cap->bus_info, sizeof(cap->bus_info),
->> +                "platform:%s", dev_name(dev));
->> +
->> +       return 0;
->> +}
->> +
->> +static int rkcif_enum_framesizes(struct file *file, void *fh,
->> +                                struct v4l2_frmsizeenum *fsize)
->> +{
->> +       struct rkcif_stream *stream = video_drvdata(file);
->> +       struct rkcif_device *dev = stream->cifdev;
->> +       struct v4l2_subdev_frame_size_enum fse = {
->> +               .index = fsize->index,
->> +               .which = V4L2_SUBDEV_FORMAT_ACTIVE,
->> +       };
->> +       const struct cif_output_fmt *fmt;
->> +       int ret;
->> +
->> +       if (!dev->sensor.sd)
->> +               return -EINVAL;
->> +
->> +       fmt = find_output_fmt(stream, fsize->pixel_format);
->> +       if (!fmt)
->> +               return -EINVAL;
->> +
->> +       fse.code = fmt->mbus;
->> +
->> +       ret = v4l2_subdev_call(dev->sensor.sd, pad, enum_frame_size,
->> +                              NULL, &fse);
->> +       if (ret)
->> +               return ret;
->> +
->> +       fsize->type = V4L2_FRMSIZE_TYPE_DISCRETE;
->> +       fsize->discrete.width = fse.max_width;
->> +       fsize->discrete.height = fse.max_height;
->> +
->> +       return 0;
->> +}
->> +
->> +static int rkcif_g_input(struct file *file, void *fh, unsigned int *i)
->> +{
->> +       *i = 0;
->> +       return 0;
->> +}
->> +
->> +static int rkcif_s_input(struct file *file, void *fh, unsigned int i)
->> +{
->> +       if (i)
->> +               return -EINVAL;
->> +
->> +       return 0;
->> +}
->> +
->> +static const struct v4l2_ioctl_ops rkcif_v4l2_ioctl_ops = {
->> +       .vidioc_reqbufs = vb2_ioctl_reqbufs,
->> +       .vidioc_querybuf = vb2_ioctl_querybuf,
->> +       .vidioc_create_bufs = vb2_ioctl_create_bufs,
->> +       .vidioc_qbuf = vb2_ioctl_qbuf,
->> +       .vidioc_expbuf = vb2_ioctl_expbuf,
->> +       .vidioc_dqbuf = vb2_ioctl_dqbuf,
->> +       .vidioc_prepare_buf = vb2_ioctl_prepare_buf,
->> +       .vidioc_streamon = vb2_ioctl_streamon,
->> +       .vidioc_streamoff = vb2_ioctl_streamoff,
->> +
->> +       .vidioc_enum_fmt_vid_cap = rkcif_enum_fmt_vid_cap,
->> +       .vidioc_try_fmt_vid_cap_mplane = rkcif_try_fmt_vid_cap_mplane,
->> +       .vidioc_s_fmt_vid_cap_mplane = rkcif_s_fmt_vid_cap_mplane,
->> +       .vidioc_g_fmt_vid_cap_mplane = rkcif_g_fmt_vid_cap_mplane,
->> +       .vidioc_querycap = rkcif_querycap,
->> +       .vidioc_enum_framesizes = rkcif_enum_framesizes,
->> +
->> +       .vidioc_enum_input = rkcif_enum_input,
->> +       .vidioc_g_input = rkcif_g_input,
->> +       .vidioc_s_input = rkcif_s_input,
->> +};
->> +
->> +void rkcif_unregister_stream_vdev(struct rkcif_device *dev)
->> +{
->> +       struct rkcif_stream *stream = &dev->stream;
->> +
->> +       media_entity_cleanup(&stream->vdev.entity);
->> +       video_unregister_device(&stream->vdev);
->> +}
->> +
->> +int rkcif_register_stream_vdev(struct rkcif_device *dev)
->> +{
->> +       struct rkcif_stream *stream = &dev->stream;
->> +       struct v4l2_device *v4l2_dev = &dev->v4l2_dev;
->> +       struct video_device *vdev = &stream->vdev;
->> +       int ret;
->> +
->> +       strlcpy(vdev->name, CIF_VIDEODEVICE_NAME, sizeof(vdev->name));
->> +       mutex_init(&stream->vlock);
->> +
->> +       vdev->ioctl_ops = &rkcif_v4l2_ioctl_ops;
->> +       vdev->release = video_device_release_empty;
->> +       vdev->fops = &rkcif_fops;
->> +       vdev->minor = -1;
->> +       vdev->v4l2_dev = v4l2_dev;
->> +       vdev->lock = &stream->vlock;
->> +       vdev->device_caps = V4L2_CAP_VIDEO_CAPTURE_MPLANE |
->> +                           V4L2_CAP_STREAMING;
->> +       video_set_drvdata(vdev, stream);
->> +       vdev->vfl_dir = VFL_DIR_RX;
->> +       stream->pad.flags = MEDIA_PAD_FL_SINK;
->> +
->> +       rkcif_init_vb2_queue(&stream->buf_queue, stream,
->> +                       V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE |
->> +                       V4L2_BUF_TYPE_VIDEO_CAPTURE);  
->
->As suggested, drop V4L2_BUF_TYPE_VIDEO_CAPTURE.
->
->> +       vdev->queue = &stream->buf_queue;
->> +       strscpy(vdev->name, KBUILD_MODNAME, sizeof(vdev->name));
->> +
->> +       ret = video_register_device(vdev, VFL_TYPE_VIDEO, -1);
->> +       if (ret < 0) {
->> +               v4l2_err(v4l2_dev,
->> +                        "video_register_device failed with error %d\n", ret);
->> +               return ret;
->> +       }
->> +
->> +       ret = media_entity_pads_init(&vdev->entity, 1, &stream->pad);
->> +       if (ret < 0)
->> +               goto unreg;
->> +
->> +       return 0;
->> +unreg:
->> +       video_unregister_device(vdev);
->> +       return ret;
->> +}
->> +
->> +static void rkcif_vb_done_oneframe(struct rkcif_stream *stream,  
->
->Why this "oneframe" naming? Is there some other mode planned?
->
->> +                                  struct vb2_v4l2_buffer *vb_done)
->> +{
->> +       const struct cif_output_fmt *fmt = stream->cif_fmt_out;
->> +       u32 i;
->> +
->> +       /* Dequeue a filled buffer */
->> +       for (i = 0; i < fmt->mplanes; i++) {
->> +               vb2_set_plane_payload(&vb_done->vb2_buf, i,
->> +                       stream->pixm.plane_fmt[i].sizeimage);
->> +       }
->> +       vb_done->vb2_buf.timestamp = ktime_get_ns();  
->
->vb_done->vb2_buf.sequence needs to be set.
->Also, you can use it to mark drop buffers. See below.
->
->> +       vb2_buffer_done(&vb_done->vb2_buf, VB2_BUF_STATE_DONE);
->> +}
->> +
->> +void rkcif_irq_oneframe(struct rkcif_device *cif_dev)
->> +{
->> +       struct rkcif_stream *stream = &cif_dev->stream;
->> +       u32 lastline, lastpix, ctl, cif_frmst, intstat;
->> +       void __iomem *base = cif_dev->base_addr;
->> +
->> +       intstat = read_cif_reg(base, CIF_INTSTAT);
->> +       cif_frmst = read_cif_reg(base, CIF_FRAME_STATUS);
->> +       lastline = CIF_FETCH_Y_LAST_LINE(read_cif_reg(base, CIF_LAST_LINE));
->> +       lastpix = read_cif_reg(base, CIF_LAST_PIX);
->> +       ctl = read_cif_reg(base, CIF_CTRL);
->> +
->> +       /* There are two irqs enabled:
->> +        *  - PST_INF_FRAME_END: cif FIFO is ready, this is prior to FRAME_END
->> +        *  -         FRAME_END: cif has saved frame to memory, a frame ready
->> +        */
->> +
->> +       if ((intstat & PST_INF_FRAME_END)) {
->> +               write_cif_reg(base, CIF_INTSTAT, PST_INF_FRAME_END_CLR);
->> +
->> +               if (stream->stopping)
->> +                       /* To stop CIF ASAP, before FRAME_END irq */
->> +                       write_cif_reg(base, CIF_CTRL, ctl & (~ENABLE_CAPTURE));
->> +       }
->> +
->> +       if ((intstat & LINE_ERR)) {
->> +               write_cif_reg(base, CIF_INTSTAT, LINE_ERR_CLR);
->> +
->> +               if (stream->stopping) {
->> +                       rkcif_stream_stop(stream);
->> +                       stream->stopping = false;
->> +                       wake_up(&stream->wq_stopped);
->> +                       return;
->> +               }
->> +
->> +               v4l2_err(&cif_dev->v4l2_dev,
->> +                        "Bad frame, irq:0x%x frmst:0x%x size:%dx%d\n",
->> +                        intstat, cif_frmst, lastline, lastpix);
->> +               /* Clear status to receive into the same buffer */
->> +               write_cif_reg(base, CIF_FRAME_STATUS, FRM0_STAT_CLS);
->> +               return;
->> +       }
->> +
->> +
->> +       if ((intstat & FRAME_END)) {
->> +               struct vb2_v4l2_buffer *vb_done = NULL;
->> +
->> +               write_cif_reg(base, CIF_INTSTAT, FRAME_END_CLR);
->> +
->> +               if (stream->stopping) {
->> +                       rkcif_stream_stop(stream);
->> +                       stream->stopping = false;
->> +                       wake_up(&stream->wq_stopped);
->> +                       return;
->> +               }
->> +
->> +               if (lastline != stream->pixm.height ||
->> +                   !(cif_frmst & CIF_F0_READY)) {
->> +                       v4l2_err(&cif_dev->v4l2_dev,
->> +                                "Bad frame, irq:0x%x frmst:0x%x size:%dx%d\n",
->> +                                intstat, cif_frmst, lastline, lastpix);
->> +                       /* Clear status to receive into the same buffer */
->> +                       write_cif_reg(base, CIF_FRAME_STATUS, FRM0_STAT_CLS);
->> +                       return;
->> +               }
->> +
->> +               if (stream->curr_buf)
->> +                       vb_done = &stream->curr_buf->vb;
->> +               rkcif_assign_new_buffer_oneframe(stream);
->> +
->> +               /* In one-frame mode, must clear status manually to enable
->> +                * the next frame end irq
->> +                */
->> +               write_cif_reg(base, CIF_FRAME_STATUS, FRM0_STAT_CLS);
->> +
->> +               if (vb_done)
->> +                       rkcif_vb_done_oneframe(stream, vb_done);
->> +
->> +               stream->frame_idx++;  
->
->Although it's currently unused, frame_idx will be useful to set the sequence.
->Now, it would be interesting to keep track of captures to the dummy buffer
->(i.e. dropped buffers) vs. captures to real buffers (captured frames).
->
->Skipping dropped buffers from the sequence would allow userspace
->applications to detect that something is going wrong.
->
->You could also expose this captured/dropped counters in debugfs.
-
-Yup good idea !  I'm currently debugging issues with some frames
-getting lost, so I'll be implementing something very similar to what
-you suggest !
-
->> +       }
->> +}
->> diff --git a/drivers/media/platform/rockchip/cif/dev.c b/drivers/media/platform/rockchip/cif/dev.c
->> new file mode 100644
->> index 000000000000..dbd5fdbd1cef
->> --- /dev/null
->> +++ b/drivers/media/platform/rockchip/cif/dev.c
->> @@ -0,0 +1,358 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Rockchip CIF Driver
->> + *
->> + * Copyright (C) 2018 Rockchip Electronics Co., Ltd.
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/delay.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_graph.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/of_reserved_mem.h>
->> +#include <linux/reset.h>
->> +#include <linux/pm_runtime.h>
->> +#include <linux/pinctrl/consumer.h>
->> +#include <media/v4l2-fwnode.h>
->> +
->> +#include "dev.h"
->> +#include "regs.h"
->> +
->> +#define RKCIF_VERNO_LEN                10
->> +
->> +static int rkcif_create_links(struct rkcif_device *dev)
->> +{
->> +       struct v4l2_subdev *sd = dev->sensor.sd;
->> +       int ret;
->> +
->> +       ret = media_entity_get_fwnode_pad(&sd->entity, sd->fwnode,
->> +                                         MEDIA_PAD_FL_SOURCE);
->> +       if (ret)
->> +               return ret;
->> +
->> +       ret = media_create_pad_link(&sd->entity, 0,
->> +                                   &dev->stream.vdev.entity, 0,
->> +                                   MEDIA_LNK_FL_ENABLED);
->> +       if (ret) {
->> +               dev_err(dev->dev, "failed to create link");
->> +               return ret;
->> +       }
->> +
->> +       return 0;
->> +}
->> +
->> +static int subdev_notifier_complete(struct v4l2_async_notifier *notifier)
->> +{
->> +       struct rkcif_device *dev;
->> +       int ret;
->> +
->> +       dev = container_of(notifier, struct rkcif_device, notifier);
->> +
->> +       mutex_lock(&dev->media_dev.graph_mutex);
->> +
->> +       ret = rkcif_create_links(dev);
->> +       if (ret < 0)
->> +               goto unlock;
->> +
->> +       ret = v4l2_device_register_subdev_nodes(&dev->v4l2_dev);
->> +       if (ret < 0)
->> +               goto unlock;
->> +
->> +unlock:
->> +       mutex_unlock(&dev->media_dev.graph_mutex);
->> +       return ret;
->> +}
->> +
->> +static int subdev_notifier_bound(struct v4l2_async_notifier *notifier,
->> +                                struct v4l2_subdev *subdev,
->> +                                struct v4l2_async_subdev *asd)
->> +{
->> +       struct rkcif_device *cif_dev = container_of(notifier,
->> +                                       struct rkcif_device, notifier);
->> +
->> +       int pad;
->> +
->> +       cif_dev->sensor.sd = subdev;
->> +       pad = media_entity_get_fwnode_pad(&subdev->entity, subdev->fwnode,
->> +                                         MEDIA_PAD_FL_SOURCE);
->> +       if (pad < 0)
->> +               return pad;
->> +
->> +       cif_dev->sensor.pad = pad;
->> +
->> +       return 0;
->> +}
->> +
->> +static const struct v4l2_async_notifier_operations subdev_notifier_ops = {
->> +       .bound = subdev_notifier_bound,
->> +       .complete = subdev_notifier_complete,
->> +};
->> +
->> +static int cif_subdev_notifier(struct rkcif_device *cif_dev)
->> +{
->> +       struct v4l2_async_notifier *ntf = &cif_dev->notifier;
->> +       struct device *dev = cif_dev->dev;
->> +       struct v4l2_fwnode_endpoint vep = {
->> +               .bus_type = V4L2_MBUS_PARALLEL,
->> +       };
->> +       struct fwnode_handle *ep;
->> +       int ret;
->> +
->> +       v4l2_async_notifier_init(ntf);
->> +
->> +       ep = fwnode_graph_get_endpoint_by_id(dev_fwnode(dev), 0, 0,
->> +                       FWNODE_GRAPH_ENDPOINT_NEXT);
->> +       if (!ep)
->> +               return -EINVAL;
->> +
->> +       ret = v4l2_fwnode_endpoint_parse(ep, &vep);
->> +       if (ret)
->> +               return ret;
->> +
->> +       ret = v4l2_async_notifier_add_fwnode_remote_subdev(ntf, ep,
->> +                                                          &cif_dev->asd);
->> +       if (ret)
->> +               return ret;
->> +
->> +       ntf->ops = &subdev_notifier_ops;
->> +
->> +       fwnode_handle_put(ep);
->> +
->> +       ret = v4l2_async_notifier_register(&cif_dev->v4l2_dev, ntf);
->> +       return ret;
->> +}
->> +
->> +static int rkcif_register_platform_subdevs(struct rkcif_device *cif_dev)
->> +{
->> +       int ret;
->> +
->> +       ret = rkcif_register_stream_vdev(cif_dev);
->> +       if (ret < 0)
->> +               return ret;
->> +
->> +       ret = cif_subdev_notifier(cif_dev);
->> +       if (ret < 0) {
->> +               v4l2_err(&cif_dev->v4l2_dev,
->> +                        "Failed to register subdev notifier(%d)\n", ret);
->> +               rkcif_unregister_stream_vdev(cif_dev);
->> +       }
->> +
->> +       return 0;
->> +}  
->
->> +
->> +static struct clk_bulk_data px30_cif_clks[] = {
->> +       { .id = "aclk" },
->> +       { .id = "hclk" },
->> +       { .id = "pclkin" },
->> +};
->> +
->> +static const struct cif_match_data px30_cif_match_data = {
->> +       .chip_id = CHIP_PX30_CIF,
->> +       .clks = px30_cif_clks,
->> +       .clks_num = ARRAY_SIZE(px30_cif_clks),
->> +};
->> +
->> +static const struct of_device_id rkcif_plat_of_match[] = {
->> +       {
->> +               .compatible = "rockchip,px30-cif",
->> +               .data = &px30_cif_match_data,
->> +       },
->> +       {},
->> +};
->> +
->> +static irqreturn_t rkcif_irq_handler(int irq, void *ctx)
->> +{
->> +       struct device *dev = ctx;
->> +       struct rkcif_device *cif_dev = dev_get_drvdata(dev);
->> +
->> +       rkcif_irq_oneframe(cif_dev);
->> +
->> +       return IRQ_HANDLED;
->> +}
->> +
->> +static void rkcif_disable_sys_clk(struct rkcif_device *cif_dev)
->> +{
->> +       int i;
->> +
->> +       for (i = cif_dev->data->clks_num - 1; i >= 0; i--)
->> +               clk_disable_unprepare(cif_dev->clks[i]);  
->
->clk_bulk_disable_unprepare
->
->> +}
->> +
->> +static int rkcif_enable_sys_clk(struct rkcif_device *cif_dev)
->> +{
->> +       int i, ret = -EINVAL;
->> +
->> +       for (i = 0; i < cif_dev->data->clks_num; i++) {
->> +               ret = clk_prepare_enable(cif_dev->clks[i]);
->> +  
->
->clk_bulk_enable_prepare
->
->> +               if (ret < 0)
->> +                       goto err;
->> +       }
->> +
->> +       return 0;
->> +
->> +err:
->> +       for (--i; i >= 0; --i)
->> +               clk_disable_unprepare(cif_dev->clks[i]);
->> +
->> +       return ret;
->> +}
->> +
->> +void rkcif_soft_reset(struct rkcif_device *cif_dev)
->> +{
->> +       reset_control_assert(cif_dev->cif_rst);
->> +
->> +       udelay(5);
->> +
->> +       reset_control_deassert(cif_dev->cif_rst);
->> +}
->> +
->> +static int rkcif_plat_probe(struct platform_device *pdev)
->> +{
->> +       struct device *dev = &pdev->dev;
->> +       struct v4l2_device *v4l2_dev;
->> +       struct rkcif_device *cif_dev;
->> +       const struct cif_match_data *data;
->> +       int ret, irq;
->> +
->> +       cif_dev = devm_kzalloc(dev, sizeof(*cif_dev), GFP_KERNEL);
->> +       if (!cif_dev)
->> +               return -ENOMEM;
->> +
->> +       dev_set_drvdata(dev, cif_dev);
->> +       cif_dev->dev = dev;
->> +
->> +       data = of_device_get_match_data(&pdev->dev);
->> +       if (!data)
->> +               return -EINVAL;
->> +
->> +       cif_dev->data = data;
->> +
->> +       irq = platform_get_irq(pdev, 0);
->> +       if (irq < 0)
->> +               return irq;
->> +
->> +       ret = devm_request_irq(dev, irq, rkcif_irq_handler, IRQF_SHARED,  
->
->I guess it's shared with the IOMMU, or is this a mistake?
-
-Hmm you might be right, I'll need to check that.
-
->Note that you seem to always handle the interrupt.
->
->> +                              dev_driver_string(dev), dev);
->> +       if (ret < 0) {
->> +               dev_err(dev, "request irq failed: %d\n", ret);
->> +               return ret;
->> +       }
->> +
->> +       cif_dev->irq = irq;
->> +
->> +       cif_dev->base_addr = devm_platform_ioremap_resource(pdev, 0);
->> +       if (IS_ERR(cif_dev->base_addr))
->> +               return PTR_ERR(cif_dev->base_addr);
->> +
->> +       ret = of_reserved_mem_device_init(dev);  
->
->Can't find any mention to this reserved memory in the bindings documentation.
->Perhaps you can add an example and/or add some comments for this?
-
-yes this should be added in the binding, you're correct.
-
->> +       if (ret)
->> +               v4l2_info(v4l2_dev, "No reserved memory region assign to CIF\n");
->> +
->> +       ret = devm_clk_bulk_get(dev, data->clks_num, data->clks);
->> +       if (ret)
->> +               return ret;
->> +
->> +       cif_dev->cif_rst = devm_reset_control_array_get(dev, false, false);
->> +       if (IS_ERR(cif_dev->cif_rst))
->> +               return PTR_ERR(cif_dev->cif_rst);
->> +
->> +       /* Initialize the stream */
->> +       rkcif_stream_init(cif_dev);
->> +
->> +       strlcpy(cif_dev->media_dev.model, "rkcif",
->> +               sizeof(cif_dev->media_dev.model));
->> +       cif_dev->media_dev.dev = &pdev->dev;
->> +       v4l2_dev = &cif_dev->v4l2_dev;
->> +       v4l2_dev->mdev = &cif_dev->media_dev;
->> +       strlcpy(v4l2_dev->name, "rkcif", sizeof(v4l2_dev->name));
->> +       v4l2_ctrl_handler_init(&cif_dev->ctrl_handler, 8);
->> +       v4l2_dev->ctrl_handler = &cif_dev->ctrl_handler;
->> +
->> +       ret = v4l2_device_register(cif_dev->dev, &cif_dev->v4l2_dev);
->> +       if (ret < 0)
->> +               return ret;
->> +
->> +       media_device_init(&cif_dev->media_dev);
->> +
->> +       ret = media_device_register(&cif_dev->media_dev);
->> +       if (ret < 0) {
->> +               v4l2_err(v4l2_dev, "Failed to register media device: %d\n",
->> +                        ret);
->> +               goto err_unreg_v4l2_dev;
->> +       }
->> +
->> +       /* create & register platefom subdev (from of_node) */
->> +       ret = rkcif_register_platform_subdevs(cif_dev);
->> +       if (ret < 0)
->> +               goto err_unreg_media_dev;
->> +
->> +       pm_runtime_enable(&pdev->dev);
->> +  
->
->Off the top of my head, I believe enabling PM runtime
->after registering the device to the world could be problematic.
-
-Ah OK, I didn't know that.
-
->> +       return 0;
->> +
->> +err_unreg_media_dev:
->> +       media_device_unregister(&cif_dev->media_dev);
->> +err_unreg_v4l2_dev:
->> +       v4l2_device_unregister(&cif_dev->v4l2_dev);
->> +       return ret;
->> +}
->> +
->> +static int rkcif_plat_remove(struct platform_device *pdev)
->> +{
->> +       struct rkcif_device *cif_dev = platform_get_drvdata(pdev);
->> +
->> +       pm_runtime_disable(&pdev->dev);
->> +
->> +       media_device_unregister(&cif_dev->media_dev);
->> +       v4l2_device_unregister(&cif_dev->v4l2_dev);
->> +       rkcif_unregister_stream_vdev(cif_dev);
->> +
->> +       return 0;
->> +}
->> +
->> +static int __maybe_unused rkcif_runtime_suspend(struct device *dev)
->> +{
->> +       struct rkcif_device *cif_dev = dev_get_drvdata(dev);
->> +
->> +       rkcif_disable_sys_clk(cif_dev);
->> +
->> +       return pinctrl_pm_select_sleep_state(dev);
->> +}
->> +
->> +static int __maybe_unused rkcif_runtime_resume(struct device *dev)
->> +{
->> +       struct rkcif_device *cif_dev = dev_get_drvdata(dev);
->> +       int ret;
->> +
->> +       ret = pinctrl_pm_select_default_state(dev);
->> +       if (ret < 0)
->> +               return ret;
->> +       rkcif_enable_sys_clk(cif_dev);
->> +  
->
->Just move the clock handling here and avoid defining rkcif_enable_sys_clk ?
-
-Yup, I'll do that too
-
->> +       return 0;
->> +}
->> +
->> +static const struct dev_pm_ops rkcif_plat_pm_ops = {
->> +       SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
->> +                               pm_runtime_force_resume)
->> +       SET_RUNTIME_PM_OPS(rkcif_runtime_suspend, rkcif_runtime_resume, NULL)
->> +};
->> +
->> +static struct platform_driver rkcif_plat_drv = {
->> +       .driver = {
->> +                  .name = CIF_DRIVER_NAME,
->> +                  .of_match_table = of_match_ptr(rkcif_plat_of_match),
->> +                  .pm = &rkcif_plat_pm_ops,
->> +       },
->> +       .probe = rkcif_plat_probe,
->> +       .remove = rkcif_plat_remove,
->> +};
->> +
->> +module_platform_driver(rkcif_plat_drv);
->> +MODULE_AUTHOR("Rockchip Camera/ISP team");  
->
->MODULE_AUTHOR goes to the module's metadata,
->e.g. for users to query driver's authors.
->
->I've had to upstream drivers originally written by other
->people, and I've wondered what's the value of
->putting a team as author.
->
->> +MODULE_DESCRIPTION("Rockchip CIF platform driver");
->> +MODULE_LICENSE("GPL");  
->
->Thanks for the hard work,
-
-And thanks for the thourough review !! This helps a lot !
-
-Maxime
-
->Ezequiel
-
-
-
--- 
-Maxime Chevallier, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogZGV2aWNldHJlZS1vd25l
+ckB2Z2VyLmtlcm5lbC5vcmcgPGRldmljZXRyZWUtDQo+IG93bmVyQHZnZXIua2VybmVsLm9yZz4g
+T24gQmVoYWxmIE9mIEFtaXJlZGR5IE1hbGxpa2FyanVuYSByZWRkeQ0KPiBTZW50OiBEb25uZXJz
+dGFnLCA5LiBKdWxpIDIwMjAgMDg6MDENCj4gVG86IGRtYWVuZ2luZUB2Z2VyLmtlcm5lbC5vcmc7
+IHZrb3VsQGtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyByb2JoK2R0
+QGtlcm5lbC5vcmcNCj4gQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFNoZXZjaGVu
+a28sIEFuZHJpeQ0KPiA8YW5kcml5LnNoZXZjaGVua29AaW50ZWwuY29tPjsgY2h1YW5odWEubGVp
+QGxpbnV4LmludGVsLmNvbTsgS2ltLCBDaGVvbA0KPiBZb25nIDxjaGVvbC55b25nLmtpbUBpbnRl
+bC5jb20+OyBXdSwgUWltaW5nIDxxaS1taW5nLnd1QGludGVsLmNvbT47DQo+IG1hbGxpYW1pcmVk
+ZHkwMDlAZ21haWwuY29tOyBBbWlyZWRkeSBNYWxsaWthcmp1bmEgcmVkZHkNCj4gPG1hbGxpa2Fy
+anVuYXgucmVkZHlAbGludXguaW50ZWwuY29tPg0KPiBTdWJqZWN0OiBbUEFUQ0ggdjQgMS8yXSBk
+dC1iaW5kaW5nczogZG1hOiBBZGQgYmluZGluZ3MgZm9yIGludGVsIExHTSBTT0MNCj4gDQo+IEFk
+ZCBEVCBiaW5kaW5ncyBZQU1MIHNjaGVtYSBmb3IgRE1BIGNvbnRyb2xsZXIgZHJpdmVyDQo+IG9m
+IExpZ2h0bmluZyBNb3VudGFpbihMR00pIFNvQy4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEFtaXJl
+ZGR5IE1hbGxpa2FyanVuYSByZWRkeQ0KPiA8bWFsbGlrYXJqdW5heC5yZWRkeUBsaW51eC5pbnRl
+bC5jb20+DQo+IC0tLQ0KPiB2MToNCj4gLSBJbml0aWFsIHZlcnNpb24uDQo+IA0KPiB2MjoNCj4g
+LSBGaXggYm90IGVycm9ycy4NCj4gDQo+IHYzOg0KPiAtIE5vIGNoYW5nZS4NCj4gDQo+IHY0Og0K
+PiAtIEFkZHJlc3MgVGhvbWFzIGxhbmdlciBjb21tZW50cw0KDQpQbGVhc2UgcmVhZCBteSBjb21t
+ZW50cyBhZ2FpbiBhbmQgdGhlbiByZXNwb25kIGFib3V0IHRoZSB0b3BpY3MgeW91IGlnbm9yZWQu
+DQpJIGFkZGVkIHNvbWUgaGludHMgYmVsb3cgYWdhaW4uDQoNClRoYW5rcy4NCg0KPiAtLS0NCj4g
+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9pbnRlbCxsZG1hLnlhbWwgICAgICAgIHwgNDE2
+DQo+ICsrKysrKysrKysrKysrKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDQxNiBpbnNlcnRp
+b25zKCspDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2RtYS9pbnRlbCxsZG1hLnlhbWwNCj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL2ludGVsLGxkbWEueWFtbA0KPiBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvaW50ZWwsbGRtYS55YW1sDQo+IG5ldyBm
+aWxlIG1vZGUgMTAwNjQ0DQo+IGluZGV4IDAwMDAwMDAwMDAwMC4uN2Y2NjZiOTgxMmU0DQo+IC0t
+LSAvZGV2L251bGwNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rt
+YS9pbnRlbCxsZG1hLnlhbWwNCj4gQEAgLTAsMCArMSw0MTYgQEANCj4gKyMgU1BEWC1MaWNlbnNl
+LUlkZW50aWZpZXI6IChHUEwtMi4wLW9ubHkgT1IgQlNELTItQ2xhdXNlKQ0KPiArJVlBTUwgMS4y
+DQo+ICstLS0NCj4gKyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvZG1hL2ludGVs
+LGxkbWEueWFtbCMNCj4gKyRzY2hlbWE6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVt
+YXMvY29yZS55YW1sIw0KPiArDQo+ICt0aXRsZTogTGlnaHRuaW5nIE1vdW50YWluIGNlbnRyYWxp
+emVkIGxvdyBzcGVlZCBETUEgYW5kIGhpZ2ggc3BlZWQgRE1BDQo+IGNvbnRyb2xsZXJzLg0KPiAr
+DQo+ICttYWludGFpbmVyczoNCj4gKyAgLSBjaHVhbmh1YS5sZWlAaW50ZWwuY29tDQo+ICsgIC0g
+bWFsbGlrYXJqdW5heC5yZWRkeUBpbnRlbC5jb20NCj4gKw0KPiArcHJvcGVydGllczoNCj4gKyAk
+bm9kZW5hbWU6DQo+ICsgICBwYXR0ZXJuOiAiXmRtYShALiopPyQiDQoNClBsZWFzZSBleHBsYWlu
+IHRoZSBkaWZmZXJlbmNlIHRvIHRoZSBjb21tb24gZG1hIGJpbmRpbmcuDQoNCj4gKw0KPiArICIj
+ZG1hLWNlbGxzIjoNCj4gKyAgIGNvbnN0OiAxDQo+ICsNCj4gKyBjb21wYXRpYmxlOg0KPiArICBh
+bnlPZjoNCj4gKyAgIC0gY29uc3Q6IGludGVsLGxnbS1jZG1hDQo+ICsgICAtIGNvbnN0OiBpbnRl
+bCxsZ20tZG1hMnR4DQo+ICsgICAtIGNvbnN0OiBpbnRlbCxsZ20tZG1hMXJ4DQo+ICsgICAtIGNv
+bnN0OiBpbnRlbCxsZ20tZG1hMXR4DQo+ICsgICAtIGNvbnN0OiBpbnRlbCxsZ20tZG1hMHR4DQo+
+ICsgICAtIGNvbnN0OiBpbnRlbCxsZ20tZG1hMw0KPiArICAgLSBjb25zdDogaW50ZWwsbGdtLXRv
+ZS1kbWEzMA0KPiArICAgLSBjb25zdDogaW50ZWwsbGdtLXRvZS1kbWEzMQ0KDQpQbGVhc2UgZXhw
+bGFpbiB3aHkgeW91IG5lZWQgc28gbWFueSBkaWZmZXJlbnQgY29tcGF0aWJsZSBzdHJpbmdzLg0K
+DQo+ICsNCj4gKyByZWc6DQo+ICsgIG1heEl0ZW1zOiAxDQo+ICsNCj4gKyBjbG9ja3M6DQo+ICsg
+IG1heEl0ZW1zOiAxDQo+ICsNCj4gKyByZXNldHM6DQo+ICsgIG1heEl0ZW1zOiAxDQo+ICsNCj4g
+KyBpbnRlcnJ1cHRzOg0KPiArICBtYXhJdGVtczogMQ0KPiArDQo+ICsgaW50ZWwsZG1hLXBvbGwt
+Y250Og0KPiArICAgJHJlZjogL3NjaGVtYXMvdHlwZXMueWFtbCNkZWZpbml0aW9ucy91aW50MzIN
+Cj4gKyAgIGRlc2NyaXB0aW9uOg0KPiArICAgICBETUEgZGVzY3JpcHRvciBwb2xsaW5nIGNvdW50
+ZXIuIEl0IG1heSBuZWVkIGZpbmUgdHVuZSBhY2NvcmRpbmcNCj4gKyAgICAgdG8gdGhlIHN5c3Rl
+bSBhcHBsaWNhdGlvbiBzY2VuYXJpby4NCj4gKw0KPiArIGludGVsLGRtYS1ieXRlLWVuOg0KPiAr
+ICAgdHlwZTogYm9vbGVhbg0KPiArICAgZGVzY3JpcHRpb246DQo+ICsgICAgIERNQSBieXRlIGVu
+YWJsZSBpcyBvbmx5IHZhbGlkIGZvciBETUEgd3JpdGUoUlgpLg0KPiArICAgICBCeXRlIGVuYWJs
+ZSgxKSBtZWFucyBETUEgd3JpdGUgd2lsbCBiZSBiYXNlZCBvbiB0aGUgbnVtYmVyIG9mDQo+IGR3
+b3Jkcw0KPiArICAgICBpbnN0ZWFkIG9mIHRoZSB3aG9sZSBidXJzdC4NCj4gKw0KPiArIGludGVs
+LGRtYS1kcmI6DQo+ICsgICAgdHlwZTogYm9vbGVhbg0KPiArICAgIGRlc2NyaXB0aW9uOg0KPiAr
+ICAgICAgRE1BIGRlc2NyaXB0b3IgcmVhZCBiYWNrIHRvIG1ha2Ugc3VyZSBkYXRhIGFuZCBkZXNj
+DQo+IHN5bmNocm9uaXphdGlvbi4NCj4gKw0KPiArIGludGVsLGRtYS1idXJzdDoNCj4gKyAgICAk
+cmVmOiAvc2NoZW1hcy90eXBlcy55YW1sI2RlZmluaXRpb25zL3VpbnQzMg0KPiArICAgIGRlc2Ny
+aXB0aW9uOg0KPiArICAgICAgIFNwZWNpZml5IHRoZSBETUEgYnVyc3Qgc2l6ZShpbiBkd29yZHMp
+LCB0aGUgdmFsaWQgdmFsdWUgd2lsbCBiZQ0KPiA4LCAxNiwgMzIuDQo+ICsgICAgICAgRGVmYXVs
+dCBpcyAxNiBmb3IgZGF0YSBwYXRoIGRtYSwgMzIgaXMgZm9yIG1lbWNvcHkgRE1BLg0KPiArDQo+
+ICsgaW50ZWwsZG1hLXBvbGxpbmctY250Og0KPiArICAgICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlh
+bWwjZGVmaW5pdGlvbnMvdWludDMyDQo+ICsgICAgZGVzY3JpcHRpb246DQo+ICsgICAgICAgRE1B
+IGRlc2NyaXB0b3IgcG9sbGluZyBjb3VudGVyLiBJdCBtYXkgbmVlZCBmaW5lIHR1bmUgYWNjb3Jk
+aW5nDQo+IHRvDQo+ICsgICAgICAgdGhlIHN5c3RlbSBhcHBsaWNhdGlvbiBzY2VuYXJpby4NCj4g
+Kw0KPiArIGludGVsLGRtYS1kZXNjLWluLXNyYW06DQo+ICsgICAgdHlwZTogYm9vbGVhbg0KPiAr
+ICAgIGRlc2NyaXB0aW9uOg0KPiArICAgICAgIERNQSBkZXNjcml0cG9ycyBpbiBTUkFNIG9yIG5v
+dC4gU29tZSBvbGQgY29udHJvbGxlcnMgZGVzY3JpcHRvcnMNCj4gKyAgICAgICBjYW4gYmUgaW4g
+RFJBTSBvciBTUkFNLiBUaGUgbmV3IG9uZXMgYXJlIGFsbCBpbiBTUkFNLg0KPiArDQo+ICsgaW50
+ZWwsZG1hLW9ycmM6DQo+ICsgICAgJHJlZjogL3NjaGVtYXMvdHlwZXMueWFtbCNkZWZpbml0aW9u
+cy91aW50MzINCj4gKyAgICBkZXNjcmlwdGlvbjoNCj4gKyAgICAgICBETUEgb3V0c3RhbmRpbmcg
+cmVhZCBjb3VudGVyLiBUaGUgbWF4aW11bSB2YWx1ZSBpcyAxNiwgYW5kIGl0DQo+IG1heQ0KPiAr
+ICAgICAgIG5lZWQgZmluZSB0dW5lIGFjY29yZGluZyB0byB0aGUgc3lzdGVtIGFwcGxpY2F0aW9u
+IHNjZW5hcmlvcy4NCj4gKw0KPiArIGludGVsLGRtYS1kYnVyc3Qtd3I6DQo+ICsgICAgdHlwZTog
+Ym9vbGVhbg0KPiArICAgIGRlc2NyaXB0aW9uOg0KPiArICAgICAgIEVuYWJsZSBSWCBkeW5hbWlj
+IGJ1cnN0IHdyaXRlLiBJdCBvbmx5IGFwcGxpZXMgdG8gUlggRE1BIGFuZA0KPiBtZW1jb3B5IERN
+QS4NCj4gKw0KPiArDQo+ICsgZG1hLXBvcnRzOg0KPiArICAgIHR5cGU6IG9iamVjdA0KPiArICAg
+IGRlc2NyaXB0aW9uOg0KPiArICAgICAgIFRoaXMgc3ViLW5vZGUgbXVzdCBjb250YWluIGEgc3Vi
+LW5vZGUgZm9yIGVhY2ggRE1BIHBvcnQuDQo+ICsgICAgcHJvcGVydGllczoNCj4gKyAgICAgICcj
+YWRkcmVzcy1jZWxscyc6DQo+ICsgICAgICAgIGNvbnN0OiAxDQo+ICsgICAgICAnI3NpemUtY2Vs
+bHMnOg0KPiArICAgICAgICBjb25zdDogMA0KPiArDQo+ICsgICAgcGF0dGVyblByb3BlcnRpZXM6
+DQo+ICsgICAgICAiXmRtYS1wb3J0c0BbMC05XSskIjoNCj4gKyAgICAgICAgICB0eXBlOiBvYmpl
+Y3QNCj4gKw0KPiArICAgICAgICAgIHByb3BlcnRpZXM6DQo+ICsgICAgICAgICAgICByZWc6DQo+
+ICsgICAgICAgICAgICAgIGl0ZW1zOg0KPiArICAgICAgICAgICAgICAgIC0gZW51bTogWzAsIDEs
+IDIsIDMsIDQsIDVdDQo+ICsgICAgICAgICAgICAgIGRlc2NyaXB0aW9uOg0KPiArICAgICAgICAg
+ICAgICAgICBXaGljaCBwb3J0IHRoaXMgbm9kZSByZWZlcnMgdG8uDQo+ICsNCj4gKyAgICAgICAg
+ICAgIGludGVsLG5hbWU6DQo+ICsgICAgICAgICAgICAgICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlh
+bWwjZGVmaW5pdGlvbnMvc3RyaW5nLWFycmF5DQo+ICsgICAgICAgICAgICAgIGRlc2NyaXB0aW9u
+Og0KPiArICAgICAgICAgICAgICAgICBQb3J0IG5hbWUgb2YgZWFjaCBETUEgcG9ydC4NCj4gKw0K
+PiArICAgICAgICAgICAgaW50ZWwsY2hhbnM6DQo+ICsgICAgICAgICAgICAgICRyZWY6IC9zY2hl
+bWFzL3R5cGVzLnlhbWwjL2RlZmluaXRpb25zL3VpbnQzMi1hcnJheQ0KPiArICAgICAgICAgICAg
+ICBkZXNjcmlwdGlvbjoNCj4gKyAgICAgICAgICAgICAgICAgVGhlIGNoYW5uZWxzIGluY2x1ZGVk
+IG9uIHRoaXMgcG9ydC4gRm9ybWF0IGlzIGNoYW5uZWwNCj4gc3RhcnQNCj4gKyAgICAgICAgICAg
+ICAgICAgbnVtYmVyIGFuZCBob3cgbWFueSBjaGFubmVscyBvbiB0aGlzIHBvcnQuDQo+ICsNCj4g
+KyAgICAgICAgICAgIGludGVsLGJ1cnN0Og0KPiArICAgICAgICAgICAgICAkcmVmOiAvc2NoZW1h
+cy90eXBlcy55YW1sIy9kZWZpbml0aW9ucy91aW50MzINCj4gKyAgICAgICAgICAgICAgZGVzY3Jp
+cHRpb246DQo+ICsgICAgICAgICAgICAgICAgIFNwZWNpZnkgdGhlIERNQSBwb3J0IGJ1cnN0IHNp
+emUsIHRoZSB2YWxpZCB2YWx1ZSB3aWxsDQo+IGJlDQo+ICsgICAgICAgICAgICAgICAgIDIsIDQs
+IDguIERlZmF1bHQgaXMgMiBmb3IgZGF0YSBwYXRoIGRtYS4NCj4gKw0KPiArICAgICAgICAgICAg
+aW50ZWwsdHh3Z3Q6DQo+ICsgICAgICAgICAgICAgICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwj
+L2RlZmluaXRpb25zL3VpbnQzMg0KPiArICAgICAgICAgICAgICBkZXNjcmlwdGlvbjoNCj4gKyAg
+ICAgICAgICAgICAgICAgU3BlY2lmeSB0aGUgcG9ydCB0cmFuc21pdCB3ZWlnaHQgZm9yIFFvUyBw
+dXJwb3NlLiBUaGUNCj4gdmFsaWQNCj4gKyAgICAgICAgICAgICAgICAgdmFsdWUgaXMgMX43LiBE
+ZWZhdWx0IHZhbHVlIGlzIDEuDQo+ICsNCj4gKyAgICAgICAgICAgIGludGVsLGVuZGlhbjoNCj4g
+KyAgICAgICAgICAgICAgJHJlZjogL3NjaGVtYXMvdHlwZXMueWFtbCMvZGVmaW5pdGlvbnMvdWlu
+dDMyDQo+ICsgICAgICAgICAgICAgIGRlc2NyaXB0aW9uOg0KPiArICAgICAgICAgICAgICAgICBT
+cGVjaWZ5IHRoZSBETUEgcG9ydCBlbmRpYW5uZXMgY29udmVyc2lvbiBkdWUgdG8gU29DDQo+IGVu
+ZGlhbm5lc3MgZGlmZmVyZW5jZS4NCj4gKw0KPiArICAgICAgICAgIHJlcXVpcmVkOg0KPiArICAg
+ICAgICAgICAgLSByZWcNCj4gKyAgICAgICAgICAgIC0gaW50ZWwsbmFtZQ0KPiArICAgICAgICAg
+ICAgLSBpbnRlbCxjaGFucw0KPiArDQo+ICsNCj4gKyBkbWEtY2hhbm5lbHM6DQo+ICsgICAgdHlw
+ZTogb2JqZWN0DQo+ICsgICAgZGVzY3JpcHRpb246DQo+ICsgICAgICAgVGhpcyBzdWItbm9kZSBt
+dXN0IGNvbnRhaW4gYSBzdWItbm9kZSBmb3IgZWFjaCBETUEgY2hhbm5lbC4NCj4gKyAgICBwcm9w
+ZXJ0aWVzOg0KPiArICAgICAgJyNhZGRyZXNzLWNlbGxzJzoNCj4gKyAgICAgICAgY29uc3Q6IDEN
+Cj4gKyAgICAgICcjc2l6ZS1jZWxscyc6DQo+ICsgICAgICAgIGNvbnN0OiAwDQo+ICsNCj4gKyAg
+ICBwYXR0ZXJuUHJvcGVydGllczoNCj4gKyAgICAgICJeZG1hLWNoYW5uZWxzQFswLTldKyQiOg0K
+PiArICAgICAgICAgIHR5cGU6IG9iamVjdA0KPiArDQo+ICsgICAgICAgICAgcHJvcGVydGllczoN
+Cj4gKyAgICAgICAgICAgIHJlZzoNCj4gKyAgICAgICAgICAgICAgaXRlbXM6DQo+ICsgICAgICAg
+ICAgICAgICAgLSBlbnVtOiBbMCwgMSwgMiwgMywgNCwgNSwgNiwgNywgOCwgOSwgMTAsIDExLCAx
+MiwgMTMsDQo+IDE0LCAxNV0NCj4gKyAgICAgICAgICAgICAgZGVzY3JpcHRpb246DQo+ICsgICAg
+ICAgICAgICAgICAgIFdoaWNoIGNoYW5uZWwgdGhpcyBub2RlIHJlZmVycyB0by4NCj4gKw0KPiAr
+ICAgICAgICAgICAgaW50ZWwsZGVzY19udW06DQo+ICsgICAgICAgICAgICAgICRyZWY6IC9zY2hl
+bWFzL3R5cGVzLnlhbWwjL2RlZmluaXRpb25zL3VpbnQzMg0KPiArICAgICAgICAgICAgICBkZXNj
+cmlwdGlvbjoNCj4gKyAgICAgICAgICAgICAgICAgUGVyIGNoYW5uZWwgbWF4aW11bSBkZXNjcmlw
+dG9yIG51bWJlci4gVGhlIG1heCB2YWx1ZQ0KPiBpcyAyNTUuDQo+ICsNCj4gKyAgICAgICAgICAg
+IGludGVsLHBrdF9zejoNCj4gKyAgICAgICAgICAgICAgJHJlZjogL3NjaGVtYXMvdHlwZXMueWFt
+bCMvZGVmaW5pdGlvbnMvdWludDMyDQo+ICsgICAgICAgICAgICAgIGRlc2NyaXB0aW9uOg0KPiAr
+ICAgICAgICAgICAgICAgICBDaGFubmVsIGJ1ZmZlciBwYWNrZXQgc2l6ZS4gSXQgbXVzdCBiZSBw
+b3dlciBvZiAyLg0KPiArICAgICAgICAgICAgICAgICBUaGUgbWF4aW11bSBzaXplIGlzIDQwOTYu
+DQo+ICsNCj4gKyAgICAgICAgICAgIGludGVsLGRlc2Mtcngtbm9ucG9zdDoNCj4gKyAgICAgICAg
+ICAgICAgdHlwZTogYm9vbGVhbg0KPiArICAgICAgICAgICAgICBkZXNjcmlwdGlvbjoNCj4gKyAg
+ICAgICAgICAgICAgICAgV3JpdGUgbm9uLXBvc3RlZCB0eXBlIGZvciBETUEgUlggbGFzdCBkYXRh
+IGJlYXQgb2YNCj4gZXZlcnkgZGVzY3JpcHRvci4NCj4gKw0KPiArICAgICAgICAgICAgaW50ZWws
+ZGF0YS1lbmRpYW46DQo+ICsgICAgICAgICAgICAgICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwj
+L2RlZmluaXRpb25zL3VpbnQzMg0KPiArICAgICAgICAgICAgICBkZXNjcmlwdGlvbjoNCj4gKyAg
+ICAgICAgICAgICAgICAgUGVyIGNoYW5uZWwgZGF0YSBlbmRpYW5uZXNzIGNvbmZpZ3VyYXRpb24g
+YWNjb3JkaW5nIHRvDQo+IFNvQyByZXF1aXJlbWVudC4NCj4gKw0KPiArICAgICAgICAgICAgaW50
+ZWwsZGVzYy1lbmRpYW46DQo+ICsgICAgICAgICAgICAgICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlh
+bWwjL2RlZmluaXRpb25zL3VpbnQzMg0KPiArICAgICAgICAgICAgICBkZXNjcmlwdGlvbjoNCj4g
+KyAgICAgICAgICAgICAgICAgUGVyIGNoYW5uZWwgZGVzY3JpcHRvciBlbmRpYW5uZXNzIGNvbmZp
+Z3VyYXRpb24NCj4gYWNjb3JkaW5nIHRvIFNvQyByZXF1aXJlbWVudC4NCj4gKw0KPiArICAgICAg
+ICAgICAgaW50ZWwsZGF0YS1lbmRpYW4tZW46DQo+ICsgICAgICAgICAgICAgIHR5cGU6IGJvb2xl
+YW4NCj4gKyAgICAgICAgICAgICAgZGVzY3JpcHRpb246DQo+ICsgICAgICAgICAgICAgICAgIFBl
+ciBjaGFubmVsIGRhdGEgZW5kaWFubmVzcyBlbmFibGVkLg0KPiArDQo+ICsgICAgICAgICAgICBp
+bnRlbCxkZXNjLWVuZGlhbi1lbjoNCj4gKyAgICAgICAgICAgICAgdHlwZTogYm9vbGVhbg0KPiAr
+ICAgICAgICAgICAgICBkZXNjcmlwdGlvbjoNCj4gKyAgICAgICAgICAgICAgICAgUGVyIGNoYW5u
+ZWwgZGVzY3JpcHRvciBlbmRpYW5uZXNzIGVuYWJsZWQuDQo+ICsNCj4gKyAgICAgICAgICAgIGlu
+dGVsLGJ5dGUtb2Zmc2V0Og0KPiArICAgICAgICAgICAgICAkcmVmOiAvc2NoZW1hcy90eXBlcy55
+YW1sIy9kZWZpbml0aW9ucy91aW50MzINCj4gKyAgICAgICAgICAgICAgZGVzY3JpcHRpb246DQo+
+ICsgICAgICAgICAgICAgICAgIFBlciBjaGFubmVsIGJ5dGUgb2Zmc2V0KDB+MTI4KS4NCj4gKw0K
+PiArICAgICAgICAgICAgaW50ZWwsaGRyLW1vZGU6DQo+ICsgICAgICAgICAgICAgICRyZWY6IC9z
+Y2hlbWFzL3R5cGVzLnlhbWwjL2RlZmluaXRpb25zL3VpbnQzMi1hcnJheQ0KPiArICAgICAgICAg
+ICAgICBkZXNjcmlwdGlvbjoNCj4gKyAgICAgICAgICAgICAgICAgVGhlIGZpcnN0IHBhcmFtZXRl
+ciBpcyBoZWFkZXIgbW9kZSBzaXplLCB0aGUgc2Vjb25kDQo+ICsgICAgICAgICAgICAgICAgIHBh
+cmFtZXRlciBpcyBjaGVja3N1bSBlbmFibGUgb3IgZGlzYWJsZS4gSWYgZW5hYmxlZCwNCj4gKyAg
+ICAgICAgICAgICAgICAgaGVhZGVyIG1vZGUgc2l6ZSBpcyBpZ25vcmVkLiBJZiBkaXNhYmxlZCwg
+aGVhZGVyIG1vZGUNCj4gKyAgICAgICAgICAgICAgICAgc2l6ZSBtdXN0IGJlIHByb3ZpZGVkLg0K
+PiArDQo+ICsgICAgICAgICAgICBpbnRlbCxub24tYXJiLWNudDoNCj4gKyAgICAgICAgICAgICAg
+JHJlZjogL3NjaGVtYXMvdHlwZXMueWFtbCMvZGVmaW5pdGlvbnMvdWludDMyDQo+ICsgICAgICAg
+ICAgICAgIGRlc2NyaXB0aW9uOg0KPiArICAgICAgICAgICAgICAgICBQZXIgY2hhbm5lbCBub24g
+YXJiaXRyYXRpb24gY291bnRlciB3aGlsZSBwb2xsaW5nDQo+ICsNCj4gKyAgICAgICAgICAgIGlu
+dGVsLGFyYi1jbnQ6DQo+ICsgICAgICAgICAgICAgICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwj
+L2RlZmluaXRpb25zL3VpbnQzMg0KPiArICAgICAgICAgICAgICBkZXNjcmlwdGlvbjoNCj4gKyAg
+ICAgICAgICAgICAgICAgUGVyIGNoYW5uZWwgYXJiaXRyYXRpb24gY291bnRlciB3aGlsZSBwb2xs
+aW5nLg0KPiArICAgICAgICAgICAgICAgICBhcmJfY250IG11c3QgYmUgZ3JlYXRlciB0aGFuIG5v
+bl9hcmJfY250DQo+ICsNCj4gKyAgICAgICAgICAgIGludGVsLHBrdC1kcm9wOg0KPiArICAgICAg
+ICAgICAgICB0eXBlOiBib29sZWFuDQo+ICsgICAgICAgICAgICAgIGRlc2NyaXB0aW9uOg0KPiAr
+ICAgICAgICAgICAgICAgICBDaGFubmVsIHBhY2tldCBkcm9wIGVuYWJsZWQgb3IgZGlzYWJsZWQu
+DQo+ICsNCj4gKyAgICAgICAgICAgIGludGVsLGh3LWRlc2M6DQo+ICsgICAgICAgICAgICAgICRy
+ZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjL2RlZmluaXRpb25zL3VpbnQzMi1hcnJheQ0KPiArICAg
+ICAgICAgICAgICBkZXNjcmlwdGlvbjoNCj4gKyAgICAgICAgICAgICAgICAgUGVyIGNoYW5uZWwg
+ZG1hIGhhcmR3YXJlIGRlc2NyaXB0b3IgY29uZmlndXJhdGlvbi4NCj4gKyAgICAgICAgICAgICAg
+ICAgVGhlIGZpcnN0IHBhcmFtZXRlciBpcyBkZXNjcmlwdG9yIHBoeXNpY2FsIGFkZHJlc3MgYW5k
+DQo+IHRoZQ0KPiArICAgICAgICAgICAgICAgICBzZWNvbmQgcGFyYW1ldGVyIGhhcmR3YXJlIGRl
+c2NyaXB0b3IgbnVtYmVyLg0KPiArDQo+ICsgICAgICAgICAgcmVxdWlyZWQ6DQo+ICsgICAgICAg
+ICAgICAtIHJlZw0KPiArDQo+ICtyZXF1aXJlZDoNCj4gKyAtIGNvbXBhdGlibGUNCj4gKyAtIHJl
+Zw0KPiArIC0gJyNkbWEtY2VsbHMnDQo+ICsNCj4gK2V4YW1wbGVzOg0KPiArIC0gfA0KPiArICAg
+ZG1hMDogZG1hQGUwZTAwMDAwIHsNCj4gKyAgICAgY29tcGF0aWJsZSA9ICJpbnRlbCxsZ20tY2Rt
+YSI7DQo+ICsgICAgIHJlZyA9IDwweGUwZTAwMDAwIDB4MTAwMD47DQo+ICsgICAgICNkbWEtY2Vs
+bHMgPSA8MT47DQo+ICsgICAgIGludGVycnVwdC1wYXJlbnQgPSA8JmlvYXBpYzE+Ow0KPiArICAg
+ICBpbnRlcnJ1cHRzID0gPDgyIDE+Ow0KPiArICAgICByZXNldHMgPSA8JnJjdTAgMHgzMCAwPjsN
+Cj4gKyAgICAgcmVzZXQtbmFtZXMgPSAiY3RybCI7DQo+ICsgICAgIGNsb2NrcyA9IDwmY2d1MCA4
+MD47DQo+ICsgICAgIGludGVsLGRtYS1wb2xsLWNudCA9IDw0PjsNCj4gKyAgICAgaW50ZWwsZG1h
+LWJ5dGUtZW47DQo+ICsgICAgIGludGVsLGRtYS1kcmI7DQo+ICsgICAgIGRtYS1wb3J0cyB7DQo+
+ICsgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ICsgICAgICAgI3NpemUtY2VsbHMgPSA8
+MD47DQo+ICsNCj4gKyAgICAgICBkbWEtcG9ydHNAMCB7DQo+ICsgICAgICAgICAgIHJlZyA9IDww
+PjsNCj4gKyAgICAgICAgICAgaW50ZWwsbmFtZSA9ICJTUEkwIjsNCj4gKyAgICAgICAgICAgaW50
+ZWwsY2hhbnMgPSA8MCAyPjsNCj4gKyAgICAgICAgICAgaW50ZWwsYnVyc3QgPSA8Mj47DQo+ICsg
+ICAgICAgICAgIGludGVsLHR4d2d0ID0gPDE+Ow0KPiArICAgICAgIH07DQo+ICsgICAgICAgZG1h
+LXBvcnRzQDEgew0KPiArICAgICAgICAgICByZWcgPSA8MT47DQo+ICsgICAgICAgICAgIGludGVs
+LG5hbWUgPSAiU1BJMSI7DQo+ICsgICAgICAgICAgIGludGVsLGNoYW5zID0gPDIgMj47DQo+ICsg
+ICAgICAgICAgIGludGVsLGJ1cnN0ID0gPDI+Ow0KPiArICAgICAgICAgICBpbnRlbCx0eHdndCA9
+IDwxPjsNCj4gKyAgICAgICB9Ow0KPiArICAgICAgIGRtYS1wb3J0c0AyIHsNCj4gKyAgICAgICAg
+ICAgcmVnID0gPDI+Ow0KPiArICAgICAgICAgICBpbnRlbCxuYW1lID0gIlNQSTIiOw0KPiArICAg
+ICAgICAgICBpbnRlbCxjaGFucyA9IDw0IDI+Ow0KPiArICAgICAgICAgICBpbnRlbCxidXJzdCA9
+IDwyPjsNCj4gKyAgICAgICAgICAgaW50ZWwsdHh3Z3QgPSA8MT47DQo+ICsgICAgICAgfTsNCj4g
+KyAgICAgICBkbWEtcG9ydHNAMyB7DQo+ICsgICAgICAgICAgIHJlZyA9IDwzPjsNCj4gKyAgICAg
+ICAgICAgaW50ZWwsbmFtZSA9ICJTUEkzIjsNCj4gKyAgICAgICAgICAgaW50ZWwsY2hhbnMgPSA8
+NiAyPjsNCj4gKyAgICAgICAgICAgaW50ZWwsYnVyc3QgPSA8Mj47DQo+ICsgICAgICAgICAgIGlu
+dGVsLGVuZGlhbiA9IDwwPjsNCj4gKyAgICAgICAgICAgaW50ZWwsdHh3Z3QgPSA8MT47DQo+ICsg
+ICAgICAgfTsNCj4gKyAgICAgICBkbWEtcG9ydHNANCB7DQo+ICsgICAgICAgICAgIHJlZyA9IDw0
+PjsNCj4gKyAgICAgICAgICAgaW50ZWwsbmFtZSA9ICJIU05BTkQiOw0KPiArICAgICAgICAgICBp
+bnRlbCxjaGFucyA9IDw4IDI+Ow0KPiArICAgICAgICAgICBpbnRlbCxidXJzdCA9IDw4PjsNCj4g
+KyAgICAgICAgICAgaW50ZWwsdHh3Z3QgPSA8MT47DQo+ICsgICAgICAgfTsNCj4gKyAgICAgICBk
+bWEtcG9ydHNANSB7DQo+ICsgICAgICAgICAgIHJlZyA9IDw1PjsNCj4gKyAgICAgICAgICAgaW50
+ZWwsbmFtZSA9ICJQQ00iOw0KPiArICAgICAgICAgICBpbnRlbCxjaGFucyA9IDwxMCA2PjsNCj4g
+KyAgICAgICAgICAgaW50ZWwsYnVyc3QgPSA8OD47DQo+ICsgICAgICAgICAgIGludGVsLHR4d2d0
+ID0gPDE+Ow0KPiArICAgICAgIH07DQo+ICsgICAgIH07DQo+ICsgICAgIGRtYS1jaGFubmVscyB7
+DQo+ICsgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ICsgICAgICAgI3NpemUtY2VsbHMg
+PSA8MD47DQo+ICsNCj4gKyAgICAgICBkbWEtY2hhbm5lbHNAMCB7DQo+ICsgICAgICAgICAgIHJl
+ZyA9IDwwPjsNCj4gKyAgICAgICAgICAgaW50ZWwsZGVzY19udW0gPSA8MT47DQo+ICsgICAgICAg
+fTsNCj4gKyAgICAgICBkbWEtY2hhbm5lbHNAMSB7DQo+ICsgICAgICAgICAgIHJlZyA9IDwxPjsN
+Cj4gKyAgICAgICAgICAgaW50ZWwsZGVzY19udW0gPSA8MT47DQo+ICsgICAgICAgfTsNCj4gKyAg
+ICAgICBkbWEtY2hhbm5lbHNAMiB7DQo+ICsgICAgICAgICAgIHJlZyA9IDwyPjsNCj4gKyAgICAg
+ICAgICAgaW50ZWwsZGVzY19udW0gPSA8MT47DQo+ICsgICAgICAgfTsNCj4gKyAgICAgICBkbWEt
+Y2hhbm5lbHNAMyB7DQo+ICsgICAgICAgICAgIHJlZyA9IDwzPjsNCj4gKyAgICAgICAgICAgaW50
+ZWwsZGVzY19udW0gPSA8MT47DQo+ICsgICAgICAgfTsNCj4gKyAgICAgICBkbWEtY2hhbm5lbHNA
+NCB7DQo+ICsgICAgICAgICAgIHJlZyA9IDw0PjsNCj4gKyAgICAgICAgICAgaW50ZWwsZGVzY19u
+dW0gPSA8MT47DQo+ICsgICAgICAgfTsNCj4gKyAgICAgICBkbWEtY2hhbm5lbHNANSB7DQo+ICsg
+ICAgICAgICAgIHJlZyA9IDw1PjsNCj4gKyAgICAgICAgICAgaW50ZWwsZGVzY19udW0gPSA8MT47
+DQo+ICsgICAgICAgfTsNCj4gKyAgICAgICBkbWEtY2hhbm5lbHNANiB7DQo+ICsgICAgICAgICAg
+IHJlZyA9IDw2PjsNCj4gKyAgICAgICAgICAgaW50ZWwsZGVzY19udW0gPSA8MT47DQo+ICsgICAg
+ICAgfTsNCj4gKyAgICAgICBkbWEtY2hhbm5lbHNANyB7DQo+ICsgICAgICAgICAgIHJlZyA9IDw3
+PjsNCj4gKyAgICAgICAgICAgaW50ZWwsZGVzY19udW0gPSA8MT47DQo+ICsgICAgICAgfTsNCj4g
+KyAgICAgICBkbWEtY2hhbm5lbHNAOCB7DQo+ICsgICAgICAgICAgIHJlZyA9IDw4PjsNCj4gKyAg
+ICAgICB9Ow0KPiArICAgICAgIGRtYS1jaGFubmVsc0A5IHsNCj4gKyAgICAgICAgICAgcmVnID0g
+PDk+Ow0KPiArICAgICAgIH07DQo+ICsgICAgICAgZG1hLWNoYW5uZWxzQDEwIHsNCj4gKyAgICAg
+ICAgICAgcmVnID0gPDEwPjsNCj4gKyAgICAgICB9Ow0KPiArICAgICAgIGRtYS1jaGFubmVsc0Ax
+MSB7DQo+ICsgICAgICAgICAgIHJlZyA9IDwxMT47DQo+ICsgICAgICAgfTsNCj4gKyAgICAgICBk
+bWEtY2hhbm5lbHNAMTIgew0KPiArICAgICAgICAgICByZWcgPSA8MTI+Ow0KPiArICAgICAgIH07
+DQo+ICsgICAgICAgZG1hLWNoYW5uZWxzQDEzIHsNCj4gKyAgICAgICAgICAgcmVnID0gPDEzPjsN
+Cj4gKyAgICAgICB9Ow0KPiArICAgICAgIGRtYS1jaGFubmVsc0AxNCB7DQo+ICsgICAgICAgICAg
+IHJlZyA9IDwxND47DQo+ICsgICAgICAgfTsNCj4gKyAgICAgICBkbWEtY2hhbm5lbHNAMTUgew0K
+PiArICAgICAgICAgICByZWcgPSA8MTU+Ow0KPiArICAgICAgIH07DQo+ICsgICAgIH07DQo+ICsg
+ICB9Ow0KPiArIC0gfA0KPiArICAgZG1hMzogZG1hQGVjODAwMDAwIHsNCj4gKyAgICAgY29tcGF0
+aWJsZSA9ICJpbnRlbCxsZ20tZG1hMyI7DQo+ICsgICAgIHJlZyA9IDwweGVjODAwMDAwIDB4MTAw
+MD47DQo+ICsgICAgIGNsb2NrcyA9IDwmY2d1MCA3MT47DQo+ICsgICAgIHJlc2V0cyA9IDwmcmN1
+MCAweDEwIDk+Ow0KPiArICAgICAjZG1hLWNlbGxzID0gPDE+Ow0KPiArICAgICBpbnRlbCxkbWEt
+YnVyc3QgPSA8MzI+Ow0KPiArICAgICBpbnRlbCxkbWEtcG9sbGluZy1jbnQgPSA8MTY+Ow0KPiAr
+ICAgICBpbnRlbCxkbWEtZGVzYy1pbi1zcmFtOw0KPiArICAgICBpbnRlbCxkbWEtb3JyYyA9IDwx
+Nj47DQo+ICsgICAgIGludGVsLGRtYS1ieXRlLWVuOw0KPiArICAgICBpbnRlbCxkbWEtZGJ1cnN0
+LXdyOw0KPiArICAgICBkbWEtY2hhbm5lbHMgew0KPiArICAgICAgICAgI2FkZHJlc3MtY2VsbHMg
+PSA8MT47DQo+ICsgICAgICAgICAjc2l6ZS1jZWxscyA9IDwwPjsNCj4gKw0KPiArICAgICAgICAg
+ZG1hLWNoYW5uZWxzQDEyIHsNCj4gKyAgICAgICAgICAgICByZWcgPSA8MTI+Ow0KPiArICAgICAg
+ICAgICAgIGludGVsLHBrdF9zeiA9IDw0MDk2PjsNCj4gKyAgICAgICAgICAgICBpbnRlbCxkZXNj
+LXJ4LW5vbnBvc3Q7DQo+ICsgICAgICAgICAgICAgaW50ZWwsZGF0YS1lbmRpYW4gPSA8MD47DQo+
+ICsgICAgICAgICAgICAgaW50ZWwsZGVzYy1lbmRpYW4gPSA8MD47DQo+ICsgICAgICAgICAgICAg
+aW50ZWwsZGF0YS1lbmRpYW4tZW47DQo+ICsgICAgICAgICAgICAgaW50ZWwsZGVzYy1lbmRpYW4t
+ZW47DQo+ICsgICAgICAgICAgICAgaW50ZWwsYnl0ZS1vZmZzZXQgPSA8MD47DQo+ICsgICAgICAg
+ICAgICAgaW50ZWwsaGRyLW1vZGUgPSA8MTI4IDA+Ow0KPiArICAgICAgICAgICAgIGludGVsLG5v
+bi1hcmItY250ID0gPDA+Ow0KPiArICAgICAgICAgICAgIGludGVsLGFyYi1jbnQgPSA8MD47DQo+
+ICsgICAgICAgICAgICAgaW50ZWwsaHctZGVzYyA9IDwweDIwMDAwMDAwIDg+Ow0KPiArICAgICAg
+ICAgfTsNCj4gKyAgICAgICAgIGRtYS1jaGFubmVsc0AxMyB7DQo+ICsgICAgICAgICAgICAgcmVn
+ID0gPDEzPjsNCj4gKyAgICAgICAgICAgICBpbnRlbCxwa3QtZHJvcDsNCj4gKyAgICAgICAgICAg
+ICBpbnRlbCxwa3Rfc3ogPSA8NDA5Nj47DQo+ICsgICAgICAgICAgICAgaW50ZWwsZGF0YS1lbmRp
+YW4gPSA8MD47DQo+ICsgICAgICAgICAgICAgaW50ZWwsZGVzYy1lbmRpYW4gPSA8MD47DQo+ICsg
+ICAgICAgICAgICAgaW50ZWwsZGF0YS1lbmRpYW4tZW47DQo+ICsgICAgICAgICAgICAgaW50ZWws
+ZGVzYy1lbmRpYW4tZW47DQo+ICsgICAgICAgICAgICAgaW50ZWwsYnl0ZS1vZmZzZXQgPSA8MD47
+DQo+ICsgICAgICAgICAgICAgaW50ZWwsaGRyLW1vZGUgPSA8MTI4IDA+Ow0KPiArICAgICAgICAg
+ICAgIGludGVsLG5vbi1hcmItY250ID0gPDA+Ow0KPiArICAgICAgICAgICAgIGludGVsLGFyYi1j
+bnQgPSA8MD47DQo+ICsgICAgICAgICB9Ow0KPiArICAgICB9Ow0KPiArICAgfTsNCj4gLS0NCj4g
+Mi4xMS4wDQoNCg==
