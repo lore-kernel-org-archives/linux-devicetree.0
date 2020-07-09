@@ -2,1335 +2,467 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 925D2C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 14:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E83C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 14:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5980E20672
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 14:45:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7053B2073A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 14:47:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r6Newwhh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgGIOpd (ORCPT
+        id S1727907AbgGIOrw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 10:45:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49230 "EHLO
+        Thu, 9 Jul 2020 10:47:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbgGIOpd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 10:45:33 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EC3EC08C5CE
-        for <devicetree@vger.kernel.org>; Thu,  9 Jul 2020 07:45:32 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jtXnm-0004c9-Tz; Thu, 09 Jul 2020 16:45:30 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jtXnl-0003F8-WE; Thu, 09 Jul 2020 16:45:30 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
-To:     Shawn Guo <shawnguo@kernel.org>,
-        Paul Barker <pbarker@konsulko.com>, devicetree@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Cc:     Matt Ranostay <matt.ranostay@konsulko.com>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        kernel@pengutronix.de,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Subject: [PATCH] ARM: dts: imx: default to #pwm-cells = <3> in the SoC dtsi files
-Date:   Thu,  9 Jul 2020 16:45:27 +0200
-Message-Id: <20200709144527.23528-1-uwe@kleine-koenig.org>
-X-Mailer: git-send-email 2.27.0
+        with ESMTP id S1727905AbgGIOrw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 10:47:52 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1331AC08C5DD
+        for <devicetree@vger.kernel.org>; Thu,  9 Jul 2020 07:47:52 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id p3so1082670pgh.3
+        for <devicetree@vger.kernel.org>; Thu, 09 Jul 2020 07:47:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9ro8BWZ6Nt1mU3LMw0YQWvIfUyjJ2BroQgSItIneQ5Q=;
+        b=r6Newwhhh4id3vyMleK/DDOTJ5BmSCDsvpopEE2wYlyQO9NJK/TuvaAh4BmqG7uYUw
+         5mIauWSwlKFsSol5wFSU6pgJv/tjAg62Y3toDsZ8fL/X9SAYpg87Rb6ttxNHEe8xiXyQ
+         mTi4rGoEQEDKoyARkto5x8bvekNfCkPLSH8o3t4tjJWeIjjOGwayEAPPjr2YDXFhKTu7
+         ysXpEdAAmLIqsDSPVzDE1zkqQdBVPCPCm7IOc5O2VMmkD2R4srsL2+WLVwMB0y5T4MGw
+         Ead/2CISYR/C9tFCxxiW9Z03MmzOM6vIGa8ye/+1R3BFm9V2HkHPPukBofmQDyEmE5bV
+         YXPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9ro8BWZ6Nt1mU3LMw0YQWvIfUyjJ2BroQgSItIneQ5Q=;
+        b=N3YUKS3u+xUaf7CCHngd7qhv1J0+lXnI3+0rr+UezM20DX2ySlo5orpu/I4oR8xorS
+         6OCFA6LpSmXZMXv2edRIbqETfU9u7Q2IZj3Hv8X+ZDQ5M7uAYc/tmnfvZyvObE3+gxzd
+         CMdCFCxkOa7VHVerTtMGjJb+X45GpFmofAjvJ5IbYXTs3gFYuocXy3pvZzPgoOwHV2uL
+         lDIUVyZKr+xo5GWrTEPUz50y6/Z9vv4TMiP89iPiiFOwX5IUlPJdjjOi7AcbGVYAbdOH
+         uupVzs5Vkv1PMzFb4ohhQUxjG4mSyzPqUPg5hPUWChb3YjGGB8KbH+1x+pQm7N5t9v49
+         cL9g==
+X-Gm-Message-State: AOAM532MMVIkQui8w3hzyXnGTUFoKlprA2oLKp1mG6BHP9O5MdEmMGwP
+        AiuYoouGzfahD57xwEJ1DCcGCg==
+X-Google-Smtp-Source: ABdhPJymAnrBf8Zxkz/lsMjbxHDbT9CpQ8lZNyy0Mhe4hGauWUspH9zwNPT31V/BWn4VdYarAhLaCQ==
+X-Received: by 2002:a05:6a00:2292:: with SMTP id f18mr58309786pfe.192.1594306071120;
+        Thu, 09 Jul 2020 07:47:51 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id e20sm3122098pfl.212.2020.07.09.07.47.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 07:47:50 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 07:45:34 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, agross@kernel.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, saravanak@google.com,
+        dianders@chromium.org, vincent.guittot@linaro.org,
+        amit.kucheria@linaro.org, robdclark@chromium.org
+Subject: Re: [PATCH v2] arm64: dts: qcom: sdm845: Add cpu OPP tables
+Message-ID: <20200709144534.GA1881320@builder.lan>
+References: <20200702204643.25785-1-sibis@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702204643.25785-1-sibis@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+On Thu 02 Jul 13:46 PDT 2020, Sibi Sankar wrote:
 
-The imx-pwm driver supports 3 cells and this is the more flexible setting.
-So use it by default and overwrite it back to two for the files that
-reference the PWMs with just 2 cells to minimize changes.
+> Add OPP tables required to scale DDR/L3 per freq-domain on SDM845 SoCs.
+> 
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 
-This allows to drop explicit setting to 3 cells for the boards that already
-depend on this.
+Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
-Hello,
+and applied.
 
-this picks up an old mail thread where Paul Barker started to work on
-this in March. He got some feedback but didn't come up with a new
-approach.
+Thanks,
+Bjorn
 
-Compared to his patch (Message-Id:
-20200309145558.16098-1-pbarker@konsulko.com) I overwrite back to
-#pwm-cells = <2> in the board .dts files to minimize changes there.
-
-Best regards
-Uwe
-
- arch/arm/boot/dts/imx1.dtsi                      |  2 +-
- arch/arm/boot/dts/imx25.dtsi                     |  8 ++++----
- arch/arm/boot/dts/imx27.dtsi                     |  2 +-
- arch/arm/boot/dts/imx31.dtsi                     |  2 +-
- arch/arm/boot/dts/imx50.dtsi                     |  4 ++--
- arch/arm/boot/dts/imx53-kp.dtsi                  |  8 ++++++++
- arch/arm/boot/dts/imx53-m53evk.dts               |  1 +
- arch/arm/boot/dts/imx53-ppd.dts                  |  2 ++
- arch/arm/boot/dts/imx53-tqma53.dtsi              |  8 ++++++++
- arch/arm/boot/dts/imx53-tx53.dtsi                |  1 -
- arch/arm/boot/dts/imx53.dtsi                     |  4 ++--
- arch/arm/boot/dts/imx6dl-aristainetos_4.dts      |  1 +
- arch/arm/boot/dts/imx6dl-aristainetos_7.dts      |  1 +
- arch/arm/boot/dts/imx6dl-mamoj.dts               |  1 +
- arch/arm/boot/dts/imx6dl-yapp4-common.dtsi       |  1 -
- arch/arm/boot/dts/imx6q-ba16.dtsi                |  1 +
- arch/arm/boot/dts/imx6q-dhcom-pdk2.dts           |  1 -
- arch/arm/boot/dts/imx6q-display5.dtsi            |  1 -
- arch/arm/boot/dts/imx6q-kp.dtsi                  |  2 ++
- arch/arm/boot/dts/imx6q-mccmon6.dts              |  1 -
- arch/arm/boot/dts/imx6q-novena.dts               |  1 +
- arch/arm/boot/dts/imx6q-pistachio.dts            |  1 +
- arch/arm/boot/dts/imx6q-var-dt6customboard.dts   |  1 +
- arch/arm/boot/dts/imx6qdl-apalis.dtsi            |  1 +
- arch/arm/boot/dts/imx6qdl-apf6dev.dtsi           |  1 +
- arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi     |  1 +
- arch/arm/boot/dts/imx6qdl-colibri.dtsi           |  1 +
- arch/arm/boot/dts/imx6qdl-cubox-i.dtsi           |  1 +
- arch/arm/boot/dts/imx6qdl-emcon.dtsi             |  3 +++
- arch/arm/boot/dts/imx6qdl-gw52xx.dtsi            |  1 +
- arch/arm/boot/dts/imx6qdl-gw53xx.dtsi            |  1 +
- arch/arm/boot/dts/imx6qdl-gw54xx.dtsi            |  1 +
- arch/arm/boot/dts/imx6qdl-gw560x.dtsi            |  1 +
- arch/arm/boot/dts/imx6qdl-gw5903.dtsi            |  1 +
- arch/arm/boot/dts/imx6qdl-gw5904.dtsi            |  1 +
- arch/arm/boot/dts/imx6qdl-icore.dtsi             |  1 +
- arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi         |  2 ++
- arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi     |  3 +++
- arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi    |  2 ++
- arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi        |  2 ++
- arch/arm/boot/dts/imx6qdl-phytec-mira.dtsi       |  1 +
- arch/arm/boot/dts/imx6qdl-sabreauto.dtsi         |  1 +
- arch/arm/boot/dts/imx6qdl-sabrelite.dtsi         |  3 +++
- arch/arm/boot/dts/imx6qdl-sabresd.dtsi           |  1 +
- arch/arm/boot/dts/imx6qdl-savageboard.dtsi       |  1 +
- arch/arm/boot/dts/imx6qdl-tx6.dtsi               |  2 --
- arch/arm/boot/dts/imx6qdl.dtsi                   |  8 ++++----
- arch/arm/boot/dts/imx6sl-evk.dts                 |  1 +
- arch/arm/boot/dts/imx6sl.dtsi                    |  8 ++++----
- arch/arm/boot/dts/imx6sll-evk.dts                |  1 +
- arch/arm/boot/dts/imx6sll.dtsi                   |  8 ++++----
- arch/arm/boot/dts/imx6sx-nitrogen6sx.dts         |  1 +
- arch/arm/boot/dts/imx6sx-sdb.dtsi                |  1 +
- arch/arm/boot/dts/imx6sx-softing-vining-2000.dts |  3 +++
- arch/arm/boot/dts/imx6sx.dtsi                    | 16 ++++++++--------
- arch/arm/boot/dts/imx6ul-14x14-evk.dtsi          |  1 +
- arch/arm/boot/dts/imx6ul-ccimx6ulsbcpro.dts      |  1 +
- arch/arm/boot/dts/imx6ul-geam.dts                |  1 +
- arch/arm/boot/dts/imx6ul-imx6ull-opos6uldev.dtsi |  1 +
- arch/arm/boot/dts/imx6ul-isiot.dtsi              |  1 +
- arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts  |  1 +
- arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi    |  1 +
- arch/arm/boot/dts/imx6ul-pico.dtsi               |  1 +
- arch/arm/boot/dts/imx6ul-tx6ul.dtsi              |  1 -
- arch/arm/boot/dts/imx6ul.dtsi                    | 16 ++++++++--------
- arch/arm/boot/dts/imx6ull-colibri.dtsi           |  4 ----
- 66 files changed, 113 insertions(+), 51 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx1.dtsi b/arch/arm/boot/dts/imx1.dtsi
-index b30448cde582..9b940987864c 100644
---- a/arch/arm/boot/dts/imx1.dtsi
-+++ b/arch/arm/boot/dts/imx1.dtsi
-@@ -125,7 +125,7 @@ uart2: serial@207000 {
- 			};
- 
- 			pwm: pwm@208000 {
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				compatible = "fsl,imx1-pwm";
- 				reg = <0x00208000 0x1000>;
- 				interrupts = <34>;
-diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
-index 1123e683025c..b3ea4a17723f 100644
---- a/arch/arm/boot/dts/imx25.dtsi
-+++ b/arch/arm/boot/dts/imx25.dtsi
-@@ -411,7 +411,7 @@ gpio4: gpio@53f9c000 {
- 
- 			pwm2: pwm@53fa0000 {
- 				compatible = "fsl,imx25-pwm", "fsl,imx27-pwm";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				reg = <0x53fa0000 0x4000>;
- 				clocks = <&clks 106>, <&clks 52>;
- 				clock-names = "ipg", "per";
-@@ -430,7 +430,7 @@ gpio3: gpio@53fa4000 {
- 
- 			pwm3: pwm@53fa8000 {
- 				compatible = "fsl,imx25-pwm", "fsl,imx27-pwm";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				reg = <0x53fa8000 0x4000>;
- 				clocks = <&clks 107>, <&clks 52>;
- 				clock-names = "ipg", "per";
-@@ -488,7 +488,7 @@ slcdc@53fc0000 {
- 
- 			pwm4: pwm@53fc8000 {
- 				compatible = "fsl,imx25-pwm", "fsl,imx27-pwm";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				reg = <0x53fc8000 0x4000>;
- 				clocks = <&clks 108>, <&clks 52>;
- 				clock-names = "ipg", "per";
-@@ -535,7 +535,7 @@ wdog@53fdc000 {
- 
- 			pwm1: pwm@53fe0000 {
- 				compatible = "fsl,imx25-pwm", "fsl,imx27-pwm";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				reg = <0x53fe0000 0x4000>;
- 				clocks = <&clks 105>, <&clks 52>;
- 				clock-names = "ipg", "per";
-diff --git a/arch/arm/boot/dts/imx27.dtsi b/arch/arm/boot/dts/imx27.dtsi
-index 002cd223f22d..cadf11cf94e2 100644
---- a/arch/arm/boot/dts/imx27.dtsi
-+++ b/arch/arm/boot/dts/imx27.dtsi
-@@ -134,7 +134,7 @@ gpt3: timer@10005000 {
- 			};
- 
- 			pwm: pwm@10006000 {
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				compatible = "fsl,imx27-pwm";
- 				reg = <0x10006000 0x1000>;
- 				interrupts = <23>;
-diff --git a/arch/arm/boot/dts/imx31.dtsi b/arch/arm/boot/dts/imx31.dtsi
-index 18270ec648fe..8fe1a2d3681e 100644
---- a/arch/arm/boot/dts/imx31.dtsi
-+++ b/arch/arm/boot/dts/imx31.dtsi
-@@ -327,7 +327,7 @@ pwm: pwm@53fe0000 {
- 				interrupts = <26>;
- 				clocks = <&clks 10>, <&clks 42>;
- 				clock-names = "ipg", "per";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 		};
-diff --git a/arch/arm/boot/dts/imx50.dtsi b/arch/arm/boot/dts/imx50.dtsi
-index 1f4ecbca5225..f951f2e1c020 100644
---- a/arch/arm/boot/dts/imx50.dtsi
-+++ b/arch/arm/boot/dts/imx50.dtsi
-@@ -289,7 +289,7 @@ iomuxc: iomuxc@53fa8000 {
- 			};
- 
- 			pwm1: pwm@53fb4000 {
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				compatible = "fsl,imx50-pwm", "fsl,imx27-pwm";
- 				reg = <0x53fb4000 0x4000>;
- 				clocks = <&clks IMX5_CLK_PWM1_IPG_GATE>,
-@@ -299,7 +299,7 @@ pwm1: pwm@53fb4000 {
- 			};
- 
- 			pwm2: pwm@53fb8000 {
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				compatible = "fsl,imx50-pwm", "fsl,imx27-pwm";
- 				reg = <0x53fb8000 0x4000>;
- 				clocks = <&clks IMX5_CLK_PWM2_IPG_GATE>,
-diff --git a/arch/arm/boot/dts/imx53-kp.dtsi b/arch/arm/boot/dts/imx53-kp.dtsi
-index 8b25416a5303..4508f34139a0 100644
---- a/arch/arm/boot/dts/imx53-kp.dtsi
-+++ b/arch/arm/boot/dts/imx53-kp.dtsi
-@@ -162,6 +162,14 @@ MX53_PAD_EIM_D20__GPIO3_20 0x1e4
- 	>;
- };
- 
-+&pwm1 {
-+	#pwm-cells = <2>;
-+};
-+
-+&pwm2 {
-+	#pwm-cells = <2>;
-+};
-+
- &uart1 {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/imx53-m53evk.dts b/arch/arm/boot/dts/imx53-m53evk.dts
-index daab56abe94a..a1a6228d1aa6 100644
---- a/arch/arm/boot/dts/imx53-m53evk.dts
-+++ b/arch/arm/boot/dts/imx53-m53evk.dts
-@@ -321,6 +321,7 @@ &ipu_di1_disp1 {
- };
- 
- &pwm1 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm1>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx53-ppd.dts b/arch/arm/boot/dts/imx53-ppd.dts
-index 5ff9a179c83c..4b39921f88dd 100644
---- a/arch/arm/boot/dts/imx53-ppd.dts
-+++ b/arch/arm/boot/dts/imx53-ppd.dts
-@@ -598,12 +598,14 @@ &pmu {
- };
- 
- &pwm1 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm1>;
- 	status = "okay";
- };
- 
- &pwm2 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm2>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx53-tqma53.dtsi b/arch/arm/boot/dts/imx53-tqma53.dtsi
-index ea90fd95ad01..9a6cb138adf3 100644
---- a/arch/arm/boot/dts/imx53-tqma53.dtsi
-+++ b/arch/arm/boot/dts/imx53-tqma53.dtsi
-@@ -209,6 +209,14 @@ MX53_PAD_PATA_CS_1__UART3_RXD_MUX	0x1e4
- 	};
- };
- 
-+&pwm1 {
-+	#pwm-cells = <2>;
-+};
-+
-+&pwm2 {
-+	#pwm-cells = <2>;
-+};
-+
- &uart1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart1>;
-diff --git a/arch/arm/boot/dts/imx53-tx53.dtsi b/arch/arm/boot/dts/imx53-tx53.dtsi
-index 4ab135906949..7c9730f3f820 100644
---- a/arch/arm/boot/dts/imx53-tx53.dtsi
-+++ b/arch/arm/boot/dts/imx53-tx53.dtsi
-@@ -542,7 +542,6 @@ &nfc {
- &pwm2 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm2>;
--	#pwm-cells = <3>;
- };
- 
- &sdma {
-diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-index afa57bf7b0ed..cb782c99160e 100644
---- a/arch/arm/boot/dts/imx53.dtsi
-+++ b/arch/arm/boot/dts/imx53.dtsi
-@@ -525,7 +525,7 @@ port@2 {
- 			};
- 
- 			pwm1: pwm@53fb4000 {
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				compatible = "fsl,imx53-pwm", "fsl,imx27-pwm";
- 				reg = <0x53fb4000 0x4000>;
- 				clocks = <&clks IMX5_CLK_PWM1_IPG_GATE>,
-@@ -535,7 +535,7 @@ pwm1: pwm@53fb4000 {
- 			};
- 
- 			pwm2: pwm@53fb8000 {
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				compatible = "fsl,imx53-pwm", "fsl,imx27-pwm";
- 				reg = <0x53fb8000 0x4000>;
- 				clocks = <&clks IMX5_CLK_PWM2_IPG_GATE>,
-diff --git a/arch/arm/boot/dts/imx6dl-aristainetos_4.dts b/arch/arm/boot/dts/imx6dl-aristainetos_4.dts
-index 37f80ab8ccd0..809ca5611072 100644
---- a/arch/arm/boot/dts/imx6dl-aristainetos_4.dts
-+++ b/arch/arm/boot/dts/imx6dl-aristainetos_4.dts
-@@ -79,5 +79,6 @@ &ipu1_di0_disp0 {
- };
- 
- &pwm1 {
-+	#pwm-cells = <2>;
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/imx6dl-aristainetos_7.dts b/arch/arm/boot/dts/imx6dl-aristainetos_7.dts
-index 8d8c8c27e482..4d58cb4436d9 100644
---- a/arch/arm/boot/dts/imx6dl-aristainetos_7.dts
-+++ b/arch/arm/boot/dts/imx6dl-aristainetos_7.dts
-@@ -69,5 +69,6 @@ &ipu1_di0_disp0 {
- };
- 
- &pwm3 {
-+	#pwm-cells = <2>;
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/imx6dl-mamoj.dts b/arch/arm/boot/dts/imx6dl-mamoj.dts
-index 385ce7b0029e..028951955bde 100644
---- a/arch/arm/boot/dts/imx6dl-mamoj.dts
-+++ b/arch/arm/boot/dts/imx6dl-mamoj.dts
-@@ -303,6 +303,7 @@ &ipu1_di0_disp0 {
- };
- 
- &pwm3 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm3>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-index 2b9423d55c37..c4a235d212b6 100644
---- a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-+++ b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-@@ -540,7 +540,6 @@ &pcie {
- };
- 
- &pwm1 {
--	#pwm-cells = <3>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm1>;
- 	status = "disabled";
-diff --git a/arch/arm/boot/dts/imx6q-ba16.dtsi b/arch/arm/boot/dts/imx6q-ba16.dtsi
-index 37c63402157b..fc81f2f4b62d 100644
---- a/arch/arm/boot/dts/imx6q-ba16.dtsi
-+++ b/arch/arm/boot/dts/imx6q-ba16.dtsi
-@@ -334,6 +334,7 @@ &pcie {
- };
- 
- &pwm1 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm1>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6q-dhcom-pdk2.dts b/arch/arm/boot/dts/imx6q-dhcom-pdk2.dts
-index a2dd7e549568..a685b1c3208f 100644
---- a/arch/arm/boot/dts/imx6q-dhcom-pdk2.dts
-+++ b/arch/arm/boot/dts/imx6q-dhcom-pdk2.dts
-@@ -253,7 +253,6 @@ &pcie {
- &pwm1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm1>;
--	#pwm-cells = <3>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/imx6q-display5.dtsi b/arch/arm/boot/dts/imx6q-display5.dtsi
-index 83524bb99eb3..fef5d7254536 100644
---- a/arch/arm/boot/dts/imx6q-display5.dtsi
-+++ b/arch/arm/boot/dts/imx6q-display5.dtsi
-@@ -399,7 +399,6 @@ lvds0_out: endpoint {
- };
- 
- &pwm2 {
--	#pwm-cells = <3>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm2>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6q-kp.dtsi b/arch/arm/boot/dts/imx6q-kp.dtsi
-index 24c8169baf44..1ade0bff681d 100644
---- a/arch/arm/boot/dts/imx6q-kp.dtsi
-+++ b/arch/arm/boot/dts/imx6q-kp.dtsi
-@@ -378,12 +378,14 @@ MX6QDL_PAD_SD4_DAT7__SD4_DATA7		0x17059
- };
- 
- &pwm1 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm1>;
- 	status = "okay";
- };
- 
- &pwm2 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm2>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6q-mccmon6.dts b/arch/arm/boot/dts/imx6q-mccmon6.dts
-index a4d295455e67..55692c73943d 100644
---- a/arch/arm/boot/dts/imx6q-mccmon6.dts
-+++ b/arch/arm/boot/dts/imx6q-mccmon6.dts
-@@ -237,7 +237,6 @@ lvds0_out: endpoint {
- };
- 
- &pwm2 {
--	#pwm-cells = <3>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm2>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6q-novena.dts b/arch/arm/boot/dts/imx6q-novena.dts
-index 69f170ff31c5..52e3567d1859 100644
---- a/arch/arm/boot/dts/imx6q-novena.dts
-+++ b/arch/arm/boot/dts/imx6q-novena.dts
-@@ -455,6 +455,7 @@ &pcie {
- };
- 
- &pwm1 {
-+	#pwm-cells = <2>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/imx6q-pistachio.dts b/arch/arm/boot/dts/imx6q-pistachio.dts
-index a31b17eaf51c..7a33e54cc0f1 100644
---- a/arch/arm/boot/dts/imx6q-pistachio.dts
-+++ b/arch/arm/boot/dts/imx6q-pistachio.dts
-@@ -570,6 +570,7 @@ lvds0_out: endpoint {
- };
- 
- &pwm1 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm1>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6q-var-dt6customboard.dts b/arch/arm/boot/dts/imx6q-var-dt6customboard.dts
-index c54362fcc508..a57c2e3a8435 100644
---- a/arch/arm/boot/dts/imx6q-var-dt6customboard.dts
-+++ b/arch/arm/boot/dts/imx6q-var-dt6customboard.dts
-@@ -203,6 +203,7 @@ lvds1_out: endpoint {
- };
- 
- &pwm2 {
-+	#pwm-cells = <2>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/imx6qdl-apalis.dtsi b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-index e34be8fabd93..dbdd7db60325 100644
---- a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-@@ -371,6 +371,7 @@ &pwm3 {
- };
- 
- &pwm4 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm4>;
- 	status = "disabled";
-diff --git a/arch/arm/boot/dts/imx6qdl-apf6dev.dtsi b/arch/arm/boot/dts/imx6qdl-apf6dev.dtsi
-index b8e74ab3c993..2577eb4f535a 100644
---- a/arch/arm/boot/dts/imx6qdl-apf6dev.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-apf6dev.dtsi
-@@ -211,6 +211,7 @@ &pcie {
- };
- 
- &pwm3 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm3>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi b/arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi
-index 376750882ed3..d38630d4b892 100644
---- a/arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi
-@@ -336,6 +336,7 @@ &pcie {
- };
- 
- &pwm1 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm1>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-index 240b86d2eb71..1d9f527c04bb 100644
---- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-@@ -312,6 +312,7 @@ &pwm2 {
- 
- /* Colibri PWM<A> */
- &pwm3 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm3>;
- 	status = "disabled";
-diff --git a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-index e3be453d8a4a..67042793b0ca 100644
---- a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-@@ -233,6 +233,7 @@ MX6QDL_PAD_EIM_DA8__GPIO3_IO08	0x17059
- };
- 
- &pwm1 {
-+	#pwm-cells = <2>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/imx6qdl-emcon.dtsi b/arch/arm/boot/dts/imx6qdl-emcon.dtsi
-index 70d26616d771..35e230f991f1 100644
---- a/arch/arm/boot/dts/imx6qdl-emcon.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-emcon.dtsi
-@@ -737,14 +737,17 @@ &pcie {
- };
- 
- &pwm1 {
-+	#pwm-cells = <2>;
- 	status = "okay";
- };
- 
- &pwm3 {
-+	#pwm-cells = <2>;
- 	status = "okay";
- };
- 
- &pwm4 {
-+	#pwm-cells = <2>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
-index 60563ff0b7ce..65fe66f0c9ad 100644
---- a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
-@@ -365,6 +365,7 @@ &pwm3 {
- };
- 
- &pwm4 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm4>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
-index 8942bec65c5c..545b7831692d 100644
---- a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
-@@ -356,6 +356,7 @@ &pwm3 {
- };
- 
- &pwm4 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm4>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
-index c40583dbd96d..52fbc6719fab 100644
---- a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
-@@ -419,6 +419,7 @@ &pwm3 {
- };
- 
- &pwm4 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default", "state_dio";
- 	pinctrl-0 = <&pinctrl_pwm4_backlight>;
- 	pinctrl-1 = <&pinctrl_pwm4_dio>;
-diff --git a/arch/arm/boot/dts/imx6qdl-gw560x.dtsi b/arch/arm/boot/dts/imx6qdl-gw560x.dtsi
-index 69ca70d3baa8..d295898f1dec 100644
---- a/arch/arm/boot/dts/imx6qdl-gw560x.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-gw560x.dtsi
-@@ -471,6 +471,7 @@ &pwm3 {
- };
- 
- &pwm4 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm4>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6qdl-gw5903.dtsi b/arch/arm/boot/dts/imx6qdl-gw5903.dtsi
-index aee9221f0f29..201c17b15df2 100644
---- a/arch/arm/boot/dts/imx6qdl-gw5903.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-gw5903.dtsi
-@@ -365,6 +365,7 @@ timing0: g101evn010 {
- };
- 
- &pwm1 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm1>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6qdl-gw5904.dtsi b/arch/arm/boot/dts/imx6qdl-gw5904.dtsi
-index 76d6cf57f1c3..b30c1487252d 100644
---- a/arch/arm/boot/dts/imx6qdl-gw5904.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-gw5904.dtsi
-@@ -401,6 +401,7 @@ &pwm3 {
- };
- 
- &pwm4 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm4>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-index 756f3a9f1b4f..f2f475ea74e0 100644
---- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-@@ -245,6 +245,7 @@ mipi_csi2_in: endpoint {
- };
- 
- &pwm3 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm3>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi b/arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi
-index 2418cf8f2317..d526f01a2c52 100644
---- a/arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi
-@@ -497,6 +497,7 @@ &pcie {
- };
- 
- &pwm1 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm1>;
- 	status = "okay";
-@@ -509,6 +510,7 @@ &pwm3 {
- };
- 
- &pwm4 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm4>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
-index c3415aa348a2..185a1a31ca39 100644
---- a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
-@@ -736,12 +736,14 @@ &pcie {
- };
- 
- &pwm1 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm1>;
- 	status = "okay";
- };
- 
- &pwm2 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm2>;
- 	status = "okay";
-@@ -754,6 +756,7 @@ &pwm3 {
- };
- 
- &pwm4 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm4>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi
-index ed53f07c6b7b..4bbe54e1ddb5 100644
---- a/arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi
-@@ -639,6 +639,7 @@ &pcie {
- };
- 
- &pwm1 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm1>;
- 	status = "okay";
-@@ -651,6 +652,7 @@ &pwm3 {
- };
- 
- &pwm4 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm4>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-index 8b0e432099b5..c63e1bc1ad3a 100644
---- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-@@ -596,6 +596,7 @@ &pcie {
- };
- 
- &pwm1 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm1>;
- 	status = "okay";
-@@ -608,6 +609,7 @@ &pwm3 {
- };
- 
- &pwm4 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm4>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6qdl-phytec-mira.dtsi b/arch/arm/boot/dts/imx6qdl-phytec-mira.dtsi
-index 9ebd438dce7d..019938562aa9 100644
---- a/arch/arm/boot/dts/imx6qdl-phytec-mira.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-phytec-mira.dtsi
-@@ -218,6 +218,7 @@ &pcie {
- };
- 
- &pwm1 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm1>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-index cf628465cd0a..55f736dbee0b 100644
---- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-@@ -800,6 +800,7 @@ timing0: hsd100pxn1 {
- };
- 
- &pwm3 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm3>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-index 8468216dae9b..95f9ddab5996 100644
---- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-@@ -687,18 +687,21 @@ &pcie {
- };
- 
- &pwm1 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm1>;
- 	status = "okay";
- };
- 
- &pwm3 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm3>;
- 	status = "okay";
- };
- 
- &pwm4 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm4>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-index 28b35ccb3757..550e22511e34 100644
---- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-@@ -729,6 +729,7 @@ &pcie {
- };
- 
- &pwm1 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm1>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6qdl-savageboard.dtsi b/arch/arm/boot/dts/imx6qdl-savageboard.dtsi
-index a616e3c400d3..02e6d36e85fa 100644
---- a/arch/arm/boot/dts/imx6qdl-savageboard.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-savageboard.dtsi
-@@ -140,6 +140,7 @@ lvds0_out: endpoint {
- };
- 
- &pwm1 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm1>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6qdl-tx6.dtsi b/arch/arm/boot/dts/imx6qdl-tx6.dtsi
-index c68cb90fd801..362e65ccaa78 100644
---- a/arch/arm/boot/dts/imx6qdl-tx6.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-tx6.dtsi
-@@ -738,14 +738,12 @@ MATRIX_KEY(2, 2, KEY_KP9) /* 0x02020049 */
- &pwm1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm1>;
--	#pwm-cells = <3>;
- 	status = "disabled";
- };
- 
- &pwm2 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm2>;
--	#pwm-cells = <3>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 32114cf6acee..b055ec152279 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -510,7 +510,7 @@ aipstz@207c000 { /* AIPSTZ1 */
- 			};
- 
- 			pwm1: pwm@2080000 {
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				compatible = "fsl,imx6q-pwm", "fsl,imx27-pwm";
- 				reg = <0x02080000 0x4000>;
- 				interrupts = <0 83 IRQ_TYPE_LEVEL_HIGH>;
-@@ -521,7 +521,7 @@ pwm1: pwm@2080000 {
- 			};
- 
- 			pwm2: pwm@2084000 {
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				compatible = "fsl,imx6q-pwm", "fsl,imx27-pwm";
- 				reg = <0x02084000 0x4000>;
- 				interrupts = <0 84 IRQ_TYPE_LEVEL_HIGH>;
-@@ -532,7 +532,7 @@ pwm2: pwm@2084000 {
- 			};
- 
- 			pwm3: pwm@2088000 {
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				compatible = "fsl,imx6q-pwm", "fsl,imx27-pwm";
- 				reg = <0x02088000 0x4000>;
- 				interrupts = <0 85 IRQ_TYPE_LEVEL_HIGH>;
-@@ -543,7 +543,7 @@ pwm3: pwm@2088000 {
- 			};
- 
- 			pwm4: pwm@208c000 {
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				compatible = "fsl,imx6q-pwm", "fsl,imx27-pwm";
- 				reg = <0x0208c000 0x4000>;
- 				interrupts = <0 86 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm/boot/dts/imx6sl-evk.dts b/arch/arm/boot/dts/imx6sl-evk.dts
-index bc86cfaaa9c2..b1b069e723d2 100644
---- a/arch/arm/boot/dts/imx6sl-evk.dts
-+++ b/arch/arm/boot/dts/imx6sl-evk.dts
-@@ -575,6 +575,7 @@ display_out: endpoint {
- };
- 
- &pwm1 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm1>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index 911d8cf77f2c..45794b91a31d 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -344,7 +344,7 @@ uart4: serial@2038000 {
- 			};
- 
- 			pwm1: pwm@2080000 {
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				compatible = "fsl,imx6sl-pwm", "fsl,imx27-pwm";
- 				reg = <0x02080000 0x4000>;
- 				interrupts = <0 83 IRQ_TYPE_LEVEL_HIGH>;
-@@ -354,7 +354,7 @@ pwm1: pwm@2080000 {
- 			};
- 
- 			pwm2: pwm@2084000 {
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				compatible = "fsl,imx6sl-pwm", "fsl,imx27-pwm";
- 				reg = <0x02084000 0x4000>;
- 				interrupts = <0 84 IRQ_TYPE_LEVEL_HIGH>;
-@@ -364,7 +364,7 @@ pwm2: pwm@2084000 {
- 			};
- 
- 			pwm3: pwm@2088000 {
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				compatible = "fsl,imx6sl-pwm", "fsl,imx27-pwm";
- 				reg = <0x02088000 0x4000>;
- 				interrupts = <0 85 IRQ_TYPE_LEVEL_HIGH>;
-@@ -374,7 +374,7 @@ pwm3: pwm@2088000 {
- 			};
- 
- 			pwm4: pwm@208c000 {
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				compatible = "fsl,imx6sl-pwm", "fsl,imx27-pwm";
- 				reg = <0x0208c000 0x4000>;
- 				interrupts = <0 86 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm/boot/dts/imx6sll-evk.dts b/arch/arm/boot/dts/imx6sll-evk.dts
-index 5ace9e6acf85..c755cbdb7cde 100644
---- a/arch/arm/boot/dts/imx6sll-evk.dts
-+++ b/arch/arm/boot/dts/imx6sll-evk.dts
-@@ -260,6 +260,7 @@ display_out: endpoint {
- };
- 
- &pwm1 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm1>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
-index edd3abb9a9f1..f327405253f6 100644
---- a/arch/arm/boot/dts/imx6sll.dtsi
-+++ b/arch/arm/boot/dts/imx6sll.dtsi
-@@ -331,7 +331,7 @@ pwm1: pwm@2080000 {
- 				clocks = <&clks IMX6SLL_CLK_PWM1>,
- 					 <&clks IMX6SLL_CLK_PWM1>;
- 				clock-names = "ipg", "per";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 			};
- 
- 			pwm2: pwm@2084000 {
-@@ -341,7 +341,7 @@ pwm2: pwm@2084000 {
- 				clocks = <&clks IMX6SLL_CLK_PWM2>,
- 					 <&clks IMX6SLL_CLK_PWM2>;
- 				clock-names = "ipg", "per";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 			};
- 
- 			pwm3: pwm@2088000 {
-@@ -351,7 +351,7 @@ pwm3: pwm@2088000 {
- 				clocks = <&clks IMX6SLL_CLK_PWM3>,
- 					 <&clks IMX6SLL_CLK_PWM3>;
- 				clock-names = "ipg", "per";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 			};
- 
- 			pwm4: pwm@208c000 {
-@@ -361,7 +361,7 @@ pwm4: pwm@208c000 {
- 				clocks = <&clks IMX6SLL_CLK_PWM4>,
- 					 <&clks IMX6SLL_CLK_PWM4>;
- 				clock-names = "ipg", "per";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 			};
- 
- 			gpt1: timer@2098000 {
-diff --git a/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts b/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
-index d84ea6999377..66af78e83b70 100644
---- a/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
-+++ b/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
-@@ -229,6 +229,7 @@ &pcie {
- };
- 
- &pwm4 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm4>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6sx-sdb.dtsi b/arch/arm/boot/dts/imx6sx-sdb.dtsi
-index 3e5fb72f21fc..81bc7675d2e9 100644
---- a/arch/arm/boot/dts/imx6sx-sdb.dtsi
-+++ b/arch/arm/boot/dts/imx6sx-sdb.dtsi
-@@ -281,6 +281,7 @@ display_out: endpoint {
- };
- 
- &pwm3 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm3>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6sx-softing-vining-2000.dts b/arch/arm/boot/dts/imx6sx-softing-vining-2000.dts
-index 6b728b03f1f2..d25e27d0315f 100644
---- a/arch/arm/boot/dts/imx6sx-softing-vining-2000.dts
-+++ b/arch/arm/boot/dts/imx6sx-softing-vining-2000.dts
-@@ -505,18 +505,21 @@ &pcie {
- };
- 
- &pwm1 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm1>;
- 	status = "okay";
- };
- 
- &pwm2 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm2>;
- 	status = "okay";
- };
- 
- &pwm6 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm6>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index 94e3df47d1ad..43b270d7abd9 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -413,7 +413,7 @@ pwm1: pwm@2080000 {
- 				clocks = <&clks IMX6SX_CLK_PWM1>,
- 					 <&clks IMX6SX_CLK_PWM1>;
- 				clock-names = "ipg", "per";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 			};
- 
- 			pwm2: pwm@2084000 {
-@@ -423,7 +423,7 @@ pwm2: pwm@2084000 {
- 				clocks = <&clks IMX6SX_CLK_PWM2>,
- 					 <&clks IMX6SX_CLK_PWM2>;
- 				clock-names = "ipg", "per";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 			};
- 
- 			pwm3: pwm@2088000 {
-@@ -433,7 +433,7 @@ pwm3: pwm@2088000 {
- 				clocks = <&clks IMX6SX_CLK_PWM3>,
- 					 <&clks IMX6SX_CLK_PWM3>;
- 				clock-names = "ipg", "per";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 			};
- 
- 			pwm4: pwm@208c000 {
-@@ -443,7 +443,7 @@ pwm4: pwm@208c000 {
- 				clocks = <&clks IMX6SX_CLK_PWM4>,
- 					 <&clks IMX6SX_CLK_PWM4>;
- 				clock-names = "ipg", "per";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 			};
- 
- 			flexcan1: can@2090000 {
-@@ -1337,7 +1337,7 @@ pwm5: pwm@22a4000 {
- 				clocks = <&clks IMX6SX_CLK_PWM5>,
- 					 <&clks IMX6SX_CLK_PWM5>;
- 				clock-names = "ipg", "per";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 			};
- 
- 			pwm6: pwm@22a8000 {
-@@ -1347,7 +1347,7 @@ pwm6: pwm@22a8000 {
- 				clocks = <&clks IMX6SX_CLK_PWM6>,
- 					 <&clks IMX6SX_CLK_PWM6>;
- 				clock-names = "ipg", "per";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 			};
- 
- 			pwm7: pwm@22ac000 {
-@@ -1357,7 +1357,7 @@ pwm7: pwm@22ac000 {
- 				clocks = <&clks IMX6SX_CLK_PWM7>,
- 					 <&clks IMX6SX_CLK_PWM7>;
- 				clock-names = "ipg", "per";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 			};
- 
- 			pwm8: pwm@22b0000 {
-@@ -1367,7 +1367,7 @@ pwm8: pwm@22b0000 {
- 				clocks = <&clks IMX6SX_CLK_PWM8>,
- 					 <&clks IMX6SX_CLK_PWM8>;
- 				clock-names = "ipg", "per";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 			};
- 		};
- 
-diff --git a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-index 265bf4108cb6..64c2d1e9f7fc 100644
---- a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-@@ -228,6 +228,7 @@ display_out: endpoint {
- };
- 
- &pwm1 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm1>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6ul-ccimx6ulsbcpro.dts b/arch/arm/boot/dts/imx6ul-ccimx6ulsbcpro.dts
-index 5d3805b07032..a0bbec57ddc7 100644
---- a/arch/arm/boot/dts/imx6ul-ccimx6ulsbcpro.dts
-+++ b/arch/arm/boot/dts/imx6ul-ccimx6ulsbcpro.dts
-@@ -168,6 +168,7 @@ &pwm4 {
- };
- 
- &pwm5 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm5>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6ul-geam.dts b/arch/arm/boot/dts/imx6ul-geam.dts
-index 9f63706383a7..a0097da03f38 100644
---- a/arch/arm/boot/dts/imx6ul-geam.dts
-+++ b/arch/arm/boot/dts/imx6ul-geam.dts
-@@ -195,6 +195,7 @@ timing0: timing0 {
- };
- 
- &pwm8 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm8>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6ul-imx6ull-opos6uldev.dtsi b/arch/arm/boot/dts/imx6ul-imx6ull-opos6uldev.dtsi
-index 18966350bfd8..935a77d717a6 100644
---- a/arch/arm/boot/dts/imx6ul-imx6ull-opos6uldev.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-imx6ull-opos6uldev.dtsi
-@@ -155,6 +155,7 @@ lcdif_out: endpoint {
- };
- 
- &pwm3 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm3>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6ul-isiot.dtsi b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-index cc9adce638f5..14fc4828ba4e 100644
---- a/arch/arm/boot/dts/imx6ul-isiot.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-@@ -187,6 +187,7 @@ timing0: timing0 {
- };
- 
- &pwm8 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm8>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts b/arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts
-index 5bad29683cc3..5bfad4655b22 100644
---- a/arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts
-+++ b/arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts
-@@ -41,6 +41,7 @@ &lcdif {
- };
- 
- &pwm7 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm7>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
-index 53a25fba34f6..a35be2a369b3 100644
---- a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
-@@ -153,6 +153,7 @@ rtc@32 {
- };
- 
- &pwm8 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm8>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6ul-pico.dtsi b/arch/arm/boot/dts/imx6ul-pico.dtsi
-index df1da98ab10f..357ffb2f5ad6 100644
---- a/arch/arm/boot/dts/imx6ul-pico.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-pico.dtsi
-@@ -175,6 +175,7 @@ display_out: endpoint {
- };
- 
- &pwm3 {
-+	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm3>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6ul-tx6ul.dtsi b/arch/arm/boot/dts/imx6ul-tx6ul.dtsi
-index bb6dbfd5546b..938a32ced88d 100644
---- a/arch/arm/boot/dts/imx6ul-tx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-tx6ul.dtsi
-@@ -549,7 +549,6 @@ ETQ570 {
- &pwm5 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm5>;
--	#pwm-cells = <3>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index 5379a03391bd..74ae25a5ab72 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -371,7 +371,7 @@ pwm1: pwm@2080000 {
- 				clocks = <&clks IMX6UL_CLK_PWM1>,
- 					 <&clks IMX6UL_CLK_PWM1>;
- 				clock-names = "ipg", "per";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -382,7 +382,7 @@ pwm2: pwm@2084000 {
- 				clocks = <&clks IMX6UL_CLK_PWM2>,
- 					 <&clks IMX6UL_CLK_PWM2>;
- 				clock-names = "ipg", "per";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -393,7 +393,7 @@ pwm3: pwm@2088000 {
- 				clocks = <&clks IMX6UL_CLK_PWM3>,
- 					 <&clks IMX6UL_CLK_PWM3>;
- 				clock-names = "ipg", "per";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -404,7 +404,7 @@ pwm4: pwm@208c000 {
- 				clocks = <&clks IMX6UL_CLK_PWM4>,
- 					 <&clks IMX6UL_CLK_PWM4>;
- 				clock-names = "ipg", "per";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -734,7 +734,7 @@ pwm5: pwm@20f0000 {
- 				clocks = <&clks IMX6UL_CLK_PWM5>,
- 					 <&clks IMX6UL_CLK_PWM5>;
- 				clock-names = "ipg", "per";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -745,7 +745,7 @@ pwm6: pwm@20f4000 {
- 				clocks = <&clks IMX6UL_CLK_PWM6>,
- 					 <&clks IMX6UL_CLK_PWM6>;
- 				clock-names = "ipg", "per";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -756,7 +756,7 @@ pwm7: pwm@20f8000 {
- 				clocks = <&clks IMX6UL_CLK_PWM7>,
- 					 <&clks IMX6UL_CLK_PWM7>;
- 				clock-names = "ipg", "per";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -767,7 +767,7 @@ pwm8: pwm@20fc000 {
- 				clocks = <&clks IMX6UL_CLK_PWM8>,
- 					 <&clks IMX6UL_CLK_PWM8>;
- 				clock-names = "ipg", "per";
--				#pwm-cells = <2>;
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 		};
-diff --git a/arch/arm/boot/dts/imx6ull-colibri.dtsi b/arch/arm/boot/dts/imx6ull-colibri.dtsi
-index 9145c536d71a..6cf95939121d 100644
---- a/arch/arm/boot/dts/imx6ull-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx6ull-colibri.dtsi
-@@ -145,25 +145,21 @@ &lcdif {
- &pwm4 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm4>;
--	#pwm-cells = <3>;
- };
- 
- &pwm5 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm5>;
--	#pwm-cells = <3>;
- };
- 
- &pwm6 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm6>;
--	#pwm-cells = <3>;
- };
- 
- &pwm7 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm7>;
--	#pwm-cells = <3>;
- };
- 
- &sdma {
--- 
-2.27.0
-
+> ---
+> 
+> v2:
+>  * Drop interconnect tags
+>  * Add all possible cpu opps from supported frequency list
+> 
+> v1: https://patchwork.kernel.org/patch/11527589/
+> 
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 285 +++++++++++++++++++++++++++
+>  1 file changed, 285 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index 8eb5a31346d28..9a7e27ede7186 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -12,6 +12,7 @@
+>  #include <dt-bindings/clock/qcom,lpass-sdm845.h>
+>  #include <dt-bindings/clock/qcom,rpmh.h>
+>  #include <dt-bindings/clock/qcom,videocc-sdm845.h>
+> +#include <dt-bindings/interconnect/qcom,osm-l3.h>
+>  #include <dt-bindings/interconnect/qcom,sdm845.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/phy/phy-qcom-qusb2.h>
+> @@ -198,6 +199,9 @@ &LITTLE_CPU_SLEEP_1
+>  			capacity-dmips-mhz = <607>;
+>  			dynamic-power-coefficient = <100>;
+>  			qcom,freq-domain = <&cpufreq_hw 0>;
+> +			operating-points-v2 = <&cpu0_opp_table>;
+> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
+> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+>  			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_0>;
+>  			L2_0: l2-cache {
+> @@ -220,6 +224,9 @@ &LITTLE_CPU_SLEEP_1
+>  			capacity-dmips-mhz = <607>;
+>  			dynamic-power-coefficient = <100>;
+>  			qcom,freq-domain = <&cpufreq_hw 0>;
+> +			operating-points-v2 = <&cpu0_opp_table>;
+> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
+> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+>  			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_100>;
+>  			L2_100: l2-cache {
+> @@ -239,6 +246,9 @@ &LITTLE_CPU_SLEEP_1
+>  			capacity-dmips-mhz = <607>;
+>  			dynamic-power-coefficient = <100>;
+>  			qcom,freq-domain = <&cpufreq_hw 0>;
+> +			operating-points-v2 = <&cpu0_opp_table>;
+> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
+> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+>  			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_200>;
+>  			L2_200: l2-cache {
+> @@ -258,6 +268,9 @@ &LITTLE_CPU_SLEEP_1
+>  			capacity-dmips-mhz = <607>;
+>  			dynamic-power-coefficient = <100>;
+>  			qcom,freq-domain = <&cpufreq_hw 0>;
+> +			operating-points-v2 = <&cpu0_opp_table>;
+> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
+> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+>  			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_300>;
+>  			L2_300: l2-cache {
+> @@ -277,6 +290,9 @@ &BIG_CPU_SLEEP_1
+>  					   &CLUSTER_SLEEP_0>;
+>  			dynamic-power-coefficient = <396>;
+>  			qcom,freq-domain = <&cpufreq_hw 1>;
+> +			operating-points-v2 = <&cpu4_opp_table>;
+> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
+> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+>  			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_400>;
+>  			L2_400: l2-cache {
+> @@ -296,6 +312,9 @@ &BIG_CPU_SLEEP_1
+>  					   &CLUSTER_SLEEP_0>;
+>  			dynamic-power-coefficient = <396>;
+>  			qcom,freq-domain = <&cpufreq_hw 1>;
+> +			operating-points-v2 = <&cpu4_opp_table>;
+> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
+> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+>  			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_500>;
+>  			L2_500: l2-cache {
+> @@ -315,6 +334,9 @@ &BIG_CPU_SLEEP_1
+>  					   &CLUSTER_SLEEP_0>;
+>  			dynamic-power-coefficient = <396>;
+>  			qcom,freq-domain = <&cpufreq_hw 1>;
+> +			operating-points-v2 = <&cpu4_opp_table>;
+> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
+> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+>  			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_600>;
+>  			L2_600: l2-cache {
+> @@ -334,6 +356,9 @@ &BIG_CPU_SLEEP_1
+>  					   &CLUSTER_SLEEP_0>;
+>  			dynamic-power-coefficient = <396>;
+>  			qcom,freq-domain = <&cpufreq_hw 1>;
+> +			operating-points-v2 = <&cpu4_opp_table>;
+> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
+> +					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+>  			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_700>;
+>  			L2_700: l2-cache {
+> @@ -433,6 +458,266 @@ CLUSTER_SLEEP_0: cluster-sleep-0 {
+>  		};
+>  	};
+>  
+> +	cpu0_opp_table: cpu0_opp_table {
+> +		compatible = "operating-points-v2";
+> +		opp-shared;
+> +
+> +		cpu0_opp1: opp-300000000 {
+> +			opp-hz = /bits/ 64 <300000000>;
+> +			opp-peak-kBps = <800000 4800000>;
+> +		};
+> +
+> +		cpu0_opp2: opp-403200000 {
+> +			opp-hz = /bits/ 64 <403200000>;
+> +			opp-peak-kBps = <800000 4800000>;
+> +		};
+> +
+> +		cpu0_opp3: opp-480000000 {
+> +			opp-hz = /bits/ 64 <480000000>;
+> +			opp-peak-kBps = <800000 6451200>;
+> +		};
+> +
+> +		cpu0_opp4: opp-576000000 {
+> +			opp-hz = /bits/ 64 <576000000>;
+> +			opp-peak-kBps = <800000 6451200>;
+> +		};
+> +
+> +		cpu0_opp5: opp-652800000 {
+> +			opp-hz = /bits/ 64 <652800000>;
+> +			opp-peak-kBps = <800000 7680000>;
+> +		};
+> +
+> +		cpu0_opp6: opp-748800000 {
+> +			opp-hz = /bits/ 64 <748800000>;
+> +			opp-peak-kBps = <1804000 9216000>;
+> +		};
+> +
+> +		cpu0_opp7: opp-825600000 {
+> +			opp-hz = /bits/ 64 <825600000>;
+> +			opp-peak-kBps = <1804000 9216000>;
+> +		};
+> +
+> +		cpu0_opp8: opp-902400000 {
+> +			opp-hz = /bits/ 64 <902400000>;
+> +			opp-peak-kBps = <1804000 10444800>;
+> +		};
+> +
+> +		cpu0_opp9: opp-979200000 {
+> +			opp-hz = /bits/ 64 <979200000>;
+> +			opp-peak-kBps = <1804000 11980800>;
+> +		};
+> +
+> +		cpu0_opp10: opp-1056000000 {
+> +			opp-hz = /bits/ 64 <1056000000>;
+> +			opp-peak-kBps = <1804000 11980800>;
+> +		};
+> +
+> +		cpu0_opp11: opp-1132800000 {
+> +			opp-hz = /bits/ 64 <1132800000>;
+> +			opp-peak-kBps = <2188000 13516800>;
+> +		};
+> +
+> +		cpu0_opp12: opp-1228800000 {
+> +			opp-hz = /bits/ 64 <1228800000>;
+> +			opp-peak-kBps = <2188000 15052800>;
+> +		};
+> +
+> +		cpu0_opp13: opp-1324800000 {
+> +			opp-hz = /bits/ 64 <1324800000>;
+> +			opp-peak-kBps = <2188000 16588800>;
+> +		};
+> +
+> +		cpu0_opp14: opp-1420800000 {
+> +			opp-hz = /bits/ 64 <1420800000>;
+> +			opp-peak-kBps = <3072000 18124800>;
+> +		};
+> +
+> +		cpu0_opp15: opp-1516800000 {
+> +			opp-hz = /bits/ 64 <1516800000>;
+> +			opp-peak-kBps = <3072000 19353600>;
+> +		};
+> +
+> +		cpu0_opp16: opp-1612800000 {
+> +			opp-hz = /bits/ 64 <1612800000>;
+> +			opp-peak-kBps = <4068000 19353600>;
+> +		};
+> +
+> +		cpu0_opp17: opp-1689600000 {
+> +			opp-hz = /bits/ 64 <1689600000>;
+> +			opp-peak-kBps = <4068000 20889600>;
+> +		};
+> +
+> +		cpu0_opp18: opp-1766400000 {
+> +			opp-hz = /bits/ 64 <1766400000>;
+> +			opp-peak-kBps = <4068000 22425600>;
+> +		};
+> +	};
+> +
+> +	cpu4_opp_table: cpu4_opp_table {
+> +		compatible = "operating-points-v2";
+> +		opp-shared;
+> +
+> +		cpu4_opp1: opp-300000000 {
+> +			opp-hz = /bits/ 64 <300000000>;
+> +			opp-peak-kBps = <800000 4800000>;
+> +		};
+> +
+> +		cpu4_opp2: opp-403200000 {
+> +			opp-hz = /bits/ 64 <403200000>;
+> +			opp-peak-kBps = <800000 4800000>;
+> +		};
+> +
+> +		cpu4_opp3: opp-480000000 {
+> +			opp-hz = /bits/ 64 <480000000>;
+> +			opp-peak-kBps = <1804000 4800000>;
+> +		};
+> +
+> +		cpu4_opp4: opp-576000000 {
+> +			opp-hz = /bits/ 64 <576000000>;
+> +			opp-peak-kBps = <1804000 4800000>;
+> +		};
+> +
+> +		cpu4_opp5: opp-652800000 {
+> +			opp-hz = /bits/ 64 <652800000>;
+> +			opp-peak-kBps = <1804000 4800000>;
+> +		};
+> +
+> +		cpu4_opp6: opp-748800000 {
+> +			opp-hz = /bits/ 64 <748800000>;
+> +			opp-peak-kBps = <1804000 4800000>;
+> +		};
+> +
+> +		cpu4_opp7: opp-825600000 {
+> +			opp-hz = /bits/ 64 <825600000>;
+> +			opp-peak-kBps = <2188000 9216000>;
+> +		};
+> +
+> +		cpu4_opp8: opp-902400000 {
+> +			opp-hz = /bits/ 64 <902400000>;
+> +			opp-peak-kBps = <2188000 9216000>;
+> +		};
+> +
+> +		cpu4_opp9: opp-979200000 {
+> +			opp-hz = /bits/ 64 <979200000>;
+> +			opp-peak-kBps = <2188000 9216000>;
+> +		};
+> +
+> +		cpu4_opp10: opp-1056000000 {
+> +			opp-hz = /bits/ 64 <1056000000>;
+> +			opp-peak-kBps = <3072000 9216000>;
+> +		};
+> +
+> +		cpu4_opp11: opp-1132800000 {
+> +			opp-hz = /bits/ 64 <1132800000>;
+> +			opp-peak-kBps = <3072000 11980800>;
+> +		};
+> +
+> +		cpu4_opp12: opp-1209600000 {
+> +			opp-hz = /bits/ 64 <1209600000>;
+> +			opp-peak-kBps = <4068000 11980800>;
+> +		};
+> +
+> +		cpu4_opp13: opp-1286400000 {
+> +			opp-hz = /bits/ 64 <1286400000>;
+> +			opp-peak-kBps = <4068000 11980800>;
+> +		};
+> +
+> +		cpu4_opp14: opp-1363200000 {
+> +			opp-hz = /bits/ 64 <1363200000>;
+> +			opp-peak-kBps = <4068000 15052800>;
+> +		};
+> +
+> +		cpu4_opp15: opp-1459200000 {
+> +			opp-hz = /bits/ 64 <1459200000>;
+> +			opp-peak-kBps = <4068000 15052800>;
+> +		};
+> +
+> +		cpu4_opp16: opp-1536000000 {
+> +			opp-hz = /bits/ 64 <1536000000>;
+> +			opp-peak-kBps = <5412000 15052800>;
+> +		};
+> +
+> +		cpu4_opp17: opp-1612800000 {
+> +			opp-hz = /bits/ 64 <1612800000>;
+> +			opp-peak-kBps = <5412000 15052800>;
+> +		};
+> +
+> +		cpu4_opp18: opp-1689600000 {
+> +			opp-hz = /bits/ 64 <1689600000>;
+> +			opp-peak-kBps = <5412000 19353600>;
+> +		};
+> +
+> +		cpu4_opp19: opp-1766400000 {
+> +			opp-hz = /bits/ 64 <1766400000>;
+> +			opp-peak-kBps = <6220000 19353600>;
+> +		};
+> +
+> +		cpu4_opp20: opp-1843200000 {
+> +			opp-hz = /bits/ 64 <1843200000>;
+> +			opp-peak-kBps = <6220000 19353600>;
+> +		};
+> +
+> +		cpu4_opp21: opp-1920000000 {
+> +			opp-hz = /bits/ 64 <1920000000>;
+> +			opp-peak-kBps = <7216000 19353600>;
+> +		};
+> +
+> +		cpu4_opp22: opp-1996800000 {
+> +			opp-hz = /bits/ 64 <1996800000>;
+> +			opp-peak-kBps = <7216000 20889600>;
+> +		};
+> +
+> +		cpu4_opp23: opp-2092800000 {
+> +			opp-hz = /bits/ 64 <2092800000>;
+> +			opp-peak-kBps = <7216000 20889600>;
+> +		};
+> +
+> +		cpu4_opp24: opp-2169600000 {
+> +			opp-hz = /bits/ 64 <2169600000>;
+> +			opp-peak-kBps = <7216000 20889600>;
+> +		};
+> +
+> +		cpu4_opp25: opp-2246400000 {
+> +			opp-hz = /bits/ 64 <2246400000>;
+> +			opp-peak-kBps = <7216000 20889600>;
+> +		};
+> +
+> +		cpu4_opp26: opp-2323200000 {
+> +			opp-hz = /bits/ 64 <2323200000>;
+> +			opp-peak-kBps = <7216000 20889600>;
+> +		};
+> +
+> +		cpu4_opp27: opp-2400000000 {
+> +			opp-hz = /bits/ 64 <2400000000>;
+> +			opp-peak-kBps = <7216000 22425600>;
+> +		};
+> +
+> +		cpu4_opp28: opp-2476800000 {
+> +			opp-hz = /bits/ 64 <2476800000>;
+> +			opp-peak-kBps = <7216000 22425600>;
+> +		};
+> +
+> +		cpu4_opp29: opp-2553600000 {
+> +			opp-hz = /bits/ 64 <2553600000>;
+> +			opp-peak-kBps = <7216000 22425600>;
+> +		};
+> +
+> +		cpu4_opp30: opp-2649600000 {
+> +			opp-hz = /bits/ 64 <2649600000>;
+> +			opp-peak-kBps = <7216000 22425600>;
+> +		};
+> +
+> +		cpu4_opp31: opp-2745600000 {
+> +			opp-hz = /bits/ 64 <2745600000>;
+> +			opp-peak-kBps = <7216000 25497600>;
+> +		};
+> +
+> +		cpu4_opp32: opp-2803200000 {
+> +			opp-hz = /bits/ 64 <2803200000>;
+> +			opp-peak-kBps = <7216000 25497600>;
+> +		};
+> +	};
+> +
+>  	pmu {
+>  		compatible = "arm,armv8-pmuv3";
+>  		interrupts = <GIC_PPI 5 IRQ_TYPE_LEVEL_HIGH>;
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
