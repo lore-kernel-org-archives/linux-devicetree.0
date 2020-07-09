@@ -2,113 +2,318 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDD4C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 09:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC16C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 09:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA3FA206A1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 09:27:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="th/+uK9d"
+	by mail.kernel.org (Postfix) with ESMTP id 469772074B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 09:35:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbgGIJ1R (ORCPT
+        id S1726287AbgGIJfV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 05:27:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56300 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbgGIJ1Q (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 05:27:16 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6820BC08C5DC
-        for <devicetree@vger.kernel.org>; Thu,  9 Jul 2020 02:27:16 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id q15so1088835wmj.2
-        for <devicetree@vger.kernel.org>; Thu, 09 Jul 2020 02:27:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IUWPqNTyupX2OfJokS7Cyg6szXXlNV4uQSRKuBbr+Nk=;
-        b=th/+uK9dwrxSw1xSQDtZLXE93rsinY7TIBR5hcrowU8HCYEo+RR5AQxCCEJOI1NwAE
-         RF8Wl4q6A998sRt0mKbrYLRppA7usgYnsIa8tAeN458OgIpojMVBP+ImgJmm0TOGrvRC
-         lJOeDXjUNFXYSkfzZcjbGrmhlw6B8K7d7nTceNSz7N4Kbg4Fz1yoLPVCSlNEruYN8nuw
-         sqPNJQY12V5+Lox4FiLNTOPiBseRbsjXgF2o2mzA3y94RVcZBBzW101AtTjEnfhfMsgN
-         uIQmwhcXhDFfbX/wW01yt3fp6D8weEUoIgs3cTino+4KBshiJiS8YGgJUD5s12S2Gu1z
-         YVig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IUWPqNTyupX2OfJokS7Cyg6szXXlNV4uQSRKuBbr+Nk=;
-        b=pOpMd8A/y2pvpHlxIl/C5gK4X2bka+iD2CoznUQ/d4ZWlG0zXzfsMG84L7BJ2/nV4W
-         TwRADmDz4lms9IhJNLDtvLf6gMRD6dmWsyRtodVB+YK3l0e7vaeAsqLMmf/S5vheZ2Te
-         ca04/NSvW3T3zvcPcNPNaVBrnuek20SIo5Qh2x5TXZA0fHd/49O3sSqMPmMq0KZH5E03
-         Tg7v2NjjzbtrdIvum3pJ8cFhJIt2HRNwZK2C3VvTmnsyMEe+sB3KMkyIKxznTGYPw/oY
-         XFW1MnGmPY+T7tnInlYBaTTfPpWW2va7mwmc4Jf3QJp6Po8DK7zkPb96WIqE1Fy//A2V
-         TbNw==
-X-Gm-Message-State: AOAM530XLV/Oum2iYJ2sXhMH0tiv+EgMOEvbV1MrvDLef8Zo1IWVxKou
-        vC7anxXoNruALpsPCQT3nb8qag==
-X-Google-Smtp-Source: ABdhPJz4oppYHDMOr7cWktwBN00kT6be7JvWf8qKYCDNjlSQ2uUZu9nCNLwF+xq1vN5a0vn60fBs0w==
-X-Received: by 2002:a7b:c4d6:: with SMTP id g22mr13844105wmk.170.1594286835202;
-        Thu, 09 Jul 2020 02:27:15 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id 65sm4082233wmd.20.2020.07.09.02.27.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 Jul 2020 02:27:14 -0700 (PDT)
-Subject: Re: [PATCH v3 7/8] ASoC: qcom: lpass-sc7180: Add platform driver for
- lpass audio
-To:     Rohit kumar <rohitkr@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
-        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
-        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Ajit Pandey <ajitp@codeaurora.org>,
-        Rohit kumar <rohkumar@qti.qualcomm.com>
-References: <1594184896-10629-1-git-send-email-rohitkr@codeaurora.org>
- <1594184896-10629-8-git-send-email-rohitkr@codeaurora.org>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <2d39e123-4b97-787a-7d6c-7d9fdfaa8f56@linaro.org>
-Date:   Thu, 9 Jul 2020 10:27:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 9 Jul 2020 05:35:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:46244 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726278AbgGIJfU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Jul 2020 05:35:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 08F5631B;
+        Thu,  9 Jul 2020 02:35:19 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CD36D3F887;
+        Thu,  9 Jul 2020 02:35:16 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 10:35:14 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     linux-arm-kernel@lists.infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Will Deacon <will@kernel.org>, Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: Re: [PATCH v2 05/12] ACPI/IORT: Add an input ID to
+ acpi_dma_configure()
+Message-ID: <20200709093514.GC18149@e121166-lin.cambridge.arm.com>
+References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
+ <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
+ <20200619082013.13661-6-lorenzo.pieralisi@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1594184896-10629-8-git-send-email-rohitkr@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200619082013.13661-6-lorenzo.pieralisi@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 08/07/2020 06:08, Rohit kumar wrote:
-> From: Ajit Pandey <ajitp@codeaurora.org>
+On Fri, Jun 19, 2020 at 09:20:06AM +0100, Lorenzo Pieralisi wrote:
+> Some HW devices are created as child devices of proprietary busses,
+> that have a bus specific policy defining how the child devices
+> wires representing the devices ID are translated into IOMMU and
+> IRQ controllers device IDs.
 > 
-> Add platform driver for configuring sc7180 lpass core I2S and
-> DMA configuration to support playback & capture to external codecs
-> connected over primary & secondary MI2S interfaces.
+> Current IORT code provides translations for:
 > 
-> Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
-> Signed-off-by: Rohit kumar <rohkumar@qti.qualcomm.com>
+> - PCI devices, where the device ID is well identified at bus level
+>   as the requester ID (RID)
+> - Platform devices that are endpoint devices where the device ID is
+>   retrieved from the ACPI object IORT mappings (Named components single
+>   mappings). A platform device is represented in IORT as a named
+>   component node
+> 
+> For devices that are child devices of proprietary busses the IORT
+> firmware represents the bus node as a named component node in IORT
+> and it is up to that named component node to define in/out bus
+> specific ID translations for the bus child devices that are
+> allocated and created in a bus specific manner.
+> 
+> In order to make IORT ID translations available for proprietary
+> bus child devices, the current ACPI (and IORT) code must be
+> augmented to provide an additional ID parameter to acpi_dma_configure()
+> representing the child devices input ID. This ID is bus specific
+> and it is retrieved in bus specific code.
+> 
+> By adding an ID parameter to acpi_dma_configure(), the IORT
+> code can map the child device ID to an IOMMU stream ID through
+> the IORT named component representing the bus in/out ID mappings.
+> 
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Hanjun Guo <guohanjun@huawei.com>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 > ---
-LGTM,
+>  drivers/acpi/arm64/iort.c | 59 +++++++++++++++++++++++++++++----------
+>  drivers/acpi/scan.c       |  8 ++++--
+>  include/acpi/acpi_bus.h   |  9 ++++--
+>  include/linux/acpi.h      |  7 +++++
+>  include/linux/acpi_iort.h |  7 +++--
+>  5 files changed, 67 insertions(+), 23 deletions(-)
 
-Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Hi Rafael,
 
+just to ask if the ACPI core changes in this patch are OK with you,
+thank you very much.
 
+Lorenzo
 
->   sound/soc/qcom/Kconfig        |   5 +
->   sound/soc/qcom/Makefile       |   2 +
->   sound/soc/qcom/lpass-sc7180.c | 216 ++++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 223 insertions(+)
->   create mode 100644 sound/soc/qcom/lpass-sc7180.c
+> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+> index 421c6976ab81..ec782e4a0fe4 100644
+> --- a/drivers/acpi/arm64/iort.c
+> +++ b/drivers/acpi/arm64/iort.c
+> @@ -978,19 +978,54 @@ static void iort_named_component_init(struct device *dev,
+>  					   nc->node_flags);
+>  }
+>  
+> +static int iort_nc_iommu_map(struct device *dev, struct acpi_iort_node *node)
+> +{
+> +	struct acpi_iort_node *parent;
+> +	int err = -ENODEV, i = 0;
+> +	u32 streamid = 0;
+> +
+> +	do {
+> +
+> +		parent = iort_node_map_platform_id(node, &streamid,
+> +						   IORT_IOMMU_TYPE,
+> +						   i++);
+> +
+> +		if (parent)
+> +			err = iort_iommu_xlate(dev, parent, streamid);
+> +	} while (parent && !err);
+> +
+> +	return err;
+> +}
+> +
+> +static int iort_nc_iommu_map_id(struct device *dev,
+> +				struct acpi_iort_node *node,
+> +				const u32 *in_id)
+> +{
+> +	struct acpi_iort_node *parent;
+> +	u32 streamid;
+> +
+> +	parent = iort_node_map_id(node, *in_id, &streamid, IORT_IOMMU_TYPE);
+> +	if (parent)
+> +		return iort_iommu_xlate(dev, parent, streamid);
+> +
+> +	return -ENODEV;
+> +}
+> +
+> +
+>  /**
+> - * iort_iommu_configure - Set-up IOMMU configuration for a device.
+> + * iort_iommu_configure_id - Set-up IOMMU configuration for a device.
+>   *
+>   * @dev: device to configure
+> + * @id_in: optional input id const value pointer
+>   *
+>   * Returns: iommu_ops pointer on configuration success
+>   *          NULL on configuration failure
+>   */
+> -const struct iommu_ops *iort_iommu_configure(struct device *dev)
+> +const struct iommu_ops *iort_iommu_configure_id(struct device *dev,
+> +						const u32 *id_in)
+>  {
+> -	struct acpi_iort_node *node, *parent;
+> +	struct acpi_iort_node *node;
+>  	const struct iommu_ops *ops;
+> -	u32 streamid = 0;
+>  	int err = -ENODEV;
+>  
+>  	/*
+> @@ -1019,21 +1054,13 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev)
+>  		if (fwspec && iort_pci_rc_supports_ats(node))
+>  			fwspec->flags |= IOMMU_FWSPEC_PCI_RC_ATS;
+>  	} else {
+> -		int i = 0;
+> -
+>  		node = iort_scan_node(ACPI_IORT_NODE_NAMED_COMPONENT,
+>  				      iort_match_node_callback, dev);
+>  		if (!node)
+>  			return NULL;
+>  
+> -		do {
+> -			parent = iort_node_map_platform_id(node, &streamid,
+> -							   IORT_IOMMU_TYPE,
+> -							   i++);
+> -
+> -			if (parent)
+> -				err = iort_iommu_xlate(dev, parent, streamid);
+> -		} while (parent && !err);
+> +		err = id_in ? iort_nc_iommu_map_id(dev, node, id_in) :
+> +			      iort_nc_iommu_map(dev, node);
+>  
+>  		if (!err)
+>  			iort_named_component_init(dev, node);
+> @@ -1058,6 +1085,7 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev)
+>  
+>  	return ops;
+>  }
+> +
+>  #else
+>  static inline const struct iommu_ops *iort_fwspec_iommu_ops(struct device *dev)
+>  { return NULL; }
+> @@ -1066,7 +1094,8 @@ static inline int iort_add_device_replay(const struct iommu_ops *ops,
+>  { return 0; }
+>  int iort_iommu_msi_get_resv_regions(struct device *dev, struct list_head *head)
+>  { return 0; }
+> -const struct iommu_ops *iort_iommu_configure(struct device *dev)
+> +const struct iommu_ops *iort_iommu_configure_id(struct device *dev,
+> +						const u32 *input_id)
+>  { return NULL; }
+>  #endif
+>  
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index 8777faced51a..2142f1554761 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -1457,8 +1457,10 @@ int acpi_dma_get_range(struct device *dev, u64 *dma_addr, u64 *offset,
+>   * acpi_dma_configure - Set-up DMA configuration for the device.
+>   * @dev: The pointer to the device
+>   * @attr: device dma attributes
+> + * @input_id: input device id const value pointer
+>   */
+> -int acpi_dma_configure(struct device *dev, enum dev_dma_attr attr)
+> +int acpi_dma_configure_id(struct device *dev, enum dev_dma_attr attr,
+> +			  const u32 *input_id)
+>  {
+>  	const struct iommu_ops *iommu;
+>  	u64 dma_addr = 0, size = 0;
+> @@ -1470,7 +1472,7 @@ int acpi_dma_configure(struct device *dev, enum dev_dma_attr attr)
+>  
+>  	iort_dma_setup(dev, &dma_addr, &size);
+>  
+> -	iommu = iort_iommu_configure(dev);
+> +	iommu = iort_iommu_configure_id(dev, input_id);
+>  	if (PTR_ERR(iommu) == -EPROBE_DEFER)
+>  		return -EPROBE_DEFER;
+>  
+> @@ -1479,7 +1481,7 @@ int acpi_dma_configure(struct device *dev, enum dev_dma_attr attr)
+>  
+>  	return 0;
+>  }
+> -EXPORT_SYMBOL_GPL(acpi_dma_configure);
+> +EXPORT_SYMBOL_GPL(acpi_dma_configure_id);
+>  
+>  static void acpi_init_coherency(struct acpi_device *adev)
+>  {
+> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+> index 5afb6ceb284f..a3abcc4b7d9f 100644
+> --- a/include/acpi/acpi_bus.h
+> +++ b/include/acpi/acpi_bus.h
+> @@ -588,8 +588,13 @@ bool acpi_dma_supported(struct acpi_device *adev);
+>  enum dev_dma_attr acpi_get_dma_attr(struct acpi_device *adev);
+>  int acpi_dma_get_range(struct device *dev, u64 *dma_addr, u64 *offset,
+>  		       u64 *size);
+> -int acpi_dma_configure(struct device *dev, enum dev_dma_attr attr);
+> -
+> +int acpi_dma_configure_id(struct device *dev, enum dev_dma_attr attr,
+> +			   const u32 *input_id);
+> +static inline int acpi_dma_configure(struct device *dev,
+> +				     enum dev_dma_attr attr)
+> +{
+> +	return acpi_dma_configure_id(dev, attr, NULL);
+> +}
+>  struct acpi_device *acpi_find_child_device(struct acpi_device *parent,
+>  					   u64 address, bool check_children);
+>  int acpi_is_root_bridge(acpi_handle);
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index d661cd0ee64d..6d2c47489d90 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -905,6 +905,13 @@ static inline int acpi_dma_configure(struct device *dev,
+>  	return 0;
+>  }
+>  
+> +static inline int acpi_dma_configure_id(struct device *dev,
+> +					enum dev_dma_attr attr,
+> +					const u32 *input_id)
+> +{
+> +	return 0;
+> +}
+> +
+>  #define ACPI_PTR(_ptr)	(NULL)
+>  
+>  static inline void acpi_device_set_enumerated(struct acpi_device *adev)
+> diff --git a/include/linux/acpi_iort.h b/include/linux/acpi_iort.h
+> index e51425e083da..20a32120bb88 100644
+> --- a/include/linux/acpi_iort.h
+> +++ b/include/linux/acpi_iort.h
+> @@ -35,7 +35,8 @@ void acpi_configure_pmsi_domain(struct device *dev);
+>  int iort_pmsi_get_dev_id(struct device *dev, u32 *dev_id);
+>  /* IOMMU interface */
+>  void iort_dma_setup(struct device *dev, u64 *dma_addr, u64 *size);
+> -const struct iommu_ops *iort_iommu_configure(struct device *dev);
+> +const struct iommu_ops *iort_iommu_configure_id(struct device *dev,
+> +						const u32 *id_in);
+>  int iort_iommu_msi_get_resv_regions(struct device *dev, struct list_head *head);
+>  #else
+>  static inline void acpi_iort_init(void) { }
+> @@ -48,8 +49,8 @@ static inline void acpi_configure_pmsi_domain(struct device *dev) { }
+>  /* IOMMU interface */
+>  static inline void iort_dma_setup(struct device *dev, u64 *dma_addr,
+>  				  u64 *size) { }
+> -static inline const struct iommu_ops *iort_iommu_configure(
+> -				      struct device *dev)
+> +static inline const struct iommu_ops *iort_iommu_configure_id(
+> +				      struct device *dev, const u32 *id_in)
+>  { return NULL; }
+>  static inline
+>  int iort_iommu_msi_get_resv_regions(struct device *dev, struct list_head *head)
+> -- 
+> 2.26.1
 > 
-> diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
-> index 0ea4cde..87bec7f 100644
