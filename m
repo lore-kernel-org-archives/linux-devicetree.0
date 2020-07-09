@@ -2,147 +2,355 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E41C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 19:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6FAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 19:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2731A20775
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 19:29:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eRu13Z0E"
+	by mail.kernel.org (Postfix) with ESMTP id 96B78207DA
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 19:35:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594323325;
+	bh=52goD9kXj3f65N+NMkr1VOCNMK3WfYEyhL5uRo1gQBo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TQEiUcN1JveAR2ZxtA1bOpTKtHLSFTq9EpFXWrAa7W2SSS0BLEGrkZQfLFli0LoC5
+	 mv7bmmo6Oi9frnoe81O1Mjg4G7cTZO6WFe58GdquahzUs86YjHlB1C+fLJ/M6DyM0C
+	 tvGOkwYj152OKQp0uKWYm0vS3x2c6edUus2sTUSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgGIT30 (ORCPT
+        id S1726444AbgGITfZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 15:29:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36922 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbgGIT30 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 15:29:26 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D389C08C5DD
-        for <devicetree@vger.kernel.org>; Thu,  9 Jul 2020 12:29:26 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id z5so1404464pgb.6
-        for <devicetree@vger.kernel.org>; Thu, 09 Jul 2020 12:29:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=x/U7Hyj1lkNWWpCKmP6FeJ+27MCr9OUMUAFO2UtX4yg=;
-        b=eRu13Z0EkubMZlrKLPOJ7ZH9Fg6zy17jy5Vh09YLC/MQc9/t1N/M30Y5gmmdqqxr/E
-         M8gLt+vonkUwcckkl84RgJf5wGq1TAiQIX9pUTQKuN5wU/0Pn7s8CGluxJbWx2sJujVY
-         dcWCt0VkHhoTgydMDFu3FQZRJVYelVsdkZySZWRdk4NjQocply0RMyTrnpyTk5RAhrJV
-         XG1bpymGRsL2i4yE31mQizwHmQhj7qB/XoGVVNEn/QZF0nHUovbceCsBBMLF/RA7I8va
-         3aywPIJXwNzKKvdQcnX0aD/PyNpjlv8US7ALyLRqtCidzmhTpNaiHssResHno3Zc/VMo
-         +/ew==
+        Thu, 9 Jul 2020 15:35:25 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:36726 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbgGITfZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 15:35:25 -0400
+Received: by mail-il1-f196.google.com with SMTP id x9so3063128ila.3;
+        Thu, 09 Jul 2020 12:35:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=x/U7Hyj1lkNWWpCKmP6FeJ+27MCr9OUMUAFO2UtX4yg=;
-        b=dO45Xs/nlNs6cSF89HpzStA37/QdYnt+4JqPKHVgALU0FHV0AorqOdNsnUEgWikquD
-         hq2tfw3MoHmMH+VURHrr9h/g06k7N7c/zOnIEnHAwUQ4P8x4NZGpvti1DYGYb4eVDniM
-         YdDnhxYf2eDl8d4TF8RCc5crrohW5JDtEQRnv3dLjnZ9VlRUuhcSyCpD/fX4LH/txVty
-         bER3eRayyyDOggBclxnaUf+FpWffo992J+f7CRnpSb56XmTQTraRLCMhSKegk0gw6O8+
-         1M9mVLPUIbpfycnS9FofuIw6VbGbvVUyxbMnHRjnt701n25qSqnSmBp+JzIA+QwKCEBJ
-         hddQ==
-X-Gm-Message-State: AOAM530i9bmLnDR4GJoKHWTjyaIBbrfMjT4jNxsy5fR9WyEdQl43lEL0
-        6b410ZSFgYW9j61dHCkrO2c89w==
-X-Google-Smtp-Source: ABdhPJxRNWYbm4rzHtO99C40tFaWJAzQnnLjDsK2WcWD1ygXWJHbVEj61vEYDNgrc1iu404itWFSIg==
-X-Received: by 2002:a65:4349:: with SMTP id k9mr30627877pgq.404.1594322965775;
-        Thu, 09 Jul 2020 12:29:25 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id u26sm3428393pfn.54.2020.07.09.12.29.24
+        bh=2bRvjjWG5rooZWvm3VJcSiPcUziiKoqrx5O4SNOwhpk=;
+        b=C2fWq0pLwyQShzq8KN2A+uZK4sxvlXhdH5QMVuY/Uzumw0LTut+52Hj5xhmL9bk58h
+         lCH1l9P1WNJyqHCaCzXeDXDRwkqh5K+uqTj2HpOu9k5Y0OU4kX/JsFg0wk9FI3aWtQKQ
+         WSx4rVL8hjn7gxdHhVlW7vaeQejuuXqQ5DznKLQCAirNT8+RamqBvU4vpYOIEY1eXrka
+         raNrtPhkNnUFumGU26+hKGRHnnpHM/HcskPoFc72b4tgksLrLpRmn42Lt+htmR6Avh2a
+         Q6KpWFgn74v6ajXvZMMfRoUy5PLMWpaenpjy6MacAk3UCjKsbSuOsXlp4zq5aEhJUA44
+         aXOQ==
+X-Gm-Message-State: AOAM530wJYH0CEmpQZu0tT0zCEJV2BFfg2i6IBRZj4/fKeYREU1KJMwO
+        v8WENjJJPT2n5sOWP4VEpBbqDObwIw==
+X-Google-Smtp-Source: ABdhPJwf/McHdwCmzMNsaytTp2BzxeqUH9ggULzFjRCLVbtgrk91De/gHYQKj0jy8RLoKBEXtBAk8w==
+X-Received: by 2002:a92:d807:: with SMTP id y7mr47430329ilm.187.1594323322937;
+        Thu, 09 Jul 2020 12:35:22 -0700 (PDT)
+Received: from xps15 ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id i84sm2417052ill.30.2020.07.09.12.35.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 12:29:25 -0700 (PDT)
-Date:   Thu, 9 Jul 2020 13:29:23 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] remoteproc: k3-r5: Initialize TCM memories for ECC
-Message-ID: <20200709192923.GB948668@xps15>
-References: <20200630024922.32491-1-s-anna@ti.com>
- <20200630024922.32491-4-s-anna@ti.com>
+        Thu, 09 Jul 2020 12:35:22 -0700 (PDT)
+Received: (nullmailer pid 762859 invoked by uid 1000);
+        Thu, 09 Jul 2020 19:35:20 -0000
+Date:   Thu, 9 Jul 2020 13:35:20 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+Cc:     sre@kernel.org, pali@kernel.org, afd@ti.com, dmurphy@ti.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, sspatil@android.com
+Subject: Re: [PATCH v16 2/4] dt-bindings: power: Convert battery.txt to
+ battery.yaml
+Message-ID: <20200709193520.GA750493@bogus>
+References: <20200707212914.31540-1-r-rivera-matos@ti.com>
+ <20200707212914.31540-3-r-rivera-matos@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200630024922.32491-4-s-anna@ti.com>
+In-Reply-To: <20200707212914.31540-3-r-rivera-matos@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 09:49:21PM -0500, Suman Anna wrote:
-> The R5F processors on K3 SoCs all have two TCMs (ATCM and BTCM) that
-> support 32-bit ECC. The TCMs are typically loaded with some boot-up
-> code to initialize the R5 MPUs to further execute code out of DDR.
-> The ECC for the TCMs is enabled by default on K3 SoCs due to internal
-> default tie-off values, but the TCM memories are not initialized on
-> device power up. Any read access without the corresponding TCM memory
-> location initialized will generate an ECC error, and any such access
-> from a A72 or A53 core will trigger a SError.
+On Tue, Jul 07, 2020 at 04:29:12PM -0500, Ricardo Rivera-Matos wrote:
+> From: Dan Murphy <dmurphy@ti.com>
 > 
-> So, zero initialize both the TCM memories before loading any firmware
-> onto a R5F in remoteproc mode. Any R5F booted from U-Boot/SPL would
-> require a similar initialization in the bootloader. Note that both
-> the TCMs are initialized unconditionally as the TCM enable config bits
-> only manage the access and visibility from R5.
+> Convert the battery.txt file to yaml and fix up the examples.
 > 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 > ---
-> v2:
->  - Fixed the logic of initializing TCMs even when the resets deassertion
->    failed
->  - Dropped the confusing last sentence from the 2nd paragraph of the
->    patch description
->  - Revised the patch title to move away from remoteproc/k3-r5
->  - Dropped Mathieu's Acked-by because of the changes
-> v1: https://patchwork.kernel.org/patch/11456371/
+>  .../bindings/power/supply/battery.txt         |  86 +---------
+>  .../bindings/power/supply/battery.yaml        | 157 ++++++++++++++++++
+>  2 files changed, 158 insertions(+), 85 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/battery.yaml
 > 
->  drivers/remoteproc/ti_k3_r5_remoteproc.c | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/ti_k3_r5_remoteproc.c b/drivers/remoteproc/ti_k3_r5_remoteproc.c
-> index c4f99e59dc2f..aca0eaf42a38 100644
-> --- a/drivers/remoteproc/ti_k3_r5_remoteproc.c
-> +++ b/drivers/remoteproc/ti_k3_r5_remoteproc.c
-> @@ -363,11 +363,24 @@ static int k3_r5_rproc_prepare(struct rproc *rproc)
+> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+> index 5e29595edd74..a9f80cc49068 100644
+> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+> @@ -1,87 +1,3 @@
+> -Battery Characteristics
+> -
+> -The devicetree battery node provides static battery characteristics.
+> -In smart batteries, these are typically stored in non-volatile memory
+> -on a fuel gauge chip. The battery node should be used where there is
+> -no appropriate non-volatile memory, or it is unprogrammed/incorrect.
+> -
+> -Upstream dts files should not include battery nodes, unless the battery
+> -represented cannot easily be replaced in the system by one of a
+> -different type. This prevents unpredictable, potentially harmful,
+> -behavior should a replacement that changes the battery type occur
+> -without a corresponding update to the dtb.
+> +The contents of this file has been moved to battery.yaml
 >  
->  	ret = (cluster->mode == CLUSTER_MODE_LOCKSTEP) ?
->  		k3_r5_lockstep_release(cluster) : k3_r5_split_release(core);
-> -	if (ret)
-> +	if (ret) {
->  		dev_err(dev, "unable to enable cores for TCM loading, ret = %d\n",
->  			ret);
-> +		return ret;
-> +	}
->  
-> -	return ret;
-> +	/*
-> +	 * Zero out both TCMs unconditionally (access from v8 Arm core is not
-> +	 * affected by ATCM & BTCM enable configuration values) so that ECC
-> +	 * can be effective on all TCM addresses.
-> +	 */
-> +	dev_dbg(dev, "zeroing out ATCM memory\n");
-> +	memset(core->mem[0].cpu_addr, 0x00, core->mem[0].size);
+>  Please note that not all charger drivers respect all of the properties.
+> -
+> -Required Properties:
+> - - compatible: Must be "simple-battery"
+> -
+> -Optional Properties:
+> - - over-voltage-threshold-microvolt: battery over-voltage limit
+> - - re-charge-voltage-microvolt: limit to automatically start charging again
+> - - voltage-min-design-microvolt: drained battery voltage
+> - - voltage-max-design-microvolt: fully charged battery voltage
+> - - energy-full-design-microwatt-hours: battery design energy
+> - - charge-full-design-microamp-hours: battery design capacity
+> - - trickle-charge-current-microamp: current for trickle-charge phase
+> - - precharge-current-microamp: current for pre-charge phase
+> - - precharge-upper-limit-microvolt: limit when to change to constant charging
+> - - charge-term-current-microamp: current for charge termination phase
+> - - constant-charge-current-max-microamp: maximum constant input current
+> - - constant-charge-voltage-max-microvolt: maximum constant input voltage
+> - - factory-internal-resistance-micro-ohms: battery factory internal resistance
+> - - ocv-capacity-table-0: An array providing the open circuit voltage (OCV)
+> -   of the battery and corresponding battery capacity percent, which is used
+> -   to look up battery capacity according to current OCV value. And the open
+> -   circuit voltage unit is microvolt.
+> - - ocv-capacity-table-1: Same as ocv-capacity-table-0
+> - ......
+> - - ocv-capacity-table-n: Same as ocv-capacity-table-0
+> - - ocv-capacity-celsius: An array containing the temperature in degree Celsius,
+> -   for each of the battery capacity lookup table. The first temperature value
+> -   specifies the OCV table 0, and the second temperature value specifies the
+> -   OCV table 1, and so on.
+> - - resistance-temp-table: An array providing the temperature in degree Celsius
+> -   and corresponding battery internal resistance percent, which is used to look
+> -   up the resistance percent according to current temperature to get a accurate
+> -   batterty internal resistance in different temperatures.
+> -
+> -Battery properties are named, where possible, for the corresponding
+> -elements in enum power_supply_property, defined in
+> -https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/power_supply.h
+> -
+> -Batteries must be referenced by chargers and/or fuel-gauges
+> -using a phandle. The phandle's property should be named
+> -"monitored-battery".
+> -
+> -Example:
+> -
+> -	bat: battery {
+> -		compatible = "simple-battery";
+> -		voltage-min-design-microvolt = <3200000>;
+> -		voltage-max-design-microvolt = <4200000>;
+> -		energy-full-design-microwatt-hours = <5290000>;
+> -		charge-full-design-microamp-hours = <1430000>;
+> -		precharge-current-microamp = <256000>;
+> -		charge-term-current-microamp = <128000>;
+> -		constant-charge-current-max-microamp = <900000>;
+> -		constant-charge-voltage-max-microvolt = <4200000>;
+> -		factory-internal-resistance-micro-ohms = <250000>;
+> -		ocv-capacity-celsius = <(-10) 0 10>;
+> -		ocv-capacity-table-0 = <4185000 100>, <4113000 95>, <4066000 90>, ...;
+> -		ocv-capacity-table-1 = <4200000 100>, <4185000 95>, <4113000 90>, ...;
+> -		ocv-capacity-table-2 = <4250000 100>, <4200000 95>, <4185000 90>, ...;
+> -		resistance-temp-table = <20 100>, <10 90>, <0 80>, <(-10) 60>;
+> -	};
+> -
+> -	charger: charger@11 {
+> -		....
+> -		monitored-battery = <&bat>;
+> -		...
+> -	};
+> -
+> -	fuel_gauge: fuel-gauge@22 {
+> -		....
+> -		monitored-battery = <&bat>;
+> -		...
+> -	};
+> diff --git a/Documentation/devicetree/bindings/power/supply/battery.yaml b/Documentation/devicetree/bindings/power/supply/battery.yaml
+> new file mode 100644
+> index 000000000000..0b3fc8cc6163
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/battery.yaml
+> @@ -0,0 +1,157 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/power/supply/battery.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +	dev_dbg(dev, "zeroing out BTCM memory\n");
-> +	memset(core->mem[1].cpu_addr, 0x00, core->mem[1].size);
+> +title: Battery Characteristics
 > +
-> +	return 0;
+> +maintainers:
+> +  - Sebastian Reichel <sre@kernel.org>
+> +
+> +description: |
+> +  The devicetree battery node provides static battery characteristics.
+> +  In smart batteries, these are typically stored in non-volatile memory
+> +  on a fuel gauge chip. The battery node should be used where there is
+> +  no appropriate non-volatile memory, or it is unprogrammed/incorrect.
+> +
+> +  Upstream dts files should not include battery nodes, unless the battery
+> +  represented cannot easily be replaced in the system by one of a
+> +  different type. This prevents unpredictable, potentially harmful,
+> +  behavior should a replacement that changes the battery type occur
+> +  without a corresponding update to the dtb.
+> +
+> +  Battery properties are named, where possible, for the corresponding elements
+> +  in enum power_supply_property, defined in include/linux/power_supply.h
+> +
+> +  Batteries must be referenced by chargers and/or fuel-gauges using a phandle.
+> +  The phandle's property should be named "monitored-battery".
+> +
+> +properties:
+> +  compatible:
+> +    const: simple-battery
+> +
+> +  over-voltage-threshold-microvolt:
+> +    description: battery over-voltage limit
+> +
+> +  re-charge-voltage-microvolt:
+> +    description: limit to automatically start charging again
+> +
+> +  voltage-min-design-microvolt:
+> +    description: drained battery voltage
+> +
+> +  voltage-max-design-microvolt:
+> +    description: fully charged battery voltage
+> +
+> +  energy-full-design-microwatt-hours:
+> +    description: battery design energy
+> +
+> +  charge-full-design-microamp-hours:
+> +    description: battery design capacity
+> +
+> +  trickle-charge-current-microamp:
+> +    description: current for trickle-charge phase
+> +
+> +  precharge-current-microamp:
+> +    description: current for pre-charge phase
+> +
+> +  precharge-upper-limit-microvolt:
+> +    description: limit when to change to constant charging
+> +
+> +  charge-term-current-microamp:
+> +    description: current for charge termination phase
+> +
+> +  constant-charge-current-max-microamp:
+> +    description: maximum constant input current
+> +
+> +  constant-charge-voltage-max-microvolt:
+> +    description: maximum constant input voltage
+> +
+> +  factory-internal-resistance-micro-ohms:
+> +    description: battery factory internal resistance
+> +
+> +  monitored-battery:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: phandle to the battery node being monitored
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+This needs to be a separate schema because it doesn't apply to 
+simple-battery nodes.
 
->  }
->  
->  /*
+> +
+> +required:
+> +  - compatible
+> +
+> +patternProperties:
+> +  '^ocv-capacity-table-[0-100]$':
+> +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> +    description: |
+> +      An array providing the open circuit voltage (OCV)
+> +      of the battery and corresponding battery capacity percent, which is used
+> +      to look up battery capacity according to current OCV value. And the open
+> +      circuit voltage unit is microvolt.
+> +    maxItems: 100
+> +    items:
+> +      items:
+> +        - description: open circuit voltage (OCV) in microvolts
+> +        - description: battery capacity percent
+> +          maximum: 100
+> +
+> +  '^resistance-temp-table-[0-100]$':
+> +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> +    description: |
+> +      An array providing the temperature in degree Celsius
+> +      and corresponding battery internal resistance percent, which is used to
+> +      look up the resistance percent according to current temperature to get an
+> +      accurate batterty internal resistance in different temperatures.
+> +    maxItems: 100
+> +    items:
+> +      items:
+> +        - description: internal resistance percent
+> +        - description: battery capacity percent
+> +          maximum: 100
+> +
+> +  '^ocv-capacity-celsius-[0-100]$':
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    description: |
+> +      An array containing the temperature in degree Celsius,
+> +      for each of the battery capacity lookup table.
+> +    maxItems: 100
+
+This doesn't seem right. You can have a 100 tuples or just 2 u32's? If 
+the former, the type here should also be uint32-matrix. For the latter, 
+drop this and the first 'items'.
+
+> +    items:
+> +      items:
+> +        - description: temperature in degree Celsius
+> +        - description: battery capacity percent
+> +          maximum: 100
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    power {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      battery:battery {
+
+space            ^
+
+> +        compatible = "simple-battery";
+> +        over-voltage-threshold-microvolt = <4500000>;
+> +        re-charge-voltage-microvolt = <250000>;
+> +        voltage-min-design-microvolt = <3200000>;
+> +        voltage-max-design-microvolt = <4200000>;
+> +        energy-full-design-microwatt-hours = <5290000>;
+> +        charge-full-design-microamp-hours = <1430000>;
+> +        precharge-current-microamp = <256000>;
+> +        precharge-upper-limit-microvolt = <2500000>;
+> +        charge-term-current-microamp = <128000>;
+> +        constant-charge-current-max-microamp = <900000>;
+> +        constant-charge-voltage-max-microvolt = <4200000>;
+> +        factory-internal-resistance-micro-ohms = <250000>;
+> +        ocv-capacity-celsius-0 = <(-10) 10>;
+> +        ocv-capacity-table-0 = <4185000 100>, <4113000 95>, <4066000 90>;
+> +        resistance-temp-table-0 = <20 100>, <10 90>, <0 80>, <(-10) 60>;
+> +      };
+> +
+> +      charger@11 {
+> +        reg = <0x11>;
+> +        monitored-battery = <&battery>;
+> +      };
+> +
+> +      fuel-gauge@22 {
+> +        reg = <0x22>;
+> +        monitored-battery = <&battery>;
+> +      };
+> +    };
 > -- 
-> 2.26.0
+> 2.27.0
 > 
