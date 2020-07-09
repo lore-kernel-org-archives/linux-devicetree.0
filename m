@@ -7,99 +7,96 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7359C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 16:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A28F1C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 16:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A56F920720
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 16:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C8EF20720
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 16:46:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594313116;
-	bh=Qjgf5SbL5uhfUfgfWQpOEbBr4Nh8e43IGbwKTCrl+Ok=;
+	s=default; t=1594313176;
+	bh=JfFF8+CMKABCuPn0K8Tniqu0lfWES1uKahWsojmYWHA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=H7wcMHvr3fb2Fqkf6KFKzSzUPapL4jB+c3rTfJyzdf3sUfNuMgr3ODdI88s9rmDmX
-	 wLfGRTsFry1P5HNu79bM0BZR1bgM0yGvM50qDhj/vrMiW5Rs5LWUFBjRQl0xlQew83
-	 9TtIexANGXR83vcfuv1Ce3vZRmCEneeyEcAikIpE=
+	b=CPwIC2UaXenDBGW9xwppEKMYTVrmhTgshVfsFU8V0z/44v6C9lTyxhrCBTNYyj5eW
+	 sERdlfs/Bobr/AdNbO58PT723wHwG0xPW5ASyQDzNhD8CPuHrDtRFDH5j70oaSOION
+	 653F9AxftmtVMmIuufuct3KB1a0Gaiz/qNjYpVeo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbgGIQpQ (ORCPT
+        id S1728036AbgGIQqQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 12:45:16 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:46633 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgGIQpQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 12:45:16 -0400
-Received: by mail-il1-f195.google.com with SMTP id a6so2556115ilq.13;
-        Thu, 09 Jul 2020 09:45:15 -0700 (PDT)
+        Thu, 9 Jul 2020 12:46:16 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:44042 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgGIQqP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 12:46:15 -0400
+Received: by mail-il1-f193.google.com with SMTP id h16so2569547ilj.11;
+        Thu, 09 Jul 2020 09:46:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ckuJddeyQNpGCGzxrbrYjyShRH3Zbf5UZ94Sm2GBo2A=;
-        b=nzgXQ/yuKgb+lVkHwlMW44PYzR153y756tYXm46Dokylznc4osbEx6a0nJZDJR0L9f
-         xULQyNB6I8t0m4qet234N2udTvDF0UN3ZuKZ/n89YYyXxEY5Fzhi6Nmt70ibrdElOcev
-         PE10wgLufvYQ+LizMiNVZv76E+awNe6gagLZbAZG4QsZTzXMF/4YoZXMnSSb0jRb9X0+
-         ZFI8jPRuLFZF7qQwtRpCxDHjhB+R2lm2EotAI9oygmleVgzxH+YvrxwV8x2+kHTjZjMT
-         BSmun/oVXRAuLFMZNi/cDDJJinMm1Hk3zZwV2WQLhe1GI9Px2L65PdztDoKTxwOEFz4h
-         B6Rg==
-X-Gm-Message-State: AOAM532gPAxZ2BZppsQUZtHS2WpHXm99PBmzgxU4OnOJtIuNXV5Kp4tZ
-        f/zfw90DFZz1GVCyfRFRKg==
-X-Google-Smtp-Source: ABdhPJwyGqJ0jD8YjRo2OQIOc4D+V5YTOxxXwyAoSn/CJwUlhPrkV6RADGPfwrh+1WVYpR9zTOkcgQ==
-X-Received: by 2002:a92:d812:: with SMTP id y18mr37926511ilm.286.1594313114885;
-        Thu, 09 Jul 2020 09:45:14 -0700 (PDT)
+        bh=dYgb8/mkuUxIt2m5PD9T5anmcR08HvFF0Uc/2CHjdPQ=;
+        b=He1m/PsIVb5tKHHq8mBC69c7AEDk6NE5Pi0/2neqZ3zXdqZ5rgIkM7Jp6pFrhkjrxY
+         fMxwWS0nHtdWh8Irsf89PETwv5mLhAOjMoCgfu1G8AWQOcWQMOysUahrPpAIvz8rqhv1
+         zwOIWUj35dpPapdZkxnwLTktPgqVyPzs4XmYzSpQxRqDY6XTFu7/b8lmIjyC5v7zQ0RF
+         Mf+is7A+4/zCbMouNYcSMadMkmsY6unfZtnX/UFvGCfLOiC5BI5isQETu6v5HZLPhiFb
+         8MfO1/gyHtlro4zkNxsNGP83tC04kIoJAzJhmiX1c6T5nFwTDSLom8/jxXi/50VFSdmy
+         KUfw==
+X-Gm-Message-State: AOAM533sHhRPAs1k/2x8ZwAGEiMBrjSkggKwT4vB1A6EkNmF46T98p1e
+        ocolo75F6FyJzvppvetYSw==
+X-Google-Smtp-Source: ABdhPJwYm6C3eOH7D/4rieFBCAyN9fWZOQE2mUBpGjJ9eTOUprMXR7+3CRFw2hY7dFeVrVSISj+QSA==
+X-Received: by 2002:a92:4810:: with SMTP id v16mr47587387ila.75.1594313174582;
+        Thu, 09 Jul 2020 09:46:14 -0700 (PDT)
 Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id c77sm2264678ill.13.2020.07.09.09.45.12
+        by smtp.gmail.com with ESMTPSA id j28sm2264580ili.76.2020.07.09.09.46.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 09:45:14 -0700 (PDT)
-Received: (nullmailer pid 497532 invoked by uid 1000);
-        Thu, 09 Jul 2020 16:45:10 -0000
-Date:   Thu, 9 Jul 2020 10:45:10 -0600
+        Thu, 09 Jul 2020 09:46:14 -0700 (PDT)
+Received: (nullmailer pid 498959 invoked by uid 1000);
+        Thu, 09 Jul 2020 16:46:09 -0000
+Date:   Thu, 9 Jul 2020 10:46:09 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     vineetha.g.jaya.kumaran@intel.com
-Cc:     boon.leong.ong@intel.com, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, mcoquelin.stm32@gmail.com,
-        davem@davemloft.net, weifeng.voon@intel.com,
-        hock.leong.kweh@intel.com, kuba@kernel.org, robh+dt@kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: net: Add bindings for Intel Keem Bay
-Message-ID: <20200709164510.GA496369@bogus>
-References: <1594097238-8827-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
- <1594097238-8827-2-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Cc:     linux-hwmon@vger.kernel.org, Jack Lo <jack.lo@gtsys.com.hk>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Jean Delvare <jdelvare@suse.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v4 2/2] devicetree: hwmon: shtc1: Add sensirion,shtc1.yaml
+Message-ID: <20200709164609.GA498064@bogus>
+References: <20200708040748.9014-1-chris.ruehl@gtsys.com.hk>
+ <20200708040748.9014-3-chris.ruehl@gtsys.com.hk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1594097238-8827-2-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+In-Reply-To: <20200708040748.9014-3-chris.ruehl@gtsys.com.hk>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 07 Jul 2020 12:47:17 +0800, vineetha.g.jaya.kumaran@intel.com wrote:
-> From: "Vineetha G. Jaya Kumaran" <vineetha.g.jaya.kumaran@intel.com>
+On Wed, 08 Jul 2020 12:07:47 +0800, Chris Ruehl wrote:
+> Add documentation for the newly added DTS support in the shtc1 driver.
+> To align with the drivers logic to have high precision by default
+> a boolean sensirion,low_precision is used to switch to low precision.
 > 
-> Add Device Tree bindings documentation for the ethernet controller
-> on Intel Keem Bay.
-> 
-> Signed-off-by: Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
+> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
 > ---
->  .../devicetree/bindings/net/intel,dwmac-plat.yaml  | 123 +++++++++++++++++++++
->  1 file changed, 123 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/intel,dwmac-plat.yaml
+>  .../bindings/hwmon/sensirion,shtc1.yaml       | 60 +++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
 > 
 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/intel,dwmac-plat.yaml: properties:clocks:maxItems: False schema does not allow 3
-Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/net/intel,dwmac-plat.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/net/intel,dwmac-plat.example.dts] Error 1
+Error: Documentation/devicetree/bindings/hwmon/sensirion,shtc1.example.dts:26.13-14 syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:315: recipe for target 'Documentation/devicetree/bindings/hwmon/sensirion,shtc1.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/hwmon/sensirion,shtc1.example.dt.yaml] Error 1
 make[1]: *** Waiting for unfinished jobs....
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/intel,dwmac-plat.yaml: ignoring, error in schema: properties: clocks: maxItems
-warning: no schema found in file: ./Documentation/devicetree/bindings/net/intel,dwmac-plat.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/intel,dwmac-plat.yaml: ignoring, error in schema: properties: clocks: maxItems
-warning: no schema found in file: ./Documentation/devicetree/bindings/net/intel,dwmac-plat.yaml
 Makefile:1347: recipe for target 'dt_binding_check' failed
 make: *** [dt_binding_check] Error 2
 
 
-See https://patchwork.ozlabs.org/patch/1324088
+See https://patchwork.ozlabs.org/patch/1324936
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
