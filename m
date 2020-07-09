@@ -2,160 +2,82 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EADC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 11:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3289BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 11:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C351220774
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 11:06:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Zp76D379"
+	by mail.kernel.org (Postfix) with ESMTP id 1492B2076A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 11:09:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgGILGX (ORCPT
+        id S1726645AbgGILJR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 07:06:23 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:20443 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726806AbgGILGX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 07:06:23 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594292782; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=yxKB+f0iO9CExiHd4llgeNv4VdmTVWRtzF0m4fF95jk=; b=Zp76D379JH03UObIgOR4GLVF14VT0jW3kQz4XuM0hlEyAlbL8NIskKconu++ROTFXW1OlGok
- nNQtnT3etTBv5YQY65u1sgraiia12QPcgyd8g3VH633xMZ4TXLOB9LejgCOLRobheYvMqH6l
- ZF9CvPHOBG2xeHRdt/N4SkVe5Xc=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n14.prod.us-west-2.postgun.com with SMTP id
- 5f06f9e8f97e988aab0f76b3 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 11:05:12
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 65DE7C4339C; Thu,  9 Jul 2020 11:05:12 +0000 (UTC)
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D95EAC433CA;
-        Thu,  9 Jul 2020 11:05:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D95EAC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     robdclark@gmail.com, sean@poorly.run, agross@kernel.org,
-        bjorn.andersson@linaro.org
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v3 4/4] arm64: dts: sc7180: Add DSI and MDP OPP tables and power-domains
-Date:   Thu,  9 Jul 2020 16:34:34 +0530
-Message-Id: <1594292674-15632-5-git-send-email-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594292674-15632-1-git-send-email-rnayak@codeaurora.org>
-References: <1594292674-15632-1-git-send-email-rnayak@codeaurora.org>
+        Thu, 9 Jul 2020 07:09:17 -0400
+Received: from mga07.intel.com ([134.134.136.100]:39568 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726575AbgGILJQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Jul 2020 07:09:16 -0400
+IronPort-SDR: 45nC6U7Bv7mJjVYTZWqGyWG55S2sfdSXKEcrPpoWLWF++DAuAmuc7F3bo9BMjq72Tw1aXQIta9
+ /YoDptNR1RFQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="212891107"
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="212891107"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 04:09:16 -0700
+IronPort-SDR: OWaLNeZBmurGE0tfls9Q2CUa/rhJAuCmUH8nFuOlGcWQl+Rl23mb1bdok7/IQ+rBvSwIphLnW6
+ cN3S2miYfZjA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="323211719"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by FMSMGA003.fm.intel.com with ESMTP; 09 Jul 2020 04:09:13 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1jtUQU-000qRR-HO; Thu, 09 Jul 2020 14:09:14 +0300
+Date:   Thu, 9 Jul 2020 14:09:14 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Amireddy Mallikarjuna reddy <mallikarjunax.reddy@linux.intel.com>
+Cc:     dmaengine@vger.kernel.org, vkoul@kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, chuanhua.lei@linux.intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        malliamireddy009@gmail.com
+Subject: Re: [PATCH v4 2/2] Add Intel LGM soc DMA support.
+Message-ID: <20200709110914.GW3703480@smile.fi.intel.com>
+References: <cover.1594273437.git.mallikarjunax.reddy@linux.intel.com>
+ <6be9b9cfbf6708fe371f280cb94cbdc9c04bdccb.1594273437.git.mallikarjunax.reddy@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6be9b9cfbf6708fe371f280cb94cbdc9c04bdccb.1594273437.git.mallikarjunax.reddy@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the OPP tables for DSI and MDP based on the perf state/clk
-requirements, and add the power-domains property to specify the
-scalable power domain.
+On Thu, Jul 09, 2020 at 02:01:06PM +0800, Amireddy Mallikarjuna reddy wrote:
+> Add DMA controller driver for Lightning Mountain(LGM) family of SoCs.
+> 
+> The main function of the DMA controller is the transfer of data from/to any
+> DPlus compliant peripheral to/from the memory. A memory to memory copy
+> capability can also be configured.
+> 
+> This ldma driver is used for configure the device and channnels for data
+> and control paths.
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 49 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+> +#include "../virt-dma.h"
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 2be81a2..1ce895f 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -2642,6 +2642,8 @@
- 						       <19200000>,
- 						       <19200000>,
- 						       <19200000>;
-+				operating-points-v2 = <&mdp_opp_table>;
-+				power-domains = <&rpmhpd SC7180_CX>;
- 
- 				interrupt-parent = <&mdss>;
- 				interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-@@ -2659,6 +2661,31 @@
- 						};
- 					};
- 				};
-+
-+				mdp_opp_table: mdp-opp-table {
-+					compatible = "operating-points-v2";
-+
-+					opp-200000000 {
-+						opp-hz = /bits/ 64 <200000000>;
-+						required-opps = <&rpmhpd_opp_low_svs>;
-+					};
-+
-+					opp-300000000 {
-+						opp-hz = /bits/ 64 <300000000>;
-+						required-opps = <&rpmhpd_opp_svs>;
-+					};
-+
-+					opp-345000000 {
-+						opp-hz = /bits/ 64 <345000000>;
-+						required-opps = <&rpmhpd_opp_svs_l1>;
-+					};
-+
-+					opp-460000000 {
-+						opp-hz = /bits/ 64 <460000000>;
-+						required-opps = <&rpmhpd_opp_nom>;
-+					};
-+				};
-+
- 			};
- 
- 			dsi0: dsi@ae94000 {
-@@ -2682,6 +2709,9 @@
- 					      "iface",
- 					      "bus";
- 
-+				operating-points-v2 = <&dsi_opp_table>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+
- 				phys = <&dsi_phy>;
- 				phy-names = "dsi";
- 
-@@ -2707,6 +2737,25 @@
- 						};
- 					};
- 				};
-+
-+				dsi_opp_table: dsi-opp-table {
-+					compatible = "operating-points-v2";
-+
-+					opp-187500000 {
-+						opp-hz = /bits/ 64 <187500000>;
-+						required-opps = <&rpmhpd_opp_low_svs>;
-+					};
-+
-+					opp-300000000 {
-+						opp-hz = /bits/ 64 <300000000>;
-+						required-opps = <&rpmhpd_opp_svs>;
-+					};
-+
-+					opp-358000000 {
-+						opp-hz = /bits/ 64 <358000000>;
-+						required-opps = <&rpmhpd_opp_svs_l1>;
-+					};
-+				};
- 			};
- 
- 			dsi_phy: dsi-phy@ae94400 {
+I didn't find any evidence this driver utilizes virt-dma API in full.
+For example, there is a virt_dma_desc structure and descriptor management around it.
+Why don't you use it?
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+With Best Regards,
+Andy Shevchenko
+
 
