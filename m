@@ -2,122 +2,114 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 024B8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 17:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01048C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 17:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB3FF20767
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 17:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D13D820767
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 17:30:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YMK7N//u"
+	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="oh/vaVMf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbgGIR0j (ORCPT
+        id S1727003AbgGIRan (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 13:26:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45890 "EHLO
+        Thu, 9 Jul 2020 13:30:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728392AbgGIR0j (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 13:26:39 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2292C08E6DC
-        for <devicetree@vger.kernel.org>; Thu,  9 Jul 2020 10:26:38 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id k5so1091284plk.13
-        for <devicetree@vger.kernel.org>; Thu, 09 Jul 2020 10:26:38 -0700 (PDT)
+        with ESMTP id S1726722AbgGIRan (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 13:30:43 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EC7CC08C5DC
+        for <devicetree@vger.kernel.org>; Thu,  9 Jul 2020 10:30:43 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id g37so2240965otb.9
+        for <devicetree@vger.kernel.org>; Thu, 09 Jul 2020 10:30:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fAVMof5nNwaeOe0UjH7aEaTqC0vuF4D1qFzyqvlHDMA=;
-        b=YMK7N//u1wp3f+ymy0j9gl/3flzcYQz53aZpmqO7VGDdmq6ht7XX5idCJyJybOzq2X
-         wdUIBwZUGuUmjCB5FN1/G9/P50YCCgGRi5GVPPimM6uooU4F3iaqi8cS2khxAyJi4hBe
-         +WSLxitMer7bbujtrum3loVKkZbxzWSA+DVy4=
+        d=konsulko.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=3m60qlJpb4zSVwjX3KfuFM5A8w6HuVKnF0CMOiaKyO0=;
+        b=oh/vaVMffz6NBpk57JhA0bccxQ+CgY2N8B2O4IVgQU4KbWtY9xo9fUav21zjzPGRFu
+         XzNKfFHDPNOfIkq/8qYU7rpnUPPTFWELncvRei93tj7/zkq1Y7dFa7rEUaMclB0JOBqV
+         OUtatGCohXqF1J7LdbhoOA84aqKaifMwZaw74=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fAVMof5nNwaeOe0UjH7aEaTqC0vuF4D1qFzyqvlHDMA=;
-        b=rA93oS+i8sKY+6en4B7ERKaUCFmfNZV8CeuXOKvepEoJoG5jnCsDKtgmFunDq/h2bN
-         bRhpqltDKbi/EXqPRcbBiqEVTAWV6/gj01FIRZ21OBWhtBo/CcUyMZtI0uNC/bxm/7lm
-         xyQu72aOuSVPU+Ic7eLupg+QfRBTEJ6YeuAwDJWPKZ0guibIsSqt91xD6ncseKCjO7aT
-         ZY7oIagDiBpJkzcjKw6yGrpOuP59hEjVXZRX7RXOvldze/kkAp53Y8dHP7B2g9PddPwN
-         1xzAo/22KOgFgt9umUNi+qGPkCjBgiMpgzHV8/pxwiX6NsTO9ohBf/M7YYmnKEoDsELA
-         aIOA==
-X-Gm-Message-State: AOAM532sNfut/f/q9AS5yQMJX61mSQgWR7tTYYyDn2HJLSKkCwn23pQd
-        UQI33x7wEPylGGnr6RFQJEqJoA==
-X-Google-Smtp-Source: ABdhPJwzBJkpMTYA6AAa9Z1wDaiyNvhZ2Z/dNzuJcOR6hBmjNBylvIiW3pKrued1/Rg34jcKcwbpTA==
-X-Received: by 2002:a17:90a:bb84:: with SMTP id v4mr1232421pjr.162.1594315598390;
-        Thu, 09 Jul 2020 10:26:38 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id o17sm3096883pjq.6.2020.07.09.10.26.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2020 10:26:37 -0700 (PDT)
-Date:   Thu, 9 Jul 2020 10:26:36 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-Subject: Re: [PATCH v8 1/2] usb: dwc3: qcom: Add interconnect support in dwc3
- driver
-Message-ID: <20200709172636.GL3191083@google.com>
-References: <1594310413-14577-1-git-send-email-sanm@codeaurora.org>
- <1594310413-14577-2-git-send-email-sanm@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3m60qlJpb4zSVwjX3KfuFM5A8w6HuVKnF0CMOiaKyO0=;
+        b=oIRwgRhErGoxv9mr7jz/WodadvHhXD/FxcW26HaM0BeblWvyKQ8eWYeQlDJ5q+Spmf
+         c+3Cj+OY/TVtKt1UIGczgBlbe+fpVkgMyOxEu/yEc4LfIHdQW59WjMf36nycM0dJcnS3
+         WeULGwMHnPrxaA2pJdV4x+oreB2mteOG8Hhj9bdn6nxjgMHwlht9mgnXjlcDxNEseGel
+         Xhpl2RQbqFBX3KiNGuL45lk/q7OVOAFsRw5tAl3ulJCyqdhBM45XjyXQKTnOTmPUZbpI
+         WkG41KTn+CAgTIO5i3z+rKz9x9EQuFoYqMyI+xpkKMlnFxw1sRrt3/YQUkyle1ZyDFvG
+         2YdA==
+X-Gm-Message-State: AOAM531QQ8x60kocMg6DIvTpAE9t93YUQIbMPzkwNmdHmreb93pVD4yb
+        Elef9o2xVY9VIQw9dfXZTON2AZMg0CehCG304GmOlA==
+X-Google-Smtp-Source: ABdhPJw7G6FF2diX1q8cHlRwPzJnbtDmb9sO/T7kW+epnUE2deow+2VW1fqrGUJP7FP/wVSXruBBnpkZ0T81v6/XMvw=
+X-Received: by 2002:a9d:674a:: with SMTP id w10mr49598426otm.305.1594315842379;
+ Thu, 09 Jul 2020 10:30:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1594310413-14577-2-git-send-email-sanm@codeaurora.org>
+References: <20200709144527.23528-1-uwe@kleine-koenig.org>
+In-Reply-To: <20200709144527.23528-1-uwe@kleine-koenig.org>
+From:   Paul Barker <pbarker@konsulko.com>
+Date:   Thu, 9 Jul 2020 18:30:31 +0100
+Message-ID: <CAM9ZRVt8V9mPwAtQ3pvPqGc-Zuxs-SkcoSNk49JipwvERByGdw@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx: default to #pwm-cells = <3> in the SoC
+ dtsi files
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>
+Cc:     Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        Matt Ranostay <matt.ranostay@konsulko.com>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        kernel@pengutronix.de,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-
-inline one more thing I forgot to comment on in my previous mail
-
-On Thu, Jul 09, 2020 at 09:30:11PM +0530, Sandeep Maheswaram wrote:
-> Add interconnect support in dwc3-qcom driver to vote for bus
-> bandwidth.
-> 
-> This requires for two different paths - from USB master to
-> DDR slave. The other is from APPS master to USB slave.
-> 
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+On Thu, 9 Jul 2020 at 15:45, Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig.org> =
+wrote:
+>
+> From: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+>
+> The imx-pwm driver supports 3 cells and this is the more flexible setting=
+.
+> So use it by default and overwrite it back to two for the files that
+> reference the PWMs with just 2 cells to minimize changes.
+>
+> This allows to drop explicit setting to 3 cells for the boards that alrea=
+dy
+> depend on this.
+>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
 > ---
->  drivers/usb/dwc3/dwc3-qcom.c | 127 ++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 125 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-> index 1dfd024..5532988 100644
-> --- a/drivers/usb/dwc3/dwc3-qcom.c
-> +++ b/drivers/usb/dwc3/dwc3-qcom.c
+> Hello,
 >
-> ...
+> this picks up an old mail thread where Paul Barker started to work on
+> this in March. He got some feedback but didn't come up with a new
+> approach.
 >
-> @@ -648,6 +763,11 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
->  		goto depopulate;
->  	}
->  
-> +	qcom->max_speed = usb_get_maximum_speed(&qcom->dwc3->dev);
+> Compared to his patch (Message-Id:
+> 20200309145558.16098-1-pbarker@konsulko.com) I overwrite back to
+> #pwm-cells =3D <2> in the board .dts files to minimize changes there.
+>
+> Best regards
+> Uwe
 
-What if the function returns USB_SPEED_UNKNOWN?
+Thanks for picking this up Uwe, I must admit it fell off my todo list
+due to the coronavirus situation.
 
-You need a reasonable default value for that case, which I think would be
-USB_SPEED_SUPER (i.e. the controller would work properly at super speed,
-though the interconnects would consume a bit more power than necessary lower
-speed modes).
+Is there a reason why imx23.dtsi, imx28.dtsi and imx51.dtsi have not
+been changed?
+
+--=20
+Paul Barker
+Konsulko Group
