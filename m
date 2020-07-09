@@ -2,49 +2,47 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E100C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 11:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBEEC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 11:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB092076A
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 11:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64FFE20772
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 11:05:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JBYeYh12"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fEY3VopJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbgGILFV (ORCPT
+        id S1727080AbgGILF3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 07:05:21 -0400
+        Thu, 9 Jul 2020 07:05:29 -0400
 Received: from m43-7.mailgun.net ([69.72.43.7]:62028 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726936AbgGILFV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 9 Jul 2020 07:05:21 -0400
+        id S1727075AbgGILF2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Jul 2020 07:05:28 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594292720; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=HJWdyO0UDBgRKgOYKL4fiuT5Fdu/5iVjgEtgN+UMip4=; b=JBYeYh12sBbRCLfLaMZ0ia8PuTfskI/HOGYWtGeZGBKoqHj0sS3QL2NDt65WSoqCtE476zqn
- q+Mml3N2Ii65BqMn+XRtjB2bZnctwMeIpOnJCbvpbtiMjFM+zN72VK/ZEABUECDsSbP9pJVo
- jE6FC+yJbLniSiWpl0ITaCP50NY=
+ s=smtp; t=1594292728; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=jsDFDs4zDabaEWDbeRx/lyIO/1u6Uzt/XQpS5ikRQHw=; b=fEY3VopJVHd/3arOEKEd/K8FqStGHQAkIpTA5t6MFUCdhEKqEXIVaZ3sFooR5D/j1Eraz6cI
+ l8eNZ/Ro3O/X+IkZAQ7Hxw3YoSLTFSmJG13JWOYCF4oefORO/aro0qk6VBr2YcFtmVlQQvwO
+ pZGytDe8X4Z5xi/Zj7JzPNE+e1k=
 X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 5f06f9e1a19992ac650ec5e7 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 11:05:05
+ smtp-out-n20.prod.us-west-2.postgun.com with SMTP id
+ 5f06f9daa33b1a3dd46a2718 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 11:04:58
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AF9BAC43391; Thu,  9 Jul 2020 11:05:05 +0000 (UTC)
+        id B8DC2C43387; Thu,  9 Jul 2020 11:04:58 +0000 (UTC)
 Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 314D0C433CA;
-        Thu,  9 Jul 2020 11:05:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 314D0C433CA
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 83C1DC433C6;
+        Thu,  9 Jul 2020 11:04:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 83C1DC433C6
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
 From:   Rajendra Nayak <rnayak@codeaurora.org>
@@ -53,106 +51,42 @@ To:     robdclark@gmail.com, sean@poorly.run, agross@kernel.org,
 Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v3 2/4] drm/msm: dsi: Use OPP API to set clk/perf state
-Date:   Thu,  9 Jul 2020 16:34:32 +0530
-Message-Id: <1594292674-15632-3-git-send-email-rnayak@codeaurora.org>
+Subject: [PATCH v3 0/4] DVFS support for dpu and dsi
+Date:   Thu,  9 Jul 2020 16:34:30 +0530
+Message-Id: <1594292674-15632-1-git-send-email-rnayak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594292674-15632-1-git-send-email-rnayak@codeaurora.org>
-References: <1594292674-15632-1-git-send-email-rnayak@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On SDM845 and SC7180 DSI needs to express a performance state
-requirement on a power domain depending on the clock rates.
-Use OPP table from DT to register with OPP framework and use
-dev_pm_opp_set_rate() to set the clk/perf state.
+Changes in v3
+- Added dev_pm_opp_put_clkname() in the error path
 
-dev_pm_opp_set_rate() is designed to be equivalent to clk_set_rate()
-for devices without an OPP table, hence the change works fine
-on devices/platforms which only need to set a clock rate.
+Changes in v2
+- Patch 2: Dropped dsi_link_clk_set_rate_6g_v2 and dsi_link_clk_disable_6g_v2 as suggested by Matthias
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
----
- drivers/gpu/drm/msm/dsi/dsi_host.c | 27 +++++++++++++++++++++++++--
- 1 file changed, 25 insertions(+), 2 deletions(-)
+These patches add DVFS support for DPU and DSI.
 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
-index 11ae5b8..0a14c4a 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-@@ -14,6 +14,7 @@
- #include <linux/of_graph.h>
- #include <linux/of_irq.h>
- #include <linux/pinctrl/consumer.h>
-+#include <linux/pm_opp.h>
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
- #include <linux/spinlock.h>
-@@ -111,6 +112,9 @@ struct msm_dsi_host {
- 	struct clk *pixel_clk_src;
- 	struct clk *byte_intf_clk;
- 
-+	struct opp_table *opp_table;
-+	bool has_opp_table;
-+
- 	u32 byte_clk_rate;
- 	u32 pixel_clk_rate;
- 	u32 esc_clk_rate;
-@@ -512,9 +516,10 @@ int dsi_link_clk_set_rate_6g(struct msm_dsi_host *msm_host)
- 	DBG("Set clk rates: pclk=%d, byteclk=%d",
- 		msm_host->mode->clock, msm_host->byte_clk_rate);
- 
--	ret = clk_set_rate(msm_host->byte_clk, msm_host->byte_clk_rate);
-+	ret = dev_pm_opp_set_rate(&msm_host->pdev->dev,
-+				  msm_host->byte_clk_rate);
- 	if (ret) {
--		pr_err("%s: Failed to set rate byte clk, %d\n", __func__, ret);
-+		pr_err("%s: dev_pm_opp_set_rate failed %d\n", __func__, ret);
- 		return ret;
- 	}
- 
-@@ -658,6 +663,8 @@ int dsi_link_clk_enable_v2(struct msm_dsi_host *msm_host)
- 
- void dsi_link_clk_disable_6g(struct msm_dsi_host *msm_host)
- {
-+	/* Drop the performance state vote */
-+	dev_pm_opp_set_rate(&msm_host->pdev->dev, 0);
- 	clk_disable_unprepare(msm_host->esc_clk);
- 	clk_disable_unprepare(msm_host->pixel_clk);
- 	if (msm_host->byte_intf_clk)
-@@ -1879,6 +1886,19 @@ int msm_dsi_host_init(struct msm_dsi *msm_dsi)
- 		goto fail;
- 	}
- 
-+	msm_host->opp_table = dev_pm_opp_set_clkname(&pdev->dev, "byte");
-+	if (IS_ERR(msm_host->opp_table))
-+		return PTR_ERR(msm_host->opp_table);
-+	/* OPP table is optional */
-+	ret = dev_pm_opp_of_add_table(&pdev->dev);
-+	if (!ret) {
-+		msm_host->has_opp_table = true;
-+	} else if (ret != -ENODEV) {
-+		dev_err(&pdev->dev, "invalid OPP table in device tree\n");
-+		dev_pm_opp_put_clkname(msm_host->opp_table);
-+		return ret;
-+	}
-+
- 	init_completion(&msm_host->dma_comp);
- 	init_completion(&msm_host->video_comp);
- 	mutex_init(&msm_host->dev_mutex);
-@@ -1914,6 +1934,9 @@ void msm_dsi_host_destroy(struct mipi_dsi_host *host)
- 	mutex_destroy(&msm_host->cmd_mutex);
- 	mutex_destroy(&msm_host->dev_mutex);
- 
-+	if (msm_host->has_opp_table)
-+		dev_pm_opp_of_remove_table(&msm_host->pdev->dev);
-+	dev_pm_opp_put_clkname(msm_host->opp_table);
- 	pm_runtime_disable(&msm_host->pdev->dev);
- }
- 
+These patches have no other dependency. Patch 1 and 2 will need to be merged in
+via the MSM DRM tree.
+
+DT patches will need to land via the msm tree.
+
+Rajendra Nayak (4):
+  drm/msm/dpu: Use OPP API to set clk/perf state
+  drm/msm: dsi: Use OPP API to set clk/perf state
+  arm64: dts: sdm845: Add DSI and MDP OPP tables and power-domains
+  arm64: dts: sc7180: Add DSI and MDP OPP tables and power-domains
+
+ arch/arm64/boot/dts/qcom/sc7180.dtsi          | 49 ++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          | 59 +++++++++++++++++++++++++++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c |  3 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c       | 27 +++++++++++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h       |  4 ++
+ drivers/gpu/drm/msm/dsi/dsi_host.c            | 27 +++++++++++-
+ 6 files changed, 165 insertions(+), 4 deletions(-)
+
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
