@@ -6,83 +6,82 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74899C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D491AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43C5A2070E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A85A520775
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:13:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594336036;
-	bh=nuY8B7MtSnrkeveXJ136EeuRvMPEqGlBV84ZUBNpRV0=;
+	s=default; t=1594336421;
+	bh=1sOuvMmgTIqgfyJhP5qnTqBJYKZkMIqsO/8V4NDTW68=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=doxuXfltsoGUTtPtyzmJPBU7UTMsmICO5oHo+rT//0oc2ToRO8Y56HuVXMtiUgtlK
-	 3JFORC3hXzcTb6hsCWSTGhzBfsAt+rnJJFJyZHQtZ3QUh/D8URZCKGKI8EnkB3zfE6
-	 wVf87XGBkVFUZJqAGxHd8ewBv9/+WOZvMgsAVpw0=
+	b=0gA4AJtW7p81y+SNt6xl4kq7oUexnwAoiLWrTfjuZPCwaNhQUow2HaTP1Ksn90026
+	 kxSgpTbI5oalhpTw/rPROE5nBtLlKcrW5uHAisM3TyS9vjOh7+BFflQjt65UggG4ve
+	 evnpcKr3I9qtcAr37MEA2KZ8z2advC9au0xjsRGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbgGIXHP (ORCPT
+        id S1726323AbgGIXNl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 19:07:15 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43406 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbgGIXHP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 19:07:15 -0400
-Received: by mail-io1-f65.google.com with SMTP id k23so4088079iom.10;
-        Thu, 09 Jul 2020 16:07:14 -0700 (PDT)
+        Thu, 9 Jul 2020 19:13:41 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:35461 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbgGIXNl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 19:13:41 -0400
+Received: by mail-il1-f194.google.com with SMTP id t18so3516962ilh.2;
+        Thu, 09 Jul 2020 16:13:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=kpUPxSg4+S4VKiL42RctcMIj4F/VgQ6lAZPDiD3WZ1c=;
-        b=ZeTnPOo3ZOoOX4XMg2KJe3J23TDhOO1Xxx9fXdS2MRSdi7+3fKBFAEh8zd1RtuG+79
-         gys1YrjijNzy3qzss+c9sOjFAYgcD6YjcdgmPiC+1ve8LujKzladAcB/O8dW09wLaTjV
-         MR/y1mSRsHyUtY+3X9UPfJu/ameC5M8n0t+CuMP57cizZKrb9frzfaPz79lAj+MveKcl
-         EQteb0bXjHpluLSSg4kpmkLtWSTlF5yo9ujAgV/xEuSoDRu0qqYf6sE9PQGcX9IE+nUk
-         7Y9uZDtNxCQByvtPJgmRzcRa+0ZOYsqgYWEl98cENkJtHtNByI3V+/XNqSxRsT6f2KB9
-         P/NA==
-X-Gm-Message-State: AOAM530WsQXWaDe6ZShgg+MWiK4SWNtfTSHmUAeOUbvk3QtWvXb/DkWv
-        HpNo3cf2TM5vJowbTcuDtg==
-X-Google-Smtp-Source: ABdhPJwaXaUIQd+wSZRsx/L/XhnFNFY/DGeEFJ7JNWbK+VHIBsG3tfiZgEqUQ8jf1hhuDf+OE7e2aQ==
-X-Received: by 2002:a5d:94cc:: with SMTP id y12mr23644866ior.133.1594336034560;
-        Thu, 09 Jul 2020 16:07:14 -0700 (PDT)
+        bh=qVYJSmIH5pGs/4dhKNiiY1TOXTho3Eq5GDRG0ULpRKU=;
+        b=V7XIFnZuJH+UNp/ReoPeWYAQHb6LdWLXvZeDMdtKNiMUlRge1jaW1bXoM0ITCWcxG2
+         +jpR95Lhc7erG2uOnJlt84dYIwdKWoonrILoBSn4BAx03uVlfUJJfQKoO94Xeerd6tHL
+         5pppKFazt0qP6wWwBi+bIQeYWf9zsfQ+dIyYpfgtUN8FrB0FWxQhVE/AOvkRK1SupYw9
+         CiL+kVYBuauActX8WucXRjzff/qFcWZFAt3759VJF97B6dRG0Zbt8GGeRfXPMv7TrXNm
+         GnRQzsycGh0v4/2YHIN+vdlmDlJZLZp9dNxUsEcqGfKsRT/mSa6qarvJCetkmAkTHyKn
+         8qiQ==
+X-Gm-Message-State: AOAM5330fP7NFfbSlo72vGjKPh4DW/Gu24PIlxCM8NNbMTTPHrzdqPMc
+        /msfaRxlWJWkAflGOB3rUg==
+X-Google-Smtp-Source: ABdhPJwSaf8vHd4K9Dyi8pY6+VkhDEivCPd1Hgh2whPHR6+/lCW9ltyoN1fWo70Xj5XWqmqCNSCjJQ==
+X-Received: by 2002:a92:cece:: with SMTP id z14mr19176614ilq.120.1594336420385;
+        Thu, 09 Jul 2020 16:13:40 -0700 (PDT)
 Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id c77sm2720628ill.13.2020.07.09.16.07.13
+        by smtp.gmail.com with ESMTPSA id p84sm2739075ill.64.2020.07.09.16.13.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 16:07:14 -0700 (PDT)
-Received: (nullmailer pid 1063353 invoked by uid 1000);
-        Thu, 09 Jul 2020 23:07:12 -0000
-Date:   Thu, 9 Jul 2020 17:07:12 -0600
+        Thu, 09 Jul 2020 16:13:39 -0700 (PDT)
+Received: (nullmailer pid 1073745 invoked by uid 1000);
+        Thu, 09 Jul 2020 23:13:38 -0000
+Date:   Thu, 9 Jul 2020 17:13:38 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        yin1.li@intel.com, p.zabel@pengutronix.de,
-        linux-kernel@vger.kernel.org, balbi@kernel.org,
-        gregkh@linuxfoundation.org, cheol.yong.kim@intel.com,
-        linux-usb@vger.kernel.org, qi-ming.wu@intel.com
-Subject: Re: [PATCH v4 1/2] dt-bindings: usb: Add USB PHY support for Intel
- LGM SoC
-Message-ID: <20200709230712.GA1063293@bogus>
-References: <20200617035818.54110-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200617035818.54110-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>
+Subject: Re: [PATCH v4 1/3] dt-bindings: hwmon: Add Sparx5 temperature sensor
+Message-ID: <20200709231338.GA1073694@bogus>
+References: <20200618135951.25441-1-lars.povlsen@microchip.com>
+ <20200618135951.25441-2-lars.povlsen@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200617035818.54110-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+In-Reply-To: <20200618135951.25441-2-lars.povlsen@microchip.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 17 Jun 2020 11:58:17 +0800, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On Thu, 18 Jun 2020 15:59:49 +0200, Lars Povlsen wrote:
+> This add the DT binding specification for the Sparx5 temperature
+> sensor.
 > 
-> Add the dt-schema to support USB PHY on Intel LGM SoC
-> 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
 > ---
->  .../devicetree/bindings/usb/intel,lgm-usb-phy.yaml | 53 ++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/intel,lgm-usb-phy.yaml
+>  .../bindings/hwmon/microchip,sparx5-temp.yaml | 44 +++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/microchip,sparx5-temp.yaml
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
