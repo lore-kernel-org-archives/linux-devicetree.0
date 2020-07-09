@@ -4,92 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC95CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 20:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDC5C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 20:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76C13206DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 20:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 763982065D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 20:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594326523;
-	bh=qWkQ7M81fpimxYrOeQNvhFsIIYC+E/bgJI0TaoS7kBI=;
+	s=default; t=1594326629;
+	bh=wEbq1hR1q6egwjZz8nwm4bNIAo39znkOJ/htzpzk9uY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JahxXgPsn6YXHJZOQKtM8Ty3xeH2ugRc3nmEgGs7P592q1i2wfowalbytVzIcx4xR
-	 WtLmyYpOLbNwztuyPM4aySfGAbArbtCUg7ny2fep6lhZ5afGeXthS61itN/TkpPsXo
-	 RRGv+21dsAu0Eu9eQTZoTKhHF9FT5FIYDbPqujGA=
+	b=hjaIhgTrpPBouxYpBFtJNdByh0LjjK+7UKgvLGZaqhSmQfWahbIKd/byPoLs4xoWH
+	 YKncnl2yjD/UoUJAfOcl/m40IwJ3+uKuOivDCFy7GevUo/r6XcPIMuuIk/wnsKUwi7
+	 xVPfXwC99ZSyhCjWF8IGWux3Mp9YQytWEiy1RqXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbgGIU2n (ORCPT
+        id S1726220AbgGIUaX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 16:28:43 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:41640 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgGIU2m (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 16:28:42 -0400
-Received: by mail-il1-f196.google.com with SMTP id q3so3155784ilt.8;
-        Thu, 09 Jul 2020 13:28:41 -0700 (PDT)
+        Thu, 9 Jul 2020 16:30:23 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:36230 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbgGIUaW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 16:30:22 -0400
+Received: by mail-io1-f66.google.com with SMTP id y2so3744597ioy.3;
+        Thu, 09 Jul 2020 13:30:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=f86UOLnCawtqhCK/Q6eF0gy2sdMy97aoXKHRFnr5wqE=;
-        b=qSfbdyiNg0ZpEhW+E0tLnUJJc3dNxXbsrO7JJq+uDyftSceMPkDY1gJ4fDjVxpTxk6
-         gtTkb6SY2EDkNOk0bMzIO2ZGeyn39f1ZeG9QlnrEqq5mgfnbES3WCWpUsiYRD7UOp7Km
-         sZoSMaoPKVXD2WxmZTPfJP0QR1dCtIkHAq/iPcHi9aYRk62kjx8rvLQXEUHOGzGLYzsm
-         YiFGOGieVwTVmXXAaQ1sg3pFS6Hn7BWIiNqAYpejuNcRFdZBe1aik53whtpq33x1t5kl
-         3Zq9D0lx2i4u0BEcBhLGnvpVgrZEPPvFsfdT16fM9QHq7+hGE+292CKEi8moiN4G8dDQ
-         zCXw==
-X-Gm-Message-State: AOAM533d29PoMsIo/KYJGd8TAJtOPy1vtX/iqOF9IaSiwHVa/8YWqcu5
-        uHD6BzLNzOPcnBe4fXiEiQ==
-X-Google-Smtp-Source: ABdhPJw1ErPn0i/flIuVykZc4G9AUQr0yJoBYuG+gUne33UoponLiMSDnxOcY82bQJv9S7f+2E8S4g==
-X-Received: by 2002:a05:6e02:e05:: with SMTP id a5mr45125941ilk.92.1594326521440;
-        Thu, 09 Jul 2020 13:28:41 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to;
+        bh=KuoJiLkjprainlec1ecjgTMZB2cKWXAmKPaY29PFAzA=;
+        b=Dcf+KsjQrxlZDMaX0b9ShyzJj6moESxbayjAzjhaG+f2Ws3bohZADVVUkABjSDppxd
+         K5sFjso9oK/fhxfAAfpBWlz5EqULutrgyl0TloJ/WHrrQGwI/XRM7NG79o2orVS7Xlwc
+         bgWd5U6CPn5Yj/1piBmXyENsqD8O8PRY0fBMrM5pYuKZJIpKRRIHX4g5pE+Aivr/H1+s
+         ZBX3XuSRjxk1M8FXkL9kROA+NCzZKMuyhYBwU7sT/eyDWevNwmtZgcFMYPB/lPAtos/8
+         0t/30GT1kzEbBkA8Pg9LWe9pvNmoAQ/fN2QpdWqaLGPZ+1prybKing53y7yYQCy5dGtn
+         mecA==
+X-Gm-Message-State: AOAM531eK9g1kJYYpfU/BVYdd0icuV+Xma0INoBbIIlPYVmWsWCO/oeE
+        WSzBC+X7KWTGhEcrblyru1PeQfrqGQ==
+X-Google-Smtp-Source: ABdhPJx3AzvFynIgBhDSUMOIYtDu5GgZICqxbyTyD1+BtuQ9XyEYl6v0a8ONVIl1WqsF5NufN/q8qQ==
+X-Received: by 2002:a05:6638:2172:: with SMTP id p18mr75832809jak.63.1594326621896;
+        Thu, 09 Jul 2020 13:30:21 -0700 (PDT)
 Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id u65sm2619035iod.45.2020.07.09.13.28.40
+        by smtp.gmail.com with ESMTPSA id z9sm2615120iob.39.2020.07.09.13.30.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 13:28:40 -0700 (PDT)
-Received: (nullmailer pid 834740 invoked by uid 1000);
-        Thu, 09 Jul 2020 20:28:39 -0000
-Date:   Thu, 9 Jul 2020 14:28:39 -0600
+        Thu, 09 Jul 2020 13:30:21 -0700 (PDT)
+Received: (nullmailer pid 837045 invoked by uid 1000);
+        Thu, 09 Jul 2020 20:30:20 -0000
+Date:   Thu, 9 Jul 2020 14:30:20 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
-Cc:     devicetree@vger.kernel.org, jonas.gorski@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, tsbogend@alpha.franken.de,
-        robh+dt@kernel.org, f.fainelli@gmail.com,
-        linux-mips@vger.kernel.org, p.zabel@pengutronix.de,
-        Florian Fainelli <F.fainelli@gmail.com>
-Subject: Re: [PATCH v7 9/9] mips: bmips: add BCM6318 reset controller
- definitions
-Message-ID: <20200709202839.GA834690@bogus>
-References: <20200617105042.3824116-1-noltari@gmail.com>
- <20200617105042.3824116-10-noltari@gmail.com>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     netdev@vger.kernel.org, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux-kernel@vger.kernel.org, andrew@lunn.ch, davem@davemloft.net,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH net-next v7 5/6] dt-bindings: net: dp83822: Add TI
+ dp83822 phy
+Message-ID: <20200709203020.GA836973@bogus>
+References: <20200617182019.6790-1-dmurphy@ti.com>
+ <20200617182019.6790-6-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200617105042.3824116-10-noltari@gmail.com>
+In-Reply-To: <20200617182019.6790-6-dmurphy@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 17 Jun 2020 12:50:41 +0200, Álvaro Fernández Rojas wrote:
-> BCM6318 SoCs have a reset controller for certain components.
+On Wed, 17 Jun 2020 13:20:18 -0500, Dan Murphy wrote:
+> Add a dt binding for the TI dp83822 ethernet phy device.
 > 
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-> Acked-by: Florian Fainelli <F.fainelli@gmail.com>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 > ---
->  v7: no changes.
->  v6: fix BCM6318_RST_HOSTMIPS value (12 vs 11).
->  v5: no changes.
->  v4: no changes.
->  v3: add new path with BCM6318 reset controller definitions.
-> 
->  include/dt-bindings/reset/bcm6318-reset.h | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 include/dt-bindings/reset/bcm6318-reset.h
+>  .../devicetree/bindings/net/ti,dp83822.yaml   | 51 +++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/ti,dp83822.yaml
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
