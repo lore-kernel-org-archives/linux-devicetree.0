@@ -2,83 +2,99 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33323C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 02:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 193BDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 03:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01F97206F6
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 02:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2A1320738
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 03:46:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LHgaqoAT"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lvW2ellQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbgGICbQ (ORCPT
+        id S1726321AbgGIDqf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jul 2020 22:31:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48916 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726107AbgGICbQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jul 2020 22:31:16 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CA73C061A0B
-        for <devicetree@vger.kernel.org>; Wed,  8 Jul 2020 19:31:16 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id e18so740989ilr.7
-        for <devicetree@vger.kernel.org>; Wed, 08 Jul 2020 19:31:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Y1aFB8ecB2wmH9T4OAlgM3uPIr3+7dTGswq2KZGud10=;
-        b=LHgaqoATqobXsJ823bt6UbEz6EFOF6myqOpjQDAnwqhgXKl07w4nHw+JB03BZYlt2X
-         BNH+dH0z6LmpBnHFCumuSMuAdzaEP7M5WsxWs3gQu7DQ7dgritCm3xWZ+CHEUxizjiLP
-         WTPrkPBuUAeyMQ64PvdBWCyu2vQkgWzCqizQH0GOGKHXYvYJaNuKqcM1H8eMJwBOmZRF
-         7abA8/E8d+8fydzTVcEVQ7JMm7doNMOrPww7G/vZcmpETvsROzdtGumcGiL1jGG5x2QH
-         YlRQ0q/flSV88Gf7LJiNjzISn/9i6uirwLeNNQJGZuXCHNK41ap2wqMgSIyGoNq1RLMV
-         bJOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y1aFB8ecB2wmH9T4OAlgM3uPIr3+7dTGswq2KZGud10=;
-        b=gqqukVEI73+RB59adYfiRexchd8UuDcd8Uz/OcwhpeAjP953zjFTGbw/hUyXAjleGn
-         6gvGo/UqiTrIggAhZDmldlCEMDwUGMPjEbFKmh5s3EBgRMq6wz+K0QWQXNSVj3cx2+hV
-         Ecj9ylKTwijixwe2TAURm+5epxAdKIHyE/iLmb2K5iGsNvHwgorOreKqmrKRICMPjl4l
-         uVq1zcvT09BrIOWxHo1xzcGSzrQ4lHfFYKv4UeYkZLvhw9oFnbkCEFDkYqvnmTsNn03d
-         HZlVCvkRyf4atq4HisAq6z9po0QKgw73oLlKVMK61JZ4QyRq4+WONq6fQIBjjCLxZSQA
-         iMPA==
-X-Gm-Message-State: AOAM533+SyFV5xBMHyVUiFV+ohLefTzwLD4T9vFO/7MuDTBpMbd4GpjU
-        Q/EU4uDjsSd+64Zc6z2axlN0XLuc5iCjCAmEiQoS0L7b
-X-Google-Smtp-Source: ABdhPJycmG2v/dMRqlo4y4LjYnpAsyQqnOVG2LTg3fO1f0wSLY2ig+oxacWew56SN7C4tQMpaHBJFn2jujQh0be0RaI=
-X-Received: by 2002:a92:dd02:: with SMTP id n2mr44851812ilm.257.1594261875306;
- Wed, 08 Jul 2020 19:31:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200708113233.3994206-1-tzungbi@google.com> <159422758800.28431.1053466753613230176.b4-ty@kernel.org>
-In-Reply-To: <159422758800.28431.1053466753613230176.b4-ty@kernel.org>
-From:   Tzung-Bi Shih <tzungbi@google.com>
-Date:   Thu, 9 Jul 2020 10:31:04 +0800
-Message-ID: <CA+Px+wXPoW-VU-SXSZoBdMY7zSxWf3qxWJZGOE2hT4riwT8XtA@mail.gmail.com>
-Subject: Re: [PATCH 0/3] ASoC: mediatek: mt8183: support machine driver for rt1015
+        Wed, 8 Jul 2020 23:46:35 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:35494 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726320AbgGIDqf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 8 Jul 2020 23:46:35 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594266394; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=ClVKfwV1sejEfp520mgp/j3raQqoqw5b6t+T4bASRgo=; b=lvW2ellQIRrW8+KAwx7Vva1IwwOxB9EIYl1y6knp25DzV932Sr8tOFURQJmq/bX6QEx+Qz1P
+ MZFQ8UG5FEwPsWe8pZ3ul+5jr6q4phDV93kFejSG2+eBWmOBged3yUU2xD0Jxf0FJHJ7bDdG
+ W7ZIhuu/V6mbF5QShuIX4u4G+N4=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n08.prod.us-east-1.postgun.com with SMTP id
+ 5f06931a71d7ca1d3a4fdf8f (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 03:46:34
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id F024EC433C6; Thu,  9 Jul 2020 03:46:32 +0000 (UTC)
+Received: from [192.168.0.129] (unknown [183.83.142.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rohitkr)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0F3ADC433C6;
+        Thu,  9 Jul 2020 03:46:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0F3ADC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
+Subject: Re: [PATCH v3 5/8] ASoC: qcom: lpass-platform: Replace card->dev with
+ component->dev
 To:     Mark Brown <broonie@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        ALSA development <alsa-devel@alsa-project.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        robh+dt@kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org,
+        perex@perex.cz, tiwai@suse.com, srinivas.kandagatla@linaro.org,
+        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ajit Pandey <ajitp@codeaurora.org>
+References: <1594184896-10629-1-git-send-email-rohitkr@codeaurora.org>
+ <1594184896-10629-6-git-send-email-rohitkr@codeaurora.org>
+ <20200708165041.GX4655@sirena.org.uk>
+From:   Rohit Kumar <rohitkr@codeaurora.org>
+Message-ID: <79221e43-c4f0-8e75-e97e-f0f255f3f68c@codeaurora.org>
+Date:   Thu, 9 Jul 2020 09:16:11 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200708165041.GX4655@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 9, 2020 at 1:00 AM Mark Brown <broonie@kernel.org> wrote:
->
-> [1/3] ASoC: mediatek: mt8183: sort header inclusions in alphabetical
->       commit: 4dae01c2e5df7beb8dfd5deb9560e42f19d3cfb7
-> [2/3] ASoC: mt8183: add compatible string for using rt1015
->       commit: ab1ba5252f611c0efabca5fca81f5717445da47b
 
-I am curious about the 2nd patch's title.  Did you change it from
-"dt-bindings" to "ASoC" intentionally?
+On 7/8/2020 10:20 PM, Mark Brown wrote:
+> On Wed, Jul 08, 2020 at 10:38:13AM +0530, Rohit kumar wrote:
+>> From: Ajit Pandey <ajitp@codeaurora.org>
+>>
+>> We are allocating dma memory for component->dev but trying to mmap
+>> such memory for substream->pcm->card->dev. Replace device argument
+>> in mmap with component->dev to fix this.
+> This is a bug fix and should've been at the start of the series (or sent
+> separately) so that it can be applied without the rest of the series.
 
-I am trying to avoid using the wrong title prefix next time.
+Thanks Mark for the suggestion. I will send it separately.
+
+For other patches in series, I will wait for comments before posting next
+
+patchset.
+
+Thanks,
+
+Rohit
+
+-- 
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the Linux Foundation.
+
