@@ -6,93 +6,100 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76332C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A433C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D6E920720
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 725F92070E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:16:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594336491;
-	bh=d1uVvdO/dNHtLZWEqpN7n/n5kfvrdtFCU99/atKL+dk=;
+	s=default; t=1594336573;
+	bh=mNyk9N4alJQfoIxQDdG6TbNcCeQqLvhEwItt5YuNIbQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hYYVHNyCLicGVPz+lrDu3NDFQOuAq6EucQWSiGpQnJAgVYz/4VGohqp0v92QvMt+W
-	 ILeH/eBzZOEbsPASNpRR7MK2RPI85yRRkvDYLk35vwcNs9fQIf4P1tvgruMzx9oNfW
-	 +yFNKd9t+wRdY0ZtXOaEfiTOOVeKCmgnLQpjDDhg=
+	b=eNIW6DDKrtCZzrG8fF7hfKNY7/aDz5F8wJ0OUtpQfNL5VrpYnRzRHYRUCpVV7Buws
+	 WBax8Ochne0bBNZZYId08Y0NeEb5kdj5P+i2FiCH0/5Wlv1MNsQAAAOrGJgnfbMCO/
+	 932hpgZzcE7sUfwxsLSdmvmze9RVtDr537qwApAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgGIXOr (ORCPT
+        id S1726872AbgGIXQN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 19:14:47 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:40867 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbgGIXOq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 19:14:46 -0400
-Received: by mail-il1-f194.google.com with SMTP id e18so3481689ilr.7;
-        Thu, 09 Jul 2020 16:14:45 -0700 (PDT)
+        Thu, 9 Jul 2020 19:16:13 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:46452 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726311AbgGIXQM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 19:16:12 -0400
+Received: by mail-il1-f196.google.com with SMTP id a6so3468935ilq.13;
+        Thu, 09 Jul 2020 16:16:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=9/pD7cr8lRFB2QR/pjn1SXMs9QW8l4vbXZ+8xQ3OLzc=;
-        b=DuqAGoWVbz02/y6hIm9mdF/kV2wJoLc9jT+rQyubEIz0wMDUkyhGyJuIQcx3hwtX+l
-         mCU2tO4sn439CNB7kpDcFardN7cGeoPOSeW9PDBvQo16svOvHlWjT4rRoGpTOjGU2Ucd
-         4X+O2R8ZkVGwgxSjfYQbD3w2WuzaoNDkiCGNBxwpLsFpXGntstkJLMoUeWIa65mRxVH3
-         VDqGNXjm6Or0yg6uIp4hI4O2JHbZxa4PJkJOCuATXFI68OXEylaghuIOFcnFbJWxHLy4
-         yBTVuz34eyAf5g4kQlLemYS9u+w2PwaQd0+bMzm43gNOhKePo7qGtAoNbtORXpG9J6bJ
-         XaQg==
-X-Gm-Message-State: AOAM533B3YbhhYziEhzOeX7wHGE7/kwx6cxZs9Ba/u2k8dXyz2Ne7+DR
-        AO9zPXVgVt6CtCKlsPUCNg==
-X-Google-Smtp-Source: ABdhPJx0VFnhwAIiq029Kxet6kqjRJ18m1i4k1getuY7Fb791BR8UoU+iRoeP8rmdEcDCahafE0TQw==
-X-Received: by 2002:a92:794f:: with SMTP id u76mr45321103ilc.215.1594336485400;
-        Thu, 09 Jul 2020 16:14:45 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to;
+        bh=iKzcctYs0QvUJ6q2sy3GcGzx+xLjicf/+aR5rbD4H3M=;
+        b=idaUOSIP8jLKCq5j8Mdildpk6iT+FliCqUomAXtv4iTioDV36i+YRQ6VnVrytSOkUz
+         tqvHFRBQgylZJ0Im/fx1/Yd2QCEe2wrtT5rH+C+0cO3PFIk2oXjrNjXvbczZCMrOAitC
+         9PnUYQ8jecNE7fXY05AaXVUy5zQXb0smEAkFeI+Mzxzx6qdrn6rmTSwrDh3F5kmwIoeu
+         IV83dYOjAOgHYg23wL16fEo7suqqSOBgfd939Nu8EHJCI/6hxGF55UeutbMlQsJoHUEg
+         k9pKYEninLudPY7nQGamlwkx3jLb4uA0XbPtCvhAzygO3IuQR4vgafRHRQmBr7IvJ90r
+         bf+w==
+X-Gm-Message-State: AOAM533X03ww90oSHBtl4ETE0OcaupPUmh3hBaSXmLFFhGjNMGlMt1fc
+        SKgZ1WmAHrg3oxlPSLB8M2q72piMXcky
+X-Google-Smtp-Source: ABdhPJyGoYqtu1pgdnf0oNWJV1iPyQWBtsQqraNlXKAUYkIRszTj3i+FNESTxpecxYcJhm2Um4HTmQ==
+X-Received: by 2002:a92:40cf:: with SMTP id d76mr50233534ill.198.1594336571851;
+        Thu, 09 Jul 2020 16:16:11 -0700 (PDT)
 Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id m16sm2535338ili.26.2020.07.09.16.14.44
+        by smtp.gmail.com with ESMTPSA id k24sm2642537ilg.66.2020.07.09.16.16.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 16:14:44 -0700 (PDT)
-Received: (nullmailer pid 1075615 invoked by uid 1000);
-        Thu, 09 Jul 2020 23:14:44 -0000
-Date:   Thu, 9 Jul 2020 17:14:44 -0600
+        Thu, 09 Jul 2020 16:16:11 -0700 (PDT)
+Received: (nullmailer pid 1077936 invoked by uid 1000);
+        Thu, 09 Jul 2020 23:16:10 -0000
+Date:   Thu, 9 Jul 2020 17:16:10 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc:     linux-realtek-soc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, James Tai <james.tai@realtek.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v4 2/3] dt-bindings: arm: realtek: Document RTD1319 and
- Realtek Pym Particles EVB
-Message-ID: <20200709231444.GA1075562@bogus>
-References: <20200622125527.24207-1-afaerber@suse.de>
- <20200622125527.24207-3-afaerber@suse.de>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Ravi Kumar Bokka <rbokka@codeaurora.org>, rnayak@codeaurora.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org, dhavalp@codeaurora.org,
+        linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>,
+        sparate@codeaurora.org, saiprakash.ranjan@codeaurora.org,
+        Rob Herring <robh+dt@kernel.org>, mkurumel@codeaurora.org,
+        Andy Gross <agross@kernel.org>, mturney@codeaurora.org
+Subject: Re: [PATCH v4 1/4] dt-bindings: nvmem: qfprom: Convert to yaml
+Message-ID: <20200709231610.GA1077879@bogus>
+References: <20200622144929.230498-1-dianders@chromium.org>
+ <20200622074845.v4.1.Iea2704ec2cb40c00eca47781c310a6330ac5dd41@changeid>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200622125527.24207-3-afaerber@suse.de>
+In-Reply-To: <20200622074845.v4.1.Iea2704ec2cb40c00eca47781c310a6330ac5dd41@changeid>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 22 Jun 2020 14:55:25 +0200, Andreas Färber wrote:
-> From: James Tai <james.tai@realtek.com>
+On Mon, 22 Jun 2020 07:49:26 -0700, Douglas Anderson wrote:
+> From: Ravi Kumar Bokka <rbokka@codeaurora.org>
 > 
-> Define compatible strings for Realtek RTD1319 SoC and Realtek Pym Particles
-> EVB.
+> This switches the bindings over from txt to yaml.
 > 
-> Signed-off-by: James Tai <james.tai@realtek.com>
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
+> Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > ---
->  v3 -> v4:
->  * Renamed compatible from pymparticle to pym-particles
->  * Turned SoC comment into description
 > 
->  v2 -> v3: Unchanged
+> Changes in v4:
+> - Maintainer now listed as Srinivas.
+> - Example under "soc" to get #address-cells and #size-cells.
 > 
->  v1 -> v2:
->  * Put string in alphabetical order
+> Changes in v3:
+> - Split conversion to yaml into separate patch new in v3.
+> - Use 'const' for compatible instead of a 1-entry enum.
+> - Changed filename to match compatible string.
+> - Add #address-cells and #size-cells to list of properties.
+> - Fixed up example.
 > 
->  Documentation/devicetree/bindings/arm/realtek.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  .../bindings/nvmem/qcom,qfprom.yaml           | 50 +++++++++++++++++++
+>  .../devicetree/bindings/nvmem/qfprom.txt      | 35 -------------
+>  2 files changed, 50 insertions(+), 35 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/nvmem/qfprom.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
