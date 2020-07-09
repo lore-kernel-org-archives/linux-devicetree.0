@@ -2,122 +2,67 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D53C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 11:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A76C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 11:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EEF420772
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 11:09:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kiYzVtoZ"
+	by mail.kernel.org (Postfix) with ESMTP id 1BD8A2074B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 11:42:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgGILJk (ORCPT
+        id S1727050AbgGILmU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 07:09:40 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:38741 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726575AbgGILJj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 07:09:39 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594292979; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To: From:
- Subject: Sender; bh=x4m6NkhtSK7m0N67OblPvMfBvcT5m7GhZdNzWJ4eB+I=; b=kiYzVtoZjVvmzBtdn8x9DbbJLN75JJBATD/D9yhQFe+YoSScRD4OjqxtmQIjtNxrIcEWJoT/
- aHW6ZUHBkGQ0iM3EoEQ+RqXW6ZjKVWwg+KJZ3ommCjOrNijczTXzF+PsrdlBERhfazw80r1a
- M5xviFwbXEO3mRxxUu9zrnZhDrY=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n19.prod.us-west-2.postgun.com with SMTP id
- 5f06fae50082b278484b5d9d (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 09 Jul 2020 11:09:25
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C0706C433CA; Thu,  9 Jul 2020 11:09:25 +0000 (UTC)
-Received: from [192.168.1.11] (unknown [61.3.20.152])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A525AC433C6;
-        Thu,  9 Jul 2020 11:09:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A525AC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v2] dt-bindings: media: venus: Add an optional power
- domain for perf voting
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     stanimir.varbanov@linaro.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org
-References: <1589349807-10163-1-git-send-email-rnayak@codeaurora.org>
- <20200527193638.GA2604206@bogus>
- <448cc4c0-0714-dc62-df19-7fa8fba91758@codeaurora.org>
- <1e8c07c8-0954-462a-cfe6-a1ccde1bedea@codeaurora.org>
-Message-ID: <43b6f7ee-503c-1036-3f00-9fbb4d531ea0@codeaurora.org>
-Date:   Thu, 9 Jul 2020 16:39:17 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 9 Jul 2020 07:42:20 -0400
+Received: from mga17.intel.com ([192.55.52.151]:5195 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726433AbgGILmU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Jul 2020 07:42:20 -0400
+IronPort-SDR: skiGhcDJ0FQz83L6XuKIPDsQbBB8jmZeHqVBIAknAoZxmchflmVeDdRTKjoQHNsQmzMLnYi3XC
+ W4qeCSVQjlQQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9676"; a="128046864"
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="128046864"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2020 04:42:19 -0700
+IronPort-SDR: XE0d1mBqu7YGw3U+LrPHZjvrWGV04Jh6iYCGGr5seNBGkinrOOER7Cws5lhVPO97K6NPbKyLsU
+ 3uEAC/sbeqiw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,331,1589266800"; 
+   d="scan'208";a="324195429"
+Received: from nk4-mobl1.gar.corp.intel.com (HELO localhost) ([10.252.52.252])
+  by orsmga007.jf.intel.com with ESMTP; 09 Jul 2020 04:42:15 -0700
+Date:   Thu, 9 Jul 2020 14:42:13 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Masahisa Kojima <masahisa.kojima@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        ardb@kernel.org, devicetree <devicetree@vger.kernel.org>,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca
+Subject: Re: [PATCH v3 0/2] synquacer: add TPM support
+Message-ID: <20200709114213.GB683620@linux.intel.com>
+References: <20200708131424.18729-1-masahisa.kojima@linaro.org>
+ <20200708162017.GB549022@linux.intel.com>
+ <CADQ0-X9im8yVVVJbJL5Ssaa49UTOw+M=tYrfhNoODUaY723O8A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1e8c07c8-0954-462a-cfe6-a1ccde1bedea@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADQ0-X9im8yVVVJbJL5Ssaa49UTOw+M=tYrfhNoODUaY723O8A@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-On 7/1/2020 4:50 PM, Rajendra Nayak wrote:
+On Thu, Jul 09, 2020 at 08:34:27AM +0900, Masahisa Kojima wrote:
+> Hi Jakko,
 > 
-> On 6/1/2020 11:26 AM, Rajendra Nayak wrote:
->>
->> On 5/28/2020 1:06 AM, Rob Herring wrote:
->>> On Wed, May 13, 2020 at 11:33:27AM +0530, Rajendra Nayak wrote:
->>>> Add an optional power domain which when specified can be used for
->>>> setting the performance state of Venus.
->>>>
->>>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->>>> ---
->>>>   Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml    | 6 +++++-
->>>>   Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml | 6 +++++-
->>>>   2 files changed, 10 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
->>>> index 764affa..ac1ed64 100644
->>>> --- a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
->>>> +++ b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
->>>> @@ -25,12 +25,16 @@ properties:
->>>>       maxItems: 1
->>>>     power-domains:
->>>> -    maxItems: 2
->>>> +    minItems: 2
->>>> +    maxItems: 3
->>>>     power-domain-names:
->>>> +    minItems: 2
->>>> +    maxItems: 3
->>>>       items:
->>>>         - const: venus
->>>>         - const: vcodec0
->>>> +      - const: opp-pd
->>>
->>> Humm, looks suspicious. This is a phyical power island in this block?
->>
->> yes, this is used to represent the physical 'cx' power island in the SoC
->> (Its a shared power island, not a power island specific to this block)
->> that can be scaled to different 'performance levels' based on the frequency
->> the codec is expected to run at.
+> > Overally the code looks great. You've run it through checkpatch.pl?
 > 
-> Rob, Did you have any other concerns here? Should I be re-posting this?
+> Yes, I have run checkpatch.pl and removed errors.
 
-Rob, ping.
+OK, cool.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+/Jarkko
