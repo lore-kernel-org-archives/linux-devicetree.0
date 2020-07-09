@@ -2,151 +2,167 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCA0C433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 16:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6E6C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 16:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3458D2077D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 16:48:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="jc+tHc/F"
+	by mail.kernel.org (Postfix) with ESMTP id 7B2DE207DA
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 16:53:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594313581;
+	bh=Ou1869HVFSvMwv+8dhYgjVi8A7KdtbtdmscrHUk5bU4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sEI9Vgsz+nSMmgSkIYjVJcEPLIdzkKVd0DlzhMZW0hK5qfWvqfHSLTZ4O4PZzyANZ
+	 oBAefaCUu1zlYV/BcfQ8ZNk4JyxDkIFNH5PRqFxn4loLjnSfWKcqrQtgoj49hcyarK
+	 eBAGv5d2UWnQGx16kDivdAjKw3s6lMABoo8/3zEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbgGIQso (ORCPT
+        id S1726872AbgGIQxB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 12:48:44 -0400
-Received: from mail-vi1eur05on2088.outbound.protection.outlook.com ([40.107.21.88]:6257
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727926AbgGIQsl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 9 Jul 2020 12:48:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QYo7+QhZgQ1ygs2UQZE9uPksorVV6KiolfRIS/shmwe7fXqY6GUTsfynWuUO5G+7h/ACqs2DkUxYVxCw+eUH8iEesGAmkkflzgxbQ4SA0pRduUgXgf3BONuC+KldiZaUplnpEPFsqwltcXeCRDLdwkyehA3J9ToT8g2HRvA6xB19CmyJr5Jp3aqBzi/HJgIAOo9oZaOn+NghdGnVTAq4gq7mFLqJ+Hx0wzB8JSAhHu4M/14uBenI010aBql6Xm8RhiDEEhNUHyefWqAEZO2r1TPfU/seasip/uRDgh36KXBoG5S6YA/e6zTrhPg3i9SZrjeX9A4+Z+jBMz7QEmPDjQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+T36PisOq0j8rKIYiCn8vy4JAzon6KegVFoJ4p5bdGQ=;
- b=kDc6u/BUBcz/KdkBQNx6UCYwJB0bWIioXHzGRJsW3v7UdWJSkUMu0SWU8ckZNiI9SvT4vPEC5XZ7VdCJN6QUAWmz5bGUquJRkHKAoQLG9pbPd0EELo+ADT6tOoI95C3r6Vaao8//GA0VkjeGLxsDAC2fXdO5s38goODmgPsLcIrqYmHXXakvmjTXEZTJtsQ5Osvn3jN+x2/D3xLHeucmquSEjM0Btu3/CXrJtaqylvYNBd5j8e1WCa0YOzonf7jlVcUxgT4mxand6qv2+BkDjaJSwa0CnprZmgoVQyu0G5ewrnQ3dwCW0s5ubFoqox2aif2utqiGXowpE2JcpJd4eA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+T36PisOq0j8rKIYiCn8vy4JAzon6KegVFoJ4p5bdGQ=;
- b=jc+tHc/F82AF1A3x2yDSBNMezjvhrbm8FgPPUIbuRKK9rStVYvNZjLcZRkTzGhe95fOakv8/rmV2EspdTklKBIg6AqAqufuHrqYyTm4OzQR/dkSr7gy55zuNbD9dhFxGf8MKnvAO+ybbMWLN8XadNonsf6ew72Yupm4gjViRc0c=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=oss.nxp.com;
-Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
- (2603:10a6:803:22::27) by VI1PR04MB6239.eurprd04.prod.outlook.com
- (2603:10a6:803:fd::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Thu, 9 Jul
- 2020 16:47:59 +0000
-Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
- ([fe80::4c0:79dd:b734:9ea7]) by VI1PR0402MB3902.eurprd04.prod.outlook.com
- ([fe80::4c0:79dd:b734:9ea7%5]) with mapi id 15.20.3153.029; Thu, 9 Jul 2020
- 16:47:59 +0000
-From:   Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Cc:     l.stach@pengutronix.de, lukas@mntmn.com, agx@sigxcpu.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        laurentiu.palcu@oss.nxp.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v5 5/5] arm64: dts: imx8mq: add DCSS node
-Date:   Thu,  9 Jul 2020 19:47:33 +0300
-Message-Id: <20200709164736.18291-6-laurentiu.palcu@oss.nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200709164736.18291-1-laurentiu.palcu@oss.nxp.com>
-References: <20200709164736.18291-1-laurentiu.palcu@oss.nxp.com>
-Content-Type: text/plain; charset="us-ascii"
-X-ClientProxiedBy: AM0PR03CA0041.eurprd03.prod.outlook.com (2603:10a6:208::18)
- To VI1PR0402MB3902.eurprd04.prod.outlook.com (2603:10a6:803:22::27)
+        Thu, 9 Jul 2020 12:53:01 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:33367 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgGIQxA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 12:53:00 -0400
+Received: by mail-il1-f196.google.com with SMTP id a11so2641751ilk.0;
+        Thu, 09 Jul 2020 09:53:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7/DCDecxKksLQjx2pJx97E2fm4hbkP0T5+uzMJw8RSw=;
+        b=Mb5vSJwc6KGMq7PEECu1KP6eU13QQQDRxxSucMnH6xOdmOpbwrjRk0YjHz8uM5SFwi
+         J2muvvrKXAwND51BslJwmqoUi/vjRZsirT98PiXJMNy+qVzYfMLconPJWBbCF/4LcIcf
+         NM3xvFrzgPy3WRNYl7PEYFsR/0U91qlVN5NY4QDcialL8/9vvfBJyy+kDYRqEosUq9ba
+         3c+A84UBGf/2WLIEBG0ky/HQeKtIhDCtkEgCvNesmChf0aDHQPqJ32z+wK5PA7bk1swb
+         ksKAAXEwXGMqfK0UJn5HBJYyqlzON7yqWYsHWTiAv0JxFCsIZBvKpfUc6sjnRi9h2M7b
+         8OFA==
+X-Gm-Message-State: AOAM531pAzKvM3IS42LsYdl6rjhO3gdZ0e+AyqjoU3muYw8InEdBw85W
+        s2GrwjfxAkslz/T/uUKrUg==
+X-Google-Smtp-Source: ABdhPJxpUGLRhdHevt6FxnlHLfFjo1zs7m9mcBQFfsYIWjkHPg9D1Aon2dvz6mvRSv5guWR5rc9R2w==
+X-Received: by 2002:a92:c5c6:: with SMTP id s6mr49200705ilt.139.1594313579681;
+        Thu, 09 Jul 2020 09:52:59 -0700 (PDT)
+Received: from xps15 ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id r11sm2115791ilm.2.2020.07.09.09.52.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 09:52:58 -0700 (PDT)
+Received: (nullmailer pid 505434 invoked by uid 1000);
+        Thu, 09 Jul 2020 16:51:07 -0000
+Date:   Thu, 9 Jul 2020 10:51:07 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Cc:     Jack Lo <jack.lo@gtsys.com.hk>, devicetree@vger.kernel.org,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] devicetree: hwmon: shtc1: Add sensirion,shtc1.yaml
+Message-ID: <20200709165107.GB498064@bogus>
+References: <20200708040748.9014-1-chris.ruehl@gtsys.com.hk>
+ <20200708040748.9014-3-chris.ruehl@gtsys.com.hk>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from fsr-ub1864-141.ea.freescale.net (83.217.231.2) by AM0PR03CA0041.eurprd03.prod.outlook.com (2603:10a6:208::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21 via Frontend Transport; Thu, 9 Jul 2020 16:47:58 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [83.217.231.2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 7b46d3b7-e09c-4ea1-70bc-08d82427d683
-X-MS-TrafficTypeDiagnostic: VI1PR04MB6239:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB62398D468F04D022A1247C04BE640@VI1PR04MB6239.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2449;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: p2MmOmgNRzA04lrPQzjmulkCm+94pQpiNu2bcwpwXcSbStuFiXSPbKr+WYAchzCjhbAGZSLvg0xaz5Al8lvAcHHGVQY8J9DhqZ/2F8jRTe6+XQQDgmqNCZkMJa9NkDp2oK31Rly2AhoVkuRkqzYqLJYKSz4eMGdRdKWNn3fE/P0GkSye88hUTE0/8SkTwMOGsaj02EyMevOKGvJFNTswbjhcODCMcPkXAfgJqmwoakxC/lIJafp0vN4ZzJNHOJI6BkNvj/TWV1tTuwPpKcFmiNkVonJd7doxqchnMfmEIWqWQiFRZJvST2BHIIZdgqvslSCixkAw1Lh63psraCMHZLsGrqc3K65RKI1qOw4fTaYWxtTyiso3UiVA19zDPp2D
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3902.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(136003)(376002)(366004)(39860400002)(8936002)(66556008)(66476007)(186003)(16526019)(6666004)(52116002)(1076003)(86362001)(6486002)(6506007)(66946007)(4326008)(5660300002)(2616005)(26005)(956004)(7416002)(2906002)(83380400001)(110136005)(478600001)(316002)(44832011)(8676002)(6512007)(32563001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: Y49MmX8S0dY+CjQIh6s76lu137XTX8ivkZVgHUW2LS2PxjdF1JOn02BmYTQemn4cKnKukIkFg0NapyvsuzLSAl2tCWLWbKyv32VR/SBEx69uUQ7mhv1PXCopTkfTovdurMkDgT9JTxtVzMNYTRbcFGagbP+0/O85YzgZutvYpuv7Ot3iuixV7awqz0Z4BJtLojQZw3B++4fUN7DaKqiZ0gTJD3mXv4QJdgZSdDCk+ZlJXa9RuDPUgEOLtPXXb7qSWpEq5HsGtn6XuyxK3v52nCOqwxSdGXsIUzxiLG4jLm6BMOJSHUS5zZTrBeuWLpr4hsRGo/4x+AkvsaVBojqrLTKB71xAA2eFouNpyq0YO6eEhTXDyIY+aVvTO3FQbzI1kaYGYxFv9ZVoHmV8O05k4plJGk56TTJ0gy7zmbhhf9TIp5piplRJOyVbt1BRopQAnG07eoskSRaY6kMA5bKZ/WISvHdg6vnLKMCTFrtGVX8=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7b46d3b7-e09c-4ea1-70bc-08d82427d683
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3902.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2020 16:47:59.5597
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LW0zp8z1pGlzaGFJqsYwrFmdqAiQMxj9JRWxuJdxeIRWDlRMZBVg/SxT/tf1dU9j1bd1y2wcXEUHQKZ4TTKtiw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6239
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200708040748.9014-3-chris.ruehl@gtsys.com.hk>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+On Wed, Jul 08, 2020 at 12:07:47PM +0800, Chris Ruehl wrote:
+> Add documentation for the newly added DTS support in the shtc1 driver.
+> To align with the drivers logic to have high precision by default
+> a boolean sensirion,low_precision is used to switch to low precision.
+> 
+> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+> ---
+>  .../bindings/hwmon/sensirion,shtc1.yaml       | 60 +++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml b/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
+> new file mode 100644
+> index 000000000000..6725a7b646b7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
+> @@ -0,0 +1,60 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/hwmon/sensirion,shtc1.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Sensirion SHTC1 Humidity and Temperature Sensor IC
+> +
+> +maintainers:
+> +  - chris.ruehl@gtsys.com.hk
+> +
+> +description: |
+> +  The SHTC1, SHTW1 and SHTC3 are digital humidity and temperature sensor
+> +  designed especially for battery-driven high-volume consumer electronics
+> +  applications.
+> +  For further information refere to Documentation/hwmon/shtc1.rst
+> +
+> +  This binding document describes the binding for the hardware monitor
+> +  portion of the driver.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - sensirion,shtc1
+> +      - sensirion,shtw1
+> +      - sensirion,shtc3
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: I2C address 0x70
 
-This patch adds the node for iMX8MQ Display Controller Subsystem.
+If 0x70 is the only address, then do:
 
-Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+reg:
+  const: 0x70
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 978f8122c0d2..022720cdf6ed 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -1040,6 +1040,29 @@
- 			#size-cells = <1>;
- 			ranges = <0x32c00000 0x32c00000 0x400000>;
- 
-+			dcss: display-controller@32e00000 {
-+				compatible = "nxp,imx8mq-dcss";
-+				reg = <0x32e00000 0x2d000>, <0x32e2f000 0x1000>;
-+				interrupts = <6>, <8>, <9>;
-+				interrupt-names = "ctxld", "ctxld_kick", "vblank";
-+				interrupt-parent = <&irqsteer>;
-+				clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>,
-+					 <&clk IMX8MQ_CLK_DISP_AXI_ROOT>,
-+					 <&clk IMX8MQ_CLK_DISP_RTRM_ROOT>,
-+					 <&clk IMX8MQ_VIDEO2_PLL_OUT>,
-+					 <&clk IMX8MQ_CLK_DISP_DTRC>;
-+				clock-names = "apb", "axi", "rtrm", "pix", "dtrc";
-+				assigned-clocks = <&clk IMX8MQ_CLK_DISP_AXI>,
-+						  <&clk IMX8MQ_CLK_DISP_RTRM>,
-+						  <&clk IMX8MQ_VIDEO2_PLL1_REF_SEL>;
-+				assigned-clock-parents = <&clk IMX8MQ_SYS1_PLL_800M>,
-+							 <&clk IMX8MQ_SYS1_PLL_800M>,
-+							 <&clk IMX8MQ_CLK_27M>;
-+				assigned-clock-rates = <800000000>,
-+						       <400000000>;
-+				status = "disabled";
-+			};
-+
- 			irqsteer: interrupt-controller@32e2d000 {
- 				compatible = "fsl,imx8m-irqsteer", "fsl,imx-irqsteer";
- 				reg = <0x32e2d000 0x1000>;
--- 
-2.23.0
+> +
+> +  sensirion,blocking_io:
 
+s/_/-/
+
+> +    $ref: /schemas/types.yaml#definitions/flag
+> +    description:
+> +      If set the i2c bus hold until measure finished.
+> +
+> +  sensirion,low_precision:
+> +    $ref: /schemas/types.yaml#definitions/flag
+
+s/_/-/
+
+> +    description:
+> +      If set aquire data with low precision (not recommended).
+> +      The driver aquire data with high precision by default.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    i2c1 {
+> +      status = "okay";
+
+Don't show status in examples.
+
+> +      clock-frequency = <400000>;
+> +
+> +      shtc3@70 {
+> +        compatible = "sensirion,shtc3";
+> +        reg = <0x70>
+> +        sensirion,blocking_io;
+> +        status = "okay";
+> +      };
+> +    };
+> +...
+> -- 
+> 2.20.1
+> 
