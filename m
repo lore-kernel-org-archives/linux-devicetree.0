@@ -2,213 +2,124 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 331DAC433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 15:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C43C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 15:35:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B3B820829
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 15:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20A4920720
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 15:35:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OWbz3/Cq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbgGIPWo (ORCPT
+        id S1727971AbgGIPfa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 11:22:44 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:44849 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726852AbgGIPWo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 11:22:44 -0400
-X-Originating-IP: 195.189.32.242
-Received: from pc.localdomain (unknown [195.189.32.242])
-        (Authenticated sender: contact@artur-rojek.eu)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 53BC0C0008;
-        Thu,  9 Jul 2020 15:22:39 +0000 (UTC)
-From:   Artur Rojek <contact@artur-rojek.eu>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v8 1/6] dt-bindings: iio/adc: Convert ingenic-adc docs to YAML.
-Date:   Thu,  9 Jul 2020 17:21:55 +0200
-Message-Id: <20200709152200.10039-2-contact@artur-rojek.eu>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200709152200.10039-1-contact@artur-rojek.eu>
-References: <20200709152200.10039-1-contact@artur-rojek.eu>
+        Thu, 9 Jul 2020 11:35:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57038 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727848AbgGIPf3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 11:35:29 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7AE3C08C5DC
+        for <devicetree@vger.kernel.org>; Thu,  9 Jul 2020 08:35:29 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id z5so1133044pgb.6
+        for <devicetree@vger.kernel.org>; Thu, 09 Jul 2020 08:35:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=0q/rCvNt3k405F9K/TajOpXPAtgojFFtnqWJkLPEMF4=;
+        b=OWbz3/CqrDpo/Wcvq2r+CzFCtoWft8EU3UQBsM0iXshdZeW30DCs/+vWW/pDAXePHh
+         2oLzG8kSev55DDnOpuoGAbRzEEmpYfdKukcFXVxGuDNbCFFMWbv25beCD/NtvTEk6R1c
+         g7W7jqGUm4nzWI01J6Ul1JxZcEbMXqtZSar7Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0q/rCvNt3k405F9K/TajOpXPAtgojFFtnqWJkLPEMF4=;
+        b=ME/rUQj3mVAQHpMnwQRQ5R0xNrWMxVe24Fiqrn6GzfBmOQ4QZlAmZDd7o90wn+ylqy
+         hakn1W5rmov5gcL4lcDwlRf0P4hmDpEJ93/vmAEmWI13Sl4l+b8CfjJCm907Q9p/FSqk
+         C/7+r4nBs72fAXqN4DBmpaBjgCdT73tCLvBl5Q4lZ+oUQ6/XnLLupIilFVXfoZD+pyLM
+         3I67Qplkek7tKraYCA2VgKWKxEfsRunwkiHq68E37jkupiKUAUYwPRO7/ISH4BhLd/Es
+         oH00YasbT4dBWS+qvPa4G5SWAPmMynNsWXi5LEghozo7h+w6504+u1Yl0qhQaZHppZ1F
+         rZHQ==
+X-Gm-Message-State: AOAM530ge87QYzih6uO6WGVzT0k4Z81jqB0hObRcKeVrjerzi/Q0A1It
+        ZJe+8E8biG+BoaOeASNMRv1JPg==
+X-Google-Smtp-Source: ABdhPJxezNzU/FHc9DH0NCqtmmgu7yFn9tCxihSQrSv2FyCRlXKSWOfUQMA/NNJhOf+7Z3KfioxOBA==
+X-Received: by 2002:a62:a217:: with SMTP id m23mr27037150pff.291.1594308929281;
+        Thu, 09 Jul 2020 08:35:29 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
+        by smtp.gmail.com with ESMTPSA id b8sm3221741pjm.31.2020.07.09.08.35.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 08:35:28 -0700 (PDT)
+Date:   Thu, 9 Jul 2020 08:35:27 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Mike Tipton <mdtipton@codeaurora.org>
+Cc:     georgi.djakov@linaro.org, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org, agross@kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: interconnect: Add generic qcom bindings
+Message-ID: <20200709153527.GJ3191083@google.com>
+References: <20200623040515.23317-1-mdtipton@codeaurora.org>
+ <20200623040515.23317-2-mdtipton@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200623040515.23317-2-mdtipton@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the textual documentation of Device Tree bindings for the
-Ingenic JZ47xx SoCs ADC controller to YAML.
+On Mon, Jun 22, 2020 at 09:05:14PM -0700, Mike Tipton wrote:
+> Add generic qcom interconnect bindings that are common across platforms. In
+> particular, these include QCOM_ICC_TAG_* macros that clients can use when
+> calling icc_set_tag().
+> 
+> Signed-off-by: Mike Tipton <mdtipton@codeaurora.org>
+> ---
+>  include/dt-bindings/interconnect/qcom,icc.h | 26 +++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 include/dt-bindings/interconnect/qcom,icc.h
+> 
+> diff --git a/include/dt-bindings/interconnect/qcom,icc.h b/include/dt-bindings/interconnect/qcom,icc.h
+> new file mode 100644
+> index 000000000000..cd34f36daaaa
+> --- /dev/null
+> +++ b/include/dt-bindings/interconnect/qcom,icc.h
+> @@ -0,0 +1,26 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_ICC_H
+> +#define __DT_BINDINGS_INTERCONNECT_QCOM_ICC_H
+> +
+> +/*
+> + * The AMC bucket denotes constraints that are applied to hardware when
+> + * icc_set_bw() completes, whereas the WAKE and SLEEP constraints are applied
+> + * when the execution environment transitions between active and low power mode.
+> + */
+> +#define QCOM_ICC_BUCKET_AMC		0
+> +#define QCOM_ICC_BUCKET_WAKE		1
+> +#define QCOM_ICC_BUCKET_SLEEP		2
+> +#define QCOM_ICC_NUM_BUCKETS		3
+> +
+> +#define QCOM_ICC_TAG_AMC		(1 << QCOM_ICC_BUCKET_AMC)
+> +#define QCOM_ICC_TAG_WAKE		(1 << QCOM_ICC_BUCKET_WAKE)
+> +#define QCOM_ICC_TAG_SLEEP		(1 << QCOM_ICC_BUCKET_SLEEP)
+> +#define QCOM_ICC_TAG_ACTIVE_ONLY	(QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE)
+> +#define QCOM_ICC_TAG_ALWAYS		(QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE |\
+> +					 QCOM_ICC_TAG_SLEEP)
+> +
+> +#endif
 
-The `interrupts` property is now explicitly listed and marked as
-required. While missing from the previous textual documentation, this
-property has been used with all the boards which probe this driver.
-
-Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-Tested-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-
- Changes:
-
- v6: new patch
-
- v7: - specify `maxItems: 1` for single entry properties
-     - get rid of redundant descriptions of said properties
-
- v8: no change
-
- .../bindings/iio/adc/ingenic,adc.txt          | 49 -------------
- .../bindings/iio/adc/ingenic,adc.yaml         | 71 +++++++++++++++++++
- 2 files changed, 71 insertions(+), 49 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
- create mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
-
-diff --git a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
-deleted file mode 100644
-index cd9048cf9dcf..000000000000
---- a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
-+++ /dev/null
-@@ -1,49 +0,0 @@
--* Ingenic JZ47xx ADC controller IIO bindings
--
--Required properties:
--
--- compatible: Should be one of:
--  * ingenic,jz4725b-adc
--  * ingenic,jz4740-adc
--  * ingenic,jz4770-adc
--- reg: ADC controller registers location and length.
--- clocks: phandle to the SoC's ADC clock.
--- clock-names: Must be set to "adc".
--- #io-channel-cells: Must be set to <1> to indicate channels are selected
--  by index.
--
--ADC clients must use the format described in iio-bindings.txt, giving
--a phandle and IIO specifier pair ("io-channels") to the ADC controller.
--
--Example:
--
--#include <dt-bindings/iio/adc/ingenic,adc.h>
--
--adc: adc@10070000 {
--	compatible = "ingenic,jz4740-adc";
--	#io-channel-cells = <1>;
--
--	reg = <0x10070000 0x30>;
--
--	clocks = <&cgu JZ4740_CLK_ADC>;
--	clock-names = "adc";
--
--	interrupt-parent = <&intc>;
--	interrupts = <18>;
--};
--
--adc-keys {
--	...
--	compatible = "adc-keys";
--	io-channels = <&adc INGENIC_ADC_AUX>;
--	io-channel-names = "buttons";
--	...
--};
--
--battery {
--	...
--	compatible = "ingenic,jz4740-battery";
--	io-channels = <&adc INGENIC_ADC_BATTERY>;
--	io-channel-names = "battery";
--	...
--};
-diff --git a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
-new file mode 100644
-index 000000000000..9f414dbdae86
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
-@@ -0,0 +1,71 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019-2020 Artur Rojek
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/iio/adc/ingenic,adc.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Ingenic JZ47xx ADC controller IIO bindings
-+
-+maintainers:
-+  - Artur Rojek <contact@artur-rojek.eu>
-+
-+description: >
-+  Industrial I/O subsystem bindings for ADC controller found in
-+  Ingenic JZ47xx SoCs.
-+
-+  ADC clients must use the format described in iio-bindings.txt, giving
-+  a phandle and IIO specifier pair ("io-channels") to the ADC controller.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ingenic,jz4725b-adc
-+      - ingenic,jz4740-adc
-+      - ingenic,jz4770-adc
-+
-+  '#io-channel-cells':
-+    const: 1
-+    description:
-+      Must be set to <1> to indicate channels are selected by index.
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: adc
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - '#io-channel-cells'
-+  - reg
-+  - clocks
-+  - clock-names
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/jz4740-cgu.h>
-+    #include <dt-bindings/iio/adc/ingenic,adc.h>
-+
-+    adc@10070000 {
-+            compatible = "ingenic,jz4740-adc";
-+            #io-channel-cells = <1>;
-+
-+            reg = <0x10070000 0x30>;
-+
-+            clocks = <&cgu JZ4740_CLK_ADC>;
-+            clock-names = "adc";
-+
-+            interrupt-parent = <&intc>;
-+            interrupts = <18>;
-+    };
--- 
-2.27.0
-
+Would it make sense to squash the two patches of this series into a
+single patch? This would make it more evident that this was moved
+from drivers/interconnect/qcom/icc-rpmh.h and avoid duplicate
+definitions if only this patch was applied.
