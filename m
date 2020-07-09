@@ -2,62 +2,62 @@ Return-Path: <SRS0=ioLT=AU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E09F8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69AABC433E6
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEA4820772
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 414EA207DA
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jul 2020 23:20:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vB6whN1e"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yFoI9KYV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgGIXUN (ORCPT
+        id S1726778AbgGIXUN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Thu, 9 Jul 2020 19:20:13 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:49288 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgGIXUM (ORCPT
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:47040 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgGIXUM (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 19:20:12 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 069NK4IW122916;
-        Thu, 9 Jul 2020 18:20:04 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 069NK6dS038462;
+        Thu, 9 Jul 2020 18:20:06 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594336804;
-        bh=zGwp7kf/6vGSBcqJKvT87gomlb9Jc7VbFtUnbKFhyuI=;
+        s=ti-com-17Q1; t=1594336806;
+        bh=4NEaJ+o/Rdfi/1ONnr+25cH1gYQsbvGjOaeF9dyNuSg=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=vB6whN1ey/S1kK6AsIww0TVF5zNxwP6LkFTG3Xsk/+LV1nITqJUR7PIA7rDuBYwal
-         9+sJifSyUjgR021HRdKFMKoV1n3y0NHI6Mm5/Byhzo6l/tYalGv7oh6JlW6GXj4czh
-         UvuX0PoLTiLK+e/hFrckAt5/O9qZ03ezPFgY4UAQ=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 069NK4go023734
+        b=yFoI9KYVaPhM71Uob3JJvXvt56aE7h4B63n5YX0jRt/OsS7X9gU3N2Q6w8oXVasND
+         TjtRdgoPKgKwwgaJh6qn68a5zOvZ4Q27FjA9dJgkGJpJyk7J1SuBWxjmDsvM+pFWJN
+         kP0yXE/MvGIB2YnUxnT6lZHh7w2pvJV+fuiQMu7c=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 069NK5BN051495
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 9 Jul 2020 18:20:04 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 9 Jul 2020 18:20:06 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 9 Jul
- 2020 18:20:04 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 18:20:05 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 9 Jul 2020 18:20:04 -0500
+ Frontend Transport; Thu, 9 Jul 2020 18:20:05 -0500
 Received: from fllv0103.dal.design.ti.com (fllv0103.dal.design.ti.com [10.247.120.73])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 069NK3oX118932;
-        Thu, 9 Jul 2020 18:20:04 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 069NK5Ms095981;
+        Thu, 9 Jul 2020 18:20:05 -0500
 Received: from localhost ([10.250.34.57])
-        by fllv0103.dal.design.ti.com (8.14.7/8.14.7) with ESMTP id 069NK3wx124406;
-        Thu, 9 Jul 2020 18:20:03 -0500
+        by fllv0103.dal.design.ti.com (8.14.7/8.14.7) with ESMTP id 069NK5us124429;
+        Thu, 9 Jul 2020 18:20:05 -0500
 From:   Suman Anna <s-anna@ti.com>
 To:     Tony Lindgren <tony@atomide.com>
 CC:     <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Tero Kristo <t-kristo@ti.com>, Suman Anna <s-anna@ti.com>
-Subject: [PATCH 03/13] ARM: dts: omap4: Update the DSP node
-Date:   Thu, 9 Jul 2020 18:19:44 -0500
-Message-ID: <20200709231954.1973-4-s-anna@ti.com>
+Subject: [PATCH 05/13] ARM: dts: omap4: Add aliases for rproc nodes
+Date:   Thu, 9 Jul 2020 18:19:46 -0500
+Message-ID: <20200709231954.1973-6-s-anna@ti.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200709231954.1973-1-s-anna@ti.com>
 References: <20200709231954.1973-1-s-anna@ti.com>
@@ -70,58 +70,31 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The compatible property for the DSP node is updated to match
-the OMAP remoteproc bindings. The node is moved from the soc
-node to the ocp node to better reflect the connectivity from
-MPU side.
+Add aliases for the DSP and IPU remoteproc processor
+nodes common to all OMAP4 boards. The aliases uses
+the stem "rproc".
 
-The node is updated with the 'ti,bootreg', 'clocks', 'resets',
-'iommus', 'mboxes' and 'firmware' properties. Note that the
-node does not have any 'reg' or 'reg-names' properties since
-it doesn't have any L2 RAM memory, but only Unicaches.
-
-The node is disabled for now, and should be enabled as per
-the individual product configuration in the corresponding
-board dts files.
+The aliases can be overridden, if needed, in the
+respective board files.
 
 Signed-off-by: Suman Anna <s-anna@ti.com>
 ---
- arch/arm/boot/dts/omap4.dtsi | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/omap4.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-index 4400f5f8e099..8f6b38bb5753 100644
+index 4928951ad9db..3fd26b22c4f3 100644
 --- a/arch/arm/boot/dts/omap4.dtsi
 +++ b/arch/arm/boot/dts/omap4.dtsi
-@@ -106,10 +106,6 @@ mpu {
- 			sram = <&ocmcram>;
- 		};
+@@ -26,6 +26,8 @@ aliases {
+ 		serial1 = &uart2;
+ 		serial2 = &uart3;
+ 		serial3 = &uart4;
++		rproc0 = &dsp;
++		rproc1 = &ipu;
+ 	};
  
--		dsp {
--			compatible = "ti,omap3-c64";
--		};
--
- 		iva {
- 			compatible = "ti,ivahd";
- 			ti,hwmods = "iva";
-@@ -277,6 +273,17 @@ emif2: emif@4d000000 {
- 			hw-caps-temp-alert;
- 		};
- 
-+		dsp: dsp {
-+			compatible = "ti,omap4-dsp";
-+			ti,bootreg = <&scm_conf 0x304 0>;
-+			iommus = <&mmu_dsp>;
-+			resets = <&prm_tesla 0>;
-+			clocks = <&tesla_clkctrl OMAP4_DSP_CLKCTRL 0>;
-+			firmware-name = "omap4-dsp-fw.xe64T";
-+			mboxes = <&mailbox &mbox_dsp>;
-+			status = "disabled";
-+		};
-+
- 		aes1_target: target-module@4b501000 {
- 			compatible = "ti,sysc-omap2", "ti,sysc";
- 			reg = <0x4b501080 0x4>,
+ 	cpus {
 -- 
 2.26.0
 
