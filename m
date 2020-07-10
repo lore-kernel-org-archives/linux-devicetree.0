@@ -2,62 +2,63 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD174C433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 19:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E7BC433E7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 19:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A87A820748
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 19:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81CE720748
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 19:46:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pYICjG7J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sFQFMa5M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728518AbgGJTqH (ORCPT
+        id S1728561AbgGJTqQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 15:46:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36358 "EHLO
+        Fri, 10 Jul 2020 15:46:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbgGJTqG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 15:46:06 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB027C08C5DC;
-        Fri, 10 Jul 2020 12:46:05 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id l12so7288836ejn.10;
-        Fri, 10 Jul 2020 12:46:05 -0700 (PDT)
+        with ESMTP id S1728535AbgGJTqN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 15:46:13 -0400
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9524DC08E6DC;
+        Fri, 10 Jul 2020 12:46:13 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id w6so7305356ejq.6;
+        Fri, 10 Jul 2020 12:46:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hKe9fcnHaLqYW+TZA6wyu181qJwcaEwZM0FzB6O+GhE=;
-        b=pYICjG7JvGOVBOlg0uttBzals1oO3VBvvIUa+CX81xcMwmHVB+h5vkKTM+k4u/kZDZ
-         cZCYGu9fXjdAMaT5iAgW2XQtr9zeQOhZEWIeaHcMUNb7YE5iaVqD1J7I8qTq+yTscdzX
-         CACrZuWBHqmCdX7OniaHB/WxQ3N6swU+XiYkCHhgiruSz1aKxrMeuHTaVJ0IxmZZqTTB
-         anu+5+VlToRu9ltD8b0POmEnzo/+RbkSRjEOZKJ3MvcPZ1eUqzkqSf68FJy/HdCygxTY
-         /w5KtRo8kvxohWbTMCakSkYDM9e97/zmME7XRRXSS1OWJBJPwNpSVqIzhdt0cn7iCUoX
-         AJxg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=3Neukk5Ha30hw7xCMR87weS6wdEy4yDg0uzyL5tr2Zk=;
+        b=sFQFMa5MwgkhmWpwuF4Tqu66g6+70VZ96IG1D1bGOW/13LYgHhxJDi/ScNr7F4cOfm
+         zEl3/5l6Apw9O73pIeE5+lQe4qnkH1ciwhbT9i3Gm/gzJsuuJXzyYcleBgPMxL1U2ZQq
+         Ex6LqNDV36UVm92LsCTd0raOaa2EG/qu4hr/2BHUPEAJKdQEmWUnC2NRPe+BRYCYulcX
+         mS+NXXobRtQ/ddxIQjffZbLH3OX7TKHt7R25J0CYuWzDu82AZWSfcqDptDL20vnKVkWu
+         x5stIIGSsCCPGsoni3+cNFG1pYsulANcwnXpCXSoqbtc2elCcE5NfQ78Ik1CpcqgsoX3
+         Jw/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hKe9fcnHaLqYW+TZA6wyu181qJwcaEwZM0FzB6O+GhE=;
-        b=VdDabsHDjTXrUOOyt51aH9Igc51rDEuQ7UWsU2lry1n/b0VH6OtzKxNAv3qqzPBPJm
-         EyKm9tp791czywOPz54PTyfJz6NwB1pv8NfkiwdygfuTjzvcvE8IqYSz4B6rCweautiJ
-         C828jL2xZMaAYM0wO15zoP8KGzzxyPee3B2s+jsaaRT3nn0mHLXSyueMDjugPxl9uPZC
-         WZztE7LsSINsX9OkmCP7UleN+qnm/A/tWQDotyHrZ1jxf8yz8DjSOxgt/ftrCRs2Yl3z
-         DSZaPbUnePg2wa7xbTpizOog+mAuujMha+t7VrGRIaVGqBS4RbzdnrIoVzbKHl8tCKN/
-         uuBQ==
-X-Gm-Message-State: AOAM532xCUSImMMNGsqjAEqiwpIX1wWJMowq6XocmdoP3UEL7TUn1MPp
-        O6QLwv0+Jt+WWBOGLdVooHM7Sgxuw3M=
-X-Google-Smtp-Source: ABdhPJy6ba0T34AvK2myKn7iidpLBeh0YnFLWZ69NBa87t2C923SaQUojouWXFrP1r4GsepbVv97xA==
-X-Received: by 2002:a17:906:700f:: with SMTP id n15mr52833073ejj.390.1594410364509;
-        Fri, 10 Jul 2020 12:46:04 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=3Neukk5Ha30hw7xCMR87weS6wdEy4yDg0uzyL5tr2Zk=;
+        b=p9YN4paKmw9yz0gNgcP2+0XJ302oh9OBX3HxEapXIM/cWPETNukpCH4YusAdI7O7TP
+         YBPQwB2fFTJMogzYC9Vdpos7NYu06biuTg/4TTJifFnrV6s2RgrRqlNBLHAAUgOFBoqH
+         uE3eCJm8Wt8NrXgd8fwgrEBbd1gDrSA39Q4zBDuqMBiQE/m0fIRet+cN2bUzItJyBHSq
+         XsteVeplb+kaOJDQH4O0TnQPVHEP4pnuvsVnBxkkfRuZGrw2qHhANquTY2HwUESluuwZ
+         jJoPAYgNjuLxmvDWGe3TpWGgg8u1Qkw9wEkNQ+wP9zNXKPTPsuYtvdUmAOsFHBWa3qOT
+         VZLw==
+X-Gm-Message-State: AOAM530pglxR4WMn9a5lnVG352q7RsMyrtMxBiDidpmcg0yGUKz3CU6s
+        PQl8ji+WQgHvbiqy14iwsM2z3Tivrtg=
+X-Google-Smtp-Source: ABdhPJz6Da6O0pPqNk+DasQ9vpu/01bXtZQv/a1Bp7pcRV30Cdw2jj2veKSqdoXlPu39xMduWFE1Mg==
+X-Received: by 2002:a17:906:391:: with SMTP id b17mr49916697eja.282.1594410371260;
+        Fri, 10 Jul 2020 12:46:11 -0700 (PDT)
 Received: from Ansuel-XPS.localdomain (host-87-16-250-164.retail.telecomitalia.it. [87.16.250.164])
-        by smtp.googlemail.com with ESMTPSA id kt4sm4155768ejb.48.2020.07.10.12.46.02
+        by smtp.googlemail.com with ESMTPSA id kt4sm4155768ejb.48.2020.07.10.12.46.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 12:46:03 -0700 (PDT)
+        Fri, 10 Jul 2020 12:46:10 -0700 (PDT)
 From:   Ansuel Smith <ansuelsmth@gmail.com>
 To:     Amit Kucheria <amit.kucheria@linaro.org>
 Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
@@ -65,13 +66,15 @@ Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Zhang Rui <rui.zhang@intel.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/6] Add support for ipq8064 tsens
-Date:   Fri, 10 Jul 2020 21:45:51 +0200
-Message-Id: <20200710194558.26487-1-ansuelsmth@gmail.com>
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 3/6] dt-bindings: thermal: tsens: document ipq8064 bindings
+Date:   Fri, 10 Jul 2020 21:45:54 +0200
+Message-Id: <20200710194558.26487-4-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200710194558.26487-1-ansuelsmth@gmail.com>
+References: <20200710194558.26487-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -79,28 +82,108 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Ipq8064 SoCs tsens driver is based on 8960 tsens driver. This patchset expand
-the 8960 unused driver with interrupt support and set_trip point.
-Ipq8064 needs to registed with a syscon phandle as the tsens regs on
-this platform are shared with the gcc controller.
+Document the use of regmap phandle for ipq8064 SoCs
 
-v2:
-* Fix dt-bindings problems
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+ .../bindings/thermal/qcom-tsens.yaml          | 53 ++++++++++++++++---
+ 1 file changed, 46 insertions(+), 7 deletions(-)
 
-Ansuel Smith (6):
-  drivers: thermal: tsens: load regmap from phandle for 8960
-  drivers: thermal: tsens: add ipq8064 support
-  dt-bindings: thermal: tsens: document ipq8064 bindings
-  drivers: thermal: tsens: add interrupt support for 9860 driver
-  drivers: thermal: tsens: add support for custom set_trip function
-  drivers: thermal: tsens: add set_trip support for 8960
-
- .../bindings/thermal/qcom-tsens.yaml          |  53 +++-
- drivers/thermal/qcom/tsens-8960.c             | 283 +++++++++++++++++-
- drivers/thermal/qcom/tsens.c                  |   7 +
- drivers/thermal/qcom/tsens.h                  |   3 +
- 4 files changed, 323 insertions(+), 23 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+index d7be931b42d2..964a68d194d2 100644
+--- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
++++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+@@ -19,6 +19,11 @@ description: |
+ properties:
+   compatible:
+     oneOf:
++      - description: msm9860 TSENS based
++        items:
++          - enum:
++            - qcom,ipq8064-tsens
++
+       - description: v0.1 of TSENS
+         items:
+           - enum:
+@@ -47,6 +52,11 @@ properties:
+       - description: TM registers
+       - description: SROT registers
+ 
++  regmap:
++    description:
++      Phandle to the gcc. On ipq8064 SoCs gcc and tsense share the same regs.
++    $ref: /schemas/types.yaml#/definitions/phandle
++
+   interrupts:
+     minItems: 1
+     items:
+@@ -85,12 +95,18 @@ properties:
+       Number of cells required to uniquely identify the thermal sensors. Since
+       we have multiple sensors this is set to 1
+ 
++required:
++  - compatible
++  - interrupts
++  - "#thermal-sensor-cells"
++
+ allOf:
+   - if:
+       properties:
+         compatible:
+           contains:
+             enum:
++              - qcom,ipq8064-tsens
+               - qcom,msm8916-tsens
+               - qcom,msm8974-tsens
+               - qcom,msm8976-tsens
+@@ -111,17 +127,40 @@ allOf:
+         interrupt-names:
+           minItems: 2
+ 
+-required:
+-  - compatible
+-  - reg
+-  - "#qcom,sensors"
+-  - interrupts
+-  - interrupt-names
+-  - "#thermal-sensor-cells"
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - qcom,ipq8064-tsens
++    then:
++      required:
++        - regmap
++
++    else:
++      required:
++        - reg
++        - interrupt-names
++        - "#qcom,sensors"
+ 
+ additionalProperties: false
+ 
+ examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    // Example msm9860 based SoC (ipq8064):
++    tsens: thermal-sensor {
++           compatible = "qcom,ipq8064-tsens";
++           regmap = <&gcc>;
++
++           nvmem-cells = <&tsens_calib>, <&tsens_calsel>;
++           nvmem-cell-names = "calib", "calib_sel";
++
++           interrupts = <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH>;
++
++           #thermal-sensor-cells = <1>;
++    };
++
+   - |
+     #include <dt-bindings/interrupt-controller/arm-gic.h>
+     // Example 1 (legacy: for pre v1 IP):
 -- 
 2.27.0
 
