@@ -2,289 +2,104 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A666FC433E5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 16:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5C1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 16:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DE9020725
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 16:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C8282078B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 16:39:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594399156;
-	bh=wlTIEVuuaMZmtPeIcBWpbjZ1TUU6kjrlRUj6tDtvXgw=;
+	s=default; t=1594399184;
+	bh=jrT+bIHosKw7cOBrdn+/6R1dP6Sejd4LsqgP9T9qjO4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bSJUZUUN0LigpCzFtc4D2NGCTflPpHNite43Y7G06q+XpK6lBN91QH295ueFkU3XP
-	 2xNT1kj3JDv6bdePdysOQhRR0RB1vwvAUuDrKPCL4aeOzrqRESRR6SRwSyhxJLPEiK
-	 VPWTQnmlltF4m6WO4+kd33yfiHmMkivT7use86I0=
+	b=KkjxBxgLXVLcxl8okvqIfkrBn6LmSBSLLnutJdh2PGqjN+0qEbhNyU65h7nr5vZZM
+	 Gpn66LiMavcMIqbOWZ8nAyEtV6qxcHuHzfWMpkk1W7WA7FCKJJvSXhSixBJ/3ecG21
+	 ujT0E8Xojr67tL/DJNqzorOE+Zo8QFHZhqZpsrTo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbgGJQjJ (ORCPT
+        id S1728186AbgGJQjn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:39:09 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:38067 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbgGJQjJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 12:39:09 -0400
-Received: by mail-il1-f194.google.com with SMTP id s21so5597632ilk.5;
-        Fri, 10 Jul 2020 09:39:08 -0700 (PDT)
+        Fri, 10 Jul 2020 12:39:43 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:42709 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726920AbgGJQjn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 12:39:43 -0400
+Received: by mail-il1-f195.google.com with SMTP id t27so5583682ill.9;
+        Fri, 10 Jul 2020 09:39:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=RDEiKXkfuo1LcvNVgxR5JlTZIhsrn+C+Okx9e1+bqZ4=;
-        b=saOGHK6ePcEtWiPDOLtNtdnjg/2nnJj61cNnhejzN3MUHDgNVBMyrGoYTZXrKmWqqo
-         +CCr0xyjQJMlyTcDXBlSGhIYapCqJOh9p/8mbJCVTX/yJUALX/wFZBR0+i6azcw5c6lZ
-         6ERaPuN51phFFg1SKqO0Is69oeoM+n1IZT4eNwM+5SsMjkdqXWWJR4adZ2yIGZ6jfXDW
-         L4OI3k7ILbD3Zjdt+l800X/lRFXMsJV4eJWv6jh8a63NCldFE4TMyBg8IH0Bnft9W0uq
-         ywwK2UlMpkKSSoAB7r9jW8KSiwfAm5VMOvNd8YdXjmFYjAtnjQ4oqXjaWtolKyjT7Mos
-         Bk7w==
-X-Gm-Message-State: AOAM5336JHOR/MP8TZaZLUt9VM9tjOqU6k5zdqSe2E82npmZLh1OMaUJ
-        KbMI8IMHlKKq8MwAzdD4Ng==
-X-Google-Smtp-Source: ABdhPJzLFaHStBCrMtyNEUyaEU9MNoIRNK7UH30HjnsBYGguV8MEdpVyBF9INgKlpdURHNTbgPM9bw==
-X-Received: by 2002:a92:5bdd:: with SMTP id c90mr47581679ilg.154.1594399147560;
-        Fri, 10 Jul 2020 09:39:07 -0700 (PDT)
+        bh=PbdZ4MRWgPRTLXc9OX+frNiKU7Q0wD+VvOim/01go3w=;
+        b=OI1egB3x3TciHwh3w/GmEjca3raQbMjlefMA14+PJ6LpinSdsbH658kO6BD1AgVCvo
+         ITWXKRg00cnl5lNv4NLheffgQmUynERlL1zc7fDQaKaKGUUP3SLDjomfyQ1wnfKcNfVI
+         H1G/PpZmCpxXVCdnjTnP2CbXE9O48MK8LNt3zDBqCKGMpNJnAKbDL6f5GepuANeBcBGt
+         b8getMIGkcW6rooSauuZmU3D7Jm/fGA8fUIOIuhHv89otw9UQ27fEW4/p9MkNto7GCga
+         eeIMctpO+uQ7MjFr3DH/Vji6zPddIPk4sDfymtMiHbl1d65SrnLBRt/VRUAfkIwn+qFv
+         mXSQ==
+X-Gm-Message-State: AOAM533zCNA45fzCnWqSiOY2ZIf+0TmKoeWRGHA6eULVT3R+ueZt6z2x
+        BupUw7to6AAIky475iWnU3WbMLWKxcPB
+X-Google-Smtp-Source: ABdhPJxQhmbMFZ3hkYNcCKa2yWDgTlPwCTZc5raZI6lv5WRcFB9L6NEI8B5WdPqWurpwaypPKt5xNg==
+X-Received: by 2002:a92:c213:: with SMTP id j19mr53468433ilo.40.1594399182198;
+        Fri, 10 Jul 2020 09:39:42 -0700 (PDT)
 Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id y12sm3670759ilm.38.2020.07.10.09.39.06
+        by smtp.gmail.com with ESMTPSA id b21sm3980629ioc.36.2020.07.10.09.39.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 09:39:07 -0700 (PDT)
-Received: (nullmailer pid 2774475 invoked by uid 1000);
-        Fri, 10 Jul 2020 16:39:05 -0000
-Date:   Fri, 10 Jul 2020 10:39:05 -0600
+        Fri, 10 Jul 2020 09:39:41 -0700 (PDT)
+Received: (nullmailer pid 2775731 invoked by uid 1000);
+        Fri, 10 Jul 2020 16:39:40 -0000
+Date:   Fri, 10 Jul 2020 10:39:40 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Zhiyong Tao <zhiyong.tao@mediatek.com>
-Cc:     linus.walleij@linaro.org, mark.rutland@arm.com,
-        matthias.bgg@gmail.com, sean.wang@kernel.org,
-        srv_heupstream@mediatek.com, hui.liu@mediatek.com,
-        eddie.huang@mediatek.com, chuanjia.liu@mediatek.com,
-        biao.huang@mediatek.com, hongzhou.yang@mediatek.com,
-        erin.lo@mediatek.com, sean.wang@mediatek.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 2/3] dt-bindings: pinctrl: mt8192: add binding document
-Message-ID: <20200710163905.GA2761779@bogus>
-References: <20200710072717.3056-1-zhiyong.tao@mediatek.com>
- <20200710072717.3056-3-zhiyong.tao@mediatek.com>
+To:     Kurt Kanzenbach <kurt@linutronix.de>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v1 1/1] dt-bindings: net: dsa: Add DSA yaml binding
+Message-ID: <20200710163940.GA2775145@bogus>
+References: <20200710090618.28945-1-kurt@linutronix.de>
+ <20200710090618.28945-2-kurt@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200710072717.3056-3-zhiyong.tao@mediatek.com>
+In-Reply-To: <20200710090618.28945-2-kurt@linutronix.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 03:27:16PM +0800, Zhiyong Tao wrote:
-> The commit adds mt8192 compatible node in binding document.
+On Fri, 10 Jul 2020 11:06:18 +0200, Kurt Kanzenbach wrote:
+> For future DSA drivers it makes sense to add a generic DSA yaml binding which
+> can be used then. This was created using the properties from dsa.txt. It
+> includes the ports and the dsa,member property.
 > 
-> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> Suggested-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
 > ---
->  .../bindings/pinctrl/pinctrl-mt8192.yaml      | 170 ++++++++++++++++++
->  1 file changed, 170 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml
+>  .../devicetree/bindings/net/dsa/dsa.yaml      | 80 +++++++++++++++++++
+>  1 file changed, 80 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/dsa/dsa.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml
-> new file mode 100644
-> index 000000000000..c698b7f65950
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml
-> @@ -0,0 +1,170 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/pinctrl-mt8192.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Mediatek MT8192 Pin Controller
-> +
-> +maintainers:
-> +  - Linus Walleij <linus.walleij@linaro.org>
 
-Should be someone who knows the h/w (Mediatek).
 
-> +
-> +description: |
-> +  The Mediatek's Pin controller is used to control SoC pins.
-> +
-> +properties:
-> +  compatible:
-> +    const: mediatek,mt8192-pinctrl
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +    description:
-> +      Number of cells in GPIO specifier. Since the generic GPIO binding is used,
-> +      the amount of cells must be specified as 2. See the below
-> +      mentioned gpio binding representation for description of particular cells.
-> +    const: 2
-> +
-> +  gpio-ranges:
-> +    description: gpio valid number range.
-> +    maxItems: 1
-> +
-> +  reg:
-> +    description:
-> +      Physical address base for gpio base registers. There are 11 GPIO
-> +      physical address base in mt8192.
-> +    maxItems: 11
-> +
-> +  reg-names:
-> +    description:
-> +      Gpio base register names. There are 11 gpio base register names in mt8192.
-> +      They are "iocfg0", "iocfg_rm", "iocfg_bm", "iocfg_bl", "iocfg_br",
-> +      "iocfg_lm", "iocfg_lb", "iocfg_rt", "iocfg_lt", "iocfg_tl", "eint".
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Should be a schema.
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/ti,cpsw-switch.example.dt.yaml: switch@0: 'ports' is a required property
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.example.dt.yaml: switch@10: 'ports' is a required property
 
-> +    maxItems: 11
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    const: 2
-> +
-> +  interrupts:
-> +    description: The interrupt outputs to sysirq.
-> +    maxItems: 1
-> +
-> +#PIN CONFIGURATION NODES
-> +patternProperties:
-> +  subnode format:
 
-The child node name is 'subnode format'?
+See https://patchwork.ozlabs.org/patch/1326594
 
-> +    description:
-> +      A pinctrl node should contain at least one subnodes representing the
-> +      pinctrl groups available on the machine. Each subnode will list the
-> +      pins it needs, and how they should be configured, with regard to muxer
-> +      configuration, pullups, drive strength, input enable/disable and
-> +      input schmitt.
-> +
-> +      node {
-> +        pinmux = <PIN_NUMBER_PINMUX>;
-> +        GENERIC_PINCONFIG;
-> +      };
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
 
-If you want to preserve formatting, description needs a literal block 
-notation on the end ('|').
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
 
-> +  '-pinmux$':
-> +    description:
-> +      Integer array, represents gpio pin number and mux setting.
-> +      Supported pin number and mux varies for different SoCs, and are defined
-> +      as macros in dt-bindings/pinctrl/<soc>-pinfunc.h directly.
-> +    $ref: "/schemas/pinctrl/pincfg-node.yaml"
-> +
-> +  GENERIC_PINCONFIG:
+Please check and re-submit.
 
-You just defined a property called 'GENERIC_PINCONFIG'...
-
-> +    description:
-> +      It is the generic pinconfig options to use, bias-disable,
-> +      bias-pull-down, bias-pull-up, input-enable, input-disable, output-low,
-> +      output-high, input-schmitt-enable, input-schmitt-disable
-> +      and drive-strength are valid.
-> +
-> +      Some special pins have extra pull up strength, there are R0 and R1 pull-up
-> +      resistors available, but for user, it's only need to set R1R0 as 00, 01,
-> +      10 or 11. So It needs config "mediatek,pull-up-adv" or
-> +      "mediatek,pull-down-adv" to support arguments for those special pins.
-> +      Valid arguments are from 0 to 3.
-> +
-> +      We can use "mediatek,tdsel" which is an integer describing the steps for
-> +      output level shifter duty cycle when asserted (high pulse width adjustment).
-> +      Valid arguments  are from 0 to 15.
-> +      We can use "mediatek,rdsel" which is an integer describing the steps for
-> +      input level shifter duty cycle when asserted (high pulse width adjustment).
-> +      Valid arguments are from 0 to 63.
-> +
-> +      When config drive-strength, it can support some arguments, such as
-> +      MTK_DRIVE_4mA, MTK_DRIVE_6mA, etc. See dt-bindings/pinctrl/mt65xx.h.
-> +      It can only support 2/4/6/8/10/12/14/16mA in mt8192.
-> +      For I2C pins, there are existing generic driving setup and the specific
-> +      driving setup. I2C pins can only support 2/4/6/8/10/12/14/16mA driving
-> +      adjustment in generic driving setup. But in specific driving setup,
-> +      they can support 0.125/0.25/0.5/1mA adjustment. If we enable specific
-> +      driving setup for I2C pins, the existing generic driving setup will be
-> +      disabled. For some special features, we need the I2C pins specific
-> +      driving setup. The specific driving setup is controlled by E1E0EN.
-> +      So we need add extra vendor driving preperty instead of
-> +      the generic driving property.
-> +      We can add "mediatek,drive-strength-adv = <XXX>;" to describe the specific
-> +      driving setup property. "XXX" means the value of E1E0EN. EN is 0 or 1.
-> +      It is used to enable or disable the specific driving setup.
-> +      E1E0 is used to describe the detail strength specification of the I2C pin.
-> +      When E1=0/E0=0, the strength is 0.125mA.
-> +      When E1=0/E0=1, the strength is 0.25mA.
-> +      When E1=1/E0=0, the strength is 0.5mA.
-> +      When E1=1/E0=1, the strength is 1mA.
-> +      So the valid arguments of "mediatek,drive-strength-adv" are from 0 to 7.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-controller
-> +  - '#interrupt-cells'
-> +  - gpio-controller
-> +  - '#gpio-cells'
-> +  - gpio-ranges
-> +
-> +examples:
-> +  - |
-> +            #include <dt-bindings/pinctrl/mt8192-pinfunc.h>
-> +            #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +            pio: pinctrl@10005000 {
-
-Drop unused labels.
-
-> +                    compatible = "mediatek,mt8192-pinctrl";
-> +                    reg = <0 0x10005000 0 0x1000>,
-> +                          <0 0x11c20000 0 0x1000>,
-> +                          <0 0x11d10000 0 0x1000>,
-> +                          <0 0x11d30000 0 0x1000>,
-> +                          <0 0x11d40000 0 0x1000>,
-> +                          <0 0x11e20000 0 0x1000>,
-> +                          <0 0x11e70000 0 0x1000>,
-> +                          <0 0x11ea0000 0 0x1000>,
-> +                          <0 0x11f20000 0 0x1000>,
-> +                          <0 0x11f30000 0 0x1000>,
-> +                          <0 0x1000b000 0 0x1000>;
-> +                    reg-names = "iocfg0", "iocfg_rm", "iocfg_bm",
-> +                          "iocfg_bl", "iocfg_br", "iocfg_lm",
-> +                          "iocfg_lb", "iocfg_rt", "iocfg_lt",
-> +                          "iocfg_tl", "eint";
-> +                    gpio-controller;
-> +                    #gpio-cells = <2>;
-> +                    gpio-ranges = <&pio 0 0 220>;
-> +                    interrupt-controller;
-> +                    interrupts = <GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH 0>;
-> +                    #interrupt-cells = <2>;
-> +                    i2c0_pins_a: i2c0 {
-
-Doesn't match the schema.
-
-> +                        pins {
-
-Doesn't match the schema. Why do you need 2 levels of nodes here?
-
-> +                                pinmux = <PINMUX_GPIO118__FUNC_SCL1>,
-> +                                         <PINMUX_GPIO119__FUNC_SDA1>;
-> +                                mediatek,pull-up-adv = <3>;
-> +                                mediatek,drive-strength-adv = <7>;
-> +                        };
-> +                    };
-> +                    i2c1_pins_a: i2c1 {
-> +                        pins {
-> +                                pinmux = <PINMUX_GPIO141__FUNC_SCL2>,
-> +                                         <PINMUX_GPIO142__FUNC_SDA2>;
-> +                                mediatek,pull-down-adv = <2>;
-> +                                mediatek,drive-strength-adv = <4>;
-> +                       };
-> +                   };
-> +            };
-> -- 
-> 2.18.0
