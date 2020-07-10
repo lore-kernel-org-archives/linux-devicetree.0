@@ -2,177 +2,169 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A141BC433E3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 11:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A67C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 11:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7595F2077D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 11:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A57520748
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 11:36:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dskhWfK3"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="F3UW57Hi";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="j7UAB4Qw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbgGJLdo (ORCPT
+        id S1728030AbgGJLg2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 07:33:44 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:49756 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbgGJLdn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 07:33:43 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06ABXe8D097451;
-        Fri, 10 Jul 2020 06:33:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594380821;
-        bh=FxhfaLSX2SCVsKQvwGQevHvm0zAMmt0Sg5LDxf2xheM=;
-        h=From:To:CC:Subject:Date;
-        b=dskhWfK3vL5WhYCpJSkw8cWdGGe1t7n29p5Ycxcpv2v2TkXbvY0WFmZEBvs0mig+F
-         6mej2CW/JyaQPgxmMh5DkB7QjVtTCX5JbLS6vfijmwCCQVByRxQ3ffkIPc5PU5MXPM
-         20SrfuaRrKd70YihJStLroI5IiJWdXpaIb+jNhQA=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06ABXeFX067124
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 10 Jul 2020 06:33:40 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 10
- Jul 2020 06:33:40 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 10 Jul 2020 06:33:40 -0500
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06ABXc8g094805;
-        Fri, 10 Jul 2020 06:33:39 -0500
-From:   Roger Quadros <rogerq@ti.com>
-To:     <balbi@kernel.org>
-CC:     <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v2] dt-bindings: usb: ti,keystone-dwc3.yaml: Improve schema
-Date:   Fri, 10 Jul 2020 14:33:37 +0300
-Message-ID: <20200710113337.15954-1-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 10 Jul 2020 07:36:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45312 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727995AbgGJLg2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 07:36:28 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C280CC08C5CE;
+        Fri, 10 Jul 2020 04:36:27 -0700 (PDT)
+From:   Kurt Kanzenbach <kurt@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594380985;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=kW5iQKvueihTm+gqITX1I5662N3JykpJnqULwrfoYXg=;
+        b=F3UW57HiPJVUzuaUa7iGjFBjr29/zjLFDHfAHUH54Sf8dHydlkCvr4QehzsrrUcpVB/5wi
+        QYdRN8FOciXhOxno5cQTTfgGtMRwcydodmLOzgws/65EP4Dwr57Qyfu8hQpGE5mFcWrDZg
+        uK7+uaTUlQfF8PO69NeUt5HHgf6QlpAc+YnP238IF6aCOxeCJq2ASiWKeDQvo3gXxUak8N
+        vLpmrf9KXZ2IoEIJ4id+sPf8aeYPv9W56jk0lyxC8uOsOxrtRzNhGZ8eEtyPSclpf1DvaQ
+        8211QUtvlk2UarVynT5ytiUn0BYoINrBNgBJwLRDhMHsvdxmWs/FG0NN1Bzitw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594380985;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=kW5iQKvueihTm+gqITX1I5662N3JykpJnqULwrfoYXg=;
+        b=j7UAB4Qw9a9cPHPk+Fhn0Xn6AOJxkO0vr98THZKvUbxSsYA20Kiis8LVUBl9aKTmrkUUn0
+        oBF+1nNTBcDQXEAw==
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org, Vladimir Oltean <olteanv@gmail.com>,
+        Kurt Kanzenbach <kurt@linutronix.de>
+Subject: [PATCH v1 0/8] Hirschmann Hellcreek DSA driver
+Date:   Fri, 10 Jul 2020 13:36:03 +0200
+Message-Id: <20200710113611.3398-1-kurt@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There were some review comments after the patch was integrated.
-Address those.
+Hi,
 
-Fixes: 1883a934e156 ("dt-bindings: usb: convert keystone-usb.txt to YAML")
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- .../bindings/usb/ti,keystone-dwc3.yaml        | 51 ++++++++++++++-----
- 1 file changed, 37 insertions(+), 14 deletions(-)
+this series adds a DSA driver for the Hirschmann Hellcreek TSN switch
+IP. Characteristics of that IP:
 
-diff --git a/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml b/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
-index f127535feb0b..804b9b4f6654 100644
---- a/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
-+++ b/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
-@@ -11,22 +11,36 @@ maintainers:
- 
- properties:
-   compatible:
--    oneOf:
--      - const: "ti,keystone-dwc3"
--      - const: "ti,am654-dwc3"
-+    items:
-+      - enum:
-+        - ti,keystone-dwc3
-+        - ti,am654-dwc3
- 
-   reg:
-     maxItems: 1
--    description: Address and length of the register set for the USB subsystem on
--      the SOC.
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 1
-+
-+  ranges: true
- 
-   interrupts:
-     maxItems: 1
--    description: The irq number of this device that is used to interrupt the MPU.
--
- 
-   clocks:
--    description: Clock ID for USB functional clock.
-+    minItems: 1
-+    maxItems: 2
-+
-+  assigned-clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+  assigned-clock-parents:
-+    minItems: 1
-+    maxItems: 2
- 
-   power-domains:
-     description: Should contain a phandle to a PM domain provider node
-@@ -42,33 +56,42 @@ properties:
- 
-   phy-names:
-     items:
--      - const: "usb3-phy"
-+      - const: usb3-phy
-+
-+  dma-coherent: true
- 
--  dwc3:
-+  dma-ranges: true
-+
-+patternProperties:
-+  "usb@[a-f0-9]+$":
-+    type: object
-     description: This is the node representing the DWC3 controller instance
-       Documentation/devicetree/bindings/usb/dwc3.txt
- 
- required:
-   - compatible
-   - reg
-+  - "#address-cells"
-+  - "#size-cells"
-+  - ranges
-   - interrupts
--  - clocks
-+
-+additionalProperties: false
- 
- examples:
-   - |
-     #include <dt-bindings/interrupt-controller/arm-gic.h>
- 
--    usb: usb@2680000 {
-+    dwc3@2680000 {
-       compatible = "ti,keystone-dwc3";
-       #address-cells = <1>;
-       #size-cells = <1>;
-       reg = <0x2680000 0x10000>;
-       clocks = <&clkusb>;
--      clock-names = "usb";
-       interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
-       ranges;
- 
--      dwc3@2690000 {
-+      usb@2690000 {
-         compatible = "synopsys,dwc3";
-         reg = <0x2690000 0x70000>;
-         interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
+ * Full duplex Ethernet interface at 100/1000 Mbps on three ports
+ * IEEE 802.1Q-compliant Ethernet Switch
+ * IEEE 802.1Qbv Time-Aware scheduling support
+ * IEEE 1588 and IEEE 802.1AS support
+
+That IP is used e.g. in
+
+ https://www.arrow.com/en/campaigns/arrow-kairos
+
+Due to the hardware setup the switch driver is implemented using DSA. A special
+tagging protocol is leveraged. Furthermore, this driver supports PTP, hardware
+timestamping and TAPRIO offloading.
+
+This work is part of the AccessTSN project: https://www.accesstsn.com/
+
+The RFC version can be found here:
+
+ https://lkml.kernel.org/netdev/20200618064029.32168-1-kurt@linutronix.de/
+
+Changes since RFC ordered by reviewers:
+
+ * Andrew Lunn
+   * Use dev_dbg for debug messages
+   * Get rid of __ function names where possible
+   * Use reverse xmas tree variable ordering
+   * Remove redundant/useless checks
+   * Improve comments e.g. for PTP
+   * Fix Kconfig ordering
+   * Make LED handling more generic and provide info via DT
+   * Setup advertisement of PHYs according to hardware
+   * Drop debugfs patch
+ * Jakub Kicinski
+   * Fix compiler warnings
+ * Florian Fainelli
+   * Switch to YAML DT bindings
+ * Richard Cochran
+   * Fix typo
+   * Add missing NULL checks
+
+And two problems I found myself:
+
+ * Fix reg property in DT
+ * Fix wrong comments
+
+Please note, that this series depends on
+
+ https://lkml.kernel.org/netdev/20200710090618.28945-2-kurt@linutronix.de/
+
+Tested on top of 5.8.0-rc2.
+
+Thanks,
+Kurt
+
+Kamil Alkhouri (2):
+  net: dsa: hellcreek: Add PTP clock support
+  net: dsa: hellcreek: Add support for hardware timestamping
+
+Kurt Kanzenbach (6):
+  net: dsa: Add tag handling for Hirschmann Hellcreek switches
+  net: dsa: Add DSA driver for Hirschmann Hellcreek switches
+  net: dsa: hellcreek: Add TAPRIO offloading support
+  net: dsa: hellcreek: Add PTP status LEDs
+  dt-bindings: Add vendor prefix for Hirschmann
+  dt-bindings: net: dsa: Add documentation for Hellcreek switches
+
+ .../bindings/net/dsa/hellcreek.yaml           |  132 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |    2 +
+ drivers/net/dsa/Kconfig                       |    2 +
+ drivers/net/dsa/Makefile                      |    1 +
+ drivers/net/dsa/hirschmann/Kconfig            |    7 +
+ drivers/net/dsa/hirschmann/Makefile           |    5 +
+ drivers/net/dsa/hirschmann/hellcreek.c        | 1555 +++++++++++++++++
+ drivers/net/dsa/hirschmann/hellcreek.h        |  301 ++++
+ .../net/dsa/hirschmann/hellcreek_hwtstamp.c   |  498 ++++++
+ .../net/dsa/hirschmann/hellcreek_hwtstamp.h   |   58 +
+ drivers/net/dsa/hirschmann/hellcreek_ptp.c    |  452 +++++
+ drivers/net/dsa/hirschmann/hellcreek_ptp.h    |   76 +
+ include/net/dsa.h                             |    2 +
+ net/dsa/Kconfig                               |    6 +
+ net/dsa/Makefile                              |    1 +
+ net/dsa/tag_hellcreek.c                       |  101 ++
+ 16 files changed, 3199 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/dsa/hellcreek.yaml
+ create mode 100644 drivers/net/dsa/hirschmann/Kconfig
+ create mode 100644 drivers/net/dsa/hirschmann/Makefile
+ create mode 100644 drivers/net/dsa/hirschmann/hellcreek.c
+ create mode 100644 drivers/net/dsa/hirschmann/hellcreek.h
+ create mode 100644 drivers/net/dsa/hirschmann/hellcreek_hwtstamp.c
+ create mode 100644 drivers/net/dsa/hirschmann/hellcreek_hwtstamp.h
+ create mode 100644 drivers/net/dsa/hirschmann/hellcreek_ptp.c
+ create mode 100644 drivers/net/dsa/hirschmann/hellcreek_ptp.h
+ create mode 100644 net/dsa/tag_hellcreek.c
+
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.20.1
 
