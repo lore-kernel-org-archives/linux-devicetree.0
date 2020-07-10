@@ -2,155 +2,97 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F41DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 18:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB315C433E4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 18:47:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 152F22075D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 18:29:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KXwE82fH"
+	by mail.kernel.org (Postfix) with ESMTP id 9FF352078D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 18:47:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbgGJS3P (ORCPT
+        id S1728100AbgGJSrf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 14:29:15 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:45772 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726872AbgGJS3P (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 14:29:15 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06AITA3a016582;
-        Fri, 10 Jul 2020 13:29:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594405750;
-        bh=JA2fGK+IPfj2XRw+1DVYm1XcdbI6kYi+WfeNyz5F/cE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=KXwE82fH65xgnhVszE0t9MXVwpgz7n2HoWW71OKhIyV3X3D6qw87TbaIz+is8cmjE
-         AMVdnP1iKvVQ8H+WGx/d/DlsU13UlvstrL8VEZ2iRzpwh+n5yfKCJiacsPqmVsqhWO
-         bYUtIpVHs0Gi4yJq02N5vOK2gScZW7AnbbQ5HVWM=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06AITAQF054371
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 10 Jul 2020 13:29:10 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 10
- Jul 2020 13:29:09 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 10 Jul 2020 13:29:09 -0500
-Received: from [10.250.34.57] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06AIT9ul061868;
-        Fri, 10 Jul 2020 13:29:09 -0500
-Subject: Re: [PATCH 00/13] Add IPU & DSP remoteprocs on OMAP4 and OMAP5
-To:     Tony Lindgren <tony@atomide.com>
-CC:     <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Tero Kristo <t-kristo@ti.com>
-References: <20200709231954.1973-1-s-anna@ti.com>
- <20200710165814.GF5849@atomide.com>
- <41bd2bb4-06fe-5f70-22cf-ce9cedc8bbc3@ti.com>
- <4602b219-6822-4ebc-66c6-c64740793938@ti.com>
- <20200710175907.GH5849@atomide.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <bc05fbe7-be02-e44e-3461-69f7c06b7d34@ti.com>
-Date:   Fri, 10 Jul 2020 13:29:08 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 10 Jul 2020 14:47:35 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:48750 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727082AbgGJSrf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 14:47:35 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 593238051B;
+        Fri, 10 Jul 2020 20:47:31 +0200 (CEST)
+Date:   Fri, 10 Jul 2020 20:47:30 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        Chris Zhong <zyw@rock-chips.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: Re: [PATCH v3 0/3] dt-bindings: display: convert panel bindings to
+ DT Schema
+Message-ID: <20200710184730.GA628995@ravnborg.org>
+References: <20200704102806.735713-1-sam@ravnborg.org>
+ <20200704103408.GA735964@ravnborg.org>
+ <20200709233502.GA1103707@bogus>
 MIME-Version: 1.0
-In-Reply-To: <20200710175907.GH5849@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200709233502.GA1103707@bogus>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8 a=7gkXJVJtAAAA:8
+        a=SIG6TxBT1hdypITfUdwA:9 a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22
+        a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 7/10/20 12:59 PM, Tony Lindgren wrote:
-> * Suman Anna <s-anna@ti.com> [200710 17:29]:
->> FYI, the following one-line removal is enough for me to not see the error.
->>
->> diff --git a/arch/arm/mach-omap2/vc.c b/arch/arm/mach-omap2/vc.c
->> index 86f1ac4c2412..b80c9dff81c4 100644
->> --- a/arch/arm/mach-omap2/vc.c
->> +++ b/arch/arm/mach-omap2/vc.c
->> @@ -44,7 +44,6 @@
->>   #define OMAP4_VDD_DEFAULT_VAL  \
->>          (OMAP4430_VDD_I2C_DISABLE_MASK | \
->>           OMAP4430_VDD_IVA_PRESENCE | OMAP4430_VDD_MPU_PRESENCE | \
->> -        OMAP4430_AUTO_CTRL_VDD_IVA(OMAP4430_AUTO_CTRL_VDD_RET) | \
->>           OMAP4430_AUTO_CTRL_VDD_MPU(OMAP4430_AUTO_CTRL_VDD_RET) | \
->>           OMAP4430_AUTO_CTRL_VDD_CORE(OMAP4430_AUTO_CTRL_VDD_RET))
->>
-> 
-> OK.
-> 
-> Below is an untested attempt to sync the 4460 opp values with
-> what earlier TI kernels had. Not sure if this help, might be worth
-> testing :) My pandaboard-es seems to have a corrupt sdio card.
+Hi Rob.
 
-Yeah, mine is the regular pandaboard with 4430, so the below patch will 
-not make any difference.
+> > On Sat, Jul 04, 2020 at 12:28:03PM +0200, Sam Ravnborg wrote:
+> > > This patch-set convert 3 of the remaining panel bindings to yaml.
+> > > 
+> > > This is a follow-up on v2 that converted a lot of panel bindings:
+> > > https://lore.kernel.org/dri-devel/20200408195109.32692-1-sam@ravnborg.org/
+> > > All was applied except for the reaming three patches included here.
+> > > 
+> > > One binding is a DSI binding so just added to panel-simple-dsi.
+> > > The other two bindings addressed review feedback from Rob.
+> > > 
+> > > Sebastian Reichel has a pending patch to address the remaining
+> > > panel binding in display/panel/
+> > > 
+> > > All bindings pass dt-binding-check.
+> > > Based on top of drm-misc-next.
+> > > 
+> > > 	Sam
+> > > 
+> > > 
+> > > Sam Ravnborg (3):
+> > >       dt-bindings: display: convert innolux,p079zca to DT Schema
+> > >       dt-bindings: display: convert samsung,s6e8aa0 to DT Schema
+> > >       dt-bindings: display: convert sharp,lq101r1sx01 to DT Schema
+> > 
+> > git format-patch adds a space after the ',' - in the subject.
+> > This is often a good idea, but not for binding files.
+> > Will fix when I apply - if I do not forget that is..
+> 
+> Sure about that? I'm pretty sure it's dri-devel doing it. Look at 
+> lore.kernel.org copies for different lists. I've been fighting with that 
+> first in patchwork (which had this bug) and then in b4 (which is where 
+> it got nailed down to dri-devel).
+You are right.
 
-regards
-Suman
+The patches that I copied myself on had the correct subject.
+Only the dri-devel mails had the mangled subject.
+
+	Sam
 
 > 
-> Regards,
-> 
-> Tony
-> 
-> 8< ---------------------
-> diff --git a/arch/arm/mach-omap2/opp4xxx_data.c b/arch/arm/mach-omap2/opp4xxx_data.c
-> --- a/arch/arm/mach-omap2/opp4xxx_data.c
-> +++ b/arch/arm/mach-omap2/opp4xxx_data.c
-> @@ -66,21 +66,23 @@ struct omap_volt_data omap443x_vdd_core_volt_data[] = {
->   };
->   
->   #define OMAP4460_VDD_MPU_OPP50_UV		1025000
-> -#define OMAP4460_VDD_MPU_OPP100_UV		1200000
-> -#define OMAP4460_VDD_MPU_OPPTURBO_UV		1313000
-> -#define OMAP4460_VDD_MPU_OPPNITRO_UV		1375000
-> +#define OMAP4460_VDD_MPU_OPP100_UV		1203000
-> +#define OMAP4460_VDD_MPU_OPPTURBO_UV		1317000
-> +#define OMAP4460_VDD_MPU_OPPNITRO_UV		1380000
-> +#define OMAP4460_VDD_MPU_OPPNITROSB_UV		1390000
->   
->   struct omap_volt_data omap446x_vdd_mpu_volt_data[] = {
->   	VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPP50_UV, OMAP44XX_CONTROL_FUSE_MPU_OPP50, 0xf4, 0x0c),
->   	VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPP100_UV, OMAP44XX_CONTROL_FUSE_MPU_OPP100, 0xf9, 0x16),
->   	VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPPTURBO_UV, OMAP44XX_CONTROL_FUSE_MPU_OPPTURBO, 0xfa, 0x23),
->   	VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPPNITRO_UV, OMAP44XX_CONTROL_FUSE_MPU_OPPNITRO, 0xfa, 0x27),
-> +	VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPPNITROSB_UV, OMAP44XX_CONTROL_FUSE_MPU_OPPNITROSB, 0xfa, 0x27),
->   	VOLT_DATA_DEFINE(0, 0, 0, 0),
->   };
->   
-> -#define OMAP4460_VDD_IVA_OPP50_UV		1025000
-> -#define OMAP4460_VDD_IVA_OPP100_UV		1200000
-> -#define OMAP4460_VDD_IVA_OPPTURBO_UV		1313000
-> +#define OMAP4460_VDD_IVA_OPP50_UV		 950000
-> +#define OMAP4460_VDD_IVA_OPP100_UV		1140000
-> +#define OMAP4460_VDD_IVA_OPPTURBO_UV		1291000
->   #define OMAP4460_VDD_IVA_OPPNITRO_UV		1375000
->   
->   struct omap_volt_data omap446x_vdd_iva_volt_data[] = {
-> @@ -91,8 +93,8 @@ struct omap_volt_data omap446x_vdd_iva_volt_data[] = {
->   	VOLT_DATA_DEFINE(0, 0, 0, 0),
->   };
->   
-> -#define OMAP4460_VDD_CORE_OPP50_UV		1025000
-> -#define OMAP4460_VDD_CORE_OPP100_UV		1200000
-> +#define OMAP4460_VDD_CORE_OPP50_UV		 962000
-> +#define OMAP4460_VDD_CORE_OPP100_UV		1127000
->   #define OMAP4460_VDD_CORE_OPP100_OV_UV		1250000
->   
->   struct omap_volt_data omap446x_vdd_core_volt_data[] = {
-> 
-
+> Rob
