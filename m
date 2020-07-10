@@ -2,248 +2,121 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F37C8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 23:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B173AC43464
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 23:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6DE320657
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 23:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E75320657
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 23:03:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sxEL6JcH"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k8zU2rjL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgGJXES (ORCPT
+        id S1726845AbgGJXD1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 19:04:18 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:60320 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726519AbgGJXER (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 19:04:17 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06AN3B24130519;
-        Fri, 10 Jul 2020 18:03:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594422191;
-        bh=ub1+3l989W7mhZEj/I2ppqT5GtSi7nEJv2DHiEKNTsI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=sxEL6JcHWOB90ZiF98uA+dnOLNJqIhGWjmu2u+pC6gH0R2vT5KLDlxKuxEu4pC/fX
-         G4oMyPeUkc3IiwKheb9KJS1SC7u4/NRrEJXV7vdzSM5lSzHSsR3vrKe59DVsbRo0r+
-         Z/uYWam3khgNv9oq002dgqRLzCrbqM4PP3FJoPM0=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06AN3BvQ064771
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 10 Jul 2020 18:03:11 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 10
- Jul 2020 18:03:11 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 10 Jul 2020 18:03:10 -0500
-Received: from [10.250.34.57] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06AN3AG1093664;
-        Fri, 10 Jul 2020 18:03:10 -0500
-Subject: Re: [PATCHv3 2/6] irqchip/irq-pruss-intc: Add a PRUSS irqchip driver
- for PRUSS interrupts
-To:     Marc Zyngier <maz@kernel.org>,
-        Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-CC:     <tglx@linutronix.de>, <jason@lakedaemon.net>, <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <david@lechnology.com>,
-        "Mills, William" <wmills@ti.com>, "Andrew F . Davis" <afd@ti.com>,
-        Roger Quadros <rogerq@ti.com>
-References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
- <1593699479-1445-3-git-send-email-grzegorz.jaszczyk@linaro.org>
- <f0d3f3224a1b8fa2be668dd2b8d9d84e@kernel.org>
- <CAMxfBF6A9702-rBOo0jHtfn4Ds1_G+nWG4O9-urNqU00dFXeww@mail.gmail.com>
- <12db6d22c12369b6d64f410aa2434b03@kernel.org>
- <CAMxfBF7pbH1LLE4fJnnCPnrqnQ-tdO+_xfoN1VerJcQ-ZyYM9Q@mail.gmail.com>
- <53d39d8fbd63c6638dbf0584c7016ee0@kernel.org>
- <CAMxfBF6Th+zKOmogA5phkh21tSUzutokCgU+pv0Eh-sDk=1Hbg@mail.gmail.com>
- <f11097c321b62e7f8ba904dc2907d4e0@kernel.org>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <3501f3a6-0613-df1c-2c6d-5ac4610a226d@ti.com>
-Date:   Fri, 10 Jul 2020 18:03:10 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 10 Jul 2020 19:03:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38538 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726903AbgGJXCr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 19:02:47 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB177C08E6DC
+        for <devicetree@vger.kernel.org>; Fri, 10 Jul 2020 16:02:47 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id q17so2839572pls.9
+        for <devicetree@vger.kernel.org>; Fri, 10 Jul 2020 16:02:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=SOEifiIh+gw1ksCpw3+MdPsiCbOdQ0cDfgdVRKb9Csc=;
+        b=k8zU2rjLwwu9xxH6CtqzfzziVe1vGy1bbnfaYS4aV6d8OBtTZkbwlSOJJvvmPXJbSR
+         e+lH31NsyffijpPqmezQuKlLqrpVO65l/rRqLmPGfkCVwXEwRCH5bYRYw15DCh6yEcR+
+         41eQMVmiDyHYBBVuEs5cYvgWCaYuLUL9AnpjQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=SOEifiIh+gw1ksCpw3+MdPsiCbOdQ0cDfgdVRKb9Csc=;
+        b=umpqEFLDY6eEGYCbM43Zuz9S74PzKVZ0dtcSNZYbEBtMhKj5sr7ZKtKMsze1o4kQHA
+         on7zjpv8FhYv7fZn0EhBmclIG90epLnsXo9B4X7CUGLzuGAXRrC1zr7BY7OtZUUZRjKE
+         GFNQbjGr6b8Z/zaMicI3EJ+knv+XK3tCB8mWrAej7tbKaY2FQz/dnvUbZmVssXNHUDtm
+         C9eQquv+FTMeXEflFp5ZBK85nqshsnFPLjzC8xYdrr1qepDn7jKkhgAuzWzg3Wa4EDF0
+         P+0uS/4pw0o8njg4FQSWMEnNO/NA8+GFkdXXF3qfrxtfry2ak91q+irytzSXql4ROI9L
+         wLgw==
+X-Gm-Message-State: AOAM533/13ed4RZ6aMU/Pz7e/yoxH9ikXUvJMvgoKDgjjacXUDhpjZx6
+        j4kZUCx8u7ImnZMC6Py2XMV4ZQ==
+X-Google-Smtp-Source: ABdhPJzdSjyDJg2gb4e4NI73Cop7js70UClKGQIJKPQF33PAmLwF3oSqZOi78uGWEWIaJ81gbrnxfg==
+X-Received: by 2002:a17:90a:cc:: with SMTP id v12mr7439843pjd.96.1594422167234;
+        Fri, 10 Jul 2020 16:02:47 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
+        by smtp.gmail.com with ESMTPSA id my9sm7266836pjb.44.2020.07.10.16.02.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 16:02:46 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Rob Herring <robh+dt@kernel.org>, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/9] dt-bindings: msm/dpu: Add simple-bus to dpu bindings
+Date:   Fri, 10 Jul 2020 16:02:17 -0700
+Message-Id: <20200710160131.2.Id4b5c92d28b7350d047218774afaf69b683651e0@changeid>
+X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
+In-Reply-To: <20200710230224.2265647-1-dianders@chromium.org>
+References: <20200710230224.2265647-1-dianders@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <f11097c321b62e7f8ba904dc2907d4e0@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Marc,
+We have a whole bunch of child devices that we really just want
+treated as other devices to instantiate.  Add the "simple-bus"
+property for this.
 
-On 7/8/20 5:47 AM, Marc Zyngier wrote:
-> On 2020-07-08 08:04, Grzegorz Jaszczyk wrote:
->> On Sun, 5 Jul 2020 at 22:45, Marc Zyngier <maz@kernel.org> wrote:
->>>
->>> On 2020-07-05 14:26, Grzegorz Jaszczyk wrote:
->>> > On Sat, 4 Jul 2020 at 11:39, Marc Zyngier <maz@kernel.org> wrote:
->>> >>
->>> >> On 2020-07-03 15:28, Grzegorz Jaszczyk wrote:
->>>
->>> [...]
->>>
->>> >> It still begs the question: if the HW can support both edge and level
->>> >> triggered interrupts, why isn't the driver supporting this diversity?
->>> >> I appreciate that your HW may only have level interrupts so far, but
->>> >> what guarantees that this will forever be true? It would imply a
->>> >> change
->>> >> in the DT binding, which isn't desirable.
->>> >
->>> > Ok, I've got your point. I will try to come up with something later
->>> > on. Probably extending interrupt-cells by one and passing interrupt
->>> > type will be enough for now. Extending this driver to actually support
->>> > it can be handled later if needed. Hope it works for you.
->>>
->>> Writing a set_type callback to deal with this should be pretty easy.
->>> Don't delay doing the right thing.
->>
->> Ok.
+Commit-notes
+This bindings file really needs to move over to yaml.  Hopefully
+someone at Qualcomm who's working on display code can help with that.
 
-Sorry for the typo in my comment causing this confusion.
+Right now on Linux we have a manual call to of_platform_populate() to
+populate our children.  That's pretty non-ideal as described in
+another patch in this series and I'm trying to remove it.
 
-The h/w actually doesn't support the edge-interrupts. Likewise, the 
-polarity is always high. The individual register bit descriptions 
-mention what the bit values 0 and 1 mean, but there is additional 
-description in the TRMs on all the SoCs that says
-"always write 1 to the bits of this register" for PRUSS_INTC_SIPR(x) and
-"always write 0 to the bits of this register" for PRUSS_INTC_SITR(x).
-FWIW, these are also the reset values.
+I'm not sure how much of a hack to consider "simple-bus".  I've seen
+it used like this before, but if folks tell me that it's terrible then
+I guess we'll have to figure some other way out of our crazy
+-EPROBE_DEFER loop in Linux.
+END
 
-Eg: AM335x TRM - https://www.ti.com/lit/pdf/spruh73
-Please see Section 4.4.2.5 and the register descriptions in 4.5.3.49, 
-4.5.3.51. Please also see Section 4.4.2.3 that explains the PRUSS INTC 
-methodology.
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
->>
->>>
->>> [...]
->>>
->>> >> >> > +             hwirq = hipir & GENMASK(9, 0);
->>> >> >> > +             virq = irq_linear_revmap(intc->domain, hwirq);
->>> >> >>
->>> >> >> And this is where I worry. You seems to have a single irqdomain
->>> >> >> for all the muxes. Are you guaranteed that you will have no
->>> >> >> overlap between muxes? And please use irq_find_mapping(), as
->>> >> >> I have top-secret plans to kill irq_linear_revmap().
->>> >> >
->>> >> > Regarding irq_find_mapping - sure.
->>> >> >
->>> >> > Regarding irqdomains:
->>> >> > It is a single irqdomain since the hwirq (system event) can be 
->>> mapped
->>> >> > to different irq_host (muxes). Patch #6
->>> >> > https://lkml.org/lkml/2020/7/2/616 implements and describes how 
->>> input
->>> >> > events can be mapped to some output host interrupts through 2 
->>> levels
->>> >> > of many-to-one mapping i.e. events to channel mapping and 
->>> channels to
->>> >> > host interrupts. Mentioned implementation ensures that specific 
->>> system
->>> >> > event (hwirq) can be mapped through PRUSS specific channel into a
->>> >> > single host interrupt.
->>> >>
->>> >> Patch #6 is a nightmare of its own, and I haven't fully groked it 
->>> yet.
->>> >> Also, this driver seems to totally ignore the 2-level routing. Where
->>> >> is it set up? map/unmap in this driver do exactly *nothing*, so
->>> >> something somewhere must set it up.
->>> >
->>> > The map/unmap is updated in patch #6 and it deals with those 2-level
->>> > routing setup. Map is responsible for programming the Channel Map
->>> > Registers (CMRx) and Host-Interrupt Map Registers (HMRx) basing on
->>> > provided configuration from the one parsed in the xlate function.
->>> > Unmap undo whatever was done on the map. More details can be found in
->>> > patch #6.
->>> >
->>> > Maybe it would be better to squash patch #6 with this one so it would
->>> > be less confusing. What is your advice?
->>>
->>> So am I right in understanding that without patch #6, this driver does
->>> exactly nothing? If so, it has been a waste of review time.
->>>
->>> Please split patch #6 so that this driver does something useful
->>> for Linux, without any of the PRU interrupt routing stuff. I want
->>> to see a Linux-only driver that works and doesn't rely on any other
->>> exotic feature.
->>>
->>
->> Patch #6 provides PRU specific 2-level routing setup. This step is
->> required and it is part of the entire patch-set. Theoretically routing
->> setup could be done by other platform driver (not irq one) or e.g. by
->> PRU firmware. In such case this driver would be functional without
->> patch #6 but I do not think it would be proper.
-> 
-> Then this whole driver is non-functional until the last patch that
-> comes with the PRU-specific "value-add".
+ Documentation/devicetree/bindings/display/msm/dpu.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-It is all moot actually and the interrupts work only when the PRU 
-remoteproc/clients have invoked the irq_create_fwspec_mapping()
-for all of the desired system events. It does not make much difference 
-if it was a separate patch or squashed in, patch #6 is a replacement for 
-the previous logic, and since it was complex, it was done in a separate 
-patch to better explain the usage (same reason on v1 and v2 as well).
-
-> 
-> [...]
-> 
->> I am open to any suggestion if there is a better way of handling
->> 2-level routing. I will also appreciate if you could elaborate about
->> issues that you see with patch #6.
-> 
-> The two level routing has to be part of this (or another) irqchip
-> driver (specially given that it appears to me like another set of
-> crossbar). There should only be a *single* binding for all interrupts,
-> including those targeting the PRU (you seem to have two).
-> 
-
-Yeah, there hasn't been a clean way of doing this. Our previous attempt 
-was to do this through custom exported functions so that the PRU 
-remoteproc driver can set these up correctly, but that was shot down and 
-this is the direction we are pointed to.
-
-We do want to leverage the "interrupts" property in the PRU user nodes 
-instead of inventing our own paradigm through a non-irqchip driver, and 
-at the same time, be able to configure this at the run time only when 
-that PRU driver is running, and remove the mappings once that driver is 
-removed allowing another PRU application/driver. We treat PRUs as an 
-exclusive resource, so everything needs to go along with an appropriate 
-client user.
-
-> And the non-CPU interrupt code has to be in its own patch, because
-> it is pretty borderline anyway (I'm still not completely convinced
-> this is Linux's job).
-
-The logic for non-CPU interrupt code is exactly the same as the CPU 
-interrupt code, as they are all setup through the 
-irq_create_fwspec_mapping(). The CPU-specific pieces are primarily the 
-chained interrupt handling.
-
-We have already argued internally about the last part, but our firmware 
-developers literally don't have any IRAM space (we have a lot of 
-Industrial protocols working out of 4K/8K memory), and have pushed all 
-one-time setup to the OS running (Linux or otherwise) on the main ARM 
-core, and INTC is one among the other many such settings. Every word in 
-Instruction RAM was crucial for them.
-
-So, we are all ears if there is still an elegant way of doing this. Look 
-forward to any suggestions you may have.
-
-And thank you for all your review comments.
-
-regards
-Suman
+diff --git a/Documentation/devicetree/bindings/display/msm/dpu.txt b/Documentation/devicetree/bindings/display/msm/dpu.txt
+index 551ae26f60da..b88269524365 100644
+--- a/Documentation/devicetree/bindings/display/msm/dpu.txt
++++ b/Documentation/devicetree/bindings/display/msm/dpu.txt
+@@ -8,7 +8,9 @@ The DPU display controller is found in SDM845 SoC.
+ 
+ MDSS:
+ Required properties:
+-- compatible:  "qcom,sdm845-mdss", "qcom,sc7180-mdss"
++- compatible:  One of:
++  - "qcom,sdm845-mdss", "simple-bus"
++  - "qcom,sc7180-mdss", "simple-bus"
+ - reg: physical base address and length of contoller's registers.
+ - reg-names: register region names. The following region is required:
+   * "mdss"
+-- 
+2.27.0.383.g050319c2ae-goog
 
