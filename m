@@ -2,87 +2,83 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAB3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 07:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17834C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 07:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C684A2077D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 07:07:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594364877;
-	bh=BvkMbxF8p9ePOnvbDwQMRLRHfDMC+k2cTE5KGnfyFng=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QfFbNQYDZmvn1tVK3ZLg5TS+XCPprRU1E8N+DEjooJiIot5Yk051yQHjWxUw8qKtm
-	 gJkFahB87MYYfMUKd2hTYOtiZvdF1MXdyKHsLL3raESr8abq79qQjqLhXaDAWp8Vvv
-	 LZ3DA7xQuLqRzWazd3B8ZrLP46ab1IVc8DMehVi4=
+	by mail.kernel.org (Postfix) with ESMTP id EBFA42078D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 07:28:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="aJ95BNTe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbgGJHHx (ORCPT
+        id S1726201AbgGJH2K (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 03:07:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53814 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725966AbgGJHHx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 10 Jul 2020 03:07:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DA2F2077D;
-        Fri, 10 Jul 2020 07:07:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594364873;
-        bh=BvkMbxF8p9ePOnvbDwQMRLRHfDMC+k2cTE5KGnfyFng=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dCCem0174HgReRB61ts5VlAlIeO+QeUb/sV0BQxtHfpKxM1rG4NrUlteBpeJAyxVu
-         ym0TsOmbs6X1RR5CMGGscMyLfS28nNieP+1CNrxfL6ZGDJ/ihQImwH194/EgR2bkdw
-         14ngeh+5rTgzYtWVqM/DToyzddPm8JDcyRNNZoFw=
-Date:   Fri, 10 Jul 2020 09:07:58 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Felipe Balbi <balbi@kernel.org>
-Cc:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        linux-kernel@vger.kernel.org, robh@kernel.org,
-        p.zabel@pengutronix.de, devicetree@vger.kernel.org,
-        linux-usb@vger.kernel.org, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, yin1.li@intel.com,
-        andriy.shevchenko@intel.com
-Subject: Re: [PATCH v4 2/2] usb: phy: Add USB3 PHY support for Intel LGM SoC
-Message-ID: <20200710070758.GB1176018@kroah.com>
-References: <20200617035818.54110-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200617035818.54110-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <87blknrjg6.fsf@kernel.org>
+        Fri, 10 Jul 2020 03:28:10 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:2210 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725851AbgGJH2K (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 03:28:10 -0400
+X-UUID: 0e6bc4382b20431e90a4d40b6f04524c-20200710
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=Kck5qu3yKPdlKefd7jPiCK9z60HEzMZy05drle8P5fI=;
+        b=aJ95BNTeouiRE1P/SMVcsBcsMJC6B6+AFmJUTp30RqfkK7JZ0xoLiQZG8eqKAhH7WIjiq9Be23cEuGfImUtIFDQsEYkKgNqHN98FlnCZ8kQINK672JNH1Tw9OsHnIDG37DPkH/rAVSFrp8JNfUDbZ2YaVjqWejitRc+Uf+93xFI=;
+X-UUID: 0e6bc4382b20431e90a4d40b6f04524c-20200710
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <zhiyong.tao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1017993438; Fri, 10 Jul 2020 15:28:05 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 10 Jul 2020 15:28:03 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 10 Jul 2020 15:28:02 +0800
+From:   Zhiyong Tao <zhiyong.tao@mediatek.com>
+To:     <robh+dt@kernel.org>, <linus.walleij@linaro.org>,
+        <mark.rutland@arm.com>, <matthias.bgg@gmail.com>,
+        <sean.wang@kernel.org>
+CC:     <srv_heupstream@mediatek.com>, <zhiyong.tao@mediatek.com>,
+        <hui.liu@mediatek.com>, <eddie.huang@mediatek.com>,
+        <chuanjia.liu@mediatek.com>, <biao.huang@mediatek.com>,
+        <hongzhou.yang@mediatek.com>, <erin.lo@mediatek.com>,
+        <sean.wang@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>
+Subject: [PATCH 0/3] Mediatek pinctrl patch on mt8192 
+Date:   Fri, 10 Jul 2020 15:27:14 +0800
+Message-ID: <20200710072717.3056-1-zhiyong.tao@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87blknrjg6.fsf@kernel.org>
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 3CB678FE8CE4C5D6230117BC5AACDE25C13BDDFBBE0F779C8812E6E4463C13942000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 09:08:09AM +0300, Felipe Balbi wrote:
-> 
-> Hi,
-> 
-> "Ramuthevar,Vadivel MuruganX"
-> <vadivel.muruganx.ramuthevar@linux.intel.com> writes:
-> 
-> > From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> >
-> > Add support for USB PHY on Intel LGM SoC.
-> >
-> > Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> > ---
-> >  drivers/usb/phy/Kconfig       |  11 ++
-> >  drivers/usb/phy/Makefile      |   1 +
-> >  drivers/usb/phy/phy-lgm-usb.c | 275 ++++++++++++++++++++++++++++++++++++++++++
-> 
-> new phy drivers should use drivers/phy instead.
+VGhpcyBzZXJpZXMgaW5jbHVkZXMgMyBwYXRjaGVzOg0KMS5hZGQgcGluY3RybCBmaWxlIG9uIG10
+ODE5Mi4NCjIuYWRkIHBpbmN0cmwgYmluZGluZyBkb2N1bWVudCBvbiBtdDgxOTIuDQozLmFkZCBw
+aW5jdHJsIGRyaXZlciBvbiBNVDgxOTIuDQoNClpoaXlvbmcgVGFvICgzKToNCiAgZHQtYmluZGlu
+Z3M6IHBpbmN0cmw6IG10ODE5MjogYWRkIHBpbmN0cmwgZmlsZQ0KICBkdC1iaW5kaW5nczogcGlu
+Y3RybDogbXQ4MTkyOiBhZGQgYmluZGluZyBkb2N1bWVudA0KICBwaW5jdHJsOiBhZGQgcGluY3Ry
+bCBkcml2ZXIgb24gbXQ4MTkyDQoNCiAuLi4vYmluZGluZ3MvcGluY3RybC9waW5jdHJsLW10ODE5
+Mi55YW1sICAgICAgfCAgMTcwICsrDQogZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL0tjb25maWcg
+ICAgICAgICAgICAgIHwgICAgNyArDQogZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL01ha2VmaWxl
+ICAgICAgICAgICAgIHwgICAgMSArDQogZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwt
+bXQ4MTkyLmMgICAgIHwgMTQ1MyArKysrKysrKysrKw0KIGRyaXZlcnMvcGluY3RybC9tZWRpYXRl
+ay9waW5jdHJsLW10ay1tdDgxOTIuaCB8IDIyMjggKysrKysrKysrKysrKysrKysNCiBpbmNsdWRl
+L2R0LWJpbmRpbmdzL3BpbmN0cmwvbXQ4MTkyLXBpbmZ1bmMuaCAgfCAxMzQ0ICsrKysrKysrKysN
+CiA2IGZpbGVzIGNoYW5nZWQsIDUyMDMgaW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9waW5jdHJsLW10ODE5
+Mi55YW1sDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5j
+dHJsLW10ODE5Mi5jDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGluY3RybC9tZWRpYXRl
+ay9waW5jdHJsLW10ay1tdDgxOTIuaA0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2R0LWJp
+bmRpbmdzL3BpbmN0cmwvbXQ4MTkyLXBpbmZ1bmMuaA0KDQotLQ0KMi4yNS4xDQoNCg==
 
-Can we move all of the existing usb/phy drivers there too?
-
-thanks,
-
-greg k-h
