@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF30C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 15:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09600C433E4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 15:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7364920836
+	by mail.kernel.org (Postfix) with ESMTP id D8AE12082E
 	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 15:27:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1594394848;
 	bh=HtQU5OPY9EFeSVUj/3uwy2WcyP2F8grkgn60jU+WHLI=;
 	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=2VpioZvgYzDCwhxsgoIAQm1c3I2u4/UilJNbC/tcIKZXtMt4IFItG1y7wE0bCvxm5
-	 FZmTVIk7YnZ+BCJ0SX3zIgUgx3ki0en6j3EofBopd64Amn0UvCJqxOFfNJiff4OSVm
-	 pzYPNJwPwAgRwI/XAoLBgOThw4idzT57UaOWvfBs=
+	b=srNm3+KUvKHf3sS9BLt9WoOkvSjLX+dT+5okl02RfmF8+wtBEpZ3x3Bf1hcLx8Hxz
+	 g+guHN4DUV0c6fB+LRzSfCzYR4CMjeRSJ0PGrj0+h8bq3cZafteYBF6wi80tQEUZ0b
+	 C/cIxSISVsB/oowtWhfQl2N3WofTw0b3W1GiNW5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbgGJP11 (ORCPT
+        id S1728005AbgGJP12 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:27:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51286 "EHLO mail.kernel.org"
+        Fri, 10 Jul 2020 11:27:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727091AbgGJP11 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1727839AbgGJP11 (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Fri, 10 Jul 2020 11:27:27 -0400
 Received: from [192.168.1.30] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25EF92078B;
+        by mail.kernel.org (Postfix) with ESMTPSA id 260E42082E;
         Fri, 10 Jul 2020 15:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1594394846;
         bh=HtQU5OPY9EFeSVUj/3uwy2WcyP2F8grkgn60jU+WHLI=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=dtyD3Jdj91VicCUgNYq/dqvIa8XnCB5bTIQ8PRb0/d4wczuyrQZTuzLjAQqWFdhTs
-         /v9S8AhsafMkXtIrwa8KDYuCk15cYajfV6fIRadPCVuLtDmduHj4GzqyepX3gLsV8a
-         CgEAQXJIkIogRrowrmVAdvPYGkxoewbItjuptVLc=
+        b=eZdmlEojSNgMcSiIrH5Gujtb1uzznV7QQGNMM/JNhT5otvisgwCTbRWI9qOu0WtqE
+         mW17b1I/AEI99n66Eg2On53wtNE8lL0TqOO/t7cH6otkX2F8UJbR36L4S33fPy8LnA
+         PfRW30T0e1eaqIpW7MU2fB9chDngmzQtVc3v8rsE=
 Subject: Re: [PATCH 2/3] arm64: dts: stratix10: add status to qspi dts node
 To:     Sasha Levin <sashal@kernel.org>,
         linux-arm-kernel@lists.infradead.org
@@ -87,8 +87,8 @@ Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
  cJEJNezizexE0dVclt9OS2U9Xwb3VOjs1ITMEYUf8T1j83iiCCFuXqH4U3Eji0nDEiEN5Ac0
  Jn/EGOBG2qGyKZ4uOec9j5ABF7J6hyO7H6LJaX5bLtp0Z7wUbyVaR4UIGdIOchNgNQk4stfm
  JiyuXyoFl/1ihREfvUG/e7+VAAoOBnMjitE5/qUERDoEkkuQkMcAHyEyd+XZMyXY
-Message-ID: <7fb07b88-611f-532b-ed7e-108baadf43c5@kernel.org>
-Date:   Fri, 10 Jul 2020 10:27:23 -0500
+Message-ID: <3f972455-396f-d389-6aa5-73d91bd25387@kernel.org>
+Date:   Fri, 10 Jul 2020 10:27:24 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
