@@ -2,92 +2,92 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A45C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 01:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9964C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 02:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 982312073A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 01:58:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WAregngz"
+	by mail.kernel.org (Postfix) with ESMTP id BFA102070E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 02:09:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgGJB6I (ORCPT
+        id S1726444AbgGJCI7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 21:58:08 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:22398 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727916AbgGJB6E (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 9 Jul 2020 21:58:04 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594346284; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=skG1sNc6a9bKW7iRy/ErFo7Z5EjunK0kUA/gn4pjeGg=; b=WAregngzYo5LJFGkbDCAGxjhcrN9VoXcgQrICM0RzjWmIJZpSwmj7G9Sqwl2ALwCpS577kVH
- rKob0t3+K/+NBo0EUphuCNiCzwjG9jpygKspfzA7VoCd59hicyzlg0er3p4+BRo+s1yKDz2u
- NqAqkJsaZtEu31bh9G07jv+k7kA=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n16.prod.us-east-1.postgun.com with SMTP id
- 5f07caf278e7807b5eecf9fb (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 01:57:06
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 70C59C433C8; Fri, 10 Jul 2020 01:57:05 +0000 (UTC)
-Received: from mdtipton-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mdtipton)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A72B2C433C6;
-        Fri, 10 Jul 2020 01:57:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A72B2C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mdtipton@codeaurora.org
-From:   Mike Tipton <mdtipton@codeaurora.org>
-To:     georgi.djakov@linaro.org
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mike Tipton <mdtipton@codeaurora.org>
-Subject: [PATCH v2 0/6] interconnect: qcom: Misc bcm-voter changes and fixes
-Date:   Thu,  9 Jul 2020 18:56:46 -0700
-Message-Id: <20200710015652.19206-1-mdtipton@codeaurora.org>
-X-Mailer: git-send-email 2.24.0
+        Thu, 9 Jul 2020 22:08:59 -0400
+Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:50472 "EHLO
+        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbgGJCI7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 22:08:59 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.gtsys.com.hk (Postfix) with ESMTP id EDF1720160C8;
+        Fri, 10 Jul 2020 10:08:56 +0800 (HKT)
+X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
+Received: from mail.gtsys.com.hk ([127.0.0.1])
+        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id aottJ6C8Q-Yh; Fri, 10 Jul 2020 10:08:56 +0800 (HKT)
+Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
+        by mail.gtsys.com.hk (Postfix) with ESMTP id CC1E220160B5;
+        Fri, 10 Jul 2020 10:08:56 +0800 (HKT)
+Received: from [10.128.2.32] (unknown [124.217.189.79])
+        by s01.gtsys.com.hk (Postfix) with ESMTPSA id 87C61C01FBA;
+        Fri, 10 Jul 2020 10:08:56 +0800 (HKT)
+Subject: Re: [PATCH v4 2/2] devicetree: hwmon: shtc1: Add sensirion,shtc1.yaml
+To:     Rob Herring <robh@kernel.org>
+Cc:     Jack Lo <jack.lo@gtsys.com.hk>, devicetree@vger.kernel.org,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200708040748.9014-1-chris.ruehl@gtsys.com.hk>
+ <20200708040748.9014-3-chris.ruehl@gtsys.com.hk>
+ <20200709165107.GB498064@bogus>
+From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Message-ID: <21a3f5a0-6f66-33d2-6def-725743cc67e3@gtsys.com.hk>
+Date:   Fri, 10 Jul 2020 10:08:55 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200709165107.GB498064@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-These changes are mostly unrelated, but there are some dependencies
-between them.
+Hi Rob,
 
-v2:
-- New patch for generic qcom,icc.h bindings
-- New patch for documenting qcom,tcs-wait property
-- Update bcm_div() 'base' parameter from u64 to u32
+On 10/7/2020 12:51 am, Rob Herring wrote:
+> On Wed, Jul 08, 2020 at 12:07:47PM +0800, Chris Ruehl wrote:
+>> Add documentation for the newly added DTS support in the shtc1 driver.
+>> To align with the drivers logic to have high precision by default
+> 
+> If 0x70 is the only address, then do:
+> 
+> reg:
+>    const: 0x70
 
-Mike Tipton (6):
-  dt-bindings: interconnect: Add generic qcom bindings
-  dt-bindings: interconnect: Add property to set BCM TCS wait behavior
-  interconnect: qcom: Support bcm-voter-specific TCS wait behavior
-  interconnect: qcom: Only wait for completion in AMC/WAKE by default
-  interconnect: qcom: Add support for per-BCM scaling factors
-  interconnect: qcom: Fix small BW votes being truncated to zero
+yes, that make sense.
 
- .../bindings/interconnect/qcom,bcm-voter.yaml | 13 ++++
- drivers/interconnect/qcom/bcm-voter.c         | 63 ++++++++++++-------
- drivers/interconnect/qcom/icc-rpmh.c          |  3 +
- drivers/interconnect/qcom/icc-rpmh.h          | 20 ++----
- include/dt-bindings/interconnect/qcom,icc.h   | 26 ++++++++
- 5 files changed, 88 insertions(+), 37 deletions(-)
- create mode 100644 include/dt-bindings/interconnect/qcom,icc.h
+> 
+>> +
+>> +  sensirion,blocking_io:
+> 
+> s/_/-/
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+done!
 
+>> +
+>> +examples:
+>> +  - |
+>> +    i2c1 {
+>> +      status = "okay";
+> 
+> Don't show status in examples.
+
+Thanks for your advice.
+
+updated and patch set v5 is out soon.
+
+Chris
