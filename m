@@ -2,67 +2,66 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5C1C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 16:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E65BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 16:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C8282078B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 16:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5784320725
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 16:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594399184;
-	bh=jrT+bIHosKw7cOBrdn+/6R1dP6Sejd4LsqgP9T9qjO4=;
+	s=default; t=1594399504;
+	bh=B24S6WAT9yyqmHwr3vSzbLWdpKefVYWeCSLCuou+a04=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KkjxBxgLXVLcxl8okvqIfkrBn6LmSBSLLnutJdh2PGqjN+0qEbhNyU65h7nr5vZZM
-	 Gpn66LiMavcMIqbOWZ8nAyEtV6qxcHuHzfWMpkk1W7WA7FCKJJvSXhSixBJ/3ecG21
-	 ujT0E8Xojr67tL/DJNqzorOE+Zo8QFHZhqZpsrTo=
+	b=mWW+E4wh9mF3LCOQblYhG5gEGpfSwEPWTtntbeyN5qKVK0h9U4YF2gGhknQSPYnF6
+	 rTbXRWYKA0uFBAfZy1ewb7HI8o1r4ugoHuuf84pYsqaE5D4vMWD/WE+Z92i4y6GHhj
+	 gz6wQd/CxTH/recCS+rxMH3WpRAmNkZhK/2rrhCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbgGJQjn (ORCPT
+        id S1727065AbgGJQpD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:39:43 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:42709 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726920AbgGJQjn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 12:39:43 -0400
-Received: by mail-il1-f195.google.com with SMTP id t27so5583682ill.9;
-        Fri, 10 Jul 2020 09:39:42 -0700 (PDT)
+        Fri, 10 Jul 2020 12:45:03 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:45970 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726896AbgGJQpD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 12:45:03 -0400
+Received: by mail-io1-f68.google.com with SMTP id e64so6678223iof.12;
+        Fri, 10 Jul 2020 09:45:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=PbdZ4MRWgPRTLXc9OX+frNiKU7Q0wD+VvOim/01go3w=;
-        b=OI1egB3x3TciHwh3w/GmEjca3raQbMjlefMA14+PJ6LpinSdsbH658kO6BD1AgVCvo
-         ITWXKRg00cnl5lNv4NLheffgQmUynERlL1zc7fDQaKaKGUUP3SLDjomfyQ1wnfKcNfVI
-         H1G/PpZmCpxXVCdnjTnP2CbXE9O48MK8LNt3zDBqCKGMpNJnAKbDL6f5GepuANeBcBGt
-         b8getMIGkcW6rooSauuZmU3D7Jm/fGA8fUIOIuhHv89otw9UQ27fEW4/p9MkNto7GCga
-         eeIMctpO+uQ7MjFr3DH/Vji6zPddIPk4sDfymtMiHbl1d65SrnLBRt/VRUAfkIwn+qFv
-         mXSQ==
-X-Gm-Message-State: AOAM533zCNA45fzCnWqSiOY2ZIf+0TmKoeWRGHA6eULVT3R+ueZt6z2x
-        BupUw7to6AAIky475iWnU3WbMLWKxcPB
-X-Google-Smtp-Source: ABdhPJxQhmbMFZ3hkYNcCKa2yWDgTlPwCTZc5raZI6lv5WRcFB9L6NEI8B5WdPqWurpwaypPKt5xNg==
-X-Received: by 2002:a92:c213:: with SMTP id j19mr53468433ilo.40.1594399182198;
-        Fri, 10 Jul 2020 09:39:42 -0700 (PDT)
+        bh=NcVIqFMxSOYKqnZQ2wilEAou9p34LBdWDEjfs7eZSqw=;
+        b=QSr8JFdADz5lcE32UvfIykugUV4SxzWc5xj6RA8F5FMQjZ/QshwZZHJRVX2nAdr2BN
+         FVEEmDq2KXkk4vLH5FM5EjZhOyDJLReGfTaFcL/G80vjKrvVvBis3KKbGcV0n1Tuvp8S
+         RGKP5hWS9LW2EuO7LkkI5tZZpgqnaW5MChbh32iJB5Pnx5o7V9dIaFscZJJDv+JpYrlM
+         nSqHLQDaVD3WDN5vM1yg04LvGkc+JSg2TLxQXl2fyJlAhXSw9VlBS2TwIdlI4Oqh1aVg
+         BEvIUTuxuKTHi+8UAWXrniTw9xgz5+fs8T2IjENTFRI2Bja45DGzShgmaPWeoh7yfxmm
+         z05w==
+X-Gm-Message-State: AOAM530HWXAlXcTCvrHvGET/mKdIT8eGUuCqFFdC3vU2JsbIlmzkXhGU
+        F2sPnhLUEsqRKjSjj/e9jQ==
+X-Google-Smtp-Source: ABdhPJzBtLHrDDjhTprzaUErp3U5RC1TXc/DAe4OsQ/FyL2GyTi8gDWOA1hzxKU9hsRp7+oUZUKMEQ==
+X-Received: by 2002:a6b:197:: with SMTP id 145mr48209904iob.77.1594399502194;
+        Fri, 10 Jul 2020 09:45:02 -0700 (PDT)
 Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id b21sm3980629ioc.36.2020.07.10.09.39.41
+        by smtp.gmail.com with ESMTPSA id r11sm3603540ilm.2.2020.07.10.09.45.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 09:39:41 -0700 (PDT)
-Received: (nullmailer pid 2775731 invoked by uid 1000);
-        Fri, 10 Jul 2020 16:39:40 -0000
-Date:   Fri, 10 Jul 2020 10:39:40 -0600
+        Fri, 10 Jul 2020 09:45:01 -0700 (PDT)
+Received: (nullmailer pid 2786114 invoked by uid 1000);
+        Fri, 10 Jul 2020 16:45:00 -0000
+Date:   Fri, 10 Jul 2020 10:45:00 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Kurt Kanzenbach <kurt@linutronix.de>
 Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org,
         Vivien Didelot <vivien.didelot@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org
 Subject: Re: [PATCH v1 1/1] dt-bindings: net: dsa: Add DSA yaml binding
-Message-ID: <20200710163940.GA2775145@bogus>
+Message-ID: <20200710164500.GA2775934@bogus>
 References: <20200710090618.28945-1-kurt@linutronix.de>
  <20200710090618.28945-2-kurt@linutronix.de>
 MIME-Version: 1.0
@@ -74,7 +73,7 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 10 Jul 2020 11:06:18 +0200, Kurt Kanzenbach wrote:
+On Fri, Jul 10, 2020 at 11:06:18AM +0200, Kurt Kanzenbach wrote:
 > For future DSA drivers it makes sense to add a generic DSA yaml binding which
 > can be used then. This was created using the properties from dsa.txt. It
 > includes the ports and the dsa,member property.
@@ -86,20 +85,109 @@ On Fri, 10 Jul 2020 11:06:18 +0200, Kurt Kanzenbach wrote:
 >  1 file changed, 80 insertions(+)
 >  create mode 100644 Documentation/devicetree/bindings/net/dsa/dsa.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/net/dsa/dsa.yaml b/Documentation/devicetree/bindings/net/dsa/dsa.yaml
+> new file mode 100644
+> index 000000000000..bec257231bf8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/dsa/dsa.yaml
+> @@ -0,0 +1,80 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/dsa/dsa.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Distributed Switch Architecture Device Tree Bindings
 
+DSA is a Linuxism, right?
 
-My bot found errors running 'make dt_binding_check' on your patch:
+> +
+> +maintainers:
+> +  - Andrew Lunn <andrew@lunn.ch>
+> +  - Florian Fainelli <f.fainelli@gmail.com>
+> +  - Vivien Didelot <vivien.didelot@gmail.com>
+> +
+> +description:
+> +  Switches are true Linux devices and can be probed by any means. Once probed,
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/ti,cpsw-switch.example.dt.yaml: switch@0: 'ports' is a required property
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.example.dt.yaml: switch@10: 'ports' is a required property
+Bindings are OS independent.
 
+> +  they register to the DSA framework, passing a node pointer. This node is
+> +  expected to fulfil the following binding, and may contain additional
+> +  properties as required by the device it is embedded within.
 
-See https://patchwork.ozlabs.org/patch/1326594
+Describe what type of h/w should use this binding.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^switch(@.*)?$"
+> +
+> +  dsa,member:
+> +    minItems: 2
+> +    maxItems: 2
+> +    description:
+> +      A two element list indicates which DSA cluster, and position within the
+> +      cluster a switch takes. <0 0> is cluster 0, switch 0. <0 1> is cluster 0,
+> +      switch 1. <1 0> is cluster 1, switch 0. A switch not part of any cluster
+> +      (single device hanging off a CPU port) must not specify this property
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +
+> +  ports:
+> +    type: object
+> +    properties:
+> +      '#address-cells':
+> +        const: 1
+> +      '#size-cells':
+> +        const: 0
+> +
+> +    patternProperties:
+> +      "^port@[0-9]+$":
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+As ports and port are OF graph nodes, it would be better if we 
+standardized on a different name for these. I think we've used 
+'ethernet-port' some.
 
-Please check and re-submit.
+> +          type: object
+> +          description: DSA switch ports
+> +
+> +          allOf:
+> +            - $ref: ../ethernet-controller.yaml#
 
+How does this and 'ethernet' both apply?
+
+> +
+> +          properties:
+> +            reg:
+> +              description: Port number
+> +
+> +            label:
+> +              description:
+> +                Describes the label associated with this port, which will become
+> +                the netdev name
+> +              $ref: /schemas/types.yaml#definitions/string
+> +
+> +            link:
+> +              description:
+> +                Should be a list of phandles to other switch's DSA port. This
+> +                port is used as the outgoing port towards the phandle ports. The
+> +                full routing information must be given, not just the one hop
+> +                routes to neighbouring switches
+> +              $ref: /schemas/types.yaml#definitions/phandle-array
+> +
+> +            ethernet:
+> +              description:
+> +                Should be a phandle to a valid Ethernet device node.  This host
+> +                device is what the switch port is connected to
+> +              $ref: /schemas/types.yaml#definitions/phandle
+> +
+> +          required:
+> +            - reg
+> +
+> +required:
+> +  - ports
+> +
+> +...
+> -- 
+> 2.20.1
+> 
