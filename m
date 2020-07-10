@@ -2,135 +2,242 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B07CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 06:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 272CCC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 06:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53C4F20720
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 06:08:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594361299;
-	bh=0oFpgD9D9qzya4+Km3ZH6Km/e2tBwdXbf0TuXwfXHxQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=bbPo9IJzdM1ZbwJQOcVk8doTWERf7QKzWDkCbPRcR9uWRioINQWMlNnhjUJTIM55t
-	 YV3pC/tJVzyIsIPv4MHTgo5omhVUIKFnuQ0KlPkbhIJ4VMKRsfWByc5qTtHIfM06Oe
-	 1CdPoqcc4gB3cMtHFNG+F9na3qT3iH6oHfRUDM7s=
+	by mail.kernel.org (Postfix) with ESMTP id EFFE820720
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 06:12:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YQN3wyrU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727038AbgGJGIR (ORCPT
+        id S1726796AbgGJGMb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 02:08:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51064 "EHLO
+        Fri, 10 Jul 2020 02:12:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbgGJGIQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 02:08:16 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81421C08C5CE;
-        Thu,  9 Jul 2020 23:08:16 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id 9so5086973ljv.5;
-        Thu, 09 Jul 2020 23:08:16 -0700 (PDT)
+        with ESMTP id S1726004AbgGJGMa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 02:12:30 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39046C08C5DC
+        for <devicetree@vger.kernel.org>; Thu,  9 Jul 2020 23:12:30 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id cv18so4159116pjb.1
+        for <devicetree@vger.kernel.org>; Thu, 09 Jul 2020 23:12:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=lRfwj4BHA5SmkTCLszGaorekKIYPb/tiAdhoiGB9VyM=;
-        b=Kz6CctuCGvLTKE/zff1VDJnM5l9JFbToUmtSnV+Ak0hGdyS8MkDYxYaf50tYG6xVwl
-         EhkoKRTzCKFutu5+uMot2oIkrXduH11LSNmTVZYoAZykJjqsMfKguC11TRqXwaoJqmIN
-         VXUQgtsd0uNhcDtpKRPXKPRpoE6mLoXwo9o29f4sJmJMxiyDBaGOQTCWjFTQKE7i0LL5
-         P+rCf8rg3fnKgRPuqTs+QdhbUEBARbhEFbwwn0RGyRbh6rM7AMo8kP6sI8UADZStU2d7
-         BgZSOs9pGkV+wabPGNT3aqtt6bpLDIZKWy3upYwC5A7Vz+PbZBXCL84Jb7NrhkPU841h
-         ZIPg==
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=MDOqx8vxa/30A8XhY3uCkxkxCTIbX1UKL3i9UssXhro=;
+        b=YQN3wyrUqnoKyW6LkEnOAXbo1yEYXD4zeVsZah3jneZODo1vRwD80P1/DO3vAgKpo4
+         4q8jvKxSP8roPZPEXCfRBPzFVAixIeBB1c06dFtSgvQWiC4i1sfPaCzF76ziNbXao2h1
+         AXjyXvLz3UKJ8luQEI2qPMVB2HLJzTpYO79yA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=lRfwj4BHA5SmkTCLszGaorekKIYPb/tiAdhoiGB9VyM=;
-        b=KKoar2uwI4QtQIUwxNCEMS/TnhnimOpaZM7xHoSs/duO3qyR7r48M6RtrKKf8X2ihs
-         KR2HhwLPw+/h4ZCniOWl91r5AdQbYL3fnZUH5wdMTZoiCTRNe7fp4HtT2HlbQlM9EpD7
-         THqISFE2nhKB6SgZogBFtPoegf75bCJlmhvmH5usKkE8k69M1toYXb7HtOtuGFL6SYzh
-         8q3lkJ1BMVBb2Z3ybFKzJMLKHw7AEM3kzPUyrQEAhbMYBUXRszgBFkq1nm5Nj+y1A0BJ
-         9TmeDGkZSkocp9LQGNmCgkcw342aoFbypNEUJvmzAD3wxgXv8+FWtirsN0RF0wK7nTcN
-         nCNw==
-X-Gm-Message-State: AOAM530YE6ChIdfH9XdkmhQ9vxYGaSRj+0HnHei+MpC2OZH6SRxymiKL
-        yW4QMw54FKZlrIAvnvSCobg=
-X-Google-Smtp-Source: ABdhPJxGGMmuPkrDz1atQLdBX2QRyj5KbJAuPHduR2muUCVw+/VATbS8wijHIodTpTMmPpG0A/ezCg==
-X-Received: by 2002:a2e:7615:: with SMTP id r21mr29940355ljc.124.1594361294942;
-        Thu, 09 Jul 2020 23:08:14 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id s8sm1545691ljh.74.2020.07.09.23.08.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 Jul 2020 23:08:14 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     "Ramuthevar\,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        linux-kernel@vger.kernel.org, robh@kernel.org,
-        p.zabel@pengutronix.de
-Cc:     gregkh@linuxfoundation.org, devicetree@vger.kernel.org,
-        linux-usb@vger.kernel.org, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, yin1.li@intel.com,
-        andriy.shevchenko@intel.com,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: Re: [PATCH v4 2/2] usb: phy: Add USB3 PHY support for Intel LGM SoC
-In-Reply-To: <20200617035818.54110-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20200617035818.54110-1-vadivel.muruganx.ramuthevar@linux.intel.com> <20200617035818.54110-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-Date:   Fri, 10 Jul 2020 09:08:09 +0300
-Message-ID: <87blknrjg6.fsf@kernel.org>
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=MDOqx8vxa/30A8XhY3uCkxkxCTIbX1UKL3i9UssXhro=;
+        b=CoURW2WGPkfY36cMl5rpn8cEczys0hEkyqdLNFB8wDMdCrQFATp9EN+sdoQzrBn0j9
+         oRh6rCHxYZBaH8TW6jlg/Z8ah7swJT87QHOsdFHHZLBZVJuXfVoEMWyhCx5K2y+OmNqa
+         Tp8sgBkjcoZnkHIujx5n9518vmPuOGcNmMbKWkeXvtVIsARwu7px1rYVD164VOYhrYKC
+         PJaONLdmvoSI0xc925p1S4ds1bkDtBDldkuyMTyximHMiuicGs9LevIzdx2VVqk2w3Ue
+         IdTDDdzMnMi4H0FE922EraWZs6AHgavBoiJt8XMCZ80zGewsjED7ReqklWeq/2BU/UY5
+         i69Q==
+X-Gm-Message-State: AOAM531jApbLDW2psehYz2p0vXBDT+yhHf9cRVJYrs961nLRIQMBd2xn
+        0SHFdmzG2Yd8h6Qdy1NBAgxvdQ==
+X-Google-Smtp-Source: ABdhPJwPvKjchWKFqAIbyd/TdHITo1hj1fnDIECweruqTh33U9CzcEdR1JMeCauMakY0xW7tmhE7Hg==
+X-Received: by 2002:a17:90a:1b4a:: with SMTP id q68mr3871837pjq.1.1594361549533;
+        Thu, 09 Jul 2020 23:12:29 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id z26sm4709566pfr.187.2020.07.09.23.12.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2020 23:12:28 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1594235417-23066-3-git-send-email-sanm@codeaurora.org>
+References: <1594235417-23066-1-git-send-email-sanm@codeaurora.org> <1594235417-23066-3-git-send-email-sanm@codeaurora.org>
+Subject: Re: [PATCH v2 2/3] usb: dwc3: qcom: Configure wakeup interrupts and set genpd active wakeup flag
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Date:   Thu, 09 Jul 2020 23:12:27 -0700
+Message-ID: <159436154779.1987609.882978770178758503@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Quoting Sandeep Maheswaram (2020-07-08 12:10:16)
+> configure interrupts based on hs_phy_flag. Set genpd active wakeup flag
 
+Please capitalize the start of a sentence. What is 'hs_phy_flag'?
 
-Hi,
+> for usb gdsc if wakeup capable devices are connected.
 
-"Ramuthevar,Vadivel MuruganX"
-<vadivel.muruganx.ramuthevar@linux.intel.com> writes:
+This tells us what is happening in the code but doesn't tell us the
+important part, i.e. _why_ this patch is important. Why do we need to
+set the genpd active wakeup flag? Why configure interrupt based on
+hs_phy_flag, whatever that is.
 
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel=
-.com>
->
-> Add support for USB PHY on Intel LGM SoC.
->
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@li=
-nux.intel.com>
+>=20
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
 > ---
->  drivers/usb/phy/Kconfig       |  11 ++
->  drivers/usb/phy/Makefile      |   1 +
->  drivers/usb/phy/phy-lgm-usb.c | 275 ++++++++++++++++++++++++++++++++++++=
-++++++
+>  drivers/usb/dwc3/dwc3-qcom.c | 73 ++++++++++++++++++++++++++++++++++----=
+------
+>  1 file changed, 57 insertions(+), 16 deletions(-)
+>=20
+> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+> index 1dfd024..8902670 100644
+> --- a/drivers/usb/dwc3/dwc3-qcom.c
+> +++ b/drivers/usb/dwc3/dwc3-qcom.c
+> @@ -192,21 +194,34 @@ static int dwc3_qcom_register_extcon(struct dwc3_qc=
+om *qcom)
+> =20
+>  static void dwc3_qcom_disable_interrupts(struct dwc3_qcom *qcom)
+>  {
+> +       struct dwc3 *dwc =3D platform_get_drvdata(qcom->dwc3);
+> +
+>         if (qcom->hs_phy_irq) {
+>                 disable_irq_wake(qcom->hs_phy_irq);
+>                 disable_irq_nosync(qcom->hs_phy_irq);
+>         }
+> +       if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_LS) {
+> +               if (qcom->dp_hs_phy_irq) {
+> +                       disable_irq_wake(qcom->dp_hs_phy_irq);
+> +                       disable_irq_nosync(qcom->dp_hs_phy_irq);
+> +               }
+> +       } else if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_HS) {
+> +               if (qcom->dm_hs_phy_irq) {
+> +                       disable_irq_wake(qcom->dm_hs_phy_irq);
+> +                       disable_irq_nosync(qcom->dm_hs_phy_irq);
+> +               }
+> +       } else {
+> =20
+> -       if (qcom->dp_hs_phy_irq) {
+> -               disable_irq_wake(qcom->dp_hs_phy_irq);
+> -               disable_irq_nosync(qcom->dp_hs_phy_irq);
+> -       }
+> +               if (qcom->dp_hs_phy_irq) {
+> +                       disable_irq_wake(qcom->dp_hs_phy_irq);
+> +                       disable_irq_nosync(qcom->dp_hs_phy_irq);
+> +               }
+> =20
+> -       if (qcom->dm_hs_phy_irq) {
+> -               disable_irq_wake(qcom->dm_hs_phy_irq);
+> -               disable_irq_nosync(qcom->dm_hs_phy_irq);
+> +               if (qcom->dm_hs_phy_irq) {
+> +                       disable_irq_wake(qcom->dm_hs_phy_irq);
+> +                       disable_irq_nosync(qcom->dm_hs_phy_irq);
+> +               }
+>         }
+> -
 
-new phy drivers should use drivers/phy instead.
+I liked the newline. Please keep it.
 
-=2D-=20
-balbi
+>         if (qcom->ss_phy_irq) {
+>                 disable_irq_wake(qcom->ss_phy_irq);
+>                 disable_irq_nosync(qcom->ss_phy_irq);
+> @@ -215,21 +230,34 @@ static void dwc3_qcom_disable_interrupts(struct dwc=
+3_qcom *qcom)
+> =20
+>  static void dwc3_qcom_enable_interrupts(struct dwc3_qcom *qcom)
+>  {
+> +       struct dwc3 *dwc =3D platform_get_drvdata(qcom->dwc3);
+> +
+>         if (qcom->hs_phy_irq) {
+>                 enable_irq(qcom->hs_phy_irq);
+>                 enable_irq_wake(qcom->hs_phy_irq);
+>         }
+> +       if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_LS) {
+> +               if (qcom->dp_hs_phy_irq) {
+> +                       enable_irq(qcom->dp_hs_phy_irq);
+> +                       enable_irq_wake(qcom->dp_hs_phy_irq);
+> +               }
+> +       } else if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_HS) {
+> +               if (qcom->dm_hs_phy_irq) {
+> +                       enable_irq(qcom->dm_hs_phy_irq);
+> +                       enable_irq_wake(qcom->dm_hs_phy_irq);
+> +               }
+> +       } else {
+> =20
+> -       if (qcom->dp_hs_phy_irq) {
+> -               enable_irq(qcom->dp_hs_phy_irq);
+> -               enable_irq_wake(qcom->dp_hs_phy_irq);
+> -       }
+> +               if (qcom->dp_hs_phy_irq) {
+> +                       enable_irq(qcom->dp_hs_phy_irq);
+> +                       enable_irq_wake(qcom->dp_hs_phy_irq);
+> +               }
+> =20
+> -       if (qcom->dm_hs_phy_irq) {
+> -               enable_irq(qcom->dm_hs_phy_irq);
+> -               enable_irq_wake(qcom->dm_hs_phy_irq);
+> +               if (qcom->dm_hs_phy_irq) {
+> +                       enable_irq(qcom->dm_hs_phy_irq);
+> +                       enable_irq_wake(qcom->dm_hs_phy_irq);
+> +               }
+>         }
+> -
+>         if (qcom->ss_phy_irq) {
+>                 enable_irq(qcom->ss_phy_irq);
+>                 enable_irq_wake(qcom->ss_phy_irq);
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Can we use the wakeup irq support code in the kernel here? That would be
+preferred to having the driver enable and disable irq wake at various
+times when the irq is enabled and disabled (which is also odd by the
+way). Why can't we request the irqs and leave them enabled all the time?
+Also it seems like the binding should have 'wakeup-source' in it (see
+Documentation/devicetree/bindings/power/wakeup-source.txt for more
+info).
 
------BEGIN PGP SIGNATURE-----
+> @@ -240,6 +268,14 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
+>  {
+>         u32 val;
+>         int i;
+> +       struct dwc3 *dwc =3D platform_get_drvdata(qcom->dwc3);
+> +       struct usb_hcd  *hcd =3D platform_get_drvdata(dwc->xhci);
+> +       struct generic_pm_domain *genpd;
+> +
+> +       genpd =3D pd_to_genpd(qcom->dev->pm_domain);
+> +
+> +       if (genpd && usb_wakeup_enabled_descendants(hcd->self.root_hub))
 
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8IBckACgkQzL64meEa
-mQYZ6BAAu5MqDG/JYVcpiey75QpGHGvsHZBZTk7WOeelxqLVV3w2Nt2hv3678T0Q
-MZE47NTCyKryH6pNph9WdUxTdPLWqIAnUNXEZYbyGJypSesojI+MDvOH/lNFLzn0
-aJsg8mngVJoQeOe7vY694PvQYgpf2NlTiw8pqPRUkhaDRKTSyEZ03e0RQnsJx+I4
-Rf3cKvvfhRY5o1PFa1XIZt8hBJ/6HbYBfXObxwdr3tNV8hjSArKzh8AnT017VGHq
-THQPa1pxGRsyTthgUAT03sqiDIbeEmNdvjhST5OcfrH00kLztJflLO35c8TWiZGQ
-P3vcM/jFBKYMSt6vkRWiejslL/wxFi+hDaNM3jYSGRXeblqfhP9wuTCXlymVJ3Oq
-9sga4yDpXvDF4w89IVyOMyheXEM+L3TRcs+3EzLXnbOWzeJroyIPPvcDPzhg0X9J
-VQp+ZirKFKJDBj2420O+a17l76m0q5Gru1qEDfmBiktYRw527RQkH+zU6Viv3PR5
-H/cXhIEjQt2mofRiVfMyvOC37r2Fv0ucfHCAWRr1LHKsRLt6PyWztOqWZ6vuPlma
-Nl5qRGSo7OHDYmETGiolEYqE09zv5zzCJT3D3eVf5nMyn2VoDSyEWH705Xq3XOSj
-IyWcMERI9OthanyVYWeRG0lChTC1XAUHUltZ3TCvewjwAlK6b0A=
-=i/Uk
------END PGP SIGNATURE-----
---=-=-=--
+Feels like a comment would be good to explain why wakeup enabled
+descendants matters here.
+
+> +               genpd->flags |=3D GENPD_FLAG_ACTIVE_WAKEUP;
+> =20
+>         if (qcom->is_suspended)
+>                 return 0;
+> @@ -261,6 +297,11 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
+>  {
+>         int ret;
+>         int i;
+> +       struct generic_pm_domain *genpd;
+> +
+> +       genpd =3D pd_to_genpd(qcom->dev->pm_domain);
+
+This does container_of() so it can't return NULL.
+
+> +       if (genpd)
+
+So this check is wrong?
+
+> +               genpd->flags &=3D !GENPD_FLAG_ACTIVE_WAKEUP;
