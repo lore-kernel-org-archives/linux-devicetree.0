@@ -2,124 +2,94 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 016BDC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 19:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB60C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 19:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C674A20748
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 19:02:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QGSgLCyD"
+	by mail.kernel.org (Postfix) with ESMTP id 5BE632078B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 19:17:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728054AbgGJTCi (ORCPT
+        id S1727083AbgGJTRM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 15:02:38 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50014 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727910AbgGJTC3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 15:02:29 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06AJ2Qhh024832;
-        Fri, 10 Jul 2020 14:02:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594407746;
-        bh=sN1g4cqo1Aq2bCsd+grKG6xPau517lgjK4Sgbn4Xfds=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=QGSgLCyDHG6EeI6RSeYw5WPfkLrYertzg2+3ulwUn06bbt669Bp8YLJvo/vy/ayOI
-         TgP21RfNl09LRhSNNLlMY2VwFcKpDMXJ3fVRDtLzdurbiI2GMI/AOube4iDe0KqHe0
-         oPTatyVZb32bITf5Ac+Uiigx/dyh6npbumfUiDjU=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06AJ2QU5102709
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 10 Jul 2020 14:02:26 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 10
- Jul 2020 14:02:26 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 10 Jul 2020 14:02:26 -0500
-Received: from a0230074-Latitude-E7470.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06AJ2Gm5043446;
-        Fri, 10 Jul 2020 14:02:23 -0500
-From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <robh+dt@kernel.org>, <nm@ti.com>, <t-kristo@ti.com>,
-        <faiz_abbas@ti.com>
-Subject: [PATCH 2/2] arm64: dts: ti: k3-am654-base-board: Add support for SD card
-Date:   Sat, 11 Jul 2020 00:32:15 +0530
-Message-ID: <20200710190215.30938-3-faiz_abbas@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200710190215.30938-1-faiz_abbas@ti.com>
-References: <20200710190215.30938-1-faiz_abbas@ti.com>
+        Fri, 10 Jul 2020 15:17:12 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:52084 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbgGJTRM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 15:17:12 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 365C28051F;
+        Fri, 10 Jul 2020 21:17:09 +0200 (CEST)
+Date:   Fri, 10 Jul 2020 21:17:07 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        Rob Herring <robh@kernel.org>
+Cc:     Chris Zhong <zyw@rock-chips.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: Re: [PATCH v3 0/3] dt-bindings: display: convert panel bindings to
+ DT Schema
+Message-ID: <20200710191707.GA675682@ravnborg.org>
+References: <20200704102806.735713-1-sam@ravnborg.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200704102806.735713-1-sam@ravnborg.org>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8 a=7gkXJVJtAAAA:8 a=e5mUnYsNAAAA:8
+        a=KES7fKIIVwMXKWEOJbMA:9 a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22
+        a=E9Po1WZjFZOl8hwRPBS3:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-With silicon revision 2.0, add support for SD card on the am65x-evm.
-Boards with silicon revision 1.0 are susceptible to interface issues
-because of erratas i2025 and i2026[1] and are recommended to disable
-this node.
+On Sat, Jul 04, 2020 at 12:28:03PM +0200, Sam Ravnborg wrote:
+> This patch-set convert 3 of the remaining panel bindings to yaml.
+> 
+> This is a follow-up on v2 that converted a lot of panel bindings:
+> https://lore.kernel.org/dri-devel/20200408195109.32692-1-sam@ravnborg.org/
+> All was applied except for the reaming three patches included here.
+> 
+> One binding is a DSI binding so just added to panel-simple-dsi.
+> The other two bindings addressed review feedback from Rob.
+> 
+> Sebastian Reichel has a pending patch to address the remaining
+> panel binding in display/panel/
+> 
+> All bindings pass dt-binding-check.
+> Based on top of drm-misc-next.
+> 
+> 	Sam
+> 
+> 
+> Sam Ravnborg (3):
+>       dt-bindings: display: convert innolux,p079zca to DT Schema
+>       dt-bindings: display: convert samsung,s6e8aa0 to DT Schema
+>       dt-bindings: display: convert sharp,lq101r1sx01 to DT Schema
 
-[1] Am654x Silicon Revision 1.0 errata: https://www.ti.com/lit/pdf/sprz452
+All applied to drm-misc-next.
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
----
- .../arm64/boot/dts/ti/k3-am654-base-board.dts | 24 +++++++++++++++++++
- 1 file changed, 24 insertions(+)
+	Sam
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-index 9fc7898a6a3b..84aeb4761ac0 100644
---- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-@@ -167,6 +167,19 @@
- 		>;
- 	};
- 
-+	main_mmc1_pins_default: main_mmc1_pins_default {
-+		pinctrl-single,pins = <
-+			AM65X_IOPAD(0x02d4, PIN_INPUT_PULLDOWN, 0) /* (C27) MMC1_CLK */
-+			AM65X_IOPAD(0x02d8, PIN_INPUT_PULLUP, 0) /* (C28) MMC1_CMD */
-+			AM65X_IOPAD(0x02d0, PIN_INPUT_PULLUP, 0) /* (D28) MMC1_DAT0 */
-+			AM65X_IOPAD(0x02cc, PIN_INPUT_PULLUP, 0) /* (E27) MMC1_DAT1 */
-+			AM65X_IOPAD(0x02c8, PIN_INPUT_PULLUP, 0) /* (D26) MMC1_DAT2 */
-+			AM65X_IOPAD(0x02c4, PIN_INPUT_PULLUP, 0) /* (D27) MMC1_DAT3 */
-+			AM65X_IOPAD(0x02dc, PIN_INPUT_PULLUP, 0) /* (B24) MMC1_SDCD */
-+			AM65X_IOPAD(0x02e0, PIN_INPUT, 0) /* (C24) MMC1_SDWP */
-+		>;
-+	};
-+
- 	usb1_pins_default: usb1_pins_default {
- 		pinctrl-single,pins = <
- 			AM65X_IOPAD(0x02c0, PIN_OUTPUT, 0) /* (AC8) USB1_DRVVBUS */
-@@ -299,6 +312,17 @@
- 	ti,driver-strength-ohm = <50>;
- 	disable-wp;
- };
-+/*
-+ * Because of erratas i2025 and i2026 for silicon revision 1.0, the
-+ * SD card interface might fail. Boards with sr1.0 are recommended to
-+ * disable sdhci1
-+ */
-+&sdhci1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&main_mmc1_pins_default>;
-+	ti,driver-strength-ohm = <50>;
-+	disable-wp;
-+};
- 
- &dwc3_1 {
- 	status = "okay";
--- 
-2.17.1
-
+> 
+>  .../bindings/display/panel/innolux,p079zca.txt     |  22 -----
+>  .../bindings/display/panel/panel-simple-dsi.yaml   |   2 +
+>  .../bindings/display/panel/samsung,s6e8aa0.txt     |  56 ------------
+>  .../bindings/display/panel/samsung,s6e8aa0.yaml    | 100 +++++++++++++++++++++
+>  .../bindings/display/panel/sharp,lq101r1sx01.txt   |  49 ----------
+>  .../bindings/display/panel/sharp,lq101r1sx01.yaml  |  87 ++++++++++++++++++
+>  6 files changed, 189 insertions(+), 127 deletions(-)
+> 
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
