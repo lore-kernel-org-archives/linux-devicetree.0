@@ -2,190 +2,185 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 328C4C43445
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 19:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82DA5C433E6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 19:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 036582078D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 19:38:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594409937;
-	bh=LoSJMfK92YumYrvaNsXj0AvUWvu64EYY6m7/BSaeTZE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TgF37ToaZWdrsA0vtm8Qo5vUnsmVr9dNdK7PpsYjIbTKiLfp35OfGf9+7UxpnA57V
-	 PyjOp4KYw2EVpSQTq8UI/c/ft7zNA24kb2l370E+Mn1d1wC/cxICxhSdh4jP1hSqHx
-	 GxKggMWcjTkrOacTe5LeVfMVqPMb/+QsoRa6q6sM=
+	by mail.kernel.org (Postfix) with ESMTP id 57F84207FC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 19:41:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y7xXCS1n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgGJTi4 (ORCPT
+        id S1728362AbgGJTlB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 15:38:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33216 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726908AbgGJTi4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 10 Jul 2020 15:38:56 -0400
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20CC0207D0;
-        Fri, 10 Jul 2020 19:38:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594409935;
-        bh=LoSJMfK92YumYrvaNsXj0AvUWvu64EYY6m7/BSaeTZE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Hfo2UZfOYx7MpoASvQLR99H+ibRB7SEkkhnbNkgJliAjznTi2b/kwTwCzWjoCb9Qs
-         eAqPBuekTIt3JjJ0YbXm3xoJwfW89Io9IOJp7y6LmOWBc17HisInGsENy91VP2A3zK
-         6An4u/q+LOm/Fdhiq0n2Ylago4ABnI1N0QmtEbX8=
-Received: by mail-oi1-f177.google.com with SMTP id k22so5755189oib.0;
-        Fri, 10 Jul 2020 12:38:55 -0700 (PDT)
-X-Gm-Message-State: AOAM530VawN/oLmTYunAQMtve420c8Ow0G5OArjyXaZ4TETSm+kpr6iL
-        +aMFLI2gX48Y3zujxddLuIgVll+/Mr1rV9s9ag==
-X-Google-Smtp-Source: ABdhPJzAB5d07pCJasiAsdsh07SEaezq9dexRFAqKHbwbvGpDpVDW2NzrP+hP7WWnZwkzjXsmVZfthZDAm74TW+L56A=
-X-Received: by 2002:aca:bb82:: with SMTP id l124mr5555099oif.106.1594409934332;
- Fri, 10 Jul 2020 12:38:54 -0700 (PDT)
+        Fri, 10 Jul 2020 15:41:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35572 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726908AbgGJTlB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 15:41:01 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B34A8C08C5DC;
+        Fri, 10 Jul 2020 12:41:00 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id dr13so7304203ejc.3;
+        Fri, 10 Jul 2020 12:41:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6Mfk46Wt0EkqUcbzqXWWdXTqCsqh4r5j+eF9fbxeot0=;
+        b=Y7xXCS1nOyST5iaTPkncvqxbKVgFj+Nfn88bRSj5S4OQHG4kl1muiQw/AvZYLNudnY
+         9mPoOtL6Pt896dSy83Z2dzSkM7nl4FiBi/v8tuWypIw2LqrCLpodTF9fmoLXMu+Ej30S
+         k2DwUlGDQfXjBxJL+d+Lgumj2g42UGKwXpN8Knytkji13XJi+RusTz1bmPzggaxcbAiT
+         1dZLUkbOKTp1siTDY+nEzLfpzQWWkVJKY9wNRhV5+9AKOciOZjEA8hxs2RJ0Ai4bvFLf
+         q9+wsgdRL0qTHOnRDRpPH0qiHuUR/P7l9kgLy9FTHiAG9994JxxqpCBS7khSp1dMSBS+
+         vvlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6Mfk46Wt0EkqUcbzqXWWdXTqCsqh4r5j+eF9fbxeot0=;
+        b=omAt/QaVFwhWcO6CWJG7FL025mthqIwByW+ZJYSxg0kl9p7edFEzyd0EsO9tZncfS5
+         8/ssDFZa7ei7eClnoO4YFQ5n+eLCaQfLofM4Burn0SUpbnM7RCqHaVRmwNs3vxM2dIck
+         3egNuajw8edwQo7KYEhjA3On22fvnm2063T+In1+YMQCfcqMox5xkyamKHqymThVoTdJ
+         iTuSC5SMlFHKhyUbQEu5fFY1yX1OgkfwukZCzck68bbEJDzeX922eQ1DSoW4LIbZFhFs
+         zrv5KEvsutVQqxO6odc7ICXmuNNUgRrrV0iTXZVqASKQRXBPHa1pv4y6jLxvXPuVbmvQ
+         4iWw==
+X-Gm-Message-State: AOAM531FLnbqmVFq6mUUovNgLnbbYVxYzoAdcgJrdNtdp1DhUu/hU39w
+        6/pfZViFtPtXOrABXnQSVp8Vx0SEBh1Ham3lq9k=
+X-Google-Smtp-Source: ABdhPJwwtakCaQKxyz/Xgq/TraHmqTx5+wz3uRxu6aBHqI7ZcwPjE6kUBX1Sx322eMeOiNMBX1MH0LMW8jw21ilN+fs=
+X-Received: by 2002:a17:906:328d:: with SMTP id 13mr63567977ejw.71.1594410059289;
+ Fri, 10 Jul 2020 12:40:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200710090618.28945-1-kurt@linutronix.de> <20200710090618.28945-2-kurt@linutronix.de>
- <20200710164500.GA2775934@bogus> <8c105489-42c5-b4ba-73b6-c3a858f646a6@gmail.com>
-In-Reply-To: <8c105489-42c5-b4ba-73b6-c3a858f646a6@gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 10 Jul 2020 13:38:42 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+zP9++MftM+Dh2Fe-OdKq6EiGA_tASEbBwA_jEdwoFCA@mail.gmail.com>
-Message-ID: <CAL_Jsq+zP9++MftM+Dh2Fe-OdKq6EiGA_tASEbBwA_jEdwoFCA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] dt-bindings: net: dsa: Add DSA yaml binding
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Kurt Kanzenbach <kurt@linutronix.de>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org
+References: <1594324828-9571-1-git-send-email-akhilpo@codeaurora.org> <1594324828-9571-5-git-send-email-akhilpo@codeaurora.org>
+In-Reply-To: <1594324828-9571-5-git-send-email-akhilpo@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Fri, 10 Jul 2020 12:41:31 -0700
+Message-ID: <CAF6AEGv4Nc6ZAxGoCC1s5KT=rxLR6uZDHfDnWZRnnLhqnegOpA@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH v4 4/7] drm: msm: a6xx: use dev_pm_opp_set_bw
+ to scale DDR
+To:     Akhil P Oommen <akhilpo@codeaurora.org>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Jonathan <jonathan@marek.ca>,
+        saravanak@google.com,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        dri-devel@freedesktop.org, Viresh Kumar <viresh.kumar@linaro.org>,
+        Sibi Sankar <sibis@codeaurora.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 11:20 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
+On Thu, Jul 9, 2020 at 1:01 PM Akhil P Oommen <akhilpo@codeaurora.org> wrote:
 >
+> From: Sharat Masetty <smasetty@codeaurora.org>
 >
+> This patches replaces the previously used static DDR vote and uses
+> dev_pm_opp_set_bw() to scale GPU->DDR bandwidth along with scaling
+> GPU frequency. Also since the icc path voting is handled completely
+> in the opp driver, remove the icc_path handle and its usage in the
+> drm driver.
 >
-> On 7/10/2020 9:45 AM, Rob Herring wrote:
-> > On Fri, Jul 10, 2020 at 11:06:18AM +0200, Kurt Kanzenbach wrote:
-> >> For future DSA drivers it makes sense to add a generic DSA yaml binding which
-> >> can be used then. This was created using the properties from dsa.txt. It
-> >> includes the ports and the dsa,member property.
-> >>
-> >> Suggested-by: Florian Fainelli <f.fainelli@gmail.com>
-> >> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
-> >> ---
-> >>  .../devicetree/bindings/net/dsa/dsa.yaml      | 80 +++++++++++++++++++
-> >>  1 file changed, 80 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/net/dsa/dsa.yaml
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/net/dsa/dsa.yaml b/Documentation/devicetree/bindings/net/dsa/dsa.yaml
-> >> new file mode 100644
-> >> index 000000000000..bec257231bf8
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/net/dsa/dsa.yaml
-> >> @@ -0,0 +1,80 @@
-> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/net/dsa/dsa.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: Distributed Switch Architecture Device Tree Bindings
-> >
-> > DSA is a Linuxism, right?
+> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+> Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
+> ---
+>  drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 25 +++++++++++++++++--------
+>  1 file changed, 17 insertions(+), 8 deletions(-)
 >
-> Not really, it is a Marvell term that describes their proprietary
-> switching protocol. Since then DSA within Linux expands well beyond just
-> Marvell switches, so the terms have been blurred a little bit.
-
-Either way, sounds like the terminology here should be more general.
-
-Though I missed that this is really just a conversion of dsa.txt which
-should be removed in this patch. Otherwise, you'll get me re-reviewing
-the binding.
-
-> >> +
-> >> +maintainers:
-> >> +  - Andrew Lunn <andrew@lunn.ch>
-> >> +  - Florian Fainelli <f.fainelli@gmail.com>
-> >> +  - Vivien Didelot <vivien.didelot@gmail.com>
-> >> +
-> >> +description:
-> >> +  Switches are true Linux devices and can be probed by any means. Once probed,
-> >
-> > Bindings are OS independent.
-> >
-> >> +  they register to the DSA framework, passing a node pointer. This node is
-> >> +  expected to fulfil the following binding, and may contain additional
-> >> +  properties as required by the device it is embedded within.
-> >
-> > Describe what type of h/w should use this binding.
-> >
-> >> +
-> >> +properties:
-> >> +  $nodename:
-> >> +    pattern: "^switch(@.*)?$"
-> >> +
-> >> +  dsa,member:
-> >> +    minItems: 2
-> >> +    maxItems: 2
-> >> +    description:
-> >> +      A two element list indicates which DSA cluster, and position within the
-> >> +      cluster a switch takes. <0 0> is cluster 0, switch 0. <0 1> is cluster 0,
-> >> +      switch 1. <1 0> is cluster 1, switch 0. A switch not part of any cluster
-> >> +      (single device hanging off a CPU port) must not specify this property
-> >> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> >> +
-> >> +  ports:
-> >> +    type: object
-> >> +    properties:
-> >> +      '#address-cells':
-> >> +        const: 1
-> >> +      '#size-cells':
-> >> +        const: 0
-> >> +
-> >> +    patternProperties:
-> >> +      "^port@[0-9]+$":
-> >
-> > As ports and port are OF graph nodes, it would be better if we
-> > standardized on a different name for these. I think we've used
-> > 'ethernet-port' some.
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> index b547339..6fbfd7d 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> @@ -123,7 +123,7 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
 >
-> Yes we did talk about that before, however when the original DSA binding
-> was introduced about 7 years ago (or maybe more recently, my memory
-> fails me now), "ports" was chosen as the encapsulating node. We should
-> be accepting both ethernet-ports and ports.
+>         if (!gmu->legacy) {
+>                 a6xx_hfi_set_freq(gmu, gmu->current_perf_index);
+> -               icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
+> +               dev_pm_opp_set_bw(&gpu->pdev->dev, opp);
 
-Yes, I'm aware of the history. Back then it was a free-for-all on node
-names. Now we're trying to be more disciplined. Ideally, we pick
-something unique to standardize on and fix the dts files to match as
-long as the node name is generally a don't care for the OS.
+What is the status of the patch to add dev_pm_opp_set_bw()?  If it is
+ready to go, and I get an ack-by from the OPP maintainer, I suppose I
+could merge it via drm/msm.
 
-The schema says only port/ports is allowed, so at a minimum
-ethernet-port/ethernet-ports needs to be added here.
+Otherwise should we consider pulling in a private copy of it into
+drm/msm (and then drop it to use the helper in, hopefully, the next
+cycle)?
 
+I'm pulling the patches preceding this one into msm-next-staging to do
+some testing.  And the dt patches following this one would normally
+get merged via Bjorn.  At the moment, I'm not sure what to do with
+this one.
+
+BR,
+-R
+
+>                 return;
+>         }
 >
-> >
-> >> +          type: object
-> >> +          description: DSA switch ports
-> >> +
-> >> +          allOf:
-> >> +            - $ref: ../ethernet-controller.yaml#
-> >
-> > How does this and 'ethernet' both apply?
+> @@ -149,11 +149,7 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
+>         if (ret)
+>                 dev_err(gmu->dev, "GMU set GPU frequency error: %d\n", ret);
 >
-> I think the intent here was to mean that some of the properties from the
-> Ethernet controller such as phy-mode, phy-handle, fixed-link also apply
-> here since the switch port is a simplified Ethernet MAC on a number of
-> counts.
-
-Okay, it's good to explicitly define which of those apply as I imagine
-some don't. Just need "<prop>: true" to do that.
-
-Rob
+> -       /*
+> -        * Eventually we will want to scale the path vote with the frequency but
+> -        * for now leave it at max so that the performance is nominal.
+> -        */
+> -       icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
+> +       dev_pm_opp_set_bw(&gpu->pdev->dev, opp);
+>  }
+>
+>  unsigned long a6xx_gmu_get_freq(struct msm_gpu *gpu)
+> @@ -840,6 +836,19 @@ static void a6xx_gmu_set_initial_freq(struct msm_gpu *gpu, struct a6xx_gmu *gmu)
+>         dev_pm_opp_put(gpu_opp);
+>  }
+>
+> +static void a6xx_gmu_set_initial_bw(struct msm_gpu *gpu, struct a6xx_gmu *gmu)
+> +{
+> +       struct dev_pm_opp *gpu_opp;
+> +       unsigned long gpu_freq = gmu->gpu_freqs[gmu->current_perf_index];
+> +
+> +       gpu_opp = dev_pm_opp_find_freq_exact(&gpu->pdev->dev, gpu_freq, true);
+> +       if (IS_ERR_OR_NULL(gpu_opp))
+> +               return;
+> +
+> +       dev_pm_opp_set_bw(&gpu->pdev->dev, gpu_opp);
+> +       dev_pm_opp_put(gpu_opp);
+> +}
+> +
+>  int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
+>  {
+>         struct adreno_gpu *adreno_gpu = &a6xx_gpu->base;
+> @@ -864,7 +873,7 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
+>         }
+>
+>         /* Set the bus quota to a reasonable value for boot */
+> -       icc_set_bw(gpu->icc_path, 0, MBps_to_icc(3072));
+> +       a6xx_gmu_set_initial_bw(gpu, gmu);
+>
+>         /* Enable the GMU interrupt */
+>         gmu_write(gmu, REG_A6XX_GMU_AO_HOST_INTERRUPT_CLR, ~0);
+> @@ -1040,7 +1049,7 @@ int a6xx_gmu_stop(struct a6xx_gpu *a6xx_gpu)
+>                 a6xx_gmu_shutdown(gmu);
+>
+>         /* Remove the bus vote */
+> -       icc_set_bw(gpu->icc_path, 0, 0);
+> +       dev_pm_opp_set_bw(&gpu->pdev->dev, NULL);
+>
+>         /*
+>          * Make sure the GX domain is off before turning off the GMU (CX)
+> --
+> 2.7.4
+>
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
