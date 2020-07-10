@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFDC8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 01:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95CAEC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 01:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDF7D20748
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 01:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 766C42073A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 01:57:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JN+naCyE"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="gZ0YMWgm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgGJB5r (ORCPT
+        id S1727866AbgGJB5z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 21:57:47 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:33725 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727807AbgGJB5n (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 21:57:43 -0400
+        Thu, 9 Jul 2020 21:57:55 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:37361 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727031AbgGJB51 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Jul 2020 21:57:27 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594346263; h=Content-Transfer-Encoding: MIME-Version:
+ s=smtp; t=1594346246; h=Content-Transfer-Encoding: MIME-Version:
  References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=SxG9DUI8j6W7xcfFy8jWpjO+nuVORHIu2LMKU2ZnaKw=; b=JN+naCyECH0UK61368USZnmP6KWrKvYCDKTYDC8LkSjFR4yKUWIvEoxFRKRweNWlP1ClRUKV
- jxPSHyhlwoa7x6VMjyLBFU7atiwfdiuJvLDCVoMYfyJ1Ne8/UWBfJr79cu04C56yLLKxRb+M
- puXJQKLMrO8V3SU90p+OKytfSOc=
-X-Mailgun-Sending-Ip: 104.130.122.29
+ Sender; bh=u8uz0uMN/xy7PGwmfxG8bfDIz484M6eYVSKAENLu8us=; b=gZ0YMWgmUC268hUiCuRjreJpiWvr85dIUVQK9xP3sXqIibX5rQG04/BedAyuZ2BhZWq6U6PL
+ d0H5zGeqOcvYqhTZp8dRm/BFjwZ6Ou94YuXGseRh7lCv5R9AkL7HQANL0MKM6UOVg2JfQRLJ
+ MpeEkmvB7PBw2WayvgiMdGxNbD8=
+X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n16.prod.us-east-1.postgun.com with SMTP id
- 5f07caf39f03943e5ca7ec83 (version=TLS1.2,
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5f07caf3bca1ed3155803d06 (version=TLS1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 01:57:07
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3E7F6C4339C; Fri, 10 Jul 2020 01:57:06 +0000 (UTC)
+        id 6D4D0C43395; Fri, 10 Jul 2020 01:57:06 +0000 (UTC)
 Received: from mdtipton-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: mdtipton)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 36455C433CA;
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B5B6DC43391;
         Fri, 10 Jul 2020 01:57:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 36455C433CA
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B5B6DC43391
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mdtipton@codeaurora.org
 From:   Mike Tipton <mdtipton@codeaurora.org>
@@ -53,9 +53,9 @@ Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
         linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Mike Tipton <mdtipton@codeaurora.org>
-Subject: [PATCH v2 1/6] dt-bindings: interconnect: Add generic qcom bindings
-Date:   Thu,  9 Jul 2020 18:56:47 -0700
-Message-Id: <20200710015652.19206-2-mdtipton@codeaurora.org>
+Subject: [PATCH v2 2/6] dt-bindings: interconnect: Add property to set BCM TCS wait behavior
+Date:   Thu,  9 Jul 2020 18:56:48 -0700
+Message-Id: <20200710015652.19206-3-mdtipton@codeaurora.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200710015652.19206-1-mdtipton@codeaurora.org>
 References: <20200710015652.19206-1-mdtipton@codeaurora.org>
@@ -66,85 +66,46 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add generic qcom interconnect bindings that are common across platforms. In
-particular, these include QCOM_ICC_TAG_* macros that clients can use when
-calling icc_set_tag().
+Add "qcom,tcs-wait" property to set which TCS should wait for completion
+when triggering.
 
 Signed-off-by: Mike Tipton <mdtipton@codeaurora.org>
 ---
- drivers/interconnect/qcom/icc-rpmh.h        | 18 ++------------
- include/dt-bindings/interconnect/qcom,icc.h | 26 +++++++++++++++++++++
- 2 files changed, 28 insertions(+), 16 deletions(-)
- create mode 100644 include/dt-bindings/interconnect/qcom,icc.h
+ .../bindings/interconnect/qcom,bcm-voter.yaml       | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/interconnect/qcom/icc-rpmh.h b/drivers/interconnect/qcom/icc-rpmh.h
-index 903d25e61984..cb736b745e1a 100644
---- a/drivers/interconnect/qcom/icc-rpmh.h
-+++ b/drivers/interconnect/qcom/icc-rpmh.h
-@@ -6,6 +6,8 @@
- #ifndef __DRIVERS_INTERCONNECT_QCOM_ICC_RPMH_H__
- #define __DRIVERS_INTERCONNECT_QCOM_ICC_RPMH_H__
+diff --git a/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
+index 5971fc1df08d..f0c3d6b01831 100644
+--- a/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
++++ b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
+@@ -21,6 +21,16 @@ properties:
+     enum:
+       - qcom,bcm-voter
  
-+#include <dt-bindings/interconnect/qcom,icc.h>
++  qcom,tcs-wait:
++    description: |
++      Optional mask of which TCSs (Triggered Command Sets) wait for completion
++      upon triggering. In most cases, it's necessary to wait in both the AMC
++      and WAKE sets to ensure resources are available before use. If a specific
++      RSC and its use cases can ensure sufficient delay by other means, then
++      this can be overridden to reduce latencies.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    default: QCOM_ICC_TAG_ACTIVE_ONLY
 +
- #define to_qcom_provider(_provider) \
- 	container_of(_provider, struct qcom_icc_provider, provider)
+ required:
+   - compatible
  
-@@ -44,22 +46,6 @@ struct bcm_db {
- #define MAX_BCM_PER_NODE	3
- #define MAX_VCD			10
+@@ -39,7 +49,10 @@ examples:
+   # as defined in Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+   - |
  
--/*
-- * The AMC bucket denotes constraints that are applied to hardware when
-- * icc_set_bw() completes, whereas the WAKE and SLEEP constraints are applied
-- * when the execution environment transitions between active and low power mode.
-- */
--#define QCOM_ICC_BUCKET_AMC		0
--#define QCOM_ICC_BUCKET_WAKE		1
--#define QCOM_ICC_BUCKET_SLEEP		2
--#define QCOM_ICC_NUM_BUCKETS		3
--#define QCOM_ICC_TAG_AMC		BIT(QCOM_ICC_BUCKET_AMC)
--#define QCOM_ICC_TAG_WAKE		BIT(QCOM_ICC_BUCKET_WAKE)
--#define QCOM_ICC_TAG_SLEEP		BIT(QCOM_ICC_BUCKET_SLEEP)
--#define QCOM_ICC_TAG_ACTIVE_ONLY	(QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE)
--#define QCOM_ICC_TAG_ALWAYS		(QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE |\
--					 QCOM_ICC_TAG_SLEEP)
--
- /**
-  * struct qcom_icc_node - Qualcomm specific interconnect nodes
-  * @name: the node name used in debugfs
-diff --git a/include/dt-bindings/interconnect/qcom,icc.h b/include/dt-bindings/interconnect/qcom,icc.h
-new file mode 100644
-index 000000000000..cd34f36daaaa
---- /dev/null
-+++ b/include/dt-bindings/interconnect/qcom,icc.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+ */
++    #include <dt-bindings/interconnect/qcom,icc.h>
 +
-+#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_ICC_H
-+#define __DT_BINDINGS_INTERCONNECT_QCOM_ICC_H
-+
-+/*
-+ * The AMC bucket denotes constraints that are applied to hardware when
-+ * icc_set_bw() completes, whereas the WAKE and SLEEP constraints are applied
-+ * when the execution environment transitions between active and low power mode.
-+ */
-+#define QCOM_ICC_BUCKET_AMC		0
-+#define QCOM_ICC_BUCKET_WAKE		1
-+#define QCOM_ICC_BUCKET_SLEEP		2
-+#define QCOM_ICC_NUM_BUCKETS		3
-+
-+#define QCOM_ICC_TAG_AMC		(1 << QCOM_ICC_BUCKET_AMC)
-+#define QCOM_ICC_TAG_WAKE		(1 << QCOM_ICC_BUCKET_WAKE)
-+#define QCOM_ICC_TAG_SLEEP		(1 << QCOM_ICC_BUCKET_SLEEP)
-+#define QCOM_ICC_TAG_ACTIVE_ONLY	(QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE)
-+#define QCOM_ICC_TAG_ALWAYS		(QCOM_ICC_TAG_AMC | QCOM_ICC_TAG_WAKE |\
-+					 QCOM_ICC_TAG_SLEEP)
-+
-+#endif
+     disp_bcm_voter: bcm_voter {
+         compatible = "qcom,bcm-voter";
++        qcom,tcs-wait = <QCOM_ICC_TAG_AMC>;
+     };
+ ...
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
