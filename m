@@ -2,232 +2,193 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 386B9C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 14:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EB7C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 14:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 110B520674
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 14:21:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594390883;
-	bh=vnGCAMdU16YbGd612Tww4xROob47vhq+nuKzE0R1u7U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=trZbCHZxsq+twd2eP5TeTuosYKWD7oHfI1HgLT0XIYW9hgwE1QHqyegpqss2hxgHD
-	 FHoWlXJtj8gwpub/Sj3GYfdpNtxhR5gyZ13z5syo2HWbJhjqbtyvygq8Tvh2uNFH7+
-	 /y0UosvKzG9OKRWhH9MV3jLlQ3/szJFXYD4O8EaE=
+	by mail.kernel.org (Postfix) with ESMTP id 91CA62083B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 14:23:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cBtgUf/6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbgGJOVW (ORCPT
+        id S1727107AbgGJOXS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 10:21:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59648 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727107AbgGJOVW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 10 Jul 2020 10:21:22 -0400
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 487DB206E2;
-        Fri, 10 Jul 2020 14:21:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594390881;
-        bh=vnGCAMdU16YbGd612Tww4xROob47vhq+nuKzE0R1u7U=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UL1+SyxRjmBzD1Du9SkUt3YtH0lBuwH0PEX9ZDvSM5OoR0zGw89VSy2bQLYGbBR1X
-         wJP1GkU/519jLzUmsp2y99R4E9uTbM9dtnaXzLFM8zTj23nE8ggopTyyqtbeEgtOpb
-         KbvFWnAXw9gyJvVfGu2kM6CwFpPdGvNdjAh3eTp4=
-Received: by mail-ej1-f45.google.com with SMTP id f12so6241303eja.9;
-        Fri, 10 Jul 2020 07:21:21 -0700 (PDT)
-X-Gm-Message-State: AOAM533IZmtk410yFR2dvq5sEczy9PwU1VeH0pGT65p9TvYq/I0B05ZT
-        bGEyFERf0OD9tUgm6YS3QIO+YFOLKvMRHdNmlQ==
-X-Google-Smtp-Source: ABdhPJyaOgx0v3QQp9UUwrSQOCQPxGwcRXu/+A6Vt4C8xtVhE2RGpU6+mdFimeAQ0LhXaQwMIK3DZflaHHnDmySR8Gs=
-X-Received: by 2002:a17:906:9354:: with SMTP id p20mr13236833ejw.187.1594390879813;
- Fri, 10 Jul 2020 07:21:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <1594285927-1840-1-git-send-email-neal.liu@mediatek.com>
- <1594285927-1840-3-git-send-email-neal.liu@mediatek.com> <CAAOTY_-7PwoPG_0ce2p4BCNQ3rundg40Bsni14XSmVETExkKkw@mail.gmail.com>
- <1594351423.4670.18.camel@mtkswgap22>
-In-Reply-To: <1594351423.4670.18.camel@mtkswgap22>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Fri, 10 Jul 2020 22:21:08 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_9MPYi=FAisE50UzT=eceSykN+Z8HnfFLLg_uRDhPAkpg@mail.gmail.com>
-Message-ID: <CAAOTY_9MPYi=FAisE50UzT=eceSykN+Z8HnfFLLg_uRDhPAkpg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] soc: mediatek: add mtk-devapc driver
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
+        Fri, 10 Jul 2020 10:23:18 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:54962 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726925AbgGJOXR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 10:23:17 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200710142315euoutp01f63506525106a13c80f0d85ca2a7d3e8~gainMz43b3218432184euoutp01H
+        for <devicetree@vger.kernel.org>; Fri, 10 Jul 2020 14:23:15 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200710142315euoutp01f63506525106a13c80f0d85ca2a7d3e8~gainMz43b3218432184euoutp01H
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594390995;
+        bh=Ga4/uLKUWlfUPZ9BHNuUYUFmwSH9Mag8gjlNshjn2pQ=;
+        h=From:Subject:To:Cc:Date:In-Reply-To:References:From;
+        b=cBtgUf/6KdGqUoIif0XJqvv6Ieq7PMU2+L6mvye0ygC8N5qvUrqzRmXK/qMGOTlSI
+         oBduxuoFXoeEyhHdIjW18ft13UdGLBAQ0QabArKAERBNAr6QlfQfacgd5x5gi2IceZ
+         wQ7vbcUDRJqJOcEJ3pdQ4qnItxsh4cF+2WUYQ5RA=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200710142315eucas1p2f988e584e607cacf21eaa9b238d458c2~gainBqRiw2910529105eucas1p2t;
+        Fri, 10 Jul 2020 14:23:15 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id D7.0D.06456.3D9780F5; Fri, 10
+        Jul 2020 15:23:15 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200710142315eucas1p2025d734fcb9e2403c5e28da4aae9c75f~gaimw3dTI1525515255eucas1p29;
+        Fri, 10 Jul 2020 14:23:15 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200710142315eusmtrp282f5e5e07714335d6393fbf10c7e3b17~gaimwOlyZ1201912019eusmtrp2f;
+        Fri, 10 Jul 2020 14:23:15 +0000 (GMT)
+X-AuditID: cbfec7f2-809ff70000001938-1a-5f0879d34003
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 85.61.06017.3D9780F5; Fri, 10
+        Jul 2020 15:23:15 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200710142314eusmtip27cf37c6510707c8c390465ba403b3ab3~gaimXGN341450814508eusmtip2N;
+        Fri, 10 Jul 2020 14:23:14 +0000 (GMT)
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH v3] video: fbdev: ssd1307fb: Added support to Column
+ offset
+To:     Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com,
         devicetree@vger.kernel.org,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Rodrigo Rolim Mendes de Alencar <alencar.fmce@imbel.gov.br>
+Message-ID: <64d46ff6-a16f-1cf6-4bb9-84524ce43207@samsung.com>
+Date:   Fri, 10 Jul 2020 16:23:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <1589395691-8762-1-git-send-email-alencar.fmce@imbel.gov.br>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOKsWRmVeSWpSXmKPExsWy7djP87qXKzniDU4cVbP4ePcrs8XDOZeY
+        LF5OOMxoMf/IOVaLK1/fs1mc6PvAanF51xw2B3aPnbPusnu8OvSLxeN+93Emj8+b5AJYorhs
+        UlJzMstSi/TtErgyfh+YxljwWqziwIVu1gbGnUJdjBwcEgImEvO7VbsYuTiEBFYwSmy+sY0V
+        wvnCKPHowBk2COczo8TEfw3MXYycYB1z2npZIBLLGSV2fD4D5bxllHhx8wUrSBWbgJXExPZV
+        jCC2sECgRE9DDxuILSJgLNF+ayojSAOzwA1GiSvzWllAErwCdhKLbp5lArFZBFQlZj0/D2aL
+        CkRIfHpwmBWiRlDi5MwnYPWcAp4S/7+tBRvKLCAucevJfCYIW15i+9s5zCALJAQ2sUvsmvaM
+        FeJuF4lDl9vYIWxhiVfHt0DZMhL/d4I0gzSsY5T42/ECqns7o8Tyyf/YIKqsJe6c+8UGCjNm
+        AU2J9bv0IcKOEufvnGGCBCWfxI23ghBH8ElM2jadGSLMK9HRJgRRrSaxYdkGNpi1XTtXMk9g
+        VJqF5LVZSN6ZheSdWQh7FzCyrGIUTy0tzk1PLTbMSy3XK07MLS7NS9dLzs/dxAhMPqf/Hf+0
+        g/HrpaRDjAIcjEo8vAsSOeKFWBPLiitzDzFKcDArifA6nT0dJ8SbklhZlVqUH19UmpNafIhR
+        moNFSZzXeNHLWCGB9MSS1OzU1ILUIpgsEwenVAPjvODlpgpl8+ber/3Y/2WGyrRS8Q2RH5vM
+        /I3XzlgSrqp5vyQj6MOO8qt33WqEolUkuBmfKK/xcNT5k12VES3HsGBz4LLafNaMwrWnVUJ8
+        z63t/lP+wt1+6fNjGvN0m6N3uAU//qRxyHInY6l+kWRSGPe8CQcmf+96WNV5u1ps/9YC5ge/
+        tjgpsRRnJBpqMRcVJwIAaDZnLzoDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBIsWRmVeSWpSXmKPExsVy+t/xe7qXKzniDXa/E7D4ePcrs8XDOZeY
+        LF5OOMxoMf/IOVaLK1/fs1mc6PvAanF51xw2B3aPnbPusnu8OvSLxeN+93Emj8+b5AJYovRs
+        ivJLS1IVMvKLS2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstSi/TtEvQyfh+Yxljw
+        WqziwIVu1gbGnUJdjJwcEgImEnPaelm6GLk4hASWMkr8O3mHsYuRAyghI3F8fRlEjbDEn2td
+        bBA1rxkluiZNZgZJsAlYSUxsX8UIYgsLBEr0NPSwgdgiAsYS7bemMoI0MAvcYJR4Me8+WIOQ
+        wBxGia1tgSA2r4CdxKKbZ5lAbBYBVYlZz8+D2aICERKHd8xihKgRlDg58wkLiM0p4Cnx/9ta
+        sAXMAuoSf+ZdYoawxSVuPZnPBGHLS2x/O4d5AqPQLCTts5C0zELSMgtJywJGllWMIqmlxbnp
+        ucVGesWJucWleel6yfm5mxiBsbbt2M8tOxi73gUfYhTgYFTi4V2QyBEvxJpYVlyZe4hRgoNZ
+        SYTX6ezpOCHelMTKqtSi/Pii0pzU4kOMpkDPTWSWEk3OB6aBvJJ4Q1NDcwtLQ3Njc2MzCyVx
+        3g6BgzFCAumJJanZqakFqUUwfUwcnFINjKK9OodMBF+tU1JLKNa51ZYXeUzu9Ma5D/be22uf
+        m+Sie7ko73a+kcXMgAUn2Vcqqbm5nZ1yTFt6m8B0X7F757e66Saprj1X27RrXaRyj8n98+nd
+        ZteTq466r8mVsPqr9CDUaU7UsYqNcx8rmG86Z7VnftSk+SemLmX8dShpt1VwlULJ65zF75RY
+        ijMSDbWYi4oTAanbaWjLAgAA
+X-CMS-MailID: 20200710142315eucas1p2025d734fcb9e2403c5e28da4aae9c75f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200513184838eucas1p1df4f9229dca2094694e4b16d82a95418
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200513184838eucas1p1df4f9229dca2094694e4b16d82a95418
+References: <CGME20200513184838eucas1p1df4f9229dca2094694e4b16d82a95418@eucas1p1.samsung.com>
+        <1589395691-8762-1-git-send-email-alencar.fmce@imbel.gov.br>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Neal:
 
-Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8810=E6=97=
-=A5 =E9=80=B1=E4=BA=94 =E4=B8=8A=E5=8D=8811:23=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Hi Chun-Kuang,
->
-> Thanks for your review.
->
-> On Thu, 2020-07-09 at 21:01 +0800, Chun-Kuang Hu wrote:
-> > Hi, Neal:
-> >
-> > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=889=E6=
-=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=885:13=E5=AF=AB=E9=81=93=EF=BC=9A
-> > >
-> > > MediaTek bus fabric provides TrustZone security support and data
-> > > protection to prevent slaves from being accessed by unexpected
-> > > masters.
-> > > The security violation is logged and sent to the processor for
-> > > further analysis or countermeasures.
-> > >
-> > > Any occurrence of security violation would raise an interrupt, and
-> > > it will be handled by mtk-devapc driver. The violation
-> > > information is printed in order to find the murderer.
-> > >
-> > > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
-> >
-> > [snip]
-> >
-> > > +
-> > > +static u32 get_shift_group(struct mtk_devapc_context *devapc_ctx,
-> > > +                          int slave_type, int vio_idx)
-> >
-> > vio_idx  is useless, so remove it.
-> >
->
-> yes, my mistake. I'll remove it on next patch.
->
-> > > +{
-> > > +       u32 vio_shift_sta;
-> > > +       void __iomem *reg;
-> > > +       int bit;
-> > > +
-> > > +       reg =3D mtk_devapc_pd_get(devapc_ctx, slave_type, VIO_SHIFT_S=
-TA, 0);
-> > > +       vio_shift_sta =3D readl(reg);
-> > > +
-> > > +       for (bit =3D 0; bit < 32; bit++) {
-> > > +               if ((vio_shift_sta >> bit) & 0x1)
-> > > +                       break;
-> > > +       }
-> > > +
-> > > +       return bit;
-> > > +}
-> > > +
-> >
-> > [snip]
-> >
-> > > +
-> > > +/*
-> > > + * devapc_violation_irq - the devapc Interrupt Service Routine (ISR)=
- will dump
-> > > + *                       violation information including which maste=
-r violates
-> > > + *                       access slave.
-> > > + */
-> > > +static irqreturn_t devapc_violation_irq(int irq_number,
-> > > +                                       struct mtk_devapc_context *de=
-vapc_ctx)
-> > > +{
-> > > +       const struct mtk_device_info **device_info;
-> > > +       int slave_type_num;
-> > > +       int vio_idx =3D -1;
-> > > +       int slave_type;
-> > > +
-> > > +       slave_type_num =3D devapc_ctx->slave_type_num;
-> > > +       device_info =3D devapc_ctx->device_info;
-> > > +
-> > > +       for (slave_type =3D 0; slave_type < slave_type_num; slave_typ=
-e++) {
-> >
-> > If slave_type_num is 1, I think the code should be simpler.
->
-> slave_type_num is depends on DT data, it's not always 1.
+[ added dri-devel ML to Cc: ]
 
-Please change commit title to "add mt6779 mtk-devapc driver". This
-patch is just for mt6779. If slave_type_num =3D 1 in mt6779, there is
-only one slave and we don't need a slave_type variable. Add
-slave_type_num in the patch of adding one SoC which has multiple
-slaves.
+Hi,
 
->
-> >
-> > > +               if (!mtk_devapc_dump_vio_dbg(devapc_ctx, slave_type, =
-&vio_idx))
-> > > +                       continue;
-> > > +
-> > > +               /* Ensure that violation info are written before
-> > > +                * further operations
-> > > +                */
-> > > +               smp_mb();
-> > > +
-> > > +               mask_module_irq(devapc_ctx, slave_type, vio_idx, true=
-);
-> >
-> > Why do you mask irq?
->
-> It has to mask slave's irq before clear violation status.
-> It's one of hardware design.
+Sorry for the delay.
 
-If don't do this before clear_vio_status, what would happen? The clear
-would fail?
+On 5/13/20 8:48 PM, Rodrigo Alencar wrote:
+> From: Rodrigo Rolim Mendes de Alencar <alencar.fmce@imbel.gov.br>
+> 
+> This patch provides support for displays like VGM128064B0W10,
+> which requires a column offset of 2, i.e., its segments starts
+> in SEG2 and ends in SEG129.
+> 
+> Signed-off-by: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
 
->
-> >
-> > > +
-> > > +               clear_vio_status(devapc_ctx, slave_type, vio_idx);
-> > > +
-> > > +               mask_module_irq(devapc_ctx, slave_type, vio_idx, fals=
-e);
-> > > +       }
-> > > +
-> > > +       return IRQ_HANDLED;
-> > > +}
-> > > +
-> > > +/*
-> > > + * start_devapc - initialize devapc status and start receiving inter=
-rupt
-> > > + *               while devapc violation is triggered.
-> > > + */
-> >
-> > [snip]
-> >
-> > > +
-> > > +struct mtk_device_info {
-> > > +       int sys_index;
-> >
-> > Useless, so remove it.
->
-> We need to print it as our debug information.
-> But I did not apply it on this patch, I'll add it on next patch.
+Please resend with "From:" & "Signed-off-by:" tags fixed to match so
+I can merge the patch.
 
-I think vio address is enough to find out the murder, so remove it in
-this patch. If it provide another information, add it in another patch
-and describe clear about what is this and how to use this information.
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
 
->
-> >
-> > > +       int ctrl_index;
-> >
-> > Ditto.
-> >
-> > Regards,
-> > Chun-Kuang.
-> >
-> > > +       int vio_index;
-> > > +};
-> > > +
->
+> ---
+>  Documentation/devicetree/bindings/display/ssd1307fb.txt | 1 +
+>  drivers/video/fbdev/ssd1307fb.c                         | 8 ++++++--
+>  2 files changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/ssd1307fb.txt b/Documentation/devicetree/bindings/display/ssd1307fb.txt
+> index 27333b9551b3..2dcb6d12d137 100644
+> --- a/Documentation/devicetree/bindings/display/ssd1307fb.txt
+> +++ b/Documentation/devicetree/bindings/display/ssd1307fb.txt
+> @@ -19,6 +19,7 @@ Optional properties:
+>    - vbat-supply: The supply for VBAT
+>    - solomon,segment-no-remap: Display needs normal (non-inverted) data column
+>                                to segment mapping
+> +  - solomon,col-offset: Offset of columns (COL/SEG) that the screen is mapped to.
+>    - solomon,com-seq: Display uses sequential COM pin configuration
+>    - solomon,com-lrremap: Display uses left-right COM pin remap
+>    - solomon,com-invdir: Display uses inverted COM pin scan direction
+> diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
+> index 8e06ba912d60..102f941104c0 100644
+> --- a/drivers/video/fbdev/ssd1307fb.c
+> +++ b/drivers/video/fbdev/ssd1307fb.c
+> @@ -74,6 +74,7 @@ struct ssd1307fb_par {
+>  	struct fb_info *info;
+>  	u8 lookup_table[4];
+>  	u32 page_offset;
+> +	u32 col_offset;
+>  	u32 prechargep1;
+>  	u32 prechargep2;
+>  	struct pwm_device *pwm;
+> @@ -458,11 +459,11 @@ static int ssd1307fb_init(struct ssd1307fb_par *par)
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	ret = ssd1307fb_write_cmd(par->client, 0x0);
+> +	ret = ssd1307fb_write_cmd(par->client, par->col_offset);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	ret = ssd1307fb_write_cmd(par->client, par->width - 1);
+> +	ret = ssd1307fb_write_cmd(par->client, par->col_offset + par->width - 1);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> @@ -626,6 +627,9 @@ static int ssd1307fb_probe(struct i2c_client *client)
+>  	if (device_property_read_u32(dev, "solomon,page-offset", &par->page_offset))
+>  		par->page_offset = 1;
+>  
+> +	if (device_property_read_u32(dev, "solomon,col-offset", &par->col_offset))
+> +		par->col_offset = 0;
+> +
+>  	if (device_property_read_u32(dev, "solomon,com-offset", &par->com_offset))
+>  		par->com_offset = 0;
+>  
+> 
