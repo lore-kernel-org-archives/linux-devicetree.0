@@ -2,177 +2,232 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B021BC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 05:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB2BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 05:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DA7820720
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 05:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B2792077D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 05:44:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CxKCCTLO"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="FYAxZkLd";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PAFB3sOr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbgGJF3k (ORCPT
+        id S1725966AbgGJFoj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 01:29:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45138 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727906AbgGJF3i (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 01:29:38 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B830C08C5DC
-        for <devicetree@vger.kernel.org>; Thu,  9 Jul 2020 22:29:38 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id e8so2015172pgc.5
-        for <devicetree@vger.kernel.org>; Thu, 09 Jul 2020 22:29:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LrEMg7fVwuiooc5MLW1OYb4mtJllfG4D6r8RWT/b3sw=;
-        b=CxKCCTLOKqqO7JWvU/G5EMfnstNxEKb1dka1ZqN2gIG0tl7r6OoXteASnNM0OuOmCn
-         uY37q2IhPbR0YnDfVYWZMQ/jZB0/KhlzbFs9uwB0acc6hJFqwNOqdw6YOGtzC88zBQ4R
-         j7Ogf3SCL+KGm3OMvpbOyQsiQSGToa3Iid991VeWl0voTzjusSj6CrR3OnfIHdw2P+Kf
-         mA4BVnwGiWJDxOuYGb6R9DGHBOiBORWpDl8UtnguLLpJrgVL+dYL5c31cYfhyc8wD2Dq
-         B8TGiOMoNF4quqpHNPd5BmsoWRl6DyTlMYDNR+wKYlmdQE1CFBJuC7T+LMd9kWZCCQoX
-         btgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LrEMg7fVwuiooc5MLW1OYb4mtJllfG4D6r8RWT/b3sw=;
-        b=EFElaH/mUGqoJOIEzEoC5ulzEt6uc4DsLpvNyZ2/pwA8/W1BuoV6x5DFGevVx0Qm7i
-         rkPiGZxDoYH9zSj85+wQOJpK1O6Wh4MI2ysa7R+jYzAu0sEB3Bwdvv85itPljNkIbevx
-         CPCkm/6C2uvW+zeect4QpubFDPKeiBv+b9RVlw2MvoYrUbZw6z+e8xAo2OnVbesvMfp6
-         wgZfdaDkhmXX0scWKsUkv3Wx0XPCZn9HXCOdIs1AA+USNPRljcPW6JPuPXfZZ9nez6uS
-         pS2qIhe3Rwgqb5jIQmpYZc2yJVYeqpueKoVPUHZRpS5+xrvM1j7no//v7gX6xmkbBObZ
-         9hMw==
-X-Gm-Message-State: AOAM533h5uJb5jkroB7LanC5KjG2i8I1GVGtEWTqV5rm/4EkECdW2BH1
-        rogrpIelxhDmoTCRzhjB6KmjYg==
-X-Google-Smtp-Source: ABdhPJwX7+CmXa7FuhunOH1xpkGPJKpy0u3E/VAJrdFNV4DOCgfMEFsbbZh56sxg2zimQmCSMTFMyA==
-X-Received: by 2002:a05:6a00:1510:: with SMTP id q16mr58657852pfu.164.1594358978017;
-        Thu, 09 Jul 2020 22:29:38 -0700 (PDT)
-Received: from nagraj.local ([49.206.21.239])
-        by smtp.gmail.com with ESMTPSA id j17sm4168320pgn.87.2020.07.09.22.29.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 22:29:37 -0700 (PDT)
-From:   Sumit Semwal <sumit.semwal@linaro.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, robh+dt@kernel.org
-Cc:     nishakumari@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kgunda@codeaurora.org, rnayak@codeaurora.org,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Subject: [RESEND PATCH v5 2/4] dt-bindings: regulator: Add labibb regulator
-Date:   Fri, 10 Jul 2020 10:59:17 +0530
-Message-Id: <20200710052919.2611-3-sumit.semwal@linaro.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200710052919.2611-1-sumit.semwal@linaro.org>
-References: <20200710052919.2611-1-sumit.semwal@linaro.org>
+        Fri, 10 Jul 2020 01:44:39 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:46209 "EHLO
+        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725851AbgGJFoj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 10 Jul 2020 01:44:39 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.west.internal (Postfix) with ESMTP id 4E199D63;
+        Fri, 10 Jul 2020 01:44:37 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Fri, 10 Jul 2020 01:44:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        from:subject:to:cc:references:message-id:date:mime-version
+        :in-reply-to:content-type:content-transfer-encoding; s=fm3; bh=B
+        kv1RNfuDFYyvEIc++Gnj9pUqO53KBzD75sd4jhLp6Y=; b=FYAxZkLd0MDjmWqiI
+        U1SunbOs6XcWpC3ur+5Rikz2hulUb1pV+jPtZiqXepeBnk/XHyfJej1TF7M9taLL
+        cmlQAfEHAiitoy39HJhlwZY5D87XeGe0Bq6F3rNfp796UlaIkdcCXE7Qbg6xiczF
+        vVZtPC3LRZPqYeUtHZ+yT2J8dwCQratYhYDu4/szqiNEa/kk+dS+ChE3H5Lp0reC
+        0kBG9k16FAkAgzbrNl3/fDvPsc8KYDnJVgQY+9qRHO+95kMq9SCOVd5gl6C767MS
+        Sbfxghy0jGf0jUVWJ7iO99lrUIQB2CKQrU+X78XUA6U6WlrZVxa1uS3Gtfxll9AP
+        z9yTQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=Bkv1RNfuDFYyvEIc++Gnj9pUqO53KBzD75sd4jhLp
+        6Y=; b=PAFB3sOrVhErSmUejakZts/M9hCPdzJx8OtEvCi/SfKT7wJAlhaM5R8RV
+        S1LYmQlyRx895uuoHh3NuQu9TFmJpoD8RlqRItCVxJQtMgcRiWLTeQ/ad96ZzCDx
+        31px+tXYHtnwWeF5VRP+nBFNbmSChhxlUeD7epusxSYLEFy5jCGcjRwcWk1Dp4BP
+        uJY4KJO/x7TBOwvZciKZFN6WE2VYWUeHos/jAVro5Py2SNg9l6HC4QOafTxnUQBr
+        Aprst6hJzyIj5AnhYpMsX820zPkVmBhoRj6QiQ14Ttcv16WlSFXprZd1QDzMSnOT
+        lStrAhY1As5TzpaDoEfMEq3p75CQQ==
+X-ME-Sender: <xms:QwAIX-Uyh-qJ-jagCEW6OuCJD21hhdk3ooFJ37BMkHNjQtLtEusX3Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrvddtgdellecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhuffvfhfkffgfgggjtgfgsehtkeertddtfeejnecuhfhrohhmpefurghmuhgv
+    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucggtf
+    frrghtthgvrhhnpeevvdffgedtieehfeeltdekleejvedtvdefueehueeihfdvjefgkeef
+    udegjeejtdenucfkphepjedtrddufeehrddugeekrdduhedunecuvehluhhsthgvrhfuih
+    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghn
+    ugdrohhrgh
+X-ME-Proxy: <xmx:QwAIX6mFXBxSUevng_EmAIgrV9ylrN51RCB3THWWX3SRnO4ypUKvOw>
+    <xmx:QwAIXyYXp_CSleuHIhwwqjjXBwPC_Xr-tDjtutl-12H6QGRQqaHqag>
+    <xmx:QwAIX1Vr3CXssyrpUCvVEq1N4pyZdxdb-nyF08KFbBX9PXX_w2Ybhw>
+    <xmx:RAAIXydopoa5yry6t4FOFMRnoqlsEeXu2WUuDL-TMy_f3JGMNfy7Tfsxfpg>
+Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 709CA328005A;
+        Fri, 10 Jul 2020 01:44:34 -0400 (EDT)
+From:   Samuel Holland <samuel@sholland.org>
+Subject: Re: [linux-sunxi] [PATCH 01/16] ASoC: sun4i-i2s: Add support for H6
+ I2S
+To:     peron.clem@gmail.com, Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Marcus Cooper <codekipper@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+References: <20200704113902.336911-1-peron.clem@gmail.com>
+ <20200704113902.336911-2-peron.clem@gmail.com>
+Message-ID: <72a6fddf-5e84-f050-2eee-74178d457789@sholland.org>
+Date:   Fri, 10 Jul 2020 00:44:33 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <20200704113902.336911-2-peron.clem@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Nisha Kumari <nishakumari@codeaurora.org>
+On 7/4/20 6:38 AM, Clément Péron wrote:
+> From: Jernej Skrabec <jernej.skrabec@siol.net>
+> 
+> H6 I2S is very similar to that in H3, except it supports up to 16
+> channels.
+> 
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> ---
+>  sound/soc/sunxi/sun4i-i2s.c | 227 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 227 insertions(+)
+> 
+> diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+> index d0a8d5810c0a..9690389cb68e 100644
+> --- a/sound/soc/sunxi/sun4i-i2s.c
+> +++ b/sound/soc/sunxi/sun4i-i2s.c
+> @@ -124,6 +124,21 @@
+>  #define SUN8I_I2S_RX_CHAN_SEL_REG	0x54
+>  #define SUN8I_I2S_RX_CHAN_MAP_REG	0x58
+>  
+> +/* Defines required for sun50i-h6 support */
+> +#define SUN50I_H6_I2S_TX_CHAN_SEL_OFFSET_MASK	GENMASK(21, 20)
+> +#define SUN50I_H6_I2S_TX_CHAN_SEL_OFFSET(offset)	((offset) << 20)
+> +#define SUN50I_H6_I2S_TX_CHAN_SEL_MASK		GENMASK(19, 16)
+> +#define SUN50I_H6_I2S_TX_CHAN_SEL(chan)		((chan - 1) << 16)
+> +#define SUN50I_H6_I2S_TX_CHAN_EN_MASK		GENMASK(15, 0)
+> +#define SUN50I_H6_I2S_TX_CHAN_EN(num_chan)	(((1 << num_chan) - 1))
+> +
+> +#define SUN50I_H6_I2S_TX_CHAN_MAP0_REG	0x44
+> +#define SUN50I_H6_I2S_TX_CHAN_MAP1_REG	0x48
+> +
+> +#define SUN50I_H6_I2S_RX_CHAN_SEL_REG	0x64
+> +#define SUN50I_H6_I2S_RX_CHAN_MAP0_REG	0x68
+> +#define SUN50I_H6_I2S_RX_CHAN_MAP1_REG	0x6C
+> +
+>  struct sun4i_i2s;
+>  
+>  /**
+> @@ -466,6 +481,65 @@ static int sun8i_i2s_set_chan_cfg(const struct sun4i_i2s *i2s,
+>  	return 0;
+>  }
+>  
+> +static int sun50i_i2s_set_chan_cfg(const struct sun4i_i2s *i2s,
+> +				   const struct snd_pcm_hw_params *params)
+> +{
+> +	unsigned int channels = params_channels(params);
+> +	unsigned int slots = channels;
+> +	unsigned int lrck_period;
+> +
+> +	if (i2s->slots)
+> +		slots = i2s->slots;
+> +
+> +	/* Map the channels for playback and capture */
+> +	regmap_write(i2s->regmap, SUN50I_H6_I2S_TX_CHAN_MAP1_REG, 0x76543210);
+> +	regmap_write(i2s->regmap, SUN50I_H6_I2S_RX_CHAN_MAP1_REG, 0x76543210);
+> +
+> +	/* Configure the channels */
+> +	regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
+> +			   SUN50I_H6_I2S_TX_CHAN_SEL_MASK,
+> +			   SUN50I_H6_I2S_TX_CHAN_SEL(channels));
+> +	regmap_update_bits(i2s->regmap, SUN50I_H6_I2S_RX_CHAN_SEL_REG,
+> +			   SUN50I_H6_I2S_TX_CHAN_SEL_MASK,
+> +			   SUN50I_H6_I2S_TX_CHAN_SEL(channels));
+> +
+> +	regmap_update_bits(i2s->regmap, SUN8I_I2S_CHAN_CFG_REG,
+> +			   SUN8I_I2S_CHAN_CFG_TX_SLOT_NUM_MASK,
+> +			   SUN8I_I2S_CHAN_CFG_TX_SLOT_NUM(channels));
+> +	regmap_update_bits(i2s->regmap, SUN8I_I2S_CHAN_CFG_REG,
+> +			   SUN8I_I2S_CHAN_CFG_RX_SLOT_NUM_MASK,
+> +			   SUN8I_I2S_CHAN_CFG_RX_SLOT_NUM(channels));
+> +
+> +	switch (i2s->format & SND_SOC_DAIFMT_FORMAT_MASK) {
+> +	case SND_SOC_DAIFMT_DSP_A:
+> +	case SND_SOC_DAIFMT_DSP_B:
+> +	case SND_SOC_DAIFMT_LEFT_J:
+> +	case SND_SOC_DAIFMT_RIGHT_J:
 
-Adding the devicetree binding for labibb regulator.
+According to the manual, LEFT_J and RIGHT_J should use the same calculation as
+I2S, not the one for PCM/DSP.
 
-Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
-Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
- [sumits: cleanup as per review comments and update to yaml]
+> +		lrck_period = params_physical_width(params) * slots;
+> +		break;
+> +
+> +	case SND_SOC_DAIFMT_I2S:
+> +		lrck_period = params_physical_width(params);
+> +		break;
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (i2s->slot_width)
+> +		lrck_period = i2s->slot_width;
+> +
+> +	regmap_update_bits(i2s->regmap, SUN4I_I2S_FMT0_REG,
+> +			   SUN8I_I2S_FMT0_LRCK_PERIOD_MASK,
+> +			   SUN8I_I2S_FMT0_LRCK_PERIOD(lrck_period));
 
----
-v5: Addressed review comments - removed interrupt-names, changed to
-     dual license, added unevaluatedProperties: false
-v4: fixed dt_binding_check issues
-v3: moved to yaml
-v2: updated for better compatible string and names.
----
- .../regulator/qcom-labibb-regulator.yaml      | 70 +++++++++++++++++++
- 1 file changed, 70 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.yaml
+From the description in the manual, this looks off by one. The number of BCLKs
+per LRCK is LRCK_PERIOD + 1.
 
-diff --git a/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.yaml b/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.yaml
-new file mode 100644
-index 000000000000..085cbd1ad8d0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.yaml
-@@ -0,0 +1,70 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/qcom-labibb-regulator.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm's LAB(LCD AMOLED Boost)/IBB(Inverting Buck Boost) Regulator
-+
-+maintainers:
-+  - Sumit Semwal <sumit.semwal@linaro.org>
-+
-+description:
-+  LAB can be used as a positive boost power supply and IBB can be used as a
-+  negative boost power supply for display panels. Currently implemented for
-+  pmi8998.
-+
-+properties:
-+  compatible:
-+    const: qcom,pmi8998-lab-ibb
-+
-+  lab:
-+    type: object
-+
-+    properties:
-+
-+      interrupts:
-+        maxItems: 1
-+        description:
-+          Short-circuit interrupt for lab.
-+
-+    required:
-+    - interrupts
-+
-+  ibb:
-+    type: object
-+
-+    properties:
-+
-+      interrupts:
-+        maxItems: 1
-+        description:
-+          Short-circuit interrupt for lab.
-+
-+    required:
-+    - interrupts
-+
-+required:
-+  - compatible
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    labibb {
-+      compatible = "qcom,pmi8998-lab-ibb";
-+
-+      lab {
-+        interrupts = <0x3 0x0 IRQ_TYPE_EDGE_RISING>;
-+        interrupt-names = "sc-err";
-+      };
-+
-+      ibb {
-+        interrupts = <0x3 0x2 IRQ_TYPE_EDGE_RISING>;
-+        interrupt-names = "sc-err";
-+      };
-+    };
-+
-+...
--- 
-2.27.0
+> +
+> +	regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
+> +			   SUN50I_H6_I2S_TX_CHAN_EN_MASK,
+> +			   SUN50I_H6_I2S_TX_CHAN_EN(channels));
+> +
+> +	return 0;
+> +}
+> +
+>  static int sun4i_i2s_hw_params(struct snd_pcm_substream *substream,
+>  			       struct snd_pcm_hw_params *params,
+>  			       struct snd_soc_dai *dai)
+> @@ -691,6 +765,108 @@ static int sun8i_i2s_set_soc_fmt(const struct sun4i_i2s *i2s,
+>  	return 0;
+>  }
+>  
+> +static int sun50i_i2s_set_soc_fmt(const struct sun4i_i2s *i2s,
+> +				  unsigned int fmt)
+> +{
+> +	u32 mode, val;
+> +	u8 offset;
+> +
+> +	/*
+> +	 * DAI clock polarity
+> +	 *
+> +	 * The setup for LRCK contradicts the datasheet, but under a
+> +	 * scope it's clear that the LRCK polarity is reversed
+> +	 * compared to the expected polarity on the bus.
+> +	 */
 
+This comment makes us sound a lot more confident than I think we actually are.
+
+Regards,
+Samuel
