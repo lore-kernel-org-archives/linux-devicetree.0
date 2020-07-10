@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A216C433E5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 11:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5431C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 11:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68BFE20748
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 11:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8068D207BB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 11:36:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eif+J+dH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="azW9jjQD"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cPD3yhM3";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZYD5hezy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbgGJLgk (ORCPT
+        id S1728154AbgGJLgn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 07:36:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45342 "EHLO
+        Fri, 10 Jul 2020 07:36:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728098AbgGJLgf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 07:36:35 -0400
+        with ESMTP id S1727092AbgGJLge (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 07:36:34 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFC35C08E763;
-        Fri, 10 Jul 2020 04:36:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C564AC08E6DC;
+        Fri, 10 Jul 2020 04:36:33 -0700 (PDT)
 From:   Kurt Kanzenbach <kurt@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594380993;
+        s=2020; t=1594380992;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=qVwjHtWGfQEymI42xswgbLLssGllrLxNhmwD9iS8ZHc=;
-        b=eif+J+dHEMYqsIc14jVZfW/GevMwxqa8BSYzd22PFHfzjzGciQ9foDRAuBULuS0lCmgteq
-        3RpbB0r4hlrE9BbAWYDPcc6RxciA9zA20sYxPZ8fwqq4uvbECd/A9QZYzOmBBkQT96z+xg
-        fXnJOg5v77mGF8u7hvevMxGGKzV8ZDHzAO4Lpq1VfLzl958S7jlY3Wumnp/90wN5UuNYwV
-        rpInVZ/ZBnSX5y8McmsbTvxD6b4ba7ADXNcafPePGZ5r5B9gKqyJy8Zd0DUy6iB4w6OSNe
-        7JAqI6D8BXRxZJUjWpIIj01BHaWwTnKcHyrJM0H6wQSOuCVdkL/BrNQPjiBPqg==
+        bh=E6vNxszJ+QpAHIwzS32Xb3utPJ984pUYlUYs3hKg754=;
+        b=cPD3yhM37oQ+oIY1/VAO6t2vS3yZF2ubOoBNZrNM/YGVwS64TGNnc8P3/7i3Lyg9AiJEfp
+        dUMN3GsEj6WMezE8WNHpKOzHjlUDyBWZDO4oFV3QMbU8FZ/r1BV91VVyYcomiS2yoTWyFg
+        toIP52rrzZmxNj5JIcOXllbyQUE9OIRYisW6x6ptpiyhDPqv/19/S2LBL0rM6aOP8LpcZ2
+        BKhzKLS5lMDbwyqxDZLG0Q3KqcPu9NgxVMwBSp1Dpj71WAJKda7Pfrn+zLmy9a4HMrnE7p
+        eGNf1msuMn5F7VD6NNMSnyxZka5ckpBj+rGtz1ar73LMuYMr9uOLRUYKgABD6Q==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594380993;
+        s=2020e; t=1594380992;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=qVwjHtWGfQEymI42xswgbLLssGllrLxNhmwD9iS8ZHc=;
-        b=azW9jjQD8mwO040/NHQITW4NiU+doJw4UQt2mVDOwrGnn4wWtl/NP3+119XKfkWWSW5MHD
-        kr3SovmHpFppQcBg==
+        bh=E6vNxszJ+QpAHIwzS32Xb3utPJ984pUYlUYs3hKg754=;
+        b=ZYD5hezyn5HO/Vnj4gisrZ+LUxUeEyG+eka+dosoWIfu7wg+H0MlLWd/ze3E9eNZA5MQ0h
+        kfsCLiN/yMi13lBQ==
 To:     Andrew Lunn <andrew@lunn.ch>,
         Vivien Didelot <vivien.didelot@gmail.com>,
         Florian Fainelli <f.fainelli@gmail.com>
@@ -59,9 +59,9 @@ Cc:     "David S. Miller" <davem@davemloft.net>,
         Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
         ilias.apalodimas@linaro.org, Vladimir Oltean <olteanv@gmail.com>,
         Kurt Kanzenbach <kurt@linutronix.de>
-Subject: [PATCH v1 8/8] dt-bindings: net: dsa: Add documentation for Hellcreek switches
-Date:   Fri, 10 Jul 2020 13:36:11 +0200
-Message-Id: <20200710113611.3398-9-kurt@linutronix.de>
+Subject: [PATCH v1 7/8] dt-bindings: Add vendor prefix for Hirschmann
+Date:   Fri, 10 Jul 2020 13:36:10 +0200
+Message-Id: <20200710113611.3398-8-kurt@linutronix.de>
 In-Reply-To: <20200710113611.3398-1-kurt@linutronix.de>
 References: <20200710113611.3398-1-kurt@linutronix.de>
 MIME-Version: 1.0
@@ -71,152 +71,27 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add basic documentation and example.
+Hirschmann is building devices for automation and networking. Add them to the
+vendor prefixes.
 
 Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
 ---
- .../bindings/net/dsa/hellcreek.yaml           | 132 ++++++++++++++++++
- 1 file changed, 132 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/dsa/hellcreek.yaml
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/hellcreek.yaml b/Documentation/devicetree/bindings/net/dsa/hellcreek.yaml
-new file mode 100644
-index 000000000000..bb8ccc1762c8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/dsa/hellcreek.yaml
-@@ -0,0 +1,132 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/dsa/hellcreek.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Hirschmann Hellcreek TSN Switch Device Tree Bindings
-+
-+allOf:
-+  - $ref: dsa.yaml#
-+
-+maintainers:
-+  - Andrew Lunn <andrew@lunn.ch>
-+  - Florian Fainelli <f.fainelli@gmail.com>
-+  - Vivien Didelot <vivien.didelot@gmail.com>
-+
-+description:
-+  The Hellcreek TSN Switch IP is a 802.1Q Ethernet compliant switch. It supports
-+  the Pricision Time Protocol, Hardware Timestamping as well the Time Aware
-+  Shaper.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: hirschmann,hellcreek
-+
-+  reg:
-+    description:
-+      The physical base address and size of TSN and PTP memory base
-+
-+  reg-names:
-+    description:
-+      Names of the physical base addresses
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 1
-+
-+  leds:
-+    type: object
-+    properties:
-+      '#address-cells':
-+        const: 1
-+      '#size-cells':
-+        const: 0
-+
-+    patternProperties:
-+      "^led@[0-9]+$":
-+          type: object
-+          description: Hellcreek leds
-+
-+          properties:
-+            reg:
-+              items:
-+                - enum: [0, 1]
-+              description: Led number
-+
-+            label:
-+              description: Label associated with this led
-+              $ref: /schemas/types.yaml#/definitions/string
-+
-+            default-state:
-+              items:
-+                enum: ["on", "off", "keep"]
-+              description: Default state for the led
-+              $ref: /schemas/types.yaml#/definitions/string
-+
-+          required:
-+            - reg
-+
-+required:
-+  - compatible
-+  - reg
-+  - '#address-cells'
-+  - '#size-cells'
-+  - ports
-+  - leds
-+
-+examples:
-+  - |
-+        switch0: switch@ff240000 {
-+            compatible = "hirschmann,hellcreek";
-+            status = "okay";
-+            reg = <0xff240000 0x1000>,
-+                  <0xff250000 0x1000>;
-+            reg-names = "reg", "ptp";
-+            #address-cells = <1>;
-+            #size-cells = <1>;
-+            dsa,member = <0 0>;
-+
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                port@0 {
-+                    reg = <0>;
-+                    label = "cpu";
-+                    ethernet = <&gmac0>;
-+                };
-+
-+                port@2 {
-+                    reg = <2>;
-+                    label = "lan0";
-+                    phy-handle = <&phy1>;
-+                };
-+
-+                port@3 {
-+                    reg = <3>;
-+                    label = "lan1";
-+                    phy-handle = <&phy2>;
-+                };
-+            };
-+
-+            leds {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                led@0 {
-+                    reg = <0>;
-+                    label = "sync_good";
-+                    default-state = "on";
-+                };
-+
-+                led@1 {
-+                    reg = <1>;
-+                    label = "is_gm";
-+                    default-state = "off";
-+                };
-+            };
-+        };
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 9aeab66be85f..279a10418ce8 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -429,6 +429,8 @@ patternProperties:
+     description: HiDeep Inc.
+   "^himax,.*":
+     description: Himax Technologies, Inc.
++  "^hirschmann,.*":
++    description: Hirschmann Automation and Control GmbH
+   "^hisilicon,.*":
+     description: Hisilicon Limited.
+   "^hit,.*":
 -- 
 2.20.1
 
