@@ -2,879 +2,331 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDFDC433F7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 11:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81044C433E5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 11:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9369D20748
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 11:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5546620720
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 11:51:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XMqpDx3e";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AVK25gq3"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nxEjUPrU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbgGJLgz (ORCPT
+        id S1728018AbgGJLuv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 07:36:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728084AbgGJLgc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 07:36:32 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1767C08C5DC;
-        Fri, 10 Jul 2020 04:36:31 -0700 (PDT)
-From:   Kurt Kanzenbach <kurt@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594380990;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YDmUK1QfV+EPilSHC4FM/0hzUgKt4U5tEClqDmQhP0k=;
-        b=XMqpDx3e+IHvgkVq3yZijxRFQQ6OWyLDb0oTCgqM+phJPJXh295vplV3rHf2nwWjgTfj3U
-        AwbSgMma8DmpDWIQt7XdNElAsxH1RJwAy6wwWOw7hfJFmSGYduPfM5gEUW7K+5oPqkoVuC
-        3SLlSwHIT3hPs+cpjSvOT/hkDKm3tMSp3+Y0etYr+brPuz/a2SGnEWPCkO7z7n7Ed4AtI7
-        NTgGwc4hPj1uFj7w6x3DZ1cw+VEdXJXSTD/xx1BcyGTT4W+aRol3wXnFLcoB92g5Sj7UQm
-        Nt8WFhlhrfE+UsKHubSKevDh1Z9/PQWtcL/U8IXexpXKC4h/29JsczqFn1UG9Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594380990;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YDmUK1QfV+EPilSHC4FM/0hzUgKt4U5tEClqDmQhP0k=;
-        b=AVK25gq3/uyyw3Cwx44mhPdVDcNGI6mfT1y3lbzLsyauT+ysgoaUXVnXVmq5PZHLW93k3S
-        Y4/jB56YUOJyJvBg==
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org, Vladimir Oltean <olteanv@gmail.com>,
-        Kurt Kanzenbach <kurt@linutronix.de>
-Subject: [PATCH v1 4/8] net: dsa: hellcreek: Add support for hardware timestamping
-Date:   Fri, 10 Jul 2020 13:36:07 +0200
-Message-Id: <20200710113611.3398-5-kurt@linutronix.de>
-In-Reply-To: <20200710113611.3398-1-kurt@linutronix.de>
-References: <20200710113611.3398-1-kurt@linutronix.de>
+        Fri, 10 Jul 2020 07:50:51 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:42456 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726955AbgGJLut (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 07:50:49 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06ABoVRb120001;
+        Fri, 10 Jul 2020 06:50:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594381831;
+        bh=k8R8ueoWrckBVnJIXngXqqYA2m1bpgdK9FsVJSyK4cA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=nxEjUPrUkD1SYfpI36HASLn924kLRQca+UsNW6rUTwtkq0MKKaiqeCs5xswqfZHOV
+         6ntIX6dfB5+5Wk6LTGH6PPtYCDyrUg84gdRyhuNzhpjWYYsVagf4YJv4BI41qKrxnM
+         vXppq6ZHT1cl3XMqOZYdch9kAP/QXUEANYSzILIY=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06ABoV0j089013
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 10 Jul 2020 06:50:31 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 10
+ Jul 2020 06:50:31 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 10 Jul 2020 06:50:31 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06ABoS0w112002;
+        Fri, 10 Jul 2020 06:50:29 -0500
+Subject: Re: [PATCH v7 04/11] dmaengine: Introduce max SG list entries
+ capability
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+CC:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+ <20200709224550.15539-5-Sergey.Semin@baikalelectronics.ru>
+ <d667adda-6576-623d-6976-30f60ab3c3dc@ti.com>
+ <20200710092738.z7zyywe46mp7uuf3@mobilestation>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <427bc5c8-0325-bc25-8637-a7627bcac26f@ti.com>
+Date:   Fri, 10 Jul 2020 14:51:33 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200710092738.z7zyywe46mp7uuf3@mobilestation>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>
+Hi Sergey,
 
-The switch has the ability to take hardware generated time stamps per port for
-PTPv2 event messages in Rx and Tx direction. That is useful for achieving needed
-time synchronization precision for TSN devices/switches. So add support for it.
+On 10/07/2020 12.27, Serge Semin wrote:
+> Hello Peter
+>=20
+> On Fri, Jul 10, 2020 at 11:31:47AM +0300, Peter Ujfalusi wrote:
+>>
+>>
+>> On 10/07/2020 1.45, Serge Semin wrote:
+>>> Some devices may lack the support of the hardware accelerated SG list=
 
-There are two directions:
+>>> entries automatic walking through and execution. In this case a burde=
+n of
+>>> the SG list traversal and DMA engine re-initialization lies on the
+>>> DMA engine driver (normally implemented by using a DMA transfer compl=
+etion
+>>> IRQ to recharge the DMA device with a next SG list entry). But such
+>>> solution may not be suitable for some DMA consumers. In particular SP=
+I
+>>> devices need both Tx and Rx DMA channels work synchronously in order
+>>> to avoid the Rx FIFO overflow. In case if Rx DMA channel is paused fo=
+r
+>>> some time while the Tx DMA channel works implicitly pulling data into=
+ the
+>>> Rx FIFO, the later will be eventually overflown, which will cause the=
+ data
+>>> loss. So if SG list entries aren't automatically fetched by the DMA
+>>> engine, but are one-by-one manually selected for execution in the
+>>> ISRs/deferred work/etc., such problem will eventually happen due to t=
+he
+>>> non-deterministic latencies of the service execution.
+>>
+>=20
+>> It is not really the number of sg nents which is the problem, but the
+>> combination of total number of bytes _and_ the number of nents used to=
 
- * RX
+>> map them.
+>=20
+> No, in the case described above the latency only matters.
 
-   The switch has a single register per port to capture a timestamp. That
-   mechanism is not used due to correlation problems. If the software processing
-   is too slow and a PTPv2 event message is received before the previous one has
-   been processed, false timestamps will be captured. Therefore, the switch can
-   do "inline" timestamping which means it can insert the nanoseconds part of
-   the timestamp directly into the PTPv2 event message. The reserved field (4
-   bytes) is leveraged for that. This might not be in accordance with (older)
-   PTP standards, but is the only way to get reliable results.
+Sure, the latency comes in (at least for EDMA) when moving from one
+sub-sg_list to the next one when needing to break the long list into
+smaller chunks. In the sub-completion we need to move to the next chunk.
 
- * TX
+> The length of the SG
+> entries doesn't (at most of extents). The same is with the nents. If th=
+ere are
+> more than one SG entries in the Rx SG-list handled with the non-determi=
+nistic
+> latency, the problem may happen at the moment of any Rx SG entry reload=
+=2E
 
-   In Tx direction there is no correlation problem, because the software and the
-   driver has to ensure that only one event message is "on the fly". However,
-   the switch provides also a mechanism to check whether a timestamp is
-   lost. That can only happen when a timestamp is read and at this point another
-   message is timestamped. So, that lost bit is checked just in case to indicate
-   to the user that the driver or the software is somewhat buggy.
+You have latency in the hardware when progressing between the sg entries?=
 
-Signed-off-by: Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>
-Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
----
- drivers/net/dsa/hirschmann/Makefile           |   1 +
- drivers/net/dsa/hirschmann/hellcreek.c        |  15 +
- drivers/net/dsa/hirschmann/hellcreek.h        |  25 +
- .../net/dsa/hirschmann/hellcreek_hwtstamp.c   | 498 ++++++++++++++++++
- .../net/dsa/hirschmann/hellcreek_hwtstamp.h   |  58 ++
- drivers/net/dsa/hirschmann/hellcreek_ptp.c    |  48 +-
- drivers/net/dsa/hirschmann/hellcreek_ptp.h    |   4 +
- 7 files changed, 635 insertions(+), 14 deletions(-)
- create mode 100644 drivers/net/dsa/hirschmann/hellcreek_hwtstamp.c
- create mode 100644 drivers/net/dsa/hirschmann/hellcreek_hwtstamp.h
 
-diff --git a/drivers/net/dsa/hirschmann/Makefile b/drivers/net/dsa/hirschmann/Makefile
-index 39de02a03640..f4075c2998b5 100644
---- a/drivers/net/dsa/hirschmann/Makefile
-+++ b/drivers/net/dsa/hirschmann/Makefile
-@@ -2,3 +2,4 @@
- obj-$(CONFIG_NET_DSA_HIRSCHMANN_HELLCREEK)	+= hellcreek_sw.o
- hellcreek_sw-objs := hellcreek.o
- hellcreek_sw-objs += hellcreek_ptp.o
-+hellcreek_sw-objs += hellcreek_hwtstamp.o
-diff --git a/drivers/net/dsa/hirschmann/hellcreek.c b/drivers/net/dsa/hirschmann/hellcreek.c
-index 9901d6435d97..3941a9a3252d 100644
---- a/drivers/net/dsa/hirschmann/hellcreek.c
-+++ b/drivers/net/dsa/hirschmann/hellcreek.c
-@@ -26,6 +26,7 @@
- 
- #include "hellcreek.h"
- #include "hellcreek_ptp.h"
-+#include "hellcreek_hwtstamp.h"
- 
- static const struct hellcreek_counter hellcreek_counter[] = {
- 	{ 0x00, "RxFiltered", },
-@@ -1103,6 +1104,11 @@ static const struct dsa_switch_ops hellcreek_ds_ops = {
- 	.port_bridge_leave   = hellcreek_port_bridge_leave,
- 	.port_stp_state_set  = hellcreek_port_stp_state_set,
- 	.phylink_validate    = hellcreek_phylink_validate,
-+	.port_hwtstamp_set   = hellcreek_port_hwtstamp_set,
-+	.port_hwtstamp_get   = hellcreek_port_hwtstamp_get,
-+	.port_txtstamp	     = hellcreek_port_txtstamp,
-+	.port_rxtstamp	     = hellcreek_port_rxtstamp,
-+	.get_ts_info	     = hellcreek_get_ts_info,
- };
- 
- static int hellcreek_probe(struct platform_device *pdev)
-@@ -1202,10 +1208,18 @@ static int hellcreek_probe(struct platform_device *pdev)
- 		goto err_ptp_setup;
- 	}
- 
-+	ret = hellcreek_hwtstamp_setup(hellcreek);
-+	if (ret) {
-+		dev_err(dev, "Failed to setup hardware timestamping!\n");
-+		goto err_tstamp_setup;
-+	}
-+
- 	platform_set_drvdata(pdev, hellcreek);
- 
- 	return 0;
- 
-+err_tstamp_setup:
-+	hellcreek_ptp_free(hellcreek);
- err_ptp_setup:
- 	dsa_unregister_switch(hellcreek->ds);
- 
-@@ -1216,6 +1230,7 @@ static int hellcreek_remove(struct platform_device *pdev)
- {
- 	struct hellcreek *hellcreek = platform_get_drvdata(pdev);
- 
-+	hellcreek_hwtstamp_free(hellcreek);
- 	hellcreek_ptp_free(hellcreek);
- 	dsa_unregister_switch(hellcreek->ds);
- 	platform_set_drvdata(pdev, NULL);
-diff --git a/drivers/net/dsa/hirschmann/hellcreek.h b/drivers/net/dsa/hirschmann/hellcreek.h
-index 2d4422fd2567..1d3de72a48a5 100644
---- a/drivers/net/dsa/hirschmann/hellcreek.h
-+++ b/drivers/net/dsa/hirschmann/hellcreek.h
-@@ -212,11 +212,36 @@ struct hellcreek_counter {
- 
- struct hellcreek;
- 
-+/* State flags for hellcreek_port_hwtstamp::state */
-+enum {
-+	HELLCREEK_HWTSTAMP_ENABLED,
-+	HELLCREEK_HWTSTAMP_TX_IN_PROGRESS,
-+};
-+
-+/* A structure to hold hardware timestamping information per port */
-+struct hellcreek_port_hwtstamp {
-+	/* Timestamping state */
-+	unsigned long state;
-+
-+	/* Resources for receive timestamping */
-+	struct sk_buff_head rx_queue; /* For synchronization messages */
-+
-+	/* Resources for transmit timestamping */
-+	unsigned long tx_tstamp_start;
-+	struct sk_buff *tx_skb;
-+
-+	/* Current timestamp configuration */
-+	struct hwtstamp_config tstamp_config;
-+};
-+
- struct hellcreek_port {
- 	struct hellcreek *hellcreek;
- 	int port;
- 	u16 ptcfg;		/* ptcfg shadow */
- 	u64 *counter_values;
-+
-+	/* Per-port timestamping resources */
-+	struct hellcreek_port_hwtstamp port_hwtstamp;
- };
- 
- struct hellcreek_fdb_entry {
-diff --git a/drivers/net/dsa/hirschmann/hellcreek_hwtstamp.c b/drivers/net/dsa/hirschmann/hellcreek_hwtstamp.c
-new file mode 100644
-index 000000000000..dc0ab75d099b
---- /dev/null
-+++ b/drivers/net/dsa/hirschmann/hellcreek_hwtstamp.c
-@@ -0,0 +1,498 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * DSA driver for:
-+ * Hirschmann Hellcreek TSN switch.
-+ *
-+ * Copyright (C) 2019,2020 Hochschule Offenburg
-+ * Copyright (C) 2019,2020 Linutronix GmbH
-+ * Authors: Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>
-+ *	    Kurt Kanzenbach <kurt@linutronix.de>
-+ */
-+
-+#include <linux/ptp_classify.h>
-+
-+#include "hellcreek.h"
-+#include "hellcreek_hwtstamp.h"
-+#include "hellcreek_ptp.h"
-+
-+int hellcreek_get_ts_info(struct dsa_switch *ds, int port,
-+			  struct ethtool_ts_info *info)
-+{
-+	struct hellcreek *hellcreek = ds->priv;
-+
-+	info->phc_index = hellcreek->ptp_clock ?
-+		ptp_clock_index(hellcreek->ptp_clock) : -1;
-+	info->so_timestamping = SOF_TIMESTAMPING_TX_HARDWARE |
-+		SOF_TIMESTAMPING_RX_HARDWARE |
-+		SOF_TIMESTAMPING_RAW_HARDWARE;
-+
-+	/* enabled tx timestamping */
-+	info->tx_types = BIT(HWTSTAMP_TX_ON);
-+
-+	/* L2 & L4 PTPv2 event rx messages are timestamped */
-+	info->rx_filters = BIT(HWTSTAMP_FILTER_PTP_V2_EVENT);
-+
-+	return 0;
-+}
-+
-+/* Enabling/disabling TX and RX HW timestamping for different PTP messages is
-+ * not available in the switch. Thus, this function only serves as a check if
-+ * the user requested what is actually available or not
-+ */
-+static int hellcreek_set_hwtstamp_config(struct hellcreek *hellcreek, int port,
-+					 struct hwtstamp_config *config)
-+{
-+	struct hellcreek_port_hwtstamp *ps =
-+		&hellcreek->ports[port].port_hwtstamp;
-+	bool tx_tstamp_enable = false;
-+	bool rx_tstamp_enable = false;
-+
-+	/* Interaction with the timestamp hardware is prevented here.  It is
-+	 * enabled when this config function ends successfully
-+	 */
-+	clear_bit_unlock(HELLCREEK_HWTSTAMP_ENABLED, &ps->state);
-+
-+	/* Reserved for future extensions */
-+	if (config->flags)
-+		return -EINVAL;
-+
-+	switch (config->tx_type) {
-+	case HWTSTAMP_TX_ON:
-+		tx_tstamp_enable = true;
-+		break;
-+
-+	/* TX HW timestamping can't be disabled on the switch */
-+	case HWTSTAMP_TX_OFF:
-+		config->tx_type = HWTSTAMP_TX_ON;
-+		break;
-+
-+	default:
-+		return -ERANGE;
-+	}
-+
-+	switch (config->rx_filter) {
-+	/* RX HW timestamping can't be disabled on the switch */
-+	case HWTSTAMP_FILTER_NONE:
-+		config->rx_filter = HWTSTAMP_FILTER_PTP_V2_EVENT;
-+		break;
-+
-+	case HWTSTAMP_FILTER_PTP_V2_L4_EVENT:
-+	case HWTSTAMP_FILTER_PTP_V2_L4_SYNC:
-+	case HWTSTAMP_FILTER_PTP_V2_L4_DELAY_REQ:
-+	case HWTSTAMP_FILTER_PTP_V2_L2_EVENT:
-+	case HWTSTAMP_FILTER_PTP_V2_L2_SYNC:
-+	case HWTSTAMP_FILTER_PTP_V2_L2_DELAY_REQ:
-+	case HWTSTAMP_FILTER_PTP_V2_EVENT:
-+	case HWTSTAMP_FILTER_PTP_V2_SYNC:
-+	case HWTSTAMP_FILTER_PTP_V2_DELAY_REQ:
-+		config->rx_filter = HWTSTAMP_FILTER_PTP_V2_EVENT;
-+		rx_tstamp_enable = true;
-+		break;
-+
-+	/* RX HW timestamping can't be enabled for all messages on the switch */
-+	case HWTSTAMP_FILTER_ALL:
-+		config->rx_filter = HWTSTAMP_FILTER_PTP_V2_EVENT;
-+		break;
-+
-+	default:
-+		return -ERANGE;
-+	}
-+
-+	if (!tx_tstamp_enable)
-+		return -ERANGE;
-+
-+	if (!rx_tstamp_enable)
-+		return -ERANGE;
-+
-+	/* If this point is reached, then the requested hwtstamp config is
-+	 * compatible with the hwtstamp offered by the switch.  Therefore,
-+	 * enable the interaction with the HW timestamping
-+	 */
-+	set_bit(HELLCREEK_HWTSTAMP_ENABLED, &ps->state);
-+
-+	return 0;
-+}
-+
-+int hellcreek_port_hwtstamp_set(struct dsa_switch *ds, int port,
-+				struct ifreq *ifr)
-+{
-+	struct hellcreek *hellcreek = ds->priv;
-+	struct hellcreek_port_hwtstamp *ps;
-+	struct hwtstamp_config config;
-+	int err;
-+
-+	ps = &hellcreek->ports[port].port_hwtstamp;
-+
-+	if (copy_from_user(&config, ifr->ifr_data, sizeof(config)))
-+		return -EFAULT;
-+
-+	err = hellcreek_set_hwtstamp_config(hellcreek, port, &config);
-+	if (err)
-+		return err;
-+
-+	/* Save the chosen configuration to be returned later */
-+	memcpy(&ps->tstamp_config, &config, sizeof(config));
-+
-+	return copy_to_user(ifr->ifr_data, &config, sizeof(config)) ?
-+		-EFAULT : 0;
-+}
-+
-+int hellcreek_port_hwtstamp_get(struct dsa_switch *ds, int port,
-+				struct ifreq *ifr)
-+{
-+	struct hellcreek *hellcreek = ds->priv;
-+	struct hellcreek_port_hwtstamp *ps;
-+	struct hwtstamp_config *config;
-+
-+	ps = &hellcreek->ports[port].port_hwtstamp;
-+	config = &ps->tstamp_config;
-+
-+	return copy_to_user(ifr->ifr_data, config, sizeof(*config)) ?
-+		-EFAULT : 0;
-+}
-+
-+/* Get a pointer to the PTP header in this skb */
-+static u8 *parse_ptp_header(struct sk_buff *skb, unsigned int type)
-+{
-+	u8 *data = skb_mac_header(skb);
-+	unsigned int offset = 0;
-+
-+	if (type & PTP_CLASS_VLAN)
-+		offset += VLAN_HLEN;
-+
-+	switch (type & PTP_CLASS_PMASK) {
-+	case PTP_CLASS_IPV4:
-+		offset += ETH_HLEN + IPV4_HLEN(data + offset) + UDP_HLEN;
-+		break;
-+	case PTP_CLASS_IPV6:
-+		offset += ETH_HLEN + IP6_HLEN + UDP_HLEN;
-+		break;
-+	case PTP_CLASS_L2:
-+		offset += ETH_HLEN;
-+		break;
-+	default:
-+		return NULL;
-+	}
-+
-+	/* Ensure that the entire header is present in this packet. */
-+	if (skb->len + ETH_HLEN < offset + 34)
-+		return NULL;
-+
-+	return data + offset;
-+}
-+
-+/* Returns a pointer to the PTP header if the caller should time stamp, or NULL
-+ * if the caller should not.
-+ */
-+static u8 *hellcreek_should_tstamp(struct hellcreek *hellcreek, int port,
-+				   struct sk_buff *skb, unsigned int type)
-+{
-+	struct hellcreek_port_hwtstamp *ps =
-+		&hellcreek->ports[port].port_hwtstamp;
-+	u8 *hdr;
-+
-+	hdr = parse_ptp_header(skb, type);
-+	if (!hdr)
-+		return NULL;
-+
-+	if (!test_bit(HELLCREEK_HWTSTAMP_ENABLED, &ps->state))
-+		return NULL;
-+
-+	return hdr;
-+}
-+
-+static u64 hellcreek_get_reserved_field(u8 *ptp_hdr)
-+{
-+	__be32 *ts;
-+
-+	/* length is checked by parse_ptp_header() */
-+	ts = (__force __be32 *)&ptp_hdr[16];
-+
-+	return be32_to_cpup(ts);
-+}
-+
-+static int hellcreek_ptp_hwtstamp_available(struct hellcreek *hellcreek,
-+					    unsigned int ts_reg)
-+{
-+	u16 status;
-+
-+	status = hellcreek_ptp_read(hellcreek, ts_reg);
-+
-+	if (status & PR_TS_STATUS_TS_LOST)
-+		dev_err(hellcreek->dev,
-+			"Tx time stamp lost! This should never happen!\n");
-+
-+	/* If hwtstamp is not available, this means the previous hwtstamp was
-+	 * successfully read, and the one we need is not yet available
-+	 */
-+	return (status & PR_TS_STATUS_TS_AVAIL) ? 1 : 0;
-+}
-+
-+/* Get nanoseconds timestamp from timestamping unit */
-+static u64 hellcreek_ptp_hwtstamp_read(struct hellcreek *hellcreek,
-+				       unsigned int ts_reg)
-+{
-+	u16 nsl, nsh;
-+
-+	nsh = hellcreek_ptp_read(hellcreek, ts_reg);
-+	nsh = hellcreek_ptp_read(hellcreek, ts_reg);
-+	nsh = hellcreek_ptp_read(hellcreek, ts_reg);
-+	nsh = hellcreek_ptp_read(hellcreek, ts_reg);
-+	nsl = hellcreek_ptp_read(hellcreek, ts_reg);
-+
-+	return (u64)nsl | ((u64)nsh << 16);
-+}
-+
-+static int hellcreek_txtstamp_work(struct hellcreek *hellcreek,
-+				   struct hellcreek_port_hwtstamp *ps, int port)
-+{
-+	struct skb_shared_hwtstamps shhwtstamps;
-+	unsigned int status_reg, data_reg;
-+	struct sk_buff *tmp_skb;
-+	int ts_status;
-+	u64 ns = 0;
-+
-+	if (!ps->tx_skb)
-+		return 0;
-+
-+	switch (port) {
-+	case 2:
-+		status_reg = PR_TS_TX_P1_STATUS_C;
-+		data_reg   = PR_TS_TX_P1_DATA_C;
-+		break;
-+	case 3:
-+		status_reg = PR_TS_TX_P2_STATUS_C;
-+		data_reg   = PR_TS_TX_P2_DATA_C;
-+		break;
-+	default:
-+		dev_err(hellcreek->dev, "Wrong port for timestamping!\n");
-+		return 0;
-+	}
-+
-+	ts_status = hellcreek_ptp_hwtstamp_available(hellcreek, status_reg);
-+
-+	/* Not available yet? */
-+	if (ts_status == 0) {
-+		/* Check whether the operation of reading the tx timestamp has
-+		 * exceeded its allowed period
-+		 */
-+		if (time_is_before_jiffies(ps->tx_tstamp_start +
-+					   TX_TSTAMP_TIMEOUT)) {
-+			dev_err(hellcreek->dev,
-+				"Timeout while waiting for Tx timestamp!\n");
-+			goto free_and_clear_skb;
-+		}
-+
-+		/* The timestamp should be available quickly, while getting it
-+		 * in high priority. Restart the work
-+		 */
-+		return 1;
-+	}
-+
-+	spin_lock(&hellcreek->ptp_lock);
-+	ns  = hellcreek_ptp_hwtstamp_read(hellcreek, data_reg);
-+	ns += hellcreek_ptp_gettime_seconds(hellcreek, ns);
-+	spin_unlock(&hellcreek->ptp_lock);
-+
-+	/* Now we have the timestamp in nanoseconds, store it in the correct
-+	 * structure in order to send it to the user
-+	 */
-+	memset(&shhwtstamps, 0, sizeof(shhwtstamps));
-+	shhwtstamps.hwtstamp = ns_to_ktime(ns);
-+
-+	tmp_skb = ps->tx_skb;
-+	ps->tx_skb = NULL;
-+
-+	/* skb_complete_tx_timestamp() frees up the client to make another
-+	 * timestampable transmit.  We have to be ready for it by clearing the
-+	 * ps->tx_skb "flag" beforehand
-+	 */
-+	clear_bit_unlock(HELLCREEK_HWTSTAMP_TX_IN_PROGRESS, &ps->state);
-+
-+	/* Deliver a clone of the original outgoing tx_skb with tx hwtstamp */
-+	skb_complete_tx_timestamp(tmp_skb, &shhwtstamps);
-+
-+	return 0;
-+
-+free_and_clear_skb:
-+	dev_kfree_skb_any(ps->tx_skb);
-+	ps->tx_skb = NULL;
-+	clear_bit_unlock(HELLCREEK_HWTSTAMP_TX_IN_PROGRESS, &ps->state);
-+
-+	return 0;
-+}
-+
-+static void hellcreek_get_rxts(struct hellcreek *hellcreek,
-+			       struct hellcreek_port_hwtstamp *ps,
-+			       struct sk_buff *skb, struct sk_buff_head *rxq,
-+			       int port)
-+{
-+	struct skb_shared_hwtstamps *shwt;
-+	struct sk_buff_head received;
-+	unsigned long flags;
-+
-+	/* The latched timestamp belongs to one of the received frames. */
-+	__skb_queue_head_init(&received);
-+
-+	/* Lock & disable interrupts */
-+	spin_lock_irqsave(&rxq->lock, flags);
-+
-+	/* Add the reception queue "rxq" to the "received" queue an reintialize
-+	 * "rxq".  From now on, we deal with "received" not with "rxq"
-+	 */
-+	skb_queue_splice_tail_init(rxq, &received);
-+
-+	spin_unlock_irqrestore(&rxq->lock, flags);
-+
-+	for (; skb; skb = __skb_dequeue(&received)) {
-+		unsigned int type;
-+		u8 *hdr;
-+		u64 ns;
-+
-+		/* Get nanoseconds from ptp packet */
-+		type = SKB_PTP_TYPE(skb);
-+		hdr  = parse_ptp_header(skb, type);
-+		ns   = hellcreek_get_reserved_field(hdr);
-+
-+		/* Add seconds part */
-+		spin_lock(&hellcreek->ptp_lock);
-+		ns += hellcreek_ptp_gettime_seconds(hellcreek, ns);
-+		spin_unlock(&hellcreek->ptp_lock);
-+
-+		/* Save time stamp */
-+		shwt = skb_hwtstamps(skb);
-+		memset(shwt, 0, sizeof(*shwt));
-+		shwt->hwtstamp = ns_to_ktime(ns);
-+		netif_rx_ni(skb);
-+	}
-+}
-+
-+static void hellcreek_rxtstamp_work(struct hellcreek *hellcreek,
-+				    struct hellcreek_port_hwtstamp *ps,
-+				    int port)
-+{
-+	struct sk_buff *skb;
-+
-+	skb = skb_dequeue(&ps->rx_queue);
-+	if (skb)
-+		hellcreek_get_rxts(hellcreek, ps, skb, &ps->rx_queue, port);
-+}
-+
-+long hellcreek_hwtstamp_work(struct ptp_clock_info *ptp)
-+{
-+	struct hellcreek *hellcreek = ptp_to_hellcreek(ptp);
-+	struct dsa_switch *ds = hellcreek->ds;
-+	struct hellcreek_port_hwtstamp *ps;
-+	int i, restart = 0;
-+
-+	for (i = 2; i < ds->num_ports; i++) {
-+		ps = &hellcreek->ports[i].port_hwtstamp;
-+
-+		if (test_bit(HELLCREEK_HWTSTAMP_TX_IN_PROGRESS, &ps->state))
-+			restart |= hellcreek_txtstamp_work(hellcreek, ps, i);
-+
-+		hellcreek_rxtstamp_work(hellcreek, ps, i);
-+	}
-+
-+	return restart ? 1 : -1;
-+}
-+
-+bool hellcreek_port_txtstamp(struct dsa_switch *ds, int port,
-+			     struct sk_buff *clone, unsigned int type)
-+{
-+	struct hellcreek *hellcreek = ds->priv;
-+	struct hellcreek_port_hwtstamp *ps;
-+	u8 *hdr;
-+
-+	ps = &hellcreek->ports[port].port_hwtstamp;
-+
-+	/* Check if the driver is expected to do HW timestamping */
-+	if (!(skb_shinfo(clone)->tx_flags & SKBTX_HW_TSTAMP))
-+		return false;
-+
-+	/* Make sure the message is a PTP message that needs to be timestamped
-+	 * and the interaction with the HW timestamping is enabled. If not, stop
-+	 * here
-+	 */
-+	hdr = hellcreek_should_tstamp(hellcreek, port, clone, type);
-+	if (!hdr)
-+		return false;
-+
-+	if (test_and_set_bit_lock(HELLCREEK_HWTSTAMP_TX_IN_PROGRESS,
-+				  &ps->state))
-+		return false;
-+
-+	ps->tx_skb = clone;
-+
-+	/* store the number of ticks occurred since system start-up till this
-+	 * moment
-+	 */
-+	ps->tx_tstamp_start = jiffies;
-+
-+	ptp_schedule_worker(hellcreek->ptp_clock, 0);
-+
-+	return true;
-+}
-+
-+bool hellcreek_port_rxtstamp(struct dsa_switch *ds, int port,
-+			     struct sk_buff *skb, unsigned int type)
-+{
-+	struct hellcreek *hellcreek = ds->priv;
-+	struct hellcreek_port_hwtstamp *ps;
-+	u8 *hdr;
-+
-+	ps = &hellcreek->ports[port].port_hwtstamp;
-+
-+	/* This check only fails if the user did not initialize hardware
-+	 * timestamping beforehand.
-+	 */
-+	if (ps->tstamp_config.rx_filter != HWTSTAMP_FILTER_PTP_V2_EVENT)
-+		return false;
-+
-+	/* Make sure the message is a PTP message that needs to be timestamped
-+	 * and the interaction with the HW timestamping is enabled. If not, stop
-+	 * here
-+	 */
-+	hdr = hellcreek_should_tstamp(hellcreek, port, skb, type);
-+	if (!hdr)
-+		return false;
-+
-+	SKB_PTP_TYPE(skb) = type;
-+
-+	skb_queue_tail(&ps->rx_queue, skb);
-+
-+	ptp_schedule_worker(hellcreek->ptp_clock, 0);
-+
-+	return true;
-+}
-+
-+static void hellcreek_hwtstamp_port_setup(struct hellcreek *hellcreek, int port)
-+{
-+	struct hellcreek_port_hwtstamp *ps =
-+		&hellcreek->ports[port].port_hwtstamp;
-+
-+	skb_queue_head_init(&ps->rx_queue);
-+}
-+
-+int hellcreek_hwtstamp_setup(struct hellcreek *hellcreek)
-+{
-+	int i;
-+
-+	/* Initialize timestamping ports. */
-+	for (i = 2; i < NUM_PORTS; ++i)
-+		hellcreek_hwtstamp_port_setup(hellcreek, i);
-+
-+	/* Select the synchronized clock as the source timekeeper for the
-+	 * timestamps and enable inline timestamping.
-+	 */
-+	hellcreek_ptp_write(hellcreek, PR_SETTINGS_C_TS_SRC_TK_MASK |
-+			    PR_SETTINGS_C_RES3TS,
-+			    PR_SETTINGS_C);
-+
-+	return 0;
-+}
-+
-+void hellcreek_hwtstamp_free(struct hellcreek *hellcreek)
-+{
-+	/* Nothing todo */
-+}
-diff --git a/drivers/net/dsa/hirschmann/hellcreek_hwtstamp.h b/drivers/net/dsa/hirschmann/hellcreek_hwtstamp.h
-new file mode 100644
-index 000000000000..c0745ffa1ebb
---- /dev/null
-+++ b/drivers/net/dsa/hirschmann/hellcreek_hwtstamp.h
-@@ -0,0 +1,58 @@
-+/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
-+/*
-+ * DSA driver for:
-+ * Hirschmann Hellcreek TSN switch.
-+ *
-+ * Copyright (C) 2019,2020 Hochschule Offenburg
-+ * Copyright (C) 2019,2020 Linutronix GmbH
-+ * Authors: Kurt Kanzenbach <kurt@linutronix.de>
-+ *	    Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>
-+ */
-+
-+#ifndef _HELLCREEK_HWTSTAMP_H_
-+#define _HELLCREEK_HWTSTAMP_H_
-+
-+#include <net/dsa.h>
-+#include "hellcreek.h"
-+
-+/* Timestamp Register */
-+#define PR_TS_RX_P1_STATUS_C	(0x1d * 2)
-+#define PR_TS_RX_P1_DATA_C	(0x1e * 2)
-+#define PR_TS_TX_P1_STATUS_C	(0x1f * 2)
-+#define PR_TS_TX_P1_DATA_C	(0x20 * 2)
-+#define PR_TS_RX_P2_STATUS_C	(0x25 * 2)
-+#define PR_TS_RX_P2_DATA_C	(0x26 * 2)
-+#define PR_TS_TX_P2_STATUS_C	(0x27 * 2)
-+#define PR_TS_TX_P2_DATA_C	(0x28 * 2)
-+
-+#define PR_TS_STATUS_TS_AVAIL	BIT(2)
-+#define PR_TS_STATUS_TS_LOST	BIT(3)
-+
-+#define SKB_PTP_TYPE(__skb) (*(unsigned int *)((__skb)->cb))
-+
-+/* TX_TSTAMP_TIMEOUT: This limits the time spent polling for a TX
-+ * timestamp. When working properly, hardware will produce a timestamp
-+ * within 1ms. Software may enounter delays, so the timeout is set
-+ * accordingly.
-+ */
-+#define TX_TSTAMP_TIMEOUT	msecs_to_jiffies(40)
-+
-+int hellcreek_port_hwtstamp_set(struct dsa_switch *ds, int port,
-+				struct ifreq *ifr);
-+int hellcreek_port_hwtstamp_get(struct dsa_switch *ds, int port,
-+				struct ifreq *ifr);
-+
-+bool hellcreek_port_rxtstamp(struct dsa_switch *ds, int port,
-+			     struct sk_buff *clone, unsigned int type);
-+bool hellcreek_port_txtstamp(struct dsa_switch *ds, int port,
-+			     struct sk_buff *clone, unsigned int type);
-+
-+int hellcreek_get_ts_info(struct dsa_switch *ds, int port,
-+			  struct ethtool_ts_info *info);
-+
-+long hellcreek_hwtstamp_work(struct ptp_clock_info *ptp);
-+
-+int hellcreek_hwtstamp_setup(struct hellcreek *chip);
-+void hellcreek_hwtstamp_free(struct hellcreek *chip);
-+
-+#endif /* _HELLCREEK_HWTSTAMP_H_ */
-diff --git a/drivers/net/dsa/hirschmann/hellcreek_ptp.c b/drivers/net/dsa/hirschmann/hellcreek_ptp.c
-index c606a26a130e..8c2cef2b60fb 100644
---- a/drivers/net/dsa/hirschmann/hellcreek_ptp.c
-+++ b/drivers/net/dsa/hirschmann/hellcreek_ptp.c
-@@ -12,14 +12,15 @@
- #include <linux/ptp_clock_kernel.h>
- #include "hellcreek.h"
- #include "hellcreek_ptp.h"
-+#include "hellcreek_hwtstamp.h"
- 
--static u16 hellcreek_ptp_read(struct hellcreek *hellcreek, unsigned int offset)
-+u16 hellcreek_ptp_read(struct hellcreek *hellcreek, unsigned int offset)
- {
- 	return readw(hellcreek->ptp_base + offset);
- }
- 
--static void hellcreek_ptp_write(struct hellcreek *hellcreek, u16 data,
--				unsigned int offset)
-+void hellcreek_ptp_write(struct hellcreek *hellcreek, u16 data,
-+			 unsigned int offset)
- {
- 	writew(data, hellcreek->ptp_base + offset);
- }
-@@ -61,6 +62,24 @@ static u64 __hellcreek_ptp_gettime(struct hellcreek *hellcreek)
- 	return ns;
- }
- 
-+/* Retrieve the seconds parts in nanoseconds for a packet timestamped with @ns.
-+ * There has to be a check whether an overflow occurred between the packet
-+ * arrival and now. If so use the correct seconds (-1) for calculating the
-+ * packet arrival time.
-+ */
-+u64 hellcreek_ptp_gettime_seconds(struct hellcreek *hellcreek, u64 ns)
-+{
-+	u64 s;
-+
-+	__hellcreek_ptp_gettime(hellcreek);
-+	if (hellcreek->last_ts > ns)
-+		s = hellcreek->seconds * NSEC_PER_SEC;
-+	else
-+		s = (hellcreek->seconds - 1) * NSEC_PER_SEC;
-+
-+	return s;
-+}
-+
- static int hellcreek_ptp_gettime(struct ptp_clock_info *ptp,
- 				 struct timespec64 *ts)
- {
-@@ -238,17 +257,18 @@ int hellcreek_ptp_setup(struct hellcreek *hellcreek)
- 	 * accumulator_overflow_rate shall not exceed 62.5 MHz (which adjusts
- 	 * the nominal frequency by 6.25%)
- 	 */
--	hellcreek->ptp_clock_info.max_adj   = 62500000;
--	hellcreek->ptp_clock_info.n_alarm   = 0;
--	hellcreek->ptp_clock_info.n_pins    = 0;
--	hellcreek->ptp_clock_info.n_ext_ts  = 0;
--	hellcreek->ptp_clock_info.n_per_out = 0;
--	hellcreek->ptp_clock_info.pps	    = 0;
--	hellcreek->ptp_clock_info.adjfine   = hellcreek_ptp_adjfine;
--	hellcreek->ptp_clock_info.adjtime   = hellcreek_ptp_adjtime;
--	hellcreek->ptp_clock_info.gettime64 = hellcreek_ptp_gettime;
--	hellcreek->ptp_clock_info.settime64 = hellcreek_ptp_settime;
--	hellcreek->ptp_clock_info.enable    = hellcreek_ptp_enable;
-+	hellcreek->ptp_clock_info.max_adj     = 62500000;
-+	hellcreek->ptp_clock_info.n_alarm     = 0;
-+	hellcreek->ptp_clock_info.n_pins      = 0;
-+	hellcreek->ptp_clock_info.n_ext_ts    = 0;
-+	hellcreek->ptp_clock_info.n_per_out   = 0;
-+	hellcreek->ptp_clock_info.pps	      = 0;
-+	hellcreek->ptp_clock_info.adjfine     = hellcreek_ptp_adjfine;
-+	hellcreek->ptp_clock_info.adjtime     = hellcreek_ptp_adjtime;
-+	hellcreek->ptp_clock_info.gettime64   = hellcreek_ptp_gettime;
-+	hellcreek->ptp_clock_info.settime64   = hellcreek_ptp_settime;
-+	hellcreek->ptp_clock_info.enable      = hellcreek_ptp_enable;
-+	hellcreek->ptp_clock_info.do_aux_work = hellcreek_hwtstamp_work;
- 
- 	hellcreek->ptp_clock = ptp_clock_register(&hellcreek->ptp_clock_info,
- 						  hellcreek->dev);
-diff --git a/drivers/net/dsa/hirschmann/hellcreek_ptp.h b/drivers/net/dsa/hirschmann/hellcreek_ptp.h
-index 2dd8aaa532d0..e0eca1f4a494 100644
---- a/drivers/net/dsa/hirschmann/hellcreek_ptp.h
-+++ b/drivers/net/dsa/hirschmann/hellcreek_ptp.h
-@@ -59,6 +59,10 @@
- 
- int hellcreek_ptp_setup(struct hellcreek *hellcreek);
- void hellcreek_ptp_free(struct hellcreek *hellcreek);
-+u16 hellcreek_ptp_read(struct hellcreek *hellcreek, unsigned int offset);
-+void hellcreek_ptp_write(struct hellcreek *hellcreek, u16 data,
-+			 unsigned int offset);
-+u64 hellcreek_ptp_gettime_seconds(struct hellcreek *hellcreek, u64 ns);
- 
- #define ptp_to_hellcreek(ptp)					\
- 	container_of(ptp, struct hellcreek, ptp_clock_info)
--- 
-2.20.1
+> (In fact the DW DMAC driver is working with so called Linked-List entri=
+es,
+> which are used to map the SG-list entries into the list of items with l=
+ength
+> less than or equal to the max block size the engine supports. But for
+> simplicity I call them the SG-list entries, since if dma_set_max_seg_si=
+ze()
+> is specified the mapping will be uniform.)
+
+Right, I'll come back to the dma_set_max_seq_size() later for my cases ;)=
+
+
+>> The EDMA from TI have similar limitation (we set the limit to 20 nents=
+).
+>> Longer lists will be broken up to maximum of 20 segment transfers.
+>> This setup has bigger impact on audio (cyclic) as we need to limit the=
+
+>> number of periods to not exceed this limit of 20.
+>=20
+> As I said the problem described above isn't about the number of entries=
+, but
+> about how they are handled. If there is a latency, then the problem may=
+ and most
+> like will eventually happen.
+>=20
+> The complexity of the situation is that the DW DMAC driver may split a =
+SG-list
+> entry up if its length exceeds max block size the engine supports. That=
+'s
+> why in order to fix the problem described in the patch log the DMA clie=
+nt driver
+> developed needs to take into account the next two points:
+> 1) Detect the maximum number of SG entries the DMA engine can handle wi=
+thout the
+> non-deterministic latency (you called it max_sg_nents_burst). So the cl=
+ient
+> drivers would know, that the DMA-channels responsible for Tx and Rx tra=
+nsfers
+> may be executed with latencies.
+
+This is really useful information for the clients. But in some cases
+they just don't care how the list is going to be processed, given if
+they have large enough internal FIFO to hold on while the DMA moves from
+one chunk to another.
+
+> 2) Make sure the length of each SG-list entry doesn't exceed the max bl=
+ock size
+> the DW DMAC supports. If some of them does, then the DW DMAC code will =
+break
+> these SG-entries up into the smaller DMA Linked-list entries, which wil=
+l get us
+> back to the re-submission latency problem described in the patch log. T=
+his
+> peculiarity is covered by calling dma_set_max_seg_size() method in the =
+DW DMAC
+> driver (at least for SPI subsystem it works out-of-box).
+
+This is what does not work for me for neither EDMA or sDMA... The
+max_seq_size depends on the src/dst_addr_width the peripheral is
+configured. It is different for each DMA_SLAVE_BUSWIDTH_*_BYTES _and_
+also for the burst used.
+
+It is on my to-do list to clean up and send this:
+https://github.com/omap-audio/linux-audio/commit/dd81de1a343810468b6e7a60=
+1e90a9161f46cab1
+
+For EDMA the implementation is:
+https://github.com/omap-audio/linux-audio/commit/ee93c45667d0f250baa1e224=
+e5d1266fae2e7c80
+
+along the same lines for sDMA:
+https://github.com/omap-audio/linux-audio/commit/d6ac68692efcdac8ec233c70=
+b802d37f594d6d4d
+
+What is obviously missing is that if the driver does not implement the
+device_get_max_len, then dma_get_max_seg_size() of the device should be
+returned.
+
+Other option would be:
+https://github.com/omap-audio/linux-audio/commit/95dda19c92a3843774185030=
+9374a2ca4ef1e361
+
+I'm still hesitating which would be more generic to be acceptable.
+
+And to make things a bit more interesting the UDMA have also different
+dma_sg_len() supported depending on what mode the channel is used (TR or
+packet mode), but that's another story in itself.
+
+>> The sDMA on the other hand has different limits. Earlier versions
+>> without linking support can execute one SG chunk at the time and needs=
+
+>> to reconfigure for the next one -> max_sg_nents is 1 for the older sDM=
+As...
+>=20
+> Yes, this is our case.
+
+Interesting. So you prefer that your clients will use
+dmaengine_prep_slave_single() if possible?
+
+>>> In order to let the DMA consumer know about the DMA device capabiliti=
+es
+>>> regarding the hardware accelerated SG list traversal we introduce the=
+
+>>> max_sg_list capability. It is supposed to be initialized by the DMA e=
+ngine
+>>> driver with 0 if there is no limitation for the number of SG entries
+>>> atomically executed and with non-zero value if there is such constrai=
+nts,
+>>> so the upper limit is determined by the number set to the property.
+>>>
+>>> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>>> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+>>> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>>> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+>>> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+>>> Cc: Arnd Bergmann <arnd@arndb.de>
+>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>> Cc: linux-mips@vger.kernel.org
+>>> Cc: devicetree@vger.kernel.org
+>>>
+>>> ---
+>>>
+>>> Changelog v3:
+>>> - This is a new patch created as a result of the discussion with Vinu=
+d and
+>>>   Andy in the framework of DW DMA burst and LLP capabilities.
+>>>
+>>> Changelog v4:
+>>> - Fix of->if typo. It should be definitely of.
+>>> ---
+>>>  drivers/dma/dmaengine.c   | 1 +
+>>>  include/linux/dmaengine.h | 8 ++++++++
+>>>  2 files changed, 9 insertions(+)
+>>>
+>>> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+>>> index b332ffe52780..ad56ad58932c 100644
+>>> --- a/drivers/dma/dmaengine.c
+>>> +++ b/drivers/dma/dmaengine.c
+>>> @@ -592,6 +592,7 @@ int dma_get_slave_caps(struct dma_chan *chan, str=
+uct dma_slave_caps *caps)
+>>>  	caps->directions =3D device->directions;
+>>>  	caps->min_burst =3D device->min_burst;
+>>>  	caps->max_burst =3D device->max_burst;
+>>> +	caps->max_sg_nents =3D device->max_sg_nents;
+>>>  	caps->residue_granularity =3D device->residue_granularity;
+>>>  	caps->descriptor_reuse =3D device->descriptor_reuse;
+>>>  	caps->cmd_pause =3D !!device->device_pause;
+>>> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+>>> index 0c7403b27133..a7e4d8dfdd19 100644
+>>> --- a/include/linux/dmaengine.h
+>>> +++ b/include/linux/dmaengine.h
+>>> @@ -467,6 +467,9 @@ enum dma_residue_granularity {
+>>>   *	should be checked by controller as well
+>>>   * @min_burst: min burst capability per-transfer
+>>>   * @max_burst: max burst capability per-transfer
+>>> + * @max_sg_nents: max number of SG list entries executed in a single=
+ atomic
+>>> + *	DMA tansaction with no intermediate IRQ for reinitialization. Zer=
+o
+>>> + *	value means unlimited number of entries.
+>>
+>=20
+>> Without looking at the comment the name max_sg_nents implies that the
+>> DMA can not handle longer lists, but it is not really true.
+>> max_sg_nents_burst might be a bit cleaner for the first look?
+>=20
+> Seems reasonable. I also thought of a better naming so there wouldn't b=
+e need to
+> read a comment in order get a notion what exactly the parameter is resp=
+onsible
+> for. Although at the moment of the patchset preparation nothing better =
+got in my
+> mind.
+>=20
+> I like what you suggest, but I'd better make it "max_sg_burst" or "max_=
+sg_chain".
+> What do you think?
+
+Since we should be able to handle longer lists and this is kind of a
+hint for clients that above this number of nents the list will be broken
+up to smaller 'bursts', which when traversing could cause latency.
+
+sg_chunk_len might be another candidate.
+
+> Vinod?
+> Andy (since you've already acked the patch)?
+>=20
+> -Sergey
+
+- P=C3=A9ter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
