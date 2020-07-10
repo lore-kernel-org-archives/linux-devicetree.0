@@ -2,86 +2,82 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF38C433E5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 13:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F29C433E5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 13:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C874207D0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 13:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0A8E207DD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 13:49:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HiUD1SeS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DDeXOIXu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgGJNrc (ORCPT
+        id S1728034AbgGJNtn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 09:47:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37386 "EHLO
+        Fri, 10 Jul 2020 09:49:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727910AbgGJNrb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 09:47:31 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B0C3C08C5CE;
-        Fri, 10 Jul 2020 06:47:31 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id z15so6002789wrl.8;
-        Fri, 10 Jul 2020 06:47:31 -0700 (PDT)
+        with ESMTP id S1727826AbgGJNtm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 09:49:42 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1972DC08C5DC;
+        Fri, 10 Jul 2020 06:49:42 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id f18so5993531wml.3;
+        Fri, 10 Jul 2020 06:49:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FbKNbXw5+ofG9RyKnBh68SnbvorNSKKjBU7WOLXWQE4=;
-        b=HiUD1SeS9oNEOQGLlGjspqlx1ucgIHwcztodspOdsWF5ZLU+APPJD7sBYoCs4essF+
-         iXgSyAj2XPcG3o0aOB4IvQ7R+0mCaei3Vineeb3Jnx6Iix8KSmow+PxMGaa/BzxztTPy
-         4rbyx0c8P12c5p1sgmpGPzsj1/CRo+hL11l1RTydDnt82Fjj7hflsJezjbzZocMlYe7t
-         3fcb3ZuCkDRaexCjlYWVuJ0pa1YLBTdk5C8/mzS3IdNLnwwyWDjp7vW8Tgv7st0tSHaa
-         fSTZN5E5d3BiwyZy+8IV6CghewKF9APDlPS7mjHJCClCC3aUJIFsXvWSBEkfC3My+R1w
-         FJ/A==
+        bh=iNGUlusb6XGPbY/iiSrmci3WQY8ih0duTRRM8I2QK9k=;
+        b=DDeXOIXu2BiCS9fxE/OsSzLix5ZdnrJD7euJ0K+UCFRooM4QhYEWIwlloYFXznyBZm
+         bKbGh0uDE6bIJv30lRIEsnj74X57uq3TJMpGjfCn3vhTWD9aEUHTzLDKAqOgcspa30h5
+         +CnLyEPQQKos8wPL2CSrAb76Q/pAUFcDrPd+fMBR3yqYPMU5VYP810xOhmmOTpiT4SnC
+         YEWmNQnU7GCRAbl4U1BAgGTE4WJbWn/3RMzFI8hOazRhh6VbdhqocEXc05m8/GyughE1
+         Q3aASZzlCujpYuV35daJXyN8nOclhExxN91OKM4x9Yiui+i9MqkW7TXPmo+pzisQmUzN
+         V7jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=FbKNbXw5+ofG9RyKnBh68SnbvorNSKKjBU7WOLXWQE4=;
-        b=rkqRjJ0tjtbLHRxrtjZ0IXxrYgnTkWRmE3iTDTGI2zC0meRgfO5HB9IoIZnBiz0LGF
-         h5TSw2qBXiVWX9DCAgPYLKNJDSV0FPJeuY3Qj/UKNNV8bikIb6NrnkLWdO6mk81LpyNs
-         fs2gFNZzL12BXBuby3/fF4w0RftKIyTIXFCrS/v+NcgV+gKYlaxIdPXFgdFICIrz1RhJ
-         0qtORv63kuiylQ4Aa7BjKcE8uXZxWCPA9Zai3W7S7UL26W9CkTQoY9EteChWZf4VTiOB
-         jLoffK7AVZOtdUaL/YgF2pD8+PnC7I/jseHa0psyc8+5SYFPvZlZgwtgJdKD39RyjyV4
-         D4Uw==
-X-Gm-Message-State: AOAM530aUXBcx32WVQaqeXnvEbAAditxUbNHurw5C3pdMIN3p7nIysA8
-        9XKCONSLeAq2bU/1X0AFvCo=
-X-Google-Smtp-Source: ABdhPJz30P3Ja6nlaCcxoVO3T84UFVmzRkAQoQzS2oPJFdsgjFqTddAfgdfaqHdktNmYIqTpnDGbFQ==
-X-Received: by 2002:adf:e6c1:: with SMTP id y1mr42243181wrm.116.1594388850081;
-        Fri, 10 Jul 2020 06:47:30 -0700 (PDT)
+        bh=iNGUlusb6XGPbY/iiSrmci3WQY8ih0duTRRM8I2QK9k=;
+        b=OAqRhMOU4noy3u39oTi+qV12NuTeLmeQoe4/zwcHzzHtcZeracydIvClVZWoFzuyKr
+         AX2jnK7SEPzrmupefXa0kUv+9Dm69Q8v0j+FDAkVbhQ8RFAIk+l0ywBX+iEpjjRZ9eUQ
+         oiHkfPsovFiD19UHKTxHFaxC5+rGgzRvRNbX2pqRGNznxrPksvQxg8jUVu1IJPYlB+lq
+         7tanwptHQE1ZZTuQmKLlTvGuGmWXipM2aY9ZHYADIMRdkGXL3/2bqg7PpeX7S/Lk4Cwn
+         MvYiBlvKQw0LeCqp2UMK+BB47jy3Hl7SvgXGGdYVkEyVNZjRP5Sl1c+HKGC9ZbJ7wGpF
+         yjOg==
+X-Gm-Message-State: AOAM533+EQqMKV02lVp6t/AqrMKDpEY+rXFsItexVyNkwQQUQxMRKnQc
+        yuhiFpI1XUWK3EUXfQCbt/0=
+X-Google-Smtp-Source: ABdhPJwHTlESN9DoaaDMAtI7D4n+BAt5h4FXs+RBDE5A/6CTsyJydS9yE1+a9c/jDu4TOKk7lQ8lNw==
+X-Received: by 2002:a1c:9d07:: with SMTP id g7mr5264267wme.160.1594388980849;
+        Fri, 10 Jul 2020 06:49:40 -0700 (PDT)
 Received: from ziggy.stardust ([213.195.114.245])
-        by smtp.gmail.com with ESMTPSA id y6sm4572954wrr.74.2020.07.10.06.47.28
+        by smtp.gmail.com with ESMTPSA id l14sm10626393wrn.18.2020.07.10.06.49.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jul 2020 06:47:29 -0700 (PDT)
-Subject: Re: [PATCH v7 7/7] arm64: dts: add dts nodes for MT6779
-To:     Hanks Chen <hanks.chen@mediatek.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>
-Cc:     mtk01761 <wendell.lin@mediatek.com>,
-        Andy Teng <andy.teng@mediatek.com>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        wsd_upstream@mediatek.com, CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>
-References: <1593694630-26604-1-git-send-email-hanks.chen@mediatek.com>
- <1593694630-26604-9-git-send-email-hanks.chen@mediatek.com>
+        Fri, 10 Jul 2020 06:49:40 -0700 (PDT)
+Subject: Re: [PATCH v6 07/10] iommu/mediatek: Add REG_MMU_WR_LEN_CTRL register
+ definition
+To:     Chao Hao <chao.hao@mediatek.com>, Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com,
+        FY Yang <fy.yang@mediatek.com>, Yong Wu <yong.wu@mediatek.com>,
+        TH Yang <th.yang@mediatek.com>
+References: <20200703044127.27438-1-chao.hao@mediatek.com>
+ <20200703044127.27438-8-chao.hao@mediatek.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <2eee3a1f-464a-359e-e7d3-0d331c8898ed@gmail.com>
-Date:   Fri, 10 Jul 2020 15:47:28 +0200
+Message-ID: <2500e311-983a-2d79-cd31-a9ff948b2883@gmail.com>
+Date:   Fri, 10 Jul 2020 15:49:39 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <1593694630-26604-9-git-send-email-hanks.chen@mediatek.com>
+In-Reply-To: <20200703044127.27438-8-chao.hao@mediatek.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -92,88 +88,86 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 
 
-On 02/07/2020 14:57, Hanks Chen wrote:
-> this adds initial MT6779 dts settings for board support,
-> including cpu, gic, timer, ccf, pinctrl, uart, sysirq...etc.
+On 03/07/2020 06:41, Chao Hao wrote:
+> Some platforms(ex: mt6779) need to improve performance by setting
+> REG_MMU_WR_LEN_CTRL register. And we can use WR_THROT_EN macro to control
+> whether we need to set the register. If the register uses default value,
+> iommu will send command to EMI without restriction, when the number of
+> commands become more and more, it will drop the EMI performance. So when
+> more than ten_commands(default value) don't be handled for EMI, iommu will
+> stop send command to EMI for keeping EMI's performace by enabling write
+> throttling mechanism(bit[5][21]=0) in MMU_WR_LEN_CTRL register.
 > 
-> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
+> Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> Signed-off-by: Chao Hao <chao.hao@mediatek.com>
+
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+
 > ---
->   arch/arm64/boot/dts/mediatek/Makefile       |    1 +
->   arch/arm64/boot/dts/mediatek/mt6779-evb.dts |   31 +++
->   arch/arm64/boot/dts/mediatek/mt6779.dtsi    |  271 +++++++++++++++++++++++++++
->   3 files changed, 303 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/mediatek/mt6779-evb.dts
->   create mode 100644 arch/arm64/boot/dts/mediatek/mt6779.dtsi
+>   drivers/iommu/mtk_iommu.c | 11 +++++++++++
+>   drivers/iommu/mtk_iommu.h |  1 +
+>   2 files changed, 12 insertions(+)
 > 
-[...]
-> +
-> +		uart2: serial@11004000 {
-> +			compatible = "mediatek,mt6779-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11004000 0 0x400>;
-> +			interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&clk26m>, <&infracfg_ao CLK_INFRA_UART1>;
-
-I suppose that should be:
-
-clocks = <&clk26m>, <&infracfg_ao CLK_INFRA_UART2>;
-
-
-Regards,
-Matthias
-
-> +			clock-names = "baud", "bus";
-> +			status = "disabled";
-> +		};
-> +
-> +		audio: clock-controller@11210000 {
-> +			compatible = "mediatek,mt6779-audio", "syscon";
-> +			reg = <0 0x11210000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		mfgcfg: clock-controller@13fbf000 {
-> +			compatible = "mediatek,mt6779-mfgcfg", "syscon";
-> +			reg = <0 0x13fbf000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		mmsys: syscon@14000000 {
-> +			compatible = "mediatek,mt6779-mmsys", "syscon";
-> +			reg = <0 0x14000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		imgsys: clock-controller@15020000 {
-> +			compatible = "mediatek,mt6779-imgsys", "syscon";
-> +			reg = <0 0x15020000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		vdecsys: clock-controller@16000000 {
-> +			compatible = "mediatek,mt6779-vdecsys", "syscon";
-> +			reg = <0 0x16000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		vencsys: clock-controller@17000000 {
-> +			compatible = "mediatek,mt6779-vencsys", "syscon";
-> +			reg = <0 0x17000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		camsys: clock-controller@1a000000 {
-> +			compatible = "mediatek,mt6779-camsys", "syscon";
-> +			reg = <0 0x1a000000 0 0x10000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		ipesys: clock-controller@1b000000 {
-> +			compatible = "mediatek,mt6779-ipesys", "syscon";
-> +			reg = <0 0x1b000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +	};
-> +};
+> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> index 0d96dcd8612b..5c8e141668fc 100644
+> --- a/drivers/iommu/mtk_iommu.c
+> +++ b/drivers/iommu/mtk_iommu.c
+> @@ -46,6 +46,8 @@
+>   #define F_MMU_STANDARD_AXI_MODE_MASK		(BIT(3) | BIT(19))
+>   
+>   #define REG_MMU_DCM_DIS				0x050
+> +#define REG_MMU_WR_LEN_CTRL			0x054
+> +#define F_MMU_WR_THROT_DIS_MASK			(BIT(5) | BIT(21))
+>   
+>   #define REG_MMU_CTRL_REG			0x110
+>   #define F_MMU_TF_PROT_TO_PROGRAM_ADDR		(2 << 4)
+> @@ -112,6 +114,7 @@
+>   #define RESET_AXI			BIT(3)
+>   #define OUT_ORDER_WR_EN			BIT(4)
+>   #define HAS_SUB_COMM			BIT(5)
+> +#define WR_THROT_EN			BIT(6)
+>   
+>   #define MTK_IOMMU_HAS_FLAG(pdata, _x) \
+>   		((((pdata)->flags) & (_x)) == (_x))
+> @@ -593,6 +596,12 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
+>   		writel_relaxed(regval, data->base + REG_MMU_VLD_PA_RNG);
+>   	}
+>   	writel_relaxed(0, data->base + REG_MMU_DCM_DIS);
+> +	if (MTK_IOMMU_HAS_FLAG(data->plat_data, WR_THROT_EN)) {
+> +		/* write command throttling mode */
+> +		regval = readl_relaxed(data->base + REG_MMU_WR_LEN_CTRL);
+> +		regval &= ~F_MMU_WR_THROT_DIS_MASK;
+> +		writel_relaxed(regval, data->base + REG_MMU_WR_LEN_CTRL);
+> +	}
+>   
+>   	if (MTK_IOMMU_HAS_FLAG(data->plat_data, RESET_AXI)) {
+>   		/* The register is called STANDARD_AXI_MODE in this case */
+> @@ -747,6 +756,7 @@ static int __maybe_unused mtk_iommu_suspend(struct device *dev)
+>   	struct mtk_iommu_suspend_reg *reg = &data->reg;
+>   	void __iomem *base = data->base;
+>   
+> +	reg->wr_len_ctrl = readl_relaxed(base + REG_MMU_WR_LEN_CTRL);
+>   	reg->misc_ctrl = readl_relaxed(base + REG_MMU_MISC_CTRL);
+>   	reg->dcm_dis = readl_relaxed(base + REG_MMU_DCM_DIS);
+>   	reg->ctrl_reg = readl_relaxed(base + REG_MMU_CTRL_REG);
+> @@ -771,6 +781,7 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
+>   		dev_err(data->dev, "Failed to enable clk(%d) in resume\n", ret);
+>   		return ret;
+>   	}
+> +	writel_relaxed(reg->wr_len_ctrl, base + REG_MMU_WR_LEN_CTRL);
+>   	writel_relaxed(reg->misc_ctrl, base + REG_MMU_MISC_CTRL);
+>   	writel_relaxed(reg->dcm_dis, base + REG_MMU_DCM_DIS);
+>   	writel_relaxed(reg->ctrl_reg, base + REG_MMU_CTRL_REG);
+> diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
+> index 46d0d47b22e1..31edd05e2eb1 100644
+> --- a/drivers/iommu/mtk_iommu.h
+> +++ b/drivers/iommu/mtk_iommu.h
+> @@ -31,6 +31,7 @@ struct mtk_iommu_suspend_reg {
+>   	u32				int_main_control;
+>   	u32				ivrp_paddr;
+>   	u32				vld_pa_rng;
+> +	u32				wr_len_ctrl;
+>   };
+>   
+>   enum mtk_iommu_plat {
 > 
