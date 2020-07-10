@@ -2,85 +2,81 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F398AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 08:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47CFDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 09:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAACC207BC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 08:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20A6B207FF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 09:07:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NU0o0rmL";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ExT1cj+L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727871AbgGJIxB (ORCPT
+        id S1726369AbgGJJHG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 04:53:01 -0400
-Received: from mga01.intel.com ([192.55.52.88]:6065 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726615AbgGJIxB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 10 Jul 2020 04:53:01 -0400
-IronPort-SDR: l9fjHArwszqsaGn3r9+wIPdu85PhiqRIGY4VE9BJHjU1s2kp2McgB/dZHAfGasNRvzNH743Oj6
- gu/p8t+QQ4Aw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="166261589"
-X-IronPort-AV: E=Sophos;i="5.75,335,1589266800"; 
-   d="scan'208";a="166261589"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 01:53:00 -0700
-IronPort-SDR: 4aHkhL0w0yOuCrWxuFpni5YCq9aksJvJK62MuowlK8S8jL8LTaItN+0eIApHptMMJXbflEoguA
- W/AH5SXeMSJQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,335,1589266800"; 
-   d="scan'208";a="298361965"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002.jf.intel.com with ESMTP; 10 Jul 2020 01:52:57 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jtomA-0011SQ-4A; Fri, 10 Jul 2020 11:52:58 +0300
-Date:   Fri, 10 Jul 2020 11:52:58 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 08/11] dmaengine: dw: Add dummy device_caps callback
-Message-ID: <20200710085258.GG3703480@smile.fi.intel.com>
-References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
- <20200709224550.15539-9-Sergey.Semin@baikalelectronics.ru>
- <20200710085123.GF3703480@smile.fi.intel.com>
+        Fri, 10 Jul 2020 05:07:06 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45422 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726288AbgGJJHG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 05:07:06 -0400
+From:   Kurt Kanzenbach <kurt@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594372024;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=MVpLVGnR+Mx6MGrjjXvN7djH89CADIzyMcCTyhH/N5s=;
+        b=NU0o0rmLqfZRQyGDsJiNHGl4JyQD75vjZbsaeORZh+HdhLh8QBuNhSA4Bow4S9w7j6tDe5
+        gWhQfXr5q0fvbLERk6qk5Pys83JwyLmDydvYDh4abm10016fFfM3nJq9zRfSVEtSQJJxqr
+        N4gI465NlXXCYTb+WGsVLqezrIqKUyDxG9bhf3Z9qnRCh2mFIpJepaHd97gHFaAcmfxPxj
+        620Fm6z02Yfe/MXSnjrdIIilPXfmYBufX6wlyoe98hW4lyW9IggKrf88IafVPc5h3ksPwl
+        mEJmwqaTs823uNyAr9aBq1s1JjUguhdipgBrIwYPX397NhUBjfuFd6t6kdMJMQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594372024;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=MVpLVGnR+Mx6MGrjjXvN7djH89CADIzyMcCTyhH/N5s=;
+        b=ExT1cj+LXdXw96gtPegeZ4y8YKjDPawGPbV27oVaF3WPCAE3n2LWFjJnWGO5EHfblldQEM
+        dV7TgdZRFrrtfKBQ==
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, Kurt Kanzenbach <kurt@linutronix.de>
+Subject: [PATCH v1 0/1] dt-bindings: net: dsa: Add DSA yaml binding
+Date:   Fri, 10 Jul 2020 11:06:17 +0200
+Message-Id: <20200710090618.28945-1-kurt@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710085123.GF3703480@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 11:51:23AM +0300, Andy Shevchenko wrote:
-> On Fri, Jul 10, 2020 at 01:45:47AM +0300, Serge Semin wrote:
-> > Since some DW DMA controllers (like one installed on Baikal-T1 SoC) may
-> > have non-uniform DMA capabilities per device channels, let's add
-> > the DW DMA specific device_caps callback to expose that specifics up to
-> > the DMA consumer. It's a dummy function for now. We'll fill it in with
-> > capabilities overrides in the next commits.
-> 
-> Just a reminder (mainly to Vinod) of my view to this.
-> Unneeded churn, should be folded to patch 9.
+Hi,
 
-Sorry, s/9/10/ (also the sign that they should be in one, rather than spread
-over the series).
+as discussed [1] it makes sense to add a DSA yaml binding. So here it
+is. Feedback is highly welcome. Tested in combination with the hellcreek.yaml
+file.
+
+Thanks,
+Kurt
+
+[1] - https://lkml.kernel.org/netdev/449f0a03-a91d-ae82-b31f-59dfd1457ec5@gmail.com/
+
+Kurt Kanzenbach (1):
+  dt-bindings: net: dsa: Add DSA yaml binding
+
+ .../devicetree/bindings/net/dsa/dsa.yaml      | 80 +++++++++++++++++++
+ 1 file changed, 80 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/dsa/dsa.yaml
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.20.1
 
