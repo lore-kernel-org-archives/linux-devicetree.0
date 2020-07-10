@@ -2,153 +2,231 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E724EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 17:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AFDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 17:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0A7120720
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 17:28:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CCCB2076A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 17:35:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FliVh1s0"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OvrOYy/k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgGJR2g (ORCPT
+        id S1726962AbgGJRfP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 13:28:36 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:50348 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbgGJR2g (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 13:28:36 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06AHSW8t047719;
-        Fri, 10 Jul 2020 12:28:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594402112;
-        bh=jCPc+6jaziK3Wpf6rcI/cU6ahFDEiVnwjDvew5WE6fo=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=FliVh1s0bpdzkRcx8H631G26NGwPrUBvq7UQNbJMQt2LhqKQxH5feI4QFQVDP5Z/0
-         fhgY96AvsryFI5nk79/EGLi1zdWGGC+tz3QJYpid2n2QHKZGcypbvxOx5ZTFMYcD6A
-         oojTfIlvK9cZ6r3fToHxS+HfjzZbw5CBQF6zjruE=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06AHSWDH091711
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 10 Jul 2020 12:28:32 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 10
- Jul 2020 12:28:31 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 10 Jul 2020 12:28:31 -0500
-Received: from [10.250.34.57] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06AHSVT7084896;
-        Fri, 10 Jul 2020 12:28:31 -0500
-Subject: Re: [PATCH 00/13] Add IPU & DSP remoteprocs on OMAP4 and OMAP5
-From:   Suman Anna <s-anna@ti.com>
-To:     Tony Lindgren <tony@atomide.com>
-CC:     <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Tero Kristo <t-kristo@ti.com>
-References: <20200709231954.1973-1-s-anna@ti.com>
- <20200710165814.GF5849@atomide.com>
- <41bd2bb4-06fe-5f70-22cf-ce9cedc8bbc3@ti.com>
-Message-ID: <4602b219-6822-4ebc-66c6-c64740793938@ti.com>
-Date:   Fri, 10 Jul 2020 12:28:26 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <41bd2bb4-06fe-5f70-22cf-ce9cedc8bbc3@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 10 Jul 2020 13:35:15 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:46227 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726872AbgGJRfO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 13:35:14 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200710173513euoutp02fc27a88586d56c044b90d08e0d8ec1c6~gdKNnVH7v1623816238euoutp02y
+        for <devicetree@vger.kernel.org>; Fri, 10 Jul 2020 17:35:13 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200710173513euoutp02fc27a88586d56c044b90d08e0d8ec1c6~gdKNnVH7v1623816238euoutp02y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1594402513;
+        bh=Ucl8qQkq/Y/lZnIAjMzZVO6MQAbXoZrhmEgdirnuKH0=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=OvrOYy/kTbR+2OTKwaj4zV3vFmWbjyEXQp08mVAWUf9OiAunak6Cp1We8zrqLo8NM
+         ynRa74op30uG5SqIa9SDNzvfK9DvlC1R2LZdtuTqygArN6OziS2ZngNMZQAS5+62VW
+         +n8gSBE9uz6u8vbEkEAg3ZPYPU+Xp/9D/TuX7h1U=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200710173512eucas1p16154c5959623fa570f517785a7204f47~gdKNQR5003026630266eucas1p13;
+        Fri, 10 Jul 2020 17:35:12 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id EF.1D.06318.0D6A80F5; Fri, 10
+        Jul 2020 18:35:12 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200710173512eucas1p101c03994a728150f18428295192edf25~gdKM9O5EL3193331933eucas1p1n;
+        Fri, 10 Jul 2020 17:35:12 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200710173512eusmtrp240beea254a53a5f0a7153c32847ebafe~gdKM8kZVk0083200832eusmtrp20;
+        Fri, 10 Jul 2020 17:35:12 +0000 (GMT)
+X-AuditID: cbfec7f5-371ff700000018ae-cb-5f08a6d08ac0
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 95.BE.06017.0D6A80F5; Fri, 10
+        Jul 2020 18:35:12 +0100 (BST)
+Received: from AMDC3061.digital.local (unknown [106.120.51.75]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200710173511eusmtip12ba193e6f648ff4a75f48ef80a6ce13b~gdKMbTkxq2698126981eusmtip1H;
+        Fri, 10 Jul 2020 17:35:11 +0000 (GMT)
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+To:     broonie@kernel.org, krzk@kernel.org
+Cc:     simon@lineageos.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
+        linux-samsung-soc@vger.kernel.org, s.nawrocki@samsung.com
+Subject: [PATCH 1/3] ASoC: samsung: Document DT bindings for Midas sound
+ subsystem
+Date:   Fri, 10 Jul 2020 19:34:58 +0200
+Message-Id: <20200710173500.22365-1-s.nawrocki@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFIsWRmVeSWpSXmKPExsWy7djPc7oXlnHEG0z5om9x5eIhJouNM9az
+        Wkx9+ITNYv6Rc6wW589vYLeYcX4fk8XaI3fZLVr3HmG3OPymndViy5nbbA5cHhs+N7F5bFrV
+        yebRsn4Tm0ffllWMHp83yQWwRnHZpKTmZJalFunbJXBlLNpRWbBEpmLNg/VsDYzvRLoYOTgk
+        BEwkmp8EdTFycQgJrGCUuPCkma2LkRPI+cIosXlDGIT9mVHixckgEBuk/uz+TSwQ8eVA8Zka
+        EM1A9bvWb2UHSbAJGEr0Hu1jBLFFBNQl7s9oYgUpYha4ySgxc1Mf2AZhgRCJy9vugjWwCKhK
+        /Lu1EKyBV8Ba4vGnTewQ2+QlVm84wAzSLCHwmU2ia2sHVMJF4sX5G2wQtrDEq+NboOIyEv93
+        zmeCaGhmlOjZfZsdwpnAKHH/+AJGiCpriTvnfrGBAoBZQFNi/S59iLCjRGvjXyZIuPBJ3Hgr
+        CBJmBjInbZvODBHmlehoE4KoVpH4vWo6E4QtJdH95D8LRImHxIHb8pAAipXYO30W8wRGuVkI
+        qxYwMq5iFE8tLc5NTy02zkst1ytOzC0uzUvXS87P3cQITBGn/x3/uoNx35+kQ4wCHIxKPLwL
+        EjnihVgTy4orcw8xSnAwK4nwOp09HSfEm5JYWZValB9fVJqTWnyIUZqDRUmc13jRy1ghgfTE
+        ktTs1NSC1CKYLBMHp1QD4zTOuobDypP7+me/XXJqI/sNns0Lv6Z0Cujx/c6eKXtA5twcFwm1
+        XMY5LWujGwL0Yl23laQaOr9pc/YtYPkgu/vbo2MBG0wXSee+kclwMFRY+lJLyPuV59XtUhEP
+        ZCatEi8wf17zxen0vYRXh9VmGd9o+FG/8aeQxrEy+Zxy9RlG0aekehY9UWIpzkg01GIuKk4E
+        AOU8TPINAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrILMWRmVeSWpSXmKPExsVy+t/xu7oXlnHEGyxul7a4cvEQk8XGGetZ
+        LaY+fMJmMf/IOVaL8+c3sFvMOL+PyWLtkbvsFq17j7BbHH7Tzmqx5cxtNgcujw2fm9g8Nq3q
+        ZPNoWb+JzaNvyypGj8+b5AJYo/RsivJLS1IVMvKLS2yVog0tjPQMLS30jEws9QyNzWOtjEyV
+        9O1sUlJzMstSi/TtEvQyFu2oLFgiU7HmwXq2BsZ3Il2MnBwSAiYSZ/dvYuli5OIQEljKKHFj
+        2Xe2LkYOoISUxPwWJYgaYYk/17rYQGwhgU+MEhtOKoPYbAKGEr1H+xhBbBEBTYmOebdZQeYw
+        CzxklNh//D4jyBxhgSCJj7srQGpYBFQl/t1aCFbPK2At8fjTJnaI+fISqzccYJ7AyLOAkWEV
+        o0hqaXFuem6xkV5xYm5xaV66XnJ+7iZGYHBuO/Zzyw7GrnfBhxgFOBiVeHgXJHLEC7EmlhVX
+        5h5ilOBgVhLhdTp7Ok6INyWxsiq1KD++qDQntfgQoynQ8onMUqLJ+cDIySuJNzQ1NLewNDQ3
+        Njc2s1AS5+0QOBgjJJCeWJKanZpakFoE08fEwSnVwCi/uqs7rbLyxuyeF8zV22912uhp7Aw4
+        WfQ8c8WuU4t07C0Zfp5/bcyieepNRoC/m8lcpyeKq3eoLN9xn9WeY4u+45S901a4rv5i4NRr
+        a5l9SOOHdeBe+/3W7Il7RLI4Wf4s79m9pDlwiotY/Vmn7S5vNqq/Y9u6Tdbws7PLrUP8P5cs
+        KziwIEGJpTgj0VCLuag4EQAA5MzSZAIAAA==
+X-CMS-MailID: 20200710173512eucas1p101c03994a728150f18428295192edf25
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200710173512eucas1p101c03994a728150f18428295192edf25
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200710173512eucas1p101c03994a728150f18428295192edf25
+References: <CGME20200710173512eucas1p101c03994a728150f18428295192edf25@eucas1p1.samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 7/10/20 12:17 PM, Suman Anna wrote:
-> On 7/10/20 11:58 AM, Tony Lindgren wrote:
->> Hi,
->>
->> * Suman Anna <s-anna@ti.com> [200709 16:20]:
->>> Hi Tony,
->>>
->>> The following series contains all the necessary DT pieces to boot the
->>> IPU and DSP remote processors on OMAP4 and OMAP5 SoCs. They are
->>> enabled specifically on the TI OMAP4 PandaBoard and OMAP5 uEVM boards.
->>> This is the last DT piece that now completes the support for IPUs and
->>> DSPs on all OMAP4+ SoCs, similar patches were merged for 5.8 covering
->>> the DRA7xx/AM57xx SoCs. Appreciate it if you can pick up the series for
->>> 5.9 if it isn't too late.
->>
->> Great and good to hear things are working with only dts changes now :)
->> Yes let's try to get these merged.
-> 
-> Thanks.
-> 
->>
->>> There is one issue that I have run into while testing this series on
->>> the latest kernel. I am seeing a l3_noc error for OMAP4 DSP when it
->>> attempts to auto-suspend or stop after it is booted. The issue is a
->>> L4CFG read error that happens in the sysc_disable_module() function
->>> in ti-sysc code.
->>>
->>> I do not have any issues on my downstream 5.4 based SDK kernel. I have
->>> root-caused this to the OMAP4 voltage controller patches you added for
->>> 5.5 kernel through your omap-for-v5.5/pm branch, specifically the
->>> commit 4873843718f9 ("ARM: OMAP2+: Initialize voltage controller for 
->>> omap4").
->>> The VOLTCTRL register value is 0x300 before that patch, and modifying
->>> this register either through  omap4_vc_init_pmic_signaling() or
->>> omap4_vc_set_pmic_signaling() will trigger this. A debug print in
->>> sysc_disable_module() also seems to help.
->>
->> Hmm interesting, not sure how the VOLTCTRL register affects this.
->>
->> I wonder the following commit in v5.8-rc3 might help with this though:
->>
->> 5ce8aee81be6 ("bus: ti-sysc: Flush posted write on enable and disable")
->>
-> 
-> I had already tested on v5.8-rc4 when I posted the patches, so this 
-> patch doesn't help. OMAP5 DSP is fine, because Think it has to do with 
-> this automated
-> 
-> So, I am looking at the TRM, and the three 
-> VDD_{IVA,MPU,CORE}_I2C_DISABLE bits in VOLTCTRL are marked debug-purpose 
-> only, so I don't think we should be setting those to begin with. Any 
-> reason why you want to set those? Anyway, these bits were not an issue, 
-> I have specifically tried that already.
+This patch adds documentation of DT biding for the Midas sound complex.
+Partially based on the *txt version by Simon Shields <simon@lineageos.org>.
 
-FYI, the following one-line removal is enough for me to not see the error.
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+---
+ .../bindings/sound/samsung,midas-audio.yaml        | 105 +++++++++++++++++++++
+ 1 file changed, 105 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/samsung,midas-audio.yaml
 
-diff --git a/arch/arm/mach-omap2/vc.c b/arch/arm/mach-omap2/vc.c
-index 86f1ac4c2412..b80c9dff81c4 100644
---- a/arch/arm/mach-omap2/vc.c
-+++ b/arch/arm/mach-omap2/vc.c
-@@ -44,7 +44,6 @@
-  #define OMAP4_VDD_DEFAULT_VAL  \
-         (OMAP4430_VDD_I2C_DISABLE_MASK | \
-          OMAP4430_VDD_IVA_PRESENCE | OMAP4430_VDD_MPU_PRESENCE | \
--        OMAP4430_AUTO_CTRL_VDD_IVA(OMAP4430_AUTO_CTRL_VDD_RET) | \
-          OMAP4430_AUTO_CTRL_VDD_MPU(OMAP4430_AUTO_CTRL_VDD_RET) | \
-          OMAP4430_AUTO_CTRL_VDD_CORE(OMAP4430_AUTO_CTRL_VDD_RET))
-
-regards
-Suman
-
-> 
->> I was seeing that occasionally with mcspi, but never had anything
->> reproducable.
->>
->> Regards,
->>
->> Tony
->>
-> 
+diff --git a/Documentation/devicetree/bindings/sound/samsung,midas-audio.yaml b/Documentation/devicetree/bindings/sound/samsung,midas-audio.yaml
+new file mode 100644
+index 0000000..4a82829
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/samsung,midas-audio.yaml
+@@ -0,0 +1,105 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/samsung,midas-audio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Samsung Midas audio complex with WM1811 codec
++
++maintainers:
++  - Sylwester Nawrocki <s.nawrocki@samsung.com>
++
++properties:
++  compatible:
++    const: samsung,midas-audio
++
++  model:
++    $ref: /schemas/types.yaml#/definitions/string
++    description: The user-visible name of this sound complex.
++
++  cpu:
++    type: object
++    properties:
++      sound-dai:
++        $ref: /schemas/types.yaml#/definitions/phandle-array
++        description: phandle to the I2S controller
++
++  codec:
++    type: object
++    properties:
++      sound-dai:
++        $ref: /schemas/types.yaml#/definitions/phandle-array
++        description: phandle to the WM1811 CODEC node
++
++  samsung,audio-routing:
++    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
++    description: |
++      List of the connections between audio components; each entry is
++      a pair of strings, the first being the connection's sink, the second
++      being the connection's source; valid names for sources and sinks are
++      the WM1811's pins (as documented in its binding), and the jacks
++      on the board: HP, SPK, Main Mic, Sub Mic, Headset Mic.
++
++  mic-bias-supply:
++    description: Supply for the micbias on the Main microphone
++
++  submic-bias-supply:
++    description: Supply for the micbias on the Sub microphone
++
++  fm-sel-gpios:
++    description: GPIO pin for FM selection
++
++  lineout-sel-gpios:
++    description: GPIO pin for line out selection
++
++required:
++  - compatible
++  - model
++  - cpu
++  - codec
++  - samsung,audio-routing
++  - mic-bias-supply
++  - submic-bias-supply
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    sound {
++        compatible = "samsung,midas-audio";
++        model = "Midas";
++
++        mic-bias-gpios = <&gpf1 7 GPIO_ACTIVE_HIGH>;
++        submic-bias-gpios = <&gpf2 0 GPIO_ACTIVE_HIGH>;
++
++        mic-bias-supply = <&mic_bias_reg>;
++        submic-bias-supply = <&submic_bias_reg>;
++
++        samsung,audio-routing =
++                "HP", "HPOUT1L",
++                "HP", "HPOUT1R",
++
++                "SPK", "SPKOUTLN",
++                "SPK", "SPKOUTLP",
++                "SPK", "SPKOUTRN",
++                "SPK", "SPKOUTRP",
++
++                "RCV", "HPOUT2N",
++                "RCV", "HPOUT2P",
++
++                "IN1LP", "Main Mic",
++                "IN1LN", "Main Mic",
++                "IN1RP", "Sub Mic",
++                "IN1LP", "Sub Mic";
++
++        cpu {
++            sound-dai = <&i2s0>;
++        };
++
++        codec {
++            sound-dai = <&wm1811>;
++        };
++
++    };
+-- 
+2.7.4
 
