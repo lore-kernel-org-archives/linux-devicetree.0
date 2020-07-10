@@ -2,182 +2,266 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCD1C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 09:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D75E6C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 09:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4248620772
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 09:52:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="W3IoGo37"
+	by mail.kernel.org (Postfix) with ESMTP id BDFE720775
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 09:58:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgGJJwK (ORCPT
+        id S1726664AbgGJJ6y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 05:52:10 -0400
-Received: from mail-eopbgr20057.outbound.protection.outlook.com ([40.107.2.57]:54030
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726560AbgGJJwK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 10 Jul 2020 05:52:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EcciSGfvbRj9a8O6dQHWM7Qa1/CBdXLyNDA4+k8S7AZ/EACKxxxBxA+xqk76ntENLoNpzk3LsLcd/5SRkOQpMFuJ6Qr1Bx+dPSQOKveIz3KJUxOWmdpkXbn7tzp6dnWSVlATf916HejRjLF7uSD+iJiYSf5amMB5QlA38uN6CYno1aNDk3BLTqiK/fso0xnqRy+StxpCqDVciI/FBLzs2lGQA74p62ggrFbYZaRjAimDTXL1UIqa9Bm6CVnXrRUifdkLcJSyb128PONL+RFgIiTTGlQmXcDcZVXrTYh/I2KwmLbMXI1sU8wXLS3XnQ+vnP53XV09DIRZoX8FA0XmwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Uj1p96EV+bN+Q7ds+bpmiVZu2zjFogs0q0tQ1bFVtQ8=;
- b=bcBKgdrp6U9AvGHJh7kqDrEN+JS1ccfpaw6AMVkft5h/YbXwJrZAaYkGywMfwKQwkSFJ3zUiFdZDY73K+4Vd8P5PWhsjeZEnwfQQVmYQFqB+v8VY/GA58ofZjv2heiC7d3A2pdY+WTGIpAqH4+EzEvttNOX9Tj1CsrMiLFKDU4Qylt5b/D/fRiBAzN5zcR7TW3zlv2+uByO6iWg173CDEVjhcznMC6k0AQ+yAjrqomNyuJ8O2VE528ArtXvDdpvwv7GUmXBi+VLoRol7oOu7/unrzm+lyvJ/SSRI75PSLWa4Q2U9SmdvgU85/WwqicA5D92/TWKfZp9UE9/hSwNVCA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Uj1p96EV+bN+Q7ds+bpmiVZu2zjFogs0q0tQ1bFVtQ8=;
- b=W3IoGo37JcwmngSmOtKKhIq3Sq27tuhc3ZqidGEhTCBvmwkZVE6W21CbkSvY/cggxl7BiooFReOhSdWrzErdkdCzFdVvP70Pax8clNGJu9ExpuvGZsm5h+nxTsqYJdODoWWjz7t2K6esLSqB+hjBoX9wCAtBFYlVgqApoB8tthY=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=oss.nxp.com;
-Received: from VE1PR04MB6702.eurprd04.prod.outlook.com (2603:10a6:803:123::13)
- by VI1PR04MB3200.eurprd04.prod.outlook.com (2603:10a6:802:d::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20; Fri, 10 Jul
- 2020 09:52:06 +0000
-Received: from VE1PR04MB6702.eurprd04.prod.outlook.com
- ([fe80::81c4:97a6:7592:f225]) by VE1PR04MB6702.eurprd04.prod.outlook.com
- ([fe80::81c4:97a6:7592:f225%7]) with mapi id 15.20.3174.023; Fri, 10 Jul 2020
- 09:52:06 +0000
-From:   Wasim Khan <wasim.khan@oss.nxp.com>
-To:     shawnguo@kernel.org, robh+dt@kernel.org, zhiqiang.hou@nxp.com,
-        V.sethi@nxp.com, leoyang.li@nxp.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Wasim Khan <wasim.khan@nxp.com>
-Subject: [PATCH] arm64: dts: lx2160a: Increase configuration space size
-Date:   Fri, 10 Jul 2020 15:21:44 +0530
-Message-Id: <1594374704-11323-1-git-send-email-wasim.khan@oss.nxp.com>
-X-Mailer: git-send-email 2.7.4
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR02CA0055.apcprd02.prod.outlook.com
- (2603:1096:4:54::19) To VE1PR04MB6702.eurprd04.prod.outlook.com
- (2603:10a6:803:123::13)
+        Fri, 10 Jul 2020 05:58:54 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:52789 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726560AbgGJJ6x (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 05:58:53 -0400
+Received: from [192.168.1.169] ([37.4.249.118]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MYeV3-1kPTI72ZCF-00Vigi; Fri, 10 Jul 2020 11:58:20 +0200
+Subject: Re: [PATCH v4 00/78] drm/vc4: Support BCM2711 Display Pipeline
+To:     Maxime Ripard <maxime@cerno.tech>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>
+Cc:     devicetree@vger.kernel.org, Tim Gover <tim.gover@raspberrypi.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Phil Elwell <phil@raspberrypi.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Autocrypt: addr=stefan.wahren@i2se.com; keydata=
+ LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tClZlcnNpb246IEdudVBHIHYy
+ CgptUUlOQkZ0NmdCTUJFQUN1Yi9wQmV2SHhidkplZnlaRzMySklObW4yYnNFUFgyNVY2ZmVq
+ bXlZd21DR0tqRnRMCi9Eb1VNRVZIRHhDSjQ3Qk1YbzM0NGZIVjFDM0FudWRnTjFCZWhMb0J0
+ TEh4bW5lQ3pnSDNLY1B0V1c3cHRqNEcKdEp2OUNRRFp5MjdTS29FUHh5YUk4Q0YweWdSeEpj
+ NzJNOUk5d21zUFo1YlVIc0x1WVdNcVE3SmNSbVBzNkQ4ZwpCa2srOC95bmdFeU5FeHd4SnBS
+ MXlsajVianhXREh5WVF2dUo1THpaS3VPOUxCM2xYVnNjNGJxWEVqYzZWRnVaCkZDQ2svc3lp
+ by9ZaHNlOE4rUXN4N01RYWd6NHdLVWtRUWJmWGcxVnFrVG5BaXZYczQyVm5Ja211NWd6SXcv
+ MHQKUkp2NTBGUmhIaHhweUtBSThCOG5oTjhRdng3TVZrUGM1dkRmZDN1R1lXNDdKUGhWUUJj
+ VXdKd05rLzQ5RjllQQp2ZzJtdE1QRm5GT1JrV1VSdlArRzZGSmZtNitDdk92N1lmUDF1ZXdB
+ aTRsbitKTzFnK2dqVklXbC9XSnB5MG5UCmlwZGZlSDlkSGtnU2lmUXVuWWN1Y2lzTXlvUmJG
+ OTU1dENna0VZOUVNRWRZMXQ4aUdEaUNnWDZzNTBMSGJpM2sKNDUzdWFjcHhmUVhTYUF3UGtz
+ bDhNa0NPc3YyZUVyNElOQ0hZUUR5WmljbEJ1dUNnOEVOYlI2QUdWdFpTUGNRYgplbnpTektS
+ Wm9POUNhcUlEK2ZhdkxpQi9kaHptSEErOWJnSWhtWGZ2WFJMRFp6ZThwbzFkeXQzRTFzaFhp
+ ZGRaClBBOE51SlZ6RUl0MmxtSTZWOHBaRHBuMjIxcmZLaml2UlFpYW9zNTRUZ1pqak1ZSTdu
+ bko3ZTZ4endBUkFRQUIKdENCVGRHVm1ZVzRnVjJGb2NtVnVJRHgzWVdoeVpXNXpkRUJuYlhn
+ dWJtVjBQb2tDTndRVEFRZ0FJUVVDWElkYwo0Z0liQXdVTENRZ0hBZ1lWQ0FrS0N3SUVGZ0lE
+ QVFJZUFRSVhnQUFLQ1JDVWdld1BFWkR5MjFPVEQvOUdpWkxkCnRSWWNteVJKZ2x0aVFRekFp
+ UWRjSUQ3OGxHb1dwL3grci92Y1U2YjZqdVl1ZVR3Z1Iwclc3djdsMklSQnlEN24KSEp4YSt0
+ SVNvUVpCZ2hvbE1JZmI5TXRoR09KTENZNzdrL1FoQWhuMzJOR1prZWp3OXR6a3MvNDBtclpT
+ VVQ4NApaeWJzUVhyTE0vSFI2VElJL0RlUEIwbktEM0ppcHBzMlVIUUQ5cUQySWpFd1NRUGxI
+ akNPckVaaDQ1UFo3bTkrClo5M0x6aVRlc1dabFlRdUxpSndzNHJLcHRIVzFkL3dSZWxzaG1t
+ NlFxY0wybDRDL2U0MGVEQjlncTRkU1poOVgKUEVZbGxpeU5RaDdhMkxTZHVtRTFyK2NTd0lq
+ RS91ZHRSdmRPOWFLb0psT2JVSzVkTmpTUEg3d0tUYndkWGRZRApHUHdEaFhkNThOQXdyK1BY
+ QmxQajB0STFMQ3ErTEJ4ZUt6aFdYK0dWcTlEb2pWanlVREV4Rk5Ga1h1b0M3ZzhtClY5VDB0
+ ZUJpdVpSbm91WEt3VjJGcHRaT0hIN0JVRVd0a0t0aGgxZXRmT1dwaWdCemtVN2JQc2ZJWVQr
+ cnk5dGIKMW9KK3Y0MVBOYXFaRW1QVXBKeHZmek5UN3Ayd01lRDdaajlmMHJ1YlJQdExBSjJR
+ R2pyRkhzdVh3QU9xcHl6ZQoxOEVidHNZazBOMHp1SEVoY2orUEJJQmZoMFlJWWQ1MW9mNkdJ
+ aU95UjlxMFhYdHBsVUo3VDIvSDF1UXFrWGxwCitnVzRWa2lmc2NJckl1eWZueFpXMTJlSXZq
+ NnlicVdMN2FZS0dZbVQ2aUxDUGJIWXlZY2F5bDRFa0ZjckNGN0UKZTBXVC9zY1ZNaE8vNVgv
+ SGFOQTVIQngvcjUycGdMY3Y0aTlNeExRbVUzUmxabUZ1SUZkaGFISmxiaUE4YzNSbApabUZ1
+ TG5kaGFISmxia0JwTW5ObExtTnZiVDZKQWpnRUV3RUNBQ0lGQWx0NmdCTUNHd01HQ3drSUJ3
+ TUNCaFVJCkFna0tDd1FXQWdNQkFoNEJBaGVBQUFvSkVKU0I3QThSa1BMYmpic1AvamdqYVNz
+ NUh0bGtBSXZXUytGcm15N2MKaG5jT0F4TFRWL0Q2UkV3SU95R0poRkt3d29pck55UTJnOXZV
+ YTNZQ1lDZjFmSjh3RWhhS09COWQwTHBNUm5MNApkRVQ4ZDgyMzhFL3BLK0hxTktpSXNKaHM2
+ SnNLOFpnalZRR3JtbWZua0dyWisxdjBIQnV4ZGljZ0duUC9XdHVBClVsOGw2Mi9BTGJheXlq
+ KzYxQ2xyc0V0UklhcU82N0xJWXdQaVBEUkkrWGlNek5pR3pIRi8xUTZHUjAyUkg2YTMKRjg5
+ ejhhUHhjSGkxWnZDdDJ5a3o2VUVjaHpQMHI1Z3FGSisvTC9VcHU4ME1YaVk0djVlSWFCNTJn
+ VlBnaXlNQQpsTDJkRHMxbUladm5yUkxSWTJ0YjNtQVlOa1Y1QjVJRFQzcGtXeTZrS281T0Nn
+ SytZZFlPUjhGTloyb04ydDhPCnJLK1ZudGFLN01NU0tIbG1ZL3NPd3RSbEVoMU9CbXJjQ3dH
+ d21wLzA1R2tSNDZmL0lzaFJWZUZPUmF3K0dBcXQKUDIrQ0ZhMkNOQS9JSG5aTm95aWtsRHpQ
+ UUhVVUdzck5wcERyaFg5Sm1oQm1nMXYyeXdIMU5YdTFpRGZQMUJBdwpLZ29rdDVmNVVhUkY5
+ c0FBNTN2V0V2YlVVTjllZXNGR0x6UFdkSkdRNWhwZC9WSDVJUXk5U0JyaC93SWNla3E1Cm4w
+ a042cGJUSHhHRTUyU2kvTVZJa05UdURaM2FwbjJqbERaNHBPdHBCWEkydlAzYlBPK05pcUJa
+ anNVM3R4TGkKV2R2MkZqeXp6NlhMUndlV1JZVkw1SGE2TER0eG9yMnZ1NlVQMDdwOXh6MXhS
+ WmFPRFczb1lsSEZ6WXBhNFc1ZwpMSGIybEVrSXVVZlNjaWNHYmpqQXRDbFRkR1ZtWVc0Z1Yy
+ Rm9jbVZ1SUR4emRHVm1ZVzR1ZDJGb2NtVnVRR2x1CkxYUmxZMmd1WTI5dFBva0NOd1FUQVFn
+ QUlRVUNYSWRlaHdJYkF3VUxDUWdIQWdZVkNBa0tDd0lFRmdJREFRSWUKQVFJWGdBQUtDUkNV
+ Z2V3UEVaRHkyeUhURC85VUY3UWxEa0d4elE3QWFDSTZOOTVpUWY4LzFvU1VhRE51Mlk2SQpL
+ K0R6UXBiMVRiVE9yM1ZKd3dZOGEzT1d6NU5MU09MTVdlVnh0K29zTW1sUUlHdWJEM09EWko4
+ aXpQbEcvSnJOCnQ1elNkbU41SUE1ZjNlc1dXUVZLdmdoWkFnVERxZHB2K1pIVzJFbXhuQUox
+ dUxGWFhlUWQzVVpjQzVyMy9nL3YKU2FNbzl4ZWszSjVtTnVEbTcxbEVXc0FzL0JBY0ZjK3lu
+ TGh4d0JXQld3c3Z3UjhiSHRKNURPTVd2YUt1RHNrcApJR0ZVZS9LYjJCK2pyYXZRM1RuNnMv
+ SHFKTTBjZXhTSHo1cGUrMHNHdlArdDlKNzIzNEJGUXdlRkV4cmlleThVCkl4T3I0WEFiYWFi
+ U3J5WW5VL3pWSDlVMWkyQUlRWk1XSkFldkN2VmdRL1UrTmVSaFh1ZGU5WVVtRE1EbzJzQjIK
+ VkFGRUFxaUYyUVVIUEEybThhN0VPM3lmTDRyTWswaUh6TElLdmg2L3JIOFFDWThpM1h4VE5M
+ OWlDTHpCV3UvTgpPbkNBYlMremx2TFphaVNNaDVFZnV4VHR2NFBsVmRFamY2MlArWkhJRDE2
+ Z1VEd0VtYXpMQU1yeDY2NmpINWt1ClVDVFZ5bWJMMFR2Qis2TDZBUmw4QU55TTRBRG1rV2tw
+ eU0yMmtDdUlTWUFFZlFSM3VXWFo5WWd4YVBNcWJWK3cKQnJoSmc0SGFONkM2eFRxR3YzcjRC
+ MmFxYjc3L0NWb1JKMVo5Y3BIQ3dpT3pJYUFtdnl6UFU2TXhDRFhaOEZnWQpsVDR2MjNHNWlt
+ SlAyemdYNXMrRjZBQ1VKOVVRUEQwdVRmK0o5RGEycitza2gvc1dPbloreWNvSE5CUXZvY1pF
+ Ck5BSFFmN2tDRFFSYmVvQVRBUkFBMkhkMGZzRFZLNzJSTFNESGJ5ME9oZ0RjRGxWQk0yTSto
+ WVlwTzNmWDFyKysKc2hpcVBLQ0hWQXNRNWJ4ZTdIbUppbUhhNEtLWXMya3YvbWx0L0NhdUNK
+ Ly9wbWN5Y0JNN0d2d25Lem11WHp1QQpHbVZUWkM2V1I1TGtha0ZydEhPelZtc0VHcE52NVJj
+ OWw2SFlGcExrYlNrVmk1U1BRWkp5K0VNZ01DRmdqclpmClZGNnlvdHdFMWFmN0hOdE1oTlBh
+ TEROMW9VS0Y1aitSeVJnNWl3SnVDRGtuSGp3QlFWNHBndzIvNXZTOEE3WlEKdjJNYlcvVExF
+ eXBLWGlmNzhJaGdBelh0RTJYck0xbi9vNlpINzFvUkZGS096NDJsRmR6ZHJTWDBZc3FYZ0hD
+ WAo1Z0l0TGZxemoxcHNNYTlvMWVpTlRFbTFkVlFyVHFueXMwbDE4b2FsUk5zd1lsUW1uWUJ3
+ cHdDa2FUSExNSHdLCmZHQmJvNWRMUEVzaHRWb3dJNm5zZ3FMVHlRSG1xSFlxVVpZSXBpZ21t
+ QzNTd0JXWTFWNmZmVUVta3FwQUFDRW4KTDQvZ1Vnbjd5US81ZDBzZXFuQXEycFNCSE1VVW9D
+ Y1R6RVFVV1ZraUR2M1JrN2hURm1oVHNNcTc4eHYyWFJzWApNUjZ5UWhTVFBGWkNZRFVFeEVs
+ RXNTbzlGV0hXcjZ6SHlZY2M4cURMRnZHOUZQaG1RdVQyczlCbHg2Z0kzMjNHCm5FcTFsd1dQ
+ SlZ6UDRqUWtKS0lBWHdGcHYrVzhDV0xxekRXT3ZkbHJEYVRhVk1zY0ZUZUg1VzZVcHJsNjVq
+ cUYKUUdNcGNSR0NzOEdDVVcxM0gwSXlPdFF0d1dYQTRueStTTDgxcHZpQW1hU1hVOGxhS2FS
+ dTkxVk9WYUY5ZjRzQQpFUUVBQVlrQ0h3UVlBUUlBQ1FVQ1czcUFFd0liREFBS0NSQ1VnZXdQ
+ RVpEeTIrb1hELzljSEhSa0JaT2ZrbVNxCjE0U3Z4MDYyUHRVMEtWNDcwVFNucC9qV29ZSm5L
+ SXczRzBtWElSZ3J0SDJkUHdwSWdWanNZeVJTVk1LbVNwdDUKWnJEZjlOdFRiTldnazhWb0xl
+ WnpZRW8rSjNvUHFGclRNczNhWVl2N2U0K0pLNjk1WW5tUSttT0Q5bmlhOTE1dApyNUFaajk1
+ VWZTVGx5VW15aWMxZDhvdnNmMWZQN1hDVVZSRmNSamZOZkRGMW9ML3BEZ01QNUdaMk93YVRl
+ am15CkN1SGpNOElSMUNpYXZCcFlEbUJuVFlrN1B0aHk2YXRXdllsMGZ5L0NxYWpUS3N4Nytw
+ OXh6aXU4WmZWWCtpS0IKQ2MrSGUrRURFZEdJRGh2TlovSVFIZk9CMlBVWFdHUytzOUZOVHhy
+ L0E2bkxHWG5BOVk2dzkzaVBkWUl3eFM3SwpYTG9LSmVlMTBEamx6c1lzUmZsRk9XMFpPaVNp
+ aElDWGlRVjF1cU02dHpGRzlndFJjaXVzNVVBdGhXYU8xT3dVClNDUW1mQ09tNGZ2TUlKSUE5
+ cnh0b1M2T3FSUWNpRjNjcm1vMHJKQ3ROMmF3WmZnaThYRWlmN2Q2aGp2MEVLTTkKWFpvaUFa
+ WVpEKy9pTG01VGFLV042b0dJdGkwVmpKdjhaWk9aT2ZDYjZ2cUZJa0pXK2FPdTRvclRMRk16
+ MjhhbwpVM1F5V3BOQzhGRm1kWXNWdWE4czZnTjFOSWE2eTNxYS9aQjhiQS9pa3k1OUFFejRp
+ RElScmdVek1FZzhBazdUCmZtMUtpWWVpVHRCRENvMjVCdlhqYnFzeXhrUUQxbmtSbTZGQVZ6
+ RXVPUEllOEp1cVcyeEQ5aXhHWXZqVTVoa1IKZ0pwM2dQNWIrY25HM0xQcXF1UTJFNmdvS1VN
+ TEFia0NEUVJiZmw5REFSQUFzRExjYStMbFAydm5mdEVHaHBjQQpCR1ZOUUVGbkdQckNhdVU2
+ SGhOODA1V3RQVHRtc1JPdUp6cWdVVDBtcHFXSWZacTZzTXd5dkhLOVRzL0tIM0paClVWYlJD
+ M3oyaDNLZmhIL0RhZjk1cGQ2bVBjL2g5dkYvT3kzK2VUV2hnR25QNmNBNWtsUitmTzFXaEc4
+ VnJpWHYKck5lUkcyMHN6emplSG9jblNJY1Q1WHVaUjB1REhPaUd4T2l6MXNNUkZUR3h6R095
+ MTlSOXJ2dTYzdGlJM2Q3dgpnYzc1T0NBZGtlQi9TZUNFbGFSdzBUZjdMWmJQampzRjI2M0JZ
+ bk1mNGtrTkVLdnFXY1UyaWNNcCtxZXpqeW5CCnB2ZXVlMHJDVFFCWUFRbG9GQ1ZUR0hyV1dB
+ NkQ0VzVPMkFmSWRJYzF1MUpDWnAyZjVMV1ZvVUZUVklyUW5RUVUKU0hDaWZyOU1aeExUdFBK
+ ZFU1Mm9TUHczZGs0aExQOGlKSUx1dnYvYXZhakNzUVlIRXR3WXNiZUZaeGl1TGdscApBN1lj
+ Sk5ObXBnQ3BNRDR3VWh2bEN0QUtOQlFXeXIyOTc2OThFUVRuNDZlQmVVNkttMkNpaFhrZ3dD
+ eWY4ZXlLCkxFM3NYZXdhcTVrZ1pXdk5xNml1NXFZSVJCOXl3K2NYYzYwZE9aRE9scTkzWDVT
+ QVJZemFvZXBrSHo0cmtMa1AKUG8rdENIeUhRUHNHblBYYzlXVDgwREM5Tm5KR2R2VWx5NXJk
+ TUk0eHBaeWdlb2tqd293VlFsUFV1Y1M2TXluNwpmOHc4Y2dmQjdDMklBSWNEeDJwUC9IendY
+ dmtDT1FOQTdtVjFsTTA4bitnVmtUcnpweGlwNURicTRDSW9ZeDJNCkpaVDhiR1JINlhqY1VE
+ S2EwOVFoeVpzQUVRRUFBWWtFUkFRWUFRZ0FEd1VDVzM1ZlF3SWJBZ1VKQThKbkFBSXAKQ1JD
+ VWdld1BFWkR5MjhGZElBUVpBUWdBQmdVQ1czNWZRd0FLQ1JCVnhETFBjVk1NamNkc0QvMFJo
+ QXN1UVlPeQpyMTNCbDNOaFhrWUFaR3AyWkZER3VrZTdPU2tWOG9qT09UZFR5ei9jT1JHQ2J5
+ ZEQrRGd2cUZ5VmRuT1hLZ08wCmxKbUd3ckdlTGRnZ0F2aDBpaHJwNU8wWVVKOWJCU1htR01t
+ UVRZSC9BbUxUR2FkYnVqQ1dqNWZGVWtDeXd4aW0KSHV5MFBiMjRwelR2UzUwR1k1WStxSDBG
+ SE5haWdka2tpV04zcnVnN0haRXUvQ3lsUFpqT1h6K0QxUVBNckV4dwo3ZC9NS2FiVis5YU5i
+ UVlabGRJajk4UXd2VUYxS1N6YThqbFVJdnBoUnEyN0FUOGZER1lHUGZERU1nMmNCT2FlCkty
+ N29uUXM0YjdhV082aWZEbHhRVHB6c3pvK0FuODA3Tk1TdFZFRmYrczNBaFZEM2U3bmY4SkJh
+ dmJWckFlMGsKb20yNm96elBubnh6K2xxVlZ0dzZVazRYTUl6dGl4L0h3SFl3dUNuY1VYWndL
+ MEkzeUFKd2pZd29vck9DaEozUwpFVWJKUVB0R3NneFJERXhWQkZlNk5MUC82MnhQOU82dGFj
+ d09kYjBNbVAxYjM5cFJBVEM3YmdkMWxkVUxpNzVaCmxKckowL1NpVkVyb3FOWXk3OXRmbWdB
+ WjJVeFptczlTckV5Nm85UVNmc24xYVh2K01QTDlKYUNHbWtQNnpiTFEKTm5kajBKY2FRbmtD
+ MHZneWRPMUJtNk11OTZQOXVmbEtaY0FTNndtTE01SWRIT3lqTDg4d0h3anVjakFPQnRjdwpw
+ MG9HVG5WT25Sc05ZU084VzhZWi9LZGJ1Nzg1ZGF6TXFKMmlOakFEdUJiZG02TjRqNUVkTW5r
+ TG4wQklmUEpwCmRnbTR2bDJVcExqd1JHci9NM3dtbTVwdnMrNnVCN2hrL0ZKaUQvNGxsRU5Q
+ NGVNMWg3U200aitWcTZOMSt6VEIKSVhKQWViSXFhc0RwNXlaUzdYcnk0STM2bjg1WEVZZkcw
+ MWx0QXlob05WMkRPOFNJUlFwdWkydHErOVJQM1JLMQpKREJ4eEVKWTJFTzVKWjhNeGFQSFEw
+ RFQwNWxSRmpLMkFsaGRFSXRqTGpwSjNmVW05c3FMeE1XeHpQNlV6M2lpCjJ1YTR1bnJ0Nk9D
+ VHFRd2lqRi8zYlRXaXd2VkFBSG5NRlVpb1hzaEhhb2hWRGNWZm5lSU1mVjBiUUNYWWkzTnAK
+ WTB2MFp3Y2lGSCtnU0M3cUQ2WE51aHBWR1NMNElpbGlGeS9TemNhSkV6QUhlTERTaFpQMkNX
+ ZG5DNHZnbDM3dApocHg4aDU1WWhKbjZIU3VVelBnaGFLdFZCMmsrajdaZXlaK1NGeHA3SXVi
+ SEN3TEhsUWhUNzVSd1EzaUF4S242CjBxajUxY1lUbnF4ZFpYVzZmSDNQa3VNellVNUdwcVIv
+ MU9sNWMvd2ZJNmc2QW04eUtXLzBFVUx0K0tuNExGc1MKbTdZM201SDV2MTJVNkpCWXZWK3Ix
+ M2paaW9zNEVFREU5M0Q1c05IMk1JeVJ6Q0RxMXpkZHQ0WHV5S0ZqUEtXMQo5aWJaRGZGVjdL
+ dUNzdnVMMjNzQmMxc0NNb3ArRTFtVC9ReE9JQTZvRFQxTVFzdHdPVnVReURDdi9PdktTZ2Z6
+ CjhGWEdMNkFQY2xqQ3FqOEFKaHhReXN4ZG9pUVA4bS92dStialdHR3Z4dzVzMWxncGlSRFRS
+ VVBnY0pKTmFHWTIKVklEclpRaTROU2lOUTBOSWkrZGp1NGZOTW1DcFFxZzh0YkMzY0FhNnl3
+ bTZvUUIxU0JobURYMmUxMWdSbGx1SQpPblRHUEUwSFRvM2w3MmxoYmc9PQo9cVpNVgotLS0t
+ LUVORCBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCg==
+Message-ID: <89fb9c01-84fb-0ea0-233d-d77eaf81412b@i2se.com>
+Date:   Fri, 10 Jul 2020 11:58:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from lsv03032.swis.in-blr01.nxp.com (14.142.151.118) by SG2PR02CA0055.apcprd02.prod.outlook.com (2603:1096:4:54::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3174.21 via Frontend Transport; Fri, 10 Jul 2020 09:52:03 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [14.142.151.118]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 52ed5485-8170-4c73-3043-08d824b6e759
-X-MS-TrafficTypeDiagnostic: VI1PR04MB3200:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB3200ECE010F26956E4245180D1650@VI1PR04MB3200.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1850;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: bM4A5LKGWAoqP2JwnbRh5CS6Ok5J6t+bwVoKy9qwLYR/RloddnT5Aouyad5hqNFALeuTyHGKniZnuK8lGYOeaJIY/uEQi9Y12UR8C4sYMlUq/gT9mbJm5pC01FoXJPzkfnmiqyhIjlqulTP3+smjIOWJYsfT+7V2bxuDtZLFgwXheO06EPL8pLGVFEBaAVVZNZmvVyp9x35ro9wowBlqCguqcziHjL5cmL4MRfTnUPlcwT0rXeVIEF+tEVu4UyRFKzW3kDcTAMqupiQvm1MEVdd3xAtuzQc2T5GMoAVET4pyhwwpNTvGoWmxXfWYpQBf5X2NADNgTw4xC97gaJUDu/OaN+JHMEJKAwZz3aY9j/h7Qd8Dz5mcqznsHfYV+hH/
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6702.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(39860400002)(366004)(396003)(376002)(44832011)(52116002)(16526019)(2616005)(4326008)(5660300002)(83380400001)(956004)(186003)(66556008)(26005)(6512007)(478600001)(2906002)(66946007)(66476007)(6506007)(316002)(8676002)(6486002)(6666004)(55236004)(86362001)(8936002)(1006002)(110426005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: cYjU8NXraVn6oQZ/reWpkRHv/0r/H1aNA5gx74w5nhRzjVAUfZamts1lFtlnqt+7OKYWqf8bsRBW2TnEHARpjTZ1vhvlGbczxPdc+XinrPto2Pi3XEpdzTEmtwvV0Xs/6/EzLyZPIGYHKHFlE6g/VKSTYa63pM9QVDwlPhN1+ipElNwtDibl0FqDXsF8NEYoHV6dFZLbhMZw0YvGt8c7OCAUmeXB4nAuLaMo468WLRLeyl5hG6SABUP0jMx8xfSnYODxB3d0knTLSJV/mXBXNSDe6bH2qD9PVci7kMccGGKSdd0Cw1C6RsR+2zRicg/clIzIg1rv+nIFPd0qi1DE815ac2CVETrofA8SldtP+FNwCIjzAchsfcyTc9sVhUeBgPDvC/FuMdyQMFKBI/6R6NhAiCJh5v26t9fH++4m3duP1PfeUnrV4UyedkBR9qiRJO3+UmliC5KklPS0cyZxYv38AfzxK9PDUoK58wEulh5+xHo3KEhlI45pZIluZcWi
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 52ed5485-8170-4c73-3043-08d824b6e759
-X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6702.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2020 09:52:05.9323
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ozo9FuwfEQsCGdlySAIw2V7a7V1Nj/Pxf8CAj3yXLJG/IxbGFCL+NFkjsmKP4u3zYfx0J+TRQ1Hjj7X2CLk+8g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3200
+In-Reply-To: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:d8V8LXc4DjNchVUVBAe/cY/cUXKVKV9S8l4bxOUE17i79Q6TBKw
+ 8crkWnQnIIYkDndo5al4po4ydTGZsE2mSGrSbUbsU+4CNxSWtkuflcXwyrZTk3BoUZ84TjV
+ 636RGaYWO94ti85xSYfCHphj7s/EiXhYQCYKI9sKMXACXr9BfB4vdewN/vJpBCyJvaLEXHY
+ Xpvp4himvle7lzKut1Cjw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:UG9DGXHUauc=:bUPYCkAVGgF64CglKKTZjt
+ pI/boEIK+YmCsiqcH320RjmOM5cDvLJ4/bh195LHrQW4QhAY2nMeGBvOKo1Op7Il8/3LSogyT
+ RnwVgfAhhThee07LMXlsQS4TWPKAt+cyRk0bhhBUgUsLKJyLdMZDI/HmFJX5P+CZfWFpXw2Nc
+ W/Jn9Y1jqJ2FKfVZUorHDfgwl49aq4c/gJwED0FALUzDFr8s04Z3p288iYtOnkSF1ZiY3/KUA
+ ipYcTHhgFXWxsgPy7Qcg1oYVYNuroGSZ5rMHA+Dm2NIT2T5gVbkS+cHqMCg0sTOXsXf4cxEHc
+ BRslFqmuQghWAEGOBQ9QTnEDwUJ3wdM1yIRLXSZk5m5THyhyKWoe75We+raxBAczvKEH1Upjm
+ Up46+xVdzUz/Jl/CRQ1QlKEsGJokqamuyzJDkBLP67gxEUdP1amO0wgr7iUh3JRzg76u0hEMQ
+ D3S7BZ/XU6kzeWH2ZWfK+TBVNarBVK+Ysuw/+OqbOk+nFXayMD9VCJWoYlqLbXw0Psv4sE156
+ X6+/Yh4UUTtq74vIE5yjCCuqPHWJ0WeuIAmEYAYd38T+w65Pk8A97cbbFkHPH1qLRJGjKNvDt
+ TDXWhS9QRJU9Kqgrg8ghL8Cr45nvc61LupJk0VWAjzh6m21mKCjg3WF0423PpFegRjide6YnD
+ W3a0hEtn5ELtHeOWu0vluXn1EIEYv3LaOoo4m1K2oZxJnSwGH6p7+4fbpjlF+8ElTXX1QGKEq
+ 95+rMqi51QIhrW/hLADx13NfzL2cECuEx+hJ28MqSCPej02vOO2+ad2iKh3qEUSfVFdOxJTdb
+ 0/y3OqM23lg3wWByWkEk0piTqiOD0Nu/gKcPTXh0HIJDBnKtizMxCIhacbo6FQHZdBbJtT0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Wasim Khan <wasim.khan@nxp.com>
+Hi Maxime,
 
-lx2160a rev2 requires 4KB space for type0 and 4KB
-space for type1 iATU window. Increase configuration
-space size to 8KB to have sufficient space for type0
-and type1 window.
+Am 08.07.20 um 19:41 schrieb Maxime Ripard:
+> Hi everyone,
+>
+> Here's a (pretty long) series to introduce support in the VC4 DRM driver
+> for the display pipeline found in the BCM2711 (and thus the RaspberryPi 4).
+>
+> The main differences are that there's two HDMI controllers and that there's
+> more pixelvalve now. Those pixelvalve come with a mux in the HVS that still
+> have only 3 FIFOs. Both of those differences are breaking a bunch of
+> expectations in the driver, so we first need a good bunch of cleanup and
+> reworks to introduce support for the new controllers.
+>
+> Similarly, the HDMI controller has all its registers shuffled and split in
+> multiple controllers now, so we need a bunch of changes to support this as
+> well.
+>
+> Only the HDMI support is enabled for now (even though the DPI and DSI
+> outputs have been tested too).
+>
+> Let me know if you have any comments
+> Maxime
+>
+> Cc: bcm-kernel-feedback-list@broadcom.com
+> Cc: devicetree@vger.kernel.org
+> Cc: Kamal Dasu <kdasu.kdev@gmail.com>
+> Cc: linux-clk@vger.kernel.org
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+>
+> Changes from v3:
+>   - Rebased on top of next-20200708
+>   - Added a name to the HDMI audio codec component
+>   - Only disable the BCM2711 HDMI pixelvalves at boot
+>   - Fixed an error in the HVS binding
+>   - Fix a framebuffer size condition that was inverted
+>   - Changed the channel allocation algorithm using Eric's suggestion
+>   - Always write the muxing values instead of updating if needed
+>   - Improved a bit the hvs_available_channels comment in the structure
+>   - Change atomic_complete_commit code to use for_each_new_crtc_in_state
+>   - Change the muxing code to take into account disparities between the
+>     BCM2711 and previous SoCs.
+>   - Only change the clock rate on BCM2711 during a modeset
+>   - Fix a crash at atomic_disable
+>   - Use clk_set_min_rate for the core clock too
+>   - Add a few defines, and simplify the FIFO level stuff
+>   - Reordered the patches according to Eric's reviews
+>   - Fixed a regression with VID_CTL setting on RPI3
+>
+i additionally applied "drm/vc4/vc4_hdmi: fill ASoC card owner" on top
+of your series (potential merge conflict).
 
-Signed-off-by: Wasim Khan <wasim.khan@nxp.com>
-Reviewed-by: Li Yang <leoyang.li@nxp.com>
-Acked-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+I didn't see any issues with a RPI 3B or RPI 4B.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-index abaeb58..037c4b9 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-@@ -2,7 +2,7 @@
- //
- // Device Tree Include file for Layerscape-LX2160A family SoC.
- //
--// Copyright 2018 NXP
-+// Copyright 2018-2020 NXP
- 
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-@@ -957,7 +957,7 @@
- 		pcie@3400000 {
- 			compatible = "fsl,lx2160a-pcie";
- 			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
--			       0x80 0x00000000 0x0 0x00001000>; /* configuration space */
-+			       0x80 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "csr_axi_slave", "config_axi_slave";
- 			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
- 				     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-@@ -985,7 +985,7 @@
- 		pcie@3500000 {
- 			compatible = "fsl,lx2160a-pcie";
- 			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
--			       0x88 0x00000000 0x0 0x00001000>; /* configuration space */
-+			       0x88 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "csr_axi_slave", "config_axi_slave";
- 			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
- 				     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-@@ -1013,7 +1013,7 @@
- 		pcie@3600000 {
- 			compatible = "fsl,lx2160a-pcie";
- 			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
--			       0x90 0x00000000 0x0 0x00001000>; /* configuration space */
-+			       0x90 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "csr_axi_slave", "config_axi_slave";
- 			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
- 				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-@@ -1041,7 +1041,7 @@
- 		pcie@3700000 {
- 			compatible = "fsl,lx2160a-pcie";
- 			reg = <0x00 0x03700000 0x0 0x00100000   /* controller registers */
--			       0x98 0x00000000 0x0 0x00001000>; /* configuration space */
-+			       0x98 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "csr_axi_slave", "config_axi_slave";
- 			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
- 				     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-@@ -1069,7 +1069,7 @@
- 		pcie@3800000 {
- 			compatible = "fsl,lx2160a-pcie";
- 			reg = <0x00 0x03800000 0x0 0x00100000   /* controller registers */
--			       0xa0 0x00000000 0x0 0x00001000>; /* configuration space */
-+			       0xa0 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "csr_axi_slave", "config_axi_slave";
- 			interrupts = <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
- 				     <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-@@ -1097,7 +1097,7 @@
- 		pcie@3900000 {
- 			compatible = "fsl,lx2160a-pcie";
- 			reg = <0x00 0x03900000 0x0 0x00100000   /* controller registers */
--			       0xa8 0x00000000 0x0 0x00001000>; /* configuration space */
-+			       0xa8 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "csr_axi_slave", "config_axi_slave";
- 			interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
- 				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
--- 
-2.7.4
+So this whole series is
+
+Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
+
+Regards
+Stefan
 
