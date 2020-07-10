@@ -2,111 +2,101 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FF5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 00:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FF4C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 00:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31A982065D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 00:43:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eFBgkYUp"
+	by mail.kernel.org (Postfix) with ESMTP id C13322073A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 00:54:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgGJAnW (ORCPT
+        id S1726820AbgGJAyO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 20:43:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbgGJAnI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 20:43:08 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9503AC08C5DC
-        for <devicetree@vger.kernel.org>; Thu,  9 Jul 2020 17:43:08 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 124so5114105ybb.5
-        for <devicetree@vger.kernel.org>; Thu, 09 Jul 2020 17:43:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=PChTsD7+lOfYquQN6+h5WG1wyZRkuvc0gJ7VnIMPpcI=;
-        b=eFBgkYUpUC19TYrSClaWnACSWhKB0k5jcDpo+PTCgNBUkAiDzm+ORJ7p+M7sjb66Ka
-         lWtCn0H5by6dCE82W0iKV6mmx6kRgCqc+3AxVy8yWqUYQu43g026sorjNlQ0d1PDuQAZ
-         29onMDkcy7/BpVBNOy1dwqDwjF+o8P8j+QhxUaXtj8tXYMCoJM0ZhcydfKpz4AB/eBDZ
-         zWFSbDcHte5W/BvRP/taIxaEwuwcJY6eLjxsQH1s4riNeWuJGxvmV1zSQZqbBX2rVib5
-         frgB94mh32Q9xz6rqcnyjrvx5EBbgbfZ2rBqxlsZnkuaxUTQnvF0rXIuSr1J4FI/Ark1
-         2ZUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=PChTsD7+lOfYquQN6+h5WG1wyZRkuvc0gJ7VnIMPpcI=;
-        b=N6pHh9SoKYUxonKyLYJCaLY6cOgDbkuQ/PBpXerZ/8YZUhAvOxnIndn5lKNOYQs9C2
-         QnJdr2j5VyaU7OfypjiLTzifaeZX2q7ZH3nfbb1W33xmEom7K+2vcDx4rk2LNd/uw2B9
-         EjWT00aB11DQQj4mZbFBXqVk4DQOxN4otA2jWY8dl5fEOdqpoUOeON9EB9Ga/6PF6Q9O
-         9pLUHmJJbGYgY9UbxxzHvwXF2lnoj6NYRjjTd9t/xfO/bfsno7flWqtjVMzSdDMq1fSr
-         GOBKUCXKYWzNbsZNQMAPtqWSr0xn1n4NrY3hn1kcXXI1MqVGEMEw+9+axzbkob03JPdU
-         UK7A==
-X-Gm-Message-State: AOAM53145h4aOfC9ykDzmZ+AQpxPJB63ulJqDnWMgzpLigihz8rxEWW8
-        rruwU7y8uE0QATeHsoWk6a6l/zhXvTNrDmBZ
-X-Google-Smtp-Source: ABdhPJw3ovj5xIgTKeUgsA84rILy0QjfSh1DlsEiwU5RWnjTdC3QlkA8ODLexpuSzMstbWzOEt5EKdjDztKvbJhN
-X-Received: by 2002:a25:c547:: with SMTP id v68mr1490103ybe.508.1594341787646;
- Thu, 09 Jul 2020 17:43:07 -0700 (PDT)
-Date:   Fri, 10 Jul 2020 00:42:58 +0000
-Message-Id: <20200710004258.296017-1-linchuyuan@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
-Subject: [PATCH] dt-bindings: hwmon: adm1272: add adm1272-adm1275-temp1-en binding
-From:   Chu Lin <linchuyuan@google.com>
-To:     linux@roeck-us.net
-Cc:     belgaied@google.com, jasonling@google.com, jdelvare@suse.com,
-        linchuyuan@google.com, linux-hwmon@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        zhongqil@google.com
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 9 Jul 2020 20:54:14 -0400
+Received: from mx.socionext.com ([202.248.49.38]:39525 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726311AbgGJAyO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Jul 2020 20:54:14 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 10 Jul 2020 09:54:13 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 4A74D180C09;
+        Fri, 10 Jul 2020 09:54:13 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 10 Jul 2020 09:54:13 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 2EDCD1A0507;
+        Fri, 10 Jul 2020 09:54:13 +0900 (JST)
+Received: from [10.213.31.123] (unknown [10.213.31.123])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 847BE12012F;
+        Fri, 10 Jul 2020 09:54:12 +0900 (JST)
+Subject: Re: [PATCH v5 6/6] PCI: uniphier: Use
+ devm_platform_ioremap_resource_byname()
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1592469493-1549-7-git-send-email-hayashi.kunihiko@socionext.com>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <f7138d4c-be56-5519-fbb2-3c655945f5ff@socionext.com>
+Date:   Fri, 10 Jul 2020 09:54:12 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <1592469493-1549-7-git-send-email-hayashi.kunihiko@socionext.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Problem:
-	adm1272 and adm1278 supports temperature sampling. The
-current way of enabling it requires the user manually unbind the device
-from the driver, flip the temperature sampling control bit and then bind
-the device back to the driver. It would be nice if we can control this in a
-better way by reading the dt.
+Hi Lorenzo,
 
-Solution:
-	Introducing device tree binding adm1272-adm1278-temp1-en. If the
-flag is set, flip the temp1_en control bit on probing.
+This 6/6 patch has just been covered with the following patch:
+https://patchwork.ozlabs.org/project/linux-pci/patch/20200708164013.5076-1-zhengdejin5@gmail.com/
 
-Testing:
-make dt_binding_check
+As a result, my other patches conflict with this patch.
+I'd like your comments in the patch 2/6, though,
+should I rebase to pci/dwc and resend this series without 6/6?
 
-Signed-off-by: Chu Lin <linchuyuan@google.com>
+Thank you,
+
+On 2020/06/18 17:38, Kunihiko Hayashi wrote:
+> Use devm_platform_ioremap_resource_byname() to simplify the code a bit.
+> 
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>f
+> ---
+>   drivers/pci/controller/dwc/pcie-uniphier.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+> index 8356dd3..233d624 100644
+> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+> @@ -456,8 +456,7 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
+>   	if (IS_ERR(priv->pci.atu_base))
+>   		priv->pci.atu_base = NULL;
+>   
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "link");
+> -	priv->base = devm_ioremap_resource(dev, res);
+> +	priv->base = devm_platform_ioremap_resource_byname(pdev, "link");
+>   	if (IS_ERR(priv->base))
+>   		return PTR_ERR(priv->base);
+>   
+> 
+
 ---
- Documentation/devicetree/bindings/hwmon/adm1275.txt | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/hwmon/adm1275.txt b/Documentation/devicetree/bindings/hwmon/adm1275.txt
-index 1ecd03f3da4d..4403fe30f005 100644
---- a/Documentation/devicetree/bindings/hwmon/adm1275.txt
-+++ b/Documentation/devicetree/bindings/hwmon/adm1275.txt
-@@ -15,6 +15,8 @@ Optional properties:
- 
- - shunt-resistor-micro-ohms
- 	Shunt resistor value in micro-Ohm
-+- adm1272-adm1278-temp1-en
-+	Enable temperature sampling. This is supported on adm1272 and adm1278
- 
- Example:
- 
-@@ -22,4 +24,5 @@ adm1272@10 {
- 	compatible = "adi,adm1272";
- 	reg = <0x10>;
- 	shunt-resistor-micro-ohms = <500>;
-+	adm1272-adm1278-temp1-en;
- };
--- 
-2.27.0.383.g050319c2ae-goog
-
+Best Regards
+Kunihiko Hayashi
