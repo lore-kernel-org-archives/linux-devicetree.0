@@ -2,96 +2,99 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7A7C433E7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 15:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0244C433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 15:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCEF920842
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 15:29:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4461207DD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 15:40:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594394960;
-	bh=A+5H0viLCweISXKhZ8vukjCT/YthyI0T6G22a0E9wP0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bIkOSwZbTb4FKW7aFFPIVkxBx3LzBrEHFteFopSvIsfCgZm6oYOci74HXGz6zxPoH
-	 /qU690EU2ZKFw2RLewco4vtgDFovkUvc2FIUnp+Gt2UwtAOdSYwAjwwwYXqockgHQ7
-	 4Zg3Hywq0JeOnF898ikGCOeJBSx1el5f3KTRvnoA=
+	s=default; t=1594395605;
+	bh=31SRA1ojL9GpcKLyUiLwLpHPGG0dcpgvSQatvym/bPs=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=C0OfzHsGWTP7+JtExwdGk2YuRor9WQLFLA7aSGQEig5K7CJauqG+gaEuXmiSdwwOb
+	 511eWmaE5hZO4IkiktqxEAZGqkDA2sPYhUxV97PUfrbPxYeYHW7QLE5FPcTJYJvu2i
+	 KJVKSCh5WRZz2mxBYFfzbzpK45l54dPtbSNBFwgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgGJP3Q (ORCPT
+        id S1727782AbgGJPkF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:29:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52136 "EHLO mail.kernel.org"
+        Fri, 10 Jul 2020 11:40:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726832AbgGJP3N (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:29:13 -0400
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726872AbgGJPkF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 10 Jul 2020 11:40:05 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DABB2078B;
-        Fri, 10 Jul 2020 15:29:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F80C207BB;
+        Fri, 10 Jul 2020 15:40:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594394952;
-        bh=A+5H0viLCweISXKhZ8vukjCT/YthyI0T6G22a0E9wP0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mJsAbAS7bLMR4MIKisf/3VlNypxyehVH+9BwAL4A4vgISOkEiO6mGXdKX087waoJM
-         fyUO+PMEDS/T576yL6+oEmzLMT21Vq1DkfIV7JjxQFNTP3kaUzxAWsgrpi1PQNmyPC
-         jsxswVgDNeMI9i5IR6BIIRWOGeip8p5Yl6Flv5Os=
-Received: by mail-ot1-f49.google.com with SMTP id w17so4484408otl.4;
-        Fri, 10 Jul 2020 08:29:12 -0700 (PDT)
-X-Gm-Message-State: AOAM533Aq/iK9eQH0XZXrhV8qwP7QjNqV2XkdVEMpAeHXBi50pNdC2aV
-        ae/T9hr6SlPvkQans2HoeSRhMxYVu8y3upULtA==
-X-Google-Smtp-Source: ABdhPJxgp0IgRa0RKnSG7bJrUjnRw1wt0F8ZA2+d85ACmCNg+Fh7mRY7d4DZzaL2DFznGG81bchkn3CjCx5gorcXI3Y=
-X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr59510659ots.192.1594394951793;
- Fri, 10 Jul 2020 08:29:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <ce0d7561-ff93-d267-b57a-6505014c728c@infradead.org>
-In-Reply-To: <ce0d7561-ff93-d267-b57a-6505014c728c@infradead.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 10 Jul 2020 09:28:59 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+AWo6xP1vC1NubFcdWzoX4hVvSW4KGry1NhOXUieDrSA@mail.gmail.com>
-Message-ID: <CAL_Jsq+AWo6xP1vC1NubFcdWzoX4hVvSW4KGry1NhOXUieDrSA@mail.gmail.com>
-Subject: Re: [PATCH -next] <linux/of.h>: add stub for of_get_next_parent() to
- fix qcom build error
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        s=default; t=1594395604;
+        bh=31SRA1ojL9GpcKLyUiLwLpHPGG0dcpgvSQatvym/bPs=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=LZMhp4bX0rgy7ASmfQ8w6c5qwZi78zTA53J/RT7BpqPcGjen1sXLzA1Aou9pff3wT
+         ECKaLD/lzBs3Wn5/zzrSlOTYRQDPX2/4Qa4CVJfoGvkTZtm4sbJeSQ0mGjNBwGQ/3f
+         OEPXq9ouCjLqHgNvdka7TPnZ7xWZFuTCwODcsYYg=
+Date:   Fri, 10 Jul 2020 16:39:58 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     robh+dt@kernel.org, Tzung-Bi Shih <tzungbi@google.com>
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+In-Reply-To: <20200710052505.3664118-1-tzungbi@google.com>
+References: <20200710052505.3664118-1-tzungbi@google.com>
+Subject: Re: [PATCH 0/6] ASoC: mediatek: mt8183: support DP audio
+Message-Id: <159439557864.48910.15353677231173679587.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 10:43 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> From: Randy Dunlap <rdunlap@infradead.org>
->
-> Fix a (COMPILE_TEST) build error when CONFIG_OF is not set/enabled
-> by adding a stub for of_get_next_parent().
->
-> ../drivers/soc/qcom/qcom-geni-se.c:819:11: error: implicit declaration of function 'of_get_next_parent'; did you mean 'of_get_parent'? [-Werror=implicit-function-declaration]
-> ../drivers/soc/qcom/qcom-geni-se.c:819:9: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
->
+On Fri, 10 Jul 2020 13:24:59 +0800, Tzung-Bi Shih wrote:
+> This series is a follow up for a long time ago series
+> (https://patchwork.kernel.org/cover/11204303/).
+> 
+> The old series bound too much on the patches of DRM bridge and ASoC
+> machine driver.  And unluckily, the dependencies
+> (https://lore.kernel.org/patchwork/patch/1126819/) have not applied.
+> 
+> [...]
 
-Fixes tag?
+Applied to
 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: linux-arm-msm@vger.kernel.org
-> ---
->  include/linux/of.h |    5 +++++
->  1 file changed, 5 insertions(+)
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-I'm assuming this will be applied to the tree that introduced the problem.
+Thanks!
 
-Acked-by: Rob Herring <robh@kernel.org>
+[1/6] ASoC: dt-bindings: mt8183: add a property "mediatek, hdmi-codec"
+      commit: cc07e14b149e4260075093c06b371bcb31574ccc
+[2/6] ASoC: mediatek: mt8183: use hdmi-codec
+      commit: f2024dc55fcb743469238aa11f9967e0752ac600
+[3/6] ASoC: mediatek: mt8183: support HDMI jack reporting
+      commit: 88abbf627a56efcd7f24aa119f07069d3d10bd0b
+[4/6] ASoC: dt-bindings: mt8183-da7219: add a property "mediatek, hdmi-codec"
+      commit: 5653841d1e6bace7897a0b5ca681fa37945fa11b
+[5/6] ASoC: mediatek: mt8183-da7219: use hdmi-codec
+      commit: 5bdbe977117741a6bf4958c8dfdcb6b9263e9f1c
+[6/6] ASoC: mediatek: mt8183-da7219: support HDMI jack reporting
+      commit: e25f8afd8869bd97a4d0baea5d8da730913c8541
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
