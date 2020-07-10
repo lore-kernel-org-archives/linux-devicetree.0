@@ -2,107 +2,127 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 549CBC43458
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 19:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45BC5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 20:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D0C62078D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 19:46:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UN7Gn4uP"
+	by mail.kernel.org (Postfix) with ESMTP id 1B4E22075D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 20:01:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594411277;
+	bh=uxSaA+fCdlWn4qcPwLruiKx79jbqmYw66ELH749IiaE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Ith7tjXdyGjc0pe3KWyFH34vo58hkHO25fbJipy8AWHV7dU134Tl+OgUgDkKx6mNO
+	 ppsAyo1PzSBldkRHickpOrS5H+M404xvPmdkM/7gyDLxnYmvMClKVdm+Xfn2Ub1ezK
+	 rilkhxfh5k5IiUwASLtit2EIv1HTiQd2v7AvEfDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728633AbgGJTqk (ORCPT
+        id S1727828AbgGJUBQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 15:46:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36372 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728276AbgGJTqK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 15:46:10 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EA14C08C5DD;
-        Fri, 10 Jul 2020 12:46:10 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id by13so5512438edb.11;
-        Fri, 10 Jul 2020 12:46:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Z7hfnd49qzQu+v3pW4+QTWy4zDs6kHByKCCdtVpj2B8=;
-        b=UN7Gn4uPQtMnfHppgaJpBhNkiEB9r7978G3WIOnisLXwrh2OI9cn0BCtUqf1MPwZVY
-         W2ZJhJmz2/t842wvrC1Jhh1tusoJ5T8+hffg2jWdu+jG4pSdsmJ6vN5kJQTE8OsGz8hq
-         2jPSCCNk5NziX1RpxRuwApyp5Hjfhl6pjGAxGswNZO7WmH6pQnYgP2iD28RlrSVNMmvv
-         fjErgvT8SBbvPO2YdmtXeYgIvVQsEVzur9GXwGZeZdijnTZI+eFOZW5rQBepuqlw80pj
-         XT+1icbJI2CMn155prTr+XDtVeRsyDWmi78OBlqjGCBdLZ9yk5rE8QqAAOmd9C4B2qUx
-         2sMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Z7hfnd49qzQu+v3pW4+QTWy4zDs6kHByKCCdtVpj2B8=;
-        b=guyEsEUiJhmYPhXjqS6YezBLnaYZ0OPE0eP8HuuI5z3yLcXgoR8NAUFl7dFd3tFLm+
-         qPc61xscULmTErOt8Yaaj5/10PrJ0skxPNqBVI6cYYPPZJ+POuGKhsHnzaiOjOXwBki2
-         Nn2V1KMUDgUb1//6zdVRsdOhtm6KAifLjp3duaGpZD2FtlwMU/OKW4G54JMCM+tHv4QJ
-         PhWoSeF2LlNineVeETFfo8eqVmZrC8ZEImvKiVI67+ZlBRmkIpOBu7V7oJUTJF+BjvGj
-         TdfNo3IoVAUOOQ8dIpKhIH29x3TiAjuH2zb9tzqKB08By2hk6++q8J6+6qBVVQCUGC0B
-         cSFw==
-X-Gm-Message-State: AOAM533QTsOb3Xj1KCyv6ukkj1PrCe0es3oH7tFWYtYzly/f8mdIhyaa
-        bATBehaXjEBqqJTu6ifNHrs=
-X-Google-Smtp-Source: ABdhPJykPK6hXQIbX7d3fld79E3i/oUJKENzcBCVYhZYKx1YdcxH769O2NWFAYLrpNr/TrdEOTIbWA==
-X-Received: by 2002:a05:6402:134e:: with SMTP id y14mr79734387edw.4.1594410369165;
-        Fri, 10 Jul 2020 12:46:09 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host-87-16-250-164.retail.telecomitalia.it. [87.16.250.164])
-        by smtp.googlemail.com with ESMTPSA id kt4sm4155768ejb.48.2020.07.10.12.46.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 12:46:08 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/6] drivers: thermal: tsens: add ipq8064 support
-Date:   Fri, 10 Jul 2020 21:45:53 +0200
-Message-Id: <20200710194558.26487-3-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200710194558.26487-1-ansuelsmth@gmail.com>
-References: <20200710194558.26487-1-ansuelsmth@gmail.com>
+        Fri, 10 Jul 2020 16:01:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45536 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726832AbgGJUBP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 10 Jul 2020 16:01:15 -0400
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 448CE2075D;
+        Fri, 10 Jul 2020 20:01:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594411275;
+        bh=uxSaA+fCdlWn4qcPwLruiKx79jbqmYw66ELH749IiaE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=1wPkaE20z7plsMQiJwhVZ0+paqUwAPcL9GsKXf1XrgHsHp6QKFd3U0qwNQj1wVKw6
+         oFM2bYRdanLlb02iDrG6quyLCCI8fDqDyAlcxJYyq5iMV0fXlzOygHrhBaOBnc10fv
+         qOZWzZ3l5FqPvoVBsTQgTCr2YMgP9r32B1WtrAIw=
+Received: by mail-oi1-f174.google.com with SMTP id k6so5733973oij.11;
+        Fri, 10 Jul 2020 13:01:15 -0700 (PDT)
+X-Gm-Message-State: AOAM5302QEB6q2hQdZ1j4ExEPq/yphh+1JBvgadblNSxBqEwzmamzPv1
+        dz1hv0Vu/h27fovdMNl7OjJT0MCJeS8wNqhTaw==
+X-Google-Smtp-Source: ABdhPJwp+smXE3Nydu1By4o0JE3KuEQE3LX21t7xmomGltsl4AiTMSJDziZ1tEKIqsf+vYtAAi8lMSlSyNN6DaD306U=
+X-Received: by 2002:aca:bb82:: with SMTP id l124mr5612171oif.106.1594411274634;
+ Fri, 10 Jul 2020 13:01:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200701130129.30961-1-benjamin.gaignard@st.com>
+ <20200701130129.30961-2-benjamin.gaignard@st.com> <20200709203718.GA837160@bogus>
+ <20e4907a-f218-3e43-1111-7d4b9ee6d945@st.com>
+In-Reply-To: <20e4907a-f218-3e43-1111-7d4b9ee6d945@st.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 10 Jul 2020 14:01:02 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+VgXTJy1SQr6B63kLZ3wcRMe4YfYiRNCT6s=gUO_tmTw@mail.gmail.com>
+Message-ID: <CAL_Jsq+VgXTJy1SQr6B63kLZ3wcRMe4YfYiRNCT6s=gUO_tmTw@mail.gmail.com>
+Subject: Re: [PATCH v7 1/3] dt-bindings: media: stm32-dcmi: Add DCMI min
+ frequency property
+To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Cc:     Hugues FRUCHET <hugues.fruchet@st.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+        "valentin.schneider@arm.com" <valentin.schneider@arm.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Ipq8064 SoCs based use the same 8960 driver.
+On Fri, Jul 10, 2020 at 1:33 AM Benjamin GAIGNARD
+<benjamin.gaignard@st.com> wrote:
+>
+>
+>
+> On 7/9/20 10:37 PM, Rob Herring wrote:
+> > On Wed, Jul 01, 2020 at 03:01:27PM +0200, Benjamin Gaignard wrote:
+> >> Document st,stm32-dcmi-min-frequency property which is used to
+> >> request CPUs minimum frequency when streaming frames.
+> >>
+> >> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> >> ---
+> >>   Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml | 8 ++++++++
+> >>   1 file changed, 8 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml b/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
+> >> index 3fe778cb5cc3..05ca85a2411a 100644
+> >> --- a/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
+> >> +++ b/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
+> >> @@ -44,6 +44,13 @@ properties:
+> >>         bindings defined in
+> >>         Documentation/devicetree/bindings/media/video-interfaces.txt.
+> >>
+> >> +  st,stm32-dcmi-min-frequency:
+> >> +    description: DCMI minimum CPUs frequency requirement (in KHz).
+> >> +    allOf:
+> >> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> >> +      - minimum: 0
+> >> +      - default: 0
+> > I think this is questionable to be in DT and if it is, it's something
+> > that's hardly specific to ST or this block. IIRC, we already have a way
+> > to specify minimum OPPs.
+> This binding is only needed on some STM32 SoC when DVFS is activated
+> with low frequency setting in opp. The value also depends of the targeted
+> video format and framerate.
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- drivers/thermal/qcom/tsens.c | 3 +++
- 1 file changed, 3 insertions(+)
+As those 2 things are not in the DT, then neither should this value be.
 
-diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
-index 39c4462e38f6..2985a064a0d1 100644
---- a/drivers/thermal/qcom/tsens.c
-+++ b/drivers/thermal/qcom/tsens.c
-@@ -907,6 +907,9 @@ static const struct of_device_id tsens_table[] = {
- 		.compatible = "qcom,msm8996-tsens",
- 		.data = &data_8996,
- 	}, {
-+		.compatible = "qcom,ipq8064-tsens",
-+		.data = &data_8060,
-+	} {
- 		.compatible = "qcom,tsens-v1",
- 		.data = &data_tsens_v1,
- 	}, {
--- 
-2.27.0
+> It is not an opp because it doesn't define a voltage-current-frequency
+> combination
+> but only set a minimum target for the CPUs frequency to guaranty a good
+> reaction
+> time when handling IRQs for the sensor.
 
+OPPs can be frequency only. This is pretty clearly defining the CPU
+must Operate at a certain minimum Performance Point.
+
+Rob
