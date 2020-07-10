@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBDDC433EC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 23:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65EEBC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 23:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08CBE20786
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 23:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F5CA206E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 23:02:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Et6Dk9C0"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l5ce6hjS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbgGJXCy (ORCPT
+        id S1727069AbgGJXC6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 19:02:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38552 "EHLO
+        Fri, 10 Jul 2020 19:02:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbgGJXCu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 19:02:50 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D066C08C5DD
-        for <devicetree@vger.kernel.org>; Fri, 10 Jul 2020 16:02:50 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id k71so3225564pje.0
-        for <devicetree@vger.kernel.org>; Fri, 10 Jul 2020 16:02:50 -0700 (PDT)
+        with ESMTP id S1727052AbgGJXC4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 19:02:56 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39B81C08C5DD
+        for <devicetree@vger.kernel.org>; Fri, 10 Jul 2020 16:02:56 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id b9so2844718plx.6
+        for <devicetree@vger.kernel.org>; Fri, 10 Jul 2020 16:02:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tVqx7g36rFA8fGH9HPQE1NOw2DZAuX6VKaMN/UQGYmk=;
-        b=Et6Dk9C0ZAXRSSAVBOeYyozI3Jj+uhoeW1ZrbIn4h7Zhux2W8tHEXkW2/mrDbKQZqL
-         Uvg6xpKFBy1wu6a4o5ZQrtYyfcgypwjH2LJNmsuaN5NHupqledwdyeX8dcn770r3gX2g
-         hlziyVRNx3N8dW2y2fAPskxRWpjbeRquFS9fA=
+        bh=co3iFm8egyAhpjouB4wYZ2DsUz/fkVXl0yTaXVEDDSU=;
+        b=l5ce6hjS0xdsv66VLkfTFe9rwljnNeJ2hAUFnEXltlcciTj3GGqnNyK32o3TZO5+uL
+         hQu+6PL0ibJ1s2JdZyy9/nrbrSEwM2PdoIk8FFiIaYNRhJ1pg9Q1h6xsMGYxCxgIiy7t
+         r7I75GuEvSq8lGjPgTHXgmf/mqfSk79NkurBw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tVqx7g36rFA8fGH9HPQE1NOw2DZAuX6VKaMN/UQGYmk=;
-        b=RmqvkNVKAdMSsaAfrNQtr4p9QCU4MZlzvjfpZW5e6AXFn+yVn8GU/MaMkBsS28yWKt
-         Ze7sgIf9ZcVR7zaua8OPySJI+wV7mvUHTwtmMXwuBR1/oDB44AuszJyM6XqnpWCaoyX/
-         jNQ9Z4siemxLLyDCC5nN89IQmbAOCTweSFBOmZQ9xSiDCnBwIGRXismsi/jMcM9t9Xxc
-         fp4oVHRw1Baw2Z+OoDsDWQKX6HWtPcFRtu0YXw/ZJB5KMz+s8FBy8Qeul9Cmwve92Nnk
-         KBzbj+E2+ON/YqHzW32gYuBT3KE5ZVKAw9d71t7mc89G15g/FtwAe4h0+DEGknIdbOC6
-         g6DQ==
-X-Gm-Message-State: AOAM531aGsCHsMygS6INYXWV1Eoo/ibZXVodsqVdY8Z7rA17MOxdJg6R
-        Atlu+MYFMLS2pc50i9nRfDb2Kg==
-X-Google-Smtp-Source: ABdhPJw4NYcILGIGbzu/Mo7t5i5bNT/aUinQfG5IFKgb6SVXfZdHoKdaoadkxhHDmq9STiHl74UbJg==
-X-Received: by 2002:a17:902:d215:: with SMTP id t21mr40582652ply.136.1594422169822;
-        Fri, 10 Jul 2020 16:02:49 -0700 (PDT)
+        bh=co3iFm8egyAhpjouB4wYZ2DsUz/fkVXl0yTaXVEDDSU=;
+        b=LTYrReKjZZpsmyYOHRY6JHKEbnHNgmTBSsU63Znwfaxx3hyKwp8+A1OvOWkK/pGkOM
+         Lc8OJG38gIVt7ae7BRGaNfSWIMjOW0ETtT2p46iNXR4ZIQ9QCfw4rQrhrXpWQjhdaskp
+         o5lqDQGrgm/cHp9rulZetcL0u9CktOtPAauMLUTRG6hTCtaF94is7ddwviPGYtAOXFUB
+         g9thRwDR77T/ZGRWjKDcG7uES6gt0xSThKHOCjCZObOv/ws5fdShf0LyJ/s091zVCC97
+         vpn8lsYJdL9DoABB48LNNjJzb6Trsw08C5+43qnLpOp+fYgFU7uVYgfqnx6rEwevB6pb
+         SepQ==
+X-Gm-Message-State: AOAM530eNymh3GH0AyYX8xyeevvIqw+bFi+nF3XPJUdQKB/Fdv06KOfn
+        CnClzvudAB7RdmAqZeCapX5udw==
+X-Google-Smtp-Source: ABdhPJwAAHPNollF2qNbk1bn/dIvuDP118bo1zP5qg598VD2MSzTkTnoyhetCyghTdH9xKFShiITnw==
+X-Received: by 2002:a17:90a:7b84:: with SMTP id z4mr7749468pjc.106.1594422175761;
+        Fri, 10 Jul 2020 16:02:55 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
-        by smtp.gmail.com with ESMTPSA id my9sm7266836pjb.44.2020.07.10.16.02.48
+        by smtp.gmail.com with ESMTPSA id my9sm7266836pjb.44.2020.07.10.16.02.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 16:02:49 -0700 (PDT)
+        Fri, 10 Jul 2020 16:02:55 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Rob Herring <robh+dt@kernel.org>, Rob Clark <robdclark@gmail.com>,
         Sean Paul <sean@poorly.run>, Andy Gross <agross@kernel.org>,
@@ -63,11 +63,10 @@ To:     Rob Herring <robh+dt@kernel.org>, Rob Clark <robdclark@gmail.com>,
 Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
         freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
         Douglas Anderson <dianders@chromium.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/9] drm/msm: Avoid manually populating our children if "simple-bus" is there
-Date:   Fri, 10 Jul 2020 16:02:19 -0700
-Message-Id: <20200710160131.4.I358ea82de218ea5f4406572ade23f5e121297555@changeid>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 9/9] ARM: dts: qcom: msm8974: Add "simple-bus" to our mdss node
+Date:   Fri, 10 Jul 2020 16:02:24 -0700
+Message-Id: <20200710160131.9.I667d728b2a99b1ed50df01a3e14483fa69babf0e@changeid>
 X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
 In-Reply-To: <20200710230224.2265647-1-dianders@chromium.org>
 References: <20200710230224.2265647-1-dianders@chromium.org>
@@ -78,57 +77,37 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-If our compatible string has "simple-bus" at the end of it then the
-system will handle probing our children for us.  Doing this has a few
-advantages:
-
-1. If we defer we don't have to keep probing / removing our children
-   which should speed up boot.  The system just probes them once.
-
-2. It fixes a problem where we could get into a big loop where we'd
-   have:
-   - msm_pdev_probe() is called.
-   - msm_pdev_probe() registers drivers.  Registering drivers kicks
-     off processing of probe deferrals.
-   - component_master_add_with_match() could return -EPROBE_DEFER.
-     making msm_pdev_probe() return -EPROBE_DEFER.
-   - When msm_pdev_probe() returned the processing of probe deferrals
-     happens.
-   - Loop back to the start.
+As described in the bindings patch, this means that our child nodes
+are devices in their own right.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
+If this patch lands before the patch ("drm/msm: Avoid manually
+populating our children if "simple-bus" is there") it doesn't seem to
+be the end of the world.  The first time through
+add_display_components() it'll notice that the children are already
+populated and it will be a no-op.  When it gets a defer it will then
+depouplate them (even though it didn't populate them) and future calls
+will just populate them again.
 
- drivers/gpu/drm/msm/msm_drv.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+NOTE: I have no way to test this patch, but I'm assuming it works OK?
 
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index 78b09fde9e29..f7c6ef147095 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -1208,10 +1208,18 @@ static int add_display_components(struct device *dev,
- 	if (of_device_is_compatible(dev->of_node, "qcom,mdss") ||
- 	    of_device_is_compatible(dev->of_node, "qcom,sdm845-mdss") ||
- 	    of_device_is_compatible(dev->of_node, "qcom,sc7180-mdss")) {
--		ret = devm_of_platform_populate(dev);
--		if (ret) {
--			DRM_DEV_ERROR(dev, "failed to populate children devices\n");
--			return ret;
-+		/*
-+		 * Old device tree files didn't include "simple-bus"
-+		 * in their compatible string so we had to manually pouplate
-+		 * our children.  When existing device trees are fixed this
-+		 * can be removed.
-+		 */
-+		if (!of_device_is_compatible(dev->of_node, "simple-bus")) {
-+			ret = devm_of_platform_populate(dev);
-+			if (ret) {
-+				DRM_DEV_ERROR(dev, "failed to populate children devices\n");
-+				return ret;
-+			}
- 		}
+ arch/arm/boot/dts/qcom-msm8974.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+index 51f5f904f9eb..9f84c9fd716c 100644
+--- a/arch/arm/boot/dts/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+@@ -1402,7 +1402,7 @@ cnoc: interconnect@fc480000 {
+ 		mdss: mdss@fd900000 {
+ 			status = "disabled";
  
- 		mdp_dev = device_find_child(dev, NULL, compare_name_mdp);
+-			compatible = "qcom,mdss";
++			compatible = "qcom,mdss", "simple-bus";
+ 			reg = <0xfd900000 0x100>,
+ 			      <0xfd924000 0x1000>;
+ 			reg-names = "mdss_phys",
 -- 
 2.27.0.383.g050319c2ae-goog
 
