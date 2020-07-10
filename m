@@ -5,65 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A89C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 09:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D36D5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 09:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FA3A2082E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 09:46:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA9AA20786
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 09:46:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="RydD085p"
+	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="kfa1c32Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbgGJJql (ORCPT
+        id S1728059AbgGJJq2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 05:46:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56616 "EHLO
+        Fri, 10 Jul 2020 05:46:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728112AbgGJJqj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 05:46:39 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4560AC08C5DC
-        for <devicetree@vger.kernel.org>; Fri, 10 Jul 2020 02:46:39 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id a14so2327416pfi.2
-        for <devicetree@vger.kernel.org>; Fri, 10 Jul 2020 02:46:39 -0700 (PDT)
+        with ESMTP id S1728043AbgGJJqY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 05:46:24 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDCBAC08C5DC
+        for <devicetree@vger.kernel.org>; Fri, 10 Jul 2020 02:46:23 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id w2so2288341pgg.10
+        for <devicetree@vger.kernel.org>; Fri, 10 Jul 2020 02:46:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=0x0f.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=IiSZdtFwKwHNBZOweoCEZNTpFyXOI2NF01y7ZbXZOTk=;
-        b=RydD085pKT0b9+NpuJwO0tdgshoGEZNx/AhEt5n3kfl3cx2WJzywCcdnPTvGFULF72
-         961lMEHFVczSkaV0F9k6rewCArn58gmhZKIdjKpVy75CqyS+U/B6LQ1Bcb/Tk4ryvAUi
-         NxkiAOIALY02FUQJmiGhG3fmJ1IbCNgCNK3Gs=
+        bh=3QX7mr2czZhjXYilcEPsm3JJuQZMY4I8zbNHVBoLG5o=;
+        b=kfa1c32YEKjeTfDKHQAKtV8FgiuI1D8K0yOcy05VLxl5eFkOU4UF6V22Xj7GeoczAp
+         ai941cnu1m42k3FmtXaAzEeP+jb4mRKbSKx+z4gSG+uULsOkZsWQ8VN+2RqHVZzr4KAC
+         qGDjCEotAwW9ianPnMePwrDXejhy6qY39DuVE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IiSZdtFwKwHNBZOweoCEZNTpFyXOI2NF01y7ZbXZOTk=;
-        b=gjDFzu5fe60wmYq+tCstr4xCrB6fqNZHzP7M0NTyp0pWEuNmRJwYih8j0aVjLxAXQp
-         VLK50VBOyCODTyJOGUgc2SmoH5d3D+7L1CHP7pGxG0X0V3Q3tDIylXpdtJNnno8s6ZkA
-         CYq5u2cCwd9q6iWZX6bNBHwKqY1wNCNGA5iMFmuKbe3ChZuDMcc0TFgfsjKmZxEwXwto
-         J9ZSWQ5+sCyDUpWpNG4z9WCHrX2TUJBAsSmFLqSG+VkEgjqpIBAvS2TQSXlb8KV1dPcw
-         FDZKN12x6LuTCurzBeF75/G5ccXFvpolCSKcrz59qJyP+BCpzh9gw4eKZ1nrWaEqB69o
-         lGOQ==
-X-Gm-Message-State: AOAM532CRr7BFSl3QglS3gNsn099mYdUgbDaC//ucab+fqaMg2qC6JBp
-        3YQRZyOl+tKPAgMSeLihcCVlYw==
-X-Google-Smtp-Source: ABdhPJxRLK+HF3RoRsHoDJrpSwyCcu6NSk63Rd02qQcNLWwyf9MKQPlLn3+V8DlqwpidZkcVz/hs6w==
-X-Received: by 2002:a63:fc01:: with SMTP id j1mr59035011pgi.0.1594374398814;
-        Fri, 10 Jul 2020 02:46:38 -0700 (PDT)
+        bh=3QX7mr2czZhjXYilcEPsm3JJuQZMY4I8zbNHVBoLG5o=;
+        b=RT7iSwzF/8kOPfZQaNvyMe2srLbmEpB34hflJp5MPLYZxalWNcZxXBJBdj8Su+gVq7
+         PPGokftxtnwx3d53xlrgQ5HFRFEAlq2eo8Xu4IR/2w/goZKine7e/TMG0QhdxDj2lCgV
+         V2NwWnvc5QKZG4qd7wvgJ7hyYnzksk1VvCIEzxpTNY6cp8vZWT9C7w1zA4kY0nGjay59
+         0Mi0U5fkQRDs7qZX8ZoysVG4DnGy8CChvnVDeZsgnRkfw35LW6ab719Zqsxnrzv79wfV
+         Z1IHF/UaBGnOenCcb9QSaLXtnoH7oB+H6xy7oqo7hvt7KvXO5r30FWcRF7eoSn78fQaz
+         f+rg==
+X-Gm-Message-State: AOAM532ebd5RCrkLGylCvSs6XKwmCniOVtI64xaxf6/nycS87giXCGUF
+        NuG/6Sk3XCTRRtORRrlKudCt4w==
+X-Google-Smtp-Source: ABdhPJyb2uDW5kLd5NsW4DYsjExTjrSLzOxm1x+MHO6glBvrk7cv7KZY20e8IH7bj3QhvrSDFrqw6A==
+X-Received: by 2002:a63:bf04:: with SMTP id v4mr59776470pgf.212.1594374383340;
+        Fri, 10 Jul 2020 02:46:23 -0700 (PDT)
 Received: from shiro.work ([2400:4162:2428:2f01:7285:c2ff:fe8e:66d7])
-        by smtp.googlemail.com with ESMTPSA id z9sm5133213pgh.94.2020.07.10.02.46.36
+        by smtp.googlemail.com with ESMTPSA id z9sm5133213pgh.94.2020.07.10.02.46.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 02:46:38 -0700 (PDT)
+        Fri, 10 Jul 2020 02:46:22 -0700 (PDT)
 From:   Daniel Palmer <daniel@0x0f.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         robh+dt@kernel.org, linux@armlinux.org.uk, arnd@arndb.de,
         afaerber@suse.de, maz@kernel.org, w@1wt.eu,
-        Daniel Palmer <daniel@0x0f.com>
-Subject: [PATCH v5 12/12] ARM: mstar: Add dts for 70mai midrive d08
-Date:   Fri, 10 Jul 2020 18:45:44 +0900
-Message-Id: <20200710094544.430258-13-daniel@0x0f.com>
+        Daniel Palmer <daniel@0x0f.com>, Rob Herring <robh@kernel.org>
+Subject: [PATCH v5 07/12] ARM: mstar: Add binding details for mstar,l3bridge
+Date:   Fri, 10 Jul 2020 18:45:39 +0900
+Message-Id: <20200710094544.430258-8-daniel@0x0f.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200710094544.430258-1-daniel@0x0f.com>
 References: <20200710094544.430258-1-daniel@0x0f.com>
@@ -74,60 +74,66 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Adds initial support for the 70mai midrive d08 dash camera.
+This adds a YAML description of the l3bridge node needed by the
+platform code for the MStar/SigmaStar Armv7 SoCs.
 
 Signed-off-by: Daniel Palmer <daniel@0x0f.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/boot/dts/Makefile                    |  3 ++-
- .../boot/dts/mercury5-ssc8336n-midrived08.dts | 25 +++++++++++++++++++
- 2 files changed, 27 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/mercury5-ssc8336n-midrived08.dts
+ .../bindings/misc/mstar,l3bridge.yaml         | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/mstar,l3bridge.yaml
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 4a5f8075a4f6..35c7ecc52c60 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1344,7 +1344,8 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += \
- dtb-$(CONFIG_ARCH_MILBEAUT) += milbeaut-m10v-evb.dtb
- dtb-$(CONFIG_ARCH_MSTARV7) += \
- 	infinity-msc313-breadbee_crust.dtb \
--	infinity3-msc313e-breadbee.dtb
-+	infinity3-msc313e-breadbee.dtb \
-+	mercury5-ssc8336n-midrive08.dtb
- dtb-$(CONFIG_ARCH_ZX) += zx296702-ad1.dtb
- dtb-$(CONFIG_ARCH_ASPEED) += \
- 	aspeed-ast2500-evb.dtb \
-diff --git a/arch/arm/boot/dts/mercury5-ssc8336n-midrived08.dts b/arch/arm/boot/dts/mercury5-ssc8336n-midrived08.dts
+diff --git a/Documentation/devicetree/bindings/misc/mstar,l3bridge.yaml b/Documentation/devicetree/bindings/misc/mstar,l3bridge.yaml
 new file mode 100644
-index 000000000000..f24bd8cb8e60
+index 000000000000..cb7fd1cdfb1a
 --- /dev/null
-+++ b/arch/arm/boot/dts/mercury5-ssc8336n-midrived08.dts
-@@ -0,0 +1,25 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright (c) 2020 thingy.jp.
-+ * Author: Daniel Palmer <daniel@thingy.jp>
-+ */
++++ b/Documentation/devicetree/bindings/misc/mstar,l3bridge.yaml
+@@ -0,0 +1,44 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2020 thingy.jp.
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/misc/mstar,l3bridge.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+/dts-v1/;
-+#include "mercury5-ssc8336n.dtsi"
++title: MStar/SigmaStar Armv7 SoC l3bridge
 +
-+/ {
-+	model = "70mai Midrive D08";
-+	compatible = "70mai,midrived08", "mstar,mercury5";
++maintainers:
++  - Daniel Palmer <daniel@thingy.jp>
 +
-+	aliases {
-+		serial0 = &pm_uart;
-+	};
++description: |
++  MStar/SigmaStar's Armv7 SoCs have a pipeline in the interface
++  between the CPU and memory. This means that before DMA capable
++  devices are allowed to run the pipeline must be flushed to ensure
++  everything is in memory.
 +
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
++  The l3bridge region contains registers that allow such a flush
++  to be triggered.
 +
-+&pm_uart {
-+	status = "okay";
-+};
++  This node is used by the platform code to find where the registers
++  are and install a barrier that triggers the required pipeline flush.
++
++properties:
++  compatible:
++    items:
++      - const: mstar,l3bridge
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    l3bridge: l3bridge@1f204400 {
++        compatible = "mstar,l3bridge";
++        reg = <0x1f204400 0x200>;
++    };
 -- 
 2.27.0
 
