@@ -2,669 +2,244 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64CEFC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 17:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D589DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 17:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C386207F9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 17:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFFCD20657
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 17:08:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Mb7OQ2Ek"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgGJRDa (ORCPT
+        id S1726962AbgGJRIY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 13:03:30 -0400
-Received: from out28-100.mail.aliyun.com ([115.124.28.100]:60607 "EHLO
-        out28-100.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728215AbgGJRDa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 13:03:30 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_alarm|0.0448904-0.0022582-0.952851;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03299;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.I.khRXN_1594400587;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I.khRXN_1594400587)
-          by smtp.aliyun-inc.com(10.147.44.129);
-          Sat, 11 Jul 2020 01:03:15 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
-        daniel.lezcano@linaro.org, paul@crapouillou.net,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH v6 2/2] clocksource: Ingenic: Add support for the Ingenic X1000 OST.
-Date:   Sat, 11 Jul 2020 01:02:59 +0800
-Message-Id: <20200710170259.29028-3-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200710170259.29028-1-zhouyanjie@wanyeetech.com>
-References: <20200710170259.29028-1-zhouyanjie@wanyeetech.com>
+        Fri, 10 Jul 2020 13:08:24 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:15740 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727101AbgGJRIX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 10 Jul 2020 13:08:23 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594400902; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=FwNg3e/t161QXeNlfj8RjjHMHRPeaUVntsu2CE4ozZ0=;
+ b=Mb7OQ2EkbgV5lom6QcPnL8iFpw4JTwFX7vQuMugfYUP+FSAXF4KWeaH3a01FqWy7aZe6wY54
+ hIWPhI2sW0LKiugyoxmexe1T5aKH5AiKDPyT4RcyBiB8bBhdsqZIHb77ZseQ/MiT2itFhmKZ
+ 8ocjia9a6mZF1j8i35Ui/0+nkyU=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n20.prod.us-east-1.postgun.com with SMTP id
+ 5f08a06e427cd55766585112 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 17:07:58
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BCC8BC433C6; Fri, 10 Jul 2020 17:07:57 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: tanmay)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 68BE5C433C6;
+        Fri, 10 Jul 2020 17:07:56 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 10 Jul 2020 10:07:56 -0700
+From:   tanmay@codeaurora.org
+To:     Rob Herring <robh@kernel.org>
+Cc:     swboyd@chromium.org, sam@ravnborg.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        seanpaul@chromium.org, robdclark@gmail.com, daniel@ffwll.ch,
+        airlied@linux.ie, aravindh@codeaurora.org, abhinavk@codeaurora.org,
+        chandanu@codeaurora.org, varar@codeaurora.org
+Subject: Re: [PATCH v8 0/6] Add support for DisplayPort driver on SnapDragon
+In-Reply-To: <20200709202110.GA814782@bogus>
+References: <20200630184507.15589-1-tanmay@codeaurora.org>
+ <20200709202110.GA814782@bogus>
+Message-ID: <2e867e903db9be91a988a37b7508abd0@codeaurora.org>
+X-Sender: tanmay@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-X1000 and SoCs after X1000 (such as X1500 and X1830) had a separate
-OST, it no longer belongs to TCU. This driver will register both a
-clocksource and a sched_clock to the system.
+Thanks for reviews Rob.
 
-Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
-Co-developed-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
-Signed-off-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-Reviewed-by: Paul Cercueil <paul@crapouillou.net>
----
-
-Notes:
-    v1->v2:
-    Fix compile warnings.
-    Reported-by: kernel test robot <lkp@intel.com>
-    
-    v2->v3:
-    No change.
-    
-    v3->v4:
-    1.Rename "ost" to "sysost"
-    1.Remove unrelated changes.
-    2.Remove ost_clock_parent enum.
-    3.Remove ost->percpu_timer_channel/ost->global_timer_channel.
-    4.Set up independent .recalc_rate/.set_rate for percpu/global timer.
-    5.No longer call functions in variable declarations.
-    
-    v4->v5:
-    Use "of_io_request_and_map()" instead "of_iomap()".
-    Suggested-by: Paul Cercueil <paul@crapouillou.net>
-    
-    v5->v6:
-    No change.
-
- drivers/clocksource/Kconfig          |  11 +
- drivers/clocksource/Makefile         |   1 +
- drivers/clocksource/ingenic-sysost.c | 539 +++++++++++++++++++++++++++++++++++
- 3 files changed, 551 insertions(+)
- create mode 100644 drivers/clocksource/ingenic-sysost.c
-
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 91418381fcd4..1bca8b8fb30f 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -696,6 +696,17 @@ config INGENIC_TIMER
- 	help
- 	  Support for the timer/counter unit of the Ingenic JZ SoCs.
- 
-+config INGENIC_SYSOST
-+	bool "Clocksource/timer using the SYSOST in Ingenic X SoCs"
-+	default MACH_INGENIC
-+	depends on MIPS || COMPILE_TEST
-+	depends on COMMON_CLK
-+	select MFD_SYSCON
-+	select TIMER_OF
-+	select IRQ_DOMAIN
-+	help
-+	  Support for the SYSOST of the Ingenic X Series SoCs.
-+
- config INGENIC_OST
- 	bool "Clocksource for Ingenic OS Timer"
- 	depends on MIPS || COMPILE_TEST
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index bdda1a2e4097..3994e221e262 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -82,6 +82,7 @@ obj-$(CONFIG_H8300_TMR8)		+= h8300_timer8.o
- obj-$(CONFIG_H8300_TMR16)		+= h8300_timer16.o
- obj-$(CONFIG_H8300_TPU)			+= h8300_tpu.o
- obj-$(CONFIG_INGENIC_OST)		+= ingenic-ost.o
-+obj-$(CONFIG_INGENIC_SYSOST)	+= ingenic-sysost.o
- obj-$(CONFIG_INGENIC_TIMER)		+= ingenic-timer.o
- obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
- obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
-diff --git a/drivers/clocksource/ingenic-sysost.c b/drivers/clocksource/ingenic-sysost.c
-new file mode 100644
-index 000000000000..e77d58449005
---- /dev/null
-+++ b/drivers/clocksource/ingenic-sysost.c
-@@ -0,0 +1,539 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Ingenic XBurst SoCs SYSOST clocks driver
-+ * Copyright (c) 2020 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/clockchips.h>
-+#include <linux/clocksource.h>
-+#include <linux/interrupt.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/sched_clock.h>
-+#include <linux/slab.h>
-+#include <linux/syscore_ops.h>
-+
-+#include <dt-bindings/clock/ingenic,sysost.h>
-+
-+/* OST register offsets */
-+#define OST_REG_OSTCCR			0x00
-+#define OST_REG_OSTCR			0x08
-+#define OST_REG_OSTFR			0x0c
-+#define OST_REG_OSTMR			0x10
-+#define OST_REG_OST1DFR			0x14
-+#define OST_REG_OST1CNT			0x18
-+#define OST_REG_OST2CNTL		0x20
-+#define OST_REG_OSTCNT2HBUF		0x24
-+#define OST_REG_OSTESR			0x34
-+#define OST_REG_OSTECR			0x38
-+
-+/* bits within the OSTCCR register */
-+#define OSTCCR_PRESCALE1_MASK	0x3
-+#define OSTCCR_PRESCALE2_MASK	0xc
-+#define OSTCCR_PRESCALE1_LSB	0
-+#define OSTCCR_PRESCALE2_LSB	2
-+
-+/* bits within the OSTCR register */
-+#define OSTCR_OST1CLR			BIT(0)
-+#define OSTCR_OST2CLR			BIT(1)
-+
-+/* bits within the OSTFR register */
-+#define OSTFR_FFLAG				BIT(0)
-+
-+/* bits within the OSTMR register */
-+#define OSTMR_FMASK				BIT(0)
-+
-+/* bits within the OSTESR register */
-+#define OSTESR_OST1ENS			BIT(0)
-+#define OSTESR_OST2ENS			BIT(1)
-+
-+/* bits within the OSTECR register */
-+#define OSTECR_OST1ENC			BIT(0)
-+#define OSTECR_OST2ENC			BIT(1)
-+
-+struct ingenic_soc_info {
-+	unsigned int num_channels;
-+};
-+
-+struct ingenic_ost_clk_info {
-+	struct clk_init_data init_data;
-+	u8 ostccr_reg;
-+};
-+
-+struct ingenic_ost_clk {
-+	struct clk_hw hw;
-+	unsigned int idx;
-+	struct ingenic_ost *ost;
-+	const struct ingenic_ost_clk_info *info;
-+};
-+
-+struct ingenic_ost {
-+	void __iomem *base;
-+	const struct ingenic_soc_info *soc_info;
-+	struct clk *clk, *percpu_timer_clk, *global_timer_clk;
-+	struct clock_event_device cevt;
-+	struct clocksource cs;
-+	char name[20];
-+
-+	struct clk_hw_onecell_data *clocks;
-+};
-+
-+static struct ingenic_ost *ingenic_ost;
-+
-+static inline struct ingenic_ost_clk *to_ost_clk(struct clk_hw *hw)
-+{
-+	return container_of(hw, struct ingenic_ost_clk, hw);
-+}
-+
-+static unsigned long ingenic_ost_percpu_timer_recalc_rate(struct clk_hw *hw,
-+		unsigned long parent_rate)
-+{
-+	struct ingenic_ost_clk *ost_clk = to_ost_clk(hw);
-+	const struct ingenic_ost_clk_info *info = ost_clk->info;
-+	unsigned int prescale;
-+
-+	prescale = readl(ost_clk->ost->base + info->ostccr_reg);
-+
-+	prescale = (prescale & OSTCCR_PRESCALE1_MASK) >> OSTCCR_PRESCALE1_LSB;
-+
-+	return parent_rate >> (prescale * 2);
-+}
-+
-+static unsigned long ingenic_ost_global_timer_recalc_rate(struct clk_hw *hw,
-+		unsigned long parent_rate)
-+{
-+	struct ingenic_ost_clk *ost_clk = to_ost_clk(hw);
-+	const struct ingenic_ost_clk_info *info = ost_clk->info;
-+	unsigned int prescale;
-+
-+	prescale = readl(ost_clk->ost->base + info->ostccr_reg);
-+
-+	prescale = (prescale & OSTCCR_PRESCALE2_MASK) >> OSTCCR_PRESCALE2_LSB;
-+
-+	return parent_rate >> (prescale * 2);
-+}
-+
-+static u8 ingenic_ost_get_prescale(unsigned long rate, unsigned long req_rate)
-+{
-+	u8 prescale;
-+
-+	for (prescale = 0; prescale < 2; prescale++)
-+		if ((rate >> (prescale * 2)) <= req_rate)
-+			return prescale;
-+
-+	return 2; /* /16 divider */
-+}
-+
-+static long ingenic_ost_round_rate(struct clk_hw *hw, unsigned long req_rate,
-+		unsigned long *parent_rate)
-+{
-+	unsigned long rate = *parent_rate;
-+	u8 prescale;
-+
-+	if (req_rate > rate)
-+		return rate;
-+
-+	prescale = ingenic_ost_get_prescale(rate, req_rate);
-+
-+	return rate >> (prescale * 2);
-+}
-+
-+static int ingenic_ost_percpu_timer_set_rate(struct clk_hw *hw, unsigned long req_rate,
-+		unsigned long parent_rate)
-+{
-+	struct ingenic_ost_clk *ost_clk = to_ost_clk(hw);
-+	const struct ingenic_ost_clk_info *info = ost_clk->info;
-+	u8 prescale = ingenic_ost_get_prescale(parent_rate, req_rate);
-+	int val;
-+
-+	val = readl(ost_clk->ost->base + info->ostccr_reg);
-+	val = (val & ~OSTCCR_PRESCALE1_MASK) | (prescale << OSTCCR_PRESCALE1_LSB);
-+	writel(val, ost_clk->ost->base + info->ostccr_reg);
-+
-+	return 0;
-+}
-+
-+static int ingenic_ost_global_timer_set_rate(struct clk_hw *hw, unsigned long req_rate,
-+		unsigned long parent_rate)
-+{
-+	struct ingenic_ost_clk *ost_clk = to_ost_clk(hw);
-+	const struct ingenic_ost_clk_info *info = ost_clk->info;
-+	u8 prescale = ingenic_ost_get_prescale(parent_rate, req_rate);
-+	int val;
-+
-+	val = readl(ost_clk->ost->base + info->ostccr_reg);
-+	val = (val & ~OSTCCR_PRESCALE2_MASK) | (prescale << OSTCCR_PRESCALE2_LSB);
-+	writel(val, ost_clk->ost->base + info->ostccr_reg);
-+
-+	return 0;
-+}
-+
-+static const struct clk_ops ingenic_ost_percpu_timer_ops = {
-+	.recalc_rate	= ingenic_ost_percpu_timer_recalc_rate,
-+	.round_rate		= ingenic_ost_round_rate,
-+	.set_rate		= ingenic_ost_percpu_timer_set_rate,
-+};
-+
-+static const struct clk_ops ingenic_ost_global_timer_ops = {
-+	.recalc_rate	= ingenic_ost_global_timer_recalc_rate,
-+	.round_rate		= ingenic_ost_round_rate,
-+	.set_rate		= ingenic_ost_global_timer_set_rate,
-+};
-+
-+static const char * const ingenic_ost_clk_parents[] = { "ext" };
-+
-+static const struct ingenic_ost_clk_info ingenic_ost_clk_info[] = {
-+	[OST_CLK_PERCPU_TIMER] = {
-+		.init_data = {
-+			.name = "percpu timer",
-+			.parent_names = ingenic_ost_clk_parents,
-+			.num_parents = ARRAY_SIZE(ingenic_ost_clk_parents),
-+			.ops = &ingenic_ost_percpu_timer_ops,
-+			.flags = CLK_SET_RATE_UNGATE,
-+		},
-+		.ostccr_reg = OST_REG_OSTCCR,
-+	},
-+
-+	[OST_CLK_GLOBAL_TIMER] = {
-+		.init_data = {
-+			.name = "global timer",
-+			.parent_names = ingenic_ost_clk_parents,
-+			.num_parents = ARRAY_SIZE(ingenic_ost_clk_parents),
-+			.ops = &ingenic_ost_global_timer_ops,
-+			.flags = CLK_SET_RATE_UNGATE,
-+		},
-+		.ostccr_reg = OST_REG_OSTCCR,
-+	},
-+};
-+
-+static u64 notrace ingenic_ost_global_timer_read_cntl(void)
-+{
-+	struct ingenic_ost *ost = ingenic_ost;
-+	unsigned int count;
-+
-+	count = readl(ost->base + OST_REG_OST2CNTL);
-+
-+	return count;
-+}
-+
-+static u64 notrace ingenic_ost_clocksource_read(struct clocksource *cs)
-+{
-+	return ingenic_ost_global_timer_read_cntl();
-+}
-+
-+static inline struct ingenic_ost *to_ingenic_ost(struct clock_event_device *evt)
-+{
-+	return container_of(evt, struct ingenic_ost, cevt);
-+}
-+
-+static int ingenic_ost_cevt_set_state_shutdown(struct clock_event_device *evt)
-+{
-+	struct ingenic_ost *ost = to_ingenic_ost(evt);
-+
-+	writel(OSTECR_OST1ENC, ost->base + OST_REG_OSTECR);
-+
-+	return 0;
-+}
-+
-+static int ingenic_ost_cevt_set_next(unsigned long next,
-+				     struct clock_event_device *evt)
-+{
-+	struct ingenic_ost *ost = to_ingenic_ost(evt);
-+
-+	writel((u32)~OSTFR_FFLAG, ost->base + OST_REG_OSTFR);
-+	writel(next, ost->base + OST_REG_OST1DFR);
-+	writel(OSTCR_OST1CLR, ost->base + OST_REG_OSTCR);
-+	writel(OSTESR_OST1ENS, ost->base + OST_REG_OSTESR);
-+	writel((u32)~OSTMR_FMASK, ost->base + OST_REG_OSTMR);
-+
-+	return 0;
-+}
-+
-+static irqreturn_t ingenic_ost_cevt_cb(int irq, void *dev_id)
-+{
-+	struct clock_event_device *evt = dev_id;
-+	struct ingenic_ost *ost = to_ingenic_ost(evt);
-+
-+	writel(OSTECR_OST1ENC, ost->base + OST_REG_OSTECR);
-+
-+	if (evt->event_handler)
-+		evt->event_handler(evt);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int __init ingenic_ost_register_clock(struct ingenic_ost *ost,
-+			unsigned int idx, const struct ingenic_ost_clk_info *info,
-+			struct clk_hw_onecell_data *clocks)
-+{
-+	struct ingenic_ost_clk *ost_clk;
-+	int val, err;
-+
-+	ost_clk = kzalloc(sizeof(*ost_clk), GFP_KERNEL);
-+	if (!ost_clk)
-+		return -ENOMEM;
-+
-+	ost_clk->hw.init = &info->init_data;
-+	ost_clk->idx = idx;
-+	ost_clk->info = info;
-+	ost_clk->ost = ost;
-+
-+	/* Reset clock divider */
-+	val = readl(ost->base + info->ostccr_reg);
-+	val &= ~(OSTCCR_PRESCALE1_MASK | OSTCCR_PRESCALE2_MASK);
-+	writel(val, ost->base + info->ostccr_reg);
-+
-+	err = clk_hw_register(NULL, &ost_clk->hw);
-+	if (err) {
-+		kfree(ost_clk);
-+		return err;
-+	}
-+
-+	clocks->hws[idx] = &ost_clk->hw;
-+
-+	return 0;
-+}
-+
-+static struct clk * __init ingenic_ost_get_clock(struct device_node *np, int id)
-+{
-+	struct of_phandle_args args;
-+
-+	args.np = np;
-+	args.args_count = 1;
-+	args.args[0] = id;
-+
-+	return of_clk_get_from_provider(&args);
-+}
-+
-+static int __init ingenic_ost_percpu_timer_init(struct device_node *np,
-+					 struct ingenic_ost *ost)
-+{
-+	unsigned int timer_virq, channel = OST_CLK_PERCPU_TIMER;
-+	unsigned long rate;
-+	int err;
-+
-+	ost->percpu_timer_clk = ingenic_ost_get_clock(np, channel);
-+	if (IS_ERR(ost->percpu_timer_clk))
-+		return PTR_ERR(ost->percpu_timer_clk);
-+
-+	err = clk_prepare_enable(ost->percpu_timer_clk);
-+	if (err)
-+		goto err_clk_put;
-+
-+	rate = clk_get_rate(ost->percpu_timer_clk);
-+	if (!rate) {
-+		err = -EINVAL;
-+		goto err_clk_disable;
-+	}
-+
-+	timer_virq = of_irq_get(np, 0);
-+	if (!timer_virq) {
-+		err = -EINVAL;
-+		goto err_clk_disable;
-+	}
-+
-+	snprintf(ost->name, sizeof(ost->name), "OST percpu timer");
-+
-+	err = request_irq(timer_virq, ingenic_ost_cevt_cb, IRQF_TIMER,
-+			  ost->name, &ost->cevt);
-+	if (err)
-+		goto err_irq_dispose_mapping;
-+
-+	ost->cevt.cpumask = cpumask_of(smp_processor_id());
-+	ost->cevt.features = CLOCK_EVT_FEAT_ONESHOT;
-+	ost->cevt.name = ost->name;
-+	ost->cevt.rating = 400;
-+	ost->cevt.set_state_shutdown = ingenic_ost_cevt_set_state_shutdown;
-+	ost->cevt.set_next_event = ingenic_ost_cevt_set_next;
-+
-+	clockevents_config_and_register(&ost->cevt, rate, 4, 0xffffffff);
-+
-+	return 0;
-+
-+err_irq_dispose_mapping:
-+	irq_dispose_mapping(timer_virq);
-+err_clk_disable:
-+	clk_disable_unprepare(ost->percpu_timer_clk);
-+err_clk_put:
-+	clk_put(ost->percpu_timer_clk);
-+	return err;
-+}
-+
-+static int __init ingenic_ost_global_timer_init(struct device_node *np,
-+					       struct ingenic_ost *ost)
-+{
-+	unsigned int channel = OST_CLK_GLOBAL_TIMER;
-+	struct clocksource *cs = &ost->cs;
-+	unsigned long rate;
-+	int err;
-+
-+	ost->global_timer_clk = ingenic_ost_get_clock(np, channel);
-+	if (IS_ERR(ost->global_timer_clk))
-+		return PTR_ERR(ost->global_timer_clk);
-+
-+	err = clk_prepare_enable(ost->global_timer_clk);
-+	if (err)
-+		goto err_clk_put;
-+
-+	rate = clk_get_rate(ost->global_timer_clk);
-+	if (!rate) {
-+		err = -EINVAL;
-+		goto err_clk_disable;
-+	}
-+
-+	/* Clear counter CNT registers */
-+	writel(OSTCR_OST2CLR, ost->base + OST_REG_OSTCR);
-+
-+	/* Enable OST channel */
-+	writel(OSTESR_OST2ENS, ost->base + OST_REG_OSTESR);
-+
-+	cs->name = "ingenic-ost";
-+	cs->rating = 400;
-+	cs->flags = CLOCK_SOURCE_IS_CONTINUOUS;
-+	cs->mask = CLOCKSOURCE_MASK(32);
-+	cs->read = ingenic_ost_clocksource_read;
-+
-+	err = clocksource_register_hz(cs, rate);
-+	if (err)
-+		goto err_clk_disable;
-+
-+	return 0;
-+
-+err_clk_disable:
-+	clk_disable_unprepare(ost->global_timer_clk);
-+err_clk_put:
-+	clk_put(ost->global_timer_clk);
-+	return err;
-+}
-+
-+static const struct ingenic_soc_info x1000_soc_info = {
-+	.num_channels = 2,
-+};
-+
-+static const struct of_device_id __maybe_unused ingenic_ost_of_match[] __initconst = {
-+	{ .compatible = "ingenic,x1000-ost", .data = &x1000_soc_info, },
-+	{ /* sentinel */ }
-+};
-+
-+static int __init ingenic_ost_probe(struct device_node *np)
-+{
-+	const struct of_device_id *id = of_match_node(ingenic_ost_of_match, np);
-+	struct ingenic_ost *ost;
-+	unsigned int i;
-+	int ret;
-+
-+	ost = kzalloc(sizeof(*ost), GFP_KERNEL);
-+	if (!ost)
-+		return -ENOMEM;
-+
-+	ost->base = of_io_request_and_map(np, 0, of_node_full_name(np));
-+	if (IS_ERR(ost->base)) {
-+		pr_err("%s: Failed to map OST registers\n", __func__);
-+		ret = PTR_ERR(ost->base);
-+		goto err_free_ost;
-+	}
-+
-+	ost->clk = of_clk_get_by_name(np, "ost");
-+	if (IS_ERR(ost->clk)) {
-+		ret = PTR_ERR(ost->clk);
-+		pr_crit("%s: Cannot get OST clock\n", __func__);
-+		goto err_free_ost;
-+	}
-+
-+	ret = clk_prepare_enable(ost->clk);
-+	if (ret) {
-+		pr_crit("%s: Unable to enable OST clock\n", __func__);
-+		goto err_put_clk;
-+	}
-+
-+	ost->soc_info = id->data;
-+
-+	ost->clocks = kzalloc(struct_size(ost->clocks, hws, ost->soc_info->num_channels),
-+			      GFP_KERNEL);
-+	if (!ost->clocks) {
-+		ret = -ENOMEM;
-+		goto err_clk_disable;
-+	}
-+
-+	ost->clocks->num = ost->soc_info->num_channels;
-+
-+	for (i = 0; i < ost->clocks->num; i++) {
-+		ret = ingenic_ost_register_clock(ost, i, &ingenic_ost_clk_info[i], ost->clocks);
-+		if (ret) {
-+			pr_crit("%s: Cannot register clock %d\n", __func__, i);
-+			goto err_unregister_ost_clocks;
-+		}
-+	}
-+
-+	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get, ost->clocks);
-+	if (ret) {
-+		pr_crit("%s: Cannot add OF clock provider\n", __func__);
-+		goto err_unregister_ost_clocks;
-+	}
-+
-+	ingenic_ost = ost;
-+
-+	return 0;
-+
-+err_unregister_ost_clocks:
-+	for (i = 0; i < ost->clocks->num; i++)
-+		if (ost->clocks->hws[i])
-+			clk_hw_unregister(ost->clocks->hws[i]);
-+	kfree(ost->clocks);
-+err_clk_disable:
-+	clk_disable_unprepare(ost->clk);
-+err_put_clk:
-+	clk_put(ost->clk);
-+err_free_ost:
-+	kfree(ost);
-+	return ret;
-+}
-+
-+static int __init ingenic_ost_init(struct device_node *np)
-+{
-+	struct ingenic_ost *ost;
-+	unsigned long rate;
-+	int ret;
-+
-+	ret = ingenic_ost_probe(np);
-+	if (ret) {
-+		pr_crit("%s: Failed to initialize OST clocks: %d\n", __func__, ret);
-+		return ret;
-+	}
-+
-+	of_node_clear_flag(np, OF_POPULATED);
-+
-+	ost = ingenic_ost;
-+	if (IS_ERR(ost))
-+		return PTR_ERR(ost);
-+
-+	ret = ingenic_ost_global_timer_init(np, ost);
-+	if (ret) {
-+		pr_crit("%s: Unable to init global timer: %x\n", __func__, ret);
-+		goto err_free_ingenic_ost;
-+	}
-+
-+	ret = ingenic_ost_percpu_timer_init(np, ost);
-+	if (ret)
-+		goto err_ost_global_timer_cleanup;
-+
-+	/* Register the sched_clock at the end as there's no way to undo it */
-+	rate = clk_get_rate(ost->global_timer_clk);
-+	sched_clock_register(ingenic_ost_global_timer_read_cntl, 32, rate);
-+
-+	return 0;
-+
-+err_ost_global_timer_cleanup:
-+	clocksource_unregister(&ost->cs);
-+	clk_disable_unprepare(ost->global_timer_clk);
-+	clk_put(ost->global_timer_clk);
-+err_free_ingenic_ost:
-+	kfree(ost);
-+	return ret;
-+}
-+
-+TIMER_OF_DECLARE(x1000_ost,  "ingenic,x1000-ost",  ingenic_ost_init);
--- 
-2.11.0
-
+On 2020-07-09 13:21, Rob Herring wrote:
+> On Tue, Jun 30, 2020 at 11:45:01AM -0700, Tanmay Shah wrote:
+>> These patches add Display-Port driver on SnapDragon/msm hardware.
+>> This series also contains device-tree bindings for msm DP driver.
+>> It also contains Makefile and Kconfig changes to compile msm DP 
+>> driver.
+>> 
+>> The block diagram of DP driver is shown below:
+>> 
+>> 
+>>                  +-------------+
+>>                  |DRM FRAMEWORK|
+>>                  +------+------+
+>>                         |
+>>                    +----v----+
+>>                    | DP DRM  |
+>>                    +----+----+
+>>                         |
+>>                    +----v----+
+>>      +------------+|   DP    +----------++------+
+>>      +        +---+| DISPLAY |+---+      |      |
+>>      |        +    +-+-----+-+    |      |      |
+>>      |        |      |     |      |      |      |
+>>      |        |      |     |      |      |      |
+>>      |        |      |     |      |      |      |
+>>      v        v      v     v      v      v      v
+>>  +------+ +------+ +---+ +----+ +----+ +---+ +-----+
+>>  |  DP  | |  DP  | |DP | | DP | | DP | |DP | | DP  |
+>>  |PARSER| | HPD  | |AUX| |LINK| |CTRL| |PHY| |POWER|
+>>  +--+---+ +---+--+ +---+ +----+ +--+-+ +-+-+ +-----+
+>>     |                              |     |
+>>  +--v---+                         +v-----v+
+>>  |DEVICE|                         |  DP   |
+>>  | TREE |                         |CATALOG|
+>>  +------+                         +---+---+
+>>                                       |
+>>                                   +---v----+
+>>                                   |CTRL/PHY|
+>>                                   |   HW   |
+>>                                   +--------+
+>> 
+>> Changes in v7:
+>> 
+>> - Modify cover letter description and fix title.
+>> - Introduce dp-controller.yaml for common bindings across SOC
+>> - Rename dp-sc7180.yaml to dp-controller-sc7180.yaml for SC7180 
+>> bindings
+>> - Rename compatible string to qcom,sc7180-dp
+>> - Add assigned-clocks and assigned-clock-parents properties in 
+>> bindings
+>> - Remove redundant code from driver
+>> - Extend series to include HPD detection logic
+>> 
+>> Changes in v8:
+>> 
+>> - Add MDSS AHB clock in bindings
+>> - Replace mode->vrefresh use with drm_mode_vrefresh API
+>> - Remove redundant aux config code from parser and aux module
+>> - Assign default max lanes if data-lanes property is not available
+>> - Fix use-after-free during DP driver remove
+>> - Unregister hardware clocks during driver cleanup
+>> 
+>> This series depends-on:
+>> 	https://patchwork.freedesktop.org/patch/366159/
+> 
+> If a single patch is a dependency, please coordinate your work and send
+> as 1 series.
+> 
+> To put it another way, I'm just going to ignore this series until the
+> dependency is sorted out.
+Sure I will wait till previous patch is resolved.
+> 
+>> 	https://patchwork.freedesktop.org/patch/369859/
+> 
+> Probably the same goes for this too, but I care less as it's not the
+> binding...
+Above patch is not compile time dependency, but without it we see issues 
+during runtime.
+So will be removed from dependency list.
+Thanks.
+> 
+>> 
+>> Chandan Uddaraju (4):
+>>   dt-bindings: msm/dp: add bindings of DP/DP-PLL driver for Snapdragon
+>>   drm: add constant N value in helper file
+>>   drm/msm/dp: add displayPort driver support
+>>   drm/msm/dp: add support for DP PLL driver
+>> 
+>> Jeykumar Sankaran (1):
+>>   drm/msm/dpu: add display port support in DPU
+>> 
+>> Tanmay Shah (1):
+>>   drm/msm/dp: Add Display Port HPD feature
+>> 
+>>  .../display/msm/dp-controller-sc7180.yaml     |  144 ++
+>>  .../bindings/display/msm/dp-controller.yaml   |   61 +
+>>  .../bindings/display/msm/dpu-sc7180.yaml      |   11 +
+>>  drivers/gpu/drm/i915/display/intel_display.c  |    2 +-
+>>  drivers/gpu/drm/msm/Kconfig                   |   16 +
+>>  drivers/gpu/drm/msm/Makefile                  |   14 +
+>>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c   |   29 +-
+>>  .../drm/msm/disp/dpu1/dpu_encoder_phys_vid.c  |    8 +
+>>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c       |   83 +-
+>>  drivers/gpu/drm/msm/dp/dp_aux.c               |  510 +++++
+>>  drivers/gpu/drm/msm/dp/dp_aux.h               |   29 +
+>>  drivers/gpu/drm/msm/dp/dp_catalog.c           | 1060 ++++++++++
+>>  drivers/gpu/drm/msm/dp/dp_catalog.h           |  104 +
+>>  drivers/gpu/drm/msm/dp/dp_ctrl.c              | 1707 
+>> +++++++++++++++++
+>>  drivers/gpu/drm/msm/dp/dp_ctrl.h              |   35 +
+>>  drivers/gpu/drm/msm/dp/dp_display.c           | 1017 ++++++++++
+>>  drivers/gpu/drm/msm/dp/dp_display.h           |   31 +
+>>  drivers/gpu/drm/msm/dp/dp_drm.c               |  168 ++
+>>  drivers/gpu/drm/msm/dp/dp_drm.h               |   18 +
+>>  drivers/gpu/drm/msm/dp/dp_hpd.c               |   69 +
+>>  drivers/gpu/drm/msm/dp/dp_hpd.h               |   79 +
+>>  drivers/gpu/drm/msm/dp/dp_link.c              | 1216 ++++++++++++
+>>  drivers/gpu/drm/msm/dp/dp_link.h              |  132 ++
+>>  drivers/gpu/drm/msm/dp/dp_panel.c             |  490 +++++
+>>  drivers/gpu/drm/msm/dp/dp_panel.h             |   95 +
+>>  drivers/gpu/drm/msm/dp/dp_parser.c            |  267 +++
+>>  drivers/gpu/drm/msm/dp/dp_parser.h            |  138 ++
+>>  drivers/gpu/drm/msm/dp/dp_pll.c               |   99 +
+>>  drivers/gpu/drm/msm/dp/dp_pll.h               |   61 +
+>>  drivers/gpu/drm/msm/dp/dp_pll_10nm.c          |  917 +++++++++
+>>  drivers/gpu/drm/msm/dp/dp_pll_private.h       |  111 ++
+>>  drivers/gpu/drm/msm/dp/dp_power.c             |  392 ++++
+>>  drivers/gpu/drm/msm/dp/dp_power.h             |  103 +
+>>  drivers/gpu/drm/msm/dp/dp_reg.h               |  517 +++++
+>>  drivers/gpu/drm/msm/msm_drv.c                 |    2 +
+>>  drivers/gpu/drm/msm/msm_drv.h                 |   59 +-
+>>  include/drm/drm_dp_helper.h                   |    1 +
+>>  37 files changed, 9776 insertions(+), 19 deletions(-)
+>>  create mode 100644
+> Documentation/devicetree/bindings/display/msm/dp-controller-sc7180.yaml
+>>  create mode 100644
+> Documentation/devicetree/bindings/display/msm/dp-controller.yaml
+>>  create mode 100644 drivers/gpu/drm/msm/dp/dp_aux.c
+>>  create mode 100644 drivers/gpu/drm/msm/dp/dp_aux.h
+>>  create mode 100644 drivers/gpu/drm/msm/dp/dp_catalog.c
+>>  create mode 100644 drivers/gpu/drm/msm/dp/dp_catalog.h
+>>  create mode 100644 drivers/gpu/drm/msm/dp/dp_ctrl.c
+>>  create mode 100644 drivers/gpu/drm/msm/dp/dp_ctrl.h
+>>  create mode 100644 drivers/gpu/drm/msm/dp/dp_display.c
+>>  create mode 100644 drivers/gpu/drm/msm/dp/dp_display.h
+>>  create mode 100644 drivers/gpu/drm/msm/dp/dp_drm.c
+>>  create mode 100644 drivers/gpu/drm/msm/dp/dp_drm.h
+>>  create mode 100644 drivers/gpu/drm/msm/dp/dp_hpd.c
+>>  create mode 100644 drivers/gpu/drm/msm/dp/dp_hpd.h
+>>  create mode 100644 drivers/gpu/drm/msm/dp/dp_link.c
+>>  create mode 100644 drivers/gpu/drm/msm/dp/dp_link.h
+>>  create mode 100644 drivers/gpu/drm/msm/dp/dp_panel.c
+>>  create mode 100644 drivers/gpu/drm/msm/dp/dp_panel.h
+>>  create mode 100644 drivers/gpu/drm/msm/dp/dp_parser.c
+>>  create mode 100644 drivers/gpu/drm/msm/dp/dp_parser.h
+>>  create mode 100644 drivers/gpu/drm/msm/dp/dp_pll.c
+>>  create mode 100644 drivers/gpu/drm/msm/dp/dp_pll.h
+>>  create mode 100644 drivers/gpu/drm/msm/dp/dp_pll_10nm.c
+>>  create mode 100644 drivers/gpu/drm/msm/dp/dp_pll_private.h
+>>  create mode 100644 drivers/gpu/drm/msm/dp/dp_power.c
+>>  create mode 100644 drivers/gpu/drm/msm/dp/dp_power.h
+>>  create mode 100644 drivers/gpu/drm/msm/dp/dp_reg.h
+>> 
+>> 
+>> base-commit: 0a19b068acc47d05212f03e494381926dc0381e2
+>> prerequisite-patch-id: 8058026a54241aa728a91dd1685419afb249959e
+>> prerequisite-patch-id: ed730eb83f84501579332a0f0ab98f7ef649e868
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+> Forum,
+>> a Linux Foundation Collaborative Project
+>> 
