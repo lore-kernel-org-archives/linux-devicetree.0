@@ -2,195 +2,200 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BABC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 10:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B2FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 11:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CAC8207DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 10:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0E5E2077D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 11:15:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DH56qud2"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="eUNqj3ne"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbgGJKmH (ORCPT
+        id S1726816AbgGJLPG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 06:42:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36906 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbgGJKl7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 06:41:59 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83002C08C5CE;
-        Fri, 10 Jul 2020 03:41:59 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id w3so5420135wmi.4;
-        Fri, 10 Jul 2020 03:41:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jJUd39bjlIspvI1o1u2naIJgRgatARb46UKsj3YoryU=;
-        b=DH56qud2+QsVfrK8NLDzF6y3pDUvhI1TiiWC9GaXIDY+mjOyJsz5RrWGxvnr98N6em
-         Nae2lMEO9/PQm+iyD0C4QFfenRe4mMqw0YWsEQ88YAy9XZZ2llLQnNiO9bwoXrHLj5hy
-         f4IF0+t/glYSyA/C/vbq/600XYSZPlbprs8fEJruKudcF3XSp1LkDkVQFk6nCHj2JJSg
-         pf+47vfnif9+zsGTdSNw7weQvui+2SSxAfu8u9NEaBEoM6Tzai0nnckyXWjqWLFT+dHh
-         F/f3qhdwiK3je5hhCuS0bc8y1qDq5X5Pa86goGdiZCi42yRSpDohJRQNQEEHMcxBNYPk
-         xfpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jJUd39bjlIspvI1o1u2naIJgRgatARb46UKsj3YoryU=;
-        b=DmGSQHI9fQmcRThUa98FZ6evyBXGrad8Fap6zopsa67GsAPijM+tOLGPb9H4OuuwEx
-         cvol3jCYOC6BmEBlIKNTnwIfc0r9Mv31bzvHpAn0/XmNoJbPuMdzKEHUy0d3AJYFw4LA
-         wx+oLedYiYVbAN5yXDL/aOVs9MDTILsWuiBVbLq9kDFmjqIcb/VQIhlbsh9y1Ad/pjdQ
-         DuSesWmkcLr5kSEJWMHivK/AsQgN2OI+GMA1SUV6X9IiEIIMKtZU6rnNrdyiSi+XnGLZ
-         QBktaEtbl4p7FHYQxJ5R7oHtUrClYz6+EA7ec0YPDqUayUnNa3eXlkLhn0tml7H/KJCZ
-         5mFA==
-X-Gm-Message-State: AOAM5330AFyw6zsHE1xZEDPDIMS7DhoYYrHK/Daw5u7X1VqHnQED15dM
-        l2GIP9xr64e60JQb1nBa6Y2EYqmmv+U=
-X-Google-Smtp-Source: ABdhPJxcOlZwyO5x1hX0CUcQEPIZG+vWvNQwfyRKiWOJNQTc49ZTOFqDxgJLOxgU2UD9pmY0t6+Xgg==
-X-Received: by 2002:a1c:5459:: with SMTP id p25mr4429409wmi.148.1594377718256;
-        Fri, 10 Jul 2020 03:41:58 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.114.245])
-        by smtp.gmail.com with ESMTPSA id a4sm10470215wrg.80.2020.07.10.03.41.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jul 2020 03:41:57 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] dt-bindings: devapc: add bindings for mtk-devapc
-To:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        lkml <linux-kernel@vger.kernel.org>, wsd_upstream@mediatek.com
-References: <1594285927-1840-1-git-send-email-neal.liu@mediatek.com>
- <1594285927-1840-2-git-send-email-neal.liu@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <a0a58181-525c-f7a3-4385-d778a113d60c@gmail.com>
-Date:   Fri, 10 Jul 2020 12:41:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <1594285927-1840-2-git-send-email-neal.liu@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Fri, 10 Jul 2020 07:15:06 -0400
+Received: from mga01.intel.com ([192.55.52.88]:18870 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726369AbgGJLPF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 10 Jul 2020 07:15:05 -0400
+IronPort-SDR: n1K3rXhD03g8VUYgGvbPR/tJcVGrDYOshZnPAIsj3TcSAMpW4WAvrlqBXAFwNx8UsMFHac/6vQ
+ 3TWE3h8bzFpg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9677"; a="166273494"
+X-IronPort-AV: E=Sophos;i="5.75,335,1589266800"; 
+   d="scan'208";a="166273494"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2020 04:15:04 -0700
+IronPort-SDR: HNJhi6YVL5oBmbLHbmlgSpSynUluVTzhjfybjng2suFzsWdlqoI7m1Rq9Ej6sps67/rD9EQCV7
+ uhnQG2W5PJ1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,335,1589266800"; 
+   d="scan'208";a="280617519"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by orsmga003.jf.intel.com with ESMTP; 10 Jul 2020 04:15:03 -0700
+Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 10 Jul 2020 04:15:03 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.172)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Fri, 10 Jul 2020 04:15:03 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VkJcioQrcjahR9d1qyNYNp1zItZ87AjgarwwhkH8czz1CHvuY48MUMcOFqJgzPkFeSCA/BVasCWTUlo1MdsoO0mursglT3eCbbZElj8Xok18t8NtirXU4jEMSmwDhFrlSzPGDDYXY7Mbtm57yhXeEFCy9KyRULhiZPwkPb2LdTwCeAn2msgfcPZQz6We4q9ltDtw2A2DbG7Xb24vwTA9ddZhB9sdYDVoPIWaYhfu6TmtAz8X4rYVuUXp++fziKpvDrAaP4cp49rfmq63Jm3qLy4IhL6jkaEi5Uv/vX5A3QCPBS69ujGSmQIwv3P6pA4l04cK2riJqx/hDkcTYnMZjQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m7kivWx3E169TRA+ijenNtx71+Vhmo55dBvVvS6rxd4=;
+ b=lgA3xySr5vgaFnzFeazDEvN7TjFCR4H5peq+TBpRtPN88rYZ8ZmZ7p6wumDsMv1os2OvgaDycEPHCaYEWsCgEQQKT7rF9mDM2iYSmttUU5IpxGT71XOBDOYHA1uz0wCzR4EeSm5q/U7vAplalth8JQCG6woimVuDv17BrZh7yEUC3vsr/BAcBQshcEPDaqXiSgVjE4K2qjh7WCzuB7g4/OTboto/jnH5gljkbpRlE7AysVdgbMY2B761fE+xaQ2Haf8j1c/J+5HW/1bVtlflg5M2aB65uHRJROKvcaxljRAgQiHP8DMQbf+S+gFhVAos8KOqNW8TjQvtkf1WlCu27Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m7kivWx3E169TRA+ijenNtx71+Vhmo55dBvVvS6rxd4=;
+ b=eUNqj3neYp8GH37cQTjTAXfC1+5gXWG1MI/8OUZXe2PHeVpbL9JBG7DlEVb3KdFJ59q684Q+4laSEevAqxyYNVCkLhUuRR8/CRa4vw1crlbk0qOdtqX+fBkAwXiQL2dY9a9sJo52cFsgD3TrxHN3sLNyoBok5eXISZD9uqQVSOw=
+Received: from SN6PR11MB2575.namprd11.prod.outlook.com (2603:10b6:805:57::20)
+ by SA0PR11MB4527.namprd11.prod.outlook.com (2603:10b6:806:72::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Fri, 10 Jul
+ 2020 11:15:01 +0000
+Received: from SN6PR11MB2575.namprd11.prod.outlook.com
+ ([fe80::cd49:6ea7:530c:95e0]) by SN6PR11MB2575.namprd11.prod.outlook.com
+ ([fe80::cd49:6ea7:530c:95e0%4]) with mapi id 15.20.3174.022; Fri, 10 Jul 2020
+ 11:15:01 +0000
+From:   "G Jaya Kumaran, Vineetha" <vineetha.g.jaya.kumaran@intel.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "Ong, Boon Leong" <boon.leong.ong@intel.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "Voon, Weifeng" <weifeng.voon@intel.com>,
+        "Kweh, Hock Leong" <hock.leong.kweh@intel.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Subject: RE: [PATCH 1/2] dt-bindings: net: Add bindings for Intel Keem Bay
+Thread-Topic: [PATCH 1/2] dt-bindings: net: Add bindings for Intel Keem Bay
+Thread-Index: AQHWVBoHg2J3hFBg90GdtvIrstZWeKj/eGoAgAE0jPA=
+Date:   Fri, 10 Jul 2020 11:15:01 +0000
+Message-ID: <SN6PR11MB2575830AC1DAFDB8D9C00504F6650@SN6PR11MB2575.namprd11.prod.outlook.com>
+References: <1594097238-8827-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+ <1594097238-8827-2-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+ <20200709164510.GA496369@bogus>
+In-Reply-To: <20200709164510.GA496369@bogus>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.198.147.206]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6224986d-ada4-4c94-c328-08d824c27d5b
+x-ms-traffictypediagnostic: SA0PR11MB4527:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SA0PR11MB45274BC320540357F5C4C75EF6650@SA0PR11MB4527.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: pQqkfJ6MpYwlU0dc+o+fVcQD2IgWkxp8WnDfmntBnQSlL6FsR+9eF8atrUtAC0Lxh0g/URmZA3h/WKnRoBIIxvev32UtftfDucLnJR/wQmfzcspZzjhmklD3EtKHSEHVmQk75IkJsv8DAPC+/Y0OB1MIcKP8QKjtWMCPw+5QKfKx22B/EAO202dp1ilFUIlkYaWJP66BqdL8qKOjBluqkt2f7KJm9Naq2gEnwM4GlsrfP8GXXQ/Id/WlJG2l5Q/WiJ378SonIwbx+Yxpb6vxnFu8aJcuRaKaimH0z+ZpaTZHkBFyl1fmdO+ZfmdozNtyOorZ52jfKRH6vt62hnoywbnOB6V6qSE50N7Binru8uaGs0xzPXAqwP0u5xMPhrmQ1+Q91CiLS4WWafe5iVi58g==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB2575.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(346002)(366004)(136003)(376002)(39860400002)(53546011)(6506007)(6916009)(86362001)(71200400001)(4326008)(55016002)(26005)(52536014)(66446008)(76116006)(64756008)(66476007)(66556008)(186003)(66946007)(2906002)(8676002)(5660300002)(7696005)(54906003)(316002)(83380400001)(478600001)(33656002)(8936002)(9686003)(966005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: zNpaSbONcPTZ9EobcMnbKJiwBViuCtSmwKNlu0U+oFkIxDu80rxtMcjs1+fY+9WBW48bqnKKyDrhzhLEcZXqOP4qS8kwRfN8jUX9oy4V+W6QTusqSIyew90yr4OYgKeLqxDaor/bj0dVZOWUDkJr3/5eXkjL52/Noz69xeEPkJEzcI151AAkz7Oa/Zr4UOPFUHxanF7+AXe6btkoeqH8RONQdsOrIJX4GZfQampKI0IfWO9t1w7HROn+dd9PWwMV6rdVUaIRx7Q6YkNxoprL0Bpqvsmzy4FdxmYglI1Pi5P5jIB9Bus9eQNDLzddItyY6oQ9J2WlJI8EMyweGgoS6cb27il963Hs3n9MulIJYSJQWOeYh2C+1mJhs4Q8babSJ2wsEHIE3kBsTGdKhLkLQ4S2Ws1Y6FMDC4varDlnK2w8F6TJNS52CfP7h4KYn67HqvKP33gNC+Is0IRiqAOraNOau6ne4G/TB3jV7ZYxduvT9ynaav6Q7a/6607BzZCK
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB2575.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6224986d-ada4-4c94-c328-08d824c27d5b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2020 11:15:01.6287
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 42Qx0qM5N653objYVKytiKc6TO1vmFN83574max71WeLE8jRarZtcFFPhneL7os9VMydfG0z2r2yrEQ/h+zYS+yoRoemAx2PadGcAJaoScySLPRQA97pyfPop3Zan5f7
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4527
+X-OriginatorOrg: intel.com
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
+> -----Original Message-----
+> From: Rob Herring <robh@kernel.org>
+> Sent: Friday, July 10, 2020 12:45 AM
+> To: G Jaya Kumaran, Vineetha <vineetha.g.jaya.kumaran@intel.com>
+> Cc: Ong, Boon Leong <boon.leong.ong@intel.com>; netdev@vger.kernel.org;
+> devicetree@vger.kernel.org; mcoquelin.stm32@gmail.com;
+> davem@davemloft.net; Voon, Weifeng <weifeng.voon@intel.com>; Kweh,
+> Hock Leong <hock.leong.kweh@intel.com>; kuba@kernel.org;
+> robh+dt@kernel.org
+> Subject: Re: [PATCH 1/2] dt-bindings: net: Add bindings for Intel Keem Ba=
+y
+>=20
+> On Tue, 07 Jul 2020 12:47:17 +0800, vineetha.g.jaya.kumaran@intel.com wro=
+te:
+> > From: "Vineetha G. Jaya Kumaran" <vineetha.g.jaya.kumaran@intel.com>
+> >
+> > Add Device Tree bindings documentation for the ethernet controller on
+> > Intel Keem Bay.
+> >
+> > Signed-off-by: Vineetha G. Jaya Kumaran
+> > <vineetha.g.jaya.kumaran@intel.com>
+> > ---
+> >  .../devicetree/bindings/net/intel,dwmac-plat.yaml  | 123
+> > +++++++++++++++++++++
+> >  1 file changed, 123 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/net/intel,dwmac-plat.yaml
+> >
+>=20
+>=20
+> My bot found errors running 'make dt_binding_check' on your patch:
+>=20
+> /builds/robherring/linux-dt-
+> review/Documentation/devicetree/bindings/net/intel,dwmac-plat.yaml:
+> properties:clocks:maxItems: False schema does not allow 3
+> Documentation/devicetree/bindings/Makefile:20: recipe for target
+> 'Documentation/devicetree/bindings/net/intel,dwmac-plat.example.dts' fail=
+ed
+> make[1]: *** [Documentation/devicetree/bindings/net/intel,dwmac-
+> plat.example.dts] Error 1
+> make[1]: *** Waiting for unfinished jobs....
+> /builds/robherring/linux-dt-
+> review/Documentation/devicetree/bindings/net/intel,dwmac-plat.yaml:
+> ignoring, error in schema: properties: clocks: maxItems
+> warning: no schema found in file:
+> ./Documentation/devicetree/bindings/net/intel,dwmac-plat.yaml
+> /builds/robherring/linux-dt-
+> review/Documentation/devicetree/bindings/net/intel,dwmac-plat.yaml:
+> ignoring, error in schema: properties: clocks: maxItems
+> warning: no schema found in file:
+> ./Documentation/devicetree/bindings/net/intel,dwmac-plat.yaml
+> Makefile:1347: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+>=20
+>=20
+> See https://patchwork.ozlabs.org/patch/1324088
+>=20
+> If you already ran 'make dt_binding_check' and didn't see the above error=
+(s),
+> then make sure dt-schema is up to date:
+>=20
+> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master -=
+-
+> upgrade
+>=20
+> Please check and re-submit.
 
-On 09/07/2020 11:12, Neal Liu wrote:
-> Add bindings for mtk-devapc.
-> 
-> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
-> ---
->   .../devicetree/bindings/soc/mediatek/devapc.yaml   |   82 ++++++++++++++++++++
->   1 file changed, 82 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/soc/mediatek/devapc.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/mediatek/devapc.yaml b/Documentation/devicetree/bindings/soc/mediatek/devapc.yaml
-> new file mode 100644
-> index 0000000..f08243e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/mediatek/devapc.yaml
-> @@ -0,0 +1,82 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# # Copyright 2020 MediaTek Inc.
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/soc/mediatek/devapc.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: MediaTek Device Access Permission Control driver
-> +
-> +description: |
-> +  MediaTek bus fabric provides TrustZone security support and data
-> +  protection to prevent slaves from being accessed by unexpected masters.
-> +  The security violation is logged and sent to the processor for further
-> +  analysis and countermeasures.
-> +
-> +maintainers:
-> +  - Neal Liu <neal.liu@mediatek.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - mediatek,mt6779-devapc
-> +
-> +  reg:
-> +    description: The base address of devapc register bank
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description: A single interrupt specifier
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description: Contains module clock source and clock names
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    description: Names of the clocks list in clocks property
-> +    maxItems: 1
-> +
-> +  mediatek-slv_type_num:
-> +    description: Numbers of slave type in mediatek platform
-> +    maxItems: 1
-
-This should go in the DT data, have a look for example at:
-https://elixir.bootlin.com/linux/latest/source/drivers/soc/mediatek/mtk-pmic-wrap.c#L1842
-and
-https://elixir.bootlin.com/linux/latest/source/drivers/soc/mediatek/mtk-pmic-wrap.c#L1777
-
-> +
-> +  mediatek-vio_dbgs:
-> +    description: The mask bit and start bit of devapc violation debug registers
-> +    maxItems: 5
-> +
-
-same here
-
-> +  mediatek-pds_offset:
-> +    description: The offset of devapc pds registers
-> +    maxItems: 1
-
-same here
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - mediatek-slv_type_num
-> +  - mediatek-vio_dbgs
-> +  - mediatek-pds_offset
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/mt6779-clk.h>
-> +
-> +    devapc: devapc@10207000 {
-> +      compatible = "mediatek,mt6779-devapc";
-> +      reg = <0x10207000 0x1000>;
-> +      interrupts = <GIC_SPI 168 IRQ_TYPE_LEVEL_LOW>;
-> +      clocks = <&infracfg_ao CLK_INFRA_DEVICE_APC>;
-> +      clock-names = "devapc-infra-clock";
-> +
-> +      mediatek-slv_type_num = /bits/ 8 <1>;
-> +      mediatek-vio_dbgs = <0x0000FFFF 0x0>,
-> +                          <0x003F0000 0x10>,
-> +                          <0x00400000 0x16>,
-> +                          <0x00800000 0x17>,
-> +                          <0x0F000000 0x18>;
-> +      mediatek-pds_offset = <0x0 0x400 0x900 0x904
-> +                             0xF00 0xF10 0xF14 0xF20>;
-> +    };
-> 
+Thanks Rob,  I did run make dt_binding_check on my side but did not encount=
+er any errors.=20
+Will update and check before resubmitting.
