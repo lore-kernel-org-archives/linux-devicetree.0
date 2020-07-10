@@ -2,99 +2,123 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1ABC433E3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 15:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E094C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 15:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 549D720842
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 15:40:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594395619;
-	bh=yBGfKHJWIcCaqiK6pZXuN/WxGy9oTJD39ERpyC3HJZE=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=p2x1yzDjXwvDqY9JLmCOYLVpgKVw332VdLKaYgh5fYlgjh+0W7htc2vIexmuWxD3N
-	 llynl9rOqBcgmNGvNv1H501LdXR2RZpwDhgby+3Lbbchu3LT7B5T6VC3wrk1ntUe2C
-	 xWAialGgm3paNy4dS7cUEvPYFQfa40r3byFppPjQ=
+	by mail.kernel.org (Postfix) with ESMTP id ED81020725
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 15:49:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="fRrKUGss"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgGJPkT (ORCPT
+        id S1727851AbgGJPts (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 11:40:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56746 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726828AbgGJPkS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:40:18 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90A1A207DD;
-        Fri, 10 Jul 2020 15:40:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594395618;
-        bh=yBGfKHJWIcCaqiK6pZXuN/WxGy9oTJD39ERpyC3HJZE=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=Rh3B0AA2G23e7cN0TqDiNZ4HGpI6QrwnANwUQheACFHuf8KjlMxr0O4i2mN5/pm//
-         qSCl7C95ob72boOGGaEAMR2FyvS4s23I8TtUJ7QjASt7SX4uMog+BDZDYAmj4eDDzj
-         M2xJL0gFbZqD/hKdki0w60glq8BhA3fDqQ5JOXXY=
-Date:   Fri, 10 Jul 2020 16:40:11 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     s.hauer@pengutronix.de, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, shawnguo@kernel.org, robh+dt@kernel.org,
-        Anson Huang <Anson.Huang@nxp.com>, marex@denx.de,
-        devicetree@vger.kernel.org, festevam@gmail.com
-Cc:     Linux-imx@nxp.com
-In-Reply-To: <1592281575-32708-1-git-send-email-Anson.Huang@nxp.com>
-References: <1592281575-32708-1-git-send-email-Anson.Huang@nxp.com>
-Subject: Re: [PATCH V3 0/3] Convert mxs/imx spi/cspi/lpspi binding to json-schema
-Message-Id: <159439561193.49235.7694501887022961004.b4-ty@kernel.org>
+        Fri, 10 Jul 2020 11:49:48 -0400
+Received: from mail-db8eur05on2108.outbound.protection.outlook.com ([40.107.20.108]:30784
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726950AbgGJPts (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 10 Jul 2020 11:49:48 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KhedyrS583iVXfEQVx1uHO5xcwMmIEPiLTA3iLknpbGV6rk/K0/Az9l91SdRIpLXNgnbRwLlMMbH/pBLVdA/1WsLvGTzSKTkvykqUTFM0WGHltd7fzP+ARveNC7y9CyFhlBOMj9QsuWNGMyCmIe1qQ6YI3tH80awYxfjKRUYlaLLG68gSTybJA8W/cJCeWceIVRfJ5sT7IqLCgNw9C8QJ2MbSqRPbUz/kt4rcBuZvv43MYxA50dvvPadsmcJ0DIT640J4LYOxuOd3dAHf9XTluyjTAwlpOl/fo2lZFgztkIgwGvcmvEYj/vtF6LB7m9Hexu7O//mhQM6ol1TKttZag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ntUudqTpdIV2P2ptD1MDuZY6tRQ5gZwq4AhJhQrFWKc=;
+ b=IzlVzVeOT8DQ+9/qsVipkW4aIHRRYJiEZzJ2XQz5XBMtSRyW3NNrgkEi6DCGlsuCXz6EciJ3hdoIb/GRJRyHL7KciM1ow5e3Z4/fQKL2Xg58oJ3HRbJnVd6LbpFo9BWGMS+aJHGO1ahaGy/aFR/YGsU/KeaHrE5JXlZA1A2qjN585AKq2K0dwotudsQ1U2/KtYQf9dGtvT2D6WIctHVcN7ClX2t2vmDqzJygNxNXrfF8W8hZ/tUUbGw6OOEFjNYZW73a2xEZsCa2WfOyhZuQ3hwR/kdi1nJ+2feYkUkB1E07d04yV0lPKv9RDSZOeWZ9wQo3oSBXBePZ0w7TxoMgvg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ntUudqTpdIV2P2ptD1MDuZY6tRQ5gZwq4AhJhQrFWKc=;
+ b=fRrKUGssO/MiDZp8B9BtVRCktpcn+OTI1YU3zOVwm9LwTaW4OA765Syek+hSumyKXUCSe9WQLDxL7XJaJRb8xsutmPeXI4A8P7GpsB10grzlLO+xeRNv1lNYXw/szXH6CV5iVacGPQEaLwAvfcfPmvV7XmNhg239GZd1Cct3pL0=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=toradex.com;
+Received: from AM6PR05MB6120.eurprd05.prod.outlook.com (2603:10a6:20b:a8::25)
+ by AM6PR05MB5879.eurprd05.prod.outlook.com (2603:10a6:20b:a2::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.20; Fri, 10 Jul
+ 2020 15:49:44 +0000
+Received: from AM6PR05MB6120.eurprd05.prod.outlook.com
+ ([fe80::1d81:6a9b:8c26:3b7d]) by AM6PR05MB6120.eurprd05.prod.outlook.com
+ ([fe80::1d81:6a9b:8c26:3b7d%4]) with mapi id 15.20.3174.023; Fri, 10 Jul 2020
+ 15:49:44 +0000
+From:   Philippe Schenker <philippe.schenker@toradex.com>
+To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-usb@vger.kernel.org, Peter Chen <Peter.Chen@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Cc:     Philippe Schenker <philippe.schenker@toradex.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] dt-bindings: usb: ci-hdrc-usb2: add property disable-runtime-pm
+Date:   Fri, 10 Jul 2020 17:49:32 +0200
+Message-Id: <20200710154935.697190-1-philippe.schenker@toradex.com>
+X-Mailer: git-send-email 2.27.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: GV0P278CA0047.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:710:29::16) To AM6PR05MB6120.eurprd05.prod.outlook.com
+ (2603:10a6:20b:a8::25)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from philippe-pc.toradex.int (31.10.206.124) by GV0P278CA0047.CHEP278.PROD.OUTLOOK.COM (2603:10a6:710:29::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.23 via Frontend Transport; Fri, 10 Jul 2020 15:49:43 +0000
+X-Mailer: git-send-email 2.27.0
+X-Originating-IP: [31.10.206.124]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6e6226b2-6a98-44be-72cb-08d824e8dd5f
+X-MS-TrafficTypeDiagnostic: AM6PR05MB5879:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM6PR05MB5879E61A1A8B8E52D441BA79F4650@AM6PR05MB5879.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: X9YhtxW1tGjJzniJZ6MK0RhuwuM6BJHNPrg2ceka6rlt+ytxFt741KMZuDCOXmHlWI0tGkwVUI8H9O4jargY9bWX21NDuY1ZMmP5Rwdrm5ofSZFrj5OwQUXHROrBdfkIrIGvIoH1S1x2bDDUakx+b223bq0Iid/4d3y66emnq6BrWhlCVaUNX6dV+vOoWuvMJKtBL2O40ctK++SfFoRjjZtEU8FJXoeNjXEp2j1IS98vNjn0giT0cmKtE9GpKb1iTS1D4oKKJskRyBbJIdQRhF2R59bg3X30W2J6rPshrQhuC5q7JZryHPh4boG4/0Kh8i9EtDeg4WB78WznkUWm2uiaAlwLtJ96sa6Ue+VBj8iJUEqkfvgAzijJm0iq0vl7
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR05MB6120.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(346002)(136003)(376002)(39850400004)(54906003)(66946007)(86362001)(52116002)(478600001)(110136005)(1076003)(6666004)(4326008)(6486002)(316002)(6506007)(83380400001)(26005)(2906002)(8936002)(44832011)(36756003)(5660300002)(16526019)(6512007)(8676002)(66476007)(66556008)(956004)(2616005)(186003)(4744005)(16060500001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: z019xzeYg+ojJdyLOsfQwo4hHg77LaMET3F9pTJJ8Xham0St72jTDWeXfUSv7Iyxk5sVzXnMQFOt2Jt21cIpw8y4HFeBSLBXqKa+ClFJxgAc+G9TqCBDOC8+oYnsEW0FF/7dKGcfU3eN1E/8xI/lnDg2ulC79ZPrbJ+OkrkGSxXuNPiIbHc0dCr5JEQx7x+1ga3CIoA4bnrR0aR0V7SkD2Z2jaRHlhvTBk5CBUrhN+xKoT/neBgYFKRJzF/D0lgge4V8k0Mu74t75LOOt9CYwmk2J4HUNeqlohamHzZUo+w5SZJy/Y374/N2jeI26VCpprXVvDSW6DDWZwZpl4/MjLPdnju+E0e9m2vvWeSz+AV+FZyOGWaJkBfzgR0QDtWUmADLde2iINW4xgB2QXgNAO+WyENkXa7HHR/qjJ2UCiAuWp5Gt6Mr+eBots8d8Q1W4WRiOXdcrR0kaGzhJwwrBfiQaf9kzvRrC+drS8O8wG0=
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6e6226b2-6a98-44be-72cb-08d824e8dd5f
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR05MB6120.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2020 15:49:43.9436
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: E889PdGyF94hWhK4ogblsBTF3OcafpDouKZnv+DLwCmKZWmdJAUHSSakKc9bqQ0JXIUS/9SiSiWazDH26jSYPJ2bX8/mx94YnNIB8exMTQ8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB5879
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 16 Jun 2020 12:26:12 +0800, Anson Huang wrote:
-> This patch series converts mxs/imx spi/cspi/lpspi binding to json-schema.
-> 
-> In fsl-imx-cspi.yaml, also update compatible, remove obsolete properties
-> "fsl,spi-num-chipselects" and update the example based on latest DT file;
-> 
-> In spi-fsl-lpspi.yaml, the original maintainer's email address pandy.gao@nxp.com
-> is no longer valid, so I use mine.
-> 
-> [...]
+Chipidea depends on some hardware signals to be there in order
+for runtime-pm to work well. Add the possibility to disable runtime
+power management that is necessary for certain boards.
 
-Applied to
+Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+---
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+ Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks!
+diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+index 51376cbe5f3d..67a31df13e69 100644
+--- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
++++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+@@ -90,6 +90,7 @@ Optional properties:
+   case, the "idle" state needs to pull down the data and strobe pin
+   and the "active" state needs to pull up the strobe pin.
+ - pinctrl-n: alternate pin modes
++- disable-runtime-pm: This disables the runtime power management.
+ 
+ i.mx specific properties
+ - fsl,usbmisc: phandler of non-core register device, with one
+-- 
+2.27.0
 
-[1/3] dt-bindings: spi: Convert mxs spi to json-schema
-      commit: e013bf2d96528c382f232a6ee068990d63e81a3d
-[2/3] dt-bindings: spi: Convert imx cspi to json-schema
-      commit: 790739c4417c17b2201bc742a9d5d819ea71799f
-[3/3] dt-bindings: spi: Convert imx lpspi to json-schema
-      commit: be8faebc2e55b2e5a335b606d11d070d53e78133
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
