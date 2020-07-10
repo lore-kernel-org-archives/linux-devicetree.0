@@ -2,192 +2,137 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E65BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 16:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA529C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 16:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5784320725
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 16:45:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594399504;
-	bh=B24S6WAT9yyqmHwr3vSzbLWdpKefVYWeCSLCuou+a04=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mWW+E4wh9mF3LCOQblYhG5gEGpfSwEPWTtntbeyN5qKVK0h9U4YF2gGhknQSPYnF6
-	 rTbXRWYKA0uFBAfZy1ewb7HI8o1r4ugoHuuf84pYsqaE5D4vMWD/WE+Z92i4y6GHhj
-	 gz6wQd/CxTH/recCS+rxMH3WpRAmNkZhK/2rrhCA=
+	by mail.kernel.org (Postfix) with ESMTP id 8253520767
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 16:48:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="itvOTeZz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgGJQpD (ORCPT
+        id S1726977AbgGJQse (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 12:45:03 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45970 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726896AbgGJQpD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 12:45:03 -0400
-Received: by mail-io1-f68.google.com with SMTP id e64so6678223iof.12;
-        Fri, 10 Jul 2020 09:45:02 -0700 (PDT)
+        Fri, 10 Jul 2020 12:48:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37270 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727901AbgGJQsd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 12:48:33 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B534C08C5DC;
+        Fri, 10 Jul 2020 09:48:33 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id w6so6798618ejq.6;
+        Fri, 10 Jul 2020 09:48:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AH6BfNEx7NMMgyW4KKGIOyQbMozTPM1cZFNmtLAMXVo=;
+        b=itvOTeZzDsSKPmqWJyGD6DG0Zy9j+XU7lRcziqvd3wLRZvRrhacbBuSSAXWVPMYDiP
+         O/TOXofNQ0ZEnZAPFUtEfKqH0WhpXRHQQk9dO07qaBzAU4CWsY9rCwMlrhDIsFnL9Cvq
+         F24YrLP+euH2FKXaCsq2vIEFHMqDflH4YESs11zJFThC/pbNvW3PM3eHRjYrdX+v5wN/
+         kpzlPtzFZLzTg4a2qC7fr4caD2Yu7hQ9cK0trZmaRpj1/9liISYEwf8VslD5Ph3jyMTO
+         A+9panmjwkCMCoSArH1xEHAHCijuc1FPox0gRKyWguhTrMyQi2Z1xwg7xYP0k7fZeEcC
+         VKAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NcVIqFMxSOYKqnZQ2wilEAou9p34LBdWDEjfs7eZSqw=;
-        b=QSr8JFdADz5lcE32UvfIykugUV4SxzWc5xj6RA8F5FMQjZ/QshwZZHJRVX2nAdr2BN
-         FVEEmDq2KXkk4vLH5FM5EjZhOyDJLReGfTaFcL/G80vjKrvVvBis3KKbGcV0n1Tuvp8S
-         RGKP5hWS9LW2EuO7LkkI5tZZpgqnaW5MChbh32iJB5Pnx5o7V9dIaFscZJJDv+JpYrlM
-         nSqHLQDaVD3WDN5vM1yg04LvGkc+JSg2TLxQXl2fyJlAhXSw9VlBS2TwIdlI4Oqh1aVg
-         BEvIUTuxuKTHi+8UAWXrniTw9xgz5+fs8T2IjENTFRI2Bja45DGzShgmaPWeoh7yfxmm
-         z05w==
-X-Gm-Message-State: AOAM530HWXAlXcTCvrHvGET/mKdIT8eGUuCqFFdC3vU2JsbIlmzkXhGU
-        F2sPnhLUEsqRKjSjj/e9jQ==
-X-Google-Smtp-Source: ABdhPJzBtLHrDDjhTprzaUErp3U5RC1TXc/DAe4OsQ/FyL2GyTi8gDWOA1hzxKU9hsRp7+oUZUKMEQ==
-X-Received: by 2002:a6b:197:: with SMTP id 145mr48209904iob.77.1594399502194;
-        Fri, 10 Jul 2020 09:45:02 -0700 (PDT)
-Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id r11sm3603540ilm.2.2020.07.10.09.45.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 09:45:01 -0700 (PDT)
-Received: (nullmailer pid 2786114 invoked by uid 1000);
-        Fri, 10 Jul 2020 16:45:00 -0000
-Date:   Fri, 10 Jul 2020 10:45:00 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kurt Kanzenbach <kurt@linutronix.de>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] dt-bindings: net: dsa: Add DSA yaml binding
-Message-ID: <20200710164500.GA2775934@bogus>
-References: <20200710090618.28945-1-kurt@linutronix.de>
- <20200710090618.28945-2-kurt@linutronix.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AH6BfNEx7NMMgyW4KKGIOyQbMozTPM1cZFNmtLAMXVo=;
+        b=ihvSO8lwq9T+wAPTQknK9Y2DnNkoUkz0WwEcEFyJb/3nnr5r6PGvw8389fhZib12ph
+         Pkn+17v06O+TA3rVuW0ScLORjzMBKuDuMJ/nncvyYTOqTZHg4qWsWx9spSHFVyCkiJ+M
+         WruMH5fN0/jFyBbV3asqT1S7uAb0NphjCkHHpxY2emtAiC7qqZlmS/KA4AtJprwfXDJT
+         k5L0Gs/UeKgDkLZ5dznDwYjilMWK9MMe8caO+0jRbGJUKNsGsOvKsJp7Ssp+jF945/nr
+         Q1gCFrGjmxufuTtTilUnzCgLCsZ4ZqkF/O+s/4s496KITuk2hYGEcEZhd/7r2VEN5B2C
+         1etA==
+X-Gm-Message-State: AOAM531BJLINPYRrRxJOvfOdVwIzfa5514K/XfQFlZNUXU/ukMB19rWV
+        Hw7QZj7PNE8tgrKCTHIj6RCuB9fZ4QwqpwgjUMQ=
+X-Google-Smtp-Source: ABdhPJwDjzzbL451WTm2kBZbNaPGaYstnPw8x3nK3iC9JJrKdS8XZ1xv6MgGnlX4lvBVk3NgQSo97t3LUsAnzPha41A=
+X-Received: by 2002:a17:906:7c54:: with SMTP id g20mr63237421ejp.460.1594399711917;
+ Fri, 10 Jul 2020 09:48:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710090618.28945-2-kurt@linutronix.de>
+References: <1593089153-17811-1-git-send-email-kalyan_t@codeaurora.org>
+In-Reply-To: <1593089153-17811-1-git-send-email-kalyan_t@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Fri, 10 Jul 2020 09:49:04 -0700
+Message-ID: <CAF6AEGtPDh7q6Hjophdyz+Pvi93-bK5WULGeSw9P4BWRw5SWxQ@mail.gmail.com>
+Subject: Re: [v1] drm/msm/dpu: enumerate second cursor pipe for external interface
+To:     Kalyan Thota <kalyan_t@codeaurora.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Krishna Manikandan <mkrishn@codeaurora.org>,
+        Raviteja Tamatam <travitej@codeaurora.org>,
+        nganji@codeaurora.org, Stephen Boyd <swboyd@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 11:06:18AM +0200, Kurt Kanzenbach wrote:
-> For future DSA drivers it makes sense to add a generic DSA yaml binding which
-> can be used then. This was created using the properties from dsa.txt. It
-> includes the ports and the dsa,member property.
-> 
-> Suggested-by: Florian Fainelli <f.fainelli@gmail.com>
-> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
+On Thu, Jun 25, 2020 at 5:46 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
+>
+> Setup an RGB HW pipe as cursor which can be used on
+> secondary interface.
+>
+> For SC7180 2 HW pipes are enumerated as cursors
+> 1 - primary interface
+> 2 - secondary interface
+>
+> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
 > ---
->  .../devicetree/bindings/net/dsa/dsa.yaml      | 80 +++++++++++++++++++
->  1 file changed, 80 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/dsa/dsa.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/net/dsa/dsa.yaml b/Documentation/devicetree/bindings/net/dsa/dsa.yaml
-> new file mode 100644
-> index 000000000000..bec257231bf8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/dsa/dsa.yaml
-> @@ -0,0 +1,80 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/dsa/dsa.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Distributed Switch Architecture Device Tree Bindings
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+> index 8f2357d..23061fd 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+> @@ -117,10 +117,10 @@
+>                 .reg_off = 0x2AC, .bit_off = 0},
+>         .clk_ctrls[DPU_CLK_CTRL_DMA0] = {
+>                 .reg_off = 0x2AC, .bit_off = 8},
+> -       .clk_ctrls[DPU_CLK_CTRL_DMA1] = {
+> -               .reg_off = 0x2B4, .bit_off = 8},
+>         .clk_ctrls[DPU_CLK_CTRL_CURSOR0] = {
+> -               .reg_off = 0x2BC, .bit_off = 8},
+> +               .reg_off = 0x2B4, .bit_off = 8},
+> +       .clk_ctrls[DPU_CLK_CTRL_CURSOR1] = {
+> +               .reg_off = 0x2C4, .bit_off = 8},
 
-DSA is a Linuxism, right?
+It looks like you shifted the register offset here from 0x2bc to
+0x2c4, was that intentional?
 
-> +
-> +maintainers:
-> +  - Andrew Lunn <andrew@lunn.ch>
-> +  - Florian Fainelli <f.fainelli@gmail.com>
-> +  - Vivien Didelot <vivien.didelot@gmail.com>
-> +
-> +description:
-> +  Switches are true Linux devices and can be probed by any means. Once probed,
+BR,
+-R
 
-Bindings are OS independent.
-
-> +  they register to the DSA framework, passing a node pointer. This node is
-> +  expected to fulfil the following binding, and may contain additional
-> +  properties as required by the device it is embedded within.
-
-Describe what type of h/w should use this binding.
-
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^switch(@.*)?$"
-> +
-> +  dsa,member:
-> +    minItems: 2
-> +    maxItems: 2
-> +    description:
-> +      A two element list indicates which DSA cluster, and position within the
-> +      cluster a switch takes. <0 0> is cluster 0, switch 0. <0 1> is cluster 0,
-> +      switch 1. <1 0> is cluster 1, switch 0. A switch not part of any cluster
-> +      (single device hanging off a CPU port) must not specify this property
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +
-> +  ports:
-> +    type: object
-> +    properties:
-> +      '#address-cells':
-> +        const: 1
-> +      '#size-cells':
-> +        const: 0
-> +
-> +    patternProperties:
-> +      "^port@[0-9]+$":
-
-As ports and port are OF graph nodes, it would be better if we 
-standardized on a different name for these. I think we've used 
-'ethernet-port' some.
-
-> +          type: object
-> +          description: DSA switch ports
-> +
-> +          allOf:
-> +            - $ref: ../ethernet-controller.yaml#
-
-How does this and 'ethernet' both apply?
-
-> +
-> +          properties:
-> +            reg:
-> +              description: Port number
-> +
-> +            label:
-> +              description:
-> +                Describes the label associated with this port, which will become
-> +                the netdev name
-> +              $ref: /schemas/types.yaml#definitions/string
-> +
-> +            link:
-> +              description:
-> +                Should be a list of phandles to other switch's DSA port. This
-> +                port is used as the outgoing port towards the phandle ports. The
-> +                full routing information must be given, not just the one hop
-> +                routes to neighbouring switches
-> +              $ref: /schemas/types.yaml#definitions/phandle-array
-> +
-> +            ethernet:
-> +              description:
-> +                Should be a phandle to a valid Ethernet device node.  This host
-> +                device is what the switch port is connected to
-> +              $ref: /schemas/types.yaml#definitions/phandle
-> +
-> +          required:
-> +            - reg
-> +
-> +required:
-> +  - ports
-> +
-> +...
-> -- 
-> 2.20.1
-> 
+>         },
+>  };
+>
+> @@ -272,10 +272,10 @@
+>                 sc7180_vig_sblk_0, 0,  SSPP_TYPE_VIG, DPU_CLK_CTRL_VIG0),
+>         SSPP_BLK("sspp_8", SSPP_DMA0, 0x24000,  DMA_SDM845_MASK,
+>                 sdm845_dma_sblk_0, 1, SSPP_TYPE_DMA, DPU_CLK_CTRL_DMA0),
+> -       SSPP_BLK("sspp_9", SSPP_DMA1, 0x26000,  DMA_SDM845_MASK,
+> -               sdm845_dma_sblk_1, 5, SSPP_TYPE_DMA, DPU_CLK_CTRL_DMA1),
+> +       SSPP_BLK("sspp_9", SSPP_DMA1, 0x26000,  DMA_CURSOR_SDM845_MASK,
+> +               sdm845_dma_sblk_1, 5, SSPP_TYPE_DMA, DPU_CLK_CTRL_CURSOR0),
+>         SSPP_BLK("sspp_10", SSPP_DMA2, 0x28000,  DMA_CURSOR_SDM845_MASK,
+> -               sdm845_dma_sblk_2, 9, SSPP_TYPE_DMA, DPU_CLK_CTRL_CURSOR0),
+> +               sdm845_dma_sblk_2, 9, SSPP_TYPE_DMA, DPU_CLK_CTRL_CURSOR1),
+>  };
+>
+>  /*************************************************************
+> --
+> 1.9.1
+>
