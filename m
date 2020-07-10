@@ -2,227 +2,190 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01115C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 19:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 328C4C43445
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 19:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1CFD2076A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 19:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 036582078D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 19:38:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594409937;
+	bh=LoSJMfK92YumYrvaNsXj0AvUWvu64EYY6m7/BSaeTZE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TgF37ToaZWdrsA0vtm8Qo5vUnsmVr9dNdK7PpsYjIbTKiLfp35OfGf9+7UxpnA57V
+	 PyjOp4KYw2EVpSQTq8UI/c/ft7zNA24kb2l370E+Mn1d1wC/cxICxhSdh4jP1hSqHx
+	 GxKggMWcjTkrOacTe5LeVfMVqPMb/+QsoRa6q6sM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbgGJTWl convert rfc822-to-8bit (ORCPT
+        id S1727771AbgGJTi4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 15:22:41 -0400
-Received: from mailoutvs32.siol.net ([185.57.226.223]:57978 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726867AbgGJTWl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 15:22:41 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 9A60B522763;
-        Fri, 10 Jul 2020 21:22:37 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id gejh6xTW37uc; Fri, 10 Jul 2020 21:22:37 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 1D556522762;
-        Fri, 10 Jul 2020 21:22:37 +0200 (CEST)
-Received: from jernej-laptop.localnet (89-212-178-211.dynamic.t-2.net [89.212.178.211])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id 0D90A522763;
-        Fri, 10 Jul 2020 21:22:35 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     peron.clem@gmail.com, Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Samuel Holland <samuel@sholland.org>
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Marcus Cooper <codekipper@gmail.com>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [linux-sunxi] [PATCH 01/16] ASoC: sun4i-i2s: Add support for H6 I2S
-Date:   Fri, 10 Jul 2020 21:22:34 +0200
-Message-ID: <3787973.dVgI16VYFl@jernej-laptop>
-In-Reply-To: <72a6fddf-5e84-f050-2eee-74178d457789@sholland.org>
-References: <20200704113902.336911-1-peron.clem@gmail.com> <20200704113902.336911-2-peron.clem@gmail.com> <72a6fddf-5e84-f050-2eee-74178d457789@sholland.org>
+        Fri, 10 Jul 2020 15:38:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726908AbgGJTi4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 10 Jul 2020 15:38:56 -0400
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20CC0207D0;
+        Fri, 10 Jul 2020 19:38:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594409935;
+        bh=LoSJMfK92YumYrvaNsXj0AvUWvu64EYY6m7/BSaeTZE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Hfo2UZfOYx7MpoASvQLR99H+ibRB7SEkkhnbNkgJliAjznTi2b/kwTwCzWjoCb9Qs
+         eAqPBuekTIt3JjJ0YbXm3xoJwfW89Io9IOJp7y6LmOWBc17HisInGsENy91VP2A3zK
+         6An4u/q+LOm/Fdhiq0n2Ylago4ABnI1N0QmtEbX8=
+Received: by mail-oi1-f177.google.com with SMTP id k22so5755189oib.0;
+        Fri, 10 Jul 2020 12:38:55 -0700 (PDT)
+X-Gm-Message-State: AOAM530VawN/oLmTYunAQMtve420c8Ow0G5OArjyXaZ4TETSm+kpr6iL
+        +aMFLI2gX48Y3zujxddLuIgVll+/Mr1rV9s9ag==
+X-Google-Smtp-Source: ABdhPJzAB5d07pCJasiAsdsh07SEaezq9dexRFAqKHbwbvGpDpVDW2NzrP+hP7WWnZwkzjXsmVZfthZDAm74TW+L56A=
+X-Received: by 2002:aca:bb82:: with SMTP id l124mr5555099oif.106.1594409934332;
+ Fri, 10 Jul 2020 12:38:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+References: <20200710090618.28945-1-kurt@linutronix.de> <20200710090618.28945-2-kurt@linutronix.de>
+ <20200710164500.GA2775934@bogus> <8c105489-42c5-b4ba-73b6-c3a858f646a6@gmail.com>
+In-Reply-To: <8c105489-42c5-b4ba-73b6-c3a858f646a6@gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 10 Jul 2020 13:38:42 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+zP9++MftM+Dh2Fe-OdKq6EiGA_tASEbBwA_jEdwoFCA@mail.gmail.com>
+Message-ID: <CAL_Jsq+zP9++MftM+Dh2Fe-OdKq6EiGA_tASEbBwA_jEdwoFCA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] dt-bindings: net: dsa: Add DSA yaml binding
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Kurt Kanzenbach <kurt@linutronix.de>, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Samuel!
+On Fri, Jul 10, 2020 at 11:20 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+>
+>
+> On 7/10/2020 9:45 AM, Rob Herring wrote:
+> > On Fri, Jul 10, 2020 at 11:06:18AM +0200, Kurt Kanzenbach wrote:
+> >> For future DSA drivers it makes sense to add a generic DSA yaml binding which
+> >> can be used then. This was created using the properties from dsa.txt. It
+> >> includes the ports and the dsa,member property.
+> >>
+> >> Suggested-by: Florian Fainelli <f.fainelli@gmail.com>
+> >> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
+> >> ---
+> >>  .../devicetree/bindings/net/dsa/dsa.yaml      | 80 +++++++++++++++++++
+> >>  1 file changed, 80 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/net/dsa/dsa.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/net/dsa/dsa.yaml b/Documentation/devicetree/bindings/net/dsa/dsa.yaml
+> >> new file mode 100644
+> >> index 000000000000..bec257231bf8
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/net/dsa/dsa.yaml
+> >> @@ -0,0 +1,80 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/net/dsa/dsa.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: Distributed Switch Architecture Device Tree Bindings
+> >
+> > DSA is a Linuxism, right?
+>
+> Not really, it is a Marvell term that describes their proprietary
+> switching protocol. Since then DSA within Linux expands well beyond just
+> Marvell switches, so the terms have been blurred a little bit.
 
-Dne petek, 10. julij 2020 ob 07:44:33 CEST je Samuel Holland napisal(a):
-> On 7/4/20 6:38 AM, Clément Péron wrote:
-> > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> > 
-> > H6 I2S is very similar to that in H3, except it supports up to 16
-> > channels.
-> > 
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> > Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> > ---
-> > 
-> >  sound/soc/sunxi/sun4i-i2s.c | 227 ++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 227 insertions(+)
-> > 
-> > diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-> > index d0a8d5810c0a..9690389cb68e 100644
-> > --- a/sound/soc/sunxi/sun4i-i2s.c
-> > +++ b/sound/soc/sunxi/sun4i-i2s.c
-> > @@ -124,6 +124,21 @@
-> > 
-> >  #define SUN8I_I2S_RX_CHAN_SEL_REG	0x54
-> >  #define SUN8I_I2S_RX_CHAN_MAP_REG	0x58
-> > 
-> > +/* Defines required for sun50i-h6 support */
-> > +#define SUN50I_H6_I2S_TX_CHAN_SEL_OFFSET_MASK	GENMASK(21, 20)
-> > +#define SUN50I_H6_I2S_TX_CHAN_SEL_OFFSET(offset)	((offset) << 20)
-> > +#define SUN50I_H6_I2S_TX_CHAN_SEL_MASK		GENMASK(19, 16)
-> > +#define SUN50I_H6_I2S_TX_CHAN_SEL(chan)		((chan - 1) << 16)
-> > +#define SUN50I_H6_I2S_TX_CHAN_EN_MASK		GENMASK(15, 0)
-> > +#define SUN50I_H6_I2S_TX_CHAN_EN(num_chan)	(((1 << num_chan) - 1))
-> > +
-> > +#define SUN50I_H6_I2S_TX_CHAN_MAP0_REG	0x44
-> > +#define SUN50I_H6_I2S_TX_CHAN_MAP1_REG	0x48
-> > +
-> > +#define SUN50I_H6_I2S_RX_CHAN_SEL_REG	0x64
-> > +#define SUN50I_H6_I2S_RX_CHAN_MAP0_REG	0x68
-> > +#define SUN50I_H6_I2S_RX_CHAN_MAP1_REG	0x6C
-> > +
-> > 
-> >  struct sun4i_i2s;
-> >  
-> >  /**
-> > 
-> > @@ -466,6 +481,65 @@ static int sun8i_i2s_set_chan_cfg(const struct
-> > sun4i_i2s *i2s,> 
-> >  	return 0;
-> >  
-> >  }
-> > 
-> > +static int sun50i_i2s_set_chan_cfg(const struct sun4i_i2s *i2s,
-> > +				   const struct snd_pcm_hw_params 
-*params)
-> > +{
-> > +	unsigned int channels = params_channels(params);
-> > +	unsigned int slots = channels;
-> > +	unsigned int lrck_period;
-> > +
-> > +	if (i2s->slots)
-> > +		slots = i2s->slots;
-> > +
-> > +	/* Map the channels for playback and capture */
-> > +	regmap_write(i2s->regmap, SUN50I_H6_I2S_TX_CHAN_MAP1_REG, 
-0x76543210);
-> > +	regmap_write(i2s->regmap, SUN50I_H6_I2S_RX_CHAN_MAP1_REG, 
-0x76543210);
-> > +
-> > +	/* Configure the channels */
-> > +	regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
-> > +			   SUN50I_H6_I2S_TX_CHAN_SEL_MASK,
-> > +			   SUN50I_H6_I2S_TX_CHAN_SEL(channels));
-> > +	regmap_update_bits(i2s->regmap, SUN50I_H6_I2S_RX_CHAN_SEL_REG,
-> > +			   SUN50I_H6_I2S_TX_CHAN_SEL_MASK,
-> > +			   SUN50I_H6_I2S_TX_CHAN_SEL(channels));
-> > +
-> > +	regmap_update_bits(i2s->regmap, SUN8I_I2S_CHAN_CFG_REG,
-> > +			   SUN8I_I2S_CHAN_CFG_TX_SLOT_NUM_MASK,
-> > +			   
-SUN8I_I2S_CHAN_CFG_TX_SLOT_NUM(channels));
-> > +	regmap_update_bits(i2s->regmap, SUN8I_I2S_CHAN_CFG_REG,
-> > +			   SUN8I_I2S_CHAN_CFG_RX_SLOT_NUM_MASK,
-> > +			   
-SUN8I_I2S_CHAN_CFG_RX_SLOT_NUM(channels));
-> > +
-> > +	switch (i2s->format & SND_SOC_DAIFMT_FORMAT_MASK) {
-> > +	case SND_SOC_DAIFMT_DSP_A:
-> > +	case SND_SOC_DAIFMT_DSP_B:
-> > +	case SND_SOC_DAIFMT_LEFT_J:
-> 
-> > +	case SND_SOC_DAIFMT_RIGHT_J:
-> According to the manual, LEFT_J and RIGHT_J should use the same calculation
-> as I2S, not the one for PCM/DSP.
-> 
-> > +		lrck_period = params_physical_width(params) * slots;
-> > +		break;
-> > +
-> > +	case SND_SOC_DAIFMT_I2S:
-> > +		lrck_period = params_physical_width(params);
-> > +		break;
-> > +
-> > +	default:
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	if (i2s->slot_width)
-> > +		lrck_period = i2s->slot_width;
-> > +
-> > +	regmap_update_bits(i2s->regmap, SUN4I_I2S_FMT0_REG,
-> > +			   SUN8I_I2S_FMT0_LRCK_PERIOD_MASK,
-> > +			   SUN8I_I2S_FMT0_LRCK_PERIOD(lrck_period));
-> 
-> From the description in the manual, this looks off by one. The number of
-> BCLKs per LRCK is LRCK_PERIOD + 1.
+Either way, sounds like the terminology here should be more general.
 
-Are you sure? Macro SUN8I_I2S_FMT0_LRCK_PERIOD() is defined as follows:
+Though I missed that this is really just a conversion of dsa.txt which
+should be removed in this patch. Otherwise, you'll get me re-reviewing
+the binding.
 
-#define SUN8I_I2S_FMT0_LRCK_PERIOD(period)	((period - 1) << 8)
+> >> +
+> >> +maintainers:
+> >> +  - Andrew Lunn <andrew@lunn.ch>
+> >> +  - Florian Fainelli <f.fainelli@gmail.com>
+> >> +  - Vivien Didelot <vivien.didelot@gmail.com>
+> >> +
+> >> +description:
+> >> +  Switches are true Linux devices and can be probed by any means. Once probed,
+> >
+> > Bindings are OS independent.
+> >
+> >> +  they register to the DSA framework, passing a node pointer. This node is
+> >> +  expected to fulfil the following binding, and may contain additional
+> >> +  properties as required by the device it is embedded within.
+> >
+> > Describe what type of h/w should use this binding.
+> >
+> >> +
+> >> +properties:
+> >> +  $nodename:
+> >> +    pattern: "^switch(@.*)?$"
+> >> +
+> >> +  dsa,member:
+> >> +    minItems: 2
+> >> +    maxItems: 2
+> >> +    description:
+> >> +      A two element list indicates which DSA cluster, and position within the
+> >> +      cluster a switch takes. <0 0> is cluster 0, switch 0. <0 1> is cluster 0,
+> >> +      switch 1. <1 0> is cluster 1, switch 0. A switch not part of any cluster
+> >> +      (single device hanging off a CPU port) must not specify this property
+> >> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> >> +
+> >> +  ports:
+> >> +    type: object
+> >> +    properties:
+> >> +      '#address-cells':
+> >> +        const: 1
+> >> +      '#size-cells':
+> >> +        const: 0
+> >> +
+> >> +    patternProperties:
+> >> +      "^port@[0-9]+$":
+> >
+> > As ports and port are OF graph nodes, it would be better if we
+> > standardized on a different name for these. I think we've used
+> > 'ethernet-port' some.
+>
+> Yes we did talk about that before, however when the original DSA binding
+> was introduced about 7 years ago (or maybe more recently, my memory
+> fails me now), "ports" was chosen as the encapsulating node. We should
+> be accepting both ethernet-ports and ports.
 
-which already lowers value by 1.
+Yes, I'm aware of the history. Back then it was a free-for-all on node
+names. Now we're trying to be more disciplined. Ideally, we pick
+something unique to standardize on and fix the dts files to match as
+long as the node name is generally a don't care for the OS.
 
-Best regards,
-Jernej
+The schema says only port/ports is allowed, so at a minimum
+ethernet-port/ethernet-ports needs to be added here.
 
-> 
-> > +
-> > +	regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
-> > +			   SUN50I_H6_I2S_TX_CHAN_EN_MASK,
-> > +			   SUN50I_H6_I2S_TX_CHAN_EN(channels));
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > 
-> >  static int sun4i_i2s_hw_params(struct snd_pcm_substream *substream,
-> >  
-> >  			       struct snd_pcm_hw_params *params,
-> >  			       struct snd_soc_dai *dai)
-> > 
-> > @@ -691,6 +765,108 @@ static int sun8i_i2s_set_soc_fmt(const struct
-> > sun4i_i2s *i2s,> 
-> >  	return 0;
-> >  
-> >  }
-> > 
-> > +static int sun50i_i2s_set_soc_fmt(const struct sun4i_i2s *i2s,
-> > +				  unsigned int fmt)
-> > +{
-> > +	u32 mode, val;
-> > +	u8 offset;
-> > +
-> > +	/*
-> > +	 * DAI clock polarity
-> > +	 *
-> > +	 * The setup for LRCK contradicts the datasheet, but under a
-> > +	 * scope it's clear that the LRCK polarity is reversed
-> > +	 * compared to the expected polarity on the bus.
-> > +	 */
-> 
-> This comment makes us sound a lot more confident than I think we actually
-> are.
-> 
-> Regards,
-> Samuel
+>
+> >
+> >> +          type: object
+> >> +          description: DSA switch ports
+> >> +
+> >> +          allOf:
+> >> +            - $ref: ../ethernet-controller.yaml#
+> >
+> > How does this and 'ethernet' both apply?
+>
+> I think the intent here was to mean that some of the properties from the
+> Ethernet controller such as phy-mode, phy-handle, fixed-link also apply
+> here since the switch port is a simplified Ethernet MAC on a number of
+> counts.
 
+Okay, it's good to explicitly define which of those apply as I imagine
+some don't. Just need "<prop>: true" to do that.
 
-
-
+Rob
