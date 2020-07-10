@@ -2,101 +2,150 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FF4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 00:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51929C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 01:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C13322073A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 00:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2763B20708
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 01:50:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594345814;
+	bh=R/qvQtOapBzQfjgp1F+VIsMPD3+hFH2lYsvvxiVRsrs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uZZ/hoI3C9Wds/+jxQwFVxfNCk4muNoTlxhUkrzcxl1jU1vcbOKQeipnPASUHWIDb
+	 gwBvsHbZurGhlaXwGYvz5mx3jMdgqktLPtv3HDMzbpqB4ouKwGMH6YRJbgFKRuhkwD
+	 HHeW7a1YHS1ejaMK8oHvAX7xLahYXZZbJE97uDA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgGJAyO (ORCPT
+        id S1726446AbgGJBuN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 20:54:14 -0400
-Received: from mx.socionext.com ([202.248.49.38]:39525 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726311AbgGJAyO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 9 Jul 2020 20:54:14 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 10 Jul 2020 09:54:13 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 4A74D180C09;
-        Fri, 10 Jul 2020 09:54:13 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 10 Jul 2020 09:54:13 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 2EDCD1A0507;
-        Fri, 10 Jul 2020 09:54:13 +0900 (JST)
-Received: from [10.213.31.123] (unknown [10.213.31.123])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 847BE12012F;
-        Fri, 10 Jul 2020 09:54:12 +0900 (JST)
-Subject: Re: [PATCH v5 6/6] PCI: uniphier: Use
- devm_platform_ioremap_resource_byname()
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1592469493-1549-7-git-send-email-hayashi.kunihiko@socionext.com>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <f7138d4c-be56-5519-fbb2-3c655945f5ff@socionext.com>
-Date:   Fri, 10 Jul 2020 09:54:12 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 9 Jul 2020 21:50:13 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:28776 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726433AbgGJBuN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 21:50:13 -0400
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 06A1nxnI015769;
+        Fri, 10 Jul 2020 10:49:59 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 06A1nxnI015769
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1594345799;
+        bh=Gvm+g/WdTbueU8JPboyyP1wbcG28Ei9VuntqPk2mzHE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Thx0DZv4GPO9epHZUAoaYDzag+dAUQQQiqtzN6kf34r8XEL2Tv2cqci0boXcTjQYX
+         jF9SbvHvpTRA510CguVcKToatU4SOkpNRupbn52jgkatGETwxR5tQ+bEWArb78P6Ki
+         LruGjd37AKo4/0t9leoVAp03bpqF4JMio72PYm8LshPmcpCZtE0Kz6eTzI89hrVDuz
+         vktnWTTmlDwyHcNQ/i4XbciSg5Vjc4hXh+cwjCQIN6BnoHQ/f3C7une7dz9V0pltNh
+         qIfyLYL/BLgtpIPpkCW33AXv0/jPsOGGrPthOwbYzCDXaQHCLFAs65sH1kdJ0vPfbt
+         f+GJ1pQGVQvDw==
+X-Nifty-SrcIP: [209.85.222.49]
+Received: by mail-ua1-f49.google.com with SMTP id q15so1337219uap.4;
+        Thu, 09 Jul 2020 18:49:59 -0700 (PDT)
+X-Gm-Message-State: AOAM531vyuf+RY9bDItKC5ZyVSvgf62wiP5JpFUkcwfOJtG1rZnt+up6
+        uBnbWPyPsPwFbE6g0xquozQ/m+Z6inQzo4HXe0E=
+X-Google-Smtp-Source: ABdhPJw78ViM4Wbi6CPTVoIpEk8EDcs586MtfpjU2widRKRiXIbdD0Zwe61bDGZFwCuGkFP4OUY8RS8a2TH0fyxfEhk=
+X-Received: by 2002:ab0:44e5:: with SMTP id n92mr9280862uan.121.1594345798317;
+ Thu, 09 Jul 2020 18:49:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1592469493-1549-7-git-send-email-hayashi.kunihiko@socionext.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1594198320-28900-1-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <1594198320-28900-1-git-send-email-hayashi.kunihiko@socionext.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 10 Jul 2020 10:49:21 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASAvC2aF9530Dc24dcVfVH_SK3ZpdkjSmSEj9xw+mXr6A@mail.gmail.com>
+Message-ID: <CAK7LNASAvC2aF9530Dc24dcVfVH_SK3ZpdkjSmSEj9xw+mXr6A@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: uniphier: Add PCIe endpoint and PHY node for Pro5
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Lorenzo,
+On Wed, Jul 8, 2020 at 5:52 PM Kunihiko Hayashi
+<hayashi.kunihiko@socionext.com> wrote:
+>
+> This adds PCIe endpoint controller and PHY nodes for Pro5 SoC,
+> and also adds pinctrl node for PCIe.
+>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 
-This 6/6 patch has just been covered with the following patch:
-https://patchwork.ozlabs.org/project/linux-pci/patch/20200708164013.5076-1-zhengdejin5@gmail.com/
 
-As a result, my other patches conflict with this patch.
-I'd like your comments in the patch 2/6, though,
-should I rebase to pci/dwc and resend this series without 6/6?
+Applied.
 
-Thank you,
 
-On 2020/06/18 17:38, Kunihiko Hayashi wrote:
-> Use devm_platform_ioremap_resource_byname() to simplify the code a bit.
-> 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>f
 > ---
->   drivers/pci/controller/dwc/pcie-uniphier.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-> index 8356dd3..233d624 100644
-> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
-> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-> @@ -456,8 +456,7 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
->   	if (IS_ERR(priv->pci.atu_base))
->   		priv->pci.atu_base = NULL;
->   
-> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "link");
-> -	priv->base = devm_ioremap_resource(dev, res);
-> +	priv->base = devm_platform_ioremap_resource_byname(pdev, "link");
->   	if (IS_ERR(priv->base))
->   		return PTR_ERR(priv->base);
->   
-> 
+>  arch/arm/boot/dts/uniphier-pinctrl.dtsi |  5 +++++
+>  arch/arm/boot/dts/uniphier-pro5.dtsi    | 30 ++++++++++++++++++++++++++++++
+>  2 files changed, 35 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/uniphier-pinctrl.dtsi b/arch/arm/boot/dts/uniphier-pinctrl.dtsi
+> index bfdfb76..c0fd029 100644
+> --- a/arch/arm/boot/dts/uniphier-pinctrl.dtsi
+> +++ b/arch/arm/boot/dts/uniphier-pinctrl.dtsi
+> @@ -126,6 +126,11 @@
+>                 function = "nand";
+>         };
+>
+> +       pinctrl_pcie: pcie {
+> +               groups = "pcie";
+> +               function = "pcie";
+> +       };
+> +
+>         pinctrl_sd: sd {
+>                 groups = "sd";
+>                 function = "sd";
+> diff --git a/arch/arm/boot/dts/uniphier-pro5.dtsi b/arch/arm/boot/dts/uniphier-pro5.dtsi
+> index feadb4a..3525125 100644
+> --- a/arch/arm/boot/dts/uniphier-pro5.dtsi
+> +++ b/arch/arm/boot/dts/uniphier-pro5.dtsi
+> @@ -613,6 +613,36 @@
+>                         };
+>                 };
+>
+> +               pcie_ep: pcie-ep@66000000 {
+> +                       compatible = "socionext,uniphier-pro5-pcie-ep",
+> +                                    "snps,dw-pcie-ep";
+> +                       status = "disabled";
+> +                       reg-names = "dbi", "dbi2", "link", "addr_space";
+> +                       reg = <0x66000000 0x1000>, <0x66001000 0x1000>,
+> +                             <0x66010000 0x10000>, <0x67000000 0x400000>;
+> +                       pinctrl-names = "default";
+> +                       pinctrl-0 = <&pinctrl_pcie>;
+> +                       clock-names = "gio", "link";
+> +                       clocks = <&sys_clk 12>, <&sys_clk 24>;
+> +                       reset-names = "gio", "link";
+> +                       resets = <&sys_rst 12>, <&sys_rst 24>;
+> +                       num-ib-windows = <16>;
+> +                       num-ob-windows = <16>;
+> +                       num-lanes = <4>;
+> +                       phy-names = "pcie-phy";
+> +                       phys = <&pcie_phy>;
+> +               };
+> +
+> +               pcie_phy: phy@66038000 {
+> +                       compatible = "socionext,uniphier-pro5-pcie-phy";
+> +                       reg = <0x66038000 0x4000>;
+> +                       #phy-cells = <0>;
+> +                       clock-names = "gio", "link";
+> +                       clocks = <&sys_clk 12>, <&sys_clk 24>;
+> +                       reset-names = "gio", "link";
+> +                       resets = <&sys_rst 12>, <&sys_rst 24>;
+> +               };
+> +
+>                 nand: nand-controller@68000000 {
+>                         compatible = "socionext,uniphier-denali-nand-v5b";
+>                         status = "disabled";
+> --
+> 2.7.4
+>
 
----
+
+-- 
 Best Regards
-Kunihiko Hayashi
+Masahiro Yamada
