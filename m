@@ -2,132 +2,173 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C54C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 02:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60AD2C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 03:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D73A42073A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 02:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E9C320767
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 03:08:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jL7zy/Sy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbgGJCPz (ORCPT
+        id S1727059AbgGJDIz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jul 2020 22:15:55 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:50862 "EHLO
-        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1726973AbgGJCPz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 22:15:55 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 1034320160CA;
-        Fri, 10 Jul 2020 10:15:53 +0800 (HKT)
-X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
-Received: from mail.gtsys.com.hk ([127.0.0.1])
-        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id r28K9n0KtGAZ; Fri, 10 Jul 2020 10:15:52 +0800 (HKT)
-Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id EC14F20160B5;
-        Fri, 10 Jul 2020 10:15:52 +0800 (HKT)
-Received: from armhf2.gtsys.com.hk (unknown [10.128.4.15])
-        by s01.gtsys.com.hk (Postfix) with ESMTP id E909DC01FBA;
-        Fri, 10 Jul 2020 10:15:52 +0800 (HKT)
-Received: by armhf2.gtsys.com.hk (Postfix, from userid 1000)
-        id E4B5E202299; Fri, 10 Jul 2020 10:15:52 +0800 (HKT)
-From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
-To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Cc:     Jack Lo <jack.lo@gtsys.com.hk>, devicetree@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5 2/2] devicetree: hwmon: shtc1: Add sensirion,shtc1.yaml
-Date:   Fri, 10 Jul 2020 10:15:35 +0800
-Message-Id: <20200710021536.27544-3-chris.ruehl@gtsys.com.hk>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200710021536.27544-1-chris.ruehl@gtsys.com.hk>
-References: <20200710021536.27544-1-chris.ruehl@gtsys.com.hk>
+        Thu, 9 Jul 2020 23:08:55 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:43370 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727074AbgGJDIv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jul 2020 23:08:51 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594350530; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=u61ezaq/mKofrwr3vkAw+UCv+XkcrfufCL8jWoBDK3M=; b=jL7zy/SyJmlwWdk4Su+nnOZovYH34nZ1f0cm2vn2wdO7XwxouroFafXexJMnusurZ8htSbsa
+ jtpnEG4Y1rv8NFQMPBziBBPNLWv4jdX7rcEmO5OHZIUH+KphwKnVYXijkXcUSgB5mKLlWnTN
+ ds2mLje5HbbEXEUJV9yMi4g2h00=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 5f07dbc119b27ae9cedbee12 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 03:08:49
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8E7FEC433CA; Fri, 10 Jul 2020 03:08:47 +0000 (UTC)
+Received: from [10.110.59.15] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DD3F5C433C8;
+        Fri, 10 Jul 2020 03:08:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DD3F5C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [PATCH v5 2/6] dt-bindings: usb: Add Qualcomm PMIC type C
+ controller dt-binding
+To:     Rob Herring <robh@kernel.org>
+Cc:     lgirdwood@gmail.com, mark.rutland@arm.com, agross@kernel.org,
+        broonie@kernel.org, heikki.krogerus@linux.intel.com,
+        gregkh@linuxfoundation.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jackp@codeaurora.org, rdunlap@infradead.org,
+        bryan.odonoghue@linaro.org
+References: <20200703015102.27295-1-wcheng@codeaurora.org>
+ <20200703015102.27295-3-wcheng@codeaurora.org>
+ <20200709224626.GA1021653@bogus>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <bef7638a-3f1d-2c92-a7a0-c7a17d2f63c0@codeaurora.org>
+Date:   Thu, 9 Jul 2020 20:08:45 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200709224626.GA1021653@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add documentation for the newly added DTS support in the shtc1 driver.
-To align with the drivers logic to have high precision by default
-a boolean sensirion,low_precision is used to switch to low precision.
 
-Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
----
- .../bindings/hwmon/sensirion,shtc1.yaml       | 57 +++++++++++++++++++
- 1 file changed, 57 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
+On 7/9/2020 3:46 PM, Rob Herring wrote:
+> 
+> Why is all the connector schema duplicated here? You only need things 
+> that are further constrained like 'compatible'.
+> 
 
-diff --git a/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml b/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
-new file mode 100644
-index 000000000000..140cf3043a27
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
-@@ -0,0 +1,57 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hwmon/sensirion,shtc1.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Sensirion SHTC1 Humidity and Temperature Sensor IC
-+
-+maintainers:
-+  - chris.ruehl@gtsys.com.hk
-+
-+description: |
-+  The SHTC1, SHTW1 and SHTC3 are digital humidity and temperature sensor
-+  designed especially for battery-driven high-volume consumer electronics
-+  applications.
-+  For further information refere to Documentation/hwmon/shtc1.rst
-+
-+  This binding document describes the binding for the hardware monitor
-+  portion of the driver.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - sensirion,shtc1
-+      - sensirion,shtw1
-+      - sensirion,shtc3
-+
-+  reg:
-+    const: 0x70
-+
-+  sensirion,blocking-io:
-+    $ref: /schemas/types.yaml#definitions/flag
-+    description:
-+      If set, the driver hold the i2c bus until measurement is finished.
-+
-+  sensirion,low-precision:
-+    $ref: /schemas/types.yaml#definitions/flag
-+    description:
-+      If set, the sensor aquire data with low precision (not recommended).
-+      The driver aquire data with high precision by default.
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    i2c1 {
-+      clock-frequency = <400000>;
-+
-+      shtc3@70 {
-+        compatible = "sensirion,shtc3";
-+        reg = <0x70>
-+        sensirion,blocking-io;
-+      };
-+    };
-+...
+Hi Rob,
+
+Most of the properties in this dt-binding are going to be constrained by
+the definitions/values specified by usb-connector.  I can add individual
+references to each property, such as compatible, power-role, data-role
+and ports, if that is the recommended approach.
+
+> 
+> 'remote-endpoint' in not an array.
+> 
+
+Agreed, I have removed the maxItems parameter.
+
+> 
+> So USB-SS data can come from 'type C mux' or 'role switch node'? That 
+> seems odd.
+> 
+
+This was one of the interpretations, which might work with the current
+usb-connector model.  From the previous block diagram I shared, we can
+see that the SS path has two potential "endpoints," one to the mux and
+another to the USB controller on the SOC.
+
+Another design consideration is when the device supports the "Audio
+Adapter Accessory Mode."  The audio accessory is mentioned in the type C
+spec as an adapter which will utilize the USB D+/- lines for audio
+output.  So now, you could potentially have something like below:
+
+				   _______		 _______
+                            ______|FUSB302|		|SOC	|
+			   |	  |Type C |		|	|
+			   |      |Cntrl  |__I2C_______	|	|
+			   |	  |_______|		|	|
+ ___                       |       			|	|
+|   |______ CC1/2 _________|				|	|
+|   |				   _______		|	|
+|   |			     ____*|Charger|		|	|
+|   |			    |	  |HW     |		|	|
+|   |			    |     |_______|		|	|
+|   |			    |	   ________      	|	|
+|   |______ HS DP/DM _______|____*|MAX20328|_HS D+/D-__	|	|
+|   |				  |________|__Audio Out_|	|
+|   |				   ________		|	|
+|   |______ SS RX/TX1 __________**|FUSB304 |_SS RX/TX**_|	|
+|   |______ SS RX/TX2 ____________|USB Mux |		|_______|
+|   |                             |________|
+|   |
+|___|
+
+With this kind of device, it would make sense to have multiple endpoints
+per path, which can be represented like the following:
+
+connector {
+        compatible = "usb-c-connector";
+	...
+        ports {
+        	port@0 {
+			...
+			//Charger endpoint*
+			usb_con_hs_chg: endpoint@0 {
+				reg = <0>;
+				remote-endpoint = <&max77865_usbc_hs>;
+			};
+			//Audio accessory adapter mux*
+			usb_con_hs_audio: endpoint@1 {
+				reg = <1>;
+				remote-endpoint = <&analog_audio>;
+			};
+                };
+		port@1 {
+			...
+			//USB3 lane mux**
+			usb3_data_ss: endpoint@0 {
+				reg = <0>;
+				remote-endpoint = <&qmp_ss_mux>;
+			};
+			//USB3 SOC controller**
+			usb3_role: endpoint@1 {
+				reg = <1>;
+				remote-endpoint = <&dwc3_drd_switch>;
+			};
+		};
+	};
+};
+
+Thanks
+Wesley Cheng
+
 -- 
-2.20.1
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
