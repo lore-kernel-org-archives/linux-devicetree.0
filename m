@@ -2,107 +2,170 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80487C433E7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 23:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4215FC433E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 23:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 558942077D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 23:40:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Oi9BadDa"
+	by mail.kernel.org (Postfix) with ESMTP id 1809A207BC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 23:44:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594424645;
+	bh=O6pr3kBXRQxQ5c2SaDz3ETl2DXoncP1sUQ0qgTPJBCQ=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=oqQS0s5pAi1t3A3Pyv1N7A2gtdCh7SvyIzoHnMWc4V/9ZCdL4kBXqFSHIxx6/+MPD
+	 aLLjUBMOVaCaEqTu/Y/0axs78Ck/ku0krphf3xaUpkB4W3fhrVPDQMbLxjZ7X8rQ9f
+	 N2nu8m/DcS5Y+CVUWOCyk3kvG1UZ7inYwZrY3Iuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbgGJXkL (ORCPT
+        id S1726523AbgGJXoE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 19:40:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44568 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbgGJXkL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 19:40:11 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3C25C08C5DC;
-        Fri, 10 Jul 2020 16:40:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=MwgubfgOnn4tw/Gmznvx9EZNqV15HqAt1D08KvU1Mbo=; b=Oi9BadDaKVCkPEKsvgxa02EBq9
-        uWUTkqeBuHzfd5JFKwP/3jAwR513+AqyRq2NQFWJ1qjsDEP7eTsfFYgIZweWrWFBu+MeKaFt4URFO
-        KSVbWTfstvDlGnnjaV+R6OIVTVs6DelpfjcVPY2esIHd+gyeNueAMsqmhOF9yE7o6bFtm/qAxmGOt
-        KzUYVry2wX0w0JNP8baACCbEjM+HIVTEXHpfbPzUXH4ibRQ8bkVrlpC7/EHhgqCkxFqu4djorbTu4
-        jpq8WQ3gDO8JRZoVIrWnWfRsuNbiSGQMK/ZL/A0VgvSEPIyzJUiDOmKOICvxx1ryvchCyW24/S8u5
-        8E7CNF6Q==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ju2ch-0003zF-PC; Fri, 10 Jul 2020 23:40:08 +0000
-Subject: Re: [PATCH -next] <linux/of.h>: add stub for of_get_next_parent() to
- fix qcom build error
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Akash Asthana <akashast@codeaurora.org>
-References: <ce0d7561-ff93-d267-b57a-6505014c728c@infradead.org>
- <CAL_Jsq+AWo6xP1vC1NubFcdWzoX4hVvSW4KGry1NhOXUieDrSA@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <215c3c59-e6f7-1721-76ca-993bbaf91356@infradead.org>
-Date:   Fri, 10 Jul 2020 16:40:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 10 Jul 2020 19:44:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46592 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726369AbgGJXoE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 10 Jul 2020 19:44:04 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F4C1206A1;
+        Fri, 10 Jul 2020 23:44:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594424643;
+        bh=O6pr3kBXRQxQ5c2SaDz3ETl2DXoncP1sUQ0qgTPJBCQ=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=yTDBzJ2A68xlHvJeQhf4rCKXKbMnOzqQz/qCz4eH03kSuc1bEylQFOTTPlLsWMar+
+         hniiV1Zwo8O3320L0a8yGn89jcMoNaykE/30+3EFZ9ITvPAoEFa1SR7aFGbO12mczG
+         LKglrlqb1P0XTPTWyoEZm3T/xipMR2zRtCqKbml0=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+AWo6xP1vC1NubFcdWzoX4hVvSW4KGry1NhOXUieDrSA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1593766722-28838-2-git-send-email-gokulsri@codeaurora.org>
+References: <20190726092332.25202-1-govinds@codeaurora.org> <1593766722-28838-1-git-send-email-gokulsri@codeaurora.org> <1593766722-28838-2-git-send-email-gokulsri@codeaurora.org>
+Subject: Re: [v7 1/4] remoteproc: qcom: wcss: populate hardcoded param using driver data
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     agross@kernel.org, linux-soc@vger.kernel.org,
+        devicetree@vger.kernel.org, govinds@codeaurora.org,
+        sricharan@codeaurora.org, gokulsri@codeaurora.org
+To:     Gokul Sriram Palanisamy <gokulsri@codeaurora.org>,
+        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org
+Date:   Fri, 10 Jul 2020 16:44:02 -0700
+Message-ID: <159442464252.1987609.9113647358389820731@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 7/10/20 8:28 AM, Rob Herring wrote:
-> On Mon, Jun 29, 2020 at 10:43 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->>
->> From: Randy Dunlap <rdunlap@infradead.org>
->>
->> Fix a (COMPILE_TEST) build error when CONFIG_OF is not set/enabled
->> by adding a stub for of_get_next_parent().
->>
->> ../drivers/soc/qcom/qcom-geni-se.c:819:11: error: implicit declaration of function 'of_get_next_parent'; did you mean 'of_get_parent'? [-Werror=implicit-function-declaration]
->> ../drivers/soc/qcom/qcom-geni-se.c:819:9: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
->>
-> 
-> Fixes tag?
+Quoting Gokul Sriram Palanisamy (2020-07-03 01:58:39)
+> From: Govind Singh <govinds@codeaurora.org>
+>=20
+> Q6 based WiFi fw loading is supported across
+> different targets, ex: IPQ8074/QCS404. In order to
+> support different fw names/pas id etc, populate
+> hardcoded param using driver data.
+>=20
+> Signed-off-by: Govind Singh <govinds@codeaurora.org>
+> [rebased on top of 5.8-rc3]
 
-Are linux-next hashes/tags stable?
+This tag is not really useful and doesn't follow the style of having
+your email prefix the text. I'd expect to see
 
-Fixes: 048eb908a1f2 ("soc: qcom-geni-se: Add interconnect support to fix earlycon crash")
+[gokulsri@codeaurora.org: made some sort of change]
 
->> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Frank Rowand <frowand.list@gmail.com>
->> Cc: devicetree@vger.kernel.org
->> Cc: Andy Gross <agross@kernel.org>
->> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
->> Cc: linux-arm-msm@vger.kernel.org
->> ---
->>  include/linux/of.h |    5 +++++
->>  1 file changed, 5 insertions(+)
-> 
-> I'm assuming this will be applied to the tree that introduced the problem.
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-> 
+> Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
+> ---
+>  drivers/remoteproc/qcom_q6v5_wcss.c | 31 ++++++++++++++++++++++++++-----
+>  1 file changed, 26 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qco=
+m_q6v5_wcss.c
+> index 88c76b9..abc5f9d 100644
+> --- a/drivers/remoteproc/qcom_q6v5_wcss.c
+> +++ b/drivers/remoteproc/qcom_q6v5_wcss.c
+> @@ -70,6 +71,11 @@
+>  #define TCSR_WCSS_CLK_MASK     0x1F
+>  #define TCSR_WCSS_CLK_ENABLE   0x14
+> =20
+> +struct wcss_data {
+> +       const char *firmware_name;
+> +       int crash_reason_smem;
 
-Hi Akash,
-Can you add this patch to your tree, as Rob indicated above?
+Is it signed for some reason?
 
-thanks.
--- 
-~Randy
+> +};
+> +
+>  struct q6v5_wcss {
+>         struct device *dev;
+> =20
+> @@ -92,6 +98,8 @@ struct q6v5_wcss {
+>         void *mem_region;
+>         size_t mem_size;
+> =20
+> +       int crash_reason_smem;
+> +
 
+Same question, why not unsigned?
+
+>         struct qcom_rproc_glink glink_subdev;
+>         struct qcom_rproc_ssr ssr_subdev;
+>  };
+> @@ -430,7 +438,7 @@ static int q6v5_wcss_load(struct rproc *rproc, const =
+struct firmware *fw)
+>                                      wcss->mem_size, &wcss->mem_reloc);
+>  }
+> =20
+> -static const struct rproc_ops q6v5_wcss_ops =3D {
+> +static const struct rproc_ops q6v5_wcss_ipq8074_ops =3D {
+>         .start =3D q6v5_wcss_start,
+>         .stop =3D q6v5_wcss_stop,
+>         .da_to_va =3D q6v5_wcss_da_to_va,
+> @@ -530,12 +538,17 @@ static int q6v5_alloc_memory_region(struct q6v5_wcs=
+s *wcss)
+> =20
+>  static int q6v5_wcss_probe(struct platform_device *pdev)
+>  {
+> +       const struct wcss_data *desc;
+>         struct q6v5_wcss *wcss;
+>         struct rproc *rproc;
+>         int ret;
+> =20
+> -       rproc =3D rproc_alloc(&pdev->dev, pdev->name, &q6v5_wcss_ops,
+> -                           "IPQ8074/q6_fw.mdt", sizeof(*wcss));
+> +       desc =3D of_device_get_match_data(&pdev->dev);
+
+Use device_get_match_data() and drop the of_device.h include.
+
+> +       if (!desc)
+> +               return -EINVAL;
+> +
+> +       rproc =3D rproc_alloc(&pdev->dev, pdev->name, &q6v5_wcss_ipq8074_=
+ops,
+> +                           desc->firmware_name, sizeof(*wcss));
+>         if (!rproc) {
+>                 dev_err(&pdev->dev, "failed to allocate rproc\n");
+>                 return -ENOMEM;
+> @@ -587,8 +602,14 @@ static int q6v5_wcss_remove(struct platform_device *=
+pdev)
+>         return 0;
+>  }
+> =20
+> +static const struct wcss_data wcss_ipq8074_res_init =3D {
+> +       .firmware_name =3D "IPQ8074/q6_fw.mdt",
+> +       .crash_reason_smem =3D WCSS_CRASH_REASON,
+> +};
+> +
+>  static const struct of_device_id q6v5_wcss_of_match[] =3D {
+> -       { .compatible =3D "qcom,ipq8074-wcss-pil" },
+> +       { .compatible =3D "qcom,ipq8074-wcss-pil", .data =3D &wcss_ipq807=
+4_res_init },
+> +
+
+Please remove this extra newline.
+
+>         { },
+>  };
+>  MODULE_DEVICE_TABLE(of, q6v5_wcss_of_match);
