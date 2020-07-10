@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B173AC43464
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B152C43462
 	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 23:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E75320657
+	by mail.kernel.org (Postfix) with ESMTP id 335A320657
 	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 23:03:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k8zU2rjL"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YqfD9if0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgGJXD1 (ORCPT
+        id S1726794AbgGJXCr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 19:03:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38538 "EHLO
+        Fri, 10 Jul 2020 19:02:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726903AbgGJXCr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 19:02:47 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB177C08E6DC
-        for <devicetree@vger.kernel.org>; Fri, 10 Jul 2020 16:02:47 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id q17so2839572pls.9
-        for <devicetree@vger.kernel.org>; Fri, 10 Jul 2020 16:02:47 -0700 (PDT)
+        with ESMTP id S1726523AbgGJXCq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 19:02:46 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6556CC08C5DD
+        for <devicetree@vger.kernel.org>; Fri, 10 Jul 2020 16:02:46 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id 72so2857088ple.0
+        for <devicetree@vger.kernel.org>; Fri, 10 Jul 2020 16:02:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=SOEifiIh+gw1ksCpw3+MdPsiCbOdQ0cDfgdVRKb9Csc=;
-        b=k8zU2rjLwwu9xxH6CtqzfzziVe1vGy1bbnfaYS4aV6d8OBtTZkbwlSOJJvvmPXJbSR
-         e+lH31NsyffijpPqmezQuKlLqrpVO65l/rRqLmPGfkCVwXEwRCH5bYRYw15DCh6yEcR+
-         41eQMVmiDyHYBBVuEs5cYvgWCaYuLUL9AnpjQ=
+        bh=KDlhJEK8bEQDr4AEmZYceY0lLW1c8BenSCxp/VqeSg0=;
+        b=YqfD9if0lPwu+n0J/F3oyLF5d7cL9WsuOonWuP7ZQ7PJ7PHL9OzPXYWf5BPO5qfemv
+         SwrxE7PTMHZjhNQO4tH9fw+9KDQRmBRGfNSVmqpTEvMVsy78vW07p1D36O+Is2YPUW6P
+         wG6iJcV73pywBqYswv6ZmNfhjbzdG/8cq++88=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=SOEifiIh+gw1ksCpw3+MdPsiCbOdQ0cDfgdVRKb9Csc=;
-        b=umpqEFLDY6eEGYCbM43Zuz9S74PzKVZ0dtcSNZYbEBtMhKj5sr7ZKtKMsze1o4kQHA
-         on7zjpv8FhYv7fZn0EhBmclIG90epLnsXo9B4X7CUGLzuGAXRrC1zr7BY7OtZUUZRjKE
-         GFNQbjGr6b8Z/zaMicI3EJ+knv+XK3tCB8mWrAej7tbKaY2FQz/dnvUbZmVssXNHUDtm
-         C9eQquv+FTMeXEflFp5ZBK85nqshsnFPLjzC8xYdrr1qepDn7jKkhgAuzWzg3Wa4EDF0
-         P+0uS/4pw0o8njg4FQSWMEnNO/NA8+GFkdXXF3qfrxtfry2ak91q+irytzSXql4ROI9L
-         wLgw==
-X-Gm-Message-State: AOAM533/13ed4RZ6aMU/Pz7e/yoxH9ikXUvJMvgoKDgjjacXUDhpjZx6
-        j4kZUCx8u7ImnZMC6Py2XMV4ZQ==
-X-Google-Smtp-Source: ABdhPJzdSjyDJg2gb4e4NI73Cop7js70UClKGQIJKPQF33PAmLwF3oSqZOi78uGWEWIaJ81gbrnxfg==
-X-Received: by 2002:a17:90a:cc:: with SMTP id v12mr7439843pjd.96.1594422167234;
-        Fri, 10 Jul 2020 16:02:47 -0700 (PDT)
+        bh=KDlhJEK8bEQDr4AEmZYceY0lLW1c8BenSCxp/VqeSg0=;
+        b=KlfCIBvw3xQo8/f5MQihnU2L47Sz+G2H53io2Ijc53Jf/PdxdZr+EbW0fe65hZnmme
+         dH0t7ZN3AgLsh027Sdp8JdIaUfvV5aFMq/cZGuZNGvDE72D4gBloLT9Kf0iS9cD+Cloy
+         ZgmQikazLJkbcsCk6VvPSzw6yqGsplhiaaRI3hKfcAy9Z2i/3s+Guf8mUMJw0y9jScoB
+         Fa/69iGXMEjHyp6BZ8z6vR9/woqZqzZjBWESyJ78slWJbiHXxnU4Hr0BVWHVd7QWjYpF
+         hurDKL7wr8lJSHzmQUxGpUMbUrIDy55MiMTo6BmL3uSM5lL4oIOX7q3Pjsdql/4g8UxE
+         rKdA==
+X-Gm-Message-State: AOAM5301m/5ukWngvrHH6jMYaLguUj9m5oBmYsoPsXucl6r5q0T5OoPp
+        mDP4+EL/v+RE584efCOfx3bs/g==
+X-Google-Smtp-Source: ABdhPJwSPO3qFeV3DepwLxB8csth6F4T+/Ne+JcPTYmGZnrrv09IRasdUI54wXZe6z/2aXeJ8r0VXw==
+X-Received: by 2002:a17:90a:f3ca:: with SMTP id ha10mr7762940pjb.46.1594422165962;
+        Fri, 10 Jul 2020 16:02:45 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
-        by smtp.gmail.com with ESMTPSA id my9sm7266836pjb.44.2020.07.10.16.02.46
+        by smtp.gmail.com with ESMTPSA id my9sm7266836pjb.44.2020.07.10.16.02.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 16:02:46 -0700 (PDT)
+        Fri, 10 Jul 2020 16:02:45 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Rob Herring <robh+dt@kernel.org>, Rob Clark <robdclark@gmail.com>,
         Sean Paul <sean@poorly.run>, Andy Gross <agross@kernel.org>,
@@ -65,9 +65,9 @@ Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
         Douglas Anderson <dianders@chromium.org>,
         Daniel Vetter <daniel@ffwll.ch>,
         David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/9] dt-bindings: msm/dpu: Add simple-bus to dpu bindings
-Date:   Fri, 10 Jul 2020 16:02:17 -0700
-Message-Id: <20200710160131.2.Id4b5c92d28b7350d047218774afaf69b683651e0@changeid>
+Subject: [PATCH 1/9] drm/msm: Use the devm variant of of_platform_populate()
+Date:   Fri, 10 Jul 2020 16:02:16 -0700
+Message-Id: <20200710160131.1.I3f7862adcb0806d56a8c7260857d887100b06b41@changeid>
 X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
 In-Reply-To: <20200710230224.2265647-1-dianders@chromium.org>
 References: <20200710230224.2265647-1-dianders@chromium.org>
@@ -78,45 +78,80 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-We have a whole bunch of child devices that we really just want
-treated as other devices to instantiate.  Add the "simple-bus"
-property for this.
-
-Commit-notes
-This bindings file really needs to move over to yaml.  Hopefully
-someone at Qualcomm who's working on display code can help with that.
-
-Right now on Linux we have a manual call to of_platform_populate() to
-populate our children.  That's pretty non-ideal as described in
-another patch in this series and I'm trying to remove it.
-
-I'm not sure how much of a hack to consider "simple-bus".  I've seen
-it used like this before, but if folks tell me that it's terrible then
-I guess we'll have to figure some other way out of our crazy
--EPROBE_DEFER loop in Linux.
-END
+Let's save ourselves some hassle and use the devm variant of
+of_platform_populate() do we don't need to worry about manually
+depopulating.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
- Documentation/devicetree/bindings/display/msm/dpu.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/msm/msm_drv.c | 20 ++++----------------
+ 1 file changed, 4 insertions(+), 16 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/msm/dpu.txt b/Documentation/devicetree/bindings/display/msm/dpu.txt
-index 551ae26f60da..b88269524365 100644
---- a/Documentation/devicetree/bindings/display/msm/dpu.txt
-+++ b/Documentation/devicetree/bindings/display/msm/dpu.txt
-@@ -8,7 +8,9 @@ The DPU display controller is found in SDM845 SoC.
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index f6ce40bf3699..78b09fde9e29 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -1208,7 +1208,7 @@ static int add_display_components(struct device *dev,
+ 	if (of_device_is_compatible(dev->of_node, "qcom,mdss") ||
+ 	    of_device_is_compatible(dev->of_node, "qcom,sdm845-mdss") ||
+ 	    of_device_is_compatible(dev->of_node, "qcom,sc7180-mdss")) {
+-		ret = of_platform_populate(dev->of_node, NULL, NULL, dev);
++		ret = devm_of_platform_populate(dev);
+ 		if (ret) {
+ 			DRM_DEV_ERROR(dev, "failed to populate children devices\n");
+ 			return ret;
+@@ -1217,7 +1217,6 @@ static int add_display_components(struct device *dev,
+ 		mdp_dev = device_find_child(dev, NULL, compare_name_mdp);
+ 		if (!mdp_dev) {
+ 			DRM_DEV_ERROR(dev, "failed to find MDSS MDP node\n");
+-			of_platform_depopulate(dev);
+ 			return -ENODEV;
+ 		}
  
- MDSS:
- Required properties:
--- compatible:  "qcom,sdm845-mdss", "qcom,sc7180-mdss"
-+- compatible:  One of:
-+  - "qcom,sdm845-mdss", "simple-bus"
-+  - "qcom,sc7180-mdss", "simple-bus"
- - reg: physical base address and length of contoller's registers.
- - reg-names: register region names. The following region is required:
-   * "mdss"
+@@ -1232,8 +1231,6 @@ static int add_display_components(struct device *dev,
+ 	}
+ 
+ 	ret = add_components_mdp(mdp_dev, matchptr);
+-	if (ret)
+-		of_platform_depopulate(dev);
+ 
+ 	return ret;
+ }
+@@ -1300,30 +1297,21 @@ static int msm_pdev_probe(struct platform_device *pdev)
+ 
+ 	ret = add_gpu_components(&pdev->dev, &match);
+ 	if (ret)
+-		goto fail;
++		return ret;
+ 
+ 	/* on all devices that I am aware of, iommu's which can map
+ 	 * any address the cpu can see are used:
+ 	 */
+ 	ret = dma_set_mask_and_coherent(&pdev->dev, ~0);
+ 	if (ret)
+-		goto fail;
+-
+-	ret = component_master_add_with_match(&pdev->dev, &msm_drm_ops, match);
+-	if (ret)
+-		goto fail;
+-
+-	return 0;
++		return ret;
+ 
+-fail:
+-	of_platform_depopulate(&pdev->dev);
+-	return ret;
++	return component_master_add_with_match(&pdev->dev, &msm_drm_ops, match);
+ }
+ 
+ static int msm_pdev_remove(struct platform_device *pdev)
+ {
+ 	component_master_del(&pdev->dev, &msm_drm_ops);
+-	of_platform_depopulate(&pdev->dev);
+ 
+ 	return 0;
+ }
 -- 
 2.27.0.383.g050319c2ae-goog
 
