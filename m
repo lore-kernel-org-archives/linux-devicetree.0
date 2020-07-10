@@ -2,103 +2,173 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C03C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 20:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C7CC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 20:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75F1720748
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 20:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B0452077D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 20:45:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VpPsz/l3"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Jnss7r9y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgGJUby (ORCPT
+        id S1727082AbgGJUps (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 16:31:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbgGJUby (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 16:31:54 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60CB5C08C5DC
-        for <devicetree@vger.kernel.org>; Fri, 10 Jul 2020 13:31:54 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id q198so6588125qka.2
-        for <devicetree@vger.kernel.org>; Fri, 10 Jul 2020 13:31:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Ws4QXKiJxpLBjxT3ZdUkj3gHF/c7NBJAkVNuujQ6ISM=;
-        b=VpPsz/l3Q/jW9/X/+IEPE09NF2F44rLpqxyQfU8F23od0x+pfqeLavHtknXXvgHBpA
-         FDTBj8NmfsGqgTJcRWBsQHWEaUjmj9WipTlTf0pqLc4T+YyPElW0U5nLHj+9gq0MKOV/
-         Spi3JShNUvheuj5/8YeavmmgcObGG7DUQcJl8srkbho1paXaW2sZ5DPYXN5qLmgs0GGj
-         4JQsnezJntwqzw46oP/tPIA2GChZvmDEAQVM/sOaqv/Hkvllz91ArmbTK8sOGj8IE6jo
-         AawzcvPoiBVIEjsD3j1l8hvT4z6lt2+UXS9irNX2Ri3ZrIk7Lm6l1SdIjX8FtbhYFnE7
-         2vDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Ws4QXKiJxpLBjxT3ZdUkj3gHF/c7NBJAkVNuujQ6ISM=;
-        b=Jo5F4XtyYzm98dl4ncmKgrMLLOcAPhorwP+wpBI7CzbHw/qrucp5Ahxq63/z0jOujW
-         ndkv9hRLySSnMN4U8X/hQ0tiYmDBV0XDSRsf5SwQ8onh7PWvkThqFdCT31GvAf+iFsIR
-         8vLcKupMtpYiHSmlvntQuOozTNz+/o5KBNt7GOaydH5FRq3lTb7lqBLtqzOUop6kfEer
-         BN0a0EtPR2PvW0Yo3QATIuDO+5KDEHEfSFMe4Rnh7l8+pzDg0oPWe5zqm2CtrPpjaEHC
-         nKx0vz/9FlsDxc0Pl4daBpXl2NPJfQsNFHDY2etrT2VocwJrKE5RCNyw9v7SYs5mUumR
-         1gZg==
-X-Gm-Message-State: AOAM531GemShLih2thTvvuesmG8BBhjJEZ5DuCU8vhdbHdATRXxDREOC
-        E8fJVMLW2R7zjNKcdMCbngq53NEPVBo=
-X-Google-Smtp-Source: ABdhPJyJ/VnbG31NRS7njtdyv2IixhI4CSBxLqjrhQ/KwM3/XeZ+y3/QZpAIXPHoyXyTa4x2YTSUaw==
-X-Received: by 2002:a37:a507:: with SMTP id o7mr66248445qke.406.1594413113405;
-        Fri, 10 Jul 2020 13:31:53 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14c:482:92b:9d6d:2996:7c26:fb1d])
-        by smtp.gmail.com with ESMTPSA id 130sm8651818qkn.82.2020.07.10.13.31.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2020 13:31:52 -0700 (PDT)
-From:   Fabio Estevam <festevam@gmail.com>
-To:     mripard@kernel.org
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH] dt-bindings: display: sun8i-mixer: Remove duplicated 'iommus'
-Date:   Fri, 10 Jul 2020 17:31:24 -0300
-Message-Id: <20200710203124.20044-1-festevam@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 10 Jul 2020 16:45:48 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:44602 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726828AbgGJUps (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 16:45:48 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06AKjhia097205;
+        Fri, 10 Jul 2020 15:45:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594413943;
+        bh=GzI/OQHYQyY+r81RqEfqUxeikbSRUmnkZbd5vzTadJU=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=Jnss7r9yJXvI8iIiUl9SZwbT3sf962jIKdY/js7ebXP87ESPVLF9SEH5DtqM88IcN
+         4Zer95XtV9Qm9p/NUg/NoJqtyRxABN4zqZ/Vs/PyYnv4degEeiCX4mPgx3jskXPx+O
+         B/gQ6fwuQmS+br8m+IBSR/02mwQHm7WF8bVml96o=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06AKjhNG124279
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 10 Jul 2020 15:45:43 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 10
+ Jul 2020 15:45:42 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 10 Jul 2020 15:45:42 -0500
+Received: from [10.250.34.57] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06AKjgDK130595;
+        Fri, 10 Jul 2020 15:45:42 -0500
+Subject: Re: [PATCH 00/13] Add IPU & DSP remoteprocs on OMAP4 and OMAP5
+From:   Suman Anna <s-anna@ti.com>
+To:     Tony Lindgren <tony@atomide.com>
+CC:     <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Tero Kristo <t-kristo@ti.com>
+References: <20200709231954.1973-1-s-anna@ti.com>
+ <20200710165814.GF5849@atomide.com>
+ <41bd2bb4-06fe-5f70-22cf-ce9cedc8bbc3@ti.com>
+ <4602b219-6822-4ebc-66c6-c64740793938@ti.com>
+ <20200710175907.GH5849@atomide.com>
+ <bc05fbe7-be02-e44e-3461-69f7c06b7d34@ti.com>
+Message-ID: <557ebada-4a2f-32ed-fbea-2daba8daa073@ti.com>
+Date:   Fri, 10 Jul 2020 15:45:42 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <bc05fbe7-be02-e44e-3461-69f7c06b7d34@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Commit 13871279ff5c ("arm64: dts: allwinner: h6: Fix Cedrus IOMMU usage")
-introduced a double instance of 'iommus' causing the following build
-error with 'make dt_binding_check':
+On 7/10/20 1:29 PM, Suman Anna wrote:
+> On 7/10/20 12:59 PM, Tony Lindgren wrote:
+>> * Suman Anna <s-anna@ti.com> [200710 17:29]:
+>>> FYI, the following one-line removal is enough for me to not see the 
+>>> error.
+>>>
+>>> diff --git a/arch/arm/mach-omap2/vc.c b/arch/arm/mach-omap2/vc.c
+>>> index 86f1ac4c2412..b80c9dff81c4 100644
+>>> --- a/arch/arm/mach-omap2/vc.c
+>>> +++ b/arch/arm/mach-omap2/vc.c
+>>> @@ -44,7 +44,6 @@
+>>>   #define OMAP4_VDD_DEFAULT_VAL  \
+>>>          (OMAP4430_VDD_I2C_DISABLE_MASK | \
+>>>           OMAP4430_VDD_IVA_PRESENCE | OMAP4430_VDD_MPU_PRESENCE | \
+>>> -        OMAP4430_AUTO_CTRL_VDD_IVA(OMAP4430_AUTO_CTRL_VDD_RET) | \
+>>>           OMAP4430_AUTO_CTRL_VDD_MPU(OMAP4430_AUTO_CTRL_VDD_RET) | \
+>>>           OMAP4430_AUTO_CTRL_VDD_CORE(OMAP4430_AUTO_CTRL_VDD_RET))
+>>>
+>>
+>> OK.
+>>
+>> Below is an untested attempt to sync the 4460 opp values with
+>> what earlier TI kernels had. Not sure if this help, might be worth
+>> testing :) My pandaboard-es seems to have a corrupt sdio card.
+> 
+> Yeah, mine is the regular pandaboard with 4430, so the below patch will 
+> not make any difference.
+> 
+> regards
+> Suman
+> 
+>>
+>> Regards,
+>>
+>> Tony
+>>
+>> 8< ---------------------
+>> diff --git a/arch/arm/mach-omap2/opp4xxx_data.c 
+>> b/arch/arm/mach-omap2/opp4xxx_data.c
+>> --- a/arch/arm/mach-omap2/opp4xxx_data.c
+>> +++ b/arch/arm/mach-omap2/opp4xxx_data.c
+>> @@ -66,21 +66,23 @@ struct omap_volt_data 
+>> omap443x_vdd_core_volt_data[] = {
+>>   };
+>>   #define OMAP4460_VDD_MPU_OPP50_UV        1025000
+>> -#define OMAP4460_VDD_MPU_OPP100_UV        1200000
+>> -#define OMAP4460_VDD_MPU_OPPTURBO_UV        1313000
+>> -#define OMAP4460_VDD_MPU_OPPNITRO_UV        1375000
+>> +#define OMAP4460_VDD_MPU_OPP100_UV        1203000
+>> +#define OMAP4460_VDD_MPU_OPPTURBO_UV        1317000
+>> +#define OMAP4460_VDD_MPU_OPPNITRO_UV        1380000
+>> +#define OMAP4460_VDD_MPU_OPPNITROSB_UV        1390000
 
-found duplicate key "iommus" with value "{}" (original value: "{}")
-  in "<unicode string>", line 45, column 3
+I am not sure about this, I see it as 1380 for both OPPNITRO and OPPNITROSB.
 
-Remove the double occurrence to fix this problem.
+>>   struct omap_volt_data omap446x_vdd_mpu_volt_data[] = {
+>>       VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPP50_UV, 
+>> OMAP44XX_CONTROL_FUSE_MPU_OPP50, 0xf4, 0x0c),
+>>       VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPP100_UV, 
+>> OMAP44XX_CONTROL_FUSE_MPU_OPP100, 0xf9, 0x16),
+>>       VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPPTURBO_UV, 
+>> OMAP44XX_CONTROL_FUSE_MPU_OPPTURBO, 0xfa, 0x23),
+>>       VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPPNITRO_UV, 
+>> OMAP44XX_CONTROL_FUSE_MPU_OPPNITRO, 0xfa, 0x27),
+>> +    VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPPNITROSB_UV, 
+>> OMAP44XX_CONTROL_FUSE_MPU_OPPNITROSB, 0xfa, 0x27),
+>>       VOLT_DATA_DEFINE(0, 0, 0, 0),
+>>   };
+>> -#define OMAP4460_VDD_IVA_OPP50_UV        1025000
+>> -#define OMAP4460_VDD_IVA_OPP100_UV        1200000
+>> -#define OMAP4460_VDD_IVA_OPPTURBO_UV        1313000
+>> +#define OMAP4460_VDD_IVA_OPP50_UV         950000
+>> +#define OMAP4460_VDD_IVA_OPP100_UV        1140000
 
-Fixes: 13871279ff5c ("arm64: dts: allwinner: h6: Fix Cedrus IOMMU usage")
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
----
- .../bindings/display/allwinner,sun8i-a83t-de2-mixer.yaml       | 3 ---
- 1 file changed, 3 deletions(-)
+Btw, this should be 1114000
 
-diff --git a/Documentation/devicetree/bindings/display/allwinner,sun8i-a83t-de2-mixer.yaml b/Documentation/devicetree/bindings/display/allwinner,sun8i-a83t-de2-mixer.yaml
-index c2fbf0b06d32..c040eef56518 100644
---- a/Documentation/devicetree/bindings/display/allwinner,sun8i-a83t-de2-mixer.yaml
-+++ b/Documentation/devicetree/bindings/display/allwinner,sun8i-a83t-de2-mixer.yaml
-@@ -42,9 +42,6 @@ properties:
-   resets:
-     maxItems: 1
- 
--  iommus:
--    maxItems: 1
--
-   ports:
-     type: object
-     description: |
--- 
-2.17.1
+>> +#define OMAP4460_VDD_IVA_OPPTURBO_UV        1291000
+>>   #define OMAP4460_VDD_IVA_OPPNITRO_UV        1375000
+>>   struct omap_volt_data omap446x_vdd_iva_volt_data[] = {
+>> @@ -91,8 +93,8 @@ struct omap_volt_data omap446x_vdd_iva_volt_data[] = {
+>>       VOLT_DATA_DEFINE(0, 0, 0, 0),
+>>   };
+>> -#define OMAP4460_VDD_CORE_OPP50_UV        1025000
+>> -#define OMAP4460_VDD_CORE_OPP100_UV        1200000
+>> +#define OMAP4460_VDD_CORE_OPP50_UV         962000
+>> +#define OMAP4460_VDD_CORE_OPP100_UV        1127000
+>>   #define OMAP4460_VDD_CORE_OPP100_OV_UV        1250000
+>>   struct omap_volt_data omap446x_vdd_core_volt_data[] = {
+>>
+> 
+
+Atleast this update and the previous OMAP4430 patch matches up to what I 
+can see from the Data Manual. So, guess you can add an official version 
+of this patch.
+
+regards
+Suman
 
