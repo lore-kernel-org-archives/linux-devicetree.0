@@ -2,190 +2,297 @@ Return-Path: <SRS0=VTvW=AV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E27AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 21:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E4FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 21:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 575FC206C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 21:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B46682068F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jul 2020 21:00:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ErkAPC02"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EnMxoAKL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726203AbgGJVDw (ORCPT
+        id S1726208AbgGJVAZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jul 2020 17:03:52 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:41064 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbgGJVDw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 10 Jul 2020 17:03:52 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594415030; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=/Y+F2VRKOW+F7AotxxwUsOTyOLysK88Rj1ETIuOMgCU=; b=ErkAPC02khGmIDdZMcJtOdZDkeXXBXMh0tXVUOoCmNbjOsPwSoXdC2dytScKOZntX87nEkmb
- bjFSnST6hrTkw9CENZxsIBAe4IsHwFdv7vYA9rHL9T6u4ApZovdhQxakrNgg8hT6WaasG2/Q
- y0lF2vrv5TAEiEYiNUaW6EWKLy4=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n18.prod.us-east-1.postgun.com with SMTP id
- 5f08d7b503c8596cdb04592c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 21:03:49
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C0D63C433A0; Fri, 10 Jul 2020 21:03:47 +0000 (UTC)
-Received: from [192.168.1.9] (unknown [117.210.185.108])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akhilpo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 599D8C433C6;
-        Fri, 10 Jul 2020 21:03:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 599D8C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akhilpo@codeaurora.org
-Subject: Re: [Freedreno] [PATCH v4 4/7] drm: msm: a6xx: use dev_pm_opp_set_bw
- to scale DDR
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Jonathan <jonathan@marek.ca>,
-        saravanak@google.com,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        dri-devel@freedesktop.org, Viresh Kumar <viresh.kumar@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-References: <1594324828-9571-1-git-send-email-akhilpo@codeaurora.org>
- <1594324828-9571-5-git-send-email-akhilpo@codeaurora.org>
- <CAF6AEGv4Nc6ZAxGoCC1s5KT=rxLR6uZDHfDnWZRnnLhqnegOpA@mail.gmail.com>
-From:   Akhil P Oommen <akhilpo@codeaurora.org>
-Message-ID: <17afba8b-dae5-d724-4c8c-8b4c79fcfb84@codeaurora.org>
-Date:   Sat, 11 Jul 2020 02:33:40 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 10 Jul 2020 17:00:25 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:34972 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbgGJVAY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jul 2020 17:00:24 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06AKxI2C051993;
+        Fri, 10 Jul 2020 15:59:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594414758;
+        bh=tT1VHuhKTHIe/m651i8A9lbZsgn2+ODXje4UgLJIXoY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=EnMxoAKLvpB22zy7s9sTK3BugDYI2eK3DyL5fgtF5gpacVcV9EuMjQr1GsmDl5ER9
+         6Fu8XeNBbO2E4k+h+Ww3eerWaZqI8uzvII8uqpD9xQAcqV2LAQtOoXB5sXPyWqducv
+         vDxsR0W+ze1CXSizmoR/Pg9iY45jtIrQWngZR4kg=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06AKxIFj046058
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 10 Jul 2020 15:59:18 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 10
+ Jul 2020 15:59:18 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 10 Jul 2020 15:59:17 -0500
+Received: from [10.250.34.57] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06AKxHtu027634;
+        Fri, 10 Jul 2020 15:59:17 -0500
+Subject: Re: [PATCHv3 3/6] irqchip/irq-pruss-intc: Add support for shared and
+ invalid interrupts
+To:     Marc Zyngier <maz@kernel.org>,
+        Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+CC:     <tglx@linutronix.de>, <jason@lakedaemon.net>, <robh+dt@kernel.org>,
+        <lee.jones@linaro.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <david@lechnology.com>,
+        <wmills@ti.com>
+References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <1593699479-1445-4-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <2a6b0391f1395eb0aa15ffee6769184e@kernel.org>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <3a73bb14-9f7b-970d-fbae-f9c7bb7bdf1e@ti.com>
+Date:   Fri, 10 Jul 2020 15:59:17 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAF6AEGv4Nc6ZAxGoCC1s5KT=rxLR6uZDHfDnWZRnnLhqnegOpA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <2a6b0391f1395eb0aa15ffee6769184e@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Marc,
 
-On 7/11/2020 1:11 AM, Rob Clark wrote:
-> On Thu, Jul 9, 2020 at 1:01 PM Akhil P Oommen <akhilpo@codeaurora.org> wrote:
->> From: Sharat Masetty <smasetty@codeaurora.org>
+On 7/2/20 12:44 PM, Marc Zyngier wrote:
+> On 2020-07-02 15:17, Grzegorz Jaszczyk wrote:
+>> From: Suman Anna <s-anna@ti.com>
 >>
->> This patches replaces the previously used static DDR vote and uses
->> dev_pm_opp_set_bw() to scale GPU->DDR bandwidth along with scaling
->> GPU frequency. Also since the icc path voting is handled completely
->> in the opp driver, remove the icc_path handle and its usage in the
->> drm driver.
+>> The PRUSS INTC has a fixed number of output interrupt lines that are
+>> connected to a number of processors or other PRUSS instances or other
+>> devices (like DMA) on the SoC. The output interrupt lines 2 through 9
+>> are usually connected to the main Arm host processor and are referred
+>> to as host interrupts 0 through 7 from ARM/MPU perspective.
 >>
->> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
->> Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
+>> All of these 8 host interrupts are not always exclusively connected
+>> to the Arm interrupt controller. Some SoCs have some interrupt lines
+>> not connected to the Arm interrupt controller at all, while a few others
+>> have the interrupt lines connected to multiple processors in which they
+>> need to be partitioned as per SoC integration needs. For example, AM437x
+>> and 66AK2G SoCs have 2 PRUSS instances each and have the host interrupt 5
+>> connected to the other PRUSS, while AM335x has host interrupt 0 shared
+>> between MPU and TSC_ADC and host interrupts 6 & 7 shared between MPU and
+>> a DMA controller.
+>>
+>> Add support to the PRUSS INTC driver to allow both these shared and
+>> invalid interrupts by not returning a failure if any of these interrupts
+>> are skipped from the corresponding INTC DT node.
+> 
+> That's not exactly "adding support", is it? It really is "ignore these
+> interrupts because they are useless from the main CPU's perspective",
+> right?
+
+Correct. We can rephrase this to something like
+"Add logic to the PRUSS INTC driver to ignore.."
+
+> 
+>>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
 >> ---
->>   drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 25 +++++++++++++++++--------
->>   1 file changed, 17 insertions(+), 8 deletions(-)
+>> v2->v3:
+>> - Extra checks for (intc->irqs[i]) in error/remove path was moved from
+>>   "irqchip/irq-pruss-intc: Add a PRUSS irqchip driver for PRUSS
+>>   interrupts" to this patch
+>> v1->v2:
+>> - https://patchwork.kernel.org/patch/11069757/
+>> ---
+>>  drivers/irqchip/irq-pruss-intc.c | 73 
+>> +++++++++++++++++++++++++++++++++++++---
+>>  1 file changed, 68 insertions(+), 5 deletions(-)
 >>
->> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
->> index b547339..6fbfd7d 100644
->> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
->> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
->> @@ -123,7 +123,7 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
+>> diff --git a/drivers/irqchip/irq-pruss-intc.c 
+>> b/drivers/irqchip/irq-pruss-intc.c
+>> index fb3dda3..49c936f 100644
+>> --- a/drivers/irqchip/irq-pruss-intc.c
+>> +++ b/drivers/irqchip/irq-pruss-intc.c
+>> @@ -65,11 +65,15 @@
+>>   * @irqs: kernel irq numbers corresponding to PRUSS host interrupts
+>>   * @base: base virtual address of INTC register space
+>>   * @domain: irq domain for this interrupt controller
+>> + * @shared_intr: bit-map denoting if the MPU host interrupt is shared
+> 
+> nit: bitmap
+
+ok
+
+> 
+>> + * @invalid_intr: bit-map denoting if host interrupt is not connected 
+>> to MPU
+>>   */
+>>  struct pruss_intc {
+>>      unsigned int irqs[MAX_NUM_HOST_IRQS];
+>>      void __iomem *base;
+>>      struct irq_domain *domain;
+>> +    u16 shared_intr;
+>> +    u16 invalid_intr;
+> 
+> Please represent bitmaps as an unsigned long.
+
+ok. We have atmost 8 interrupts coming in, but agree on the change since 
+we are using the BIT() macro below.
+
+> 
+>>  };
 >>
->>          if (!gmu->legacy) {
->>                  a6xx_hfi_set_freq(gmu, gmu->current_perf_index);
->> -               icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
->> +               dev_pm_opp_set_bw(&gpu->pdev->dev, opp);
-> What is the status of the patch to add dev_pm_opp_set_bw()?  If it is
-> ready to go, and I get an ack-by from the OPP maintainer, I suppose I
-> could merge it via drm/msm.
->
-> Otherwise should we consider pulling in a private copy of it into
-> drm/msm (and then drop it to use the helper in, hopefully, the next
-> cycle)?
->
-> I'm pulling the patches preceding this one into msm-next-staging to do
-> some testing.  And the dt patches following this one would normally
-> get merged via Bjorn.  At the moment, I'm not sure what to do with
-> this one.
->
-> BR,
-> -R
-I see Sibi's patch is already picked in opp/linux-next branch.
-https://kernel.googlesource.com/pub/scm/linux/kernel/git/vireshk/pm/+/b466542f331e221a3628c1cfe5ccff307d7d787f 
+>>  static inline u32 pruss_intc_read_reg(struct pruss_intc *intc,
+>> unsigned int reg)
+>> @@ -222,7 +226,8 @@ static int pruss_intc_probe(struct platform_device 
+>> *pdev)
+>>          "host_intr4", "host_intr5", "host_intr6", "host_intr7", };
+>>      struct device *dev = &pdev->dev;
+>>      struct pruss_intc *intc;
+>> -    int i, irq;
+>> +    int i, irq, count;
+>> +    u8 temp_intr[MAX_NUM_HOST_IRQS] = { 0 };
+>>
+>>      intc = devm_kzalloc(dev, sizeof(*intc), GFP_KERNEL);
+>>      if (!intc)
+>> @@ -235,6 +240,52 @@ static int pruss_intc_probe(struct 
+>> platform_device *pdev)
+>>          return PTR_ERR(intc->base);
+>>      }
+>>
+>> +    count = of_property_read_variable_u8_array(dev->of_node,
+>> +                           "ti,irqs-reserved",
+>> +                           temp_intr, 0,
+>> +                           MAX_NUM_HOST_IRQS);
+>> +    /*
+>> +     * The irqs-reserved is used only for some SoC's therefore not 
+>> having
+>> +     * this property is still valid
+>> +     */
+>> +    if (count == -EINVAL)
+>> +        count = 0;
+>> +    if (count < 0)
+>> +        return count;
+>> +
+>> +    for (i = 0; i < count; i++) {
+>> +        if (temp_intr[i] >= MAX_NUM_HOST_IRQS) {
+>> +            dev_warn(dev, "ignoring invalid reserved irq %d\n",
+>> +                 temp_intr[i]);
+>> +            continue;
+>> +        }
+>> +
+>> +        intc->invalid_intr |= BIT(temp_intr[i]);
+>> +    }
+>> +
+>> +    count = of_property_read_variable_u8_array(dev->of_node,
+>> +                           "ti,irqs-shared",
+>> +                           temp_intr, 0,
+>> +                           MAX_NUM_HOST_IRQS);
+>> +    /*
+>> +     * The irqs-shared is used only for some SoC's therefore not having
+>> +     * this property is still valid
+>> +     */
+>> +    if (count == -EINVAL)
+>> +        count = 0;
+>> +    if (count < 0)
+>> +        return count;
+>> +
+>> +    for (i = 0; i < count; i++) {
+>> +        if (temp_intr[i] >= MAX_NUM_HOST_IRQS) {
+>> +            dev_warn(dev, "ignoring invalid shared irq %d\n",
+>> +                 temp_intr[i]);
+>> +            continue;
+>> +        }
+>> +
+>> +        intc->shared_intr |= BIT(temp_intr[i]);
+>> +    }
+>> +
+> 
+> You probably want to move this in a separate function, since you populate a
+> common structure.
+> 
+>>      pruss_intc_init(intc);
+>>
+>>      /* always 64 events */
+>> @@ -244,8 +295,14 @@ static int pruss_intc_probe(struct 
+>> platform_device *pdev)
+>>          return -ENOMEM;
+>>
+>>      for (i = 0; i < MAX_NUM_HOST_IRQS; i++) {
+>> +        if (intc->invalid_intr & BIT(i))
+>> +            continue;
+>> +
+>>          irq = platform_get_irq_byname(pdev, irq_names[i]);
+>>          if (irq <= 0) {
+>> +            if (intc->shared_intr & BIT(i))
+>> +                continue;
+> 
+> I don't really understand why you are treating these "shared" interrupts
+> differently from the invalid ones. In all cases, they shouldn't be used.
+
+The behavior is the same in how we handle it, but the difference is that 
+an "invalid" one is never even connected to the ARM interrupt 
+controller, while the "shared" one is a choice. So, unless this 
+interrupt is being used/handled by a different processor/entity, you 
+would not see this skipped from the dts node.
+
+regards
+Suman
 
 
-Thanks,
--Akhil
+> 
+>> +
+>>              dev_err(dev, "platform_get_irq_byname failed for %s : %d\n",
+>>                  irq_names[i], irq);
+>>              goto fail_irq;
+>> @@ -259,8 +316,11 @@ static int pruss_intc_probe(struct 
+>> platform_device *pdev)
+>>      return 0;
+>>
+>>  fail_irq:
+>> -    while (--i >= 0)
+>> -        irq_set_chained_handler_and_data(intc->irqs[i], NULL, NULL);
+>> +    while (--i >= 0) {
+>> +        if (intc->irqs[i])
+>> +            irq_set_chained_handler_and_data(intc->irqs[i], NULL,
+>> +                             NULL);
+>> +    }
+>>
+>>      irq_domain_remove(intc->domain);
+>>
+>> @@ -273,8 +333,11 @@ static int pruss_intc_remove(struct 
+>> platform_device *pdev)
+>>      unsigned int hwirq;
+>>      int i;
+>>
+>> -    for (i = 0; i < MAX_NUM_HOST_IRQS; i++)
+>> -        irq_set_chained_handler_and_data(intc->irqs[i], NULL, NULL);
+>> +    for (i = 0; i < MAX_NUM_HOST_IRQS; i++) {
+>> +        if (intc->irqs[i])
+>> +            irq_set_chained_handler_and_data(intc->irqs[i], NULL,
+>> +                             NULL);
+>> +    }
+>>
+>>      for (hwirq = 0; hwirq < MAX_PRU_SYS_EVENTS; hwirq++)
+>>          irq_dispose_mapping(irq_find_mapping(intc->domain, hwirq));
+> 
+> Thanks,
+> 
+>          M.
 
->>                  return;
->>          }
->>
->> @@ -149,11 +149,7 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
->>          if (ret)
->>                  dev_err(gmu->dev, "GMU set GPU frequency error: %d\n", ret);
->>
->> -       /*
->> -        * Eventually we will want to scale the path vote with the frequency but
->> -        * for now leave it at max so that the performance is nominal.
->> -        */
->> -       icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
->> +       dev_pm_opp_set_bw(&gpu->pdev->dev, opp);
->>   }
->>
->>   unsigned long a6xx_gmu_get_freq(struct msm_gpu *gpu)
->> @@ -840,6 +836,19 @@ static void a6xx_gmu_set_initial_freq(struct msm_gpu *gpu, struct a6xx_gmu *gmu)
->>          dev_pm_opp_put(gpu_opp);
->>   }
->>
->> +static void a6xx_gmu_set_initial_bw(struct msm_gpu *gpu, struct a6xx_gmu *gmu)
->> +{
->> +       struct dev_pm_opp *gpu_opp;
->> +       unsigned long gpu_freq = gmu->gpu_freqs[gmu->current_perf_index];
->> +
->> +       gpu_opp = dev_pm_opp_find_freq_exact(&gpu->pdev->dev, gpu_freq, true);
->> +       if (IS_ERR_OR_NULL(gpu_opp))
->> +               return;
->> +
->> +       dev_pm_opp_set_bw(&gpu->pdev->dev, gpu_opp);
->> +       dev_pm_opp_put(gpu_opp);
->> +}
->> +
->>   int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
->>   {
->>          struct adreno_gpu *adreno_gpu = &a6xx_gpu->base;
->> @@ -864,7 +873,7 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
->>          }
->>
->>          /* Set the bus quota to a reasonable value for boot */
->> -       icc_set_bw(gpu->icc_path, 0, MBps_to_icc(3072));
->> +       a6xx_gmu_set_initial_bw(gpu, gmu);
->>
->>          /* Enable the GMU interrupt */
->>          gmu_write(gmu, REG_A6XX_GMU_AO_HOST_INTERRUPT_CLR, ~0);
->> @@ -1040,7 +1049,7 @@ int a6xx_gmu_stop(struct a6xx_gpu *a6xx_gpu)
->>                  a6xx_gmu_shutdown(gmu);
->>
->>          /* Remove the bus vote */
->> -       icc_set_bw(gpu->icc_path, 0, 0);
->> +       dev_pm_opp_set_bw(&gpu->pdev->dev, NULL);
->>
->>          /*
->>           * Make sure the GX domain is off before turning off the GMU (CX)
->> --
->> 2.7.4
->>
->> _______________________________________________
->> Freedreno mailing list
->> Freedreno@lists.freedesktop.org
->> https://lists.freedesktop.org/mailman/listinfo/freedreno
