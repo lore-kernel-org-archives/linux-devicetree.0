@@ -2,135 +2,91 @@ Return-Path: <SRS0=t1WB=AW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0632C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 20:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E9EC433E4
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 21:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA07520720
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 20:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 112E120748
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 21:12:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vJ5Xx45a"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="phqDGApF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727863AbgGKUiu (ORCPT
+        id S1727944AbgGKVMw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Jul 2020 16:38:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39080 "EHLO
+        Sat, 11 Jul 2020 17:12:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727021AbgGKUit (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jul 2020 16:38:49 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87177C08C5DD;
-        Sat, 11 Jul 2020 13:38:49 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id x9so3680114plr.2;
-        Sat, 11 Jul 2020 13:38:49 -0700 (PDT)
+        with ESMTP id S1727777AbgGKVMw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jul 2020 17:12:52 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E8C2C08E763
+        for <devicetree@vger.kernel.org>; Sat, 11 Jul 2020 14:12:51 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id q4so10406264lji.2
+        for <devicetree@vger.kernel.org>; Sat, 11 Jul 2020 14:12:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=s18ZnoqY14oQyb9zsNB7IKskd4ciL3caDyG6Woi/AEM=;
-        b=vJ5Xx45aOYtTCOtQgboD0wLF0wV9VohKeH2qAMq4yEjkW02oxAWFOPgFYZQmJTNqeb
-         Gdt5Usk0Ww0H7RhAydlb9TqQ05BDZ6fk4PLCJUSxgdM8ZrdtaHGo+OJeupVhBBLPHD+R
-         jiPz08e1/i50s9oi/4hBd6sXJafTcdEUgrqdy9IaD1RQ83GapK1LqgW0OxCeItkGfugb
-         c0py6C2BIyo/iNAEwO8TRhqqL2Gj/0vjSlx/ZSXARA4Ot8AtpKkjrodivMlROyLWfHUk
-         Q9uZYT68DNkPv2RCqnlj13Fh5Kv9VgVL3Pj4QUKk0f28mmPYBdt6Q7qm4R7Hl/x6RCaf
-         8x9g==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HgHuk3yasiCaHOFp70C3S20yfZ/46i84UF/qS9vnKcc=;
+        b=phqDGApFNUiMib/i5ixNCjfscEjoGG9dm6nGYkkuK89crua9hH+Tw7oPeffJC7QngU
+         RONlsfsM4KQjjbP4mPDj9QElR/qCsD9yv/qaQpjBCA6/oyONnMwuRKN7BB4cC0vhIiwY
+         kyAqCwFYD67vTukOgwi4SAOOJ3y4bWgX75+0NHKHaTOzQU1EfVepNIPR9OmInGdCueXn
+         tgKw5T5UbQ3RnhfyKVS6CypNrb7d2z6WvMAaa21KH/66WCySXG/dPzbDMW17AY9luj2q
+         ttE93UdvI29dJLsLDydAdDP/Ugx2PXg9S+F1Ay5326VSHypR6iQ4rRYxyLTwY7LgiIuE
+         ug/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=s18ZnoqY14oQyb9zsNB7IKskd4ciL3caDyG6Woi/AEM=;
-        b=cN+yv4k04aoLVlAuJ/QZyo25KNCqLFPu6calaBhC/PgPJXWUTytrQcH5MmaYKpaCSY
-         lSWmFLbNWpz1+0153luzyQRIFuxhJvGwf+h6vozrEcngGrntChrtw5Toa0ACeg4/lgN5
-         AQsNvM8EgnS1bIuLpcK1YkKnlpRL7evrqaSzT3UaG+8Aqq5nA3m7AHLfttKxljQumFnh
-         lcG0x0Z+kq5XYbUvkH0yzu4q9D015N8OOg1xQmYvYvpIEMMrI+kATykp4sRVSlsm+q5Q
-         SOCw4ArLoCA0B/3oR7yd7i7yodOq+43k2JDC0LL9FF66/Y3/Az+Xs/ooVooVUciabD25
-         XsLg==
-X-Gm-Message-State: AOAM530h8msf2NVAXoZMDrrSrMe1qMtfB8pVtU37TL9DFrnRmanAQe/F
-        9AKbfdVpd1uMEokYmnU9z+8=
-X-Google-Smtp-Source: ABdhPJwWfWJAxremhzhnn13oaBl/bg81BqdpITPFKNL6p1V8x/ck3m+nmRaM+Z1pyyLjP5gSMNYdEQ==
-X-Received: by 2002:a17:902:6194:: with SMTP id u20mr66275217plj.333.1594499929025;
-        Sat, 11 Jul 2020 13:38:49 -0700 (PDT)
-Received: from ?IPv6:2001:470:67:5b9:108c:a2dd:75d1:a903? ([2001:470:67:5b9:108c:a2dd:75d1:a903])
-        by smtp.gmail.com with ESMTPSA id d25sm8869503pgn.2.2020.07.11.13.38.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 11 Jul 2020 13:38:48 -0700 (PDT)
-Subject: Re: [PATCH v1 3/8] net: dsa: hellcreek: Add PTP clock support
-To:     Kurt Kanzenbach <kurt@linutronix.de>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org, Vladimir Oltean <olteanv@gmail.com>
-References: <20200710113611.3398-1-kurt@linutronix.de>
- <20200710113611.3398-4-kurt@linutronix.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <01981d4a-6e28-2789-6d15-5d825e7ce09b@gmail.com>
-Date:   Sat, 11 Jul 2020 13:38:47 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HgHuk3yasiCaHOFp70C3S20yfZ/46i84UF/qS9vnKcc=;
+        b=CycW2gK/Hib2nyJvECqYC4Kpx1eeB5/K7v5ZqOBk5NxSDwscyapUmRu3n2e1psfpne
+         Rpdh9ZEOmfLguLPLzhhoFOBZxUsESFPsfezVYB9LVhTn0khx2y2PtvqE/Qzt5DOYDf25
+         fU29gOcFpEuXFrkgUxqbEjQHg76KqTt83jWzsezp0ykrbbIq4PKpKL16NWlcXCANZdvt
+         3M/+Rwk7mz9ZnhxCvczFi3FR1EBat8+OqJKdohY29waHvjA/zSAn6l3wffhD+uzmcJ6T
+         USUFG6z2EzSAyHkS8nmhh3T+wCMaTp0GhZAqI42fliifJjAz2WPFZvBqjL1WzFpCa1Im
+         TniQ==
+X-Gm-Message-State: AOAM532TJo59CT+XoGxnO5lMOYJQ3fEAABzVjGKEBeiRrZWTmeuXjbyM
+        NhxTuwuqDjzMtZx//wKy7cXElANWSJjobhDRlf7I/w==
+X-Google-Smtp-Source: ABdhPJxfLX8yHShpQtjGOPNlAosmEBIPTvGmPBymA5g4mnnwVTGmE0j69am4R1NGfe/2Nhmcd1M6BuIbcIw3m1Dxgdc=
+X-Received: by 2002:a2e:7a1a:: with SMTP id v26mr27868119ljc.104.1594501970063;
+ Sat, 11 Jul 2020 14:12:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200710113611.3398-4-kurt@linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200701013320.130441-1-drew@beagleboard.org> <CACRpkdY3mUjczkJhV9BdZhUJGOgrbOMJnciBjOaPg6c9XUt8Ww@mail.gmail.com>
+ <CAEf4M_ArGSpN5-7_zt6mQaWm8XkqTcQiOnCbs3_obCipDC1KNA@mail.gmail.com>
+In-Reply-To: <CAEf4M_ArGSpN5-7_zt6mQaWm8XkqTcQiOnCbs3_obCipDC1KNA@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 11 Jul 2020 23:12:39 +0200
+Message-ID: <CACRpkdZRnS=xt6FKy6pSUQ+itkxoimAAKBc+=kupTXpEGg+b8g@mail.gmail.com>
+Subject: Re: [PATCH v4 0/2] pinctrl: single: support #pinctrl-cells = 2
+To:     Drew Fustini <pdp7pdp7@gmail.com>
+Cc:     Drew Fustini <drew@beagleboard.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, Jul 7, 2020 at 1:02 PM Drew Fustini <pdp7pdp7@gmail.com> wrote:
 
+> Which repo/branch is the best for me to use if I am going to be
+> posting any further dts patches?
 
-On 7/10/2020 4:36 AM, Kurt Kanzenbach wrote:
-> From: Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>
-> 
-> The switch has internal PTP hardware clocks. Add support for it. There are three
-> clocks:
-> 
->  * Synchronized
->  * Syntonized
->  * Free running
-> 
-> Currently the synchronized clock is exported to user space which is a good
-> default for the beginning. The free running clock might be exported later
-> e.g. for implementing 802.1AS-2011/2020 Time Aware Bridges (TAB). The switch
-> also supports cross time stamping for that purpose.
-> 
-> The implementation adds support setting/getting the time as well as offset and
-> frequency adjustments. However, the clock only holds a partial timeofday
-> timestamp. This is why we track the seconds completely in software (see overflow
-> work and last_ts).
-> 
-> Furthermore, add the PTP multicast addresses into the FDB to forward that
-> packages only to the CPU port where they are processed by a PTP program.
-> 
-> Signed-off-by: Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>
-> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
+Mine, pinctrl devel branch during this (v5.9) cycle I suppose.
 
-Are not you missing an depends on PTP_1588_CLOCK somewhere?
-
-> ---
-
-[snip]
-
->  
-> +static int hellcreek_setup_fdb(struct hellcreek *hellcreek)
-> +{
-> +	static struct hellcreek_fdb_entry ptp = {
-> +		/* MAC: 01-1B-19-00-00-00 */
-> +		.mac	      = { 0x01, 0x1b, 0x19, 0x00, 0x00, 0x00 },
-> +		.portmask     = 0x03,	/* Management ports */
-
-Should not this depend on the actual number of ports enabled by the user
-and so it would be more logical to program those entries (or update
-them) at port_enable() time?
--- 
-Florian
+Yours,
+Linus Walleij
