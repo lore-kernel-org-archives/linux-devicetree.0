@@ -2,172 +2,109 @@ Return-Path: <SRS0=t1WB=AW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89AFAC433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 04:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1A0C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 04:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69B012078B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 04:44:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UcCQhckE"
+	by mail.kernel.org (Postfix) with ESMTP id 90C46206A5
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 04:54:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgGKEo3 (ORCPT
+        id S1727081AbgGKEyt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Jul 2020 00:44:29 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:46216 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726786AbgGKEo3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sat, 11 Jul 2020 00:44:29 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594442667; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=/We79d7IRFCX6NpF/d6AI0I7gjDSb15un20bxx8zAJE=;
- b=UcCQhckEzJL1aE19ThpVal34rE3ZAWkC99t/Cwalm0SzyHmDUp/h3JaBAHYEO9pK9lLGV8Bl
- ZWvxOz/9gpTk4kGCAe0tvxEO/YG0ELEjJ0+W8gslOBKjp0rHARouBEbCRMe5dETIpq/hQKZi
- lCuDR2KpKbi+uklFe1GqIS/r+B0=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n18.prod.us-west-2.postgun.com with SMTP id
- 5f0943aa8e36ecda307d8f7b (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 11 Jul 2020 04:44:26
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6ADEEC433C6; Sat, 11 Jul 2020 04:44:26 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A1F49C433C8;
-        Sat, 11 Jul 2020 04:44:25 +0000 (UTC)
+        Sat, 11 Jul 2020 00:54:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36154 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726903AbgGKEys (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jul 2020 00:54:48 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9EE3C08C5DD
+        for <devicetree@vger.kernel.org>; Fri, 10 Jul 2020 21:54:48 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ju7XA-00069H-QU; Sat, 11 Jul 2020 06:54:44 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ju7X9-0001iY-PM; Sat, 11 Jul 2020 06:54:43 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-gpio@vger.kernel.org,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, kernel@pengutronix.de,
+        devicetree@vger.kernel.org
+Subject: [PATCH v2] [RFC] dt-bindings: gpio: introduce hog properties with less ambiguity
+Date:   Sat, 11 Jul 2020 06:54:41 +0200
+Message-Id: <20200711045441.19464-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <CACRpkdbccHbhYcCyPiSoA7+zGXBtbL_LwLkPB3vQDyOqkTA7EQ@mail.gmail.com>
+References: <CACRpkdbccHbhYcCyPiSoA7+zGXBtbL_LwLkPB3vQDyOqkTA7EQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sat, 11 Jul 2020 10:14:25 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Rakesh Pillai <pillair@codeaurora.org>
-Cc:     'Doug Anderson' <dianders@chromium.org>,
-        "'open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS'" 
-        <devicetree@vger.kernel.org>, 'Evan Green' <evgreen@chromium.org>,
-        'Andy Gross' <agross@kernel.org>,
-        'Bjorn Andersson' <bjorn.andersson@linaro.org>,
-        'Rob Herring' <robh+dt@kernel.org>,
-        'linux-arm-msm' <linux-arm-msm@vger.kernel.org>,
-        'LKML' <linux-kernel@vger.kernel.org>,
-        linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Add missing properties for Wifi
- node
-In-Reply-To: <007701d65734$90039c80$b00ad580$@codeaurora.org>
-References: <1594286253-32244-1-git-send-email-pillair@codeaurora.org>
- <CAD=FV=XQy17ZuKdJXPH20uGTrEtPrDacDXAg+rTA96HBm6hVVw@mail.gmail.com>
- <007701d65734$90039c80$b00ad580$@codeaurora.org>
-Message-ID: <ddf402ee75c44616ce3be5cc1968dd03@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-07-11 09:07, Rakesh Pillai wrote:
->> -----Original Message-----
->> From: Doug Anderson <dianders@chromium.org>
->> Sent: Friday, July 10, 2020 1:36 AM
->> To: Rakesh Pillai <pillair@codeaurora.org>
->> Cc: open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
->> <devicetree@vger.kernel.org>; Evan Green <evgreen@chromium.org>;
->> Andy Gross <agross@kernel.org>; Bjorn Andersson
->> <bjorn.andersson@linaro.org>; Rob Herring <robh+dt@kernel.org>; linux-
->> arm-msm <linux-arm-msm@vger.kernel.org>; LKML <linux-
->> kernel@vger.kernel.org>; Sibi Sankar <sibis@codeaurora.org>
->> Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Add missing properties 
->> for
->> Wifi node
->> 
->> Hi,
->> 
->> On Thu, Jul 9, 2020 at 2:18 AM Rakesh Pillai <pillair@codeaurora.org> 
->> wrote:
->> >
->> > The wlan firmware memory is statically mapped in
->> > the Trusted Firmware, hence the wlan driver does
->> > not need to map/unmap this region dynamically.
->> >
->> > Hence add the property to indicate the wlan driver
->> > to not map/unamp the firmware memory region
->> > dynamically.
->> >
->> > Also add the chain1 voltage supply for wlan.
->> >
->> > Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
->> > ---
->> > This patch is created on top of the change by
->> > Douglas Anderson.
->> > https://lkml.org/lkml/2020/6/25/817
->> >
->> > Also the dt-bindings for the chain1 voltage supply
->> > is added by the below patch series:
->> > https://patchwork.kernel.org/project/linux-wireless/list/?series=309137
->> > ---
->> >  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 2 ++
->> >  1 file changed, 2 insertions(+)
->> >
->> > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
->> b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
->> > index 472f7f4..4c64bc1 100644
->> > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
->> > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
->> > @@ -391,10 +391,12 @@
->> >
->> >  &wifi {
->> >         status = "okay";
->> > +       qcom,msa-fixed-perm;
+For active low lines the semantic of output-low and output-high is hard
+to grasp because there is a double negation involved and so output-low
+is actually a request to drive the line high (aka inactive).
 
-Should we include ^^ property
-in the base dts? Since I don't
-foresee any platform skipping
-qcom,msa-fixed-perm property.
+So introduce output-inactive and output-active with the same semantic as
+output-low and output-high respectively have today, but with a more
+sensible name.
 
->> 
->> At one point in time I thought +Sibi said that this wouldn't be needed
->> once the firmware was fixed.  ...afterwards you said that it was
->> needed for SSR (subsystem reset).  Would be good to get confirmation
->> from Sibi that this matches his understanding.
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+Hello,
 
-Yes all of ^^ happened and yes
-we now need qcom,msa-fixed-perm
-since the wlan_fw_mem permission
-assignment in now handled in ATF.
+compared to (implicit) v1, changed to ..asserted from ...active as Linus
+Walleij suggested.
 
-> 
-> Hi Doug,
-> 
-> This is now needed as the firmware memory mapping was moved to Trusted 
-> firmware.
-> This region is now statically mapped to avoid access from driver.
-> 
->> 
->> 
->> >         vdd-0.8-cx-mx-supply = <&vreg_l9a_0p6>;
->> >         vdd-1.8-xo-supply = <&vreg_l1c_1p8>;
->> >         vdd-1.3-rfa-supply = <&vreg_l2c_1p3>;
->> >         vdd-3.3-ch0-supply = <&vreg_l10c_3p3>;
->> > +       vdd-3.3-ch1-supply = <&vreg_l11c_3p3>;
->> >         wifi-firmware {
->> >                 iommus = <&apps_smmu 0xc2 0x1>;
->> >         };
->> 
->> Other than the one question this looks good to me.
->> 
->> -Doug
+Best regards
+Uwe
 
+ Documentation/devicetree/bindings/gpio/gpio.txt | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+index a8895d339bfe..1061c346a619 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+@@ -196,11 +196,16 @@ Only one of the following properties scanned in the order shown below.
+ This means that when multiple properties are present they will be searched
+ in the order presented below and the first match is taken as the intended
+ configuration.
+-- input:      A property specifying to set the GPIO direction as input.
+-- output-low  A property specifying to set the GPIO direction as output with
+-	      the value low.
+-- output-high A property specifying to set the GPIO direction as output with
+-	      the value high.
++- input:             A property specifying to set the GPIO direction as input.
++- output-deasserted: A property specifying to set the GPIO direction as output
++		     with the inactive value (depending on the line's polarity,
++		     which is active-high by default)
++- output-asserted:   A property specifying to set the GPIO direction as output
++		     with the active value.
++
++For backwards compatibility "output-low" and "output-high" should be supported
++as aliases for "output-deasserted" and "output-asserted" respectively. Their
++usage is misleading for active-low outputs, so their use is discouraged.
+ 
+ Optional properties:
+ - line-name:  The GPIO label name. If not present the node name is used.
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+2.27.0
+
