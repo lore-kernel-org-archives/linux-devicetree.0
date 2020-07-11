@@ -2,85 +2,93 @@ Return-Path: <SRS0=t1WB=AW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD616C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 13:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E246AC433E3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 13:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98EB720786
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 13:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B071520786
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 13:55:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594475582;
-	bh=s/7gnYxbL8MGJCdRA8lVq8/Fs0I4KXG/wBbbmOccA8s=;
+	s=default; t=1594475752;
+	bh=wvdNBvU3F1zN+u0G9fC/OHdlGjB9UUukKaget+WBTsI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qXhtYrlfxFPnM/vSyHUZNWU1pCzbtaxRSM2+HnMeUicjnfUDgkeaOstzF+8hf/dFk
-	 gaUZNu+Eoy8z4cqK3/Ac2Slih/T96WJvv6mTZvGI7hQwGyOC9Cp/IHV6Fah07nNR34
-	 +Wmgai/gvmcud1tOzP9pLd0Lg15oJid/WWpz+vVU=
+	b=wsj/RMKRRyngvVCxFXzJnxo6RNgPkupbMj8kpM0J8gsOZ090XA+l8MeeP++1Ovlsr
+	 KCCyAQMp9YPh4lX8ZYfQCYNte5+OqcmHLevLEDV8v6hwa5rB1K3pKUpQDSHnlTBkAD
+	 as9bm+x7RDXeZLw1kMzQo9Yj77d0kGRSjRAQtTAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728154AbgGKNxC (ORCPT
+        id S1728368AbgGKNzw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Jul 2020 09:53:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38222 "EHLO mail.kernel.org"
+        Sat, 11 Jul 2020 09:55:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728087AbgGKNxC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 11 Jul 2020 09:53:02 -0400
+        id S1726630AbgGKNzw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 11 Jul 2020 09:55:52 -0400
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F3612075F;
-        Sat, 11 Jul 2020 13:52:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E3552075F;
+        Sat, 11 Jul 2020 13:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594475581;
-        bh=s/7gnYxbL8MGJCdRA8lVq8/Fs0I4KXG/wBbbmOccA8s=;
+        s=default; t=1594475751;
+        bh=wvdNBvU3F1zN+u0G9fC/OHdlGjB9UUukKaget+WBTsI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VVxcVMgcqwkiplyk7Ep7Dv309WWAJdZ5Mz8P1lw6Nk+XKNhd7bn7ImReEehA5Ez10
-         SWfDY7FcDqOxdwpz6vW7hSLGhVWjeLew7FG/yB0R3p/yJJbIFCHE3M1mQZZbCLw4QF
-         JYVSUK89ZR8OgN5hRqANEpJX2afHG1q/IWvu9jVk=
-Date:   Sat, 11 Jul 2020 21:52:53 +0800
+        b=Tql6Q3H/S88FHlbQy2nUNhuIMxMI1C4Oa9rHcbOeZuCVthai4Hd+FSrOPwcs+jYO8
+         HlmwEaVK/HVWWa55/DCswFB7SvEObMAvr6NB+QC3bgl8daGGf5q+U+alonk7hDNmL6
+         FhHzWwFFIBeuNiVagxIIWoCizXjoJv7q2Zz4snG0=
+Date:   Sat, 11 Jul 2020 21:55:45 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     robh+dt@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/5] Add audio support for imx6sx platform
-Message-ID: <20200711135253.GE21277@dragon>
-References: <cover.1592460381.git.shengjiu.wang@nxp.com>
+To:     Biwen Li <biwen.li@oss.nxp.com>
+Cc:     leoyang.li@nxp.com, robh+dt@kernel.org, meenakshi.aggarwal@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jiafei.pan@nxp.com, Biwen Li <biwen.li@nxp.com>
+Subject: Re: [PATCH] dts: arm64: lx2160a-rdb: fix shunt-resistor
+Message-ID: <20200711135544.GF21277@dragon>
+References: <20200619084607.16637-1-biwen.li@oss.nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1592460381.git.shengjiu.wang@nxp.com>
+In-Reply-To: <20200619084607.16637-1-biwen.li@oss.nxp.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 02:03:44PM +0800, Shengjiu Wang wrote:
-> Add audio support for imx6sx platform.
-> Enable ASRC, ESAI, SPDIF, MQS.
+On Fri, Jun 19, 2020 at 04:46:07PM +0800, Biwen Li wrote:
+> From: Biwen Li <biwen.li@nxp.com>
 > 
-> Shengjiu Wang (5):
->   ARM: dts: imx6sx: Enable ASRC device
->   ARM: dts: imx6sx-sdb: Add MQS support
+> Fix value of shunt-resistor property
+> 
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
 
-Applied the series, except this one which doesn't apply to my branch.
+'arm64: dts: ...' as subject prefix please.
+
+Also can you improve commit log to better describe the problem the patch
+is fixing?
 
 Shawn
 
->   ARM: dts: imx6sx-sdb: Add SPDIF support
->   ARM: dts: imx6sx-sabreauto: Add SPDIF support
->   ARM: dts: imx6sx-sabreauto: Add cs42888 sound card support
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->  arch/arm/boot/dts/Makefile             |  1 +
->  arch/arm/boot/dts/imx6sx-sabreauto.dts | 96 ++++++++++++++++++++++++++
->  arch/arm/boot/dts/imx6sx-sdb-mqs.dts   | 48 +++++++++++++
->  arch/arm/boot/dts/imx6sx-sdb.dtsi      | 30 ++++++++
->  arch/arm/boot/dts/imx6sx.dtsi          | 36 +++++++---
->  5 files changed, 203 insertions(+), 8 deletions(-)
->  create mode 100644 arch/arm/boot/dts/imx6sx-sdb-mqs.dts
-> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
+> index e266d8a170ea..dce79018d397 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
+> @@ -141,7 +141,7 @@
+>  			power-monitor@40 {
+>  				compatible = "ti,ina220";
+>  				reg = <0x40>;
+> -				shunt-resistor = <1000>;
+> +				shunt-resistor = <500>;
+>  			};
+>  		};
+>  
 > -- 
-> 2.21.0
+> 2.17.1
 > 
