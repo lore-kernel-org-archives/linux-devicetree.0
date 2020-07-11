@@ -2,77 +2,83 @@ Return-Path: <SRS0=t1WB=AW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CC7C433E4
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 15:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D580C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 16:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAE6520786
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 15:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 735A9207DD
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 16:10:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594483826;
+	bh=yapXeHMIK9PVmlLcwW6FzKp88IXzSgQ+WQYAL1I8VsE=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=WhiiCEvSdA590ViCuBO7ZD3zYmP8mOFwFO9lagTZmWjnv+ZSz9xv8uORv3Jmk5Jx3
+	 fPva9KiqPID3VzEdVSWkkfw5Yj6oEnJF7BZFrd0DLZv8shEo3ozXU9FnL8u6BUYIBA
+	 MVekzwKfPjmwiJJL3Z/lJzLuY9j3R6/qOINcFksI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728614AbgGKP5y (ORCPT
+        id S1728540AbgGKQKX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Jul 2020 11:57:54 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:46330 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728412AbgGKP5x (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jul 2020 11:57:53 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 0F5481C0BD2; Sat, 11 Jul 2020 17:57:50 +0200 (CEST)
-Date:   Sat, 11 Jul 2020 17:57:49 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, robh@kernel.org,
-        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v29 13/16] leds: lp5523: Update the lp5523 code to add
- multicolor brightness function
-Message-ID: <20200711155749.GB22715@amd>
-References: <20200622185919.2131-1-dmurphy@ti.com>
- <20200622185919.2131-14-dmurphy@ti.com>
+        Sat, 11 Jul 2020 12:10:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51912 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726630AbgGKQKW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 11 Jul 2020 12:10:22 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5195C2075F;
+        Sat, 11 Jul 2020 16:10:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594483822;
+        bh=yapXeHMIK9PVmlLcwW6FzKp88IXzSgQ+WQYAL1I8VsE=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=IvZswk59GNeV3N7qMo2+D+6TWakET7tA/i6Urd18paPTMN3zaDHd8wutENMDRYh0O
+         4iq+oVV8BF68jxGvn8H/dHX11GFYAIxfEeg/hgQuycX8IPBxXj4hcmaPPToDmMIVDm
+         6WZWIgm9apLfE2PiLuU1qRrNhyF8U4wV2Nxliutk=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="kXdP64Ggrk/fb43R"
-Content-Disposition: inline
-In-Reply-To: <20200622185919.2131-14-dmurphy@ti.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1593940680-2363-5-git-send-email-sivaprak@codeaurora.org>
+References: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org> <1593940680-2363-5-git-send-email-sivaprak@codeaurora.org>
+Subject: Re: [PATCH 4/9] clk: qcom: ipq8074: Add missing clocks for pcie
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+To:     agross@kernel.org, bhelgaas@google.com, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, kishon@ti.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        lorenzo.pieralisi@arm.com, mgautam@codeaurora.org,
+        mturquette@baylibre.com, p.zabel@pengutronix.de,
+        robh+dt@kernel.org, sivaprak@codeaurora.org,
+        smuthayy@codeaurora.org, svarbanov@mm-sol.com,
+        varada@codeaurora.org, vkoul@kernel.org
+Date:   Sat, 11 Jul 2020 09:10:21 -0700
+Message-ID: <159448382156.1987609.6835614318226972862@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Quoting Sivaprakash Murugesan (2020-07-05 02:17:55)
+> diff --git a/drivers/clk/qcom/gcc-ipq8074.c b/drivers/clk/qcom/gcc-ipq807=
+4.c
+> index e01f5f591d1e..443e28cda8ed 100644
+> --- a/drivers/clk/qcom/gcc-ipq8074.c
+> +++ b/drivers/clk/qcom/gcc-ipq8074.c
+> @@ -4316,6 +4316,62 @@ static struct clk_branch gcc_gp3_clk =3D {
+>         },
+>  };
+> =20
+> +struct freq_tbl ftbl_pcie_rchng_clk_src[] =3D {
 
---kXdP64Ggrk/fb43R
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+static const?
 
-Hi!
-
-> Add the multicolor brightness call back to support the multicolor
-> framework.  This call back allows setting  brightness on grouped channels
-
-Extra space before "brightness".
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---kXdP64Ggrk/fb43R
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl8J4X0ACgkQMOfwapXb+vILkQCdFaq1nNtFBeEBOdqoQ870zf6/
-e+UAn00JPk/78+F/U3qsGwXmwKakEZFZ
-=ePh7
------END PGP SIGNATURE-----
-
---kXdP64Ggrk/fb43R--
+> +       F(19200000, P_XO, 1, 0, 0),
+> +       F(100000000, P_GPLL0, 8, 0, 0),
+> +       { }
+> +};
+> +
