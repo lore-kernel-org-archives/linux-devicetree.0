@@ -2,91 +2,115 @@ Return-Path: <SRS0=t1WB=AW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E9EC433E4
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 21:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E3BC433E2
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 23:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 112E120748
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 21:12:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="phqDGApF"
+	by mail.kernel.org (Postfix) with ESMTP id 9646120748
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 23:59:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgGKVMw (ORCPT
+        id S1727021AbgGKX7I (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Jul 2020 17:12:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44310 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727777AbgGKVMw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jul 2020 17:12:52 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E8C2C08E763
-        for <devicetree@vger.kernel.org>; Sat, 11 Jul 2020 14:12:51 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id q4so10406264lji.2
-        for <devicetree@vger.kernel.org>; Sat, 11 Jul 2020 14:12:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HgHuk3yasiCaHOFp70C3S20yfZ/46i84UF/qS9vnKcc=;
-        b=phqDGApFNUiMib/i5ixNCjfscEjoGG9dm6nGYkkuK89crua9hH+Tw7oPeffJC7QngU
-         RONlsfsM4KQjjbP4mPDj9QElR/qCsD9yv/qaQpjBCA6/oyONnMwuRKN7BB4cC0vhIiwY
-         kyAqCwFYD67vTukOgwi4SAOOJ3y4bWgX75+0NHKHaTOzQU1EfVepNIPR9OmInGdCueXn
-         tgKw5T5UbQ3RnhfyKVS6CypNrb7d2z6WvMAaa21KH/66WCySXG/dPzbDMW17AY9luj2q
-         ttE93UdvI29dJLsLDydAdDP/Ugx2PXg9S+F1Ay5326VSHypR6iQ4rRYxyLTwY7LgiIuE
-         ug/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HgHuk3yasiCaHOFp70C3S20yfZ/46i84UF/qS9vnKcc=;
-        b=CycW2gK/Hib2nyJvECqYC4Kpx1eeB5/K7v5ZqOBk5NxSDwscyapUmRu3n2e1psfpne
-         Rpdh9ZEOmfLguLPLzhhoFOBZxUsESFPsfezVYB9LVhTn0khx2y2PtvqE/Qzt5DOYDf25
-         fU29gOcFpEuXFrkgUxqbEjQHg76KqTt83jWzsezp0ykrbbIq4PKpKL16NWlcXCANZdvt
-         3M/+Rwk7mz9ZnhxCvczFi3FR1EBat8+OqJKdohY29waHvjA/zSAn6l3wffhD+uzmcJ6T
-         USUFG6z2EzSAyHkS8nmhh3T+wCMaTp0GhZAqI42fliifJjAz2WPFZvBqjL1WzFpCa1Im
-         TniQ==
-X-Gm-Message-State: AOAM532TJo59CT+XoGxnO5lMOYJQ3fEAABzVjGKEBeiRrZWTmeuXjbyM
-        NhxTuwuqDjzMtZx//wKy7cXElANWSJjobhDRlf7I/w==
-X-Google-Smtp-Source: ABdhPJxfLX8yHShpQtjGOPNlAosmEBIPTvGmPBymA5g4mnnwVTGmE0j69am4R1NGfe/2Nhmcd1M6BuIbcIw3m1Dxgdc=
-X-Received: by 2002:a2e:7a1a:: with SMTP id v26mr27868119ljc.104.1594501970063;
- Sat, 11 Jul 2020 14:12:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200701013320.130441-1-drew@beagleboard.org> <CACRpkdY3mUjczkJhV9BdZhUJGOgrbOMJnciBjOaPg6c9XUt8Ww@mail.gmail.com>
- <CAEf4M_ArGSpN5-7_zt6mQaWm8XkqTcQiOnCbs3_obCipDC1KNA@mail.gmail.com>
-In-Reply-To: <CAEf4M_ArGSpN5-7_zt6mQaWm8XkqTcQiOnCbs3_obCipDC1KNA@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 11 Jul 2020 23:12:39 +0200
-Message-ID: <CACRpkdZRnS=xt6FKy6pSUQ+itkxoimAAKBc+=kupTXpEGg+b8g@mail.gmail.com>
-Subject: Re: [PATCH v4 0/2] pinctrl: single: support #pinctrl-cells = 2
-To:     Drew Fustini <pdp7pdp7@gmail.com>
-Cc:     Drew Fustini <drew@beagleboard.org>,
-        Tony Lindgren <tony@atomide.com>,
+        Sat, 11 Jul 2020 19:59:08 -0400
+Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:53228 "EHLO
+        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1726939AbgGKX7I (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jul 2020 19:59:08 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.gtsys.com.hk (Postfix) with ESMTP id 45DBA200080F;
+        Sun, 12 Jul 2020 07:59:05 +0800 (HKT)
+X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
+Received: from mail.gtsys.com.hk ([127.0.0.1])
+        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Mk8KdIFMvSK7; Sun, 12 Jul 2020 07:59:05 +0800 (HKT)
+Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
+        by mail.gtsys.com.hk (Postfix) with ESMTP id 1F2C6200029E;
+        Sun, 12 Jul 2020 07:59:05 +0800 (HKT)
+Received: from [10.128.2.32] (unknown [124.217.189.79])
+        by s01.gtsys.com.hk (Postfix) with ESMTPSA id BF109C019F4;
+        Sun, 12 Jul 2020 07:59:04 +0800 (HKT)
+Subject: Re: [PATCH v5 2/2] devicetree: hwmon: shtc1: Add sensirion,shtc1.yaml
+From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>, Jack Lo <jack.lo@gtsys.com.hk>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Jean Delvare <jdelvare@suse.com>, devicetree@vger.kernel.org
+References: <20200710021536.27544-1-chris.ruehl@gtsys.com.hk>
+ <20200710021536.27544-3-chris.ruehl@gtsys.com.hk>
+ <20200710163153.GA2760091@bogus>
+ <d45ba090-a09b-dd51-4645-bc62e90cb9bc@gtsys.com.hk>
+Message-ID: <4189dcf7-fc67-29c4-6357-646071d7ded0@gtsys.com.hk>
+Date:   Sun, 12 Jul 2020 07:59:03 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <d45ba090-a09b-dd51-4645-bc62e90cb9bc@gtsys.com.hk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 1:02 PM Drew Fustini <pdp7pdp7@gmail.com> wrote:
+Morning,
 
-> Which repo/branch is the best for me to use if I am going to be
-> posting any further dts patches?
+On 11/7/2020 6:05 pm, Chris Ruehl wrote:
+> 
+> On 11/7/2020 12:31 am, Rob Herring wrote:
+>> On Fri, 10 Jul 2020 10:15:35 +0800, Chris Ruehl wrote:
+>>> Add documentation for the newly added DTS support in the shtc1 driver.
+>>> To align with the drivers logic to have high precision by default
+>>> a boolean sensirion,low_precision is used to switch to low precision.
+>>>
+>>> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+>>> ---
+>>>   .../bindings/hwmon/sensirion,shtc1.yaml       | 57 +++++++++++++++++++
+>>>   1 file changed, 57 insertions(+)
+>>>   create mode 100644 
+>>> Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
+>>>
+>>
+>>
+>> My bot found errors running 'make dt_binding_check' on your patch:
+>>
+>> Error: 
+>> Documentation/devicetree/bindings/hwmon/sensirion,shtc1.example.dts:25.13-14 
+>> syntax error
+>> FATAL ERROR: Unable to parse input tree
+>> scripts/Makefile.lib:315: recipe for target 
+>> 'Documentation/devicetree/bindings/hwmon/sensirion,shtc1.example.dt.yaml' failed
+>> make[1]: *** 
+>> [Documentation/devicetree/bindings/hwmon/sensirion,shtc1.example.dt.yaml] Error 1
+>> make[1]: *** Waiting for unfinished jobs....
+>> Makefile:1347: recipe for target 'dt_binding_check' failed
+>> make: *** [dt_binding_check] Error 2
+>>
+>>
+>> See https://patchwork.ozlabs.org/patch/1326414
+>>
+>> If you already ran 'make dt_binding_check' and didn't see the above
+>> error(s), then make sure dt-schema is up to date:
+>>
+>> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+>>
+>> Please check and re-submit.
+>>
+> 
+> Hi Rob,
+> 
+> I did run the test and didn't had any Error. dt-schema 2020.06 installed from 
+> git. pip3 install -e.
+> 
+> Can you help?
+> 
+> Chris
 
-Mine, pinctrl devel branch during this (v5.9) cycle I suppose.
+Solved, missing ";" behind reg = <0x70>
 
-Yours,
-Linus Walleij
+will resend.
