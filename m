@@ -2,102 +2,74 @@ Return-Path: <SRS0=t1WB=AW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7ACC433E3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 10:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A517C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 10:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EE7420748
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 10:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F48C2075F
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 10:43:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594464187;
+	bh=M6Gv5LhVsekhAqlpYwpr7VAiiUfCVAtwfASULSjgwbk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mXNd+ZUOP6h9MuejWbA59EuTk4dsLB02Wzi0HotRTHq6e9L35nQXGE+w40yu6JchG
+	 xRuvWxqIOMw5EbV7PYtIYtbdskR87/2maq16fE9MWBRon8MnVcakM7Vh+Lk352MU7r
+	 B+sIEVTEo2dw7ykCoTTd0fQtdtMlUFy1G6BK97WI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgGKKFJ (ORCPT
+        id S1726262AbgGKKnG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Jul 2020 06:05:09 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:46708 "EHLO
-        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgGKKFJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jul 2020 06:05:09 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 7E2A3201411B;
-        Sat, 11 Jul 2020 18:05:05 +0800 (HKT)
-X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
-Received: from mail.gtsys.com.hk ([127.0.0.1])
-        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id aD-6Vkk2IvhR; Sat, 11 Jul 2020 18:05:05 +0800 (HKT)
-Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 5AD522014570;
-        Sat, 11 Jul 2020 18:05:05 +0800 (HKT)
-Received: from [10.128.2.32] (unknown [124.217.189.79])
-        by s01.gtsys.com.hk (Postfix) with ESMTPSA id F20E7C01FBA;
-        Sat, 11 Jul 2020 18:05:04 +0800 (HKT)
-Subject: Re: [PATCH v5 2/2] devicetree: hwmon: shtc1: Add sensirion,shtc1.yaml
-To:     Rob Herring <robh@kernel.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>, Jack Lo <jack.lo@gtsys.com.hk>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>, devicetree@vger.kernel.org
-References: <20200710021536.27544-1-chris.ruehl@gtsys.com.hk>
- <20200710021536.27544-3-chris.ruehl@gtsys.com.hk>
- <20200710163153.GA2760091@bogus>
-From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Message-ID: <d45ba090-a09b-dd51-4645-bc62e90cb9bc@gtsys.com.hk>
-Date:   Sat, 11 Jul 2020 18:05:03 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sat, 11 Jul 2020 06:43:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33284 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726261AbgGKKnG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 11 Jul 2020 06:43:06 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60FEF20720;
+        Sat, 11 Jul 2020 10:43:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594464186;
+        bh=M6Gv5LhVsekhAqlpYwpr7VAiiUfCVAtwfASULSjgwbk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HHDeCLrAtUjf3uj0kUTZhIXfPMGQeYrAK8yP76d668EbZ6BgV5TNwZNX+NwoiOsrU
+         6kZNUWNyPb3351lbGF5rUlcMKvWtG9D5Kvpb8cEdJoQhbXtNBXxID0vPEr/DvUJc/H
+         BLAS3fukVR8NWHp1NBO6WzaUAQH55qE1d357dWHA=
+Date:   Sat, 11 Jul 2020 18:42:58 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] ARM: dts: imx6qdl-gw: add Gateworks System Controller
+ support
+Message-ID: <20200711104258.GB21277@dragon>
+References: <1592497149-22526-1-git-send-email-tharvey@gateworks.com>
+ <1592937347-12962-1-git-send-email-tharvey@gateworks.com>
 MIME-Version: 1.0
-In-Reply-To: <20200710163153.GA2760091@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592937347-12962-1-git-send-email-tharvey@gateworks.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, Jun 23, 2020 at 11:35:47AM -0700, Tim Harvey wrote:
+> Add Gateworks System Controller support to Gateworks Ventana boards:
+> - add dt bindings for GSC mfd driver and hwmon driver for ADC's and
+>   fan controllers.
+> - add dt bindings for gpio-keys driver for push-button and interrupt events
+> 
+> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
 
-On 11/7/2020 12:31 am, Rob Herring wrote:
-> On Fri, 10 Jul 2020 10:15:35 +0800, Chris Ruehl wrote:
->> Add documentation for the newly added DTS support in the shtc1 driver.
->> To align with the drivers logic to have high precision by default
->> a boolean sensirion,low_precision is used to switch to low precision.
->>
->> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
->> ---
->>   .../bindings/hwmon/sensirion,shtc1.yaml       | 57 +++++++++++++++++++
->>   1 file changed, 57 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
->>
-> 
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> Error: Documentation/devicetree/bindings/hwmon/sensirion,shtc1.example.dts:25.13-14 syntax error
-> FATAL ERROR: Unable to parse input tree
-> scripts/Makefile.lib:315: recipe for target 'Documentation/devicetree/bindings/hwmon/sensirion,shtc1.example.dt.yaml' failed
-> make[1]: *** [Documentation/devicetree/bindings/hwmon/sensirion,shtc1.example.dt.yaml] Error 1
-> make[1]: *** Waiting for unfinished jobs....
-> Makefile:1347: recipe for target 'dt_binding_check' failed
-> make: *** [dt_binding_check] Error 2
-> 
-> 
-> See https://patchwork.ozlabs.org/patch/1326414
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure dt-schema is up to date:
-> 
-> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-> 
-> Please check and re-submit.
-> 
-
-Hi Rob,
-
-I did run the test and didn't had any Error. dt-schema 2020.06 installed from 
-git. pip3 install -e.
-
-Can you help?
-
-Chris
+Applied, thanks.
