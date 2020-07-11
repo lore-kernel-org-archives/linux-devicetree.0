@@ -2,72 +2,98 @@ Return-Path: <SRS0=t1WB=AW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41ED9C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 14:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 170A8C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 14:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB95207F9
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 14:32:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594477945;
-	bh=UqWFBHcsmz1nBysnWIV+Cuhkrsz5c16BQDv6NLgGk/Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uAzOxymAsU5tOktKrrG5cvuGBfH4b7+vt247vsaREc8/tCa9xuBdSTWXeI3PnNn+t
-	 V4GHPuJoOr2cALCURL0oLeHvGM3hgjUHVMl/fMyVpZF7KXA+zT3CKOXGWeOWKrLeC0
-	 KAGzIJNKKENpMgS3rIDwIqxfUA533o5ZHtGHNhhA=
+	by mail.kernel.org (Postfix) with ESMTP id E895F207DD
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 14:53:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n28FxMxw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728378AbgGKOcY (ORCPT
+        id S1728382AbgGKOxQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Jul 2020 10:32:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53578 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728294AbgGKOcY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 11 Jul 2020 10:32:24 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14BB220720;
-        Sat, 11 Jul 2020 14:32:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594477943;
-        bh=UqWFBHcsmz1nBysnWIV+Cuhkrsz5c16BQDv6NLgGk/Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VJfsj+ZPAB8k4L09HNHzrZG7ZvoClAPFCTA5SNU78mzrkTkanJI9Ldfi1jFG2Lr7I
-         2FZTUvkKVO9ZpzQ2QbEiepROTP8fmDF5mk4IZWWdo3BsvCFyfO1T8WRenyJ0O7raVx
-         GqArakqzl1vyaeCwtbcia9gt0Lf/cYgKt7+UjrGg=
-Date:   Sat, 11 Jul 2020 22:32:18 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Tim Harvey <tharvey@gateworks.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v3] ARM: dts: imx6qdl-gw551x: fix audio SSI
-Message-ID: <20200711143217.GK21277@dragon>
-References: <1592937087-8885-1-git-send-email-tharvey@gateworks.com>
- <1592939214-13637-1-git-send-email-tharvey@gateworks.com>
+        Sat, 11 Jul 2020 10:53:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42800 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728309AbgGKOxP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jul 2020 10:53:15 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C49C8C08C5DD;
+        Sat, 11 Jul 2020 07:53:15 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id gc9so3835533pjb.2;
+        Sat, 11 Jul 2020 07:53:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=dfgCDF5aF9HyZfNeGtiuOGSATcEFAgqH2c1Xe5nNzN4=;
+        b=n28FxMxwPJjSzsSAitHsf3w/D5jZmmnPsFuwel9jieH2Et1ym1KeiDpd6uSuJS33Ea
+         q/yppANDCrBcgbr+0Y+HL2BIC5yisjjCt8hEa/UWi6xF7b8Js1365LlVD43FFDhemSOR
+         Q1iw1GYLFuU8V8vUE+wQcdi5ecHQ9LWpTKPqP1v8QErNFBRNKmzfvGJvUOhAeNxTJqWe
+         UguqITmo1lLk1gmfIi9idKswM/wh+TGZIW/wXxm9JEUwIR67/U+XOSC8HBQhrgqZ04KN
+         AI8Jfxo3NO+CInGCqlFhtw3aleBLUPW7fEAqMkRw1mdv6j0I9DTxNtqybiERVoWLwsNf
+         DSWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dfgCDF5aF9HyZfNeGtiuOGSATcEFAgqH2c1Xe5nNzN4=;
+        b=Sc2itT2QX6PFh7/EV8Rcw5TeaxB31Xt5UVJUmN38XBo4JON8VAAll1FMMP9Zd84Udn
+         9DvhKQl38R2dIE4zoKeEdvp5io4s2gEbN799rcdw7wDidTirogzWmJ8yDClau+IRfClY
+         eqX3H/D2K+MsC4DF2mS2EZWfr54/u44aYMXPwe60gj+bjX9Ixd8hq1hq2V2ShttV0OyI
+         LkTZE50dxUFEDVINH3lGSp7EP9Ww3GRIY7a4VHY1YZeEOtQKHtyrwhMkW2F63/z3G6wl
+         KpIVIcePkJmsaihRyDGofnGzEOSYV8c8YqocUn7IGfhSPkBHIlirv28n1RCInDLixLPk
+         gwEg==
+X-Gm-Message-State: AOAM533cupQmnvhKCGIBDS2Uybx/Yct8Usudj5ceAcUaVKFSnrVBZRGR
+        ILqmPxaazTAZ8PG7mJxR3hfp0SkMTt4HB+69pUOIU8Kz
+X-Google-Smtp-Source: ABdhPJxQIDN/ON0wB7E4KFITK5udBsQqanVCMGtDW1Vh3QBXbFQlMhdtKbrkFBBihFj8sUhOKU/Cj339A2D3hMXyxw4=
+X-Received: by 2002:a17:902:7611:: with SMTP id k17mr63836364pll.255.1594479194050;
+ Sat, 11 Jul 2020 07:53:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1592939214-13637-1-git-send-email-tharvey@gateworks.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <CACRpkdbccHbhYcCyPiSoA7+zGXBtbL_LwLkPB3vQDyOqkTA7EQ@mail.gmail.com>
+ <20200711045441.19464-1-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20200711045441.19464-1-u.kleine-koenig@pengutronix.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 11 Jul 2020 17:52:58 +0300
+Message-ID: <CAHp75VeJh5drwYo+3Q7gUvhBnhsVR-x5czmuFW2N2eWppsg-2A@mail.gmail.com>
+Subject: Re: [PATCH v2] [RFC] dt-bindings: gpio: introduce hog properties with
+ less ambiguity
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 12:06:54PM -0700, Tim Harvey wrote:
-> The audio codec on the GW551x routes to ssi1
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 3117e851cef1 ("ARM: dts: imx: Add TDA19971 HDMI Receiver to GW551x")
-> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+On Sat, Jul 11, 2020 at 7:57 AM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> For active low lines the semantic of output-low and output-high is hard
+> to grasp because there is a double negation involved and so output-low
+> is actually a request to drive the line high (aka inactive).
+>
+> So introduce output-inactive and output-active with the same semantic as
+> output-low and output-high respectively have today, but with a more
+> sensible name.
 
-Applied, thanks.
+I guess someone needs to proofread the GPIO in-kernel documentation
+and update it accordingly. We have a lot of references to logical vs.
+physical state AFAIR.
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
