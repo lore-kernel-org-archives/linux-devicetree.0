@@ -2,194 +2,90 @@ Return-Path: <SRS0=t1WB=AW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A95C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 20:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A816C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 20:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7132D206A5
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 20:18:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AqDP0ZuH"
+	by mail.kernel.org (Postfix) with ESMTP id 27A2E20748
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 20:24:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgGKUS5 (ORCPT
+        id S1727844AbgGKUYX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Jul 2020 16:18:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36020 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727107AbgGKUS5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jul 2020 16:18:57 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3517BC08C5DE;
-        Sat, 11 Jul 2020 13:18:57 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ch3so4062446pjb.5;
-        Sat, 11 Jul 2020 13:18:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+W9lcpdbR+gbswF4mAEkwAjlZYQZEcdmRIB2Ky3Trb8=;
-        b=AqDP0ZuHWk4mUmEuWDg++234B8G9w7n8pXLEcl6ZCwUmjfkfmvb6DHh04mLvxPCUI4
-         PQvVBdI9Ll/YZ0DlLS5P21EIkmTZi7037EwpBm2ie9j7Lx11gqHIDyKS280iMhfP8ISp
-         kWdLfAFVXi+k73KDoaCUI7AIuZ8xGlDTd07grS36YIjCCsYQU18s61vX8jjhf2UJJCPm
-         BaWKkcEvd/NCZm+ujt/z+Tn0M3DlW3cAjU7jl2W0E2+NzcZgwRLc2LFij5dHebiXwM4H
-         V7vm36+WyL1z3TRhYssmCCeS1t8ehSaBw+eLcLElGQbGJwpFYPbeT6N6S4tshvMAJBOG
-         TYEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+W9lcpdbR+gbswF4mAEkwAjlZYQZEcdmRIB2Ky3Trb8=;
-        b=AOkSGQMI4mnFn0BzWivfmbnPkvqoPtzLGwnCdvSWPILFe7VjkNaYvD0sXOw1FtCAyP
-         2sgexFBwQ9afCz1U3kdR+VgmzDWx7JMMvA9Uwo7oR/gPOAudD8WLpRwceinCbZiLOZ/u
-         Enye4peOZqLoCiOWt8n0jQenxf4r6YzHvDcb4deOS6KkC+aFHAqWtBZkumTJBlgl7ry7
-         mfgzBLWyL+odxl0MK4wZi2fPhJUGp1Xk+eOA3fmU+Nsmgs3+EKr6JggPZUnrXGx1ik7y
-         E3q32a5NM7Xjelg3ko8+x54Xzrpb0LPiCHp0aNNi6uT30w82qUOPO9tKGZh/QA3SpO6w
-         qRKA==
-X-Gm-Message-State: AOAM530A8PYKSxH7sGBT1bLIj2Rbk/x3+ziCrxXDx973TECtIu7SZaC6
-        lv7Qp+9vkTWRsi+3l4sBRG4=
-X-Google-Smtp-Source: ABdhPJwJjmZXTes0CpNtictuio/y3kdHja0U879m+LcpdxXmVn886eMMdjDx4Y2jRmb6qvNU1dE3hA==
-X-Received: by 2002:a17:90b:918:: with SMTP id bo24mr12695792pjb.191.1594498736693;
-        Sat, 11 Jul 2020 13:18:56 -0700 (PDT)
-Received: from ?IPv6:2001:470:67:5b9:108c:a2dd:75d1:a903? ([2001:470:67:5b9:108c:a2dd:75d1:a903])
-        by smtp.gmail.com with ESMTPSA id m20sm10349179pfk.52.2020.07.11.13.18.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 11 Jul 2020 13:18:55 -0700 (PDT)
-Subject: Re: [PATCH v1 8/8] dt-bindings: net: dsa: Add documentation for
- Hellcreek switches
-To:     Kurt Kanzenbach <kurt@linutronix.de>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org, Vladimir Oltean <olteanv@gmail.com>
-References: <20200710113611.3398-1-kurt@linutronix.de>
- <20200710113611.3398-9-kurt@linutronix.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <92b7dca3-f56d-ecb1-59c2-0981c2b99dad@gmail.com>
-Date:   Sat, 11 Jul 2020 13:18:54 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
+        Sat, 11 Jul 2020 16:24:23 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:36066 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727099AbgGKUYX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jul 2020 16:24:23 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 371561C0BD2; Sat, 11 Jul 2020 22:24:20 +0200 (CEST)
+Date:   Sat, 11 Jul 2020 22:24:19 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     Dan Murphy <dmurphy@ti.com>, robh@kernel.org,
+        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v29 13/16] leds: lp5523: Update the lp5523 code to add
+ multicolor brightness function
+Message-ID: <20200711202419.GA18347@duo.ucw.cz>
+References: <20200622185919.2131-1-dmurphy@ti.com>
+ <20200622185919.2131-14-dmurphy@ti.com>
+ <20200711155749.GB22715@amd>
+ <c9e20136-7226-2feb-b017-0a0742867f93@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200710113611.3398-9-kurt@linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
+Content-Disposition: inline
+In-Reply-To: <c9e20136-7226-2feb-b017-0a0742867f93@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
+--2fHTh5uZTiUOsy+g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 7/10/2020 4:36 AM, Kurt Kanzenbach wrote:
-> Add basic documentation and example.
-> 
-> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
-> ---
->  .../bindings/net/dsa/hellcreek.yaml           | 132 ++++++++++++++++++
->  1 file changed, 132 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/dsa/hellcreek.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/net/dsa/hellcreek.yaml b/Documentation/devicetree/bindings/net/dsa/hellcreek.yaml
-> new file mode 100644
-> index 000000000000..bb8ccc1762c8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/dsa/hellcreek.yaml
-> @@ -0,0 +1,132 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/dsa/hellcreek.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Hirschmann Hellcreek TSN Switch Device Tree Bindings
-> +
-> +allOf:
-> +  - $ref: dsa.yaml#
-> +
-> +maintainers:
-> +  - Andrew Lunn <andrew@lunn.ch>
-> +  - Florian Fainelli <f.fainelli@gmail.com>
-> +  - Vivien Didelot <vivien.didelot@gmail.com>
+On Sat 2020-07-11 19:19:22, Jacek Anaszewski wrote:
+> On 7/11/20 5:57 PM, Pavel Machek wrote:
+> > Hi!
+> >=20
+> > > Add the multicolor brightness call back to support the multicolor
+> > > framework.  This call back allows setting  brightness on grouped chan=
+nels
+> >=20
+> > Extra space before "brightness".
+>=20
+> And before "This".
 
-Don't you want to add yourself here as well?
+That one is intentional, I believe.
 
-> +
-> +description:
-> +  The Hellcreek TSN Switch IP is a 802.1Q Ethernet compliant switch. It supports
-> +  the Pricision Time Protocol, Hardware Timestamping as well the Time Aware
-> +  Shaper.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: hirschmann,hellcreek
-> +
-> +  reg:
-> +    description:
-> +      The physical base address and size of TSN and PTP memory base
+https://www.independent.co.uk/life-style/gadgets-and-tech/news/one-space-or=
+-two-spaces-after-a-full-stop-scientists-have-finally-found-the-answer-a833=
+7646.html
 
-You need to indicate how many of these cells are required.
+We are using fixed width fonts, so typewriter rules still apply here.
 
-> +
-> +  reg-names:
-> +    description:
-> +      Names of the physical base addresses
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-Likewise.
+--2fHTh5uZTiUOsy+g
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 1
+-----BEGIN PGP SIGNATURE-----
 
-Humm, not sure about those, you do not expose a memory mapped interface
-bus from this switch to another sub node.
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXwof8wAKCRAw5/Bqldv6
+8rAyAJ4hPt7IgHlyAtBRG2ArOmyZ8Mj29QCggA8ecmn08QOBVK7ziUsCW4evjuI=
+=RSa+
+-----END PGP SIGNATURE-----
 
-> +
-> +  leds:
-> +    type: object
-> +    properties:
-> +      '#address-cells':
-> +        const: 1
-> +      '#size-cells':
-> +        const: 0
-> +
-> +    patternProperties:
-> +      "^led@[0-9]+$":
-> +          type: object
-> +          description: Hellcreek leds
-> +
-> +          properties:
-> +            reg:
-> +              items:
-> +                - enum: [0, 1]
-> +              description: Led number
-> +
-> +            label:
-> +              description: Label associated with this led
-> +              $ref: /schemas/types.yaml#/definitions/string
-> +
-> +            default-state:
-> +              items:
-> +                enum: ["on", "off", "keep"]
-> +              description: Default state for the led
-> +              $ref: /schemas/types.yaml#/definitions/string
-> +
-> +          required:
-> +            - reg
-
-Can you reference an existing LED binding by any chance?
--- 
-Florian
+--2fHTh5uZTiUOsy+g--
