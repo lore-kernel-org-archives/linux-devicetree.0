@@ -2,113 +2,152 @@ Return-Path: <SRS0=t1WB=AW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09853C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 20:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D09CCC433E3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 20:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D577D20725
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 20:30:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BB4720725
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 20:30:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r1uev5EJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="kH7wAi2c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgGKUaS (ORCPT
+        id S1726780AbgGKUas (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Jul 2020 16:30:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37750 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbgGKUaS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jul 2020 16:30:18 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13556C08C5DD;
-        Sat, 11 Jul 2020 13:30:18 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id m16so2465913pls.5;
-        Sat, 11 Jul 2020 13:30:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5SxQ/W4fQ7dzP/hsn63V8CBLGv3LBO6R8zOG1XBAxQg=;
-        b=r1uev5EJYj14z6OIUA2WzEr5gq48rqe95et2oKueB8EWZ+Y0lP2OGRRQlKhX66AMqV
-         MmD42JAE7Qe1bKFoF2DXgufLjTc+beTeiNSCRqXNhV+Rkc7Cd+AdEkjQhD1SxGa8OL4R
-         vY4JnGyfdbqeUx49H6jYvpPWGRuJqm3LqUeVnOZFUlNAmv2dgSIyizfLpfua8JVHPXFD
-         xolp0f9DPSgRx8wETIQVk64ixiNGLS+tEl1MY/eR3mxAE52RtDktQFcI7Tz6wuFaKnew
-         KxIjutHWryEyXTJnVrlJl+qt/k2llqO/TyKP1SlbHS7vrlgPo+728goPFE2l0u7VZmQR
-         4FNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5SxQ/W4fQ7dzP/hsn63V8CBLGv3LBO6R8zOG1XBAxQg=;
-        b=OgsOV4KiKMUOHMVraC1Ib+e0jkxdWC6LvvGV8IoOleyqZE/B7zeA+SYyUgCZ2OOrra
-         Trv/8+McB6WPwn1j5/Z2Y9f/jMDzt9aaEcjpkWJLXUK28Bey8UkxwfULFl82pIaUwy19
-         +1wuTpxpZaoydendqHdvCBsyicfSQGEVsaI1y4mbNMDfglhDvf9LDDJEOTKb3UxAgxYZ
-         NTP5/Yj924RMVdg80mNPgHAaZBCHtw2Nj5q3FqQTq1SSi2qODvs4J7zcRyeROXc6XxtM
-         /uSTnNC2vYyde3Yg5Sw0nQoXub+y2xFSsoUZDp1Gi3q5ijnZftTsYB4WMguXSUrvV1m2
-         5VNw==
-X-Gm-Message-State: AOAM5334LOfARGsG1t2dA0da2R/ck4Nt3V+VkbB8+uCLLhpN7aPkNq/4
-        O4ph9J//uw52+o1nPi5NtTjx989P
-X-Google-Smtp-Source: ABdhPJzBRccBaPGRXGSWz4vPQ96Ry7hFEM/ut7r0OjTO2ACfWIG5KxOhwrWSNrKXOIGmlDED8jgKYw==
-X-Received: by 2002:a17:90a:e981:: with SMTP id v1mr11916618pjy.130.1594499416411;
-        Sat, 11 Jul 2020 13:30:16 -0700 (PDT)
-Received: from hoboy (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id x3sm9923306pfn.154.2020.07.11.13.30.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Jul 2020 13:30:15 -0700 (PDT)
-Date:   Sat, 11 Jul 2020 13:30:13 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Kurt Kanzenbach <kurt@linutronix.de>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org, Vladimir Oltean <olteanv@gmail.com>
-Subject: Re: [PATCH v1 3/8] net: dsa: hellcreek: Add PTP clock support
-Message-ID: <20200711203013.GA27467@hoboy>
-References: <20200710113611.3398-1-kurt@linutronix.de>
- <20200710113611.3398-4-kurt@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710113611.3398-4-kurt@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sat, 11 Jul 2020 16:30:48 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:8612 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726281AbgGKUas (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jul 2020 16:30:48 -0400
+X-Greylist: delayed 353 seconds by postgrey-1.27 at vger.kernel.org; Sat, 11 Jul 2020 16:30:47 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1594499446;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=18zzlBN37qwwt5tcPIAQJklJ+UKlT7xWUM+c7A9ByOY=;
+        b=kH7wAi2cC/F99+aCAZQ/5gUcbhhHyrPQ9CyLbBpTJPdWVHxs++le1EvJzdVWbhAXd8
+        XteFtWJAeEdU2Z1XYy/tTrnATWN42VR1vui5US+Mc/7wMMl/YGJHlpvfl41K5YYUwh/0
+        p5jn7WQD9HIZjqjAr0fZ0KtOsr0JaSiyTRLYe5Md8eVsivtnhrBqbSN1/ZEo6hs+72s4
+        RKyarBfgRGCw2BfntzxolKFSvCY6f3kveqU6wzAz+9DeV2iFz2plUXC8NFPYg16JP5e8
+        WKw5KC39Z6cV6ZdCoR/1tbWV2u9w+nEGfH4Z3RTI8XVmjBrKRT7B9pS/v7rCMgmbXfxv
+        R1TA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlWcXAYPzw=="
+X-RZG-CLASS-ID: mo00
+Received: from mbp-13-nikolaus.fritz.box
+        by smtp.strato.de (RZmta 46.10.5 DYNA|AUTH)
+        with ESMTPSA id V07054w6BKOhAv0
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Sat, 11 Jul 2020 22:24:43 +0200 (CEST)
+Subject: Re: [PATCH] MIPS: CI20: DTS: Correcting IW8103 Wifi binding
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=utf-8
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <f617580b-fad7-f4f2-e89d-402b53c21c47@deutnet.info>
+Date:   Sat, 11 Jul 2020 22:24:47 +0200
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        linux-mips <linux-mips@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <6AB9C165-7B42-44A6-BCA8-8879B7D70699@goldelico.com>
+References: <20200705103215.96672-1-agriveaux@deutnet.info> <457C75ED-A033-4B46-A9D9-53B510C16F37@goldelico.com> <f617580b-fad7-f4f2-e89d-402b53c21c47@deutnet.info>
+To:     Alexandre GRIVEAUX <agriveaux@deutnet.info>
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 01:36:06PM +0200, Kurt Kanzenbach wrote:
-> From: Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>
-> 
-> The switch has internal PTP hardware clocks. Add support for it. There are three
-> clocks:
-> 
->  * Synchronized
->  * Syntonized
->  * Free running
-> 
-> Currently the synchronized clock is exported to user space which is a good
-> default for the beginning. The free running clock might be exported later
-> e.g. for implementing 802.1AS-2011/2020 Time Aware Bridges (TAB). The switch
-> also supports cross time stamping for that purpose.
-> 
-> The implementation adds support setting/getting the time as well as offset and
-> frequency adjustments. However, the clock only holds a partial timeofday
-> timestamp. This is why we track the seconds completely in software (see overflow
-> work and last_ts).
-> 
-> Furthermore, add the PTP multicast addresses into the FDB to forward that
-> packages only to the CPU port where they are processed by a PTP program.
-> 
-> Signed-off-by: Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>
-> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
+Hi Alexandre,
 
-Acked-by: Richard Cochran <richardcochran@gmail.com>
+> Am 06.07.2020 um 22:22 schrieb Alexandre GRIVEAUX =
+<agriveaux@deutnet.info>:
+>=20
+> Le 06/07/2020 =C3=A0 13:15, H. Nikolaus Schaller a =C3=A9crit :
+>> Hi Alexandre,
+>>=20
+>>> Am 05.07.2020 um 12:32 schrieb agriveaux@deutnet.info:
+>>>=20
+>>> From: Alexandre GRIVEAUX <agriveaux@deutnet.info>
+>>>=20
+>>> Use brcm,bcm4329-fmac instead of brcm,bcm4330-fmac.
+>>>=20
+>>> Signed-off-by: Alexandre GRIVEAUX <agriveaux@deutnet.info>
+>>> ---
+>>> arch/mips/boot/dts/ingenic/ci20.dts | 4 ++--
+>>> 1 file changed, 2 insertions(+), 2 deletions(-)
+>>>=20
+>>> diff --git a/arch/mips/boot/dts/ingenic/ci20.dts =
+b/arch/mips/boot/dts/ingenic/ci20.dts
+>>> index 75f5bfbf2c37..82a1f126b778 100644
+>>> --- a/arch/mips/boot/dts/ingenic/ci20.dts
+>>> +++ b/arch/mips/boot/dts/ingenic/ci20.dts
+>>> @@ -116,8 +116,8 @@
+>>> 	pinctrl-0 =3D <&pins_mmc1>;
+>>>=20
+>>> 	brcmf: wifi@1 {
+>>> -/*		reg =3D <4>;*/
+>>> -		compatible =3D "brcm,bcm4330-fmac";
+>>> +		reg =3D <1>;
+>>> +		compatible =3D "brcm,bcm4329-fmac";
+>>> 		vcc-supply =3D <&wlan0_power>;
+>>> 		device-wakeup-gpios =3D <&gpd 9 GPIO_ACTIVE_HIGH>;
+>>> 		shutdown-gpios =3D <&gpf 7 GPIO_ACTIVE_LOW>;
+>> Do you have it working with a v5.8 kernel?
+>>=20
+>> I don't see any activity to detect the module or load firmware.
+>>=20
+>> Does it rely on some other patch?
+>>=20
+>> BR and thanks,
+>> Nikolaus
+>>=20
+> Hi Nikolaus
+>=20
+>=20
+> At this time the patch have been only "tested" for error will doing =
+make:
+>=20
+> make ARCH=3Dmips CROSS_COMPILE=3Dmipsel-linux-gnu- olddefconfig &&  =
+make
+> ARCH=3Dmips CROSS_COMPILE=3Dmipsel-linux-gnu- -j8 && make ARCH=3Dmips
+> CROSS_COMPILE=3Dmipsel-linux-gnu- -j8 uImage
+>=20
+>=20
+> The .config come from creator-ci20 kernel 'config-3.18.3-ci20-1'
+>=20
+>=20
+> Even with the right DT
+> (Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt)
+> it's need some config with brcm enabled I gess.
+>=20
+>=20
+> I need to do some investigation will trying the uImage this week,
+> unfortunaly kernel developpement is not my main work, it's a hobby.
+
+No problem. For me, the CI20 is also a hobby project :)
+
+Here is some information about the CI20 WiFi and firmware:
+
+https://elinux.org/CI20_Hardware#WiFi.2FBT
+
+https://elinux.org/CI20_upstream#WiFi_firmware
+
+So to be it looks as if the
+
+compatible =3D "brcm,bcm4330-fmac";
+
+is correct. But the reg =3D <4> or <1> is something we have to find out.
+
+BR,
+Nikolaus
+
