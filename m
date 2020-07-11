@@ -2,97 +2,127 @@ Return-Path: <SRS0=t1WB=AW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC33C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 20:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3898C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 20:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 094EC20725
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 20:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A0AF2077D
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 20:38:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qQ0OZEls"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgGKU3s (ORCPT
+        id S1727098AbgGKUiO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Jul 2020 16:29:48 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:36364 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbgGKU3s (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jul 2020 16:29:48 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 6AA9B1C0BD2; Sat, 11 Jul 2020 22:29:45 +0200 (CEST)
-Date:   Sat, 11 Jul 2020 22:29:45 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dan Murphy <dmurphy@ti.com>, marek.behun@nic.cz
-Cc:     jacek.anaszewski@gmail.com, robh@kernel.org,
-        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v29 00/16] Multicolor Framework v29
-Message-ID: <20200711202944.GA19108@duo.ucw.cz>
-References: <20200622185919.2131-1-dmurphy@ti.com>
- <20200704124729.GA20088@amd>
+        Sat, 11 Jul 2020 16:38:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38970 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727021AbgGKUiN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jul 2020 16:38:13 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A861C08C5DD;
+        Sat, 11 Jul 2020 13:38:13 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id d4so4115763pgk.4;
+        Sat, 11 Jul 2020 13:38:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9yxWqLAujS3P0ixpFdXfloKeUJCd/J3seY5CVD80kVg=;
+        b=qQ0OZElsZtT4gMww/mF4mdziBQk3R+yOv0WzDYO2cC+GF3dxAEPeJYl3/IZtkwfedm
+         wsXEw7dNB64MIe6+AxLipPikY6yHGNsNbx3gl2h2pSBjXgJdmwy1kev945k4d46I6B94
+         I4rNNscWX1dTiJ+Cu5xUWB+0W5vXBy2WQuNbWpn0uLPDtcXovmJG4cXh9A5AGCgzclnD
+         E1LoslhymgwttWovOKnXN2D+f04WbAFLwkk+3P+22IOw9JljCh0BS1XT2c6gXwVEfCMw
+         A2fYhe19GrdsSmufASld9Ne8gG1almp1CvJ6tqftfBrvywXiIifEApexZdfsyeIaL069
+         lgUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9yxWqLAujS3P0ixpFdXfloKeUJCd/J3seY5CVD80kVg=;
+        b=XH481C40QPvc+B9XP1N0VkB53d2Z+ex8QJDyiLUEF6PGrQmvDoOdX1JMRj780mKS19
+         1ifkFR+BRlGi5O0TOjvrtqkxbhVTXnrVXVN/18GusSulFyUqEj1dUU44l8jjTSmPxJKc
+         HD2wz5G5IS9lHafsHuhQQYvOvNPa+toId4nNH2l3ZNUJMOZd3Z0bUZW/Q+Gj2aj3ieWq
+         QBnmokYBMKa5eKk8X5rmaOUQBdaIbveOBb1loV7ZbZhHc2SjSeA+97fFula7xVdkbcce
+         Q7mZTPUxlZq8yRWRMjcpWdf1Uwbq6lo8FkOSXtwZrU9f2p4sKbNuJprv8IOmkAUCoGc1
+         8Tuw==
+X-Gm-Message-State: AOAM530zCMRkfg1tiEzbo+fZ8Xaoz+Pm2uul+2bX6Ndtvb4K1moJ5tD8
+        klIqm+ptpyU0S9ILMJUAeTU=
+X-Google-Smtp-Source: ABdhPJwU60o/LtYa7R9yYYeXcfP729m2X78MAhuEz+boLIXxsl+evCtfQxtqxln1gUWKi76QoQwZsg==
+X-Received: by 2002:a63:5a17:: with SMTP id o23mr63695545pgb.218.1594499892883;
+        Sat, 11 Jul 2020 13:38:12 -0700 (PDT)
+Received: from hoboy (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id t187sm9385064pgb.76.2020.07.11.13.38.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Jul 2020 13:38:12 -0700 (PDT)
+Date:   Sat, 11 Jul 2020 13:38:10 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Kurt Kanzenbach <kurt@linutronix.de>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org, Vladimir Oltean <olteanv@gmail.com>
+Subject: Re: [PATCH v1 4/8] net: dsa: hellcreek: Add support for hardware
+ timestamping
+Message-ID: <20200711203810.GB27467@hoboy>
+References: <20200710113611.3398-1-kurt@linutronix.de>
+ <20200710113611.3398-5-kurt@linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="4Ckj6UjgE2iN1+kY"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200704124729.GA20088@amd>
+In-Reply-To: <20200710113611.3398-5-kurt@linutronix.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, Jul 10, 2020 at 01:36:07PM +0200, Kurt Kanzenbach wrote:
+> +static void hellcreek_get_rxts(struct hellcreek *hellcreek,
+> +			       struct hellcreek_port_hwtstamp *ps,
+> +			       struct sk_buff *skb, struct sk_buff_head *rxq,
+> +			       int port)
+> +{
+> +	struct skb_shared_hwtstamps *shwt;
+> +	struct sk_buff_head received;
+> +	unsigned long flags;
+> +
+> +	/* The latched timestamp belongs to one of the received frames. */
+> +	__skb_queue_head_init(&received);
+> +
+> +	/* Lock & disable interrupts */
+> +	spin_lock_irqsave(&rxq->lock, flags);
+> +
+> +	/* Add the reception queue "rxq" to the "received" queue an reintialize
+> +	 * "rxq".  From now on, we deal with "received" not with "rxq"
+> +	 */
+> +	skb_queue_splice_tail_init(rxq, &received);
+> +
+> +	spin_unlock_irqrestore(&rxq->lock, flags);
+> +
+> +	for (; skb; skb = __skb_dequeue(&received)) {
+> +		unsigned int type;
+> +		u8 *hdr;
+> +		u64 ns;
+> +
+> +		/* Get nanoseconds from ptp packet */
+> +		type = SKB_PTP_TYPE(skb);
+> +		hdr  = parse_ptp_header(skb, type);
+> +		ns   = hellcreek_get_reserved_field(hdr);
 
---4Ckj6UjgE2iN1+kY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+You might consider clearing the reserved field at this point.  Some
+user space SW might consider non-zero reserved fields as corrupt!
 
-On Sat 2020-07-04 14:47:29, Pavel Machek wrote:
-> Hi!
->=20
-> > This is the multi color LED framework.   This framework presents cluste=
-red
-> > colored LEDs into an array and allows the user space to adjust the brig=
-htness
-> > of the cluster using a single file write.  The individual colored LEDs
-> > intensities are controlled via a single file that is an array of LEDs
-> >=20
-> > Change to the LEDs Kconfig to fix dependencies on the LP55XX_COMMON.
-> > Added update to the u8500_defconfig
->=20
-> Marek, would you be willing to look over this series?
->=20
-> Dan, can we please get it in the order
->=20
-> 1) fixes first
->=20
-> 2) changes needed for multicolor but not depending on dt acks
->=20
-> 3) dt changes
->=20
-> 4) rest?
+(The LinuxPTP stack doesn't do this, but still maybe others are more
+pedantic.)
 
-Actually, one more request. I believe I won't be able to take at least
-some of the ARM: dts stuff... not everything is acked. Please put that
-last.
 
-Thank you,
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---4Ckj6UjgE2iN1+kY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXwohOAAKCRAw5/Bqldv6
-8sPyAJ97i6Ntm4lIfSIJO0apJgNpU2HrZwCghh4yCOPhIh9uclm0dxx8ShyVEss=
-=GqAJ
------END PGP SIGNATURE-----
-
---4Ckj6UjgE2iN1+kY--
+Acked-by: Richard Cochran <richardcochran@gmail.com>
