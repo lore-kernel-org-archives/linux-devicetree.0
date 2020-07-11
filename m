@@ -2,87 +2,96 @@ Return-Path: <SRS0=t1WB=AW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D72C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 16:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03211C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 17:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5218206F4
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 16:52:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0162207F9
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 17:19:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jn4vqjOe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbgGKQwI (ORCPT
+        id S1728412AbgGKRT1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Jul 2020 12:52:08 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:58646 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728412AbgGKQwI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 11 Jul 2020 12:52:08 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1juIjL-004djd-Mj; Sat, 11 Jul 2020 18:52:03 +0200
-Date:   Sat, 11 Jul 2020 18:52:03 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Kurt Kanzenbach <kurt@linutronix.de>
-Cc:     Rob Herring <robh@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v1 1/1] dt-bindings: net: dsa: Add DSA yaml binding
-Message-ID: <20200711165203.GO1014141@lunn.ch>
-References: <20200710090618.28945-1-kurt@linutronix.de>
- <20200710090618.28945-2-kurt@linutronix.de>
- <20200710163940.GA2775145@bogus>
- <874kqewahb.fsf@kurt>
+        Sat, 11 Jul 2020 13:19:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36838 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726281AbgGKRT1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jul 2020 13:19:27 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B573C08C5DD;
+        Sat, 11 Jul 2020 10:19:26 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id o2so8957055wmh.2;
+        Sat, 11 Jul 2020 10:19:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BAY2/0J+ZmHyiIP5qBIYgvkyqh416isH8/DQ5Y+/lR4=;
+        b=Jn4vqjOe1vlXGpmpFkxEq/lsZBxq7vqbdHx5DuZWQWam7mPTJ0xoQ86fvLGKDTocWQ
+         4/mLwdfdrvdp6Enxgp4B7N4r2blG/USWai0/Tl+1pYAwzq2eH4j037KlyyT6v/Tmd26/
+         OFapOiV2ZPCpEPo1tfTUb6/s5fG69nP0bJrzvz5EfvUfjg2KeOpCKlzen4SBSK/++HR9
+         jaVJ2f/E7CWtGlf4f6rECZzxJazF2Xm91y4APFaxtFWu9V9Y95nnlTW29Vvw5U+15Icf
+         ql8XCGDXWP6Gf0AXNgeYV3VmHyyDif/tO4yipq0/Y0eWz+7ZlOqrR2XHjWgIx3xp8y9F
+         pZAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BAY2/0J+ZmHyiIP5qBIYgvkyqh416isH8/DQ5Y+/lR4=;
+        b=irEOOI9UmeYvihN/IGrftf8aSqqDnbVLYwXXm0TkSYgrAz6a9a8S7RtjcmPr6ac9Dx
+         8IOml6RJ2HhCDrnStnAPt6ZTJie/3Kib1gU8RVvTWVZTIArK1x2NqxkLyE0lFdb9SgPv
+         9TEPGrN3rBPvp3CY6TrrKJtBSzLMd53AvO2EupPgbhna7vpPyc3dlkTN2ALGTFkxJf+G
+         vnO1zqPvg0zGtONr6LMl4NV31mZ232CRmM1beUYZf3v5w9eSHEc8nyFPOw/xyWIvJDn+
+         oFltrpD/Ed64rfNpdM7wgg+eVnq3wn9v0LuH/p5fqYZh8DSGztVttY2/IPxw8JzYafW3
+         0n0w==
+X-Gm-Message-State: AOAM530dGwPINP7d1U1KIXEZt+qm/fgaE4L5DyoyFrJ+UCRJ89/gpyPc
+        q4AvEf/WUkN62qoQbQn9W18=
+X-Google-Smtp-Source: ABdhPJxv2OIE3YrK4OHjS2Mx+Yn4v1VlZsR6jW8FSXzwoxPCICSLQIr/RL1LUYfXVZufqX1/z7SL3w==
+X-Received: by 2002:a05:600c:21ca:: with SMTP id x10mr10638365wmj.63.1594487965310;
+        Sat, 11 Jul 2020 10:19:25 -0700 (PDT)
+Received: from ?IPv6:2a01:110f:b59:fd00:e1bd:5ced:59bb:4d37? ([2a01:110f:b59:fd00:e1bd:5ced:59bb:4d37])
+        by smtp.gmail.com with ESMTPSA id o29sm16760012wra.5.2020.07.11.10.19.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 11 Jul 2020 10:19:24 -0700 (PDT)
+Subject: Re: [PATCH v29 13/16] leds: lp5523: Update the lp5523 code to add
+ multicolor brightness function
+To:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+Cc:     robh@kernel.org, devicetree@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200622185919.2131-1-dmurphy@ti.com>
+ <20200622185919.2131-14-dmurphy@ti.com> <20200711155749.GB22715@amd>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <c9e20136-7226-2feb-b017-0a0742867f93@gmail.com>
+Date:   Sat, 11 Jul 2020 19:19:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874kqewahb.fsf@kurt>
+In-Reply-To: <20200711155749.GB22715@amd>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Jul 11, 2020 at 01:35:12PM +0200, Kurt Kanzenbach wrote:
-> On Fri Jul 10 2020, Rob Herring wrote:
-> > On Fri, 10 Jul 2020 11:06:18 +0200, Kurt Kanzenbach wrote:
-> >> For future DSA drivers it makes sense to add a generic DSA yaml binding which
-> >> can be used then. This was created using the properties from dsa.txt. It
-> >> includes the ports and the dsa,member property.
-> >> 
-> >> Suggested-by: Florian Fainelli <f.fainelli@gmail.com>
-> >> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
-> >> ---
-> >>  .../devicetree/bindings/net/dsa/dsa.yaml      | 80 +++++++++++++++++++
-> >>  1 file changed, 80 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/net/dsa/dsa.yaml
-> >> 
-> >
-> >
-> > My bot found errors running 'make dt_binding_check' on your patch:
-> >
-> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/ti,cpsw-switch.example.dt.yaml: switch@0: 'ports' is a required property
-> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.example.dt.yaml: switch@10: 'ports' is a required property
+On 7/11/20 5:57 PM, Pavel Machek wrote:
+> Hi!
 > 
-> Okay, the requirement for 'ports' has be to removed.
+>> Add the multicolor brightness call back to support the multicolor
+>> framework.  This call back allows setting  brightness on grouped channels
+> 
+> Extra space before "brightness".
 
-Hummm....
+And before "This".
 
-ti.cpsw is not a DSA switch. So this binding should not apply to
-it. It is a plain switchdev switch.
-
-The qcom,ipq806 is just an MDIO bus master. The DSA binding might
-apply, for a specific .dts file, if that dts file has a DSA switch on
-the bus. But in general, it should not apply.
-
-So i actually think you need to work out why this binding is being
-applied when it should not be.
-
-I suspect it is the keyword 'switch'. switch does not imply it is a
-DSA switch. There are other sorts of switches as well.
-
-	Andrew
+-- 
+Best regards,
+Jacek Anaszewski
