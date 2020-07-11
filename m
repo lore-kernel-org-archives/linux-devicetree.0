@@ -2,131 +2,72 @@ Return-Path: <SRS0=t1WB=AW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 032CEC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 14:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41ED9C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 14:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC96B20786
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 14:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EB95207F9
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 14:32:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594477410;
-	bh=i6hKd36iicKMTEXCGhxUPRXIZNMbi5YL5dR7KTFIjpw=;
+	s=default; t=1594477945;
+	bh=UqWFBHcsmz1nBysnWIV+Cuhkrsz5c16BQDv6NLgGk/Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DvSEJ2+vVX5L3OUEpqGMnnaov+JUsLXQMnWMEcx/0IZJ4Knz23LIYM0XB24SNGTPL
-	 gG85C34kdzBfGpCrgwiwyujuEEdVyyBkk6DQ96uFSIrcA1gjdW3wnU0GRUYzG4Hn7t
-	 beMdXZ/EEnor+mGqaMC/vYjsXZiTMVkYb+cWOvAo=
+	b=uAzOxymAsU5tOktKrrG5cvuGBfH4b7+vt247vsaREc8/tCa9xuBdSTWXeI3PnNn+t
+	 V4GHPuJoOr2cALCURL0oLeHvGM3hgjUHVMl/fMyVpZF7KXA+zT3CKOXGWeOWKrLeC0
+	 KAGzIJNKKENpMgS3rIDwIqxfUA533o5ZHtGHNhhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbgGKOXa (ORCPT
+        id S1728378AbgGKOcY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Jul 2020 10:23:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49232 "EHLO mail.kernel.org"
+        Sat, 11 Jul 2020 10:32:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726630AbgGKOX3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 11 Jul 2020 10:23:29 -0400
+        id S1728294AbgGKOcY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 11 Jul 2020 10:32:24 -0400
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5350D20720;
-        Sat, 11 Jul 2020 14:23:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14BB220720;
+        Sat, 11 Jul 2020 14:32:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594477409;
-        bh=i6hKd36iicKMTEXCGhxUPRXIZNMbi5YL5dR7KTFIjpw=;
+        s=default; t=1594477943;
+        bh=UqWFBHcsmz1nBysnWIV+Cuhkrsz5c16BQDv6NLgGk/Y=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yebrohnLQCFk4By/M719fjkVcdyr6qgeJ8BNGqb+KXzmG2y2GI9IyAaaeubShoHn8
-         nTKwBUV5DAXfYwi6BVwnAyP4sb4NZybtJ6iNpXIM9H+Okhw0mkZEMsTnzLblbK4qz3
-         sJ4+2JPYFvC4k/geHoim08yCorLMQf4Xa/HbWwVY=
-Date:   Sat, 11 Jul 2020 22:23:23 +0800
+        b=VJfsj+ZPAB8k4L09HNHzrZG7ZvoClAPFCTA5SNU78mzrkTkanJI9Ldfi1jFG2Lr7I
+         2FZTUvkKVO9ZpzQ2QbEiepROTP8fmDF5mk4IZWWdo3BsvCFyfO1T8WRenyJ0O7raVx
+         GqArakqzl1vyaeCwtbcia9gt0Lf/cYgKt7+UjrGg=
+Date:   Sat, 11 Jul 2020 22:32:18 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Qiang Zhao <qiang.zhao@nxp.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        leoyang.li@nxp.com, Chuanhua Han <chuanhua.han@nxp.com>
-Subject: Re: [RESEND PATCH 1/2] arm64: dts: lx2160a: add dspi controller DT
- nodes
-Message-ID: <20200711142322.GI21277@dragon>
-References: <20200622083109.3441-1-qiang.zhao@nxp.com>
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v3] ARM: dts: imx6qdl-gw551x: fix audio SSI
+Message-ID: <20200711143217.GK21277@dragon>
+References: <1592937087-8885-1-git-send-email-tharvey@gateworks.com>
+ <1592939214-13637-1-git-send-email-tharvey@gateworks.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200622083109.3441-1-qiang.zhao@nxp.com>
+In-Reply-To: <1592939214-13637-1-git-send-email-tharvey@gateworks.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 04:31:08PM +0800, Qiang Zhao wrote:
-> From: Chuanhua Han <chuanhua.han@nxp.com>
+On Tue, Jun 23, 2020 at 12:06:54PM -0700, Tim Harvey wrote:
+> The audio codec on the GW551x routes to ssi1
 > 
-> Add the dspi support on lx2160
-> 
-> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
-> Signed-off-by: Bao Xiaowei <xiaowei.bao@nxp.com>
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
+> Cc: stable@vger.kernel.org
+> Fixes: 3117e851cef1 ("ARM: dts: imx: Add TDA19971 HDMI Receiver to GW551x")
+> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
 
-When you resend patches, please state why.  Should I drop the patches
-I just applied and pick up this version instead?
-
-Shawn
-
-> ---
->  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 39 ++++++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> index abaeb58..f56172f 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> @@ -777,6 +777,45 @@
->  			status = "disabled";
->  		};
->  
-> +		dspi0: spi@2100000 {
-> +			compatible = "fsl,lx2160a-dspi", "fsl,ls2085a-dspi";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0x0 0x2100000 0x0 0x10000>;
-> +			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clockgen 4 7>;
-> +			clock-names = "dspi";
-> +			spi-num-chipselects = <5>;
-> +			bus-num = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		dspi1: spi@2110000 {
-> +			compatible = "fsl,lx2160a-dspi", "fsl,ls2085a-dspi";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0x0 0x2110000 0x0 0x10000>;
-> +			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clockgen 4 7>;
-> +			clock-names = "dspi";
-> +			spi-num-chipselects = <5>;
-> +			bus-num = <1>;
-> +			status = "disabled";
-> +		};
-> +
-> +		dspi2: spi@2120000 {
-> +			compatible = "fsl,lx2160a-dspi", "fsl,ls2085a-dspi";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0x0 0x2120000 0x0 0x10000>;
-> +			interrupts = <GIC_SPI 241 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clockgen 4 7>;
-> +			clock-names = "dspi";
-> +			spi-num-chipselects = <5>;
-> +			bus-num = <2>;
-> +			status = "disabled";
-> +		};
-> +
->  		esdhc0: esdhc@2140000 {
->  			compatible = "fsl,esdhc";
->  			reg = <0x0 0x2140000 0x0 0x10000>;
-> -- 
-> 2.7.4
-> 
+Applied, thanks.
