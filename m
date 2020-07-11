@@ -2,77 +2,152 @@ Return-Path: <SRS0=t1WB=AW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04198C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 10:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BD6C433E6
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 10:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE66E2075F
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 10:39:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594463963;
-	bh=0tKmM3hnqlBR6wjwAtL9NeJWHhpnrj1shC9MoLhtWb4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gY3qW1U1u8VEf6/LvyJF3NdQtp7BmmcsqiYULyng/uW0SJ5BOjxM0RE4j8K/uuFDU
-	 NyFXYmabbDAcDPJGSbxDsPHjtpYcYrGMhxjjvDppHzHGzdT1dQCRTMMeu3dMdHHkzh
-	 eIyd9n+1VjTQPvPGp1PKoqq1dcfKEm28/H1ZlFgk=
+	by mail.kernel.org (Postfix) with ESMTP id 67EEB207D4
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jul 2020 10:46:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aurel32.net header.i=@aurel32.net header.b="T3rF3OsC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbgGKKjX (ORCPT
+        id S1726261AbgGKKq5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Jul 2020 06:39:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60922 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726261AbgGKKjX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 11 Jul 2020 06:39:23 -0400
-Received: from dragon (unknown [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B284720720;
-        Sat, 11 Jul 2020 10:39:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594463962;
-        bh=0tKmM3hnqlBR6wjwAtL9NeJWHhpnrj1shC9MoLhtWb4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=So+3Dv31XOmsflbh95H6ny1myLUVlNMHmgO38lh/dhdu/T/xblhAW6r0gdCkK4voN
-         eUrZKXqAMTDNSTtmvGsxXthpT+t41KTUj/Xee3WMIDcx3ZZI0xgRZGDgklLeFEeiYr
-         hAYy+JVwRdu92whWLyV6LZSEFJRAEpizc1z8CiqE=
-Date:   Sat, 11 Jul 2020 18:39:03 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
+        Sat, 11 Jul 2020 06:46:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33470 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbgGKKq5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jul 2020 06:46:57 -0400
+X-Greylist: delayed 2696 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 11 Jul 2020 03:46:57 PDT
+Received: from hall.aurel32.net (hall.aurel32.net [IPv6:2001:bc8:30d7:100::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A1E7C08C5DD;
+        Sat, 11 Jul 2020 03:46:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=aurel32.net
+        ; s=202004.hall; h=In-Reply-To:Content-Type:MIME-Version:References:
+        Message-ID:Subject:Cc:To:From:Date:Content-Transfer-Encoding:From:Reply-To:
+        Subject:Content-ID:Content-Description:X-Debbugs-Cc;
+        bh=Brj2Uur/vWw8fobBoxnPCAHoheyz+8lGCkL8KGgE4kk=; b=T3rF3OsCphU2NAQsomSG79Gt7G
+        toOUn6F5KjoMhxsr7qwX0TqKajhOBb5Yiwwk7CK6VeFp8KlTLYtmadtvGpULqvEEUVGwymznvessY
+        5skk9TM12Wf3h47kZUDIbTMD+cCSJKHfCtijxevGHedRQlD857qWYp3owOp3DlgxEyGEfxGy4830G
+        gnkd1pPeUZxEgirqLUdI96a9Rw8nnJCgofAUmv0QwIE1RbxsMZ1HBL1dUTMt182DuKbQuKqqducmU
+        BmSvsX7hSsF8s3RJnoBcSCU0ZChdIhHvDUwQDF85JjEsXYUhEK2eAq0gPt7+eFVxbqotky0YlLYOj
+        IDry8pzw==;
+Received: from [2a01:e35:2fdd:a4e1:fe91:fc89:bc43:b814] (helo=ohm.rr44.fr)
+        by hall.aurel32.net with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <aurelien@aurel32.net>)
+        id 1juCKN-0005Xf-Iz; Sat, 11 Jul 2020 12:01:51 +0200
+Received: from aurel32 by ohm.rr44.fr with local (Exim 4.94)
+        (envelope-from <aurelien@aurel32.net>)
+        id 1juCKL-00A3er-Fn; Sat, 11 Jul 2020 12:01:49 +0200
+Date:   Sat, 11 Jul 2020 12:01:49 +0200
+From:   Aurelien Jarno <aurelien@aurel32.net>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        Ian Ray <ian.ray@ge.com>, Samu Nuutamo <samu.nuutamo@vincit.fi>
-Subject: Re: [PATCH] ARM: dts: imx53: ppd: alarm LEDs use kernel LED interface
-Message-ID: <20200711103902.GA21277@dragon>
-References: <20200416145123.73039-1-sebastian.reichel@collabora.com>
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.19 080/106] mips: Add udelay lpj numbers
+ adjustment
+Message-ID: <20200711100149.GA2397222@aurel32.net>
+Mail-Followup-To: Sasha Levin <sashal@kernel.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>, Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org
+References: <20200608232238.3368589-1-sashal@kernel.org>
+ <20200608232238.3368589-80-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200416145123.73039-1-sebastian.reichel@collabora.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200608232238.3368589-80-sashal@kernel.org>
+User-Agent: Mutt/1.14.0 (2020-05-02)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 04:51:23PM +0200, Sebastian Reichel wrote:
-> From: Ian Ray <ian.ray@ge.com>
+On 2020-06-08 19:22, Sasha Levin wrote:
+> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > 
-> Use kernel LED interface for the alarm LEDs.
+> [ Upstream commit ed26aacfb5f71eecb20a51c4467da440cb719d66 ]
 > 
-> Signed-off-by: Ian Ray <ian.ray@ge.com>
-> [Rebased]
-> Signed-off-by: Samu Nuutamo <samu.nuutamo@vincit.fi>
-> [Rebased]
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> Loops-per-jiffies is a special number which represents a number of
+> noop-loop cycles per CPU-scheduler quantum - jiffies. As you
+> understand aside from CPU-specific implementation it depends on
+> the CPU frequency. So when a platform has the CPU frequency fixed,
+> we have no problem and the current udelay interface will work
+> just fine. But as soon as CPU-freq driver is enabled and the cores
+> frequency changes, we'll end up with distorted udelay's. In order
+> to fix this we have to accordinly adjust the per-CPU udelay_val
+> (the same as the global loops_per_jiffy) number. This can be done
+> in the CPU-freq transition event handler. We subscribe to that event
+> in the MIPS arch time-inititalization method.
+> 
+> Co-developed-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  arch/mips/kernel/time.c | 70 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+> 
+> diff --git a/arch/mips/kernel/time.c b/arch/mips/kernel/time.c
+> index bfe02ded25d1..1e631a484ddf 100644
+> --- a/arch/mips/kernel/time.c
+> +++ b/arch/mips/kernel/time.c
+> @@ -22,12 +22,82 @@
+>  #include <linux/smp.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/export.h>
+> +#include <linux/cpufreq.h>
+> +#include <linux/delay.h>
+>  
+>  #include <asm/cpu-features.h>
+>  #include <asm/cpu-type.h>
+>  #include <asm/div64.h>
+>  #include <asm/time.h>
+>  
+> +#ifdef CONFIG_CPU_FREQ
+> +
+> +static DEFINE_PER_CPU(unsigned long, pcp_lpj_ref);
+> +static DEFINE_PER_CPU(unsigned long, pcp_lpj_ref_freq);
+> +static unsigned long glb_lpj_ref;
+> +static unsigned long glb_lpj_ref_freq;
+> +
+> +static int cpufreq_callback(struct notifier_block *nb,
+> +			    unsigned long val, void *data)
+> +{
+> +	struct cpufreq_freqs *freq = data;
+> +	struct cpumask *cpus = freq->policy->cpus;
+                                     ^^^^^^
 
-s/imx53: ppd/imx53-ppd in subject.
+The policy member has been added in kernel 5.2, so kernel 4.19.129 and
+later do not build anymore when CONFIG_CPU_FREQ=y.
 
-Applied, thanks.
+-- 
+Aurelien Jarno                          GPG: 4096R/1DDD8C9B
+aurelien@aurel32.net                 http://www.aurel32.net
