@@ -2,58 +2,61 @@ Return-Path: <SRS0=EOmc=AX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EF1C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 10:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2429AC433E4
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 11:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE45F20725
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 10:59:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 035AF2075F
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 11:22:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594551566;
-	bh=m2ldq/P6eHCKFhsuxxrh5YUDTHV4+XhlQ3ie/UGHytY=;
+	s=default; t=1594552951;
+	bh=ZselvpBXx8fvRjXcrydYqfW7ObsUAVRjBnXH31XHV40=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=rMFuRTWprjHa+Gtl5JTNoXn6j9PfcYQY9t1CmXXJb6w+/HBJNHiO5mCCe52Mtpa5b
-	 lcjjBA0zXs5XUWsD8pNc13aSIKseeyPKA97Dv9frSjgZEcmbgRS/cToj2BWkGrPJ3N
-	 voCELRe7tBojkej/C4vx0O/KCmtEmodK72WqrqGM=
+	b=1o78p0rIL8VaojF3ds+vjV3YB0hbBdcUtt/Uw19lpNHaY7PjkmRxXOnV6HouVorAz
+	 XSJE7C8jnwuTGznhSjs0A/GTDvY6ZQZO1HxwH6nza6pOP1MZ0kJ6TF7MgzT6cw4bPw
+	 S77avHBipgVHctwNygiMIm/hV3768M0ekXud56lI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728781AbgGLK7Z (ORCPT
+        id S1728837AbgGLLW0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Jul 2020 06:59:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53536 "EHLO mail.kernel.org"
+        Sun, 12 Jul 2020 07:22:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728615AbgGLK7Z (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 12 Jul 2020 06:59:25 -0400
+        id S1728828AbgGLLW0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 12 Jul 2020 07:22:26 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3831420720;
-        Sun, 12 Jul 2020 10:59:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 663FC2075F;
+        Sun, 12 Jul 2020 11:22:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594551564;
-        bh=m2ldq/P6eHCKFhsuxxrh5YUDTHV4+XhlQ3ie/UGHytY=;
+        s=default; t=1594552945;
+        bh=ZselvpBXx8fvRjXcrydYqfW7ObsUAVRjBnXH31XHV40=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nnDVnbU7ES+2e9H77biTNBg1l0d6WFJsQYIUb4CiY9yr/CyZ8A3Cft1RdwqKGQqxo
-         QqRrUxdG44IFfj7y+moOM1OFGSNY9pme2u9QX+xxyWAsmMG1g08B94A30zK7PzRv0M
-         /VTl+AXZNOymhjMGrdSihK+nh8wTxx1zpjQ/+SuM=
-Date:   Sun, 12 Jul 2020 11:59:20 +0100
+        b=HmSPwmhUhokYPC5svIpG9xyv9N62LQcH9CPsa82fkLzWHfZC5PoyR93qeAwPxJk9d
+         80LKKbnFOiUVwswt4qXrqzJvXcLzi48Sgz3/D4MxAW2dHr4xSCaM3fTyVqjggGD++w
+         hl1wi6t6RKPddPQgiR/QbsIpUWzH6Zh1T3VPi2nU=
+Date:   Sun, 12 Jul 2020 12:22:19 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Eugene Zaikonnikov <ez@norphonic.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, development@norphonic.com,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v9 2/2] dt-bindings: iio: humidity: Add TI HDC20x0
- support
-Message-ID: <20200712115920.4041260c@archlinux>
-In-Reply-To: <86blknd0id.fsf@norphonic.com>
-References: <86d053d1re.fsf@norphonic.com>
-        <86blknd0id.fsf@norphonic.com>
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v8 1/6] dt-bindings: iio/adc: Convert ingenic-adc docs
+ to YAML.
+Message-ID: <20200712122219.6c9e1e62@archlinux>
+In-Reply-To: <20200709152200.10039-2-contact@artur-rojek.eu>
+References: <20200709152200.10039-1-contact@artur-rojek.eu>
+        <20200709152200.10039-2-contact@artur-rojek.eu>
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -63,85 +66,178 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 10 Jul 2020 14:20:58 +0200
-Eugene Zaikonnikov <ez@norphonic.com> wrote:
+On Thu,  9 Jul 2020 17:21:55 +0200
+Artur Rojek <contact@artur-rojek.eu> wrote:
 
-> Add device tree bindings for HDC2010/HDC2080 family of humidity and
-> temperature sensors.
+> Convert the textual documentation of Device Tree bindings for the
+> Ingenic JZ47xx SoCs ADC controller to YAML.
 > 
+> The `interrupts` property is now explicitly listed and marked as
+> required. While missing from the previous textual documentation, this
+> property has been used with all the boards which probe this driver.
+> 
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> Tested-by: Paul Cercueil <paul@crapouillou.net>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-As Andy mentioned for patch 1 please avoid attachments.
+Given this is a good change on it's own. I'll apply it before even
+reading the rest of the series.  If we do need to go to a v9 at least
+it'll be shorter ;) 
 
-> Changes from v8:
-> - document the use of reg
-> - change the license terms to GPL-2.0-only
-
-The change log should be after the --- (which isn't here because
-of the attachments issue).  This is so we don't track a bunch of change
-logs in the eventual git log.  They tend not to be of much interest once
-a patch has merged.  If there is stuff in there of interest, it should usually
-be added to the patch description itself (e.g. some design decision or similar).
-
-The license terms seem to be dual with BSD, which is good, but
-not what the change log says!
-
-I've pasted in the actual patch content below, so others can easily
-review this version.
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to poke at it.
 
 Thanks,
+
 Jonathan
 
-
+> ---
 > 
-> Signed-off-by: Eugene Zaikonnikov <ez@norphonic.com>
+>  Changes:
 > 
-
-> diff -uprN linux-5.3.8/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml linux-5.3.8_docs/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml
-> --- linux-5.3.8/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml	1970-01-01 01:00:00.000000000 +0100
-> +++ linux-5.3.8_docs/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml	2020-07-10 13:08:46.818076734 +0200
-> @@ -0,0 +1,45 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>  v6: new patch
+> 
+>  v7: - specify `maxItems: 1` for single entry properties
+>      - get rid of redundant descriptions of said properties
+> 
+>  v8: no change
+> 
+>  .../bindings/iio/adc/ingenic,adc.txt          | 49 -------------
+>  .../bindings/iio/adc/ingenic,adc.yaml         | 71 +++++++++++++++++++
+>  2 files changed, 71 insertions(+), 49 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+> deleted file mode 100644
+> index cd9048cf9dcf..000000000000
+> --- a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+> +++ /dev/null
+> @@ -1,49 +0,0 @@
+> -* Ingenic JZ47xx ADC controller IIO bindings
+> -
+> -Required properties:
+> -
+> -- compatible: Should be one of:
+> -  * ingenic,jz4725b-adc
+> -  * ingenic,jz4740-adc
+> -  * ingenic,jz4770-adc
+> -- reg: ADC controller registers location and length.
+> -- clocks: phandle to the SoC's ADC clock.
+> -- clock-names: Must be set to "adc".
+> -- #io-channel-cells: Must be set to <1> to indicate channels are selected
+> -  by index.
+> -
+> -ADC clients must use the format described in iio-bindings.txt, giving
+> -a phandle and IIO specifier pair ("io-channels") to the ADC controller.
+> -
+> -Example:
+> -
+> -#include <dt-bindings/iio/adc/ingenic,adc.h>
+> -
+> -adc: adc@10070000 {
+> -	compatible = "ingenic,jz4740-adc";
+> -	#io-channel-cells = <1>;
+> -
+> -	reg = <0x10070000 0x30>;
+> -
+> -	clocks = <&cgu JZ4740_CLK_ADC>;
+> -	clock-names = "adc";
+> -
+> -	interrupt-parent = <&intc>;
+> -	interrupts = <18>;
+> -};
+> -
+> -adc-keys {
+> -	...
+> -	compatible = "adc-keys";
+> -	io-channels = <&adc INGENIC_ADC_AUX>;
+> -	io-channel-names = "buttons";
+> -	...
+> -};
+> -
+> -battery {
+> -	...
+> -	compatible = "ingenic,jz4740-battery";
+> -	io-channels = <&adc INGENIC_ADC_BATTERY>;
+> -	io-channel-names = "battery";
+> -	...
+> -};
+> diff --git a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
+> new file mode 100644
+> index 000000000000..9f414dbdae86
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.yaml
+> @@ -0,0 +1,71 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019-2020 Artur Rojek
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/iio/humidity/ti,hdc2010.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +$id: "http://devicetree.org/schemas/iio/adc/ingenic,adc.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 > +
-> +title: HDC2010/HDC2080 humidity and temperature iio sensors
+> +title: Ingenic JZ47xx ADC controller IIO bindings
 > +
 > +maintainers:
-> +  - Eugene Zaikonnikov <ez@norophonic.com>
+> +  - Artur Rojek <contact@artur-rojek.eu>
 > +
-> +description: |
-> +  Relative humidity and tempereature sensors on I2C bus
+> +description: >
+> +  Industrial I/O subsystem bindings for ADC controller found in
+> +  Ingenic JZ47xx SoCs.
 > +
-> +  Datasheets are available at:
-> +    http://www.ti.com/product/HDC2010/datasheet
-> +    http://www.ti.com/product/HDC2080/datasheet
+> +  ADC clients must use the format described in iio-bindings.txt, giving
+> +  a phandle and IIO specifier pair ("io-channels") to the ADC controller.
 > +
 > +properties:
 > +  compatible:
 > +    enum:
-> +      - ti,hdc2010
-> +      - ti,hdc2080
+> +      - ingenic,jz4725b-adc
+> +      - ingenic,jz4740-adc
+> +      - ingenic,jz4770-adc
 > +
-> +  vdd-supply:
-> +    maxItems: 1
+> +  '#io-channel-cells':
+> +    const: 1
+> +    description:
+> +      Must be set to <1> to indicate channels are selected by index.
 > +
 > +  reg:
 > +    maxItems: 1
 > +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: adc
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
 > +required:
 > +  - compatible
+> +  - '#io-channel-cells'
 > +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +
+> +additionalProperties: false
 > +
 > +examples:
 > +  - |
-> +    i2c0 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
+> +    #include <dt-bindings/clock/jz4740-cgu.h>
+> +    #include <dt-bindings/iio/adc/ingenic,adc.h>
 > +
-> +      humidity@40 {
-> +          compatible = "ti,hdc2010";
-> +          reg = <0x40>;
-> +      };
+> +    adc@10070000 {
+> +            compatible = "ingenic,jz4740-adc";
+> +            #io-channel-cells = <1>;
+> +
+> +            reg = <0x10070000 0x30>;
+> +
+> +            clocks = <&cgu JZ4740_CLK_ADC>;
+> +            clock-names = "adc";
+> +
+> +            interrupt-parent = <&intc>;
+> +            interrupts = <18>;
 > +    };
+
