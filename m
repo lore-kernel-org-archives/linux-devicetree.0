@@ -2,133 +2,143 @@ Return-Path: <SRS0=EOmc=AX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D41D2C433E2
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 10:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0897C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 10:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5B7B207DD
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 10:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B2962070B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 10:29:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="I+r9r045"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PSp9tjkU";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VMpQ130a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbgGLKZS (ORCPT
+        id S1728112AbgGLK3r (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Jul 2020 06:25:18 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:6691 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727777AbgGLKZS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Jul 2020 06:25:18 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0ae4d50000>; Sun, 12 Jul 2020 03:24:21 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sun, 12 Jul 2020 03:25:18 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sun, 12 Jul 2020 03:25:18 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 12 Jul
- 2020 10:25:18 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Sun, 12 Jul 2020 10:25:18 +0000
-Received: from moonraker.nvidia.com (Not Verified[10.26.75.246]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f0ae50c0013>; Sun, 12 Jul 2020 03:25:17 -0700
-From:   Jon Hunter <jonathanh@nvidia.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH 2/3] arm64: tegra: Enable DFLL support on Jetson Nano
-Date:   Sun, 12 Jul 2020 11:25:05 +0100
-Message-ID: <20200712102506.23686-3-jonathanh@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200712102506.23686-1-jonathanh@nvidia.com>
-References: <20200712102506.23686-1-jonathanh@nvidia.com>
-X-NVConfidentiality: public
+        Sun, 12 Jul 2020 06:29:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52894 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbgGLK3q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Jul 2020 06:29:46 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 906D9C061794;
+        Sun, 12 Jul 2020 03:29:46 -0700 (PDT)
+From:   Kurt Kanzenbach <kurt@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594549781;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=IWFrAeJzdC1u5O59YIvI89feeTzWtk1CrA2wzI7B5gE=;
+        b=PSp9tjkUXphkpck6Gxdu/lMEZw5gF0vW38et/aNTdWMOLb+5CmmzJCc6n1n84uBxWDId5X
+        Fzn5t+XBKdd5iHG2y3bRdAiQSDaKkGImtNi/1QuI7LVA7KtDnmxsVU0LxCbogHpExTzNwJ
+        lYiMUCQEMoWWlD2E83VpGi3VHAVGKmqgCJxbAbztoBpUF7NsafpZI/uohat3Vm5R4YsuD9
+        4xOlYlnZ1OyVY0Dxf7CjGOLSE6nyxglV5Rdc5DR9Kn8IS9STCzRhHHjwN8BJXW4CE5Emle
+        2rUCVvvHOJc7iBf/WWU5s7Za8lm+9Moi1siZ5tgTkVig1ddMACL7lrB3MiVF7g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594549781;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=IWFrAeJzdC1u5O59YIvI89feeTzWtk1CrA2wzI7B5gE=;
+        b=VMpQ130axs2hwnRSwQ/bqxaQQc3ST3nKEbRBB8nfn4ZY9LkIav224V3zoPMikeu5qmE+yL
+        Qp1rVKb/NkvfLDDg==
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Rob Herring <robh@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v1 1/1] dt-bindings: net: dsa: Add DSA yaml binding
+In-Reply-To: <20200711165203.GO1014141@lunn.ch>
+References: <20200710090618.28945-1-kurt@linutronix.de> <20200710090618.28945-2-kurt@linutronix.de> <20200710163940.GA2775145@bogus> <874kqewahb.fsf@kurt> <20200711165203.GO1014141@lunn.ch>
+Date:   Sun, 12 Jul 2020 12:29:30 +0200
+Message-ID: <877dv9owl1.fsf@kurt>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594549461; bh=TzDiRWzYTOCE1gUE1TfyIWopeKtWIS6gv0hEoYmbnbk=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=I+r9r045vQXKDGp+iU+hvRlkUd+FVQAAxUzDi4Aa4penXsoh1Fkb+TRJLWOuD5CgU
-         uBm4bEWtZYq81uyFGWc1tqYST+vk/BZwdruJ6m9PmlcCAlACNOJnHpD3s1YxmW+izg
-         aCwxX0uaPpkWGoqAYLnVe5rFroz+HVJOL2KmMBY3Ht7GFzGFq5rNc4snC6jn0C1EH2
-         m9DaOfi1nynxMvewqub/MiEm2gCed/4XXlggEBmTYa+GHAniCaS+tH7qf2NZT19i3j
-         nkh8sw+fG7lO7d4UwwAu3PByENX+w6AWmL38FzWM/rw0Xj9Fxm6niLp8dKbJgqhTWW
-         YJdro0grkL/bw==
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Populate the DFLL node and corresponding PWM pin nodes in order to
-enable CPUFREQ support on the Jetson Nano platform.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
----
- .../boot/dts/nvidia/tegra210-p3450-0000.dts   | 37 +++++++++++++++++++
- 1 file changed, 37 insertions(+)
+On Sat Jul 11 2020, Andrew Lunn wrote:
+> On Sat, Jul 11, 2020 at 01:35:12PM +0200, Kurt Kanzenbach wrote:
+>> On Fri Jul 10 2020, Rob Herring wrote:
+>> > My bot found errors running 'make dt_binding_check' on your patch:
+>> >
+>> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/n=
+et/ti,cpsw-switch.example.dt.yaml: switch@0: 'ports' is a required property
+>> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/n=
+et/qcom,ipq8064-mdio.example.dt.yaml: switch@10: 'ports' is a required prop=
+erty
+>>=20
+>> Okay, the requirement for 'ports' has be to removed.
+>
+> Hummm....
+>
+> ti.cpsw is not a DSA switch. So this binding should not apply to
+> it. It is a plain switchdev switch.
+>
+> The qcom,ipq806 is just an MDIO bus master. The DSA binding might
+> apply, for a specific .dts file, if that dts file has a DSA switch on
+> the bus. But in general, it should not apply.
+>
+> So i actually think you need to work out why this binding is being
+> applied when it should not be.
+>
+> I suspect it is the keyword 'switch'. switch does not imply it is a
+> DSA switch. There are other sorts of switches as well.
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts b/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
-index 9b6346917ea9..2282ea1c6279 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
-@@ -111,6 +111,22 @@
- 		status = "okay";
- 	};
- 
-+	pinmux@700008d4 {
-+		dvfs_pwm_active_state: dvfs_pwm_active {
-+			dvfs_pwm_pbb1 {
-+				nvidia,pins = "dvfs_pwm_pbb1";
-+				nvidia,tristate = <TEGRA_PIN_DISABLE>;
-+			};
-+		};
-+
-+		dvfs_pwm_inactive_state: dvfs_pwm_inactive {
-+			dvfs_pwm_pbb1 {
-+				nvidia,pins = "dvfs_pwm_pbb1";
-+				nvidia,tristate = <TEGRA_PIN_ENABLE>;
-+			};
-+		};
-+	};
-+
- 	/* debug port */
- 	serial@70006000 {
- 		status = "okay";
-@@ -584,6 +600,27 @@
- 		hvdd-usb-supply = <&vdd_1v8>;
- 	};
- 
-+	clock@70110000 {
-+		status = "okay";
-+
-+		nvidia,cf = <6>;
-+		nvidia,ci = <0>;
-+		nvidia,cg = <2>;
-+		nvidia,droop-ctrl = <0x00000f00>;
-+		nvidia,force-mode = <1>;
-+		nvidia,sample-rate = <25000>;
-+
-+		nvidia,pwm-min-microvolts = <708000>;
-+		nvidia,pwm-period-nanoseconds = <2500>; /* 2.5us */
-+		nvidia,pwm-to-pmic;
-+		nvidia,pwm-tristate-microvolts = <1000000>;
-+		nvidia,pwm-voltage-step-microvolts = <19200>;
-+
-+		pinctrl-names = "dvfs_pwm_enable", "dvfs_pwm_disable";
-+		pinctrl-0 = <&dvfs_pwm_active_state>;
-+		pinctrl-1 = <&dvfs_pwm_inactive_state>;
-+	};
-+
- 	clk32k_in: clock@0 {
- 		compatible = "fixed-clock";
- 		clock-frequency = <32768>;
--- 
-2.17.1
+OK, makes sense. It seems like the nodename is responsible for that.
 
+This fixes the problem:
+
+|diff --git a/Documentation/devicetree/bindings/net/dsa/dsa.yaml b/Document=
+ation/devicetree/bindings/net/dsa/dsa.yaml
+|index bec257231bf8..4c360f8b170e 100644
+|--- a/Documentation/devicetree/bindings/net/dsa/dsa.yaml
+|+++ b/Documentation/devicetree/bindings/net/dsa/dsa.yaml
+|@@ -18,9 +18,6 @@ description:
+|   properties as required by the device it is embedded within.
+|=20
+| properties:
+|-  $nodename:
+|-    pattern: "^switch(@.*)?$"
+|-
+|   dsa,member:
+|     minItems: 2
+|     maxItems: 2
+
+Thanks,
+Kurt
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl8K5goACgkQeSpbgcuY
+8KYE0RAAzpJZjOmKWljpOO5oKYziFmhkV7L3HXbG53rkVv6YbcpuETjWW+UrbEjZ
+XHLxvRFETuQgOrH8bEUWXbom6h0fv7HIUi/On3DSlajPRfyuSzMw7AYMi99wNM0F
+3eVk8f1+ftLDZNEdbcigZYU+ZuCFXlnuelqvq9JzYBps44M18Cdc1DlddNNTy/jo
+/qDtNtHmQxjcxXPDW6LDJn+WnsQlo8Fxz7Se+8/jNHz8NV+b5Hi33m0aevkZwK1R
+bsby9RgIuhbSOg8hlM98KCkowcRT0aNoyMsiy+luoTxEAJOA/QQJ3w0zgdT3+bT9
+7uq0EvdkNtXvbXNVej3FbcxS/9636ZkCEmHCz8EAVbZ7q4WLU2+f801HQ3m21hRO
+7Szad+gXUHkIRP/xGdfZFhGV7snsWKEn13VufmnO5dHz+xVLI39obr0TekbWEjfw
+4H2OaLvnmgGRJlxluH27xDu379IUxYO6lqy+fIpb4WDHiQryjOe2kY14q0hEERKi
+M133gk+DWheg/OrgIPybPHliHrjPO1Egx8N1Lf7fW3HHjA2aRrEpnkrZNDitjXRx
+cJL1DnDDQNp7GUx1aGJJLKISZBMLz/MePwhp6uUAiFeVLEmnk5oGt8joqnMbO0Q4
+TVlzaKEyLdIWtfmc6EJTrRa9NPUYo3BfC8zrupljlcWLxAAQM/Q=
+=1pvc
+-----END PGP SIGNATURE-----
+--=-=-=--
