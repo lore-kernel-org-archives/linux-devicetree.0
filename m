@@ -2,128 +2,128 @@ Return-Path: <SRS0=EOmc=AX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F32C433E2
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 15:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DAFC433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 16:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1504C206F4
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 15:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D8C22068F
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 16:56:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W9J4Lfge"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kAilNj0p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728861AbgGLPb3 (ORCPT
+        id S1728957AbgGLQ4d (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Jul 2020 11:31:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42544 "EHLO
+        Sun, 12 Jul 2020 12:56:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728859AbgGLPb2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Jul 2020 11:31:28 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17D8FC061794;
-        Sun, 12 Jul 2020 08:31:28 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id a1so3198609edt.10;
-        Sun, 12 Jul 2020 08:31:27 -0700 (PDT)
+        with ESMTP id S1728844AbgGLQ4d (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Jul 2020 12:56:33 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F4176C061794
+        for <devicetree@vger.kernel.org>; Sun, 12 Jul 2020 09:56:32 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id q17so4910928pfu.8
+        for <devicetree@vger.kernel.org>; Sun, 12 Jul 2020 09:56:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OC8AObzew9aqd3OWFgWAH1kVdGnLQeAxyBxr457j2LY=;
-        b=W9J4LfgeIK144Btt0OSLh+fJulag+sR0kLYVE2lDrPCcBOy+ajXJWVer78aAUIWXJm
-         oofzVCY/g/c/gg9L7RL8YWB5vwjwBb6JHnectBiFiftnAtRBVaH0Z2VRpRDjtEuHUTdh
-         vK8n5T2Cx+UsODr9SKNHypR6Xr0c0Ag0Wj2AAHJqYUDysbMnQcj0Ov6Uk3ByOj0ap40Z
-         +/WKwmJ26niqbmuQBFaEV5L+mDLruaLzYtKOTSc5Oo4+RYd730nm4/A8No/ibttfXSuy
-         lYlcVXOnO1HsfuW7Fq9RkLTJanXT8XLxf7Nci3GZ9OyHBEAhiwGkFn5BQaN9Lj1j2YLg
-         X2ig==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RoZLVftkUKnaYcMruWWsZbHBr7e1w4vlSaetUKLXTFc=;
+        b=kAilNj0pa5MHzUf5mqnUrQ7Io4OPdEm3+GWctUqGgbEAqrKEONdzOgLEtnLUtC55G+
+         TJtYT+cGSILGH69JxTvlt3yKTcXz6qHtcsydg5XT4UvB5YOx/f/sRub3Ay25mlOjAF/3
+         Q7SsWrN/t2t/YSI2c956Kn0tOeQESIl/aBX/WxWsX5JBA8dwEW/V+tBePyy9k5DcPfvL
+         iOxFXXiqwHcff6QE2/z7w3vFkUXjNvBfC7seQGaFda29Cd9pd0C+OBv/tEpAlByl9WYw
+         TpJC2ksfwfQt93SyRngRVRgQXvhNBnLMoBNkmhoNSK8GbAez6vmaq7TDtGGx61hd60q4
+         EvzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OC8AObzew9aqd3OWFgWAH1kVdGnLQeAxyBxr457j2LY=;
-        b=MjBPRbpwBrFmYsrw18Q73U4na5SLwUo+PM8rGTuUCPhcLgmYYFDvQ9Nq0ldAEyYvKs
-         vGyZ+BCTG2xpvdqOxBRFqOR1z9DJD5QueCxEHhazbsJtC8ud391KDlbQF9MRu1/ZbS2W
-         AjmLnyTvjLt70NIgKZneJI3gtLWowywrXQ7D8O2WQL5kxq4WOH92DOy5Qw48SEqLEHsm
-         izdRh0OqksIPRTbQlXe74vZdF3TF28ZuuMGcXekQlRsLLMQ9doRqY1eqmnT8ab/e8XsV
-         AOAG+eP9Czi7eZduTm05Bhrs9f0v0vJWGGtmtgiEsfO7izQxvq2jNAqJ/GUvGendVQ+o
-         G0og==
-X-Gm-Message-State: AOAM531ONvxDq2UI1W/oM9oQRe3Mev1nriU3FDubFtPXrAZ7kQMDcx8p
-        k+jWk3gx/krz41awuHUOjBA=
-X-Google-Smtp-Source: ABdhPJwJm7304izUL0IgGkG7yBGMirci+PY/YyegBIwPgXeaCR/OkgnpmwgdXrXRFn3RWKIOrW3fJw==
-X-Received: by 2002:a50:f058:: with SMTP id u24mr87330213edl.351.1594567886745;
-        Sun, 12 Jul 2020 08:31:26 -0700 (PDT)
-Received: from ?IPv6:2a01:110f:b59:fd00:cdeb:44e7:80ea:5ee2? ([2a01:110f:b59:fd00:cdeb:44e7:80ea:5ee2])
-        by smtp.gmail.com with ESMTPSA id d5sm9570554eds.40.2020.07.12.08.31.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 12 Jul 2020 08:31:26 -0700 (PDT)
-Subject: Re: [PATCH v29 13/16] leds: lp5523: Update the lp5523 code to add
- multicolor brightness function
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Dan Murphy <dmurphy@ti.com>, robh@kernel.org,
-        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20200622185919.2131-1-dmurphy@ti.com>
- <20200622185919.2131-14-dmurphy@ti.com> <20200711155749.GB22715@amd>
- <c9e20136-7226-2feb-b017-0a0742867f93@gmail.com>
- <20200711202419.GA18347@duo.ucw.cz>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <e2a2fe12-b5e8-6a62-3dc3-f45019ade330@gmail.com>
-Date:   Sun, 12 Jul 2020 17:31:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RoZLVftkUKnaYcMruWWsZbHBr7e1w4vlSaetUKLXTFc=;
+        b=VEK2GlMNX+VuPs0cgruog2YmHDmNfwuvaYw2bFWNiyyHvrANPpLuRK4sI6O3SubuFZ
+         EncS3tt0W24/+XWXc3QdxaBc60OOQAO2Koqegs0uAuZ7PHW2r8TdxvzDPQdbho+CINkK
+         JI0BsTfrB1Qh/dUppex0OvDVQyE7x8hkI2i7uV227iNYkF19DDv8FjQSAtZw9AXw8LsG
+         U2P9ZnbEObG6E6KlTCloRHSH4IhveBOhw3eYV1AV1ND4dUf/eGFBI2nDbVyD9OY4gPNH
+         y0SD6MWYI4nxgECnm+o8Su9Oz2+Z1Y16eFEEb+iRWWyl7Wnn6AUUdg5qTXpSbcI/Suxv
+         vPBw==
+X-Gm-Message-State: AOAM530enB5AU7v2cOGMwG7qvq2y9m6NlQqseeELVInolwxwY7cpvmyj
+        M206MXwYkyVqhEnU/QsBZW23
+X-Google-Smtp-Source: ABdhPJzJFvcF/99ggPqX5iRKTo/N7UTdplTTfJ9WJ7cg6cZfaX40TZSERHNl3+HJgCvx/2u+fP6row==
+X-Received: by 2002:a62:3583:: with SMTP id c125mr23840742pfa.158.1594572992302;
+        Sun, 12 Jul 2020 09:56:32 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6c81:c187:70f5:3123:b5de:e77f])
+        by smtp.gmail.com with ESMTPSA id p30sm12971935pfq.153.2020.07.12.09.56.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 12 Jul 2020 09:56:31 -0700 (PDT)
+Date:   Sun, 12 Jul 2020 22:26:25 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-actions@lists.infradead.org
+Subject: Re: [PATCH v3 2/6] dt-bindings: clock: Add APB, DMAC, GPIO bindings
+ for Actions S500 SoC
+Message-ID: <20200712165625.GA6110@Mani-XPS-13-9360>
+References: <cover.1593788312.git.cristian.ciocaltea@gmail.com>
+ <67112af4f5bc0cc5e70ce8410feb369cc72972b8.1593788312.git.cristian.ciocaltea@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200711202419.GA18347@duo.ucw.cz>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <67112af4f5bc0cc5e70ce8410feb369cc72972b8.1593788312.git.cristian.ciocaltea@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 7/11/20 10:24 PM, Pavel Machek wrote:
-> On Sat 2020-07-11 19:19:22, Jacek Anaszewski wrote:
->> On 7/11/20 5:57 PM, Pavel Machek wrote:
->>> Hi!
->>>
->>>> Add the multicolor brightness call back to support the multicolor
->>>> framework.  This call back allows setting  brightness on grouped channels
->>>
->>> Extra space before "brightness".
->>
->> And before "This".
+On Fri, Jul 03, 2020 at 08:05:08PM +0300, Cristian Ciocaltea wrote:
+> Add the missing APB, DMAC and GPIO clock bindings constants for
+> Actions Semi S500 SoC.
 > 
-> That one is intentional, I believe.
+> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+Thanks,
+Mani
+
+> ---
+> Changes in v3:
+>  - Preserved the original values of the existing bindings and moved
+>    the newly added constants bellow, as indicated by Stephen
 > 
-> https://www.independent.co.uk/life-style/gadgets-and-tech/news/one-space-or-two-spaces-after-a-full-stop-scientists-have-finally-found-the-answer-a8337646.html
+> Changes in v2:
+>  - None
 > 
-> We are using fixed width fonts, so typewriter rules still apply here.
-
-But see the article [0].
-Also, in [1], in the section "Computer era" you can find opposite
-examples in the modern systems.
-
-And grep returns following numbers for kernel Documentation folder:
-
-$ rgrep "[A-Za-z0-9]\.  " Documentation/ | wc -l
-18449
-$ rgrep "[A-Za-z0-9]\. " Documentation/ | wc -l
-63067
-
-I prefer single space but will not fight for that too hard.
-Nonetheless, it would be good to use one style consistently,
-since most files I've looked at had problem with that.
-
-Both DT and LED documentation in this set is not consistent
-in this regard as well.
-
-[0] 
-https://www.instructionalsolutions.com/blog/one-space-vs-two-after-period
-[1] https://en.wikipedia.org/wiki/Sentence_spacing
-
--- 
-Best regards,
-Jacek Anaszewski
+>  include/dt-bindings/clock/actions,s500-cmu.h | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/dt-bindings/clock/actions,s500-cmu.h b/include/dt-bindings/clock/actions,s500-cmu.h
+> index 030981cd2d56..a250a52a6192 100644
+> --- a/include/dt-bindings/clock/actions,s500-cmu.h
+> +++ b/include/dt-bindings/clock/actions,s500-cmu.h
+> @@ -72,7 +72,12 @@
+>  #define CLK_NAND		52
+>  #define CLK_ECC			53
+>  #define CLK_RMII_REF		54
+> +#define CLK_GPIO		55
+>  
+> -#define CLK_NR_CLKS	       (CLK_RMII_REF + 1)
+> +/* system clock (part 2) */
+> +#define CLK_APB			56
+> +#define CLK_DMAC		57
+> +
+> +#define CLK_NR_CLKS		(CLK_DMAC + 1)
+>  
+>  #endif /* __DT_BINDINGS_CLOCK_S500_CMU_H */
+> -- 
+> 2.27.0
+> 
