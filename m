@@ -2,173 +2,130 @@ Return-Path: <SRS0=EOmc=AX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F03DDC433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 23:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB597C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 23:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C246A20758
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 23:14:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594595684;
-	bh=JJcu9UGyZSmnY8MG9Tb8lOo8zhSv3HDqhkH2NhNsK9k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XbD4bUoQPSXyJkUZkCVAocJ7GfLAmYzFcdqZ6luaYQL8SeKx8JthhrFzjzqDK2Voj
-	 qudgkHGx3CCPEbThiPHo+v1s2eKwdyH3XLIZpmDwZFSUu9gExdQYg5AfwGfSxJg1Vy
-	 /pfhtUC+0PUNgqa5MFpVCFRfn8xyfgpx+RCGfzA8=
+	by mail.kernel.org (Postfix) with ESMTP id 9A09D206F0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 23:19:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgGLXOo (ORCPT
+        id S1727906AbgGLXTa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Jul 2020 19:14:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41536 "EHLO mail.kernel.org"
+        Sun, 12 Jul 2020 19:19:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:59674 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727785AbgGLXOo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 12 Jul 2020 19:14:44 -0400
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1287D207BB;
-        Sun, 12 Jul 2020 23:14:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594595683;
-        bh=JJcu9UGyZSmnY8MG9Tb8lOo8zhSv3HDqhkH2NhNsK9k=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=nFOpIko9y3x8JaPjoj5+5x2bHF0GjI/PiZtHtJWFV9YMbHsEhhZjIGrO8VJ/o00u5
-         ZDL1vzgPDibwrFtdZkOQTxdeDzTYESo772+A/vB2VLhG6sfH6imgPzMi9oOv/Gadsl
-         41SEsGk4sQ2hxJ5baQ1oJsZTSX8bxb2Vd0BQkwSg=
-Received: by mail-ed1-f50.google.com with SMTP id dg28so10381336edb.3;
-        Sun, 12 Jul 2020 16:14:42 -0700 (PDT)
-X-Gm-Message-State: AOAM530Lj1YIYh4YbBQDh7AAY20ALP05ufmLWrO+n2xTjNwlEfZ0IsJW
-        l8iiCtAANnCXBaz5xbthxnnO71OVt6NH+9cooA==
-X-Google-Smtp-Source: ABdhPJwWEw89a3TPBeDtbrMxC83/9R66XtgjlsU1MmE822OJ1v3FtQUjP7YI/JkTftCHfeXxfej+3oDaYrfbYHp9aP8=
-X-Received: by 2002:aa7:c3d6:: with SMTP id l22mr87628185edr.148.1594595681551;
- Sun, 12 Jul 2020 16:14:41 -0700 (PDT)
+        id S1727785AbgGLXT3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 12 Jul 2020 19:19:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1465130E;
+        Sun, 12 Jul 2020 16:19:29 -0700 (PDT)
+Received: from [192.168.2.22] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BAA443F7C3;
+        Sun, 12 Jul 2020 16:19:27 -0700 (PDT)
+Subject: Re: [PATCH v5 10/10] arm64: dts: actions: Add uSD support for
+ Cubieboard7
+To:     Amit Tomer <amittomer25@gmail.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
+        Rob Herring <robh+dt@kernel.org>, cristian.ciocaltea@gmail.com,
+        linux-kernel@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
+References: <1593701576-28580-1-git-send-email-amittomer25@gmail.com>
+ <1593701576-28580-11-git-send-email-amittomer25@gmail.com>
+ <20200712173044.GL6110@Mani-XPS-13-9360>
+ <CABHD4K8+cZMwA=pQx4Gvv5Z4xLof8Ln6fUNrB0=-SS2M_0_3aw@mail.gmail.com>
+From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
+Organization: ARM Ltd.
+Message-ID: <5e2eb92e-eada-9b14-3f15-38717284bc92@arm.com>
+Date:   Mon, 13 Jul 2020 00:17:57 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200708104023.3225-1-louis.kuo@mediatek.com> <20200708104023.3225-2-louis.kuo@mediatek.com>
-In-Reply-To: <20200708104023.3225-2-louis.kuo@mediatek.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Mon, 13 Jul 2020 07:14:29 +0800
-X-Gmail-Original-Message-ID: <CAAOTY__fRjytz9w4zA6rOoYKzjyRH-j=ASFqNMVNShBYGd6-5Q@mail.gmail.com>
-Message-ID: <CAAOTY__fRjytz9w4zA6rOoYKzjyRH-j=ASFqNMVNShBYGd6-5Q@mail.gmail.com>
-Subject: Re: [RFC PATCH V7 1/3] media: platform: mtk-isp: Add Mediatek sensor
- interface driver
-To:     Louis Kuo <louis.kuo@mediatek.com>
-Cc:     hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com,
-        Tomasz Figa <tfiga@chromium.org>, keiichiw@chromium.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        devicetree@vger.kernel.org,
-        =?UTF-8?B?U2VhbiBDaGVuZyAo6YSt5piH5byYKQ==?= 
-        <Sean.Cheng@mediatek.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        =?UTF-8?B?SmVycnktY2ggQ2hlbiAo6Zmz5pWs5oayKQ==?= 
-        <Jerry-ch.Chen@mediatek.com>,
-        =?UTF-8?B?SnVuZ28gTGluICjmnpfmmI7kv4op?= <jungo.lin@mediatek.com>,
-        =?UTF-8?B?U2ogSHVhbmcgKOm7g+S/oeeSiyk=?= <sj.huang@mediatek.com>,
-        yuzhao@chromium.org,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>, zwisler@chromium.org,
-        =?UTF-8?B?Q2hyaXN0aWUgWXUgKOa4uOmbheaDoCk=?= 
-        <christie.yu@mediatek.com>,
-        =?UTF-8?B?RnJlZGVyaWMgQ2hlbiAo6Zmz5L+K5YWDKQ==?= 
-        <frederic.chen@mediatek.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-media@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CABHD4K8+cZMwA=pQx4Gvv5Z4xLof8Ln6fUNrB0=-SS2M_0_3aw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Louis:
+On 12/07/2020 19:45, Amit Tomer wrote:
 
-Louis Kuo <louis.kuo@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=888=E6=97=
-=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=886:41=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> This patch adds Mediatek's sensor interface driver. Sensor interface
-> driver is a MIPI-CSI2 host driver, namely, a HW camera interface controll=
-er.
-> It support a widely adopted, simple, high-speed protocol primarily intend=
-ed
-> for point-to-point image and video transmission between cameras and host
-> devices. The mtk-isp directory will contain drivers for multiple IP block=
-s
-> found in Mediatek ISP system. It will include ISP Pass 1 driver, sensor
-> interface driver, DIP driver and face detection driver.
->
-> Signed-off-by: Louis Kuo <louis.kuo@mediatek.com>
-> ---
+Hi,
 
-[snip]
+> On Sun, Jul 12, 2020 at 11:00 PM Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
+>>
+>> On Thu, Jul 02, 2020 at 08:22:56PM +0530, Amit Singh Tomar wrote:
+>>> This commit adds uSD support for Cubieboard7 board based on Actions Semi
+>>> S700 SoC. SD0 is connected to uSD slot. Since there is no PMIC support
+>>> added yet, fixed regulator has been used as a regulator node.
+>>>
+>>> Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
+>>> ---
+>>> Changes since v4:
+>>>       * No change.
+>>> Changes since v3:
+>>>         * No change.
+>>> Changes since v2:
+>>>         * No change.
+>>> Changes since v1:
+>>>         * No change.
+>>> Changes since RFC:
+>>>         * No change.
+>>> ---
+>>>  arch/arm64/boot/dts/actions/s700-cubieboard7.dts | 41 ++++++++++++++++++++++++
+>>>  arch/arm64/boot/dts/actions/s700.dtsi            |  1 +
+>>>  2 files changed, 42 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
+>>> index 63e375cd9eb4..ec117eb12f3a 100644
+>>> --- a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
+>>> +++ b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
+>>> @@ -13,6 +13,7 @@
+>>>
+>>>       aliases {
+>>>               serial3 = &uart3;
+>>> +             mmc0 = &mmc0;
+>>>       };
+>>>
+>>>       chosen {
+>>> @@ -28,6 +29,23 @@
+>>>               device_type = "memory";
+>>>               reg = <0x1 0xe0000000 0x0 0x0>;
+>>>       };
+>>> +
+>>> +     /* Fixed regulator used in the absence of PMIC */
+>>> +     vcc_3v1: vcc-3v1 {
+>>> +             compatible = "regulator-fixed";
+>>> +             regulator-name = "fixed-3.1V";
+>>> +             regulator-min-microvolt = <3100000>;
+>>> +             regulator-max-microvolt = <3100000>;
+>>> +     };
+>>
+>> Is this regulator used somewhere?
+> 
+> This is something I copied from bubblegum dts as I wasn't sure what is right way
+> to include these regulators.
 
-> +
-> +enum CFG_CSI_PORT {
-> +       CFG_CSI_PORT_0 =3D 0x0,   /* 4D1C */
-> +       CFG_CSI_PORT_1,         /* 4D1C */
-> +       CFG_CSI_PORT_2,         /* 4D1C */
-> +       CFG_CSI_PORT_0A,        /* 2D1C */
-> +       CFG_CSI_PORT_0B,        /* 2D1C */
-> +       CFG_CSI_PORT_MAX_NUM,
-> +       CFG_CSI_PORT_NONE       /*for non-MIPI sensor */
-> +};
-> +
-> +enum PIXEL_MODE {
-> +       ONE_PIXEL_MODE  =3D 0x0,
-> +       TWO_PIXEL_MODE  =3D 0x1,
-> +       FOUR_PIXEL_MODE =3D 0x2,
-> +};
-> +
-> +enum SENINF_ID {
-> +       SENINF_1 =3D 0x0,
-> +       SENINF_2 =3D 0x1,
-> +       SENINF_3 =3D 0x2,
-> +       SENINF_4 =3D 0x3,
-> +       SENINF_5 =3D 0x4,
-> +       SENINF_NUM,
-> +};
-> +
+But this regulator is only used for the eMMC there, which we apparently
+don't have on the Cubieboard 7?
 
-[snip]
+> Also, another day tested it without having these regulators in , and
+> still it seems to
+> work.  So should these be removed ?
 
-> +
-> +static int seninf_link_setup(struct media_entity *entity,
-> +                            const struct media_pad *local,
-> +                            const struct media_pad *remote, u32 flags)
-> +{
-> +       struct v4l2_subdev *sd;
-> +       struct mtk_seninf *priv;
-> +       struct device *dev;
-> +
-> +       sd =3D media_entity_to_v4l2_subdev(entity);
-> +       priv =3D v4l2_get_subdevdata(sd);
-> +       dev =3D priv->dev;
-> +
-> +       if (!(flags & MEDIA_LNK_FL_ENABLED))
-> +               return 0;
-> +
-> +       if (local->flags & MEDIA_PAD_FL_SOURCE) {
-> +               priv->mux_sel =3D local->index - CAM_MUX_IDX_MIN;
-> +       } else {
-> +               /* Select port */
-> +               priv->port =3D local->index;
+If there are not even referenced in the .dts, then fixed regulators are
+rather pointless. So yes, please remove this vcc-3v1 one.
 
-I don't understand V4L2 much, but the port definition is inside this
-file, how does the caller know what to pass to here? Could you explain
-how does it work?
+What is the story with the other regulator? Is there a PMIC or a power
+switch for the SD card? Or is the power supply actually hardwired?
 
-Regards,
-Chun-Kuang.
-
-> +               if (priv->port >=3D NUM_SENSORS) {
-> +                       dev_err(dev, "port index is over number of ports\=
-n");
-> +                       return -EINVAL;
-> +               }
-> +       }
-> +
-> +       return 0;
-> +}
-> +
+Cheers,
+Andre
