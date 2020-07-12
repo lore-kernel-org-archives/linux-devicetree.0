@@ -2,117 +2,173 @@ Return-Path: <SRS0=EOmc=AX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E931C433E3
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 22:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F03DDC433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 23:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DAE120672
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 22:11:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g1kGe88j"
+	by mail.kernel.org (Postfix) with ESMTP id C246A20758
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 23:14:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594595684;
+	bh=JJcu9UGyZSmnY8MG9Tb8lOo8zhSv3HDqhkH2NhNsK9k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XbD4bUoQPSXyJkUZkCVAocJ7GfLAmYzFcdqZ6luaYQL8SeKx8JthhrFzjzqDK2Voj
+	 qudgkHGx3CCPEbThiPHo+v1s2eKwdyH3XLIZpmDwZFSUu9gExdQYg5AfwGfSxJg1Vy
+	 /pfhtUC+0PUNgqa5MFpVCFRfn8xyfgpx+RCGfzA8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbgGLWLz (ORCPT
+        id S1727795AbgGLXOo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Jul 2020 18:11:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47238 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727838AbgGLWLz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Jul 2020 18:11:55 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AAAEC061794;
-        Sun, 12 Jul 2020 15:11:55 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id y10so13194530eje.1;
-        Sun, 12 Jul 2020 15:11:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lLj/bs7AsTeL4aQLydn/QJv9f9oPPwS3qEKRHPI9MFU=;
-        b=g1kGe88jxl8niV1GOLtWC+yCUgxTT0olqyW4tR2UBJsTuO1yBqofIKAcbF3s6M4+e4
-         RssnyRuD9sa/mChrJJrHSL5rjvEH0C+qGOrU8ivDykRcQuUdJpU6G+LZbgChkvikxqhu
-         ImRm3CXyhOZFovfNhJiuGGBEqsFmaUzmSTg3Omhs6HbvFSjBGQYJs3ajfNeZEznS87pF
-         r2qsokgRkNsNQuY6CPOdNGYaDR5+QQ5Zu6MWw/1OGnARy+kwPYz/sxQClCy8uqwgzKxZ
-         iH/onMYvih7ms2TnZqumuCcp0TjoW6YCpY6QeJ6AcpAEwssJq/XrbFwSrCWLZ09qHe03
-         W1dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lLj/bs7AsTeL4aQLydn/QJv9f9oPPwS3qEKRHPI9MFU=;
-        b=WsvLWZtozFbNk0VX1E5fga+3+6nT8/bMclo5KGMs6urhB9zohSEZemiVwaW9Vh8XK3
-         q7lFMoz9oqkhRPZPH4glQ4GxSUGsTuzN12IsAOX5mur+6l4xZILGsRAxFPCxnIs0xf5Q
-         aO9vrpwLASrTHB8ae0VzZhL9mwynbEjp5LPiNc0J9XDJydenJ8a3+BxnTnalBFuT8oFr
-         5x0qkojuFPh197yWCnxZdbCjxkyxQvjOY78jVjgN+GHIpzSao5NQwH9nIumywDhEXSPs
-         KBKvMXpZ+0XvswybYRfng1xQXkgE+lzv59lubJhLqP7p0K9RK3s/rWM1VeM11Fa15EiU
-         CiMw==
-X-Gm-Message-State: AOAM5303cCGNZxSN5J7r0pmToIkUQH1S4RAyjI/6nfWxajY+qI+Owkeb
-        Be7oDiWBhT5zI9ORNSjHFAgcsyIG
-X-Google-Smtp-Source: ABdhPJzHux4LUj0AkhYEAJf7mPkaMRH/nvN45sVsX1HkLEAhVoDnqU/M6bC0S4cLaNPMQDSV+FZrKA==
-X-Received: by 2002:a17:906:c943:: with SMTP id fw3mr69762031ejb.55.1594591913750;
-        Sun, 12 Jul 2020 15:11:53 -0700 (PDT)
-Received: from ?IPv6:2a01:110f:b59:fd00:416b:3fd:d547:2e80? ([2a01:110f:b59:fd00:416b:3fd:d547:2e80])
-        by smtp.gmail.com with ESMTPSA id w20sm10216188eds.21.2020.07.12.15.11.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 12 Jul 2020 15:11:53 -0700 (PDT)
-Subject: Re: [PATCH v3 1/2] dt-bindings: leds: add cznic,turris-omnia-leds
- binding
-To:     Marek Behun <marek.behun@nic.cz>
-Cc:     linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org
-References: <20200712210601.5239-1-marek.behun@nic.cz>
- <20200712210601.5239-2-marek.behun@nic.cz>
- <4609c389-4be6-0987-5078-725b43153596@gmail.com>
- <20200712234035.213348aa@nic.cz>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <ff707d34-8fc0-342e-3df2-e96e5493004b@gmail.com>
-Date:   Mon, 13 Jul 2020 00:11:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sun, 12 Jul 2020 19:14:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41536 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727785AbgGLXOo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 12 Jul 2020 19:14:44 -0400
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1287D207BB;
+        Sun, 12 Jul 2020 23:14:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594595683;
+        bh=JJcu9UGyZSmnY8MG9Tb8lOo8zhSv3HDqhkH2NhNsK9k=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nFOpIko9y3x8JaPjoj5+5x2bHF0GjI/PiZtHtJWFV9YMbHsEhhZjIGrO8VJ/o00u5
+         ZDL1vzgPDibwrFtdZkOQTxdeDzTYESo772+A/vB2VLhG6sfH6imgPzMi9oOv/Gadsl
+         41SEsGk4sQ2hxJ5baQ1oJsZTSX8bxb2Vd0BQkwSg=
+Received: by mail-ed1-f50.google.com with SMTP id dg28so10381336edb.3;
+        Sun, 12 Jul 2020 16:14:42 -0700 (PDT)
+X-Gm-Message-State: AOAM530Lj1YIYh4YbBQDh7AAY20ALP05ufmLWrO+n2xTjNwlEfZ0IsJW
+        l8iiCtAANnCXBaz5xbthxnnO71OVt6NH+9cooA==
+X-Google-Smtp-Source: ABdhPJwWEw89a3TPBeDtbrMxC83/9R66XtgjlsU1MmE822OJ1v3FtQUjP7YI/JkTftCHfeXxfej+3oDaYrfbYHp9aP8=
+X-Received: by 2002:aa7:c3d6:: with SMTP id l22mr87628185edr.148.1594595681551;
+ Sun, 12 Jul 2020 16:14:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200712234035.213348aa@nic.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200708104023.3225-1-louis.kuo@mediatek.com> <20200708104023.3225-2-louis.kuo@mediatek.com>
+In-Reply-To: <20200708104023.3225-2-louis.kuo@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Mon, 13 Jul 2020 07:14:29 +0800
+X-Gmail-Original-Message-ID: <CAAOTY__fRjytz9w4zA6rOoYKzjyRH-j=ASFqNMVNShBYGd6-5Q@mail.gmail.com>
+Message-ID: <CAAOTY__fRjytz9w4zA6rOoYKzjyRH-j=ASFqNMVNShBYGd6-5Q@mail.gmail.com>
+Subject: Re: [RFC PATCH V7 1/3] media: platform: mtk-isp: Add Mediatek sensor
+ interface driver
+To:     Louis Kuo <louis.kuo@mediatek.com>
+Cc:     hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com,
+        Tomasz Figa <tfiga@chromium.org>, keiichiw@chromium.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        devicetree@vger.kernel.org,
+        =?UTF-8?B?U2VhbiBDaGVuZyAo6YSt5piH5byYKQ==?= 
+        <Sean.Cheng@mediatek.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        =?UTF-8?B?SmVycnktY2ggQ2hlbiAo6Zmz5pWs5oayKQ==?= 
+        <Jerry-ch.Chen@mediatek.com>,
+        =?UTF-8?B?SnVuZ28gTGluICjmnpfmmI7kv4op?= <jungo.lin@mediatek.com>,
+        =?UTF-8?B?U2ogSHVhbmcgKOm7g+S/oeeSiyk=?= <sj.huang@mediatek.com>,
+        yuzhao@chromium.org,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>, zwisler@chromium.org,
+        =?UTF-8?B?Q2hyaXN0aWUgWXUgKOa4uOmbheaDoCk=?= 
+        <christie.yu@mediatek.com>,
+        =?UTF-8?B?RnJlZGVyaWMgQ2hlbiAo6Zmz5L+K5YWDKQ==?= 
+        <frederic.chen@mediatek.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 7/12/20 11:40 PM, Marek Behun wrote:
-> On Sun, 12 Jul 2020 23:27:07 +0200
-> Jacek Anaszewski <jacek.anaszewski@gmail.com> wrote:
-> 
->>> +            multi-led@0 {
->>> +                reg = <0>;
->>> +                color = <LED_COLOR_ID_MULTI>;
->>> +                function = LED_FUNCTION_POWER;
->>
->> Please provide child nodes for each color LED. Let's stick
->> to the bindings closely and not make any deviations from
->> the beginning.
-> 
-> Why? It would make sense if there were devices using this controller
-> having other configuration, but on Omnia, all LEDs are RGB.
-> 
-> Also, if I do this, should I also make the driver check in the probe
-> function whether the per-channel child nodes are correct? Eg. if they
-> are always three: one for red, one for green and one for blue? Or
-> should the driver ignore this and only the device tree binding specify
-> it?
-> 
-> Because the way the driver is written now, it only registers
-> multi-color RGB LEDs.
+Hi, Louis:
 
-This is not RGB framework, but multicolor framework. It is not justified
-to pretend that RGB is default. Unless you would state that clearly in
-the comment in DT, but that should be agreed upon with Rob.
+Louis Kuo <louis.kuo@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=888=E6=97=
+=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=886:41=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> This patch adds Mediatek's sensor interface driver. Sensor interface
+> driver is a MIPI-CSI2 host driver, namely, a HW camera interface controll=
+er.
+> It support a widely adopted, simple, high-speed protocol primarily intend=
+ed
+> for point-to-point image and video transmission between cameras and host
+> devices. The mtk-isp directory will contain drivers for multiple IP block=
+s
+> found in Mediatek ISP system. It will include ISP Pass 1 driver, sensor
+> interface driver, DIP driver and face detection driver.
+>
+> Signed-off-by: Louis Kuo <louis.kuo@mediatek.com>
+> ---
 
--- 
-Best regards,
-Jacek Anaszewski
+[snip]
+
+> +
+> +enum CFG_CSI_PORT {
+> +       CFG_CSI_PORT_0 =3D 0x0,   /* 4D1C */
+> +       CFG_CSI_PORT_1,         /* 4D1C */
+> +       CFG_CSI_PORT_2,         /* 4D1C */
+> +       CFG_CSI_PORT_0A,        /* 2D1C */
+> +       CFG_CSI_PORT_0B,        /* 2D1C */
+> +       CFG_CSI_PORT_MAX_NUM,
+> +       CFG_CSI_PORT_NONE       /*for non-MIPI sensor */
+> +};
+> +
+> +enum PIXEL_MODE {
+> +       ONE_PIXEL_MODE  =3D 0x0,
+> +       TWO_PIXEL_MODE  =3D 0x1,
+> +       FOUR_PIXEL_MODE =3D 0x2,
+> +};
+> +
+> +enum SENINF_ID {
+> +       SENINF_1 =3D 0x0,
+> +       SENINF_2 =3D 0x1,
+> +       SENINF_3 =3D 0x2,
+> +       SENINF_4 =3D 0x3,
+> +       SENINF_5 =3D 0x4,
+> +       SENINF_NUM,
+> +};
+> +
+
+[snip]
+
+> +
+> +static int seninf_link_setup(struct media_entity *entity,
+> +                            const struct media_pad *local,
+> +                            const struct media_pad *remote, u32 flags)
+> +{
+> +       struct v4l2_subdev *sd;
+> +       struct mtk_seninf *priv;
+> +       struct device *dev;
+> +
+> +       sd =3D media_entity_to_v4l2_subdev(entity);
+> +       priv =3D v4l2_get_subdevdata(sd);
+> +       dev =3D priv->dev;
+> +
+> +       if (!(flags & MEDIA_LNK_FL_ENABLED))
+> +               return 0;
+> +
+> +       if (local->flags & MEDIA_PAD_FL_SOURCE) {
+> +               priv->mux_sel =3D local->index - CAM_MUX_IDX_MIN;
+> +       } else {
+> +               /* Select port */
+> +               priv->port =3D local->index;
+
+I don't understand V4L2 much, but the port definition is inside this
+file, how does the caller know what to pass to here? Could you explain
+how does it work?
+
+Regards,
+Chun-Kuang.
+
+> +               if (priv->port >=3D NUM_SENSORS) {
+> +                       dev_err(dev, "port index is over number of ports\=
+n");
+> +                       return -EINVAL;
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+> +
