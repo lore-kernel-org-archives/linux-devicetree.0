@@ -2,132 +2,92 @@ Return-Path: <SRS0=EOmc=AX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8110AC433E6
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 04:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B63A4C433E3
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 05:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 634F82072D
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 04:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92DC720725
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 05:51:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728252AbgGLEoc (ORCPT
+        id S1727107AbgGLFu7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Jul 2020 00:44:32 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:37170 "EHLO
-        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1728048AbgGLEob (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Jul 2020 00:44:31 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id DF03720139AB;
-        Sun, 12 Jul 2020 12:44:28 +0800 (HKT)
-X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
-Received: from mail.gtsys.com.hk ([127.0.0.1])
-        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id mNmcZS_kDkJ2; Sun, 12 Jul 2020 12:44:28 +0800 (HKT)
-Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id C6B4620139A6;
-        Sun, 12 Jul 2020 12:44:28 +0800 (HKT)
-Received: from armhf2.gtsys.com.hk (unknown [10.128.4.15])
-        by s01.gtsys.com.hk (Postfix) with ESMTP id C35C2C019F4;
-        Sun, 12 Jul 2020 12:44:28 +0800 (HKT)
-Received: by armhf2.gtsys.com.hk (Postfix, from userid 1000)
-        id C03D1202299; Sun, 12 Jul 2020 12:44:28 +0800 (HKT)
-From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
-To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Cc:     Jack Lo <jack.lo@gtsys.com.hk>, devicetree@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v6 2/2] devicetree: hwmon: shtc1: Add sensirion,shtc1.yaml
-Date:   Sun, 12 Jul 2020 12:44:10 +0800
-Message-Id: <20200712044411.23323-3-chris.ruehl@gtsys.com.hk>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200712044411.23323-1-chris.ruehl@gtsys.com.hk>
-References: <20200712044411.23323-1-chris.ruehl@gtsys.com.hk>
+        Sun, 12 Jul 2020 01:50:59 -0400
+Received: from mga09.intel.com ([134.134.136.24]:64366 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727077AbgGLFu7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 12 Jul 2020 01:50:59 -0400
+IronPort-SDR: PqrVqmkYA2Ua5G8qqPBCNGv7WEro90R1EarS04Nwx6v5YHsepxS716QSa0SKfrjZDNCCX3pij5
+ 7buOec5zd2Cw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9679"; a="149932010"
+X-IronPort-AV: E=Sophos;i="5.75,342,1589266800"; 
+   d="scan'208";a="149932010"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2020 22:50:59 -0700
+IronPort-SDR: 6dIdGJ+V6iv5lTF00/dGQIFV7NJ7kgJvEJjz8QW2uFcxlA+MxeRH2jDsmK2S/OVKEYP3RWarmY
+ BVAZH/bmq31g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,342,1589266800"; 
+   d="scan'208";a="268087447"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 11 Jul 2020 22:50:58 -0700
+Received: from [10.255.131.188] (unknown [10.255.131.188])
+        by linux.intel.com (Postfix) with ESMTP id D44F65805F0;
+        Sat, 11 Jul 2020 22:50:55 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v4 2/2] usb: phy: Add USB3 PHY support for Intel LGM SoC
+To:     Felipe Balbi <balbi@kernel.org>, linux-kernel@vger.kernel.org,
+        robh@kernel.org, p.zabel@pengutronix.de
+Cc:     gregkh@linuxfoundation.org, devicetree@vger.kernel.org,
+        linux-usb@vger.kernel.org, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, yin1.li@intel.com,
+        andriy.shevchenko@intel.com
+References: <20200617035818.54110-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200617035818.54110-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <87blknrjg6.fsf@kernel.org>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <04a2d471-168f-7769-895e-b390c64e95ad@linux.intel.com>
+Date:   Sun, 12 Jul 2020 13:50:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <87blknrjg6.fsf@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add documentation for the newly added DTS support in the shtc1 driver.
-To align with the drivers logic to have high precision by default
-a boolean sensirion,low_precision is used to switch to low precision.
+Hi,
 
-Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
----
- .../bindings/hwmon/sensirion,shtc1.yaml       | 57 +++++++++++++++++++
- 1 file changed, 57 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
+On 10/7/2020 2:08 pm, Felipe Balbi wrote:
+> 
+> Hi,
+> 
+> "Ramuthevar,Vadivel MuruganX"
+> <vadivel.muruganx.ramuthevar@linux.intel.com> writes:
+> 
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> Add support for USB PHY on Intel LGM SoC.
+>>
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> ---
+>>   drivers/usb/phy/Kconfig       |  11 ++
+>>   drivers/usb/phy/Makefile      |   1 +
+>>   drivers/usb/phy/phy-lgm-usb.c | 275 ++++++++++++++++++++++++++++++++++++++++++
+> 
+> new phy drivers should use drivers/phy instead.
+Noted, Will move to drivers/phy as per your suggestion, Thanks!
 
-diff --git a/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml b/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
-new file mode 100644
-index 000000000000..752fd32eed25
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
-@@ -0,0 +1,57 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hwmon/sensirion,shtc1.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Sensirion SHTC1 Humidity and Temperature Sensor IC
-+
-+maintainers:
-+  - chris.ruehl@gtsys.com.hk
-+
-+description: |
-+  The SHTC1, SHTW1 and SHTC3 are digital humidity and temperature sensor
-+  designed especially for battery-driven high-volume consumer electronics
-+  applications.
-+  For further information refere to Documentation/hwmon/shtc1.rst
-+
-+  This binding document describes the binding for the hardware monitor
-+  portion of the driver.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - sensirion,shtc1
-+      - sensirion,shtw1
-+      - sensirion,shtc3
-+
-+  reg:
-+    const: 0x70
-+
-+  sensirion,blocking-io:
-+    $ref: /schemas/types.yaml#definitions/flag
-+    description:
-+      If set, the driver hold the i2c bus until measurement is finished.
-+
-+  sensirion,low-precision:
-+    $ref: /schemas/types.yaml#definitions/flag
-+    description:
-+      If set, the sensor aquire data with low precision (not recommended).
-+      The driver aquire data with high precision by default.
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    i2c1 {
-+      clock-frequency = <400000>;
-+
-+      shtc3@70 {
-+        compatible = "sensirion,shtc3";
-+        reg = <0x70>;
-+        sensirion,blocking-io;
-+      };
-+    };
-+...
--- 
-2.20.1
-
+Regards
+Vadivel
+> 
