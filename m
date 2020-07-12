@@ -2,121 +2,102 @@ Return-Path: <SRS0=EOmc=AX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 118A0C433E2
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 16:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F708C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 17:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD7F62068F
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 16:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06AC320702
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 17:13:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XsZ93uYy"
+	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="V/Ue66OX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729169AbgGLQ6d (ORCPT
+        id S1728862AbgGLRNT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Jul 2020 12:58:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55840 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729002AbgGLQ6d (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Jul 2020 12:58:33 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EE3BC08C5DB
-        for <devicetree@vger.kernel.org>; Sun, 12 Jul 2020 09:58:33 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ch3so4962581pjb.5
-        for <devicetree@vger.kernel.org>; Sun, 12 Jul 2020 09:58:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=81VG818pMyCMeObuY0Lnq7OIq0/1trDhkGYhGsXjMvU=;
-        b=XsZ93uYy/foX6o8q1xCxtf91N/S/I0+sI4A7mp5vwt3BZzpO0YgKkPWfaRoQeEZfEr
-         IV8ZfXq+Diq3fx75WMXuN1b5JKyBqgAXwNC7Eg+fYWvcTwxh0d+x3sRiX1Jd5wCDHEIu
-         oW7ui7pe/hwmAqXj8NYconFQauQogPDmYvq4KUOiljqVAxWfL+f3VO6WXCecLYolQun5
-         fgvGxQcazTeF0NmxHBbBFfregigq7Go0ywCam77rV0MvAbPOfH64pP5m6DgTszy3byYR
-         TCqmoZmBAo/uu/g1ZGXb6J4CjwhiVRmyWLimjOEO1ZHF2k6pE49kFtkSnPnsMiLUrR4T
-         Wz4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=81VG818pMyCMeObuY0Lnq7OIq0/1trDhkGYhGsXjMvU=;
-        b=TnMcXWn3W5PY3xHJmyC324WWOpQYHpBY3jJCu7Es0vwfkfutn6mwd+ubiSKRhptX+c
-         hUdO2CxLp3JDIbMIUpb7mVOLREzhu0VyhoQgG1X0oXQO9yAu7oUw4VnZXd8UCt1XA/Pn
-         ZL+X7nfTxjvngdJd6mVVGxdHXjIz5umtizoXWoYC9SaZO3Bm30TcgAJ9k/6HZDJla4ZP
-         RZz6/nGfzx5NTq+P3xSX4dlJOK1hOWBazwxXiOMVhwckauF1OvXE0LeINHqKx9dC6CXj
-         FJzvRNZstgJ+XzxsUX0a8RrmnsUBSzQFXmbqZLohtGU+Y4IwJFPDeIEnb3xc8vYtsKI6
-         GfJg==
-X-Gm-Message-State: AOAM533HdEIwhPTZ1r527Um/YnY9A77w4vimIrmtpWcnF9uhZACdIoCk
-        FA4B1dt7CgKQPCHTUpeVJEdv
-X-Google-Smtp-Source: ABdhPJxOIZgMYozvqspN0rUdWA6m8Lp+V2Px+VYzdLA+hTYIcHQljXmotPH39K/WfUBHPw3VYXAILQ==
-X-Received: by 2002:a17:90a:1f81:: with SMTP id x1mr14677430pja.115.1594573112789;
-        Sun, 12 Jul 2020 09:58:32 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6c81:c187:70f5:3123:b5de:e77f])
-        by smtp.gmail.com with ESMTPSA id n12sm11003682pgr.88.2020.07.12.09.58.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 12 Jul 2020 09:58:32 -0700 (PDT)
-Date:   Sun, 12 Jul 2020 22:28:26 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH v3 6/6] MAINTAINERS: Add reset binding entry for Actions
- Semi Owl SoCs
-Message-ID: <20200712165826.GD6110@Mani-XPS-13-9360>
-References: <cover.1593788312.git.cristian.ciocaltea@gmail.com>
- <78d63d97e3a8a8f7a9048b6eec74a9d158578833.1593788312.git.cristian.ciocaltea@gmail.com>
+        Sun, 12 Jul 2020 13:13:19 -0400
+Received: from lists.nic.cz ([217.31.204.67]:51476 "EHLO mail.nic.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728859AbgGLRNS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 12 Jul 2020 13:13:18 -0400
+Received: from localhost (unknown [172.20.6.135])
+        by mail.nic.cz (Postfix) with ESMTPSA id D51DF13F695;
+        Sun, 12 Jul 2020 19:13:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
+        t=1594573995; bh=IdpjkEs0baFSLdPZACLe10nfwrtF82lLhF1z9A2cKrE=;
+        h=Date:From:To;
+        b=V/Ue66OXddxfeTBv55NCWebdOTpChau5tYqADSDnwCIjwqpDrAmn+9XP4XFlvv8bO
+         fYWkZS8uVs19BBEK7JcGUBh4vgTA0jiJZWkuGZNkPe7Aae3xZltN5SfQyLeiYlY4/9
+         xH762pf8DOgvu1R3yENdXZL42rcqxWxvOxV5w+iU=
+Date:   Sun, 12 Jul 2020 19:13:15 +0200
+From:   Marek Behun <marek.behun@nic.cz>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Dan Murphy <dmurphy@ti.com>, jacek.anaszewski@gmail.com,
+        robh@kernel.org, devicetree@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v29 00/16] Multicolor Framework v29
+Message-ID: <20200712191315.5dab10a6@nic.cz>
+In-Reply-To: <20200704124729.GA20088@amd>
+References: <20200622185919.2131-1-dmurphy@ti.com>
+        <20200704124729.GA20088@amd>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <78d63d97e3a8a8f7a9048b6eec74a9d158578833.1593788312.git.cristian.ciocaltea@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+X-Virus-Status: Clean
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 08:05:12PM +0300, Cristian Ciocaltea wrote:
-> Add a reset binding entry to match all members of Actions Semi Owl SoCs.
-> 
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+On Sat, 4 Jul 2020 14:47:29 +0200
+Pavel Machek <pavel@ucw.cz> wrote:
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Hi!
+> 
+> > This is the multi color LED framework.   This framework presents clustered
+> > colored LEDs into an array and allows the user space to adjust the brightness
+> > of the cluster using a single file write.  The individual colored LEDs
+> > intensities are controlled via a single file that is an array of LEDs
+> > 
+> > Change to the LEDs Kconfig to fix dependencies on the LP55XX_COMMON.
+> > Added update to the u8500_defconfig  
+> 
+> Marek, would you be willing to look over this series?
 
-Thanks,
-Mani
+Overall this series looks good to me. I wanted to apply version 29 of
+the patches, but I didn't receive all patches in v29 (some are
+missing), so I had to search for previous versions of selected patches.
 
-> ---
-> Changes in v3:
->  - Removed the "-reset.h" suffix from the binding entry, as suggested
->    by Mani
+I have seen some typos in documentation, but that can be solved
+afterwards.
+
+One thing I don't like much is that in the sysfs multi_index and
+multi_intensity files there is a trailing space after the last color.
+This is not true for example for the trigger file. It is trivial to fix
+this, so again maybe a will send a follow-up patch after this series is
+accepted.
+
+Marek
+
+> Dan, can we please get it in the order
 > 
-> Changes in v2:
->  - None
+> 1) fixes first
 > 
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
+> 2) changes needed for multicolor but not depending on dt acks
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 496fd4eafb68..5033de342f31 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1533,6 +1533,7 @@ F:	drivers/mmc/host/owl-mmc.c
->  F:	drivers/pinctrl/actions/*
->  F:	drivers/soc/actions/
->  F:	include/dt-bindings/power/owl-*
-> +F:	include/dt-bindings/reset/actions,*
->  F:	include/linux/soc/actions/
->  N:	owl
->  
-> -- 
-> 2.27.0
+> 3) dt changes
 > 
+> 4) rest?
+> 
+> This is the order it should have been in the first place, and I'd like
+> to get fixes applied, and perhaps some of the preparation.
+> 
+> Best regards,
+> 									Pavel
+> 
+
