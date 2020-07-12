@@ -2,154 +2,128 @@ Return-Path: <SRS0=EOmc=AX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E64B6C433E4
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 13:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F32C433E2
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 15:31:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6E6920725
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 13:35:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594560940;
-	bh=tA6inrUVMBbNMdDUv0sGKtGU7BZNsriyMOePDmhGwc8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=QZhzTDhuulzd0eYIB/LGdyhq5qH8Qh7KuaLD/zi2NbdEvXg3XH9l1cBTd1usnPWIn
-	 2asBnHLRnhSH7Y5+xVlYZQBexlZRDKRdn2dhKybYhYaR6KcO0oq4ymENdF/y/XRSAo
-	 p/ZhbQY0S2HJVr02/SRBmxYINZOxbYnLrgR02Jd8=
+	by mail.kernel.org (Postfix) with ESMTP id 1504C206F4
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 15:31:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W9J4Lfge"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728852AbgGLNfk (ORCPT
+        id S1728861AbgGLPb3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Jul 2020 09:35:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41058 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728339AbgGLNfk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 12 Jul 2020 09:35:40 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C37D206B6;
-        Sun, 12 Jul 2020 13:35:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594560939;
-        bh=tA6inrUVMBbNMdDUv0sGKtGU7BZNsriyMOePDmhGwc8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=G6zXdmu7qxU3Vgk93hqW3Jio/U+fyHYjuZ6eECAXysS9JNbx54qgm+1xOPFkY3CvE
-         sAO9eEiWzoS7n0Z/bM2n5DGcqGeaYpYoG/b6YMyWqDk/d0GCdKy7MdMNkM6IOnVlvN
-         1SxelAHXAGoVB/7aFwu7rmzvQfBKPvaWeBQBt72Y=
-Date:   Sun, 12 Jul 2020 14:35:34 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
-Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH v6 0/5] Microchip TCB Capture driver
-Message-ID: <20200712143534.278ea3c7@archlinux>
-In-Reply-To: <20200706114347.174452-1-kamel.bouhara@bootlin.com>
-References: <20200706114347.174452-1-kamel.bouhara@bootlin.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 12 Jul 2020 11:31:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42544 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728859AbgGLPb2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Jul 2020 11:31:28 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17D8FC061794;
+        Sun, 12 Jul 2020 08:31:28 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id a1so3198609edt.10;
+        Sun, 12 Jul 2020 08:31:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OC8AObzew9aqd3OWFgWAH1kVdGnLQeAxyBxr457j2LY=;
+        b=W9J4LfgeIK144Btt0OSLh+fJulag+sR0kLYVE2lDrPCcBOy+ajXJWVer78aAUIWXJm
+         oofzVCY/g/c/gg9L7RL8YWB5vwjwBb6JHnectBiFiftnAtRBVaH0Z2VRpRDjtEuHUTdh
+         vK8n5T2Cx+UsODr9SKNHypR6Xr0c0Ag0Wj2AAHJqYUDysbMnQcj0Ov6Uk3ByOj0ap40Z
+         +/WKwmJ26niqbmuQBFaEV5L+mDLruaLzYtKOTSc5Oo4+RYd730nm4/A8No/ibttfXSuy
+         lYlcVXOnO1HsfuW7Fq9RkLTJanXT8XLxf7Nci3GZ9OyHBEAhiwGkFn5BQaN9Lj1j2YLg
+         X2ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OC8AObzew9aqd3OWFgWAH1kVdGnLQeAxyBxr457j2LY=;
+        b=MjBPRbpwBrFmYsrw18Q73U4na5SLwUo+PM8rGTuUCPhcLgmYYFDvQ9Nq0ldAEyYvKs
+         vGyZ+BCTG2xpvdqOxBRFqOR1z9DJD5QueCxEHhazbsJtC8ud391KDlbQF9MRu1/ZbS2W
+         AjmLnyTvjLt70NIgKZneJI3gtLWowywrXQ7D8O2WQL5kxq4WOH92DOy5Qw48SEqLEHsm
+         izdRh0OqksIPRTbQlXe74vZdF3TF28ZuuMGcXekQlRsLLMQ9doRqY1eqmnT8ab/e8XsV
+         AOAG+eP9Czi7eZduTm05Bhrs9f0v0vJWGGtmtgiEsfO7izQxvq2jNAqJ/GUvGendVQ+o
+         G0og==
+X-Gm-Message-State: AOAM531ONvxDq2UI1W/oM9oQRe3Mev1nriU3FDubFtPXrAZ7kQMDcx8p
+        k+jWk3gx/krz41awuHUOjBA=
+X-Google-Smtp-Source: ABdhPJwJm7304izUL0IgGkG7yBGMirci+PY/YyegBIwPgXeaCR/OkgnpmwgdXrXRFn3RWKIOrW3fJw==
+X-Received: by 2002:a50:f058:: with SMTP id u24mr87330213edl.351.1594567886745;
+        Sun, 12 Jul 2020 08:31:26 -0700 (PDT)
+Received: from ?IPv6:2a01:110f:b59:fd00:cdeb:44e7:80ea:5ee2? ([2a01:110f:b59:fd00:cdeb:44e7:80ea:5ee2])
+        by smtp.gmail.com with ESMTPSA id d5sm9570554eds.40.2020.07.12.08.31.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 12 Jul 2020 08:31:26 -0700 (PDT)
+Subject: Re: [PATCH v29 13/16] leds: lp5523: Update the lp5523 code to add
+ multicolor brightness function
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Dan Murphy <dmurphy@ti.com>, robh@kernel.org,
+        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20200622185919.2131-1-dmurphy@ti.com>
+ <20200622185919.2131-14-dmurphy@ti.com> <20200711155749.GB22715@amd>
+ <c9e20136-7226-2feb-b017-0a0742867f93@gmail.com>
+ <20200711202419.GA18347@duo.ucw.cz>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <e2a2fe12-b5e8-6a62-3dc3-f45019ade330@gmail.com>
+Date:   Sun, 12 Jul 2020 17:31:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200711202419.GA18347@duo.ucw.cz>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon,  6 Jul 2020 13:43:42 +0200
-Kamel Bouhara <kamel.bouhara@bootlin.com> wrote:
+On 7/11/20 10:24 PM, Pavel Machek wrote:
+> On Sat 2020-07-11 19:19:22, Jacek Anaszewski wrote:
+>> On 7/11/20 5:57 PM, Pavel Machek wrote:
+>>> Hi!
+>>>
+>>>> Add the multicolor brightness call back to support the multicolor
+>>>> framework.  This call back allows setting  brightness on grouped channels
+>>>
+>>> Extra space before "brightness".
+>>
+>> And before "This".
+> 
+> That one is intentional, I believe.
+> 
+> https://www.independent.co.uk/life-style/gadgets-and-tech/news/one-space-or-two-spaces-after-a-full-stop-scientists-have-finally-found-the-answer-a8337646.html
+> 
+> We are using fixed width fonts, so typewriter rules still apply here.
 
-> Hello,
-> 
-> Here is a new counter driver to support Microchip TCB capture devices.
-> 
-> Each SoC has two TCB blocks, each one including three independent
-> channels.The following series adds support for two counter modes:
-> increase and quadrature decoder.
-> 
-> As for the atmel clocksource and pwm, the counter driver needs to fill
-> some tcb capabilities in order to operate with the right configuration.
-> This is achieved in first patch of this series.
-> 
-> Please feel free to comment.
+But see the article [0].
+Also, in [1], in the section "Computer era" you can find opposite
+examples in the modern systems.
 
-As far as I can see we have all the necessary acks etc and it looks
-good to me as well.
+And grep returns following numbers for kernel Documentation folder:
 
-Shall I do an immutable branch with the whole lot or should we split it
-up?  Patches 1 and 5 need to go through the same tree, but bindings
-could go via another route.  I'm also fine if the whole lot goes
-via the appropriate soc tree if that is easier.
+$ rgrep "[A-Za-z0-9]\.  " Documentation/ | wc -l
+18449
+$ rgrep "[A-Za-z0-9]\. " Documentation/ | wc -l
+63067
 
-Jonathan
+I prefer single space but will not fight for that too hard.
+Nonetheless, it would be good to use one style consistently,
+since most files I've looked at had problem with that.
 
+Both DT and LED documentation in this set is not consistent
+in this regard as well.
 
-> 
-> Cheers,
-> 
-> Changes in v6:
->  - Rebased on top of v5.8-rc3
->  - Added Alexandre's ack
->  - Added Rob's ack
-> 
-> Changes in v5:
->  - Fix duplicate keys errors in yaml dt-schema
-> 
-> Changes in v4:
->  - Use existing binding to document capture mode of the Microchip TCBs.
-> 
-> Changes in v3:
->  - Updated the brand name: s/atmel/microchip/.
->  - Added missing kernel doc for new elements introduced in structure
->    atmel_tcb_config.
->  - Removed useless blank line
->  - Added an explicit clock removing path using devm_add_action_or_reset
-> 
-> Changes in v2:
->  - Fixed first patch not applying on mainline
->  - Updated return code to -EINVAL when user is requesting qdec mode on
->    a counter device not supporting it.
->  - Added an error case returning -EINVAL when action edge is performed
->    in
->    qdec mode.
->  - Removed no need to explicity setting ops to NULL from static struct
->    as
->    it is the default value.
->  - Changed confusing code by using snprintf for the sake of clarity.
->  - Changed code to use ARRAY_SIZE so that future reviewers will know
->    that num_counts matches what's in the atmel_tc_count array without
->    having to check so themselves.
->  - Fixed errors reported by dt_binding_check
-> 
-> Alexandre Belloni (2):
->   dt-bindings: atmel-tcb: convert bindings to json-schema
->   dt-bindings: microchip: atmel,at91rm9200-tcb: add sama5d2 compatible
-> 
-> Kamel Bouhara (3):
->   ARM: at91: add atmel tcb capabilities
->   dt-bindings: counter: microchip-tcb-capture counter
->   counter: Add microchip TCB capture counter
-> 
->  .../devicetree/bindings/mfd/atmel-tcb.txt     |  56 ---
->  .../soc/microchip/atmel,at91rm9200-tcb.yaml   | 181 ++++++++
->  drivers/counter/Kconfig                       |  11 +
->  drivers/counter/Makefile                      |   1 +
->  drivers/counter/microchip-tcb-capture.c       | 397 ++++++++++++++++++
->  include/soc/at91/atmel_tcb.h                  |   5 +
->  6 files changed, 595 insertions(+), 56 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mfd/atmel-tcb.txt
->  create mode 100644 Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
->  create mode 100644 drivers/counter/microchip-tcb-capture.c
-> 
-> --
-> 2.26.2
-> 
+[0] 
+https://www.instructionalsolutions.com/blog/one-space-vs-two-after-period
+[1] https://en.wikipedia.org/wiki/Sentence_spacing
 
+-- 
+Best regards,
+Jacek Anaszewski
