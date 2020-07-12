@@ -3,193 +3,188 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BCDC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 17:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B80EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 18:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C18E20702
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 17:30:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D37A206F0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 18:06:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LddmON61"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CAUkLktO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729307AbgGLRaw (ORCPT
+        id S1729259AbgGLSGW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Jul 2020 13:30:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60792 "EHLO
+        Sun, 12 Jul 2020 14:06:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729103AbgGLRaw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Jul 2020 13:30:52 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEFB2C061794
-        for <devicetree@vger.kernel.org>; Sun, 12 Jul 2020 10:30:51 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id d4so4968329pgk.4
-        for <devicetree@vger.kernel.org>; Sun, 12 Jul 2020 10:30:51 -0700 (PDT)
+        with ESMTP id S1728923AbgGLSGV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Jul 2020 14:06:21 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79653C061794;
+        Sun, 12 Jul 2020 11:06:21 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id l2so10767591wmf.0;
+        Sun, 12 Jul 2020 11:06:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=b52O4yZ4WWPWMkyXBM0Cslv57iFmmN2CyMy2jQ7ZsD4=;
-        b=LddmON61RT0OdXk1RGnQPzfQO3pv4v5Wwkx2pNa9zsjn5G4NMYYzYZGctAnheyT3Es
-         nJ9eJ7KNvbkIojJI0FgFthDaRzLms+UOCTLjDgpwblskqxvcdNjzqdFZZR9LKAV215eK
-         N7eCxBpG0bBZijbqqy5REpfXLtF/db+kIFlLAye2BEvnAeRa1ENaAJNzui+aJJwcWlVt
-         8ZHbphqmfa2Tzcnt8phzt3rL0Cv8FzF1xnvntAB/NfRaRi15g15vYDQqV0VtjlR/mLhI
-         q04wSQz22HsLDjiKHvGZASF/D3A2Ez53JSp4BED0DeK8RPRpz6xrhKkBMNqduSxGPD2L
-         Vt1w==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rXIYGf7nKP36lUXjPoJamlUt3MsApH6KmL+wKFQttL0=;
+        b=CAUkLktOBjEigcVSb5JNR+sboa7yimUHhD+N1nwWEE7TinAlC7ZJNpGfHK9TKMEE9l
+         0cFr2gf3pQ/bimZ8PBmiV4spwFLh9Iw1RO9rBcG7PFxWiFLYEPaPpCXAR/N4mc2dgcWB
+         tHCvoTJjzayOYqRC+WHHKpHlV4KrlUOlE88MtiGizREsb82J64QBr19uwQSN3z1M+FG/
+         Y1DxrB1lza/XDpoPjGgx4mOPJo6Spw3wTZgDtkYXXk8xppsrnxOQwrrSv7ubg5G92EFa
+         JRordYRXyQn25uLMcRP1ElTewWOqgggYgqRIBY6UWLtlTGtUn4j7sdy8qAdRtdv5ZVrs
+         W+eQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=b52O4yZ4WWPWMkyXBM0Cslv57iFmmN2CyMy2jQ7ZsD4=;
-        b=c2nqZNEsQvXZgTUmZMNx8VRIr9RZ6rnqbHzEY3F3eI/QseLkVk5/wW6Cu6Ep8Yj8dc
-         j4uLBS3YoklNfql9ilen40eAiSrCwVh5wTP6Fcj6HUfn7bYjhkS1K2wytRrhfah2AzvJ
-         VDaDpulfkfnuXU9LCEWZWXSCncpCjizUQKK0xYstaP1NziayqsxRMcazHjdXPgZ6Hwx1
-         rold5YyPDRNGyYkgXItKhdwSpR7uw5eVn23Lb8l6oXAlPhAWB7illhA/7IdoMcfdjUct
-         UfpRn/FoZx7lNuKWcPiOqnY3XNJtl8JqLrCbnOvw89p3F5U1jHunLXq8mrqMuqizX/Yz
-         UN/A==
-X-Gm-Message-State: AOAM532ZRW92KYl2zZXluD5mle/mVOO1XT00qA/ZUKtrSwKKX40PvVJE
-        JjsbHklCzdhN0DMb/4IoKVQH
-X-Google-Smtp-Source: ABdhPJz6AvDaMsE8b5SEDGKeF6F6u6F07neWNGvaeWp2nmNpKLu88W56zKF5hvMLBOUhvZ6s+yuw7A==
-X-Received: by 2002:a63:1548:: with SMTP id 8mr40566225pgv.172.1594575051183;
-        Sun, 12 Jul 2020 10:30:51 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6c81:c187:70f5:3123:b5de:e77f])
-        by smtp.gmail.com with ESMTPSA id n9sm11734571pjo.53.2020.07.12.10.30.46
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 12 Jul 2020 10:30:50 -0700 (PDT)
-Date:   Sun, 12 Jul 2020 23:00:44 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Amit Singh Tomar <amittomer25@gmail.com>
-Cc:     andre.przywara@arm.com, afaerber@suse.de, robh+dt@kernel.org,
-        cristian.ciocaltea@gmail.com, linux-kernel@vger.kernel.org,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rXIYGf7nKP36lUXjPoJamlUt3MsApH6KmL+wKFQttL0=;
+        b=iofWVueEjgXHZ8vD9f7Tk0TEKQVkosuVzekrdWyT/Vs9rmuX9YOkGUDS0+Nv25V4OV
+         0ScJKD2JalS2ZqJsU1uvLGTQlUrZ/qKcPlz8DjFy5xKZb/w7rI/7HdHv3wgE191CCEO4
+         UZd7aYu5og/E24Z+5MtMPe3oVdbMfbSYQHgr5rAF9zpnqymmc61F9rzrWezRG8HHg/E6
+         kJ8eQksj5SH18JkQ7d+ayUdkIn/OFpw8p9guJtsxOGgTC1CMYyrh63/nKvqdg3WXtNbu
+         lY4nR6I55oVk5DTHh/xzbfgHV0TPjSNw+L/GImhZI3A6eblQBn3gg8GbI5yBgohhatjf
+         MbuQ==
+X-Gm-Message-State: AOAM533l4aYc8HEiwgWrZhEbDdUTWmY14hKr8MsdRHz6dfaUKId6FOCd
+        HoxDtcYo4EDwqQ7Ij+yJC6k=
+X-Google-Smtp-Source: ABdhPJzOUmPXUmNbjdA7jZ/Qn0aHiRAOlQ80hzDT623yYWJX8GnjOzvPMH7bEVZ6XQEHalOXvPDCZg==
+X-Received: by 2002:a1c:49d7:: with SMTP id w206mr15866960wma.181.1594577180061;
+        Sun, 12 Jul 2020 11:06:20 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.114.245])
+        by smtp.gmail.com with ESMTPSA id j6sm20823362wro.25.2020.07.12.11.06.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 12 Jul 2020 11:06:19 -0700 (PDT)
+Subject: Re: [PATCH 01/21] dt-binding: memory: mediatek: Add a common
+ larb-port header file
+To:     Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>
+Cc:     Will Deacon <will@kernel.org>, Evan Green <evgreen@chromium.org>,
+        Tomasz Figa <tfiga@google.com>,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 10/10] arm64: dts: actions: Add uSD support for
- Cubieboard7
-Message-ID: <20200712173044.GL6110@Mani-XPS-13-9360>
-References: <1593701576-28580-1-git-send-email-amittomer25@gmail.com>
- <1593701576-28580-11-git-send-email-amittomer25@gmail.com>
+        iommu@lists.linux-foundation.org, youlin.pei@mediatek.com,
+        Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com,
+        cui.zhang@mediatek.com, chao.hao@mediatek.com,
+        ming-fan.chen@mediatek.com
+References: <20200711064846.16007-1-yong.wu@mediatek.com>
+ <20200711064846.16007-2-yong.wu@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <9e21288c-07da-88b0-2dbb-bd9a2a4d529b@gmail.com>
+Date:   Sun, 12 Jul 2020 20:06:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1593701576-28580-11-git-send-email-amittomer25@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200711064846.16007-2-yong.wu@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 08:22:56PM +0530, Amit Singh Tomar wrote:
-> This commit adds uSD support for Cubieboard7 board based on Actions Semi
-> S700 SoC. SD0 is connected to uSD slot. Since there is no PMIC support
-> added yet, fixed regulator has been used as a regulator node.
+
+
+On 11/07/2020 08:48, Yong Wu wrote:
+> Put all the macros about smi larb/port togethers, this is a preparing
+> patch for extending LARB_NR and adding new dom-id support.
 > 
-> Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
+> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
 > ---
-> Changes since v4:
-> 	* No change.
-> Changes since v3:
->         * No change.
-> Changes since v2:
->         * No change.
-> Changes since v1:
->         * No change.
-> Changes since RFC:
->         * No change.
-> ---
->  arch/arm64/boot/dts/actions/s700-cubieboard7.dts | 41 ++++++++++++++++++++++++
->  arch/arm64/boot/dts/actions/s700.dtsi            |  1 +
->  2 files changed, 42 insertions(+)
+>   include/dt-bindings/memory/mt2712-larb-port.h  |  2 +-
+>   include/dt-bindings/memory/mt6779-larb-port.h  |  2 +-
+>   include/dt-bindings/memory/mt8173-larb-port.h  |  2 +-
+>   include/dt-bindings/memory/mt8183-larb-port.h  |  2 +-
+>   include/dt-bindings/memory/mtk-smi-larb-port.h | 15 +++++++++++++++
+>   5 files changed, 19 insertions(+), 4 deletions(-)
+>   create mode 100644 include/dt-bindings/memory/mtk-smi-larb-port.h
 > 
-> diff --git a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-> index 63e375cd9eb4..ec117eb12f3a 100644
-> --- a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-> +++ b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-> @@ -13,6 +13,7 @@
->  
->  	aliases {
->  		serial3 = &uart3;
-> +		mmc0 = &mmc0;
->  	};
->  
->  	chosen {
-> @@ -28,6 +29,23 @@
->  		device_type = "memory";
->  		reg = <0x1 0xe0000000 0x0 0x0>;
->  	};
+> diff --git a/include/dt-bindings/memory/mt2712-larb-port.h b/include/dt-bindings/memory/mt2712-larb-port.h
+> index 6f9aa7349cef..b6b2c6bf4459 100644
+> --- a/include/dt-bindings/memory/mt2712-larb-port.h
+> +++ b/include/dt-bindings/memory/mt2712-larb-port.h
+> @@ -6,7 +6,7 @@
+>   #ifndef __DTS_IOMMU_PORT_MT2712_H
+>   #define __DTS_IOMMU_PORT_MT2712_H
+>   
+> -#define MTK_M4U_ID(larb, port)		(((larb) << 5) | (port))
+> +#include <dt-bindings/memory/mtk-smi-larb-port.h>
+>   
+>   #define M4U_LARB0_ID			0
+>   #define M4U_LARB1_ID			1
+> diff --git a/include/dt-bindings/memory/mt6779-larb-port.h b/include/dt-bindings/memory/mt6779-larb-port.h
+> index 2ad0899fbf2f..60f57f54393e 100644
+> --- a/include/dt-bindings/memory/mt6779-larb-port.h
+> +++ b/include/dt-bindings/memory/mt6779-larb-port.h
+> @@ -7,7 +7,7 @@
+>   #ifndef _DTS_IOMMU_PORT_MT6779_H_
+>   #define _DTS_IOMMU_PORT_MT6779_H_
+>   
+> -#define MTK_M4U_ID(larb, port)		 (((larb) << 5) | (port))
+> +#include <dt-bindings/memory/mtk-smi-larb-port.h>
+>   
+>   #define M4U_LARB0_ID			 0
+>   #define M4U_LARB1_ID			 1
+> diff --git a/include/dt-bindings/memory/mt8173-larb-port.h b/include/dt-bindings/memory/mt8173-larb-port.h
+> index 9f31ccfeca21..d8c99c946053 100644
+> --- a/include/dt-bindings/memory/mt8173-larb-port.h
+> +++ b/include/dt-bindings/memory/mt8173-larb-port.h
+> @@ -6,7 +6,7 @@
+>   #ifndef __DTS_IOMMU_PORT_MT8173_H
+>   #define __DTS_IOMMU_PORT_MT8173_H
+>   
+> -#define MTK_M4U_ID(larb, port)		(((larb) << 5) | (port))
+> +#include <dt-bindings/memory/mtk-smi-larb-port.h>
+>   
+>   #define M4U_LARB0_ID			0
+>   #define M4U_LARB1_ID			1
+> diff --git a/include/dt-bindings/memory/mt8183-larb-port.h b/include/dt-bindings/memory/mt8183-larb-port.h
+> index 2c579f305162..275c095a6fd6 100644
+> --- a/include/dt-bindings/memory/mt8183-larb-port.h
+> +++ b/include/dt-bindings/memory/mt8183-larb-port.h
+> @@ -6,7 +6,7 @@
+>   #ifndef __DTS_IOMMU_PORT_MT8183_H
+>   #define __DTS_IOMMU_PORT_MT8183_H
+>   
+> -#define MTK_M4U_ID(larb, port)		(((larb) << 5) | (port))
+> +#include <dt-bindings/memory/mtk-smi-larb-port.h>
+>   
+>   #define M4U_LARB0_ID			0
+>   #define M4U_LARB1_ID			1
+> diff --git a/include/dt-bindings/memory/mtk-smi-larb-port.h b/include/dt-bindings/memory/mtk-smi-larb-port.h
+> new file mode 100644
+> index 000000000000..2ec7fe5ce4e9
+> --- /dev/null
+> +++ b/include/dt-bindings/memory/mtk-smi-larb-port.h
+> @@ -0,0 +1,15 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2020 MediaTek Inc.
+> + * Author: Yong Wu <yong.wu@mediatek.com>
+> + */
+> +#ifndef __DTS_MTK_IOMMU_PORT_H_
+> +#define __DTS_MTK_IOMMU_PORT_H_
 > +
-> +	/* Fixed regulator used in the absence of PMIC */
-> +	vcc_3v1: vcc-3v1 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "fixed-3.1V";
-> +		regulator-min-microvolt = <3100000>;
-> +		regulator-max-microvolt = <3100000>;
-> +	};
+> +#define MTK_LARB_NR_MAX			16
 
-Is this regulator used somewhere?
+include/soc/mediatek/smi.h has the very same define.
+Should smi.h include this file?
 
-Thanks,
-Mani
+Regards,
+Matthias
 
 > +
-> +	/* Fixed regulator used in the absence of PMIC */
-> +	sd_vcc: sd-vcc {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "fixed-3.1V";
-> +		regulator-min-microvolt = <3100000>;
-> +		regulator-max-microvolt = <3100000>;
-> +		regulator-always-on;
-> +	};
->  };
->  
->  &i2c0 {
-> @@ -81,6 +99,14 @@
->  			bias-pull-up;
->  		};
->  	};
+> +#define MTK_M4U_ID(larb, port)		(((larb) << 5) | (port))
+> +#define MTK_M4U_TO_LARB(id)		(((id) >> 5) & 0xf)
+> +#define MTK_M4U_TO_PORT(id)		((id) & 0x1f)
 > +
-> +	mmc0_default: mmc0_default {
-> +		pinmux {
-> +			groups = "sd0_d0_mfp", "sd0_d1_mfp", "sd0_d2_d3_mfp",
-> +				 "sd0_cmd_mfp", "sd0_clk_mfp";
-> +			function = "sd0";
-> +		};
-> +	};
->  };
->  
->  &timer {
-> @@ -90,3 +116,18 @@
->  &uart3 {
->  	status = "okay";
->  };
-> +
-> +/* uSD */
-> +&mmc0 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mmc0_default>;
-> +	cd-gpios = <&pinctrl 120 GPIO_ACTIVE_LOW>;
-> +	no-sdio;
-> +	no-mmc;
-> +	no-1-8-v;
-> +	bus-width = <4>;
-> +	vmmc-supply = <&sd_vcc>;
-> +	vqmmc-supply = <&sd_vcc>;
-> +};
-> +
-> diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
-> index 9ed88aafc2da..ba498cf9217d 100644
-> --- a/arch/arm64/boot/dts/actions/s700.dtsi
-> +++ b/arch/arm64/boot/dts/actions/s700.dtsi
-> @@ -4,6 +4,7 @@
->   */
->  
->  #include <dt-bindings/clock/actions,s700-cmu.h>
-> +#include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/power/owl-s700-powergate.h>
->  #include <dt-bindings/reset/actions,s700-reset.h>
-> -- 
-> 2.7.4
+> +#endif
 > 
