@@ -2,143 +2,89 @@ Return-Path: <SRS0=EOmc=AX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0897C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 10:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA2FDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 10:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B2962070B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 10:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E1A62070B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 10:25:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PSp9tjkU";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VMpQ130a"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dMY0SU3c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728112AbgGLK3r (ORCPT
+        id S1728404AbgGLKZQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Jul 2020 06:29:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbgGLK3q (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Jul 2020 06:29:46 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 906D9C061794;
-        Sun, 12 Jul 2020 03:29:46 -0700 (PDT)
-From:   Kurt Kanzenbach <kurt@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594549781;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=IWFrAeJzdC1u5O59YIvI89feeTzWtk1CrA2wzI7B5gE=;
-        b=PSp9tjkUXphkpck6Gxdu/lMEZw5gF0vW38et/aNTdWMOLb+5CmmzJCc6n1n84uBxWDId5X
-        Fzn5t+XBKdd5iHG2y3bRdAiQSDaKkGImtNi/1QuI7LVA7KtDnmxsVU0LxCbogHpExTzNwJ
-        lYiMUCQEMoWWlD2E83VpGi3VHAVGKmqgCJxbAbztoBpUF7NsafpZI/uohat3Vm5R4YsuD9
-        4xOlYlnZ1OyVY0Dxf7CjGOLSE6nyxglV5Rdc5DR9Kn8IS9STCzRhHHjwN8BJXW4CE5Emle
-        2rUCVvvHOJc7iBf/WWU5s7Za8lm+9Moi1siZ5tgTkVig1ddMACL7lrB3MiVF7g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594549781;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=IWFrAeJzdC1u5O59YIvI89feeTzWtk1CrA2wzI7B5gE=;
-        b=VMpQ130axs2hwnRSwQ/bqxaQQc3ST3nKEbRBB8nfn4ZY9LkIav224V3zoPMikeu5qmE+yL
-        Qp1rVKb/NkvfLDDg==
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Rob Herring <robh@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v1 1/1] dt-bindings: net: dsa: Add DSA yaml binding
-In-Reply-To: <20200711165203.GO1014141@lunn.ch>
-References: <20200710090618.28945-1-kurt@linutronix.de> <20200710090618.28945-2-kurt@linutronix.de> <20200710163940.GA2775145@bogus> <874kqewahb.fsf@kurt> <20200711165203.GO1014141@lunn.ch>
-Date:   Sun, 12 Jul 2020 12:29:30 +0200
-Message-ID: <877dv9owl1.fsf@kurt>
+        Sun, 12 Jul 2020 06:25:16 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9228 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727777AbgGLKZP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Jul 2020 06:25:15 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0ae4fe0000>; Sun, 12 Jul 2020 03:25:02 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 12 Jul 2020 03:25:15 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 12 Jul 2020 03:25:15 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 12 Jul
+ 2020 10:25:15 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Sun, 12 Jul 2020 10:25:15 +0000
+Received: from moonraker.nvidia.com (Not Verified[10.26.75.246]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f0ae50a0000>; Sun, 12 Jul 2020 03:25:14 -0700
+From:   Jon Hunter <jonathanh@nvidia.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>
+Subject: [PATCH 0/3] arm64: tegra: A few DT updates for Tegra
+Date:   Sun, 12 Jul 2020 11:25:03 +0100
+Message-ID: <20200712102506.23686-1-jonathanh@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594549502; bh=vT93s6iHbge88d+HGxcJPLAamzNc87M0lYca4EgUgSI=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=dMY0SU3c8dta9hCw99alwaK3Q9+O89aOvkUZrNnmFXnKzLVdvgfQtxxJisEgniM4D
+         /nticV9Z48HDlB62bUFtO8Ayoo+x8+sy14lRr5TkGLDK7OAEcl7NWr32cQcLytj6qH
+         Qo54se6UWxErPQosWdZmCTWNZt73mVsdvk5ra/yYv/xcGJsVf2UOGhfw4TDGzrl1cb
+         +kx2aBKEglUiqH//0xH1FCsQVh8CdcIcGD6SBAmtKd//PBn+b34+Vq89xrMT4M55t2
+         XOgRNG1Qg/G+0Ty9E5DMinIc+mxgvW5aDVQL1EiC9GKHvBbjqikpRLRmJJv8S4voE2
+         bW8e0kw3KGB7Q==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+This series adds ...
 
-On Sat Jul 11 2020, Andrew Lunn wrote:
-> On Sat, Jul 11, 2020 at 01:35:12PM +0200, Kurt Kanzenbach wrote:
->> On Fri Jul 10 2020, Rob Herring wrote:
->> > My bot found errors running 'make dt_binding_check' on your patch:
->> >
->> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/n=
-et/ti,cpsw-switch.example.dt.yaml: switch@0: 'ports' is a required property
->> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/n=
-et/qcom,ipq8064-mdio.example.dt.yaml: switch@10: 'ports' is a required prop=
-erty
->>=20
->> Okay, the requirement for 'ports' has be to removed.
->
-> Hummm....
->
-> ti.cpsw is not a DSA switch. So this binding should not apply to
-> it. It is a plain switchdev switch.
->
-> The qcom,ipq806 is just an MDIO bus master. The DSA binding might
-> apply, for a specific .dts file, if that dts file has a DSA switch on
-> the bus. But in general, it should not apply.
->
-> So i actually think you need to work out why this binding is being
-> applied when it should not be.
->
-> I suspect it is the keyword 'switch'. switch does not imply it is a
-> DSA switch. There are other sorts of switches as well.
+1. Support for Tegra19 Jetson Xavier NX
+2. Support for the DFLL on Tegra210 Jetson Nano
+3. Fixes VBUS supply for Tegra186 Jetson TX2
 
-OK, makes sense. It seems like the nodename is responsible for that.
+Jon Hunter (2):
+  arm64: tegra: Enable DFLL support on Jetson Nano
+  arm64: tegra: Populate VBUS for USB3 on Jetson TX2
 
-This fixes the problem:
+Thierry Reding (1):
+  arm64: tegra: Add support for Jetson Xavier NX
 
-|diff --git a/Documentation/devicetree/bindings/net/dsa/dsa.yaml b/Document=
-ation/devicetree/bindings/net/dsa/dsa.yaml
-|index bec257231bf8..4c360f8b170e 100644
-|--- a/Documentation/devicetree/bindings/net/dsa/dsa.yaml
-|+++ b/Documentation/devicetree/bindings/net/dsa/dsa.yaml
-|@@ -18,9 +18,6 @@ description:
-|   properties as required by the device it is embedded within.
-|=20
-| properties:
-|-  $nodename:
-|-    pattern: "^switch(@.*)?$"
-|-
-|   dsa,member:
-|     minItems: 2
-|     maxItems: 2
+ arch/arm64/boot/dts/nvidia/Makefile           |   1 +
+ .../boot/dts/nvidia/tegra186-p2771-0000.dts   |   1 +
+ .../nvidia/tegra194-p3509-0000+p3668-0000.dts | 343 ++++++++++++++++++
+ .../boot/dts/nvidia/tegra194-p3668-0000.dtsi  | 296 +++++++++++++++
+ .../boot/dts/nvidia/tegra210-p3450-0000.dts   |  37 ++
+ 5 files changed, 678 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/nvidia/tegra194-p3509-0000+p3668-0000.dts
+ create mode 100644 arch/arm64/boot/dts/nvidia/tegra194-p3668-0000.dtsi
 
-Thanks,
-Kurt
+-- 
+2.17.1
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl8K5goACgkQeSpbgcuY
-8KYE0RAAzpJZjOmKWljpOO5oKYziFmhkV7L3HXbG53rkVv6YbcpuETjWW+UrbEjZ
-XHLxvRFETuQgOrH8bEUWXbom6h0fv7HIUi/On3DSlajPRfyuSzMw7AYMi99wNM0F
-3eVk8f1+ftLDZNEdbcigZYU+ZuCFXlnuelqvq9JzYBps44M18Cdc1DlddNNTy/jo
-/qDtNtHmQxjcxXPDW6LDJn+WnsQlo8Fxz7Se+8/jNHz8NV+b5Hi33m0aevkZwK1R
-bsby9RgIuhbSOg8hlM98KCkowcRT0aNoyMsiy+luoTxEAJOA/QQJ3w0zgdT3+bT9
-7uq0EvdkNtXvbXNVej3FbcxS/9636ZkCEmHCz8EAVbZ7q4WLU2+f801HQ3m21hRO
-7Szad+gXUHkIRP/xGdfZFhGV7snsWKEn13VufmnO5dHz+xVLI39obr0TekbWEjfw
-4H2OaLvnmgGRJlxluH27xDu379IUxYO6lqy+fIpb4WDHiQryjOe2kY14q0hEERKi
-M133gk+DWheg/OrgIPybPHliHrjPO1Egx8N1Lf7fW3HHjA2aRrEpnkrZNDitjXRx
-cJL1DnDDQNp7GUx1aGJJLKISZBMLz/MePwhp6uUAiFeVLEmnk5oGt8joqnMbO0Q4
-TVlzaKEyLdIWtfmc6EJTrRa9NPUYo3BfC8zrupljlcWLxAAQM/Q=
-=1pvc
------END PGP SIGNATURE-----
---=-=-=--
