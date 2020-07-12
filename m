@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F95FC433E2
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 16:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32589C433E6
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 16:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B83E2068F
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 16:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C7002068F
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jul 2020 16:57:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ri/8DHJC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bWC59/PI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbgGLQ5X (ORCPT
+        id S1729148AbgGLQ5y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Jul 2020 12:57:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55648 "EHLO
+        Sun, 12 Jul 2020 12:57:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728862AbgGLQ5W (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Jul 2020 12:57:22 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59DD8C08C5DD
-        for <devicetree@vger.kernel.org>; Sun, 12 Jul 2020 09:57:22 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id b92so4986858pjc.4
-        for <devicetree@vger.kernel.org>; Sun, 12 Jul 2020 09:57:22 -0700 (PDT)
+        with ESMTP id S1728859AbgGLQ5x (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Jul 2020 12:57:53 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99A79C08C5DD
+        for <devicetree@vger.kernel.org>; Sun, 12 Jul 2020 09:57:53 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id z5so4942200pgb.6
+        for <devicetree@vger.kernel.org>; Sun, 12 Jul 2020 09:57:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=CPkl/fwjqSvU16542/LkecvuecxR0K2ncOMxvrSe7NE=;
-        b=ri/8DHJCrZj2aPu+BZBBMbrgWxU5X0reDn4yF7oiqicN18H9KEWTnfWiwU6o0lFv0j
-         CR+gKIE8y1H5nja1iD9lv4MbYDB56AWfHLrRzEMKluhzZHtl8/UBt85cMOlSh3lAz8TW
-         Jmxoc5Rx7P+L6I80/zIqR7i3xvTmZEej9PL/iDj4gJgUCVoVJud8SFqzVa3ZSJpO7Lv5
-         YhOILn3AfbcjufDc6fkqxa0XyXEMvTeWETtoaj3hbpktip/dQFGOy5/HF7YdKoZtBkqE
-         jBJdvbl5S8kH2vyUhT2lghLdXksq5KPriM2jwUx7FxZctbMI4nQSlfO4zp8iYs7PzVj7
-         vbYw==
+        bh=V+29yKObV42dMQQ2dOZ0zPCpRtPFoPAyDYNr7LlSwdc=;
+        b=bWC59/PIbucCBlrCBRATrsYAd7bKQMjD6gi64gyOjernEIBPyP0H6qFjMGOgdTiTyJ
+         46QYtqIsCqqd+KhocNIehQgjuBMJwcyRbhBaltiH3l4e9nPYWm7wWYSHnoCKrx0R7abk
+         ko4WmPRQeIP/2Fxa0jNGHpYUjYqqoVKrY2VRAhx51ru11qznd0zy7xnmkjVqVN2nvXlO
+         L5sllayuiSYqUjD0TVrG8uF9ftRJ+kcS4AvJbIRYnAffg1pTitHX1RvLd90zLfb+ctdL
+         LiGtRk87wy0cJhgS+q/Oo7WTUUYYYGvAh7hpyGbtdixpU+Pl5J8wU8MoDUpkYpZpN44x
+         vJVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CPkl/fwjqSvU16542/LkecvuecxR0K2ncOMxvrSe7NE=;
-        b=a8IarARQS1uCDloA1Q+QvC27ZvN65LA//ZAsTqE5p5SkHE4TT8cT54ZUgoD4YuG8tB
-         +rriFNpNHWxT/dG/nkfu8Vg/RwU0c9PIcTclk3eXvlxpmUcCRpnvHVaA1Pngr4BmMKLU
-         yUjOM+R4Q/WJAKHJMBQOhUA6itwsyu5FavGmvIfqCkyQMQlSZs/rDGhdJGXMMrWGhvhN
-         tuGOxi+4/gu+irWhn2nhutF1RDDGbSd2ABm/iKQYtuTeus+bvEmV9bCIqQwO5ZRSTyk0
-         Qn88ffW/XmeU8bzBEkOd0bPBEe68M/f79YMxGD251uUj44NN7BGdgbFynIAJIEdYUO/o
-         SmqA==
-X-Gm-Message-State: AOAM532t9WEB+i12pKlAOQIBG/JEWj9veqYqb7Bu+cu8W/dcTAei/2Ne
-        0QeBcRGRk5Tf+8li6UTKAtvY
-X-Google-Smtp-Source: ABdhPJyQCFxGpgMAOKCeaJPmYY4B/hH9RTOBNaBOL6mE5Dj9lnKy4l4/DYZdr1WJMXgBCaqv7qVnyQ==
-X-Received: by 2002:a17:902:b682:: with SMTP id c2mr57166264pls.273.1594573041785;
-        Sun, 12 Jul 2020 09:57:21 -0700 (PDT)
+        bh=V+29yKObV42dMQQ2dOZ0zPCpRtPFoPAyDYNr7LlSwdc=;
+        b=uLgLTvWvY+XW/DVmq6XjJf6euiYM9iaU7/hwvc8wXVyuXMQ06sIBVj+3J5qSYyuPcy
+         0qGEcvFyo9euVEe260q4Dl4bSU3bM/5Iu7GOr/ROoKDPVwWGiOQYViDMEPQTwbZ9tJwl
+         Zith56N4mq46UWh41Bap+5nuHgWNy9QBTTs7/s157fFixGxW7LJX6lzDsHvTLUD17SZY
+         Zo8RTM+BCm4dLxmuP2bIy2JY0V6iCZF8oVipRNlnTi09aNwwO55+w2rOFLqMH2UimDao
+         1Afw4zCqv30p2UPSwY2Gt2sw9hdTXhL6zPs7ySx9IJL31ezk3LbjsFUd3oJrthOkb098
+         LLUQ==
+X-Gm-Message-State: AOAM530X2JIE0waHHsrPNlt2kdOgy+vNkkz1BQnKZGVUUkc9BThrqENK
+        Ay3H7zNQvslaR/K4eeCqD5S3XrGj0Q==
+X-Google-Smtp-Source: ABdhPJwComCFu5NW51NSCSx23R8m1BCRnSBdKKfbmpXV+SU6YXcuMzpA4LDByLSdD3nXUjU3b5S5uQ==
+X-Received: by 2002:aa7:938c:: with SMTP id t12mr70387576pfe.37.1594573073104;
+        Sun, 12 Jul 2020 09:57:53 -0700 (PDT)
 Received: from Mani-XPS-13-9360 ([2409:4072:6c81:c187:70f5:3123:b5de:e77f])
-        by smtp.gmail.com with ESMTPSA id n18sm13093540pfd.99.2020.07.12.09.57.17
+        by smtp.gmail.com with ESMTPSA id v2sm11908986pje.19.2020.07.12.09.57.48
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 12 Jul 2020 09:57:21 -0700 (PDT)
-Date:   Sun, 12 Jul 2020 22:27:15 +0530
+        Sun, 12 Jul 2020 09:57:52 -0700 (PDT)
+Date:   Sun, 12 Jul 2020 22:27:46 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
 Cc:     Stephen Boyd <sboyd@kernel.org>,
@@ -69,26 +69,27 @@ Cc:     Stephen Boyd <sboyd@kernel.org>,
         linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-actions@lists.infradead.org
-Subject: Re: [PATCH v3 3/6] clk: actions: Add APB, DMAC, GPIO clock support
- for Actions S500 SoC
-Message-ID: <20200712165715.GB6110@Mani-XPS-13-9360>
+Subject: Re: [PATCH v3 4/6] dt-bindings: reset: Add binding constants for
+ Actions S500 RMU
+Message-ID: <20200712165746.GC6110@Mani-XPS-13-9360>
 References: <cover.1593788312.git.cristian.ciocaltea@gmail.com>
- <87964ae012e513597b8b4c7be2e7ac332a70087a.1593788312.git.cristian.ciocaltea@gmail.com>
+ <daf615160b3be9f38dcf7926cc82128c9c2d73e3.1593788312.git.cristian.ciocaltea@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87964ae012e513597b8b4c7be2e7ac332a70087a.1593788312.git.cristian.ciocaltea@gmail.com>
+In-Reply-To: <daf615160b3be9f38dcf7926cc82128c9c2d73e3.1593788312.git.cristian.ciocaltea@gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 08:05:09PM +0300, Cristian Ciocaltea wrote:
-> Add support for the missing APB, DMAC and GPIO clocks in the Actions
-> Semi S500 SoC clock driver.
+On Fri, Jul 03, 2020 at 08:05:10PM +0300, Cristian Ciocaltea wrote:
+> Add device tree binding constants for Actions Semi S500 SoC Reset
+> Management Unit (RMU).
 > 
 > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
@@ -97,55 +98,88 @@ Mani
 
 > ---
 > Changes in v3:
->  - None
+>  - Added Philipp's Acked-by tag
 > 
 > Changes in v2:
 >  - None
 > 
->  drivers/clk/actions/owl-s500.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>  .../dt-bindings/reset/actions,s500-reset.h    | 67 +++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+>  create mode 100644 include/dt-bindings/reset/actions,s500-reset.h
 > 
-> diff --git a/drivers/clk/actions/owl-s500.c b/drivers/clk/actions/owl-s500.c
-> index 0eb83a0b70bc..025a8f6d6482 100644
-> --- a/drivers/clk/actions/owl-s500.c
-> +++ b/drivers/clk/actions/owl-s500.c
-> @@ -175,6 +175,8 @@ static OWL_MUX(dev_clk, "dev_clk", dev_clk_mux_p, CMU_DEVPLL, 12, 1, CLK_SET_RAT
->  static OWL_MUX(ahbprediv_clk, "ahbprediv_clk", ahbprediv_clk_mux_p, CMU_BUSCLK1, 8, 3, CLK_SET_RATE_PARENT);
->  
->  /* gate clocks */
-> +static OWL_GATE(gpio_clk, "gpio_clk", "apb_clk", CMU_DEVCLKEN0, 18, 0, 0);
-> +static OWL_GATE(dmac_clk, "dmac_clk", "h_clk", CMU_DEVCLKEN0, 1, 0, 0);
->  static OWL_GATE(spi0_clk, "spi0_clk", "ahb_clk", CMU_DEVCLKEN1, 10, 0, CLK_IGNORE_UNUSED);
->  static OWL_GATE(spi1_clk, "spi1_clk", "ahb_clk", CMU_DEVCLKEN1, 11, 0, CLK_IGNORE_UNUSED);
->  static OWL_GATE(spi2_clk, "spi2_clk", "ahb_clk", CMU_DEVCLKEN1, 12, 0, CLK_IGNORE_UNUSED);
-> @@ -184,6 +186,7 @@ static OWL_GATE(hdmi_clk, "hdmi_clk", "hosc", CMU_DEVCLKEN1, 3, 0, 0);
->  
->  /* divider clocks */
->  static OWL_DIVIDER(h_clk, "h_clk", "ahbprediv_clk", CMU_BUSCLK1, 12, 2, NULL, 0, 0);
-> +static OWL_DIVIDER(apb_clk, "apb_clk", "ahb_clk", CMU_BUSCLK1, 14, 2, NULL, 0, 0);
->  static OWL_DIVIDER(rmii_ref_clk, "rmii_ref_clk", "ethernet_pll_clk", CMU_ETHERNETPLL, 1, 1, rmii_ref_div_table, 0, 0);
->  
->  /* factor clocks */
-> @@ -428,6 +431,9 @@ static struct owl_clk_common *s500_clks[] = {
->  	&spdif_clk.common,
->  	&nand_clk.common,
->  	&ecc_clk.common,
-> +	&apb_clk.common,
-> +	&dmac_clk.common,
-> +	&gpio_clk.common,
->  };
->  
->  static struct clk_hw_onecell_data s500_hw_clks = {
-> @@ -484,6 +490,9 @@ static struct clk_hw_onecell_data s500_hw_clks = {
->  		[CLK_SPDIF]		= &spdif_clk.common.hw,
->  		[CLK_NAND]		= &nand_clk.common.hw,
->  		[CLK_ECC]		= &ecc_clk.common.hw,
-> +		[CLK_APB]		= &apb_clk.common.hw,
-> +		[CLK_DMAC]		= &dmac_clk.common.hw,
-> +		[CLK_GPIO]		= &gpio_clk.common.hw,
->  	},
->  	.num = CLK_NR_CLKS,
->  };
+> diff --git a/include/dt-bindings/reset/actions,s500-reset.h b/include/dt-bindings/reset/actions,s500-reset.h
+> new file mode 100644
+> index 000000000000..f5d94176d10b
+> --- /dev/null
+> +++ b/include/dt-bindings/reset/actions,s500-reset.h
+> @@ -0,0 +1,67 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * Device Tree binding constants for Actions Semi S500 Reset Management Unit
+> + *
+> + * Copyright (c) 2014 Actions Semi Inc.
+> + * Copyright (c) 2020 Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> + */
+> +
+> +#ifndef __DT_BINDINGS_ACTIONS_S500_RESET_H
+> +#define __DT_BINDINGS_ACTIONS_S500_RESET_H
+> +
+> +#define RESET_DMAC				0
+> +#define RESET_NORIF				1
+> +#define RESET_DDR				2
+> +#define RESET_NANDC				3
+> +#define RESET_SD0				4
+> +#define RESET_SD1				5
+> +#define RESET_PCM1				6
+> +#define RESET_DE				7
+> +#define RESET_LCD				8
+> +#define RESET_SD2				9
+> +#define RESET_DSI				10
+> +#define RESET_CSI				11
+> +#define RESET_BISP				12
+> +#define RESET_KEY				13
+> +#define RESET_GPIO				14
+> +#define RESET_AUDIO				15
+> +#define RESET_PCM0				16
+> +#define RESET_VDE				17
+> +#define RESET_VCE				18
+> +#define RESET_GPU3D				19
+> +#define RESET_NIC301				20
+> +#define RESET_LENS				21
+> +#define RESET_PERIPHRESET			22
+> +#define RESET_USB2_0				23
+> +#define RESET_TVOUT				24
+> +#define RESET_HDMI				25
+> +#define RESET_HDCP2TX				26
+> +#define RESET_UART6				27
+> +#define RESET_UART0				28
+> +#define RESET_UART1				29
+> +#define RESET_UART2				30
+> +#define RESET_SPI0				31
+> +#define RESET_SPI1				32
+> +#define RESET_SPI2				33
+> +#define RESET_SPI3				34
+> +#define RESET_I2C0				35
+> +#define RESET_I2C1				36
+> +#define RESET_USB3				37
+> +#define RESET_UART3				38
+> +#define RESET_UART4				39
+> +#define RESET_UART5				40
+> +#define RESET_I2C2				41
+> +#define RESET_I2C3				42
+> +#define RESET_ETHERNET				43
+> +#define RESET_CHIPID				44
+> +#define RESET_USB2_1				45
+> +#define RESET_WD0RESET				46
+> +#define RESET_WD1RESET				47
+> +#define RESET_WD2RESET				48
+> +#define RESET_WD3RESET				49
+> +#define RESET_DBG0RESET				50
+> +#define RESET_DBG1RESET				51
+> +#define RESET_DBG2RESET				52
+> +#define RESET_DBG3RESET				53
+> +
+> +#endif /* __DT_BINDINGS_ACTIONS_S500_RESET_H */
 > -- 
 > 2.27.0
 > 
