@@ -2,61 +2,62 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB02C433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 13:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9B4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 13:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0B51206F4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 13:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA089206F0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 13:29:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="eZztk7O7"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Mm7n4KSQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729833AbgGMN3m (ORCPT
+        id S1729925AbgGMN3t (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 09:29:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48604 "EHLO
+        Mon, 13 Jul 2020 09:29:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729564AbgGMN3l (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 09:29:41 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21E7CC061755
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 06:29:41 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id a6so16550086wrm.4
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 06:29:41 -0700 (PDT)
+        with ESMTP id S1729911AbgGMN3t (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 09:29:49 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CC20C08C5DB
+        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 06:29:49 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id r12so16513517wrj.13
+        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 06:29:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8M2es7HHouzmCUpyAYFqBmq/VXXAGiCHzbOor1SAZdY=;
-        b=eZztk7O7rf+DFBdXysVaFW4Q6svK0fGNMvSOeDFuBZn/YGHCVDHChUbKn5LhBskGZF
-         z4kFVrudVva1mgg1mPIwMgG/zOElB0ulSNlJAWaXR4twxVMVl3if3wzh4Jerf2NIhpy9
-         ZgYZpN1qdb1PX8A36OK7S2FYxhqRzMqWnhli036pECPg1gVa6H+PclsfMX1+zivylIBh
-         EdcoHIsqNvh00CBTbSgfCw04YoJLD5d00c8lG8RVo0q06XZ1R2AfjmaXvoXcZiRPu0I+
-         TnQBMfQZVhJf8vwoGnfJyVRgxYMSADJXe6+/E4ouhnfFeOQD3BoMi4SN7/c/DPG7Jt5h
-         uUmA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1L4Fd0ydGXB1tLJq49wHyxg/8oVp3tIdrwadCHK6MBc=;
+        b=Mm7n4KSQrzuIzL5V5oAkygyQJZK8zxZPRPWSKVqHAT9JGioQsWMBEhYVvUKCdvZ5qk
+         nLEktNB+4PQs+YC1AYQ40rQPY1h/mssBV76kXxTD9eS2QLXV4HhBsMuTNBI1KaNCq3nH
+         ElPJHUjYX36UTba60MYN5rdXsYfuPYcBEzH5Zw+374d1AZ5YlG0ZqAawK1AgYum1b4e1
+         XwIfBVLmSLzPzyGRur2HJh8m9v4Ri3z1GoUxesRy0e73/rvpIXw7LyWY/N8mif+ZuscX
+         ypm/lS84F5l4VhYEeo49NcBQJ2dealR6xBuOF3ezU1P1edoaMRebYsEhc6eJldWcsEdS
+         Kdbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8M2es7HHouzmCUpyAYFqBmq/VXXAGiCHzbOor1SAZdY=;
-        b=MfyZN/vxEAdkPYcLqy+KxV0ISFCYiB6cxay2kinUP6f56IA7JQpNpxgjlsfL6OQsO1
-         1eSD/QBKtbV4ontMWyA0O9me7wrFnAHO4R5aCzEke62gS/6QMQ6t87x5PnROlQb2kk4b
-         dk3jPJx4QudagDtRCjzW22Rxu4rwldzxLWdKk56/B9cyp+pQM+O1bs+R9Tnmm8PnxH2s
-         rQ7cJ3c39VSB6gkFXVDfuribrqI5ILsy2eQX21jQ9MTEzoypuAS81yIL3oX5cfXv6VO5
-         Am0K1xsv+deQXWzEGDHN2CrlxIk8DWEOHfjvl8wjCpAh+ouo2UcW/YXsjq49qquaKar5
-         uVYA==
-X-Gm-Message-State: AOAM533qQ1woXt7VywQ9MFIxoeYGBK92z0yMu4VpYAgCuVBesyDUNTyj
-        i9kBTbF/IyZHLmrGIIb5NbWe0g==
-X-Google-Smtp-Source: ABdhPJxMEwQ8RYMjAHEW54Z1j94xXKNRmix+I5953GVI4mfW5CH5zrllY5eazKO4pgPCsaIsWRN1NA==
-X-Received: by 2002:adf:e40e:: with SMTP id g14mr86432689wrm.271.1594646979741;
-        Mon, 13 Jul 2020 06:29:39 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1L4Fd0ydGXB1tLJq49wHyxg/8oVp3tIdrwadCHK6MBc=;
+        b=PFiF3ktD9vCIeuDRtWWFH1VBLhrpJvrZ+o8byFWoE0gkBsZ8IW/MeWo+zDuiZt6KGl
+         5p7kBqI1h/deK+91/ZUpOdRY65VLTENqZvtrd+wZEOl+z3ElLshP0rt3SEpJKqL7yeS/
+         wn16zLN5tlrvZZ2D0rAx/HY458m8PtarC5F0OzUTv36WFgdq8xDQmpXLRjvLDop1Hg4x
+         0i4DvcwaRGW3EjOqZxwWS1uHNSreogskghReC/2Z1N3MOuGBIfdTNsfberXWlrf6eDP6
+         BZWDSXXDFz+Q+zAg/yNYtE4BnlHbge+1q+EV54paV6X8mx5MzrUfNpAbP1oFfS+Nh1mO
+         K2cg==
+X-Gm-Message-State: AOAM532OAmqnaqapJJ95xwhFdgmyAm2xML0NZerUJ7Npcqg1yh5KVNFb
+        7QWb7hcpumYC2m+lzkpqfoEHEw==
+X-Google-Smtp-Source: ABdhPJwzZlcUKbMf7yvv/ipKPBNj0GCeAedKQcrzHWzFJjvtRWFrPMYVOGGBdMWDjOPRwHglztjNig==
+X-Received: by 2002:adf:e90d:: with SMTP id f13mr75056890wrm.146.1594646986821;
+        Mon, 13 Jul 2020 06:29:46 -0700 (PDT)
 Received: from linux.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id j14sm23896642wrs.75.2020.07.13.06.29.38
+        by smtp.gmail.com with ESMTPSA id j14sm23896642wrs.75.2020.07.13.06.29.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 06:29:38 -0700 (PDT)
+        Mon, 13 Jul 2020 06:29:46 -0700 (PDT)
 From:   Alexandre Bailon <abailon@baylibre.com>
 To:     ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org,
         matthias.bgg@gmail.com
@@ -64,10 +65,12 @@ Cc:     linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
         Alexandre Bailon <abailon@baylibre.com>
-Subject: [PATCH 0/6] Add support of mt8183 APU
-Date:   Mon, 13 Jul 2020 15:29:21 +0200
-Message-Id: <20200713132927.24925-1-abailon@baylibre.com>
+Subject: [PATCH 6/6] ARM64: mt8183: Add support of APU to mt8183
+Date:   Mon, 13 Jul 2020 15:29:27 +0200
+Message-Id: <20200713132927.24925-7-abailon@baylibre.com>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200713132927.24925-1-abailon@baylibre.com>
+References: <20200713132927.24925-1-abailon@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -75,46 +78,72 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some Mediatek's SoC have an Accelerated Processing Unit.
-This adds support of the one available in the mt8183
-(aswell some derivative SoC).
+This adds the support of APU to mt8183.
 
-This series depends on two other series:
-- Mediatek MT8183 scpsys support  
-- arm64: dts: Add m4u and smi-larbs nodes for mt8183 
+Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
+---
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 42 ++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-Notes:
-This series include two workarounds:
-- remoteproc: mtk_vpu_rproc: Don't try to load empty PT_LOAD segment
-- rproc: mtk_apu: Don't try to use local APU RAM
-
-The first one is required to load malformed firmwares.
-This is probably caused by the toolchain we are using (a fork of gcc 4.2).
-It would be better to fix the firmwares but I don't know how to fix it.
-
-The second one prevents the CPU to access to the APU local RAM.
-If the CPU tries to read or write the APU local RAM, then the CPU will
-hang. I'm still looking for a solution, but until, we must prevent
-remoteproc to write something (usually, to initialize data section).
-Because of that issue, the current driver doesn't map the the local RAM.
-
-Alexandre Bailon (6):
-  dt bindings: remoteproc: Add bindings for MT8183 APU
-  remoteproc: Add a remoteproc driver for the MT8183's APU
-  remoteproc: mtk_vpu_rproc: Add support of JTAG
-  remoteproc: mtk_vpu_rproc: Don't try to load empty PT_LOAD segment
-  remoteproc: mtk_apu: Don't try to use the APU local RAM
-  ARM64: mt8183: Add support of APU to mt8183
-
- .../bindings/remoteproc/mtk,apu.yaml          | 121 +++++
- arch/arm64/boot/dts/mediatek/mt8183.dtsi      |  42 ++
- drivers/remoteproc/Kconfig                    |  19 +
- drivers/remoteproc/Makefile                   |   1 +
- drivers/remoteproc/mtk_apu_rproc.c            | 501 ++++++++++++++++++
- 5 files changed, 684 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,apu.yaml
- create mode 100644 drivers/remoteproc/mtk_apu_rproc.c
-
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index 1e03c849dc5d..6a2e9ee0b566 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -720,12 +720,54 @@ ipu_adl: syscon@19010000 {
+ 			#clock-cells = <1>;
+ 		};
+ 
++		vpu0: vpu@0x19100000 {
++			compatible = "mediatek,mt8183-apu";
++			reg = <0 0x19180000 0 0x14000>;
++			reg-names = "mmio";
++			interrupts = <GIC_SPI 292 IRQ_TYPE_LEVEL_LOW>;
++
++			iommus = <&iommu M4U_PORT_IMG_IPUO>,
++				 <&iommu M4U_PORT_IMG_IPU3O>,
++				 <&iommu M4U_PORT_IMG_IPUI>;
++
++			clocks = <&ipu_core0 CLK_IPU_CORE0_AXI>,
++				 <&ipu_core0 CLK_IPU_CORE0_IPU>,
++				 <&ipu_core0 CLK_IPU_CORE0_JTAG>;
++
++			clock-names = "axi", "ipu", "jtag";
++
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_VPU_CORE0>;
++			memory-region = <&vpu_ram>;
++		};
++
+ 		ipu_core0: syscon@19180000 {
+ 			compatible = "mediatek,mt8183-ipu_core0", "syscon";
+ 			reg = <0 0x19180000 0 0x1000>;
+ 			#clock-cells = <1>;
+ 		};
+ 
++		vpu1: vpu@0x19200000 {
++			compatible = "mediatek,mt8183-apu";
++			reg = <0 0x19280000 0 0x14000>;
++			reg-names = "mmio";
++			interrupts = <GIC_SPI 293 IRQ_TYPE_LEVEL_LOW>;
++
++			iommus = <&iommu M4U_PORT_IMG_IPUO>,
++				 <&iommu M4U_PORT_IMG_IPU2O>,
++				 <&iommu M4U_PORT_IMG_IPU3O>,
++				 <&iommu M4U_PORT_IMG_IPUI>,
++				 <&iommu M4U_PORT_IMG_IPU2I>;
++
++			clocks = <&ipu_core0 CLK_IPU_CORE1_AXI>,
++				 <&ipu_core0 CLK_IPU_CORE1_IPU>,
++				 <&ipu_core0 CLK_IPU_CORE1_JTAG>;
++
++			clock-names = "axi", "ipu", "jtag";
++
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_VPU_CORE1>;
++			memory-region = <&vpu_ram>;
++		};
++
+ 		ipu_core1: syscon@19280000 {
+ 			compatible = "mediatek,mt8183-ipu_core1", "syscon";
+ 			reg = <0 0x19280000 0 0x1000>;
 -- 
 2.26.2
 
