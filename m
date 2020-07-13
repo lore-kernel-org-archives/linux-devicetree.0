@@ -2,133 +2,146 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1771C433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 21:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92773C433EA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 21:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9D632075D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 21:28:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7016F2089D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 21:32:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g/ZP2DBc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bLpTnFR3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbgGMV2x (ORCPT
+        id S1726505AbgGMVc3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 17:28:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38090 "EHLO
+        Mon, 13 Jul 2020 17:32:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726416AbgGMV2w (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 17:28:52 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EB1DC061755;
-        Mon, 13 Jul 2020 14:28:52 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id a1so9592438edt.10;
-        Mon, 13 Jul 2020 14:28:52 -0700 (PDT)
+        with ESMTP id S1726477AbgGMVc2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 17:32:28 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A027C061755;
+        Mon, 13 Jul 2020 14:32:28 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id p20so19065652ejd.13;
+        Mon, 13 Jul 2020 14:32:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6Ko+tWmnzBB3nKRx32WCJEtNPAc5X2qQdpUQLqvYvwU=;
-        b=g/ZP2DBcYqX5d4g6Guf0sKImn0bMrQL4VroJiqYXhgtkH96/ScPoEFPPPO7At+DuK+
-         7hIkg8n7m/oszH/F+1bdw3O8j5Q+70rwAr29OM8swiw9z0vrfzyM7K3ImsPtaSXE6/3/
-         8Rhz7c6qjuJpB/MBYRpsrOR2g7wldTR5lxpMlhJu19Yo5lYi4WIct5C8Nu9USmgzAu7u
-         tmeDNJQ8I0zahDaSiozqtgAFxFM/HLMrydCKzPiBqsaeNn0GNmBOpTkObltU9nGeOFWx
-         h4IOGEUswfeeqjF3tpYpuEd4YVcnMb+qFXIbnvoQHwW1zyefRxdYFOV/hO/c9kZYYxwU
-         x1rw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9xk5002gZ5H7JGOgsHs7h731etRLB6WtyENiHxGGu7I=;
+        b=bLpTnFR30/+CWwAe8tAwcO+WU+hkSYANQdbkuElT0SAIi6ujeM1TQRDW+tCw7AICBj
+         5kCIWw6YVvqgCI3mI7R3rV4p4D/H1krl4pX5fIqkagHlyiEFyV329SLTFtsSHwii5Pvs
+         NeEcqyvNhCmv006c7RAJd1CQDhlH02TJpBBVtkzWG3QMAyS8lhgPxRzgN6IKJvk8TKPT
+         iOYrzrUHpGNz96WU9SoDtgqNIGpwQAbG5CIzoGQbtjCl4cby+ZNa9qJtkEVVg7PL+93M
+         vusMQSDo7Z272nWxnOj7FItu1oUHIplSVGK/K9ov0C0pGx+tmdVKK6E4IM28vEMhl+Ku
+         EEsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6Ko+tWmnzBB3nKRx32WCJEtNPAc5X2qQdpUQLqvYvwU=;
-        b=AdWp9MVBzkLK52rdQvdqDyMWnCps/fDACcjCepOIsP7vhBzH6Psv6WFx0zCietCkU4
-         G+WxAFPl4m6RMycu9h2ZtGd5tx6eoBO3SA2fczy/m4YV2Pd+Y9hQ+7RXpRBtdk18ttlJ
-         WMfLJbkVYCYb5h01qhLQ0c+rL76/MICIoI3dkhSphWDgQuyd4Y/MLL5AjsPhJ/0xAUjg
-         jtTuIEiIsb2OVLw2plSwQslOMDDlXHyEp8U31ZP/TLzv9NSvKwkwHRzKabEZ2SM6I/Vo
-         /wLGwXi8TO5oJ4YOe2tngCKDAHQDdCGs0etUer+wWMzoc0EQZcDEUcpJKy1o1TlltciB
-         fpNg==
-X-Gm-Message-State: AOAM531tSl4Y3J3JK6wgLbz50OAsvEt5qVcGoyrP9pL2pUEU5cSwOdFH
-        tvu1Ijp7h+KBVyo/M3yIW2dNllxP
-X-Google-Smtp-Source: ABdhPJwhCW2OW9B2YYFuzdPoyuFYuNZkft51XuoHfzoHy3EtZ88dfi4c9M8VvCVe1J9973X9UcnfNw==
-X-Received: by 2002:aa7:c606:: with SMTP id h6mr1295881edq.363.1594675731090;
-        Mon, 13 Jul 2020 14:28:51 -0700 (PDT)
-Received: from ?IPv6:2a01:110f:b59:fd00:e124:492d:3208:4365? ([2a01:110f:b59:fd00:e124:492d:3208:4365])
-        by smtp.gmail.com with ESMTPSA id d26sm12116076edz.93.2020.07.13.14.28.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 14:28:50 -0700 (PDT)
-Subject: Re: [PATCH v3 1/2] dt-bindings: leds: add cznic,turris-omnia-leds
- binding
-To:     Rob Herring <robh@kernel.org>
-Cc:     Marek Behun <marek.behun@nic.cz>, linux-leds@vger.kernel.org,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        devicetree@vger.kernel.org
-References: <20200712210601.5239-1-marek.behun@nic.cz>
- <20200712210601.5239-2-marek.behun@nic.cz>
- <4609c389-4be6-0987-5078-725b43153596@gmail.com>
- <20200712234035.213348aa@nic.cz>
- <ff707d34-8fc0-342e-3df2-e96e5493004b@gmail.com>
- <20200713150634.GA176775@bogus>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <01ead073-71e0-6bd3-7fcf-32aa0fd9c7a5@gmail.com>
-Date:   Mon, 13 Jul 2020 23:28:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9xk5002gZ5H7JGOgsHs7h731etRLB6WtyENiHxGGu7I=;
+        b=QRBpNhtO7CwTYgvyvtY7Sm8pmgRxgEnvOpjePIiWbEYtPl14Jz0hsIMpCl+88SdSFZ
+         R7tSzHMKRQ3IHlNsaMLdRoMjUsFcv/ZJcyWbzo7f/1ccxUwKGas4xsErFeM/HgsA1VeQ
+         3JBv3aNnHp0IvPQUctZzDJNvVX76g7vPGwPbMaxtkIVdPqQrs3iH/TcY5BTjWK2vQOYC
+         K8Nh7ebV/27LzJ79USmOTMvvvm4ZJeFYstX9t+1qh/GhY6oWJjkcWhvbNowl+AurnvZQ
+         X7qJXoMBIR+yrJ1z0JnbksNaWkaEgrOq00BJd3BqGjl7npFfuwmAvQR2OiLfhfl1Lpqi
+         jahg==
+X-Gm-Message-State: AOAM532v6zO/9Gx9xo91LxkjFks/Csm3stAgLX+ODHjq/Mh9bqqC5xwy
+        nR3RL0tdCJO/Uc3W2LV4YClU+WEOhf16yXbtuQA=
+X-Google-Smtp-Source: ABdhPJwMoWogKyu+hB7N/OXDUjzYJXatIjRK36LwG1lOC44kvht0iMkOGCJlZyw4lHZLCW+pL24HAecjyLLmYhlZNWg=
+X-Received: by 2002:a17:906:ca4c:: with SMTP id jx12mr1508481ejb.231.1594675946837;
+ Mon, 13 Jul 2020 14:32:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200713150634.GA176775@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200710230224.2265647-1-dianders@chromium.org>
+ <CAL_JsqKC5WtHb-coMCxMTDJ7CJcjVXcAxDT4J9N-Xyr=0uuURA@mail.gmail.com>
+ <CAD=FV=XWKoTd_t2uRGpw3oa0Nij2EPeAJpOHhUipXFW07JN2qw@mail.gmail.com> <CAL_JsqLJM5nwNSdugMBLDVtjP97dikCm_AiHjnDs1jqBOFoaaQ@mail.gmail.com>
+In-Reply-To: <CAL_JsqLJM5nwNSdugMBLDVtjP97dikCm_AiHjnDs1jqBOFoaaQ@mail.gmail.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Mon, 13 Jul 2020 14:32:59 -0700
+Message-ID: <CAF6AEGufuFW3ba3u3A+mY+Gw0ouH2x9xY-9A+OtVff+iXdix9A@mail.gmail.com>
+Subject: Re: [PATCH 0/9] drm/msm: Avoid possible infinite probe deferral and
+ speed booting
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Doug Anderson <dianders@chromium.org>, Sean Paul <sean@poorly.run>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 7/13/20 5:06 PM, Rob Herring wrote:
-> On Mon, Jul 13, 2020 at 12:11:51AM +0200, Jacek Anaszewski wrote:
->> On 7/12/20 11:40 PM, Marek Behun wrote:
->>> On Sun, 12 Jul 2020 23:27:07 +0200
->>> Jacek Anaszewski <jacek.anaszewski@gmail.com> wrote:
->>>
->>>>> +            multi-led@0 {
->>>>> +                reg = <0>;
->>>>> +                color = <LED_COLOR_ID_MULTI>;
->>>>> +                function = LED_FUNCTION_POWER;
->>>>
->>>> Please provide child nodes for each color LED. Let's stick
->>>> to the bindings closely and not make any deviations from
->>>> the beginning.
->>>
->>> Why? It would make sense if there were devices using this controller
->>> having other configuration, but on Omnia, all LEDs are RGB.
->>>
->>> Also, if I do this, should I also make the driver check in the probe
->>> function whether the per-channel child nodes are correct? Eg. if they
->>> are always three: one for red, one for green and one for blue? Or
->>> should the driver ignore this and only the device tree binding specify
->>> it?
->>>
->>> Because the way the driver is written now, it only registers
->>> multi-color RGB LEDs.
->>
->> This is not RGB framework, but multicolor framework. It is not justified
->> to pretend that RGB is default. Unless you would state that clearly in
->> the comment in DT, but that should be agreed upon with Rob.
-> 
-> If the LEDs are fixed in h/w and never vary for this controller, then
-> they don't need to be in DT. However, is it really possible that a
-> channel only supports 1 color of LED? I don't think so.
+On Mon, Jul 13, 2020 at 1:25 PM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Mon, Jul 13, 2020 at 9:08 AM Doug Anderson <dianders@chromium.org> wrote:
+> >
+> > Hi,
+> >
+> > On Mon, Jul 13, 2020 at 7:11 AM Rob Herring <robh+dt@kernel.org> wrote:
+> > >
+> > > On Fri, Jul 10, 2020 at 5:02 PM Douglas Anderson <dianders@chromium.org> wrote:
+> > > >
+> > > > I found that if I ever had a little mistake in my kernel config,
+> > > > or device tree, or graphics driver that my system would sit in a loop
+> > > > at bootup trying again and again and again.  An example log was:
+> > >
+> > > Why do we care about optimizing the error case?
+> >
+> > It actually results in a _fully_ infinite loop.  That is: if anything
+> > small causes a component of DRM to fail to probe then the whole system
+> > doesn't boot because it just loops trying to probe over and over
+> > again.  The messages I put in the commit message are printed over and
+> > over and over again.
+>
+> Sounds like a bug as that's not what should happen.
+>
+> If you defer during boot (initcalls), then you'll be on the deferred
+> list until late_initcall and everything is retried. After
+> late_initcall, only devices getting added should trigger probing. But
+> maybe the adding and then removing a device is causing a re-trigger.
+>
+> > > >   msm ae00000.mdss: bound ae01000.mdp (ops 0xffffffe596e951f8)
+> > > >   msm_dsi ae94000.dsi: ae94000.dsi supply gdsc not found, using dummy regulator
+> > > >   msm_dsi_manager_register: failed to register mipi dsi host for DSI 0
+> > > >   [drm:ti_sn_bridge_probe] *ERROR* could not find any panel node
+> > > >   ...
+> > > >
+> > > > I finally tracked it down where this was happening:
+> > > >   - msm_pdev_probe() is called.
+> > > >   - msm_pdev_probe() registers drivers.  Registering drivers kicks
+> > > >     off processing of probe deferrals.
+> > > >   - component_master_add_with_match() could return -EPROBE_DEFER.
+> > > >     making msm_pdev_probe() return -EPROBE_DEFER.
+> > > >   - When msm_pdev_probe() returned the processing of probe deferrals
+> > > >     happens.
+> > > >   - Loop back to the start.
+> > > >
+> > > > It looks like we can fix this by marking "mdss" as a "simple-bus".
+> > > > I have no idea if people consider this the right thing to do or a
+> > > > hack.  Hopefully it's the right thing to do.  :-)
+> > >
+> > > It's a simple test. Do the child devices have any dependency on the
+> > > parent to probe and/or function? If so, not a simple-bus.
+> >
+> > Great!  You can see in the earlier patch in the series that the very
+> > first thing that happens when the parent device probes is that it
+> > calls devm_of_platform_populate().  That means no dependencies, right?
+>
+> It should. But then I reviewed the MDSS binding today and it looks
+> like the MDSS is the interrupt parent for at least some child devices?
+>
 
-Theoretically we could allow for registering two LEDs as LED multi
-color device and the other one as monochrome LED class device
-but I admit that this would be a bit convoluted and entail unnecessary
-complexity in the driver.
+yes, that is correct
 
-So I'm OK with no child nodes for these bindings, but let's add some
-comment justifying that.
-
--- 
-Best regards,
-Jacek Anaszewski
+BR,
+-R
