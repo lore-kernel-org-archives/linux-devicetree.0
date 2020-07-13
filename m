@@ -2,61 +2,69 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CC9C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 01:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70459C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 02:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04EC7206D9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 01:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52F03206F4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 02:13:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgGMBoD (ORCPT
+        id S1726262AbgGMCNX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Jul 2020 21:44:03 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:52540 "EHLO
+        Sun, 12 Jul 2020 22:13:23 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:60760 "EHLO
         smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726262AbgGMBoD (ORCPT
+        by vger.kernel.org with ESMTP id S1726261AbgGMCNX (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Sun, 12 Jul 2020 21:44:03 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1167423|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0681111-0.00041438-0.931475;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03273;MF=frank@allwinnertech.com;NM=1;PH=DW;RN=9;RT=9;SR=0;TI=W4_5899425_DEFAULT_0A9326FC_1594604587689_o7001c2454m;
-Received: from WS-web (frank@allwinnertech.com[W4_5899425_DEFAULT_0A9326FC_1594604587689_o7001c2454m]) by e01l07394.eu6 at Mon, 13 Jul 2020 09:43:59 +0800
-Date:   Mon, 13 Jul 2020 09:43:59 +0800
-From:   "=?UTF-8?B?5p2O5oms6Z+s?=" <frank@allwinnertech.com>
-To:     "Maxime Ripard" <maxime@cerno.tech>
-Cc:     "robh+dt" <robh+dt@kernel.org>, "wens" <wens@csie.org>,
-        "tiny.windzz" <tiny.windzz@gmail.com>,
-        "devicetree" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel" <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel" <linux-kernel@vger.kernel.org>,
-        "=?UTF-8?B?6buE54OB55Sf?=" <huangshuosheng@allwinnertech.com>,
-        "=?UTF-8?B?5p2O5YuH?=" <liyong@allwinnertech.com>
-Reply-To: "=?UTF-8?B?5p2O5oms6Z+s?=" <frank@allwinnertech.com>
-Message-ID: <687f6b72-d5c6-4ea4-81d9-e91612cd75d5.frank@allwinnertech.com>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2MyAxNC8xNl0gYXJtNjQ6IGFsbHdpbm5lcjogQTEwMDogYWRkIHRoZSBi?=
-  =?UTF-8?B?YXNpY2FsIEFsbHdpbm5lciBBMTAwIERUU0kgZmlsZQ==?=
-X-Mailer: [Alimail-Mailagent][W4_5899425][DEFAULT][Chrome]
+        Sun, 12 Jul 2020 22:13:23 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.4102802|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.00696024-0.000355632-0.992684;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03278;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=11;RT=11;SR=0;TI=SMTPD_---.I0sGW3h_1594606394;
+Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I0sGW3h_1594606394)
+          by smtp.aliyun-inc.com(10.147.42.253);
+          Mon, 13 Jul 2020 10:13:20 +0800
+From:   Frank Lee <frank@allwinnertech.com>
+To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
+        robh+dt@kernel.org, mripard@kernel.org, wens@csie.org
+Cc:     tiny.windzz@gmail.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Frank Lee <frank@allwinnertech.com>
+Subject: [PATCH v3 11/16] dt-bindings: irq: sun7i-nmi: fix dt-binding for a80 nmi
+Date:   Mon, 13 Jul 2020 10:13:09 +0800
+Message-Id: <20200713021309.31885-1-frank@allwinnertech.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20200708082505.28910-1-frank@allwinnertech.com>,<20200710123306.wlqadpz4tuy2r3jc@gilmour.lan>
-In-Reply-To: <20200710123306.wlqadpz4tuy2r3jc@gilmour.lan>
-x-aliyun-mail-creator: W4_5899425_DEFAULT_LjMTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzU2LjAuMjkyNC44NyBTYWZhcmkvNTM3LjM2TM
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-PkhpLAo+Cj5UaGFua3MgZm9yIHNlbmRpbmcgYSBuZXcgc2VyaWVzCj4KPk9uIFdlZCwgSnVsIDA4
-LCAyMDIwIGF0IDA0OjI1OjA1UE0gKzA4MDAsIEZyYW5rIExlZSB3cm90ZToKPj4gKyB0aGVybWFs
-LXpvbmVzIHsKPj4gKyAgY3B1X3RoZXJtYWxfem9uZSB7Cj4+ICsgICBwb2xsaW5nLWRlbGF5LXBh
-c3NpdmUgPSA8MD47Cj4+ICsgICBwb2xsaW5nLWRlbGF5ID0gPDA+Owo+PiArICAgdGhlcm1hbC1z
-ZW5zb3JzID0gPCZ0aHMgMD47Cj4+ICsgIH07Cj4+ICsKPj4gKyAgZ3B1X3RoZXJtYWxfem9uZSB7
-Cj4+ICsgICBwb2xsaW5nLWRlbGF5LXBhc3NpdmUgPSA8MD47Cj4+ICsgICBwb2xsaW5nLWRlbGF5
-ID0gPDA+Owo+PiArICAgdGhlcm1hbC1zZW5zb3JzID0gPCZ0aHMgMT47Cj4+ICsgIH07Cj4+ICsK
-Pj4gKyAgZGRyX3RoZXJtYWxfem9uZSB7Cj4+ICsgICBwb2xsaW5nLWRlbGF5LXBhc3NpdmUgPSA8
-MD47Cj4+ICsgICBwb2xsaW5nLWRlbGF5ID0gPDA+Owo+PiArICAgdGhlcm1hbC1zZW5zb3JzID0g
-PCZ0aHMgMj47Cj4+ICsgIH07Cj4+ICsgfTsKPj4gK307Cj4KPlRoZSBub2RlIG5hbWVzIHNob3Vs
-ZG4ndCBoYXZlIGFueSB1bmRlcnNjb3JlLCBvdGhlcndpc2UgaXQgd2lsbCBnZW5lcmF0ZSBhIERU
-QyB3YXJuaW5nLgoKWWVhaCwgSSBpZ25vcmVkIHRoaXMuCgpZYW5ndGFv
+There is no one use "allwinner,sun9i-a80-sc-nmi". The A80 uses
+"allwinner,sun9i-a80-nmi".
+
+Let's fix it.
+
+Signed-off-by: Frank Lee <frank@allwinnertech.com>
+---
+ .../bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml       | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
+index cf09055..aab74a8 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
++++ b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
+@@ -29,7 +29,7 @@ properties:
+       - items:
+         - const: allwinner,sun8i-a83t-r-intc
+         - const: allwinner,sun6i-a31-r-intc
+-      - const: allwinner,sun9i-a80-sc-nmi
++      - const: allwinner,sun9i-a80-nmi
+       - items:
+         - const: allwinner,sun50i-a64-r-intc
+         - const: allwinner,sun6i-a31-r-intc
+-- 
+1.9.1
+
