@@ -2,84 +2,157 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E34E9C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 08:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8352FC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 08:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB360206F0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 08:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 580022065D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 08:45:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="mXAsuZ2c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729043AbgGMIlg (ORCPT
+        id S1728382AbgGMIpl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 04:41:36 -0400
-Received: from mga07.intel.com ([134.134.136.100]:46404 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728382AbgGMIlg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 04:41:36 -0400
-IronPort-SDR: N2547ZEoTeqNBMC8fzTI+8W/jeP0XhIfG0BN8l9wc7hhlqm+JBvkSmXGra4zAeKkmcz4JJcbhi
- v2GohUVTAvhg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9680"; a="213414173"
-X-IronPort-AV: E=Sophos;i="5.75,346,1589266800"; 
-   d="scan'208";a="213414173"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 01:41:35 -0700
-IronPort-SDR: BLDNkp2A7Jp4PSPcgGtrrs2mwi6zap10DENFrgIJHJw7qKhjwMhOLvab3Dd19FuZLoaO4IcQvP
- WqfvenKKZrlw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,346,1589266800"; 
-   d="scan'208";a="325436277"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 13 Jul 2020 01:41:35 -0700
-Received: from [10.215.249.14] (mreddy3x-MOBL.gar.corp.intel.com [10.215.249.14])
-        by linux.intel.com (Postfix) with ESMTP id 6EEBA58080E;
-        Mon, 13 Jul 2020 01:41:32 -0700 (PDT)
-Subject: Re: [PATCH v4 2/2] Add Intel LGM soc DMA support.
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     dmaengine@vger.kernel.org, vkoul@kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, chuanhua.lei@linux.intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        malliamireddy009@gmail.com, mallikarjunax.reddy@linux.intel.com
-References: <cover.1594273437.git.mallikarjunax.reddy@linux.intel.com>
- <6be9b9cfbf6708fe371f280cb94cbdc9c04bdccb.1594273437.git.mallikarjunax.reddy@linux.intel.com>
- <20200709110914.GW3703480@smile.fi.intel.com>
-From:   "Reddy, MallikarjunaX" <mallikarjunax.reddy@linux.intel.com>
-Message-ID: <e2eae7fc-0726-5156-8676-d64eab991c9e@linux.intel.com>
-Date:   Mon, 13 Jul 2020 16:41:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200709110914.GW3703480@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Mon, 13 Jul 2020 04:45:41 -0400
+Received: from mail-db8eur05on2072.outbound.protection.outlook.com ([40.107.20.72]:15836
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727834AbgGMIpl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 04:45:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B+4tLt8Mwhhco3OhfYp3ZMHvBnWt/VMLwkYZaHqNCGJ2M7Yxf9ODVJKmp1FOWyF1S8iL4EsvpfjqpR+VJd1q/gaM89yh04S/Hcg0DBL++fmMbx9CqzyY/W4OVH+NhvgMeDyGP1/V2+11GlDVT7mwoWY9uZ4iRU7jwCoLaK217qDfcG1Y2Yqi8JQ0P4N11nKX9enBdvQ6xjqjvjxMN4Az5G9yO+AyMnzPj5Cv6Dz9GN6+Dv9Q3yZvrCkKwC/oixeiZnHNiud+GE3Ceon5OEu20rbcMV7dnCQlOtd5Ma3tsOAzN7ZUC+4jzf9T9iVNfKWnLvTXKtp6TKyV6KS3OP9jEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pJwUT5S+YE1A/su5q5q3JdJxgmj8h5pXAxgSsT9FS8M=;
+ b=glkt5CZSdyHj+IqZsA0itW2oAQAWnLn1EqS5N7fltTpIpE9kCKhHYkqQsNBDP0wKAxssm/mHGM8UPa7zaHKMFOiaEc6JKEvE0v8/htK3HnN+EXC38pqJpjMceF3AMs2P84hZIT9GmBLOYgXbWAIwvnZY2WhL8Yy7uOh3mlj7G5ESSPXd8B37VjWArask550PuhpyDNFrSBOyV0EjZvPmGg17Ku3gI5l9QhIz8BQ4rmkopO/X1M2TS9aX5rx7HMOHt8VhtD6IgBTFPEzon1HbQUTi3knHOGmkBvq1lvfghPf6ilrEk0p+TuCviI7wydHs1CwqmQG2Jlh2moc2XA4rTQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pJwUT5S+YE1A/su5q5q3JdJxgmj8h5pXAxgSsT9FS8M=;
+ b=mXAsuZ2cKiOHb5wOSVdE8+B4NUhvw+Vw5iibVzesqtHwyGrw2fcKfwxa1hTsnMcoL3GE7e3MH2b0lZuZrMfG0oV9/e3DZIWdwLsGfq6pNRukl+s5i2m0OGFk/sh8AhNApF+uNq3fGPcgCdRHEyU/1DwN7vxndKILKjlg4pZydsI=
+Received: from VI1PR10MB1662.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:802:31::26)
+ by VI1PR10MB2320.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:803:81::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22; Mon, 13 Jul
+ 2020 08:45:36 +0000
+Received: from VI1PR10MB1662.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::f97b:2363:7cfc:9150]) by VI1PR10MB1662.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::f97b:2363:7cfc:9150%4]) with mapi id 15.20.3174.025; Mon, 13 Jul 2020
+ 08:45:36 +0000
+From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] Replace HTTP links with HTTPS ones: Dialog Semiconductor
+ drivers
+Thread-Topic: [PATCH] Replace HTTP links with HTTPS ones: Dialog Semiconductor
+ drivers
+Thread-Index: AQHWUqG3NenvGbZLWUeE5MxT8HaZlakFPnUw
+Date:   Mon, 13 Jul 2020 08:45:36 +0000
+Message-ID: <VI1PR10MB1662457FD0D0B6549C1DDB6B80600@VI1PR10MB1662.EURPRD10.PROD.OUTLOOK.COM>
+References: <20200705075542.22728-1-grandmaster@al2klimov.de>
+In-Reply-To: <20200705075542.22728-1-grandmaster@al2klimov.de>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: al2klimov.de; dkim=none (message not signed)
+ header.d=none;al2klimov.de; dmarc=none action=none header.from=diasemi.com;
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.225.80.85]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1d9bb325-81b2-4cab-90a5-08d827091cf0
+x-ms-traffictypediagnostic: VI1PR10MB2320:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR10MB2320475785D3D47868674A39A7600@VI1PR10MB2320.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: m5h02he1Jba/0BQLzi2Ij2epARz/pSJ6kGWKeayVALe8QGTrD18FZJVUEnt3L9gAXbDfVN2L3O3T9hTqqGKijXwa+O4jD4/svNX8kzqclovptF4JcDvTf0gg3g6CstdtQx2qZUjTy7p9woStw6kVAwDgaGfEiuXK0DJnBrAdTiCmqrYGb8Ec8I5VfATU8C2oRpPMpKb7WK0/Fx3UmgR7mLRLE87s+RpjGl3w3YwKJR0sbSGzaUGaSu82ET5kHO/g5viAcqZedVc8YvJrX1Ie2ElbeLO2wmOLAW3xGSh0V+KsRtzAKlpSsCZu7Ck6E/7zWQZI7c5k2iEzFD8RCTvL7QBNhPKfj2KnqerRhVl/O4m9dETJ+ZQOKMYmIfuPP2JJH8Rmg0gzxvoQE7y17zWZvw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR10MB1662.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(366004)(396003)(39850400004)(376002)(136003)(55236004)(8936002)(2906002)(33656002)(6506007)(53546011)(316002)(71200400001)(52536014)(8676002)(110136005)(86362001)(186003)(478600001)(26005)(9686003)(66446008)(64756008)(66556008)(66476007)(66946007)(5660300002)(76116006)(55016002)(7696005)(966005)(83380400001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: C5GOEagkaQT/sWjhu8C2Qf27T9Qci4sASP6Oqle2/xmBZlcWSd1BqrtRtZPjXnAwI7FxVtdeT8JNaYRvlxZKilupQGJq4YWliGduLt5bS/UrgsgOwqRs9tvVhAOhTB6aSHw1t5yi3QLNnMm4Kf2bztzCicINRsb4xq6R4WCLzC/i9yZZPq49ilEYPDA0OjG9MRdVS9JRJOXD95+tnXvJ9KhJpXJgNGUYJL6Yxk38ifFph3D/mUTs13CkwRUNihnnUm0soq7dULoduxRml4/CDavIb82rcdmDDedXDACAEdzD0JqkAf9KHMIPTccu0e7nsEzZP/KqdYhGyEUzXbZEpTH3mEsULCOfnehITC+kENPKl9e1UozmgL6krU28WXSXHNegdUrew+LiHLl0MG9mp4R/K4HFRP8kdJa9d03/JlvUdMz67s8vACdr/Rr53pVSPIsJJ2y53qsxAFu1EDYT1jDPPpiVIOYXeZJbUeBxKO8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR10MB1662.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1d9bb325-81b2-4cab-90a5-08d827091cf0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jul 2020 08:45:36.5662
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ndQY4Nn7AHHMy+S6e6TWYAg4P2v38eXYFiuwRBG9MM+umLi4xPl23KPzwu7P6VU4Jl0Ds1xY31QHR8MCa/7KFS0YvLzRSXKN29ZwVNP66Zk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB2320
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Thanks for the review Andy. My comments inline.
+On 05 July 2020 08:56, Alexander A. Klimov wrote:
 
-On 7/9/2020 7:09 PM, Andy Shevchenko wrote:
-> On Thu, Jul 09, 2020 at 02:01:06PM +0800, Amireddy Mallikarjuna reddy wrote:
->> Add DMA controller driver for Lightning Mountain(LGM) family of SoCs.
->>
->> The main function of the DMA controller is the transfer of data from/to any
->> DPlus compliant peripheral to/from the memory. A memory to memory copy
->> capability can also be configured.
->>
->> This ldma driver is used for configure the device and channnels for data
->> and control paths.
->> +#include "../virt-dma.h"
-> I didn't find any evidence this driver utilizes virt-dma API in full.
-> For example, there is a virt_dma_desc structure and descriptor management around it.
-> Why don't you use it?
-Lgm dma soc has its own hardware descriptor.
-and each dma channel is associated with a peripheral, it is one to one 
-mapping between channel and associated peripheral.
->
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+>=20
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>           If both the HTTP and HTTPS versions
+>           return 200 OK and serve the same content:
+>             Replace HTTP with HTTPS.
+>=20
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+
+Acked-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+
+> ---
+>  Continuing my work started at 93431e0607e5.
+>=20
+>  If there are any URLs to be removed completely or at least not HTTPSifie=
+d:
+>  Just clearly say so and I'll *undo my change*.
+>  See also https://lkml.org/lkml/2020/6/27/64
+>=20
+>  If there are any valid, but yet not changed URLs:
+>  See https://lkml.org/lkml/2020/6/26/837
+>=20
+>  Documentation/devicetree/bindings/mfd/da9062.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt
+> b/Documentation/devicetree/bindings/mfd/da9062.txt
+> index 857af982c88f..bab0d0e66cb3 100644
+> --- a/Documentation/devicetree/bindings/mfd/da9062.txt
+> +++ b/Documentation/devicetree/bindings/mfd/da9062.txt
+> @@ -1,8 +1,8 @@
+>  * Dialog DA9062 Power Management Integrated Circuit (PMIC)
+>=20
+>  Product information for the DA9062 and DA9061 devices can be found here:
+> -- http://www.dialog-semiconductor.com/products/da9062
+> -- http://www.dialog-semiconductor.com/products/da9061
+> +- https://www.dialog-semiconductor.com/products/da9062
+> +- https://www.dialog-semiconductor.com/products/da9061
+>=20
+>  The DA9062 PMIC consists of:
+>=20
+> --
+> 2.27.0
+
