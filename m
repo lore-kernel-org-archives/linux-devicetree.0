@@ -2,175 +2,372 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49054C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 20:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F844C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 20:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23B042077D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 20:25:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594671946;
-	bh=+jPAZ3C7SWxUuRUQs+Sr6Y2DGrQqPWecmS58fVnwjRg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pBwFa3EZ4HEYchhGmPyfwd3ZYttiG0WT72Iza0554tvmHWmkyhO9VALUSBjsBHbI9
-	 /rzJpu145NdXaBNyh0VRMp3rnqsOZApP5x7+epx9NjZ6uhs/9CDc5eQMj90JD3oVzW
-	 NcK3PYwV/15pjAbP3A2VX/rG5nXq171fw0bhe4nw=
+	by mail.kernel.org (Postfix) with ESMTP id 706F42075B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 20:31:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HKGa5xri"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgGMUZp (ORCPT
+        id S1726338AbgGMUbE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 16:25:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34864 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726321AbgGMUZp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 16:25:45 -0400
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45F562080D;
-        Mon, 13 Jul 2020 20:25:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594671944;
-        bh=+jPAZ3C7SWxUuRUQs+Sr6Y2DGrQqPWecmS58fVnwjRg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DOQurS/Ibt581N9zjmP/Pqa8hl78moJnuITh6tQCapRRRq3lmxAkJao/TRTea4zip
-         M3IgIl+ogsfoJJPTcHZUxX93MDkAakZHpcmyPOpXRWk2Tc9UVg/06l2MQwzMxTTpA7
-         cZj7SPprMA2NR6Y6IEGnVzak4K3X+xXevHfSU7AU=
-Received: by mail-oi1-f181.google.com with SMTP id y22so12072744oie.8;
-        Mon, 13 Jul 2020 13:25:44 -0700 (PDT)
-X-Gm-Message-State: AOAM532IX77W1ELrAjS8I4hr8C/bUxpYaQYDrw8iTxrNdEPWBHPufDUr
-        +O8ppvJLKOw56nelDW3bb5VJIzoEmkOT3pJ8oA==
-X-Google-Smtp-Source: ABdhPJz4yVpioDr20qd9s5LSTk+AV4nU2x5TPIq7IEfqTgA5EioBNPLPC36euXlnKruM3zNGoxsQBu0ZdZFRaXmekfM=
-X-Received: by 2002:aca:4844:: with SMTP id v65mr1078680oia.152.1594671943516;
- Mon, 13 Jul 2020 13:25:43 -0700 (PDT)
+        Mon, 13 Jul 2020 16:31:04 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:36476 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbgGMUbD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 16:31:03 -0400
+Received: from [10.0.0.249] (c-24-19-135-168.hsd1.wa.comcast.net [24.19.135.168])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 3468820B4908;
+        Mon, 13 Jul 2020 13:31:00 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3468820B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1594672261;
+        bh=/alYulr7TfHdtnQcnR5ksYNOj4rEKwjLZlm8tyeN/ig=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=HKGa5xriPaJtfUMOGKAdDEmNm530YOlnYSEACRiZ3qek6FvrL/gO2JzOlCjjVpaES
+         wr6E6LV/9mSxj+YP7UlkZ8qn3zs9VPhh9ADbVFJKR8LajLESGVLVlMgtnguuVmFup0
+         Kmtw0sgUMtC7d96W9/rPiy8/xnK4YEXPkWFcs8aE=
+Subject: Re: [V2 PATCH 1/3] Refactoring powerpc code for carrying over IMA
+ measurement logs, to move non architecture specific code to security/ima.
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, catalin.marinas@arm.com,
+        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
+        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
+        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, jmorris@namei.org,
+        serge@hallyn.com, pasha.tatashin@soleen.com, allison@lohutok.net,
+        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
+        tglx@linutronix.de, vincenzo.frascino@arm.com,
+        mark.rutland@arm.com, masahiroy@kernel.org, james.morse@arm.com,
+        bhsharma@redhat.com, mbrugger@suse.com, hsinyi@chromium.org,
+        tao.li@vivo.com, christophe.leroy@c-s.fr,
+        gregkh@linuxfoundation.org, nramas@linux.microsoft.com,
+        tusharsu@linux.microsoft.com, balajib@linux.microsoft.com
+References: <20200618071045.471131-1-prsriva@linux.microsoft.com>
+ <20200618071045.471131-2-prsriva@linux.microsoft.com>
+ <87o8per3m0.fsf@morokweng.localdomain>
+From:   Prakhar Srivastava <prsriva@linux.microsoft.com>
+Message-ID: <1385c8bb-cd25-8dc4-7224-8e27135f3356@linux.microsoft.com>
+Date:   Mon, 13 Jul 2020 13:30:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200710230224.2265647-1-dianders@chromium.org>
- <CAL_JsqKC5WtHb-coMCxMTDJ7CJcjVXcAxDT4J9N-Xyr=0uuURA@mail.gmail.com> <CAD=FV=XWKoTd_t2uRGpw3oa0Nij2EPeAJpOHhUipXFW07JN2qw@mail.gmail.com>
-In-Reply-To: <CAD=FV=XWKoTd_t2uRGpw3oa0Nij2EPeAJpOHhUipXFW07JN2qw@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 13 Jul 2020 14:25:31 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLJM5nwNSdugMBLDVtjP97dikCm_AiHjnDs1jqBOFoaaQ@mail.gmail.com>
-Message-ID: <CAL_JsqLJM5nwNSdugMBLDVtjP97dikCm_AiHjnDs1jqBOFoaaQ@mail.gmail.com>
-Subject: Re: [PATCH 0/9] drm/msm: Avoid possible infinite probe deferral and
- speed booting
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87o8per3m0.fsf@morokweng.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 9:08 AM Doug Anderson <dianders@chromium.org> wrote:
->
-> Hi,
->
-> On Mon, Jul 13, 2020 at 7:11 AM Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Fri, Jul 10, 2020 at 5:02 PM Douglas Anderson <dianders@chromium.org> wrote:
-> > >
-> > > I found that if I ever had a little mistake in my kernel config,
-> > > or device tree, or graphics driver that my system would sit in a loop
-> > > at bootup trying again and again and again.  An example log was:
-> >
-> > Why do we care about optimizing the error case?
->
-> It actually results in a _fully_ infinite loop.  That is: if anything
-> small causes a component of DRM to fail to probe then the whole system
-> doesn't boot because it just loops trying to probe over and over
-> again.  The messages I put in the commit message are printed over and
-> over and over again.
 
-Sounds like a bug as that's not what should happen.
 
-If you defer during boot (initcalls), then you'll be on the deferred
-list until late_initcall and everything is retried. After
-late_initcall, only devices getting added should trigger probing. But
-maybe the adding and then removing a device is causing a re-trigger.
+On 6/19/20 5:19 PM, Thiago Jung Bauermann wrote:
+> 
+> Prakhar Srivastava <prsriva@linux.microsoft.com> writes:
+> 
+>> Powerpc has support to carry over the IMA measurement logs. Refatoring the
+>> non-architecture specific code out of arch/powerpc and into security/ima.
+>>
+>> The code adds support for reserving and freeing up of memory for IMA measurement
+>> logs.
+> 
+> Last week, Mimi provided this feedback:
+> 
+> "From your patch description, this patch should be broken up.  Moving
+> the non-architecture specific code out of powerpc should be one patch.
+>   Additional support should be in another patch.  After each patch, the
+> code should work properly."
+> 
+> That's not what you do here. You move the code, but you also make other
+> changes at the same time. This has two problems:
+> 
+> 1. It makes the patch harder to review, because it's very easy to miss a
+>     change.
+> 
+> 2. If in the future a git bisect later points to this patch, it's not
+>     clear whether the problem is because of the code movement, or because
+>     of the other changes.
+> 
+> When you move code, ideally the patch should only make the changes
+> necessary to make the code work at its new location. The patch which
+> does code movement should not cause any change in behavior.
+> 
+> Other changes should go in separate patches, either before or after the
+> one moving the code.
+> 
+> More comments below.
+> 
+Hi Thiago,
 
-> > >   msm ae00000.mdss: bound ae01000.mdp (ops 0xffffffe596e951f8)
-> > >   msm_dsi ae94000.dsi: ae94000.dsi supply gdsc not found, using dummy regulator
-> > >   msm_dsi_manager_register: failed to register mipi dsi host for DSI 0
-> > >   [drm:ti_sn_bridge_probe] *ERROR* could not find any panel node
-> > >   ...
-> > >
-> > > I finally tracked it down where this was happening:
-> > >   - msm_pdev_probe() is called.
-> > >   - msm_pdev_probe() registers drivers.  Registering drivers kicks
-> > >     off processing of probe deferrals.
-> > >   - component_master_add_with_match() could return -EPROBE_DEFER.
-> > >     making msm_pdev_probe() return -EPROBE_DEFER.
-> > >   - When msm_pdev_probe() returned the processing of probe deferrals
-> > >     happens.
-> > >   - Loop back to the start.
-> > >
-> > > It looks like we can fix this by marking "mdss" as a "simple-bus".
-> > > I have no idea if people consider this the right thing to do or a
-> > > hack.  Hopefully it's the right thing to do.  :-)
-> >
-> > It's a simple test. Do the child devices have any dependency on the
-> > parent to probe and/or function? If so, not a simple-bus.
->
-> Great!  You can see in the earlier patch in the series that the very
-> first thing that happens when the parent device probes is that it
-> calls devm_of_platform_populate().  That means no dependencies, right?
+Apologies for the delayed response i was away for a few days.
+I am working on breaking up the changes so that its easier to review and 
+update as well.
 
-It should. But then I reviewed the MDSS binding today and it looks
-like the MDSS is the interrupt parent for at least some child devices?
+Thanks,
+Prakhar Srivastava
 
->  So that means it's fine/correct to add "simple-bus" here?
->
->
-> > > Once I do this I notice that my boot gets marginally faster (you
-> > > don't need to probe the sub devices over and over) and also if I
-> >
-> > Can you quantify that?
->
-> I'd say < 100 us.  I can try to quantify more if needed, but it wasn't
-> the point of this patch.
->
->
-> > Have you run with devlinks enabled. You need a command line option to
-> > enable. That too should reduce deferred probes.
->
-> Ah, good idea!  I will try it.  However, even with devlinks, if there
-> is any chance of deferred probes then we need a fix like this.  The
-> point of the patch isn't about speeding things up but about avoiding
-> an infinite loop at bootup due to a small bug.
+>>
+>> ---
+>>   arch/powerpc/include/asm/ima.h     |  10 ---
+>>   arch/powerpc/kexec/ima.c           | 126 ++---------------------------
+>>   security/integrity/ima/ima_kexec.c | 116 ++++++++++++++++++++++++++
+>>   3 files changed, 124 insertions(+), 128 deletions(-)
+>>
+>> diff --git a/arch/powerpc/include/asm/ima.h b/arch/powerpc/include/asm/ima.h
+>> index ead488cf3981..c29ec86498f8 100644
+>> --- a/arch/powerpc/include/asm/ima.h
+>> +++ b/arch/powerpc/include/asm/ima.h
+>> @@ -4,15 +4,6 @@
+>>
+>>   struct kimage;
+>>
+>> -int ima_get_kexec_buffer(void **addr, size_t *size);
+>> -int ima_free_kexec_buffer(void);
+>> -
+>> -#ifdef CONFIG_IMA
+>> -void remove_ima_buffer(void *fdt, int chosen_node);
+>> -#else
+>> -static inline void remove_ima_buffer(void *fdt, int chosen_node) {}
+>> -#endif
+>> -
+>>   #ifdef CONFIG_IMA_KEXEC
+>>   int arch_ima_add_kexec_buffer(struct kimage *image, unsigned long load_addr,
+>>   			      size_t size);
+>> @@ -22,7 +13,6 @@ int setup_ima_buffer(const struct kimage *image, void *fdt, int chosen_node);
+>>   static inline int setup_ima_buffer(const struct kimage *image, void *fdt,
+>>   				   int chosen_node)
+>>   {
+>> -	remove_ima_buffer(fdt, chosen_node);
+>>   	return 0;
+>>   }
+> 
+> This is wrong. Even if the currently running kernel doesn't have
+> CONFIG_IMA_KEXEC, it should remove the IMA buffer property and memory
+> reservation from the FDT that is being prepared for the next kernel.
+> 
+> This is because the IMA kexec buffer is useless for the next kernel,
+> regardless of whether the current kernel supports CONFIG_IMA_KEXEC or
+> not. Keeping it around would be a waste of memory.
+> 
+I will keep it in my next revision.
+My understanding was the reserved memory is freed and property removed 
+when IMA loads the logs on init. During setup_fdt in kexec, a duplicate 
+copy of the dt is used, but memory still needs to be allocated, thus the 
+property itself indicats presence of reserved memory.
 
-I think a deferred probe would only happen if there's a dependency we
-don't track (but we're tracking about everything that's common). But
-if there's some error, I'm not sure what would happen. Seems like a
-good test case. :)
 
-> > > have a problem it doesn't loop forever (on my system it still
-> > > gets upset about some stuck clocks in that case, but at least I
-> > > can boot up).
-> >
-> > Deferred probe only runs when a device is added, so it's not like it
-> > is continually running.
->
-> If you don't mind looking at the code patch, see:
->
-> https://lore.kernel.org/r/20200710160131.4.I358ea82de218ea5f4406572ade23f5e121297555@changeid/
->
-> Specifically you can see that each time we try to probe we were
-> calling of_platform_populate().  That appeared to be enough to trigger
-> things.
+>> @@ -179,13 +64,18 @@ int setup_ima_buffer(const struct kimage *image, void *fdt, int chosen_node)
+>>   	int ret, addr_cells, size_cells, entry_size;
+>>   	u8 value[16];
+>>
+>> -	remove_ima_buffer(fdt, chosen_node);
+> 
+> This is wrong, for the same reason stated above.
+> 
+>>   	if (!image->arch.ima_buffer_size)
+>>   		return 0;
+>>
+>> -	ret = get_addr_size_cells(&addr_cells, &size_cells);
+>> -	if (ret)
+>> +	ret = fdt_address_cells(fdt, chosen_node);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +	addr_cells = ret;
+>> +
+>> +	ret = fdt_size_cells(fdt, chosen_node);
+>> +	if (ret < 0)
+>>   		return ret;
+>> +	size_cells = ret;
+>>
+>>   	entry_size = 4 * (addr_cells + size_cells);
+>>
+> 
+> I liked this change. Thanks! I agree it's better to use
+> fdt_address_cells() and fdt_size_cells() here.
+> 
+> But it should be in a separate patch. Either before or after the one
+> moving the code.
+> 
+>> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+>> index 121de3e04af2..e1e6d6154015 100644
+>> --- a/security/integrity/ima/ima_kexec.c
+>> +++ b/security/integrity/ima/ima_kexec.c
+>> @@ -10,8 +10,124 @@
+>>   #include <linux/seq_file.h>
+>>   #include <linux/vmalloc.h>
+>>   #include <linux/kexec.h>
+>> +#include <linux/of.h>
+>> +#include <linux/memblock.h>
+>> +#include <linux/libfdt.h>
+>>   #include "ima.h"
+>>
+>> +static int get_addr_size_cells(int *addr_cells, int *size_cells)
+>> +{
+>> +	struct device_node *root;
+>> +
+>> +	root = of_find_node_by_path("/");
+>> +	if (!root)
+>> +		return -EINVAL;
+>> +
+>> +	*addr_cells = of_n_addr_cells(root);
+>> +	*size_cells = of_n_size_cells(root);
+>> +
+>> +	of_node_put(root);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int do_get_kexec_buffer(const void *prop, int len, unsigned long *addr,
+>> +			       size_t *size)
+>> +{
+>> +	int ret, addr_cells, size_cells;
+>> +
+>> +	ret = get_addr_size_cells(&addr_cells, &size_cells);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (len < 4 * (addr_cells + size_cells))
+>> +		return -ENOENT;
+>> +
+>> +	*addr = of_read_number(prop, addr_cells);
+>> +	*size = of_read_number(prop + 4 * addr_cells, size_cells);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +/**
+>> + * ima_get_kexec_buffer - get IMA buffer from the previous kernel
+>> + * @addr:	On successful return, set to point to the buffer contents.
+>> + * @size:	On successful return, set to the buffer size.
+>> + *
+>> + * Return: 0 on success, negative errno on error.
+>> + */
+>> +int ima_get_kexec_buffer(void **addr, size_t *size)
+>> +{
+>> +	int ret, len;
+>> +	unsigned long tmp_addr;
+>> +	size_t tmp_size;
+>> +	const void *prop;
+>> +
+>> +	prop = of_get_property(of_chosen, "linux,ima-kexec-buffer", &len);
+>> +	if (!prop)
+>> +		return -ENOENT;
+>> +
+>> +	ret = do_get_kexec_buffer(prop, len, &tmp_addr, &tmp_size);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	*addr = __va(tmp_addr);
+>> +	*size = tmp_size;
+>> +
+>> +	return 0;
+>> +}
+> 
+> The functions above were moved without being changed. Good.
+> 
+>> +/**
+>> + * ima_free_kexec_buffer - free memory used by the IMA buffer
+>> + */
+>> +int ima_free_kexec_buffer(void)
+>> +{
+>> +	int ret;
+>> +	unsigned long addr;
+>> +	size_t size;
+>> +	struct property *prop;
+>> +
+>> +	prop = of_find_property(of_chosen, "linux,ima-kexec-buffer", NULL);
+>> +	if (!prop)
+>> +		return -ENOENT;
+>> +
+>> +	ret = do_get_kexec_buffer(prop->value, prop->length, &addr, &size);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret = of_remove_property(of_chosen, prop);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return memblock_free(__pa(addr), size);
+> 
+> Here you added a __pa() call. Do you store a virtual address in
+> linux,ima-kexec-buffer property? Doesn't it make more sense to store a
+> physical address?
+> 
+trying to minimize the changes here as do_get_kexec_buffer return the va.
+I will refactor this to remove the double translation.
 
-Like I said, sounds like a bug. Even if 'simple-bus' is the
-appropriate thing to do here, it should be fixed or at least
-understood.
-
-Rob
+> Even if making this change is the correct thing to do, it should be a
+> separate patch, unless it can't be avoided. And if that is the case,
+> then it should be explained in the commit message.
+> 
+>> +
+>> +}
+>> +
+>> +/**
+>> + * remove_ima_buffer - remove the IMA buffer property and reservation from @fdt
+>> + *
+>> + * The IMA measurement buffer is of no use to a subsequent kernel, so we always
+>> + * remove it from the device tree.
+>> + */
+>> +void remove_ima_buffer(void *fdt, int chosen_node)
+>> +{
+>> +	int ret, len;
+>> +	unsigned long addr;
+>> +	size_t size;
+>> +	const void *prop;
+>> +
+>> +	prop = fdt_getprop(fdt, chosen_node, "linux,ima-kexec-buffer", &len);
+>> +	if (!prop)
+>> +		return;
+>> +
+>> +	do_get_kexec_buffer(prop, len, &addr, &size);
+>> +	ret = fdt_delprop(fdt, chosen_node, "linux,ima-kexec-buffer");
+>> +	if (ret < 0)
+>> +		return;
+>> +
+>> +	memblock_free(addr, size);
+>> +}
+> 
+> Here is another function that changed when moved. This one I know to be
+> wrong. You're confusing the purposes of remove_ima_buffer() and
+> ima_free_kexec_buffer().
+> 
+> You did send me a question about them nearly three weeks ago which I
+> only answered today, so I apologize. Also, their names could more
+> clearly reflect their differences, so it's bad naming on my part.
+> 
+> With IMA kexec buffers, there are two kernels (and thus their two
+> respective, separate device trees) to be concerned about:
+> 
+> 1. the currently running kernel, which uses the live device tree
+> (accessed with the of_* functions) and the memblock subsystem;
+> 
+> 2. the kernel which is being loaded by kexec, which will use the FDT
+> blob being passed around as argument to these functions, and the memory
+> reservations in the memory reservation table of the FDT blob.
+> 
+> ima_free_kexec_buffer() is used by IMA in the currently running kernel.
+> Therefore the device tree it is concerned about is the live one, and
+> thus uses the of_* functions to access it. And uses memblock to change
+> the memory reservation.
+> 
+> remove_ima_buffer() on the other hand is used by the kexec code to
+> prepare an FDT blob for the kernel that is being loaded. It should not
+> make any changes to live device tree, nor to memblock allocations. It
+> should only make changes to the FDT blob.
+> 
+Thank you for this, greatly appreciate clearing my misunderstandings.
+> --
+> Thiago Jung Bauermann
+> IBM Linux Technology Center
+> 
