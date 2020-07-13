@@ -2,104 +2,142 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0638C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 323DCC433E5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90E9D2076D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09733206F0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594665033;
-	bh=lGyXS5W7sMi1fO8+TehYcXm2WS74y4cSQuwKM5swFhU=;
+	s=default; t=1594665399;
+	bh=434+czJR3aO7UqtzcgQhBeHa5ZHugRBjzsxKWWY0Jfg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mLnm+KYM+z2a4wiYIqsw4vaMgCdzscH6EayxZKsNMdP/L0A3jifteFvWOuh21nX1m
-	 UZ0GwFAxzHRXQeeDsHgqe76p8c49C/ttZBZg4PhxqiH2XI9zWkn41j4taKfDgpXsmi
-	 FtyBSreFNNWf60WIJ8FfIBjpAIKuZ+QsZW7fzj+I=
+	b=cHg0oFvEQWBcS+gGpJ7fXaZrPlFaAs+J5xE9vJFIDIhgyI7tM6S9x8RnFrNy0lLGd
+	 vjUIZA3dw95V2cMvQZroqnZnSEMtaQxcoDEkhFydkjmzbMYS34RdHngSvKhp6XqjQY
+	 hE7jIz67x5P20XPkG9xiAYm4ZlKRdGQRWFs83bcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgGMSad (ORCPT
+        id S1726352AbgGMSgi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 14:30:33 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:33522 "EHLO
+        Mon, 13 Jul 2020 14:36:38 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39883 "EHLO
         mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726058AbgGMSad (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 14:30:33 -0400
-Received: by mail-io1-f67.google.com with SMTP id d18so14595729ion.0;
-        Mon, 13 Jul 2020 11:30:32 -0700 (PDT)
+        with ESMTP id S1726321AbgGMSgi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 14:36:38 -0400
+Received: by mail-io1-f67.google.com with SMTP id f23so14591977iof.6;
+        Mon, 13 Jul 2020 11:36:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NHhkcNXb84hSAAGGaYzyykFtvdzROqlQA3oYhJq02hM=;
-        b=hNZydfhJx6SskkyezyOooTRYNX7nlv0/wYecSzx2OK0t4j1oxOMfD1psO/G9Bu/O5w
-         ymGMe7KkZUEz+DmKBwVIpJ8xqatiLgkaoCoiG4K+AOjMgX4cUFJ03BRoLqvGQuTmSk+k
-         pOFZAfqa6v2simAWVLohtZjR+HAB7zBx+t5lSKQmU9QRuXWGjC74BNAP3Kg1aIah/wSK
-         24CW1su1HPlKvjttiBl1Ya65+StVlzQutn0fGRPN1rZ/Zpf2ebfim5uncjbQm9f0JSrS
-         qZVRBYSEphq6ZXgJiBK9kgQWqiB/lAWrTIQ0UKi0vmJ0nxpeHG94u6eTBkloajnjVMDN
-         Whzw==
-X-Gm-Message-State: AOAM531il0XVja2H4loUCsR79L+CQL5TAFAjUIU1z9zrILxQzpYHiczT
-        P9BEr4rKMHaA9T9HkmikosmAIGqf+A==
-X-Google-Smtp-Source: ABdhPJwAtRsdg6KD5FHFMosiY8HZz72nLwAuFkbXMPZzCJadowi7jZH/+kSwAWiv7GK7DiIT/0OFSQ==
-X-Received: by 2002:a5d:9dc4:: with SMTP id 4mr1118287ioo.172.1594665031757;
-        Mon, 13 Jul 2020 11:30:31 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=3UGvQbUMACoG6FusERtLEKApCKDY3BG4pPYGTvjSnXw=;
+        b=fHbVqTSHyKL/KVHghVpu3yOYO8aKdWJ6rp+A6zpoW4AmC1moFy/lY7Ok+MAMthz+J4
+         ZxJQTQu0xXF7KfI5jC8CENVy5Y7IATOzzacErWULkPECdUdikHSyYWjAf79TqhwqToov
+         sgcET+DOsIB4ct6snUmkPHkotFB/Ska9tE5MsBp20bxldjYJMY+XWFX/qSigQ8hhZgj5
+         WKdKq3sqwzLRGux5cL2cqHz7YjBuaaw8xQFrZRKkQd7af8yKGCpjNttaIcJ6/bP7ka4d
+         74gny5Se3G9yKJ6a2O9xlkZWxMgn2aLUWRn70P9w3kVEgL2qezeENvR/1nXHxJ362r8a
+         vCKA==
+X-Gm-Message-State: AOAM533Ul5B7YpxiW2cLCP4hfls44nUEtN2pAbGHLoymN7W8JqT/ybXt
+        azhDloSGytkRp3rolq6qnnyb+97KaQ==
+X-Google-Smtp-Source: ABdhPJwlLcZvlXjaK0WV6RoZRmrbEb+BVeQEkO60kA5Qv+K6ncL582YMAzNgzE1tcPZhtZExKuKelQ==
+X-Received: by 2002:a6b:2b17:: with SMTP id r23mr1161061ior.36.1594665397089;
+        Mon, 13 Jul 2020 11:36:37 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id t74sm9021781ild.6.2020.07.13.11.30.30
+        by smtp.gmail.com with ESMTPSA id y12sm5748560iot.49.2020.07.13.11.36.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 11:30:31 -0700 (PDT)
-Received: (nullmailer pid 502654 invoked by uid 1000);
-        Mon, 13 Jul 2020 18:30:29 -0000
-Date:   Mon, 13 Jul 2020 12:30:29 -0600
+        Mon, 13 Jul 2020 11:36:36 -0700 (PDT)
+Received: (nullmailer pid 510535 invoked by uid 1000);
+        Mon, 13 Jul 2020 18:36:35 -0000
+Date:   Mon, 13 Jul 2020 12:36:35 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-remoteproc@vger.kernel.org
-Subject: Re: [PATCH v3 4/6] dt-bindings: remoteproc: Add bindings for C66x
- DSPs on TI K3 SoCs
-Message-ID: <20200713183029.GA502585@bogus>
-References: <20200612224914.7634-1-s-anna@ti.com>
- <20200612224914.7634-5-s-anna@ti.com>
+To:     Daniel =?iso-8859-1?Q?Gonz=E1lez?= Cabanelas <dgcbueu@gmail.com>
+Cc:     linux-pm@vger.kernel.org, sre@kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] dt-bindings: power: reset: add yaml bindings for
+ LinkStation power off
+Message-ID: <20200713183635.GA503416@bogus>
+References: <2774047.62mrzoXREp@tool>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200612224914.7634-5-s-anna@ti.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2774047.62mrzoXREp@tool>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 12 Jun 2020 17:49:12 -0500, Suman Anna wrote:
-> Some Texas Instruments K3 family of SoCs have one of more Digital Signal
-> Processor (DSP) subsystems that are comprised of either a TMS320C66x
-> CorePac and/or a next-generation TMS320C71x CorePac processor subsystem.
-> Add the device tree bindings document for the C66x DSP devices on these
-> SoCs. The added example illustrates the DT nodes for the first C66x DSP
-> device present on the K3 J721E family of SoCs.
+On Sat, Jun 13, 2020 at 12:26:56PM +0200, Daniel González Cabanelas wrote:
+> Add Linkstation poweroff bindings documentation. 
 > 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Daniel González Cabanelas <dgcbueu@gmail.com>
 > ---
-> v3:
->  - Refactored the common ti-sci properties "ti,sci", "ti,sci-dev-id" and
->    "ti,sci-proc-ids" into a separate binding ti,k3-sci-proc.yaml.
->  - Dropped the general description and maxItems against reg and reg-names
->  - Added items list under reg
->  - Removed the other binding references from the description for resets
->    and mboxes
->  - Revised the memory-region description and listed the mandatory items
->  - Updated example to drop reserved-memory nodes, unused node labels
-> v2: https://patchwork.kernel.org/patch/11561781/
+> Changes in v3:
+>   - "phy-handle,intn" property deleted. Now autodetection used.
+>   - Cosmetic changes
+> Changes in v2:
+>   - Changed the required properties and description to adjust to the new
+>     driver now enabling the WoL feature on the device.
 > 
->  .../bindings/remoteproc/ti,k3-dsp-rproc.yaml  | 139 ++++++++++++++++++
->  1 file changed, 139 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+>  .../power/reset/linkstation-poweroff.yaml     | 35 +++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/reset/linkstation-poweroff.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/power/reset/linkstation-poweroff.yaml b/Documentation/devicetree/bindings/power/reset/linkstation-poweroff.yaml
+> new file mode 100644
+> index 0000000000..8845333ca4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/reset/linkstation-poweroff.yaml
+> @@ -0,0 +1,35 @@
+> +# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+As I said before:
+
+GPL-2.0-only
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/power/reset/linkstation-poweroff.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Buffalo Linkstation poweroff Binding
+> +
+> +maintainers:
+> +  - Daniel González Cabanelas <dgcbueu@gmail.com>
+> +
+> +description: |
+> +  Some Buffalo LinkStations (ARM MVEBU boards) use an output pin at the ethernet
+> +  PHY (LED2/INTn) to inform the board if the power off operation must be performed
+> +  at restart time. This pin is ORed with the power switch and allows the WOL
+> +  function to be also used.
+> +
+> +  When the power-off handler is called, the ethernet PHY INTn ouptut is set to
+> +  LOW state. If the restart command is executed then the PHY INTn output is
+> +  forced to HIGH state.
+> +
+> +properties:
+> +  compatible:
+> +    const: linkstation,power-off
+> +
+> +required:
+> +  - compatible
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    poweroff {
+> +        compatible = "linkstation,power-off";
+> +    };
+
+This is not what I was suggesting in the last version. You don't need a 
+binding for this. Use the root node compatible string.
+
+Your driver initcall needs to check the root compatible and create a 
+platform device if it matches.
+
+Rob
