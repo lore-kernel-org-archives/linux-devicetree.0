@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C00CDC433EA
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC6FC4345F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0BD6207E8
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88FDB20791
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:09:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JbHX0YdT"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hhS/XVom"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729319AbgGMGJq (ORCPT
+        id S1729350AbgGMGJt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 02:09:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35360 "EHLO
+        Mon, 13 Jul 2020 02:09:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729315AbgGMGJp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 02:09:45 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08713C061794
-        for <devicetree@vger.kernel.org>; Sun, 12 Jul 2020 23:09:45 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id 1so5539211pfn.9
-        for <devicetree@vger.kernel.org>; Sun, 12 Jul 2020 23:09:45 -0700 (PDT)
+        with ESMTP id S1729334AbgGMGJs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 02:09:48 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1624EC08C5DB
+        for <devicetree@vger.kernel.org>; Sun, 12 Jul 2020 23:09:48 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id l63so5565167pge.12
+        for <devicetree@vger.kernel.org>; Sun, 12 Jul 2020 23:09:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=8vtvohJFj5DhHOwcKV42+FAe6eItys47TuzDpZd6Sp0=;
-        b=JbHX0YdTuTKPraV5j0+Ujs09z3xmVLzJBs5dtbV2ca2zlEIpw9/Xwx2cr8kRrzd5zL
-         WMhXzbgQmxy4ma6ZB4meDw7ruUpf5RClj2KFH+fzH/rThCe+0uM0s0+va0IQqpPBd0+n
-         FimYaQ9nAce5kSkWg50D4Onk1O0RXwlS7HOHA=
+        bh=il4DpcD/apPDl2cTCXc8/jfWcqySO11EC2m8fJv5U88=;
+        b=hhS/XVomC66uSGacbR44AJu4XX8RglVUnHbYRQFol+JOwVlyO4zmLPxjZJVS2QAdPG
+         f5e0TK74oOqb0gaxzYWjWU7yYwwdWiPjdfvbvDKizkxbdcHPi5xoVRDGXk7gTs4fly6H
+         ULSsSLkR05CHdOA7/iNUCTpSeSaZU/O2iRGl4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=8vtvohJFj5DhHOwcKV42+FAe6eItys47TuzDpZd6Sp0=;
-        b=OoBc2TgZDv7CWnt1Akwml7cetC4bSx6EhYWGrSsub231faVJ9TWkLMc6vIj3R6bLrH
-         2QA6Hj4x7Qyv6NA6lEClao51fKJwczlE3KsZD5nyFm6ul8gvyLf5MSON2dlnYugfDYaN
-         2+vUCJxT7F/sLnlekJPlphegIB10NgxLb8XqiT0mL8RFeZua68YnfFaq/srmxOweo5RG
-         VFIM+EM199t54VWVa3m+/CSG4SIjbAyUiUiAJGZiQP2Ujc5t8w+QdCJJ+cZ3HCXWA3qp
-         f3ABH1RMa0ZlAjm+qIfOGWvkw6IXr7qcNRWflmKWT1aG2W4LnR/0JndjL+4lyx2QoThq
-         DQFg==
-X-Gm-Message-State: AOAM531W3Y0+TyPAxNFvS70PnkSzt30d3WOcYVxev8/TjuHnQlbxS4Dc
-        jscRGrmiS6T9z5qi92qDYendzg==
-X-Google-Smtp-Source: ABdhPJx40QbqJZpmVOJjZEznYEBEY1KsemgvYMG41NmDSjiFnZj8wuKUzbGtLGNNdplayD3iq4xSFQ==
-X-Received: by 2002:a63:757:: with SMTP id 84mr68486625pgh.275.1594620584647;
-        Sun, 12 Jul 2020 23:09:44 -0700 (PDT)
+        bh=il4DpcD/apPDl2cTCXc8/jfWcqySO11EC2m8fJv5U88=;
+        b=dhPGyXR3S7SDQ8Z7T6urH2q704zJRzxPsm5uIikZp3GnZ6o7c9NaKiGXslq0FbaMfb
+         m/xg6J58d3vRUXinDYSd6IN1/2OD7F3FlFkVG+dNuoXya2LDp5dxuCCrC8d0eLEeveIr
+         t4Tw6b10zC2cMrgD9Wrrv0rMmOqnusrghBVQGD3EVFD/QaEdG5AjC1M5sr0HNWSFrcO8
+         BkB2usDmIVQKw1O+DRvICDs8NebjxXh9LoCpSogShKfXdyzHvVDVHM/0+MBqQKHSOEUP
+         s1KFn/i/QeOiQvrCon8Vcz2BN5oATk3I5HrgzoQG2yW/sb85TU5vpbPJ75EmdKqa+kvE
+         eOgQ==
+X-Gm-Message-State: AOAM532Nr3WMPAvP8zAdL4ganN+Nzoac8qYNj1bSd4qMgkyEDLe2Zcq/
+        50YenrRr0hBk4nNPqXSUmfy+qw==
+X-Google-Smtp-Source: ABdhPJw4BuEKfXc1u9J80dnCet+O2HF62eLmMroTE4/+eQtDNPiyJisvtCiuH9Xyms3zgoFcD2wLwA==
+X-Received: by 2002:a62:1610:: with SMTP id 16mr8378715pfw.113.1594620587680;
+        Sun, 12 Jul 2020 23:09:47 -0700 (PDT)
 Received: from acourbot.tok.corp.google.com ([2401:fa00:8f:203:eeb1:d7ff:fe57:b7e5])
-        by smtp.gmail.com with ESMTPSA id c134sm13134934pfc.115.2020.07.12.23.09.41
+        by smtp.gmail.com with ESMTPSA id c134sm13134934pfc.115.2020.07.12.23.09.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jul 2020 23:09:43 -0700 (PDT)
+        Sun, 12 Jul 2020 23:09:47 -0700 (PDT)
 From:   Alexandre Courbot <acourbot@chromium.org>
 To:     Tiffany Lin <tiffany.lin@mediatek.com>,
         Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
@@ -65,9 +65,9 @@ To:     Tiffany Lin <tiffany.lin@mediatek.com>,
 Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Alexandre Courbot <acourbot@chromium.org>
-Subject: [PATCH v3 11/16] media: mtk-vcodec: venc support MIN_OUTPUT_BUFFERS control
-Date:   Mon, 13 Jul 2020 15:08:37 +0900
-Message-Id: <20200713060842.471356-12-acourbot@chromium.org>
+Subject: [PATCH v3 12/16] media: mtk-vcodec: venc: set OUTPUT buffers field to V4L2_FIELD_NONE
+Date:   Mon, 13 Jul 2020 15:08:38 +0900
+Message-Id: <20200713060842.471356-13-acourbot@chromium.org>
 X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
 In-Reply-To: <20200713060842.471356-1-acourbot@chromium.org>
 References: <20200713060842.471356-1-acourbot@chromium.org>
@@ -78,28 +78,37 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This control is required by v4l2-compliance for encoders. A value of 1
-should be suitable for all scenarios.
+A default value of 0 means V4L2_FIELD_ANY, which is not correct.
+Reported by v4l2-compliance.
 
 Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
 Acked-by: Tiffany Lin <tiffany.lin@mediatek.com>
 ---
- drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
-index f2ba19c32400..f833aee4a06f 100644
+index f833aee4a06f..1a981d842c19 100644
 --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
 +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
-@@ -1206,6 +1206,8 @@ int mtk_vcodec_enc_ctrls_setup(struct mtk_vcodec_ctx *ctx)
+@@ -893,8 +893,17 @@ static void vb2ops_venc_stop_streaming(struct vb2_queue *q)
+ 	ctx->state = MTK_STATE_FREE;
+ }
  
- 	v4l2_ctrl_handler_init(handler, MTK_MAX_CTRLS_HINT);
- 
-+	v4l2_ctrl_new_std(handler, ops, V4L2_CID_MIN_BUFFERS_FOR_OUTPUT,
-+			  1, 1, 1, 1);
- 	v4l2_ctrl_new_std(handler, ops, V4L2_CID_MPEG_VIDEO_BITRATE,
- 			  ctx->dev->venc_pdata->min_bitrate,
- 			  ctx->dev->venc_pdata->max_bitrate, 1, 4000000);
++static int vb2ops_venc_buf_out_validate(struct vb2_buffer *vb)
++{
++	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
++
++	vbuf->field = V4L2_FIELD_NONE;
++	return 0;
++}
++
+ static const struct vb2_ops mtk_venc_vb2_ops = {
+ 	.queue_setup		= vb2ops_venc_queue_setup,
++	.buf_out_validate	= vb2ops_venc_buf_out_validate,
+ 	.buf_prepare		= vb2ops_venc_buf_prepare,
+ 	.buf_queue		= vb2ops_venc_buf_queue,
+ 	.wait_prepare		= vb2_ops_wait_prepare,
 -- 
 2.27.0.383.g050319c2ae-goog
 
