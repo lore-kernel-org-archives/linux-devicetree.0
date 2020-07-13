@@ -2,162 +2,135 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3A7C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E9FC433E4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56A60207BC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:17:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594621063;
-	bh=XlMSuqTpDlP5SWU0u/vnLYHw1UcIUbZbzLp5CEBxgos=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1h5Gisg4hzijBhr9ai0odc7xtEimUB5r1lXMeeIGAn3h/7LeCLGI81H/Bc3xRfDRP
-	 J/Qp1V2kilMwoTug0UDgm19nkoly68PQtXSO7z7l4/dJlocN8f4sYtwD1wr/+gfUJa
-	 tXe2GKJ5BFJgXSGKQy4psI9Ja+t/MC+2Vpge5t+Y=
+	by mail.kernel.org (Postfix) with ESMTP id EE7532065F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:18:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WS/g6GmX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbgGMGRn (ORCPT
+        id S1729053AbgGMGSl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 02:17:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47338 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726571AbgGMGRm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 02:17:42 -0400
-Received: from localhost (unknown [122.182.251.219])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16AD92065F;
-        Mon, 13 Jul 2020 06:17:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594621062;
-        bh=XlMSuqTpDlP5SWU0u/vnLYHw1UcIUbZbzLp5CEBxgos=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aNl3g7zAwv+h/dlFGVcJySB7qXgYhqSUXJL0PPfLcAGCk3tLLFl2RrRafkjXCinex
-         QWnlowxFpGmoM2BSqp7SB5VYvrvyQSy5jbs96BqZRi0TjzeaYVt/IO+21BwLCy8xUg
-         mzPQZ8Cj5k1e2eVM/4sghR236HDiiMZa9F51B2i0=
-Date:   Mon, 13 Jul 2020 11:47:37 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Alim Akhtar <alim.akhtar@samsung.com>
-Cc:     robh+dt@kernel.org, krzk@kernel.org, kwmad.kim@samsung.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        kishon@ti.com
-Subject: Re: [PATCH v12 2/2] phy: samsung-ufs: add UFS PHY driver for samsung
- SoC
-Message-ID: <20200713061737.GD34333@vkoul-mobl>
-References: <20200703171135.77389-1-alim.akhtar@samsung.com>
- <CGME20200703173144epcas5p1daa9f5c594e7f299638cc75b7425b7c8@epcas5p1.samsung.com>
- <20200703171135.77389-2-alim.akhtar@samsung.com>
+        Mon, 13 Jul 2020 02:18:41 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:39218 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725804AbgGMGSl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 02:18:41 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06D6IP73016334;
+        Mon, 13 Jul 2020 01:18:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594621105;
+        bh=D5Sliar+y7yEU28bb90V7Ozp3UAZgIVTWqJbKqXmdvQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=WS/g6GmXZkq+VG20d2LTXIUEqSWFliOQultgiQHpWsRPuBu0fpV9Ff5eFJzaM5FKe
+         D+KbZzVG7r0bLrs4hv0k7NqtKvED5W4AQSf5OX7UkPmyPMP+k88wYgcB175k8kT9JF
+         TI+C1v/M7NhNTNjgtBLTpfVJoprgVSntWPcamL4Q=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06D6IPgP103912;
+        Mon, 13 Jul 2020 01:18:25 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 13
+ Jul 2020 01:18:25 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 13 Jul 2020 01:18:25 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06D6ILWb050033;
+        Mon, 13 Jul 2020 01:18:22 -0500
+Subject: Re: [PATCH v6 08/14] PCI: cadence: Fix updating Vendor ID and
+ Subsystem Vendor ID register
+To:     Rob Herring <robh@kernel.org>
+CC:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200708093018.28474-1-kishon@ti.com>
+ <20200708093018.28474-9-kishon@ti.com> <20200709214555.GA939109@bogus>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <9e9dd21b-7626-ef06-4b63-f801a297082e@ti.com>
+Date:   Mon, 13 Jul 2020 11:48:21 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200703171135.77389-2-alim.akhtar@samsung.com>
+In-Reply-To: <20200709214555.GA939109@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 03-07-20, 22:41, Alim Akhtar wrote:
+Hi Rob,
 
-> +static const struct samsung_ufs_phy_cfg exynos7_post_init_cfg[] = {
-> +	END_UFS_PHY_CFG
-> +};
+On 7/10/2020 3:15 AM, Rob Herring wrote:
+> On Wed, Jul 08, 2020 at 03:00:12PM +0530, Kishon Vijay Abraham I wrote:
+>> Commit 1b79c5284439 ("PCI: cadence: Add host driver for Cadence PCIe
+>> controller") in order to update Vendor ID, directly wrote to
+>> PCI_VENDOR_ID register. However PCI_VENDOR_ID in root port configuration
+>> space is read-only register and writing to it will have no effect.
+>> Use local management register to configure Vendor ID and Subsystem Vendor
+>> ID.
+>>
+>> Fixes: 1b79c5284439 ("PCI: cadence: Add host driver for Cadence PCIe controller")
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  drivers/pci/controller/cadence/pcie-cadence-host.c | 9 +++++++--
+>>  1 file changed, 7 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> index 10127ea71b83..8935f7a37e5a 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> @@ -82,6 +82,7 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+>>  {
+>>  	struct cdns_pcie *pcie = &rc->pcie;
+>>  	u32 value, ctrl;
+>> +	u32 id;
+>>  
+>>  	/*
+>>  	 * Set the root complex BAR configuration register:
+>> @@ -101,8 +102,12 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+>>  	cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
+>>  
+>>  	/* Set root port configuration space */
+>> -	if (rc->vendor_id != 0xffff)
+>> -		cdns_pcie_rp_writew(pcie, PCI_VENDOR_ID, rc->vendor_id);
+> 
+> If this is read-only, then...
+> 
+>> +	if (rc->vendor_id != 0xffff) {
+>> +		id = CDNS_PCIE_LM_ID_VENDOR(rc->vendor_id) |
+>> +			CDNS_PCIE_LM_ID_SUBSYS(rc->vendor_id);
+>> +		cdns_pcie_writel(pcie, CDNS_PCIE_LM_ID, id);
+>> +	}
+>> +
+>>  	if (rc->device_id != 0xffff)
+>>  		cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, rc->device_id);
+> 
+> ...isn't this read-only too?
 
-This is dummy, why not add a check to make config optional?
+Apparently no. There is local management register only for vendor ID and
+subsystem vendorID. It could be because this same IP is used EP mode and in
+case of multi-function device, different deviceID could be required for each
+independent function whereas vendor ID should be same, they could have given a
+single local management register for vendorID and not for deviceID.
 
-> +static int samsung_ufs_phy_symbol_clk_init(struct samsung_ufs_phy *phy)
-> +{
-> +	int ret = 0;
-
-superfluous init, am sure I flagged it before as well
-
-> +
-> +	phy->tx0_symbol_clk = devm_clk_get(phy->dev, "tx0_symbol_clk");
-> +	if (IS_ERR(phy->tx0_symbol_clk)) {
-> +		dev_err(phy->dev, "failed to get tx0_symbol_clk clock\n");
-> +		goto out;
-> +	}
-> +
-> +	phy->rx0_symbol_clk = devm_clk_get(phy->dev, "rx0_symbol_clk");
-> +	if (IS_ERR(phy->rx0_symbol_clk)) {
-> +		dev_err(phy->dev, "failed to get rx0_symbol_clk clock\n");
-> +		goto out;
-> +	}
-> +
-> +	phy->rx1_symbol_clk = devm_clk_get(phy->dev, "rx1_symbol_clk");
-> +	if (IS_ERR(phy->rx0_symbol_clk)) {
-> +		dev_err(phy->dev, "failed to get rx1_symbol_clk clock\n");
-> +		goto out;
-> +	}
-> +
-> +	ret = clk_prepare_enable(phy->tx0_symbol_clk);
-> +	if (ret) {
-> +		dev_err(phy->dev, "%s: tx0_symbol_clk enable failed %d\n", __func__, ret);
-> +		goto out;
-> +	}
-> +
-> +	ret = clk_prepare_enable(phy->rx0_symbol_clk);
-> +	if (ret) {
-> +		dev_err(phy->dev, "%s: rx0_symbol_clk enable failed %d\n", __func__, ret);
-> +		clk_disable_unprepare(phy->tx0_symbol_clk);
-> +		goto out;
-> +	}
-> +
-> +	ret = clk_prepare_enable(phy->rx1_symbol_clk);
-> +	if (ret) {
-> +		dev_err(phy->dev, "%s: rx1_symbol_clk enable failed %d\n", __func__, ret);
-> +		clk_disable_unprepare(phy->tx0_symbol_clk);
-> +		clk_disable_unprepare(phy->rx0_symbol_clk);
-
-maybe it will look better if we add common rollback and jump to proper
-labels
-
-> +static int samsung_ufs_phy_clks_init(struct samsung_ufs_phy *phy)
-> +{
-> +	int ret;
-> +
-> +	phy->ref_clk = devm_clk_get(phy->dev, "ref_clk");
-> +	if (IS_ERR(phy->ref_clk))
-> +		dev_err(phy->dev, "failed to get ref_clk clock\n");
-> +
-> +	ret = clk_prepare_enable(phy->ref_clk);
-> +	if (ret) {
-> +		dev_err(phy->dev, "%s: ref_clk enable failed %d\n", __func__, ret);
-> +		return ret;
-> +	}
-> +
-> +	dev_info(phy->dev, "UFS MPHY ref_clk_rate = %ld\n", clk_get_rate(phy->ref_clk));
-
-debug pls
-
-> +static int samsung_ufs_phy_init(struct phy *phy)
-> +{
-> +	struct samsung_ufs_phy *_phy = get_samsung_ufs_phy(phy);
-
-ss_phy perhaps?
-
-> +	int ret;
-> +
-> +	_phy->lane_cnt = phy->attrs.bus_width;
-> +	_phy->ufs_phy_state = CFG_PRE_INIT;
-> +
-> +	if (_phy->drvdata->has_symbol_clk) {
-> +		ret = samsung_ufs_phy_symbol_clk_init(_phy);
-> +		if (ret)
-> +			dev_err(_phy->dev, "failed to set ufs phy symbol clocks\n");
-> +	}
-> +
-> +	ret = samsung_ufs_phy_clks_init(_phy);
-> +	if (ret)
-> +		dev_err(_phy->dev, "failed to set ufs phy  clocks\n");
-> +
-> +	samsung_ufs_phy_calibrate(phy);
-> +
-> +	return 0;
-
-not return samsung_ufs_phy_calibrate() ?
--- 
-~Vinod
+Thanks
+Kishon
