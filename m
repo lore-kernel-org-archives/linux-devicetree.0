@@ -2,286 +2,374 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7FBC43445
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D46C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26B23207FB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:43:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="eSo2x87Y"
+	by mail.kernel.org (Postfix) with ESMTP id 4945020773
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:44:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594655094;
+	bh=PuVHpJbGyTKPTRipnTqfIdH1jqlvLpbt9Fm9AkKe7D4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FMTmNHDxoGVRRYUQUpdcoeynEaYB6vXJRs4Hr9hDvo6XhIpM0YpgR61jzSXlulUYX
+	 tvIBuzoELFC0yaA4ZdYkcwfi8C2CYpPA4lMZtHutq7c19opP8DkNN2spgr/swWUJYu
+	 l81g7PFQdoidbbtxmIsqD3cEZD+rHHLBbke6RHKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730057AbgGMPnX (ORCPT
+        id S1729703AbgGMPox (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:43:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40970 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730015AbgGMPmw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 11:42:52 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5276C061755
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 08:42:52 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id c139so12584172qkg.12
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 08:42:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0/Om6KX5WpVodwKlmSsBgTMZUVH39nABMAZW28824HU=;
-        b=eSo2x87Y1epp53LEJ7RdCRLoB/S0E7dpae2sSzReQ3SKvPtOMgUP2jsO7NKnQebEUU
-         lvRek+vwBTyMP+hmCDA+6KHwv1+xQoxDmVkIk6+h3Oal0DIyA0mmfy53/Z+q+NTE9Fzs
-         CuztoLtIp3KXDDPo84W7jWqCUJWKiim3cMzxYkyTsCUVnxJrAYlCMK737+imofzhgrwV
-         H2v33eWHT1lm2gPm/+O3WzZhDpjxnit0fMG5JJtBkGYSsiZ/6n9iorWkoNIn2aM+DiZ0
-         G4DypqX6EhKDPFKL6RLN/ueR8HFeapLFFikGQPtDvojwphKhgTnA8wKrljmBBLCl3cMx
-         yiXQ==
+        Mon, 13 Jul 2020 11:44:53 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36314 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729644AbgGMPox (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 11:44:53 -0400
+Received: by mail-io1-f67.google.com with SMTP id y2so13967639ioy.3;
+        Mon, 13 Jul 2020 08:44:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0/Om6KX5WpVodwKlmSsBgTMZUVH39nABMAZW28824HU=;
-        b=HI7T9+fUYlp0znQ3uAhVrzRSFTm3VYEQVADM9k+u3PFcu3ywhj4VHVKBgdRpB6X7Ii
-         akUtxcbTX24Hn+MrA0VVUwGGYoB8Yg8Lu58QadEvVhly/fL9mSC11pdVzdv23arbJYwT
-         5Vn0FZtoX8s47FTeDSHN0E+xaSIUq/5zqQ7ZeIbnnsMGSIqY+ikpXfIhlQDG1GNAcXym
-         7iGkfSDxIURHClRp2ZQrs7RPDz41wQM7NVG5QK/Qbm6Un7gzB5TS4flFrA7rxY8pNf8T
-         vewsWjZATjyXtTOUhofcJOAXZt7kNGwhywZ1Xjw2NkARFUOIy9SucE7j/h3WAhdF+BBM
-         uRdw==
-X-Gm-Message-State: AOAM530bZ41UPaI9MbLNmAtdGY5DaEe9mJQ1iyI3lc0vcQyArlPgY21t
-        3Qs2EHk9gxQWWqIiqlSenLIa7Q==
-X-Google-Smtp-Source: ABdhPJzwnEHIsy08nyUHYlxsxaXmMySKLQo3sZve5g3qQlPwjyG7BMny1Oa27guDoBfPV4pyxGvGMQ==
-X-Received: by 2002:a37:9bc9:: with SMTP id d192mr142932qke.409.1594654971906;
-        Mon, 13 Jul 2020 08:42:51 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id l1sm19806371qtk.18.2020.07.13.08.42.51
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=YERaL+KHCGMJb0BAoF+RGnX8A9CCPeD7GkkxlhmLQ48=;
+        b=QBDrw1nkQHelw3/cLP3ynEPqtCzZBDvSKRvVN7GieyW/uqOwB7wY5X2kMOwnlY2dj2
+         ZtkVEeyoZSeH0rOYPjGyIIK9vDT6izmbO+8yMo6/04jH9ez21uimffe91tDk904eLEWm
+         z1Gr5/jF+go8e53Fwji1xpYU0oDi2dm1lViTFJNmabsnOXcEMMN7jfioawU/4ObSFL/1
+         NAy13bY5vwhQ2LcMeUjybiSEl1qmXSICHdjZo5+d6xgFK4GRCTwmgnJVcKQ3/eOmUDUV
+         ZsAnP/1BOfJ1DIx3RBoIkyzZDxs2H+FooPN/0jJspg8MH5tXK+NM1qdBsP+fpz8Fe9LZ
+         R1cw==
+X-Gm-Message-State: AOAM5331d+Pqjt1vWwnU2djCZT4JrhkT52mo0fbiA8+zRjdhlwaF6HyM
+        bpRRtEy/xmKmrQEWFEyuqA==
+X-Google-Smtp-Source: ABdhPJz7mH6zxg+zhBdKAmEOYd5Bdwx0f3TSPuRCowLBbfLYcV1UtN5ZzzZ4LH9FU1RqFm56rZ03JA==
+X-Received: by 2002:a05:6602:21c7:: with SMTP id c7mr290398ioc.1.1594655091561;
+        Mon, 13 Jul 2020 08:44:51 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id d9sm974698iod.55.2020.07.13.08.44.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 08:42:51 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Odelu Kukatla <okukatla@codeaurora.org>,
-        linux-pm@vger.kernel.org (open list:INTERCONNECT API),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 2/7] dt-bindings: interconnect: Add Qualcomm SM8150 DT bindings
-Date:   Mon, 13 Jul 2020 11:41:11 -0400
-Message-Id: <20200713154121.22094-3-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200713154121.22094-1-jonathan@marek.ca>
-References: <20200713154121.22094-1-jonathan@marek.ca>
+        Mon, 13 Jul 2020 08:44:50 -0700 (PDT)
+Received: (nullmailer pid 265817 invoked by uid 1000);
+        Mon, 13 Jul 2020 15:44:49 -0000
+Date:   Mon, 13 Jul 2020 09:44:49 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH 2/3] dt-bindings: adv7604: Convert bindings to json-schema
+Message-ID: <20200713154449.GA256154@bogus>
+References: <20200713111844.528313-1-niklas.soderlund+renesas@ragnatech.se>
+ <20200713111844.528313-3-niklas.soderlund+renesas@ragnatech.se>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200713111844.528313-3-niklas.soderlund+renesas@ragnatech.se>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Qualcomm SM8150 platform has several bus fabrics that could be
-controlled and tuned dynamically according to the bandwidth demand.
+On Mon, Jul 13, 2020 at 01:18:43PM +0200, Niklas Söderlund wrote:
+> Convert ADV7604 video decoder documentation to json-schema.
+> 
+> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> ---
+>  .../devicetree/bindings/media/i2c/adv7604.txt |  87 ---------
+>  .../bindings/media/i2c/adv7604.yaml           | 171 ++++++++++++++++++
+>  2 files changed, 171 insertions(+), 87 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/media/i2c/adv7604.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/adv7604.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+> deleted file mode 100644
+> index 8c7cdc7cd7aaebc8..0000000000000000
+> --- a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+> +++ /dev/null
+> @@ -1,87 +0,0 @@
+> -* Analog Devices ADV7604/11/12 video decoder with HDMI receiver
+> -
+> -The ADV7604 and ADV7611/12 are multiformat video decoders with an integrated
+> -HDMI receiver. The ADV7604 has four multiplexed HDMI inputs and one analog
+> -input, and the ADV7611 has one HDMI input and no analog input. The 7612 is
+> -similar to the 7611 but has 2 HDMI inputs.
+> -
+> -These device tree bindings support the ADV7611/12 only at the moment.
+> -
+> -Required Properties:
+> -
+> -  - compatible: Must contain one of the following
+> -    - "adi,adv7611" for the ADV7611
+> -    - "adi,adv7612" for the ADV7612
+> -
+> -  - reg: I2C slave addresses
+> -    The ADV76xx has up to thirteen 256-byte maps that can be accessed via the
+> -    main I2C ports. Each map has it own I2C address and acts as a standard
+> -    slave device on the I2C bus. The main address is mandatory, others are
+> -    optional and revert to defaults if not specified.
+> -
+> -The device node must contain one 'port' child node per device input and output
+> -port, in accordance with the video interface bindings defined in
+> -Documentation/devicetree/bindings/media/video-interfaces.txt. The port nodes
+> -are numbered as follows.
+> -
+> -  Port			ADV7611    ADV7612
+> -------------------------------------------------------------
+> -  HDMI			0             0, 1
+> -  Digital output	1                2
+> -
+> -The digital output port node must contain at least one endpoint.
+> -
+> -Optional Properties:
+> -
+> -  - hpd-gpios: References to the GPIOs that control the HDMI hot-plug
+> -    detection pins, one per HDMI input. The active flag indicates the GPIO
+> -    level that enables hot-plug detection.
+> -  - reset-gpios: Reference to the GPIO connected to the device's reset pin.
+> -  - default-input: Select which input is selected after reset.
+> -  - reg-names : Names of maps with programmable addresses.
+> -		It can contain any map needing a non-default address.
+> -		Possible maps names are :
+> -		  "main", "avlink", "cec", "infoframe", "esdp", "dpp", "afe",
+> -		  "rep", "edid", "hdmi", "test", "cp", "vdp"
+> -
+> -Optional Endpoint Properties:
+> -
+> -  The following three properties are defined in video-interfaces.txt and are
+> -  valid for source endpoints only.
+> -
+> -  - hsync-active: Horizontal synchronization polarity. Defaults to active low.
+> -  - vsync-active: Vertical synchronization polarity. Defaults to active low.
+> -  - pclk-sample: Pixel clock polarity. Defaults to output on the falling edge.
+> -
+> -  If none of hsync-active, vsync-active and pclk-sample is specified the
+> -  endpoint will use embedded BT.656 synchronization.
+> -
+> -Example:
+> -
+> -	hdmi_receiver@4c {
+> -		compatible = "adi,adv7611";
+> -		/*
+> -		 * The edid page will be accessible @ 0x66 on the I2C bus. All
+> -		 * other maps will retain their default addresses.
+> -		 */
+> -		reg = <0x4c>, <0x66>;
+> -		reg-names = "main", "edid";
+> -
+> -		reset-gpios = <&ioexp 0 GPIO_ACTIVE_LOW>;
+> -		hpd-gpios = <&ioexp 2 GPIO_ACTIVE_HIGH>;
+> -
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+> -
+> -		default-input = <0>;
+> -
+> -		port@0 {
+> -			reg = <0>;
+> -		};
+> -		port@1 {
+> -			reg = <1>;
+> -			hdmi_in: endpoint {
+> -				remote-endpoint = <&ccdc_in>;
+> -			};
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.yaml b/Documentation/devicetree/bindings/media/i2c/adv7604.yaml
+> new file mode 100644
+> index 0000000000000000..d354fd8e0cc88d93
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.yaml
+> @@ -0,0 +1,171 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/i2c/adv7604.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices ADV7604/11/12 video decoder with HDMI receiver
+> +
+> +maintainers:
+> +  - Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> +
+> +description:
+> +  The ADV7604 and ADV7611/12 are multiformat video decoders with an integrated
+> +  HDMI receiver. The ADV7604 has four multiplexed HDMI inputs and one analog
+> +  input, and the ADV7611 has one HDMI input and no analog input. The 7612 is
+> +  similar to the 7611 but has 2 HDMI inputs.
+> +
+> +  These device tree bindings support the ADV7611/12 only at the moment.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +        - adi,adv7611
+> +        - adi,adv7612
+> +
+> +  reg:
+> +    minItems: 1
+> +    maxItems: 13
+> +
+> +  reg-names:
+> +    items:
+> +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
+> +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
+> +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
+> +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
+> +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
+> +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
+> +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
+> +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
+> +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
+> +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
+> +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
+> +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
+> +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
----
- .../bindings/interconnect/qcom,rpmh.yaml      |  11 ++
- .../dt-bindings/interconnect/qcom,sm8150.h    | 163 ++++++++++++++++++
- 2 files changed, 174 insertions(+)
- create mode 100644 include/dt-bindings/interconnect/qcom,sm8150.h
+This can be simplified to:
 
-diff --git a/Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml b/Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml
-index 9878139a73b8..9dfd1d75fdd3 100644
---- a/Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml
-+++ b/Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml
-@@ -45,6 +45,17 @@ properties:
-       - qcom,sdm845-mem-noc
-       - qcom,sdm845-mmss-noc
-       - qcom,sdm845-system-noc
-+      - qcom,sm8150-aggre1-noc
-+      - qcom,sm8150-aggre2-noc
-+      - qcom,sm8150-camnoc-noc
-+      - qcom,sm8150-compute-noc
-+      - qcom,sm8150-config-noc
-+      - qcom,sm8150-dc-noc
-+      - qcom,sm8150-gem-noc
-+      - qcom,sm8150-ipa-virt
-+      - qcom,sm8150-mc-virt
-+      - qcom,sm8150-mmss-noc
-+      - qcom,sm8150-system-noc
- 
-   '#interconnect-cells':
-     const: 1
-diff --git a/include/dt-bindings/interconnect/qcom,sm8150.h b/include/dt-bindings/interconnect/qcom,sm8150.h
-new file mode 100644
-index 000000000000..ab42f04d93a2
---- /dev/null
-+++ b/include/dt-bindings/interconnect/qcom,sm8150.h
-@@ -0,0 +1,163 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Qualcomm SM8150 interconnect IDs
-+ *
-+ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+ */
-+
-+#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_SM8150_H
-+#define __DT_BINDINGS_INTERCONNECT_QCOM_SM8150_H
-+
-+#define MASTER_A1NOC_CFG		0
-+#define MASTER_QUP_0			1
-+#define MASTER_EMAC			2
-+#define MASTER_UFS_MEM			3
-+#define MASTER_USB3			4
-+#define MASTER_USB3_1			5
-+#define A1NOC_SNOC_SLV			6
-+#define SLAVE_SERVICE_A1NOC		7
-+
-+#define MASTER_A2NOC_CFG		0
-+#define MASTER_QDSS_BAM			1
-+#define MASTER_QSPI			2
-+#define MASTER_QUP_1			3
-+#define MASTER_QUP_2			4
-+#define MASTER_SENSORS_AHB		5
-+#define MASTER_TSIF			6
-+#define MASTER_CNOC_A2NOC		7
-+#define MASTER_CRYPTO_CORE_0		8
-+#define MASTER_IPA			9
-+#define MASTER_PCIE			10
-+#define MASTER_PCIE_1			11
-+#define MASTER_QDSS_ETR			12
-+#define MASTER_SDCC_2			13
-+#define MASTER_SDCC_4			14
-+#define A2NOC_SNOC_SLV			15
-+#define SLAVE_ANOC_PCIE_GEM_NOC		16
-+#define SLAVE_SERVICE_A2NOC		17
-+
-+#define MASTER_CAMNOC_HF0_UNCOMP	0
-+#define MASTER_CAMNOC_HF1_UNCOMP	1
-+#define MASTER_CAMNOC_SF_UNCOMP		2
-+#define SLAVE_CAMNOC_UNCOMP		3
-+
-+#define MASTER_NPU			0
-+#define SLAVE_CDSP_MEM_NOC		1
-+
-+#define MASTER_SPDM			0
-+#define SNOC_CNOC_MAS			1
-+#define MASTER_QDSS_DAP			2
-+#define SLAVE_A1NOC_CFG			3
-+#define SLAVE_A2NOC_CFG			4
-+#define SLAVE_AHB2PHY_SOUTH		5
-+#define SLAVE_AOP			6
-+#define SLAVE_AOSS			7
-+#define SLAVE_CAMERA_CFG		8
-+#define SLAVE_CLK_CTL			9
-+#define SLAVE_CDSP_CFG			10
-+#define SLAVE_RBCPR_CX_CFG		11
-+#define SLAVE_RBCPR_MMCX_CFG		12
-+#define SLAVE_RBCPR_MX_CFG		13
-+#define SLAVE_CRYPTO_0_CFG		14
-+#define SLAVE_CNOC_DDRSS		15
-+#define SLAVE_DISPLAY_CFG		16
-+#define SLAVE_EMAC_CFG			17
-+#define SLAVE_GLM			18
-+#define SLAVE_GRAPHICS_3D_CFG		19
-+#define SLAVE_IMEM_CFG			20
-+#define SLAVE_IPA_CFG			21
-+#define SLAVE_CNOC_MNOC_CFG		22
-+#define SLAVE_NPU_CFG			23
-+#define SLAVE_PCIE_0_CFG		24
-+#define SLAVE_PCIE_1_CFG		25
-+#define SLAVE_NORTH_PHY_CFG		26
-+#define SLAVE_PIMEM_CFG			27
-+#define SLAVE_PRNG			28
-+#define SLAVE_QDSS_CFG			29
-+#define SLAVE_QSPI			30
-+#define SLAVE_QUP_2			31
-+#define SLAVE_QUP_1			32
-+#define SLAVE_QUP_0			33
-+#define SLAVE_SDCC_2			34
-+#define SLAVE_SDCC_4			35
-+#define SLAVE_SNOC_CFG			36
-+#define SLAVE_SPDM_WRAPPER		37
-+#define SLAVE_SPSS_CFG			38
-+#define SLAVE_SSC_CFG			39
-+#define SLAVE_TCSR			40
-+#define SLAVE_TLMM_EAST			41
-+#define SLAVE_TLMM_NORTH		42
-+#define SLAVE_TLMM_SOUTH		43
-+#define SLAVE_TLMM_WEST			44
-+#define SLAVE_TSIF			45
-+#define SLAVE_UFS_CARD_CFG		46
-+#define SLAVE_UFS_MEM_CFG		47
-+#define SLAVE_USB3			48
-+#define SLAVE_USB3_1			49
-+#define SLAVE_VENUS_CFG			50
-+#define SLAVE_VSENSE_CTRL_CFG		51
-+#define SLAVE_CNOC_A2NOC		52
-+#define SLAVE_SERVICE_CNOC		53
-+
-+#define MASTER_CNOC_DC_NOC		0
-+#define SLAVE_LLCC_CFG			1
-+#define SLAVE_GEM_NOC_CFG		2
-+
-+#define MASTER_AMPSS_M0			0
-+#define MASTER_GPU_TCU			1
-+#define MASTER_SYS_TCU			2
-+#define MASTER_GEM_NOC_CFG		3
-+#define MASTER_COMPUTE_NOC		4
-+#define MASTER_GRAPHICS_3D		5
-+#define MASTER_MNOC_HF_MEM_NOC		6
-+#define MASTER_MNOC_SF_MEM_NOC		7
-+#define MASTER_GEM_NOC_PCIE_SNOC	8
-+#define MASTER_SNOC_GC_MEM_NOC		9
-+#define MASTER_SNOC_SF_MEM_NOC		10
-+#define MASTER_ECC			11
-+#define SLAVE_MSS_PROC_MS_MPU_CFG	12
-+#define SLAVE_ECC			13
-+#define SLAVE_GEM_NOC_SNOC		14
-+#define SLAVE_LLCC			15
-+#define SLAVE_SERVICE_GEM_NOC		16
-+
-+#define MASTER_IPA_CORE			0
-+#define SLAVE_IPA_CORE			1
-+
-+#define MASTER_LLCC			0
-+#define MASTER_ALC			1
-+#define SLAVE_EBI_CH0			2
-+
-+#define MASTER_CNOC_MNOC_CFG		0
-+#define MASTER_CAMNOC_HF0		1
-+#define MASTER_CAMNOC_HF1		2
-+#define MASTER_CAMNOC_SF		3
-+#define MASTER_MDP_PORT0		4
-+#define MASTER_MDP_PORT1		5
-+#define MASTER_ROTATOR			6
-+#define MASTER_VIDEO_P0			7
-+#define MASTER_VIDEO_P1			8
-+#define MASTER_VIDEO_PROC		9
-+#define SLAVE_MNOC_SF_MEM_NOC		10
-+#define SLAVE_MNOC_HF_MEM_NOC		11
-+#define SLAVE_SERVICE_MNOC		12
-+
-+#define MASTER_SNOC_CFG			0
-+#define A1NOC_SNOC_MAS			1
-+#define A2NOC_SNOC_MAS			2
-+#define MASTER_GEM_NOC_SNOC		3
-+#define MASTER_PIMEM			4
-+#define MASTER_GIC			5
-+#define SLAVE_APPSS			6
-+#define SNOC_CNOC_SLV			7
-+#define SLAVE_SNOC_GEM_NOC_GC		8
-+#define SLAVE_SNOC_GEM_NOC_SF		9
-+#define SLAVE_OCIMEM			10
-+#define SLAVE_PIMEM			11
-+#define SLAVE_SERVICE_SNOC		12
-+#define SLAVE_PCIE_0			13
-+#define SLAVE_PCIE_1			14
-+#define SLAVE_QDSS_STM			15
-+#define SLAVE_TCU			16
-+
-+#endif
--- 
-2.26.1
+items:
+  enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
 
+(Make items a schema applying to all items, rather than a list)
+
+Though we may want to enforce 'main' is first with:
+
+minItems: 1
+maxItems: 13
+items:
+  - const: main
+
+These 2 can be combined under an 'allOf'.
+
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +
+> +  hpd-gpios:
+> +    minItems: 1
+> +    description:
+> +      References to the GPIOs that control the HDMI hot-plug detection pins,
+> +      one per HDMI input. The active flag indicates the GPIO level that
+> +      enables hot-plug detection.
+> +
+> +  default-input:
+> +    maxItems: 1
+> +    description:
+> +      Select which input is selected after reset.
+> +
+> +  ports:
+> +    type: object
+> +    description:
+> +      A node containing input and output port nodes with endpoint definitions
+> +      as documented in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: adi,adv7611
+> +    then:
+> +      properties:
+> +        ports:
+> +          properties:
+> +            '#address-cells':
+> +              const: 1
+> +            '#size-cells':
+> +              const: 0
+> +            port@0:
+> +              type: object
+> +              description: Input port
+> +            port@1:
+> +              type: object
+> +              description: Output port
+> +
+> +          required:
+> +            - port@1
+> +
+> +          additionalProperties: false
+> +
+> +      required:
+> +        - ports
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: adi,adv7612
+> +    then:
+> +      properties:
+> +        ports:
+> +          properties:
+> +            '#address-cells':
+> +              const: 1
+> +            '#size-cells':
+> +              const: 0
+> +            port@2:
+> +              type: object
+> +              description: Output port
+> +
+> +          patternProperties:
+> +            "^port@[0-1]$":
+> +              type: object
+> +              description: Input port
+> +
+> +          required:
+> +            - port@2
+> +
+> +          additionalProperties: false
+> +
+> +      required:
+> +        - ports
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    i2c {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            hdmi_receiver@4c {
+> +                    compatible = "adi,adv7611";
+> +                    /*
+> +                     * The edid page will be accessible @ 0x66 on the I2C bus. All
+> +                     * other maps will retain their default addresses.
+> +                     */
+> +                    reg = <0x4c>, <0x66>;
+> +                    reg-names = "main", "edid";
+> +
+> +                    reset-gpios = <&ioexp 0 GPIO_ACTIVE_LOW>;
+> +                    hpd-gpios = <&ioexp 2 GPIO_ACTIVE_HIGH>;
+> +                    default-input = <0>;
+> +
+> +                    ports {
+> +                            #address-cells = <1>;
+> +                            #size-cells = <0>;
+> +
+> +                            port@0 {
+> +                                    reg = <0>;
+> +                            };
+> +
+> +                            port@1 {
+> +                                    reg = <1>;
+> +                                    hdmi_in: endpoint {
+> +                                            remote-endpoint = <&ccdc_in>;
+> +                                    };
+> +                            };
+> +                    };
+> +
+> +
+> +            };
+> +    };
+> -- 
+> 2.27.0
+> 
