@@ -2,127 +2,133 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82235C433E7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF28C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EC4C20773
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D93220773
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:38:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A+JNrFxp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729811AbgGMPhC (ORCPT
+        id S1729806AbgGMPif (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:37:02 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:35673 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729806AbgGMPg6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 11:36:58 -0400
-X-Originating-IP: 91.175.115.186
-Received: from localhost (91-175-115-186.subs.proxad.net [91.175.115.186])
-        (Authenticated sender: gregory.clement@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 7B534C0002;
-        Mon, 13 Jul 2020 15:36:54 +0000 (UTC)
-From:   Gregory CLEMENT <gregory.clement@bootlin.com>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] phy: armada-38x: fix NETA lockup when repeatedly switching speeds
-In-Reply-To: <20200713061846.GE34333@vkoul-mobl>
-References: <20200630160452.GD1551@shell.armlinux.org.uk> <E1jqIlO-0007rX-Tv@rmk-PC.armlinux.org.uk> <20200701065727.GY2599@vkoul-mobl> <20200710151921.GJ1551@shell.armlinux.org.uk> <20200713061846.GE34333@vkoul-mobl>
-Date:   Mon, 13 Jul 2020 17:36:54 +0200
-Message-ID: <87365v5svd.fsf@FE-laptop>
+        Mon, 13 Jul 2020 11:38:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40292 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729703AbgGMPie (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 11:38:34 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADC63C061755;
+        Mon, 13 Jul 2020 08:38:34 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id t6so2505276plo.3;
+        Mon, 13 Jul 2020 08:38:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EkuY5nTWtYjHN6dlAxhuSPoKlCvkK/wdqr04aL31t4o=;
+        b=A+JNrFxppxl73xfHd+hlQqaFZfE2iKKbu7A43CSIk8a5+LopIJtGENZPiCYhgs/gyX
+         /8KkoSDz32K4LCHddQAx34yTodb28lKG6+eZUiVfbCGajqhc7SlLoj/oKtj2b1uzK7Ps
+         64lGg6lN4nV28DYLPGjA+ZlLA1XTw5qqT1BOShmQxgN9ISQFYWv94rajZkK0eHJKfeVp
+         rCjyCz/ybWcP87gDBjCJ7QfNleYSJrut+ARdSQRILVPJ8N9H2NQ1CVX5YbZq9zQ8Hxy6
+         I9j/yVUrlyoSUYP4OqqfZI6d08SwFtXXfgskPDEhc8iM53Kkias6nfv/lzUGYiIVQ3to
+         6+3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EkuY5nTWtYjHN6dlAxhuSPoKlCvkK/wdqr04aL31t4o=;
+        b=bYFDyrmurceX4efQ2gET3PfomCSeF/dcYT2yuQliavyVqXaHfNp9HJuwxwC5IlKGEU
+         rqpG0XJQ9XVvhsXN8fW5fdYo+HF8eFrPpQLB2Z6FJyJ6BYZIRA5Gvp1fYvXPfsiLCQ68
+         DF5RK3bb6bUyscruqHy+xRHTYDhWWN0PPV+FjosZ/qWfAGelCARa46lNAHlW5caMK60c
+         RmVPWkCGKMausn1OLl4F+TN6eZDNaxONhWOObcudvtw5bQ4DKa/+GvmYsvxG4sXKQVQ+
+         tA4dccCc6qFfSCHTGO1c1jf7NRI7yzMyebCNkJBRuXOCMVYhAAcumzSq4hYla2Ig/zvO
+         /3UQ==
+X-Gm-Message-State: AOAM532aXi4bycbJHXKEjkS750vgZgi5e81+SGyxL5w3JZc8kUIwoLYC
+        1884BDxr/qkSRdNo/lQIGcY=
+X-Google-Smtp-Source: ABdhPJy0kUiywZaC/bxx58Daz314s+l4aZe3uztdWBi8TKRWWU3gTwcr1gL27+OzebJ20UptMK4uEw==
+X-Received: by 2002:a17:902:7484:: with SMTP id h4mr174821pll.243.1594654714276;
+        Mon, 13 Jul 2020 08:38:34 -0700 (PDT)
+Received: from hoboy (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id q13sm16050804pfk.8.2020.07.13.08.38.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 08:38:33 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 08:38:31 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Kurt Kanzenbach <kurt@linutronix.de>, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org
+Subject: Re: [PATCH v1 4/8] net: dsa: hellcreek: Add support for hardware
+ timestamping
+Message-ID: <20200713153831.GA29291@hoboy>
+References: <20200710113611.3398-1-kurt@linutronix.de>
+ <20200710113611.3398-5-kurt@linutronix.de>
+ <20200713095700.rd4u4t6thkzfnlll@skbuf>
+ <87k0z7n0m9.fsf@kurt>
+ <20200713140112.GB27934@hoboy>
+ <20200713141217.ktgh5rtullmrjjsy@skbuf>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713141217.ktgh5rtullmrjjsy@skbuf>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
+On Mon, Jul 13, 2020 at 05:12:17PM +0300, Vladimir Oltean wrote:
+> On Mon, Jul 13, 2020 at 07:01:12AM -0700, Richard Cochran wrote:
+> > I don't think it makes sense for DSA drivers to set this bit, as it
+> > serves no purpose in the DSA context.
+> > 
+> 
+> For whom does this bit serve a purpose, though, and how do you tell?
 
-> On 10-07-20, 16:19, Russell King - ARM Linux admin wrote:
->> On Wed, Jul 01, 2020 at 12:27:27PM +0530, Vinod Koul wrote:
->> > On 30-06-20, 17:05, Russell King wrote:
->> > > The mvneta hardware appears to lock up in various random ways when
->> > > repeatedly switching speeds between 1G and 2.5G, which involves
->> > > reprogramming the COMPHY.  It is not entirely clear why this happens,
->> > > but best guess is that reprogramming the COMPHY glitches mvneta clocks
->> > > causing the hardware to fail.  It seems that rebooting resolves the
->> > > failure, but not down/up cycling the interface alone.
->> > > 
->> > > Various other approaches have been tried, such as trying to cleanly
->> > > power down the COMPHY and then take it back through the power up
->> > > initialisation, but this does not seem to help.
->> > > 
->> > > It was finally noticed that u-boot's last step when configuring a
->> > > COMPHY for "SGMII" mode was to poke at a register described as
->> > > "GBE_CONFIGURATION_REG", which is undocumented in any external
->> > > documentation.  All that we have is the fact that u-boot sets a bit
->> > > corresponding to the "SGMII" lane at the end of COMPHY initialisation.
->> > > 
->> > > Experimentation shows that if we clear this bit prior to changing the
->> > > speed, and then set it afterwards, mvneta does not suffer this problem
->> > > on the SolidRun Clearfog when switching speeds between 1G and 2.5G.
->> > > 
->> > > This problem was found while script-testing phylink.
->> > > 
->> > > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
->> > > ---
->> > >  arch/arm/boot/dts/armada-38x.dtsi          |  3 +-
->> > 
->> > lgtm, i need ack for dts parts before I can apply this
->> 
->> I'm not sure what the situation is for Bootlin, but they don't seem to
->> be very responsive right now (covid related?)
->> 
->> What I know from what I've been party to on netdev is that Bootlin
->> sent a patch for the MVPP2 driver, and the very next day someone
->> reported that the patch caused a bug.  Unfortunately, the patch got
->> picked up anyway, but there was no response from Bootlin.  After a
->> month or so, -final was released containing this patch, so now it
->> had become a regression - and still no response from Bootlin.
->> 
->> Eventually the bug got fixed - not because Bootlin fixed it, but
->> because I ended up spending the time researching how that part of
->> the network driver worked, diagnosing what was going on, and
->> eventually fixing it in the most obvious way - but it's not clear
->> that the fix was the right approach.  Bootlin never commented.  See
->> 3138a07ce219 ("net: mvpp2: fix RX hashing for non-10G ports").
->> 
->> So, I think we have to assume that Bootlin are struggling right now,
->> and as it's been over a week, it's unlikely that they are going to
->> respond soon.  What do you think we should do?
->> 
->> I also note that Rob has not responded to the DT binding change
->> either, despite me gently prodding, and Rob processing a whole raft
->> of DT binding stuff yesterday.
->> 
->> I can split the DTS change from the rest of the patch, but I don't
->> think that really helps without at least the binding change being
->> agreed.
->
-> I would prefer splitting, you may sent the DTS to arm arch folks if no
-> response from subarch folks
+It had a historical purpose.  Originally, the stack delivered either a
+hardware or a software time stamp, but not both.  This restriction was
+eventually lifted via the SOF_TIMESTAMPING_OPT_TX_SWHW option, but
+still the original behavior is preserved as the default.
 
-Yes please could you split the patch to put the dts apart ? And if the
-binding is accepted we will apply it.
+You can see how SKBTX_IN_PROGRESS is used by the skb_tstamp_tx() path
+here:
 
-Thanks,
+void __skb_tstamp_tx(struct sk_buff *orig_skb,
+		     struct skb_shared_hwtstamps *hwtstamps,
+		     struct sock *sk, int tstype)
+{
+	...
 
-Gregory
+	if (!hwtstamps && !(sk->sk_tsflags & SOF_TIMESTAMPING_OPT_TX_SWHW) &&
+	    skb_shinfo(orig_skb)->tx_flags & SKBTX_IN_PROGRESS)
+		return;
+}
+
+It prevents SW time stamp when the flag is set.
+
+Note that DSA drivers deliver TX time stamps via a different path,
+namely skb_complete_tx_timestamp().  Also, DSA drivers don't provide
+SW time stamping at all.
+
+Q: When should drivers set SKBTX_IN_PROGRESS?
+
+A: When the interface they represent offers both
+   SOF_TIMESTAMPING_TX_HARDWARE and SOF_TIMESTAMPING_TX_SOFTWARE.
+
+HTH,
+Richard
 
 
->
-> -- 
-> ~Vinod
 
--- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
