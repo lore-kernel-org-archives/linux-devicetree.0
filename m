@@ -2,99 +2,112 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 342D0C433E5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CDFC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B48520663
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:51:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZVoh3ZgO"
+	by mail.kernel.org (Postfix) with ESMTP id 825BD20663
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:52:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594655559;
+	bh=40qtcbwFchqJ8vBUEk4KEu6k8zSbgF/WxMSY8WBbSRA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CfFHKk/zv5mWIztERKDDHcgBZ7zOjQHramW975Gvx7npxvM11Dc/hGgCje5JODRb6
+	 tPsBqLoBfT/ASrYT1LzTCdNXb6SrhimkZR4BS0vF/MqHTSJBxPH8x5WrIxYGrjxB33
+	 APM6p9wRHOANuUJzxFavR+htjK8EAXeRAmK7FAC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730178AbgGMPvh (ORCPT
+        id S1729917AbgGMPwj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:51:37 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:56062 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730084AbgGMPvh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 11:51:37 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06DFpTBG020144;
-        Mon, 13 Jul 2020 10:51:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594655489;
-        bh=Xv2IWcO5scWdcCHAvwCpGK5Ld4tkWYL+Z6X6Ww0o69E=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ZVoh3ZgOvq+L0BrFD11SXvDqbxz5oV3WjQ1hkZJILG9Qy0wAV3cy3cftj5xkgoYT7
-         kDzwX/gceF95RFM/kXNqvq4nhDrFCu06ZOrrdQr9MMjCZpBhFuyFzVzUCdpy4aJqCY
-         mg3zphgQTY6erV5NYHQIYFa9DcU6/RmbD173Z5S4=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06DFpTVl007979
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 13 Jul 2020 10:51:29 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 13
- Jul 2020 10:51:29 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 13 Jul 2020 10:51:29 -0500
-Received: from [10.250.32.229] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06DFpSmf112299;
-        Mon, 13 Jul 2020 10:51:28 -0500
-Subject: Re: [PATCH net-next v2 2/2] net: phy: DP83822: Add ability to
- advertise Fiber connection
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200710143733.30751-1-dmurphy@ti.com>
- <20200710143733.30751-3-dmurphy@ti.com> <20200711184512.GR1014141@lunn.ch>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <bd3580a2-a603-7d17-692c-2cb353ded865@ti.com>
-Date:   Mon, 13 Jul 2020 10:51:28 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 13 Jul 2020 11:52:39 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45039 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730261AbgGMPwi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 11:52:38 -0400
+Received: by mail-io1-f66.google.com with SMTP id i4so13959205iov.11;
+        Mon, 13 Jul 2020 08:52:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Og7BkYL+oiNLDgCfsnUgO6NhQoUD5ht+hSYNasuYtP8=;
+        b=W8QSNCm/PZfsK/SMS7AXJXrE3PRMZSuZykCYrtOI6Hl6IiF48OtRw5WpKlUna3bm1e
+         S5vCmR0L/SD8GTKhLigbbXz3XfU6gSZJI4CGo+GC7GIosEwvy8HYVPLhXCJ5AWtv9nMt
+         vi+cIq2hKCLAZU7xUoq7ifwHxuNrCMe457+RYS2i5unag8zFbTJ8iJRRi4Fug5xp+f3v
+         wBhgrqYSv5WURlgrlpJH/T+EJtGDuz8aaV0pvQ+9/us/d9dLwzOh+uIxUsB20Ebc65Gh
+         q8n4fJFBS4jtQxZaidZBP4eF7dgb1WHH8nbfjzEs5kod4kke39MxXjwafRpIbi09kc+h
+         JUXA==
+X-Gm-Message-State: AOAM530RVqLLT2xOeLyBqHb+76PNTi5FdC3LkH2IIyfhEV080lxZ7ICQ
+        5rOW4dxxYE8F/t4oHUzu8g==
+X-Google-Smtp-Source: ABdhPJz2hs8g3YQG4YgdiIDD9SU9toPlQEztr/OyGHwPf0X0T3cCrlIrG9PmjDn1Fn0Y+t09ixjo1w==
+X-Received: by 2002:a5e:9b0e:: with SMTP id j14mr297203iok.169.1594655557525;
+        Mon, 13 Jul 2020 08:52:37 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id t14sm8930940ilk.17.2020.07.13.08.52.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 08:52:36 -0700 (PDT)
+Received: (nullmailer pid 280514 invoked by uid 1000);
+        Mon, 13 Jul 2020 15:52:35 -0000
+Date:   Mon, 13 Jul 2020 09:52:35 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>
+Cc:     devicetree@vger.kernel.org, dongsheng.qiu@ingenic.com,
+        sernia.zhou@foxmail.com, tglx@linutronix.de, aric.pzqi@ingenic.com,
+        daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org,
+        paul@crapouillou.net, zhenwenjin@gmail.com, yanfei.li@ingenic.com,
+        rick.tyliu@ingenic.com, robh+dt@kernel.org
+Subject: Re: [PATCH v6 1/2] dt-bindings: timer: Add Ingenic X1000 OST
+ bindings.
+Message-ID: <20200713155235.GA280416@bogus>
+References: <20200710170259.29028-1-zhouyanjie@wanyeetech.com>
+ <20200710170259.29028-2-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-In-Reply-To: <20200711184512.GR1014141@lunn.ch>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200710170259.29028-2-zhouyanjie@wanyeetech.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Andrew
+On Sat, 11 Jul 2020 01:02:58 +0800, 周琰杰 (Zhou Yanjie) wrote:
+> Add the OST bindings for the X10000 SoC from Ingenic.
+> 
+> Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
+> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+> 
+> Notes:
+>     v1->v2:
+>     No change.
+> 
+>     v2->v3:
+>     Fix wrong parameters in "clocks".
+> 
+>     v3->v4:
+>     1.Rename "ingenic,ost.yaml" to "ingenic,sysost.yaml".
+>     2.Rename "ingenic,ost.h" to "ingenic,sysost.h".
+>     3.Modify the description in "ingenic,sysost.yaml".
+> 
+>     v4->v5:
+>     No change.
+> 
+>     v5->v6:
+>     1.Drop "oneOf" and the blank line.
+>     2.Add "additionalProperties: false".
+> 
+>  .../devicetree/bindings/timer/ingenic,sysost.yaml  | 63 ++++++++++++++++++++++
+>  include/dt-bindings/clock/ingenic,sysost.h         | 12 +++++
+>  2 files changed, 75 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
+>  create mode 100644 include/dt-bindings/clock/ingenic,sysost.h
+> 
 
-On 7/11/20 1:45 PM, Andrew Lunn wrote:
->> +#define MII_DP83822_FIBER_ADVERTISE	(SUPPORTED_AUI | SUPPORTED_FIBRE | \
->> +					 SUPPORTED_BNC | SUPPORTED_Pause | \
->> +					 SUPPORTED_Asym_Pause | \
->> +					 SUPPORTED_100baseT_Full)
->> +
->> +		/* Setup fiber advertisement */
->> +		err = phy_modify_changed(phydev, MII_ADVERTISE,
->> +					 ADVERTISE_1000XFULL |
->> +					 ADVERTISE_1000XPAUSE |
->> +					 ADVERTISE_1000XPSE_ASYM,
->> +					 MII_DP83822_FIBER_ADVERTISE);
-> That looks very odd. SUPPORTED_AUI #define has nothing to do with
-> MII_ADVERTISE register. It is not a bit you can read/write in that
-> register.
-
-ACK removed the SUPPORTED_AUI.
-
-I also going to update the MII_DP83822_FIBER_ADVERTISE defines from 
-SUPPORTED_* to ADVERTISED_*
-
-Dan
-
-
-> 	Andrew
+Reviewed-by: Rob Herring <robh@kernel.org>
