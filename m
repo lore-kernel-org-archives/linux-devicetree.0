@@ -2,182 +2,135 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB54C433E8
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 07:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3599C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 07:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7A542073A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 07:12:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="rY0Gf63B"
+	by mail.kernel.org (Postfix) with ESMTP id 9CACF2073A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 07:13:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594624432;
+	bh=xVWnbn71e12nKs+8LFqQsBzd/nrmtlDTH93hB63ta+I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q6efg5xkwtboic3ouQiAXL8gaSOBHaZBejDmkAGd4QeqnnmUbaQZ1V7bJaZO49cGb
+	 uphVWghUlxOUThlAZqRo3yKS/how9E7uUfIRaVMOZfnFkwHEWEYjGlokIAXWqTf6on
+	 j2flTn/OQ1ATootKxbjSyfmUcIw/4xQCXrNvB2gY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728795AbgGMHLy (ORCPT
+        id S1727034AbgGMHNw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 03:11:54 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:18833 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728737AbgGMHLy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 03:11:54 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200713071149epoutp021dd0ba9e9752e2d414fbc8a9139397f7~hPlx3H5OR2458124581epoutp02M
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 07:11:49 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200713071149epoutp021dd0ba9e9752e2d414fbc8a9139397f7~hPlx3H5OR2458124581epoutp02M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594624309;
-        bh=fvdb8j9PaoYsFszqN6un92aMnmzVWaQh86O7KCfShUw=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=rY0Gf63BuEPUQRO6aK6FEJQoYomddTxLHrWiWrFLzhGBlS9jQLyHVzci+aQY/xKWG
-         xBxOzn9iPtOgsxYRhaenryGZ35JMSDwmT8dcXxNLY7eGlZdiOG8TOoh1S/x/W2OGqS
-         KPmFZ8FbgJ3aNbkHLbxVuWGxMN527PRPbzCKJiXQ=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200713071149epcas1p4e16fc830bef8d6680486e068559dc1c2~hPlxOVvkM1177611776epcas1p4_;
-        Mon, 13 Jul 2020 07:11:49 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.158]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 4B4vw163j2zMqYly; Mon, 13 Jul
-        2020 07:11:45 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        4D.86.18978.1390C0F5; Mon, 13 Jul 2020 16:11:45 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200713071145epcas1p4e85b274131cc673354e22a70d06470d6~hPltlcWIq0908309083epcas1p4k;
-        Mon, 13 Jul 2020 07:11:45 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200713071145epsmtrp17ad310682ea1085d6f33635242848158~hPltkur6D0449404494epsmtrp10;
-        Mon, 13 Jul 2020 07:11:45 +0000 (GMT)
-X-AuditID: b6c32a35-603ff70000004a22-6a-5f0c09314e3f
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        B9.DC.08303.1390C0F5; Mon, 13 Jul 2020 16:11:45 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200713071145epsmtip2dbdb3fa43942b6cafe6e075c1694278a~hPltWpsbK2500625006epsmtip2a;
-        Mon, 13 Jul 2020 07:11:45 +0000 (GMT)
-Subject: Re: [PATCH] dt-bindings: devfreq: rk3399_dmc: Add rockchip,pmu
- phandle
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Collabora Kernel ML <kernel@collabora.com>, dianders@chromium.org,
-        heiko@sntech.de, maz@kernel.org, Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Ga=c3=abl_PORTAY?= <gael.portay@collabora.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-pm@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <95cd1315-3253-7b70-f648-717e36d4a6b9@samsung.com>
-Date:   Mon, 13 Jul 2020 16:23:09 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Mon, 13 Jul 2020 03:13:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46462 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726523AbgGMHNv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 03:13:51 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37C8E2075D;
+        Mon, 13 Jul 2020 07:13:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594624431;
+        bh=xVWnbn71e12nKs+8LFqQsBzd/nrmtlDTH93hB63ta+I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HEWllgk2YOFua+n5t2l0ZTpeLJeDHwykd8NCjsWiqbGdZDMgogX1wPZX3cxgQrb0a
+         9/X/h/anUDl1EpgaD2aRJFCf9CxHwVHnLFLtiUYy8c+KbIzT1SgU67VREkRhyVQkC+
+         E+bdTOXj7Cage1IrxywG4XED0mO1FoPphrTp5r3o=
+Date:   Mon, 13 Jul 2020 15:13:46 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Bruno Thomsen <bruno.thomsen@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>, bth@kamstrup.com,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: Re: [PATCH 3/3] MAINTAINERS: Add Bruno Thomsen as reviewer of
+ Kamstrup DTS
+Message-ID: <20200713071342.GK12113@dragon>
+References: <20200629114927.17379-1-bruno.thomsen@gmail.com>
+ <20200629114927.17379-3-bruno.thomsen@gmail.com>
+ <20200713025559.GZ21277@dragon>
+ <da52724655ff2161add7fb27fea8fc673028b9fc.camel@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <20200709090529.1404999-1-enric.balletbo@collabora.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNJsWRmVeSWpSXmKPExsWy7bCmnq4hJ0+8wYO5Bhbzj5xjtTi77CCb
-        xZrbhxgtlux6w2bx/9FrVovN53qAEk1v2C0u75rDZvG59wijxc45J1ktbjeuYLNo3XuE3eL/
-        nh3sDrwesxsusnjsuLuE0WPTqk42j74tqxg9tl+bx+zxeZNcAFtUtk1GamJKapFCal5yfkpm
-        XrqtkndwvHO8qZmBoa6hpYW5kkJeYm6qrZKLT4CuW2YO0KVKCmWJOaVAoYDE4mIlfTubovzS
-        klSFjPziElul1IKUnALLAr3ixNzi0rx0veT8XCtDAwMjU6DChOyMpQ/OsRQ0CVW837mdvYFx
-        IX8XIyeHhICJxPZT7WxdjFwcQgI7GCU+njvFAuF8YpSY3/KSDaRKSOAzo8SG2bIwHTtuTGCH
-        KNrFKLHk/nyoovdAzr0IEFtYIFDi9YSZLCC2iECkxKT2j4wgDcwCX5kkfs/+DdbAJqAlsf/F
-        DTCbX0BR4uqPx4wgNq+AncSun+/YQWwWAVWJhvZvYINEBcIkTm5rgaoRlDg58wlYnFPAReLg
-        hy4wm1lAXOLWk/lMELa8RPPW2cwgiyUEznBI/Jq3jgniBReJu1eaWCBsYYlXx7ewQ9hSEi/7
-        26DsaomVJ4+wQTR3MEps2X+BFSJhLLF/6WSgQRxAGzQl1u/ShwgrSuz8PZcRYjGfxLuvPawg
-        JRICvBIdbUIQJcoSlx/chTpBUmJxeyfbBEalWUjemYXkhVlIXpiFsGwBI8sqRrHUguLc9NRi
-        wwJD5NjexAhOxVqmOxgnvv2gd4iRiYPxEKMEB7OSCG+0KGe8EG9KYmVValF+fFFpTmrxIUZT
-        YABPZJYSTc4HZoO8knhDUyNjY2MLE0MzU0NDJXHef2fZ44UE0hNLUrNTUwtSi2D6mDg4pRqY
-        uln9XYt36JzaZxjLu/NWIq+b6GS1DaeeGBjovxFiXGDO9fx05TKP8P8Z8dFG6Q5TdpQ435xk
-        2K9xY4/0ojchc+tYvWZt2XtU2/HXErn2yrWXmfYLM91TtJp+6nv6N/cfXayGjwqmtUw4dMNK
-        i9moTHLVs7JPSbbv+QR17P9d1Ldp/Ot5PXnV66N3Jz+5NSF2ddr8XUv0r7sdvxTAs8dzelyX
-        gb+FsBPD05/mszI8WXw5VZ3Ou7xWXno+quyNuEO293bDb/Icshblqja3z1b1sL16F+apP2uq
-        SmkM754T/4uuKGUWRiUsv1Z1M937nz1XbE/57JsflF+dfnY5Zdf6Tyohbs+bJm9Q+PxejWWn
-        EktxRqKhFnNRcSIALSds404EAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGIsWRmVeSWpSXmKPExsWy7bCSvK4hJ0+8weWTfBbzj5xjtTi77CCb
-        xZrbhxgtlux6w2bx/9FrVovN53qAEk1v2C0u75rDZvG59wijxc45J1ktbjeuYLNo3XuE3eL/
-        nh3sDrwesxsusnjsuLuE0WPTqk42j74tqxg9tl+bx+zxeZNcAFsUl01Kak5mWWqRvl0CV8bS
-        B+dYCpqEKt7v3M7ewLiQv4uRk0NCwERix40J7CC2kMAORonbt1Ig4pIS0y4eZe5i5ACyhSUO
-        Hy7uYuQCKnnLKHH55X0WkBphgUCJ1xNmgtkiApESxzYvYAcpYhb4yiSx/Ps2RoiO6YwSc7c1
-        MoJUsQloSex/cYMNxOYXUJS4+uMxWJxXwE5i1893YFewCKhKNLR/A5sqKhAmsXPJYyaIGkGJ
-        kzOfgMU5BVwkDn7oArOZBdQl/sy7xAxhi0vcejKfCcKWl2jeOpt5AqPwLCTts5C0zELSMgtJ
-        ywJGllWMkqkFxbnpucWGBUZ5qeV6xYm5xaV56XrJ+bmbGMFRqaW1g3HPqg96hxiZOBgPMUpw
-        MCuJ8EaLcsYL8aYkVlalFuXHF5XmpBYfYpTmYFES5/06a2GckEB6YklqdmpqQWoRTJaJg1Oq
-        gUkuNvjcTWGOT41/fTqT+5+u5zyxM0B3/pV7VrbJ++yObdRXN79848mPCUGdf7eHTSl41fGE
-        y3zz6orw+4aeyUqXKk1P/s37diq8abaR7AaNN/FFocbnfm245bQ/UTHy1QQ7S87cGP91y19s
-        tu2sXTmv0kBmekmMMG8x67Zz5xu88pzYpTc7LefeNoXzfoXs1jLOa573aqusq48emCMr4r16
-        nZk/v/cTl4kcyvmH/r453dK6SkufaVZn6v1gOX0loeteadxWN/ymXjpov1PQItq4tjqVwWFG
-        04PrikeEW+6wHGR7bejmumHFf/fSa9YW/H8X7/2Zk/N+pulGJTvb7h3rXTQ3NVZm/FKQF8i3
-        VGIpzkg01GIuKk4EAJHMl2g5AwAA
-X-CMS-MailID: 20200713071145epcas1p4e85b274131cc673354e22a70d06470d6
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200709090541epcas1p1b5d1c5ab9b3c1409d59257035b104747
-References: <CGME20200709090541epcas1p1b5d1c5ab9b3c1409d59257035b104747@epcas1p1.samsung.com>
-        <20200709090529.1404999-1-enric.balletbo@collabora.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <da52724655ff2161add7fb27fea8fc673028b9fc.camel@perches.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Enric,
-
-On 7/9/20 6:05 PM, Enric Balletbo i Serra wrote:
-> The Rockchip DMC (Dynamic Memory Interface) needs to access to the PMU
-> general register files to know the DRAM type, so add a phandle to the
-> syscon that manages these registers.
+On Sun, Jul 12, 2020 at 10:22:50PM -0700, Joe Perches wrote:
+> Right now, a little less than half of the .dts* files
+> have an author or other email address in them.
 > 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Gaël PORTAY <gael.portay@collabora.com>
-> Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+> $ git ls-files arch/arm/boot/dts/*.dts* | wc -l
+> 2105
+> 
+> $ git grep -P --name-only '<\S+@\S+>' arch/arm/boot/dts/*.dts* | wc -l
+> 997
+> 
+> Some have multiple email addresses:
+> 
+> $ git grep -P '<\S+@\S+>' arch/arm/boot/dts/*.dts* | wc -l
+> 1240
+> 
+> (and there are a few false positives in that regex)
+> 
+> I suppose that get_maintainer could handle .dts* files
+> the same way .yaml files are handled so any email address
+> in the file is added to patches that touch the file.
+> 
+> This is the commit that added the .yaml file handling:
+> 
+> commit 0c78c013762142bfe8fce34e7e968f83f0a4b891
+> Author: Joe Perches <joe@perches.com>
+> Date:   Thu Jun 4 16:50:01 2020 -0700
+> 
+>     get_maintainer: add email addresses from .yaml files
+>     
+>     .yaml files can contain maintainer/author addresses and it seems unlikely
+>     or unnecessary that individual MAINTAINER file section entries for each
+>     .yaml file will be created.
+>     
+>     So add the email addresses found in .yaml files to the default
+>     get_maintainer output.
+>     
+>     The email addresses are marked with "(in file)" when using the "--roles"
+>     or "--rolestats" options.
+> 
+> So something like:
+
+Yeah, that's helpful.
+
 > ---
-> Following the discussion in [1] and after having [2] accepted, this
-> patch is a RESEND of a patch [3] that has already all the acks but for
-> some reason and my bad, I lost the tracking, didn't land. The patch adds
-> documentation for an already property implemented in the driver, so
-> resend the patch again. There is a slighty modification, the rockchip,pmu
-> property has been moved to be optional as is not really required.
+>  scripts/get_maintainer.pl | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Thanks,
->   Enric
-> 
-> [1] https://protect2.fireeye.com/v1/url?k=0a124f1c-57c247d0-0a13c453-000babff3793-37ca8c47e6666c09&q=1&e=40f33cd6-b2d6-4de2-a309-fbf8645f89f9&u=https%3A%2F%2Flkml.org%2Flkml%2F2020%2F6%2F22%2F692
-> [2] https://protect2.fireeye.com/v1/url?k=1aca44e8-471a4c24-1acbcfa7-000babff3793-6f0cff085cef3454&q=1&e=40f33cd6-b2d6-4de2-a309-fbf8645f89f9&u=https%3A%2F%2Flkml.org%2Flkml%2F2020%2F6%2F30%2F367
-> [3] https://patchwork.kernel.org/patch/10901593/
-> 
->  Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
-> index 0ec68141f85a..a10d1f6d85c6 100644
-> --- a/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
-> +++ b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
-> @@ -18,6 +18,8 @@ Optional properties:
->  			 format depends on the interrupt controller.
->  			 It should be a DCF interrupt. When DDR DVFS finishes
->  			 a DCF interrupt is triggered.
-> +- rockchip,pmu:		 Phandle to the syscon managing the "PMU general register
-> +			 files".
+> diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
+> index 484d2fbf5921..4c3c69d7bed0 100755
+> --- a/scripts/get_maintainer.pl
+> +++ b/scripts/get_maintainer.pl
+> @@ -436,7 +436,7 @@ sub maintainers_in_file {
 >  
->  Following properties relate to DDR timing:
+>      return if ($file =~ m@\bMAINTAINERS$@);
 >  
->
+> -    if (-f $file && ($email_file_emails || $file =~ /\.yaml$/)) {
+> +    if (-f $file && ($email_file_emails || $file =~ /\.(?:yaml|dtsi?)$/)) {
 
-Applied it. Thanks.
+It should cover .dts file too?
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Shawn
+
+>  	open(my $f, '<', $file)
+>  	    or die "$P: Can't open $file: $!\n";
+>  	my $text = do { local($/) ; <$f> };
+> 
+> 
