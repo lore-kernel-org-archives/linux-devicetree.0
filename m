@@ -4,106 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 145E9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 23:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31EB1C433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 23:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E57262145D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 23:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C56120DD4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 23:34:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594683208;
-	bh=ASyGfa3Wk9yhEqjezqaJilEkvipfynLyaSZXaASIVX4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dCdiWkIuEGcLw+R5zubKU1ay+lv8+Yb32UPeh0HYnFUwNn3wJ0POW2GZ4D1BuZX7O
-	 G7scwlAvx0asXep5NPEOWHFVvTyGDKp2tX/cwQeynz6+vP+8xqihNi141KmHd9X+La
-	 LUFqXXrXRK7w4YYoPIGgAAjQHDD0IhX7TZPGtJcg=
+	s=default; t=1594683296;
+	bh=jtL/x8QaeJYBVX26qVxdc9Gf42pQ1Umn1+ig/5qqPB4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1atuh58WuqrLJViQsyXWZPgDgEbYybsWspEMSrWULFBVHVXB64VxsdcMecMo3fqpX
+	 dbT6AVKab4mgl9SS3kSy5FfL55eOeK55CHSx5yWWvNmmfPjsYkAf0SsS7tIdr9Vd4V
+	 uWk9zXha3NcEvsigDCf1a01LDuOzB9gSPvXbC4rI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbgGMXd2 (ORCPT
+        id S1726352AbgGMXez (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 19:33:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49722 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726339AbgGMXd2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 19:33:28 -0400
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48EA220DD4;
-        Mon, 13 Jul 2020 23:33:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594683207;
-        bh=ASyGfa3Wk9yhEqjezqaJilEkvipfynLyaSZXaASIVX4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QLtsmejCfy9e4auxKVg0O/r8JmxeFkxZ//UOmpI7peIMM4tvfxR1jybbdDS1mSI43
-         Zeasdc+UOeNrqSkNz04BXtyNK0FY4ZKm+Ek3QlVTTteo9w+eSQVNTzYMjNkhqHPB6I
-         DPwPBO4eK2buv4Qyx+Meqz7KEYfwVP6Iv0Hik/6o=
-Received: by mail-oo1-f44.google.com with SMTP id t6so2808048ooh.4;
-        Mon, 13 Jul 2020 16:33:27 -0700 (PDT)
-X-Gm-Message-State: AOAM531f63R5S6zUy9PUcwWDD2KHRN4M1R0okKSauALtfngnL+Wk4OLD
-        hy1KdgW3TZSqd+0Vqi7W7wNP41AVRrYGT5LDYA==
-X-Google-Smtp-Source: ABdhPJxJn4Yq2V9XaFU8Qu7rKSKIoq5hATYp03MMXMnT6eRrlBajd27f8pUxj/NKMNWyOQuf9hIsTFEpJUwU6oj3ods=
-X-Received: by 2002:a4a:7459:: with SMTP id t25mr2138469ooe.25.1594683206670;
- Mon, 13 Jul 2020 16:33:26 -0700 (PDT)
+        Mon, 13 Jul 2020 19:34:55 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35627 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgGMXez (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 19:34:55 -0400
+Received: by mail-io1-f68.google.com with SMTP id v8so15417843iox.2;
+        Mon, 13 Jul 2020 16:34:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=h09mBGtHi8i5lSRssVJKTabDr88RFU9DFJVpDRWqOyY=;
+        b=na4Iy3kB395xsmp6N5sYOQOW3e7HZQhIpTfQ714D7a/M2AWkN5Nt5zJtK9czQ2qfmo
+         a89/z71p+LCFvHI8Ppo+I0rd/XJ/v3jVUOJjL1nVcF3TGROIBWb13IoFtelReT3B8bR/
+         JOxR0vsvklo3RRSTY9UvoMWYtt+e8xUDk9S1PXjSqtMLkMjh5/qbq7jFmJoatAUNlu8t
+         17XvilSBNnGFuN3WCZsavShfD6hJpLViGeTTkaFIji20ow5RyYOZ22HX0gH/Ng7oX8Iw
+         zVBBBbmmIEGGjb74gx6jhseI+UJCZRniKL++wDCOiqcw7rZ/D6w8NizUwFO0Tk32xTkB
+         NNhw==
+X-Gm-Message-State: AOAM532+MTXtiRQBtEg52nSxD1vduz9AxFZM3gIscn20ZpOY9B9L0rAU
+        oHBOw/5Ok0VUvX6VUvU+sw==
+X-Google-Smtp-Source: ABdhPJwfI7+jWURn6sHIGYi1OZze4wchDmNC/r88ULrNM/NVokDGIeeAUfetYg1n5a5T/nSqq97g0g==
+X-Received: by 2002:a05:6638:d8b:: with SMTP id l11mr2765494jaj.124.1594683294403;
+        Mon, 13 Jul 2020 16:34:54 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id s18sm8922933ilj.63.2020.07.13.16.34.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 16:34:53 -0700 (PDT)
+Received: (nullmailer pid 928397 invoked by uid 1000);
+        Mon, 13 Jul 2020 23:34:52 -0000
+Date:   Mon, 13 Jul 2020 17:34:52 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Alexandre Courbot <acourbot@chromium.org>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        linux-media@vger.kernel.org,
+        Maoguang Meng <maoguang.meng@mediatek.com>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 08/16] dt-bindings: media: document
+ mediatek,mt8183-vcodec-enc
+Message-ID: <20200713233452.GA928367@bogus>
+References: <20200713060842.471356-1-acourbot@chromium.org>
+ <20200713060842.471356-9-acourbot@chromium.org>
 MIME-Version: 1.0
-References: <20200708071942.22595-1-frank@allwinnertech.com>
- <20200708071942.22595-2-frank@allwinnertech.com> <20200713225453.GA874275@bogus>
-In-Reply-To: <20200713225453.GA874275@bogus>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 13 Jul 2020 17:33:15 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK4azgT=+vXu1VJ1tn--QnGaoied+FPSKZ68vtZs+=_sw@mail.gmail.com>
-Message-ID: <CAL_JsqK4azgT=+vXu1VJ1tn--QnGaoied+FPSKZ68vtZs+=_sw@mail.gmail.com>
-Subject: Re: [PATCH v3 01/16] dt-bindings: clk: sunxi-ccu: add compatible
- string for A100 CCU and R-CCU
-To:     Frank Lee <frank@allwinnertech.com>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Corentin Labbe <clabbe@baylibre.com>, liyong@allwinnertech.com,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        bage@linutronix.de, Thomas Gleixner <tglx@linutronix.de>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Ondrej Jirman <megous@megous.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Stefan Mavrodiev <stefan@olimex.com>,
-        huangshuosheng@allwinnertech.com,
-        Jason Cooper <jason@lakedaemon.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713060842.471356-9-acourbot@chromium.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 4:54 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, 08 Jul 2020 15:19:27 +0800, Frank Lee wrote:
-> > This patch adds binding to a100's ccu clock and r-ccu clock.
-> >
-> > Signed-off-by: Frank Lee <frank@allwinnertech.com>
-> > ---
-> >  .../devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml         | 7 ++++++-
-> >  1 file changed, 6 insertions(+), 1 deletion(-)
-> >
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
+On Mon, 13 Jul 2020 15:08:34 +0900, Alexandre Courbot wrote:
+> MT8183's encoder is similar to MT8173's.
+> 
+> Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+> ---
+>  Documentation/devicetree/bindings/media/mediatek-vcodec.txt | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
 
-Note that your series isn't threaded properly. Please send series
-threaded (in reply to cover letter or 1st patch).
+Acked-by: Rob Herring <robh@kernel.org>
