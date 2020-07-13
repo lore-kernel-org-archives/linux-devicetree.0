@@ -2,170 +2,152 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B59C433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FC7C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 618FE2075B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:08:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Rrznap+7"
+	by mail.kernel.org (Postfix) with ESMTP id CCCBB2075B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:08:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594652902;
+	bh=tSCwMG3kKKN5MJkIhI/pVKqBUCQiU5I8TxD3u4pXauw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EM58Cd31AC1h6peqzr14axBA/fT6IZ6FrEqC1WgzEQrlpDTzEQH4Ew1FHSAWpJPa4
+	 GjRwgO/j+Ej5BMxhbBd0jDA0pWr5ivLZ0g2TAbehMT+pFdTtaeMwL9nXTp0HlJRgEy
+	 mIsvjBhj8A9l+rlS/Cb4w4rkO3SWsPyu1gjhgX9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729593AbgGMPIb (ORCPT
+        id S1729581AbgGMPIW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:08:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35706 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729917AbgGMPIa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 11:08:30 -0400
-Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C5C3C061794
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 08:08:30 -0700 (PDT)
-Received: by mail-ua1-x944.google.com with SMTP id b24so4204177uak.2
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 08:08:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jL0qg9txtW+UzBOFpRiVbZ1cvNjK+k+Z2zD2+dWd5xU=;
-        b=Rrznap+7c3ejPjjRxwh934nQUUwJZgqI+M3shHiuekSOP8O2XMiQptg6HCTZ3/GqCq
-         PtvZbvQ+9M7G4UEaYbk2Zkurr6mOU2qKAsB6gunmVxW0xlHUEsKN65rqdz5KBVIGQVuf
-         s4ezGY5pV1pLxDDQrvlXGCCUyp85khIBh+8xk=
+        Mon, 13 Jul 2020 11:08:22 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:45597 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729027AbgGMPIV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 11:08:21 -0400
+Received: by mail-il1-f194.google.com with SMTP id o3so11415593ilo.12;
+        Mon, 13 Jul 2020 08:08:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jL0qg9txtW+UzBOFpRiVbZ1cvNjK+k+Z2zD2+dWd5xU=;
-        b=Jn6mqyGoOp9WKbC37fdLdgXbrVdut5rMaXs2q4+9tOrBlrSQW5hd4t4p1/MA//xt0l
-         zrimYE0sL4/qmmCWUP7PidZjxOZqi7+k+WXUICDouGONcxFVgprtj5vfr+IEmhEXZlRj
-         lt44AZutoPfkZbVjhNvGDVOU8n83BApGWP9+NxGd7vfhsQ3PoIzQZ3Nd9l1H4MnuXMxM
-         ceZRmXOU4+7SAP4C9pQqDdAIS3VTw7NB5eb0jtH09kVVtrtNfe7vbquvibRU9iO5AhMK
-         oykeFql0eexAXIj0sV9QnLtDrEYUUBlKqs5fMgjsZByMSmyaD3zuqmvqj8v+/9ZQe5QS
-         UY0w==
-X-Gm-Message-State: AOAM531/Sxvrtae5NQwCcAG/y29tRrDlPrvKoAxLC0/f/z7sIfuN3QN7
-        oOwlo3SGX70yYt4mKqPDHWh6q++Tu8E=
-X-Google-Smtp-Source: ABdhPJxQCckwJoP8AyAb078Ws3pDCcpBlcYuQ4OBFu3vyJSs7wNWt2sSAwmozTezstqRxI46gsbYag==
-X-Received: by 2002:a9f:2636:: with SMTP id 51mr58963uag.2.1594652907942;
-        Mon, 13 Jul 2020 08:08:27 -0700 (PDT)
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
-        by smtp.gmail.com with ESMTPSA id p7sm1704788vsl.25.2020.07.13.08.08.27
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 08:08:27 -0700 (PDT)
-Received: by mail-vs1-f44.google.com with SMTP id p25so6759614vsg.4
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 08:08:27 -0700 (PDT)
-X-Received: by 2002:a05:6102:20a:: with SMTP id z10mr50329603vsp.213.1594652906281;
- Mon, 13 Jul 2020 08:08:26 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=v4cXggTd/OPPGdKO38hIkkIvGUA2vA7so39nPLvitDw=;
+        b=K6jL4bdAhMP+NGxs3Iqf/kCjq71C4OhDmDJ0QC7Zi00pAqIQ8Xdoxtcubx3fBpAtLO
+         e073YRr/VK0/BoIKaiBVDbT8RQTfezw8lfjmiNLcRF6T59VqbvdqN5UXydn+DoMHFj64
+         IMrIUKRm3nKLfCMTJYRFGM8vhyNRHpxd1L2fhPMNwU6Trghu4odaPK0YAE5tP3sH/Q60
+         eVDzsRZdmqJPbTyTcFH5eTuyUeq1o975AmQLsD9R3f6+ROj7WzrhHksZqIkMBPqv7Tj1
+         fDnpruJdWNiQGOo0XH3g100OcGzaGFV7jsm4dT1E9unZ3EBYCj4HiYiljiD8HhR6onKS
+         cd4A==
+X-Gm-Message-State: AOAM530yv0LPxpTSP4ow/H8lJZfGyLMCH+qv1ro2XOGE/rsDJEYYPWhQ
+        D3jmKWvV2d1/FBDszeLNqQ==
+X-Google-Smtp-Source: ABdhPJwPQ8bhYRoCPDiPVwwo9RBAq8+lRRZzacUL0wjjOUAg8glIn4/s22/EEIfQTI4XfYdqhSP8KQ==
+X-Received: by 2002:a92:bb84:: with SMTP id x4mr99368ilk.177.1594652900880;
+        Mon, 13 Jul 2020 08:08:20 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id e21sm7889088ioe.11.2020.07.13.08.08.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 08:08:20 -0700 (PDT)
+Received: (nullmailer pid 186365 invoked by uid 1000);
+        Mon, 13 Jul 2020 15:08:18 -0000
+Date:   Mon, 13 Jul 2020 09:08:18 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     kishon@ti.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, p.zabel@pengutronix.de,
+        gregkh@linuxfoundation.org, andriy.shevchenko@intel.com,
+        balbi@kernel.org, cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        yin1.li@intel.com
+Subject: Re: [PATCH v5 1/2] dt-bindings: phy: Add USB PHY support for Intel
+ LGM SoC
+Message-ID: <20200713150818.GB184301@bogus>
+References: <20200713085453.7353-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200713085453.7353-2-vadivel.muruganx.ramuthevar@linux.intel.com>
 MIME-Version: 1.0
-References: <20200710230224.2265647-1-dianders@chromium.org> <CAL_JsqKC5WtHb-coMCxMTDJ7CJcjVXcAxDT4J9N-Xyr=0uuURA@mail.gmail.com>
-In-Reply-To: <CAL_JsqKC5WtHb-coMCxMTDJ7CJcjVXcAxDT4J9N-Xyr=0uuURA@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 13 Jul 2020 08:08:14 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XWKoTd_t2uRGpw3oa0Nij2EPeAJpOHhUipXFW07JN2qw@mail.gmail.com>
-Message-ID: <CAD=FV=XWKoTd_t2uRGpw3oa0Nij2EPeAJpOHhUipXFW07JN2qw@mail.gmail.com>
-Subject: Re: [PATCH 0/9] drm/msm: Avoid possible infinite probe deferral and
- speed booting
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713085453.7353-2-vadivel.muruganx.ramuthevar@linux.intel.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Jul 13, 2020 at 04:54:52PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> 
+> Add the dt-schema to support USB PHY on Intel LGM SoC
+> 
+> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/phy/intel,lgm-usb-phy.yaml | 53 ++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml
+> new file mode 100644
+> index 000000000000..0fc76cd23774
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml
+> @@ -0,0 +1,53 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/usb/intel,lgm-usb-phy.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Intel LGM USB PHY Device Tree Bindings
+> +
+> +maintainers:
+> +  - Vadivel Murugan Ramuthevar <vadivel.muruganx.ramuthevar@linux.intel.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: intel,lgm-usb-phy
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    items:
+> +      - description: USB PHY and Host controller reset
+> +      - description: APB BUS reset
+> +      - description: General Hardware reset
+> +
+> +  reset-names:
+> +    items:
+> +      - const: phy
+> +      - const: apb
+> +      - const: phy31
+> +
+> +required:
+> +  - compatible
+> +  - clocks
+> +  - reg
+> +  - resets
+> +  - reset-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    usb_phy: usb_phy@e7e00000 {
 
-On Mon, Jul 13, 2020 at 7:11 AM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Fri, Jul 10, 2020 at 5:02 PM Douglas Anderson <dianders@chromium.org> wrote:
-> >
-> > I found that if I ever had a little mistake in my kernel config,
-> > or device tree, or graphics driver that my system would sit in a loop
-> > at bootup trying again and again and again.  An example log was:
->
-> Why do we care about optimizing the error case?
+usb-phy@...
 
-It actually results in a _fully_ infinite loop.  That is: if anything
-small causes a component of DRM to fail to probe then the whole system
-doesn't boot because it just loops trying to probe over and over
-again.  The messages I put in the commit message are printed over and
-over and over again.
-
-
-> >   msm ae00000.mdss: bound ae01000.mdp (ops 0xffffffe596e951f8)
-> >   msm_dsi ae94000.dsi: ae94000.dsi supply gdsc not found, using dummy regulator
-> >   msm_dsi_manager_register: failed to register mipi dsi host for DSI 0
-> >   [drm:ti_sn_bridge_probe] *ERROR* could not find any panel node
-> >   ...
-> >
-> > I finally tracked it down where this was happening:
-> >   - msm_pdev_probe() is called.
-> >   - msm_pdev_probe() registers drivers.  Registering drivers kicks
-> >     off processing of probe deferrals.
-> >   - component_master_add_with_match() could return -EPROBE_DEFER.
-> >     making msm_pdev_probe() return -EPROBE_DEFER.
-> >   - When msm_pdev_probe() returned the processing of probe deferrals
-> >     happens.
-> >   - Loop back to the start.
-> >
-> > It looks like we can fix this by marking "mdss" as a "simple-bus".
-> > I have no idea if people consider this the right thing to do or a
-> > hack.  Hopefully it's the right thing to do.  :-)
->
-> It's a simple test. Do the child devices have any dependency on the
-> parent to probe and/or function? If so, not a simple-bus.
-
-Great!  You can see in the earlier patch in the series that the very
-first thing that happens when the parent device probes is that it
-calls devm_of_platform_populate().  That means no dependencies, right?
- So that means it's fine/correct to add "simple-bus" here?
-
-
-> > Once I do this I notice that my boot gets marginally faster (you
-> > don't need to probe the sub devices over and over) and also if I
->
-> Can you quantify that?
-
-I'd say < 100 us.  I can try to quantify more if needed, but it wasn't
-the point of this patch.
-
-
-> Have you run with devlinks enabled. You need a command line option to
-> enable. That too should reduce deferred probes.
-
-Ah, good idea!  I will try it.  However, even with devlinks, if there
-is any chance of deferred probes then we need a fix like this.  The
-point of the patch isn't about speeding things up but about avoiding
-an infinite loop at bootup due to a small bug.
-
-
-> > have a problem it doesn't loop forever (on my system it still
-> > gets upset about some stuck clocks in that case, but at least I
-> > can boot up).
->
-> Deferred probe only runs when a device is added, so it's not like it
-> is continually running.
-
-If you don't mind looking at the code patch, see:
-
-https://lore.kernel.org/r/20200710160131.4.I358ea82de218ea5f4406572ade23f5e121297555@changeid/
-
-Specifically you can see that each time we try to probe we were
-calling of_platform_populate().  That appeared to be enough to trigger
-things.
-
-
--Doug
+> +        compatible = "intel,lgm-usb-phy";
+> +        reg = <0xe7e00000 0x10000>;
+> +        clocks = <&cgu0 153>;
+> +        resets = <&rcu 0x70 0x24>,
+> +                 <&rcu 0x70 0x26>,
+> +                 <&rcu 0x70 0x28>;
+> +        reset-names = "phy", "apb", "phy31";
+> +    };
+> -- 
+> 2.11.0
+> 
