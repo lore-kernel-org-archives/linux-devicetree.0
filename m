@@ -2,242 +2,128 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0C5C433E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 12:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C365C433E8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 12:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5007206F0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 12:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 145C320738
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 12:24:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729143AbgGMMSR (ORCPT
+        id S1729708AbgGMMY5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 08:18:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35724 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbgGMMSR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 08:18:17 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB007C061755;
-        Mon, 13 Jul 2020 05:18:16 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id B8C72BC0CB;
-        Mon, 13 Jul 2020 12:18:11 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     kishon@ti.com, vkoul@kernel.org, robh+dt@kernel.org, rogerq@ti.com,
-        wen.yang99@zte.com.cn, sboyd@kernel.org, grygorii.strashko@ti.com,
-        jsarha@ti.com, weiyongjun1@huawei.com, nsekhar@ti.com,
-        hslester96@gmail.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] drivers: phy: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 14:18:05 +0200
-Message-Id: <20200713121805.34047-1-grandmaster@al2klimov.de>
+        Mon, 13 Jul 2020 08:24:57 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40792 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728714AbgGMMY4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 08:24:56 -0400
+Received: by mail-ot1-f66.google.com with SMTP id c25so9343712otf.7;
+        Mon, 13 Jul 2020 05:24:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NKzDJKlpDpfQR0XqsgcICeQR3a964ULdFkGju83hPh4=;
+        b=PZ8YhE6GE31idexlhmfb3Jirg1fmIzWelFz3bJoSnqo+EVZ4vFFRokFm0JrlHU+Wjt
+         8qYOpYcBQUmBcVX0OUjBRQkoBWsjFeCRcJbcXh8eDr7pEzceDVZB5EIZvviFDvUnaZ8x
+         uljKNjdd66Zog078sR8ZVwZsMp9ZKUAApgab5j0b11Zc2PNDmQStQJzTp3cxWTcd/e9O
+         Lbm/sK+7BLfprg7I1F6n1rLcPnhCqP7HeRblQ4MNtq9JdVXNSQZD/RWpRa9BvsTHvFGv
+         D5v7NmezD//lb4mE/NwB/84RY9jCWGE0vK7uOYm9nLO/N5m6KKkON4NwebacF8WQ8ozX
+         Qtog==
+X-Gm-Message-State: AOAM530+jeSYYKO7B1XtwgyItnWIIqrhIk0rckd9yaUI4yVg/Hu/M8ka
+        dH4zr6CDpZg/PtRo7TCQyrFQXkQoI+Qjn3B3lIw=
+X-Google-Smtp-Source: ABdhPJxFpWOlCjGDSPwtxen5jRbE20ZbTRROeQPrTNlSL/t1mKoQeo8W3SZGj1ef99nPDdRUJYfaYSbuaSZRFBz1XuE=
+X-Received: by 2002:a05:6830:1451:: with SMTP id w17mr57240483otp.250.1594643094760;
+ Mon, 13 Jul 2020 05:24:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+References: <1594230511-24790-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594230511-24790-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594230511-24790-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 13 Jul 2020 14:24:43 +0200
+Message-ID: <CAMuHMdWBLrPQJJzs=K7fHzu4UJsKyj29Yu9KZK4vf9QQNLQF+Q@mail.gmail.com>
+Subject: Re: [PATCH 6/8] arm64: dts: renesas: Initial r8a774e1 SoC device tree
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+Hi Prabhakar,
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+On Wed, Jul 8, 2020 at 7:49 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> Basic support for the RZ/G2H SoC.
+>
+> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+Thanks for your patch!
 
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
+> +               avb: ethernet@e6800000 {
+> +                       reg = <0 0xe6800000 0 0x800>, <0 0xe6a00000 0 0x10000>;
 
- If you apply the patch, please let me know.
+According to Rev. 1.00 of the Hardware User's Manual, RZ/G2H does not
+have the Stream Buffer for EtherAVB-IF, so the second register block
+should be dropped.
 
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       status = "disabled";
+> +
+> +                       /* placeholder */
+> +               };
 
+> +               gic: interrupt-controller@f1010000 {
+> +                       compatible = "arm,gic-400";
+> +                       #interrupt-cells = <3>;
+> +                       #address-cells = <0>;
+> +                       interrupt-controller;
+> +                       reg = <0x0 0xf1010000 0 0x1000>,
+> +                             <0x0 0xf1020000 0 0x20000>,
+> +                             <0x0 0xf1040000 0 0x20000>,
+> +                             <0x0 0xf1060000 0 0x20000>;
+> +                       interrupts = <GIC_PPI 9
+> +                                       (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
 
- Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml | 2 +-
- drivers/phy/phy-core.c                                      | 2 +-
- drivers/phy/ti/phy-am654-serdes.c                           | 2 +-
- drivers/phy/ti/phy-gmii-sel.c                               | 2 +-
- drivers/phy/ti/phy-j721e-wiz.c                              | 2 +-
- drivers/phy/ti/phy-omap-control.c                           | 2 +-
- drivers/phy/ti/phy-omap-usb2.c                              | 2 +-
- drivers/phy/ti/phy-ti-pipe3.c                               | 2 +-
- include/linux/phy/omap_control_phy.h                        | 2 +-
- include/linux/phy/omap_usb.h                                | 2 +-
- include/linux/phy/phy.h                                     | 2 +-
- 11 files changed, 11 insertions(+), 11 deletions(-)
+Like Marc already pointed out, GIC_CPU_MASK_SIMPLE(8).
 
-diff --git a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
-index 3f913d6d1c3d..ebb5ffe1b821 100644
---- a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
-+++ b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
--# Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-+# Copyright (C) 2019 Texas Instruments Incorporated - https://www.ti.com/
- %YAML 1.2
- ---
- $id: "http://devicetree.org/schemas/phy/ti,phy-j721e-wiz.yaml#"
-diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index a27b8d578d7f..41182dd3b705 100644
---- a/drivers/phy/phy-core.c
-+++ b/drivers/phy/phy-core.c
-@@ -2,7 +2,7 @@
- /*
-  * phy-core.c  --  Generic Phy framework.
-  *
-- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com
-  *
-  * Author: Kishon Vijay Abraham I <kishon@ti.com>
-  */
-diff --git a/drivers/phy/ti/phy-am654-serdes.c b/drivers/phy/ti/phy-am654-serdes.c
-index 0a166d5a6414..89d5b5a5d83a 100644
---- a/drivers/phy/ti/phy-am654-serdes.c
-+++ b/drivers/phy/ti/phy-am654-serdes.c
-@@ -2,7 +2,7 @@
- /**
-  * PCIe SERDES driver for AM654x SoC
-  *
-- * Copyright (C) 2018 - 2019 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2018 - 2019 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Kishon Vijay Abraham I <kishon@ti.com>
-  */
- 
-diff --git a/drivers/phy/ti/phy-gmii-sel.c b/drivers/phy/ti/phy-gmii-sel.c
-index 7edd5c3bc536..84a3434375ab 100644
---- a/drivers/phy/ti/phy-gmii-sel.c
-+++ b/drivers/phy/ti/phy-gmii-sel.c
-@@ -2,7 +2,7 @@
- /*
-  * Texas Instruments CPSW Port's PHY Interface Mode selection Driver
-  *
-- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
-  *
-  * Based on cpsw-phy-sel.c driver created by Mugunthan V N <mugunthanvnm@ti.com>
-  */
-diff --git a/drivers/phy/ti/phy-j721e-wiz.c b/drivers/phy/ti/phy-j721e-wiz.c
-index 30ea5b207285..f8cfdc8f56b9 100644
---- a/drivers/phy/ti/phy-j721e-wiz.c
-+++ b/drivers/phy/ti/phy-j721e-wiz.c
-@@ -2,7 +2,7 @@
- /**
-  * Wrapper driver for SERDES used in J721E
-  *
-- * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2019 Texas Instruments Incorporated - https://www.ti.com/
-  * Author: Kishon Vijay Abraham I <kishon@ti.com>
-  */
- 
-diff --git a/drivers/phy/ti/phy-omap-control.c b/drivers/phy/ti/phy-omap-control.c
-index ccd0e4e00451..8257972fac25 100644
---- a/drivers/phy/ti/phy-omap-control.c
-+++ b/drivers/phy/ti/phy-omap-control.c
-@@ -2,7 +2,7 @@
- /*
-  * omap-control-phy.c - The PHY part of control module.
-  *
-- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com
-  * Author: Kishon Vijay Abraham I <kishon@ti.com>
-  */
- 
-diff --git a/drivers/phy/ti/phy-omap-usb2.c b/drivers/phy/ti/phy-omap-usb2.c
-index cb2dd3230fa7..9bc96db3315f 100644
---- a/drivers/phy/ti/phy-omap-usb2.c
-+++ b/drivers/phy/ti/phy-omap-usb2.c
-@@ -2,7 +2,7 @@
- /*
-  * omap-usb2.c - USB PHY, talking to USB controller on TI SoCs.
-  *
-- * Copyright (C) 2012-2020 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2012-2020 Texas Instruments Incorporated - https://www.ti.com
-  * Author: Kishon Vijay Abraham I <kishon@ti.com>
-  */
- 
-diff --git a/drivers/phy/ti/phy-ti-pipe3.c b/drivers/phy/ti/phy-ti-pipe3.c
-index a87946589eb7..b6d5e1e94f92 100644
---- a/drivers/phy/ti/phy-ti-pipe3.c
-+++ b/drivers/phy/ti/phy-ti-pipe3.c
-@@ -2,7 +2,7 @@
- /*
-  * phy-ti-pipe3 - PIPE3 PHY driver.
-  *
-- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com
-  * Author: Kishon Vijay Abraham I <kishon@ti.com>
-  */
- 
-diff --git a/include/linux/phy/omap_control_phy.h b/include/linux/phy/omap_control_phy.h
-index aec57dd784f7..2fd00c05acbf 100644
---- a/include/linux/phy/omap_control_phy.h
-+++ b/include/linux/phy/omap_control_phy.h
-@@ -2,7 +2,7 @@
- /*
-  * omap_control_phy.h - Header file for the PHY part of control module.
-  *
-- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com
-  * Author: Kishon Vijay Abraham I <kishon@ti.com>
-  */
- 
-diff --git a/include/linux/phy/omap_usb.h b/include/linux/phy/omap_usb.h
-index e23b52df93ec..783effd61185 100644
---- a/include/linux/phy/omap_usb.h
-+++ b/include/linux/phy/omap_usb.h
-@@ -2,7 +2,7 @@
- /*
-  * omap_usb.h -- omap usb2 phy header file
-  *
-- * Copyright (C) 2012-2020 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2012-2020 Texas Instruments Incorporated - https://www.ti.com
-  * Author: Kishon Vijay Abraham I <kishon@ti.com>
-  */
- 
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index bcee8eba62b3..baa3b1c7a0fb 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -2,7 +2,7 @@
- /*
-  * phy.h -- generic phy header file
-  *
-- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com
-  *
-  * Author: Kishon Vijay Abraham I <kishon@ti.com>
-  */
--- 
-2.27.0
+With the above fixed:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Will queue in renesas-devel for v5.9, after fixing the above.
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
