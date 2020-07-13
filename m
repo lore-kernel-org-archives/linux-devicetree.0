@@ -2,108 +2,381 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C6FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDA6C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C901B2075D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D0C32075D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594622180;
-	bh=UT7xCgBr7XTK0g96nMID4egnSzqW6jseo+avRrShlUc=;
+	s=default; t=1594622506;
+	bh=e18wHx1Fm/Gf+Fp65u7cXKwoLMdCt3jPSIMBgqCGqbA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TlWrTG1b0gZE67nIx7BYvRkyc2R80WZZMxOgs39oKht/g1ib5oNdhTFhiu9O5R3dP
-	 PWMZwI48Jxc8a6mNOAuYhb6OPJ6hLkP1zO0gVvcy3nDoD0eX6jdluQcE+EpHwCDhW0
-	 IRtu2Hu+cnWtNfXqTqzeaPIKx+tlfao4w2drguKk=
+	b=fMhwi5Q+Zw2c/heoB0BNXi3vE8GKKwa4zavpLeLRu6NG0Bm2X3bt7Bg+xkh1N4iBK
+	 PXjOpG7iQbNF7PRYcyM779KHsGPu2mzjHxjRSQkMdS0bPw1hlargdmoIaid8NBTsJX
+	 GDlqL2Vdfk0bM/KYMgywHkxezvozz8vU75V/ElHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbgGMGgU (ORCPT
+        id S1725969AbgGMGlp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 02:36:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58750 "EHLO mail.kernel.org"
+        Mon, 13 Jul 2020 02:41:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725969AbgGMGgU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 02:36:20 -0400
+        id S1725804AbgGMGlp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 02:41:45 -0400
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E42C20720;
-        Mon, 13 Jul 2020 06:36:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E50620720;
+        Mon, 13 Jul 2020 06:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594622179;
-        bh=UT7xCgBr7XTK0g96nMID4egnSzqW6jseo+avRrShlUc=;
+        s=default; t=1594622504;
+        bh=e18wHx1Fm/Gf+Fp65u7cXKwoLMdCt3jPSIMBgqCGqbA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u8k47lCLPPTQIhGZPWfJiSk2yvJ8A4JPnhgOjfHlKjK0sxYQ0ohoHESYQlkoLy9Nl
-         p0wwkt6LSxfmr5qx/r6Tt/QII9QRTS/sEVclyFWTfZd0B+m4FvulQfvyFltSc8dUtk
-         P7MZBLAdxg1EOkClpqPtKp8PUfYyXx11frYsrh7o=
-Date:   Mon, 13 Jul 2020 14:36:15 +0800
+        b=xSxbkl/0W3J9au52pJxSZV0ST4SM8CTemjn8dZLFmNG3/3/5XQIBke+aRiPgDzE7z
+         qExp04Pe0PwkLS2vZSYFHEJQjEmweFUbXJd1KPqxHxMLq11eCtBBzcK/J4faWCkjnu
+         QpvuUZcmeYxk/N2GRMR7xyfQEV3yOaFQauYn6S74=
+Date:   Mon, 13 Jul 2020 14:41:39 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Chris Healy <cphealy@gmail.com>
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
-        Stefan Agner <stefan@agner.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux ARM <linux-arm-kernel@lists.infradead.org>,
-        devicetree@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: dts: vf610-zii-ssmb-dtu: Pass "no-sdio"/"no-sd"
- properties
-Message-ID: <20200713063611.GF12113@dragon>
-References: <CAFXsbZoovWBavRFaEWEFcSkVjNx26BkKOkhcutNfzL8MrHwMTw@mail.gmail.com>
+To:     Parthiban Nallathambi <parthiban@linumiz.com>
+Cc:     robh@kernel.org, s.hauer@pengutronix.de,
+        devicetree@vger.kernel.org, linux-imx@nxp.com,
+        kernel@pengutronix.de, festevam@gmail.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 2/2] ARM: dts: imx6ull: add MYiR MYS-6ULX SBC
+Message-ID: <20200713064136.GG12113@dragon>
+References: <20200705130126.64285-1-parthiban@linumiz.com>
+ <20200705130126.64285-2-parthiban@linumiz.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFXsbZoovWBavRFaEWEFcSkVjNx26BkKOkhcutNfzL8MrHwMTw@mail.gmail.com>
+In-Reply-To: <20200705130126.64285-2-parthiban@linumiz.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Jul 04, 2020 at 08:16:10PM -0700, Chris Healy wrote:
-> esdhc0 is connected to an eMMC, so it is safe to pass the "no-sdio"/"no-sd"
-> properties.
+On Sun, Jul 05, 2020 at 03:01:26PM +0200, Parthiban Nallathambi wrote:
+> Add support for the MYiR imx6ULL based single board computer
+> equipped with on board 256MB NAND & RAM. The board also
+> provides expansion header for expansion board, but this
+> commit adds only support for SBC.
 > 
-> esdhc1 is wired to a standard SD socket, so pass the "no-sdio" property.
+> Signed-off-by: Parthiban Nallathambi <parthiban@linumiz.com>
+> ---
 > 
-> Signed-off-by: Chris Healy <cphealy@gmail.com>
+> Notes:
+>     Changelog v3:
+>     - use only 'eval' as compatability and rename devicetree
+>     name to -eval suffix
+>     
+>     Changelog v2:
+>     - moved regulator under root node
+>     - status property removed
+> 
+>  arch/arm/boot/dts/Makefile                    |   1 +
+>  .../boot/dts/imx6ull-myir-mys-6ulx-eval.dts   |  19 ++
+>  arch/arm/boot/dts/imx6ull-myir-mys-6ulx.dtsi  | 238 ++++++++++++++++++
+>  3 files changed, 258 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx6ull-myir-mys-6ulx-eval.dts
+>  create mode 100644 arch/arm/boot/dts/imx6ull-myir-mys-6ulx.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index e6a1cac0bfc7..5e07ed88970f 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -617,6 +617,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
+>  	imx6ull-14x14-evk.dtb \
+>  	imx6ull-colibri-eval-v3.dtb \
+>  	imx6ull-colibri-wifi-eval-v3.dtb \
+> +	imx6ull-myir-mys-6ulx-eval.dtb \
+>  	imx6ull-opos6uldev.dtb \
+>  	imx6ull-phytec-segin-ff-rdk-nand.dtb \
+>  	imx6ull-phytec-segin-ff-rdk-emmc.dtb \
+> diff --git a/arch/arm/boot/dts/imx6ull-myir-mys-6ulx-eval.dts b/arch/arm/boot/dts/imx6ull-myir-mys-6ulx-eval.dts
+> new file mode 100644
+> index 000000000000..e086d916c951
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6ull-myir-mys-6ulx-eval.dts
+> @@ -0,0 +1,19 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2020 Linumiz
+> + * Author: Parthiban Nallathambi <parthiban@linumiz.com>
+> + */
+> +
+> +/dts-v1/;
+> +#include "imx6ull.dtsi"
+> +#include "imx6ull-myir-mys-6ulx.dtsi"
+> +
+> +/ {
+> +	model = "MYiR i.MX6ULL MYS-6ULX Single Board Computer with NAND";
+> +	compatible = "myir,imx6ull-mys-6ulx-eval", "myir,imx6ull-mys-6ulx",
 
-I would suggest something like below for patch subject.
-
-  ARM: dts: vf610-zii-ssmb-dtu: Add no-sdio/no-sd properties
-
-Also the patch doesn't apply to my branch.
+"myir,imx6ull-mys-6ulx" is not documented?  You need to either document
+or drop it.
 
 Shawn
 
-> ---
->  arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
-> b/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
-> index 0bb3dcff0b79..7d4ddfb6b5b5 100644
-> --- a/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
-> +++ b/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
-> @@ -81,6 +81,8 @@
->      non-removable;
->      no-1-8-v;
->      keep-power-in-suspend;
-> +    no-sdio;
-> +    no-sd;
->      status = "okay";
->  };
-> 
-> @@ -88,6 +90,7 @@
->      pinctrl-names = "default";
->      pinctrl-0 = <&pinctrl_esdhc1>;
->      bus-width = <4>;
-> +    no-sdio;
->      status = "okay";
->  };
-> 
+> +		     "fsl,imx6ull";
+> +};
+> +
+> +&gpmi {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm/boot/dts/imx6ull-myir-mys-6ulx.dtsi b/arch/arm/boot/dts/imx6ull-myir-mys-6ulx.dtsi
+> new file mode 100644
+> index 000000000000..03365a1ca8e6
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6ull-myir-mys-6ulx.dtsi
+> @@ -0,0 +1,238 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2020 Linumiz
+> + * Author: Parthiban Nallathambi <parthiban@linumiz.com>
+> + */
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/pwm/pwm.h>
+> +
+> +/ {
+> +	model = "MYiR MYS-6ULX Single Board Computer";
+> +	compatible = "myir,imx6ull-mys-6ulx", "fsl,imx6ull";
+> +
+> +	chosen {
+> +		stdout-path = &uart1;
+> +	};
+> +
+> +	reg_vdd_5v: regulator-vdd-5v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VDD_5V";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +	};
+> +
+> +	reg_vdd_3v3: regulator-vdd-3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VDD_3V3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-always-on;
+> +		vin-supply = <&reg_vdd_5v>;
+> +	};
+> +};
+> +
+> +&fec1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_enet1>;
+> +	phy-mode = "rmii";
+> +	phy-handle = <&ethphy0>;
+> +	phy-supply = <&reg_vdd_3v3>;
+> +	status = "okay";
+> +
+> +	mdio: mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		ethphy0: ethernet-phy@0 {
+> +			reg = <0>;
+> +			interrupt-parent = <&gpio5>;
+> +			interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&clks IMX6UL_CLK_ENET_REF>;
+> +			clock-names = "rmii-ref";
+> +		};
+> +	};
+> +};
+> +
+> +&gpmi {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_gpmi_nand>;
+> +	nand-on-flash-bbt;
+> +	status = "disabled";
+> +};
+> +
+> +&uart1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart1>;
+> +	status = "okay";
+> +};
+> +
+> +&usbotg1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usb_otg1_id>;
+> +	dr_mode = "otg";
+> +	status = "okay";
+> +};
+> +
+> +&usbotg2 {
+> +	dr_mode = "host";
+> +	disable-over-current;
+> +	status = "okay";
+> +};
+> +
+> +&usdhc1 {
+> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+> +	pinctrl-0 = <&pinctrl_usdhc1>;
+> +	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
+> +	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
+> +	cd-gpios = <&gpio1 19 GPIO_ACTIVE_LOW>;
+> +	no-1-8-v;
+> +	keep-power-in-suspend;
+> +	wakeup-source;
+> +	vmmc-supply = <&reg_vdd_3v3>;
+> +	status = "okay";
+> +};
+> +
+> +&usdhc2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc2>;
+> +	pinctrl-1 = <&pinctrl_usdhc2_100mhz>;
+> +	pinctrl-2 = <&pinctrl_usdhc2_200mhz>;
+> +	bus-width = <8>;
+> +	non-removable;
+> +	keep-power-in-suspend;
+> +	vmmc-supply = <&reg_vdd_3v3>;
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl_enet1: enet1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_GPIO1_IO06__ENET1_MDIO	0x1b0b0
+> +			MX6UL_PAD_GPIO1_IO07__ENET1_MDC		0x1b0b0
+> +			MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN	0x1b0b0
+> +			MX6UL_PAD_ENET1_RX_ER__ENET1_RX_ER	0x1b0b0
+> +			MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00	0x1b0b0
+> +			MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01	0x1b0b0
+> +			MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN	0x1b0b0
+> +			MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00	0x1b0b0
+> +			MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01	0x1b0b0
+> +			MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1	0x4001b031
+> +			MX6UL_PAD_SNVS_TAMPER5__GPIO5_IO05	0x1b0b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_gpmi_nand: gpminandgrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_NAND_CLE__RAWNAND_CLE		0x0b0b1
+> +			MX6UL_PAD_NAND_ALE__RAWNAND_ALE		0x0b0b1
+> +			MX6UL_PAD_NAND_WP_B__RAWNAND_WP_B	0x0b0b1
+> +			MX6UL_PAD_NAND_READY_B__RAWNAND_READY_B	0x0b000
+> +			MX6UL_PAD_NAND_CE0_B__RAWNAND_CE0_B	0x0b0b1
+> +			MX6UL_PAD_NAND_RE_B__RAWNAND_RE_B	0x0b0b1
+> +			MX6UL_PAD_NAND_WE_B__RAWNAND_WE_B	0x0b0b1
+> +			MX6UL_PAD_NAND_DATA00__RAWNAND_DATA00	0x0b0b1
+> +			MX6UL_PAD_NAND_DATA01__RAWNAND_DATA01	0x0b0b1
+> +			MX6UL_PAD_NAND_DATA02__RAWNAND_DATA02	0x0b0b1
+> +			MX6UL_PAD_NAND_DATA03__RAWNAND_DATA03	0x0b0b1
+> +			MX6UL_PAD_NAND_DATA04__RAWNAND_DATA04	0x0b0b1
+> +			MX6UL_PAD_NAND_DATA05__RAWNAND_DATA05	0x0b0b1
+> +			MX6UL_PAD_NAND_DATA06__RAWNAND_DATA06	0x0b0b1
+> +			MX6UL_PAD_NAND_DATA07__RAWNAND_DATA07	0x0b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart1: uart1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX	0x1b0b1
+> +			MX6UL_PAD_UART1_RX_DATA__UART1_DCE_RX	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usb_otg1_id: usbotg1idgrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_GPIO1_IO00__ANATOP_OTG1_ID	0x17059
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1: usdhc1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x17059
+> +			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x10059
+> +			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x17059
+> +			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x17059
+> +			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x17059
+> +			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x17059
+> +			MX6UL_PAD_UART1_RTS_B__GPIO1_IO19	0x17059
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
+> +		fsl,pins = <
+> +			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x170b9
+> +			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x100b9
+> +			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x170b9
+> +			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x170b9
+> +			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x170b9
+> +			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x170b9
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
+> +		fsl,pins = <
+> +			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x170f9
+> +			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x100f9
+> +			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x170f9
+> +			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x170f9
+> +			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x170f9
+> +			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x170f9
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc2: usdhc2grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x10069
+> +			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x17059
+> +			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x17059
+> +			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x17059
+> +			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x17059
+> +			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x17059
+> +			MX6UL_PAD_NAND_DATA04__USDHC2_DATA4	0x17059
+> +			MX6UL_PAD_NAND_DATA05__USDHC2_DATA5	0x17059
+> +			MX6UL_PAD_NAND_DATA06__USDHC2_DATA6	0x17059
+> +			MX6UL_PAD_NAND_DATA07__USDHC2_DATA7	0x17059
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
+> +		fsl,pins = <
+> +			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x100b9
+> +			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x170b9
+> +			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x170b9
+> +			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x170b9
+> +			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x170b9
+> +			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x170b9
+> +			MX6UL_PAD_NAND_DATA04__USDHC2_DATA4	0x170b9
+> +			MX6UL_PAD_NAND_DATA05__USDHC2_DATA5	0x170b9
+> +			MX6UL_PAD_NAND_DATA06__USDHC2_DATA6	0x170b9
+> +			MX6UL_PAD_NAND_DATA07__USDHC2_DATA7	0x170b9
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
+> +		fsl,pins = <
+> +			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x100f9
+> +			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x170f9
+> +			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x170f9
+> +			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x170f9
+> +			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x170f9
+> +			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x170f9
+> +			MX6UL_PAD_NAND_DATA04__USDHC2_DATA4	0x170f9
+> +			MX6UL_PAD_NAND_DATA05__USDHC2_DATA5	0x170f9
+> +			MX6UL_PAD_NAND_DATA06__USDHC2_DATA6	0x170f9
+> +			MX6UL_PAD_NAND_DATA07__USDHC2_DATA7	0x170f9
+> +		>;
+> +	};
+> +};
 > -- 
-> 2.21.3
+> 2.27.0
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
