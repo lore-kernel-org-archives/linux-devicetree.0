@@ -2,132 +2,99 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50FA7C433EC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A45C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 314D72075F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDD4A2075F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:20:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594621132;
-	bh=hXHCtXD4RJbWVedvu6u9jHc3/dLrfcFLZ/u3QlppIXs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aFt3hLA+MQBk/e3KtmoWkOP4YoVt1hQ78NiWidS1guo9y3u1HzGMp4T9YQ53kASCB
-	 LxDWosGH9spNt/THRmpj0mzjbwSGT1kUHykB4pOEfMr518wNyuxE5hRe+t8dYkpchF
-	 qcRiJFhaJ/uOlsMXoRNEPQZd1z09jU+MoWf9eVK4=
+	s=default; t=1594621221;
+	bh=WuqdpFUcq4uF0/RIHZ+88zR6TAiC4uqqH38bj35kais=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0Q8JVFlB66jn6+h4qkxnsCk7JOv4WpjLB7ICE6TCJjVXbMzbRkvczQN6dP0hNmdHS
+	 CtcNFmvv6CmVdMdL2s+1ZQBkH/TNyhRlM48DDMcMQ/Xkh/Rgad4zDtvgEj3zDlHHLQ
+	 61WIyi0No1dhlwGkHrnCAZK+cfEaYEIgCllz0fbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725804AbgGMGSv (ORCPT
+        id S1729094AbgGMGUV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 02:18:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48680 "EHLO mail.kernel.org"
+        Mon, 13 Jul 2020 02:20:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729211AbgGMGSv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 02:18:51 -0400
-Received: from localhost (unknown [122.182.251.219])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728488AbgGMGUU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 02:20:20 -0400
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFA412065F;
-        Mon, 13 Jul 2020 06:18:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C14720674;
+        Mon, 13 Jul 2020 06:20:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594621130;
-        bh=hXHCtXD4RJbWVedvu6u9jHc3/dLrfcFLZ/u3QlppIXs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D4+1yQRpJHH7xk0Cxq1yFppBnw2P2siD6Fzor2gxKeAFxi53s93i5mZcjFqw03GK3
-         XI701noqf23ekCWpTOHfNvzG8mnJs4jcwYhibApH1a/ihUdzjkoLKqEQ5QoD/XZoWL
-         m33wml+mnE9hAMxIm2IMTy3LpfxOxOdzFliyFl10=
-Date:   Mon, 13 Jul 2020 11:48:46 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] phy: armada-38x: fix NETA lockup when repeatedly
- switching speeds
-Message-ID: <20200713061846.GE34333@vkoul-mobl>
-References: <20200630160452.GD1551@shell.armlinux.org.uk>
- <E1jqIlO-0007rX-Tv@rmk-PC.armlinux.org.uk>
- <20200701065727.GY2599@vkoul-mobl>
- <20200710151921.GJ1551@shell.armlinux.org.uk>
+        s=default; t=1594621220;
+        bh=WuqdpFUcq4uF0/RIHZ+88zR6TAiC4uqqH38bj35kais=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=mAHy2i16DHnsjtZOV9CiFKZ8CB6E94YhMONfe1eYB8cgTEYhjamHkCxYaxqhpNEpV
+         fGje76CwK0714jEll/wPYDMz/deqygPuGMeSMnIvkbfJ+0+VcMd+/8ldR5U4k4ERYt
+         NjDeFeKkyR2QPSj9g5FGo+LVWq3C0yRijSnJSTTY=
+Received: by mail-lj1-f182.google.com with SMTP id e4so15451448ljn.4;
+        Sun, 12 Jul 2020 23:20:19 -0700 (PDT)
+X-Gm-Message-State: AOAM532by/n0cQogQYUYwdv8n4KWvfxFZzpilIj6gKRb5OcPi8+/j+8k
+        L23y3q56gghv84zKQNW0DJi0Q7+fgEh4S6a7nXk=
+X-Google-Smtp-Source: ABdhPJwb9dJ9VZo72PEXS5lIrY6ZN22jA33AQiuxNlQxQodB1qXlHopTmumJdSl0lOT2r+0ZQLDwGAu+Y+IPRKaEWJE=
+X-Received: by 2002:a05:651c:200f:: with SMTP id s15mr36978008ljo.125.1594621218404;
+ Sun, 12 Jul 2020 23:20:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200710151921.GJ1551@shell.armlinux.org.uk>
+References: <20200713060842.471356-1-acourbot@chromium.org> <20200713060842.471356-3-acourbot@chromium.org>
+In-Reply-To: <20200713060842.471356-3-acourbot@chromium.org>
+From:   Chen-Yu Tsai <wens@kernel.org>
+Date:   Mon, 13 Jul 2020 14:20:06 +0800
+X-Gmail-Original-Message-ID: <CAGb2v66rFAb6eczD=ct68b7Q60ZvFyMCRN6XdY-rUAbk6zVupw@mail.gmail.com>
+Message-ID: <CAGb2v66rFAb6eczD=ct68b7Q60ZvFyMCRN6XdY-rUAbk6zVupw@mail.gmail.com>
+Subject: Re: [PATCH v3 02/16] dt-bindings: media: mtk-vcodec: document SCP node
+To:     Alexandre Courbot <acourbot@chromium.org>
+Cc:     Tiffany Lin <tiffany.lin@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Maoguang Meng <maoguang.meng@mediatek.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 10-07-20, 16:19, Russell King - ARM Linux admin wrote:
-> On Wed, Jul 01, 2020 at 12:27:27PM +0530, Vinod Koul wrote:
-> > On 30-06-20, 17:05, Russell King wrote:
-> > > The mvneta hardware appears to lock up in various random ways when
-> > > repeatedly switching speeds between 1G and 2.5G, which involves
-> > > reprogramming the COMPHY.  It is not entirely clear why this happens,
-> > > but best guess is that reprogramming the COMPHY glitches mvneta clocks
-> > > causing the hardware to fail.  It seems that rebooting resolves the
-> > > failure, but not down/up cycling the interface alone.
-> > > 
-> > > Various other approaches have been tried, such as trying to cleanly
-> > > power down the COMPHY and then take it back through the power up
-> > > initialisation, but this does not seem to help.
-> > > 
-> > > It was finally noticed that u-boot's last step when configuring a
-> > > COMPHY for "SGMII" mode was to poke at a register described as
-> > > "GBE_CONFIGURATION_REG", which is undocumented in any external
-> > > documentation.  All that we have is the fact that u-boot sets a bit
-> > > corresponding to the "SGMII" lane at the end of COMPHY initialisation.
-> > > 
-> > > Experimentation shows that if we clear this bit prior to changing the
-> > > speed, and then set it afterwards, mvneta does not suffer this problem
-> > > on the SolidRun Clearfog when switching speeds between 1G and 2.5G.
-> > > 
-> > > This problem was found while script-testing phylink.
-> > > 
-> > > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-> > > ---
-> > >  arch/arm/boot/dts/armada-38x.dtsi          |  3 +-
-> > 
-> > lgtm, i need ack for dts parts before I can apply this
-> 
-> I'm not sure what the situation is for Bootlin, but they don't seem to
-> be very responsive right now (covid related?)
-> 
-> What I know from what I've been party to on netdev is that Bootlin
-> sent a patch for the MVPP2 driver, and the very next day someone
-> reported that the patch caused a bug.  Unfortunately, the patch got
-> picked up anyway, but there was no response from Bootlin.  After a
-> month or so, -final was released containing this patch, so now it
-> had become a regression - and still no response from Bootlin.
-> 
-> Eventually the bug got fixed - not because Bootlin fixed it, but
-> because I ended up spending the time researching how that part of
-> the network driver worked, diagnosing what was going on, and
-> eventually fixing it in the most obvious way - but it's not clear
-> that the fix was the right approach.  Bootlin never commented.  See
-> 3138a07ce219 ("net: mvpp2: fix RX hashing for non-10G ports").
-> 
-> So, I think we have to assume that Bootlin are struggling right now,
-> and as it's been over a week, it's unlikely that they are going to
-> respond soon.  What do you think we should do?
-> 
-> I also note that Rob has not responded to the DT binding change
-> either, despite me gently prodding, and Rob processing a whole raft
-> of DT binding stuff yesterday.
-> 
-> I can split the DTS change from the rest of the patch, but I don't
-> think that really helps without at least the binding change being
-> agreed.
+On Mon, Jul 13, 2020 at 2:09 PM Alexandre Courbot <acourbot@chromium.org> wrote:
+>
+> The mediatek codecs can use either the VPU or the SCP as their interface
+> to firmware. Reflect this in the DT bindings.
+>
+> Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+> Acked-by: Tiffany Lin <tiffany.lin@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/media/mediatek-vcodec.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+> index b6b5dde6abd8..7aef0a4fe207 100644
+> --- a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+> +++ b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+> @@ -19,7 +19,9 @@ Required properties:
+>  - iommus : should point to the respective IOMMU block with master port as
+>    argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+>    for details.
+> -- mediatek,vpu : the node of video processor unit
+> +One of the two following nodes:
+> +- mediatek,vpu : the node of the video processor unit, if using VPU.
+> +- mediatek,scp : the noode of the SCP unit, if using SCP.
 
-I would prefer splitting, you may sent the DTS to arm arch folks if no
-response from subarch folks
+                         ^ typo / extra o
 
--- 
-~Vinod
+ChenYu
