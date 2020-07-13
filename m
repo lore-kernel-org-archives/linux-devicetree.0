@@ -2,44 +2,44 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6A7C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 13:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B2EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 13:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E31020738
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 13:44:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0111520771
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 13:50:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594647898;
-	bh=ct2PJVK3v9aqQdAaYhtWeltGvO9MFnxLdsz9ZGp1m8c=;
+	s=default; t=1594648228;
+	bh=zx+4Nn0WfziKJQDknstYCw7HzoUzPTgS03z9BIVq5Y0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OcdlamyRVmGdOROKY0MXHrfcODXXd1neMuxoWSc9AcmBkPP3GroCc9TIi7hOgpmeR
-	 IC76tPdI8w0YDl1FOR+IhVFqyDyCuL+go4P1cBC5yH5NPj3Ys2wOTcDKHEW0bDCvGs
-	 QgxZJtCkhTo4zzu+XYK6a+IVyn4xT7DIHx7BZ6Zw=
+	b=m6jrOWS7cqAQdRUkq00SDn+eYVnPHMlk+El2dObcXBfVVE0MF4d2t5YBzo7B3jPXn
+	 xum/geuUEz/Zzuj9teQObJ9FpCukBB93MAEVxmaDa57BdW23ZKruThYq68u44ZzydS
+	 MjFA3HIjP+Uh0/FBztg4TnIYhI17/fbcigNFMszc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729821AbgGMNo5 (ORCPT
+        id S1729593AbgGMNu1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 09:44:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51704 "EHLO mail.kernel.org"
+        Mon, 13 Jul 2020 09:50:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728950AbgGMNo5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 09:44:57 -0400
+        id S1729581AbgGMNu1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 09:50:27 -0400
 Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 099732072D;
-        Mon, 13 Jul 2020 13:44:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3419206F4;
+        Mon, 13 Jul 2020 13:50:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594647897;
-        bh=ct2PJVK3v9aqQdAaYhtWeltGvO9MFnxLdsz9ZGp1m8c=;
+        s=default; t=1594648227;
+        bh=zx+4Nn0WfziKJQDknstYCw7HzoUzPTgS03z9BIVq5Y0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=03i+wBFkvHUzATa6golRiPGIrx0zXbZhvoXvywEQM//aVB3Tm7aAGC04FwFuBdj9T
-         lSsDOaF8U+0pTuB3FczsXbFim/rN6/dcBEdhIwuZL0Sd9NmdpAXepHsY8EmmaB0WQn
-         +bf9cYr32pA2Ay3X0/BpQ2dKvur7ALhfOZ30QMRo=
-Date:   Mon, 13 Jul 2020 14:44:51 +0100
+        b=CWJs6c41a1vUpwjTSeKRjm45pshqAXeZaQakNlzF7KpEth8qeT5EB4TX6PXc9DBKL
+         vhMS9bIIuLyg2+hoHEX+xh++nofLTHpV9tS6SZOeKvp5WuXfFYgPOE2nDcHS0/pgob
+         NLawUJduIQdac3phQNUD8LP+8MdaxnXT64+wh1q8=
+Date:   Mon, 13 Jul 2020 14:50:20 +0100
 From:   Will Deacon <will@kernel.org>
 To:     Krishna Reddy <vdumpa@nvidia.com>
 Cc:     joro@8bytes.org, robin.murphy@arm.com, robh+dt@kernel.org,
@@ -50,37 +50,28 @@ Cc:     joro@8bytes.org, robin.murphy@arm.com, robh+dt@kernel.org,
         praithatha@nvidia.com, talho@nvidia.com, bbiswas@nvidia.com,
         mperttunen@nvidia.com, nicolinc@nvidia.com, bhuntsman@nvidia.com,
         nicoleotsuka@gmail.com
-Subject: Re: [PATCH v10 5/5] iommu/arm-smmu: Add global/context fault
- implementation hooks
-Message-ID: <20200713134450.GC2739@willie-the-truck>
+Subject: Re: [PATCH v10 0/5] NVIDIA ARM SMMU Implementation
+Message-ID: <20200713135020.GD2739@willie-the-truck>
 References: <20200708050017.31563-1-vdumpa@nvidia.com>
- <20200708050017.31563-6-vdumpa@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200708050017.31563-6-vdumpa@nvidia.com>
+In-Reply-To: <20200708050017.31563-1-vdumpa@nvidia.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 07, 2020 at 10:00:17PM -0700, Krishna Reddy wrote:
-> Add global/context fault hooks to allow vendor specific implementations
-> override default fault interrupt handlers.
-> 
-> Update NVIDIA implementation to override the default global/context fault
-> interrupt handlers and handle interrupts across the two ARM MMU-500s that
-> are programmed identically.
-> 
-> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
-> ---
->  drivers/iommu/arm-smmu-nvidia.c | 99 +++++++++++++++++++++++++++++++++
->  drivers/iommu/arm-smmu.c        | 17 +++++-
->  drivers/iommu/arm-smmu.h        |  3 +
->  3 files changed, 117 insertions(+), 2 deletions(-)
+On Tue, Jul 07, 2020 at 10:00:12PM -0700, Krishna Reddy wrote:
+> Changes in v10:
+> Perform SMMU base ioremap before calling implementation init.
+> Check for Global faults across both ARM MMU-500s during global interrupt.
+> Check for context faults across all contexts of both ARM MMU-500s during context fault interrupt.
+> Add new DT binding nvidia,smmu-500 for NVIDIA implementation.
 
-Given that faults shouldn't occur during normal operation, is this patch
-actually necessary?
+Please repost based on my SMMU queue, as this doesn't currently apply.
+
+https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=for-joerg/arm-smmu/updates
 
 Will
