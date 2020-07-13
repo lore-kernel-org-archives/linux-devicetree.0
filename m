@@ -2,374 +2,137 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D46C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA58C433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4945020773
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:44:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594655094;
-	bh=PuVHpJbGyTKPTRipnTqfIdH1jqlvLpbt9Fm9AkKe7D4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FMTmNHDxoGVRRYUQUpdcoeynEaYB6vXJRs4Hr9hDvo6XhIpM0YpgR61jzSXlulUYX
-	 tvIBuzoELFC0yaA4ZdYkcwfi8C2CYpPA4lMZtHutq7c19opP8DkNN2spgr/swWUJYu
-	 l81g7PFQdoidbbtxmIsqD3cEZD+rHHLBbke6RHKk=
+	by mail.kernel.org (Postfix) with ESMTP id 9E45020578
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:46:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WBZpXP0+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729703AbgGMPox (ORCPT
+        id S1729649AbgGMPqA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:44:53 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36314 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729644AbgGMPox (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 11:44:53 -0400
-Received: by mail-io1-f67.google.com with SMTP id y2so13967639ioy.3;
-        Mon, 13 Jul 2020 08:44:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=YERaL+KHCGMJb0BAoF+RGnX8A9CCPeD7GkkxlhmLQ48=;
-        b=QBDrw1nkQHelw3/cLP3ynEPqtCzZBDvSKRvVN7GieyW/uqOwB7wY5X2kMOwnlY2dj2
-         ZtkVEeyoZSeH0rOYPjGyIIK9vDT6izmbO+8yMo6/04jH9ez21uimffe91tDk904eLEWm
-         z1Gr5/jF+go8e53Fwji1xpYU0oDi2dm1lViTFJNmabsnOXcEMMN7jfioawU/4ObSFL/1
-         NAy13bY5vwhQ2LcMeUjybiSEl1qmXSICHdjZo5+d6xgFK4GRCTwmgnJVcKQ3/eOmUDUV
-         ZsAnP/1BOfJ1DIx3RBoIkyzZDxs2H+FooPN/0jJspg8MH5tXK+NM1qdBsP+fpz8Fe9LZ
-         R1cw==
-X-Gm-Message-State: AOAM5331d+Pqjt1vWwnU2djCZT4JrhkT52mo0fbiA8+zRjdhlwaF6HyM
-        bpRRtEy/xmKmrQEWFEyuqA==
-X-Google-Smtp-Source: ABdhPJz7mH6zxg+zhBdKAmEOYd5Bdwx0f3TSPuRCowLBbfLYcV1UtN5ZzzZ4LH9FU1RqFm56rZ03JA==
-X-Received: by 2002:a05:6602:21c7:: with SMTP id c7mr290398ioc.1.1594655091561;
-        Mon, 13 Jul 2020 08:44:51 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id d9sm974698iod.55.2020.07.13.08.44.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 08:44:50 -0700 (PDT)
-Received: (nullmailer pid 265817 invoked by uid 1000);
-        Mon, 13 Jul 2020 15:44:49 -0000
-Date:   Mon, 13 Jul 2020 09:44:49 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH 2/3] dt-bindings: adv7604: Convert bindings to json-schema
-Message-ID: <20200713154449.GA256154@bogus>
-References: <20200713111844.528313-1-niklas.soderlund+renesas@ragnatech.se>
- <20200713111844.528313-3-niklas.soderlund+renesas@ragnatech.se>
+        Mon, 13 Jul 2020 11:46:00 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45302 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729644AbgGMPqA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 11:46:00 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06DFjjDC000681;
+        Mon, 13 Jul 2020 10:45:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594655145;
+        bh=BXLaxwIJXLV+Ac4q6dmalYN8p6JTcCD3nvyE4KBB/JA=;
+        h=From:To:CC:Subject:Date;
+        b=WBZpXP0+LbdNAOMDQxe3/d69cFWxMB7ZGaSMf1wpmEOu3+rzo1NcuxTxVg/MHGPJY
+         6HziO5gs+ar4FWc4Fmlc31wkSsZk+rFyiI9k+j1VDW+fDuZ+TnkAXyfZigXnadm4HQ
+         IyVmMBpt7W9KIuYwy9zbiwL3kn4JuZM6rwp3EYEs=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06DFjjX6130634
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 13 Jul 2020 10:45:45 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 13
+ Jul 2020 10:45:45 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 13 Jul 2020 10:45:45 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06DFjjwm033372;
+        Mon, 13 Jul 2020 10:45:45 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>,
+        <marek.behun@nic.cz>
+CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v30 00/16] Multicolor Framework v30
+Date:   Mon, 13 Jul 2020 10:45:28 -0500
+Message-ID: <20200713154544.1683-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200713111844.528313-3-niklas.soderlund+renesas@ragnatech.se>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 01:18:43PM +0200, Niklas Söderlund wrote:
-> Convert ADV7604 video decoder documentation to json-schema.
-> 
-> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> ---
->  .../devicetree/bindings/media/i2c/adv7604.txt |  87 ---------
->  .../bindings/media/i2c/adv7604.yaml           | 171 ++++++++++++++++++
->  2 files changed, 171 insertions(+), 87 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/media/i2c/adv7604.txt
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/adv7604.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-> deleted file mode 100644
-> index 8c7cdc7cd7aaebc8..0000000000000000
-> --- a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-> +++ /dev/null
-> @@ -1,87 +0,0 @@
-> -* Analog Devices ADV7604/11/12 video decoder with HDMI receiver
-> -
-> -The ADV7604 and ADV7611/12 are multiformat video decoders with an integrated
-> -HDMI receiver. The ADV7604 has four multiplexed HDMI inputs and one analog
-> -input, and the ADV7611 has one HDMI input and no analog input. The 7612 is
-> -similar to the 7611 but has 2 HDMI inputs.
-> -
-> -These device tree bindings support the ADV7611/12 only at the moment.
-> -
-> -Required Properties:
-> -
-> -  - compatible: Must contain one of the following
-> -    - "adi,adv7611" for the ADV7611
-> -    - "adi,adv7612" for the ADV7612
-> -
-> -  - reg: I2C slave addresses
-> -    The ADV76xx has up to thirteen 256-byte maps that can be accessed via the
-> -    main I2C ports. Each map has it own I2C address and acts as a standard
-> -    slave device on the I2C bus. The main address is mandatory, others are
-> -    optional and revert to defaults if not specified.
-> -
-> -The device node must contain one 'port' child node per device input and output
-> -port, in accordance with the video interface bindings defined in
-> -Documentation/devicetree/bindings/media/video-interfaces.txt. The port nodes
-> -are numbered as follows.
-> -
-> -  Port			ADV7611    ADV7612
-> -------------------------------------------------------------
-> -  HDMI			0             0, 1
-> -  Digital output	1                2
-> -
-> -The digital output port node must contain at least one endpoint.
-> -
-> -Optional Properties:
-> -
-> -  - hpd-gpios: References to the GPIOs that control the HDMI hot-plug
-> -    detection pins, one per HDMI input. The active flag indicates the GPIO
-> -    level that enables hot-plug detection.
-> -  - reset-gpios: Reference to the GPIO connected to the device's reset pin.
-> -  - default-input: Select which input is selected after reset.
-> -  - reg-names : Names of maps with programmable addresses.
-> -		It can contain any map needing a non-default address.
-> -		Possible maps names are :
-> -		  "main", "avlink", "cec", "infoframe", "esdp", "dpp", "afe",
-> -		  "rep", "edid", "hdmi", "test", "cp", "vdp"
-> -
-> -Optional Endpoint Properties:
-> -
-> -  The following three properties are defined in video-interfaces.txt and are
-> -  valid for source endpoints only.
-> -
-> -  - hsync-active: Horizontal synchronization polarity. Defaults to active low.
-> -  - vsync-active: Vertical synchronization polarity. Defaults to active low.
-> -  - pclk-sample: Pixel clock polarity. Defaults to output on the falling edge.
-> -
-> -  If none of hsync-active, vsync-active and pclk-sample is specified the
-> -  endpoint will use embedded BT.656 synchronization.
-> -
-> -Example:
-> -
-> -	hdmi_receiver@4c {
-> -		compatible = "adi,adv7611";
-> -		/*
-> -		 * The edid page will be accessible @ 0x66 on the I2C bus. All
-> -		 * other maps will retain their default addresses.
-> -		 */
-> -		reg = <0x4c>, <0x66>;
-> -		reg-names = "main", "edid";
-> -
-> -		reset-gpios = <&ioexp 0 GPIO_ACTIVE_LOW>;
-> -		hpd-gpios = <&ioexp 2 GPIO_ACTIVE_HIGH>;
-> -
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -
-> -		default-input = <0>;
-> -
-> -		port@0 {
-> -			reg = <0>;
-> -		};
-> -		port@1 {
-> -			reg = <1>;
-> -			hdmi_in: endpoint {
-> -				remote-endpoint = <&ccdc_in>;
-> -			};
-> -		};
-> -	};
-> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.yaml b/Documentation/devicetree/bindings/media/i2c/adv7604.yaml
-> new file mode 100644
-> index 0000000000000000..d354fd8e0cc88d93
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.yaml
-> @@ -0,0 +1,171 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/i2c/adv7604.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices ADV7604/11/12 video decoder with HDMI receiver
-> +
-> +maintainers:
-> +  - Hans Verkuil <hverkuil-cisco@xs4all.nl>
-> +
-> +description:
-> +  The ADV7604 and ADV7611/12 are multiformat video decoders with an integrated
-> +  HDMI receiver. The ADV7604 has four multiplexed HDMI inputs and one analog
-> +  input, and the ADV7611 has one HDMI input and no analog input. The 7612 is
-> +  similar to the 7611 but has 2 HDMI inputs.
-> +
-> +  These device tree bindings support the ADV7611/12 only at the moment.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +        - adi,adv7611
-> +        - adi,adv7612
-> +
-> +  reg:
-> +    minItems: 1
-> +    maxItems: 13
-> +
-> +  reg-names:
-> +    items:
-> +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-> +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-> +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-> +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-> +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-> +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-> +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-> +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-> +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-> +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-> +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-> +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-> +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
+Hello
 
-This can be simplified to:
+This is the multi color LED framework.   This framework presents clustered
+colored LEDs into an array and allows the user space to adjust the brightness
+of the cluster using a single file write.  The individual colored LEDs
+intensities are controlled via a single file that is an array of LEDs
 
-items:
-  enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
+Fixed documentation, removed adding a space when reading intensity and index,
+update LP50xx to store trigger directly into led_cdev added RB's by Rob H.
 
-(Make items a schema applying to all items, rather than a list)
+Dan
 
-Though we may want to enforce 'main' is first with:
+Dan Murphy (16):
+  leds: lp55xx: Fix file permissions to use DEVICE_ATTR macros
+  leds: lp5523: Fix various formatting issues in the code
+  dt: bindings: Add multicolor class dt bindings documention
+  leds: Add multicolor ID to the color ID list
+  leds: multicolor: Introduce a multicolor class definition
+  dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
+  leds: lp50xx: Add the LP50XX family of the RGB LED driver
+  dt-bindings: leds: Convert leds-lp55xx to yaml
+  leds: lp55xx: Convert LED class registration to devm_*
+  leds: lp55xx: Add multicolor framework support to lp55xx
+  ARM: defconfig: u8500: Add LP55XX_COMMON config flag
+  leds: lp5523: Update the lp5523 code to add multicolor brightness
+    function
+  leds: lp5521: Add multicolor framework multicolor brightness support
+  ARM: dts: n900: Add reg property to the LP5523 channel node
+  ARM: dts: imx6dl-yapp4: Add reg property to the lp5562 channel node
+  ARM: dts: ste-href: Add reg property to the LP5521 channel nodes
 
-minItems: 1
-maxItems: 13
-items:
-  - const: main
+ .../ABI/testing/sysfs-class-led-multicolor    |  35 +
+ .../bindings/leds/leds-class-multicolor.yaml  |  37 +
+ .../devicetree/bindings/leds/leds-lp50xx.yaml | 130 +++
+ .../devicetree/bindings/leds/leds-lp55xx.txt  | 228 -----
+ .../devicetree/bindings/leds/leds-lp55xx.yaml | 220 +++++
+ Documentation/leds/index.rst                  |   1 +
+ Documentation/leds/leds-class-multicolor.rst  |  86 ++
+ arch/arm/boot/dts/imx6dl-yapp4-common.dtsi    |  14 +-
+ arch/arm/boot/dts/omap3-n900.dts              |  29 +-
+ arch/arm/boot/dts/ste-href.dtsi               |  22 +-
+ arch/arm/configs/u8500_defconfig              |   1 +
+ drivers/leds/Kconfig                          |  32 +-
+ drivers/leds/Makefile                         |   2 +
+ drivers/leds/led-class-multicolor.c           | 204 +++++
+ drivers/leds/led-core.c                       |   1 +
+ drivers/leds/leds-lp50xx.c                    | 784 ++++++++++++++++++
+ drivers/leds/leds-lp5521.c                    |  43 +-
+ drivers/leds/leds-lp5523.c                    |  62 +-
+ drivers/leds/leds-lp5562.c                    |  22 +-
+ drivers/leds/leds-lp55xx-common.c             | 212 +++--
+ drivers/leds/leds-lp55xx-common.h             |  16 +-
+ drivers/leds/leds-lp8501.c                    |  23 +-
+ include/dt-bindings/leds/common.h             |   3 +-
+ include/linux/led-class-multicolor.h          | 121 +++
+ include/linux/platform_data/leds-lp55xx.h     |   7 +
+ 25 files changed, 1975 insertions(+), 360 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+ delete mode 100644 Documentation/devicetree/bindings/leds/leds-lp55xx.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
+ create mode 100644 Documentation/leds/leds-class-multicolor.rst
+ create mode 100644 drivers/leds/led-class-multicolor.c
+ create mode 100644 drivers/leds/leds-lp50xx.c
+ create mode 100644 include/linux/led-class-multicolor.h
 
-These 2 can be combined under an 'allOf'.
+-- 
+2.27.0
 
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +
-> +  hpd-gpios:
-> +    minItems: 1
-> +    description:
-> +      References to the GPIOs that control the HDMI hot-plug detection pins,
-> +      one per HDMI input. The active flag indicates the GPIO level that
-> +      enables hot-plug detection.
-> +
-> +  default-input:
-> +    maxItems: 1
-> +    description:
-> +      Select which input is selected after reset.
-> +
-> +  ports:
-> +    type: object
-> +    description:
-> +      A node containing input and output port nodes with endpoint definitions
-> +      as documented in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: adi,adv7611
-> +    then:
-> +      properties:
-> +        ports:
-> +          properties:
-> +            '#address-cells':
-> +              const: 1
-> +            '#size-cells':
-> +              const: 0
-> +            port@0:
-> +              type: object
-> +              description: Input port
-> +            port@1:
-> +              type: object
-> +              description: Output port
-> +
-> +          required:
-> +            - port@1
-> +
-> +          additionalProperties: false
-> +
-> +      required:
-> +        - ports
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: adi,adv7612
-> +    then:
-> +      properties:
-> +        ports:
-> +          properties:
-> +            '#address-cells':
-> +              const: 1
-> +            '#size-cells':
-> +              const: 0
-> +            port@2:
-> +              type: object
-> +              description: Output port
-> +
-> +          patternProperties:
-> +            "^port@[0-1]$":
-> +              type: object
-> +              description: Input port
-> +
-> +          required:
-> +            - port@2
-> +
-> +          additionalProperties: false
-> +
-> +      required:
-> +        - ports
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    i2c {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            hdmi_receiver@4c {
-> +                    compatible = "adi,adv7611";
-> +                    /*
-> +                     * The edid page will be accessible @ 0x66 on the I2C bus. All
-> +                     * other maps will retain their default addresses.
-> +                     */
-> +                    reg = <0x4c>, <0x66>;
-> +                    reg-names = "main", "edid";
-> +
-> +                    reset-gpios = <&ioexp 0 GPIO_ACTIVE_LOW>;
-> +                    hpd-gpios = <&ioexp 2 GPIO_ACTIVE_HIGH>;
-> +                    default-input = <0>;
-> +
-> +                    ports {
-> +                            #address-cells = <1>;
-> +                            #size-cells = <0>;
-> +
-> +                            port@0 {
-> +                                    reg = <0>;
-> +                            };
-> +
-> +                            port@1 {
-> +                                    reg = <1>;
-> +                                    hdmi_in: endpoint {
-> +                                            remote-endpoint = <&ccdc_in>;
-> +                                    };
-> +                            };
-> +                    };
-> +
-> +
-> +            };
-> +    };
-> -- 
-> 2.27.0
-> 
