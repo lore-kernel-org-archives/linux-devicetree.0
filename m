@@ -2,100 +2,102 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D49C433ED
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33044C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBBF820674
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04B3720758
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:51:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594666224;
-	bh=Gz1tbOn6WGGUuqnXjDQcSzCKA3wY4PYaQ9UYF1hupR4=;
+	s=default; t=1594666280;
+	bh=2u4NzwccIq+s0JWCd50cqYM7N/biSOkqRNZOgiHeIlo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a6Kn0Vzp2oG/XoQ2e/fzBF2zwR7J4CBkadpHyQyTItHNmYzUkL5/IImZjLdbzNkyC
-	 fwuPyjvSD3aANsCiHl+ry9UVpnvyvG7xsHQI1YqllEwZKyl3eadh4S5+Y629C+jo8J
-	 4lIfxrSmWypDfz5Ob/7KPy4nyiDwgj2HUNIxkV/Q=
+	b=vgbCsZhl1UV3I5GzOg1pQQhHXoyZSw/l70nFRv7gkbrGnjllYN1wynQ1NDvU0eiqd
+	 w+Rw5kMj/oQd1LtrgUTp0xibAWqDZdqSvxgUtjJ/X8pC6j8WAStm+dQ25du0EO3E/u
+	 KB+h0M3ykpIdD/Gp/+IOuzeTV+OH7p5fnPoyE2S8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgGMSuV (ORCPT
+        id S1726339AbgGMSvT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 14:50:21 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46367 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgGMSuV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 14:50:21 -0400
-Received: by mail-io1-f67.google.com with SMTP id a12so14581516ion.13;
-        Mon, 13 Jul 2020 11:50:20 -0700 (PDT)
+        Mon, 13 Jul 2020 14:51:19 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41211 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726321AbgGMSvT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 14:51:19 -0400
+Received: by mail-io1-f66.google.com with SMTP id p205so6085693iod.8;
+        Mon, 13 Jul 2020 11:51:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=dxSIKalG5pmPJrENOgt+knqfr40NsiQacbub2rb1U8U=;
-        b=NRfIHj68tz946k/pbpdCXaHeNf5JZ7yvvlne8Eb41Eh/vvnFiNaaHSGARzlGV0zAWP
-         QpTFMRh8zuAmYyBZMQxDl026wIs0mmxKzi733qvt9qhp3Ury2FkVgDH8m6vESyHtmS2M
-         HQNortKZLOPb3IwdmUpkF12WhFhTZhUrY0Q1R8jWeKnNK/zjwWV0HD/cuo2FtSnPFNWX
-         oY/NG35NPyY1W04WIsmM5m+ityx7m+oyRU8GtJ5mttByQ8Bp6hGlLkFxsyVkFtMXHiFk
-         su8YwHCex36z3OKmCcgl9u7OvvVzmG2of7bry4c/jgqDne4Qq1tmimYa9keRJPQGz6aO
-         d7jw==
-X-Gm-Message-State: AOAM533gUmGu3bO13r7fgUqJeYiNLi8BSGGTGJtN4ae1OARBI14g+CJ0
-        7w+O4zqjxjnTCyG/vgdyKw==
-X-Google-Smtp-Source: ABdhPJyLkZZwvj61ZNsHMThlgpkJfwv9jMCmBiY9npdnk2nVKArKeRCDOvgu1OZdIoirrAR4n2N+qg==
-X-Received: by 2002:a05:6602:21c3:: with SMTP id c3mr1065368ioc.93.1594666219953;
-        Mon, 13 Jul 2020 11:50:19 -0700 (PDT)
+        bh=5I3GK8ON13ZeITKAZxa8BAwViFRoyB1EmrHHm5nafuM=;
+        b=sDbrTxu26JAuW+34nXMIIaZmsFnn4ZiLW0uJfG6ZLc7lDWEDKxc+dVlV+eQ8e6rgOj
+         J+xtEW3vwcDjkSC9An+aqBC4aHoffjsnJsTi9RnVQDsl7fDSc+nrgeR9CGdoFy9RVo42
+         kyqLeTfu97tv9yyxmO6Juw6WTTl7lrEv+YcqFrTKs4hz1f3VR+nMmz4G6WKEyuVzoR+V
+         gtJG5tlljbM52r47v/64slZmGq+nLQPdOJBFJ19JVPpyBvqaogxQV4Getb34Go1daSJ8
+         6n9T2ptNUs9UYbmS40k8wCtjC18EY6R1JCPtu8tXCz0CjhzOOUlwaEqR5YoJfSeqDIzx
+         aNNQ==
+X-Gm-Message-State: AOAM530r2B+I94hmmiRwMeKepsMPVvE8APWE7GzdBPcb1yLwpi1vS9Kt
+        4GtzuioEMsyUx4BG7qT9lA==
+X-Google-Smtp-Source: ABdhPJxY7MYG7dgnOcq01GdR3ZrbB5Uuy2jWOltjU1O5UTSsTNwiMZ5UDwXUhFl0bCkNgc8pjKQkMw==
+X-Received: by 2002:a05:6602:1544:: with SMTP id h4mr1235724iow.24.1594666278319;
+        Mon, 13 Jul 2020 11:51:18 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id d77sm8967211ill.67.2020.07.13.11.50.18
+        by smtp.gmail.com with ESMTPSA id f18sm7978542ion.47.2020.07.13.11.51.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 11:50:19 -0700 (PDT)
-Received: (nullmailer pid 530111 invoked by uid 1000);
-        Mon, 13 Jul 2020 18:50:18 -0000
-Date:   Mon, 13 Jul 2020 12:50:18 -0600
+        Mon, 13 Jul 2020 11:51:17 -0700 (PDT)
+Received: (nullmailer pid 531387 invoked by uid 1000);
+        Mon, 13 Jul 2020 18:51:16 -0000
+Date:   Mon, 13 Jul 2020 12:51:16 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-kernel@vger.kernel.org,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        devicetree@vger.kernel.org, linux-rtc@vger.kernel.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v3 5/5] dt-bindings: timer: Convert mrvl,mmp-timer to
- json-schema
-Message-ID: <20200713185018.GA529968@bogus>
-References: <20200616223353.993567-1-lkundrak@v3.sk>
- <20200616223353.993567-6-lkundrak@v3.sk>
+To:     Anilkumar Kolli <akolli@codeaurora.org>
+Cc:     ath11k@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-wireless@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] dt: bindings: net: update compatible for ath11k
+Message-ID: <20200713185116.GB529968@bogus>
+References: <1592458104-2961-1-git-send-email-akolli@codeaurora.org>
+ <1592458104-2961-2-git-send-email-akolli@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200616223353.993567-6-lkundrak@v3.sk>
+In-Reply-To: <1592458104-2961-2-git-send-email-akolli@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 17 Jun 2020 00:33:53 +0200, Lubomir Rintel wrote:
-> A straightforward conversion of the mrvl,mmp-timer binding to DT schema
-> format using json-schema.
+On Thu, Jun 18, 2020 at 10:58:22AM +0530, Anilkumar Kolli wrote:
+> Add IPQ6018 wireless driver support,
+> its based on ath11k driver.
 > 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> 
+> Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
 > ---
-> Changes since v1:
-> - Add default GPL-2.0-only license tag
-> - Fill in maintainers from MAINTAINERS file
+> V3:
+>  - Use 'enum' rather than oneOf+const.
 > 
->  .../bindings/timer/mrvl,mmp-timer.txt         | 17 -------
->  .../bindings/timer/mrvl,mmp-timer.yaml        | 46 +++++++++++++++++++
->  2 files changed, 46 insertions(+), 17 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/timer/mrvl,mmp-timer.txt
->  create mode 100644 Documentation/devicetree/bindings/timer/mrvl,mmp-timer.yaml
+>  Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
+> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
+> index a1717db36dba..b22cde6f3594 100644
+> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
+> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
+> @@ -17,7 +17,11 @@ description: |
+>  
+>  properties:
+>    compatible:
+> -    const: qcom,ipq8074-wifi
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - qcom,ipq8074-wifi
+> +              - qcom,ipq6018-wifi
 
-Applied, thanks!
+Just need:
+
+enum:
+  - qcom,ipq8074-wifi
+  - qcom,ipq6018-wifi
