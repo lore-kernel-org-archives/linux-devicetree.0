@@ -2,163 +2,118 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0F2C433E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 19:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 081D8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 19:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6605A2075D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 19:23:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594668183;
-	bh=wVo32CZJ2n65nfq6ZPRHSOAfToUez+SaJkGiq2GtGiw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZOmSffQuLmafcWQGhBcMlvd7/M03FL54mMHJkEJtUfo+vSC/+4mHkFRiF2rfF0MlT
-	 1f+RTzyy3inZMdH/dHy5liHR5YReylPhS7ElL4vZp4zu6vwYELjNkBS87X4491LMkS
-	 KbkTFWzfYWSOLM2tTrgLLAMdEysI6SCGHaKHKz1Y=
+	by mail.kernel.org (Postfix) with ESMTP id DD5C12075D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 19:25:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mha8nIa3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgGMTXD (ORCPT
+        id S1726456AbgGMTZG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 15:23:03 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:44020 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbgGMTXC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 15:23:02 -0400
-Received: by mail-il1-f193.google.com with SMTP id i18so12201133ilk.10;
-        Mon, 13 Jul 2020 12:23:01 -0700 (PDT)
+        Mon, 13 Jul 2020 15:25:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbgGMTZG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 15:25:06 -0400
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2B9DC061794
+        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 12:25:05 -0700 (PDT)
+Received: by mail-ua1-x942.google.com with SMTP id u33so2225221uad.9
+        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 12:25:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c58fzMesBGqhrQjXqO4m6q7tGi1qVPYPv+VcB4W3u3s=;
+        b=mha8nIa3wwJcYw8HGrMiBF3Mqh9BaxUUw0QNdsJNEZo+P7GFJ34sfYSZ4Dac6ldiwa
+         MbcIhDmmapR421rsnWjZbGDP1c0k++FFN9c0HUlBsEHWgBwzNrxsdybHpdnaBdCrA3VN
+         Km9LO2Uibj3KQZsAtzjgDwVa2VdCbGZpAyIQ235mOM8FkDFmXNXedgQn8eyXf28ckJdx
+         GaUSwknl88f+t9zS8aig4kUoFZkbAhBYdIdEnwW27Tr6+IIXhpJqegHPJ8lVI+z4xrNl
+         eVc70PJCzTjZv/jHzphwN6rrs6RfsjUnTmkezv1zPHj9JqCZ+J5iqyLqpIX+eD/x8FXV
+         M9tA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Z6l2qI+K33ZIyGh2iAzifK0EJmgah4onXsJ9iJQsL6k=;
-        b=ARgaSpAn5q0sW1krs/qj6vYmtHwTH7JoXXY5Ft9oka8AO3JwKz7JnWQ2t8sg7BzErs
-         IOzn8gCUwS43HLPy2gEeUGjhqHzc34oRwW9xX5cGEP/OjkCnvV+SQY+m13BWOQt1Z0EJ
-         2729KodIzJBhN+CAr3v0Z1ohI8IkHCO/gS84KjueRoO2R2o5RIfXHIY7EoWR9s2W9yWp
-         a14L9m7K67R1i/lJSyURf2eMof4fUTJsTTsomMUJq2oE/mneiKQsHLbfFgKK5AeEvJ9Z
-         WHyKZniZmEWHdy2uoTXhWjGneLuahhb+4LN8U842uqWrP3v95oNyOvXTlVX7A5SuRVpK
-         D1bg==
-X-Gm-Message-State: AOAM533v/t+DNeViMKkLaQYUUnimUe0yd+371R88ra/kt/1mMqtRGlYE
-        6UxadMeatdWPh44hOvmVE6U4YYwMAw==
-X-Google-Smtp-Source: ABdhPJx0fZoesFoSttNLhXIu0D/sCw48OSjyG1jR+wcDMT2daIoZuFNpeOuvHXA+lPdlxwrrbVB15Q==
-X-Received: by 2002:a92:4049:: with SMTP id n70mr1292900ila.161.1594668181506;
-        Mon, 13 Jul 2020 12:23:01 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id y12sm8649031ilm.38.2020.07.13.12.23.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 12:23:00 -0700 (PDT)
-Received: (nullmailer pid 586277 invoked by uid 1000);
-        Mon, 13 Jul 2020 19:22:59 -0000
-Date:   Mon, 13 Jul 2020 13:22:59 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-Cc:     Mark Brown <broonie@kernel.org>, Peter Rosin <peda@axentia.se>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Subject: Re: [PATCH v3 5/8] dt-bindings: snps,dw-apb-ssi: Add sparx5 support,
- plus snps,rx-sample-delay-ns property
-Message-ID: <20200713192259.GA553903@bogus>
-References: <20200702101331.26375-1-lars.povlsen@microchip.com>
- <20200702101331.26375-6-lars.povlsen@microchip.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c58fzMesBGqhrQjXqO4m6q7tGi1qVPYPv+VcB4W3u3s=;
+        b=X/6U5CKVNsKHDKUVPGr1vVQV19l9jqjQnTW6mNi831/HW7tk7LrYO78AGqtTbWrqE5
+         JCqctbncxQGITdp//Xkda9jrap01eQsCVv2BG0wNRulnHQ0V4Sg/kqD2JmchP3EtTrTd
+         10Yn3CrC2C8MNrLsYXJx79XmCr+uGnBX+6mt659Eg+4g4/saxi4VqltUVyrxYr5PJ2tM
+         +opL7F7alYlluWOGpMXnUuRQNrA1gYh8woCSJL8wsDgRJ5hHLBgLa89AWe2AxFmjJ3WX
+         13ZHWqmI1IPBy6m6gcd/BctRlOe6SXvj1V4XRQK9QCVcmzYtxymT6/NGChgMsLc1TCY8
+         jXeA==
+X-Gm-Message-State: AOAM530XZxRPhoI9RIdPI07U+mdWCXMnWnzhzr4/XvHY9MLHcst1IEEk
+        kG9jxApSn3BHa1IWioDerCKehHcIzc0ydn4wXITFRQ==
+X-Google-Smtp-Source: ABdhPJwP9bGsiDAnqaDUGPoQOR9PisnIuW4faekW21ANZsw39QW2WVLI/gUVmMNoRZXnfYOFJBcTipBzs4obwQc2dR0=
+X-Received: by 2002:ab0:2894:: with SMTP id s20mr831300uap.55.1594668304785;
+ Mon, 13 Jul 2020 12:25:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702101331.26375-6-lars.povlsen@microchip.com>
+References: <20200710004258.296017-1-linchuyuan@google.com>
+In-Reply-To: <20200710004258.296017-1-linchuyuan@google.com>
+From:   Chu Lin <linchuyuan@google.com>
+Date:   Mon, 13 Jul 2020 12:24:53 -0700
+Message-ID: <CAKCA56A8b+8NA8Si7g+whkYSRqr7=JLV+726nyFiDjWQ70BTgA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: hwmon: adm1272: add adm1272-adm1275-temp1-en binding
+To:     Guenter Roeck <linux@roeck-us.net>, robh+dt@kernel.org
+Cc:     Kais Belgaied <belgaied@google.com>,
+        Jason Ling <jasonling@google.com>, jdelvare@suse.com,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Zhongqi Li <zhongqil@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 12:13:28PM +0200, Lars Povlsen wrote:
-> This has the following changes for the snps,dw-apb-ss DT bindings:
-> 
-> - Add "microchip,sparx5-spi" as the compatible for the Sparx5 SoC
->   controller
-> 
-> - Add the property "mux-controls" for the above compatible string
-> 
-> - Add the property "snps,rx-sample-delay-ns" for SPI slaves
-> 
-> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+Adding Rob to the review list.
+
+On Thu, Jul 9, 2020 at 5:43 PM Chu Lin <linchuyuan@google.com> wrote:
+>
+> Problem:
+>         adm1272 and adm1278 supports temperature sampling. The
+> current way of enabling it requires the user manually unbind the device
+> from the driver, flip the temperature sampling control bit and then bind
+> the device back to the driver. It would be nice if we can control this in a
+> better way by reading the dt.
+>
+> Solution:
+>         Introducing device tree binding adm1272-adm1278-temp1-en. If the
+> flag is set, flip the temp1_en control bit on probing.
+>
+> Testing:
+> make dt_binding_check
+>
+> Signed-off-by: Chu Lin <linchuyuan@google.com>
 > ---
->  .../bindings/spi/snps,dw-apb-ssi.yaml         | 28 +++++++++++++++++++
->  1 file changed, 28 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-> index c62cbe79f00dd..9d9208391fae3 100644
-> --- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-> +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-> @@ -36,6 +36,8 @@ properties:
->                - mscc,ocelot-spi
->                - mscc,jaguar2-spi
->            - const: snps,dw-apb-ssi
-> +      - description: Microchip Sparx5 SoC SPI Controller
-> +        const: microchip,sparx5-spi
->        - description: Amazon Alpine SPI Controller
->          const: amazon,alpine-dw-apb-ssi
->        - description: Renesas RZ/N1 SPI Controller
-> @@ -93,6 +95,19 @@ properties:
->        - const: tx
->        - const: rx
-> 
-> +if:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        const: microchip,sparx5-spi
-> +
-> +then:
-> +  properties:
-> +    mux-controls:
-> +      description: A mux controller node for selecting SPI bus interface.
-> +      maxItems: 1
-> +      $ref: '/schemas/types.yaml#/definitions/phandle'
-
-Can drop the type. You can assume common properties already have a 
-defined type.
-
-> +
->  patternProperties:
->    "^.*@[0-9a-f]+$":
->      type: object
-> @@ -107,6 +122,14 @@ patternProperties:
->        spi-tx-bus-width:
->          const: 1
-> 
-> +      snps,rx-sample-delay-ns:
-
-We already have 'rx-sample-delay-ns' from Rockchip SPI, so use that. But 
-note that it applies to the SPI node. Does this need to be per SPI 
-child?
-
-BTW, the Rockchip controller appears to be a version of the DW 
-controller.
-
-> +        description: SPI Rx sample delay offset, unit is nanoseconds.
-> +          The delay from the default sample time before the actual
-> +          sample of the rxd input signal occurs. The "rx_sample_delay"
-> +          is an optional feature of the designware controller, and the
-> +          upper limit is also subject to controller configuration.
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +
->  unevaluatedProperties: false
-> 
->  required:
-> @@ -129,5 +152,10 @@ examples:
->        num-cs = <2>;
->        cs-gpios = <&gpio0 13 0>,
->                   <&gpio0 14 0>;
-> +      spi-flash@1 {
-> +        compatible = "spi-nand";
-> +        reg = <1>;
-> +        snps,rx-sample-delay-ns = <7>;
-> +      };
->      };
->  ...
+>  Documentation/devicetree/bindings/hwmon/adm1275.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/hwmon/adm1275.txt b/Documentation/devicetree/bindings/hwmon/adm1275.txt
+> index 1ecd03f3da4d..4403fe30f005 100644
+> --- a/Documentation/devicetree/bindings/hwmon/adm1275.txt
+> +++ b/Documentation/devicetree/bindings/hwmon/adm1275.txt
+> @@ -15,6 +15,8 @@ Optional properties:
+>
+>  - shunt-resistor-micro-ohms
+>         Shunt resistor value in micro-Ohm
+> +- adm1272-adm1278-temp1-en
+> +       Enable temperature sampling. This is supported on adm1272 and adm1278
+>
+>  Example:
+>
+> @@ -22,4 +24,5 @@ adm1272@10 {
+>         compatible = "adi,adm1272";
+>         reg = <0x10>;
+>         shunt-resistor-micro-ohms = <500>;
+> +       adm1272-adm1278-temp1-en;
+>  };
 > --
-> 2.27.0
+> 2.27.0.383.g050319c2ae-goog
+>
