@@ -7,85 +7,85 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 284F6C433E5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE73C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 013F920738
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66D3520771
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:31:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594665010;
-	bh=s6tjxSatQ3Ic+GIaNKCWc3Rm91m2pwZ2p1bX9EgcrGs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tt863S5gjhk4+GQww76ZGUn5FKfy/Dd720mCN3YYJjrZK438+LKLOa0NnsehaQYY7
-	 V4rNN7zR/jsbWcARqKttK9uNJBrQnqXEGHyoqnGuvK4GE40qsS9jn7h5U/Qlk87l67
-	 2r4ttNNOu+xgkl02XhbGwFpT2AurqYFuyLH+wPa0=
+	s=default; t=1594665076;
+	bh=Q+HK1Q7zVRO6bPfXYi5jwqYnO9t8ua0qhLDmv/SMT90=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wrGEW0s9HKMX6lVP10ulvs3v5ihijhQLR+YeS0O2WYNtoB615qR5tz+N2b0Zhvfnt
+	 usmlaGQbNnQMZH162WKk5NhQl0qI0jTCv4MxRhu37iLpughxgIdKnUefJ4pqqQJE3X
+	 FifHAbUXsPwVWXNsOYQ9X3QggPBgGvhQ0QXcRsCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbgGMSaJ (ORCPT
+        id S1726309AbgGMSbQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 14:30:09 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:37160 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726058AbgGMSaJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 14:30:09 -0400
-Received: by mail-io1-f68.google.com with SMTP id v6so14573669iob.4;
-        Mon, 13 Jul 2020 11:30:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rIQlsjDi0tvpb6bzNA737NPfAI6p63hzRYQiaEuCUvM=;
-        b=l4T1d77+qA3HyAViAmmjuWTfdFR2gBkYJaVYH1NOUFWjLgtWJlR6LSldhAcNzHPGQm
-         3J61mW6lfuzhAK4USwNfhAntXwL+v6LiffKSstiSHpnIAYz2k1AfN2Niwpxi7FUrfzjt
-         BAo0AlSz8NpDL3QzSMmIu7mGM31Hxmw1RP/+wU64HoWIc4e3jemP7PTEA/9H2uJiNIDv
-         ioiEhtHLbC2ucOsTB9ToiZdnuEZV42959J/rdvVZj+/SrNQtcdEmxJjRD6ET75b1jCEN
-         Vx5fzjYsdoAN1KFaefwnc0OEO41E9yM4SStXbVlb9hk3EW9gpcpjOi6JYIVKNBGtu7xh
-         feFA==
-X-Gm-Message-State: AOAM531bqIqXXBMtJ4F8msMyTJnfEe+n1nFsn/uD1pqzPc7mE504CI5w
-        wNL4VfhFtahtGFx0TjcLcQ==
-X-Google-Smtp-Source: ABdhPJx7yiGPcydh9XG53doGG+7bNapG6fmV6HSGHoyOxCtPoO+8YUWYYYzMTLE7zJ9GO2VDiEmVTw==
-X-Received: by 2002:a02:c903:: with SMTP id t3mr1593875jao.30.1594665008503;
-        Mon, 13 Jul 2020 11:30:08 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id i188sm7963259ioa.33.2020.07.13.11.30.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 11:30:07 -0700 (PDT)
-Received: (nullmailer pid 502044 invoked by uid 1000);
-        Mon, 13 Jul 2020 18:30:07 -0000
-Date:   Mon, 13 Jul 2020 12:30:07 -0600
-From:   Rob Herring <robh@kernel.org>
+        Mon, 13 Jul 2020 14:31:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53544 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726058AbgGMSbP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 14:31:15 -0400
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D6A62075D;
+        Mon, 13 Jul 2020 18:31:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594665075;
+        bh=Q+HK1Q7zVRO6bPfXYi5jwqYnO9t8ua0qhLDmv/SMT90=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Diq5Pb/QksKWa4fHMqMPg9ZyVIdPDDMzIycugVPMsSAg9QyZjauVpT4K/Z+wiJMKD
+         LenahMasZS38qRigWgWHRym685l3wZBBZQ6asMjH99kNRvLsLNIxCxtXN+sHWsY9Vz
+         /0Q4u6CGlAisL7ZGmWWFUhkHzdmjwztkRfTS49OY=
+Received: by mail-oi1-f178.google.com with SMTP id k6so11759179oij.11;
+        Mon, 13 Jul 2020 11:31:15 -0700 (PDT)
+X-Gm-Message-State: AOAM531tJ9zJY+pSaSahWliUQD3P8svxU5Zmp6znrYi2mg5G+XIouAJz
+        CKClKZDSeOM9Qtu5HJui/biDKUOjwzNanSc3RQ==
+X-Google-Smtp-Source: ABdhPJwD3DPdHbzTuxLSVpY1ZFpk34ZdgtVY1onVvRra1UjjLWAFSnTbuXzcHV7Q3WMvOKzCnlYkge/bnGcwgolP8W4=
+X-Received: by 2002:aca:4844:: with SMTP id v65mr677170oia.152.1594665074595;
+ Mon, 13 Jul 2020 11:31:14 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200612224914.7634-1-s-anna@ti.com> <20200612224914.7634-4-s-anna@ti.com>
+ <20200713183007.GA501995@bogus>
+In-Reply-To: <20200713183007.GA501995@bogus>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 13 Jul 2020 12:31:02 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLN8sb+FS3Sh5YmHLvF=Mm_DngNPKv1Sb8pwcAwOnd1Fw@mail.gmail.com>
+Message-ID: <CAL_JsqLN8sb+FS3Sh5YmHLvF=Mm_DngNPKv1Sb8pwcAwOnd1Fw@mail.gmail.com>
+Subject: Re: [PATCH v3 3/6] dt-bindings: remoteproc: Add common TI SCI rproc bindings
 To:     Suman Anna <s-anna@ti.com>
 Cc:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Lokesh Vutla <lokeshvutla@ti.com>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
-        linux-remoteproc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 3/6] dt-bindings: remoteproc: Add common TI SCI rproc
- bindings
-Message-ID: <20200713183007.GA501995@bogus>
-References: <20200612224914.7634-1-s-anna@ti.com>
- <20200612224914.7634-4-s-anna@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200612224914.7634-4-s-anna@ti.com>
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 12 Jun 2020 17:49:11 -0500, Suman Anna wrote:
-> Add a bindings document that lists the common TI SCI properties
-> used by the K3 R5F and DSP remoteproc devices.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> ---
-> v3: New Patch refactoring out the common ti-sci-proc properties
-> 
->  .../bindings/remoteproc/ti,k3-sci-proc.yaml   | 51 +++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-sci-proc.yaml
-> 
+On Mon, Jul 13, 2020 at 12:30 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, 12 Jun 2020 17:49:11 -0500, Suman Anna wrote:
+> > Add a bindings document that lists the common TI SCI properties
+> > used by the K3 R5F and DSP remoteproc devices.
+> >
+> > Signed-off-by: Suman Anna <s-anna@ti.com>
+> > ---
+> > v3: New Patch refactoring out the common ti-sci-proc properties
+> >
+> >  .../bindings/remoteproc/ti,k3-sci-proc.yaml   | 51 +++++++++++++++++++
+> >  1 file changed, 51 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-sci-proc.yaml
+> >
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Oops, wrong patch.
