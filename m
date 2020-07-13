@@ -2,138 +2,82 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB221C433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 11:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EC9C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 11:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92B2120738
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 11:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 666E02072D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 11:50:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594641035;
+	bh=A3xNlAR4ygLcLPhZ8CqcVOYL8/NUwzBP6NZpl/Tp4u4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BJgT+fr8A5ghNLFSwRGbZ2Xs/QYONd3GqFygsqi8B5icNZ6ifCecSEKDeYsd54YA1
+	 ePEdpOnTveRefktEzPBh1ECXck1ZOSdbGFJZeqNqAnhL5BobRKNB3P9Ra3t4Re2Bu5
+	 FMxTNbgKSrI73fGFN0LqMr6vsNM21MrEtXzK6XF4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729043AbgGMLkE (ORCPT
+        id S1729027AbgGMLuf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 07:40:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:57170 "EHLO foss.arm.com"
+        Mon, 13 Jul 2020 07:50:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726586AbgGMLkD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 07:40:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B0BD1FB;
-        Mon, 13 Jul 2020 04:40:02 -0700 (PDT)
-Received: from [10.57.62.178] (unknown [10.57.62.178])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 326733F7D8;
-        Mon, 13 Jul 2020 04:40:00 -0700 (PDT)
-Subject: Re: [PATCH 0/4] Bounced DMA support
-To:     Claire Chang <tientzu@chromium.org>, robh+dt@kernel.org,
-        frowand.list@gmail.com, hch@lst.de, m.szyprowski@samsung.com
-Cc:     treding@nvidia.com, gregkh@linuxfoundation.org,
-        saravanak@google.com, suzuki.poulose@arm.com,
-        dan.j.williams@intel.com, heikki.krogerus@linux.intel.com,
-        bgolaszewski@baylibre.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        tfiga@chromium.org, drinkcat@chromium.org
-References: <20200713091211.2183368-1-tientzu@chromium.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <8a7ce34e-87c0-d224-3974-34f1877fbb0e@arm.com>
-Date:   Mon, 13 Jul 2020 12:39:59 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1728714AbgGMLue (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 07:50:34 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD72E206F4;
+        Mon, 13 Jul 2020 11:50:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594641034;
+        bh=A3xNlAR4ygLcLPhZ8CqcVOYL8/NUwzBP6NZpl/Tp4u4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dfolvZ7+TGYVruQAoIFKZCUfG+gpQhUeSzsfUiO0LKQ50+ttQOzy7nM/i8+GM8slt
+         Wd6XoVU+vvy8FwpYP/+0VLUCHMZzDQ5W5uIwi1BKG8SZdBkmPfA1fAlc5r+Ha2E83v
+         hVvC/2gfPufpfKEMWKrDApXiPgOCc1dQ9bDMZ9kQ=
+Date:   Mon, 13 Jul 2020 19:50:29 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] ARM: dts: imx6qdl-gw: add Gateworks System Controller
+ support
+Message-ID: <20200713115028.GO15718@dragon>
+References: <1592497149-22526-1-git-send-email-tharvey@gateworks.com>
+ <1592937347-12962-1-git-send-email-tharvey@gateworks.com>
 MIME-Version: 1.0
-In-Reply-To: <20200713091211.2183368-1-tientzu@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592937347-12962-1-git-send-email-tharvey@gateworks.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-07-13 10:12, Claire Chang wrote:
-> This series implements mitigations for lack of DMA access control on
-> systems without an IOMMU, which could result in the DMA accessing the
-> system memory at unexpected times and/or unexpected addresses, possibly
-> leading to data leakage or corruption.
+On Tue, Jun 23, 2020 at 11:35:47AM -0700, Tim Harvey wrote:
+> Add Gateworks System Controller support to Gateworks Ventana boards:
+> - add dt bindings for GSC mfd driver and hwmon driver for ADC's and
+>   fan controllers.
+> - add dt bindings for gpio-keys driver for push-button and interrupt events
 > 
-> For example, we plan to use the PCI-e bus for Wi-Fi and that PCI-e bus
-> is not behind an IOMMU. As PCI-e, by design, gives the device full
-> access to system memory, a vulnerability in the Wi-Fi firmware could
-> easily escalate to a full system exploit (remote wifi exploits: [1a],
-> [1b] that shows a full chain of exploits; [2], [3]).
-> 
-> To mitigate the security concerns, we introduce bounced DMA. The bounced
-> DMA ops provide an implementation of DMA ops that bounce streaming DMA
-> in and out of a specially allocated region. The feature on its own
-> provides a basic level of protection against the DMA overwriting buffer
-> contents at unexpected times. However, to protect against general data
-> leakage and system memory corruption, the system needs to provide a way
-> to restrict the DMA to a predefined memory region (this is usually done
-> at firmware level, e.g. in ATF on some ARM platforms).
+> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
 
-More to the point, this seems to need some fairly special interconnect 
-hardware too. On typical systems that just stick a TZASC directly in 
-front of the memory controller it would be hard to block DMA access 
-without also blocking CPU access. With something like Arm TZC-400 I 
-guess you could set up a "secure" region for most of DRAM that allows NS 
-accesses by NSAID from the CPUs, then similar regions for the pools with 
-NSAID access for both the respective device and the CPUs, but by that 
-point you've probably used up most of the available regions before even 
-considering what the firmware and TEE might want for actual Secure memory.
+It causes DTC warnings like below.
 
-In short, I don't foresee this being used by very many systems.
+../arch/arm/boot/dts/imx6qdl-gw5912.dtsi:248.4-17: Warning (reg_format): /soc/bus@2100000/i2c@21a0000/gsc@20/fan-controller@a:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 0)
+arch/arm/boot/dts/imx6dl-gw5912.dtb: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
+arch/arm/boot/dts/imx6dl-gw5912.dtb: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
+arch/arm/boot/dts/imx6dl-gw5912.dtb: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
+../arch/arm/boot/dts/imx6qdl-gw5912.dtsi:244.20-249.5: Warning (avoid_default_addr_size): /soc/bus@2100000/i2c@21a0000/gsc@20/fan-controller@a: Relying on default #address-cells value
 
-That said,, although the motivation is different, it appears to end up 
-being almost exactly the same end result as the POWER secure 
-virtualisation thingy (essentially: constrain DMA to a specific portion 
-of RAM). The more code can be shared with that, the better.
-
-> Currently, 32-bit architectures are not supported because of the need to
-> handle HIGHMEM, which increases code complexity and adds more
-> performance penalty for such platforms. Also, bounced DMA can not be
-> enabled on devices behind an IOMMU, as those require an IOMMU-aware
-> implementation of DMA ops and do not require this kind of mitigation
-> anyway.
-
-Note that we do actually have the notion of bounced DMA with IOMMUs 
-already (to avoid leakage of unrelated data in the same page). I think 
-it's only implemented for intel-iommu so far, but shouldn't take much 
-work to generalise to iommu-dma if anyone wanted to. That's already done 
-a bunch of work to generalise the SWIOTLB routines to be more reusable, 
-so building on top of that would be highly preferable.
-
-Thirdly, the concept of device-private bounce buffers does in fact 
-already exist to some degree too - there are various USB, crypto and 
-other devices that can only DMA to a local SRAM buffer (not to mention 
-subsystems doing their own bouncing for the sake of alignment/block 
-merging/etc.). Again, a slightly more generalised solution that makes 
-this a first-class notion for dma-direct itself and could help supplant 
-some of those hacks would be really really good.
-
-Robin.
-
-> [1a] https://googleprojectzero.blogspot.com/2017/04/over-air-exploiting-broadcoms-wi-fi_4.html
-> [1b] https://googleprojectzero.blogspot.com/2017/04/over-air-exploiting-broadcoms-wi-fi_11.html
-> [2] https://blade.tencent.com/en/advisories/qualpwn/
-> [3] https://www.bleepingcomputer.com/news/security/vulnerabilities-found-in-highly-popular-firmware-for-wifi-chips/
-> 
-> 
-> Claire Chang (4):
->    dma-mapping: Add bounced DMA ops
->    dma-mapping: Add bounced DMA pool
->    dt-bindings: of: Add plumbing for bounced DMA pool
->    of: Add plumbing for bounced DMA pool
-> 
->   .../reserved-memory/reserved-memory.txt       |  36 +++
->   drivers/of/address.c                          |  37 +++
->   drivers/of/device.c                           |   3 +
->   drivers/of/of_private.h                       |   6 +
->   include/linux/device.h                        |   3 +
->   include/linux/dma-mapping.h                   |   1 +
->   kernel/dma/Kconfig                            |  17 +
->   kernel/dma/Makefile                           |   1 +
->   kernel/dma/bounced.c                          | 304 ++++++++++++++++++
->   9 files changed, 408 insertions(+)
->   create mode 100644 kernel/dma/bounced.c
-> 
+Patch dropped.
