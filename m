@@ -2,96 +2,85 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43209C433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 13:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6A7C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 13:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E77C2067D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 13:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E31020738
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 13:44:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594647898;
+	bh=ct2PJVK3v9aqQdAaYhtWeltGvO9MFnxLdsz9ZGp1m8c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OcdlamyRVmGdOROKY0MXHrfcODXXd1neMuxoWSc9AcmBkPP3GroCc9TIi7hOgpmeR
+	 IC76tPdI8w0YDl1FOR+IhVFqyDyCuL+go4P1cBC5yH5NPj3Ys2wOTcDKHEW0bDCvGs
+	 QgxZJtCkhTo4zzu+XYK6a+IVyn4xT7DIHx7BZ6Zw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729649AbgGMNkT (ORCPT
+        id S1729821AbgGMNo5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 09:40:19 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:57350 "EHLO smtp.al2klimov.de"
+        Mon, 13 Jul 2020 09:44:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728950AbgGMNkT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 09:40:19 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id F01BBBC0FD;
-        Mon, 13 Jul 2020 13:40:15 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     mdf@kernel.org, robh+dt@kernel.org, linux-fpga@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] fpga: region: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 15:40:08 +0200
-Message-Id: <20200713134008.34635-1-grandmaster@al2klimov.de>
+        id S1728950AbgGMNo5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 09:44:57 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 099732072D;
+        Mon, 13 Jul 2020 13:44:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594647897;
+        bh=ct2PJVK3v9aqQdAaYhtWeltGvO9MFnxLdsz9ZGp1m8c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=03i+wBFkvHUzATa6golRiPGIrx0zXbZhvoXvywEQM//aVB3Tm7aAGC04FwFuBdj9T
+         lSsDOaF8U+0pTuB3FczsXbFim/rN6/dcBEdhIwuZL0Sd9NmdpAXepHsY8EmmaB0WQn
+         +bf9cYr32pA2Ay3X0/BpQ2dKvur7ALhfOZ30QMRo=
+Date:   Mon, 13 Jul 2020 14:44:51 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Krishna Reddy <vdumpa@nvidia.com>
+Cc:     joro@8bytes.org, robin.murphy@arm.com, robh+dt@kernel.org,
+        treding@nvidia.com, jonathanh@nvidia.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org, yhsu@nvidia.com, snikam@nvidia.com,
+        praithatha@nvidia.com, talho@nvidia.com, bbiswas@nvidia.com,
+        mperttunen@nvidia.com, nicolinc@nvidia.com, bhuntsman@nvidia.com,
+        nicoleotsuka@gmail.com
+Subject: Re: [PATCH v10 5/5] iommu/arm-smmu: Add global/context fault
+ implementation hooks
+Message-ID: <20200713134450.GC2739@willie-the-truck>
+References: <20200708050017.31563-1-vdumpa@nvidia.com>
+ <20200708050017.31563-6-vdumpa@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spam: Yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200708050017.31563-6-vdumpa@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Tue, Jul 07, 2020 at 10:00:17PM -0700, Krishna Reddy wrote:
+> Add global/context fault hooks to allow vendor specific implementations
+> override default fault interrupt handlers.
+> 
+> Update NVIDIA implementation to override the default global/context fault
+> interrupt handlers and handle interrupts across the two ARM MMU-500s that
+> are programmed identically.
+> 
+> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
+> ---
+>  drivers/iommu/arm-smmu-nvidia.c | 99 +++++++++++++++++++++++++++++++++
+>  drivers/iommu/arm-smmu.c        | 17 +++++-
+>  drivers/iommu/arm-smmu.h        |  3 +
+>  3 files changed, 117 insertions(+), 2 deletions(-)
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+Given that faults shouldn't occur during normal operation, is this patch
+actually necessary?
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
-
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- Documentation/devicetree/bindings/fpga/fpga-region.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/fpga/fpga-region.txt b/Documentation/devicetree/bindings/fpga/fpga-region.txt
-index 8ab19d1d3f9a..e811cf825019 100644
---- a/Documentation/devicetree/bindings/fpga/fpga-region.txt
-+++ b/Documentation/devicetree/bindings/fpga/fpga-region.txt
-@@ -493,4 +493,4 @@ FPGA Bridges that exist on the FPGA fabric prior to the partial reconfiguration.
- --
- [1] www.altera.com/content/dam/altera-www/global/en_US/pdfs/literature/ug/ug_partrecon.pdf
- [2] tspace.library.utoronto.ca/bitstream/1807/67932/1/Byma_Stuart_A_201411_MAS_thesis.pdf
--[3] http://www.xilinx.com/support/documentation/sw_manuals/xilinx14_1/ug702.pdf
-+[3] https://www.xilinx.com/support/documentation/sw_manuals/xilinx14_1/ug702.pdf
--- 
-2.27.0
-
+Will
