@@ -3,49 +3,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5272CC433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 08:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E406AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 08:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EFED20702
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 08:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B98CB2065D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 08:40:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="I8Sfjgcu"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="fPRovHyf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgGMIiP (ORCPT
+        id S1726571AbgGMIkd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 04:38:15 -0400
-Received: from mail-eopbgr130043.outbound.protection.outlook.com ([40.107.13.43]:37048
+        Mon, 13 Jul 2020 04:40:33 -0400
+Received: from mail-eopbgr130048.outbound.protection.outlook.com ([40.107.13.48]:10722
         "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725818AbgGMIiP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 04:38:15 -0400
+        id S1725830AbgGMIkc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 04:40:32 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iz9KLixbSxTJ/pxfy+QK0cRX9egVFphYm7X+qeLODEhdhsllJvtu4bCgR6e+WWBJ/tj/QWuUZzoWEznVkoQcmkHSh+j0XNs0otHu8CQoGz7vsFj2lYroi39KRZzDcloeF3zFAAjqU4ESi65WJZ1MSQ2nDadP84pDJ59/N3uUtKZ1zvL+NZjK4dxdtDSw3DeGGptjKFPpUBdgXuPRbfG18Y51dk5mScVT3Dx2xyfadpQxK531xwUFzG0WH3nS6IerqAPrLQyt3apKbWOX2Joeo2g7xPCb34ViUCFPIlSnWqfC61DQV3WGkrKqmEbpDMI79xURIIszc49vbQ22eKVjDQ==
+ b=O2W/mw0AkkIq+DTKeXz7sdxjtbx+kma5YwBXBlsfzLCvndvugoItZH+mD1p/Sgr/FI1P4AuQ0yAWzWlnSjVqXBpd/qNcgGVLVJFTwCrcECJBebjvXEnJ5mHbSTAta8G9SRCdpYEksPJ8MLggqydJLxtFOnR8tXUGUxKN6uCrLbxsnD6T8OkXT4fJEGco8geAncolRFuf2TLRgIf0MtjZcQNlgLrGaQzOZ8XeHzbFERYU7C/z08MnF1fBFnyRxWxh/foM2T1TriSRT0sZ7nQjnxtBvHZiNQmPkMqTeBmqbd8eySPi+ttJWP2gD5Ul/5fdpgtcC56rWxhHUV+nAnJatw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nClVY1nAD9Eb7jHBUjax86wQ6dqVW8M8y/My7arrTLQ=;
- b=GJAwm7GuVYRDQPeylFTpiihXTAPOjkOfv12SJIaNifhF/uBDVswjy+5K1MG9iekegCBoMwrZeM21fx69e4WBWjF/nFJRCA+wRnJ/JodaKDP/F/7cMkhO7z0Xbe3ReR5Rkhsqqegws6gVYcWzqndidPuMRpQ6icd3sQceFtKlr8l/F7VBBLwKSMqPsb4Aqk8Mk/2mHU4iHTaNn0mwh94zPD9KNvKOY3GNnn+qilE/kXXVkSSHHWK840+taXNwmobS2JJ8yfOT57nHoSwg02JPE/fJesihNOUPH4js73OJXOBdfEKWYqsnBhMeZ0FvO+eN9ryjBUYJiu8YtAMtw38LSw==
+ bh=Olfc1ERZO23dz4gJNsFCqpFnHu/TtIRJlZ++ylWRFzo=;
+ b=Eiqx1XVAFJLA9yOWKZOz4KSrNYOvknd1FD5pNEvpdTC0pw/CVk9KZp1Y4nSdFncJ6SOar/wWqXf+tWh56Z6EMnQvt02HxH4xNWyqC48fl54ofpeon812k1+rebK5Zb7h15k0aMuhAdGLBY2pF/F/B1I3jLKYMrDBV4NDFEfDGMd+NPnwLdhi374Lpjy8iBExDsX8SzI+xyret9TkRXA/AqZaxEMLxJKcp3Lp32YYB2koa61fkW/rM2h3KL7Z0S8Gg+Jm23sgBrIHG8xAeRnANHDxjlD2/2ANYhLU/QZmvT8K1w3W/RZhFZWZUf4vyQ3M8s3o7jhBur44wB0khoSFMA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nClVY1nAD9Eb7jHBUjax86wQ6dqVW8M8y/My7arrTLQ=;
- b=I8SfjgcupTyvmolquC/WdAKtACeaAjtmrlC8jadUO2KubLpgo3ckN3wl0GGYnwTVJaEqLojR3PRywr38Z18Eck4A3lNlAejq+QoOI0RFL0/5OKYhnS+9tHcSOiVLy+PnnsqXtCjUxtbULsP273puDFoorB7umE2o7d9+s18JSoI=
+ bh=Olfc1ERZO23dz4gJNsFCqpFnHu/TtIRJlZ++ylWRFzo=;
+ b=fPRovHyfgUZFpcCr6NEIY4iZrPzYeJBqNrercqLGlUT8okcRt3uQRbNdEDru4TaXCBUgWILYKOxWAQxF4dhx64YvX0SyXBnHcq5NcYY5SPy7Lr56QBvbnVbD9HUqCNEaNeKxT/H3S8dwZiI46NpvgyquWAT5P6c2SL2KJ0c54xY=
 Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (2603:10a6:20b:118::20)
  by AM6PR04MB5608.eurprd04.prod.outlook.com (2603:10a6:20b:a1::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.22; Mon, 13 Jul
- 2020 08:38:11 +0000
+ 2020 08:40:29 +0000
 Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
  ([fe80::1101:adaa:ee89:af2a]) by AM7PR04MB7157.eurprd04.prod.outlook.com
  ([fe80::1101:adaa:ee89:af2a%3]) with mapi id 15.20.3174.025; Mon, 13 Jul 2020
- 08:38:11 +0000
+ 08:40:29 +0000
 From:   Peter Chen <peter.chen@nxp.com>
 To:     Shawn Guo <shawnguo@kernel.org>
 CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
@@ -57,16 +57,16 @@ CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
         dl-linux-imx <linux-imx@nxp.com>,
         "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
         Jun Li <jun.li@nxp.com>
-Subject: RE: [PATCH 1/4] doc: dt-binding: ci-hdrc-usb2: add property for imx
- picophy
-Thread-Topic: [PATCH 1/4] doc: dt-binding: ci-hdrc-usb2: add property for imx
- picophy
-Thread-Index: AQHWVd/263vExqqdu06vQC3dMxDtIakFNEMAgAABX2A=
-Date:   Mon, 13 Jul 2020 08:38:11 +0000
-Message-ID: <AM7PR04MB7157D089D56069DDE2654D7C8B600@AM7PR04MB7157.eurprd04.prod.outlook.com>
+Subject: RE: [PATCH 3/4] ARM64: dts: fsl: imx8mm-evk: add two parameters for
+ picophy tuning
+Thread-Topic: [PATCH 3/4] ARM64: dts: fsl: imx8mm-evk: add two parameters for
+ picophy tuning
+Thread-Index: AQHWVd/6PSh/hZ4gPEa7GemIPlKBdKkFNYaAgAABJYA=
+Date:   Mon, 13 Jul 2020 08:40:28 +0000
+Message-ID: <AM7PR04MB71577343E91264A4B6E05AA88B600@AM7PR04MB7157.eurprd04.prod.outlook.com>
 References: <20200709105902.23165-1-peter.chen@nxp.com>
- <20200713083129.GC15718@dragon>
-In-Reply-To: <20200713083129.GC15718@dragon>
+ <20200709105902.23165-3-peter.chen@nxp.com> <20200713083600.GD15718@dragon>
+In-Reply-To: <20200713083600.GD15718@dragon>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -76,29 +76,29 @@ authentication-results: kernel.org; dkim=none (message not signed)
 x-originating-ip: [101.229.5.111]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: dcbdf065-d7ca-4142-32c9-08d82708138a
+x-ms-office365-filtering-correlation-id: 9d63041c-9120-4a8c-97ed-08d8270865a2
 x-ms-traffictypediagnostic: AM6PR04MB5608:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB560839CEEFB28A6EB90968B58B600@AM6PR04MB5608.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-microsoft-antispam-prvs: <AM6PR04MB56080DE11A19075DB74AE83E8B600@AM6PR04MB5608.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: bmAFuRLK4cmQhgUv+LwjlcjnY75jlC44xoGFi7jPI06pFVLmFc7/LVPL+uIfojIwoICINNNyqzwhw/B2+98ENd+bqp7tNoZXDiDkyXYPPThWn1GPg5jhv2wxa0gncqY5yqVhcHsIGYvx0M2ejUWt/woNazqv8jEwdSwnwbxG40ILL8pHFq1c0r82riouOJtM/4IfCHYIK/kIJlPuv6Kdjh1UEtoVozQp1wpbyIEXefjWVzvvBvrDB2f+4hSOho3KxDPTtfN6R9P+OjVgXD71TNjH0g8tmUnXcYYHqz93RRX/IAhSxXblwk5lCRvAnHrw1vdAGxxzJL1uDuyem0V8Xg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7157.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(136003)(396003)(39860400002)(376002)(478600001)(86362001)(44832011)(7696005)(76116006)(5660300002)(66476007)(54906003)(66556008)(6506007)(66946007)(2906002)(55016002)(9686003)(71200400001)(4326008)(26005)(66446008)(52536014)(64756008)(316002)(8676002)(33656002)(6916009)(8936002)(186003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: ZbxRH/Z4Cp9kiqR3Qd6z+RqQVe83eYZ7AeaSA7wX3iFxS2ARXpskGfKA83L7kbd6psX/n1UcXbYgQ9TT3EpbPUZf8gV9BLhSVmpUr9vjPVILoERG38r8VCIVOOgeKlIcsw8QLjPGlMHbG3qOoowzTkrRzSBEt8mXRNAT6QXWEpPO8Lt1Z4+MHOo/sRxlM6uX33HzBBr/lyH6hsS6HbplfWJZ8xQ6+iGKbVVZ5w0e3U0tlsFZ+in8ZYEbum0dQCHWI7KaM0RodDVsPmZ3ekdzm8fk1sA1i6uVOI917j9ZfnVYvYvTbZ8pTX55N8/3LeLXl9Xp0tHLzP8JpkukfxfYiw+qgQoEC36BTYnIKsKECVVmbDf1vvrB+1h8YVaSH5YQZ4Maoxj3LL2/dxY8M10oOj65L/bJCC0RVzJxgaH316MAY0EGijg2E7IcFwTKKa56S+LnTFVlxQWCR0hQMtJrXcOhk6HxbSOkIuqciIAeQJ8=
+x-microsoft-antispam-message-info: 1AxC2z92RA9uablTHC6LmJUynOEq12nafliInmQLUg/wAuwihDOpm0+XMBPjiCt99A7lVaEERbQF324NcooyboMr1HpLXK1tfhfsD/bsk6GDO2vytQpaUYg1oHIxIef6ADDEMcooQttB0vwfs2dGxk0WOObkL1Wh8IeTuI4bwi8/TAhbQOw0iUIFg8O16X4RtFJXNamT9zc2YfNiR8zX7/CQTU7eP5MKrbd/ABsOuAyavT7Dt7ts8BoIv1Ilpa7zLckeA4WPuXqEsAlHnAc3bZCCMx0orNSd92skQUp+NExfMlJlFFLLe5+7M6LfpJY/KbYqxAJvbAVlJXq3hfd9xPf/wDeD2z9CEQOkFSZ7zmKS000bBAt6++lAo9QlDWxm
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7157.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(136003)(396003)(39860400002)(376002)(478600001)(86362001)(44832011)(7696005)(76116006)(5660300002)(66476007)(54906003)(66556008)(6506007)(4744005)(66946007)(2906002)(55016002)(9686003)(71200400001)(4326008)(26005)(66446008)(52536014)(64756008)(316002)(8676002)(33656002)(6916009)(8936002)(186003)(32563001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: HFLvls16q3EJMc3TELtshbUnXfQc3Ay9q4zl8z7QvbVxQ9evkBMTbwq41MVdK0TmweabP3Z5SnsTNB+6rasdM2KBl6yCPVxgNbHLaNjbgEQ2BYlLOLkKjCy99bJoRyF5O3yD7JLPPEyEShXgUN+gdhouAMUgXG1Cw2jhyHSBVOAfj3uy9DWjrkC3gTnDuWBMin0wbuJvwkvAG8T15kRz4m9z/f4uNXf8nicIzw8ZwHRuBlYCD+D70vVyKUZ2WAF0nP+Id/Hw7c+s1wYmmYX7f3oUk0UG187CJrzf5HpTS3aYKiIB7Fmsu2kzGwuvSze4dVWjGW1b2hyec8Fxr+9LpwI/5VvdBOwiAuNjwkgkHxpuEDtn3OWPEpzoBFpHSncIMexPb3+n92DOd2s3xmGVlrQ9oVZ4J9CCCFJ1YsliYYYcyqf/x8pFBbp3kzEq9IBdzVQi0EGa5hAmV0HH648CuY9cFgtirmdNpJKBRMfZLY8=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7157.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dcbdf065-d7ca-4142-32c9-08d82708138a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jul 2020 08:38:11.3025
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d63041c-9120-4a8c-97ed-08d8270865a2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jul 2020 08:40:28.9967
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: o/g+BhDNU8FElhMFvGBZrBWJH+gc8HZUnnMhofxCIAGG0yfusH6Oxc9R3XPnn9gFO2mYwKcX01yigz2WHXE+Dg==
+X-MS-Exchange-CrossTenant-userprincipalname: Myy7N8ZOM0bnQzM1cePdSktGQWUKZWwXMDMr4KBt+gmqsrT5qoaewvZW4uJRGp4b3VBJ//89SXbYPtuxfautaQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5608
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -106,44 +106,19 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 =20
-> > ---
-> >  Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> > b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> > index 51376cbe5f3d..e9858dafb08f 100644
-> > --- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> > +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> > @@ -100,6 +100,13 @@ i.mx specific properties
-> >    It's recommended to specify the over current polarity.
-> >  - power-active-high: power signal polarity is active high
-> >  - external-vbus-divider: enables off-chip resistor divider for Vbus
-> > +- picophy,pre-emp-curr-control: HS Transmitter Pre-Emphasis Current
+> > Reviewed-by: Jun Li <jun.li@nxp.com>
+> > Signed-off-by: Peter Chen <peter.chen@nxp.com>
 >=20
-> 'picophy' should be documented in vendor-prefixes.yaml?
+> It's not so consistent, but idiomatically we prefix arm i.MX platform/dts=
+ patches like
+> 'ARM: ...', but 'arm64: ...' for arm64 ones.
+> Also with 'imx8mm-evk' in prefix, it's good enough to know this is fsl/im=
+x patch, so I
+> suggest prefix like:
 >=20
-
-For chipidea binding doc, there is no vendor specific doc, only there are v=
-endor
-specific parts in general binding doc.
+>  'arm64: dts: imx8mm-evk: ...'
+>=20
+=20
+Thanks, will change.
 
 Peter
-
-
-> Shawn
->=20
-> > +  Control. This signal controls the amount of current sourced to the
-> > +  USB_OTG*_DP and USB_OTG*_DN pins after a J-to-K or K-to-J transition=
-.
-> > +  Details can refer to TXPREEMPAMPTUNE0 bits of USBNC_n_PHY_CFG1.
-> > +- picophy,dc-vol-level-adjust: HS DC Voltage Level Adjustment.
-> > +  Adjust the high-speed transmitter DC level voltage, details can
-> > +refer
-> > +  to TXVREFTUNE0 bits of USBNC_n_PHY_CFG1.
-> >
-> >  Example:
-> >
-> > --
-> > 2.17.1
-> >
