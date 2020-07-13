@@ -7,64 +7,67 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B207C433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 08:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA7BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 08:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2285E2067D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 08:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53DCB20758
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 08:25:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594628588;
-	bh=Cc6XpKtFID0FHQDQzIyY1YoIHwf0PusCyNXYaHGbvkc=;
+	s=default; t=1594628757;
+	bh=bnb0Ao6sCyzm2xOSI9gjcZln3mdKoHgihfBEVcHcflM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WpGE93cbPVxBuqM4jtjGFC6HuM3vc/1bmn4sFxfAMMHwOdU+cxwOx4/MKr7FHAT7e
-	 kcvoeT2Ez9WbnKTun+eHwmRyZFn+pn/mBX/3SF8c4RdA3c20EGHWMrKlCi2vef7Mp4
-	 y8KgFdi6tIGfjzSD0QMVmjEsihin+WTYsJDetXPg=
+	b=bOHTmt17vFQuJ/kx/+QyvlWXKpyTcSNS/eNAsRu9GuDyfeGE0gB7ZqUNQb1va9iLk
+	 hAKdSkhbQJqLuE1pLc5IIfcP4ueEmWtf9sYmx5uyWev+1BQRYBjIpVt6vGVG8gGSef
+	 kqoP3FeZLDNIiC++nl73aYZJXhyy6GrOK8N+1iys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729034AbgGMIXH (ORCPT
+        id S1726300AbgGMIZ4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 04:23:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57540 "EHLO mail.kernel.org"
+        Mon, 13 Jul 2020 04:25:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbgGMIXH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 04:23:07 -0400
+        id S1725818AbgGMIZ4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 04:25:56 -0400
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 810482065D;
-        Mon, 13 Jul 2020 08:23:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 956EA2073A;
+        Mon, 13 Jul 2020 08:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594628587;
-        bh=Cc6XpKtFID0FHQDQzIyY1YoIHwf0PusCyNXYaHGbvkc=;
+        s=default; t=1594628756;
+        bh=bnb0Ao6sCyzm2xOSI9gjcZln3mdKoHgihfBEVcHcflM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MkAMBzJ8hZD7trw7NLlfrXDIuyoHiUhDKNZRBO/SJw+7HnXjBE98dBtiH5DhA5MNn
-         vx0bLMKwMJl1ZMA7u81j7Sas5gREJGEuWhRgOjjUDQsHYmeWJNj9wzyKIHrTV5L0Vx
-         SgGrKQo85tsHT9bRP2zxc+Kn3F3BtlYibu86cHYE=
-Date:   Mon, 13 Jul 2020 16:23:01 +0800
+        b=HD7PYqpUpXangwjU80N7DY7WyawD/jkGv5pn81/t+gk3/Rn2eo1cV3zZQC0JL7Gmg
+         UwTbwu8Nd76EKFmtBTeFN/Zo4OWEeSiea0KIIEkcY+H5Yb5S8nHySaZtA2G0FM162g
+         t+iGNFenwqyXNraVGQ6i8Y/OxSU430Q3+IWbiP4s=
+Date:   Mon, 13 Jul 2020 16:25:51 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
 To:     Chris Healy <cphealy@gmail.com>
-Cc:     festevam@gmail.com, andrew@lunn.ch, s.hauer@pengutronix.de,
-        stefan@agner.ch, robh+dt@kernel.org,
+Cc:     s.hauer@pengutronix.de, stefan@agner.ch, robh+dt@kernel.org,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ARM: dts: vf610-zii-dev-rev-c: Configure fiber port
+        linux-kernel@vger.kernel.org, festevam@gmail.com,
+        Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2] arm: dts: vf610-zii-scu4-aib: Configure fibre ports
  to 1000BaseX
-Message-ID: <20200713082300.GO12113@dragon>
-References: <20200708232501.6200-1-cphealy@gmail.com>
+Message-ID: <20200713082548.GA15718@dragon>
+References: <20200709001154.7403-1-cphealy@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200708232501.6200-1-cphealy@gmail.com>
+In-Reply-To: <20200709001154.7403-1-cphealy@gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 04:25:01PM -0700, Chris Healy wrote:
-> The SFF soldered onto the board expects the port to use 1000BaseX.  It
-> makes no sense to have the port set to SGMII, since it doesn't even
+On Wed, Jul 08, 2020 at 05:11:54PM -0700, Chris Healy wrote:
+> From: Andrew Lunn <andrew@lunn.ch>
+> 
+> The SFF soldered onto the board expect the ports to use 1000BaseX.  It
+> makes no sense to have the ports set to SGMII, since they don't even
 > support that mode.
 > 
+> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
 > Signed-off-by: Chris Healy <cphealy@gmail.com>
 
-Applied, thanks.
+s/arm/ARM in subject prefix, and applied.
