@@ -2,76 +2,65 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73478C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 03:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A28C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 03:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C2C12070B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 03:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9732E2070B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 03:22:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594610158;
-	bh=YZzIW+KZpc0vqOCl/7oVkW5+VX1XWYHsXl9tcGS26FI=;
+	s=default; t=1594610538;
+	bh=59mZYRNAzcxgHIO3OMwPaOI3VjJIXJrdO39yAFq5mxo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Tj3aLsAb+ZJFnrtByGxUiKWddK21N/r4o+0Z9eGmAWjI7c8PXy2KsDdFzAkG/jd2X
-	 fBYSekW8/mdHnLnkvoZBrPfPh45wCh5qE4RqFRnCzNAKEvN0XKowdgnUsaU2bGPYUE
-	 M6E/4PqoVxs1RYiFmXmmKUThoJD9+6M/OIay/olE=
+	b=rapeJe7UwiXaCZ1G2V58ZjPlzTi7ZoB48a6gzDm9qJspjwGku9/dbVdHtuNUyzZIM
+	 tyqW4dPnXfLrAU856gxtU0ek6Mi+FBrJ0m27Kvhop1v0aTQ/IVK7QX6dKgyqdgVh+W
+	 xk0m5+6k3wou/LjzcmgG2CoyamkvFzhxmGXNObTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbgGMDP5 (ORCPT
+        id S1726465AbgGMDWS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Jul 2020 23:15:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36966 "EHLO mail.kernel.org"
+        Sun, 12 Jul 2020 23:22:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726261AbgGMDP5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 12 Jul 2020 23:15:57 -0400
+        id S1726261AbgGMDWR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 12 Jul 2020 23:22:17 -0400
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C85BD2068F;
-        Mon, 13 Jul 2020 03:15:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EB08206E2;
+        Mon, 13 Jul 2020 03:22:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594610157;
-        bh=YZzIW+KZpc0vqOCl/7oVkW5+VX1XWYHsXl9tcGS26FI=;
+        s=default; t=1594610537;
+        bh=59mZYRNAzcxgHIO3OMwPaOI3VjJIXJrdO39yAFq5mxo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xMmz1NIH59pJQvE4XDhJ3Kpk649kZPlGk9O7qg4Vuc1zWSWbssqppShAXVmmG/Hck
-         oEo/vvn3AqVIwk96fgF3BLYIxapJ9KiQ5zv7Sr84cY4Wnd2RFEe87mJ18+bLKfuNM7
-         I9Cam+LsrYGcHTdTyioj1bn0cagJT0JOvJ+/84aE=
-Date:   Mon, 13 Jul 2020 11:15:52 +0800
+        b=M9Z8rFVc8LGG0fLJt9zmjolvrFqpVzB2yq3XuaRC2J07hHBD1n3J607TuXx3/ywIP
+         zcMjQigf7sjNMbHtNL3fvWoLp+F2cyinbykF5LwUuTcxxVxogZCWv6rhI7wYkNni9T
+         mrRzVZ4Qz4H+IDWOZGnCQgHvPTfwrP0wjvsM1DxU=
+Date:   Mon, 13 Jul 2020 11:22:08 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Andy Tang <andy.tang@nxp.com>
-Cc:     Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [EXT] Re: [PATCH 1/2] arm64: dts: ls1088a: add more thermal zone
- support
-Message-ID: <20200713031551.GB21277@dragon>
-References: <20200630032014.22956-1-andy.tang@nxp.com>
- <CAHLCerO3B4Z67KP8VaF957Jkid21gLvzhS49gNeqUC+6muPkjA@mail.gmail.com>
- <DBBPR04MB609085CD69E4CCBDD49CCF66F36F0@DBBPR04MB6090.eurprd04.prod.outlook.com>
- <CAP245DV-_+5Ht=yP9Mnzb2vUqXDJSEeBPfbNh48mEt62PmBeWA@mail.gmail.com>
- <DBBPR04MB60907EC06EAABC949DD42E3EF36F0@DBBPR04MB6090.eurprd04.prod.outlook.com>
- <CAP245DUzQBmKvg9oit8StKyfvp==eVZZ7dh0DUAwKkQnjSL_yw@mail.gmail.com>
- <DBBPR04MB6090001AA0A668A924EEB0FCF36D0@DBBPR04MB6090.eurprd04.prod.outlook.com>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     robh+dt@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] ARM: dts: imx6ul: Add ASRC device node
+Message-ID: <20200713032207.GC21277@dragon>
+References: <1593575216-19921-1-git-send-email-shengjiu.wang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DBBPR04MB6090001AA0A668A924EEB0FCF36D0@DBBPR04MB6090.eurprd04.prod.outlook.com>
+In-Reply-To: <1593575216-19921-1-git-send-email-shengjiu.wang@nxp.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 03:33:59AM +0000, Andy Tang wrote:
-> Hi Shawn,
+On Wed, Jul 01, 2020 at 11:46:56AM +0800, Shengjiu Wang wrote:
+> Add ASRC device node.
 > 
-> Do you think it is ok if the cooling devices are shared between thermal zones?
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-Yeah, Amit has the authority on thermal support, so follow his
-suggestion, I would say :)
-
-Shawn
+Applied, thanks.
