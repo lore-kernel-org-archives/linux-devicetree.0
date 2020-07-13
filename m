@@ -2,69 +2,92 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9349CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 09:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6840EC433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 09:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64C88206F0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 09:01:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594630903;
-	bh=nJLPgcuBwhmSHu4F6XNXgD70YkFDj7kDupRQGsTzmzw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eWW/y3rC/K7tkg5I58EsKebsyu106YiGvmQWTkGN85DDCA7dN8CQBy+veZbtip+Tn
-	 j3TbZNqO+DGV6aFk7/30lbkeM+WeZCH8gxmMGIX0Jq9OG8k4WDKlNH+0E0jGIO+ohF
-	 Si/dNhTcYIydomQFw5EOey77Af9L1PfbG1BE1GN0=
+	by mail.kernel.org (Postfix) with ESMTP id 49A07206F0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 09:03:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgGMJBn (ORCPT
+        id S1729211AbgGMJDY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 05:01:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47624 "EHLO mail.kernel.org"
+        Mon, 13 Jul 2020 05:03:24 -0400
+Received: from mga11.intel.com ([192.55.52.93]:62216 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726077AbgGMJBm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 05:01:42 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 902C52068F;
-        Mon, 13 Jul 2020 09:01:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594630902;
-        bh=nJLPgcuBwhmSHu4F6XNXgD70YkFDj7kDupRQGsTzmzw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zZOuTy9w9sQ+De4o5izVaycdKlvIVnBrIerDgJApJx9WZM6Znfm0njloYjHwG/cFc
-         vooDuM/wpMmSsA7xcErjLMA5lMebeR1R9S8JDjQO009HtqFDfDSBJUIrmGqfl3lzVV
-         iaEaaiPpysgglgC4eHvf+CKwF5Qo44CCSpFvlzHU=
-Date:   Mon, 13 Jul 2020 17:01:36 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Philippe Schenker <philippe.schenker@toradex.com>
-Cc:     devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] ARM: dts: colibri-imx6: remove pinctrl-names orphan
-Message-ID: <20200713090136.GI15718@dragon>
-References: <20200710132423.497230-1-philippe.schenker@toradex.com>
+        id S1726360AbgGMJDY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 05:03:24 -0400
+IronPort-SDR: FKCxaN1pN5/QCgaJ8gWMOclLRWVaE1NdRCtLlRgAZNJm62rJfwoFViblSllRzyPVSU20BHqdW9
+ ReA4+oFRFCag==
+X-IronPort-AV: E=McAfee;i="6000,8403,9680"; a="146613402"
+X-IronPort-AV: E=Sophos;i="5.75,347,1589266800"; 
+   d="scan'208";a="146613402"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 02:03:23 -0700
+IronPort-SDR: UE4MUmNowr4zmxZPYlPAOi4ANrMT2reqcJZxqE4OVXjKiZBFqHzcmqsodXz9YrwexhAtUeGbiW
+ qQkWxPT+XivA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,347,1589266800"; 
+   d="scan'208";a="325440370"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 13 Jul 2020 02:03:21 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1juuMr-001ZBW-PN; Mon, 13 Jul 2020 12:03:21 +0300
+Date:   Mon, 13 Jul 2020 12:03:21 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     "Reddy, MallikarjunaX" <mallikarjunax.reddy@linux.intel.com>
+Cc:     dmaengine@vger.kernel.org, vkoul@kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, chuanhua.lei@linux.intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        malliamireddy009@gmail.com
+Subject: Re: [PATCH v4 2/2] Add Intel LGM soc DMA support.
+Message-ID: <20200713090321.GA3703480@smile.fi.intel.com>
+References: <cover.1594273437.git.mallikarjunax.reddy@linux.intel.com>
+ <6be9b9cfbf6708fe371f280cb94cbdc9c04bdccb.1594273437.git.mallikarjunax.reddy@linux.intel.com>
+ <20200709110914.GW3703480@smile.fi.intel.com>
+ <e2eae7fc-0726-5156-8676-d64eab991c9e@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200710132423.497230-1-philippe.schenker@toradex.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <e2eae7fc-0726-5156-8676-d64eab991c9e@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 03:24:21PM +0200, Philippe Schenker wrote:
-> This is not necessary without a pinctrl-0 statement. Remove this
-> orphan.
-> 
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+On Mon, Jul 13, 2020 at 04:41:31PM +0800, Reddy, MallikarjunaX wrote:
+> On 7/9/2020 7:09 PM, Andy Shevchenko wrote:
+> > On Thu, Jul 09, 2020 at 02:01:06PM +0800, Amireddy Mallikarjuna reddy wrote:
+> > > Add DMA controller driver for Lightning Mountain(LGM) family of SoCs.
+> > > 
+> > > The main function of the DMA controller is the transfer of data from/to any
+> > > DPlus compliant peripheral to/from the memory. A memory to memory copy
+> > > capability can also be configured.
+> > > 
+> > > This ldma driver is used for configure the device and channnels for data
+> > > and control paths.
+> > > +#include "../virt-dma.h"
+> > I didn't find any evidence this driver utilizes virt-dma API in full.
+> > For example, there is a virt_dma_desc structure and descriptor management around it.
+> > Why don't you use it?
+> Lgm dma soc has its own hardware descriptor.
+> and each dma channel is associated with a peripheral, it is one to one
+> mapping between channel and associated peripheral.
 
-Applied all, thanks.
+And this neither objects nor answers to my question.
+
+Hint: above mentioned structure is an abstraction of hardware descriptors for
+easier management in Linux kernel.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
