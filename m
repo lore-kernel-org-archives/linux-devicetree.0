@@ -2,62 +2,56 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD81FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 05:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98818C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 05:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBF7820674
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 05:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 771812073A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 05:46:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="AX/QIrgi"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="HHyYCo37"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728672AbgGMFpi (ORCPT
+        id S1725818AbgGMFq3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 01:45:38 -0400
-Received: from enterprise02.smtp.diehl.com ([193.201.238.220]:16159 "EHLO
-        enterprise02.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725818AbgGMFph (ORCPT
+        Mon, 13 Jul 2020 01:46:29 -0400
+Received: from enterprise01.smtp.diehl.com ([193.201.238.219]:43256 "EHLO
+        enterprise01.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725804AbgGMFq2 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 01:45:37 -0400
+        Mon, 13 Jul 2020 01:46:28 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
-  t=1594619135; x=1626155135;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=7cW/YOJXUx2PIiwmm/PI3I7DknzDgEvfBng6cd6jKWw=;
-  b=AX/QIrgikYaHJFxASCxcx3RtmqioW7TzAu6aksq3JWtOCpsoSkQcN8o8
-   qfQ5cTBAwCvqWUMSplukHH7fiSDsh/P4OLRnACD/T5vimcgJtFNxiHOgl
-   7EVgXca5xtqO+IjfPezqe7pn/yd7KsQNtMZsmBPgq89VPekEyuBv3TyoK
-   hMvSPYbHDuF7DPaTScM3P/Jcc98MpEESbH0ec5575pcr+U5vpRzs8VfB1
-   z2NxEh3A7JJr21z/hHhNDjhYZowbEt7Hd3cBQsEeRxybWUIeKqtjpbjIu
-   DCe5Tqz3M1qCY7pgjDbjow69XGSL2zO+YvP2KdH+rGqq0C2MZafTO9TYT
+  t=1594619187; x=1626155187;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=575HEkwvnGuRpevqUYYJMxN0/FnyosKPT8D7C6Z2IB4=;
+  b=HHyYCo372VU93e47WWKvcHykNP6EuSTTTCaylavKIsaLWe7WOw7sWByH
+   LU9hjMniKdTv82jXVews37r6dfycIwrftxncAKdTygrJW/fyfoCh13d7m
+   GPZ3kZN22JtRDaRDmU3LvUUDjQybNdGJjIjuzvZcBTIEbFTyWL9UrBSJZ
+   VlDtuSczWB0SfdJXIK0q+6OY6RxPSDAzQTNu+bqhbHQJZUJ2zBE//2ddv
+   Si79+e+wH1p2n2tCaJ36Pty/nqO1BWHTlX55ymeteFoXepDTlTblmhUoT
+   Ol6urXRpVbjbV7bxtAJZvi738DXm++y/ydKEJpHBPBBHmdofmeJTKoBNu
    Q==;
-IronPort-SDR: bg80K5TqI9tLYD0QW4HMUH6kvelFBXiPFM1O6aWKx6bBG82n0PhEavia4qaf2WnjZdYx9wsFGg
- fEf9KYKxNT0Q==
+IronPort-SDR: Riw7ZFQkJ1fIB0RG6fMld0k2GJxFi0nmfCfTM4ws2pdbirTW4O46hj1lcagwsN2z/J7J4sYwG6
+ MHjtjJjB90fw==
 X-IronPort-AV: E=Sophos;i="5.75,346,1589234400"; 
-   d="scan'208";a="64193337"
+   d="scan'208";a="39432166"
 From:   Denis Osterland-Heim <denis.osterland@diehl.com>
 To:     "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
         "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>
-CC:     "robh@kernel.org" <robh@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Denis Osterland-Heim <denis.osterland@diehl.com>,
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
         "robh+dt@kernel.org" <robh+dt@kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: [PATCH v6 2/2] leds: pwm: add reference to common leds for
- default-state
-Thread-Topic: [PATCH v6 2/2] leds: pwm: add reference to common leds for
- default-state
-Thread-Index: AQHWWNjSvxKdnghAx02VQ0imS9FJCQ==
-Date:   Mon, 13 Jul 2020 05:45:31 +0000
-Message-ID: <20200713054259.7608-3-Denis.Osterland@diehl.com>
-References: <20200713054259.7608-1-Denis.Osterland@diehl.com>
-In-Reply-To: <20200713054259.7608-1-Denis.Osterland@diehl.com>
+Subject: [PATCH v6 0/2] leds: pwm: add support for default-state device
+Thread-Topic: [PATCH v6 0/2] leds: pwm: add support for default-state device
+Thread-Index: AQHWWNjSOiDq5TcOv0aTFx6++gy85w==
+Date:   Mon, 13 Jul 2020 05:45:32 +0000
+Message-ID: <20200713054259.7608-1-Denis.Osterland@diehl.com>
 Accept-Language: de-DE, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -68,38 +62,23 @@ Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-TrailerSkip: 1
-X-GBS-PROC: byQFdw3ukCM+zy1/poiPc9DxUHFKa5QuXnUaA65Gx6zvbScgxME0GmNfjkqzTgl2
+X-GBS-PROC: 415AWy8o668fDtCxszluz/YUUpbtbZKv9hhwd+iOvDKuI0HiOHUkk6gbb3ZKKrmq
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The default-state is now supported for PWM leds.
+v5 -> v6: tested the rebase to v5.8-rc2 based for-next
 
-Signed-off-by: Denis Osterland-Heim <Denis.Osterland@diehl.com>
-Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/leds/leds-pwm.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ .../devicetree/bindings/leds/leds-pwm.txt          |  2 +
+ drivers/leds/leds-pwm.c                            | 54 ++++++++++++++++=
++++---
+ 2 files changed, 50 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-pwm.txt b/Docume=
-ntation/devicetree/bindings/leds/leds-pwm.txt
-index 6c6583c35f2f..d0f489680594 100644
---- a/Documentation/devicetree/bindings/leds/leds-pwm.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-pwm.txt
-@@ -19,6 +19,8 @@ LED sub-node properties:
-   see Documentation/devicetree/bindings/leds/common.txt
- - linux,default-trigger :  (optional)
-   see Documentation/devicetree/bindings/leds/common.txt
-+- default-state : (optional)
-+  see Documentation/devicetree/bindings/leds/common.yaml
-=20
- Example:
-=20
---=20
-2.27.0
+Message-Id: <20200421130644.16059-1-Denis.Osterland@diehl.com>
+base-commit: cf1a1a6a7d81d73bcb5568b23572d6fd593add87
+
+
 
 
 
