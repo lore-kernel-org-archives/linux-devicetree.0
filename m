@@ -2,75 +2,78 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23560C4345B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7FBC43445
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04E2B207FB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26B23207FB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:43:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="PWuqcgBx"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="eSo2x87Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729849AbgGMPmt (ORCPT
+        id S1730057AbgGMPnX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:42:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40948 "EHLO
+        Mon, 13 Jul 2020 11:43:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729782AbgGMPmt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 11:42:49 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 021B0C061794
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 08:42:48 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id d27so10270624qtg.4
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 08:42:48 -0700 (PDT)
+        with ESMTP id S1730015AbgGMPmw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 11:42:52 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5276C061755
+        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 08:42:52 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id c139so12584172qkg.12
+        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 08:42:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=o6mVIteS5H22xj7K9FbgllDWoWh0dWKcuZiDimv8WT0=;
-        b=PWuqcgBxjYScsRLGOLnb7Muj06nTih8BeA2wxRUzz65ls/OgusFE+hlPsst9WP7HSl
-         0wbLJmYCzmvh57Itn/lK1AWfozL4MPIcAdPDZV7lupW5RvF3pkuafSA2sQNkM6/hqZtY
-         qQ4NPXtZUw5pXwb1Xj2IPAY8uHSEfhXfEVSEe3sxsvn9hssb/iaxp+EbEo50Ou1k6Vka
-         T0NCu5E/Xs+oZnort4PcU5yEmqjWsr56TC4r9K+kCGtIZehRrxSMXNVk8vg8XHKv4aXi
-         /32B36zBejkNQ6VA+C5FQU9i4t4HBbFH2GYLmR1lUwNIKq7WPl62vAy/VCAvd+aSzn3g
-         R4Hw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0/Om6KX5WpVodwKlmSsBgTMZUVH39nABMAZW28824HU=;
+        b=eSo2x87Y1epp53LEJ7RdCRLoB/S0E7dpae2sSzReQ3SKvPtOMgUP2jsO7NKnQebEUU
+         lvRek+vwBTyMP+hmCDA+6KHwv1+xQoxDmVkIk6+h3Oal0DIyA0mmfy53/Z+q+NTE9Fzs
+         CuztoLtIp3KXDDPo84W7jWqCUJWKiim3cMzxYkyTsCUVnxJrAYlCMK737+imofzhgrwV
+         H2v33eWHT1lm2gPm/+O3WzZhDpjxnit0fMG5JJtBkGYSsiZ/6n9iorWkoNIn2aM+DiZ0
+         G4DypqX6EhKDPFKL6RLN/ueR8HFeapLFFikGQPtDvojwphKhgTnA8wKrljmBBLCl3cMx
+         yiXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=o6mVIteS5H22xj7K9FbgllDWoWh0dWKcuZiDimv8WT0=;
-        b=ILYB5FeFnMGkVZ2MXOd+CqUzQerAq7dRMf7XA7kEsTmuASJsbuX2UB41n0qbmmyJG8
-         wHYftFX/vjer/MmUnrrAGYvUU6KbC36M5ls3qCyl6O7jV3teBno/l8twkD3w8t69HFis
-         sPGW5uL4XGdpn1yKzA2F0KQbET0GZTGyWo+1ud6uZae9Xq05XHIVx6O6X495m+4nzfqh
-         CTGAUjuOstqYRFqOYbouctvaaYaDzDkX35h8RVIHVY/KMyySipRx/h9GIo02IFHi60MG
-         xisbuIH2QraFQ9sB1FZLtL4QiOdvvlXNRoBRn7zHxye3oEXiYtn+dy+nW7rGmDH6/n7X
-         tfPA==
-X-Gm-Message-State: AOAM531UvNoX3Mk3eL6MY5j02i3nzRXo6Mq6xfMGIyXuEWqgc1XWiSCg
-        B3SPZLWYfuOVYDSDKI6M/S25ow==
-X-Google-Smtp-Source: ABdhPJxV2KKXGOQ10kOUx+nUwR0+7ahOgBJa7GfDP+fROft5m6+JqIu5v0A9I3+GFGxVzwGxo7V3eQ==
-X-Received: by 2002:ac8:45d1:: with SMTP id e17mr88246364qto.159.1594654968159;
-        Mon, 13 Jul 2020 08:42:48 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=0/Om6KX5WpVodwKlmSsBgTMZUVH39nABMAZW28824HU=;
+        b=HI7T9+fUYlp0znQ3uAhVrzRSFTm3VYEQVADM9k+u3PFcu3ywhj4VHVKBgdRpB6X7Ii
+         akUtxcbTX24Hn+MrA0VVUwGGYoB8Yg8Lu58QadEvVhly/fL9mSC11pdVzdv23arbJYwT
+         5Vn0FZtoX8s47FTeDSHN0E+xaSIUq/5zqQ7ZeIbnnsMGSIqY+ikpXfIhlQDG1GNAcXym
+         7iGkfSDxIURHClRp2ZQrs7RPDz41wQM7NVG5QK/Qbm6Un7gzB5TS4flFrA7rxY8pNf8T
+         vewsWjZATjyXtTOUhofcJOAXZt7kNGwhywZ1Xjw2NkARFUOIy9SucE7j/h3WAhdF+BBM
+         uRdw==
+X-Gm-Message-State: AOAM530bZ41UPaI9MbLNmAtdGY5DaEe9mJQ1iyI3lc0vcQyArlPgY21t
+        3Qs2EHk9gxQWWqIiqlSenLIa7Q==
+X-Google-Smtp-Source: ABdhPJzwnEHIsy08nyUHYlxsxaXmMySKLQo3sZve5g3qQlPwjyG7BMny1Oa27guDoBfPV4pyxGvGMQ==
+X-Received: by 2002:a37:9bc9:: with SMTP id d192mr142932qke.409.1594654971906;
+        Mon, 13 Jul 2020 08:42:51 -0700 (PDT)
 Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id l1sm19806371qtk.18.2020.07.13.08.42.46
+        by smtp.gmail.com with ESMTPSA id l1sm19806371qtk.18.2020.07.13.08.42.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 08:42:47 -0700 (PDT)
+        Mon, 13 Jul 2020 08:42:51 -0700 (PDT)
 From:   Jonathan Marek <jonathan@marek.ca>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), Georgi Djakov <georgi.djakov@linaro.org>,
-        linux-kernel@vger.kernel.org (open list),
-        linux-pm@vger.kernel.org (open list:INTERCONNECT API),
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Odelu Kukatla <okukatla@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v2 0/7] Add SM8150 and SM8250 interconnect drivers
-Date:   Mon, 13 Jul 2020 11:41:09 -0400
-Message-Id: <20200713154121.22094-1-jonathan@marek.ca>
+        linux-pm@vger.kernel.org (open list:INTERCONNECT API),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 2/7] dt-bindings: interconnect: Add Qualcomm SM8150 DT bindings
+Date:   Mon, 13 Jul 2020 11:41:11 -0400
+Message-Id: <20200713154121.22094-3-jonathan@marek.ca>
 X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200713154121.22094-1-jonathan@marek.ca>
+References: <20200713154121.22094-1-jonathan@marek.ca>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -78,46 +81,207 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Most of this is generated from downstream dts using a script.
+The Qualcomm SM8150 platform has several bus fabrics that could be
+controlled and tuned dynamically according to the bandwidth demand.
 
-There are a couple things I'm still not sure about:
-* When to set keepalive in DEFINE_QBCM macro (set to all false)
-* Size for the reg fields. For the size I just used 0x1000.
-
-v2: single yaml file for RPMh interconnect bindings, drop display RSC
-
-Jonathan Marek (7):
-  dt-bindings: interconnect: single yaml file for RPMh interconnect
-    drivers
-  dt-bindings: interconnect: Add Qualcomm SM8150 DT bindings
-  dt-bindings: interconnect: Add Qualcomm SM8250 DT bindings
-  interconnect: qcom: Add SM8150 interconnect provider driver
-  interconnect: qcom: Add SM8250 interconnect provider driver
-  arm64: dts: qcom: sm8150: add interconnect nodes
-  arm64: dts: qcom: sm8250: add interconnect nodes
-
- .../{qcom,sc7180.yaml => qcom,rpmh.yaml}      |  55 +-
- .../bindings/interconnect/qcom,sdm845.yaml    |  74 --
- arch/arm64/boot/dts/qcom/sm8150.dtsi          |  82 +++
- arch/arm64/boot/dts/qcom/sm8250.dtsi          |  82 +++
- drivers/interconnect/qcom/Kconfig             |  20 +
- drivers/interconnect/qcom/Makefile            |   4 +
- drivers/interconnect/qcom/sm8150.c            | 639 +++++++++++++++++
- drivers/interconnect/qcom/sm8150.h            | 153 ++++
- drivers/interconnect/qcom/sm8250.c            | 655 ++++++++++++++++++
- drivers/interconnect/qcom/sm8250.h            | 163 +++++
- .../dt-bindings/interconnect/qcom,sm8150.h    | 163 +++++
- .../dt-bindings/interconnect/qcom,sm8250.h    | 173 +++++
- 12 files changed, 2186 insertions(+), 77 deletions(-)
- rename Documentation/devicetree/bindings/interconnect/{qcom,sc7180.yaml => qcom,rpmh.yaml} (56%)
- delete mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
- create mode 100644 drivers/interconnect/qcom/sm8150.c
- create mode 100644 drivers/interconnect/qcom/sm8150.h
- create mode 100644 drivers/interconnect/qcom/sm8250.c
- create mode 100644 drivers/interconnect/qcom/sm8250.h
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+---
+ .../bindings/interconnect/qcom,rpmh.yaml      |  11 ++
+ .../dt-bindings/interconnect/qcom,sm8150.h    | 163 ++++++++++++++++++
+ 2 files changed, 174 insertions(+)
  create mode 100644 include/dt-bindings/interconnect/qcom,sm8150.h
- create mode 100644 include/dt-bindings/interconnect/qcom,sm8250.h
 
+diff --git a/Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml b/Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml
+index 9878139a73b8..9dfd1d75fdd3 100644
+--- a/Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml
++++ b/Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml
+@@ -45,6 +45,17 @@ properties:
+       - qcom,sdm845-mem-noc
+       - qcom,sdm845-mmss-noc
+       - qcom,sdm845-system-noc
++      - qcom,sm8150-aggre1-noc
++      - qcom,sm8150-aggre2-noc
++      - qcom,sm8150-camnoc-noc
++      - qcom,sm8150-compute-noc
++      - qcom,sm8150-config-noc
++      - qcom,sm8150-dc-noc
++      - qcom,sm8150-gem-noc
++      - qcom,sm8150-ipa-virt
++      - qcom,sm8150-mc-virt
++      - qcom,sm8150-mmss-noc
++      - qcom,sm8150-system-noc
+ 
+   '#interconnect-cells':
+     const: 1
+diff --git a/include/dt-bindings/interconnect/qcom,sm8150.h b/include/dt-bindings/interconnect/qcom,sm8150.h
+new file mode 100644
+index 000000000000..ab42f04d93a2
+--- /dev/null
++++ b/include/dt-bindings/interconnect/qcom,sm8150.h
+@@ -0,0 +1,163 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Qualcomm SM8150 interconnect IDs
++ *
++ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
++ */
++
++#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_SM8150_H
++#define __DT_BINDINGS_INTERCONNECT_QCOM_SM8150_H
++
++#define MASTER_A1NOC_CFG		0
++#define MASTER_QUP_0			1
++#define MASTER_EMAC			2
++#define MASTER_UFS_MEM			3
++#define MASTER_USB3			4
++#define MASTER_USB3_1			5
++#define A1NOC_SNOC_SLV			6
++#define SLAVE_SERVICE_A1NOC		7
++
++#define MASTER_A2NOC_CFG		0
++#define MASTER_QDSS_BAM			1
++#define MASTER_QSPI			2
++#define MASTER_QUP_1			3
++#define MASTER_QUP_2			4
++#define MASTER_SENSORS_AHB		5
++#define MASTER_TSIF			6
++#define MASTER_CNOC_A2NOC		7
++#define MASTER_CRYPTO_CORE_0		8
++#define MASTER_IPA			9
++#define MASTER_PCIE			10
++#define MASTER_PCIE_1			11
++#define MASTER_QDSS_ETR			12
++#define MASTER_SDCC_2			13
++#define MASTER_SDCC_4			14
++#define A2NOC_SNOC_SLV			15
++#define SLAVE_ANOC_PCIE_GEM_NOC		16
++#define SLAVE_SERVICE_A2NOC		17
++
++#define MASTER_CAMNOC_HF0_UNCOMP	0
++#define MASTER_CAMNOC_HF1_UNCOMP	1
++#define MASTER_CAMNOC_SF_UNCOMP		2
++#define SLAVE_CAMNOC_UNCOMP		3
++
++#define MASTER_NPU			0
++#define SLAVE_CDSP_MEM_NOC		1
++
++#define MASTER_SPDM			0
++#define SNOC_CNOC_MAS			1
++#define MASTER_QDSS_DAP			2
++#define SLAVE_A1NOC_CFG			3
++#define SLAVE_A2NOC_CFG			4
++#define SLAVE_AHB2PHY_SOUTH		5
++#define SLAVE_AOP			6
++#define SLAVE_AOSS			7
++#define SLAVE_CAMERA_CFG		8
++#define SLAVE_CLK_CTL			9
++#define SLAVE_CDSP_CFG			10
++#define SLAVE_RBCPR_CX_CFG		11
++#define SLAVE_RBCPR_MMCX_CFG		12
++#define SLAVE_RBCPR_MX_CFG		13
++#define SLAVE_CRYPTO_0_CFG		14
++#define SLAVE_CNOC_DDRSS		15
++#define SLAVE_DISPLAY_CFG		16
++#define SLAVE_EMAC_CFG			17
++#define SLAVE_GLM			18
++#define SLAVE_GRAPHICS_3D_CFG		19
++#define SLAVE_IMEM_CFG			20
++#define SLAVE_IPA_CFG			21
++#define SLAVE_CNOC_MNOC_CFG		22
++#define SLAVE_NPU_CFG			23
++#define SLAVE_PCIE_0_CFG		24
++#define SLAVE_PCIE_1_CFG		25
++#define SLAVE_NORTH_PHY_CFG		26
++#define SLAVE_PIMEM_CFG			27
++#define SLAVE_PRNG			28
++#define SLAVE_QDSS_CFG			29
++#define SLAVE_QSPI			30
++#define SLAVE_QUP_2			31
++#define SLAVE_QUP_1			32
++#define SLAVE_QUP_0			33
++#define SLAVE_SDCC_2			34
++#define SLAVE_SDCC_4			35
++#define SLAVE_SNOC_CFG			36
++#define SLAVE_SPDM_WRAPPER		37
++#define SLAVE_SPSS_CFG			38
++#define SLAVE_SSC_CFG			39
++#define SLAVE_TCSR			40
++#define SLAVE_TLMM_EAST			41
++#define SLAVE_TLMM_NORTH		42
++#define SLAVE_TLMM_SOUTH		43
++#define SLAVE_TLMM_WEST			44
++#define SLAVE_TSIF			45
++#define SLAVE_UFS_CARD_CFG		46
++#define SLAVE_UFS_MEM_CFG		47
++#define SLAVE_USB3			48
++#define SLAVE_USB3_1			49
++#define SLAVE_VENUS_CFG			50
++#define SLAVE_VSENSE_CTRL_CFG		51
++#define SLAVE_CNOC_A2NOC		52
++#define SLAVE_SERVICE_CNOC		53
++
++#define MASTER_CNOC_DC_NOC		0
++#define SLAVE_LLCC_CFG			1
++#define SLAVE_GEM_NOC_CFG		2
++
++#define MASTER_AMPSS_M0			0
++#define MASTER_GPU_TCU			1
++#define MASTER_SYS_TCU			2
++#define MASTER_GEM_NOC_CFG		3
++#define MASTER_COMPUTE_NOC		4
++#define MASTER_GRAPHICS_3D		5
++#define MASTER_MNOC_HF_MEM_NOC		6
++#define MASTER_MNOC_SF_MEM_NOC		7
++#define MASTER_GEM_NOC_PCIE_SNOC	8
++#define MASTER_SNOC_GC_MEM_NOC		9
++#define MASTER_SNOC_SF_MEM_NOC		10
++#define MASTER_ECC			11
++#define SLAVE_MSS_PROC_MS_MPU_CFG	12
++#define SLAVE_ECC			13
++#define SLAVE_GEM_NOC_SNOC		14
++#define SLAVE_LLCC			15
++#define SLAVE_SERVICE_GEM_NOC		16
++
++#define MASTER_IPA_CORE			0
++#define SLAVE_IPA_CORE			1
++
++#define MASTER_LLCC			0
++#define MASTER_ALC			1
++#define SLAVE_EBI_CH0			2
++
++#define MASTER_CNOC_MNOC_CFG		0
++#define MASTER_CAMNOC_HF0		1
++#define MASTER_CAMNOC_HF1		2
++#define MASTER_CAMNOC_SF		3
++#define MASTER_MDP_PORT0		4
++#define MASTER_MDP_PORT1		5
++#define MASTER_ROTATOR			6
++#define MASTER_VIDEO_P0			7
++#define MASTER_VIDEO_P1			8
++#define MASTER_VIDEO_PROC		9
++#define SLAVE_MNOC_SF_MEM_NOC		10
++#define SLAVE_MNOC_HF_MEM_NOC		11
++#define SLAVE_SERVICE_MNOC		12
++
++#define MASTER_SNOC_CFG			0
++#define A1NOC_SNOC_MAS			1
++#define A2NOC_SNOC_MAS			2
++#define MASTER_GEM_NOC_SNOC		3
++#define MASTER_PIMEM			4
++#define MASTER_GIC			5
++#define SLAVE_APPSS			6
++#define SNOC_CNOC_SLV			7
++#define SLAVE_SNOC_GEM_NOC_GC		8
++#define SLAVE_SNOC_GEM_NOC_SF		9
++#define SLAVE_OCIMEM			10
++#define SLAVE_PIMEM			11
++#define SLAVE_SERVICE_SNOC		12
++#define SLAVE_PCIE_0			13
++#define SLAVE_PCIE_1			14
++#define SLAVE_QDSS_STM			15
++#define SLAVE_TCU			16
++
++#endif
 -- 
 2.26.1
 
