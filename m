@@ -2,230 +2,92 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B16B4C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2704C433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8ED9C20791
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:45:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XEWFleZr";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="H9rYNp09"
+	by mail.kernel.org (Postfix) with ESMTP id 995A420663
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:51:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594623100;
+	bh=eICm5z1aVZzbICki22PDS3qQwA4tGgtSA08FRFspzSk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xrTtsQ9k7t8UTesQyiF196omjcUvdCSYcWv8gNXM4Zo4mxirqZ4/f70SwfMwEzxgX
+	 Euby7AImwgqVyb+7IDcWAd0ulFov51Wg7lBby/vNxWz0hllLHaVOxOeYDVLtuAIFUA
+	 09PSURM0+qOxwyoZKVRlFMR8LtKpbG8emDebBi30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726077AbgGMGph (ORCPT
+        id S1728252AbgGMGvg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 02:45:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40912 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725804AbgGMGpg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 02:45:36 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E93EC061794;
-        Sun, 12 Jul 2020 23:45:36 -0700 (PDT)
-From:   Kurt Kanzenbach <kurt@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594622734;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Kf/nuRryitoAmJQ9FWeY087byFdcNTAQOaJG29udnw0=;
-        b=XEWFleZr0sHhedxUOMbSBzqxRLKbrf1FiW84VcKEGfxQ8Egz7DBDZdmFlSQ6j9GlBssV+d
-        yXntHRrsjbI+eT4DU77kv1PNgFVXNoIpxBH2QRDxoMX5lsbvjeWGOBmclfv2WvRJ6OjyDd
-        4L9edSO4v6Mt3hEASzcTtDEx4Grg4rISAfjqctRpgTlvDvgxnRkQKK9c9Az2FdL5hpXcIE
-        3B9b2+pZbLpPmzpJ2vCiJMSJsVZBijDWF7lj20xEunGA5dRxVPd6eIuxpSoOay5CqMwd0K
-        hryP/40oCsWQosZ59aAwO3hrDdm5Abgr2U2LV7jHezaY9if2bxek60VwRA+qxQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594622734;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Kf/nuRryitoAmJQ9FWeY087byFdcNTAQOaJG29udnw0=;
-        b=H9rYNp09dzFG+qQK2dNfMhI/myIHRNBvDNe3zs/4ilSQKrU2Oq7QlPHUFO/KSABjo9TM/t
-        /cvF/hDfP9ITi0Cg==
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org, Vladimir Oltean <olteanv@gmail.com>
-Subject: Re: [PATCH v1 8/8] dt-bindings: net: dsa: Add documentation for Hellcreek switches
-In-Reply-To: <92b7dca3-f56d-ecb1-59c2-0981c2b99dad@gmail.com>
-References: <20200710113611.3398-1-kurt@linutronix.de> <20200710113611.3398-9-kurt@linutronix.de> <92b7dca3-f56d-ecb1-59c2-0981c2b99dad@gmail.com>
-Date:   Mon, 13 Jul 2020 08:45:33 +0200
-Message-ID: <87mu43ncaa.fsf@kurt>
+        Mon, 13 Jul 2020 02:51:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36606 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726360AbgGMGvg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 02:51:36 -0400
+Received: from localhost (unknown [122.182.251.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE78920663;
+        Mon, 13 Jul 2020 06:51:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594623095;
+        bh=eICm5z1aVZzbICki22PDS3qQwA4tGgtSA08FRFspzSk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0u/PPKPVHJrtXQ1BQ9UECn/8iSxQKll6GDhkWKShES2uESX6/+sOpgtEBloL5Oo1O
+         H7Qe0n1nCHNokb7cv+f3Gv4yg6+lVdhaQwZ4TtKlV5LyCrtRdy0OnP0k5kGvd3eA4y
+         ZbAMNdnelKHkzhPwyE/PCcwOXoCqldskaj7Y/veQ=
+Date:   Mon, 13 Jul 2020 12:21:31 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 05/11] dmaengine: Introduce DMA-device device_caps
+ callback
+Message-ID: <20200713065131.GG34333@vkoul-mobl>
+References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+ <20200709224550.15539-6-Sergey.Semin@baikalelectronics.ru>
+ <20200710084503.GE3703480@smile.fi.intel.com>
+ <20200710093834.su3nsjesnhntpd6d@mobilestation>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200710093834.su3nsjesnhntpd6d@mobilestation>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On 10-07-20, 12:38, Serge Semin wrote:
+> On Fri, Jul 10, 2020 at 11:45:03AM +0300, Andy Shevchenko wrote:
+> > On Fri, Jul 10, 2020 at 01:45:44AM +0300, Serge Semin wrote:
+> > > There are DMA devices (like ours version of Synopsys DW DMAC) which have
+> > > DMA capabilities non-uniformly redistributed between the device channels.
+> > > In order to provide a way of exposing the channel-specific parameters to
+> > > the DMA engine consumers, we introduce a new DMA-device callback. In case
+> > > if provided it gets called from the dma_get_slave_caps() method and is
+> > > able to override the generic DMA-device capabilities.
+> > 
+> 
+> > In light of recent developments consider not to add 'slave' and a such words to the kernel.
+> 
+> As long as the 'slave' word is used in the name of the dma_slave_caps
+> structure and in the rest of the DMA-engine subsystem, it will be ambiguous
+> to use some else terminology. If renaming needs to be done, then it should be
+> done synchronously for the whole subsystem.
 
-On Sat Jul 11 2020, Florian Fainelli wrote:
-> On 7/10/2020 4:36 AM, Kurt Kanzenbach wrote:
->> Add basic documentation and example.
->>=20
->> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
->> ---
->>  .../bindings/net/dsa/hellcreek.yaml           | 132 ++++++++++++++++++
->>  1 file changed, 132 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/net/dsa/hellcreek.=
-yaml
->>=20
->> diff --git a/Documentation/devicetree/bindings/net/dsa/hellcreek.yaml b/=
-Documentation/devicetree/bindings/net/dsa/hellcreek.yaml
->> new file mode 100644
->> index 000000000000..bb8ccc1762c8
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/dsa/hellcreek.yaml
->> @@ -0,0 +1,132 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/net/dsa/hellcreek.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Hirschmann Hellcreek TSN Switch Device Tree Bindings
->> +
->> +allOf:
->> +  - $ref: dsa.yaml#
->> +
->> +maintainers:
->> +  - Andrew Lunn <andrew@lunn.ch>
->> +  - Florian Fainelli <f.fainelli@gmail.com>
->> +  - Vivien Didelot <vivien.didelot@gmail.com>
->
-> Don't you want to add yourself here as well?
+Right, I have plans to tackle that during next merge window and have
+started changes. Thankfully slave_dma can be replaced by peripheral dma
+easily. But getting that in would be tricky as we need to change users
+too.
 
-Sure.
-
->
->> +
->> +description:
->> +  The Hellcreek TSN Switch IP is a 802.1Q Ethernet compliant switch. It=
- supports
->> +  the Pricision Time Protocol, Hardware Timestamping as well the Time A=
-ware
-
-s/Pricision/Precision/g;
-
->> +  Shaper.
->> +
->> +properties:
->> +  compatible:
->> +    oneOf:
->> +      - const: hirschmann,hellcreek
->> +
->> +  reg:
->> +    description:
->> +      The physical base address and size of TSN and PTP memory base
->
-> You need to indicate how many of these cells are required.
-
-Yes.
-
->
->> +
->> +  reg-names:
->> +    description:
->> +      Names of the physical base addresses
->
-> Likewise.
->
->> +
->> +  '#address-cells':
->> +    const: 1
->> +
->> +  '#size-cells':
->> +    const: 1
->
-> Humm, not sure about those, you do not expose a memory mapped interface
-> bus from this switch to another sub node.
-
-True. That might be even different for other SoCs.
-
->
->> +
->> +  leds:
->> +    type: object
->> +    properties:
->> +      '#address-cells':
->> +        const: 1
->> +      '#size-cells':
->> +        const: 0
->> +
->> +    patternProperties:
->> +      "^led@[0-9]+$":
->> +          type: object
->> +          description: Hellcreek leds
->> +
->> +          properties:
->> +            reg:
->> +              items:
->> +                - enum: [0, 1]
->> +              description: Led number
->> +
->> +            label:
->> +              description: Label associated with this led
->> +              $ref: /schemas/types.yaml#/definitions/string
->> +
->> +            default-state:
->> +              items:
->> +                enum: ["on", "off", "keep"]
->> +              description: Default state for the led
->> +              $ref: /schemas/types.yaml#/definitions/string
->> +
->> +          required:
->> +            - reg
->
-> Can you reference an existing LED binding by any chance?
-
-Yes, we should reference leds/common.yaml somehow. Looking at
-leds-gpio.yaml for example, it should be possible like this:
-
-patternProperties:
-  "^led@[0-9]+$":
-      type: object
-      description: Hellcreek leds
-
-      $ref: ../../leds/common.yaml#
-
-      [...]
-
-But, how to express that only label and default-state should be used?
-
-Thanks,
-Kurt
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl8MAw0ACgkQeSpbgcuY
-8KYPzg//R5idczbboAKCnVnY4K7KSHLZ39RQEuwAdaEQ43EBMG/OG4XeW6NvuNBs
-TRNF6dko9zhHYvEJxQjbtK/cE8gJhkOxPXzr1kmcfemiClio2tiIRnzuLbotHMxK
-irUB/LRpG/K5H+qsw0R8liKqz8ma1GB/FQ8fYMjjirjpTr7R0Zp7D351s+RRen24
-0PrewSKi+9kgqb+/WQpbT/qU4hETf9pZXUsewsJ0T5TnUi/8Tcwa5RnUFt1I2COa
-D6VNjMSFT6HmsxOXnAdJBSwJl/bHOvPN1YZpxe+EoJLI71yxRY4r/tsRIKmKxpkX
-gpqtOY0nPj4QeatvSwffpbUcy40RbDGzRzGfktC6/VhqNrk787+ASxzAoQoYgFOl
-764pVv8It3tt6mGVQzPKruCrLJgjgPL9MHI2zii2ZeQ2C4+kLQjlIxBG57CREBKG
-5+zF56jL04HzTF2R3J5jjTCc2qKx/qyWZhveGEimUrPprIKVgBYS7GQBmTqIJK/6
-/k55xUQS2ngRkjSr3LbTjVx8vLW4R8mD4fKBgV2ir7lqbOeeu8X6H57dxXuAYvBh
-npyaEHgZk7c7Gl0iN+Sn+3pjRaB1os1SJvyGpY4XjmQle8yUJVpX+3wuvQ3Y/pcH
-x/b1TueKZzO1Npa3IaFCXFaJL+z2s8tn7tD6UwaXYPligWJKjz4=
-=QLWv
------END PGP SIGNATURE-----
---=-=-=--
+-- 
+~Vinod
