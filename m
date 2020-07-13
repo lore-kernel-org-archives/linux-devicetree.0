@@ -2,216 +2,173 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 613CAC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5D6C433E4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 417B720738
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04CBE20738
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594651466;
-	bh=T9ZB2uW5nJ6H5+3jj3VedqOXcp1eECwv/yUfo2enSS8=;
+	s=default; t=1594651605;
+	bh=AgepWT7Qk1eufiWlt8Bn9mEhhCH/ZD1sfoj89k9aNdE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=v/60vmAeJnPniz/UpkbXZNCtvzxSkZ4rFgrQszkMz3gQmE0BSwXOxugaPXommsgLg
-	 9Tl5qO/nDG18yFy4dm+njF5VDOZ2FIhbovRrdTfRw/MSaI9HAAWYm9lMbTonU9A4+j
-	 tDqg/vLg/TGZR4Iqy5Scbe3w3fbExjV4KInuTFe8=
+	b=2BzBrazcIuw9QzzM2McfGgJNAG0YP74RIhZfddzXS86yVV44Jls7z1zeCo5VGdfj7
+	 BoVC5MTlrg1AaN/w7HkWbQywxjfPbAeGIU7wspu64SDeaKazE50ciBMvRR28z2Sj3M
+	 GtACb0ftIFOe5deDPd5a6gIKJEqgqhEFZKL3yxh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729782AbgGMOoY (ORCPT
+        id S1729681AbgGMOqo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:44:24 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:37599 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729703AbgGMOoX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 10:44:23 -0400
-Received: by mail-il1-f195.google.com with SMTP id r12so11375053ilh.4;
-        Mon, 13 Jul 2020 07:44:23 -0700 (PDT)
+        Mon, 13 Jul 2020 10:46:44 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41204 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729523AbgGMOqo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 10:46:44 -0400
+Received: by mail-io1-f66.google.com with SMTP id p205so5178660iod.8;
+        Mon, 13 Jul 2020 07:46:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=NGaGy7e/QItRe31Endu4HioF7kLqOnN7iiPvP2SlYbo=;
-        b=jd0OK1FCp3v+0mxHLt+lgHtBH9z43TeqBIwh8LMlD4OqJ02W3O9MSQcwf6vboJ2XAw
-         v59/Qp00iHy/esNneb9gUtNqlRptpdmKKzmFP7Z3O9Z6e24BEkPh9k5Nzm47F22sJy6i
-         Pui540cr3+L7jGkTEu1nsYpvDxin1qrMZy63fg51I1G3OcuDH9g7PtwnGXcM0r279SQ0
-         5XfIDIrun2RS4j7L1vlxUd35c8mO/hVpaicCp6mrILs+fq3jE3ZDROXzgicxWBkOXtXV
-         rcRcsiQTZbi3BOICm947dv/405nsUs+1xTxat8FNXwtt9ZBmYl13kDLNR94QtLaCJ9wR
-         N96g==
-X-Gm-Message-State: AOAM533gyCkZHbGI+sJvrLwv1O5Vp/NizwcDgqtdzZBCx1s+9YUnQK2Z
-        iC21SLbUMl14KipTWMjpmU5yjgJdMw==
-X-Google-Smtp-Source: ABdhPJzT2ulZfmlrepEO40ag1dive2U1RS4bZA9xVjwFKHFnaBsgmAphymT1KzkyOOn0eSeOk+7lkA==
-X-Received: by 2002:a92:5bdd:: with SMTP id c90mr30613ilg.154.1594651462800;
-        Mon, 13 Jul 2020 07:44:22 -0700 (PDT)
+        bh=nbDwnmZqExm0GJ0AQBPbfTfEhmeWr4XCe+A+8/PM6M0=;
+        b=T5+4jJYQlZ5hUHd84SckU3rKPK7CClh70W5uYAWcrpD9ssDeB3QErZxptmwPRGy1HQ
+         4WvN3oBwXakKPlwT2ygLIM0OGQeXSgttBR6eJZzB2JGAfW2K7eoOsk4ROpEHerEUWJXq
+         DJD6nU4dsC14/HW6+stbG7dN4axGQsmzWn2fkIUiFe2/rzmDUmUyBL8I/kHspXQvjDYg
+         7FOIYd5J0g9f7i1ueqaHmm3wlscR2Qc4uV3qPmvgmOcb0+c4xqBmiTvGIsimkLFA6r8J
+         fFSjQv53fYvFtbUhtZV1cJ3KKWwN5+RRsgTbd1cDTg5a1jTvnEaUqOCywaQWaG4i0YRS
+         yi7A==
+X-Gm-Message-State: AOAM533Y3+xWv+OEHt1KTm8MPBbjuW8Ab1LgnQuYE6VWPpSsbGku1g0b
+        2lXrckrw4Z6c2YfBtnRmug==
+X-Google-Smtp-Source: ABdhPJyC5hljtwK8AI4NvIkZ9UF+F6cv86WbaPgrtAlXxynhWmF1sbz5QKxouIpA7c6uyqRQqrL5Nw==
+X-Received: by 2002:a05:6638:2615:: with SMTP id m21mr394291jat.134.1594651603099;
+        Mon, 13 Jul 2020 07:46:43 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id o16sm8210750ilt.59.2020.07.13.07.44.21
+        by smtp.gmail.com with ESMTPSA id s11sm8669417ili.79.2020.07.13.07.46.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 07:44:22 -0700 (PDT)
-Received: (nullmailer pid 154124 invoked by uid 1000);
-        Mon, 13 Jul 2020 14:44:21 -0000
-Date:   Mon, 13 Jul 2020 08:44:21 -0600
+        Mon, 13 Jul 2020 07:46:42 -0700 (PDT)
+Received: (nullmailer pid 157351 invoked by uid 1000);
+        Mon, 13 Jul 2020 14:46:40 -0000
+Date:   Mon, 13 Jul 2020 08:46:40 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Kurt Kanzenbach <kurt@linutronix.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org, Vladimir Oltean <olteanv@gmail.com>
-Subject: Re: [PATCH v1 8/8] dt-bindings: net: dsa: Add documentation for
- Hellcreek switches
-Message-ID: <20200713144421.GA149051@bogus>
-References: <20200710113611.3398-1-kurt@linutronix.de>
- <20200710113611.3398-9-kurt@linutronix.de>
- <92b7dca3-f56d-ecb1-59c2-0981c2b99dad@gmail.com>
- <87mu43ncaa.fsf@kurt>
+To:     Krishna Manikandan <mkrishn@codeaurora.org>
+Cc:     kalyan_t@codeaurora.org, seanpaul@chromium.org,
+        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        robdclark@gmail.com, hoegsberg@chromium.org,
+        linux-kernel@vger.kernel.org, freedreno@lists.freedesktop.org,
+        nganji@codeaurora.org, devicetree@vger.kernel.org
+Subject: Re: [v5] dt-bindings: msm: disp: add yaml schemas for DPU and DSI
+ bindings
+Message-ID: <20200713144640.GA155367@bogus>
+References: <1594389469-2573-1-git-send-email-mkrishn@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87mu43ncaa.fsf@kurt>
+In-Reply-To: <1594389469-2573-1-git-send-email-mkrishn@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 08:45:33AM +0200, Kurt Kanzenbach wrote:
-> On Sat Jul 11 2020, Florian Fainelli wrote:
-> > On 7/10/2020 4:36 AM, Kurt Kanzenbach wrote:
-> >> Add basic documentation and example.
-> >> 
-> >> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
-> >> ---
-> >>  .../bindings/net/dsa/hellcreek.yaml           | 132 ++++++++++++++++++
-> >>  1 file changed, 132 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/net/dsa/hellcreek.yaml
-> >> 
-> >> diff --git a/Documentation/devicetree/bindings/net/dsa/hellcreek.yaml b/Documentation/devicetree/bindings/net/dsa/hellcreek.yaml
-> >> new file mode 100644
-> >> index 000000000000..bb8ccc1762c8
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/net/dsa/hellcreek.yaml
-> >> @@ -0,0 +1,132 @@
-> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/net/dsa/hellcreek.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: Hirschmann Hellcreek TSN Switch Device Tree Bindings
-> >> +
-> >> +allOf:
-> >> +  - $ref: dsa.yaml#
-> >> +
-> >> +maintainers:
-> >> +  - Andrew Lunn <andrew@lunn.ch>
-> >> +  - Florian Fainelli <f.fainelli@gmail.com>
-> >> +  - Vivien Didelot <vivien.didelot@gmail.com>
-> >
-> > Don't you want to add yourself here as well?
+On Fri, 10 Jul 2020 19:27:49 +0530, Krishna Manikandan wrote:
+> MSM Mobile Display Subsytem (MDSS) encapsulates sub-blocks
+> like DPU display controller, DSI etc. Add YAML schema
+> for the device tree bindings for the same.
 > 
-> Sure.
+> Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
 > 
-> >
-> >> +
-> >> +description:
-> >> +  The Hellcreek TSN Switch IP is a 802.1Q Ethernet compliant switch. It supports
-> >> +  the Pricision Time Protocol, Hardware Timestamping as well the Time Aware
+> Changes in v2:
+> 	- Changed dpu to DPU (Sam Ravnborg)
+> 	- Fixed indentation issues (Sam Ravnborg)
+> 	- Added empty line between different properties (Sam Ravnborg)
+> 	- Replaced reference txt files with  their corresponding
+> 	  yaml files (Sam Ravnborg)
+> 	- Modified the file to use "|" only when it is
+> 	  necessary (Sam Ravnborg)
 > 
-> s/Pricision/Precision/g;
+> Changes in v3:
+> 	- Corrected the license used (Rob Herring)
+> 	- Added maxItems for properties (Rob Herring)
+> 	- Dropped generic descriptions (Rob Herring)
+> 	- Added ranges property (Rob Herring)
+> 	- Corrected the indendation (Rob Herring)
+> 	- Added additionalProperties (Rob Herring)
+> 	- Split dsi file into two, one for dsi controller
+> 	  and another one for dsi phy per target (Rob Herring)
+> 	- Corrected description for pinctrl-names (Rob Herring)
+> 	- Corrected the examples used in yaml file (Rob Herring)
+> 	- Delete dsi.txt and dpu.txt (Rob Herring)
 > 
-> >> +  Shaper.
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    oneOf:
-> >> +      - const: hirschmann,hellcreek
-> >> +
-> >> +  reg:
-> >> +    description:
-> >> +      The physical base address and size of TSN and PTP memory base
-> >
-> > You need to indicate how many of these cells are required.
+> Changes in v4:
+> 	- Move schema up by one level (Rob Herring)
+> 	- Add patternProperties for mdp node (Rob Herring)
+> 	- Corrected description of some properties (Rob Herring)
 > 
-> Yes.
+> Changes in v5:
+> 	- Correct the indentation (Rob Herring)
+> 	- Remove unnecessary description from properties (Rob Herring)
+> 	- Correct the number of interconnect entries (Rob Herring)
+> 	- Add interconnect names for sc7180 (Rob Herring)
+> 	- Add description for ports (Rob Herring)
+> 	- Remove common properties (Rob Herring)
+> 	- Add unevalutatedProperties (Rob Herring)
+> 	- Reference existing dsi controller yaml in the common
+> 	  dsi controller file (Rob Herring)
+> 	- Correct the description of clock names to include only the
+> 	  clocks that are required (Rob Herring)
+> 	- Remove properties which are already covered under the common
+> 	  binding (Rob Herring)
+> 	- Add dsi phy supply nodes which are required for sc7180 and
+> 	  sdm845 targets (Rob Herring)
+> 	- Add type ref for syscon-sfpb (Rob Herring)
+> ---
+>  .../bindings/display/dsi-controller.yaml           |   4 +-
+>  .../bindings/display/msm/dpu-sc7180.yaml           | 230 +++++++++++++++++++
+>  .../bindings/display/msm/dpu-sdm845.yaml           | 210 ++++++++++++++++++
+>  .../devicetree/bindings/display/msm/dpu.txt        | 141 ------------
+>  .../display/msm/dsi-common-controller.yaml         | 178 +++++++++++++++
+>  .../display/msm/dsi-controller-sc7180.yaml         | 115 ++++++++++
+>  .../display/msm/dsi-controller-sdm845.yaml         | 115 ++++++++++
+>  .../bindings/display/msm/dsi-phy-sc7180.yaml       |  79 +++++++
+>  .../bindings/display/msm/dsi-phy-sdm845.yaml       |  81 +++++++
+>  .../devicetree/bindings/display/msm/dsi-phy.yaml   |  79 +++++++
+>  .../devicetree/bindings/display/msm/dsi.txt        | 246 ---------------------
+>  11 files changed, 1089 insertions(+), 389 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dpu-sc7180.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dpu-sdm845.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/display/msm/dpu.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-common-controller.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-controller-sc7180.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-controller-sdm845.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-sc7180.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-sdm845.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/display/msm/dsi.txt
 > 
-> >
-> >> +
-> >> +  reg-names:
-> >> +    description:
-> >> +      Names of the physical base addresses
-> >
-> > Likewise.
-> >
-> >> +
-> >> +  '#address-cells':
-> >> +    const: 1
-> >> +
-> >> +  '#size-cells':
-> >> +    const: 1
-> >
-> > Humm, not sure about those, you do not expose a memory mapped interface
-> > bus from this switch to another sub node.
-> 
-> True. That might be even different for other SoCs.
-> 
-> >
-> >> +
-> >> +  leds:
-> >> +    type: object
-> >> +    properties:
-> >> +      '#address-cells':
-> >> +        const: 1
-> >> +      '#size-cells':
-> >> +        const: 0
-> >> +
-> >> +    patternProperties:
-> >> +      "^led@[0-9]+$":
-> >> +          type: object
-> >> +          description: Hellcreek leds
-> >> +
-> >> +          properties:
-> >> +            reg:
-> >> +              items:
-> >> +                - enum: [0, 1]
-> >> +              description: Led number
-> >> +
-> >> +            label:
-> >> +              description: Label associated with this led
-> >> +              $ref: /schemas/types.yaml#/definitions/string
-> >> +
-> >> +            default-state:
-> >> +              items:
-> >> +                enum: ["on", "off", "keep"]
-> >> +              description: Default state for the led
-> >> +              $ref: /schemas/types.yaml#/definitions/string
-> >> +
-> >> +          required:
-> >> +            - reg
-> >
-> > Can you reference an existing LED binding by any chance?
-> 
-> Yes, we should reference leds/common.yaml somehow. Looking at
-> leds-gpio.yaml for example, it should be possible like this:
-> 
-> patternProperties:
->   "^led@[0-9]+$":
->       type: object
->       description: Hellcreek leds
-> 
->       $ref: ../../leds/common.yaml#
-> 
->       [...]
-> 
-> But, how to express that only label and default-state should be used?
 
-properties:
-  label: true
-  default-state: true
 
-additionalProperties: false
+My bot found errors running 'make dt_binding_check' on your patch:
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/msm/dsi-controller-sc7180.example.dt.yaml: example-0: dsi@ae94000:reg:0: [0, 183058432, 0, 1024] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/msm/dpu-sdm845.example.dt.yaml: example-0: mdss@ae00000:reg:0: [0, 182452224, 0, 4096] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/msm/dsi-phy-sc7180.example.dt.yaml: example-0: dsi-phy@ae94400:reg:0: [0, 183059456, 0, 512] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/msm/dsi-phy-sc7180.example.dt.yaml: example-0: dsi-phy@ae94400:reg:1: [0, 183059968, 0, 640] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/msm/dsi-phy-sc7180.example.dt.yaml: example-0: dsi-phy@ae94400:reg:2: [0, 183060992, 0, 480] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/msm/dpu-sc7180.example.dt.yaml: example-0: mdss@ae00000:reg:0: [0, 182452224, 0, 4096] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/msm/dsi-phy-sdm845.example.dt.yaml: example-0: dsi-phy@ae94400:reg:0: [0, 183059456, 0, 512] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/msm/dsi-phy-sdm845.example.dt.yaml: example-0: dsi-phy@ae94400:reg:1: [0, 183059968, 0, 640] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/msm/dsi-phy-sdm845.example.dt.yaml: example-0: dsi-phy@ae94400:reg:2: [0, 183060992, 0, 480] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/msm/dsi-controller-sdm845.example.dt.yaml: example-0: dsi@ae94000:reg:0: [0, 183058432, 0, 1024] is too long
+
+
+See https://patchwork.ozlabs.org/patch/1326868
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
