@@ -2,103 +2,86 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBA9C433E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D1CC433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2A7B207D4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1272120773
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594654728;
-	bh=cW/SUmAQ5LiOaEPn5R9wQTreDs1QIDgSHcDX+7j6sbY=;
+	s=default; t=1594654782;
+	bh=ceTjzoqUmonpZHtjRNEGgrycENVzdLWxAssaBz1jGP0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=05lu3QWM6FY7caJkZHTqMtL9BAksqFRXqP3pnAFJpNEFxg0Bi7Par/aKvWE6Odd1r
-	 GQ+WhazRAcl5J44oQptJr3mJYW8pxRq2RaqcJTdyiPHHWUsNm4rf5YM/jA8JhWL2WM
-	 aPnXIhKJmIV+AvHsEE8nd481TPk9nu2Bj5P6iaTU=
+	b=tTGt++9sJ7Bn1T6j/8dc1JRd1ac15jXcEtPwfCfYf+kFStUtF3c3ujFyOqqPWHevZ
+	 iY9i1jDssdeN9G/WY3463a/i+NHUaodxXL2OgCfDonEbkVjPri3l3F8QkxqD5gwIqf
+	 4UVQXLH671zH3638/LscSMnlD1r7fI6EYoCuB/oU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729875AbgGMPir (ORCPT
+        id S1729687AbgGMPjl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:38:47 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44038 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729703AbgGMPir (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 11:38:47 -0400
-Received: by mail-io1-f68.google.com with SMTP id i4so13907434iov.11;
-        Mon, 13 Jul 2020 08:38:46 -0700 (PDT)
+        Mon, 13 Jul 2020 11:39:41 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:42001 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729649AbgGMPjl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 11:39:41 -0400
+Received: by mail-il1-f195.google.com with SMTP id t27so11515038ill.9;
+        Mon, 13 Jul 2020 08:39:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+pMcvMtCRWhdkza41G5iTrQjI/XTs22mJcQM1Op8aHQ=;
-        b=Iv4Hrr/dUAJKf118WQ5qzc+OC2dtjXcyXishm6opFfBSvDfrBtSUFMegGglcaiT790
-         ZeEpshIIQe9IocRW8sLJD8EDVwK7HeySDHBvm9559HDTxfszBu6NG6XTKZzcw1ZQAYvZ
-         f21fDqvM+7ha9cWL9ONc9CHBjnUz5RXHv3w7SiMB2EYUOKhdA2Goy3Auu5SUpIC3PRIu
-         Tf5tRsiyijKogYPoN+JyVmHHfJM+vPEIICzoQArzndik8ZCc/YlcA8TxCFcPxjZPPE35
-         AY9P3B8pGN0Q/UykkCXL8N3PxHMfBZ2np9c/UKQFUvsvMdqFmx6eSbNtS3OMIIyRO3Fw
-         scrg==
-X-Gm-Message-State: AOAM533KzQ3zZlc+t0ccXWBoJBk/F/2fbGjj8yK/smWPORRw4YH1smRd
-        YwxEvFHSnqZZ9z89lzr65Q==
-X-Google-Smtp-Source: ABdhPJyr5leUy9cs5NZ0gs+zeLxzAY1E/Eas3j0IhKpTcy+VYH3b8iJIsqmfcJrPkNajPPxeXCsyjg==
-X-Received: by 2002:a02:a909:: with SMTP id n9mr695975jam.70.1594654726254;
-        Mon, 13 Jul 2020 08:38:46 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=/JwjaTBwdy7p5gzq/S6A6j7F6S/p1+FIjVHrB/VC0Co=;
+        b=noEmCClbjzm84w/UnpT4QVHqivctIwCQfJ+WWjaHmDAqIuQ+D/7qkFJ4K0n4Hx9074
+         DKEX3gqk4R4HdEdodtgewgUVm7alHsay44qhkz57MJL8SROCAArcJMSm2S0rX7WoIWc3
+         pAcprzGxkFBk4QyEAeD2EBWFkXV7AoiTqD2Yvlx6Q8L8uvsJh6I3mAsqNIPxwmgMDy5p
+         JEgMQPcYVdDnoPFg2vPwcQvy3n1q2jjgwuuHC7QzvmhuiplxGdlvcwp/BkYF+p2HagHF
+         4Z1fwGZQyr7WN5PilhYYjYD51XWQq0gl4g+th7eJk6zxOb3JIVriK06MXK4RvLGLD8lt
+         s3Ww==
+X-Gm-Message-State: AOAM533G3e1KSlqoSFc+0VC9Cy3s0KaMxQvS/4z5djd/AYdA5+70kLy9
+        3hztU32KCvLAgJKZ/qkvhw==
+X-Google-Smtp-Source: ABdhPJzWXA9tqzl0qSfuDHyTGqByvWKyA1xxZxjggwkRVJ0xA11a4BggwBLRyuoYIvlSqC4UuDejrw==
+X-Received: by 2002:a92:9892:: with SMTP id a18mr286907ill.60.1594654780640;
+        Mon, 13 Jul 2020 08:39:40 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id y6sm8426457ila.74.2020.07.13.08.38.45
+        by smtp.gmail.com with ESMTPSA id s18sm8374531ilj.63.2020.07.13.08.39.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 08:38:45 -0700 (PDT)
-Received: (nullmailer pid 253739 invoked by uid 1000);
-        Mon, 13 Jul 2020 15:38:44 -0000
-Date:   Mon, 13 Jul 2020 09:38:44 -0600
+        Mon, 13 Jul 2020 08:39:40 -0700 (PDT)
+Received: (nullmailer pid 255705 invoked by uid 1000);
+        Mon, 13 Jul 2020 15:39:39 -0000
+Date:   Mon, 13 Jul 2020 09:39:39 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Eugene Zaikonnikov <ez@norphonic.com>, development@norphonic.com,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v9 2/2] dt-bindings: iio: humidity: Add TI HDC20x0 support
-Message-ID: <20200713153844.GA250984@bogus>
-References: <86d053d1re.fsf@norphonic.com>
- <86blknd0id.fsf@norphonic.com>
- <20200712115920.4041260c@archlinux>
+To:     Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Subject: Re: [PATCH 1/3] dt-bindings: adv7604: Fix documentation for hpd-gpios
+Message-ID: <20200713153939.GA255646@bogus>
+References: <20200713111844.528313-1-niklas.soderlund+renesas@ragnatech.se>
+ <20200713111844.528313-2-niklas.soderlund+renesas@ragnatech.se>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200712115920.4041260c@archlinux>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200713111844.528313-2-niklas.soderlund+renesas@ragnatech.se>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Jul 12, 2020 at 11:59:20AM +0100, Jonathan Cameron wrote:
-> On Fri, 10 Jul 2020 14:20:58 +0200
-> Eugene Zaikonnikov <ez@norphonic.com> wrote:
+On Mon, 13 Jul 2020 13:18:42 +0200, Niklas Söderlund wrote:
+> As of [1] the hpd-gpios property is optional, document it as such.
 > 
-> > Add device tree bindings for HDC2010/HDC2080 family of humidity and
-> > temperature sensors.
-> > 
+> 1. commit 269bd1324fbfaa52 ("[media] media: adv7604: improve usage of gpiod API")
 > 
-> As Andy mentioned for patch 1 please avoid attachments.
+> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> ---
+>  Documentation/devicetree/bindings/media/i2c/adv7604.txt | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
 > 
-> > Changes from v8:
-> > - document the use of reg
-> > - change the license terms to GPL-2.0-only
-> 
-> The change log should be after the --- (which isn't here because
-> of the attachments issue).  This is so we don't track a bunch of change
-> logs in the eventual git log.  They tend not to be of much interest once
-> a patch has merged.  If there is stuff in there of interest, it should usually
-> be added to the patch description itself (e.g. some design decision or similar).
-> 
-> The license terms seem to be dual with BSD, which is good, but
-> not what the change log says!
-> 
-> I've pasted in the actual patch content below, so others can easily
-> review this version.
-
-Other than those issues,
 
 Reviewed-by: Rob Herring <robh@kernel.org>
