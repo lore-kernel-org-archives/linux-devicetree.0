@@ -2,245 +2,121 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 439EDC4346B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 11:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A2FBC433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 11:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21F1F20874
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 11:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 423C9206F0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 11:11:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="I0KxUTEq"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="dalbMtPH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729594AbgGMLCN (ORCPT
+        id S1729027AbgGMLLV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 07:02:13 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:56808 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729631AbgGMLCM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 07:02:12 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06DB21s5101091;
-        Mon, 13 Jul 2020 06:02:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594638121;
-        bh=MZf42sPBwBopHgxh/3zJoW1MM7sBcf1j/itzNs7qpps=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=I0KxUTEqCMYGCfcm7r/JjXnHt1dIyPaMOBIaCPvDzT6AsR0kmSf0UGuXXAsvs55j/
-         2c/V8//Jeg+GOhPg43ZTRv3bJcPniU5COse39Ef33wfRngQEqoZ2DOw8Cmd8+e8gcc
-         n3bDVeB0EFYUhYTC4JvU8ZxhPvJYWCK5eEQyDGxY=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06DB21AP004741;
-        Mon, 13 Jul 2020 06:02:01 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 13
- Jul 2020 06:02:01 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 13 Jul 2020 06:02:01 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06DB1gVe031460;
-        Mon, 13 Jul 2020 06:01:57 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        Mon, 13 Jul 2020 07:11:21 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:30583 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727890AbgGMLLV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 07:11:21 -0400
+X-UUID: 769eda0855344af89307eb0a729d908b-20200713
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=q42cPTjFuRIZprsAfqDWm9AEfpK4UiJ6KtTPS0h5+gQ=;
+        b=dalbMtPHsYCfr+r3BRPVH2AY+70HcHJ/jTZX2aVoadN7tBsdL9FyPz8mi5OL8//bsV3AaeRoU3xn7c18LHJvO4QWDNNfdeG2MlRYZqP83ehBSw5vj3o4EEeCG/cFAdnTv/a5sDeLJGS9MadUPsK1w3yEZ8XIjTrW4ShU/aHsCII=;
+X-UUID: 769eda0855344af89307eb0a729d908b-20200713
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 602377913; Mon, 13 Jul 2020 19:11:18 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 13 Jul 2020 19:11:14 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 13 Jul 2020 19:11:14 +0800
+Message-ID: <1594638676.29621.1.camel@mtkswgap22>
+Subject: Re: [PATCH v7 7/7] arm64: dts: add dts nodes for MT6779
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v7 04/14] PCI: cadence: Add support to start link and verify link status
-Date:   Mon, 13 Jul 2020 16:31:31 +0530
-Message-ID: <20200713110141.13156-5-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200713110141.13156-1-kishon@ti.com>
-References: <20200713110141.13156-1-kishon@ti.com>
+        Michael Turquette <mturquette@baylibre.com>,
+        "Stephen Boyd" <sboyd@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
+Date:   Mon, 13 Jul 2020 19:11:16 +0800
+In-Reply-To: <2eee3a1f-464a-359e-e7d3-0d331c8898ed@gmail.com>
+References: <1593694630-26604-1-git-send-email-hanks.chen@mediatek.com>
+         <1593694630-26604-9-git-send-email-hanks.chen@mediatek.com>
+         <2eee3a1f-464a-359e-e7d3-0d331c8898ed@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add cdns_pcie_ops to start link and verify link status. The registers
-to start link and to check link status is in Platform specific PCIe
-wrapper. Add support for platform specific drivers to add callback
-functions for the PCIe Cadence core to start link and verify link status.
-
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../pci/controller/cadence/pcie-cadence-ep.c  |  8 ++++
- .../controller/cadence/pcie-cadence-host.c    | 28 ++++++++++++++
- drivers/pci/controller/cadence/pcie-cadence.h | 37 ++++++++++++++++++-
- 3 files changed, 72 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-index c6eb2db94680..034cb3cf726e 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-@@ -357,8 +357,10 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
- {
- 	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
- 	struct cdns_pcie *pcie = &ep->pcie;
-+	struct device *dev = pcie->dev;
- 	struct pci_epf *epf;
- 	u32 cfg;
-+	int ret;
- 
- 	/*
- 	 * BIT(0) is hardwired to 1, hence function 0 is always enabled
-@@ -369,6 +371,12 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
- 		cfg |= BIT(epf->func_no);
- 	cdns_pcie_writel(pcie, CDNS_PCIE_LM_EP_FUNC_CFG, cfg);
- 
-+	ret = cdns_pcie_start_link(pcie);
-+	if (ret) {
-+		dev_err(dev, "Failed to start link\n");
-+		return ret;
-+	}
-+
- 	return 0;
- }
- 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-index 030e828bfd4c..de02fadc4809 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-@@ -3,6 +3,7 @@
- // Cadence PCIe host controller driver.
- // Author: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
- 
-+#include <linux/delay.h>
- #include <linux/kernel.h>
- #include <linux/list_sort.h>
- #include <linux/of_address.h>
-@@ -419,6 +420,23 @@ static int cdns_pcie_host_init(struct device *dev,
- 	return err;
- }
- 
-+static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
-+{
-+	struct device *dev = pcie->dev;
-+	int retries;
-+
-+	/* Check if the link is up or not */
-+	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
-+		if (cdns_pcie_link_up(pcie)) {
-+			dev_info(dev, "Link up\n");
-+			return 0;
-+		}
-+		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
-+	}
-+
-+	return -ETIMEDOUT;
-+}
-+
- int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
- {
- 	struct device *dev = rc->pcie.dev;
-@@ -467,6 +485,16 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
- 
- 	pcie->mem_res = res;
- 
-+	ret = cdns_pcie_start_link(pcie);
-+	if (ret) {
-+		dev_err(dev, "Failed to start link\n");
-+		return ret;
-+	}
-+
-+	ret = cdns_pcie_host_wait_for_link(pcie);
-+	if (ret)
-+		dev_dbg(dev, "PCIe link never came up\n");
-+
- 	for (bar = RP_BAR0; bar <= RP_NO_BAR; bar++)
- 		rc->avail_ib_bar[bar] = true;
- 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index a45c11158f49..54e10caf2d4b 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -10,6 +10,11 @@
- #include <linux/pci.h>
- #include <linux/phy/phy.h>
- 
-+/* Parameters for the waiting for link up routine */
-+#define LINK_WAIT_MAX_RETRIES	10
-+#define LINK_WAIT_USLEEP_MIN	90000
-+#define LINK_WAIT_USLEEP_MAX	100000
-+
- /*
-  * Local Management Registers
-  */
-@@ -245,12 +250,20 @@ enum cdns_pcie_msg_routing {
- 	MSG_ROUTING_GATHER,
- };
- 
-+struct cdns_pcie_ops {
-+	int	(*start_link)(struct cdns_pcie *pcie);
-+	void	(*stop_link)(struct cdns_pcie *pcie);
-+	bool	(*link_up)(struct cdns_pcie *pcie);
-+};
-+
- /**
-  * struct cdns_pcie - private data for Cadence PCIe controller drivers
-  * @reg_base: IO mapped register base
-  * @mem_res: start/end offsets in the physical system memory to map PCI accesses
-  * @is_rc: tell whether the PCIe controller mode is Root Complex or Endpoint.
-  * @bus: In Root Complex mode, the bus number
-+ * @ops: Platform specific ops to control various inputs from Cadence PCIe
-+ *       wrapper
-  */
- struct cdns_pcie {
- 	void __iomem		*reg_base;
-@@ -261,7 +274,7 @@ struct cdns_pcie {
- 	int			phy_count;
- 	struct phy		**phy;
- 	struct device_link	**link;
--	const struct cdns_pcie_common_ops *ops;
-+	const struct cdns_pcie_ops *ops;
- };
- 
- /**
-@@ -426,6 +439,28 @@ static inline u32 cdns_pcie_ep_fn_readl(struct cdns_pcie *pcie, u8 fn, u32 reg)
- 	return readl(pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
- }
- 
-+static inline int cdns_pcie_start_link(struct cdns_pcie *pcie)
-+{
-+	if (pcie->ops->start_link)
-+		return pcie->ops->start_link(pcie);
-+
-+	return 0;
-+}
-+
-+static inline void cdns_pcie_stop_link(struct cdns_pcie *pcie)
-+{
-+	if (pcie->ops->stop_link)
-+		pcie->ops->stop_link(pcie);
-+}
-+
-+static inline bool cdns_pcie_link_up(struct cdns_pcie *pcie)
-+{
-+	if (pcie->ops->link_up)
-+		return pcie->ops->link_up(pcie);
-+
-+	return true;
-+}
-+
- #ifdef CONFIG_PCIE_CADENCE_HOST
- int cdns_pcie_host_setup(struct cdns_pcie_rc *rc);
- #else
--- 
-2.17.1
+T24gRnJpLCAyMDIwLTA3LTEwIGF0IDE1OjQ3ICswMjAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
+Og0KPiANCj4gT24gMDIvMDcvMjAyMCAxNDo1NywgSGFua3MgQ2hlbiB3cm90ZToNCj4gPiB0aGlz
+IGFkZHMgaW5pdGlhbCBNVDY3NzkgZHRzIHNldHRpbmdzIGZvciBib2FyZCBzdXBwb3J0LA0KPiA+
+IGluY2x1ZGluZyBjcHUsIGdpYywgdGltZXIsIGNjZiwgcGluY3RybCwgdWFydCwgc3lzaXJxLi4u
+ZXRjLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEhhbmtzIENoZW4gPGhhbmtzLmNoZW5AbWVk
+aWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICAgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9N
+YWtlZmlsZSAgICAgICB8ICAgIDEgKw0KPiA+ICAgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRl
+ay9tdDY3NzktZXZiLmR0cyB8ICAgMzEgKysrDQo+ID4gICBhcmNoL2FybTY0L2Jvb3QvZHRzL21l
+ZGlhdGVrL210Njc3OS5kdHNpICAgIHwgIDI3MSArKysrKysrKysrKysrKysrKysrKysrKysrKysN
+Cj4gPiAgIDMgZmlsZXMgY2hhbmdlZCwgMzAzIGluc2VydGlvbnMoKykNCj4gPiAgIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc3OS1ldmIuZHRzDQo+
+ID4gICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3
+NzkuZHRzaQ0KPiA+IA0KPiBbLi4uXQ0KPiA+ICsNCj4gPiArCQl1YXJ0Mjogc2VyaWFsQDExMDA0
+MDAwIHsNCj4gPiArCQkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3NzktdWFydCIsDQo+ID4g
+KwkJCQkgICAgICJtZWRpYXRlayxtdDY1NzctdWFydCI7DQo+ID4gKwkJCXJlZyA9IDwwIDB4MTEw
+MDQwMDAgMCAweDQwMD47DQo+ID4gKwkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAxMTcgSVJRX1RZ
+UEVfTEVWRUxfTE9XPjsNCj4gPiArCQkJY2xvY2tzID0gPCZjbGsyNm0+LCA8JmluZnJhY2ZnX2Fv
+IENMS19JTkZSQV9VQVJUMT47DQo+IA0KPiBJIHN1cHBvc2UgdGhhdCBzaG91bGQgYmU6DQo+IA0K
+PiBjbG9ja3MgPSA8JmNsazI2bT4sIDwmaW5mcmFjZmdfYW8gQ0xLX0lORlJBX1VBUlQyPjsNCj4g
+DQpNeSBmYXVsdCwgSSdsbCBmaXggdGhlIHR5cG8gaW4gbmV4dCB2ZXJzaW9uLg0KDQpUaGFua3Mh
+DQoNCkhhbmtzDQoNCj4gDQo+IFJlZ2FyZHMsDQo+IE1hdHRoaWFzDQo+IA0KPiA+ICsJCQljbG9j
+ay1uYW1lcyA9ICJiYXVkIiwgImJ1cyI7DQo+ID4gKwkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+
+ID4gKwkJfTsNCj4gPiArDQo+ID4gKwkJYXVkaW86IGNsb2NrLWNvbnRyb2xsZXJAMTEyMTAwMDAg
+ew0KPiA+ICsJCQljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10Njc3OS1hdWRpbyIsICJzeXNjb24i
+Ow0KPiA+ICsJCQlyZWcgPSA8MCAweDExMjEwMDAwIDAgMHgxMDAwPjsNCj4gPiArCQkJI2Nsb2Nr
+LWNlbGxzID0gPDE+Ow0KPiA+ICsJCX07DQo+ID4gKw0KPiA+ICsJCW1mZ2NmZzogY2xvY2stY29u
+dHJvbGxlckAxM2ZiZjAwMCB7DQo+ID4gKwkJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2Nzc5
+LW1mZ2NmZyIsICJzeXNjb24iOw0KPiA+ICsJCQlyZWcgPSA8MCAweDEzZmJmMDAwIDAgMHgxMDAw
+PjsNCj4gPiArCQkJI2Nsb2NrLWNlbGxzID0gPDE+Ow0KPiA+ICsJCX07DQo+ID4gKw0KPiA+ICsJ
+CW1tc3lzOiBzeXNjb25AMTQwMDAwMDAgew0KPiA+ICsJCQljb21wYXRpYmxlID0gIm1lZGlhdGVr
+LG10Njc3OS1tbXN5cyIsICJzeXNjb24iOw0KPiA+ICsJCQlyZWcgPSA8MCAweDE0MDAwMDAwIDAg
+MHgxMDAwPjsNCj4gPiArCQkJI2Nsb2NrLWNlbGxzID0gPDE+Ow0KPiA+ICsJCX07DQo+ID4gKw0K
+PiA+ICsJCWltZ3N5czogY2xvY2stY29udHJvbGxlckAxNTAyMDAwMCB7DQo+ID4gKwkJCWNvbXBh
+dGlibGUgPSAibWVkaWF0ZWssbXQ2Nzc5LWltZ3N5cyIsICJzeXNjb24iOw0KPiA+ICsJCQlyZWcg
+PSA8MCAweDE1MDIwMDAwIDAgMHgxMDAwPjsNCj4gPiArCQkJI2Nsb2NrLWNlbGxzID0gPDE+Ow0K
+PiA+ICsJCX07DQo+ID4gKw0KPiA+ICsJCXZkZWNzeXM6IGNsb2NrLWNvbnRyb2xsZXJAMTYwMDAw
+MDAgew0KPiA+ICsJCQljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10Njc3OS12ZGVjc3lzIiwgInN5
+c2NvbiI7DQo+ID4gKwkJCXJlZyA9IDwwIDB4MTYwMDAwMDAgMCAweDEwMDA+Ow0KPiA+ICsJCQkj
+Y2xvY2stY2VsbHMgPSA8MT47DQo+ID4gKwkJfTsNCj4gPiArDQo+ID4gKwkJdmVuY3N5czogY2xv
+Y2stY29udHJvbGxlckAxNzAwMDAwMCB7DQo+ID4gKwkJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWss
+bXQ2Nzc5LXZlbmNzeXMiLCAic3lzY29uIjsNCj4gPiArCQkJcmVnID0gPDAgMHgxNzAwMDAwMCAw
+IDB4MTAwMD47DQo+ID4gKwkJCSNjbG9jay1jZWxscyA9IDwxPjsNCj4gPiArCQl9Ow0KPiA+ICsN
+Cj4gPiArCQljYW1zeXM6IGNsb2NrLWNvbnRyb2xsZXJAMWEwMDAwMDAgew0KPiA+ICsJCQljb21w
+YXRpYmxlID0gIm1lZGlhdGVrLG10Njc3OS1jYW1zeXMiLCAic3lzY29uIjsNCj4gPiArCQkJcmVn
+ID0gPDAgMHgxYTAwMDAwMCAwIDB4MTAwMDA+Ow0KPiA+ICsJCQkjY2xvY2stY2VsbHMgPSA8MT47
+DQo+ID4gKwkJfTsNCj4gPiArDQo+ID4gKwkJaXBlc3lzOiBjbG9jay1jb250cm9sbGVyQDFiMDAw
+MDAwIHsNCj4gPiArCQkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3NzktaXBlc3lzIiwgInN5
+c2NvbiI7DQo+ID4gKwkJCXJlZyA9IDwwIDB4MWIwMDAwMDAgMCAweDEwMDA+Ow0KPiA+ICsJCQkj
+Y2xvY2stY2VsbHMgPSA8MT47DQo+ID4gKwkJfTsNCj4gPiArDQo+ID4gKwl9Ow0KPiA+ICt9Ow0K
+PiA+IA0KDQo=
 
