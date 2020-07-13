@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E8B2C433F8
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44801C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3035207D4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F15F207D4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:43:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="jMbkVBYY"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="uh/p1Ef6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730188AbgGMPnD (ORCPT
+        id S1730092AbgGMPnK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:43:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41028 "EHLO
+        Mon, 13 Jul 2020 11:43:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730184AbgGMPnA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 11:43:00 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C49E1C08C5DE
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 08:43:00 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id b185so12626262qkg.1
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 08:43:00 -0700 (PDT)
+        with ESMTP id S1730145AbgGMPm7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 11:42:59 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD579C08C5DD
+        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 08:42:59 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id j80so12629379qke.0
+        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 08:42:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=marek-ca.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=SefBkkTKXeYctWnwpQcS5vaISiY7Do8N46ytSx3YzJ4=;
-        b=jMbkVBYY+NXCLG9hbB+gMll4sw7qmTcsdy7tJwrMLZkoblHO09UR9DY6VZQrD5hy+9
-         H+g/+KAY/XFzFbaABAMkRpPY6NU16DDTJNcGXFriLN7JIeTKi1ZCY6q50FZJ7+M+B7+x
-         E97k3CHLlWYn7h5a3tW0cT2krLmPMBVSqLKyVUtlTDHpqbJNm2W7kxHybVCjP13WkVp4
-         7xc651Xao1+dUsD4NAe/9qHUZoKqo0wJ3AW5AkMS3QJqsbhYm8F4WcLmNc/WQsAIFvKn
-         56p/u264l25q129gOnT2fRq9NlzTsbj8EqhyogG6bV6tRIOjfdqYqzrQnPIS5sQCMHda
-         Ra9Q==
+        bh=VZ9xGmnDMhVmVeHb/A9jwCumG7lyw2W/vCjl/eftB8Q=;
+        b=uh/p1Ef6AcNvbVRpHudmQkMOJ1S/koQyeNCuMN4rYGt0P/Cyivoo4wCbanFKcJKRsw
+         Sx+iSxYxAONbEgso6SXVN1HbKBlMhfPWnD02+V6DrlX8CAN/kj1BQ1G0k9xeJHqMp+9W
+         O9k+hZuCuW3iwbAZV+poMsuO5Zj7hjPr2Tha8nmyOw4IbWOqhuoF1lxQjUSWCCpxZAPn
+         vpDtaQDcVMepBU3YZJPIhf/JR4M8jBEcXb2kwTq0WEYrLyHlOOmpBOSXuGXcYtu0R+lN
+         FOVlrlxqZeWl7ixsowFCXK9LAT6TB6rDkHOgR/V0SGEnAbVmL6suW7KAKN5I7NX/vCeH
+         HPUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=SefBkkTKXeYctWnwpQcS5vaISiY7Do8N46ytSx3YzJ4=;
-        b=VMsgVIwD8z6Rd+GcqpYZ0TG5cPJvN1YI99pUWmpWQiiQcQQT/7+LiVf5Ju04M0v61V
-         TpvSuvoRFdcdp6Crxby/lK7BKDYRJyUag9EUJPC4jSQlttRMzgeSxFxebZOr9/fiM7Eo
-         AFOEXQ1B3bB0F/VMGhvqnVQ8qL1snOYh9AEv9bifGdmf/UFLASY0sDJUJr4tiURexDcA
-         OcUc2Y+MP/nCQ/9xmbux1MjzsZ0CP+Gd0N/h5ZJVINMon/oD4WsXsdfUh/qrW9qophFt
-         uRcdOjgBXdMeKl4qiR0aO1N5tY3knV72caRZMl0g0Ki8C8CExmWy/dx2cpb4blxnbAM6
-         7Vpw==
-X-Gm-Message-State: AOAM532XaeoZfrUkAdf3NcHJkawGphs42gC+7xpxxM2wLt9ZSfkkF2dV
-        OvFlIl3QRAKw4TYZJqdrjfg7Ug==
-X-Google-Smtp-Source: ABdhPJx1zGPaXKf+KbTHBqCK7f+OtWWxHy/aBw7q2ZmMFpDzVBrlTF4P7kXfB529C6L8XKJg94jnSA==
-X-Received: by 2002:a05:620a:2492:: with SMTP id i18mr199672qkn.414.1594654980043;
-        Mon, 13 Jul 2020 08:43:00 -0700 (PDT)
+        bh=VZ9xGmnDMhVmVeHb/A9jwCumG7lyw2W/vCjl/eftB8Q=;
+        b=im9shptrHdju88mx9S9p+DWF4XnnpCXe/6ym09Zy4f2+ABCBAFTA6L8pkb0mTKY5IT
+         +5eWKkmKWgC8IaSqqIb9J7e5FhEuQDP9pkovUlKTapFbB9PQbgSB7sN5dUq13fIZ2l7x
+         2P7ZpbqdQVV5fwMIeCPyGmpV6tGtlYokzChSpulitcvINYKe2hpEvl1jlPkGkRpkx1Lm
+         JFvnyea313BKIW3B6HoXzeeMgDOjWzrf7wzCl8H852Bks0m0xv6h02neEpRAks1g9Y+c
+         RWr9j+xPACMrgJ+PIyJk4kdDH47QrC++WUdIY8YqvS9gFAkJD+t2lLd3gJlOHmGDbkTf
+         dWEA==
+X-Gm-Message-State: AOAM530ZTAY9n4Hq43uJ700WxQHdHPCRThT6NvnKAX5xCcrx1RymyC6I
+        K1Wlvltt+Ept7bihafUsFuEMfw==
+X-Google-Smtp-Source: ABdhPJzsL343pl6s6o//ejmnrLm038pBE/14aNx1jNZS+SLcX9OWFto4sJBCKMsdD+D/PXhSscjkOw==
+X-Received: by 2002:ae9:e212:: with SMTP id c18mr211782qkc.348.1594654978946;
+        Mon, 13 Jul 2020 08:42:58 -0700 (PDT)
 Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id l1sm19806371qtk.18.2020.07.13.08.42.59
+        by smtp.gmail.com with ESMTPSA id l1sm19806371qtk.18.2020.07.13.08.42.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 08:42:59 -0700 (PDT)
+        Mon, 13 Jul 2020 08:42:58 -0700 (PDT)
 From:   Jonathan Marek <jonathan@marek.ca>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     Andy Gross <agross@kernel.org>,
@@ -65,9 +65,9 @@ Cc:     Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 7/7] arm64: dts: qcom: sm8250: add interconnect nodes
-Date:   Mon, 13 Jul 2020 11:41:16 -0400
-Message-Id: <20200713154121.22094-8-jonathan@marek.ca>
+Subject: [PATCH v2 6/7] arm64: dts: qcom: sm8150: add interconnect nodes
+Date:   Mon, 13 Jul 2020 11:41:15 -0400
+Message-Id: <20200713154121.22094-7-jonathan@marek.ca>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200713154121.22094-1-jonathan@marek.ca>
 References: <20200713154121.22094-1-jonathan@marek.ca>
@@ -78,117 +78,117 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the interconnect dts nodes for sm8250.
+Add the interconnect dts nodes for sm8150.
 
 Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 ---
- arch/arm64/boot/dts/qcom/sm8250.dtsi | 82 ++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sm8150.dtsi | 82 ++++++++++++++++++++++++++++
  1 file changed, 82 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-index 636e2196138c..dfc1b7fa7d85 100644
---- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+index 33ff99132f4f..fa9cd9d60093 100644
+--- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
 @@ -11,6 +11,7 @@
- #include <dt-bindings/power/qcom-aoss-qmp.h>
- #include <dt-bindings/power/qcom-rpmpd.h>
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
-+#include <dt-bindings/interconnect/qcom,sm8250.h>
+ #include <dt-bindings/clock/qcom,rpmh.h>
+ #include <dt-bindings/clock/qcom,gcc-sm8150.h>
+ #include <dt-bindings/clock/qcom,gpucc-sm8150.h>
++#include <dt-bindings/interconnect/qcom,sm8150.h>
+ #include <dt-bindings/thermal/thermal.h>
  
  / {
- 	interrupt-parent = <&intc>;
-@@ -978,6 +979,55 @@ spi13: spi@a94000 {
+@@ -440,6 +441,69 @@ uart2: serial@a90000 {
  			};
  		};
  
++		dc_noc: interconnect@14e0000 {
++			compatible = "qcom,sm8150-dc-noc";
++			reg = <0 0x014e0000 0 0x1000>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
++
 +		config_noc: interconnect@1500000 {
-+			compatible = "qcom,sm8250-config-noc";
++			compatible = "qcom,sm8150-config-noc";
 +			reg = <0 0x01500000 0 0x1000>;
 +			#interconnect-cells = <1>;
 +			qcom,bcm-voters = <&apps_bcm_voter>;
 +		};
 +
-+		ipa_virt: interconnect@1620000 {
-+			compatible = "qcom,sm8250-ipa-virt";
++		camnoc_virt: interconnect@1620000 {
++			compatible = "qcom,sm8150-camnoc-virt";
 +			reg = <0 0x01620000 0 0x1000>;
 +			#interconnect-cells = <1>;
 +			qcom,bcm-voters = <&apps_bcm_voter>;
 +		};
 +
-+		system_noc: interconnect@1632000 {
-+			compatible = "qcom,sm8250-system-noc";
-+			reg = <0 0x01632000 0 0x1000>;
++		ipa_virt: interconnect-ipa@1620000 {
++			compatible = "qcom,sm8150-ipa-virt";
++			reg = <0 0x01620000 0 0x1000>;
 +			#interconnect-cells = <1>;
 +			qcom,bcm-voters = <&apps_bcm_voter>;
 +		};
 +
-+		aggre1_noc: interconnect@16e2000 {
-+			compatible = "qcom,sm8250-aggre1-noc";
-+			reg = <0 0x016e2000 0 0x1000>;
++		system_noc: interconnect@1629000 {
++			compatible = "qcom,sm8150-system-noc";
++			reg = <0 0x01629000 0 0x1000>;
 +			#interconnect-cells = <1>;
 +			qcom,bcm-voters = <&apps_bcm_voter>;
 +		};
 +
-+		aggre2_noc: interconnect@1703000 {
-+			compatible = "qcom,sm8250-aggre2-noc";
-+			reg = <0 0x01703000 0 0x1000>;
++		aggre1_noc: interconnect@16e4000 {
++			compatible = "qcom,sm8150-aggre1-noc";
++			reg = <0 0x016e4000 0 0x1000>;
 +			#interconnect-cells = <1>;
 +			qcom,bcm-voters = <&apps_bcm_voter>;
 +		};
 +
-+		compute_noc: interconnect@1733000 {
-+			compatible = "qcom,sm8250-compute-noc";
-+			reg = <0 0x01733000 0 0x1000>;
++		aggre2_noc: interconnect@1706000 {
++			compatible = "qcom,sm8150-aggre2-noc";
++			reg = <0 0x01706000 0 0x1000>;
 +			#interconnect-cells = <1>;
 +			qcom,bcm-voters = <&apps_bcm_voter>;
 +		};
 +
-+		mmss_noc: interconnect@174a000 {
-+			compatible = "qcom,sm8250-mmss-noc";
-+			reg = <0 0x0174a000 0 0x1000>;
++		compute_noc: interconnect@1720000 {
++			compatible = "qcom,sm8150-compute-noc";
++			reg = <0 0x01720000 0 0x1000>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
++
++		mmss_noc: interconnect@1749000 {
++			compatible = "qcom,sm8150-mmss-noc";
++			reg = <0 0x01749000 0 0x1000>;
 +			#interconnect-cells = <1>;
 +			qcom,bcm-voters = <&apps_bcm_voter>;
 +		};
 +
  		ufs_mem_hc: ufshc@1d84000 {
- 			compatible = "qcom,sm8250-ufshc", "qcom,ufshc",
+ 			compatible = "qcom,sm8150-ufshc", "qcom,ufshc",
  				     "jedec,ufs-2.0";
-@@ -1364,6 +1414,34 @@ usb_2_ssphy: lane@88eb200 {
+@@ -860,6 +924,20 @@ usb_2_ssphy: lane@88eb200 {
  			};
  		};
  
-+		dc_noc: interconnect@90c0000 {
-+			compatible = "qcom,sm8250-dc-noc";
-+			reg = <0 0x090c0000 0 0x1000>;
++		mc_virt: interconnect@9680000 {
++			compatible = "qcom,sm8150-mc-virt";
++			reg = <0 0x09680000 0 0x1000>;
 +			#interconnect-cells = <1>;
 +			qcom,bcm-voters = <&apps_bcm_voter>;
 +		};
 +
-+		mc_virt: interconnect@9100000 {
-+			compatible = "qcom,sm8250-mc-virt";
-+			reg = <0 0x09100000 0 0x1000>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		gem_noc: interconnect@9121000 {
-+			compatible = "qcom,sm8250-gem-noc";
-+			reg = <0 0x09121000 0 0x1000>;
-+			#interconnect-cells = <1>;
-+			qcom,bcm-voters = <&apps_bcm_voter>;
-+		};
-+
-+		npu_noc: interconnect@9990000 {
-+			compatible = "qcom,sm8250-npu-noc";
-+			reg = <0 0x09990000 0 0x1000>;
++		gem_noc: interconnect@96ab000 {
++			compatible = "qcom,sm8150-gem-noc";
++			reg = <0 0x096ab000 0 0x1000>;
 +			#interconnect-cells = <1>;
 +			qcom,bcm-voters = <&apps_bcm_voter>;
 +		};
 +
  		usb_1: usb@a6f8800 {
- 			compatible = "qcom,sm8250-dwc3", "qcom,dwc3";
+ 			compatible = "qcom,sm8150-dwc3", "qcom,dwc3";
  			reg = <0 0x0a6f8800 0 0x400>;
-@@ -2359,6 +2437,10 @@ rpmhpd_opp_turbo_l1: opp10 {
+@@ -1280,6 +1358,10 @@ rpmhpd_opp_turbo_l1: opp11 {
  					};
  				};
  			};
@@ -197,8 +197,8 @@ index 636e2196138c..dfc1b7fa7d85 100644
 +				compatible = "qcom,bcm-voter";
 +			};
  		};
- 	};
  
+ 		cpufreq_hw: cpufreq@18323000 {
 -- 
 2.26.1
 
