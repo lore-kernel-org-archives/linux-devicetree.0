@@ -2,369 +2,242 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD9DC433EB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 11:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0C5C433E4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 12:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F4592072D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 11:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5007206F0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 12:18:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729657AbgGMLzs (ORCPT
+        id S1729143AbgGMMSR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 07:55:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:57966 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728714AbgGMLzs (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 07:55:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2636630E;
-        Mon, 13 Jul 2020 04:55:47 -0700 (PDT)
-Received: from [10.57.62.178] (unknown [10.57.62.178])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 957063F887;
-        Mon, 13 Jul 2020 04:55:44 -0700 (PDT)
-Subject: Re: [PATCH 1/4] dma-mapping: Add bounced DMA ops
-To:     Claire Chang <tientzu@chromium.org>, robh+dt@kernel.org,
-        frowand.list@gmail.com, hch@lst.de, m.szyprowski@samsung.com
-Cc:     treding@nvidia.com, gregkh@linuxfoundation.org,
-        saravanak@google.com, suzuki.poulose@arm.com,
-        dan.j.williams@intel.com, heikki.krogerus@linux.intel.com,
-        bgolaszewski@baylibre.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        tfiga@chromium.org, drinkcat@chromium.org
-References: <20200713091211.2183368-1-tientzu@chromium.org>
- <20200713091211.2183368-2-tientzu@chromium.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <4a2451f9-57d8-2e83-e1d6-f144f37173c0@arm.com>
-Date:   Mon, 13 Jul 2020 12:55:43 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 13 Jul 2020 08:18:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35724 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbgGMMSR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 08:18:17 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB007C061755;
+        Mon, 13 Jul 2020 05:18:16 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id B8C72BC0CB;
+        Mon, 13 Jul 2020 12:18:11 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     kishon@ti.com, vkoul@kernel.org, robh+dt@kernel.org, rogerq@ti.com,
+        wen.yang99@zte.com.cn, sboyd@kernel.org, grygorii.strashko@ti.com,
+        jsarha@ti.com, weiyongjun1@huawei.com, nsekhar@ti.com,
+        hslester96@gmail.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] drivers: phy: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 14:18:05 +0200
+Message-Id: <20200713121805.34047-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-In-Reply-To: <20200713091211.2183368-2-tientzu@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-07-13 10:12, Claire Chang wrote:
-> The bounced DMA ops provide an implementation of DMA ops that bounce
-> streaming DMA in and out of a specially allocated region. Only the
-> operations relevant to streaming DMA are supported.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-I think there are too many implicit assumptions here - apparently that 
-coherent allocations will always be intercepted by 
-dma_*_from_dev_coherent(), and that calling into dma-direct won't 
-actually bounce things a second time beyond where you thought they were 
-going, manage coherency for a different address, and make it all go 
-subtly wrong. Consider "swiotlb=force", for instance...
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-Again, plumbing this straight into dma-direct so that SWIOTLB can simply 
-target a different buffer and always bounce regardless of masks would 
-seem a far better option.
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-Robin.
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
 
-> Signed-off-by: Claire Chang <tientzu@chromium.org>
-> ---
->   include/linux/device.h      |   3 +
->   include/linux/dma-mapping.h |   1 +
->   kernel/dma/Kconfig          |  17 +++
->   kernel/dma/Makefile         |   1 +
->   kernel/dma/bounced.c        | 215 ++++++++++++++++++++++++++++++++++++
->   5 files changed, 237 insertions(+)
->   create mode 100644 kernel/dma/bounced.c
-> 
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index 7322c51e9c0c..868b9a364003 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -588,6 +588,9 @@ struct device {
->   
->   	struct list_head	dma_pools;	/* dma pools (if dma'ble) */
->   
-> +#ifdef CONFIG_DMA_BOUNCED
-> +	struct dma_bounced_mem  *dma_bounced_mem;
-> +#endif
->   #ifdef CONFIG_DMA_DECLARE_COHERENT
->   	struct dma_coherent_mem	*dma_mem; /* internal for coherent mem
->   					     override */
-> diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-> index 2328f451a45d..86089424dafd 100644
-> --- a/include/linux/dma-mapping.h
-> +++ b/include/linux/dma-mapping.h
-> @@ -135,6 +135,7 @@ struct dma_map_ops {
->   
->   extern const struct dma_map_ops dma_virt_ops;
->   extern const struct dma_map_ops dma_dummy_ops;
-> +extern const struct dma_map_ops dma_bounced_ops;
->   
->   #define DMA_BIT_MASK(n)	(((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
->   
-> diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
-> index 1da3f44f2565..148734c8748b 100644
-> --- a/kernel/dma/Kconfig
-> +++ b/kernel/dma/Kconfig
-> @@ -88,6 +88,23 @@ config DMA_DIRECT_REMAP
->   	select DMA_REMAP
->   	select DMA_COHERENT_POOL
->   
-> +config DMA_BOUNCED
-> +	bool "DMA Bounced"
-> +	depends on !HIGHMEM
-> +	select OF_RESERVED_MEM
-> +	help
-> +	  This enables support for bounced DMA pools which provide a level of
-> +	  DMA memory protection on systems with limited hardware protection
-> +	  capabilities, such as those lacking an IOMMU. It does so by bouncing
-> +	  the data to a specially allocated DMA-accessible protected region
-> +	  before mapping and unmapping. One can assign the protected memory
-> +	  region in the device tree by using reserved-memory.
-> +
-> +	  For more information see
-> +	  <Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt>
-> +	  and <kernel/dma/bounced.c>.
-> +	  If unsure, say "n".
-> +
->   config DMA_CMA
->   	bool "DMA Contiguous Memory Allocator"
->   	depends on HAVE_DMA_CONTIGUOUS && CMA
-> diff --git a/kernel/dma/Makefile b/kernel/dma/Makefile
-> index 370f63344e9c..f5fb4f42326a 100644
-> --- a/kernel/dma/Makefile
-> +++ b/kernel/dma/Makefile
-> @@ -1,6 +1,7 @@
->   # SPDX-License-Identifier: GPL-2.0
->   
->   obj-$(CONFIG_HAS_DMA)			+= mapping.o direct.o dummy.o
-> +obj-$(CONFIG_DMA_BOUNCED)		+= bounced.o
->   obj-$(CONFIG_DMA_CMA)			+= contiguous.o
->   obj-$(CONFIG_DMA_DECLARE_COHERENT)	+= coherent.o
->   obj-$(CONFIG_DMA_VIRT_OPS)		+= virt.o
-> diff --git a/kernel/dma/bounced.c b/kernel/dma/bounced.c
-> new file mode 100644
-> index 000000000000..fcaabb5eccf2
-> --- /dev/null
-> +++ b/kernel/dma/bounced.c
-> @@ -0,0 +1,215 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Bounced DMA support.
-> + *
-> + * This implements the mitigations for lack of IOMMU by bouncing the data to a
-> + * specially allocated region before mapping and unmapping.
-> + *
-> + * Copyright 2020 Google LLC.
-> + */
-> +#include <linux/dma-direct.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/dma-noncoherent.h>
-> +#include <linux/io.h>
-> +#include <linux/genalloc.h>
-> +#include <linux/slab.h>
-> +
-> +struct dma_bounced_mem {
-> +	void		**orig_addr;
-> +	void		*virt_base;
-> +	dma_addr_t	device_base;
-> +	dma_addr_t	device_end;
-> +	struct gen_pool	*pool;
-> +	size_t		size;
-> +};
-> +
-> +static void dma_bounced_set_orig_virt(struct device *dev, dma_addr_t dma_addr,
-> +				      void *orig_addr)
-> +{
-> +	struct dma_bounced_mem *mem = dev->dma_bounced_mem;
-> +	int idx = (dma_addr - mem->device_base) >> PAGE_SHIFT;
-> +
-> +	if (dma_addr < mem->device_base || dma_addr >= mem->device_end)
-> +		return;
-> +
-> +	mem->orig_addr[idx] = orig_addr;
-> +}
-> +
-> +static void *dma_bounced_get_orig_virt(struct device *dev, dma_addr_t dma_addr)
-> +{
-> +	struct dma_bounced_mem *mem = dev->dma_bounced_mem;
-> +	int idx = (dma_addr - mem->device_base) >> PAGE_SHIFT;
-> +
-> +	if (dma_addr < mem->device_base || dma_addr >= mem->device_end)
-> +		return NULL;
-> +
-> +	return mem->orig_addr[idx];
-> +}
-> +
-> +static void *dma_bounced_get_virt(struct device *dev, dma_addr_t dma_addr)
-> +{
-> +	struct dma_bounced_mem *mem = dev->dma_bounced_mem;
-> +
-> +	if (dma_addr < mem->device_base || dma_addr >= mem->device_end)
-> +		return NULL;
-> +
-> +	return (dma_addr - mem->device_base) + mem->virt_base;
-> +}
-> +
-> +static void dma_bounced_sync_single_for_cpu(struct device *dev,
-> +					    dma_addr_t dma_addr, size_t size,
-> +					    enum dma_data_direction dir)
-> +{
-> +	void *orig_virt = dma_bounced_get_orig_virt(dev, dma_addr);
-> +	void *bounced_virt = dma_bounced_get_virt(dev, dma_addr);
-> +
-> +	if (!orig_virt || !bounced_virt)
-> +		return;
-> +
-> +	dma_direct_sync_single_for_cpu(dev, dma_addr, size, dir);
-> +
-> +	if (dir == DMA_FROM_DEVICE || dir == DMA_BIDIRECTIONAL)
-> +		memcpy(orig_virt, bounced_virt, size);
-> +}
-> +
-> +static void dma_bounced_sync_single_for_device(struct device *dev,
-> +					       dma_addr_t dma_addr, size_t size,
-> +					       enum dma_data_direction dir)
-> +{
-> +	void *orig_virt = dma_bounced_get_orig_virt(dev, dma_addr);
-> +	void *bounced_virt = dma_bounced_get_virt(dev, dma_addr);
-> +
-> +	if (!orig_virt || !bounced_virt)
-> +		return;
-> +
-> +	if (dir == DMA_TO_DEVICE || dir == DMA_BIDIRECTIONAL)
-> +		memcpy(bounced_virt, orig_virt, size);
-> +
-> +	dma_direct_sync_single_for_device(dev, dma_addr, size, dir);
-> +}
-> +
-> +static void dma_bounced_sync_sg_for_cpu(struct device *dev,
-> +					struct scatterlist *sgl, int nents,
-> +					enum dma_data_direction dir)
-> +{
-> +	struct scatterlist *sg;
-> +	int i;
-> +
-> +	for_each_sg(sgl, sg, nents, i) {
-> +		dma_bounced_sync_single_for_cpu(dev, sg->dma_address,
-> +						sg->length, dir);
-> +	}
-> +}
-> +
-> +static void dma_bounced_sync_sg_for_device(struct device *dev,
-> +					   struct scatterlist *sgl, int nents,
-> +					   enum dma_data_direction dir)
-> +{
-> +	struct scatterlist *sg;
-> +	int i;
-> +
-> +	for_each_sg(sgl, sg, nents, i) {
-> +		dma_bounced_sync_single_for_device(dev, sg->dma_address,
-> +						   sg->length, dir);
-> +	}
-> +}
-> +
-> +static void dma_bounced_unmap_page(struct device *dev, dma_addr_t dma_addr,
-> +				   size_t size, enum dma_data_direction dir,
-> +				   unsigned long attrs)
-> +{
-> +	struct dma_bounced_mem *mem = dev->dma_bounced_mem;
-> +
-> +	if (dma_addr < mem->device_base || dma_addr >= mem->device_end)
-> +		return;
-> +
-> +	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC))
-> +		dma_bounced_sync_single_for_cpu(dev, dma_addr, size, dir);
-> +
-> +	dma_bounced_set_orig_virt(dev, dma_addr, NULL);
-> +	gen_pool_free(mem->pool,
-> +		      (unsigned long)dma_bounced_get_virt(dev, dma_addr), size);
-> +}
-> +
-> +static dma_addr_t dma_bounced_map_page(struct device *dev, struct page *page,
-> +				       unsigned long offset, size_t size,
-> +				       enum dma_data_direction dir,
-> +				       unsigned long attrs)
-> +{
-> +	struct dma_bounced_mem *mem = dev->dma_bounced_mem;
-> +	dma_addr_t dma_addr;
-> +	void *orig_virt;
-> +
-> +	if (unlikely(!gen_pool_dma_alloc(mem->pool, size, &dma_addr)))
-> +		return DMA_MAPPING_ERROR;
-> +
-> +	orig_virt = page_to_virt(page) + offset;
-> +	dma_bounced_set_orig_virt(dev, dma_addr, orig_virt);
-> +
-> +	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC))
-> +		dma_bounced_sync_single_for_device(dev, dma_addr, size, dir);
-> +
-> +	return dma_addr;
-> +}
-> +
-> +static void dma_bounced_unmap_sg(struct device *dev, struct scatterlist *sgl,
-> +				 int nents, enum dma_data_direction dir,
-> +				 unsigned long attrs)
-> +{
-> +	struct scatterlist *sg;
-> +	int i;
-> +
-> +	for_each_sg(sgl, sg, nents, i) {
-> +		dma_bounced_unmap_page(dev, sg->dma_address, sg_dma_len(sg),
-> +				       dir, attrs);
-> +	}
-> +}
-> +
-> +static int dma_bounced_map_sg(struct device *dev, struct scatterlist *sgl,
-> +			      int nents, enum dma_data_direction dir,
-> +			      unsigned long attrs)
-> +{
-> +	int i;
-> +	struct scatterlist *sg;
-> +
-> +	for_each_sg(sgl, sg, nents, i) {
-> +		sg->dma_address = dma_bounced_map_page(
-> +			dev, sg_page(sg), sg->offset, sg->length, dir, attrs);
-> +		if (sg->dma_address == DMA_MAPPING_ERROR)
-> +			goto out_unmap;
-> +		sg_dma_len(sg) = sg->length;
-> +	}
-> +
-> +	return nents;
-> +
-> +out_unmap:
-> +	dma_bounced_unmap_sg(dev, sgl, i, dir, attrs | DMA_ATTR_SKIP_CPU_SYNC);
-> +	return 0;
-> +}
-> +
-> +static size_t dma_bounced_max_mapping_size(struct device *dev)
-> +{
-> +	return dev->dma_bounced_mem->size;
-> +}
-> +
-> +const struct dma_map_ops dma_bounced_ops = {
-> +	.alloc			= NULL,
-> +	.free			= NULL,
-> +	.mmap			= NULL,
-> +	.get_sgtable		= NULL,
-> +	.sync_single_for_cpu	= dma_bounced_sync_single_for_cpu,
-> +	.sync_single_for_device = dma_bounced_sync_single_for_device,
-> +	.sync_sg_for_cpu	= dma_bounced_sync_sg_for_cpu,
-> +	.sync_sg_for_device	= dma_bounced_sync_sg_for_device,
-> +	.map_page		= dma_bounced_map_page,
-> +	.unmap_page		= dma_bounced_unmap_page,
-> +	.map_sg			= dma_bounced_map_sg,
-> +	.unmap_sg		= dma_bounced_unmap_sg,
-> +	.unmap_resource		= NULL,
-> +	.map_resource		= NULL,
-> +	.cache_sync		= NULL,
-> +	.dma_supported		= dma_direct_supported,
-> +	.get_required_mask	= dma_direct_get_required_mask,
-> +	.max_mapping_size	= dma_bounced_max_mapping_size,
-> +	.get_merge_boundary	= NULL,
-> +};
-> 
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml | 2 +-
+ drivers/phy/phy-core.c                                      | 2 +-
+ drivers/phy/ti/phy-am654-serdes.c                           | 2 +-
+ drivers/phy/ti/phy-gmii-sel.c                               | 2 +-
+ drivers/phy/ti/phy-j721e-wiz.c                              | 2 +-
+ drivers/phy/ti/phy-omap-control.c                           | 2 +-
+ drivers/phy/ti/phy-omap-usb2.c                              | 2 +-
+ drivers/phy/ti/phy-ti-pipe3.c                               | 2 +-
+ include/linux/phy/omap_control_phy.h                        | 2 +-
+ include/linux/phy/omap_usb.h                                | 2 +-
+ include/linux/phy/phy.h                                     | 2 +-
+ 11 files changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+index 3f913d6d1c3d..ebb5ffe1b821 100644
+--- a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
++++ b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+-# Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
++# Copyright (C) 2019 Texas Instruments Incorporated - https://www.ti.com/
+ %YAML 1.2
+ ---
+ $id: "http://devicetree.org/schemas/phy/ti,phy-j721e-wiz.yaml#"
+diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+index a27b8d578d7f..41182dd3b705 100644
+--- a/drivers/phy/phy-core.c
++++ b/drivers/phy/phy-core.c
+@@ -2,7 +2,7 @@
+ /*
+  * phy-core.c  --  Generic Phy framework.
+  *
+- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
++ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com
+  *
+  * Author: Kishon Vijay Abraham I <kishon@ti.com>
+  */
+diff --git a/drivers/phy/ti/phy-am654-serdes.c b/drivers/phy/ti/phy-am654-serdes.c
+index 0a166d5a6414..89d5b5a5d83a 100644
+--- a/drivers/phy/ti/phy-am654-serdes.c
++++ b/drivers/phy/ti/phy-am654-serdes.c
+@@ -2,7 +2,7 @@
+ /**
+  * PCIe SERDES driver for AM654x SoC
+  *
+- * Copyright (C) 2018 - 2019 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2018 - 2019 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Kishon Vijay Abraham I <kishon@ti.com>
+  */
+ 
+diff --git a/drivers/phy/ti/phy-gmii-sel.c b/drivers/phy/ti/phy-gmii-sel.c
+index 7edd5c3bc536..84a3434375ab 100644
+--- a/drivers/phy/ti/phy-gmii-sel.c
++++ b/drivers/phy/ti/phy-gmii-sel.c
+@@ -2,7 +2,7 @@
+ /*
+  * Texas Instruments CPSW Port's PHY Interface Mode selection Driver
+  *
+- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
+  *
+  * Based on cpsw-phy-sel.c driver created by Mugunthan V N <mugunthanvnm@ti.com>
+  */
+diff --git a/drivers/phy/ti/phy-j721e-wiz.c b/drivers/phy/ti/phy-j721e-wiz.c
+index 30ea5b207285..f8cfdc8f56b9 100644
+--- a/drivers/phy/ti/phy-j721e-wiz.c
++++ b/drivers/phy/ti/phy-j721e-wiz.c
+@@ -2,7 +2,7 @@
+ /**
+  * Wrapper driver for SERDES used in J721E
+  *
+- * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2019 Texas Instruments Incorporated - https://www.ti.com/
+  * Author: Kishon Vijay Abraham I <kishon@ti.com>
+  */
+ 
+diff --git a/drivers/phy/ti/phy-omap-control.c b/drivers/phy/ti/phy-omap-control.c
+index ccd0e4e00451..8257972fac25 100644
+--- a/drivers/phy/ti/phy-omap-control.c
++++ b/drivers/phy/ti/phy-omap-control.c
+@@ -2,7 +2,7 @@
+ /*
+  * omap-control-phy.c - The PHY part of control module.
+  *
+- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
++ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com
+  * Author: Kishon Vijay Abraham I <kishon@ti.com>
+  */
+ 
+diff --git a/drivers/phy/ti/phy-omap-usb2.c b/drivers/phy/ti/phy-omap-usb2.c
+index cb2dd3230fa7..9bc96db3315f 100644
+--- a/drivers/phy/ti/phy-omap-usb2.c
++++ b/drivers/phy/ti/phy-omap-usb2.c
+@@ -2,7 +2,7 @@
+ /*
+  * omap-usb2.c - USB PHY, talking to USB controller on TI SoCs.
+  *
+- * Copyright (C) 2012-2020 Texas Instruments Incorporated - http://www.ti.com
++ * Copyright (C) 2012-2020 Texas Instruments Incorporated - https://www.ti.com
+  * Author: Kishon Vijay Abraham I <kishon@ti.com>
+  */
+ 
+diff --git a/drivers/phy/ti/phy-ti-pipe3.c b/drivers/phy/ti/phy-ti-pipe3.c
+index a87946589eb7..b6d5e1e94f92 100644
+--- a/drivers/phy/ti/phy-ti-pipe3.c
++++ b/drivers/phy/ti/phy-ti-pipe3.c
+@@ -2,7 +2,7 @@
+ /*
+  * phy-ti-pipe3 - PIPE3 PHY driver.
+  *
+- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
++ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com
+  * Author: Kishon Vijay Abraham I <kishon@ti.com>
+  */
+ 
+diff --git a/include/linux/phy/omap_control_phy.h b/include/linux/phy/omap_control_phy.h
+index aec57dd784f7..2fd00c05acbf 100644
+--- a/include/linux/phy/omap_control_phy.h
++++ b/include/linux/phy/omap_control_phy.h
+@@ -2,7 +2,7 @@
+ /*
+  * omap_control_phy.h - Header file for the PHY part of control module.
+  *
+- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
++ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com
+  * Author: Kishon Vijay Abraham I <kishon@ti.com>
+  */
+ 
+diff --git a/include/linux/phy/omap_usb.h b/include/linux/phy/omap_usb.h
+index e23b52df93ec..783effd61185 100644
+--- a/include/linux/phy/omap_usb.h
++++ b/include/linux/phy/omap_usb.h
+@@ -2,7 +2,7 @@
+ /*
+  * omap_usb.h -- omap usb2 phy header file
+  *
+- * Copyright (C) 2012-2020 Texas Instruments Incorporated - http://www.ti.com
++ * Copyright (C) 2012-2020 Texas Instruments Incorporated - https://www.ti.com
+  * Author: Kishon Vijay Abraham I <kishon@ti.com>
+  */
+ 
+diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+index bcee8eba62b3..baa3b1c7a0fb 100644
+--- a/include/linux/phy/phy.h
++++ b/include/linux/phy/phy.h
+@@ -2,7 +2,7 @@
+ /*
+  * phy.h -- generic phy header file
+  *
+- * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
++ * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com
+  *
+  * Author: Kishon Vijay Abraham I <kishon@ti.com>
+  */
+-- 
+2.27.0
+
