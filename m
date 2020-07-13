@@ -2,67 +2,62 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD4EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 02:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E285C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 02:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28C07206D9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 02:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F440206B6
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 02:30:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbgGMCRx (ORCPT
+        id S1726262AbgGMCab (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Jul 2020 22:17:53 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:44301 "EHLO
+        Sun, 12 Jul 2020 22:30:31 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:44233 "EHLO
         smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726465AbgGMCRx (ORCPT
+        by vger.kernel.org with ESMTP id S1726534AbgGMCab (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Sun, 12 Jul 2020 22:17:53 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.3591534|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0142864-0.00190888-0.983805;FP=0|0|0|0|0|-1|-1|-1;HT=e01l10422;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=11;RT=11;SR=0;TI=SMTPD_---.I0soH8L_1594606665;
-Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I0soH8L_1594606665)
-          by smtp.aliyun-inc.com(10.147.42.241);
-          Mon, 13 Jul 2020 10:17:49 +0800
-From:   Frank Lee <frank@allwinnertech.com>
-To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        robh+dt@kernel.org, mripard@kernel.org, wens@csie.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, tiny.windzz@gmail.com,
-        Frank Lee <frank@allwinnertech.com>
-Subject: [PATCH v3 12/16] dt-bindings: irq: sun7i-nmi: Add binding for A100's NMI controller
-Date:   Mon, 13 Jul 2020 10:17:40 +0800
-Message-Id: <20200713021740.17389-1-frank@allwinnertech.com>
-X-Mailer: git-send-email 2.24.0
+        Sun, 12 Jul 2020 22:30:31 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1725605|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0492821-0.000422833-0.950295;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07440;MF=frank@allwinnertech.com;NM=1;PH=DW;RN=9;RT=9;SR=0;TI=W4_5899425_DEFAULT_0AC26699_1594607350236_o7001c824s;
+Received: from WS-web (frank@allwinnertech.com[W4_5899425_DEFAULT_0AC26699_1594607350236_o7001c824s]) by e02c03303.eu6 at Mon, 13 Jul 2020 10:30:27 +0800
+Date:   Mon, 13 Jul 2020 10:30:27 +0800
+From:   "=?UTF-8?B?5p2O5oms6Z+s?=" <frank@allwinnertech.com>
+To:     "Maxime Ripard" <maxime@cerno.tech>
+Cc:     "wens" <wens@csie.org>, "robh+dt" <robh+dt@kernel.org>,
+        "tiny.windzz" <tiny.windzz@gmail.com>,
+        "linux-arm-kernel" <linux-arm-kernel@lists.infradead.org>,
+        "devicetree" <devicetree@vger.kernel.org>,
+        "linux-kernel" <linux-kernel@vger.kernel.org>,
+        "=?UTF-8?B?6buE54OB55Sf?=" <huangshuosheng@allwinnertech.com>,
+        "=?UTF-8?B?5p2O5YuH?=" <liyong@allwinnertech.com>
+Reply-To: "=?UTF-8?B?5p2O5oms6Z+s?=" <frank@allwinnertech.com>
+Message-ID: <2aa29f79-c105-4dc7-ac71-91a8e1225833.frank@allwinnertech.com>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2MyAxNi8xNl0gYXJtNjQ6IGFsbHdpbm5lcjogQTEwMDogYWRkIHN1cHBv?=
+  =?UTF-8?B?cnQgZm9yIEFsbHdpbm5lciBQZXJmMSBib2FyZA==?=
+X-Mailer: [Alimail-Mailagent][W4_5899425][DEFAULT][Chrome]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200708082821.13188-1-frank@allwinnertech.com>,<20200710123617.ebd2ljn7okdrx4ph@gilmour.lan>
+x-aliyun-mail-creator: W4_5899425_DEFAULT_LjMTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzU2LjAuMjkyNC44NyBTYWZhcmkvNTM3LjM2TM
+In-Reply-To: <20200710123617.ebd2ljn7okdrx4ph@gilmour.lan>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a binding for A100's nmi controller.
-
-Signed-off-by: Frank Lee <frank@allwinnertech.com>
----
- .../bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml      | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
-index aab74a8..b8d5bac 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
-+++ b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
-@@ -34,6 +34,9 @@ properties:
-           - const: allwinner,sun50i-a64-r-intc
-           - const: allwinner,sun6i-a31-r-intc
-       - items:
-+          - const: allwinner,sun50i-a100-nmi
-+          - const: allwinner,sun9i-a80-nmi
-+      - items:
-           - const: allwinner,sun50i-h6-r-intc
-           - const: allwinner,sun6i-a31-r-intc
- 
--- 
-1.9.1
-
+Pj4gKyZwaW8gewo+PiArIHZjYy1wYi1zdXBwbHkgPSA8JnJlZ19kY2RjMT47Cj4+ICsgdmNjLXBj
+LXN1cHBseSA9IDwmcmVnX2VsZG8xPjsKPj4gKyB2Y2MtcGQtc3VwcGx5ID0gPCZyZWdfZGNkYzE+
+Owo+PiArIHZjYy1wZS1zdXBwbHkgPSA8JnJlZ19kbGRvMj47Cj4+ICsgdmNjLXBmLXN1cHBseSA9
+IDwmcmVnX2RjZGMxPjsKPj4gKyB2Y2MtcGctc3VwcGx5ID0gPCZyZWdfZGxkbzE+Owo+PiArIHZj
+Yy1waC1zdXBwbHkgPSA8JnJlZ19kY2RjMT47Cj4+ICt9OwoKPlRoZXJlJ3Mgc29tZXRoaW5nIG9m
+ZiBoZXJlLiBUaGUgUEMgc3VwcGx5IGlzIHNldCB0byBlbGRvMSwgYnV0Cgo+PiArJnJlZ19kY2Rj
+MSB7Cj4+ICsgcmVndWxhdG9yLWFsd2F5cy1vbjsKPj4gKyByZWd1bGF0b3ItbWluLW1pY3Jvdm9s
+dCA9IDwzMzAwMDAwPjsKPj4gKyByZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwzMzAwMDAwPjsK
+Pj4gKyByZWd1bGF0b3ItbmFtZSA9ICJ2Y2MtcGMtaW8tdXNiLXBkLWVtbWMtbmFuZC1jYXJkIjsK
+Pj4gK307Cgo+QnV0IGhlcmUgeW91IHNheSBpbiB0aGUgbmFtZSB0aGF0IGRsZG8xIGlzIGEgUEMg
+c3VwcGx5IHRvbz8KClRoZXJlIGlzIHNvbWUgbWlzbGVhZGluZyBvbiB0aGUgc2NoZW1hdGljLCBp
+biBmYWN0IHRoZXJlIGlzIG5vCmNvbm5lY3Rpb24gYmV0d2VlbiBkY2RjMSBhbmQgcGMsIEkgd2ls
+bCBmaXggdGhpcy4KClRoeCwKWWFuZ3Rhbw==
