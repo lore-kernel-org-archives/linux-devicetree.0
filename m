@@ -2,173 +2,225 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5D6C433E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12393C433ED
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04CBE20738
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:46:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594651605;
-	bh=AgepWT7Qk1eufiWlt8Bn9mEhhCH/ZD1sfoj89k9aNdE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2BzBrazcIuw9QzzM2McfGgJNAG0YP74RIhZfddzXS86yVV44Jls7z1zeCo5VGdfj7
-	 BoVC5MTlrg1AaN/w7HkWbQywxjfPbAeGIU7wspu64SDeaKazE50ciBMvRR28z2Sj3M
-	 GtACb0ftIFOe5deDPd5a6gIKJEqgqhEFZKL3yxh4=
+	by mail.kernel.org (Postfix) with ESMTP id ECE872065F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:51:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729681AbgGMOqo (ORCPT
+        id S1730150AbgGMOva (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:46:44 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:41204 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729523AbgGMOqo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 10:46:44 -0400
-Received: by mail-io1-f66.google.com with SMTP id p205so5178660iod.8;
-        Mon, 13 Jul 2020 07:46:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nbDwnmZqExm0GJ0AQBPbfTfEhmeWr4XCe+A+8/PM6M0=;
-        b=T5+4jJYQlZ5hUHd84SckU3rKPK7CClh70W5uYAWcrpD9ssDeB3QErZxptmwPRGy1HQ
-         4WvN3oBwXakKPlwT2ygLIM0OGQeXSgttBR6eJZzB2JGAfW2K7eoOsk4ROpEHerEUWJXq
-         DJD6nU4dsC14/HW6+stbG7dN4axGQsmzWn2fkIUiFe2/rzmDUmUyBL8I/kHspXQvjDYg
-         7FOIYd5J0g9f7i1ueqaHmm3wlscR2Qc4uV3qPmvgmOcb0+c4xqBmiTvGIsimkLFA6r8J
-         fFSjQv53fYvFtbUhtZV1cJ3KKWwN5+RRsgTbd1cDTg5a1jTvnEaUqOCywaQWaG4i0YRS
-         yi7A==
-X-Gm-Message-State: AOAM533Y3+xWv+OEHt1KTm8MPBbjuW8Ab1LgnQuYE6VWPpSsbGku1g0b
-        2lXrckrw4Z6c2YfBtnRmug==
-X-Google-Smtp-Source: ABdhPJyC5hljtwK8AI4NvIkZ9UF+F6cv86WbaPgrtAlXxynhWmF1sbz5QKxouIpA7c6uyqRQqrL5Nw==
-X-Received: by 2002:a05:6638:2615:: with SMTP id m21mr394291jat.134.1594651603099;
-        Mon, 13 Jul 2020 07:46:43 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id s11sm8669417ili.79.2020.07.13.07.46.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 07:46:42 -0700 (PDT)
-Received: (nullmailer pid 157351 invoked by uid 1000);
-        Mon, 13 Jul 2020 14:46:40 -0000
-Date:   Mon, 13 Jul 2020 08:46:40 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Krishna Manikandan <mkrishn@codeaurora.org>
-Cc:     kalyan_t@codeaurora.org, seanpaul@chromium.org,
-        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        robdclark@gmail.com, hoegsberg@chromium.org,
-        linux-kernel@vger.kernel.org, freedreno@lists.freedesktop.org,
-        nganji@codeaurora.org, devicetree@vger.kernel.org
-Subject: Re: [v5] dt-bindings: msm: disp: add yaml schemas for DPU and DSI
- bindings
-Message-ID: <20200713144640.GA155367@bogus>
-References: <1594389469-2573-1-git-send-email-mkrishn@codeaurora.org>
+        Mon, 13 Jul 2020 10:51:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33080 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729659AbgGMOv1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 10:51:27 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A09CC061755;
+        Mon, 13 Jul 2020 07:51:27 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 2AAAEBC09E;
+        Mon, 13 Jul 2020 14:51:24 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
+        robh+dt@kernel.org, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] leds: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 16:51:15 +0200
+Message-Id: <20200713145115.35121-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594389469-2573-1-git-send-email-mkrishn@codeaurora.org>
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spam: Yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 10 Jul 2020 19:27:49 +0530, Krishna Manikandan wrote:
-> MSM Mobile Display Subsytem (MDSS) encapsulates sub-blocks
-> like DPU display controller, DSI etc. Add YAML schema
-> for the device tree bindings for the same.
-> 
-> Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
-> 
-> Changes in v2:
-> 	- Changed dpu to DPU (Sam Ravnborg)
-> 	- Fixed indentation issues (Sam Ravnborg)
-> 	- Added empty line between different properties (Sam Ravnborg)
-> 	- Replaced reference txt files with  their corresponding
-> 	  yaml files (Sam Ravnborg)
-> 	- Modified the file to use "|" only when it is
-> 	  necessary (Sam Ravnborg)
-> 
-> Changes in v3:
-> 	- Corrected the license used (Rob Herring)
-> 	- Added maxItems for properties (Rob Herring)
-> 	- Dropped generic descriptions (Rob Herring)
-> 	- Added ranges property (Rob Herring)
-> 	- Corrected the indendation (Rob Herring)
-> 	- Added additionalProperties (Rob Herring)
-> 	- Split dsi file into two, one for dsi controller
-> 	  and another one for dsi phy per target (Rob Herring)
-> 	- Corrected description for pinctrl-names (Rob Herring)
-> 	- Corrected the examples used in yaml file (Rob Herring)
-> 	- Delete dsi.txt and dpu.txt (Rob Herring)
-> 
-> Changes in v4:
-> 	- Move schema up by one level (Rob Herring)
-> 	- Add patternProperties for mdp node (Rob Herring)
-> 	- Corrected description of some properties (Rob Herring)
-> 
-> Changes in v5:
-> 	- Correct the indentation (Rob Herring)
-> 	- Remove unnecessary description from properties (Rob Herring)
-> 	- Correct the number of interconnect entries (Rob Herring)
-> 	- Add interconnect names for sc7180 (Rob Herring)
-> 	- Add description for ports (Rob Herring)
-> 	- Remove common properties (Rob Herring)
-> 	- Add unevalutatedProperties (Rob Herring)
-> 	- Reference existing dsi controller yaml in the common
-> 	  dsi controller file (Rob Herring)
-> 	- Correct the description of clock names to include only the
-> 	  clocks that are required (Rob Herring)
-> 	- Remove properties which are already covered under the common
-> 	  binding (Rob Herring)
-> 	- Add dsi phy supply nodes which are required for sc7180 and
-> 	  sdm845 targets (Rob Herring)
-> 	- Add type ref for syscon-sfpb (Rob Herring)
-> ---
->  .../bindings/display/dsi-controller.yaml           |   4 +-
->  .../bindings/display/msm/dpu-sc7180.yaml           | 230 +++++++++++++++++++
->  .../bindings/display/msm/dpu-sdm845.yaml           | 210 ++++++++++++++++++
->  .../devicetree/bindings/display/msm/dpu.txt        | 141 ------------
->  .../display/msm/dsi-common-controller.yaml         | 178 +++++++++++++++
->  .../display/msm/dsi-controller-sc7180.yaml         | 115 ++++++++++
->  .../display/msm/dsi-controller-sdm845.yaml         | 115 ++++++++++
->  .../bindings/display/msm/dsi-phy-sc7180.yaml       |  79 +++++++
->  .../bindings/display/msm/dsi-phy-sdm845.yaml       |  81 +++++++
->  .../devicetree/bindings/display/msm/dsi-phy.yaml   |  79 +++++++
->  .../devicetree/bindings/display/msm/dsi.txt        | 246 ---------------------
->  11 files changed, 1089 insertions(+), 389 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dpu-sc7180.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dpu-sdm845.yaml
->  delete mode 100644 Documentation/devicetree/bindings/display/msm/dpu.txt
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-common-controller.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-controller-sc7180.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-controller-sdm845.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-sc7180.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-sdm845.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy.yaml
->  delete mode 100644 Documentation/devicetree/bindings/display/msm/dsi.txt
-> 
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
+
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
+
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
+
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
 
 
-My bot found errors running 'make dt_binding_check' on your patch:
+ Documentation/devicetree/bindings/leds/leds-lm3532.txt  | 2 +-
+ Documentation/devicetree/bindings/leds/leds-lm3601x.txt | 4 ++--
+ Documentation/devicetree/bindings/leds/leds-lm36274.txt | 2 +-
+ Documentation/devicetree/bindings/leds/leds-lm3692x.txt | 2 +-
+ Documentation/devicetree/bindings/leds/leds-lm3697.txt  | 2 +-
+ Documentation/devicetree/bindings/leds/leds-lp8860.txt  | 2 +-
+ drivers/leds/leds-lm3532.c                              | 4 ++--
+ drivers/leds/leds-lm3601x.c                             | 2 +-
+ drivers/leds/leds-lm36274.c                             | 2 +-
+ drivers/leds/leds-lm3692x.c                             | 2 +-
+ drivers/leds/leds-lm3697.c                              | 2 +-
+ 11 files changed, 13 insertions(+), 13 deletions(-)
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/msm/dsi-controller-sc7180.example.dt.yaml: example-0: dsi@ae94000:reg:0: [0, 183058432, 0, 1024] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/msm/dpu-sdm845.example.dt.yaml: example-0: mdss@ae00000:reg:0: [0, 182452224, 0, 4096] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/msm/dsi-phy-sc7180.example.dt.yaml: example-0: dsi-phy@ae94400:reg:0: [0, 183059456, 0, 512] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/msm/dsi-phy-sc7180.example.dt.yaml: example-0: dsi-phy@ae94400:reg:1: [0, 183059968, 0, 640] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/msm/dsi-phy-sc7180.example.dt.yaml: example-0: dsi-phy@ae94400:reg:2: [0, 183060992, 0, 480] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/msm/dpu-sc7180.example.dt.yaml: example-0: mdss@ae00000:reg:0: [0, 182452224, 0, 4096] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/msm/dsi-phy-sdm845.example.dt.yaml: example-0: dsi-phy@ae94400:reg:0: [0, 183059456, 0, 512] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/msm/dsi-phy-sdm845.example.dt.yaml: example-0: dsi-phy@ae94400:reg:1: [0, 183059968, 0, 640] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/msm/dsi-phy-sdm845.example.dt.yaml: example-0: dsi-phy@ae94400:reg:2: [0, 183060992, 0, 480] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/msm/dsi-controller-sdm845.example.dt.yaml: example-0: dsi@ae94000:reg:0: [0, 183058432, 0, 1024] is too long
-
-
-See https://patchwork.ozlabs.org/patch/1326868
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+diff --git a/Documentation/devicetree/bindings/leds/leds-lm3532.txt b/Documentation/devicetree/bindings/leds/leds-lm3532.txt
+index 53793213dd52..097490a5ff91 100644
+--- a/Documentation/devicetree/bindings/leds/leds-lm3532.txt
++++ b/Documentation/devicetree/bindings/leds/leds-lm3532.txt
+@@ -102,4 +102,4 @@ led-controller@38 {
+ };
+ 
+ For more product information please see the links below:
+-http://www.ti.com/product/LM3532
++https://www.ti.com/product/LM3532
+diff --git a/Documentation/devicetree/bindings/leds/leds-lm3601x.txt b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
+index 095dafb6ec7f..17e940025dc2 100644
+--- a/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
++++ b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
+@@ -47,5 +47,5 @@ led-controller@64 {
+ }
+ 
+ For more product information please see the links below:
+-http://www.ti.com/product/LM36010
+-http://www.ti.com/product/LM36011
++https://www.ti.com/product/LM36010
++https://www.ti.com/product/LM36011
+diff --git a/Documentation/devicetree/bindings/leds/leds-lm36274.txt b/Documentation/devicetree/bindings/leds/leds-lm36274.txt
+index 39c230d59a4d..de6f4931fb31 100644
+--- a/Documentation/devicetree/bindings/leds/leds-lm36274.txt
++++ b/Documentation/devicetree/bindings/leds/leds-lm36274.txt
+@@ -82,4 +82,4 @@ lm36274@11 {
+ };
+ 
+ For more product information please see the link below:
+-http://www.ti.com/lit/ds/symlink/lm36274.pdf
++https://www.ti.com/lit/ds/symlink/lm36274.pdf
+diff --git a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+index 501468aa4d38..b1103d961d6c 100644
+--- a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
++++ b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+@@ -62,4 +62,4 @@ led-controller@36 {
+ }
+ 
+ For more product information please see the link below:
+-http://www.ti.com/lit/ds/snvsa29/snvsa29.pdf
++https://www.ti.com/lit/ds/snvsa29/snvsa29.pdf
+diff --git a/Documentation/devicetree/bindings/leds/leds-lm3697.txt b/Documentation/devicetree/bindings/leds/leds-lm3697.txt
+index 63992d732959..221b37b6049b 100644
+--- a/Documentation/devicetree/bindings/leds/leds-lm3697.txt
++++ b/Documentation/devicetree/bindings/leds/leds-lm3697.txt
+@@ -70,4 +70,4 @@ led-controller@36 {
+ }
+ 
+ For more product information please see the link below:
+-http://www.ti.com/lit/ds/symlink/lm3697.pdf
++https://www.ti.com/lit/ds/symlink/lm3697.pdf
+diff --git a/Documentation/devicetree/bindings/leds/leds-lp8860.txt b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
+index 9863220db4ba..8bb25749a3da 100644
+--- a/Documentation/devicetree/bindings/leds/leds-lp8860.txt
++++ b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
+@@ -47,4 +47,4 @@ led-controller@2d {
+ }
+ 
+ For more product information please see the link below:
+-http://www.ti.com/product/lp8860-q1
++https://www.ti.com/product/lp8860-q1
+diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
+index aa9bf8cda673..946ad67eaecb 100644
+--- a/drivers/leds/leds-lm3532.c
++++ b/drivers/leds/leds-lm3532.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ // TI LM3532 LED driver
+-// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
+-// http://www.ti.com/lit/ds/symlink/lm3532.pdf
++// Copyright (C) 2019 Texas Instruments Incorporated - https://www.ti.com/
++// https://www.ti.com/lit/ds/symlink/lm3532.pdf
+ 
+ #include <linux/i2c.h>
+ #include <linux/leds.h>
+diff --git a/drivers/leds/leds-lm3601x.c b/drivers/leds/leds-lm3601x.c
+index fce89f2a2d92..d0e1d4814042 100644
+--- a/drivers/leds/leds-lm3601x.c
++++ b/drivers/leds/leds-lm3601x.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ // Flash and torch driver for Texas Instruments LM3601X LED
+ // Flash driver chip family
+-// Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
++// Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
+ 
+ #include <linux/delay.h>
+ #include <linux/i2c.h>
+diff --git a/drivers/leds/leds-lm36274.c b/drivers/leds/leds-lm36274.c
+index 836b60c9a2b8..59360482e7ba 100644
+--- a/drivers/leds/leds-lm36274.c
++++ b/drivers/leds/leds-lm36274.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ // TI LM36274 LED chip family driver
+-// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
++// Copyright (C) 2019 Texas Instruments Incorporated - https://www.ti.com/
+ 
+ #include <linux/bitops.h>
+ #include <linux/device.h>
+diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
+index 28a51aeb28de..e1e2d2b64a56 100644
+--- a/drivers/leds/leds-lm3692x.c
++++ b/drivers/leds/leds-lm3692x.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ // TI LM3692x LED chip family driver
+-// Copyright (C) 2017-18 Texas Instruments Incorporated - http://www.ti.com/
++// Copyright (C) 2017-18 Texas Instruments Incorporated - https://www.ti.com/
+ 
+ #include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
+diff --git a/drivers/leds/leds-lm3697.c b/drivers/leds/leds-lm3697.c
+index 872d26f9706a..024983088d59 100644
+--- a/drivers/leds/leds-lm3697.c
++++ b/drivers/leds/leds-lm3697.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ // TI LM3697 LED chip family driver
+-// Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
++// Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
+ 
+ #include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
+-- 
+2.27.0
 
