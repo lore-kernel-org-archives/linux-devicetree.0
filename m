@@ -2,145 +2,143 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90380C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 16:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE2AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 17:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5DF2067D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 16:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A84002075D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 17:01:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594659679;
+	bh=YP+Q3ycNjgRpQIKzSN0RepzmavN2DDlJsBGVnx+Kb0M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=D02DgDVMsfEHZHMIewTIXAIpN3ZWJzEEVz6PTLLHTW16WMV9PqPRTS6lko674aeQa
+	 s6KoeBfkmjm6m/vGX/jbzDpav7eh/oErFLp6sCGeCNoTFHmYXwxkRMJH/DkvuINdHa
+	 XZC4DmnyFOvUHyToqiBoZgU/fu9RNKaPozf+FvRw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729747AbgGMQyV (ORCPT
+        id S1730000AbgGMRBT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 12:54:21 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:38296 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729659AbgGMQyU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 12:54:20 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 585A3BC0FD;
-        Mon, 13 Jul 2020 16:54:16 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        robh+dt@kernel.org, linus.walleij@linaro.org, arnd@arndb.de,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] mtd: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 18:54:08 +0200
-Message-Id: <20200713165408.36229-1-grandmaster@al2klimov.de>
+        Mon, 13 Jul 2020 13:01:19 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:35678 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729751AbgGMRBT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 13:01:19 -0400
+Received: by mail-il1-f195.google.com with SMTP id t18so11820096ilh.2;
+        Mon, 13 Jul 2020 10:01:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=u+ATDfebf9MV39yazJSR2REjUJRTM5Ietg8G+hjq9hs=;
+        b=ZxAgbNgRqB6fP1D8x2d6i8HVjRG+vGvJxZiaTYoESfpplqy5Tdd5Z14JvIKWGz1V3x
+         7UKTTBpJ3IhlegV+Jy6Kmxmeo1F4yq9/ksy8dz9HNAg47zwqlfLI/nDn5uVLiX9WR5RH
+         9s5qHAxyCYe03Ww1Mz6jZhGLAJpTqBTVVf9kUgZ7s9dFpArqj7C0fPPytXS0wdh2V+cZ
+         B4NIVIz4H6ZyQPS+38/vJUA/YwbmLPGNKcJ/7aAj3DE1UxjRHHg/fu59Saig4l9FYiIX
+         21QZ5MSsksiA6p+Dw46BwCWckft3gBiVZxcRtrbQgvbM3yvb4l9CNtlu59g39zbe4j4x
+         TviQ==
+X-Gm-Message-State: AOAM531a63pfJT1qCnMJKMp7As/KrvaHSciKekD5Uu01mhodzoSUVkNE
+        FKlrCrRdmmUh5KmPEn+Eow==
+X-Google-Smtp-Source: ABdhPJz8Xnzy5VMGLC1oVbharKqEmV8XouNZObzNUKUHDywbuYQ837jCWWk9uWJgtsZ2IZZCJw3hPw==
+X-Received: by 2002:a92:9892:: with SMTP id a18mr656663ill.60.1594659678061;
+        Mon, 13 Jul 2020 10:01:18 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id w4sm7909214ioc.23.2020.07.13.10.01.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 10:01:17 -0700 (PDT)
+Received: (nullmailer pid 384200 invoked by uid 1000);
+        Mon, 13 Jul 2020 17:01:16 -0000
+Date:   Mon, 13 Jul 2020 11:01:16 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        linus.walleij@linaro.org, gregkh@linuxfoundation.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        stefano.stabellini@xilinx.com, tomase@xilinx.com,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 1/5] dt-bindings: bus: Add firewall bindings
+Message-ID: <20200713170116.GA364356@bogus>
+References: <20200701132523.32533-1-benjamin.gaignard@st.com>
+ <20200701132523.32533-2-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spam: Yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701132523.32533-2-benjamin.gaignard@st.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Wed, Jul 01, 2020 at 03:25:19PM +0200, Benjamin Gaignard wrote:
+> Add schemas for firewall consumer and provider.
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  .../bindings/bus/stm32/firewall-consumer.yaml      | 36 ++++++++++++++++++++++
+>  .../bindings/bus/stm32/firewall-provider.yaml      | 18 +++++++++++
+>  2 files changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml
+>  create mode 100644 Documentation/devicetree/bindings/bus/stm32/firewall-provider.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml b/Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml
+> new file mode 100644
+> index 000000000000..d3d76f99b38d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml
+> @@ -0,0 +1,36 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bus/stm32/firewall-consumer.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Common Bus Firewall consumer binding
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+I'm all for common bindings, but I want to see more than 1 user before 
+accepting this. There's been some other postings for similar h/w 
+(AFAICT) recently.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+> +
+> +description: |
+> +  Firewall properties provide the possible firewall bus controller
+> +  configurations for a device.
+> +  Bus firewall controllers are typically used to control if a hardware
+> +  block can perform read or write operations on bus.
+> +  The contents of the firewall bus configuration properties are defined by
+> +  the binding for the individual firewall controller device.
+> +
+> +  The first configuration 'firewall-0' or the one named 'default' is
+> +  applied before probing the device itself.
 
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+This is a Linux implementation detail and debatable whether the core 
+should do this or drivers.
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
+> +
+> +maintainers:
+> +  - Benjamin Gaignard <benjamin.gaignard@st.com>
+> +
+> +# always select the core schema
+> +select: true
+> +
+> +properties:
+> +  firewall-0: true
+> +
+> +  firewall-names: true
+> +
+> +patternProperties:
+> +  "firewall-[0-9]":
+> +    $ref: "/schemas/types.yaml#/definitions/phandle-array"
 
- If you apply the patch, please let me know.
+So I guess multiple properties is to encode all the modes into DT like 
+pinctrl does. Is that really necessary? I don't think so as I wouldn't 
+expect modes to be defined by the consumer, but by the provider in this 
+case. To use pinctrl as a example, we could have pad setting per MMC 
+speed. That has to be in the consumer side as the pinctrl knows nothing 
+about MMC.
 
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- Documentation/devicetree/bindings/mtd/davinci-nand.txt | 4 ++--
- drivers/mtd/chips/Kconfig                              | 2 +-
- drivers/mtd/maps/Kconfig                               | 2 +-
- drivers/mtd/maps/sc520cdp.c                            | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mtd/davinci-nand.txt b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
-index cfb18abe6001..edebeae1f5b3 100644
---- a/Documentation/devicetree/bindings/mtd/davinci-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
-@@ -4,8 +4,8 @@ This file provides information, what the device node for the davinci/keystone
- NAND interface contains.
- 
- Documentation:
--Davinci DM646x - http://www.ti.com/lit/ug/sprueq7c/sprueq7c.pdf
--Kestone - http://www.ti.com/lit/ug/sprugz3a/sprugz3a.pdf
-+Davinci DM646x - https://www.ti.com/lit/ug/sprueq7c/sprueq7c.pdf
-+Kestone - https://www.ti.com/lit/ug/sprugz3a/sprugz3a.pdf
- 
- Required properties:
- 
-diff --git a/drivers/mtd/chips/Kconfig b/drivers/mtd/chips/Kconfig
-index a7e47e068ad9..aef14990e5f7 100644
---- a/drivers/mtd/chips/Kconfig
-+++ b/drivers/mtd/chips/Kconfig
-@@ -11,7 +11,7 @@ config MTD_CFI
- 	  AMD and other flash manufactures that provides a universal method
- 	  for probing the capabilities of flash devices. If you wish to
- 	  support any device that is CFI-compliant, you need to enable this
--	  option. Visit <http://www.amd.com/products/nvd/overview/cfi.html>
-+	  option. Visit <https://www.amd.com/products/nvd/overview/cfi.html>
- 	  for more information on CFI.
- 
- config MTD_JEDECPROBE
-diff --git a/drivers/mtd/maps/Kconfig b/drivers/mtd/maps/Kconfig
-index b28225a7c4f3..fd37553f1b07 100644
---- a/drivers/mtd/maps/Kconfig
-+++ b/drivers/mtd/maps/Kconfig
-@@ -310,7 +310,7 @@ config MTD_DC21285
- 	help
- 	  This provides a driver for the flash accessed using Intel's
- 	  21285 bridge used with Intel's StrongARM processors. More info at
--	  <http://www.intel.com/design/bridge/docs/21285_documentation.htm>.
-+	  <https://www.intel.com/design/bridge/docs/21285_documentation.htm>.
- 
- config MTD_IXP4XX
- 	tristate "CFI Flash device mapped on Intel IXP4xx based systems"
-diff --git a/drivers/mtd/maps/sc520cdp.c b/drivers/mtd/maps/sc520cdp.c
-index 9902b37e18b4..8ef7aec634c7 100644
---- a/drivers/mtd/maps/sc520cdp.c
-+++ b/drivers/mtd/maps/sc520cdp.c
-@@ -6,7 +6,7 @@
-  * The SC520CDP is an evaluation board for the Elan SC520 processor available
-  * from AMD. It has two banks of 32-bit Flash ROM, each 8 Megabytes in size,
-  * and up to 512 KiB of 8-bit DIL Flash ROM.
-- * For details see http://www.amd.com/products/epd/desiging/evalboards/18.elansc520/520_cdp_brief/index.html
-+ * For details see https://www.amd.com/products/epd/desiging/evalboards/18.elansc520/520_cdp_brief/index.html
-  */
- 
- #include <linux/module.h>
--- 
-2.27.0
-
+Rob
