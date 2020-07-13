@@ -2,123 +2,56 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88739C433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 042ADC433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 692D720738
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:24:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594664643;
-	bh=ppt62WvXKF05OipX3gn1xhHgk70OfYdjS0NhuenP91g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=s2pqeAdoiCNKVbf5Kblg9S791MOEuK09rw8p1gD7szn0sIV/qlBhp3f8Z7mptIZ+1
-	 wZa0Zrspxt+wlFblgDrsuBLNeHeLVagOiGDrFs7A3b8sHVrtrhc/UNfCkIY5qkfpPp
-	 +qrGauW7idK5WdVT/qC3pCcE/VScuNerqycCyJHQ=
+	by mail.kernel.org (Postfix) with ESMTP id DC566206F5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:24:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbgGMSYA (ORCPT
+        id S1726338AbgGMSY6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 14:24:00 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:37333 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbgGMSX7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 14:23:59 -0400
-Received: by mail-io1-f66.google.com with SMTP id v6so14554187iob.4;
-        Mon, 13 Jul 2020 11:23:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ifx3aALNuF7rKl8vX3SdTnNE70Q3qXp0lBlunsaf+O4=;
-        b=VPOOTJhoLj5Cb150y6p1TwenBQzNfDKOJ5wyIUWq4XesRghFuTupXuNDC6XNt5OrZa
-         Y2mvcXADpPiRngSgJJMkFr1gD3AYhLU7GsEGv8Yk1NjjGhs0PShMjaoA0yiZ9Vj3bHHI
-         f0tHrDuUtWjy0YmU2DPTP72NHuzF2htDmG+Xv3vspo1FQn28gbZBbCsFlWFJA5UbdEE2
-         tKMAaZp1qC+gDMfv2kJqggJI5H/WvroU6A/Pv1xt2X1IRwbyMxsjC6GDQho6qnrG8rCG
-         jv+p0WXJsc5kYMuXSj/fBo3dLxk3e4kUc/sSHhG2fi9RMkU9le6t9UnLvXXhu1dm1mg7
-         DJWA==
-X-Gm-Message-State: AOAM531xcWgCijWFCMHSfaq2+gqfDJ4IR4U1yAwOsPTsPXK2TLW17jM4
-        aFtGB5nmVKZljP8THAO4sQ==
-X-Google-Smtp-Source: ABdhPJya3sqMPQiW2H/b993RNfsrgt3J2EBCVEUsT+0P5mubEbH1CLbcW6JdVEJ2qL9zNx+NokQEPw==
-X-Received: by 2002:a5e:dd4c:: with SMTP id u12mr1090199iop.14.1594664638827;
-        Mon, 13 Jul 2020 11:23:58 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id t1sm8159994iob.16.2020.07.13.11.23.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 11:23:58 -0700 (PDT)
-Received: (nullmailer pid 493759 invoked by uid 1000);
-        Mon, 13 Jul 2020 18:23:56 -0000
-Date:   Mon, 13 Jul 2020 12:23:56 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>, linux-usb@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
-        lorenzo.pieralisi@arm.com, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 1/9] dt-bindings: reset: Add a binding for the RPi
- Firmware reset controller
-Message-ID: <20200713182356.GA413630@bogus>
-References: <20200612171334.26385-1-nsaenzjulienne@suse.de>
- <20200612171334.26385-2-nsaenzjulienne@suse.de>
+        Mon, 13 Jul 2020 14:24:58 -0400
+Received: from muru.com ([72.249.23.125]:36740 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726321AbgGMSY6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 14:24:58 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 7FAA68106;
+        Mon, 13 Jul 2020 18:24:55 +0000 (UTC)
+Date:   Mon, 13 Jul 2020 11:24:54 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH 00/13] Add IPU & DSP remoteprocs on OMAP4 and OMAP5
+Message-ID: <20200713182454.GQ5849@atomide.com>
+References: <20200709231954.1973-1-s-anna@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200612171334.26385-2-nsaenzjulienne@suse.de>
+In-Reply-To: <20200709231954.1973-1-s-anna@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 07:13:25PM +0200, Nicolas Saenz Julienne wrote:
-> The firmware running on the RPi VideoCore can be used to reset and
-> initialize HW controlled by the firmware.
+* Suman Anna <s-anna@ti.com> [200709 16:20]:
+> Hi Tony,
 > 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> 
-> ---
-> Changes since v2:
->  - Add include file for reset IDs
-> 
-> Changes since v1:
->  - Correct cells binding as per Florian's comment
->  - Change compatible string to be more generic
-> 
->  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++++++++
->  .../reset/raspberrypi,firmware-reset.h        | 13 ++++++++++++
->  2 files changed, 34 insertions(+)
->  create mode 100644 include/dt-bindings/reset/raspberrypi,firmware-reset.h
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-> index b48ed875eb8e..23a885af3a28 100644
-> --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-> @@ -39,6 +39,22 @@ properties:
->        - compatible
->        - "#clock-cells"
->  
-> +  reset:
+> The following series contains all the necessary DT pieces to boot the
+> IPU and DSP remote processors on OMAP4 and OMAP5 SoCs. They are
+> enabled specifically on the TI OMAP4 PandaBoard and OMAP5 uEVM boards.
+> This is the last DT piece that now completes the support for IPUs and
+> DSPs on all OMAP4+ SoCs, similar patches were merged for 5.8 covering
+> the DRA7xx/AM57xx SoCs. Appreciate it if you can pick up the series for
+> 5.9 if it isn't too late.
 
-I'm not really thrilled how this is evolving with a node per provider. 
-There's no reason you can't just add #clock-cells and #reset-cells to 
-the parent firmware node.
+Applying the series into omap-for-v5.9/dt thanks.
 
-I probably should have complained with the clocks node, but that's only 
-pending for 5.9.
+Regards,
 
-The bigger issue is this stuff is just trickling in one bit at a time 
-which gives no context for review. What's next? Is it really a mystery 
-as to what functions the firmware provides? You don't have to have a 
-driver in place for every function.
-
-Rob
+Tony
