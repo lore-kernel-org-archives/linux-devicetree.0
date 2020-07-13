@@ -2,118 +2,162 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C5FC433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 04:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 722FEC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 04:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CBB42068F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 04:47:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AviZiQAb"
+	by mail.kernel.org (Postfix) with ESMTP id 4A2A52075F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 04:59:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594616385;
+	bh=Uo3ZuWzbEoHlUPyhOZImPSSVLS7iqxNl2AlQNgt1NO0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cEbDtBSrwke24uOkrP1FbQuc2i1W4jjGxf/2hAG29dnIiB+EBwZRBfWc5edWzVHdi
+	 dWuYrKFXL7h87Vs2J1v6DZuVgXWOPdm4x4Z5QMHr0oyjn89JWXVqu+PZsU38C4gkHh
+	 b+A3pN+925ZS6ObDWgEfDnbq6e7rYYc2f0yIk5jY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbgGMErP (ORCPT
+        id S1727829AbgGME7o (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 00:47:15 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:10680 "EHLO m43-7.mailgun.net"
+        Mon, 13 Jul 2020 00:59:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbgGMErP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 00:47:15 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594615635; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=D1cJQYMG1BKUOtpcDCFa52YY0VbzOKffRSGeoyv72S0=; b=AviZiQAbrks28i06gkmhL6oUP3ZJaC0QY67g7tClX7zFNFdhE1Ttbz1YQ4mESxjc89Ku0stM
- 5csm1gvI10DK3h/RjAQqG73eqxQLZrff0J/9mIOvXMmXrbqhd85Xt9nElTJh0ylKgYCsiIhz
- wHHUqlSLQ7SZqwq9go6wG/ky1Lg=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
- 5f0be73e166c1c5494460b08 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 13 Jul 2020 04:46:54
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9EABBC433C6; Mon, 13 Jul 2020 04:46:53 +0000 (UTC)
-Received: from pillair-linux.qualcomm.com (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        id S1725804AbgGME7o (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 00:59:44 -0400
+Received: from localhost (unknown [122.182.251.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: pillair)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AF583C433C8;
-        Mon, 13 Jul 2020 04:46:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AF583C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
-From:   Rakesh Pillai <pillair@codeaurora.org>
-To:     devicetree@vger.kernel.org
-Cc:     dianders@chromium.org, evgreen@chromium.org,
-        Rakesh Pillai <pillair@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] arm64: dts: qcom: sc7180: Add missing properties for Wifi node
-Date:   Mon, 13 Jul 2020 10:16:26 +0530
-Message-Id: <1594615586-17055-1-git-send-email-pillair@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        by mail.kernel.org (Postfix) with ESMTPSA id 38D7E2073A;
+        Mon, 13 Jul 2020 04:59:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594616384;
+        bh=Uo3ZuWzbEoHlUPyhOZImPSSVLS7iqxNl2AlQNgt1NO0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NcqwQ7km3Q3UMyE91gFbM9UWbd4Gv6xVn+D2wz7LOZj1z51Z7/HbYQaeOhygYP5hv
+         TOVd1ZRZ4hm3eY9OgpWx4J9XRrHv5mmPWGUZByY7VN8FKN5LTGwxwq/VlYE6L3dYcx
+         ayOVfMIxg3B5mvpnfyYpQrzwseWhXjgMI6r5cGMw=
+Date:   Mon, 13 Jul 2020 10:29:40 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: phy: Add UniPhier AHCI PHY
+ description
+Message-ID: <20200713045940.GQ34333@vkoul-mobl>
+References: <1593507574-10007-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1593507574-10007-2-git-send-email-hayashi.kunihiko@socionext.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1593507574-10007-2-git-send-email-hayashi.kunihiko@socionext.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The wlan firmware memory is statically mapped in
-the Trusted Firmware, hence the wlan driver does
-not need to map/unmap this region dynamically.
+On 30-06-20, 17:59, Kunihiko Hayashi wrote:
+> Add DT bindings for PHY interface built into ahci controller implemented
+> in UniPhier SoCs.
 
-Hence add the property to indicate the wlan driver
-to not map/unamp the firmware memory region
-dynamically.
+Rob ?
 
-Also add the chain1 voltage supply for wlan.
+> 
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>  .../bindings/phy/socionext,uniphier-ahci-phy.yaml  | 76 ++++++++++++++++++++++
+>  1 file changed, 76 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/socionext,uniphier-ahci-phy.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/socionext,uniphier-ahci-phy.yaml b/Documentation/devicetree/bindings/phy/socionext,uniphier-ahci-phy.yaml
+> new file mode 100644
+> index 0000000..bab2ff4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/socionext,uniphier-ahci-phy.yaml
+> @@ -0,0 +1,76 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/socionext,uniphier-ahci-phy.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Socionext UniPhier AHCI PHY
+> +
+> +description: |
+> +  This describes the deivcetree bindings for PHY interfaces built into
+> +  AHCI controller implemented on Socionext UniPhier SoCs.
+> +
+> +maintainers:
+> +  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - socionext,uniphier-pxs2-ahci-phy
+> +      - socionext,uniphier-pxs3-ahci-phy
+> +
+> +  reg:
+> +    description: PHY register region (offset and length)
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +  clocks:
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    oneOf:
+> +      - items:          # for PXs2
+> +        - const: link
+> +      - items:          # for others
+> +        - const: link
+> +        - const: phy
+> +
+> +  resets:
+> +    maxItems: 2
+> +
+> +  reset-names:
+> +    items:
+> +      - const: link
+> +      - const: phy
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#phy-cells"
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +  - reset-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    ahci-glue@65700000 {
+> +        compatible = "socionext,uniphier-pxs3-ahci-glue",
+> +                     "simple-mfd";
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +        ranges = <0 0x65700000 0x100>;
+> +
+> +        ahci_phy: phy@10 {
+> +            compatible = "socionext,uniphier-pxs3-ahci-phy";
+> +            reg = <0x10 0x10>;
+> +            #phy-cells = <0>;
+> +            clock-names = "link", "phy";
+> +            clocks = <&sys_clk 28>, <&sys_clk 30>;
+> +            reset-names = "link", "phy";
+> +            resets = <&sys_rst 28>, <&sys_rst 30>;
+> +        };
+> +    };
+> -- 
+> 2.7.4
 
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
----
-Changes from v1:
-- Add the wifi mac alias
-
-This patch is created on top of the change by
-Douglas Anderson.
-https://lkml.org/lkml/2020/6/25/817
-
-Also the dt-bindings for the chain1 voltage supply
-is added by the below patch series:
-https://patchwork.kernel.org/project/linux-wireless/list/?series=309137
----
- arch/arm64/boot/dts/qcom/sc7180-idp.dts | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index 472f7f4..c042d61 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -19,6 +19,7 @@
- 
- 	aliases {
- 		bluetooth0 = &bluetooth;
-+		wifi0 = &wifi;
- 		hsuart0 = &uart3;
- 		serial0 = &uart8;
- 	};
-@@ -391,10 +392,12 @@
- 
- &wifi {
- 	status = "okay";
-+	qcom,msa-fixed-perm;
- 	vdd-0.8-cx-mx-supply = <&vreg_l9a_0p6>;
- 	vdd-1.8-xo-supply = <&vreg_l1c_1p8>;
- 	vdd-1.3-rfa-supply = <&vreg_l2c_1p3>;
- 	vdd-3.3-ch0-supply = <&vreg_l10c_3p3>;
-+	vdd-3.3-ch1-supply = <&vreg_l11c_3p3>;
- 	wifi-firmware {
- 		iommus = <&apps_smmu 0xc2 0x1>;
- 	};
 -- 
-2.7.4
-
+~Vinod
