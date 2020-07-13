@@ -7,66 +7,63 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94823C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 02:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 359DBC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 02:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72E612070B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 02:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F3C4206F4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 02:17:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594606524;
-	bh=E3+c5kljqoqNsRLxsFojcCBmSVCwAZ2wSSbGAjIGrms=;
+	s=default; t=1594606678;
+	bh=v31vMi7ynx1XiseH1ZOMeZU6ugOoDG2CHW9KHbrBmaU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JteKfuo3zH1iTsGYuiriaPotXT+ZbGOpiQ5rvjaNE6lX6bQaMN3rfAJ09lOa0cLpN
-	 d6h0j9PpW1vdYJNr8JxHHeEzPiH84tJa9sqFRjSitof2rS34F3T0dae9kQD9cTvaT2
-	 Fc/UNPL4LIsZKmIktD8XiMj/BsHUoe9JkqWCm+R0=
+	b=ryptr3vhp0JqzWAjhSzeHuF1AgsjmURPz3+bOkzF3lGvgNGqJtFXCRXnlbjJyaKeW
+	 J7EDwKiMYlfKhhHkhjA0WpNAqBHRWJrQqZyzEwh3KoYHbyerth9gltTQjOZfRRurFn
+	 2kjPkoxlePzFFH/LCx7lnWXgCoUjinvQJx5DT1J8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbgGMCPX (ORCPT
+        id S1726465AbgGMCR5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Jul 2020 22:15:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44414 "EHLO mail.kernel.org"
+        Sun, 12 Jul 2020 22:17:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726261AbgGMCPX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 12 Jul 2020 22:15:23 -0400
+        id S1726261AbgGMCR5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 12 Jul 2020 22:17:57 -0400
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F306206D9;
-        Mon, 13 Jul 2020 02:15:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F1A5206D9;
+        Mon, 13 Jul 2020 02:17:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594606523;
-        bh=E3+c5kljqoqNsRLxsFojcCBmSVCwAZ2wSSbGAjIGrms=;
+        s=default; t=1594606676;
+        bh=v31vMi7ynx1XiseH1ZOMeZU6ugOoDG2CHW9KHbrBmaU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iomCkNnga4XFvjJcetTdijdrsrIDdqExtCg+NkgA7pUjYCWcicQ0t5ioW3x/pcVrL
-         QexDACviCGeSPNinUyBxc4ZGSn92Z1T6Zq6rPfoRqjk39+1Oht1Yk5JMVFl3GICI34
-         o9jyWXzmX1rBGoCofqI/Lvwjd7IiwZU+43x/z2nM=
-Date:   Mon, 13 Jul 2020 10:15:19 +0800
+        b=wg/hHcHDNbDrO2lEUyNe08emznimj5pe7YaRk/C3wLGMOKEvgMnckk/oGOhgpPlr2
+         MvuVMNugN5Gn9DVAeVB1qKJRXwywXJ/PwO01xPVJbY7SAPPilOCvkbo14hCk//9eKb
+         /AyuSpI7ZekWYHFfd/YfP4qhwoMf3Dh+JlUEfyNE=
+Date:   Mon, 13 Jul 2020 10:17:44 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Qiang Zhao <qiang.zhao@nxp.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        leoyang.li@nxp.com, Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [Patch V2] arm64: dts: ls1028a: Add DSPI flash nodes for
- LS1028a-qds
-Message-ID: <20200713021518.GU21277@dragon>
-References: <20200629024634.14582-1-qiang.zhao@nxp.com>
+To:     andy.tang@nxp.com
+Cc:     leoyang.li@nxp.com, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] arm64: dts: ls1046a: add more thermal zone support
+Message-ID: <20200713021735.GV21277@dragon>
+References: <20200629074519.28851-1-andy.tang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200629024634.14582-1-qiang.zhao@nxp.com>
+In-Reply-To: <20200629074519.28851-1-andy.tang@nxp.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 10:46:34AM +0800, Qiang Zhao wrote:
-> From: Xiaowei Bao <xiaowei.bao@nxp.com>
+On Mon, Jun 29, 2020 at 03:45:18PM +0800, andy.tang@nxp.com wrote:
+> From: Yuantian Tang <andy.tang@nxp.com>
 > 
-> Add the DSPI flash nodes into fsl-ls1028a-qds.dts
+> There are 5 thermal zones in ls1046a soc. Add the rest thermal zone
+> nodes to enable them.
 > 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
+> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
 
-Updated subject as 'arm64: dts: ls1028a-qds: Add DSPI flash nodes' and
-applied the patch.
-
-Shawn
+Applied both, thanks.
