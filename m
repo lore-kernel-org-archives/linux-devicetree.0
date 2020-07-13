@@ -2,31 +2,32 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E0BC433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 21:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC37BC433EB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 21:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AFF42082F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 21:35:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A440220EDD
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 21:35:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgGMVf2 (ORCPT
+        id S1726890AbgGMVfg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 17:35:28 -0400
+        Mon, 13 Jul 2020 17:35:36 -0400
 Received: from relmlor2.renesas.com ([210.160.252.172]:43762 "EHLO
         relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726150AbgGMVf2 (ORCPT
+        by vger.kernel.org with ESMTP id S1726150AbgGMVff (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 17:35:28 -0400
+        Mon, 13 Jul 2020 17:35:35 -0400
 X-IronPort-AV: E=Sophos;i="5.75,348,1589209200"; 
-   d="scan'208";a="51803346"
+   d="scan'208";a="51803356"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 14 Jul 2020 06:35:26 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 14 Jul 2020 06:35:34 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 8094940F7FC8;
-        Tue, 14 Jul 2020 06:35:22 +0900 (JST)
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id C3C6E40F7FC8;
+        Tue, 14 Jul 2020 06:35:30 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Vinod Koul <vkoul@kernel.org>,
@@ -44,44 +45,49 @@ Cc:     Magnus Damm <magnus.damm@gmail.com>,
         netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Prabhakar <prabhakar.csengg@gmail.com>
-Subject: [PATCH 0/9] R8A774E1 SoC enable support for IPMMU, DMAC, GPIO and AVB
-Date:   Mon, 13 Jul 2020 22:35:11 +0100
-Message-Id: <1594676120-5862-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 2/9] iommu/ipmmu-vmsa: Hook up R8A774E1 DT matching code
+Date:   Mon, 13 Jul 2020 22:35:13 +0100
+Message-Id: <1594676120-5862-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1594676120-5862-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <1594676120-5862-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi All,
+From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-This patch series adds device nodes for IPMMU, DMAC, GPIO
-and AVB nodes for RZ/G2H (R8A774E1) SoC.
+Add support for RZ/G2H (R8A774E1) SoC IPMMUs.
 
-Cheers,
-Prabhakar
+Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ drivers/iommu/ipmmu-vmsa.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Lad Prabhakar (3):
-  dt-bindings: iommu: renesas,ipmmu-vmsa: Add r8a774e1 support
-  dt-bindings: dma: renesas,rcar-dmac: Document R8A774E1 bindings
-  dt-bindings: gpio: renesas,rcar-gpio: Add r8a774e1 support
-
-Marian-Cristian Rotariu (6):
-  iommu/ipmmu-vmsa: Hook up R8A774E1 DT matching code
-  arm64: dts: renesas: r8a774e1: Add IPMMU device nodes
-  arm64: dts: renesas: r8a774e1: Add SYS-DMAC device nodes
-  arm64: dts: renesas: r8a774e1: Add GPIO device nodes
-  dt-bindings: net: renesas,ravb: Add support for r8a774e1 SoC
-  arm64: dts: renesas: r8a774e1: Add Ethernet AVB node
-
- .../bindings/dma/renesas,rcar-dmac.yaml       |   1 +
- .../bindings/gpio/renesas,rcar-gpio.yaml      |   1 +
- .../bindings/iommu/renesas,ipmmu-vmsa.yaml    |   1 +
- .../devicetree/bindings/net/renesas,ravb.txt  |   1 +
- arch/arm64/boot/dts/renesas/r8a774e1.dtsi     | 361 +++++++++++++++++-
- drivers/iommu/ipmmu-vmsa.c                    |   4 +
- 6 files changed, 350 insertions(+), 19 deletions(-)
-
+diff --git a/drivers/iommu/ipmmu-vmsa.c b/drivers/iommu/ipmmu-vmsa.c
+index b90cd9ff96f6..cbce88ac5a71 100644
+--- a/drivers/iommu/ipmmu-vmsa.c
++++ b/drivers/iommu/ipmmu-vmsa.c
+@@ -751,6 +751,7 @@ static const struct soc_device_attribute soc_rcar_gen3[] = {
+ static const struct soc_device_attribute soc_rcar_gen3_whitelist[] = {
+ 	{ .soc_id = "r8a774b1", },
+ 	{ .soc_id = "r8a774c0", },
++	{ .soc_id = "r8a774e1", },
+ 	{ .soc_id = "r8a7795", .revision = "ES3.*" },
+ 	{ .soc_id = "r8a77961", },
+ 	{ .soc_id = "r8a77965", },
+@@ -963,6 +964,9 @@ static const struct of_device_id ipmmu_of_ids[] = {
+ 	}, {
+ 		.compatible = "renesas,ipmmu-r8a774c0",
+ 		.data = &ipmmu_features_rcar_gen3,
++	}, {
++		.compatible = "renesas,ipmmu-r8a774e1",
++		.data = &ipmmu_features_rcar_gen3,
+ 	}, {
+ 		.compatible = "renesas,ipmmu-r8a7795",
+ 		.data = &ipmmu_features_rcar_gen3,
 -- 
 2.17.1
 
