@@ -2,122 +2,94 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EEDC433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A313C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B6E6206F4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:01:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UcZcvj6t"
+	by mail.kernel.org (Postfix) with ESMTP id 65D58206F4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:02:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729703AbgGMOBW (ORCPT
+        id S1729945AbgGMOCc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:01:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53504 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729695AbgGMOBW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 10:01:22 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BEF9C061755;
-        Mon, 13 Jul 2020 07:01:22 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id i14so6030034pfu.13;
-        Mon, 13 Jul 2020 07:01:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cCXKJLHZKOo9WepEq5/xoL1jF7eCdGbwLR/OdmMlRgE=;
-        b=UcZcvj6tdkMVOyI3IFIQG/8vSKdQqFGSaN+JmaVwOF9GbrNpDl52u97EGTC6WttrCB
-         +uq4lGa7Ki8pWAqvg/EdWy7KqgMrlKQb9DCYCLI4okUb/lbc0AbiuAYzQZyWERS/Ckhy
-         3bA943nAcgAIsMRA48e1dvIRLkAF//62qJ44RIuEj9mEbYNQu/+REF5b4paeoqxnWzsR
-         JU4I1Qr4GfVS0ABjiDG+geZ+1TySNVXkqMCwta91/jegJF/Qo3NHN25Rpf/QJZgo8aRD
-         FPpraNnOvK59kpPviG/wb9PTg4tt56zP1uY5XGqWGzYJzZTI5ADqEqk5TATkUz0ZUOJW
-         IdSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cCXKJLHZKOo9WepEq5/xoL1jF7eCdGbwLR/OdmMlRgE=;
-        b=XEm0ssD7Bz3C7mCOhEE50wSF+TLY3bDYUqKA8BdWsDZIW+wFJmYxroaA7jq6uUZDiQ
-         7ona2cXC34rWsduehv7fsX6dmViaFNMC9o+38PbPqScctVBooMg/ZaQii0hzkKjbVxDm
-         lp3dbOBdImfret99P4PTJeIy7q/YyeKiGHqTWjazdMH1jVmPVNmCM4B5qLXpPzGPpwL7
-         tRdAGplN0JvGm2+lsxcFvCCXvcWicjinLbiTQI8cB3M1xJkQQW2A38l+1qSKWJwJ7M4A
-         WUisQhY9FMV2VCrnRnGUMRsGRcOqB/F+YTtO4o/vQ8Ytqx5YAsUYOieU8f7MgCr+JAz/
-         3ahQ==
-X-Gm-Message-State: AOAM533/juXgaFY0L55WjPmdXLifoZ9cwyL7BdAGm94MNHV3mVzadMtR
-        m3wlIwcZ3acQtJXlzEEwoZCn7rKF
-X-Google-Smtp-Source: ABdhPJxqegTpxm4H1FI4lALz8ckkFIs7OKoYhLjveV0eADTl4m+2jIxGOwdCniuKxIKUeAb3ineT9w==
-X-Received: by 2002:a63:7c4d:: with SMTP id l13mr69353235pgn.12.1594648881800;
-        Mon, 13 Jul 2020 07:01:21 -0700 (PDT)
-Received: from hoboy (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id r2sm14185798pfh.106.2020.07.13.07.01.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 07:01:20 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 07:01:12 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Kurt Kanzenbach <kurt@linutronix.de>
-Cc:     Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org
-Subject: Re: [PATCH v1 4/8] net: dsa: hellcreek: Add support for hardware
- timestamping
-Message-ID: <20200713140112.GB27934@hoboy>
-References: <20200710113611.3398-1-kurt@linutronix.de>
- <20200710113611.3398-5-kurt@linutronix.de>
- <20200713095700.rd4u4t6thkzfnlll@skbuf>
- <87k0z7n0m9.fsf@kurt>
+        Mon, 13 Jul 2020 10:02:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:36668 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729659AbgGMOCc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 10:02:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE97530E;
+        Mon, 13 Jul 2020 07:02:31 -0700 (PDT)
+Received: from [10.57.62.178] (unknown [10.57.62.178])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 08FA73F7BB;
+        Mon, 13 Jul 2020 07:02:28 -0700 (PDT)
+Subject: Re: [PATCH v10 2/5] iommu/arm-smmu: ioremap smmu mmio region before
+ implementation init
+To:     Krishna Reddy <vdumpa@nvidia.com>, joro@8bytes.org,
+        will@kernel.org, robh+dt@kernel.org, treding@nvidia.com,
+        jonathanh@nvidia.com
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org, yhsu@nvidia.com, snikam@nvidia.com,
+        praithatha@nvidia.com, talho@nvidia.com, bbiswas@nvidia.com,
+        mperttunen@nvidia.com, nicolinc@nvidia.com, bhuntsman@nvidia.com,
+        nicoleotsuka@gmail.com
+References: <20200708050017.31563-1-vdumpa@nvidia.com>
+ <20200708050017.31563-3-vdumpa@nvidia.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <49c222ce-e889-937a-6f05-eb1b46739306@arm.com>
+Date:   Mon, 13 Jul 2020 15:02:28 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87k0z7n0m9.fsf@kurt>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200708050017.31563-3-vdumpa@nvidia.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 12:57:34PM +0200, Kurt Kanzenbach wrote:
-> Hi Vladimir,
+On 2020-07-08 06:00, Krishna Reddy wrote:
+> ioremap smmu mmio region before calling into implementation init.
+> This is necessary to allow mapped address available during vendor
+> specific implementation init.
+
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+
+> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
+> ---
+>   drivers/iommu/arm-smmu.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> On Mon Jul 13 2020, Vladimir Oltean wrote:
-> >> +/* Get a pointer to the PTP header in this skb */
-> >> +static u8 *parse_ptp_header(struct sk_buff *skb, unsigned int type)
-> >
-> > Maybe this and the function from mv88e6xxx could share the same
-> > implementation somehow.
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index d2054178df35..e03e873d3bca 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -2120,10 +2120,6 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+>   	if (err)
+>   		return err;
+>   
+> -	smmu = arm_smmu_impl_init(smmu);
+> -	if (IS_ERR(smmu))
+> -		return PTR_ERR(smmu);
+> -
+>   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>   	ioaddr = res->start;
+>   	smmu->base = devm_ioremap_resource(dev, res);
+> @@ -2135,6 +2131,10 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+>   	 */
+>   	smmu->numpage = resource_size(res);
+>   
+> +	smmu = arm_smmu_impl_init(smmu);
+> +	if (IS_ERR(smmu))
+> +		return PTR_ERR(smmu);
+> +
+>   	num_irqs = 0;
+>   	while ((res = platform_get_resource(pdev, IORESOURCE_IRQ, num_irqs))) {
+>   		num_irqs++;
 > 
-> Actually both functions are identical. Should it be moved to the ptp
-> core, maybe? Then, all drivers could use that. I guess we should also
-> define a PTP offset for the reserved field which is accessed in
-> hellcreek_get_reserved_field() just with 16 instead of a proper macro
-> constant.
-
-I support re-factoring the code that parses the PTP header.  Last time
-I looked, each driver needed slightly different fields, and I didn't
-see an easy way to accommodate them all.
-
-> > I would like to get some clarification on whether "SKBTX_IN_PROGRESS"
-> > should be set in shtx->tx_flags or not. On one hand, it's asking for
-> > trouble, on the other hand, it's kind of required for proper compliance
-> > to API pre-SO_TIMESTAMPING...
-> 
-> Hm. We actually oriented our code on the mv88e6xxx time stamping code base.
-
-Where in mv88e6xxx does the driver set SKBTX_IN_PROGRESS?
-
-I don't think it makes sense for DSA drivers to set this bit, as it
-serves no purpose in the DSA context.
-
-Thanks,
-Richard
