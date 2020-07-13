@@ -2,162 +2,178 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 722FEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 04:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00977C433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 05:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A2A52075F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 04:59:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF1632073A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 05:05:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594616385;
-	bh=Uo3ZuWzbEoHlUPyhOZImPSSVLS7iqxNl2AlQNgt1NO0=;
+	s=default; t=1594616732;
+	bh=JxJp9VSiVtBSKbZYDcCaTaxt/f4xJQVvXKj7oFzNxxw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cEbDtBSrwke24uOkrP1FbQuc2i1W4jjGxf/2hAG29dnIiB+EBwZRBfWc5edWzVHdi
-	 dWuYrKFXL7h87Vs2J1v6DZuVgXWOPdm4x4Z5QMHr0oyjn89JWXVqu+PZsU38C4gkHh
-	 b+A3pN+925ZS6ObDWgEfDnbq6e7rYYc2f0yIk5jY=
+	b=2AVmSIBh3910I2GfOhdmcL6lkJPnN7W1f7E5SbYZope1qfPX7RLQR1IR82GyWWr2G
+	 IAoWAFwKDpHcjiyQaFkxpWqS4H6XUqoQM2IGjKWFPJ55zkBZEF5Xu29dvYu0zgZenc
+	 9Er2lnHkhOrKnDz8wLRl4MuXzNXylBbuhTlG7GAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgGME7o (ORCPT
+        id S1726991AbgGMFFc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 00:59:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47616 "EHLO mail.kernel.org"
+        Mon, 13 Jul 2020 01:05:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbgGME7o (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 00:59:44 -0400
+        id S1725830AbgGMFFc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 01:05:32 -0400
 Received: from localhost (unknown [122.182.251.219])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38D7E2073A;
-        Mon, 13 Jul 2020 04:59:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A125120724;
+        Mon, 13 Jul 2020 05:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594616384;
-        bh=Uo3ZuWzbEoHlUPyhOZImPSSVLS7iqxNl2AlQNgt1NO0=;
+        s=default; t=1594616731;
+        bh=JxJp9VSiVtBSKbZYDcCaTaxt/f4xJQVvXKj7oFzNxxw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NcqwQ7km3Q3UMyE91gFbM9UWbd4Gv6xVn+D2wz7LOZj1z51Z7/HbYQaeOhygYP5hv
-         TOVd1ZRZ4hm3eY9OgpWx4J9XRrHv5mmPWGUZByY7VN8FKN5LTGwxwq/VlYE6L3dYcx
-         ayOVfMIxg3B5mvpnfyYpQrzwseWhXjgMI6r5cGMw=
-Date:   Mon, 13 Jul 2020 10:29:40 +0530
+        b=HqnQ2+SiDhAGgzNWnPs2gt0UTDKTww104BASz7gdSal7PjzQbx9Cvb2l9ppmjNl9B
+         p1VjslY09VfaebQt1i0ani+oC4d6Qs5zZgjAF4YH8wgWYVUh9fYfdfprYlxkig3hg4
+         gXjydw3C0S2tJFgcMq8ryMyDrnncqXGm9B7692oo=
+Date:   Mon, 13 Jul 2020 10:35:27 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Rob Herring <robh+dt@kernel.org>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: phy: Add UniPhier AHCI PHY
- description
-Message-ID: <20200713045940.GQ34333@vkoul-mobl>
+Subject: Re: [PATCH v2 2/2] phy: socionext: Add UniPhier AHCI PHY driver
+ support
+Message-ID: <20200713050527.GR34333@vkoul-mobl>
 References: <1593507574-10007-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1593507574-10007-2-git-send-email-hayashi.kunihiko@socionext.com>
+ <1593507574-10007-3-git-send-email-hayashi.kunihiko@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1593507574-10007-2-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <1593507574-10007-3-git-send-email-hayashi.kunihiko@socionext.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 On 30-06-20, 17:59, Kunihiko Hayashi wrote:
-> Add DT bindings for PHY interface built into ahci controller implemented
-> in UniPhier SoCs.
 
-Rob ?
+> +++ b/drivers/phy/socionext/phy-uniphier-ahci.c
+> @@ -0,0 +1,335 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * phy-uniphier-ahci.c - PHY driver for UniPhier AHCI controller
+> + * Copyright 2016-2018, Socionext Inc.
 
-> 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  .../bindings/phy/socionext,uniphier-ahci-phy.yaml  | 76 ++++++++++++++++++++++
->  1 file changed, 76 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/socionext,uniphier-ahci-phy.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/socionext,uniphier-ahci-phy.yaml b/Documentation/devicetree/bindings/phy/socionext,uniphier-ahci-phy.yaml
-> new file mode 100644
-> index 0000000..bab2ff4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/socionext,uniphier-ahci-phy.yaml
-> @@ -0,0 +1,76 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/socionext,uniphier-ahci-phy.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Socionext UniPhier AHCI PHY
-> +
-> +description: |
-> +  This describes the deivcetree bindings for PHY interfaces built into
-> +  AHCI controller implemented on Socionext UniPhier SoCs.
-> +
-> +maintainers:
-> +  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - socionext,uniphier-pxs2-ahci-phy
-> +      - socionext,uniphier-pxs3-ahci-phy
-> +
-> +  reg:
-> +    description: PHY register region (offset and length)
-> +
-> +  "#phy-cells":
-> +    const: 0
-> +
-> +  clocks:
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    oneOf:
-> +      - items:          # for PXs2
-> +        - const: link
-> +      - items:          # for others
-> +        - const: link
-> +        - const: phy
-> +
-> +  resets:
-> +    maxItems: 2
-> +
-> +  reset-names:
-> +    items:
-> +      - const: link
-> +      - const: phy
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#phy-cells"
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +  - reset-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    ahci-glue@65700000 {
-> +        compatible = "socionext,uniphier-pxs3-ahci-glue",
-> +                     "simple-mfd";
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +        ranges = <0 0x65700000 0x100>;
-> +
-> +        ahci_phy: phy@10 {
-> +            compatible = "socionext,uniphier-pxs3-ahci-phy";
-> +            reg = <0x10 0x10>;
-> +            #phy-cells = <0>;
-> +            clock-names = "link", "phy";
-> +            clocks = <&sys_clk 28>, <&sys_clk 30>;
-> +            reset-names = "link", "phy";
-> +            resets = <&sys_rst 28>, <&sys_rst 30>;
-> +        };
-> +    };
-> -- 
-> 2.7.4
+we are in 2020 now!
 
+> +static int uniphier_ahciphy_pxs2_power_on(struct uniphier_ahciphy_priv *priv)
+> +{
+> +	int ret;
+> +	u32 val;
+> +
+> +	/* enable reference clock for PHY */
+> +	val = readl(priv->base + CKCTRL);
+> +	val |= CKCTRL_REF_SSP_EN;
+> +	writel(val, priv->base + CKCTRL);
+> +
+> +	/* release port reset */
+> +	val = readl(priv->base + CKCTRL);
+> +	val &= ~CKCTRL_P0_RESET;
+> +	writel(val, priv->base + CKCTRL);
+> +
+> +	/* wait until PLL is ready */
+> +	if (priv->data->is_ready_high)
+> +		ret = readl_poll_timeout(priv->base + CKCTRL, val,
+> +					 (val & CKCTRL_P0_READY), 200, 400);
+> +	else
+> +		ret = readl_poll_timeout(priv->base + CKCTRL, val,
+> +					 !(val & CKCTRL_P0_READY), 200, 400);
+> +	if (ret) {
+> +		dev_err(priv->dev, "Failed to check whether PHY PLL is ready\n");
+> +		goto out_disable_clock;
+> +	}
+> +
+> +	return 0;
+> +
+> +out_disable_clock:
+> +	/* assert port reset */
+> +	val = readl(priv->base + CKCTRL);
+> +	val |= CKCTRL_P0_RESET;
+> +	writel(val, priv->base + CKCTRL);
+> +
+> +	/* disable reference clock for PHY */
+> +	val = readl(priv->base + CKCTRL);
+> +	val &= ~CKCTRL_REF_SSP_EN;
+> +	writel(val, priv->base + CKCTRL);
+
+this seems to be repeated patter, why not add a modifyl() helper here..
+
+> +static int uniphier_ahciphy_pxs3_init(struct uniphier_ahciphy_priv *priv)
+> +{
+> +	int i;
+> +	u32 val;
+> +
+> +	/* setup port parameter */
+> +	val = readl(priv->base + TXCTRL0);
+> +	val &= ~TXCTRL0_AMP_G3_MASK;
+> +	val |= FIELD_PREP(TXCTRL0_AMP_G3_MASK, 0x73);
+> +	val &= ~TXCTRL0_AMP_G2_MASK;
+> +	val |= FIELD_PREP(TXCTRL0_AMP_G2_MASK, 0x46);
+> +	val &= ~TXCTRL0_AMP_G1_MASK;
+> +	val |= FIELD_PREP(TXCTRL0_AMP_G1_MASK, 0x42);
+> +	writel(val, priv->base + TXCTRL0);
+> +
+> +	val = readl(priv->base + TXCTRL1);
+> +	val &= ~TXCTRL1_DEEMPH_G3_MASK;
+> +	val |= FIELD_PREP(TXCTRL1_DEEMPH_G3_MASK, 0x23);
+> +	val &= ~TXCTRL1_DEEMPH_G2_MASK;
+> +	val |= FIELD_PREP(TXCTRL1_DEEMPH_G2_MASK, 0x05);
+> +	val &= ~TXCTRL1_DEEMPH_G1_MASK;
+> +	val |= FIELD_PREP(TXCTRL1_DEEMPH_G1_MASK, 0x05);
+> +
+> +	val = readl(priv->base + RXCTRL);
+> +	val &= ~RXCTRL_LOS_LVL_MASK;
+> +	val |= FIELD_PREP(RXCTRL_LOS_LVL_MASK, 0x9);
+> +	val &= ~RXCTRL_LOS_BIAS_MASK;
+> +	val |= FIELD_PREP(RXCTRL_LOS_BIAS_MASK, 0x2);
+> +	val &= ~RXCTRL_RX_EQ_MASK;
+> +	val |= FIELD_PREP(RXCTRL_RX_EQ_MASK, 0x1);
+> +
+> +	/* dummy read 25 times */
+
+why?
+
+> +static int uniphier_ahciphy_init(struct phy *phy)
+> +{
+> +	struct uniphier_ahciphy_priv *priv = phy_get_drvdata(phy);
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(priv->clk_parent);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = reset_control_deassert(priv->rst_parent);
+> +	if (ret)
+> +		goto out_clk_disable;
+> +
+> +	if (priv->data->init) {
+> +		ret = priv->data->init(priv);
+> +		if (ret)
+> +			goto out_rst_assert;
+> +	}
+> +
+> +	return ret;
+
+return 0?
+
+> +static const struct uniphier_ahciphy_soc_data uniphier_pxs2_data = {
+> +	.init = NULL,
+
+Isn't this superfluous ?
 -- 
 ~Vinod
