@@ -2,101 +2,120 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D977C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 20:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8968AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 20:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DD2A20809
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 20:55:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60ABA20771
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 20:56:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594673817;
+	bh=4wfonj6lsRhQ0cW3cAS4E4Zpd7EpJTMw1F1kI7y+4MU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=vQQfqSa68cDjclmZ7hH/IWUEChTwUIbnqnAV61dqEMYNVAwJ+GkY1IJq/3pshb2u4
+	 dEL2h/M4b6llploU9mv0PpPblmJHv1QWDsW5qcPf7AniMrMqcYmP3wWz5ZkikM4eJZ
+	 gcFG6F8G21CRi358EeqWRbhRsxOINYopnHHTO1zc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgGMUzR (ORCPT
+        id S1726398AbgGMU45 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 16:55:17 -0400
-Received: from mga07.intel.com ([134.134.136.100]:49219 "EHLO mga07.intel.com"
+        Mon, 13 Jul 2020 16:56:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726338AbgGMUzR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 16:55:17 -0400
-IronPort-SDR: EbeLArq4HkKuXrlRxYpB/WS2qvAXL+eK3WEI4G9/favHK5tDRXMs139ILa9JUq6sYcrvGIBs++
- dPhiTZl6KmIg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="213545772"
-X-IronPort-AV: E=Sophos;i="5.75,348,1589266800"; 
-   d="scan'208";a="213545772"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 13:55:16 -0700
-IronPort-SDR: 7szJfcXPONfImWsDE0U1Og3oR6gRPzY9NXu27bBlEUhLsXyTzhLMHYMpnGwjaJkpOUSxedhjvm
- WmmYlkewsJUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,348,1589266800"; 
-   d="scan'208";a="390288665"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.172.11]) ([10.212.172.11])
-  by fmsmga001.fm.intel.com with ESMTP; 13 Jul 2020 13:55:15 -0700
-Subject: Re: [PATCH v7 05/11] dmaengine: Introduce DMA-device device_caps
- callback
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
- <20200709224550.15539-6-Sergey.Semin@baikalelectronics.ru>
- <20200710084503.GE3703480@smile.fi.intel.com>
- <20200710093834.su3nsjesnhntpd6d@mobilestation>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <07d4a977-1de6-b611-3d4f-7c7d6cd7fe5f@intel.com>
-Date:   Mon, 13 Jul 2020 13:55:14 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726325AbgGMU44 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 16:56:56 -0400
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD56F207BC;
+        Mon, 13 Jul 2020 20:56:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594673816;
+        bh=4wfonj6lsRhQ0cW3cAS4E4Zpd7EpJTMw1F1kI7y+4MU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=WbO0QXZGfr9zYDH55vgD8iBWLb5D/FaD/5nYpP46EnLAcstG92jNdleAamMO1EouO
+         H7LbzwE2jQI/LRr28s1CowjmWd1nsexCb4ZsrmOS40v3pBPe7+Bq0KPh+Fvw4Cdstb
+         8nMsGHu7tmUtSo3u0oHjpAYzyYyWKD+bpILVh5cY=
+Received: by mail-oi1-f170.google.com with SMTP id e4so12195033oib.1;
+        Mon, 13 Jul 2020 13:56:55 -0700 (PDT)
+X-Gm-Message-State: AOAM5323KRSXP0GqV42fkTPpA6SHNErty962cqAIzcOtZfeMxKWesMeK
+        W59YjH/KztTm2si/Wdevb9tJoQDEpT9/rnyxDA==
+X-Google-Smtp-Source: ABdhPJwVv71g0MzRH+ftAnZ69z1/ABXIEb9TxKX2p2+w/ni7qEXb6zxqydnTbTljeSr/4/pjPY6VB2WkZ8y6LFjZPgo=
+X-Received: by 2002:aca:30d2:: with SMTP id w201mr1103898oiw.147.1594673815264;
+ Mon, 13 Jul 2020 13:56:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200710093834.su3nsjesnhntpd6d@mobilestation>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200710090618.28945-1-kurt@linutronix.de> <20200710090618.28945-2-kurt@linutronix.de>
+ <20200710163940.GA2775145@bogus> <874kqewahb.fsf@kurt> <20200711165203.GO1014141@lunn.ch>
+In-Reply-To: <20200711165203.GO1014141@lunn.ch>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 13 Jul 2020 14:56:43 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKe47GdjVXJ6GeRCfZ7v+WKxee6P2jAi64+M5BYaf=8SQ@mail.gmail.com>
+Message-ID: <CAL_JsqKe47GdjVXJ6GeRCfZ7v+WKxee6P2jAi64+M5BYaf=8SQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] dt-bindings: net: dsa: Add DSA yaml binding
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Kurt Kanzenbach <kurt@linutronix.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Sat, Jul 11, 2020 at 10:52 AM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> On Sat, Jul 11, 2020 at 01:35:12PM +0200, Kurt Kanzenbach wrote:
+> > On Fri Jul 10 2020, Rob Herring wrote:
+> > > On Fri, 10 Jul 2020 11:06:18 +0200, Kurt Kanzenbach wrote:
+> > >> For future DSA drivers it makes sense to add a generic DSA yaml binding which
+> > >> can be used then. This was created using the properties from dsa.txt. It
+> > >> includes the ports and the dsa,member property.
+> > >>
+> > >> Suggested-by: Florian Fainelli <f.fainelli@gmail.com>
+> > >> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
+> > >> ---
+> > >>  .../devicetree/bindings/net/dsa/dsa.yaml      | 80 +++++++++++++++++++
+> > >>  1 file changed, 80 insertions(+)
+> > >>  create mode 100644 Documentation/devicetree/bindings/net/dsa/dsa.yaml
+> > >>
+> > >
+> > >
+> > > My bot found errors running 'make dt_binding_check' on your patch:
+> > >
+> > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/ti,cpsw-switch.example.dt.yaml: switch@0: 'ports' is a required property
+> > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.example.dt.yaml: switch@10: 'ports' is a required property
+> >
+> > Okay, the requirement for 'ports' has be to removed.
+>
+> Hummm....
+>
+> ti.cpsw is not a DSA switch. So this binding should not apply to
+> it. It is a plain switchdev switch.
 
+Well, the binding looks very similar with the same
+ethernet-ports/port@X structure. So maybe we need a switch schema that
+covers both and then a DSA schema.
 
-On 7/10/2020 2:38 AM, Serge Semin wrote:
-> On Fri, Jul 10, 2020 at 11:45:03AM +0300, Andy Shevchenko wrote:
->> On Fri, Jul 10, 2020 at 01:45:44AM +0300, Serge Semin wrote:
->>> There are DMA devices (like ours version of Synopsys DW DMAC) which have
->>> DMA capabilities non-uniformly redistributed between the device channels.
->>> In order to provide a way of exposing the channel-specific parameters to
->>> the DMA engine consumers, we introduce a new DMA-device callback. In case
->>> if provided it gets called from the dma_get_slave_caps() method and is
->>> able to override the generic DMA-device capabilities.
->>
-> 
->> In light of recent developments consider not to add 'slave' and a such words to the kernel.
-> 
-> As long as the 'slave' word is used in the name of the dma_slave_caps
-> structure and in the rest of the DMA-engine subsystem, it will be ambiguous
-> to use some else terminology. If renaming needs to be done, then it should be
-> done synchronously for the whole subsystem.
+> The qcom,ipq806 is just an MDIO bus master. The DSA binding might
+> apply, for a specific .dts file, if that dts file has a DSA switch on
+> the bus. But in general, it should not apply.
+>
+> So i actually think you need to work out why this binding is being
+> applied when it should not be.
+>
+> I suspect it is the keyword 'switch'. switch does not imply it is a
+> DSA switch. There are other sorts of switches as well.
 
-What about just calling it dma_device_caps? Consider this is a useful function 
-not only slave DMA will utilize this. I can see this being useful for some of my 
-future code with idxd driver.
+Yes, by default, we match on compatible or node name if no compatible.
+The simple solution here is adding 'select: false' and then dsa.yaml
+will only be applied when explicitly referenced by the h/w specific
+bindings.
 
-> 
-> -Sergey
-> 
->>
->>
->> -- 
->> With Best Regards,
->> Andy Shevchenko
->>
->>
+There's also mscc-ocelot which is not yet a schema.
+
+Rob
