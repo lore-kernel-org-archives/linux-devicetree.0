@@ -2,143 +2,134 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE2AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 17:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD59C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 17:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A84002075D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 17:01:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594659679;
-	bh=YP+Q3ycNjgRpQIKzSN0RepzmavN2DDlJsBGVnx+Kb0M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D02DgDVMsfEHZHMIewTIXAIpN3ZWJzEEVz6PTLLHTW16WMV9PqPRTS6lko674aeQa
-	 s6KoeBfkmjm6m/vGX/jbzDpav7eh/oErFLp6sCGeCNoTFHmYXwxkRMJH/DkvuINdHa
-	 XZC4DmnyFOvUHyToqiBoZgU/fu9RNKaPozf+FvRw=
+	by mail.kernel.org (Postfix) with ESMTP id 0BBE52075D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 17:03:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sqYyZCjl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730000AbgGMRBT (ORCPT
+        id S1729751AbgGMRDn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 13:01:19 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:35678 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729751AbgGMRBT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 13:01:19 -0400
-Received: by mail-il1-f195.google.com with SMTP id t18so11820096ilh.2;
-        Mon, 13 Jul 2020 10:01:18 -0700 (PDT)
+        Mon, 13 Jul 2020 13:03:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729849AbgGMRDn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 13:03:43 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8AB8C061794
+        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 10:03:42 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id o11so17384006wrv.9
+        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 10:03:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CPSWw64mXOwsZCsijrwvsAEz1b4GFJuj5M6D0TIa2Y4=;
+        b=sqYyZCjlzGtKUdjQ8mhJhTfzzemy2MkNKIWqAUalFwRGpbEYxDschPntoZzktQOiAu
+         K+h53t1qzpSeSlG7jIs+5itZw7L3aoHSXonlpbOcTIk4FcPQgaLjOU+sz74Dr8PCz+So
+         gpMoAdFgVaZUl4nWgwg5rrx+GaRcaIsUVl+KHwGU1xC4+e0FvK4AoW5bfyO6KnJ/MlTg
+         nWomACfGj8IQL7NQCAS8To/F62fE9GAqBkiw32JXvgfE9zvZ5Vp1ZOzPzWLrKZVCWrfq
+         OoFVAiW6pdBdKGXZJK6UQBrqlM7d0egxtWC+Au3kS/B2IUd7UQ0FhsnW7x6JGGHiEwGC
+         hGgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=u+ATDfebf9MV39yazJSR2REjUJRTM5Ietg8G+hjq9hs=;
-        b=ZxAgbNgRqB6fP1D8x2d6i8HVjRG+vGvJxZiaTYoESfpplqy5Tdd5Z14JvIKWGz1V3x
-         7UKTTBpJ3IhlegV+Jy6Kmxmeo1F4yq9/ksy8dz9HNAg47zwqlfLI/nDn5uVLiX9WR5RH
-         9s5qHAxyCYe03Ww1Mz6jZhGLAJpTqBTVVf9kUgZ7s9dFpArqj7C0fPPytXS0wdh2V+cZ
-         B4NIVIz4H6ZyQPS+38/vJUA/YwbmLPGNKcJ/7aAj3DE1UxjRHHg/fu59Saig4l9FYiIX
-         21QZ5MSsksiA6p+Dw46BwCWckft3gBiVZxcRtrbQgvbM3yvb4l9CNtlu59g39zbe4j4x
-         TviQ==
-X-Gm-Message-State: AOAM531a63pfJT1qCnMJKMp7As/KrvaHSciKekD5Uu01mhodzoSUVkNE
-        FKlrCrRdmmUh5KmPEn+Eow==
-X-Google-Smtp-Source: ABdhPJz8Xnzy5VMGLC1oVbharKqEmV8XouNZObzNUKUHDywbuYQ837jCWWk9uWJgtsZ2IZZCJw3hPw==
-X-Received: by 2002:a92:9892:: with SMTP id a18mr656663ill.60.1594659678061;
-        Mon, 13 Jul 2020 10:01:18 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id w4sm7909214ioc.23.2020.07.13.10.01.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 10:01:17 -0700 (PDT)
-Received: (nullmailer pid 384200 invoked by uid 1000);
-        Mon, 13 Jul 2020 17:01:16 -0000
-Date:   Mon, 13 Jul 2020 11:01:16 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        linus.walleij@linaro.org, gregkh@linuxfoundation.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        stefano.stabellini@xilinx.com, tomase@xilinx.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] dt-bindings: bus: Add firewall bindings
-Message-ID: <20200713170116.GA364356@bogus>
-References: <20200701132523.32533-1-benjamin.gaignard@st.com>
- <20200701132523.32533-2-benjamin.gaignard@st.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CPSWw64mXOwsZCsijrwvsAEz1b4GFJuj5M6D0TIa2Y4=;
+        b=tQChovW2GfoPtO5p0zP75KBaM0tB46CybbxZLYVLdlhr6/kS9m8dQ7uCv7tq0I41L8
+         6GoA7BoitoShmIdxc8ySZbKfgE7RfG+S806y5ZBblWoz0F1v8RsAPWhK+ZuKo+g7gzWG
+         F4PxgGRYrx2RwNWVvh0WaL6Oq+19bcPO9g/XrjO1njHosmUaAVhe+zmCA+0etMvGw7VL
+         Ub0JfoWr/c+qC1DubbTNJEW69ULE9ZFEsj4LLND2mHggyYjSqT2lyk/Fs6gG3YTloAAR
+         2y+jMGAFejg2h6+SHhuVMj+ZtWrZMMGGGOdjoS5iu8sAirGizmNk58CjX2iHJMm5Mbuj
+         dbJg==
+X-Gm-Message-State: AOAM533aWzfBTeL5jf51UFXqeA8H64ew9i9j/mWttd3w6fD77QGISXxL
+        yGVfJL/QldpK1sAVpO/sJ2FR3Q==
+X-Google-Smtp-Source: ABdhPJxwQBfsNMkNI4xGLvZYHPzk1Tka3WLrm/vB852YmxjUd1eWVokbCzi7pGH2UsnflDHI2l+6iw==
+X-Received: by 2002:adf:cf0c:: with SMTP id o12mr307750wrj.265.1594659821364;
+        Mon, 13 Jul 2020 10:03:41 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:501b:b12d:3463:93f8? ([2a01:e34:ed2f:f020:501b:b12d:3463:93f8])
+        by smtp.googlemail.com with ESMTPSA id a22sm304308wmj.9.2020.07.13.10.03.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jul 2020 10:03:40 -0700 (PDT)
+Subject: Re: [RFC PATCH 1/4] dt-bindings:thermal:Add cold trip point type
+To:     Thara Gopinath <thara.gopinath@linaro.org>, rui.zhang@intel.com,
+        robh+dt@kernel.org
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200710135154.181454-1-thara.gopinath@linaro.org>
+ <20200710135154.181454-2-thara.gopinath@linaro.org>
+ <08503e0c-c8db-6d03-9692-5339dadf6c4f@linaro.org>
+ <2b845792-41f0-7fb1-122e-a77aa70c9a3c@linaro.org>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <b1ee5a73-863b-c6d2-5d09-1ac231f40fe2@linaro.org>
+Date:   Mon, 13 Jul 2020 19:03:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200701132523.32533-2-benjamin.gaignard@st.com>
+In-Reply-To: <2b845792-41f0-7fb1-122e-a77aa70c9a3c@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 03:25:19PM +0200, Benjamin Gaignard wrote:
-> Add schemas for firewall consumer and provider.
+On 13/07/2020 19:01, Thara Gopinath wrote:
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  .../bindings/bus/stm32/firewall-consumer.yaml      | 36 ++++++++++++++++++++++
->  .../bindings/bus/stm32/firewall-provider.yaml      | 18 +++++++++++
->  2 files changed, 54 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml
->  create mode 100644 Documentation/devicetree/bindings/bus/stm32/firewall-provider.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml b/Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml
-> new file mode 100644
-> index 000000000000..d3d76f99b38d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml
-> @@ -0,0 +1,36 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bus/stm32/firewall-consumer.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Common Bus Firewall consumer binding
+> On 7/13/20 11:05 AM, Daniel Lezcano wrote:
+>> On 10/07/2020 15:51, Thara Gopinath wrote:
+>>> Extend thermal trip point type property to include "cold" trip type
+>>> indicating point in the temperature domain below which a warming action
+>>> must be intiated.
+>>>
+>>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+>>> ---
+>>>   Documentation/devicetree/bindings/thermal/thermal.txt | 1 +
+>>>   1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt
+>>> b/Documentation/devicetree/bindings/thermal/thermal.txt
+>>> index f78bec19ca35..1689d9ba1471 100644
+>>> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
+>>> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
+>>> @@ -87,6 +87,7 @@ Required properties:
+>>>       "active":    A trip point to enable active cooling
+>>>       "passive":    A trip point to enable passive cooling
+>>>       "hot":        A trip point to notify emergency
+>>> +    "cold":        A trip point to enable warming
+>>>       "critical":    Hardware not reliable.
+>>>     Type: string
+>>
+>>
+>> thermal.txt should have been removed. Perhaps, a patch is missing. The
+>> thermal.txt has been converted into 3 yaml schema.
+>>
+>> The change should be in thermal-zones.yaml.
+> 
+> Hi Daniel..
+> 
+> Thanks for the review. My bad.. I will fix this in the next version.
+> I can send a patch removing thermal.txt as well
 
-I'm all for common bindings, but I want to see more than 1 user before 
-accepting this. There's been some other postings for similar h/w 
-(AFAICT) recently.
+Yes, sure.
 
-> +
-> +description: |
-> +  Firewall properties provide the possible firewall bus controller
-> +  configurations for a device.
-> +  Bus firewall controllers are typically used to control if a hardware
-> +  block can perform read or write operations on bus.
-> +  The contents of the firewall bus configuration properties are defined by
-> +  the binding for the individual firewall controller device.
-> +
-> +  The first configuration 'firewall-0' or the one named 'default' is
-> +  applied before probing the device itself.
+Thanks
 
-This is a Linux implementation detail and debatable whether the core 
-should do this or drivers.
 
-> +
-> +maintainers:
-> +  - Benjamin Gaignard <benjamin.gaignard@st.com>
-> +
-> +# always select the core schema
-> +select: true
-> +
-> +properties:
-> +  firewall-0: true
-> +
-> +  firewall-names: true
-> +
-> +patternProperties:
-> +  "firewall-[0-9]":
-> +    $ref: "/schemas/types.yaml#/definitions/phandle-array"
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-So I guess multiple properties is to encode all the modes into DT like 
-pinctrl does. Is that really necessary? I don't think so as I wouldn't 
-expect modes to be defined by the consumer, but by the provider in this 
-case. To use pinctrl as a example, we could have pad setting per MMC 
-speed. That has to be in the consumer side as the pinctrl knows nothing 
-about MMC.
-
-Rob
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
