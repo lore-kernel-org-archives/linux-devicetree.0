@@ -2,124 +2,140 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3552CC433E5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 09:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D3F5C433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 09:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 130152075B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 09:42:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lcI55Yvo"
+	by mail.kernel.org (Postfix) with ESMTP id 145122075B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 09:46:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbgGMJmu (ORCPT
+        id S1729562AbgGMJqN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 05:42:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40020 "EHLO
+        Mon, 13 Jul 2020 05:46:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbgGMJmt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 05:42:49 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CD59C061794
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 02:42:49 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id p1so5287325pls.4
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 02:42:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kucW4jxemtt/pXZ+E7AnSMC/PbTa/AsJZUR8UTzZMJ4=;
-        b=lcI55YvoWw3tjd74BpYl3dOvn6cD8IGpI18wAuSDdfI4sk/yUrXuYryw5dMDR3ba1H
-         wsDroptgzsdRf6HDnuuC9KtEUmxNLkSugmrrZZWJ+TrxRInGvzQu+V8U1KyCGsgmzQxz
-         utd2+/BqJCDwDxIeA96VNW5V1m1uo/asivNCEOTBFLElvOGHzz5oKsGQpwERc+BFy2EJ
-         tVygl8BjJ+ZYkfzJlScudQJmmd2ndfRU8setyiwGZRWSA7yS4TGV1osn/KyuhFmsufe5
-         QoYRNH63+CWoFr39Gaeeza7qt7cIfKrbEIIgbUzn1Fny9/V/FPtfPgrwrwYUwxshYy9F
-         RIzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kucW4jxemtt/pXZ+E7AnSMC/PbTa/AsJZUR8UTzZMJ4=;
-        b=JyqHapAcnYUVDEIunku+fuXLbB4qCDA2WTqT1lm7DJxWyOS1AbSAcDT6mTpxShqNo9
-         h6UdbPfLTIy0ay7Z9yRENPLHNbv7Lz43z52eyvryHeP3cCB25rcbOjHcighui3ttWMpJ
-         vwo1edpn1SBvcQY0VmLyplwBnveD8X4uvACCCuJNX0l14ANMYy4un+lO2OQfLM1jd7D3
-         6rAd8pUT4tig1PRFOZdvLLfzq4f2gIdabRkO9P2JaqWaDctjkzta/lLuGa7YonfHQpYp
-         fV4saub6EAtxpb6o8xfWNt3vP01cKafpccQUkNzowN4mzntinLS6+7tpvudUq0RCJkG8
-         KgLA==
-X-Gm-Message-State: AOAM533YPEmDIMPXLjqqMVLqlxzrGodznmj8n4ijpUoXeo08qxqqhI3J
-        EZk3HKnoDhV+LmZB3/m6zPQ5HQ==
-X-Google-Smtp-Source: ABdhPJwSWiNCy4GMY/Ku2oHof1ytCHYjNesOLFGJYXH8bvQqNhWsN8dMZuvobXI86tTO3CgigTkIpw==
-X-Received: by 2002:a17:902:e9d2:: with SMTP id 18mr69294722plk.40.1594633368761;
-        Mon, 13 Jul 2020 02:42:48 -0700 (PDT)
-Received: from localhost ([122.172.34.142])
-        by smtp.gmail.com with ESMTPSA id h18sm6620431pfr.186.2020.07.13.02.42.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 Jul 2020 02:42:48 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 15:12:45 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        srv_heupstream@mediatek.com
-Subject: Re: [PATCH v7 5/8] opp: Modify opp API, dev_pm_opp_get_freq(), find
- freq in opp, even it is disabled
-Message-ID: <20200713094245.ktx3oj3i225r74qh@vireshk-i7>
-References: <1594348284-14199-1-git-send-email-andrew-sh.cheng@mediatek.com>
- <1594348284-14199-6-git-send-email-andrew-sh.cheng@mediatek.com>
+        with ESMTP id S1727035AbgGMJqM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 05:46:12 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EA3AC061755
+        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 02:46:12 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[127.0.0.1])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <a.fatoum@pengutronix.de>)
+        id 1juv2E-0002EX-BQ; Mon, 13 Jul 2020 11:46:06 +0200
+Subject: Re: [PATCH 3/3] ARM: dts: colibri-imx7: add usb dual-role switch
+ capability
+To:     Philippe Schenker <philippe.schenker@toradex.com>,
+        devicetree@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200710132423.497230-1-philippe.schenker@toradex.com>
+ <20200710132423.497230-3-philippe.schenker@toradex.com>
+From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
+Message-ID: <73240ab0-5069-40c5-4ade-7fcc2207dfaf@pengutronix.de>
+Date:   Mon, 13 Jul 2020 11:46:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594348284-14199-6-git-send-email-andrew-sh.cheng@mediatek.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20200710132423.497230-3-philippe.schenker@toradex.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 10-07-20, 10:31, Andrew-sh.Cheng wrote:
-> From: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-> 
-> Modify dev_pm_opp_get_freq() to return freqeuncy
-> even this opp item is not available.
-> So that we can get the information of disable opp items.
-> 
-> Change-Id: I54dacf13050397f5080ccdb8b07d6220e7461e4e
-> CR-Id:
-> Feature:
-> Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
-> ---
->  drivers/opp/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index eed42d6b2e6b..5213e0462382 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -118,7 +118,7 @@ EXPORT_SYMBOL_GPL(dev_pm_opp_get_voltage);
->   */
->  unsigned long dev_pm_opp_get_freq(struct dev_pm_opp *opp)
->  {
-> -	if (IS_ERR_OR_NULL(opp) || !opp->available) {
-> +	if (IS_ERR_OR_NULL(opp)) {
->  		pr_err("%s: Invalid parameters\n", __func__);
->  		return 0;
->  	}
+Hello Philippe,
 
-Please cleanup this patch for all the extra stuff that isn't required mainline
-and send it again to me separately from this series.
+On 7/10/20 3:24 PM, Philippe Schenker wrote:
+> Since the runtime-pm wakeup bug was fixed in
+> drivers/usb/chipidea/core.c usb dual-role host/device switching is
+> working. So make use of it.
+> 
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+> 
+> ---
+> 
+>  arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 9 +++++++++
+>  arch/arm/boot/dts/imx7-colibri.dtsi         | 4 ++--
+>  2 files changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+> index 97601375f264..db56a532a34a 100644
+> --- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+> +++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+> @@ -20,6 +20,14 @@ clk16m: clk16m {
+>  		clock-frequency = <16000000>;
+>  	};
+>  
+> +	extcon_usbc_det: usbc_det {
+> +		compatible = "linux,extcon-usb-gpio";
+
+According to 4602f3bff266 ("usb: common: add USB GPIO based connection detection driver"):
+"the old way using extcon to support USB Dual-Role switch is now deprecated
+ when use Type-B connector."
+
+Have you considered using a compatible = "gpio-usb-b-connector" child node instead?
+
+Cheers,
+Ahmad
+
+> +		id-gpio = <&gpio7 14 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_usbc_det>;
+> +	};
+> +
+> +
+>  	gpio-keys {
+>  		compatible = "gpio-keys";
+>  		pinctrl-names = "default";
+> @@ -174,6 +182,7 @@ &uart3 {
+>  };
+>  
+>  &usbotg1 {
+> +	extcon = <0>, <&extcon_usbc_det>;
+>  	status = "okay";
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
+> index e18e89dec879..caea90d2421f 100644
+> --- a/arch/arm/boot/dts/imx7-colibri.dtsi
+> +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+> @@ -457,7 +457,7 @@ &uart3 {
+>  };
+>  
+>  &usbotg1 {
+> -	dr_mode = "host";
+> +	dr_mode = "otg";
+>  };
+>  
+>  &usdhc1 {
+> @@ -486,7 +486,7 @@ &usdhc3 {
+>  &iomuxc {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_gpio1 &pinctrl_gpio2 &pinctrl_gpio3 &pinctrl_gpio4
+> -		     &pinctrl_gpio7 &pinctrl_usbc_det>;
+> +		     &pinctrl_gpio7>;
+>  
+>  	pinctrl_gpio1: gpio1-grp {
+>  		fsl,pins = <
+> 
 
 -- 
-viresh
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
