@@ -4,100 +4,284 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33044C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E8CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04B3720758
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 765E12075D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:54:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594666280;
-	bh=2u4NzwccIq+s0JWCd50cqYM7N/biSOkqRNZOgiHeIlo=;
+	s=default; t=1594666495;
+	bh=vCVncfvo5bfbS+YBtIZZhv3ZJo0EUNJoxFdJDWEMXSg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vgbCsZhl1UV3I5GzOg1pQQhHXoyZSw/l70nFRv7gkbrGnjllYN1wynQ1NDvU0eiqd
-	 w+Rw5kMj/oQd1LtrgUTp0xibAWqDZdqSvxgUtjJ/X8pC6j8WAStm+dQ25du0EO3E/u
-	 KB+h0M3ykpIdD/Gp/+IOuzeTV+OH7p5fnPoyE2S8=
+	b=ttPM24xxY2OEnUuHhq936QcExL7dLMi4ZgNO/a5+wI2jxk+iCV8aVm8UGXRQ22tsC
+	 M19iFw1riiMnhr2FeVKbtNHNP9v7MaAgtkBV1by5j4HZfZtd7Y9neRbL2MLj/AJPBr
+	 4eA+Z8kzgMT6iHySzM4fl3/Godum5JZmuSgxepHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbgGMSvT (ORCPT
+        id S1726345AbgGMSyv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 14:51:19 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:41211 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbgGMSvT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 14:51:19 -0400
-Received: by mail-io1-f66.google.com with SMTP id p205so6085693iod.8;
-        Mon, 13 Jul 2020 11:51:18 -0700 (PDT)
+        Mon, 13 Jul 2020 14:54:51 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39343 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbgGMSyu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 14:54:50 -0400
+Received: by mail-io1-f65.google.com with SMTP id f23so14653280iof.6;
+        Mon, 13 Jul 2020 11:54:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=5I3GK8ON13ZeITKAZxa8BAwViFRoyB1EmrHHm5nafuM=;
-        b=sDbrTxu26JAuW+34nXMIIaZmsFnn4ZiLW0uJfG6ZLc7lDWEDKxc+dVlV+eQ8e6rgOj
-         J+xtEW3vwcDjkSC9An+aqBC4aHoffjsnJsTi9RnVQDsl7fDSc+nrgeR9CGdoFy9RVo42
-         kyqLeTfu97tv9yyxmO6Juw6WTTl7lrEv+YcqFrTKs4hz1f3VR+nMmz4G6WKEyuVzoR+V
-         gtJG5tlljbM52r47v/64slZmGq+nLQPdOJBFJ19JVPpyBvqaogxQV4Getb34Go1daSJ8
-         6n9T2ptNUs9UYbmS40k8wCtjC18EY6R1JCPtu8tXCz0CjhzOOUlwaEqR5YoJfSeqDIzx
-         aNNQ==
-X-Gm-Message-State: AOAM530r2B+I94hmmiRwMeKepsMPVvE8APWE7GzdBPcb1yLwpi1vS9Kt
-        4GtzuioEMsyUx4BG7qT9lA==
-X-Google-Smtp-Source: ABdhPJxY7MYG7dgnOcq01GdR3ZrbB5Uuy2jWOltjU1O5UTSsTNwiMZ5UDwXUhFl0bCkNgc8pjKQkMw==
-X-Received: by 2002:a05:6602:1544:: with SMTP id h4mr1235724iow.24.1594666278319;
-        Mon, 13 Jul 2020 11:51:18 -0700 (PDT)
+        bh=GpjldxV+7Jj2vT+IvkGpTu9C3cb82+6pyMRNKhGFrns=;
+        b=dIXpME/JD8rpfMSCteagWjef8EaBjoer3sikstmxe0GIvEqRDniB2X8tJ1YRwrIa8w
+         pFQAC8qCwCVR6aWW6iI6cBs7BARt8F9lcoD+D4qIQGEtIN0nkc++GcZ+G0a3+7NaPqTx
+         mFAsgQUOCotmbLLeCmttG9tuOFJhiT/KmogdKCjpigWLOBk7cSGua3EQB3FRshr9nmDm
+         aRHI7qSQg+B25HOAAau7CoDa/sHUQIHXE0ZiFs00/DDw7jIZZ25QQNVRW1MJ/K1Wq9NT
+         3RYs3QjDT2wJFc15qY0EM2955x9apDL+M9Y7wIohxpMX6fJ2pm9Fi6HZSAByNr+wtArC
+         hHUA==
+X-Gm-Message-State: AOAM5302zkMiyOGIbbYwTW233MxDEJ1rbo/RQEqMJ0c17BHpj+g8gnV/
+        eXJj+ukseuWQanbQfxpKXQ==
+X-Google-Smtp-Source: ABdhPJwfBTESnW9A9BK0215CPEqL1tvb5pOJfUAQ5J+a1D83Ui/ogMwIHTrR/fSKXGi3VJ9a15EbAg==
+X-Received: by 2002:a6b:ba8b:: with SMTP id k133mr1207385iof.204.1594666489080;
+        Mon, 13 Jul 2020 11:54:49 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id f18sm7978542ion.47.2020.07.13.11.51.17
+        by smtp.gmail.com with ESMTPSA id a24sm8109070ioe.46.2020.07.13.11.54.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 11:51:17 -0700 (PDT)
-Received: (nullmailer pid 531387 invoked by uid 1000);
-        Mon, 13 Jul 2020 18:51:16 -0000
-Date:   Mon, 13 Jul 2020 12:51:16 -0600
+        Mon, 13 Jul 2020 11:54:48 -0700 (PDT)
+Received: (nullmailer pid 536032 invoked by uid 1000);
+        Mon, 13 Jul 2020 18:54:47 -0000
+Date:   Mon, 13 Jul 2020 12:54:47 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Anilkumar Kolli <akolli@codeaurora.org>
-Cc:     ath11k@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-wireless@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] dt: bindings: net: update compatible for ath11k
-Message-ID: <20200713185116.GB529968@bogus>
-References: <1592458104-2961-1-git-send-email-akolli@codeaurora.org>
- <1592458104-2961-2-git-send-email-akolli@codeaurora.org>
+To:     Vishal Sagar <vishal.sagar@xilinx.com>
+Cc:     hyunk@xilinx.com, laurent.pinchart@ideasonboard.com,
+        hverkuil@xs4all.nl, mchehab@kernel.org, mark.rutland@arm.com,
+        michals@xilinx.com, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, joe@perches.com, sandipk@xilinx.com,
+        dineshk@xilinx.com
+Subject: Re: [PATCH v3 2/3] media: dt-bindings: media: xilinx: Add Xilinx
+ UHD-SDI Receiver Subsystem
+Message-ID: <20200713185447.GA531731@bogus>
+References: <20200618053304.14551-1-vishal.sagar@xilinx.com>
+ <20200618053304.14551-3-vishal.sagar@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1592458104-2961-2-git-send-email-akolli@codeaurora.org>
+In-Reply-To: <20200618053304.14551-3-vishal.sagar@xilinx.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 10:58:22AM +0530, Anilkumar Kolli wrote:
-> Add IPQ6018 wireless driver support,
-> its based on ath11k driver.
+On Thu, Jun 18, 2020 at 11:03:03AM +0530, Vishal Sagar wrote:
+> Add bindings documentation for Xilinx UHD-SDI Receiver Subsystem.
 > 
-> Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
+> The Xilinx UHD-SDI Receiver Subsystem consists of SMPTE UHD-SDI (RX) IP
+> core, an SDI RX to Video Bridge IP core to convert SDI video to native
+> video and a Video In to AXI4-Stream IP core to convert native video to
+> AXI4-Stream.
+> 
+> Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
 > ---
-> V3:
->  - Use 'enum' rather than oneOf+const.
+> v3
+> - bpc instead of bpp
+> - removed bpc as required property (default to 10 bpc)
+> - add dt-bindings/media/xilinx-sdi.h
+> - made line-rate as u32 instead of string
+> - fixed reg
+> - fixed s/upto/up to/
 > 
->  Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+> v2
+> - Removed references to xlnx,video*
+> - Fixed as per Sakari Ailus and Rob Herring's comments
+> - Converted to yaml format
 > 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
-> index a1717db36dba..b22cde6f3594 100644
-> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
-> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
-> @@ -17,7 +17,11 @@ description: |
->  
->  properties:
->    compatible:
-> -    const: qcom,ipq8074-wifi
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - qcom,ipq8074-wifi
-> +              - qcom,ipq6018-wifi
+>  .../bindings/media/xilinx/xlnx,sdirxss.yaml   | 132 ++++++++++++++++++
+>  include/dt-bindings/media/xilinx-sdi.h        |  20 +++
+>  2 files changed, 152 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
+>  create mode 100644 include/dt-bindings/media/xilinx-sdi.h
+> 
+> diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml b/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
+> new file mode 100644
+> index 000000000000..6cfc18ca435f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
+> @@ -0,0 +1,132 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/xilinx/xlnx,sdirxss.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +
+> +title: Xilinx SMPTE UHD-SDI Receiver Subsystem
+> +
+> +maintainers:
+> +  - Vishal Sagar <vishal.sagar@xilinx.com>
+> +
+> +description: |
+> +  The SMPTE UHD-SDI Receiver (RX) Subsystem allows you to quickly create systems
+> +  based on SMPTE SDI protocols. It receives unaligned native SDI streams from
+> +  the SDI GT PHY and outputs an AXI4-Stream video stream, native video, or
+> +  native SDI using Xilinx transceivers as the physical layer.
+> +
+> +  The subsystem consists of
+> +  1 - SMPTE UHD-SDI Rx
+> +  2 - SDI Rx to Native Video Bridge
+> +  3 - Video In to AXI4-Stream Bridge
+> +
+> +  The subsystem can capture SDI streams in up to 12G mode 8 data streams and output
+> +  a dual pixel per clock RGB/YUV444,422/420 10/12 bits per component AXI4-Stream.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +        - xlnx,v-smpte-uhdsdi-rx-ss-2.0
 
-Just need:
+Should be indented 2 more spaces.
 
-enum:
-  - qcom,ipq8074-wifi
-  - qcom,ipq6018-wifi
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description: List of clock specifiers
+
+Drop. That's every 'clocks' property.
+
+> +    items:
+> +      - description: AXI4-Lite clock
+> +      - description: SMPTE UHD-SDI Rx core clock
+> +      - description: Video clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: s_axi_aclk
+> +      - const: sdi_rx_clk
+> +      - const: video_out_clk
+> +
+> +  xlnx,bpc:
+> +    description: Bits per component supported. Can be 10 or 12 bits per component only.
+> +    allOf:
+
+You can drop the 'allOf' now.
+
+> +      - $ref: "/schemas/types.yaml#/definitions/uint32"
+> +      - enum: [10, 12]
+
+Seems like this should be a standard property?
+
+> +
+> +  xlnx,line-rate:
+> +    description: |
+> +      The maximum mode supported by the design. Possible values are as below
+> +      0 - XSDI_STD_3G      -  3G mode
+> +      1 - XSDI_STD_6G      -  6G mode
+> +      2 - XSDI_STD_12G_8DS - 12G mode with 8 data streams
+> +    allOf:
+> +      - $ref: "/schemas/types.yaml#/definitions/uint32"
+> +      - enum: [0, 1, 2]
+
+Standard?
+
+> +
+> +  xlnx,include-edh:
+> +    type: boolean
+> +    description: |
+> +      This is present when the Error Detection and Handling processor is
+> +      enabled in design.
+> +
+> +  ports:
+> +    type: object
+> +    description: |
+> +      Generally the SDI port is connected to a device like SDI Broadcast camera
+> +      which is independently controlled. Hence port@0 is a source port which can be
+> +      connected to downstream IP which can work with AXI4 Stream data.
+> +    properties:
+> +      port@0:
+> +        type: object
+> +        description: Source port
+> +        properties:
+> +          reg:
+> +            const: 0
+> +          endpoint:
+> +            type: object
+> +            properties:
+> +              remote-endpoint: true
+> +            required:
+> +              - remote-endpoint
+> +            additionalProperties: false
+> +        additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - xlnx,line-rate
+> +  - ports
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/media/xilinx-sdi.h>
+> +    uhdsdirxss: v-smpte-uhdsdi-rxss@80000000 {
+> +      compatible = "xlnx,v-smpte-uhdsdi-rx-ss-2.0";
+> +      interrupt-parent = <&gic>;
+> +      interrupts = <0 89 4>;
+> +      reg = <0x80000000 0x10000>;
+> +      xlnx,include-edh;
+> +      xlnx,line-rate = <XSDI_STD_12G_8DS>;
+> +      clocks = <&clk_1>, <&si570_1>, <&clk_2>;
+> +      clock-names = "s_axi_aclk", "sdi_rx_clk", "video_out_clk";
+> +      xlnx,bpc = <10>;
+> +
+> +      ports {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        port@0 {
+> +          reg = <0>;
+> +          sdirx_out: endpoint {
+> +            remote-endpoint = <&vcap_sdirx_in>;
+> +          };
+> +        };
+> +      };
+> +    };
+> +...
+> diff --git a/include/dt-bindings/media/xilinx-sdi.h b/include/dt-bindings/media/xilinx-sdi.h
+> new file mode 100644
+> index 000000000000..11938fade041
+> --- /dev/null
+> +++ b/include/dt-bindings/media/xilinx-sdi.h
+> @@ -0,0 +1,20 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Xilinx SDI device tree bindings
+> + *
+> + * Copyright (C) 2020 Xilinx, Inc.
+> + *
+> + * Contacts: Vishal Sagar <vishal.sagar@xilinx.com>
+> + */
+> +
+> +#ifndef __DT_BINDINGS_MEDIA_XILINX_SDI_H__
+> +#define __DT_BINDINGS_MEDIA_XILINX_SDI_H__
+> +
+> +/*
+> + * SDI Configurations
+> + */
+> +#define XSDI_STD_3G		0
+> +#define XSDI_STD_6G		1
+> +#define XSDI_STD_12G_8DS	2
+> +
+> +#endif /* __DT_BINDINGS_MEDIA_XILINX_SDI_H__ */
+> -- 
+> 2.21.0
+> 
