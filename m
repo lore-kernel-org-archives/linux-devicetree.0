@@ -2,113 +2,132 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50EE6C433E5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2628BC433E6
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FDB720738
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 047BB2075B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:14:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/WhEHWB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h+yIc+Jc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729902AbgGMOMW (ORCPT
+        id S1729772AbgGMOON (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:12:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55196 "EHLO
+        Mon, 13 Jul 2020 10:14:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729649AbgGMOMW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 10:12:22 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED957C061755;
-        Mon, 13 Jul 2020 07:12:21 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id d18so13823959edv.6;
-        Mon, 13 Jul 2020 07:12:21 -0700 (PDT)
+        with ESMTP id S1729649AbgGMOON (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 10:14:13 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE0CFC061755;
+        Mon, 13 Jul 2020 07:14:12 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id ga4so17369906ejb.11;
+        Mon, 13 Jul 2020 07:14:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ybYxR1GRnq5IyovTfClT+C6t+JkS/8OJ9dnDjjyYAlQ=;
-        b=i/WhEHWB951iAbrT2J/PBgio1raDichTwdYsve8dmI8ewVDJrriAewvgU7COnYla31
-         LQ73zLJwxVeM+kQPi/JhCJV6Y3xzt3yyn9BA8VikaPku6J3lQ0AHKpNkdS+ESDB3fmDi
-         ppxsYSfxJ9fs9kGTTvyoDJqnuxSOQDqw9kRVRQ6iLaEep0fEO/RkDeHdvHbpJ1y2JmTA
-         63qeBWuluhYGbEyclY2bm68Vx9eZ7mu4Jf7brLKiw96NeSNQMZYjLIJ02qgCqI7A7fza
-         P86mMbYzly3TmQnvR7JF1CBVfE9xx0+rHQSxFQoMieF0HMNEmmmaWB7StPbn1s9efYWf
-         nSZA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MIZxje+MAG8HbWvvUc6uH3FVOHItPs+CHk8GbtDOk8s=;
+        b=h+yIc+JccePabEpzp8I+pesSbr0m/WLujDxYsdjf+9DXMasZsalm91neD19Ivz6u5G
+         cdJOx/+AN0f1eZmadGkvokecJppcr3fIl9jirgr4LS66G/c1gM5eahuei+G2+foVs49c
+         wLFvLLiEofL9DNPUS9ezarBzYtL9yX8/WwbvmyKseNxcURxm8eVAMo5jfqqWf+dcWELZ
+         tC2sbb1nLzOGKadrmUFv2291VTpzkcLwJYQdm5gGbhsqH2rrpikjrZXgCWmI7OgR11gL
+         HlAabodB/rBX0KVZKOtpMzIhvXVq/MHCUZcb52SRnXVacSLDA1SSLG7FV8pGh7hYpe9U
+         cEfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ybYxR1GRnq5IyovTfClT+C6t+JkS/8OJ9dnDjjyYAlQ=;
-        b=lL+YTmQJZ1ESIqvO40t8axExqdYD3FUg2wKtIAFoamKb1VFYjfbAsC15HTx9Djk7T+
-         EF8i/zN73mNOAfPLXyc9jmqRakv2N72QsEC/itdrhWWO1dltlFdy6tebXSdFJYRYBWa2
-         7A4R3BoWmlcLRJuXrhl8QJpHsHi9RFT6uwj4NjVaOfmzSqztVlKNtzvbui3NloQFc1+S
-         wmcG0IJmRziqvGhWOxbZKqgJby1ycSfkoCdxiYTj4/N2a4EUmnPFNqivo+IQu8kSSS6h
-         atA6e4GQoIN9HsQcPI4mVtKO5zpDcZOqXpeeaoimLOlklij68g+IsqiZAE08UmQ7X14/
-         5OcA==
-X-Gm-Message-State: AOAM533/2mudr/Nba/qamPPCDSgKKP4C218zgBWQTHIDxEAc/DTaPyCH
-        yZJw487F4tDAhI4XYXX2vaY=
-X-Google-Smtp-Source: ABdhPJw/8jHf9QA0AJm4G5lfM69GPdfyK/swpa872/c1BG2bJZ2NWH3dR7A0bYnIc4r8J6YHnq//5w==
-X-Received: by 2002:a50:9b18:: with SMTP id o24mr93210935edi.335.1594649540641;
-        Mon, 13 Jul 2020 07:12:20 -0700 (PDT)
-Received: from skbuf ([188.25.219.134])
-        by smtp.gmail.com with ESMTPSA id ck6sm11436045edb.18.2020.07.13.07.12.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 07:12:20 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 17:12:17 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     Kurt Kanzenbach <kurt@linutronix.de>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org
-Subject: Re: [PATCH v1 4/8] net: dsa: hellcreek: Add support for hardware
- timestamping
-Message-ID: <20200713141217.ktgh5rtullmrjjsy@skbuf>
-References: <20200710113611.3398-1-kurt@linutronix.de>
- <20200710113611.3398-5-kurt@linutronix.de>
- <20200713095700.rd4u4t6thkzfnlll@skbuf>
- <87k0z7n0m9.fsf@kurt>
- <20200713140112.GB27934@hoboy>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MIZxje+MAG8HbWvvUc6uH3FVOHItPs+CHk8GbtDOk8s=;
+        b=QWBQKUE+Qu63Gz+UwPNRK37mfHypk0jZeIeK4J9q8J9q/SKGQUPUa1fKtJeYA7O3YT
+         7QIqNdRxaZd0wgWcekKZhIkoUqSCt+dtRgjQLh370rFKDcS5ElDGqsZe9/YyDSH5Dl3F
+         ssc4zMkzlzCvUTfPqqaFmUpE0Ih9QVQFb6KYMugaiHBmT3IP9A9hiarplXyZbqociHIA
+         eWvUthgBhcWGwJfB93RVovlcZpbRwp3w6taNwxp7vQslNq76pn/RR4+oIITWPup3WvFK
+         ZxzTSvcNYjAz37p7znhfEWCI7AsqqcaAKo+WltGyKp+H4YJkmf5dTVXmIXFegn60fCwA
+         eUFg==
+X-Gm-Message-State: AOAM531Vkq1WWyZy8V80ph5BIW371lIHwpRgjR5pKcHrhwbSP/Nuu9cn
+        mNT27TDOAOpMP1PHHOvMCg22YNvMTHgo4yl4n9KwmsRv
+X-Google-Smtp-Source: ABdhPJzRe9teOUkzh2Dfta6zb49ZDUsatOfn8+cgv5TYh6kQrSWbSloCSg2Xc8sRSHFDK4FawOk5qifcPpSE3vTVWrA=
+X-Received: by 2002:a17:906:1187:: with SMTP id n7mr67254807eja.161.1594649650550;
+ Mon, 13 Jul 2020 07:14:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200713140112.GB27934@hoboy>
+References: <1593089153-17811-1-git-send-email-kalyan_t@codeaurora.org>
+ <CAF6AEGtPDh7q6Hjophdyz+Pvi93-bK5WULGeSw9P4BWRw5SWxQ@mail.gmail.com> <c10c0f70988d42037ccaccc6b5474942@codeaurora.org>
+In-Reply-To: <c10c0f70988d42037ccaccc6b5474942@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Mon, 13 Jul 2020 07:14:42 -0700
+Message-ID: <CAF6AEGvhVLY=2d7Qbp2qXmLX-ywtN1jkydhHkVesREF3ffRjYA@mail.gmail.com>
+Subject: Re: [Freedreno] [v1] drm/msm/dpu: enumerate second cursor pipe for
+ external interface
+To:     Kalyan Thota <kalyan_t@codeaurora.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Krishna Manikandan <mkrishn@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Raviteja Tamatam <travitej@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        nganji@codeaurora.org, Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 07:01:12AM -0700, Richard Cochran wrote:
-> On Mon, Jul 13, 2020 at 12:57:34PM +0200, Kurt Kanzenbach wrote:
-> > > I would like to get some clarification on whether "SKBTX_IN_PROGRESS"
-> > > should be set in shtx->tx_flags or not. On one hand, it's asking for
-> > > trouble, on the other hand, it's kind of required for proper compliance
-> > > to API pre-SO_TIMESTAMPING...
-> > 
-> > Hm. We actually oriented our code on the mv88e6xxx time stamping code base.
-> 
-> Where in mv88e6xxx does the driver set SKBTX_IN_PROGRESS?
-> 
+On Mon, Jul 13, 2020 at 3:18 AM <kalyan_t@codeaurora.org> wrote:
+>
+> On 2020-07-10 22:19, Rob Clark wrote:
+> > On Thu, Jun 25, 2020 at 5:46 AM Kalyan Thota <kalyan_t@codeaurora.org>
+> > wrote:
+> >>
+> >> Setup an RGB HW pipe as cursor which can be used on
+> >> secondary interface.
+> >>
+> >> For SC7180 2 HW pipes are enumerated as cursors
+> >> 1 - primary interface
+> >> 2 - secondary interface
+> >>
+> >> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+> >> ---
+> >>  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c | 12 ++++++------
+> >>  1 file changed, 6 insertions(+), 6 deletions(-)
+> >>
+> >> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+> >> b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+> >> index 8f2357d..23061fd 100644
+> >> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+> >> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+> >> @@ -117,10 +117,10 @@
+> >>                 .reg_off = 0x2AC, .bit_off = 0},
+> >>         .clk_ctrls[DPU_CLK_CTRL_DMA0] = {
+> >>                 .reg_off = 0x2AC, .bit_off = 8},
+> >> -       .clk_ctrls[DPU_CLK_CTRL_DMA1] = {
+> >> -               .reg_off = 0x2B4, .bit_off = 8},
+> >>         .clk_ctrls[DPU_CLK_CTRL_CURSOR0] = {
+> >> -               .reg_off = 0x2BC, .bit_off = 8},
+> >> +               .reg_off = 0x2B4, .bit_off = 8},
+> >> +       .clk_ctrls[DPU_CLK_CTRL_CURSOR1] = {
+> >> +               .reg_off = 0x2C4, .bit_off = 8},
+> >
+> > It looks like you shifted the register offset here from 0x2bc to
+> > 0x2c4, was that intentional?
+> >
+> > BR,
+> > -R
+> Yes Rob, the offset was wrong which i corrected in this patch.
 
-That's the point, it doesn't, and neither does hellcreek.
 
-> I don't think it makes sense for DSA drivers to set this bit, as it
-> serves no purpose in the DSA context.
-> 
+Thanks for confirming.  In the future, it would have been useful to
+mention that in the commit msg.
 
-For whom does this bit serve a purpose, though, and how do you tell?
-
-> Thanks,
-> Richard
-
-Thanks,
--Vladimir
+BR,
+-R
