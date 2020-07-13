@@ -2,134 +2,108 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD7CC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C6FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9227720720
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:35:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oOiV1kSc";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="E1asMlFW"
+	by mail.kernel.org (Postfix) with ESMTP id C901B2075D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:36:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594622180;
+	bh=UT7xCgBr7XTK0g96nMID4egnSzqW6jseo+avRrShlUc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TlWrTG1b0gZE67nIx7BYvRkyc2R80WZZMxOgs39oKht/g1ib5oNdhTFhiu9O5R3dP
+	 PWMZwI48Jxc8a6mNOAuYhb6OPJ6hLkP1zO0gVvcy3nDoD0eX6jdluQcE+EpHwCDhW0
+	 IRtu2Hu+cnWtNfXqTqzeaPIKx+tlfao4w2drguKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgGMGfq (ORCPT
+        id S1726360AbgGMGgU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 02:35:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39394 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbgGMGfp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 02:35:45 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3D51C061794;
-        Sun, 12 Jul 2020 23:35:45 -0700 (PDT)
-From:   Kurt Kanzenbach <kurt@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1594622144;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=lGwmJIkZOZkMHJGtImhb5KqsxN75lLuiXne9IMeGa/A=;
-        b=oOiV1kScW2I2fOrQI2UkUlnU9FL+ia6y5UCOhe9XKKToyeXoMs7riH3eSbnViK5X/UVodR
-        skTyg0yc7dKwfKEGKZeNW4NG8hoYjoC2bEnRsUUZuDMmA7i6FT81rbeG+F2J+WSFwdqDhk
-        G9Cxv5Jo53WG4gTIW+TDYWLzcAfn5qqg8oGonbIhSN4VCDmDLwE8cxRfnIGNohqqFzU21G
-        YBsS0BgDDX5im9WOrN8zu3+FGSjZ5SgYySHNp7IRfL3xSdTEPnV0uTt6hsajMGaa0RnOBt
-        2JsmVjrcDV3IByF2wRI4rWlWkyZX20//OXjXUckptY6n7YvtrENR0+ZfqaOqYQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1594622144;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=lGwmJIkZOZkMHJGtImhb5KqsxN75lLuiXne9IMeGa/A=;
-        b=E1asMlFW5LrXUA2VCU8sD4kjaSOZE8GaMxZVbCXjklrYTfzdiQ6rfV/9GwcUm3+WUQLZmW
-        IVX+ciVo5bYGHxDw==
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org, Vladimir Oltean <olteanv@gmail.com>
-Subject: Re: [PATCH v1 4/8] net: dsa: hellcreek: Add support for hardware timestamping
-In-Reply-To: <20200711203810.GB27467@hoboy>
-References: <20200710113611.3398-1-kurt@linutronix.de> <20200710113611.3398-5-kurt@linutronix.de> <20200711203810.GB27467@hoboy>
-Date:   Mon, 13 Jul 2020 08:35:43 +0200
-Message-ID: <87pn8zncqo.fsf@kurt>
+        Mon, 13 Jul 2020 02:36:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58750 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725969AbgGMGgU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 02:36:20 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E42C20720;
+        Mon, 13 Jul 2020 06:36:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594622179;
+        bh=UT7xCgBr7XTK0g96nMID4egnSzqW6jseo+avRrShlUc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=u8k47lCLPPTQIhGZPWfJiSk2yvJ8A4JPnhgOjfHlKjK0sxYQ0ohoHESYQlkoLy9Nl
+         p0wwkt6LSxfmr5qx/r6Tt/QII9QRTS/sEVclyFWTfZd0B+m4FvulQfvyFltSc8dUtk
+         P7MZBLAdxg1EOkClpqPtKp8PUfYyXx11frYsrh7o=
+Date:   Mon, 13 Jul 2020 14:36:15 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Chris Healy <cphealy@gmail.com>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Stefan Agner <stefan@agner.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux ARM <linux-arm-kernel@lists.infradead.org>,
+        devicetree@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] ARM: dts: vf610-zii-ssmb-dtu: Pass "no-sdio"/"no-sd"
+ properties
+Message-ID: <20200713063611.GF12113@dragon>
+References: <CAFXsbZoovWBavRFaEWEFcSkVjNx26BkKOkhcutNfzL8MrHwMTw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFXsbZoovWBavRFaEWEFcSkVjNx26BkKOkhcutNfzL8MrHwMTw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+On Sat, Jul 04, 2020 at 08:16:10PM -0700, Chris Healy wrote:
+> esdhc0 is connected to an eMMC, so it is safe to pass the "no-sdio"/"no-sd"
+> properties.
+> 
+> esdhc1 is wired to a standard SD socket, so pass the "no-sdio" property.
+> 
+> Signed-off-by: Chris Healy <cphealy@gmail.com>
 
-On Sat Jul 11 2020, Richard Cochran wrote:
-> On Fri, Jul 10, 2020 at 01:36:07PM +0200, Kurt Kanzenbach wrote:
->> +static void hellcreek_get_rxts(struct hellcreek *hellcreek,
->> +			       struct hellcreek_port_hwtstamp *ps,
->> +			       struct sk_buff *skb, struct sk_buff_head *rxq,
->> +			       int port)
->> +{
->> +	struct skb_shared_hwtstamps *shwt;
->> +	struct sk_buff_head received;
->> +	unsigned long flags;
->> +
->> +	/* The latched timestamp belongs to one of the received frames. */
->> +	__skb_queue_head_init(&received);
->> +
->> +	/* Lock & disable interrupts */
->> +	spin_lock_irqsave(&rxq->lock, flags);
->> +
->> +	/* Add the reception queue "rxq" to the "received" queue an reintialize
->> +	 * "rxq".  From now on, we deal with "received" not with "rxq"
->> +	 */
->> +	skb_queue_splice_tail_init(rxq, &received);
->> +
->> +	spin_unlock_irqrestore(&rxq->lock, flags);
->> +
->> +	for (; skb; skb = __skb_dequeue(&received)) {
->> +		unsigned int type;
->> +		u8 *hdr;
->> +		u64 ns;
->> +
->> +		/* Get nanoseconds from ptp packet */
->> +		type = SKB_PTP_TYPE(skb);
->> +		hdr  = parse_ptp_header(skb, type);
->> +		ns   = hellcreek_get_reserved_field(hdr);
->
-> You might consider clearing the reserved field at this point.  Some
-> user space SW might consider non-zero reserved fields as corrupt!
+I would suggest something like below for patch subject.
 
-Indeed. Never thought about it.
+  ARM: dts: vf610-zii-ssmb-dtu: Add no-sdio/no-sd properties
 
-Thanks,
-Kurt
+Also the patch doesn't apply to my branch.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Shawn
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl8MAL8ACgkQeSpbgcuY
-8KY1TA/+KEdPEl04h/iBlEc7pnDGDE0KAnasnn5FoDOCaQdNiK5lUyvV3F0aG6JT
-4Y4K8bjNiFVoWczws2xJ7G/fdLL/EoSURiHUaq6tY5ciCRBUbG51H4Q6nBBPY8nR
-CZqQMcBrki3/fWNB0XICv+iXyvmUEQ6wxBckHKU6cCmVxbiKKcD7m6gTVfrgJD26
-261IlZuLxrn4CYtWD/pi897rMMO96SMKKWNuRLsDf0v86IOf8SFP1CTKAF2uGs1Y
-k6HkoIK65F9EXEECk99tDoW/rzk1SqFEOzFHzVt/Qqa41Np87Jx/Z75O+9ge/qmj
-IfsOUrgIOkOLiCfWr0poFGR6a5SUFi2m43IOQ8hndWbF08ySWdfXL94ChwUEZAXC
-XIj9BSJdlZTYaEhygWlyrTWuOjDxDKM276W5PISVMIXfSr5Z02iYe7oAUY1SKagT
-vMYzeZnTajzcc0JEVjzRdd5dzXrcvQ8ta3OaLtJUSByZ3S0GoFsmhE30gTrt31ye
-fsi/RTk6/Nkzmt0nwQjBkWyeJLb0g2gs61viRo8e0K/siP3LrlZnj5eC3r0wybOQ
-GFsJGyI9w3yx/DuXJMyfCu+2tixpvyIpKi+vGYOA7MXO68gUy11wxAtGx8EJyDIl
-CJt7bj3msEzGQQ/z1p4pFNubCZIaNpV54KjK6sueKJ67zuQ5hOY=
-=KSHc
------END PGP SIGNATURE-----
---=-=-=--
+> ---
+>  arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
+> b/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
+> index 0bb3dcff0b79..7d4ddfb6b5b5 100644
+> --- a/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
+> +++ b/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
+> @@ -81,6 +81,8 @@
+>      non-removable;
+>      no-1-8-v;
+>      keep-power-in-suspend;
+> +    no-sdio;
+> +    no-sd;
+>      status = "okay";
+>  };
+> 
+> @@ -88,6 +90,7 @@
+>      pinctrl-names = "default";
+>      pinctrl-0 = <&pinctrl_esdhc1>;
+>      bus-width = <4>;
+> +    no-sdio;
+>      status = "okay";
+>  };
+> 
+> -- 
+> 2.21.3
