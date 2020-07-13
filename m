@@ -7,156 +7,172 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 441E6C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 05:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5475C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 05:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2021E2073A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 05:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FB872075D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 05:56:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594619488;
-	bh=WqjUMsam9TwPcBeZzSP9ccMJT5xrxITFuIxjeD2l9z4=;
+	s=default; t=1594619764;
+	bh=gXFwq43ohUgKZA8gAkhAymCG+JyohqjJf0fM3HTHIZs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hQBignNP7p0ISmfcUf1fAF9B3zc0bDk6pB28wZ1A35qJpEe2afyGUZUk0HEwyneGB
-	 ghpEua2NEyJL/NB4S3wyhxHzmD1OwdfLwtfK/5nqVdPQIUoABgKRy6ELqZdAtGe9so
-	 hk0JLmzkJ6q6nN9+dvrd4dKQMvgd/Ce79Zf3Q84I=
+	b=tbJj9T/a1lCRNQT24mxkXSenCJqd8VPAA3HR3K6hmLG+RRKzxBjrZe2e8cPFYtjkJ
+	 BM/GODUeVyoNUhdfjpNtkWp7L0VuZrucvW59962QHk8uqK4Pz5/hPZQ+MnB1gL/hxT
+	 thHYogvwf9x8hp1OL5HQL2ONv+w+QASgNbKMxQ/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725830AbgGMFv1 (ORCPT
+        id S1728048AbgGMF4E (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 01:51:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35798 "EHLO mail.kernel.org"
+        Mon, 13 Jul 2020 01:56:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbgGMFv1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 01:51:27 -0400
+        id S1727107AbgGMF4D (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 01:56:03 -0400
 Received: from localhost (unknown [122.182.251.219])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF8C720724;
-        Mon, 13 Jul 2020 05:51:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 217812073A;
+        Mon, 13 Jul 2020 05:56:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594619486;
-        bh=WqjUMsam9TwPcBeZzSP9ccMJT5xrxITFuIxjeD2l9z4=;
+        s=default; t=1594619762;
+        bh=gXFwq43ohUgKZA8gAkhAymCG+JyohqjJf0fM3HTHIZs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bzclSa4FVIcYVTzLrOLcMdpqeHRmywH5zXkJj3m51Gm4gcCcmdmamqHjrcXaBk6xv
-         FO+yEJOG1q8pQz/iLG0RiGvnana22+gsx5JVGzWM6YC1DL0cOrJjqxqaT2GHGSloQh
-         z8/XjUQOgqY2hP9u8XwPSw8iGw1WKN7ww8YxOO2Q=
-Date:   Mon, 13 Jul 2020 11:21:22 +0530
+        b=paFGk7uJF66m93nyveVPcYNj/dGkVDvY1u8K9A/2rvKSlO0MBabNq/m+/4CmMR6Ff
+         L3J6QduoGk6i58NoIF1rhO3v2QX4kAL49CKLIzXdfBbn9rvtWgf4FJh/EgiUXlZ+sg
+         Df7mie1gP/c+V3+RqnTFL0MqOir01L2jDMVQjrns=
+Date:   Mon, 13 Jul 2020 11:25:58 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
-Cc:     simon@fire.lp0.eu, jonas.gorski@gmail.com, kishon@ti.com,
-        robh+dt@kernel.org, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
-        krzk@kernel.org, gregkh@linuxfoundation.org, alcooperx@gmail.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 2/2] phy: bcm63xx-usbh: Add BCM63xx USBH driver
-Message-ID: <20200713055122.GA34333@vkoul-mobl>
-References: <20200619100035.4032596-1-noltari@gmail.com>
- <20200619100035.4032596-3-noltari@gmail.com>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
+        robh+dt@kernel.org, kishon@ti.com, mturquette@baylibre.com,
+        sboyd@kernel.org, svarbanov@mm-sol.com, lorenzo.pieralisi@arm.com,
+        p.zabel@pengutronix.de, mgautam@codeaurora.org,
+        smuthayy@codeaurora.org, varada@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, stable@vger.kernel.org,
+        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+Subject: Re: [PATCH 5/9] phy: qcom-qmp: use correct values for ipq8074 gen2
+ pcie phy init
+Message-ID: <20200713055558.GB34333@vkoul-mobl>
+References: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
+ <1593940680-2363-6-git-send-email-sivaprak@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200619100035.4032596-3-noltari@gmail.com>
+In-Reply-To: <1593940680-2363-6-git-send-email-sivaprak@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 19-06-20, 12:00, Álvaro Fernández Rojas wrote:
-> Add BCM63xx USBH PHY driver for BMIPS.
+On 05-07-20, 14:47, Sivaprakash Murugesan wrote:
+> There were some problem in ipq8074 gen2 pcie phy init sequence, fix
+
+Can you please describe these problems, it would help review to
+understand the issues and also for future reference to you
+
+> these to make gen2 pcie port on ipq8074 to work.
 > 
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> Fixes: eef243d04b2b6 ("phy: qcom-qmp: Add support for IPQ8074")
+> 
+> Cc: stable@vger.kernel.org
+> Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 > ---
->  v5: use devm_reset_control_get_exclusive.
->  v4: several improvements:
->   - Use devm_platform_ioremap_resource.
->   - Code cleanups.
->   - Improve device mode config:
->     - Move USBH_SWAP_CONTROL device mode value to variant variable.
->     - Set USBH_UTMI_CONTROL1 register value (variant variable).
->  v3: introduce changes suggested by Florian:
->   - Add support for device mode.
->  v2: introduce changes suggested by Florian:
->   - Drop OF dependency (use device_get_match_data).
->   - Drop __initconst from variant tables.
->   - Use devm_clk_get_optional.
+>  drivers/phy/qualcomm/phy-qcom-qmp.c | 16 +++++++++-------
+>  drivers/phy/qualcomm/phy-qcom-qmp.h |  2 ++
+>  2 files changed, 11 insertions(+), 7 deletions(-)
 > 
->  drivers/phy/broadcom/Kconfig            |   9 +
->  drivers/phy/broadcom/Makefile           |   1 +
->  drivers/phy/broadcom/phy-bcm63xx-usbh.c | 457 ++++++++++++++++++++++++
->  3 files changed, 467 insertions(+)
->  create mode 100644 drivers/phy/broadcom/phy-bcm63xx-usbh.c
-> 
-> diff --git a/drivers/phy/broadcom/Kconfig b/drivers/phy/broadcom/Kconfig
-> index b29f11c19155..a7889df8c541 100644
-> --- a/drivers/phy/broadcom/Kconfig
-> +++ b/drivers/phy/broadcom/Kconfig
-> @@ -2,6 +2,15 @@
->  #
->  # Phy drivers for Broadcom platforms
->  #
-> +config PHY_BCM63XX_USBH
-> +	tristate "BCM63xx USBH PHY driver"
-> +	depends on BMIPS_GENERIC || COMPILE_TEST
-> +	select GENERIC_PHY
-> +	default BMIPS_GENERIC
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> index e91040af3394..ba277136f52b 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> @@ -504,8 +504,8 @@ static const struct qmp_phy_init_tbl ipq8074_pcie_serdes_tbl[] = {
+>  	QMP_PHY_INIT_CFG(QSERDES_COM_BG_TRIM, 0xf),
+>  	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP_EN, 0x1),
+>  	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_MAP, 0x0),
+> -	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_TIMER1, 0x1f),
+> -	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_TIMER2, 0x3f),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_TIMER1, 0xff),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_TIMER2, 0x1f),
+>  	QMP_PHY_INIT_CFG(QSERDES_COM_CMN_CONFIG, 0x6),
+>  	QMP_PHY_INIT_CFG(QSERDES_COM_PLL_IVCO, 0xf),
+>  	QMP_PHY_INIT_CFG(QSERDES_COM_HSCLK_SEL, 0x0),
+> @@ -531,7 +531,6 @@ static const struct qmp_phy_init_tbl ipq8074_pcie_serdes_tbl[] = {
+>  	QMP_PHY_INIT_CFG(QSERDES_COM_INTEGLOOP_GAIN1_MODE0, 0x0),
+>  	QMP_PHY_INIT_CFG(QSERDES_COM_INTEGLOOP_GAIN0_MODE0, 0x80),
+>  	QMP_PHY_INIT_CFG(QSERDES_COM_BIAS_EN_CTRL_BY_PSM, 0x1),
+> -	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_CTRL, 0xa),
+>  	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_EN_CENTER, 0x1),
+>  	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_PER1, 0x31),
+>  	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_PER2, 0x1),
+> @@ -540,7 +539,6 @@ static const struct qmp_phy_init_tbl ipq8074_pcie_serdes_tbl[] = {
+>  	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_STEP_SIZE1, 0x2f),
+>  	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_STEP_SIZE2, 0x19),
+>  	QMP_PHY_INIT_CFG(QSERDES_COM_CLK_EP_DIV, 0x19),
+> -	QMP_PHY_INIT_CFG(QSERDES_RX_SIGDET_CNTRL, 0x7),
+>  };
+>  
+>  static const struct qmp_phy_init_tbl ipq8074_pcie_tx_tbl[] = {
+> @@ -548,6 +546,8 @@ static const struct qmp_phy_init_tbl ipq8074_pcie_tx_tbl[] = {
+>  	QMP_PHY_INIT_CFG(QSERDES_TX_LANE_MODE, 0x6),
+>  	QMP_PHY_INIT_CFG(QSERDES_TX_RES_CODE_LANE_OFFSET, 0x2),
+>  	QMP_PHY_INIT_CFG(QSERDES_TX_RCV_DETECT_LVL_2, 0x12),
+> +	QMP_PHY_INIT_CFG(QSERDES_TX_EMP_POST1_LVL, 0x36),
+> +	QMP_PHY_INIT_CFG(QSERDES_TX_SLEW_CNTL, 0x0a),
+>  };
+>  
+>  static const struct qmp_phy_init_tbl ipq8074_pcie_rx_tbl[] = {
+> @@ -558,7 +558,6 @@ static const struct qmp_phy_init_tbl ipq8074_pcie_rx_tbl[] = {
+>  	QMP_PHY_INIT_CFG(QSERDES_RX_RX_EQU_ADAPTOR_CNTRL4, 0xdb),
+>  	QMP_PHY_INIT_CFG(QSERDES_RX_UCDR_SO_SATURATION_AND_ENABLE, 0x4b),
+>  	QMP_PHY_INIT_CFG(QSERDES_RX_UCDR_SO_GAIN, 0x4),
+> -	QMP_PHY_INIT_CFG(QSERDES_RX_UCDR_SO_GAIN_HALF, 0x4),
+>  };
+>  
+>  static const struct qmp_phy_init_tbl ipq8074_pcie_pcs_tbl[] = {
+> @@ -1673,6 +1672,9 @@ static const struct qmp_phy_cfg msm8996_usb3phy_cfg = {
+>  	.pwrdn_ctrl		= SW_PWRDN,
+>  };
+>  
+> +static const char * const ipq8074_pciephy_clk_l[] = {
+> +	"aux", "cfg_ahb",
+> +};
+>  /* list of resets */
+>  static const char * const ipq8074_pciephy_reset_l[] = {
+>  	"phy", "common",
+> @@ -1690,8 +1692,8 @@ static const struct qmp_phy_cfg ipq8074_pciephy_cfg = {
+>  	.rx_tbl_num		= ARRAY_SIZE(ipq8074_pcie_rx_tbl),
+>  	.pcs_tbl		= ipq8074_pcie_pcs_tbl,
+>  	.pcs_tbl_num		= ARRAY_SIZE(ipq8074_pcie_pcs_tbl),
+> -	.clk_list		= NULL,
+> -	.num_clks		= 0,
+> +	.clk_list		= ipq8074_pciephy_clk_l,
+> +	.num_clks		= ARRAY_SIZE(ipq8074_pciephy_clk_l),
 
-you depend on BMIPS_GENERIC and also use as default?
+I see patch is modifying some register values and then adding clks, in
+the absence of proper patch description it is extremely hard to
+understand what is going on..
 
-> +static int __init bcm63xx_usbh_phy_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct bcm63xx_usbh_phy	*usbh;
-> +	const struct bcm63xx_usbh_phy_variant *variant;
-> +	struct phy *phy;
-> +	struct phy_provider *phy_provider;
-> +
-> +	usbh = devm_kzalloc(dev, sizeof(*usbh), GFP_KERNEL);
-> +	if (!usbh)
-> +		return -ENOMEM;
-> +
-> +	variant = device_get_match_data(dev);
-> +	if (!variant)
-> +		return -EINVAL;
-> +	usbh->variant = variant;
-> +
-> +	usbh->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(usbh->base))
-> +		return PTR_ERR(usbh->base);
-> +
-> +	usbh->reset = devm_reset_control_get_exclusive(dev, NULL);
-> +	if (IS_ERR(usbh->reset)) {
-> +		if (PTR_ERR(usbh->reset) != -EPROBE_DEFER)
-> +			dev_err(dev, "failed to get reset\n");
-> +		return PTR_ERR(usbh->reset);
-> +	}
-> +
-> +	usbh->usbh_clk = devm_clk_get_optional(dev, "usbh");
-> +	if (IS_ERR(usbh->usbh_clk))
-> +		return PTR_ERR(usbh->usbh_clk);
-> +
-> +	usbh->usb_ref_clk = devm_clk_get_optional(dev, "usb_ref");
-> +	if (IS_ERR(usbh->usb_ref_clk))
-> +		return PTR_ERR(usbh->usb_ref_clk);
-> +
-> +	phy = devm_phy_create(dev, NULL, &bcm63xx_usbh_phy_ops);
-> +	if (IS_ERR(phy)) {
-> +		dev_err(dev, "failed to create PHY\n");
-> +		return PTR_ERR(phy);
-> +	}
-> +
-> +	platform_set_drvdata(pdev, usbh);
-> +	phy_set_drvdata(phy, usbh);
-> +
-> +	phy_provider = devm_of_phy_provider_register(dev,
-> +						     bcm63xx_usbh_phy_xlate);
-> +	if (IS_ERR(phy_provider)) {
-> +		dev_err(dev, "failed to register PHY provider\n");
-> +		return PTR_ERR(phy_provider);
-> +	}
-> +
-> +	dev_info(dev, "Registered BCM63xx USB PHY driver\n");
+>  	.reset_list		= ipq8074_pciephy_reset_l,
+>  	.num_resets		= ARRAY_SIZE(ipq8074_pciephy_reset_l),
+>  	.vreg_list		= NULL,
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.h b/drivers/phy/qualcomm/phy-qcom-qmp.h
+> index 6d017a0c0c8d..832b3d098403 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.h
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.h
+> @@ -77,6 +77,8 @@
+>  #define QSERDES_COM_CORECLK_DIV_MODE1			0x1bc
+>  
+>  /* Only for QMP V2 PHY - TX registers */
+> +#define QSERDES_TX_EMP_POST1_LVL			0x018
+> +#define QSERDES_TX_SLEW_CNTL				0x040
+>  #define QSERDES_TX_RES_CODE_LANE_OFFSET			0x054
+>  #define QSERDES_TX_DEBUG_BUS_SEL			0x064
+>  #define QSERDES_TX_HIGHZ_TRANSCEIVEREN_BIAS_DRVR_EN	0x068
+> -- 
+> 2.7.4
 
-debug level?
 -- 
 ~Vinod
