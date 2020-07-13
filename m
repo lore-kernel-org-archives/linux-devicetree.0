@@ -2,417 +2,123 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A670C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88739C433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E1DE2076D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:17:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="Hj//nTx3"
+	by mail.kernel.org (Postfix) with ESMTP id 692D720738
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:24:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594664643;
+	bh=ppt62WvXKF05OipX3gn1xhHgk70OfYdjS0NhuenP91g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=s2pqeAdoiCNKVbf5Kblg9S791MOEuK09rw8p1gD7szn0sIV/qlBhp3f8Z7mptIZ+1
+	 wZa0Zrspxt+wlFblgDrsuBLNeHeLVagOiGDrFs7A3b8sHVrtrhc/UNfCkIY5qkfpPp
+	 +qrGauW7idK5WdVT/qC3pCcE/VScuNerqycCyJHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729826AbgGMSRo (ORCPT
+        id S1726321AbgGMSYA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 14:17:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36804 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729703AbgGMSRo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 14:17:44 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23FB4C061794
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 11:17:44 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id t74so9665846lff.2
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 11:17:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=re205F3z3WnfkvkgeXz1WwNi629ipzRJD7RAzs2IT/Q=;
-        b=Hj//nTx3wiyhyMOG0DRHL40AiUQGiiV0QjLDcfsoYHd0ulVNeUy/HazwItkhkNsoBh
-         KedpuoDmmlePxXOAy0PIjnRrUYTRng2WaVkhpy4sWZ4wRtLCF0sqEddfX/oRxCFtXYhX
-         b96pvBpx4MoYcGOVPWncW0dX1j6emDUl+0MfUMbIp4SVQOFJmuFMrI1t52LIezxI6kdq
-         Z4JDcmG+2BuHalWOz2h/RJ9YWpKryffVOD5iarkiBdZkpDxLNVJQSPy1HpJzPP6uIc4e
-         lIRbT/dZPQbroR0KEisFZ1nZHN8qdqQJgqxGSWnCgdmeqabN4UBCedwlEEgUmnXbgV33
-         pCUw==
+        Mon, 13 Jul 2020 14:24:00 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:37333 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbgGMSX7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 14:23:59 -0400
+Received: by mail-io1-f66.google.com with SMTP id v6so14554187iob.4;
+        Mon, 13 Jul 2020 11:23:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=re205F3z3WnfkvkgeXz1WwNi629ipzRJD7RAzs2IT/Q=;
-        b=qp7bO1FXBn2hGJNuioXd1rrVV6sM3N0yo7xfVrDDYkkio6euQuNrR4bnkiVgnLTl8d
-         BAnHzTXz0/sUckQdwlDcBb5IE5dSLoizGbBe4kHlJRcZDQcgoLlh8vo6u7mjgHD3ECHm
-         piHRUCwguKppT33iVa3cRXiIYEy5mgRl+yPbSr/ocZIkL6uLau9doLpswqicawA0eMv8
-         rxqxL/h/iWBNNkaU3GUfIyhq8t8+o8KtuzOBrpk79Uzb9YljqlYqfdpvaYjNuSSL2Zid
-         AXTSXj82dx6xuEFpzh+7Fsjm7omsO3vRAx7Jzbjb9BhZsK00xZBG5r42K3EWacLQnHXB
-         3zUQ==
-X-Gm-Message-State: AOAM532jV8BPcfMpF1RABhfQANrMqiAUj9c2BjvC/YOVmXxzg1d6UVCh
-        M7goFxfIVvGmvPqi8h8/IyqT+g==
-X-Google-Smtp-Source: ABdhPJyps+72YbhYLSrI/QoXfBHkSCwlUK9RsRzM//V9Gv5XBFs75HmSmpJLl1uYq5z0yokW8JyH+g==
-X-Received: by 2002:a19:604f:: with SMTP id p15mr216863lfk.59.1594664262404;
-        Mon, 13 Jul 2020 11:17:42 -0700 (PDT)
-Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
-        by smtp.gmail.com with ESMTPSA id e9sm4178332ljn.61.2020.07.13.11.17.41
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ifx3aALNuF7rKl8vX3SdTnNE70Q3qXp0lBlunsaf+O4=;
+        b=VPOOTJhoLj5Cb150y6p1TwenBQzNfDKOJ5wyIUWq4XesRghFuTupXuNDC6XNt5OrZa
+         Y2mvcXADpPiRngSgJJMkFr1gD3AYhLU7GsEGv8Yk1NjjGhs0PShMjaoA0yiZ9Vj3bHHI
+         f0tHrDuUtWjy0YmU2DPTP72NHuzF2htDmG+Xv3vspo1FQn28gbZBbCsFlWFJA5UbdEE2
+         tKMAaZp1qC+gDMfv2kJqggJI5H/WvroU6A/Pv1xt2X1IRwbyMxsjC6GDQho6qnrG8rCG
+         jv+p0WXJsc5kYMuXSj/fBo3dLxk3e4kUc/sSHhG2fi9RMkU9le6t9UnLvXXhu1dm1mg7
+         DJWA==
+X-Gm-Message-State: AOAM531xcWgCijWFCMHSfaq2+gqfDJ4IR4U1yAwOsPTsPXK2TLW17jM4
+        aFtGB5nmVKZljP8THAO4sQ==
+X-Google-Smtp-Source: ABdhPJya3sqMPQiW2H/b993RNfsrgt3J2EBCVEUsT+0P5mubEbH1CLbcW6JdVEJ2qL9zNx+NokQEPw==
+X-Received: by 2002:a5e:dd4c:: with SMTP id u12mr1090199iop.14.1594664638827;
+        Mon, 13 Jul 2020 11:23:58 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id t1sm8159994iob.16.2020.07.13.11.23.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 11:17:41 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 20:17:40 +0200
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH 2/3] dt-bindings: adv7604: Convert bindings to json-schema
-Message-ID: <20200713181740.GO2866302@oden.dyn.berto.se>
-References: <20200713111844.528313-1-niklas.soderlund+renesas@ragnatech.se>
- <20200713111844.528313-3-niklas.soderlund+renesas@ragnatech.se>
- <20200713154449.GA256154@bogus>
+        Mon, 13 Jul 2020 11:23:58 -0700 (PDT)
+Received: (nullmailer pid 493759 invoked by uid 1000);
+        Mon, 13 Jul 2020 18:23:56 -0000
+Date:   Mon, 13 Jul 2020 12:23:56 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
+        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>, linux-usb@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, helgaas@kernel.org,
+        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
+        lorenzo.pieralisi@arm.com, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 1/9] dt-bindings: reset: Add a binding for the RPi
+ Firmware reset controller
+Message-ID: <20200713182356.GA413630@bogus>
+References: <20200612171334.26385-1-nsaenzjulienne@suse.de>
+ <20200612171334.26385-2-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200713154449.GA256154@bogus>
+In-Reply-To: <20200612171334.26385-2-nsaenzjulienne@suse.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Thanks for your feedback.
-
-On 2020-07-13 09:44:49 -0600, Rob Herring wrote:
-> On Mon, Jul 13, 2020 at 01:18:43PM +0200, Niklas Söderlund wrote:
-> > Convert ADV7604 video decoder documentation to json-schema.
-> > 
-> > Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> > ---
-> >  .../devicetree/bindings/media/i2c/adv7604.txt |  87 ---------
-> >  .../bindings/media/i2c/adv7604.yaml           | 171 ++++++++++++++++++
-> >  2 files changed, 171 insertions(+), 87 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/media/i2c/adv7604.txt
-> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/adv7604.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-> > deleted file mode 100644
-> > index 8c7cdc7cd7aaebc8..0000000000000000
-> > --- a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-> > +++ /dev/null
-> > @@ -1,87 +0,0 @@
-> > -* Analog Devices ADV7604/11/12 video decoder with HDMI receiver
-> > -
-> > -The ADV7604 and ADV7611/12 are multiformat video decoders with an integrated
-> > -HDMI receiver. The ADV7604 has four multiplexed HDMI inputs and one analog
-> > -input, and the ADV7611 has one HDMI input and no analog input. The 7612 is
-> > -similar to the 7611 but has 2 HDMI inputs.
-> > -
-> > -These device tree bindings support the ADV7611/12 only at the moment.
-> > -
-> > -Required Properties:
-> > -
-> > -  - compatible: Must contain one of the following
-> > -    - "adi,adv7611" for the ADV7611
-> > -    - "adi,adv7612" for the ADV7612
-> > -
-> > -  - reg: I2C slave addresses
-> > -    The ADV76xx has up to thirteen 256-byte maps that can be accessed via the
-> > -    main I2C ports. Each map has it own I2C address and acts as a standard
-> > -    slave device on the I2C bus. The main address is mandatory, others are
-> > -    optional and revert to defaults if not specified.
-> > -
-> > -The device node must contain one 'port' child node per device input and output
-> > -port, in accordance with the video interface bindings defined in
-> > -Documentation/devicetree/bindings/media/video-interfaces.txt. The port nodes
-> > -are numbered as follows.
-> > -
-> > -  Port			ADV7611    ADV7612
-> > -------------------------------------------------------------
-> > -  HDMI			0             0, 1
-> > -  Digital output	1                2
-> > -
-> > -The digital output port node must contain at least one endpoint.
-> > -
-> > -Optional Properties:
-> > -
-> > -  - hpd-gpios: References to the GPIOs that control the HDMI hot-plug
-> > -    detection pins, one per HDMI input. The active flag indicates the GPIO
-> > -    level that enables hot-plug detection.
-> > -  - reset-gpios: Reference to the GPIO connected to the device's reset pin.
-> > -  - default-input: Select which input is selected after reset.
-> > -  - reg-names : Names of maps with programmable addresses.
-> > -		It can contain any map needing a non-default address.
-> > -		Possible maps names are :
-> > -		  "main", "avlink", "cec", "infoframe", "esdp", "dpp", "afe",
-> > -		  "rep", "edid", "hdmi", "test", "cp", "vdp"
-> > -
-> > -Optional Endpoint Properties:
-> > -
-> > -  The following three properties are defined in video-interfaces.txt and are
-> > -  valid for source endpoints only.
-> > -
-> > -  - hsync-active: Horizontal synchronization polarity. Defaults to active low.
-> > -  - vsync-active: Vertical synchronization polarity. Defaults to active low.
-> > -  - pclk-sample: Pixel clock polarity. Defaults to output on the falling edge.
-> > -
-> > -  If none of hsync-active, vsync-active and pclk-sample is specified the
-> > -  endpoint will use embedded BT.656 synchronization.
-> > -
-> > -Example:
-> > -
-> > -	hdmi_receiver@4c {
-> > -		compatible = "adi,adv7611";
-> > -		/*
-> > -		 * The edid page will be accessible @ 0x66 on the I2C bus. All
-> > -		 * other maps will retain their default addresses.
-> > -		 */
-> > -		reg = <0x4c>, <0x66>;
-> > -		reg-names = "main", "edid";
-> > -
-> > -		reset-gpios = <&ioexp 0 GPIO_ACTIVE_LOW>;
-> > -		hpd-gpios = <&ioexp 2 GPIO_ACTIVE_HIGH>;
-> > -
-> > -		#address-cells = <1>;
-> > -		#size-cells = <0>;
-> > -
-> > -		default-input = <0>;
-> > -
-> > -		port@0 {
-> > -			reg = <0>;
-> > -		};
-> > -		port@1 {
-> > -			reg = <1>;
-> > -			hdmi_in: endpoint {
-> > -				remote-endpoint = <&ccdc_in>;
-> > -			};
-> > -		};
-> > -	};
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.yaml b/Documentation/devicetree/bindings/media/i2c/adv7604.yaml
-> > new file mode 100644
-> > index 0000000000000000..d354fd8e0cc88d93
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.yaml
-> > @@ -0,0 +1,171 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/media/i2c/adv7604.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Analog Devices ADV7604/11/12 video decoder with HDMI receiver
-> > +
-> > +maintainers:
-> > +  - Hans Verkuil <hverkuil-cisco@xs4all.nl>
-> > +
-> > +description:
-> > +  The ADV7604 and ADV7611/12 are multiformat video decoders with an integrated
-> > +  HDMI receiver. The ADV7604 has four multiplexed HDMI inputs and one analog
-> > +  input, and the ADV7611 has one HDMI input and no analog input. The 7612 is
-> > +  similar to the 7611 but has 2 HDMI inputs.
-> > +
-> > +  These device tree bindings support the ADV7611/12 only at the moment.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - enum:
-> > +        - adi,adv7611
-> > +        - adi,adv7612
-> > +
-> > +  reg:
-> > +    minItems: 1
-> > +    maxItems: 13
-> > +
-> > +  reg-names:
-> > +    items:
-> > +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-> > +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-> > +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-> > +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-> > +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-> > +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-> > +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-> > +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-> > +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-> > +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-> > +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-> > +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-> > +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
+On Fri, Jun 12, 2020 at 07:13:25PM +0200, Nicolas Saenz Julienne wrote:
+> The firmware running on the RPi VideoCore can be used to reset and
+> initialize HW controlled by the firmware.
 > 
-> This can be simplified to:
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 > 
-> items:
->   enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-
-I tried this at first,
-
-properties:
-  reg-names:
-    items:
-      enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-
-But running the dt_binding_check on it fails with,
-
-$ make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/i2c/adv7604.yaml
-  CHKDT   Documentation/devicetree/bindings/media/i2c/adv7604.yaml
-/mnt/build/linux/Documentation/devicetree/bindings/media/i2c/adv7604.yaml: properties:reg-names:items: {'enum': ['main', 'avlink', 'cec', 'infoframe', 'esdp', 'dpp', 'afe', 'rep', 'edid', 'hdmi', 'test', 'cp', 'vdp']} is not of type 'array'
-make[1]: *** [Documentation/devicetree/bindings/Makefile:20: Documentation/devicetree/bindings/media/i2c/adv7604.example.dts] Error 1
-make: *** [Makefile:1334: dt_binding_check] Error 2
-
-What am I missing? I'm using latest master of dt-schema [1] if it makes 
-any difference.
-
-1. 1330cddcba757bee ("schemas: Make additionalProperties/unevaluatedProperties explicit")
-
+> ---
+> Changes since v2:
+>  - Add include file for reset IDs
 > 
-> (Make items a schema applying to all items, rather than a list)
+> Changes since v1:
+>  - Correct cells binding as per Florian's comment
+>  - Change compatible string to be more generic
 > 
-> Though we may want to enforce 'main' is first with:
+>  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++++++++
+>  .../reset/raspberrypi,firmware-reset.h        | 13 ++++++++++++
+>  2 files changed, 34 insertions(+)
+>  create mode 100644 include/dt-bindings/reset/raspberrypi,firmware-reset.h
 > 
-> minItems: 1
-> maxItems: 13
-> items:
->   - const: main
-> 
-> These 2 can be combined under an 'allOf'.
+> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+> index b48ed875eb8e..23a885af3a28 100644
+> --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+> @@ -39,6 +39,22 @@ properties:
+>        - compatible
+>        - "#clock-cells"
+>  
+> +  reset:
 
-I also had this idea by dropping main from the list of enums for all but 
-the first one. But I can't find any argument for why main needs to go 
-first, but I agree it feels like the right thing.
+I'm not really thrilled how this is evolving with a node per provider. 
+There's no reason you can't just add #clock-cells and #reset-cells to 
+the parent firmware node.
 
-> 
-> > +
-> > +  reset-gpios:
-> > +    maxItems: 1
-> > +
-> > +  hpd-gpios:
-> > +    minItems: 1
-> > +    description:
-> > +      References to the GPIOs that control the HDMI hot-plug detection pins,
-> > +      one per HDMI input. The active flag indicates the GPIO level that
-> > +      enables hot-plug detection.
-> > +
-> > +  default-input:
-> > +    maxItems: 1
-> > +    description:
-> > +      Select which input is selected after reset.
-> > +
-> > +  ports:
-> > +    type: object
-> > +    description:
-> > +      A node containing input and output port nodes with endpoint definitions
-> > +      as documented in
-> > +      Documentation/devicetree/bindings/media/video-interfaces.txt
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +allOf:
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            const: adi,adv7611
-> > +    then:
-> > +      properties:
-> > +        ports:
-> > +          properties:
-> > +            '#address-cells':
-> > +              const: 1
-> > +            '#size-cells':
-> > +              const: 0
-> > +            port@0:
-> > +              type: object
-> > +              description: Input port
-> > +            port@1:
-> > +              type: object
-> > +              description: Output port
-> > +
-> > +          required:
-> > +            - port@1
-> > +
-> > +          additionalProperties: false
-> > +
-> > +      required:
-> > +        - ports
-> > +
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            const: adi,adv7612
-> > +    then:
-> > +      properties:
-> > +        ports:
-> > +          properties:
-> > +            '#address-cells':
-> > +              const: 1
-> > +            '#size-cells':
-> > +              const: 0
-> > +            port@2:
-> > +              type: object
-> > +              description: Output port
-> > +
-> > +          patternProperties:
-> > +            "^port@[0-1]$":
-> > +              type: object
-> > +              description: Input port
-> > +
-> > +          required:
-> > +            - port@2
-> > +
-> > +          additionalProperties: false
-> > +
-> > +      required:
-> > +        - ports
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +
-> > +    i2c {
-> > +            #address-cells = <1>;
-> > +            #size-cells = <0>;
-> > +
-> > +            hdmi_receiver@4c {
-> > +                    compatible = "adi,adv7611";
-> > +                    /*
-> > +                     * The edid page will be accessible @ 0x66 on the I2C bus. All
-> > +                     * other maps will retain their default addresses.
-> > +                     */
-> > +                    reg = <0x4c>, <0x66>;
-> > +                    reg-names = "main", "edid";
-> > +
-> > +                    reset-gpios = <&ioexp 0 GPIO_ACTIVE_LOW>;
-> > +                    hpd-gpios = <&ioexp 2 GPIO_ACTIVE_HIGH>;
-> > +                    default-input = <0>;
-> > +
-> > +                    ports {
-> > +                            #address-cells = <1>;
-> > +                            #size-cells = <0>;
-> > +
-> > +                            port@0 {
-> > +                                    reg = <0>;
-> > +                            };
-> > +
-> > +                            port@1 {
-> > +                                    reg = <1>;
-> > +                                    hdmi_in: endpoint {
-> > +                                            remote-endpoint = <&ccdc_in>;
-> > +                                    };
-> > +                            };
-> > +                    };
-> > +
-> > +
-> > +            };
-> > +    };
-> > -- 
-> > 2.27.0
-> > 
+I probably should have complained with the clocks node, but that's only 
+pending for 5.9.
 
--- 
-Regards,
-Niklas Söderlund
+The bigger issue is this stuff is just trickling in one bit at a time 
+which gives no context for review. What's next? Is it really a mystery 
+as to what functions the firmware provides? You don't have to have a 
+driver in place for every function.
+
+Rob
