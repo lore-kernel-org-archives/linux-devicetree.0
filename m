@@ -2,112 +2,151 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FFDC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEB8C433E5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8093F20720
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:33:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594622010;
-	bh=bVP0kqOjBb7yc4VbMsPyXj/p1GIRDdmOqU2CJ/tpabE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JAJ1xFeAzPrC8MDXgAfEsdos08pjclrIzFxKg/bYHnMs5T2Dy5pEkYpW7ufmNdrVo
-	 xEyogZm16TMA5+PNU+aST88f/ebLYMXG5RdbVxVurH1kH4eRLxjQkf/EWisWn7DDJb
-	 FBqIyYS/ir+wUrv7ub/Ttm++h0P8kY70mEBS3+M0=
+	by mail.kernel.org (Postfix) with ESMTP id 0C5AA20791
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:34:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VfSGc/WE";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FWZNe1tj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729110AbgGMGd3 (ORCPT
+        id S1725804AbgGMGeF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 02:33:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55540 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbgGMGd3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 02:33:29 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 999DC2067D;
-        Mon, 13 Jul 2020 06:33:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594622009;
-        bh=bVP0kqOjBb7yc4VbMsPyXj/p1GIRDdmOqU2CJ/tpabE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jpDnQNzEdC4zS0nU0V00HdU63VxbfTUhY38uQZjq/Gg9OUB/rGFiBxTS9c6O55xC9
-         1ZAPUBZiWZ0fePHDs/hu0TgAoJAtKarYDvz84nmqe7VXAg/HG6m4aCeBuA81xhroFo
-         jU3GyusbQBKcvTgQfVlxPUiWgDxkRZYgxElxEVf4=
-Date:   Mon, 13 Jul 2020 14:33:24 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Chris Healy <cphealy@gmail.com>
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
-        Stefan Agner <stefan@agner.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux ARM <linux-arm-kernel@lists.infradead.org>,
-        devicetree@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: Re: [PATCH] ARM: dts: vfxxx: Add node for CAAM
-Message-ID: <20200713063323.GE12113@dragon>
-References: <CAFXsbZoeTyRp7bwjBUcXT5H2GhrTmNeeoQSFcgiS9aNRFw6V_g@mail.gmail.com>
+        Mon, 13 Jul 2020 02:34:05 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33822 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728341AbgGMGeF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 02:34:05 -0400
+From:   Kurt Kanzenbach <kurt@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594622042;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=gz+RIm1i6Cxy/hPxPhdgJ4qdopKz9kcCzsUPWt0a7wI=;
+        b=VfSGc/WEcM2Ax8+jDkDCk9hozs3LCylBXjVMp96uLgrYUAIODJq9cgelWM9lDyXoYyUxJ7
+        51Ke0beLlzkA+utFpF+E3GzKY5FDu4/1Fjm6LwidBZpJeIpm3yFHt5uzsqaLq6wyRxGv5i
+        0xLHyEsm12qrQPpb9E6HBSK/vcfQ5vaIAq56CX2DbEOpwTFA1Cmwvu58iKZ3/ph8A5xhAf
+        LxGKKD4rEWdrNuZDXY37uaD+I8Jp0K8gin+ztLPeI2dYKRZ22fvY0JvW/Az0hxKNhWoDqa
+        /duvqRIyXUDSDdqp8VDVamuV8Va+SqD6w2p1AV5wO0sfN5xu8QbIpgdeZLvfhQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594622042;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=gz+RIm1i6Cxy/hPxPhdgJ4qdopKz9kcCzsUPWt0a7wI=;
+        b=FWZNe1tj23kCX7H9YJmZUxLGEG9TasEh9fR/UD/OmpnjjJ7eCfhn1lYOShHivtb7cb3V3f
+        pGwIUdmvZfr88ZBg==
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org, Vladimir Oltean <olteanv@gmail.com>
+Subject: Re: [PATCH v1 3/8] net: dsa: hellcreek: Add PTP clock support
+In-Reply-To: <01981d4a-6e28-2789-6d15-5d825e7ce09b@gmail.com>
+References: <20200710113611.3398-1-kurt@linutronix.de> <20200710113611.3398-4-kurt@linutronix.de> <01981d4a-6e28-2789-6d15-5d825e7ce09b@gmail.com>
+Date:   Mon, 13 Jul 2020 08:34:01 +0200
+Message-ID: <87sgdvncti.fsf@kurt>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFXsbZoeTyRp7bwjBUcXT5H2GhrTmNeeoQSFcgiS9aNRFw6V_g@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Jul 04, 2020 at 06:40:43PM -0700, Chris Healy wrote:
-> Add node for CAAM device in NXP Vybrid SoC.
-> 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Signed-off-by: Chris Healy <cphealy@gmail.com>
-> ---
->  arch/arm/boot/dts/vfxxx.dtsi | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-> index 2d547e7b21ad..0fe03aa0367f 100644
-> --- a/arch/arm/boot/dts/vfxxx.dtsi
-> +++ b/arch/arm/boot/dts/vfxxx.dtsi
-> @@ -729,6 +729,28 @@
->                  dma-names = "rx","tx";
->                  status = "disabled";
->              };
-> +
-> +            crypto: crypto@400f0000 {
-> +                compatible = "fsl,sec-v4.0";
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Please use tab for indentation.
+On Sat Jul 11 2020, Florian Fainelli wrote:
+> On 7/10/2020 4:36 AM, Kurt Kanzenbach wrote:
+>> From: Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>
+>>=20
+>> The switch has internal PTP hardware clocks. Add support for it. There a=
+re three
+>> clocks:
+>>=20
+>>  * Synchronized
+>>  * Syntonized
+>>  * Free running
+>>=20
+>> Currently the synchronized clock is exported to user space which is a go=
+od
+>> default for the beginning. The free running clock might be exported later
+>> e.g. for implementing 802.1AS-2011/2020 Time Aware Bridges (TAB). The sw=
+itch
+>> also supports cross time stamping for that purpose.
+>>=20
+>> The implementation adds support setting/getting the time as well as offs=
+et and
+>> frequency adjustments. However, the clock only holds a partial timeofday
+>> timestamp. This is why we track the seconds completely in software (see =
+overflow
+>> work and last_ts).
+>>=20
+>> Furthermore, add the PTP multicast addresses into the FDB to forward that
+>> packages only to the CPU port where they are processed by a PTP program.
+>>=20
+>> Signed-off-by: Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>
+>> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
+>
+> Are not you missing an depends on PTP_1588_CLOCK somewhere?
 
-Shawn
+Most likely. Thanks!
 
-> +                #address-cells = <1>;
-> +                #size-cells = <1>;
-> +                reg = <0x400f0000 0x9000>;
-> +                ranges = <0 0x400f0000 0x9000>;
-> +                clocks = <&clks VF610_CLK_CAAM>;
-> +                clock-names = "ipg";
-> +
-> +                sec_jr0: jr0@1000 {
-> +                    compatible = "fsl,sec-v4.0-job-ring";
-> +                    reg = <0x1000 0x1000>;
-> +                    interrupts = <102 IRQ_TYPE_LEVEL_HIGH>;
-> +                };
-> +
-> +                sec_jr1: jr1@2000 {
-> +                    compatible = "fsl,sec-v4.0-job-ring";
-> +                    reg = <0x2000 0x1000>;
-> +                    interrupts = <102 IRQ_TYPE_LEVEL_HIGH>;
-> +                };
-> +            };
->          };
->      };
->  };
-> --
-> 2.21.3
+>
+>> ---
+>
+> [snip]
+>
+>>=20=20
+>> +static int hellcreek_setup_fdb(struct hellcreek *hellcreek)
+>> +{
+>> +	static struct hellcreek_fdb_entry ptp =3D {
+>> +		/* MAC: 01-1B-19-00-00-00 */
+>> +		.mac	      =3D { 0x01, 0x1b, 0x19, 0x00, 0x00, 0x00 },
+>> +		.portmask     =3D 0x03,	/* Management ports */
+>
+> Should not this depend on the actual number of ports enabled by the user
+> and so it would be more logical to program those entries (or update
+> them) at port_enable() time?
+
+For me this is a switch configuration. It means forward all PTP traffic
+to the switch's CPU port and therefore it doesn't depend on the enabled
+ports.
+
+Thanks,
+Kurt
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl8MAFkACgkQeSpbgcuY
+8KZGUhAAtNX9yACTWdGjQh/xcyeLMxfc8wgMY2SHn22kQPwsLYCQlNB36VOq0oE0
+05hNIdK2BRhcVIAO8XK611PkAVHmGuCMl6JXJ9X/zShjZBM6Fq9f3bgFBLSfc97B
+zLhRYz7u6vGMPzwwRWtNjY+Op7VirtSYvnGZNqEWoC2rtnA1TIXz2GKbzuOIeO5p
+NgVy2sOkfnAoTH3dYvLQwCOeZGM9h4oJxd5Tl6tGrdYMqO6DxYXvlc5cxIh0TmPM
+fWgkuvyETqxGJPalVSmOwZS26EjbYobdJWsjPO5LBysy4LDkXG0ZuUm/K08ONkkq
+pUn3nF1eVNK4mvbe4CtjFPm54vgv27BXQlzZARP1Ln8sdJ73G/Ea0Ug66MWNqO2r
+ITjDKCUOVKFEGkkDwCrNLzE6kDwT1PCTnIkKRRr4QZeirUaKnca4jQBnRaBSToW6
+CC/6H8AUWIA3tdg+XoG4VuBkO/TUT+wxZbK1UHcnTVD6FIptQI7/3yF0sfE1FPvT
+hKP98aO+0uvoK07dVb3i3KUNrPrEbAvN93hWqzXcPXRnay5S1mHQosyJwBaDFsLN
+LQkAg7lW34f5EJ3NRfOUn7mNlQbpH5xZcVHYEfqPK0thq9Gm78p/W3PQmkI9g8fy
+l3lanOwBeS8qDrK3BDv326s+y7vkAn6rB1S5M0HPXp0001BP/kI=
+=rWdt
+-----END PGP SIGNATURE-----
+--=-=-=--
