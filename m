@@ -2,60 +2,60 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91398C4346A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E4FC433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EE5D20809
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01B552068F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 06:10:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KvjueiX8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MJI0XNhB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729382AbgGMGJz (ORCPT
+        id S1729275AbgGMGJk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 02:09:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35404 "EHLO
+        Mon, 13 Jul 2020 02:09:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729357AbgGMGJy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 02:09:54 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46D8AC08C5DB
-        for <devicetree@vger.kernel.org>; Sun, 12 Jul 2020 23:09:54 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id f2so5052911plr.8
-        for <devicetree@vger.kernel.org>; Sun, 12 Jul 2020 23:09:54 -0700 (PDT)
+        with ESMTP id S1729272AbgGMGJi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 02:09:38 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0BF3C08C5DB
+        for <devicetree@vger.kernel.org>; Sun, 12 Jul 2020 23:09:38 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id gc15so6134107pjb.0
+        for <devicetree@vger.kernel.org>; Sun, 12 Jul 2020 23:09:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=dIf/kbmDB8xe6X4lo4cpvvB2emLMAc7eYXhbCxEdg7A=;
-        b=KvjueiX8a5M7s3DOVR4ub0g5vPoTlo1v0PFdNEE1FbjLLfEJDvO2nItXoNfgBA1n+c
-         YD6uQYgUO0k7rfcU7MDnE/e+eZl7lWQaW5zrZdaRTkXnf/wRA56r6LD/PRSI3CpJqgtt
-         Zp5Yjj+ERrihJzZWXHtTKO8i44u9M8aRl1eFo=
+        bh=emr/NGqj2O214H2RbodqJQHnJMZ9UzU1pc+xV9IRc4I=;
+        b=MJI0XNhBy7D66xtLNgM0JoF5yJyBliChbZhl+Ewb7Rxb0zXallIaPeV0iHxOcHqBMM
+         foYz0ZreIMkRc8Pto9PpxS3ZTignfJ5HuqD+fs1zRlIBgymv2Xph23P9lNGblMZGfR8U
+         EdINi2IIzILZ9kdLXxkMo1GtL0K/6kbFSHy7w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=dIf/kbmDB8xe6X4lo4cpvvB2emLMAc7eYXhbCxEdg7A=;
-        b=IhjZJTKvTak2Fi/AVq/RnXt2HLF4IpUav05/oAMF15YOWU58+BDTZZev6stWX0oTfB
-         l7s9ImGH1FT4c5O9fLyqV92YoH7xU8wQmw1Dap1VQldMcI2PUPHnzU/Wc6yeRS/rF347
-         mdym4S1DdEelbVgczh7mftkWT4UdMjtsbFPpDRwqlbWtxEkGppHIacBCeVzdXyxXXx90
-         q5UfVEllTg7xAkMnuR+lN4TEGis2eulcTboD+iOcVuSrY70VdjrDXa0NaXwmGCMS65MZ
-         sBmUe7VUl/5rEJmmu+k5LNMp84XLEaWZNzvpFuNTL9IalyDojVzEURhnV352MSqwJAK7
-         i5bg==
-X-Gm-Message-State: AOAM532Vn1C4UtmwCa7MytXiE8ndEpdltlqZrjY497TGhDiB/4LfIjF5
-        yDyU3ZesklhbVnItRFoUg6rNLQ==
-X-Google-Smtp-Source: ABdhPJyyNgcKwjr4YlNkGt0EkWZx1ghU0v4rcCtbtbVDVnNk7CIEc0d6/O+Z8WYcxD2E/rHe+eUL3A==
-X-Received: by 2002:a17:90a:f996:: with SMTP id cq22mr19935477pjb.208.1594620593829;
-        Sun, 12 Jul 2020 23:09:53 -0700 (PDT)
+        bh=emr/NGqj2O214H2RbodqJQHnJMZ9UzU1pc+xV9IRc4I=;
+        b=n0o6teLe8GPejCBCCUqfiWK+yOwVu7LmNUCuWM3ldiXAkWYFiBmXaAFozHDU4Pu7Bf
+         zvu+gl+Y8AJ1P1WOPQNLR2r5Lqkr8aqd5KagbTc/D9Ir9mMf4Kx596LuwqMFSwTiEBy7
+         +GlgXC60FBheRT4tT4W1AoqO9LQSlaahkL9O9s5rJmBvv5FLJtrtoAV1tZAgXuRbnYwE
+         hiefWDwsep/PmpDku07JaDK/4iIEuaE2ENNN3oGvlp/y6kuwB7DyDqgTqKR9L/6BQyX0
+         a5fZsKr7IUItCQbUmMqvc6yKf4gJQyOxPm58507pBGgsNR9a2kNkibJtUzpH0lDU2e7z
+         Zwww==
+X-Gm-Message-State: AOAM533ituNi8Q/mLWx+HbWPErQ7iQg3gkLAZnLZijnfypWPPj84TN1H
+        RlF11tYV0ag4WAG1mDsWr9UaHA==
+X-Google-Smtp-Source: ABdhPJysjlLkR7LkuQ6sWSWbC6lkJls5Z50Q4yTfrVa+t5ZL7a+g9iV25BOY6gvfVvL6OvzXgbJlvw==
+X-Received: by 2002:a17:90b:2348:: with SMTP id ms8mr17509414pjb.5.1594620578321;
+        Sun, 12 Jul 2020 23:09:38 -0700 (PDT)
 Received: from acourbot.tok.corp.google.com ([2401:fa00:8f:203:eeb1:d7ff:fe57:b7e5])
-        by smtp.gmail.com with ESMTPSA id c134sm13134934pfc.115.2020.07.12.23.09.50
+        by smtp.gmail.com with ESMTPSA id c134sm13134934pfc.115.2020.07.12.23.09.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jul 2020 23:09:53 -0700 (PDT)
+        Sun, 12 Jul 2020 23:09:37 -0700 (PDT)
 From:   Alexandre Courbot <acourbot@chromium.org>
 To:     Tiffany Lin <tiffany.lin@mediatek.com>,
         Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
@@ -65,9 +65,9 @@ To:     Tiffany Lin <tiffany.lin@mediatek.com>,
 Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Alexandre Courbot <acourbot@chromium.org>
-Subject: [PATCH v3 14/16] media: mtk-vcodec: venc: support ENUM_FRAMESIZES on OUTPUT formats
-Date:   Mon, 13 Jul 2020 15:08:40 +0900
-Message-Id: <20200713060842.471356-15-acourbot@chromium.org>
+Subject: [PATCH v3 09/16] media: mtk-vcodec: add support for MT8183 encoder
+Date:   Mon, 13 Jul 2020 15:08:35 +0900
+Message-Id: <20200713060842.471356-10-acourbot@chromium.org>
 X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
 In-Reply-To: <20200713060842.471356-1-acourbot@chromium.org>
 References: <20200713060842.471356-1-acourbot@chromium.org>
@@ -78,141 +78,75 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-v4l2-compliance requires ENUM_FRAMESIZES to support OUTPUT formats.
-Reuse mtk_venc_find_format() to make sure both queues are considered
-when serving an ENUM_FRAMESIZES.
+From: Yunfei Dong <yunfei.dong@mediatek.com>
 
+Now that all the supporting blocks are present, enable encoder for
+MT8183.
+
+Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
+[acourbot: refactor, cleanup and split]
+Co-developed-by: Alexandre Courbot <acourbot@chromium.org>
 Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+Acked-by: Tiffany Lin <tiffany.lin@mediatek.com>
 ---
- .../platform/mtk-vcodec/mtk_vcodec_enc.c      | 71 +++++++++----------
- 1 file changed, 33 insertions(+), 38 deletions(-)
+ .../platform/mtk-vcodec/mtk_vcodec_drv.h      |  1 +
+ .../platform/mtk-vcodec/mtk_vcodec_enc_drv.c  | 22 +++++++++++++++++++
+ 2 files changed, 23 insertions(+)
 
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
-index f8d4fbe927f9..1b79185cf922 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
-@@ -123,28 +123,44 @@ static int vidioc_enum_fmt(struct v4l2_fmtdesc *f,
- 	return 0;
- }
+diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
+index 59b4b750666b..a271611750ad 100644
+--- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
++++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
+@@ -302,6 +302,7 @@ struct mtk_vcodec_ctx {
  
-+static const struct mtk_video_fmt *mtk_venc_find_format(u32 fourcc,
-+	const struct mtk_vcodec_enc_pdata *pdata)
-+{
-+	const struct mtk_video_fmt *fmt;
-+	unsigned int k;
+ enum mtk_chip {
+ 	MTK_MT8173,
++	MTK_MT8183,
+ };
+ 
+ /**
+diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
+index c8a4b85a81c4..b8fe408dd6c7 100644
+--- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
++++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
+@@ -62,6 +62,14 @@ static const struct mtk_video_fmt mtk_video_formats_capture_mt8173[] =  {
+ 	},
+ };
+ 
++static const struct mtk_video_fmt mtk_video_formats_capture_mt8183[] =  {
++	{
++		.fourcc = V4L2_PIX_FMT_H264,
++		.type = MTK_FMT_ENC,
++		.num_planes = 1,
++	},
++};
 +
-+	for (k = 0; k < pdata->num_capture_formats; k++) {
-+		fmt = &pdata->capture_formats[k];
-+		if (fmt->fourcc == fourcc)
-+			return fmt;
-+	}
-+
-+	for (k = 0; k < pdata->num_output_formats; k++) {
-+		fmt = &pdata->output_formats[k];
-+		if (fmt->fourcc == fourcc)
-+			return fmt;
-+	}
-+
-+	return NULL;
-+}
-+
- static int vidioc_enum_framesizes(struct file *file, void *fh,
- 				  struct v4l2_frmsizeenum *fsize)
+ /* Wake up context wait_queue */
+ static void wake_up_ctx(struct mtk_vcodec_ctx *ctx, unsigned int reason)
  {
--	const struct mtk_vcodec_enc_pdata *pdata =
--		fh_to_ctx(fh)->dev->venc_pdata;
--	int i = 0;
-+	const struct mtk_video_fmt *fmt;
+@@ -424,8 +432,22 @@ static const struct mtk_vcodec_enc_pdata mt8173_pdata = {
+ 	.max_bitrate = 4000000,
+ };
  
- 	if (fsize->index != 0)
- 		return -EINVAL;
- 
--	for (i = 0; i < pdata->num_capture_formats; ++i) {
--		const struct mtk_video_fmt *fmt = &pdata->capture_formats[i];
-+	fmt = mtk_venc_find_format(fsize->pixel_format,
-+				   fh_to_ctx(fh)->dev->venc_pdata);
-+	if (!fmt)
-+		return -EINVAL;
- 
--		if (fsize->pixel_format != fmt->fourcc)
--			continue;
-+	fsize->type = V4L2_FRMSIZE_TYPE_STEPWISE;
-+	fsize->stepwise = mtk_venc_framesizes;
- 
--		fsize->type = V4L2_FRMSIZE_TYPE_STEPWISE;
--		fsize->stepwise = mtk_venc_framesizes;
--		return 0;
--	}
--
--	return -EINVAL;
-+	return 0;
- }
- 
- static int vidioc_enum_fmt_vid_cap(struct file *file, void *priv,
-@@ -222,27 +238,6 @@ static struct mtk_q_data *mtk_venc_get_q_data(struct mtk_vcodec_ctx *ctx,
- 	return &ctx->q_data[MTK_Q_DATA_DST];
- }
- 
--static const struct mtk_video_fmt *mtk_venc_find_format(struct v4l2_format *f,
--	const struct mtk_vcodec_enc_pdata *pdata)
--{
--	const struct mtk_video_fmt *fmt;
--	unsigned int k;
--
--	for (k = 0; k < pdata->num_capture_formats; k++) {
--		fmt = &pdata->capture_formats[k];
--		if (fmt->fourcc == f->fmt.pix.pixelformat)
--			return fmt;
--	}
--
--	for (k = 0; k < pdata->num_output_formats; k++) {
--		fmt = &pdata->output_formats[k];
--		if (fmt->fourcc == f->fmt.pix.pixelformat)
--			return fmt;
--	}
--
--	return NULL;
--}
--
- /* V4L2 specification suggests the driver corrects the format struct if any of
-  * the dimensions is unsupported
-  */
-@@ -403,7 +398,7 @@ static int vidioc_venc_s_fmt_cap(struct file *file, void *priv,
- 		return -EINVAL;
- 	}
- 
--	fmt = mtk_venc_find_format(f, pdata);
-+	fmt = mtk_venc_find_format(f->fmt.pix.pixelformat, pdata);
- 	if (!fmt) {
- 		fmt = &ctx->dev->venc_pdata->capture_formats[0];
- 		f->fmt.pix.pixelformat = fmt->fourcc;
-@@ -467,7 +462,7 @@ static int vidioc_venc_s_fmt_out(struct file *file, void *priv,
- 		return -EINVAL;
- 	}
- 
--	fmt = mtk_venc_find_format(f, pdata);
-+	fmt = mtk_venc_find_format(f->fmt.pix.pixelformat, pdata);
- 	if (!fmt) {
- 		fmt = &ctx->dev->venc_pdata->output_formats[0];
- 		f->fmt.pix.pixelformat = fmt->fourcc;
-@@ -550,7 +545,7 @@ static int vidioc_try_fmt_vid_cap_mplane(struct file *file, void *priv,
- 	struct mtk_vcodec_ctx *ctx = fh_to_ctx(priv);
- 	const struct mtk_vcodec_enc_pdata *pdata = ctx->dev->venc_pdata;
- 
--	fmt = mtk_venc_find_format(f, pdata);
-+	fmt = mtk_venc_find_format(f->fmt.pix.pixelformat, pdata);
- 	if (!fmt) {
- 		fmt = &ctx->dev->venc_pdata->capture_formats[0];
- 		f->fmt.pix.pixelformat = fmt->fourcc;
-@@ -570,7 +565,7 @@ static int vidioc_try_fmt_vid_out_mplane(struct file *file, void *priv,
- 	struct mtk_vcodec_ctx *ctx = fh_to_ctx(priv);
- 	const struct mtk_vcodec_enc_pdata *pdata = ctx->dev->venc_pdata;
- 
--	fmt = mtk_venc_find_format(f, pdata);
-+	fmt = mtk_venc_find_format(f->fmt.pix.pixelformat, pdata);
- 	if (!fmt) {
- 		fmt = &ctx->dev->venc_pdata->output_formats[0];
- 		f->fmt.pix.pixelformat = fmt->fourcc;
++static const struct mtk_vcodec_enc_pdata mt8183_pdata = {
++	.chip = MTK_MT8183,
++	.has_lt_irq = false,
++	.uses_ext = true,
++	.capture_formats = mtk_video_formats_capture_mt8183,
++	.num_capture_formats = ARRAY_SIZE(mtk_video_formats_capture_mt8183),
++	/* MT8183 supports the same output formats as MT8173 */
++	.output_formats = mtk_video_formats_output_mt8173,
++	.num_output_formats = ARRAY_SIZE(mtk_video_formats_output_mt8173),
++	.min_bitrate = 64,
++	.max_bitrate = 40000000,
++};
++
+ static const struct of_device_id mtk_vcodec_enc_match[] = {
+ 	{.compatible = "mediatek,mt8173-vcodec-enc", .data = &mt8173_pdata},
++	{.compatible = "mediatek,mt8183-vcodec-enc", .data = &mt8183_pdata},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, mtk_vcodec_enc_match);
 -- 
 2.27.0.383.g050319c2ae-goog
 
