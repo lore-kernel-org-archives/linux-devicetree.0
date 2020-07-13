@@ -2,120 +2,175 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8968AC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 20:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D8AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 20:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60ABA20771
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 20:56:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594673817;
-	bh=4wfonj6lsRhQ0cW3cAS4E4Zpd7EpJTMw1F1kI7y+4MU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=vQQfqSa68cDjclmZ7hH/IWUEChTwUIbnqnAV61dqEMYNVAwJ+GkY1IJq/3pshb2u4
-	 dEL2h/M4b6llploU9mv0PpPblmJHv1QWDsW5qcPf7AniMrMqcYmP3wWz5ZkikM4eJZ
-	 gcFG6F8G21CRi358EeqWRbhRsxOINYopnHHTO1zc=
+	by mail.kernel.org (Postfix) with ESMTP id 6AA0720771
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 20:58:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726398AbgGMU45 (ORCPT
+        id S1726432AbgGMU6c (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 16:56:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48304 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726325AbgGMU44 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 16:56:56 -0400
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD56F207BC;
-        Mon, 13 Jul 2020 20:56:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594673816;
-        bh=4wfonj6lsRhQ0cW3cAS4E4Zpd7EpJTMw1F1kI7y+4MU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WbO0QXZGfr9zYDH55vgD8iBWLb5D/FaD/5nYpP46EnLAcstG92jNdleAamMO1EouO
-         H7LbzwE2jQI/LRr28s1CowjmWd1nsexCb4ZsrmOS40v3pBPe7+Bq0KPh+Fvw4Cdstb
-         8nMsGHu7tmUtSo3u0oHjpAYzyYyWKD+bpILVh5cY=
-Received: by mail-oi1-f170.google.com with SMTP id e4so12195033oib.1;
-        Mon, 13 Jul 2020 13:56:55 -0700 (PDT)
-X-Gm-Message-State: AOAM5323KRSXP0GqV42fkTPpA6SHNErty962cqAIzcOtZfeMxKWesMeK
-        W59YjH/KztTm2si/Wdevb9tJoQDEpT9/rnyxDA==
-X-Google-Smtp-Source: ABdhPJwVv71g0MzRH+ftAnZ69z1/ABXIEb9TxKX2p2+w/ni7qEXb6zxqydnTbTljeSr/4/pjPY6VB2WkZ8y6LFjZPgo=
-X-Received: by 2002:aca:30d2:: with SMTP id w201mr1103898oiw.147.1594673815264;
- Mon, 13 Jul 2020 13:56:55 -0700 (PDT)
+        Mon, 13 Jul 2020 16:58:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726325AbgGMU6b (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 16:58:31 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60859C061755;
+        Mon, 13 Jul 2020 13:58:31 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 347F8BC07E;
+        Mon, 13 Jul 2020 20:58:27 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] watchdog: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 22:58:21 +0200
+Message-Id: <20200713205821.38223-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-References: <20200710090618.28945-1-kurt@linutronix.de> <20200710090618.28945-2-kurt@linutronix.de>
- <20200710163940.GA2775145@bogus> <874kqewahb.fsf@kurt> <20200711165203.GO1014141@lunn.ch>
-In-Reply-To: <20200711165203.GO1014141@lunn.ch>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 13 Jul 2020 14:56:43 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKe47GdjVXJ6GeRCfZ7v+WKxee6P2jAi64+M5BYaf=8SQ@mail.gmail.com>
-Message-ID: <CAL_JsqKe47GdjVXJ6GeRCfZ7v+WKxee6P2jAi64+M5BYaf=8SQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] dt-bindings: net: dsa: Add DSA yaml binding
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Kurt Kanzenbach <kurt@linutronix.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spam: Yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Jul 11, 2020 at 10:52 AM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> On Sat, Jul 11, 2020 at 01:35:12PM +0200, Kurt Kanzenbach wrote:
-> > On Fri Jul 10 2020, Rob Herring wrote:
-> > > On Fri, 10 Jul 2020 11:06:18 +0200, Kurt Kanzenbach wrote:
-> > >> For future DSA drivers it makes sense to add a generic DSA yaml binding which
-> > >> can be used then. This was created using the properties from dsa.txt. It
-> > >> includes the ports and the dsa,member property.
-> > >>
-> > >> Suggested-by: Florian Fainelli <f.fainelli@gmail.com>
-> > >> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
-> > >> ---
-> > >>  .../devicetree/bindings/net/dsa/dsa.yaml      | 80 +++++++++++++++++++
-> > >>  1 file changed, 80 insertions(+)
-> > >>  create mode 100644 Documentation/devicetree/bindings/net/dsa/dsa.yaml
-> > >>
-> > >
-> > >
-> > > My bot found errors running 'make dt_binding_check' on your patch:
-> > >
-> > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/ti,cpsw-switch.example.dt.yaml: switch@0: 'ports' is a required property
-> > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.example.dt.yaml: switch@10: 'ports' is a required property
-> >
-> > Okay, the requirement for 'ports' has be to removed.
->
-> Hummm....
->
-> ti.cpsw is not a DSA switch. So this binding should not apply to
-> it. It is a plain switchdev switch.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Well, the binding looks very similar with the same
-ethernet-ports/port@X structure. So maybe we need a switch schema that
-covers both and then a DSA schema.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-> The qcom,ipq806 is just an MDIO bus master. The DSA binding might
-> apply, for a specific .dts file, if that dts file has a DSA switch on
-> the bus. But in general, it should not apply.
->
-> So i actually think you need to work out why this binding is being
-> applied when it should not be.
->
-> I suspect it is the keyword 'switch'. switch does not imply it is a
-> DSA switch. There are other sorts of switches as well.
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-Yes, by default, we match on compatible or node name if no compatible.
-The simple solution here is adding 'select: false' and then dsa.yaml
-will only be applied when explicitly referenced by the h/w specific
-bindings.
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
 
-There's also mscc-ocelot which is not yet a schema.
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
 
-Rob
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ Documentation/devicetree/bindings/watchdog/davinci-wdt.txt | 4 ++--
+ drivers/watchdog/Kconfig                                   | 2 +-
+ drivers/watchdog/dw_wdt.c                                  | 2 +-
+ drivers/watchdog/nv_tco.c                                  | 2 +-
+ drivers/watchdog/nv_tco.h                                  | 2 +-
+ drivers/watchdog/sp5100_tco.c                              | 2 +-
+ 6 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt b/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
+index e60b9a13bdcb..aa10b8ec36e2 100644
+--- a/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
++++ b/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
+@@ -11,8 +11,8 @@ Optional properties:
+ 	   See clock-bindings.txt
+ 
+ Documentation:
+-Davinci DM646x - http://www.ti.com/lit/ug/spruer5b/spruer5b.pdf
+-Keystone - http://www.ti.com/lit/ug/sprugv5a/sprugv5a.pdf
++Davinci DM646x - https://www.ti.com/lit/ug/spruer5b/spruer5b.pdf
++Keystone - https://www.ti.com/lit/ug/sprugv5a/sprugv5a.pdf
+ 
+ Examples:
+ 
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index 4f4687c46d38..ab7aad5a1e69 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -1027,7 +1027,7 @@ config ADVANTECH_WDT
+ 	  If you are configuring a Linux kernel for the Advantech single-board
+ 	  computer, say `Y' here to support its built-in watchdog timer
+ 	  feature. More information can be found at
+-	  <http://www.advantech.com.tw/products/>
++	  <https://www.advantech.com.tw/products/>
+ 
+ config ALIM1535_WDT
+ 	tristate "ALi M1535 PMU Watchdog Timer"
+diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+index fba21de2bbad..57bbc1434341 100644
+--- a/drivers/watchdog/dw_wdt.c
++++ b/drivers/watchdog/dw_wdt.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ /*
+  * Copyright 2010-2011 Picochip Ltd., Jamie Iles
+- * http://www.picochip.com
++ * https://www.picochip.com
+  *
+  * This file implements a driver for the Synopsys DesignWare watchdog device
+  * in the many subsystems. The watchdog has 16 different timeout periods
+diff --git a/drivers/watchdog/nv_tco.c b/drivers/watchdog/nv_tco.c
+index d7a560e348d5..179fb9aa3cf4 100644
+--- a/drivers/watchdog/nv_tco.c
++++ b/drivers/watchdog/nv_tco.c
+@@ -7,7 +7,7 @@
+  *	Based off i8xx_tco.c:
+  *	(c) Copyright 2000 kernel concepts <nils@kernelconcepts.de>, All Rights
+  *	Reserved.
+- *				http://www.kernelconcepts.de
++ *				https://www.kernelconcepts.de
+  *
+  *	TCO timer driver for NV chipsets
+  *	based on softdog.c by Alan Cox <alan@redhat.com>
+diff --git a/drivers/watchdog/nv_tco.h b/drivers/watchdog/nv_tco.h
+index d325e528010f..c65f82588386 100644
+--- a/drivers/watchdog/nv_tco.h
++++ b/drivers/watchdog/nv_tco.h
+@@ -9,7 +9,7 @@
+  *
+  *	(c) Copyright 2000 kernel concepts <nils@kernelconcepts.de>, All Rights
+  *	Reserved.
+- *				http://www.kernelconcepts.de
++ *				https://www.kernelconcepts.de
+  *
+  *	Neither kernel concepts nor Nils Faerber admit liability nor provide
+  *	warranty for any of this software. This material is provided
+diff --git a/drivers/watchdog/sp5100_tco.c b/drivers/watchdog/sp5100_tco.c
+index 93bd302ae7c5..85e9664318c9 100644
+--- a/drivers/watchdog/sp5100_tco.c
++++ b/drivers/watchdog/sp5100_tco.c
+@@ -7,7 +7,7 @@
+  *	Based on i8xx_tco.c:
+  *	(c) Copyright 2000 kernel concepts <nils@kernelconcepts.de>, All Rights
+  *	Reserved.
+- *				http://www.kernelconcepts.de
++ *				https://www.kernelconcepts.de
+  *
+  *	See AMD Publication 43009 "AMD SB700/710/750 Register Reference Guide",
+  *	    AMD Publication 45482 "AMD SB800-Series Southbridges Register
+-- 
+2.27.0
+
