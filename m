@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E591CC433E6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3FFC433EC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1B112075D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3BEE2075B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:46:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="i8DpPYeL"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bKxou/eN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730023AbgGMPqF (ORCPT
+        id S1730218AbgGMPqS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:46:05 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:54978 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730029AbgGMPqF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 11:46:05 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06DFjpBd038963;
-        Mon, 13 Jul 2020 10:45:51 -0500
+        Mon, 13 Jul 2020 11:46:18 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:55508 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730180AbgGMPqM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 11:46:12 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06DFju71018930;
+        Mon, 13 Jul 2020 10:45:56 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594655151;
-        bh=fixhIkoPgG+a/gbgj4pHNFrof0wf1XPrapzgiwGlOI4=;
+        s=ti-com-17Q1; t=1594655156;
+        bh=guAebOmRuPZn0pCzc4snOkbfY7Zfn23fU9q10KQYjVc=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=i8DpPYeLHkdKNBxOj6WzSlVWyn950+rFHFcfLi1/wG9WZQZ1UGzkrsfXrxu9tq4YL
-         oZMwkOBawDE5aMBr5GhZONG+4FADkgDQDgAZaAVypF/YNATU2Iw9Gyr9F6ZshtZaZy
-         nRUZHWLwjMTojSDcQufl+OuOUxLe92EsyZb+uHuo=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06DFjpDv058308
+        b=bKxou/eNtjIIKQ5jUVoAvJGfc6fiscGCgGUNmQgaseFDCnV9viGrZc5MCUDgIHVXl
+         GcM1XJf0kf2NJmO0Z9mSZR6j4GRWK/Nf4SJpWFEGFrUvlZFAOSwfRM1hX7BXQGudEo
+         DfwH10Uu2enkmyVWMz3t7Iu+APjOKeZKfz2AeI6U=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06DFjuhi066826
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 13 Jul 2020 10:45:51 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 13 Jul 2020 10:45:56 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 13
- Jul 2020 10:45:51 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ Jul 2020 10:45:56 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 13 Jul 2020 10:45:50 -0500
+ Frontend Transport; Mon, 13 Jul 2020 10:45:56 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06DFjooc032891;
-        Mon, 13 Jul 2020 10:45:50 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06DFjukX033617;
+        Mon, 13 Jul 2020 10:45:56 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>,
         <marek.behun@nic.cz>
 CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v30 01/16] leds: lp55xx: Fix file permissions to use DEVICE_ATTR macros
-Date:   Mon, 13 Jul 2020 10:45:29 -0500
-Message-ID: <20200713154544.1683-2-dmurphy@ti.com>
+Subject: [PATCH v30 03/16] dt: bindings: Add multicolor class dt bindings documention
+Date:   Mon, 13 Jul 2020 10:45:31 -0500
+Message-ID: <20200713154544.1683-4-dmurphy@ti.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200713154544.1683-1-dmurphy@ti.com>
 References: <20200713154544.1683-1-dmurphy@ti.com>
@@ -69,102 +69,77 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Fix the checkpatch warnings for the use of the file permission macros.
-In converting the file permissions to the DEVICE_ATTR_XX macros the
-call back function names needed to be updated within the code.
+Add DT bindings for the LEDs multicolor class framework.
+Add multicolor ID to the color ID list for device tree bindings.
 
-This means that the lp55xx_ needed to be dropped in the name to keep in
-harmony with the ABI documentation.
-
+CC: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Acked-by: Pavel Machek <pavel@ucw.cz>
 Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- drivers/leds/leds-lp55xx-common.c | 22 ++++++++++------------
- 1 file changed, 10 insertions(+), 12 deletions(-)
+ .../bindings/leds/leds-class-multicolor.yaml  | 37 +++++++++++++++++++
+ include/dt-bindings/leds/common.h             |  3 +-
+ 2 files changed, 39 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
 
-diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
-index 1354965ac866..3d0bc4dcd9f2 100644
---- a/drivers/leds/leds-lp55xx-common.c
-+++ b/drivers/leds/leds-lp55xx-common.c
-@@ -77,7 +77,7 @@ static int lp55xx_post_init_device(struct lp55xx_chip *chip)
- 	return cfg->post_init_device(chip);
- }
+diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+new file mode 100644
+index 000000000000..b55e1f1308a4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+@@ -0,0 +1,37 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/leds/leds-class-multicolor.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Common properties for the multicolor LED class.
++
++maintainers:
++  - Dan Murphy <dmurphy@ti.com>
++
++description: |
++  Bindings for multi color LEDs show how to describe current outputs of
++  either integrated multi-color LED elements (like RGB, RGBW, RGBWA-UV
++  etc.) or standalone LEDs, to achieve logically grouped multi-color LED
++  modules. This is achieved by adding multi-led nodes layer to the
++  monochrome LED bindings.
++  The nodes and properties defined in this document are unique to the multicolor
++  LED class.  Common LED nodes and properties are inherited from the common.txt
++  within this documentation directory.
++
++patternProperties:
++  "^multi-led@([0-9a-f])$":
++    type: object
++    description: Represents the LEDs that are to be grouped.
++    properties:
++      color:
++        const: 8  # LED_COLOR_ID_MULTI
++        description: |
++          For multicolor LED support this property should be defined as
++          LED_COLOR_ID_MULTI which can be found in include/linux/leds/common.h.
++
++    $ref: "common.yaml#"
++
++    required:
++      - color
++...
+diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
+index 0ce7dfc00dcb..a463ce6a8794 100644
+--- a/include/dt-bindings/leds/common.h
++++ b/include/dt-bindings/leds/common.h
+@@ -30,7 +30,8 @@
+ #define LED_COLOR_ID_VIOLET	5
+ #define LED_COLOR_ID_YELLOW	6
+ #define LED_COLOR_ID_IR		7
+-#define LED_COLOR_ID_MAX	8
++#define LED_COLOR_ID_MULTI	8
++#define LED_COLOR_ID_MAX	9
  
--static ssize_t lp55xx_show_current(struct device *dev,
-+static ssize_t led_current_show(struct device *dev,
- 			    struct device_attribute *attr,
- 			    char *buf)
- {
-@@ -86,7 +86,7 @@ static ssize_t lp55xx_show_current(struct device *dev,
- 	return scnprintf(buf, PAGE_SIZE, "%d\n", led->led_current);
- }
- 
--static ssize_t lp55xx_store_current(struct device *dev,
-+static ssize_t led_current_store(struct device *dev,
- 			     struct device_attribute *attr,
- 			     const char *buf, size_t len)
- {
-@@ -110,7 +110,7 @@ static ssize_t lp55xx_store_current(struct device *dev,
- 	return len;
- }
- 
--static ssize_t lp55xx_show_max_current(struct device *dev,
-+static ssize_t max_current_show(struct device *dev,
- 			    struct device_attribute *attr,
- 			    char *buf)
- {
-@@ -119,9 +119,8 @@ static ssize_t lp55xx_show_max_current(struct device *dev,
- 	return scnprintf(buf, PAGE_SIZE, "%d\n", led->max_current);
- }
- 
--static DEVICE_ATTR(led_current, S_IRUGO | S_IWUSR, lp55xx_show_current,
--		lp55xx_store_current);
--static DEVICE_ATTR(max_current, S_IRUGO , lp55xx_show_max_current, NULL);
-+static DEVICE_ATTR_RW(led_current);
-+static DEVICE_ATTR_RO(max_current);
- 
- static struct attribute *lp55xx_led_attrs[] = {
- 	&dev_attr_led_current.attr,
-@@ -224,7 +223,7 @@ static int lp55xx_request_firmware(struct lp55xx_chip *chip)
- 				GFP_KERNEL, chip, lp55xx_firmware_loaded);
- }
- 
--static ssize_t lp55xx_show_engine_select(struct device *dev,
-+static ssize_t select_engine_show(struct device *dev,
- 			    struct device_attribute *attr,
- 			    char *buf)
- {
-@@ -234,7 +233,7 @@ static ssize_t lp55xx_show_engine_select(struct device *dev,
- 	return sprintf(buf, "%d\n", chip->engine_idx);
- }
- 
--static ssize_t lp55xx_store_engine_select(struct device *dev,
-+static ssize_t select_engine_store(struct device *dev,
- 			     struct device_attribute *attr,
- 			     const char *buf, size_t len)
- {
-@@ -276,7 +275,7 @@ static inline void lp55xx_run_engine(struct lp55xx_chip *chip, bool start)
- 		chip->cfg->run_engine(chip, start);
- }
- 
--static ssize_t lp55xx_store_engine_run(struct device *dev,
-+static ssize_t run_engine_store(struct device *dev,
- 			     struct device_attribute *attr,
- 			     const char *buf, size_t len)
- {
-@@ -301,9 +300,8 @@ static ssize_t lp55xx_store_engine_run(struct device *dev,
- 	return len;
- }
- 
--static DEVICE_ATTR(select_engine, S_IRUGO | S_IWUSR,
--		   lp55xx_show_engine_select, lp55xx_store_engine_select);
--static DEVICE_ATTR(run_engine, S_IWUSR, NULL, lp55xx_store_engine_run);
-+static DEVICE_ATTR_RW(select_engine);
-+static DEVICE_ATTR_WO(run_engine);
- 
- static struct attribute *lp55xx_engine_attributes[] = {
- 	&dev_attr_select_engine.attr,
+ /* Standard LED functions */
+ /* Keyboard LEDs, usually it would be input4::capslock etc. */
 -- 
 2.27.0
 
