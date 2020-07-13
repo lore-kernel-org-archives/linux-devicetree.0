@@ -2,41 +2,41 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02487C433E6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1B1C433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D55852072D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B7AB206F0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:07:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Kz1L2isO"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="AH6U/mbJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729919AbgGMOG6 (ORCPT
+        id S1730045AbgGMOH2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:06:58 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:10119 "EHLO
+        Mon, 13 Jul 2020 10:07:28 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:10215 "EHLO
         hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729659AbgGMOG6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 10:06:58 -0400
+        with ESMTP id S1730014AbgGMOH1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 10:07:27 -0400
 Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0c6a750000>; Mon, 13 Jul 2020 07:06:45 -0700
+        id <B5f0c6a930000>; Mon, 13 Jul 2020 07:07:15 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 13 Jul 2020 07:06:57 -0700
+  Mon, 13 Jul 2020 07:07:27 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 13 Jul 2020 07:06:57 -0700
+        by hqpgpgate101.nvidia.com on Mon, 13 Jul 2020 07:07:27 -0700
 Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 Jul
- 2020 14:06:56 +0000
+ 2020 14:07:24 +0000
 Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
  (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 13 Jul 2020 14:06:57 +0000
+ Transport; Mon, 13 Jul 2020 14:07:24 +0000
 Received: from sumitg-l4t.nvidia.com (Not Verified[10.24.37.103]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f0c6a7c0001>; Mon, 13 Jul 2020 07:06:56 -0700
+        id <B5f0c6a980001>; Mon, 13 Jul 2020 07:07:24 -0700
 From:   Sumit Gupta <sumitg@nvidia.com>
 To:     <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
         <catalin.marinas@arm.com>, <will@kernel.org>,
@@ -47,80 +47,51 @@ To:     <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>
 CC:     <bbasu@nvidia.com>, <sumitg@nvidia.com>, <mperttunen@nvidia.com>
-Subject: [TEGRA194_CPUFREQ PATCH v5 0/4] Add cpufreq driver for Tegra194
-Date:   Mon, 13 Jul 2020 19:36:45 +0530
-Message-ID: <1594649209-29394-1-git-send-email-sumitg@nvidia.com>
+Subject: [TEGRA194_CPUFREQ PATCH v5 4/4] soc/tegra: cpufreq: select cpufreq for Tegra194
+Date:   Mon, 13 Jul 2020 19:36:49 +0530
+Message-ID: <1594649209-29394-5-git-send-email-sumitg@nvidia.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1594649209-29394-1-git-send-email-sumitg@nvidia.com>
+References: <1594649209-29394-1-git-send-email-sumitg@nvidia.com>
 X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594649205; bh=U4gKmB4y0qNEJQMMMEmw5DHftEyFtcpFURIRDyOumOk=;
+        t=1594649235; bh=Z4LE+9mlEefkiZynxc+GIrsCq+qVS4APQRbGTaTqj3U=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=Kz1L2isODkhL7vhii4ky6KnxDsBSmnVexTLc0pN1iEyCi5kOFc0Y7ZRJZKLWsEu9W
-         l2Laqyjlo97zDxK4gDNTU0eiwPNTsAGe2xyXuhUk+KyXFYNGuXlmRSq7m6FRrAQOAN
-         f2w6oTG4/tCB8+q8KBXlj9BcwJobPjPTrtxudKGExSHhJnBk9ysojvHmFkt2B1TyFU
-         TOEfI8RPCYpQvTjl6tjQZVbCQ3GfnigVHzP5t504hDhBciaX8RtTEgWIDjm86pasKF
-         V18pGIDdRpFkHWnDBkJ9y/3d4W7X6bfFd+jCZsm3rxZ8MYxkmPIOE/fkCPn9caOCFl
-         OcO7aqbFrehDQ==
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=AH6U/mbJ7J8lFPLWMVic8E/ux3ZD78PqUpCWc3JamkEYG57a9wFspQ9xoFdGKPVAQ
+         oRmbjuc1mGh4x9PUb2TYI5K848wQ7iLTq1uHIer5svetZLFlArUay2NmLsqw/Vu1Ig
+         BZmEqSAo3QMINERy2pIYiw4qf7FVwpDje+iF4vAQdQBNS0aq5XMQO8m155GvWXVYbU
+         YygAxSyeVvkOZsvXevkPw49cFZlaqxZNEAkllEihqoEQXf7vOMomeHXClaeir3z6W+
+         MzEn0s9llCyHgwEY8cxN77Dz5s5s+LDD6ZbJvfrd5x1oEtfrKp3lMTGshT9iEq/NID
+         P8CSDBykB8ZLg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Viresh,
+Select ARM_TEGRA194_CPUFREQ by default to enable CPU frequency
+scaling support for Tegra194 SOC.
 
-The patch series adds cpufreq driver for Tegra194 SOC.
-Incorporated the feedback on previous version of patchset.
-Please consider this patch series for merging in 5.9.
+Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+---
+ drivers/soc/tegra/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Hi Rob,
-Can you please review/ack DT patches (1-2).
-
-v4[4] -> v5
-- Don't call destroy_workqueue() if alloc_workqueue() fails[Viresh]
-- Move CONFIG_ARM_TEGRA194_CPUFREQ enabling to soc/tegra/Kconfig[Viresh]
-- Add dependency of 'nvidia,bpmp' on 'compatible' in yaml file[Michal]
-- Fix typo in description causing dt_binding_check bot failure[Rob]
-
-v3[3] -> v4
-- Open code LOOP_FOR_EACH_CPU_OF_CLUSTER macro[Viresh]
-- Delete unused funciton map_freq_to_ndiv[Viresh, kernel test bot]
-- Remove flush_workqueue from free_resources[Viresh]
-
-v2[2] -> v3
-- Set same policy for all cpus in a cluster[Viresh].
-- Add compatible string for CPU Complex under cpus node[Thierry].
-- Add reference to bpmp node under cpus node[Thierry].
-- Bind cpufreq driver to CPU Complex compatible string[Thierry].
-- Remove patch to get bpmp data as now using cpus node to get that[Thierry].
-
-v1[1] -> v2:
-- Remove cpufreq_lock mutex from tegra194_cpufreq_set_target [Viresh].
-- Remove CPUFREQ_ASYNC_NOTIFICATION flag [Viresh].
-- Remove redundant _begin|end() call from tegra194_cpufreq_set_target.
-- Rename opp_table to freq_table [Viresh].
-
-Sumit Gupta (4):
-  dt-bindings: arm: Add t194 ccplex compatible and bpmp property
-  arm64: tegra: Add t194 ccplex compatible and bpmp property
-  cpufreq: Add Tegra194 cpufreq driver
-  soc/tegra: cpufreq: select cpufreq for Tegra194
-
- Documentation/devicetree/bindings/arm/cpus.yaml |  11 +
- arch/arm64/boot/dts/nvidia/tegra194.dtsi        |   2 +
- drivers/cpufreq/Kconfig.arm                     |   6 +
- drivers/cpufreq/Makefile                        |   1 +
- drivers/cpufreq/tegra194-cpufreq.c              | 397 ++++++++++++++++++++++++
- drivers/soc/tegra/Kconfig                       |   1 +
- 6 files changed, 418 insertions(+)
- create mode 100644 drivers/cpufreq/tegra194-cpufreq.c
-
-[1] https://marc.info/?t=157539452300001&r=1&w=2
-[2] https://marc.info/?l=linux-tegra&m=158602857106213&w=2
-[3] https://marc.info/?l=linux-pm&m=159283376010084&w=2
-[4] https://marc.info/?l=linux-tegra&m=159318640622917&w=2
+diff --git a/drivers/soc/tegra/Kconfig b/drivers/soc/tegra/Kconfig
+index 2e95809..6955cee 100644
+--- a/drivers/soc/tegra/Kconfig
++++ b/drivers/soc/tegra/Kconfig
+@@ -117,6 +117,7 @@ config ARCH_TEGRA_194_SOC
+ 	select TEGRA_HSP_MBOX
+ 	select TEGRA_IVC
+ 	select SOC_TEGRA_PMC
++	select ARM_TEGRA194_CPUFREQ
+ 	help
+ 	  Enable support for the NVIDIA Tegra194 SoC.
+ 
 -- 
 2.7.4
 
