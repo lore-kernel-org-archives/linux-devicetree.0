@@ -2,324 +2,77 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE92C433E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 07:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D1BCC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 07:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A3232073A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 07:19:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27670206F0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 07:26:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbgGMHTb (ORCPT
+        id S1726380AbgGMH0f (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 03:19:31 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:35590 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbgGMHTb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 03:19:31 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id D3780BC069;
-        Mon, 13 Jul 2020 07:19:27 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     ssantosh@kernel.org, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] ARM: keystone: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 09:19:21 +0200
-Message-Id: <20200713071921.31918-1-grandmaster@al2klimov.de>
+        Mon, 13 Jul 2020 03:26:35 -0400
+Received: from smtprelay0237.hostedemail.com ([216.40.44.237]:54108 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725985AbgGMH0f (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 03:26:35 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 8EEAF180A7FF9;
+        Mon, 13 Jul 2020 07:26:34 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: coil74_1d1262a26ee6
+X-Filterd-Recvd-Size: 1873
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 13 Jul 2020 07:26:32 +0000 (UTC)
+Message-ID: <855b5a01416dfe42d89018450a1c791ccb48e500.camel@perches.com>
+Subject: Re: [PATCH 3/3] MAINTAINERS: Add Bruno Thomsen as reviewer of
+ Kamstrup DTS
+From:   Joe Perches <joe@perches.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     Bruno Thomsen <bruno.thomsen@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>, bth@kamstrup.com,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Date:   Mon, 13 Jul 2020 00:26:31 -0700
+In-Reply-To: <20200713071342.GK12113@dragon>
+References: <20200629114927.17379-1-bruno.thomsen@gmail.com>
+         <20200629114927.17379-3-bruno.thomsen@gmail.com>
+         <20200713025559.GZ21277@dragon>
+         <da52724655ff2161add7fb27fea8fc673028b9fc.camel@perches.com>
+         <20200713071342.GK12113@dragon>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spam: Yes
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Mon, 2020-07-13 at 15:13 +0800, Shawn Guo wrote:
+> On Sun, Jul 12, 2020 at 10:22:50PM -0700, Joe Perches wrote:
+[]
+> > diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
+[]
+> > @@ -436,7 +436,7 @@ sub maintainers_in_file {
+> >  
+> >      return if ($file =~ m@\bMAINTAINERS$@);
+> >  
+> > -    if (-f $file && ($email_file_emails || $file =~ /\.yaml$/)) {
+> > +    if (-f $file && ($email_file_emails || $file =~ /\.(?:yaml|dtsi?)$/)) {
+> 
+> It should cover .dts file too?
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+It does as dtsi? means the i is optional.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
-
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- arch/arm/boot/dts/keystone-clocks.dtsi      | 2 +-
- arch/arm/boot/dts/keystone-k2e-clocks.dtsi  | 2 +-
- arch/arm/boot/dts/keystone-k2e-evm.dts      | 2 +-
- arch/arm/boot/dts/keystone-k2e-netcp.dtsi   | 2 +-
- arch/arm/boot/dts/keystone-k2e.dtsi         | 2 +-
- arch/arm/boot/dts/keystone-k2g-evm.dts      | 2 +-
- arch/arm/boot/dts/keystone-k2g-ice.dts      | 2 +-
- arch/arm/boot/dts/keystone-k2g-netcp.dtsi   | 2 +-
- arch/arm/boot/dts/keystone-k2g.dtsi         | 2 +-
- arch/arm/boot/dts/keystone-k2hk-clocks.dtsi | 2 +-
- arch/arm/boot/dts/keystone-k2hk-evm.dts     | 2 +-
- arch/arm/boot/dts/keystone-k2hk-netcp.dtsi  | 2 +-
- arch/arm/boot/dts/keystone-k2hk.dtsi        | 2 +-
- arch/arm/boot/dts/keystone-k2l-clocks.dtsi  | 2 +-
- arch/arm/boot/dts/keystone-k2l-evm.dts      | 2 +-
- arch/arm/boot/dts/keystone-k2l-netcp.dtsi   | 2 +-
- arch/arm/boot/dts/keystone-k2l.dtsi         | 2 +-
- 17 files changed, 17 insertions(+), 17 deletions(-)
-
-diff --git a/arch/arm/boot/dts/keystone-clocks.dtsi b/arch/arm/boot/dts/keystone-clocks.dtsi
-index 0397c3423d2d..20bab90ee0ba 100644
---- a/arch/arm/boot/dts/keystone-clocks.dtsi
-+++ b/arch/arm/boot/dts/keystone-clocks.dtsi
-@@ -2,7 +2,7 @@
- /*
-  * Device Tree Source for Keystone 2 clock tree
-  *
-- * Copyright (C) 2013-2017 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2013-2017 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- clocks {
-diff --git a/arch/arm/boot/dts/keystone-k2e-clocks.dtsi b/arch/arm/boot/dts/keystone-k2e-clocks.dtsi
-index cf30e007fea3..74720dbf3110 100644
---- a/arch/arm/boot/dts/keystone-k2e-clocks.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2e-clocks.dtsi
-@@ -2,7 +2,7 @@
- /*
-  * Keystone 2 Edison SoC specific device tree
-  *
-- * Copyright (C) 2014-2017 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2014-2017 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- clocks {
-diff --git a/arch/arm/boot/dts/keystone-k2e-evm.dts b/arch/arm/boot/dts/keystone-k2e-evm.dts
-index 66fec5f5d081..36640e18e3d3 100644
---- a/arch/arm/boot/dts/keystone-k2e-evm.dts
-+++ b/arch/arm/boot/dts/keystone-k2e-evm.dts
-@@ -2,7 +2,7 @@
- /*
-  * Keystone 2 Edison EVM device tree
-  *
-- * Copyright (C) 2013-2017 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2013-2017 Texas Instruments Incorporated - https://www.ti.com/
-  */
- /dts-v1/;
- 
-diff --git a/arch/arm/boot/dts/keystone-k2e-netcp.dtsi b/arch/arm/boot/dts/keystone-k2e-netcp.dtsi
-index ad15e77874b1..249f5f63bfc1 100644
---- a/arch/arm/boot/dts/keystone-k2e-netcp.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2e-netcp.dtsi
-@@ -2,7 +2,7 @@
- /*
-  * Device Tree Source for Keystone 2 Edison Netcp driver
-  *
-- * Copyright (C) 2015-2017 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2015-2017 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- qmss: qmss@2a40000 {
-diff --git a/arch/arm/boot/dts/keystone-k2e.dtsi b/arch/arm/boot/dts/keystone-k2e.dtsi
-index 2d94faf31fab..2506bf4c0a27 100644
---- a/arch/arm/boot/dts/keystone-k2e.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2e.dtsi
-@@ -2,7 +2,7 @@
- /*
-  * Keystone 2 Edison soc device tree
-  *
-- * Copyright (C) 2013-2017 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2013-2017 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- #include <dt-bindings/reset/ti-syscon.h>
-diff --git a/arch/arm/boot/dts/keystone-k2g-evm.dts b/arch/arm/boot/dts/keystone-k2g-evm.dts
-index db640bab8c1d..003036abf7ba 100644
---- a/arch/arm/boot/dts/keystone-k2g-evm.dts
-+++ b/arch/arm/boot/dts/keystone-k2g-evm.dts
-@@ -2,7 +2,7 @@
- /*
-  * Device Tree Source for K2G EVM
-  *
-- * Copyright (C) 2016-2017 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2016-2017 Texas Instruments Incorporated - https://www.ti.com/
-  */
- /dts-v1/;
- 
-diff --git a/arch/arm/boot/dts/keystone-k2g-ice.dts b/arch/arm/boot/dts/keystone-k2g-ice.dts
-index 2a2d38cf0fff..86c111bcfd0d 100644
---- a/arch/arm/boot/dts/keystone-k2g-ice.dts
-+++ b/arch/arm/boot/dts/keystone-k2g-ice.dts
-@@ -2,7 +2,7 @@
- /*
-  * Device Tree Source for K2G Industrial Communication Engine EVM
-  *
-- * Copyright (C) 2017 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2017 Texas Instruments Incorporated - https://www.ti.com/
-  */
- /dts-v1/;
- 
-diff --git a/arch/arm/boot/dts/keystone-k2g-netcp.dtsi b/arch/arm/boot/dts/keystone-k2g-netcp.dtsi
-index d0e6a9a43402..268ede13db8c 100644
---- a/arch/arm/boot/dts/keystone-k2g-netcp.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2g-netcp.dtsi
-@@ -2,7 +2,7 @@
- /*
-  * Device Tree Source for K2G Netcp driver
-  *
-- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- qmss: qmss@4020000 {
-diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
-index 05a75019275e..c3b237b8ae6f 100644
---- a/arch/arm/boot/dts/keystone-k2g.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2g.dtsi
-@@ -2,7 +2,7 @@
- /*
-  * Device Tree Source for K2G SOC
-  *
-- * Copyright (C) 2016-2017 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2016-2017 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-diff --git a/arch/arm/boot/dts/keystone-k2hk-clocks.dtsi b/arch/arm/boot/dts/keystone-k2hk-clocks.dtsi
-index 4ba6912176ef..3ca4722087c9 100644
---- a/arch/arm/boot/dts/keystone-k2hk-clocks.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2hk-clocks.dtsi
-@@ -2,7 +2,7 @@
- /*
-  * Keystone 2 Kepler/Hawking SoC clock nodes
-  *
-- * Copyright (C) 2013-2017 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2013-2017 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- clocks {
-diff --git a/arch/arm/boot/dts/keystone-k2hk-evm.dts b/arch/arm/boot/dts/keystone-k2hk-evm.dts
-index ad4e22afe133..deb1bd793664 100644
---- a/arch/arm/boot/dts/keystone-k2hk-evm.dts
-+++ b/arch/arm/boot/dts/keystone-k2hk-evm.dts
-@@ -2,7 +2,7 @@
- /*
-  * Keystone 2 Kepler/Hawking EVM device tree
-  *
-- * Copyright (C) 2013-2017 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2013-2017 Texas Instruments Incorporated - https://www.ti.com/
-  */
- /dts-v1/;
- 
-diff --git a/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi b/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi
-index d5a6c1f5633c..2042f28f2d2f 100644
---- a/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi
-@@ -2,7 +2,7 @@
- /*
-  * Device Tree Source for Keystone 2 Hawking Netcp driver
-  *
-- * Copyright (C) 2015-2017 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2015-2017 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- qmss: qmss@2a40000 {
-diff --git a/arch/arm/boot/dts/keystone-k2hk.dtsi b/arch/arm/boot/dts/keystone-k2hk.dtsi
-index 8a9447703310..0acfa2cebe4c 100644
---- a/arch/arm/boot/dts/keystone-k2hk.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2hk.dtsi
-@@ -2,7 +2,7 @@
- /*
-  * Keystone 2 Kepler/Hawking soc specific device tree
-  *
-- * Copyright (C) 2013-2017 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2013-2017 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- #include <dt-bindings/reset/ti-syscon.h>
-diff --git a/arch/arm/boot/dts/keystone-k2l-clocks.dtsi b/arch/arm/boot/dts/keystone-k2l-clocks.dtsi
-index 635528064dea..fcfc2fb6cc2d 100644
---- a/arch/arm/boot/dts/keystone-k2l-clocks.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2l-clocks.dtsi
-@@ -2,7 +2,7 @@
- /*
-  * Keystone 2 lamarr SoC clock nodes
-  *
-- * Copyright (C) 2013-2017 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2013-2017 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- clocks {
-diff --git a/arch/arm/boot/dts/keystone-k2l-evm.dts b/arch/arm/boot/dts/keystone-k2l-evm.dts
-index e200533d26a4..3a17da60d668 100644
---- a/arch/arm/boot/dts/keystone-k2l-evm.dts
-+++ b/arch/arm/boot/dts/keystone-k2l-evm.dts
-@@ -2,7 +2,7 @@
- /*
-  * Keystone 2 Lamarr EVM device tree
-  *
-- * Copyright (C) 2014-2017 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2014-2017 Texas Instruments Incorporated - https://www.ti.com/
-  */
- /dts-v1/;
- 
-diff --git a/arch/arm/boot/dts/keystone-k2l-netcp.dtsi b/arch/arm/boot/dts/keystone-k2l-netcp.dtsi
-index c1f982604145..aaf852b4739e 100644
---- a/arch/arm/boot/dts/keystone-k2l-netcp.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2l-netcp.dtsi
-@@ -2,7 +2,7 @@
- /*
-  * Device Tree Source for Keystone 2 Lamarr Netcp driver
-  *
-- * Copyright (C) 2015-2017 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2015-2017 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- qmss: qmss@2a40000 {
-diff --git a/arch/arm/boot/dts/keystone-k2l.dtsi b/arch/arm/boot/dts/keystone-k2l.dtsi
-index dff5fea72b2f..c89c8fa24a7a 100644
---- a/arch/arm/boot/dts/keystone-k2l.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2l.dtsi
-@@ -2,7 +2,7 @@
- /*
-  * Keystone 2 Lamarr SoC specific device tree
-  *
-- * Copyright (C) 2014-2017 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2014-2017 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- #include <dt-bindings/reset/ti-syscon.h>
--- 
-2.27.0
 
