@@ -2,132 +2,145 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D72C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 16:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90380C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 16:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF01206F5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 16:46:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594658764;
-	bh=SGsOOfEC4xum3saQgimJUAE9qs7WoAKlLKynjgp7pTI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EcxxVDXYYWsvc7smotdzI8z0lBH8IOORT3ocEovrCJx378w63sqW1cylkQRH3y49f
-	 iRuYxRV0infg8+EB/VCUPOG1YkU8ikYNrnSwJVPV6ITfdTuta1PjFpvZICyz3kJ98o
-	 sUVraQyYIZ7+COAmZkoEhYbfG3M3GJSxSurVTolc=
+	by mail.kernel.org (Postfix) with ESMTP id 7A5DF2067D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 16:54:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730152AbgGMQqD (ORCPT
+        id S1729747AbgGMQyV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 12:46:03 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:38476 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729593AbgGMQqD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 12:46:03 -0400
-Received: by mail-io1-f67.google.com with SMTP id l1so14201573ioh.5;
-        Mon, 13 Jul 2020 09:46:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=H1m/Teq+x/ilTIvfbGsXt4itCdaLyvafzNxPOtFihBg=;
-        b=ELHmd2f2MdsNZSQGC+F6YlXmesAdgvPRey3aYo6+j1becm7KT+crvC0E7pKd+ry2t5
-         4WItXeeyeNxiie9Zpp4C3i7pjnKaD61r/m4+vXDsdfSB6DbmenYKKvpJD8KPdJFVeNLP
-         4IZCAzIE/eklIUqfSG2Wbe537F85jtFGb/wdwMswpZG8LXv6FDoejBD3fTni7n5rHb7N
-         lq4iH0FvtZcHLVb6YY6lXjfo127T6eumcnAQwwOKyhDkDFZAQsQS9H18er+FfYxGqhRu
-         TLWMa5c4aWynqeCvC/aRuvdBu3vDvey0eDrh9lmX0SX/BfAENOIrJQKks/59fLLdvm+/
-         LxCw==
-X-Gm-Message-State: AOAM530/5wyD5qTTIPUd29ZGjZHUcSLZKcSLM+E9yUYr0OYkGoFzBwN+
-        0+bqZO7LpyuQyHNArAiU/A==
-X-Google-Smtp-Source: ABdhPJxrujumDriuqPPBU6YyvN7fQLld9rwVoqG6+j8iuptKd1wORLde6EnsrYNYBwaOdB0cQ7qrew==
-X-Received: by 2002:a02:cf12:: with SMTP id q18mr1034219jar.3.1594658762332;
-        Mon, 13 Jul 2020 09:46:02 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id y12sm5627632iot.49.2020.07.13.09.46.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 09:46:01 -0700 (PDT)
-Received: (nullmailer pid 364057 invoked by uid 1000);
-        Mon, 13 Jul 2020 16:46:00 -0000
-Date:   Mon, 13 Jul 2020 10:46:00 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        thierry.reding@gmail.com, p.zabel@pengutronix.de,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar.linux@gmail.com
-Subject: Re: [PATCH v4 1/2] Add DT bindings YAML schema for PWM fan
- controller of LGM SoC
-Message-ID: <20200713164600.GA359372@bogus>
-References: <cover.1593503228.git.rahul.tanwar@linux.intel.com>
- <cfef33c19b97a9cfbb8ecc0c6a122f3c9a5b46dd.1593503228.git.rahul.tanwar@linux.intel.com>
+        Mon, 13 Jul 2020 12:54:21 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:38296 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729659AbgGMQyU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 12:54:20 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 585A3BC0FD;
+        Mon, 13 Jul 2020 16:54:16 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        robh+dt@kernel.org, linus.walleij@linaro.org, arnd@arndb.de,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] mtd: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 18:54:08 +0200
+Message-Id: <20200713165408.36229-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cfef33c19b97a9cfbb8ecc0c6a122f3c9a5b46dd.1593503228.git.rahul.tanwar@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spam: Yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 03:55:31PM +0800, Rahul Tanwar wrote:
-> Intel's LGM(Lightning Mountain) SoC contains a PWM fan controller
-> which is only used to control the fan attached to the system. This
-> PWM controller does not have any other consumer other than fan.
-> Add DT bindings documentation for this PWM fan controller.
-> 
-> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> ---
->  .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     | 50 ++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
-> new file mode 100644
-> index 000000000000..120bf3d85a24
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
-> @@ -0,0 +1,50 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pwm/intel,lgm-pwm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: LGM SoC PWM fan controller
-> +
-> +maintainers:
-> +  - Rahul Tanwar <rahul.tanwar@intel.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: intel,lgm-pwm
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  intel,fan-wire:
-> +    $ref: '/schemas/types.yaml#/definitions/uint32'
-> +    description: Specifies fan mode. Default when unspecified is 2.
-> +
-> +  intel,max-rpm:
-> +    $ref: '/schemas/types.yaml#/definitions/uint32'
-> +    description:
-> +      Specifies maximum RPM of fan attached to the system.
-> +      Default when unspecified is 4000.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-These are properties of the fan, not the PWM. And probably if you 
-need these properties then others would too, so they should be 
-common. Look at the pwm-fan.txt binding.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-Rob
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
+
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ Documentation/devicetree/bindings/mtd/davinci-nand.txt | 4 ++--
+ drivers/mtd/chips/Kconfig                              | 2 +-
+ drivers/mtd/maps/Kconfig                               | 2 +-
+ drivers/mtd/maps/sc520cdp.c                            | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mtd/davinci-nand.txt b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
+index cfb18abe6001..edebeae1f5b3 100644
+--- a/Documentation/devicetree/bindings/mtd/davinci-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
+@@ -4,8 +4,8 @@ This file provides information, what the device node for the davinci/keystone
+ NAND interface contains.
+ 
+ Documentation:
+-Davinci DM646x - http://www.ti.com/lit/ug/sprueq7c/sprueq7c.pdf
+-Kestone - http://www.ti.com/lit/ug/sprugz3a/sprugz3a.pdf
++Davinci DM646x - https://www.ti.com/lit/ug/sprueq7c/sprueq7c.pdf
++Kestone - https://www.ti.com/lit/ug/sprugz3a/sprugz3a.pdf
+ 
+ Required properties:
+ 
+diff --git a/drivers/mtd/chips/Kconfig b/drivers/mtd/chips/Kconfig
+index a7e47e068ad9..aef14990e5f7 100644
+--- a/drivers/mtd/chips/Kconfig
++++ b/drivers/mtd/chips/Kconfig
+@@ -11,7 +11,7 @@ config MTD_CFI
+ 	  AMD and other flash manufactures that provides a universal method
+ 	  for probing the capabilities of flash devices. If you wish to
+ 	  support any device that is CFI-compliant, you need to enable this
+-	  option. Visit <http://www.amd.com/products/nvd/overview/cfi.html>
++	  option. Visit <https://www.amd.com/products/nvd/overview/cfi.html>
+ 	  for more information on CFI.
+ 
+ config MTD_JEDECPROBE
+diff --git a/drivers/mtd/maps/Kconfig b/drivers/mtd/maps/Kconfig
+index b28225a7c4f3..fd37553f1b07 100644
+--- a/drivers/mtd/maps/Kconfig
++++ b/drivers/mtd/maps/Kconfig
+@@ -310,7 +310,7 @@ config MTD_DC21285
+ 	help
+ 	  This provides a driver for the flash accessed using Intel's
+ 	  21285 bridge used with Intel's StrongARM processors. More info at
+-	  <http://www.intel.com/design/bridge/docs/21285_documentation.htm>.
++	  <https://www.intel.com/design/bridge/docs/21285_documentation.htm>.
+ 
+ config MTD_IXP4XX
+ 	tristate "CFI Flash device mapped on Intel IXP4xx based systems"
+diff --git a/drivers/mtd/maps/sc520cdp.c b/drivers/mtd/maps/sc520cdp.c
+index 9902b37e18b4..8ef7aec634c7 100644
+--- a/drivers/mtd/maps/sc520cdp.c
++++ b/drivers/mtd/maps/sc520cdp.c
+@@ -6,7 +6,7 @@
+  * The SC520CDP is an evaluation board for the Elan SC520 processor available
+  * from AMD. It has two banks of 32-bit Flash ROM, each 8 Megabytes in size,
+  * and up to 512 KiB of 8-bit DIL Flash ROM.
+- * For details see http://www.amd.com/products/epd/desiging/evalboards/18.elansc520/520_cdp_brief/index.html
++ * For details see https://www.amd.com/products/epd/desiging/evalboards/18.elansc520/520_cdp_brief/index.html
+  */
+ 
+ #include <linux/module.h>
+-- 
+2.27.0
+
