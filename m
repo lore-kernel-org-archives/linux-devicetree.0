@@ -2,118 +2,133 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E550CC433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 21:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1771C433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 21:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C11492084C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 21:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9D632075D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 21:28:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cj0QgtAf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g/ZP2DBc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgGMV1H (ORCPT
+        id S1726440AbgGMV2x (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 17:27:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37818 "EHLO
+        Mon, 13 Jul 2020 17:28:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726416AbgGMV1H (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 17:27:07 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B08A9C061755
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 14:27:06 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id s9so19820419ljm.11
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 14:27:06 -0700 (PDT)
+        with ESMTP id S1726416AbgGMV2w (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 17:28:52 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EB1DC061755;
+        Mon, 13 Jul 2020 14:28:52 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id a1so9592438edt.10;
+        Mon, 13 Jul 2020 14:28:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M0i+cm/2qImH5MvfqEwzYLh9q23sYVfzwD0CdeOFYso=;
-        b=Cj0QgtAfC5HUnM+bKMgYqHL/fmBdYBBRzRZZYifYR5KgO0Ps1/oWkLaDowqyOL3OfX
-         HxRyw1deAhh9/h7LHayzwHV6veGQhudNxZP10qgJI4Qrdd+Dbu79JVW7sdnrXGJwQdq5
-         Dw5TfiW9vmFNSQkT5ppdvHgxQhzLFGG2LZ+Tq3bktK516asPsdNqkW49wiuTKJwvUgMz
-         QtlbXAXFUwCp/sy/mqfVgcIu8fhI17RhAIedk8vgKRolI0gnSaD8QB39nHSmEe7iTbW7
-         i7894BpI4niFqaV6B5zBzF/J6kqEk1i7LbAfRUw1BWGM22PFqQc9Mu8agFs7Hnxs6kHT
-         W44Q==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6Ko+tWmnzBB3nKRx32WCJEtNPAc5X2qQdpUQLqvYvwU=;
+        b=g/ZP2DBcYqX5d4g6Guf0sKImn0bMrQL4VroJiqYXhgtkH96/ScPoEFPPPO7At+DuK+
+         7hIkg8n7m/oszH/F+1bdw3O8j5Q+70rwAr29OM8swiw9z0vrfzyM7K3ImsPtaSXE6/3/
+         8Rhz7c6qjuJpB/MBYRpsrOR2g7wldTR5lxpMlhJu19Yo5lYi4WIct5C8Nu9USmgzAu7u
+         tmeDNJQ8I0zahDaSiozqtgAFxFM/HLMrydCKzPiBqsaeNn0GNmBOpTkObltU9nGeOFWx
+         h4IOGEUswfeeqjF3tpYpuEd4YVcnMb+qFXIbnvoQHwW1zyefRxdYFOV/hO/c9kZYYxwU
+         x1rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M0i+cm/2qImH5MvfqEwzYLh9q23sYVfzwD0CdeOFYso=;
-        b=r19pZDl5PIZy/A4H7Anxb/Di6QDcxEIPYWEfNdQu9CgU0n+dWOfNCPp1vj+lrAlV0U
-         EFlju0Owmgvr7HmuKVd1QewZvVTk2RN9FrcyeMq6EFx7PCU2wGsRl5Bga8bIgdvWS9hT
-         05XRu+S/u+yMxH5qjzDVC8tHOxoXTU9TXxy6zdh/OmGrM/zKQFeAHg1Appjm94BUVOfg
-         iivAh7sD92wnEJHEfqWVBvcMhbUn5jmdVd8l728VR+6/zL50nAtTKhuzyALEKcM7FOdU
-         72Vq1W6sYufZwTmvzJOXTqeiQUc8Q6Ylj83ljl2xqbhh9zIAs+gqNAyn75K8Gg5ggtRw
-         xqNQ==
-X-Gm-Message-State: AOAM530WzKHgbtZ3ERaDeSf25FVd3/e7XkNBZagrnjPPq0xIbnIFN77B
-        lIJB0V9Tak53qWiMGJaaMKiL6HKs9q/OIpDHgLqejA==
-X-Google-Smtp-Source: ABdhPJzLwjTTkwJxPnjSMVJqCSW4Kk1XJ72UeXKhD8NfUFwJYpPZF1VgCCBoNC0gnTkKJ7z5PX1ZtHK+8z/mAxaJt+E=
-X-Received: by 2002:a2e:9c3:: with SMTP id 186mr744318ljj.293.1594675625195;
- Mon, 13 Jul 2020 14:27:05 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6Ko+tWmnzBB3nKRx32WCJEtNPAc5X2qQdpUQLqvYvwU=;
+        b=AdWp9MVBzkLK52rdQvdqDyMWnCps/fDACcjCepOIsP7vhBzH6Psv6WFx0zCietCkU4
+         G+WxAFPl4m6RMycu9h2ZtGd5tx6eoBO3SA2fczy/m4YV2Pd+Y9hQ+7RXpRBtdk18ttlJ
+         WMfLJbkVYCYb5h01qhLQ0c+rL76/MICIoI3dkhSphWDgQuyd4Y/MLL5AjsPhJ/0xAUjg
+         jtTuIEiIsb2OVLw2plSwQslOMDDlXHyEp8U31ZP/TLzv9NSvKwkwHRzKabEZ2SM6I/Vo
+         /wLGwXi8TO5oJ4YOe2tngCKDAHQDdCGs0etUer+wWMzoc0EQZcDEUcpJKy1o1TlltciB
+         fpNg==
+X-Gm-Message-State: AOAM531tSl4Y3J3JK6wgLbz50OAsvEt5qVcGoyrP9pL2pUEU5cSwOdFH
+        tvu1Ijp7h+KBVyo/M3yIW2dNllxP
+X-Google-Smtp-Source: ABdhPJwhCW2OW9B2YYFuzdPoyuFYuNZkft51XuoHfzoHy3EtZ88dfi4c9M8VvCVe1J9973X9UcnfNw==
+X-Received: by 2002:aa7:c606:: with SMTP id h6mr1295881edq.363.1594675731090;
+        Mon, 13 Jul 2020 14:28:51 -0700 (PDT)
+Received: from ?IPv6:2a01:110f:b59:fd00:e124:492d:3208:4365? ([2a01:110f:b59:fd00:e124:492d:3208:4365])
+        by smtp.gmail.com with ESMTPSA id d26sm12116076edz.93.2020.07.13.14.28.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jul 2020 14:28:50 -0700 (PDT)
+Subject: Re: [PATCH v3 1/2] dt-bindings: leds: add cznic,turris-omnia-leds
+ binding
+To:     Rob Herring <robh@kernel.org>
+Cc:     Marek Behun <marek.behun@nic.cz>, linux-leds@vger.kernel.org,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        devicetree@vger.kernel.org
+References: <20200712210601.5239-1-marek.behun@nic.cz>
+ <20200712210601.5239-2-marek.behun@nic.cz>
+ <4609c389-4be6-0987-5078-725b43153596@gmail.com>
+ <20200712234035.213348aa@nic.cz>
+ <ff707d34-8fc0-342e-3df2-e96e5493004b@gmail.com>
+ <20200713150634.GA176775@bogus>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <01ead073-71e0-6bd3-7fcf-32aa0fd9c7a5@gmail.com>
+Date:   Mon, 13 Jul 2020 23:28:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <01afcac0-bd34-3fd0-b991-a8b40d4b4561@enneenne.com>
- <CACRpkdbX9T9EuN-nxkMPC=sN74PEdoLuWurNLdGCzZJwwFrdpQ@mail.gmail.com>
- <1c4f1a83-835a-9317-3647-b55f6f39c0ba@enneenne.com> <CACRpkdZPjJSryJc+RtYjRN=X7xKMcao5pYek1fUM2+sE9xgdFQ@mail.gmail.com>
- <CAMuHMdUtguuu4FWU4nRS=pBUyEwKM1JZ8DYPdCQHXBYN0i_Frg@mail.gmail.com>
- <87efe96c-3679-14d5-4d79-569b6c047b00@enneenne.com> <CAMuHMdUght0hkJT1N8ub5xR5GB+U18MAhAg+zDmAAuxoRSRaYg@mail.gmail.com>
- <d30e64c9-ad7f-7cd5-51a4-3f37d6f1e3d8@enneenne.com> <070fa558-6e20-0fbf-d3e4-0a0eca4fe82c@enneenne.com>
- <CACRpkdYFAW2bcB53M3_b2LsveJO_PWZJhprGhdTtfmW11B1WmQ@mail.gmail.com> <f66dc9c4-b164-c934-72a8-d4aca063fca5@enneenne.com>
-In-Reply-To: <f66dc9c4-b164-c934-72a8-d4aca063fca5@enneenne.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 13 Jul 2020 23:26:54 +0200
-Message-ID: <CACRpkdbjc6vvpHVjnJNGisRw6LiLZd-95aHWJJORwvaRNigPcw@mail.gmail.com>
-Subject: Re: [RFC] GPIO lines [was: GPIO User I/O]
-To:     Rodolfo Giometti <giometti@enneenne.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200713150634.GA176775@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 4:20 PM Rodolfo Giometti <giometti@enneenne.com> wrote:
+On 7/13/20 5:06 PM, Rob Herring wrote:
+> On Mon, Jul 13, 2020 at 12:11:51AM +0200, Jacek Anaszewski wrote:
+>> On 7/12/20 11:40 PM, Marek Behun wrote:
+>>> On Sun, 12 Jul 2020 23:27:07 +0200
+>>> Jacek Anaszewski <jacek.anaszewski@gmail.com> wrote:
+>>>
+>>>>> +            multi-led@0 {
+>>>>> +                reg = <0>;
+>>>>> +                color = <LED_COLOR_ID_MULTI>;
+>>>>> +                function = LED_FUNCTION_POWER;
+>>>>
+>>>> Please provide child nodes for each color LED. Let's stick
+>>>> to the bindings closely and not make any deviations from
+>>>> the beginning.
+>>>
+>>> Why? It would make sense if there were devices using this controller
+>>> having other configuration, but on Omnia, all LEDs are RGB.
+>>>
+>>> Also, if I do this, should I also make the driver check in the probe
+>>> function whether the per-channel child nodes are correct? Eg. if they
+>>> are always three: one for red, one for green and one for blue? Or
+>>> should the driver ignore this and only the device tree binding specify
+>>> it?
+>>>
+>>> Because the way the driver is written now, it only registers
+>>> multi-color RGB LEDs.
+>>
+>> This is not RGB framework, but multicolor framework. It is not justified
+>> to pretend that RGB is default. Unless you would state that clearly in
+>> the comment in DT, but that should be agreed upon with Rob.
+> 
+> If the LEDs are fixed in h/w and never vary for this controller, then
+> they don't need to be in DT. However, is it really possible that a
+> channel only supports 1 color of LED? I don't think so.
 
-> >>                 motor {
-> >>                         gpios = <&gpionb 8 GPIO_ACTIVE_HIGH>;
-> >>                         mode = "out-high-open-drain";
-> >>                 };
-(...)
-> > /* Bit 2 express Open drain or open source */
-> > #define GPIO_LINE_OPEN_SOURCE 0
-> > #define GPIO_LINE_OPEN_DRAIN 4
-(...)
-> These modes came from include/linux/gpio/consumer.h:
+Theoretically we could allow for registering two LEDs as LED multi
+color device and the other one as monochrome LED class device
+but I admit that this would be a bit convoluted and entail unnecessary
+complexity in the driver.
 
-OK I was a bit unclear. Mainly open drain should be a flag on
-the line, not a mode.
+So I'm OK with no child nodes for these bindings, but let's add some
+comment justifying that.
 
-> Maybe I can do something similar to hog-gpio as below, if you prefer...
->
-> bypass0 {
->         gpios = <&gpionb 10 GPIO_ACTIVE_LOW>;
->         output-low;
-
-Yes this is better, just boolean flags is not natural than strings
-for this.
-
-However it addresses in a way an issue we have had popping
-up from time to time which is assignment of default values to
-lines before they are used overall.
-
-I think that would be a bit of thing that should be proper to
-solve as part of this.
-
-The discussion has often stopped short due to different
-opinions on the device tree bindings for that.
-
-Yours,
-Linus Walleij
+-- 
+Best regards,
+Jacek Anaszewski
