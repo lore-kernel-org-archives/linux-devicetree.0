@@ -4,79 +4,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F18E8C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 23:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 145E9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 23:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE4AD20DD4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 23:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E57262145D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 23:33:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594682845;
-	bh=Vm9UZLloX6f3ru3gOCqu7hHqZVKT8bVEJlLMjYcZiuM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IPR+j+Qrj/izRn8ing4OHsG5tfCTvEAYtKBSmGq6U+QdO5cp+H1gGNe29597QipPc
-	 OJ+qw5efKK/2ygXMKdc+IadsHYloiB12N0DPCuzX17M2g40R1f3nr+mLmUUCQbgdaD
-	 GzWjbp2Q8eAIKGEhMKhOCuMNhBLt05p/zX83fxxo=
+	s=default; t=1594683208;
+	bh=ASyGfa3Wk9yhEqjezqaJilEkvipfynLyaSZXaASIVX4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dCdiWkIuEGcLw+R5zubKU1ay+lv8+Yb32UPeh0HYnFUwNn3wJ0POW2GZ4D1BuZX7O
+	 G7scwlAvx0asXep5NPEOWHFVvTyGDKp2tX/cwQeynz6+vP+8xqihNi141KmHd9X+La
+	 LUFqXXrXRK7w4YYoPIGgAAjQHDD0IhX7TZPGtJcg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbgGMX1Z (ORCPT
+        id S1726364AbgGMXd2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 19:27:25 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:32907 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbgGMX1Z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 19:27:25 -0400
-Received: by mail-il1-f195.google.com with SMTP id a11so12756898ilk.0;
-        Mon, 13 Jul 2020 16:27:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zAVa3lTSYila6966sp8Gn62aDm38C7zi+tjV9vKX43I=;
-        b=ec+BX7kRwnIIydh1TGTZBLctpRyHjt9TQ1M71ZO7c03xRhtkrcfu3yYH6QmRDnCL6w
-         R7kVGotn1Q9J5m1WUvIE+Cnc9Qs+RfxQbTSoFGfn8sAggsAWtm5/99l7wp9hZpjrJs39
-         3TnrPppVAfYAiu9Obc3I1Xz6oE8FtTHYICUTlqHL8d1o6jSdlB5TT1VvcUzZgINShYK3
-         ZG6+4QhdD1e/CMyQuPhqgT2K5X+ezf5z32A8eS/04WvxzhGP78fohxSP3agVV87tCaJl
-         qU3QmtG7v7B/Xfu86hRfLyxQukvHapEEtqwkdSEiPn+ZuTchG9TiK7uHtYR41kpGHbFR
-         +1ZA==
-X-Gm-Message-State: AOAM533QbjceL/MqRSYSV3vJc34k8ZcerT1SsQ/jTtedmeGXRCeHu+r+
-        Mw8dwKA/lTzQWLCleeFjGQ==
-X-Google-Smtp-Source: ABdhPJyXmtIrQdcQjdN9a8VFpJHAVd9PmhEOvZbXOsKiCbcGyeFTONHHYgS8sbR+ZOWoU6/uoSIPiw==
-X-Received: by 2002:a92:cd10:: with SMTP id z16mr2300685iln.77.1594682844207;
-        Mon, 13 Jul 2020 16:27:24 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id f2sm8335325ioc.52.2020.07.13.16.27.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 16:27:23 -0700 (PDT)
-Received: (nullmailer pid 918455 invoked by uid 1000);
-        Mon, 13 Jul 2020 23:27:22 -0000
-Date:   Mon, 13 Jul 2020 17:27:22 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Frank Lee <frank@allwinnertech.com>
-Cc:     maz@kernel.org, wens@csie.org, tiny.windzz@gmail.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, tglx@linutronix.de, mripard@kernel.org,
-        devicetree@vger.kernel.org, jason@lakedaemon.net
-Subject: Re: [PATCH v3 12/16] dt-bindings: irq: sun7i-nmi: Add binding for
- A100's NMI controller
-Message-ID: <20200713232722.GA918407@bogus>
-References: <20200713021740.17389-1-frank@allwinnertech.com>
+        Mon, 13 Jul 2020 19:33:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49722 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726339AbgGMXd2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 19:33:28 -0400
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48EA220DD4;
+        Mon, 13 Jul 2020 23:33:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594683207;
+        bh=ASyGfa3Wk9yhEqjezqaJilEkvipfynLyaSZXaASIVX4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QLtsmejCfy9e4auxKVg0O/r8JmxeFkxZ//UOmpI7peIMM4tvfxR1jybbdDS1mSI43
+         Zeasdc+UOeNrqSkNz04BXtyNK0FY4ZKm+Ek3QlVTTteo9w+eSQVNTzYMjNkhqHPB6I
+         DPwPBO4eK2buv4Qyx+Meqz7KEYfwVP6Iv0Hik/6o=
+Received: by mail-oo1-f44.google.com with SMTP id t6so2808048ooh.4;
+        Mon, 13 Jul 2020 16:33:27 -0700 (PDT)
+X-Gm-Message-State: AOAM531f63R5S6zUy9PUcwWDD2KHRN4M1R0okKSauALtfngnL+Wk4OLD
+        hy1KdgW3TZSqd+0Vqi7W7wNP41AVRrYGT5LDYA==
+X-Google-Smtp-Source: ABdhPJxJn4Yq2V9XaFU8Qu7rKSKIoq5hATYp03MMXMnT6eRrlBajd27f8pUxj/NKMNWyOQuf9hIsTFEpJUwU6oj3ods=
+X-Received: by 2002:a4a:7459:: with SMTP id t25mr2138469ooe.25.1594683206670;
+ Mon, 13 Jul 2020 16:33:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200713021740.17389-1-frank@allwinnertech.com>
+References: <20200708071942.22595-1-frank@allwinnertech.com>
+ <20200708071942.22595-2-frank@allwinnertech.com> <20200713225453.GA874275@bogus>
+In-Reply-To: <20200713225453.GA874275@bogus>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 13 Jul 2020 17:33:15 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK4azgT=+vXu1VJ1tn--QnGaoied+FPSKZ68vtZs+=_sw@mail.gmail.com>
+Message-ID: <CAL_JsqK4azgT=+vXu1VJ1tn--QnGaoied+FPSKZ68vtZs+=_sw@mail.gmail.com>
+Subject: Re: [PATCH v3 01/16] dt-bindings: clk: sunxi-ccu: add compatible
+ string for A100 CCU and R-CCU
+To:     Frank Lee <frank@allwinnertech.com>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Corentin Labbe <clabbe@baylibre.com>, liyong@allwinnertech.com,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        bage@linutronix.de, Thomas Gleixner <tglx@linutronix.de>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Ondrej Jirman <megous@megous.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Stefan Mavrodiev <stefan@olimex.com>,
+        huangshuosheng@allwinnertech.com,
+        Jason Cooper <jason@lakedaemon.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 13 Jul 2020 10:17:40 +0800, Frank Lee wrote:
-> Add a binding for A100's nmi controller.
-> 
-> Signed-off-by: Frank Lee <frank@allwinnertech.com>
-> ---
->  .../bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml      | 3 +++
->  1 file changed, 3 insertions(+)
-> 
+On Mon, Jul 13, 2020 at 4:54 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, 08 Jul 2020 15:19:27 +0800, Frank Lee wrote:
+> > This patch adds binding to a100's ccu clock and r-ccu clock.
+> >
+> > Signed-off-by: Frank Lee <frank@allwinnertech.com>
+> > ---
+> >  .../devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml         | 7 ++++++-
+> >  1 file changed, 6 insertions(+), 1 deletion(-)
+> >
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Note that your series isn't threaded properly. Please send series
+threaded (in reply to cover letter or 1st patch).
