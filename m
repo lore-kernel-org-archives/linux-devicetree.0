@@ -2,140 +2,99 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B881CC433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C06C433E7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 920D420791
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:58:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gc+A3oOT"
+	by mail.kernel.org (Postfix) with ESMTP id 47E952075D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:59:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594652356;
+	bh=nzASuH9Aa6QzRRlwVHAvFBo4qZ+A3sWOlJRsPr6CAsg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q8atQD685RIuObGUDzNK/apnWyfmdxRvxlinBj5iPxozLPasGwEpXLBb2fMAQuQBq
+	 Tg7IBo7B/FY7OiATeWpS4rZTnFqqSVE0HMxVwIseATK5/x8aulIS92uo6Zbtvf3bdu
+	 1IB3rJoCjr2hGX9B6b9obyW9mou5kKlK38xu0csw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729772AbgGMO6s (ORCPT
+        id S1729902AbgGMO7P (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:58:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34196 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729649AbgGMO6r (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 10:58:47 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FDDAC061755;
-        Mon, 13 Jul 2020 07:58:47 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id d18so13811888ion.0;
-        Mon, 13 Jul 2020 07:58:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Mr56/9hhLOah/1WskpzGTun6YF0+zSZRxtX7at7eeVk=;
-        b=Gc+A3oOTz9nxjK8Oyz2sB/jyvAya9tVKQeexSVdJCjoV2OVdcuV0hIniUbCNB6CwVZ
-         6tY79EfIWpa2RVlOKKs3UFWTSFhE8GHr7esXVeevmPwDOy3oVqXj4hnc2uQQRiRTIySw
-         JryBhJveeYTzUlsqJK+yoBd2NT6eWoHVH60yiUeOtgMme73L4+xdqzK+uptFtkMMV8f3
-         Our1KWeXztm/kR0adTbs2OqgrVgmSlL3WLs5pQ3mii/5JG5wFgyfV4CKA+3qyalk+uns
-         vKkfdSYpj0+EVH22FK8/xli/MytuOFNPdL0TvjcH7vC8l79CN4vVCKEjohHu054mLGju
-         EWGQ==
+        Mon, 13 Jul 2020 10:59:15 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38951 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729649AbgGMO7P (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 10:59:15 -0400
+Received: by mail-io1-f66.google.com with SMTP id f23so13790305iof.6;
+        Mon, 13 Jul 2020 07:59:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Mr56/9hhLOah/1WskpzGTun6YF0+zSZRxtX7at7eeVk=;
-        b=YuOh0JxCBDLezIRVz77pO5JbF2zW6sahcJBR3QwOCQDUvk4nZ3HLoekmpwDtTz8upc
-         jnYDxTJu/ghdylsneEHHhSKuYqOGSy7CqnOR2krPKlNL5+n0iT/aEiGGHTdxXVOn8IXB
-         2DfE7pNcmOgkxJ56W91VVr9MUAFoxzywkjE1kRkZfFYl6115BMuWrJ6D0Q17Fgalow4H
-         9EWewbneSR7SASkmBCZ9+BmXevv99KlmJDmVJlvV+AwlbLPYD8XrQZiubV9yUkaLOXTY
-         k2xz+7AHGvZ9HTpziOTeJmMgnsf7JvOoJiZ4TTUymSK0tqPx1YHXTXoRz4YFRjcWksSR
-         UKbg==
-X-Gm-Message-State: AOAM5338oANA40apsKxizRCDIY2aerG/gb+sqjUz6bWMUs2Eig+bkCUD
-        d3LS5DYbDhC4AKuNUfAOrCy+8EhCyBfZDAT6xBI=
-X-Google-Smtp-Source: ABdhPJyIb4TLaDuRzssmGjD8GlxCnRNZPX1fjJp7B0DVJOpqXfeErBQ2zLmh4Yjcd81ES/b/Ybs6G90MJv7Otmmv4ng=
-X-Received: by 2002:a02:c604:: with SMTP id i4mr442905jan.19.1594652325448;
- Mon, 13 Jul 2020 07:58:45 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5WwrQCBfCGD1oAlfh4Q+LcNaL9+7pA+S/ObwRTYKA7s=;
+        b=LKLwd+S4MPDacMi32SyNCh3ZWLF8Wi3Nm7XoF/zpJbaHECabq46sghtrBNoOhJ1zBN
+         jH8/EEcuj13F1D+L3feeSgrT/t48kQt9xTdkdEQ5O3j3r0Wwe6vkfZfzs73bCJw9A7/g
+         Dz7P1BalARhLYMr1KhokwD75VX7EKCLbg8KnMcEUafNFTicQTHA2aP4VnIWJ34Pwr5jO
+         jLjYj1Q6wXqMdfG3xl3wM0ZskQ14Tq3cOPAqHF8smCsSfCQm20FWNcEhc1QvZWDXi7Ri
+         r/FtJX08w8SySDJUGFCsYkjZZwYi14923eJA7LXDQi4DMUcrfKsvcCp3xu3tPulu1T/s
+         NJcw==
+X-Gm-Message-State: AOAM530NEkcYhN/YZYFdzF0qyXkqpOa2YvZNOteZfYav5Hk1vKIcParC
+        bypAaLWoUO0s/rPRGmY3eWOnOKxiEQ==
+X-Google-Smtp-Source: ABdhPJzHZq+wMFL1ggb2CsSFLDEJagYQZrr2Q2lLGCkDm5iY+m/zhSLIJpn5qI8RV2IDmpYmYErCOA==
+X-Received: by 2002:a05:6638:12d2:: with SMTP id v18mr502732jas.4.1594652354184;
+        Mon, 13 Jul 2020 07:59:14 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id y12sm5507378iot.49.2020.07.13.07.59.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 07:59:13 -0700 (PDT)
+Received: (nullmailer pid 173994 invoked by uid 1000);
+        Mon, 13 Jul 2020 14:59:12 -0000
+Date:   Mon, 13 Jul 2020 08:59:12 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
+        simon@lineageos.org, linux-samsung-soc@vger.kernel.org,
+        b.zolnierkie@samsung.com, alsa-devel@alsa-project.org,
+        m.szyprowski@samsung.com, broonie@kernel.org, krzk@kernel.org
+Subject: Re: [PATCH 1/3] ASoC: samsung: Document DT bindings for Midas sound
+ subsystem
+Message-ID: <20200713145912.GA173446@bogus>
+References: <CGME20200710173512eucas1p101c03994a728150f18428295192edf25@eucas1p1.samsung.com>
+ <20200710173500.22365-1-s.nawrocki@samsung.com>
 MIME-Version: 1.0
-References: <20200710230224.2265647-1-dianders@chromium.org> <CAL_JsqKC5WtHb-coMCxMTDJ7CJcjVXcAxDT4J9N-Xyr=0uuURA@mail.gmail.com>
-In-Reply-To: <CAL_JsqKC5WtHb-coMCxMTDJ7CJcjVXcAxDT4J9N-Xyr=0uuURA@mail.gmail.com>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Mon, 13 Jul 2020 08:58:34 -0600
-Message-ID: <CAOCk7NrCXXM_RgohjhooJUcenTkV5ajs+Xg1QE-7F5BDRYppyw@mail.gmail.com>
-Subject: Re: [Freedreno] [PATCH 0/9] drm/msm: Avoid possible infinite probe
- deferral and speed booting
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        DTML <devicetree@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>, Sean Paul <sean@poorly.run>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200710173500.22365-1-s.nawrocki@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 8:11 AM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Fri, Jul 10, 2020 at 5:02 PM Douglas Anderson <dianders@chromium.org> wrote:
-> >
-> > I found that if I ever had a little mistake in my kernel config,
-> > or device tree, or graphics driver that my system would sit in a loop
-> > at bootup trying again and again and again.  An example log was:
->
-> Why do we care about optimizing the error case?
->
-> >   msm ae00000.mdss: bound ae01000.mdp (ops 0xffffffe596e951f8)
-> >   msm_dsi ae94000.dsi: ae94000.dsi supply gdsc not found, using dummy regulator
-> >   msm_dsi_manager_register: failed to register mipi dsi host for DSI 0
-> >   [drm:ti_sn_bridge_probe] *ERROR* could not find any panel node
-> >   ...
-> >
-> > I finally tracked it down where this was happening:
-> >   - msm_pdev_probe() is called.
-> >   - msm_pdev_probe() registers drivers.  Registering drivers kicks
-> >     off processing of probe deferrals.
-> >   - component_master_add_with_match() could return -EPROBE_DEFER.
-> >     making msm_pdev_probe() return -EPROBE_DEFER.
-> >   - When msm_pdev_probe() returned the processing of probe deferrals
-> >     happens.
-> >   - Loop back to the start.
-> >
-> > It looks like we can fix this by marking "mdss" as a "simple-bus".
-> > I have no idea if people consider this the right thing to do or a
-> > hack.  Hopefully it's the right thing to do.  :-)
->
-> It's a simple test. Do the child devices have any dependency on the
-> parent to probe and/or function? If so, not a simple-bus.
->
-> > Once I do this I notice that my boot gets marginally faster (you
-> > don't need to probe the sub devices over and over) and also if I
->
-> Can you quantify that?
->
-> Have you run with devlinks enabled. You need a command line option to
-> enable. That too should reduce deferred probes.
->
-> > have a problem it doesn't loop forever (on my system it still
-> > gets upset about some stuck clocks in that case, but at least I
-> > can boot up).
->
-> Deferred probe only runs when a device is added, so it's not like it
-> is continually running.
+On Fri, 10 Jul 2020 19:34:58 +0200, Sylwester Nawrocki wrote:
+> This patch adds documentation of DT biding for the Midas sound complex.
+> Partially based on the *txt version by Simon Shields <simon@lineageos.org>.
+> 
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+>  .../bindings/sound/samsung,midas-audio.yaml        | 105 +++++++++++++++++++++
+>  1 file changed, 105 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/samsung,midas-audio.yaml
+> 
 
-But it is.  I've hit this as well, but haven't attempted a fix.
 
-So we have a parent device, with several sub devices.  The parent
-device probes which causes the sub devices to probe.  One of the sub
-devices successfully probes, and another fails with EPROBE_DEFER.
-This both caused the probe defer framework to immediately schedule
-processing the probe defer queue, and also cause all of the chile
-devices and the parent device to be removed to probe defer later.
-Since the system state doesn't change (one of the sub devices actually
-requires an independent other device to have probed), the system ends
-up an an infinite probe defer loop.
+My bot found errors running 'make dt_binding_check' on your patch:
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/sound/samsung,midas-audio.example.dt.yaml: sound: 'mic-bias-gpios', 'submic-bias-gpios' do not match any of the regexes: 'pinctrl-[0-9]+'
+
+
+See https://patchwork.ozlabs.org/patch/1327065
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
