@@ -2,86 +2,297 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31EB1C433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 23:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40635C433F2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 23:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C56120DD4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 23:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B03B21532
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 23:40:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594683296;
-	bh=jtL/x8QaeJYBVX26qVxdc9Gf42pQ1Umn1+ig/5qqPB4=;
+	s=default; t=1594683611;
+	bh=fpS8M43HFhKDabLZC/eeNS5M8xOi7c5Q76QXE/qWXbU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1atuh58WuqrLJViQsyXWZPgDgEbYybsWspEMSrWULFBVHVXB64VxsdcMecMo3fqpX
-	 dbT6AVKab4mgl9SS3kSy5FfL55eOeK55CHSx5yWWvNmmfPjsYkAf0SsS7tIdr9Vd4V
-	 uWk9zXha3NcEvsigDCf1a01LDuOzB9gSPvXbC4rI=
+	b=0pTP1IcdO08c7pbq+Zf7m5VYnCfUfjL+ezQKRbfObrgK3PA7jUgNatzf/LlmD5WSp
+	 FshVcdrTzeC/73mMhsYTdgbTo9DXEb/lyFFw3Loine54JbsB7W0mEAUJoP6rSWvn1O
+	 kHBS+by72laEsG5euoc4gokb0SYtPyeqgTukX7N8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgGMXez (ORCPT
+        id S1726768AbgGMXkE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 19:34:55 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35627 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgGMXez (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 19:34:55 -0400
-Received: by mail-io1-f68.google.com with SMTP id v8so15417843iox.2;
-        Mon, 13 Jul 2020 16:34:54 -0700 (PDT)
+        Mon, 13 Jul 2020 19:40:04 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34998 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgGMXkD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 19:40:03 -0400
+Received: by mail-io1-f67.google.com with SMTP id v8so15427833iox.2;
+        Mon, 13 Jul 2020 16:40:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=h09mBGtHi8i5lSRssVJKTabDr88RFU9DFJVpDRWqOyY=;
-        b=na4Iy3kB395xsmp6N5sYOQOW3e7HZQhIpTfQ714D7a/M2AWkN5Nt5zJtK9czQ2qfmo
-         a89/z71p+LCFvHI8Ppo+I0rd/XJ/v3jVUOJjL1nVcF3TGROIBWb13IoFtelReT3B8bR/
-         JOxR0vsvklo3RRSTY9UvoMWYtt+e8xUDk9S1PXjSqtMLkMjh5/qbq7jFmJoatAUNlu8t
-         17XvilSBNnGFuN3WCZsavShfD6hJpLViGeTTkaFIji20ow5RyYOZ22HX0gH/Ng7oX8Iw
-         zVBBBbmmIEGGjb74gx6jhseI+UJCZRniKL++wDCOiqcw7rZ/D6w8NizUwFO0Tk32xTkB
-         NNhw==
-X-Gm-Message-State: AOAM532+MTXtiRQBtEg52nSxD1vduz9AxFZM3gIscn20ZpOY9B9L0rAU
-        oHBOw/5Ok0VUvX6VUvU+sw==
-X-Google-Smtp-Source: ABdhPJwfI7+jWURn6sHIGYi1OZze4wchDmNC/r88ULrNM/NVokDGIeeAUfetYg1n5a5T/nSqq97g0g==
-X-Received: by 2002:a05:6638:d8b:: with SMTP id l11mr2765494jaj.124.1594683294403;
-        Mon, 13 Jul 2020 16:34:54 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=cGg7d7tV4w5UbMq23q7yKIkfee+l0kw7iwNJqfig+x8=;
+        b=Vn/p25UEff09W/bfqmKcoXhETdtmyJmYWU1nYtey9t2AiTvdPalqFEBnELTf7ftwyI
+         vaAWI5C+rC4LSBPp5HzPr750Zu97XtlyYDEY/UUigKO4YD6p2BaAElxh9zFboX6jfwQ+
+         /02zqNMDGuUwqKv5HRx6ZKZ95H3nfkigEjR9j3zpyusg0g0AQYTVxW19FpITOa55Wl17
+         /bNW/7xlQWUsURz31Lo6nnuEYAE6QQfTeW27BrbQfQ4GZ9G6hpSjDAFZM8bT9QxHzEAo
+         If+CazcEyR8skK9ilTaQ1PPQzOu+3SINJT9jrGX7htnIQ5aFjlM3ms2No1rI4uX3zzly
+         VbgA==
+X-Gm-Message-State: AOAM531yKQXT6qubk6oiaL8zUUpyNvCcwJdq+SCNLr5UF/cecAaKiLNP
+        M477WZZ6/4rARGcA3TE4Jw==
+X-Google-Smtp-Source: ABdhPJwb293LXKyIEQNeGkK1sLAdpG1wm5kpKwV8Rtq3nT60dgt4JuKB9E6vIfN8wBhxnQXTG9ZGxg==
+X-Received: by 2002:a05:6638:223:: with SMTP id f3mr2871376jaq.144.1594683602330;
+        Mon, 13 Jul 2020 16:40:02 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id s18sm8922933ilj.63.2020.07.13.16.34.53
+        by smtp.gmail.com with ESMTPSA id c9sm8950695ilm.57.2020.07.13.16.40.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 16:34:53 -0700 (PDT)
-Received: (nullmailer pid 928397 invoked by uid 1000);
-        Mon, 13 Jul 2020 23:34:52 -0000
-Date:   Mon, 13 Jul 2020 17:34:52 -0600
+        Mon, 13 Jul 2020 16:40:01 -0700 (PDT)
+Received: (nullmailer pid 935209 invoked by uid 1000);
+        Mon, 13 Jul 2020 23:39:59 -0000
+Date:   Mon, 13 Jul 2020 17:39:59 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Alexandre Courbot <acourbot@chromium.org>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        linux-media@vger.kernel.org,
-        Maoguang Meng <maoguang.meng@mediatek.com>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 08/16] dt-bindings: media: document
- mediatek,mt8183-vcodec-enc
-Message-ID: <20200713233452.GA928367@bogus>
-References: <20200713060842.471356-1-acourbot@chromium.org>
- <20200713060842.471356-9-acourbot@chromium.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Sebastian Reichel <sre@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        David Heidelberg <david@ixit.cz>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Jonghwa Lee <jonghwa3.lee@samsung.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Vinay Simha BN <simhavcs@gmail.com>
+Subject: Re: [PATCH v2 1/9] dt-bindings: power: supply: Add device-tree
+ binding for Summit SMB3xx
+Message-ID: <20200713233959.GA928559@bogus>
+References: <20200607144113.10202-1-digetx@gmail.com>
+ <20200607144113.10202-2-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200713060842.471356-9-acourbot@chromium.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200607144113.10202-2-digetx@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 13 Jul 2020 15:08:34 +0900, Alexandre Courbot wrote:
-> MT8183's encoder is similar to MT8173's.
+On Sun, Jun 07, 2020 at 05:41:05PM +0300, Dmitry Osipenko wrote:
+> From: David Heidelberg <david@ixit.cz>
 > 
-> Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+> Summit SMB3xx series is a Programmable Switching Li+ Battery Charger.
+> This patch adds device-tree binding for Summit SMB345, SMB347 and SMB358
+> chargers.
+> 
+> Signed-off-by: David Heidelberg <david@ixit.cz>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->  Documentation/devicetree/bindings/media/mediatek-vcodec.txt | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  .../power/supply/summit,smb347-charger.yaml   | 165 ++++++++++++++++++
+>  .../dt-bindings/power/summit,smb347-charger.h |  19 ++
+>  2 files changed, 184 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/summit,smb347-charger.yaml
+>  create mode 100644 include/dt-bindings/power/summit,smb347-charger.h
 > 
+> diff --git a/Documentation/devicetree/bindings/power/supply/summit,smb347-charger.yaml b/Documentation/devicetree/bindings/power/supply/summit,smb347-charger.yaml
+> new file mode 100644
+> index 000000000000..eea0a6398c95
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/summit,smb347-charger.yaml
+> @@ -0,0 +1,165 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/power/supply/summit,smb347-charger.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Battery charger driver for SMB345, SMB347 and SMB358
+> +
+> +maintainers:
+> +  - David Heidelberg <david@ixit.cz>
+> +  - Dmitry Osipenko <digetx@gmail.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - summit,smb345
+> +      - summit,smb347
+> +      - summit,smb358
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  monitored-battery:
+> +    description: phandle to the battery node
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +
+> +  summit,enable-usb-charging:
+> +    type: boolean
+> +    description: Enable charging through USB.
+> +
+> +  summit,enable-otg-charging:
+> +    type: boolean
+> +    description: Provide power for USB OTG
+> +
+> +  summit,enable-mains-charging:
+> +    type: boolean
+> +    description: Enable charging through mains
+> +
+> +  summit,enable-charge-control:
+> +    description: Enable charging control
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - enum:
+> +          - 0 # SMB3XX_CHG_ENABLE_SW SW (I2C interface)
+> +          - 1 # SMB3XX_CHG_ENABLE_PIN_ACTIVE_LOW Pin control (Active Low)
+> +          - 2 # SMB3XX_CHG_ENABLE_PIN_ACTIVE_HIGH Pin control (Active High)
+> +
+> +  summit,fast-voltage-threshold-microvolt:
+> +    description: Voltage threshold to transit to fast charge mode (in uV)
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
 
-Acked-by: Rob Herring <robh@kernel.org>
+Anything with a standard unit suffix already has a type, so drop.
+
+> +    minimum: 2400000
+> +    maximum: 3000000
+> +
+> +  summit,mains-current-limit-microamp:
+> +    description: Maximum input current from AC/DC input (in uA)
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  summit,usb-current-limit-microamp:
+> +    description: Maximum input current from USB input (in uA)
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  summit,charge-current-compensation-microamp:
+> +    description: Charge current compensation (in uA)
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  summit,chip-temperature-threshold-celsius:
+> +    description: Chip temperature for thermal regulation in °C.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [100, 110, 120, 130]
+> +
+> +  summit,soft-compensation-method:
+> +    description: Soft temperature limit compensation method
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - enum:
+> +          - 0 # SMB3XX_SOFT_TEMP_COMPENSATE_NONE Compensation none
+> +          - 1 # SMB3XX_SOFT_TEMP_COMPENSATE_CURRENT Current compensation
+> +          - 2 # SMB3XX_SOFT_TEMP_COMPENSATE_VOLTAGE Voltage compensation
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - summit,smb345
+> +            - summit,smb358
+> +
+> +    then:
+> +      properties:
+> +        summit,mains-current-limit-microamp:
+> +          enum: [ 300000,  500000,  700000, 1000000,
+> +                 1500000, 1800000, 2000000]
+> +
+> +        summit,usb-current-limit-microamp:
+> +          enum: [ 300000,  500000,  700000, 1000000,
+> +                 1500000, 1800000, 2000000]
+> +
+> +        summit,charge-current-compensation-microamp:
+> +          enum: [200000, 450000, 600000, 900000]
+> +
+> +    else:
+> +      properties:
+> +        summit,mains-current-limit-microamp:
+> +          enum: [ 300000,  500000,  700000,  900000, 1200000,
+> +                 1500000, 1800000, 2000000, 2200000, 2500000]
+> +
+> +        summit,usb-current-limit-microamp:
+> +          enum: [ 300000,  500000,  700000,  900000, 1200000,
+> +                 1500000, 1800000, 2000000, 2200000, 2500000]
+> +
+> +        summit,charge-current-compensation-microamp:
+> +          enum: [250000, 700000, 900000, 1200000]
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +anyOf:
+> +  - required:
+> +      - summit,enable-usb-charging
+> +  - required:
+> +      - summit,enable-otg-charging
+> +  - required:
+> +      - summit,enable-mains-charging
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/power/summit,smb347-charger.h>
+> +
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        charger@7f {
+> +            compatible = "summit,smb347";
+> +            reg = <0x7f>;
+> +            status = "okay";
+> +
+> +            summit,enable-charge-control = <SMB3XX_CHG_ENABLE_PIN_ACTIVE_HIGH>;
+> +            summit,chip-temperature-threshold-celsius = <110>;
+> +            summit,mains-current-limit-microamp = <2000000>;
+> +            summit,usb-current-limit-microamp = <500000>;
+> +            summit,enable-usb-charging;
+> +            summit,enable-mains-charging;
+> +
+> +            monitored-battery = <&battery>;
+> +        };
+> +    };
+> +
+> +    battery: battery-cell {
+> +        compatible = "simple-battery";
+> +        constant-charge-current-max-microamp = <1800000>;
+> +        temperature-min-alert-celsius = <5>;
+> +        temperature-max-alert-celsius = <40>;
+> +    };
+> diff --git a/include/dt-bindings/power/summit,smb347-charger.h b/include/dt-bindings/power/summit,smb347-charger.h
+> new file mode 100644
+> index 000000000000..d918bf321a71
+> --- /dev/null
+> +++ b/include/dt-bindings/power/summit,smb347-charger.h
+> @@ -0,0 +1,19 @@
+> +/* SPDX-License-Identifier: (GPL-2.0-or-later or MIT) */
+> +/*
+> + * Author: David Heidelberg <david@ixit.cz>
+> + */
+> +
+> +#ifndef _DT_BINDINGS_SMB347_CHARGER_H
+> +#define _DT_BINDINGS_SMB347_CHARGER_H
+> +
+> +/* Charging compensation method */
+> +#define SMB3XX_SOFT_TEMP_COMPENSATE_NONE	0
+> +#define SMB3XX_SOFT_TEMP_COMPENSATE_CURRENT	1
+> +#define SMB3XX_SOFT_TEMP_COMPENSATE_VOLTAGE	2
+> +
+> +/* Charging enable control */
+> +#define SMB3XX_CHG_ENABLE_SW			0
+> +#define SMB3XX_CHG_ENABLE_PIN_ACTIVE_LOW	1
+> +#define SMB3XX_CHG_ENABLE_PIN_ACTIVE_HIGH	2
+> +
+> +#endif
+> -- 
+> 2.26.0
+> 
