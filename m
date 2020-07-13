@@ -2,123 +2,101 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D94C433E6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 07:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8970C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 07:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 621AC207BC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 07:04:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oBSA29ZR"
+	by mail.kernel.org (Postfix) with ESMTP id 81E112067D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 07:09:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbgGMHEJ (ORCPT
+        id S1725830AbgGMHJU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 03:04:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43780 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbgGMHEJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 03:04:09 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0CE1C08C5DB
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 00:04:08 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id z17so11972226edr.9
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 00:04:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9He2Y/cj2b1yofJp3r0tciWRU0GFm0a2fXfgV5d2ZsM=;
-        b=oBSA29ZRXnyX5uNrdKdKimE/m7zWdZXNnhrXmKWKgnyN/SH230LhrcwzyL4D5IYCjQ
-         q+j9awO4n+F2erswVyiQg/WMcIkxFh/IgNX4JZT8Q8aB3qp0IaeT4wjmr6f/xn1O58TX
-         4LtOfoBBudGY9551aEhRNWgZVLL5lJSfEBVd8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9He2Y/cj2b1yofJp3r0tciWRU0GFm0a2fXfgV5d2ZsM=;
-        b=cmgdN7nXs2qRHBl+TXncq3SN+T7QJ8agR1b6zd8jPq3hasiLsFeiEdGjIjnjxpN6Z0
-         aQPkoq8NewzPFLD97h6ghqQLeNpFUKqALui3jSVkMO+WglQADKd5KF+Es97ddpSBJH47
-         OoHwaGzHfT/rpUtUT2+GteO0Xjnbh90KzGIdR+G+VDwa2hB0Xnt2LJF0TnlJGmWNFG5M
-         4ZJxz0HMTkB/D2/GZDVBxiW0DnXKox11VG2+afJiw+qWaKu68QHlUCy2f6g7FuRmA7V6
-         BlX0Zz3OZ++gPEleSNnh086YbkqVPYd5tI0NF/WaRH0tqc1wOFuEe+yngAIOMsRgqT9i
-         Shdg==
-X-Gm-Message-State: AOAM5331SmYcbpPt+AUY0GE3MRSbbEMHIS8pTtOe3ztBWv1FZAOtIDSF
-        4SZ3oHkQ4d1yDf4ecelZeuqpPO8U9wUId95EjD2uCVpkGPtGfQ==
-X-Google-Smtp-Source: ABdhPJxgek6wFGTNWYGWXYoVuA91A7Bl2JN7v5ipfo4T7zContyupAUFj7BG3ePmDatYcqA77vTV3vhHfoLVelT2s64=
-X-Received: by 2002:a17:906:f117:: with SMTP id gv23mr43961935ejb.528.1594623847288;
- Mon, 13 Jul 2020 00:04:07 -0700 (PDT)
+        Mon, 13 Jul 2020 03:09:20 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:60142 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726360AbgGMHJT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 03:09:19 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id A8114BC06E;
+        Mon, 13 Jul 2020 07:09:15 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     jason@lakedaemon.net, andrew@lunn.ch, gregory.clement@bootlin.com,
+        sebastian.hesselbarth@gmail.com, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] ARM: dts: kirkwood: Replace HTTP links with HTTPS ones
+Date:   Mon, 13 Jul 2020 09:09:08 +0200
+Message-Id: <20200713070908.31846-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-References: <20200711064846.16007-1-yong.wu@mediatek.com> <20200711064846.16007-12-yong.wu@mediatek.com>
-In-Reply-To: <20200711064846.16007-12-yong.wu@mediatek.com>
-From:   Pi-Hsun Shih <pihsun@chromium.org>
-Date:   Mon, 13 Jul 2020 15:03:31 +0800
-Message-ID: <CANdKZ0e3=AeCxpSHVk7daUE01L7AgJYmZ7jeOQDT169SaowL-g@mail.gmail.com>
-Subject: Re: [PATCH 11/21] iommu/mediatek: Add power-domain operation
-To:     Yong Wu <yong.wu@mediatek.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Tomasz Figa <tfiga@google.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>, srv_heupstream@mediatek.com,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        iommu@lists.linux-foundation.org,
-        =?UTF-8?B?WW91bGluIFBlaSAo6KO05Y+L5p6XKQ==?= 
-        <youlin.pei@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>,
-        anan.sun@mediatek.com, cui.zhang@mediatek.com,
-        chao.hao@mediatek.com, ming-fan.chen@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spam: Yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Jul 11, 2020 at 2:51 PM Yong Wu <yong.wu@mediatek.com> wrote:
->
-> In the previous SoC, the M4U HW is in the EMI power domain which is
-> always on. the latest M4U is in the display power domain which may be
-> turned on/off, thus we have to add pm_runtime interface for it.
->
-> we should enable its power before M4U hw initial. and disable it after HW
-> initialize.
->
-> When the engine work, the engine always enable the power and clocks for
-> smi-larb/smi-common, then the M4U's power will always be powered on
-> automatically via the device link with smi-common.
->
-> Note: we don't enable the M4U power in iommu_map/unmap for tlb flush.
-> If its power already is on, of course it is ok. if the power is off,
-> the main tlb will be reset while M4U power on, thus the tlb flush while
-> m4u power off is unnecessary, just skip it.
->
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> ---
->  drivers/iommu/mtk_iommu.c | 54 ++++++++++++++++++++++++++++++++++-----
->  1 file changed, 47 insertions(+), 7 deletions(-)
-> ...
->         for_each_m4u(data) {
-> +               /* skip tlb flush when pm is not active */
-> +               if (pm_runtime_enabled(data->dev) &&
-> +                   !pm_runtime_active(data->dev))
-> +                       continue;
-> +
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-pm_runtime_active(dev) == false implies dev->power.disable_depth == 0,
-which implies pm_runtime_enabled(dev) == true, so the
-pm_runtime_enabled(data->dev) can be omitted here.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
->                 spin_lock_irqsave(&data->tlb_lock, flags);
->                 writel_relaxed(F_INVLD_EN1 | F_INVLD_EN0,
->                                data->base + data->plat_data->inv_sel_reg);
-> ...
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
+
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ arch/arm/boot/dts/kirkwood-b3.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/kirkwood-b3.dts b/arch/arm/boot/dts/kirkwood-b3.dts
+index 17f48f88a983..a7636fe28501 100644
+--- a/arch/arm/boot/dts/kirkwood-b3.dts
++++ b/arch/arm/boot/dts/kirkwood-b3.dts
+@@ -9,7 +9,7 @@
+  * L2 cache. If your B3 silently fails to boot, u-boot is probably too
+  * old. Either upgrade, or consider the following email:
+  *
+- * http://lists.debian.org/debian-arm/2012/08/msg00128.html
++ * https://lists.debian.org/debian-arm/2012/08/msg00128.html
+  */
+ 
+ /dts-v1/;
+-- 
+2.27.0
+
