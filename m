@@ -2,268 +2,151 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DB5C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 10:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79729C433E6
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 10:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7186120773
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 10:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FCE320773
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 10:18:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nA4viPOJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728382AbgGMKOU (ORCPT
+        id S1729043AbgGMKSx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 06:14:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44946 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbgGMKOT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 06:14:19 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59FEEC061755;
-        Mon, 13 Jul 2020 03:14:19 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 0D8A2BC070;
-        Mon, 13 Jul 2020 10:14:15 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     t-kristo@ti.com, nm@ti.com, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] arm64: dts: ti: k3-*: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 12:14:09 +0200
-Message-Id: <20200713101409.33131-1-grandmaster@al2klimov.de>
+        Mon, 13 Jul 2020 06:18:53 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:38103 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727035AbgGMKSp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 06:18:45 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594635524; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=HbTO1RWO0AYCBF7885LW5yU3nqXfLVBq9W9UdB+eByI=;
+ b=nA4viPOJzHWCyPolFOoHgaSwWq+EXZmdgXheEaaXH7SGufr3yGNN/Jixe/zdqtSVcbSgmt1V
+ 9VUGZ5FEqlI2VJlX01c98mN/TioqY00fvjNiIFKbTKsscbCRu8mpklYGVPRE9su6vHZ2VzSN
+ zROXBQfqiZY8mlKIfzpHl0f1X5w=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n09.prod.us-east-1.postgun.com with SMTP id
+ 5f0c3503c7a053446aa7478b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 13 Jul 2020 10:18:43
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 82D0AC433CA; Mon, 13 Jul 2020 10:18:42 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kalyan_t)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D426DC433C8;
+        Mon, 13 Jul 2020 10:18:41 +0000 (UTC)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spam: Yes
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 13 Jul 2020 15:48:41 +0530
+From:   kalyan_t@codeaurora.org
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Krishna Manikandan <mkrishn@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Raviteja Tamatam <travitej@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        nganji@codeaurora.org, Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>
+Subject: Re: [Freedreno] [v1] drm/msm/dpu: enumerate second cursor pipe for
+ external interface
+In-Reply-To: <CAF6AEGtPDh7q6Hjophdyz+Pvi93-bK5WULGeSw9P4BWRw5SWxQ@mail.gmail.com>
+References: <1593089153-17811-1-git-send-email-kalyan_t@codeaurora.org>
+ <CAF6AEGtPDh7q6Hjophdyz+Pvi93-bK5WULGeSw9P4BWRw5SWxQ@mail.gmail.com>
+Message-ID: <c10c0f70988d42037ccaccc6b5474942@codeaurora.org>
+X-Sender: kalyan_t@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
-
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
-
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
-
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- arch/arm64/boot/dts/ti/Makefile                       | 2 +-
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi              | 2 +-
- arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi               | 2 +-
- arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi            | 2 +-
- arch/arm64/boot/dts/ti/k3-am65.dtsi                   | 2 +-
- arch/arm64/boot/dts/ti/k3-am654-base-board.dts        | 2 +-
- arch/arm64/boot/dts/ti/k3-am654.dtsi                  | 2 +-
- arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts | 2 +-
- arch/arm64/boot/dts/ti/k3-j721e-main.dtsi             | 2 +-
- arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi       | 2 +-
- arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi           | 2 +-
- arch/arm64/boot/dts/ti/k3-j721e.dtsi                  | 2 +-
- include/dt-bindings/pinctrl/k3.h                      | 2 +-
- 13 files changed, 13 insertions(+), 13 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
-index b397945fdf73..05c0bebf65d4 100644
---- a/arch/arm64/boot/dts/ti/Makefile
-+++ b/arch/arm64/boot/dts/ti/Makefile
-@@ -3,7 +3,7 @@
- # Make file to build device tree binaries for boards based on
- # Texas Instruments Inc processors
- #
--# Copyright (C) 2016-2018 Texas Instruments Incorporated - http://www.ti.com/
-+# Copyright (C) 2016-2018 Texas Instruments Incorporated - https://www.ti.com/
- #
- 
- dtb-$(CONFIG_ARCH_K3_AM6_SOC) += k3-am654-base-board.dtb
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index 61815228e230..940acc6cbf26 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -2,7 +2,7 @@
- /*
-  * Device Tree Source for AM6 SoC Family Main Domain peripherals
-  *
-- * Copyright (C) 2016-2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2016-2018 Texas Instruments Incorporated - https://www.ti.com/
-  */
- #include <dt-bindings/phy/phy-am654-serdes.h>
- 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-index ae5f813d0cac..8c1abcfe0860 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-@@ -2,7 +2,7 @@
- /*
-  * Device Tree Source for AM6 SoC Family MCU Domain peripherals
-  *
-- * Copyright (C) 2016-2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2016-2018 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- &cbass_mcu {
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-index 54a133fa1bf2..dd75a5592539 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-@@ -2,7 +2,7 @@
- /*
-  * Device Tree Source for AM6 SoC Family Wakeup Domain peripherals
-  *
-- * Copyright (C) 2016-2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2016-2018 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- &cbass_wakeup {
-diff --git a/arch/arm64/boot/dts/ti/k3-am65.dtsi b/arch/arm64/boot/dts/ti/k3-am65.dtsi
-index 5be75e430965..27c0406b10ba 100644
---- a/arch/arm64/boot/dts/ti/k3-am65.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65.dtsi
-@@ -2,7 +2,7 @@
- /*
-  * Device Tree Source for AM6 SoC Family
-  *
-- * Copyright (C) 2016-2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2016-2018 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- #include <dt-bindings/gpio/gpio.h>
-diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-index 2f3d3316a1cf..78084a507fcf 100644
---- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Copyright (C) 2016-2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2016-2018 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- /dts-v1/;
-diff --git a/arch/arm64/boot/dts/ti/k3-am654.dtsi b/arch/arm64/boot/dts/ti/k3-am654.dtsi
-index b221abf43ac2..f0a6541b8042 100644
---- a/arch/arm64/boot/dts/ti/k3-am654.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am654.dtsi
-@@ -2,7 +2,7 @@
- /*
-  * Device Tree Source for AM6 SoC family in Quad core configuration
-  *
-- * Copyright (C) 2016-2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2016-2018 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- #include "k3-am65.dtsi"
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-index 6df823aaa37c..7de37e8abfbb 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2019 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- /dts-v1/;
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-index 96c929da639d..bdeda701af7c 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-@@ -2,7 +2,7 @@
- /*
-  * Device Tree Source for J721E SoC Family Main Domain peripherals
-  *
-- * Copyright (C) 2016-2019 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2016-2019 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- &cbass_main {
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-index dc31bd0434cb..4e1865d2d4b1 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-@@ -2,7 +2,7 @@
- /*
-  * Device Tree Source for J721E SoC Family MCU/WAKEUP Domain peripherals
-  *
-- * Copyright (C) 2016-2019 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2016-2019 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- &cbass_mcu_wakeup {
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
-index 7680109ca60a..8fa3361e5e45 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2019 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- /dts-v1/;
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e.dtsi b/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-index 2f9a56d9b114..d035b61e0e16 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-@@ -2,7 +2,7 @@
- /*
-  * Device Tree Source for J721E SoC Family
-  *
-- * Copyright (C) 2016-2019 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2016-2019 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- #include <dt-bindings/interrupt-controller/irq.h>
-diff --git a/include/dt-bindings/pinctrl/k3.h b/include/dt-bindings/pinctrl/k3.h
-index 499de6216581..b0eea7cc6e23 100644
---- a/include/dt-bindings/pinctrl/k3.h
-+++ b/include/dt-bindings/pinctrl/k3.h
-@@ -3,7 +3,7 @@
-  * This header provides constants for pinctrl bindings for TI's K3 SoC
-  * family.
-  *
-- * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com/
-  */
- #ifndef _DT_BINDINGS_PINCTRL_TI_K3_H
- #define _DT_BINDINGS_PINCTRL_TI_K3_H
--- 
-2.27.0
-
+On 2020-07-10 22:19, Rob Clark wrote:
+> On Thu, Jun 25, 2020 at 5:46 AM Kalyan Thota <kalyan_t@codeaurora.org> 
+> wrote:
+>> 
+>> Setup an RGB HW pipe as cursor which can be used on
+>> secondary interface.
+>> 
+>> For SC7180 2 HW pipes are enumerated as cursors
+>> 1 - primary interface
+>> 2 - secondary interface
+>> 
+>> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+>> ---
+>>  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c | 12 ++++++------
+>>  1 file changed, 6 insertions(+), 6 deletions(-)
+>> 
+>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c 
+>> b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+>> index 8f2357d..23061fd 100644
+>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+>> @@ -117,10 +117,10 @@
+>>                 .reg_off = 0x2AC, .bit_off = 0},
+>>         .clk_ctrls[DPU_CLK_CTRL_DMA0] = {
+>>                 .reg_off = 0x2AC, .bit_off = 8},
+>> -       .clk_ctrls[DPU_CLK_CTRL_DMA1] = {
+>> -               .reg_off = 0x2B4, .bit_off = 8},
+>>         .clk_ctrls[DPU_CLK_CTRL_CURSOR0] = {
+>> -               .reg_off = 0x2BC, .bit_off = 8},
+>> +               .reg_off = 0x2B4, .bit_off = 8},
+>> +       .clk_ctrls[DPU_CLK_CTRL_CURSOR1] = {
+>> +               .reg_off = 0x2C4, .bit_off = 8},
+> 
+> It looks like you shifted the register offset here from 0x2bc to
+> 0x2c4, was that intentional?
+> 
+> BR,
+> -R
+Yes Rob, the offset was wrong which i corrected in this patch.
+> 
+>>         },
+>>  };
+>> 
+>> @@ -272,10 +272,10 @@
+>>                 sc7180_vig_sblk_0, 0,  SSPP_TYPE_VIG, 
+>> DPU_CLK_CTRL_VIG0),
+>>         SSPP_BLK("sspp_8", SSPP_DMA0, 0x24000,  DMA_SDM845_MASK,
+>>                 sdm845_dma_sblk_0, 1, SSPP_TYPE_DMA, 
+>> DPU_CLK_CTRL_DMA0),
+>> -       SSPP_BLK("sspp_9", SSPP_DMA1, 0x26000,  DMA_SDM845_MASK,
+>> -               sdm845_dma_sblk_1, 5, SSPP_TYPE_DMA, 
+>> DPU_CLK_CTRL_DMA1),
+>> +       SSPP_BLK("sspp_9", SSPP_DMA1, 0x26000,  
+>> DMA_CURSOR_SDM845_MASK,
+>> +               sdm845_dma_sblk_1, 5, SSPP_TYPE_DMA, 
+>> DPU_CLK_CTRL_CURSOR0),
+>>         SSPP_BLK("sspp_10", SSPP_DMA2, 0x28000,  
+>> DMA_CURSOR_SDM845_MASK,
+>> -               sdm845_dma_sblk_2, 9, SSPP_TYPE_DMA, 
+>> DPU_CLK_CTRL_CURSOR0),
+>> +               sdm845_dma_sblk_2, 9, SSPP_TYPE_DMA, 
+>> DPU_CLK_CTRL_CURSOR1),
+>>  };
+>> 
+>>  /*************************************************************
+>> --
+>> 1.9.1
+>> 
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
