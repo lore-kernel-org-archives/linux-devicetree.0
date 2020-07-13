@@ -2,159 +2,625 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA58C433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 17:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E777BC43445
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 17:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B576206F5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 17:21:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="KVdbz0ot"
+	by mail.kernel.org (Postfix) with ESMTP id BF9AB20791
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 17:22:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594660943;
+	bh=Omki0jBJnUMlGNSF3eClo4q4bAHaNAoXHVSFbalxbEE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dN4bX4h8Bm/YVZnph31I0bCbfVeAuqeGKlclgM3JB9ToZ9fCAp3yGlKW5pE4NGQGO
+	 F99dEVRWWs9UN/e9BPv/X1fAfyiCQYyhMo6paWFakAzKyQOgtYyvleKdf9Cr85Vdse
+	 hOLmJU0JibF/y6pWXlb0w7atH8VvmcDOqYvsdd9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729764AbgGMRVx (ORCPT
+        id S1730472AbgGMRWP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 13:21:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56378 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729644AbgGMRVx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 13:21:53 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ECAFC061755
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 10:21:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=irLg2kwLfnd1AVN3uGYYu+WIu9zLFDYpdJ0aLsjfhQk=; b=KVdbz0ot4zsgtEMQYPeLh6dgZ
-        2v3/8IOinqYoqETZnHHjDP6yltDIHrV99uiMTkOxPZcRp1z87H4L26o006gzvkcnhjmyYiC5i1yx2
-        b6h7t8yz8qXZ3HLtCPiDo3fo0ECBJ2ZxGsNHWUdi5lHacIGmgAMY48PQpM5YbRzGsJGyZYFeSNk3X
-        qFDne7/WvOVs2rWOV6a1oZJ9SdURUGCP0vaXQG3SYa0UenfEzZBWy03TsLuwHOU46nY13SbyU5gJh
-        mqbXHr4sPvO1/4e4Ffvvoc+3y+Vy3Z3FB2cvMWaHS38O1X35XMQLtqfvp925L0Wn8qgBWVu17+Zm+
-        15kXZyBcg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:39048)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jv297-0004BH-Fk; Mon, 13 Jul 2020 18:21:41 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jv296-0006SB-Nn; Mon, 13 Jul 2020 18:21:40 +0100
-Date:   Mon, 13 Jul 2020 18:21:40 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] phy: armada-38x: fix NETA lockup when repeatedly
- switching speeds
-Message-ID: <20200713172140.GT1551@shell.armlinux.org.uk>
-References: <20200630160452.GD1551@shell.armlinux.org.uk>
- <E1jqIlO-0007rX-Tv@rmk-PC.armlinux.org.uk>
- <20200701065727.GY2599@vkoul-mobl>
- <20200710151921.GJ1551@shell.armlinux.org.uk>
- <20200713061846.GE34333@vkoul-mobl>
- <87365v5svd.fsf@FE-laptop>
+        Mon, 13 Jul 2020 13:22:15 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:36999 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730466AbgGMRWP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 13:22:15 -0400
+Received: by mail-io1-f66.google.com with SMTP id v6so14339945iob.4;
+        Mon, 13 Jul 2020 10:22:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=FAYVmeaTjbP9PM2hhH+3TrdY0mM7tf66eJ0OMReiSrY=;
+        b=TlRQ1ZBP05J4mrdrUCiy/ov8QkvqxvG/FaoBuK0nUZ2+nPyuftIc3kazinjoewuPnh
+         QtjQkjoXadj4mZYBuLj83qxdIAVElcNzuCgBrXNZAUbNWtqyHgSBn5aBDyfaQxW5hsaW
+         Qxfts2kHnGVkOz13ObIm/TAayJf4cdp+tuwtvJMJYQj3dv6XRKEZWXvM73wV1bmsifN0
+         AdxNVsokJghPPin4p8Hq66L1EFXbu45SyxXlXGNnSZxFDz+YNHsyCsAyT67ej7CT2sYK
+         PqQAAFEiV6cX4eArgtClwMUrRhYjRdNTnfSG+tYeIZt+/4cgmkBOKr53SdhYTlpntHAh
+         WGfQ==
+X-Gm-Message-State: AOAM532EtdExCDSWiNIG20qqr4lBBoladPQHyCr2goyHn8EGXLqbeS1P
+        DrPUbpEx9wAvgzZkM/L4PQ==
+X-Google-Smtp-Source: ABdhPJwDUALPZYwFPjGTkKi2LzQxxp7TOOBMuFLe4NML1D2AN78cA+DtcN+bHhJPYACa+CEyUWYNDA==
+X-Received: by 2002:a5d:9752:: with SMTP id c18mr829426ioo.10.1594660933235;
+        Mon, 13 Jul 2020 10:22:13 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id s12sm8953517ilk.58.2020.07.13.10.22.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 10:22:12 -0700 (PDT)
+Received: (nullmailer pid 411927 invoked by uid 1000);
+        Mon, 13 Jul 2020 17:22:11 -0000
+Date:   Mon, 13 Jul 2020 11:22:11 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "Reddy, MallikarjunaX" <mallikarjunax.reddy@linux.intel.com>
+Cc:     "Langer, Thomas" <thomas.langer@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
+        "Kim, Cheol Yong" <cheol.yong.kim@intel.com>,
+        "Wu, Qiming" <qi-ming.wu@intel.com>,
+        "malliamireddy009@gmail.com" <malliamireddy009@gmail.com>,
+        mallikarjunax.reddy@intel.com
+Subject: Re: [PATCH v4 1/2] dt-bindings: dma: Add bindings for intel LGM SOC
+Message-ID: <20200713172211.GA391669@bogus>
+References: <cover.1594273437.git.mallikarjunax.reddy@linux.intel.com>
+ <ad6c511dc027b7989acebbce77ca739e22e2123e.1594273437.git.mallikarjunax.reddy@linux.intel.com>
+ <DM6PR11MB3227DE41730A08B57B9C14DCFE640@DM6PR11MB3227.namprd11.prod.outlook.com>
+ <1f90d37c-d029-ae80-40f5-7d99b486dbd3@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <87365v5svd.fsf@FE-laptop>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1f90d37c-d029-ae80-40f5-7d99b486dbd3@linux.intel.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 05:36:54PM +0200, Gregory CLEMENT wrote:
-> Hello,
+On Mon, Jul 13, 2020 at 11:39:49AM +0800, Reddy, MallikarjunaX wrote:
+> Hi Thomas,
 > 
-> > On 10-07-20, 16:19, Russell King - ARM Linux admin wrote:
-> >> On Wed, Jul 01, 2020 at 12:27:27PM +0530, Vinod Koul wrote:
-> >> > On 30-06-20, 17:05, Russell King wrote:
-> >> > > The mvneta hardware appears to lock up in various random ways when
-> >> > > repeatedly switching speeds between 1G and 2.5G, which involves
-> >> > > reprogramming the COMPHY.  It is not entirely clear why this happens,
-> >> > > but best guess is that reprogramming the COMPHY glitches mvneta clocks
-> >> > > causing the hardware to fail.  It seems that rebooting resolves the
-> >> > > failure, but not down/up cycling the interface alone.
-> >> > > 
-> >> > > Various other approaches have been tried, such as trying to cleanly
-> >> > > power down the COMPHY and then take it back through the power up
-> >> > > initialisation, but this does not seem to help.
-> >> > > 
-> >> > > It was finally noticed that u-boot's last step when configuring a
-> >> > > COMPHY for "SGMII" mode was to poke at a register described as
-> >> > > "GBE_CONFIGURATION_REG", which is undocumented in any external
-> >> > > documentation.  All that we have is the fact that u-boot sets a bit
-> >> > > corresponding to the "SGMII" lane at the end of COMPHY initialisation.
-> >> > > 
-> >> > > Experimentation shows that if we clear this bit prior to changing the
-> >> > > speed, and then set it afterwards, mvneta does not suffer this problem
-> >> > > on the SolidRun Clearfog when switching speeds between 1G and 2.5G.
-> >> > > 
-> >> > > This problem was found while script-testing phylink.
-> >> > > 
-> >> > > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-> >> > > ---
-> >> > >  arch/arm/boot/dts/armada-38x.dtsi          |  3 +-
-> >> > 
-> >> > lgtm, i need ack for dts parts before I can apply this
-> >> 
-> >> I'm not sure what the situation is for Bootlin, but they don't seem to
-> >> be very responsive right now (covid related?)
-> >> 
-> >> What I know from what I've been party to on netdev is that Bootlin
-> >> sent a patch for the MVPP2 driver, and the very next day someone
-> >> reported that the patch caused a bug.  Unfortunately, the patch got
-> >> picked up anyway, but there was no response from Bootlin.  After a
-> >> month or so, -final was released containing this patch, so now it
-> >> had become a regression - and still no response from Bootlin.
-> >> 
-> >> Eventually the bug got fixed - not because Bootlin fixed it, but
-> >> because I ended up spending the time researching how that part of
-> >> the network driver worked, diagnosing what was going on, and
-> >> eventually fixing it in the most obvious way - but it's not clear
-> >> that the fix was the right approach.  Bootlin never commented.  See
-> >> 3138a07ce219 ("net: mvpp2: fix RX hashing for non-10G ports").
-> >> 
-> >> So, I think we have to assume that Bootlin are struggling right now,
-> >> and as it's been over a week, it's unlikely that they are going to
-> >> respond soon.  What do you think we should do?
-> >> 
-> >> I also note that Rob has not responded to the DT binding change
-> >> either, despite me gently prodding, and Rob processing a whole raft
-> >> of DT binding stuff yesterday.
-> >> 
-> >> I can split the DTS change from the rest of the patch, but I don't
-> >> think that really helps without at least the binding change being
-> >> agreed.
-> >
-> > I would prefer splitting, you may sent the DTS to arm arch folks if no
-> > response from subarch folks
+> Thanks for the review. My comments inline.
 > 
-> Yes please could you split the patch to put the dts apart ? And if the
-> binding is accepted we will apply it.
+> On 7/9/2020 3:54 PM, Langer, Thomas wrote:
+> > 
+> > > -----Original Message-----
+> > > From: devicetree-owner@vger.kernel.org <devicetree-
+> > > owner@vger.kernel.org> On Behalf Of Amireddy Mallikarjuna reddy
+> > > Sent: Donnerstag, 9. Juli 2020 08:01
+> > > To: dmaengine@vger.kernel.org; vkoul@kernel.org;
+> > > devicetree@vger.kernel.org; robh+dt@kernel.org
+> > > Cc: linux-kernel@vger.kernel.org; Shevchenko, Andriy
+> > > <andriy.shevchenko@intel.com>; chuanhua.lei@linux.intel.com; Kim, Cheol
+> > > Yong <cheol.yong.kim@intel.com>; Wu, Qiming <qi-ming.wu@intel.com>;
+> > > malliamireddy009@gmail.com; Amireddy Mallikarjuna reddy
+> > > <mallikarjunax.reddy@linux.intel.com>
+> > > Subject: [PATCH v4 1/2] dt-bindings: dma: Add bindings for intel LGM SOC
+> > > 
+> > > Add DT bindings YAML schema for DMA controller driver
+> > > of Lightning Mountain(LGM) SoC.
+> > > 
+> > > Signed-off-by: Amireddy Mallikarjuna reddy
+> > > <mallikarjunax.reddy@linux.intel.com>
+> > > ---
+> > > v1:
+> > > - Initial version.
+> > > 
+> > > v2:
+> > > - Fix bot errors.
+> > > 
+> > > v3:
+> > > - No change.
+> > > 
+> > > v4:
+> > > - Address Thomas langer comments
+> > Please read my comments again and then respond about the topics you ignored.
+> > I added some hints below again.
+> > 
+> > Thanks.
+> > 
+> > > ---
+> > >   .../devicetree/bindings/dma/intel,ldma.yaml        | 416
+> > > +++++++++++++++++++++
+> > >   1 file changed, 416 insertions(+)
+> > >   create mode 100644
+> > > Documentation/devicetree/bindings/dma/intel,ldma.yaml
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/dma/intel,ldma.yaml
+> > > b/Documentation/devicetree/bindings/dma/intel,ldma.yaml
+> > > new file mode 100644
+> > > index 000000000000..7f666b9812e4
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/dma/intel,ldma.yaml
+> > > @@ -0,0 +1,416 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/dma/intel,ldma.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Lightning Mountain centralized low speed DMA and high speed DMA
+> > > controllers.
+> > > +
+> > > +maintainers:
+> > > +  - chuanhua.lei@intel.com
+> > > +  - mallikarjunax.reddy@intel.com
+> > > +
+> > > +properties:
+> > > + $nodename:
+> > > +   pattern: "^dma(@.*)?$"
+> > Please explain the difference to the common dma binding.
+> No difference. we can use "^dma-controller(@.*)?$" as in the common binding.
+> Its My bad. I missed the changes to include in this patch. Surely update in
+> the upcoming patch.
+> > 
+> > > +
+> > > + "#dma-cells":
+> > > +   const: 1
+> > > +
+> > > + compatible:
+> > > +  anyOf:
+> > > +   - const: intel,lgm-cdma
+> > > +   - const: intel,lgm-dma2tx
+> > > +   - const: intel,lgm-dma1rx
+> > > +   - const: intel,lgm-dma1tx
+> > > +   - const: intel,lgm-dma0tx
+> > > +   - const: intel,lgm-dma3
+> > > +   - const: intel,lgm-toe-dma30
+> > > +   - const: intel,lgm-toe-dma31
+> > Please explain why you need so many different compatible strings.
+> This hw dma has 7 DMA instances.
+> Some for datapath, some for memcpy  and some for TOE.
+> Some for TX only, some for RX only, and some for TX/RX(memcpy and ToE).
+> 
+> dma TX/RX type we considered as driver specific data of each instance and
+> used different compatible strings for each instance.
+> And also idea is in future if any driver specific data of any particular
+> instance we can handle.
+> 
+> Here if dma name and type(tx or rx) will be accepted as devicetree
+> attributes then we can move .name = "toe_dma31", & .type = DMA_TYPE_MCPY
+> to devicetree. So that the compatible strings can be limited to two.
+> intel,lgm-cdma & intel,lgm-hdma .
 
-I don't see any sign that Rob will ever review the DTS part, so I'm
-at the point of just not caring about this anymore. I will carry it
-in my tree, but I'm going to do nothing further.
+Different compatibles are okay if the instances are different and we 
+don't have properties to describe the differences.
 
-That means that switching speed on mvneta on the Armada 38x is can
-cause the network to die, but hey, if people can't be bothered to
-review, and wish to impose rules such as "you can't change anything
-with DT without my express say so" which have the effect of blocking
-fixes, that's really not my problem.
+For some of what you have in this binding, I think it should be part of 
+the consumer cells.
 
-So, shrug, I'm giving up with these patches.  Sorry.
+> 
+> please suggest us the better proposal.
+> > 
+> > > +
+> > > + reg:
+> > > +  maxItems: 1
+> > > +
+> > > + clocks:
+> > > +  maxItems: 1
+> > > +
+> > > + resets:
+> > > +  maxItems: 1
+> > > +
+> > > + interrupts:
+> > > +  maxItems: 1
+> > > +
+> > > + intel,dma-poll-cnt:
+> > > +   $ref: /schemas/types.yaml#definitions/uint32
+> > > +   description:
+> > > +     DMA descriptor polling counter. It may need fine tune according
+> > > +     to the system application scenario.
+> > > +
+> > > + intel,dma-byte-en:
+> > > +   type: boolean
+> > > +   description:
+> > > +     DMA byte enable is only valid for DMA write(RX).
+> > > +     Byte enable(1) means DMA write will be based on the number of
+> > > dwords
+> > > +     instead of the whole burst.
+> > > +
+> > > + intel,dma-drb:
+> > > +    type: boolean
+> > > +    description:
+> > > +      DMA descriptor read back to make sure data and desc
+> > > synchronization.
+> > > +
+> > > + intel,dma-burst:
+> > > +    $ref: /schemas/types.yaml#definitions/uint32
+> > > +    description:
+> > > +       Specifiy the DMA burst size(in dwords), the valid value will be
+> > > 8, 16, 32.
+> > > +       Default is 16 for data path dma, 32 is for memcopy DMA.
+> > > +
+> > > + intel,dma-polling-cnt:
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+What's the difference with intel,dma-poll-cnt?
+
+> > > +    $ref: /schemas/types.yaml#definitions/uint32
+> > > +    description:
+> > > +       DMA descriptor polling counter. It may need fine tune according
+> > > to
+> > > +       the system application scenario.
+> > > +
+> > > + intel,dma-desc-in-sram:
+> > > +    type: boolean
+> > > +    description:
+> > > +       DMA descritpors in SRAM or not. Some old controllers descriptors
+> > > +       can be in DRAM or SRAM. The new ones are all in SRAM.
+> > > +
+> > > + intel,dma-orrc:
+> > > +    $ref: /schemas/types.yaml#definitions/uint32
+> > > +    description:
+> > > +       DMA outstanding read counter. The maximum value is 16, and it
+> > > may
+> > > +       need fine tune according to the system application scenarios.
+> > > +
+> > > + intel,dma-dburst-wr:
+> > > +    type: boolean
+> > > +    description:
+> > > +       Enable RX dynamic burst write. It only applies to RX DMA and
+> > > memcopy DMA.
+> > > +
+> > > +
+> > > + dma-ports:
+> > > +    type: object
+> > > +    description:
+> > > +       This sub-node must contain a sub-node for each DMA port.
+
+What's a DMA port?
+
+> > > +    properties:
+> > > +      '#address-cells':
+> > > +        const: 1
+> > > +      '#size-cells':
+> > > +        const: 0
+> > > +
+> > > +    patternProperties:
+> > > +      "^dma-ports@[0-9]+$":
+> > > +          type: object
+> > > +
+> > > +          properties:
+> > > +            reg:
+> > > +              items:
+> > > +                - enum: [0, 1, 2, 3, 4, 5]
+> > > +              description:
+> > > +                 Which port this node refers to.
+> > > +
+> > > +            intel,name:
+> > > +              $ref: /schemas/types.yaml#definitions/string-array
+> > > +              description:
+> > > +                 Port name of each DMA port.
+
+Why do you need this?
+
+> > > +
+> > > +            intel,chans:
+> > > +              $ref: /schemas/types.yaml#/definitions/uint32-array
+> > > +              description:
+> > > +                 The channels included on this port. Format is channel
+> > > start
+> > > +                 number and how many channels on this port.
+
+We already have standard properties for defining channels.
+
+> > > +
+> > > +            intel,burst:
+> > > +              $ref: /schemas/types.yaml#/definitions/uint32
+> > > +              description:
+> > > +                 Specify the DMA port burst size, the valid value will
+> > > be
+> > > +                 2, 4, 8. Default is 2 for data path dma.
+
+This would normally be in the consumer cells.
+
+> > > +
+> > > +            intel,txwgt:
+> > > +              $ref: /schemas/types.yaml#/definitions/uint32
+> > > +              description:
+> > > +                 Specify the port transmit weight for QoS purpose. The
+> > > valid
+> > > +                 value is 1~7. Default value is 1.
+> > > +
+> > > +            intel,endian:
+> > > +              $ref: /schemas/types.yaml#/definitions/uint32
+> > > +              description:
+> > > +                 Specify the DMA port endiannes conversion due to SoC
+> > > endianness difference.
+> > > +
+> > > +          required:
+> > > +            - reg
+> > > +            - intel,name
+> > > +            - intel,chans
+> > > +
+> > > +
+> > > + dma-channels:
+> > > +    type: object
+> > > +    description:
+> > > +       This sub-node must contain a sub-node for each DMA channel.
+> > > +    properties:
+> > > +      '#address-cells':
+> > > +        const: 1
+> > > +      '#size-cells':
+> > > +        const: 0
+> > > +
+> > > +    patternProperties:
+> > > +      "^dma-channels@[0-9]+$":
+> > > +          type: object
+> > > +
+> > > +          properties:
+> > > +            reg:
+> > > +              items:
+> > > +                - enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
+> > > 14, 15]
+> > > +              description:
+> > > +                 Which channel this node refers to.
+> > > +
+> > > +            intel,desc_num:
+> > > +              $ref: /schemas/types.yaml#/definitions/uint32
+> > > +              description:
+> > > +                 Per channel maximum descriptor number. The max value
+> > > is 255.
+> > > +
+> > > +            intel,pkt_sz:
+> > > +              $ref: /schemas/types.yaml#/definitions/uint32
+> > > +              description:
+> > > +                 Channel buffer packet size. It must be power of 2.
+> > > +                 The maximum size is 4096.
+> > > +
+> > > +            intel,desc-rx-nonpost:
+> > > +              type: boolean
+> > > +              description:
+> > > +                 Write non-posted type for DMA RX last data beat of
+> > > every descriptor.
+> > > +
+> > > +            intel,data-endian:
+> > > +              $ref: /schemas/types.yaml#/definitions/uint32
+> > > +              description:
+> > > +                 Per channel data endianness configuration according to
+> > > SoC requirement.
+> > > +
+> > > +            intel,desc-endian:
+> > > +              $ref: /schemas/types.yaml#/definitions/uint32
+> > > +              description:
+> > > +                 Per channel descriptor endianness configuration
+> > > according to SoC requirement.
+> > > +
+> > > +            intel,data-endian-en:
+> > > +              type: boolean
+> > > +              description:
+> > > +                 Per channel data endianness enabled.
+> > > +
+> > > +            intel,desc-endian-en:
+> > > +              type: boolean
+> > > +              description:
+> > > +                 Per channel descriptor endianness enabled.
+> > > +
+> > > +            intel,byte-offset:
+> > > +              $ref: /schemas/types.yaml#/definitions/uint32
+> > > +              description:
+> > > +                 Per channel byte offset(0~128).
+> > > +
+> > > +            intel,hdr-mode:
+> > > +              $ref: /schemas/types.yaml#/definitions/uint32-array
+> > > +              description:
+> > > +                 The first parameter is header mode size, the second
+> > > +                 parameter is checksum enable or disable. If enabled,
+> > > +                 header mode size is ignored. If disabled, header mode
+> > > +                 size must be provided.
+> > > +
+> > > +            intel,non-arb-cnt:
+> > > +              $ref: /schemas/types.yaml#/definitions/uint32
+> > > +              description:
+> > > +                 Per channel non arbitration counter while polling
+> > > +
+> > > +            intel,arb-cnt:
+> > > +              $ref: /schemas/types.yaml#/definitions/uint32
+> > > +              description:
+> > > +                 Per channel arbitration counter while polling.
+> > > +                 arb_cnt must be greater than non_arb_cnt
+> > > +
+> > > +            intel,pkt-drop:
+> > > +              type: boolean
+> > > +              description:
+> > > +                 Channel packet drop enabled or disabled.
+> > > +
+> > > +            intel,hw-desc:
+> > > +              $ref: /schemas/types.yaml#/definitions/uint32-array
+> > > +              description:
+> > > +                 Per channel dma hardware descriptor configuration.
+> > > +                 The first parameter is descriptor physical address and
+> > > the
+> > > +                 second parameter hardware descriptor number.
+
+All/most of these seem like client/consumer settings.
+
+> > > +
+> > > +          required:
+> > > +            - reg
+> > > +
+> > > +required:
+> > > + - compatible
+> > > + - reg
+> > > + - '#dma-cells'
+> > > +
+> > > +examples:
+> > > + - |
+> > > +   dma0: dma@e0e00000 {
+> > > +     compatible = "intel,lgm-cdma";
+> > > +     reg = <0xe0e00000 0x1000>;
+> > > +     #dma-cells = <1>;
+> > > +     interrupt-parent = <&ioapic1>;
+> > > +     interrupts = <82 1>;
+> > > +     resets = <&rcu0 0x30 0>;
+> > > +     reset-names = "ctrl";
+> > > +     clocks = <&cgu0 80>;
+> > > +     intel,dma-poll-cnt = <4>;
+> > > +     intel,dma-byte-en;
+> > > +     intel,dma-drb;
+> > > +     dma-ports {
+> > > +       #address-cells = <1>;
+> > > +       #size-cells = <0>;
+> > > +
+> > > +       dma-ports@0 {
+> > > +           reg = <0>;
+> > > +           intel,name = "SPI0";
+> > > +           intel,chans = <0 2>;
+> > > +           intel,burst = <2>;
+> > > +           intel,txwgt = <1>;
+
+Yeah, based on the names, it definitely seems like these belong as cells 
+in 'dmas' properties.
+
+> > > +       };
+> > > +       dma-ports@1 {
+> > > +           reg = <1>;
+> > > +           intel,name = "SPI1";
+> > > +           intel,chans = <2 2>;
+> > > +           intel,burst = <2>;
+> > > +           intel,txwgt = <1>;
+> > > +       };
+> > > +       dma-ports@2 {
+> > > +           reg = <2>;
+> > > +           intel,name = "SPI2";
+> > > +           intel,chans = <4 2>;
+> > > +           intel,burst = <2>;
+> > > +           intel,txwgt = <1>;
+> > > +       };
+> > > +       dma-ports@3 {
+> > > +           reg = <3>;
+> > > +           intel,name = "SPI3";
+> > > +           intel,chans = <6 2>;
+> > > +           intel,burst = <2>;
+> > > +           intel,endian = <0>;
+> > > +           intel,txwgt = <1>;
+> > > +       };
+> > > +       dma-ports@4 {
+> > > +           reg = <4>;
+> > > +           intel,name = "HSNAND";
+> > > +           intel,chans = <8 2>;
+> > > +           intel,burst = <8>;
+> > > +           intel,txwgt = <1>;
+> > > +       };
+> > > +       dma-ports@5 {
+> > > +           reg = <5>;
+> > > +           intel,name = "PCM";
+> > > +           intel,chans = <10 6>;
+> > > +           intel,burst = <8>;
+> > > +           intel,txwgt = <1>;
+> > > +       };
+> > > +     };
+> > > +     dma-channels {
+> > > +       #address-cells = <1>;
+> > > +       #size-cells = <0>;
+> > > +
+> > > +       dma-channels@0 {
+> > > +           reg = <0>;
+> > > +           intel,desc_num = <1>;
+> > > +       };
+> > > +       dma-channels@1 {
+> > > +           reg = <1>;
+> > > +           intel,desc_num = <1>;
+> > > +       };
+> > > +       dma-channels@2 {
+> > > +           reg = <2>;
+> > > +           intel,desc_num = <1>;
+> > > +       };
+> > > +       dma-channels@3 {
+> > > +           reg = <3>;
+> > > +           intel,desc_num = <1>;
+> > > +       };
+> > > +       dma-channels@4 {
+> > > +           reg = <4>;
+> > > +           intel,desc_num = <1>;
+> > > +       };
+> > > +       dma-channels@5 {
+> > > +           reg = <5>;
+> > > +           intel,desc_num = <1>;
+> > > +       };
+> > > +       dma-channels@6 {
+> > > +           reg = <6>;
+> > > +           intel,desc_num = <1>;
+> > > +       };
+> > > +       dma-channels@7 {
+> > > +           reg = <7>;
+> > > +           intel,desc_num = <1>;
+> > > +       };
+> > > +       dma-channels@8 {
+> > > +           reg = <8>;
+> > > +       };
+> > > +       dma-channels@9 {
+> > > +           reg = <9>;
+> > > +       };
+> > > +       dma-channels@10 {
+> > > +           reg = <10>;
+> > > +       };
+> > > +       dma-channels@11 {
+> > > +           reg = <11>;
+> > > +       };
+> > > +       dma-channels@12 {
+> > > +           reg = <12>;
+> > > +       };
+> > > +       dma-channels@13 {
+> > > +           reg = <13>;
+> > > +       };
+> > > +       dma-channels@14 {
+> > > +           reg = <14>;
+> > > +       };
+> > > +       dma-channels@15 {
+> > > +           reg = <15>;
+> > > +       };
+> > > +     };
+> > > +   };
+> > > + - |
+> > > +   dma3: dma@ec800000 {
+> > > +     compatible = "intel,lgm-dma3";
+> > > +     reg = <0xec800000 0x1000>;
+> > > +     clocks = <&cgu0 71>;
+> > > +     resets = <&rcu0 0x10 9>;
+> > > +     #dma-cells = <1>;
+> > > +     intel,dma-burst = <32>;
+> > > +     intel,dma-polling-cnt = <16>;
+> > > +     intel,dma-desc-in-sram;
+> > > +     intel,dma-orrc = <16>;
+> > > +     intel,dma-byte-en;
+> > > +     intel,dma-dburst-wr;
+> > > +     dma-channels {
+> > > +         #address-cells = <1>;
+> > > +         #size-cells = <0>;
+> > > +
+> > > +         dma-channels@12 {
+> > > +             reg = <12>;
+> > > +             intel,pkt_sz = <4096>;
+> > > +             intel,desc-rx-nonpost;
+> > > +             intel,data-endian = <0>;
+> > > +             intel,desc-endian = <0>;
+> > > +             intel,data-endian-en;
+> > > +             intel,desc-endian-en;
+> > > +             intel,byte-offset = <0>;
+> > > +             intel,hdr-mode = <128 0>;
+> > > +             intel,non-arb-cnt = <0>;
+> > > +             intel,arb-cnt = <0>;
+> > > +             intel,hw-desc = <0x20000000 8>;
+> > > +         };
+> > > +         dma-channels@13 {
+> > > +             reg = <13>;
+> > > +             intel,pkt-drop;
+> > > +             intel,pkt_sz = <4096>;
+> > > +             intel,data-endian = <0>;
+> > > +             intel,desc-endian = <0>;
+> > > +             intel,data-endian-en;
+> > > +             intel,desc-endian-en;
+> > > +             intel,byte-offset = <0>;
+> > > +             intel,hdr-mode = <128 0>;
+> > > +             intel,non-arb-cnt = <0>;
+> > > +             intel,arb-cnt = <0>;
+> > > +         };
+> > > +     };
+> > > +   };
+> > > --
+> > > 2.11.0
