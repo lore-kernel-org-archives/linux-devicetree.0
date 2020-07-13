@@ -2,101 +2,175 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C72C433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 20:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49054C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 20:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCCAB20674
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 20:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23B042077D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 20:25:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594671946;
+	bh=+jPAZ3C7SWxUuRUQs+Sr6Y2DGrQqPWecmS58fVnwjRg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pBwFa3EZ4HEYchhGmPyfwd3ZYttiG0WT72Iza0554tvmHWmkyhO9VALUSBjsBHbI9
+	 /rzJpu145NdXaBNyh0VRMp3rnqsOZApP5x7+epx9NjZ6uhs/9CDc5eQMj90JD3oVzW
+	 NcK3PYwV/15pjAbP3A2VX/rG5nXq171fw0bhe4nw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgGMUNL (ORCPT
+        id S1726338AbgGMUZp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 16:13:11 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:58364 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726332AbgGMUNL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 16:13:11 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 51EBA8030866;
-        Mon, 13 Jul 2020 20:13:08 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id RqU2vW_Nx0sU; Mon, 13 Jul 2020 23:13:07 +0300 (MSK)
-Date:   Mon, 13 Jul 2020 23:13:06 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 05/11] dmaengine: Introduce DMA-device device_caps
- callback
-Message-ID: <20200713201306.4rfmvtjzklcldajc@mobilestation>
-References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
- <20200709224550.15539-6-Sergey.Semin@baikalelectronics.ru>
- <20200710084503.GE3703480@smile.fi.intel.com>
- <20200710093834.su3nsjesnhntpd6d@mobilestation>
- <20200713065131.GG34333@vkoul-mobl>
+        Mon, 13 Jul 2020 16:25:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34864 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726321AbgGMUZp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 16:25:45 -0400
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45F562080D;
+        Mon, 13 Jul 2020 20:25:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594671944;
+        bh=+jPAZ3C7SWxUuRUQs+Sr6Y2DGrQqPWecmS58fVnwjRg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=DOQurS/Ibt581N9zjmP/Pqa8hl78moJnuITh6tQCapRRRq3lmxAkJao/TRTea4zip
+         M3IgIl+ogsfoJJPTcHZUxX93MDkAakZHpcmyPOpXRWk2Tc9UVg/06l2MQwzMxTTpA7
+         cZj7SPprMA2NR6Y6IEGnVzak4K3X+xXevHfSU7AU=
+Received: by mail-oi1-f181.google.com with SMTP id y22so12072744oie.8;
+        Mon, 13 Jul 2020 13:25:44 -0700 (PDT)
+X-Gm-Message-State: AOAM532IX77W1ELrAjS8I4hr8C/bUxpYaQYDrw8iTxrNdEPWBHPufDUr
+        +O8ppvJLKOw56nelDW3bb5VJIzoEmkOT3pJ8oA==
+X-Google-Smtp-Source: ABdhPJz4yVpioDr20qd9s5LSTk+AV4nU2x5TPIq7IEfqTgA5EioBNPLPC36euXlnKruM3zNGoxsQBu0ZdZFRaXmekfM=
+X-Received: by 2002:aca:4844:: with SMTP id v65mr1078680oia.152.1594671943516;
+ Mon, 13 Jul 2020 13:25:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200713065131.GG34333@vkoul-mobl>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+References: <20200710230224.2265647-1-dianders@chromium.org>
+ <CAL_JsqKC5WtHb-coMCxMTDJ7CJcjVXcAxDT4J9N-Xyr=0uuURA@mail.gmail.com> <CAD=FV=XWKoTd_t2uRGpw3oa0Nij2EPeAJpOHhUipXFW07JN2qw@mail.gmail.com>
+In-Reply-To: <CAD=FV=XWKoTd_t2uRGpw3oa0Nij2EPeAJpOHhUipXFW07JN2qw@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 13 Jul 2020 14:25:31 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLJM5nwNSdugMBLDVtjP97dikCm_AiHjnDs1jqBOFoaaQ@mail.gmail.com>
+Message-ID: <CAL_JsqLJM5nwNSdugMBLDVtjP97dikCm_AiHjnDs1jqBOFoaaQ@mail.gmail.com>
+Subject: Re: [PATCH 0/9] drm/msm: Avoid possible infinite probe deferral and
+ speed booting
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Vinod,
-  
-Could you please keep on this patchset review? Really, the patchset isn't that
-big and complicated to be working on it for such a long time. I've sent it out
-at the time of the kernel 5.6. I've considered all the Andy's comments since
-then. There is going to be 5.9 merge window soon, but the patchset still under
-review procedure, while I still have some work, which depends on the changes
-provided by this patchset. It would be great to at least submit it for review
-before the next merge window, and super-great have it merged in before that.
+On Mon, Jul 13, 2020 at 9:08 AM Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
+> On Mon, Jul 13, 2020 at 7:11 AM Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Fri, Jul 10, 2020 at 5:02 PM Douglas Anderson <dianders@chromium.org> wrote:
+> > >
+> > > I found that if I ever had a little mistake in my kernel config,
+> > > or device tree, or graphics driver that my system would sit in a loop
+> > > at bootup trying again and again and again.  An example log was:
+> >
+> > Why do we care about optimizing the error case?
+>
+> It actually results in a _fully_ infinite loop.  That is: if anything
+> small causes a component of DRM to fail to probe then the whole system
+> doesn't boot because it just loops trying to probe over and over
+> again.  The messages I put in the commit message are printed over and
+> over and over again.
 
-There is a Peter Ujfalusi comment to the patch
-"[PATCH v7 04/11] dmaengine: Introduce max SG list entries capability", which
-needs your attention. Could you please take a look at that? So I could submit
-the next patchset revision if you agree with the Peter' suggestion.
+Sounds like a bug as that's not what should happen.
 
--Sergey
+If you defer during boot (initcalls), then you'll be on the deferred
+list until late_initcall and everything is retried. After
+late_initcall, only devices getting added should trigger probing. But
+maybe the adding and then removing a device is causing a re-trigger.
 
-On Mon, Jul 13, 2020 at 12:21:31PM +0530, Vinod Koul wrote:
-> On 10-07-20, 12:38, Serge Semin wrote:
-> > On Fri, Jul 10, 2020 at 11:45:03AM +0300, Andy Shevchenko wrote:
-> > > On Fri, Jul 10, 2020 at 01:45:44AM +0300, Serge Semin wrote:
-> > > > There are DMA devices (like ours version of Synopsys DW DMAC) which have
-> > > > DMA capabilities non-uniformly redistributed between the device channels.
-> > > > In order to provide a way of exposing the channel-specific parameters to
-> > > > the DMA engine consumers, we introduce a new DMA-device callback. In case
-> > > > if provided it gets called from the dma_get_slave_caps() method and is
-> > > > able to override the generic DMA-device capabilities.
-> > > 
-> > 
-> > > In light of recent developments consider not to add 'slave' and a such words to the kernel.
-> > 
-> > As long as the 'slave' word is used in the name of the dma_slave_caps
-> > structure and in the rest of the DMA-engine subsystem, it will be ambiguous
-> > to use some else terminology. If renaming needs to be done, then it should be
-> > done synchronously for the whole subsystem.
-> 
-> Right, I have plans to tackle that during next merge window and have
-> started changes. Thankfully slave_dma can be replaced by peripheral dma
-> easily. But getting that in would be tricky as we need to change users
-> too.
-> 
-> -- 
-> ~Vinod
+> > >   msm ae00000.mdss: bound ae01000.mdp (ops 0xffffffe596e951f8)
+> > >   msm_dsi ae94000.dsi: ae94000.dsi supply gdsc not found, using dummy regulator
+> > >   msm_dsi_manager_register: failed to register mipi dsi host for DSI 0
+> > >   [drm:ti_sn_bridge_probe] *ERROR* could not find any panel node
+> > >   ...
+> > >
+> > > I finally tracked it down where this was happening:
+> > >   - msm_pdev_probe() is called.
+> > >   - msm_pdev_probe() registers drivers.  Registering drivers kicks
+> > >     off processing of probe deferrals.
+> > >   - component_master_add_with_match() could return -EPROBE_DEFER.
+> > >     making msm_pdev_probe() return -EPROBE_DEFER.
+> > >   - When msm_pdev_probe() returned the processing of probe deferrals
+> > >     happens.
+> > >   - Loop back to the start.
+> > >
+> > > It looks like we can fix this by marking "mdss" as a "simple-bus".
+> > > I have no idea if people consider this the right thing to do or a
+> > > hack.  Hopefully it's the right thing to do.  :-)
+> >
+> > It's a simple test. Do the child devices have any dependency on the
+> > parent to probe and/or function? If so, not a simple-bus.
+>
+> Great!  You can see in the earlier patch in the series that the very
+> first thing that happens when the parent device probes is that it
+> calls devm_of_platform_populate().  That means no dependencies, right?
+
+It should. But then I reviewed the MDSS binding today and it looks
+like the MDSS is the interrupt parent for at least some child devices?
+
+>  So that means it's fine/correct to add "simple-bus" here?
+>
+>
+> > > Once I do this I notice that my boot gets marginally faster (you
+> > > don't need to probe the sub devices over and over) and also if I
+> >
+> > Can you quantify that?
+>
+> I'd say < 100 us.  I can try to quantify more if needed, but it wasn't
+> the point of this patch.
+>
+>
+> > Have you run with devlinks enabled. You need a command line option to
+> > enable. That too should reduce deferred probes.
+>
+> Ah, good idea!  I will try it.  However, even with devlinks, if there
+> is any chance of deferred probes then we need a fix like this.  The
+> point of the patch isn't about speeding things up but about avoiding
+> an infinite loop at bootup due to a small bug.
+
+I think a deferred probe would only happen if there's a dependency we
+don't track (but we're tracking about everything that's common). But
+if there's some error, I'm not sure what would happen. Seems like a
+good test case. :)
+
+> > > have a problem it doesn't loop forever (on my system it still
+> > > gets upset about some stuck clocks in that case, but at least I
+> > > can boot up).
+> >
+> > Deferred probe only runs when a device is added, so it's not like it
+> > is continually running.
+>
+> If you don't mind looking at the code patch, see:
+>
+> https://lore.kernel.org/r/20200710160131.4.I358ea82de218ea5f4406572ade23f5e121297555@changeid/
+>
+> Specifically you can see that each time we try to probe we were
+> calling of_platform_populate().  That appeared to be enough to trigger
+> things.
+
+Like I said, sounds like a bug. Even if 'simple-bus' is the
+appropriate thing to do here, it should be fixed or at least
+understood.
+
+Rob
