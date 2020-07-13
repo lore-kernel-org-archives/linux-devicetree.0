@@ -2,86 +2,244 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D1CC433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 466EDC433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1272120773
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:39:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594654782;
-	bh=ceTjzoqUmonpZHtjRNEGgrycENVzdLWxAssaBz1jGP0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tTGt++9sJ7Bn1T6j/8dc1JRd1ac15jXcEtPwfCfYf+kFStUtF3c3ujFyOqqPWHevZ
-	 iY9i1jDssdeN9G/WY3463a/i+NHUaodxXL2OgCfDonEbkVjPri3l3F8QkxqD5gwIqf
-	 4UVQXLH671zH3638/LscSMnlD1r7fI6EYoCuB/oU=
+	by mail.kernel.org (Postfix) with ESMTP id 2517F20771
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 15:42:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="T1eIEg5B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729687AbgGMPjl (ORCPT
+        id S1729806AbgGMPmw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 11:39:41 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:42001 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729649AbgGMPjl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 11:39:41 -0400
-Received: by mail-il1-f195.google.com with SMTP id t27so11515038ill.9;
-        Mon, 13 Jul 2020 08:39:41 -0700 (PDT)
+        Mon, 13 Jul 2020 11:42:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40960 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729961AbgGMPmv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 11:42:51 -0400
+Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD0AEC08C5DB
+        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 08:42:50 -0700 (PDT)
+Received: by mail-qt1-x82b.google.com with SMTP id w34so10299335qte.1
+        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 08:42:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=fBkvJA+OBYCqy/w9rh6WipjqZaqykhBizHU4FH5/a70=;
+        b=T1eIEg5BnGK/MhA+kO5ZwkyNTOvU1AQe2uAoEEV3EK7g+C1fboIWcjjn0tiTEwETNo
+         kVLT0j5e2igwTSgRk6vBfQSHHZb+mY4VntOkMyRRWaT3smHLIQaL0UlEzhIecvBwxmXi
+         bLjImdJWrg8+bD1RtI5Us6ovapmOaHhn3a5HEa7o3e7fYDw1lBzqdTR6H8IQocu1e+zP
+         XpJt3NZ+xK7Um8cf/CsG6A2JgmXwapklcQy9XIcFsNymkSEoBRDmmK3MJMdkwswZKy3m
+         ee4jrr2hlMD4Mg9d+Z3TdG99f6EJ0N5JwVxEheu5NqRXD17AaffEzDOzNWZZsCt038fr
+         8KlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=/JwjaTBwdy7p5gzq/S6A6j7F6S/p1+FIjVHrB/VC0Co=;
-        b=noEmCClbjzm84w/UnpT4QVHqivctIwCQfJ+WWjaHmDAqIuQ+D/7qkFJ4K0n4Hx9074
-         DKEX3gqk4R4HdEdodtgewgUVm7alHsay44qhkz57MJL8SROCAArcJMSm2S0rX7WoIWc3
-         pAcprzGxkFBk4QyEAeD2EBWFkXV7AoiTqD2Yvlx6Q8L8uvsJh6I3mAsqNIPxwmgMDy5p
-         JEgMQPcYVdDnoPFg2vPwcQvy3n1q2jjgwuuHC7QzvmhuiplxGdlvcwp/BkYF+p2HagHF
-         4Z1fwGZQyr7WN5PilhYYjYD51XWQq0gl4g+th7eJk6zxOb3JIVriK06MXK4RvLGLD8lt
-         s3Ww==
-X-Gm-Message-State: AOAM533G3e1KSlqoSFc+0VC9Cy3s0KaMxQvS/4z5djd/AYdA5+70kLy9
-        3hztU32KCvLAgJKZ/qkvhw==
-X-Google-Smtp-Source: ABdhPJzWXA9tqzl0qSfuDHyTGqByvWKyA1xxZxjggwkRVJ0xA11a4BggwBLRyuoYIvlSqC4UuDejrw==
-X-Received: by 2002:a92:9892:: with SMTP id a18mr286907ill.60.1594654780640;
-        Mon, 13 Jul 2020 08:39:40 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id s18sm8374531ilj.63.2020.07.13.08.39.39
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=fBkvJA+OBYCqy/w9rh6WipjqZaqykhBizHU4FH5/a70=;
+        b=DA8a0+sP/Pl2AFCLfg3o/LyU+3g1M5U+UgpEL8VGwpEXMQcquNDlwO0BFSml77l43j
+         Uf2ADiFjoquQx98VhurLwCrWZv8K/B/ZKESu8a6TFnICG6O/vFVMOR9DKVCoO51+LKB8
+         YWTnLB+RCSiLEQVWvcU2KUxiVqp6sFzClM0xd51yb+uoOjK/9d2XMttH0bE985E3+OY/
+         E7etqIZHyBCo+7qcWVFxsDIiwMgsfYreMkASEqwlZygn1Uz5yhS3RfVlqxDBgdYgqd/d
+         LkRTlylVehKn4LoJaymkiw2PnYCE3R2AS5ouwh9zbhdtCcdV8ty0HwnbasAD4QAH2LXH
+         LD2w==
+X-Gm-Message-State: AOAM5336TTaeic0mdiiI8Lp5/3Ela8eK2Op+oqDlAbBWhouIxu/alx1B
+        LLL4Z5VsrRotMwvk6QDqf53UgA==
+X-Google-Smtp-Source: ABdhPJzT3RNLlaSDxmjw/n9TGbDLbX3SwdZUPFcQFBMS7zAG+klDiStL4IjP2cad6vI1u6DUb42dYQ==
+X-Received: by 2002:ac8:1ac4:: with SMTP id h4mr87960956qtk.249.1594654969941;
+        Mon, 13 Jul 2020 08:42:49 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id l1sm19806371qtk.18.2020.07.13.08.42.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 08:39:40 -0700 (PDT)
-Received: (nullmailer pid 255705 invoked by uid 1000);
-        Mon, 13 Jul 2020 15:39:39 -0000
-Date:   Mon, 13 Jul 2020 09:39:39 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        Mon, 13 Jul 2020 08:42:49 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Subject: Re: [PATCH 1/3] dt-bindings: adv7604: Fix documentation for hpd-gpios
-Message-ID: <20200713153939.GA255646@bogus>
-References: <20200713111844.528313-1-niklas.soderlund+renesas@ragnatech.se>
- <20200713111844.528313-2-niklas.soderlund+renesas@ragnatech.se>
+        Odelu Kukatla <okukatla@codeaurora.org>,
+        linux-pm@vger.kernel.org (open list:INTERCONNECT API),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 1/7] dt-bindings: interconnect: single yaml file for RPMh interconnect drivers
+Date:   Mon, 13 Jul 2020 11:41:10 -0400
+Message-Id: <20200713154121.22094-2-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200713154121.22094-1-jonathan@marek.ca>
+References: <20200713154121.22094-1-jonathan@marek.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200713111844.528313-2-niklas.soderlund+renesas@ragnatech.se>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 13 Jul 2020 13:18:42 +0200, Niklas Söderlund wrote:
-> As of [1] the hpd-gpios property is optional, document it as such.
-> 
-> 1. commit 269bd1324fbfaa52 ("[media] media: adv7604: improve usage of gpiod API")
-> 
-> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> ---
->  Documentation/devicetree/bindings/media/i2c/adv7604.txt | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
+These two bindings are almost identical, so combine them into one. This
+will make it easier to add the sm8150 and sm8250 interconnect bindings.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+---
+ .../{qcom,sc7180.yaml => qcom,rpmh.yaml}      | 33 ++++++++-
+ .../bindings/interconnect/qcom,sdm845.yaml    | 74 -------------------
+ 2 files changed, 30 insertions(+), 77 deletions(-)
+ rename Documentation/devicetree/bindings/interconnect/{qcom,sc7180.yaml => qcom,rpmh.yaml} (67%)
+ delete mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
+
+diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml b/Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml
+similarity index 67%
+rename from Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+rename to Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml
+index d01bac80d416..9878139a73b8 100644
+--- a/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
++++ b/Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml
+@@ -1,16 +1,17 @@
+ # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+ %YAML 1.2
+ ---
+-$id: http://devicetree.org/schemas/interconnect/qcom,sc7180.yaml#
++$id: http://devicetree.org/schemas/interconnect/qcom,rpmh.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ 
+-title:  Qualcomm SC7180 Network-On-Chip Interconnect
++title:  Qualcomm RPMh Network-On-Chip Interconnect
+ 
+ maintainers:
++  - Georgi Djakov <georgi.djakov@linaro.org>
+   - Odelu Kukatla <okukatla@codeaurora.org>
+ 
+ description: |
+-   SC7180 interconnect providers support system bandwidth requirements through
++   RPMh interconnect providers support system bandwidth requirements through
+    RPMh hardware accelerators known as Bus Clock Manager (BCM). The provider is
+    able to communicate with the BCM through the Resource State Coordinator (RSC)
+    associated with each execution environment. Provider nodes must point to at
+@@ -36,6 +37,14 @@ properties:
+       - qcom,sc7180-npu-noc
+       - qcom,sc7180-qup-virt
+       - qcom,sc7180-system-noc
++      - qcom,sdm845-aggre1-noc
++      - qcom,sdm845-aggre2-noc
++      - qcom,sdm845-config-noc
++      - qcom,sdm845-dc-noc
++      - qcom,sdm845-gladiator-noc
++      - qcom,sdm845-mem-noc
++      - qcom,sdm845-mmss-noc
++      - qcom,sdm845-system-noc
+ 
+   '#interconnect-cells':
+     const: 1
+@@ -60,6 +69,24 @@ required:
+ additionalProperties: false
+ 
+ examples:
++  - |
++      #include <dt-bindings/interconnect/qcom,sdm845.h>
++
++      mem_noc: interconnect@1380000 {
++             compatible = "qcom,sdm845-mem-noc";
++             reg = <0x01380000 0x27200>;
++             #interconnect-cells = <1>;
++             qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      mmss_noc: interconnect@1740000 {
++             compatible = "qcom,sdm845-mmss-noc";
++             reg = <0x01740000 0x1c1000>;
++             #interconnect-cells = <1>;
++             qcom,bcm-voter-names = "apps", "disp";
++             qcom,bcm-voters = <&apps_bcm_voter>, <&disp_bcm_voter>;
++      };
++
+   - |
+       #include <dt-bindings/interconnect/qcom,sc7180.h>
+ 
+diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml b/Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
+deleted file mode 100644
+index 74536747b51d..000000000000
+--- a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
++++ /dev/null
+@@ -1,74 +0,0 @@
+-# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+-%YAML 1.2
+----
+-$id: http://devicetree.org/schemas/interconnect/qcom,sdm845.yaml#
+-$schema: http://devicetree.org/meta-schemas/core.yaml#
+-
+-title:  Qualcomm SDM845 Network-On-Chip Interconnect
+-
+-maintainers:
+-  - Georgi Djakov <georgi.djakov@linaro.org>
+-
+-description: |
+-   SDM845 interconnect providers support system bandwidth requirements through
+-   RPMh hardware accelerators known as Bus Clock Manager (BCM). The provider is
+-   able to communicate with the BCM through the Resource State Coordinator (RSC)
+-   associated with each execution environment. Provider nodes must point to at
+-   least one RPMh device child node pertaining to their RSC and each provider
+-   can map to multiple RPMh resources.
+-
+-properties:
+-  reg:
+-    maxItems: 1
+-
+-  compatible:
+-    enum:
+-      - qcom,sdm845-aggre1-noc
+-      - qcom,sdm845-aggre2-noc
+-      - qcom,sdm845-config-noc
+-      - qcom,sdm845-dc-noc
+-      - qcom,sdm845-gladiator-noc
+-      - qcom,sdm845-mem-noc
+-      - qcom,sdm845-mmss-noc
+-      - qcom,sdm845-system-noc
+-
+-  '#interconnect-cells':
+-    const: 1
+-
+-  qcom,bcm-voters:
+-    $ref: /schemas/types.yaml#/definitions/phandle-array
+-    description: |
+-      List of phandles to qcom,bcm-voter nodes that are required by
+-      this interconnect to send RPMh commands.
+-
+-  qcom,bcm-voter-names:
+-    $ref: /schemas/types.yaml#/definitions/string-array
+-    description: |
+-      Names for each of the qcom,bcm-voters specified.
+-
+-required:
+-  - compatible
+-  - reg
+-  - '#interconnect-cells'
+-  - qcom,bcm-voters
+-
+-additionalProperties: false
+-
+-examples:
+-  - |
+-      #include <dt-bindings/interconnect/qcom,sdm845.h>
+-
+-      mem_noc: interconnect@1380000 {
+-             compatible = "qcom,sdm845-mem-noc";
+-             reg = <0x01380000 0x27200>;
+-             #interconnect-cells = <1>;
+-             qcom,bcm-voters = <&apps_bcm_voter>;
+-      };
+-
+-      mmss_noc: interconnect@1740000 {
+-             compatible = "qcom,sdm845-mmss-noc";
+-             reg = <0x01740000 0x1c1000>;
+-             #interconnect-cells = <1>;
+-             qcom,bcm-voter-names = "apps", "disp";
+-             qcom,bcm-voters = <&apps_bcm_voter>, <&disp_bcm_voter>;
+-      };
+-- 
+2.26.1
+
