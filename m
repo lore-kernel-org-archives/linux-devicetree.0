@@ -2,151 +2,102 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79729C433E6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 10:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EF7C433E4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 10:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FCE320773
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 10:18:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nA4viPOJ"
+	by mail.kernel.org (Postfix) with ESMTP id 42AA320809
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 10:52:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594637547;
+	bh=ADqVZRWZ/51fjjRPcMqetiQetPZ84+yWUeey/gb/nUU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=t8a4qVCkl7My5CYQxDVLv8olEpc+VkUzMIDS16nNA8vTCabXqdiQ9I0gKylO68ysf
+	 Um2/YZ7pr1R4JVzZlw9SRds7ow54rDiubplk/nYAHyRuOfiTU+TR/7g2EIbytyR2Tr
+	 57O7imxIC6LdI+nihSBM3YnRALAKu+F7XviszWYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729043AbgGMKSx (ORCPT
+        id S1729308AbgGMKw0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 06:18:53 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:38103 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727035AbgGMKSp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 06:18:45 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594635524; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=HbTO1RWO0AYCBF7885LW5yU3nqXfLVBq9W9UdB+eByI=;
- b=nA4viPOJzHWCyPolFOoHgaSwWq+EXZmdgXheEaaXH7SGufr3yGNN/Jixe/zdqtSVcbSgmt1V
- 9VUGZ5FEqlI2VJlX01c98mN/TioqY00fvjNiIFKbTKsscbCRu8mpklYGVPRE9su6vHZ2VzSN
- zROXBQfqiZY8mlKIfzpHl0f1X5w=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-east-1.postgun.com with SMTP id
- 5f0c3503c7a053446aa7478b (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 13 Jul 2020 10:18:43
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 82D0AC433CA; Mon, 13 Jul 2020 10:18:42 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Mon, 13 Jul 2020 06:52:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34980 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728883AbgGMKw0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 06:52:26 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kalyan_t)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D426DC433C8;
-        Mon, 13 Jul 2020 10:18:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4933020773;
+        Mon, 13 Jul 2020 10:52:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594637546;
+        bh=ADqVZRWZ/51fjjRPcMqetiQetPZ84+yWUeey/gb/nUU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IpC2uSQJRwoNT6hkjWdSmS6Qn5EDAzTySC6hz2Sj0WilIDu3UOC7m1U2k2p8l2DcV
+         adnQd6KIIyxKLh52sebskcVgxdGfQzuo3gqnKMHSSMdVaw6UFodxwXuEwND/keqv1y
+         krEFqpxgDguMEYS3qRh3XxHN0YzdgYGdeWzExU6I=
+Date:   Mon, 13 Jul 2020 18:52:20 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Ahmad Fatoum <a.fatoum@pengutronix.de>
+Cc:     Philippe Schenker <philippe.schenker@toradex.com>,
+        devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/3] ARM: dts: colibri-imx7: add usb dual-role switch
+ capability
+Message-ID: <20200713105219.GN15718@dragon>
+References: <20200710132423.497230-1-philippe.schenker@toradex.com>
+ <20200710132423.497230-3-philippe.schenker@toradex.com>
+ <73240ab0-5069-40c5-4ade-7fcc2207dfaf@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 13 Jul 2020 15:48:41 +0530
-From:   kalyan_t@codeaurora.org
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Krishna Manikandan <mkrishn@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Raviteja Tamatam <travitej@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        nganji@codeaurora.org, Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        freedreno <freedreno@lists.freedesktop.org>
-Subject: Re: [Freedreno] [v1] drm/msm/dpu: enumerate second cursor pipe for
- external interface
-In-Reply-To: <CAF6AEGtPDh7q6Hjophdyz+Pvi93-bK5WULGeSw9P4BWRw5SWxQ@mail.gmail.com>
-References: <1593089153-17811-1-git-send-email-kalyan_t@codeaurora.org>
- <CAF6AEGtPDh7q6Hjophdyz+Pvi93-bK5WULGeSw9P4BWRw5SWxQ@mail.gmail.com>
-Message-ID: <c10c0f70988d42037ccaccc6b5474942@codeaurora.org>
-X-Sender: kalyan_t@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <73240ab0-5069-40c5-4ade-7fcc2207dfaf@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-07-10 22:19, Rob Clark wrote:
-> On Thu, Jun 25, 2020 at 5:46 AM Kalyan Thota <kalyan_t@codeaurora.org> 
-> wrote:
->> 
->> Setup an RGB HW pipe as cursor which can be used on
->> secondary interface.
->> 
->> For SC7180 2 HW pipes are enumerated as cursors
->> 1 - primary interface
->> 2 - secondary interface
->> 
->> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
->> ---
->>  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c | 12 ++++++------
->>  1 file changed, 6 insertions(+), 6 deletions(-)
->> 
->> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c 
->> b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
->> index 8f2357d..23061fd 100644
->> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
->> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
->> @@ -117,10 +117,10 @@
->>                 .reg_off = 0x2AC, .bit_off = 0},
->>         .clk_ctrls[DPU_CLK_CTRL_DMA0] = {
->>                 .reg_off = 0x2AC, .bit_off = 8},
->> -       .clk_ctrls[DPU_CLK_CTRL_DMA1] = {
->> -               .reg_off = 0x2B4, .bit_off = 8},
->>         .clk_ctrls[DPU_CLK_CTRL_CURSOR0] = {
->> -               .reg_off = 0x2BC, .bit_off = 8},
->> +               .reg_off = 0x2B4, .bit_off = 8},
->> +       .clk_ctrls[DPU_CLK_CTRL_CURSOR1] = {
->> +               .reg_off = 0x2C4, .bit_off = 8},
+On Mon, Jul 13, 2020 at 11:46:04AM +0200, Ahmad Fatoum wrote:
+> Hello Philippe,
 > 
-> It looks like you shifted the register offset here from 0x2bc to
-> 0x2c4, was that intentional?
+> On 7/10/20 3:24 PM, Philippe Schenker wrote:
+> > Since the runtime-pm wakeup bug was fixed in
+> > drivers/usb/chipidea/core.c usb dual-role host/device switching is
+> > working. So make use of it.
+> > 
+> > Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+> > 
+> > ---
+> > 
+> >  arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 9 +++++++++
+> >  arch/arm/boot/dts/imx7-colibri.dtsi         | 4 ++--
+> >  2 files changed, 11 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+> > index 97601375f264..db56a532a34a 100644
+> > --- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+> > +++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+> > @@ -20,6 +20,14 @@ clk16m: clk16m {
+> >  		clock-frequency = <16000000>;
+> >  	};
+> >  
+> > +	extcon_usbc_det: usbc_det {
+> > +		compatible = "linux,extcon-usb-gpio";
 > 
-> BR,
-> -R
-Yes Rob, the offset was wrong which i corrected in this patch.
+> According to 4602f3bff266 ("usb: common: add USB GPIO based connection detection driver"):
+> "the old way using extcon to support USB Dual-Role switch is now deprecated
+>  when use Type-B connector."
 > 
->>         },
->>  };
->> 
->> @@ -272,10 +272,10 @@
->>                 sc7180_vig_sblk_0, 0,  SSPP_TYPE_VIG, 
->> DPU_CLK_CTRL_VIG0),
->>         SSPP_BLK("sspp_8", SSPP_DMA0, 0x24000,  DMA_SDM845_MASK,
->>                 sdm845_dma_sblk_0, 1, SSPP_TYPE_DMA, 
->> DPU_CLK_CTRL_DMA0),
->> -       SSPP_BLK("sspp_9", SSPP_DMA1, 0x26000,  DMA_SDM845_MASK,
->> -               sdm845_dma_sblk_1, 5, SSPP_TYPE_DMA, 
->> DPU_CLK_CTRL_DMA1),
->> +       SSPP_BLK("sspp_9", SSPP_DMA1, 0x26000,  
->> DMA_CURSOR_SDM845_MASK,
->> +               sdm845_dma_sblk_1, 5, SSPP_TYPE_DMA, 
->> DPU_CLK_CTRL_CURSOR0),
->>         SSPP_BLK("sspp_10", SSPP_DMA2, 0x28000,  
->> DMA_CURSOR_SDM845_MASK,
->> -               sdm845_dma_sblk_2, 9, SSPP_TYPE_DMA, 
->> DPU_CLK_CTRL_CURSOR0),
->> +               sdm845_dma_sblk_2, 9, SSPP_TYPE_DMA, 
->> DPU_CLK_CTRL_CURSOR1),
->>  };
->> 
->>  /*************************************************************
->> --
->> 1.9.1
->> 
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
+> Have you considered using a compatible = "gpio-usb-b-connector" child node instead?
+
+I dropped patch #2 and #3 for now.
+
+Shawn
