@@ -2,94 +2,125 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A313C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02487C433E6
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65D58206F4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D55852072D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:07:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Kz1L2isO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729945AbgGMOCc (ORCPT
+        id S1729919AbgGMOG6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:02:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:36668 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729659AbgGMOCc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:02:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE97530E;
-        Mon, 13 Jul 2020 07:02:31 -0700 (PDT)
-Received: from [10.57.62.178] (unknown [10.57.62.178])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 08FA73F7BB;
-        Mon, 13 Jul 2020 07:02:28 -0700 (PDT)
-Subject: Re: [PATCH v10 2/5] iommu/arm-smmu: ioremap smmu mmio region before
- implementation init
-To:     Krishna Reddy <vdumpa@nvidia.com>, joro@8bytes.org,
-        will@kernel.org, robh+dt@kernel.org, treding@nvidia.com,
-        jonathanh@nvidia.com
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, yhsu@nvidia.com, snikam@nvidia.com,
-        praithatha@nvidia.com, talho@nvidia.com, bbiswas@nvidia.com,
-        mperttunen@nvidia.com, nicolinc@nvidia.com, bhuntsman@nvidia.com,
-        nicoleotsuka@gmail.com
-References: <20200708050017.31563-1-vdumpa@nvidia.com>
- <20200708050017.31563-3-vdumpa@nvidia.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <49c222ce-e889-937a-6f05-eb1b46739306@arm.com>
-Date:   Mon, 13 Jul 2020 15:02:28 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 13 Jul 2020 10:06:58 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:10119 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729659AbgGMOG6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 10:06:58 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0c6a750000>; Mon, 13 Jul 2020 07:06:45 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 13 Jul 2020 07:06:57 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 13 Jul 2020 07:06:57 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 Jul
+ 2020 14:06:56 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 13 Jul 2020 14:06:57 +0000
+Received: from sumitg-l4t.nvidia.com (Not Verified[10.24.37.103]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f0c6a7c0001>; Mon, 13 Jul 2020 07:06:56 -0700
+From:   Sumit Gupta <sumitg@nvidia.com>
+To:     <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <thierry.reding@gmail.com>, <robh+dt@kernel.org>,
+        <mirq-linux@rere.qmqm.pl>, <devicetree@vger.kernel.org>,
+        <jonathanh@nvidia.com>, <talho@nvidia.com>,
+        <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <bbasu@nvidia.com>, <sumitg@nvidia.com>, <mperttunen@nvidia.com>
+Subject: [TEGRA194_CPUFREQ PATCH v5 0/4] Add cpufreq driver for Tegra194
+Date:   Mon, 13 Jul 2020 19:36:45 +0530
+Message-ID: <1594649209-29394-1-git-send-email-sumitg@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-In-Reply-To: <20200708050017.31563-3-vdumpa@nvidia.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594649205; bh=U4gKmB4y0qNEJQMMMEmw5DHftEyFtcpFURIRDyOumOk=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=Kz1L2isODkhL7vhii4ky6KnxDsBSmnVexTLc0pN1iEyCi5kOFc0Y7ZRJZKLWsEu9W
+         l2Laqyjlo97zDxK4gDNTU0eiwPNTsAGe2xyXuhUk+KyXFYNGuXlmRSq7m6FRrAQOAN
+         f2w6oTG4/tCB8+q8KBXlj9BcwJobPjPTrtxudKGExSHhJnBk9ysojvHmFkt2B1TyFU
+         TOEfI8RPCYpQvTjl6tjQZVbCQ3GfnigVHzP5t504hDhBciaX8RtTEgWIDjm86pasKF
+         V18pGIDdRpFkHWnDBkJ9y/3d4W7X6bfFd+jCZsm3rxZ8MYxkmPIOE/fkCPn9caOCFl
+         OcO7aqbFrehDQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-07-08 06:00, Krishna Reddy wrote:
-> ioremap smmu mmio region before calling into implementation init.
-> This is necessary to allow mapped address available during vendor
-> specific implementation init.
+Hi Viresh,
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+The patch series adds cpufreq driver for Tegra194 SOC.
+Incorporated the feedback on previous version of patchset.
+Please consider this patch series for merging in 5.9.
 
-> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
-> ---
->   drivers/iommu/arm-smmu.c | 8 ++++----
->   1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index d2054178df35..e03e873d3bca 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -2120,10 +2120,6 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
->   	if (err)
->   		return err;
->   
-> -	smmu = arm_smmu_impl_init(smmu);
-> -	if (IS_ERR(smmu))
-> -		return PTR_ERR(smmu);
-> -
->   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->   	ioaddr = res->start;
->   	smmu->base = devm_ioremap_resource(dev, res);
-> @@ -2135,6 +2131,10 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
->   	 */
->   	smmu->numpage = resource_size(res);
->   
-> +	smmu = arm_smmu_impl_init(smmu);
-> +	if (IS_ERR(smmu))
-> +		return PTR_ERR(smmu);
-> +
->   	num_irqs = 0;
->   	while ((res = platform_get_resource(pdev, IORESOURCE_IRQ, num_irqs))) {
->   		num_irqs++;
-> 
+Hi Rob,
+Can you please review/ack DT patches (1-2).
+
+v4[4] -> v5
+- Don't call destroy_workqueue() if alloc_workqueue() fails[Viresh]
+- Move CONFIG_ARM_TEGRA194_CPUFREQ enabling to soc/tegra/Kconfig[Viresh]
+- Add dependency of 'nvidia,bpmp' on 'compatible' in yaml file[Michal]
+- Fix typo in description causing dt_binding_check bot failure[Rob]
+
+v3[3] -> v4
+- Open code LOOP_FOR_EACH_CPU_OF_CLUSTER macro[Viresh]
+- Delete unused funciton map_freq_to_ndiv[Viresh, kernel test bot]
+- Remove flush_workqueue from free_resources[Viresh]
+
+v2[2] -> v3
+- Set same policy for all cpus in a cluster[Viresh].
+- Add compatible string for CPU Complex under cpus node[Thierry].
+- Add reference to bpmp node under cpus node[Thierry].
+- Bind cpufreq driver to CPU Complex compatible string[Thierry].
+- Remove patch to get bpmp data as now using cpus node to get that[Thierry].
+
+v1[1] -> v2:
+- Remove cpufreq_lock mutex from tegra194_cpufreq_set_target [Viresh].
+- Remove CPUFREQ_ASYNC_NOTIFICATION flag [Viresh].
+- Remove redundant _begin|end() call from tegra194_cpufreq_set_target.
+- Rename opp_table to freq_table [Viresh].
+
+Sumit Gupta (4):
+  dt-bindings: arm: Add t194 ccplex compatible and bpmp property
+  arm64: tegra: Add t194 ccplex compatible and bpmp property
+  cpufreq: Add Tegra194 cpufreq driver
+  soc/tegra: cpufreq: select cpufreq for Tegra194
+
+ Documentation/devicetree/bindings/arm/cpus.yaml |  11 +
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi        |   2 +
+ drivers/cpufreq/Kconfig.arm                     |   6 +
+ drivers/cpufreq/Makefile                        |   1 +
+ drivers/cpufreq/tegra194-cpufreq.c              | 397 ++++++++++++++++++++++++
+ drivers/soc/tegra/Kconfig                       |   1 +
+ 6 files changed, 418 insertions(+)
+ create mode 100644 drivers/cpufreq/tegra194-cpufreq.c
+
+[1] https://marc.info/?t=157539452300001&r=1&w=2
+[2] https://marc.info/?l=linux-tegra&m=158602857106213&w=2
+[3] https://marc.info/?l=linux-pm&m=159283376010084&w=2
+[4] https://marc.info/?l=linux-tegra&m=159318640622917&w=2
+-- 
+2.7.4
+
