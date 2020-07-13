@@ -2,118 +2,113 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A580C433E7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50EE6C433E5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39F0F20738
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:11:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594649484;
-	bh=T7QvK7R+StJM4r1IQ7c0n9HcB+fbfozHwcxG3TVZxo4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0e5VxWjvk+yDJ3+Azqspblv99t9Ik8TuBZ8Y/++gPZNl7n62llyh842Lffcy3vioE
-	 c+WMGfREc2P6Ds6274SmFVsUk+hMcG4/SdQSltvrc5m1nHvasdKuHZmQLc1fF/Wzyn
-	 2vdOuDv49VILrDli19aHO1j/ZALVL8vw1Zvyksr8=
+	by mail.kernel.org (Postfix) with ESMTP id 2FDB720738
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:12:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/WhEHWB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729823AbgGMOLU (ORCPT
+        id S1729902AbgGMOMW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:11:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38368 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729523AbgGMOLU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 10:11:20 -0400
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EE892075B;
-        Mon, 13 Jul 2020 14:11:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594649479;
-        bh=T7QvK7R+StJM4r1IQ7c0n9HcB+fbfozHwcxG3TVZxo4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=X7FqkZipmIBmyCZGB2I50FJei86C7jKNyhfscfKTgxvANpKpPjPQ+2Oe2TEv+EiB7
-         affUXOkPREJoFFD6k8g7b7Z4mpB0bFJ/1T92vUM55PbW8XX5Tt0XNsw4Sk0jdKO3ZR
-         L3jlsUUKQorGXQalVIGSFuIaVfRfeIfGk032djzI=
-Received: by mail-oo1-f51.google.com with SMTP id k47so2369577ool.2;
-        Mon, 13 Jul 2020 07:11:19 -0700 (PDT)
-X-Gm-Message-State: AOAM5304+p8J0UxcTfZ0bL079z9SDU+73ToBZ8zFU8Y3CgrkHwRuHO3a
-        XacMWU4tJJWEDD/WwF2drE0asEE5cPzL+lx08g==
-X-Google-Smtp-Source: ABdhPJzP1wWznjdcOYYxW7COHis2JavRSCgLMLU2wKLa+wmcB7a1M0yROJgH50RXyQmrjZLEyjG4GfeETI7dveqtQXI=
-X-Received: by 2002:a4a:7459:: with SMTP id t25mr64494ooe.25.1594649478792;
- Mon, 13 Jul 2020 07:11:18 -0700 (PDT)
+        Mon, 13 Jul 2020 10:12:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55196 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729649AbgGMOMW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 10:12:22 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED957C061755;
+        Mon, 13 Jul 2020 07:12:21 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id d18so13823959edv.6;
+        Mon, 13 Jul 2020 07:12:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ybYxR1GRnq5IyovTfClT+C6t+JkS/8OJ9dnDjjyYAlQ=;
+        b=i/WhEHWB951iAbrT2J/PBgio1raDichTwdYsve8dmI8ewVDJrriAewvgU7COnYla31
+         LQ73zLJwxVeM+kQPi/JhCJV6Y3xzt3yyn9BA8VikaPku6J3lQ0AHKpNkdS+ESDB3fmDi
+         ppxsYSfxJ9fs9kGTTvyoDJqnuxSOQDqw9kRVRQ6iLaEep0fEO/RkDeHdvHbpJ1y2JmTA
+         63qeBWuluhYGbEyclY2bm68Vx9eZ7mu4Jf7brLKiw96NeSNQMZYjLIJ02qgCqI7A7fza
+         P86mMbYzly3TmQnvR7JF1CBVfE9xx0+rHQSxFQoMieF0HMNEmmmaWB7StPbn1s9efYWf
+         nSZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ybYxR1GRnq5IyovTfClT+C6t+JkS/8OJ9dnDjjyYAlQ=;
+        b=lL+YTmQJZ1ESIqvO40t8axExqdYD3FUg2wKtIAFoamKb1VFYjfbAsC15HTx9Djk7T+
+         EF8i/zN73mNOAfPLXyc9jmqRakv2N72QsEC/itdrhWWO1dltlFdy6tebXSdFJYRYBWa2
+         7A4R3BoWmlcLRJuXrhl8QJpHsHi9RFT6uwj4NjVaOfmzSqztVlKNtzvbui3NloQFc1+S
+         wmcG0IJmRziqvGhWOxbZKqgJby1ycSfkoCdxiYTj4/N2a4EUmnPFNqivo+IQu8kSSS6h
+         atA6e4GQoIN9HsQcPI4mVtKO5zpDcZOqXpeeaoimLOlklij68g+IsqiZAE08UmQ7X14/
+         5OcA==
+X-Gm-Message-State: AOAM533/2mudr/Nba/qamPPCDSgKKP4C218zgBWQTHIDxEAc/DTaPyCH
+        yZJw487F4tDAhI4XYXX2vaY=
+X-Google-Smtp-Source: ABdhPJw/8jHf9QA0AJm4G5lfM69GPdfyK/swpa872/c1BG2bJZ2NWH3dR7A0bYnIc4r8J6YHnq//5w==
+X-Received: by 2002:a50:9b18:: with SMTP id o24mr93210935edi.335.1594649540641;
+        Mon, 13 Jul 2020 07:12:20 -0700 (PDT)
+Received: from skbuf ([188.25.219.134])
+        by smtp.gmail.com with ESMTPSA id ck6sm11436045edb.18.2020.07.13.07.12.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 07:12:20 -0700 (PDT)
+Date:   Mon, 13 Jul 2020 17:12:17 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     Kurt Kanzenbach <kurt@linutronix.de>, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org
+Subject: Re: [PATCH v1 4/8] net: dsa: hellcreek: Add support for hardware
+ timestamping
+Message-ID: <20200713141217.ktgh5rtullmrjjsy@skbuf>
+References: <20200710113611.3398-1-kurt@linutronix.de>
+ <20200710113611.3398-5-kurt@linutronix.de>
+ <20200713095700.rd4u4t6thkzfnlll@skbuf>
+ <87k0z7n0m9.fsf@kurt>
+ <20200713140112.GB27934@hoboy>
 MIME-Version: 1.0
-References: <20200710230224.2265647-1-dianders@chromium.org>
-In-Reply-To: <20200710230224.2265647-1-dianders@chromium.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 13 Jul 2020 08:11:07 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKC5WtHb-coMCxMTDJ7CJcjVXcAxDT4J9N-Xyr=0uuURA@mail.gmail.com>
-Message-ID: <CAL_JsqKC5WtHb-coMCxMTDJ7CJcjVXcAxDT4J9N-Xyr=0uuURA@mail.gmail.com>
-Subject: Re: [PATCH 0/9] drm/msm: Avoid possible infinite probe deferral and
- speed booting
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        devicetree@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713140112.GB27934@hoboy>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 5:02 PM Douglas Anderson <dianders@chromium.org> wrote:
->
-> I found that if I ever had a little mistake in my kernel config,
-> or device tree, or graphics driver that my system would sit in a loop
-> at bootup trying again and again and again.  An example log was:
+On Mon, Jul 13, 2020 at 07:01:12AM -0700, Richard Cochran wrote:
+> On Mon, Jul 13, 2020 at 12:57:34PM +0200, Kurt Kanzenbach wrote:
+> > > I would like to get some clarification on whether "SKBTX_IN_PROGRESS"
+> > > should be set in shtx->tx_flags or not. On one hand, it's asking for
+> > > trouble, on the other hand, it's kind of required for proper compliance
+> > > to API pre-SO_TIMESTAMPING...
+> > 
+> > Hm. We actually oriented our code on the mv88e6xxx time stamping code base.
+> 
+> Where in mv88e6xxx does the driver set SKBTX_IN_PROGRESS?
+> 
 
-Why do we care about optimizing the error case?
+That's the point, it doesn't, and neither does hellcreek.
 
->   msm ae00000.mdss: bound ae01000.mdp (ops 0xffffffe596e951f8)
->   msm_dsi ae94000.dsi: ae94000.dsi supply gdsc not found, using dummy regulator
->   msm_dsi_manager_register: failed to register mipi dsi host for DSI 0
->   [drm:ti_sn_bridge_probe] *ERROR* could not find any panel node
->   ...
->
-> I finally tracked it down where this was happening:
->   - msm_pdev_probe() is called.
->   - msm_pdev_probe() registers drivers.  Registering drivers kicks
->     off processing of probe deferrals.
->   - component_master_add_with_match() could return -EPROBE_DEFER.
->     making msm_pdev_probe() return -EPROBE_DEFER.
->   - When msm_pdev_probe() returned the processing of probe deferrals
->     happens.
->   - Loop back to the start.
->
-> It looks like we can fix this by marking "mdss" as a "simple-bus".
-> I have no idea if people consider this the right thing to do or a
-> hack.  Hopefully it's the right thing to do.  :-)
+> I don't think it makes sense for DSA drivers to set this bit, as it
+> serves no purpose in the DSA context.
+> 
 
-It's a simple test. Do the child devices have any dependency on the
-parent to probe and/or function? If so, not a simple-bus.
+For whom does this bit serve a purpose, though, and how do you tell?
 
-> Once I do this I notice that my boot gets marginally faster (you
-> don't need to probe the sub devices over and over) and also if I
+> Thanks,
+> Richard
 
-Can you quantify that?
-
-Have you run with devlinks enabled. You need a command line option to
-enable. That too should reduce deferred probes.
-
-> have a problem it doesn't loop forever (on my system it still
-> gets upset about some stuck clocks in that case, but at least I
-> can boot up).
-
-Deferred probe only runs when a device is added, so it's not like it
-is continually running.
-
-Rob
+Thanks,
+-Vladimir
