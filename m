@@ -2,164 +2,131 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C80EC433E6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD44C433EB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA3D7205CB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:27:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="g5wR0zIG"
+	by mail.kernel.org (Postfix) with ESMTP id A7505205CB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:28:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729784AbgGMO1i (ORCPT
+        id S1729908AbgGMO2n (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 10:27:38 -0400
-Received: from smtpcmd02101.aruba.it ([62.149.158.101]:50067 "EHLO
-        smtpcmd02101.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729886AbgGMO1i (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 10:27:38 -0400
-Received: from [192.168.1.129] ([93.146.66.165])
-        by smtpcmd02.ad.aruba.it with bizsmtp
-        id 2eLN230113Zw7e501eLPZ4; Mon, 13 Jul 2020 16:20:27 +0200
-Subject: Re: [RFC] GPIO lines [was: GPIO User I/O]
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <01afcac0-bd34-3fd0-b991-a8b40d4b4561@enneenne.com>
- <CACRpkdbX9T9EuN-nxkMPC=sN74PEdoLuWurNLdGCzZJwwFrdpQ@mail.gmail.com>
- <1c4f1a83-835a-9317-3647-b55f6f39c0ba@enneenne.com>
- <CACRpkdZPjJSryJc+RtYjRN=X7xKMcao5pYek1fUM2+sE9xgdFQ@mail.gmail.com>
- <CAMuHMdUtguuu4FWU4nRS=pBUyEwKM1JZ8DYPdCQHXBYN0i_Frg@mail.gmail.com>
- <87efe96c-3679-14d5-4d79-569b6c047b00@enneenne.com>
- <CAMuHMdUght0hkJT1N8ub5xR5GB+U18MAhAg+zDmAAuxoRSRaYg@mail.gmail.com>
- <d30e64c9-ad7f-7cd5-51a4-3f37d6f1e3d8@enneenne.com>
- <070fa558-6e20-0fbf-d3e4-0a0eca4fe82c@enneenne.com>
- <CACRpkdYFAW2bcB53M3_b2LsveJO_PWZJhprGhdTtfmW11B1WmQ@mail.gmail.com>
-From:   Rodolfo Giometti <giometti@enneenne.com>
-Message-ID: <f66dc9c4-b164-c934-72a8-d4aca063fca5@enneenne.com>
-Date:   Mon, 13 Jul 2020 16:20:22 +0200
+        Mon, 13 Jul 2020 10:28:43 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2056 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729782AbgGMO2m (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 10:28:42 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06DE3bC7109961;
+        Mon, 13 Jul 2020 10:28:36 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 328s0c8tjp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Jul 2020 10:28:36 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06DE4UES114776;
+        Mon, 13 Jul 2020 10:28:35 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 328s0c8thf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Jul 2020 10:28:35 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06DEETXs015468;
+        Mon, 13 Jul 2020 14:28:34 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma02wdc.us.ibm.com with ESMTP id 327urs9mkj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Jul 2020 14:28:34 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06DESUi730998968
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jul 2020 14:28:30 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6018A78064;
+        Mon, 13 Jul 2020 14:28:33 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0455D7805C;
+        Mon, 13 Jul 2020 14:28:32 +0000 (GMT)
+Received: from [9.163.41.130] (unknown [9.163.41.130])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 13 Jul 2020 14:28:32 +0000 (GMT)
+Subject: Re: [PATCH 1/2] dt-bindings: leds: pca955x: Add IBM implementation
+ compatible string
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org, dmurphy@ti.com,
+        jacek.anaszewski@gmail.com, vishwa@linux.ibm.com
+References: <20200709201220.13736-1-eajames@linux.ibm.com>
+ <20200709201220.13736-2-eajames@linux.ibm.com> <20200711134814.GB6407@amd>
+From:   Eddie James <eajames@linux.ibm.com>
+Message-ID: <ad50a2a7-0b06-420e-baa7-dec2787ab30d@linux.ibm.com>
+Date:   Mon, 13 Jul 2020 09:28:32 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdYFAW2bcB53M3_b2LsveJO_PWZJhprGhdTtfmW11B1WmQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20200711134814.GB6407@amd>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aruba.it; s=a1;
-        t=1594650027; bh=htV99MPbzwj4JWvKbJWvdYMsckXanjJlxRhiqpDyOD0=;
-        h=Subject:To:From:Date:MIME-Version:Content-Type;
-        b=g5wR0zIG3iO0Xj/NjCc4RWlVwTb4BTE1PzRK9fwEzWeCY2pyFGE2VztebYSgXAsjZ
-         Vh6ei6C3yAOKF+xlvPqWKNKCFIKao0nUMJ7CI1KsBBmMKXRqdYzApq94XSW6J5QZOS
-         fAWI8X9IctbQe0JxCWWLX/WYo8OikFfUQBixY9is/OL5nKAaiEPtfFytV13CtRTQBf
-         ueEpbCDaHpwJ8k0tsL7RkD/iC7aQYM57hwaWCp8SVep8d6N4xTJ7UwhpJ1eqlfKx6p
-         czsx5Y2f9cLsOG2aC0F21VGZDre5j/+Ya+yQUKdsri4OGiGqCOxKIXbX/qSn6fYzCz
-         Xorg+Nfz0/V4A==
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-13_11:2020-07-13,2020-07-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
+ suspectscore=0 spamscore=0 malwarescore=0 mlxlogscore=999
+ lowpriorityscore=0 phishscore=0 clxscore=1015 impostorscore=0 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007130102
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11/07/2020 17:21, Linus Walleij wrote:
-> On Thu, Jul 9, 2020 at 4:11 PM Rodolfo Giometti <giometti@enneenne.com> wrote:
-> 
->>         gpio_lines {
->>                 compatible = "gpio-line";
->>
->>                 bypass0 {
->>                         gpios = <&gpionb 10 GPIO_ACTIVE_HIGH>;
->>                         mode = "out-low";
->>                 };
->>
->>                 bypass1 {
->>                         gpios = <&gpiosb 11 GPIO_ACTIVE_HIGH>;
->>                         mode = "out-low";
->>                 };
->>
->>                 key {
->>                         gpios = <&gpionb 4 GPIO_ACTIVE_HIGH>;
->>                         mode = "input";
->>                 };
->>
->>                 motor {
->>                         gpios = <&gpionb 8 GPIO_ACTIVE_HIGH>;
->>                         mode = "out-high-open-drain";
->>                 };
-> 
-> These mode = ... strings are really just a big confusion for me since
-> they reinvent several of the flags you can already give to the gpios,
-> see include/dt-bindings/gpio/gpio.h:
-> 
-> /* Bit 0 express polarity */
-> #define GPIO_ACTIVE_HIGH 0
-> #define GPIO_ACTIVE_LOW 1
-> 
-> /* Bit 1 express single-endedness */
-> #define GPIO_PUSH_PULL 0
-> #define GPIO_SINGLE_ENDED 2
-> 
-> /* Bit 2 express Open drain or open source */
-> #define GPIO_LINE_OPEN_SOURCE 0
-> #define GPIO_LINE_OPEN_DRAIN 4
-> 
-> /*
->  * Open Drain/Collector is the combination of single-ended open drain interface.
->  * Open Source/Emitter is the combination of single-ended open source interface.
->  */
-> #define GPIO_OPEN_DRAIN (GPIO_SINGLE_ENDED | GPIO_LINE_OPEN_DRAIN)
-> #define GPIO_OPEN_SOURCE (GPIO_SINGLE_ENDED | GPIO_LINE_OPEN_SOURCE)
 
-These modes came from include/linux/gpio/consumer.h:
+On 7/11/20 8:48 AM, Pavel Machek wrote:
+> Hi!
+>
+>> IBM created an implementation of the PCA9552 on a PIC16F
+>> microcontroller. Document the new compatible string for this device.
+> Is the implementation opensource?
 
-/**
- * Optional flags that can be passed to one of gpiod_* to configure direction
- * and output value. These values cannot be OR'd.
- */
-enum gpiod_flags {
-        GPIOD_ASIS      = 0,
-        GPIOD_IN        = GPIOD_FLAGS_BIT_DIR_SET,
-        GPIOD_OUT_LOW   = GPIOD_FLAGS_BIT_DIR_SET | GPIOD_FLAGS_BIT_DIR_OUT,
-        GPIOD_OUT_HIGH  = GPIOD_FLAGS_BIT_DIR_SET | GPIOD_FLAGS_BIT_DIR_OUT |
-                          GPIOD_FLAGS_BIT_DIR_VAL,
-        GPIOD_OUT_LOW_OPEN_DRAIN = GPIOD_OUT_LOW | GPIOD_FLAGS_BIT_OPEN_DRAIN,
-        GPIOD_OUT_HIGH_OPEN_DRAIN = GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_OPEN_DRAIN,
-};
 
-So a setting like the following should set at boot gpio10 as output to 0:
+Hi, no it is not.
 
-bypass0 {
-        gpios = <&gpionb 10 GPIO_ACTIVE_HIGH>;
-        mode = "out-low";
-};
 
-While the next one should set gpio10 as output to 1:
+>
+>> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+>> +++ b/Documentation/devicetree/bindings/leds/leds-pca955x.txt
+>> @@ -9,6 +9,7 @@ Required properties:
+>>   	"nxp,pca9550"
+>>   	"nxp,pca9551"
+>>   	"nxp,pca9552"
+>> +	"nxp,pca9552-ibm"
+>>   	"nxp,pca9553"
+> Is it good idea to use nxp prefix for something that is
+> software-defined and not built by nxp?
 
-bypass0 {
-        gpios = <&gpionb 10 GPIO_ACTIVE_LOW>;
-        mode = "out-low";
-};
 
-Maybe I can do something similar to hog-gpio as below, if you prefer...
+Yea I suppose not...
 
-bypass0 {
-        gpios = <&gpionb 10 GPIO_ACTIVE_LOW>;
-	output-low;
-};
+>
+> Would ibm,pca9552 be better, or maybe even sw,pca9552 to indicate that
+> is not real hardware, but software emulation?
 
-Ciao,
 
-Rodolfo
+How about ibm,pca9552-sw? Someone suggested that just adding "sw" could 
+be a problem if another company does the same thing but it isn't compatible.
 
--- 
-GNU/Linux Solutions                  e-mail: giometti@enneenne.com
-Linux Device Driver                          giometti@linux.it
-Embedded Systems                     phone:  +39 349 2432127
-UNIX programming                     skype:  rodolfo.giometti
+
+Thanks for taking a look!
+
+Eddie
+
+
+>
+> Best regards,
+> 									Pavel
