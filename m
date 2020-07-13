@@ -2,187 +2,104 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F04C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0638C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BFA420773
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:31:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JyAWJNFj"
+	by mail.kernel.org (Postfix) with ESMTP id 90E9D2076D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 18:30:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594665033;
+	bh=lGyXS5W7sMi1fO8+TehYcXm2WS74y4cSQuwKM5swFhU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mLnm+KYM+z2a4wiYIqsw4vaMgCdzscH6EayxZKsNMdP/L0A3jifteFvWOuh21nX1m
+	 UZ0GwFAxzHRXQeeDsHgqe76p8c49C/ttZBZg4PhxqiH2XI9zWkn41j4taKfDgpXsmi
+	 FtyBSreFNNWf60WIJ8FfIBjpAIKuZ+QsZW7fzj+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgGMSbl (ORCPT
+        id S1726428AbgGMSad (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 14:31:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38950 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726058AbgGMSbl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 14:31:41 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FCB0C061755
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 11:31:41 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id z13so17698804wrw.5
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 11:31:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xDeE6XTtLt3Qt1D96MTrxO2Q3EShTZj/KtWg38N4yEc=;
-        b=JyAWJNFjQCusAelsqbhR+EzsdC7xMI/9KdyLuOt9jWqQeHH/Sc7n7J+MBRV1giZaz5
-         iKdMauNYrS0hQqTBz0912oTyo+nFQYHn0bIyVSj5ER7Cm90iJSNHkOHU1gexux7115SP
-         71I2z8wl+b+IxJB8uwY81bxt4lKRvptMJqujsC3U47v0/IovL33EvsvwG2fuYUaPqvZk
-         Qdo7U3/mv0wEVkGSCFqp4BHXZsb58XvzdEUxb7Tnrdoo6LQX6tgI+zZQEAb0I+BlAHBs
-         XheLux5L3pjFVyGPyLptdnYfGbeRiEei600eqT4CW6Id1+gAz+j4xqZVWIdgUi5wqQwO
-         NhXA==
+        Mon, 13 Jul 2020 14:30:33 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33522 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726058AbgGMSad (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 14:30:33 -0400
+Received: by mail-io1-f67.google.com with SMTP id d18so14595729ion.0;
+        Mon, 13 Jul 2020 11:30:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xDeE6XTtLt3Qt1D96MTrxO2Q3EShTZj/KtWg38N4yEc=;
-        b=PCm3r/am7v9Bg8/ZyEBCVknhhxkKaAq79MzDyyJ7FP9WBeNm+hrnuVWSrQioNKTG8L
-         l0GJ9a4EShRHfqnlr8U9+M0VN/bgsUFwFnwTqQLXuyUOuLMjYRJYNRGUn1uEiUNpDPCu
-         cq2nIXfJRHB0RVZc88Q0fXm8MvVhujhu4Yj6LqB71KlXTQHkDf69TiZxouoOA2kd8vFs
-         7ORYfGI7sqK1idctFijUV6Us4sTDUORmv42FPt9x0DZoShYnMOp4gszIkLaQVOYLKCMl
-         TQpz35aQety8aS8CwId3wYqjpu+MtDmlch+F7QO8uH29ujK4dm7d7qQm8dynoI0WlyJ4
-         KAIA==
-X-Gm-Message-State: AOAM530PpDqNpomkxL69csqxOn5BcerOieUIm9dR9wXj/LZl69Rk/EN6
-        cJw6nQdeKTV05gRwhGqFS7TupQ==
-X-Google-Smtp-Source: ABdhPJw7NWb8sEdQ8MeqNKe1W3OrikajIRFerqQemNOpvtNZQjBsLZmevVao4ANlpyMaTHno+zKW5A==
-X-Received: by 2002:adf:82e1:: with SMTP id 88mr747721wrc.376.1594665099563;
-        Mon, 13 Jul 2020 11:31:39 -0700 (PDT)
-Received: from [10.44.66.8] ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id c136sm616270wmd.10.2020.07.13.11.31.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 11:31:38 -0700 (PDT)
-Subject: Re: [RESEND v2] arm64: dts: imx8m: Add NOC nodes
-To:     Abel Vesa <abel.vesa@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Leonard Crestez <cdleonard@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NHhkcNXb84hSAAGGaYzyykFtvdzROqlQA3oYhJq02hM=;
+        b=hNZydfhJx6SskkyezyOooTRYNX7nlv0/wYecSzx2OK0t4j1oxOMfD1psO/G9Bu/O5w
+         ymGMe7KkZUEz+DmKBwVIpJ8xqatiLgkaoCoiG4K+AOjMgX4cUFJ03BRoLqvGQuTmSk+k
+         pOFZAfqa6v2simAWVLohtZjR+HAB7zBx+t5lSKQmU9QRuXWGjC74BNAP3Kg1aIah/wSK
+         24CW1su1HPlKvjttiBl1Ya65+StVlzQutn0fGRPN1rZ/Zpf2ebfim5uncjbQm9f0JSrS
+         qZVRBYSEphq6ZXgJiBK9kgQWqiB/lAWrTIQ0UKi0vmJ0nxpeHG94u6eTBkloajnjVMDN
+         Whzw==
+X-Gm-Message-State: AOAM531il0XVja2H4loUCsR79L+CQL5TAFAjUIU1z9zrILxQzpYHiczT
+        P9BEr4rKMHaA9T9HkmikosmAIGqf+A==
+X-Google-Smtp-Source: ABdhPJwAtRsdg6KD5FHFMosiY8HZz72nLwAuFkbXMPZzCJadowi7jZH/+kSwAWiv7GK7DiIT/0OFSQ==
+X-Received: by 2002:a5d:9dc4:: with SMTP id 4mr1118287ioo.172.1594665031757;
+        Mon, 13 Jul 2020 11:30:31 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id t74sm9021781ild.6.2020.07.13.11.30.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 11:30:31 -0700 (PDT)
+Received: (nullmailer pid 502654 invoked by uid 1000);
+        Mon, 13 Jul 2020 18:30:29 -0000
+Date:   Mon, 13 Jul 2020 12:30:29 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
         linux-arm-kernel@lists.infradead.org,
-        Leonard Crestez <leonard.crestez@nxp.com>
-References: <1594070006-816-1-git-send-email-abel.vesa@nxp.com>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
- xsFNBFjTuRcBEACyAOVzghvyN19Sa/Nit4LPBWkICi5W20p6bwiZvdjhtuh50H5q4ktyxJtp
- 1+s8dMSa/j58hAWhrc2SNL3fttOCo+MM1bQWwe8uMBQJP4swgXf5ZUYkSssQlXxGKqBSbWLB
- uFHOOBTzaQBaNgsdXo+mQ1h8UCgM0zQOmbs2ort8aHnH2i65oLs5/Xgv/Qivde/FcFtvEFaL
- 0TZ7odM67u+M32VetH5nBVPESmnEDjRBPw/DOPhFBPXtal53ZFiiRr6Bm1qKVu3dOEYXHHDt
- nF13gB+vBZ6x5pjl02NUEucSHQiuCc2Aaavo6xnuBc3lnd4z/xk6GLBqFP3P/eJ56eJv4d0B
- 0LLgQ7c1T3fU4/5NDRRCnyk6HJ5+HSxD4KVuluj0jnXW4CKzFkKaTxOp7jE6ZD/9Sh74DM8v
- etN8uwDjtYsM07I3Szlh/I+iThxe/4zVtUQsvgXjwuoOOBWWc4m4KKg+W4zm8bSCqrd1DUgL
- f67WiEZgvN7tPXEzi84zT1PiUOM98dOnmREIamSpKOKFereIrKX2IcnZn8jyycE12zMkk+Sc
- ASMfXhfywB0tXRNmzsywdxQFcJ6jblPNxscnGMh2VlY2rezmqJdcK4G4Lprkc0jOHotV/6oJ
- mj9h95Ouvbq5TDHx+ERn8uytPygDBR67kNHs18LkvrEex/Z1cQARAQABzShHZW9yZ2kgRGph
- a292IDxnZW9yZ2kuZGpha292QGxpbmFyby5vcmc+wsF+BBMBAgAoBQJY07kXAhsDBQkHhM4A
- BgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRCyi/eZcnWWUuvsD/4miikUeAO6fU2Xy3fT
- l7RUCeb2Uuh1/nxYoE1vtXcow6SyAvIVTD32kHXucJJfYy2zFzptWpvD6Sa0Sc58qe4iLY4j
- M54ugOYK7XeRKkQHFqqR2T3g/toVG1BOLS2atooXEU+8OFbpLkBXbIdItqJ1M1SEw8YgKmmr
- JlLAaKMq3hMb5bDQx9erq7PqEKOB/Va0nNu17IL58q+Q5Om7S1x54Oj6LiG/9kNOxQTklOQZ
- t61oW1Ewjbl325fW0/Lk0QzmfLCrmGXXiedFEMRLCJbVImXVKdIt/Ubk6SAAUrA5dFVNBzm2
- L8r+HxJcfDeEpdOZJzuwRyFnH96u1Xz+7X2V26zMU6Wl2+lhvr2Tj7spxjppR+nuFiybQq7k
- MIwyEF0mb75RLhW33sdGStCZ/nBsXIGAUS7OBj+a5fm47vQKv6ekg60oRTHWysFSJm1mlRyq
- exhI6GwUo5GM/vE36rIPSJFRRgkt6nynoba/1c4VXxfhok2rkP0x3CApJ5RimbvITTnINY0o
- CU6f1ng1I0A1UTi2YcLjFq/gmCdOHExT4huywfu1DDf0p1xDyPA1FJaii/gJ32bBP3zK53hM
- dj5S7miqN7F6ZpvGSGXgahQzkGyYpBR5pda0m0k8drV2IQn+0W8Qwh4XZ6/YdfI81+xyFlXc
- CJjljqsMCJW6PdgEH87BTQRY07kXARAAvupGd4Jdd8zRRiF+jMpv6ZGz8L55Di1fl1YRth6m
- lIxYTLwGf0/p0oDLIRldKswena3fbWh5bbTMkJmRiOQ/hffhPSNSyyh+WQeLY2kzl6geiHxD
- zbw37e2hd3rWAEfVFEXOLnmenaUeJFyhA3Wd8OLdRMuoV+RaLhNfeHctiEn1YGy2gLCq4VNb
- 4Wj5hEzABGO7+LZ14hdw3hJIEGKtQC65Jh/vTayGD+qdwedhINnIqslk9tCQ33a+jPrCjXLW
- X29rcgqigzsLHH7iVHWA9R5Aq7pCy5hSFsl4NBn1uV6UHlyOBUuiHBDVwTIAUnZ4S8EQiwgv
- WQxEkXEWLM850V+G6R593yZndTr3yydPgYv0xEDACd6GcNLR/x8mawmHKzNmnRJoOh6Rkfw2
- fSiVGesGo83+iYq0NZASrXHAjWgtZXO1YwjW9gCQ2jYu9RGuQM8zIPY1VDpQ6wJtjO/KaOLm
- NehSR2R6tgBJK7XD9it79LdbPKDKoFSqxaAvXwWgXBj0Oz+Y0BqfClnAbxx3kYlSwfPHDFYc
- R/ppSgnbR5j0Rjz/N6Lua3S42MDhQGoTlVkgAi1btbdV3qpFE6jglJsJUDlqnEnwf03EgjdJ
- 6KEh0z57lyVcy5F/EUKfTAMZweBnkPo+BF2LBYn3Qd+CS6haZAWaG7vzVJu4W/mPQzsAEQEA
- AcLBZQQYAQIADwUCWNO5FwIbDAUJB4TOAAAKCRCyi/eZcnWWUhlHD/0VE/2x6lKh2FGP+QHH
- UTKmiiwtMurYKJsSJlQx0T+j/1f+zYkY3MDX+gXa0d0xb4eFv8WNlEjkcpSPFr+pQ7CiAI33
- 99kAVMQEip/MwoTYvM9NXSMTpyRJ/asnLeqa0WU6l6Z9mQ41lLzPFBAJ21/ddT4xeBDv0dxM
- GqaH2C6bSnJkhSfSja9OxBe+F6LIAZgCFzlogbmSWmUdLBg+sh3K6aiBDAdZPUMvGHzHK3fj
- gHK4GqGCFK76bFrHQYgiBOrcR4GDklj4Gk9osIfdXIAkBvRGw8zg1zzUYwMYk+A6v40gBn00
- OOB13qJe9zyKpReWMAhg7BYPBKIm/qSr82aIQc4+FlDX2Ot6T/4tGUDr9MAHaBKFtVyIqXBO
- xOf0vQEokkUGRKWBE0uA3zFVRfLiT6NUjDQ0vdphTnsdA7h01MliZLQ2lLL2Mt5lsqU+6sup
- Tfql1omgEpjnFsPsyFebzcKGbdEr6vySGa3Cof+miX06hQXKe99a5+eHNhtZJcMAIO89wZmj
- 7ayYJIXFqjl/X0KBcCbiAl4vbdBw1bqFnO4zd1lMXKVoa29UHqby4MPbQhjWNVv9kqp8A39+
- E9xw890l1xdERkjVKX6IEJu2hf7X3MMl9tOjBK6MvdOUxvh1bNNmXh7OlBL1MpJYY/ydIm3B
- KEmKjLDvB0pePJkdTw==
-Message-ID: <2ee84924-778f-458c-5066-b3c759039278@linaro.org>
-Date:   Mon, 13 Jul 2020 21:31:37 +0300
+        Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-remoteproc@vger.kernel.org
+Subject: Re: [PATCH v3 4/6] dt-bindings: remoteproc: Add bindings for C66x
+ DSPs on TI K3 SoCs
+Message-ID: <20200713183029.GA502585@bogus>
+References: <20200612224914.7634-1-s-anna@ti.com>
+ <20200612224914.7634-5-s-anna@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <1594070006-816-1-git-send-email-abel.vesa@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200612224914.7634-5-s-anna@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 7/7/20 00:13, Abel Vesa wrote:
-> From: Leonard Crestez <leonard.crestez@nxp.com>
+On Fri, 12 Jun 2020 17:49:12 -0500, Suman Anna wrote:
+> Some Texas Instruments K3 family of SoCs have one of more Digital Signal
+> Processor (DSP) subsystems that are comprised of either a TMS320C66x
+> CorePac and/or a next-generation TMS320C71x CorePac processor subsystem.
+> Add the device tree bindings document for the C66x DSP devices on these
+> SoCs. The added example illustrates the DT nodes for the first C66x DSP
+> device present on the K3 J721E family of SoCs.
 > 
-> Add nodes for the main interconnect of the imx8m series chips.
-> 
-> These nodes are bound to by devfreq and interconnect drivers.
-> 
-> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> Tested-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-> Acked-by: Georgi Djakov <georgi.djakov@linaro.org>
+> Signed-off-by: Suman Anna <s-anna@ti.com>
 > ---
+> v3:
+>  - Refactored the common ti-sci properties "ti,sci", "ti,sci-dev-id" and
+>    "ti,sci-proc-ids" into a separate binding ti,k3-sci-proc.yaml.
+>  - Dropped the general description and maxItems against reg and reg-names
+>  - Added items list under reg
+>  - Removed the other binding references from the description for resets
+>    and mboxes
+>  - Revised the memory-region description and listed the mandatory items
+>  - Updated example to drop reserved-memory nodes, unused node labels
+> v2: https://patchwork.kernel.org/patch/11561781/
 > 
-> Changes since v1:
->  - picked up the bindinds header which were part of the original patch
->    from Leonard
+>  .../bindings/remoteproc/ti,k3-dsp-rproc.yaml  | 139 ++++++++++++++++++
+>  1 file changed, 139 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
 > 
->  arch/arm64/boot/dts/freescale/imx8mm.dtsi | 24 ++++++++++++++++++++++++
->  arch/arm64/boot/dts/freescale/imx8mn.dtsi | 24 ++++++++++++++++++++++++
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 24 ++++++++++++++++++++++++
->  3 files changed, 72 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> index 76f040e..970d132 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> @@ -8,6 +8,7 @@
->  #include <dt-bindings/input/input.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/thermal/thermal.h>
-> +#include <dt-bindings/interconnect/imx8mm.h>
 
-Nit: Seems like these are sorted alphabetically. Please maintain this.
-
-[..]
-> --- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-> @@ -8,6 +8,7 @@
->  #include <dt-bindings/input/input.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/thermal/thermal.h>
-> +#include <dt-bindings/interconnect/imx8mn.h>
->  
-
-ditto
-
-[..]> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -11,6 +11,7 @@
->  #include "dt-bindings/input/input.h"
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/thermal/thermal.h>
-> +#include <dt-bindings/interconnect/imx8mq.h>
->  #include "imx8mq-pinfunc.h"
-
-ditto
-
-Thanks,
-Georgi
+Reviewed-by: Rob Herring <robh@kernel.org>
