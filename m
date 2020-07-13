@@ -2,144 +2,163 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB47C433E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 12:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3381FC433E4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 13:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E5832072D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 12:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C555206F0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 13:12:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hZKV+SG/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729523AbgGMMpN (ORCPT
+        id S1729662AbgGMNL4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 08:45:13 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41768 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729267AbgGMMpN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 08:45:13 -0400
-Received: by mail-oi1-f193.google.com with SMTP id y22so10820955oie.8;
-        Mon, 13 Jul 2020 05:45:12 -0700 (PDT)
+        Mon, 13 Jul 2020 09:11:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729578AbgGMNLz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 09:11:55 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74D5AC061755;
+        Mon, 13 Jul 2020 06:11:55 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id w6so17082807ejq.6;
+        Mon, 13 Jul 2020 06:11:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=/LcskTFE0ftRjKPkrUkg9e4RKK6cWyQd9LPAwkcR1i0=;
+        b=hZKV+SG/j73cRLtgscm/TJyIzdnydZ66AbZXwMbTphprnLoRp7PIavE3QkrS1SfgEG
+         hK90ffaMF3j67xJJfmR4kpuHeBuurRipPAWo1bcckI+J8H00pMlcOFh/ubztIUM/CcGH
+         rX+tt0V3v1BYqWVuTrZN6fgyfYAs4vSUfuJdRLuHZHSPcT2rRbIhQ4FyjtVkxZ1ClIiZ
+         LRH8OeiJnyQW4+2je7p4ZWWXCshRaU+qWhMTOGFd4ZFekv32iwJK5x0iKO0+1ENLvwYy
+         ghlRSlLxGT3l0T9Tge53/iQ5QV+vjd8QJSO7YdN9mIz/lEfsT2K4HpcX+08Q6mAwod+E
+         WcoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aljxsgKwzsCh4HKBPDRBFN6aAU1M4l9yokMVAmNF5/M=;
-        b=fQgZF8tejXcqNlHHJnvUgvHsiIXENY8SpJSYdr1nqBlRRlh+/XNPLTYFIYY75Y/GZj
-         e7bUzFnq9eedJT87mYiwaIxfa4bIUbRAdyB5CRmuavfe1i41MWlHClWJPQD4YNEssOjs
-         nX0Bh/ejkvMEtZgsPgr5ki5uEy6LJ3iLVy+dIxC6V56xZwqiq7MseVThv7OyKXgKrVob
-         NDLUbOQY78qdqsnrMZ4iIeAJmZjksNlP/c6tAOe/3Wj/9f/nsVqCIdshfR7xg3deJrMg
-         GD6Gylom5fklkfwOBSvQ5fwjK9d3BYLms+4UMuMa/Ks13NsoSURE4GcD4ykltwZg/slf
-         O2Mg==
-X-Gm-Message-State: AOAM530YdkMiLzwY5OLXtWOX1/TrA6HDDskz7xp0x3Pjxd8GLqGF30yE
-        4c3+m7QtOXqe+N3HEBbXTjfn2+THHmbM1zfhg8g=
-X-Google-Smtp-Source: ABdhPJzp2NIcDW3ySmiQvENCT3/a35iWUrdCt5bn4W0aULLvRFTL+huDV91eAgE9TFRYXnr0A2GEBYK12mclgEQP7mI=
-X-Received: by 2002:aca:5c41:: with SMTP id q62mr13311228oib.148.1594644311938;
- Mon, 13 Jul 2020 05:45:11 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=/LcskTFE0ftRjKPkrUkg9e4RKK6cWyQd9LPAwkcR1i0=;
+        b=HINuQT9/eN1KQjYGmMcFEuso9QFJ9z+Sn9ygL9kkigFyj3dgQqS7dAPSEyuT7yhMB1
+         XpN8hXGJqdKQf5WQEIzp/2WcfVrBN8KbuJoVDS1kWDX8ijTKhWXHojSwEsLp4jI8sJa2
+         8BHoEDrrNacCO1Y10oMWxuTcmv5cEwPeJCYqz9gc+T76A/hW9jOHta1VlSOSTL4sde9s
+         ZakGHKaaU+Sh6/zR+BJseTK8/s/VVSGJsAaiDgNBp5NfaMrkGt5PK1PtXGcz8cafn8NU
+         DZxqiICVXQOUoGoqx2e29E9q24kxl/CT4/9yMuexpRXk4SfC7cptSlcUrHAWqVy3+A57
+         a/VQ==
+X-Gm-Message-State: AOAM5327C3b6OgBe2AnTDl4Kds346E87X59DstGDprxqq6pEdSenNw+c
+        yXPAKtrcoPITtesbH86t9VQ=
+X-Google-Smtp-Source: ABdhPJzqKrgmo4lKRir8KbulNZTXvb76s7hasIFMZVuNbjy0t50dr1lBBC95p7fNtwPq1t+mPzKpzw==
+X-Received: by 2002:a17:906:3acd:: with SMTP id z13mr56514418ejd.69.1594645914066;
+        Mon, 13 Jul 2020 06:11:54 -0700 (PDT)
+Received: from AnsuelXPS (host-87-16-250-131.retail.telecomitalia.it. [87.16.250.131])
+        by smtp.gmail.com with ESMTPSA id u18sm11430586edx.34.2020.07.13.06.11.51
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 Jul 2020 06:11:53 -0700 (PDT)
+From:   <ansuelsmth@gmail.com>
+To:     "'Vinod Koul'" <vkoul@kernel.org>
+Cc:     "'Andy Gross'" <agross@codeaurora.org>,
+        "'Jonathan McDowell'" <noodles@earth.li>,
+        "'Andy Gross'" <agross@kernel.org>,
+        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
+        "'Kishon Vijay Abraham I'" <kishon@ti.com>,
+        "'Rob Herring'" <robh+dt@kernel.org>,
+        "'Mark Rutland'" <mark.rutland@arm.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20200615205333.20747-1-ansuelsmth@gmail.com> <20200713053255.GY34333@vkoul-mobl>
+In-Reply-To: <20200713053255.GY34333@vkoul-mobl>
+Subject: R: [RESEND PATCH v7 1/2] phy: qualcomm: add qcom ipq806x dwc usb phy driver
+Date:   Mon, 13 Jul 2020 15:11:48 +0200
+Message-ID: <019d01d65917$2bff9ba0$83fed2e0$@gmail.com>
 MIME-Version: 1.0
-References: <20200617120510.25071-1-aford173@gmail.com> <CAMuHMdWjpyi6QiGTHkwXcepMzP8hN7MkXSJ=Xnxn40VkRU9OXg@mail.gmail.com>
- <CAHCN7xJWbP16SA-Ok-5syNnqOZAt8OFJo2_rtg5VrNVsN2-eiQ@mail.gmail.com> <CAHCN7xLygG5YRG0wt0b9JWW3PHDwMV_kiLRpJqPdSAx7gOoc9w@mail.gmail.com>
-In-Reply-To: <CAHCN7xLygG5YRG0wt0b9JWW3PHDwMV_kiLRpJqPdSAx7gOoc9w@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 13 Jul 2020 14:45:00 +0200
-Message-ID: <CAMuHMdWzcKa1xXdQ8W=fmjTKvPRN68GNVhBi4pFD5OW1_R_aAw@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: Introduce r8a774a1-beacon-rzg2m-kit
-To:     Adam Ford <aford173@gmail.com>
-Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Adam Ford-BE <aford@beaconembedded.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+        charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: it
+Thread-Index: AQJO0Cndc+Pketd50VjNHRY/HVB9ygG/2AhjqAaOrYA=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Adam,
 
-CC Stephen
 
-On Thu, Jul 9, 2020 at 12:00 AM Adam Ford <aford173@gmail.com> wrote:
-> On Wed, Jul 8, 2020 at 4:53 PM Adam Ford <aford173@gmail.com> wrote:
-> > On Mon, Jun 22, 2020 at 8:20 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > On Wed, Jun 17, 2020 at 2:05 PM Adam Ford <aford173@gmail.com> wrote:
-> > > > Beacon EmebddedWorks, formerly Logic PD is introducing a new
-> > > > SOM and development kit based on the RZ/G2M SoC from Renesas.
-> > > >
-> > > > The SOM supports eMMC, WiFi and Bluetooth, along with a Cat-M1
-> > > > cellular radio.
-> > > >
-> > > > The Baseboard has Ethernet, USB, HDMI, stereo audio in and out,
-> > > > along with a vareity of push buttons and LED's.
+> -----Messaggio originale-----
+> Da: Vinod Koul <vkoul@kernel.org>
+> Inviato: luned=EC 13 luglio 2020 07:33
+> A: Ansuel Smith <ansuelsmth@gmail.com>
+> Cc: Andy Gross <agross@codeaurora.org>; Jonathan McDowell
+> <noodles@earth.li>; Andy Gross <agross@kernel.org>; Bjorn Andersson
+> <bjorn.andersson@linaro.org>; Kishon Vijay Abraham I <kishon@ti.com>;
+> Rob Herring <robh+dt@kernel.org>; Mark Rutland
+> <mark.rutland@arm.com>; linux-arm-msm@vger.kernel.org; linux-
+> kernel@vger.kernel.org; devicetree@vger.kernel.org
+> Oggetto: Re: [RESEND PATCH v7 1/2] phy: qualcomm: add qcom ipq806x
+> dwc usb phy driver
+>=20
+> On 15-06-20, 22:53, Ansuel Smith wrote:
+>=20
+> > @@ -0,0 +1,593 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/* Copyright (c) 2014-2015, Code Aurora Forum. All rights reserved.
+> > + *
+> > + * This program is free software; you can redistribute it and/or =
+modify
+> > + * it under the terms of the GNU General Public License version 2 =
+and
+> > + * only version 2 as published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+>=20
+> You have SPDX tag, so we dont need the license text, please remove =
+this.
+> Also we are in 2020 now so Copyright looks incorrect
+>=20
+> > +static int qcom_ipq806x_usb_ss_phy_init(struct phy *phy)
+> > +{
+> > +	struct usb_phy *phy_dwc3 =3D phy_get_drvdata(phy);
+> > +	int ret;
+> > +	u32 data =3D 0;
+>=20
+> Superfluous init
+>=20
+> > +static int qcom_ipq806x_usb_phy_probe(struct platform_device *pdev)
+> > +{
+> > +	struct usb_phy	*phy_dwc3;
+> > +	struct phy_provider		*phy_provider;
+> > +	struct phy			*generic_phy;
+> > +	const struct of_device_id *match;
+> > +	const struct phy_drvdata *data;
+> > +	struct resource			*res;
+> > +	resource_size_t			size;
+>=20
+> Pls pick one, tabs or single spaces, not both. and reverse christmas
+> looks better :)
+>=20
+> > +	struct device_node *np;
+> > +
+> > +	phy_dwc3 =3D devm_kzalloc(&pdev->dev, sizeof(*phy_dwc3),
+> GFP_KERNEL);
+> > +	if (!phy_dwc3)
+> > +		return -ENOMEM;
+> > +
+> > +	match =3D of_match_node(qcom_ipq806x_usb_phy_table, pdev-
+> >dev.of_node);
+> > +	data =3D match->data;
+>=20
+> How about using of_device_get_match_data() instead?
+> --
+> ~Vinod
 
-> > > > --- /dev/null
-> > > > +++ b/arch/arm64/boot/dts/renesas/beacon-renesom-baseboard.dtsi
-> > > > @@ -0,0 +1,733 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > +/*
-> > > > + * Copyright 2020, Compass Electronics Group, LLC
-> > > > + */
-> > > > +
-> > > > +#include <dt-bindings/gpio/gpio.h>
-> > > > +#include <dt-bindings/input/input.h>
-> > > > +#include <dt-bindings/clk/versaclock.h>
-> > >
-> > > This depends on "[PATCH V3 2/3] dt: Add additional option bindings for
-> > > IDT VersaClock", which hasn't been accepted yet, AFAIK.
->
-> Geert,
->
-> I forgot to ask.  What is the protocol for something when new bindings
-> have been accepted in one branch, but another branch where I want to
-> reference them hasn't merged with the other branch?  I'd really like
-> to get this board into the next kernel.  I could remove these
-> references and the calling functions, but that may cause instability
-> due to undefined behaviour of some of the versaclock functions because
-> they are not programmed.
+match is also used in the function to compare compatible.=20
 
-As soon as a binding update has been accepted into the maintainer's
-for-next branch, I happily accept DTS patches that start using it,
-unless doing so would introduce a regression.
-In this case, it's not a pure binding update, but also an update to
-binding definitions in a header file, thus creating a hard dependency.
-Usually this is mitigated by committing the header file change to an
-immutable branch, to be shared by driver and DTS, and to be pulled by
-all maintainers affected by the dependency.
-
-As Stephen has already applied the binding update to his clk-next
-branch, it's too late to go for the immutable branch approach.  Hence
-the simplest solution would be to postpone your DTS patch to v5.10.
-
-> However, I would rather have the board mostly work if it means getting
-> it accepted into the kernel.  Beacon hasn't shipped any outside of the
-> company yet, so I am not really worried about people seeing problems.
-> If the board gets accepted without these, I could apply some 'fixes'
-> at a late date to correct the undefined behavior.  Let me know what
-> the best way to proceed should be, and I'll send a V2 patch.
-
-An alternative would be for me to cherry-pick commit 34662f6e30846ae0
-("dt: Add additional option bindings for IDT VersaClock") from the
-clk-next branch into renesas-devel, before applying your patch.
-While that would help you, it may introduce a merge conflict for
-linux-next and for upstream later, as Luca has already posted multiple
-patches for idt,versaclock5.txt, to fix typos and do the json-schema
-conversion.  These may or may not land in v5.9.
-
-Stephen: what do you think?
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
