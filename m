@@ -2,91 +2,130 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44253C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 19:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FB2C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 19:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1695B2067D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 19:02:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D2742075D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 19:03:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594666935;
-	bh=lGC13MXod2dWRy1C4K2cfxQ4N25942nM/qMW9I5+TWM=;
+	s=default; t=1594666993;
+	bh=+VLRc7Y9AXVnLAUpIImIA24MM8YQKoOuv2uu8mDmwGY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=b8DA8dfsFgrr1JmPU+L0GX86ctWzjPEbr0r0wD0725qgGSkP32yKjVTUq3MEji90h
-	 z7CS4mXwOpfYU7B6bYYt6QmmaHaAsuq8auo9WYMDQ2HSYfIFN7WINLvbZ3E0wr5z5E
-	 TEjwBx+FZWSa5OG1fPiFB4K3G1q5i5vKPgDTdShE=
+	b=UXazcCCff9FlVXw5q4bNvdObzjJp7JHYFWki9IKat5eXR8+GFFbSS4O+SYgCjAZ2V
+	 vDTm7WZR8GzQ4Nly3UZsQDprQlppQKC0SYtg272A+kKfd4Hx92d1hytTyJZPo38YOH
+	 /GwH+8VOP5C73VSCQdQj7A4BZ3elFTu4lS4AhGMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgGMTCO (ORCPT
+        id S1726345AbgGMTDN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 15:02:14 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:35760 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgGMTCO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 15:02:14 -0400
-Received: by mail-io1-f66.google.com with SMTP id v8so14682300iox.2;
-        Mon, 13 Jul 2020 12:02:13 -0700 (PDT)
+        Mon, 13 Jul 2020 15:03:13 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:37736 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbgGMTDM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 15:03:12 -0400
+Received: by mail-il1-f196.google.com with SMTP id r12so12151790ilh.4;
+        Mon, 13 Jul 2020 12:03:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=qQzS/AJXhtT2zFSo3Dszdq+1pBzYrAwv1FvWox6CELk=;
-        b=dQTDOBtLNZHIQg4QBFMjfS9xruSOU1/FQ85CSSq6Fav3sb/JWhhHvIaGahHeecYBnM
-         KraZQvmjqSMdo6vELhEA1KoVWNl+TEtjNwHM5hR5Fatft5fDT3/3lPeiS/UhfCwAylcE
-         u/QHKgSwSgiVFno4wAwGoxJ4YO4rFxJWj5TcnrPhuDbZCmXZGFG4GMndRRpV10WMOJ8c
-         TjDFEb5Od/e1N0ARfq8CX0nKQrVSHIAnnbEuqKTyF8dadEYV/jXJ/GhOSuZjTeZ2y5Pt
-         LeWiNXUy8IMDg6XjP+hDQAun4MiVHbws4s4wzz+HY0ACFH3+mmAtb69ZUWJk+YVIc6lP
-         AGcA==
-X-Gm-Message-State: AOAM530yRlg9WbhYzOwrQ1DCB4CGWUUnCh9bpu1Jnxge5RSeqKYnyhkw
-        fuUufozcvhHd5SuRPUqROA==
-X-Google-Smtp-Source: ABdhPJytBhAc3DwxVXCUmjelGBDFS20+Vt6w8NKXCrXG0T8J8vfuj3ou7uT/Q995peg/pQtJvSHxLQ==
-X-Received: by 2002:a05:6638:12c7:: with SMTP id v7mr1723305jas.56.1594666932865;
-        Mon, 13 Jul 2020 12:02:12 -0700 (PDT)
+        bh=l5rWVgnnCloHt41CFPCxRV5qmnmySbxOsQcq4blbDZU=;
+        b=ZMUT17gJPmBGA6zePd0uFpkmKqt59ITqHZGlUtkyL4JtM1vo28ypmBUssz7LhSrHDr
+         ohGPxkcUcDziTjb5llGP7U/UP0uBNHjmXJSMeloKbkVCj8OdNDa9x7jxhUugJqi+xMh3
+         qE+kJdGuJjyfYQk10LdLf0yYXhrx2Vl5R38CzshG611ol0Q2CNffl9ftDeuIRj1txGpl
+         Od1niqW1icvujCGxGFkGk2R2Az9dBzHAsfIgOrmcWwThPnpV0nUJqzGeoVU2jIJHhru3
+         wWa2oCVZqlrKqWA3OsOInzDHN0tr/yOU2Qj+51Q1OrP2x96GVmHF5vq6r59SAftj6cya
+         4XDw==
+X-Gm-Message-State: AOAM530zoQHoTgCEp0NyYrBMdHYz0QLTMkRaSidrFuAr/SvD54Uv5zQJ
+        7brQJpTG5VXorvW0cOUES6LuBJ1ueg==
+X-Google-Smtp-Source: ABdhPJyFU3OO/ANkI1WfClMonQPuMZQFkzhvvt9yHjYL0J26xn464hZPF3poCvPXO+hMPxbus5uE0g==
+X-Received: by 2002:a92:6a02:: with SMTP id f2mr1110656ilc.68.1594666991695;
+        Mon, 13 Jul 2020 12:03:11 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id a13sm8655575ilk.19.2020.07.13.12.02.11
+        by smtp.gmail.com with ESMTPSA id x12sm1175218iov.43.2020.07.13.12.03.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 12:02:12 -0700 (PDT)
-Received: (nullmailer pid 546299 invoked by uid 1000);
-        Mon, 13 Jul 2020 19:02:11 -0000
-Date:   Mon, 13 Jul 2020 13:02:11 -0600
+        Mon, 13 Jul 2020 12:03:10 -0700 (PDT)
+Received: (nullmailer pid 547640 invoked by uid 1000);
+        Mon, 13 Jul 2020 19:03:10 -0000
+Date:   Mon, 13 Jul 2020 13:03:10 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>,
-        linux-kernel@vger.kernel.org, skrzynka@konradybcio.pl,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Colin Cross <ccross@android.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        devicetree@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3 5/8] mailbox: qcom: Add msm8994 apcs compatible
-Message-ID: <20200713190211.GA546226@bogus>
-References: <20200624150107.76234-1-konradybcio@gmail.com>
- <20200624150107.76234-6-konradybcio@gmail.com>
+To:     Iskren Chernev <iskren.chernev@gmail.com>
+Cc:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Subject: Re: [PATCH v3 2/6] dt-bindings: power: supply: Extend max17040
+ compatibility
+Message-ID: <20200713190310.GA546410@bogus>
+References: <20200624155633.3557401-1-iskren.chernev@gmail.com>
+ <20200624155633.3557401-3-iskren.chernev@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200624150107.76234-6-konradybcio@gmail.com>
+In-Reply-To: <20200624155633.3557401-3-iskren.chernev@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 24 Jun 2020 17:01:03 +0200, Konrad Dybcio wrote:
-> MSM8994 has an APCS block similar to 8916, but
-> with a different clock driver due to the former
-> one having 2 clusters.
+On Wed, Jun 24, 2020 at 06:56:29PM +0300, Iskren Chernev wrote:
+> Maxim max17040 is a fuel gauge from a larger family utilising the Model
+> Gauge technology. Document all different compatible strings that the
+> max17040 driver recognizes.
 > 
-> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+> Some devices in the wild report double the capacity. The
+> maxim,double-soc (from State-Of-Charge) property fixes that.
+> 
+> Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
 > ---
->  .../devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml   | 1 +
->  drivers/mailbox/qcom-apcs-ipc-mailbox.c                      | 5 +++++
->  2 files changed, 6 insertions(+)
+>  .../bindings/power/supply/max17040_battery.txt    | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
 > 
+> diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> index 4e0186b8380fa..554bce82a08e6 100644
+> --- a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> @@ -2,7 +2,9 @@ max17040_battery
+>  ~~~~~~~~~~~~~~~~
+>  
+>  Required properties :
+> - - compatible : "maxim,max17040" or "maxim,max77836-battery"
+> + - compatible : "maxim,max17040", "maxim,max17041", "maxim,max17043",
+> + 		"maxim,max17044", "maxim,max17048", "maxim,max17049",
+> +		"maxim,max17058", "maxim,max17059" or "maxim,max77836-battery"
+>   - reg: i2c slave address
+>  
+>  Optional properties :
+> @@ -11,6 +13,10 @@ Optional properties :
+>  				generated. Can be configured from 1 up to 32
+>  				(%). If skipped the power up default value of
+>  				4 (%) will be used.
+> +- maxim,double-soc : 		Certain devices return double the capacity.
+> +				Specify this boolean property to divide the
+> +				reported value in 2 and thus normalize it.
+> +				SOC == State of Charge == Capacity.
 
-Acked-by: Rob Herring <robh@kernel.org>
+This can't be implied by the compatible string?
+
+>  - interrupts : 			Interrupt line see Documentation/devicetree/
+>  				bindings/interrupt-controller/interrupts.txt
+>  - wakeup-source :		This device has wakeup capabilities. Use this
+> @@ -31,3 +37,10 @@ Example:
+>  		interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+>  		wakeup-source;
+>  	};
+> +
+> +	battery-fuel-gauge@36 {
+> +		compatible = "maxim,max17048";
+> +		reg = <0x36>;
+> +		maxim,alert-low-soc-level = <10>;
+> +		maxim,double-soc;
+> +	};
+> -- 
+> 2.27.0
+> 
