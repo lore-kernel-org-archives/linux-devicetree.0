@@ -2,136 +2,62 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C1DC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 16:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AC9C433E5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 16:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5984220738
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 16:42:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594658541;
-	bh=DTwgxtmu5cArvIbVuTDaWQ3jATFmx/Wxz91NZAUKkV4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Qa41ywf4103USfJLv8rP7i6H2L49Wa/us6IyPylhQMDNiWIORXLCsA0pfXx3fffQw
-	 +DUPTPGia/Ji+sKFD54Y1eXJv52wnCpwPme39ajriqyZpm3/RyD3ys2jPNo4vO8EpC
-	 jw91Bzzsc8W2QAhur/aKXlLpFTK2FkH8hqFEhlx0=
+	by mail.kernel.org (Postfix) with ESMTP id 3D668206F5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 16:45:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730622AbgGMQmS (ORCPT
+        id S1729687AbgGMQps (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 12:42:18 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43471 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729751AbgGMQmR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 12:42:17 -0400
-Received: by mail-io1-f65.google.com with SMTP id k23so14145762iom.10;
-        Mon, 13 Jul 2020 09:42:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=95u4XQbiBNEbmUiVqX+fo8bOSxhI7i+gaxCn3lXTzqc=;
-        b=Ki0uiu2WF5elAO9m6oh5urkF4YdhJXVhuAs6vnZIEkE/bjpVpw/MvddAHdv0GfZbho
-         9OUc6KJUuV5hji8Z66oYdcrgWzaWx1x4g3txsCfqU0tVr1fRc5gRRv3Dy+y3qQ9InpNB
-         uX4tD6CLOgvFFHeBM1Q5Y10ZZV5y7H1XJEmM96mWie9+hTYq57ExRoEr/huMXMLAMqf9
-         JyYrzTD//2sxBrZXI5aSz/qDDFG8zrajvHkGTWSgEX29OGN6dQrtHuFUbLrosPNwZDlw
-         hIk4ybwk99nSh9mafPqHPS7Yk5yIV6ZzuTM8kzs0yrpn7zYX6FsT050Fr7/b3l5dfaTj
-         1dFw==
-X-Gm-Message-State: AOAM533pn5he9VOvmcE/t30BLR2HFmk8vzHgNTV/zCwHWv63MhU4cAEg
-        KzN3BCdp2urAmHTUSsOW3A==
-X-Google-Smtp-Source: ABdhPJw6zyKQhU2fGmPHQI3+yP7QiHYYcgQrgUA4qyagqHgLVfTS4YB+9LdplG/eDrMeToQieLohgw==
-X-Received: by 2002:a02:6c07:: with SMTP id w7mr1034168jab.33.1594658536188;
-        Mon, 13 Jul 2020 09:42:16 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id b13sm7889364iof.21.2020.07.13.09.42.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 09:42:15 -0700 (PDT)
-Received: (nullmailer pid 359058 invoked by uid 1000);
-        Mon, 13 Jul 2020 16:42:14 -0000
-Date:   Mon, 13 Jul 2020 10:42:14 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sumit Gupta <sumitg@nvidia.com>
-Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        catalin.marinas@arm.com, will@kernel.org, thierry.reding@gmail.com,
-        mirq-linux@rere.qmqm.pl, devicetree@vger.kernel.org,
-        jonathanh@nvidia.com, talho@nvidia.com, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, bbasu@nvidia.com,
-        mperttunen@nvidia.com
-Subject: Re: [TEGRA194_CPUFREQ PATCH v5 1/4] dt-bindings: arm: Add t194
- ccplex compatible and bpmp property
-Message-ID: <20200713164214.GA341271@bogus>
-References: <1594649209-29394-1-git-send-email-sumitg@nvidia.com>
- <1594649209-29394-2-git-send-email-sumitg@nvidia.com>
+        Mon, 13 Jul 2020 12:45:48 -0400
+Received: from muru.com ([72.249.23.125]:36662 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729593AbgGMQps (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 12:45:48 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id F23588106;
+        Mon, 13 Jul 2020 16:45:45 +0000 (UTC)
+Date:   Mon, 13 Jul 2020 09:45:45 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     dillon.minfei@gmail.com
+Cc:     bcousson@baylibre.com, robh+dt@kernel.org,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: Configure osc clock for d_can on am437x
+Message-ID: <20200713164545.GL5849@atomide.com>
+References: <1592753641-5205-1-git-send-email-dillon.minfei@gmail.com>
+ <1592753641-5205-2-git-send-email-dillon.minfei@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1594649209-29394-2-git-send-email-sumitg@nvidia.com>
+In-Reply-To: <1592753641-5205-2-git-send-email-dillon.minfei@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 07:36:46PM +0530, Sumit Gupta wrote:
-> To do frequency scaling on all CPUs within T194 CPU Complex, we need
-> to query BPMP for data on valid operating points. Document a compatible
-> string under 'cpus' node to represent the CPU Complex for binding drivers
-> like cpufreq which don't have their node or CPU Complex node to bind to.
-> Also, document a property to point to the BPMP device that can be queried
-> for all CPUs.
-
-The cpus.yaml binding documents what's in 'cpu' nodes, not 'cpus' 
-node. AIUI, the latter is what you want. You should do your own schema 
-file here.
-
+* dillon.minfei@gmail.com <dillon.minfei@gmail.com> [200621 15:36]:
+> From: dillon min <dillon.minfei@gmail.com>
 > 
-> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
-> ---
->  Documentation/devicetree/bindings/arm/cpus.yaml | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+> Since am437x have the same clock structure with am335x [1][2],
+> reuse the code from Tony Lindgren's patch [3] to fix dcan probe
+> failed on am437x platform.
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
-> index a018147..9b328e3 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.yaml
-> +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
-> @@ -162,6 +162,7 @@ properties:
->        - nvidia,tegra132-denver
->        - nvidia,tegra186-denver
->        - nvidia,tegra194-carmel
-> +      - nvidia,tegra194-ccplex
-
-Tegra194 has 2 different CPUs?
-
->        - qcom,krait
->        - qcom,kryo
->        - qcom,kryo260
-> @@ -255,6 +256,15 @@ properties:
->  
->        where voltage is in V, frequency is in MHz.
->  
-> +  nvidia,bpmp:
-> +    $ref: '/schemas/types.yaml#/definitions/phandle'
-> +    description: |
-> +      Specifies the bpmp node that needs to be queried to get
-> +      operating point data for all CPUs.
-> +
-> +      Optional for systems that have a "compatible"
-> +      property value of "nvidia,tegra194-ccplex".
-> +
->    power-domains:
->      $ref: '/schemas/types.yaml#/definitions/phandle-array'
->      description:
-> @@ -340,6 +350,7 @@ required:
->  
->  dependencies:
->    rockchip,pmu: [enable-method]
-> +  nvidia,bpmp: [compatible]
->  
->  examples:
->    - |
-> -- 
-> 2.7.4
+> [1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
+> Integration
+> [2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
+> Integration
+> [3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on
+> am335x")
 > 
+> Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during init to
+> read revision")
+
+Thanks applying into fixes.
+
+Tony
