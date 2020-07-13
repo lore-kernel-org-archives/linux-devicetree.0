@@ -2,217 +2,218 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	TVD_PH_BODY_ACCOUNTS_POST,TVD_PH_BODY_META_ALL,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0178C433F2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 13:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E6AC433E4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 13:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B01CF206F4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 13:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38332206F0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 13:34:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="PrmHEa5F"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="V7s0ufhy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729860AbgGMN3n (ORCPT
+        id S1729904AbgGMNey (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 09:29:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48610 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729854AbgGMN3m (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 09:29:42 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C1E3C061755
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 06:29:42 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id o11so16587052wrv.9
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 06:29:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ku9aM1vtf8T+FGw4lj5ZIPzjxBiChVO0/pPdJg2fBGw=;
-        b=PrmHEa5FPW0LpbYElEyKRcYnhJi5XmlC36lx5TSUk0I4eKD5oBsz61WrgLwaHWBGIX
-         Ut63kpeIUoPgm/Iugy6CdW2TIR25zGavB/guDK5USe1uzqHhQIzZmP4SybSuqPzcYscF
-         EpwVxFYP4NgYDzzlW7/wtUOdb6KvFamYq/rsjAhy7Pv/QfGSzORPzVUZLWXXKh3oBHXM
-         kmLBRJzeMfEs2EaHJlYuyMfD0K6LX8k2KCDF1nSPRFMgYE8kZN4eCxgtwF15LSmpbSGc
-         lpjY8R1Mjpf7JpeZjWoq/AMQ4feht55IcICbLW8Zw9qNxbusSYWa6dd9BuiEWOSp9Q0t
-         n3hA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ku9aM1vtf8T+FGw4lj5ZIPzjxBiChVO0/pPdJg2fBGw=;
-        b=PWoRakyfKV4/5L2gGTSkl208wDlN3bG72sClawkIcI4kQfyOrxCpGZfsz0g7xmUuWi
-         9ey4QRGixxXzLWyxMcMpJWzDkqhqJ4E2iqy7e9vWRjdLWQbyzhJg9N/FZHjTmmy8U4A7
-         vV/ayUVz4SLRjzrL/3VsnK6b9PoYFfya3WUS0QDQLuemvj0COLr4i0kCiAPbBSDVmisb
-         MUraLlDDIT46M9FUCg4ko7k9FMzbttOfbLDv5gtLisvXiDudBWwOg+v6cu4DT+TxrY0P
-         EWkkvQwozPmjpeBRdtz6trnWX1TP8cobY4x2EkRgaQsCagXGfNFIvWe//tTLaIP3x7i7
-         W6Cg==
-X-Gm-Message-State: AOAM533jTp21QWviY14FfFhfcqEESnnK3/ivxgGK2XrCZ1zV7FI7TTag
-        9UbcfIE4XiYwkXWwZzpJOV+59ZYtjZw=
-X-Google-Smtp-Source: ABdhPJw27IwpFadhq+5bRv4bzXdsWZ8YmL639ivQFIAbVn7c+uDln0qheLOT9j1ytM6vhX/7UJNMeg==
-X-Received: by 2002:adf:de12:: with SMTP id b18mr85726204wrm.390.1594646980907;
-        Mon, 13 Jul 2020 06:29:40 -0700 (PDT)
-Received: from linux.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id j14sm23896642wrs.75.2020.07.13.06.29.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 06:29:40 -0700 (PDT)
-From:   Alexandre Bailon <abailon@baylibre.com>
-To:     ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        matthias.bgg@gmail.com
-Cc:     linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Alexandre Bailon <abailon@baylibre.com>
-Subject: [PATCH 1/6] dt bindings: remoteproc: Add bindings for MT8183 APU
-Date:   Mon, 13 Jul 2020 15:29:22 +0200
-Message-Id: <20200713132927.24925-2-abailon@baylibre.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200713132927.24925-1-abailon@baylibre.com>
-References: <20200713132927.24925-1-abailon@baylibre.com>
+        Mon, 13 Jul 2020 09:34:54 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:47326 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729805AbgGMNey (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 09:34:54 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06DDYicE008834;
+        Mon, 13 Jul 2020 08:34:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594647284;
+        bh=luXMMPErLS31mqgSXoK+p/1sP1jJ1sb3mbiOyr1b5Iw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=V7s0ufhyzBePXtngza29y1zjt/bPy+SxICXzO3SIp/JiqaZvESJnK65MR6szglv6x
+         ofpljnczLz7ECHvFNUUOtnGXjVpSVOL6KlP2fZS/2g8bn8c5lHRfEsJwJ2+myQwdnM
+         zi6JTCSw9uP/Le5B0x4KroCCwZSvZnklT/Km4o4A=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06DDYiYm066629
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 13 Jul 2020 08:34:44 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 13
+ Jul 2020 08:34:43 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 13 Jul 2020 08:34:43 -0500
+Received: from [10.250.32.229] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06DDYh1h042399;
+        Mon, 13 Jul 2020 08:34:43 -0500
+Subject: Re: [PATCH v29 03/16] leds: multicolor: Introduce a multicolor class
+ definition
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     <jacek.anaszewski@gmail.com>, <robh@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200622185919.2131-1-dmurphy@ti.com>
+ <20200622185919.2131-4-dmurphy@ti.com> <20200711155734.GA21726@amd>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <ab537d8d-00e3-fcad-d530-264ffeccdf30@ti.com>
+Date:   Mon, 13 Jul 2020 08:34:43 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200711155734.GA21726@amd>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds dt bindings for the APU present in the MT8183.
+Pavel
 
-Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
----
- .../bindings/remoteproc/mtk,apu.yaml          | 121 ++++++++++++++++++
- 1 file changed, 121 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,apu.yaml
+Thanks for the review
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/mtk,apu.yaml b/Documentation/devicetree/bindings/remoteproc/mtk,apu.yaml
-new file mode 100644
-index 000000000000..1d5fcc135617
---- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/mtk,apu.yaml
-@@ -0,0 +1,121 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+
-+---
-+$id: "http://devicetree.org/schemas/remoteproc/mtk,apu.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: MT8183 Vision Processor Unit (VPU) devices
-+
-+description:
-+  This document defines the binding for the APU, a co-processor that could
-+  offload the CPU for machine learning and neural network.
-+
-+maintainers:
-+  - Alexandre Bailon <abailon@bayLibre.com>
-+
-+properties:
-+  compatible:
-+    const: mediatek,mt8183-apu
-+
-+  reg:
-+    description:
-+      Address ranges of the APU MMIO.
-+    maxItems: 1
-+
-+  interrupts:
-+    description:
-+      The interrupt number used to receive the interrupts from the DSP.
-+    maxItems: 1
-+
-+  clocks:
-+    description:
-+      "Clocks for co-processor (See: ../clock/clock-bindings.txt)
-+      Three clocks are expected for AXI, IPU and JTAG.
-+      The JTAG clock seems to be required to run the DSP,
-+      even when JTAG is not in use."
-+    maxItems: 3
-+  clock-names:
-+    description:
-+      The name of clocks, must be ipu, axi and jtag
-+    items:
-+      - const: ipu
-+      - const: axi
-+      - const: jtag
-+
-+  iommu:
-+    description: "IOMMU (See: ../iommu/iommu.txt)"
-+    maxItems: 3
-+
-+  memory-region:
-+    description: "Reserved memory (See: ../reserved-memory/reserved-memory.txt)"
-+    maxItems: 1
-+
-+  power-domains:
-+    description: "Power domain (see: ../power/power_domain.txt)"
-+    maxItems: 1
-+
-+  pinctrl:
-+    description: pinctrl handles, required to configure pins for JTAG.
-+    maxItems: 2
-+
-+  pinctrl-names:
-+    description:
-+      pinctrl name, must be "default", "jtag".
-+      "default" must configure the pins when JTAG is disabled.
-+      "jtag" must configure the pins for JTAG operations.
-+    items:
-+      - const: default
-+      - const: jtag
-+    maxItems: 2
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - iommu
-+  - memory-region
-+  - power-domains
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/mt8183-clk.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/memory/mt8183-larb-port.h>
-+    #include <dt-bindings/power/mt8183-power.h>
-+
-+    reserved-memory {
-+      #address-cells = <1>;
-+      #size-cells = <1>;
-+      ranges;
-+
-+      vpu_ram: vpu_ram@0x60000000 {
-+        compatible = "shared-dma-pool";
-+        reg = <0 0x60000000 0 0x040000000>;
-+        no-map;
-+        linux,cma-default;
-+      };
-+    };
-+
-+    vpu0: vpu@0x19100000 {
-+      compatible = "mediatek,mt8183-apu";
-+      reg = <0 0x19180000 0 0x14000>;
-+      reg-names = "mmio";
-+      interrupts = <GIC_SPI 292 IRQ_TYPE_LEVEL_LOW>;
-+
-+      iommus = <&iommu M4U_PORT_IMG_IPUO>,
-+         <&iommu M4U_PORT_IMG_IPU3O>,
-+         <&iommu M4U_PORT_IMG_IPUI>;
-+
-+      clocks = <&ipu_core0 CLK_IPU_CORE0_AXI>,
-+         <&ipu_core0 CLK_IPU_CORE0_IPU>,
-+         <&ipu_core0 CLK_IPU_CORE0_JTAG>;
-+
-+      clock-names = "axi", "ipu", "jtag";
-+
-+      power-domains = <&scpsys MT8183_POWER_DOMAIN_VPU_CORE0>;
-+      memory-region = <&vpu_ram>;
-+    };
-+...
--- 
-2.26.2
+On 7/11/20 10:57 AM, Pavel Machek wrote:
+> Hi!
+>
+>> Introduce a multicolor class that groups colored LEDs
+>> within a LED node.
+>> +What:		/sys/class/leds/<led>/multi_intensity
+>> +Date:		March 2020
+>> +KernelVersion:	5.8
+>> +Contact:	Dan Murphy <dmurphy@ti.com>
+>> +Description:	read/write
+>> +		Intensity level for the LED color within an array of integers.
+> ? "This file contains array of integers".
+OK
+>
+>> +		The intensities for each color must be entered based on the
+>> +		multi_index array.
+> This does not make sense to me. "Order of components is described by
+> the multi_index array"?
+>
+>> The max_intensity should not exceed
+> "max_intensity" -> "maximum intensity"?
+OK
+>
+>> +		/sys/class/leds/<led>/max_brightness.
+>> +Multicolor Class Brightness Control
+>> +===================================
+>> +The multicolor class framework will calculate each monochrome LEDs intensity.
+> ?
+This is redundant and will be removed.
+>
+>> +static ssize_t multi_intensity_store(struct device *dev,
+>> +				struct device_attribute *intensity_attr,
+>> +				const char *buf, size_t size)
+>> +{
+>> +	struct led_classdev *led_cdev = dev_get_drvdata(dev);
+>> +	struct led_classdev_mc *mcled_cdev = lcdev_to_mccdev(led_cdev);
+>> +	int nrchars, offset = 0;
+>> +	int intensity_value[LED_COLOR_ID_MAX];
+>> +	int i;
+>> +	ssize_t ret;
+>> +
+>> +	mutex_lock(&led_cdev->led_access);
+>> +
+>> +	for (i = 0; i < mcled_cdev->num_colors; i++) {
+>> +		ret = sscanf(buf + offset, "%i%n",
+>> +			     &intensity_value[i], &nrchars);
+>> +		if (ret != 1) {
+>> +			dev_dbg(led_cdev->dev,
+>> +				"Incorrect number of LEDs expected %i values intensity was not applied\n",
+>> +				mcled_cdev->num_colors);
+>> +			ret = -EINVAL;
+>> +			goto err_out;
+>> +		}
+>> +		offset += nrchars;
+>> +	}
+>> +
+>> +	/* account for the space at the end of the buffer */
+>> +	offset++;
+> space? I'd expect \n there. And it would be good to verify it is
+> indeed \n, so that for example "0 0 0b" is not accepted.
+It is a new line the comment is incorrect I can remove the comment or 
+update the comment to account for the new line
+> Please remove the dev_dbg()s that can be triggered by userspace. We
+> don't want users spamming the logs.
+Removed
+>
+>> +static ssize_t multi_intensity_show(struct device *dev,
+>> +			      struct device_attribute *intensity_attr,
+>> +			      char *buf)
+>> +{
+>> +	struct led_classdev *led_cdev = dev_get_drvdata(dev);
+>> +	struct led_classdev_mc *mcled_cdev = lcdev_to_mccdev(led_cdev);
+>> +	int len = 0;
+>> +	int i;
+>> +
+>> +	for (i = 0; i < mcled_cdev->num_colors; i++) {
+>> +		len += sprintf(buf + len, "%d",
+>> +			       mcled_cdev->subled_info[i].intensity);
+>> +		len += sprintf(buf + len, " ");
+> We should not really put " " before newline.
 
+OK I will fix that.
+
+
+>> +static ssize_t multi_index_show(struct device *dev,
+>> +			      struct device_attribute *multi_index_attr,
+>> +			      char *buf)
+>> +{
+>> +	for (i = 0; i < mcled_cdev->num_colors; i++) {
+>> +		index = mcled_cdev->subled_info[i].color_index;
+>> +		len += sprintf(buf + len, "%s", led_colors[index]);
+>> +		len += sprintf(buf + len, " ");
+>> +	}
+> We should not really put " " before newline.
+>
+>> +{
+>> +	struct led_classdev *led_cdev;
+>> +
+>> +	if (!mcled_cdev)
+>> +		return -EINVAL;
+>> +
+>> +	if (!mcled_cdev->num_colors)
+>> +		return -EINVAL;
+> It is plain int, so you may want to check for <= 0? Or maybe make it
+> unsigned?
+
+ok
+
+
+>> +MODULE_LICENSE("GPL v2");
+> If your legal department allows that, GPL v2+ would be preffered
+> (globally).
+
+OK
+
+
+>
+>> +struct mc_subled {
+>> +	int color_index;
+>> +	int brightness;
+>> +	int intensity;
+>> +	int channel;
+>> +};
+>> +
+>> +struct led_classdev_mc {
+>> +	/* led class device */
+>> +	struct led_classdev led_cdev;
+>> +	int num_colors;
+>> +
+>> +	struct mc_subled *subled_info;
+>> +};
+> Would some "unsigned"s make sense here to cut number of corner cases?
+
+I made these unsigned.
+
+Dan
+
+>
+> Best regards,
+> 									Pavel
