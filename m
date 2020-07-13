@@ -2,140 +2,126 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D3F5C433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 09:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A32C433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 09:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 145122075B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 09:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE094207F9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 09:55:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="2BqzUBw7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729562AbgGMJqN (ORCPT
+        id S1729321AbgGMJzU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 05:46:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40556 "EHLO
+        Mon, 13 Jul 2020 05:55:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbgGMJqM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 05:46:12 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EA3AC061755
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 02:46:12 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[127.0.0.1])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <a.fatoum@pengutronix.de>)
-        id 1juv2E-0002EX-BQ; Mon, 13 Jul 2020 11:46:06 +0200
-Subject: Re: [PATCH 3/3] ARM: dts: colibri-imx7: add usb dual-role switch
- capability
-To:     Philippe Schenker <philippe.schenker@toradex.com>,
-        devicetree@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <20200710132423.497230-1-philippe.schenker@toradex.com>
- <20200710132423.497230-3-philippe.schenker@toradex.com>
-From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
-Message-ID: <73240ab0-5069-40c5-4ade-7fcc2207dfaf@pengutronix.de>
-Date:   Mon, 13 Jul 2020 11:46:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        with ESMTP id S1726523AbgGMJzT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 05:55:19 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41E4BC061755
+        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 02:55:19 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id b15so12774272edy.7
+        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 02:55:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EX/IMErDoxcFcjxLjU7HkV8aJIJA8/hNtsxtvwLEDVQ=;
+        b=2BqzUBw7/Z8AjkdfPds8NRm7bDSUM3XsIrf08G4cqiKfWpoCwH1NTL+R5QErw9RMJD
+         ruOOmIvhK2azCGi9uTui4vnRgEUtp0bpkPnHMDU11Vkn3wOmHcqW2EV9SaqkOxHV5Fca
+         NUWASbM2f6hrjIsVsCk2LOEX1AFlHFS0IQAtONNEn4HJRA0HgBsb+AyCyOH7FVVpoy29
+         /h+oPi34xmqCcwXn6mGQunDQDpNDNsV+FVWlBZ8WBwCJ5Bfk0ZwD7tLlXopNogGdJscE
+         x5hhD9Q7+FTkS8/x09olpK0PddGcpPQU8Pxzn8gjOKjZB2ssoHAQq8jHqyOjTj2+8lFz
+         eGmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EX/IMErDoxcFcjxLjU7HkV8aJIJA8/hNtsxtvwLEDVQ=;
+        b=YXj7a8Q8///JKDIOsL9EcREdaapoBAegnCAe7LzwahLRynQxNVZVc/j/e81RIlnSod
+         avQvBy5h5B92eWY5beyvy52TPu3xaSbCMUn3vOKl5WHlu7Hm9mFWhhWsRvG7P4iR75n8
+         44EbcBqC819ww/S72ny2btChOXuo5SOOcVe8Jy7N19Jk6hMBf70CvKpZvBQ2c3pWCi4c
+         qgQBnbTRhlq+Op7FtWAzfwqwXfEAki+cQzar8WAHK21GRAT7kwxAXDgTokme0VzDEOZn
+         nWiS+YDKjIdphLIcOSSF0qmkONDP06g6XhAjzMGp7Nj6Kyx+yZhrY/xWlqseHJfKPHBU
+         /QVg==
+X-Gm-Message-State: AOAM531cYnWMheEO2CCqXTalqhPi4KMebo5+UpBJyPs9U8NX/7LYouju
+        vMABCzAYAwUPIrex0++Sj2s4Gg==
+X-Google-Smtp-Source: ABdhPJxc6tyvTQYd53XE6resgy8+ALS+JG8waXk5fYpksiyCZf1PTru3ENaDbBHsQP/quKbsa2MCMQ==
+X-Received: by 2002:a05:6402:1494:: with SMTP id e20mr77492854edv.2.1594634117908;
+        Mon, 13 Jul 2020 02:55:17 -0700 (PDT)
+Received: from localhost.localdomain (dh207-98-45.xnet.hr. [88.207.98.45])
+        by smtp.googlemail.com with ESMTPSA id w24sm10957046edt.28.2020.07.13.02.55.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 02:55:17 -0700 (PDT)
+From:   Robert Marko <robert.marko@sartura.hr>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Robert Marko <robert.marko@sartura.hr>
+Subject: [PATCH] arm64: dts: ipq6018: Add NAND nodes
+Date:   Mon, 13 Jul 2020 11:55:08 +0200
+Message-Id: <20200713095508.512919-1-robert.marko@sartura.hr>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200710132423.497230-3-philippe.schenker@toradex.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Philippe,
+IPQ6018 uses the same NAND and controller as IPQ8074 which
+is supported by the Qualcomm NANDC driver.
+So lets add the NAND node as well as node for the BAM DMA
+controller that is supported by the BAM DMA driver.
 
-On 7/10/20 3:24 PM, Philippe Schenker wrote:
-> Since the runtime-pm wakeup bug was fixed in
-> drivers/usb/chipidea/core.c usb dual-role host/device switching is
-> working. So make use of it.
-> 
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-> 
-> ---
-> 
->  arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 9 +++++++++
->  arch/arm/boot/dts/imx7-colibri.dtsi         | 4 ++--
->  2 files changed, 11 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-> index 97601375f264..db56a532a34a 100644
-> --- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-> +++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-> @@ -20,6 +20,14 @@ clk16m: clk16m {
->  		clock-frequency = <16000000>;
->  	};
->  
-> +	extcon_usbc_det: usbc_det {
-> +		compatible = "linux,extcon-usb-gpio";
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+---
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-According to 4602f3bff266 ("usb: common: add USB GPIO based connection detection driver"):
-"the old way using extcon to support USB Dual-Role switch is now deprecated
- when use Type-B connector."
-
-Have you considered using a compatible = "gpio-usb-b-connector" child node instead?
-
-Cheers,
-Ahmad
-
-> +		id-gpio = <&gpio7 14 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_usbc_det>;
-> +	};
-> +
-> +
->  	gpio-keys {
->  		compatible = "gpio-keys";
->  		pinctrl-names = "default";
-> @@ -174,6 +182,7 @@ &uart3 {
->  };
->  
->  &usbotg1 {
-> +	extcon = <0>, <&extcon_usbc_det>;
->  	status = "okay";
->  };
->  
-> diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
-> index e18e89dec879..caea90d2421f 100644
-> --- a/arch/arm/boot/dts/imx7-colibri.dtsi
-> +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-> @@ -457,7 +457,7 @@ &uart3 {
->  };
->  
->  &usbotg1 {
-> -	dr_mode = "host";
-> +	dr_mode = "otg";
->  };
->  
->  &usdhc1 {
-> @@ -486,7 +486,7 @@ &usdhc3 {
->  &iomuxc {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_gpio1 &pinctrl_gpio2 &pinctrl_gpio3 &pinctrl_gpio4
-> -		     &pinctrl_gpio7 &pinctrl_usbc_det>;
-> +		     &pinctrl_gpio7>;
->  
->  	pinctrl_gpio1: gpio1-grp {
->  		fsl,pins = <
-> 
-
+diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+index 1aa8d8579463..bd4a1317c4c6 100644
+--- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+@@ -274,6 +274,33 @@ i2c_1: i2c@78b7000 { /* BLSP1 QUP2 */
+ 			status = "disabled";
+ 		};
+ 
++		qpic_bam: dma@7984000{
++			compatible = "qcom,bam-v1.7.0";
++			reg = <0x7984000 0x1a000>;
++			interrupts = <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_QPIC_AHB_CLK>;
++			clock-names = "bam_clk";
++			#dma-cells = <1>;
++			qcom,ee = <0>;
++			status = "disabled";
++		};
++
++		nand: qpic-nand@79b0000 {
++			compatible = "qcom,ipq8074-nand";
++			reg = <0x79b0000 0x10000>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			clocks = <&gcc GCC_QPIC_CLK>,
++					 <&gcc GCC_QPIC_AHB_CLK>;
++			clock-names = "core", "aon";
++
++			dmas = <&qpic_bam 0>,
++			       <&qpic_bam 1>,
++			       <&qpic_bam 2>;
++			dma-names = "tx", "rx", "cmd";
++			status = "disabled";
++		};
++
+ 		intc: interrupt-controller@b000000 {
+ 			compatible = "qcom,msm-qgic2";
+ 			interrupt-controller;
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.26.2
+
