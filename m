@@ -2,72 +2,71 @@ Return-Path: <SRS0=NyTY=AY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B81C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 13:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2631FC433E5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11F6520720
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 13:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0BED20738
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jul 2020 14:00:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r9WeZB1Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HA4wkhgN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729756AbgGMNzS (ORCPT
+        id S1729736AbgGMOAD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 09:55:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52572 "EHLO
+        Mon, 13 Jul 2020 10:00:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729457AbgGMNzS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 09:55:18 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12961C061755;
-        Mon, 13 Jul 2020 06:55:18 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id o2so13261574wmh.2;
-        Mon, 13 Jul 2020 06:55:18 -0700 (PDT)
+        with ESMTP id S1729457AbgGMOAD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 10:00:03 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA4EFC061755;
+        Mon, 13 Jul 2020 07:00:02 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f139so13275868wmf.5;
+        Mon, 13 Jul 2020 07:00:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:subject:from:in-reply-to:date:cc
          :content-transfer-encoding:message-id:references:to;
-        bh=U7jqdMnaVzHEYQshn5rJZjg9Ynx27NjLKs/T+a+iupw=;
-        b=r9WeZB1Qmj11p9CLtA5BoPQItFRXCrbejIvSEZT69PxifX+cH3u3dbtgdXJ6Ida1wP
-         BrwT4kg4xRHyzaJCji3Tjw988XCa5rDyWPCNmgJXPN2/OfGKMoxQKZ43iOlKzcRDMOAA
-         KG3Pz+0bZodRWXwj0Y3BFk7xVtcupmIed58LuoTi3SET/muRQks9D85uIs6sBy71PY8F
-         UFTC7HhLPifcpQ7HLfikCY08T+fMpdvsufurQOJzJw4B4Y89SNZ9zcd+BjxzRez7v4VP
-         z0+jEvAEcTysO3uN98q2MN1A2T8noD+6iQwhlVGxasbT2IOtYVGXUhltCHxDDmccAdIU
-         4PNg==
+        bh=wjhfJUEnIOJMs1D/Wjs143z8mAIgzS/z/FK2CaV1eX0=;
+        b=HA4wkhgNspd1MRTL1HEnVyFQyqLj45CLEKt5oqiJ/tW9dlBtNwGCIsDqSXNPCA9l76
+         NWINWp0oEU4orwIfXkYooAGG80MAioID/w2Sx0Gb9PTa8q6cervqHJ4caYemymFrt0hb
+         jz9Ew3zPEjgygomAwMRqM2+b1gQncamcVMlYm5Qht/Q2z0PMiUecOlH6O2OFIqfhB/4I
+         Y2WhMKHZuz5cmA64DhTT7u3r/l9C2w2gxe7aqk32uc//WDxTmZuW8ihIALfVZ4+9MXOu
+         Y9niK3bFaRfCJ6JfI3yCn8HbV352ivePp1pky7KO1F0lUt7eIzir+Uutw7lhSKGMsYxW
+         y+iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
          :content-transfer-encoding:message-id:references:to;
-        bh=U7jqdMnaVzHEYQshn5rJZjg9Ynx27NjLKs/T+a+iupw=;
-        b=AheAPuyLynBMM4DAm5aiM9I8GUUYED1E5YuS2JG7Mhmkblv7kt57J/1gfUMbk8WoWc
-         mGUfGDW9u8DKz/vda4oF13kWuFAMA1kvo70hjviCuuP6wwmaEg2ISbMQZvynmwdrIDu2
-         mcVZZs2cjYnN0+Rw6tfCqDpTzFDg23qG3GYgCerb34/Ja6YuOVm0OSuXDZQsl2oKmtk2
-         /ojNkSJf6gzQt5OlE/qcphPBpwfPZzlN7Icb2GX1CvpzpdLWl+/MTDTop1Z5pjMy8Jhn
-         qqrA3uZX17qHML9imhxaPWfjU1S9C3XsxeHdHwr1e5jz8nCqC0vzVXPyN7HMqGII2s3O
-         1c9Q==
-X-Gm-Message-State: AOAM532cW4XQwN5cH7usVqi88aNNnKpQRw9RlR6qRtCbw0WcH45ogmYs
-        nVrYUGBjXcbNrRkDy3ZvB0U=
-X-Google-Smtp-Source: ABdhPJz5kItPUp91CVhASrhacYzVQs0uTvWuaT2HuIEENWQw8gobzKMHoV7I+Exigfis7+aZcvp5qw==
-X-Received: by 2002:a1c:59c2:: with SMTP id n185mr115551wmb.104.1594648516691;
-        Mon, 13 Jul 2020 06:55:16 -0700 (PDT)
+        bh=wjhfJUEnIOJMs1D/Wjs143z8mAIgzS/z/FK2CaV1eX0=;
+        b=rEh5N7aucI4goIODwap//DscY0RKvAQn2Zm1DkNQBoeAAyuebDG9WvEjyAKSFmtrHV
+         0sMNdwmsl4wepq5w5rYDxu5Viy4+7T5JMXH3CB7NwrtjWFm73YL/a6icgdq95O262EVN
+         Z6g/evKB3ldoA8cmhbFb6je03sc2cr8PtKXI80iiDxttTedNiTaCBl6WW+6bHhEND60z
+         lSo0dUgLhDoDAhUziEZT/doTPndp0pYRgGC+vsPFFd59sHfmeRQiXhKKchA7KcBFFWst
+         wTBTQi+jA7X6A/3DVYO73ZFamlb2Db1JEu+hKPf7U6qAE7R2SCNC9QclE/KhkhEqNrdu
+         cGdg==
+X-Gm-Message-State: AOAM530nXN1h9pyYpQOhr8P7UuJ0iT7a/R0cZ/7sZtLrV4nRXq+1jNyC
+        J4Sbb/wpsAxgqU8BmjmnQwVCLB5r5Go=
+X-Google-Smtp-Source: ABdhPJzJEC+DU5LtH5NtBRUAwyw08m5QjPSgF1XoxUkfKfm6TizJLBXY61An7u3SLpxTHUdkmpv1Ow==
+X-Received: by 2002:a1c:4b09:: with SMTP id y9mr138750wma.46.1594648801118;
+        Mon, 13 Jul 2020 07:00:01 -0700 (PDT)
 Received: from macbook-pro-alvaro-eth.lan (134.red-88-1-104.dynamicip.rima-tde.net. [88.1.104.134])
-        by smtp.gmail.com with ESMTPSA id h199sm17345031wme.42.2020.07.13.06.55.11
+        by smtp.gmail.com with ESMTPSA id k4sm2242253wrp.86.2020.07.13.06.59.59
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 Jul 2020 06:55:14 -0700 (PDT)
+        Mon, 13 Jul 2020 07:00:00 -0700 (PDT)
 Content-Type: text/plain;
         charset=utf-8
 Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH v5 1/2] dt-bindings: phy: add bcm63xx-usbh bindings
+Subject: Re: [PATCH v5 2/2] phy: bcm63xx-usbh: Add BCM63xx USBH driver
 From:   =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
-In-Reply-To: <20200709221105.GA976808@bogus>
-Date:   Mon, 13 Jul 2020 15:55:11 +0200
+In-Reply-To: <20200713055122.GA34333@vkoul-mobl>
+Date:   Mon, 13 Jul 2020 15:59:59 +0200
 Cc:     simon@fire.lp0.eu, Jonas Gorski <jonas.gorski@gmail.com>,
-        kishon@ti.com, vkoul@kernel.org,
+        kishon@ti.com, robh+dt@kernel.org,
         Florian Fainelli <f.fainelli@gmail.com>,
         bcm-kernel-feedback-list@broadcom.com,
         Philipp Zabel <p.zabel@pengutronix.de>, krzk@kernel.org,
@@ -75,157 +74,132 @@ Cc:     simon@fire.lp0.eu, Jonas Gorski <jonas.gorski@gmail.com>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <273F7F58-2416-4106-9622-4351711A26B2@gmail.com>
+Message-Id: <A0B096B5-A130-44AA-8CC3-6AD136B5107F@gmail.com>
 References: <20200619100035.4032596-1-noltari@gmail.com>
- <20200619100035.4032596-2-noltari@gmail.com> <20200709221105.GA976808@bogus>
-To:     Rob Herring <robh@kernel.org>
+ <20200619100035.4032596-3-noltari@gmail.com>
+ <20200713055122.GA34333@vkoul-mobl>
+To:     Vinod Koul <vkoul@kernel.org>
 X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Vinod,
 
-If adding "additionalProperties: false=E2=80=9D throws the following =
-error, which I don=E2=80=99t understand:
-=
-/home/noltari/workspace/linux/Documentation/devicetree/bindings/phy/brcm,b=
-cm63xx-usbh-phy.example.dt.yaml: usb-phy@10001700: 'clock-names', =
-'clocks' do not match any of the regexes: 'pinctrl-[0-9]+=E2=80=99
-
-BTW, is this what you mean? (I added another if section for the cases =
-with just 1 clock):
-https://gist.github.com/Noltari/9bd94a30e8bcc857d6af87985d7ca010
-
-Best regards,
-=C3=81lvaro.
-
-> El 10 jul 2020, a las 0:11, Rob Herring <robh@kernel.org> escribi=C3=B3:=
+> El 13 jul 2020, a las 7:51, Vinod Koul <vkoul@kernel.org> escribi=C3=B3:=
 
 >=20
-> On Fri, Jun 19, 2020 at 12:00:34PM +0200, =C3=81lvaro Fern=C3=A1ndez =
-Rojas wrote:
->> Document BCM63xx USBH PHY bindings.
+> On 19-06-20, 12:00, =C3=81lvaro Fern=C3=A1ndez Rojas wrote:
+>> Add BCM63xx USBH PHY driver for BMIPS.
 >>=20
 >> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
->> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 >> ---
->> v5: no changes.
->> v4: conditionally require 1/2 clocks and fix clock/reset values.
->> v3: no changes.
->> v2: phy-cells changed to 1.
+>> v5: use devm_reset_control_get_exclusive.
+>> v4: several improvements:
+>>  - Use devm_platform_ioremap_resource.
+>>  - Code cleanups.
+>>  - Improve device mode config:
+>>    - Move USBH_SWAP_CONTROL device mode value to variant variable.
+>>    - Set USBH_UTMI_CONTROL1 register value (variant variable).
+>> v3: introduce changes suggested by Florian:
+>>  - Add support for device mode.
+>> v2: introduce changes suggested by Florian:
+>>  - Drop OF dependency (use device_get_match_data).
+>>  - Drop __initconst from variant tables.
+>>  - Use devm_clk_get_optional.
 >>=20
->> .../bindings/phy/brcm,bcm63xx-usbh-phy.yaml   | 84 =
-+++++++++++++++++++
->> 1 file changed, 84 insertions(+)
->> create mode 100644 =
-Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml
+>> drivers/phy/broadcom/Kconfig            |   9 +
+>> drivers/phy/broadcom/Makefile           |   1 +
+>> drivers/phy/broadcom/phy-bcm63xx-usbh.c | 457 =
+++++++++++++++++++++++++
+>> 3 files changed, 467 insertions(+)
+>> create mode 100644 drivers/phy/broadcom/phy-bcm63xx-usbh.c
 >>=20
->> diff --git =
-a/Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml =
-b/Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml
->> new file mode 100644
->> index 000000000000..f267da6193a9
->> --- /dev/null
->> +++ =
-b/Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml
->> @@ -0,0 +1,84 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/phy/brcm,bcm63xx-usbh-phy.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: BCM63xx USBH PHY
->> +
->> +maintainers:
->> +  - =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - brcm,bcm6318-usbh-phy
->> +      - brcm,bcm6328-usbh-phy
->> +      - brcm,bcm6358-usbh-phy
->> +      - brcm,bcm6362-usbh-phy
->> +      - brcm,bcm6368-usbh-phy
->> +      - brcm,bcm63268-usbh-phy
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  clock-names:
->> +    const: usbh
->> +
->> +  resets:
->> +    maxItems: 1
->> +
->> +  "#phy-cells":
->> +    const: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - clock-names
->> +  - resets
->> +  - "#phy-cells"
+>> diff --git a/drivers/phy/broadcom/Kconfig =
+b/drivers/phy/broadcom/Kconfig
+>> index b29f11c19155..a7889df8c541 100644
+>> --- a/drivers/phy/broadcom/Kconfig
+>> +++ b/drivers/phy/broadcom/Kconfig
+>> @@ -2,6 +2,15 @@
+>> #
+>> # Phy drivers for Broadcom platforms
+>> #
+>> +config PHY_BCM63XX_USBH
+>> +	tristate "BCM63xx USBH PHY driver"
+>> +	depends on BMIPS_GENERIC || COMPILE_TEST
+>> +	select GENERIC_PHY
+>> +	default BMIPS_GENERIC
 >=20
-> You need:
->=20
-> additionalProperties: false
->=20
->> +
->> +allOf:
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          enum:
->> +            - brcm,bcm6318-usbh-phy
->> +            - brcm,bcm63268-usbh-phy
->> +    then:
->> +      properties:
->> +        clocks:
->> +          maxItems: 2
->=20
-> This doesn't work. The main schema will also be applied and it says=20
-> there's 1. The main schema has to cover all the cases and then if/then=20=
+> you depend on BMIPS_GENERIC and also use as default?
 
-> schemas add constraints.
+PHY_CYGNUS_PCIE, PHY_BCM_SR_USB, PHY_NS2_USB_DRD, PHY_BRCM_USB and =
+PHY_BCM_SR_PCIE are doing that, so I just copied it =C2=AF\_(=E3=83=84)_/=C2=
+=AF.
+I will remove the default since there are other SoCs in BMIPS_GENERIC =
+that won=E2=80=99t need this.
+
 >=20
->> +        clock-names:
->> +          items:
->> +            - const: usbh
->> +            - const: usb_ref
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          enum:
->> +            - brcm,bcm6318-usbh-phy
->> +            - brcm,bcm6328-usbh-phy
->> +            - brcm,bcm6362-usbh-phy
->> +            - brcm,bcm63268-usbh-phy
->> +    then:
->> +      properties:
->> +        power-domains:
->> +          maxItems: 1
->> +      required:
->> +        - power-domains
+>> +static int __init bcm63xx_usbh_phy_probe(struct platform_device =
+*pdev)
+>> +{
+>> +	struct device *dev =3D &pdev->dev;
+>> +	struct bcm63xx_usbh_phy	*usbh;
+>> +	const struct bcm63xx_usbh_phy_variant *variant;
+>> +	struct phy *phy;
+>> +	struct phy_provider *phy_provider;
 >> +
->> +examples:
->> +  - |
->> +    usbh: usb-phy@10001700 {
->> +      compatible =3D "brcm,bcm6368-usbh-phy";
->> +      reg =3D <0x10001700 0x38>;
->> +      clocks =3D <&periph_clk 15>;
->> +      clock-names =3D "usbh";
->> +      resets =3D <&periph_rst 12>;
->> +      #phy-cells =3D <1>;
->> +    };
->> --=20
->> 2.27.0
+>> +	usbh =3D devm_kzalloc(dev, sizeof(*usbh), GFP_KERNEL);
+>> +	if (!usbh)
+>> +		return -ENOMEM;
+>> +
+>> +	variant =3D device_get_match_data(dev);
+>> +	if (!variant)
+>> +		return -EINVAL;
+>> +	usbh->variant =3D variant;
+>> +
+>> +	usbh->base =3D devm_platform_ioremap_resource(pdev, 0);
+>> +	if (IS_ERR(usbh->base))
+>> +		return PTR_ERR(usbh->base);
+>> +
+>> +	usbh->reset =3D devm_reset_control_get_exclusive(dev, NULL);
+>> +	if (IS_ERR(usbh->reset)) {
+>> +		if (PTR_ERR(usbh->reset) !=3D -EPROBE_DEFER)
+>> +			dev_err(dev, "failed to get reset\n");
+>> +		return PTR_ERR(usbh->reset);
+>> +	}
+>> +
+>> +	usbh->usbh_clk =3D devm_clk_get_optional(dev, "usbh");
+>> +	if (IS_ERR(usbh->usbh_clk))
+>> +		return PTR_ERR(usbh->usbh_clk);
+>> +
+>> +	usbh->usb_ref_clk =3D devm_clk_get_optional(dev, "usb_ref");
+>> +	if (IS_ERR(usbh->usb_ref_clk))
+>> +		return PTR_ERR(usbh->usb_ref_clk);
+>> +
+>> +	phy =3D devm_phy_create(dev, NULL, &bcm63xx_usbh_phy_ops);
+>> +	if (IS_ERR(phy)) {
+>> +		dev_err(dev, "failed to create PHY\n");
+>> +		return PTR_ERR(phy);
+>> +	}
+>> +
+>> +	platform_set_drvdata(pdev, usbh);
+>> +	phy_set_drvdata(phy, usbh);
+>> +
+>> +	phy_provider =3D devm_of_phy_provider_register(dev,
+>> +						     =
+bcm63xx_usbh_phy_xlate);
+>> +	if (IS_ERR(phy_provider)) {
+>> +		dev_err(dev, "failed to register PHY provider\n");
+>> +		return PTR_ERR(phy_provider);
+>> +	}
+>> +
+>> +	dev_info(dev, "Registered BCM63xx USB PHY driver\n");
+>=20
+> debug level?
+
+Yeah, I will change it.
+
+> --=20
+> ~Vinod
 
