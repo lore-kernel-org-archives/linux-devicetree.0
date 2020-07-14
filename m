@@ -2,111 +2,115 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D51D6C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 18:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 077D1C433F4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 19:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABC5B225AA
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 18:41:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VejG7ns5"
+	by mail.kernel.org (Postfix) with ESMTP id DDB472240B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 19:04:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728370AbgGNSl7 (ORCPT
+        id S1729728AbgGNTEm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:41:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbgGNSl6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 14:41:58 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79C36C061755;
-        Tue, 14 Jul 2020 11:41:58 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id w6so23750492ejq.6;
-        Tue, 14 Jul 2020 11:41:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=f70f6IrV0YxEjaCs9DxeSPhQuDdLaxIEZSEaWG88uXA=;
-        b=VejG7ns58/o56wE4RNCvWeVgjvU+LlSoJSfL5d4/jVqlOeuw9g5CUYQ50YHQsdFubO
-         Ha/tpOyW5b8T/y1/g5j25Dy7Stl9LZry22xtj/m8/nOqMpc/fCk+1qjE7uVogVEwusDR
-         MdrLTadVg8Tfor2CQMkYUPeF6CotVCOZnYDiYMxzpT5+FiGYsggCeOtJWuy50S8NnYeA
-         RfW/LG7XaOHQ6LRT9d3xfBPJ70NeCSRtCGUFyCRQ9exbhAh59Bl0S0Hb7uNNsmQ8hc2i
-         nO9UZMEvYBuewr/CkpT34nSSSPnXFAlfdo1tQfc/nxdNZYwWTNErlafBOzZK4GRqr5ub
-         BHKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=f70f6IrV0YxEjaCs9DxeSPhQuDdLaxIEZSEaWG88uXA=;
-        b=NdB5YC4AY95LbZuW9bpDGpMjoxM5pHrIN8NTn90ViQ7r7BvEfm9JN3xhAtKHy7+XDu
-         SaPrz4LkTFromgwx6pzHAGYBt//MAbYz5Di/o4U5c981suBpHPLKJHO0EIOkxdsNH4c1
-         ynhCKoh8aMyk+ryqmLooxIpmKar4ZBaW7p3GFdBL5KioVcpizGWaSdCqqLjDKzaEo8Pa
-         miwx+Pd2mkRAJ3fHoc4vEn+164mkwnouce/kSlSYK+/QP7tTRaPFYsIFWmPxssqOvEwN
-         xpWAJdM9d9jscRiruxS1UDg0F/jWUxTUD9GrGWzjnxYBlGNvwlEK+SkbKUgsYGo3vOoo
-         XAvg==
-X-Gm-Message-State: AOAM5327QPEPL19XZofxEEeU+Ly4qLvdk9ovQ2ltRYyOHUJmpBtJhDma
-        TfNi4TpFtn7O4YAKm4quYuqBIr21yPXJOjnrx8E=
-X-Google-Smtp-Source: ABdhPJx7APKDvb5pLdspcKbtqQHuogOBvlhkuNQrvEweAhJTwvPQg/Zo30df4jeOKEXwcHuWI25swo7X80ueqGE9D3w=
-X-Received: by 2002:a17:906:4d4c:: with SMTP id b12mr5749555ejv.506.1594752117201;
- Tue, 14 Jul 2020 11:41:57 -0700 (PDT)
+        Tue, 14 Jul 2020 15:04:42 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:34614 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730335AbgGNTEm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jul 2020 15:04:42 -0400
+Received: from x2f7fa33.dyn.telefonica.de ([2.247.250.51] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jvQEI-0000LX-HB; Tue, 14 Jul 2020 21:04:38 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Suniel Mahesh <sunil@amarulasolutions.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-amarula <linux-amarula@amarulasolutions.com>
+Subject: Re: [PATCH v5 1/4] arm64: dts: rockchip: Trivial cleanups for RockPI N10
+Date:   Tue, 14 Jul 2020 21:04:37 +0200
+Message-ID: <21801049.BKhHgEE1TG@phil>
+In-Reply-To: <20200709100756.42384-2-jagan@amarulasolutions.com>
+References: <20200709100756.42384-1-jagan@amarulasolutions.com> <20200709100756.42384-2-jagan@amarulasolutions.com>
 MIME-Version: 1.0
-References: <1594733130-398-1-git-send-email-akhilpo@codeaurora.org> <20200714171036.GS3191083@google.com>
-In-Reply-To: <20200714171036.GS3191083@google.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 14 Jul 2020 11:42:28 -0700
-Message-ID: <CAF6AEGsvbnWiFXQUFR+k-CLJ2CsCEoiVVE8pGVq0X0=VHE3hHA@mail.gmail.com>
-Subject: Re: [PATCH] drm: msm: a6xx: fix gpu failure after system resume
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Akhil P Oommen <akhilpo@codeaurora.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Jonathan <jonathan@marek.ca>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 10:10 AM Matthias Kaehlcke <mka@chromium.org> wrote:
->
-> On Tue, Jul 14, 2020 at 06:55:30PM +0530, Akhil P Oommen wrote:
-> > On targets where GMU is available, GMU takes over the ownership of GX GDSC
-> > during its initialization. So, take a refcount on the GX PD on behalf of
-> > GMU before we initialize it. This makes sure that nobody can collapse the
-> > GX GDSC once GMU owns the GX GDSC. This patch fixes some weird failures
-> > during GPU wake up during system resume.
-> >
-> > Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
->
-> I went through a few dozen suspend/resume cycles on SC7180 and didn't run
-> into the kernel panic that typically occurs after a few iterations without
-> this patch.
->
-> Reported-by: Matthias Kaehlcke <mka@chromium.org>
-> Tested-by: Matthias Kaehlcke <mka@chromium.org>
->
-> On which tree is this patch based on? I had to apply it manually because
-> 'git am' is unhappy when I try to apply it:
->
->   error: sha1 information is lacking or useless (drivers/gpu/drm/msm/adreno/a6xx_gmu.c).
->   error: could not build fake ancestor
->
-> Both upstream and drm-msm are in my remotes and synced, so I suspect it's
-> some private tree. Please make sure to base patches on the corresponding
-> maintainer tree or upstream, whichs makes life easier for maintainers,
-> testers and reviewers.
+Am Donnerstag, 9. Juli 2020, 12:07:53 CEST schrieb Jagan Teki:
+> Radxa dalang carrier boards are used to mount vmarc SoM's
+> of rk3399pro and rk3288 to make complete SBC.
+> 
+> So, this patch adds trivial changes to properties.
+> - move common properties into radxa dalang carrier dtsi.
+> - maintain ascending order for nodes, properties.
+> - change the order of dtsi include so-that common properties
+>   will reflect in main dts.
+> - drop unnecessary header includes.
 
-I've run into the same issue frequently :-(
+can you please split this patch into bits at these marks?
+(1) moving common
+(2) sorting
+...
 
-BR,
--R
+It's hard to follow and especially verify.
+
+
+
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
+> index 0a516334f15f..9ed5b27d715c 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
+> @@ -7,35 +7,12 @@
+>  
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/pinctrl/rockchip.h>
+> -#include <dt-bindings/pwm/pwm.h>
+>  
+>  / {
+>  	compatible = "vamrs,rk3399pro-vmarc-som", "rockchip,rk3399pro";
+>  
+> -	clkin_gmac: external-gmac-clock {
+> -		compatible = "fixed-clock";
+> -		clock-frequency = <125000000>;
+> -		clock-output-names = "clkin_gmac";
+> -		#clock-cells = <0>;
+> -	};
+> -
+> -	vcc12v_dcin: vcc12v-dcin-regulator {
+> -		compatible = "regulator-fixed";
+> -		regulator-name = "vcc12v_dcin";
+> -		regulator-always-on;
+> -		regulator-boot-on;
+> -		regulator-min-microvolt = <12000000>;
+> -		regulator-max-microvolt = <12000000>;
+> -	};
+> -
+> -	vcc5v0_sys: vcc5v0-sys-regulator {
+> -		compatible = "regulator-fixed";
+> -		regulator-name = "vcc5v0_sys";
+> -		regulator-always-on;
+> -		regulator-boot-on;
+> -		regulator-min-microvolt = <5000000>;
+> -		regulator-max-microvolt = <5000000>;
+> -		vin-supply = <&vcc12v_dcin>;
+> +	chosen {
+> +		stdout-path = "serial2:1500000n8";
+
+isn't chosen more a property of the individual board combination?
+So to me this should live in the  rk3399pro-rock-pi-n10.dts .
+As other board even using the rk3399pro variant may want to use
+a different uart for serial output.
+
+Heiko
+
+
