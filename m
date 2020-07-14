@@ -2,146 +2,208 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B676FC433E4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 15:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDD1C433E7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 15:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91A542245A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 15:04:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594739065;
-	bh=FYCfNCt5uaRkVo5QbOItUGbXRJQEdHEvBhLF5JIiyX4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZvYwhLbmnKCfdyL875DMhXVAJdH6IATWM+b9goVCAeJQMZM9tXnYwKCl9mO0wNXDs
-	 op45Q07xmgSnlpygzlCo/cZuwIzwS/yvrtEZCMR3aetwMSOtt3WEzwJjpF/yGLgfDT
-	 QEUDdXuuoRCtZEb+wJZ32xpPKVLXL+ytD/H+ws80=
+	by mail.kernel.org (Postfix) with ESMTP id D436220B80
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 15:05:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbgGNPEZ (ORCPT
+        id S1728723AbgGNPFb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 11:04:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbgGNPEY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 11:04:24 -0400
-Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D08B722473;
-        Tue, 14 Jul 2020 15:04:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594739063;
-        bh=FYCfNCt5uaRkVo5QbOItUGbXRJQEdHEvBhLF5JIiyX4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vKFLh7a7V8L2G7kls9Fkf68/5iKD9IjMArDhOL2udS1vFjV919bMfuiBuhR99/c+W
-         rerP0+vnmTb+9qhqC1iLUMLrbIAcFu9MeN397oe931Pu5+VDjm0IA5F6kkhvu+RvWq
-         GdsMz58j+EV54H9qXsHHRTVWGwH3hJ4tw+UP7fjM=
-Received: by mail-oo1-f42.google.com with SMTP id p26so3398024oos.7;
-        Tue, 14 Jul 2020 08:04:23 -0700 (PDT)
-X-Gm-Message-State: AOAM533M4YaWXafcSvsO9uzZuhhbcBKXiw8tRCbpmGOoxLaodDMO6XaK
-        QOCxIcFhfxvSv/EE9g1OxEFldWI+BJrJaFGbvw==
-X-Google-Smtp-Source: ABdhPJwsDP9x0kim57Rk9m1PvNioEMAED/geuEjKV85XSOp5N+kWkC9OHZn74arPvotNxGhaS6KiH03426VYKBf/v/I=
-X-Received: by 2002:a4a:ae07:: with SMTP id z7mr1744282oom.25.1594739063197;
- Tue, 14 Jul 2020 08:04:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200627161957.134376-1-anup.patel@wdc.com> <20200627161957.134376-6-anup.patel@wdc.com>
- <20200714023748.GA1164267@bogus> <CAAhSdy0O0YoDJ84NX8OasjuTdE8pd=Yk51WJWLpBiAEk3AcCQQ@mail.gmail.com>
-In-Reply-To: <CAAhSdy0O0YoDJ84NX8OasjuTdE8pd=Yk51WJWLpBiAEk3AcCQQ@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 14 Jul 2020 09:04:12 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL9xcnzNAtL5nM3tt21pbfwz8qB_BSwfFAtXe0mj=MVEA@mail.gmail.com>
-Message-ID: <CAL_JsqL9xcnzNAtL5nM3tt21pbfwz8qB_BSwfFAtXe0mj=MVEA@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] dt-bindings: timer: Add CLINT bindings
-To:     Anup Patel <anup@brainfault.org>
-Cc:     Anup Patel <anup.patel@wdc.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Palmer Dabbelt <palmerdabbelt@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 14 Jul 2020 11:05:31 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:27935 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726187AbgGNPFa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jul 2020 11:05:30 -0400
+Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 14 Jul 2020 08:05:29 -0700
+Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
+  by ironmsg04-sd.qualcomm.com with ESMTP; 14 Jul 2020 08:05:25 -0700
+Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
+        id DD5F521723; Tue, 14 Jul 2020 20:35:23 +0530 (IST)
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, p.zabel@pengutronix.de,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Subject: [PATCH 1/4] clk: qcom: ipq8074: remove gcc reset bindings
+Date:   Tue, 14 Jul 2020 20:35:19 +0530
+Message-Id: <1594739122-29327-2-git-send-email-sivaprak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1594739122-29327-1-git-send-email-sivaprak@codeaurora.org>
+References: <1594739122-29327-1-git-send-email-sivaprak@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 9:47 PM Anup Patel <anup@brainfault.org> wrote:
->
-> On Tue, Jul 14, 2020 at 8:07 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Sat, Jun 27, 2020 at 09:49:57PM +0530, Anup Patel wrote:
-> > > We add DT bindings documentation for CLINT device.
-> > >
-> > > Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> > > Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
-> > > ---
-> > >  .../bindings/timer/sifive,clint.txt           | 34 +++++++++++++++++++
-> > >  1 file changed, 34 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.txt
-> >
-> > Bindings should be in DT schema format now.
->
-> Okay, will update.
->
-> >
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/timer/sifive,clint.txt b/Documentation/devicetree/bindings/timer/sifive,clint.txt
-> > > new file mode 100644
-> > > index 000000000000..45b75347a7d5
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/timer/sifive,clint.txt
-> > > @@ -0,0 +1,34 @@
-> > > +SiFive Core Local Interruptor (CLINT)
-> > > +-------------------------------------
-> > > +
-> > > +SiFive (and other RISC-V) SOCs include an implementation of the SiFive Core
-> > > +Local Interruptor (CLINT) for M-mode timer and inter-processor interrupts.
-> > > +
-> > > +It directly connects to the timer and inter-processor interrupt lines of
-> > > +various HARTs (or CPUs) so RISC-V per-HART (or per-CPU) local interrupt
-> > > +controller is the parent interrupt controller for CLINT device.
-> > > +
-> > > +The clock frequency of CLINT is specified via "timebase-frequency" DT
-> > > +property of "/cpus" DT node. The "timebase-frequency" DT property is
-> > > +described in: Documentation/devicetree/bindings/riscv/cpus.yaml
-> > > +
-> > > +Required properties:
-> > > +- compatible : should be "riscv,clint0" or "sifive,clint-1.0.0". A specific
-> >
-> > A new versioning scheme from SiFive? To review, we don't do version
-> > numbers unless there's a well defined and documented scheme. IOW, one
-> > that's not s/w folks just making up v1, v2, v3, etc.
->
-> The "riscv,clint0" is already used by various RISC-V systems (including QEMU).
+Remove ipq8074 gcc reset bindings from gcc clock bindings file,
+so that it can be added in reset bindings.
 
-Not my problem that undocumented bindings are being used.
+This will avoid confusion while adding new clock and resets.
 
-> The "sifive,clint-1.0.0" is for being consistent with the PLIC
-> versioning scheme.
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+---
+ include/dt-bindings/clock/qcom,gcc-ipq8074.h | 139 +--------------------------
+ 1 file changed, 3 insertions(+), 136 deletions(-)
 
-Where is that documented? This is what I expect you to be following or
-updating to match:
+diff --git a/include/dt-bindings/clock/qcom,gcc-ipq8074.h b/include/dt-bindings/clock/qcom,gcc-ipq8074.h
+index e3e018565add..07c0ca02cc17 100644
+--- a/include/dt-bindings/clock/qcom,gcc-ipq8074.h
++++ b/include/dt-bindings/clock/qcom,gcc-ipq8074.h
+@@ -230,141 +230,8 @@
+ #define GCC_GP1_CLK				221
+ #define GCC_GP2_CLK				222
+ #define GCC_GP3_CLK				223
+-
+-#define GCC_BLSP1_BCR				0
+-#define GCC_BLSP1_QUP1_BCR			1
+-#define GCC_BLSP1_UART1_BCR			2
+-#define GCC_BLSP1_QUP2_BCR			3
+-#define GCC_BLSP1_UART2_BCR			4
+-#define GCC_BLSP1_QUP3_BCR			5
+-#define GCC_BLSP1_UART3_BCR			6
+-#define GCC_BLSP1_QUP4_BCR			7
+-#define GCC_BLSP1_UART4_BCR			8
+-#define GCC_BLSP1_QUP5_BCR			9
+-#define GCC_BLSP1_UART5_BCR			10
+-#define GCC_BLSP1_QUP6_BCR			11
+-#define GCC_BLSP1_UART6_BCR			12
+-#define GCC_IMEM_BCR				13
+-#define GCC_SMMU_BCR				14
+-#define GCC_APSS_TCU_BCR			15
+-#define GCC_SMMU_XPU_BCR			16
+-#define GCC_PCNOC_TBU_BCR			17
+-#define GCC_SMMU_CFG_BCR			18
+-#define GCC_PRNG_BCR				19
+-#define GCC_BOOT_ROM_BCR			20
+-#define GCC_CRYPTO_BCR				21
+-#define GCC_WCSS_BCR				22
+-#define GCC_WCSS_Q6_BCR				23
+-#define GCC_NSS_BCR				24
+-#define GCC_SEC_CTRL_BCR			25
+-#define GCC_ADSS_BCR				26
+-#define GCC_DDRSS_BCR				27
+-#define GCC_SYSTEM_NOC_BCR			28
+-#define GCC_PCNOC_BCR				29
+-#define GCC_TCSR_BCR				30
+-#define GCC_QDSS_BCR				31
+-#define GCC_DCD_BCR				32
+-#define GCC_MSG_RAM_BCR				33
+-#define GCC_MPM_BCR				34
+-#define GCC_SPMI_BCR				35
+-#define GCC_SPDM_BCR				36
+-#define GCC_RBCPR_BCR				37
+-#define GCC_RBCPR_MX_BCR			38
+-#define GCC_TLMM_BCR				39
+-#define GCC_RBCPR_WCSS_BCR			40
+-#define GCC_USB0_PHY_BCR			41
+-#define GCC_USB3PHY_0_PHY_BCR			42
+-#define GCC_USB0_BCR				43
+-#define GCC_USB1_PHY_BCR			44
+-#define GCC_USB3PHY_1_PHY_BCR			45
+-#define GCC_USB1_BCR				46
+-#define GCC_QUSB2_0_PHY_BCR			47
+-#define GCC_QUSB2_1_PHY_BCR			48
+-#define GCC_SDCC1_BCR				49
+-#define GCC_SDCC2_BCR				50
+-#define GCC_SNOC_BUS_TIMEOUT0_BCR		51
+-#define GCC_SNOC_BUS_TIMEOUT2_BCR		52
+-#define GCC_SNOC_BUS_TIMEOUT3_BCR		53
+-#define GCC_PCNOC_BUS_TIMEOUT0_BCR		54
+-#define GCC_PCNOC_BUS_TIMEOUT1_BCR		55
+-#define GCC_PCNOC_BUS_TIMEOUT2_BCR		56
+-#define GCC_PCNOC_BUS_TIMEOUT3_BCR		57
+-#define GCC_PCNOC_BUS_TIMEOUT4_BCR		58
+-#define GCC_PCNOC_BUS_TIMEOUT5_BCR		59
+-#define GCC_PCNOC_BUS_TIMEOUT6_BCR		60
+-#define GCC_PCNOC_BUS_TIMEOUT7_BCR		61
+-#define GCC_PCNOC_BUS_TIMEOUT8_BCR		62
+-#define GCC_PCNOC_BUS_TIMEOUT9_BCR		63
+-#define GCC_UNIPHY0_BCR				64
+-#define GCC_UNIPHY1_BCR				65
+-#define GCC_UNIPHY2_BCR				66
+-#define GCC_CMN_12GPLL_BCR			67
+-#define GCC_QPIC_BCR				68
+-#define GCC_MDIO_BCR				69
+-#define GCC_PCIE1_TBU_BCR			70
+-#define GCC_WCSS_CORE_TBU_BCR			71
+-#define GCC_WCSS_Q6_TBU_BCR			72
+-#define GCC_USB0_TBU_BCR			73
+-#define GCC_USB1_TBU_BCR			74
+-#define GCC_PCIE0_TBU_BCR			75
+-#define GCC_NSS_NOC_TBU_BCR			76
+-#define GCC_PCIE0_BCR				77
+-#define GCC_PCIE0_PHY_BCR			78
+-#define GCC_PCIE0PHY_PHY_BCR			79
+-#define GCC_PCIE0_LINK_DOWN_BCR			80
+-#define GCC_PCIE1_BCR				81
+-#define GCC_PCIE1_PHY_BCR			82
+-#define GCC_PCIE1PHY_PHY_BCR			83
+-#define GCC_PCIE1_LINK_DOWN_BCR			84
+-#define GCC_DCC_BCR				85
+-#define GCC_APC0_VOLTAGE_DROOP_DETECTOR_BCR	86
+-#define GCC_APC1_VOLTAGE_DROOP_DETECTOR_BCR	87
+-#define GCC_SMMU_CATS_BCR			88
+-#define GCC_UBI0_AXI_ARES			89
+-#define GCC_UBI0_AHB_ARES			90
+-#define GCC_UBI0_NC_AXI_ARES			91
+-#define GCC_UBI0_DBG_ARES			92
+-#define GCC_UBI0_CORE_CLAMP_ENABLE		93
+-#define GCC_UBI0_CLKRST_CLAMP_ENABLE		94
+-#define GCC_UBI1_AXI_ARES			95
+-#define GCC_UBI1_AHB_ARES			96
+-#define GCC_UBI1_NC_AXI_ARES			97
+-#define GCC_UBI1_DBG_ARES			98
+-#define GCC_UBI1_CORE_CLAMP_ENABLE		99
+-#define GCC_UBI1_CLKRST_CLAMP_ENABLE		100
+-#define GCC_NSS_CFG_ARES			101
+-#define GCC_NSS_IMEM_ARES			102
+-#define GCC_NSS_NOC_ARES			103
+-#define GCC_NSS_CRYPTO_ARES			104
+-#define GCC_NSS_CSR_ARES			105
+-#define GCC_NSS_CE_APB_ARES			106
+-#define GCC_NSS_CE_AXI_ARES			107
+-#define GCC_NSSNOC_CE_APB_ARES			108
+-#define GCC_NSSNOC_CE_AXI_ARES			109
+-#define GCC_NSSNOC_UBI0_AHB_ARES		110
+-#define GCC_NSSNOC_UBI1_AHB_ARES		111
+-#define GCC_NSSNOC_SNOC_ARES			112
+-#define GCC_NSSNOC_CRYPTO_ARES			113
+-#define GCC_NSSNOC_ATB_ARES			114
+-#define GCC_NSSNOC_QOSGEN_REF_ARES		115
+-#define GCC_NSSNOC_TIMEOUT_REF_ARES		116
+-#define GCC_PCIE0_PIPE_ARES			117
+-#define GCC_PCIE0_SLEEP_ARES			118
+-#define GCC_PCIE0_CORE_STICKY_ARES		119
+-#define GCC_PCIE0_AXI_MASTER_ARES		120
+-#define GCC_PCIE0_AXI_SLAVE_ARES		121
+-#define GCC_PCIE0_AHB_ARES			122
+-#define GCC_PCIE0_AXI_MASTER_STICKY_ARES	123
+-#define GCC_PCIE1_PIPE_ARES			124
+-#define GCC_PCIE1_SLEEP_ARES			125
+-#define GCC_PCIE1_CORE_STICKY_ARES		126
+-#define GCC_PCIE1_AXI_MASTER_ARES		127
+-#define GCC_PCIE1_AXI_SLAVE_ARES		128
+-#define GCC_PCIE1_AHB_ARES			129
+-#define GCC_PCIE1_AXI_MASTER_STICKY_ARES	130
+-#define GCC_PCIE0_AXI_SLAVE_STICKY_ARES		131
+-#define GCC_PCIE0_AXI_S_BRIDGE_CLK		132
+-#define GCC_PCIE0_RCHNG_CLK_SRC			133
+-#define GCC_PCIE0_RCHNG_CLK			134
++#define GCC_PCIE0_AXI_S_BRIDGE_CLK		224
++#define GCC_PCIE0_RCHNG_CLK_SRC			225
++#define GCC_PCIE0_RCHNG_CLK			226
+ 
+ #endif
+-- 
+2.7.4
 
-Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt
-
->
-> There is no clear documentation of CLINT versioning scheme. I think it's best
-> to just drop "sifive,clint-1.0.0" . Agree ??
-
-No, because then you are left with a very generic compatible string.
-You need something specific enough to handle any implementation
-features/quirks/bugs without needing a DT update. Typically, this
-means a per SoC compatible string for a block as even the same IP
-version can have different integration quirks.
-
-Rob
