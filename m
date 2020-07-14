@@ -2,154 +2,105 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5D4C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 11:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA50BC433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 11:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC1552220C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 11:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C34F822224
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 11:54:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mMHZutoF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mGjyAIe0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgGNLoA (ORCPT
+        id S1726955AbgGNLyU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 07:44:00 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17282 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbgGNLoA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 07:44:00 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0d9a720000>; Tue, 14 Jul 2020 04:43:47 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 14 Jul 2020 04:43:59 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 14 Jul 2020 04:43:59 -0700
-Received: from [10.24.37.103] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Jul
- 2020 11:43:51 +0000
-Subject: Re: [TEGRA194_CPUFREQ PATCH v5 1/4] dt-bindings: arm: Add t194 ccplex
- compatible and bpmp property
-To:     Rob Herring <robh@kernel.org>
-CC:     <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <thierry.reding@gmail.com>, <mirq-linux@rere.qmqm.pl>,
-        <devicetree@vger.kernel.org>, <jonathanh@nvidia.com>,
-        <talho@nvidia.com>, <linux-pm@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <bbasu@nvidia.com>,
-        <mperttunen@nvidia.com>, Sumit Gupta <sumitg@nvidia.com>
-References: <1594649209-29394-1-git-send-email-sumitg@nvidia.com>
- <1594649209-29394-2-git-send-email-sumitg@nvidia.com>
- <20200713164214.GA341271@bogus>
-From:   Sumit Gupta <sumitg@nvidia.com>
-Message-ID: <70a0a8ee-b79a-2a05-5150-2ee0faaf2730@nvidia.com>
-Date:   Tue, 14 Jul 2020 17:13:47 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 14 Jul 2020 07:54:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbgGNLyT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 07:54:19 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61BCCC061755;
+        Tue, 14 Jul 2020 04:54:19 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id t9so11282527lfl.5;
+        Tue, 14 Jul 2020 04:54:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kviBBfRUXF6FyQ/T2lhXR2kEq+3oh1SIHqgwdRSis9Y=;
+        b=mGjyAIe06bIfAGY9o+A+teKJimbQB9fcw5z9/KlcKfAtHrhaDEIaNygzGUvgoZ+QTt
+         XghQsz8XBAB2bkgGRD+UEOKVGhB9kR6/BVEL6sswnabb2kVyo1bTKhXU7z5eS3gL29Zl
+         ZPIN+zueHJOgUGbizzx5H++vBAm1v6mqANd359vfEEPdydDt/CGju+Y7qv3Shotg9g+w
+         lqxHDunaNeFzftnW9ZzWBsylmFWfLU0cjE3u5nhuLW7P2rI9RLujnqg0kDfqRf8wXsta
+         V3x+9pmiRkL03D6iPTAOtMT72ucaSA2BBQC1FlV2PrnOJDnggWXai8C+wEIBx8N0PHZJ
+         gBKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kviBBfRUXF6FyQ/T2lhXR2kEq+3oh1SIHqgwdRSis9Y=;
+        b=gPI9XRbAGylFvvDVlkIhWMgIRbCVoBcWwAy66upT5fZ9mrI7M6KZP97Q09HUEhL3Kv
+         VbzjbKAtRzOoBQfS61be3VSlSrQp5BNYKIFPvChN4udA6DIJPBVn7BBGNjsTgloCo3cU
+         xp1y5oRDsXSRtQRA61e6uZ6teunzIQjmP2uJcgDEbVbB59M6xMBwVg/FP0Ky4jIFef8F
+         fmMQSNVve5mY2zgdflaqSLWBFS4UfJKuIWN2h2xMzvRwcvtlbpkGi1xfxQRXwLZBeE16
+         ROZsndyUwgoZz5QaDr4Mz0AsQC/OdnEay6Xy7pspcmgl8keZ4kbVrBUK/3kUkKDZeEqn
+         tGvg==
+X-Gm-Message-State: AOAM5324nr+om7faitrLCf0U7AISoZTnxZohEl1nh/328sn62bIooDYt
+        MKgbMjGaxLzBMHJ7wVVu5G4I0PIThTdFY6HE5+Q=
+X-Google-Smtp-Source: ABdhPJzpcBS8ojSUurssZkclJ5NwsbqUtkf7ZoPFrW6jtuQRlH1WOTGDaI75hN8OcOkECKQp0To/UNg6SgeB36TJmjQ=
+X-Received: by 2002:a19:7e09:: with SMTP id z9mr2009713lfc.69.1594727657785;
+ Tue, 14 Jul 2020 04:54:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200713164214.GA341271@bogus>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594727027; bh=UrDpE1YD14GDWCNhmIrtodld5JLaTd22aLzUVIM8f98=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=mMHZutoFQHCAIoy3C50Yj8sRZfz8bUZeBCDekvCUEPPE8fsSz4fwzSQExX22vT/cZ
-         CflAgHY7F7DJQ0Ib4eEEBXTwMFoxODxAFuZ7sqHypnZdLsr1h4XhH0RpEetY5HUKUq
-         dpdSChmaeb86JPmxsDAXX5wUYvBjjNXhm6RcDVwsF0ZUP0UzXoU78qq0SEFs+zR/Ak
-         KPnQHXDPepa0yEXM9VUFQMFH/fIJIQfTam+Zy1qhexBLYqL8k6s2t6w8P2vQ65lKZJ
-         m67IHksK0pXbcM+jcJ+j556VUZyo8+yLif9IcjmoS32tdNUvZbpy57tu1db+VDf5g0
-         mRMvlTySolpVA==
+References: <20200629114927.17379-1-bruno.thomsen@gmail.com>
+ <20200629114927.17379-2-bruno.thomsen@gmail.com> <20200713025246.GY21277@dragon>
+ <CAH+2xPAHKY6YfhO-jXfKN+TRN5LDT1Kkn8a8HUj_EOqFt=75nQ@mail.gmail.com>
+In-Reply-To: <CAH+2xPAHKY6YfhO-jXfKN+TRN5LDT1Kkn8a8HUj_EOqFt=75nQ@mail.gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 14 Jul 2020 08:54:06 -0300
+Message-ID: <CAOMZO5DsyqRgD8n-w=6OmnXuMX+1T2DDOjQLNK133=FaqtWXVQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] ARM: dts: imx7: add support for kamstrup flex concentrator
+To:     Bruno Thomsen <bruno.thomsen@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Bruno Thomsen <bth@kamstrup.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Bruno,
 
+On Tue, Jul 14, 2020 at 7:03 AM Bruno Thomsen <bruno.thomsen@gmail.com> wrote:
 
-> On Mon, Jul 13, 2020 at 07:36:46PM +0530, Sumit Gupta wrote:
->> To do frequency scaling on all CPUs within T194 CPU Complex, we need
->> to query BPMP for data on valid operating points. Document a compatible
->> string under 'cpus' node to represent the CPU Complex for binding drivers
->> like cpufreq which don't have their node or CPU Complex node to bind to.
->> Also, document a property to point to the BPMP device that can be queried
->> for all CPUs.
-> 
-> The cpus.yaml binding documents what's in 'cpu' nodes, not 'cpus'
-> node. AIUI, the latter is what you want. You should do your own schema
-> file here.
-> 
-Do you mean to change existing file name from 'cpus.yaml' to 'cpu.yaml' 
-and create new 'cpus.yaml' file?
-I think it's better to incorporate the change in existing 'cpus.yaml' 
-file to keep both cpu@X and cpus node details together. Please suggest.
+> I have not yet been successful in converting the deprecated properties
+> to generic phy properties, so hoping I could get a hit.
+>
+> Kernel error messages:
+> mdio_bus 30be0000.ethernet-1: MDIO device at address 1 is missing.
 
->>
->> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
->> ---
->>   Documentation/devicetree/bindings/arm/cpus.yaml | 11 +++++++++++
->>   1 file changed, 11 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
->> index a018147..9b328e3 100644
->> --- a/Documentation/devicetree/bindings/arm/cpus.yaml
->> +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
->> @@ -162,6 +162,7 @@ properties:
->>         - nvidia,tegra132-denver
->>         - nvidia,tegra186-denver
->>         - nvidia,tegra194-carmel
->> +      - nvidia,tegra194-ccplex
-> 
-> Tegra194 has 2 different CPUs?
-> 
-No, T194 SOC has homogeneous architecture with four clusters where each 
-cluster has two symmetric cores. 'nvidia,tegra194-carmel' compatible 
-string represents each cpu. 'nvidia,tegra194-ccplex' string represents 
-the CPU Complex to bind cpufreq driver. The change was done as per 
-discussion [1]
+Please double-check whether 1 is the correct address for the KSZ8051
+Ethernet PHY as per your schematics.
 
->>         - qcom,krait
->>         - qcom,kryo
->>         - qcom,kryo260
->> @@ -255,6 +256,15 @@ properties:
->>
->>         where voltage is in V, frequency is in MHz.
->>
->> +  nvidia,bpmp:
->> +    $ref: '/schemas/types.yaml#/definitions/phandle'
->> +    description: |
->> +      Specifies the bpmp node that needs to be queried to get
->> +      operating point data for all CPUs.
->> +
->> +      Optional for systems that have a "compatible"
->> +      property value of "nvidia,tegra194-ccplex".
->> +
->>     power-domains:
->>       $ref: '/schemas/types.yaml#/definitions/phandle-array'
->>       description:
->> @@ -340,6 +350,7 @@ required:
->>
->>   dependencies:
->>     rockchip,pmu: [enable-method]
->> +  nvidia,bpmp: [compatible]
->>
->>   examples:
->>     - |
->> --
->> 2.7.4
->>
+Are there external pull-up/pull-down resistors for strapping the
+various configuration pins for the PHY? Or are the pull-up/pull-down
+provided by the i.MX7D pins?
 
-[1] https://marc.info/?l=linux-arm-kernel&m=158999171528418&w=2
+If there are no external pull-ups, please make sure to configure the
+pinctrl_enet1 accordingly, so that the Ethernet PHY address can be
+properly configured and then mdio_bus driver can find it at the
+correct address.
+
+Please check in arch/arm/boot/dts/imx6qdl-sr-som.dtsi for an example
+on how to configure the Ethernet PHY pin strapping via iMX IOMUX.
