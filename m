@@ -2,124 +2,105 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B08C433FB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 12:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78379C433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 12:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDB2222475
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 12:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5532821D7B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 12:40:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbgGNMjx (ORCPT
+        id S1728455AbgGNMkT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:39:53 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33142 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726041AbgGNMjv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 08:39:51 -0400
-Received: by mail-ot1-f68.google.com with SMTP id h13so12929224otr.0;
-        Tue, 14 Jul 2020 05:39:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1gkM+uPTnitshLBuV08goagb6Ra5DyU+s9EwRHXtZeQ=;
-        b=mfkgj4eGLF/mS6HqwU2jRhvquP2KbIWOqQVHucEbNhtAlIGrgbXdXbsPnTkayf14FE
-         oQg/z0nbq0N+stgN7htDaEcBL5b8DITSlN2vdoPC/vnB3zkOh6sRIKIDyXcD/1Lhgpx7
-         m+8MBQqD39qOni3D0FQ2zPI0yLuLo/dvpXpuVO8fTJCWIv33HKy4tP1k5rwtAIhtdVpv
-         UaVqpCj6ZFTqN4K68xtGjsnmaVhCwf5aMHL/Xha/LRqNAcGfXsOX9uM8yCjmJAKJPaH9
-         5/ifjivkwWjaZvYMaZXQ2q80AIvuA3d9wqLnZCear2qONGYWSW+PuDfaQGwbDI7nK4AI
-         Mg4A==
-X-Gm-Message-State: AOAM5326I/hh7zqgBgwJ88VvQbW6sEr26AX/NfYV4yASaSuSSOLlPDNM
-        yHg8earbspn+2BzeO70WnYQNYum9VJMV/FRyviQ=
-X-Google-Smtp-Source: ABdhPJwQEGIYICCEl9+rMfVmtnnA3KEy1Oav7DAM0WyYTDfpBWgrg5GEkZrfN+c/weUUf5GnvXRjVxzrNetFysb/vow=
-X-Received: by 2002:a9d:2646:: with SMTP id a64mr3637009otb.107.1594730390491;
- Tue, 14 Jul 2020 05:39:50 -0700 (PDT)
+        Tue, 14 Jul 2020 08:40:19 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:52080 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728300AbgGNMjk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jul 2020 08:39:40 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 36540200FFF;
+        Tue, 14 Jul 2020 14:39:38 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2903A20018F;
+        Tue, 14 Jul 2020 14:39:38 +0200 (CEST)
+Received: from fsr-ub1864-014.ea.freescale.net (fsr-ub1864-014.ea.freescale.net [10.171.95.219])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 6CBAB205A4;
+        Tue, 14 Jul 2020 14:39:37 +0200 (CEST)
+From:   =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
+To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Kaiser <martin@kaiser.cx>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 5/5] hwrng: imx-rngc: enable driver for i.MX6
+Date:   Tue, 14 Jul 2020 15:39:20 +0300
+Message-Id: <20200714123920.23711-6-horia.geanta@nxp.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200714123920.23711-1-horia.geanta@nxp.com>
+References: <20200714123920.23711-1-horia.geanta@nxp.com>
 MIME-Version: 1.0
-References: <1594676120-5862-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594676120-5862-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdV4zzrk_=-2Cmgq8=PKTeU457iveJ58gYekJ-Z8SXqaCQ@mail.gmail.com>
- <CA+V-a8tB0mA17f51GMQQ-Cj_CUXze_JjTahrpoAtmwuOFHQV6g@mail.gmail.com>
- <CAMuHMdXM3qf266exJtJrN0XAogEsJoM-k3FON9CjX+stLpuMFA@mail.gmail.com> <TY2PR01MB3692A868DD4E67D770C610E3D8610@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY2PR01MB3692A868DD4E67D770C610E3D8610@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 14 Jul 2020 14:39:39 +0200
-Message-ID: <CAMuHMdUry12MnLvVgmd7NJ+Gv4mA86qKKfsQobP1o-ohzKm=RQ@mail.gmail.com>
-Subject: Re: [PATCH 2/9] iommu/ipmmu-vmsa: Hook up R8A774E1 DT matching code
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Shimoda-san,
+i.MX6 SL, SLL, ULL, ULZ SoCs have an RNGB block.
 
-On Tue, Jul 14, 2020 at 1:42 PM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> > From: Geert Uytterhoeven, Sent: Tuesday, July 14, 2020 5:42 PM
-> > On Tue, Jul 14, 2020 at 10:30 AM Lad, Prabhakar
-> > <prabhakar.csengg@gmail.com> wrote:
-> > > On Tue, Jul 14, 2020 at 9:09 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > On Mon, Jul 13, 2020 at 11:35 PM Lad Prabhakar
-> > > Also the recent patch to add
-> > > "r8a77961" just adds to soc_rcar_gen3_whitelist.
-> >
-> > Oops, commit 17fe16181639801b ("iommu/renesas: Add support for r8a77961")
-> > did it wrong, too.
->
-> Thank you for the point it out. We should add r8a77961 to the soc_rcar_gen3[].
-> However, I don't know why I could not realize this issue...
-> So, I investigated this a little and then, IIUC, glob_match() which
-> soc_device_match() uses seems to return true, if *pat = "r8a7796" and *str = "r8a77961".
+Since imx-rngc driver supports also rngb,
+let's enable it for these SoCs too.
 
-Are you sure about this?
-I enabled CONFIG_GLOB_SELFTEST, and globtest succeeded.
-It does test glob_match("a", "aa"), which is a similar test.
+Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+Reviewed-by: Martin Kaiser <martin@kaiser.cx>
+Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>
+---
+ drivers/char/hw_random/Kconfig    | 2 +-
+ drivers/char/hw_random/imx-rngc.c | 3 +++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-To be 100% sure, I added:
-
---- a/lib/globtest.c
-+++ b/lib/globtest.c
-@@ -59,6 +59,7 @@ static char const glob_tests[] __initconst =
-        "1" "a\0" "a\0"
-        "0" "a\0" "b\0"
-        "0" "a\0" "aa\0"
-+       "0" "r8a7796\0" "r8a77961\0"
-        "0" "a\0" "\0"
-        "1" "\0" "\0"
-        "0" "\0" "a\0"
-
-and it still succeeded.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
+index 8478eb757f3c..98f95a09ce55 100644
+--- a/drivers/char/hw_random/Kconfig
++++ b/drivers/char/hw_random/Kconfig
+@@ -255,7 +255,7 @@ config HW_RANDOM_MXC_RNGA
+ config HW_RANDOM_IMX_RNGC
+ 	tristate "Freescale i.MX RNGC Random Number Generator"
+ 	depends on HAS_IOMEM && HAVE_CLK
+-	depends on SOC_IMX25 || COMPILE_TEST
++	depends on SOC_IMX25 || SOC_IMX6SL || SOC_IMX6SLL || SOC_IMX6UL || COMPILE_TEST
+ 	default HW_RANDOM
+ 	help
+ 	  This driver provides kernel-side support for the Random Number
+diff --git a/drivers/char/hw_random/imx-rngc.c b/drivers/char/hw_random/imx-rngc.c
+index 9c47e431ce90..84576d2fbf8c 100644
+--- a/drivers/char/hw_random/imx-rngc.c
++++ b/drivers/char/hw_random/imx-rngc.c
+@@ -350,6 +350,9 @@ static SIMPLE_DEV_PM_OPS(imx_rngc_pm_ops, imx_rngc_suspend, imx_rngc_resume);
+ 
+ static const struct of_device_id imx_rngc_dt_ids[] = {
+ 	{ .compatible = "fsl,imx25-rngb", .data = NULL, },
++	{ .compatible = "fsl,imx6sl-rngb", .data = NULL, },
++	{ .compatible = "fsl,imx6sll-rngb", .data = NULL, },
++	{ .compatible = "fsl,imx6ull-rngb", .data = NULL, },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, imx_rngc_dt_ids);
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.17.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
