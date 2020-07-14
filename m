@@ -2,204 +2,189 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C565AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 22:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 735DBC433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 23:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E045206D9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 22:54:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m5pNVSgB"
+	by mail.kernel.org (Postfix) with ESMTP id 50B162071B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 23:18:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594768715;
+	bh=WbHcOuCS+rj4obHCGdLyDlzJy258Ll6RBipsjc9gqhs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rjW8GwuYyMu3FQUtn7MCaiI2rTqv7gzaWWzZCZP7UUU8ImYcpcmuaxJ2uWz4yO55x
+	 0LGBJdh00WyDZMb5zC3BsrXoA7zdTuD3OuauoMBElbhOZnrY+7DaOoI+zjbK1wWrGo
+	 zB+YwBtNZP+Oqb3YHciFyFDPpLPhMVLAcAEWZIp4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgGNWy2 (ORCPT
+        id S1726815AbgGNXS3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 18:54:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48606 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbgGNWy1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 18:54:27 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E42FC061755
-        for <devicetree@vger.kernel.org>; Tue, 14 Jul 2020 15:54:27 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id z5so48803pgb.6
-        for <devicetree@vger.kernel.org>; Tue, 14 Jul 2020 15:54:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3y0aRHGaKLcjgwTZ86bMCl3Kd5iHKCmsfg8nxWgSzuE=;
-        b=m5pNVSgBKkI6PwKQD2vUNqG0ZLdHsap8ldYmjfwKhC+N+RIw2BMBiferTYXMbClpjp
-         DpoKnsjuM90XtJwOPN4OurXsXBPpCBZWEs07T12VxyB8yN53I3XzUuzB8DOUvNVJiMcq
-         wje9eSPnrY+4TlhRPNovSBBxBP5rfQ1puEAZD4Sy2XtdK//5udIt1MPngviFqsA6ZrYJ
-         XxjI5/Qyqwn4cjAhgCs6pS7cSo1c8hcItjtq4BFwdh0lEc0Gf9lAomM6yarfhCvfXMyH
-         FMpnMChKgP1HPaipU47gMOXvR86AkNoU42tqIPzSy+Io6W/QRI0fb2muHcr8WFNhiY53
-         yaTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3y0aRHGaKLcjgwTZ86bMCl3Kd5iHKCmsfg8nxWgSzuE=;
-        b=Xgbsqi+d8MDfFjahISaAEjVcYk9D6EAHbfup/Dw+I8w8YJ6pwIWNWipAzQTm4KdEqE
-         waO/S98fwqSHUPwX7f+85PuWIEc1gOhakYxcr7xnEPmjbyU41LCm46xhEDEITn5IhWDT
-         spFPSs8KwWXrA1RcXb7WWQJD2fLm/1BwYYyij+G8NL3GGjVH/qzpQeP1JWui32qUD0DN
-         EfU5XOp/G0mD4q3BmWgh/9y/1Gv7BZRkfdMMALnfDpVebJWt0I3DAKxeLw8H+NEJjUfN
-         sSJxkG3L/0r+f7odsb4zHZz+T38g4XN5LMuQ6yxVme7e1KcLbzhirc7qmDkCsSsb3uDc
-         37Rw==
-X-Gm-Message-State: AOAM533q1ZZUF5p4SgSrSiHR5U1xAydV/fAQRJgkMzXSv3LlhiwxS3qn
-        rfQTHFtwYNytKtsqzA3/2P73lg==
-X-Google-Smtp-Source: ABdhPJx3Wi8OjlqSsBzWZjk6f7Ltz4EPiYqzQQwwUOpxm0+vSSgBw2G4lGptzsHtGsccxn9jxT3+WQ==
-X-Received: by 2002:a62:1646:: with SMTP id 67mr6079256pfw.281.1594767266740;
-        Tue, 14 Jul 2020 15:54:26 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id my9sm113099pjb.44.2020.07.14.15.54.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 15:54:26 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 15:52:20 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Doug Anderson <dianders@chromium.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>, Sean Paul <sean@poorly.run>
-Subject: Re: [Freedreno] [PATCH 0/9] drm/msm: Avoid possible infinite probe
- deferral and speed booting
-Message-ID: <20200714225220.GI388985@builder.lan>
-References: <20200710230224.2265647-1-dianders@chromium.org>
- <CAL_JsqKC5WtHb-coMCxMTDJ7CJcjVXcAxDT4J9N-Xyr=0uuURA@mail.gmail.com>
- <CAD=FV=XWKoTd_t2uRGpw3oa0Nij2EPeAJpOHhUipXFW07JN2qw@mail.gmail.com>
- <CAL_JsqLJM5nwNSdugMBLDVtjP97dikCm_AiHjnDs1jqBOFoaaQ@mail.gmail.com>
- <CAD=FV=UP0AHWr22U69TKcwwAefPCYMsfzymobczqmrdB6BOOhA@mail.gmail.com>
- <CAOCk7NoX-XAXy2WaYGjGOtEmypis-DO-W1cfU0wnucHH0oZrqg@mail.gmail.com>
- <CAL_Jsq+Nys+ry-3D07e-68e=9Pb34C9Js6piAnzwd1gXf_DmTw@mail.gmail.com>
+        Tue, 14 Jul 2020 19:18:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49946 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726187AbgGNXS2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jul 2020 19:18:28 -0400
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8583D2074B;
+        Tue, 14 Jul 2020 23:18:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594768707;
+        bh=WbHcOuCS+rj4obHCGdLyDlzJy258Ll6RBipsjc9gqhs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=OTYv7SW64RJ7rcBLNLixgDhz1BOtm1ZlPfGu0RW7CKMz/+ee2kQZnsPya33XRsqSZ
+         NSY9JKrQ2FHqtYIo/G1nklBOWhlXLpB3Bb80i2eXAScH3Qkvmz4gkSVFZ3xyOmHSB2
+         fS1zjaVyGJOhZPsVcQWQD09xHBVeLAHPlnAO/7HE=
+Received: by mail-ot1-f47.google.com with SMTP id h13so68081otr.0;
+        Tue, 14 Jul 2020 16:18:27 -0700 (PDT)
+X-Gm-Message-State: AOAM531sTp1Rzu6UUNRYLmVqQbl0CpurZMh5yerLiQhkx5Ucm1Hde/hl
+        nUGH9qkEQoMlwdLXNKEmpqSFXENueBn9VUlgcQ==
+X-Google-Smtp-Source: ABdhPJzamyUgo6UiqW59FuZ+b+pvPCuOFw/T+vorF7nM8Yc7QjaPRAdppkgkTdGO/rge6EQOKevq7Mn09VhM3JKnhr0=
+X-Received: by 2002:a9d:4002:: with SMTP id m2mr6332092ote.129.1594768706856;
+ Tue, 14 Jul 2020 16:18:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+Nys+ry-3D07e-68e=9Pb34C9Js6piAnzwd1gXf_DmTw@mail.gmail.com>
+References: <20200612171334.26385-1-nsaenzjulienne@suse.de>
+ <20200612171334.26385-2-nsaenzjulienne@suse.de> <20200713182356.GA413630@bogus>
+ <ed42e27eaf48fd19cc8ccccd15b0b25ba1d836ae.camel@suse.de> <20200714210708.GA2897216@bogus>
+ <925bab2c-91e0-bf60-9ec4-286eb53f72ab@gmail.com>
+In-Reply-To: <925bab2c-91e0-bf60-9ec4-286eb53f72ab@gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 14 Jul 2020 17:18:15 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+BvM+Z_QNkB47_8AQzZ6R3LOCjNWd5MA-9avxp0HHG2w@mail.gmail.com>
+Message-ID: <CAL_Jsq+BvM+Z_QNkB47_8AQzZ6R3LOCjNWd5MA-9avxp0HHG2w@mail.gmail.com>
+Subject: Re: [PATCH v3 1/9] dt-bindings: reset: Add a binding for the RPi
+ Firmware reset controller
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Eric Anholt <eric@anholt.net>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, tim.gover@raspberrypi.org,
+        PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue 14 Jul 15:13 PDT 2020, Rob Herring wrote:
-
-> On Tue, Jul 14, 2020 at 10:33 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+On Tue, Jul 14, 2020 at 3:18 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+>
+>
+> On 7/14/2020 2:07 PM, Rob Herring wrote:
+> > On Tue, Jul 14, 2020 at 01:59:21PM +0200, Nicolas Saenz Julienne wrote:
+> >> On Mon, 2020-07-13 at 12:23 -0600, Rob Herring wrote:
+> >>> On Fri, Jun 12, 2020 at 07:13:25PM +0200, Nicolas Saenz Julienne wrote:
+> >>>> The firmware running on the RPi VideoCore can be used to reset and
+> >>>> initialize HW controlled by the firmware.
+> >>>>
+> >>>> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> >>>> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> >>>>
+> >>>> ---
+> >>>> Changes since v2:
+> >>>>  - Add include file for reset IDs
+> >>>>
+> >>>> Changes since v1:
+> >>>>  - Correct cells binding as per Florian's comment
+> >>>>  - Change compatible string to be more generic
+> >>>>
+> >>>>  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++++++++
+> >>>>  .../reset/raspberrypi,firmware-reset.h        | 13 ++++++++++++
+> >>>>  2 files changed, 34 insertions(+)
+> >>>>  create mode 100644 include/dt-bindings/reset/raspberrypi,firmware-reset.h
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+> >>>> firmware.yaml
+> >>>> b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+> >>>> firmware.yaml
+> >>>> index b48ed875eb8e..23a885af3a28 100644
+> >>>> --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+> >>>> firmware.yaml
+> >>>> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
+> >>>> firmware.yaml
+> >>>> @@ -39,6 +39,22 @@ properties:
+> >>>>        - compatible
+> >>>>        - "#clock-cells"
+> >>>>
+> >>>> +  reset:
+> >>>
+> >>> I'm not really thrilled how this is evolving with a node per provider.
+> >>> There's no reason you can't just add #clock-cells and #reset-cells to
+> >>> the parent firmware node.
+> >>
+> >> What are the downsides? The way I see it there is not much difference. And this
+> >> way of handling things is feels more intuitive and flexible (overlays can
+> >> control what to enable easily, we can take advantage of the platform device
+> >> core).
 > >
-> > On Mon, Jul 13, 2020 at 5:50 PM Doug Anderson <dianders@chromium.org> wrote:
-> > >
-> > > Hi,
-> > >
-> > > On Mon, Jul 13, 2020 at 1:25 PM Rob Herring <robh+dt@kernel.org> wrote:
-> > > >
-> > > > On Mon, Jul 13, 2020 at 9:08 AM Doug Anderson <dianders@chromium.org> wrote:
-> > > > >
-> > > > > Hi,
-> > > > >
-> > > > > On Mon, Jul 13, 2020 at 7:11 AM Rob Herring <robh+dt@kernel.org> wrote:
-> > > > > >
-> > > > > > On Fri, Jul 10, 2020 at 5:02 PM Douglas Anderson <dianders@chromium.org> wrote:
-> > > > > > >
-> > > > > > > I found that if I ever had a little mistake in my kernel config,
-> > > > > > > or device tree, or graphics driver that my system would sit in a loop
-> > > > > > > at bootup trying again and again and again.  An example log was:
-> > > > > >
-> > > > > > Why do we care about optimizing the error case?
-> > > > >
-> > > > > It actually results in a _fully_ infinite loop.  That is: if anything
-> > > > > small causes a component of DRM to fail to probe then the whole system
-> > > > > doesn't boot because it just loops trying to probe over and over
-> > > > > again.  The messages I put in the commit message are printed over and
-> > > > > over and over again.
-> > > >
-> > > > Sounds like a bug as that's not what should happen.
-> > > >
-> > > > If you defer during boot (initcalls), then you'll be on the deferred
-> > > > list until late_initcall and everything is retried. After
-> > > > late_initcall, only devices getting added should trigger probing. But
-> > > > maybe the adding and then removing a device is causing a re-trigger.
-> > >
-> > > Right, I'm nearly certain that the adding and then removing is causing
-> > > a re-trigger.  I believe the loop would happen for any case where we
-> > > have a probe function that:
-> > >
-> > > 1. Adds devices.
-> > > 2. After adding devices it decides that it needs to defer.
-> > > 3. Removes the devices it added.
-> > > 4. Return -EPROBE_DEFER from its probe function.
-> > >
-> > > Specifically from what I know about how -EPROBE_DEFER works I'm not
-> > > sure how it wouldn't cause an infinite loop in that case.
-> > >
-> > > Perhaps the missing part of my explanation, though, is why it never
-> > > gets out of this infinite loop.  In my case I purposely made the
-> > > bridge chip "ti-sn65dsi86.c" return an error (-EINVAL) in its probe
-> > > every time.  Obviously I wasn't going to get a display up like this,
-> > > but I just wanted to not loop forever at bootup.  I tracked down
-> > > exactly why we get an - EPROBE_DEFER over and over in this case.
-> > >
-> > > You can see it in msm_dsi_host_register().  If some components haven't
-> > > shown up when that function runs it will _always_ return
-> > > -EPROBE_DEFER.
-> > >
-> > > In my case, since I caused the bridge to fail to probe, those
-> > > components will _never_ show up.  That means that
-> > > msm_dsi_host_register() will _always_ return -EPROBE_DEFER.
-> > >
-> > > I haven't dug through all the DRM code enough, but it doesn't
-> > > necessarily seem like the wrong behavior.  If the bridge driver or a
-> > > panel was a module then (presumably) they could show up later and so
-> > > it should be OK for it to defer, right?
-> > >
-> > > So with all that, it doesn't really feel like this is a bug so much as
-> > > it's an unsupported use case.  The current deferral logic simply can't
-> > > handle the case we're throwing at it.  You cannot return -EPROBE_DEFER
-> > > if your probe function adds devices each time through the probe
-> > > function.
-> > >
-> > > Assuming all the above makes sense, that means we're stuck with:
-> > >
-> > > a) This patch series, which makes us not add devices.
-> > >
-> > > b) Some other patch series which rearchitects the MSM graphics stack
-> > > to not return -EPROBE_DEFER in this case.
+> > What the OS wants can evolve, so designing around the current needs of
+> > the OS is not how bindings should be done.
 > >
-> > This isn't a MSM specific issue.  This is an issue with how the DSI
-> > interface works, and how software is structured in Linux.  I would
-> > expect that pretty much any DSI host in the kernel would have some
-> > version of this issue.
+> > Using overlays to add clocks or resets wouldn't really work given they
+> > are spread out over the tree. And with clocks in particular, you'd have
+> > to replace dummy fixed clocks with actual firmware clocks. Sounds
+> > fragile and messy...
 > >
-> > The problem is that DSI is not "hot pluggable", so to give the DRM
-> > stack the info it needs, we need both the DSI controller (aka the MSM
-> > graphics stack in your case), and the thing it connects to (in your
-> > case, the TI bridge, normally the actual panel) because the DRM stack
-> > expects that if init completes, it has certain information
-> > (resolution, etc), and some of that information is in the DSI
-> > controller, and some of it is on the DSI device.
-> 
-> Ah yes, DRM's lack of hot-plug and discrete component support... Is
-> that not improved with some of the bridge rework?
-> 
-> Anyways, given there is a child dependency on the parent, I don't
-> think we should work-around DRM deficiencies in DT.
-> 
-> BTW, There's also a deferred probe timeout you can use which stops
-> deferring probe some number of seconds after late_initcall.
-> 
+> >>> I probably should have complained with the clocks node, but that's only
+> >>> pending for 5.9.
+> >>
+> >> Note that there are more users for this pattern: "raspberrypi,firmware-ts" and
+> >> "raspberrypi,firmware-gpio". Actually you were the one to originally propose
+> >> this it[1]. :P
+> >
+> > Sigh, this is why I dislike incomplete examples...
+> >
+> > Based on that,
+> >
+> > Acked-by: Rob Herring <robh@kernel.org>
+> >
+> > And please get gpio and ts converted to schema and referenced here
+> > before the next time I look at this.
+> >
+> >> There already is a fair amount of churn in these drivers because of all the DT
+> >> changes we did in the past, and if we need to change how we integrate these
+> >> again, I'd really like it to be for good.
+> >>
+> >>> The bigger issue is this stuff is just trickling in one bit at a time
+> >>> which gives no context for review. What's next? Is it really a mystery
+> >>> as to what functions the firmware provides?
+> >>
+> >> We have no control over it, RPi engineers integrate new designs and new
+> >> firmware interfaces show up. This is a good example of it.
+> >>
+> >> I proposed them to use SCMI as it covers most of what they are already
+> >> providing here. But no luck so far.
+> >
+> > Once we get tired of supporting all the different firmware interfaces
+> > and the mess they become, we'll just have to start refusing custom ones.
+> > Worked for PSCI.
+>
+> In this particular case, the Raspberry Pi Foundation VPU firmware should
+> just implement SCMI and that would avoid having to write new client
+> drivers for Linux, it is not clear to me why this has not been done yet.
 
-I don't think we can rely on the deferred probe timeout, given that it
-was reverted back to 0 seconds past late_initcall - which given that
-most of the involved components are modules, means that without the
-opt-in command line option we would likely fail to bring up the display.
+Writing drivers is fun?
 
-Regards,
-Bjorn
+Perhaps we should start refusing new firmware interfaces now.
+
+Rob
