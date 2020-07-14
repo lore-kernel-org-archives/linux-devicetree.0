@@ -2,211 +2,180 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA200C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 21:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BE7C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 22:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2462064C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 21:39:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WjEYpxVM"
+	by mail.kernel.org (Postfix) with ESMTP id E4592206F4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 22:13:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594764795;
+	bh=p8xfw2q/yMrH6U15B1idZInMuEtxyddvH406FsTsfxQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0r7Ey8H6oCDjEHR+i2hIrtypc3IW8KCQYeUoa3P1B3DV7613lMNMnaC7pUXo5nubQ
+	 9Wqs2CoTU6c4zzAL91KMDuVre44V5COQjUm+sLjDHaNU+ZJSMFyiBQtxkL4QPpzA0p
+	 +ydr+A9Kk6eNYtUfmGcnKxDJJhMs6ugOsqvg+f1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbgGNVjc (ORCPT
+        id S1726619AbgGNWNP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 17:39:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37140 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728145AbgGNVjb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 17:39:31 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D032C061794
-        for <devicetree@vger.kernel.org>; Tue, 14 Jul 2020 14:39:31 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id el4so8201349qvb.13
-        for <devicetree@vger.kernel.org>; Tue, 14 Jul 2020 14:39:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ivtV/tA+b1A/Jafm7GfFZzd+iRi0WOOxKuOfikxY7+k=;
-        b=WjEYpxVM3mq/vbkRqdXSLdC7YbDXYAN/KzVub+tuD6Pj/BjXgN6ubrURsurRWz5Zju
-         XVL/1DkXIqEXvbjBtcHthBS/cpgE68ii8m0B8NWdlp+0ZsEERD+qlrbrswcvQL9nhoIo
-         pCyLIufdlyvYT5fREkPjqmbjxcHYRExuBahHXDsu+u5fsocUIz2jZtMM7zgDTCDJwsfA
-         /1fopVeOCIW7EaL0irp4bqfk5vXgkSZWjqjB2wZB/J7Xl0goI+lxCGzOO6THyQk5vTAL
-         aZDdX27Ci77hxUKb2q5WbtCT6O3L+8RDEwzsI97kA0s9VZqAsrwcs845rOZpQMrZDIzv
-         tYXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ivtV/tA+b1A/Jafm7GfFZzd+iRi0WOOxKuOfikxY7+k=;
-        b=C2BAcde3mCcAGeSNiePC4OToeRq85L1+zF2T5nhZ1Q4ZBFe2bzZkczuG2vPqStmbHT
-         /vNUzK/+CclQxcvVJdqU2+3tHXrxulU3nxggAnjS0oY3Nr4dvNCEEcL31QqG+Tvx0mVy
-         OZfVs7y3jhb1nrAMp7WVjd6cZoPoGx5LkmTjlnLy+sq+kk75F1DcnOoTbQMG9GJwuWRC
-         HbJ5SMA9rs96VFMq+LRcEMybYJTh7PSdI8cg/cquH6PMu6rEz4vDcMPV3XgT1ehrg8Jj
-         kWSWOWAGv+bIyIJHtBsWIt2QL+NG632wf6VCvwr/0y4oWS38tEbTPuswrOyZtM8mDX97
-         pZoQ==
-X-Gm-Message-State: AOAM530NLbQQxJyrVCPUWo4Vtz263DuXfMotUlMY0Gxy+iWBrh6EBTaf
-        UX0j7Ycei+HgjATJlIzz+h5O8w==
-X-Google-Smtp-Source: ABdhPJwe07rWmBLjDl+TNx93m7uxFpH0gw52e9HYRNc/1T0+JhOUVFNF4wo6TGY89wzmBv3Wnssccw==
-X-Received: by 2002:ad4:42a7:: with SMTP id e7mr6694798qvr.212.1594762770573;
-        Tue, 14 Jul 2020 14:39:30 -0700 (PDT)
-Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.gmail.com with ESMTPSA id r185sm740qkb.39.2020.07.14.14.39.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jul 2020 14:39:30 -0700 (PDT)
-Subject: Re: [RFC PATCH 0/4] thermal: Introduce support for monitoring falling
- temperature
-To:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>, robh+dt@kernel.org
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200710135154.181454-1-thara.gopinath@linaro.org>
- <7437ee89-e76d-0c82-9860-5c6076ad8a30@linaro.org>
- <b25d54d35cec777f0dcc5b2bcacce27321d9bd45.camel@intel.com>
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <5861acec-c49a-47cc-d7c6-ccef11dc1d58@linaro.org>
-Date:   Tue, 14 Jul 2020 17:39:29 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 14 Jul 2020 18:13:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51704 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726361AbgGNWNP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jul 2020 18:13:15 -0400
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DDAA20658;
+        Tue, 14 Jul 2020 22:13:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594764794;
+        bh=p8xfw2q/yMrH6U15B1idZInMuEtxyddvH406FsTsfxQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2MLTFbXt3lEqDEHZWcpTPElKFx2Mlpghv3AL6pGhKHdgtX4mZSwhub989kb/xglYq
+         XdY4ivbtJ9Ha6PoGmeb4P0ynrMTl+Bg0GtPgQps2K6CvEvZRHhUZYCCjChTf1YeSxh
+         Sq9eTZDFW3irH7nWbO73vba+/B8p402NiNoCxREU=
+Received: by mail-ot1-f45.google.com with SMTP id 95so14221493otw.10;
+        Tue, 14 Jul 2020 15:13:14 -0700 (PDT)
+X-Gm-Message-State: AOAM532a6PWQyGSa/WJcftBH+I+mGp6h4UVvJojIWt1HgEIV2mnRQ9tZ
+        moQzI1oBj+5xilgkp9MtKJAv1VAPBGauvm26WQ==
+X-Google-Smtp-Source: ABdhPJyLD2OHAbfUvFU/OhpgQL9qmOMS53+t6bNPLQXFwTVUYSvJnvKU/NsVsjit+NH5JJh+nFWuvW57mAWywVgrxuM=
+X-Received: by 2002:a9d:2646:: with SMTP id a64mr5739450otb.107.1594764793562;
+ Tue, 14 Jul 2020 15:13:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <b25d54d35cec777f0dcc5b2bcacce27321d9bd45.camel@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200710230224.2265647-1-dianders@chromium.org>
+ <CAL_JsqKC5WtHb-coMCxMTDJ7CJcjVXcAxDT4J9N-Xyr=0uuURA@mail.gmail.com>
+ <CAD=FV=XWKoTd_t2uRGpw3oa0Nij2EPeAJpOHhUipXFW07JN2qw@mail.gmail.com>
+ <CAL_JsqLJM5nwNSdugMBLDVtjP97dikCm_AiHjnDs1jqBOFoaaQ@mail.gmail.com>
+ <CAD=FV=UP0AHWr22U69TKcwwAefPCYMsfzymobczqmrdB6BOOhA@mail.gmail.com> <CAOCk7NoX-XAXy2WaYGjGOtEmypis-DO-W1cfU0wnucHH0oZrqg@mail.gmail.com>
+In-Reply-To: <CAOCk7NoX-XAXy2WaYGjGOtEmypis-DO-W1cfU0wnucHH0oZrqg@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 14 Jul 2020 16:13:02 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+Nys+ry-3D07e-68e=9Pb34C9Js6piAnzwd1gXf_DmTw@mail.gmail.com>
+Message-ID: <CAL_Jsq+Nys+ry-3D07e-68e=9Pb34C9Js6piAnzwd1gXf_DmTw@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH 0/9] drm/msm: Avoid possible infinite probe
+ deferral and speed booting
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Doug Anderson <dianders@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>, Sean Paul <sean@poorly.run>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, Jul 14, 2020 at 10:33 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+>
+> On Mon, Jul 13, 2020 at 5:50 PM Doug Anderson <dianders@chromium.org> wrote:
+> >
+> > Hi,
+> >
+> > On Mon, Jul 13, 2020 at 1:25 PM Rob Herring <robh+dt@kernel.org> wrote:
+> > >
+> > > On Mon, Jul 13, 2020 at 9:08 AM Doug Anderson <dianders@chromium.org> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > On Mon, Jul 13, 2020 at 7:11 AM Rob Herring <robh+dt@kernel.org> wrote:
+> > > > >
+> > > > > On Fri, Jul 10, 2020 at 5:02 PM Douglas Anderson <dianders@chromium.org> wrote:
+> > > > > >
+> > > > > > I found that if I ever had a little mistake in my kernel config,
+> > > > > > or device tree, or graphics driver that my system would sit in a loop
+> > > > > > at bootup trying again and again and again.  An example log was:
+> > > > >
+> > > > > Why do we care about optimizing the error case?
+> > > >
+> > > > It actually results in a _fully_ infinite loop.  That is: if anything
+> > > > small causes a component of DRM to fail to probe then the whole system
+> > > > doesn't boot because it just loops trying to probe over and over
+> > > > again.  The messages I put in the commit message are printed over and
+> > > > over and over again.
+> > >
+> > > Sounds like a bug as that's not what should happen.
+> > >
+> > > If you defer during boot (initcalls), then you'll be on the deferred
+> > > list until late_initcall and everything is retried. After
+> > > late_initcall, only devices getting added should trigger probing. But
+> > > maybe the adding and then removing a device is causing a re-trigger.
+> >
+> > Right, I'm nearly certain that the adding and then removing is causing
+> > a re-trigger.  I believe the loop would happen for any case where we
+> > have a probe function that:
+> >
+> > 1. Adds devices.
+> > 2. After adding devices it decides that it needs to defer.
+> > 3. Removes the devices it added.
+> > 4. Return -EPROBE_DEFER from its probe function.
+> >
+> > Specifically from what I know about how -EPROBE_DEFER works I'm not
+> > sure how it wouldn't cause an infinite loop in that case.
+> >
+> > Perhaps the missing part of my explanation, though, is why it never
+> > gets out of this infinite loop.  In my case I purposely made the
+> > bridge chip "ti-sn65dsi86.c" return an error (-EINVAL) in its probe
+> > every time.  Obviously I wasn't going to get a display up like this,
+> > but I just wanted to not loop forever at bootup.  I tracked down
+> > exactly why we get an - EPROBE_DEFER over and over in this case.
+> >
+> > You can see it in msm_dsi_host_register().  If some components haven't
+> > shown up when that function runs it will _always_ return
+> > -EPROBE_DEFER.
+> >
+> > In my case, since I caused the bridge to fail to probe, those
+> > components will _never_ show up.  That means that
+> > msm_dsi_host_register() will _always_ return -EPROBE_DEFER.
+> >
+> > I haven't dug through all the DRM code enough, but it doesn't
+> > necessarily seem like the wrong behavior.  If the bridge driver or a
+> > panel was a module then (presumably) they could show up later and so
+> > it should be OK for it to defer, right?
+> >
+> > So with all that, it doesn't really feel like this is a bug so much as
+> > it's an unsupported use case.  The current deferral logic simply can't
+> > handle the case we're throwing at it.  You cannot return -EPROBE_DEFER
+> > if your probe function adds devices each time through the probe
+> > function.
+> >
+> > Assuming all the above makes sense, that means we're stuck with:
+> >
+> > a) This patch series, which makes us not add devices.
+> >
+> > b) Some other patch series which rearchitects the MSM graphics stack
+> > to not return -EPROBE_DEFER in this case.
+>
+> This isn't a MSM specific issue.  This is an issue with how the DSI
+> interface works, and how software is structured in Linux.  I would
+> expect that pretty much any DSI host in the kernel would have some
+> version of this issue.
+>
+> The problem is that DSI is not "hot pluggable", so to give the DRM
+> stack the info it needs, we need both the DSI controller (aka the MSM
+> graphics stack in your case), and the thing it connects to (in your
+> case, the TI bridge, normally the actual panel) because the DRM stack
+> expects that if init completes, it has certain information
+> (resolution, etc), and some of that information is in the DSI
+> controller, and some of it is on the DSI device.
 
+Ah yes, DRM's lack of hot-plug and discrete component support... Is
+that not improved with some of the bridge rework?
 
-On 7/14/20 9:49 AM, Zhang Rui wrote:
-> On Mon, 2020-07-13 at 17:03 +0200, Daniel Lezcano wrote:
->> On 10/07/2020 15:51, Thara Gopinath wrote:
->>> Thermal framework today supports monitoring for rising temperatures
->>> and
->>> subsequently initiating cooling action in case of a thermal trip
->>> point
->>> being crossed. There are scenarios where a SoC need some warming
->>> action to
->>> be activated if the temperature falls below a cetain permissible
->>> limit.
->>> Since warming action can be considered mirror opposite of cooling
->>> action,
->>> most of the thermal framework can be re-used to achieve this.
->>>
->>> This patch series is yet another attempt to add support for
->>> monitoring
->>> falling temperature in thermal framework. Unlike the first
->>> attempt[1]
->>> (where a new property was added to thermal trip point binding to
->>> indicate
->>> direction of temperature monitoring), this series introduces a new
->>> trip
->>> point type (THERMAL_TRIP_COLD) to indicate a trip point at which
->>> falling
->>> temperature monitoring must be triggered. This patch series uses
->>> Daniel
->>> Lezcano's recently added thermal genetlink interface[2] to notify
->>> userspace
->>> of falling temperature and rising temperature at the cold trip
->>> point. This
->>> will enable a user space engine to trigger the relevant mitigation
->>> for
->>> falling temperature. At present, no support is added to any of the
->>> thermal
->>> governors to monitor and mitigate falling temperature at the cold
->>> trip
->>> point;rather all governors return doing nothing if triggered for a
->>> cold
->>> trip point. As future extension, monitoring of falling temperature
->>> can be
->>> added to the relevant thermal governor.
->>
->> I agree we need a cold trip point in order to introduce the
->> functioning
->> temperature range in the thermal framework.
->>
->> Rui, what is your opinion ?
-> 
-> I agree with the concept of "cold" trip point.
-> In this patch set, the cold trip point is defined with only netlink
-> event support. But there are still quite a lot of things unclear,
-> especially what we should do in thermal framework?
-Hi Rui,
+Anyways, given there is a child dependency on the parent, I don't
+think we should work-around DRM deficiencies in DT.
 
-Thanks for the comments.
+BTW, There's also a deferred probe timeout you can use which stops
+deferring probe some number of seconds after late_initcall.
 
-You are right that cold trip points are dealt with only by netlink 
-events in this patch series. Eventually IMHO, governors should handle 
-them with a logic opposite to what is being currently done for non-cold 
-trip points.
-
-> 
-> For example, to support this, we can
-> either
-> introduce both "cold" trip points and "warming devices", and introduce
-> new logic in thermal framework and governors to handle them,
-> Or
-> introduce "cold" trip point and "warming" device, but only
-> semantically, and treat them just like normal trip points and cooling
-> devices. And strictly define cooling state 0 as the state that
-> generates most heat, and define max cooling state as the state that
-> generates least heat. Then, say, we have a trip point at -10C, the
-> "warming" device is set to cooling state 0 when the temperature is
-> lower than -10C, and in most cases, this thermal zone is always in a
-> "overheating" state (temperature higher than -10C), and the "warming"
-> device for this thermal zone is "throttled" to generate as least heat
-> as possible. And this is pretty much what the current code has always
-> been doing, right?
-
-
-IMHO, thermal framework should move to a direction where the term 
-"mitigation" is used rather than cooling or warming. In this case 
-"cooling dev" and "warming dev" should will become 
-"temp-mitigating-dev". So going by this, I think what you mention as 
-option 1 is more suitable where new logic is introduced into the 
-framework and governors to handle the trip points marked as "cold".
-
-Also in the current set of requirements, we have a few power domain 
-rails and other resources that are used exclusively in the thermal 
-framework for warming alone as in they are not used ever for cooling 
-down a zone. But then one of the requirements we have discussed is for 
-cpufreq and gpu scaling to be behave as warming devices where the 
-minimum operating point/ voltage of the relevant cpu/gpu is restricted.
-So in this case, Daniel had this suggestion of introducing negative 
-states for presently what is defined as cooling devices. So cooling dev 
-/ temp-mitigation-dev states can range from say -3 to 5 with 0 as the 
-good state where no mitigation is happening. This is an interesting idea 
-though I have not proto-typed it yet.
-
-> 
-> I can not say which one is better for now as I don't have the
-> background of this requirement. It's nice that Thara sent this RFC
-> series for discussion, but from upstream point of view, I'd prefer to
-> see a full stack solution, before taking any code.
-
-We had done a session at ELC on this requirement. Here is the link to 
-the presentation. Hopefully it gives you some back ground on this.
-
-https://elinux.org/images/f/f7/ELC-2020-Thara-Ram-Linux-Kernel-Thermal-Warming.pdf
-
-I have sent across some patches for introducing a generic power domain 
-warming device which is under review by Daniel.
-
-So how do you want to proceed on this? Can you elaborate a bit more on 
-what you mean by a full stack solution.
-
-> 
-> thanks,
-> Rui
-> 
-
--- 
-Warm Regards
-Thara
+Rob
