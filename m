@@ -2,222 +2,104 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44355C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 16:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 183EBC433E2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 16:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 257DA2075B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 16:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E87292075B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 16:14:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qnXT67KX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728281AbgGNQOA (ORCPT
+        id S1728177AbgGNQOe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 12:14:00 -0400
-Received: from mga17.intel.com ([192.55.52.151]:13555 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728153AbgGNQOA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 12:14:00 -0400
-IronPort-SDR: j3kr0dCLL6HnDRLgML3bUUPchyM04RxmLG/yK6nyYRUDdtnCbJHdqe2vIligRluvSxBLAAb91f
- n5uflYsQGF0w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="129030394"
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="129030394"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 09:13:57 -0700
-IronPort-SDR: F1mVtnAzisnmV70Pv7CVDD1755nVp3KgQKYxi/unxQaaDlySYph8n4NjcQlOVEq1M4MDymjbiw
- LmSD7683LDLQ==
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="485930637"
-Received: from yagellee-mobl.ger.corp.intel.com (HELO dalessan-mobl1.ir.intel.com) ([10.252.20.60])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 09:13:53 -0700
-From:   Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
-List-Id: <soc.lore.kernel.org>
-To:     linux-arm-kernel@lists.infradead.org, SoC Team <soc@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc:     Daniele Alessandrelli <daniele.alessandrelli@intel.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jassi Brar <jassisinghbrar@gmail.com>,
+        Tue, 14 Jul 2020 12:14:34 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:7132 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbgGNQOd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 12:14:33 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0dd9af0001>; Tue, 14 Jul 2020 09:13:35 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 14 Jul 2020 09:14:33 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 14 Jul 2020 09:14:33 -0700
+Received: from [10.24.37.103] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Jul
+ 2020 16:14:25 +0000
+Subject: Re: [TEGRA194_CPUFREQ PATCH v5 1/4] dt-bindings: arm: Add t194 ccplex
+ compatible and bpmp property
+To:     Rob Herring <robh@kernel.org>
+CC:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "Paul J. Murphy" <paul.j.murphy@intel.com>,
-        Dinh Nguyen <dinguyen@kernel.org>
-Subject: [PATCH v3 6/7] arm64: dts: keembay: Add device tree for Keem Bay SoC
-Date:   Tue, 14 Jul 2020 17:13:04 +0100
-Message-Id: <20200714161305.836348-7-daniele.alessandrelli@linux.intel.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200714161305.836348-1-daniele.alessandrelli@linux.intel.com>
-References: <20200714161305.836348-1-daniele.alessandrelli@linux.intel.com>
+        "Will Deacon" <will@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        <devicetree@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>,
+        Timo Alho <talho@nvidia.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        <bbasu@nvidia.com>, Mikko Perttunen <mperttunen@nvidia.com>,
+        Sumit Gupta <sumitg@nvidia.com>
+References: <1594649209-29394-1-git-send-email-sumitg@nvidia.com>
+ <1594649209-29394-2-git-send-email-sumitg@nvidia.com>
+ <20200713164214.GA341271@bogus>
+ <70a0a8ee-b79a-2a05-5150-2ee0faaf2730@nvidia.com>
+ <CAL_JsqL1CuumdT1CZiofEZw9j+3gsir8JwSrZVfcxFxEB=bavQ@mail.gmail.com>
+From:   Sumit Gupta <sumitg@nvidia.com>
+Message-ID: <ebc98e4b-1f94-e9a5-cad4-0677f4e440f7@nvidia.com>
+Date:   Tue, 14 Jul 2020 21:44:22 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqL1CuumdT1CZiofEZw9j+3gsir8JwSrZVfcxFxEB=bavQ@mail.gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594743215; bh=/P5rK0jFQFtvkIppoDEAhZsCXMc8C/ph5QwjUSI4HQ0=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=qnXT67KX8RhTnD9Mtxu7mrWphK73FS5l7mjJnHIsqSG9tbjQb7ko+f0DYypkxpLHm
+         rpe5+GOZTFm1wUAS21fajtoShYzYPPwG/CbHvmrZS0pmGZYuq2uW3VVYlnx29Kx+YV
+         10a1ykGV9l8+dfkSelN0X8dmhwh7mrC7d2IAqUfBnRvXiVHAbDmktMh3O0zoNA01dr
+         LZuZufNgUIODZ2nK9n/u164NghxnC5Cj68CGIVQvPP7g3OwSIq75hWlnCU1mhdBQTs
+         U+9F8+6jTUWjphsqvWEk8ThW6qOZejOUfENRPotDupikT+QIb3nuQEorKD8bmCMIza
+         9ByB+YNPkASkw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
 
-Add initial device tree for Intel Movidius SoC code-named Keem Bay.
+>>>
+>>> The cpus.yaml binding documents what's in 'cpu' nodes, not 'cpus'
+>>> node. AIUI, the latter is what you want. You should do your own schema
+>>> file here.
+>>>
+>> Do you mean to change existing file name from 'cpus.yaml' to 'cpu.yaml'
+>> and create new 'cpus.yaml' file?
+>> I think it's better to incorporate the change in existing 'cpus.yaml'
+>> file to keep both cpu@X and cpus node details together. Please suggest.
+> 
+> No, I'm suggesting you create nvidia,tegra194-ccplex.yaml.
+> 
+Have posted new version of only this patch with new schema file.
+Please review.
 
-This initial DT includes nodes for Cortex-A53 cores, UARTs, GIC, PSCI,
-and PMU.
-
-Reviewed-by: Dinh Nguyen <dinguyen@kernel.org>
-Signed-off-by: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
----
- MAINTAINERS                                |   1 +
- arch/arm64/boot/dts/intel/keembay-soc.dtsi | 125 +++++++++++++++++++++
- 2 files changed, 126 insertions(+)
- create mode 100644 arch/arm64/boot/dts/intel/keembay-soc.dtsi
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b151d0fc0588..e5019c8487c8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1959,6 +1959,7 @@ M:	Paul J. Murphy <paul.j.murphy@intel.com>
- M:	Daniele Alessandrelli <daniele.alessandrelli@intel.com>
- S:	Maintained
- F:	Documentation/devicetree/bindings/arm/keembay.yaml
-+F:	arch/arm64/boot/dts/intel/keembay-soc.dtsi
- F:	include/dt-bindings/clock/keembay-clocks.h
- F:	include/dt-bindings/power/keembay-power.h
- 
-diff --git a/arch/arm64/boot/dts/intel/keembay-soc.dtsi b/arch/arm64/boot/dts/intel/keembay-soc.dtsi
-new file mode 100644
-index 000000000000..57c67621ed63
---- /dev/null
-+++ b/arch/arm64/boot/dts/intel/keembay-soc.dtsi
-@@ -0,0 +1,125 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
-+/*
-+ * Copyright (C) 2020, Intel Corporation.
-+ *
-+ * Device tree describing Keem Bay SoC.
-+ */
-+
-+#include <dt-bindings/clock/keembay-clocks.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/power/keembay-power.h>
-+
-+/ {
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <0x0>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu@1 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <0x1>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu@2 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <0x2>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu@3 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <0x3>;
-+			enable-method = "psci";
-+		};
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "smc";
-+	};
-+
-+	gic: interrupt-controller@20500000 {
-+		compatible = "arm,gic-v3";
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+		reg = <0x0 0x20500000 0x0 0x20000>,	/* GICD */
-+		      <0x0 0x20580000 0x0 0x80000>;	/* GICR */
-+		/* VGIC maintenance interrupt */
-+		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		/* Secure, non-secure, virtual, and hypervisor */
-+		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_PPI 10 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	pmu {
-+		compatible = "arm,armv8-pmuv3";
-+		interrupts = <GIC_PPI 0x7 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		uart0: serial@20150000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x0 0x20150000 0x0 0x100>;
-+			interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-frequency = <24000000>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@20160000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x0 0x20160000 0x0 0x100>;
-+			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-frequency = <24000000>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			status = "disabled";
-+		};
-+
-+		uart2: serial@20170000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x0 0x20170000 0x0 0x100>;
-+			interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-frequency = <24000000>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			status = "disabled";
-+		};
-+
-+		uart3: serial@20180000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x0 0x20180000 0x0 0x100>;
-+			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-frequency = <24000000>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			status = "disabled";
-+		};
-+	};
-+};
--- 
-2.26.2
-
+Thanks,
+Sumit
