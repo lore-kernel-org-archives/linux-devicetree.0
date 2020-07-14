@@ -2,100 +2,220 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2938FC433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 16:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA659C433EA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 16:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1E5D22519
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 16:08:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594742919;
-	bh=m1sZU8ZEuecg3AdLYhlDX2E1cX3Y8hJyqEV30UQuGNU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d/jZ1qImAPk/BnGzSrr5RYa8rUTvFyQAguJKgmuGYvBE9YGnqft5uOTA79KqNnO7P
-	 lKYeHcpKaRLdxJvVPwvqWrYFeqg7+GO4XLe/Os3xkD2dcFpDw9aTjC47Bl/i0AZuLz
-	 lHxPVL4u/vybgZwtQRpdE5q7G3e0anmpRvk1+kiU=
+	by mail.kernel.org (Postfix) with ESMTP id ADED522515
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 16:09:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgGNQIf (ORCPT
+        id S1728169AbgGNQJB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 12:08:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbgGNQIf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 12:08:35 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3AE822515;
-        Tue, 14 Jul 2020 16:08:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594742914;
-        bh=m1sZU8ZEuecg3AdLYhlDX2E1cX3Y8hJyqEV30UQuGNU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dYPw/QTslqDwXMkvcuWmgLjUlIp+8O6gOIUKVUY2+TlTa34zQ+zz1U09lJOwQW09S
-         Zs39faJMF1AQ5iw8NUoRb+aOAmoaJq57/pNyE2didK61rX+fg7Upj2jbx+qnSqFSBo
-         krdukl4duieXXuhukMg/55wm4P/zD5q7x9vpVeLg=
-Date:   Tue, 14 Jul 2020 21:38:30 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 05/11] dmaengine: Introduce DMA-device device_caps
- callback
-Message-ID: <20200714160830.GL34333@vkoul-mobl>
-References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
- <20200709224550.15539-6-Sergey.Semin@baikalelectronics.ru>
- <20200710084503.GE3703480@smile.fi.intel.com>
- <20200710093834.su3nsjesnhntpd6d@mobilestation>
- <07d4a977-1de6-b611-3d4f-7c7d6cd7fe5f@intel.com>
+        Tue, 14 Jul 2020 12:09:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41250 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbgGNQJB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 12:09:01 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA9B7C061755
+        for <devicetree@vger.kernel.org>; Tue, 14 Jul 2020 09:09:00 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jvNUI-0006MO-Nr; Tue, 14 Jul 2020 18:08:58 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jvNUG-00029L-H1; Tue, 14 Jul 2020 18:08:56 +0200
+Date:   Tue, 14 Jul 2020 18:08:56 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v5 07/13] pwm: add support for sl28cpld PWM controller
+Message-ID: <20200714160856.rjqi7lv63geil3hm@pengutronix.de>
+References: <20200706175353.16404-1-michael@walle.cc>
+ <20200706175353.16404-8-michael@walle.cc>
+ <20200709085006.b54ype3p4yu64upl@pengutronix.de>
+ <72858253a9094074e9c8cd7a4e1db09f@walle.cc>
+ <20200713084750.qj4hquzd6uz6y526@pengutronix.de>
+ <c0594c34c712ce26b3936d42c92d2361@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ochzazkc36dtv4os"
 Content-Disposition: inline
-In-Reply-To: <07d4a977-1de6-b611-3d4f-7c7d6cd7fe5f@intel.com>
+In-Reply-To: <c0594c34c712ce26b3936d42c92d2361@walle.cc>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 13-07-20, 13:55, Dave Jiang wrote:
-> 
-> 
-> On 7/10/2020 2:38 AM, Serge Semin wrote:
-> > On Fri, Jul 10, 2020 at 11:45:03AM +0300, Andy Shevchenko wrote:
-> > > On Fri, Jul 10, 2020 at 01:45:44AM +0300, Serge Semin wrote:
-> > > > There are DMA devices (like ours version of Synopsys DW DMAC) which have
-> > > > DMA capabilities non-uniformly redistributed between the device channels.
-> > > > In order to provide a way of exposing the channel-specific parameters to
-> > > > the DMA engine consumers, we introduce a new DMA-device callback. In case
-> > > > if provided it gets called from the dma_get_slave_caps() method and is
-> > > > able to override the generic DMA-device capabilities.
-> > > 
-> > 
-> > > In light of recent developments consider not to add 'slave' and a such words to the kernel.
-> > 
-> > As long as the 'slave' word is used in the name of the dma_slave_caps
-> > structure and in the rest of the DMA-engine subsystem, it will be ambiguous
-> > to use some else terminology. If renaming needs to be done, then it should be
-> > done synchronously for the whole subsystem.
-> 
-> What about just calling it dma_device_caps? Consider this is a useful
-> function not only slave DMA will utilize this. I can see this being useful
-> for some of my future code with idxd driver.
 
-Some of the caps may make sense to generic dmaengine but few of them do
-not :) While at it, am planning to make it dmaengine_periph_caps to
-denote that these are dmaengine peripheral capabilities.
+--ochzazkc36dtv4os
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-~Vinod
+Hello Michael,
+
+On Tue, Jul 14, 2020 at 01:31:13PM +0200, Michael Walle wrote:
+> Am 2020-07-13 10:47, schrieb Uwe Kleine-K=F6nig:
+> > I already thought about proposing pwm_get_rate_hw(), but for now there
+> > is (AFAICT) no user who would need it. And it's hard to know which
+> > variant is actually preferred by consumers. My expectation is that most
+> > don't even care.
+> >=20
+> > I also have a pwm_round_rate() function in mind that will give you the
+> > actual rate without applying it. This can then be used by consumers who
+> > care. But also there is no user who would need it today.
+>=20
+> Ok. I take it that all such improvements are still in the making ;)
+
+If you have a real use case, present it, then I give it a boost on my
+todo list.
+
+> > > But the PWM subsystem returns the cached state,
+> > > right? get_state() is called only on device request (and during
+> > > debug it seems). Actually, enabling PWM_DEBUG might choke on this
+> > > workaround (".apply didn't pick the best available period"). Is
+> > > this ok?
+> >=20
+> > hmm, I didn't consider this when writing the checks for PWM_DEBUG.
+> > According to the currently checked rules the expected configuration is
+> > to pick the 250Hz mode and use cycle =3D 0x7f.
+>=20
+> Not to use 0x80, which is the max_duty_cycle? Like its 0x40 for the 500Hz
+> mode.
+
+No, when I thought about a sane set of rules (and so checks for
+PWM_DEBUG) I didn't consider a PWM that can implement 100% but not for
+all otherwise available period lengths. I'm still amazed sometimes how
+different the capabilities of different implementations for something so
+seemingly easy like a PWM are.
+
+> > Hmm, I have to think about
+> > this. Maybe we should weaken the check to the cases with
+> > 0 < duty_cycle < period. Thierry, what do you think?
+> >=20
+> > Special casing 0% and 100% is annoying, but insisting 250Hz + 0x7f seems
+> > to be far from reality. (Is it?)
+>=20
+> If you mean by insisting to clip at 0x7f, yeah thats bad IMHO, because
+> the user wants an all-high line, but in the end it would be a toggling
+> line. It wouldn't be that bad for anything in between 0% and 100% but
+> IMHO its bad for exactly 0% and 100%.
+>=20
+> You could also ask the driver about known quirks, like special 0% and
+> 100% handling and exclude it from the tests accordingly.
+
+Do you care enough to propose a patch? You're in the situation to test
+it.
+
+> > > > > +	ret =3D regmap_write(priv->regmap, priv->offset + PWM_CTRL, ctr=
+l);
+> > > > > +	if (ret)
+> > > > > +		return ret;
+> > > > > +
+> > > > > +	return regmap_write(priv->regmap, priv->offset + PWM_CYCLE,
+> > > > > (u8)cycle);
+> > > >
+> > > > I assume this can result in broken output? Consider the hardware ru=
+ns
+> > > > with mode =3D 1 & cycle =3D 0x23 and you want to go to mode =3D 0 &=
+ cycle =3D
+> > > > 0x42: Can this result in a period that has mode =3D 0 & cycle =3D 0=
+x23?
+> > >=20
+> > > Isn't that always the case if a write may fail and there are more than
+> > > one register to configure?
+> >=20
+> > Depending on hardware capabilities you might not be able to prevent
+> > this yes. Unfortunately this is quite common.
+> >=20
+> > But there are hardware implementations that are not prone to such
+> > failures. (E.g. the registers written can be only shadow values that are
+> > latched into hardware only when the last value is written.)
+>=20
+> Maybe this could be improved in the future.
+
+We should somewhere describe, what an ideal PWM can do.=20
+My wishlist (just as it comes to my mind, so no guarantee of
+completeness):
+
+ - can do 0% duty cycle for all supported period lengths
+ - can do 100% duty cycle for all supported period lengths
+ - supports both polarities
+ - supports immediate change of configuration and after completion of
+   the currently running period
+ - atomic update (i.e. if you go from configuration A to configuration B
+   the hardware guarantees to only emit periods of type A and then type
+   B. (Depending on the item above, the last A period might be cut off.)
+ - emits an irq when configuration changes
+
+> > If you change only cycle but not mode, does the hardware complete the
+> > currently running period?
+>=20
+> No it does not.
+
+Please document this as a Limitation.
+=20
+> > What about disable()?
+>=20
+> Mhh well, it would do one 100% cycle.. mhh ;) Lets see if there we can
+> fix that (in hardware), not much we can do in the driver here. We are
+> _very_ constraint in size, therefore all that little edge cases fall off
+> the table.
+
+You're saying that on disable the hardware emits a constant high level
+for one cycle? I hope not ...
+
+I never programmed a CPLD to emulate a hardware PWM, but I wonder if
+these are really edge cases that increase the size of the binary?!
+
+Best regards
+Uwe
+
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--ochzazkc36dtv4os
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8N2JUACgkQwfwUeK3K
+7AkhFQf/QeUghp0itjnebSKuCcU1Du1FgZx19oml+qdZdrWg9phaEQGAQxXc7m+N
+HoMLWaZLv3O8L5DS4hpYKyj+hK1w7pN1qjuRbkevrgYUlDcU/NYeA+3UUfB7TAMz
+N7muhIaeivH8Z4gJfLtnFtosfOHt3sqZTEYeX5frrCTHro4f7ecgwqkbtAv9MO+M
+Ct382nabV/hgbpuyAya4PbeHtpJXqRVB4fgXFim8n86jJVZcqLgm+Cjk+NG3BABF
++gaDplLA8kTNTKJnKUxpMbKpsR4YBz6hqmP/YlhmWHweIwDy6HXMQyOkrnH0LINz
+4YQ4iZLwcCQt6CY4bEP1h+aiZJjm+g==
+=A67j
+-----END PGP SIGNATURE-----
+
+--ochzazkc36dtv4os--
