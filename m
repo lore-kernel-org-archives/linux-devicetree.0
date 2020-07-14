@@ -2,102 +2,204 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3529C433E4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 02:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0618AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 02:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A45520C56
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 02:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF5D521D91
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 02:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594694818;
-	bh=tb89MPufIRQTjNjbYjaOsF8kfZemqK2Axttm/UcaCjg=;
+	s=default; t=1594694955;
+	bh=FQefL0S3oOa2O4hzm7+iXbr0aZkkdvsbdCRiO+nHzdg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YWIHSyKjOdZDJ8q+0LVyZ3J5RecIm85JkBiLjSXZIoYh0iosPKoULOeha8LH1Lkmh
-	 7uhkY+CQHB1+fS8lYfTjHeG9fsYvJ/XoO60EJQd8izHdYeafX06eoX90FyVsvicB/g
-	 8t+MaDgGKE3kv1N7ihKgxRXDjbbgOzSk09ZHfBGY=
+	b=NSJ47FBQ3vpjKMG5scAshb3cSsfBhTcs5bHwd+tjV7tDMaHt+WQyYsXYnqtYu19ik
+	 ppWqATDMJVwKD6lg/V9V9aK06OPfMI0aJ+/qWd/qUrdEZl/OHCUxMjjzIdy5o7U0FW
+	 zJw4mVWfU45UXsyTZiL0vuYaoaV9s+pi8ekMfczA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbgGNCqz (ORCPT
+        id S1726435AbgGNCtP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 22:46:55 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40079 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726742AbgGNCqz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 22:46:55 -0400
-Received: by mail-io1-f67.google.com with SMTP id l17so4254065iok.7;
-        Mon, 13 Jul 2020 19:46:54 -0700 (PDT)
+        Mon, 13 Jul 2020 22:49:15 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:40192 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbgGNCtP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 22:49:15 -0400
+Received: by mail-il1-f196.google.com with SMTP id e18so13001279ilr.7;
+        Mon, 13 Jul 2020 19:49:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Bc5jq0niHA3gC08P2rOK06R4R1evL8StG0uwWdkja3Y=;
-        b=Evieg6i57U43gQpqsD3U6XyErOPHli7xCwhKjUmBiOGDTMLEYWoTYdQ36cewIH8jfn
-         Im0KrBpmAR17jGZOqRQKfDT4BPhBefkwWrdGsxsPu/p9HueJy/OU/qJw+acHBuuecl4/
-         tGjTbrlBPCE295lMfHPnhbVHSGiv4F9e8csGSyzbLqRn4SJ5FsskjKo8v74TgV6GdClz
-         5/dV9TRSNNTfzuC4O0ZtnsUKFCniw2/rXbIJ0bbs0Z5kWsdEeU1jx7cpvno/BYxF0w0a
-         W0Tj38Jq6GI3++8tUSM1r+71X58NNK07Yate97P0IhozXVEfqGMNFtGfC+kc0nrqnZaW
-         f+Ew==
-X-Gm-Message-State: AOAM5325YPcLG/kLi8UAanx235TNA9+M66q4pK39APtX0o8p1HqtnHoi
-        y30mnEr3Vuv7RVjIFteswQ==
-X-Google-Smtp-Source: ABdhPJxtEZf0uhmPI6XNqvrxc/TEXzwKQHie8nqQYbol8cjKgBqiy0lDcBQvXMLpVO0RWLzVhVfD0g==
-X-Received: by 2002:a6b:1ce:: with SMTP id 197mr2922980iob.76.1594694813895;
-        Mon, 13 Jul 2020 19:46:53 -0700 (PDT)
+        bh=DdQRU+re2daApc1buZh/NOScJMoADL35yGQLsQdXB0M=;
+        b=LtknXvta8Kz1C/vk2tTggkcKoVTwQX+UeiTeQ09r71DwrEb1cCS8P+uB5cP2z8VBIB
+         38u5utVpQ56NhggHHm14cR2bjU/w0KvR0Et4Sq2Im1dPr90rmFleWCB6IIzpXOZIhLM3
+         htPWqs/+4w2vpm+StWT3IvWXRSeMYtFv1zbDPEm8MGwKIQeaVK3ujyQH44o42AUDPcBh
+         kNOb9Ctdz2uKqQSleuibFBezGNVsWohRbUR5il5gmy7xCDon1m3a+Cz8ezMhWcqUoGmM
+         uqFK3B2R0fnTwCDnAOuXO1g1w05+JcSL6z2lmTNGMSF8HipoHVMmZo5Ci/gWy92viw5K
+         U4kA==
+X-Gm-Message-State: AOAM531LnXMRZrTKETwHXYSYMqU9+SrusJqXTmj0N4azxKXeXWMYBYF1
+        vKEJuJko31UdbX3wC7cgAA==
+X-Google-Smtp-Source: ABdhPJz9igZQqkIyHCZ5N1hs9WTl0MnTGAZmaW5l4R56IePZCqGF6EM/cUpsjUEx18PhvChQvcjoqA==
+X-Received: by 2002:a92:c00d:: with SMTP id q13mr2499962ild.222.1594694954000;
+        Mon, 13 Jul 2020 19:49:14 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id x12sm9349060ile.14.2020.07.13.19.46.52
+        by smtp.gmail.com with ESMTPSA id f18sm8489104ion.47.2020.07.13.19.49.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 19:46:53 -0700 (PDT)
-Received: (nullmailer pid 1184151 invoked by uid 1000);
-        Tue, 14 Jul 2020 02:46:52 -0000
-Date:   Mon, 13 Jul 2020 20:46:52 -0600
+        Mon, 13 Jul 2020 19:49:13 -0700 (PDT)
+Received: (nullmailer pid 1187292 invoked by uid 1000);
+        Tue, 14 Jul 2020 02:49:12 -0000
+Date:   Mon, 13 Jul 2020 20:49:12 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+To:     Adrian Pop <pop.adrian61@gmail.com>
+Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
         Lee Jones <lee.jones@linaro.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Pankaj Dubey <pankaj.dubey@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, devicetree@vger.kernel.org,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/8] dt-bindings: pwm: samsung: Do not require
- interrupts on Exynos SoCs
-Message-ID: <20200714024652.GA1184042@bogus>
-References: <20200702155149.12854-1-krzk@kernel.org>
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] ARM: dts: stm32: Enable MIPI DSI display support.
+Message-ID: <20200714024912.GA1184333@bogus>
+References: <20200702172714.158786-1-pop.adrian61@gmail.com>
+ <20200702172714.158786-2-pop.adrian61@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200702155149.12854-1-krzk@kernel.org>
+In-Reply-To: <20200702172714.158786-2-pop.adrian61@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 02 Jul 2020 17:51:42 +0200, Krzysztof Kozlowski wrote:
-> The bindings required interrupts for all SoCs but actually only the PWM
-> timer clocksource (for S3C/S5P SoCs) was using them.  This PWM timer
-> clocksource driver is not used on Exynos SoCs thus the interrupts can be
-> marked as optional.
+On Thu, Jul 02, 2020 at 08:27:14PM +0300, Adrian Pop wrote:
+> STM32f769-disco features a 4" MIPI DSI display: add support for it.
+> On Cortex-M7 DMA can't use cached memory. For this reason I use a dedicated
+> memory pool for DMA with no-cache attribute which is located at the end of
+>  RAM.
 > 
-> Reported-by: Alim Akhtar <alim.akhtar@samsung.com>
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
+> Signed-off-by: Adrian Pop <pop.adrian61@gmail.com>
 > ---
+>  arch/arm/boot/dts/stm32f746.dtsi      | 34 +++++++++++++++++++
+>  arch/arm/boot/dts/stm32f769-disco.dts | 49 +++++++++++++++++++++++++++
+>  2 files changed, 83 insertions(+)
 > 
-> Changes since v1:
-> 1. New patch
-> ---
->  .../devicetree/bindings/pwm/pwm-samsung.yaml  | 23 +++++++++++++++----
->  1 file changed, 18 insertions(+), 5 deletions(-)
-> 
+> diff --git a/arch/arm/boot/dts/stm32f746.dtsi b/arch/arm/boot/dts/stm32f746.dtsi
+> index 93c063796780..577a812ca01c 100644
+> --- a/arch/arm/boot/dts/stm32f746.dtsi
+> +++ b/arch/arm/boot/dts/stm32f746.dtsi
+> @@ -48,6 +48,19 @@ / {
+>  	#address-cells = <1>;
+>  	#size-cells = <1>;
+>  
+> +	reserved-memory {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		linux,dma {
 
-Applied, thanks!
+Build your DT with W=1. This will have a warning.
+
+> +			compatible = "shared-dma-pool";
+> +			linux,dma-default;
+> +			no-map;
+> +			reg = <0xc0f00000 0x100000>;
+> +		};
+> +	};
+> +
+>  	clocks {
+>  		clk_hse: clk-hse {
+>  			#clock-cells = <0>;
+> @@ -75,6 +88,27 @@ clk_i2s_ckin: clk-i2s-ckin {
+>  	};
+>  
+>  	soc {
+> +		ltdc: display-controller@40016800 {
+> +			compatible = "st,stm32-ltdc";
+> +			reg = <0x40016800 0x200>;
+> +			interrupts = <88>, <89>;
+> +			resets = <&rcc STM32F7_APB2_RESET(LTDC)>;
+> +			clocks = <&rcc 1 CLK_LCD>;
+> +			clock-names = "lcd";
+> +			status = "disabled";
+> +		};
+> +
+> +		dsi: dsi@40016c00 {
+> +			compatible = "st,stm32-dsi";
+> +			reg = <0x40016c00 0x800>;
+> +			interrupts = <98>;
+> +			clocks = <&rcc 1 CLK_F769_DSI>, <&clk_hse>;
+> +			clock-names = "pclk", "ref";
+> +			resets = <&rcc STM32F7_APB2_RESET(DSI)>;
+> +			reset-names = "apb";
+> +			status = "disabled";
+> +		};
+> +
+>  		timer2: timer@40000000 {
+>  			compatible = "st,stm32-timer";
+>  			reg = <0x40000000 0x400>;
+> diff --git a/arch/arm/boot/dts/stm32f769-disco.dts b/arch/arm/boot/dts/stm32f769-disco.dts
+> index 1626e00bb2cb..a9e81b49809c 100644
+> --- a/arch/arm/boot/dts/stm32f769-disco.dts
+> +++ b/arch/arm/boot/dts/stm32f769-disco.dts
+> @@ -153,3 +153,52 @@ &usbotg_hs {
+>  	pinctrl-names = "default";
+>  	status = "okay";
+>  };
+> +
+> +&dsi {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	status = "okay";
+> +
+> +	ports {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		port@0 {
+> +			reg = <0>;
+> +			dsi_in: endpoint {
+> +				remote-endpoint = <&ltdc_out_dsi>;
+> +			};
+> +		};
+> +
+> +		port@1 {
+> +			reg = <1>;
+> +			dsi_out: endpoint {
+> +				remote-endpoint = <&dsi_in_panel>;
+> +			};
+> +		};
+> +
+> +	};
+> +
+> +	panel: panel {
+> +		compatible = "orisetech,otm8009a";
+> +		reg = <0>;
+> +		reset-gpios = <&gpioj 15 GPIO_ACTIVE_LOW>;
+> +		status = "okay";
+
+Don't need status. Enabled is the default.
+
+> +
+> +		port {
+> +			dsi_in_panel: endpoint {
+> +				remote-endpoint = <&dsi_out>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&ltdc {
+> +	status = "okay";
+> +
+> +	port {
+> +		ltdc_out_dsi: endpoint {
+> +			remote-endpoint = <&dsi_in>;
+> +		};
+> +	};
+> +};
+> -- 
+> 2.27.0
+> 
