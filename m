@@ -2,108 +2,102 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A11C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 09:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB99C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 09:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90218208C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 09:33:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="I0lhH+Sg"
+	by mail.kernel.org (Postfix) with ESMTP id 9121221D7D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 09:53:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594720389;
+	bh=69NDwPfEkbnCl+IKo1KaYa8NHEQkLg8q/hcElxsnFJM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jHSlDNxTqN5mHM8MpYPKbGePlAQMxmaHT0RsJag2c3/4bOJ/QUMyXZ+AonGsrDJQm
+	 WjYn0tnpq6toGqMPw8SfpecNXqsN9ogsdtStQ5H4jzh+cQSFcUVTJVUrm0vO3oYP7q
+	 iV/OqyRAHf5jV9mnIKXDAHtTMbWR7yZNmdOI3Gew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725952AbgGNJdz (ORCPT
+        id S1725952AbgGNJxJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:33:55 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:42253 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725884AbgGNJdy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 05:33:54 -0400
-X-UUID: 03cb09f6c67347d4bd174cae1c380851-20200714
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=k1s7sjnnsRye1CFdb6q0XzdF7nQsqyfBB1IhxQ2urWM=;
-        b=I0lhH+SgvmpVYRsa1E8cdyHfe2AuG/Qfq59D7x4V0Xq7oNnoXNT5Z+MVFpgFPN3M5eyulToc4tuqz1y4YHjhZwKmiBMIQG24M+WGajW4otv82ZBmBuEz3X77+92ieROMdmh3OGIh+9dXBLvgYT/4yIUnthElkq7mdi5YyidF3/Y=;
-X-UUID: 03cb09f6c67347d4bd174cae1c380851-20200714
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 220981910; Tue, 14 Jul 2020 17:33:48 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS32N2.mediatek.inc
- (172.27.4.72) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 14 Jul
- 2020 17:33:47 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 14 Jul 2020 17:33:45 +0800
-Message-ID: <1594719177.16172.33.camel@mhfsdcap03>
-Subject: Re: [PATCH 12/21] iommu/mediatek: Add iova reserved function
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Pi-Hsun Shih <pihsun@chromium.org>
-CC:     Joerg Roedel <joro@8bytes.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Tomasz Figa <tfiga@google.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>,
-        Youlin Pei =?UTF-8?Q?=28=E8=A3=B4=E5=8F=8B=E6=9E=97=29?= 
-        <youlin.pei@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>,
-        <anan.sun@mediatek.com>, <cui.zhang@mediatek.com>,
-        <chao.hao@mediatek.com>, <ming-fan.chen@mediatek.com>,
-        Hao Chao <hao.chao@mediatek.com>
-Date:   Tue, 14 Jul 2020 17:32:57 +0800
-In-Reply-To: <CANdKZ0d8CSWQepCj9RFFxrvYq8K8G=oZCnskRiA3aY3gY-DD=w@mail.gmail.com>
-References: <20200711064846.16007-1-yong.wu@mediatek.com>
-         <20200711064846.16007-13-yong.wu@mediatek.com>
-         <CANdKZ0d8CSWQepCj9RFFxrvYq8K8G=oZCnskRiA3aY3gY-DD=w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 14 Jul 2020 05:53:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39628 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725884AbgGNJxI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jul 2020 05:53:08 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B50DD20EDD;
+        Tue, 14 Jul 2020 09:53:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594720388;
+        bh=69NDwPfEkbnCl+IKo1KaYa8NHEQkLg8q/hcElxsnFJM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=b4S3d/Cpg/SKJZaLtxCRtdwqV5R+4hYj1NBblToFHsT2iKgKg7o6lDZaJdoaFwGDB
+         YMjhQ6hyYwLYhwntegIrVyCLl1RkVr/LLUoSutGgg06I7ETTTHTvEwd5VW6DAEDgV8
+         nkw33EMoPHD/WMF7+Ij0eHGWTVzqvo2vM4TIZBIs=
+Date:   Tue, 14 Jul 2020 10:52:59 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        DTML <devicetree@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        - <alsa-devel@alsa-project.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: ASoC: Convert UniPhier EVEA codec to
+ json-schema
+Message-ID: <20200714095259.GB4900@sirena.org.uk>
+References: <20200623114005.791643-1-yamada.masahiro@socionext.com>
+ <20200714022252.GA1151466@bogus>
+ <CAK7LNAQrdqztMrHtAHnbMkxeaDLLyBS68WVovev+zytHdD7RVQ@mail.gmail.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: DEC085A44EA7D3545BF3F8F5EDD48DA486042A01F90A9595EFE295D355A786BF2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="RASg3xLB4tUQ4RcS"
+Content-Disposition: inline
+In-Reply-To: <CAK7LNAQrdqztMrHtAHnbMkxeaDLLyBS68WVovev+zytHdD7RVQ@mail.gmail.com>
+X-Cookie: Your password is pitifully obvious.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA3LTEzIGF0IDE1OjMzICswODAwLCBQaS1Ic3VuIFNoaWggd3JvdGU6DQo+
-IE9uIFNhdCwgSnVsIDExLCAyMDIwIGF0IDI6NTEgUE0gWW9uZyBXdSA8eW9uZy53dUBtZWRpYXRl
-ay5jb20+IHdyb3RlOg0KPiA+DQo+ID4gRm9yIG11bHRpcGxlIGlvbW11X2RvbWFpbnMsIHdlIG5l
-ZWQgdG8gcmVzZXJ2ZSBzb21lIGlvdmEgcmVnaW9ucywgc28gd2UNCj4gPiB3aWxsIGFkZCBtdGtf
-aW9tbXVfaW92YV9yZWdpb24gc3RydWN0dXJlLiBJdCBpbmNsdWRlcyB0aGUgYmFzZSBhZGRyZXNz
-DQo+ID4gYW5kIHNpemUgb2YgdGhlIHJhbmdlLg0KPiA+IFRoaXMgaXMgYSBwcmVwYXJpbmcgcGF0
-Y2ggZm9yIHN1cHBvcnRpbmcgbXVsdGktZG9tYWluLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTog
-QW5hbiBzdW48YW5hbi5zdW5AbWVkaWF0ZWsuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEhhbyBD
-aGFvPGhhby5jaGFvQG1lZGlhdGVrLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBZb25nIFd1IDx5
-b25nLnd1QG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9pb21tdS9tdGtfaW9t
-bXUuYyB8IDM3ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgZHJp
-dmVycy9pb21tdS9tdGtfaW9tbXUuaCB8ICA1ICsrKysrDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwg
-NDIgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaW9tbXUvbXRr
-X2lvbW11LmMgYi9kcml2ZXJzL2lvbW11L210a19pb21tdS5jDQo+ID4gaW5kZXggMDNhNmQ2NmY0
-YmVmLi5mZGZkYjc1NzA2ZTAgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9pb21tdS9tdGtfaW9t
-bXUuYw0KPiA+ICsrKyBiL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmMNCj4gPiBAQCAtMTUxLDYg
-KzE1MSwxMSBAQCBzdGF0aWMgTElTVF9IRUFEKG00dWxpc3QpOyAvKiBMaXN0IGFsbCB0aGUgTTRV
-IEhXcyAqLw0KPiA+IC4uLg0KPiA+ICsNCj4gPiArc3RhdGljIHZvaWQgbXRrX2lvbW11X3B1dF9y
-ZXN2X3JlZ2lvbnMoc3RydWN0IGRldmljZSAqZGV2LA0KPiA+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHN0cnVjdCBsaXN0X2hlYWQgKmhlYWQpDQo+ID4gK3sNCj4gPiAr
-ICAgICAgIHN0cnVjdCBpb21tdV9yZXN2X3JlZ2lvbiAqZW50cnksICpuZXh0Ow0KPiA+ICsNCj4g
-PiArICAgICAgIGxpc3RfZm9yX2VhY2hfZW50cnlfc2FmZShlbnRyeSwgbmV4dCwgaGVhZCwgbGlz
-dCkNCj4gPiArICAgICAgICAgICAgICAga2ZyZWUoZW50cnkpOw0KPiA+ICt9DQo+ID4gKw0KPiAN
-Cj4gVGhpcyBpcyB0aGUgc2FtZSBhcyBnZW5lcmljX2lvbW11X3B1dF9yZXN2X3JlZ2lvbnMsIHVz
-ZSB0aGF0IGFzIHRoZQ0KPiAucHV0X3Jlc3ZfcmVnaW9ucyBjYWxsYmFjayBpbnN0ZWFkPw0KDQpU
-aGFua3MgdmVyeSBtdWNoIGZvciB0aGUgcmV2aWV3Lg0KDQpZZXMuIEkgd2lsbCBmaXggaXQgaW4g
-bmV4dCB2ZXJzaW9uLg0KDQo+IA0KPiA+IC4uLg0KPiA+IC0tDQo+ID4gMi4xOC4wDQoNCg==
 
+--RASg3xLB4tUQ4RcS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Jul 14, 2020 at 03:13:26PM +0900, Masahiro Yamada wrote:
+
+> What do you mean by Reviewed-by ?
+> Do you expect this to go to the asoc tree?
+
+> I just thought the schema conversion
+> would go through the dt tree.
+
+No, bindings changes usually go through the subsystem - if there's any
+other work on the binding then it'll usually also involve driver
+changes.
+
+--RASg3xLB4tUQ4RcS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8NgHoACgkQJNaLcl1U
+h9Dsrgf/fPLrNlqqgRY19cFoFt6CgtBbNO86y/JcGKXNAdFdJ5lG9scZL2Rgzas/
+0/YpfGyCQAOMGEWc5Icxjhcj+geFRr+aqL7mtvz4XT+Wv0I0VSWeCdVEeoYcFUpV
+/J6PxuLhaOhAKkcKcm0UNz+dI5TmhySRUnB97ikprAPWs498y1c0otugjbP9hClu
+nhkI6a7K+OtE/t21oN80kQzqNGfaMgai5G3t0kZ7knfmJqyXanwYZLUWxZuBueoR
+4CDY9eOE/jaTkLyIerbibswcLl+MYv/L/jkh3Jmd3v1xmDNailW5yjE/TsZvc5E+
+RUaalfr2073gZqSDnJz9e1PoPrNzzA==
+=+jbC
+-----END PGP SIGNATURE-----
+
+--RASg3xLB4tUQ4RcS--
