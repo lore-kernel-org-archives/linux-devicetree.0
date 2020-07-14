@@ -2,194 +2,87 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77AC9C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 08:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A655C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 09:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52BCA20BED
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 08:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 587D921D7D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 09:04:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="U80e4I5y"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pZfWpOO8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726187AbgGNIwG (ORCPT
+        id S1726809AbgGNJEs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 04:52:06 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:36046 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbgGNIwG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 04:52:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1594716725; x=1626252725;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=tky6NM7O8/hnmZ6YHCdQVf/2RQnmXE+nhxA5aK0S6a8=;
-  b=U80e4I5yPSJrEZsICK9sGoFpO5j6OWsrYKurhz3/SIm65b3SKIAsOhWr
-   iza6nKRALzaBkqOZN7Q5gMGJx+Jy/rIcd8JwDvvdFAxgSBi5nAg2jz+40
-   h/yJ96x1Tn/2r6HipWtUk9cOAPW6K9FDfP9xoOxO92WIJLUux1nCHR1PZ
-   RjZv4Qjba20vAQkhqE4Jj5Dc5Wk0xJlxqLQcwrV8h1VlKICObZKNz0Gf2
-   1DJpmmTgio41W2e6i04cegRNd8jHx/XuusT1yCUU1rxh/6ap+N6Vv0nPm
-   fAiL2Lc+7lFa+ZBcwX1CYczaRHcNxFhipHV1Yztwggat7fEYrDYdPNbaz
-   A==;
-IronPort-SDR: fYrEfRCafZ4CxcwW6D3u0SOieHK0rHHRRzQG9Gfh5XnLBXvOpgKBDsMVAAZp1VZ+Q1AK9fuy5N
- VaLBShb30ZgOmiq1RLe6gM2qPqL/XmBd8m1yFKuCrSlVAzZjc69yu8kyh3xr4SJvwZgfRS1HfO
- a6hWpxGlnUnTBW1cbofkn2pqIVsJMvwXoTo1f5xTzF2aXXyx7kj6TCRykJGkn4b6XWRACgcSa/
- Nlxxna2dJQcnM62j9a2uwpSbir7mjn+JNKS/D6ZtPqPOqV4KbcHG3M/VYuYvs11KLC5H/9Ly2R
- Sk4=
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="87506770"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Jul 2020 01:52:05 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 14 Jul 2020 01:51:34 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
- via Frontend Transport; Tue, 14 Jul 2020 01:51:30 -0700
-References: <20200702101331.26375-1-lars.povlsen@microchip.com> <20200702101331.26375-7-lars.povlsen@microchip.com> <20200713192902.GA587038@bogus>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Mark Brown <broonie@kernel.org>, Peter Rosin <peda@axentia.se>,
-        "Microchip Linux Driver Support" <UNGLinuxDriver@microchip.com>,
-        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
+        Tue, 14 Jul 2020 05:04:48 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:33429 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726431AbgGNJEr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 05:04:47 -0400
+X-UUID: 96a93593bea04ce3bb92840ad50347c8-20200714
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=oQhNO1aDSq964/bNoXZsaKR638iBryUKI8hdFeOuNn4=;
+        b=pZfWpOO8RCMm9n4Q4i4vg2DYCge5qafplcO6YOJ5gRLNGg5bGnwFEk9GdRQ7E/qB047rzbpsoba3ZjYhdLGOAQNxIKS+K5Vo5KqyosKgIhNrevCYS2VZxyNwOA+iQt81Exm2SJVX0IjahPT8E+TOM5mL4e+8LOiryWaB29hxbq0=;
+X-UUID: 96a93593bea04ce3bb92840ad50347c8-20200714
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 525924331; Tue, 14 Jul 2020 17:04:44 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 14 Jul 2020 17:04:42 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 14 Jul 2020 17:04:42 +0800
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>
+CC:     mtk01761 <wendell.lin@mediatek.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Subject: Re: [PATCH v3 6/8] dt-bindings: microchip,sparx5-spi-mux: Add Sparx5 SPI mux driver bindings
-In-Reply-To: <20200713192902.GA587038@bogus>
-Date:   Tue, 14 Jul 2020 10:52:01 +0200
-Message-ID: <87y2nmjx72.fsf@soft-dev15.microsemi.net>
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Hanks Chen <hanks.chen@mediatek.com>
+Subject: [PATCH 7/7] clk: mediatek: add UART0 clock support
+Date:   Tue, 14 Jul 2020 17:04:39 +0800
+Message-ID: <1594717479-8160-8-git-send-email-hanks.chen@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1594717479-8160-1-git-send-email-hanks.chen@mediatek.com>
+References: <1594717479-8160-1-git-send-email-hanks.chen@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+QWRkIE1UNjc3OSBVQVJUMCBjbG9jayBzdXBwb3J0Lg0KDQpGaXhlczogNzEwNzc0ZTA0ODYxICgi
+Y2xrOiBtZWRpYXRlazogQWRkIE1UNjc3OSBjbG9jayBzdXBwb3J0IikNClNpZ25lZC1vZmYtYnk6
+IFdlbmRlbGwgTGluIDx3ZW5kZWxsLmxpbkBtZWRpYXRlay5jb20+DQpTaWduZWQtb2ZmLWJ5OiBI
+YW5rcyBDaGVuIDxoYW5rcy5jaGVuQG1lZGlhdGVrLmNvbT4NClJldmlld2VkLWJ5OiBNYXR0aGlh
+cyBCcnVnZ2VyIDxtYXR0aGlhcy5iZ2dAZ21haWwuY29tPg0KLS0tDQogZHJpdmVycy9jbGsvbWVk
+aWF0ZWsvY2xrLW10Njc3OS5jIHwgICAgMiArKw0KIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlv
+bnMoKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDY3NzkuYyBi
+L2RyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDY3NzkuYw0KaW5kZXggOTc2NmNjYy4uNmUwZDNh
+MSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDY3NzkuYw0KKysrIGIv
+ZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10Njc3OS5jDQpAQCAtOTE5LDYgKzkxOSw4IEBADQog
+CQkgICAgInB3bV9zZWwiLCAxOSksDQogCUdBVEVfSU5GUkEwKENMS19JTkZSQV9QV00sICJpbmZy
+YV9wd20iLA0KIAkJICAgICJwd21fc2VsIiwgMjEpLA0KKwlHQVRFX0lORlJBMChDTEtfSU5GUkFf
+VUFSVDAsICJpbmZyYV91YXJ0MCIsDQorCQkgICAgInVhcnRfc2VsIiwgMjIpLA0KIAlHQVRFX0lO
+RlJBMChDTEtfSU5GUkFfVUFSVDEsICJpbmZyYV91YXJ0MSIsDQogCQkgICAgInVhcnRfc2VsIiwg
+MjMpLA0KIAlHQVRFX0lORlJBMChDTEtfSU5GUkFfVUFSVDIsICJpbmZyYV91YXJ0MiIsDQotLSAN
+CjEuNy45LjUNCg==
 
-Rob Herring writes:
-
-> On Thu, Jul 02, 2020 at 12:13:29PM +0200, Lars Povlsen wrote:
->> The Microchip Sparx5 SPI controller has two bus segments, and use this
->> mux to control the bus interface mapping for any chip selects. This
->> decribes the bindings used to configure the mux driver.
->>
->> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
->> ---
->>  .../mux/microchip,sparx5-spi-mux.yaml         | 71 +++++++++++++++++++
->>  1 file changed, 71 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mux/microchip,sparx5-spi-mux.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/mux/microchip,sparx5-spi-mux.yaml b/Documentation/devicetree/bindings/mux/microchip,sparx5-spi-mux.yaml
->> new file mode 100644
->> index 0000000000000..b0ce3b15a69e5
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mux/microchip,sparx5-spi-mux.yaml
->> @@ -0,0 +1,71 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/mux/microchip,sparx5-spi-mux.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Microchip Sparx5 SPI mux
->> +
->> +maintainers:
->> +  - Lars Povlsen <lars.povlsen@microchip.com>
->> +
->> +description: |
->> +  The Microchip Sparx5 SPI controller has two bus segments. In order
->> +  to switch between the appropriate bus for any given SPI slave
->> +  (defined by a chip select), this mux driver is used. The device tree
->> +  node for the mux will define the bus mapping for any chip
->> +  selects. The default bus mapping for any chip select is "0", such
->> +  that only non-default mappings need to be explicitly defined.
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - microchip,sparx5-spi-mux
->> +
->> +  '#address-cells':
->> +    const: 1
->> +
->> +  '#size-cells':
->> +    const: 0
->> +
->> +  '#mux-control-cells':
->> +    const: 0
->> +
->> +required:
->> +  - compatible
->> +
->> +additionalProperties: false
->> +
->> +patternProperties:
->> +  "^mux@[0-9a-f]$":
->> +    type: object
->> +
->> +    properties:
->> +      reg:
->> +        description:
->> +          Chip select to define bus mapping for.
->> +        minimum: 0
->> +        maximum: 15
->> +
->> +      microchip,bus-interface:
->> +        description:
->> +          The bus interface to use for this chip select.
->> +        $ref: /schemas/types.yaml#/definitions/uint32
->> +        enum: [0, 1]
->> +
->> +    required:
->> +      - reg
->> +      - microchip,bus-interface
->> +
->> +examples:
->> +  - |
->> +    mux: mux-controller {
->> +      compatible = "microchip,sparx5-spi-mux";
->> +      #address-cells = <1>;
->> +      #size-cells = <0>;
->> +      #mux-control-cells = <0>;
->
-> How is this mux accessed? You have no control interface defined.
->
->> +      mux@e {
->> +        reg = <14>;
->> +        microchip,bus-interface = <1>;
->
-> This looks odd. I take it that there's 2 muxes for this h/w? If so then
-> #mux-control-cells should be 1 and the cell value can be whatever you
-> want that is meaningful for the mux controller. Could be 0,1 or perhaps
-> 0xe if that's more useful.
->
-
-Rob,
-
-The intended use was for the SPI driver to use mux_control_select(mux,
-<cs>) and then have the mux driver translate the <cs> to the right bus
-interface, according to its configuration. The SPI driver would have a
-"mux-controls" property bound to this mux.
-
-Anyway, I am getting pushed in the direction of using the "mux-mmio" and
-"spi-mux" combo, so this driver and bindings are being dropped again.
-
-I am currently awaiting the "rx-sample-delay-ns" issue to be clarified
-such that I can refresh the series.
-
-Thank you for your comments!
-
-> Rob
-
--- 
-Lars Povlsen,
-Microchip
