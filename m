@@ -2,191 +2,80 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F88AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 05:21:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2210EC433EB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 05:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7288520B80
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 05:21:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nr5IsVmB"
+	by mail.kernel.org (Postfix) with ESMTP id F4086221FC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 05:33:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725306AbgGNFVp (ORCPT
+        id S1726602AbgGNFdK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 01:21:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgGNFVo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 01:21:44 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 891F4C061755;
-        Mon, 13 Jul 2020 22:21:44 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id l17so4500729iok.7;
-        Mon, 13 Jul 2020 22:21:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Up3G6PsFpPGYr8nZRL3w9MPTvUeQJXFm+eKweHGs86o=;
-        b=Nr5IsVmBRvtEBrNLQ9atU796t0OuBHDNFUIUpmSRdDIx5aETNaogxWClkvNgYO0o3i
-         m/1zM+mtwrZC9R6+4fk+lsAbEyLEnmeQouo9siwT54qbYW0jfGHOIClh6Ob1kv5sApu8
-         99yC9FPAQj523Fx7PVC2/ZMZOe/LyYcaOavuGGIaGWrjQf29vzigq7Awn4v8BRhP97el
-         YSkPHETinL1bN3M8CAa7Q9uLkdpCLOIrFjDuTf0ZKGL/7WPJoYlsWtISOFkQAnSOo+71
-         +Zf/O3nPQjg+AvXlP55nPgqhsr3RTTJgtrcUo0cqIUlojiKahFHjJsWkq+3sshlhdBb2
-         Elbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Up3G6PsFpPGYr8nZRL3w9MPTvUeQJXFm+eKweHGs86o=;
-        b=H1FGYNlHw4Dwc4PhteDqUAKtCsjwEFUhZl4xE+nVcuSyFqSFPee5jYMrRa91Y5z9C3
-         4bZtza9LcTEGw+lktqkKf9kTzW0GQ8x0bvSJUcDeMrfM/OpgynsqX/oHjOFD13HDx8Fk
-         v2MvIvsXxOHBJteSpPGgOkP9ES2wnl8mVLmgAFDmb2E1HL9dcNXHGPO2gL9+BGmYOpJo
-         w4gFq1SVaGL+75MIeipknQDXGDau/068ijn45DZk88SgP3rF8YzX/jXfa+jebKQuIhIq
-         q7ivERwYuBwJIAvdg+uu3yOaWF12xWGh0lingPw27dJCHaP1joNf6syxaUYhXT7UuEWs
-         Pogw==
-X-Gm-Message-State: AOAM531Ia3Wdnp8C6VhSQOTJ+wfiQ7FB0DCLxvxyDvF8iLZlSibpGlxW
-        i7xwZq7bmg1JMAFQs+dy6jYEssnz5i01v9avtrw=
-X-Google-Smtp-Source: ABdhPJzFKfHtR2lq73ZLFph/Q2QwhS4b1uCu5CknGEp/7od+WTT6dFeOnjjJNB2Cosa4z4TbW+8SA/BJLb+Nb3G1+3E=
-X-Received: by 2002:a05:6602:1610:: with SMTP id x16mr3317570iow.68.1594704103845;
- Mon, 13 Jul 2020 22:21:43 -0700 (PDT)
+        Tue, 14 Jul 2020 01:33:10 -0400
+Received: from out28-53.mail.aliyun.com ([115.124.28.53]:60284 "EHLO
+        out28-53.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbgGNFdJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 01:33:09 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07881087|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0154259-0.00356313-0.981011;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16378;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=15;RT=15;SR=0;TI=SMTPD_---.I1QwJ79_1594704779;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I1QwJ79_1594704779)
+          by smtp.aliyun-inc.com(10.147.44.145);
+          Tue, 14 Jul 2020 13:33:04 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     tsbogend@alpha.franken.de, robh+dt@kernel.org
+Cc:     linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, paulburton@kernel.org,
+        paul@crapouillou.net, ak@linux.intel.com, ebiederm@xmission.com,
+        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
+        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+Subject: [PATCH v4 0/5] Add support for Ingenic X1830 SoC and Y&A CU1830-Neo board.
+Date:   Tue, 14 Jul 2020 13:32:24 +0800
+Message-Id: <20200714053229.33195-1-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-References: <1594696998-3995-1-git-send-email-dillon.minfei@gmail.com>
- <1594696998-3995-2-git-send-email-dillon.minfei@gmail.com>
- <20200714133835.3b03b8af@canb.auug.org.au> <CAL9mu0JurdBoXbSxvHUmNFSBOa=RneNyYtzT=C1MvJs10Y-Geg@mail.gmail.com>
- <20200714135407.35992389@canb.auug.org.au>
-In-Reply-To: <20200714135407.35992389@canb.auug.org.au>
-From:   dillon min <dillon.minfei@gmail.com>
-Date:   Tue, 14 Jul 2020 13:21:07 +0800
-Message-ID: <CAL9mu0L5=khi2oXaei=EhTmRJC5mC1hj5gZVBHJgowi_3vxk=Q@mail.gmail.com>
-Subject: Re: [PATCH v2] Since am437x have the same clock structure with am335x
- [1][2], reuse the code from Tony Lindgren's patch [3] to fix dcan probe
- failed on am437x platform.
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Benoit Cousson <bcousson@baylibre.com>, tony@atomide.com,
-        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 11:54 AM Stephen Rothwell <sfr@canb.auug.org.au> wr=
-ote:
->
-> Hi Dillon,
->
-> On Tue, 14 Jul 2020 11:43:31 +0800 dillon min <dillon.minfei@gmail.com> w=
-rote:
-> >
-> > On Tue, Jul 14, 2020 at 11:38 AM Stephen Rothwell <sfr@canb.auug.org.au=
-> wrote:
-> > >
-> > > On Tue, 14 Jul 2020 11:23:18 +0800 dillon.minfei@gmail.com wrote:
-> > > >
-> > > > From: dillon min <dillon.minfei@gmail.com>
-> > > >
-> > > > Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly duri=
-ng init to read revision")
-> > > >
-> > > > [1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DC=
-AN
-> > > > Integration
-> > > > [2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DC=
-AN
-> > > > Integration
-> > > > [3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can =
-on am335x")
-> > > >
-> > > > Signed-off-by: dillon min <dillon.minfei@gmail.com>
-> > > > ---
-> > > >
-> > > > Hi Stephen,
-> > > >
-> > > > This changes correct commit messages based on your reviewing.
-> > > > make Fixes tags to oneline.
-> > > > make all commit message tags at the end of commit message
-> > >
-> > > But the Fixes: line should be down with the Signed-off-by: line ...
-> > >
-> > Ok, should it be like this=EF=BC=8Ci will resubmit it.
-> >
-> > Subject: [PATCH v2] Since am437x have the same clock structure with am3=
-35x
-> >  [1][2], reuse the code from Tony Lindgren's patch [3] to fix dcan
-> >  probe failed on the am437x platform.
->
-> You should have a shorter subject and maybe the above could be the
-> first paragraph of the commit message.
->
-> >
-> > [1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
-> > Integration
-> > [2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
-> > Integration
-> > [3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on a=
-m335x")
-> >
-> > Signed-off-by: dillon min <dillon.minfei@gmail.com>
-> > Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during
-> > init to read revision")
->
-> No wrapping the the Fixes line, please and it would usually go before
-> your Signed=3Doff-by line
+v3->v4:
+1.Modify the commit message and add the change description
+  for CU1000-Neo in patch [2/5].
+2.The wrongly written "ingenic,x1000" in compatible is
+  changed to "ingenic,x1000e" in "cu1000-neo.dts".
+3.Adjust the order of nodes according to the corresponding
+  address value for X1000.
+4.Drop unnecessary node in "wlan_pwrseq" in "cu1000-neo.dts".
+5.Add the leds node to "cu1000-neo.dts".
 
-Hi Stephen,
+周琰杰 (Zhou Yanjie) (5):
+  MIPS: Ingenic: Add Ingenic X1830 support.
+  dt-bindings: MIPS: Add X1830 based CU1830-Neo and fix bug in
+    CU1000-Neo.
+  MIPS: Ingenic: Add YSH & ATIL CU Neo board support.
+  MIPS: Ingenic: Fix bugs and add missing LED node for X1000.
+  MIPS: CU1000-Neo: Refresh defconfig to support LED.
 
-Thanks, how about the below commit message.
+ .../devicetree/bindings/mips/ingenic/devices.yaml  |  12 +-
+ arch/mips/boot/dts/ingenic/Makefile                |   1 +
+ arch/mips/boot/dts/ingenic/cu1000-neo.dts          | 114 ++++----
+ arch/mips/boot/dts/ingenic/cu1830-neo.dts          | 168 ++++++++++++
+ arch/mips/boot/dts/ingenic/x1000.dtsi              | 126 +++++----
+ arch/mips/boot/dts/ingenic/x1830.dtsi              | 300 +++++++++++++++++++++
+ arch/mips/configs/cu1000-neo_defconfig             |   4 +
+ arch/mips/configs/cu1830-neo_defconfig             | 123 +++++++++
+ arch/mips/jz4740/Kconfig                           |  10 +
+ 9 files changed, 733 insertions(+), 125 deletions(-)
+ create mode 100644 arch/mips/boot/dts/ingenic/cu1830-neo.dts
+ create mode 100644 arch/mips/boot/dts/ingenic/x1830.dtsi
+ create mode 100644 arch/mips/configs/cu1830-neo_defconfig
 
-Subject: [PATCH v4] Fix dcan driver probe failed on am437x platform
+-- 
+2.11.0
 
-Got following d_can probe errors with kernel 5.8-rc1 on am437x
-
-[   10.730822] CAN device driver interface
-Starting Wait for Network to be Configured...
-[  OK  ] Reached target Network.
-[   10.787363] c_can_platform 481cc000.can: probe failed
-[   10.792484] c_can_platform: probe of 481cc000.can failed with
-error -2
-[   10.799457] c_can_platform 481d0000.can: probe failed
-[   10.804617] c_can_platform: probe of 481d0000.can failed with
-error -2
-
-actually, Tony has fixed this issue on am335x with the patch [3]
-
-Since am437x has the same clock structure with am335x
-[1][2], so reuse the code from Tony Lindgren's patch [3] to fix it.
-
-
-[1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
-Integration
-[2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
-Integration
-[3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on am335=
-x")
-
-Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during
-init to read revision")
-Signed-off-by: dillon min <dillon.minfei@gmail.com>
----
-
-Hi Stephen,
-
-This changes correct commit messages based on your reviewing.
-make Fixes tags to oneline.
-make all commit message tags at the end of commit message
-make Fixes tags before Signed-off-by line.
-add probe failed log to commit message.
-
-
-> --
-> Cheers,
-> Stephen Rothwell
