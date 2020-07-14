@@ -2,144 +2,88 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6280C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 02:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E13C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 02:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9207420791
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 02:37:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CF64207FB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 02:38:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594694272;
-	bh=K8jI6zknpMC31Ic2WpkzSCBbDaa/02sIBIrlsPfMJN4=;
+	s=default; t=1594694318;
+	bh=51FBegSLb8zjqOHPKmcVZpdFJ/EQu52yY4tZBqDJraA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AQKO1SIXCPXm70d6jhb5GNVAaFZMuSadbCRNtEk/qo5uMT8e2cqYHDImo4hS/FFF9
-	 j7wzEU2MI36mWrxx65Sf6IoVgQCgqeb/9y5u1fCB0f+iJqSazLB/I0ty0R7dm8R2jc
-	 2qKrzrSJPf2ggbtdXs1z/Rs+iPHe1LOTbSzhnfGE=
+	b=jZWLHPImzKj9BlzATBkNJhhb1Alm1rhIRpDgHafbro/vjChu3CC4VhraWWct1AG67
+	 stsPPKFMlgyiHk26/amT4t3bJ4bIf6vF8wt6ygHpUPbR7CQnFu5hKCYZ2Y1dcb7EPY
+	 DVT+a3AMCg9R+c6GzgXfph4wqNihpHedl0DRAbtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726372AbgGNChw (ORCPT
+        id S1726517AbgGNCih (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 22:37:52 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35840 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgGNChv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 22:37:51 -0400
-Received: by mail-io1-f65.google.com with SMTP id y2so15756358ioy.3;
-        Mon, 13 Jul 2020 19:37:50 -0700 (PDT)
+        Mon, 13 Jul 2020 22:38:37 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46418 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbgGNCih (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 22:38:37 -0400
+Received: by mail-io1-f66.google.com with SMTP id a12so15706059ion.13;
+        Mon, 13 Jul 2020 19:38:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=l9yRXPbAuKbatZZtOZ8lv0tgEHkyKNFIEmB9CuDKx1I=;
-        b=ppPi6zGuZcktUVBS3VkRxcwiRltB9NMrwCVkVcUbaFsydlYiuvrg5piMPVNhXlfFQi
-         g5Bx3csedIUexIls+qAqI3KaNoh259DwDD2G4ZisWUUrapUYE0UufBnFTs2j9zwbxTTH
-         wij9LZKu7vt7YrB4w8lfItF+XTq7Apq6zOW4fu2A5hUZK166QrIabkk2XVRFjf5lWE2T
-         GTsjhUac4BuHi693o0nOrWdZWiLWxTHJ/jbUQsxCZiRweOpeV+fCiMcF5UuyZ8QStUUh
-         z2zmgvwK3mCTgVD/s0odNtjg0J6gFF73llcHZT1FdO1yPImyvIXdBCZRiJdfWFBj1+yb
-         nFRA==
-X-Gm-Message-State: AOAM5304dwXwxpW9/YTMcR0hQ2Tf9RSkKbBVRD+JQJLh6xE4WdWcsviX
-        LkodEy35t0DL6V8bXNp6v+BaxCQROUbO
-X-Google-Smtp-Source: ABdhPJwB0uH4+dXlUcswfGdYzX5Q71gv/PavH+vKBm/oYyn40EnjX/9utyBqyLLVsYAIO9o14kvV5A==
-X-Received: by 2002:a02:9182:: with SMTP id p2mr3548431jag.69.1594694270483;
-        Mon, 13 Jul 2020 19:37:50 -0700 (PDT)
+        bh=4Gg8DYJFGz0ri+pNHJ3d+QdBSaSue9B9wGaWAqzH7gE=;
+        b=cDzmnpZqLIr89deEgp39vsGloYK7iVfJ623XNV4qDAXKBbcKr3RgQ+mDtNCSh6FiBs
+         qc7YOrRRB6ebCpJL2Acr+ihYQo6mvJ/hHsv3oTjn7aqahjG8F9RkSKJ7ufkaH1BGvN15
+         AZqnpe99/iBWluuePChy59IT95dojhJzyDPi3/th+2GZSkWueDIRloM7yvLVIroKtkLy
+         y8HGpzxRKMljNMM4gapq4lm+INy2CpYwKBI/RfYTkp8/8cUfFqI6TIy9c3VSmx1ymJWN
+         uqBnKZZmr7zHcjccH6sINhbtqVdPPb+Zjtu1Zjom3M+gk+IkuG0vhB18+UqwCp03NRjq
+         eY8g==
+X-Gm-Message-State: AOAM5324DEydaH5vS2GlYkj7Bi9HEY6AoCTRNlNvoWEdR0zMS6YU8qio
+        AkmA2lvQi8bsnZEc+QdTSg==
+X-Google-Smtp-Source: ABdhPJwZqnw3INgfD6Hay7X47f+EZmXP1MZ7Ywp8k31VukJNIC1u1XNf6R93i8iUljLxukbnVOSYfg==
+X-Received: by 2002:a5d:9590:: with SMTP id a16mr2767645ioo.150.1594694316558;
+        Mon, 13 Jul 2020 19:38:36 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id h5sm8923943ilq.22.2020.07.13.19.37.48
+        by smtp.gmail.com with ESMTPSA id d6sm9425301ilq.27.2020.07.13.19.38.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 19:37:49 -0700 (PDT)
-Received: (nullmailer pid 1171324 invoked by uid 1000);
-        Tue, 14 Jul 2020 02:37:48 -0000
-Date:   Mon, 13 Jul 2020 20:37:48 -0600
+        Mon, 13 Jul 2020 19:38:35 -0700 (PDT)
+Received: (nullmailer pid 1172482 invoked by uid 1000);
+        Tue, 14 Jul 2020 02:38:35 -0000
+Date:   Mon, 13 Jul 2020 20:38:35 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Anup Patel <anup.patel@wdc.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Anup Patel <anup@brainfault.org>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Palmer Dabbelt <palmerdabbelt@google.com>
-Subject: Re: [PATCH v2 5/5] dt-bindings: timer: Add CLINT bindings
-Message-ID: <20200714023748.GA1164267@bogus>
-References: <20200627161957.134376-1-anup.patel@wdc.com>
- <20200627161957.134376-6-anup.patel@wdc.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org,
+        David Airlie <airlied@linux.ie>, linux-mips@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, od@zcrc.me
+Subject: Re: [PATCH v2 02/10] dt-bindings: display: Add ingenic,ipu.yaml
+Message-ID: <20200714023835.GA1172429@bogus>
+References: <20200629235210.441709-1-paul@crapouillou.net>
+ <20200629235210.441709-2-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200627161957.134376-6-anup.patel@wdc.com>
+In-Reply-To: <20200629235210.441709-2-paul@crapouillou.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 09:49:57PM +0530, Anup Patel wrote:
-> We add DT bindings documentation for CLINT device.
+On Tue, 30 Jun 2020 01:52:02 +0200, Paul Cercueil wrote:
+> Add documentation of the Device Tree bindings for the Image Processing
+> Unit (IPU) found in most Ingenic SoCs.
 > 
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->  .../bindings/timer/sifive,clint.txt           | 34 +++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.txt
-
-Bindings should be in DT schema format now.
-
 > 
-> diff --git a/Documentation/devicetree/bindings/timer/sifive,clint.txt b/Documentation/devicetree/bindings/timer/sifive,clint.txt
-> new file mode 100644
-> index 000000000000..45b75347a7d5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/sifive,clint.txt
-> @@ -0,0 +1,34 @@
-> +SiFive Core Local Interruptor (CLINT)
-> +-------------------------------------
-> +
-> +SiFive (and other RISC-V) SOCs include an implementation of the SiFive Core
-> +Local Interruptor (CLINT) for M-mode timer and inter-processor interrupts.
-> +
-> +It directly connects to the timer and inter-processor interrupt lines of
-> +various HARTs (or CPUs) so RISC-V per-HART (or per-CPU) local interrupt
-> +controller is the parent interrupt controller for CLINT device.
-> +
-> +The clock frequency of CLINT is specified via "timebase-frequency" DT
-> +property of "/cpus" DT node. The "timebase-frequency" DT property is
-> +described in: Documentation/devicetree/bindings/riscv/cpus.yaml
-> +
-> +Required properties:
-> +- compatible : should be "riscv,clint0" or "sifive,clint-1.0.0". A specific
-
-A new versioning scheme from SiFive? To review, we don't do version 
-numbers unless there's a well defined and documented scheme. IOW, one 
-that's not s/w folks just making up v1, v2, v3, etc.
-
-> +  string identifying the actual implementation can be added if implementation
-> +  specific worked arounds are needed.
-> +- reg : Should contain 1 register range (address and length).
-> +- interrupts-extended : Specifies which HARTs (or CPUs) are connected to
-> +  the CLINT.  Each node pointed to should be a riscv,cpu-intc node, which
-> +  has a riscv node as parent.
-> +
-> +Example:
-> +
-> +	clint@2000000 {
-> +		compatible = "sifive,clint-1.0.0", "sifive,fu540-c000-clint";
-
-Doesn't match the binding.
-
-> +		interrupts-extended = <
-> +			&cpu1-intc 3 &cpu1-intc 7
-> +			&cpu2-intc 3 &cpu2-intc 7
-> +			&cpu3-intc 3 &cpu3-intc 7
-> +			&cpu4-intc 3 &cpu4-intc 7>;
-> +		reg = <0x2000000 0x4000000>;
-> +	};
-> -- 
-> 2.25.1
+> Notes:
+>     v2: Add missing 'const' in items list
 > 
+>  .../bindings/display/ingenic,ipu.yaml         | 65 +++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/ingenic,ipu.yaml
+> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
