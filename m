@@ -2,130 +2,167 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75838C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 03:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C208C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 03:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A04D20890
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 03:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 445BA206F0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 03:47:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YrBOtJnj"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="Dn/xsk6E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbgGNDoJ (ORCPT
+        id S1726624AbgGNDrx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 23:44:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39154 "EHLO
+        Mon, 13 Jul 2020 23:47:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbgGNDoJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 23:44:09 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71D53C061755;
-        Mon, 13 Jul 2020 20:44:09 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id i4so15825556iov.11;
-        Mon, 13 Jul 2020 20:44:09 -0700 (PDT)
+        with ESMTP id S1726542AbgGNDrx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 23:47:53 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 317ADC061794
+        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 20:47:53 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id r12so19497437wrj.13
+        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 20:47:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=5pIkH7mXC1jbQvQgKO8e4n9ss2Wr0Vand3f4K2LBYz4=;
-        b=YrBOtJnjGtArnUFIOOSjKKuUr3mYU6wCe/3j9WYc1t+7SI0WSSQ3z1qVrokn3PITMz
-         Diu+HPEas1OK5EDKEJ8ttv2QbCUqmus7l0+8dXkgj1dTe+MQ3L+MkVo9DUH2lh13HHV6
-         XwKvPo4o3gVF0WXt4YdIG6AfeG6a0PSCYzdvCABpRUDm5Mj7S4Ue03eG+K/x9rmhEx3c
-         844BZ25AJ2ApY4O/O2iOxuUgzw9EVLl70EBE9r6BZRNKkwg5S+LMEIiidjOCztp1+6hf
-         5C1tD6h4nN2FtIAQlV6fNNLHFwNq+emxJcTfMsJV6XLniFpTYOmGSpjqeG6Nlcl4RHfn
-         SlMA==
+         :cc;
+        bh=qI24xBB/rzdG/cpOm9YsxEJKq/zwmC3JEgqbChZ686c=;
+        b=Dn/xsk6EaU3zSb3BKgpl+10/FOdZR1egP1f1UGyP/yNSXO++t5ytc1+ErOGmvm+3Qw
+         sKKbiNY4LnTQ8EzxXcs6o3fPg+FB3aGqwwk3T6BNlzi4Ebc4Vte3BvxGAccxcvLgprJa
+         dFBBCrQvDqm3cTojPiUdKlSODLmPVNibHOmFmaV2z2OCkvZrDheBxM9q99AG3Wx/GhRM
+         k91NIQFoXCd1vjRmkwAntBQQEg72tpb5qFckMM4QyANyda/c40HxMabSblMYJX4kJvGL
+         FujGdM2y3OlTkTveXMZupSqKsV0sqI50l2HoHWCBz7yh3OzxseS/idJUYn88p5lbQsXx
+         a7aQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=5pIkH7mXC1jbQvQgKO8e4n9ss2Wr0Vand3f4K2LBYz4=;
-        b=KvKSGMatihbCv3Ivj0K3b+0PD6Tz/w4dDWAe9RryKlMLlkSeqUfCKS89F/n6kLgVSN
-         atgXBjQEUT65OgYZPVglU8dpRze+uQlH/YksO7Qcho3BWVsOKSsHqyTwGV8OKy7ZuZJD
-         CK+B+YZfmtIN81E1b6mYqIA06UQbLMXzozn8psVvS5OgQZjzUwZgvhFB1nVAxNuG4OmU
-         o0prl1H7qan9VK9Z0zn1Kv/I9IjODIaH6glImMhebR1rN8iA52w4fBzAMOPSQn/TuoUM
-         ukZQaAbTt1kjmT6OikbdpF5jRQ1vyxaYoYQs+mKLa8vGT66GbyLO84+1+d72yajtuZ2m
-         p5/Q==
-X-Gm-Message-State: AOAM532VP+22RcWc6WjH2lkBBOSFfByTlnMT0oHAY8lOk4Uto9UFZn81
-        BP6OgWIeax9sm6i2m7IaH/dmABCUdwMLsYlWRow=
-X-Google-Smtp-Source: ABdhPJwdZwfVYKqVFMbcOMVarwyvJ7kguDcnx//+Z0fzQDSHID9tABdNxDB+esaGr5DViPMpG3uIbsfsyTVjj8YEVXU=
-X-Received: by 2002:a6b:ee02:: with SMTP id i2mr3032327ioh.110.1594698248705;
- Mon, 13 Jul 2020 20:44:08 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=qI24xBB/rzdG/cpOm9YsxEJKq/zwmC3JEgqbChZ686c=;
+        b=KPoLdRey0UAhBZRhNaQRex8+75olfRUuPvTHiLkBbCTAKYjsGqIm0HuIWHZJ/rml5g
+         xbaHVlGe4wjnerCs8dSBX/uUSE1okVmUsCZAj4bjfZtwPsg57FT5LcLnm6l0cza/08ZL
+         UlrmKZ/4IhkDAs4B3BnVEKTkFo/oqVmSbzWKrFxzHQUxbSP2gBEj/Nw0z1d6FVQ255PG
+         jtG0088AU19nPLy65a7Q3lJtRedKRx3k2xsMzyK4TDeNeuF1SJr6I3cVV/BhxdzifQjN
+         BEFYdgM49ogkzM1j2lXBITscLVFxlQAep84MZ2E49DRHuApO3HoY2WcQGIjLvmaPBAQa
+         wREQ==
+X-Gm-Message-State: AOAM532PVSSbbo2ySHttPXJ0tv0iu+xCCAh/UXOhVwnEdudiVRScf7rX
+        I21NwIQbFACoHImlZMjhFOhgXCs0dzyDr5/7VyvQ36s+90g=
+X-Google-Smtp-Source: ABdhPJyzmGfojs4K3LUS8fPXgGa7xK2rYTn4JhLpsd4yeuJCR3uTFmQBj4zD54/cXBQfEZqb4E1JRCJz4UWUThjGymE=
+X-Received: by 2002:adf:fcca:: with SMTP id f10mr2659455wrs.325.1594698471722;
+ Mon, 13 Jul 2020 20:47:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <1594696998-3995-1-git-send-email-dillon.minfei@gmail.com>
- <1594696998-3995-2-git-send-email-dillon.minfei@gmail.com> <20200714133835.3b03b8af@canb.auug.org.au>
-In-Reply-To: <20200714133835.3b03b8af@canb.auug.org.au>
-From:   dillon min <dillon.minfei@gmail.com>
-Date:   Tue, 14 Jul 2020 11:43:31 +0800
-Message-ID: <CAL9mu0JurdBoXbSxvHUmNFSBOa=RneNyYtzT=C1MvJs10Y-Geg@mail.gmail.com>
-Subject: Re: [PATCH v2] Since am437x have the same clock structure with am335x
- [1][2], reuse the code from Tony Lindgren's patch [3] to fix dcan probe
- failed on am437x platform.
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Benoit Cousson <bcousson@baylibre.com>, tony@atomide.com,
-        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200627161957.134376-1-anup.patel@wdc.com> <20200627161957.134376-6-anup.patel@wdc.com>
+ <20200714023748.GA1164267@bogus>
+In-Reply-To: <20200714023748.GA1164267@bogus>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Tue, 14 Jul 2020 09:17:39 +0530
+Message-ID: <CAAhSdy0O0YoDJ84NX8OasjuTdE8pd=Yk51WJWLpBiAEk3AcCQQ@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] dt-bindings: timer: Add CLINT bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     Anup Patel <anup.patel@wdc.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Palmer Dabbelt <palmerdabbelt@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 11:38 AM Stephen Rothwell <sfr@canb.auug.org.au> wr=
-ote:
+On Tue, Jul 14, 2020 at 8:07 AM Rob Herring <robh@kernel.org> wrote:
 >
-> Hi,
->
-> On Tue, 14 Jul 2020 11:23:18 +0800 dillon.minfei@gmail.com wrote:
+> On Sat, Jun 27, 2020 at 09:49:57PM +0530, Anup Patel wrote:
+> > We add DT bindings documentation for CLINT device.
 > >
-> > From: dillon min <dillon.minfei@gmail.com>
-> >
-> > Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during i=
-nit to read revision")
-> >
-> > [1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
-> > Integration
-> > [2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
-> > Integration
-> > [3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on a=
-m335x")
-> >
-> > Signed-off-by: dillon min <dillon.minfei@gmail.com>
+> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> > Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
 > > ---
-> >
-> > Hi Stephen,
-> >
-> > This changes correct commit messages based on your reviewing.
-> > make Fixes tags to oneline.
-> > make all commit message tags at the end of commit message
+> >  .../bindings/timer/sifive,clint.txt           | 34 +++++++++++++++++++
+> >  1 file changed, 34 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.txt
 >
-> But the Fixes: line should be down with the Signed-off-by: line ...
+> Bindings should be in DT schema format now.
+
+Okay, will update.
+
 >
-Ok, should it be like this=EF=BC=8Ci will resubmit it.
+> >
+> > diff --git a/Documentation/devicetree/bindings/timer/sifive,clint.txt b/Documentation/devicetree/bindings/timer/sifive,clint.txt
+> > new file mode 100644
+> > index 000000000000..45b75347a7d5
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/timer/sifive,clint.txt
+> > @@ -0,0 +1,34 @@
+> > +SiFive Core Local Interruptor (CLINT)
+> > +-------------------------------------
+> > +
+> > +SiFive (and other RISC-V) SOCs include an implementation of the SiFive Core
+> > +Local Interruptor (CLINT) for M-mode timer and inter-processor interrupts.
+> > +
+> > +It directly connects to the timer and inter-processor interrupt lines of
+> > +various HARTs (or CPUs) so RISC-V per-HART (or per-CPU) local interrupt
+> > +controller is the parent interrupt controller for CLINT device.
+> > +
+> > +The clock frequency of CLINT is specified via "timebase-frequency" DT
+> > +property of "/cpus" DT node. The "timebase-frequency" DT property is
+> > +described in: Documentation/devicetree/bindings/riscv/cpus.yaml
+> > +
+> > +Required properties:
+> > +- compatible : should be "riscv,clint0" or "sifive,clint-1.0.0". A specific
+>
+> A new versioning scheme from SiFive? To review, we don't do version
+> numbers unless there's a well defined and documented scheme. IOW, one
+> that's not s/w folks just making up v1, v2, v3, etc.
 
-Subject: [PATCH v2] Since am437x have the same clock structure with am335x
- [1][2], reuse the code from Tony Lindgren's patch [3] to fix dcan
- probe failed on the am437x platform.
+The "riscv,clint0" is already used by various RISC-V systems (including QEMU).
 
-[1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
-Integration
-[2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
-Integration
-[3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on am335=
-x")
+The "sifive,clint-1.0.0" is for being consistent with the PLIC
+versioning scheme.
 
-Signed-off-by: dillon min <dillon.minfei@gmail.com>
-Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during
-init to read revision")
+There is no clear documentation of CLINT versioning scheme. I think it's best
+to just drop "sifive,clint-1.0.0" . Agree ??
 
-Thanks,
-Dillon,
-> --
-> Cheers,
-> Stephen Rothwell
+>
+> > +  string identifying the actual implementation can be added if implementation
+> > +  specific worked arounds are needed.
+> > +- reg : Should contain 1 register range (address and length).
+> > +- interrupts-extended : Specifies which HARTs (or CPUs) are connected to
+> > +  the CLINT.  Each node pointed to should be a riscv,cpu-intc node, which
+> > +  has a riscv node as parent.
+> > +
+> > +Example:
+> > +
+> > +     clint@2000000 {
+> > +             compatible = "sifive,clint-1.0.0", "sifive,fu540-c000-clint";
+>
+> Doesn't match the binding.
+
+Okay, will update.
+
+>
+> > +             interrupts-extended = <
+> > +                     &cpu1-intc 3 &cpu1-intc 7
+> > +                     &cpu2-intc 3 &cpu2-intc 7
+> > +                     &cpu3-intc 3 &cpu3-intc 7
+> > +                     &cpu4-intc 3 &cpu4-intc 7>;
+> > +             reg = <0x2000000 0x4000000>;
+> > +     };
+> > --
+> > 2.25.1
+> >
+
+Regards,
+Anup
