@@ -2,209 +2,92 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F25CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 13:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2504AC433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 13:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 262AC22203
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 13:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B0BC224D2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 13:28:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726870AbgGNN1f (ORCPT
+        id S1727876AbgGNN2u (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 09:27:35 -0400
-Received: from foss.arm.com ([217.140.110.172]:55572 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726796AbgGNN1f (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 09:27:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81C1C1FB;
-        Tue, 14 Jul 2020 06:27:34 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D57D83F68F;
-        Tue, 14 Jul 2020 06:27:32 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 14:27:27 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH v5 2/6] PCI: uniphier: Add misc interrupt handler to
- invoke PME and AER
-Message-ID: <20200714132727.GA13061@e121166-lin.cambridge.arm.com>
-References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1592469493-1549-3-git-send-email-hayashi.kunihiko@socionext.com>
+        Tue, 14 Jul 2020 09:28:50 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:58533 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbgGNN2t (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 09:28:49 -0400
+Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1Mn2eN-1kcL7X03RH-00k5oM; Tue, 14 Jul 2020 15:28:48 +0200
+Received: by mail-qk1-f174.google.com with SMTP id j80so15536709qke.0;
+        Tue, 14 Jul 2020 06:28:47 -0700 (PDT)
+X-Gm-Message-State: AOAM531qKUh7ffI+aZwsrrvalHeMo6Kw2FghBcGwH/7htbL574Rjtx/H
+        wgykE67Hijc2xPNjOM1j6wW9NlxQX2TjuvDZqMo=
+X-Google-Smtp-Source: ABdhPJxHPIXfmlqcGBqu9OXRIk6erH/D8djWlmD0b3P/vROxLbkhNRC4oaHHQrBV5XAH3EWaILtop2qaNksWBICgIYg=
+X-Received: by 2002:a37:a496:: with SMTP id n144mr4552372qke.286.1594733326751;
+ Tue, 14 Jul 2020 06:28:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1592469493-1549-3-git-send-email-hayashi.kunihiko@socionext.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200714125753.22466-1-Sergey.Semin@baikalelectronics.ru> <20200714125753.22466-6-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200714125753.22466-6-Sergey.Semin@baikalelectronics.ru>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 14 Jul 2020 15:28:30 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a09RW+zCMJ9Luh2C3NkYPdY4Esu6EKk_QX_i4faV-rUjg@mail.gmail.com>
+Message-ID: <CAK8P3a09RW+zCMJ9Luh2C3NkYPdY4Esu6EKk_QX_i4faV-rUjg@mail.gmail.com>
+Subject: Re: [PATCH v5 5/6] bus: cdmm: Add MIPS R5 arch support
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:vSOlFJOMQtdcJW89Ot+xnzfTZOdqBnZJxvDGkZWxoieSiauq1Op
+ TvKnJgap7NWslsMnVLDKFa79aabknwkWqafsgAlp1tDn/DGziuHYcYcjgwiUKhvV7T9rcWo
+ fM2xHMb7zUXmGw9vfG8OHy1S2//lUWhDxvtsurupdW+FDKk3LUoP2SYn7cHzjUHxfNRWa6P
+ LTLKkz8F1HIYaOzr2k3vw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:jfoq56SE9Eg=:FVzCfhKgZlrrfI14j/B23F
+ VlKbX2/PArHmzzmT95EvRA5ecpEwrE7S9JHf66okVxVIbTdy3OmGoWb/MpMfAHHVcQYUWY9sO
+ 6Ltwc3+3zOg4uTfy2yJHN9KqSufBohHgnySm5bKCGybyybpUuBSA7UJt0MbqtQA15veNGYLAn
+ OEMZ2CETRQ14pCcRCqnz/9p4vLP00LsYgp+Qh7PrtAJDsoqcwkj1uUmYtvNgv2JQOct29nPM7
+ mH2i6lyYHKEuRnh5IrbFUn8rvQf9frSoCqyZfWmc7RBPqPghps0/WJUi5Z6Ds4tZs+Se+Ttfi
+ ef/ScXnCmi6HOgHtVu9fKuH5s+VEjzvhkeXqimwuipX3t9l7QGwleGEBkypHhSGlt5k1h1c/0
+ lJl4+96LY2LvbwY1HNUe9o0UBf1BQp73pj5tddwMr8VGWt9fhes2q22zCptGuCtrnhlrdotN5
+ YSxWSUMqRRfzD9r08/DEXssmqQLZ3380LESWWaM+HBLXJO5tGZsDj7K5fkcADkz3ACn2gvIWQ
+ 8Fq8O2y4dqE5LxxpVmBN/Ndf4K0Ruo52Is+jaH+9an9ORv8g5yCeaBwQ1zwvZ4aYEFn6qJnL7
+ hEoJnoK11mf6mwTIWMIFKFv2rqSYuv2vbsmdIhU2Tk3/tzHEQ86ZCG/shO5wqqhYr9oxVOkoE
+ 9TGvSp1IU+1a3ih+YIKnIy99sxsxox/JS4Hx5AXj4tNltY5/B3DZ37ZNz/5/6rOwpFCnfV6V9
+ vluyZTgkTE5XamkC0fh8thJEIaeeekMho2IbV4owJUSbFfS2aMqOBKtdAwk8WftIJSWPQNCta
+ KAVjMitGUB6/OTMXees0ctH2rUsib8XNrQ4jaf8EWUEUZylNNQMMBFDG9fFITZPZVPwnJlr4+
+ afBEunCKaJ3PyJYaLMAXyyWyOvzfH/hBMkzhHLKOrEJG6uWYG6lT7rbtoSecJwXAB6WT63b1n
+ DZb/gxcqyErWgzFLjgcHEnv7AN5AEQsQ2fxd73VaFCGCZEUcNy15g
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 05:38:09PM +0900, Kunihiko Hayashi wrote:
-> The misc interrupts consisting of PME, AER, and Link event, is handled
-> by INTx handler, however, these interrupts should be also handled by
-> MSI handler.
+On Tue, Jul 14, 2020 at 2:58 PM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
+>
+>  config MIPS_CDMM
+>         bool "MIPS Common Device Memory Map (CDMM) Driver"
+> -       depends on CPU_MIPSR2
+> +       depends on CPU_MIPSR2 || CPU_MIPSR5
+>         help
 
-Define what you mean please.
+Wouldn't a kernel built for P5600 have CPU_MIPSR2 set already?
+I thought R5 was just a backwards-compatible extension of R2.
 
-> This adds the function uniphier_pcie_misc_isr() that handles misc
-> interrupts, which is called from both INTx and MSI handlers.
-> This function detects PME and AER interrupts with the status register,
-> and invoke PME and AER drivers related to MSI.
-> 
-> And this sets the mask for misc interrupts from INTx if MSI is enabled
-> and sets the mask for misc interrupts from MSI if MSI is disabled.
-> 
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Jingoo Han <jingoohan1@gmail.com>
-> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  drivers/pci/controller/dwc/pcie-uniphier.c | 57 ++++++++++++++++++++++++------
->  1 file changed, 46 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-> index a5401a0..5ce2479 100644
-> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
-> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-> @@ -44,7 +44,9 @@
->  #define PCL_SYS_AUX_PWR_DET		BIT(8)
->  
->  #define PCL_RCV_INT			0x8108
-> +#define PCL_RCV_INT_ALL_INT_MASK	GENMASK(28, 25)
->  #define PCL_RCV_INT_ALL_ENABLE		GENMASK(20, 17)
-> +#define PCL_RCV_INT_ALL_MSI_MASK	GENMASK(12, 9)
->  #define PCL_CFG_BW_MGT_STATUS		BIT(4)
->  #define PCL_CFG_LINK_AUTO_BW_STATUS	BIT(3)
->  #define PCL_CFG_AER_RC_ERR_MSI_STATUS	BIT(2)
-> @@ -167,7 +169,15 @@ static void uniphier_pcie_stop_link(struct dw_pcie *pci)
->  
->  static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
->  {
-> -	writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
-> +	u32 val;
-> +
-> +	val = PCL_RCV_INT_ALL_ENABLE;
-> +	if (pci_msi_enabled())
-> +		val |= PCL_RCV_INT_ALL_INT_MASK;
-> +	else
-> +		val |= PCL_RCV_INT_ALL_MSI_MASK;
-> +
-> +	writel(val, priv->base + PCL_RCV_INT);
->  	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
->  }
->  
-> @@ -231,32 +241,56 @@ static const struct irq_domain_ops uniphier_intx_domain_ops = {
->  	.map = uniphier_pcie_intx_map,
->  };
->  
-> -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
-> +static void uniphier_pcie_misc_isr(struct pcie_port *pp, bool is_msi)
->  {
-> -	struct pcie_port *pp = irq_desc_get_handler_data(desc);
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->  	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
-> -	struct irq_chip *chip = irq_desc_get_chip(desc);
-> -	unsigned long reg;
-> -	u32 val, bit, virq;
-> +	u32 val, virq;
->  
-> -	/* INT for debug */
->  	val = readl(priv->base + PCL_RCV_INT);
->  
->  	if (val & PCL_CFG_BW_MGT_STATUS)
->  		dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
-> +
->  	if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
->  		dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
-> -	if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
-> -		dev_dbg(pci->dev, "Root Error\n");
-> -	if (val & PCL_CFG_PME_MSI_STATUS)
-> -		dev_dbg(pci->dev, "PME Interrupt\n");
-> +
-> +	if (is_msi) {
-> +		if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
-> +			dev_dbg(pci->dev, "Root Error Status\n");
-> +
-> +		if (val & PCL_CFG_PME_MSI_STATUS)
-> +			dev_dbg(pci->dev, "PME Interrupt\n");
-> +
-> +		if (val & (PCL_CFG_AER_RC_ERR_MSI_STATUS |
-> +			   PCL_CFG_PME_MSI_STATUS)) {
-> +			virq = irq_linear_revmap(pp->irq_domain, 0);
+If not, what about R3?
 
-I think this is wrong. pp->irq_domain is the DWC MSI domain, how do
-you know that hwirq 0 *is* the AER/PME interrupt ?
-
-It just *works* in this case because the port driver probes and alloc
-MSIs before any PCI device has a chance to do it and actually I think
-this is just wrong also because hwirq 0 *is* usable by devices but
-it can't be used because current code takes it for the PME/AER interrupt
-(which AFAICS is an internal signal disconnected from the DWC MSI
-interrupt controller).
-
-I think this extra glue logic should be separate MSI domain
-otherwise there is no way you can reliably look-up the virq
-corresponding to AER/PME.
-
-How does it work in HW ? Is the root port really sending a memory
-write to raise an IRQ or it just signal the IRQ through internal
-logic ? I think the root port MSI handling is different from the
-DWC logic and should be treated separately.
-
-Lorenzo
-
-> +			generic_handle_irq(virq);
-> +		}
-> +	}
->  
->  	writel(val, priv->base + PCL_RCV_INT);
-> +}
-> +
-> +static void uniphier_pcie_msi_host_isr(struct pcie_port *pp)
-> +{
-> +	uniphier_pcie_misc_isr(pp, true);
-> +}
-> +
-> +static void uniphier_pcie_irq_handler(struct irq_desc *desc)
-> +{
-> +	struct pcie_port *pp = irq_desc_get_handler_data(desc);
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
-> +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> +	unsigned long reg;
-> +	u32 val, bit, virq;
->  
->  	/* INTx */
->  	chained_irq_enter(chip, desc);
->  
-> +	uniphier_pcie_misc_isr(pp, false);
-> +
->  	val = readl(priv->base + PCL_RCV_INTX);
->  	reg = FIELD_GET(PCL_RCV_INTX_ALL_STATUS, val);
->  
-> @@ -330,6 +364,7 @@ static int uniphier_pcie_host_init(struct pcie_port *pp)
->  
->  static const struct dw_pcie_host_ops uniphier_pcie_host_ops = {
->  	.host_init = uniphier_pcie_host_init,
-> +	.msi_host_isr = uniphier_pcie_msi_host_isr,
->  };
->  
->  static int uniphier_add_pcie_port(struct uniphier_pcie_priv *priv,
-> -- 
-> 2.7.4
-> 
+      Arnd
