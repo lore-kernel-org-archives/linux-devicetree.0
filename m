@@ -2,32 +2,33 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB57C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 09:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D11C433E7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 09:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D907F2076D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 09:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D69DE221F0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 09:09:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725905AbgGNJJQ (ORCPT
+        id S1726850AbgGNJJZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:09:16 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:39366 "EHLO inva021.nxp.com"
+        Tue, 14 Jul 2020 05:09:25 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:39554 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725833AbgGNJJQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:09:16 -0400
+        id S1725833AbgGNJJY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jul 2020 05:09:24 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8623D200F2E;
-        Tue, 14 Jul 2020 11:09:14 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3A68D200F54;
+        Tue, 14 Jul 2020 11:09:23 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 38E5F200F35;
-        Tue, 14 Jul 2020 11:09:08 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id DA146200F44;
+        Tue, 14 Jul 2020 11:09:16 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 220AA402B4;
-        Tue, 14 Jul 2020 17:09:00 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C88D9402BB;
+        Tue, 14 Jul 2020 17:09:08 +0800 (SGT)
 From:   Shengjiu Wang <shengjiu.wang@nxp.com>
 To:     perex@perex.cz, tiwai@suse.com, lgirdwood@gmail.com,
         broonie@kernel.org, kuninori.morimoto.gx@renesas.com,
@@ -36,32 +37,39 @@ To:     perex@perex.cz, tiwai@suse.com, lgirdwood@gmail.com,
         devicetree@vger.kernel.org, timur@kernel.org,
         nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com, festevam@gmail.com
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 0/3] ASoC: fsl-asoc-card: Support hp and mic detection
-Date:   Tue, 14 Jul 2020 17:05:33 +0800
-Message-Id: <1594717536-5188-1-git-send-email-shengjiu.wang@nxp.com>
+Subject: [PATCH 2/3] ASoC: bindings: fsl-asoc-card: Support hp-det-gpio and mic-det-gpio
+Date:   Tue, 14 Jul 2020 17:05:35 +0800
+Message-Id: <1594717536-5188-3-git-send-email-shengjiu.wang@nxp.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1594717536-5188-1-git-send-email-shengjiu.wang@nxp.com>
+References: <1594717536-5188-1-git-send-email-shengjiu.wang@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Support hp and mic detection.
-Add a parameter for asoc_simple_init_jack.
+Add headphone and microphone detection GPIO support.
 
-Shengjiu Wang (3):
-  ASoC: simple-card-utils: Support configure pin_name for
-    asoc_simple_init_jack
-  ASoC: bindings: fsl-asoc-card: Support hp-det-gpio and mic-det-gpio
-  ASoC: fsl-asoc-card: Support Headphone and Microphone Jack detection
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+ Documentation/devicetree/bindings/sound/fsl-asoc-card.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
- .../bindings/sound/fsl-asoc-card.txt          |  3 +
- include/sound/simple_card_utils.h             |  6 +-
- sound/soc/fsl/Kconfig                         |  1 +
- sound/soc/fsl/fsl-asoc-card.c                 | 69 ++++++++++++++++++-
- sound/soc/generic/simple-card-utils.c         |  7 +-
- 5 files changed, 78 insertions(+), 8 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/sound/fsl-asoc-card.txt b/Documentation/devicetree/bindings/sound/fsl-asoc-card.txt
+index 133d7e14a4d0..8a6a3d0fda5e 100644
+--- a/Documentation/devicetree/bindings/sound/fsl-asoc-card.txt
++++ b/Documentation/devicetree/bindings/sound/fsl-asoc-card.txt
+@@ -69,6 +69,9 @@ Optional properties:
+ 			        coexisting in order to support the old bindings
+ 				of wm8962 and sgtl5000.
+ 
++  - hp-det-gpio		: The GPIO that detect headphones are plugged in
++  - mic-det-gpio	: The GPIO that detect microphones are plugged in
++
+ Optional unless SSI is selected as a CPU DAI:
+ 
+   - mux-int-port	: The internal port of the i.MX audio muxer (AUDMUX)
 -- 
 2.27.0
 
