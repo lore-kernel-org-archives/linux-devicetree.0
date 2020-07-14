@@ -6,59 +6,59 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4EBC433E4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 16:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFC7C433E2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 16:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ED6B22475
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 16:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37D212253A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 16:39:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594744802;
-	bh=irvfRDzY/K0ARRQhB262mQahABhtwmib6ye2BEgbh1g=;
+	s=default; t=1594744787;
+	bh=TbXWV5ei7TBnr/Ctk0w3GzHb6IxxNUBtez1DyLMmyCk=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=pJS+aZRL+eB9ZGAvIBENmeHk+tdtb62OEk3Ih3ic8dy6asrf2A6Qgoq3PqyXOg3Pz
-	 B00Bh9gBWIITUaNeKNj2pxknwa1i8IJCi5LJvD9t/Cn5qpdpXYHTvpLth6X00OLJSf
-	 +19aE0UYcoLYmAEqCtR7cjaDUSlb7I0U+rlqH8ZM=
+	b=oe9uqMJ8FLzZ84r1SZ+0IqwTSPJjHBERGYyy+bjleBdNI4fpizLdF9yCc4aWrluvS
+	 u80WJzwI/+qptnOjrBJuUQrCKnGsCRiHlG280ddrLrUYHKxg8YPpE/V5kiGfJaF0BO
+	 DbqBf/ERPvj1i48O1fe4N/2li9usffGsvGEv5uTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbgGNQkC (ORCPT
+        id S1728362AbgGNQjq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 12:40:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56748 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 12:39:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725931AbgGNQkB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 12:40:01 -0400
+        id S1725931AbgGNQjq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jul 2020 12:39:46 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04E4222518;
-        Tue, 14 Jul 2020 16:40:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A879122475;
+        Tue, 14 Jul 2020 16:39:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594744801;
-        bh=irvfRDzY/K0ARRQhB262mQahABhtwmib6ye2BEgbh1g=;
+        s=default; t=1594744786;
+        bh=TbXWV5ei7TBnr/Ctk0w3GzHb6IxxNUBtez1DyLMmyCk=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=Wsf1aHfn3DXD1Ju2Os7ztOjkQRzT1LIy/nMPQymcD77GM3Z4je+RMO8XHPtOsRlLE
-         c0jG1gKFWJpiqHlP3FM25PEUaoPJ3EwGRnsjTRu3/WSn4HS3ouwCzSimIWEpTZtpnQ
-         yE/MD6M4MswleCBVqUsjftDR8lj0OjAxyLbhGwMM=
-Date:   Tue, 14 Jul 2020 17:39:52 +0100
+        b=BznuuqH97wJLHyex5iSFWHeYbkNfLTB2RFZQR+i+UN8PjghuFxITWS+85qdQchZaw
+         +06NZp5M5zHse8Ky/eFq7lvb48byAkGE+Ar+GUPnD84kMxweJMwi66np7bv6NgLBBQ
+         TOdoGJScF39M++kfVYx6sAvwM1+CAb4OnAcVaABk=
+Date:   Tue, 14 Jul 2020 17:39:37 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
         Rob Herring <robh+dt@kernel.org>
-Cc:     - <alsa-devel@alsa-project.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+Cc:     alsa-devel@alsa-project.org, Rob Herring <robh@kernel.org>,
+        devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
         linux-arm-kernel@lists.infradead.org
-In-Reply-To: <20200623114005.791643-1-yamada.masahiro@socionext.com>
-References: <20200623114005.791643-1-yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v2] dt-bindings: ASoC: Convert UniPhier EVEA codec to json-schema
-Message-Id: <159474477218.998.2572332784309869444.b4-ty@kernel.org>
+In-Reply-To: <20200714073247.172859-1-katsuhiro@katsuster.net>
+References: <20200714073247.172859-1-katsuhiro@katsuster.net>
+Subject: Re: [PATCH v3] dt-bindings: sound: convert rk3328 codec binding to yaml
+Message-Id: <159474477218.998.15280718297734736345.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 23 Jun 2020 20:40:05 +0900, Masahiro Yamada wrote:
-> Convert the UniPhier EVEA sound codec binding to DT schema format.
+On Tue, 14 Jul 2020 16:32:47 +0900, Katsuhiro Suzuki wrote:
+> This patch converts Rockchip rk3328 audio codec binding to DT schema.
+> And adds description about "mclk" clock and fixes some errors in
+> original example.
 
 Applied to
 
@@ -66,8 +66,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: Convert UniPhier EVEA codec to json-schema
-      commit: 08277cd63797d97185284bc3e86d085fb9ff2adc
+[1/1] ASoC: convert rk3328 codec binding to yaml
+      commit: 3f6597ad2f9ed8ed89dbd2a9ec0b0c892774f9d2
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
