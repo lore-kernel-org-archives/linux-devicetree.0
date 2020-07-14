@@ -2,268 +2,105 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 115ECC433F4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 16:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 882A6C433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 16:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D966A2075B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 16:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6877C2251F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 16:18:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725876AbgGNQOW (ORCPT
+        id S1727898AbgGNQSS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 12:14:22 -0400
-Received: from mga17.intel.com ([192.55.52.151]:13532 "EHLO mga17.intel.com"
+        Tue, 14 Jul 2020 12:18:18 -0400
+Received: from mga05.intel.com ([192.55.52.43]:55862 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726851AbgGNQOW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 12:14:22 -0400
-IronPort-SDR: NUhEYDZkjrRzYJ4gbkQOiWQZOW7sz1X0MxLbFONIv586Wo7znFljAYLABKm2ayIJp/WAYi/hMi
- tqcKc7hSSNYA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="129030361"
+        id S1725876AbgGNQSS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jul 2020 12:18:18 -0400
+IronPort-SDR: qUaFIV6Ek4VO4F7jEEhBqUESBD1o+iItkVztJPDxdKUcyu5RrtBvgiISvltaqHUefzZQY5wys9
+ zLs2xqSzJbsg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="233813989"
 X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="129030361"
+   d="scan'208";a="233813989"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 09:13:45 -0700
-IronPort-SDR: JS6+rD7t2ni19gzPe59pM5E/WFoyOHixccFbuMzfUrOjK1XB3x5KZ9QaXbRJnlor8kqVVXd1c6
- GmiABp1ZwHEQ==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 09:18:18 -0700
+IronPort-SDR: HN+vpBCYu9KmC3INIgKGNBMsFh/JR6Q0OcGv5RbozxfE74tRKkf9WfaIPnZmBleoc/bK7AUnqY
+ E86DQqdVbCDQ==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="485930553"
-Received: from yagellee-mobl.ger.corp.intel.com (HELO dalessan-mobl1.ir.intel.com) ([10.252.20.60])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 09:13:42 -0700
-From:   Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
-List-Id: <soc.lore.kernel.org>
-To:     linux-arm-kernel@lists.infradead.org, SoC Team <soc@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc:     Daniele Alessandrelli <daniele.alessandrelli@intel.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "Paul J. Murphy" <paul.j.murphy@intel.com>,
-        Dinh Nguyen <dinguyen@kernel.org>
-Subject: [PATCH v3 3/7] dt-bindings: clock: Add Keem Bay clock IDs
-Date:   Tue, 14 Jul 2020 17:13:01 +0100
-Message-Id: <20200714161305.836348-4-daniele.alessandrelli@linux.intel.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200714161305.836348-1-daniele.alessandrelli@linux.intel.com>
-References: <20200714161305.836348-1-daniele.alessandrelli@linux.intel.com>
+   d="scan'208";a="307928997"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.209.140.223]) ([10.209.140.223])
+  by fmsmga004.fm.intel.com with ESMTP; 14 Jul 2020 09:18:17 -0700
+Subject: Re: [PATCH v7 05/11] dmaengine: Introduce DMA-device device_caps
+ callback
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+ <20200709224550.15539-6-Sergey.Semin@baikalelectronics.ru>
+ <20200710084503.GE3703480@smile.fi.intel.com>
+ <20200710093834.su3nsjesnhntpd6d@mobilestation>
+ <07d4a977-1de6-b611-3d4f-7c7d6cd7fe5f@intel.com>
+ <20200714160830.GL34333@vkoul-mobl>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <f746fafd-851e-f402-3755-03ef94a65988@intel.com>
+Date:   Tue, 14 Jul 2020 09:18:16 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200714160830.GL34333@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
 
-Add clock dt-bindings for Keem Bay SoC.
 
-Signed-off-by: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
----
- include/dt-bindings/clock/keembay-clocks.h | 188 +++++++++++++++++++++
- 1 file changed, 188 insertions(+)
- create mode 100644 include/dt-bindings/clock/keembay-clocks.h
+On 7/14/2020 9:08 AM, Vinod Koul wrote:
+> On 13-07-20, 13:55, Dave Jiang wrote:
+>>
+>>
+>> On 7/10/2020 2:38 AM, Serge Semin wrote:
+>>> On Fri, Jul 10, 2020 at 11:45:03AM +0300, Andy Shevchenko wrote:
+>>>> On Fri, Jul 10, 2020 at 01:45:44AM +0300, Serge Semin wrote:
+>>>>> There are DMA devices (like ours version of Synopsys DW DMAC) which have
+>>>>> DMA capabilities non-uniformly redistributed between the device channels.
+>>>>> In order to provide a way of exposing the channel-specific parameters to
+>>>>> the DMA engine consumers, we introduce a new DMA-device callback. In case
+>>>>> if provided it gets called from the dma_get_slave_caps() method and is
+>>>>> able to override the generic DMA-device capabilities.
+>>>>
+>>>
+>>>> In light of recent developments consider not to add 'slave' and a such words to the kernel.
+>>>
+>>> As long as the 'slave' word is used in the name of the dma_slave_caps
+>>> structure and in the rest of the DMA-engine subsystem, it will be ambiguous
+>>> to use some else terminology. If renaming needs to be done, then it should be
+>>> done synchronously for the whole subsystem.
+>>
+>> What about just calling it dma_device_caps? Consider this is a useful
+>> function not only slave DMA will utilize this. I can see this being useful
+>> for some of my future code with idxd driver.
+> 
+> Some of the caps may make sense to generic dmaengine but few of them do
+> not :) While at it, am planning to make it dmaengine_periph_caps to
+> denote that these are dmaengine peripheral capabilities.
+> 
 
-diff --git a/include/dt-bindings/clock/keembay-clocks.h b/include/dt-bindings/clock/keembay-clocks.h
-new file mode 100644
-index 000000000000..4ad6616ee8e0
---- /dev/null
-+++ b/include/dt-bindings/clock/keembay-clocks.h
-@@ -0,0 +1,188 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
-+/*
-+ * Copyright (c) 2020 Intel Corporation.
-+ *
-+ * Device tree defines for clocks in Keem Bay.
-+ */
-+
-+#ifndef __DT_BINDINGS_KEEMBAY_CLOCKS_H
-+#define __DT_BINDINGS_KEEMBAY_CLOCKS_H
-+
-+/* CPR_PLL region. CLK_ID: 0 - 11 */
-+#define KEEM_BAY_A53_PLL_START_ID (0)
-+#define KEEM_BAY_A53_PLL_0_OUT_0 (KEEM_BAY_A53_PLL_START_ID + 0)
-+#define KEEM_BAY_A53_PLL_0_OUT_1 (KEEM_BAY_A53_PLL_START_ID + 1)
-+#define KEEM_BAY_A53_PLL_0_OUT_2 (KEEM_BAY_A53_PLL_START_ID + 2)
-+#define KEEM_BAY_A53_PLL_0_OUT_3 (KEEM_BAY_A53_PLL_START_ID + 3)
-+#define KEEM_BAY_A53_PLL_1_OUT_0 (KEEM_BAY_A53_PLL_START_ID + 4)
-+#define KEEM_BAY_A53_PLL_1_OUT_1 (KEEM_BAY_A53_PLL_START_ID + 5)
-+#define KEEM_BAY_A53_PLL_1_OUT_2 (KEEM_BAY_A53_PLL_START_ID + 6)
-+#define KEEM_BAY_A53_PLL_1_OUT_3 (KEEM_BAY_A53_PLL_START_ID + 7)
-+#define KEEM_BAY_A53_PLL_2_OUT_0 (KEEM_BAY_A53_PLL_START_ID + 8)
-+#define KEEM_BAY_A53_PLL_2_OUT_1 (KEEM_BAY_A53_PLL_START_ID + 9)
-+#define KEEM_BAY_A53_PLL_2_OUT_2 (KEEM_BAY_A53_PLL_START_ID + 10)
-+#define KEEM_BAY_A53_PLL_2_OUT_3 (KEEM_BAY_A53_PLL_START_ID + 11)
-+#define KEEM_BAY_A53_PLL_MAX_ID (KEEM_BAY_A53_PLL_2_OUT_3)
-+
-+/* A53_CPR region. CLK_ID: 12 - 30 */
-+#define KEEM_BAY_A53_START_ID (KEEM_BAY_A53_PLL_MAX_ID + 1)
-+#define KEEM_BAY_A53_AON (KEEM_BAY_A53_START_ID + 0)
-+#define KEEM_BAY_A53_NOC (KEEM_BAY_A53_START_ID + 1)
-+#define KEEM_BAY_A53_FUSE (KEEM_BAY_A53_START_ID + 2)
-+#define KEEM_BAY_A53_ROM (KEEM_BAY_A53_START_ID + 3)
-+#define KEEM_BAY_A53_ICB (KEEM_BAY_A53_START_ID + 4)
-+#define KEEM_BAY_A53_GIC (KEEM_BAY_A53_START_ID + 5)
-+#define KEEM_BAY_A53_TIM (KEEM_BAY_A53_START_ID + 6)
-+#define KEEM_BAY_A53_GPIO (KEEM_BAY_A53_START_ID + 7)
-+#define KEEM_BAY_A53_JTAG (KEEM_BAY_A53_START_ID + 8)
-+#define KEEM_BAY_A53_MBIST_0 (KEEM_BAY_A53_START_ID + 9)
-+#define KEEM_BAY_A53_DSS (KEEM_BAY_A53_START_ID + 10)
-+#define KEEM_BAY_A53_MSS (KEEM_BAY_A53_START_ID + 11)
-+#define KEEM_BAY_A53_PSS (KEEM_BAY_A53_START_ID + 12)
-+#define KEEM_BAY_A53_PCIE (KEEM_BAY_A53_START_ID + 13)
-+#define KEEM_BAY_A53_VENC (KEEM_BAY_A53_START_ID + 14)
-+#define KEEM_BAY_A53_VDEC (KEEM_BAY_A53_START_ID + 15)
-+#define KEEM_BAY_A53_MBIST_1 (KEEM_BAY_A53_START_ID + 16)
-+#define KEEM_BAY_A53_MBIST_2 (KEEM_BAY_A53_START_ID + 17)
-+#define KEEM_BAY_A53_MBIST_3 (KEEM_BAY_A53_START_ID + 18)
-+#define KEEM_BAY_A53_MAX_ID (KEEM_BAY_A53_MBIST_3)
-+
-+/* A53_CPR_AUX region. CLK_ID: 31 - 57 */
-+#define KEEM_BAY_A53_AUX_START_ID (KEEM_BAY_A53_MAX_ID + 1)
-+#define KEEM_BAY_A53_AUX_32KHZ (KEEM_BAY_A53_AUX_START_ID + 0)
-+#define KEEM_BAY_A53_AUX_CPR (KEEM_BAY_A53_AUX_START_ID + 1)
-+#define KEEM_BAY_A53_AUX_TSENS (KEEM_BAY_A53_AUX_START_ID + 2)
-+#define KEEM_BAY_A53_AUX_GPIO0 (KEEM_BAY_A53_AUX_START_ID + 3)
-+#define KEEM_BAY_A53_AUX_GPIO1 (KEEM_BAY_A53_AUX_START_ID + 4)
-+#define KEEM_BAY_A53_AUX_GPIO2 (KEEM_BAY_A53_AUX_START_ID + 5)
-+#define KEEM_BAY_A53_AUX_GPIO3 (KEEM_BAY_A53_AUX_START_ID + 6)
-+#define KEEM_BAY_A53_AUX_DDR_REF (KEEM_BAY_A53_AUX_START_ID + 7)
-+#define KEEM_BAY_A53_AUX_DDR_REF_BYPASS (KEEM_BAY_A53_AUX_START_ID + 8)
-+#define KEEM_BAY_A53_AUX_RESERVED1 (KEEM_BAY_A53_AUX_START_ID + 9)
-+#define KEEM_BAY_A53_AUX_VENC (KEEM_BAY_A53_AUX_START_ID + 10)
-+#define KEEM_BAY_A53_AUX_VDEC (KEEM_BAY_A53_AUX_START_ID + 11)
-+#define KEEM_BAY_A53_AUX_USOC_USB_CTRL (KEEM_BAY_A53_AUX_START_ID + 12)
-+#define KEEM_BAY_A53_AUX_USB (KEEM_BAY_A53_AUX_START_ID + 13)
-+#define KEEM_BAY_A53_AUX_USB_REF (KEEM_BAY_A53_AUX_START_ID + 14)
-+#define KEEM_BAY_A53_AUX_USB_ALT_REF (KEEM_BAY_A53_AUX_START_ID + 15)
-+#define KEEM_BAY_A53_AUX_USB_SUSPEND (KEEM_BAY_A53_AUX_START_ID + 16)
-+#define KEEM_BAY_A53_AUX_RESERVED2 (KEEM_BAY_A53_AUX_START_ID + 17)
-+#define KEEM_BAY_A53_AUX_PCIE (KEEM_BAY_A53_AUX_START_ID + 18)
-+#define KEEM_BAY_A53_AUX_DBG_CLK (KEEM_BAY_A53_AUX_START_ID + 19)
-+#define KEEM_BAY_A53_AUX_DBG_TRACE (KEEM_BAY_A53_AUX_START_ID + 20)
-+#define KEEM_BAY_A53_AUX_DBG_DAP (KEEM_BAY_A53_AUX_START_ID + 21)
-+#define KEEM_BAY_A53_AUX_ARM_CLKIN (KEEM_BAY_A53_AUX_START_ID + 22)
-+#define KEEM_BAY_A53_AUX_ARM_AXI (KEEM_BAY_A53_AUX_START_ID + 23)
-+#define KEEM_BAY_A53_AUX_USOC (KEEM_BAY_A53_AUX_START_ID + 24)
-+#define KEEM_BAY_A53_AUX_USOC_REF (KEEM_BAY_A53_AUX_START_ID + 25)
-+#define KEEM_BAY_A53_AUX_USOC_ALT_REF (KEEM_BAY_A53_AUX_START_ID + 26)
-+#define KEEM_BAY_A53_AUX_MAX_ID (KEEM_BAY_A53_AUX_USOC_ALT_REF)
-+
-+/* PSS_CPR region CLK_ID: CLK_ID: 58 - 82 */
-+#define KEEM_BAY_PSS_START_ID (KEEM_BAY_A53_AUX_MAX_ID + 1)
-+#define KEEM_BAY_PSS_I2C0 (KEEM_BAY_PSS_START_ID + 0)
-+#define KEEM_BAY_PSS_I2C1 (KEEM_BAY_PSS_START_ID + 1)
-+#define KEEM_BAY_PSS_I2C2 (KEEM_BAY_PSS_START_ID + 2)
-+#define KEEM_BAY_PSS_I2C3 (KEEM_BAY_PSS_START_ID + 3)
-+#define KEEM_BAY_PSS_I2C4 (KEEM_BAY_PSS_START_ID + 4)
-+#define KEEM_BAY_PSS_SD0 (KEEM_BAY_PSS_START_ID + 5)
-+#define KEEM_BAY_PSS_SD1 (KEEM_BAY_PSS_START_ID + 6)
-+#define KEEM_BAY_PSS_EMMC (KEEM_BAY_PSS_START_ID + 7)
-+#define KEEM_BAY_PSS_AXI_DMA (KEEM_BAY_PSS_START_ID + 8)
-+#define KEEM_BAY_PSS_SPI0 (KEEM_BAY_PSS_START_ID + 9)
-+#define KEEM_BAY_PSS_SPI1 (KEEM_BAY_PSS_START_ID + 10)
-+#define KEEM_BAY_PSS_SPI2 (KEEM_BAY_PSS_START_ID + 11)
-+#define KEEM_BAY_PSS_SPI3 (KEEM_BAY_PSS_START_ID + 12)
-+#define KEEM_BAY_PSS_I2S0 (KEEM_BAY_PSS_START_ID + 13)
-+#define KEEM_BAY_PSS_I2S1 (KEEM_BAY_PSS_START_ID + 14)
-+#define KEEM_BAY_PSS_I2S2 (KEEM_BAY_PSS_START_ID + 15)
-+#define KEEM_BAY_PSS_I2S3 (KEEM_BAY_PSS_START_ID + 16)
-+#define KEEM_BAY_PSS_UART0 (KEEM_BAY_PSS_START_ID + 17)
-+#define KEEM_BAY_PSS_UART1 (KEEM_BAY_PSS_START_ID + 18)
-+#define KEEM_BAY_PSS_UART2 (KEEM_BAY_PSS_START_ID + 19)
-+#define KEEM_BAY_PSS_UART3 (KEEM_BAY_PSS_START_ID + 20)
-+#define KEEM_BAY_PSS_I3C0 (KEEM_BAY_PSS_START_ID + 21)
-+#define KEEM_BAY_PSS_I3C1 (KEEM_BAY_PSS_START_ID + 22)
-+#define KEEM_BAY_PSS_I3C2 (KEEM_BAY_PSS_START_ID + 23)
-+#define KEEM_BAY_PSS_GBE (KEEM_BAY_PSS_START_ID + 24)
-+#define KEEM_BAY_PSS_MAX_ID (KEEM_BAY_PSS_GBE)
-+
-+/* PSS_CPR_AUX region. CLK_ID: 83 - 97 */
-+#define KEEM_BAY_PSS_AUX_START_ID (KEEM_BAY_PSS_MAX_ID + 1)
-+#define KEEM_BAY_PSS_AUX_I2S0 (KEEM_BAY_PSS_AUX_START_ID + 0)
-+#define KEEM_BAY_PSS_AUX_I2S1 (KEEM_BAY_PSS_AUX_START_ID + 1)
-+#define KEEM_BAY_PSS_AUX_I2S2 (KEEM_BAY_PSS_AUX_START_ID + 2)
-+#define KEEM_BAY_PSS_AUX_I2S3 (KEEM_BAY_PSS_AUX_START_ID + 3)
-+#define KEEM_BAY_PSS_AUX_UART0 (KEEM_BAY_PSS_AUX_START_ID + 4)
-+#define KEEM_BAY_PSS_AUX_UART1 (KEEM_BAY_PSS_AUX_START_ID + 5)
-+#define KEEM_BAY_PSS_AUX_UART2 (KEEM_BAY_PSS_AUX_START_ID + 6)
-+#define KEEM_BAY_PSS_AUX_UART3 (KEEM_BAY_PSS_AUX_START_ID + 7)
-+#define KEEM_BAY_PSS_AUX_SD0 (KEEM_BAY_PSS_AUX_START_ID + 8)
-+#define KEEM_BAY_PSS_AUX_SD1 (KEEM_BAY_PSS_AUX_START_ID + 9)
-+#define KEEM_BAY_PSS_AUX_EMMC (KEEM_BAY_PSS_AUX_START_ID + 10)
-+#define KEEM_BAY_PSS_AUX_TRNG (KEEM_BAY_PSS_AUX_START_ID + 11)
-+#define KEEM_BAY_PSS_AUX_OCS (KEEM_BAY_PSS_AUX_START_ID + 12)
-+#define KEEM_BAY_PSS_AUX_GBE_PTP (KEEM_BAY_PSS_AUX_START_ID + 13)
-+#define KEEM_BAY_PSS_AUX_GBE_TX (KEEM_BAY_PSS_AUX_START_ID + 14)
-+#define KEEM_BAY_PSS_AUX_MAX_ID (KEEM_BAY_PSS_AUX_GBE_TX)
-+
-+/* DSS_CPR region. CLK_ID: 98 - 109 */
-+#define KEEM_BAY_DSS_START_ID (KEEM_BAY_PSS_AUX_MAX_ID + 1)
-+#define KEEM_BAY_DSS_SYS (KEEM_BAY_DSS_START_ID + 0)
-+#define KEEM_BAY_DSS_DEC400 (KEEM_BAY_DSS_START_ID + 1)
-+#define KEEM_BAY_DSS_TSENSE (KEEM_BAY_DSS_START_ID + 2)
-+#define KEEM_BAY_DSS_BUS_0 (KEEM_BAY_DSS_START_ID + 3)
-+#define KEEM_BAY_DSS_CORE_0 (KEEM_BAY_DSS_START_ID + 4)
-+#define KEEM_BAY_DSS_REF_0 (KEEM_BAY_DSS_START_ID + 5)
-+#define KEEM_BAY_DSS_REF_BYP_0 (KEEM_BAY_DSS_START_ID + 6)
-+#define KEEM_BAY_DSS_BUS_1 (KEEM_BAY_DSS_START_ID + 7)
-+#define KEEM_BAY_DSS_CORE_1 (KEEM_BAY_DSS_START_ID + 8)
-+#define KEEM_BAY_DSS_REF_1 (KEEM_BAY_DSS_START_ID + 9)
-+#define KEEM_BAY_DSS_REF_BYP_1 (KEEM_BAY_DSS_START_ID + 10)
-+#define KEEM_BAY_DSS_MMU500 (KEEM_BAY_DSS_START_ID + 11)
-+#define KEEM_BAY_DSS_MAX_ID (KEEM_BAY_DSS_MMU500)
-+
-+/* USS_CPR region. CLK_ID: 110 - 116 */
-+#define KEEM_BAY_USS_START_ID (KEEM_BAY_DSS_MAX_ID + 1)
-+#define KEEM_BAY_USS_SYS (KEEM_BAY_USS_START_ID + 0)
-+#define KEEM_BAY_USS_REF (KEEM_BAY_USS_START_ID + 1)
-+#define KEEM_BAY_USS_ALT_REF (KEEM_BAY_USS_START_ID + 2)
-+#define KEEM_BAY_USS_SUSPEND (KEEM_BAY_USS_START_ID + 3)
-+#define KEEM_BAY_USS_CORE (KEEM_BAY_USS_START_ID + 4)
-+#define KEEM_BAY_USS_LOW_JIT (KEEM_BAY_USS_START_ID + 5)
-+#define KEEM_BAY_USS_PHY_TST (KEEM_BAY_USS_START_ID + 6)
-+#define KEEM_BAY_USS_MAX_ID (KEEM_BAY_USS_PHY_TST)
-+
-+/* MSS_CPR region. CLK_ID: 117 - 129 */
-+#define KEEM_BAY_MSS_START_ID (KEEM_BAY_USS_MAX_ID + 1)
-+#define KEEM_BAY_MSS_CPU (KEEM_BAY_MSS_START_ID + 0)
-+#define KEEM_BAY_MSS_CPU_DSU (KEEM_BAY_MSS_START_ID + 1)
-+#define KEEM_BAY_MSS_CPU_L2C (KEEM_BAY_MSS_START_ID + 2)
-+#define KEEM_BAY_MSS_CPU_ICB (KEEM_BAY_MSS_START_ID + 3)
-+#define KEEM_BAY_MSS_CPU_TIM (KEEM_BAY_MSS_START_ID + 4)
-+#define KEEM_BAY_MSS_JPGENC (KEEM_BAY_MSS_START_ID + 5)
-+#define KEEM_BAY_MSS_DTB (KEEM_BAY_MSS_START_ID + 6)
-+#define KEEM_BAY_MSS_BLT (KEEM_BAY_MSS_START_ID + 7)
-+#define KEEM_BAY_MSS_UPA (KEEM_BAY_MSS_START_ID + 8)
-+#define KEEM_BAY_MSS_NCE (KEEM_BAY_MSS_START_ID + 9)
-+#define KEEM_BAY_MSS_CV (KEEM_BAY_MSS_START_ID + 10)
-+#define KEEM_BAY_MSS_ISP (KEEM_BAY_MSS_START_ID + 11)
-+#define KEEM_BAY_MSS_CAM (KEEM_BAY_MSS_START_ID + 12)
-+#define KEEM_BAY_MSS_MAX_ID (KEEM_BAY_MSS_CAM)
-+
-+/* MSS_CPR_AUX region. CLK_ID: 130 - 138 */
-+#define KEEM_BAY_MSS_AUX_START_ID (KEEM_BAY_MSS_MAX_ID + 1)
-+#define KEEM_BAY_MSS_AUX_CIF (KEEM_BAY_MSS_AUX_START_ID + 0)
-+#define KEEM_BAY_MSS_AUX_LCD (KEEM_BAY_MSS_AUX_START_ID + 1)
-+#define KEEM_BAY_MSS_AUX_SLVDS0 (KEEM_BAY_MSS_AUX_START_ID + 2)
-+#define KEEM_BAY_MSS_AUX_SLVDS1 (KEEM_BAY_MSS_AUX_START_ID + 3)
-+#define KEEM_BAY_MSS_AUX_MIPI_TX0 (KEEM_BAY_MSS_AUX_START_ID + 4)
-+#define KEEM_BAY_MSS_AUX_MIPI_TX1 (KEEM_BAY_MSS_AUX_START_ID + 5)
-+#define KEEM_BAY_MSS_AUX_MIPI_ECFG (KEEM_BAY_MSS_AUX_START_ID + 6)
-+#define KEEM_BAY_MSS_AUX_MIPI_CFG (KEEM_BAY_MSS_AUX_START_ID + 7)
-+#define KEEM_BAY_MSS_AUX_JPGENC (KEEM_BAY_MSS_AUX_START_ID + 8)
-+#define KEEM_BAY_MSS_AUX_MAX_ID (KEEM_BAY_MSS_AUX_JPGENC)
-+
-+#define KEEM_BAY_NUM_CLOCKS (KEEM_BAY_MSS_AUX_MAX_ID + 1)
-+
-+#endif /* __DT_BINDINGS_KEEMBAY_CLOCKS_H */
--- 
-2.26.2
-
+If the function only passes in periph_caps, how do we allow the non periph DMA 
+utilize this function?
