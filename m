@@ -4,90 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41253C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 02:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF2BC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 02:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 147E821927
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 02:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 077CA20674
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 02:15:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594692579;
-	bh=+cwhjBj8CfhqJWNHnp7/eo01IqnythBFj6b/ahFv/Ew=;
+	s=default; t=1594692918;
+	bh=o956ka+swNrTcmGylhwNkjD05XsXLXhaXTUExKWkLVc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qfwMRQyXpkK7Q8ud4soWkr6f/+UiPTKEP1a/c1vg8DNomWSRplH0XXK+fcxuJjntO
-	 2UvtLHKHDp6GfDfmQiYycZSF6fuupE+5qNndHEixA3nQrCaabU8IOVOZnYmeMKd0YX
-	 Fjy/xA0VpRprparonsVrU5224gK3FNHuaqgnFTMU=
+	b=gUWPT/xgLodXVwQZ06VdqG776ZXzQp+dAF4K6piRJIvxndgkYdn/V88NcXFcr5VdZ
+	 TFV6Z71E8uPrp4v3ci5YLr5LngmyC/+5c++Re+sF+yD4QiVqU3RVHQxr8iqjx03EgD
+	 F4MlhU25ENGZL7nc0QoiPNy927vA7r4DEhUcr40E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726372AbgGNCJi (ORCPT
+        id S1726398AbgGNCPR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 22:09:38 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:41404 "EHLO
+        Mon, 13 Jul 2020 22:15:17 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:41751 "EHLO
         mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgGNCJi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 22:09:38 -0400
-Received: by mail-il1-f193.google.com with SMTP id q3so12959121ilt.8;
-        Mon, 13 Jul 2020 19:09:37 -0700 (PDT)
+        with ESMTP id S1726364AbgGNCPR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 22:15:17 -0400
+Received: by mail-il1-f193.google.com with SMTP id q3so12966483ilt.8;
+        Mon, 13 Jul 2020 19:15:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KPcWWEFayVvDQVr24WFW0Iat95lCbS98CRPSzZcM2HA=;
-        b=SFw4/AYH1AOcgtAYPf/CYXijucCTKs8V3pYvuOoGzFYnnC7dL4IWKNgcNXqGig9SYG
-         2UAzJH6bSCRKaLV7lqepn4A8Iu5snRSgJyDZvXpCUW+9aC7CXtXcZzpoK2SZc9hz73e4
-         usXczK10ylDV/UlDan+yWVJwXbwrPdZC+Zzvwt/WWPzAufzMfUQk1Sb1tAhAv7ZSxHFv
-         w8io4QeYjJmPNQHDjTIoS7mX1Mx9AUaDhbgsIu76StJSnYsxpBScNO4X6iT+NVrwCdjf
-         LN4oVQHlVbPCjxusTSRTKzFUj0pQ5DrahopfOHOxvv7YiHASbwoMONXnY4JnCUGGpAJp
-         w6rA==
-X-Gm-Message-State: AOAM533bosifZDzRHTrmwdqk1KlevyfjHmRGZTcTFFF4Wfz/K5KEteue
-        7sDKEBt3gtShBSaYykEydg==
-X-Google-Smtp-Source: ABdhPJzQQad0wTSDAMPA9ATJ9hA1u98WVgnzC9LLhonu5X2eHqH93+QPB4bNhmGqkdB13vmALMiaJw==
-X-Received: by 2002:a05:6e02:14c2:: with SMTP id o2mr2669736ilk.54.1594692576834;
-        Mon, 13 Jul 2020 19:09:36 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=HAKv0UP98J59W+EXwmN2neF5GsNxnxRV02qIPUTyYRk=;
+        b=eQfFl2hMSXQU20tNmUoDVO3Bz1oTexaC5mJgaJ7rS9wV1yAzU0LDHb1/3i7ljGH3ZC
+         PAA9GlwkXKjhBZ1Imtr+V4+jIk7e/DSWXWn7DvCDVmbpN13ss4slGBnlCaEt5QI4tATV
+         PzCgiurAP0vr1DdjMn1P1ygsZquqkUviS1Sl4VnUkQNLFEnLGNqslcfdWB6UjfM3/jls
+         wLHlzx01ZTbbJw6/73FvrJJqw3/um2AtufKW4EEurqShmH7af4wANeubO+Eb+DVLrthN
+         //7kC8k/9ns4XXDZPjDn1AFZcONpFda39zRKhPJPZEfqo39rtt1FTyQZEB0T89xJQsss
+         cT3A==
+X-Gm-Message-State: AOAM530Xznc1T79Eyp1gOolrSEVbwsEJplqkLIKDTPLWI3IbSUYQnpuG
+        yQcn7J/q8crZfrYEQ8GC3A==
+X-Google-Smtp-Source: ABdhPJzzxIoZRAvxxuKKpOCe6ort0jaXZG6vZiU3J1Am4i8Qx+6kt5Izr1KNun7PXBrCIjonkJRkcQ==
+X-Received: by 2002:a92:cd4e:: with SMTP id v14mr2452258ilq.247.1594692916024;
+        Mon, 13 Jul 2020 19:15:16 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id i84sm9534158ill.30.2020.07.13.19.09.35
+        by smtp.gmail.com with ESMTPSA id k3sm9106930ils.8.2020.07.13.19.15.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 19:09:36 -0700 (PDT)
-Received: (nullmailer pid 1132789 invoked by uid 1000);
-        Tue, 14 Jul 2020 02:09:35 -0000
-Date:   Mon, 13 Jul 2020 20:09:35 -0600
+        Mon, 13 Jul 2020 19:15:15 -0700 (PDT)
+Received: (nullmailer pid 1140861 invoked by uid 1000);
+        Tue, 14 Jul 2020 02:15:14 -0000
+Date:   Mon, 13 Jul 2020 20:15:14 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Baolin Wang <baolin.wang7@gmail.com>,
-        linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        Andy Gross <agross@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: hwlock: qcom: Migrate binding to YAML
-Message-ID: <20200714020935.GA1122169@bogus>
-References: <20200622075956.171058-1-bjorn.andersson@linaro.org>
- <20200622075956.171058-2-bjorn.andersson@linaro.org>
+To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc:     Edgar Lee <cylee12@realtek.com>,
+        Stanley Chang =?utf-8?B?W+aYjOiCsuW+t10=?= 
+        <stanley_chang@realtek.com>, linux-arm-kernel@lists.infradead.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        James Tai =?utf-8?B?W+aItOW/l+WzsF0=?= <james.tai@realtek.com>,
+        linux-realtek-soc@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 17/29] dt-bindings: nvmem: Add Realtek RTD1195 eFuse
+Message-ID: <20200714021514.GA1140827@bogus>
+References: <20200623025106.31273-1-afaerber@suse.de>
+ <20200623025106.31273-18-afaerber@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200622075956.171058-2-bjorn.andersson@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200623025106.31273-18-afaerber@suse.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 22 Jun 2020 00:59:53 -0700, Bjorn Andersson wrote:
-> Migrate the Qualcomm TCSR mutex binding to YAML to allow validation.
+On Tue, 23 Jun 2020 04:50:54 +0200, Andreas Färber wrote:
+> Add a DT binding for eFuse on Realtek Digital Home Center SoCs.
 > 
-> Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Andreas Färber <afaerber@suse.de>
 > ---
+>  v2: New
 > 
-> Changes since v1:
-> - Actually remove the old binding doc
-> 
->  .../bindings/hwlock/qcom-hwspinlock.txt       | 39 --------------
->  .../bindings/hwlock/qcom-hwspinlock.yaml      | 51 +++++++++++++++++++
->  2 files changed, 51 insertions(+), 39 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
->  create mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
+>  .../bindings/nvmem/realtek,rtd1195-efuse.yaml | 53 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/realtek,rtd1195-efuse.yaml
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
