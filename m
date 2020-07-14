@@ -2,163 +2,258 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E86EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 11:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B300C433E2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 12:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AD4822224
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 11:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F89E22224
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 12:08:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intenta.de header.i=@intenta.de header.b="fW+syt96"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgGNL7Z (ORCPT
+        id S1727886AbgGNMIn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 07:59:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50290 "EHLO mx2.suse.de"
+        Tue, 14 Jul 2020 08:08:43 -0400
+Received: from mail.intenta.de ([178.249.25.132]:38258 "EHLO mail.intenta.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726041AbgGNL7Y (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 07:59:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 710A2B013;
-        Tue, 14 Jul 2020 11:59:25 +0000 (UTC)
-Message-ID: <ed42e27eaf48fd19cc8ccccd15b0b25ba1d836ae.camel@suse.de>
-Subject: Re: [PATCH v3 1/9] dt-bindings: reset: Add a binding for the RPi
- Firmware reset controller
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Rob Herring <robh@kernel.org>
-Cc:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>, linux-usb@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
-        lorenzo.pieralisi@arm.com, devicetree@vger.kernel.org
-Date:   Tue, 14 Jul 2020 13:59:21 +0200
-In-Reply-To: <20200713182356.GA413630@bogus>
-References: <20200612171334.26385-1-nsaenzjulienne@suse.de>
-         <20200612171334.26385-2-nsaenzjulienne@suse.de>
-         <20200713182356.GA413630@bogus>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-cyjjn9iMFbQ+NRASHXx8"
-User-Agent: Evolution 3.36.4 
+        id S1727867AbgGNMIn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jul 2020 08:08:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=intenta.de; s=dkim1;
+        h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:CC:To:From:Date; bh=zln4hxZBPKBJeOUEje0k20V2f5G6rG4rAoe1m3aL+eI=;
+        b=fW+syt96bwKz945+di9iKOrbGSelnfe/4x0AZQedolC13C3jW1Ox9Y7mUAWgYufBbP9HU2LgEX+2TxuVwDa1rKeNACezI+nI+JTUYCaTECJovN2P1YqPtYnfsMtFQwdDu8FiCB1Yb+jHJrxWHNzc8qevCJ+17OoORPyiBfOfZcSggUKIRppqoObnFO6EDdUt3o3hLZG1o0ZMe6Liop12tb2sH7WBuvDT+TX10ajS4hNXakvDbvgwe/77jBCKCVnk3fCoOMq2gFG3GtJmvxs+AUTxCXDyq7q9pEbUzOtEc2R8HjxOcTp2nJZrBTzhc6Ef3cVqm061U3g896pQhV085g==;
+Date:   Tue, 14 Jul 2020 14:08:28 +0200
+From:   Helmut Grohne <helmut.grohne@intenta.de>
+To:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Woojung Huh <woojung.huh@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Jakub Kicinski" <kuba@kernel.org>
+CC:     Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <netdev@vger.kernel.org>
+Subject: [PATCH] net: dsa: microchip: look for phy-mode in port nodes
+Message-ID: <20200714120827.GA7939@laureti-dev>
+References: <20200617082235.GA1523@laureti-dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200617082235.GA1523@laureti-dev>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: ICSMA002.intenta.de (10.10.16.48) To ICSMA002.intenta.de
+ (10.10.16.48)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Documentation/devicetree/bindings/net/dsa/dsa.txt says that the phy-mode
+property should be specified on port nodes. However, the microchip
+drivers read it from the switch node.
 
---=-cyjjn9iMFbQ+NRASHXx8
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Let the driver use the per-port property and fall back to the old
+location with a warning.
 
-On Mon, 2020-07-13 at 12:23 -0600, Rob Herring wrote:
-> On Fri, Jun 12, 2020 at 07:13:25PM +0200, Nicolas Saenz Julienne wrote:
-> > The firmware running on the RPi VideoCore can be used to reset and
-> > initialize HW controlled by the firmware.
-> >=20
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> >=20
-> > ---
-> > Changes since v2:
-> >  - Add include file for reset IDs
-> >=20
-> > Changes since v1:
-> >  - Correct cells binding as per Florian's comment
-> >  - Change compatible string to be more generic
-> >=20
-> >  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++++++++
-> >  .../reset/raspberrypi,firmware-reset.h        | 13 ++++++++++++
-> >  2 files changed, 34 insertions(+)
-> >  create mode 100644 include/dt-bindings/reset/raspberrypi,firmware-rese=
-t.h
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2=
-835-
-> > firmware.yaml
-> > b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
-> > firmware.yaml
-> > index b48ed875eb8e..23a885af3a28 100644
-> > --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
-> > firmware.yaml
-> > +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
-> > firmware.yaml
-> > @@ -39,6 +39,22 @@ properties:
-> >        - compatible
-> >        - "#clock-cells"
-> > =20
-> > +  reset:
->=20
-> I'm not really thrilled how this is evolving with a node per provider.=
-=20
-> There's no reason you can't just add #clock-cells and #reset-cells to=20
-> the parent firmware node.
+Fix in-tree users.
 
-What are the downsides? The way I see it there is not much difference. And =
-this
-way of handling things is feels more intuitive and flexible (overlays can
-control what to enable easily, we can take advantage of the platform device
-core).
+Signed-off-by: Helmut Grohne <helmut.grohne@intenta.de>
+Link: https://lore.kernel.org/netdev/20200617082235.GA1523@laureti-dev/
+---
+ arch/arm/boot/dts/at91-sama5d2_icp.dts |  2 +-
+ drivers/net/dsa/microchip/ksz8795.c    | 17 +++++++++++-----
+ drivers/net/dsa/microchip/ksz9477.c    | 28 +++++++++++++++++---------
+ drivers/net/dsa/microchip/ksz_common.c | 13 +++++++++++-
+ drivers/net/dsa/microchip/ksz_common.h |  3 ++-
+ 5 files changed, 45 insertions(+), 18 deletions(-)
 
-> I probably should have complained with the clocks node, but that's only=
-=20
-> pending for 5.9.
-
-Note that there are more users for this pattern: "raspberrypi,firmware-ts" =
-and
-"raspberrypi,firmware-gpio". Actually you were the one to originally propos=
-e
-this it[1]. :P
-
-There already is a fair amount of churn in these drivers because of all the=
- DT
-changes we did in the past, and if we need to change how we integrate these
-again, I'd really like it to be for good.
-
-> The bigger issue is this stuff is just trickling in one bit at a time=20
-> which gives no context for review. What's next? Is it really a mystery=
-=20
-> as to what functions the firmware provides?
-
-We have no control over it, RPi engineers integrate new designs and new
-firmware interfaces show up. This is a good example of it.
-
-I proposed them to use SCMI as it covers most of what they are already
-providing here. But no luck so far.
-
-> You don't have to have a driver in place for every function.
-
-I see your point, it could be more monolithic, that said, having a driver i=
-s
-essential. See the reverts I managed to pull off at the end of the series.
-
-[1] https://patchwork.kernel.org/patch/10166783/#21421571
-
-
---=-cyjjn9iMFbQ+NRASHXx8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl8NnhkACgkQlfZmHno8
-x/7gMAf/WpgWrzZn8OWvm5HWyZhbLlpudApJFqIMveDTldhi/2C/3fqEMLewG6PW
-XjENuKydy6YXzpsn4CMxU8M2ELLf8hBU6rN0om2oW9IcQuxbNCT/DLQjjXxkzLkk
-HBZnE4AomVfl9BgNPVHtwodK1tmCuNLSxLggfnCmkgAB5/6mV3/1VhKUEe4AmTba
-/r7ZMNhJJHDdOc5BqCtPLj2MxwNzaFLhEgxR9TmYQuzX66BFJwggq/If8088Ektx
-pk1jTsE+mkRsOUq2Pdu2kl6WQM0mxOyPefDgJDQwry/YePCuVj1JOVeCnKvKgbF5
-JGPa7jelAE3azkvNQOBKXW1HiBYgsQ==
-=tEOc
------END PGP SIGNATURE-----
-
---=-cyjjn9iMFbQ+NRASHXx8--
+diff --git a/arch/arm/boot/dts/at91-sama5d2_icp.dts b/arch/arm/boot/dts/at91-sama5d2_icp.dts
+index 8d19925fc09e..6783cf16ff81 100644
+--- a/arch/arm/boot/dts/at91-sama5d2_icp.dts
++++ b/arch/arm/boot/dts/at91-sama5d2_icp.dts
+@@ -116,7 +116,6 @@
+ 		switch0: ksz8563@0 {
+ 			compatible = "microchip,ksz8563";
+ 			reg = <0>;
+-			phy-mode = "mii";
+ 			reset-gpios = <&pioA PIN_PD4 GPIO_ACTIVE_LOW>;
+ 
+ 			spi-max-frequency = <500000>;
+@@ -140,6 +139,7 @@
+ 					reg = <2>;
+ 					label = "cpu";
+ 					ethernet = <&macb0>;
++					phy-mode = "mii";
+ 					fixed-link {
+ 						speed = <100>;
+ 						full-duplex;
+diff --git a/drivers/net/dsa/microchip/ksz8795.c b/drivers/net/dsa/microchip/ksz8795.c
+index 7c17b0f705ec..01c03205db53 100644
+--- a/drivers/net/dsa/microchip/ksz8795.c
++++ b/drivers/net/dsa/microchip/ksz8795.c
+@@ -941,11 +941,18 @@ static void ksz8795_port_setup(struct ksz_device *dev, int port, bool cpu_port)
+ 	ksz_port_cfg(dev, port, P_PRIO_CTRL, PORT_802_1P_ENABLE, true);
+ 
+ 	if (cpu_port) {
++		if (!p->interface && dev->compat_interface) {
++			dev_warn(dev->dev,
++				 "Using legacy switch \"phy-mode\" missing on port %d node. Please update your device tree.\n",
++				 port);
++			p->interface = dev->compat_interface;
++		}
++
+ 		/* Configure MII interface for proper network communication. */
+ 		ksz_read8(dev, REG_PORT_5_CTRL_6, &data8);
+ 		data8 &= ~PORT_INTERFACE_TYPE;
+ 		data8 &= ~PORT_GMII_1GPS_MODE;
+-		switch (dev->interface) {
++		switch (p->interface) {
+ 		case PHY_INTERFACE_MODE_MII:
+ 			p->phydev.speed = SPEED_100;
+ 			break;
+@@ -961,11 +968,11 @@ static void ksz8795_port_setup(struct ksz_device *dev, int port, bool cpu_port)
+ 		default:
+ 			data8 &= ~PORT_RGMII_ID_IN_ENABLE;
+ 			data8 &= ~PORT_RGMII_ID_OUT_ENABLE;
+-			if (dev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
+-			    dev->interface == PHY_INTERFACE_MODE_RGMII_RXID)
++			if (p->interface == PHY_INTERFACE_MODE_RGMII_ID ||
++			    p->interface == PHY_INTERFACE_MODE_RGMII_RXID)
+ 				data8 |= PORT_RGMII_ID_IN_ENABLE;
+-			if (dev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
+-			    dev->interface == PHY_INTERFACE_MODE_RGMII_TXID)
++			if (p->interface == PHY_INTERFACE_MODE_RGMII_ID ||
++			    p->interface == PHY_INTERFACE_MODE_RGMII_TXID)
+ 				data8 |= PORT_RGMII_ID_OUT_ENABLE;
+ 			data8 |= PORT_GMII_1GPS_MODE;
+ 			data8 |= PORT_INTERFACE_RGMII;
+diff --git a/drivers/net/dsa/microchip/ksz9477.c b/drivers/net/dsa/microchip/ksz9477.c
+index 8d15c3016024..06c76948814b 100644
+--- a/drivers/net/dsa/microchip/ksz9477.c
++++ b/drivers/net/dsa/microchip/ksz9477.c
+@@ -1234,7 +1234,7 @@ static void ksz9477_port_setup(struct ksz_device *dev, int port, bool cpu_port)
+ 
+ 		/* configure MAC to 1G & RGMII mode */
+ 		ksz_pread8(dev, port, REG_PORT_XMII_CTRL_1, &data8);
+-		switch (dev->interface) {
++		switch (p->interface) {
+ 		case PHY_INTERFACE_MODE_MII:
+ 			ksz9477_set_xmii(dev, 0, &data8);
+ 			ksz9477_set_gbit(dev, false, &data8);
+@@ -1255,11 +1255,11 @@ static void ksz9477_port_setup(struct ksz_device *dev, int port, bool cpu_port)
+ 			ksz9477_set_gbit(dev, true, &data8);
+ 			data8 &= ~PORT_RGMII_ID_IG_ENABLE;
+ 			data8 &= ~PORT_RGMII_ID_EG_ENABLE;
+-			if (dev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
+-			    dev->interface == PHY_INTERFACE_MODE_RGMII_RXID)
++			if (p->interface == PHY_INTERFACE_MODE_RGMII_ID ||
++			    p->interface == PHY_INTERFACE_MODE_RGMII_RXID)
+ 				data8 |= PORT_RGMII_ID_IG_ENABLE;
+-			if (dev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
+-			    dev->interface == PHY_INTERFACE_MODE_RGMII_TXID)
++			if (p->interface == PHY_INTERFACE_MODE_RGMII_ID ||
++			    p->interface == PHY_INTERFACE_MODE_RGMII_TXID)
+ 				data8 |= PORT_RGMII_ID_EG_ENABLE;
+ 			p->phydev.speed = SPEED_1000;
+ 			break;
+@@ -1303,23 +1303,31 @@ static void ksz9477_config_cpu_port(struct dsa_switch *ds)
+ 			dev->cpu_port = i;
+ 			dev->host_mask = (1 << dev->cpu_port);
+ 			dev->port_mask |= dev->host_mask;
++			p = &dev->ports[i];
+ 
+ 			/* Read from XMII register to determine host port
+ 			 * interface.  If set specifically in device tree
+ 			 * note the difference to help debugging.
+ 			 */
+ 			interface = ksz9477_get_interface(dev, i);
+-			if (!dev->interface)
+-				dev->interface = interface;
+-			if (interface && interface != dev->interface)
++			if (!p->interface) {
++				if (dev->compat_interface) {
++					dev_warn(dev->dev,
++						 "Using legacy switch \"phy-mode\" missing on port %d node. Please update your device tree.\n",
++						 i);
++					p->interface = dev->compat_interface;
++				} else {
++					p->interface = interface;
++				}
++			}
++			if (interface && interface != p->interface)
+ 				dev_info(dev->dev,
+ 					 "use %s instead of %s\n",
+-					  phy_modes(dev->interface),
++					  phy_modes(p->interface),
+ 					  phy_modes(interface));
+ 
+ 			/* enable cpu port */
+ 			ksz9477_port_setup(dev, i, true);
+-			p = &dev->ports[dev->cpu_port];
+ 			p->vid_member = dev->port_mask;
+ 			p->on = 1;
+ 		}
+diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
+index fd1d6676ae4f..9cb8e04109f4 100644
+--- a/drivers/net/dsa/microchip/ksz_common.c
++++ b/drivers/net/dsa/microchip/ksz_common.c
+@@ -416,6 +416,8 @@ int ksz_switch_register(struct ksz_device *dev,
+ {
+ 	phy_interface_t interface;
+ 	int ret;
++	struct device_node *port;
++	unsigned int port_num;
+ 
+ 	if (dev->pdata)
+ 		dev->chip_id = dev->pdata->chip_id;
+@@ -448,10 +450,19 @@ int ksz_switch_register(struct ksz_device *dev,
+ 	/* Host port interface will be self detected, or specifically set in
+ 	 * device tree.
+ 	 */
++	for (port_num = 0; port_num < dev->port_cnt; ++port_num)
++		dev->ports[port_num].interface = PHY_INTERFACE_MODE_NA;
+ 	if (dev->dev->of_node) {
+ 		ret = of_get_phy_mode(dev->dev->of_node, &interface);
+ 		if (ret == 0)
+-			dev->interface = interface;
++			dev->compat_interface = interface;
++		for_each_available_child_of_node(dev->dev->of_node, port) {
++			if (of_property_read_u32(port, "reg", &port_num))
++				continue;
++			if (port_num >= dev->port_cnt)
++				return -EINVAL;
++			of_get_phy_mode(port, &dev->ports[port_num].interface);
++		}
+ 		dev->synclko_125 = of_property_read_bool(dev->dev->of_node,
+ 							 "microchip,synclko-125");
+ 	}
+diff --git a/drivers/net/dsa/microchip/ksz_common.h b/drivers/net/dsa/microchip/ksz_common.h
+index f2c9bb68fd33..c0c736aaef61 100644
+--- a/drivers/net/dsa/microchip/ksz_common.h
++++ b/drivers/net/dsa/microchip/ksz_common.h
+@@ -39,6 +39,7 @@ struct ksz_port {
+ 	u32 freeze:1;			/* MIB counter freeze is enabled */
+ 
+ 	struct ksz_port_mib mib;
++	phy_interface_t interface;
+ };
+ 
+ struct ksz_device {
+@@ -72,7 +73,7 @@ struct ksz_device {
+ 	int mib_cnt;
+ 	int mib_port_cnt;
+ 	int last_port;			/* ports after that not used */
+-	phy_interface_t interface;
++	phy_interface_t compat_interface;
+ 	u32 regs_size;
+ 	bool phy_errata_9477;
+ 	bool synclko_125;
+-- 
+2.20.1
 
