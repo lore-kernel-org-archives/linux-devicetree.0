@@ -7,92 +7,85 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB592C433E5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 02:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D01C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 02:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8297021BE5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 02:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BAB821D7D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 02:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594692638;
-	bh=5c3QuihQALTZgxjxEZz4oU51gs2BZpZ72z0g/xS6hOw=;
+	s=default; t=1594692742;
+	bh=csx9tBTw2KX6+gAj82SwHGIBtQYDs4KaKC/uvNJC7CI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LD/95awNADVJiSP0NStZkVG5asq7422fWYTmkn/4vGa8Fm9m1heHDTDy+5KlF+h0o
-	 259J6xPho9jMoqHf8UiMvUsOCtR+Kr7cClBikMBlHi5z6XaYR3e5Ls7ueQsLAaitUS
-	 Y4tmQNhufKmqhIeFmuSyaKd2baA7F3AqC0mJfpSg=
+	b=HWo2isx31hhMuErm34bJweCzL/e5wgK/4AonOrakIVS2zoiHTxoe7jAySTEkG283Q
+	 RVjvQrB+pdQmbmGP7L/9LuGpg99PfkQCXvl6m1trP4ck5o1KAaI8ALK5iB/Z+Nvc5m
+	 tAWBlwA1AtubYpbD8E8JQ3gHKRrGrUvS50VOvTZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726517AbgGNCKf (ORCPT
+        id S1726478AbgGNCMV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 22:10:35 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:36928 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgGNCKf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 22:10:35 -0400
-Received: by mail-il1-f193.google.com with SMTP id r12so12978245ilh.4;
-        Mon, 13 Jul 2020 19:10:34 -0700 (PDT)
+        Mon, 13 Jul 2020 22:12:21 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46243 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbgGNCMV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 22:12:21 -0400
+Received: by mail-io1-f66.google.com with SMTP id a12so15659121ion.13;
+        Mon, 13 Jul 2020 19:12:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=HVXpc1NITyP8Pn7hV8yHkm5mpbKPnCCTBIkt0whb6Rg=;
-        b=Ht3klcZqrim1JKB9RDNEG+uQZ9bYa3jRIPWPPzmLVv1/AO7UWkdCzBX6IQn8wv50rt
-         0C5l4XITjxooGNPfdhdW0BQf9286Tlq99mswV7pG1wKaDovk2KVABWu2+TfDBkEU9Arl
-         oz+DzeX1lonmfH5tCOjqVsyjkTBBOz8i04m+euutKemOoals+4Pr9cxEl8RnuC4ObcEm
-         A9mWUULZu+j/PMJ/PdbMcZvdeFMur4JpVYCVo7Ii2wTqgsyDXM0P9no0bEp9ZcvQq7LJ
-         pD3Sv/ZOjoCVd47H5dB7uMq6B4D58K6A0XH/Qv6wyQ4xEKJNbYGp0BHfv6cVDkGnSbOQ
-         hxZA==
-X-Gm-Message-State: AOAM531ZzuDAB6gD4R2U4iANwXeWgKEjffeA5vxsuCe5XIqyk9CrdbDw
-        /JZLLMrpfndWd6PntG7kaA==
-X-Google-Smtp-Source: ABdhPJy4v9p582B3IXAulABtnT2za4K9ObvrGcmXa2ozTEF7GFMR0uLu7Df/Wks6wX7CDeERYr3Dxw==
-X-Received: by 2002:a92:5b4b:: with SMTP id p72mr2605911ilb.285.1594692633956;
-        Mon, 13 Jul 2020 19:10:33 -0700 (PDT)
+        bh=rYKdpUqepou9jx1AglhXW1v3VmWcoBH3ywbADxlKubw=;
+        b=ew04cEZEkgwAKcTJjuPbY62pINv6QQ8VcdmfXAGB2iq8LRndqybfHgcJZpIcToQY77
+         5UE6h95VGo60eTnJYwgA/nt9Wp7h3ASOcAzgutPn3sETkYy2j0MSZ/kVGGTF86Gm2Jbg
+         +cYkcM4HcdSyLTcHw9BZzHndx5tE9dbnoBmd78QoiXpeLiV+9n7uPCqD6BujeQeBliHY
+         bY7fEjvMvu4m/06VtvsIr9+kG7C+oHOrj1sFc/ldTNEB8RrPm19mQXHsKVyKrR45T+Vi
+         p+BMlcW/FIwmhmpRSAogH+duXBfiZ4g6UefwnxWzD14pjDFxZeGtuW7btL7MrJqubg+p
+         goEg==
+X-Gm-Message-State: AOAM531MSHEVd/tgJBxGEpvShaO+ILk9ARvFXjvnDGMPd8zt1w/nrygg
+        1ghR6KarDBJ2xBV+zCN49Ov0JeV9qoRx
+X-Google-Smtp-Source: ABdhPJwCEYfAYaJ74OVjMWY5/7ctAi6PGeZuG0YxAFqpXycKurAzjq7l1ACdie74Vlon5me8aKoAKg==
+X-Received: by 2002:a05:6602:45:: with SMTP id z5mr2729761ioz.112.1594692740631;
+        Mon, 13 Jul 2020 19:12:20 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id d6sm8425355ioo.9.2020.07.13.19.10.27
+        by smtp.gmail.com with ESMTPSA id 5sm8374172ion.7.2020.07.13.19.12.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 19:10:33 -0700 (PDT)
-Received: (nullmailer pid 1133963 invoked by uid 1000);
-        Tue, 14 Jul 2020 02:10:22 -0000
-Date:   Mon, 13 Jul 2020 20:10:22 -0600
+        Mon, 13 Jul 2020 19:12:19 -0700 (PDT)
+Received: (nullmailer pid 1136711 invoked by uid 1000);
+        Tue, 14 Jul 2020 02:12:18 -0000
+Date:   Mon, 13 Jul 2020 20:12:18 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, devicetree@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] dt-bindings: hwlock: qcom: Allow device on mmio
- bus
-Message-ID: <20200714021022.GA1133914@bogus>
-References: <20200622075956.171058-1-bjorn.andersson@linaro.org>
- <20200622075956.171058-3-bjorn.andersson@linaro.org>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
+        robh+dt@kernel.org, linux-usb@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: usb: renesas,usb-xhci: convert to YAML
+Message-ID: <20200714021218.GA1136658@bogus>
+References: <1592822252-12338-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200622075956.171058-3-bjorn.andersson@linaro.org>
+In-Reply-To: <1592822252-12338-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 22 Jun 2020 00:59:54 -0700, Bjorn Andersson wrote:
-> In modern Qualcomm platforms the mutex region of the TCSR is forked off
-> into its own block, all with a offset of 0 and stride of 4096, and in
-> some of these platforms no other registers in this region is accessed
-> from Linux.
+On Mon, 22 Jun 2020 19:37:32 +0900, Yoshihiro Shimoda wrote:
+> Convert Renesas related parts of usb-xhci to YAML because
+> they are not compatible with generic-xhci.
 > 
-> Update the binding to allow the hardware block to be described directly
-> on the mmio bus, in addition to allowing the existing syscon based
-> definition for backwards compatibility.
-> 
-> Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 > ---
+>  Changes from v1:
+>  - Update the commit description.
+>  - Use SoC part names instead of part numbers in the comments.
+>  - Add comments on renesas,rcar-gen[23]-xhci.
+>  - Add power-domains and resets to required.
+>  https://patchwork.kernel.org/patch/11604565/
 > 
-> Changes since v1:
-> - None
-> 
->  .../bindings/hwlock/qcom-hwspinlock.yaml         | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
+>  .../devicetree/bindings/usb/renesas,usb-xhci.yaml  | 86 ++++++++++++++++++++++
+>  Documentation/devicetree/bindings/usb/usb-xhci.txt | 18 -----
+>  2 files changed, 86 insertions(+), 18 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/renesas,usb-xhci.yaml
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied, thanks!
