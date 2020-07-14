@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78379C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 12:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB253C433F1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 12:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5532821D7B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 12:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85BD32220D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 12:40:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbgGNMkT (ORCPT
+        id S1728319AbgGNMjk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:40:19 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:52080 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728300AbgGNMjk (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Tue, 14 Jul 2020 08:39:40 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:52006 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727772AbgGNMjh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jul 2020 08:39:37 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 36540200FFF;
-        Tue, 14 Jul 2020 14:39:38 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BB6F6201005;
+        Tue, 14 Jul 2020 14:39:35 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2903A20018F;
-        Tue, 14 Jul 2020 14:39:38 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id AEA44201001;
+        Tue, 14 Jul 2020 14:39:35 +0200 (CEST)
 Received: from fsr-ub1864-014.ea.freescale.net (fsr-ub1864-014.ea.freescale.net [10.171.95.219])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 6CBAB205A4;
-        Tue, 14 Jul 2020 14:39:37 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id E9CF7205A4;
+        Tue, 14 Jul 2020 14:39:34 +0200 (CEST)
 From:   =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
 To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
@@ -46,9 +46,9 @@ Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
         Iuliana Prodan <iuliana.prodan@nxp.com>,
         Silvano Di Ninno <silvano.dininno@nxp.com>,
         linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 5/5] hwrng: imx-rngc: enable driver for i.MX6
-Date:   Tue, 14 Jul 2020 15:39:20 +0300
-Message-Id: <20200714123920.23711-6-horia.geanta@nxp.com>
+Subject: [PATCH v3 2/5] ARM: dts: imx6sl: fix rng node
+Date:   Tue, 14 Jul 2020 15:39:17 +0300
+Message-Id: <20200714123920.23711-3-horia.geanta@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200714123920.23711-1-horia.geanta@nxp.com>
 References: <20200714123920.23711-1-horia.geanta@nxp.com>
@@ -61,46 +61,34 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-i.MX6 SL, SLL, ULL, ULZ SoCs have an RNGB block.
+rng DT node was added without a compatible string.
 
-Since imx-rngc driver supports also rngb,
-let's enable it for these SoCs too.
+i.MX driver for RNGC (drivers/char/hw_random/imx-rngc.c) also claims
+support for RNGB, and is currently used for i.MX25.
 
+Let's use this driver also for RNGB block in i.MX6SL.
+
+Fixes: e29fe21cff96 ("ARM: dts: add device tree source for imx6sl SoC")
 Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
-Reviewed-by: Martin Kaiser <martin@kaiser.cx>
-Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- drivers/char/hw_random/Kconfig    | 2 +-
- drivers/char/hw_random/imx-rngc.c | 3 +++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx6sl.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-index 8478eb757f3c..98f95a09ce55 100644
---- a/drivers/char/hw_random/Kconfig
-+++ b/drivers/char/hw_random/Kconfig
-@@ -255,7 +255,7 @@ config HW_RANDOM_MXC_RNGA
- config HW_RANDOM_IMX_RNGC
- 	tristate "Freescale i.MX RNGC Random Number Generator"
- 	depends on HAS_IOMEM && HAVE_CLK
--	depends on SOC_IMX25 || COMPILE_TEST
-+	depends on SOC_IMX25 || SOC_IMX6SL || SOC_IMX6SLL || SOC_IMX6UL || COMPILE_TEST
- 	default HW_RANDOM
- 	help
- 	  This driver provides kernel-side support for the Random Number
-diff --git a/drivers/char/hw_random/imx-rngc.c b/drivers/char/hw_random/imx-rngc.c
-index 9c47e431ce90..84576d2fbf8c 100644
---- a/drivers/char/hw_random/imx-rngc.c
-+++ b/drivers/char/hw_random/imx-rngc.c
-@@ -350,6 +350,9 @@ static SIMPLE_DEV_PM_OPS(imx_rngc_pm_ops, imx_rngc_suspend, imx_rngc_resume);
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index 1c7180f28539..91a8c54d5e11 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -939,8 +939,10 @@
+ 			};
  
- static const struct of_device_id imx_rngc_dt_ids[] = {
- 	{ .compatible = "fsl,imx25-rngb", .data = NULL, },
-+	{ .compatible = "fsl,imx6sl-rngb", .data = NULL, },
-+	{ .compatible = "fsl,imx6sll-rngb", .data = NULL, },
-+	{ .compatible = "fsl,imx6ull-rngb", .data = NULL, },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, imx_rngc_dt_ids);
+ 			rngb: rngb@21b4000 {
++				compatible = "fsl,imx6sl-rngb", "fsl,imx25-rngb";
+ 				reg = <0x021b4000 0x4000>;
+ 				interrupts = <0 5 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clks IMX6SL_CLK_DUMMY>;
+ 			};
+ 
+ 			weim: weim@21b8000 {
 -- 
 2.17.1
 
