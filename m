@@ -2,162 +2,133 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEABC433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 03:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D95DC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 03:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B37121973
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 03:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E799E21D90
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 03:52:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="xSUjBlOy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QwF5+Zb6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgGNDuN (ORCPT
+        id S1726568AbgGNDwL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 23:50:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40108 "EHLO
+        Mon, 13 Jul 2020 23:52:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbgGNDuM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 23:50:12 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41866C061755
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 20:50:12 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id o11so19584544wrv.9
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 20:50:12 -0700 (PDT)
+        with ESMTP id S1726432AbgGNDwL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 23:52:11 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1185FC061755;
+        Mon, 13 Jul 2020 20:52:11 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id u185so7003413pfu.1;
+        Mon, 13 Jul 2020 20:52:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=W2pU/oRXe8zSH98/qlLNnZqVfljdKaiKGd5Djyh/EW4=;
-        b=xSUjBlOytxheMN0Qygh7ElYrmY/6f5sOe3XoReILxBTvS+M/NKh4zZDDmr6WF4A6Ft
-         zU/Ghe9q8AOapCe1xcwtRt2f7CkyVqHXMc4q7C7uZqjLywbOOv5Ru/SFE7w08PPgMQ7/
-         yyJIXh69rVO4dfbZ+bYhMnPUywUqj1pUJmHYwT16W/PAkASHlCtRov419gtTrAhc+Lz1
-         T2GxOF8p6rzAUVzDP64yxNHkjqUEvCckMKaO1qMzxeVsIGDeFDfdw0VbeEQu5t/GauLR
-         makvc8Ts0BG2zt2oi+VysQqrk74fGbMeiaJ+7SGSrfRb0dBYR/PkOSsOy8iSR9XEwOwv
-         EdEg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=BBW3oa13Oa8CN3zGFpEI3FHknw3Uj0TMLjOHYEFkNdM=;
+        b=QwF5+Zb6uv1oHdz/iyAarbRcEm9woy225E53I+2oBKpb9u+ubyywQdyk75QBbKtMPB
+         l2PVQZtQ1ineCMboClfowLPsciRCgpUEw0WGd5IDKgm+Agd9rUHYsZH2rzmB9s8KgTXM
+         NsSfANR7QnH8JpkA/jtRa1bT9emFcy4kjCT99EeB5J6Z8dSOwflirm5pp/t2NNXr8aEn
+         nro+THY4n/0rymYHngR25igGKGMT6bP+C93QjtB+FeAItLSyNVQUZyzeinLLbCVA7vni
+         AJNX0zTuJoZbHrSMm1FqtQV78jkTncJ4mHRyDKrOg29Y216AOIVJ9YGrNZvfK5nx19SN
+         sIyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=W2pU/oRXe8zSH98/qlLNnZqVfljdKaiKGd5Djyh/EW4=;
-        b=b88/XY8haxjh12LP5QkrsKET8ZN971uvyQhsjLzW+LD5DQNNy5oCVlFaGs3SWm6x53
-         oW5nfwIobNfa1M7sXp6pzJV5Dy2OTP7l1TXp6R9z0UPMBd0J8RmGOXcDbkA0SNoMPPdc
-         VPObMCh/qFQJMP7COZxk4eGEXKqUHYtOtFz9DUd63AQcXvMjYk2eb7GzZwdkjWYvPtr3
-         mPFs3OR3S6lyZfkIdTzQa/L+oieag5MG+I3f8SXxpXsnJHQbOpmnGsbXfzblf2yLeNPV
-         nVPNq5uGhWyJkIcmulyUuHanqx2sK9QcJC5Uyj8LvtPx5Lr/ZNuUi22nQr13IhTY4ctm
-         8Ojw==
-X-Gm-Message-State: AOAM5331J4uH1TyfBa88rLrsgpEP2M/iA68kyeDOCpqpGYE9Sx+PaMsW
-        2BkjA8sYnWC0DOQYZ1z8HOqE8Rl+OJHv9ucz5ht/Gg==
-X-Google-Smtp-Source: ABdhPJyxhhnTBn9Z/d3RQByv+5O7q0RnlhAbpx4mldb52mcVpL0AUfedlXqbhjWWfR/hwCGcWa89EFLWLUtbzxojgNo=
-X-Received: by 2002:adf:fcca:: with SMTP id f10mr2671322wrs.325.1594698609842;
- Mon, 13 Jul 2020 20:50:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200627161957.134376-1-anup.patel@wdc.com> <mhng-4d70be69-ef20-4d38-bda4-ec4101530c0a@palmerdabbelt-glaptop1>
-In-Reply-To: <mhng-4d70be69-ef20-4d38-bda4-ec4101530c0a@palmerdabbelt-glaptop1>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Tue, 14 Jul 2020 09:19:57 +0530
-Message-ID: <CAAhSdy3mHhaKTrhRnNd_gGv7GbmjqxkB28sOw4q7ZTxw4oRd1Q@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] Dedicated CLINT timer driver
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Rob Herring <robh+dt@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=BBW3oa13Oa8CN3zGFpEI3FHknw3Uj0TMLjOHYEFkNdM=;
+        b=ga8R4dig30j23JdnuPk5nqZqy7/VxbRL+9pyCLxcLX6m7yVkt+6iLO/6orsaX9wzmO
+         ZbLw4KVBH9e6JbG610iJPTq9B5feJiJn20BCFzDIxgOviNIjFUKc6DSXFQN+PqviIz3Q
+         qCoKu29lXyWrZv1fWnMV058Y2zfxhIt2tDy46N0gMvB325CL3ebE+MA+oQvyW1jSfCTn
+         3qCJT6pFepyFm/LXPtJHn+NVglcLrjCAtxkrOxWm0Rg97am0hJ8Ps3IYw+/4hNUy8qIQ
+         zxj6mSLb/lEnADQ0zoNxUv3+tWd+Zc5WtabYZJgW78ZKXhlrg8wjPHd1iswuJ4nVof2w
+         5lbw==
+X-Gm-Message-State: AOAM5312BIu/W2JgQRwdNlE1yGT9+wvbHXFnQYXE/r0Fzz1U2Z1M+HLB
+        vhDsG6uDD8srJw/5OFi4r8M=
+X-Google-Smtp-Source: ABdhPJzGFvPrVkkdZmdazY4aHmlfE0Mk7hut0QL4mPKgFTjhQE1zq6iNlbs4o1q+q9Znn1iWIZ7KCA==
+X-Received: by 2002:a05:6a00:2286:: with SMTP id f6mr2566676pfe.303.1594698730624;
+        Mon, 13 Jul 2020 20:52:10 -0700 (PDT)
+Received: from fmin-OptiPlex-7060.nreal.work ([103.206.191.8])
+        by smtp.gmail.com with ESMTPSA id v11sm17595832pfc.108.2020.07.13.20.52.08
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 Jul 2020 20:52:10 -0700 (PDT)
+From:   dillon.minfei@gmail.com
+To:     sfr@canb.auug.org.au, bcousson@baylibre.com, tony@atomide.com,
+        robh+dt@kernel.org
+Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dillon min <dillon.minfei@gmail.com>
+Subject: [PATCH v3] ARM: dts: Configure osc clock for d_can on am437x
+Date:   Tue, 14 Jul 2020 11:52:05 +0800
+Message-Id: <1594698726-4557-1-git-send-email-dillon.minfei@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 4:32 AM Palmer Dabbelt <palmer@dabbelt.com> wrote:
->
-> On Sat, 27 Jun 2020 09:19:52 PDT (-0700), Anup Patel wrote:
-> > The current RISC-V timer driver is convoluted and implements two
-> > distinct timers:
-> >  1. S-mode timer: This is for Linux RISC-V S-mode with MMU. The
-> >     clocksource is implemented using TIME CSR and clockevent device
-> >     is implemented using SBI Timer calls.
-> >  2. M-mode timer: This is for Linux RISC-V M-mode without MMU. The
-> >     clocksource is implemented using CLINT MMIO time register and
-> >     clockevent device is implemented using CLINT MMIO timecmp registers.
-> >
-> > This patchset removes clint related code from RISC-V timer driver and
-> > arch/riscv directory. Instead, the series adds a dedicated MMIO based
-> > CLINT driver under drivers/clocksource directory which can be used by
-> > Linux RISC-V M-mode (i.e NoMMU Linux RISC-V).
-> >
-> > The patchset is based up Linux-5.8-rc2 and can be found at riscv_clint_v2
-> > branch of: https://github.com/avpatel/linux.git
-> >
-> > This series is tested on:
-> >  1. QEMU RV64 virt machine using Linux RISC-V S-mode
-> >  2. QEMU RV32 virt machine using Linux RISC-V S-mode
-> >  3. QEMU RV64 virt machine using Linux RISC-V M-mode (i.e. NoMMU)
-> >
-> > Changes since v1:
-> >  - Rebased series on Linux-5.8-rc2
-> >  - Added pr_warn() for case where ipi_ops not available in PATCH1
-> >  - Updated ipi_inject() prototype to use "struct cpumask *" in PATCH1
-> >  - Updated CLINT_TIMER kconfig option to depend on RISCV_M_MODE in PATCH4
-> >  - Added riscv,clint0 compatible string in DT bindings document
-> >
-> > Anup Patel (5):
-> >   RISC-V: Add mechanism to provide custom IPI operations
-> >   RISC-V: Remove CLINT related code
-> >   clocksource/drivers/timer-riscv: Remove MMIO related stuff
-> >   clocksource/drivers: Add CLINT timer driver
-> >   dt-bindings: timer: Add CLINT bindings
->
-> This all generally LGTM, though I haven't been through the code line-by-line
-> yet.  It touches a bunch of trees, so I'd prefer to have some Acks before
-> merging -- I'll dig through the RISC-V specific stuff, but the new CLINT driver
-> probhably deserves a look from one of the clocksource folks.
->
-> I think the only issue is that the port will be broken between patch 2 and 4,
-> as at that point we won't have an M-mode timer driver.  I think it shouldn't be
-> too much to just reorder these, LMK if you want to do it or you want me to.
+From: dillon min <dillon.minfei@gmail.com>
 
-Okay, I will try your suggestion to reorder patches. There is another minor
-build issue reported by test bots which I will fix as well.
+V2 -> V3:
+make Fixes tags after Signed-off-by line.
 
-I will send v3 in a couple of days before end-of-week.
+V1 -> V2:
+correct commit messages based on Stephen Rothwell's reviewing.
+make Fixes tags to oneline.
+make all commit message tags at the end of commit message
 
-Regards,
-Anup
 
->
-> Thanks!
->
-> >
-> >  .../bindings/timer/sifive,clint.txt           |  34 +++
-> >  arch/riscv/Kconfig                            |   2 +-
-> >  arch/riscv/include/asm/clint.h                |  39 ---
-> >  arch/riscv/include/asm/smp.h                  |  11 +
-> >  arch/riscv/include/asm/timex.h                |  28 +--
-> >  arch/riscv/kernel/Makefile                    |   2 +-
-> >  arch/riscv/kernel/clint.c                     |  44 ----
-> >  arch/riscv/kernel/sbi.c                       |  14 ++
-> >  arch/riscv/kernel/setup.c                     |   2 -
-> >  arch/riscv/kernel/smp.c                       |  44 ++--
-> >  arch/riscv/kernel/smpboot.c                   |   4 +-
-> >  drivers/clocksource/Kconfig                   |  12 +-
-> >  drivers/clocksource/Makefile                  |   1 +
-> >  drivers/clocksource/timer-clint.c             | 229 ++++++++++++++++++
-> >  drivers/clocksource/timer-riscv.c             |  17 +-
-> >  include/linux/cpuhotplug.h                    |   1 +
-> >  16 files changed, 337 insertions(+), 147 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.txt
-> >  delete mode 100644 arch/riscv/include/asm/clint.h
-> >  delete mode 100644 arch/riscv/kernel/clint.c
-> >  create mode 100644 drivers/clocksource/timer-clint.c
+V1:
+Got following d_can probe errors with kernel 5.8-rc1 on am437x
+
+[   10.730822] CAN device driver interface
+Starting Wait for Network to be Configured...
+[  OK  ] Reached target Network.
+[   10.787363] c_can_platform 481cc000.can: probe failed
+[   10.792484] c_can_platform: probe of 481cc000.can failed with
+error -2
+[   10.799457] c_can_platform 481d0000.can: probe failed
+[   10.804617] c_can_platform: probe of 481d0000.can failed with
+error -2
+
+actually, Tony has fixed this issue on am335x, the patch [3]
+commit messages:
+"
+The reason why the issue happens is because we now attempt to read the
+interconnect target module revision register by first manually enabling
+all the device clocks in sysc_probe(). And looks like d_can also needs
+the osc clock in addition to the module clock, and it may or may not be
+enabled depending on the bootloader version and if other devices have
+already requested osc clock.
+
+Let's fix the issue by adding osc clock as an optional clock for the
+module for am335x. Note that am437x does not seem to list the osc clock
+at all, so presumably it is not needed for am437x.
+"
+
+from TRM of am335x/am437x [1][2], they have the same clock structure,
+so, we can just reuse [3] for am437x platform.
+
+Tested on custom am4372 board.
+
+[1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
+Integration
+[2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
+Integration
+[3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on am335x")
+
+
+dillon min (1):
+  Since am437x have the same clock structure with am335x [1][2],    
+    reuse the code from Tony Lindgren's patch [reference] to fix dcan
+    probe     failed on am437x platform.
+
+ arch/arm/boot/dts/am437x-l4.dtsi | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
+-- 
+2.7.4
+
