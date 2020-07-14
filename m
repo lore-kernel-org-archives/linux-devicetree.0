@@ -2,189 +2,231 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 735DBC433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 23:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3137DC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 23:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50B162071B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 23:18:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594768715;
-	bh=WbHcOuCS+rj4obHCGdLyDlzJy258Ll6RBipsjc9gqhs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rjW8GwuYyMu3FQUtn7MCaiI2rTqv7gzaWWzZCZP7UUU8ImYcpcmuaxJ2uWz4yO55x
-	 0LGBJdh00WyDZMb5zC3BsrXoA7zdTuD3OuauoMBElbhOZnrY+7DaOoI+zjbK1wWrGo
-	 zB+YwBtNZP+Oqb3YHciFyFDPpLPhMVLAcAEWZIp4=
+	by mail.kernel.org (Postfix) with ESMTP id 110092075D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 23:44:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="fHAkLGfM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbgGNXS3 (ORCPT
+        id S1726734AbgGNXod (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 19:18:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49946 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726187AbgGNXS2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 19:18:28 -0400
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8583D2074B;
-        Tue, 14 Jul 2020 23:18:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594768707;
-        bh=WbHcOuCS+rj4obHCGdLyDlzJy258Ll6RBipsjc9gqhs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OTYv7SW64RJ7rcBLNLixgDhz1BOtm1ZlPfGu0RW7CKMz/+ee2kQZnsPya33XRsqSZ
-         NSY9JKrQ2FHqtYIo/G1nklBOWhlXLpB3Bb80i2eXAScH3Qkvmz4gkSVFZ3xyOmHSB2
-         fS1zjaVyGJOhZPsVcQWQD09xHBVeLAHPlnAO/7HE=
-Received: by mail-ot1-f47.google.com with SMTP id h13so68081otr.0;
-        Tue, 14 Jul 2020 16:18:27 -0700 (PDT)
-X-Gm-Message-State: AOAM531sTp1Rzu6UUNRYLmVqQbl0CpurZMh5yerLiQhkx5Ucm1Hde/hl
-        nUGH9qkEQoMlwdLXNKEmpqSFXENueBn9VUlgcQ==
-X-Google-Smtp-Source: ABdhPJzamyUgo6UiqW59FuZ+b+pvPCuOFw/T+vorF7nM8Yc7QjaPRAdppkgkTdGO/rge6EQOKevq7Mn09VhM3JKnhr0=
-X-Received: by 2002:a9d:4002:: with SMTP id m2mr6332092ote.129.1594768706856;
- Tue, 14 Jul 2020 16:18:26 -0700 (PDT)
+        Tue, 14 Jul 2020 19:44:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56282 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726542AbgGNXod (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 19:44:33 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4E47C061755;
+        Tue, 14 Jul 2020 16:44:32 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id E01A771D;
+        Wed, 15 Jul 2020 01:44:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1594770270;
+        bh=BlgHswt5o7rZqUfB4W5bNSHos/OcygyFLCNV4tKAzw8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fHAkLGfMZfQQf2tY4NQZfUcyIAGVPkU7FroBy4x+xhA5O8b7t1JKue/5CSHvFNeX+
+         O/zfcx2z69J2n3lnLPHnbMbx6CDyL2Dbqf+6Dfx1L5sDow85+EE3OROXT0efYmQ3/H
+         XDA2DB7lMAhQTx88WLSXV+Zo9le6EN5j4oC/LoCk=
+Date:   Wed, 15 Jul 2020 02:44:23 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-media@vger.kernel.org, mchehab@kernel.org,
+        sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl,
+        dave.stevenson@raspberrypi.com, dongchun.zhu@mediatek.com,
+        linux-renesas-soc@vger.kernel.org,
+        roman.kovalivskyi@globallogic.com, Rob Herring <robh@kernel.org>,
+        Jacopo Mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: media: ov5647: Convert to json-schema
+Message-ID: <20200714234423.GM5854@pendragon.ideasonboard.com>
+References: <20200714142856.58365-1-jacopo+renesas@jmondi.org>
+ <20200714142856.58365-2-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-References: <20200612171334.26385-1-nsaenzjulienne@suse.de>
- <20200612171334.26385-2-nsaenzjulienne@suse.de> <20200713182356.GA413630@bogus>
- <ed42e27eaf48fd19cc8ccccd15b0b25ba1d836ae.camel@suse.de> <20200714210708.GA2897216@bogus>
- <925bab2c-91e0-bf60-9ec4-286eb53f72ab@gmail.com>
-In-Reply-To: <925bab2c-91e0-bf60-9ec4-286eb53f72ab@gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 14 Jul 2020 17:18:15 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+BvM+Z_QNkB47_8AQzZ6R3LOCjNWd5MA-9avxp0HHG2w@mail.gmail.com>
-Message-ID: <CAL_Jsq+BvM+Z_QNkB47_8AQzZ6R3LOCjNWd5MA-9avxp0HHG2w@mail.gmail.com>
-Subject: Re: [PATCH v3 1/9] dt-bindings: reset: Add a binding for the RPi
- Firmware reset controller
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Eric Anholt <eric@anholt.net>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, tim.gover@raspberrypi.org,
-        PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200714142856.58365-2-jacopo+renesas@jmondi.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 3:18 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->
->
->
-> On 7/14/2020 2:07 PM, Rob Herring wrote:
-> > On Tue, Jul 14, 2020 at 01:59:21PM +0200, Nicolas Saenz Julienne wrote:
-> >> On Mon, 2020-07-13 at 12:23 -0600, Rob Herring wrote:
-> >>> On Fri, Jun 12, 2020 at 07:13:25PM +0200, Nicolas Saenz Julienne wrote:
-> >>>> The firmware running on the RPi VideoCore can be used to reset and
-> >>>> initialize HW controlled by the firmware.
-> >>>>
-> >>>> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> >>>> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> >>>>
-> >>>> ---
-> >>>> Changes since v2:
-> >>>>  - Add include file for reset IDs
-> >>>>
-> >>>> Changes since v1:
-> >>>>  - Correct cells binding as per Florian's comment
-> >>>>  - Change compatible string to be more generic
-> >>>>
-> >>>>  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++++++++
-> >>>>  .../reset/raspberrypi,firmware-reset.h        | 13 ++++++++++++
-> >>>>  2 files changed, 34 insertions(+)
-> >>>>  create mode 100644 include/dt-bindings/reset/raspberrypi,firmware-reset.h
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
-> >>>> firmware.yaml
-> >>>> b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
-> >>>> firmware.yaml
-> >>>> index b48ed875eb8e..23a885af3a28 100644
-> >>>> --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
-> >>>> firmware.yaml
-> >>>> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
-> >>>> firmware.yaml
-> >>>> @@ -39,6 +39,22 @@ properties:
-> >>>>        - compatible
-> >>>>        - "#clock-cells"
-> >>>>
-> >>>> +  reset:
-> >>>
-> >>> I'm not really thrilled how this is evolving with a node per provider.
-> >>> There's no reason you can't just add #clock-cells and #reset-cells to
-> >>> the parent firmware node.
-> >>
-> >> What are the downsides? The way I see it there is not much difference. And this
-> >> way of handling things is feels more intuitive and flexible (overlays can
-> >> control what to enable easily, we can take advantage of the platform device
-> >> core).
-> >
-> > What the OS wants can evolve, so designing around the current needs of
-> > the OS is not how bindings should be done.
-> >
-> > Using overlays to add clocks or resets wouldn't really work given they
-> > are spread out over the tree. And with clocks in particular, you'd have
-> > to replace dummy fixed clocks with actual firmware clocks. Sounds
-> > fragile and messy...
-> >
-> >>> I probably should have complained with the clocks node, but that's only
-> >>> pending for 5.9.
-> >>
-> >> Note that there are more users for this pattern: "raspberrypi,firmware-ts" and
-> >> "raspberrypi,firmware-gpio". Actually you were the one to originally propose
-> >> this it[1]. :P
-> >
-> > Sigh, this is why I dislike incomplete examples...
-> >
-> > Based on that,
-> >
-> > Acked-by: Rob Herring <robh@kernel.org>
-> >
-> > And please get gpio and ts converted to schema and referenced here
-> > before the next time I look at this.
-> >
-> >> There already is a fair amount of churn in these drivers because of all the DT
-> >> changes we did in the past, and if we need to change how we integrate these
-> >> again, I'd really like it to be for good.
-> >>
-> >>> The bigger issue is this stuff is just trickling in one bit at a time
-> >>> which gives no context for review. What's next? Is it really a mystery
-> >>> as to what functions the firmware provides?
-> >>
-> >> We have no control over it, RPi engineers integrate new designs and new
-> >> firmware interfaces show up. This is a good example of it.
-> >>
-> >> I proposed them to use SCMI as it covers most of what they are already
-> >> providing here. But no luck so far.
-> >
-> > Once we get tired of supporting all the different firmware interfaces
-> > and the mess they become, we'll just have to start refusing custom ones.
-> > Worked for PSCI.
->
-> In this particular case, the Raspberry Pi Foundation VPU firmware should
-> just implement SCMI and that would avoid having to write new client
-> drivers for Linux, it is not clear to me why this has not been done yet.
+Hi Jacopo,
 
-Writing drivers is fun?
+Thank you for the patch.
 
-Perhaps we should start refusing new firmware interfaces now.
+On Tue, Jul 14, 2020 at 04:28:54PM +0200, Jacopo Mondi wrote:
+> Convert the ov5647 image sensor bindings to DT schema and add
+> the file entry to MAINTAINERS.
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
+> ---
+>  .../devicetree/bindings/media/i2c/ov5647.txt  | 35 --------
+>  .../devicetree/bindings/media/i2c/ov5647.yaml | 82 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  3 files changed, 83 insertions(+), 35 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
+> deleted file mode 100644
+> index 22e44945b661..000000000000
+> --- a/Documentation/devicetree/bindings/media/i2c/ov5647.txt
+> +++ /dev/null
+> @@ -1,35 +0,0 @@
+> -Omnivision OV5647 raw image sensor
+> ----------------------------------
+> -
+> -OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
+> -and CCI (I2C compatible) control bus.
+> -
+> -Required properties:
+> -
+> -- compatible		: "ovti,ov5647".
+> -- reg			: I2C slave address of the sensor.
+> -- clocks		: Reference to the xclk clock.
+> -
+> -The common video interfaces bindings (see video-interfaces.txt) should be
+> -used to specify link to the image data receiver. The OV5647 device
+> -node should contain one 'port' child node with an 'endpoint' subnode.
+> -
+> -Endpoint node mandatory properties:
+> -
+> -- remote-endpoint: A phandle to the bus receiver's endpoint node.
+> -
+> -Example:
+> -
+> -	i2c@2000 {
+> -		...
+> -		ov: camera@36 {
+> -			compatible = "ovti,ov5647";
+> -			reg = <0x36>;
+> -			clocks = <&camera_clk>;
+> -			port {
+> -				camera_1: endpoint {
+> -					remote-endpoint = <&csi1_ep1>;
+> -				};
+> -			};
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.yaml b/Documentation/devicetree/bindings/media/i2c/ov5647.yaml
+> new file mode 100644
+> index 000000000000..067e222e0c7c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov5647.yaml
+> @@ -0,0 +1,82 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/i2c/ov5647.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Omnivision OV5647 raw image sensor
+> +
+> +maintainers:
+> +  - Dave Stevenson <dave.stevenson@raspberrypi.com>
+> +
+> +description: |-
+> +  OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
+> +  and CCI (I2C compatible) control bus.
+> +
+> +properties:
+> +  compatible:
+> +    const: ovti,ov5647
+> +
+> +  reg:
+> +    description: I2C device address
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description: Reference to the xclk clock
+> +    maxItems: 1
+> +
+> +  port:
+> +    type: object
+> +    description: |-
+> +      Should contain one endpoint sub-node used to model connection to the
+> +      video receiver according to the specification defined in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> +
+> +    properties:
+> +      endpoint:
+> +        type: object
+> +
+> +        properties:
+> +          remote-endpoint:
+> +            description: |-
+> +              phandle to the video receiver input port
+> +
+> +        required:
+> +          - remote-endpoint
+> +
+> +        additionalProperties: false
+> +
+> +    required:
+> +      - endpoint
 
-Rob
+We usually make it valid for a port to contain no endpoint. This can be
+used, for instance, to create a base DT that doesn't describe the
+connections, where an overlay will then wire the components together.
+I'd thus drop the required property here. Apart from that,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - port
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        ov5647: camera@36 {
+> +            compatible = "ovti,ov5647";
+> +            reg = <0x36>;
+> +            clocks = <&camera_clk>;
+> +
+> +            port {
+> +                camera_out: endpoint {
+> +                    remote-endpoint = <&csi1_ep1>;
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2730af1265ea..1742fa1a88cd 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12612,6 +12612,7 @@ L:	linux-media@vger.kernel.org
+>  S:	Maintained
+>  T:	git git://linuxtv.org/media_tree.git
+>  F:	drivers/media/i2c/ov5647.c
+> +F:	Documentation/devicetree/bindings/media/i2c/ov5647.yaml
+>  
+>  OMNIVISION OV5670 SENSOR DRIVER
+>  M:	Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>
+
+-- 
+Regards,
+
+Laurent Pinchart
