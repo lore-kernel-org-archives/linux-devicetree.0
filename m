@@ -4,91 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8A0C433E7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D8D0C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 993832076D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11D302220F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:12:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725905AbgGNHL6 (ORCPT
+        id S1726600AbgGNHML (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 03:11:58 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:40818 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726892AbgGNHL6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 03:11:58 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.4868273|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.00592741-0.000606278-0.993466;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03306;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=16;RT=16;SR=0;TI=SMTPD_---.I1U1W7._1594710707;
-Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I1U1W7._1594710707)
-          by smtp.aliyun-inc.com(10.147.40.44);
-          Tue, 14 Jul 2020 15:11:51 +0800
-From:   Frank Lee <frank@allwinnertech.com>
-To:     anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        robh+dt@kernel.org, mripard@kernel.org, wens@csie.org,
-        linux-pm@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, huangshuosheng@allwinnertech.com,
-        liyong@allwinnertech.com, Yangtao Li <frank@allwinnertech.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v4 07/16] dt-bindings: thermal: sun8i: Add binding for A100's THS controller
-Date:   Tue, 14 Jul 2020 15:11:40 +0800
-Message-Id: <da4026f02eb93193f63201a9d6654a870ada9dc7.1594708864.git.frank@allwinnertech.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1594708863.git.frank@allwinnertech.com>
-References: <cover.1594708863.git.frank@allwinnertech.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 14 Jul 2020 03:12:11 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:45060 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725876AbgGNHML (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jul 2020 03:12:11 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BBBB3200161;
+        Tue, 14 Jul 2020 09:12:09 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 45668200ED4;
+        Tue, 14 Jul 2020 09:12:06 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 9435D402BB;
+        Tue, 14 Jul 2020 15:12:01 +0800 (SGT)
+From:   Biwen Li <biwen.li@oss.nxp.com>
+To:     leoyang.li@nxp.com, shawnguo@kernel.org, robh+dt@kernel.org,
+        meenakshi.aggarwal@nxp.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jiafei.pan@nxp.com, Biwen Li <biwen.li@nxp.com>
+Subject: [v2 PATCH] dts: arm64: lx2160a-rdb: fix shunt-resistor value
+Date:   Tue, 14 Jul 2020 15:05:45 +0800
+Message-Id: <20200714070545.2051-1-biwen.li@oss.nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Yangtao Li <frank@allwinnertech.com>
+From: Biwen Li <biwen.li@nxp.com>
 
-Add a binding for A100's ths controller.
+Fix value of shunt-resistor property.
+The LX2160A-RDB has 500 uOhm shunt for
+the INA220, not 1000 uOhm. Unless
+it will get wrong power consumption(1/2)
 
-Signed-off-by: Yangtao Li <frank@allwinnertech.com>
-Reviewed-by: Yangtao Li <tiny.windzz@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
 ---
- .../bindings/thermal/allwinner,sun8i-a83t-ths.yaml          | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+v2:
+	- update description
 
-diff --git a/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-index 87369264feb9..9d40fc7ff6fd 100644
---- a/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-+++ b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-@@ -17,6 +17,7 @@ properties:
-       - allwinner,sun8i-h3-ths
-       - allwinner,sun8i-r40-ths
-       - allwinner,sun50i-a64-ths
-+      - allwinner,sun50i-a100-ths
-       - allwinner,sun50i-h5-ths
-       - allwinner,sun50i-h6-ths
- 
-@@ -61,7 +62,9 @@ allOf:
-       properties:
-         compatible:
-           contains:
--            const: allwinner,sun50i-h6-ths
-+            enum:
-+              - allwinner,sun50i-a100-ths
-+              - allwinner,sun50i-h6-ths
- 
-     then:
-       properties:
-@@ -103,6 +106,7 @@ allOf:
-               - const: allwinner,sun8i-h3-ths
-               - const: allwinner,sun8i-r40-ths
-               - const: allwinner,sun50i-a64-ths
-+              - const: allwinner,sun50i-a100-ths
-               - const: allwinner,sun50i-h5-ths
-               - const: allwinner,sun50i-h6-ths
+ arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
+index 22d0308..54fe8cd 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
+@@ -121,7 +121,7 @@
+ 			power-monitor@40 {
+ 				compatible = "ti,ina220";
+ 				reg = <0x40>;
+-				shunt-resistor = <1000>;
++				shunt-resistor = <500>;
+ 			};
+ 		};
  
 -- 
-2.24.0
+2.7.4
 
