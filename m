@@ -2,221 +2,112 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AB7C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 03:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43868C433E4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 03:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 292E82193E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 03:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F80121D95
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 03:38:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NFadGpuF"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YhNyqPH3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgGNDhn (ORCPT
+        id S1726820AbgGNDij (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 23:37:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38174 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbgGNDhn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 23:37:43 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 621F7C061755;
-        Mon, 13 Jul 2020 20:37:43 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id t4so13113061iln.1;
-        Mon, 13 Jul 2020 20:37:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=x5kA50WCYmAo+Q8432Sy1VWAEloJEHU1E0inGU7UJt4=;
-        b=NFadGpuFjJ3tv7FOJrDxOb09SxgAqSP6xTut0HFSaivRjSIvWM4zedl+yOsvzbHyGp
-         GZ6V8je0HHQQ/gAH4Ajffl0VN8ZchHbXb8mj+jkCQvVV9ymE5qlRxXvdFzVA6CJu1qCL
-         3Q2HvrpVvjDeviw41DVzRWAyMqRI+/Hu33o7yypqALpNrQz3i2GSaO0Vju0oGbucTSDm
-         C4YO1Sb2E1/qkZ+MoLUFnSRdc6Tg8n3SbvkV+yKtNIixJvvtJc2yPGP2P30xWvBB/dKc
-         0hxWjARpQYsrxL8c6dYfo7Wea3UrF6zqRUhXAbflAcf+HaGEGFC0VdFpPZnVv09CEtP7
-         7BZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=x5kA50WCYmAo+Q8432Sy1VWAEloJEHU1E0inGU7UJt4=;
-        b=MVWK2ypUrAEARPY/oAMPjxIhsyK3aBAaAf/1QTY6B2AmS8SCknJQ89l5Xts2SVWx0a
-         P/eFPK2RScorPnoFrPKcxAQvQq0yS7mSmLEFT3S4aBHyK5O1vzqEGxa5VUCu1FW5/YM5
-         vDmV/OSEWPKks0oesZnpBQlrnS8dXhJYZD+Fi2NBfCY8oA6xZLF2U4JsUCt27f/Ehjxe
-         Di5JidEKpaaO99hsZeUjfQyfkCv//TpqC5dmVLlQkQ2n/cQJHZFTae6A47ZhgtJwjYjV
-         WpQl1R0UjlObgbf5x6mwU/QQZxOkjB8Dvo6qJbvExlXbX87utKCMyp6NWjbaBRWK9/6F
-         SebA==
-X-Gm-Message-State: AOAM530C9SMd6XH3yIGXApUmChY30uJ1/+oFPw15rxK8ic6DuufZM/++
-        NH3Nl8EjKo3JTw9bH04sjhJ+T76KYTMTjHkB3yMhLTWzYo00/A==
-X-Google-Smtp-Source: ABdhPJwt2i4uMXnI/aDf/IMCkp+fkfiR8T1ZV0Xq5jPXfVkLqk1/z6xJceU91wFxGtS0OwHxE8OGOEvpPZuhVEc/yDo=
-X-Received: by 2002:a92:d6d2:: with SMTP id z18mr2855668ilp.272.1594697862742;
- Mon, 13 Jul 2020 20:37:42 -0700 (PDT)
+        Mon, 13 Jul 2020 23:38:39 -0400
+Received: from ozlabs.org ([203.11.71.1]:41395 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726456AbgGNDij (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jul 2020 23:38:39 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B5R7c1n5lz9sRf;
+        Tue, 14 Jul 2020 13:38:36 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1594697917;
+        bh=utKdEPCFFOb8Q1Yxk4/KLx+BAJ8D2GFKAuYxXohCvG8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=YhNyqPH34KDJC8jEG9M/eVuyt9cp7GboLqIlNbnCksVZV0jDSD5tcjZ3qamCB2BTW
+         77nJg9JkOSDaEQYDHE5qSYLdALc9cAixTzF6wwWdelNfgZJEOXuRtsb5OmM/Ryndal
+         Fi7cu7PRJ8g836mWmZbDvPevVHabbZo9dUzYQEMix9rzzA15BBiwJbcWsnkxmMvgFo
+         An/EbFyasd8sLsnaqw9HAYxY8ljonIpWhWzeKGjMXwdb46oLK/X7pPGwYDZ0MzgzeH
+         Ydu7j+da1KVtcIwii1oA/6ogGp2YLXf8fHv6gX+PbS/4lujDnGNdPiqpeYR18fLRVl
+         SW2JhvfMsQzpw==
+Date:   Tue, 14 Jul 2020 13:38:35 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     dillon.minfei@gmail.com
+Cc:     bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] Since am437x have the same clock structure with
+ am335x [1][2], reuse the code from Tony Lindgren's patch [3] to fix dcan
+ probe failed on am437x platform.
+Message-ID: <20200714133835.3b03b8af@canb.auug.org.au>
+In-Reply-To: <1594696998-3995-2-git-send-email-dillon.minfei@gmail.com>
+References: <1594696998-3995-1-git-send-email-dillon.minfei@gmail.com>
+        <1594696998-3995-2-git-send-email-dillon.minfei@gmail.com>
 MIME-Version: 1.0
-References: <20200702172714.158786-1-pop.adrian61@gmail.com> <20200702172714.158786-2-pop.adrian61@gmail.com>
-In-Reply-To: <20200702172714.158786-2-pop.adrian61@gmail.com>
-From:   Hua Dillon <dillonhua@gmail.com>
-Date:   Tue, 14 Jul 2020 11:37:30 +0800
-Message-ID: <CAPTRvHm0gX=myLBeztq-7q8hMGZ+a0pH_ZB8hH+RZtSSsqVGDw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] ARM: dts: stm32: Enable MIPI DSI display support.
-To:     Adrian Pop <pop.adrian61@gmail.com>
-Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="Sig_/k1XeJEgdCmFTZKkg66haG0l";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Adrian,
+--Sig_/k1XeJEgdCmFTZKkg66haG0l
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Just one suggestion for you.
+Hi,
 
-Adrian Pop <pop.adrian61@gmail.com> =E4=BA=8E2020=E5=B9=B47=E6=9C=883=E6=97=
-=A5=E5=91=A8=E4=BA=94 =E4=B8=8A=E5=8D=881:30=E5=86=99=E9=81=93=EF=BC=9A
+On Tue, 14 Jul 2020 11:23:18 +0800 dillon.minfei@gmail.com wrote:
 >
-> STM32f769-disco features a 4" MIPI DSI display: add support for it.
-> On Cortex-M7 DMA can't use cached memory. For this reason I use a dedicat=
-ed
-> memory pool for DMA with no-cache attribute which is located at the end o=
-f
->  RAM.
->
-> Signed-off-by: Adrian Pop <pop.adrian61@gmail.com>
+> From: dillon min <dillon.minfei@gmail.com>
+>=20
+> Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during ini=
+t to read revision")
+>=20
+> [1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
+> Integration
+> [2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
+> Integration
+> [3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on am3=
+35x")
+>=20
+> Signed-off-by: dillon min <dillon.minfei@gmail.com>
 > ---
->  arch/arm/boot/dts/stm32f746.dtsi      | 34 +++++++++++++++++++
->  arch/arm/boot/dts/stm32f769-disco.dts | 49 +++++++++++++++++++++++++++
->  2 files changed, 83 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/stm32f746.dtsi b/arch/arm/boot/dts/stm32f7=
-46.dtsi
-> index 93c063796780..577a812ca01c 100644
-> --- a/arch/arm/boot/dts/stm32f746.dtsi
-> +++ b/arch/arm/boot/dts/stm32f746.dtsi
-> @@ -48,6 +48,19 @@ / {
->         #address-cells =3D <1>;
->         #size-cells =3D <1>;
->
-> +       reserved-memory {
-> +               #address-cells =3D <1>;
-> +               #size-cells =3D <1>;
-> +               ranges;
-> +
-> +               linux,dma {
-> +                       compatible =3D "shared-dma-pool";
-> +                       linux,dma-default;
-> +                       no-map;
-> +                       reg =3D <0xc0f00000 0x100000>;
-> +               };
-> +       };
-> +
-Christoph Hellwig was submit a patch for !CONFIG_MMU platforms to support m=
-map.
-the patch is : 1fbf57d05302 dma-direct: re-enable mmap for !CONFIG_MMU
-i thought there is no need to create a reserved-memory for it.
+>=20
+> Hi Stephen,
+>=20
+> This changes correct commit messages based on your reviewing.
+> make Fixes tags to oneline.
+> make all commit message tags at the end of commit message
 
->         clocks {
->                 clk_hse: clk-hse {
->                         #clock-cells =3D <0>;
-> @@ -75,6 +88,27 @@ clk_i2s_ckin: clk-i2s-ckin {
->         };
->
->         soc {
-> +               ltdc: display-controller@40016800 {
-> +                       compatible =3D "st,stm32-ltdc";
-> +                       reg =3D <0x40016800 0x200>;
-> +                       interrupts =3D <88>, <89>;
-> +                       resets =3D <&rcc STM32F7_APB2_RESET(LTDC)>;
-> +                       clocks =3D <&rcc 1 CLK_LCD>;
-> +                       clock-names =3D "lcd";
-> +                       status =3D "disabled";
-> +               };
-> +
-> +               dsi: dsi@40016c00 {
-> +                       compatible =3D "st,stm32-dsi";
-> +                       reg =3D <0x40016c00 0x800>;
-> +                       interrupts =3D <98>;
-> +                       clocks =3D <&rcc 1 CLK_F769_DSI>, <&clk_hse>;
-> +                       clock-names =3D "pclk", "ref";
-> +                       resets =3D <&rcc STM32F7_APB2_RESET(DSI)>;
-> +                       reset-names =3D "apb";
-> +                       status =3D "disabled";
-> +               };
-> +
->                 timer2: timer@40000000 {
->                         compatible =3D "st,stm32-timer";
->                         reg =3D <0x40000000 0x400>;
-> diff --git a/arch/arm/boot/dts/stm32f769-disco.dts b/arch/arm/boot/dts/st=
-m32f769-disco.dts
-> index 1626e00bb2cb..a9e81b49809c 100644
-> --- a/arch/arm/boot/dts/stm32f769-disco.dts
-> +++ b/arch/arm/boot/dts/stm32f769-disco.dts
-> @@ -153,3 +153,52 @@ &usbotg_hs {
->         pinctrl-names =3D "default";
->         status =3D "okay";
->  };
-> +
-> +&dsi {
-> +       #address-cells =3D <1>;
-> +       #size-cells =3D <0>;
-> +       status =3D "okay";
-> +
-> +       ports {
-> +               #address-cells =3D <1>;
-> +               #size-cells =3D <0>;
-> +
-> +               port@0 {
-> +                       reg =3D <0>;
-> +                       dsi_in: endpoint {
-> +                               remote-endpoint =3D <&ltdc_out_dsi>;
-> +                       };
-> +               };
-> +
-> +               port@1 {
-> +                       reg =3D <1>;
-> +                       dsi_out: endpoint {
-> +                               remote-endpoint =3D <&dsi_in_panel>;
-> +                       };
-> +               };
-> +
-> +       };
-> +
-> +       panel: panel {
-> +               compatible =3D "orisetech,otm8009a";
-> +               reg =3D <0>;
-> +               reset-gpios =3D <&gpioj 15 GPIO_ACTIVE_LOW>;
-> +               status =3D "okay";
-> +
-> +               port {
-> +                       dsi_in_panel: endpoint {
-> +                               remote-endpoint =3D <&dsi_out>;
-> +                       };
-> +               };
-> +       };
-> +};
-> +
-> +&ltdc {
-> +       status =3D "okay";
-> +
-> +       port {
-> +               ltdc_out_dsi: endpoint {
-> +                       remote-endpoint =3D <&dsi_in>;
-> +               };
-> +       };
-> +};
-> --
-> 2.27.0
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+But the Fixes: line should be down with the Signed-off-by: line ...
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/k1XeJEgdCmFTZKkg66haG0l
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8NKLsACgkQAVBC80lX
+0Gxd/gf/XDaMTcgnoIkuJHOcd/X609x4hkBiINhaOmMBdPYVD/PQndttJiqXeUPM
+NTBl0H06S0BFUyeLAMiw2eA0gfzcCoz81NKhgTiKFl1uh3n+3MHM4Uw1ZkC2aj+o
+XW46IYvBt9Kf4IFd07cs/JGz8S25/LXhlU1tUQlujk5nBk52afUguIpIPLMq66QS
+3K4BlmGIYFvJhATTndQEkT4nGKfLXm0J00Pg8Ajq+y0kcErMGRgrGOgySdB9v0Ij
+wyZlDlZpLcSF8kfr+3Fk31ZGZmxkNAEvKrvdbsZjmV48PYedlgXYrQ8vk1924nAE
+lT4RqY7Bbs2VdqKaTY1WHYppHlCAOQ==
+=Y4xQ
+-----END PGP SIGNATURE-----
+
+--Sig_/k1XeJEgdCmFTZKkg66haG0l--
