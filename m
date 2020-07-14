@@ -7,86 +7,81 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72616C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 02:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F7AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 02:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A35321D6C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 02:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3E8620674
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 02:17:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594692947;
-	bh=OzubgVFc3pjahklLc2y2IxmKpyNZA0d2DWC+kikFdzg=;
+	s=default; t=1594693068;
+	bh=gcDfgbO3q8pVxqYv7ZRRLWSUibyUhngogHhP6MN+qt8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YdnaXDdGAa4dNvX1u7dQHGtt8V1ups54oPaHvXc2CnFRaSkr4rYAWGf1zBIpOHmrO
-	 +3Se2Z2Se8ZINQ61e+Ir4wBoxTr0IvIaa4ZTDxB4yzKGv6nrW3Z0lJFC63PWkfJ+xU
-	 TTVMXOb7WSaOidcgnNKtvfI8x+hk2cGK20KbBgpc=
+	b=HPPZqOc2zSJnRaTMe52Qa4kq4W9aRYoKrOLtodtYSBbcEWi4YStSgQxWsVV7IXmp1
+	 IdE4kgrbnhD4lkDt7kYiY3wc3t/KSY0+js1pVZN5fbRcC/WuZiNLep8+DkOB+7YhNo
+	 0yeUeHGOK26MvZCdtqbw89g611RbPN1RiWsQ82Kc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbgGNCPq (ORCPT
+        id S1726409AbgGNCRs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 22:15:46 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34021 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbgGNCPq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 22:15:46 -0400
-Received: by mail-io1-f68.google.com with SMTP id q74so15744587iod.1;
-        Mon, 13 Jul 2020 19:15:45 -0700 (PDT)
+        Mon, 13 Jul 2020 22:17:48 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:42336 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbgGNCRs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 22:17:48 -0400
+Received: by mail-il1-f193.google.com with SMTP id t27so12956270ill.9;
+        Mon, 13 Jul 2020 19:17:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=W/3EJR0UO+DEw9NNDm9c2vVCgxBKwyW6tiiCML3eaIY=;
-        b=h9F/+XOE0BmO28e+aRe0ajTH2K6YGjVmJ7Ao8U+3iBmTC5As9LTuLhvX/wA0VoLNmn
-         JX6LPhdxQPmw7snW/6VMtMucrBV5z5qN9TIyZt7YMTMkukzad+pdr3H9P6u+0HThFCHF
-         45Nl/oE6GMno10UuOpBN0CRQO9PH4gtH54Czjwo6DrM/vow8KQvBgSQB1qzt0md2MhqT
-         VrmsgzilTbGWXWT78OSPnpzZpbTLUf82muZo3ahFq03TFPeNnAL1JeOvHflO9CMpvwoB
-         MtDEzTpIDTNyqfKqjrZpCHtxIfbJB/smuN90pD9WeRK2lHCDoUvlxUDLFalenpFIyrwo
-         bQOA==
-X-Gm-Message-State: AOAM53273Pow+fHlSlx4b4TZYTXMCp+q8my0rkmED0puV7JGBFnUbrwj
-        2XTSNjsvtWxXUGOdfEt9xg==
-X-Google-Smtp-Source: ABdhPJzlc8uQiBvXN6TzU1Q5aKmi07q/eB5wKID1pG8ixxrevptiDKxWRy7HG9xU/9WbA9zAZ1U+jA==
-X-Received: by 2002:a02:cf12:: with SMTP id q18mr3366899jar.3.1594692945604;
-        Mon, 13 Jul 2020 19:15:45 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to;
+        bh=oFdPFI+MbNBnmxHM20F+AOCXori4Lgn3RYqynR+OBf8=;
+        b=SNw32SyAJECuugIEwvc8NSGCKGR5vq1ViOcJoHzNqUa0pbY9beGF1Cdz9fgkYBzcXK
+         myoZSk46tOkBSljDNn5vYoyqrZzgyODl2tB0RU2bnBzQvO6VKdcAcJXm0J02NOiJTwbn
+         eLEA7fYHTcYYEFezP9B7hUJllnjz+Pe296yDLUHzymw1Tgz38iaFOXUR8KTKq6LX+ceG
+         Jrc2x51dlRh2nDQKssi6GvPUk3pEsfMiea7FnK76fz8yBge1T6My+GCzAivQJwdJa85E
+         Yfy20Y71LW7ujnasxTpBOvRxWLAWPv2Mi8MclpggzDXWmYRAm/Q11CY/UH3MA/IxPR5N
+         QEXw==
+X-Gm-Message-State: AOAM531KORd9LINceY7Sx38yLN4TsXdgbB0X/rxjRM+MBdTGAvCdkXQQ
+        SNVGeqMUnEGVgDO11uXGdA==
+X-Google-Smtp-Source: ABdhPJwwwbrRzUvoKcbbV4zCrrZnyCRjMCDpLDC5U2L/wfozkEChDnPIWXBNDDoEO/fbqqWxsE1aOQ==
+X-Received: by 2002:a92:d2c6:: with SMTP id w6mr2628347ilg.24.1594693067006;
+        Mon, 13 Jul 2020 19:17:47 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id u5sm9573480ili.33.2020.07.13.19.15.44
+        by smtp.gmail.com with ESMTPSA id i84sm9543027ill.30.2020.07.13.19.17.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 19:15:45 -0700 (PDT)
-Received: (nullmailer pid 1141630 invoked by uid 1000);
-        Tue, 14 Jul 2020 02:15:44 -0000
-Date:   Mon, 13 Jul 2020 20:15:44 -0600
+        Mon, 13 Jul 2020 19:17:46 -0700 (PDT)
+Received: (nullmailer pid 1144515 invoked by uid 1000);
+        Tue, 14 Jul 2020 02:17:45 -0000
+Date:   Mon, 13 Jul 2020 20:17:45 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc:     James Tai =?utf-8?B?W+aItOW/l+WzsF0=?= <james.tai@realtek.com>,
-        Stanley Chang =?utf-8?B?W+aYjOiCsuW+t10=?= 
-        <stanley_chang@realtek.com>, linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-realtek-soc@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Edgar Lee <cylee12@realtek.com>
-Subject: Re: [PATCH v2 24/29] dt-bindings: soc: realtek: rtd1195-chip: Allow
- nvmem-cells property
-Message-ID: <20200714021544.GA1141578@bogus>
-References: <20200623025106.31273-1-afaerber@suse.de>
- <20200623025106.31273-25-afaerber@suse.de>
+To:     Kathiravan T <kathirav@codeaurora.org>
+Cc:     lgirdwood@gmail.com, robh+dt@kernel.org, agross@kernel.org,
+        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, sivaprak@codeaurora.org,
+        broonie@kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH V2 5/6] dt-bindings: soc: qcom: convert the SMD-RPM
+ document to YAML schema
+Message-ID: <20200714021745.GA1144468@bogus>
+References: <1592889472-6843-1-git-send-email-kathirav@codeaurora.org>
+ <1592889472-6843-6-git-send-email-kathirav@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200623025106.31273-25-afaerber@suse.de>
+In-Reply-To: <1592889472-6843-6-git-send-email-kathirav@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 23 Jun 2020 04:51:01 +0200, Andreas Färber wrote:
-> Allow to optionally specify nvmem cells to identify the chip.
-> RTD1295 family will want the eFuse package_id cell.
+On Tue, 23 Jun 2020 10:47:51 +0530, Kathiravan T wrote:
+> Convert the qcom,smd-rpm.txt document to YAML schema
 > 
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
+> Signed-off-by: Kathiravan T <kathirav@codeaurora.org>
 > ---
->  v1 -> v2:
->  * Instead of extending reg, allow nvmem-cells reference for eFuse
-> 
->  .../bindings/soc/realtek/realtek,rtd1195-chip.yaml   | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+>  .../devicetree/bindings/soc/qcom/qcom,smd-rpm.txt  | 63 ---------------
+>  .../devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml | 92 ++++++++++++++++++++++
+>  2 files changed, 92 insertions(+), 63 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
