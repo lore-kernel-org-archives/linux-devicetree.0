@@ -2,333 +2,419 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABEC2C4345A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 13:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CAEC433E5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 14:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85DF8224D3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 13:57:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594735060;
-	bh=anOkgRGBEMl/XKw2buzvSOBQZ/OCdvpI2l0MBdv9laI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RdX7IX6FIu/g/6NDpuPL4Pz5dKGfxZtI54Bl1zVuwimNuX4m3Vd5ETAnZEO396eXx
-	 q2YI8T5pDpak9ChWuGmesXs2nkBzA/V9QXZFXDILV4xBIqWGlZwbUPZLr7Yy89cZOq
-	 x7MFQEQrw+pgKOWC8LJLPHX/X9F0ZI83Sgm7Frc8=
+	by mail.kernel.org (Postfix) with ESMTP id 0797422453
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 14:01:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="nDCa++5w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbgGNN5a (ORCPT
+        id S1725821AbgGNOBx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 09:57:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34928 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728095AbgGNN53 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 09:57:29 -0400
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 890E322512;
-        Tue, 14 Jul 2020 13:57:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594735048;
-        bh=anOkgRGBEMl/XKw2buzvSOBQZ/OCdvpI2l0MBdv9laI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ttteglnPO8kwRXFeQtRwVICizqXHDJHt4IvI4Olwam2up4wa0m5vYWHRtK9hY67/n
-         hmk9iXjDD9GxA/JQ84LgJgL+x2xGODNe0uMXcm7T0Zn/XZhJkIKRAIw8+yOA4y2bRr
-         cvCtWaWII9Yvew6vnirELHNgPZQEACYfv5ds1fyI=
-Received: by mail-ot1-f54.google.com with SMTP id t18so13081680otq.5;
-        Tue, 14 Jul 2020 06:57:28 -0700 (PDT)
-X-Gm-Message-State: AOAM531F90QcZlsGOcOiclKdEsrQ8F95WPFyRW++7eJYz+vy/PBmY2fi
-        t+ZERfcJkvwGtsXI6n7qNdcqPK/qRFrnTKJXKA==
-X-Google-Smtp-Source: ABdhPJyvJtNZ6AovmC6N3Uf290TAiRrNFPNQ2ge621fVPSlVbwTn0jNpHg5QrJVyxju7szdTK7/jWtfI/J/bQ3Gynjk=
-X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr4257242ots.192.1594735047801;
- Tue, 14 Jul 2020 06:57:27 -0700 (PDT)
+        Tue, 14 Jul 2020 10:01:53 -0400
+Received: from smtpcmd0986.aruba.it ([62.149.156.86]:56376 "EHLO
+        smtpcmd0986.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726766AbgGNOBx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 10:01:53 -0400
+Received: from [192.168.1.129] ([93.146.66.165])
+        by smtpcmd09.ad.aruba.it with bizsmtp
+        id 321o230273Zw7e50121pt7; Tue, 14 Jul 2020 16:01:50 +0200
+Subject: Re: [RFC v2 GPIO lines [was: GPIO User I/O]
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+References: <01afcac0-bd34-3fd0-b991-a8b40d4b4561@enneenne.com>
+ <CACRpkdbX9T9EuN-nxkMPC=sN74PEdoLuWurNLdGCzZJwwFrdpQ@mail.gmail.com>
+ <1c4f1a83-835a-9317-3647-b55f6f39c0ba@enneenne.com>
+ <CACRpkdZPjJSryJc+RtYjRN=X7xKMcao5pYek1fUM2+sE9xgdFQ@mail.gmail.com>
+ <CAMuHMdUtguuu4FWU4nRS=pBUyEwKM1JZ8DYPdCQHXBYN0i_Frg@mail.gmail.com>
+ <87efe96c-3679-14d5-4d79-569b6c047b00@enneenne.com>
+ <CAMuHMdUght0hkJT1N8ub5xR5GB+U18MAhAg+zDmAAuxoRSRaYg@mail.gmail.com>
+ <d30e64c9-ad7f-7cd5-51a4-3f37d6f1e3d8@enneenne.com>
+ <070fa558-6e20-0fbf-d3e4-0a0eca4fe82c@enneenne.com>
+ <CACRpkdYFAW2bcB53M3_b2LsveJO_PWZJhprGhdTtfmW11B1WmQ@mail.gmail.com>
+ <f66dc9c4-b164-c934-72a8-d4aca063fca5@enneenne.com>
+ <CACRpkdbjc6vvpHVjnJNGisRw6LiLZd-95aHWJJORwvaRNigPcw@mail.gmail.com>
+From:   Rodolfo Giometti <giometti@enneenne.com>
+Message-ID: <cb6e208b-446e-eba4-b324-d88aec94a69b@enneenne.com>
+Date:   Tue, 14 Jul 2020 16:01:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200713111844.528313-1-niklas.soderlund+renesas@ragnatech.se>
- <20200713111844.528313-3-niklas.soderlund+renesas@ragnatech.se>
- <20200713154449.GA256154@bogus> <20200713181740.GO2866302@oden.dyn.berto.se>
-In-Reply-To: <20200713181740.GO2866302@oden.dyn.berto.se>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 14 Jul 2020 07:57:14 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKJwMET3_VqrJi3KJJMbrNy-aR0yr26VFXYbgN_yPNfGw@mail.gmail.com>
-Message-ID: <CAL_JsqKJwMET3_VqrJi3KJJMbrNy-aR0yr26VFXYbgN_yPNfGw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] dt-bindings: adv7604: Convert bindings to json-schema
-To:     =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        devicetree@vger.kernel.org,
-        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
-        <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CACRpkdbjc6vvpHVjnJNGisRw6LiLZd-95aHWJJORwvaRNigPcw@mail.gmail.com>
+Content-Type: multipart/mixed;
+ boundary="------------994CFF9A1AE7C48D7657D2A5"
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aruba.it; s=a1;
+        t=1594735310; bh=Df788FnsET2OlqizvcvQ0X8sBa2DlTMjEo7LCjxbbm8=;
+        h=Subject:To:From:Date:MIME-Version:Content-Type;
+        b=nDCa++5w1+YwFCGyOc4Ps9rmN3SGg8smpNOGFLjszaIHygz3SXU3HVikop0jfIOHO
+         mpq8dPRShhWzt2i9IdQ+hhnzWhJYpxDf/+aefLTUTaYawUpXEbS1Qy1GDK70wIWJKn
+         CegMYuMRdSsyTC+F7xRD03TsWhYSZxM6wzQsqntQcPbeR1xiLlRLM7XJVjiTMX4HdW
+         1i6UE/X2pxxE309sMoW7yfQSuD0NRxz+r5M1dFquuP+C+VwkpbPavUtp5H6527JqtF
+         04CBqFxZps0P6NtEoBoiAFz+hQR/Rv/uBA580l5zGtay2gP0vXiIXK0sCP3admNowy
+         h3fwu/2dOEkow==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 12:17 PM Niklas S=C3=B6derlund
-<niklas.soderlund+renesas@ragnatech.se> wrote:
->
-> Hi Rob,
->
-> Thanks for your feedback.
->
-> On 2020-07-13 09:44:49 -0600, Rob Herring wrote:
-> > On Mon, Jul 13, 2020 at 01:18:43PM +0200, Niklas S=C3=B6derlund wrote:
-> > > Convert ADV7604 video decoder documentation to json-schema.
-> > >
-> > > Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnat=
-ech.se>
-> > > ---
-> > >  .../devicetree/bindings/media/i2c/adv7604.txt |  87 ---------
-> > >  .../bindings/media/i2c/adv7604.yaml           | 171 ++++++++++++++++=
-++
-> > >  2 files changed, 171 insertions(+), 87 deletions(-)
-> > >  delete mode 100644 Documentation/devicetree/bindings/media/i2c/adv76=
-04.txt
-> > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/adv76=
-04.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt =
-b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-> > > deleted file mode 100644
-> > > index 8c7cdc7cd7aaebc8..0000000000000000
-> > > --- a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-> > > +++ /dev/null
-> > > @@ -1,87 +0,0 @@
-> > > -* Analog Devices ADV7604/11/12 video decoder with HDMI receiver
-> > > -
-> > > -The ADV7604 and ADV7611/12 are multiformat video decoders with an in=
-tegrated
-> > > -HDMI receiver. The ADV7604 has four multiplexed HDMI inputs and one =
-analog
-> > > -input, and the ADV7611 has one HDMI input and no analog input. The 7=
-612 is
-> > > -similar to the 7611 but has 2 HDMI inputs.
-> > > -
-> > > -These device tree bindings support the ADV7611/12 only at the moment=
-.
-> > > -
-> > > -Required Properties:
-> > > -
-> > > -  - compatible: Must contain one of the following
-> > > -    - "adi,adv7611" for the ADV7611
-> > > -    - "adi,adv7612" for the ADV7612
-> > > -
-> > > -  - reg: I2C slave addresses
-> > > -    The ADV76xx has up to thirteen 256-byte maps that can be accesse=
-d via the
-> > > -    main I2C ports. Each map has it own I2C address and acts as a st=
-andard
-> > > -    slave device on the I2C bus. The main address is mandatory, othe=
-rs are
-> > > -    optional and revert to defaults if not specified.
-> > > -
-> > > -The device node must contain one 'port' child node per device input =
-and output
-> > > -port, in accordance with the video interface bindings defined in
-> > > -Documentation/devicetree/bindings/media/video-interfaces.txt. The po=
-rt nodes
-> > > -are numbered as follows.
-> > > -
-> > > -  Port                     ADV7611    ADV7612
-> > > -------------------------------------------------------------
-> > > -  HDMI                     0             0, 1
-> > > -  Digital output   1                2
-> > > -
-> > > -The digital output port node must contain at least one endpoint.
-> > > -
-> > > -Optional Properties:
-> > > -
-> > > -  - hpd-gpios: References to the GPIOs that control the HDMI hot-plu=
-g
-> > > -    detection pins, one per HDMI input. The active flag indicates th=
-e GPIO
-> > > -    level that enables hot-plug detection.
-> > > -  - reset-gpios: Reference to the GPIO connected to the device's res=
-et pin.
-> > > -  - default-input: Select which input is selected after reset.
-> > > -  - reg-names : Names of maps with programmable addresses.
-> > > -           It can contain any map needing a non-default address.
-> > > -           Possible maps names are :
-> > > -             "main", "avlink", "cec", "infoframe", "esdp", "dpp", "a=
-fe",
-> > > -             "rep", "edid", "hdmi", "test", "cp", "vdp"
-> > > -
-> > > -Optional Endpoint Properties:
-> > > -
-> > > -  The following three properties are defined in video-interfaces.txt=
- and are
-> > > -  valid for source endpoints only.
-> > > -
-> > > -  - hsync-active: Horizontal synchronization polarity. Defaults to a=
-ctive low.
-> > > -  - vsync-active: Vertical synchronization polarity. Defaults to act=
-ive low.
-> > > -  - pclk-sample: Pixel clock polarity. Defaults to output on the fal=
-ling edge.
-> > > -
-> > > -  If none of hsync-active, vsync-active and pclk-sample is specified=
- the
-> > > -  endpoint will use embedded BT.656 synchronization.
-> > > -
-> > > -Example:
-> > > -
-> > > -   hdmi_receiver@4c {
-> > > -           compatible =3D "adi,adv7611";
-> > > -           /*
-> > > -            * The edid page will be accessible @ 0x66 on the I2C bus=
-. All
-> > > -            * other maps will retain their default addresses.
-> > > -            */
-> > > -           reg =3D <0x4c>, <0x66>;
-> > > -           reg-names =3D "main", "edid";
-> > > -
-> > > -           reset-gpios =3D <&ioexp 0 GPIO_ACTIVE_LOW>;
-> > > -           hpd-gpios =3D <&ioexp 2 GPIO_ACTIVE_HIGH>;
-> > > -
-> > > -           #address-cells =3D <1>;
-> > > -           #size-cells =3D <0>;
-> > > -
-> > > -           default-input =3D <0>;
-> > > -
-> > > -           port@0 {
-> > > -                   reg =3D <0>;
-> > > -           };
-> > > -           port@1 {
-> > > -                   reg =3D <1>;
-> > > -                   hdmi_in: endpoint {
-> > > -                           remote-endpoint =3D <&ccdc_in>;
-> > > -                   };
-> > > -           };
-> > > -   };
-> > > diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.yaml=
- b/Documentation/devicetree/bindings/media/i2c/adv7604.yaml
-> > > new file mode 100644
-> > > index 0000000000000000..d354fd8e0cc88d93
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.yaml
-> > > @@ -0,0 +1,171 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/media/i2c/adv7604.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Analog Devices ADV7604/11/12 video decoder with HDMI receiver
-> > > +
-> > > +maintainers:
-> > > +  - Hans Verkuil <hverkuil-cisco@xs4all.nl>
-> > > +
-> > > +description:
-> > > +  The ADV7604 and ADV7611/12 are multiformat video decoders with an =
-integrated
-> > > +  HDMI receiver. The ADV7604 has four multiplexed HDMI inputs and on=
-e analog
-> > > +  input, and the ADV7611 has one HDMI input and no analog input. The=
- 7612 is
-> > > +  similar to the 7611 but has 2 HDMI inputs.
-> > > +
-> > > +  These device tree bindings support the ADV7611/12 only at the mome=
-nt.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    items:
-> > > +      - enum:
-> > > +        - adi,adv7611
-> > > +        - adi,adv7612
-> > > +
-> > > +  reg:
-> > > +    minItems: 1
-> > > +    maxItems: 13
-> > > +
-> > > +  reg-names:
-> > > +    items:
-> > > +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, e=
-did, hdmi, test, cp, vdp ]
-> > > +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, e=
-did, hdmi, test, cp, vdp ]
-> > > +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, e=
-did, hdmi, test, cp, vdp ]
-> > > +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, e=
-did, hdmi, test, cp, vdp ]
-> > > +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, e=
-did, hdmi, test, cp, vdp ]
-> > > +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, e=
-did, hdmi, test, cp, vdp ]
-> > > +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, e=
-did, hdmi, test, cp, vdp ]
-> > > +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, e=
-did, hdmi, test, cp, vdp ]
-> > > +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, e=
-did, hdmi, test, cp, vdp ]
-> > > +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, e=
-did, hdmi, test, cp, vdp ]
-> > > +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, e=
-did, hdmi, test, cp, vdp ]
-> > > +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, e=
-did, hdmi, test, cp, vdp ]
-> > > +      - enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, e=
-did, hdmi, test, cp, vdp ]
-> >
-> > This can be simplified to:
-> >
-> > items:
-> >   enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi=
-, test, cp, vdp ]
->
-> I tried this at first,
->
-> properties:
->   reg-names:
->     items:
->       enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hd=
-mi, test, cp, vdp ]
->
-> But running the dt_binding_check on it fails with,
->
-> $ make dt_binding_check DT_SCHEMA_FILES=3DDocumentation/devicetree/bindin=
-gs/media/i2c/adv7604.yaml
->   CHKDT   Documentation/devicetree/bindings/media/i2c/adv7604.yaml
-> /mnt/build/linux/Documentation/devicetree/bindings/media/i2c/adv7604.yaml=
-: properties:reg-names:items: {'enum': ['main', 'avlink', 'cec', 'infoframe=
-', 'esdp', 'dpp', 'afe', 'rep', 'edid', 'hdmi', 'test', 'cp', 'vdp']} is no=
-t of type 'array'
-> make[1]: *** [Documentation/devicetree/bindings/Makefile:20: Documentatio=
-n/devicetree/bindings/media/i2c/adv7604.example.dts] Error 1
-> make: *** [Makefile:1334: dt_binding_check] Error 2
->
-> What am I missing? I'm using latest master of dt-schema [1] if it makes
-> any difference.
+This is a multi-part message in MIME format.
+--------------994CFF9A1AE7C48D7657D2A5
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-If 'items' is not an array, you need 'minItems' and 'maxItems' since
-there is no size.
+On 13/07/2020 23:26, Linus Walleij wrote:
+> On Mon, Jul 13, 2020 at 4:20 PM Rodolfo Giometti <giometti@enneenne.com> wrote:
+>> Maybe I can do something similar to hog-gpio as below, if you prefer...
+>>
+>> bypass0 {
+>>         gpios = <&gpionb 10 GPIO_ACTIVE_LOW>;
+>>         output-low;
+> 
+> Yes this is better, just boolean flags is not natural than strings
+> for this.
 
-> 1. 1330cddcba757bee ("schemas: Make additionalProperties/unevaluatedPrope=
-rties explicit")
->
-> >
-> > (Make items a schema applying to all items, rather than a list)
-> >
-> > Though we may want to enforce 'main' is first with:
-> >
-> > minItems: 1
-> > maxItems: 13
-> > items:
-> >   - const: main
-> >
-> > These 2 can be combined under an 'allOf'.
->
-> I also had this idea by dropping main from the list of enums for all but
-> the first one. But I can't find any argument for why main needs to go
-> first, but I agree it feels like the right thing.
+OK, changed.
 
-For DT we want the order defined as much as possible which is usually
-required entries first, then optional entries. Unfortunately there's
-no way in json-schema to express entries may be missing from a list.
+> However it addresses in a way an issue we have had popping
+> up from time to time which is assignment of default values to
+> lines before they are used overall.
+> 
+> I think that would be a bit of thing that should be proper to
+> solve as part of this.
+> 
+> The discussion has often stopped short due to different
+> opinions on the device tree bindings for that.
 
-Rob
+I see... however attached is a new version of my proposal patch with the
+following changelog:
+
+- GPIO line modes are now decoded as boolean properties (as for gpio-hogs).
+  Allowed values are" "input", "output-low" and "output-high". If nothing is
+  specified defaults to "as-is";
+
+- At boot a more descriptive message for each line is displayed as below:
+
+[    1.834901] line bypass0: GPIO486 added as output-low
+
+Ciao,
+
+Rodolfo
+
+-- 
+GNU/Linux Solutions                  e-mail: giometti@enneenne.com
+Linux Device Driver                          giometti@linux.it
+Embedded Systems                     phone:  +39 349 2432127
+UNIX programming                     skype:  rodolfo.giometti
+
+--------------994CFF9A1AE7C48D7657D2A5
+Content-Type: text/x-patch; charset=UTF-8;
+ name="gpio-line.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline;
+ filename="gpio-line.patch"
+
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 4f52c3a8ec99..f117b0b9d33e 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -73,6 +73,16 @@ config GPIO_SYSFS
+ 	  Kernel drivers may also request that a particular GPIO be
+ 	  exported to userspace; this can be useful when debugging.
+ 
++config GPIO_LINE
++	bool "/sys/class/line/... (GPIO lines interface)"
++	depends on SYSFS
++	help
++	  Say Y here to add a sysfs interface to manage system's GPIO lines.
++
++	  Instead of the GPIO_SYSFS support, by using this support, you'll be
++	  able to use GPIOs from userspace as stated in the device-tree
++	  for well defined pourposes and by using proper names.
++
+ config GPIO_GENERIC
+ 	depends on HAS_IOMEM # Only for IOMEM drivers
+ 	tristate
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index c256aff66a65..033a6b836dec 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -9,6 +9,7 @@ obj-$(CONFIG_GPIOLIB)		+= gpiolib-legacy.o
+ obj-$(CONFIG_GPIOLIB)		+= gpiolib-devprop.o
+ obj-$(CONFIG_OF_GPIO)		+= gpiolib-of.o
+ obj-$(CONFIG_GPIO_SYSFS)	+= gpiolib-sysfs.o
++obj-$(CONFIG_GPIO_LINE)		+= gpiolib-line.o
+ obj-$(CONFIG_GPIO_ACPI)		+= gpiolib-acpi.o
+ 
+ # Device drivers. Generally keep list sorted alphabetically
+diff --git a/drivers/gpio/gpiolib-line.c b/drivers/gpio/gpiolib-line.c
+new file mode 100644
+index 000000000000..640c9971d97e
+--- /dev/null
++++ b/drivers/gpio/gpiolib-line.c
+@@ -0,0 +1,251 @@
++/*
++ * GPIOlib - userspace I/O line interface
++ *
++ *
++ * Copyright (C) 2020   Rodolfo Giometti <giometti@enneenne.com>
++ *
++ *   This program is free software; you can redistribute it and/or modify
++ *   it under the terms of the GNU General Public License as published by
++ *   the Free Software Foundation; either version 2 of the License, or
++ *   (at your option) any later version.
++ *
++ *   This program is distributed in the hope that it will be useful,
++ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *   GNU General Public License for more details.
++ *
++ *   You should have received a copy of the GNU General Public License
++ *   along with this program; if not, write to the Free Software
++ *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ */
++
++#include <linux/kernel.h>
++#include <linux/init.h>
++#include <linux/device.h>
++#include <linux/idr.h>
++#include <linux/kdev_t.h>
++#include <linux/mutex.h>
++#include <linux/platform_device.h>
++#include <linux/property.h>
++#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
++
++#define GPIO_LINE_MAX_SOURCES       128      /* should be enough... */
++
++/*
++ * Local variables
++ */
++
++static dev_t gpio_line_devt;
++static struct class *gpio_line_class;
++
++static DEFINE_MUTEX(gpio_line_idr_lock);
++static DEFINE_IDR(gpio_line_idr);
++
++struct gpio_line_device {
++	struct gpio_desc *gpiod;
++	const char *name;
++	unsigned int id;
++	struct device *dev;
++};
++
++/*
++ * sysfs methods
++ */
++
++static ssize_t state_store(struct device *dev,
++				struct device_attribute *attr,
++				const char *buf, size_t count)
++{
++	struct gpio_line_device *gpio_line = dev_get_drvdata(dev);
++	int status, ret;
++
++	ret = sscanf(buf, "%d", &status);
++	if (ret != 1 && status != 0 && status != 1)
++		return -EINVAL;
++
++	gpiod_set_value_cansleep(gpio_line->gpiod, status);
++
++	return count;
++}
++
++static ssize_t state_show(struct device *dev,
++				struct device_attribute *attr, char *buf)
++{
++	struct gpio_line_device *gpio_line = dev_get_drvdata(dev);
++	int status = gpiod_get_value_cansleep(gpio_line->gpiod);
++
++	return sprintf(buf, "%d\n", status);
++}
++static DEVICE_ATTR_RW(state);
++
++/*
++ * Class attributes
++ */
++
++static struct attribute *gpio_line_attrs[] = {
++	&dev_attr_state.attr,
++	NULL,
++};
++
++static const struct attribute_group gpio_line_group = {
++	.attrs = gpio_line_attrs,
++};
++
++static const struct attribute_group *gpio_line_groups[] = {
++	&gpio_line_group,
++	NULL,
++};
++
++/*
++ * Driver stuff
++ */
++
++static struct gpio_line_device *gpio_line_create_entry(const char *name,
++				struct gpio_desc *gpiod,
++				struct device *parent)
++{
++	struct gpio_line_device *gpio_line;
++	dev_t devt;
++	int ret;
++
++	/* First allocate a new gpio_line device */
++	gpio_line = kmalloc(sizeof(struct gpio_line_device), GFP_KERNEL);
++	if (!gpio_line)
++		return ERR_PTR(-ENOMEM);
++
++	mutex_lock(&gpio_line_idr_lock);
++	/*
++	 * Get new ID for the new gpio_line source.  After idr_alloc() calling
++	 * the new source will be freely available into the kernel.
++	 */
++	ret = idr_alloc(&gpio_line_idr, gpio_line, 0,
++			GPIO_LINE_MAX_SOURCES, GFP_KERNEL);
++	if (ret < 0) {
++		if (ret == -ENOSPC) {
++			pr_err("%s: too many GPIO lines in the system\n",
++			       name);
++			ret = -EBUSY;
++		}
++		goto error_device_create;
++	}
++	gpio_line->id = ret;
++	mutex_unlock(&gpio_line_idr_lock);
++
++	/* Create the device and init the device's data */
++	devt = MKDEV(MAJOR(gpio_line_devt), gpio_line->id);
++	gpio_line->dev = device_create(gpio_line_class, parent, devt, gpio_line,
++				   "%s", name);
++	if (IS_ERR(gpio_line->dev)) {
++		dev_err(gpio_line->dev, "unable to create device %s\n", name);
++		ret = PTR_ERR(gpio_line->dev);
++		goto error_idr_remove;
++	}
++	dev_set_drvdata(gpio_line->dev, gpio_line);
++
++	/* Init the gpio_line data */
++	gpio_line->gpiod = gpiod;
++	gpio_line->name = name;
++
++	return gpio_line;
++
++error_idr_remove:
++	mutex_lock(&gpio_line_idr_lock);
++	idr_remove(&gpio_line_idr, gpio_line->id);
++
++error_device_create:
++	mutex_unlock(&gpio_line_idr_lock);
++	kfree(gpio_line);
++
++	return ERR_PTR(ret);
++}
++
++static int gpio_line_gpio_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct fwnode_handle *child;
++	struct gpio_line_device *gpio_line;
++	int ret;
++
++	device_for_each_child_node(dev, child) {
++		struct device_node *np = to_of_node(child);
++		const char *name;
++		enum gpiod_flags flags;
++		struct gpio_desc *gpiod;
++
++		ret = fwnode_property_read_string(child, "line-name", &name);
++		if (ret && IS_ENABLED(CONFIG_OF) && np)
++			name = np->name;
++		if (!name) {
++			dev_err(dev,
++				"name property not defined or invalid!\n");
++			goto skip;
++		}
++
++		flags = GPIOD_ASIS;
++		if (of_property_read_bool(np, "input"))
++			flags = GPIOD_IN;
++		else if (of_property_read_bool(np, "output-low"))
++			flags = GPIOD_OUT_LOW;
++		else if (of_property_read_bool(np, "output-high"))
++			flags = GPIOD_OUT_HIGH;
++		gpiod = devm_fwnode_get_gpiod_from_child(dev, NULL, child,
++							 flags, name);
++		if (IS_ERR(gpiod)) {
++			dev_err(dev, "gpios property not defined!\n");
++			goto skip;
++		}
++
++		gpio_line = gpio_line_create_entry(name, gpiod, dev);
++		if (IS_ERR(gpio_line))
++			goto skip;
++
++		/* Success, go to the next child */
++		dev_info(gpio_line->dev, "GPIO%d added as %s\n",
++			desc_to_gpio(gpiod),
++			flags == GPIOD_ASIS ? "as-is" :
++			  flags == GPIOD_OUT_HIGH ? "output-high" :
++			    flags == GPIOD_OUT_LOW ? "output-low" :
++			      flags == GPIOD_IN ? "input" : "unknow!");
++		continue;
++
++skip:		/* Error, skip the child */
++		fwnode_handle_put(child);
++		dev_err(dev, "failed to register GPIO lines interface\n");
++	}
++
++	return 0;
++}
++
++static const struct of_device_id of_gpio_gpio_line_match[] = {
++	{ .compatible = "gpio-line", },
++	{ /* sentinel */ }
++};
++
++static struct platform_driver gpio_line_gpio_driver = {
++	.driver	 = {
++		.name   = "gpio-line",
++		.of_match_table = of_gpio_gpio_line_match,
++	},
++};
++
++builtin_platform_driver_probe(gpio_line_gpio_driver, gpio_line_gpio_probe);
++
++/*
++ * Module stuff
++ */
++
++static int __init gpiolib_line_init(void)
++{
++	/* Create the new class */
++	gpio_line_class = class_create(THIS_MODULE, "line");
++	if (!gpio_line_class) {
++		printk(KERN_ERR "gpio_line: failed to create class\n");
++		return -ENOMEM;
++	}
++	gpio_line_class->dev_groups = gpio_line_groups;
++
++	return 0;
++}
++
++postcore_initcall(gpiolib_line_init);
+
+--------------994CFF9A1AE7C48D7657D2A5--
