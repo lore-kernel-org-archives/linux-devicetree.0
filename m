@@ -7,298 +7,188 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B42C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 02:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5605C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 03:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE6BB2192A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 02:55:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FF54208FE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 03:00:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594695304;
-	bh=6Az/x/SpKxi7qLYvUkJ4U78CaamWUfw26Fi//GS3BH0=;
+	s=default; t=1594695605;
+	bh=iTE6ogOHaz8ANSqAECwjkGMmvl5yaZcvRk4m3Gsf51I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AHeaNv/uN4HPEn3wxY0o0IwQumiQfG2T7m75EcW8hYArEuGTgpykmliVSKE1qzFFA
-	 PfZG3CVRH797o5+HVsQK0jzzhaT2eP6lTceMBpWQV/mqq23pE6mcB/+Z8BM5SLqd2M
-	 e0Qp5iSYbWvfEWtNG3UiyM2tFy+PyEV9Kee00mzs=
+	b=ocRpBaxRrb+ymCz5dPDGiR3wNULmStSbDPBzDKu3ZHMXFu+aV/QGtQOwPGWhVU+d2
+	 vxEE0f8pUt93dsQlUzb0bwbE4vW8jiP1idu+JcHZsiHHAbFpBfhNstxtbx+pOqHmal
+	 D3VOCHZKI3GAnWif6wTXzYGERxKn7UY1XrI+KZRc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbgGNCzE (ORCPT
+        id S1726722AbgGNDAF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 22:55:04 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:36281 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbgGNCzE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 22:55:04 -0400
-Received: by mail-il1-f195.google.com with SMTP id x9so13041280ila.3;
-        Mon, 13 Jul 2020 19:55:02 -0700 (PDT)
+        Mon, 13 Jul 2020 23:00:05 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34627 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbgGNDAE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 23:00:04 -0400
+Received: by mail-io1-f66.google.com with SMTP id q74so15820875iod.1;
+        Mon, 13 Jul 2020 20:00:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=33mC0WNeWBJScLg34kZk7QhtvixCsZdcT9IrD69H6fg=;
-        b=Lc+8ni+Co7lUy68+QjHk9dsz5IjulnskSEc0XL2jG72ypLWcXattbUm2lJ8bMVChx7
-         SzHIGBARiReyILNFt/gscW6ZXLmXs/wFmD8QTyCpzqZvrkQo0Ejil1DiM+1fVK0CgBsF
-         hE5DfiSDB/Ri5KnTgmMfrVUEj/Tj1DFHZk66o4ezHsKdzvioUQXnTupXgeZtRVdUVS0G
-         GCq4F39m8LCvFU2yzh+FN3HS0epgI12GEvCc1FIRK6QDq+DWuLgU/XtT0GBtOHUD5civ
-         4lVv9SsdG2kHIOD389mL6mYANcO/F3gdUneerzZGo9zhdIVxYvWKP0KNJzqHr9szeRo7
-         t7CQ==
-X-Gm-Message-State: AOAM532dd2K6d2MiMMOZ7I2M0xzQk1k3nrIQB79ul23PUlGP8zeJR1H4
-        ZNCpolyT59p8wMLLJ2zF/+5XL+lfLJsf
-X-Google-Smtp-Source: ABdhPJyE9VvhWE/YtF/sfRrUgNk6tQr8+XEEQkz614yZLL/axpbEH8QBKdMus3SSxaOMi+uD8xnotQ==
-X-Received: by 2002:a92:9fcb:: with SMTP id z72mr2764823ilk.195.1594695302402;
-        Mon, 13 Jul 2020 19:55:02 -0700 (PDT)
+        bh=wSXghTdlLAieEFZ39iyyxrFmCFgGzVBzq1RNCvrRwsw=;
+        b=Dxopd11xoF+60OsIl/Ybc7YNMFS7CfEkuZxnmHccrBqfsiOGgjUXRljMek7ya2Abpk
+         gvVm+ZZcCWXis7LmdW8pHm1jZzSGaiwradCyCjBhR3Yj/MLzhA9PIuvISFaW2rvDS7BP
+         zMsMb7PQatWh0GTBCWq1Hi8k1mB0rF5uvFN2Bp10wMp9oFmTuqCmrI9vMA2Mf+pX8YPA
+         wa6qPdRfd4xHbxsJoWIOgcza5Xaf7DhIQqg/DTovjZ3OpFMuqgt5fIUxOXvs5/fokvZW
+         uA2D457Oy2PoRS8cCuRSUh53+BQ9iXez2Te7KriepNkugmOAB2qou9F8QXoDs6HS4+zW
+         R1+A==
+X-Gm-Message-State: AOAM533hs+BCKPR+Uyfl4LJ03MNqGSzdJri9xJu4gyiukqzMdtnVBabN
+        qyGMAs2L1M9/h9CDAOCvKlwiCGs39jwi
+X-Google-Smtp-Source: ABdhPJyYgsLrR7GdjWOSNztbmbu/GfZF0NPf4tc2WGYT9ElsoeWfIqN7HC5bGrGWEOd8HcW+Cgvzew==
+X-Received: by 2002:a02:6514:: with SMTP id u20mr3442335jab.94.1594695603704;
+        Mon, 13 Jul 2020 20:00:03 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id b20sm9555598ila.5.2020.07.13.19.55.00
+        by smtp.gmail.com with ESMTPSA id u62sm9418029ilc.87.2020.07.13.20.00.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 19:55:01 -0700 (PDT)
-Received: (nullmailer pid 1195007 invoked by uid 1000);
-        Tue, 14 Jul 2020 02:55:00 -0000
-Date:   Mon, 13 Jul 2020 20:55:00 -0600
+        Mon, 13 Jul 2020 20:00:03 -0700 (PDT)
+Received: (nullmailer pid 1201871 invoked by uid 1000);
+        Tue, 14 Jul 2020 03:00:01 -0000
+Date:   Mon, 13 Jul 2020 21:00:01 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Eugen Hristev <eugen.hristev@microchip.com>
-Cc:     mchehab@kernel.org, hverkuil@xs4all.nl,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/4] dt-bindings: media: csi2dc: add bindings for
- microchip csi2dc
-Message-ID: <20200714025500.GA1187556@bogus>
-References: <20200703074416.55272-1-eugen.hristev@microchip.com>
- <20200703074416.55272-2-eugen.hristev@microchip.com>
+To:     Li Jun <jun.li@nxp.com>
+Cc:     balbi@kernel.org, shawnguo@kernel.org, gregkh@linuxfoundation.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        peter.chen@nxp.com, Anson.Huang@nxp.com, peng.fan@nxp.com,
+        horia.geanta@nxp.com
+Subject: Re: [PATCH v2 5/5] dt-bindings: usb: dwc3-imx8mp: add imx8mp dwc3
+ glue bindings
+Message-ID: <20200714030001.GA1196828@bogus>
+References: <1594028699-1055-1-git-send-email-jun.li@nxp.com>
+ <1594028699-1055-6-git-send-email-jun.li@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200703074416.55272-2-eugen.hristev@microchip.com>
+In-Reply-To: <1594028699-1055-6-git-send-email-jun.li@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 10:44:13AM +0300, Eugen Hristev wrote:
-> Add bindings documentation for microchip CSI2 Demultiplexer controller.
+On Mon, Jul 06, 2020 at 05:44:59PM +0800, Li Jun wrote:
+> NXP imx8mp integrates 2 dwc3 3.30b IP and add some wakeup logic
+> to support low power mode, the glue layer is for this wakeup
+> functionality, which has a separated interrupt, can support
+> wakeup from U3 and connect events for host, and vbus wakeup for
+> device.
 > 
-> CSI2DC is a demultiplexer from Synopsys IDI interface specification to
-> parallel interface connection or direct memory access.
-> 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+> Signed-off-by: Li Jun <jun.li@nxp.com>
 > ---
-> Changes in v2:
-> - fixed warnings reported by dt_binding_check
+>  .../devicetree/bindings/usb/fsl,imx8mp-dwc3.yaml   | 87 ++++++++++++++++++++++
+>  1 file changed, 87 insertions(+)
 > 
-> 
->  .../bindings/media/microchip,csi2dc.yaml      | 185 ++++++++++++++++++
->  1 file changed, 185 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/microchip,csi2dc.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/media/microchip,csi2dc.yaml b/Documentation/devicetree/bindings/media/microchip,csi2dc.yaml
+> diff --git a/Documentation/devicetree/bindings/usb/fsl,imx8mp-dwc3.yaml b/Documentation/devicetree/bindings/usb/fsl,imx8mp-dwc3.yaml
 > new file mode 100644
-> index 000000000000..b7c46f7ad2a4
+> index 0000000..823db058
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/microchip,csi2dc.yaml
-> @@ -0,0 +1,185 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-
-New bindings should be:
-
-(GPL-2.0-only OR BSD-2-Clause)
-
+> +++ b/Documentation/devicetree/bindings/usb/fsl,imx8mp-dwc3.yaml
+> @@ -0,0 +1,87 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright (c) 2020 NXP
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/media/microchip,csi2dc.yaml#
+> +$id: http://devicetree.org/schemas/usb/fsl,imx8mp-dwc3.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Microchip CSI2 Demux Controller (CSI2DC)
+> +title: NXP iMX8MP Soc USB Controller
 > +
 > +maintainers:
-> +  - Eugen Hristev <eugen.hristev@microchip.com>
-> +
-> +description:
-> +  CSI2DC - Camera Serial Interface 2 Demux Controller
-> +
-> +  CSI2DC is a hardware block that receives incoming data from an IDI interface
-> +  and filters packets based on their data type and virtual channel identifier,
-> +  then converts the byte stream into a cross clock domain to a pixel stream
-> +  to a parallel interface that can be read by a sensor controller.
-> +
-> +  CSI2DC provides two pipes, one video pipe and one data pipe. Video pipe
-> +  is connected to a sensor controller and the data pipe is accessible
-> +  as a DMA slave port to a DMA controller.
-> +
-> +  CSI2DC supports a single 'port' node as a source pad with Synopsys 32-bit
-> +  IDI interface. The connected endpoint must be a IDI interface compatible
-> +  device (like Synopsys CSI2HOST) , that can provide 32-bit IDI interface
-> +  connection as sink pad.
-> +  It should contain one 'port' child node with one child 'endpoint' node.
-> +  This node should always have the 'reg' property as 0, being the first child
-> +  node.
-
-This information should be expressed as a schema.
-
-> +  For media entity and endpoints please refer to the bindings defined in
-> +  Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +  For Synopsys IDI interface please refer to
-> +  Documentation/devicetree/bindings/media/snps,dw-csi-plat.txt
-> +
-
-> +  CSI2DC supports one 'port' node as sink pad with parallel interface. This is
-> +  called video pipe.
-> +  The reg property inside this 'port' node must have the 'reg' property as 1,
-> +  being the second child node.
-> +  This node must have one 'endpoint', and this 'endpoint' is related to the
-> +  virtual channel identifier.
-> +  The 'reg' property inside this 'endpoint' represents the CSI2 virtual channel
-> +  identifier.
-> +  This 'endpoint' can then be used as a source pad for another controller
-> +  (next in pipeline).
-> +  Please refer to the bindings defined in
-> +  Documentation/devicetree/bindings/media/video-interfaces.txt.
-
-And all this.
-
-> +
-> +  CSI2DC must have two clocks to function correctly. One clock is the
-> +  peripheral clock for the inside functionality of the hardware block.
-> +  This is named 'pclk'. The second clock must be the cross domain clock,
-> +  in which CSI2DC will perform clock crossing. This clock must be fed
-> +  by the next controller in pipeline, which usually is a sensor controller.
-> +  Normally this clock should be given by this sensor controller who
-> +  is also a clock source. This clock is named 'scck', sensor controller clock.
-
-Better to be part of 'clocks'.
-
-> +
-> +  CSI2DC also supports direct access to the data through AHB, via DMA channel,
-> +  called data pipe.
-> +  Because of this, the sink 'port' child node (second) is not mandatory.
-> +  If the sink 'port' child node is missing, only data pipe is available.
+> +  - Li Jun <jun.li@nxp.com>
 > +
 > +properties:
 > +  compatible:
-> +    const: microchip,sama7g5-csi2dc
+> +    items:
+> +    - const: fsl,imx8mp-dwc3
 > +
 > +  reg:
-> +    description:
-> +      Physical base address and length of the registers set for the device.
-
-That is every 'reg' prop. Drop.
-
 > +    maxItems: 1
+> +    description: Address and length of the register set for the wrapper of
+> +      dwc3 core on the SOC.
+> +
+> +  "#address-cells":
+> +    enum: [ 1, 2 ]
+> +
+> +  "#size-cells":
+> +    enum: [ 1, 2 ]
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description: The interrupt that is asserted when a wakeup event is
+> +      received.
 > +
 > +  clocks:
-> +    maxItems: 2
+> +    description:
+> +      A list of phandle and clock-specifier pairs for the clocks
+> +      listed in clock-names.
+> +    items:
+> +      - description: system hsio root clock.
+> +      - description: system bus AXI clock.
+> +      - description: suspend clock, used for wakeup logic.
 > +
 > +  clock-names:
 > +    items:
-> +      - const: pclk
-> +      - const: scck
+> +      - const: hsio
+> +      - const: bus
+> +      - const: suspend
 > +
-> +  microchip,clk-gated:
-> +    type: boolean
-> +    description:
-> +      If present, indicates that the clock is gated.
-> +      Otherwise, the clock is free-running.
+> +# Required child node:
 > +
-> +  microchip,inter-line-delay:
-> +    allOf:
-> +    - $ref: /schemas/types.yaml#/definitions/uint32
-> +    - minimum: 1
-> +    - maximum: 16
-> +    default: 16
-> +    description:
-> +      Indicates how many clock cycles should be introduced between each line.
-> +
-> +  port@0:
-> +    type: object
-> +    description:
-> +      Input port node, single endpoint describing the input pad.
-> +
-> +    properties:
-> +      reg:
-> +        const: 0
-> +
-> +      endpoint:
-> +        type: object
-> +
-> +        properties:
-> +          remote-endpoint: true
-> +
-> +        required:
-> +          - remote-endpoint
-> +
-> +        additionalProperties: false
-> +
-> +    additionalProperties: false
-> +
-> +  port@1:
-> +    type: object
-> +    description:
-> +      Output port node, single endpoint, describing the output pad.
-> +
-> +    properties:
-> +      '#address-cells':
-> +        const: 1
-> +
-> +      '#size-cells':
-> +        const: 0
-> +
-> +      reg:
-> +        const: 1
-> +
-> +    patternProperties:
-> +      "^endpoint@[0-9a-f]$":
+> +  dwc3:
 
-Looks like only [0-3] is valid.
+Needs to be a pattern with the unit-address.
 
-> +        type: object
-> +
-> +        properties:
-> +          reg:
-> +            enum: [0, 1, 2, 3]
-> +            description: virtual channel for the endpoint
-> +
-> +          remote-endpoint: true
-> +
-> +        required:
-> +          - remote-endpoint
-> +          - reg
-> +
-> +        additionalProperties: false
-> +
-> +    additionalProperties: false
+> +    description: This is the node representing the DWC3 controller instance
+> +      Documentation/devicetree/bindings/usb/dwc3.txt
 > +
 > +required:
 > +  - compatible
 > +  - reg
+> +  - interrupts
 > +  - clocks
-> +  - clock-names
-> +  - port@0
+
+Pretty sure you need a few more properties here...
+
+Add:
+
+additionalProperties: false
+
 > +
 > +examples:
 > +  - |
-> +    csi2dc@e1404000 {
-> +        compatible = "microchip,sama7g5-csi2dc";
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        reg = <0xe1404000 0x500>;
-> +        clocks = <&pclk>, <&scck>;
-> +        clock-names = "pclk", "scck";
+> +    #include <dt-bindings/clock/imx8mp-clock.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    usb3_0: usb@32f10100 {
+> +      compatible = "fsl,imx8mp-dwc3";
+> +      reg = <0x32f10100 0x8>;
+> +      clocks = <&clk IMX8MP_CLK_HSIO_ROOT>,
+> +               <&clk IMX8MP_CLK_HSIO_AXI_DIV>,
+> +               <&clk IMX8MP_CLK_USB_ROOT>;
+> +      clock-names = "hsio", "bus", "suspend";
+> +      assigned-clocks = <&clk IMX8MP_CLK_HSIO_AXI_SRC>;
+> +      assigned-clock-parents = <&clk IMX8MP_SYS_PLL2_500M>;
+> +      assigned-clock-rates = <500000000>;
+> +      interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +      ranges;
 > +
-> +        port@0 {
-> +               reg = <0>; /* must be 0, first child port */
-> +               csi2dc_in: endpoint { /* input from IDI interface */
-> +                     remote-endpoint = <&csi2host_out>;
-> +               };
-> +        };
-> +
-> +        port@1 {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +                reg = <1>; /* must be 1, second child port */
-> +                csi2dc_out: endpoint@2 {
-> +                        reg = <2>;  /* virtual channel identifier */
-> +                        remote-endpoint = <&xisc_in>; /* output to sensor controller */
-> +                };
-> +        };
+> +      dwc3@38100000 {
+> +        compatible = "snps,dwc3";
+> +        reg = <0x38100000 0x10000>;
+> +        interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+> +        phys = <&usb3_phy0>, <&usb3_phy0>;
+> +        phy-names = "usb2-phy", "usb3-phy";
+> +      };
 > +    };
-> +
-> +...
 > -- 
-> 2.25.1
+> 2.7.4
 > 
