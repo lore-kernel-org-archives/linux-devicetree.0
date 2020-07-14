@@ -3,100 +3,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FF7C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 17:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F60C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 17:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C313522574
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 17:10:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YcUpdW8s"
+	by mail.kernel.org (Postfix) with ESMTP id 2D19D22574
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 17:15:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594746957;
+	bh=6dk0fQui4ZKups3uBkoflh2avaOC3v852OaUAdu3KHs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WrQsJ9n6tg5d8LrEqmFgMCu2+N11sEu4stdbtP+a8otMdHBh2Gs1OqwfxEZAWeHE2
+	 qWFEQt6aw8YYQBoVsbNdjYrNtTV+WtjKwJmFQOKm/Vq7UtF2eVR03G5ox3N9s9nFxG
+	 aqMKQNfcHqSmgVB5hto2yu8ndacjwelecCvEYwFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbgGNRKj (ORCPT
+        id S1728186AbgGNRP4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 13:10:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50978 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbgGNRKi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 13:10:38 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6C00C061755
-        for <devicetree@vger.kernel.org>; Tue, 14 Jul 2020 10:10:38 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id 72so7296365ple.0
-        for <devicetree@vger.kernel.org>; Tue, 14 Jul 2020 10:10:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9Pi0r+taXC55e2CabsrtsPMzJOxhTQ5VmZxPESoJ2R0=;
-        b=YcUpdW8ssFvg31o7FKf1VxZt+87ICTP6BSy10MKwemlGlPTgoZywHlO0FpXTOwd/RU
-         w/bmCXL2iKjRaYWDvnTjtwzPvUKBib7XWkuxrC/k8O0L3uhEvg0mByeAVTHLIuI+oYJi
-         UYI69blXL++kD2Z9kDNOsL0ynAVx1mU7fpvMs=
+        Tue, 14 Jul 2020 13:15:56 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34145 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726169AbgGNRP4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 13:15:56 -0400
+Received: by mail-io1-f68.google.com with SMTP id q74so18135501iod.1;
+        Tue, 14 Jul 2020 10:15:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=9Pi0r+taXC55e2CabsrtsPMzJOxhTQ5VmZxPESoJ2R0=;
-        b=pn7Vzz66qDSsDEZK8TxDILDKn6/7x1TUjZ5+VThHWdQ4or++Ttoc+f4LF40KjrS4W6
-         F4KAewJIGcRlhulJ48FCM3jmg8YKTchmXTeAwcoC+z1cpjo4s5Oy4EeKyjTQd+/BADzf
-         ZBIb39yoyZMEf+q/BEWuOn+jBmE9TRE+HDhs4WAZRuKf8OjrkcsMhH67lfInE7pEDA57
-         R0k224rABblrJXVaLxJ8OuBpJjfcoTMoXvtlE1dUXYbUA4Mh+dpBNInwmvRwLhpkR+Ce
-         5FlCjBA4MjThwcOI7STj6m87nj7RPsQh9xpK7ZVE91S941bvWTHFB4LE3k9Q39DFxim7
-         mXWA==
-X-Gm-Message-State: AOAM530WXWTgXOk/wlhumHZ0dhpXYjaguJi89Ot0qJ/ri3nfFtn5l91Y
-        GAxr0qyV/h7nYYVfROhHDzi+lg==
-X-Google-Smtp-Source: ABdhPJwDHng07+7Jqf3f0zfUAjKLkymgxwE7dDtjLH3NoOVCed41ZFg0oAaAvDN6Z5TOUJLbYrwhEg==
-X-Received: by 2002:a17:90b:8d0:: with SMTP id ds16mr5960924pjb.2.1594746638227;
-        Tue, 14 Jul 2020 10:10:38 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id a3sm16338620pgd.73.2020.07.14.10.10.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jul 2020 10:10:37 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 10:10:36 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Akhil P Oommen <akhilpo@codeaurora.org>
-Cc:     freedreno@lists.freedesktop.org, dri-devel@freedesktop.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jcrouse@codeaurora.org, devicetree@vger.kernel.org,
-        jonathan@marek.ca, robdclark@gmail.com, rnayak@codeaurora.org
-Subject: Re: [PATCH] drm: msm: a6xx: fix gpu failure after system resume
-Message-ID: <20200714171036.GS3191083@google.com>
-References: <1594733130-398-1-git-send-email-akhilpo@codeaurora.org>
+        bh=anDElTHK8FTg74ug9cz0yo5gvG9pTxsEpYnEOXS2E10=;
+        b=DExxrJr02dzL7W8WPCJQsG5LKLjoV42eCM9mVUJ94ozZc8g+bSG0Qq19atnLi+0+LW
+         6itrKv2rVzutSJIaP3B5+I97qc0zhT7xzopGvZtCVn6zs8/7Ehn9TaJtIp+Fdo9mvzMI
+         zhQkIwIJxree4R5ix0wjGyIO3IiHGLpAdDZ8wffVtGjVOEbDoMPaDxgNd1tzKpRt7mcb
+         axlzsUtGaY/dhCyjBJ4/2bsa8U0+IQsYCt8BZIgxYjR3ZzQvygvq3fb29PvwNSF1GZBE
+         3/RZof2u8bBnjl+Y/u+pUTTbM3oIMkw4LVM+y2758rGQNqcsEcONzxio5HN5G+3TBgIR
+         zTLw==
+X-Gm-Message-State: AOAM531OiFE8onTIaaiDgDVdi/sZaZ47XXw2onVmUD/fXt9k+AUFUBZc
+        5Dyk42SktdeUHhNjwXoQnsRCwA56Wh6p
+X-Google-Smtp-Source: ABdhPJxg7GVfzF4j6Shx1sDsnZ5fsOOV6Zz3xfMPgpIhRO2lCTzggqQ1Gg8GirNOzqCU+9eZgyhk6A==
+X-Received: by 2002:a02:694c:: with SMTP id e73mr7033232jac.17.1594746955212;
+        Tue, 14 Jul 2020 10:15:55 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id m5sm10149810ilg.18.2020.07.14.10.15.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 10:15:54 -0700 (PDT)
+Received: (nullmailer pid 2550226 invoked by uid 1000);
+        Tue, 14 Jul 2020 17:15:53 -0000
+Date:   Tue, 14 Jul 2020 11:15:53 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] dt-bindings: remoteproc: Add bindings for R5F
+ subsystem on TI K3 SoCs
+Message-ID: <20200714171553.GA2522956@bogus>
+References: <20200630024922.32491-1-s-anna@ti.com>
+ <20200630024922.32491-2-s-anna@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1594733130-398-1-git-send-email-akhilpo@codeaurora.org>
+In-Reply-To: <20200630024922.32491-2-s-anna@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 06:55:30PM +0530, Akhil P Oommen wrote:
-> On targets where GMU is available, GMU takes over the ownership of GX GDSC
-> during its initialization. So, take a refcount on the GX PD on behalf of
-> GMU before we initialize it. This makes sure that nobody can collapse the
-> GX GDSC once GMU owns the GX GDSC. This patch fixes some weird failures
-> during GPU wake up during system resume.
+On Mon, Jun 29, 2020 at 09:49:19PM -0500, Suman Anna wrote:
+> The Texas Instruments K3 family of SoCs have one or more dual-core
+> Arm Cortex R5F processor subsystems/clusters (R5FSS). The clusters
+> can be split between multiple voltage domains as well. Add the device
+> tree bindings document for these R5F subsystem devices. These R5F
+> processors do not have an MMU, and so require fixed memory carveout
+> regions matching the firmware image addresses. The nodes require more
+> than one memory region, with the first memory region used for DMA
+> allocations at runtime. The remaining memory regions are reserved
+> and are used for the loading and running of the R5F remote processors.
+> The R5F processors can also optionally use any internal on-chip SRAM
+> memories either for executing code or using it as fast-access data.
 > 
-> Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
+> The added example illustrates the DT nodes for the single R5FSS device
+> present on K3 AM65x family of SoCs.
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> ---
+> v2:
+>  - Renamed "lockstep-mode" property to "ti,cluster-mode"
 
-I went through a few dozen suspend/resume cycles on SC7180 and didn't run
-into the kernel panic that typically occurs after a few iterations without
-this patch.
+I don't think that's a move in the right direction given this is at 
+least partially a standard feature.
 
-Reported-by: Matthias Kaehlcke <mka@chromium.org>
-Tested-by: Matthias Kaehlcke <mka@chromium.org>
+As I said before, I'm very hesistant to accept anything here given I 
+know the desires and activity to define 'system Devicetrees' of which 
+TI is participating. While maybe an rproc node is sufficient for a 
+DSP, it seems multiple vendors have R cores and want to define them in 
+system DT.
 
-On which tree is this patch based on? I had to apply it manually because
-'git am' is unhappy when I try to apply it:
+Though the system DT effort has not yet given any thought to what is the 
+view of one processor or instance to another instance (which is what 
+this binding is). We'll still need something defined for that, but I'd 
+expect that to be dependent on what is defined for system DT.
 
-  error: sha1 information is lacking or useless (drivers/gpu/drm/msm/adreno/a6xx_gmu.c).
-  error: could not build fake ancestor
-
-Both upstream and drm-msm are in my remotes and synced, so I suspect it's
-some private tree. Please make sure to base patches on the corresponding
-maintainer tree or upstream, whichs makes life easier for maintainers,
-testers and reviewers.
+Rob
