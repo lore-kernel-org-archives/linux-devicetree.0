@@ -2,167 +2,162 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C208C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 03:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEABC433E2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 03:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 445BA206F0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 03:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B37121973
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 03:50:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="Dn/xsk6E"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="xSUjBlOy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726624AbgGNDrx (ORCPT
+        id S1726661AbgGNDuN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 23:47:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39750 "EHLO
+        Mon, 13 Jul 2020 23:50:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726542AbgGNDrx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 23:47:53 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 317ADC061794
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 20:47:53 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id r12so19497437wrj.13
-        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 20:47:53 -0700 (PDT)
+        with ESMTP id S1726432AbgGNDuM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 23:50:12 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41866C061755
+        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 20:50:12 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id o11so19584544wrv.9
+        for <devicetree@vger.kernel.org>; Mon, 13 Jul 2020 20:50:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qI24xBB/rzdG/cpOm9YsxEJKq/zwmC3JEgqbChZ686c=;
-        b=Dn/xsk6EaU3zSb3BKgpl+10/FOdZR1egP1f1UGyP/yNSXO++t5ytc1+ErOGmvm+3Qw
-         sKKbiNY4LnTQ8EzxXcs6o3fPg+FB3aGqwwk3T6BNlzi4Ebc4Vte3BvxGAccxcvLgprJa
-         dFBBCrQvDqm3cTojPiUdKlSODLmPVNibHOmFmaV2z2OCkvZrDheBxM9q99AG3Wx/GhRM
-         k91NIQFoXCd1vjRmkwAntBQQEg72tpb5qFckMM4QyANyda/c40HxMabSblMYJX4kJvGL
-         FujGdM2y3OlTkTveXMZupSqKsV0sqI50l2HoHWCBz7yh3OzxseS/idJUYn88p5lbQsXx
-         a7aQ==
+        bh=W2pU/oRXe8zSH98/qlLNnZqVfljdKaiKGd5Djyh/EW4=;
+        b=xSUjBlOytxheMN0Qygh7ElYrmY/6f5sOe3XoReILxBTvS+M/NKh4zZDDmr6WF4A6Ft
+         zU/Ghe9q8AOapCe1xcwtRt2f7CkyVqHXMc4q7C7uZqjLywbOOv5Ru/SFE7w08PPgMQ7/
+         yyJIXh69rVO4dfbZ+bYhMnPUywUqj1pUJmHYwT16W/PAkASHlCtRov419gtTrAhc+Lz1
+         T2GxOF8p6rzAUVzDP64yxNHkjqUEvCckMKaO1qMzxeVsIGDeFDfdw0VbeEQu5t/GauLR
+         makvc8Ts0BG2zt2oi+VysQqrk74fGbMeiaJ+7SGSrfRb0dBYR/PkOSsOy8iSR9XEwOwv
+         EdEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qI24xBB/rzdG/cpOm9YsxEJKq/zwmC3JEgqbChZ686c=;
-        b=KPoLdRey0UAhBZRhNaQRex8+75olfRUuPvTHiLkBbCTAKYjsGqIm0HuIWHZJ/rml5g
-         xbaHVlGe4wjnerCs8dSBX/uUSE1okVmUsCZAj4bjfZtwPsg57FT5LcLnm6l0cza/08ZL
-         UlrmKZ/4IhkDAs4B3BnVEKTkFo/oqVmSbzWKrFxzHQUxbSP2gBEj/Nw0z1d6FVQ255PG
-         jtG0088AU19nPLy65a7Q3lJtRedKRx3k2xsMzyK4TDeNeuF1SJr6I3cVV/BhxdzifQjN
-         BEFYdgM49ogkzM1j2lXBITscLVFxlQAep84MZ2E49DRHuApO3HoY2WcQGIjLvmaPBAQa
-         wREQ==
-X-Gm-Message-State: AOAM532PVSSbbo2ySHttPXJ0tv0iu+xCCAh/UXOhVwnEdudiVRScf7rX
-        I21NwIQbFACoHImlZMjhFOhgXCs0dzyDr5/7VyvQ36s+90g=
-X-Google-Smtp-Source: ABdhPJyzmGfojs4K3LUS8fPXgGa7xK2rYTn4JhLpsd4yeuJCR3uTFmQBj4zD54/cXBQfEZqb4E1JRCJz4UWUThjGymE=
-X-Received: by 2002:adf:fcca:: with SMTP id f10mr2659455wrs.325.1594698471722;
- Mon, 13 Jul 2020 20:47:51 -0700 (PDT)
+        bh=W2pU/oRXe8zSH98/qlLNnZqVfljdKaiKGd5Djyh/EW4=;
+        b=b88/XY8haxjh12LP5QkrsKET8ZN971uvyQhsjLzW+LD5DQNNy5oCVlFaGs3SWm6x53
+         oW5nfwIobNfa1M7sXp6pzJV5Dy2OTP7l1TXp6R9z0UPMBd0J8RmGOXcDbkA0SNoMPPdc
+         VPObMCh/qFQJMP7COZxk4eGEXKqUHYtOtFz9DUd63AQcXvMjYk2eb7GzZwdkjWYvPtr3
+         mPFs3OR3S6lyZfkIdTzQa/L+oieag5MG+I3f8SXxpXsnJHQbOpmnGsbXfzblf2yLeNPV
+         nVPNq5uGhWyJkIcmulyUuHanqx2sK9QcJC5Uyj8LvtPx5Lr/ZNuUi22nQr13IhTY4ctm
+         8Ojw==
+X-Gm-Message-State: AOAM5331J4uH1TyfBa88rLrsgpEP2M/iA68kyeDOCpqpGYE9Sx+PaMsW
+        2BkjA8sYnWC0DOQYZ1z8HOqE8Rl+OJHv9ucz5ht/Gg==
+X-Google-Smtp-Source: ABdhPJyxhhnTBn9Z/d3RQByv+5O7q0RnlhAbpx4mldb52mcVpL0AUfedlXqbhjWWfR/hwCGcWa89EFLWLUtbzxojgNo=
+X-Received: by 2002:adf:fcca:: with SMTP id f10mr2671322wrs.325.1594698609842;
+ Mon, 13 Jul 2020 20:50:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200627161957.134376-1-anup.patel@wdc.com> <20200627161957.134376-6-anup.patel@wdc.com>
- <20200714023748.GA1164267@bogus>
-In-Reply-To: <20200714023748.GA1164267@bogus>
+References: <20200627161957.134376-1-anup.patel@wdc.com> <mhng-4d70be69-ef20-4d38-bda4-ec4101530c0a@palmerdabbelt-glaptop1>
+In-Reply-To: <mhng-4d70be69-ef20-4d38-bda4-ec4101530c0a@palmerdabbelt-glaptop1>
 From:   Anup Patel <anup@brainfault.org>
-Date:   Tue, 14 Jul 2020 09:17:39 +0530
-Message-ID: <CAAhSdy0O0YoDJ84NX8OasjuTdE8pd=Yk51WJWLpBiAEk3AcCQQ@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] dt-bindings: timer: Add CLINT bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     Anup Patel <anup.patel@wdc.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
+Date:   Tue, 14 Jul 2020 09:19:57 +0530
+Message-ID: <CAAhSdy3mHhaKTrhRnNd_gGv7GbmjqxkB28sOw4q7ZTxw4oRd1Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] Dedicated CLINT timer driver
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Albert Ou <aou@eecs.berkeley.edu>,
+        Rob Herring <robh+dt@kernel.org>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Atish Patra <atish.patra@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
         Alistair Francis <Alistair.Francis@wdc.com>,
         linux-riscv <linux-riscv@lists.infradead.org>,
         "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Palmer Dabbelt <palmerdabbelt@google.com>
+        devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 8:07 AM Rob Herring <robh@kernel.org> wrote:
+On Tue, Jul 14, 2020 at 4:32 AM Palmer Dabbelt <palmer@dabbelt.com> wrote:
 >
-> On Sat, Jun 27, 2020 at 09:49:57PM +0530, Anup Patel wrote:
-> > We add DT bindings documentation for CLINT device.
+> On Sat, 27 Jun 2020 09:19:52 PDT (-0700), Anup Patel wrote:
+> > The current RISC-V timer driver is convoluted and implements two
+> > distinct timers:
+> >  1. S-mode timer: This is for Linux RISC-V S-mode with MMU. The
+> >     clocksource is implemented using TIME CSR and clockevent device
+> >     is implemented using SBI Timer calls.
+> >  2. M-mode timer: This is for Linux RISC-V M-mode without MMU. The
+> >     clocksource is implemented using CLINT MMIO time register and
+> >     clockevent device is implemented using CLINT MMIO timecmp registers.
 > >
-> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> > Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
-> > ---
-> >  .../bindings/timer/sifive,clint.txt           | 34 +++++++++++++++++++
-> >  1 file changed, 34 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.txt
->
-> Bindings should be in DT schema format now.
-
-Okay, will update.
-
->
+> > This patchset removes clint related code from RISC-V timer driver and
+> > arch/riscv directory. Instead, the series adds a dedicated MMIO based
+> > CLINT driver under drivers/clocksource directory which can be used by
+> > Linux RISC-V M-mode (i.e NoMMU Linux RISC-V).
 > >
-> > diff --git a/Documentation/devicetree/bindings/timer/sifive,clint.txt b/Documentation/devicetree/bindings/timer/sifive,clint.txt
-> > new file mode 100644
-> > index 000000000000..45b75347a7d5
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/timer/sifive,clint.txt
-> > @@ -0,0 +1,34 @@
-> > +SiFive Core Local Interruptor (CLINT)
-> > +-------------------------------------
-> > +
-> > +SiFive (and other RISC-V) SOCs include an implementation of the SiFive Core
-> > +Local Interruptor (CLINT) for M-mode timer and inter-processor interrupts.
-> > +
-> > +It directly connects to the timer and inter-processor interrupt lines of
-> > +various HARTs (or CPUs) so RISC-V per-HART (or per-CPU) local interrupt
-> > +controller is the parent interrupt controller for CLINT device.
-> > +
-> > +The clock frequency of CLINT is specified via "timebase-frequency" DT
-> > +property of "/cpus" DT node. The "timebase-frequency" DT property is
-> > +described in: Documentation/devicetree/bindings/riscv/cpus.yaml
-> > +
-> > +Required properties:
-> > +- compatible : should be "riscv,clint0" or "sifive,clint-1.0.0". A specific
->
-> A new versioning scheme from SiFive? To review, we don't do version
-> numbers unless there's a well defined and documented scheme. IOW, one
-> that's not s/w folks just making up v1, v2, v3, etc.
-
-The "riscv,clint0" is already used by various RISC-V systems (including QEMU).
-
-The "sifive,clint-1.0.0" is for being consistent with the PLIC
-versioning scheme.
-
-There is no clear documentation of CLINT versioning scheme. I think it's best
-to just drop "sifive,clint-1.0.0" . Agree ??
-
->
-> > +  string identifying the actual implementation can be added if implementation
-> > +  specific worked arounds are needed.
-> > +- reg : Should contain 1 register range (address and length).
-> > +- interrupts-extended : Specifies which HARTs (or CPUs) are connected to
-> > +  the CLINT.  Each node pointed to should be a riscv,cpu-intc node, which
-> > +  has a riscv node as parent.
-> > +
-> > +Example:
-> > +
-> > +     clint@2000000 {
-> > +             compatible = "sifive,clint-1.0.0", "sifive,fu540-c000-clint";
->
-> Doesn't match the binding.
-
-Okay, will update.
-
->
-> > +             interrupts-extended = <
-> > +                     &cpu1-intc 3 &cpu1-intc 7
-> > +                     &cpu2-intc 3 &cpu2-intc 7
-> > +                     &cpu3-intc 3 &cpu3-intc 7
-> > +                     &cpu4-intc 3 &cpu4-intc 7>;
-> > +             reg = <0x2000000 0x4000000>;
-> > +     };
-> > --
-> > 2.25.1
+> > The patchset is based up Linux-5.8-rc2 and can be found at riscv_clint_v2
+> > branch of: https://github.com/avpatel/linux.git
 > >
+> > This series is tested on:
+> >  1. QEMU RV64 virt machine using Linux RISC-V S-mode
+> >  2. QEMU RV32 virt machine using Linux RISC-V S-mode
+> >  3. QEMU RV64 virt machine using Linux RISC-V M-mode (i.e. NoMMU)
+> >
+> > Changes since v1:
+> >  - Rebased series on Linux-5.8-rc2
+> >  - Added pr_warn() for case where ipi_ops not available in PATCH1
+> >  - Updated ipi_inject() prototype to use "struct cpumask *" in PATCH1
+> >  - Updated CLINT_TIMER kconfig option to depend on RISCV_M_MODE in PATCH4
+> >  - Added riscv,clint0 compatible string in DT bindings document
+> >
+> > Anup Patel (5):
+> >   RISC-V: Add mechanism to provide custom IPI operations
+> >   RISC-V: Remove CLINT related code
+> >   clocksource/drivers/timer-riscv: Remove MMIO related stuff
+> >   clocksource/drivers: Add CLINT timer driver
+> >   dt-bindings: timer: Add CLINT bindings
+>
+> This all generally LGTM, though I haven't been through the code line-by-line
+> yet.  It touches a bunch of trees, so I'd prefer to have some Acks before
+> merging -- I'll dig through the RISC-V specific stuff, but the new CLINT driver
+> probhably deserves a look from one of the clocksource folks.
+>
+> I think the only issue is that the port will be broken between patch 2 and 4,
+> as at that point we won't have an M-mode timer driver.  I think it shouldn't be
+> too much to just reorder these, LMK if you want to do it or you want me to.
+
+Okay, I will try your suggestion to reorder patches. There is another minor
+build issue reported by test bots which I will fix as well.
+
+I will send v3 in a couple of days before end-of-week.
 
 Regards,
 Anup
+
+>
+> Thanks!
+>
+> >
+> >  .../bindings/timer/sifive,clint.txt           |  34 +++
+> >  arch/riscv/Kconfig                            |   2 +-
+> >  arch/riscv/include/asm/clint.h                |  39 ---
+> >  arch/riscv/include/asm/smp.h                  |  11 +
+> >  arch/riscv/include/asm/timex.h                |  28 +--
+> >  arch/riscv/kernel/Makefile                    |   2 +-
+> >  arch/riscv/kernel/clint.c                     |  44 ----
+> >  arch/riscv/kernel/sbi.c                       |  14 ++
+> >  arch/riscv/kernel/setup.c                     |   2 -
+> >  arch/riscv/kernel/smp.c                       |  44 ++--
+> >  arch/riscv/kernel/smpboot.c                   |   4 +-
+> >  drivers/clocksource/Kconfig                   |  12 +-
+> >  drivers/clocksource/Makefile                  |   1 +
+> >  drivers/clocksource/timer-clint.c             | 229 ++++++++++++++++++
+> >  drivers/clocksource/timer-riscv.c             |  17 +-
+> >  include/linux/cpuhotplug.h                    |   1 +
+> >  16 files changed, 337 insertions(+), 147 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.txt
+> >  delete mode 100644 arch/riscv/include/asm/clint.h
+> >  delete mode 100644 arch/riscv/kernel/clint.c
+> >  create mode 100644 drivers/clocksource/timer-clint.c
