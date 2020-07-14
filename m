@@ -2,672 +2,377 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F08C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 11:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D04C433E2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 11:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 472412220D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 11:20:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC5AE2082F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 11:23:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="r7mZXrke"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="GwxB2TJx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbgGNLUu (ORCPT
+        id S1726801AbgGNLXN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 07:20:50 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:43174 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728069AbgGNLUt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 07:20:49 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594725647; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=41cHG+oA2zzProgvWjOnJ0zE0yg7Rim7XBurV4i3PcA=;
- b=r7mZXrkeKc61y9JjwIbRes4NzMD/qm7sjjWuxumm7qlwfd1Ny0wnX9d0rchPCfIXt/onEcX3
- VJFWwbd6MKkLHeXMxt03Xd2/4st2rDVLLSroPp9vyGT7giNmSTWupcOviCXksdAA7IEozoDC
- JlYNvqBjTmKdlFObzCh8sxO2cOI=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
- 5f0d94f6b35196d59d3027d5 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 14 Jul 2020 11:20:22
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2CAC1C43391; Tue, 14 Jul 2020 11:20:22 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kalyan_t)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 458AFC43395;
-        Tue, 14 Jul 2020 11:20:20 +0000 (UTC)
+        Tue, 14 Jul 2020 07:23:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53272 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbgGNLXM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 07:23:12 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C09DAC061755
+        for <devicetree@vger.kernel.org>; Tue, 14 Jul 2020 04:23:12 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id ch3so1424251pjb.5
+        for <devicetree@vger.kernel.org>; Tue, 14 Jul 2020 04:23:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from:cc;
+        bh=//Y6Q6/nt5UQmFKrzLEvuZWLkdIv8woPD80SrhIdXso=;
+        b=GwxB2TJx/Q5Gzmc27zqgSGDWp9BFD8ezXXdKNdeVbfRHuvs+Gx7oP5c/nc37kCMPns
+         F0IXtXePSz4EcZkvdTXouWnDH2mD+7ZUDy5GmK4VJkVBbBA5kGxyt/EafnqwqE+MRya2
+         aHTe2MCOOut1BW6w3Aag5jXJZQ6ECIpSToCg070QrowqQth9bS7UN+WFfTOEvXAHGeov
+         QBDYWx4rp9QVdxdWmIsfD5ETVIe+ExmVS8KHQXHsuFzT1ysyQVXybhR/PECam3ncyXCE
+         zqWxD62gi29N0rAbmmsx3jyyauDakV8g3lbEEoGfgtoJohajf+o11Qh/aclTOK85Uvxi
+         G2Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from:cc;
+        bh=//Y6Q6/nt5UQmFKrzLEvuZWLkdIv8woPD80SrhIdXso=;
+        b=DH2GdGCz28tjIJULp0vOY1XmHo9jOlrJtL4zgieDw9i+Dl4UJGHkB3HVOQI62ewJX3
+         PAG2uv0GLAgklHuaqFXnfh/OhVHZXMc/NsWQ+ZxE5KyyyXu1mxtdyMp/PhoO+pfNAurC
+         Uda3PoTkS/g9jbLEC3Hcv1oOctzFmtJ7xlmCJRt5Et51KSO+WYovnf7pb3S9wr5WC9FS
+         0eoqQmBXdwd4l69ld1Hsgl7sifQlSeEX0xji7NxrBwWapoImBNJUxxbSZyLPfKuVEb3W
+         qWL2tsQhSZklSzkw5yiQ2BIvIuAYh1oE3G8hF91iklYZnqeXNLLgO8Qus7ICzFia0hOl
+         4WwQ==
+X-Gm-Message-State: AOAM530sg0/ygyGbwrs8PMYmAaWXzE2VTOhtWMsX9SeNZPKlUhAoZ2dT
+        OJk2H9oX67ZWllypWZxMEDIPSQ==
+X-Google-Smtp-Source: ABdhPJxvtS+urOiJgadhaOSFAZcKpmlxwgNZi3nXi9RCL4P9R91Xu7iOpv9+/jUyU8jYbnqAzGtejA==
+X-Received: by 2002:a17:90a:b63:: with SMTP id 90mr4262434pjq.47.1594725792100;
+        Tue, 14 Jul 2020 04:23:12 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id z11sm17144483pfk.46.2020.07.14.04.23.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 04:23:11 -0700 (PDT)
+Message-ID: <5f0d959f.1c69fb81.e240a.a18c@mx.google.com>
+Date:   Tue, 14 Jul 2020 04:23:11 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 14 Jul 2020 16:50:20 +0530
-From:   kalyan_t@codeaurora.org
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Krishna Manikandan <mkrishn@codeaurora.org>,
-        Raviteja Tamatam <travitej@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        nganji@codeaurora.org, Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        freedreno <freedreno@lists.freedesktop.org>
-Subject: Re: [Freedreno] [v1] drm/msm/dpu: add support for clk and bw scaling
- for display
-In-Reply-To: <CAF6AEGvibErbc-VJWvp9kRz_PwLaBLcfw4xjABwZwh6vg9BbKQ@mail.gmail.com>
-References: <1592489321-29213-1-git-send-email-kalyan_t@codeaurora.org>
- <CAF6AEGuD8+goHa8geZgR89aD2Pb84LT_24bzAbTdL-G-=LWU5A@mail.gmail.com>
- <fac48fcbe15254637196938a7eda04ad@codeaurora.org>
- <CAF6AEGvibErbc-VJWvp9kRz_PwLaBLcfw4xjABwZwh6vg9BbKQ@mail.gmail.com>
-Message-ID: <9a64de9362cf4156786cf23d39dd6547@codeaurora.org>
-X-Sender: kalyan_t@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.8-rc5-8-g0dc589da873b
+X-Kernelci-Report-Type: bisect
+X-Kernelci-Tree: mainline
+X-Kernelci-Branch: master
+X-Kernelci-Lab-Name: lab-cip
+Subject: mainline/master bisection: baseline.dmesg.crit on
+ qemu_arm-vexpress-a15
+To:     kernelci-results@groups.io, Sudeep Holla <sudeep.holla@arm.com>,
+        gtucker@collabora.com, Andre Przywara <andre.przywara@arm.com>
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-07-13 22:50, Rob Clark wrote:
-> On Mon, Jul 13, 2020 at 8:59 AM <kalyan_t@codeaurora.org> wrote:
->> 
->> On 2020-07-10 22:38, Rob Clark wrote:
->> > On Thu, Jun 18, 2020 at 7:09 AM Kalyan Thota <kalyan_t@codeaurora.org>
->> > wrote:
->> >>
->> >> This change adds support to scale src clk and bandwidth as
->> >> per composition requirements.
->> >>
->> >> Interconnect registration for bw has been moved to mdp
->> >> device node from mdss to facilitate the scaling.
->> >>
->> >> Changes in v1:
->> >>  - Address armv7 compilation issues with the patch (Rob)
->> >>
->> >> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
->> >> ---
->> >>  drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c  | 109
->> >> +++++++++++++++++++++----
->> >>  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c |   5 +-
->> >>  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h |   4 +
->> >>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c        |  37 ++++++++-
->> >>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h        |   4 +
->> >>  drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c       |   9 +-
->> >>  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c      |  84
->> >> +++++++++++++++++++
->> >>  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h      |   4 +
->> >>  8 files changed, 233 insertions(+), 23 deletions(-)
->> >>
->> >> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
->> >> b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
->> >> index 7c230f7..e52bc44 100644
->> >> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
->> >> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
->> >> @@ -29,6 +29,74 @@ enum dpu_perf_mode {
->> >>         DPU_PERF_MODE_MAX
->> >>  };
->> >>
->> >> +/**
->> >> + * @_dpu_core_perf_calc_bw() - to calculate BW per crtc
->> >> + * @kms -  pointer to the dpu_kms
->> >> + * @crtc - pointer to a crtc
->> >> + * Return: returns aggregated BW for all planes in crtc.
->> >> + */
->> >> +static u64 _dpu_core_perf_calc_bw(struct dpu_kms *kms,
->> >> +               struct drm_crtc *crtc)
->> >> +{
->> >> +       struct drm_plane *plane;
->> >> +       struct dpu_plane_state *pstate;
->> >> +       u64 crtc_plane_bw = 0;
->> >> +       u32 bw_factor;
->> >> +
->> >> +       drm_atomic_crtc_for_each_plane(plane, crtc) {
->> >> +               pstate = to_dpu_plane_state(plane->state);
->> >> +               if (!pstate)
->> >> +                       continue;
->> >> +
->> >> +               crtc_plane_bw += pstate->plane_fetch_bw;
->> >> +       }
->> >> +
->> >> +       bw_factor = kms->catalog->perf.bw_inefficiency_factor;
->> >> +       if (bw_factor) {
->> >> +               crtc_plane_bw *= bw_factor;
->> >> +               do_div(crtc_plane_bw, 100);
->> >> +       }
->> >> +
->> >> +       return crtc_plane_bw;
->> >> +}
->> >> +
->> >> +/**
->> >> + * _dpu_core_perf_calc_clk() - to calculate clock per crtc
->> >> + * @kms -  pointer to the dpu_kms
->> >> + * @crtc - pointer to a crtc
->> >> + * @state - pointer to a crtc state
->> >> + * Return: returns max clk for all planes in crtc.
->> >> + */
->> >> +static u64 _dpu_core_perf_calc_clk(struct dpu_kms *kms,
->> >> +               struct drm_crtc *crtc, struct drm_crtc_state *state)
->> >> +{
->> >> +       struct drm_plane *plane;
->> >> +       struct dpu_plane_state *pstate;
->> >> +       struct drm_display_mode *mode;
->> >> +       u64 crtc_clk;
->> >> +       u32 clk_factor;
->> >> +
->> >> +       mode = &state->adjusted_mode;
->> >> +
->> >> +       crtc_clk = mode->vtotal * mode->hdisplay *
->> >> drm_mode_vrefresh(mode);
->> >> +
->> >> +       drm_atomic_crtc_for_each_plane(plane, crtc) {
->> >> +               pstate = to_dpu_plane_state(plane->state);
->> >> +               if (!pstate)
->> >> +                       continue;
->> >> +
->> >> +               crtc_clk = max(pstate->plane_clk, crtc_clk);
->> >> +       }
->> >> +
->> >> +       clk_factor = kms->catalog->perf.clk_inefficiency_factor;
->> >> +       if (clk_factor) {
->> >> +               crtc_clk *= clk_factor;
->> >> +               do_div(crtc_clk, 100);
->> >> +       }
->> >> +
->> >> +       return crtc_clk;
->> >> +}
->> >> +
->> >>  static struct dpu_kms *_dpu_crtc_get_kms(struct drm_crtc *crtc)
->> >>  {
->> >>         struct msm_drm_private *priv;
->> >> @@ -51,12 +119,7 @@ static void _dpu_core_perf_calc_crtc(struct
->> >> dpu_kms *kms,
->> >>         dpu_cstate = to_dpu_crtc_state(state);
->> >>         memset(perf, 0, sizeof(struct dpu_core_perf_params));
->> >>
->> >> -       if (!dpu_cstate->bw_control) {
->> >> -               perf->bw_ctl = kms->catalog->perf.max_bw_high *
->> >> -                                       1000ULL;
->> >> -               perf->max_per_pipe_ib = perf->bw_ctl;
->> >> -               perf->core_clk_rate = kms->perf.max_core_clk_rate;
->> >> -       } else if (kms->perf.perf_tune.mode == DPU_PERF_MODE_MINIMUM)
->> >> {
->> >> +       if (kms->perf.perf_tune.mode == DPU_PERF_MODE_MINIMUM) {
->> >>                 perf->bw_ctl = 0;
->> >>                 perf->max_per_pipe_ib = 0;
->> >>                 perf->core_clk_rate = 0;
->> >> @@ -64,6 +127,10 @@ static void _dpu_core_perf_calc_crtc(struct
->> >> dpu_kms *kms,
->> >>                 perf->bw_ctl = kms->perf.fix_core_ab_vote;
->> >>                 perf->max_per_pipe_ib = kms->perf.fix_core_ib_vote;
->> >>                 perf->core_clk_rate = kms->perf.fix_core_clk_rate;
->> >> +       } else {
->> >> +               perf->bw_ctl = _dpu_core_perf_calc_bw(kms, crtc);
->> >> +               perf->max_per_pipe_ib =
->> >> kms->catalog->perf.min_dram_ib;
->> >> +               perf->core_clk_rate = _dpu_core_perf_calc_clk(kms,
->> >> crtc, state);
->> >>         }
->> >>
->> >>         DPU_DEBUG(
->> >> @@ -115,11 +182,7 @@ int dpu_core_perf_crtc_check(struct drm_crtc
->> >> *crtc,
->> >>                         DPU_DEBUG("crtc:%d bw:%llu ctrl:%d\n",
->> >>                                 tmp_crtc->base.id,
->> >> tmp_cstate->new_perf.bw_ctl,
->> >>                                 tmp_cstate->bw_control);
->> >> -                       /*
->> >> -                        * For bw check only use the bw if the
->> >> -                        * atomic property has been already set
->> >> -                        */
->> >> -                       if (tmp_cstate->bw_control)
->> >> +
->> >>                                 bw_sum_of_intfs +=
->> >> tmp_cstate->new_perf.bw_ctl;
->> >>                 }
->> >>
->> >> @@ -131,9 +194,7 @@ int dpu_core_perf_crtc_check(struct drm_crtc
->> >> *crtc,
->> >>
->> >>                 DPU_DEBUG("final threshold bw limit = %d\n",
->> >> threshold);
->> >>
->> >> -               if (!dpu_cstate->bw_control) {
->> >> -                       DPU_DEBUG("bypass bandwidth check\n");
->> >> -               } else if (!threshold) {
->> >> +               if (!threshold) {
->> >>                         DPU_ERROR("no bandwidth limits specified\n");
->> >>                         return -E2BIG;
->> >>                 } else if (bw > threshold) {
->> >> @@ -154,7 +215,11 @@ static int _dpu_core_perf_crtc_update_bus(struct
->> >> dpu_kms *kms,
->> >>                                         =
->> >> dpu_crtc_get_client_type(crtc);
->> >>         struct drm_crtc *tmp_crtc;
->> >>         struct dpu_crtc_state *dpu_cstate;
->> >> -       int ret = 0;
->> >> +       int i, ret = 0;
->> >> +       u64 avg_bw;
->> >> +
->> >> +       if (!kms->num_paths)
->> >> +               return -EINVAL;
->> >>
->> >>         drm_for_each_crtc(tmp_crtc, crtc->dev) {
->> >>                 if (tmp_crtc->enabled &&
->> >> @@ -165,10 +230,20 @@ static int _dpu_core_perf_crtc_update_bus(struct
->> >> dpu_kms *kms,
->> >>                         perf.max_per_pipe_ib =
->> >> max(perf.max_per_pipe_ib,
->> >>
->> >> dpu_cstate->new_perf.max_per_pipe_ib);
->> >>
->> >> -                       DPU_DEBUG("crtc=%d bw=%llu\n",
->> >> tmp_crtc->base.id,
->> >> -                                       dpu_cstate->new_perf.bw_ctl);
->> >> +                       perf.bw_ctl += dpu_cstate->new_perf.bw_ctl;
->> >> +
->> >> +                       DPU_DEBUG("crtc=%d bw=%llu paths:%d\n",
->> >> +                                 tmp_crtc->base.id,
->> >> +                                 dpu_cstate->new_perf.bw_ctl,
->> >> kms->num_paths);
->> >>                 }
->> >>         }
->> >> +
->> >> +       avg_bw = perf.bw_ctl;
->> >> +       do_div(avg_bw, (kms->num_paths * 1000)); /*Bps_to_icc*/
->> >> +
->> >> +       for (i = 0; i < kms->num_paths; i++)
->> >> +               icc_set_bw(kms->path[i], avg_bw,
->> >> perf.max_per_pipe_ib);
->> >> +
->> >>         return ret;
->> >>  }
->> >>
->> >> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
->> >> b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
->> >> index 29d4fde..8f2357d 100644
->> >> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
->> >> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
->> >> @@ -541,7 +541,8 @@
->> >>         .max_bw_high = 6800000,
->> >>         .min_core_ib = 2400000,
->> >>         .min_llcc_ib = 800000,
->> >> -       .min_dram_ib = 800000,
->> >> +       .min_dram_ib = 1600000,
->> >> +       .min_prefill_lines = 24,
->> >>         .danger_lut_tbl = {0xff, 0xffff, 0x0},
->> >>         .qos_lut_tbl = {
->> >>                 {.nentry = ARRAY_SIZE(sc7180_qos_linear),
->> >> @@ -558,6 +559,8 @@
->> >>                 {.rd_enable = 1, .wr_enable = 1},
->> >>                 {.rd_enable = 1, .wr_enable = 0}
->> >>         },
->> >> +       .clk_inefficiency_factor = 105,
->> >> +       .bw_inefficiency_factor = 120,
->> >>  };
->> >>
->> >>  /*************************************************************
->> >> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
->> >> b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
->> >> index f7de438..f2a5fe2 100644
->> >> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
->> >> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
->> >> @@ -651,6 +651,8 @@ struct dpu_perf_cdp_cfg {
->> >>   * @downscaling_prefill_lines  downscaling latency in lines
->> >>   * @amortizable_theshold minimum y position for traffic shaping
->> >> prefill
->> >>   * @min_prefill_lines  minimum pipeline latency in lines
->> >> + * @clk_inefficiency_factor DPU src clock inefficiency factor
->> >> + * @bw_inefficiency_factor DPU axi bus bw inefficiency factor
->> >>   * @safe_lut_tbl: LUT tables for safe signals
->> >>   * @danger_lut_tbl: LUT tables for danger signals
->> >>   * @qos_lut_tbl: LUT tables for QoS signals
->> >> @@ -675,6 +677,8 @@ struct dpu_perf_cfg {
->> >>         u32 downscaling_prefill_lines;
->> >>         u32 amortizable_threshold;
->> >>         u32 min_prefill_lines;
->> >> +       u32 clk_inefficiency_factor;
->> >> +       u32 bw_inefficiency_factor;
->> >>         u32 safe_lut_tbl[DPU_QOS_LUT_USAGE_MAX];
->> >>         u32 danger_lut_tbl[DPU_QOS_LUT_USAGE_MAX];
->> >>         struct dpu_qos_lut_tbl qos_lut_tbl[DPU_QOS_LUT_USAGE_MAX];
->> >> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
->> >> b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
->> >> index b8615d4..a5da7aa 100644
->> >> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
->> >> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
->> >> @@ -303,6 +303,28 @@ static int dpu_kms_global_obj_init(struct dpu_kms
->> >> *dpu_kms)
->> >>         return 0;
->> >>  }
->> >>
->> >> +static int dpu_kms_parse_data_bus_icc_path(struct dpu_kms *dpu_kms)
->> >> +{
->> >> +       struct icc_path *path0;
->> >> +       struct icc_path *path1;
->> >> +       struct drm_device *dev = dpu_kms->dev;
->> >> +
->> >> +       path0 = of_icc_get(dev->dev, "mdp0-mem");
->> >> +       path1 = of_icc_get(dev->dev, "mdp1-mem");
->> >> +
->> >> +       if (IS_ERR_OR_NULL(path0))
->> >> +               return PTR_ERR_OR_ZERO(path0);
->> >> +
->> >> +       dpu_kms->path[0] = path0;
->> >> +       dpu_kms->num_paths = 1;
->> >> +
->> >> +       if (!IS_ERR_OR_NULL(path1)) {
->> >> +               dpu_kms->path[1] = path1;
->> >> +               dpu_kms->num_paths++;
->> >> +       }
->> >> +       return 0;
->> >> +}
->> >
->> >
->> > so wait, why do we need a 2nd nearly identical copy of
->> > dpu_mdss_parse_data_bus_icc_path() for sc7180?  And tracking of the
->> > path in dpu_mdss for some gens and dpu_kms in other gens?
->> >
->> > (I have a suspicion that the answer is dpu has too much indirection
->> > and abstraction.)
->> >
->> > BR,
->> > -R
->> Hi Rob,
->> 
->> If you could remember, we have discussed this earlier. We don't want 
->> to
->> change the way interconnects are defined in the DT.
->> but since the change is about scaling the BW as per composition cycle,
->> icc paths are needed to be available for MDP node in the kms structure
-> 
-> Right, we don't want to change the bindings.. but I think we could
-> just move the icc paths to dpu_kms in both cases, and not have this
-> duplication?
-> 
->> In summary behavior will be as follows
->> 
->> 1) if icc paths are enumerated at dpu_mdss then BW vote will be once
->> during power up.  ( for cheza )
->> 
->> 2) if icc paths are enumerated at dpu_kms then BW vote will scale on
->> every commit. ( for Trogdor )
-> 
-> If we move it all to dpu_kms, we could decide on dynamic vs static
-> vote based on whether the necessary parameters (inefficiency_factors,
-> etc) are set in the hwcatalog.
-> 
-> That said, I would kinda like to enable bw scaling on 845 as well at
-> some point.  I assume the logic should all be the same, other than the
-> hwcatalog values.  If they are called roughly the same thing in the
-> android kernel, I could probably figure out the values and test this
-> on my sdm850 laptop.
-> 
-> BR,
-> -R
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* This automated bisection report was sent to you on the basis  *
+* that you may be involved with the breaking commit it has      *
+* found.  No manual investigation has been done to verify it,   *
+* and the root cause of the problem may be somewhere else.      *
+*                                                               *
+* If you do send a fix, please include this trailer:            *
+*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+*                                                               *
+* Hope this helps!                                              *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-Sure Rob, i'll remove the duplication, can i follow it up in a separate 
-patch instead of updating this one?
-i don't have Cheza setup to validate it and it will be difficult to get 
-one due to WFH scenario
-is it possible to help validate the patch on Cheza?
+mainline/master bisection: baseline.dmesg.crit on qemu_arm-vexpress-a15
 
->> 
->> >
->> >> +
->> >>  static int dpu_kms_enable_vblank(struct msm_kms *kms, struct drm_crtc
->> >> *crtc)
->> >>  {
->> >>         return dpu_crtc_vblank(crtc, true);
->> >> @@ -972,6 +994,9 @@ static int dpu_kms_hw_init(struct msm_kms *kms)
->> >>
->> >>         dpu_vbif_init_memtypes(dpu_kms);
->> >>
->> >> +       if (of_device_is_compatible(dev->dev->of_node,
->> >> "qcom,sc7180-mdss"))
->> >> +               dpu_kms_parse_data_bus_icc_path(dpu_kms);
->> >> +
->> >>         pm_runtime_put_sync(&dpu_kms->pdev->dev);
->> >>
->> >>         return 0;
->> >> @@ -1077,7 +1102,7 @@ static int dpu_dev_remove(struct platform_device
->> >> *pdev)
->> >>
->> >>  static int __maybe_unused dpu_runtime_suspend(struct device *dev)
->> >>  {
->> >> -       int rc = -1;
->> >> +       int i, rc = -1;
->> >>         struct platform_device *pdev = to_platform_device(dev);
->> >>         struct dpu_kms *dpu_kms = platform_get_drvdata(pdev);
->> >>         struct dss_module_power *mp = &dpu_kms->mp;
->> >> @@ -1086,6 +1111,9 @@ static int __maybe_unused
->> >> dpu_runtime_suspend(struct device *dev)
->> >>         if (rc)
->> >>                 DPU_ERROR("clock disable failed rc:%d\n", rc);
->> >>
->> >> +       for (i = 0; i < dpu_kms->num_paths; i++)
->> >> +               icc_set_bw(dpu_kms->path[i], 0, 0);
->> >> +
->> >>         return rc;
->> >>  }
->> >>
->> >> @@ -1097,8 +1125,15 @@ static int __maybe_unused
->> >> dpu_runtime_resume(struct device *dev)
->> >>         struct drm_encoder *encoder;
->> >>         struct drm_device *ddev;
->> >>         struct dss_module_power *mp = &dpu_kms->mp;
->> >> +       int i;
->> >>
->> >>         ddev = dpu_kms->dev;
->> >> +
->> >> +       /* Min vote of BW is required before turning on AXI clk */
->> >> +       for (i = 0; i < dpu_kms->num_paths; i++)
->> >> +               icc_set_bw(dpu_kms->path[i], 0,
->> >> +                       dpu_kms->catalog->perf.min_dram_ib);
->> >> +
->> >>         rc = msm_dss_enable_clk(mp->clk_config, mp->num_clk, true);
->> >>         if (rc) {
->> >>                 DPU_ERROR("clock enable failed rc:%d\n", rc);
->> >> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
->> >> b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
->> >> index 4e32d04..94410ca 100644
->> >> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
->> >> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
->> >> @@ -8,6 +8,8 @@
->> >>  #ifndef __DPU_KMS_H__
->> >>  #define __DPU_KMS_H__
->> >>
->> >> +#include <linux/interconnect.h>
->> >> +
->> >>  #include <drm/drm_drv.h>
->> >>
->> >>  #include "msm_drv.h"
->> >> @@ -137,6 +139,8 @@ struct dpu_kms {
->> >>          * when disabled.
->> >>          */
->> >>         atomic_t bandwidth_ref;
->> >> +       struct icc_path *path[2];
->> >> +       u32 num_paths;
->> >>  };
->> >>
->> >>  struct vsync_info {
->> >> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
->> >> b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
->> >> index 80d3cfc..df0a983 100644
->> >> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
->> >> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
->> >> @@ -8,7 +8,6 @@
->> >>  #include <linux/irqdesc.h>
->> >>  #include <linux/irqchip/chained_irq.h>
->> >>  #include "dpu_kms.h"
->> >> -#include <linux/interconnect.h>
->> >>
->> >>  #define to_dpu_mdss(x) container_of(x, struct dpu_mdss, base)
->> >>
->> >> @@ -315,9 +314,11 @@ int dpu_mdss_init(struct drm_device *dev)
->> >>         }
->> >>         dpu_mdss->mmio_len = resource_size(res);
->> >>
->> >> -       ret = dpu_mdss_parse_data_bus_icc_path(dev, dpu_mdss);
->> >> -       if (ret)
->> >> -               return ret;
->> >> +       if (!of_device_is_compatible(dev->dev->of_node,
->> >> "qcom,sc7180-mdss")) {
->> >> +               ret = dpu_mdss_parse_data_bus_icc_path(dev, dpu_mdss);
->> >> +               if (ret)
->> >> +                       return ret;
->> >> +       }
->> >>
->> >>         mp = &dpu_mdss->mp;
->> >>         ret = msm_dss_parse_clock(pdev, mp);
->> >> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
->> >> b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
->> >> index 3b9c33e..6379fe1 100644
->> >> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
->> >> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
->> >> @@ -132,6 +132,86 @@ static struct dpu_kms *_dpu_plane_get_kms(struct
->> >> drm_plane *plane)
->> >>  }
->> >>
->> >>  /**
->> >> + * _dpu_plane_calc_bw - calculate bandwidth required for a plane
->> >> + * @Plane: Pointer to drm plane.
->> >> + * Result: Updates calculated bandwidth in the plane state.
->> >> + * BW Equation: src_w * src_h * bpp * fps * (v_total / v_dest)
->> >> + * Prefill BW Equation: line src bytes * line_time
->> >> + */
->> >> +static void _dpu_plane_calc_bw(struct drm_plane *plane,
->> >> +       struct drm_framebuffer *fb)
->> >> +{
->> >> +       struct dpu_plane *pdpu = to_dpu_plane(plane);
->> >> +       struct dpu_plane_state *pstate;
->> >> +       struct drm_display_mode *mode;
->> >> +       const struct dpu_format *fmt = NULL;
->> >> +       struct dpu_kms *dpu_kms = _dpu_plane_get_kms(plane);
->> >> +       int src_width, src_height, dst_height, fps;
->> >> +       u64 plane_prefill_bw;
->> >> +       u64 plane_bw;
->> >> +       u32 hw_latency_lines;
->> >> +       u64 scale_factor;
->> >> +       int vbp, vpw;
->> >> +
->> >> +       pstate = to_dpu_plane_state(plane->state);
->> >> +       mode = &plane->state->crtc->mode;
->> >> +
->> >> +       fmt = dpu_get_dpu_format_ext(fb->format->format,
->> >> fb->modifier);
->> >> +
->> >> +       src_width = drm_rect_width(&pdpu->pipe_cfg.src_rect);
->> >> +       src_height = drm_rect_height(&pdpu->pipe_cfg.src_rect);
->> >> +       dst_height = drm_rect_height(&pdpu->pipe_cfg.dst_rect);
->> >> +       fps = drm_mode_vrefresh(mode);
->> >> +       vbp = mode->vtotal - mode->vsync_end;
->> >> +       vpw = mode->vsync_end - mode->vsync_start;
->> >> +       hw_latency_lines =  dpu_kms->catalog->perf.min_prefill_lines;
->> >> +       scale_factor = src_height > dst_height ?
->> >> +               mult_frac(src_height, 1, dst_height) : 1;
->> >> +
->> >> +       plane_bw =
->> >> +               src_width * mode->vtotal * fps * fmt->bpp *
->> >> +               scale_factor;
->> >> +
->> >> +       plane_prefill_bw =
->> >> +               src_width * hw_latency_lines * fps * fmt->bpp *
->> >> +               scale_factor * mode->vtotal;
->> >> +
->> >> +       do_div(plane_prefill_bw, (vbp+vpw));
->> >> +
->> >> +       pstate->plane_fetch_bw = max(plane_bw, plane_prefill_bw);
->> >> +}
->> >> +
->> >> +/**
->> >> + * _dpu_plane_calc_clk - calculate clock required for a plane
->> >> + * @Plane: Pointer to drm plane.
->> >> + * Result: Updates calculated clock in the plane state.
->> >> + * Clock equation: dst_w * v_total * fps * (src_h / dst_h)
->> >> + */
->> >> +static void _dpu_plane_calc_clk(struct drm_plane *plane)
->> >> +{
->> >> +       struct dpu_plane *pdpu = to_dpu_plane(plane);
->> >> +       struct dpu_plane_state *pstate;
->> >> +       struct drm_display_mode *mode;
->> >> +       int dst_width, src_height, dst_height, fps;
->> >> +
->> >> +       pstate = to_dpu_plane_state(plane->state);
->> >> +       mode = &plane->state->crtc->mode;
->> >> +
->> >> +       src_height = drm_rect_height(&pdpu->pipe_cfg.src_rect);
->> >> +       dst_width = drm_rect_width(&pdpu->pipe_cfg.dst_rect);
->> >> +       dst_height = drm_rect_height(&pdpu->pipe_cfg.dst_rect);
->> >> +       fps = drm_mode_vrefresh(mode);
->> >> +
->> >> +       pstate->plane_clk =
->> >> +               dst_width * mode->vtotal * fps;
->> >> +
->> >> +       if (src_height > dst_height) {
->> >> +               pstate->plane_clk *= src_height;
->> >> +               do_div(pstate->plane_clk, dst_height);
->> >> +       }
->> >> +}
->> >> +
->> >> +/**
->> >>   * _dpu_plane_calc_fill_level - calculate fill level of the given
->> >> source format
->> >>   * @plane:             Pointer to drm plane
->> >>   * @fmt:               Pointer to source buffer format
->> >> @@ -1102,6 +1182,10 @@ static void dpu_plane_sspp_atomic_update(struct
->> >> drm_plane *plane)
->> >>         }
->> >>
->> >>         _dpu_plane_set_qos_remap(plane);
->> >> +
->> >> +       _dpu_plane_calc_bw(plane, fb);
->> >> +
->> >> +       _dpu_plane_calc_clk(plane);
->> >>  }
->> >>
->> >>  static void _dpu_plane_atomic_disable(struct drm_plane *plane)
->> >> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
->> >> b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
->> >> index 4569497..ca83b87 100644
->> >> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
->> >> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
->> >> @@ -25,6 +25,8 @@
->> >>   * @scaler3_cfg: configuration data for scaler3
->> >>   * @pixel_ext: configuration data for pixel extensions
->> >>   * @cdp_cfg:   CDP configuration
->> >> + * @plane_fetch_bw: calculated BW per plane
->> >> + * @plane_clk: calculated clk per plane
->> >>   */
->> >>  struct dpu_plane_state {
->> >>         struct drm_plane_state base;
->> >> @@ -39,6 +41,8 @@ struct dpu_plane_state {
->> >>         struct dpu_hw_pixel_ext pixel_ext;
->> >>
->> >>         struct dpu_hw_pipe_cdp_cfg cdp_cfg;
->> >> +       u64 plane_fetch_bw;
->> >> +       u64 plane_clk;
->> >>  };
->> >>
->> >>  /**
->> >> --
->> >> 1.9.1
->> >>
->> > _______________________________________________
->> > Freedreno mailing list
->> > Freedreno@lists.freedesktop.org
->> > https://lists.freedesktop.org/mailman/listinfo/freedreno
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
+Summary:
+  Start:      0dc589da873b Merge tag 'iommu-fixes-v5.8-rc5' of git://git.ke=
+rnel.org/pub/scm/linux/kernel/git/joro/iommu
+  Plain log:  https://storage.kernelci.org/mainline/master/v5.8-rc5-8-g0dc5=
+89da873b/arm/vexpress_defconfig/gcc-8/lab-cip/baseline-vexpress-v2p-ca15-tc=
+1.txt
+  HTML log:   https://storage.kernelci.org/mainline/master/v5.8-rc5-8-g0dc5=
+89da873b/arm/vexpress_defconfig/gcc-8/lab-cip/baseline-vexpress-v2p-ca15-tc=
+1.html
+  Result:     38ac46002d1d arm: dts: vexpress: Move mcc node back into moth=
+erboard node
+
+Checks:
+  revert:     PASS
+  verify:     PASS
+
+Parameters:
+  Tree:       mainline
+  URL:        https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linu=
+x.git
+  Branch:     master
+  Target:     qemu_arm-vexpress-a15
+  CPU arch:   arm
+  Lab:        lab-cip
+  Compiler:   gcc-8
+  Config:     vexpress_defconfig
+  Test case:  baseline.dmesg.crit
+
+Breaking commit found:
+
+---------------------------------------------------------------------------=
+----
+commit 38ac46002d1df5707566a73486452851341028d2
+Author: Andre Przywara <andre.przywara@arm.com>
+Date:   Wed Jun 3 17:22:37 2020 +0100
+
+    arm: dts: vexpress: Move mcc node back into motherboard node
+    =
+
+    Commit d9258898ad49 ("arm64: dts: arm: vexpress: Move fixed devices
+    out of bus node") moved the "mcc" DT node into the root node, because
+    it does not have any children using "reg" properties, so does violate
+    some dtc checks about "simple-bus" nodes.
+    =
+
+    However this broke the vexpress config-bus code, which walks up the
+    device tree to find the first node with an "arm,vexpress,site" property.
+    This gave the wrong result (matching the root node instead of the
+    motherboard node), so broke the clocks and some other devices for
+    VExpress boards.
+    =
+
+    Move the whole node back into its original position. This re-introduces
+    the dtc warning, but is conceptually the right thing to do. The dtc
+    warning seems to be overzealous here, there are discussions on fixing or
+    relaxing this check instead.
+    =
+
+    Link: https://lore.kernel.org/r/20200603162237.16319-1-andre.przywara@a=
+rm.com
+    Fixes: d9258898ad49 ("arm64: dts: vexpress: Move fixed devices out of b=
+us node")
+    Reported-and-tested-by: Guenter Roeck <linux@roeck-us.net>
+    Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+    Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+
+diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/ve=
+xpress-v2m-rs1.dtsi
+index e6308fb76183..a88ee5294d35 100644
+--- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
++++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+@@ -100,79 +100,6 @@
+ 		};
+ 	};
+ =
+
+-	mcc {
+-		compatible =3D "arm,vexpress,config-bus";
+-		arm,vexpress,config-bridge =3D <&v2m_sysreg>;
+-
+-		oscclk0 {
+-			/* MCC static memory clock */
+-			compatible =3D "arm,vexpress-osc";
+-			arm,vexpress-sysreg,func =3D <1 0>;
+-			freq-range =3D <25000000 60000000>;
+-			#clock-cells =3D <0>;
+-			clock-output-names =3D "v2m:oscclk0";
+-		};
+-
+-		v2m_oscclk1: oscclk1 {
+-			/* CLCD clock */
+-			compatible =3D "arm,vexpress-osc";
+-			arm,vexpress-sysreg,func =3D <1 1>;
+-			freq-range =3D <23750000 65000000>;
+-			#clock-cells =3D <0>;
+-			clock-output-names =3D "v2m:oscclk1";
+-		};
+-
+-		v2m_oscclk2: oscclk2 {
+-			/* IO FPGA peripheral clock */
+-			compatible =3D "arm,vexpress-osc";
+-			arm,vexpress-sysreg,func =3D <1 2>;
+-			freq-range =3D <24000000 24000000>;
+-			#clock-cells =3D <0>;
+-			clock-output-names =3D "v2m:oscclk2";
+-		};
+-
+-		volt-vio {
+-			/* Logic level voltage */
+-			compatible =3D "arm,vexpress-volt";
+-			arm,vexpress-sysreg,func =3D <2 0>;
+-			regulator-name =3D "VIO";
+-			regulator-always-on;
+-			label =3D "VIO";
+-		};
+-
+-		temp-mcc {
+-			/* MCC internal operating temperature */
+-			compatible =3D "arm,vexpress-temp";
+-			arm,vexpress-sysreg,func =3D <4 0>;
+-			label =3D "MCC";
+-		};
+-
+-		reset {
+-			compatible =3D "arm,vexpress-reset";
+-			arm,vexpress-sysreg,func =3D <5 0>;
+-		};
+-
+-		muxfpga {
+-			compatible =3D "arm,vexpress-muxfpga";
+-			arm,vexpress-sysreg,func =3D <7 0>;
+-		};
+-
+-		shutdown {
+-			compatible =3D "arm,vexpress-shutdown";
+-			arm,vexpress-sysreg,func =3D <8 0>;
+-		};
+-
+-		reboot {
+-			compatible =3D "arm,vexpress-reboot";
+-			arm,vexpress-sysreg,func =3D <9 0>;
+-		};
+-
+-		dvimode {
+-			compatible =3D "arm,vexpress-dvimode";
+-			arm,vexpress-sysreg,func =3D <11 0>;
+-		};
+-	};
+-
+ 	bus@8000000 {
+ 		motherboard-bus {
+ 			model =3D "V2M-P1";
+@@ -435,6 +362,79 @@
+ 						};
+ 					};
+ 				};
++
++				mcc {
++					compatible =3D "arm,vexpress,config-bus";
++					arm,vexpress,config-bridge =3D <&v2m_sysreg>;
++
++					oscclk0 {
++						/* MCC static memory clock */
++						compatible =3D "arm,vexpress-osc";
++						arm,vexpress-sysreg,func =3D <1 0>;
++						freq-range =3D <25000000 60000000>;
++						#clock-cells =3D <0>;
++						clock-output-names =3D "v2m:oscclk0";
++					};
++
++					v2m_oscclk1: oscclk1 {
++						/* CLCD clock */
++						compatible =3D "arm,vexpress-osc";
++						arm,vexpress-sysreg,func =3D <1 1>;
++						freq-range =3D <23750000 65000000>;
++						#clock-cells =3D <0>;
++						clock-output-names =3D "v2m:oscclk1";
++					};
++
++					v2m_oscclk2: oscclk2 {
++						/* IO FPGA peripheral clock */
++						compatible =3D "arm,vexpress-osc";
++						arm,vexpress-sysreg,func =3D <1 2>;
++						freq-range =3D <24000000 24000000>;
++						#clock-cells =3D <0>;
++						clock-output-names =3D "v2m:oscclk2";
++					};
++
++					volt-vio {
++						/* Logic level voltage */
++						compatible =3D "arm,vexpress-volt";
++						arm,vexpress-sysreg,func =3D <2 0>;
++						regulator-name =3D "VIO";
++						regulator-always-on;
++						label =3D "VIO";
++					};
++
++					temp-mcc {
++						/* MCC internal operating temperature */
++						compatible =3D "arm,vexpress-temp";
++						arm,vexpress-sysreg,func =3D <4 0>;
++						label =3D "MCC";
++					};
++
++					reset {
++						compatible =3D "arm,vexpress-reset";
++						arm,vexpress-sysreg,func =3D <5 0>;
++					};
++
++					muxfpga {
++						compatible =3D "arm,vexpress-muxfpga";
++						arm,vexpress-sysreg,func =3D <7 0>;
++					};
++
++					shutdown {
++						compatible =3D "arm,vexpress-shutdown";
++						arm,vexpress-sysreg,func =3D <8 0>;
++					};
++
++					reboot {
++						compatible =3D "arm,vexpress-reboot";
++						arm,vexpress-sysreg,func =3D <9 0>;
++					};
++
++					dvimode {
++						compatible =3D "arm,vexpress-dvimode";
++						arm,vexpress-sysreg,func =3D <11 0>;
++					};
++				};
+ 			};
+ 		};
+ 	};
+---------------------------------------------------------------------------=
+----
+
+
+Git bisection log:
+
+---------------------------------------------------------------------------=
+----
+git bisect start
+# good: [719fdd32921fb7e3208db8832d32ae1c2d68900f] afs: Fix storage of cell=
+ names
+git bisect good 719fdd32921fb7e3208db8832d32ae1c2d68900f
+# bad: [0dc589da873b58b70f4caf4b070fb0cf70fdd1dc] Merge tag 'iommu-fixes-v5=
+.8-rc5' of git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu
+git bisect bad 0dc589da873b58b70f4caf4b070fb0cf70fdd1dc
+# bad: [aa27b32b76d0b1b242d43977da0e5358da1c825f] Merge tag 'for-5.8-rc4-ta=
+g' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
+git bisect bad aa27b32b76d0b1b242d43977da0e5358da1c825f
+# bad: [684c8ccc40d7e5408d597a43712bad3827d3fb94] Merge tag 'devicetree-fix=
+es-for-5.8-2' of git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux
+git bisect bad 684c8ccc40d7e5408d597a43712bad3827d3fb94
+# bad: [e44b59cd758acdd413512d4597a1fabdadfe3abf] Merge tag 'arm-fixes-5.8-=
+1' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
+git bisect bad e44b59cd758acdd413512d4597a1fabdadfe3abf
+# good: [91a9a90d040e8b9ff63d48ea71468e0f4db764ff] Merge tag 'sched_urgent_=
+for_5.8_rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+git bisect good 91a9a90d040e8b9ff63d48ea71468e0f4db764ff
+# bad: [42d3f7e8da1bc55e3109f612c519c945f6587194] Merge tag 'imx-fixes-5.8'=
+ of git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux into arm/f=
+ixes
+git bisect bad 42d3f7e8da1bc55e3109f612c519c945f6587194
+# bad: [6d89c73ca5813768a2cc66f7420ac0cbddf4f37d] Merge tag 'arm-soc/for-5.=
+8/soc-fixes' of https://github.com/Broadcom/stblinux into arm/fixes
+git bisect bad 6d89c73ca5813768a2cc66f7420ac0cbddf4f37d
+# bad: [0f77ce26ebcf6ea384421d2dd47b924b83649692] Revert "ARM: sti: Impleme=
+nt dummy L2 cache's write_sec"
+git bisect bad 0f77ce26ebcf6ea384421d2dd47b924b83649692
+# bad: [d68ec1644dd546851d651787a638aead32a60a6f] Merge tag 'juno-fix-5.8' =
+of git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux into ar=
+m/fixes
+git bisect bad d68ec1644dd546851d651787a638aead32a60a6f
+# bad: [38ac46002d1df5707566a73486452851341028d2] arm: dts: vexpress: Move =
+mcc node back into motherboard node
+git bisect bad 38ac46002d1df5707566a73486452851341028d2
+# first bad commit: [38ac46002d1df5707566a73486452851341028d2] arm: dts: ve=
+xpress: Move mcc node back into motherboard node
+---------------------------------------------------------------------------=
+----
