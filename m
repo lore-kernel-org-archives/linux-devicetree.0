@@ -2,73 +2,141 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D33C433EB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 14:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7666C433E6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 14:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5152D22515
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 14:25:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95BE022516
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 14:26:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594736798;
+	bh=S3wLIXMLvW4hWE0k9kaLD27dt6WY9VJU7X1n3XEPPEI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZxQH2SwgowKj7233fdyJ38J/5G0CrbhCXLxpXtYxlrcfTDqqZGFNeLboF3rTLEDrd
+	 h7uuZa4y9qABXCCSJuiIduEtz3CQpdoubbLHOKhC67n3Dvg3FltBuqmfQ7AHo2p888
+	 P3OqR5pgN6aJUtIiJMm2DSFGi0zxhcD4wBnmyYEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728562AbgGNOZn (ORCPT
+        id S1725945AbgGNO0e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:25:43 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:18513 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728479AbgGNOZn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 10:25:43 -0400
-X-Originating-IP: 93.34.118.233
-Received: from uno.lan (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id BAC28240011;
-        Tue, 14 Jul 2020 14:25:39 +0000 (UTC)
-From:   Jacopo Mondi <jacopo+renesas@jmondi.org>
-To:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-media@vger.kernel.org
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org,
-        sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl,
-        dave.stevenson@raspberrypi.com, dongchun.zhu@mediatek.com,
-        linux-renesas-soc@vger.kernel.org,
-        laurent.pinchart@ideasonboard.com,
-        roman.kovalivskyi@globallogic.com
-Subject: [PATCH v2 3/3] media: MAINTAINERS: ov5647: Add myself as maintainer
-Date:   Tue, 14 Jul 2020 16:28:56 +0200
-Message-Id: <20200714142856.58365-4-jacopo+renesas@jmondi.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200714142856.58365-1-jacopo+renesas@jmondi.org>
-References: <20200714142856.58365-1-jacopo+renesas@jmondi.org>
+        Tue, 14 Jul 2020 10:26:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49290 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725890AbgGNO0e (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:26:34 -0400
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A2C822516;
+        Tue, 14 Jul 2020 14:26:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594736793;
+        bh=S3wLIXMLvW4hWE0k9kaLD27dt6WY9VJU7X1n3XEPPEI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=GZKQS7l+v7huDhLmjre/t0kJSh4fLGZXnxIGOz8xnJYJsjKtyUc3hg5uM5w4/uSTP
+         eyUoZi4km+sze9KRrIiGzk3/vjRqI9Ua4hd4CkgZLG2dq/ro+daGh4CPuw3k+NpK/O
+         P8JmTQXzjye8F4gLH+1Dg+XqZUrpxVWAD+3q5kqo=
+Received: by mail-ot1-f49.google.com with SMTP id 18so13148114otv.6;
+        Tue, 14 Jul 2020 07:26:33 -0700 (PDT)
+X-Gm-Message-State: AOAM531LpGbzxpDkZ3ZfpPwjK2EGXeFKmxQ2ATumZA/cyKRyAyvjiSL3
+        okCXaYxYZ1pmNeEL3oprheCk/8QhDxfhktJG0g==
+X-Google-Smtp-Source: ABdhPJyuvjA8JGPnMGdzGxe+pkPemV2r5WuflfIGWMOBeMYBaIts3muiUvAU/L9AW1tNJurH/prAJoPR1eJXtPrSD+o=
+X-Received: by 2002:a9d:2646:: with SMTP id a64mr4051084otb.107.1594736792668;
+ Tue, 14 Jul 2020 07:26:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200709215136.28044-1-ansuelsmth@gmail.com> <20200709215136.28044-4-ansuelsmth@gmail.com>
+ <20200710162657.GB2743639@bogus> <0ef601d656f5$b9f8e0c0$2deaa240$@gmail.com>
+In-Reply-To: <0ef601d656f5$b9f8e0c0$2deaa240$@gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 14 Jul 2020 08:26:21 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ8C_YJFiTSKCGqJoySKFJThZXQuQg9eLQE33yL_6v3pA@mail.gmail.com>
+Message-ID: <CAL_JsqJ8C_YJFiTSKCGqJoySKFJThZXQuQg9eLQE33yL_6v3pA@mail.gmail.com>
+Subject: Re: [PATCH 3/6] dt-bindings: thermal: tsens: document ipq8064 bindings
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Amit Kucheria <amit.kucheria@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Since the current maintainer email address bounces back, replace
-the entry and make myself maintainer of the driver since I have the
-sensor and platforms to test it.
+On Fri, Jul 10, 2020 at 2:07 PM <ansuelsmth@gmail.com> wrote:
+>
+>
+>
+> > -----Messaggio originale-----
+> > Da: Rob Herring <robh@kernel.org>
+> > Inviato: venerd=C3=AC 10 luglio 2020 18:27
+> > A: Ansuel Smith <ansuelsmth@gmail.com>
+> > Cc: Amit Kucheria <amit.kucheria@linaro.org>; Andy Gross
+> > <agross@kernel.org>; Bjorn Andersson <bjorn.andersson@linaro.org>;
+> > Zhang Rui <rui.zhang@intel.com>; Daniel Lezcano
+> > <daniel.lezcano@linaro.org>; linux-pm@vger.kernel.org; linux-arm-
+> > msm@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> > kernel@vger.kernel.org
+> > Oggetto: Re: [PATCH 3/6] dt-bindings: thermal: tsens: document ipq8064
+> > bindings
+> >
+> > On Thu, Jul 09, 2020 at 11:51:33PM +0200, Ansuel Smith wrote:
+> > > Document the use of regmap phandle for ipq8064 SoCs
+> > >
+> > > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> > > ---
+> > >  .../bindings/thermal/qcom-tsens.yaml          | 51 ++++++++++++++++-=
+--
+> > >  1 file changed, 44 insertions(+), 7 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yam=
+l
+> > b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> > > index d7be931b42d2..5ceb5d720e16 100644
+> > > --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> > > +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> > > @@ -24,6 +24,7 @@ properties:
+> > >            - enum:
+> > >                - qcom,msm8916-tsens
+> > >                - qcom,msm8974-tsens
+> > > +              - qcom,ipq8064-tsens
+> > >            - const: qcom,tsens-v0_1
+> > >
+> > >        - description: v1 of TSENS
+> > > @@ -47,6 +48,11 @@ properties:
+> > >        - description: TM registers
+> > >        - description: SROT registers
+> > >
+> > > +  regmap:
+> > > +    description:
+> > > +      Phandle to the gcc. On ipq8064 SoCs gcc and tsense share the s=
+ame
+> > regs.
+> > > +    $ref: /schemas/types.yaml#/definitions/phandle
+> >
+> > Can't you make this a child of the gcc and drop this property?
+> >
+>
+> Make the thermal a child of the gcc would be a little confusing. Anyway
+> making this
+> a child of gcc cause the not probing of the thermal driver as it's ignore=
+d
+> any child of
+> gcc. I pushed v2 with the fixed problem.
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Structure the DT as the h/w is structured, not what's convenient for the OS=
+.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1742fa1a88cd..e2128afd83b6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12607,7 +12607,7 @@ T:	git git://linuxtv.org/media_tree.git
- F:	drivers/media/i2c/ov5640.c
- 
- OMNIVISION OV5647 SENSOR DRIVER
--M:	Luis Oliveira <lolivei@synopsys.com>
-+M:	Jacopo Mondi <jacopo@jmondi.org>
- L:	linux-media@vger.kernel.org
- S:	Maintained
- T:	git git://linuxtv.org/media_tree.git
--- 
-2.27.0
+Either the GCC driver has to call of_platform_populate on the child
+nodes or you can perhaps use 'simple-mfd'.
 
+Rob
