@@ -2,102 +2,101 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6010C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 12:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F63EC433E2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 12:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD7B22453
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 12:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDF2A22473
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 12:48:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EDqqD/EA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728050AbgGNMks (ORCPT
+        id S1728050AbgGNMsQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:40:48 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:58969 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbgGNMkr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 08:40:47 -0400
-Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MWSJJ-1kOFtd0c7n-00Xu1w; Tue, 14 Jul 2020 14:40:46 +0200
-Received: by mail-qk1-f174.google.com with SMTP id e13so15379526qkg.5;
-        Tue, 14 Jul 2020 05:40:45 -0700 (PDT)
-X-Gm-Message-State: AOAM532uWDfK0CrMGEqUt+3JEtNLskFiGnm5aWT4PyqG7lknZnW356qk
-        xivRCE1zfxU1jA19LxwwobUqkniFpy0+80lXE8E=
-X-Google-Smtp-Source: ABdhPJwoDyUVNvcOe+3WE/Iw422K5Ioay6giK+l3tMcD5he75L5Od52pooGlmGuC3YHnkuA463/el5XmyYtbmMe13MA=
-X-Received: by 2002:a37:a282:: with SMTP id l124mr4103430qke.3.1594730444925;
- Tue, 14 Jul 2020 05:40:44 -0700 (PDT)
+        Tue, 14 Jul 2020 08:48:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728049AbgGNMsP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 08:48:15 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 240FCC061755;
+        Tue, 14 Jul 2020 05:48:15 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id f5so22439467ljj.10;
+        Tue, 14 Jul 2020 05:48:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Ou2c+Y4ocksj5FtnaDLrroq0j5xVq/IWLcnDWLiQ6Dk=;
+        b=EDqqD/EAEzPy6cYw9EYkELqFwbGBKIM0SjzVCXs0AQwKMlgaF15SI+Vg+iZ/nUvo42
+         G4p+pzGZL+B9nfhSFgpXvVcp5tJbasB+zUotfokeH0lNJNMmtePeoFMUngSohjcisPgB
+         ViZo6K12ikMU/Pmmt3v4CxoEJnFquvJ9qzEg0TmC/Q92t6EVV/2BzQY4rA0tkFPoJH8u
+         clckWvHoFtssjZ+h/Pt2UFA81QEB4JfMn2GdOYo/SF5MRm1evYu/7laqbKwPB0wb5XcE
+         QplLpvlbmO4jLD2LwH3RN3IBVBupQMVyf8G46zzGE2JRFXbkShz0Pt6rqzyUPWmavzuN
+         mazA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Ou2c+Y4ocksj5FtnaDLrroq0j5xVq/IWLcnDWLiQ6Dk=;
+        b=ExrjRMzDYGv1ViTnAdmTex/xUHgKLtJL4F6egTwXsebGxO7mxGML3v+1j3+WkxrVYq
+         2vfpT0hOJpzAT/fkdZl1z2Wvy6q5VriSYuD4eEVWb11gQkbXoqWN3z/rnSHgqaODZmmD
+         69i9J0On4TRtFjhe61vziZCy2kQJayXGCBSy52Qp2JzkcOMNqmWa7hrKIKaLdgS2X/5H
+         diaDMcff/atgnXe/6IzBrLI2jOQl38QmHkJWIlLvBbOdt4h7ODy59GqxNsDQAIsFYHBc
+         pJiCUMSVwssxNDTKMhxay6JH+NUMrOZ9swgpObYZtvXyYSlXZn4M9l3H22GFq4mVEyiK
+         ChQQ==
+X-Gm-Message-State: AOAM532z6IDt6F2XDacO1RUwszy9gDTkjgjU8BfeNp11YZIPjwNvjlEd
+        wKCUvjQmCTmz25+pOcUHj7UpFjziRJpT2WaaHNU=
+X-Google-Smtp-Source: ABdhPJwZT2oTeFEXtSJJBhdvrMRetYxl7UuILWW3tQaQRvYRjdvG7E2x8Zgbp/ce+/49J8u6kIYaiLGEtT+34l1zzew=
+X-Received: by 2002:a2e:a168:: with SMTP id u8mr2062083ljl.178.1594730893460;
+ Tue, 14 Jul 2020 05:48:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200708175020.194436-1-daniele.alessandrelli@linux.intel.com>
-In-Reply-To: <20200708175020.194436-1-daniele.alessandrelli@linux.intel.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 14 Jul 2020 14:40:28 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3GVZftAZKEHC3TjDRL86vYOkND6TNuVq1KjssOHi5AXw@mail.gmail.com>
-Message-ID: <CAK8P3a3GVZftAZKEHC3TjDRL86vYOkND6TNuVq1KjssOHi5AXw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] Add initial Keem Bay SoC / Board support
-To:     Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Olof Johansson <olof@lixom.net>,
-        DTML <devicetree@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Paul Murphy <paul.j.murphy@intel.com>,
-        Will Deacon <will@kernel.org>,
-        Daniele Alessandrelli <daniele.alessandrelli@intel.com>
+References: <20200714123920.23711-1-horia.geanta@nxp.com> <20200714123920.23711-6-horia.geanta@nxp.com>
+In-Reply-To: <20200714123920.23711-6-horia.geanta@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 14 Jul 2020 09:48:02 -0300
+Message-ID: <CAOMZO5DSRy7LZS_SZw2dCyxKyAq4XCdVPiS3LiuaR7oWjtG8kw@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] hwrng: imx-rngc: enable driver for i.MX6
+To:     =?UTF-8?Q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Kaiser <martin@kaiser.cx>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:CsynuHuwhHtu5uzF+9VYwHTOHeqJFWUP52MU5ctkAdvQyk183H6
- gZqqgMZU6MO6d4Sgt9Qi0sE2qHQLuOEqs8gFjdv9O+nL3qBGJ5iYOQ9undmjHTT2vdKHYUa
- nsQGaaF/O/iYZsiptdAqYvr4CVcvBsjC+m2sKBB0H7nq1+dAnWYeQXPopPew739thZsKqJz
- Rdc8csrJy1rU017s68Vqg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:kJyLWz3kEj4=:vOcnB8EFLlBnmYTTKTwQrM
- alOEZAeGQhQ2eyzA8c/HkD12ZTiKooAVcYD1iUveJLGorsAy0b/gEGhl7JCjSKl8BcU9INhuY
- VxKK+umsUS7bW0c3SyQ+AzKWfWTAEOy6JVJtwDN4TP21kf7k2eXY1zz6PmwKi1b+4EbN0NSty
- n+ZgalwffrzvMMH8eLGPZRonpagRwbd9MawsPAD9q6I5GGKVDjbeyCMhmL89F8KmYJx3Aw7oe
- Dzx20PVQHxJRJKAJex3YV0BBpoXfuTdVtuas/U76ZpQ6bZHj9fXWsrbOK3Qvfo3hEIfNhf3gl
- HA+uYJO2uiGupILeymREMXmmhARfThO9NCNE8WeOwzaSqefikPT4UnPDIau68s98CvO75FD6a
- ray6/ghyfmeQWRo2mU6wP3dhsPmQUVJxcfsLM/4A2rRRX2H0gp/WcwlrqBZ5VDzAQ1r8yKLMJ
- wQhKh7G359DX3n6pa2AZAdwDFipCRRdg0RuCmjgUpCNE4UBL2bxQ1WnTOj+yWfWOtp8B2YO3i
- lwf79W/+QSVWFeSLSnWueu9t297boVdHdKSh2q7xBvq0xecnMBLXp8DqQxLPnHKVRYin7jTXk
- o1rvvWrmLg6tja/n63gMPjO1zrWVy4IokizIHKQLrccmK9k19NJqnQ2pKya9TmO4CjsqMTaRq
- bY49eP8+tawnMRVoj7XYEu9H7rjEAaRJz2okswev9PL6XsUtv6SRN7nQ5qyp7DCWPkWvp1giN
- s62H/RYSXit5DP/xJs6wvTjhaPsesq7aqQ6OA2qXDCtUOcA82ymcb/7g2GzoXcF9H0uBE3HMz
- jaEVttUxJVay1TSNP94ogDOUVdK+PsiZOMes2Fa7g6WYVAfWC4IDkju7dFNO/SRGR9ilj45/Z
- NMXgPF4FY10aau3jnKUe3pcjAcZJVyEII5b7OxwTWEkiGhfnPHRW2VnQO777MwOyltsCGIO4A
- Rf49B42n+7U7tXHxqCN48ktluMOW7aOIaRBQNPEHCFohcUci4E3v3
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 7:50 PM Daniele Alessandrelli
-<daniele.alessandrelli@linux.intel.com> wrote:
->
-> Hi,
->
-> This patch-set adds initial support for a new Intel Movidius SoC code-named
-> Keem Bay. The SoC couples an ARM Cortex A53 CPU with an Intel Movidius VPU.
->
-> This initial patch-set enables only the minimal set of components required
-> to make the Keem Bay EVM board boot into initramfs.
->
-> Changes from v1 to v2:
-> * Moved keembay-scmi-mailbox driver to a separate patchset
-> * Removed Keem Bay SCMI mailbox and SCMI node from Keem Bay SoC device tree
+On Tue, Jul 14, 2020 at 9:39 AM Horia Geant=C4=83 <horia.geanta@nxp.com> wr=
+ote:
 
-This all looks basically ok, but I noticed that the DT bindings ands
-DTS files all have a
-"GPL-2.0-only" tag. Usually we make those dual-licensed in order to
-make it easier
-to distribute them with a non-GPL bootloader and synchronize them between
-projects.
+>  static const struct of_device_id imx_rngc_dt_ids[] =3D {
+>         { .compatible =3D "fsl,imx25-rngb", .data =3D NULL, },
+> +       { .compatible =3D "fsl,imx6sl-rngb", .data =3D NULL, },
+> +       { .compatible =3D "fsl,imx6sll-rngb", .data =3D NULL, },
+> +       { .compatible =3D "fsl,imx6ull-rngb", .data =3D NULL, },
 
-Do you know if the GPL-2.0-only part was picked intentionally, or if it can
-be changed to dual-licensed?
-
-      Arnd
+It seems that these new entries are not needed, since they fallback to
+"fsl,imx25-rngb".
