@@ -2,98 +2,194 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F012FC43458
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E62C35256
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C21BE221ED
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:03:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UuwneiRc"
+	by mail.kernel.org (Postfix) with ESMTP id 7D6D622205
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:05:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725931AbgGNHD0 (ORCPT
+        id S1725997AbgGNHFu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 03:03:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41476 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgGNHD0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 03:03:26 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D47CCC061755;
-        Tue, 14 Jul 2020 00:03:25 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id v6so16225665iob.4;
-        Tue, 14 Jul 2020 00:03:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MT7cYYrcM99DVBuXFRqZwFieQfngoQCFo5QcPTP5JIU=;
-        b=UuwneiRc0rQ4ddykmcV5x4aFSBSVHiADlOmVLt+KR1OpoPshajKUwgnvFAcpGSrxl5
-         3pGRlh9s4/86E31cbcNuVMogV6sdDS0rQj9+cA323xxXwYQ2hwNUSV5bssL2w7/SprQh
-         LfMbP5OsgkMYdGRiIZ9q852VoxNxtbKbnzYYVH3B0n6NEnmzVC0nq3KggJDS3YpBUD/D
-         uSvQAEGqc+9ZQzGfzNnvPhpcUtDYw46nzAPxSh+QM/jD8uclpmT76WFgIZJpYQH6XNvq
-         3kwsabONEMBcGjzDzWzgUtPlslAtkKMXs9vFaVg91F6Cfbc077ix/IxSewKrczxN4Yj5
-         9WRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MT7cYYrcM99DVBuXFRqZwFieQfngoQCFo5QcPTP5JIU=;
-        b=f/ch9BlkP3qJNsq2T8fHqnaHjm2tJll2qLzZqYx594cYJ+wAaDjSwO+f1biTQoGzPY
-         fgoQ9epWjnCkbdiCbGropF/oYCuK1djvG6bqoCkbiNQSpCOTpo76iw7d/TeYf9zwDU7E
-         xi/O9BOUZWAyByRRD/5YMBvsx9aBr3p4crfbWZRu5kUdmfE1JwzYfTmga8RziIR12PCK
-         t3JJIu3oPzet8iuaLjj97Ag3gTcfNzOPrUtjBpBY4vTO8F+7azIKj5oNW27aNNZpcjoN
-         Ngu2Bi1APVv/DFX/i0nlbBJ4TAZ75d9kVhmvqtx2GHnIRMAC4tOaeiskNEvFVJAtvjWO
-         lvjw==
-X-Gm-Message-State: AOAM532ZbrIGPU7SPgxx6agSuaTb69ZyigFiEJgdzUCdkJT9l3ASalod
-        DvYcRLtzzZpU4XYpbcCOy5MutxWJKUd9qbfSppo=
-X-Google-Smtp-Source: ABdhPJx/68mFEtDU4FvSbKmhgpZcJ/ThBF5GsLgMTXMMX9bc0cLIFg2GtR0zDMn4VLvb+UyjQcuz6KcG9QXNXo3MMi4=
-X-Received: by 2002:a05:6638:601:: with SMTP id g1mr4378444jar.137.1594710205319;
- Tue, 14 Jul 2020 00:03:25 -0700 (PDT)
+        Tue, 14 Jul 2020 03:05:50 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:39093 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726778AbgGNHEI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jul 2020 03:04:08 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.8989657|0.1165595;BR=01201311R991ec;CH=green;DM=|AD|false|;DS=SPAM|spam_other|0.913775-0.00286365-0.0833614;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03267;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.I1SwXGj_1594710240;
+Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I1SwXGj_1594710240)
+          by smtp.aliyun-inc.com(10.147.41.199);
+          Tue, 14 Jul 2020 15:04:04 +0800
+From:   Frank Lee <frank@allwinnertech.com>
+To:     linus.walleij@linaro.org, robh+dt@kernel.org, mripard@kernel.org,
+        wens@csie.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     tiny.windzz@gmail.com, huangshuosheng@allwinnertech.com,
+        liyong@allwinnertech.com, Yangtao Li <frank@allwinnertech.com>
+Subject: [PATCH v4 03/16] dt-bindings: pinctrl: sunxi: Get rid of continual nesting
+Date:   Tue, 14 Jul 2020 15:03:53 +0800
+Message-Id: <b486dc2f07aeb4772af7ee2ed521932582354a34.1594708864.git.frank@allwinnertech.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <cover.1594708863.git.frank@allwinnertech.com>
+References: <cover.1594708863.git.frank@allwinnertech.com>
 MIME-Version: 1.0
-References: <1594708507-6794-1-git-send-email-dillon.minfei@gmail.com>
- <1594708507-6794-2-git-send-email-dillon.minfei@gmail.com> <20200714164504.10b23697@canb.auug.org.au>
-In-Reply-To: <20200714164504.10b23697@canb.auug.org.au>
-From:   dillon min <dillon.minfei@gmail.com>
-Date:   Tue, 14 Jul 2020 15:02:49 +0800
-Message-ID: <CAL9mu0KRc1qNvW4xJj0cn_PoaumCnfdFVoneHja_B+2DPoRTSw@mail.gmail.com>
-Subject: Re: [PATCH v4] Fix dcan driver probe failed on am437x platform
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Benoit Cousson <bcousson@baylibre.com>, tony@atomide.com,
-        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Stephen,
+From: Yangtao Li <frank@allwinnertech.com>
 
-Thanks for your patience, step by step help on my patch reviewing.
+Rather than a continual nesting of 'else' clauses, just make
+each 'if' a new entry under 'allOf' and get rid of the else.
 
-Dillon,
+Signed-off-by: Yangtao Li <frank@allwinnertech.com>
+---
+ .../pinctrl/allwinner,sun4i-a10-pinctrl.yaml  | 124 ++++++++++--------
+ 1 file changed, 68 insertions(+), 56 deletions(-)
 
-On Tue, Jul 14, 2020 at 2:45 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi Dillon,
->
-> > Hi Stephen,
-> >
-> > This changes correct commit messages based on your reviewing.
-> > make Fixes tags to oneline.
-> > make all commit message tags at the end of commit message
-> > make Fixes tags before Signed-off-by line.
-> > add probe failed log to commit message.
->
-> Thanks for persisting.  It looks good to me, now.
->
-> --
-> Cheers,
-> Stephen Rothwell
+diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
+index 7556be6e2754..35a26abb02e7 100644
+--- a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
+@@ -155,62 +155,74 @@ allOf:
+           minItems: 5
+           maxItems: 5
+ 
+-    else:
+-      if:
+-        properties:
+-          compatible:
+-            enum:
+-              - allwinner,sun6i-a31-pinctrl
+-              - allwinner,sun6i-a31s-pinctrl
+-              - allwinner,sun50i-h6-pinctrl
+-
+-      then:
+-        properties:
+-          interrupts:
+-            minItems: 4
+-            maxItems: 4
+-
+-      else:
+-        if:
+-          properties:
+-            compatible:
+-              enum:
+-                - allwinner,sun8i-a23-pinctrl
+-                - allwinner,sun8i-a83t-pinctrl
+-                - allwinner,sun50i-a64-pinctrl
+-                - allwinner,sun50i-h5-pinctrl
+-                - allwinner,suniv-f1c100s-pinctrl
+-
+-        then:
+-          properties:
+-            interrupts:
+-              minItems: 3
+-              maxItems: 3
+-
+-        else:
+-          if:
+-            properties:
+-              compatible:
+-                enum:
+-                  - allwinner,sun6i-a31-r-pinctrl
+-                  - allwinner,sun8i-a33-pinctrl
+-                  - allwinner,sun8i-h3-pinctrl
+-                  - allwinner,sun8i-v3-pinctrl
+-                  - allwinner,sun8i-v3s-pinctrl
+-                  - allwinner,sun9i-a80-r-pinctrl
+-                  - allwinner,sun50i-h6-r-pinctrl
+-
+-          then:
+-            properties:
+-              interrupts:
+-                minItems: 2
+-                maxItems: 2
+-
+-          else:
+-            properties:
+-              interrupts:
+-                minItems: 1
+-                maxItems: 1
++  - if:
++      properties:
++        compatible:
++          enum:
++            - allwinner,sun6i-a31-pinctrl
++            - allwinner,sun6i-a31s-pinctrl
++            - allwinner,sun50i-h6-pinctrl
++
++    then:
++      properties:
++        interrupts:
++          minItems: 4
++          maxItems: 4
++
++  - if:
++      properties:
++        compatible:
++          enum:
++            - allwinner,sun8i-a23-pinctrl
++            - allwinner,sun8i-a83t-pinctrl
++            - allwinner,sun50i-a64-pinctrl
++            - allwinner,sun50i-h5-pinctrl
++            - allwinner,suniv-f1c100s-pinctrl
++
++    then:
++      properties:
++        interrupts:
++          minItems: 3
++          maxItems: 3
++
++  - if:
++      properties:
++        compatible:
++          enum:
++            - allwinner,sun6i-a31-r-pinctrl
++            - allwinner,sun8i-a33-pinctrl
++            - allwinner,sun8i-h3-pinctrl
++            - allwinner,sun8i-v3-pinctrl
++            - allwinner,sun8i-v3s-pinctrl
++            - allwinner,sun9i-a80-r-pinctrl
++            - allwinner,sun50i-h6-r-pinctrl
++
++    then:
++      properties:
++        interrupts:
++          minItems: 2
++          maxItems: 2
++
++  - if:
++      properties:
++        compatible:
++          enum:
++            - allwinner,sun4i-a10-pinctrl
++            - allwinner,sun5i-a10s-pinctrl
++            - allwinner,sun5i-a13-pinctrl
++            - allwinner,sun7i-a20-pinctrl
++            - allwinner,sun8i-a23-r-pinctrl
++            - allwinner,sun8i-a83t-r-pinctrl
++            - allwinner,sun8i-h3-r-pinctrl
++            - allwinner,sun8i-r40-pinctrl
++            - allwinner,sun50i-a64-r-pinctrl
++            - nextthing,gr8-pinctrl
++
++    then:
++      properties:
++        interrupts:
++          minItems: 1
++          maxItems: 1
+ 
+ additionalProperties: false
+ 
+-- 
+2.24.0
+
