@@ -2,197 +2,182 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AF5C433E7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 09:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 596F9C433E4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 09:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2648221F2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 09:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B9A021D7D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 09:16:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbgGNJKy (ORCPT
+        id S1726431AbgGNJP7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:10:54 -0400
-Received: from mx.socionext.com ([202.248.49.38]:30094 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725793AbgGNJKx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:10:53 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 14 Jul 2020 18:10:51 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 9ACA460060;
-        Tue, 14 Jul 2020 18:10:51 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 14 Jul 2020 18:10:51 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 2AC731A0508;
-        Tue, 14 Jul 2020 18:10:51 +0900 (JST)
-Received: from [10.212.0.26] (unknown [10.212.0.26])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id C7F8F12012F;
-        Tue, 14 Jul 2020 18:10:50 +0900 (JST)
-Subject: Re: [PATCH v2 2/2] phy: socionext: Add UniPhier AHCI PHY driver
- support
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <1593507574-10007-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1593507574-10007-3-git-send-email-hayashi.kunihiko@socionext.com>
- <20200713050527.GR34333@vkoul-mobl>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <9f358850-eb2a-769c-be57-866d77183a7f@socionext.com>
-Date:   Tue, 14 Jul 2020 18:10:50 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Tue, 14 Jul 2020 05:15:59 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:53085 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725833AbgGNJP7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jul 2020 05:15:59 -0400
+Received: from [78.134.114.177] (port=53704 helo=[192.168.77.62])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1jvH2Z-000H1H-17; Tue, 14 Jul 2020 11:15:55 +0200
+Subject: Re: [PATCH v2 4/4] dt-bindings: clk: versaclock5: convert to yaml
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-clk@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
+        Adam Ford <aford173@gmail.com>
+References: <20200708074035.31595-1-luca@lucaceresoli.net>
+ <20200708074035.31595-4-luca@lucaceresoli.net>
+ <20200714031109.GA1210492@bogus>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <6177ebd1-b39a-3b53-3f5b-92f8d1f9881b@lucaceresoli.net>
+Date:   Tue, 14 Jul 2020 11:15:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200713050527.GR34333@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200714031109.GA1210492@bogus>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Vinod,
+Hi Rob,
 
-On 2020/07/13 14:05, Vinod Koul wrote:
-> On 30-06-20, 17:59, Kunihiko Hayashi wrote:
+thanks for you review!
+
+On 14/07/20 05:11, Rob Herring wrote:
+> On Wed, Jul 08, 2020 at 09:40:35AM +0200, Luca Ceresoli wrote:
+>> Convert to yaml the VersaClock bindings document. The mapping between
+>> clock specifier and physical pins cannot be described formally in yaml
+>> schema, then keep it verbatim in the description field.
+>>
+>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+
+[...]
+
+>> +  reg:
+>> +    maxItems: 1
+>> +    description: I2C device address, shall be 0x68 or 0x6a.
 > 
->> +++ b/drivers/phy/socionext/phy-uniphier-ahci.c
->> @@ -0,0 +1,335 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * phy-uniphier-ahci.c - PHY driver for UniPhier AHCI controller
->> + * Copyright 2016-2018, Socionext Inc.
+> Can be a schema:
 > 
-> we are in 2020 now!
+> enum: [ 0x68, 0x6a ]
 
-Oops, I'll adjust it.
+Nice, will fix.
 
->> +static int uniphier_ahciphy_pxs2_power_on(struct uniphier_ahciphy_priv *priv)
->> +{
->> +	int ret;
->> +	u32 val;
 >> +
->> +	/* enable reference clock for PHY */
->> +	val = readl(priv->base + CKCTRL);
->> +	val |= CKCTRL_REF_SSP_EN;
->> +	writel(val, priv->base + CKCTRL);
+>> +  '#clock-cells':
+>> +    const: 1
 >> +
->> +	/* release port reset */
->> +	val = readl(priv->base + CKCTRL);
->> +	val &= ~CKCTRL_P0_RESET;
->> +	writel(val, priv->base + CKCTRL);
->> +
->> +	/* wait until PLL is ready */
->> +	if (priv->data->is_ready_high)
->> +		ret = readl_poll_timeout(priv->base + CKCTRL, val,
->> +					 (val & CKCTRL_P0_READY), 200, 400);
->> +	else
->> +		ret = readl_poll_timeout(priv->base + CKCTRL, val,
->> +					 !(val & CKCTRL_P0_READY), 200, 400);
->> +	if (ret) {
->> +		dev_err(priv->dev, "Failed to check whether PHY PLL is ready\n");
->> +		goto out_disable_clock;
->> +	}
->> +
->> +	return 0;
->> +
->> +out_disable_clock:
->> +	/* assert port reset */
->> +	val = readl(priv->base + CKCTRL);
->> +	val |= CKCTRL_P0_RESET;
->> +	writel(val, priv->base + CKCTRL);
->> +
->> +	/* disable reference clock for PHY */
->> +	val = readl(priv->base + CKCTRL);
->> +	val &= ~CKCTRL_REF_SSP_EN;
->> +	writel(val, priv->base + CKCTRL);
+>> +patternProperties:
+>> +  "^OUT[1-4]$":
+>> +    type: object
+>> +    description:
+>> +      Description of one of the outputs (OUT1..OUT4). See "Clock1 Output
+>> +      Configuration" in the Versaclock 5/6/6E Family Register Description
+>> +      and Programming Guide.
+>> +    properties:
+>> +      idt,mode:
+>> +        description:
+>> +          The output drive mode. Values defined in dt-bindings/clk/versaclock.h
+>> +        enum:
+>> +          - VC5_LVPECL
 > 
-> this seems to be repeated patter, why not add a modifyl() helper here..
+> This is defining a string. Can't use defines here.
 
-Hmm, I try to add helpers for modifying P0_RESET and REF_SSP_EN bits.
+How do I use the defines from include/dt-bindings then? Or should I just
+use the numeric values then, like:
 
+  idt,mode:
+    description:
+      The output drive mode. Values defined in
+      dt-bindings/clk/versaclock.h
+    minimum: 0
+    maximum: 6
+
+?
+
+>> +      idt,voltage-microvolts:
+>> +        description: The output drive voltage.
+>> +        $ref: /schemas/types.yaml#/definitions/uint32
 > 
->> +static int uniphier_ahciphy_pxs3_init(struct uniphier_ahciphy_priv *priv)
->> +{
->> +	int i;
->> +	u32 val;
->> +
->> +	/* setup port parameter */
->> +	val = readl(priv->base + TXCTRL0);
->> +	val &= ~TXCTRL0_AMP_G3_MASK;
->> +	val |= FIELD_PREP(TXCTRL0_AMP_G3_MASK, 0x73);
->> +	val &= ~TXCTRL0_AMP_G2_MASK;
->> +	val |= FIELD_PREP(TXCTRL0_AMP_G2_MASK, 0x46);
->> +	val &= ~TXCTRL0_AMP_G1_MASK;
->> +	val |= FIELD_PREP(TXCTRL0_AMP_G1_MASK, 0x42);
->> +	writel(val, priv->base + TXCTRL0);
->> +
->> +	val = readl(priv->base + TXCTRL1);
->> +	val &= ~TXCTRL1_DEEMPH_G3_MASK;
->> +	val |= FIELD_PREP(TXCTRL1_DEEMPH_G3_MASK, 0x23);
->> +	val &= ~TXCTRL1_DEEMPH_G2_MASK;
->> +	val |= FIELD_PREP(TXCTRL1_DEEMPH_G2_MASK, 0x05);
->> +	val &= ~TXCTRL1_DEEMPH_G1_MASK;
->> +	val |= FIELD_PREP(TXCTRL1_DEEMPH_G1_MASK, 0x05);
->> +
->> +	val = readl(priv->base + RXCTRL);
->> +	val &= ~RXCTRL_LOS_LVL_MASK;
->> +	val |= FIELD_PREP(RXCTRL_LOS_LVL_MASK, 0x9);
->> +	val &= ~RXCTRL_LOS_BIAS_MASK;
->> +	val |= FIELD_PREP(RXCTRL_LOS_BIAS_MASK, 0x2);
->> +	val &= ~RXCTRL_RX_EQ_MASK;
->> +	val |= FIELD_PREP(RXCTRL_RX_EQ_MASK, 0x1);
->> +
->> +	/* dummy read 25 times */
+> Standard unit suffixes have a type already, so drop.
+
+Ok.
+
+>> +allOf:
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            enum:
+>> +              - idt,5p49v5933
+>> +              - idt,5p49v5935
+>> +    then:
+>> +      # Devices with builtin crystal, optional external input
+>> +      properties:
+>> +        clock-names:
+>> +          const: clkin
+>> +        clocks:
+>> +          maxItems: 1
+>> +    else:
+>> +      # Devices without builtin crystal
+>> +      properties:
+>> +        clock-names:
+>> +          anyOf:
+>> +            - required: [ xin ]
+>> +            - required: [ clkin ]
 > 
-> why?
-
-According to the specification document,
-these 25 read accesses make a wait time for the phy to stablize.
-I'll add the reason as comment.
-
+> This isn't valid. I think you want:
 > 
->> +static int uniphier_ahciphy_init(struct phy *phy)
->> +{
->> +	struct uniphier_ahciphy_priv *priv = phy_get_drvdata(phy);
->> +	int ret;
->> +
->> +	ret = clk_prepare_enable(priv->clk_parent);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = reset_control_deassert(priv->rst_parent);
->> +	if (ret)
->> +		goto out_clk_disable;
->> +
->> +	if (priv->data->init) {
->> +		ret = priv->data->init(priv);
->> +		if (ret)
->> +			goto out_rst_assert;
->> +	}
->> +
->> +	return ret;
+> clock-names:
+>   minItems: 1
+>   items:
+>     - const: xin
+>     - const: clkin
 > 
-> return 0?
+> This would mean 'xin' is always required, clkin is optional.
 
-Yes, I'll fix it.
+No, what I wanted to mean is that allowed cases are:
+ * for idt,5p49v5933 and idt,5p49v5935:
+   - only 'xin' (required)
+ * for the other parts one of these:
+   - only 'xin'
+   - only 'clkin'
+   - both 'xin' and 'clkin'
 
-> 
->> +static const struct uniphier_ahciphy_soc_data uniphier_pxs2_data = {
->> +	.init = NULL,
-> 
-> Isn't this superfluous ?
+How do I express that?
 
-Indeed, this can be removed.
 
-Thank you,
+A general note: as a newcomer to yaml bindings I found a steep learning
+curve. Finding a correct construct (not to mention the best one) for
+each situation is time consuming and frustrating. I've been looking at
+existing files for suitable examples but it doesn't work very well.
 
----
-Best Regards
-Kunihiko Hayashi
+Is there any guide to yaml bindings for beginners with examples of
+typical cases? It would greatly help in producing better patches and
+saving time for everybody.
+
+Thanks,
+-- 
+Luca
