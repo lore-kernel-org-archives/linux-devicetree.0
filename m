@@ -2,114 +2,152 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5458FC433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 06:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B10C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 06:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32223217D8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 06:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B2F2221EB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 06:34:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tejj1Erp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tyB5kEh8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726061AbgGNGar (ORCPT
+        id S1725925AbgGNGeP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 02:30:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36368 "EHLO
+        Tue, 14 Jul 2020 02:34:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgGNGar (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 02:30:47 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC5C9C061755;
-        Mon, 13 Jul 2020 23:30:46 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id p20so20291316ejd.13;
-        Mon, 13 Jul 2020 23:30:46 -0700 (PDT)
+        with ESMTP id S1725306AbgGNGeO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 02:34:14 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5A08C061755;
+        Mon, 13 Jul 2020 23:34:14 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id i4so16117075iov.11;
+        Mon, 13 Jul 2020 23:34:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=WDXrzFVh8dPZdUoaPn9Fet8aXFJz7P/2Be+BzrI1pyE=;
-        b=tejj1ErpQNUFtDQMvGW9bNJg1jL6/aKDikj/iPRu5NslOsOp8I0oMU00udNnzmvkSl
-         9qcb2UF9fOj7gxy9Bb9qGzhAI5oy8kaZxB7aml6Y9PXjgQ8npgdvlJ/2oUsj7f9yNvsh
-         +46uOq5N/gkxy9DMtPqpec4S9ttrBprc+xllZHy2kys81rZcPF38FSpo0hS2m9eLQVou
-         C3WsBKCit60KkpttjuFIW2wGybzq1TaOM/4nuuUfkAS8AqAkz35qGYAbv6OrzoP7xtUv
-         uNrIgOoSsKCl+AIVpgHf114ORPpn8++e2u1B+5frd43DvhfG2kLppJQFIKjARSaWNYjT
-         HSIA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mg7wgDULy0lIYE5hnNqN0j2UtYPwULkhOaQ9Kls/Nyc=;
+        b=tyB5kEh80h4y6UqY/UvTDtTj1/IY5xUlBHVQVix/iwHkP+r7UPrvX1yge1andtOWaU
+         mk/1qV78d18S7ZRJ9GhbfiVg1DdsBX9wba0scX51M8BJEwHps8NVftl1kGQ4lBYVpqf7
+         M1jyWUwNxD74fSXeClEQOIRXqBGZ2+rXeD6di4xSv7B2MBSHAne9ofkIyIhv7wF+by1l
+         zxS3BQhuHwsAJN9x2DfjVI9F2sl7Zc8+285WDIEveOwSHKmMd/8Kf1/8lQ/dxqdlUaxj
+         BNasa0voiAVzQlCrE7uFkQIpMh8YIts77J4Rf2rCZZ887byAJ2+nHZQ0RFhH/98PoX2R
+         XNkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=WDXrzFVh8dPZdUoaPn9Fet8aXFJz7P/2Be+BzrI1pyE=;
-        b=DPk7ab+CYe849ge4jQobl0UvayOx8armaOj2dgVVyV4HYd12jRzYtEz0pSPBLTH59y
-         H0d5yA1gzBrnk5M97ojKhEzbWJxp/oNKxbFL8o5huVn5MT8LTr+sxKFSIYEOGsr9X2sf
-         6+ke4HFPkoQ0dhlxuidNcfFtQCyDUB7HPJM3nrqr/o5Nuq9t8QMPXTrCfPYyQFUVRTqp
-         CdGYw3nngJtTZr/W2yp0aKuJqo5/ydUXl28k9KnolB7MpizeNmKHnjNKziyg23qPqb+H
-         eCAVAR5pBgKBeP2NND36E3a4Z8cdDSplJBbx5Jq4xg6eLWRCQoIsncq1byHUlPwN8PuG
-         MqDg==
-X-Gm-Message-State: AOAM533hLCfRv+PLzEJeyGuoLjaisjzXfg3HabPDBbygPsRZu3z+/MDb
-        o9NN1J+A0v/z7wlnZK+pJF4=
-X-Google-Smtp-Source: ABdhPJzAtUV4CLIhPpcRbq3dMdTeGC4Ii5aCix/QzePzBrI1bss70Hgw/d/GfQSJxOxUjCJSShMaNA==
-X-Received: by 2002:a17:906:3784:: with SMTP id n4mr196820ejc.277.1594708245450;
-        Mon, 13 Jul 2020 23:30:45 -0700 (PDT)
-Received: from felia.fritz.box ([2001:16b8:2d88:ea00:c4fb:750d:a5d0:9d75])
-        by smtp.gmail.com with ESMTPSA id t20sm11618717ejd.124.2020.07.13.23.30.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 23:30:44 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Jeff Chase <jnchase@google.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     Rob Herring <robh@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
-        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
-        Pia Eichinger <pia.eichinger@st.oth-regensburg.de>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: rectify CHRONTEL CH7322 CEC DRIVER section
-Date:   Tue, 14 Jul 2020 08:30:35 +0200
-Message-Id: <20200714063035.8635-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mg7wgDULy0lIYE5hnNqN0j2UtYPwULkhOaQ9Kls/Nyc=;
+        b=XyFf5cZs6tVzyu+v+PxlVP2+v5AiDALH8clf8DojsjRsHn/71/HWEt6cwgUljUSHHE
+         UhZR46Hi8bGYU8U06g8s0b1CU2ow+GFGNbEgRbgkkSvJ/ncowxYGAF1LdKhVMNFgR5IH
+         wg7cnuUITTfdan+x812YwqisDs0rr2ddL1aAnR42rgCeG3R6mPVer0Y11av7nb4HeYG9
+         FJI6E8A5OA0ZovgIVK68SIE3Fhgfb/F6s4HTppITVpY7legsC6soiXXshoQIhUDgvFWD
+         78qdIhb7/rD0wwCNRQBawMCwD8xw3IohkU4vtYB4AD4E4/EEkHr02qMfpG8fm8bjx8Wp
+         hwwA==
+X-Gm-Message-State: AOAM532A5VngAImTyv3vuV9XEGQ6g5iT2+bFs8E2Jf8qbczKluvsCt3Y
+        IRIpIc9+48xLezZosaEOTrJ/3rBl88Cb5t9TztY=
+X-Google-Smtp-Source: ABdhPJwT7lxoi1W5OkuUSDXYa65U0eLsDbZo+QW7nVqjhL+XvY+W+cBhzor2TTtyvrY+kkqGl3UK6GC8McCAFTbKtMU=
+X-Received: by 2002:a6b:ee02:: with SMTP id i2mr3525208ioh.110.1594708454180;
+ Mon, 13 Jul 2020 23:34:14 -0700 (PDT)
+MIME-Version: 1.0
+References: <1594696998-3995-1-git-send-email-dillon.minfei@gmail.com>
+ <1594696998-3995-2-git-send-email-dillon.minfei@gmail.com>
+ <20200714133835.3b03b8af@canb.auug.org.au> <CAL9mu0JurdBoXbSxvHUmNFSBOa=RneNyYtzT=C1MvJs10Y-Geg@mail.gmail.com>
+ <20200714135407.35992389@canb.auug.org.au> <CAL9mu0L5=khi2oXaei=EhTmRJC5mC1hj5gZVBHJgowi_3vxk=Q@mail.gmail.com>
+ <20200714153656.4a044437@canb.auug.org.au>
+In-Reply-To: <20200714153656.4a044437@canb.auug.org.au>
+From:   dillon min <dillon.minfei@gmail.com>
+Date:   Tue, 14 Jul 2020 14:33:38 +0800
+Message-ID: <CAL9mu0+sbCPEuriONAzWAFdpb+ak+ufG=vP7Z10eGL8TC=c3JQ@mail.gmail.com>
+Subject: Re: [PATCH v2] Since am437x have the same clock structure with am335x
+ [1][2], reuse the code from Tony Lindgren's patch [3] to fix dcan probe
+ failed on am437x platform.
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Benoit Cousson <bcousson@baylibre.com>, tony@atomide.com,
+        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Commit 7f52faabd2e5 ("media: dt-bindings: Add ch7322 media i2c device")
-slipped in a typo in the CHRONTEL CH7322 CEC DRIVER section.
+Hi Stephen,
 
-Hence, ./scripts/get_maintainer.pl --self-test=patterns complains:
+On Tue, Jul 14, 2020 at 1:37 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi Dillon,
+>
+> On Tue, 14 Jul 2020 13:21:07 +0800 dillon min <dillon.minfei@gmail.com> wrote:
+> >
+> > Thanks, how about the below commit message.
+> >
+> > Subject: [PATCH v4] Fix dcan driver probe failed on am437x platform
+> >
+> > Got following d_can probe errors with kernel 5.8-rc1 on am437x
+> >
+> > [   10.730822] CAN device driver interface
+> > Starting Wait for Network to be Configured...
+> > [  OK  ] Reached target Network.
+> > [   10.787363] c_can_platform 481cc000.can: probe failed
+> > [   10.792484] c_can_platform: probe of 481cc000.can failed with
+> > error -2
+> > [   10.799457] c_can_platform 481d0000.can: probe failed
+> > [   10.804617] c_can_platform: probe of 481d0000.can failed with
+> > error -2
+> >
+> > actually, Tony has fixed this issue on am335x with the patch [3]
+> >
+> > Since am437x has the same clock structure with am335x
+> > [1][2], so reuse the code from Tony Lindgren's patch [3] to fix it.
+> >
+> >
+> > [1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
+> > Integration
+> > [2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
+> > Integration
+> > [3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on am335x")
+> >
+> > Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during
+> > init to read revision")
+> > Signed-off-by: dillon min <dillon.minfei@gmail.com>
+> > ---
+> >
+> > Hi Stephen,
+> >
+> > This changes correct commit messages based on your reviewing.
+> > make Fixes tags to oneline.
+> > make all commit message tags at the end of commit message
+> > make Fixes tags before Signed-off-by line.
+> > add probe failed log to commit message.
+>
+> Apart from the line wrapping, that looks better.  I assume that your
+> email client (looks like Gmail web gui) is wrapping the lines, please
+> see if you can stop it doing that (see the section on Gmail in
+> Documentation/process/email-clients.rst).
+>
+Thanks.
+I checked with git send-email , there is no line wrapping. maybe gmail just has
+the feature which text be split into lines of about 78 characters in
+gmail web clients.
 
-    warning: no file matches    F: \
-        Documentation/devicetree/bindings/media/i2c/chontel,ch7322.yaml
+if add '>' before the line which exceeds 78 characters in gmail web
+clients, this line will not be wrapped.
 
-Fix the typo to address this warning.
+>Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during init to read revision")
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-applies on next-20200713
+I will sumit v4 version for you.
 
-Jeff, please ack this patch.
-Hans, please pick this minor non-urgent patch for your -next tree.
+thanks,
+dillon,
 
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ea296f213e45..43661d432b4b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4114,7 +4114,7 @@ M:	Jeff Chase <jnchase@google.com>
- L:	linux-media@vger.kernel.org
- S:	Maintained
- T:	git git://linuxtv.org/media_tree.git
--F:	Documentation/devicetree/bindings/media/i2c/chontel,ch7322.yaml
-+F:	Documentation/devicetree/bindings/media/i2c/chrontel,ch7322.yaml
- F:	drivers/media/cec/i2c/ch7322.c
- 
- CIRRUS LOGIC AUDIO CODEC DRIVERS
--- 
-2.17.1
-
+> --
+> Cheers,
+> Stephen Rothwell
