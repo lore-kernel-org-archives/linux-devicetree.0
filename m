@@ -2,363 +2,138 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB067C433ED
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 06:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC4DAC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 06:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEFF2221EB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 06:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 856A621D93
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 06:35:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HE0YOIdt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgGNGeo (ORCPT
+        id S1725884AbgGNGfN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 02:34:44 -0400
-Received: from out28-51.mail.aliyun.com ([115.124.28.51]:46153 "EHLO
-        out28-51.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbgGNGeo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 02:34:44 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0362274-0.000277295-0.963495;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16384;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.I1SlfTL_1594708424;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I1SlfTL_1594708424)
-          by smtp.aliyun-inc.com(10.147.41.120);
-          Tue, 14 Jul 2020 14:34:36 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     balbi@kernel.org, robh+dt@kernel.org
-Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com, paul@crapouillou.net
-Subject: [PATCH v3 2/3] USB: PHY: JZ4770: Add support for new Ingenic SoCs.
-Date:   Tue, 14 Jul 2020 14:31:08 +0800
-Message-Id: <20200714063109.102926-3-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200714063109.102926-1-zhouyanjie@wanyeetech.com>
-References: <20200714063109.102926-1-zhouyanjie@wanyeetech.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 14 Jul 2020 02:35:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbgGNGfM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 02:35:12 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3EB8C061755;
+        Mon, 13 Jul 2020 23:35:12 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id t15so1049977pjq.5;
+        Mon, 13 Jul 2020 23:35:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=nYIq3s1IHbdH+MZbpM6kGknWWai88MaOCyqNgWjvORc=;
+        b=HE0YOIdtyktN/30g5UR4aTbDMEiJ60MfhzG2RF8vKWVhG1kla54bXSlfT5Tff4Dw5a
+         T6PjAD6fhfPS3YAfdirgAUBBVtHINZVhLZonhmDEiOrAET+wvq348P8fSeQ5QREeoEj4
+         4smc0y3hv+zQxrPiyTdiur6S3uoW9zn9uyuegIrVLEj2gPXxOeDzVN0yFIJjyTMdxLTx
+         l/EglEwGocda2Ezxp+/qNOv0jJY2TEEXJfsDsX1N4C0EMpMRgUiLnd92sjHMJtfwcOyY
+         ymZRU2iJAaDf3W4WxIdDblZyw4XCNi9H2VYTjl3WRUtnBz8iWwuv+Ksddsh2FSYOiplg
+         QigQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=nYIq3s1IHbdH+MZbpM6kGknWWai88MaOCyqNgWjvORc=;
+        b=gFgffUPYFPrd4stCm8H8n/CJBYkYz0cCYJXNOXTwj1GsZhOInWzVVIG8q9iK5g2mYB
+         d2WbcvPWiVG420iUMbUCZKMEFSshv92uc4KfwmjxnBokZ8IQ87oZT98lIiOdRt1i8T3q
+         TqOkk/FhS0QXP0gsN22w20mza/Z0M2/Y0BMzAz/Mptcz604Zm5XZeKgtk8KSrFQcz1hK
+         R+D7oxQSv1gpXDFhYC+rEelgKtlRVIRvo9lh3H7RCAvlAv0LSZSyxwCRc2pgCh8mMyzp
+         107wGG0uKkF6NayEk6Uu1G0ngOK94iM/HYOS37pTjzWtKzSvSnzf/WwoOT6UJnHfEerB
+         +NoQ==
+X-Gm-Message-State: AOAM531vFL+7WEbwXZTGCqtsqISLgPv/4jXEGqKnxW3EJwa4luEFzNgf
+        U9Redn5xXpuzwDWh+rCGn+Y=
+X-Google-Smtp-Source: ABdhPJzXWYfelP2UlkhJrFFyCyinzaLny15ZuOdnLd3JvnBFfo9xDWUlt3iTnE1a+GsOEMdsc8V+1Q==
+X-Received: by 2002:a17:90a:14a5:: with SMTP id k34mr3214646pja.37.1594708512326;
+        Mon, 13 Jul 2020 23:35:12 -0700 (PDT)
+Received: from fmin-OptiPlex-7060.nreal.work ([103.206.191.8])
+        by smtp.gmail.com with ESMTPSA id q29sm16041215pfl.77.2020.07.13.23.35.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 Jul 2020 23:35:11 -0700 (PDT)
+From:   dillon.minfei@gmail.com
+To:     sfr@canb.auug.org.au, bcousson@baylibre.com, tony@atomide.com,
+        robh+dt@kernel.org
+Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dillon min <dillon.minfei@gmail.com>
+Subject: [PATCH v4] ARM: dts: Configure osc clock for d_can on am437x
+Date:   Tue, 14 Jul 2020 14:35:06 +0800
+Message-Id: <1594708507-6794-1-git-send-email-dillon.minfei@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for probing the phy-jz4770 driver on the JZ4780 SoC,
-the X1000 SoC and the X1830 SoC from Ingenic.
+From: dillon min <dillon.minfei@gmail.com>
 
-Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
-Co-developed-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
-Signed-off-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
----
+V3 -> V4:
+make Fixes tags before Signed-off-by line.
+make subject more clear and short.
+add driver probe failed log to commit message.
 
-Notes:
-    v1->v2:
-    Add bindings for the JZ4780 SoC.
-    
-    v2->v3:
-    Use "of_device_get_match_data" instead "of_match_device"
-    to get version information.
+V2 -> V3:
+make Fixes tags after Signed-off-by line.
 
- drivers/usb/phy/Kconfig      |   4 +-
- drivers/usb/phy/phy-jz4770.c | 173 ++++++++++++++++++++++++++++++++-----------
- 2 files changed, 132 insertions(+), 45 deletions(-)
+V1 -> V2:
+correct commit messages based on Stephen Rothwell's reviewing.
+make Fixes tags to oneline.
+make all commit message tags at the end of commit message
 
-diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
-index 4b3fa78995cf..775f0dd7b5f5 100644
---- a/drivers/usb/phy/Kconfig
-+++ b/drivers/usb/phy/Kconfig
-@@ -185,11 +185,11 @@ config USB_ULPI_VIEWPORT
- 	  controllers with a viewport register (e.g. Chipidea/ARC controllers).
- 
- config JZ4770_PHY
--	tristate "Ingenic JZ4770 Transceiver Driver"
-+	tristate "Ingenic SoCs Transceiver Driver"
- 	depends on MIPS || COMPILE_TEST
- 	select USB_PHY
- 	help
- 	  This driver provides PHY support for the USB controller found
--	  on the JZ4770 SoC from Ingenic.
-+	  on the JZ4770/JZ4780/X1000/X1830 SoC from Ingenic.
- 
- endmenu
-diff --git a/drivers/usb/phy/phy-jz4770.c b/drivers/usb/phy/phy-jz4770.c
-index 8f62dc2a90ff..fb5e1004bc72 100644
---- a/drivers/usb/phy/phy-jz4770.c
-+++ b/drivers/usb/phy/phy-jz4770.c
-@@ -1,12 +1,15 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Ingenic JZ4770 USB PHY driver
-+ * Ingenic SoCs USB PHY driver
-  * Copyright (c) Paul Cercueil <paul@crapouillou.net>
-+ * Copyright (c) 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
-+ * Copyright (c) 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-  */
- 
- #include <linux/clk.h>
- #include <linux/io.h>
- #include <linux/module.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/regulator/consumer.h>
- #include <linux/usb/otg.h>
-@@ -17,11 +20,10 @@
- #define REG_USBVBFIL_OFFSET	0x08
- #define REG_USBPCR1_OFFSET	0x0c
- 
--/* USBPCR */
-+/*USB Parameter Control Register*/
- #define USBPCR_USB_MODE		BIT(31)
- #define USBPCR_AVLD_REG		BIT(30)
--#define USBPCR_INCRM		BIT(27)
--#define USBPCR_CLK12_EN		BIT(26)
-+#define USBPCR_INCR_MASK	BIT(27)
- #define USBPCR_COMMONONN	BIT(25)
- #define USBPCR_VBUSVLDEXT	BIT(24)
- #define USBPCR_VBUSVLDEXTSEL	BIT(23)
-@@ -32,46 +34,80 @@
- 
- #define USBPCR_IDPULLUP_LSB	28
- #define USBPCR_IDPULLUP_MASK	GENMASK(29, USBPCR_IDPULLUP_LSB)
--#define USBPCR_IDPULLUP_ALWAYS	(3 << USBPCR_IDPULLUP_LSB)
--#define USBPCR_IDPULLUP_SUSPEND	(1 << USBPCR_IDPULLUP_LSB)
--#define USBPCR_IDPULLUP_OTG	(0 << USBPCR_IDPULLUP_LSB)
-+#define USBPCR_IDPULLUP_ALWAYS	(0x2 << USBPCR_IDPULLUP_LSB)
-+#define USBPCR_IDPULLUP_SUSPEND	(0x1 << USBPCR_IDPULLUP_LSB)
-+#define USBPCR_IDPULLUP_OTG	(0x0 << USBPCR_IDPULLUP_LSB)
- 
- #define USBPCR_COMPDISTUNE_LSB	17
- #define USBPCR_COMPDISTUNE_MASK	GENMASK(19, USBPCR_COMPDISTUNE_LSB)
--#define USBPCR_COMPDISTUNE_DFT	4
-+#define USBPCR_COMPDISTUNE_DFT	(0x4 << USBPCR_COMPDISTUNE_LSB)
- 
- #define USBPCR_OTGTUNE_LSB	14
- #define USBPCR_OTGTUNE_MASK	GENMASK(16, USBPCR_OTGTUNE_LSB)
--#define USBPCR_OTGTUNE_DFT	4
-+#define USBPCR_OTGTUNE_DFT	(0x4 << USBPCR_OTGTUNE_LSB)
- 
- #define USBPCR_SQRXTUNE_LSB	11
- #define USBPCR_SQRXTUNE_MASK	GENMASK(13, USBPCR_SQRXTUNE_LSB)
--#define USBPCR_SQRXTUNE_DFT	3
-+#define USBPCR_SQRXTUNE_DCR_20PCT	(0x7 << USBPCR_SQRXTUNE_LSB)
-+#define USBPCR_SQRXTUNE_DFT	(0x3 << USBPCR_SQRXTUNE_LSB)
- 
- #define USBPCR_TXFSLSTUNE_LSB	7
- #define USBPCR_TXFSLSTUNE_MASK	GENMASK(10, USBPCR_TXFSLSTUNE_LSB)
--#define USBPCR_TXFSLSTUNE_DFT	3
-+#define USBPCR_TXFSLSTUNE_DCR_50PPT	(0xf << USBPCR_TXFSLSTUNE_LSB)
-+#define USBPCR_TXFSLSTUNE_DCR_25PPT	(0x7 << USBPCR_TXFSLSTUNE_LSB)
-+#define USBPCR_TXFSLSTUNE_DFT	(0x3 << USBPCR_TXFSLSTUNE_LSB)
-+#define USBPCR_TXFSLSTUNE_INC_25PPT	(0x1 << USBPCR_TXFSLSTUNE_LSB)
-+#define USBPCR_TXFSLSTUNE_INC_50PPT	(0x0 << USBPCR_TXFSLSTUNE_LSB)
-+
-+#define USBPCR_TXHSXVTUNE_LSB	4
-+#define USBPCR_TXHSXVTUNE_MASK	GENMASK(5, USBPCR_TXHSXVTUNE_LSB)
-+#define USBPCR_TXHSXVTUNE_DFT	(0x3 << USBPCR_TXHSXVTUNE_LSB)
-+#define USBPCR_TXHSXVTUNE_DCR_15MV	(0x1 << USBPCR_TXHSXVTUNE_LSB)
- 
- #define USBPCR_TXRISETUNE_LSB	4
- #define USBPCR_TXRISETUNE_MASK	GENMASK(5, USBPCR_TXRISETUNE_LSB)
--#define USBPCR_TXRISETUNE_DFT	3
-+#define USBPCR_TXRISETUNE_DFT	(0x3 << USBPCR_TXRISETUNE_LSB)
- 
- #define USBPCR_TXVREFTUNE_LSB	0
- #define USBPCR_TXVREFTUNE_MASK	GENMASK(3, USBPCR_TXVREFTUNE_LSB)
--#define USBPCR_TXVREFTUNE_DFT	5
-+#define USBPCR_TXVREFTUNE_INC_25PPT	(0x7 << USBPCR_TXVREFTUNE_LSB)
-+#define USBPCR_TXVREFTUNE_DFT	(0x5 << USBPCR_TXVREFTUNE_LSB)
- 
--/* USBRDT */
-+/*USB Reset Detect Timer Register*/
-+#define USBRDT_UTMI_RST		BIT(27)
-+#define USBRDT_HB_MASK		BIT(26)
- #define USBRDT_VBFIL_LD_EN	BIT(25)
- #define USBRDT_IDDIG_EN		BIT(24)
- #define USBRDT_IDDIG_REG	BIT(23)
--
--#define USBRDT_USBRDT_LSB	0
--#define USBRDT_USBRDT_MASK	GENMASK(22, USBRDT_USBRDT_LSB)
--
--/* USBPCR1 */
--#define USBPCR1_UHC_POWON	BIT(5)
-+#define USBRDT_VBFIL_EN		BIT(2)
-+
-+/*USB Parameter Control Register 1*/
-+#define USBPCR1_BVLD_REG			BIT(31)
-+#define USBPCR1_DPPD				BIT(29)
-+#define USBPCR1_DMPD				BIT(28)
-+#define USBPCR1_USB_SEL				BIT(28)
-+#define USBPCR1_WORD_IF_16BIT		BIT(19)
-+
-+#define USBPCR1_REFCLKSEL_LSB		26
-+#define USBPCR1_REFCLKSEL_MASK		GENMASK(27, USBPCR1_REFCLKDIV_LSB)
-+#define USBPCR1_REFCLKSEL_CLKCORE	(0x3 << USBPCR1_REFCLKSEL_LSB)
-+
-+#define USBPCR1_REFCLKDIV_LSB		24
-+#define USBPCR1_REFCLKDIV_MASK		GENMASK(25, USBPCR1_REFCLKDIV_LSB)
-+#define USBPCR1_REFCLKDIV_48M		(0x2 << USBPCR1_REFCLKDIV_LSB)
-+#define USBPCR1_REFCLKDIV_24M		(0x1 << USBPCR1_REFCLKDIV_LSB)
-+#define USBPCR1_REFCLKDIV_12M		(0x0 << USBPCR1_REFCLKDIV_LSB)
-+
-+enum ingenic_usb_phy_version {
-+	ID_JZ4770,
-+	ID_JZ4780,
-+	ID_X1000,
-+	ID_X1830,
-+};
- 
- struct jz4770_phy {
-+	enum ingenic_usb_phy_version version;
-+
- 	struct usb_phy phy;
- 	struct usb_otg otg;
- 	struct device *dev;
-@@ -96,6 +132,12 @@ static int jz4770_phy_set_peripheral(struct usb_otg *otg,
- 	struct jz4770_phy *priv = otg_to_jz4770_phy(otg);
- 	u32 reg;
- 
-+	if (priv->version >= ID_X1000) {
-+		reg = readl(priv->base + REG_USBPCR1_OFFSET);
-+		reg |= USBPCR1_BVLD_REG;
-+		writel(reg, priv->base + REG_USBPCR1_OFFSET);
-+	}
-+
- 	reg = readl(priv->base + REG_USBPCR_OFFSET);
- 	reg &= ~USBPCR_USB_MODE;
- 	reg |= USBPCR_VBUSVLDEXT | USBPCR_VBUSVLDEXTSEL | USBPCR_OTG_DISABLE;
-@@ -135,17 +177,59 @@ static int jz4770_phy_init(struct usb_phy *phy)
- 		return err;
- 	}
- 
--	reg = USBPCR_AVLD_REG | USBPCR_COMMONONN | USBPCR_IDPULLUP_ALWAYS |
--		(USBPCR_COMPDISTUNE_DFT << USBPCR_COMPDISTUNE_LSB) |
--		(USBPCR_OTGTUNE_DFT << USBPCR_OTGTUNE_LSB) |
--		(USBPCR_SQRXTUNE_DFT << USBPCR_SQRXTUNE_LSB) |
--		(USBPCR_TXFSLSTUNE_DFT << USBPCR_TXFSLSTUNE_LSB) |
--		(USBPCR_TXRISETUNE_DFT << USBPCR_TXRISETUNE_LSB) |
--		(USBPCR_TXVREFTUNE_DFT << USBPCR_TXVREFTUNE_LSB) |
--		USBPCR_POR;
-+	if (priv->version >= ID_X1830) {
-+		/* rdt */
-+		writel(USBRDT_VBFIL_EN | USBRDT_UTMI_RST, priv->base + REG_USBRDT_OFFSET);
-+
-+		reg = readl(priv->base + REG_USBPCR1_OFFSET) | USBPCR1_WORD_IF_16BIT |
-+			USBPCR1_DMPD | USBPCR1_DPPD;
-+		writel(reg, priv->base + REG_USBPCR1_OFFSET);
-+
-+		reg = USBPCR_IDPULLUP_OTG | USBPCR_VBUSVLDEXT |	USBPCR_TXPREEMPHTUNE;
-+	} else if (priv->version >= ID_X1000) {
-+		reg = readl(priv->base + REG_USBPCR1_OFFSET) | USBPCR1_WORD_IF_16BIT;
-+		writel(reg, priv->base + REG_USBPCR1_OFFSET);
-+
-+		reg = USBPCR_SQRXTUNE_DCR_20PCT | USBPCR_TXPREEMPHTUNE |
-+			USBPCR_TXHSXVTUNE_DCR_15MV | USBPCR_TXVREFTUNE_INC_25PPT;
-+	} else if (priv->version >= ID_JZ4780) {
-+		reg = readl(priv->base + REG_USBPCR1_OFFSET) | USBPCR1_USB_SEL |
-+			USBPCR1_WORD_IF_16BIT;
-+		writel(reg, priv->base + REG_USBPCR1_OFFSET);
-+
-+		reg = USBPCR_TXPREEMPHTUNE;
-+	} else {
-+		reg = USBPCR_AVLD_REG | USBPCR_IDPULLUP_ALWAYS |
-+			USBPCR_COMPDISTUNE_DFT | USBPCR_OTGTUNE_DFT |
-+			USBPCR_SQRXTUNE_DFT | USBPCR_TXFSLSTUNE_DFT |
-+			USBPCR_TXRISETUNE_DFT | USBPCR_TXVREFTUNE_DFT;
-+	}
-+
-+	reg |= USBPCR_COMMONONN | USBPCR_POR;
- 	writel(reg, priv->base + REG_USBPCR_OFFSET);
- 
--	/* Wait for PHY to reset */
-+	/*
-+	 * Power-On Reset(POR)
-+	 * Function:This customer-specific signal resets all test registers
-+	 * and state machines in the USB 2.0 nanoPHY.
-+	 * The POR signal must be asserted for a minimum of 10 μs.
-+	 * For POR timing information:
-+	 *
-+	 * T0: Power-on reset (POR) is initiated. 0 (reference).
-+	 * T1: T1 indicates when POR can be set to 1’b0. (To provide examples,
-+	 * values for T2 and T3 are also shown where T1 = T0 + 30 μs.);
-+	 * In general, T1 must be ≥ T0 + 10 μs. T0 + 10 μs ≤ T1.
-+	 * T2: T2 indicates when PHYCLOCK, CLK48MOHCI, and CLK12MOHCI are
-+	 * available at the macro output, based on the USB 2.0 nanoPHY
-+	 * reference clock source.
-+	 * Crystal:
-+	 *    • When T1 = T0 + 10 μs:
-+	 *      T2 < T1 + 805 μs = T0 + 815 μs
-+	 *    • When T1 = T0 + 30 μs:
-+	 *      T2 < T1 + 805 μs = T0 + 835 μs
-+	 * see "Reset and Power-Saving Signals" on page 60 an “Powering Up
-+	 * and Powering Down the USB 2.0 nanoPHY” on page 73.
-+	 */
- 	usleep_range(30, 300);
- 	writel(reg & ~USBPCR_POR, priv->base + REG_USBPCR_OFFSET);
- 	usleep_range(300, 1000);
-@@ -166,6 +250,15 @@ static void jz4770_phy_remove(void *phy)
- 	usb_remove_phy(phy);
- }
- 
-+static const struct of_device_id ingenic_usb_phy_of_matches[] = {
-+	{ .compatible = "ingenic,jz4770-phy", .data = (void *) ID_JZ4770 },
-+	{ .compatible = "ingenic,jz4780-phy", .data = (void *) ID_JZ4780 },
-+	{ .compatible = "ingenic,x1000-phy", .data = (void *) ID_X1000 },
-+	{ .compatible = "ingenic,x1830-phy", .data = (void *) ID_X1830 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ingenic_usb_phy_of_matches);
-+
- static int jz4770_phy_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -176,11 +269,13 @@ static int jz4770_phy_probe(struct platform_device *pdev)
- 	if (!priv)
- 		return -ENOMEM;
- 
-+	priv->version = (enum ingenic_usb_phy_version)of_device_get_match_data(dev);
-+
- 	platform_set_drvdata(pdev, priv);
- 	priv->dev = dev;
- 	priv->phy.dev = dev;
- 	priv->phy.otg = &priv->otg;
--	priv->phy.label = "jz4770-phy";
-+	priv->phy.label = "ingenic-usb-phy";
- 	priv->phy.init = jz4770_phy_init;
- 	priv->phy.shutdown = jz4770_phy_shutdown;
- 
-@@ -221,23 +316,15 @@ static int jz4770_phy_probe(struct platform_device *pdev)
- 	return devm_add_action_or_reset(dev, jz4770_phy_remove, &priv->phy);
- }
- 
--#ifdef CONFIG_OF
--static const struct of_device_id jz4770_phy_of_matches[] = {
--	{ .compatible = "ingenic,jz4770-phy" },
--	{ }
--};
--MODULE_DEVICE_TABLE(of, jz4770_phy_of_matches);
--#endif
--
--static struct platform_driver jz4770_phy_driver = {
-+static struct platform_driver ingenic_usb_phy_driver = {
- 	.probe		= jz4770_phy_probe,
- 	.driver		= {
--		.name	= "jz4770-phy",
--		.of_match_table = of_match_ptr(jz4770_phy_of_matches),
-+		.name	= "ingenic-usb-phy",
-+		.of_match_table = of_match_ptr(ingenic_usb_phy_of_matches),
- 	},
- };
--module_platform_driver(jz4770_phy_driver);
-+module_platform_driver(ingenic_usb_phy_driver);
- 
- MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
--MODULE_DESCRIPTION("Ingenic JZ4770 USB PHY driver");
-+MODULE_DESCRIPTION("Ingenic SoCs USB PHY driver");
- MODULE_LICENSE("GPL");
+
+V1:
+Got following d_can probe errors with kernel 5.8-rc1 on am437x
+
+[   10.730822] CAN device driver interface
+Starting Wait for Network to be Configured...
+[  OK  ] Reached target Network.
+[   10.787363] c_can_platform 481cc000.can: probe failed
+[   10.792484] c_can_platform: probe of 481cc000.can failed with
+error -2
+[   10.799457] c_can_platform 481d0000.can: probe failed
+[   10.804617] c_can_platform: probe of 481d0000.can failed with
+error -2
+
+actually, Tony has fixed this issue on am335x, the patch [3]
+commit messages:
+"
+The reason why the issue happens is because we now attempt to read the
+interconnect target module revision register by first manually enabling
+all the device clocks in sysc_probe(). And looks like d_can also needs
+the osc clock in addition to the module clock, and it may or may not be
+enabled depending on the bootloader version and if other devices have
+already requested osc clock.
+
+Let's fix the issue by adding osc clock as an optional clock for the
+module for am335x. Note that am437x does not seem to list the osc clock
+at all, so presumably it is not needed for am437x.
+"
+
+from TRM of am335x/am437x [1][2], they have the same clock structure,
+so, we can just reuse [3] for am437x platform.
+
+Tested on custom am4372 board.
+
+[1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
+Integration
+[2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
+Integration
+[3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on am335x")
+
+
+dillon min (1):
+  Since am437x have the same clock structure with am335x [1][2],    
+    reuse the code from Tony Lindgren's patch [reference] to fix dcan
+    probe     failed on am437x platform.
+
+ arch/arm/boot/dts/am437x-l4.dtsi | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
 -- 
-2.11.0
+2.7.4
 
