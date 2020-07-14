@@ -2,146 +2,146 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4E4C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 14:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B676FC433E4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 15:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1360223B0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 14:57:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="X3qdmtoq"
+	by mail.kernel.org (Postfix) with ESMTP id 91A542245A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 15:04:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594739065;
+	bh=FYCfNCt5uaRkVo5QbOItUGbXRJQEdHEvBhLF5JIiyX4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZvYwhLbmnKCfdyL875DMhXVAJdH6IATWM+b9goVCAeJQMZM9tXnYwKCl9mO0wNXDs
+	 op45Q07xmgSnlpygzlCo/cZuwIzwS/yvrtEZCMR3aetwMSOtt3WEzwJjpF/yGLgfDT
+	 QEUDdXuuoRCtZEb+wJZ32xpPKVLXL+ytD/H+ws80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726062AbgGNO5q (ORCPT
+        id S1727033AbgGNPEZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:57:46 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:29612 "EHLO m43-7.mailgun.net"
+        Tue, 14 Jul 2020 11:04:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725925AbgGNO5q (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:57:46 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594738665; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=rPT/6bcoi+yeld8ZbjkMYo22+/QxPs1ApgbqbZ3wZM8=; b=X3qdmtoqaYfqQJYKHdmsenJ6PVxI2TZ8ecXPn/cEAM/xzjHRDGESP+4oZSTIdPOIRixp87pF
- pUxDxlrOUCsRUKCrneh6qsZ/UArYEPJJh7DwuP5I3G+qXXuM1RXSJx4TbBUoG6aoj/00VVgn
- 8gXbt9ZmxXWoJxEZHdVXcyFdrF8=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n19.prod.us-west-2.postgun.com with SMTP id
- 5f0dc7d62991e765cda47a70 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 14 Jul 2020 14:57:26
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4A10BC433A0; Tue, 14 Jul 2020 14:57:26 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        id S1725876AbgGNPEY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jul 2020 11:04:24 -0400
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9C80EC433C8;
-        Tue, 14 Jul 2020 14:57:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9C80EC433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Tue, 14 Jul 2020 08:57:21 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Akhil P Oommen <akhilpo@codeaurora.org>
-Cc:     freedreno@lists.freedesktop.org, dri-devel@freedesktop.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, mka@chromium.org, jonathan@marek.ca,
-        robdclark@gmail.com, rnayak@codeaurora.org
-Subject: Re: [PATCH] drm: msm: a6xx: fix gpu failure after system resume
-Message-ID: <20200714145721.GD24345@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Akhil P Oommen <akhilpo@codeaurora.org>,
-        freedreno@lists.freedesktop.org, dri-devel@freedesktop.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, mka@chromium.org, jonathan@marek.ca,
-        robdclark@gmail.com, rnayak@codeaurora.org
-References: <1594733130-398-1-git-send-email-akhilpo@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id D08B722473;
+        Tue, 14 Jul 2020 15:04:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594739063;
+        bh=FYCfNCt5uaRkVo5QbOItUGbXRJQEdHEvBhLF5JIiyX4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=vKFLh7a7V8L2G7kls9Fkf68/5iKD9IjMArDhOL2udS1vFjV919bMfuiBuhR99/c+W
+         rerP0+vnmTb+9qhqC1iLUMLrbIAcFu9MeN397oe931Pu5+VDjm0IA5F6kkhvu+RvWq
+         GdsMz58j+EV54H9qXsHHRTVWGwH3hJ4tw+UP7fjM=
+Received: by mail-oo1-f42.google.com with SMTP id p26so3398024oos.7;
+        Tue, 14 Jul 2020 08:04:23 -0700 (PDT)
+X-Gm-Message-State: AOAM533M4YaWXafcSvsO9uzZuhhbcBKXiw8tRCbpmGOoxLaodDMO6XaK
+        QOCxIcFhfxvSv/EE9g1OxEFldWI+BJrJaFGbvw==
+X-Google-Smtp-Source: ABdhPJwsDP9x0kim57Rk9m1PvNioEMAED/geuEjKV85XSOp5N+kWkC9OHZn74arPvotNxGhaS6KiH03426VYKBf/v/I=
+X-Received: by 2002:a4a:ae07:: with SMTP id z7mr1744282oom.25.1594739063197;
+ Tue, 14 Jul 2020 08:04:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594733130-398-1-git-send-email-akhilpo@codeaurora.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200627161957.134376-1-anup.patel@wdc.com> <20200627161957.134376-6-anup.patel@wdc.com>
+ <20200714023748.GA1164267@bogus> <CAAhSdy0O0YoDJ84NX8OasjuTdE8pd=Yk51WJWLpBiAEk3AcCQQ@mail.gmail.com>
+In-Reply-To: <CAAhSdy0O0YoDJ84NX8OasjuTdE8pd=Yk51WJWLpBiAEk3AcCQQ@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 14 Jul 2020 09:04:12 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL9xcnzNAtL5nM3tt21pbfwz8qB_BSwfFAtXe0mj=MVEA@mail.gmail.com>
+Message-ID: <CAL_JsqL9xcnzNAtL5nM3tt21pbfwz8qB_BSwfFAtXe0mj=MVEA@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] dt-bindings: timer: Add CLINT bindings
+To:     Anup Patel <anup@brainfault.org>
+Cc:     Anup Patel <anup.patel@wdc.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Palmer Dabbelt <palmerdabbelt@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 06:55:30PM +0530, Akhil P Oommen wrote:
-> On targets where GMU is available, GMU takes over the ownership of GX GDSC
-> during its initialization. So, take a refcount on the GX PD on behalf of
-> GMU before we initialize it. This makes sure that nobody can collapse the
-> GX GDSC once GMU owns the GX GDSC. This patch fixes some weird failures
-> during GPU wake up during system resume.
+On Mon, Jul 13, 2020 at 9:47 PM Anup Patel <anup@brainfault.org> wrote:
+>
+> On Tue, Jul 14, 2020 at 8:07 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Sat, Jun 27, 2020 at 09:49:57PM +0530, Anup Patel wrote:
+> > > We add DT bindings documentation for CLINT device.
+> > >
+> > > Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> > > Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+> > > ---
+> > >  .../bindings/timer/sifive,clint.txt           | 34 +++++++++++++++++++
+> > >  1 file changed, 34 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.txt
+> >
+> > Bindings should be in DT schema format now.
+>
+> Okay, will update.
+>
+> >
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/timer/sifive,clint.txt b/Documentation/devicetree/bindings/timer/sifive,clint.txt
+> > > new file mode 100644
+> > > index 000000000000..45b75347a7d5
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/timer/sifive,clint.txt
+> > > @@ -0,0 +1,34 @@
+> > > +SiFive Core Local Interruptor (CLINT)
+> > > +-------------------------------------
+> > > +
+> > > +SiFive (and other RISC-V) SOCs include an implementation of the SiFive Core
+> > > +Local Interruptor (CLINT) for M-mode timer and inter-processor interrupts.
+> > > +
+> > > +It directly connects to the timer and inter-processor interrupt lines of
+> > > +various HARTs (or CPUs) so RISC-V per-HART (or per-CPU) local interrupt
+> > > +controller is the parent interrupt controller for CLINT device.
+> > > +
+> > > +The clock frequency of CLINT is specified via "timebase-frequency" DT
+> > > +property of "/cpus" DT node. The "timebase-frequency" DT property is
+> > > +described in: Documentation/devicetree/bindings/riscv/cpus.yaml
+> > > +
+> > > +Required properties:
+> > > +- compatible : should be "riscv,clint0" or "sifive,clint-1.0.0". A specific
+> >
+> > A new versioning scheme from SiFive? To review, we don't do version
+> > numbers unless there's a well defined and documented scheme. IOW, one
+> > that's not s/w folks just making up v1, v2, v3, etc.
+>
+> The "riscv,clint0" is already used by various RISC-V systems (including QEMU).
 
-The change looks fine but this explanation is confusing. When I read it I
-thought "oh, man, we weren't taking a reference to the GX PD during resume???"
-but that's not really the case. We *are* taking a reference, just not soon
-enough to avoid possible issues. It would be helpful if you reworded this to
-explain that you are moving the reference and perhaps to shine a bit more light
-on what the "weird" failures are.
+Not my problem that undocumented bindings are being used.
 
-Jordan
+> The "sifive,clint-1.0.0" is for being consistent with the PLIC
+> versioning scheme.
 
-> Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
-> ---
->  drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 18 ++++++++++--------
->  1 file changed, 10 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> index a6f43ff..5b2df7d 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> @@ -873,10 +873,19 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
->  	/* Turn on the resources */
->  	pm_runtime_get_sync(gmu->dev);
->  
-> +	/*
-> +	 * "enable" the GX power domain which won't actually do anything but it
-> +	 * will make sure that the refcounting is correct in case we need to
-> +	 * bring down the GX after a GMU failure
-> +	 */
-> +	if (!IS_ERR_OR_NULL(gmu->gxpd))
-> +		pm_runtime_get_sync(gmu->gxpd);
-> +
->  	/* Use a known rate to bring up the GMU */
->  	clk_set_rate(gmu->core_clk, 200000000);
->  	ret = clk_bulk_prepare_enable(gmu->nr_clocks, gmu->clocks);
->  	if (ret) {
-> +		pm_runtime_put(gmu->gxpd);
->  		pm_runtime_put(gmu->dev);
->  		return ret;
->  	}
-> @@ -919,19 +928,12 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
->  	/* Set the GPU to the current freq */
->  	a6xx_gmu_set_initial_freq(gpu, gmu);
->  
-> -	/*
-> -	 * "enable" the GX power domain which won't actually do anything but it
-> -	 * will make sure that the refcounting is correct in case we need to
-> -	 * bring down the GX after a GMU failure
-> -	 */
-> -	if (!IS_ERR_OR_NULL(gmu->gxpd))
-> -		pm_runtime_get(gmu->gxpd);
-> -
->  out:
->  	/* On failure, shut down the GMU to leave it in a good state */
->  	if (ret) {
->  		disable_irq(gmu->gmu_irq);
->  		a6xx_rpmh_stop(gmu);
-> +		pm_runtime_put(gmu->gxpd);
->  		pm_runtime_put(gmu->dev);
->  	}
->  
-> -- 
-> 2.7.4
-> 
+Where is that documented? This is what I expect you to be following or
+updating to match:
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt
+
+>
+> There is no clear documentation of CLINT versioning scheme. I think it's best
+> to just drop "sifive,clint-1.0.0" . Agree ??
+
+No, because then you are left with a very generic compatible string.
+You need something specific enough to handle any implementation
+features/quirks/bugs without needing a DT update. Typically, this
+means a per SoC compatible string for a block as even the same IP
+version can have different integration quirks.
+
+Rob
