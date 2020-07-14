@@ -8,47 +8,47 @@ X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
 	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BE4C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 09:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B98C433E6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 09:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93398217A0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 09:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9BAD208C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 09:27:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="JfXEF3E3"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="JiK/CXhO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgGNJ1k (ORCPT
+        id S1726818AbgGNJ1a (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:27:40 -0400
-Received: from mail-eopbgr50084.outbound.protection.outlook.com ([40.107.5.84]:27207
+        Tue, 14 Jul 2020 05:27:30 -0400
+Received: from mail-eopbgr50047.outbound.protection.outlook.com ([40.107.5.47]:59355
         "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725955AbgGNJ1i (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:27:38 -0400
+        id S1726803AbgGNJ13 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jul 2020 05:27:29 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UW9RcZN8oxJa0n3VUW73X3DrJU9hkRs2utKujtRuwYUxqH8KI89J5Fqp1x04Oocd8Li6SRS8D4LJZAsRKPMA9i4rrR9vJj6tD5KImwvnXGfcMOcBvng0rWzk9VlYSNMBb8/IIqmDO/jz1YZAsJbBFJk/C6WajXGw030bTtClJcAZgR4o04IapPHpiCKxhnC4hm0EzXZrWN/2mCiq9nUnCmX7CCRLwT8Ot0mwcFB+41oo/s2n/Odp9BOWM7qn7xwgxPSFqaDvs85z5XTtA8+U+oNu5+AmmhlUDuofyPglZtrGmdFrGf+HPNwjtkEirFIXgF1gxfK7S4PZEqpqQ9ukQQ==
+ b=dTx/eoPZCh2578MJsi5A3/nuG4Kyq6XY9sTF4tH24ldBml/9CY6RpanynQyCwSO+Rm9H0R0225WhoYdhekW2TT8qsQOx9aw52nYxSe4xxNJ2GF44JnzxeXxPF12UsPTyvzrc4LbmPkeFVCYS7EdeWn4U6LAdqC4C9ECSH/pyIS6aMSaTavT+fE772OLAYDmiFnhl4Bnrhsg1YEoYmC0rW3AlZXNr2AJuE550RqfPxGUAiicBVeoQ2jMgBlFNX02waiW65yZ+BABRl2GRumy/SgGYBXnM+8D2ImrpDoifqbfRTRl2cMTTXTL7NUabeIie5X494uRdpzhHpvqMs4P14g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6Y+xW4eUZ3BMp8dGzZfaOkqYoOJccc4HMqibnP9MgK0=;
- b=ezBC1lAx/KradxnqDyFBY/Pv87T3vu2RXN7H9GeN51yfSDR9pCYFati+L6hg8mOqPA5WczoBEp57ONFoS5bxjEXUG2DWqbnJvGuF4PyNHDredhK6W1ueu/KNT2R9+rmSFj8y7WB2X+xW3fiYecgddeDa33OlXDDFVcPLI/DJj0CGOTEe6xbnFL3oidAoTUTzMhxiIC/GC3hCjPq43k7bFfm2yXg+20Gaic8Pmnho6K7y34JUu1hmswOn+nxlGu5XuOO2WCF77rNniQp3Pct9QjjKDDrHxIb4+0tamBa11wvtX8Am6ZR3i7WQscSZN1jlKjgZwrMnemf3xTFJKSqeqQ==
+ bh=wnGtdIP/hbdfvrIHlyCNUJzLtnZLrNC7lK23LHA+0xg=;
+ b=htrvTrztdXOvCY93YBf7Rci9+6XTiDhVkhrHuRl6gqUnixiZ8nBC77qH9ce/YZSObBeVubeHJaov1IEZ78169M1jlYw1npVb+cHZ0czYXUPN5NKxtiYyEFZfKsPCWXe2G/reqTR90hPkHlvn2mvE4SFdBY4LAOhfNkrLdRYLXJjOKPwHj+8Nr9bufHfFUqonOvFdG3SCiRn3ecqlCOum8eGAu4466flxRisxfo/6Olx1vXLGV/QCORrQ2yXO89YXNwEV/lULVDJ6/apaqKEOYZ5TFCvCXBY+bh4ZfE/I5Wxr4eAzT85jPoNvhYFs346okCGMHvyuJU9HjwIMwyoWrQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6Y+xW4eUZ3BMp8dGzZfaOkqYoOJccc4HMqibnP9MgK0=;
- b=JfXEF3E3jCaf9jG9kzbOaouf3B9Srjxt5R20dtDhwvBIzUVIe+VJB2K4RkcV1NFoXMZwGsInJ3w8uEa/v4u+K0MPb693XoRiTP7gD2nULvykYm7Xjwlmikyb4BvzxgU5AqKWtD9KvMvNHgHP1gtcTel/JrsiEKwv3G+GJ6JjOcY=
+ bh=wnGtdIP/hbdfvrIHlyCNUJzLtnZLrNC7lK23LHA+0xg=;
+ b=JiK/CXhOTvgX9Uea14OMuHKqbxwszv0SccJBtg/RNfbYxoYFxnIRu/wVFzEVyGdf/eSVmXU5b6z6DeeGkqNhVqQkdPHCvLzU+oeoZ+Lq4iLs77oPwBdmqe6osWqP7iDBGWZaviVgt7mF0ikk0OdSXT6UypOdk3fQLpd9Hy6xQDs=
 Authentication-Results: kernel.org; dkim=none (message not signed)
  header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
 Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
  by VI1PR04MB6270.eurprd04.prod.outlook.com (2603:10a6:803:fb::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Tue, 14 Jul
- 2020 09:27:35 +0000
+ 2020 09:27:26 +0000
 Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
  ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
  ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3174.025; Tue, 14 Jul 2020
- 09:27:35 +0000
+ 09:27:26 +0000
 From:   Robin Gong <yibin.gong@nxp.com>
 To:     vkoul@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org,
         s.hauer@pengutronix.de, festevam@gmail.com,
@@ -57,9 +57,9 @@ To:     vkoul@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org,
 Cc:     kernel@pengutronix.de, linux-imx@nxp.com,
         dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 4/9] dmaengine: fsl-edma-common: export fsl_edma_set_tcd_regs
-Date:   Wed, 15 Jul 2020 01:41:43 +0800
-Message-Id: <1594748508-22179-5-git-send-email-yibin.gong@nxp.com>
+Subject: [PATCH v2 2/9] dmaengine: fsl-edma-common: add condition check for fsl_edma_chan_mux
+Date:   Wed, 15 Jul 2020 01:41:41 +0800
+Message-Id: <1594748508-22179-3-git-send-email-yibin.gong@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1594748508-22179-1-git-send-email-yibin.gong@nxp.com>
 References: <1594748508-22179-1-git-send-email-yibin.gong@nxp.com>
@@ -69,78 +69,61 @@ X-ClientProxiedBy: SG2PR01CA0092.apcprd01.prod.exchangelabs.com
  (2603:10a6:803:119::15)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.67) by SG2PR01CA0092.apcprd01.prod.exchangelabs.com (2603:1096:3:15::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3195.17 via Frontend Transport; Tue, 14 Jul 2020 09:27:31 +0000
+Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.67) by SG2PR01CA0092.apcprd01.prod.exchangelabs.com (2603:1096:3:15::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3195.17 via Frontend Transport; Tue, 14 Jul 2020 09:27:21 +0000
 X-Mailer: git-send-email 2.7.4
 X-Originating-IP: [119.31.174.67]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 25f59668-d2b6-43e0-82d1-08d827d8247c
+X-MS-Office365-Filtering-Correlation-Id: fb5e9702-7499-4f20-d669-08d827d81ec9
 X-MS-TrafficTypeDiagnostic: VI1PR04MB6270:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB6270BC66954A2449E0A8712389610@VI1PR04MB6270.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3513;
+X-Microsoft-Antispam-PRVS: <VI1PR04MB62704B3CF5559E05C51D7C4F89610@VI1PR04MB6270.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1247;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: WRAQY49qC85Asng1RiNNrEt4RDdskgi9HS99+OF570efjDF6fDjS8ydUVqm96yLsD7P/rdVPHFV3Tp9rNu+wWt+q4RxySkNA2AUdAJNhU0YvRJwxTx4qi7tZcMDW5FzLkF0GsgtIj6GW7028BBe/LvHdwlX1t52OciIy9WnCFZaJSq8TZxDImKibUKXmWLCwaA57SP+uPqspn1IhEOFap4MN3oROeVXRiCd7rEl3FMe0uzOt5j4lE4GMGZaWSh3i1zECtUctwvY7NQn2WTdek8F5600b3/AMdHfAu93MIQ56wY70+EdmcnTVNa+RgsjWRChlzIWOFt25KJDhqIC6jQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(66946007)(6486002)(6512007)(66476007)(66556008)(8936002)(4326008)(86362001)(2906002)(6506007)(83380400001)(498600001)(36756003)(16526019)(956004)(2616005)(186003)(6666004)(26005)(5660300002)(8676002)(52116002)(7416002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: wrj+G8KyKWQsr4Q0Q12PgW58ucuv1TMaQl9Sm/aveveoJBT1VsckXEI0XRvJFrCSBrrHCZ/XEI7t92af11t8EIkiJM++dPeSCo5J2X59AbyFoPyLzzofIhyGUtjUkiyDQ+v2nGdxsu6IIgPk17S8aDnaWSHI4GekHCZiwv6LQYMB72QWawSrsnWFjTiNd8f5w/jEH+ysBjRgTq96PA+cOOgdahUrLx75nfmHQhI2yTV4ptbH0V86UySwDsVhz4t+zj5xFI/CoAuSz1QcE1mdH/EZSs8VQ4Vk7OGG44jFxrw9HPtUBwgkDvGprchElpLY7DwEKmak8XkTq03I96ctgB52B7KlZhVz1Sk8Fsd65I9OGya7onjUvtdE8lq8KnkYEHqgxfXj4CbAnKYQiDxIZHpCPHMg7xxupzJPYGgJY7JMVEpJBrtMYPjF1jp8hFqAUhojuURSHjvSOEoz0iTY0iWac89go/ByNujkuXPVN6Q=
+X-Microsoft-Antispam-Message-Info: L533UtPFavhICK6QmU/qzjQ1iG8tSfx4y8g9XNGmBtNnXiUzK87GcZFfyoHWbqxM2zz1G0tY3dm8MXFpmYYTBhdXeVyEUcGnDHp/tTs0Ya2mI0s6+dFtvURLyhw9e3eOHJe2v/rEdfSufLa7QRqMlzVnADFTN/6F9UdxsTL73Et+LssYYOkJejV8UuszRPNSSVmjks7nwmZC7q1LJbeWnDy2hyl8tX3Fj9g1G+Te2EUK+k/xOIAyjTD9rY44gvvQImL39bUeBSZFfvXWCrpmrYpBv4i6ntVdUnfQZFCSoTXlfA9OqZ9cRFyUf60d+inYjfJ3uFzc4F6i8EiVrrc6MQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(396003)(136003)(346002)(376002)(66946007)(6486002)(6512007)(66476007)(66556008)(8936002)(4326008)(86362001)(2906002)(6506007)(83380400001)(478600001)(36756003)(16526019)(956004)(2616005)(186003)(6666004)(26005)(5660300002)(8676002)(52116002)(7416002)(4744005)(316002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: EJcZ/kVzw9XOTuPR0JgQp8oa2OqWsHucD5ursn9j9PDkg4qY5dtJ7swtuXSu8khih8/zJzi/t2PVIRwPCBhpnTMClRRjVTR+r0ZdDVUaRY3HIj/3uOSKTlItwu2kfLtrBkSLYzYHPairTjtswN94i/brdHpilzd0IFqfMCLTMIGOfcBBtYP2lvkqSDzmloK76vdzfCcaZdgm0BhwjGq9E7SZHnSWLdpPqtNQcRfZOC7FPX7vDMymYmsepJYv5brFeHxgxdYJIQ5PF3AfTRXg7Zqjb5VuiuxzhsM0O3LlvUFeTJdWMckLgsSlZNxFxZErLDT6n5p+mgvXP7r6mNFhOLni+cUeW0zL0mbx8O/wNFpG/TDJu8eh6fu2rPsTNV3ZMsePjpDAdMss4MDj5bOdwKIhcE6lJeY6e0YJ005acXEetIqHrgrFPoKZTAt7f92aRfvQAkbsUK54fAA7rA44//Wy68VRG4SwTeSx1Fn1e2A=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 25f59668-d2b6-43e0-82d1-08d827d8247c
+X-MS-Exchange-CrossTenant-Network-Message-Id: fb5e9702-7499-4f20-d669-08d827d81ec9
 X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6638.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2020 09:27:35.3942
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2020 09:27:25.9416
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8VmoAEwxoLclS73kEK9NVXMsFL7OpszC8CNJ8L1kephXylv9EeEoM/W3mvitjwBNY/EGpBjcrLNVGYFlnlffFg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: M79X/HIBQBV/gYIGKIHEpXsFbm+oPKKnyStug9p4z417miw4H4uJOLD/3N2cBeykudUA9wDNyvgZPjVr+UiSyg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6270
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Preparing for edma3 since it need to be called in fsl-edma3.c
+Since next edma3 don't have dmamux, add condition check in the common
+fsl_edma_free_chan_resources().
 
 Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 ---
- drivers/dma/fsl-edma-common.c | 3 ++-
- drivers/dma/fsl-edma-common.h | 2 ++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ drivers/dma/fsl-edma-common.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-index 6ef083c..05d56d8 100644
+index ef5294f0..d19e8a8 100644
 --- a/drivers/dma/fsl-edma-common.c
 +++ b/drivers/dma/fsl-edma-common.c
-@@ -343,7 +343,7 @@ enum dma_status fsl_edma_tx_status(struct dma_chan *chan,
- }
- EXPORT_SYMBOL_GPL(fsl_edma_tx_status);
+@@ -642,7 +642,10 @@ void fsl_edma_free_chan_resources(struct dma_chan *chan)
  
--static void fsl_edma_set_tcd_regs(struct fsl_edma_chan *fsl_chan,
-+void fsl_edma_set_tcd_regs(struct fsl_edma_chan *fsl_chan,
- 				  struct fsl_edma_hw_tcd *tcd)
- {
- 	struct fsl_edma_engine *edma = fsl_chan->edma;
-@@ -374,6 +374,7 @@ static void fsl_edma_set_tcd_regs(struct fsl_edma_chan *fsl_chan,
- 
- 	edma_writew(edma, le16_to_cpu(tcd->csr), &regs->tcd[ch].csr);
- }
-+EXPORT_SYMBOL_GPL(fsl_edma_set_tcd_regs);
- 
- static inline
- void fsl_edma_fill_tcd(struct fsl_edma_chan *fsl_chan,
-diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
-index 87c8d7a..56f29f3 100644
---- a/drivers/dma/fsl-edma-common.h
-+++ b/drivers/dma/fsl-edma-common.h
-@@ -249,5 +249,7 @@ int fsl_edma_alloc_chan_resources(struct dma_chan *chan);
- void fsl_edma_free_chan_resources(struct dma_chan *chan);
- void fsl_edma_cleanup_vchan(struct dma_device *dmadev);
- void fsl_edma_setup_regs(struct fsl_edma_engine *edma);
-+void fsl_edma_set_tcd_regs(struct fsl_edma_chan *fsl_chan,
-+				struct fsl_edma_hw_tcd *tcd);
- 
- #endif /* _FSL_EDMA_COMMON_H_ */
+ 	spin_lock_irqsave(&fsl_chan->vchan.lock, flags);
+ 	fsl_chan->edma->drvdata->dis_req(fsl_chan);
+-	fsl_edma_chan_mux(fsl_chan, 0, false);
++
++	if (fsl_chan->edma->drvdata->dmamuxs)
++		fsl_edma_chan_mux(fsl_chan, 0, false);
++
+ 	fsl_chan->edesc = NULL;
+ 	vchan_get_all_descriptors(&fsl_chan->vchan, &head);
+ 	fsl_edma_unprep_slave_dma(fsl_chan);
 -- 
 2.7.4
 
