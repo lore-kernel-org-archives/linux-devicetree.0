@@ -2,85 +2,129 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBEDC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 00:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED984C433E4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 00:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE8C21927
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 00:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C658021883
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 00:03:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594684955;
-	bh=VJZ1cxqn/AVkygDwMsR/tyBFBleASfDGByLwoqN6lY0=;
+	s=default; t=1594685036;
+	bh=xNYem6YA7j8MbtSO9ITmNVLbUgSZdNCAXdIewZIIF5A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fBHdH417bEtpAT2Zu/6ZaBGGFis+j+4S+b+mGslMBxHpPsgBvbJ3N4a1nItf3b6bi
-	 Qv/Gqj7v3R9nYKOlExpGIS5kxISxSKO2DmjWjWegevZvDIXyR0vYqMrSGZkExnLKxP
-	 d2T3GoTDzPy/RJBnjibOfYKacmJPXPNHVQTrC+HI=
+	b=aAb2X8LD5je0Po+VoKeyVStJNIT3oE+a6kcVxKcSw8LsJiWSASKMykPrGgm2a1MHi
+	 2Q4nHZ7tWDjwfk5PCycWfE0UEKZCjE1Znep8mOx9yxT+XGwCEje7lfP0LI9p+auN8G
+	 SXyWD3XFbph2lxAHOW004PV2rAPQlgbrGDbn2n6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726629AbgGNACe (ORCPT
+        id S1726339AbgGNADz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 20:02:34 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:34051 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgGNACe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 20:02:34 -0400
-Received: by mail-il1-f194.google.com with SMTP id t4so12806522iln.1;
-        Mon, 13 Jul 2020 17:02:33 -0700 (PDT)
+        Mon, 13 Jul 2020 20:03:55 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38270 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbgGNADz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 20:03:55 -0400
+Received: by mail-io1-f68.google.com with SMTP id l1so15468236ioh.5;
+        Mon, 13 Jul 2020 17:03:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HdkxFP6RySWIBJNgeXU3DOswKHXBO1oVzLiJk/Yo1J0=;
-        b=WT8JCUECHiIUGuhoyefJdgx9fpZwg90n998//5BzZ66RyQWTheGUE5Mm0MuCbHsuU0
-         PGgI480J9PmB+PEiC3AgclkMGrkXcbJNJQ+h4XkAUKmEpyUVxTN3491q4AP/Lts82yYq
-         MP2YbbxUrXoh/I4KFeMIQ3GfCjIQmUVmh4QkRWXhsoisaR1SGkNF+Qlvsb9ypulaZhBK
-         Pds2HuUoil561jAM4NlOWRgjtxAVRPp1rh9lqO3ruq/K36Hbfut5VPo9fYQbq30Triuw
-         s4fW+Gq0K8DoLhCbBtQc85AUhRxMzHbULXW2bHrR9ojqEWxBJeMclLWd2EVwIexbGLWo
-         wkqw==
-X-Gm-Message-State: AOAM533LQvV7qO6nU1vx4TV7GAktrhJPPqi26ffxQFR5GP/vkS94KcSZ
-        uuXNNgyc8kfZMAphRW3sUw==
-X-Google-Smtp-Source: ABdhPJzkMFBVjplcCCONjH2uvM40l21gPZTa/5pBmaoQH0Y0NKi5HsLtcSW8OLDgOWsaAs0rVbPE3A==
-X-Received: by 2002:a05:6e02:48b:: with SMTP id b11mr2345337ils.87.1594684953219;
-        Mon, 13 Jul 2020 17:02:33 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=evai81ZnlRDbfusVNXIm1GHJcQ/JXmRNmH72lDjI1z0=;
+        b=TlO/SMXf/4yISNUp8G2BSjL9ZP6T/lzVl3Y2V+DsfC2iou6GcaRFnaWPgo30db5xMt
+         SpvZOhD+oEmKU7eiQ3cw2pH8ahmdA7gdfeoF5H1WP0W27KQDIB298bQ98s780PcnqkIB
+         tDLgUx7fAON4ApLmf5Wd0EhZ4UFQPFslIBHxvwCQOi99XSql7gs/STzwf9Wj/9SS7RTn
+         V5nF/nepEKsll14WM1amacVyJMbrTJd9WlRsyjK2AH+ZxNNVtLRnJYMCgYyqPkXa4B6R
+         YS29O7H/PIelucIMTkufMEVENhi/L+QQe/FzE3s8IAtsaPZhre4aYDBxr4liblK+EVmE
+         kpLQ==
+X-Gm-Message-State: AOAM5314HLHyCLwEJSlJKpt8YPcohOIP0FgITyKGsXgTiBawM66ZSfGl
+        4Jk5R/KRx3Eaakto3gBiNg==
+X-Google-Smtp-Source: ABdhPJwmp0epEIu44qjO8H2aC4abKmodnsLUIgzBjPG6vi2TMwpK56lYVwvbS1d4waPrIsEMMIgHhA==
+X-Received: by 2002:a02:ccb3:: with SMTP id t19mr2982333jap.122.1594685034204;
+        Mon, 13 Jul 2020 17:03:54 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id q5sm9071188ilm.73.2020.07.13.17.02.32
+        by smtp.gmail.com with ESMTPSA id f206sm8678056ilh.75.2020.07.13.17.03.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 17:02:32 -0700 (PDT)
-Received: (nullmailer pid 966436 invoked by uid 1000);
-        Tue, 14 Jul 2020 00:02:31 -0000
-Date:   Mon, 13 Jul 2020 18:02:31 -0600
+        Mon, 13 Jul 2020 17:03:53 -0700 (PDT)
+Received: (nullmailer pid 968214 invoked by uid 1000);
+        Tue, 14 Jul 2020 00:03:52 -0000
+Date:   Mon, 13 Jul 2020 18:03:52 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v2 8/8] dt-bindings: media: renesas, vsp1: Add
- power-domains and resets
-Message-ID: <20200714000231.GA966388@bogus>
-References: <20200621004734.28602-1-laurent.pinchart+renesas@ideasonboard.com>
- <20200621004734.28602-9-laurent.pinchart+renesas@ideasonboard.com>
+To:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Kaiser <martin@kaiser.cx>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] dt-bindings: rng: add RNGB compatibles for i.MX6
+ SoCs
+Message-ID: <20200714000352.GA966545@bogus>
+References: <20200621145658.12528-1-horia.geanta@nxp.com>
+ <20200621145658.12528-2-horia.geanta@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200621004734.28602-9-laurent.pinchart+renesas@ideasonboard.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200621145658.12528-2-horia.geanta@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 21 Jun 2020 03:47:34 +0300, Laurent Pinchart wrote:
-> The power-domains and resets properties are used in all DT sources in
-> the kernel but are absent from the bindings. Document them and make them
-> mandatory.
+On Sun, Jun 21, 2020 at 05:56:54PM +0300, Horia Geantă wrote:
+> RNGB block is found in some i.MX6 SoCs - 6SL, 6SLL, 6ULL, 6ULZ.
+> Add corresponding compatible strings.
 > 
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Note:
+> 
+> Several NXP SoC from QorIQ family (P1010, P1023, P4080, P3041, P5020)
+> also have a RNGB, however it's part of the CAAM
+> (Cryptograhic Accelerator and Assurance Module) crypto accelerator.
+> In this case, RNGB is managed in the caam driver
+> (drivers/crypto/caam/), since it's tightly related to
+> the caam "job ring" interface, not to mention CAAM internally relying on
+> RNGB as source of randomness.
+> 
+> On the other hand, the i.MX6 SoCs with RNGB have a DCP
+> (Data Co-Processor) crypto accelerator and this block and RNGB
+> are independent.
+> 
+> Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
 > ---
->  .../devicetree/bindings/media/renesas,vsp1.yaml    | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+>  Documentation/devicetree/bindings/rng/imx-rng.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/rng/imx-rng.txt b/Documentation/devicetree/bindings/rng/imx-rng.txt
+> index 405c2b00ccb0..eb227db9e684 100644
+> --- a/Documentation/devicetree/bindings/rng/imx-rng.txt
+> +++ b/Documentation/devicetree/bindings/rng/imx-rng.txt
+> @@ -5,6 +5,9 @@ Required properties:
+>                 "fsl,imx21-rnga"
+>                 "fsl,imx31-rnga" (backward compatible with "fsl,imx21-rnga")
+>                 "fsl,imx25-rngb"
+> +               "fsl,imx6sl-rngb"
+> +               "fsl,imx6sll-rngb"
+> +               "fsl,imx6ull-rngb"
 
-Acked-by: Rob Herring <robh@kernel.org>
+These are all different? IOW, no fallback compatible?
+
+>                 "fsl,imx35-rngc"
+>  - reg : offset and length of the register set of this block
+>  - interrupts : the interrupt number for the RNG block
+> -- 
+> 2.17.1
+> 
