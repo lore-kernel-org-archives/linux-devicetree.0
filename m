@@ -2,115 +2,95 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0412EC433E4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 14:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC79CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 14:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D14D0222C8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 14:05:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594735556;
-	bh=P/b3qBim58jOi0T9iazFlSIK9JF/mfU1hTzN9suN5hA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Lf0mehj8R6xrWreKQEbpKFhci4bAgDbG0dExVY0MT08jVPEuGSYUOa6N79zjwLEOj
-	 UzwR0Kr2Jc2mwT22dSGBw53x7j8tE+z+7w5PZpRK/dNVd6a9t2JG1b+LLbtxxs47MW
-	 uMvBXp68Xnp4Jc0H/g8Wp62t/LwJfyLF1mbSeCjQ=
+	by mail.kernel.org (Postfix) with ESMTP id AAA6A22510
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 14:15:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726050AbgGNOF4 (ORCPT
+        id S1726918AbgGNOPJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:05:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39580 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbgGNOF4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:05:56 -0400
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72389222C8;
-        Tue, 14 Jul 2020 14:05:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594735555;
-        bh=P/b3qBim58jOi0T9iazFlSIK9JF/mfU1hTzN9suN5hA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Dcswyz5UqgNEro6U2tGc1+7TSVtrOoEjeQkDpmOzTtIp5OrgVP5yJMSf+eUiSZn9g
-         8Rm4slSOye1Wq+v6n/lSkE4SqlphAVYeRsdE4YHQk7v1FNGPax1rETYZb9/lPtka8F
-         M2W6UckPkuOH47FxomIioJPrdwDjrIJ4tqro5HIk=
-Received: by mail-oo1-f47.google.com with SMTP id v26so1778605ood.1;
-        Tue, 14 Jul 2020 07:05:55 -0700 (PDT)
-X-Gm-Message-State: AOAM532H8DPO9FJkRoF4GzolHN7yUuGCDtEp1D2p5GWR0APNF2wIOtgt
-        3ECEq4+pCFbksAv0sR+rogpzmOyilQAxtZC3Fw==
-X-Google-Smtp-Source: ABdhPJwt7s8kLRi4lZYvoY3CPMfpFeErf+RroL4RvEsrKUanQ9XskXBuGGgwa0AfXOesUjk3DztRE0blcNThYHxe6Ic=
-X-Received: by 2002:a05:6820:1015:: with SMTP id v21mr4586237oor.50.1594735550633;
- Tue, 14 Jul 2020 07:05:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200622113740.46450-1-paul@crapouillou.net> <20200713153252.GA234029@bogus>
- <ADZEDQ.ZXJ99TAYD15S2@crapouillou.net>
-In-Reply-To: <ADZEDQ.ZXJ99TAYD15S2@crapouillou.net>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 14 Jul 2020 08:05:37 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+nHZsbOMPpXC7NWp1etgVL57Q+o=gr6BJ6ijAq1pLJUw@mail.gmail.com>
-Message-ID: <CAL_Jsq+nHZsbOMPpXC7NWp1etgVL57Q+o=gr6BJ6ijAq1pLJUw@mail.gmail.com>
-Subject: Re: [PATCH RESEND v2] dt-bindings: pinctrl: Convert
- ingenic,pinctrl.txt to YAML
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Linus Walleij <linus.walleij@linaro.org>, od@zcrc.me,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
+        Tue, 14 Jul 2020 10:15:09 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:33610 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgGNOPJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 10:15:09 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id A21E68030867;
+        Tue, 14 Jul 2020 14:15:06 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 3m-kbe7wnLov; Tue, 14 Jul 2020 17:15:06 +0300 (MSK)
+Date:   Tue, 14 Jul 2020 17:15:04 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v5 5/6] bus: cdmm: Add MIPS R5 arch support
+Message-ID: <20200714141504.oybqzaii5hcdy7cq@mobilestation>
+References: <20200714125753.22466-1-Sergey.Semin@baikalelectronics.ru>
+ <20200714125753.22466-6-Sergey.Semin@baikalelectronics.ru>
+ <CAK8P3a09RW+zCMJ9Luh2C3NkYPdY4Esu6EKk_QX_i4faV-rUjg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a09RW+zCMJ9Luh2C3NkYPdY4Esu6EKk_QX_i4faV-rUjg@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 9:36 AM Paul Cercueil <paul@crapouillou.net> wrote:
->
-> Hi Rob,
->
-> Le lun. 13 juil. 2020 =C3=A0 9:32, Rob Herring <robh@kernel.org> a =C3=A9=
-crit :
-> > On Mon, Jun 22, 2020 at 01:37:40PM +0200, Paul Cercueil wrote:
-> >>  Convert the ingenic,pinctrl.txt doc file to ingenic,pinctrl.yaml.
-> >>
-> >>  In the process, some compatible strings now require a fallback, as
-> >> the
-> >>  corresponding SoCs are pin-compatible with their fallback variant.
-> >>
-> >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> >>  ---
-> >>
-> >>  Notes:
-> >>      v2: - Use 'pinctrl' instead of 'pin-controller' as the node name
-> >>          - remove 'additionalProperties: false' since we will have
-> >> pin conf nodes
+On Tue, Jul 14, 2020 at 03:28:30PM +0200, Arnd Bergmann wrote:
+> On Tue, Jul 14, 2020 at 2:58 PM Serge Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
 > >
-> > What do those look like? They need to be described, but that can be a
-> > follow-up.
->
-> These are generic conf nodes that are handled by the pinctrl core.
+> >  config MIPS_CDMM
+> >         bool "MIPS Common Device Memory Map (CDMM) Driver"
+> > -       depends on CPU_MIPSR2
+> > +       depends on CPU_MIPSR2 || CPU_MIPSR5
+> >         help
+> 
 
-No such thing. There's a set of common properties, but that is all.
-You still need to document which properties apply because it is
-doubtful they all do.
+> Wouldn't a kernel built for P5600 have CPU_MIPSR2 set already?
 
-> Nothing specific to the hardware described here. The subnodes don't
-> have any specific pattern so it is not possible to represent them in
-> devicetree (we'd need a 'catch them all' wildcard pattern property).
+No. P5600 core is based on MIPS32 r5, for which since 5.8 there has been a
+dedicated kernel config CPU_MIPSR5 available. 
 
-Ideally, the nodes should be named something we can match on like
-"-pins$", but if not you can do:
+> I thought R5 was just a backwards-compatible extension of R2.
 
-additionalProperties:
-  type: object
-  $ref: pincfg-node.yaml#
-  properties:
-    bias-disable: true
-    ...
-  additionalProperties: false
+Yes, it's an extension and they are compatible in most of aspects, but
+there are still differences, which when activated/used make kernel built
+for R5 being incompatible with R2. For instance there is an ISA
+extension in R5 which hasn't been available in R5 like "eretnc"
+(return from exceptions with no atomic flag cleared), "mfhc/mthc0"
+(extended C0 register move instructions), etc. There is some other
+features/optimizations available since R5. Please see commit
+ab7c01fdc3cf ("mips: Add MIPS Release 5 support") for details.
 
+> 
+> If not, what about R3?
 
-Rob
+Currently if some chip is equipped with R3, then the kernel must be built
+for R2 with features like EVA enabled if it's required.
+
+-Sergey
+
+> 
+>       Arnd
