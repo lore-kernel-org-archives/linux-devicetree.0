@@ -2,91 +2,112 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE7CC433FB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A94BAC433E5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA91520857
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ED15217A0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:55:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbgGNHjl (ORCPT
+        id S1726769AbgGNHzc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 03:39:41 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41212 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727119AbgGNHjk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 03:39:40 -0400
-Received: by mail-oi1-f193.google.com with SMTP id y22so13188853oie.8;
-        Tue, 14 Jul 2020 00:39:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dCYnWiBfrUG0V4QV9bfy3mtM9Gw/6z5cymsRyqfOxPU=;
-        b=qH/1FIlN+DJH4FNmhUoS7tmmK6M/URGpHYWNJAy3Mb44wZiS8hmILq834C2QfxiBev
-         5wxeR/tplU0cLeQwL7TOwORTx/No9dbYn/O12Ben4/WH6T2x+l7f2jjmmyc7cV+gykT2
-         7lGobbFVkO0qGam55RFFxM/fv/oNdLJDtwqYjoI/oEivY9y2xdGNE2KML9la63CrzeQ9
-         EbiBQWVhMZSafn2O0Mv6Ub1fZQgMymQ8dmBXLuU9UygADKTYbbz+YzsyeNdDlw1TiCM+
-         wfYhL2VoViWMzpQGMCmYq12J3CQILK5yXMWscylb8Te0URo+EaSkWnnc09LMK0nZHfAh
-         EIAg==
-X-Gm-Message-State: AOAM53284iKjupKdrQ1a0mF9Os3HxzeD1yPYYctW9K9oAaD0F2TfCtv7
-        VM0H6Z96FW4XYXy3kqjsG8ftuuzCC9n/hgIgt9A=
-X-Google-Smtp-Source: ABdhPJx5dphEyeiFZMm6iXlEYQPyjm7HBBuh4FxBXEBpFTIMln0CZySUEMQ/80bez3KevRXtht7yiFFsC0OTtXhX8oU=
-X-Received: by 2002:aca:5c41:: with SMTP id q62mr2546599oib.148.1594712379512;
- Tue, 14 Jul 2020 00:39:39 -0700 (PDT)
+        Tue, 14 Jul 2020 03:55:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49486 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbgGNHzc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 03:55:32 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E86F1C061755
+        for <devicetree@vger.kernel.org>; Tue, 14 Jul 2020 00:55:31 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <a.fatoum@pengutronix.de>)
+        id 1jvFmg-0007Gm-Ku; Tue, 14 Jul 2020 09:55:26 +0200
+Subject: Re: [PATCH 3/3] ARM: dts: colibri-imx7: add usb dual-role switch
+ capability
+To:     Philippe Schenker <philippe.schenker@toradex.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+References: <20200710132423.497230-1-philippe.schenker@toradex.com>
+ <20200710132423.497230-3-philippe.schenker@toradex.com>
+ <73240ab0-5069-40c5-4ade-7fcc2207dfaf@pengutronix.de>
+ <c76c0fd056512a3f8e24bf06e7bb7e1650090609.camel@toradex.com>
+From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
+Message-ID: <7e6f8135-120f-0831-20ad-25648ea646b8@pengutronix.de>
+Date:   Tue, 14 Jul 2020 09:55:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <1594676120-5862-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594676120-5862-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594676120-5862-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 14 Jul 2020 09:39:28 +0200
-Message-ID: <CAMuHMdVyJTZ2-YS-WvjAr0ca_EfNdLk3+PEOSK8L5vShd97VWg@mail.gmail.com>
-Subject: Re: [PATCH 4/9] dt-bindings: dma: renesas,rcar-dmac: Document
- R8A774E1 bindings
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <c76c0fd056512a3f8e24bf06e7bb7e1650090609.camel@toradex.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 11:35 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Renesas RZ/G2H (R8A774E1) SoC also has the R-Car gen3 compatible
-> DMA controllers, therefore document RZ/G2H specific bindings.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Hello Philippe,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On 7/13/20 1:53 PM, Philippe Schenker wrote:
+> On Mon, 2020-07-13 at 11:46 +0200, Ahmad Fatoum wrote:
+>> Hello Philippe,
+>>
+>>> +	extcon_usbc_det: usbc_det {
+>>> +		compatible = "linux,extcon-usb-gpio";
+>>
+>> According to 4602f3bff266 ("usb: common: add USB GPIO based connection
+>> detection driver"):
+>> "the old way using extcon to support USB Dual-Role switch is now
+>> deprecated
+>>  when use Type-B connector."
+>>
+>> Have you considered using a compatible = "gpio-usb-b-connector" child
+>> node instead?
+>>
+>> Cheers,
+>> Ahmad
+> 
+> Thanks for the Hint Ahmad,
+> 
+> I already tried and just now tried again but it doesn't work on our
+> hardware. Are you sure this works with chipidea driver?
 
-Gr{oetje,eeting}s,
+I haven't, just wanted to point its existence out in case you didn't know.
+Seems we need to call of_platform_populate somewhere in the driver.
+Unsure what other changes are necessary.
 
-                        Geert
+> Should this new usb-connector stuff work in general with every old
+> driver?
+
+If the driver support isn't there yet, I think use of extcon is fine as is.
+
+Thanks
+Ahmad
+
+> 
+> Philippe
+
+
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
