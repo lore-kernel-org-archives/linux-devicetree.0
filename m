@@ -2,98 +2,161 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73963C433EA
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 13:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2DBC433E8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 13:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EFAB22280
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 13:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F08E2224B2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 13:46:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594734397;
+	bh=aE6m+220/YSfMYlMHN697thZzIYExXhOHsKVgiloIHY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=C2Nc7Ha28X/wJYAgLSrkEAPJhiiQG+MVYCXS+oxsxC855R4DbQEQv6yuIYr968f+z
+	 j8+WN2symY7JgX6UC1LCVp52OT5IfaCOupezxEkCS5luP5TfltXGTxKod/VWQjKH9q
+	 cczkHMaWuh4SYsIoOMUoef+9q3cvllay3YA/u4RY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbgGNNd6 (ORCPT
+        id S1727858AbgGNNqd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 09:33:58 -0400
-Received: from mga18.intel.com ([134.134.136.126]:19097 "EHLO mga18.intel.com"
+        Tue, 14 Jul 2020 09:46:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727925AbgGNNd5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 09:33:57 -0400
-IronPort-SDR: AnBqV1kc8Cj5OdFzXAvchzPCJ+5mvObDXOtPcmYQPqMeJIhoCBSWChwFzmpZwMctVXZqSCmOTB
- cqyHfw/KprBA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="136349156"
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="136349156"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 06:33:57 -0700
-IronPort-SDR: rrZ1bSERUgKSuqiBPFOVgVjs4jYQ+9u5vAjvsiwiZ3l/LqlEK3KFRuiBNl+3x5FGScs1S5RZXE
- v4WP7wBZ5NtA==
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="459691310"
-Received: from dconcanx-desk.ger.corp.intel.com ([10.252.20.124])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 06:33:52 -0700
-Message-ID: <445bb8712b57edb02e776bc47a1350c43f37efff.camel@linux.intel.com>
-Subject: Re: [PATCH v2 0/5] Add initial Keem Bay SoC / Board support
-From:   Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-List-Id: <soc.lore.kernel.org>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Olof Johansson <olof@lixom.net>,
-        DTML <devicetree@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Paul Murphy <paul.j.murphy@intel.com>,
-        Will Deacon <will@kernel.org>,
-        Daniele Alessandrelli <daniele.alessandrelli@intel.com>
-Date:   Tue, 14 Jul 2020 14:33:44 +0100
-In-Reply-To: <CAK8P3a3GVZftAZKEHC3TjDRL86vYOkND6TNuVq1KjssOHi5AXw@mail.gmail.com>
-References: <20200708175020.194436-1-daniele.alessandrelli@linux.intel.com>
-         <CAK8P3a3GVZftAZKEHC3TjDRL86vYOkND6TNuVq1KjssOHi5AXw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        id S1725906AbgGNNqc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jul 2020 09:46:32 -0400
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EFF722515;
+        Tue, 14 Jul 2020 13:46:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594734391;
+        bh=aE6m+220/YSfMYlMHN697thZzIYExXhOHsKVgiloIHY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=rqD/hZ68IomJYl8uX16+l7yW9YzX+Tq+FiQvbQV08s1jVIcwaX7x8lTDCe6rt+ZBa
+         Gt7h2wIwfsxjIzzkzy66cc/pprauO4dBf9+GidwGQEdX0OQkPs6wUEX7e8DAFq394H
+         UCN7Orhrvrip67ZKIteaDpLMLyWo7uSoHhd/Yj58=
+Received: by mail-ot1-f42.google.com with SMTP id 18so13047670otv.6;
+        Tue, 14 Jul 2020 06:46:31 -0700 (PDT)
+X-Gm-Message-State: AOAM5331KhUSLOB8a+0caCit0UpUeMEBW6ClVUcb/1wCRCJ3rSFA3RI9
+        Z2g9tgmZ9hY4DaPxFDUbLm9ZAFUbnQD0kuNnJw==
+X-Google-Smtp-Source: ABdhPJxfSzrolS+34yv9srge0rhF3g9YW0NmHqghsJKkBRg71RVBlCQqSIjESPLKZ4tT8EhTiG7wO/yRMM6L+Rnx8yI=
+X-Received: by 2002:a9d:2646:: with SMTP id a64mr3888709otb.107.1594734390765;
+ Tue, 14 Jul 2020 06:46:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <1594649209-29394-1-git-send-email-sumitg@nvidia.com>
+ <1594649209-29394-2-git-send-email-sumitg@nvidia.com> <20200713164214.GA341271@bogus>
+ <70a0a8ee-b79a-2a05-5150-2ee0faaf2730@nvidia.com>
+In-Reply-To: <70a0a8ee-b79a-2a05-5150-2ee0faaf2730@nvidia.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 14 Jul 2020 07:46:11 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL1CuumdT1CZiofEZw9j+3gsir8JwSrZVfcxFxEB=bavQ@mail.gmail.com>
+Message-ID: <CAL_JsqL1CuumdT1CZiofEZw9j+3gsir8JwSrZVfcxFxEB=bavQ@mail.gmail.com>
+Subject: Re: [TEGRA194_CPUFREQ PATCH v5 1/4] dt-bindings: arm: Add t194 ccplex
+ compatible and bpmp property
+To:     Sumit Gupta <sumitg@nvidia.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        devicetree@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
+        Timo Alho <talho@nvidia.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        bbasu@nvidia.com, Mikko Perttunen <mperttunen@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 2020-07-14 at 14:40 +0200, Arnd Bergmann wrote:
-> On Wed, Jul 8, 2020 at 7:50 PM Daniele Alessandrelli
-> <daniele.alessandrelli@linux.intel.com> wrote:
-> > Hi,
-> > 
-> > This patch-set adds initial support for a new Intel Movidius SoC
-> > code-named
-> > Keem Bay. The SoC couples an ARM Cortex A53 CPU with an Intel
-> > Movidius VPU.
-> > 
-> > This initial patch-set enables only the minimal set of components
-> > required
-> > to make the Keem Bay EVM board boot into initramfs.
-> > 
-> > Changes from v1 to v2:
-> > * Moved keembay-scmi-mailbox driver to a separate patchset
-> > * Removed Keem Bay SCMI mailbox and SCMI node from Keem Bay SoC
-> > device tree
-> 
-> This all looks basically ok, but I noticed that the DT bindings ands
-> DTS files all have a
-> "GPL-2.0-only" tag. Usually we make those dual-licensed in order to
-> make it easier
-> to distribute them with a non-GPL bootloader and synchronize them
-> between
-> projects.
-> 
-> Do you know if the GPL-2.0-only part was picked intentionally, or if
-> it can
-> be changed to dual-licensed?
+On Tue, Jul 14, 2020 at 5:44 AM Sumit Gupta <sumitg@nvidia.com> wrote:
+>
+>
+>
+> > On Mon, Jul 13, 2020 at 07:36:46PM +0530, Sumit Gupta wrote:
+> >> To do frequency scaling on all CPUs within T194 CPU Complex, we need
+> >> to query BPMP for data on valid operating points. Document a compatible
+> >> string under 'cpus' node to represent the CPU Complex for binding drivers
+> >> like cpufreq which don't have their node or CPU Complex node to bind to.
+> >> Also, document a property to point to the BPMP device that can be queried
+> >> for all CPUs.
+> >
+> > The cpus.yaml binding documents what's in 'cpu' nodes, not 'cpus'
+> > node. AIUI, the latter is what you want. You should do your own schema
+> > file here.
+> >
+> Do you mean to change existing file name from 'cpus.yaml' to 'cpu.yaml'
+> and create new 'cpus.yaml' file?
+> I think it's better to incorporate the change in existing 'cpus.yaml'
+> file to keep both cpu@X and cpus node details together. Please suggest.
 
-Thanks for reviewing the patchset. I'll change those files to dual-
-licensed and re-submit.
+No, I'm suggesting you create nvidia,tegra194-ccplex.yaml.
 
+
+> >> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+> >> ---
+> >>   Documentation/devicetree/bindings/arm/cpus.yaml | 11 +++++++++++
+> >>   1 file changed, 11 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+> >> index a018147..9b328e3 100644
+> >> --- a/Documentation/devicetree/bindings/arm/cpus.yaml
+> >> +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+> >> @@ -162,6 +162,7 @@ properties:
+> >>         - nvidia,tegra132-denver
+> >>         - nvidia,tegra186-denver
+> >>         - nvidia,tegra194-carmel
+> >> +      - nvidia,tegra194-ccplex
+> >
+> > Tegra194 has 2 different CPUs?
+> >
+> No, T194 SOC has homogeneous architecture with four clusters where each
+> cluster has two symmetric cores. 'nvidia,tegra194-carmel' compatible
+> string represents each cpu. 'nvidia,tegra194-ccplex' string represents
+> the CPU Complex to bind cpufreq driver. The change was done as per
+> discussion [1]
+
+You are adding the compatible string to the cpu@N node compatible.
+
+>
+> >>         - qcom,krait
+> >>         - qcom,kryo
+> >>         - qcom,kryo260
+> >> @@ -255,6 +256,15 @@ properties:
+> >>
+> >>         where voltage is in V, frequency is in MHz.
+> >>
+> >> +  nvidia,bpmp:
+> >> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+> >> +    description: |
+> >> +      Specifies the bpmp node that needs to be queried to get
+> >> +      operating point data for all CPUs.
+> >> +
+> >> +      Optional for systems that have a "compatible"
+> >> +      property value of "nvidia,tegra194-ccplex".
+> >> +
+> >>     power-domains:
+> >>       $ref: '/schemas/types.yaml#/definitions/phandle-array'
+> >>       description:
+> >> @@ -340,6 +350,7 @@ required:
+> >>
+> >>   dependencies:
+> >>     rockchip,pmu: [enable-method]
+> >> +  nvidia,bpmp: [compatible]
+> >>
+> >>   examples:
+> >>     - |
+> >> --
+> >> 2.7.4
+> >>
+>
+> [1] https://marc.info/?l=linux-arm-kernel&m=158999171528418&w=2
