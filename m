@@ -2,102 +2,80 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB99C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 09:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E418C433E6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 09:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9121221D7D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 09:53:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594720389;
-	bh=69NDwPfEkbnCl+IKo1KaYa8NHEQkLg8q/hcElxsnFJM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jHSlDNxTqN5mHM8MpYPKbGePlAQMxmaHT0RsJag2c3/4bOJ/QUMyXZ+AonGsrDJQm
-	 WjYn0tnpq6toGqMPw8SfpecNXqsN9ogsdtStQ5H4jzh+cQSFcUVTJVUrm0vO3oYP7q
-	 iV/OqyRAHf5jV9mnIKXDAHtTMbWR7yZNmdOI3Gew=
+	by mail.kernel.org (Postfix) with ESMTP id F0F03221F5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 09:54:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="YQ/3xTav"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725952AbgGNJxJ (ORCPT
+        id S1726750AbgGNJyM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:53:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39628 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725884AbgGNJxI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:53:08 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B50DD20EDD;
-        Tue, 14 Jul 2020 09:53:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594720388;
-        bh=69NDwPfEkbnCl+IKo1KaYa8NHEQkLg8q/hcElxsnFJM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=b4S3d/Cpg/SKJZaLtxCRtdwqV5R+4hYj1NBblToFHsT2iKgKg7o6lDZaJdoaFwGDB
-         YMjhQ6hyYwLYhwntegIrVyCLl1RkVr/LLUoSutGgg06I7ETTTHTvEwd5VW6DAEDgV8
-         nkw33EMoPHD/WMF7+Ij0eHGWTVzqvo2vM4TIZBIs=
-Date:   Tue, 14 Jul 2020 10:52:59 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Rob Herring <robh@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        DTML <devicetree@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        - <alsa-devel@alsa-project.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: ASoC: Convert UniPhier EVEA codec to
- json-schema
-Message-ID: <20200714095259.GB4900@sirena.org.uk>
-References: <20200623114005.791643-1-yamada.masahiro@socionext.com>
- <20200714022252.GA1151466@bogus>
- <CAK7LNAQrdqztMrHtAHnbMkxeaDLLyBS68WVovev+zytHdD7RVQ@mail.gmail.com>
+        Tue, 14 Jul 2020 05:54:12 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:23734 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725997AbgGNJyL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 05:54:11 -0400
+X-UUID: 4666040cc9074353b46bbc01f3425efe-20200714
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=dMebhq5tR/KQ7hMcnV9SdRoVU+Z7gUzMSXG15eF6Tvk=;
+        b=YQ/3xTav2uGQbQ6DgGj5UWPba8V0432KvxBi0Lc49EZyzSyH37JMkTrk1n9b2b3UPzwH05hTItVO+fOzou5ft5Pw9KfPk5dp83cp8PU2mllF2CzP80k+qBWRmndQlvD0N0UnM063m7Srwi0Y7v+W5WVa7YyBjbq2NTePGfHae4Q=;
+X-UUID: 4666040cc9074353b46bbc01f3425efe-20200714
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <hsin-hsiung.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2055831850; Tue, 14 Jul 2020 17:54:08 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 14 Jul 2020 17:54:05 +0800
+Received: from mtksdaap41.mediatek.inc (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 14 Jul 2020 17:54:06 +0800
+From:   Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Argus Lin <argus.lin@mediatek.com>
+CC:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <srv_heupstream@mediatek.com>
+Subject: [PATCH 2/3] dt-bindings: mediatek: add compatible for MT6873/8192 pwrap
+Date:   Tue, 14 Jul 2020 17:53:51 +0800
+Message-ID: <1594720432-19586-3-git-send-email-hsin-hsiung.wang@mediatek.com>
+X-Mailer: git-send-email 2.6.4
+In-Reply-To: <1594720432-19586-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+References: <1594720432-19586-1-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="RASg3xLB4tUQ4RcS"
-Content-Disposition: inline
-In-Reply-To: <CAK7LNAQrdqztMrHtAHnbMkxeaDLLyBS68WVovev+zytHdD7RVQ@mail.gmail.com>
-X-Cookie: Your password is pitifully obvious.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+VGhpcyBhZGRzIGR0LWJpbmRpbmcgZG9jdW1lbnRhdGlvbiBvZiBwd3JhcCBmb3IgTWVkaWF0ZWsg
+TVQ2ODczLzgxOTINClNvQ3MgUGxhdGZvcm0uDQoNClNpZ25lZC1vZmYtYnk6IEhzaW4tSHNpdW5n
+IFdhbmcgPGhzaW4taHNpdW5nLndhbmdAbWVkaWF0ZWsuY29tPg0KLS0tDQogRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRlay9wd3JhcC50eHQgfCAxICsNCiAxIGZp
+bGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvbWVkaWF0ZWsvcHdyYXAudHh0IGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRlay9wd3JhcC50eHQNCmluZGV4IGVjYWMy
+YmIuLjgwNTFjMTcgMTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dA0KKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3NvYy9tZWRpYXRlay9wd3JhcC50eHQNCkBAIC0yMiw2ICsyMiw3IEBAIFJlcXVp
+cmVkIHByb3BlcnRpZXMgaW4gcHdyYXAgZGV2aWNlIG5vZGUuDQogCSJtZWRpYXRlayxtdDY3NjUt
+cHdyYXAiIGZvciBNVDY3NjUgU29Dcw0KIAkibWVkaWF0ZWssbXQ2Nzc5LXB3cmFwIiBmb3IgTVQ2
+Nzc5IFNvQ3MNCiAJIm1lZGlhdGVrLG10Njc5Ny1wd3JhcCIgZm9yIE1UNjc5NyBTb0NzDQorCSJt
+ZWRpYXRlayxtdDY4NzMtcHdyYXAiIGZvciBNVDY4NzMvODE5MiBTb0NzDQogCSJtZWRpYXRlayxt
+dDc2MjItcHdyYXAiIGZvciBNVDc2MjIgU29Dcw0KIAkibWVkaWF0ZWssbXQ4MTM1LXB3cmFwIiBm
+b3IgTVQ4MTM1IFNvQ3MNCiAJIm1lZGlhdGVrLG10ODE3My1wd3JhcCIgZm9yIE1UODE3MyBTb0Nz
+DQotLSANCjIuNi40DQo=
 
---RASg3xLB4tUQ4RcS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Jul 14, 2020 at 03:13:26PM +0900, Masahiro Yamada wrote:
-
-> What do you mean by Reviewed-by ?
-> Do you expect this to go to the asoc tree?
-
-> I just thought the schema conversion
-> would go through the dt tree.
-
-No, bindings changes usually go through the subsystem - if there's any
-other work on the binding then it'll usually also involve driver
-changes.
-
---RASg3xLB4tUQ4RcS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8NgHoACgkQJNaLcl1U
-h9Dsrgf/fPLrNlqqgRY19cFoFt6CgtBbNO86y/JcGKXNAdFdJ5lG9scZL2Rgzas/
-0/YpfGyCQAOMGEWc5Icxjhcj+geFRr+aqL7mtvz4XT+Wv0I0VSWeCdVEeoYcFUpV
-/J6PxuLhaOhAKkcKcm0UNz+dI5TmhySRUnB97ikprAPWs498y1c0otugjbP9hClu
-nhkI6a7K+OtE/t21oN80kQzqNGfaMgai5G3t0kZ7knfmJqyXanwYZLUWxZuBueoR
-4CDY9eOE/jaTkLyIerbibswcLl+MYv/L/jkh3Jmd3v1xmDNailW5yjE/TsZvc5E+
-RUaalfr2073gZqSDnJz9e1PoPrNzzA==
-=+jbC
------END PGP SIGNATURE-----
-
---RASg3xLB4tUQ4RcS--
