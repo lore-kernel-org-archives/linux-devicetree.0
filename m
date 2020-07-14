@@ -7,34 +7,36 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D78C433E6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E4AC433E5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61781221E8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0259206F0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:22:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726458AbgGNHTA (ORCPT
+        id S1726062AbgGNHV6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 03:19:00 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:47182 "EHLO
+        Tue, 14 Jul 2020 03:21:58 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:45287 "EHLO
         smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725306AbgGNHTA (ORCPT
+        by vger.kernel.org with ESMTP id S1725306AbgGNHV5 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 03:19:00 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.3883162|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.00789351-0.00130981-0.990797;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03273;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=10;RT=10;SR=0;TI=SMTPD_---.I1Ta.lL_1594711131;
-Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I1Ta.lL_1594711131)
-          by smtp.aliyun-inc.com(10.147.41.120);
-          Tue, 14 Jul 2020 15:18:56 +0800
+        Tue, 14 Jul 2020 03:21:57 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.4157819|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0382117-0.00440686-0.957381;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03300;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=16;RT=16;SR=0;TI=SMTPD_---.I1TyhlI_1594711307;
+Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I1TyhlI_1594711307)
+          by smtp.aliyun-inc.com(10.147.42.197);
+          Tue, 14 Jul 2020 15:21:52 +0800
 From:   Frank Lee <frank@allwinnertech.com>
-To:     gregory.clement@bootlin.com, robh+dt@kernel.org
-Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+To:     robh+dt@kernel.org, mripard@kernel.org, wens@csie.org,
+        icenowy@aosc.io, megous@megous.com, clabbe@baylibre.com,
+        georgii.staroselskii@emlid.com, bage@linutronix.de
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, tiny.windzz@gmail.com,
         huangshuosheng@allwinnertech.com, liyong@allwinnertech.com,
         Yangtao Li <frank@allwinnertech.com>,
         Rob Herring <robh@kernel.org>
-Subject: [PATCH v4 13/16] dt-bindings: i2c: mv64xxx: Add compatible for the A100 i2c node.
-Date:   Tue, 14 Jul 2020 15:18:39 +0800
-Message-Id: <2315816045fa84057968ec6b679d0df611a3b1d3.1594708864.git.frank@allwinnertech.com>
+Subject: [PATCH v4 15/16] dt-bindings: arm: sunxi: Add Allwinner A100 Perf1 Board bindings
+Date:   Tue, 14 Jul 2020 15:21:39 +0800
+Message-Id: <175a583c7d0c151274701fc442724e1a7a3f1ed8.1594708864.git.frank@allwinnertech.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <cover.1594708863.git.frank@allwinnertech.com>
 References: <cover.1594708863.git.frank@allwinnertech.com>
@@ -47,28 +49,30 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Yangtao Li <frank@allwinnertech.com>
 
-Allwinner A100 have a mv64xxx i2c interface available to be used.
+Document board compatible names for Allwinner A100 Perf1 Board.
 
 Signed-off-by: Yangtao Li <frank@allwinnertech.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml b/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
-index 2ceb05ba2df5..5b5ae402f97a 100644
---- a/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
-+++ b/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
-@@ -26,6 +26,9 @@ properties:
-       - items:
-           - const: allwinner,sun50i-a64-i2c
-           - const: allwinner,sun6i-a31-i2c
-+      - items:
-+          - const: allwinner,sun50i-a100-i2c
-+          - const: allwinner,sun6i-a31-i2c
-       - items:
-           - const: allwinner,sun50i-h6-i2c
-           - const: allwinner,sun6i-a31-i2c
+diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
+index 87817ff0cd35..dbec66c1377a 100644
+--- a/Documentation/devicetree/bindings/arm/sunxi.yaml
++++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
+@@ -16,6 +16,11 @@ properties:
+   compatible:
+     oneOf:
+ 
++      - description: Allwinner A100 Perf1 Board
++        items:
++          - const: allwinner,a100-perf1
++          - const: allwinner,sun50i-a100
++
+       - description: Allwinner A23 Evaluation Board
+         items:
+           - const: allwinner,sun8i-a23-evb
 -- 
 2.24.0
 
