@@ -2,92 +2,80 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BE5C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 21:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA200C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 21:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0BF920656
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 21:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A2462064C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 21:39:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F3NZpnIv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WjEYpxVM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728250AbgGNVSI (ORCPT
+        id S1726918AbgGNVjc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 17:18:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33812 "EHLO
+        Tue, 14 Jul 2020 17:39:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgGNVSH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 17:18:07 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52DC6C061755;
-        Tue, 14 Jul 2020 14:18:07 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id o11so200870wrv.9;
-        Tue, 14 Jul 2020 14:18:07 -0700 (PDT)
+        with ESMTP id S1728145AbgGNVjb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 17:39:31 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D032C061794
+        for <devicetree@vger.kernel.org>; Tue, 14 Jul 2020 14:39:31 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id el4so8201349qvb.13
+        for <devicetree@vger.kernel.org>; Tue, 14 Jul 2020 14:39:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+lZBBeyUE0lPJ7ofFYfVPRC61PUIwQVU3H14G0pJ7tc=;
-        b=F3NZpnIvV6tqV2q8ALdGW4uRyADrH4iYT2AdqPJNK9HsU8K0tyI4WQv1+Uig6/NNmk
-         qKScQHCi/YEBEAb/zqm1Lu7ne97Bgc9rhgPgJUmbijzfEv888yDzLkyDzccIHEO8KbGR
-         qxFzYZ8t7qwkeZu4D2e4oLdrfdSIZl6H8V74LCrBSVqIQdydQYRdR9gRZ9jRjiwKZRBq
-         ArvQ633flh6Kur0V6qlhpeIbnSw/tHpSwuybMcWheu5IJTq39FxowWwCkF6Oh9Iclg/h
-         NrUdkvAukBfkC1z1NkI6kmqWQ06qAOW1Q6yYiWlTvrUXwlz9h6KBhjnCQlFXJyfuFlLl
-         Hz7g==
+        bh=ivtV/tA+b1A/Jafm7GfFZzd+iRi0WOOxKuOfikxY7+k=;
+        b=WjEYpxVM3mq/vbkRqdXSLdC7YbDXYAN/KzVub+tuD6Pj/BjXgN6ubrURsurRWz5Zju
+         XVL/1DkXIqEXvbjBtcHthBS/cpgE68ii8m0B8NWdlp+0ZsEERD+qlrbrswcvQL9nhoIo
+         pCyLIufdlyvYT5fREkPjqmbjxcHYRExuBahHXDsu+u5fsocUIz2jZtMM7zgDTCDJwsfA
+         /1fopVeOCIW7EaL0irp4bqfk5vXgkSZWjqjB2wZB/J7Xl0goI+lxCGzOO6THyQk5vTAL
+         aZDdX27Ci77hxUKb2q5WbtCT6O3L+8RDEwzsI97kA0s9VZqAsrwcs845rOZpQMrZDIzv
+         tYXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=+lZBBeyUE0lPJ7ofFYfVPRC61PUIwQVU3H14G0pJ7tc=;
-        b=QMldNHnDkztlAySfHygh4xhX1mQWZ2EpJVXtf3V4jrpjBa4XJAYVIwnvEvyqXBoaXl
-         DoTZZ9JVS+9/RfGK0ncZn/y9iVdrseWVd90e6Bt0V4w/WYgu9fKjDmJ16FUBENumc/v0
-         Z0xrFFiwCZ/p4+jmo95tZRCJmFwGhBLFWIBqN9WJXlyOcZNdn4lSBU3t0aZ3UxtlFGuY
-         y1FBQnr61aPwgp7rRh0oKyU3nbXcHQd7SuVteW7mGahU161Ww8tEuyU8t9N+/awgyJIl
-         5rLTLeVeEhkIiuoPrsL2Qu5zdIB3xAMcjxnuuotw4db/WfGEksEwkDhj4a8vOxXg8R9d
-         na9A==
-X-Gm-Message-State: AOAM531Q67fqjbOpHozuDoCjuCreJ3FIqnnq3sdjtL8YzArt0sylUtGT
-        +lPIb17dmH9fEYJdDFpS1ETw87BN
-X-Google-Smtp-Source: ABdhPJzDcFTmUmW90ndfjqy6LWZjEbFnjFisW6pTMPwBDeX+av28s7sc1wH8uk2lKXjz1BYHgeNsEw==
-X-Received: by 2002:adf:e908:: with SMTP id f8mr7787367wrm.3.1594761485670;
-        Tue, 14 Jul 2020 14:18:05 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id f14sm34071251wro.90.2020.07.14.14.18.01
+        bh=ivtV/tA+b1A/Jafm7GfFZzd+iRi0WOOxKuOfikxY7+k=;
+        b=C2BAcde3mCcAGeSNiePC4OToeRq85L1+zF2T5nhZ1Q4ZBFe2bzZkczuG2vPqStmbHT
+         /vNUzK/+CclQxcvVJdqU2+3tHXrxulU3nxggAnjS0oY3Nr4dvNCEEcL31QqG+Tvx0mVy
+         OZfVs7y3jhb1nrAMp7WVjd6cZoPoGx5LkmTjlnLy+sq+kk75F1DcnOoTbQMG9GJwuWRC
+         HbJ5SMA9rs96VFMq+LRcEMybYJTh7PSdI8cg/cquH6PMu6rEz4vDcMPV3XgT1ehrg8Jj
+         kWSWOWAGv+bIyIJHtBsWIt2QL+NG632wf6VCvwr/0y4oWS38tEbTPuswrOyZtM8mDX97
+         pZoQ==
+X-Gm-Message-State: AOAM530NLbQQxJyrVCPUWo4Vtz263DuXfMotUlMY0Gxy+iWBrh6EBTaf
+        UX0j7Ycei+HgjATJlIzz+h5O8w==
+X-Google-Smtp-Source: ABdhPJwe07rWmBLjDl+TNx93m7uxFpH0gw52e9HYRNc/1T0+JhOUVFNF4wo6TGY89wzmBv3Wnssccw==
+X-Received: by 2002:ad4:42a7:: with SMTP id e7mr6694798qvr.212.1594762770573;
+        Tue, 14 Jul 2020 14:39:30 -0700 (PDT)
+Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.gmail.com with ESMTPSA id r185sm740qkb.39.2020.07.14.14.39.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jul 2020 14:18:04 -0700 (PDT)
-Subject: Re: [PATCH v3 1/9] dt-bindings: reset: Add a binding for the RPi
- Firmware reset controller
-To:     Rob Herring <robh@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>, linux-usb@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
-        lorenzo.pieralisi@arm.com, devicetree@vger.kernel.org
-References: <20200612171334.26385-1-nsaenzjulienne@suse.de>
- <20200612171334.26385-2-nsaenzjulienne@suse.de>
- <20200713182356.GA413630@bogus>
- <ed42e27eaf48fd19cc8ccccd15b0b25ba1d836ae.camel@suse.de>
- <20200714210708.GA2897216@bogus>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <925bab2c-91e0-bf60-9ec4-286eb53f72ab@gmail.com>
-Date:   Tue, 14 Jul 2020 14:17:59 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
+        Tue, 14 Jul 2020 14:39:30 -0700 (PDT)
+Subject: Re: [RFC PATCH 0/4] thermal: Introduce support for monitoring falling
+ temperature
+To:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>, robh+dt@kernel.org
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200710135154.181454-1-thara.gopinath@linaro.org>
+ <7437ee89-e76d-0c82-9860-5c6076ad8a30@linaro.org>
+ <b25d54d35cec777f0dcc5b2bcacce27321d9bd45.camel@intel.com>
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <5861acec-c49a-47cc-d7c6-ccef11dc1d58@linaro.org>
+Date:   Tue, 14 Jul 2020 17:39:29 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200714210708.GA2897216@bogus>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <b25d54d35cec777f0dcc5b2bcacce27321d9bd45.camel@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
@@ -97,97 +85,128 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 
 
-On 7/14/2020 2:07 PM, Rob Herring wrote:
-> On Tue, Jul 14, 2020 at 01:59:21PM +0200, Nicolas Saenz Julienne wrote:
->> On Mon, 2020-07-13 at 12:23 -0600, Rob Herring wrote:
->>> On Fri, Jun 12, 2020 at 07:13:25PM +0200, Nicolas Saenz Julienne wrote:
->>>> The firmware running on the RPi VideoCore can be used to reset and
->>>> initialize HW controlled by the firmware.
->>>>
->>>> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->>>> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
->>>>
->>>> ---
->>>> Changes since v2:
->>>>  - Add include file for reset IDs
->>>>
->>>> Changes since v1:
->>>>  - Correct cells binding as per Florian's comment
->>>>  - Change compatible string to be more generic
->>>>
->>>>  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++++++++
->>>>  .../reset/raspberrypi,firmware-reset.h        | 13 ++++++++++++
->>>>  2 files changed, 34 insertions(+)
->>>>  create mode 100644 include/dt-bindings/reset/raspberrypi,firmware-reset.h
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
->>>> firmware.yaml
->>>> b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
->>>> firmware.yaml
->>>> index b48ed875eb8e..23a885af3a28 100644
->>>> --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
->>>> firmware.yaml
->>>> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-
->>>> firmware.yaml
->>>> @@ -39,6 +39,22 @@ properties:
->>>>        - compatible
->>>>        - "#clock-cells"
->>>>  
->>>> +  reset:
+On 7/14/20 9:49 AM, Zhang Rui wrote:
+> On Mon, 2020-07-13 at 17:03 +0200, Daniel Lezcano wrote:
+>> On 10/07/2020 15:51, Thara Gopinath wrote:
+>>> Thermal framework today supports monitoring for rising temperatures
+>>> and
+>>> subsequently initiating cooling action in case of a thermal trip
+>>> point
+>>> being crossed. There are scenarios where a SoC need some warming
+>>> action to
+>>> be activated if the temperature falls below a cetain permissible
+>>> limit.
+>>> Since warming action can be considered mirror opposite of cooling
+>>> action,
+>>> most of the thermal framework can be re-used to achieve this.
 >>>
->>> I'm not really thrilled how this is evolving with a node per provider. 
->>> There's no reason you can't just add #clock-cells and #reset-cells to 
->>> the parent firmware node.
+>>> This patch series is yet another attempt to add support for
+>>> monitoring
+>>> falling temperature in thermal framework. Unlike the first
+>>> attempt[1]
+>>> (where a new property was added to thermal trip point binding to
+>>> indicate
+>>> direction of temperature monitoring), this series introduces a new
+>>> trip
+>>> point type (THERMAL_TRIP_COLD) to indicate a trip point at which
+>>> falling
+>>> temperature monitoring must be triggered. This patch series uses
+>>> Daniel
+>>> Lezcano's recently added thermal genetlink interface[2] to notify
+>>> userspace
+>>> of falling temperature and rising temperature at the cold trip
+>>> point. This
+>>> will enable a user space engine to trigger the relevant mitigation
+>>> for
+>>> falling temperature. At present, no support is added to any of the
+>>> thermal
+>>> governors to monitor and mitigate falling temperature at the cold
+>>> trip
+>>> point;rather all governors return doing nothing if triggered for a
+>>> cold
+>>> trip point. As future extension, monitoring of falling temperature
+>>> can be
+>>> added to the relevant thermal governor.
 >>
->> What are the downsides? The way I see it there is not much difference. And this
->> way of handling things is feels more intuitive and flexible (overlays can
->> control what to enable easily, we can take advantage of the platform device
->> core).
-> 
-> What the OS wants can evolve, so designing around the current needs of 
-> the OS is not how bindings should be done.
-> 
-> Using overlays to add clocks or resets wouldn't really work given they 
-> are spread out over the tree. And with clocks in particular, you'd have 
-> to replace dummy fixed clocks with actual firmware clocks. Sounds 
-> fragile and messy...
-> 
->>> I probably should have complained with the clocks node, but that's only 
->>> pending for 5.9.
+>> I agree we need a cold trip point in order to introduce the
+>> functioning
+>> temperature range in the thermal framework.
 >>
->> Note that there are more users for this pattern: "raspberrypi,firmware-ts" and
->> "raspberrypi,firmware-gpio". Actually you were the one to originally propose
->> this it[1]. :P
+>> Rui, what is your opinion ?
 > 
-> Sigh, this is why I dislike incomplete examples...
-> 
-> Based on that,
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-> 
-> And please get gpio and ts converted to schema and referenced here 
-> before the next time I look at this.
-> 
->> There already is a fair amount of churn in these drivers because of all the DT
->> changes we did in the past, and if we need to change how we integrate these
->> again, I'd really like it to be for good.
->>
->>> The bigger issue is this stuff is just trickling in one bit at a time 
->>> which gives no context for review. What's next? Is it really a mystery 
->>> as to what functions the firmware provides?
->>
->> We have no control over it, RPi engineers integrate new designs and new
->> firmware interfaces show up. This is a good example of it.
->>
->> I proposed them to use SCMI as it covers most of what they are already
->> providing here. But no luck so far.
-> 
-> Once we get tired of supporting all the different firmware interfaces 
-> and the mess they become, we'll just have to start refusing custom ones. 
-> Worked for PSCI.
+> I agree with the concept of "cold" trip point.
+> In this patch set, the cold trip point is defined with only netlink
+> event support. But there are still quite a lot of things unclear,
+> especially what we should do in thermal framework?
+Hi Rui,
 
-In this particular case, the Raspberry Pi Foundation VPU firmware should
-just implement SCMI and that would avoid having to write new client
-drivers for Linux, it is not clear to me why this has not been done yet.
+Thanks for the comments.
+
+You are right that cold trip points are dealt with only by netlink 
+events in this patch series. Eventually IMHO, governors should handle 
+them with a logic opposite to what is being currently done for non-cold 
+trip points.
+
+> 
+> For example, to support this, we can
+> either
+> introduce both "cold" trip points and "warming devices", and introduce
+> new logic in thermal framework and governors to handle them,
+> Or
+> introduce "cold" trip point and "warming" device, but only
+> semantically, and treat them just like normal trip points and cooling
+> devices. And strictly define cooling state 0 as the state that
+> generates most heat, and define max cooling state as the state that
+> generates least heat. Then, say, we have a trip point at -10C, the
+> "warming" device is set to cooling state 0 when the temperature is
+> lower than -10C, and in most cases, this thermal zone is always in a
+> "overheating" state (temperature higher than -10C), and the "warming"
+> device for this thermal zone is "throttled" to generate as least heat
+> as possible. And this is pretty much what the current code has always
+> been doing, right?
+
+
+IMHO, thermal framework should move to a direction where the term 
+"mitigation" is used rather than cooling or warming. In this case 
+"cooling dev" and "warming dev" should will become 
+"temp-mitigating-dev". So going by this, I think what you mention as 
+option 1 is more suitable where new logic is introduced into the 
+framework and governors to handle the trip points marked as "cold".
+
+Also in the current set of requirements, we have a few power domain 
+rails and other resources that are used exclusively in the thermal 
+framework for warming alone as in they are not used ever for cooling 
+down a zone. But then one of the requirements we have discussed is for 
+cpufreq and gpu scaling to be behave as warming devices where the 
+minimum operating point/ voltage of the relevant cpu/gpu is restricted.
+So in this case, Daniel had this suggestion of introducing negative 
+states for presently what is defined as cooling devices. So cooling dev 
+/ temp-mitigation-dev states can range from say -3 to 5 with 0 as the 
+good state where no mitigation is happening. This is an interesting idea 
+though I have not proto-typed it yet.
+
+> 
+> I can not say which one is better for now as I don't have the
+> background of this requirement. It's nice that Thara sent this RFC
+> series for discussion, but from upstream point of view, I'd prefer to
+> see a full stack solution, before taking any code.
+
+We had done a session at ELC on this requirement. Here is the link to 
+the presentation. Hopefully it gives you some back ground on this.
+
+https://elinux.org/images/f/f7/ELC-2020-Thara-Ram-Linux-Kernel-Thermal-Warming.pdf
+
+I have sent across some patches for introducing a generic power domain 
+warming device which is under review by Daniel.
+
+So how do you want to proceed on this? Can you elaborate a bit more on 
+what you mean by a full stack solution.
+
+> 
+> thanks,
+> Rui
+> 
+
 -- 
-Florian
+Warm Regards
+Thara
