@@ -2,145 +2,116 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F1CC433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 03:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 188AEC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 04:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B32A021927
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 03:54:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kiyCts7u"
+	by mail.kernel.org (Postfix) with ESMTP id ED633221EA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 04:28:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgGNDyN (ORCPT
+        id S1725355AbgGNE2d (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 23:54:13 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:34977 "EHLO ozlabs.org"
+        Tue, 14 Jul 2020 00:28:33 -0400
+Received: from mga09.intel.com ([134.134.136.24]:48387 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726510AbgGNDyM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jul 2020 23:54:12 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B5RTY0LPfz9sRR;
-        Tue, 14 Jul 2020 13:54:09 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1594698849;
-        bh=3B84NJPSJ3aCDVa/eUO1Ar7r+qMlInL+yp7oVPhgKDQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=kiyCts7uI9biVlsodhX8PvD+tlBUJMqUywoXAsXM8coW6k4ay1rwMDmTNv0V9PkJ0
-         6eP8WkEMbg7izxzfe0+J7oS2GohHswBQbeXrMtWM57YCvDarMXKzJZjkuPYckt43/p
-         dJhYrz6SyYNepcWVeQnjek7bpSIzNx6LwIAytGvSrIGinn57dSK9sQCbL3DCknLXix
-         LhR9aO3BcQuOFOV1UXaCTFGMPxjdrkGPfvii26xZ4p1/J0/nnFTklEvL4myH52VSpp
-         IqFM2C6ncVCaxCJkrqK0AooGRupwAVnOOeHaUZPTrYkt6lVPS9F1eX0LqXOgvEwAf+
-         czRZaUgkde/tg==
-Date:   Tue, 14 Jul 2020 13:54:07 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     dillon min <dillon.minfei@gmail.com>
-Cc:     Benoit Cousson <bcousson@baylibre.com>, tony@atomide.com,
-        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] Since am437x have the same clock structure with
- am335x [1][2], reuse the code from Tony Lindgren's patch [3] to fix dcan
- probe failed on am437x platform.
-Message-ID: <20200714135407.35992389@canb.auug.org.au>
-In-Reply-To: <CAL9mu0JurdBoXbSxvHUmNFSBOa=RneNyYtzT=C1MvJs10Y-Geg@mail.gmail.com>
-References: <1594696998-3995-1-git-send-email-dillon.minfei@gmail.com>
-        <1594696998-3995-2-git-send-email-dillon.minfei@gmail.com>
-        <20200714133835.3b03b8af@canb.auug.org.au>
-        <CAL9mu0JurdBoXbSxvHUmNFSBOa=RneNyYtzT=C1MvJs10Y-Geg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ysRfC1yFZY8=z2G12/rynj_";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        id S1725955AbgGNE2d (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jul 2020 00:28:33 -0400
+IronPort-SDR: APWHb8pluGQpBOj+f3UQQHSo2Jfpa1yqxUL/ry5IbOo+cUz0IrfcCImZQWhsksoLrN6FvdtWXM
+ 8oKhPUIlQ2oA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="150235042"
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="150235042"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 21:28:32 -0700
+IronPort-SDR: TOk/5GX3xG2KFG4+dzjYYQuumr69eIzQHPoib8Rlmvbzi/+9oN1iai87cCjO95npoRym8A13wg
+ B6NGiKEE50ug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="269901707"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by fmsmga008.fm.intel.com with ESMTP; 13 Jul 2020 21:28:29 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     kishon@ti.com, linux-kernel@vger.kernel.org
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        p.zabel@pengutronix.de, gregkh@linuxfoundation.org,
+        andriy.shevchenko@intel.com, balbi@kernel.org,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v6 0/2] phy: Add USB PHY support on Intel LGM SoC
+Date:   Tue, 14 Jul 2020 12:26:19 +0800
+Message-Id: <20200714042621.25850-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---Sig_/ysRfC1yFZY8=z2G12/rynj_
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+The USB PHY provides the optimized for low power dissipation while active, idle, or on standby.
+Requires minimal external components, a single resistor, for best operation.
+Supports 10/5-Gbps high-speed data transmission rates through 3-m USB 3.x cable
+---
+v6:
+ -  No Change
+v5:
+  - As per Felipe and Greg's suggestion usb phy driver reviewed patches
+    changed the folder from drivers/usb/phy to drivers/phy
+  - Reviewed-By tag added in commit message
+v4:
+  - Andy's review comments addressed
+  - drop the excess error debug prints
+  - error check optimized
+  - merge the split line to one line
+v3:
+  - Andy's review comments update
+  - hardcode return value changed to actual return value from the callee
+  - add error check is fixed according to the above
+  - correct the assignment in redundant
+  - combine the split line into one line
+v2:
+  - Address Phillip's review comments
+  - replace devm_reset_control_get() by devm_reset_control_get_exclusive()
+  - re-design the assert and deassert fucntion calls as per review comments
+  - address kbuild bot warnings
+  - add the comments
+v1:
+  - initial version
 
-Hi Dillon,
+---
+dt-bindings: usb: Add USB PHY support for Intel LGM SoC
+v6: 
+  - Fixed the bot issue.
+  - replace node-name by usb-phy@ in example
+v5:
+  - Reviewed-By tag added
+v4:
+  - No Change
+v3:
+  - No Change
+v2:
+  - No Change
+v1:
+  - initial version
 
-On Tue, 14 Jul 2020 11:43:31 +0800 dillon min <dillon.minfei@gmail.com> wro=
-te:
->
-> On Tue, Jul 14, 2020 at 11:38 AM Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
-> >
-> > On Tue, 14 Jul 2020 11:23:18 +0800 dillon.minfei@gmail.com wrote: =20
-> > >
-> > > From: dillon min <dillon.minfei@gmail.com>
-> > >
-> > > Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during=
- init to read revision")
-> > >
-> > > [1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
-> > > Integration
-> > > [2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
-> > > Integration
-> > > [3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on=
- am335x")
-> > >
-> > > Signed-off-by: dillon min <dillon.minfei@gmail.com>
-> > > ---
-> > >
-> > > Hi Stephen,
-> > >
-> > > This changes correct commit messages based on your reviewing.
-> > > make Fixes tags to oneline.
-> > > make all commit message tags at the end of commit message =20
-> >
-> > But the Fixes: line should be down with the Signed-off-by: line ...
-> > =20
-> Ok, should it be like this=EF=BC=8Ci will resubmit it.
->=20
-> Subject: [PATCH v2] Since am437x have the same clock structure with am335x
->  [1][2], reuse the code from Tony Lindgren's patch [3] to fix dcan
->  probe failed on the am437x platform.
 
-You should have a shorter subject and maybe the above could be the
-first paragraph of the commit message.
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: phy: Add USB PHY support for Intel LGM SoC
+  phy: Add USB3 PHY support for Intel LGM SoC
 
->=20
-> [1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
-> Integration
-> [2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
-> Integration
-> [3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on am3=
-35x")
->=20
-> Signed-off-by: dillon min <dillon.minfei@gmail.com>
-> Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during
-> init to read revision")
+ .../devicetree/bindings/phy/intel,lgm-usb-phy.yaml |  53 ++++
+ drivers/phy/Kconfig                                |  11 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-lgm-usb.c                          | 278 +++++++++++++++++++++
+ 4 files changed, 343 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml
+ create mode 100644 drivers/phy/phy-lgm-usb.c
 
-No wrapping the the Fixes line, please and it would usually go before
-your Signed=3Doff-by line
---=20
-Cheers,
-Stephen Rothwell
+-- 
+2.11.0
 
---Sig_/ysRfC1yFZY8=z2G12/rynj_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8NLF8ACgkQAVBC80lX
-0GyneAf/Vz8N3OEDTkT89DgJLYH6tp0quCfVnAO7ZCwvo2ORCaJLnoz3f9PwlYRX
-HV7I5F02PmnsNvByTy+1oO5yruYKgABTbl1LViGu45JCzoUmqA8P4haX9wEGo2X9
-VTNwDJxipYdvkhIQ/+V6CGlUnanfbeo4pEGr9+b95rKMBdf90ELo6WFw9a/NxAyi
-Tg+89BFIp1BLfLYC/zGqjGP/P7sE6gUV/luxtcJGLnNrd9ENBfne9bNAwP61zsAZ
-So5f/a+msvHuIRM38X6Qr9g97+hBIPjyilrXVx7jX0sT9J3wADZwsUoQQ4EJCLtU
-G1bxSK72+YNX6ZgVcmZjPbR+u+FcBQ==
-=KYmx
------END PGP SIGNATURE-----
-
---Sig_/ysRfC1yFZY8=z2G12/rynj_--
