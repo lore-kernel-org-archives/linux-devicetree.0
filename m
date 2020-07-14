@@ -2,225 +2,146 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B88C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 14:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4E4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 14:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DEF121973
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 14:51:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594738319;
-	bh=yBb5NwYoawydc+4SE8fRGu7VyXAWbEb+g0AP6WC6mFc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=yJiEujg/cACe2lj1I0aH/XPTFwT+kLu8xpDKNW+MfgAkEEMk3HjjVwIZnjVVg/YdV
-	 qH4iyc7CO5OsrhLE9GiTlKoimVmaJ8Ti/1IqGoLNbxhTpERG6MdtzmF3zkEPbdNpPt
-	 MCT6cg0++RSoO/DtCVWxSOUDu3te+GRUHykQvS3o=
+	by mail.kernel.org (Postfix) with ESMTP id C1360223B0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 14:57:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="X3qdmtoq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728922AbgGNOv7 (ORCPT
+        id S1726062AbgGNO5q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 10:51:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34938 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 10:57:46 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:29612 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728410AbgGNOv6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:51:58 -0400
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+        id S1725925AbgGNO5q (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:57:46 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594738665; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=rPT/6bcoi+yeld8ZbjkMYo22+/QxPs1ApgbqbZ3wZM8=; b=X3qdmtoqaYfqQJYKHdmsenJ6PVxI2TZ8ecXPn/cEAM/xzjHRDGESP+4oZSTIdPOIRixp87pF
+ pUxDxlrOUCsRUKCrneh6qsZ/UArYEPJJh7DwuP5I3G+qXXuM1RXSJx4TbBUoG6aoj/00VVgn
+ 8gXbt9ZmxXWoJxEZHdVXcyFdrF8=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n19.prod.us-west-2.postgun.com with SMTP id
+ 5f0dc7d62991e765cda47a70 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 14 Jul 2020 14:57:26
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4A10BC433A0; Tue, 14 Jul 2020 14:57:26 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF73C21973;
-        Tue, 14 Jul 2020 14:51:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594738318;
-        bh=yBb5NwYoawydc+4SE8fRGu7VyXAWbEb+g0AP6WC6mFc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ExIYtMs8JLqxwbj6nNae6eHnbYrvDYP541mY1ltF6anHWu+bVCKIuwonfQ8bolWwo
-         M1jqUoMWjVDZ0zMdYu2r22PNYJKQP0HIX7KUKdoB0lkauYgHJcWb/YtvIkeWpiIll/
-         /hGntYFS6PsAi0fD5K6FyrdUTkfYQoDbDfYu4BWo=
-Received: by mail-ot1-f47.google.com with SMTP id n24so13192540otr.13;
-        Tue, 14 Jul 2020 07:51:57 -0700 (PDT)
-X-Gm-Message-State: AOAM532SXy19f2eUz7X/OHR52VEtv1vNeRuT6+iNJnlp9Rwr638ofLIS
-        S7hpEK3yTK+2AD9yt/MGzcmNlF/eoXjAmXqK4g==
-X-Google-Smtp-Source: ABdhPJxu9bDpxj3Hu09V0IUmiMju7QCn1apEa8gYBelufC7LjqgI1XuYmXKWxWiuIqZ3DwQLWjG/IWRcqN1eIQ909Gg=
-X-Received: by 2002:a9d:2646:: with SMTP id a64mr4155072otb.107.1594738317260;
- Tue, 14 Jul 2020 07:51:57 -0700 (PDT)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9C80EC433C8;
+        Tue, 14 Jul 2020 14:57:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9C80EC433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Tue, 14 Jul 2020 08:57:21 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Akhil P Oommen <akhilpo@codeaurora.org>
+Cc:     freedreno@lists.freedesktop.org, dri-devel@freedesktop.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, mka@chromium.org, jonathan@marek.ca,
+        robdclark@gmail.com, rnayak@codeaurora.org
+Subject: Re: [PATCH] drm: msm: a6xx: fix gpu failure after system resume
+Message-ID: <20200714145721.GD24345@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Akhil P Oommen <akhilpo@codeaurora.org>,
+        freedreno@lists.freedesktop.org, dri-devel@freedesktop.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, mka@chromium.org, jonathan@marek.ca,
+        robdclark@gmail.com, rnayak@codeaurora.org
+References: <1594733130-398-1-git-send-email-akhilpo@codeaurora.org>
 MIME-Version: 1.0
-References: <20200708074035.31595-1-luca@lucaceresoli.net> <20200708074035.31595-4-luca@lucaceresoli.net>
- <20200714031109.GA1210492@bogus> <6177ebd1-b39a-3b53-3f5b-92f8d1f9881b@lucaceresoli.net>
-In-Reply-To: <6177ebd1-b39a-3b53-3f5b-92f8d1f9881b@lucaceresoli.net>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 14 Jul 2020 08:51:45 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKCQJjAoZciQOv+Ksb885E9MSR9FB1dEAkUh7DbqM_gcg@mail.gmail.com>
-Message-ID: <CAL_JsqKCQJjAoZciQOv+Ksb885E9MSR9FB1dEAkUh7DbqM_gcg@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] dt-bindings: clk: versaclock5: convert to yaml
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     linux-clk <linux-clk@vger.kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Adam Ford <aford173@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594733130-398-1-git-send-email-akhilpo@codeaurora.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 3:15 AM Luca Ceresoli <luca@lucaceresoli.net> wrote:
->
-> Hi Rob,
->
-> thanks for you review!
->
-> On 14/07/20 05:11, Rob Herring wrote:
-> > On Wed, Jul 08, 2020 at 09:40:35AM +0200, Luca Ceresoli wrote:
-> >> Convert to yaml the VersaClock bindings document. The mapping between
-> >> clock specifier and physical pins cannot be described formally in yaml
-> >> schema, then keep it verbatim in the description field.
-> >>
-> >> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
->
-> [...]
->
-> >> +  reg:
-> >> +    maxItems: 1
-> >> +    description: I2C device address, shall be 0x68 or 0x6a.
-> >
-> > Can be a schema:
-> >
-> > enum: [ 0x68, 0x6a ]
->
-> Nice, will fix.
->
-> >> +
-> >> +  '#clock-cells':
-> >> +    const: 1
-> >> +
-> >> +patternProperties:
-> >> +  "^OUT[1-4]$":
-> >> +    type: object
-> >> +    description:
-> >> +      Description of one of the outputs (OUT1..OUT4). See "Clock1 Output
-> >> +      Configuration" in the Versaclock 5/6/6E Family Register Description
-> >> +      and Programming Guide.
-> >> +    properties:
-> >> +      idt,mode:
-> >> +        description:
-> >> +          The output drive mode. Values defined in dt-bindings/clk/versaclock.h
-> >> +        enum:
-> >> +          - VC5_LVPECL
-> >
-> > This is defining a string. Can't use defines here.
->
-> How do I use the defines from include/dt-bindings then? Or should I just
-> use the numeric values then, like:
->
->   idt,mode:
->     description:
->       The output drive mode. Values defined in
->       dt-bindings/clk/versaclock.h
->     minimum: 0
->     maximum: 6
->
-> ?
+On Tue, Jul 14, 2020 at 06:55:30PM +0530, Akhil P Oommen wrote:
+> On targets where GMU is available, GMU takes over the ownership of GX GDSC
+> during its initialization. So, take a refcount on the GX PD on behalf of
+> GMU before we initialize it. This makes sure that nobody can collapse the
+> GX GDSC once GMU owns the GX GDSC. This patch fixes some weird failures
+> during GPU wake up during system resume.
 
-Yes.
+The change looks fine but this explanation is confusing. When I read it I
+thought "oh, man, we weren't taking a reference to the GX PD during resume???"
+but that's not really the case. We *are* taking a reference, just not soon
+enough to avoid possible issues. It would be helpful if you reworded this to
+explain that you are moving the reference and perhaps to shine a bit more light
+on what the "weird" failures are.
 
->
-> >> +      idt,voltage-microvolts:
-> >> +        description: The output drive voltage.
-> >> +        $ref: /schemas/types.yaml#/definitions/uint32
-> >
-> > Standard unit suffixes have a type already, so drop.
->
-> Ok.
->
-> >> +allOf:
-> >> +  - if:
-> >> +      properties:
-> >> +        compatible:
-> >> +          contains:
-> >> +            enum:
-> >> +              - idt,5p49v5933
-> >> +              - idt,5p49v5935
-> >> +    then:
-> >> +      # Devices with builtin crystal, optional external input
-> >> +      properties:
-> >> +        clock-names:
-> >> +          const: clkin
-> >> +        clocks:
-> >> +          maxItems: 1
-> >> +    else:
-> >> +      # Devices without builtin crystal
-> >> +      properties:
-> >> +        clock-names:
-> >> +          anyOf:
-> >> +            - required: [ xin ]
-> >> +            - required: [ clkin ]
-> >
-> > This isn't valid. I think you want:
-> >
-> > clock-names:
-> >   minItems: 1
-> >   items:
-> >     - const: xin
-> >     - const: clkin
-> >
-> > This would mean 'xin' is always required, clkin is optional.
->
-> No, what I wanted to mean is that allowed cases are:
->  * for idt,5p49v5933 and idt,5p49v5935:
->    - only 'xin' (required)
+Jordan
 
-For this you need an if/then schema. There are plenty of examples in
-the tree, but this is what you need:
+> Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
+> ---
+>  drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 18 ++++++++++--------
+>  1 file changed, 10 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> index a6f43ff..5b2df7d 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> @@ -873,10 +873,19 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
+>  	/* Turn on the resources */
+>  	pm_runtime_get_sync(gmu->dev);
+>  
+> +	/*
+> +	 * "enable" the GX power domain which won't actually do anything but it
+> +	 * will make sure that the refcounting is correct in case we need to
+> +	 * bring down the GX after a GMU failure
+> +	 */
+> +	if (!IS_ERR_OR_NULL(gmu->gxpd))
+> +		pm_runtime_get_sync(gmu->gxpd);
+> +
+>  	/* Use a known rate to bring up the GMU */
+>  	clk_set_rate(gmu->core_clk, 200000000);
+>  	ret = clk_bulk_prepare_enable(gmu->nr_clocks, gmu->clocks);
+>  	if (ret) {
+> +		pm_runtime_put(gmu->gxpd);
+>  		pm_runtime_put(gmu->dev);
+>  		return ret;
+>  	}
+> @@ -919,19 +928,12 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
+>  	/* Set the GPU to the current freq */
+>  	a6xx_gmu_set_initial_freq(gpu, gmu);
+>  
+> -	/*
+> -	 * "enable" the GX power domain which won't actually do anything but it
+> -	 * will make sure that the refcounting is correct in case we need to
+> -	 * bring down the GX after a GMU failure
+> -	 */
+> -	if (!IS_ERR_OR_NULL(gmu->gxpd))
+> -		pm_runtime_get(gmu->gxpd);
+> -
+>  out:
+>  	/* On failure, shut down the GMU to leave it in a good state */
+>  	if (ret) {
+>  		disable_irq(gmu->gmu_irq);
+>  		a6xx_rpmh_stop(gmu);
+> +		pm_runtime_put(gmu->gxpd);
+>  		pm_runtime_put(gmu->dev);
+>  	}
+>  
+> -- 
+> 2.7.4
+> 
 
-if:
-  properties:
-    compatible:
-      enum:
-        - idt,5p49v5933
-        - idt,5p49v5935
-then:
-  properties:
-    clocks:
-      maxItems: 1
-    clock-names:
-      const: xin
-
->  * for the other parts one of these:
->    - only 'xin'
->    - only 'clkin'
->    - both 'xin' and 'clkin'
->
-> How do I express that?
-
-For the 2nd part:
-
-clock-names:
-  minItems: 1
-  maxItems: 2
-  items:
-    enum: [ xin, clkin ]
-
-> A general note: as a newcomer to yaml bindings I found a steep learning
-> curve. Finding a correct construct (not to mention the best one) for
-> each situation is time consuming and frustrating. I've been looking at
-> existing files for suitable examples but it doesn't work very well.
->
-> Is there any guide to yaml bindings for beginners with examples of
-> typical cases? It would greatly help in producing better patches and
-> saving time for everybody.
-
-bindings/example-schema.yaml is intended to do that. No doubt it could
-use more examples. Though from my perspective people already don't
-read and follow things it says there.
-
-The problem I think is not the typical cases, but the atypical ones. I
-don't think we can enumerate all the atypical cases. At that point you
-really need some understanding of json-schema which I agree has a bit
-of a learning curve if you've never used anything like it (I hadn't).
-
-Rob
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
