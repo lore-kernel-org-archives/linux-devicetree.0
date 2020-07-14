@@ -2,115 +2,97 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 077D1C433F4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 19:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3FC7C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 20:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDB472240B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 19:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DFB72074A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 20:34:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594758894;
+	bh=7ajVvBLLP5qEPyhUpcCFheuY6HCTcqFOFSQYzNauZG4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UwjHgWwpW5KHx5Tfgol3qbaZmHvvYMH6Fvcd/1hjzG6xwQkhknyqxR9waDYvu99zv
+	 +5lucH7LZ6DO38ZOIPrDk1VI57P5Syq2HA22eoGK1+QN2p2RyJIOxmH+n1NS/kWOyQ
+	 ebLQBCyE3Lehkpckz61MS5IOdvXjtXOz1s8Oz8UQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729728AbgGNTEm (ORCPT
+        id S1726843AbgGNUey (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 15:04:42 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:34614 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730335AbgGNTEm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 15:04:42 -0400
-Received: from x2f7fa33.dyn.telefonica.de ([2.247.250.51] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jvQEI-0000LX-HB; Tue, 14 Jul 2020 21:04:38 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Jagan Teki <jagan@amarulasolutions.com>
+        Tue, 14 Jul 2020 16:34:54 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44281 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbgGNUex (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 16:34:53 -0400
+Received: by mail-io1-f65.google.com with SMTP id i4so18716563iov.11;
+        Tue, 14 Jul 2020 13:34:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uSvktDxrURDAPk1lcLpPbZnOgOU1nKqvNNzMxPxnjLA=;
+        b=QQP+VMae95pCWjdplR1wu4y2GSilNfyOwWKDVFTwXv90zUu9KExKgJaJz4ZxBWJIZc
+         9+IAGum2Bh+BLZxVuLK88p+2D91ThNlc0YnkqeYgqwTKSNtnTnq+vrFo+d5FTrxEGpz9
+         TI4lcjBwbN0gCb4f5QTn2md2zXv+5hkkiYz0TwlrJoijgoNC0VX1WcfFsDojwWlbSGHV
+         6eHIMdfRzl7DxlcuLUaNXLR2I20s79AU0Re2+NbmaB6mpOfNvTH0HUORT41xayDKLl1w
+         FYrPWfkrEyR8hOsbcHeiPIKl5iDNUYS3FSWuR7LZYzvJKbCeiqO45GA1isrtBoo/KTge
+         q+AA==
+X-Gm-Message-State: AOAM5336k87Sr7bktq6eTcEKpQnaL7I9jCEaQN6b/BMV9Kwnrg37cHei
+        Oqf6AoDYaMvJxNQMaDKTxg==
+X-Google-Smtp-Source: ABdhPJwH2lS3w18l1/H8LJeXEvXmYUueiCeILVoYmOiLCul1iDA501lA6N+qA5gZHxI9+fpA0OfgLA==
+X-Received: by 2002:a6b:1496:: with SMTP id 144mr6868679iou.6.1594758892683;
+        Tue, 14 Jul 2020 13:34:52 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id k1sm17128ilr.35.2020.07.14.13.34.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 13:34:52 -0700 (PDT)
+Received: (nullmailer pid 2874342 invoked by uid 1000);
+        Tue, 14 Jul 2020 20:34:50 -0000
+Date:   Tue, 14 Jul 2020 14:34:50 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Hanks Chen <hanks.chen@mediatek.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
-        Suniel Mahesh <sunil@amarulasolutions.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Teng <andy.teng@mediatek.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Michael Turquette <mturquette@baylibre.com>,
         linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-Subject: Re: [PATCH v5 1/4] arm64: dts: rockchip: Trivial cleanups for RockPI N10
-Date:   Tue, 14 Jul 2020 21:04:37 +0200
-Message-ID: <21801049.BKhHgEE1TG@phil>
-In-Reply-To: <20200709100756.42384-2-jagan@amarulasolutions.com>
-References: <20200709100756.42384-1-jagan@amarulasolutions.com> <20200709100756.42384-2-jagan@amarulasolutions.com>
+        Sean Wang <sean.wang@kernel.org>, linux-gpio@vger.kernel.org,
+        CC Hwang <cc.hwang@mediatek.com>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, wsd_upstream@mediatek.com,
+        Mars Cheng <mars.cheng@mediatek.com>
+Subject: Re: [PATCH v8 1/7] pinctrl: mediatek: update pinmux definitions for
+ mt6779
+Message-ID: <20200714203450.GA2874293@bogus>
+References: <1594718402-20813-1-git-send-email-hanks.chen@mediatek.com>
+ <1594718402-20813-2-git-send-email-hanks.chen@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594718402-20813-2-git-send-email-hanks.chen@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am Donnerstag, 9. Juli 2020, 12:07:53 CEST schrieb Jagan Teki:
-> Radxa dalang carrier boards are used to mount vmarc SoM's
-> of rk3399pro and rk3288 to make complete SBC.
+On Tue, 14 Jul 2020 17:19:56 +0800, Hanks Chen wrote:
+> Add devicetree bindings for Mediatek mt6779 SoC Pin Controller.
 > 
-> So, this patch adds trivial changes to properties.
-> - move common properties into radxa dalang carrier dtsi.
-> - maintain ascending order for nodes, properties.
-> - change the order of dtsi include so-that common properties
->   will reflect in main dts.
-> - drop unnecessary header includes.
+> Acked-by: Sean Wang <sean.wang@kernel.org>
+> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> Signed-off-by: Andy Teng <andy.teng@mediatek.com>
+> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
+> ---
+>  include/dt-bindings/pinctrl/mt6779-pinfunc.h | 1242 ++++++++++++++++++
+>  1 file changed, 1242 insertions(+)
+>  create mode 100644 include/dt-bindings/pinctrl/mt6779-pinfunc.h
+> 
 
-can you please split this patch into bits at these marks?
-(1) moving common
-(2) sorting
-...
-
-It's hard to follow and especially verify.
-
-
-
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-> index 0a516334f15f..9ed5b27d715c 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-> @@ -7,35 +7,12 @@
->  
->  #include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/pinctrl/rockchip.h>
-> -#include <dt-bindings/pwm/pwm.h>
->  
->  / {
->  	compatible = "vamrs,rk3399pro-vmarc-som", "rockchip,rk3399pro";
->  
-> -	clkin_gmac: external-gmac-clock {
-> -		compatible = "fixed-clock";
-> -		clock-frequency = <125000000>;
-> -		clock-output-names = "clkin_gmac";
-> -		#clock-cells = <0>;
-> -	};
-> -
-> -	vcc12v_dcin: vcc12v-dcin-regulator {
-> -		compatible = "regulator-fixed";
-> -		regulator-name = "vcc12v_dcin";
-> -		regulator-always-on;
-> -		regulator-boot-on;
-> -		regulator-min-microvolt = <12000000>;
-> -		regulator-max-microvolt = <12000000>;
-> -	};
-> -
-> -	vcc5v0_sys: vcc5v0-sys-regulator {
-> -		compatible = "regulator-fixed";
-> -		regulator-name = "vcc5v0_sys";
-> -		regulator-always-on;
-> -		regulator-boot-on;
-> -		regulator-min-microvolt = <5000000>;
-> -		regulator-max-microvolt = <5000000>;
-> -		vin-supply = <&vcc12v_dcin>;
-> +	chosen {
-> +		stdout-path = "serial2:1500000n8";
-
-isn't chosen more a property of the individual board combination?
-So to me this should live in the  rk3399pro-rock-pi-n10.dts .
-As other board even using the rk3399pro variant may want to use
-a different uart for serial output.
-
-Heiko
-
-
+Reviewed-by: Rob Herring <robh@kernel.org>
