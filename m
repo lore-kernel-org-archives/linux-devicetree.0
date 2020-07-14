@@ -2,141 +2,160 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C235C433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 08:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE8DC433E6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 08:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 197E521897
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 08:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29E6421BE5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 08:30:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="EdOOluN3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="usyuXKN+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbgGNIUl (ORCPT
+        id S1725905AbgGNIa4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 04:20:41 -0400
-Received: from mail-eopbgr20097.outbound.protection.outlook.com ([40.107.2.97]:18817
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725793AbgGNIUk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 04:20:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R8d8pC/mcYvOkXPM6BqZQXewdH8YZxjYZr45BttVIXJ2lvBLXqSOLX0DJueCFF0NZZV0K8OGRbyWE5iNOXqfm6n3zkUZaekm0k3n2FHsbmbHmIVzxPYJK6ZaHp3jBkJeM0QGU/m/cFBD0lyWK05FNhZ4lpEkGuNYl+K2Z/Qp6mDGmt4kySJU8aFI15dBAPamQabvyGY3tIuZtgQ3Yqq65d+/zySsZq92w63wrDZM7j7kN3mBbwTiMZIqNtn6BkhGAnrho71sJCJOMOmycd4EtpqgkpABpHsb0KEMZ6fD31OFkCL+/sG4zRB978mE04c7kygNJ14q9jRoVHngLaByZw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Mu3LL8WGBx6/arpP7s7dDydU6qV2Orm739eV+CssGgc=;
- b=MHAQrzQ6xMdSKhUj/qoGK6ObfaAEHcXJtirEAH72rWZ8jDyS/+PjO4uab3Nrcw04MSpf1/61/ZGGowB60FzFeHIl55uwI4vhaIdn+YQ58OtFs1YfWxEaLGnhesBrcCaFt8bSZ3U2bUnsjcqAxmDfQz8POTxbBXvnhTJUGYfmpqYbicpPAqFOlDvo+zmBHuPgxi62ud3EmZvvJuKEkMbTk4PGerhlzVYMdG4Ckn+wIZhBwSGIK7bucYbYS6+hqQdRB9y44MJX7yPoFvN2mSbaEOX05QpmwR2f/nWpZ4RqeVRsBVYvmbkqCz5xEEC27VSwPnxpaTkIUU+tn0b255rb/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Mu3LL8WGBx6/arpP7s7dDydU6qV2Orm739eV+CssGgc=;
- b=EdOOluN3Wy4kUKBopXCVk+InMz7sZq5RxVISXYi/u96JOXypcz1CrDPQQQScuuAamLbsVUxXRasWz+6HCglkin85Z7WNxq9WDl0YADb/yOtzIP2ezfOvrd0JWcK5wzUB4T+7UbtLaGWTimA8V2X4091UzKLhzozfIhYZI/Z4eXY=
-Received: from AM6PR05MB6120.eurprd05.prod.outlook.com (2603:10a6:20b:a8::25)
- by AM6PR05MB4951.eurprd05.prod.outlook.com (2603:10a6:20b:8::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.23; Tue, 14 Jul
- 2020 08:20:35 +0000
-Received: from AM6PR05MB6120.eurprd05.prod.outlook.com
- ([fe80::1d81:6a9b:8c26:3b7d]) by AM6PR05MB6120.eurprd05.prod.outlook.com
- ([fe80::1d81:6a9b:8c26:3b7d%4]) with mapi id 15.20.3174.026; Tue, 14 Jul 2020
- 08:20:34 +0000
-From:   Philippe Schenker <philippe.schenker@toradex.com>
-To:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "a.fatoum@pengutronix.de" <a.fatoum@pengutronix.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>
-CC:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Subject: Re: [PATCH 3/3] ARM: dts: colibri-imx7: add usb dual-role switch
- capability
-Thread-Topic: [PATCH 3/3] ARM: dts: colibri-imx7: add usb dual-role switch
- capability
-Thread-Index: AQHWVr15sZvxLwnO3E+b+KcqajdLWakFR14AgAAjuQCAAU+xgIAABwcA
-Date:   Tue, 14 Jul 2020 08:20:34 +0000
-Message-ID: <83b230cef109e1a413ab1036c21ad763a1d127eb.camel@toradex.com>
-References: <20200710132423.497230-1-philippe.schenker@toradex.com>
-         <20200710132423.497230-3-philippe.schenker@toradex.com>
-         <73240ab0-5069-40c5-4ade-7fcc2207dfaf@pengutronix.de>
-         <c76c0fd056512a3f8e24bf06e7bb7e1650090609.camel@toradex.com>
-         <7e6f8135-120f-0831-20ad-25648ea646b8@pengutronix.de>
-In-Reply-To: <7e6f8135-120f-0831-20ad-25648ea646b8@pengutronix.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.36.3 
-authentication-results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=toradex.com;
-x-originating-ip: [31.10.206.124]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1b0f3fdb-3340-4f59-0c2c-08d827cec849
-x-ms-traffictypediagnostic: AM6PR05MB4951:
-x-microsoft-antispam-prvs: <AM6PR05MB495195BA01AFC16698AB6A6EF4610@AM6PR05MB4951.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3WLSZpgY2Zv8NpQEF1ER/7koPJhilvkTwsLpHkLWJ2yJPTEcjAXPN7dSvi1sq9Nv7h2gx+fonrc5iY0MuDx7P6ETs4D8oJNypslPFvY1slfya4NHLyaXGKy4coJ3dTJgSVHQ20t5Eb1EItbBUHDjW/jJvVOglAx6qylb2Ib5ZyCuvxRV0U2ELj1IDMFdqQir2t7idd+0WXxKGYtlH4Cv75/yZipCDkETeJn+cS9yN/EZU+1R6afZFt7KaU5u1rNygM2XQfxTJd8Y9IG6o6rnui92uS5JC5N2+FEBJfPtuQblMLx+o11NIZQSSnFzIdCQvI+WC/kbjAQOUskFRAS9Cw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR05MB6120.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(366004)(376002)(136003)(39850400004)(6512007)(8936002)(26005)(6486002)(76116006)(91956017)(110136005)(71200400001)(4326008)(186003)(6506007)(53546011)(478600001)(2906002)(7416002)(44832011)(66446008)(66946007)(66556008)(64756008)(66476007)(86362001)(316002)(54906003)(8676002)(2616005)(83380400001)(36756003)(5660300002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: b+Pr3dWar97rK5XDnDlTMwDWJuQ1wE0P6NZroSpN8/be6QHKV7pHrJ7unAYBgk8MmMZwu4kkCVmKaon468iw/cCxTHMBlN02ejb5nE0zeyZXS8rmahcI4C2bRe/0Op7xxG4nwjSo43m/SnpHzWMeG36w9JsgMpSn1wLbFgWlKYlwEKrqXs8OIcKdz17uxRFDqpto2feCcpD/HSqLms9OMtSY3qQb3Kz9xRo1FkjhCExXdezBDe39+FvFzKTLp154qarEU5MZZLyKFCYSFVXXbgnXCoiMljITLQPPmwOk0xNJWhtHkmnj//+WIRVni+/NC85Q3+f9uXKusiqdQAtsovkvmG3HEwk7/qQ/x9BvQPZ6kz497jrdUqmlYKBLO1DLkpLvN8AoYBXfDHvkpea2uay6gZDj5tqGNCFcUhb5pb2MOfobkwzl9scUMtEBZ/htDAyTbkj4NBaqvSZ74itq+TqNMXtp2m4gu4DwrfpL7OA=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C707C97734EAA345AD715509FC1A9975@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 14 Jul 2020 04:30:56 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:33756 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbgGNIa4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 04:30:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1594715455; x=1626251455;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=iwME0Emw2+J43pHMb9qYdnILvBRF1cOmxeCbkgwHHWI=;
+  b=usyuXKN+KCwL4nBDIstjpgPvjiNq2A+Wp7eJ3bE8Z104DiEmMl816w30
+   kQP6l8kW7LZ1HZyYpy1AOkVnAGLtvjjdpa6sbvIpbZGON15TanIpIw3IC
+   1OV4SxKa+hlT1BqbgDIVKvpdhKhdctiIF/ORSNTWKiZ4ptOlzMKo8AeCM
+   gq8JLL7DBseA4m6UbO5Or0+SHAc+G5rntmpbtz7LSfH2mzPRSk+D7N84Z
+   4S/mH5m8ei3t76AH8uELMrIrv+vsfbjcntFuxBcmH9Ll6XfwIG12S5ilM
+   ZQjKFufh/MbFGrh82bu2ZNI35gHxc+gnAUnUMIUzKqcChztxpvSxsvyUH
+   w==;
+IronPort-SDR: rDCm3eZA3Wna9AO+bK/EoLvsiUHMNsKMDHn3nfTK+yrolAsyVlBnVSS1verBpraJXN83kMw8i8
+ R0nwofBCha3cvA79LOIo5b8kNGzwuiST9NpBr6An6U5v6hPEEMu6t448RPxcYtREMfCViZNZEB
+ JF7Ed4bGIIR34VfHP/943RyhAj/6MQoJxxmThFf4p2CwZysnM8IXuBpNyhwWuzc8ODnKgh2bah
+ pH8DdvW4lFzsp+rORr5YIX3twSt19kuTp7CulOfVd2V91QKNYPItKglCEf9q1UkDXb3K4gYi5S
+ 23U=
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="87503354"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Jul 2020 01:30:55 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 14 Jul 2020 01:30:54 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Tue, 14 Jul 2020 01:30:52 -0700
+References: <20200702101331.26375-1-lars.povlsen@microchip.com> <20200702101331.26375-6-lars.povlsen@microchip.com> <20200713192259.GA553903@bogus> <20200713195219.xfvqknioqw7yyr74@mobilestation>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Mark Brown <broonie@kernel.org>
+CC:     Rob Herring <robh@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        "Lars Povlsen" <lars.povlsen@microchip.com>,
+        Peter Rosin <peda@axentia.se>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 5/8] dt-bindings: snps,dw-apb-ssi: Add sparx5 support, plus snps,rx-sample-delay-ns property
+In-Reply-To: <20200713195219.xfvqknioqw7yyr74@mobilestation>
+Date:   Tue, 14 Jul 2020 10:30:51 +0200
+Message-ID: <87zh82jy6c.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR05MB6120.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b0f3fdb-3340-4f59-0c2c-08d827cec849
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jul 2020 08:20:34.8832
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: en2v4lVXPj6270KB6HRB0+KbJaceXHPr3qfMD3Koy8Z/NmOeYqV8YFZ4Xg1xG/XQmvaf+GJYhHSsjGmTXip9GmIhEIH1dyx/fdGPx8gdX8g=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB4951
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA3LTE0IGF0IDA5OjU1ICswMjAwLCBBaG1hZCBGYXRvdW0gd3JvdGU6DQo+
-IEhlbGxvIFBoaWxpcHBlLA0KPiANCj4gT24gNy8xMy8yMCAxOjUzIFBNLCBQaGlsaXBwZSBTY2hl
-bmtlciB3cm90ZToNCj4gPiBPbiBNb24sIDIwMjAtMDctMTMgYXQgMTE6NDYgKzAyMDAsIEFobWFk
-IEZhdG91bSB3cm90ZToNCj4gPiA+IEhlbGxvIFBoaWxpcHBlLA0KPiA+ID4gDQo+ID4gPiA+ICsJ
-ZXh0Y29uX3VzYmNfZGV0OiB1c2JjX2RldCB7DQo+ID4gPiA+ICsJCWNvbXBhdGlibGUgPSAibGlu
-dXgsZXh0Y29uLXVzYi1ncGlvIjsNCj4gPiA+IA0KPiA+ID4gQWNjb3JkaW5nIHRvIDQ2MDJmM2Jm
-ZjI2NiAoInVzYjogY29tbW9uOiBhZGQgVVNCIEdQSU8gYmFzZWQNCj4gPiA+IGNvbm5lY3Rpb24N
-Cj4gPiA+IGRldGVjdGlvbiBkcml2ZXIiKToNCj4gPiA+ICJ0aGUgb2xkIHdheSB1c2luZyBleHRj
-b24gdG8gc3VwcG9ydCBVU0IgRHVhbC1Sb2xlIHN3aXRjaCBpcyBub3cNCj4gPiA+IGRlcHJlY2F0
-ZWQNCj4gPiA+ICB3aGVuIHVzZSBUeXBlLUIgY29ubmVjdG9yLiINCj4gPiA+IA0KPiA+ID4gSGF2
-ZSB5b3UgY29uc2lkZXJlZCB1c2luZyBhIGNvbXBhdGlibGUgPSAiZ3Bpby11c2ItYi1jb25uZWN0
-b3IiDQo+ID4gPiBjaGlsZA0KPiA+ID4gbm9kZSBpbnN0ZWFkPw0KPiA+ID4gDQo+ID4gPiBDaGVl
-cnMsDQo+ID4gPiBBaG1hZA0KPiA+IA0KPiA+IFRoYW5rcyBmb3IgdGhlIEhpbnQgQWhtYWQsDQo+
-ID4gDQo+ID4gSSBhbHJlYWR5IHRyaWVkIGFuZCBqdXN0IG5vdyB0cmllZCBhZ2FpbiBidXQgaXQg
-ZG9lc24ndCB3b3JrIG9uIG91cg0KPiA+IGhhcmR3YXJlLiBBcmUgeW91IHN1cmUgdGhpcyB3b3Jr
-cyB3aXRoIGNoaXBpZGVhIGRyaXZlcj8NCj4gDQo+IEkgaGF2ZW4ndCwganVzdCB3YW50ZWQgdG8g
-cG9pbnQgaXRzIGV4aXN0ZW5jZSBvdXQgaW4gY2FzZSB5b3UgZGlkbid0DQo+IGtub3cuDQo+IFNl
-ZW1zIHdlIG5lZWQgdG8gY2FsbCBvZl9wbGF0Zm9ybV9wb3B1bGF0ZSBzb21ld2hlcmUgaW4gdGhl
-IGRyaXZlci4NCj4gVW5zdXJlIHdoYXQgb3RoZXIgY2hhbmdlcyBhcmUgbmVjZXNzYXJ5Lg0KDQpZ
-ZXAsIHRoYW5rcyBmb3IgdGhhdCEgSXQgc2VlbXMgbGlrZSB0aGF0IG5lZWQgdG8gYmUgcmVhbGx5
-IGNhbGxlZCBhcyBJDQpjYW4ndCBnZXQgYSBwcm9iZSBvZiB0aGUgbmV3IHVzYiBjb25uZWN0b3Ig
-ZHJpdmVyLiBJIHF1aWNrbHkgZ3JlcHBlZA0KdGhyb3VnaCBjb2RlIGFuZCBzYXcgdGhhdCB0ZWdy
-YSBVU0IgZHJpdmVyIGlzIGNhbGxpbmcNCm9mX3BsYXRmb3JtX3BvcHVsYXRlIGFuZCB0aGV5IGFs
-c28gdXNlIHRoYXQgZ3Bpby11c2ItYi1jb25uZWN0b3IuDQoNCj4gDQo+ID4gU2hvdWxkIHRoaXMg
-bmV3IHVzYi1jb25uZWN0b3Igc3R1ZmYgd29yayBpbiBnZW5lcmFsIHdpdGggZXZlcnkgb2xkDQo+
-ID4gZHJpdmVyPw0KPiANCj4gSWYgdGhlIGRyaXZlciBzdXBwb3J0IGlzbid0IHRoZXJlIHlldCwg
-SSB0aGluayB1c2Ugb2YgZXh0Y29uIGlzIGZpbmUNCj4gYXMgaXMuDQo+IA0KPiBUaGFua3MNCj4g
-QWhtYWQNCg0KQFNoYXduOiBDb3VsZCB5b3UgcHVsbCBwYXRjaGVzICMyIGFuZCAjMyBiYWNrIGlu
-Pw0KDQpUaGFua3MgZ3V5cyENCg0KUGhpbGlwcGUNCj4gDQo+ID4gUGhpbGlwcGUNCj4gDQo+IA0K
+
+Serge Semin writes:
+
+> On Mon, Jul 13, 2020 at 01:22:59PM -0600, Rob Herring wrote:
+>> On Thu, Jul 02, 2020 at 12:13:28PM +0200, Lars Povlsen wrote:
+> ...
+>>
+>> > +
+>> >  patternProperties:
+>> >    "^.*@[0-9a-f]+$":
+>> >      type: object
+>> > @@ -107,6 +122,14 @@ patternProperties:
+>> >        spi-tx-bus-width:
+>> >          const: 1
+>> >
+>> > +      snps,rx-sample-delay-ns:
+>>
+>
+>> We already have 'rx-sample-delay-ns' from Rockchip SPI, so use that. But
+>> note that it applies to the SPI node. Does this need to be per SPI
+>> child?
+>
+> It was me, who suggested to Lars to have that parameter moved to the SPI
+> sub-nodes. As I see it the property is highly dependent on the SPI slave device
+> the controller is communicating to. Some of the them may need the delay some
+> may not. It's not always the capacitance thing, but also depends on how good
+> the MISO signal a particular slave generates. So IMO the Rockchip SPI driver
+> developer should have moved that property to the sub-nodes too.
+>
+
+In the case with sparx5, having two bus interfaces, spi slaves may be on
+different busses - making it obvious why you may need different settings.
+
+But I guess even on the same bus the physical length of SPI connections
+and device response delay to each device could play in as well.
+
+Nevertheless, it *does* make sense to be able to specify per slave, but
+a default could make the DT more terse. Should I add this to my patch?
+
+I will remove the "snps," prefix now that the property is globally
+established.
+
+---Lars
+
+> On the other hand if the Rx errors are caused by the MISO lane capacitance,
+> then it will be cumbersome to have the same property duplicated for each
+> sub-node. Then what about having the property supported by both the SPI
+> controller and the SPI-child nodes? For instance the SPI-controller
+> "rx-sample-delay-ns" will provide a default sample delay for each sub-node
+> instead of zero by default, while the individual sub-node "rx-sample-delay-ns"
+> property can be used to override the default value.
+>
+> -Sergey
+>
+>>
+>> BTW, the Rockchip controller appears to be a version of the DW
+>> controller.
+>>
+>> > +        description: SPI Rx sample delay offset, unit is nanoseconds.
+>> > +          The delay from the default sample time before the actual
+>> > +          sample of the rxd input signal occurs. The "rx_sample_delay"
+>> > +          is an optional feature of the designware controller, and the
+>> > +          upper limit is also subject to controller configuration.
+>> > +        $ref: /schemas/types.yaml#/definitions/uint32
+>> > +
+>> >  unevaluatedProperties: false
+>> >
+>> >  required:
+>> > @@ -129,5 +152,10 @@ examples:
+>> >        num-cs = <2>;
+>> >        cs-gpios = <&gpio0 13 0>,
+>> >                   <&gpio0 14 0>;
+>> > +      spi-flash@1 {
+>> > +        compatible = "spi-nand";
+>> > +        reg = <1>;
+>> > +        snps,rx-sample-delay-ns = <7>;
+>> > +      };
+>> >      };
+>> >  ...
+>> > --
+>> > 2.27.0
+
+-- 
+Lars Povlsen,
+Microchip
