@@ -2,160 +2,112 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	DATE_IN_FUTURE_06_12,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1242C4345E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 09:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C482C433E6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 09:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F495208C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 09:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 090CB217A0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 09:34:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AvVcnKkU"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qga6wQmn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgGNJ2H (ORCPT
+        id S1725906AbgGNJeD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 05:28:07 -0400
-Received: from mail-eopbgr50075.outbound.protection.outlook.com ([40.107.5.75]:34030
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727104AbgGNJ2E (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:28:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W8fw2rPJ9yD7nbpuXFWGkGWYfGtf70QKNcUFpkvxTYljaDWXSMtqMvr8wojdH2Bm6gwpkZ2Vtl07cwdwUdwP9PHc96Q6LyWPOhyYFa9X/Wi5V8lo02ZjXX3NpLShvo38xlEfZAA8gcZD51wVaoeprpYOPFGuMgf6pzlvnBF6ZnBnP5AR4alZdf62fGvG/GNLVzUeMG8fG/LlO1AqQzJVRpB2+c+lq+HFy0H4jM4Ibk8V0GXRG4j1UrxnrGysROglll4mohA09ZrvJKV1OGGEDY2gKN28j5uBvDj3p38jvD0cCXBfIrPVgpzxuesdTkS2NpT2sW1mQxM3kz7C1cGbuA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WyhlYTu0tRkFp9zbFDzlDAa/ti9lPivQitLRWGWiSXc=;
- b=VEMsyF+UruQnejNvrGiZzSO4puqxTz3tLHdbJXok//cJrQ0ZpAZKA+gitOkK9S4F78lQVyuCM/Z/LiETFYW8Ctc0JHBAN0QzkGcJI0znD6JXjLpYQDmx1e4KlINpNgoYoDB2+2aD2Dzv+tjU88Vbk+8xnPH2rqFuvWXKk/pAzpE5LWk60PLyjdjpUaV4ciYkA28vBtUp2Eh2ee3nl5CSLxv6LiBVbnc7PEXgLHWf88nIkceO6q5kvDu+GQUxwAMCem8/9BtqRBE6/vMH9vVzYekJH20dCxkRI3E7yyFmroWvW86fOFHzahFfGsJBoFg1BtFEZHpZ4KSGATXj9gidCw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WyhlYTu0tRkFp9zbFDzlDAa/ti9lPivQitLRWGWiSXc=;
- b=AvVcnKkUTGM+DjF7gLhpGC/CdxEbsSJrSA1CR9JD8IpYzOYW/k2xmadNoU74wSyBqXnDJiCWNM2SkWN9ZiWzLNPYK/1glhkoT2B2nBuj7DeWaMx6j/Y+uxKuchzUa2QMbEGlrUmrLhKcwScrSVJi3E6l1MWGf/eXQTKD4fndDmY=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VI1PR04MB6270.eurprd04.prod.outlook.com (2603:10a6:803:fb::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Tue, 14 Jul
- 2020 09:27:54 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3174.025; Tue, 14 Jul 2020
- 09:27:54 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     vkoul@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, festevam@gmail.com,
-        catalin.marinas@arm.com, will@kernel.org, dan.j.williams@intel.com,
-        angelo@sysam.it
-Cc:     kernel@pengutronix.de, linux-imx@nxp.com,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 8/9] arm64: dts: imx8qxp: add edma2
-Date:   Wed, 15 Jul 2020 01:41:47 +0800
-Message-Id: <1594748508-22179-9-git-send-email-yibin.gong@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594748508-22179-1-git-send-email-yibin.gong@nxp.com>
-References: <1594748508-22179-1-git-send-email-yibin.gong@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR01CA0092.apcprd01.prod.exchangelabs.com
- (2603:1096:3:15::18) To VE1PR04MB6638.eurprd04.prod.outlook.com
- (2603:10a6:803:119::15)
+        Tue, 14 Jul 2020 05:34:03 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:34604 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726889AbgGNJeC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 05:34:02 -0400
+X-UUID: 294ffe915ddd4f2ebdd084d2a09cb58b-20200714
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=g0vfCKfsVImSYs7pBa71fJvZ3L9cSxC+jFd3c5Ar0OA=;
+        b=qga6wQmnl6LFOkFK300s5TBJueZg6wKqfCxqm5ApKl/ZRsDH9DFKNGfON9o0N811mIV5nbnXtOhLq1skUUp1gl8KFO7yK+XzxmK+qHBqDCq+Tf2eYe/t2m2HpEiDShWesjx0GfIE2m3D5iou3wiEwCOHQkXt+aM8yocisuLvyqU=;
+X-UUID: 294ffe915ddd4f2ebdd084d2a09cb58b-20200714
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <yong.wu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1789059505; Tue, 14 Jul 2020 17:33:57 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 14 Jul
+ 2020 17:33:55 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 14 Jul 2020 17:33:54 +0800
+Message-ID: <1594719186.16172.35.camel@mhfsdcap03>
+Subject: Re: [PATCH 11/21] iommu/mediatek: Add power-domain operation
+From:   Yong Wu <yong.wu@mediatek.com>
+To:     Pi-Hsun Shih <pihsun@chromium.org>
+CC:     Joerg Roedel <joro@8bytes.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Evan Green <evgreen@chromium.org>,
+        Tomasz Figa <tfiga@google.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>,
+        Youlin Pei =?UTF-8?Q?=28=E8=A3=B4=E5=8F=8B=E6=9E=97=29?= 
+        <youlin.pei@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>,
+        <anan.sun@mediatek.com>, <cui.zhang@mediatek.com>,
+        <chao.hao@mediatek.com>, <ming-fan.chen@mediatek.com>
+Date:   Tue, 14 Jul 2020 17:33:06 +0800
+In-Reply-To: <CANdKZ0e3=AeCxpSHVk7daUE01L7AgJYmZ7jeOQDT169SaowL-g@mail.gmail.com>
+References: <20200711064846.16007-1-yong.wu@mediatek.com>
+         <20200711064846.16007-12-yong.wu@mediatek.com>
+         <CANdKZ0e3=AeCxpSHVk7daUE01L7AgJYmZ7jeOQDT169SaowL-g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.67) by SG2PR01CA0092.apcprd01.prod.exchangelabs.com (2603:1096:3:15::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3195.17 via Frontend Transport; Tue, 14 Jul 2020 09:27:50 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.67]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 109dc475-301d-4f2d-937e-08d827d83001
-X-MS-TrafficTypeDiagnostic: VI1PR04MB6270:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB62709CD632DBC8DD35EB856389610@VI1PR04MB6270.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:267;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9TIsMcHhjbhBkvTO8j3TCWDCKAJgvhSiwz5wl2fVHLCEhM2NuBbKSUHcv1+Tp2hrW69KI5jehLwBKkmOa22byDy7D2sSWtiOBdMzBcgLi02J4+V5WVqHixVAx1G6McNLf4bGL8cW0j0mIyyrmzlpfBZFUXdo0C4WKyEA8m3DVk5yC1oGlIM4bJ1asYV8mkDJucJu838MnW+Q9bMoPpdMECLn7lOrANx+1iG5oLe1atObXNuDLgNrWeFxtM+Qp5Y4iW/+KDLNuxHphKLIrJdAgCqcWh6w8fHaMXXhmg2scZ7GddmN+KIhU3Mma+myIDO5qvBJ9Nq0N1AkWpyPqcMiiL0kAw72IlfTdyeRCohvrWJkMak9kcwu8DmJQnZTeSxF
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(396003)(136003)(346002)(376002)(66946007)(6486002)(6512007)(66476007)(66556008)(8936002)(4326008)(86362001)(2906002)(6506007)(83380400001)(478600001)(36756003)(16526019)(956004)(2616005)(186003)(6666004)(26005)(5660300002)(8676002)(52116002)(7416002)(316002)(32563001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 3DEcN+UJ2xnsgdgxIN6dkx3UBPsjSRgON9TsWBEj2/V6K00WCy8SQ2poHJb+qMmANPpXMk4Gw0tLUIccEBxizQr1cX6baV7Wr2KHC8jnepfawPMbR01GD0UsfNqoIxpw+x7EfL9+9ERxSS4Q3X7OPQvZ91sZynRqb2blFDlezOEIOE9lH3IgAvKUvGkIuXcAST9SehDLjqEAWOU0NpiRmNK1o9PU2JYOVPYxLkfVKqHpFA6fgRSjIAcZIpWql7+mvaq+U36eqtpFgqG7VLl5huidPsRkmAw52KEZpRi8SyJWpK4Ecd8z8ugot+753RFa4aT2jSDtdNUaulZyhdcuReC18OQMeicuE3+mC8hINOKFvon1rPO215v4QN+Gmy7+S/MqD8M5YJ7euBiOOk/QW4epvX3H3vmnEb3mKGzWVn8zI+052cOdOoK5I4KZfnxISvJxeKBBum2Kx1HsKw/DJt06yyKOmVYeit1W9UanDeg=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 109dc475-301d-4f2d-937e-08d827d83001
-X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6638.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2020 09:27:54.7102
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AuVyysExswLTOp2XxeHgYonEsFvXo1LkVRyx3o8Ejm7G617XP7RK61lv2x8ArZEpaCXn2WEb5JjbZ1qx7SsmEA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6270
+X-TM-SNTS-SMTP: 4A868CC5672C9E09033785D03A34B39C2AB230B1DC2A9B4BD748D338AF6B73A92000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-add edma2 on i.mx8qxp.
-
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 38 ++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-index e46faac..3f4fa59d 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -300,6 +300,44 @@
- 			status = "disabled";
- 		};
- 
-+	edma2: dma-controller@5a1f0000 {
-+		compatible = "fsl,imx8qm-edma";
-+		reg = <0x5a280000 0x10000>, /* channel8 UART0 rx */
-+		      <0x5a290000 0x10000>, /* channel9 UART0 tx */
-+		      <0x5a2a0000 0x10000>, /* channel10 UART1 rx */
-+		      <0x5a2b0000 0x10000>, /* channel11 UART1 tx */
-+		      <0x5a2c0000 0x10000>, /* channel12 UART2 rx */
-+		      <0x5a2d0000 0x10000>, /* channel13 UART2 tx */
-+		      <0x5a2e0000 0x10000>, /* channel14 UART3 rx */
-+		      <0x5a2f0000 0x10000>; /* channel15 UART3 tx */
-+		#dma-cells = <3>;
-+		dma-channels = <8>;
-+		interrupts = <GIC_SPI 434 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 435 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 436 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 437 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 438 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 439 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 440 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 441 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "edma2-chan8-rx", "edma2-chan9-tx",
-+				  "edma2-chan10-rx", "edma2-chan11-tx",
-+				  "edma2-chan12-rx", "edma2-chan13-tx",
-+				  "edma2-chan14-rx", "edma2-chan15-tx";
-+		power-domains = <&pd IMX_SC_R_DMA_2_CH8>,
-+				<&pd IMX_SC_R_DMA_2_CH9>,
-+				<&pd IMX_SC_R_DMA_2_CH10>,
-+				<&pd IMX_SC_R_DMA_2_CH11>,
-+				<&pd IMX_SC_R_DMA_2_CH12>,
-+				<&pd IMX_SC_R_DMA_2_CH13>,
-+				<&pd IMX_SC_R_DMA_2_CH14>,
-+				<&pd IMX_SC_R_DMA_2_CH15>;
-+		power-domain-names = "edma2-chan8", "edma2-chan9",
-+				     "edma2-chan10", "edma2-chan11",
-+				     "edma2-chan12", "edma2-chan13",
-+				     "edma2-chan14", "edma2-chan15";
-+	};
-+
- 		adma_i2c0: i2c@5a800000 {
- 			compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
- 			reg = <0x5a800000 0x4000>;
--- 
-2.7.4
+T24gTW9uLCAyMDIwLTA3LTEzIGF0IDE1OjAzICswODAwLCBQaS1Ic3VuIFNoaWggd3JvdGU6DQo+
+IE9uIFNhdCwgSnVsIDExLCAyMDIwIGF0IDI6NTEgUE0gWW9uZyBXdSA8eW9uZy53dUBtZWRpYXRl
+ay5jb20+IHdyb3RlOg0KPiA+DQo+ID4gSW4gdGhlIHByZXZpb3VzIFNvQywgdGhlIE00VSBIVyBp
+cyBpbiB0aGUgRU1JIHBvd2VyIGRvbWFpbiB3aGljaCBpcw0KPiA+IGFsd2F5cyBvbi4gdGhlIGxh
+dGVzdCBNNFUgaXMgaW4gdGhlIGRpc3BsYXkgcG93ZXIgZG9tYWluIHdoaWNoIG1heSBiZQ0KPiA+
+IHR1cm5lZCBvbi9vZmYsIHRodXMgd2UgaGF2ZSB0byBhZGQgcG1fcnVudGltZSBpbnRlcmZhY2Ug
+Zm9yIGl0Lg0KPiA+DQo+ID4gd2Ugc2hvdWxkIGVuYWJsZSBpdHMgcG93ZXIgYmVmb3JlIE00VSBo
+dyBpbml0aWFsLiBhbmQgZGlzYWJsZSBpdCBhZnRlciBIVw0KPiA+IGluaXRpYWxpemUuDQo+ID4N
+Cj4gPiBXaGVuIHRoZSBlbmdpbmUgd29yaywgdGhlIGVuZ2luZSBhbHdheXMgZW5hYmxlIHRoZSBw
+b3dlciBhbmQgY2xvY2tzIGZvcg0KPiA+IHNtaS1sYXJiL3NtaS1jb21tb24sIHRoZW4gdGhlIE00
+VSdzIHBvd2VyIHdpbGwgYWx3YXlzIGJlIHBvd2VyZWQgb24NCj4gPiBhdXRvbWF0aWNhbGx5IHZp
+YSB0aGUgZGV2aWNlIGxpbmsgd2l0aCBzbWktY29tbW9uLg0KPiA+DQo+ID4gTm90ZTogd2UgZG9u
+J3QgZW5hYmxlIHRoZSBNNFUgcG93ZXIgaW4gaW9tbXVfbWFwL3VubWFwIGZvciB0bGIgZmx1c2gu
+DQo+ID4gSWYgaXRzIHBvd2VyIGFscmVhZHkgaXMgb24sIG9mIGNvdXJzZSBpdCBpcyBvay4gaWYg
+dGhlIHBvd2VyIGlzIG9mZiwNCj4gPiB0aGUgbWFpbiB0bGIgd2lsbCBiZSByZXNldCB3aGlsZSBN
+NFUgcG93ZXIgb24sIHRodXMgdGhlIHRsYiBmbHVzaCB3aGlsZQ0KPiA+IG00dSBwb3dlciBvZmYg
+aXMgdW5uZWNlc3NhcnksIGp1c3Qgc2tpcCBpdC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFlv
+bmcgV3UgPHlvbmcud3VAbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL2lvbW11
+L210a19pb21tdS5jIHwgNTQgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0t
+DQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA0NyBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQ0K
+PiA+IC4uLg0KPiA+ICAgICAgICAgZm9yX2VhY2hfbTR1KGRhdGEpIHsNCj4gPiArICAgICAgICAg
+ICAgICAgLyogc2tpcCB0bGIgZmx1c2ggd2hlbiBwbSBpcyBub3QgYWN0aXZlICovDQo+ID4gKyAg
+ICAgICAgICAgICAgIGlmIChwbV9ydW50aW1lX2VuYWJsZWQoZGF0YS0+ZGV2KSAmJg0KPiA+ICsg
+ICAgICAgICAgICAgICAgICAgIXBtX3J1bnRpbWVfYWN0aXZlKGRhdGEtPmRldikpDQo+ID4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgY29udGludWU7DQo+ID4gKw0KPiANCj4gcG1fcnVudGltZV9h
+Y3RpdmUoZGV2KSA9PSBmYWxzZSBpbXBsaWVzIGRldi0+cG93ZXIuZGlzYWJsZV9kZXB0aCA9PSAw
+LA0KPiB3aGljaCBpbXBsaWVzIHBtX3J1bnRpbWVfZW5hYmxlZChkZXYpID09IHRydWUsIHNvIHRo
+ZQ0KPiBwbV9ydW50aW1lX2VuYWJsZWQoZGF0YS0+ZGV2KSBjYW4gYmUgb21pdHRlZCBoZXJlLg0K
+DQpZZXMuIFRoYW5rcy4NCldpbGwgZml4IGluIG5leHQgdmVyc2lvbi4NCg0KPiANCj4gPiAgICAg
+ICAgICAgICAgICAgc3Bpbl9sb2NrX2lycXNhdmUoJmRhdGEtPnRsYl9sb2NrLCBmbGFncyk7DQo+
+ID4gICAgICAgICAgICAgICAgIHdyaXRlbF9yZWxheGVkKEZfSU5WTERfRU4xIHwgRl9JTlZMRF9F
+TjAsDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRhdGEtPmJhc2UgKyBkYXRh
+LT5wbGF0X2RhdGEtPmludl9zZWxfcmVnKTsNCj4gPiAuLi4NCg0K
 
