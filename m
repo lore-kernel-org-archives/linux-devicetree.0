@@ -2,178 +2,114 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DB7C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC76C433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EEE4204EC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C7C1204EC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:34:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IaeiwFlo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725780AbgGNHcy (ORCPT
+        id S1725801AbgGNHeI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 03:32:54 -0400
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:22414 "EHLO
-        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgGNHcy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 03:32:54 -0400
-Received: from fsav110.sakura.ne.jp (fsav110.sakura.ne.jp [27.133.134.237])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06E7WqNN034148;
-        Tue, 14 Jul 2020 16:32:52 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav110.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav110.sakura.ne.jp);
- Tue, 14 Jul 2020 16:32:52 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav110.sakura.ne.jp)
-Received: from localhost.localdomain (121.252.232.153.ap.dti.ne.jp [153.232.252.121])
-        (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06E7Wnf3034133
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Tue, 14 Jul 2020 16:32:52 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
-To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v3] dt-bindings: sound: convert rk3328 codec binding to yaml
-Date:   Tue, 14 Jul 2020 16:32:47 +0900
-Message-Id: <20200714073247.172859-1-katsuhiro@katsuster.net>
-X-Mailer: git-send-email 2.27.0
+        Tue, 14 Jul 2020 03:34:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46218 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgGNHeH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 03:34:07 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60C67C061755;
+        Tue, 14 Jul 2020 00:34:07 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id t74so10809584lff.2;
+        Tue, 14 Jul 2020 00:34:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vSZCdTeq5IZuIT/5K6A9iU6I7B62mfuU1w1ZeNdxwsA=;
+        b=IaeiwFlo8/BnwFbIg9V+kT/A3MGOXKWrL8aFqD7RmTg7SL/L0Ik13tc0GNKZ+nqBr2
+         n6F22egPYYSTnoei5lFzP64BmWd0JJUHEc7ShDJoqOV3hqZ+5S46F0Q6UWfsyW3oCbWR
+         II4204xpQRJckdYQnNR5iH5fKM8TrMWfCUI9r9unii/uFJIgewAX57yEQnRWe2Nyig1V
+         K3fhA8dFPJoDcAKjTEgfTrlTQTafus7qfE+HvYl8EAzwF2Zd9/T+TFq7NexCd5riqzry
+         aFclxGUkc8bCLkIWlVKylGLHnyGT62Q5XJ/1uH5hsjLSwD0qXzLWrnGYLX3HaTMI7PRJ
+         BmEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=vSZCdTeq5IZuIT/5K6A9iU6I7B62mfuU1w1ZeNdxwsA=;
+        b=Bj3vvvymTk1igm1eEfY5r/uiBTvbAU3e5L6WTZkAT0cJ6tI9LZE3TZ/ikD2WOqZvG8
+         Rk1xvBM8Uv+h+rAJZau6s450J2dO3O8ROrJs5cj7n2y5GLPTOrkl6zQWQrXZkdgcq7eh
+         TGnM7ETTz2uI6onks/WkxAbETqUJ7r/Pp4vS5TR+8VB92F6goueZDnS7g461nrZb1JcV
+         gM4TM6UbPB4bP4+6nfSjIHhRz4rqjQp36/d4RJuMgrGTPeZyY3IBgqTfIFW72/E1RXi+
+         jrDIxZG5bFL1ZL772pY0SMc+xsvlnQ5lNoRu3ztKnGyr3Yzgr+ijOaji0t1LEuP3E+Yv
+         HX2A==
+X-Gm-Message-State: AOAM531GwPFG9sQzmOHxwXUOTSRG/wo/F+cj6vP6y5syVVolIy2ywtbL
+        2Uwtclaq2x2dKZ3y+ELYoXbtQf+mK1U=
+X-Google-Smtp-Source: ABdhPJwKAOzh6OpUd3ef4QZMtDjWIvyqfzukJI4zVQgp0Iw73r7ql8TL8LKN16oTjdOmjeR1GQGBJg==
+X-Received: by 2002:a19:6a02:: with SMTP id u2mr1568163lfu.9.1594712045894;
+        Tue, 14 Jul 2020 00:34:05 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:809:9719:3978:b690:7798:aa4b? ([2a00:1fa0:809:9719:3978:b690:7798:aa4b])
+        by smtp.gmail.com with ESMTPSA id u9sm4468057ljk.44.2020.07.14.00.34.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jul 2020 00:34:05 -0700 (PDT)
+Subject: Re: [PATCH 8/9] dt-bindings: net: renesas,ravb: Add support for
+ r8a774e1 SoC
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, iommu@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+References: <1594676120-5862-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594676120-5862-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Organization: Brain-dead Software
+Message-ID: <db415d4f-e563-81f4-2202-5eea57f91a6d@gmail.com>
+Date:   Tue, 14 Jul 2020 10:34:01 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1594676120-5862-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch converts Rockchip rk3328 audio codec binding to DT schema.
-And adds description about "mclk" clock and fixes some errors in
-original example.
+Hello!
 
-Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../bindings/sound/rockchip,rk3328-codec.txt  | 28 --------
- .../bindings/sound/rockchip,rk3328-codec.yaml | 69 +++++++++++++++++++
- 2 files changed, 69 insertions(+), 28 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/rockchip,rk3328-codec.txt
- create mode 100644 Documentation/devicetree/bindings/sound/rockchip,rk3328-codec.yaml
+On 14.07.2020 0:35, Lad Prabhakar wrote:
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip,rk3328-codec.txt b/Documentation/devicetree/bindings/sound/rockchip,rk3328-codec.txt
-deleted file mode 100644
-index 1ecd75d2032a..000000000000
---- a/Documentation/devicetree/bindings/sound/rockchip,rk3328-codec.txt
-+++ /dev/null
-@@ -1,28 +0,0 @@
--* Rockchip Rk3328 internal codec
--
--Required properties:
--
--- compatible: "rockchip,rk3328-codec"
--- reg: physical base address of the controller and length of memory mapped
--  region.
--- rockchip,grf: the phandle of the syscon node for GRF register.
--- clocks: a list of phandle + clock-specifer pairs, one for each entry in clock-names.
--- clock-names: should be "pclk".
--- spk-depop-time-ms: speak depop time msec.
--
--Optional properties:
--
--- mute-gpios: GPIO specifier for external line driver control (typically the
--              dedicated GPIO_MUTE pin)
--
--Example for rk3328 internal codec:
--
--codec: codec@ff410000 {
--	compatible = "rockchip,rk3328-codec";
--	reg = <0x0 0xff410000 0x0 0x1000>;
--	rockchip,grf = <&grf>;
--	clocks = <&cru PCLK_ACODEC>;
--	clock-names = "pclk";
--	mute-gpios = <&grf_gpio 0 GPIO_ACTIVE_LOW>;
--	spk-depop-time-ms = 100;
--};
-diff --git a/Documentation/devicetree/bindings/sound/rockchip,rk3328-codec.yaml b/Documentation/devicetree/bindings/sound/rockchip,rk3328-codec.yaml
-new file mode 100644
-index 000000000000..5b85ad5e4834
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/rockchip,rk3328-codec.yaml
-@@ -0,0 +1,69 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/rockchip,rk3328-codec.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Rockchip rk3328 internal codec
-+
-+maintainers:
-+  - Heiko Stuebner <heiko@sntech.de>
-+
-+properties:
-+  compatible:
-+    const: rockchip,rk3328-codec
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: clock for audio codec
-+      - description: clock for I2S master clock
-+
-+  clock-names:
-+    items:
-+      - const: pclk
-+      - const: mclk
-+
-+  rockchip,grf:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      The phandle of the syscon node for the GRF register.
-+
-+  spk-depop-time-ms:
-+    default: 200
-+    description:
-+      Speaker depop time in msec.
-+
-+  mute-gpios:
-+    maxItems: 1
-+    description:
-+      GPIO specifier for external line driver control (typically the
-+      dedicated GPIO_MUTE pin)
-+
-+  "#sound-dai-cells":
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - rockchip,grf
-+  - "#sound-dai-cells"
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/clock/rk3328-cru.h>
-+    codec: codec@ff410000 {
-+      compatible = "rockchip,rk3328-codec";
-+      reg = <0xff410000 0x1000>;
-+      clocks = <&cru PCLK_ACODECPHY>, <&cru SCLK_I2S1>;
-+      clock-names = "pclk", "mclk";
-+      rockchip,grf = <&grf>;
-+      mute-gpios = <&grf_gpio 0 GPIO_ACTIVE_LOW>;
-+      spk-depop-time-ms = <100>;
-+      #sound-dai-cells = <0>;
-+    };
--- 
-2.27.0
+> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> 
+> Document RZ/G2H (R8A774E1) SoC bindings.
+> 
+> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
+Reviewed-by: Sergei Shtylyov <sergei.shtylyov@gmail.com>
+
+[...]
+
+MBR, Sergei
