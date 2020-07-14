@@ -7,34 +7,33 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 286D2C433E5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92566C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01C2B221FD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68EB6221FD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:08:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgGNHGm (ORCPT
+        id S1725931AbgGNHI6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 03:06:42 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:48606 "EHLO
+        Tue, 14 Jul 2020 03:08:58 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:53913 "EHLO
         smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725778AbgGNHGm (ORCPT
+        by vger.kernel.org with ESMTP id S1725925AbgGNHI5 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 03:06:42 -0400
-X-Alimail-AntiSpam: AC=SUSPECT;BC=0.6363785|-1;BR=01201311R131b1;CH=blue;DM=|SUSPECT|false|;DS=CONTINUE|ham_system_inform|0.0262548-0.000494732-0.973251;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03294;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.I1TY-3s_1594710393;
-Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I1TY-3s_1594710393)
-          by smtp.aliyun-inc.com(10.147.44.145);
-          Tue, 14 Jul 2020 15:06:37 +0800
+        Tue, 14 Jul 2020 03:08:57 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.4155694|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0129791-0.000774184-0.986247;FP=0|0|0|0|0|-1|-1|-1;HT=e01l10434;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=11;RT=11;SR=0;TI=SMTPD_---.I1TtesQ_1594710530;
+Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I1TtesQ_1594710530)
+          by smtp.aliyun-inc.com(10.147.40.7);
+          Tue, 14 Jul 2020 15:08:54 +0800
 From:   Frank Lee <frank@allwinnertech.com>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org, mripard@kernel.org,
-        wens@csie.org
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+To:     srinivas.kandagatla@linaro.org, robh+dt@kernel.org,
+        mripard@kernel.org, wens@csie.org, devicetree@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         tiny.windzz@gmail.com, huangshuosheng@allwinnertech.com,
         liyong@allwinnertech.com, Yangtao Li <frank@allwinnertech.com>
-Subject: [PATCH v4 04/16] dt-bindings: pinctrl: sunxi: Add A100 pinctrl bindings
-Date:   Tue, 14 Jul 2020 15:06:23 +0800
-Message-Id: <7be3efafd34cbb5938ea73dfe08f3db3e7747123.1594708864.git.frank@allwinnertech.com>
+Subject: [PATCH v4 06/16] dt-bindings: nvmem: SID: add binding for A100's SID controller
+Date:   Tue, 14 Jul 2020 15:08:43 +0800
+Message-Id: <6899200489cb4236650ba90646057874b82ed6b7.1594708864.git.frank@allwinnertech.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <cover.1594708863.git.frank@allwinnertech.com>
 References: <cover.1594708863.git.frank@allwinnertech.com>
@@ -47,54 +46,43 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Yangtao Li <frank@allwinnertech.com>
 
-Add device tree binding Documentation details for A100 pinctrl driver,
-which has a r pin controller and a pin controller with more irq lines.
+Add a binding for A100's SID controller.
 
 Signed-off-by: Yangtao Li <frank@allwinnertech.com>
 ---
- .../pinctrl/allwinner,sun4i-a10-pinctrl.yaml      | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ .../nvmem/allwinner,sun4i-a10-sid.yaml        | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
-index 35a26abb02e7..34a17d5c6135 100644
---- a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
-@@ -48,6 +48,8 @@ properties:
-       - allwinner,sun9i-a80-r-pinctrl
-       - allwinner,sun50i-a64-pinctrl
-       - allwinner,sun50i-a64-r-pinctrl
-+      - allwinner,sun50i-a100-pinctrl
-+      - allwinner,sun50i-a100-r-pinctrl
-       - allwinner,sun50i-h5-pinctrl
-       - allwinner,sun50i-h6-pinctrl
-       - allwinner,sun50i-h6-r-pinctrl
-@@ -143,6 +145,18 @@ allOf:
-   # boards are defining it at the moment so it would generate a lot of
-   # warnings.
+diff --git a/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml b/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
+index daf1321d76ad..6687ab720304 100644
+--- a/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
++++ b/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
+@@ -15,14 +15,17 @@ allOf:
  
-+  - if:
-+      properties:
-+        compatible:
-+          enum:
-+            - allwinner,sun50i-a100-pinctrl
-+
-+    then:
-+      properties:
-+        interrupts:
-+          minItems: 7
-+          maxItems: 7
-+
-   - if:
-       properties:
-         compatible:
-@@ -216,6 +230,7 @@ allOf:
-             - allwinner,sun8i-h3-r-pinctrl
-             - allwinner,sun8i-r40-pinctrl
-             - allwinner,sun50i-a64-r-pinctrl
-+            - allwinner,sun50i-a100-r-pinctrl
-             - nextthing,gr8-pinctrl
+ properties:
+   compatible:
+-    enum:
+-      - allwinner,sun4i-a10-sid
+-      - allwinner,sun7i-a20-sid
+-      - allwinner,sun8i-a83t-sid
+-      - allwinner,sun8i-h3-sid
+-      - allwinner,sun50i-a64-sid
+-      - allwinner,sun50i-h5-sid
+-      - allwinner,sun50i-h6-sid
++    oneOf:
++      - const: allwinner,sun4i-a10-sid
++      - const: allwinner,sun7i-a20-sid
++      - const: allwinner,sun8i-a83t-sid
++      - const: allwinner,sun8i-h3-sid
++      - const: allwinner,sun50i-a64-sid
++      - items:
++          - const: allwinner,sun50i-a100-sid
++          - const: allwinner,sun50i-a64-sid
++      - const: allwinner,sun50i-h5-sid
++      - const: allwinner,sun50i-h6-sid
  
-     then:
+   reg:
+     maxItems: 1
 -- 
 2.24.0
 
