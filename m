@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA291C433F8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 12:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E38C433FC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 12:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B476C22472
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 12:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AA3B22464
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 12:58:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728243AbgGNM6V (ORCPT
+        id S1728335AbgGNM6C (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 08:58:21 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:33282 "EHLO
+        Tue, 14 Jul 2020 08:58:02 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:33238 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbgGNM6C (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 08:58:02 -0400
+        with ESMTP id S1726914AbgGNM6B (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 08:58:01 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 88F558030816;
-        Tue, 14 Jul 2020 12:57:59 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id CD47B8040A6C;
+        Tue, 14 Jul 2020 12:57:58 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 0-u8Xo5aaCtj; Tue, 14 Jul 2020 15:57:58 +0300 (MSK)
+        with ESMTP id g7syMbi31EHN; Tue, 14 Jul 2020 15:57:57 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Jason Cooper <jason@lakedaemon.net>,
         Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
         <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 5/6] bus: cdmm: Add MIPS R5 arch support
-Date:   Tue, 14 Jul 2020 15:57:51 +0300
-Message-ID: <20200714125753.22466-6-Sergey.Semin@baikalelectronics.ru>
+        <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>
+Subject: [PATCH v5 3/6] dt-bindings: bus: Add MIPS CDMM controller
+Date:   Tue, 14 Jul 2020 15:57:49 +0300
+Message-ID: <20200714125753.22466-4-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200714125753.22466-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200714125753.22466-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -56,29 +56,65 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-CDMM may be available not only on MIPS R2 architectures, but also on
-newer MIPS R5 chips. For instance our P5600 chip has one. Let's mark
-the CDMM bus being supported for that MIPS arch too.
+It's a Common Device Memory Map controller embedded into the MIPS IP
+cores, which dts node is supposed to have compatible and reg properties.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
----
- drivers/bus/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-index 6d4e4497b59b..971c07bc92d4 100644
---- a/drivers/bus/Kconfig
-+++ b/drivers/bus/Kconfig
-@@ -58,7 +58,7 @@ config IMX_WEIM
- 
- config MIPS_CDMM
- 	bool "MIPS Common Device Memory Map (CDMM) Driver"
--	depends on CPU_MIPSR2
-+	depends on CPU_MIPSR2 || CPU_MIPSR5
- 	help
- 	  Driver needed for the MIPS Common Device Memory Map bus in MIPS
- 	  cores. This bus is for per-CPU tightly coupled devices such as the
+---
+
+Changelog prev:
+- Lowercase the example hex'es.
+
+Changelog v5:
+- Consider address and size cells being <1> by default for the examples.
+---
+ .../bindings/bus/mti,mips-cdmm.yaml           | 35 +++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/mti,mips-cdmm.yaml
+
+diff --git a/Documentation/devicetree/bindings/bus/mti,mips-cdmm.yaml b/Documentation/devicetree/bindings/bus/mti,mips-cdmm.yaml
+new file mode 100644
+index 000000000000..9cc2d5f1beef
+--- /dev/null
++++ b/Documentation/devicetree/bindings/bus/mti,mips-cdmm.yaml
+@@ -0,0 +1,35 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bus/mti,mips-cdmm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MIPS Common Device Memory Map
++
++description: |
++  Defines a location of the MIPS Common Device Memory Map registers.
++
++maintainers:
++  - James Hogan <jhogan@kernel.org>
++
++properties:
++  compatible:
++    const: mti,mips-cdmm
++
++  reg:
++    description: |
++      Base address and size of an unoccupied memory region, which will be
++      used to map the MIPS CDMM registers block.
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    cdmm@1bde8000 {
++      compatible = "mti,mips-cdmm";
++      reg = <0x1bde8000 0x8000>;
++    };
++...
 -- 
 2.26.2
 
