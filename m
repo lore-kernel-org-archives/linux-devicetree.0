@@ -7,44 +7,43 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5068C433ED
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 11:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5362C433F4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 11:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 851D52220E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 11:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B96582220C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 11:36:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CdVNxNh0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dNDvpt/W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgGNLgf (ORCPT
+        id S1727870AbgGNLgi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 07:36:35 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52520 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727774AbgGNLgf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 07:36:35 -0400
+        Tue, 14 Jul 2020 07:36:38 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58027 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727772AbgGNLgh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 07:36:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594726593;
+        s=mimecast20190719; t=1594726596;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=eW4Qd/bhHk5NUmcb0g7XgzqOCh78ICZfVEjjqbF1yOc=;
-        b=CdVNxNh0ilZQsds3HLw6MqZV90psFPeO8w64gAcSKz3hBPDcD71U+/ubrieM1sCxQ0g/p6
-        y6Rju13ALzCWzUQ/4yd+HDfZpbwNSVWHdHsc9BAZ77rVjECxoCq6zd3qNU3nOzoKsHR6gE
-        jEJajUVJmkYNgzCJ8d2oD//vuqdE5bk=
+        bh=zE3tIVaCaZ/QMBFJn/FpgcTLYxPRQZwgwXEI4XKQg6o=;
+        b=dNDvpt/WO9PT1O9guEc+zKKbmbt8Q5mzBelE4l/IqOTbIM8dGGcfRaBazE1RbqJuMuiTbl
+        +YV37UBuPcpm0zHL3R5rBhHbWW9IraL9TPWjWevgIlN+JChhI8GgskfmCSXh20sL5R3BkQ
+        faFCuBhVoaQtcwhsB7EGkeJe8U6j+U8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-343-HT0ITqPqOamqsia5firNdQ-1; Tue, 14 Jul 2020 07:36:28 -0400
-X-MC-Unique: HT0ITqPqOamqsia5firNdQ-1
+ us-mta-59-bC0Z7JmYP2aP59-J_zFvEQ-1; Tue, 14 Jul 2020 07:36:35 -0400
+X-MC-Unique: bC0Z7JmYP2aP59-J_zFvEQ-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E565F19253CF;
-        Tue, 14 Jul 2020 11:36:26 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 75039102CC32;
+        Tue, 14 Jul 2020 11:36:33 +0000 (UTC)
 Received: from x1.localdomain.com (ovpn-114-109.ams2.redhat.com [10.36.114.109])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3C4E479CEA;
-        Tue, 14 Jul 2020 11:36:24 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4D29C7B414;
+        Tue, 14 Jul 2020 11:36:30 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Guenter Roeck <linux@roeck-us.net>,
@@ -53,9 +52,9 @@ To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Tobias Schramm <t.schramm@manjaro.org>,
         linux-usb@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 2/4] usb: typec: Add typec_port_register_altmodes_from_fwnode()
-Date:   Tue, 14 Jul 2020 13:36:15 +0200
-Message-Id: <20200714113617.10470-3-hdegoede@redhat.com>
+Subject: [PATCH 4/4] platform/x86/intel_cht_int33fe: Add displayport altmode fwnode to the connector fwnode
+Date:   Tue, 14 Jul 2020 13:36:17 +0200
+Message-Id: <20200714113617.10470-5-hdegoede@redhat.com>
 In-Reply-To: <20200714113617.10470-1-hdegoede@redhat.com>
 References: <20200714113617.10470-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -66,108 +65,51 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This can be used by Type-C controller drivers which use a standard
-usb-connector fwnode, with altmodes sub-node, to describe the available
-altmodes.
+Add a displayport altmode fwnode to the usb-connector fwnode,
+devices which use this driver support display-port altmode through
+the PI3USB30532 USB switch, this enables support for this.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/usb/typec/class.c | 56 +++++++++++++++++++++++++++++++++++++++
- include/linux/usb/typec.h |  7 +++++
- 2 files changed, 63 insertions(+)
+ .../platform/x86/intel_cht_int33fe_typec.c    | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-index c9234748537a..47de2b2e3d54 100644
---- a/drivers/usb/typec/class.c
-+++ b/drivers/usb/typec/class.c
-@@ -1607,6 +1607,62 @@ typec_port_register_altmode(struct typec_port *port,
- }
- EXPORT_SYMBOL_GPL(typec_port_register_altmode);
+diff --git a/drivers/platform/x86/intel_cht_int33fe_typec.c b/drivers/platform/x86/intel_cht_int33fe_typec.c
+index 48638d1c56e5..b61bad9cc8d2 100644
+--- a/drivers/platform/x86/intel_cht_int33fe_typec.c
++++ b/drivers/platform/x86/intel_cht_int33fe_typec.c
+@@ -124,12 +124,31 @@ static const struct software_node usb_connector_node = {
+ 	.properties = usb_connector_properties,
+ };
  
-+void typec_port_register_altmodes_from_fwnode(struct typec_port *port,
-+	const struct typec_altmode_ops *ops, void *drvdata,
-+	struct typec_altmode **altmodes, size_t n,
-+	struct fwnode_handle *fwnode)
-+{
-+	struct fwnode_handle *altmodes_node, *child;
-+	struct typec_altmode_desc desc;
-+	struct typec_altmode *alt;
-+	size_t index = 0;
-+	u32 svid, vdo;
-+	int ret;
++static const struct software_node altmodes_node = {
++	.name = "altmodes",
++	.parent = &usb_connector_node,
++};
 +
-+	altmodes_node = fwnode_get_named_child_node(fwnode, "altmodes");
-+	if (!altmodes_node)
-+		return;
++static const struct property_entry dp_altmode_properties[] = {
++	PROPERTY_ENTRY_U32("svid", 0xff01),
++	PROPERTY_ENTRY_U32("vdo", 0x0c0086),
++	{ }
++};
 +
-+	child = NULL;
-+	while ((child = fwnode_get_next_child_node(altmodes_node, child))) {
-+		ret = fwnode_property_read_u32(child, "svid", &svid);
-+		if (ret) {
-+			dev_err(&port->dev, "Error reading svid for altmode %s\n",
-+				fwnode_get_name(child));
-+			continue;
-+		}
++static const struct software_node dp_altmode_node = {
++	.name = "displayport-altmode",
++	.parent = &altmodes_node,
++	.properties = dp_altmode_properties,
++};
 +
-+		ret = fwnode_property_read_u32(child, "vdo", &vdo);
-+		if (ret) {
-+			dev_err(&port->dev, "Error reading vdo for altmode %s\n",
-+				fwnode_get_name(child));
-+			continue;
-+		}
-+
-+		if (index >= n) {
-+			dev_err(&port->dev, "Error not enough space for altmode %s\n",
-+				fwnode_get_name(child));
-+			continue;
-+		}
-+
-+		desc.svid = svid;
-+		desc.vdo = vdo;
-+		desc.mode = index + 1;
-+		alt = typec_port_register_altmode(port, &desc);
-+		if (IS_ERR(alt)) {
-+			dev_err(&port->dev, "Error registering altmode %s\n",
-+				fwnode_get_name(child));
-+			continue;
-+		}
-+
-+		alt->ops = ops;
-+		typec_altmode_set_drvdata(alt, drvdata);
-+		altmodes[index] = alt;
-+		index++;
-+	}
-+}
-+EXPORT_SYMBOL_GPL(typec_port_register_altmodes_from_fwnode);
-+
- /**
-  * typec_register_port - Register a USB Type-C Port
-  * @parent: Parent device
-diff --git a/include/linux/usb/typec.h b/include/linux/usb/typec.h
-index 5daa1c49761c..fbe4bccb3a98 100644
---- a/include/linux/usb/typec.h
-+++ b/include/linux/usb/typec.h
-@@ -17,6 +17,7 @@ struct typec_partner;
- struct typec_cable;
- struct typec_plug;
- struct typec_port;
-+struct typec_altmode_ops;
+ static const struct software_node *node_group[] = {
+ 	&fusb302_node,
+ 	&max17047_node,
+ 	&pi3usb30532_node,
+ 	&displayport_node,
+ 	&usb_connector_node,
++	&altmodes_node,
++	&dp_altmode_node,
+ 	NULL
+ };
  
- struct fwnode_handle;
- struct device;
-@@ -121,6 +122,12 @@ struct typec_altmode
- struct typec_altmode
- *typec_port_register_altmode(struct typec_port *port,
- 			     const struct typec_altmode_desc *desc);
-+
-+void typec_port_register_altmodes_from_fwnode(struct typec_port *port,
-+	const struct typec_altmode_ops *ops, void *drvdata,
-+	struct typec_altmode **altmodes, size_t n,
-+	struct fwnode_handle *fwnode);
-+
- void typec_unregister_altmode(struct typec_altmode *altmode);
- 
- struct typec_port *typec_altmode2port(struct typec_altmode *alt);
 -- 
 2.26.2
 
