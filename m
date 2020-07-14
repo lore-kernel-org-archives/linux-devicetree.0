@@ -7,83 +7,81 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EADF9C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 20:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4CDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 20:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B81A720658
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 20:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 802F42065D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 20:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594759849;
-	bh=1MNshovhaoSschdej577QGJa81MQ6yuri12u5NAotvQ=;
+	s=default; t=1594759891;
+	bh=TBvu4sStwthPTO3PQtBtpAorzMD8ufQBRc8C5jvyq38=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W5/qjK0HDFG4hPdHe8nnx3p5pbjU8emcsysvuY/x6y7h3lASGUp8VTsb+FJVDwE/G
-	 ablBeexaSwCkdYA2a8zTanHUT7lftKQFqBTVVu0jErt6edr8IC2a4Anz3z3thNyek3
-	 ZMSeubuPNxU5T8Sjn11KznrPCSmnYKRbEKBOwbgA=
+	b=aqn6TNaYuILElU860QEKoAIwcEtDbr9tngsARh3Vq8Y5SIRH00krBKrtM161+ZECf
+	 zg9aSXLo55Zn4BMIa+1B7HqsJcJqH+uDJTSOpk8Ya5lEFWFpYXohe+LtF7M5HfuJc8
+	 tSbiqQe6DA1jaJSVvU2F4idCWRV+kUcVxzQIC72w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgGNUuq (ORCPT
+        id S1726928AbgGNUvb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 16:50:46 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42676 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbgGNUup (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 16:50:45 -0400
-Received: by mail-io1-f66.google.com with SMTP id c16so18792580ioi.9;
-        Tue, 14 Jul 2020 13:50:45 -0700 (PDT)
+        Tue, 14 Jul 2020 16:51:31 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:39809 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbgGNUva (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 16:51:30 -0400
+Received: by mail-il1-f194.google.com with SMTP id k6so18850ili.6;
+        Tue, 14 Jul 2020 13:51:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=eygC9f8Xxqb4MDq1b649X0GG6DFc2lLTxU3qtkHDzQ8=;
-        b=uMxofP3uSd87GACSDHzYtPQRiNpDaLwlTmJbWF6BBE0ECFqCa97uQEwdL3MJPPEvpK
-         MLWnuJ6sUVn3srHtCjgmFrldgxZ+AJsYNtGKAMTBOLqzYi/46dFwRGX7zWjKF3ZT+Oc5
-         KFulAByi6M2Rsb4amVEAr/c2+KtxYSTqMPySKsAdSuLJNOU/rJYvsX5d18JowIlf3WfU
-         aA1oQ6ZxLeXQfq95By527oBVcfQkJQyM+/piaIK1Pk7UNvQKfMIAG8yREMvVS6bO9YiL
-         7pnq4rZuSaSUhzuK4c35q/NJAyhtL5Qv+NHdri9eyS8uoTwDh5aAjaCloFTb3AGEZsqN
-         RY6Q==
-X-Gm-Message-State: AOAM532zh0K/Pt4+Q95HDzkmbM1b5KEX3ZAJLMVrDxZIIjLGLVzWxu0m
-        wXP7Ir3QIQkt9wyn9xhwbY11Cv1Eu1cV
-X-Google-Smtp-Source: ABdhPJy2C4LALLI4bX+F9nn7mugzaDWQxEFn++/edEEYR2aPhNX4Qf1+rAt/fXVaeKCjkM+O4EiwrQ==
-X-Received: by 2002:a02:c7cc:: with SMTP id s12mr8144011jao.79.1594759844855;
-        Tue, 14 Jul 2020 13:50:44 -0700 (PDT)
+        bh=xYP1X5WHYenvLyAi36KqfRnD8go55u9Qh6XLVD5GuJA=;
+        b=qnrCZuazz5pZjevvtJfFpdprUYgADOqCYxU1cqPiX5hXJp2+0xflCjtWwKTJO8+K1L
+         e1ScH8EgC6jdGln6xBHOAP1MaO1rn0/Uz31/6nQ7XDsW5B1RSqR+T+c4mLYOn2gi3Sj+
+         pihU2NIdmcwFpMEqO+1xM2n93W0V2NF9evGA41wylzX5ukKgv95ROR7iD6sJB9qwVxZB
+         uAhl7J5XwRElI+VLbiSxCTynEbL09hCMcAcrnfun8b79dKix0dMQNdxsx7oVewMeiqTD
+         nvpYN8/j82eUMrour3Ae1Ijf2+2rcq3Kaf+b9/LggqQlRrnEFdSBBmE565bXr7RZcKzL
+         YpZw==
+X-Gm-Message-State: AOAM5329vP0vSW7gINRT+Pm827X/BMswEYmPSon4Gq8ABCwnzddutDxi
+        HpyVSRzHjbr6HZLrKXbhyw==
+X-Google-Smtp-Source: ABdhPJzYaEGsMVXimhWQojSMQBi7CsWJsgOaTNvF72hwfOzqRITUBP+rB9yGg+dzr+pElSaD4kGCxw==
+X-Received: by 2002:a92:cf51:: with SMTP id c17mr6161881ilr.122.1594759889869;
+        Tue, 14 Jul 2020 13:51:29 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id c16sm29061ilh.54.2020.07.14.13.50.43
+        by smtp.gmail.com with ESMTPSA id t1sm87993iob.16.2020.07.14.13.51.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 13:50:44 -0700 (PDT)
-Received: (nullmailer pid 2895898 invoked by uid 1000);
-        Tue, 14 Jul 2020 20:50:43 -0000
-Date:   Tue, 14 Jul 2020 14:50:43 -0600
+        Tue, 14 Jul 2020 13:51:29 -0700 (PDT)
+Received: (nullmailer pid 2897098 invoked by uid 1000);
+        Tue, 14 Jul 2020 20:51:28 -0000
+Date:   Tue, 14 Jul 2020 14:51:28 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Frank Lee <frank@allwinnertech.com>
-Cc:     wens@csie.org, liyong@allwinnertech.com,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        huangshuosheng@allwinnertech.com, mripard@kernel.org,
-        linus.walleij@linaro.org, tiny.windzz@gmail.com,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v4 03/16] dt-bindings: pinctrl: sunxi: Get rid of
- continual nesting
-Message-ID: <20200714205043.GA2895851@bogus>
+Cc:     mripard@kernel.org, linux-arm-kernel@lists.infradead.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org, wens@csie.org,
+        tiny.windzz@gmail.com, huangshuosheng@allwinnertech.com,
+        srinivas.kandagatla@linaro.org, liyong@allwinnertech.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 06/16] dt-bindings: nvmem: SID: add binding for A100's
+ SID controller
+Message-ID: <20200714205128.GA2897050@bogus>
 References: <cover.1594708863.git.frank@allwinnertech.com>
- <b486dc2f07aeb4772af7ee2ed521932582354a34.1594708864.git.frank@allwinnertech.com>
+ <6899200489cb4236650ba90646057874b82ed6b7.1594708864.git.frank@allwinnertech.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b486dc2f07aeb4772af7ee2ed521932582354a34.1594708864.git.frank@allwinnertech.com>
+In-Reply-To: <6899200489cb4236650ba90646057874b82ed6b7.1594708864.git.frank@allwinnertech.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 14 Jul 2020 15:03:53 +0800, Frank Lee wrote:
+On Tue, 14 Jul 2020 15:08:43 +0800, Frank Lee wrote:
 > From: Yangtao Li <frank@allwinnertech.com>
 > 
-> Rather than a continual nesting of 'else' clauses, just make
-> each 'if' a new entry under 'allOf' and get rid of the else.
+> Add a binding for A100's SID controller.
 > 
 > Signed-off-by: Yangtao Li <frank@allwinnertech.com>
 > ---
->  .../pinctrl/allwinner,sun4i-a10-pinctrl.yaml  | 124 ++++++++++--------
->  1 file changed, 68 insertions(+), 56 deletions(-)
+>  .../nvmem/allwinner,sun4i-a10-sid.yaml        | 19 +++++++++++--------
+>  1 file changed, 11 insertions(+), 8 deletions(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
