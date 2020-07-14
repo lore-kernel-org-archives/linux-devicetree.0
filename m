@@ -2,103 +2,143 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDB7C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 18:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C8CC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 18:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D28F822582
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 18:01:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594749715;
-	bh=ZubfW/0iXET/B7w9JGcLDB1JM38q0c4IOOWOXRumOn4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lme+RlQUkHVSralnlTQP7orFGWZddk9wz4RSeWrXwhyU3V3HtPSVaUO1tKzSXwGwd
-	 MLoeIvJ8vdj+EjRI4jox3Snlti59qA8yK9BTQ9Bmb8OGvN0bouHgXWqQk0K2KL9tes
-	 5mVmcUZoUdoc1k092C0UtJQoQ1pIwOt10cYe2hKU=
+	by mail.kernel.org (Postfix) with ESMTP id AE848225AB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 18:15:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iu3vQTCv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725951AbgGNSBz (ORCPT
+        id S1727772AbgGNSPE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 14:01:55 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:42858 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbgGNSBz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 14:01:55 -0400
-Received: by mail-il1-f195.google.com with SMTP id t27so14949372ill.9;
-        Tue, 14 Jul 2020 11:01:54 -0700 (PDT)
+        Tue, 14 Jul 2020 14:15:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33414 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbgGNSPD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 14:15:03 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A7D2C061755;
+        Tue, 14 Jul 2020 11:15:03 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z2so23797409wrp.2;
+        Tue, 14 Jul 2020 11:15:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dSp7R1vKTnKdzsxqMgBtcDq/n3QLykSpSbeQuD3hfjc=;
+        b=iu3vQTCv0leQpsnybURB1+EIrvo+36TwXadSzcO7dbgQS5eJ/HVVXkryMCf3CZDa5V
+         M6zpTobveJkRbL2cnQ5//mKpcsLOjCk4I+owDrHcoVA49TcOal1FA/DFGqFR1VDp1elb
+         bZVfx7pgjMG5+9iixXvfyLDEkMNVPiZWHe+Eaw/3VaZB5NZWIOjnLNOZ4GR1+C3dUvmu
+         Cb+A9lbdIgT3TfNeeBpuID/O3oB+o44zv4HDE5EawQeEuLdZFzTdU3ID6szd/Xdb7hrj
+         r5TFHCPGGXl+0M4uYFlb5AydKP7l/ZHhuop0xk46VMyAG+dYBAk6gSRkJ8TaIqLv59BS
+         G//w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KSpgOvwlN47x6DPVrtxLSXxqcuUY+XXj9Joyu4Ctj7M=;
-        b=fjkiMq/Z+V+Zh8RPQZYxB65WqYzxZPDlbimBXprvgzNUL9GL2K+KPhlbOekBIU5bBv
-         ic8SfERzh6U4Bx7623+P4dH8tSTL6dPS6hC0dvYb4gsNs9vwpBjBSAuq1m1h0afrUhot
-         IZtm+wHgYPICq22911gm5mwTEDIni2zOuagUPMAuFfnzN7gYuFMj5VW88cQ64BI6daRU
-         gTjfnDiIzkP84qEgQSyblLvIUH1wwVKmh9t7k0EA+QmHzMVcuLbgxND62Dk0XTDgllzp
-         Sob/slMGtC/FDEZOPfn34PF37U24hWh310zITPsrYwGNU6iO+zM1wUFS5wGPNGvRyBNk
-         jV0A==
-X-Gm-Message-State: AOAM530tfwvhdjDaiGJj1Pm171iR5fTrvwRK43dYXtKpl+eg7UAhos5q
-        nSc7qVb+CxReAmkhcN6KPQ==
-X-Google-Smtp-Source: ABdhPJxEgcafXXyb16LmwyglpFw9HdqPPxSf5Ulikof0SJ9B1PG6vWPgFvCZ9//LAhpato+pi7dB5Q==
-X-Received: by 2002:a92:49c3:: with SMTP id k64mr5438219ilg.278.1594749713943;
-        Tue, 14 Jul 2020 11:01:53 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id q4sm10170382ils.11.2020.07.14.11.01.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 11:01:53 -0700 (PDT)
-Received: (nullmailer pid 2634305 invoked by uid 1000);
-        Tue, 14 Jul 2020 18:01:52 -0000
-Date:   Tue, 14 Jul 2020 12:01:52 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, kishon@ti.com,
-        andriy.shevchenko@intel.com, devicetree@vger.kernel.org,
-        p.zabel@pengutronix.de, balbi@kernel.org
-Subject: Re: [PATCH v6 1/2] dt-bindings: phy: Add USB PHY support for Intel
- LGM SoC
-Message-ID: <20200714180152.GA2633416@bogus>
-References: <20200714042621.25850-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200714042621.25850-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dSp7R1vKTnKdzsxqMgBtcDq/n3QLykSpSbeQuD3hfjc=;
+        b=iavXb0AOH09Nnqtsgl8TAd6aWH2nMs0m7y73kSEZyrxaK+JYCzvQkp3xYjkwPYdPeP
+         7jjOVlP+aPh5KG+I/NCpvDawqKxx1Zhouo8wHkJb67rfOv5rr40bbwtKnORK83RkA+Uf
+         3wfkHs10o7wB86p3Y8iYSO8roSh02pMQ/XCwHd3b/+pEE8Qm7E69pD2NRsKo9/BMERVm
+         lO7rBGPYHMD7BOndo1NnulQ0WmgZadgLL+7WnS5GjyJ0OReQC7m2v7iQ5QfChgJM7FZF
+         lapkZs0zf/UgdvwPSazdUHt9LyAcKN7klE7Kc6nqY3DOvGI3B8zr6zC4cL49Lzdf82ud
+         L1xQ==
+X-Gm-Message-State: AOAM531mAUv5IE+fGOMRtSA6GHYInAfmw/8C72Y/Ade4s9wlQMgNRqlW
+        s1omQQwiWAR3+G8+KOipYrI=
+X-Google-Smtp-Source: ABdhPJyyGdhWu0u0CbQOeLDCSz6P+/Yov6DrHDS6EiOJPgFRClfh0pllHT3IxqJnRE4/8NrmgSZ6fA==
+X-Received: by 2002:adf:e60e:: with SMTP id p14mr7062800wrm.31.1594750501837;
+        Tue, 14 Jul 2020 11:15:01 -0700 (PDT)
+Received: from ziggy.stardust ([84.236.220.84])
+        by smtp.gmail.com with ESMTPSA id k20sm5572396wmi.27.2020.07.14.11.15.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jul 2020 11:15:00 -0700 (PDT)
+Subject: Re: [PATCH v8 6/7] arm64: dts: add dts nodes for MT6779
+To:     Hanks Chen <hanks.chen@mediatek.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>
+Cc:     mtk01761 <wendell.lin@mediatek.com>,
+        Andy Teng <andy.teng@mediatek.com>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        wsd_upstream@mediatek.com, CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
+References: <1594718402-20813-1-git-send-email-hanks.chen@mediatek.com>
+ <1594718402-20813-7-git-send-email-hanks.chen@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <1b335463-b0af-9010-feed-c4b673ebb6c5@gmail.com>
+Date:   Tue, 14 Jul 2020 20:14:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200714042621.25850-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+In-Reply-To: <1594718402-20813-7-git-send-email-hanks.chen@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 14 Jul 2020 12:26:20 +0800, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+
+
+On 14/07/2020 11:20, Hanks Chen wrote:
+> this adds initial MT6779 dts settings for board support,
+> including cpu, gic, timer, ccf, pinctrl, uart, sysirq...etc.
 > 
-> Add the dt-schema to support USB PHY on Intel LGM SoC
-> 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
 > ---
->  .../devicetree/bindings/phy/intel,lgm-usb-phy.yaml | 53 ++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml
+>   arch/arm64/boot/dts/mediatek/Makefile       |   1 +
+>   arch/arm64/boot/dts/mediatek/mt6779-evb.dts |  31 +++
+>   arch/arm64/boot/dts/mediatek/mt6779.dtsi    | 271 ++++++++++++++++++++
+>   3 files changed, 303 insertions(+)
+>   create mode 100644 arch/arm64/boot/dts/mediatek/mt6779-evb.dts
+>   create mode 100644 arch/arm64/boot/dts/mediatek/mt6779.dtsi
 > 
+[...]
+> +
+> +		uart0: serial@11002000 {
+> +			compatible = "mediatek,mt6779-uart",
+> +				     "mediatek,mt6577-uart";
+> +			reg = <0 0x11002000 0 0x400>;
+> +			interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&clk26m>, <&infracfg_ao CLK_INFRA_UART0>;
+> +			clock-names = "baud", "bus";
+> +			status = "disabled";
+> +		};
+> +
+> +		uart1: serial@11003000 {
+> +			compatible = "mediatek,mt6779-uart",
+> +				     "mediatek,mt6577-uart";
+> +			reg = <0 0x11003000 0 0x400>;
+> +			interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&clk26m>, <&infracfg_ao CLK_INFRA_UART1>;
+> +			clock-names = "baud", "bus";
+> +			status = "disabled";
+> +		};
+> +
+> +		uart2: serial@11004000 {
+> +			compatible = "mediatek,mt6779-uart",
+> +				     "mediatek,mt6577-uart";
+> +			reg = <0 0x11004000 0 0x400>;
+> +			interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&clk26m>, <&infracfg_ao CLK_INFRA_UART2>;
+> +			clock-names = "baud", "bus";
+> +			status = "disabled";
+> +		};
 
+Devicetree describes the HW we have. As far as I know, we have 4 UARTs on 
+MT6779. So we should list them all here.
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.example.dt.yaml: usb-phy@e7e00000: '#phy-cells' is a required property
-
-
-See https://patchwork.ozlabs.org/patch/1328612
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+Regards,
+Matthias
