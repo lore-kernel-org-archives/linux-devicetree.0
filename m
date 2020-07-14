@@ -2,391 +2,191 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B80C433E5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 04:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F88AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 05:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CAC220773
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 04:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7288520B80
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 05:21:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nr5IsVmB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgGNE2n (ORCPT
+        id S1725306AbgGNFVp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 00:28:43 -0400
-Received: from mga09.intel.com ([134.134.136.24]:48396 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726282AbgGNE2m (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 00:28:42 -0400
-IronPort-SDR: THxQuEnM1BQOF6YIJi4OVWhBANqRZsYoniFeJL9cfWyM1JImJcugMJ9j7TWe/e2LD3V9ScLZCy
- e1BncmJs3Frg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="150235057"
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="150235057"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2020 21:28:41 -0700
-IronPort-SDR: LTGQjgD0Cktgs7V9NMZcPEk+znoUMikVzH5F3VFJrn75jjERyMU3hDkvv70TTEi2Z5Dx7+iK8V
- lr0c/kHYVNpg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="324435736"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by FMSMGA003.fm.intel.com with ESMTP; 13 Jul 2020 21:28:38 -0700
-From:   "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-To:     kishon@ti.com, linux-kernel@vger.kernel.org
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        p.zabel@pengutronix.de, gregkh@linuxfoundation.org,
-        andriy.shevchenko@intel.com, balbi@kernel.org,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [PATCH v6 2/2] phy: Add USB3 PHY support for Intel LGM SoC
-Date:   Tue, 14 Jul 2020 12:26:21 +0800
-Message-Id: <20200714042621.25850-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200714042621.25850-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20200714042621.25850-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Tue, 14 Jul 2020 01:21:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54092 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbgGNFVo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 01:21:44 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 891F4C061755;
+        Mon, 13 Jul 2020 22:21:44 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id l17so4500729iok.7;
+        Mon, 13 Jul 2020 22:21:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Up3G6PsFpPGYr8nZRL3w9MPTvUeQJXFm+eKweHGs86o=;
+        b=Nr5IsVmBRvtEBrNLQ9atU796t0OuBHDNFUIUpmSRdDIx5aETNaogxWClkvNgYO0o3i
+         m/1zM+mtwrZC9R6+4fk+lsAbEyLEnmeQouo9siwT54qbYW0jfGHOIClh6Ob1kv5sApu8
+         99yC9FPAQj523Fx7PVC2/ZMZOe/LyYcaOavuGGIaGWrjQf29vzigq7Awn4v8BRhP97el
+         YSkPHETinL1bN3M8CAa7Q9uLkdpCLOIrFjDuTf0ZKGL/7WPJoYlsWtISOFkQAnSOo+71
+         +Zf/O3nPQjg+AvXlP55nPgqhsr3RTTJgtrcUo0cqIUlojiKahFHjJsWkq+3sshlhdBb2
+         Elbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Up3G6PsFpPGYr8nZRL3w9MPTvUeQJXFm+eKweHGs86o=;
+        b=H1FGYNlHw4Dwc4PhteDqUAKtCsjwEFUhZl4xE+nVcuSyFqSFPee5jYMrRa91Y5z9C3
+         4bZtza9LcTEGw+lktqkKf9kTzW0GQ8x0bvSJUcDeMrfM/OpgynsqX/oHjOFD13HDx8Fk
+         v2MvIvsXxOHBJteSpPGgOkP9ES2wnl8mVLmgAFDmb2E1HL9dcNXHGPO2gL9+BGmYOpJo
+         w4gFq1SVaGL+75MIeipknQDXGDau/068ijn45DZk88SgP3rF8YzX/jXfa+jebKQuIhIq
+         q7ivERwYuBwJIAvdg+uu3yOaWF12xWGh0lingPw27dJCHaP1joNf6syxaUYhXT7UuEWs
+         Pogw==
+X-Gm-Message-State: AOAM531Ia3Wdnp8C6VhSQOTJ+wfiQ7FB0DCLxvxyDvF8iLZlSibpGlxW
+        i7xwZq7bmg1JMAFQs+dy6jYEssnz5i01v9avtrw=
+X-Google-Smtp-Source: ABdhPJzFKfHtR2lq73ZLFph/Q2QwhS4b1uCu5CknGEp/7od+WTT6dFeOnjjJNB2Cosa4z4TbW+8SA/BJLb+Nb3G1+3E=
+X-Received: by 2002:a05:6602:1610:: with SMTP id x16mr3317570iow.68.1594704103845;
+ Mon, 13 Jul 2020 22:21:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <1594696998-3995-1-git-send-email-dillon.minfei@gmail.com>
+ <1594696998-3995-2-git-send-email-dillon.minfei@gmail.com>
+ <20200714133835.3b03b8af@canb.auug.org.au> <CAL9mu0JurdBoXbSxvHUmNFSBOa=RneNyYtzT=C1MvJs10Y-Geg@mail.gmail.com>
+ <20200714135407.35992389@canb.auug.org.au>
+In-Reply-To: <20200714135407.35992389@canb.auug.org.au>
+From:   dillon min <dillon.minfei@gmail.com>
+Date:   Tue, 14 Jul 2020 13:21:07 +0800
+Message-ID: <CAL9mu0L5=khi2oXaei=EhTmRJC5mC1hj5gZVBHJgowi_3vxk=Q@mail.gmail.com>
+Subject: Re: [PATCH v2] Since am437x have the same clock structure with am335x
+ [1][2], reuse the code from Tony Lindgren's patch [3] to fix dcan probe
+ failed on am437x platform.
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Benoit Cousson <bcousson@baylibre.com>, tony@atomide.com,
+        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On Tue, Jul 14, 2020 at 11:54 AM Stephen Rothwell <sfr@canb.auug.org.au> wr=
+ote:
+>
+> Hi Dillon,
+>
+> On Tue, 14 Jul 2020 11:43:31 +0800 dillon min <dillon.minfei@gmail.com> w=
+rote:
+> >
+> > On Tue, Jul 14, 2020 at 11:38 AM Stephen Rothwell <sfr@canb.auug.org.au=
+> wrote:
+> > >
+> > > On Tue, 14 Jul 2020 11:23:18 +0800 dillon.minfei@gmail.com wrote:
+> > > >
+> > > > From: dillon min <dillon.minfei@gmail.com>
+> > > >
+> > > > Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly duri=
+ng init to read revision")
+> > > >
+> > > > [1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DC=
+AN
+> > > > Integration
+> > > > [2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DC=
+AN
+> > > > Integration
+> > > > [3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can =
+on am335x")
+> > > >
+> > > > Signed-off-by: dillon min <dillon.minfei@gmail.com>
+> > > > ---
+> > > >
+> > > > Hi Stephen,
+> > > >
+> > > > This changes correct commit messages based on your reviewing.
+> > > > make Fixes tags to oneline.
+> > > > make all commit message tags at the end of commit message
+> > >
+> > > But the Fixes: line should be down with the Signed-off-by: line ...
+> > >
+> > Ok, should it be like this=EF=BC=8Ci will resubmit it.
+> >
+> > Subject: [PATCH v2] Since am437x have the same clock structure with am3=
+35x
+> >  [1][2], reuse the code from Tony Lindgren's patch [3] to fix dcan
+> >  probe failed on the am437x platform.
+>
+> You should have a shorter subject and maybe the above could be the
+> first paragraph of the commit message.
+>
+> >
+> > [1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
+> > Integration
+> > [2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
+> > Integration
+> > [3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on a=
+m335x")
+> >
+> > Signed-off-by: dillon min <dillon.minfei@gmail.com>
+> > Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during
+> > init to read revision")
+>
+> No wrapping the the Fixes line, please and it would usually go before
+> your Signed=3Doff-by line
 
-Add support for USB PHY on Intel LGM SoC.
+Hi Stephen,
 
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Thanks, how about the below commit message.
+
+Subject: [PATCH v4] Fix dcan driver probe failed on am437x platform
+
+Got following d_can probe errors with kernel 5.8-rc1 on am437x
+
+[   10.730822] CAN device driver interface
+Starting Wait for Network to be Configured...
+[  OK  ] Reached target Network.
+[   10.787363] c_can_platform 481cc000.can: probe failed
+[   10.792484] c_can_platform: probe of 481cc000.can failed with
+error -2
+[   10.799457] c_can_platform 481d0000.can: probe failed
+[   10.804617] c_can_platform: probe of 481d0000.can failed with
+error -2
+
+actually, Tony has fixed this issue on am335x with the patch [3]
+
+Since am437x has the same clock structure with am335x
+[1][2], so reuse the code from Tony Lindgren's patch [3] to fix it.
+
+
+[1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
+Integration
+[2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
+Integration
+[3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on am335=
+x")
+
+Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during
+init to read revision")
+Signed-off-by: dillon min <dillon.minfei@gmail.com>
 ---
- drivers/phy/Kconfig       |  11 ++
- drivers/phy/Makefile      |   1 +
- drivers/phy/phy-lgm-usb.c | 278 ++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 290 insertions(+)
- create mode 100644 drivers/phy/phy-lgm-usb.c
 
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index b3ed94b98d9b..43ff5943f513 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -49,6 +49,17 @@ config PHY_XGENE
- 	help
- 	  This option enables support for APM X-Gene SoC multi-purpose PHY.
- 
-+config USB_LGM_PHY
-+	tristate "INTEL Lightning Mountain USB PHY Driver"
-+	depends on USB_SUPPORT
-+	select USB_PHY
-+	select REGULATOR
-+	select REGULATOR_FIXED_VOLTAGE
-+	help
-+	  Enable this to support Intel DWC3 PHY USB phy. This driver provides
-+	  interface to interact with USB GEN-II and USB 3.x PHY that is part
-+	  of the Intel network SOC.
-+
- source "drivers/phy/allwinner/Kconfig"
- source "drivers/phy/amlogic/Kconfig"
- source "drivers/phy/broadcom/Kconfig"
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index 310c149a9df5..c2cd6d756f5f 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_GENERIC_PHY_MIPI_DPHY)	+= phy-core-mipi-dphy.o
- obj-$(CONFIG_PHY_LPC18XX_USB_OTG)	+= phy-lpc18xx-usb-otg.o
- obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
- obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
-+obj-$(CONFIG_USB_LGM_PHY)		+= phy-lgm-usb.o
- obj-$(CONFIG_ARCH_SUNXI)		+= allwinner/
- obj-$(CONFIG_ARCH_MESON)		+= amlogic/
- obj-$(CONFIG_ARCH_MEDIATEK)		+= mediatek/
-diff --git a/drivers/phy/phy-lgm-usb.c b/drivers/phy/phy-lgm-usb.c
-new file mode 100644
-index 000000000000..1ec9ab266e08
---- /dev/null
-+++ b/drivers/phy/phy-lgm-usb.c
-@@ -0,0 +1,278 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Intel LGM USB PHY driver
-+ *
-+ * Copyright (C) 2020 Intel Corporation.
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/delay.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/reset.h>
-+#include <linux/usb/phy.h>
-+#include <linux/workqueue.h>
-+
-+#define CTRL1_OFFSET		0x14
-+#define SRAM_EXT_LD_DONE	BIT(25)
-+#define SRAM_INIT_DONE		BIT(26)
-+
-+#define TCPC_OFFSET		0x1014
-+#define TCPC_MUX_CTL		GENMASK(1, 0)
-+#define MUX_NC			0
-+#define MUX_USB			1
-+#define MUX_DP			2
-+#define MUX_USBDP		3
-+#define TCPC_FLIPPED		BIT(2)
-+#define TCPC_LOW_POWER_EN	BIT(3)
-+#define TCPC_VALID		BIT(4)
-+#define TCPC_CONN		\
-+	(TCPC_VALID | FIELD_PREP(TCPC_MUX_CTL, MUX_USB))
-+#define TCPC_DISCONN		\
-+	(TCPC_VALID | FIELD_PREP(TCPC_MUX_CTL, MUX_NC) | TCPC_LOW_POWER_EN)
-+
-+static const char *const PHY_RESETS[] = { "phy31", "phy", };
-+static const char *const CTL_RESETS[] = { "apb", "ctrl", };
-+
-+struct tca_apb {
-+	struct reset_control *resets[ARRAY_SIZE(PHY_RESETS)];
-+	struct regulator *vbus;
-+	struct work_struct wk;
-+	struct usb_phy phy;
-+
-+	bool phy_initialized;
-+	bool connected;
-+};
-+
-+static int get_flipped(struct tca_apb *ta, bool *flipped)
-+{
-+	union extcon_property_value property;
-+	int ret;
-+
-+	ret = extcon_get_property(ta->phy.edev, EXTCON_USB_HOST,
-+				  EXTCON_PROP_USB_TYPEC_POLARITY, &property);
-+	if (ret) {
-+		dev_err(ta->phy.dev, "no polarity property from extcon\n");
-+		return ret;
-+	}
-+
-+	*flipped = property.intval;
-+
-+	return ret;
-+}
-+
-+static int phy_init(struct usb_phy *phy)
-+{
-+	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
-+	void __iomem *ctrl1 = phy->io_priv + CTRL1_OFFSET;
-+	int val, ret, i;
-+
-+	if (ta->phy_initialized)
-+		return 0;
-+
-+	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++)
-+		reset_control_deassert(ta->resets[i]);
-+
-+	ret = readl_poll_timeout(ctrl1, val, val & SRAM_INIT_DONE, 10, 10 * 1000);
-+	if (ret) {
-+		dev_err(ta->phy.dev, "SRAM init failed, 0x%x\n", val);
-+		return ret;
-+	}
-+
-+	writel(readl(ctrl1) | SRAM_EXT_LD_DONE, ctrl1);
-+
-+	ta->phy_initialized = true;
-+	if (!ta->phy.edev) {
-+		writel(TCPC_CONN, ta->phy.io_priv + TCPC_OFFSET);
-+		return phy->set_vbus(phy, true);
-+	}
-+
-+	schedule_work(&ta->wk);
-+
-+	return ret;
-+}
-+
-+static void phy_shutdown(struct usb_phy *phy)
-+{
-+	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
-+	int i;
-+
-+	if (!ta->phy_initialized)
-+		return;
-+
-+	ta->phy_initialized = false;
-+	flush_work(&ta->wk);
-+	ta->phy.set_vbus(&ta->phy, false);
-+
-+	ta->connected = false;
-+	writel(TCPC_DISCONN, ta->phy.io_priv + TCPC_OFFSET);
-+
-+	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++)
-+		reset_control_assert(ta->resets[i]);
-+}
-+
-+static int phy_set_vbus(struct usb_phy *phy, int on)
-+{
-+	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
-+	int ret;
-+
-+	if (on) {
-+		ret = regulator_enable(ta->vbus);
-+		if (ret)
-+			dev_err(ta->phy.dev, "regulator not enabled\n");
-+	} else {
-+		ret = regulator_disable(ta->vbus);
-+		if (ret)
-+			dev_err(ta->phy.dev, "regulator not disabled\n");
-+	}
-+
-+	return ret;
-+}
-+
-+static void tca_work(struct work_struct *work)
-+{
-+	struct tca_apb *ta = container_of(work, struct tca_apb, wk);
-+	bool connected;
-+	bool flipped = false;
-+	u32 val;
-+	int ret;
-+
-+	ret = get_flipped(ta, &flipped);
-+	connected = extcon_get_state(ta->phy.edev, EXTCON_USB_HOST) && !ret;
-+	if (connected == ta->connected)
-+		return;
-+
-+	ta->connected = connected;
-+	if (connected) {
-+		val = TCPC_CONN;
-+		if (flipped)
-+			val |= TCPC_FLIPPED;
-+		dev_info(ta->phy.dev, "connected%s\n", flipped ? " flipped" : "");
-+	} else {
-+		val = TCPC_DISCONN;
-+		dev_info(ta->phy.dev, "disconnected\n");
-+	}
-+
-+	writel(val, ta->phy.io_priv + TCPC_OFFSET);
-+
-+	ret = ta->phy.set_vbus(&ta->phy, connected);
-+	if (ret)
-+		dev_err(ta->phy.dev, "failed to set VBUS\n");
-+}
-+
-+static int id_notifier(struct notifier_block *nb, unsigned long event, void *ptr)
-+{
-+	struct tca_apb *ta = container_of(nb, struct tca_apb, phy.id_nb);
-+
-+	if (ta->phy_initialized)
-+		schedule_work(&ta->wk);
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static int vbus_notifier(struct notifier_block *nb, unsigned long evnt, void *ptr)
-+{
-+	return NOTIFY_DONE;
-+}
-+
-+static int phy_probe(struct platform_device *pdev)
-+{
-+	struct reset_control *resets[ARRAY_SIZE(CTL_RESETS)];
-+	struct device *dev = &pdev->dev;
-+	struct usb_phy *phy;
-+	struct tca_apb *ta;
-+	int i;
-+
-+	ta = devm_kzalloc(dev, sizeof(*ta), GFP_KERNEL);
-+	if (!ta)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, ta);
-+	INIT_WORK(&ta->wk, tca_work);
-+
-+	phy = &ta->phy;
-+	phy->dev = dev;
-+	phy->label = dev_name(dev);
-+	phy->type = USB_PHY_TYPE_USB3;
-+	phy->init = phy_init;
-+	phy->shutdown = phy_shutdown;
-+	phy->set_vbus = phy_set_vbus;
-+	phy->id_nb.notifier_call = id_notifier;
-+	phy->vbus_nb.notifier_call = vbus_notifier;
-+
-+	phy->io_priv = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(phy->io_priv))
-+		return PTR_ERR(phy->io_priv);
-+
-+	ta->vbus = devm_regulator_get(dev, "vbus");
-+	if (IS_ERR(ta->vbus))
-+		return PTR_ERR(ta->vbus);
-+
-+	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++) {
-+		resets[i] = devm_reset_control_get_exclusive(dev, CTL_RESETS[i]);
-+		if (IS_ERR(resets[i])) {
-+			dev_err(dev, "%s reset not found\n", CTL_RESETS[i]);
-+			return PTR_ERR(resets[i]);
-+		}
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++) {
-+		ta->resets[i] = devm_reset_control_get_exclusive(dev, PHY_RESETS[i]);
-+		if (IS_ERR(ta->resets[i])) {
-+			dev_err(dev, "%s reset not found\n", PHY_RESETS[i]);
-+			return PTR_ERR(ta->resets[i]);
-+		}
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++)
-+		reset_control_assert(resets[i]);
-+
-+	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++)
-+		reset_control_assert(ta->resets[i]);
-+	/*
-+	 * Out-of-band reset of the controller after PHY reset will cause
-+	 * controller malfunctioning, so we should use in-band controller
-+	 * reset only and leave the controller de-asserted here.
-+	 */
-+	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++)
-+		reset_control_deassert(resets[i]);
-+
-+	/* Need to wait at least 20us after de-assert the controller */
-+	usleep_range(20, 100);
-+
-+	return usb_add_phy_dev(phy);
-+}
-+
-+static int phy_remove(struct platform_device *pdev)
-+{
-+	struct tca_apb *ta = platform_get_drvdata(pdev);
-+
-+	usb_remove_phy(&ta->phy);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id intel_usb_phy_dt_ids[] = {
-+	{ .compatible = "intel,lgm-usb-phy" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, intel_usb_phy_dt_ids);
-+
-+static struct platform_driver lgm_phy_driver = {
-+	.driver = {
-+		.name = "lgm-usb-phy",
-+		.of_match_table = intel_usb_phy_dt_ids,
-+	},
-+	.probe = phy_probe,
-+	.remove = phy_remove,
-+};
-+
-+module_platform_driver(lgm_phy_driver);
-+
-+MODULE_DESCRIPTION("Intel LGM USB PHY driver");
-+MODULE_AUTHOR("Li Yin <yin1.li@intel.com>");
-+MODULE_AUTHOR("Vadivel Murugan R <vadivel.muruganx.ramuthevar@linux.intel.com>");
-+MODULE_LICENSE("GPL v2");
--- 
-2.11.0
+Hi Stephen,
 
+This changes correct commit messages based on your reviewing.
+make Fixes tags to oneline.
+make all commit message tags at the end of commit message
+make Fixes tags before Signed-off-by line.
+add probe failed log to commit message.
+
+
+> --
+> Cheers,
+> Stephen Rothwell
