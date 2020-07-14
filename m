@@ -2,142 +2,77 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 479E8C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 10:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB56C433EC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 10:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 213D921D7A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 10:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADA4322202
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 10:23:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PWuXG4b4"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="swDY3YBv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726375AbgGNKDe (ORCPT
+        id S1726370AbgGNKXp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 06:03:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbgGNKDd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 06:03:33 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AC7CC061755;
-        Tue, 14 Jul 2020 03:03:33 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id e22so16407362edq.8;
-        Tue, 14 Jul 2020 03:03:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MKp4hLtxETvkv2CWahEKcfbp1IqsM/1I1uhcW5o/wdY=;
-        b=PWuXG4b4cpqYFf2T4pSBWibdehnMvZPSt8U8it8Y5Vr8G4jATwgScAO7URB+xYsDIk
-         ko9j8deE86NN89zX1NpP0ZD8NnsgJ0aEsk4cQyxlHIy8LnqMWPhINDEoCUH+Djt7fk/y
-         q304ihm+M83eb/bwQu6b+Toz8dSHDcE0hrBPElnsKJmwQ/199siBC15iLpr7S6Mdo26K
-         vdr863REyILYzvb0IRSz4DmkuUysNw/HjI1lpJ9FWPSxQUoSsDOCsqrIO/oIhPu2wevy
-         DXrW7iyxD/djeMfYG+35wUH6epFRuZ2OkKCh2tIw8JBTqudzg5N70NnfjZTINxnOUN9i
-         HZEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MKp4hLtxETvkv2CWahEKcfbp1IqsM/1I1uhcW5o/wdY=;
-        b=PGluHX4elZ+dcwPspx60tBqVbXgy86oSlzCTXYv3j6X3c/EisdII8vTZzw4GOYaGNd
-         BQpeqiPE2nCq9IZYPkwlr7KhTWRlbLh8oqGhZnLLmq7womYf8PWPU7IUuN0D2VY8JPQS
-         h5eL+Gvo4kt6naDYSBA+Y/9sWfsfOS1p68uq4IezbmNJWsCMCxLJxrEIAYuBjCx99HqK
-         tLkkPLkhGEL2lLlA0ZlexzLm20HnP0YkjvS6Jker7DoYj6CnFgAjQO7+nUYXM9MmHLK+
-         Y0267C1yYAJ2jZpNYKanHN5qyCWVTRT9C0ULXRnjb4kzzIG6wrF4nL7HdbnOeJS01sU6
-         BwZw==
-X-Gm-Message-State: AOAM532UEIib8a1rzLgnGuHW/PaeGVwFKjx3a2f6p//aWmm2WuXlKkIB
-        URgMHG0IaCY/XIJ43Dlx7WW4aZG/bzw+9e8tRUE=
-X-Google-Smtp-Source: ABdhPJzMuF8S5wkwmiZSLv/BO2k8Uh6Rq8XGYvR9lfAW1FMCP6K5LDh1XPrNn+57jDHjM8t8/P6yahksikRVd7DQfbE=
-X-Received: by 2002:a50:d55b:: with SMTP id f27mr3747046edj.312.1594721012001;
- Tue, 14 Jul 2020 03:03:32 -0700 (PDT)
+        Tue, 14 Jul 2020 06:23:45 -0400
+Received: from vps.xff.cz ([195.181.215.36]:46236 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726855AbgGNKXl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jul 2020 06:23:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1594722219; bh=kwgWUPQHVNL5P7EKwsJlCg0NIkarJ3r+wsUpQ/WUKtQ=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=swDY3YBvUK6mYkAlSShHBAHZ+32GoWsVFBaPQsqDFRBM+2U/laJLeFlNX0UfHwhPq
+         k61hBzPMR256H6El9IFthM4uEMb+YdUCWidSaZPfbKK7I68qq7WkO6uTC7eDe/P+pS
+         YN673wGkC9/M75ulS6k2Y66pcGsZcaMQ3igyzQn4=
+From:   Ondrej Jirman <megous@megous.com>
+To:     linux-sunxi@googlegroups.com,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     Ondrej Jirman <megous@megous.com>, Luca Weiss <luca@z3ntu.xyz>,
+        Tomas Novotny <tomas@novotny.cz>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v4 4/4] ARM: dts: sun8i-a83t-tbs-a711: Increase voltage on the vibrator
+Date:   Tue, 14 Jul 2020 12:23:03 +0200
+Message-Id: <20200714102303.3007896-5-megous@megous.com>
+In-Reply-To: <20200714102303.3007896-1-megous@megous.com>
+References: <20200714102303.3007896-1-megous@megous.com>
 MIME-Version: 1.0
-References: <20200629114927.17379-1-bruno.thomsen@gmail.com>
- <20200629114927.17379-2-bruno.thomsen@gmail.com> <20200713025246.GY21277@dragon>
-In-Reply-To: <20200713025246.GY21277@dragon>
-From:   Bruno Thomsen <bruno.thomsen@gmail.com>
-Date:   Tue, 14 Jul 2020 12:03:16 +0200
-Message-ID: <CAH+2xPAHKY6YfhO-jXfKN+TRN5LDT1Kkn8a8HUj_EOqFt=75nQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] ARM: dts: imx7: add support for kamstrup flex concentrator
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Bruno Thomsen <bth@kamstrup.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Den man. 13. jul. 2020 kl. 04.52 skrev Shawn Guo <shawnguo@kernel.org>:
->
-> On Mon, Jun 29, 2020 at 01:49:26PM +0200, Bruno Thomsen wrote:
-> > +&fec1 {
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&pinctrl_enet1>;
-> > +     phy-mode = "rmii";
-> > +     phy-reset-gpios = <&gpio7 15 GPIO_ACTIVE_LOW>;
-> > +     phy-reset-duration = <100>;
-> > +     phy-reset-post-delay = <1000>;
->
-> These properties are deprecated.
+Vibrator motor is weak at the current voltage. Increase the voltage.
 
-Thanks for review Shawn.
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+---
+ arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I have not yet been successful in converting the deprecated properties
-to generic phy properties, so hoping I could get a hit.
+diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+index a278a1e33930..1e086e979348 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+@@ -434,8 +434,8 @@ &reg_ldo_io0 {
+ };
+ 
+ &reg_ldo_io1 {
+-	regulator-min-microvolt = <3100000>;
+-	regulator-max-microvolt = <3100000>;
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
+ 	regulator-name = "vcc-vb";
+ 	status = "okay";
+ };
+-- 
+2.27.0
 
-Kernel error messages:
-mdio_bus 30be0000.ethernet-1: MDIO device at address 1 is missing.
-fec 30be0000.ethernet eth0: Unable to connect to phy
-
-Updated device tree section:
-&fec1 {
-        pinctrl-names = "default";
-        pinctrl-0 = <&pinctrl_enet1>;
-        phy-mode = "rmii";
-        phy-handle = <&ethphy>;
-        status = "okay";
-
-        mdio {
-                #address-cells = <1>;
-                #size-cells = <0>;
-
-                ethphy: ethernet-phy@1 {
-                        /* Micrel KSZ8051RNLV */
-                        compatible = "ethernet-phy-ieee802.3-c22";
-                        reg = <1>;
-                        max-speed = <100>;
-
-                        reset-assert-us = <100000>;
-                        reset-deassert-us = <1000000>;
-                        reset-gpios = <&gpio7 15 GPIO_ACTIVE_LOW>;
-                };
-        };
-};
-
-/Bruno
-
-> > +     phy-handle = <&ethphy>;
-> > +     status = "okay";
-> > +
-> > +     mdio {
-> > +             #address-cells = <1>;
-> > +             #size-cells = <0>;
-> > +             ethphy: ethernet-phy@1 {
-> > +                     /* Micrel KSZ8051RNLV */
-> > +                     compatible = "ethernet-phy-ieee802.3-c22";
-> > +                     reg = <1>;
-> > +             };
-> > +     };
-> > +};
