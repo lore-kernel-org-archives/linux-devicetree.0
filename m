@@ -2,195 +2,424 @@ Return-Path: <SRS0=HudI=AZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7AB7C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 03:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9506C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 03:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D5A0217D9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 03:07:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="RVJaPakc"
+	by mail.kernel.org (Postfix) with ESMTP id 882B1221E6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 03:11:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594696273;
+	bh=N9A1CacG6wk1Bx82ulEMuV9ByOt9GMoggxmLNOI2pBo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uU4jpxXpOJSWzvAtNlEejtXe7N/sDEoBFebEMLpOJ66wMvJw+ii3Loy+L/rU50wlX
+	 yCrh85SDn6TCm6BI05EMHUCTUw5FzGCkFS/rfixGEzecen9JYMUUSAyAlmXP7mKyUz
+	 nksr8xp9tURESOIxQfjzpdUNAvoAVmCxfoOVfq3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgGNDHF (ORCPT
+        id S1726602AbgGNDLN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jul 2020 23:07:05 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:39975 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726435AbgGNDHE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 23:07:04 -0400
-X-UUID: 44287a7313544281ad5b2461daf51a94-20200714
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=FgffRArMkE/7KEXUhK6dJi/sJmpWs+uSsflJMwEGte0=;
-        b=RVJaPakcNXSKxBc7GF0k/PXAN/NN2OhEay0CM0gyj/mX6Tu23d4/MUe2WyXjBROAo6medcMq+qWhwGM4Ov1Ee2OkXbn2k1iojt34+gEm/i2zHKoFX/Ix2fQRbsGDFRaP8SPsEgEgsQ+lCN5THsdSjM2CRkZxhqpSlSp92iVhQl8=;
-X-UUID: 44287a7313544281ad5b2461daf51a94-20200714
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 769161552; Tue, 14 Jul 2020 11:06:58 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 14 Jul 2020 11:06:52 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 14 Jul 2020 11:06:51 +0800
-Message-ID: <1594696012.26207.11.camel@mtkswgap22>
-Subject: Re: [PATCH v2 2/2] soc: mediatek: add mtk-devapc driver
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-CC:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <devicetree@vger.kernel.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Date:   Tue, 14 Jul 2020 11:06:52 +0800
-In-Reply-To: <CAAOTY_931nJb2Ove5NzfAWX=xy0D3oj6y5d0ThRsvhANFf1_BQ@mail.gmail.com>
-References: <1594285927-1840-1-git-send-email-neal.liu@mediatek.com>
-         <1594285927-1840-3-git-send-email-neal.liu@mediatek.com>
-         <CAAOTY_-7PwoPG_0ce2p4BCNQ3rundg40Bsni14XSmVETExkKkw@mail.gmail.com>
-         <1594351423.4670.18.camel@mtkswgap22>
-         <CAAOTY_9MPYi=FAisE50UzT=eceSykN+Z8HnfFLLg_uRDhPAkpg@mail.gmail.com>
-         <1594628844.22730.48.camel@mtkswgap22>
-         <CAAOTY_931nJb2Ove5NzfAWX=xy0D3oj6y5d0ThRsvhANFf1_BQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Mon, 13 Jul 2020 23:11:13 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:37017 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726432AbgGNDLM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jul 2020 23:11:12 -0400
+Received: by mail-il1-f193.google.com with SMTP id r12so13062230ilh.4;
+        Mon, 13 Jul 2020 20:11:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wB7EpZVGsgQ3decojJROTauPM9vJOZw3HOAwwkB7+aE=;
+        b=AqFIcG+zWzjSM33RTowTxVnyV5RT2SpRxJ5r0T/wJ+uhISVuGnHthDIRawoRM9lsaU
+         1OhLTvnfNStAGOL5flwQzkUsV3uhADNOF9CuSlNXoPm1PNavroYQn6aqmxWt+W/VMmhW
+         sls8zzctK1idNJD5NhfQkEzhgPk3bJwgjkzWBe0CvcQCgpF2T1txbm5a0cFxafcRNnx5
+         94TQgTy7a+oRY7uTkBLKzdGudTMcolXuz2tDd35m0+bAnKhhkGBLlgqKxsB4EYjfcHOq
+         6yKA512lSmAjgcN8sk1EOrPn/rLrcA4YZCPuu14XO50JB5vd/i/3Wd2Ku3bcLOKnQPi9
+         snuw==
+X-Gm-Message-State: AOAM532ofR0zU1T8pJt6MJhX46iAPsbQh1p5DoLTFEDFMvLB7cnQhHIq
+        ds821vypItxYHYfX2rXbDSJD0vLtnq6x
+X-Google-Smtp-Source: ABdhPJxmPqX3ZolvpemY9HPtU4SvLgi9Hy8GgegBE8lJnxqZ3mXcnTGKCyO7PGG3w8xTpLzNPBSG3Q==
+X-Received: by 2002:a92:c213:: with SMTP id j19mr3001215ilo.40.1594696271187;
+        Mon, 13 Jul 2020 20:11:11 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id a11sm4547579iow.26.2020.07.13.20.11.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 20:11:10 -0700 (PDT)
+Received: (nullmailer pid 1216966 invoked by uid 1000);
+        Tue, 14 Jul 2020 03:11:09 -0000
+Date:   Mon, 13 Jul 2020 21:11:09 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     linux-clk@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
+        Adam Ford <aford173@gmail.com>
+Subject: Re: [PATCH v2 4/4] dt-bindings: clk: versaclock5: convert to yaml
+Message-ID: <20200714031109.GA1210492@bogus>
+References: <20200708074035.31595-1-luca@lucaceresoli.net>
+ <20200708074035.31595-4-luca@lucaceresoli.net>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200708074035.31595-4-luca@lucaceresoli.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgQ2h1bi1LdWFuZywNCg0KT24gTW9uLCAyMDIwLTA3LTEzIGF0IDIyOjIwICswODAwLCBDaHVu
-LUt1YW5nIEh1IHdyb3RlOg0KPiBIaSwgTmVhbDoNCj4gDQo+IE5lYWwgTGl1IDxuZWFsLmxpdUBt
-ZWRpYXRlay5jb20+IOaWvCAyMDIw5bm0N+aciDEz5pelIOmAseS4gCDkuIvljYg0OjI35a+r6YGT
-77yaDQo+ID4NCj4gPiBIaSBDaHVuLUt1YW5nLA0KPiA+DQo+ID4gVGhhbmtzIGZvciB5b3VyIHJl
-dmlldy4NCj4gPg0KPiA+IE9uIEZyaSwgMjAyMC0wNy0xMCBhdCAyMjoyMSArMDgwMCwgQ2h1bi1L
-dWFuZyBIdSB3cm90ZToNCj4gPiA+IEhpLCBOZWFsOg0KPiA+ID4NCj4gPiA+IE5lYWwgTGl1IDxu
-ZWFsLmxpdUBtZWRpYXRlay5jb20+IOaWvCAyMDIw5bm0N+aciDEw5pelIOmAseS6lCDkuIrljYgx
-MToyM+Wvq+mBk++8mg0KPiA+ID4gPg0KPiA+ID4gPiBIaSBDaHVuLUt1YW5nLA0KPiA+ID4gPg0K
-PiA+ID4gPiBUaGFua3MgZm9yIHlvdXIgcmV2aWV3Lg0KPiA+ID4gPg0KPiA+ID4gPiBPbiBUaHUs
-IDIwMjAtMDctMDkgYXQgMjE6MDEgKzA4MDAsIENodW4tS3VhbmcgSHUgd3JvdGU6DQo+ID4gPiA+
-ID4gSGksIE5lYWw6DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBOZWFsIExpdSA8bmVhbC5saXVAbWVk
-aWF0ZWsuY29tPiDmlrwgMjAyMOW5tDfmnIg55pelIOmAseWbmyDkuIvljYg1OjEz5a+r6YGT77ya
-DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gTWVkaWFUZWsgYnVzIGZhYnJpYyBwcm92aWRlcyBU
-cnVzdFpvbmUgc2VjdXJpdHkgc3VwcG9ydCBhbmQgZGF0YQ0KPiA+ID4gPiA+ID4gcHJvdGVjdGlv
-biB0byBwcmV2ZW50IHNsYXZlcyBmcm9tIGJlaW5nIGFjY2Vzc2VkIGJ5IHVuZXhwZWN0ZWQNCj4g
-PiA+ID4gPiA+IG1hc3RlcnMuDQo+ID4gPiA+ID4gPiBUaGUgc2VjdXJpdHkgdmlvbGF0aW9uIGlz
-IGxvZ2dlZCBhbmQgc2VudCB0byB0aGUgcHJvY2Vzc29yIGZvcg0KPiA+ID4gPiA+ID4gZnVydGhl
-ciBhbmFseXNpcyBvciBjb3VudGVybWVhc3VyZXMuDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4g
-QW55IG9jY3VycmVuY2Ugb2Ygc2VjdXJpdHkgdmlvbGF0aW9uIHdvdWxkIHJhaXNlIGFuIGludGVy
-cnVwdCwgYW5kDQo+ID4gPiA+ID4gPiBpdCB3aWxsIGJlIGhhbmRsZWQgYnkgbXRrLWRldmFwYyBk
-cml2ZXIuIFRoZSB2aW9sYXRpb24NCj4gPiA+ID4gPiA+IGluZm9ybWF0aW9uIGlzIHByaW50ZWQg
-aW4gb3JkZXIgdG8gZmluZCB0aGUgbXVyZGVyZXIuDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4g
-U2lnbmVkLW9mZi1ieTogTmVhbCBMaXUgPG5lYWwubGl1QG1lZGlhdGVrLmNvbT4NCj4gPiA+ID4g
-Pg0KPiA+ID4gPiA+IFtzbmlwXQ0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4g
-PiArc3RhdGljIHUzMiBnZXRfc2hpZnRfZ3JvdXAoc3RydWN0IG10a19kZXZhcGNfY29udGV4dCAq
-ZGV2YXBjX2N0eCwNCj4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIGludCBz
-bGF2ZV90eXBlLCBpbnQgdmlvX2lkeCkNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IHZpb19pZHggIGlz
-IHVzZWxlc3MsIHNvIHJlbW92ZSBpdC4NCj4gPiA+ID4gPg0KPiA+ID4gPg0KPiA+ID4gPiB5ZXMs
-IG15IG1pc3Rha2UuIEknbGwgcmVtb3ZlIGl0IG9uIG5leHQgcGF0Y2guDQo+ID4gPiA+DQo+ID4g
-PiA+ID4gPiArew0KPiA+ID4gPiA+ID4gKyAgICAgICB1MzIgdmlvX3NoaWZ0X3N0YTsNCj4gPiA+
-ID4gPiA+ICsgICAgICAgdm9pZCBfX2lvbWVtICpyZWc7DQo+ID4gPiA+ID4gPiArICAgICAgIGlu
-dCBiaXQ7DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArICAgICAgIHJlZyA9IG10a19kZXZh
-cGNfcGRfZ2V0KGRldmFwY19jdHgsIHNsYXZlX3R5cGUsIFZJT19TSElGVF9TVEEsIDApOw0KPiA+
-ID4gPiA+ID4gKyAgICAgICB2aW9fc2hpZnRfc3RhID0gcmVhZGwocmVnKTsNCj4gPiA+ID4gPiA+
-ICsNCj4gPiA+ID4gPiA+ICsgICAgICAgZm9yIChiaXQgPSAwOyBiaXQgPCAzMjsgYml0KyspIHsN
-Cj4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICBpZiAoKHZpb19zaGlmdF9zdGEgPj4gYml0KSAm
-IDB4MSkNCj4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGJyZWFrOw0KPiA+ID4g
-PiA+ID4gKyAgICAgICB9DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArICAgICAgIHJldHVy
-biBiaXQ7DQo+ID4gPiA+ID4gPiArfQ0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+DQo+ID4gPiA+
-ID4gW3NuaXBdDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsvKg0KPiA+
-ID4gPiA+ID4gKyAqIGRldmFwY192aW9sYXRpb25faXJxIC0gdGhlIGRldmFwYyBJbnRlcnJ1cHQg
-U2VydmljZSBSb3V0aW5lIChJU1IpIHdpbGwgZHVtcA0KPiA+ID4gPiA+ID4gKyAqICAgICAgICAg
-ICAgICAgICAgICAgICB2aW9sYXRpb24gaW5mb3JtYXRpb24gaW5jbHVkaW5nIHdoaWNoIG1hc3Rl
-ciB2aW9sYXRlcw0KPiA+ID4gPiA+ID4gKyAqICAgICAgICAgICAgICAgICAgICAgICBhY2Nlc3Mg
-c2xhdmUuDQo+ID4gPiA+ID4gPiArICovDQo+ID4gPiA+ID4gPiArc3RhdGljIGlycXJldHVybl90
-IGRldmFwY192aW9sYXRpb25faXJxKGludCBpcnFfbnVtYmVyLA0KPiA+ID4gPiA+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBtdGtfZGV2YXBjX2NvbnRl
-eHQgKmRldmFwY19jdHgpDQo+ID4gPiA+ID4gPiArew0KPiA+ID4gPiA+ID4gKyAgICAgICBjb25z
-dCBzdHJ1Y3QgbXRrX2RldmljZV9pbmZvICoqZGV2aWNlX2luZm87DQo+ID4gPiA+ID4gPiArICAg
-ICAgIGludCBzbGF2ZV90eXBlX251bTsNCj4gPiA+ID4gPiA+ICsgICAgICAgaW50IHZpb19pZHgg
-PSAtMTsNCj4gPiA+ID4gPiA+ICsgICAgICAgaW50IHNsYXZlX3R5cGU7DQo+ID4gPiA+ID4gPiAr
-DQo+ID4gPiA+ID4gPiArICAgICAgIHNsYXZlX3R5cGVfbnVtID0gZGV2YXBjX2N0eC0+c2xhdmVf
-dHlwZV9udW07DQo+ID4gPiA+ID4gPiArICAgICAgIGRldmljZV9pbmZvID0gZGV2YXBjX2N0eC0+
-ZGV2aWNlX2luZm87DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArICAgICAgIGZvciAoc2xh
-dmVfdHlwZSA9IDA7IHNsYXZlX3R5cGUgPCBzbGF2ZV90eXBlX251bTsgc2xhdmVfdHlwZSsrKSB7
-DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBJZiBzbGF2ZV90eXBlX251bSBpcyAxLCBJIHRoaW5rIHRo
-ZSBjb2RlIHNob3VsZCBiZSBzaW1wbGVyLg0KPiA+ID4gPg0KPiA+ID4gPiBzbGF2ZV90eXBlX251
-bSBpcyBkZXBlbmRzIG9uIERUIGRhdGEsIGl0J3Mgbm90IGFsd2F5cyAxLg0KPiA+ID4NCj4gPiA+
-IFBsZWFzZSBjaGFuZ2UgY29tbWl0IHRpdGxlIHRvICJhZGQgbXQ2Nzc5IG10ay1kZXZhcGMgZHJp
-dmVyIi4gVGhpcw0KPiA+ID4gcGF0Y2ggaXMganVzdCBmb3IgbXQ2Nzc5LiBJZiBzbGF2ZV90eXBl
-X251bSA9IDEgaW4gbXQ2Nzc5LCB0aGVyZSBpcw0KPiA+ID4gb25seSBvbmUgc2xhdmUgYW5kIHdl
-IGRvbid0IG5lZWQgYSBzbGF2ZV90eXBlIHZhcmlhYmxlLiBBZGQNCj4gPiA+IHNsYXZlX3R5cGVf
-bnVtIGluIHRoZSBwYXRjaCBvZiBhZGRpbmcgb25lIFNvQyB3aGljaCBoYXMgbXVsdGlwbGUNCj4g
-PiA+IHNsYXZlcy4NCj4gPg0KPiA+IElmIHNsYXZlX3R5cGVfbnVtIHZhbHVlIGlzIHBhc3NlZCBm
-cm9tIERUIGRhdGEsIGNvdWxkIHdlIHN0aWxsIGFzc3VtZQ0KPiA+IGl0cyB2YWx1ZT8gRG9lcyBp
-dCBtYWtlIHNlbnNlIHRvIGhhdmUgdGhpcyBzdHJvbmcgYXNzdW1wdGlvbj8NCj4gDQo+IE1haW50
-YWluZXIgaGFzIGFza2VkIHlvdSB0byBtb3ZlIHRoaXMgZGF0YSBmcm9tIGRldmljZSB0cmVlIHRv
-IGRyaXZlcg0KPiBbMV0sIEkgZG91YnQgeW91IGNvdWxkIGdldCB0aGlzIGRhdGEgZnJvbSBkZXZp
-Y2UgdHJlZS4gRXZlbiB0aG91Z2gNCj4gZGV2aWNlIHRyZWUgaGFzIHRoaXMgcHJvcGVydHksIHRo
-aXMgZHJpdmVyIHN1cHBvcnQgb25seSBtdDY3Nzkgbm93LCBzbw0KPiBpdCdzIG5vdCBuZWNlc3Nh
-cnkgdG8gaGF2ZSBzbGF2ZV90eXBlX251bSBiZWNhdXNlIHNsYXZlIHR5cGUgaXMgb25seQ0KPiAx
-LiBJIHRoaW5rIHdlIHNob3VsZCBub3QgY29uc2lkZXIgc3VwcG9ydCBtdWx0aXBsZSBTb0MgaW4g
-dGhpcyBwYXRjaC4NCj4gDQo+IFsxXSBodHRwczovL3VybGRlZmVuc2UuY29tL3YzL19faHR0cHM6
-Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTY1MzkxMS9fXzshIUNUUk5LQTl3TWcwQVJi
-dyEySDhDUUVfX0FMQWhHVWhOYUw3eUIxTFhMc2tCa3ltRWZiMkZTVDBqcmJKZ21PTUthOC1BZUpY
-TUF5VWtIakFsJCANCj4gDQoNCk9rYXksIEknbGwgZm9sbG93IG1haW50YWluZXIncyBzdWdnZXN0
-aW9uLg0KDQo+ID4NCj4gPiBJJ20gZ29pbmcgdG8gcmVtb3ZlIG10a19kZXZpY2VfaW5mbyBzdHJ1
-Y3QgYXJyYXksIGFuZCBwYXNzIGFsbCBTb0MNCj4gPiBzcGVjaWZpYyBkYXRhIGZyb20gRFQuDQo+
-ID4gSXMgaXQgb2theSB0byBrZWVwIHNsYXZlX3R5cGVfbnVtIGFzIGEgdmFyaWFuY2U/DQo+ID4N
-Cj4gPiA+DQo+ID4gPiA+DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICBp
-ZiAoIW10a19kZXZhcGNfZHVtcF92aW9fZGJnKGRldmFwY19jdHgsIHNsYXZlX3R5cGUsICZ2aW9f
-aWR4KSkNCj4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGNvbnRpbnVlOw0KPiA+
-ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIC8qIEVuc3VyZSB0aGF0IHZp
-b2xhdGlvbiBpbmZvIGFyZSB3cml0dGVuIGJlZm9yZQ0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAg
-ICAgICAqIGZ1cnRoZXIgb3BlcmF0aW9ucw0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAq
-Lw0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIHNtcF9tYigpOw0KPiA+ID4gPiA+ID4gKw0K
-PiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIG1hc2tfbW9kdWxlX2lycShkZXZhcGNfY3R4LCBz
-bGF2ZV90eXBlLCB2aW9faWR4LCB0cnVlKTsNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IFdoeSBkbyB5
-b3UgbWFzayBpcnE/DQo+ID4gPiA+DQo+ID4gPiA+IEl0IGhhcyB0byBtYXNrIHNsYXZlJ3MgaXJx
-IGJlZm9yZSBjbGVhciB2aW9sYXRpb24gc3RhdHVzLg0KPiA+ID4gPiBJdCdzIG9uZSBvZiBoYXJk
-d2FyZSBkZXNpZ24uDQo+ID4gPg0KPiA+ID4gSWYgZG9uJ3QgZG8gdGhpcyBiZWZvcmUgY2xlYXJf
-dmlvX3N0YXR1cywgd2hhdCB3b3VsZCBoYXBwZW4/IFRoZSBjbGVhcg0KPiA+ID4gd291bGQgZmFp
-bD8NCj4gPg0KPiA+IElmIHdlIGRvbid0IG1hc2sgc2xhdmUncyBpcnEgYmVmb3JlIGNsZWFyIHZp
-byBzdGF0dXMsIEl0IG1pZ2h0IHRyaWdnZXINCj4gPiBhbm90aGVyIGludGVycnVwdCBiZWZvcmUg
-Y3VycmVudCBJU1IgZmluaXNoZWQuIFRoZSBuZXN0ZWQgaW50ZXJydXB0IHdpbGwNCj4gPiBoYXZl
-IHVuZXhwZWN0ZWQgYmVoYXZpb3IgYW5kIGhhcmR3YXJlIHN0YXRlIG1hY2hpbmUgZ29lcyB3cm9u
-Zy4NCj4gDQo+IFRoaXMgaGFyZHdhcmUgaXMgc28gc3BlY2lhbC4gRm9yIGdlbmVyYWwgaGFyZHdh
-cmUsIG9ubHkgY2xlYXIgc3RhdHVzDQo+IHdvdWxkIGxldCBoYXJkd2FyZSBzdG9wIGludGVycnVw
-dC4gUGxlYXNlIGFkZCBhIGNvbW1lbnQgYWJvdXQgdGhpcw0KPiBzcGVjaWFsIGhhcmR3YXJlIGJl
-aGF2aW9yLg0KDQpJJ2xsIGRvdWJsZSBjb25maXJtIGFuZCBhZGQgY29tbWVudCBpZiBpdCdzIG5l
-Y2Vzc2FyeS4NCg0KPiANCj4gPg0KPiA+ID4NCj4gPiA+ID4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+
-ID4gKw0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIGNsZWFyX3Zpb19zdGF0dXMoZGV2YXBj
-X2N0eCwgc2xhdmVfdHlwZSwgdmlvX2lkeCk7DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiAr
-ICAgICAgICAgICAgICAgbWFza19tb2R1bGVfaXJxKGRldmFwY19jdHgsIHNsYXZlX3R5cGUsIHZp
-b19pZHgsIGZhbHNlKTsNCj4gPiA+ID4gPiA+ICsgICAgICAgfQ0KPiA+ID4gPiA+ID4gKw0KPiA+
-ID4gPiA+ID4gKyAgICAgICByZXR1cm4gSVJRX0hBTkRMRUQ7DQo+ID4gPiA+ID4gPiArfQ0KPiA+
-ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKy8qDQo+ID4gPiA+ID4gPiArICogc3RhcnRfZGV2YXBj
-IC0gaW5pdGlhbGl6ZSBkZXZhcGMgc3RhdHVzIGFuZCBzdGFydCByZWNlaXZpbmcgaW50ZXJydXB0
-DQo+ID4gPiA+ID4gPiArICogICAgICAgICAgICAgICB3aGlsZSBkZXZhcGMgdmlvbGF0aW9uIGlz
-IHRyaWdnZXJlZC4NCj4gPiA+ID4gPiA+ICsgKi8NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IFtzbmlw
-XQ0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArc3RydWN0IG10a19kZXZp
-Y2VfaW5mbyB7DQo+ID4gPiA+ID4gPiArICAgICAgIGludCBzeXNfaW5kZXg7DQo+ID4gPiA+ID4N
-Cj4gPiA+ID4gPiBVc2VsZXNzLCBzbyByZW1vdmUgaXQuDQo+ID4gPiA+DQo+ID4gPiA+IFdlIG5l
-ZWQgdG8gcHJpbnQgaXQgYXMgb3VyIGRlYnVnIGluZm9ybWF0aW9uLg0KPiA+ID4gPiBCdXQgSSBk
-aWQgbm90IGFwcGx5IGl0IG9uIHRoaXMgcGF0Y2gsIEknbGwgYWRkIGl0IG9uIG5leHQgcGF0Y2gu
-DQo+ID4gPg0KPiA+ID4gSSB0aGluayB2aW8gYWRkcmVzcyBpcyBlbm91Z2ggdG8gZmluZCBvdXQg
-dGhlIG11cmRlciwgc28gcmVtb3ZlIGl0IGluDQo+ID4gPiB0aGlzIHBhdGNoLiBJZiBpdCBwcm92
-aWRlIGFub3RoZXIgaW5mb3JtYXRpb24sIGFkZCBpdCBpbiBhbm90aGVyIHBhdGNoDQo+ID4gPiBh
-bmQgZGVzY3JpYmUgY2xlYXIgYWJvdXQgd2hhdCBpcyB0aGlzIGFuZCBob3cgdG8gdXNlIHRoaXMg
-aW5mb3JtYXRpb24uDQo+ID4gPg0KPiA+DQo+ID4gT2theSwgaXQgbWFrZSBzZW5zZS4gSSdsbCBy
-ZW1vdmUgaXQgaW4gbmV4dCBwYXRjaGVzLg0KPiA+DQo+ID4gPiA+DQo+ID4gPiA+ID4NCj4gPiA+
-ID4gPiA+ICsgICAgICAgaW50IGN0cmxfaW5kZXg7DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBEaXR0
-by4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IFJlZ2FyZHMsDQo+ID4gPiA+ID4gQ2h1bi1LdWFuZy4N
-Cj4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gKyAgICAgICBpbnQgdmlvX2luZGV4Ow0KPiA+ID4gPiA+
-ID4gK307DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+DQo+ID4NCg0K
+On Wed, Jul 08, 2020 at 09:40:35AM +0200, Luca Ceresoli wrote:
+> Convert to yaml the VersaClock bindings document. The mapping between
+> clock specifier and physical pins cannot be described formally in yaml
+> schema, then keep it verbatim in the description field.
+> 
+> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+> ---
+>  .../bindings/clock/idt,versaclock5.txt        | 125 --------------
+>  .../bindings/clock/idt,versaclock5.yaml       | 160 ++++++++++++++++++
+>  MAINTAINERS                                   |   1 +
+>  3 files changed, 161 insertions(+), 125 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+> deleted file mode 100644
+> index 9656d4cf221c..000000000000
+> --- a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+> +++ /dev/null
+> @@ -1,125 +0,0 @@
+> -Binding for IDT VersaClock 5,6 programmable i2c clock generators.
+> -
+> -The IDT VersaClock 5 and VersaClock 6 are programmable i2c clock
+> -generators providing from 3 to 12 output clocks.
+> -
+> -==I2C device node==
+> -
+> -Required properties:
+> -- compatible:	shall be one of
+> -		"idt,5p49v5923"
+> -		"idt,5p49v5925"
+> -		"idt,5p49v5933"
+> -		"idt,5p49v5935"
+> -		"idt,5p49v6901"
+> -		"idt,5p49v6965"
+> -- reg:		i2c device address, shall be 0x68 or 0x6a.
+> -- #clock-cells:	from common clock binding; shall be set to 1.
+> -- clocks:	from common clock binding; list of parent clock handles,
+> -		- 5p49v5923 and
+> -		  5p49v5925 and
+> -		  5p49v6901: (required) either or both of XTAL or CLKIN
+> -					reference clock.
+> -		- 5p49v5933 and
+> -		- 5p49v5935: (optional) property not present (internal
+> -					Xtal used) or CLKIN reference
+> -					clock.
+> -- clock-names:	from common clock binding; clock input names, can be
+> -		- 5p49v5923 and
+> -		  5p49v5925 and
+> -		  5p49v6901: (required) either or both of "xin", "clkin".
+> -		- 5p49v5933 and
+> -		- 5p49v5935: (optional) property not present or "clkin".
+> -
+> -For all output ports, a corresponding, optional child node named OUT1,
+> -OUT2, etc. can represent a each output, and the node can be used to
+> -specify the following:
+> -
+> -- idt,mode: can be one of the following:
+> -                 - VC5_LVPECL
+> -                 - VC5_CMOS
+> -                 - VC5_HCSL33
+> -                 - VC5_LVDS
+> -                 - VC5_CMOS2
+> -                 - VC5_CMOSD
+> -                 - VC5_HCSL25
+> -
+> -- idt,voltage-microvolts:  can be one of the following
+> -                 - 1800000
+> -                 - 2500000
+> -                 - 3300000
+> --  idt,slew-percent: Percent of normal, can be one of
+> -                 - 80
+> -                 - 85
+> -                 - 90
+> -                 - 100
+> -
+> -==Mapping between clock specifier and physical pins==
+> -
+> -When referencing the provided clock in the DT using phandle and
+> -clock specifier, the following mapping applies:
+> -
+> -5P49V5923:
+> -	0 -- OUT0_SEL_I2CB
+> -	1 -- OUT1
+> -	2 -- OUT2
+> -
+> -5P49V5933:
+> -	0 -- OUT0_SEL_I2CB
+> -	1 -- OUT1
+> -	2 -- OUT4
+> -
+> -5P49V5925 and
+> -5P49V5935:
+> -	0 -- OUT0_SEL_I2CB
+> -	1 -- OUT1
+> -	2 -- OUT2
+> -	3 -- OUT3
+> -	4 -- OUT4
+> -
+> -5P49V6901:
+> -	0 -- OUT0_SEL_I2CB
+> -	1 -- OUT1
+> -	2 -- OUT2
+> -	3 -- OUT3
+> -	4 -- OUT4
+> -
+> -==Example==
+> -
+> -/* 25MHz reference crystal */
+> -ref25: ref25m {
+> -	compatible = "fixed-clock";
+> -	#clock-cells = <0>;
+> -	clock-frequency = <25000000>;
+> -};
+> -
+> -i2c-master-node {
+> -
+> -	/* IDT 5P49V5923 i2c clock generator */
+> -	vc5: clock-generator@6a {
+> -		compatible = "idt,5p49v5923";
+> -		reg = <0x6a>;
+> -		#clock-cells = <1>;
+> -
+> -		/* Connect XIN input to 25MHz reference */
+> -		clocks = <&ref25m>;
+> -		clock-names = "xin";
+> -
+> -		OUT1 {
+> -			idt,mode = <VC5_CMOS>;
+> -			idt,voltage-microvolts = <1800000>;
+> -			idt,slew-percent = <80>;
+> -		};
+> -		OUT2 {
+> -			...
+> -		};
+> -		...
+> -	};
+> -};
+> -
+> -/* Consumer referencing the 5P49V5923 pin OUT1 */
+> -consumer {
+> -	...
+> -	clocks = <&vc5 1>;
+> -	...
+> -}
+> diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml b/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
+> new file mode 100644
+> index 000000000000..4bdfd6187b48
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
+> @@ -0,0 +1,160 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/idt,versaclock5.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Binding for IDT VersaClock 5 and 6 programmable I2C clock generators
+> +
+> +description: |
+> +  The IDT VersaClock 5 and VersaClock 6 are programmable I2C
+> +  clock generators providing from 3 to 12 output clocks.
+> +
+> +  When referencing the provided clock in the DT using phandle and clock
+> +  specifier, the following mapping applies:
+> +
+> +  - 5P49V5923:
+> +    0 -- OUT0_SEL_I2CB
+> +    1 -- OUT1
+> +    2 -- OUT2
+> +
+> +  - 5P49V5933:
+> +    0 -- OUT0_SEL_I2CB
+> +    1 -- OUT1
+> +    2 -- OUT4
+> +
+> +  - other parts:
+> +    0 -- OUT0_SEL_I2CB
+> +    1 -- OUT1
+> +    2 -- OUT2
+> +    3 -- OUT3
+> +    4 -- OUT4
+> +
+> +maintainers:
+> +  - Luca Ceresoli <luca@lucaceresoli.net>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - idt,5p49v5923
+> +      - idt,5p49v5925
+> +      - idt,5p49v5933
+> +      - idt,5p49v5935
+> +      - idt,5p49v6901
+> +      - idt,5p49v6965
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: I2C device address, shall be 0x68 or 0x6a.
 
+Can be a schema:
+
+enum: [ 0x68, 0x6a ]
+
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +patternProperties:
+> +  "^OUT[1-4]$":
+> +    type: object
+> +    description:
+> +      Description of one of the outputs (OUT1..OUT4). See "Clock1 Output
+> +      Configuration" in the Versaclock 5/6/6E Family Register Description
+> +      and Programming Guide.
+> +    properties:
+> +      idt,mode:
+> +        description:
+> +          The output drive mode. Values defined in dt-bindings/clk/versaclock.h
+> +        enum:
+> +          - VC5_LVPECL
+
+This is defining a string. Can't use defines here.
+
+> +          - VC5_CMOS
+> +          - VC5_HCSL33
+> +          - VC5_LVDS
+> +          - VC5_CMOS2
+> +          - VC5_CMOSD
+> +          - VC5_HCSL25
+> +      idt,voltage-microvolts:
+> +        description: The output drive voltage.
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+
+Standard unit suffixes have a type already, so drop.
+
+> +        enum: [ 1800000, 2500000, 3300000 ]
+> +      idt,slew-percent:
+> +        description: The Slew rate control for CMOS single-ended.
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+
+Here too.
+
+> +        enum: [ 80, 85, 90, 100 ]
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - '#clock-cells'
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - idt,5p49v5933
+> +              - idt,5p49v5935
+> +    then:
+> +      # Devices with builtin crystal, optional external input
+> +      properties:
+> +        clock-names:
+> +          const: clkin
+> +        clocks:
+> +          maxItems: 1
+> +    else:
+> +      # Devices without builtin crystal
+> +      properties:
+> +        clock-names:
+> +          anyOf:
+> +            - required: [ xin ]
+> +            - required: [ clkin ]
+
+This isn't valid. I think you want:
+
+clock-names:
+  minItems: 1
+  items:
+    - const: xin
+    - const: clkin
+
+This would mean 'xin' is always required, clkin is optional.
+
+> +        clocks:
+> +          minItems: 1
+> +          maxItems: 2
+> +      required:
+> +        - clock-names
+> +        - clocks
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clk/versaclock.h>
+> +
+> +    /* 25MHz reference crystal */
+> +    ref25: ref25m {
+> +        compatible = "fixed-clock";
+> +        #clock-cells = <0>;
+> +        clock-frequency = <25000000>;
+> +    };
+> +
+> +    i2c@0 {
+> +        reg = <0x0 0x100>;
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        /* IDT 5P49V5923 I2C clock generator */
+> +        vc5: clock-generator@6a {
+> +            compatible = "idt,5p49v5923";
+> +            reg = <0x6a>;
+> +            #clock-cells = <1>;
+> +
+> +            /* Connect XIN input to 25MHz reference */
+> +            clocks = <&ref25m>;
+> +            clock-names = "xin";
+> +
+> +            OUT1 {
+> +                idt,drive-mode = <VC5_CMOSD>;
+> +                idt,voltage-microvolts = <1800000>;
+> +                idt,slew-percent = <80>;
+> +            };
+> +
+> +            OUT4 {
+> +                idt,drive-mode = <VC5_LVDS>;
+> +            };
+> +        };
+> +    };
+> +
+> +    /* Consumer referencing the 5P49V5923 pin OUT1 */
+> +    consumer {
+> +        /* ... */
+> +        clocks = <&vc5 1>;
+> +        /* ... */
+> +    };
+> +
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 5aa16c245c63..09d6efd1d0d0 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8326,6 +8326,7 @@ F:	drivers/input/misc/ideapad_slidebar.c
+>  IDT VersaClock 5 CLOCK DRIVER
+>  M:	Luca Ceresoli <luca@lucaceresoli.net>
+>  S:	Maintained
+> +F:	Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
+>  F:	drivers/clk/clk-versaclock5.c
+>  
+>  IEEE 802.15.4 SUBSYSTEM
+> -- 
+> 2.27.0
+> 
