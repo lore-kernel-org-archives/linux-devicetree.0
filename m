@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78EB3C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D265BC433EB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F1E222226
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F9042220F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jul 2020 07:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594710800;
-	bh=rDhbGvCqBc5qk7qu3M/g+nT1J2rIXk8oam06CO8RgGQ=;
+	s=default; t=1594710804;
+	bh=w1blA/cFj1h024XvBru10C7tkW/sc1XSHCZ9GuDw07w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yfmngiDSGEKahkXOz9AFOV0foqqa5KZsdKowhuP+HgTPd6skGFf+mfvBuq7HxFDSB
-	 F4nqeDOboikXv3sKatnUgT5dINBJTcnjBwDbNf46DhRoz0z8Ctlz80mDZ35bCErOwX
-	 /9Wde0tbnx8+G9LKVyqbZNkFm6+1phKja/XpVJYI=
+	b=nEsaa5FvtVSl6pT8ylykBzqvgY73IIkpvSTD6fYB5f+ITeoRQPEMKVALYq8/joU8D
+	 1RHiAceNt8PQ6UeGjEWoky7ykTw8yPy17hki9Kh2eKk+D681/+9SwyzIHx0l5GAZNr
+	 X77xA0Iwo3Ox4Ge1ojhx5+1dCp2NJ1tn78vdUTwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725788AbgGNHNT (ORCPT
+        id S1726843AbgGNHNV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 03:13:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55752 "EHLO mail.kernel.org"
+        Tue, 14 Jul 2020 03:13:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726789AbgGNHNT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jul 2020 03:13:19 -0400
+        id S1726796AbgGNHNU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jul 2020 03:13:20 -0400
 Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.194.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C97342220F;
-        Tue, 14 Jul 2020 07:13:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0C8B22225;
+        Tue, 14 Jul 2020 07:13:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594710798;
-        bh=rDhbGvCqBc5qk7qu3M/g+nT1J2rIXk8oam06CO8RgGQ=;
+        s=default; t=1594710799;
+        bh=w1blA/cFj1h024XvBru10C7tkW/sc1XSHCZ9GuDw07w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PmNE01MnT5VBTE01AE6Q8G5DNRXf0MO1AirTJDxdPVe6c2tx7RjNv1cBhsDqYnB6I
-         y3RjjOdpaIeCu/tSL735RmrgpgggPhx72lysBMK8gG0qciY8P9XLTlgiEDVyYhp5gV
-         RNoBxHB024ZUdJELanZ212tIlW4oVmo115ncM4XE=
+        b=iSETV3Xu9AbC5Rv/zleZ6t6T/ZJB5lio1LdK3NqyRNPGrWukZ6IlWZY7dLrCIdobT
+         +l6kjTNJepn5XErgyt8R14TdZjf6eDPUxZCfBhJkw6p/wJ+89ZyhSXtpbjJPVp2qOc
+         CwSiGdGjLhKEOr2TakSgIa8VrUkEKinRxFkyJVpc=
 Received: by wens.tw (Postfix, from userid 1000)
-        id E239A5FA8D; Tue, 14 Jul 2020 15:13:13 +0800 (CST)
+        id 055375FCF0; Tue, 14 Jul 2020 15:13:14 +0800 (CST)
 From:   Chen-Yu Tsai <wens@kernel.org>
 To:     Maxime Ripard <mripard@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -51,9 +51,9 @@ To:     Maxime Ripard <mripard@kernel.org>,
 Cc:     Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org,
         devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
         Siarhei Siamashka <siarhei.siamashka@gmail.com>
-Subject: [PATCH 1/5] dt-bindings: display: panel-dpi: Add bits-per-color property
-Date:   Tue, 14 Jul 2020 15:13:01 +0800
-Message-Id: <20200714071305.18492-2-wens@kernel.org>
+Subject: [PATCH 3/5] dt-bindings: arm: sunxi: Add compatible for MSI Primo73 tablet
+Date:   Tue, 14 Jul 2020 15:13:03 +0800
+Message-Id: <20200714071305.18492-4-wens@kernel.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200714071305.18492-1-wens@kernel.org>
 References: <20200714071305.18492-1-wens@kernel.org>
@@ -66,40 +66,29 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-Some LCD panels do not support 24-bit true color, or 8bits per channel
-RGB. Many low end ones only support up to 6 bits per channel natively.
-
-Add a device tree property to describe the native bit depth of the
-panel. This is separate from the bus width or format of the connection
-to the display output.
+Document board compatible name for MSI Primo73 tablet.
 
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- .../devicetree/bindings/display/panel/panel-dpi.yaml          | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml b/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
-index 0cd74c8dab42..8eb013fb1969 100644
---- a/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
-@@ -26,6 +26,9 @@ properties:
-   height-mm: true
-   label: true
-   panel-timing: true
-+  bits-per-color:
-+    description:
-+      Shall contain an integer describing the number of bits per color.
-   port: true
-   power-supply: true
-   reset-gpios: true
-@@ -42,6 +45,7 @@ examples:
-     panel {
-         compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
-         label = "osddisplay";
-+        bits-per-color = <8>;
-         power-supply = <&vcc_supply>;
-         backlight = <&backlight>;
+diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
+index efc9118233b4..35d78448ec46 100644
+--- a/Documentation/devicetree/bindings/arm/sunxi.yaml
++++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
+@@ -475,6 +475,11 @@ properties:
+           - const: allwinner,mk808c
+           - const: allwinner,sun7i-a20
  
++      - description: MSI Primo73 Tablet
++        items:
++          - const: msi,primo73
++          - const: allwinner,sun7i-a20
++
+       - description: MSI Primo81 Tablet
+         items:
+           - const: msi,primo81
 -- 
 2.27.0
 
