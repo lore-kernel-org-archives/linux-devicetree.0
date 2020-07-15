@@ -2,119 +2,222 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CED1C433E5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 08:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D80F5C433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 08:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56ED4206E9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 08:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFE3420672
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 08:53:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729563AbgGOIq5 (ORCPT
+        id S1730440AbgGOIxe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:46:57 -0400
-Received: from mga11.intel.com ([192.55.52.93]:61786 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729377AbgGOIq4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jul 2020 04:46:56 -0400
-IronPort-SDR: AVBd4w/lewG8wnDfAgIeB6mv+zgzyBqn7bjk41JbB9qb2ClgbQ0Vnh8G3dNZXONfW7HAGLrRwh
- QmrTP2vASdHA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="147113218"
-X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
-   d="scan'208";a="147113218"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 01:46:56 -0700
-IronPort-SDR: DXexAs8H1P9V9yOFnm7lrcgiUiXuzWp57mJFBrWKsRwwIaSGj+DcHhlB7ITlgE7qWM2rj3LQsj
- K6bIgPBigxIg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
-   d="scan'208";a="299819931"
-Received: from yren3-mobl.ccr.corp.intel.com ([10.249.174.224])
-  by orsmga002.jf.intel.com with ESMTP; 15 Jul 2020 01:46:54 -0700
-Message-ID: <746420e6b213985518d8b314018e32dc3438e9af.camel@intel.com>
-Subject: Re: [RFC PATCH 3/4] thermal:core:Add genetlink notifications for
- monitoring falling temperature
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Thara Gopinath <thara.gopinath@linaro.org>,
-        daniel.lezcano@linaro.org, robh+dt@kernel.org
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 15 Jul 2020 16:46:53 +0800
-In-Reply-To: <20200710135154.181454-4-thara.gopinath@linaro.org>
-References: <20200710135154.181454-1-thara.gopinath@linaro.org>
-         <20200710135154.181454-4-thara.gopinath@linaro.org>
+        Wed, 15 Jul 2020 04:53:34 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42102 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730435AbgGOIxe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 04:53:34 -0400
+Received: by mail-ot1-f68.google.com with SMTP id g37so869001otb.9;
+        Wed, 15 Jul 2020 01:53:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fegVhyn3STlKjt12R9hh8prB5z0M+XRshkNWgzH+c0A=;
+        b=mHc61kzPm3KTsgTb4tYpSFoX9qkkpK9bCp8jdYfjOXzpDQArDgxH6RdawBLGOH2LC8
+         F9PTTmratkihAlx/Ry864wnnKvtVpDfMwYAGj4cXsmpbDLCvaRPN/EVIJDXnwBW33NKr
+         1UseVHR4qbePHFj8ltZ7KZpDY3TwwMuh1xYz2FMIwjUapYIRFEvewcfhJEXQ0anoaC9X
+         E1BiQlecFn1PSeZF9cU6EMuySni+zIO4WNr6I8O3k88bA89PJY0rlAdVMzgR4PVsz8pt
+         v3esyrqIURa24QcrfFpBjuu+IInfRPPHp1MsBZztibPLYQq4kHljxUiCG0efgNR0lO55
+         Iv/w==
+X-Gm-Message-State: AOAM531kN9T4QwTS4LdFEarRHozNlWRG7LiM8Bxv89xsZqqHhq7vjsLw
+        0PN9/OyDOAIOTVctt/5xjiyMGQe2GlSjEqrvT7E=
+X-Google-Smtp-Source: ABdhPJwzqy/71BcT98+G7u2CIKJOUb+gfsSSUeTfyxWkvI4GCs2jzfcFtPG1NotmJya2dMsYwvWAXToz7YiXdIblay8=
+X-Received: by 2002:a9d:2646:: with SMTP id a64mr7385300otb.107.1594803213089;
+ Wed, 15 Jul 2020 01:53:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200714123419.3390-1-aford173@gmail.com>
+In-Reply-To: <20200714123419.3390-1-aford173@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 15 Jul 2020 10:53:21 +0200
+Message-ID: <CAMuHMdXfc4EKKOLq1yhwiFaKE1=HT+_puuj6rJZ+OgnHv2cS8g@mail.gmail.com>
+Subject: Re: [PATCH V2 1/2] arm64: dts: Introduce r8a774a1-beacon-rzg2m-kit
+To:     Adam Ford <aford173@gmail.com>
+Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Adam Ford-BE <aford@beaconembedded.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 2020-07-10 at 09:51 -0400, Thara Gopinath wrote:
-> Add notification calls for trip type THERMAL_TRIP_COLD when
-> temperature
-> crosses the trip point in either direction.
-> 
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+Hi Adam,
+
+On Tue, Jul 14, 2020 at 2:34 PM Adam Ford <aford173@gmail.com> wrote:
+> Beacon EmebeddedWorks, formerly Logic PD is introducing a new
+> SOM and development kit based on the RZ/G2M SoC from Renesas.
+>
+> The SOM supports eMMC, WiFi and Bluetooth, along with a Cat-M1
+> cellular radio.
+>
+> The Baseboard has Ethernet, USB, HDMI, stereo audio in and out,
+> along with a variety of push buttons and LED's, and support for
+> a parallel RGB and an LVDS display.
+>
+> Signed-off-by: Adam Ford <aford173@gmail.com>
 > ---
->  drivers/thermal/thermal_core.c | 21 +++++++++++++++------
->  1 file changed, 15 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/thermal/thermal_core.c
-> b/drivers/thermal/thermal_core.c
-> index 750a89f0c20a..e2302ca1cd3b 100644
-> --- a/drivers/thermal/thermal_core.c
-> +++ b/drivers/thermal/thermal_core.c
-> @@ -429,12 +429,21 @@ static void handle_thermal_trip(struct
-> thermal_zone_device *tz, int trip)
->  		tz->ops->get_trip_hyst(tz, trip, &hyst);
->  
->  	if (tz->last_temperature != THERMAL_TEMP_INVALID) {
-> -		if (tz->last_temperature < trip_temp &&
-> -		    tz->temperature >= trip_temp)
-> -			thermal_notify_tz_trip_up(tz->id, trip);
-> -		if (tz->last_temperature >= trip_temp &&
-> -		    tz->temperature < (trip_temp - hyst))
-> -			thermal_notify_tz_trip_down(tz->id, trip);
-> +		if (type == THERMAL_TRIP_COLD) {
-> +			if (tz->last_temperature > trip_temp &&
-> +			    tz->temperature <= trip_temp)
-> +				thermal_notify_tz_trip_down(tz->id,
-> trip);
+> V2:  Add support for RGB display, second backlight, fix clock references,
+>      fix Makefile, remove unsupported versaclock features, and fix typos.
 
-trip_type should also be part of the event because trip_down/trip_up
-for hot trip and cold trip have different meanings.
-Or can we use some more generic names like trip_on/trip_off? trip_on
-means the trip point is violated or actions need to be taken for the
-specific trip points, for both hot and cold trips. I know
-trip_on/trip_off doesn't represent what I mean clearly, but surely you
-can find a better name.
+Thanks for the update!
+Looks mostly OK to me, "make dtbs_check" found a few issues, though.
 
-thanks,
-rui
+> --- a/arch/arm64/boot/dts/renesas/Makefile
+> +++ b/arch/arm64/boot/dts/renesas/Makefile
+> @@ -5,6 +5,7 @@ dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-ex-idk-1110wr.dtb
+>  dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-rev2.dtb
+>  dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-rev2-ex.dtb
+>  dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-rev2-ex-idk-1110wr.dtb
+> +dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-beacon-rzg2m-kit.dtb
 
-> +			if (tz->last_temperature <= trip_temp &&
-> +			    tz->temperature > (trip_temp + hyst))
-> +				thermal_notify_tz_trip_up(tz->id,
-> trip);
-> +		} else {
-> +			if (tz->last_temperature < trip_temp &&
-> +			    tz->temperature >= trip_temp)
-> +				thermal_notify_tz_trip_up(tz->id,
-> trip);
-> +			if (tz->last_temperature >= trip_temp &&
-> +			    tz->temperature < (trip_temp - hyst))
-> +				thermal_notify_tz_trip_down(tz->id,
-> trip);
-> +		}
->  	}
->  
->  	if (type == THERMAL_TRIP_CRITICAL || type == THERMAL_TRIP_HOT)
+Please preserve alphabetical sort order.
 
+>
+>  dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n.dtb
+>  dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n-ex.dtb
+
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/renesas/beacon-renesom-baseboard.dtsi
+
+> +       lvds {
+> +               compatible = "panel-lvds";
+> +               power-supply = <&reg_lcd_reset>;
+> +               width-mm = <223>;
+> +               height-mm = <125>;
+> +               backlight = <&backlight_lvds>;
+> +               data-mapping = "vesa-24";
+> +
+> +               panel-timing {
+> +                       /* 800x480@60Hz */
+> +                       clock-frequency = <30000000>;
+> +                       hactive = <800>;
+> +                       vactive = <480>;
+> +                       hsync-len = <48>;
+> +                       hfront-porch = <40>;
+> +                       hback-porch = <40>;
+> +                       vfront-porch = <13>;
+> +                       vback-porch = <29>;
+> +                       vsync-len = <3>;
+> +                       hsync-active = <1>;
+> +                       vsync-active = <3>;
+
+"make dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/panel/panel-timing.yaml":
+lvds: panel-timing:vsync-active:0:0: 3 is not one of [0, 1]
+
+> +                       de-active = <1>;
+> +                       pixelclk-active = <0>;
+> +               };
+> +
+> +               port {
+> +                       panel_in: endpoint {
+> +                               remote-endpoint = <&lvds0_out>;
+> +                       };
+> +               };
+> +       };
+> +
+> +       rgb {
+> +               /* Different LCD with compatible timings */
+> +               compatible = "rocktech,rk070er9427";
+> +               backlight = <&backlight_rgb>;
+> +               enable-gpios = <&gpio1 21 GPIO_ACTIVE_HIGH>;
+> +               port {
+> +                       rgb_panel: endpoint {
+> +                               remote-endpoint = <&du_out_rgb>;
+> +                       };
+> +               };
+
+Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+rgb: 'power-supply' is a required property
+
+> +       };
+
+> +       versaclock6_bb: versaclock@6a {
+
+As per DT generic node name rules, this should be called
+"clock-controller@6a".  I'm aware that would cause issues with the
+current driver implementation, so I'll accept this for now.  But it
+would be good to resolve this later.
+
+> +               compatible = "idt,5p49v6965";
+> +               reg = <0x6a>;
+> +               #clock-cells = <1>;
+> +               clocks = <&x304_clk>;
+> +               clock-names = "xin";
+> +               /* CSI0_MCLK, CSI1_MCLK, AUDIO_CLKIN, USB_HUB_MCLK_BB */
+> +               assigned-clocks = <&versaclock6_bb 1>,
+> +                                  <&versaclock6_bb 2>,
+> +                                  <&versaclock6_bb 3>,
+> +                                  <&versaclock6_bb 4>;
+> +               assigned-clock-rates =  <24000000>, <24000000>, <24000000>, <24576000>;
+> +       };
+> +};
+
+> +       hd3ss3220@47 {
+> +               compatible = "ti,hd3ss3220";
+> +               reg = <0x47>;
+> +               interrupt-parent = <&gpio6>;
+> +               interrupts = <4 IRQ_TYPE_LEVEL_LOW>;
+> +
+> +               connector {
+> +                       compatible = "usb-c-connector";
+> +                       label = "USB-C";
+> +                       data-role = "dual";
+> +
+> +                       ports {
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +
+> +                               port@1 {
+> +                                       reg = <1>;
+> +                                       hd3ss3220_ep: endpoint {
+> +                                               remote-endpoint = <&usb3_role_switch>;
+> +                                       };
+> +                               };
+
+Documentation/devicetree/bindings/connector/usb-connector.yaml
+connector: ports: 'port@0' is a required property
+
+For now, I'd ignore that, as it's a contradiction between the usb-connector
+and the hd3ss3220 bindings.
+
+> +                       };
+> +               };
+> +       };
+> +};
+
+> index 000000000000..97272f5fa0ab
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/renesas/beacon-renesom-som.dtsi
+
+> +       versaclock5: versaclock_som@6a {
+
+Same comment: "clock-controller@6a" (ignored for now).
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
