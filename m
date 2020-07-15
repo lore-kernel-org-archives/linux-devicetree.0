@@ -2,84 +2,77 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 318D6C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 19:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C18C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 19:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E9222065D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 19:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AAA6207BB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 19:28:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594840912;
-	bh=lamr3/6BF467YBJH7UwzhDNsOlzdaUJg3sdsVPi+8dw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wm2MQW5Y+sNyw66dXRZxTALhif0FtBKZwzaON/N/2e2PIvomXPorFPZWMPRiIW0GN
-	 Jut8nlulhWDVqGWZO3ODkaprOWLBjdyoxD9es+w+gH+MOXbKZiS4bmbsLQ5KDpyxdP
-	 TQ7pBXCCTYc9ys+iJRC+6/WQb71Pws8xGyPv0peM=
+	s=default; t=1594841315;
+	bh=LWNE7zXq9kCU5Nm7k5Qn/MHXBFjAq0SY8reU6vwgpDQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=sRA7hIllHB+ezc/qXFOiyCjHOSBHdDLmIHV3QqttCnz7S1eiJqLNYF6rymLQSfRFl
+	 9E4A4832a+/p17mVLIhSqz2u9CzMNVTN+EMn4E1loY2mQWpCivIv2t4PF1p5eWJUQ1
+	 Da/37A5KysmgcnRPNoCwflflCJf7p0PkQ44hIM1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgGOTVv (ORCPT
+        id S1726758AbgGOT2e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 15:21:51 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35545 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726472AbgGOTVv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 15:21:51 -0400
-Received: by mail-io1-f68.google.com with SMTP id v8so3495109iox.2;
-        Wed, 15 Jul 2020 12:21:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XpO2PmYmWFeYwVE+k7Xx8wRkBjcoL7yVQGNUR1MHgJU=;
-        b=rkVsyUrOiFKQTZPfC3qY0Slb6btxKYkxTkyU3SuU2+1fKn8/dqsgji+xhKbXGKBoiE
-         2X9N3O45rLldVec4orE4oAFPKuvKRgs68cH6d4y+eBgnWqjwSm6LqsFr6eA1yObBHkF7
-         0BdkrLJVwjwBCkHdkfCLksjXyDoltm3ax0QxREuebwJX6OiGVwjXlTruhrWnzEIDcxP4
-         5LyK1avioby7YNLam1AbMrDgLuuBpaAiKKnRhMPMyja95Rh+78XWjuKbkQl1TxDXWIFg
-         ccMkT3vebV6SK4TcMitFDQh5wEMh6oc5Z/a2RxlRjx+dEZyd4rrdxHNR7GxPbIbmn8dU
-         8Q2Q==
-X-Gm-Message-State: AOAM532d6YVxeYVi7FeeCVzmkCVkSeStaRNTJzSIkvAwmRvGAizZCDvw
-        tQ0IrYxmqkxohOantFq91JfPbf/4JA==
-X-Google-Smtp-Source: ABdhPJynn0MDDy8fnolqF32P3LzcbAvnAj/VAANNkoeMF6+dMrtRFB2N5E81MG9VXkm5KqIzuoogWQ==
-X-Received: by 2002:a05:6602:21c3:: with SMTP id c3mr773323ioc.93.1594840910191;
-        Wed, 15 Jul 2020 12:21:50 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id j17sm1478157ilq.7.2020.07.15.12.21.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 12:21:49 -0700 (PDT)
-Received: (nullmailer pid 674969 invoked by uid 1000);
-        Wed, 15 Jul 2020 19:21:48 -0000
-Date:   Wed, 15 Jul 2020 13:21:48 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        alexandre.belloni@bootlin.com, linux@armlinux.org.uk,
-        ludovic.desroches@microchip.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kamel.bouhara@bootlin.com,
-        wsa@kernel.org, linux-i2c@vger.kernel.org, robh+dt@kernel.org
-Subject: Re: [RFC PATCH 1/4] dt-binding: i2c: add generic properties for GPIO
- bus recovery
-Message-ID: <20200715192148.GA674938@bogus>
-References: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
- <20200619141904.910889-2-codrin.ciubotariu@microchip.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200619141904.910889-2-codrin.ciubotariu@microchip.com>
+        Wed, 15 Jul 2020 15:28:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46296 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726491AbgGOT2e (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jul 2020 15:28:34 -0400
+Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 648DC2065F;
+        Wed, 15 Jul 2020 19:28:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594841313;
+        bh=LWNE7zXq9kCU5Nm7k5Qn/MHXBFjAq0SY8reU6vwgpDQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=BbvinmRGG6OWza0FEJvSpk+PqPlHDlMCpIspavT1JQUW+PMdNY/DYlvKelTq2NVEg
+         tBAPKmCsZsisftnt9cvum2ghGwgi0ioxDjneXN/A9/CdXElb+i/inYEcvtt7FXmib8
+         gLdXRnU+DNttp7obW7VBlbHdK7XMQdzHLKY+7Eiw=
+From:   Dinh Nguyen <dinguyen@kernel.org>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     dinguyen@kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH 1/3] arm64: dts: agilex: add nand clocks
+Date:   Wed, 15 Jul 2020 14:28:22 -0500
+Message-Id: <20200715192824.22210-1-dinguyen@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 19 Jun 2020 17:19:01 +0300, Codrin Ciubotariu wrote:
-> The I2C GPIO bus recovery properties consist of two GPIOS and one extra
-> pinctrl state ("gpio" or "recovery"). Not all are mandatory for recovery.
-> 
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c.txt | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
+Add the clock properties for the NAND dts node.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+---
+ arch/arm64/boot/dts/intel/socfpga_agilex.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
+index e300330536b7..ac1b2422e8d4 100644
+--- a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
++++ b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
+@@ -309,6 +309,10 @@
+ 			      <0xffb80000 0x1000>;
+ 			reg-names = "nand_data", "denali_reg";
+ 			interrupts = <0 97 4>;
++			clocks = <&clkmgr AGILEX_NAND_CLK>,
++				 <&clkmgr AGILEX_NAND_X_CLK>,
++				 <&clkmgr AGILEX_NAND_ECC_CLK>;
++			clock-names = "nand", "nand_x", "ecc";
+ 			resets = <&rst NAND_RESET>, <&rst NAND_OCP_RESET>;
+ 			status = "disabled";
+ 		};
+-- 
+2.17.1
+
