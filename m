@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8FBC433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 08:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF95C433EB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 08:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBFDC20672
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 08:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A3C720672
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 08:34:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="JhJWP2KI"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="V6eXBTMb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730111AbgGOIeu (ORCPT
+        id S1730121AbgGOIez (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:34:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53112 "EHLO
+        Wed, 15 Jul 2020 04:34:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728770AbgGOIeu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 04:34:50 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0160CC061755
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 01:34:50 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id b92so2634266pjc.4
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 01:34:49 -0700 (PDT)
+        with ESMTP id S1730110AbgGOIey (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 04:34:54 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B23DC061755
+        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 01:34:54 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k4so2085301pld.12
+        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 01:34:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=p5iXaht479GnGhX17VzhQEzhFfkqxgmW23gJMSjYcgI=;
-        b=JhJWP2KIMyTazKOBVKdxv6a942aDAALi0JdTWyEIrAkKg26chQuO5fK00XKgqYkLjw
-         lYkqvr9fFxnBIFNxlS7iUs2dGXWXeVZml2+4oRfgIVZGPtZ0XBKueuHg/7nkbkiBzAWg
-         aZTOEDyv+dc7OG7QWqDfXQ1bfhC/pt4e9Aa20=
+        bh=YgB0N9dRcA9w6WXseVOOZfeq0/D4u3nNZYgCsL9uaRw=;
+        b=V6eXBTMb1oMmkAgTEHHnyyDfZF9VapwcfOnuzC5FnKWSmcfLUDEbTrNQKhfI+sXwBh
+         qEDph4vNKY4+RmTwKIPyo2OYCjSG3Ekp1cC8j18AWmwZCDZ2iLeB881Va+NIWvqoJ8Tj
+         7voMtlY0djIQm9XoneunlcMwxu0kt6hrh77zc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=p5iXaht479GnGhX17VzhQEzhFfkqxgmW23gJMSjYcgI=;
-        b=ZFy1XOXgwNkwaaJRpbxrN2XjUSoBeKADLKI8jd1kIUEaT9J2BqskJpTdaRxFEfqEJf
-         /2363yPjgt6FWrAXFq6YkHbHRtvkAi27fcneLUxoy1ljharZ95/VDCk3PnAcd9pK2zV+
-         Q9BMJuhSosvua22Vi0rrWKYxyyI7MqMMn1Foljzs1BxOBnxtLrr9EhjSubJQA6Z85fpM
-         iL1PivbogxTSHwkh/wnBgrgM5f94lgn32lK/3MMA0IXGPYc53mI8Mixz4HcZmE4ou0v4
-         pxk7UzekoP9Ym/KZb6QzzQEmwOjMLAQfMj1x6jTnEZ9T6xaI2oxmEYbuRwA6/BECl8gk
-         WToQ==
-X-Gm-Message-State: AOAM5327iJGcmTP9r++Kdau68Amoq8QnJ1ZBm1H0VaGMrZFnr7nHx9uw
-        XGwPh57kPC/Y/SUsfWrcrLUvvA==
-X-Google-Smtp-Source: ABdhPJwUM/KOTmuZSRAHhXmTz7Hqdz2ADBYxx5P0O5G43ml9Ecief/OST/FVbAgERz6lKiYBLLVTaA==
-X-Received: by 2002:a17:902:b113:: with SMTP id q19mr7393133plr.170.1594802089528;
-        Wed, 15 Jul 2020 01:34:49 -0700 (PDT)
+        bh=YgB0N9dRcA9w6WXseVOOZfeq0/D4u3nNZYgCsL9uaRw=;
+        b=K+8bT0Sbdd79ieIFMYJdAapcktOJD4s9BGXMGmMLpN7vCLrsUDSUbyEuGnKs5keCwP
+         wH+afEtvFiHcxiXQ2X4PcDVEiobQ9EvV4GmOZw3Gt61xvmQamDTYWxU5D1/77kS23QhX
+         f2PFGQppNf4/M99eCczqClDuTMlv6KFXdNDwoMrVzcNdPRUddZTbaMY6kquRm3zEHlR+
+         rzTza9oRqR/noAsf3+/R8uU3jtAt8Mv0LOUo5qT0Bnd+W+cRuSZH+8qmu8Lz4WRQz3df
+         5TlYlYjF/xY60wvoZXdormKmPNMX6ejfbr+InTmlSPcbwus1dIc3LioYAn6u4uZQuoJF
+         D78w==
+X-Gm-Message-State: AOAM532woPLVrlISfzBV9v0T6mhXMQvz4RdacFAxUi7ZPSXHDV7l+JFS
+        MFfcMZURIMqN2D6tsDGsQy7KGw==
+X-Google-Smtp-Source: ABdhPJy/1St0AM52RbZ1D2GNO3p7hMgJK4ErEOABtcyvh5WcN2PObiswr/7zW2yu+DCXFJ9PZZAJJQ==
+X-Received: by 2002:a17:90a:db48:: with SMTP id u8mr8358830pjx.169.1594802094012;
+        Wed, 15 Jul 2020 01:34:54 -0700 (PDT)
 Received: from localhost.localdomain ([2405:201:c809:c7d5:9887:56a8:c916:cfdb])
-        by smtp.gmail.com with ESMTPSA id m92sm1467584pje.13.2020.07.15.01.34.45
+        by smtp.gmail.com with ESMTPSA id m92sm1467584pje.13.2020.07.15.01.34.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 01:34:48 -0700 (PDT)
+        Wed, 15 Jul 2020 01:34:53 -0700 (PDT)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
 Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
@@ -64,9 +64,9 @@ Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
         linux-kernel@vger.kernel.org,
         linux-amarula <linux-amarula@amarulasolutions.com>,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v6 2/7] arm64: dts: rk3399pro: vmarc-som: Fix sorting nodes, properties
-Date:   Wed, 15 Jul 2020 14:04:13 +0530
-Message-Id: <20200715083418.112003-3-jagan@amarulasolutions.com>
+Subject: [PATCH v6 3/7] arm64: dts: rk3399pro: vmarc-som: Move supply regulators into Carrier
+Date:   Wed, 15 Jul 2020 14:04:14 +0530
+Message-Id: <20200715083418.112003-4-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200715083418.112003-1-jagan@amarulasolutions.com>
 References: <20200715083418.112003-1-jagan@amarulasolutions.com>
@@ -77,93 +77,80 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Fix node, properties sorting on RockPI N10 board dts(i) files.
+Supply regulators are common across different variants of vmarc SOM's
+since the Type C power controller IC is part of the carrier board.
+
+So, move the supply regulators into carrier board dtsi.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
 Changes for v6:
 - spilt of previous version Trivial patch
 
- .../dts/rockchip/rk3399pro-rock-pi-n10.dts    |  2 +-
- .../dts/rockchip/rk3399pro-vmarc-som.dtsi     | 35 +++++++++----------
- 2 files changed, 18 insertions(+), 19 deletions(-)
+ .../dts/rockchip-radxa-dalang-carrier.dtsi    | 19 +++++++++++++++++++
+ .../dts/rockchip/rk3399pro-vmarc-som.dtsi     | 19 -------------------
+ 2 files changed, 19 insertions(+), 19 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-rock-pi-n10.dts b/arch/arm64/boot/dts/rockchip/rk3399pro-rock-pi-n10.dts
-index a1783e7f769a..539f4005386d 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399pro-rock-pi-n10.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399pro-rock-pi-n10.dts
-@@ -8,8 +8,8 @@
- /dts-v1/;
- #include "rk3399.dtsi"
- #include "rk3399-opp.dtsi"
--#include "rk3399pro-vmarc-som.dtsi"
- #include <arm/rockchip-radxa-dalang-carrier.dtsi>
-+#include "rk3399pro-vmarc-som.dtsi"
+diff --git a/arch/arm/boot/dts/rockchip-radxa-dalang-carrier.dtsi b/arch/arm/boot/dts/rockchip-radxa-dalang-carrier.dtsi
+index 176b53b8e41a..00b200a62263 100644
+--- a/arch/arm/boot/dts/rockchip-radxa-dalang-carrier.dtsi
++++ b/arch/arm/boot/dts/rockchip-radxa-dalang-carrier.dtsi
+@@ -11,6 +11,25 @@ / {
+ 	chosen {
+ 		stdout-path = "serial2:1500000n8";
+ 	};
++
++	vcc12v_dcin: vcc12v-dcin-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc12v_dcin";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <12000000>;
++		regulator-max-microvolt = <12000000>;
++	};
++
++	vcc5v0_sys: vcc5v0-sys-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc5v0_sys";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&vcc12v_dcin>;
++	};
+ };
  
- / {
- 	model = "Radxa ROCK Pi N10";
+ &gmac {
 diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-index e11538171e67..121a430d6a70 100644
+index 121a430d6a70..d8fa8127d9dc 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
 +++ b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-@@ -76,8 +76,8 @@ &gmac {
- 
- &i2c0 {
- 	clock-frequency = <400000>;
--	i2c-scl-rising-time-ns = <180>;
- 	i2c-scl-falling-time-ns = <30>;
-+	i2c-scl-rising-time-ns = <180>;
- 	status = "okay";
- 
- 	rk809: pmic@20 {
-@@ -323,8 +323,22 @@ hym8563: hym8563@51 {
- &io_domains {
- 	status = "okay";
- 	bt656-supply = <&vcca_1v8>;
--	sdmmc-supply = <&vccio_sd>;
- 	gpio1830-supply = <&vccio_3v0>;
-+	sdmmc-supply = <&vccio_sd>;
-+};
-+
-+&pinctrl {
-+	hym8563 {
-+		hym8563_int: hym8563-int {
-+			rockchip,pins = <4 RK_PD6 0 &pcfg_pull_up>;
-+		};
-+	};
-+
-+	pmic {
-+		pmic_int_l: pmic-int-l {
-+			rockchip,pins = <1 RK_PC2 0 &pcfg_pull_up>;
-+		};
-+	};
- };
- 
- &pmu_io_domains {
-@@ -341,22 +355,7 @@ &sdhci {
- };
- 
- &tsadc {
--	status = "okay";
- 	rockchip,hw-tshut-mode = <1>;
- 	rockchip,hw-tshut-polarity = <1>;
--};
+@@ -18,25 +18,6 @@ clkin_gmac: external-gmac-clock {
+ 		clock-output-names = "clkin_gmac";
+ 		#clock-cells = <0>;
+ 	};
 -
--&pinctrl {
--	hym8563 {
--		hym8563_int: hym8563-int {
--			rockchip,pins = <4 RK_PD6 0 &pcfg_pull_up>;
--		};
+-	vcc12v_dcin: vcc12v-dcin-regulator {
+-		compatible = "regulator-fixed";
+-		regulator-name = "vcc12v_dcin";
+-		regulator-always-on;
+-		regulator-boot-on;
+-		regulator-min-microvolt = <12000000>;
+-		regulator-max-microvolt = <12000000>;
 -	};
 -
--	pmic {
--		pmic_int_l: pmic-int-l {
--			rockchip,pins =
--				<1 RK_PC2 0 &pcfg_pull_up>;
--		};
+-	vcc5v0_sys: vcc5v0-sys-regulator {
+-		compatible = "regulator-fixed";
+-		regulator-name = "vcc5v0_sys";
+-		regulator-always-on;
+-		regulator-boot-on;
+-		regulator-min-microvolt = <5000000>;
+-		regulator-max-microvolt = <5000000>;
+-		vin-supply = <&vcc12v_dcin>;
 -	};
-+	status = "okay";
  };
+ 
+ &cpu_l0 {
 -- 
 2.25.1
 
