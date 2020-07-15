@@ -2,170 +2,134 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A99C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 08:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 712CDC433E4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 08:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A032206E9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 08:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B7E720657
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 08:43:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729304AbgGOIfo (ORCPT
+        id S1729585AbgGOIns (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:35:44 -0400
-Received: from mga02.intel.com ([134.134.136.20]:19841 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729192AbgGOIfn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jul 2020 04:35:43 -0400
-IronPort-SDR: EjSidi9PFwBEqBOegvAGd8+vAoSfnYhIRlN3ZwzT3ASs3RCJ/n2SmC5Iwmm2jlNGaw34CaHKg0
- TaunBsvrGUIQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="137234837"
-X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
-   d="scan'208";a="137234837"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 01:35:43 -0700
-IronPort-SDR: wom4Vga3jcrql6t16qwoyNREtupcp1VXNFk8PTdDNTWT21FlEY3nuBl3p7s93G5W0Or1lhgm1D
- gc5c3v+2bDrQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
-   d="scan'208";a="459992091"
-Received: from yren3-mobl.ccr.corp.intel.com ([10.249.174.224])
-  by orsmga005.jf.intel.com with ESMTP; 15 Jul 2020 01:35:40 -0700
-Message-ID: <d2eeca29328a87433a46c35947ffb490d49c168a.camel@intel.com>
-Subject: Re: [RFC PATCH 4/4] thermal: Modify thermal governors to do nothing
- for "cold" trip points
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Thara Gopinath <thara.gopinath@linaro.org>,
-        daniel.lezcano@linaro.org, robh+dt@kernel.org
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 15 Jul 2020 16:35:39 +0800
-In-Reply-To: <20200710135154.181454-5-thara.gopinath@linaro.org>
-References: <20200710135154.181454-1-thara.gopinath@linaro.org>
-         <20200710135154.181454-5-thara.gopinath@linaro.org>
+        Wed, 15 Jul 2020 04:43:48 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39018 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729466AbgGOIns (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 04:43:48 -0400
+Received: by mail-oi1-f196.google.com with SMTP id w17so1629890oie.6;
+        Wed, 15 Jul 2020 01:43:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wBSjJT0ORrybEKumemGZpkTJ/Tv11w9vz0K05d4A6Os=;
+        b=CbIvxwbN3InWD5iqe3TXYMPN0UDxbl8A+hNhBd1LmaJF2YeZOQcYUKRqFJcY8e1dm1
+         PTgb8OtSFnufGOJ879bfwEDEmsihs/vr96qon30UoDcplUgfYnoWg8ZcdKvLZZCBfm04
+         a9jZRhyDA5V2P5DntpD3xL5ezyYuDl3iHgiKBNbpHwg2TVPp4tgGTwYjUnJEQ1ZPfKVm
+         JaG9E+JFFTGY0pgbrafVs0hPcLvaUUdqwKusV+2Ue8+9zUC3oZhffc6Q2Vqtx6joVDTU
+         ww3nwTXqJVWdluxkJJ/+wZ0sf/cXHO3FDJ7UE5dJKdZpNk1yiZTQsbOWBdyuYY75zr7u
+         v0ow==
+X-Gm-Message-State: AOAM532mPUm0wiPNiWb9PTI4QnH6d//rAT8s4nY6SkvEIA6tmqjyYrLe
+        Qrsoh9WwHdVOIwrgzz0waV/UBVDb/0laCC7upnA=
+X-Google-Smtp-Source: ABdhPJw86hPfeV6CTJ8KN+UQ+NcI3bICPWChvBe3FWmE48Q4aabU0FIIinMm3s5aHvZ94WJeCrwGRqzFJIK4nhKEjXM=
+X-Received: by 2002:a05:6808:64a:: with SMTP id z10mr6957983oih.54.1594802626935;
+ Wed, 15 Jul 2020 01:43:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <1567584941-13690-1-git-send-email-biju.das@bp.renesas.com> <1567584941-13690-2-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1567584941-13690-2-git-send-email-biju.das@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 15 Jul 2020 10:43:36 +0200
+Message-ID: <CAMuHMdVZkjGDFmeQ9XkOqq-ogfSZz99hd0=N-OYLai4UEzKwAQ@mail.gmail.com>
+Subject: Re: [PATCH RESEND v7 1/3] dt-bindings: usb: hd3ss3220 device tree
+ binding document
+To:     Biju Das <biju.das@bp.renesas.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 2020-07-10 at 09:51 -0400, Thara Gopinath wrote:
-> For now, thermal governors do not support monitoring of falling
-> temperature. Hence, in case of calls to the governor for trip points
-> marked
-> as cold, return doing nothing.
-> 
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> ---
->  drivers/thermal/gov_bang_bang.c       | 8 ++++++++
->  drivers/thermal/gov_fair_share.c      | 8 ++++++++
->  drivers/thermal/gov_power_allocator.c | 8 ++++++++
->  drivers/thermal/gov_step_wise.c       | 8 ++++++++
->  4 files changed, 32 insertions(+)
+Hi Biju,
 
-userspace governor does not support cold trip point neither.
+On Wed, Sep 4, 2019 at 10:22 AM Biju Das <biju.das@bp.renesas.com> wrote:
+> Add device tree binding document for TI HD3SS3220 Type-C DRP port
+> controller driver.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-So how about adding the check in handle_non_critical_trips first, and
-remove the check later, after all the governors support cold trip?
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
+> @@ -0,0 +1,38 @@
+> +TI HD3SS3220 TypeC DRP Port Controller.
+> +
+> +Required properties:
+> + - compatible: Must be "ti,hd3ss3220".
+> + - reg: I2C slave address, must be 0x47 or 0x67 based on ADDR pin.
+> + - interrupts: An interrupt specifier.
+> +
+> +Required sub-node:
+> + - connector: The "usb-c-connector" attached to the hd3ss3220 chip. The
+> +   bindings of the connector node are specified in:
+> +
+> +       Documentation/devicetree/bindings/connector/usb-connector.txt
+> +
+> +Example:
+> +hd3ss3220@47 {
+> +       compatible = "ti,hd3ss3220";
+> +       reg = <0x47>;
+> +       interrupt-parent = <&gpio6>;
+> +       interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+> +
+> +       connector {
+> +               compatible = "usb-c-connector";
+> +               label = "USB-C";
+> +               data-role = "dual";
+> +
+> +               ports {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +
+> +                       port@1 {
 
-thanks,
-rui
-> 
-> diff --git a/drivers/thermal/gov_bang_bang.c
-> b/drivers/thermal/gov_bang_bang.c
-> index 991a1c54296d..8324d13de1e7 100644
-> --- a/drivers/thermal/gov_bang_bang.c
-> +++ b/drivers/thermal/gov_bang_bang.c
-> @@ -99,6 +99,14 @@ static void thermal_zone_trip_update(struct
-> thermal_zone_device *tz, int trip)
->  static int bang_bang_control(struct thermal_zone_device *tz, int
-> trip)
->  {
->  	struct thermal_instance *instance;
-> +	enum thermal_trip_type trip_type;
-> +
-> +	/* Return doing nothing in case of cold trip point */
-> +	if (trip != THERMAL_TRIPS_NONE) {
-> +		tz->ops->get_trip_type(tz, trip, &trip_type);
-> +		if (trip_type == THERMAL_TRIP_COLD)
-> +			return 0;
-> +	}
->  
->  	thermal_zone_trip_update(tz, trip);
->  
-> diff --git a/drivers/thermal/gov_fair_share.c
-> b/drivers/thermal/gov_fair_share.c
-> index aaa07180ab48..c0adce525faa 100644
-> --- a/drivers/thermal/gov_fair_share.c
-> +++ b/drivers/thermal/gov_fair_share.c
-> @@ -81,6 +81,14 @@ static int fair_share_throttle(struct
-> thermal_zone_device *tz, int trip)
->  	int total_weight = 0;
->  	int total_instance = 0;
->  	int cur_trip_level = get_trip_level(tz);
-> +	enum thermal_trip_type trip_type;
-> +
-> +	/* Return doing nothing in case of cold trip point */
-> +	if (trip != THERMAL_TRIPS_NONE) {
-> +		tz->ops->get_trip_type(tz, trip, &trip_type);
-> +		if (trip_type == THERMAL_TRIP_COLD)
-> +			return 0;
-> +	}
->  
->  	list_for_each_entry(instance, &tz->thermal_instances, tz_node)
-> {
->  		if (instance->trip != trip)
-> diff --git a/drivers/thermal/gov_power_allocator.c
-> b/drivers/thermal/gov_power_allocator.c
-> index 44636475b2a3..2644ad4d4032 100644
-> --- a/drivers/thermal/gov_power_allocator.c
-> +++ b/drivers/thermal/gov_power_allocator.c
-> @@ -613,8 +613,16 @@ static int power_allocator_throttle(struct
-> thermal_zone_device *tz, int trip)
->  {
->  	int ret;
->  	int switch_on_temp, control_temp;
-> +	enum thermal_trip_type trip_type;
->  	struct power_allocator_params *params = tz->governor_data;
->  
-> +	/* Return doing nothing in case of cold trip point */
-> +	if (trip != THERMAL_TRIPS_NONE) {
-> +		tz->ops->get_trip_type(tz, trip, &trip_type);
-> +		if (trip_type == THERMAL_TRIP_COLD)
-> +			return 0;
-> +	}
-> +
->  	/*
->  	 * We get called for every trip point but we only need to do
->  	 * our calculations once
-> diff --git a/drivers/thermal/gov_step_wise.c
-> b/drivers/thermal/gov_step_wise.c
-> index 2ae7198d3067..009aefda0441 100644
-> --- a/drivers/thermal/gov_step_wise.c
-> +++ b/drivers/thermal/gov_step_wise.c
-> @@ -186,6 +186,14 @@ static void thermal_zone_trip_update(struct
-> thermal_zone_device *tz, int trip)
->  static int step_wise_throttle(struct thermal_zone_device *tz, int
-> trip)
->  {
->  	struct thermal_instance *instance;
-> +	enum thermal_trip_type trip_type;
-> +
-> +	/* For now, return doing nothing in case of cold trip point */
-> +	if (trip != THERMAL_TRIPS_NONE) {
-> +		tz->ops->get_trip_type(tz, trip, &trip_type);
-> +		if (trip_type == THERMAL_TRIP_COLD)
-> +			return 0;
-> +	}
->  
->  	thermal_zone_trip_update(tz, trip);
->  
+This does not comply with
+Documentation/devicetree/bindings/connector/usb-connector.yaml:
 
+    connector: ports: 'port@0' is a required property
+
+> +                               reg = <1>;
+> +                               hd3ss3220_ep: endpoint {
+> +                                       remote-endpoint = <&usb3_role_switch>;
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +};
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
