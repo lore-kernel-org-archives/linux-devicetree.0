@@ -2,116 +2,277 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B10C433E6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 06:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34270C433E7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 06:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CBB82074B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 06:33:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1147E206D5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 06:36:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DIEHXGyX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728672AbgGOGdo (ORCPT
+        id S1727990AbgGOGg5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 02:33:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34322 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725823AbgGOGdo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 02:33:44 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 301E4C061755;
-        Tue, 14 Jul 2020 23:33:44 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 06794BC069;
-        Wed, 15 Jul 2020 06:33:39 +0000 (UTC)
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: Xilinx video IP cores
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     hyun.kwon@xilinx.com, mchehab@kernel.org, robh+dt@kernel.org,
-        michal.simek@xilinx.com, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200705075524.22657-1-grandmaster@al2klimov.de>
- <20200714235724.GR5854@pendragon.ideasonboard.com>
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Message-ID: <5fca4c17-9e83-3936-0d8f-ad73ae760033@al2klimov.de>
-Date:   Wed, 15 Jul 2020 08:33:35 +0200
+        Wed, 15 Jul 2020 02:36:57 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:20062 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728170AbgGOGg4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jul 2020 02:36:56 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594795015; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Of1lEjQiSIvpTaIAus67/5DrtPGb3n1n8NpZNwoV/Mo=; b=DIEHXGyXmCXXiywpeBMgSCKM4uB49B/U5GOW05DefIhXaWEwbwbFJNHsmwdxAZJSVh08qYmv
+ ISBpbJBqft0R3GTXyelMJ25FSfJIyb/gh8UQ2FqiN+g/Mro5aAopa6oCB0YRIjw3uNP9BjPM
+ nVUl+PRdLuziC7d81dR+yjFTKxE=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n13.prod.us-east-1.postgun.com with SMTP id
+ 5f0ea406d3d650842223dbbd (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 15 Jul 2020 06:36:54
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C02F7C43395; Wed, 15 Jul 2020 06:36:53 +0000 (UTC)
+Received: from [192.168.0.109] (unknown [183.82.138.211])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3E6B2C433CA;
+        Wed, 15 Jul 2020 06:36:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3E6B2C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH v3 2/4] dt-bindings: clock: Add YAML schemas for LPASS
+ clocks on SC7180
+To:     Rob Herring <robh@kernel.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
+References: <1591809487-5588-1-git-send-email-tdas@codeaurora.org>
+ <1591809487-5588-3-git-send-email-tdas@codeaurora.org>
+ <20200617222925.GA2947130@bogus>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <0b6927ca-6009-c2c1-c2d1-96bba99cdcc0@codeaurora.org>
+Date:   Wed, 15 Jul 2020 12:06:46 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200714235724.GR5854@pendragon.ideasonboard.com>
+In-Reply-To: <20200617222925.GA2947130@bogus>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Spamd-Bar: +
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Rob,
 
+Thanks for the review.
 
-Am 15.07.20 um 01:57 schrieb Laurent Pinchart:
-> Hi Alexander,
-> 
-> Thank you for the patch.
-> 
-> The subject line should be
-> 
-> dt-bindings: media: xilinx: Replace HTTP links with HTTPS ones
-> 
-> On Sun, Jul 05, 2020 at 09:55:24AM +0200, Alexander A. Klimov wrote:
->> Rationale:
->> Reduces attack surface on kernel devs opening the links for MITM
->> as HTTPS traffic is much harder to manipulate.
+On 6/18/2020 3:59 AM, Rob Herring wrote:
+> On Wed, Jun 10, 2020 at 10:48:05PM +0530, Taniya Das wrote:
+>> The LPASS(Low Power Audio Subsystem) clock provider have a bunch of generic
+>> properties that are needed in a device tree. Also add clock ids for GCC
+>> LPASS and LPASS Core clock IDs for LPASS client to request for the clocks.
 >>
->> Deterministic algorithm:
->> For each file:
->>    If not .svg:
->>      For each line:
->>        If doesn't contain `\bxmlns\b`:
->>          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->>            If both the HTTP and HTTPS versions
->>            return 200 OK and serve the same content:
->>              Replace HTTP with HTTPS.
->>
->> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> 
-> Will you get this patch merged as part of a bigger series, or do you
-> expect us to take care of it ? In the latter case, if you agree with the
-I've just followed the patch submission instructions as for any 
-non-treewide patch. So yes, I assume the people I write to take care of 
-the patch.
-
-> subject line change, there's no need to resubmit, I can fix this when
-> applying the patch.
-OK.
-
-> 
+>> Signed-off-by: Taniya Das <tdas@codeaurora.org>
 >> ---
->>   Continuing my work started at 93431e0607e5.
+>>   .../bindings/clock/qcom,sc7180-lpasscorecc.yaml    | 98 ++++++++++++++++++++++
+>>   include/dt-bindings/clock/qcom,gcc-sc7180.h        |  1 +
+>>   .../dt-bindings/clock/qcom,lpasscorecc-sc7180.h    | 29 +++++++
+>>   3 files changed, 128 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
+>>   create mode 100644 include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h
 >>
->>   If there are any URLs to be removed completely or at least not HTTPSified:
->>   Just clearly say so and I'll *undo my change*.
->>   See also https://lkml.org/lkml/2020/6/27/64
->>
->>   If there are any valid, but yet not changed URLs:
->>   See https://lkml.org/lkml/2020/6/26/837
->>
->>   Documentation/devicetree/bindings/media/xilinx/video.txt | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/media/xilinx/video.txt b/Documentation/devicetree/bindings/media/xilinx/video.txt
->> index 68ac210e688e..d0335ca0cd57 100644
->> --- a/Documentation/devicetree/bindings/media/xilinx/video.txt
->> +++ b/Documentation/devicetree/bindings/media/xilinx/video.txt
->> @@ -32,4 +32,4 @@ The following properties are common to all Xilinx video IP cores.
->>     defaults to "mono".
->>   
->>   
->> -[UG934] http://www.xilinx.com/support/documentation/ip_documentation/axi_videoip/v1_0/ug934_axi_videoIP.pdf
->> +[UG934] https://www.xilinx.com/support/documentation/ip_documentation/axi_videoip/v1_0/ug934_axi_videoIP.pdf
+>> diff --git a/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml b/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
+>> new file mode 100644
+>> index 0000000..5af4048
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
+>> @@ -0,0 +1,98 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/clock/qcom,sc7180-lpasscorecc.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Qualcomm LPASS Core Clock Controller Binding for SC7180
+>> +
+>> +maintainers:
+>> +  - Taniya Das <tdas@codeaurora.org>
+>> +
+>> +description: |
+>> +  Qualcomm LPASS core clock control module which supports the clocks and
+>> +  power domains on SC7180.
+>> +
+>> +  See also:
+>> +  - dt-bindings/clock/qcom,lpasscorecc-sc7180.h
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - qcom,sc7180-lpasshm
+>> +      - qcom,sc7180-lpasscorecc
+>> +
+>> +  clocks:
+>> +    items:
+>> +      - description: gcc_lpass_sway clock from GCC
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: iface
+>> +
+>> +  power-domains:
+>> +    maxItems: 1
+>> +
+>> +  '#clock-cells':
+>> +    const: 1
+>> +
+>> +  '#power-domain-cells':
+>> +    const: 1
+>> +
+>> +  reg:
+>> +    maxItems: 2
 > 
+> You need a 'minItems: 1' here instead.
+> 
+
+Will update in the next patch.
+
+>> +    items:
+>> +      - description: lpass core cc register
+>> +      - description: lpass audio cc register
+>> +
+>> +  reg-names:
+>> +    items:
+>> +      - const: lpass_core_cc
+>> +      - const: lpass_audio_cc
+>> +
+>> +if:
+>> +  properties:
+>> +    compatible:
+>> +      contains:
+>> +        const: qcom,sc7180-lpasshm
+>> +then:
+>> +  properties:
+>> +    reg:
+>> +      maxItems: 1
+> 
+> And need an:
+> 
+> else:
+>    properties:
+>      reg:
+>        minItems: 2
+
+Will take care of it.
+> 
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +  - clock-names
+>> +  - '#clock-cells'
+>> +  - '#power-domain-cells'
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/clock/qcom,gcc-sc7180.h>
+>> +    #include <dt-bindings/clock/qcom,lpasscorecc-sc7180.h>
+>> +    clock-controller@63000000 {
+>> +      compatible = "qcom,sc7180-lpasshm";
+>> +        reg = <0 0x63000000 0 0x28>;
+> 
+> Default sizes are 1 cell.
+
+Yes, my bad, will correct in the next patch.
+> 
+>> +        clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>;
+>> +        clock-names = "iface";
+>> +        #clock-cells = <1>;
+>> +        #power-domain-cells = <1>;
+>> +    };
+>> +
+>> +  - |
+>> +    clock-controller@62d00000 {
+>> +        compatible = "qcom,sc7180-lpasscorecc";
+>> +        reg = <0 0x62d00000 0 0x50000>,
+>> +            <0 0x62780000 0 0x30000>;
+>> +        reg-names = "lpass_core_cc", "lpass_audio_cc";
+>> +        clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>;
+>> +        clock-names = "iface";
+>> +        power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
+>> +        #clock-cells = <1>;
+>> +        #power-domain-cells = <1>;
+>> +    };
+>> +...
+>> diff --git a/include/dt-bindings/clock/qcom,gcc-sc7180.h b/include/dt-bindings/clock/qcom,gcc-sc7180.h
+>> index 992b67b..bdf43adc 100644
+>> --- a/include/dt-bindings/clock/qcom,gcc-sc7180.h
+>> +++ b/include/dt-bindings/clock/qcom,gcc-sc7180.h
+>> @@ -138,6 +138,7 @@
+>>   #define GCC_MSS_Q6_MEMNOC_AXI_CLK				128
+>>   #define GCC_MSS_SNOC_AXI_CLK					129
+>>   #define GCC_SEC_CTRL_CLK_SRC					130
+>> +#define GCC_LPASS_CFG_NOC_SWAY_CLK				131
+>>   
+>>   /* GCC resets */
+>>   #define GCC_QUSB2PHY_PRIM_BCR					0
+>> diff --git a/include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h b/include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h
+>> new file mode 100644
+>> index 0000000..a55d01d
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h
+>> @@ -0,0 +1,29 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +/*
+>> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +#ifndef _DT_BINDINGS_CLK_QCOM_LPASS_CORE_CC_SC7180_H
+>> +#define _DT_BINDINGS_CLK_QCOM_LPASS_CORE_CC_SC7180_H
+>> +
+>> +/* LPASS_CORE_CC clocks */
+>> +#define LPASS_LPAAUDIO_DIG_PLL				0
+>> +#define LPASS_LPAAUDIO_DIG_PLL_OUT_ODD			1
+>> +#define CORE_CLK_SRC					2
+>> +#define EXT_MCLK0_CLK_SRC				3
+>> +#define LPAIF_PRI_CLK_SRC				4
+>> +#define LPAIF_SEC_CLK_SRC				5
+>> +#define LPASS_AUDIO_CORE_CORE_CLK			6
+>> +#define LPASS_AUDIO_CORE_EXT_MCLK0_CLK			7
+>> +#define LPASS_AUDIO_CORE_LPAIF_PRI_IBIT_CLK		8
+>> +#define LPASS_AUDIO_CORE_LPAIF_SEC_IBIT_CLK		9
+>> +#define LPASS_AUDIO_CORE_SYSNOC_MPORT_CORE_CLK		10
+>> +
+>> +/* LPASS Core power domains */
+>> +#define LPASS_CORE_HM_GDSCR				0
+>> +
+>> +/* LPASS Audio power domains */
+>> +#define LPASS_AUDIO_HM_GDSCR				0
+>> +#define LPASS_PDC_HM_GDSCR				1
+>> +
+>> +#endif
+>> -- 
+>> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+>> of the Code Aurora Forum, hosted by the  Linux Foundation.
+>>
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
+
+--
