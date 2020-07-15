@@ -2,295 +2,234 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02135C433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 09:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A74B4C433E7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 10:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDEF72064B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 09:43:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="f/wlfLjB"
+	by mail.kernel.org (Postfix) with ESMTP id 8B01C206F5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 10:04:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730738AbgGOJnu (ORCPT
+        id S1731000AbgGOKEV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 05:43:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35598 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729592AbgGOJnt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 05:43:49 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 024B0C061755;
-        Wed, 15 Jul 2020 02:43:49 -0700 (PDT)
-Received: from Q.local (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4E130564;
-        Wed, 15 Jul 2020 11:43:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1594806226;
-        bh=R72+AIB3W1UESS+YG/XWiz5Ka/52SFPsZeV0CaaHkgg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f/wlfLjBDvmE6FjlafxtGYIXIc6yLoBUNX0AHKgxs73ikGZmYmtis9pYvIb9Ybom7
-         v+tTLe6E+wB7be8i3VJ/UxmZ34hlnVsV3VbO6FZeLtv+nAgETB9fv0/8lXXnFxYF/v
-         /zSdjkhMWBGe4m52eJUFrEj3nosD+dzeAy5f3bKo=
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-To:     linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        sakari.ailus@iki.fi, Rob Herring <robh+dt@kernel.org>
-Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Hyun Kwon <hyunk@xilinx.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v10.1 3/4] dt-bindings: media: i2c: Add bindings for IMI RDACM2x
-Date:   Wed, 15 Jul 2020 10:43:41 +0100
-Message-Id: <20200715094341.4123896-1-kieran.bingham+renesas@ideasonboard.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200612144713.502006-4-kieran.bingham+renesas@ideasonboard.com>
-References: <20200612144713.502006-4-kieran.bingham+renesas@ideasonboard.com>
+        Wed, 15 Jul 2020 06:04:21 -0400
+Received: from mx.socionext.com ([202.248.49.38]:44653 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726023AbgGOKES (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jul 2020 06:04:18 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 15 Jul 2020 19:04:16 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id D7A7860060;
+        Wed, 15 Jul 2020 19:04:16 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 15 Jul 2020 19:04:16 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 80C131A0507;
+        Wed, 15 Jul 2020 19:04:16 +0900 (JST)
+Received: from [10.212.4.153] (unknown [10.212.4.153])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id CA66912012E;
+        Wed, 15 Jul 2020 19:04:15 +0900 (JST)
+Subject: Re: [PATCH v5 2/6] PCI: uniphier: Add misc interrupt handler to
+ invoke PME and AER
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?B?WWFtYWRhLCBNYXNhaGlyby/lsbHnlLAg55yf5byY?= 
+        <yamada.masahiro@socionext.com>, Marc Zyngier <maz@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1592469493-1549-3-git-send-email-hayashi.kunihiko@socionext.com>
+ <20200714132727.GA13061@e121166-lin.cambridge.arm.com>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <293ed6fe-6e73-f664-c26e-0aef744ce933@socionext.com>
+Date:   Wed, 15 Jul 2020 19:04:13 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200714132727.GA13061@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=iso-2022-jp; format=flowed; delsp=yes
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Hi Lorenzo,
 
-The IMI RDACM20 and IMI RDACM21 are Gigabit Multimedia Serial Link
-(GMSL) camera capable of transmitting video and I2C control messages on
-a coax cable physical link for automotive applications.
+On 2020/07/14 22:27, Lorenzo Pieralisi wrote:
+> On Thu, Jun 18, 2020 at 05:38:09PM +0900, Kunihiko Hayashi wrote:
+>> The misc interrupts consisting of PME, AER, and Link event, is handled
+>> by INTx handler, however, these interrupts should be also handled by
+>> MSI handler.
+> 
+> Define what you mean please.
 
-Document their device tree bindings.
+AER/PME signals are assigned to the same signal as MSI by internal logic,
+that is, AER/PME and MSI are assigned to the same GIC interrupt number.
+So it's necessary to modify the code to call the misc handler from MSI handler.
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+I'll rewrite it next.
+
+> 
+>> This adds the function uniphier_pcie_misc_isr() that handles misc
+>> interrupts, which is called from both INTx and MSI handlers.
+>> This function detects PME and AER interrupts with the status register,
+>> and invoke PME and AER drivers related to MSI.
+>>
+>> And this sets the mask for misc interrupts from INTx if MSI is enabled
+>> and sets the mask for misc interrupts from MSI if MSI is disabled.
+>>
+>> Cc: Marc Zyngier <maz@kernel.org>
+>> Cc: Jingoo Han <jingoohan1@gmail.com>
+>> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>> ---
+>>   drivers/pci/controller/dwc/pcie-uniphier.c | 57 ++++++++++++++++++++++++------
+>>   1 file changed, 46 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+>> index a5401a0..5ce2479 100644
+>> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+>> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+>> @@ -44,7 +44,9 @@
+>>   #define PCL_SYS_AUX_PWR_DET		BIT(8)
+>>   
+>>   #define PCL_RCV_INT			0x8108
+>> +#define PCL_RCV_INT_ALL_INT_MASK	GENMASK(28, 25)
+>>   #define PCL_RCV_INT_ALL_ENABLE		GENMASK(20, 17)
+>> +#define PCL_RCV_INT_ALL_MSI_MASK	GENMASK(12, 9)
+>>   #define PCL_CFG_BW_MGT_STATUS		BIT(4)
+>>   #define PCL_CFG_LINK_AUTO_BW_STATUS	BIT(3)
+>>   #define PCL_CFG_AER_RC_ERR_MSI_STATUS	BIT(2)
+>> @@ -167,7 +169,15 @@ static void uniphier_pcie_stop_link(struct dw_pcie *pci)
+>>   
+>>   static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
+>>   {
+>> -	writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
+>> +	u32 val;
+>> +
+>> +	val = PCL_RCV_INT_ALL_ENABLE;
+>> +	if (pci_msi_enabled())
+>> +		val |= PCL_RCV_INT_ALL_INT_MASK;
+>> +	else
+>> +		val |= PCL_RCV_INT_ALL_MSI_MASK;
+>> +
+>> +	writel(val, priv->base + PCL_RCV_INT);
+>>   	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
+>>   }
+>>   
+>> @@ -231,32 +241,56 @@ static const struct irq_domain_ops uniphier_intx_domain_ops = {
+>>   	.map = uniphier_pcie_intx_map,
+>>   };
+>>   
+>> -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
+>> +static void uniphier_pcie_misc_isr(struct pcie_port *pp, bool is_msi)
+>>   {
+>> -	struct pcie_port *pp = irq_desc_get_handler_data(desc);
+>>   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>>   	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+>> -	struct irq_chip *chip = irq_desc_get_chip(desc);
+>> -	unsigned long reg;
+>> -	u32 val, bit, virq;
+>> +	u32 val, virq;
+>>   
+>> -	/* INT for debug */
+>>   	val = readl(priv->base + PCL_RCV_INT);
+>>   
+>>   	if (val & PCL_CFG_BW_MGT_STATUS)
+>>   		dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
+>> +
+>>   	if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
+>>   		dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
+>> -	if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+>> -		dev_dbg(pci->dev, "Root Error\n");
+>> -	if (val & PCL_CFG_PME_MSI_STATUS)
+>> -		dev_dbg(pci->dev, "PME Interrupt\n");
+>> +
+>> +	if (is_msi) {
+>> +		if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+>> +			dev_dbg(pci->dev, "Root Error Status\n");
+>> +
+>> +		if (val & PCL_CFG_PME_MSI_STATUS)
+>> +			dev_dbg(pci->dev, "PME Interrupt\n");
+>> +
+>> +		if (val & (PCL_CFG_AER_RC_ERR_MSI_STATUS |
+>> +			   PCL_CFG_PME_MSI_STATUS)) {
+>> +			virq = irq_linear_revmap(pp->irq_domain, 0);
+> 
+> I think this is wrong. pp->irq_domain is the DWC MSI domain, how do
+> you know that hwirq 0 *is* the AER/PME interrupt ?
+
+When AER/PME drivers are probed, AER/PME interrupts are registered
+as MSI-0.
+
+The pcie_message_numbers() function refers the following fields of
+PCI registers,
+
+   - PCI_EXP_FLAGS_IRQ (for PME)
+   - PCI_ERR_ROOT_AER_IRQ (for AER)
+
+and decides AER/PME interrupts numbers in MSI domain.
+Initial values of both fields are 0, so these interrupts are set to MSI-0.
+
+However, pcie_uniphier driver doesn't know that these interrupts are MSI-0.
+Surely using 0 here is wrong.
+I think that the method to get virq for AER/PME from pcieport is needed.
+
+>
+> It just *works* in this case because the port driver probes and alloc
+> MSIs before any PCI device has a chance to do it and actually I think
+> this is just wrong also because hwirq 0 *is* usable by devices but
+> it can't be used because current code takes it for the PME/AER interrupt
+> (which AFAICS is an internal signal disconnected from the DWC MSI
+> interrupt controller).
+
+AER/PME interrupts are with IRQF_SHARED, so hwirq 0 can share
+any PCI device, however, the multiple handlers might be called
+with other factor, so I don't think it is desiable.
+
+> 
+> I think this extra glue logic should be separate MSI domain
+> otherwise there is no way you can reliably look-up the virq
+> corresponding to AER/PME.
+
+Ok, however, it seems that there is no way to get virq for AER/PME
+from pcieport in pcie/portdrv_core.c.
+
+When I try to separate AER/PME interrtups from MSI domain,
+how should I get virq for AER/PME?
+
+> 
+> How does it work in HW ? Is the root port really sending a memory
+> write to raise an IRQ or it just signal the IRQ through internal
+> logic ? I think the root port MSI handling is different from the
+> DWC logic and should be treated separately.
+
+The internal logic assigns the same signal as MSI interrupt
+to AER/PME interrupts.
+
+The MSI handler checks internal status register PCL_RCV_INT,
+and know if the signal is AER or PME interrupt. MSI memory write
+isn't used for the signal.
+
+Since DWC MSI handler doesn't have a method to check the internal
+status register, I added callback .msi_host_isr() to DWC MSI handler
+in patch 1/6.
+
+Thank you,
+
 ---
-v2:
- - Provide imi vendor prefix
- - Fix minor spelling
-
-v3:
- - update binding descriptions
-
-v4:
- - No change
-
-v5:
- - Specify optional third reg address for the MCU
-
-v7:
- [Jacopo]
- - Rename to imi,rdacm2x-gmsl.yaml
- - Exand bindings to describe RDACM21
-
-v9:
-  [Jacopo]
-  - Rework 'compatible' property as suggested by Rob
-  - Re-order vendor prefixes ('g' comes before 'i' ... )
-  - Add Rob's tag
-
-v10.1:
- [Kieran]
-  - Fix up the two examples 'reg' value for the i2c nodes.
-
-
- .../bindings/media/i2c/imi,rdacm2x-gmsl.yaml  | 159 ++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- 2 files changed, 161 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/imi,rdacm2x-gmsl.yaml
-
-diff --git a/Documentation/devicetree/bindings/media/i2c/imi,rdacm2x-gmsl.yaml b/Documentation/devicetree/bindings/media/i2c/imi,rdacm2x-gmsl.yaml
-new file mode 100644
-index 000000000000..5ad4b8c356cf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/imi,rdacm2x-gmsl.yaml
-@@ -0,0 +1,159 @@
-+# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-+# Copyright (C) 2019 Renesas Electronics Corp.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/i2c/imi,rdacm2x-gmsl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title:  IMI D&D RDACM20 and RDACM21 Automotive Camera Platforms
-+
-+maintainers:
-+  - Jacopo Mondi <jacopo+renesas@jmondi.org>
-+  - Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-+  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-+  - Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-+
-+description: -|
-+  The IMI D&D RDACM20 and RDACM21 are GMSL-compatible camera designed for
-+  automotive applications.
-+
-+  The RDACM20 camera module encloses a Maxim Integrated MAX9271 GMSL serializer,
-+  coupled with an OV10635 image sensor and an embedded MCU. Both the MCU and
-+  the image sensor are connected to the serializer local I2C bus and are
-+  accessible by the host SoC by direct addressing.
-+
-+  The RDACM21 camera module encloses the same serializer, coupled with an
-+  OV10640 image sensor and an OV490 ISP. Only the OV490 ISP is interfaced to
-+  the serializer local I2C bus while the image sensor is not accessible from
-+  the host SoC.
-+
-+  They both connect to a remote GMSL endpoint through a coaxial cable.
-+
-+                                                   IMI RDACM20
-+  +---------------+                        +--------------------------------+
-+  |      GMSL     |   <- Video Stream      |       <- Video--------\        |
-+  |               |< === GMSL Link ====== >|MAX9271<- I2C bus-> <-->OV10635 |
-+  | de-serializer |   <- I2C messages ->   |                   \<-->MCU     |
-+  +---------------+                        +--------------------------------+
-+
-+                                                   IMI RDACM21
-+  +---------------+                        +--------------------------------+
-+  |      GMSL     |   <- Video Stream      |       <- Video--------\        |
-+  |               |< === GMSL Link ====== >|MAX9271<- I2C bus-> <-->OV490   |
-+  |               |   <- I2C messages ->   |                          |     |
-+  | de-serializer |                        |          OV10640 <-------|     |
-+  +---------------+                        +--------------------------------+
-+
-+  Both camera modules serialize video data generated by the embedded camera
-+  sensor on the GMSL serial channel to a remote GMSL de-serializer. They also
-+  receive and transmit I2C messages encapsulated and transmitted on the GMSL
-+  bidirectional control channel.
-+
-+  All I2C traffic received on the GMSL link not directed to the serializer is
-+  propagated on the local I2C bus to the remote device there connected. All the
-+  I2C traffic generated on the local I2C bus not directed to the serializer is
-+  propagated to the remote de-serializer encapsulated in the GMSL control
-+  channel.
-+
-+  The RDACM20 and RDACM21 DT node should be a direct child of the GMSL
-+  deserializer's I2C bus corresponding to the GMSL link that the camera is
-+  attached to.
-+
-+properties:
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
-+  compatible:
-+    enum:
-+      - imi,rdacm20
-+      - imi,rdacm21
-+
-+  reg:
-+    description: -|
-+      I2C device addresses, the first to be assigned to the serializer, the
-+      following ones to be assigned to the remote devices.
-+
-+      For RDACM20 the second entry of the property is assigned to the
-+      OV10635 image sensor and the optional third one to the embedded MCU.
-+
-+      For RDACM21 the second entry is assigned to the OV490 ISP and the optional
-+      third one ignored.
-+
-+    minItems: 2
-+    maxItems: 3
-+
-+  port:
-+    type: object
-+    additionalProperties: false
-+    description: -|
-+      Connection to the remote GMSL endpoint are modelled using the OF graph
-+      bindings in accordance with the video interface bindings defined in
-+      Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+      The device node contains a single "port" child node with a single
-+      "endpoint" sub-device.
-+
-+    properties:
-+      endpoint:
-+        type: object
-+        additionalProperties: false
-+
-+        properties:
-+          remote-endpoint:
-+            description: -|
-+              phandle to the remote GMSL endpoint sub-node in the remote node
-+              port.
-+            maxItems: 1
-+
-+        required:
-+          - remote-endpoint
-+
-+    required:
-+      - endpoint
-+
-+required:
-+  - compatible
-+  - reg
-+  - port
-+
-+examples:
-+  - |
-+    i2c@e66d8000 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      reg = <0 0xe66d8000>;
-+
-+      camera@31 {
-+        compatible = "imi,rdacm20";
-+        reg = <0x31>, <0x41>, <0x51>;
-+
-+        port {
-+          rdacm20_out0: endpoint {
-+            remote-endpoint = <&max9286_in0>;
-+          };
-+        };
-+      };
-+    };
-+
-+  - |
-+    i2c@e66d8000 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      reg = <0 0xe66d8000>;
-+
-+      camera@31 {
-+        compatible = "imi,rdacm21";
-+        reg = <0x31>, <0x41>;
-+
-+        port {
-+          rdacm21_out0: endpoint {
-+            remote-endpoint = <&max9286_in0>;
-+          };
-+        };
-+      };
-+    };
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 9aeab66be85f..8261ede298f8 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -469,6 +469,8 @@ patternProperties:
-     description: ILI Technology Corporation (ILITEK)
-   "^img,.*":
-     description: Imagination Technologies Ltd.
-+  "^imi,.*":
-+    description: Integrated Micro-Electronics Inc.
-   "^incircuit,.*":
-     description: In-Circuit GmbH
-   "^inet-tek,.*":
--- 
-2.25.1
-
+Best Regards
+Kunihiko Hayashi
