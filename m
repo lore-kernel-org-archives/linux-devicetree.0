@@ -2,222 +2,86 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 363D8C433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 18:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E1CC433E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 18:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12BFB20672
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 18:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07F482064B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 18:13:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594836771;
-	bh=fcQDgyyGhKHA92TYesU44H0lTyF4CEkwxG576vw2ga8=;
+	s=default; t=1594836815;
+	bh=VTA1McpwiEJV76vWJVQqqllLhWub1sH+lYP8U5CFbYM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XXZrFCUh6zmoYxHHbMUYmnP68A583BncIeoREh41RGwx6DNShztl8DzPEzyDBi6Rm
-	 TE3NRQHpgckKsGoUTIG0g0pEqTfkWBvRziB9Rbx0k5gkxOF5U1H1xU8i+/2/JiKa5I
-	 NHf0Uj0fx6HdzCDmfvig/Fk6lkbLexiL8HKXSUXc=
+	b=y0rHledRTSSCT1O4vfyoFFjAx4P7z6WMnYsywBIsPsPIFxg7SR1fqB4bxAbWZlFyb
+	 0pdlqtC/0oUsx2TaCCekkrDxjxaKZZFWqO2757hKn7BCTw9aIxKfkygqSDbT/I313n
+	 /dssb6842Q4O9AjKehknVvG/s4Q36pxRwb9nClfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725861AbgGOSMu (ORCPT
+        id S1726660AbgGOSNe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 14:12:50 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37176 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbgGOSMt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 14:12:49 -0400
-Received: by mail-io1-f67.google.com with SMTP id v6so3253986iob.4;
-        Wed, 15 Jul 2020 11:12:49 -0700 (PDT)
+        Wed, 15 Jul 2020 14:13:34 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41872 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbgGOSNd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 14:13:33 -0400
+Received: by mail-io1-f68.google.com with SMTP id p205so3228595iod.8;
+        Wed, 15 Jul 2020 11:13:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=U4JqWAJUqAlytAcvwdFiI+dvQqxz5t1soB/hFAm5OjQ=;
-        b=cyfNtErCjqed345PiCA7PX9i2S6XtU9+udy7nzIUOyePJqoO0vBlj27Vx1l6MoF3lo
-         pBpRCenkyqQSXcTwEOPlR84opu0SDJVMbb4sHFX5AP4dTMsfmJnlYgiU0OjcXL8fQy4Y
-         WE8uyN7B/3NeruuovSHn0YUGWOu4xLYSsCgKUAK/URLIVOw8tWkRyTcuDI2SWcOKFh3q
-         Imgv1ueCiYSYHd7PuoCWZa5zWkwnr7ogWGwYtLBfIwyVF+sfocfQT8S08kBDVJfr8qFB
-         qL9DmzbBfARAjoX4pPtbwHkKAh+FqplrjcoNa+r1CID9LLLuHURDXKeC2cg+P67Xd94B
-         F0jA==
-X-Gm-Message-State: AOAM532E5whfqZfW2rdcNgbKr1ITzrdmKXte1H0b2crOuenCVZf/NYAz
-        4UgJoTeexv/tWFv9p8fm9g==
-X-Google-Smtp-Source: ABdhPJxxgQ53vC9zVBi4XB7WdDH+bHdKBpexEFln2Bz9WLXLPsN+v2YsSm0PlI2wwA+pwM3cWthaUg==
-X-Received: by 2002:a5d:9c0e:: with SMTP id 14mr519954ioe.109.1594836768497;
-        Wed, 15 Jul 2020 11:12:48 -0700 (PDT)
+        bh=2z0jMPmTB9DDXO4KvHh6iNAZTCEGZnUYmpDsMOv40Ws=;
+        b=gXusvGmQCkW7G3dCgzru1C/WKK74TotIubxWUAAZ3abd5T0SfjLh+2zpEe6LTbYu5I
+         MWgM1+ORNjHfG+e5uHexfAl9X5JKELbLo0UuHpKsr755b0x7Lw4sule3cvn4spAcvj6p
+         J7KbsV3rcYX3Sd09HiNfLEq/vmrQCvikp1s9LKzXg3Vx9PnYYF89tNzmqPp2CJSKYhIA
+         Aj0SlDK1LYNDvf7jaZ3HQ+a3eco0mTam893AbJL+JmuhpOjHYYmk8y2dqDwHRFLkR4rX
+         G+/PHz+OjRxoiRlGu2d4yhiQaJmlP8dKOBei465rlpo1J3a/jNLEdLnnwujbgvsNbCPp
+         UueQ==
+X-Gm-Message-State: AOAM533YNzWtPiJT4GwS2+6WQKIWBWCL6++GKGuRhirB2POzu86dSpDu
+        PNLbFWqKxJ5fmq7aNuf+wQ==
+X-Google-Smtp-Source: ABdhPJzsTu/hCkev8ZsJi3uqyU6jm2P/7RkPJp0xkraSmBKKiHg3KKn2Gusj73gsQEdQONk2UrgabQ==
+X-Received: by 2002:a6b:bb43:: with SMTP id l64mr504378iof.191.1594836812882;
+        Wed, 15 Jul 2020 11:13:32 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id k3sm1414030ils.8.2020.07.15.11.12.47
+        by smtp.gmail.com with ESMTPSA id u6sm1381601ilg.32.2020.07.15.11.13.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 11:12:47 -0700 (PDT)
-Received: (nullmailer pid 545010 invoked by uid 1000);
-        Wed, 15 Jul 2020 18:12:47 -0000
-Date:   Wed, 15 Jul 2020 12:12:47 -0600
+        Wed, 15 Jul 2020 11:13:32 -0700 (PDT)
+Received: (nullmailer pid 546514 invoked by uid 1000);
+        Wed, 15 Jul 2020 18:13:31 -0000
+Date:   Wed, 15 Jul 2020 12:13:31 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, shifu0704@thundersoft.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: tas2770: Convert tas2770 binding to yaml
-Message-ID: <20200715181247.GA535887@bogus>
-References: <20200612171342.25364-1-dmurphy@ti.com>
+To:     Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-usb@vger.kernel.org,
+        Noralf Tronnes <noralf@tronnes.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: add vendor prefix for EastRising
+ Technology Co., Ltd
+Message-ID: <20200715181331.GA546460@bogus>
+References: <cover.1592055494.git.kamlesh.gurudasani@gmail.com>
+ <10dbf4687981634c510462804b8af6bbcf113fbf.1592055494.git.kamlesh.gurudasani@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200612171342.25364-1-dmurphy@ti.com>
+In-Reply-To: <10dbf4687981634c510462804b8af6bbcf113fbf.1592055494.git.kamlesh.gurudasani@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 12:13:41PM -0500, Dan Murphy wrote:
-> Convert the tas2770 binding to yaml format.
-> Add in the reset-gpio to the binding as it is in the code but not
-> documented in the binding.
+On Sat, 13 Jun 2020 19:36:46 +0530, Kamlesh Gurudasani wrote:
+> Add vendor prefix for display manufacturer company EastRising
+> Technology Co.,Ltd
 > 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> [1]https://eastrising.en.ec21.com/
+> 
+> Signed-off-by: Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>
 > ---
->  .../devicetree/bindings/sound/tas2770.txt     | 37 ---------
->  .../devicetree/bindings/sound/tas2770.yaml    | 76 +++++++++++++++++++
->  2 files changed, 76 insertions(+), 37 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sound/tas2770.txt
->  create mode 100644 Documentation/devicetree/bindings/sound/tas2770.yaml
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/tas2770.txt b/Documentation/devicetree/bindings/sound/tas2770.txt
-> deleted file mode 100644
-> index ede6bb3d9637..000000000000
-> --- a/Documentation/devicetree/bindings/sound/tas2770.txt
-> +++ /dev/null
-> @@ -1,37 +0,0 @@
-> -Texas Instruments TAS2770 Smart PA
-> -
-> -The TAS2770 is a mono, digital input Class-D audio amplifier optimized for
-> -efficiently driving high peak power into small loudspeakers.
-> -Integrated speaker voltage and current sense provides for
-> -real time monitoring of loudspeaker behavior.
-> -
-> -Required properties:
-> -
-> - - compatible:	   - Should contain "ti,tas2770".
-> - - reg:		       - The i2c address. Should contain <0x4c>, <0x4d>,<0x4e>, or <0x4f>.
-> - - #address-cells  - Should be <1>.
-> - - #size-cells     - Should be <0>.
-> - - ti,asi-format:  - Sets TDM RX capture edge. 0->Rising; 1->Falling.
-> - - ti,imon-slot-no:- TDM TX current sense time slot.
-> - - ti,vmon-slot-no:- TDM TX voltage sense time slot.
-> -
-> -Optional properties:
-> -
-> -- interrupt-parent: the phandle to the interrupt controller which provides
-> -                     the interrupt.
-> -- interrupts: interrupt specification for data-ready.
-> -
-> -Examples:
-> -
-> -    tas2770@4c {
-> -                compatible = "ti,tas2770";
-> -                reg = <0x4c>;
-> -                #address-cells = <1>;
-> -                #size-cells = <0>;
-> -                interrupt-parent = <&msm_gpio>;
-> -                interrupts = <97 0>;
-> -                ti,asi-format = <0>;
-> -                ti,imon-slot-no = <0>;
-> -                ti,vmon-slot-no = <2>;
-> -        };
-> -
-> diff --git a/Documentation/devicetree/bindings/sound/tas2770.yaml b/Documentation/devicetree/bindings/sound/tas2770.yaml
-> new file mode 100644
-> index 000000000000..8c667fd37a57
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/tas2770.yaml
-> @@ -0,0 +1,76 @@
-> +# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
 
-Do you have rights to relicense? The old binding defaults to 
-GPL-2.0-only. If so, great.
-
-Either way, GPL-2.0-only not GPL-2.0+.
-
-Otherwise,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> +# Copyright (C) 2019-20 Texas Instruments Incorporated
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/sound/tas2770.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Texas Instruments TAS2770 Smart PA
-> +
-> +maintainers:
-> +  - Shi Fu <shifu0704@thundersoft.com>
-> +
-> +description: |
-> +  The TAS2770 is a mono, digital input Class-D audio amplifier optimized for
-> +  efficiently driving high peak power into small loudspeakers.
-> +  Integrated speaker voltage and current sense provides for
-> +  real time monitoring of loudspeaker behavior.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ti,tas2770
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: |
-> +       I2C address of the device can be one of these 0x4c, 0x4d, 0x4e or 0x4f
-> +
-> +  reset-gpio:
-> +    description: GPIO used to reset the device.
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  ti,imon-slot-no:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: TDM TX current sense time slot.
-> +
-> +  ti,vmon-slot-no:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: TDM TX voltage sense time slot.
-> +
-> +  ti,asi-format:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Sets TDM RX capture edge.
-> +    enum:
-> +          - 0 # Rising edge
-> +          - 1 # Falling edge
-> +
-> +  '#sound-dai-cells':
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +   #include <dt-bindings/gpio/gpio.h>
-> +   i2c0 {
-> +     #address-cells = <1>;
-> +     #size-cells = <0>;
-> +     codec: codec@4c {
-> +       compatible = "ti,tas2770";
-> +       reg = <0x4c>;
-> +       #sound-dai-cells = <1>;
-> +       interrupt-parent = <&gpio1>;
-> +       interrupts = <14>;
-> +       reset-gpio = <&gpio1 15 0>;
-> +       ti,imon-slot-no = <0>;
-> +       ti,vmon-slot-no = <2>;
-> +     };
-> +   };
-> +
-> -- 
-> 2.26.2
-> 
+Acked-by: Rob Herring <robh@kernel.org>
