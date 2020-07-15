@@ -2,137 +2,170 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2C9C433FB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 08:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A99C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 08:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D01C2065D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 08:35:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Gq7wo52x"
+	by mail.kernel.org (Postfix) with ESMTP id 9A032206E9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 08:35:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730206AbgGOIfR (ORCPT
+        id S1729304AbgGOIfo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:35:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53204 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730191AbgGOIfQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 04:35:16 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34C09C08C5C1
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 01:35:16 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id z5so2732405pgb.6
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 01:35:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=WPolAUEN8R+26Nb1p0YR+16g+IcA7gsrUiiI7xSTFn8=;
-        b=Gq7wo52xCqehQ6QK/f2liMmmxxUT5CSK8hJv2qgPncNQnTQn3pGDoSbccnMYQPC3Ml
-         fUaTM8lUFNIsaA/w4hoWS0GxLPNzSTDRuGYwsvh+G5WVXWKoQ+aWaAARX8UUMNAzxr3t
-         nUIKNkVrkGhszsESFqPHATprCHgotgLFyLTYA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WPolAUEN8R+26Nb1p0YR+16g+IcA7gsrUiiI7xSTFn8=;
-        b=RK9V2weKNTuzlL/IhYOfbOO/kt826xZXMNLtb82p9u9x6u94GN4a64KGnPRL1b/IDb
-         EJHoyj1N+NayNi0/KK2n4d7kOfjrtUOYuZ0ym/p6bmavaHfdltILD2AFvCIK+XcBiiEc
-         jxeFdL5nU9bV7iCarLWA1kdvgPeCk9lA2HTuGup86cTQI9vAr0tMj3k+upTNnaozBlWl
-         j1VXEe21iCZw+NmAsYAIr4NTODMtJQ6SjXkq8/dXclu56Lp17k5GDPhBUrLhjm4DV+wz
-         PDpX43Tsoa4+5uJk2a0K9qhL/u178XVn44vYnvzcP96++TbhyVfbXbs0XfVJoKJWDYSa
-         yVcA==
-X-Gm-Message-State: AOAM531hlh2OOc+OAZyeg8iIIwoqQFPYBd5eEsic2h99HHFgvqj3jC8E
-        rWYbqQk5No3cwcPtYQLfnZE1fA==
-X-Google-Smtp-Source: ABdhPJyYzrJs37beWQwtGNYJoh/xqyO8utCUQ58r7LA3J+ThvdUHJeGggZl5mk14AlpcbBbfuvbXNw==
-X-Received: by 2002:a63:c947:: with SMTP id y7mr6972752pgg.357.1594802115768;
-        Wed, 15 Jul 2020 01:35:15 -0700 (PDT)
-Received: from localhost.localdomain ([2405:201:c809:c7d5:9887:56a8:c916:cfdb])
-        by smtp.gmail.com with ESMTPSA id m92sm1467584pje.13.2020.07.15.01.35.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 01:35:14 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
-Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v6 7/7] ARM: dts: rockchip: Add Radxa Rock Pi N8 initial support
-Date:   Wed, 15 Jul 2020 14:04:18 +0530
-Message-Id: <20200715083418.112003-8-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200715083418.112003-1-jagan@amarulasolutions.com>
-References: <20200715083418.112003-1-jagan@amarulasolutions.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 15 Jul 2020 04:35:44 -0400
+Received: from mga02.intel.com ([134.134.136.20]:19841 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729192AbgGOIfn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jul 2020 04:35:43 -0400
+IronPort-SDR: EjSidi9PFwBEqBOegvAGd8+vAoSfnYhIRlN3ZwzT3ASs3RCJ/n2SmC5Iwmm2jlNGaw34CaHKg0
+ TaunBsvrGUIQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="137234837"
+X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
+   d="scan'208";a="137234837"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 01:35:43 -0700
+IronPort-SDR: wom4Vga3jcrql6t16qwoyNREtupcp1VXNFk8PTdDNTWT21FlEY3nuBl3p7s93G5W0Or1lhgm1D
+ gc5c3v+2bDrQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
+   d="scan'208";a="459992091"
+Received: from yren3-mobl.ccr.corp.intel.com ([10.249.174.224])
+  by orsmga005.jf.intel.com with ESMTP; 15 Jul 2020 01:35:40 -0700
+Message-ID: <d2eeca29328a87433a46c35947ffb490d49c168a.camel@intel.com>
+Subject: Re: [RFC PATCH 4/4] thermal: Modify thermal governors to do nothing
+ for "cold" trip points
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     Thara Gopinath <thara.gopinath@linaro.org>,
+        daniel.lezcano@linaro.org, robh+dt@kernel.org
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 15 Jul 2020 16:35:39 +0800
+In-Reply-To: <20200710135154.181454-5-thara.gopinath@linaro.org>
+References: <20200710135154.181454-1-thara.gopinath@linaro.org>
+         <20200710135154.181454-5-thara.gopinath@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rock Pi N8 is a Rockchip RK3288 based SBC, which has
-- VMARC RK3288 SOM (as per SMARC standard) from Vamrs.
-- Compatible carrier board from Radxa.
+On Fri, 2020-07-10 at 09:51 -0400, Thara Gopinath wrote:
+> For now, thermal governors do not support monitoring of falling
+> temperature. Hence, in case of calls to the governor for trip points
+> marked
+> as cold, return doing nothing.
+> 
+> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> ---
+>  drivers/thermal/gov_bang_bang.c       | 8 ++++++++
+>  drivers/thermal/gov_fair_share.c      | 8 ++++++++
+>  drivers/thermal/gov_power_allocator.c | 8 ++++++++
+>  drivers/thermal/gov_step_wise.c       | 8 ++++++++
+>  4 files changed, 32 insertions(+)
 
-VAMRC RK3288 SOM need to mount on top of radxa dalang
-carrier board for making Rock Pi N8 SBC.
+userspace governor does not support cold trip point neither.
 
-So, add initial support for Rock Pi N8 by including rk3288,
-rk3288 vamrc-som and raxda dalang carrier board dtsi files.
+So how about adding the check in handle_non_critical_trips first, and
+remove the check later, after all the governors support cold trip?
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Changes for v6:
-- none
-
- arch/arm/boot/dts/Makefile              |  1 +
- arch/arm/boot/dts/rk3288-rock-pi-n8.dts | 17 +++++++++++++++++
- 2 files changed, 18 insertions(+)
- create mode 100644 arch/arm/boot/dts/rk3288-rock-pi-n8.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e8dd99201397..1d1b6ac26394 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -964,6 +964,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
- 	rk3288-popmetal.dtb \
- 	rk3288-r89.dtb \
- 	rk3288-rock2-square.dtb \
-+	rk3288-rock-pi-n8.dtb \
- 	rk3288-tinker.dtb \
- 	rk3288-tinker-s.dtb \
- 	rk3288-veyron-brain.dtb \
-diff --git a/arch/arm/boot/dts/rk3288-rock-pi-n8.dts b/arch/arm/boot/dts/rk3288-rock-pi-n8.dts
-new file mode 100644
-index 000000000000..b19593021713
---- /dev/null
-+++ b/arch/arm/boot/dts/rk3288-rock-pi-n8.dts
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd
-+ * Copyright (c) 2019 Vamrs Limited
-+ * Copyright (c) 2019 Amarula Solutions(India)
-+ */
-+
-+/dts-v1/;
-+#include "rk3288.dtsi"
-+#include <arm/rockchip-radxa-dalang-carrier.dtsi>
-+#include "rk3288-vmarc-som.dtsi"
-+
-+/ {
-+	model = "Radxa ROCK Pi N8";
-+	compatible = "radxa,rockpi-n8", "vamrs,rk3288-vmarc-som",
-+		     "rockchip,rk3288";
-+};
--- 
-2.25.1
+thanks,
+rui
+> 
+> diff --git a/drivers/thermal/gov_bang_bang.c
+> b/drivers/thermal/gov_bang_bang.c
+> index 991a1c54296d..8324d13de1e7 100644
+> --- a/drivers/thermal/gov_bang_bang.c
+> +++ b/drivers/thermal/gov_bang_bang.c
+> @@ -99,6 +99,14 @@ static void thermal_zone_trip_update(struct
+> thermal_zone_device *tz, int trip)
+>  static int bang_bang_control(struct thermal_zone_device *tz, int
+> trip)
+>  {
+>  	struct thermal_instance *instance;
+> +	enum thermal_trip_type trip_type;
+> +
+> +	/* Return doing nothing in case of cold trip point */
+> +	if (trip != THERMAL_TRIPS_NONE) {
+> +		tz->ops->get_trip_type(tz, trip, &trip_type);
+> +		if (trip_type == THERMAL_TRIP_COLD)
+> +			return 0;
+> +	}
+>  
+>  	thermal_zone_trip_update(tz, trip);
+>  
+> diff --git a/drivers/thermal/gov_fair_share.c
+> b/drivers/thermal/gov_fair_share.c
+> index aaa07180ab48..c0adce525faa 100644
+> --- a/drivers/thermal/gov_fair_share.c
+> +++ b/drivers/thermal/gov_fair_share.c
+> @@ -81,6 +81,14 @@ static int fair_share_throttle(struct
+> thermal_zone_device *tz, int trip)
+>  	int total_weight = 0;
+>  	int total_instance = 0;
+>  	int cur_trip_level = get_trip_level(tz);
+> +	enum thermal_trip_type trip_type;
+> +
+> +	/* Return doing nothing in case of cold trip point */
+> +	if (trip != THERMAL_TRIPS_NONE) {
+> +		tz->ops->get_trip_type(tz, trip, &trip_type);
+> +		if (trip_type == THERMAL_TRIP_COLD)
+> +			return 0;
+> +	}
+>  
+>  	list_for_each_entry(instance, &tz->thermal_instances, tz_node)
+> {
+>  		if (instance->trip != trip)
+> diff --git a/drivers/thermal/gov_power_allocator.c
+> b/drivers/thermal/gov_power_allocator.c
+> index 44636475b2a3..2644ad4d4032 100644
+> --- a/drivers/thermal/gov_power_allocator.c
+> +++ b/drivers/thermal/gov_power_allocator.c
+> @@ -613,8 +613,16 @@ static int power_allocator_throttle(struct
+> thermal_zone_device *tz, int trip)
+>  {
+>  	int ret;
+>  	int switch_on_temp, control_temp;
+> +	enum thermal_trip_type trip_type;
+>  	struct power_allocator_params *params = tz->governor_data;
+>  
+> +	/* Return doing nothing in case of cold trip point */
+> +	if (trip != THERMAL_TRIPS_NONE) {
+> +		tz->ops->get_trip_type(tz, trip, &trip_type);
+> +		if (trip_type == THERMAL_TRIP_COLD)
+> +			return 0;
+> +	}
+> +
+>  	/*
+>  	 * We get called for every trip point but we only need to do
+>  	 * our calculations once
+> diff --git a/drivers/thermal/gov_step_wise.c
+> b/drivers/thermal/gov_step_wise.c
+> index 2ae7198d3067..009aefda0441 100644
+> --- a/drivers/thermal/gov_step_wise.c
+> +++ b/drivers/thermal/gov_step_wise.c
+> @@ -186,6 +186,14 @@ static void thermal_zone_trip_update(struct
+> thermal_zone_device *tz, int trip)
+>  static int step_wise_throttle(struct thermal_zone_device *tz, int
+> trip)
+>  {
+>  	struct thermal_instance *instance;
+> +	enum thermal_trip_type trip_type;
+> +
+> +	/* For now, return doing nothing in case of cold trip point */
+> +	if (trip != THERMAL_TRIPS_NONE) {
+> +		tz->ops->get_trip_type(tz, trip, &trip_type);
+> +		if (trip_type == THERMAL_TRIP_COLD)
+> +			return 0;
+> +	}
+>  
+>  	thermal_zone_trip_update(tz, trip);
+>  
 
