@@ -2,280 +2,172 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63952C433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 21:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6696C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 21:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F6762065D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 21:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 807D120672
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 21:22:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S4VRyPAa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fyqry2rV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725917AbgGOVOO (ORCPT
+        id S1726370AbgGOVWq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 17:14:14 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38278 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726356AbgGOVON (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 17:14:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594847651;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Kpv1zOkxbhnG32cADERhaysVLD6xZDL8mTz6Ngsn82E=;
-        b=S4VRyPAaf7PoV/fQ8HCCIlPpUXb10ybDoPZ9ezOaO3jIb/scj4CCy3JogrOsLiSbWF+Aqo
-        O09qNk1qNyyKhspqyiOaYF4FhYMV006SJpMazp4HFIBkZe2EIQkIoTAVjKSRmPQp3JFqB5
-        JshJngWsuc2QF7FZ7uLG7THkP4oMt2U=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-438-R7o18kljM768N85TPiBwiw-1; Wed, 15 Jul 2020 17:14:07 -0400
-X-MC-Unique: R7o18kljM768N85TPiBwiw-1
-Received: by mail-wm1-f69.google.com with SMTP id t18so2192245wmj.5
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 14:14:07 -0700 (PDT)
+        Wed, 15 Jul 2020 17:22:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbgGOVWp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 17:22:45 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67342C061755;
+        Wed, 15 Jul 2020 14:22:45 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id a14so2662633pfi.2;
+        Wed, 15 Jul 2020 14:22:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zEOeNcHcUcS12HReWL9QBQ9Se3gqYrNjZVjrRl75LJU=;
+        b=fyqry2rVZWAyho5Eh/lPxvweLWsxMh9zcpIYRTREpq3y2NDJsKC7/rMT56NNQvRD4e
+         LQuWIoxxf3U2reZ7W8BUO3pPqtK7aHRDda0pwNQVom0QMEim3HwdcusYmkg9rduCJFTN
+         xfY4iDUSpEvdYxPjJv55vdjkyug3x+itUG7TNBe3NFpfzqzjeBb8C3I+LPKr+8bfc3bV
+         HXz1bD6FXy2Nt8nGGlKkdZOiknjOL+NP3yjjUDAKv0Pg9Uh+esbJkYF9ke+8FBAJCQ3E
+         8DasfjZAI6nEZ3pKamRjwFA42SZO24OKiBOc8mayUOHeDGMhFurmereTe9iUGPgqus6m
+         418w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=Kpv1zOkxbhnG32cADERhaysVLD6xZDL8mTz6Ngsn82E=;
-        b=WxbXlPiblV3PEf3xbq99kiqxFZRppv8YsVXWpN65psuX9U4EpjQnAtF9bnS/hpw9Z+
-         BARB//1y1aTp29aWofVPwh6Fwc0gvJ5EKeY918hBMap+DmAYAXFSDwkOuZUOGAYoyKpg
-         jvyULJsTZ225Pulr+dvS1WgHuUfLmJzRnnT4CeO5afkCp9c8pRLzvpdnutgQVJqZjrE1
-         DQ8WYqf4ES8WMiWwQAXMjaauoUBzAbIJD/wzUw0R9sXJ3zcnHPxEQx68NpRQ8ckMsDrq
-         Aya9X18Wkrt5KP3FjRxdUdydP+6av/Di/bwQ418xQEYQ/ByCpG1BOd/xqt+KV0LZpi8E
-         J46w==
-X-Gm-Message-State: AOAM532uM/c+G1VVJoW8LSLYBIexR/1n1sk41UYLnvbQdjOTguyU62tI
-        PEkD/mvyc4FvVGrFKok/gRA72quCyBvCuRTbzQJB+HfVovhru11IHtn2ddLH66V5nZ5TuA05Gsj
-        mwinzBu51Q+Lak+dqeogj3Q==
-X-Received: by 2002:a1c:2e57:: with SMTP id u84mr1507925wmu.52.1594847645139;
-        Wed, 15 Jul 2020 14:14:05 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwhoB3/Oak3Tm8Z2CQLtbr5DW1S+lRGQnck32qB/SkrBdvAtiCxeDB+LbnHPgIOfOmEWx2gAw==
-X-Received: by 2002:a1c:2e57:: with SMTP id u84mr1507890wmu.52.1594847644795;
-        Wed, 15 Jul 2020 14:14:04 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id q3sm4723118wmq.22.2020.07.15.14.14.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jul 2020 14:14:04 -0700 (PDT)
-Subject: Re: [PATCH 2/4] usb: typec: Add
- typec_port_register_altmodes_from_fwnode()
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Tobias Schramm <t.schramm@manjaro.org>, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <20200714113617.10470-1-hdegoede@redhat.com>
- <20200714113617.10470-3-hdegoede@redhat.com>
- <38a0c13d-fd78-9e67-91c8-4b86c437593e@roeck-us.net>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <9d1a2929-6fea-f035-6413-57cf55d1562a@redhat.com>
-Date:   Wed, 15 Jul 2020 23:14:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        bh=zEOeNcHcUcS12HReWL9QBQ9Se3gqYrNjZVjrRl75LJU=;
+        b=rThiryXVDEeRE8TAAYkAXDaVhBq/RwtgylPRRmDYb2G2pbPJlWzh70gaW0d9q4m1h5
+         PJT6am659BJdCCa9fs29J1XvX9QGskE/zCagB9doPVIqJBxse0XcprcVWqCJ/f3j6oZU
+         jj6IO62+bxer472FHRaSXqNTrn58+5YGyBeS8D1MIeA3pso1WRmWXxDz0qxIPjdxfrxC
+         iSAr9KLLeUjUjC5mmypJ2kFINgApKsJeHMEXFu7KwmKx3Up54G9aIWpVjnSVHZ1DU7B9
+         7wnTJRC+5w0iYn71fhsPXsQC8K+jZSYzxp+qsVayTzukKRjyMk6DCCIRbKabvTgfUj2Y
+         X9qQ==
+X-Gm-Message-State: AOAM531lJAOl6rv9h8ooUh2FrhK4NvuzqP7Rds8dM4Zm3dqsEUm3WBO4
+        lpKEYLeju/qLnivFY+TUlTw=
+X-Google-Smtp-Source: ABdhPJy+oKkcsN7ED8Y658Q4NbEL9ZFjkmdguwR8qBBTsjz6SD6Mc9fogzydz7mOVkv3jD3wEAdMfA==
+X-Received: by 2002:aa7:942e:: with SMTP id y14mr1046467pfo.58.1594848164745;
+        Wed, 15 Jul 2020 14:22:44 -0700 (PDT)
+Received: from localhost.localdomain.com ([2605:e000:160b:911f:a2ce:c8ff:fe03:6cb0])
+        by smtp.gmail.com with ESMTPSA id y63sm2868611pgb.49.2020.07.15.14.22.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 14:22:44 -0700 (PDT)
+From:   Chris Healy <cphealy@gmail.com>
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de, stefan@agner.ch,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        festevam@gmail.com
+Cc:     Chris Healy <cphealy@gmail.com>
+Subject: [PATCH] ARM: dts: ZII: Disable HW Ethernet switch reset GPIO
+Date:   Wed, 15 Jul 2020 14:22:27 -0700
+Message-Id: <20200715212227.26436-1-cphealy@gmail.com>
+X-Mailer: git-send-email 2.21.3
 MIME-Version: 1.0
-In-Reply-To: <38a0c13d-fd78-9e67-91c8-4b86c437593e@roeck-us.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Guenter,
+Disable Ethernet switch reset GPIO with ZII platforms that have it
+enabled to sync up with existing ZII platforms that already have
+it disabled.
 
-Thank you for all the reviews.
+Signed-off-by: Chris Healy <cphealy@gmail.com>
+---
+ arch/arm/boot/dts/vf610-zii-cfu1.dts      | 2 --
+ arch/arm/boot/dts/vf610-zii-spb4.dts      | 2 --
+ arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts  | 2 --
+ arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts | 2 --
+ 4 files changed, 8 deletions(-)
 
-On 7/15/20 6:39 PM, Guenter Roeck wrote:
-> On 7/14/20 4:36 AM, Hans de Goede wrote:
->> This can be used by Type-C controller drivers which use a standard
->> usb-connector fwnode, with altmodes sub-node, to describe the available
->> altmodes.
->>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->>   drivers/usb/typec/class.c | 56 +++++++++++++++++++++++++++++++++++++++
->>   include/linux/usb/typec.h |  7 +++++
->>   2 files changed, 63 insertions(+)
->>
->> diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
->> index c9234748537a..47de2b2e3d54 100644
->> --- a/drivers/usb/typec/class.c
->> +++ b/drivers/usb/typec/class.c
->> @@ -1607,6 +1607,62 @@ typec_port_register_altmode(struct typec_port *port,
->>   }
->>   EXPORT_SYMBOL_GPL(typec_port_register_altmode);
->>   
->> +void typec_port_register_altmodes_from_fwnode(struct typec_port *port,
->> +	const struct typec_altmode_ops *ops, void *drvdata,
->> +	struct typec_altmode **altmodes, size_t n,
->> +	struct fwnode_handle *fwnode)
->> +{
->> +	struct fwnode_handle *altmodes_node, *child;
->> +	struct typec_altmode_desc desc;
->> +	struct typec_altmode *alt;
->> +	size_t index = 0;
->> +	u32 svid, vdo;
->> +	int ret;
->> +
->> +	altmodes_node = fwnode_get_named_child_node(fwnode, "altmodes");
->> +	if (!altmodes_node)
->> +		return;
->> +
->> +	child = NULL;
->> +	while ((child = fwnode_get_next_child_node(altmodes_node, child))) {
->> +		ret = fwnode_property_read_u32(child, "svid", &svid);
->> +		if (ret) {
->> +			dev_err(&port->dev, "Error reading svid for altmode %s\n",
->> +				fwnode_get_name(child));
->> +			continue;
-> 
-> The properties are mandatory. I think the errors should not be ignored.
-
-I have done this this way deliberately, let me try to explain:
-
-We basically have 2 choices here:
-
-1) Log an error and continue, skipping/ignoring the faulty altmode fw-child-node
-2) Make the error fatal, rollback all changes made so far and return an error
-to our caller
-
-First of all, these errors should never happen and if they do happen then the
-person adding the new alt-mode to the dt, will presumably test that this alt-mode
-works, sees that it does not, check the logs and know why. So for stable shipping
-kernels I would expect to never hit this path.
-
-Secondly even if we somehow do hit this path in a stable shipping kernel, then
-what should our caller do if we return an error? Our caller basically has 2 choices:
-
-1. Log and otherwise ignore the error
-2. Completely abort the registration of the Type-C controller, possibly breaking
-things like USB over the port, charging, etc.
-
-2. Seems rather drastic and is not necessary, except for the alt-modes all the
-other functionality of the port will work fine if the call fails. So our caller
-should probably choose 1. as error handling strategy. If it does that, then for
-the error logging it can rely on typec_port_register_altmodes_from_fwnode() having
-already logged an error, so it can just treat it as returning void.
-
-But if our caller does not care, would it then not be better to just ignore
-any bad alt-mode child nodes and still try to register an alt-mode for the
-good ones?
-
-Thirdly adding code to unwind the registration of the alt-modes done so far
-+ adding code to our caller to abort the port registration would be adding a
-bunch of extra, fragile code for something which should (and likely will)
-never happen. So we ware adding a bunch of code here which in essence is
-pretty much never tested and thus is almost assured to either be broken
-from day 1, or to become broken over time.
-
-The kernel is likely full of error handling paths with bugs because it is
-trying to handle errors which never happen. Sometimes this is necessary
-because e.g. a driver's probe function cannot continue without acquiring
-a certain resource. But in this case we can easily avoid the broken error
-handling code syndrome; and keep the code nice and simple, by just skipping
-over broken nodes.
-
-> 
->> +		}
->> +
->> +		ret = fwnode_property_read_u32(child, "vdo", &vdo);
->> +		if (ret) {
->> +			dev_err(&port->dev, "Error reading vdo for altmode %s\n",
->> +				fwnode_get_name(child));
->> +			continue;
->> +		}
->> +
->> +		if (index >= n) {
->> +			dev_err(&port->dev, "Error not enough space for altmode %s\n",
->> +				fwnode_get_name(child));
->> +			continue;
-> 
-> Seems to be pointless to continue here.
-
-Continuing here makes sure that if the dts contains 10 alt-modes and n = 8 that we print
-an error for both alt-modes which we are not registering because there is not enough space
-in the passed in array for storing alt-mode pointers.
-
-It also ensures that we error check any further nodes for missing svid/vdo properties.
-
-
-> 
->> +		}
->> +
->> +		desc.svid = svid;
->> +		desc.vdo = vdo;
->> +		desc.mode = index + 1;
->> +		alt = typec_port_register_altmode(port, &desc);
->> +		if (IS_ERR(alt)) {
->> +			dev_err(&port->dev, "Error registering altmode %s\n",
->> +				fwnode_get_name(child));
->> +			continue;
-> 
-> Maybe there is a reason to ignore all those errors. If so,
-> that should be explained.
-
-See above, note this is another error which should never happen, I think
-this can only happen in case of -ENOMEM, which itself can only happen
-for allocations of an order greater then n=2 AFAIK, and I don't think
-typec_port_register_altmode() does any such allocations.
-
-I guess some comment here is warranted, but my full explanation above
-is way too long. So maybe a simple comment like this?  :
-
-			/* Should never happen, keep the error handling as simple as possible */
-
-Regards,
-
-Hans
-
-
-> 
->> +		}
->> +
->> +		alt->ops = ops;
->> +		typec_altmode_set_drvdata(alt, drvdata);
->> +		altmodes[index] = alt;
->> +		index++;
->> +	}
->> +}
->> +EXPORT_SYMBOL_GPL(typec_port_register_altmodes_from_fwnode);
->> +
->>   /**
->>    * typec_register_port - Register a USB Type-C Port
->>    * @parent: Parent device
->> diff --git a/include/linux/usb/typec.h b/include/linux/usb/typec.h
->> index 5daa1c49761c..fbe4bccb3a98 100644
->> --- a/include/linux/usb/typec.h
->> +++ b/include/linux/usb/typec.h
->> @@ -17,6 +17,7 @@ struct typec_partner;
->>   struct typec_cable;
->>   struct typec_plug;
->>   struct typec_port;
->> +struct typec_altmode_ops;
->>   
->>   struct fwnode_handle;
->>   struct device;
->> @@ -121,6 +122,12 @@ struct typec_altmode
->>   struct typec_altmode
->>   *typec_port_register_altmode(struct typec_port *port,
->>   			     const struct typec_altmode_desc *desc);
->> +
->> +void typec_port_register_altmodes_from_fwnode(struct typec_port *port,
->> +	const struct typec_altmode_ops *ops, void *drvdata,
->> +	struct typec_altmode **altmodes, size_t n,
->> +	struct fwnode_handle *fwnode);
->> +
->>   void typec_unregister_altmode(struct typec_altmode *altmode);
->>   
->>   struct typec_port *typec_altmode2port(struct typec_altmode *alt);
->>
-> 
+diff --git a/arch/arm/boot/dts/vf610-zii-cfu1.dts b/arch/arm/boot/dts/vf610-zii-cfu1.dts
+index ce1920c052fc..c2668230a4c0 100644
+--- a/arch/arm/boot/dts/vf610-zii-cfu1.dts
++++ b/arch/arm/boot/dts/vf610-zii-cfu1.dts
+@@ -170,7 +170,6 @@
+ 			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+-			reset-gpios = <&gpio3 11 GPIO_ACTIVE_LOW>;
+ 
+ 			ports {
+ 				#address-cells = <1>;
+@@ -354,7 +353,6 @@
+ 	pinctrl_switch: switch-grp {
+ 		fsl,pins = <
+ 			VF610_PAD_PTB28__GPIO_98		0x3061
+-			VF610_PAD_PTE2__GPIO_107		0x1042
+ 		>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/vf610-zii-spb4.dts b/arch/arm/boot/dts/vf610-zii-spb4.dts
+index 55b4201e27f6..261317340189 100644
+--- a/arch/arm/boot/dts/vf610-zii-spb4.dts
++++ b/arch/arm/boot/dts/vf610-zii-spb4.dts
+@@ -127,7 +127,6 @@
+ 			pinctrl-names = "default";
+ 			reg = <0>;
+ 			eeprom-length = <65536>;
+-			reset-gpios = <&gpio3 11 GPIO_ACTIVE_LOW>;
+ 			interrupt-parent = <&gpio3>;
+ 			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+ 			interrupt-controller;
+@@ -312,7 +311,6 @@
+ 
+ 	pinctrl_gpio_switch0: pinctrl-gpio-switch0 {
+ 		fsl,pins = <
+-			VF610_PAD_PTE2__GPIO_107		0x31c2
+ 			VF610_PAD_PTB28__GPIO_98		0x219d
+ 		>;
+ 	};
+diff --git a/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts b/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
+index a6c22a79779e..e37b9643269b 100644
+--- a/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
++++ b/arch/arm/boot/dts/vf610-zii-ssmb-dtu.dts
+@@ -113,7 +113,6 @@
+ 			pinctrl-names = "default";
+ 			reg = <0>;
+ 			eeprom-length = <65536>;
+-			reset-gpios = <&gpio3 11 GPIO_ACTIVE_LOW>;
+ 			interrupt-parent = <&gpio3>;
+ 			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+ 			interrupt-controller;
+@@ -288,7 +287,6 @@
+ 
+ 	pinctrl_gpio_switch0: pinctrl-gpio-switch0 {
+ 		fsl,pins = <
+-			VF610_PAD_PTE2__GPIO_107		0x31c2
+ 			VF610_PAD_PTB28__GPIO_98		0x219d
+ 		>;
+ 	};
+diff --git a/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts b/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
+index 3d05c894bdc0..b3d6d4b9fa9c 100644
+--- a/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
++++ b/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
+@@ -141,7 +141,6 @@
+ 			pinctrl-names = "default";
+ 			reg = <0>;
+ 			eeprom-length = <65536>;
+-			reset-gpios = <&gpio3 11 GPIO_ACTIVE_LOW>;
+ 			interrupt-parent = <&gpio3>;
+ 			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+ 			interrupt-controller;
+@@ -319,7 +318,6 @@
+ 
+ 	pinctrl_gpio_switch0: pinctrl-gpio-switch0 {
+ 		fsl,pins = <
+-			VF610_PAD_PTE2__GPIO_107		0x31c2
+ 			VF610_PAD_PTB28__GPIO_98		0x219d
+ 		>;
+ 	};
+-- 
+2.21.3
 
