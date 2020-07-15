@@ -6,76 +6,78 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF4EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 18:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D87C9C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 18:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 422B72064B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 18:15:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF6602064B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 18:16:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594836917;
-	bh=EQcqG1qzGVoKGmfPoEtf+P/p3Db7Uf4bwxQ5wBHXp9o=;
+	s=default; t=1594836965;
+	bh=3W/vYRkDQL6aKPhWWxsyygU3dfIRXjNHOXTdJViH5SM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=f6jtGmCMmcjNX5p9HI4AZ9/M7v5c4TBi8oNGnT6icQa70nuWiuwj6iYxQ+DYu3lig
-	 s3wnEa1MYu0J11rx/84uEmAZRpJrjHO3MuG98FYY7/zDwymq5V3K8+w7RiLQ9yJr5J
-	 yqn/PB1Uffol9z96U2FI7JT0bPB9moDogvoKyIB0=
+	b=OzOBmRZ02mtPernnkQyhcDVdzwLnHbDUS2Rx7TP53S7w3TsASIHJsHBsSLdajKUZl
+	 QWK7Zez1I9eMaysg2ceOLHPJ0W7Gq+RF+F/jvYWK9qZmaa+eAwpR8f5NJXFTCrhLQA
+	 tWXaBAp6rUcf29fGuuMJts2njJVpbDkx0bieeh9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbgGOSPQ (ORCPT
+        id S1726491AbgGOSQF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 14:15:16 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:36915 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbgGOSPQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 14:15:16 -0400
-Received: by mail-il1-f196.google.com with SMTP id r12so2819987ilh.4;
-        Wed, 15 Jul 2020 11:15:15 -0700 (PDT)
+        Wed, 15 Jul 2020 14:16:05 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:41401 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbgGOSQF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 14:16:05 -0400
+Received: by mail-il1-f194.google.com with SMTP id q3so2808634ilt.8;
+        Wed, 15 Jul 2020 11:16:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=PmBnF7DoD1kZyHvLWFAFdH+GQUE7qsucYcrrKDK6qro=;
-        b=kj90bc+yXbdDzB+vgWqmYxHRGSAwFPI8pwUD5keLOhXhSkO+L2QoewLdth7isKBLx5
-         0Yn2uEqGBKjRgbeSIdzk/4bpi/blFpDKfQe9W/tFsNHti3qw3iyL1wOJ6jgAvppCuWv1
-         i7cOZJJ+AeARbynG8/3dPZHubWf4esYKw50nZO2zH5UGHRiV1dJOLbqVg5kS+Hfm83Om
-         R1PVZOmFUXS4BBRojQmKVf03QgguDV05PkpfmI3l/u9kn/U8aKlGP1TQVEafV20wRRV8
-         vUmZ6Z67V5kwCU0Cvgsydy9NI7B51ReHqhyFxCKiB6OgMrv2VEsiXvEvmCm/nbqSFGNd
-         oxvg==
-X-Gm-Message-State: AOAM532R4/teA01ukxGzvumEC5ToZ43F5++gBxJvwqzNxREd7ev+Pbzl
-        fP+ACUliZgvPIHkO+KkiL+6xZO4Tpg==
-X-Google-Smtp-Source: ABdhPJxb2xhUbYj05ZQZVYQe0lPGVbmo4BcPFh3EMY1ZPDkGjNrgsEk1WxfOMZBcR/Faa75viXH2Vw==
-X-Received: by 2002:a92:4101:: with SMTP id o1mr749153ila.53.1594836915542;
-        Wed, 15 Jul 2020 11:15:15 -0700 (PDT)
+        bh=F0t0DHQs/G58g3g/RfGfzGlz+9oTkWn+bjS9t57l3Yc=;
+        b=TztQA2dJPxXFQfuom08WWuww7i5bNhJFJ0HAvtl+ObpwOzfiiaVY2zf5camPFXanIh
+         Wo+bAri5J84aPxPc5DL6sJIdQhjf6oCi4wFedm8oJSC7Vp2dC/i77WOhXHOyiRhRbk6+
+         l1I9PFNWDHncCV2j8zHRbw4u//gmOc0hiLrSzXQtn+cARwDu7mAHRochlNVStJpxr55i
+         VCgp7+S5YIG9GH5U+FdvEM14F2ccYz+h5bLNrmByJMrCO6Wg5R1ttMLFIT5+sWc0dTlH
+         EiPzJUMfT8cnodjjiOfqFJwK9c0Xump3QimUDHqAZuic24JVYHCMmjTvDliyPp8qq2Rw
+         nglg==
+X-Gm-Message-State: AOAM532i2fm/HzxLh4zD7Oy7nAGRgWOh0kv6rum9vJ53ibwes9oIHb4r
+        g0ihBFseNgMINQ7Roj9WOA==
+X-Google-Smtp-Source: ABdhPJxInjHwjYXnTC4M1VYr/OH0djk6+aVwKSysUTZSS+t/CPWIvKyR7inUTTJ7KDIP8zL4wzmCRw==
+X-Received: by 2002:a92:150d:: with SMTP id v13mr684749ilk.297.1594836964119;
+        Wed, 15 Jul 2020 11:16:04 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id k3sm1416637ils.8.2020.07.15.11.15.14
+        by smtp.gmail.com with ESMTPSA id 69sm1466626ile.60.2020.07.15.11.16.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 11:15:14 -0700 (PDT)
-Received: (nullmailer pid 550046 invoked by uid 1000);
-        Wed, 15 Jul 2020 18:15:14 -0000
-Date:   Wed, 15 Jul 2020 12:15:14 -0600
+        Wed, 15 Jul 2020 11:16:03 -0700 (PDT)
+Received: (nullmailer pid 551710 invoked by uid 1000);
+        Wed, 15 Jul 2020 18:16:02 -0000
+Date:   Wed, 15 Jul 2020 12:16:02 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/4] dt-bindings: Add vendor prefix for RoseapplePi.org
-Message-ID: <20200715181514.GA549992@bogus>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 3/4] dt-bindings: arm: actions: Document RoseapplePi
+Message-ID: <20200715181602.GA551625@bogus>
 References: <cover.1592123160.git.cristian.ciocaltea@gmail.com>
- <b34021779d95a4185a15118e2f13be90f5c4286f.1592123160.git.cristian.ciocaltea@gmail.com>
+ <40f7d54f9502f0d33f2dcf18b02c6de0d55d2ecb.1592123160.git.cristian.ciocaltea@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b34021779d95a4185a15118e2f13be90f5c4286f.1592123160.git.cristian.ciocaltea@gmail.com>
+In-Reply-To: <40f7d54f9502f0d33f2dcf18b02c6de0d55d2ecb.1592123160.git.cristian.ciocaltea@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 15 Jun 2020 03:19:09 +0300, Cristian Ciocaltea wrote:
-> Add devicetree vendor prefix for RoseapplePi.org Foundation.
-> Website: http://roseapplepi.org/
+On Mon, 15 Jun 2020 03:19:10 +0300, Cristian Ciocaltea wrote:
+> Define compatible strings for RoseapplePi, a SBC manufactured
+> in Taiwan, based on Actions Semi S500 reference design.
 > 
 > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+>  Documentation/devicetree/bindings/arm/actions.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
