@@ -2,140 +2,64 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0727C433E6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 17:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BEDEC433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 17:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85DF42065E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 17:55:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594835707;
-	bh=x/b+6oek5ExHkOuOAzMaafX+ZHia1G+C7ykOk8YnX1k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GVJmYYUGAhCWpD8wuExcjCDUnKDKTCoD40Z6NwKswzDjbUjLoXiH70aIXsNeiH2Zy
-	 JNPf7tq7xNdDjAGMzO5ZFsSBKD50N4bVNIXPX4s/705WFNRQU9cehajY0rG2chkXVQ
-	 AFolksl1Fni+UWcCGFySyoIWWgIemRezvM1Jve2Q=
+	by mail.kernel.org (Postfix) with ESMTP id 80B482065E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 17:59:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="vMqdUxGq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgGORzD (ORCPT
+        id S1725882AbgGOR70 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 13:55:03 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35461 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbgGORzC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 13:55:02 -0400
-Received: by mail-io1-f65.google.com with SMTP id v8so3209761iox.2;
-        Wed, 15 Jul 2020 10:55:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=woYWRRlvqEQlLUErEQBpQBUVNM6CQZJXoqFEveZ8nYE=;
-        b=e5jeug7CMLJ4yWalVt6+h28l0S4ln8a6G0sSFgWpgY13XZX+lQe9MtL6mtmDorb0so
-         rodt5zfv0EOZSCba2aPuuLqJH0nuvMuKyMNnybqbHEV+NcX7Vzd6SLJziJDMP3oZQMLk
-         c+G2RaMAwWIHDg4WNFQ8Zm78ksk9s7QaDUSnePn2asV447+4NDkIhYsP+0iP5OhvwUGr
-         dacCBPLy+R3cPhzsBTpf5XV0fSm66jiEckMi3Tk3meKDONvGj72URnwdvjMkRBiKD8rL
-         Xsp9hSvGsYq8RtmCk8Z1n396/vFM62gnZ/mvWFlnUPVYGk+gXTRV6yFsJN0K9RWW+Zg7
-         gR6Q==
-X-Gm-Message-State: AOAM532xXwGkJeJHHV9TBgZB19vfj+IzE1DyU45zxRw35gkff2ksh8LS
-        x4XkrfCslvfyDZrL7BNMDQ==
-X-Google-Smtp-Source: ABdhPJxh8fA5ehCDcqiAyP5L5alxPVWB20vQkTrQUE6pz55njBu1AfI32x925fCetMWucCJAuM+YIg==
-X-Received: by 2002:a6b:2c1:: with SMTP id 184mr417726ioc.167.1594835701529;
-        Wed, 15 Jul 2020 10:55:01 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id s5sm1389818ilo.24.2020.07.15.10.54.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 10:55:00 -0700 (PDT)
-Received: (nullmailer pid 506188 invoked by uid 1000);
-        Wed, 15 Jul 2020 17:54:59 -0000
-Date:   Wed, 15 Jul 2020 11:54:59 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Mateusz Holenko <mholenko@antmicro.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>, Jiri Slaby <jslaby@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        "Gabriel L. Somlo" <gsomlo@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>, linux-kernel@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Filip Kokosinski <fkokosinski@antmicro.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-serial@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Maxime Ripard <mripard@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stafford Horne <shorne@gmail.com>
-Subject: Re: [PATCH v8 2/5] dt-bindings: soc: document LiteX SoC Controller
- bindings
-Message-ID: <20200715175459.GA505797@bogus>
-References: <20200715130641.1953227-0-mholenko@antmicro.com>
- <20200715130641.1953227-2-mholenko@antmicro.com>
+        Wed, 15 Jul 2020 13:59:26 -0400
+Received: from mail.nic.cz ([217.31.204.67]:34598 "EHLO mail.nic.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725861AbgGOR70 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jul 2020 13:59:26 -0400
+Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
+        by mail.nic.cz (Postfix) with ESMTPSA id 8C7E1140968;
+        Wed, 15 Jul 2020 19:59:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
+        t=1594835964; bh=wSLE4bSdSmJMP5hpsSynAR0AfQ54sMsJNDTZBVOCjJM=;
+        h=Date:From:To;
+        b=vMqdUxGqpidHhI5kmr7U2ZRdspcEuLP3HEpRhraxy0n0BofPlhhoT7svUH3od1LT1
+         G9XSUlJ+5Y698s7LPk9uWmOopQbOw5P3lPkvqmOUHmF1HdRuKC+1eyISpZ8eIK4xWq
+         X//kaVHaAQelmwVe6xPDfp9yIeZOaWOXxiMjCwq8=
+Date:   Wed, 15 Jul 2020 19:59:24 +0200
+From:   Marek =?ISO-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Dan Murphy <dmurphy@ti.com>, jacek.anaszewski@gmail.com,
+        robh@kernel.org, devicetree@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v30 04/16] leds: Add multicolor ID to the color ID list
+Message-ID: <20200715195924.51ab4dbe@dellmb.labs.office.nic.cz>
+In-Reply-To: <20200715173610.GA31327@amd>
+References: <20200713154544.1683-1-dmurphy@ti.com>
+        <20200713154544.1683-5-dmurphy@ti.com>
+        <20200715152056.3505e181@dellmb.labs.office.nic.cz>
+        <20200715173610.GA31327@amd>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200715130641.1953227-2-mholenko@antmicro.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+X-Virus-Status: Clean
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 15 Jul 2020 13:07:27 +0200, Mateusz Holenko wrote:
-> From: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
-> 
-> Add documentation for LiteX SoC Controller bindings.
-> 
-> Signed-off-by: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
-> Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> 
-> Notes:
->     No changes in v8.
-> 
->     No changes in v7.
-> 
->     Changes in v6:
->         - fixed license header
-> 
->     Changes in v5:
->         - added reviewed-by tag
-> 
->     Changes in v4:
->         - changes compatible to "litex,soc-controller"
->         - fixed yaml's header
->         - removed unnecessary sections from yaml
->         - fixed indentation in yaml
-> 
->     This commit has been introduced in v3 of the patchset.
-> 
->  .../soc/litex/litex,soc-controller.yaml       | 39 +++++++++++++++++++
->  MAINTAINERS                                   |  6 +++
->  2 files changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/litex/litex,soc-controller.yaml
-> 
+On Wed, 15 Jul 2020 19:36:10 +0200
+Pavel Machek <pavel@ucw.cz> wrote:
 
+> Thanks for patches, thanks for reviews, 1-4 applied.
+> 									Pavel
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/soc/litex/litex,soc-controller.example.dt.yaml: example-0: soc-controller@f0000000:reg:0: [0, 4026531840, 0, 12] is too long
-
-
-See https://patchwork.ozlabs.org/patch/1329382
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+The most important one is 5th, though :D
