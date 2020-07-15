@@ -2,128 +2,156 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13321C433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 15:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A93C433E7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 15:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1A3B2065E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 15:36:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WcIywgf/"
+	by mail.kernel.org (Postfix) with ESMTP id 6E82C20672
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 15:37:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725907AbgGOPgM (ORCPT
+        id S1726780AbgGOPhv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:36:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33562 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbgGOPgM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 11:36:12 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C411DC061755;
-        Wed, 15 Jul 2020 08:36:11 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id g20so1932544edm.4;
-        Wed, 15 Jul 2020 08:36:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ldTR/KsOkvUXfFE3oIwY06p1m96PfAnxhTKvRebiJFk=;
-        b=WcIywgf/5yGovAVSIjXD9OIB0Yx1Lqe39sKQcKnE0bhl7NpHMP3wyUyXsz76eznoDN
-         kLjzcwlopVjThClxHuAyihsZX8FPaEHuAR07Xs+vzRHSsrUbJI0eICfPyJGZKPi/QsKZ
-         mmZYeZuAvUsvxgkbItIok1s8pKt4mmzBtXk9cwHdKDPanj9nt1L5t+ZuHliLF00lGmDj
-         sgGGTAONqoqLI9wypqeA5drEqMm5oVMEDqzFIsWfOobV+z2oJKOnAPiPglVQaa4qup8s
-         aimYRQqb3HkkSb9UJ3FCrUOw7rkvO35YQrAjHrLTkQRICmx+aHtbSrz7ehlxcrNUKK9x
-         axwQ==
+        Wed, 15 Jul 2020 11:37:51 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38362 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726776AbgGOPhv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 11:37:51 -0400
+Received: by mail-oi1-f196.google.com with SMTP id r8so2528421oij.5;
+        Wed, 15 Jul 2020 08:37:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ldTR/KsOkvUXfFE3oIwY06p1m96PfAnxhTKvRebiJFk=;
-        b=gQ0XgMnJ9kus4pHurSEm0wdnrdUhN4vb/1c8UPemjVzXd2S2EpPNxLlTp0apwiqgQR
-         +nAv2yFLteaOfb22DD3gs2HskF9o8A4JtgviHGTrjGHbok7qJoVwffz95y1FhyMaNsjs
-         iGDlujgMa7MAPEXip87nqzhuIinyxjgZbGbzVaUrKaY/2DSNLJUnewj81AXdUv2hA42T
-         r9BgyLC78sKMS+5x+2dcujIthhkOPYrM9Cc/R8sDllek8c/UreJzrhuqQcdD1P/nNPRL
-         bSsdYPj4+CaZ+avd9sQrxnAjE73gaM3xeHVrH4uqycEuH/hoFSlAS9JHdBBUHug9xA59
-         BUYg==
-X-Gm-Message-State: AOAM5300h6fXWjwjGPwqSDswQJRT/qJxXqAbFr4rzdO8uX4T1mB+iEdQ
-        1V/IqG3WCtXHkfNUSywOCQzxS7GN3JZDPlhKtXw=
-X-Google-Smtp-Source: ABdhPJwUDgryr+uwNIkAcro/MFjmRNEHds+xBye6alkuUKRwQY/Ip2yfUIBYAYZ0SbfRqlleTEVLIvRkwjo+QnLxV+0=
-X-Received: by 2002:a50:cd1a:: with SMTP id z26mr209684edi.120.1594827370435;
- Wed, 15 Jul 2020 08:36:10 -0700 (PDT)
+        bh=I8Y+iMIBLic68sY07uOSY3D6Exe00WfEOasrAyuGf+s=;
+        b=R5R4eTBNNnULPKEihChFTlXSD6YrdiulPQmVnRnj+vWhmeMXYrXRqEG+ELNrSjgPoy
+         1Hp3uPM0zE8cB68YNXTGuXSNqAKSZU7HMuJZVk2Z1CPKlCnLEtLegMP69Z84h+/M6tTO
+         LupIF3AkeWCDUL2jdYK2HxrOIpzoZ7wJs5D9LJhjv8ES9++UoWv8c7UEwj+YgKHefVsA
+         14Gwvsku/EnHZpRd1kn0HJUS/pjinvX0cBb/upw+JJ6K12Y1h9n+FOELkqNuLFYk25cD
+         MeFWDsxzpXBKWhLXLdGNqo6rNkOGpKbp4vuggxv2sSYyyVaI44Tp/YYf1W+FVFx6xZ63
+         wtwA==
+X-Gm-Message-State: AOAM530dVXiYHHcQy0jetW+CBrXdCULVZ8xJEm1EmASjyZQw0ENZl8AH
+        HZYKBWbNuSZnOwBniSEMjd1tGNuqrk/W879Pcqz+h6/C
+X-Google-Smtp-Source: ABdhPJwtSILuH3tg5zL3hnRRNwNcfF1BCTz0ZqeqvqknIQPVE78txAnKpBzVTonE0yDuNLifqFhnvTOvFPe5ntBqUoc=
+X-Received: by 2002:aca:ac10:: with SMTP id v16mr217670oie.153.1594827469906;
+ Wed, 15 Jul 2020 08:37:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <1594644106-22449-1-git-send-email-akhilpo@codeaurora.org>
-In-Reply-To: <1594644106-22449-1-git-send-email-akhilpo@codeaurora.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Wed, 15 Jul 2020 08:36:43 -0700
-Message-ID: <CAF6AEGtAEwZbWxLb4MxaWNswvtrFbLK+N0Fez2XYr7odKZffWA@mail.gmail.com>
-Subject: Re: [PATCH v5 0/6] Add support for GPU DDR BW scaling
-To:     Akhil P Oommen <akhilpo@codeaurora.org>
-Cc:     freedreno <freedreno@lists.freedesktop.org>,
-        dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
+References: <1567584941-13690-1-git-send-email-biju.das@bp.renesas.com>
+ <1567584941-13690-2-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdVZkjGDFmeQ9XkOqq-ogfSZz99hd0=N-OYLai4UEzKwAQ@mail.gmail.com> <TYBPR01MB5309C98CD8BD3706394E4784867E0@TYBPR01MB5309.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYBPR01MB5309C98CD8BD3706394E4784867E0@TYBPR01MB5309.jpnprd01.prod.outlook.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 15 Jul 2020 17:37:38 +0200
+Message-ID: <CAMuHMdWHqjuDFFrjK6C72fyFQPsvYy2qhZ5=RfPNXsG-_FXHyQ@mail.gmail.com>
+Subject: Re: [PATCH RESEND v7 1/3] dt-bindings: usb: hd3ss3220 device tree
+ binding document
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     Biju Das <biju.das@bp.renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Matthias Kaehlcke <mka@chromium.org>,
-        saravanak@google.com, Sibi Sankar <sibis@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Jonathan <jonathan@marek.ca>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
+        <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 5:41 AM Akhil P Oommen <akhilpo@codeaurora.org> wrote:
->
-> This series adds support for GPU DDR bandwidth scaling and is based on the
-> bindings from Georgi [1]. This is mostly a rebase of Sharat's patches [2] on the
-> tip of msm-next branch.
->
-> Changes from v4:
-> - Squashed a patch to another one to fix Jonathan's comment
-> - Add back the pm_runtime_get_if_in_use() check
->
-> Changes from v3:
-> - Rebased on top of Jonathan's patch which adds support for changing gpu freq
-> through hfi on newer targets
-> - As suggested by Rob, left the icc_path intact for pre-a6xx GPUs
->
-> [1] https://kernel.googlesource.com/pub/scm/linux/kernel/git/vireshk/pm/+log/opp/linux-next/
-> [2] https://patchwork.freedesktop.org/series/75291/
->
-> Sharat Masetty (6):
->   dt-bindings: drm/msm/gpu: Document gpu opp table
->   drm: msm: a6xx: send opp instead of a frequency
->   drm: msm: a6xx: use dev_pm_opp_set_bw to scale DDR
->   arm64: dts: qcom: SDM845: Enable GPU DDR bw scaling
->   arm64: dts: qcom: sc7180: Add interconnects property for GPU
->   arm64: dts: qcom: sc7180: Add opp-peak-kBps to GPU opp
+Hi Biju,
 
-I can take the first two into msm-next, the 3rd will need to wait
-until dev_pm_opp_set_bw() lands
-
-Bjorn, I assume you take the last three?
-
-BR,
--R
-
+On Wed, Jul 15, 2020 at 1:42 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
+> > Subject: Re: [PATCH RESEND v7 1/3] dt-bindings: usb: hd3ss3220 device tree
+> > binding document
+> >
+> > On Wed, Sep 4, 2019 at 10:22 AM Biju Das <biju.das@bp.renesas.com>
+> > wrote:
+> > > Add device tree binding document for TI HD3SS3220 Type-C DRP port
+> > > controller driver.
+> > >
+> > > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> >
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
+> > > @@ -0,0 +1,38 @@
+> > > +TI HD3SS3220 TypeC DRP Port Controller.
+> > > +
+> > > +Required properties:
+> > > + - compatible: Must be "ti,hd3ss3220".
+> > > + - reg: I2C slave address, must be 0x47 or 0x67 based on ADDR pin.
+> > > + - interrupts: An interrupt specifier.
+> > > +
+> > > +Required sub-node:
+> > > + - connector: The "usb-c-connector" attached to the hd3ss3220 chip. The
+> > > +   bindings of the connector node are specified in:
+> > > +
+> > > +       Documentation/devicetree/bindings/connector/usb-connector.txt
+> > > +
+> > > +Example:
+> > > +hd3ss3220@47 {
+> > > +       compatible = "ti,hd3ss3220";
+> > > +       reg = <0x47>;
+> > > +       interrupt-parent = <&gpio6>;
+> > > +       interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+> > > +
+> > > +       connector {
+> > > +               compatible = "usb-c-connector";
+> > > +               label = "USB-C";
+> > > +               data-role = "dual";
+> > > +
+> > > +               ports {
+> > > +                       #address-cells = <1>;
+> > > +                       #size-cells = <0>;
+> > > +
+> > > +                       port@1 {
+> >
+> > This does not comply with
+> > Documentation/devicetree/bindings/connector/usb-connector.yaml:
+> >
+> >     connector: ports: 'port@0' is a required property
 >
->  .../devicetree/bindings/display/msm/gpu.txt        |  28 ++++++
->  arch/arm64/boot/dts/qcom/sc7180.dtsi               |   9 ++
->  arch/arm64/boot/dts/qcom/sdm845.dtsi               |   9 ++
->  drivers/gpu/drm/msm/adreno/a6xx_gmu.c              | 108 ++++++++++++---------
->  drivers/gpu/drm/msm/adreno/a6xx_gpu.h              |   2 +-
->  drivers/gpu/drm/msm/msm_gpu.c                      |   3 +-
->  drivers/gpu/drm/msm/msm_gpu.h                      |   3 +-
->  7 files changed, 112 insertions(+), 50 deletions(-)
+> But in RZ/G2E case, the connector is a SS capable connector.  May be we need to update required property
+> as port@0 or port@1? Please let me know
 >
-> --
-> 2.7.4
->
+>  -    required:
+>  -      - port@0
+>  +    anyOf:
+>  +      - required:
+>  +          - port@0
+>  +      - required:
+>  +          - port@1
+
+May make sense.
+I'd like to defer to the USB experts, though.
+
+> > > +                               reg = <1>;
+> > > +                               hd3ss3220_ep: endpoint {
+> > > +                                       remote-endpoint = <&usb3_role_switch>;
+> > > +                               };
+> > > +                       };
+> > > +               };
+> > > +       };
+> > > +};
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
