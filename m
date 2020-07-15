@@ -6,94 +6,87 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7609BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 21:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9274AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 22:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BEFB2072E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 21:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E2B7206F4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 22:03:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594850306;
-	bh=HVGOsWy+hzwxOIpg612RrQs2OBeT51mATWj5wOACz60=;
+	s=default; t=1594850636;
+	bh=sNwO9jValwCTkjvZPUGJQ1geEfZM4BbeEZNfuTOMhZ0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pZ2XJ8pF/Ecrf2RXnJfE5ueY4ouY++Df+AcKulydkWO2Gf3xWpOzJfKcEcHAVO8/g
-	 B8+XeVjGEPlBhMIZWcw5B6zKu12j7NsAHDRBDCXjFCT5N3pILCZQ8O2yZbNky+eDOB
-	 rigJNvZBSpaYA2VSueJ8aTMqIbuMrnO1+jk2dEjw=
+	b=2oLB0v3DHGt1h73/QSkyX2eT/GGO1/MWcgl1zIBhY/CgSSYHBfEESZ6WvMykAmaS7
+	 3ybp4oT1rKB8UJvysxp+hLi9EVxTpF5x9NiLuF/2/nWIp7edSUVYryGPbgGP3FfBcI
+	 4Pfz8NRXB82sV5CgTRz6PPZ5xBnkcwEruY33NujU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbgGOV6Z (ORCPT
+        id S1726786AbgGOWDz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 17:58:25 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:45966 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbgGOV6Z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 17:58:25 -0400
-Received: by mail-il1-f194.google.com with SMTP id o3so3327523ilo.12;
-        Wed, 15 Jul 2020 14:58:24 -0700 (PDT)
+        Wed, 15 Jul 2020 18:03:55 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:46442 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbgGOWDz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 18:03:55 -0400
+Received: by mail-il1-f193.google.com with SMTP id p15so3326655ilh.13;
+        Wed, 15 Jul 2020 15:03:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=oQTLdwvSzoY7qnrKs3bx2cK5No1Qw8keJ6Qduu3x6DY=;
-        b=s1eT6lA+qbDvhcbvnEpW2mgmfUIPF1f7hUsuM/djo0j96VYjnBko7kfzvBvQ0ge6ZH
-         vIqVOb+lbFCXBIFDx0Fk+dqMTqAsQmS+g/a67hM1LAz5/PwlV8uNLG3IGGoqRU+a/GmN
-         nHStAtNK3BjCSe2jS1yNeCB8YNL38+C3y4VIgDDiDbN4M6Y+8tMnkQSdH9E3o4n/7H+M
-         E9Eg2F714N4MxJR7CyqZFGNoeyFAqhydP4NR35NLwTDk/K38N+/FZuN+y/5EbLP9Dmol
-         rqhkEZKYgH8bJOYGRyyKdNIsMMsZWx+xrfY+krKynTF9AcGhfqLo/gBe+nyNOi0q88Vr
-         7n7w==
-X-Gm-Message-State: AOAM5308wOZg56srOcbsbweSKgntJvmuw3joP70YprDzh4TIlXZsw6XX
-        q8GYDxm6sHBmDQmkJ/3fPgjz+eXbRQ==
-X-Google-Smtp-Source: ABdhPJxJoVaaBbWoU64Z+i+EAbJPZz4ZBb/zRSAl7TxI1CXvbm++wX5KDuLJHIJLUZfs6ksOgPvOuw==
-X-Received: by 2002:a92:488f:: with SMTP id j15mr1563921ilg.269.1594850304394;
-        Wed, 15 Jul 2020 14:58:24 -0700 (PDT)
+        bh=yHrzpTpE71ECQpRuBTkBYfolEU5GSatuGLtkblRjLXQ=;
+        b=a1t3tVYRY+oYfZz8gtWmPSxGSzexC1/MfPl9vmfGnuBWFB5Ot/q+ul2c/0J6R5KY2K
+         fyTA4P25HiKvKyJv+jrCxtSQj/NfKacrHEJJA3jVb911aCmKQys5V/PxBxz47lwQZyq/
+         K44eLxRpvvGZgEqovCfuCUhTMoe64YUyPZY+L7zkOZsoEXSOk/eE17GD/VkSWAbwC4ad
+         7DiU9oQNwmocWD7IQXeQ64Kl0IEl18XUqUxLqgnb1YkkPL3GFd5SB/+h0WjuOPnvIp5S
+         Pl4CFUv4+hMkK/Bz5gYtkLLql0TLfPljahUHmzEF61ydel882Jb8Q6qTFj9KGdTagt3B
+         VTEA==
+X-Gm-Message-State: AOAM532ajJELezW+GzBhz4U6DdXD7HiSUmnDmGoOv1FV6mWjnJqKDM7X
+        jH6UzDSrPui37QKAdZ/XCM/LzKvDaQXV
+X-Google-Smtp-Source: ABdhPJwQfgtE3w4Fk0lEUwsl0trZOdpbFojfWp4McLV3EX5OCRGWVOQ+wQEZIn4mHN/f9ehOeeUbbw==
+X-Received: by 2002:a92:d2c6:: with SMTP id w6mr1558062ilg.24.1594850634592;
+        Wed, 15 Jul 2020 15:03:54 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id r124sm1711394iod.40.2020.07.15.14.58.23
+        by smtp.gmail.com with ESMTPSA id t21sm1794626ioc.0.2020.07.15.15.03.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 14:58:23 -0700 (PDT)
-Received: (nullmailer pid 888952 invoked by uid 1000);
-        Wed, 15 Jul 2020 21:58:22 -0000
-Date:   Wed, 15 Jul 2020 15:58:22 -0600
+        Wed, 15 Jul 2020 15:03:53 -0700 (PDT)
+Received: (nullmailer pid 896331 invoked by uid 1000);
+        Wed, 15 Jul 2020 22:03:52 -0000
+Date:   Wed, 15 Jul 2020 16:03:52 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-iio@vger.kernel.org, Sean Nyekjaer <sean@geanix.com>
-Subject: Re: [PATCH] dt-bindings: iio: ti,ads8688 yaml conversion
-Message-ID: <20200715215822.GA888901@bogus>
-References: <20200705131720.240574-1-jic23@kernel.org>
+To:     Marcin Sloniewski <marcin.sloniewski@gmail.com>
+Cc:     Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        devicetree@vger.kernel.org,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Mark Brown <broonie@kernel.org>,
+        Lubomir Rintel <lkundrak@v3.sk>, allen <allen.chen@ite.com.tw>,
+        linux-kernel@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>
+Subject: Re: [PATCH 1/3] dt-bindings: vendor-prefixes: add Seeed Studio
+Message-ID: <20200715220352.GA896275@bogus>
+References: <20200706173353.20525-1-marcin.sloniewski@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200705131720.240574-1-jic23@kernel.org>
+In-Reply-To: <20200706173353.20525-1-marcin.sloniewski@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 05 Jul 2020 14:17:20 +0100, Jonathan Cameron wrote:
-> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+On Mon, 06 Jul 2020 19:33:47 +0200, Marcin Sloniewski wrote:
+> Add the "seeed" vendor prefix for Seeed Technology Co., Ltd
+> Website: https://www.seeedstudio.com/
 > 
-> Fairly simple binding.  Most of the changes were filling in information
-> not previously found in the binding.  I dropped the previous explicit
-> mention of spi-max-frequency as that is covered by the generic SPI
-> binding.
-> 
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Cc: Sean Nyekjaer <sean@geanix.com>
+> Signed-off-by: Marcin Sloniewski <marcin.sloniewski@gmail.com>
 > ---
-> 
-> Sean, are you fine with being explicitly listed at the maintainer
-> of this binding?  Previously we didn't have that formally laid
-> out in the old txt bindings but it's now a required field.
-> 
-> I'm going to slowly work my way through some of the simpler yaml conversions
-> over the next few months.   Of course I welcome anyone else taking
-> some of these on but for purposes of review, please keep it to only
-> a few at a time.
-> 
->  .../bindings/iio/adc/ti,ads8688.yaml          | 45 +++++++++++++++++++
->  .../bindings/iio/adc/ti-ads8688.txt           | 20 ---------
->  2 files changed, 45 insertions(+), 20 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/ti,ads8688.yaml
->  delete mode 100644 Documentation/devicetree/bindings/iio/adc/ti-ads8688.txt
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
