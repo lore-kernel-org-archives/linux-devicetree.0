@@ -2,183 +2,204 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC77C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 06:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F8AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 06:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A57020663
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 06:41:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="alvhxN7Z"
+	by mail.kernel.org (Postfix) with ESMTP id 2469C206D5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 06:55:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgGOGlY (ORCPT
+        id S1728939AbgGOGzm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 02:41:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35510 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725885AbgGOGlX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 02:41:23 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AD95C061755;
-        Tue, 14 Jul 2020 23:41:23 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id q17so1969844pls.9;
-        Tue, 14 Jul 2020 23:41:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=H3GOXsEias8O11m7veg8//yn3qcFVNyaC+qfLEtL+Ng=;
-        b=alvhxN7ZMAQKl7g8xDR8IV6PagrJ9Hahmx//vd3jdPyUs04mYsJSaxa0f8L68+OQ+l
-         E3+DxH4KmqLcBJpeV9Jtr26IcaITP+oQr6l47Zv8aHE9du2IrS27lUGCdfK6hvhSFm0E
-         AnJa4gH3mgO0SYfVUP/lsMRqaZy/c5gUkHzpKYExnEj2d08k0QFoyDyd+gqaYlNKZegr
-         d4bihMgLhmzBMDkqnkc2gq+sxeD2jmO6GA5EQrht3RujORiO3efOGCf9/0izJVYJAjLt
-         WXryT0azR8FlK9noO8I9iG9LqC1nhEQ8wjDsmCf5ak4sEtEY9j0xzqPHAf3pv+idT7uJ
-         yiIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=H3GOXsEias8O11m7veg8//yn3qcFVNyaC+qfLEtL+Ng=;
-        b=Vfu7FDC8kzrNmcfYeM5NJ4vBPXxU09zkKERhtscEUlxHvczl9knaTwpoQ54r7JGdn7
-         b6XBEAG9JN/SKPlVE5se1RcGBy/LAoUePIHCqTiWqvSH0slI61cuKL7oQn9RbiVU1IJI
-         6itHVDhqAmfABHFRn10vTVLkggJChgyDBWCPfj7cXc3jWkA29mUu10U3vxHKARMU7ObC
-         9YQX9+NaOuJps+ngkdmGTYDnr+addHxyB4wCwjSwv2eyDujCYaCxBimPac3Q7SDxR0VI
-         zeLz1llPb2WGCtl5k6bJy5/xpBxhjChVsIArrxko5o6qiI9qUdUSbbinpYC5f5U6MvAE
-         MZ5A==
-X-Gm-Message-State: AOAM530xvE/eY5F3aSx6PBgD804BA2Tkz1NLera3PoDDBBDmyjzVdskx
-        QFiKw23qFuaax5fc+3ON3H8=
-X-Google-Smtp-Source: ABdhPJx7Fa/qDN3qyOdO0QPaUPtwX+pk9Uzy1ivVjam/CKWrJ+m4kN3YIdTdkOkLBa39I3kofrPxrQ==
-X-Received: by 2002:a17:90a:1d06:: with SMTP id c6mr9005046pjd.194.1594795282729;
-        Tue, 14 Jul 2020 23:41:22 -0700 (PDT)
-Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id bx18sm958690pjb.49.2020.07.14.23.41.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 Jul 2020 23:41:22 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 23:40:58 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@gmail.com>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        linuxppc-dev@lists.ozlabs.org, Timur Tabi <timur@kernel.org>,
-        kuninori.morimoto.gx@renesas.com, samuel@sholland.org,
-        katsuhiro@katsuster.net,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Takashi Iwai <tiwai@suse.com>, Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 3/3] ASoC: fsl-asoc-card: Support Headphone and
- Microphone Jack detection
-Message-ID: <20200715064057.GA14081@Asurada-Nvidia>
-References: <1594717536-5188-1-git-send-email-shengjiu.wang@nxp.com>
- <1594717536-5188-4-git-send-email-shengjiu.wang@nxp.com>
- <20200714211432.GA10818@Asurada-Nvidia>
- <CAA+D8ANQ_B9jJUhLYQnKxKJcVrmvakxPo58h433QqFhdu2nRPA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA+D8ANQ_B9jJUhLYQnKxKJcVrmvakxPo58h433QqFhdu2nRPA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 15 Jul 2020 02:55:42 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:49776 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728752AbgGOGzm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jul 2020 02:55:42 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 416C5200226;
+        Wed, 15 Jul 2020 08:55:40 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8F855200228;
+        Wed, 15 Jul 2020 08:55:36 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A6107402C1;
+        Wed, 15 Jul 2020 14:55:31 +0800 (SGT)
+From:   andy.tang@nxp.com
+To:     shawnguo@kernel.org
+Cc:     amit.kucheria@linaro.org, leoyang.li@nxp.com, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>
+Subject: [PATCH 1/2 v2] arm64: dts: ls1088a: add more thermal zone support
+Date:   Wed, 15 Jul 2020 14:49:08 +0800
+Message-Id: <20200715064909.9161-1-andy.tang@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 12:14:01PM +0800, Shengjiu Wang wrote:
-> On Wed, Jul 15, 2020 at 5:16 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
-> >
-> > Hi Shengjiu,
-> >
-> > The whole series looks good to me. Just a couple of small
-> > questions inline:
-> >
-> > On Tue, Jul 14, 2020 at 05:05:36PM +0800, Shengjiu Wang wrote:
-> > > Use asoc_simple_init_jack function from simple card to implement
-> > > the Headphone and Microphone detection.
-> > > Register notifier to disable Speaker when Headphone is plugged in
-> > > and enable Speaker when Headphone is unplugged.
-> > > Register notifier to disable Digital Microphone when Analog Microphone
-> > > is plugged in and enable DMIC when Analog Microphone is unplugged.
-> > >
-> > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> > > ---
-> > >  sound/soc/fsl/Kconfig         |  1 +
-> > >  sound/soc/fsl/fsl-asoc-card.c | 69 ++++++++++++++++++++++++++++++++++-
-> > >  2 files changed, 68 insertions(+), 2 deletions(-)
-> >
-> > >  static int fsl_asoc_card_late_probe(struct snd_soc_card *card)
-> > >  {
-> > >       struct fsl_asoc_card_priv *priv = snd_soc_card_get_drvdata(card);
-> > > @@ -745,8 +789,29 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
-> > >       snd_soc_card_set_drvdata(&priv->card, priv);
-> > >
-> > >       ret = devm_snd_soc_register_card(&pdev->dev, &priv->card);
-> > > -     if (ret && ret != -EPROBE_DEFER)
-> > > -             dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", ret);
-> > > +     if (ret) {
-> > > +             if (ret != -EPROBE_DEFER)
-> > > +                     dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", ret);
-> >
-> > I think we may move this EPROBE_DEFER to the asrc_fail label.
-> 
-> If we move this to asrc_fail label, then it will be hard to define the
-> error message.
-> There are many places that goto asrc_fail.
+From: Yuantian Tang <andy.tang@nxp.com>
 
-Oh...good point...
+There are 2 thermal zones in ls1088a soc. Add the other thermal zone
+node to enable it.
+Also update the values in calibration table to make the temperatures
+monitored more precise.
 
-> > > +             goto asrc_fail;
-> > > +     }
-> > > +
-> > > +     if (of_property_read_bool(np, "hp-det-gpio")) {
-> >
-> > Could we move this check inside asoc_simple_init_jack? There's no
-> > problem with doing it here though, yet I got a bit confused by it
-> > as I thought it's a boolean type property, which would be against
-> > the DT bindings until I saw asoc_simple_init_jack() uses the same
-> > string to get the GPIO. Just it probably would be a bit tricky as
-> > we need it to be optional here.
-> >
-> > Otherwise, I think we may add a line of comments to indicate that
-> > the API would use the same string to get the GPIO.
-> 
-> In asoc_simple_init_jack, gpio_is_valid() will be invalid when there is
-> no "hp-det-gpio" property, and asoc_simple_init_jack will return 0.
-> 
-> The reason why I add a check here is mostly for
-> snd_soc_jack_notifier_register().
-> when there is no jack created, there will be a kernel dump.
-> 
-> or I can use this code:
-> 
-> -       if (of_property_read_bool(np, "hp-det-gpio")) {
-> -               ret = asoc_simple_init_jack(&priv->card, &priv->hp_jack,
-> -                                           1, NULL, "Headphone Jack");
-> -               if (ret)
-> -                       goto asrc_fail;
-> +       ret = asoc_simple_init_jack(&priv->card, &priv->hp_jack,
-> +                                   1, NULL, "Headphone Jack");
-> +       if (ret)
-> +               goto asrc_fail;
-> 
-> +       if (priv->hp_jack.jack.jack)
->                 snd_soc_jack_notifier_register(&priv->hp_jack.jack,
+Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+---
+v2:
+	- remove useless alert trip
 
-It's pretty clean but not very obvious for the "optional" part.
-So I think that it'd be slightly better to go for your previous
-solution, but with a line of comments to show: these properties
-are optional and asoc_simple_init_jack() uses the same strings.
+ .../arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 94 +++++++++++--------
+ 1 file changed, 56 insertions(+), 38 deletions(-)
 
-Please add to all three changes once the comments being added:
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index 169f4742ae3b..b961a896ede7 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -130,19 +130,19 @@
+ 	};
+ 
+ 	thermal-zones {
+-		cpu_thermal: cpu-thermal {
++		core-cluster {
+ 			polling-delay-passive = <1000>;
+ 			polling-delay = <5000>;
+ 			thermal-sensors = <&tmu 0>;
+ 
+ 			trips {
+-				cpu_alert: cpu-alert {
++				core_cluster_alert: core-cluster-alert {
+ 					temperature = <85000>;
+ 					hysteresis = <2000>;
+ 					type = "passive";
+ 				};
+ 
+-				cpu_crit: cpu-crit {
++				core-cluster-crit {
+ 					temperature = <95000>;
+ 					hysteresis = <2000>;
+ 					type = "critical";
+@@ -151,7 +151,7 @@
+ 
+ 			cooling-maps {
+ 				map0 {
+-					trip = <&cpu_alert>;
++					trip = <&core_cluster_alert>;
+ 					cooling-device =
+ 						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+ 						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+@@ -164,6 +164,20 @@
+ 				};
+ 			};
+ 		};
++
++		soc {
++			polling-delay-passive = <1000>;
++			polling-delay = <5000>;
++			thermal-sensors = <&tmu 1>;
++
++			trips {
++				soc-crit {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
+ 	};
+ 
+ 	timer {
+@@ -210,45 +224,49 @@
+ 			compatible = "fsl,qoriq-tmu";
+ 			reg = <0x0 0x1f80000 0x0 0x10000>;
+ 			interrupts = <0 23 0x4>;
+-			fsl,tmu-range = <0xb0000 0x9002a 0x6004c 0x30062>;
++			fsl,tmu-range = <0xb0000 0x9002a 0x6004c 0x70062>;
+ 			fsl,tmu-calibration =
+ 				/* Calibration data group 1 */
+-				<0x00000000 0x00000026
+-				0x00000001 0x0000002d
+-				0x00000002 0x00000032
+-				0x00000003 0x00000039
+-				0x00000004 0x0000003f
+-				0x00000005 0x00000046
+-				0x00000006 0x0000004d
+-				0x00000007 0x00000054
+-				0x00000008 0x0000005a
+-				0x00000009 0x00000061
+-				0x0000000a 0x0000006a
+-				0x0000000b 0x00000071
++				<0x00000000 0x00000023
++				0x00000001 0x0000002a
++				0x00000002 0x00000030
++				0x00000003 0x00000037
++				0x00000004 0x0000003d
++				0x00000005 0x00000044
++				0x00000006 0x0000004a
++				0x00000007 0x00000051
++				0x00000008 0x00000057
++				0x00000009 0x0000005e
++				0x0000000a 0x00000064
++				0x0000000b 0x0000006b
+ 				/* Calibration data group 2 */
+-				0x00010000 0x00000025
+-				0x00010001 0x0000002c
+-				0x00010002 0x00000035
+-				0x00010003 0x0000003d
+-				0x00010004 0x00000045
+-				0x00010005 0x0000004e
+-				0x00010006 0x00000057
+-				0x00010007 0x00000061
+-				0x00010008 0x0000006b
+-				0x00010009 0x00000076
++				0x00010000 0x00000022
++				0x00010001 0x0000002a
++				0x00010002 0x00000032
++				0x00010003 0x0000003a
++				0x00010004 0x00000042
++				0x00010005 0x0000004a
++				0x00010006 0x00000052
++				0x00010007 0x0000005a
++				0x00010008 0x00000062
++				0x00010009 0x0000006a
+ 				/* Calibration data group 3 */
+-				0x00020000 0x00000029
+-				0x00020001 0x00000033
+-				0x00020002 0x0000003d
+-				0x00020003 0x00000049
+-				0x00020004 0x00000056
+-				0x00020005 0x00000061
+-				0x00020006 0x0000006d
++				0x00020000 0x00000021
++				0x00020001 0x0000002b
++				0x00020002 0x00000035
++				0x00020003 0x00000040
++				0x00020004 0x0000004a
++				0x00020005 0x00000054
++				0x00020006 0x0000005e
+ 				/* Calibration data group 4 */
+-				0x00030000 0x00000021
+-				0x00030001 0x0000002a
+-				0x00030002 0x0000003c
+-				0x00030003 0x0000004e>;
++				0x00030000 0x00000010
++				0x00030001 0x0000001c
++				0x00030002 0x00000027
++				0x00030003 0x00000032
++				0x00030004 0x0000003e
++				0x00030005 0x00000049
++				0x00030006 0x00000054
++				0x00030007 0x00000060>;
+ 			little-endian;
+ 			#thermal-sensor-cells = <1>;
+ 		};
+-- 
+2.17.1
 
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-
-Thanks
