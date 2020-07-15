@@ -2,170 +2,118 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77821C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 11:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97757C433E4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 11:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56D3A2072E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 11:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EEB620720
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 11:07:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="tvY8PQWQ"
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="cSCU0QwP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729299AbgGOLHI (ORCPT
+        id S1731369AbgGOLHd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 07:07:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48400 "EHLO
+        Wed, 15 Jul 2020 07:07:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729247AbgGOLHI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 07:07:08 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9EBCC08C5DD
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 04:07:07 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id x9so2106231ljc.5
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 04:07:07 -0700 (PDT)
+        with ESMTP id S1731368AbgGOLHc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 07:07:32 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41C17C061755
+        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 04:07:32 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id o11so2164855wrv.9
+        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 04:07:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=antmicro.com; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=LS4hCUEzoSELDF8hz/hUz8/P4swJmb1Knux4DAvwCKg=;
-        b=tvY8PQWQZsDh/YAzpSCW8KgGWfH/ut9NLsu5C5/0X9wPFGorLTcyD1G44JFNQm6oZV
-         K2TpoM4gFya+SxV4S10GEWIFI6ILbEhuUIHR/w2ViF/aBdf0eeQG7+RwKPlEezU4PFGI
-         1LQEJTyjDCvNu4rN3aM32w9MRpSKGQfRO3O7Q=
+        d=raspberrypi.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GTboRADciARmdKmdVFydQyO6bXaLy3+gjZbuS1AHoC8=;
+        b=cSCU0QwPwPrx+oUmwUcrBy+AJrFWX8fH6PaZc0B9o1iG9gYnarHJcJZYxFa6hETjfy
+         OsltWCkl4ZVixyuVBlo55HpfWI8Uou3za6pDTKAWOyX9+Tit4MXhxChS8YQjphMMf0pq
+         KNCU535HeeFoimkLPqAK4GFRJieEj8EL0FBSZQ6Sw4psI/ualNK/YcMlzrwkRooOl1eP
+         aAn8OJCRFRYZyHLTm0wOKLGTi+9CnsKmrRSMmGmbDR93sS1BVDNTucn3T+1Vws91pNSf
+         p1D1N7MAhESo2tQdrUJxHByVs3JDl3ygR6sJxPMSRMAS2g/1WZz+pHb6HJJ9YGdj4dTx
+         M2QQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=LS4hCUEzoSELDF8hz/hUz8/P4swJmb1Knux4DAvwCKg=;
-        b=ZZwpG92p2MbQY8kzQCcBxtKVfCc7e7Rc/dg87fzURUqcMEvHGd9gpVzmuom2ijCkn1
-         nCxo/TtsNhqImTDyR5VHDmyB3N/9V1RMqoZlyFKSlne8O8y3cdlBRmMkix7s1p70x1WP
-         VkIt9YGKYIOlCzkxvzROLpzQoLE/lmooKqrtUzPxVbWevRjsDsG7YjXuR56SOMjuGe3M
-         07boSE4VXsL/hYxXWmb5lZyYCz53dGTpnrjbxcRbFNQKv/1RXUep0exvp55XAP07zqGY
-         z5ATm8UrP3jwrlPUmR7G7rqDAG8JqBWtD2ZYa0yelNBic82Kx3OfCpBv45Q01qmeudW4
-         iZUA==
-X-Gm-Message-State: AOAM533bG0qeWDfopLjImZuVEs+O+WRX82e3FygbPXBrHd4KKUTZ2TGq
-        2yHoLMJjn9wUTg+CQ5E/XJajd0fOPIg=
-X-Google-Smtp-Source: ABdhPJy1PC3WtzZvS6+3qsGyi9RvAdJfykrkOKNKr8hT+mKebr7eUBDBcbenv+FYYIgZFXzoLaKNLA==
-X-Received: by 2002:a2e:9a0f:: with SMTP id o15mr4723355lji.450.1594811226020;
-        Wed, 15 Jul 2020 04:07:06 -0700 (PDT)
-Received: from localhost.localdomain (d79-196.icpnet.pl. [77.65.79.196])
-        by smtp.gmail.com with ESMTPSA id u7sm513117lfi.45.2020.07.15.04.07.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 04:07:05 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 13:06:59 +0200
-From:   Mateusz Holenko <mholenko@antmicro.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Cc:     Stafford Horne <shorne@gmail.com>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Mateusz Holenko <mholenko@antmicro.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Filip Kokosinski <fkokosinski@antmicro.com>,
-        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-kernel@vger.kernel.org, "Gabriel L. Somlo" <gsomlo@gmail.com>
-Subject: [PATCH v8 0/5] LiteX SoC controller and LiteUART serial driver
-Message-ID: <20200715130641.1953227-0-mholenko@antmicro.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GTboRADciARmdKmdVFydQyO6bXaLy3+gjZbuS1AHoC8=;
+        b=Nn2LADc5wjlkEjV0PwfLKPDG059subH/cu6sm2NHNMxU8ZxFQY5HHTijrTA4UrszWF
+         iEdIlKd5ywBb2u0kfwZ9CbJTSFzE0n1w/9p+oElp/noThCeQyfClDI+YsQBkMuNiG6Et
+         WacXJRf7IAO/+gZbBEzNFJp9IhMVr2Eog+0qsslGCAh+mM2hPLGiAh6X9XMqUuJMce6V
+         FQBx1wlTO+D0gVIXRVTKb9JwXrLQvUos1dbl1sUiEqbALgEeyj9ZzBpX0o2aKHLn3ii2
+         WyPkKnPTFeovUACc2/8rOXDXxx6U4Jj7HDMv57i9OLatTE16iLg2qm24FDE9JRmgMf2+
+         zqLw==
+X-Gm-Message-State: AOAM532b5i/WCEgufRXZ0RPdRL4VC6R2/vX2Vu9WKasrZWVo1ABOofEl
+        bBrGIfZwWnlOQOf3YqYoiMbFyuTZpWddDdmH4vkkbQ==
+X-Google-Smtp-Source: ABdhPJwzAgUIUleJj5LWllzXl8a6BgBBQ3QR00OyWhWPExp1qNrqh/cfBfu+ITu1FqNaf8QrwAcuirMUQrpr6TsQU4E=
+X-Received: by 2002:adf:81c7:: with SMTP id 65mr10271163wra.47.1594811250937;
+ Wed, 15 Jul 2020 04:07:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20200714142856.58365-1-jacopo+renesas@jmondi.org>
+In-Reply-To: <20200714142856.58365-1-jacopo+renesas@jmondi.org>
+From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date:   Wed, 15 Jul 2020 12:07:16 +0100
+Message-ID: <CAPY8ntAmNoLBumgrwFqLtBU_zHAgxOW6=KY=fDndJtXC42F6XA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] dt-bidings: media: ov5647 bindings + small fix
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        dongchun.zhu@mediatek.com, linux-renesas-soc@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patchset introduces support for LiteX SoC Controller
-and LiteUART - serial device from LiteX SoC builder
-(https://github.com/enjoy-digital/litex).
+Hi Jacopo
 
-In the following patchset I will add
-a new mor1kx-based (OpenRISC) platform that
-uses this device.
+On Tue, 14 Jul 2020 at 15:25, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+>
+> I have added Rob's tag to patches [1/3] and [2/3].
+>
+> I have added to patch [1/3] an entry for the yaml binding file to MAINTAINERS
+> and added a new patch which removes the existing maintainers of the driver,
+> as his email address bounces back, and replaced it with myself.
+>
+> I hope this is not rude, but I have no way to contact Luis Oliveira and
+> ask him, and a bouncing email is not that helpful.
+>
+> Dave, would you like to be added as maintainer as well, as this sensor
+> is the one used by the RPi Camera Module v1 ?
 
-Later I plan to extend this platform by
-adding support for more devices from LiteX suite.
+I'm happy to be. I had said I would to Sakari when he went to orphan
+it, but I didn't get around to sending the email (I've not set up git
+send-email since recent changes to our email setup).
 
-Changes in v8:
-    - fixed help messages in LiteUART's KConfig
-    - removed dependency between LiteUART and LiteX SoC drivers
-    - removed `litex_check_accessors()` helper function
-    - added crashing (BUG) on the failed LiteX CSR access test
+  Dave
 
-Changes in v7:
-    - added missing include directive in UART's driver
-
-Changes in v6:
-    - changed accessors in SoC Controller's driver
-    - reworked UART driver
-
-Changes in v5:
-    - added Reviewed-by tag
-    - removed custom accessors from SoC Controller's driver
-    - fixed error checking in SoC Controller's driver
-
-Changes in v4:
-    - fixed copyright headers
-    - fixed SoC Controller's yaml 
-    - simplified SoC Controller's driver
-
-Changes in v3:
-    - added Acked-by and Reviewed-by tags
-    - introduced LiteX SoC Controller driver
-    - removed endianness detection (handled now by LiteX SoC Controller driver)
-    - modified litex.h header
-    - DTS aliases for LiteUART made optional
-    - renamed SERIAL_LITEUART_NR_PORTS to SERIAL_LITEUART_MAX_PORTS
-    - changed PORT_LITEUART from 122 to 123
-
-Changes in v2:
-    - binding description rewritten to a yaml schema file
-    - added litex.h header with common register access functions
-
-Filip Kokosinski (3):
-  dt-bindings: vendor: add vendor prefix for LiteX
-  dt-bindings: serial: document LiteUART bindings
-  drivers/tty/serial: add LiteUART driver
-
-Pawel Czarnecki (2):
-  dt-bindings: soc: document LiteX SoC Controller bindings
-  drivers/soc/litex: add LiteX SoC Controller driver
-
- .../bindings/serial/litex,liteuart.yaml       |  38 ++
- .../soc/litex/litex,soc-controller.yaml       |  39 ++
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- MAINTAINERS                                   |   9 +
- drivers/soc/Kconfig                           |   1 +
- drivers/soc/Makefile                          |   1 +
- drivers/soc/litex/Kconfig                     |  15 +
- drivers/soc/litex/Makefile                    |   3 +
- drivers/soc/litex/litex_soc_ctrl.c            | 192 +++++++++
- drivers/tty/serial/Kconfig                    |  32 ++
- drivers/tty/serial/Makefile                   |   1 +
- drivers/tty/serial/liteuart.c                 | 402 ++++++++++++++++++
- include/linux/litex.h                         |  24 ++
- 13 files changed, 759 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/litex,liteuart.yaml
- create mode 100644 Documentation/devicetree/bindings/soc/litex/litex,soc-controller.yaml
- create mode 100644 drivers/soc/litex/Kconfig
- create mode 100644 drivers/soc/litex/Makefile
- create mode 100644 drivers/soc/litex/litex_soc_ctrl.c
- create mode 100644 drivers/tty/serial/liteuart.c
- create mode 100644 include/linux/litex.h
-
--- 
-2.25.1
-
+> Thanks
+>   j
+>
+> Jacopo Mondi (3):
+>   dt-bindings: media: ov5647: Convert to json-schema
+>   dt-bindings: media: i2c: Document 'remote-endpoint'
+>   media: MAINTAINERS: ov5647: Add myself as maintainer
+>
+>  .../devicetree/bindings/media/i2c/imx219.yaml |  5 ++
+>  .../devicetree/bindings/media/i2c/ov5647.txt  | 35 --------
+>  .../devicetree/bindings/media/i2c/ov5647.yaml | 82 +++++++++++++++++++
+>  .../devicetree/bindings/media/i2c/ov8856.yaml |  5 ++
+>  MAINTAINERS                                   |  3 +-
+>  5 files changed, 94 insertions(+), 36 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.yaml
+>
+> --
+> 2.27.0
+>
