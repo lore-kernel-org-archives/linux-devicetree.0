@@ -2,79 +2,103 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD231C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DA8C433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF0A82065F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F10D2067D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:38:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594845399;
-	bh=+jXVCvcbg6lH7lytcArnLDkhkfZs10rlhS6id6XutZA=;
+	s=default; t=1594845526;
+	bh=VVOAK3dQbkuiLYmcRsOESRTZ3VVN7/fDRyT9NhZt/5Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WcIvMMtfO+1OAiPCXCvH3E0u5N3Pvjca26UXjzgLeYv4XxTvkdPhisOrlxpmgzLkz
-	 3u+nPP2BfX6A3b5DYRjNcWYy/LFlCFxz9QDfTUQnF4YQOZxtC107z90gACyM8hVP+W
-	 3PYhqVaAKFCDMM27Xajgo/J8k/ApyIHisqhM0lDM=
+	b=JzSZSk8AskVzlNwhdCo65b+mYb/I1kTPeJoFjq1HlnLlNU2iT23tgVn2Ijr8bMrwV
+	 0zvRgzlDcDfza6dryaCeSwkSRiPtUSmryQYxjoo6j93mz9AYFy4GsDgH7wd0Thkx1E
+	 UhaEiV08VvOoLBsgGJI+CrMS2HtKZr/YTpbvGAMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgGOUgj (ORCPT
+        id S1726670AbgGOUiq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 16:36:39 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:35320 "EHLO
+        Wed, 15 Jul 2020 16:38:46 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:40793 "EHLO
         mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbgGOUgi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 16:36:38 -0400
-Received: by mail-il1-f193.google.com with SMTP id t18so3183081ilh.2;
-        Wed, 15 Jul 2020 13:36:38 -0700 (PDT)
+        with ESMTP id S1726370AbgGOUip (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 16:38:45 -0400
+Received: by mail-il1-f193.google.com with SMTP id e18so3176325ilr.7;
+        Wed, 15 Jul 2020 13:38:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=BJXqP+XSa8G42ZyuDhISJ/0QmN/qD/vI4ezaEI9n1jk=;
-        b=p4nFhlTzE0KKtv6xXcVUU0+ExVtfRcu2iPb0aUQUGet9HGspCQM1CLARGgWXaegcWk
-         NOic0SnrPYvZOPFZp/HBq2eKKqXhOe7cCvn+UXtj0w5NF31F7nkBpjZ8EzTt7Pf488aq
-         1T6a2XMVwAtZf3TGkX3RrG+3LV6xwL2FFGhfOBu+d/7mk8pSQJpHC8aynM8Ul+nXtcC2
-         2z89DzdtzhO88pk2OHE931tKEqJ8gkFv9eG6h27ak7ANlz9ut89B1V0ZKDfQa8sdcYFq
-         tRaS41a1dBpHmTicBppjPG+oA0vRC8CfXVl2CztE8czX/7zS1tsE+bztZ9pezJO5rIaC
-         +YeA==
-X-Gm-Message-State: AOAM530+VbEfz2a5Zow6XbEU/NL5FJzReNqcMPTgUQr9Semnhyk1OOfp
-        cJpKVE1lZYeqrK/TVL/S/Q==
-X-Google-Smtp-Source: ABdhPJy9wtrz0U4Y6iejGJoArzuSrlG0r9+g5Y1CnR9WU06vnjI5mV5Fd3x5SusqG0Fm/xx1Hy0YLg==
-X-Received: by 2002:a05:6e02:5c4:: with SMTP id l4mr1265616ils.209.1594845397644;
-        Wed, 15 Jul 2020 13:36:37 -0700 (PDT)
+        bh=jg/X/vpGxWxvwTtPuVd1zmcZHSjHp/pT1OFJo4RhoVo=;
+        b=fjNWmQLZpcfK8jx0h6p1pjaRvd1IG3zjI/gt9si7hZw8AxX2QJrnh1dIo7w4KkOAg4
+         VrsDMtrDvNz3V78J3al/QqST4rQs28GWbDtBvSQfpGHm2CF6qdujTNmaIdP8x0fGHn7n
+         nVW69YzeqjfkdS/Agtzk0N2FZSZDsehedtBUBWxxGjLPH42r1yKvSXHkNwcKHK1YK9pm
+         ZQ/bShzUf1zttG6dVC5TCkrsJgM55MOmXpjszNR9w6hiJ/68h0wRbhsY5fl44zfFOK2J
+         ljAfEvH71thBmbTNynzo9P3Q7Ta5SFMBaal7iQtE/0sn6laYTSbpKItLxMc+MFLgy6Lc
+         SQDw==
+X-Gm-Message-State: AOAM5335pUrZeP3lbdRkN+UzTLZwCHQ3IU0UMaFHJVd0d9xGIq63iOmp
+        cPUX/KpB2JI4Uy3lTXK1Bwgv9f1pIQ==
+X-Google-Smtp-Source: ABdhPJz0SK92/suN4UomLrs3EqKOwsXIY3wPt5SN3z7HrnBvRvVJIXZ5w5poRYlUtD5KO6O1SszALQ==
+X-Received: by 2002:a92:ca8d:: with SMTP id t13mr1241550ilo.274.1594845524792;
+        Wed, 15 Jul 2020 13:38:44 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id f9sm1577464ilq.9.2020.07.15.13.36.36
+        by smtp.gmail.com with ESMTPSA id i9sm1642617ile.48.2020.07.15.13.38.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 13:36:37 -0700 (PDT)
-Received: (nullmailer pid 775848 invoked by uid 1000);
-        Wed, 15 Jul 2020 20:36:36 -0000
-Date:   Wed, 15 Jul 2020 14:36:36 -0600
+        Wed, 15 Jul 2020 13:38:44 -0700 (PDT)
+Received: (nullmailer pid 778616 invoked by uid 1000);
+        Wed, 15 Jul 2020 20:38:43 -0000
+Date:   Wed, 15 Jul 2020 14:38:43 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Wenchao Hao <haowenchao22@gmail.com>
-Cc:     robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        frowand.list@gmail.com, devicetree@vger.kernel.org
-Subject: Re: [PATCH] of/address: Fix variable name in comment of of_iomap
-Message-ID: <20200715203636.GA775752@bogus>
-References: <20200701162444.9494-1-haowenchao22@gmail.com>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        devicetree@vger.kernel.org, Alain Volmat <alain.volmat@st.com>
+Subject: Re: [PATCH] i2c: add binding to mark a bus as SMBus
+Message-ID: <20200715203843.GA776042@bogus>
+References: <20200701214830.3174-1-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200701162444.9494-1-haowenchao22@gmail.com>
+In-Reply-To: <20200701214830.3174-1-wsa+renesas@sang-engineering.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 02 Jul 2020 00:24:44 +0800, Wenchao Hao wrote:
-> The first variable name of of_iomap is np while previous
-> comment write device here.
+On Wed, Jul 01, 2020 at 11:48:30PM +0200, Wolfram Sang wrote:
+> SMBus is largely compatible with I2C but there are some specifics. In
+> case we need them on a bus, we can now use this new binding.
 > 
-> Signed-off-by: Wenchao Hao <haowenchao22@gmail.com>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 > ---
->  drivers/of/address.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/i2c/i2c.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
+> index 438ae123107e..d1f8cf3bd236 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c.txt
+> @@ -77,6 +77,11 @@ wants to support one of the below features, it should adapt these bindings.
+>  	this information to detect a stalled bus more reliably, for example.
+>  	Can not be combined with 'multi-master'.
+>  
+> +- smbus
 
-Applied, thanks!
+This is a boolean?
+
+> +	states that additional SMBus restrictions and features apply to this bus.
+> +	Examples of features are SMBusHostNotify and SMBusAlert. Examples of
+
+Do features need to be enumerated separately?
+
+> +	restrictions are more reserved addresses and timeout definitions.
+> +
+>  Required properties (per child device)
+>  --------------------------------------
+>  
+> -- 
+> 2.27.0
+> 
