@@ -2,158 +2,68 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AACC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 09:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 775EEC433E6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 09:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B11902053B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 09:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 619BD2053B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 09:15:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730079AbgGOJPp (ORCPT
+        id S1730312AbgGOJPy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 05:15:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:54634 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729577AbgGOJPo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jul 2020 05:15:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A2411FB;
-        Wed, 15 Jul 2020 02:15:44 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ED8903F718;
-        Wed, 15 Jul 2020 02:15:41 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 10:15:39 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     linux-arm-kernel@lists.infradead.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Will Deacon <will@kernel.org>, Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: Re: [PATCH v2 03/12] ACPI/IORT: Make iort_msi_map_rid() PCI agnostic
-Message-ID: <20200715091539.GB30074@e121166-lin.cambridge.arm.com>
-References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
- <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
- <20200619082013.13661-4-lorenzo.pieralisi@arm.com>
+        Wed, 15 Jul 2020 05:15:54 -0400
+Received: from vsp-unauthed02.binero.net ([195.74.38.227]:33038 "EHLO
+        vsp-unauthed02.binero.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729577AbgGOJPx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 05:15:53 -0400
+X-Halon-ID: c4f91b1b-c67b-11ea-8fb8-005056917f90
+Authorized-sender: niklas@soderlund.pp.se
+Received: from bismarck.berto.se (p4fca2eca.dip0.t-ipconnect.de [79.202.46.202])
+        by bin-vsp-out-02.atm.binero.net (Halon) with ESMTPA
+        id c4f91b1b-c67b-11ea-8fb8-005056917f90;
+        Wed, 15 Jul 2020 11:15:52 +0200 (CEST)
+From:   =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+Subject: [PATCH v2 0/3] dt-bindings: adv7604: Convert bindings to json-schema
+Date:   Wed, 15 Jul 2020 11:14:52 +0200
+Message-Id: <20200715091455.1772470-1-niklas.soderlund+renesas@ragnatech.se>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200619082013.13661-4-lorenzo.pieralisi@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 09:20:04AM +0100, Lorenzo Pieralisi wrote:
-> There is nothing PCI specific in iort_msi_map_rid().
-> 
-> Rename the function using a bus protocol agnostic name,
-> iort_msi_map_id(), and convert current callers to it.
-> 
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Hanjun Guo <guohanjun@huawei.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> ---
->  drivers/acpi/arm64/iort.c | 12 ++++++------
->  drivers/pci/msi.c         |  2 +-
+Hi Hans,
 
-Hi Bjorn,
+This series converts the ADV7604 bindings to YAML and lists the new file
+under MAINTAINERS. I have used the schema to validate the usage of the
+bindings and only found one issue that is fixed in [1].
 
-please let me know if you are OK with this change, thanks.
+1. [PATCH] ARM: dts: gose: Fix ports node name for adv7612
 
-Lorenzo
+Niklas Söderlund (3):
+  dt-bindings: adv7604: Fix documentation for hpd-gpios
+  dt-bindings: adv7604: Convert bindings to json-schema
+  MAINTAINERS: Add ADV7604 bindings documentation
 
->  include/linux/acpi_iort.h |  6 +++---
->  3 files changed, 10 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> index 902e2aaca946..53f9ef515089 100644
-> --- a/drivers/acpi/arm64/iort.c
-> +++ b/drivers/acpi/arm64/iort.c
-> @@ -568,22 +568,22 @@ static struct acpi_iort_node *iort_find_dev_node(struct device *dev)
->  }
->  
->  /**
-> - * iort_msi_map_rid() - Map a MSI requester ID for a device
-> + * iort_msi_map_id() - Map a MSI input ID for a device
->   * @dev: The device for which the mapping is to be done.
-> - * @req_id: The device requester ID.
-> + * @input_id: The device input ID.
->   *
-> - * Returns: mapped MSI RID on success, input requester ID otherwise
-> + * Returns: mapped MSI ID on success, input ID otherwise
->   */
-> -u32 iort_msi_map_rid(struct device *dev, u32 req_id)
-> +u32 iort_msi_map_id(struct device *dev, u32 input_id)
->  {
->  	struct acpi_iort_node *node;
->  	u32 dev_id;
->  
->  	node = iort_find_dev_node(dev);
->  	if (!node)
-> -		return req_id;
-> +		return input_id;
->  
-> -	iort_node_map_id(node, req_id, &dev_id, IORT_MSI_TYPE);
-> +	iort_node_map_id(node, input_id, &dev_id, IORT_MSI_TYPE);
->  	return dev_id;
->  }
->  
-> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-> index 74a91f52ecc0..77f48b95e277 100644
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -1536,7 +1536,7 @@ u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev)
->  
->  	of_node = irq_domain_get_of_node(domain);
->  	rid = of_node ? of_msi_map_rid(&pdev->dev, of_node, rid) :
-> -			iort_msi_map_rid(&pdev->dev, rid);
-> +			iort_msi_map_id(&pdev->dev, rid);
->  
->  	return rid;
->  }
-> diff --git a/include/linux/acpi_iort.h b/include/linux/acpi_iort.h
-> index 08ec6bd2297f..e51425e083da 100644
-> --- a/include/linux/acpi_iort.h
-> +++ b/include/linux/acpi_iort.h
-> @@ -28,7 +28,7 @@ void iort_deregister_domain_token(int trans_id);
->  struct fwnode_handle *iort_find_domain_token(int trans_id);
->  #ifdef CONFIG_ACPI_IORT
->  void acpi_iort_init(void);
-> -u32 iort_msi_map_rid(struct device *dev, u32 req_id);
-> +u32 iort_msi_map_id(struct device *dev, u32 id);
->  struct irq_domain *iort_get_device_domain(struct device *dev, u32 id,
->  					  enum irq_domain_bus_token bus_token);
->  void acpi_configure_pmsi_domain(struct device *dev);
-> @@ -39,8 +39,8 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev);
->  int iort_iommu_msi_get_resv_regions(struct device *dev, struct list_head *head);
->  #else
->  static inline void acpi_iort_init(void) { }
-> -static inline u32 iort_msi_map_rid(struct device *dev, u32 req_id)
-> -{ return req_id; }
-> +static inline u32 iort_msi_map_id(struct device *dev, u32 id)
-> +{ return id; }
->  static inline struct irq_domain *iort_get_device_domain(
->  	struct device *dev, u32 id, enum irq_domain_bus_token bus_token)
->  { return NULL; }
-> -- 
-> 2.26.1
-> 
+ .../devicetree/bindings/media/i2c/adv7604.txt |  88 ----------
+ .../bindings/media/i2c/adv7604.yaml           | 161 ++++++++++++++++++
+ MAINTAINERS                                   |   1 +
+ 3 files changed, 162 insertions(+), 88 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/media/i2c/adv7604.txt
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/adv7604.yaml
+
+-- 
+2.27.0
+
