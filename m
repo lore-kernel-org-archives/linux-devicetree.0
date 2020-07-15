@@ -2,37 +2,36 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4053C433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 09:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA30C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 09:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E7DA20672
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 09:10:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12FDB20672
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 09:12:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730150AbgGOJKG (ORCPT
+        id S1730224AbgGOJME (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 05:10:06 -0400
-Received: from lucky1.263xmail.com ([211.157.147.131]:57356 "EHLO
+        Wed, 15 Jul 2020 05:12:04 -0400
+Received: from lucky1.263xmail.com ([211.157.147.132]:54690 "EHLO
         lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728682AbgGOJKF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 05:10:05 -0400
-Received: from localhost (unknown [192.168.167.235])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 3ABBDB0379;
-        Wed, 15 Jul 2020 17:06:25 +0800 (CST)
+        with ESMTP id S1728739AbgGOJME (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 05:12:04 -0400
+Received: from localhost (unknown [192.168.167.209])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 30255EC4CA;
+        Wed, 15 Jul 2020 17:03:58 +0800 (CST)
 X-MAIL-GRAY: 0
 X-MAIL-DELIVERY: 1
 X-ADDR-CHECKED4: 1
 X-ANTISPAM-LEVEL: 2
 X-ABS-CHECKED: 0
 Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P5937T140503939016448S1594803977824177_;
-        Wed, 15 Jul 2020 17:06:25 +0800 (CST)
+        by smtp.263.net (postfix) whith ESMTP id P9169T139648078694144S1594803824986898_;
+        Wed, 15 Jul 2020 17:03:58 +0800 (CST)
 X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <e5e97746f481f1f5bd491f9dd2d3f77c>
+X-UNIQUE-TAG: <f0d531f91e8be1cc3dd6a1ff4d8944af>
 X-RL-SENDER: yifeng.zhao@rock-chips.com
 X-SENDER: zyf@rock-chips.com
 X-LOGIN-NAME: yifeng.zhao@rock-chips.com
@@ -48,103 +47,83 @@ Cc:     devicetree@vger.kernel.org, linux-mtd@lists.infradead.org,
         heiko@sntech.de, linux-rockchip@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Yifeng Zhao <yifeng.zhao@rock-chips.com>
-Subject: [PATCH v7 8/8] arm: dts: rockchip: Add NFC node for RK3036 SoC
-Date:   Wed, 15 Jul 2020 17:06:16 +0800
-Message-Id: <20200715090616.28452-4-yifeng.zhao@rock-chips.com>
+Subject: [PATCH v7 0/8] Add Rockchip NFC drivers for RK3308 and others
+Date:   Wed, 15 Jul 2020 17:03:38 +0800
+Message-Id: <20200715090342.28339-1-yifeng.zhao@rock-chips.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200715090616.28452-1-yifeng.zhao@rock-chips.com>
-References: <20200715090342.28339-1-yifeng.zhao@rock-chips.com>
- <20200715090616.28452-1-yifeng.zhao@rock-chips.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add NAND FLASH Controller(NFC) node for RK3036 SoC.
 
-Signed-off-by: Yifeng Zhao <yifeng.zhao@rock-chips.com>
----
+Rockchp's NFC(Nand Flash Controller) has four versions: V600, V622, V800 and
+V900.This series patch can support all four versions.
 
-Changes in v7: None
-Changes in v6: None
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
 
- arch/arm/boot/dts/rk3036.dtsi | 52 +++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+Changes in v7:
+- Fix some wrong define
+- Rebase to linux-next.
+- Fix coding style.
+- Reserved 4 bytes at the begining of the oob area.
+- Page raw read and write included ecc data.
 
-diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-index d9a0c9a29b68..be8d46c0bbb0 100644
---- a/arch/arm/boot/dts/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rk3036.dtsi
-@@ -291,6 +291,21 @@
- 		status = "disabled";
- 	};
- 
-+	nfc: nand-controller@10500000 {
-+		compatible = "rockchip,rk3036-nfc",
-+			     "rockchip,rk2928-nfc";
-+		reg = <0x10500000 0x4000>;
-+		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru HCLK_NANDC>, <&cru SCLK_NANDC>;
-+		clock-names = "ahb", "nfc";
-+		assigned-clocks = <&cru SCLK_NANDC>;
-+		assigned-clock-rates = <150000000>;
-+		pinctrl-0 = <&flash_ale &flash_bus8 &flash_cle &flash_csn0
-+			     &flash_rdn &flash_rdy &flash_wrn>;
-+		pinctrl-names = "default";
-+		status = "disabled";
-+	};
-+
- 	cru: clock-controller@20000000 {
- 		compatible = "rockchip,rk3036-cru";
- 		reg = <0x20000000 0x1000>;
-@@ -642,6 +657,43 @@
- 			};
- 		};
- 
-+		nfc {
-+			flash_ale: flash-ale {
-+				rockchip,pins = <2 RK_PA0 1 &pcfg_pull_default>;
-+			};
-+
-+			flash_bus8: flash-bus8 {
-+				rockchip,pins = <1 RK_PD0 1 &pcfg_pull_default>,
-+						<1 RK_PD1 1 &pcfg_pull_default>,
-+						<1 RK_PD2 1 &pcfg_pull_default>,
-+						<1 RK_PD3 1 &pcfg_pull_default>,
-+						<1 RK_PD4 1 &pcfg_pull_default>,
-+						<1 RK_PD5 1 &pcfg_pull_default>,
-+						<1 RK_PD6 1 &pcfg_pull_default>,
-+						<1 RK_PD7 1 &pcfg_pull_default>;
-+			};
-+
-+			flash_cle: flash-cle {
-+				rockchip,pins = <2 RK_PA1 1 &pcfg_pull_default>;
-+			};
-+
-+			flash_csn0: flash-csn0 {
-+				rockchip,pins = <2 RK_PA6 1 &pcfg_pull_default>;
-+			};
-+
-+			flash_rdn: flash-rdn {
-+				rockchip,pins = <2 RK_PA3 1 &pcfg_pull_default>;
-+			};
-+
-+			flash_rdy: flash-rdy {
-+				rockchip,pins = <2 RK_PA4 1 &pcfg_pull_default>;
-+			};
-+
-+			flash_wrn: flash-wrn {
-+				rockchip,pins = <2 RK_PA2 1 &pcfg_pull_default>;
-+			};
-+		};
-+
- 		emac {
- 			emac_xfer: emac-xfer {
- 				rockchip,pins = <2 RK_PB2 1 &pcfg_pull_default>, /* crs_dvalid */
+Changes in v6:
+- Fix some wrong define
+- Modified the definition of compatible
+- The mtd->name set by NAND label property.
+- Add some comments.
+- Fix compile error.
+
+Changes in v5:
+- Fix some wrong define.
+- Add boot-medium define.
+- Remove some compatible define.
+- Add boot blocks support  with different ECC for bootROM.
+- Rename rockchip-nand.c to rockchip-nand-controller.c.
+- Unification of other variable names.
+- Remove some compatible define.
+
+Changes in v4:
+- The compatible define with rkxx_nfc.
+- Add assigned-clocks.
+- Fix some wrong defineChanges in.
+- Define platform data structure for the register offsets.
+- The compatible define with rkxx_nfc.
+- Use SET_SYSTEM_SLEEP_PM_OPS to define PM_OPS.
+- Use exec_op instead of legacy hooks.
+
+Changes in v3:
+- Change the title for the dt-bindings.
+
+Changes in v2:
+- Fix compile error.
+- Include header files sorted by file name.
+
+Yifeng Zhao (8):
+  dt-bindings: mtd: Describe Rockchip RK3xxx NAND flash controller
+  mtd: rawnand: rockchip: NFC drivers for RK3308, RK2928 and others
+  MAINTAINERS: add maintainers to ROCKCHIP NFC
+  arm64: dts: rockchip: Add NFC node for RK3308 SoC
+  arm64: dts: rockchip: Add NFC node for PX30 SoC
+  arm: dts: rockchip: Add NFC node for RV1108 SoC
+  arm: dts: rockchip: Add NFC node for RK2928 and other SoCs
+  arm: dts: rockchip: Add NFC node for RK3036 SoC
+
+ .../mtd/rockchip,nand-controller.yaml         |  162 ++
+ MAINTAINERS                                   |    4 +-
+ arch/arm/boot/dts/rk3036.dtsi                 |   52 +
+ arch/arm/boot/dts/rk3xxx.dtsi                 |    9 +
+ arch/arm/boot/dts/rv1108.dtsi                 |   11 +
+ arch/arm64/boot/dts/rockchip/px30.dtsi        |   15 +
+ arch/arm64/boot/dts/rockchip/rk3308.dtsi      |   15 +
+ drivers/mtd/nand/raw/Kconfig                  |   12 +
+ drivers/mtd/nand/raw/Makefile                 |    1 +
+ .../mtd/nand/raw/rockchip-nand-controller.c   | 1422 +++++++++++++++++
+ 10 files changed, 1701 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml
+ create mode 100644 drivers/mtd/nand/raw/rockchip-nand-controller.c
+
 -- 
 2.17.1
 
