@@ -2,87 +2,105 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D40BC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 22:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1B4C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 22:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28A092067D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 22:10:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A11152065F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 22:11:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594851059;
-	bh=93EiFIk/NdwdF/mi7fmL6xvs1z7iai9XGWJoodXPosk=;
+	s=default; t=1594851116;
+	bh=D7E7eUE+zbAwmET6fMzWaWlMMhJQHFgfkXF8fekXvj8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tzCBY9syC56ULjj4eROrge3Z8xeacbv9gF/pMt1hcWyyMtm1nqmGDurXx0gKDyLfG
-	 dSaypGespjHcLHuamCYytVsEH4vhXCZNM/0KwoF00Vo/6Apab/cQz9g1Lez4j+cV6h
-	 gIfen8BaDpbw1Gu6blDPmkOBlIkHLm1fslgxP9q4=
+	b=dBOEc7QK32r6WRtLdCyQVLY3x8a1Pd1+lR3kQecwejgnrhMbdXEWgEuUpqkbIHf2A
+	 1MWp7k9eA4MndapwGYojbo1KMIBXpU77zBNGEl/ih6gKCx3h5imuQt+XH9p9YMPn2M
+	 ix641zjbtlUB4GG9Y3IAx4OxNbtQOD6jjBaQG9p8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbgGOWK6 (ORCPT
+        id S1726356AbgGOWL4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 18:10:58 -0400
-Received: from mail-io1-f43.google.com ([209.85.166.43]:33088 "EHLO
-        mail-io1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbgGOWK6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 18:10:58 -0400
-Received: by mail-io1-f43.google.com with SMTP id d18so3970759ion.0
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 15:10:57 -0700 (PDT)
+        Wed, 15 Jul 2020 18:11:56 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:38780 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726660AbgGOWLz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 18:11:55 -0400
+Received: by mail-io1-f65.google.com with SMTP id l1so3950773ioh.5;
+        Wed, 15 Jul 2020 15:11:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bs4UvWlAUqqCoLxMvImO4Yyx0pE7t+ca9ZPzNIql2gA=;
-        b=ceWYSEkTLpWDjRG/wDnDEMS47kfsROToHNmyaG6PlvtsP0xTdjDOq/1hx5GMaDpKay
-         0YcqTt+rqKNft+xYm4pm+cQD6dt6ViTXwDDSsvPhErMN9tjGk+9LdZIru9DBaCOCOQ16
-         mJ4sWllplUWlJYAwGYxLcHursTzQlsxooKPSo19ehWAHxTkXeCbTh1WeoUXHOos85SHz
-         qFJkr6eIcAUUAOYjayASOomnDSxq1pU/Z1hTVctbfebIx9X4xIGiZal924miTDEKlbrD
-         O1dp9c3atW2EMryc9HuXE4+u5cYFGS1hRElgA99OQr2+d8Ny2Te/uQmMSBvm43p32bD7
-         2YBA==
-X-Gm-Message-State: AOAM5303NNiwN+yXnmJPn9sq6BCnP+3i4mEjX+qnJ5P57jxTxcrnDV9j
-        noT4OBayVtbjCBIUWvKmk9brqXdefEtF
-X-Google-Smtp-Source: ABdhPJzywfwMkAxR2QgSwYC2Kedi45mHiQTzllbo4ZvapAVObxEPmKtxc/SMvZB/mHBePWd7cSiCqw==
-X-Received: by 2002:a5d:8f0b:: with SMTP id f11mr1449175iof.200.1594851057295;
-        Wed, 15 Jul 2020 15:10:57 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=cSCfkxcCcyjHt+Lm+PcX89G7cBf+aHHVtzsrdedDXKc=;
+        b=m2SCLWuOj8Cd79C0OJJQsSfjIWae+UAU1SHXdNBfAweIup+rCOP0v6ioGOxDpA7Cst
+         ataPw1D4sW2mLGLNZJTgEcD5sn7Fez3oynaEfXrcK7b9Kj3rSa4W9stEIN/iXHnFE3y4
+         wGc07HF8ZlTWOUWQyC3YOcOTuOH7FNLeMO1sHTVlq3bG2K+sutYoMhz8NWP0sWCriV6t
+         WM6Gm7uMwEtibCfPMMBsnrfj3ENTEZNi7CuZtgzAZOjml2Op4lfCQKPv3EzM3edyTHH3
+         iDwbgJsR+ySG3eHtjK4TQq1wy6E92gnKZRs9n+EhLjqOPTrNu54VX9iE9VQtRHBWElxY
+         Afdg==
+X-Gm-Message-State: AOAM531vNdSF5N9L3tO1em3vW3azXsBvxmLDcrNxmDjwXul/Fqes9pLh
+        fjx1+C3nDfg4h32XPGhYtg==
+X-Google-Smtp-Source: ABdhPJyKYsSoag/7NVQqzCmE+kWu9QcpiPp5VpZITLoA8fnHrjW4RaA72LtIyG7LK6zeuLC1+oX5tA==
+X-Received: by 2002:a5d:97d3:: with SMTP id k19mr1459065ios.45.1594851114865;
+        Wed, 15 Jul 2020 15:11:54 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id f76sm1744517ilg.62.2020.07.15.15.10.56
+        by smtp.gmail.com with ESMTPSA id v5sm1746255ios.54.2020.07.15.15.11.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 15:10:56 -0700 (PDT)
-Received: (nullmailer pid 905964 invoked by uid 1000);
-        Wed, 15 Jul 2020 22:10:55 -0000
-Date:   Wed, 15 Jul 2020 16:10:55 -0600
+        Wed, 15 Jul 2020 15:11:54 -0700 (PDT)
+Received: (nullmailer pid 907327 invoked by uid 1000);
+        Wed, 15 Jul 2020 22:11:53 -0000
+Date:   Wed, 15 Jul 2020 16:11:53 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc:     alsa-devel@alsa-project.org, Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH][resend] ASoC: dt-bindings: ak4642: switch to yaml base
- Documentation
-Message-ID: <20200715221055.GA905934@bogus>
-References: <87lfjwxlna.wl-kuninori.morimoto.gx@renesas.com>
+To:     Johnson CH Chen =?utf-8?B?KOmZs+aYreWLsyk=?= 
+        <JohnsonCH.Chen@moxa.com>
+Cc:     =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        "tony@atomide.com" <tony@atomide.com>,
+        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: omap: Replace UC-8100-ME-T with
+ UC-8100A-ME
+Message-ID: <20200715221153.GA906180@bogus>
+References: <HK2PR01MB3281AFFC8F352E3AE8046645FA660@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87lfjwxlna.wl-kuninori.morimoto.gx@renesas.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <HK2PR01MB3281AFFC8F352E3AE8046645FA660@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 07 Jul 2020 08:35:38 +0900, Kuninori Morimoto wrote:
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+On Tue, Jul 07, 2020 at 10:23:34AM +0000, Johnson CH Chen (陳昭勳) wrote:
+> UC-8100-ME-T is deprecated, and UC-8100A-ME is advanced of UC-8100-ME-T,
+> so replace UC-8100-ME-T with UC-8100A-ME.
 > 
-> This patch switches from .txt base to .yaml base Document.
-> 
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> Signed-off-by: Johnson Chen <johnsonch.chen@moxa.com>
 > ---
+>  Documentation/devicetree/bindings/arm/omap/omap.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
->  - 2weeks passed, but nothing happen
-> 
->  .../devicetree/bindings/sound/ak4642.txt      | 37 ------------
->  .../devicetree/bindings/sound/ak4642.yaml     | 57 +++++++++++++++++++
->  2 files changed, 57 insertions(+), 37 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sound/ak4642.txt
->  create mode 100644 Documentation/devicetree/bindings/sound/ak4642.yaml
-> 
+> diff --git a/Documentation/devicetree/bindings/arm/omap/omap.txt b/Documentation/devicetree/bindings/arm/omap/omap.txt
+> index e77635c5422c..f02265a8a0d4 100644
+> --- a/Documentation/devicetree/bindings/arm/omap/omap.txt
+> +++ b/Documentation/devicetree/bindings/arm/omap/omap.txt
+> @@ -167,8 +167,8 @@ Boards (incomplete list of examples):
+>  - AM335x phyBOARD-REGOR: Single Board Computer
+>    compatible = "phytec,am335x-regor", "phytec,am335x-phycore-som", "ti,am33xx"
+>  
+> -- AM335X UC-8100-ME-T: Communication-centric industrial computing platform
+> -  compatible = "moxa,uc-8100-me-t", "ti,am33xx";
+> +- AM335X UC-8100A-ME: Communication-centric industrial computing platform
+> +  compatible = "moxa,uc-8100a-me", "ti,am33xx";
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+You can't just change compatible strings. They are an ABI.
+
+>  
+>  - OMAP5 EVM : Evaluation Module
+>    compatible = "ti,omap5-evm", "ti,omap5"
+> -- 
+> 2.11.0
