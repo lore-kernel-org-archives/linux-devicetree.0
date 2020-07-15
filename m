@@ -6,62 +6,72 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62074C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 05:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F90C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 05:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BDB820720
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 05:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC546206F4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 05:57:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594792550;
-	bh=4L0r9v5FkgrxWwvK9GlcmCOK5aunuxeotemRIOEWfkQ=;
+	s=default; t=1594792636;
+	bh=sh/y6Tv58ZbvejAQoIQ7VjPDPdiVI5suGLxy8ixlw/o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rniBqkTgrSviVya787Xb5rQmhGtNLyHQwVaBqB0KL4CflcoMLWh+Rjv4hdYB5gn2F
-	 0L4LjcYdzwebvP2IaN9mRRDhMUrIzAHh8vGdANxvy/6fWOLPm0j2SKUcnzdbme5wRs
-	 Cw2zKfnHnhCsWGOF1OEDIAnnWDVwrnyv7P/PViic=
+	b=FJdqNmKox2GUcWrp8luvIhpEkZTM5DiSq2dRegpvPXjs/CY2kFVAMRloivs5ROSQO
+	 gYxOA84YQ/7Y2iTGEnF/Xp+5Ff6n2h8icvTZCYINZAzyacuPU9rFQCtJRH8Q4ScAg0
+	 9vyDYxuxfPRFjkW2KeMReZ60hBTXbwnc1cVAZL+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728742AbgGOFzt (ORCPT
+        id S1726811AbgGOF5Q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 01:55:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53856 "EHLO mail.kernel.org"
+        Wed, 15 Jul 2020 01:57:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725811AbgGOFzt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jul 2020 01:55:49 -0400
+        id S1727942AbgGOF5P (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jul 2020 01:57:15 -0400
 Received: from localhost (unknown [122.171.202.192])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EF2220663;
-        Wed, 15 Jul 2020 05:55:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 062C220663;
+        Wed, 15 Jul 2020 05:57:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594792549;
-        bh=4L0r9v5FkgrxWwvK9GlcmCOK5aunuxeotemRIOEWfkQ=;
+        s=default; t=1594792635;
+        bh=sh/y6Tv58ZbvejAQoIQ7VjPDPdiVI5suGLxy8ixlw/o=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JdClUSI2QoX3y8jh2UXmzcPqsnAEbz2/Lh0LRc8GTpt7f+6XYufh7CzGYGjmPZzE6
-         ZZToJw+z5qU7GGNYhP6lqPRNlSNAVCM14vnM5uvfmXhoCFnr/EYZTCRMf/S7UkNnGg
-         qmgDTm9urp340rQd/09+5zFIHhSdsjMkTfmwFRNQ=
-Date:   Wed, 15 Jul 2020 11:25:45 +0530
+        b=ccBKPEH3rQXWo6yxYXS2I2Zlg2bQpnTixf+T723Cut6K23obwSGs8LC/tGlIcQMhh
+         tRvVtjy4pdNc9vNYYLz3mV77xwIpzia10DvfB0RHR5uP/CP2ZPcyWHVDuB2iSvoR1u
+         OJ0W3dyzkgKGrnKDO4/kalcaLUs9xZJFNlP/+B/A=
+Date:   Wed, 15 Jul 2020 11:27:11 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Sugar Zhang <sugar.zhang@rock-chips.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 03/14] dt-bindings: dma: pl330: Document the quirk
- 'arm,pl330-periph-burst'
-Message-ID: <20200715055545.GU34333@vkoul-mobl>
-References: <1593439555-68130-1-git-send-email-sugar.zhang@rock-chips.com>
- <1593439555-68130-4-git-send-email-sugar.zhang@rock-chips.com>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
+        catalin.marinas@arm.com, will.deacon@arm.com, shawnguo@kernel.org,
+        festevam@gmail.com, s.hauer@pengutronix.de,
+        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
+        dan.j.williams@intel.com, matthias.schiffer@ew.tq-group.com,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel@pengutronix.de, dmaengine@vger.kernel.org, linux-imx@nxp.com
+Subject: Re: [PATCH v10 05/12] dmaengine: dma: imx-sdma: add fw_loaded and
+ is_ram_script
+Message-ID: <20200715055711.GW34333@vkoul-mobl>
+References: <1593523876-22387-1-git-send-email-yibin.gong@nxp.com>
+ <1593523876-22387-6-git-send-email-yibin.gong@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1593439555-68130-4-git-send-email-sugar.zhang@rock-chips.com>
+In-Reply-To: <1593523876-22387-6-git-send-email-yibin.gong@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 29-06-20, 22:05, Sugar Zhang wrote:
-> This patch Adds the quirk 'arm,pl330-periph-burst' for pl330.
+On 30-06-20, 21:31, Robin Gong wrote:
+> Add 'fw_loaded' and 'is_ram_script' to check if the script used by channel
+> is ram script and it's loaded or not, so that could prevent meaningless
+> following malloc dma descriptor and bd allocate in sdma_transfer_init(),
+> otherwise memory may be consumed out potentially without free in case
+> that spi fallback into pio while dma transfer failed by sdma firmware not
+> ready(next ERR009165 patch depends on sdma RAM scripts/firmware).
 
-Applied, thanks
+Acked-By: Vinod Koul <vkoul@kernel.org>
 
 -- 
 ~Vinod
