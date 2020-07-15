@@ -2,126 +2,93 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF9CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 10:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B78C433E4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 10:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B32220720
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 10:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 354C12072E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 10:19:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731048AbgGOKQL (ORCPT
+        id S1727844AbgGOKTK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 06:16:11 -0400
-Received: from mga05.intel.com ([192.55.52.43]:28453 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731040AbgGOKQK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jul 2020 06:16:10 -0400
-IronPort-SDR: OPfbpLpCV5grY8BPlL/UXQkBUCqgtdqgi5bTLDFwv5qvC3B5s12F9DUxTWpJ/D7FYsELcjX6b0
- Zo9grfEfCZjg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="233972800"
-X-IronPort-AV: E=Sophos;i="5.75,355,1589266800"; 
-   d="scan'208";a="233972800"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 03:16:10 -0700
-IronPort-SDR: 5o2eJmdEkhntRPy8p6mMqA9SHZt1y0LbPbDRzfnij5q/4e31dpagqBYlogvp8vubmFNSujOx+s
- g/J3bjufbzuw==
-X-IronPort-AV: E=Sophos;i="5.75,355,1589266800"; 
-   d="scan'208";a="460017463"
-Received: from ykazandz-mobl1.ger.corp.intel.com ([10.251.85.102])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 03:16:05 -0700
-Message-ID: <a4a2d3af6afcae5f368e0e6e1353f3a4743198cd.camel@linux.intel.com>
-Subject: Re: [PATCH v3 2/7] dt-bindings: arm: Add Keem Bay bindings
-From:   Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
-To:     Rob Herring <robh@kernel.org>
-List-Id: <soc.lore.kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, SoC Team <soc@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "Paul J. Murphy" <paul.j.murphy@intel.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Daniele Alessandrelli <daniele.alessandrelli@intel.com>
-Date:   Wed, 15 Jul 2020 11:15:56 +0100
-In-Reply-To: <20200714211122.GA2921587@bogus>
-References: <20200714161305.836348-1-daniele.alessandrelli@linux.intel.com>
-         <20200714161305.836348-3-daniele.alessandrelli@linux.intel.com>
-         <20200714211122.GA2921587@bogus>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        Wed, 15 Jul 2020 06:19:10 -0400
+Received: from mail-oo1-f66.google.com ([209.85.161.66]:44296 "EHLO
+        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726998AbgGOKTK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 06:19:10 -0400
+Received: by mail-oo1-f66.google.com with SMTP id o36so350247ooi.11;
+        Wed, 15 Jul 2020 03:19:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NAkHhGCBdih32hqt76V0j8Veg+fQ7FChhZOK219jyyg=;
+        b=HRl5wwAxXD3aa/M3k9gHxLMLja++2JYkfphFhp49MwX5QEZUmB01bmHiL6U3AQQgBp
+         PYp5mlL2JZ7HMDdwcnYGMgzNidvq+hlxlN+KYwRMfYNEK8jRY3kv4uxzLzR6glqm+cjT
+         716mYGZsVXpB/1BPXJQp/GXAdPhQPFPmT7s+PL5g/oOT5/iWo77xm71I25Uon9OS10J8
+         OxvlqgjypZC+KzrPnkceZRtZ0Kck5G73NdRpsz/VX9fqc9kpJPvjBtbGEXLUBmmQTgAz
+         B2Df6nNlqWpjFd3eO+0wEj6MpLlJaQTRYw/JxbJ4HmbZVCLYyh2mHA6G9at/DWYvoIPE
+         pT/g==
+X-Gm-Message-State: AOAM533FxjB8VOE1z/8HBpDOqPY0GWlsiZ2NcMjiGqnlqS6oYrFAmEKQ
+        pQG0hAowT0O/CYR/o7yAxJ6uAdX+Ziuj0EX7jaA=
+X-Google-Smtp-Source: ABdhPJwSAaZJfpGKxkLLTXuhq5d9bq9sTol7NAMegIgcAukEn+36YLrrN0ajD7D+Vfxo36peiJOo78hXGiX/3pGPC7k=
+X-Received: by 2002:a4a:9552:: with SMTP id n18mr8646494ooi.1.1594808349233;
+ Wed, 15 Jul 2020 03:19:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <1594676120-5862-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594676120-5862-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594676120-5862-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 15 Jul 2020 12:18:58 +0200
+Message-ID: <CAMuHMdUH4yVek8Fn2z1xneTS0Y_vkMv+w7VwEDJvCUXR9qVQRw@mail.gmail.com>
+Subject: Re: [PATCH 3/9] arm64: dts: renesas: r8a774e1: Add IPMMU device nodes
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 2020-07-14 at 15:11 -0600, Rob Herring wrote:
-> On Tue, Jul 14, 2020 at 05:13:00PM +0100, Daniele Alessandrelli
-> wrote:
-> > From: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
-> > 
-> > Document Intel Movidius SoC code-named Keem Bay, along with the
-> > Keem Bay
-> > EVM board.
-> > 
-> > Reviewed-by: Dinh Nguyen <dinguyen@kernel.org>
-> > Signed-off-by: Daniele Alessandrelli <
-> > daniele.alessandrelli@intel.com>
-> > ---
-> >  .../devicetree/bindings/arm/keembay.yaml      | 19
-> > +++++++++++++++++++
-> 
-> /intel,keembay.yaml
-> 
-> With that,
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+On Mon, Jul 13, 2020 at 11:35 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> Add RZ/G2H (R8A774E1) IPMMU nodes.
+>
+> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Thanks. I fixed the file name and the "$id:" field below and will re-
-submit with your "Reviewed-by" tag.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.9.
 
-> 
-> >  1 file changed, 19 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/arm/keembay.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/keembay.yaml
-> > b/Documentation/devicetree/bindings/arm/keembay.yaml
-> > new file mode 100644
-> > index 000000000000..f81b110046ca
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/keembay.yaml
-> > @@ -0,0 +1,19 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/arm/keembay.yaml#
-> 
-> And don't forget this update.
-> 
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Keem Bay platform device tree bindings
-> > +
-> > +maintainers:
-> > +  - Paul J. Murphy <paul.j.murphy@intel.com>
-> > +  - Daniele Alessandrelli <daniele.alessandrelli@intel.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - enum:
-> > +        - intel,keembay-evm
-> > +      - const: intel,keembay
-> > +...
-> > -- 
-> > 2.26.2
-> > 
+Gr{oetje,eeting}s,
 
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
