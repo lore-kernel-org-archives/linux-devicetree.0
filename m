@@ -2,134 +2,73 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F6EAC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 23:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1078BC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 23:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A4EB2065D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 23:15:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ts3s5J/0"
+	by mail.kernel.org (Postfix) with ESMTP id E6C78206D5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 23:27:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbgGOXPD (ORCPT
+        id S1726776AbgGOX1z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 19:15:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47874 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726863AbgGOXPC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 19:15:02 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 592D1C061755
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 16:15:02 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id b4so3663736qkn.11
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 16:15:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Xd3yKqfzGmIuyChmnHGbxGkkq4tAYE3GR+3CE+pvQXg=;
-        b=Ts3s5J/0Jn86cWG4tF6CjMnwblbzfZlvMliTt+poHpAG7orVq3o3nSe6n6Q1EYPvYa
-         5QSUhh8VkISuEaFNLQ0Nq89faKdYqhaCqvSyPDIKMhJFeMis5CXzx3OzzvMWT5OYXkEG
-         Wx4NhgyxGnvXNO151lP+C0lffDejUl1x+1SXEXqWE+cQjQDKFy5ffljzNj6ryf1HznNK
-         jlebn5peyRii0ZNLjeLReRyhUhDGqBX/hlxs9n0twT5nWn2AKG4yhGKX670b5nh5Y73S
-         NPGhHXQpPmIAxzDFnHK8GzrJvS/dsx1QYdmOgOTEP2xaaIud7o7YYvdDZ9gC431R3Hu8
-         vEkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Xd3yKqfzGmIuyChmnHGbxGkkq4tAYE3GR+3CE+pvQXg=;
-        b=rIlfH1UMjq4WlVl3yVPgmb8lfGuYzDo0Hk5lk2g+cDVvaksxTAPWXuv+3t7y4uBLp+
-         uaziU+kc0Si41Hd9DumgvJI/55msArdxFM/BvfTrn43JO61FBlTiQnwBfJmE2xk98zhc
-         dmhMGoxQ1YYu8sWl0gevxCl2KLPLlbCfIeo+QpmWSWHulGzubI6Tj84IACqGSUfEsA2t
-         Irq83h6yj32zffgRXzO0Y47TJ0bL3YIzXdL1z+Jsljxj60u8wRTs2QHC8zToFPduQZN8
-         mibHqJAnAMcgbEAXCbk5boe/Lc3okX6NcjLsKGep9SpCwmhhkgrmmBECza33jqnCY7zY
-         JMXw==
-X-Gm-Message-State: AOAM531MrC3pOoKDhNkcThLqImJvcpARdiXSc7hOvCKeh1OO2gbNR5xq
-        O4hKyO/Y7AryYn/vRC7AdFbQEt4u8fI=
-X-Google-Smtp-Source: ABdhPJzszqQUB8jmldBHMhwuFEBC+z8WHjXAb/q6EGDZuz6YCf/xKyIqVeXUt0vagEfU/5DMKL7TpQ==
-X-Received: by 2002:a05:620a:2002:: with SMTP id c2mr1314654qka.35.1594854901466;
-        Wed, 15 Jul 2020 16:15:01 -0700 (PDT)
-Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.gmail.com with ESMTPSA id o187sm4343607qke.76.2020.07.15.16.15.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jul 2020 16:15:00 -0700 (PDT)
-Subject: Re: [RFC PATCH 3/4] thermal:core:Add genetlink notifications for
- monitoring falling temperature
-To:     Zhang Rui <rui.zhang@intel.com>, daniel.lezcano@linaro.org,
-        robh+dt@kernel.org
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200710135154.181454-1-thara.gopinath@linaro.org>
- <20200710135154.181454-4-thara.gopinath@linaro.org>
- <746420e6b213985518d8b314018e32dc3438e9af.camel@intel.com>
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <021bec8e-2cf7-99fb-d224-e16796b95567@linaro.org>
-Date:   Wed, 15 Jul 2020 19:15:00 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <746420e6b213985518d8b314018e32dc3438e9af.camel@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 15 Jul 2020 19:27:55 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:55621 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726770AbgGOX1z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jul 2020 19:27:55 -0400
+Date:   16 Jul 2020 08:27:54 +0900
+X-IronPort-AV: E=Sophos;i="5.75,357,1589209200"; 
+   d="scan'208";a="52017879"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 16 Jul 2020 08:27:54 +0900
+Received: from mercury.renesas.com (unknown [10.166.252.133])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 0A8FF40DB58D;
+        Thu, 16 Jul 2020 08:27:54 +0900 (JST)
+Message-ID: <87365s4ax0.wl-kuninori.morimoto.gx@renesas.com>
+From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH][resend] ASoC: dt-bindings: ak4613: switch to yaml base Documentation
+In-Reply-To: <CAOMZO5BYV_3GhcWsaGXnyxT_d86wQ+3wguW3AU+kVfx7bnZUkg@mail.gmail.com>
+References: <87mu4cxlo2.wl-kuninori.morimoto.gx@renesas.com>
+        <CAOMZO5BYV_3GhcWsaGXnyxT_d86wQ+3wguW3AU+kVfx7bnZUkg@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 Emacs/26.3 Mule/6.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
+Hi Fabio
 
-On 7/15/20 4:46 AM, Zhang Rui wrote:
-> On Fri, 2020-07-10 at 09:51 -0400, Thara Gopinath wrote:
->> Add notification calls for trip type THERMAL_TRIP_COLD when
->> temperature
->> crosses the trip point in either direction.
->>
->> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
->> ---
->>   drivers/thermal/thermal_core.c | 21 +++++++++++++++------
->>   1 file changed, 15 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/thermal/thermal_core.c
->> b/drivers/thermal/thermal_core.c
->> index 750a89f0c20a..e2302ca1cd3b 100644
->> --- a/drivers/thermal/thermal_core.c
->> +++ b/drivers/thermal/thermal_core.c
->> @@ -429,12 +429,21 @@ static void handle_thermal_trip(struct
->> thermal_zone_device *tz, int trip)
->>   		tz->ops->get_trip_hyst(tz, trip, &hyst);
->>   
->>   	if (tz->last_temperature != THERMAL_TEMP_INVALID) {
->> -		if (tz->last_temperature < trip_temp &&
->> -		    tz->temperature >= trip_temp)
->> -			thermal_notify_tz_trip_up(tz->id, trip);
->> -		if (tz->last_temperature >= trip_temp &&
->> -		    tz->temperature < (trip_temp - hyst))
->> -			thermal_notify_tz_trip_down(tz->id, trip);
->> +		if (type == THERMAL_TRIP_COLD) {
->> +			if (tz->last_temperature > trip_temp &&
->> +			    tz->temperature <= trip_temp)
->> +				thermal_notify_tz_trip_down(tz->id,
->> trip);
+Thank you for the review
+
+> > +examples:
+> > +  - |
+> > +    i2c {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +        ak4613: ak4613@10 {
 > 
-> trip_type should also be part of the event because trip_down/trip_up
-> for hot trip and cold trip have different meanings.
-> Or can we use some more generic names like trip_on/trip_off? trip_on
-> means the trip point is violated or actions need to be taken for the
-> specific trip points, for both hot and cold trips. I know
-> trip_on/trip_off doesn't represent what I mean clearly, but surely you
-> can find a better name.
+> node names should be generic, so:
+> 
+> ak4613: codec@10 {
 
-Makes sense.. I will fix this in the next version. I don't have a good 
-name at the moment but will think of something!
+OK, I see.
+I think ak4642 needs same fix.
+I will post v2 patch
 
+Thank you for your help !!
 
--- 
-Warm Regards
-Thara
+Best regards
+---
+Kuninori Morimoto
