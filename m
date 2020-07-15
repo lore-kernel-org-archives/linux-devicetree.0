@@ -2,124 +2,122 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE46C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 18:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5106C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 18:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD0862064B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 18:19:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594837159;
-	bh=taJ+5KPPgh1D4VQJC+LpzEH18ropvCeO2aSQWXX/F30=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ccekISJXIeoRt55ug7w66rKGVt0b2+2jgmgkj4BT79KexBa+oizn/DtvUTri5IUQj
-	 QWVNti8DJhYtvWYV04bYaSvGDMWaGNOQ93GiNTFmHgkq9KG/s88nefokBcqiRYVtof
-	 GASxo5Q5smmpue8GIl/NiA5qkRZcGXmcVy8Dhios=
+	by mail.kernel.org (Postfix) with ESMTP id 9AE0620672
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 18:26:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uEvZT5ws"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725977AbgGOSTT (ORCPT
+        id S1726776AbgGOS0k (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 14:19:19 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41554 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbgGOSTS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 14:19:18 -0400
-Received: by mail-io1-f65.google.com with SMTP id p205so3248249iod.8;
-        Wed, 15 Jul 2020 11:19:18 -0700 (PDT)
+        Wed, 15 Jul 2020 14:26:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59922 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbgGOS0j (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 14:26:39 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0A99C061755;
+        Wed, 15 Jul 2020 11:26:39 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id a8so2357254edy.1;
+        Wed, 15 Jul 2020 11:26:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oTQol0VmjKmBPC+M8imaYKdXV0XGdfLv0rh0VWky9EE=;
+        b=uEvZT5ws7+T1jnEVo6h4JbcKv8hKOxVCiJq7OPNIAvwfhDPmyGLsLZHzlj3+UQdbDu
+         AJKToPAaUqlIXFAC4vBVNmIbeFB8QSK3UYuQk68sX+Joam1O4wNo/I0UIbhcua/xk60a
+         e1JadHF+95xJiCjkb4BPqj69zzhrMH3vOdDr9/57zwNbf1j0o51CmK+HkV8Fnv1oh3mq
+         dsHG/eup+01xytoaipZGKywOhJg0gANnXIIwUNiURsyiVQoE6F3fjv5GsM9a4ECmV1Zu
+         nsh/4VmIRcvcEWOFyXfYT657uKLnIh76SWifvHzJigNGdoc3EB2Y3w8AuF8RT8CkFJo2
+         ey+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8qir7BYEt1ePlYcSc9kQBoolo/NmI427EpRk3jCnc0E=;
-        b=MAMZCEyepTv0b0HymYM9Pt5xXg3EkaTRQOxe5Ec+mPPsIURDQaEDeO3jlLa7mxYqMA
-         bvTENVFP/SLmQPzmMrKM5gh9x50livFPdiaUmAyDcj+uzJHrvWArmGTNqUQUpD/SHpsD
-         fXAK4BIsT6u5524M8xDCXaYZew/CZGBp39X8S+3hak7cmkOM+caafEL91Wyo7IJh38xk
-         mDPkA7LXNGlqS4mVPMCg75+oBIrF5Abh9zL2AJRT/pCGcog8dIqffpzCD7LCJEgjF59J
-         QErn2OisfbYQsd7JlA9VjNYZ1veXN8swsLvo7XewKOLwil+Ey5fUdQIIT5nRJHrvQeTa
-         2coQ==
-X-Gm-Message-State: AOAM532k0gsgn5zO9TWmJBT4B31Os+cpTnpfR2XO+oJkbZfu4DxMNN5n
-        r5TYmx71R4uO7IcJj9/v5w==
-X-Google-Smtp-Source: ABdhPJy+MnYJTQwPRpfYQ3APxYiqsDRIvjF899R10bA6VgiAK98fT5sRURp5v0MVa13LsRx2/1boXA==
-X-Received: by 2002:a5d:8ac3:: with SMTP id e3mr575726iot.9.1594837157634;
-        Wed, 15 Jul 2020 11:19:17 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id t11sm1437942ils.3.2020.07.15.11.19.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 11:19:17 -0700 (PDT)
-Received: (nullmailer pid 557898 invoked by uid 1000);
-        Wed, 15 Jul 2020 18:19:16 -0000
-Date:   Wed, 15 Jul 2020 12:19:16 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Amelie Delaunay <amelie.delaunay@st.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [PATCH 1/6] dt-bindings: connector: add power-opmode optional
- property to usb-connector
-Message-ID: <20200715181916.GA551920@bogus>
-References: <20200615161512.19150-1-amelie.delaunay@st.com>
- <20200615161512.19150-2-amelie.delaunay@st.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oTQol0VmjKmBPC+M8imaYKdXV0XGdfLv0rh0VWky9EE=;
+        b=tTRIs+H4xo3e29xxKPEMMW/30g1+xlytsB1bpIn4Pw40HIgiz9yCAA46A95cFkLFAV
+         o4Z4lvxZJriql+Qq84/YFzLo+YQa6dmf7Q7rZV+EubT0ijfmJPA8FiXyiw9t+2xsfM/O
+         5nwbVGDGe30Fo4G3b0s9RnfkkYGTJ3QBh7g8wP1qt2WA8GjFpOw8XQjMTtFKgIcn/Mr3
+         gL5/zCiAo1eVrMgThtbHzbRKl9zT8D0WLdRxXJ4gSeR9shktCFluqVDT1riQYCuDpVqO
+         RFWYxWIDpPMEV73wd4gIIxFxJD10YLSdxGD9JJEUX6ox7Y4trQh1h9/bgw+kl59x/y1v
+         4U1A==
+X-Gm-Message-State: AOAM530t0giHHUudMUnNqqtVodt9utW25AwPXHG0KDPwOzqmDZQyQPSV
+        WU+DKZtY2l8BUVDQM3iKD4WyW0j57F9L0l3H/zM=
+X-Google-Smtp-Source: ABdhPJxLqEBMfJSdn3WSobb0Oqp5l9KTaKAbyXt1aXJeFG4g+SFo7Aq+S0ThjrslTJ53COSNmM0KR2c9PV+YQEl8Ctc=
+X-Received: by 2002:a05:6402:304a:: with SMTP id bu10mr915071edb.70.1594837598280;
+ Wed, 15 Jul 2020 11:26:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200615161512.19150-2-amelie.delaunay@st.com>
+References: <1594644106-22449-1-git-send-email-akhilpo@codeaurora.org> <1594644106-22449-6-git-send-email-akhilpo@codeaurora.org>
+In-Reply-To: <1594644106-22449-6-git-send-email-akhilpo@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Wed, 15 Jul 2020 11:27:11 -0700
+Message-ID: <CAF6AEGs9Ei=MAhC=OOfxHvw_AGeF25LTCrWLzxB_kGN7e2PgNA@mail.gmail.com>
+Subject: Re: [PATCH v5 5/6] arm64: dts: qcom: sc7180: Add interconnects
+ property for GPU
+To:     Akhil P Oommen <akhilpo@codeaurora.org>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Matthias Kaehlcke <mka@chromium.org>,
+        saravanak@google.com, Sibi Sankar <sibis@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Jonathan <jonathan@marek.ca>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 06:15:07PM +0200, Amelie Delaunay wrote:
-> Power operation mode may depends on hardware design, so, add the optional
-> property power-opmode for usb-c connector to select the power operation
-> mode capability.
-> 
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+On Mon, Jul 13, 2020 at 5:42 AM Akhil P Oommen <akhilpo@codeaurora.org> wrote:
+>
+> From: Sharat Masetty <smasetty@codeaurora.org>
+>
+> This patch adds the interconnects property to the GPU node. This enables
+> the GPU->DDR path bandwidth voting.
+>
+> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+> Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
 > ---
->  .../devicetree/bindings/connector/usb-connector.yaml  | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.yaml b/Documentation/devicetree/bindings/connector/usb-connector.yaml
-> index 9bd52e63c935..cd7feb2d4984 100644
-> --- a/Documentation/devicetree/bindings/connector/usb-connector.yaml
-> +++ b/Documentation/devicetree/bindings/connector/usb-connector.yaml
-> @@ -88,6 +88,17 @@ properties:
->        - device
->        - dual
->  
-> +  power-opmode:
-> +    description: Determines the power operation mode that the Type C connector
-> +      will support.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#definitions/string
-> +    enum:
-> +      - default
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 31b9217..a567297 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -1470,6 +1470,8 @@
+>                         operating-points-v2 = <&gpu_opp_table>;
+>                         qcom,gmu = <&gmu>;
+>
+> +                       interconnects = <&gem_noc MASTER_GFX3D &mc_virt SLAVE_EBI1>;
 
-Wouldn't this just be no property?
+I suppose this and the 845 dts patch should have:
 
-> +      - 1.5A
-> +      - 3.0A
+   interconnect-names = "gfx-mem";
 
-You'll need to explain these better.
+(OTOH not having it was a good way to notice a bug in the driver
+handling the legacy case without having 'interconnect-names')
 
-> +      - usb_power_delivery
+BR,
+-R
 
-I would have thought 'default' would be USB-PD. Though I thought Type-C 
-was always USB-PD. 
 
 > +
->    # The following are optional properties for "usb-c-connector" with power
->    # delivery support.
->    source-pdos:
-> -- 
-> 2.17.1
-> 
+>                         gpu_opp_table: opp-table {
+>                                 compatible = "operating-points-v2";
+>
+> --
+> 2.7.4
+>
