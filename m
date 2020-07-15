@@ -2,147 +2,77 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED64C433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 13:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DECEC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 13:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C1D720657
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 13:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D91B3206E9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 13:03:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="qlJkJ4up"
+	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="NquQ2NJf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgGONBm (ORCPT
+        id S1731372AbgGONDA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 09:01:42 -0400
-Received: from nbd.name ([46.4.11.11]:48388 "EHLO nbd.name"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731364AbgGONBl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jul 2020 09:01:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-         s=20160729; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject
-        :Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=pivfQbDXNPRL1qq0rFiuOkRxQTRlTI7QE0TCm+MsbXk=; b=qlJkJ4upTKLxMA42NTIOoVfsZa
-        GgIt7tXEJ7JTMrogl0oRMmHSoEjSssyjSI18oOuYmwu52v+OdIHpVmlhPGxiyVs7c8FRS1Lu5Xs0O
-        qCRR8Ak4+h0aRV6RGkEcc42hsfHP6HLHegM24jaK1PiGBvYWD+4utKzn4Td2a9QGPVI8=;
-Received: from p5b2068d4.dip0.t-ipconnect.de ([91.32.104.212] helo=localhost.localdomain)
-        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_CBC_SHA1:128)
-        (Exim 4.89)
-        (envelope-from <nbd@nbd.name>)
-        id 1jvh2V-0000ux-IH; Wed, 15 Jul 2020 15:01:35 +0200
-From:   Felix Fietkau <nbd@nbd.name>
-To:     linux-wireless@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, evelyn.tsai@mediatek.com,
-        Shayne Chen <shayne.chen@mediatek.com>
-Subject: [PATCH v3 1/4] dt-bindings: net: wireless: mt76: add power-limits node
-Date:   Wed, 15 Jul 2020 15:01:34 +0200
-Message-Id: <20200715130134.34988-1-nbd@nbd.name>
-X-Mailer: git-send-email 2.24.0
+        Wed, 15 Jul 2020 09:03:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37988 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731364AbgGONDA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 09:03:00 -0400
+Received: from mail.nic.cz (mail.nic.cz [IPv6:2001:1488:800:400::400])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2454FC061755;
+        Wed, 15 Jul 2020 06:03:00 -0700 (PDT)
+Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
+        by mail.nic.cz (Postfix) with ESMTPSA id A601C140A4B;
+        Wed, 15 Jul 2020 15:02:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
+        t=1594818178; bh=wjt5p2zs/BnNQixR8Q9OjRdubRO7Uu6w39hVviPSDQ0=;
+        h=Date:From:To;
+        b=NquQ2NJfx/R8NhcUxaAbiFW47DSIqVUnQJI29WvfUjMlKrWLQUbfMqjHsaNKVfXrS
+         m13BhINpvMTpPFbE0tNk640UD374bHnE9MenZowwxP7RvzGb+TBNSg4HaK+ljPBo0K
+         InbUzzMix8d8MVmz5tuQEF8OZEpUXvUUOH+/20nk=
+Date:   Wed, 15 Jul 2020 15:02:58 +0200
+From:   Marek =?ISO-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     <linux-leds@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: leds: add cznic,turris-omnia-leds
+ binding
+Message-ID: <20200715150258.11f247d6@dellmb.labs.office.nic.cz>
+In-Reply-To: <c1bfdb2a-f11e-9f67-1569-10c48f40407c@ti.com>
+References: <20200715124034.9804-1-marek.behun@nic.cz>
+        <20200715124034.9804-2-marek.behun@nic.cz>
+        <c1bfdb2a-f11e-9f67-1569-10c48f40407c@ti.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+X-Virus-Status: Clean
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This subnode can be used to set per-rate tx power limits either per
-country code / regdomain or globally.
-These limits are typically provided by the device manufacturers and are
-used to limit sideband emissions and stay within regulatory limits
+On Wed, 15 Jul 2020 07:47:28 -0500
+Dan Murphy <dmurphy@ti.com> wrote:
 
-Co-developed-by: Shayne Chen <shayne.chen@mediatek.com>
-Signed-off-by: Shayne Chen <shayne.chen@mediatek.com>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
----
-v3:
- - fix S-o-b order
-v2:
- - merge 802.11ax rate changes from Shayne's patch
- - document txs-delta property
+> This is a bit confusing and reads very rough can maybe
+> 
+> There are 12 RGB LEDs that are controlled via a micro controller that 
+> communicates via the I2C bus.
+> 
+> Dan
+> 
+> 
 
- .../bindings/net/wireless/mediatek,mt76.txt   | 59 +++++++++++++++++++
- 1 file changed, 59 insertions(+)
+How about this?
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-index ab7e7a00e534..e4859c974ef4 100644
---- a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-+++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-@@ -36,6 +36,7 @@ Optional nodes:
- - led: Properties for a connected LED
-   Optional properties:
-     - led-sources: See Documentation/devicetree/bindings/leds/common.txt
-+- power-limits: contains per-regdomain/channel rate power limit subnodes
- 
- &pcie {
- 	pcie0 {
-@@ -76,3 +77,61 @@ wmac: wmac@18000000 {
- 
- 	power-domains = <&scpsys MT7622_POWER_DOMAIN_WB>;
- };
-+
-+
-+Subnodes of power-limits:
-+
-+Properties:
-+- country: One or more country codes, as used by the cfg80211 regdomain code
-+- regdomain: "FCC", "ETSI" or "JP"
-+
-+If neither country, nor regdomain is specified, the power limits node is used
-+as a fallback when no other subnode matches.
-+
-+Subnodes txpower-2g, txpower-5g:
-+
-+Properties:
-+- channels: pairs of first and last channel number
-+- cck: 4 half-dBm per-rate power limit values
-+- ofdm: 8 half-dBm per-rate power limit values
-+- mcs:
-+	sets of per-rate power limit values for 802.11n/802.11ac rates for
-+	multiple channel bandwidth settings.
-+	Each set starts with the number of channel bandwidth settings for
-+	which the rate set applies, followed by either 8 (MT7603/MT7628) or
-+	10 (all other chips) power limit values.
-+	The order of the channel bandwidth settings is: 20, 40, 80, 160 MHz.
-+- ru:
-+	sets of per-rate power limit values for 802.11ax rates for multiple
-+	channel bandwidth or resource unit settings.
-+	Each set starts with the number of channel bandwidth or resource unit
-+	settings for which the rate set applies, followed by 12 power limit
-+	values. The order of the channel resource unit settings is:
-+	RU26, RU52, RU106, RU242/SU20, RU484/SU40, RU996/SU80, RU2x996/SU160.
-+- txs-delta: half-dBm power delta for different numbers of antennas (1, 2, ...)
-+
-+
-+power-limit example:
-+
-+power-limits {
-+	r0 {
-+		regdomain = "FCC";
-+		txpower-5g {
-+			r1 {
-+				channels = <36 48>;
-+				ofdm = <23 23 23 23 23 23 23 23>;
-+				mcs = <1 23 23 23 23 23 23 23 23 23 23>,
-+					  <3 22 22 22 22 22 22 22 22 22 22>;
-+				ru = <3 22 22 22 22 22 22 22 22 22 22 22 22>,
-+				     <4 20 20 20 20 20 20 20 20 20 20 20 20>;
-+			};
-+			r2 {
-+				channels = <100 181>;
-+				ofdm = <14 14 14 14 14 14 14 14>;
-+				mcs = <4 14 14 14 14 14 14 14 14 14 14>;
-+				txs-delta = <12 9 6>;
-+				ru = <7 14 14 14 14 14 14 14 14 14 14 14 14>;
-+			};
-+		};
-+	};
-+};
--- 
-2.24.0
-
+  This module adds support for the RGB LEDs found on the front panel of
+  the Turris Omnia router. There are 12 RGB LEDs that are controlled by
+  a microcontroller that communicates via the I2C bus. Each LED is
+  described as a subnode of this I2C device.
