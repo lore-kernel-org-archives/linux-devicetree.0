@@ -6,72 +6,123 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F90C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 05:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2706FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 06:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC546206F4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 05:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE6CE206F5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 06:20:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594792636;
-	bh=sh/y6Tv58ZbvejAQoIQ7VjPDPdiVI5suGLxy8ixlw/o=;
+	s=default; t=1594794003;
+	bh=05czjJvRJc8XN686B6X5OIjt1m5Lx94Zy66nZ0TFTuI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FJdqNmKox2GUcWrp8luvIhpEkZTM5DiSq2dRegpvPXjs/CY2kFVAMRloivs5ROSQO
-	 gYxOA84YQ/7Y2iTGEnF/Xp+5Ff6n2h8icvTZCYINZAzyacuPU9rFQCtJRH8Q4ScAg0
-	 9vyDYxuxfPRFjkW2KeMReZ60hBTXbwnc1cVAZL+0=
+	b=VPnpQerZJ69NqisSYnTYkBj51+cfFONGELy6ZvmriNqaAQ8naH5LUo44KQIYHBDsy
+	 urSTGxEo79zaJl8dQqpiaQnfchY4tXQqN1wHGvL1b6IdcEY8s3KVmKkMLaggQyon5T
+	 axytXfAcAdFnJQr96Et7UGu2ukDh6NRkgDnmc7po=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgGOF5Q (ORCPT
+        id S1728441AbgGOGUC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 01:57:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54408 "EHLO mail.kernel.org"
+        Wed, 15 Jul 2020 02:20:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727942AbgGOF5P (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jul 2020 01:57:15 -0400
+        id S1725866AbgGOGUC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jul 2020 02:20:02 -0400
 Received: from localhost (unknown [122.171.202.192])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 062C220663;
-        Wed, 15 Jul 2020 05:57:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E49520672;
+        Wed, 15 Jul 2020 06:20:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594792635;
-        bh=sh/y6Tv58ZbvejAQoIQ7VjPDPdiVI5suGLxy8ixlw/o=;
+        s=default; t=1594794001;
+        bh=05czjJvRJc8XN686B6X5OIjt1m5Lx94Zy66nZ0TFTuI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ccBKPEH3rQXWo6yxYXS2I2Zlg2bQpnTixf+T723Cut6K23obwSGs8LC/tGlIcQMhh
-         tRvVtjy4pdNc9vNYYLz3mV77xwIpzia10DvfB0RHR5uP/CP2ZPcyWHVDuB2iSvoR1u
-         OJ0W3dyzkgKGrnKDO4/kalcaLUs9xZJFNlP/+B/A=
-Date:   Wed, 15 Jul 2020 11:27:11 +0530
+        b=TkN9kI7sW2FxzrMGLsnMSOwyLrYgRTsapamaHFT5ehvpboZalM4to6Kn4CneZsoAf
+         l4tDgoEVPTgKkzAIWkq6cI1RYmZsqxw6PeL35Jmiwe4gky+oFMzPrqQysl6qj66iMd
+         mZBGDFdxeuRN4wxW83eGEdBuxtQBaZu7WESwQtMo=
+Date:   Wed, 15 Jul 2020 11:49:57 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
-        catalin.marinas@arm.com, will.deacon@arm.com, shawnguo@kernel.org,
-        festevam@gmail.com, s.hauer@pengutronix.de,
-        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
-        dan.j.williams@intel.com, matthias.schiffer@ew.tq-group.com,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@pengutronix.de, dmaengine@vger.kernel.org, linux-imx@nxp.com
-Subject: Re: [PATCH v10 05/12] dmaengine: dma: imx-sdma: add fw_loaded and
- is_ram_script
-Message-ID: <20200715055711.GW34333@vkoul-mobl>
-References: <1593523876-22387-1-git-send-email-yibin.gong@nxp.com>
- <1593523876-22387-6-git-send-email-yibin.gong@nxp.com>
+To:     EastL Lee <EastL.Lee@mediatek.com>
+Cc:     Sean Wang <sean.wang@mediatek.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, matthias.bgg@gmail.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        wsd_upstream@mediatek.com, cc.hwang@mediatek.com
+Subject: Re: [PATCH v6 2/4] dmaengine: mediatek-cqdma: remove redundant queue
+ structure
+Message-ID: <20200715061957.GA34333@vkoul-mobl>
+References: <1593673564-4425-1-git-send-email-EastL.Lee@mediatek.com>
+ <1593673564-4425-3-git-send-email-EastL.Lee@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1593523876-22387-6-git-send-email-yibin.gong@nxp.com>
+In-Reply-To: <1593673564-4425-3-git-send-email-EastL.Lee@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 30-06-20, 21:31, Robin Gong wrote:
-> Add 'fw_loaded' and 'is_ram_script' to check if the script used by channel
-> is ram script and it's loaded or not, so that could prevent meaningless
-> following malloc dma descriptor and bd allocate in sdma_transfer_init(),
-> otherwise memory may be consumed out potentially without free in case
-> that spi fallback into pio while dma transfer failed by sdma firmware not
-> ready(next ERR009165 patch depends on sdma RAM scripts/firmware).
+On 02-07-20, 15:06, EastL Lee wrote:
 
-Acked-By: Vinod Koul <vkoul@kernel.org>
+>  static enum dma_status mtk_cqdma_tx_status(struct dma_chan *c,
+>  					   dma_cookie_t cookie,
+>  					   struct dma_tx_state *txstate)
+>  {
+> -	struct mtk_cqdma_vchan *cvc = to_cqdma_vchan(c);
+> -	struct mtk_cqdma_vdesc *cvd;
+> -	struct virt_dma_desc *vd;
+> -	enum dma_status ret;
+> -	unsigned long flags;
+> -	size_t bytes = 0;
+> -
+> -	ret = dma_cookie_status(c, cookie, txstate);
+> -	if (ret == DMA_COMPLETE || !txstate)
+> -		return ret;
+> -
+> -	spin_lock_irqsave(&cvc->vc.lock, flags);
+> -	vd = mtk_cqdma_find_active_desc(c, cookie);
+> -	spin_unlock_irqrestore(&cvc->vc.lock, flags);
+> -
+> -	if (vd) {
+> -		cvd = to_cqdma_vdesc(vd);
+> -		bytes = cvd->residue;
+> -	}
+> -
+> -	dma_set_residue(txstate, bytes);
 
+any reason why you want to remove setting residue?
+
+> -static void mtk_cqdma_free_active_desc(struct dma_chan *c)
+> +static int mtk_cqdma_terminate_all(struct dma_chan *c)
+>  {
+>  	struct mtk_cqdma_vchan *cvc = to_cqdma_vchan(c);
+> -	bool sync_needed = false;
+> +	struct virt_dma_chan *vc = to_virt_chan(c);
+>  	unsigned long pc_flags;
+>  	unsigned long vc_flags;
+> +	LIST_HEAD(head);
+> +
+> +	/* wait for the VC to be inactive  */
+> +	if (!wait_for_completion_timeout(&cvc->cmp, msecs_to_jiffies(3000)))
+> +		return -EAGAIN;
+>  
+>  	/* acquire PC's lock first due to lock dependency in dma ISR */
+>  	spin_lock_irqsave(&cvc->pc->lock, pc_flags);
+>  	spin_lock_irqsave(&cvc->vc.lock, vc_flags);
+>  
+> -	/* synchronization is required if this VC is active */
+> -	if (mtk_cqdma_is_vchan_active(cvc)) {
+> -		cvc->issue_synchronize = true;
+> -		sync_needed = true;
+> -	}
+> +	/* get VDs from lists */
+> +	vchan_get_all_descriptors(vc, &head);
+> +
+> +	/* free all the VDs */
+> +	vchan_dma_desc_free_list(vc, &head);
+>  
+>  	spin_unlock_irqrestore(&cvc->vc.lock, vc_flags);
+>  	spin_unlock_irqrestore(&cvc->pc->lock, pc_flags);
+
+Good cleanup, do you need both these locks?
 -- 
 ~Vinod
