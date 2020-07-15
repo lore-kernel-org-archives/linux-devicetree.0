@@ -2,118 +2,94 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5F3C3527C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 11:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A77EC43458
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 11:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 764D32071B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 11:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4219C2075B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 11:13:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594811601;
+	bh=eydGT5vyj3DFkrTR3iGkM6VbuT/mY9iEwObflzBiA5M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pYQpRvaqDCa5oLlr62ydK0J64uCyABw6TVpGgJw3uH8WhRwRMAnlDCnEd+yE/S/fn
+	 jlIQrwnxk7KNgaCW60JOgjCpe+Jm7otwcsDZWSIxJJLAiBfUkDpfie2vsmu4+3tGFm
+	 XqFijVVD91mCmuRIq6r4qtYVAN7rJVn2n9/y5LyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729599AbgGOLJT (ORCPT
+        id S1726652AbgGOLNU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 07:09:19 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:37974 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729356AbgGOLJT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jul 2020 07:09:19 -0400
-X-IronPort-AV: E=Sophos;i="5.75,355,1589209200"; 
-   d="scan'208";a="52194034"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 15 Jul 2020 20:09:16 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 8A99F4006CDA;
-        Wed, 15 Jul 2020 20:09:11 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Magnus Damm <magnus.damm@gmail.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 00/20] Add support for [H]SCIF/TMU/CMT/THS/SDHI/MSIOF/CAN[FD]/I2C/IIC/RWDT on R8A774E1
-Date:   Wed, 15 Jul 2020 12:08:50 +0100
-Message-Id: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 15 Jul 2020 07:13:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51210 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726034AbgGOLNU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jul 2020 07:13:20 -0400
+Received: from localhost (unknown [122.171.202.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21EC220658;
+        Wed, 15 Jul 2020 11:13:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594811600;
+        bh=eydGT5vyj3DFkrTR3iGkM6VbuT/mY9iEwObflzBiA5M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uRYxnG5OXQN4sijkPXo4JIQSHo3Qzo2kvJDps2v9dTJ0oqZ96Rea5oLMtoDrybZEf
+         YHq/nhv6B7uhMyy7b5+bRM81cLS0YnTrkJlEiNxEi2qoxzVHKehGD6hMe8e5faj4Na
+         wjf5BXMWyoj6kPiSBzLZn+xio+Bhagas8hBXFHcQ=
+Date:   Wed, 15 Jul 2020 16:43:15 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 04/11] dmaengine: Introduce max SG list entries
+ capability
+Message-ID: <20200715111315.GK34333@vkoul-mobl>
+References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+ <20200709224550.15539-5-Sergey.Semin@baikalelectronics.ru>
+ <d667adda-6576-623d-6976-30f60ab3c3dc@ti.com>
+ <20200710092738.z7zyywe46mp7uuf3@mobilestation>
+ <427bc5c8-0325-bc25-8637-a7627bcac26f@ti.com>
+ <20200710161445.t6eradkgt4terdr3@mobilestation>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200710161445.t6eradkgt4terdr3@mobilestation>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi All,
+On 10-07-20, 19:14, Serge Semin wrote:
+> On Fri, Jul 10, 2020 at 02:51:33PM +0300, Peter Ujfalusi wrote:
 
-This patch series enables support for following on RZ/G2H SoC,
-* CPU OPP
-* THS
-* CMT/TMU
-* I2C/IIC
-* MSIOF
-* RWDT
-* SDHI
-* SCIF/HSCIF
-* CAN/CANFD
+> > Since we should be able to handle longer lists and this is kind of a
+> > hint for clients that above this number of nents the list will be broken
+> > up to smaller 'bursts', which when traversing could cause latency.
+> > 
+> > sg_chunk_len might be another candidate.
+> 
+> Ok. We've got four candidates:
+> - max_sg_nents_burst
+> - max_sg_burst
+> - max_sg_chain
+> - sg_chunk_len
+> 
+> @Vinod, @Andy, what do you think?
 
-Cheers,
-Prabhakar
-
-Lad Prabhakar (14):
-  dt-bindings: thermal: rcar-gen3-thermal: Add r8a774e1 support
-  dt-bindings: timer: renesas,cmt: Document r8a774e1 CMT support
-  arm64: dts: renesas: r8a774e1: Add SCIF and HSCIF nodes
-  arm64: dts: renesas: r8a774e1: Add SDHI nodes
-  dt-bindings: i2c: renesas,i2c: Document r8a774e1 support
-  dt-bindings: i2c: renesas,iic: Document r8a774e1 support
-  arm64: dts: renesas: r8a774e1: Add I2C and IIC-DVFS support
-  dt-bindings: spi: renesas,sh-msiof: Add r8a774e1 support
-  arm64: dts: renesas: r8a774e1: Add MSIOF nodes
-  dt-bindings: watchdog: renesas,wdt: Document r8a774e1 support
-  arm64: dts: renesas: r8a774e1: Add RWDT node
-  dt-bindings: can: rcar_can: Document r8a774e1 support
-  dt-bindings: can: rcar_canfd: Document r8a774e1 support
-  arm64: dts: renesas: r8a774e1: Add CAN[FD] support
-
-Marian-Cristian Rotariu (6):
-  arm64: dts: renesas: r8a774e1: Add operating points
-  thermal: rcar_gen3_thermal: Add r8a774e1 support
-  arm64: dts: renesas: r8a774e1: Add RZ/G2H thermal support
-  arm64: dts: renesas: r8a774e1: Add CMT device nodes
-  dt-bindings: timer: renesas,tmu: Document r8a774e1 bindings
-  arm64: dts: renesas: r8a774e1: Add TMU device nodes
-
- .../devicetree/bindings/i2c/renesas,i2c.txt   |   1 +
- .../devicetree/bindings/i2c/renesas,iic.txt   |   1 +
- .../devicetree/bindings/net/can/rcar_can.txt  |   1 +
- .../bindings/net/can/rcar_canfd.txt           |   1 +
- .../bindings/spi/renesas,sh-msiof.yaml        |   1 +
- .../bindings/thermal/rcar-gen3-thermal.yaml   |   1 +
- .../bindings/timer/renesas,cmt.yaml           |   2 +
- .../devicetree/bindings/timer/renesas,tmu.txt |   1 +
- .../bindings/watchdog/renesas,wdt.yaml        |   1 +
- arch/arm64/boot/dts/renesas/r8a774e1.dtsi     | 713 +++++++++++++++++-
- drivers/thermal/rcar_gen3_thermal.c           |   4 +
- 11 files changed, 715 insertions(+), 12 deletions(-)
+So IIUC your hw supports single sg and in that you would like to publish
+the length of each chunk, is that correct? If so sg_chunk_len seems
+apt..
 
 -- 
-2.17.1
-
+~Vinod
