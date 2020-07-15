@@ -6,81 +6,82 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4FB8C433E6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FA1C433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 21:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94C682067D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C16D12067D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 21:03:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594846730;
-	bh=ybEIdV7HyjnueFZ+8Obnz4ZXgIPGgarf/3fLzo5pYXM=;
+	s=default; t=1594846999;
+	bh=Vlh6jq3CeiOB+eIOnC5hyz2iGa+kf3f418QAJcxuIGg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=n2gjxTwYIhqEqnMYnEZLqXm/oXxpNaDZM5UXJ7vSV5NK5DFRfU6RBW9eTiBYYdC/H
-	 z6//ZMO2g6TCu3PbSwY79ZOOwSBS0kGd7kxNuVDb508K5kOkYa0Qide6vuDnto25bn
-	 2B3u2L13yt1FJfr2ZvzowOAvtVoDIqafq3eI07S0=
+	b=CNrowgs1LA53bZB7uu9OqFyx3NBz7Fl9tr/x4DLGPsGtc0x59MeB1Yf7RzSe/pqDd
+	 dliq7RsfIKItXt6yp9qVgSXzihQoZ74yxX3bvwrL0ale3bK4hKrvjpN95WoSX7l4PA
+	 TbvZO67VG8ulrfe3VqNFlrYzkQrIYEgdUFiUmbr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbgGOU6u (ORCPT
+        id S1725917AbgGOVDT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 16:58:50 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:42525 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726356AbgGOU6t (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 16:58:49 -0400
-Received: by mail-io1-f67.google.com with SMTP id c16so3733345ioi.9;
-        Wed, 15 Jul 2020 13:58:49 -0700 (PDT)
+        Wed, 15 Jul 2020 17:03:19 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:33568 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbgGOVDT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 17:03:19 -0400
+Received: by mail-il1-f196.google.com with SMTP id a11so3263213ilk.0;
+        Wed, 15 Jul 2020 14:03:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=hvOlrpFh38OhJfQRgWsFESzalTDuzMi9WGh0C3h9sK8=;
-        b=lK6hLt8xB4H3LpL4G/OGhS45qxk+agj+vKSSjNDhXspKTqNslZ7Olst5El1JFcPram
-         fP6WIU7b13wr3UCTthcuDfehnzf2Hu/Hd6F0zROctZJSMDVONT4ScmlzcaKROZHiZ9sW
-         C0mgG+mKMkLdFrozc6EO4YtY0nWxGmglmHN9yW0uKLW7s03NvoD+CuRAsDnvE758RPq6
-         0xjk4gOLqOUvjmbySnAb9pdNSIZ63lZ15ZPtlJuHdN+8SENDqLqEavAkYPaK1bJM2Dmo
-         PXefT8y8Med+16h1//BzicCzcVDEfVfDRN+glQh3KfvdG2aCyCPwrdJGiucIugSRUtF0
-         sseQ==
-X-Gm-Message-State: AOAM530/4PC35YTq4fQ8VYWhKd2kw5DJpJ76cH1wwBX/Vwvr9Cs06w7m
-        L/6xi692Qs0I1zqZOTe96g==
-X-Google-Smtp-Source: ABdhPJwD2sTr16al3pJVQdcYEtWu5BczxSa5mMVZBZJxKwKrlnofFmhPZ73CBtj/agbIaHc83ciPdQ==
-X-Received: by 2002:a02:ccb3:: with SMTP id t19mr1387559jap.122.1594846728709;
-        Wed, 15 Jul 2020 13:58:48 -0700 (PDT)
+        bh=GWDZepDoncsEaTMC4EtAIVPS29rg6+akZDaq58u8hqs=;
+        b=Vg4IqM0JjAVxKTl92q2Ivw7uzXy7frBWL4IQE628k6as5i0XubgNnpkLl9eunNsiHR
+         LeV/KZDrIGrtfgda0uOrRw4SICjDmA6iGKN2/w0Z6FUrVWFxsCoujz8LTZxPD5gVXIzh
+         bPST3Jt3hWRJROeAzCSfTrJSDn/KIPsaXORFRBS3Zr8nfErmNRddkSmyi7exigNrsKPe
+         piREuaR3ManQ1TKChUWFeDf8r9NftIFyZE4wdYH+koxcHXkH/k3uaPGR7udQDb7zBDm1
+         J8uMbK4iRuweGOdWfg7LPhdh2qTRIbB6WG0bDhwP66hOOKadsf+a08AJlb3O0X7+lebD
+         FK7w==
+X-Gm-Message-State: AOAM531IHXovbKEk1l9dLinDVwY33gRyXQIsuY8ryBJiCPxq4m6yAn++
+        HUt/dH/lzGO/+IRGUAOnk/ERffAYN/IA
+X-Google-Smtp-Source: ABdhPJwBYLdvUXEXFEUAVM6usSlJJ9M/lybrTM4uUutDaLWTKuqsiNxb1k9dpnNAJ8CbXwx8r57ECw==
+X-Received: by 2002:a92:cf51:: with SMTP id c17mr1328712ilr.122.1594846998231;
+        Wed, 15 Jul 2020 14:03:18 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id b2sm1644211ilf.0.2020.07.15.13.58.47
+        by smtp.gmail.com with ESMTPSA id y2sm1721651iox.22.2020.07.15.14.03.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 13:58:48 -0700 (PDT)
-Received: (nullmailer pid 805535 invoked by uid 1000);
-        Wed, 15 Jul 2020 20:58:47 -0000
-Date:   Wed, 15 Jul 2020 14:58:47 -0600
+        Wed, 15 Jul 2020 14:03:17 -0700 (PDT)
+Received: (nullmailer pid 811841 invoked by uid 1000);
+        Wed, 15 Jul 2020 21:03:16 -0000
+Date:   Wed, 15 Jul 2020 15:03:16 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        "Andrew F . Davis" <afd@ti.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-omap@vger.kernel.org, Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH 1/6] dt-bindings: omap: Update PRM binding for genpd
-Message-ID: <20200715205847.GA805485@bogus>
-References: <20200702154513.31859-1-tony@atomide.com>
- <20200702154513.31859-2-tony@atomide.com>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        alexandre.torgue@st.com, linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com,
+        lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/5] dt-bingings: arm: stm32: Add compatibles for syscon
+ nodes
+Message-ID: <20200715210316.GA811477@bogus>
+References: <20200703095520.30264-1-benjamin.gaignard@st.com>
+ <20200703095520.30264-2-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200702154513.31859-2-tony@atomide.com>
+In-Reply-To: <20200703095520.30264-2-benjamin.gaignard@st.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 02 Jul 2020 08:45:08 -0700, Tony Lindgren wrote:
-> The PRM (Power and Reset Module) has a register to enable and disable
-> the related power domain, so let's update the binding for that.
+On Fri, 03 Jul 2020 11:55:16 +0200, Benjamin Gaignard wrote:
+> Since commit ad440432d1f9 ("dt-bindings: mfd: Ensure 'syscon' has a more specific compatible")
+> it is required to provide at least 2 compatibles string for syscon node.
+> This patch document the missing compatibles for stm32 SoCs.
 > 
-> Cc: devicetree@vger.kernel.org
-> Cc: Rob Herring <robh@kernel.org>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 > ---
->  Documentation/devicetree/bindings/arm/omap/prm-inst.txt | 2 ++
->  1 file changed, 2 insertions(+)
+>  .../devicetree/bindings/arm/stm32/st,stm32-syscon.yaml     | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Typo in the subject, otherwise:
+
+Reviewed-by: Rob Herring <robh@kernel.org>
