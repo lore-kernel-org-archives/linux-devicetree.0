@@ -2,156 +2,132 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A93C433E7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 15:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C86C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 15:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E82C20672
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 15:37:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C389920663
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 15:40:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgGOPhv (ORCPT
+        id S1726376AbgGOPkK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 11:37:51 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:38362 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbgGOPhv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 11:37:51 -0400
-Received: by mail-oi1-f196.google.com with SMTP id r8so2528421oij.5;
-        Wed, 15 Jul 2020 08:37:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I8Y+iMIBLic68sY07uOSY3D6Exe00WfEOasrAyuGf+s=;
-        b=R5R4eTBNNnULPKEihChFTlXSD6YrdiulPQmVnRnj+vWhmeMXYrXRqEG+ELNrSjgPoy
-         1Hp3uPM0zE8cB68YNXTGuXSNqAKSZU7HMuJZVk2Z1CPKlCnLEtLegMP69Z84h+/M6tTO
-         LupIF3AkeWCDUL2jdYK2HxrOIpzoZ7wJs5D9LJhjv8ES9++UoWv8c7UEwj+YgKHefVsA
-         14Gwvsku/EnHZpRd1kn0HJUS/pjinvX0cBb/upw+JJ6K12Y1h9n+FOELkqNuLFYk25cD
-         MeFWDsxzpXBKWhLXLdGNqo6rNkOGpKbp4vuggxv2sSYyyVaI44Tp/YYf1W+FVFx6xZ63
-         wtwA==
-X-Gm-Message-State: AOAM530dVXiYHHcQy0jetW+CBrXdCULVZ8xJEm1EmASjyZQw0ENZl8AH
-        HZYKBWbNuSZnOwBniSEMjd1tGNuqrk/W879Pcqz+h6/C
-X-Google-Smtp-Source: ABdhPJwtSILuH3tg5zL3hnRRNwNcfF1BCTz0ZqeqvqknIQPVE78txAnKpBzVTonE0yDuNLifqFhnvTOvFPe5ntBqUoc=
-X-Received: by 2002:aca:ac10:: with SMTP id v16mr217670oie.153.1594827469906;
- Wed, 15 Jul 2020 08:37:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <1567584941-13690-1-git-send-email-biju.das@bp.renesas.com>
- <1567584941-13690-2-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdVZkjGDFmeQ9XkOqq-ogfSZz99hd0=N-OYLai4UEzKwAQ@mail.gmail.com> <TYBPR01MB5309C98CD8BD3706394E4784867E0@TYBPR01MB5309.jpnprd01.prod.outlook.com>
-In-Reply-To: <TYBPR01MB5309C98CD8BD3706394E4784867E0@TYBPR01MB5309.jpnprd01.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 15 Jul 2020 17:37:38 +0200
-Message-ID: <CAMuHMdWHqjuDFFrjK6C72fyFQPsvYy2qhZ5=RfPNXsG-_FXHyQ@mail.gmail.com>
-Subject: Re: [PATCH RESEND v7 1/3] dt-bindings: usb: hd3ss3220 device tree
- binding document
-To:     Biju Das <biju.das.jz@bp.renesas.com>
-Cc:     Biju Das <biju.das@bp.renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Wed, 15 Jul 2020 11:40:10 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:34576 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbgGOPkK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 11:40:10 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 70DBD2A1F5B
+Subject: Re: [PATCH v2 2/2] dt-bindings: mfd: Add DT compatible string
+ "google,cros_ec_uart"
+To:     Bhanu Prakash Maiya <bhanumaiya@chromium.org>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Furquan Shaikh <furquan@chromium.org>,
+        Raul E Rangel <rrangel@chromium.org>,
+        Eric Peers <epeers@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        devicetree@vger.kernel.org, linux-kernel@vger.Kernel.org,
+        Bhanu Prakash Maiya <bhanumaiya@google.com>
+References: <20200715082526.1760426-1-bhanumaiya@google.com>
+ <20200715082526.1760426-2-bhanumaiya@google.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <473adfb3-c66b-aa5a-ce61-af335002b752@collabora.com>
+Date:   Wed, 15 Jul 2020 17:40:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200715082526.1760426-2-bhanumaiya@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Biju,
+Hi bhanu,
 
-On Wed, Jul 15, 2020 at 1:42 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
-> > Subject: Re: [PATCH RESEND v7 1/3] dt-bindings: usb: hd3ss3220 device tree
-> > binding document
-> >
-> > On Wed, Sep 4, 2019 at 10:22 AM Biju Das <biju.das@bp.renesas.com>
-> > wrote:
-> > > Add device tree binding document for TI HD3SS3220 Type-C DRP port
-> > > controller driver.
-> > >
-> > > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> >
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
-> > > @@ -0,0 +1,38 @@
-> > > +TI HD3SS3220 TypeC DRP Port Controller.
-> > > +
-> > > +Required properties:
-> > > + - compatible: Must be "ti,hd3ss3220".
-> > > + - reg: I2C slave address, must be 0x47 or 0x67 based on ADDR pin.
-> > > + - interrupts: An interrupt specifier.
-> > > +
-> > > +Required sub-node:
-> > > + - connector: The "usb-c-connector" attached to the hd3ss3220 chip. The
-> > > +   bindings of the connector node are specified in:
-> > > +
-> > > +       Documentation/devicetree/bindings/connector/usb-connector.txt
-> > > +
-> > > +Example:
-> > > +hd3ss3220@47 {
-> > > +       compatible = "ti,hd3ss3220";
-> > > +       reg = <0x47>;
-> > > +       interrupt-parent = <&gpio6>;
-> > > +       interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-> > > +
-> > > +       connector {
-> > > +               compatible = "usb-c-connector";
-> > > +               label = "USB-C";
-> > > +               data-role = "dual";
-> > > +
-> > > +               ports {
-> > > +                       #address-cells = <1>;
-> > > +                       #size-cells = <0>;
-> > > +
-> > > +                       port@1 {
-> >
-> > This does not comply with
-> > Documentation/devicetree/bindings/connector/usb-connector.yaml:
-> >
-> >     connector: ports: 'port@0' is a required property
->
-> But in RZ/G2E case, the connector is a SS capable connector.  May be we need to update required property
-> as port@0 or port@1? Please let me know
->
->  -    required:
->  -      - port@0
->  +    anyOf:
->  +      - required:
->  +          - port@0
->  +      - required:
->  +          - port@1
+Thank you for your patch. This patch has some style problems, please make sure
+to fix and resent the patch.
 
-May make sense.
-I'd like to defer to the USB experts, though.
+On 15/7/20 10:25, Bhanu Prakash Maiya wrote:
+> From: Bhanu Prakash Maiya <bhanumaiya@chromium.org>
+> 
+> Add DT compatible string in
+> Documentation/devicetree/bindings/mfd/cros_ec.txt
+> 
 
-> > > +                               reg = <1>;
-> > > +                               hd3ss3220_ep: endpoint {
-> > > +                                       remote-endpoint = <&usb3_role_switch>;
-> > > +                               };
-> > > +                       };
-> > > +               };
-> > > +       };
-> > > +};
+That's actually removed you should base your changes on top of
 
-Gr{oetje,eeting}s,
+https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/commit/?h=for-mfd-next&id=46b5780688c0d825b6b8d49b267b13102bea512d
 
-                        Geert
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> Series-to: LKML <linux-kernel@vger.kernel.org>
+> Series-cc: Raul E Rangel <rrangel@chromium.org>, Furquan Shaikh <furquan@chromium.org>, Duncan Laurie <dlaurie@google.com>, Eric Peers <epeers@google.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Guenter Roeck <groeck@chromium.org>, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+> 
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+I think you need to fix your patman workflow. This should be removed from here.
+
+
+> Signed-off-by: Bhanu Prakash Maiya <bhanumaiya@chromium.org>
+> Change-Id: Icfeab15fa04daaffc61280faf5a75cd9b23ee822
+
+The Change-Id is useless upstream, please remove it.
+
+> Signed-off-by: Bhanu Prakash Maiya <bhanumaiya@google.com>
+
+Only one signed-off per person please.
+
+> ---
+>  Documentation/devicetree/bindings/mfd/cros-ec.txt | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.txt b/Documentation/devicetree/bindings/mfd/cros-ec.txt
+> index 4860eabd0f729..ec8c5d7ecc266 100644
+> --- a/Documentation/devicetree/bindings/mfd/cros-ec.txt
+> +++ b/Documentation/devicetree/bindings/mfd/cros-ec.txt
+> @@ -3,7 +3,7 @@ ChromeOS Embedded Controller
+>  Google's ChromeOS EC is a Cortex-M device which talks to the AP and
+>  implements various function such as keyboard and battery charging.
+>  
+> -The EC can be connect through various means (I2C, SPI, LPC, RPMSG) and the
+> +The EC can be connect through various means (I2C, SPI, UART, LPC, RPMSG) and the
+>  compatible string used depends on the interface. Each connection method has
+>  its own driver which connects to the top level interface-agnostic EC driver.
+>  Other Linux driver (such as cros-ec-keyb for the matrix keyboard) connect to
+> @@ -17,6 +17,10 @@ Required properties (SPI):
+>  - compatible: "google,cros-ec-spi"
+>  - reg: SPI chip select
+>  
+> +Required properties (UART):
+> +- compatible: "google,cros-ec-uart"
+> +- reg: UART baudrate, flowcontrol
+> +
+
+That's odd, a reg that is mean to contain the baudrate and the flowcontrol? How?
+
+>  Required properties (RPMSG):
+>  - compatible: "google,cros-ec-rpmsg"
+>  
+> @@ -72,5 +76,6 @@ spi@131b0000 {
+>  	};
+>  };
+>  
+> -
+>  Example for LPC is not supplied as it is not yet implemented.
+> +
+> +Example for UART is not supplied as it is not yet implemented.
+> 
