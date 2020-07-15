@@ -2,187 +2,126 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C50C0C433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 10:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF9CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 10:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1A712071B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 10:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B32220720
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 10:16:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgGOKGp (ORCPT
+        id S1731048AbgGOKQL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 06:06:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:33208 "EHLO foss.arm.com"
+        Wed, 15 Jul 2020 06:16:11 -0400
+Received: from mga05.intel.com ([192.55.52.43]:28453 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725838AbgGOKGp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jul 2020 06:06:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB79730E;
-        Wed, 15 Jul 2020 03:06:43 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AA0563F718;
-        Wed, 15 Jul 2020 03:06:41 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 11:06:36 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Makarand Pawagi <makarand.pawagi@nxp.com>
-Cc:     "Diana Madalina Craciun (OSS)" <diana.craciun@oss.nxp.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Joerg Roedel <joro@8bytes.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
+        id S1731040AbgGOKQK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jul 2020 06:16:10 -0400
+IronPort-SDR: OPfbpLpCV5grY8BPlL/UXQkBUCqgtdqgi5bTLDFwv5qvC3B5s12F9DUxTWpJ/D7FYsELcjX6b0
+ Zo9grfEfCZjg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="233972800"
+X-IronPort-AV: E=Sophos;i="5.75,355,1589266800"; 
+   d="scan'208";a="233972800"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 03:16:10 -0700
+IronPort-SDR: 5o2eJmdEkhntRPy8p6mMqA9SHZt1y0LbPbDRzfnij5q/4e31dpagqBYlogvp8vubmFNSujOx+s
+ g/J3bjufbzuw==
+X-IronPort-AV: E=Sophos;i="5.75,355,1589266800"; 
+   d="scan'208";a="460017463"
+Received: from ykazandz-mobl1.ger.corp.intel.com ([10.251.85.102])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 03:16:05 -0700
+Message-ID: <a4a2d3af6afcae5f368e0e6e1353f3a4743198cd.camel@linux.intel.com>
+Subject: Re: [PATCH v3 2/7] dt-bindings: arm: Add Keem Bay bindings
+From:   Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
+To:     Rob Herring <robh@kernel.org>
+List-Id: <soc.lore.kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, SoC Team <soc@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jassi Brar <jassisinghbrar@gmail.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>
-Subject: Re: [EXT] Re: [PATCH v2 12/12] bus: fsl-mc: Add ACPI support for
- fsl-mc
-Message-ID: <20200715100636.GA31330@e121166-lin.cambridge.arm.com>
-References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
- <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
- <20200619082013.13661-13-lorenzo.pieralisi@arm.com>
- <a7845603-9bc9-9099-dfc4-19b7bc4f4e44@nxp.com>
- <20200709091950.GA18149@e121166-lin.cambridge.arm.com>
- <DB7PR04MB4986D1A0BB7B685911DF4831EB640@DB7PR04MB4986.eurprd04.prod.outlook.com>
- <203372be-144c-54ba-d011-30d0746dd615@nxp.com>
- <DB7PR04MB4986C63772CB47A2A827D028EB640@DB7PR04MB4986.eurprd04.prod.outlook.com>
- <d41589da-c2f9-a750-f57a-25dccf51e69f@oss.nxp.com>
- <DB7PR04MB4986A56021750A3D104CA244EB640@DB7PR04MB4986.eurprd04.prod.outlook.com>
+        Will Deacon <will@kernel.org>,
+        "Paul J. Murphy" <paul.j.murphy@intel.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Daniele Alessandrelli <daniele.alessandrelli@intel.com>
+Date:   Wed, 15 Jul 2020 11:15:56 +0100
+In-Reply-To: <20200714211122.GA2921587@bogus>
+References: <20200714161305.836348-1-daniele.alessandrelli@linux.intel.com>
+         <20200714161305.836348-3-daniele.alessandrelli@linux.intel.com>
+         <20200714211122.GA2921587@bogus>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DB7PR04MB4986A56021750A3D104CA244EB640@DB7PR04MB4986.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 10:52:52AM +0000, Makarand Pawagi wrote:
-
-[...]
-
-> > >>>> fsl_mc_bus_probe(struct platform_device *pdev)
-> > >>>>>>      struct fsl_mc_io *mc_io = NULL;
-> > >>>>>>      int container_id;
-> > >>>>>>      phys_addr_t mc_portal_phys_addr;
-> > >>>>>> -   u32 mc_portal_size;
-> > >>>>>> -   struct resource res;
-> > >>>>>> +   u32 mc_portal_size, mc_stream_id;
-> > >>>>>> +   struct resource *plat_res;
-> > >>>>>> +
-> > >>>>>> +   if (!iommu_present(&fsl_mc_bus_type))
-> > >>>>>> +           return -EPROBE_DEFER;
-> > >>>>>>
-> > >>>>>>      mc = devm_kzalloc(&pdev->dev, sizeof(*mc), GFP_KERNEL);
-> > >>>>>>      if (!mc)
-> > >>>>>> @@ -874,19 +887,33 @@ static int fsl_mc_bus_probe(struct
-> > >>>>>> platform_device *pdev)
-> > >>>>>>
-> > >>>>>>      platform_set_drvdata(pdev, mc);
-> > >>>>>>
-> > >>>>>> +   plat_res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> > >>>>>> +   mc->fsl_mc_regs = devm_ioremap_resource(&pdev->dev, plat_res);
-> > >>>>>> +   if (IS_ERR(mc->fsl_mc_regs))
-> > >>>>>> +           return PTR_ERR(mc->fsl_mc_regs);
-> > >>>>>> +
-> > >>>>>> +   if (IS_ENABLED(CONFIG_ACPI) && !dev_of_node(&pdev->dev)) {
-> > >>>>>> +           mc_stream_id = readl(mc->fsl_mc_regs + FSL_MC_FAPR);
-> > >>>>>> +           /*
-> > >>>>>> +            * HW ORs the PL and BMT bit, places the result in bit 15 of
-> > >>>>>> +            * the StreamID and ORs in the ICID. Calculate it accordingly.
-> > >>>>>> +            */
-> > >>>>>> +           mc_stream_id = (mc_stream_id & 0xffff) |
-> > >>>>>> +                           ((mc_stream_id & (MC_FAPR_PL | MC_FAPR_BMT)) ?
-> > >>>>>> +                                   0x4000 : 0);
-> > >>>>>> +           error = acpi_dma_configure_id(&pdev->dev,
-> > DEV_DMA_COHERENT,
-> > >>>>>> +                                         &mc_stream_id);
-> > >>>>>> +           if (error)
-> > >>>>>> +                   dev_warn(&pdev->dev, "failed to configure dma: %d.\n",
-> > >>>>>> +                            error);
-> > >>>>>> +   }
-> > >>>>>> +
-> > >>>>>>      /*
-> > >>>>>>       * Get physical address of MC portal for the root DPRC:
-> > >>>>>>       */
-> > >>>>>> -   error = of_address_to_resource(pdev->dev.of_node, 0, &res);
-> > >>>>>> -   if (error < 0) {
-> > >>>>>> -           dev_err(&pdev->dev,
-> > >>>>>> -                   "of_address_to_resource() failed for %pOF\n",
-> > >>>>>> -                   pdev->dev.of_node);
-> > >>>>>> -           return error;
-> > >>>>>> -   }
-> > >>>>>> -
-> > >>>>>> -   mc_portal_phys_addr = res.start;
-> > >>>>>> -   mc_portal_size = resource_size(&res);
-> > >>>>>> +   plat_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > >>>>>> +   mc_portal_phys_addr = plat_res->start;
-> > >>>>>> +   mc_portal_size = resource_size(plat_res);
-> > >>>>>>      error = fsl_create_mc_io(&pdev->dev, mc_portal_phys_addr,
-> > >>>>>>                               mc_portal_size, NULL,
-> > >>>>>>                               FSL_MC_IO_ATOMIC_CONTEXT_PORTAL,
-> > >>>>>> &mc_io); @@ -903,11 +930,13 @@ static int fsl_mc_bus_probe(struct
-> > >>>> platform_device *pdev)
-> > >>>>>>      dev_info(&pdev->dev, "MC firmware version: %u.%u.%u\n",
-> > >>>>>>               mc_version.major, mc_version.minor,
-> > >>>>>> mc_version.revision);
-> > >>>>>>
-> > >>>>>> -   error = get_mc_addr_translation_ranges(&pdev->dev,
-> > >>>>>> -                                          &mc->translation_ranges,
-> > >>>>>> -                                          &mc->num_translation_ranges);
-> > >>>>>> -   if (error < 0)
-> > >>>>>> -           goto error_cleanup_mc_io;
-> > >>>>>> +   if (dev_of_node(&pdev->dev)) {
-> > >>>>>> +           error = get_mc_addr_translation_ranges(&pdev->dev,
-> > >>>>>> +                                           &mc->translation_ranges,
-> > >>>>>> +                                           &mc->num_translation_ranges);
-> > >>>>>> +           if (error < 0)
-> > >>>>>> +                   goto error_cleanup_mc_io;
-> > >>>>>> +   }
-> > >>>>>>
-> > >>>>>>      error = dprc_get_container_id(mc_io, 0, &container_id);
-> > >>>>>>      if (error < 0) {
-> > >>>>>> @@ -934,6 +963,7 @@ static int fsl_mc_bus_probe(struct
-> > >>>>>> platform_device
-> > >>>> *pdev)
-> > >>>>>>              goto error_cleanup_mc_io;
-> > >>>>>>
-> > >>>>>>      mc->root_mc_bus_dev = mc_bus_dev;
-> > >>>>>> +   mc_bus_dev->dev.fwnode = pdev->dev.fwnode;
-> > >>>>> Makarand, this looks a bit weird. Is there really a reason for it?
-> > >>>> Can you clarify please so that we can reach a conclusion on this matter ?
-> > >>>>
-> > >>> Laurentiu, can you clarify what exactly is the doubt here? Are you
-> > >>> asking about
-> > >> fwnode assignment from pdev to mc_bus_dev?
-> > >> Yes. I remember that a while ago I tested without this fwnode
-> > >> assignment and didn't encounter any issues. Maybe we can just drop it?
-> > > Did you tested with PHY changes? Because this is needed for MAC driver,
-> > where it needs the mc bus node.
+On Tue, 2020-07-14 at 15:11 -0600, Rob Herring wrote:
+> On Tue, Jul 14, 2020 at 05:13:00PM +0100, Daniele Alessandrelli
+> wrote:
+> > From: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
 > > 
-> > Maybe it worth a comment or maybe have it in a different patch?
+> > Document Intel Movidius SoC code-named Keem Bay, along with the
+> > Keem Bay
+> > EVM board.
 > > 
-> Since this change is needed for ACPI case and this is ACPI support
-> case, I feel we should have this change in this patch only instead of
-> separate patch. 
+> > Reviewed-by: Dinh Nguyen <dinguyen@kernel.org>
+> > Signed-off-by: Daniele Alessandrelli <
+> > daniele.alessandrelli@intel.com>
+> > ---
+> >  .../devicetree/bindings/arm/keembay.yaml      | 19
+> > +++++++++++++++++++
+> 
+> /intel,keembay.yaml
+> 
+> With that,
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Anyway - you need to seek feedback from Marc on whether patches
-11 and 12 are OK from an irqchip perspective, it is possible we
-can take the rest of the series independently if everyone agrees
-but I don't necessarily see a reason for that.
+Thanks. I fixed the file name and the "$id:" field below and will re-
+submit with your "Reviewed-by" tag.
 
-Long story short: you need Marc's ACK on [11-12], it is your code.
+> 
+> >  1 file changed, 19 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/arm/keembay.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/keembay.yaml
+> > b/Documentation/devicetree/bindings/arm/keembay.yaml
+> > new file mode 100644
+> > index 000000000000..f81b110046ca
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/keembay.yaml
+> > @@ -0,0 +1,19 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/arm/keembay.yaml#
+> 
+> And don't forget this update.
+> 
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Keem Bay platform device tree bindings
+> > +
+> > +maintainers:
+> > +  - Paul J. Murphy <paul.j.murphy@intel.com>
+> > +  - Daniele Alessandrelli <daniele.alessandrelli@intel.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - enum:
+> > +        - intel,keembay-evm
+> > +      - const: intel,keembay
+> > +...
+> > -- 
+> > 2.26.2
+> > 
 
-Thanks,
-Lorenzo
