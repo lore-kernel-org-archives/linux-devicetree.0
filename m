@@ -2,192 +2,86 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09CEBC433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 19:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A2EC433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 19:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEAEB20787
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 19:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1D742067D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 19:23:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594840486;
-	bh=Q92CGkbFmN831vkgF0i/MWKGtX3Qsl9FAaCQx2Pt9DY=;
+	s=default; t=1594841010;
+	bh=uebSwBPDlnrbF7ThxiwzqAwcBGKaxVvsOYqWNj6DRBA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a3n0LldG0/4Zi/0CWDRpovldIKw51SMGpouutWUhWSF9kKIevstToNChCYlZXEfJq
-	 dYpO9OCi/lyxTA++18TWEb1yGwyKJuuyi0ZRGOuvD5qCjOp/hxr5RgqdIYbVM1QKGz
-	 K9SASLJSbRQfN5wRlzni8MAxjBrqdAe7359nx+c0=
+	b=Nfv5vuV060alBugmArIhFj6kg4Q6IjYv/KLmQjo4DgDsvgHxBSNDnPGqdezPItA5p
+	 6M1BohGZe2sY7bMGF6mE/jRWAAIsNZuHTkOx579MRKtzfCRzf2rN1VhrdGqrJStLJz
+	 1rEeDrtIYUaJmnWD9s3yp/VjiOGrGVddrBTqBd4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgGOTOm (ORCPT
+        id S1726661AbgGOTXa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 15:14:42 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34637 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgGOTOk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 15:14:40 -0400
-Received: by mail-io1-f67.google.com with SMTP id q74so3481687iod.1;
-        Wed, 15 Jul 2020 12:14:40 -0700 (PDT)
+        Wed, 15 Jul 2020 15:23:30 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39560 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726479AbgGOTXa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 15:23:30 -0400
+Received: by mail-io1-f65.google.com with SMTP id f23so3458131iof.6;
+        Wed, 15 Jul 2020 12:23:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=uAYhyJcJRVka9ydt6uo/YHKiTlbjPRvSn1YwW+mkzCw=;
-        b=OlBgYq8k0O+iHOS7TQDylL0OsEDDRYkUWcXljhHrPtyCkT7RsLrXKHwoxDLm2RM2M9
-         N/eNHv98NctvsVcIsNHYK5v0lD2AnGqwDzr9f+XBz10C0mvf4Ed9CaMsB00qpMb/Y9S7
-         DOFFy1aPMTwRHBEuLMDvoBzXN+J7ltLpmnuLjh7Tq1jfKiI25VPshV5/Cz5CgikXs7YQ
-         X0OLKUlWxVq1iK0SCRgRA6q+Kj4FjdXn5Ob5tTneXUykgw2o3Nxv9egtJ6MNa60WxD0/
-         udKvd6TE+inPddSo7dX23jSpCMtD/vBfs3VvnmA8aa/1nku+c8sDP2IBCFMtAoFhitjz
-         P8xg==
-X-Gm-Message-State: AOAM532dTMGvaL2zXyDfv25luTlXk+ygw46uw1m33+uY61zo2AVB7x90
-        XG3YDFfozO+kWMrwlJxFMg==
-X-Google-Smtp-Source: ABdhPJxgvH2KybKM2cWCk8cIHsLk9UbkbEjCygxMcdbxSXzyladjhwGB4UwgszPdx59ugl221+sjgA==
-X-Received: by 2002:a6b:6b18:: with SMTP id g24mr814518ioc.8.1594840479773;
-        Wed, 15 Jul 2020 12:14:39 -0700 (PDT)
+        bh=gdwKQpu0Px21p6Yo1ji0WQqiSg9ZqCi72tqfSZPNfnE=;
+        b=JDlzrf/iy1rd1hsaXICJVuyZ308k1uDYRYyY3bQxzaJ5ZyotfOT42A0tjXVVsf7Kx7
+         WQn6nEFC0nz2wIMyCwvQNc86pVve7rEzQ7355MJ0Du2ZXM4zQg4XT1x1YpW8l4lazA0H
+         Ab8B442EpS50IBb0ja8b1ojirM4oE9Z0t43GID4o1Rtt80WfRgI5+zkNLzI4kUrtaKPo
+         3/0WCbAIXPO2NBYsMex9DNNxS89TBkJ/eYEW7IXwETxC6K0IQJvzgIdLMWrEzE2QHlAT
+         eWrX6e9Boxfgw2iemgC5kq23BCdPEqgmZ6OBzCHrJLoL81qxgl47cTMvIOODWbI+98cR
+         aoLw==
+X-Gm-Message-State: AOAM531+Y+qDrJfzJJZ88gHTf5128h5u76oeFNDk7I7S1chnADsBHgig
+        +dE8V6vBZJFWzCPNAZvwPw==
+X-Google-Smtp-Source: ABdhPJwbc9mImdlrnoACZBodTTQTYY0dq9F2rd+dhmlIFNlisTAwMXoWbRXWs9vI0WzIlwOnasAcSg==
+X-Received: by 2002:a05:6602:2ac8:: with SMTP id m8mr908011iov.36.1594841009339;
+        Wed, 15 Jul 2020 12:23:29 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id u3sm1530228iol.41.2020.07.15.12.14.38
+        by smtp.gmail.com with ESMTPSA id x71sm1504496ilk.43.2020.07.15.12.23.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 12:14:38 -0700 (PDT)
-Received: (nullmailer pid 661854 invoked by uid 1000);
-        Wed, 15 Jul 2020 19:14:37 -0000
-Date:   Wed, 15 Jul 2020 13:14:37 -0600
+        Wed, 15 Jul 2020 12:23:28 -0700 (PDT)
+Received: (nullmailer pid 677216 invoked by uid 1000);
+        Wed, 15 Jul 2020 19:23:27 -0000
+Date:   Wed, 15 Jul 2020 13:23:27 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Kathiravan T <kathirav@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        sivaprak@codeaurora.org
-Subject: Re: [PATCH 1/6] dt-bindings: soc: qcom: add YAML schema for SMD-RPM
- driver
-Message-ID: <20200715191437.GA656528@bogus>
-References: <1592550307-11040-1-git-send-email-kathirav@codeaurora.org>
- <1592550307-11040-2-git-send-email-kathirav@codeaurora.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: net: renesas,ether: Improve schema
+ validation
+Message-ID: <20200715192327.GA677138@bogus>
+References: <20200619151429.14944-1-geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1592550307-11040-2-git-send-email-kathirav@codeaurora.org>
+In-Reply-To: <20200619151429.14944-1-geert+renesas@glider.be>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 12:35:02PM +0530, Kathiravan T wrote:
-> Add YAML schema for the devitree properties used in the SMD-RPM driver.
-
-This is converting, not adding...
-
+On Fri, 19 Jun 2020 17:14:29 +0200, Geert Uytterhoeven wrote:
+>   - Remove pinctrl consumer properties, as they are handled by core
+>     dt-schema,
+>   - Document missing properties,
+>   - Document missing PHY child node,
+>   - Add "additionalProperties: false".
 > 
-> Signed-off-by: Kathiravan T <kathirav@codeaurora.org>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->  .../devicetree/bindings/soc/qcom/qcom,smd-rpm.txt  | 62 ---------------
->  .../devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml | 91 ++++++++++++++++++++++
->  2 files changed, 91 insertions(+), 62 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
->  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml
-
-
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml
-> new file mode 100644
-> index 00000000..5b33def
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml
-> @@ -0,0 +1,91 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/soc/qcom/qcom,smd-rpm.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Qualcomm Resource Power Manager (RPM) over SMD
-> +
-> +description: |
-> +  This driver is used to interface with the Resource Power Manager (RPM) found
-> +  in various Qualcomm platforms. The RPM allows each component in the system
-> +  to vote for state of the system resources, such as clocks, regulators and bus
-> +  frequencies.
-> +
-> +  The SMD information for the RPM edge should be filled out.  See qcom,smd.txt
-> +  for the required edge properties.  All SMD related properties will reside
-> +  within the RPM node itself.
-> +
-> +  The RPM exposes resources to its subnodes.  The rpm_requests node must be
-> +  present and this subnode may contain children that designate regulator
-> +  resources.
-> +
-> +  Refer to Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
-> +  for information on the regulator subnodes that can exist under the
-> +  rpm_requests.
-> +
-> +maintainers:
-> +  - Kathiravan T <kathirav@codeaurora.org>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,rpm-apq8084
-> +      - qcom,rpm-msm8916
-> +      - qcom,rpm-msm8974
-> +      - qcom,rpm-msm8976
-> +      - qcom,rpm-msm8996
-> +      - qcom,rpm-msm8998
-> +      - qcom,rpm-sdm660
-> +      - qcom,rpm-qcs404
-> +
-> +  qcom,smd-channels:
-> +    $ref: /schemas/types.yaml#/definitions/string-array
-> +    description: Channel name used for the RPM communication
-> +    items:
-> +      - const: rpm_requests
-> +
-> +if:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - qcom,rpm-apq8084
-> +          - qcom,rpm-msm8916
-> +          - qcom,rpm-msm8974
-> +then:
-> +  required:
-> +    - qcom,smd-channels
-> +
-> +required:
-> +  - compatible
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    soc {
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +        apcs: syscon@f9011000 {
-> +              compatible = "syscon";
-> +              reg = <0xf9011000 0x1000>;
-> +        };
-> +    };
-
-Drop this node. The use of 'syscon' alone is not valid and will now 
-generate warnings with what I have queued for 5.9.
-
-> +    smd {
-> +        compatible = "qcom,smd";
-> +
-> +        rpm {
-> +            interrupts = <0 168 1>;
-> +            qcom,ipc = <&apcs 8 0>;
-> +            qcom,smd-edge = <15>;
-> +
-> +                rpm_requests {
-> +                        compatible = "qcom,rpm-msm8974";
-> +                        qcom,smd-channels = "rpm_requests";
-> +
-> +                        /* Regulator nodes to follow */
-> +                };
-> +            };
-> +     };
-> +...
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+>  .../bindings/net/renesas,ether.yaml           | 22 +++++++++++++------
+>  1 file changed, 15 insertions(+), 7 deletions(-)
 > 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
