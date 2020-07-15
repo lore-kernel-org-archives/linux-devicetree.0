@@ -2,99 +2,113 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CD8C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2F6C433E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA3812065D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:58:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594846691;
-	bh=V1jaSzrhvdsz+Zw2BmVwpIaaXpNuucCb5qopS7i5+Bk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CDb048TA73OllqELpZwwmb7WI2SdpJfiBW6XVthTpKerl+Ftm45/j195TJKQ0LZgI
-	 cwYRNyic2J5B1+8cR+xqxyXgJi8/KxhTwXVijydBIlumcerKBm80LqRCfxV0UIn43/
-	 wtwbvTax7irBIRoUkIvSYJ1v6QSLu8PzY1a5JrzY=
+	by mail.kernel.org (Postfix) with ESMTP id 16F3B2070E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:58:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgGOU6L (ORCPT
+        id S1725917AbgGOU6h (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 16:58:11 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:45345 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726424AbgGOU6K (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 16:58:10 -0400
-Received: by mail-io1-f65.google.com with SMTP id e64so3731629iof.12;
-        Wed, 15 Jul 2020 13:58:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=q00alp4H8NoDtaELTDIA7qLXG/9bPROO++uuIaCrnXU=;
-        b=EGv4qMu5IEgQ8hLuH4xgPn0DL/ak3Ip+UVQJbhSp8TFhlJay35Lb7OICmuh+YX/53Y
-         SSwjKMvmyth233d+FrXA624A7kKTPPh9kPZFHCxwHijrJcHTzWLWzLgF4CQBluNcmVGH
-         47ifU1tD9syk0kp4SeMQNl1TZjpGVFoMdbJiDkjw2ES3O+2soZgJkT67x1WtWlhFR9Ry
-         xN+t3PV7Buee8cd0IJrBMEwFfTtv8T5m9zW3NS3c/2gtssWmu/AzjIlUV/01ZidsWnV1
-         9v+FUmUMQrhSSTdjNZOscIdABeM8yrl0/MztdclWlWIArha+pNNiFzz6TD621cn8i7hg
-         tRGg==
-X-Gm-Message-State: AOAM532V9vVJrBV8OtT+KZulA8dnk4zcqZzIPsnD5/sOm93PEKS79gxj
-        MmBhFKBAagXfdR/qTFQCxA==
-X-Google-Smtp-Source: ABdhPJx0LRYwvKz6St2wnD2gjzlcrImfz2qeNJTnf16/1y5TiVGZkyD6Xy7hmkDVjlC16PMbUvnCfA==
-X-Received: by 2002:a6b:c410:: with SMTP id y16mr1178290ioa.75.1594846689751;
-        Wed, 15 Jul 2020 13:58:09 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id p124sm1681111iod.32.2020.07.15.13.58.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 13:58:08 -0700 (PDT)
-Received: (nullmailer pid 804546 invoked by uid 1000);
-        Wed, 15 Jul 2020 20:58:07 -0000
-Date:   Wed, 15 Jul 2020 14:58:07 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     Andreas Kemnade <andreas@kemnade.info>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Robert Jones <rjones@gateworks.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        linux-kernel@vger.kernel.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        devicetree@vger.kernel.org,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Michael Walle <michael@walle.cc>,
-        =?iso-8859-1?Q?S=E9bastien?= Szymanski 
-        <sebastien.szymanski@armadeus.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Li Yang <leoyang.li@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: arm: fsl: Add Kontron i.MX8MM SoMs and
- boards
-Message-ID: <20200715205807.GA804345@bogus>
-References: <20200702143337.8590-1-frieder.schrempf@kontron.de>
- <20200702143337.8590-3-frieder.schrempf@kontron.de>
+        Wed, 15 Jul 2020 16:58:37 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:53114 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726424AbgGOU6h (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jul 2020 16:58:37 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id DB69B634C87;
+        Wed, 15 Jul 2020 23:57:17 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jvoSr-000386-U6; Wed, 15 Jul 2020 23:57:17 +0300
+Date:   Wed, 15 Jul 2020 23:57:17 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        linux-media@vger.kernel.org,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH v4 1/4] device property: Add a function to test is a
+ fwnode is a graph endpoint
+Message-ID: <20200715205717.GF836@valkosipuli.retiisi.org.uk>
+References: <20200701062140.12953-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20200701062140.12953-2-laurent.pinchart+renesas@ideasonboard.com>
+ <20200701073405.GB836@valkosipuli.retiisi.org.uk>
+ <CAJZ5v0iSpC=67p++vyH0WjcsuPG5SMtJJamit2T9vOQPb9jm0w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200702143337.8590-3-frieder.schrempf@kontron.de>
+In-Reply-To: <CAJZ5v0iSpC=67p++vyH0WjcsuPG5SMtJJamit2T9vOQPb9jm0w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 02 Jul 2020 16:33:07 +0200, Schrempf Frieder wrote:
-> From: Frieder Schrempf <frieder.schrempf@kontron.de>
-> 
-> Add entries for the SoMs and boards based on i.MX8MM from Kontron
-> Electronics GmbH.
-> 
-> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
+Rafael,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Wed, Jul 01, 2020 at 02:19:21PM +0200, Rafael J. Wysocki wrote:
+> On Wed, Jul 1, 2020 at 9:34 AM Sakari Ailus <sakari.ailus@iki.fi> wrote:
+> >
+> > Hi Laurent,
+> >
+> > On Wed, Jul 01, 2020 at 09:21:37AM +0300, Laurent Pinchart wrote:
+> > > Drivers may need to test if a fwnode is a graph endpoint. To avoid
+> > > hand-written solutions that wouldn't work for all fwnode types, add a
+> > > new fwnode_graph_is_endpoint() function for this purpose. We don't need
+> > > to wire it up to different backends for OF and ACPI for now, as the
+> > > implementation can simply be based on checkout the presence of a
+> > > remote-endpoint property.
+> > >
+> > > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> > > ---
+> > >  include/linux/property.h | 5 +++++
+> > >  1 file changed, 5 insertions(+)
+> > >
+> > > diff --git a/include/linux/property.h b/include/linux/property.h
+> > > index 10d03572f52e..9f805c442819 100644
+> > > --- a/include/linux/property.h
+> > > +++ b/include/linux/property.h
+> > > @@ -389,6 +389,11 @@ struct fwnode_handle *
+> > >  fwnode_graph_get_remote_node(const struct fwnode_handle *fwnode, u32 port,
+> > >                            u32 endpoint);
+> > >
+> > > +static inline bool fwnode_graph_is_endpoint(struct fwnode_handle *fwnode)
+> > > +{
+> > > +     return fwnode_property_present(fwnode, "remote-endpoint");
+> > > +}
+> > > +
+> > >  /*
+> > >   * Fwnode lookup flags
+> > >   *
+> >
+> > Thanks for the patch. I've bounced it to devicetree and linux-acpi lists
+> > (now cc'd) --- hope that works.
+> >
+> > Rafael: do you think this simple patch could go though the media tree,
+> > assuming that folks are generally fine with the patch as such?
+> 
+> Yes, it could.
+
+Thanks! I've applied this to my tree.
+
+-- 
+Kind regards,
+
+Sakari Ailus
