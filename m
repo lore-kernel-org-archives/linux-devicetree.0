@@ -2,111 +2,90 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03378C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C7EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF65820657
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:29:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fc+A99XT"
+	by mail.kernel.org (Postfix) with ESMTP id ECEC5205CB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:30:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594845038;
+	bh=PxzrL49+TZapGGuB4G3WhGxXI7UMqR77MkoZI5GfFm4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pjJE1ZUY7UtuIzBBVl0VnCFYQJGA8n64QKcPyvvvb1nLr2WsqKJqVfD9/jOsS9aFw
+	 3yaQvhUHN7GNP3lz77CYTwrI0KSnyzI5G30YBDTzLs6+7HuocYr//YxEOvcbFQ7E50
+	 QcxuVe875wB/T3II7yKm2MqbGzbz4I5rs001+Gno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbgGOU3L (ORCPT
+        id S1726370AbgGOUah (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 16:29:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50584 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbgGOU3K (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 16:29:10 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DE90C061755;
-        Wed, 15 Jul 2020 13:29:10 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id g139so1816974lfd.10;
-        Wed, 15 Jul 2020 13:29:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OG18IIAWdYGY1ved21uUkHlDS0zbB3xs5Z/Iss2A2zY=;
-        b=fc+A99XTLJkECSeMIWGgcJvL4X6HZopt8KlhrC+jkKqzA5VNkINaoY9IahPyYSFHNx
-         h/FlZ6frj1CnqnUB15AyywUig907vkEcyDbfJAtitC9GylaKvGQ/07hJyxZxBR5wjgV5
-         OM1YtvgoPeq7fSCt7vSSsUdgWURkpNW8w/WR0rnv3eGNuCIokKAIPqFGG0zSOJczjE42
-         nfvzy08UhB5OAN14gSYM6xI8Yo0EmnHjR8LsVIy55OfBRG5WmCf6Y068oBbNeTW2ZOiO
-         5MY1lN9dbfev0+mMn6TLKdXhA44QA5hyrE9ZWSvFzGnmPeia4A2ozvfz+81ySrNv5txK
-         Rngg==
+        Wed, 15 Jul 2020 16:30:37 -0400
+Received: from mail-io1-f43.google.com ([209.85.166.43]:45524 "EHLO
+        mail-io1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbgGOUag (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 16:30:36 -0400
+Received: by mail-io1-f43.google.com with SMTP id e64so3651437iof.12;
+        Wed, 15 Jul 2020 13:30:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OG18IIAWdYGY1ved21uUkHlDS0zbB3xs5Z/Iss2A2zY=;
-        b=rL7IhOIHnpSagpr+Hegjaa207Zqrz8bxD0vThcJ6nh4+oDhQN48xUNeElspueWm+TD
-         Kzxlj/2L1aBLO/ibu2NNPVmMjYEGLwsEbTP4Ns4c92AVU5CMYS8s63Lsg0CVxE/XiEoA
-         FO4q0EJz8SUDjN9X2Oyx1XK9tePzoHXFhkcNvK0kWveG0kjeAz/AyC5+ET6zWQYeiHKU
-         faUwP76OY7DUVPLi1fEOkvwJ7iJK9Ffp9dyjbxlMEQcZV1GVTTSFgK36WpSIDNzx2x6J
-         CcF0inrBudHAdOg86eaJHrBta65lJPchNMabomRZxIkhTHyaf6oTzzKRxezXRil87oDA
-         e+gw==
-X-Gm-Message-State: AOAM531nnXwt+EsbH4sby0yBwdy1yTP6mddANFQlI9DEKtzUbOkp8eMU
-        vOkTm0oTXvcEmtZvoAMvk1mEbg0Mf3rPtEwRKtA=
-X-Google-Smtp-Source: ABdhPJweCgmYoicpxKKiFHBEvM7lPrf1SLQQAsDeHqPjqYqi28G1zx1pfA/EduU9rdpS47mhUGb/UG6gE5zChOEpotk=
-X-Received: by 2002:a19:7e09:: with SMTP id z9mr368732lfc.69.1594844948607;
- Wed, 15 Jul 2020 13:29:08 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yYUQrUg8P+/Z2qQaRZUnCH8LNzb7PJi2wPNt7qBjrAk=;
+        b=QFF11bEGwK0l6zQWIhEYgsC7w3qZla/zGwOxl58k+5kHHbz5/SaGdobToWrSfXtdmU
+         dbr4L3iuk2ePeaBnDkUgqmdPw84GYPcVLyxgOXq7mQgSBtkRs0xCMI0TScLahh3UNq65
+         I3LFX6s8WaQ7Khz64S3mCCbOJGL2b/Ua57JIxkcUGUh0KBMh3W6H2xfew5bVPDStg9BN
+         PMxGfq5RB0Kt0pP/yZ6FqR92GKNcTbTYPk4Sft/EDzGo4Y644lAzPHpIPpAWZoBEI9pE
+         OUFPQjtwZqEyUAgs4fGzTfMzAFQsfUgw7B/U971fRqt2safVGph7aV0a0JD3ZGSzQnQi
+         qILQ==
+X-Gm-Message-State: AOAM532h/O1fK9zaL1R+0zeT2Ydzj/EV0vktKSa3i2k5ZJ1j96ZSm3pt
+        NFkchSvea6Sza5c95cwsqA==
+X-Google-Smtp-Source: ABdhPJy/Dkdfg1gv5bU+wnbD/kvGdXdWEHoc1q9BvuFWtmaNw+uFMhXfRK/BiwT7u5MnV+3YpU7dbQ==
+X-Received: by 2002:a05:6602:1581:: with SMTP id e1mr1165025iow.44.1594845035932;
+        Wed, 15 Jul 2020 13:30:35 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id o7sm1692424ioo.4.2020.07.15.13.30.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 13:30:35 -0700 (PDT)
+Received: (nullmailer pid 767349 invoked by uid 1000);
+        Wed, 15 Jul 2020 20:30:34 -0000
+Date:   Wed, 15 Jul 2020 14:30:34 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Merlijn Wajer <merlijn@wizzup.org>, kernel@collabora.com,
+        linux-omap@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCHv1 1/4] dt-bindings: display: panel-dsi-cm: convert to YAML
+Message-ID: <20200715203034.GA767277@bogus>
+References: <20200629223315.118256-1-sebastian.reichel@collabora.com>
+ <20200629223315.118256-2-sebastian.reichel@collabora.com>
 MIME-Version: 1.0
-References: <20200629114927.17379-1-bruno.thomsen@gmail.com>
- <20200629114927.17379-2-bruno.thomsen@gmail.com> <20200713025246.GY21277@dragon>
- <CAH+2xPAHKY6YfhO-jXfKN+TRN5LDT1Kkn8a8HUj_EOqFt=75nQ@mail.gmail.com>
- <CAOMZO5DsyqRgD8n-w=6OmnXuMX+1T2DDOjQLNK133=FaqtWXVQ@mail.gmail.com> <CAH+2xPD31bdb_ZjAi6qo5n25K469Ak-qt2GJCcppHk4FZChdeg@mail.gmail.com>
-In-Reply-To: <CAH+2xPD31bdb_ZjAi6qo5n25K469Ak-qt2GJCcppHk4FZChdeg@mail.gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 15 Jul 2020 17:28:57 -0300
-Message-ID: <CAOMZO5A0QwTsoU1XPHX30r6TqsEBCTj4JLBaBstB1AcLdGURJw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] ARM: dts: imx7: add support for kamstrup flex concentrator
-To:     Bruno Thomsen <bruno.thomsen@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Bruno Thomsen <bth@kamstrup.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200629223315.118256-2-sebastian.reichel@collabora.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Bruno,
+On Tue, 30 Jun 2020 00:33:12 +0200, Sebastian Reichel wrote:
+> Convert panel-dsi-cm bindings to YAML and add
+> missing properties while at it.
+> 
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> ---
+>  .../bindings/display/panel/panel-dsi-cm.txt   |  29 -----
+>  .../bindings/display/panel/panel-dsi-cm.yaml  | 100 ++++++++++++++++++
+>  2 files changed, 100 insertions(+), 29 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/panel/panel-dsi-cm.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/panel-dsi-cm.yaml
+> 
 
-On Wed, Jul 15, 2020 at 11:22 AM Bruno Thomsen <bruno.thomsen@gmail.com> wrote:
-
-> Thanks for the hints.
->
-> Yes, the address is correct and configured with external resistors,
-> but just realised that I wrote the wrong device name in the comment,
-> it's actually KSZ8081RNB.
->
-> Ethernet has been working with multiple mainline kernel versions
-> (latest being 5.7.8)
-> for the last year or so when using the DTS in patch. So I am pretty sure
-> hardware and setup of mux is correct'ish.
->
-> Kernel trace from patch version:
-> kernel: Micrel KSZ8081 or KSZ8091 30be0000.ethernet-1:01: attached PHY driver
->  [Micrel KSZ8081 or KSZ8091] (mii_bus:phy_addr=30be0000.ethernet-1:01, irq=POLL)
->
-> Error first occurs when switching from fec phy reset to mdio phy reset
-> code path,
-> I understand that the fec phy reset is obsolete as phy properties was wrongly
-> added to the mac and of course should be part of the phy (separate chip).
->
-> When debugging it I end up with the get_phy_device() call not working
-> inside of_mdiobus_register_phy().
-
-It would be nice if you could report this to the Ethernet PHY folks at
-netdev@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
