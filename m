@@ -2,126 +2,142 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A8FEC433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 21:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B17C433E4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 21:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25F68206F5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 21:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93F1C206F5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 21:43:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594849313;
-	bh=M0vdn4ImpbRmLWUHprEfsOm1Lnqfa4MWsb7TRDWyk04=;
+	s=default; t=1594849397;
+	bh=O5xBkASOC3BIkOpRtBcvSxfR0yUa9r8z0JPgwX9rEjw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rb1vOKP03GZjA0R0dO1waWLIwucR02C3WHmmMNyNRVA6OKFzbt9WdsgZcCH2+y8rX
-	 o7knz4/TZRATIQNwY1lqZSBsKm4IoVVu4cYIE5oaOkj/WoRV0vraxd8jP+ibSs2OOE
-	 8+8zjRklmu8esqPw+71ORhbe9v21hoKP/kIkugxM=
+	b=PH3fRoPwtWLgEYUA4EnzaFTdm2ddVxBaiL8BNVkoUwlOquT9ZQ641Qwd1taLSY7nS
+	 VBhJ3+p26WNWluS8iJqLv/jtaRpSvpTuGvF4Zh9XZ546uiyAceF1Ad0tK6Y/M/oUu3
+	 wSCCB0Bs6D97uM5xQE6dqR3HQNE1dcVe8+Cbp1pM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726356AbgGOVls (ORCPT
+        id S1726675AbgGOVnO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 17:41:48 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:38875 "EHLO
+        Wed, 15 Jul 2020 17:43:14 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:41889 "EHLO
         mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbgGOVlq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 17:41:46 -0400
-Received: by mail-il1-f196.google.com with SMTP id s21so3318449ilk.5;
-        Wed, 15 Jul 2020 14:41:46 -0700 (PDT)
+        with ESMTP id S1726356AbgGOVnN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 17:43:13 -0400
+Received: by mail-il1-f196.google.com with SMTP id q3so3310144ilt.8;
+        Wed, 15 Jul 2020 14:43:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=yRYOnV/rwceyYZSpb8vUPcnarY2UGlhf4+zHnRr772I=;
-        b=Z4iMVplNS11Ou1PFGpPb9WbTEZtkvOxW/QxPURoIqbs+tLx7LGZ92qvBvnBp9ANpl3
-         MFPlPpA3HjR3avMzGfJ3Q++tSyniun5dV3EJRnBoja79q4pkSm+qUJvLhKrtKsR7OWqH
-         Trre+NumzvNPO2l7P6RSpy+M09dxqzDJfjddwZy0ZPCYLDUAoTECDRBk2QQGupSd9EAC
-         MqOnKDT6pn22P2QbC5a4s4XQq/hzACXc4yRxqn/p5gNjMVRMR+O0MuBigA1By9PbC1gN
-         SE3S/2dIutMIg5f3X61dfou535q22+6u9bltQmdnqff7O1BI5ZMprun5Z217MqinaQdC
-         Ok3g==
-X-Gm-Message-State: AOAM532j1i6AzDQ+ecC+ZypHxwgu3gbAeknfXjXtwsrCwRY2t5B6Qe+D
-        J3Jec7hHQOBjMpjZyUj/IQ==
-X-Google-Smtp-Source: ABdhPJwcFZ4oF6Mja4fmrG4CbiHZsJ4kXTXf9mMj+xjeoPfczGS+I+7x/BP3inh5UC1cBFaPibzm1w==
-X-Received: by 2002:a92:db06:: with SMTP id b6mr1627423iln.228.1594849305560;
-        Wed, 15 Jul 2020 14:41:45 -0700 (PDT)
+        bh=tbIDFcHm1gJrq8IL60XYYyLS9ocwAGiExcbwkE9vsSc=;
+        b=Q6Ndhkwk1ZPVIHUoB+DPga0k5bx0jL6mZIcOqEhsTK3Sv3MU9xsuzlrPh7urPMzmP6
+         eQlH4oz4q6YMjuz76bScq4LFVqWylxeu7MbCIxtIPjyOGfw8hk/VmNfujXzSUnPEO0Vs
+         jhnqKPwvxNaOk47sJ0+uZVXHyiBnrfFQX1X/eDYEz2F6lIChZvdvz80j0SADJNerpQww
+         mxC71iShcdgW9yaH1l1czzXxuckDmwEkahXxLC5DaB57uq4xTuGuPBqDDOg3eu1FBcTG
+         fyNyJFxkZcKMljAhvCQjZ7KG44fTQ8xFjFxj7EQ5P7wlS8ah0o5+F/z8wvUrsKtOIh4U
+         pD/Q==
+X-Gm-Message-State: AOAM5324FdrR2Bny16d38IqPy2+aYEIGICkyXlFbTAxRyoMDJ5QIyVCj
+        tVqGxm+mY56YLjZloP15dw==
+X-Google-Smtp-Source: ABdhPJwDWgt7AyBWgVYwGzr6f6IRjKHR0z+ihwn7xVJE3HrZGHe+RXzfDt4wHqQw7V+FjMdopXtxQA==
+X-Received: by 2002:a92:58d6:: with SMTP id z83mr1503938ilf.186.1594849391997;
+        Wed, 15 Jul 2020 14:43:11 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id l17sm1615289ilm.70.2020.07.15.14.41.44
+        by smtp.gmail.com with ESMTPSA id w82sm1723815ili.42.2020.07.15.14.43.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 14:41:44 -0700 (PDT)
-Received: (nullmailer pid 865406 invoked by uid 1000);
-        Wed, 15 Jul 2020 21:41:44 -0000
-Date:   Wed, 15 Jul 2020 15:41:44 -0600
+        Wed, 15 Jul 2020 14:43:11 -0700 (PDT)
+Received: (nullmailer pid 867523 invoked by uid 1000);
+        Wed, 15 Jul 2020 21:43:09 -0000
+Date:   Wed, 15 Jul 2020 15:43:09 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     "Daniel M. Weeks" <dan@danweeks.net>, jdelvare@suse.com,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: hwmon: Correct vendor for mcp980x
-Message-ID: <20200715214144.GB818608@bogus>
-References: <20200703153748.GA16156@dev.danweeks.net>
- <4884254c-4406-5c04-3df7-030541b7c201@roeck-us.net>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     ben.dooks@codethink.co.uk, swboyd@chromium.org, arnd@arndb.de,
+        megous@megous.com, linux-input@vger.kernel.org,
+        rydberg@bitmath.org, m.felsch@pengutronix.de,
+        Henk.Vergonet@gmail.com, linux-kernel@vger.kernel.org,
+        ronald@innovation.ch, lee.jones@linaro.org, Anson.Huang@nxp.com,
+        corbet@lwn.net, christophe.jaillet@wanadoo.fr,
+        marcus.folkesson@gmail.com, p.zabel@pengutronix.de,
+        luzmaximilian@gmail.com, robh+dt@kernel.org,
+        linux-doc@vger.kernel.org, andriy.shevchenko@linux.intel.com,
+        mylene.josserand@bootlin.com, usbb2k-api-dev@nongnu.org,
+        oneukum@suse.com, linus.walleij@linaro.org, jeff@labundy.com,
+        masneyb@onstation.org, james.hilliard1@gmail.com,
+        devicetree@vger.kernel.org, a.fatoum@pengutronix.de,
+        krzk@kernel.org, dmitry.torokhov@gmail.com
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: input drivers
+Message-ID: <20200715214309.GA867493@bogus>
+References: <20200705074959.22533-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4884254c-4406-5c04-3df7-030541b7c201@roeck-us.net>
+In-Reply-To: <20200705074959.22533-1-grandmaster@al2klimov.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 02:59:12PM -0700, Guenter Roeck wrote:
-> On 7/3/20 8:37 AM, Daniel M. Weeks wrote:
-> > Signed-off-by: Daniel M. Weeks <dan@danweeks.net>
-> > ---
-> >  Documentation/devicetree/bindings/hwmon/lm75.txt | 2 +-
-> >  drivers/hwmon/lm75.c                             | 8 ++++----
-> >  2 files changed, 5 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/hwmon/lm75.txt b/Documentation/devicetree/bindings/hwmon/lm75.txt
-> > index 273616702c51..e5bb554cd2c3 100644
-> > --- a/Documentation/devicetree/bindings/hwmon/lm75.txt
-> > +++ b/Documentation/devicetree/bindings/hwmon/lm75.txt
-> > @@ -14,10 +14,10 @@ Required properties:
-> >  		"maxim,max6626",
-> >  		"maxim,max31725",
-> >  		"maxim,max31726",
-> > -		"maxim,mcp980x",
-> >  		"nxp,pct2075",
-> >  		"st,stds75",
-> >  		"st,stlm75",
-> > +		"microchip,mcp980x",
-> >  		"microchip,tcn75",
-> >  		"ti,tmp100",
-> >  		"ti,tmp101",
-> > diff --git a/drivers/hwmon/lm75.c b/drivers/hwmon/lm75.c
-> > index ba0be48aeadd..a8cfc7e4a685 100644
-> > --- a/drivers/hwmon/lm75.c
-> > +++ b/drivers/hwmon/lm75.c
-> > @@ -690,10 +690,6 @@ static const struct of_device_id __maybe_unused lm75_of_match[] = {
-> >  		.compatible = "maxim,max31726",
-> >  		.data = (void *)max31725
-> >  	},
-> > -	{
-> > -		.compatible = "maxim,mcp980x",
-> > -		.data = (void *)mcp980x
-> > -	},
-> >  	{
-> >  		.compatible = "nxp,pct2075",
-> >  		.data = (void *)pct2075
-> > @@ -706,6 +702,10 @@ static const struct of_device_id __maybe_unused lm75_of_match[] = {
-> >  		.compatible = "st,stlm75",
-> >  		.data = (void *)stlm75
-> >  	},
-> > +	{
-> > +		.compatible = "microchip,mcp980x",
-> > +		.data = (void *)mcp980x
+On Sun, 05 Jul 2020 09:49:59 +0200, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
 > 
-> Hmm, makes me wonder if we should replace this with correct chip names
-> since we are at it. After all, it only includes mcp980{0,1,2,3} and not mcp9805.
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>           If both the HTTP and HTTPS versions
+>           return 200 OK and serve the same content:
+>             Replace HTTP with HTTPS.
 > 
-> Rob, any thoughts ?
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> ---
+>  Continuing my work started at 93431e0607e5.
+> 
+>  If there are any URLs to be removed completely or at least not HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also https://lkml.org/lkml/2020/6/27/64
+> 
+>  If there are any valid, but yet not changed URLs:
+>  See https://lkml.org/lkml/2020/6/26/837
+> 
+>  .../devicetree/bindings/input/ps2keyb-mouse-apbps2.txt        | 2 +-
+>  .../devicetree/bindings/input/rmi4/rmi_2d_sensor.txt          | 2 +-
+>  Documentation/devicetree/bindings/input/rmi4/rmi_f01.txt      | 2 +-
+>  Documentation/devicetree/bindings/input/ti,drv260x.txt        | 2 +-
+>  Documentation/devicetree/bindings/input/ti,drv2665.txt        | 2 +-
+>  Documentation/devicetree/bindings/input/ti,drv2667.txt        | 2 +-
+>  Documentation/input/devices/appletouch.rst                    | 2 +-
+>  Documentation/input/devices/bcm5974.rst                       | 4 ++--
+>  Documentation/input/devices/iforce-protocol.rst               | 2 +-
+>  Documentation/input/devices/joystick-parport.rst              | 2 +-
+>  Documentation/input/devices/ntrig.rst                         | 2 +-
+>  Documentation/input/devices/pxrc.rst                          | 2 +-
+>  Documentation/input/multi-touch-protocol.rst                  | 2 +-
+>  drivers/input/keyboard/Kconfig                                | 2 +-
+>  drivers/input/keyboard/lkkbd.c                                | 2 +-
+>  drivers/input/keyboard/opencores-kbd.c                        | 2 +-
+>  drivers/input/keyboard/tca8418_keypad.c                       | 2 +-
+>  drivers/input/misc/Kconfig                                    | 2 +-
+>  drivers/input/misc/cm109.c                                    | 2 +-
+>  drivers/input/misc/gpio_decoder.c                             | 2 +-
+>  drivers/input/misc/palmas-pwrbutton.c                         | 2 +-
+>  drivers/input/misc/powermate.c                                | 2 +-
+>  drivers/input/misc/tps65218-pwrbutton.c                       | 2 +-
+>  drivers/input/misc/yealink.c                                  | 2 +-
+>  drivers/input/mouse/vsxxxaa.c                                 | 2 +-
+>  drivers/input/serio/apbps2.c                                  | 2 +-
+>  drivers/input/touchscreen/edt-ft5x06.c                        | 2 +-
+>  drivers/input/touchscreen/iqs5xx.c                            | 2 +-
+>  drivers/input/touchscreen/mc13783_ts.c                        | 2 +-
+>  drivers/input/touchscreen/ti_am335x_tsc.c                     | 2 +-
+>  drivers/input/touchscreen/usbtouchscreen.c                    | 2 +-
+>  include/uapi/linux/input-event-codes.h                        | 2 +-
+>  32 files changed, 33 insertions(+), 33 deletions(-)
+> 
 
-Do we need to distinguish the chips? Aren't there existing users?
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
