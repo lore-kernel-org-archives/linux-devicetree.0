@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0FFC43478
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 11:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DC5C43464
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 11:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 408E920658
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 11:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3C032063A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 11:11:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725907AbgGOLKx (ORCPT
+        id S1731800AbgGOLLQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 07:10:53 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:7929 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731719AbgGOLKw (ORCPT
+        Wed, 15 Jul 2020 07:11:16 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:3372 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731779AbgGOLLP (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jul 2020 07:10:52 -0400
+        Wed, 15 Jul 2020 07:11:15 -0400
 X-IronPort-AV: E=Sophos;i="5.75,355,1589209200"; 
-   d="scan'208";a="52194221"
+   d="scan'208";a="51982045"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 15 Jul 2020 20:10:50 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 15 Jul 2020 20:11:13 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id DEE474006DF5;
-        Wed, 15 Jul 2020 20:10:44 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 37C094006DF5;
+        Wed, 15 Jul 2020 20:11:08 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Wolfram Sang <wsa+renesas@sang-engineering.com>,
@@ -53,9 +53,9 @@ Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         linux-watchdog@vger.kernel.org,
         Prabhakar <prabhakar.csengg@gmail.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 16/20] dt-bindings: watchdog: renesas,wdt: Document r8a774e1 support
-Date:   Wed, 15 Jul 2020 12:09:06 +0100
-Message-Id: <1594811350-14066-17-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 20/20] arm64: dts: renesas: r8a774e1: Add CAN[FD] support
+Date:   Wed, 15 Jul 2020 12:09:10 +0100
+Message-Id: <1594811350-14066-21-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -64,26 +64,96 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-RZ/G2H (a.k.a. R8A774E1) watchdog implementation is compatible
-with R-Car Gen3, therefore add the relevant documentation.
+Add CAN[01] and CANFD support to RZ/G2H (R8A774E1) SoC specific dtsi.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 ---
- Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/renesas/r8a774e1.dtsi | 56 +++++++++++++++++++++--
+ 1 file changed, 53 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml b/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml
-index 572f4c912fef..6933005b52bd 100644
---- a/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml
-+++ b/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml
-@@ -41,6 +41,7 @@ properties:
-               - renesas,r8a774a1-wdt     # RZ/G2M
-               - renesas,r8a774b1-wdt     # RZ/G2N
-               - renesas,r8a774c0-wdt     # RZ/G2E
-+              - renesas,r8a774e1-wdt     # RZ/G2H
-               - renesas,r8a7795-wdt      # R-Car H3
-               - renesas,r8a7796-wdt      # R-Car M3-W
-               - renesas,r8a77961-wdt     # R-Car M3-W+
+diff --git a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+index b2fa1a60470c..001874af8cf2 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+@@ -34,6 +34,13 @@
+ 		clock-frequency = <0>;
+ 	};
+ 
++	/* External CAN clock - to be overridden by boards that provide it */
++	can_clk: can {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <0>;
++	};
++
+ 	cluster0_opp: opp_table0 {
+ 		compatible = "operating-points-v2";
+ 		opp-shared;
+@@ -1139,17 +1146,60 @@
+ 		};
+ 
+ 		can0: can@e6c30000 {
++			compatible = "renesas,can-r8a774e1",
++				     "renesas,rcar-gen3-can";
+ 			reg = <0 0xe6c30000 0 0x1000>;
++			interrupts = <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 916>,
++				 <&cpg CPG_CORE R8A774E1_CLK_CANFD>,
++				 <&can_clk>;
++			clock-names = "clkp1", "clkp2", "can_clk";
++			assigned-clocks = <&cpg CPG_CORE R8A774E1_CLK_CANFD>;
++			assigned-clock-rates = <40000000>;
++			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
++			resets = <&cpg 916>;
+ 			status = "disabled";
+-
+-			/* placeholder */
+ 		};
+ 
+ 		can1: can@e6c38000 {
++			compatible = "renesas,can-r8a774e1",
++				     "renesas,rcar-gen3-can";
+ 			reg = <0 0xe6c38000 0 0x1000>;
++			interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 915>,
++				 <&cpg CPG_CORE R8A774E1_CLK_CANFD>,
++				 <&can_clk>;
++			clock-names = "clkp1", "clkp2", "can_clk";
++			assigned-clocks = <&cpg CPG_CORE R8A774E1_CLK_CANFD>;
++			assigned-clock-rates = <40000000>;
++			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
++			resets = <&cpg 915>;
+ 			status = "disabled";
++		};
+ 
+-			/* placeholder */
++		canfd: can@e66c0000 {
++			compatible = "renesas,r8a774e1-canfd",
++				     "renesas,rcar-gen3-canfd";
++			reg = <0 0xe66c0000 0 0x8000>;
++			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 914>,
++				 <&cpg CPG_CORE R8A774E1_CLK_CANFD>,
++				 <&can_clk>;
++			clock-names = "fck", "canfd", "can_clk";
++			assigned-clocks = <&cpg CPG_CORE R8A774E1_CLK_CANFD>;
++			assigned-clock-rates = <40000000>;
++			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
++			resets = <&cpg 914>;
++			status = "disabled";
++
++			channel0 {
++				status = "disabled";
++			};
++
++			channel1 {
++				status = "disabled";
++			};
+ 		};
+ 
+ 		pwm0: pwm@e6e30000 {
 -- 
 2.17.1
 
