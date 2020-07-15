@@ -2,123 +2,200 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5544CC433E5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 17:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2469CC433E5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 17:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3093B2076C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 17:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09EC42065D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 17:30:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594834244;
+	bh=4T6S2epKi2ENJEC3KsYLtzEaf+uX57nEZeTJaHpHW8Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=aSuPYSxXyv/B0CxH8xHwrcejVNHCzs77UczOlPuPW1viwHS3ihVFMC5C1NX6J/zcb
+	 CNbFtK40M3HZCct3cLHZcbuMkUla9ZAKQvbFac6j2JbK2h5pSTM4vpHQwhOswLWtw6
+	 iBQz3VMOqyo62Qq2ikh44bEUfZy+ITZ9tPnUhiD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725973AbgGORIt (ORCPT
+        id S1725881AbgGORan (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 13:08:49 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:38260 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbgGORIt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 13:08:49 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id A28E5803202D;
-        Wed, 15 Jul 2020 17:08:45 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id u5_RIfGIlZua; Wed, 15 Jul 2020 20:08:45 +0300 (MSK)
-Date:   Wed, 15 Jul 2020 20:08:43 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 04/11] dmaengine: Introduce max SG list entries
- capability
-Message-ID: <20200715170843.w4rwl7zjwfcr7rg2@mobilestation>
-References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
- <20200709224550.15539-5-Sergey.Semin@baikalelectronics.ru>
- <d667adda-6576-623d-6976-30f60ab3c3dc@ti.com>
- <20200710092738.z7zyywe46mp7uuf3@mobilestation>
- <427bc5c8-0325-bc25-8637-a7627bcac26f@ti.com>
- <20200710161445.t6eradkgt4terdr3@mobilestation>
- <20200715111315.GK34333@vkoul-mobl>
+        Wed, 15 Jul 2020 13:30:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47508 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725861AbgGORam (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jul 2020 13:30:42 -0400
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 990D02065D;
+        Wed, 15 Jul 2020 17:30:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594834241;
+        bh=4T6S2epKi2ENJEC3KsYLtzEaf+uX57nEZeTJaHpHW8Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UGHUsR7BJPApYZexFuAAHrBmRxmIAKgVSeA6cL9K/upaRAeFUcZHrQLGgvS+7p5F3
+         6hvgH5plDm73aCY/VvnLmFS0Iaslye8woDqCku7pQDoa+9S8jLe4ZuFWd7MlnWOIAO
+         vqFWOiHuJh5mvdnEdK89U+IhikuPR54noxKyGrjI=
+Received: by mail-oi1-f169.google.com with SMTP id j11so2809795oiw.12;
+        Wed, 15 Jul 2020 10:30:41 -0700 (PDT)
+X-Gm-Message-State: AOAM532jxJh+Xw/HOtWoJW4m9UGaQJ5WbpwryfKKGCB5Q7AjWVzRpWgz
+        r03eNrLCPT6ycOYXwtPanm5neQw6O2pNFRzs+A==
+X-Google-Smtp-Source: ABdhPJwVPF7yPW/4Xav5tdTwLAAlgry1UaSHbNVOcYXq6cWPmc2b5sYdGrcceGq9vFN8OCcKMceTZ8Ekrz+Jdd7ZRTE=
+X-Received: by 2002:aca:bb82:: with SMTP id l124mr693571oif.106.1594834240916;
+ Wed, 15 Jul 2020 10:30:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200715111315.GK34333@vkoul-mobl>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+References: <20200710230224.2265647-1-dianders@chromium.org>
+ <CAL_JsqKC5WtHb-coMCxMTDJ7CJcjVXcAxDT4J9N-Xyr=0uuURA@mail.gmail.com>
+ <CAD=FV=XWKoTd_t2uRGpw3oa0Nij2EPeAJpOHhUipXFW07JN2qw@mail.gmail.com>
+ <CAL_JsqLJM5nwNSdugMBLDVtjP97dikCm_AiHjnDs1jqBOFoaaQ@mail.gmail.com>
+ <CAD=FV=UP0AHWr22U69TKcwwAefPCYMsfzymobczqmrdB6BOOhA@mail.gmail.com>
+ <CAOCk7NoX-XAXy2WaYGjGOtEmypis-DO-W1cfU0wnucHH0oZrqg@mail.gmail.com>
+ <CAL_Jsq+Nys+ry-3D07e-68e=9Pb34C9Js6piAnzwd1gXf_DmTw@mail.gmail.com> <20200714225220.GI388985@builder.lan>
+In-Reply-To: <20200714225220.GI388985@builder.lan>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 15 Jul 2020 11:30:29 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKU7X5f-Dt67N_yFQUUVuXrZYomB-n=dKyUqD94OXFyJQ@mail.gmail.com>
+Message-ID: <CAL_JsqKU7X5f-Dt67N_yFQUUVuXrZYomB-n=dKyUqD94OXFyJQ@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH 0/9] drm/msm: Avoid possible infinite probe
+ deferral and speed booting
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Doug Anderson <dianders@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>, Sean Paul <sean@poorly.run>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 04:43:15PM +0530, Vinod Koul wrote:
-> On 10-07-20, 19:14, Serge Semin wrote:
-> > On Fri, Jul 10, 2020 at 02:51:33PM +0300, Peter Ujfalusi wrote:
-> 
-> > > Since we should be able to handle longer lists and this is kind of a
-> > > hint for clients that above this number of nents the list will be broken
-> > > up to smaller 'bursts', which when traversing could cause latency.
-> > > 
-> > > sg_chunk_len might be another candidate.
-> > 
-> > Ok. We've got four candidates:
-> > - max_sg_nents_burst
-> > - max_sg_burst
-> > - max_sg_chain
-> > - sg_chunk_len
-> > 
-> > @Vinod, @Andy, what do you think?
-> 
+On Tue, Jul 14, 2020 at 4:54 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Tue 14 Jul 15:13 PDT 2020, Rob Herring wrote:
+>
+> > On Tue, Jul 14, 2020 at 10:33 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+> > >
+> > > On Mon, Jul 13, 2020 at 5:50 PM Doug Anderson <dianders@chromium.org> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > On Mon, Jul 13, 2020 at 1:25 PM Rob Herring <robh+dt@kernel.org> wrote:
+> > > > >
+> > > > > On Mon, Jul 13, 2020 at 9:08 AM Doug Anderson <dianders@chromium.org> wrote:
+> > > > > >
+> > > > > > Hi,
+> > > > > >
+> > > > > > On Mon, Jul 13, 2020 at 7:11 AM Rob Herring <robh+dt@kernel.org> wrote:
+> > > > > > >
+> > > > > > > On Fri, Jul 10, 2020 at 5:02 PM Douglas Anderson <dianders@chromium.org> wrote:
+> > > > > > > >
+> > > > > > > > I found that if I ever had a little mistake in my kernel config,
+> > > > > > > > or device tree, or graphics driver that my system would sit in a loop
+> > > > > > > > at bootup trying again and again and again.  An example log was:
+> > > > > > >
+> > > > > > > Why do we care about optimizing the error case?
+> > > > > >
+> > > > > > It actually results in a _fully_ infinite loop.  That is: if anything
+> > > > > > small causes a component of DRM to fail to probe then the whole system
+> > > > > > doesn't boot because it just loops trying to probe over and over
+> > > > > > again.  The messages I put in the commit message are printed over and
+> > > > > > over and over again.
+> > > > >
+> > > > > Sounds like a bug as that's not what should happen.
+> > > > >
+> > > > > If you defer during boot (initcalls), then you'll be on the deferred
+> > > > > list until late_initcall and everything is retried. After
+> > > > > late_initcall, only devices getting added should trigger probing. But
+> > > > > maybe the adding and then removing a device is causing a re-trigger.
+> > > >
+> > > > Right, I'm nearly certain that the adding and then removing is causing
+> > > > a re-trigger.  I believe the loop would happen for any case where we
+> > > > have a probe function that:
+> > > >
+> > > > 1. Adds devices.
+> > > > 2. After adding devices it decides that it needs to defer.
+> > > > 3. Removes the devices it added.
+> > > > 4. Return -EPROBE_DEFER from its probe function.
+> > > >
+> > > > Specifically from what I know about how -EPROBE_DEFER works I'm not
+> > > > sure how it wouldn't cause an infinite loop in that case.
+> > > >
+> > > > Perhaps the missing part of my explanation, though, is why it never
+> > > > gets out of this infinite loop.  In my case I purposely made the
+> > > > bridge chip "ti-sn65dsi86.c" return an error (-EINVAL) in its probe
+> > > > every time.  Obviously I wasn't going to get a display up like this,
+> > > > but I just wanted to not loop forever at bootup.  I tracked down
+> > > > exactly why we get an - EPROBE_DEFER over and over in this case.
+> > > >
+> > > > You can see it in msm_dsi_host_register().  If some components haven't
+> > > > shown up when that function runs it will _always_ return
+> > > > -EPROBE_DEFER.
+> > > >
+> > > > In my case, since I caused the bridge to fail to probe, those
+> > > > components will _never_ show up.  That means that
+> > > > msm_dsi_host_register() will _always_ return -EPROBE_DEFER.
+> > > >
+> > > > I haven't dug through all the DRM code enough, but it doesn't
+> > > > necessarily seem like the wrong behavior.  If the bridge driver or a
+> > > > panel was a module then (presumably) they could show up later and so
+> > > > it should be OK for it to defer, right?
+> > > >
+> > > > So with all that, it doesn't really feel like this is a bug so much as
+> > > > it's an unsupported use case.  The current deferral logic simply can't
+> > > > handle the case we're throwing at it.  You cannot return -EPROBE_DEFER
+> > > > if your probe function adds devices each time through the probe
+> > > > function.
+> > > >
+> > > > Assuming all the above makes sense, that means we're stuck with:
+> > > >
+> > > > a) This patch series, which makes us not add devices.
+> > > >
+> > > > b) Some other patch series which rearchitects the MSM graphics stack
+> > > > to not return -EPROBE_DEFER in this case.
+> > >
+> > > This isn't a MSM specific issue.  This is an issue with how the DSI
+> > > interface works, and how software is structured in Linux.  I would
+> > > expect that pretty much any DSI host in the kernel would have some
+> > > version of this issue.
+> > >
+> > > The problem is that DSI is not "hot pluggable", so to give the DRM
+> > > stack the info it needs, we need both the DSI controller (aka the MSM
+> > > graphics stack in your case), and the thing it connects to (in your
+> > > case, the TI bridge, normally the actual panel) because the DRM stack
+> > > expects that if init completes, it has certain information
+> > > (resolution, etc), and some of that information is in the DSI
+> > > controller, and some of it is on the DSI device.
+> >
+> > Ah yes, DRM's lack of hot-plug and discrete component support... Is
+> > that not improved with some of the bridge rework?
+> >
+> > Anyways, given there is a child dependency on the parent, I don't
+> > think we should work-around DRM deficiencies in DT.
+> >
+> > BTW, There's also a deferred probe timeout you can use which stops
+> > deferring probe some number of seconds after late_initcall.
+> >
+>
+> I don't think we can rely on the deferred probe timeout, given that it
+> was reverted back to 0 seconds past late_initcall - which given that
+> most of the involved components are modules, means that without the
+> opt-in command line option we would likely fail to bring up the display.
 
-> So IIUC your hw supports single sg and in that you would like to publish
-> the length of each chunk, is that correct?
+I meant just as a way to make progress booting in this case where the
+display is never coming up. We're talking only about a better
+experience for an error case.
 
-No. My DMA engine does support only a single-entry SG-list, but the new DMA
-{~~slave~~,channel,device,peripheral,...} capability isn't about the length, but
-is about the maximum number of SG-list entries a DMA engine is able to
-automatically/"without software help" walk through and execute. In this thread
-we are debating about that new capability naming.
+Maybe a simple solution is just having some delay inserted between
+delayed probe triggers so progress is made.
 
-The name suggested in this patch: max_sg_nents. Peter noted (I mostly agree with
-him), that it might be ambiguous, since from it (without looking into the
-dma_slave_caps structure comment) a user might think that it's a maximum number of
-SG-entries, which can be submitted for the DMA engine execution, while in fact it's
-about the DMA engine capability of automatic/burst/"without software intervention"
-SG-list entries walking through. (Such information will be helpful to solve a
-problem discussed in this mailing thread, and described in the cover-letter to
-this patchset. We also discussed it with you and Andy in the framework of this
-patchset many times.)
-
-As an alternative Peter suggested: max_sg_nents_burst. I also think it's better
-than "max_sg_nents" but for me it seems a bit long. max_sg_burst seems better.
-There is no need in having the "nents" in the name, since SG-list implies a list,
-which main parameter (if not to say only parameter) is the number of entries.
-"burst" is pointing out to the automatic/accelerated/"without software intervention"
-SG-list entries walking through.
-
-On the second thought suggested by me "max_sg_chain" sounds worse than "max_sg_burst",
-because it also might be perceived as a parameter limiting the number of SG-list
-entries is able to be submitted for the DMA engine execution, while in fact it
-describes another matter.
-
-Regarding "sg_chunk_len". I think it's ambiguous too, since the "chunk
-length" might be referred to both the entries length and to the sub-SG-list
-length.
-
-So what do you think? What name is better describing the new DMA capability?
-
--Sergey
-
-> If so sg_chunk_len seems apt..
-> 
-> -- 
-> ~Vinod
+Rob
