@@ -6,79 +6,92 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E99EEC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 21:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 297E2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 21:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B54F62067D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 21:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3B2A206F4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 21:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594846920;
-	bh=Qmep26acIl1WZ6Czvp6++MrZfH3Z7L1r45VenfTRrjA=;
+	s=default; t=1594847281;
+	bh=EBmLbTlSMK0R6vQ7jmSE2L4gma2Vkoyzioh0GCdfGY8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XmOIw572ksbG8Dplx0tTM9I2TUilGnO+n0oPKiF8nkWdqPWEe/AqzAzjQ5T3zp8M7
-	 K8kqdqfFEtiAorZEPo2+gDCzfQT3vZpHcnfTdnlUMqqiq8u719GKpa3OxzSLgjqtt3
-	 KCv2MdnLYeaBXzz6MUQjLrOr3E9H9rrES1hVW0uc=
+	b=SV20oZJ/6CITi+iUolHKnCX1pgX0OA305uT/R80d3tr+mjCtyV/eBGsLjCx90g2Lf
+	 7L1rtpT3jdIDh30CtQJVoVJha68z4lAU7kNdK5ExKD8NMhZJGhEadahzTgV72gUeBV
+	 5mTeawSs8KbrHympCLKZXDoppgbKtJS56oJUCfBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbgGOVCA (ORCPT
+        id S1726479AbgGOVIB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 17:02:00 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:34336 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726356AbgGOVB7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 17:01:59 -0400
-Received: by mail-io1-f66.google.com with SMTP id q74so3806402iod.1;
-        Wed, 15 Jul 2020 14:01:59 -0700 (PDT)
+        Wed, 15 Jul 2020 17:08:01 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39900 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbgGOVIA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 17:08:00 -0400
+Received: by mail-io1-f65.google.com with SMTP id f23so3773269iof.6;
+        Wed, 15 Jul 2020 14:08:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Tl/LoJSdH3t7ttKEqz/6MPL6wWrpBrkpzf3QORxog0s=;
-        b=OKic5iL5bq5UZt42Lb7vLDmao+XtSDxEIeCIbV108HWU/C/r7BU5f8tX45R2QEwJNJ
-         9kTAejUyeGbmBlbj5AC9/qXv/1DWkO3i5zyLPAMvZegtUePrDj9ml0JVJzafvHOxueBV
-         X0grmasTZtVUqS8kY+7/J5+Q7UlRVM/bJcuJPlzsrDNIGsGp1Sos7xkSdt5Qs8B9FFkO
-         MAoex6r3P34YHDEhxQ3z4Ne0pgAWKkahUDPRb7S4IVFibHUK45BX8TAcdS2YpE21bcUy
-         7wv9hV5AxDSSqLmhiqB9Xx8GWcvct6FtTsGvBUnfqDwwxR+y3FdQoBGjVZZrwZXQdbYj
-         s1uQ==
-X-Gm-Message-State: AOAM532duHzzRTYjyJv2thofLarectoBhCmF+XBVQPE+sQZoS7tKHy7s
-        3YVF4Yery/8rER9RoXV5CA==
-X-Google-Smtp-Source: ABdhPJykT+41Z6DfMtlkhmJ5RvUlPYF7shfy1TJ/uBCpIrEFYK0Zw0lJg5MCgYGSrBkx0cXVV56/fg==
-X-Received: by 2002:a6b:440d:: with SMTP id r13mr1200583ioa.114.1594846916417;
-        Wed, 15 Jul 2020 14:01:56 -0700 (PDT)
+        bh=KjCMCoW7QDdmcFgzIcem7O98IMC/DL0hnlshYNlIU/Q=;
+        b=FI3nxx3ezb4/JJRc4X9SmY1Qr7EPITBu8Ij7zRVLLL2IbgpTZZbPCOjuOZEvmz+9OP
+         dFZV1sGbegRBQyDSL8eHC09gbv5GJbOa1vScToPsOFMZDDM7IEyeLmKtzu7R5kGEQ/a0
+         HlKCSBtqJQE3mg9XIIga6VAp9tVV58X5BZzGBJ314i+K+LTa2Lqaelu4BJnib/OiTgcq
+         5dfotMMe5+/FhqeKuBc/FY5MAE6rhJ+7z2WQ8DfoaUR/x1U8XpA4BsxvQRsuu/m8XglS
+         fQlpX90utEL7580ATaTx0NlnmpclR+ro05tz9p8vvN6cAug+KSVqe8iqqJrHyopviS3Y
+         3sGQ==
+X-Gm-Message-State: AOAM530+J3uFGAdD/rh9D/z7MnK7Ia+JzMUlAnyooeEIy7tCPB4Gck7e
+        mGIl0UOKsyTW9XeZST5cbQ==
+X-Google-Smtp-Source: ABdhPJzEQjcFBWmWE376+W3/jvXjGaojoc/mmDz/tY6q3QXK03YBPeISo9pECab3cFblZ38C0GtHEw==
+X-Received: by 2002:a02:9f8e:: with SMTP id a14mr1443823jam.95.1594847279881;
+        Wed, 15 Jul 2020 14:07:59 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id h11sm1602621ilh.69.2020.07.15.14.01.55
+        by smtp.gmail.com with ESMTPSA id u5sm1663421ili.33.2020.07.15.14.07.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 14:01:55 -0700 (PDT)
-Received: (nullmailer pid 809889 invoked by uid 1000);
-        Wed, 15 Jul 2020 21:01:54 -0000
-Date:   Wed, 15 Jul 2020 15:01:54 -0600
+        Wed, 15 Jul 2020 14:07:59 -0700 (PDT)
+Received: (nullmailer pid 818071 invoked by uid 1000);
+        Wed, 15 Jul 2020 21:07:58 -0000
+Date:   Wed, 15 Jul 2020 15:07:58 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Brian Norris <computersforpeace@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.or>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: pinctrl: qcom: add drive-open-drain to
- ipq4019
-Message-ID: <20200715210154.GA809835@bogus>
-References: <20200703080646.23233-1-computersforpeace@gmail.com>
- <20200703080646.23233-2-computersforpeace@gmail.com>
+To:     Ondrej Jirman <megous@megous.com>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        devicetree@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: display: Fix example in nwl-dsi.yaml
+Message-ID: <20200715210758.GA818016@bogus>
+References: <20200703114717.2140832-1-megous@megous.com>
+ <20200703114717.2140832-2-megous@megous.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200703080646.23233-2-computersforpeace@gmail.com>
+In-Reply-To: <20200703114717.2140832-2-megous@megous.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 03 Jul 2020 01:06:46 -0700, Brian Norris wrote:
-> We've added drive-open-drain support, so note it in the DT binding.
+On Fri, 03 Jul 2020 13:47:16 +0200, Ondrej Jirman wrote:
+> The example is now validated against rocktech,jh057n00900 schema
+> that was ported to yaml, and didn't validate with:
 > 
-> Signed-off-by: Brian Norris <computersforpeace@gmail.com>
+> - '#address-cells', '#size-cells', 'port@0' do not match any of
+>   the regexes: 'pinctrl-[0-9]+'
+> - 'vcc-supply' is a required property
+> - 'iovcc-supply' is a required property
+> - 'reset-gpios' is a required property
+> 
+> Fix it.
+> 
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
 > ---
->  .../devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt       | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  .../devicetree/bindings/display/bridge/nwl-dsi.yaml      | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
