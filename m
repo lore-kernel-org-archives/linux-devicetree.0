@@ -6,80 +6,70 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B17C433E4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 21:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA08C433E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 21:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93F1C206F5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 21:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EFAA20771
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 21:44:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594849397;
-	bh=O5xBkASOC3BIkOpRtBcvSxfR0yUa9r8z0JPgwX9rEjw=;
+	s=default; t=1594849496;
+	bh=anKYBjcbvOPtsBtRUHg9RK+mp8CGK35PuSptGilkUVk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PH3fRoPwtWLgEYUA4EnzaFTdm2ddVxBaiL8BNVkoUwlOquT9ZQ641Qwd1taLSY7nS
-	 VBhJ3+p26WNWluS8iJqLv/jtaRpSvpTuGvF4Zh9XZ546uiyAceF1Ad0tK6Y/M/oUu3
-	 wSCCB0Bs6D97uM5xQE6dqR3HQNE1dcVe8+Cbp1pM=
+	b=Q/tDzKqmLhLqVNLb4bOyKzfv/QTZDduRijCFhWNSJSLIw2W4T8v8ggkTbPGP/Buw/
+	 PYnhLn/NBdGtHp/kdGCq+QiJzSMl4GnlSvUVXcgZDT+93goYCSClEEi5IcPngVv9Ye
+	 5pbaiNvgsWuiTEs99xVrH9JguULC5YKdcpyslECI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgGOVnO (ORCPT
+        id S1726821AbgGOVoz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 17:43:14 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:41889 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726356AbgGOVnN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 17:43:13 -0400
-Received: by mail-il1-f196.google.com with SMTP id q3so3310144ilt.8;
-        Wed, 15 Jul 2020 14:43:12 -0700 (PDT)
+        Wed, 15 Jul 2020 17:44:55 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36156 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbgGOVoz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 17:44:55 -0400
+Received: by mail-io1-f65.google.com with SMTP id y2so3897021ioy.3;
+        Wed, 15 Jul 2020 14:44:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=tbIDFcHm1gJrq8IL60XYYyLS9ocwAGiExcbwkE9vsSc=;
-        b=Q6Ndhkwk1ZPVIHUoB+DPga0k5bx0jL6mZIcOqEhsTK3Sv3MU9xsuzlrPh7urPMzmP6
-         eQlH4oz4q6YMjuz76bScq4LFVqWylxeu7MbCIxtIPjyOGfw8hk/VmNfujXzSUnPEO0Vs
-         jhnqKPwvxNaOk47sJ0+uZVXHyiBnrfFQX1X/eDYEz2F6lIChZvdvz80j0SADJNerpQww
-         mxC71iShcdgW9yaH1l1czzXxuckDmwEkahXxLC5DaB57uq4xTuGuPBqDDOg3eu1FBcTG
-         fyNyJFxkZcKMljAhvCQjZ7KG44fTQ8xFjFxj7EQ5P7wlS8ah0o5+F/z8wvUrsKtOIh4U
-         pD/Q==
-X-Gm-Message-State: AOAM5324FdrR2Bny16d38IqPy2+aYEIGICkyXlFbTAxRyoMDJ5QIyVCj
-        tVqGxm+mY56YLjZloP15dw==
-X-Google-Smtp-Source: ABdhPJwDWgt7AyBWgVYwGzr6f6IRjKHR0z+ihwn7xVJE3HrZGHe+RXzfDt4wHqQw7V+FjMdopXtxQA==
-X-Received: by 2002:a92:58d6:: with SMTP id z83mr1503938ilf.186.1594849391997;
-        Wed, 15 Jul 2020 14:43:11 -0700 (PDT)
+        bh=G2Mqt7gxRiFgu+zBoG7bPjfYecL9s+S+lyU0ScviujI=;
+        b=tDLPz8rWtwGfcf7mR215ep7KtrBZNn/03hbvhHa29SsAybIF1Rc3sDDhbZh9wAzVRn
+         B//VEJIS25JacBkBH7KRoKVYA7YPwC2ECmPuI01BuUVSwg5S2LlrjG2/eY8/dWxQbOyn
+         LbWLv6Ljyt/RLaKhvEr4kBI1aG+3AJX7nvjOqdlawLPq81x4Q8mdAZm6S1AbXjiQx3+z
+         SFuR9Zs27+G6a7QX0Cksq3/BKSkVbxWe0yl6Ov7zq3a5KtKJhbwoOE8NtgO2KI8mf5yx
+         LQCwp4oP+YSj94J7tT5CrLu8OduXnt2Z9z4ak85iCsAsL9GdWJ/mplvkjsKTXJPa17fk
+         x9ng==
+X-Gm-Message-State: AOAM5334BXonM3fO3Y8YJn3YjXpl2g1TV6DINy6gzwypTVo8JmUpwiTQ
+        uWxefP9QD3TggICCvB06Yg==
+X-Google-Smtp-Source: ABdhPJzmxir1p3e9ru+Hz1g9JLvam/4uHKqg3E7b8w9WMvJYI1Tx2B7G1S7vbF+WtPKipdU9wyqFog==
+X-Received: by 2002:a6b:b2d1:: with SMTP id b200mr1314239iof.137.1594849494492;
+        Wed, 15 Jul 2020 14:44:54 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id w82sm1723815ili.42.2020.07.15.14.43.09
+        by smtp.gmail.com with ESMTPSA id v4sm1632908ilo.44.2020.07.15.14.44.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 14:43:11 -0700 (PDT)
-Received: (nullmailer pid 867523 invoked by uid 1000);
-        Wed, 15 Jul 2020 21:43:09 -0000
-Date:   Wed, 15 Jul 2020 15:43:09 -0600
+        Wed, 15 Jul 2020 14:44:53 -0700 (PDT)
+Received: (nullmailer pid 869896 invoked by uid 1000);
+        Wed, 15 Jul 2020 21:44:52 -0000
+Date:   Wed, 15 Jul 2020 15:44:52 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     ben.dooks@codethink.co.uk, swboyd@chromium.org, arnd@arndb.de,
-        megous@megous.com, linux-input@vger.kernel.org,
-        rydberg@bitmath.org, m.felsch@pengutronix.de,
-        Henk.Vergonet@gmail.com, linux-kernel@vger.kernel.org,
-        ronald@innovation.ch, lee.jones@linaro.org, Anson.Huang@nxp.com,
-        corbet@lwn.net, christophe.jaillet@wanadoo.fr,
-        marcus.folkesson@gmail.com, p.zabel@pengutronix.de,
-        luzmaximilian@gmail.com, robh+dt@kernel.org,
-        linux-doc@vger.kernel.org, andriy.shevchenko@linux.intel.com,
-        mylene.josserand@bootlin.com, usbb2k-api-dev@nongnu.org,
-        oneukum@suse.com, linus.walleij@linaro.org, jeff@labundy.com,
-        masneyb@onstation.org, james.hilliard1@gmail.com,
-        devicetree@vger.kernel.org, a.fatoum@pengutronix.de,
-        krzk@kernel.org, dmitry.torokhov@gmail.com
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: input drivers
-Message-ID: <20200715214309.GA867493@bogus>
-References: <20200705074959.22533-1-grandmaster@al2klimov.de>
+Cc:     devicetree@vger.kernel.org, hyun.kwon@xilinx.com,
+        michal.simek@xilinx.com, mchehab@kernel.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-media@vger.kernel.org, laurent.pinchart@ideasonboard.com
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: Xilinx video IP cores
+Message-ID: <20200715214452.GA869842@bogus>
+References: <20200705075524.22657-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200705074959.22533-1-grandmaster@al2klimov.de>
+In-Reply-To: <20200705075524.22657-1-grandmaster@al2klimov.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 05 Jul 2020 09:49:59 +0200, Alexander A. Klimov wrote:
+On Sun, 05 Jul 2020 09:55:24 +0200, Alexander A. Klimov wrote:
 > Rationale:
 > Reduces attack surface on kernel devs opening the links for MITM
 > as HTTPS traffic is much harder to manipulate.
@@ -105,39 +95,8 @@ On Sun, 05 Jul 2020 09:49:59 +0200, Alexander A. Klimov wrote:
 >  If there are any valid, but yet not changed URLs:
 >  See https://lkml.org/lkml/2020/6/26/837
 > 
->  .../devicetree/bindings/input/ps2keyb-mouse-apbps2.txt        | 2 +-
->  .../devicetree/bindings/input/rmi4/rmi_2d_sensor.txt          | 2 +-
->  Documentation/devicetree/bindings/input/rmi4/rmi_f01.txt      | 2 +-
->  Documentation/devicetree/bindings/input/ti,drv260x.txt        | 2 +-
->  Documentation/devicetree/bindings/input/ti,drv2665.txt        | 2 +-
->  Documentation/devicetree/bindings/input/ti,drv2667.txt        | 2 +-
->  Documentation/input/devices/appletouch.rst                    | 2 +-
->  Documentation/input/devices/bcm5974.rst                       | 4 ++--
->  Documentation/input/devices/iforce-protocol.rst               | 2 +-
->  Documentation/input/devices/joystick-parport.rst              | 2 +-
->  Documentation/input/devices/ntrig.rst                         | 2 +-
->  Documentation/input/devices/pxrc.rst                          | 2 +-
->  Documentation/input/multi-touch-protocol.rst                  | 2 +-
->  drivers/input/keyboard/Kconfig                                | 2 +-
->  drivers/input/keyboard/lkkbd.c                                | 2 +-
->  drivers/input/keyboard/opencores-kbd.c                        | 2 +-
->  drivers/input/keyboard/tca8418_keypad.c                       | 2 +-
->  drivers/input/misc/Kconfig                                    | 2 +-
->  drivers/input/misc/cm109.c                                    | 2 +-
->  drivers/input/misc/gpio_decoder.c                             | 2 +-
->  drivers/input/misc/palmas-pwrbutton.c                         | 2 +-
->  drivers/input/misc/powermate.c                                | 2 +-
->  drivers/input/misc/tps65218-pwrbutton.c                       | 2 +-
->  drivers/input/misc/yealink.c                                  | 2 +-
->  drivers/input/mouse/vsxxxaa.c                                 | 2 +-
->  drivers/input/serio/apbps2.c                                  | 2 +-
->  drivers/input/touchscreen/edt-ft5x06.c                        | 2 +-
->  drivers/input/touchscreen/iqs5xx.c                            | 2 +-
->  drivers/input/touchscreen/mc13783_ts.c                        | 2 +-
->  drivers/input/touchscreen/ti_am335x_tsc.c                     | 2 +-
->  drivers/input/touchscreen/usbtouchscreen.c                    | 2 +-
->  include/uapi/linux/input-event-codes.h                        | 2 +-
->  32 files changed, 33 insertions(+), 33 deletions(-)
+>  Documentation/devicetree/bindings/media/xilinx/video.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Applied, thanks!
