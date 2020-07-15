@@ -2,308 +2,144 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3ECFC433EC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 14:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03221C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 14:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C943E2065D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 14:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D26542064B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 14:22:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lCcrKo0G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbgGOOOJ (ORCPT
+        id S1728153AbgGOOWN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 10:14:09 -0400
-Received: from pi.codeconstruct.com.au ([103.231.89.101]:35656 "EHLO
-        codeconstruct.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727999AbgGOOOI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 10:14:08 -0400
-Received: by codeconstruct.com.au (Postfix, from userid 20001)
-        id D428C40192; Wed, 15 Jul 2020 10:06:30 -0400 (EDT)
-From:   Jeremy Kerr <jk@codeconstruct.com.au>
-To:     linux-gpio@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        devicetree@vger.kernel.org
-Cc:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH 1/2] gpio/aspeed-sgpio: enable access to all 80 input & output sgpios
-Date:   Wed, 15 Jul 2020 21:54:17 +0800
-Message-Id: <20200715135418.3194860-1-jk@codeconstruct.com.au>
-X-Mailer: git-send-email 2.27.0
+        Wed, 15 Jul 2020 10:22:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50228 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728121AbgGOOWN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 10:22:13 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1DDEC061755;
+        Wed, 15 Jul 2020 07:22:12 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id e22so1741283edq.8;
+        Wed, 15 Jul 2020 07:22:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=J4YLq7ad8Ku7+EWFa0/mgk39lvRv5vsUDuPSLGAmMis=;
+        b=lCcrKo0G+0r8E1QGKPPSeKTD6jPE8Sc6irv4/pOM95bnJP53927eRuCyYXGeGkV9fd
+         4mAETYDfMMhmValjwwKkzgyw6wNRUSM7HPaYym0azD4zlCU3nckTdg4+j1Wc53w3nOHA
+         O1x4YZWvOSoxt6Ki5XkR4PxFJ2sl5ih71h1LHgcgiViNmWv4Groshm3PXgvKN4TJT7MH
+         8TG+hVZ4AaNClt0XH3+2cPGeaAwLX9Nb/XP5ixDGbggf5vtZTfFJFyppqTL9x3mDCHfO
+         b4nFyNmrOU8X1KLO5q+5txBX/3CO8n6xnjqpC15H43ua/BRMEViLX4C0QztCHodDD7LN
+         K3Lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J4YLq7ad8Ku7+EWFa0/mgk39lvRv5vsUDuPSLGAmMis=;
+        b=QnnOxpkqv+u1t8KK3xMYa9Yrr8zxinQg/TiQhXW6HKaqXwTb8YDuxcwcpMg/uSMX8C
+         mGJXWH7TrPxXfPxxzI2Y/L9CXae1Z+GCBQseMxcC/sWEe03Qi5pKjiPRxasWZpKlpOfA
+         68lV9obOIVHdNEa/A8f/qVSgeBi+0l6agET/daP1o4n7GdHJvGlm1KgmO52NAulYf7E3
+         P1nLpLCujJSq8f3c3bUZXr0Xw/XfaKjfU+WUcxmv4hDxB40X3C+p22FHKSiSn7hI2RKm
+         ExQRNotLtXYo9lLhlhjG59xNTkCA73A+3qYwg2te5zU3k9tDXdaU3/0G63uhAyoZT7R0
+         KW/Q==
+X-Gm-Message-State: AOAM530TkmiGvG4+pfIc07Q4Nd9IQ9Ay98/lTwLnRsug4gZmdJm6JKgD
+        PR0cQs8nBPpItyZb3qEDKqApGXadPN4DDq3Oxuo=
+X-Google-Smtp-Source: ABdhPJw5Rrl8VSXS3LDJXAXOUm42CTHm9/tBMgf95ADIskpTsgsl8yCwuH0vzZ6Rb7gKkig3GTgv+diJgyCwmRsxUnA=
+X-Received: by 2002:aa7:c3d7:: with SMTP id l23mr9596809edr.18.1594822931168;
+ Wed, 15 Jul 2020 07:22:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200629114927.17379-1-bruno.thomsen@gmail.com>
+ <20200629114927.17379-2-bruno.thomsen@gmail.com> <20200713025246.GY21277@dragon>
+ <CAH+2xPAHKY6YfhO-jXfKN+TRN5LDT1Kkn8a8HUj_EOqFt=75nQ@mail.gmail.com> <CAOMZO5DsyqRgD8n-w=6OmnXuMX+1T2DDOjQLNK133=FaqtWXVQ@mail.gmail.com>
+In-Reply-To: <CAOMZO5DsyqRgD8n-w=6OmnXuMX+1T2DDOjQLNK133=FaqtWXVQ@mail.gmail.com>
+From:   Bruno Thomsen <bruno.thomsen@gmail.com>
+Date:   Wed, 15 Jul 2020 16:21:55 +0200
+Message-ID: <CAH+2xPD31bdb_ZjAi6qo5n25K469Ak-qt2GJCcppHk4FZChdeg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] ARM: dts: imx7: add support for kamstrup flex concentrator
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Bruno Thomsen <bth@kamstrup.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Currently, the aspeed-sgpio driver exposes up to 80 GPIO lines,
-corresponding to the 80 status bits available in hardware. Each of these
-lines can be configured as either an input or an output.
+Den tir. 14. jul. 2020 kl. 13.54 skrev Fabio Estevam <festevam@gmail.com>:
+>
+> Hi Bruno,
+>
+> On Tue, Jul 14, 2020 at 7:03 AM Bruno Thomsen <bruno.thomsen@gmail.com> wrote:
+>
+> > I have not yet been successful in converting the deprecated properties
+> > to generic phy properties, so hoping I could get a hit.
+> >
+> > Kernel error messages:
+> > mdio_bus 30be0000.ethernet-1: MDIO device at address 1 is missing.
+>
+> Please double-check whether 1 is the correct address for the KSZ8051
+> Ethernet PHY as per your schematics.
 
-However, each of these GPIOs is actually an input *and* an output; we
-actually have 80 inputs plus 80 outputs.
+Hi Fabio,
 
-This change expands the maximum number of GPIOs to 160; the lower half
-of this range are the input-only GPIOs, the upper half are the outputs.
-We fix the GPIO directions to correspond to this mapping.
+Thanks for the hints.
 
-This also fixes a bug when setting GPIOs - we were reading from the
-input register, making it impossible to set more than one output GPIO.
+Yes, the address is correct and configured with external resistors,
+but just realised that I wrote the wrong device name in the comment,
+it's actually KSZ8081RNB.
 
-Signed-off-by: Jeremy Kerr <jk@codeconstruct.com.au>
----
- .../devicetree/bindings/gpio/sgpio-aspeed.txt |   5 +-
- drivers/gpio/gpio-aspeed-sgpio.c              | 115 +++++++++++-------
- 2 files changed, 77 insertions(+), 43 deletions(-)
+Ethernet has been working with multiple mainline kernel versions
+(latest being 5.7.8)
+for the last year or so when using the DTS in patch. So I am pretty sure
+hardware and setup of mux is correct'ish.
 
-diff --git a/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-index d4d83916c09d..be329ea4794f 100644
---- a/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-+++ b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-@@ -20,8 +20,9 @@ Required properties:
- - gpio-controller : Marks the device node as a GPIO controller
- - interrupts : Interrupt specifier, see interrupt-controller/interrupts.txt
- - interrupt-controller : Mark the GPIO controller as an interrupt-controller
--- ngpios : number of GPIO lines, see gpio.txt
--  (should be multiple of 8, up to 80 pins)
-+- ngpios : number of *hardware* GPIO lines, see gpio.txt. This will expose
-+  2 software GPIOs per hardware GPIO: one for hardware input, one for hardware
-+  output. Up to 80 pins, must be a multiple of 8.
- - clocks : A phandle to the APB clock for SGPM clock division
- - bus-frequency : SGPM CLK frequency
- 
-diff --git a/drivers/gpio/gpio-aspeed-sgpio.c b/drivers/gpio/gpio-aspeed-sgpio.c
-index 8319812593e3..927d46f159b8 100644
---- a/drivers/gpio/gpio-aspeed-sgpio.c
-+++ b/drivers/gpio/gpio-aspeed-sgpio.c
-@@ -17,7 +17,8 @@
- #include <linux/spinlock.h>
- #include <linux/string.h>
- 
--#define MAX_NR_SGPIO			80
-+#define MAX_NR_HW_SGPIO			80
-+#define SGPIO_OUTPUT_OFFSET		MAX_NR_HW_SGPIO
- 
- #define ASPEED_SGPIO_CTRL		0x54
- 
-@@ -30,8 +31,8 @@ struct aspeed_sgpio {
- 	struct clk *pclk;
- 	spinlock_t lock;
- 	void __iomem *base;
--	uint32_t dir_in[3];
- 	int irq;
-+	int n_sgpio;
- };
- 
- struct aspeed_sgpio_bank {
-@@ -111,31 +112,69 @@ static void __iomem *bank_reg(struct aspeed_sgpio *gpio,
- 	}
- }
- 
--#define GPIO_BANK(x)    ((x) >> 5)
--#define GPIO_OFFSET(x)  ((x) & 0x1f)
-+#define GPIO_BANK(x)    ((x % SGPIO_OUTPUT_OFFSET) >> 5)
-+#define GPIO_OFFSET(x)  ((x % SGPIO_OUTPUT_OFFSET) & 0x1f)
- #define GPIO_BIT(x)     BIT(GPIO_OFFSET(x))
- 
- static const struct aspeed_sgpio_bank *to_bank(unsigned int offset)
- {
--	unsigned int bank = GPIO_BANK(offset);
-+	unsigned int bank;
-+
-+	bank = GPIO_BANK(offset);
- 
- 	WARN_ON(bank >= ARRAY_SIZE(aspeed_sgpio_banks));
- 	return &aspeed_sgpio_banks[bank];
- }
- 
-+static int aspeed_sgpio_init_valid_mask(struct gpio_chip *gc,
-+		unsigned long *valid_mask, unsigned int ngpios)
-+{
-+	struct aspeed_sgpio *sgpio = gpiochip_get_data(gc);
-+	int n = sgpio->n_sgpio;
-+	int c = SGPIO_OUTPUT_OFFSET - n;
-+
-+	WARN_ON(ngpios < MAX_NR_HW_SGPIO * 2);
-+
-+	/* input GPIOs in the lower range */
-+	bitmap_set(valid_mask, 0, n);
-+	bitmap_clear(valid_mask, n, c);
-+
-+	/* output GPIOS above SGPIO_OUTPUT_OFFSET */
-+	bitmap_set(valid_mask, SGPIO_OUTPUT_OFFSET, n);
-+	bitmap_clear(valid_mask, SGPIO_OUTPUT_OFFSET + n, c);
-+
-+	return 0;
-+}
-+
-+static void aspeed_sgpio_irq_init_valid_mask(struct gpio_chip *gc,
-+		unsigned long *valid_mask, unsigned int ngpios)
-+{
-+	struct aspeed_sgpio *sgpio = gpiochip_get_data(gc);
-+	int n = sgpio->n_sgpio;
-+
-+	WARN_ON(ngpios < MAX_NR_HW_SGPIO * 2);
-+
-+	/* input GPIOs in the lower range */
-+	bitmap_set(valid_mask, 0, n);
-+	bitmap_clear(valid_mask, n, ngpios - n);
-+}
-+
-+static const bool aspeed_sgpio_is_input(unsigned int offset)
-+{
-+	return offset < SGPIO_OUTPUT_OFFSET;
-+}
-+
- static int aspeed_sgpio_get(struct gpio_chip *gc, unsigned int offset)
- {
- 	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
- 	const struct aspeed_sgpio_bank *bank = to_bank(offset);
- 	unsigned long flags;
- 	enum aspeed_sgpio_reg reg;
--	bool is_input;
- 	int rc = 0;
- 
- 	spin_lock_irqsave(&gpio->lock, flags);
- 
--	is_input = gpio->dir_in[GPIO_BANK(offset)] & GPIO_BIT(offset);
--	reg = is_input ? reg_val : reg_rdata;
-+	reg = aspeed_sgpio_is_input(offset) ? reg_val : reg_rdata;
- 	rc = !!(ioread32(bank_reg(gpio, bank, reg)) & GPIO_BIT(offset));
- 
- 	spin_unlock_irqrestore(&gpio->lock, flags);
-@@ -143,22 +182,31 @@ static int aspeed_sgpio_get(struct gpio_chip *gc, unsigned int offset)
- 	return rc;
- }
- 
--static void sgpio_set_value(struct gpio_chip *gc, unsigned int offset, int val)
-+static int sgpio_set_value(struct gpio_chip *gc, unsigned int offset, int val)
- {
- 	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
- 	const struct aspeed_sgpio_bank *bank = to_bank(offset);
--	void __iomem *addr;
-+	void __iomem *addr_r, *addr_w;
- 	u32 reg = 0;
- 
--	addr = bank_reg(gpio, bank, reg_val);
--	reg = ioread32(addr);
-+	if (aspeed_sgpio_is_input(offset))
-+		return -EINVAL;
-+
-+	/* Since this is an output, read the cached value from rdata, then
-+	 * update val. */
-+	addr_r = bank_reg(gpio, bank, reg_rdata);
-+	addr_w = bank_reg(gpio, bank, reg_val);
-+
-+	reg = ioread32(addr_r);
- 
- 	if (val)
- 		reg |= GPIO_BIT(offset);
- 	else
- 		reg &= ~GPIO_BIT(offset);
- 
--	iowrite32(reg, addr);
-+	iowrite32(reg, addr_w);
-+
-+	return 0;
- }
- 
- static void aspeed_sgpio_set(struct gpio_chip *gc, unsigned int offset, int val)
-@@ -175,26 +223,20 @@ static void aspeed_sgpio_set(struct gpio_chip *gc, unsigned int offset, int val)
- 
- static int aspeed_sgpio_dir_in(struct gpio_chip *gc, unsigned int offset)
- {
--	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
--	unsigned long flags;
--
--	spin_lock_irqsave(&gpio->lock, flags);
--	gpio->dir_in[GPIO_BANK(offset)] |= GPIO_BIT(offset);
--	spin_unlock_irqrestore(&gpio->lock, flags);
--
--	return 0;
-+	return aspeed_sgpio_is_input(offset) ? 0 : -EINVAL;
- }
- 
- static int aspeed_sgpio_dir_out(struct gpio_chip *gc, unsigned int offset, int val)
- {
- 	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
- 	unsigned long flags;
-+	int rc;
- 
--	spin_lock_irqsave(&gpio->lock, flags);
--
--	gpio->dir_in[GPIO_BANK(offset)] &= ~GPIO_BIT(offset);
--	sgpio_set_value(gc, offset, val);
-+	/* No special action is required for setting the direction; we'll
-+	 * error-out in sgpio_set_value if this isn't an output GPIO */
- 
-+	spin_lock_irqsave(&gpio->lock, flags);
-+	rc = sgpio_set_value(gc, offset, val);
- 	spin_unlock_irqrestore(&gpio->lock, flags);
- 
- 	return 0;
-@@ -202,16 +244,7 @@ static int aspeed_sgpio_dir_out(struct gpio_chip *gc, unsigned int offset, int v
- 
- static int aspeed_sgpio_get_direction(struct gpio_chip *gc, unsigned int offset)
- {
--	int dir_status;
--	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
--	unsigned long flags;
--
--	spin_lock_irqsave(&gpio->lock, flags);
--	dir_status = gpio->dir_in[GPIO_BANK(offset)] & GPIO_BIT(offset);
--	spin_unlock_irqrestore(&gpio->lock, flags);
--
--	return dir_status;
--
-+	return !!aspeed_sgpio_is_input(offset);
- }
- 
- static void irqd_to_aspeed_sgpio_data(struct irq_data *d,
-@@ -402,6 +435,7 @@ static int aspeed_sgpio_setup_irqs(struct aspeed_sgpio *gpio,
- 
- 	irq = &gpio->chip.irq;
- 	irq->chip = &aspeed_sgpio_irqchip;
-+	irq->init_valid_mask = aspeed_sgpio_irq_init_valid_mask;
- 	irq->handler = handle_bad_irq;
- 	irq->default_type = IRQ_TYPE_NONE;
- 	irq->parent_handler = aspeed_sgpio_irq_handler;
-@@ -452,11 +486,12 @@ static int __init aspeed_sgpio_probe(struct platform_device *pdev)
- 	if (rc < 0) {
- 		dev_err(&pdev->dev, "Could not read ngpios property\n");
- 		return -EINVAL;
--	} else if (nr_gpios > MAX_NR_SGPIO) {
-+	} else if (nr_gpios > MAX_NR_HW_SGPIO) {
- 		dev_err(&pdev->dev, "Number of GPIOs exceeds the maximum of %d: %d\n",
--			MAX_NR_SGPIO, nr_gpios);
-+			MAX_NR_HW_SGPIO, nr_gpios);
- 		return -EINVAL;
- 	}
-+	gpio->n_sgpio = nr_gpios;
- 
- 	rc = of_property_read_u32(pdev->dev.of_node, "bus-frequency", &sgpio_freq);
- 	if (rc < 0) {
-@@ -497,7 +532,8 @@ static int __init aspeed_sgpio_probe(struct platform_device *pdev)
- 	spin_lock_init(&gpio->lock);
- 
- 	gpio->chip.parent = &pdev->dev;
--	gpio->chip.ngpio = nr_gpios;
-+	gpio->chip.ngpio = MAX_NR_HW_SGPIO * 2;
-+	gpio->chip.init_valid_mask = aspeed_sgpio_init_valid_mask;
- 	gpio->chip.direction_input = aspeed_sgpio_dir_in;
- 	gpio->chip.direction_output = aspeed_sgpio_dir_out;
- 	gpio->chip.get_direction = aspeed_sgpio_get_direction;
-@@ -509,9 +545,6 @@ static int __init aspeed_sgpio_probe(struct platform_device *pdev)
- 	gpio->chip.label = dev_name(&pdev->dev);
- 	gpio->chip.base = -1;
- 
--	/* set all SGPIO pins as input (1). */
--	memset(gpio->dir_in, 0xff, sizeof(gpio->dir_in));
--
- 	aspeed_sgpio_setup_irqs(gpio, pdev);
- 
- 	rc = devm_gpiochip_add_data(&pdev->dev, &gpio->chip, gpio);
--- 
-2.27.0
+Kernel trace from patch version:
+kernel: Micrel KSZ8081 or KSZ8091 30be0000.ethernet-1:01: attached PHY driver
+ [Micrel KSZ8081 or KSZ8091] (mii_bus:phy_addr=30be0000.ethernet-1:01, irq=POLL)
 
+Error first occurs when switching from fec phy reset to mdio phy reset
+code path,
+I understand that the fec phy reset is obsolete as phy properties was wrongly
+added to the mac and of course should be part of the phy (separate chip).
+
+When debugging it I end up with the get_phy_device() call not working
+inside of_mdiobus_register_phy().
+
+Workaround at the moment seems to be extending compatible with
+"ethernet-phy-id0022.1560" to disable auto detection of phy type,
+and then Ethernet works again. At least the same PHY driver trace
+can be found and full transmission speed can be used without packet
+errors/loss.
+
+> Are there external pull-up/pull-down resistors for strapping the
+> various configuration pins for the PHY? Or are the pull-up/pull-down
+> provided by the i.MX7D pins?
+
+Config strapping is done with external resistors.
+
+> If there are no external pull-ups, please make sure to configure the
+> pinctrl_enet1 accordingly, so that the Ethernet PHY address can be
+> properly configured and then mdio_bus driver can find it at the
+> correct address.
+>
+> Please check in arch/arm/boot/dts/imx6qdl-sr-som.dtsi for an example
+> on how to configure the Ethernet PHY pin strapping via iMX IOMUX.
+
+Thanks, good examples can be hard to find.
+
+/Bruno
