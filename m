@@ -6,81 +6,79 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E03EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 19:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B396C433EA
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 19:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 718EC2065F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 19:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1980E20663
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 19:37:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594841540;
-	bh=dtECZ0kC7iNUK10l063g4A60tnTMlXraYIp1udcyfFc=;
+	s=default; t=1594841838;
+	bh=PRzYm3+SdFmitAhT7i39+gAtgtmMY7mUjrcC+fniZ0A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ctsRsWJ8RZANnh3ILwY0h/PPRWr8q79h0aKaCjYfJN8tsCInaMv0SdrzdMaMqCl3s
-	 P4zYALGQmwbl+87LBbN1r6Qz358CNajmGEomoaiJtU65Nwz3+RgBZVIRnXaDPdjhG4
-	 l4/v2DZ2xkI7srLU7Vscxx5X3lv4R0hCx4ND/wfU=
+	b=NRVoypfVzc9n8datTHQ1AVlglE5zdp5h+V7441uGfSgAr1B5ymBTzGrDL1oAAp0M6
+	 Uoc7BCk7p6kGPdhTkWVGf96Jc8y8uIQtPW2q15LnOvYzFgyUjoQv4pc1DuG4K45tHz
+	 wlt6CwqzOwaDa9+uuQFSh8QXk6nWYN0kyQJnZoKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbgGOTcU (ORCPT
+        id S1727068AbgGOThR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 15:32:20 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:33079 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbgGOTcT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 15:32:19 -0400
-Received: by mail-il1-f196.google.com with SMTP id a11so3041310ilk.0;
-        Wed, 15 Jul 2020 12:32:19 -0700 (PDT)
+        Wed, 15 Jul 2020 15:37:17 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:44260 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726786AbgGOThQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 15:37:16 -0400
+Received: by mail-il1-f193.google.com with SMTP id h16so3011988ilj.11;
+        Wed, 15 Jul 2020 12:37:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Fm0BJxhDtxgCQwxltRyCdPVib98HJFWxC3xrwVYYVeM=;
-        b=ACQPraeyMHlltlN/yuvGKhMw479wolUFh9f/MSNhlhI0VhpL4tQtuCcbzQ4x6vkrRt
-         7rZArOWNqdI4mNU9UzxmpKl4D6f8cqfgDQg5P6JlLbn2iYwGV59ibejHjtMNNV8dIGjh
-         2yCMvU0DP5bqrhnNQVAtq9MQmGiGoCCI+LAZvupk4DM2bYvp5C3g2UqlUBe97NHM+jnI
-         jApGulosBMasFtWkL/jUg6uwo7jTCgD8s05E1hoge0KsU85EB4B2DhvJq2oI7Cmao1N0
-         tUG0+7UEfTpFxscjYnopm3TkGw8QWXwwdDONMbrQ9SGpaQ33+E21CRuY8C9UUjQR1ZXZ
-         AHkA==
-X-Gm-Message-State: AOAM531vkATPwOMvAbp4ivoxLImbyjzZzrA8ADVVFtfTuTm/X8+ZpAR3
-        odCkm6mAcnOE5uKZGCP/1A==
-X-Google-Smtp-Source: ABdhPJxZZ3CA0GjhVDdP1Px9lfAUwoboMTg7JHz3I2tEnQLo4i2chUuvIXIFIKSq20QRzkLi0WuH7w==
-X-Received: by 2002:a05:6e02:14c2:: with SMTP id o2mr1093123ilk.54.1594841538920;
-        Wed, 15 Jul 2020 12:32:18 -0700 (PDT)
+        bh=FZRDNrNebIsyZMbllDgGWNkOQhQpExnnO8mqUTe5uak=;
+        b=iELUOG/l2zkxYRwxXUlp0eULZ0bLWHvLee2FVbWBlFE/bbW8YFp/ndh6PxRJxri+WS
+         s1HXlLfVPIB7dXCa4vkpKLVHsaoq1VCaqyzzkdbDzq3jQArfHE0W9a819ApKqD7egAOX
+         YlrQa848sAJ/TPHWCYxc7ZF0p9maGdAx7eiS9v44K8kX6MTOT5T/Qa/PZ5LI0dUtbRem
+         bL7XRPKnM7Bs9ntZddfIe6Kz7Ju2bfAjCbw/Oq5bgLhs/r44e9seKeZ0TZg8qC6JsLGe
+         +kyBp5l/Q/bC7FABVRhDZ7nOFMbOhx+LEllDLdNruM4Z6/7ODCxs+2MnOUsWzsbncs5A
+         kAig==
+X-Gm-Message-State: AOAM531e9wDFn/6P2gW/PXIdljYYF0SvlDHiR/7keOJQSHG5OVvKQt4m
+        I9XWusWADNBx7tMeSk/9UxkYoiC00w==
+X-Google-Smtp-Source: ABdhPJwPrpNl92AzPfR3m7WjynADwYAU4iXRD0bHvujpENXYYd6ZUdH1DNHNVRbBjtavf2DPYgh8DQ==
+X-Received: by 2002:a92:c530:: with SMTP id m16mr1106218ili.300.1594841836118;
+        Wed, 15 Jul 2020 12:37:16 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id c7sm1556191ilo.85.2020.07.15.12.32.17
+        by smtp.gmail.com with ESMTPSA id b2sm1548458ilf.0.2020.07.15.12.37.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 12:32:18 -0700 (PDT)
-Received: (nullmailer pid 689607 invoked by uid 1000);
-        Wed, 15 Jul 2020 19:32:17 -0000
-Date:   Wed, 15 Jul 2020 13:32:17 -0600
+        Wed, 15 Jul 2020 12:37:15 -0700 (PDT)
+Received: (nullmailer pid 696414 invoked by uid 1000);
+        Wed, 15 Jul 2020 19:37:14 -0000
+Date:   Wed, 15 Jul 2020 13:37:14 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: reset: Convert UniPhier reset to json-schema
-Message-ID: <20200715193217.GA689533@bogus>
-References: <20200622114826.450442-1-yamada.masahiro@socionext.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     devicetree@vger.kernel.org,
+        =?utf-8?B?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        od@zcrc.me, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/7] dt-bindings: MIPS: Add entry for the YLM RetroMini
+Message-ID: <20200715193714.GA696359@bogus>
+References: <20200623182432.187843-1-paul@crapouillou.net>
+ <20200623182432.187843-2-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200622114826.450442-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20200623182432.187843-2-paul@crapouillou.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 22 Jun 2020 20:48:26 +0900, Masahiro Yamada wrote:
-> Convert the UniPhier reset controller binding to DT schema format.
-> I excluded the glue resets because their bindings are too different.
+On Tue, 23 Jun 2020 20:24:27 +0200, Paul Cercueil wrote:
+> Add an entry to ingenic/devices.yaml for the JZ4725B-based
+> YLM "RetroMini" RS-90.
 > 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
-> 
->  .../reset/socionext,uniphier-reset.yaml       | 112 ++++++++++++++++
->  .../bindings/reset/uniphier-reset.txt         | 121 +-----------------
->  2 files changed, 113 insertions(+), 120 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/reset/socionext,uniphier-reset.yaml
+>  Documentation/devicetree/bindings/mips/ingenic/devices.yaml | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
 
-Applied, thanks!
+Acked-by: Rob Herring <robh@kernel.org>
