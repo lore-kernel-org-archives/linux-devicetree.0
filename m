@@ -7,125 +7,212 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FFF2C433E6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EEE9C433E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A27820663
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A5042065D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:10:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594843605;
-	bh=9W6vSYp92NRVcJCh9FKa27oMzyrh00zpAVYb4mIPK+A=;
+	s=default; t=1594843814;
+	bh=od32ge7X1Mili9mbitSwDIa1nUmGQwWeydtqhAzyw2Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x7uHISpc3noyqFPaSG73r+MvgeNWjNawV2+4Et+gAeLytDokvUmWY1Mj1MmRCL4p5
-	 IJyWr/0d2H2WRZpXO68NAKp9+gTCyCG6bBtOl0fuiOOEW16uPe/4exT0lyN58HUBBq
-	 8Uz4SlZlUTpnyMUS6h4tkG3lIsWgQcq9NsLYCNTk=
+	b=wzHQvM8cMIxf2aICMVjByesWCu6eS2Xh9kAf9LAIb4jkD1wPo7k09b5Beb8SdteRo
+	 fu3EeeYH8MKcibHtf00vKv9iN5W2cFtAO4uX40CDKrZFPfpNdQVbQu54ka2btz52bm
+	 4tCpzQyWCehfE1bLqJKNWKntJ+HqVBnPq9ogL3jM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgGOUGo (ORCPT
+        id S1726715AbgGOUKN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 16:06:44 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40123 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726858AbgGOUGo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 16:06:44 -0400
-Received: by mail-io1-f68.google.com with SMTP id l17so3596878iok.7;
-        Wed, 15 Jul 2020 13:06:43 -0700 (PDT)
+        Wed, 15 Jul 2020 16:10:13 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:39596 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbgGOUKI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 16:10:08 -0400
+Received: by mail-il1-f194.google.com with SMTP id k6so3111854ili.6;
+        Wed, 15 Jul 2020 13:10:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cpHgt95lxQHT5Zpu11pSPfByIAbS3Y8PM2+zGuMvPf4=;
-        b=Of9OvNvuJxei8uTA5JXZ9uAn3NPce9/B/kDyJS1v3/yWtcIa1CzomBOWeC9xBojUdE
-         diJsaqFz+Rudum5zGOMAvJu9IH3mbNwEGubsBxgLT/xf7vZZwAsAiTuqFvM5f3kkne/4
-         GxMO+8Gob/cJ6Axf2y2pQELcFzYJX7KcxlOo2gGeQ0dV3iZu+JuEjLqPPIq0vhkZ4fiG
-         /mQBAXB5jZOHVl8xLboT1VnPZmhujjrPmESpQVZfjZYLTdgMQW7Vu4vdh2JpLpUAfmYp
-         BJrBY2guVACh0LBKcPmfR9q5BdXzqczQdDOutqiFNwcOnbStp8K77/W5pY95EOEHWByT
-         s05Q==
-X-Gm-Message-State: AOAM531weLA4YQUhRdJ5A4TKDyA/R1fNcWsf20MI3vX8W6mGE/brprBl
-        ttYJme4kYyzik4e8QA//tA==
-X-Google-Smtp-Source: ABdhPJzTqc0usjbSP/XwBpuP5jwxFaTQOXK6S9rjAZx6oYxlBd6iuUMXJPDTaUqiQq5nLvvMyIBD2g==
-X-Received: by 2002:a02:1c02:: with SMTP id c2mr1168973jac.102.1594843603060;
-        Wed, 15 Jul 2020 13:06:43 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=rmVtJlWO28OOYfQ7+3Cqk4pCJzcKCbIXhxW473pP140=;
+        b=MQnX2pCFZXYyxRGSpVSzPW+LVfgzWZqdqbEKz4n3PEwbEiaMNGq/lwXcJEew1aohZe
+         xo2DUlIFt7XwEzDY7HfDHQ1SXj0QmR5U0gv9Fbxof6jOwzh2b5EnOfEC13SULpBsuLDx
+         jY2Fx6anmNW3O05gBtCY07WElrXYs20NUqdsc/BdeTgBLWrArT5Yl2sEDgJ74EdAMERk
+         uf0r2HoCPexsj4mHKjcWLgYIEHPyjcEitMvdJz0fdOFU0nC0OFxWHXHycF4MC4AGbJNm
+         eTRQOWWao0W5ArXGctpYqTp6pxasjD0KBVK9ixRXx/8Sxtpn/YlLSp0SAqs5BWjcfW7P
+         s3uQ==
+X-Gm-Message-State: AOAM530qsEYuSRGomQEpXudi6IZa8KC9signcxoAdoypCMfZRTQRrX6S
+        f/EaCJ6Fkzf6FcNSgh8GBQ==
+X-Google-Smtp-Source: ABdhPJzOXUHR2YApwW/xqgdoIvFiii1UPpVML18Gnab6Oq9EntcKo7Ry/ClzqXv+/yh8XoRD1BmWsw==
+X-Received: by 2002:a92:1b8c:: with SMTP id f12mr1150301ill.93.1594843806690;
+        Wed, 15 Jul 2020 13:10:06 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id l17sm1507537ilm.70.2020.07.15.13.06.41
+        by smtp.gmail.com with ESMTPSA id x1sm1545157ilh.29.2020.07.15.13.10.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 13:06:42 -0700 (PDT)
-Received: (nullmailer pid 735110 invoked by uid 1000);
-        Wed, 15 Jul 2020 20:06:41 -0000
-Date:   Wed, 15 Jul 2020 14:06:41 -0600
+        Wed, 15 Jul 2020 13:10:05 -0700 (PDT)
+Received: (nullmailer pid 739658 invoked by uid 1000);
+        Wed, 15 Jul 2020 20:10:04 -0000
+Date:   Wed, 15 Jul 2020 14:10:04 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, linux-clk@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] dt-bindings: arm: bcm: Add a select to the RPI Firmware
- binding
-Message-ID: <20200715200641.GA732316@bogus>
-References: <20200626115433.125735-1-maxime@cerno.tech>
+To:     Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pinctrl: renesas,rza2-pinctrl: Convert to
+ json-schema
+Message-ID: <20200715201004.GA735389@bogus>
+References: <20200626143638.16512-1-geert+renesas@glider.be>
+ <20200628163902.GI1105424@oden.dyn.berto.se>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200626115433.125735-1-maxime@cerno.tech>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200628163902.GI1105424@oden.dyn.berto.se>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 01:54:33PM +0200, Maxime Ripard wrote:
-> The RaspberryPi firmware binding uses two compatible, include simple-bus.
-> The select statement generated by default will thus select any node that
-> has simple-bus, not all of them being the raspberrypi firmware node.
+On Sun, Jun 28, 2020 at 06:39:02PM +0200, Niklas Söderlund wrote:
+> Hi Geert,
 > 
-> This results in warnings being wrongfully reported. Let's add a custom
-> select statement to fix that.
+> Thanks for your work.
 > 
-> Fixes: 5bc0b9be8544 ("dt-bindings: arm: bcm: Convert BCM2835 firmware binding to YAML")
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> On 2020-06-26 16:36:38 +0200, Geert Uytterhoeven wrote:
+> > Convert the Renesas RZ/A2 combined Pin and GPIO controller Device Tree
+> > binding documentation to json-schema.
+> > 
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> >  .../bindings/pinctrl/renesas,rza2-pinctrl.txt |  87 ---------------
+> >  .../pinctrl/renesas,rza2-pinctrl.yaml         | 100 ++++++++++++++++++
+> >  2 files changed, 100 insertions(+), 87 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
+> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
+> > deleted file mode 100644
+> > index a63ccd476cdaf919..0000000000000000
+> > --- a/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
+> > +++ /dev/null
+> > @@ -1,87 +0,0 @@
+> > -Renesas RZ/A2 combined Pin and GPIO controller
+> > -
+> > -The Renesas SoCs of the RZ/A2 series feature a combined Pin and GPIO controller.
+> > -Pin multiplexing and GPIO configuration is performed on a per-pin basis.
+> > -Each port features up to 8 pins, each of them configurable for GPIO
+> > -function (port mode) or in alternate function mode.
+> > -Up to 8 different alternate function modes exist for each single pin.
+> > -
+> > -Pin controller node
+> > --------------------
+> > -
+> > -Required properties:
+> > -  - compatible: shall be:
+> > -    - "renesas,r7s9210-pinctrl": for RZ/A2M
+> > -  - reg
+> > -    Address base and length of the memory area where the pin controller
+> > -    hardware is mapped to.
+> > -  - gpio-controller
+> > -    This pin controller also controls pins as GPIO
+> > -  - #gpio-cells
+> > -    Must be 2
+> > -  - gpio-ranges
+> > -    Expresses the total number of GPIO ports/pins in this SoC
+> > -
+> > -Example: Pin controller node for RZ/A2M SoC (r7s9210)
+> > -
+> > -	pinctrl: pin-controller@fcffe000 {
+> > -		compatible = "renesas,r7s9210-pinctrl";
+> > -		reg = <0xfcffe000 0x1000>;
+> > -
+> > -		gpio-controller;
+> > -		#gpio-cells = <2>;
+> > -		gpio-ranges = <&pinctrl 0 0 176>;
+> > -	};
+> > -
+> > -Sub-nodes
+> > ----------
+> > -
+> > -The child nodes of the pin controller designate pins to be used for
+> > -specific peripheral functions or as GPIO.
+> > -
+> > -- Pin multiplexing sub-nodes:
+> > -  A pin multiplexing sub-node describes how to configure a set of
+> > -  (or a single) pin in some desired alternate function mode.
+> > -  The values for the pinmux properties are a combination of port name, pin
+> > -  number and the desired function index. Use the RZA2_PINMUX macro located
+> > -  in include/dt-bindings/pinctrl/r7s9210-pinctrl.h to easily define these.
+> > -  For assigning GPIO pins, use the macro RZA2_PIN also in r7s9210-pinctrl.h
+> > -  to express the desired port pin.
+> > -
+> > -  Required properties:
+> > -    - pinmux:
+> > -      integer array representing pin number and pin multiplexing configuration.
+> > -      When a pin has to be configured in alternate function mode, use this
+> > -      property to identify the pin by its global index, and provide its
+> > -      alternate function configuration number along with it.
+> > -      When multiple pins are required to be configured as part of the same
+> > -      alternate function they shall be specified as members of the same
+> > -      argument list of a single "pinmux" property.
+> > -      Helper macros to ease assembling the pin index from its position
+> > -      (port where it sits on and pin number) and alternate function identifier
+> > -      are provided by the pin controller header file at:
+> > -      <dt-bindings/pinctrl/r7s9210-pinctrl.h>
+> > -      Integers values in "pinmux" argument list are assembled as:
+> > -      ((PORT * 8 + PIN) | MUX_FUNC << 16)
+> > -
+> > -  Example: Board specific pins configuration
+> > -
+> > -	&pinctrl {
+> > -		/* Serial Console */
+> > -		scif4_pins: serial4 {
+> > -			pinmux = <RZA2_PINMUX(PORT9, 0, 4)>,	/* TxD4 */
+> > -				 <RZA2_PINMUX(PORT9, 1, 4)>;	/* RxD4 */
+> > -		};
+> > -	};
+> > -
+> > -  Example: Assigning a GPIO:
+> > -
+> > -	leds {
+> > -		status = "okay";
+> > -		compatible = "gpio-leds";
+> > -
+> > -		led0 {
+> > -			/* P6_0 */
+> > -			gpios = <&pinctrl RZA2_PIN(PORT6, 0) GPIO_ACTIVE_HIGH>;
+> > -		};
+> > -	};
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml
+> > new file mode 100644
+> > index 0000000000000000..b7911a994f3a9f12
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml
+> > @@ -0,0 +1,100 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pinctrl/renesas,rza2-pinctrl.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Renesas RZ/A2 combined Pin and GPIO controller
+> > +
+> > +maintainers:
+> > +  - Chris Brandt <chris.brandt@renesas.com>
+> > +  - Geert Uytterhoeven <geert+renesas@glider.be>
+> > +
+> > +description:
+> > +  The Renesas SoCs of the RZ/A2 series feature a combined Pin and GPIO
+> > +  controller.
+> > +  Pin multiplexing and GPIO configuration is performed on a per-pin basis.
+> > +  Each port features up to 8 pins, each of them configurable for GPIO function
+> > +  (port mode) or in alternate function mode.
+> > +  Up to 8 different alternate function modes exist for each single pin.
 > 
-> ---
-> 
-> The original binding has been merged through the clock tree, so it should
-> be merged there.
-> 
-> Even though the original binding (and the DT) are using the simple-bus
-> compatible, this creates some DTC warnings since the firmware really isn't
-> a bus, so the node name doesn't match what a bus should have, none of the
-> children have a reg property, #address-cells and #size-cells are missing,
-> etc.
-> 
-> I can only guess that simple-bus was used to make the sub-devices probe,
-> but maybe simple-mfd would be more appropriate here?
+> This paragraph formatting looks odd, but I'm not sure it's intentional 
+> or not :-) In either case with or without this changed,
 
-As these are not mmio devices, I think simple-mfd is better.
-
-> ---
->  .../bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml   | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-> index b48ed875eb8e..17e4f20c8d39 100644
-> --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-> @@ -10,6 +10,15 @@ maintainers:
->    - Eric Anholt <eric@anholt.net>
->    - Stefan Wahren <wahrenst@gmx.net>
->  
-> +select:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        const: raspberrypi,bcm2835-firmware
-> +
-> +  required:
-> +    - compatible
-> +
->  properties:
->    compatible:
->      items:
-> -- 
-> 2.26.2
-> 
+If you do want the formatting here maintained, you need a '|'.
