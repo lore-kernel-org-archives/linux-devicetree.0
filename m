@@ -2,152 +2,99 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98719C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 08:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D15C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 08:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8267C20657
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 08:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CA9C20672
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 08:33:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728095AbgGOI1o (ORCPT
+        id S1726652AbgGOIdH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:27:44 -0400
-Received: from mga07.intel.com ([134.134.136.100]:41250 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726396AbgGOI1n (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jul 2020 04:27:43 -0400
-IronPort-SDR: ESfhtG135gxq2CEs2vGLLJRd7PVjIWaMsyWKJ5c8ucru3O93/oEhG4XD1DkTaZpWB7dBZoSYZh
- 3MhsQr8M5VHg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="213876760"
-X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
-   d="scan'208";a="213876760"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 01:27:37 -0700
-IronPort-SDR: R2YkGjF0/a7Jh7EPsjLE55eWyoNz3iAYV26+kZVW+YaC8o8eWQDXB2vr9kw9bdtnyGyVvMFErL
- iPHarFRLMHLg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
-   d="scan'208";a="299812940"
-Received: from yren3-mobl.ccr.corp.intel.com ([10.249.174.224])
-  by orsmga002.jf.intel.com with ESMTP; 15 Jul 2020 01:27:35 -0700
-Message-ID: <e078f9ebd3e8e440d5c04d2abac31201f5d3443d.camel@intel.com>
-Subject: Re: [RFC PATCH 0/4] thermal: Introduce support for monitoring
- falling temperature
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Thara Gopinath <thara.gopinath@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>, robh+dt@kernel.org
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 15 Jul 2020 16:27:34 +0800
-In-Reply-To: <5861acec-c49a-47cc-d7c6-ccef11dc1d58@linaro.org>
-References: <20200710135154.181454-1-thara.gopinath@linaro.org>
-         <7437ee89-e76d-0c82-9860-5c6076ad8a30@linaro.org>
-         <b25d54d35cec777f0dcc5b2bcacce27321d9bd45.camel@intel.com>
-         <5861acec-c49a-47cc-d7c6-ccef11dc1d58@linaro.org>
+        Wed, 15 Jul 2020 04:33:07 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37977 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbgGOIdH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 04:33:07 -0400
+Received: by mail-ot1-f66.google.com with SMTP id t18so849002otq.5;
+        Wed, 15 Jul 2020 01:33:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o5sAqUgn9cvxe+xg29sqCECVsVXdkGKTE+GopvFS8Qg=;
+        b=C/uPXLFdBFEYtcdajfHjCu7IaWrTLH04H5KC1xTdjmDSaxkWCmz6mJO1e3qcITZPHT
+         1LDmMGcNKjcHQriJnOX+uZfkDmnwLA0glozQyqmn5HOysXqDvDgBAErGmyxO5ucqmB0l
+         RDKHFuU1sUIuU4cDWL+/dGeobJtkStSAxTG4eTeKvZemEFuRIJAyZFbVLUGvplT1A1hw
+         UfQ+To7zesobhAE7M5RzKqCBHOUDXT0D2j1meW37KUn1PISv85IkrX8L8y3+SgJhNcfc
+         sKmLEo5IT+27SewyIWoFovvJ0EFVoj+bvEMubQZ9q82cyly2xB0WW8+531jnUT/agUEi
+         iPFQ==
+X-Gm-Message-State: AOAM532CGm9kWqZQYZzTdh9UUTnrzo3I/oFhmRpfVg+e0rxvaJiOvNeL
+        WYt4UWA2+LGpeEVWcYQpijLQlPBsxun3TnM9rdk=
+X-Google-Smtp-Source: ABdhPJxRf7X46l9/RuxnR97QYrbp+tXYdwoLbtediLsDriX3jmkzvVFsmx9ys9vBTFJoKvIU4nKd978smmCpgCdrPLg=
+X-Received: by 2002:a9d:2646:: with SMTP id a64mr7340091otb.107.1594801986000;
+ Wed, 15 Jul 2020 01:33:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200714123419.3390-1-aford173@gmail.com> <20200714123419.3390-2-aford173@gmail.com>
+ <c2e52f87-b2cf-ca36-7780-5e206f065d40@cogentembedded.com>
+In-Reply-To: <c2e52f87-b2cf-ca36-7780-5e206f065d40@cogentembedded.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 15 Jul 2020 10:32:54 +0200
+Message-ID: <CAMuHMdUYdGD2Us8W8FvSi-2MTJbDOvW4k_eC+YrTgdmZS97LCQ@mail.gmail.com>
+Subject: Re: [PATCH V2 2/2] dt-bindings: arm: renesas: Document beacon-rzg2m
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc:     Adam Ford <aford173@gmail.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Adam Ford-BE <aford@beaconembedded.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Thara,
+Hi Sergei,
 
-On Tue, 2020-07-14 at 17:39 -0400, Thara Gopinath wrote:
-> 
-> > 
-> > For example, to support this, we can
-> > either
-> > introduce both "cold" trip points and "warming devices", and
-> > introduce
-> > new logic in thermal framework and governors to handle them,
-> > Or
-> > introduce "cold" trip point and "warming" device, but only
-> > semantically, and treat them just like normal trip points and
-> > cooling
-> > devices. And strictly define cooling state 0 as the state that
-> > generates most heat, and define max cooling state as the state that
-> > generates least heat. Then, say, we have a trip point at -10C, the
-> > "warming" device is set to cooling state 0 when the temperature is
-> > lower than -10C, and in most cases, this thermal zone is always in
-> > a
-> > "overheating" state (temperature higher than -10C), and the
-> > "warming"
-> > device for this thermal zone is "throttled" to generate as least
-> > heat
-> > as possible. And this is pretty much what the current code has
-> > always
-> > been doing, right?
-> 
-> 
-> IMHO, thermal framework should move to a direction where the term 
-> "mitigation" is used rather than cooling or warming. In this case 
-> "cooling dev" and "warming dev" should will become 
-> "temp-mitigating-dev". So going by this, I think what you mention as 
-> option 1 is more suitable where new logic is introduced into the 
-> framework and governors to handle the trip points marked as "cold".
-> 
-> Also in the current set of requirements, we have a few power domain 
-> rails and other resources that are used exclusively in the thermal 
-> framework for warming alone as in they are not used ever for cooling 
-> down a zone. But then one of the requirements we have discussed is
-> for cpufreq and gpu scaling to be behave as warming devices where
-> the minimum operating point/ voltage of the relevant cpu/gpu is
-> restricted.
-> So in this case, Daniel had this suggestion of introducing negative 
-> states for presently what is defined as cooling devices. So cooling
-> dev 
-> / temp-mitigation-dev states can range from say -3 to 5 with 0 as
-> the 
-> good state where no mitigation is happening. This is an interesting
-> idea 
-> though I have not proto-typed it yet.
+On Wed, Jul 15, 2020 at 10:16 AM Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> On 14.07.2020 15:34, Adam Ford wrote:
+> > Beacon EmbeddedWorks in introducing a development kit based on the
+> > Renesas RZ/G2M platform.  This patch adds the entry to the bindings
+> > list.
+> >
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
 
-Agreed. If some devices support both "cooling" and "warning", we should
-have only one "temp-mitigating-dev" instead.
-> 
-> > 
-> > I can not say which one is better for now as I don't have the
-> > background of this requirement. It's nice that Thara sent this RFC
-> > series for discussion, but from upstream point of view, I'd prefer
-> > to
-> > see a full stack solution, before taking any code.
-> 
-> We had done a session at ELC on this requirement. Here is the link
-> to 
-> the presentation. Hopefully it gives you some back ground on this.
+> > --- a/Documentation/devicetree/bindings/arm/renesas.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/renesas.yaml
+> > @@ -118,6 +118,7 @@ properties:
+> >           items:
+> >             - enum:
+> >                 - hoperun,hihope-rzg2m # HopeRun HiHope RZ/G2M platform
+> > +              - beacon,beacon-rzg2m # Beacon EmbeddedWorks RZ/G2M Kit
+>
+>     Why the vendor-prefixes.yaml file calls it Compass Electronics Group?
 
-yes, it helps. :)
-> 
-> 
-https://elinux.org/images/f/f7/ELC-2020-Thara-Ram-Linux-Kernel-Thermal-Warming.pdf
-> 
-> I have sent across some patches for introducing a generic power
-> domain 
-> warming device which is under review by Daniel.
-> 
-> So how do you want to proceed on this? Can you elaborate a bit more
-> on 
-> what you mean by a full stack solution.
+See commit f756619f26edf74a ("dt-bindings: vendor-prefixes: Add Beacon
+vendor prefix"):
 
-I mean, the patches, and the idea look good to me, just with some minor
-comments. But applying this patch series, alone, does not bring us
-anything because we don't have a thermal zone driver that supports cold
-trip point, right?
-I'd like to see this patch series together with the support in
-thermal_core/governors and real users like updated/new thermal
-zone/cdev drivers that supports the cold trip point and warming
-actions.
-Or else I've the concern that this piece of code may be changed back
-and forth when prototyping the rest of the support.
+    Beacon EmebeddedWorks is the brand owned by Compass Electronics Group,
+    LLC based out of the United States.
 
-thanks,
-rui
+Gr{oetje,eeting}s,
 
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
