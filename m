@@ -7,73 +7,70 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DE9C433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 03:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82261C433E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 03:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53A8C207DD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 03:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5818B2074B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 03:49:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PA0lyJmm"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gXgfsJJ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbgGODqT (ORCPT
+        id S1728199AbgGODto (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 23:46:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36842 "EHLO
+        Tue, 14 Jul 2020 23:49:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728053AbgGODqT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 23:46:19 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 471CCC061755
-        for <devicetree@vger.kernel.org>; Tue, 14 Jul 2020 20:46:19 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id o3so744641ilo.12
-        for <devicetree@vger.kernel.org>; Tue, 14 Jul 2020 20:46:19 -0700 (PDT)
+        with ESMTP id S1726710AbgGODto (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 23:49:44 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69B64C061755
+        for <devicetree@vger.kernel.org>; Tue, 14 Jul 2020 20:49:44 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id md7so1945746pjb.1
+        for <devicetree@vger.kernel.org>; Tue, 14 Jul 2020 20:49:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TsOL0cHZgNHHXdS8EKSurkqDwkh4q7dcMdF14rSf6+4=;
-        b=PA0lyJmmqv3z1yng5c+bbC+Fd2sF2bB+Z0yAb13o6k76rebaVXD1D3fb41re4Ihvq+
-         hivlxR8HzDkiHGmh0l8EEY9XgRAXgoQEKAMqW+d1+qsPz3YGnYvKzC5wsCQDWpkMhiX8
-         pQ/KWP1oW9UejrUN609DKt62AESXiboSQaStU=
+        bh=L1MZa7I2FUiTYOmy499OnTCIjSLBqRD31P7fdisA5IE=;
+        b=gXgfsJJ4MdMmnwG64cIsG2YaNVG8hFB09bzTK7A8ECgTeHPHJAszwFZTdL2HmdNeKn
+         /FQ/fkWjzPV54P4Hk0AEYpO5EJGVUEka4WxBI4ByQd9Hx3pE0Q2QI54lF8YpXBjj3N2V
+         txcmu7iZy9WrLC9w2AjMl6lIngNd24pEUxvuk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TsOL0cHZgNHHXdS8EKSurkqDwkh4q7dcMdF14rSf6+4=;
-        b=foBSJjQPBqX/xaiS3hfO5jazWc9zWQEqp1zvOuG2qpLKKIoZxNRLtogvpapsgyXhh4
-         leIEpvthx1gf5HFmMygv7knyEwiAoZk4OYdKrTxUZOLDRRmZy58h5z/E2pxar5i5bTTv
-         LufXfmaeFiuP2f49B0kvWFX1N/JNoAkgzTVcmsLkPKHQjz5g1y3ijaad9d+XxN7xrHwV
-         SrXQ0ELuvnfAXR4xwIHoQuozg6lyoh2x7QsuiaIZarlu734W2NZGXpin2SZUXBjKFe3V
-         lTBxC5dZoqiu3UQ5jsM2PZlyLbRKUmp6NxzrpCGj7/NuLtZ1/4UkcTOqjZ2aPr7uD1dx
-         GD7A==
-X-Gm-Message-State: AOAM5317fEaWrZUk2trBHUZbwEyYN6Gn+5dO+KLk2viisvPAgFCSR92K
-        LKujRg6Ah5uA0Zvil49z1kzFWg8sC0s=
-X-Google-Smtp-Source: ABdhPJz3tXtDrXyumTvLW5p2AUuKml/XaLEJVIb+VDRBK5LTR9aqHbzcKZA16JYiW15IlVDnIWxehA==
-X-Received: by 2002:a92:840b:: with SMTP id l11mr7801310ild.129.1594784777991;
-        Tue, 14 Jul 2020 20:46:17 -0700 (PDT)
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com. [209.85.166.182])
-        by smtp.gmail.com with ESMTPSA id s11sm483764ili.79.2020.07.14.20.46.16
+        bh=L1MZa7I2FUiTYOmy499OnTCIjSLBqRD31P7fdisA5IE=;
+        b=ZiL1KGedxnBpMXO3FInQ+w5d4z73w4VS85cp2Zx3+J/bvo0CHLL3dxwIqbIIOx8p4a
+         mXe5kaQi1rWZffkgQgJCq8IRpP4VQCxstTSGM59skCo3h/+Wz8Mvp1HqV/L6EJBYhCPH
+         IbldyfKpC0ZTq7mGKWpFYTomUrEDOyJmzw6OZJD+7Eiz/uGhESccbZFQwauLsqmo4jbR
+         98koQSatkXvBQcqFH2nFSgjUheFx84cv1xUNk8iFxQuj60lrtRGMHIMZU+zPdefXnqu+
+         Kcwp/H/lO+Ss/+5f2zEaHizemen5GarqtRkkxJ4MW2dkd30pSWd15tp4oyXLbtNGLNOo
+         rgrQ==
+X-Gm-Message-State: AOAM533QeoK9zMJbUnxDvFG+VJs6z1UVq+qphITAGHAJTNQWmW8ooz7L
+        8b9OF5zXbm4a8I8m4ZyrVBJF3oemIds=
+X-Google-Smtp-Source: ABdhPJxfDsYhWcU6wyq2UYPWeghKDW9iFdaOVs9H5ldmF3JQVsRJrRG5K/POUU/CE17m4e0f2RgjwQ==
+X-Received: by 2002:a17:902:d698:: with SMTP id v24mr6450813ply.163.1594784983597;
+        Tue, 14 Jul 2020 20:49:43 -0700 (PDT)
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com. [209.85.215.179])
+        by smtp.gmail.com with ESMTPSA id h15sm528605pfo.192.2020.07.14.20.49.43
         for <devicetree@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jul 2020 20:46:17 -0700 (PDT)
-Received: by mail-il1-f182.google.com with SMTP id k6so776891ili.6
-        for <devicetree@vger.kernel.org>; Tue, 14 Jul 2020 20:46:16 -0700 (PDT)
-X-Received: by 2002:a92:a196:: with SMTP id b22mr7685147ill.303.1594784776244;
- Tue, 14 Jul 2020 20:46:16 -0700 (PDT)
+        Tue, 14 Jul 2020 20:49:43 -0700 (PDT)
+Received: by mail-pg1-f179.google.com with SMTP id w2so1927831pgg.10
+        for <devicetree@vger.kernel.org>; Tue, 14 Jul 2020 20:49:43 -0700 (PDT)
+X-Received: by 2002:a92:de42:: with SMTP id e2mr7643677ilr.189.1594784623009;
+ Tue, 14 Jul 2020 20:43:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200713091211.2183368-1-tientzu@chromium.org>
- <20200713091211.2183368-2-tientzu@chromium.org> <4a2451f9-57d8-2e83-e1d6-f144f37173c0@arm.com>
- <20200714110141.GD16178@lst.de>
-In-Reply-To: <20200714110141.GD16178@lst.de>
+References: <20200713091211.2183368-1-tientzu@chromium.org> <8a7ce34e-87c0-d224-3974-34f1877fbb0e@arm.com>
+In-Reply-To: <8a7ce34e-87c0-d224-3974-34f1877fbb0e@arm.com>
 From:   Claire Chang <tientzu@chromium.org>
-Date:   Wed, 15 Jul 2020 11:46:05 +0800
-X-Gmail-Original-Message-ID: <CALiNf2-9b5LMjv+KCqFJ9oz2FocT6oQ1zVY_MBaFgNG1DQxZ=Q@mail.gmail.com>
-Message-ID: <CALiNf2-9b5LMjv+KCqFJ9oz2FocT6oQ1zVY_MBaFgNG1DQxZ=Q@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dma-mapping: Add bounced DMA ops
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, frowand.list@gmail.com,
-        m.szyprowski@samsung.com, treding@nvidia.com,
+Date:   Wed, 15 Jul 2020 11:43:31 +0800
+X-Gmail-Original-Message-ID: <CALiNf2_GdC1RSLyYSu+LWXHGQZiAL69zNuW0sowuCDdRWw4HJg@mail.gmail.com>
+Message-ID: <CALiNf2_GdC1RSLyYSu+LWXHGQZiAL69zNuW0sowuCDdRWw4HJg@mail.gmail.com>
+Subject: Re: [PATCH 0/4] Bounced DMA support
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, frowand.list@gmail.com,
+        hch@lst.de, m.szyprowski@samsung.com, treding@nvidia.com,
         Greg KH <gregkh@linuxfoundation.org>, saravanak@google.com,
         suzuki.poulose@arm.com, dan.j.williams@intel.com,
         heikki.krogerus@linux.intel.com, bgolaszewski@baylibre.com,
@@ -86,26 +83,95 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 7:01 PM Christoph Hellwig <hch@lst.de> wrote:
+On Mon, Jul 13, 2020 at 7:40 PM Robin Murphy <robin.murphy@arm.com> wrote:
 >
-> On Mon, Jul 13, 2020 at 12:55:43PM +0100, Robin Murphy wrote:
-> > On 2020-07-13 10:12, Claire Chang wrote:
-> >> The bounced DMA ops provide an implementation of DMA ops that bounce
-> >> streaming DMA in and out of a specially allocated region. Only the
-> >> operations relevant to streaming DMA are supported.
+> On 2020-07-13 10:12, Claire Chang wrote:
+> > This series implements mitigations for lack of DMA access control on
+> > systems without an IOMMU, which could result in the DMA accessing the
+> > system memory at unexpected times and/or unexpected addresses, possibly
+> > leading to data leakage or corruption.
 > >
-> > I think there are too many implicit assumptions here - apparently that
-> > coherent allocations will always be intercepted by
-> > dma_*_from_dev_coherent(), and that calling into dma-direct won't actually
-> > bounce things a second time beyond where you thought they were going,
-> > manage coherency for a different address, and make it all go subtly wrong.
-> > Consider "swiotlb=force", for instance...
+> > For example, we plan to use the PCI-e bus for Wi-Fi and that PCI-e bus
+> > is not behind an IOMMU. As PCI-e, by design, gives the device full
+> > access to system memory, a vulnerability in the Wi-Fi firmware could
+> > easily escalate to a full system exploit (remote wifi exploits: [1a],
+> > [1b] that shows a full chain of exploits; [2], [3]).
 > >
-> > Again, plumbing this straight into dma-direct so that SWIOTLB can simply
-> > target a different buffer and always bounce regardless of masks would seem
-> > a far better option.
+> > To mitigate the security concerns, we introduce bounced DMA. The bounced
+> > DMA ops provide an implementation of DMA ops that bounce streaming DMA
+> > in and out of a specially allocated region. The feature on its own
+> > provides a basic level of protection against the DMA overwriting buffer
+> > contents at unexpected times. However, to protect against general data
+> > leakage and system memory corruption, the system needs to provide a way
+> > to restrict the DMA to a predefined memory region (this is usually done
+> > at firmware level, e.g. in ATF on some ARM platforms).
 >
-> I haven't really had time to read through the details, but I agree that
-> any bouncing scheme should reuse the swiotlb code and not invent a
-> parallel infrastructure.
-Thanks for the feedback. I'll try to reuse SWIOTLB.
+> More to the point, this seems to need some fairly special interconnect
+> hardware too. On typical systems that just stick a TZASC directly in
+> front of the memory controller it would be hard to block DMA access
+> without also blocking CPU access. With something like Arm TZC-400 I
+> guess you could set up a "secure" region for most of DRAM that allows NS
+> accesses by NSAID from the CPUs, then similar regions for the pools with
+> NSAID access for both the respective device and the CPUs, but by that
+> point you've probably used up most of the available regions before even
+> considering what the firmware and TEE might want for actual Secure memory.
+>
+> In short, I don't foresee this being used by very many systems.
+We're going to use this on MTK SoC with MPU (memory protection unit) to
+restrict the DMA access for PCI-e Wi-Fi.
+>
+> That said,, although the motivation is different, it appears to end up
+> being almost exactly the same end result as the POWER secure
+> virtualisation thingy (essentially: constrain DMA to a specific portion
+> of RAM). The more code can be shared with that, the better.
+Could you share a bit more about the POWER secure virtualisation thingy?
+>
+> > Currently, 32-bit architectures are not supported because of the need to
+> > handle HIGHMEM, which increases code complexity and adds more
+> > performance penalty for such platforms. Also, bounced DMA can not be
+> > enabled on devices behind an IOMMU, as those require an IOMMU-aware
+> > implementation of DMA ops and do not require this kind of mitigation
+> > anyway.
+>
+> Note that we do actually have the notion of bounced DMA with IOMMUs
+> already (to avoid leakage of unrelated data in the same page). I think
+> it's only implemented for intel-iommu so far, but shouldn't take much
+> work to generalise to iommu-dma if anyone wanted to. That's already done
+> a bunch of work to generalise the SWIOTLB routines to be more reusable,
+> so building on top of that would be highly preferable.
+Yes, I'm aware of that and I'll try to put this on top of SWIOTLB.
+>
+> Thirdly, the concept of device-private bounce buffers does in fact
+> already exist to some degree too - there are various USB, crypto and
+> other devices that can only DMA to a local SRAM buffer (not to mention
+> subsystems doing their own bouncing for the sake of alignment/block
+> merging/etc.). Again, a slightly more generalised solution that makes
+> this a first-class notion for dma-direct itself and could help supplant
+> some of those hacks would be really really good.
+>
+> Robin.
+>
+> > [1a] https://googleprojectzero.blogspot.com/2017/04/over-air-exploiting-broadcoms-wi-fi_4.html
+> > [1b] https://googleprojectzero.blogspot.com/2017/04/over-air-exploiting-broadcoms-wi-fi_11.html
+> > [2] https://blade.tencent.com/en/advisories/qualpwn/
+> > [3] https://www.bleepingcomputer.com/news/security/vulnerabilities-found-in-highly-popular-firmware-for-wifi-chips/
+> >
+> >
+> > Claire Chang (4):
+> >    dma-mapping: Add bounced DMA ops
+> >    dma-mapping: Add bounced DMA pool
+> >    dt-bindings: of: Add plumbing for bounced DMA pool
+> >    of: Add plumbing for bounced DMA pool
+> >
+> >   .../reserved-memory/reserved-memory.txt       |  36 +++
+> >   drivers/of/address.c                          |  37 +++
+> >   drivers/of/device.c                           |   3 +
+> >   drivers/of/of_private.h                       |   6 +
+> >   include/linux/device.h                        |   3 +
+> >   include/linux/dma-mapping.h                   |   1 +
+> >   kernel/dma/Kconfig                            |  17 +
+> >   kernel/dma/Makefile                           |   1 +
+> >   kernel/dma/bounced.c                          | 304 ++++++++++++++++++
+> >   9 files changed, 408 insertions(+)
+> >   create mode 100644 kernel/dma/bounced.c
+> >
