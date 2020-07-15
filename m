@@ -2,236 +2,118 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D19EBC433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 06:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59AFDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 06:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B15882068F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 06:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 303B42068F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 06:56:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="D/o5Wr1T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbgGOGzp (ORCPT
+        id S1728937AbgGOG4N (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 02:55:45 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:34616 "EHLO inva020.nxp.com"
+        Wed, 15 Jul 2020 02:56:13 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:62941 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729013AbgGOGzp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jul 2020 02:55:45 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8983E1A03AA;
-        Wed, 15 Jul 2020 08:55:42 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D7FD31A03D4;
-        Wed, 15 Jul 2020 08:55:38 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E7E02402BF;
-        Wed, 15 Jul 2020 14:55:33 +0800 (SGT)
-From:   andy.tang@nxp.com
-To:     shawnguo@kernel.org
-Cc:     amit.kucheria@linaro.org, leoyang.li@nxp.com, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>
-Subject: [PATCH 2/2 v2] arm64: dts: ls208xa: add more thermal zone support
-Date:   Wed, 15 Jul 2020 14:49:09 +0800
-Message-Id: <20200715064909.9161-2-andy.tang@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200715064909.9161-1-andy.tang@nxp.com>
-References: <20200715064909.9161-1-andy.tang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1728777AbgGOG4N (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jul 2020 02:56:13 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594796172; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=9N1oWEhcrUbKJ3x4cXl1jbwYwOPXzexus4BA/jvOXTw=; b=D/o5Wr1TxrE0lIH6JT6gj43uWWAg9TNUuT7bTg2Kko9lpzOhKXVNrWWSA5hlMyhkNiiMuOzV
+ ZXt29CBiHXoa/2YoP+uZwMG44Ev7xJ1/7Wjav/gim32sxzgblRWCPEoQVrVWKQ/ju134S1aw
+ 4YdH812DhhvAsZJlkbw/nc6Joss=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n18.prod.us-west-2.postgun.com with SMTP id
+ 5f0ea881512812c0708b13ff (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 15 Jul 2020 06:56:01
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B09A1C433A1; Wed, 15 Jul 2020 06:56:00 +0000 (UTC)
+Received: from tdas-linux.qualcomm.com (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 31F5BC433CB;
+        Wed, 15 Jul 2020 06:55:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 31F5BC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+From:   Taniya Das <tdas@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org, cychiang@google.com,
+        Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH] arm64: dts: qcom: sc7180: Add LPASS clock controller nodes
+Date:   Wed, 15 Jul 2020 12:25:49 +0530
+Message-Id: <1594796149-14778-1-git-send-email-tdas@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Yuantian Tang <andy.tang@nxp.com>
+Update the clock controller nodes for Low power audio subsystem
+functionality.
 
-There are 7 thermal zones in ls208xa soc. Add the other thermal zone
-nodes to enable them.
-
-Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
 ---
-v2:
-	- remove useless alert trip
-	- add cooling-map to core cluster zones.
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
- .../arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 141 ++++++++++++++++--
- 1 file changed, 132 insertions(+), 9 deletions(-)
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 2be81a2..8c30a17 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -8,6 +8,7 @@
+ #include <dt-bindings/clock/qcom,dispcc-sc7180.h>
+ #include <dt-bindings/clock/qcom,gcc-sc7180.h>
+ #include <dt-bindings/clock/qcom,gpucc-sc7180.h>
++#include <dt-bindings/clock/qcom,lpasscorecc-sc7180.h>
+ #include <dt-bindings/clock/qcom,rpmh.h>
+ #include <dt-bindings/clock/qcom,videocc-sc7180.h>
+ #include <dt-bindings/interconnect/qcom,osm-l3.h>
+@@ -2136,6 +2137,27 @@
+ 			};
+ 		};
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-index 41102dacc2e1..cc36c969dd9d 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -79,20 +79,62 @@
- 	};
- 
- 	thermal-zones {
--		cpu_thermal: cpu-thermal {
-+		ddr-controller1 {
- 			polling-delay-passive = <1000>;
- 			polling-delay = <5000>;
-+			thermal-sensors = <&tmu 1>;
- 
-+			trips {
-+				ddr-ctrler1-crit {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
++		lpasscc: clock-controller@62d00000 {
++			compatible = "qcom,sc7180-lpasscorecc";
++			reg = <0 0x62d00000 0 0x50000>,
++			    <0 0x62780000 0 0x30000>;
++			reg-names = "lpass_core_cc", "lpass_audio_cc";
++			clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>;
++			clock-names = "iface";
++			power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
++			#clock-cells = <1>;
++			#power-domain-cells = <1>;
 +		};
 +
-+		ddr-controller2 {
-+			polling-delay-passive = <1000>;
-+			polling-delay = <5000>;
-+			thermal-sensors = <&tmu 2>;
-+
-+			trips {
-+				ddr-ctrler2-crit {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
++		lpass_hm: clock-controller@63000000 {
++			compatible = "qcom,sc7180-lpasshm";
++			reg = <0 0x63000000 0 0x28>;
++			clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>;
++			clock-names = "iface";
++			#clock-cells = <1>;
++			#power-domain-cells = <1>;
 +		};
 +
-+		ddr-controller3 {
-+			polling-delay-passive = <1000>;
-+			polling-delay = <5000>;
-+			thermal-sensors = <&tmu 3>;
-+
-+			trips {
-+				ddr-ctrler3-crit {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		core-cluster1 {
-+			polling-delay-passive = <1000>;
-+			polling-delay = <5000>;
- 			thermal-sensors = <&tmu 4>;
- 
- 			trips {
--				cpu_alert: cpu-alert {
--					temperature = <75000>;
-+				core_cluster1_alert: core-cluster1-alert {
-+					temperature = <85000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
--				cpu_crit: cpu-crit {
--					temperature = <85000>;
-+
-+				core-cluster1-crit {
-+					temperature = <95000>;
- 					hysteresis = <2000>;
- 					type = "critical";
- 				};
-@@ -100,14 +142,95 @@
- 
- 			cooling-maps {
- 				map0 {
--					trip = <&cpu_alert>;
-+					trip = <&core_cluster1_alert>;
- 					cooling-device =
- 						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+
-+		core-cluster2 {
-+			polling-delay-passive = <1000>;
-+			polling-delay = <5000>;
-+			thermal-sensors = <&tmu 5>;
-+
-+			trips {
-+				core_cluster2_alert: core-cluster2-alert {
-+					temperature = <85000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				core-cluster2-crit {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&core_cluster2_alert>;
-+					cooling-device =
- 						<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--						<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+
-+		core-cluster3 {
-+			polling-delay-passive = <1000>;
-+			polling-delay = <5000>;
-+			thermal-sensors = <&tmu 6>;
-+
-+			trips {
-+				core_cluster3_alert: core-cluster3-alert {
-+					temperature = <85000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				core-cluster3-crit {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&core_cluster3_alert>;
-+					cooling-device =
- 						<&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--						<&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+
-+		core-cluster4 {
-+			polling-delay-passive = <1000>;
-+			polling-delay = <5000>;
-+			thermal-sensors = <&tmu 7>;
-+
-+			trips {
-+				core_cluster4_alert: core-cluster4-alert {
-+					temperature = <85000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				core-cluster4-crit {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&core_cluster4_alert>;
-+					cooling-device =
- 						<&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
- 						<&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
- 				};
--- 
-2.17.1
+ 		etm@7040000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0 0x07040000 0 0x1000>;
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
 
