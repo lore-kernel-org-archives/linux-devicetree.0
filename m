@@ -2,83 +2,224 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0326CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B90F3C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C44DA20657
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9487620657
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:24:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594844494;
-	bh=+US3XRu/B+q+83LqhN0NYLLsqsTNCCjyh5E5ySEFvk0=;
+	s=default; t=1594844657;
+	bh=xKIjM/u2ZV5/ZVHHdr3yArLrJ0mFFAdEAGTdmT/JkeI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0x9o/wwn8SA82jJi+pYtvGCIWEI6zJF/z18Kb6vmIPqartwIYGfnUQXeu2bisTFd5
-	 2+7qwLdA1jKZPi+oMRZDbvH3smRfSUTU0s2h8plRfB2AI0IY3X1QO2ejWxPoSsc9Ye
-	 lUZgHASgupzogwshke5F2/2ncatrxAOLdrRuoPWE=
+	b=FBHKkbe423FKBpAAY9Flwq2K/mP+iUlS5kE0gpAJREYw1qRqf788sZ5fA7h0IdUdF
+	 BhSFWuBMKEapxjp8LiTAc2cshWEfDt4FPL6BN63HqbdzZjZcffVgEflnaNEjZQGkdy
+	 9Rn+nB1CvY8X0acXSq49i6nycfCgmUMWisPiH7pA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgGOUVe (ORCPT
+        id S1726960AbgGOUYR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 16:21:34 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40984 "EHLO
+        Wed, 15 Jul 2020 16:24:17 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44158 "EHLO
         mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbgGOUVd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 16:21:33 -0400
-Received: by mail-io1-f68.google.com with SMTP id p205so3636959iod.8;
-        Wed, 15 Jul 2020 13:21:33 -0700 (PDT)
+        with ESMTP id S1726780AbgGOUYQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 16:24:16 -0400
+Received: by mail-io1-f68.google.com with SMTP id i4so3631169iov.11;
+        Wed, 15 Jul 2020 13:24:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ZRHVWlPqJelJFiVKMoOkTYHBbelJXS+3pBc0dV0b9NY=;
-        b=Us7uKTD6M5DrP7gemiFjeU+XIkihb6vAloLajScmmxzyUH42Wz3sAuc8aLJvnxWjCK
-         5ItPsbmgC160w3UD88EXwDiWT/62Bql9KQUP7IY8QlYg9Evcp2ghTb5xyyGxX9uDmUBv
-         NcRx21+03cQ2T1OCVkTXKjQftIgIqgvHAWKj2v383e8hUimU2TyS7aNmkr7Ygcf0PCtl
-         xlApc8sawJHBOX7urLqz0hxBMpaHxv6NG3cbdpPKwh8q1w3Y5t+jZU/28+AlR+t4vrt1
-         vQf2YkEeP/Um4U6p6H+mP1Vl4AWqdT5NcvbckliXalouLEMDRLy3zguCEcfEDuSHA6u6
-         Pa9Q==
-X-Gm-Message-State: AOAM531dFO9bUaXxqyGK2qj+3Y+hjfGQcjdBKkfrQPa4fUYz6LIfyL7/
-        ND+qo1cx7AJpHz1s+XJU324TsMnNmg==
-X-Google-Smtp-Source: ABdhPJzoeoI9JWc8U3GcDRzj/D0vkgWn0Ht/jiPxplyMTK+Lmn1q8ZyO5nTQPEbx+N2/Rb9OdT1WwQ==
-X-Received: by 2002:a05:6602:1581:: with SMTP id e1mr1134885iow.44.1594844493064;
-        Wed, 15 Jul 2020 13:21:33 -0700 (PDT)
+        bh=YRcdiJ2FPTXeGzSkfMOBjoMowJyaYinCBAoTEPC8AHs=;
+        b=OlYPTYGkwBOYxPM2PMZ9FfEP4L+KUD7DaGtaopJ/MqoF92sKz+HH1sM0S3MFeSqqW2
+         c+SVw7s0qFWbamb6D7XS41t6g7GevwPo6jLvZGAFpvHyWhzvXkk7X2/5reljCZ3OOUuW
+         AqHF88JdVWISS6OcxRes3UuRQvcpKQaq9x+eeDNx1GQM8cAd/UsLRVgZqR2pzhr3TDVw
+         6HCwZOgbkwvOm4P/9cN2BR7KP21wBxg5i6hf8faRshHz6LxJKXgTXAksDPW1HLUUUhRE
+         woVKa8i7n4IWPTkidLMP3xvsW7dcUEuYgbm6W194RkRHef4ttTmRPJBQewd5qQV/Bzw/
+         6OdA==
+X-Gm-Message-State: AOAM532JLSw4wFDiubg/wPnETpsGbMTHtq0Yg6r7m4FcHtUsyI95Jmai
+        D3QnkOMeZf/ibbCNC7qDDQ==
+X-Google-Smtp-Source: ABdhPJzKWnU/+FFE65Xzq4yXLoe1Fc03MGcI5KHKCUyztM16Oy06SY3YlA5bmZB3zcUbL63ysDl3Mw==
+X-Received: by 2002:a02:b897:: with SMTP id p23mr1327031jam.32.1594844655421;
+        Wed, 15 Jul 2020 13:24:15 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id w10sm1578678ilo.10.2020.07.15.13.21.32
+        by smtp.gmail.com with ESMTPSA id h1sm1688516iob.8.2020.07.15.13.24.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 13:21:32 -0700 (PDT)
-Received: (nullmailer pid 754804 invoked by uid 1000);
-        Wed, 15 Jul 2020 20:21:31 -0000
-Date:   Wed, 15 Jul 2020 14:21:31 -0600
+        Wed, 15 Jul 2020 13:24:14 -0700 (PDT)
+Received: (nullmailer pid 758498 invoked by uid 1000);
+        Wed, 15 Jul 2020 20:24:13 -0000
+Date:   Wed, 15 Jul 2020 14:24:13 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Rakesh Pillai <pillair@codeaurora.org>
-Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        devicetree@vger.kernel.org, ath10k@lists.infradead.org
-Subject: Re: [PATCH 1/2] dt: bindings: Add new regulator as optional property
- for WCN3990
-Message-ID: <20200715202131.GA754725@bogus>
-References: <1593194502-13164-1-git-send-email-pillair@codeaurora.org>
- <1593194502-13164-2-git-send-email-pillair@codeaurora.org>
+To:     Bartosz Dudziak <bartosz.dudziak@snejp.pl>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add msm8226 pinctrl
+ bindings
+Message-ID: <20200715202413.GA755488@bogus>
+References: <20200627192833.217531-1-bartosz.dudziak@snejp.pl>
+ <20200627192833.217531-2-bartosz.dudziak@snejp.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1593194502-13164-2-git-send-email-pillair@codeaurora.org>
+In-Reply-To: <20200627192833.217531-2-bartosz.dudziak@snejp.pl>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 26 Jun 2020 23:31:41 +0530, Rakesh Pillai wrote:
-> Add an additional regulator supply as an optional
-> property for WCN3990.
+On Sat, Jun 27, 2020 at 09:28:30PM +0200, Bartosz Dudziak wrote:
+> Add device tree binding Documentation details for Qualcomm msm8226
+> pinctrl driver.
 > 
-> Tested-on: WCN3990 hw1.0 SNOC WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
+> - Bindings documentation was based on qcom,sm8250-pinctrl.yaml by
+>   Bjorn Andersson <bjorn.andersson@linaro.org> and then modified for
+>   msm8226 content
 > 
-> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> Signed-off-by: Bartosz Dudziak <bartosz.dudziak@snejp.pl>
 > ---
->  Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  .../pinctrl/qcom,msm8226-pinctrl.yaml         | 123 ++++++++++++++++++
+>  1 file changed, 123 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8226-pinctrl.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8226-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,msm8226-pinctrl.yaml
+> new file mode 100644
+> index 0000000000..8d8dc15718
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8226-pinctrl.yaml
+> @@ -0,0 +1,123 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/qcom,msm8226-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Technologies, Inc. MSM8226 TLMM block
+> +
+> +maintainers:
+> +  - Bjorn Andersson <bjorn.andersson@linaro.org>
+> +
+> +description: |
+> +  This binding describes the Top Level Mode Multiplexer block found in the
+> +  MSM8226 platform.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,msm8226-pinctrl
+> +
+> +  reg:
+> +    description: Specifies the base address and size of the TLMM register space
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description: Specifies the TLMM summary IRQ
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    description: Specifies the PIN numbers and Flags, as defined in
+> +      include/dt-bindings/interrupt-controller/irq.h
+> +    const: 2
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    description: Specifying the pin number and flags, as defined in
+> +      include/dt-bindings/gpio/gpio.h
+> +    const: 2
+> +
+> +  gpio-ranges:
+> +    maxItems: 1
+> +
+> +  gpio-reserved-ranges:
+> +    maxItems: 1
+> +
+> +#PIN CONFIGURATION NODES
+> +patternProperties:
+> +  '^.*$':
+> +    if:
+> +      type: object
 
-Acked-by: Rob Herring <robh@kernel.org>
+For new bindings, do '-pins$' for the node name pattern so we don't have 
+to do this hack.
+
+> +    then:
+> +      properties:
+> +        pins:
+> +          description:
+> +            List of gpio pins affected by the properties specified in this
+> +            subnode.
+> +          items:
+> +            oneOf:
+> +              - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-1][0-6])$"
+> +              - enum: [ sdc1_clk, sdc1_cmd, sdc1_data, sdc2_clk, sdc2_cmd, sdc2_data ]
+> +          minItems: 1
+> +          maxItems: 36
+> +
+> +        function:
+> +          description:
+> +            Specify the alternative function to be configured for the specified
+> +            pins. Functions are only valid for gpio pins.
+> +
+> +          enum: [ gpio, cci_i2c0, blsp_uim1, blsp_uim2, blsp_uim3, blsp_uim5,
+> +            blsp_i2c1, blsp_i2c2, blsp_i2c3, blsp_i2c5, blsp_spi1,
+> +            blsp_spi2, blsp_spi3, blsp_spi5, blsp_uart1, blsp_uart2,
+> +            blsp_uart3, blsp_uart5, cam_mclk0, cam_mclk1, wlan ]
+> +
+> +        drive-strength:
+> +          enum: [2, 4, 6, 8, 10, 12, 14, 16]
+> +          default: 2
+> +          description:
+> +            Selects the drive strength for the specified pins, in mA.
+> +
+> +        bias-pull-down: true
+> +
+> +        bias-pull-up: true
+> +
+> +        bias-disable: true
+> +
+> +        output-high: true
+> +
+> +        output-low: true
+> +
+> +      required:
+> +        - pins
+> +        - function
+> +
+> +      additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - '#interrupt-cells'
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +  - gpio-ranges
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +        msmgpio: pinctrl@fd510000 {
+> +                compatible = "qcom,msm8226-pinctrl";
+> +                reg = <0xfd510000 0x4000>;
+> +
+> +                gpio-controller;
+> +                #gpio-cells = <2>;
+> +                gpio-ranges = <&msmgpio 0 0 117>;
+> +                interrupt-controller;
+> +                #interrupt-cells = <2>;
+> +                interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> +        };
+> -- 
+> 2.25.1
+> 
