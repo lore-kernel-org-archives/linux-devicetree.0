@@ -2,87 +2,194 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F88C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 17:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCF7C433E5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 17:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7FA720656
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 17:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 944102072E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 17:45:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="rIiOXO3d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725861AbgGORgR (ORCPT
+        id S1725900AbgGORpT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 13:36:17 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:48236 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgGORgR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 13:36:17 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id E53971C0BD5; Wed, 15 Jul 2020 19:36:11 +0200 (CEST)
-Date:   Wed, 15 Jul 2020 19:36:10 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
-Cc:     Dan Murphy <dmurphy@ti.com>, jacek.anaszewski@gmail.com,
-        robh@kernel.org, devicetree@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v30 04/16] leds: Add multicolor ID to the color ID list
-Message-ID: <20200715173610.GA31327@amd>
-References: <20200713154544.1683-1-dmurphy@ti.com>
- <20200713154544.1683-5-dmurphy@ti.com>
- <20200715152056.3505e181@dellmb.labs.office.nic.cz>
+        Wed, 15 Jul 2020 13:45:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53606 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbgGORpT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 13:45:19 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1654C061755;
+        Wed, 15 Jul 2020 10:45:18 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id B655322F2E;
+        Wed, 15 Jul 2020 19:45:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1594835113;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=w10bVyDGaymBveohf6RkgYg2O3Z0J4iVUQTNm+FAzcM=;
+        b=rIiOXO3d/rypuaXYbyc+9ycnYASYCZ3BKhO9SKddSNSPM4a4SB8esBoarJdLHsa8b3b8M+
+        6pQLp+UILaou3XaOK+47kbW7DAYJ1NkHh6gknnqRgULMLsCgOqHKxW0YArpfK2l7VKDDlh
+        zUIZ4VxRe48lkZPk5ag4uwXVsALPBcY=
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="jRHKVT23PllUwdXP"
-Content-Disposition: inline
-In-Reply-To: <20200715152056.3505e181@dellmb.labs.office.nic.cz>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Wed, 15 Jul 2020 19:45:10 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v5 07/13] pwm: add support for sl28cpld PWM controller
+In-Reply-To: <20200715163620.xhi24mct5b64qpyp@pengutronix.de>
+References: <20200706175353.16404-1-michael@walle.cc>
+ <20200706175353.16404-8-michael@walle.cc>
+ <20200709085006.b54ype3p4yu64upl@pengutronix.de>
+ <72858253a9094074e9c8cd7a4e1db09f@walle.cc>
+ <20200713084750.qj4hquzd6uz6y526@pengutronix.de>
+ <c0594c34c712ce26b3936d42c92d2361@walle.cc>
+ <20200714160856.rjqi7lv63geil3hm@pengutronix.de>
+ <eedceb44cba9b54e0634f0e8e4f96f70@walle.cc>
+ <20200715163620.xhi24mct5b64qpyp@pengutronix.de>
+User-Agent: Roundcube Webmail/1.4.7
+Message-ID: <7d8e9f524f0fd81be282be0be50d16ad@walle.cc>
+X-Sender: michael@walle.cc
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Uwe,
 
---jRHKVT23PllUwdXP
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Am 2020-07-15 18:36, schrieb Uwe Kleine-König:
+> On Tue, Jul 14, 2020 at 11:09:28PM +0200, Michael Walle wrote:
+>> > My wishlist (just as it comes to my mind, so no guarantee of
+>> > completeness):
+>> >
+>> >  - can do 0% duty cycle for all supported period lengths
+>> >  - can do 100% duty cycle for all supported period lengths
+>> >  - supports both polarities
+>> >  - supports immediate change of configuration and after completion of
+>> >    the currently running period
+>> >  - atomic update (i.e. if you go from configuration A to configuration B
+>> >    the hardware guarantees to only emit periods of type A and then type
+>> >    B. (Depending on the item above, the last A period might be cut off.)
+>> 
+>> We actually discussed this, because the implementation would be 
+>> easier. But
+>> if the change takes place immediately you might end up with a longer 
+>> duty
+>> cycle. Assume the PWM runs at 80% duty cycle and starts with the 
+>> on-period.
+>> If you now change that to 50% you might end up with one successive 
+>> duty
+>> cycle of "130%". Eg. the 80% of the old and right after that you 
+>> switch to
+>> the new 50% and then you'd have a high output which corresponds to a 
+>> 130%
+>> cycle. I don't know if that is acceptable for all applications.
+> 
+> I thought this is a "change takes place immediately" implementation?! 
+> So
+> these problems are actually real here. (And this not happening is 
+> exactly
+> my wish here. Is there a mis-understanding?)
 
-On Wed 2020-07-15 15:20:56, Marek Beh=FAn wrote:
-> On Mon, 13 Jul 2020 10:45:32 -0500
-> Dan Murphy <dmurphy@ti.com> wrote:
->=20
-> > Add a new color ID that is declared as MULTICOLOR as with the
-> > multicolor framework declaring a definitive color is not accurate
-> > as the node can contain multiple colors.
-> >=20
-> > Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> > ---
-> >  drivers/leds/led-core.c | 1 +
-> >  1 file changed, 1 insertion(+)
->=20
-> Reviewed-by: Marek Beh=FAn <marek.behun@nic.cz>
+I wasn't talking about the sl28cpld btw. What is the difference between
+your proposed "change take place immediately" and "after the cycle".
+I understand how the after the cycle should work. But how would the
+immediate change work in your ideal PWM?
 
-Thanks for patches, thanks for reviews, 1-4 applied.
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+>> > > > If you change only cycle but not mode, does the hardware complete the
+>> > > > currently running period?
+>> > >
+>> > > No it does not.
+>> >
+>> > Please document this as a Limitation.
+>> 
+>> I've discussed this internally, for now its a limitation. In the worst
+>> case you'd do one 100% duty cycle. Maybe we can fix the hardware. I
+>> acknowledge that this is a severe limitation, esp. if you use the PWM
+>> for controlling stuff (for now its only LCD backlight.. so thats ok).
+> 
+> That happens if you reduce the duty cycle from A to B and the counter 
+> is
+> already bigger than B but smaller than A, right?
+That is correct.
 
---jRHKVT23PllUwdXP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> The fix would be to
+> compare for counter >= match instead of counter = match. (Which then
+> would result in a period with a duty cycle bigger than B but smaller
+> than A. Also not ideal, but probably better.)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+This would actually work. I could imagine that comparing "less than" 
+will
+take up more space again. But it would be worth a try; see also below.
 
-iEYEARECAAYFAl8PPooACgkQMOfwapXb+vKzPQCgkeYcvh2P2Yt02B1/uG5cNRWX
-NzoAn2OYFBLFmx2AzOBIY7UIVxkp9EdQ
-=+HiT
------END PGP SIGNATURE-----
+>> > > > What about disable()?
+>> > >
+>> > > Mhh well, it would do one 100% cycle.. mhh ;) Lets see if there we can
+>> > > fix that (in hardware), not much we can do in the driver here. We are
+>> > > _very_ constraint in size, therefore all that little edge cases fall
+>> > > off
+>> > > the table.
+>> >
+>> > You're saying that on disable the hardware emits a constant high level
+>> > for one cycle? I hope not ...
+>> 
+>> Mh, I was mistaken, disabling the PWM will turn it off immediately, 
+>> but
+> 
+> And does turn off mean, the output gets inactive?
+> If so you might also disable the hardware if a 0% duty cycle is
+> configured assuming this saves some energy without modifying the
+> resulting wave form.
 
---jRHKVT23PllUwdXP--
+Disabling it has some side effects like switching to another function
+for this multi function pin. So I'd rather keep it on ;)
+
+>> one 100% duty cycle may happen if you change from a higher to a lower
+>> duty cycle setting. See above.
+>> 
+>> > I never programmed a CPLD to emulate a hardware PWM, but I wonder if
+>> > these are really edge cases that increase the size of the binary?!
+>> 
+>> At the moment there is only one 8bit register which stores the value
+>> which is used for matching. If you want to change that setting after
+>> a whole cycle, you'd use another 8bit register to cache the new value.
+>> So this would at least needs 8 additional flip-flops. This doesn't
+>> sound much, but we are already near 100% usage of the CPLD. So its
+>> hard to convince people why this is really necessary.
+> 
+> OK. (Maybe there is enough space to allow implementing 100% for mode 
+> 0?)
+
+Little bit here a little bit there ;) TBH there are some more critical
+bugs which would need to be fixed first. So this would need to be a
+limitation for now.
+
+-michael
