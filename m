@@ -2,144 +2,184 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03221C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 14:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B7BC433E6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 14:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D26542064B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 14:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09C492075B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 14:35:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lCcrKo0G"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="PkQmWQM2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728153AbgGOOWN (ORCPT
+        id S1728912AbgGOOfo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 10:22:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50228 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728121AbgGOOWN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 10:22:13 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1DDEC061755;
-        Wed, 15 Jul 2020 07:22:12 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id e22so1741283edq.8;
-        Wed, 15 Jul 2020 07:22:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=J4YLq7ad8Ku7+EWFa0/mgk39lvRv5vsUDuPSLGAmMis=;
-        b=lCcrKo0G+0r8E1QGKPPSeKTD6jPE8Sc6irv4/pOM95bnJP53927eRuCyYXGeGkV9fd
-         4mAETYDfMMhmValjwwKkzgyw6wNRUSM7HPaYym0azD4zlCU3nckTdg4+j1Wc53w3nOHA
-         O1x4YZWvOSoxt6Ki5XkR4PxFJ2sl5ih71h1LHgcgiViNmWv4Groshm3PXgvKN4TJT7MH
-         8TG+hVZ4AaNClt0XH3+2cPGeaAwLX9Nb/XP5ixDGbggf5vtZTfFJFyppqTL9x3mDCHfO
-         b4nFyNmrOU8X1KLO5q+5txBX/3CO8n6xnjqpC15H43ua/BRMEViLX4C0QztCHodDD7LN
-         K3Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J4YLq7ad8Ku7+EWFa0/mgk39lvRv5vsUDuPSLGAmMis=;
-        b=QnnOxpkqv+u1t8KK3xMYa9Yrr8zxinQg/TiQhXW6HKaqXwTb8YDuxcwcpMg/uSMX8C
-         mGJXWH7TrPxXfPxxzI2Y/L9CXae1Z+GCBQseMxcC/sWEe03Qi5pKjiPRxasWZpKlpOfA
-         68lV9obOIVHdNEa/A8f/qVSgeBi+0l6agET/daP1o4n7GdHJvGlm1KgmO52NAulYf7E3
-         P1nLpLCujJSq8f3c3bUZXr0Xw/XfaKjfU+WUcxmv4hDxB40X3C+p22FHKSiSn7hI2RKm
-         ExQRNotLtXYo9lLhlhjG59xNTkCA73A+3qYwg2te5zU3k9tDXdaU3/0G63uhAyoZT7R0
-         KW/Q==
-X-Gm-Message-State: AOAM530TkmiGvG4+pfIc07Q4Nd9IQ9Ay98/lTwLnRsug4gZmdJm6JKgD
-        PR0cQs8nBPpItyZb3qEDKqApGXadPN4DDq3Oxuo=
-X-Google-Smtp-Source: ABdhPJw5Rrl8VSXS3LDJXAXOUm42CTHm9/tBMgf95ADIskpTsgsl8yCwuH0vzZ6Rb7gKkig3GTgv+diJgyCwmRsxUnA=
-X-Received: by 2002:aa7:c3d7:: with SMTP id l23mr9596809edr.18.1594822931168;
- Wed, 15 Jul 2020 07:22:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200629114927.17379-1-bruno.thomsen@gmail.com>
- <20200629114927.17379-2-bruno.thomsen@gmail.com> <20200713025246.GY21277@dragon>
- <CAH+2xPAHKY6YfhO-jXfKN+TRN5LDT1Kkn8a8HUj_EOqFt=75nQ@mail.gmail.com> <CAOMZO5DsyqRgD8n-w=6OmnXuMX+1T2DDOjQLNK133=FaqtWXVQ@mail.gmail.com>
-In-Reply-To: <CAOMZO5DsyqRgD8n-w=6OmnXuMX+1T2DDOjQLNK133=FaqtWXVQ@mail.gmail.com>
-From:   Bruno Thomsen <bruno.thomsen@gmail.com>
-Date:   Wed, 15 Jul 2020 16:21:55 +0200
-Message-ID: <CAH+2xPD31bdb_ZjAi6qo5n25K469Ak-qt2GJCcppHk4FZChdeg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] ARM: dts: imx7: add support for kamstrup flex concentrator
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Bruno Thomsen <bth@kamstrup.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 15 Jul 2020 10:35:44 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:45000 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728874AbgGOOfl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jul 2020 10:35:41 -0400
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 150E030C028;
+        Wed, 15 Jul 2020 07:35:29 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 150E030C028
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1594823729;
+        bh=GSqFzmHeOiSek+62bFpDJcfrtOQWQUrThlJG71lclKo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PkQmWQM251q/9kIKk+Qiw7d64q2cinZ8PLGqa3muYrh19KB0YULOi+umj5U4MIB0x
+         ykmhll0iI/h35hcV6V1aewCdxdjXFWz2VBaxFowTKsYFRpdppHxuGBatSTbwVPuRfU
+         TaMlaLr+HGr/LIeetVrzq3neA7lfJ/GfFR1NdLug=
+Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id E1CCC14008B;
+        Wed, 15 Jul 2020 07:35:38 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Christoph Hellwig <hch@lst.de>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
+Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v8 03/12] dt-bindings: PCI: Add bindings for more Brcmstb chips
+Date:   Wed, 15 Jul 2020 10:35:06 -0400
+Message-Id: <20200715143530.9702-4-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200715143530.9702-1-james.quinlan@broadcom.com>
+References: <20200715143530.9702-1-james.quinlan@broadcom.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Den tir. 14. jul. 2020 kl. 13.54 skrev Fabio Estevam <festevam@gmail.com>:
->
-> Hi Bruno,
->
-> On Tue, Jul 14, 2020 at 7:03 AM Bruno Thomsen <bruno.thomsen@gmail.com> wrote:
->
-> > I have not yet been successful in converting the deprecated properties
-> > to generic phy properties, so hoping I could get a hit.
-> >
-> > Kernel error messages:
-> > mdio_bus 30be0000.ethernet-1: MDIO device at address 1 is missing.
->
-> Please double-check whether 1 is the correct address for the KSZ8051
-> Ethernet PHY as per your schematics.
+From: Jim Quinlan <jquinlan@broadcom.com>
 
-Hi Fabio,
+- Add compatible strings for three more Broadcom STB chips: 7278, 7216,
+  7211 (STB version of RPi4).
+- Add new property 'brcm,scb-sizes'.
+- Add new property 'resets'.
+- Add new property 'reset-names' for 7216 only.
+- Allow 'ranges' and 'dma-ranges' to have more than one item and update
+  the example to show this.
 
-Thanks for the hints.
+Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/pci/brcm,stb-pcie.yaml           | 56 ++++++++++++++++---
+ 1 file changed, 49 insertions(+), 7 deletions(-)
 
-Yes, the address is correct and configured with external resistors,
-but just realised that I wrote the wrong device name in the comment,
-it's actually KSZ8081RNB.
+diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+index 8680a0f86c5a..807694b4f41f 100644
+--- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+@@ -9,12 +9,15 @@ title: Brcmstb PCIe Host Controller Device Tree Bindings
+ maintainers:
+   - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+ 
+-allOf:
+-  - $ref: /schemas/pci/pci-bus.yaml#
+-
+ properties:
+   compatible:
+-    const: brcm,bcm2711-pcie # The Raspberry Pi 4
++    items:
++      - enum:
++          - brcm,bcm2711-pcie # The Raspberry Pi 4
++          - brcm,bcm7211-pcie # Broadcom STB version of RPi4
++          - brcm,bcm7278-pcie # Broadcom 7278 Arm
++          - brcm,bcm7216-pcie # Broadcom 7216 Arm
++          - brcm,bcm7445-pcie # Broadcom 7445 Arm
+ 
+   reg:
+     maxItems: 1
+@@ -34,10 +37,12 @@ properties:
+       - const: msi
+ 
+   ranges:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 4
+ 
+   dma-ranges:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 6
+ 
+   clocks:
+     maxItems: 1
+@@ -58,8 +63,31 @@ properties:
+ 
+   aspm-no-l0s: true
+ 
++  resets:
++    description: for "brcm,bcm7216-pcie", must be a valid reset
++      phandle pointing to the RESCAL reset controller provider node.
++    $ref: "/schemas/types.yaml#/definitions/phandle"
++
++  reset-names:
++    items:
++      - const: rescal
++
++  brcm,scb-sizes:
++    description: u64 giving the 64bit PCIe memory
++      viewport size of a memory controller.  There may be up to
++      three controllers, and each size must be a power of two
++      with a size greater or equal to the amount of memory the
++      controller supports.  Note that each memory controller
++      may have two component regions -- base and extended -- so
++      this information cannot be deduced from the dma-ranges.
++    $ref: /schemas/types.yaml#/definitions/uint64-array
++    items:
++      minItems: 1
++      maxItems: 3
++
+ required:
+   - reg
++  - ranges
+   - dma-ranges
+   - "#interrupt-cells"
+   - interrupts
+@@ -68,6 +96,18 @@ required:
+   - interrupt-map
+   - msi-controller
+ 
++allOf:
++  - $ref: /schemas/pci/pci-bus.yaml#
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: brcm,bcm7216-pcie
++    then:
++      required:
++        - resets
++        - reset-names
++
+ unevaluatedProperties: false
+ 
+ examples:
+@@ -93,7 +133,9 @@ examples:
+                     msi-parent = <&pcie0>;
+                     msi-controller;
+                     ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
+-                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
++                    dma-ranges = <0x42000000 0x1 0x00000000 0x0 0x40000000 0x0 0x80000000>,
++                                 <0x42000000 0x1 0x80000000 0x3 0x00000000 0x0 0x80000000>;
+                     brcm,enable-ssc;
++                    brcm,scb-sizes =  <0x0000000080000000 0x0000000080000000>;
+             };
+     };
+-- 
+2.17.1
 
-Ethernet has been working with multiple mainline kernel versions
-(latest being 5.7.8)
-for the last year or so when using the DTS in patch. So I am pretty sure
-hardware and setup of mux is correct'ish.
-
-Kernel trace from patch version:
-kernel: Micrel KSZ8081 or KSZ8091 30be0000.ethernet-1:01: attached PHY driver
- [Micrel KSZ8081 or KSZ8091] (mii_bus:phy_addr=30be0000.ethernet-1:01, irq=POLL)
-
-Error first occurs when switching from fec phy reset to mdio phy reset
-code path,
-I understand that the fec phy reset is obsolete as phy properties was wrongly
-added to the mac and of course should be part of the phy (separate chip).
-
-When debugging it I end up with the get_phy_device() call not working
-inside of_mdiobus_register_phy().
-
-Workaround at the moment seems to be extending compatible with
-"ethernet-phy-id0022.1560" to disable auto detection of phy type,
-and then Ethernet works again. At least the same PHY driver trace
-can be found and full transmission speed can be used without packet
-errors/loss.
-
-> Are there external pull-up/pull-down resistors for strapping the
-> various configuration pins for the PHY? Or are the pull-up/pull-down
-> provided by the i.MX7D pins?
-
-Config strapping is done with external resistors.
-
-> If there are no external pull-ups, please make sure to configure the
-> pinctrl_enet1 accordingly, so that the Ethernet PHY address can be
-> properly configured and then mdio_bus driver can find it at the
-> correct address.
->
-> Please check in arch/arm/boot/dts/imx6qdl-sr-som.dtsi for an example
-> on how to configure the Ethernet PHY pin strapping via iMX IOMUX.
-
-Thanks, good examples can be hard to find.
-
-/Bruno
