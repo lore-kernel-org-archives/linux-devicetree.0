@@ -6,84 +6,81 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80457C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B32CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53A2720657
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46B952067D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:26:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594844718;
-	bh=LXb4UbpVi2jjPZBma8jT6ADTKfuwPKPPimyEFADbH+Q=;
+	s=default; t=1594844805;
+	bh=suxVrM/f0jZ7CkGEPZwemhqPgEvOj/uNq4E8MKBxfu8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NIcJILaPCnyu5D/5Q4AvCNzBo1heY++Gru93xUsea09Jf6fJVTp0MT+pEDS/6kEPo
-	 Bb2RtfDusS9S2m9I6mqfwfIKs5SWm8Kk8UuwZmN0mWH/cyQljSOyn/hccUkLWoMFXY
-	 /Gi9R+N1YnMglIiH/Y8WlqRoIFzJ1zlI5gG79x3k=
+	b=LX2fVOuG1q/9mXZ0HfprkFZ2++q2qGle8RaOpfMwS/p5qu7NdZrmcQEiIkIa/+ZCq
+	 Q8usCm4Lug0v62F5wwpeMVI+XQ0ENk+7U60aMeWGUYo5dg+0u8j0mPmf6kmP1b1W+u
+	 MLpuVSMgNrPqEltQKxvweEi9Y2TPuLCjA5osoFVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgGOUZR (ORCPT
+        id S1725917AbgGOU0n (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 16:25:17 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:34780 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbgGOUZR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 16:25:17 -0400
-Received: by mail-io1-f66.google.com with SMTP id q74so3700143iod.1;
-        Wed, 15 Jul 2020 13:25:16 -0700 (PDT)
+        Wed, 15 Jul 2020 16:26:43 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:46449 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726894AbgGOU0m (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 16:26:42 -0400
+Received: by mail-il1-f193.google.com with SMTP id p15so3114375ilh.13;
+        Wed, 15 Jul 2020 13:26:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=pgPelXJC023gvebrydz3J6qpaoXYuRrLQ8hxrPLPGj4=;
-        b=MW964hpfQri9Hv/U9iSA8WD2iEpBha/r6nk55dGQTEXkgLJGMcG4tAGex/oSoKdvaf
-         aRm1d/NOcEjgRkvmPjrLYKaYDb3bfHdtMNzxfPp1EbFnzAXG7oj2W91m08YRW2IZdwjg
-         IvkNYRpA3zHo/xPpf2Jg1fCg8Qs4Fsw65Wp4VHy7qvC0R547xOFUdWeAEfIvdQnGslMs
-         uQRw8WB2jFpbfCkqELXSKFX5112UudqgH9jJw94ERGK+6wBo0K4q9HWZaplrDr5220el
-         XfasF8njZtLaHo2ucVuDDAAundDoPH83O4Wgw8CwBcH7vxOMG8Own8JS0tEnnnflDu5b
-         8EPw==
-X-Gm-Message-State: AOAM530ep8QZ9VQLPKfY0QpMmU1MWKNT7p+hzat5b9E15m0wKTPCXlzX
-        /n2uo9yYWtHCjx6Lmu5NRA==
-X-Google-Smtp-Source: ABdhPJyLzIPEXAng/S28+/rIhjKFMOKYRIkcS5fnGhvWXLleFbk9avmueHrgkskrz/V4hyuNVo8Ozw==
-X-Received: by 2002:a05:6638:2493:: with SMTP id x19mr1297511jat.53.1594844716503;
-        Wed, 15 Jul 2020 13:25:16 -0700 (PDT)
+        bh=iw+abfEcWg8r2U5F9bV1G66d69s59AL0m3KcUrPU2CU=;
+        b=iYbokgXQXT0cJZH6c82/T3TFiE8oNqd+1YE3rikpLQ6J4bEEUl7uuwo9xIuxccHUxM
+         U9UjYoIxkEWkoqftCxOwnN2IH46lUHsRgDVOnyuNZ5uogzBK3DBoFvSaiS74tmCxLTlO
+         O7S2ZU3AlTxnxtEecQpLy+qJx8dK2FcznLs6ErgdX2hp6iLrPBpprjp3rtF732hWYECD
+         cI94n84GFETmwg2tBFeejo8LK5WpnOJKZt764AEfAUWLFhSCe/mG080x9NNvujZLM5nb
+         IfYNQ7PLDXbsfEhCRCnj7DlmHdCtEchA/0bbSbbz7AJD3II7LdD5eKojimP6gXrmF8NX
+         qLvw==
+X-Gm-Message-State: AOAM533bCoPGRg4+DZCsrlMQB4D4i8Ep/wJ6xPy2SWlQmpI6bPS+KHYO
+        tXMvmJDDmYJSvov3ryKvAg==
+X-Google-Smtp-Source: ABdhPJx8z2WZ6yDXhQQvie9RKIBtkE5Ub6i2jwYJzJRbMHG4H74n6NbT8s2P8GEZo8OR8QFixnLRVw==
+X-Received: by 2002:a92:aad6:: with SMTP id p83mr1161782ill.65.1594844801721;
+        Wed, 15 Jul 2020 13:26:41 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id z9sm1593748ilz.45.2020.07.15.13.25.15
+        by smtp.gmail.com with ESMTPSA id z78sm1654024ilk.72.2020.07.15.13.26.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 13:25:15 -0700 (PDT)
-Received: (nullmailer pid 759949 invoked by uid 1000);
-        Wed, 15 Jul 2020 20:25:14 -0000
-Date:   Wed, 15 Jul 2020 14:25:14 -0600
+        Wed, 15 Jul 2020 13:26:41 -0700 (PDT)
+Received: (nullmailer pid 761926 invoked by uid 1000);
+        Wed, 15 Jul 2020 20:26:40 -0000
+Date:   Wed, 15 Jul 2020 14:26:40 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: iio: accel: kionix,kxsd9 yaml conversion.
-Message-ID: <20200715202514.GA759901@bogus>
-References: <20200628203205.49915-1-jic23@kernel.org>
+To:     Bruno Thomsen <bruno.thomsen@gmail.com>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>, linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, bth@kamstrup.com,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: ARM: imx: add kamstrup flex
+ concentrator to schema
+Message-ID: <20200715202640.GA761896@bogus>
+References: <20200629114927.17379-1-bruno.thomsen@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200628203205.49915-1-jic23@kernel.org>
+In-Reply-To: <20200629114927.17379-1-bruno.thomsen@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 28 Jun 2020 21:32:05 +0100, Jonathan Cameron wrote:
-> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+On Mon, 29 Jun 2020 13:49:25 +0200, Bruno Thomsen wrote:
+> Add Kamstrup flex concentrator compatibles to the schema so we can
+> make use of them for the validation.
 > 
-> Convert and flesh out a bit the binding docs for this simple 3 axis
-> accelerometer.
-> 
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Bruno Thomsen <bruno.thomsen@gmail.com>
 > ---
-> 
-> Sorry, typo in iio mailing list in first try at sending this out.
-> 
-> .../bindings/iio/accel/kionix,kxsd9.txt       | 22 -------
->  .../bindings/iio/accel/kionix,kxsd9.yaml      | 65 +++++++++++++++++++
->  2 files changed, 65 insertions(+), 22 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/accel/kionix,kxsd9.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/accel/kionix,kxsd9.yaml
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
