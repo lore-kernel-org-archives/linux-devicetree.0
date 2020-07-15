@@ -2,285 +2,543 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 728B6C43459
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 14:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3860EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 14:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D12220658
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 14:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07C8A20658
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 14:44:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="efAgcNaC"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Rgy2WPhZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbgGOOfk (ORCPT
+        id S1728260AbgGOOoe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 10:35:40 -0400
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:44904 "EHLO
-        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726761AbgGOOfj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jul 2020 10:35:39 -0400
-Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id A28F030C038;
-        Wed, 15 Jul 2020 07:35:24 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com A28F030C038
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1594823724;
-        bh=Uvm/zGsacjcYVeI2zhHRAiAmD8xVAgFfb4PjVdfhyEE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=efAgcNaCIUpJ3zT93aLp2287NZm7m8aF5Y53XauwkpwviCRlKFPiQ2NmbXK6DDMlr
-         15cNBSgOZyvcz07753wyALc6GKs+vS56V/NknPgocbPTlXrKX5MpzkT3wj+l1c7i0i
-         v+q+v9nhuLmjaPKd+LCqmVgGP6uQYqOsgprajVJc=
-Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 8A82214008B;
-        Wed, 15 Jul 2020 07:35:32 -0700 (PDT)
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-To:     linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        devel@driverdev.osuosl.org (open list:STAGING SUBSYSTEM),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE),
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS FOR ALLWINNER
-        A10), Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        iommu@lists.linux-foundation.org (open list:IOMMU DRIVERS),
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <jroedel@suse.de>,
-        Julien Grall <julien.grall@arm.com>,
-        linux-acpi@vger.kernel.org (open list:ACPI FOR ARM64 (ACPI/arm64)),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM PORT),
-        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
-        Parallel ATA drivers)), linux-kernel@vger.kernel.org (open list),
-        linux-media@vger.kernel.org (open list:ALLWINNER A10 CSI DRIVER),
-        linux-remoteproc@vger.kernel.org (open list:REMOTE PROCESSOR
-        (REMOTEPROC) SUBSYSTEM),
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-sh@vger.kernel.org (open list:SUPERH),
-        linux-usb@vger.kernel.org (open list:USB SUBSYSTEM),
-        Oliver Neukum <oneukum@suse.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Rob Herring <robh@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v8 00/12] PCI: brcmstb: enable PCIe for STB chips
-Date:   Wed, 15 Jul 2020 10:35:03 -0400
-Message-Id: <20200715143530.9702-1-james.quinlan@broadcom.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 15 Jul 2020 10:44:34 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9633 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725838AbgGOOoe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 10:44:34 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0f15df0000>; Wed, 15 Jul 2020 07:42:39 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 15 Jul 2020 07:44:33 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 15 Jul 2020 07:44:33 -0700
+Received: from [10.26.73.219] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jul
+ 2020 14:44:26 +0000
+Subject: Re: [TEGRA194_CPUFREQ PATCH v6 3/3] cpufreq: Add Tegra194 cpufreq
+ driver
+To:     Sumit Gupta <sumitg@nvidia.com>, <rjw@rjwysocki.net>,
+        <viresh.kumar@linaro.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <thierry.reding@gmail.com>,
+        <robh+dt@kernel.org>, <mirq-linux@rere.qmqm.pl>,
+        <devicetree@vger.kernel.org>, <talho@nvidia.com>,
+        <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <bbasu@nvidia.com>, <mperttunen@nvidia.com>
+References: <1594819885-31016-1-git-send-email-sumitg@nvidia.com>
+ <1594819885-31016-4-git-send-email-sumitg@nvidia.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <d0a4a28a-f471-22bd-273a-dc5c62a79051@nvidia.com>
+Date:   Wed, 15 Jul 2020 15:44:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <1594819885-31016-4-git-send-email-sumitg@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594824159; bh=hts6yE/D+T5uapmUmz6jGwekaVI+cks8M7XGRMXj33w=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Rgy2WPhZL85KmgcIVwB0B+byv7fRY3dOee38gLhLgrO6OF8d1RsYvy1QcrbaSLNLi
+         eBOYxPu4AGl7wyvWBIbJKKvDrp8aw/LEzq+hAuRnuvf38qxBQZ2ys5txMiU5w4hNi1
+         1O/+1h2ltr5C/H/FgH6hZTJlRrcY2qj+R7z+AxCkrc3fSfcNd8+inKy2eHsrcqDwYY
+         Oejji8oI+jaHEbDQDjiysmq/knaVgUH/FhEaEMFz6sP0Q/OnYnuetWhIt/q2dJ5dKi
+         9fPSw7wAkfSBSTvpsLUWmtagKl/JnyrlBPqbS3OEMRtb7wFZUSASAiUfEJmYEQPGgL
+         PCXhrMKZdG6nQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Patchset Summary:
-  Enhance a PCIe host controller driver.  Because of its unusual design
-  we are foced to change dev->dma_pfn_offset into a more general role
-  allowing multiple offsets.  See the 'v1' notes below for more info.
 
-v8:
-  Commit: "device core: Introduce DMA range map, supplanting ..."
-  -- To satisfy a specific m68 compile configuration, I moved the 'struct
-     bus_dma_region; definition out of #ifdef CONFIG_HAS_DMA and also defined
-     three inline functions for !CONFIG_HAS_DMA (kernel test robot).
-  -- The sunXi drivers -- suc4i_csi, sun6i_csi, cedrus_hw -- set
-     a pfn_offset outside of_dma_configure() but the code offers no 
-     insight on the size of the translation window.  V7 had me using
-     SIZE_MAX as the size.  I have since contacted the sunXi maintainer and
-     he said that using a size of SZ_4G would cover sunXi configurations.
+On 15/07/2020 14:31, Sumit Gupta wrote:
+> Add support for CPU frequency scaling on Tegra194. The frequency
+> of each core can be adjusted by writing a clock divisor value to
+> a MSR on the core. The range of valid divisors is queried from
+> the BPMP.
+> 
+> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
+> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+> ---
+>  drivers/cpufreq/Kconfig.arm        |   7 +
+>  drivers/cpufreq/Makefile           |   1 +
+>  drivers/cpufreq/tegra194-cpufreq.c | 397 +++++++++++++++++++++++++++++++++++++
+>  3 files changed, 405 insertions(+)
+>  create mode 100644 drivers/cpufreq/tegra194-cpufreq.c
+> 
+> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+> index 15c1a12..7e99a46 100644
+> --- a/drivers/cpufreq/Kconfig.arm
+> +++ b/drivers/cpufreq/Kconfig.arm
+> @@ -314,6 +314,13 @@ config ARM_TEGRA186_CPUFREQ
+>  	help
+>  	  This adds the CPUFreq driver support for Tegra186 SOCs.
+>  
+> +config ARM_TEGRA194_CPUFREQ
+> +	tristate "Tegra194 CPUFreq support"
+> +	depends on ARCH_TEGRA_194_SOC && TEGRA_BPMP
+> +	default y
+> +	help
+> +	  This adds CPU frequency driver support for Tegra194 SOCs.
+> +
+>  config ARM_TI_CPUFREQ
+>  	bool "Texas Instruments CPUFreq support"
+>  	depends on ARCH_OMAP2PLUS
+> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+> index f6670c4..66b5563 100644
+> --- a/drivers/cpufreq/Makefile
+> +++ b/drivers/cpufreq/Makefile
+> @@ -83,6 +83,7 @@ obj-$(CONFIG_ARM_TANGO_CPUFREQ)		+= tango-cpufreq.o
+>  obj-$(CONFIG_ARM_TEGRA20_CPUFREQ)	+= tegra20-cpufreq.o
+>  obj-$(CONFIG_ARM_TEGRA124_CPUFREQ)	+= tegra124-cpufreq.o
+>  obj-$(CONFIG_ARM_TEGRA186_CPUFREQ)	+= tegra186-cpufreq.o
+> +obj-$(CONFIG_ARM_TEGRA194_CPUFREQ)	+= tegra194-cpufreq.o
+>  obj-$(CONFIG_ARM_TI_CPUFREQ)		+= ti-cpufreq.o
+>  obj-$(CONFIG_ARM_VEXPRESS_SPC_CPUFREQ)	+= vexpress-spc-cpufreq.o
+>  
+> diff --git a/drivers/cpufreq/tegra194-cpufreq.c b/drivers/cpufreq/tegra194-cpufreq.c
+> new file mode 100644
+> index 0000000..b52a5e2
+> --- /dev/null
+> +++ b/drivers/cpufreq/tegra194-cpufreq.c
+> @@ -0,0 +1,397 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2020, NVIDIA CORPORATION. All rights reserved
+> + */
+> +
+> +#include <linux/cpu.h>
+> +#include <linux/cpufreq.h>
+> +#include <linux/delay.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +
+> +#include <asm/smp_plat.h>
+> +
+> +#include <soc/tegra/bpmp.h>
+> +#include <soc/tegra/bpmp-abi.h>
+> +
+> +#define KHZ                     1000
+> +#define REF_CLK_MHZ             408 /* 408 MHz */
+> +#define US_DELAY                500
+> +#define US_DELAY_MIN            2
+> +#define CPUFREQ_TBL_STEP_HZ     (50 * KHZ * KHZ)
+> +#define MAX_CNT                 ~0U
+> +
+> +/* cpufreq transisition latency */
+> +#define TEGRA_CPUFREQ_TRANSITION_LATENCY (300 * 1000) /* unit in nanoseconds */
+> +
+> +enum cluster {
+> +	CLUSTER0,
+> +	CLUSTER1,
+> +	CLUSTER2,
+> +	CLUSTER3,
+> +	MAX_CLUSTERS,
+> +};
+> +
+> +struct tegra194_cpufreq_data {
+> +	void __iomem *regs;
+> +	size_t num_clusters;
+> +	struct cpufreq_frequency_table **tables;
+> +};
+> +
+> +struct tegra_cpu_ctr {
+> +	u32 cpu;
+> +	u32 delay;
+> +	u32 coreclk_cnt, last_coreclk_cnt;
+> +	u32 refclk_cnt, last_refclk_cnt;
+> +};
+> +
+> +struct read_counters_work {
+> +	struct work_struct work;
+> +	struct tegra_cpu_ctr c;
+> +};
+> +
+> +static struct workqueue_struct *read_counters_wq;
+> +
+> +static enum cluster get_cpu_cluster(u8 cpu)
+> +{
+> +	return MPIDR_AFFINITY_LEVEL(cpu_logical_map(cpu), 1);
+> +}
+> +
+> +/*
+> + * Read per-core Read-only system register NVFREQ_FEEDBACK_EL1.
+> + * The register provides frequency feedback information to
+> + * determine the average actual frequency a core has run at over
+> + * a period of time.
+> + *	[31:0] PLLP counter: Counts at fixed frequency (408 MHz)
+> + *	[63:32] Core clock counter: counts on every core clock cycle
+> + *			where the core is architecturally clocking
+> + */
+> +static u64 read_freq_feedback(void)
+> +{
+> +	u64 val = 0;
+> +
+> +	asm volatile("mrs %0, s3_0_c15_c0_5" : "=r" (val) : );
+> +
+> +	return val;
+> +}
+> +
+> +static inline u32 map_ndiv_to_freq(struct mrq_cpu_ndiv_limits_response
+> +				   *nltbl, u16 ndiv)
+> +{
+> +	return nltbl->ref_clk_hz / KHZ * ndiv / (nltbl->pdiv * nltbl->mdiv);
+> +}
+> +
+> +static void tegra_read_counters(struct work_struct *work)
+> +{
+> +	struct read_counters_work *read_counters_work;
+> +	struct tegra_cpu_ctr *c;
+> +	u64 val;
+> +
+> +	/*
+> +	 * ref_clk_counter(32 bit counter) runs on constant clk,
+> +	 * pll_p(408MHz).
+> +	 * It will take = 2 ^ 32 / 408 MHz to overflow ref clk counter
+> +	 *              = 10526880 usec = 10.527 sec to overflow
+> +	 *
+> +	 * Like wise core_clk_counter(32 bit counter) runs on core clock.
+> +	 * It's synchronized to crab_clk (cpu_crab_clk) which runs at
+> +	 * freq of cluster. Assuming max cluster clock ~2000MHz,
+> +	 * It will take = 2 ^ 32 / 2000 MHz to overflow core clk counter
+> +	 *              = ~2.147 sec to overflow
+> +	 */
+> +	read_counters_work = container_of(work, struct read_counters_work,
+> +					  work);
+> +	c = &read_counters_work->c;
+> +
+> +	val = read_freq_feedback();
+> +	c->last_refclk_cnt = lower_32_bits(val);
+> +	c->last_coreclk_cnt = upper_32_bits(val);
+> +	udelay(c->delay);
+> +	val = read_freq_feedback();
+> +	c->refclk_cnt = lower_32_bits(val);
+> +	c->coreclk_cnt = upper_32_bits(val);
+> +}
+> +
+> +/*
+> + * Return instantaneous cpu speed
+> + * Instantaneous freq is calculated as -
+> + * -Takes sample on every query of getting the freq.
+> + *	- Read core and ref clock counters;
+> + *	- Delay for X us
+> + *	- Read above cycle counters again
+> + *	- Calculates freq by subtracting current and previous counters
+> + *	  divided by the delay time or eqv. of ref_clk_counter in delta time
+> + *	- Return Kcycles/second, freq in KHz
+> + *
+> + *	delta time period = x sec
+> + *			  = delta ref_clk_counter / (408 * 10^6) sec
+> + *	freq in Hz = cycles/sec
+> + *		   = (delta cycles / x sec
+> + *		   = (delta cycles * 408 * 10^6) / delta ref_clk_counter
+> + *	in KHz	   = (delta cycles * 408 * 10^3) / delta ref_clk_counter
+> + *
+> + * @cpu - logical cpu whose freq to be updated
+> + * Returns freq in KHz on success, 0 if cpu is offline
+> + */
+> +static unsigned int tegra194_get_speed_common(u32 cpu, u32 delay)
+> +{
+> +	struct read_counters_work read_counters_work;
+> +	struct tegra_cpu_ctr c;
+> +	u32 delta_refcnt;
+> +	u32 delta_ccnt;
+> +	u32 rate_mhz;
+> +
+> +	/*
+> +	 * udelay() is required to reconstruct cpu frequency over an
+> +	 * observation window. Using workqueue to call udelay() with
+> +	 * interrupts enabled.
+> +	 */
+> +	read_counters_work.c.cpu = cpu;
+> +	read_counters_work.c.delay = delay;
+> +	INIT_WORK_ONSTACK(&read_counters_work.work, tegra_read_counters);
+> +	queue_work_on(cpu, read_counters_wq, &read_counters_work.work);
+> +	flush_work(&read_counters_work.work);
+> +	c = read_counters_work.c;
+> +
+> +	if (c.coreclk_cnt < c.last_coreclk_cnt)
+> +		delta_ccnt = c.coreclk_cnt + (MAX_CNT - c.last_coreclk_cnt);
+> +	else
+> +		delta_ccnt = c.coreclk_cnt - c.last_coreclk_cnt;
+> +	if (!delta_ccnt)
+> +		return 0;
+> +
+> +	/* ref clock is 32 bits */
+> +	if (c.refclk_cnt < c.last_refclk_cnt)
+> +		delta_refcnt = c.refclk_cnt + (MAX_CNT - c.last_refclk_cnt);
+> +	else
+> +		delta_refcnt = c.refclk_cnt - c.last_refclk_cnt;
+> +	if (!delta_refcnt) {
+> +		pr_debug("cpufreq: %d is idle, delta_refcnt: 0\n", cpu);
+> +		return 0;
+> +	}
+> +	rate_mhz = ((unsigned long)(delta_ccnt * REF_CLK_MHZ)) / delta_refcnt;
+> +
+> +	return (rate_mhz * KHZ); /* in KHz */
+> +}
+> +
+> +static unsigned int tegra194_get_speed(u32 cpu)
+> +{
+> +	return tegra194_get_speed_common(cpu, US_DELAY);
+> +}
+> +
+> +static unsigned int tegra194_fast_get_speed(u32 cpu)
+> +{
+> +	return tegra194_get_speed_common(cpu, US_DELAY_MIN);
+> +}
 
-v7:
-  Commit: "device core: Introduce DMA range map, supplanting ..."
-  -- remove second kcalloc/copy in device.c (AndyS)
-  -- use PTR_ERR_OR_ZERO() and PHYS_PFN() (AndyS)
-  -- indentation, sizeof(struct ...) => sizeof(*r) (AndyS)
-  -- add pfn.h definitions: PFN_DMA_ADDR(), DMA_ADDR_PFN() (AndyS)
-  -- Fixed compile error in "sun6i_csi.c" (kernel test robot)
-  Commit "ata: ahci_brcm: Fix use of BCM7216 reset controller"
-  -- correct name of function in the commit msg (SergeiS)
-  
-v6:
-  Commit "device core: Introduce DMA range map":
-  -- of_dma_get_range() now takes a single argument and returns either
-     NULL, a valid map, or an ERR_PTR. (Robin)
-  -- offsets are no longer a PFN value but an actual address. (Robin)
-  -- the bus_dma_region struct stores the range size instead of
-     the cpu_end and pci_end values. (Robin)
-  -- devices that were setting a single offset with no boundaries
-     have been modified to have boundaries; in a few places
-     where this informatino was unavilable a /* FIXME: ... */
-     comment was added. (Robin)
-  -- dma_attach_offset_range() can be called when an offset
-     map already exists; if it's range is already present
-     nothing is done and success is returned. (Robin)
-  All commits:
-  -- Man name/style/corrections/etc changed (Bjorn)
-  -- rebase to Torvalds master
+Personally, I would not bother with the above function as it is only
+used in one place.
 
-v5:
-  Commit "device core: Introduce multiple dma pfn offsets"
-  -- in of/address.c: "map_size = 0" => "*map_size = 0"
-  -- use kcalloc instead of kzalloc (AndyS)
-  -- use PHYS_ADDR_MAX instead of "~(phys_addr_t)0"
-  Commit "PCI: brcmstb: Set internal memory viewport sizes"
-  -- now gives error on missing dma-ranges property.
-  Commit "dt-bindings: PCI: Add bindings for more Brcmstb chips"
-  -- removed "Allof:" from brcm,scb-sizes definition (RobH)
-  All Commits:
-  -- indentation style, use max chars 100 (AndyS)
-  -- rebased to torvalds master
+> +
+> +static int tegra194_cpufreq_init(struct cpufreq_policy *policy)
+> +{
+> +	struct tegra194_cpufreq_data *data = cpufreq_get_driver_data();
+> +	int cl = get_cpu_cluster(policy->cpu);
+> +	u32 cpu;
+> +
+> +	if (cl >= data->num_clusters)
+> +		return -EINVAL;
+> +
+> +	policy->cur = tegra194_fast_get_speed(policy->cpu); /* boot freq */
+> +
+> +	/* set same policy for all cpus in a cluster */
+> +	for (cpu = (cl * 2); cpu < ((cl + 1) * 2); cpu++)
+> +		cpumask_set_cpu(cpu, policy->cpus);
+> +
+> +	policy->freq_table = data->tables[cl];
+> +	policy->cpuinfo.transition_latency = TEGRA_CPUFREQ_TRANSITION_LATENCY;
+> +
+> +	return 0;
+> +}
+> +
+> +static void set_cpu_ndiv(void *data)
+> +{
+> +	struct cpufreq_frequency_table *tbl = data;
+> +	u64 ndiv_val = (u64)tbl->driver_data;
+> +
+> +	asm volatile("msr s3_0_c15_c0_4, %0" : : "r" (ndiv_val));
+> +}
+> +
+> +static int tegra194_cpufreq_set_target(struct cpufreq_policy *policy,
+> +				       unsigned int index)
+> +{
+> +	struct cpufreq_frequency_table *tbl = policy->freq_table + index;
+> +
+> +	/*
+> +	 * Each core writes frequency in per core register. Then both cores
+> +	 * in a cluster run at same frequency which is the maximum frequency
+> +	 * request out of the values requested by both cores in that cluster.
+> +	 */
+> +	on_each_cpu_mask(policy->cpus, set_cpu_ndiv, tbl, true);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct cpufreq_driver tegra194_cpufreq_driver = {
+> +	.name = "tegra194",
+> +	.flags = CPUFREQ_STICKY | CPUFREQ_CONST_LOOPS |
+> +		CPUFREQ_NEED_INITIAL_FREQ_CHECK,
+> +	.verify = cpufreq_generic_frequency_table_verify,
+> +	.target_index = tegra194_cpufreq_set_target,
+> +	.get = tegra194_get_speed,
+> +	.init = tegra194_cpufreq_init,
+> +	.attr = cpufreq_generic_attr,
+> +};
+> +
+> +static void tegra194_cpufreq_free_resources(void)
+> +{
+> +	destroy_workqueue(read_counters_wq);
+> +}
 
-v4:
-  Commit "device core: Introduce multiple dma pfn offsets"
-  -- of_dma_get_range() does not take a dev param but instead
-     takes two "out" params: map and map_size.  We do this so
-     that the code that parses dma-ranges is separate from
-     the code that modifies 'dev'.   (Nicolas)
-  -- the separate case of having a single pfn offset has
-     been removed and is now processed by going through the
-     map array. (Nicolas)
-  -- move attach_uniform_dma_pfn_offset() from of/address.c to
-     dma/mapping.c so that it does not depend on CONFIG_OF. (Nicolas)
-  -- devm_kcalloc => devm_kzalloc (DanC)
-  -- add/fix assignment to dev->dma_pfn_offset_map for func
-     attach_uniform_dma_pfn_offset() (DanC, Nicolas)
-  -- s/struct dma_pfn_offset_region/struct bus_dma_region/ (Nicolas)
-  -- s/attach_uniform_dma_pfn_offset/dma_attach_uniform_pfn_offset/
-  -- s/attach_dma_pfn_offset_map/dma_attach_pfn_offset_map/
-  -- More use of PFN_{PHYS,DOWN,UP}. (AndyS)
-  Commit "of: Include a dev param in of_dma_get_range()"
-  -- this commit was sqaushed with "device core: Introduce ..."
+I would not bother with adding this function either.
 
-v3:
-  Commit "device core: Introduce multiple dma pfn offsets"
-  Commit "arm: dma-mapping: Invoke dma offset func if needed"
-  -- The above two commits have been squashed.  More importantly,
-     the code has been modified so that the functionality for
-     multiple pfn offsets subsumes the use of dev->dma_pfn_offset.
-     In fact, dma_pfn_offset is removed and supplanted by
-     dma_pfn_offset_map, which is a pointer to an array.  The
-     more common case of a uniform offset is now handled as
-     a map with a single entry, while cases requiring multiple
-     pfn offsets use a map with multiple entries.  Code paths
-     that used to do this:
+> +
+> +static struct cpufreq_frequency_table *
+> +init_freq_table(struct platform_device *pdev, struct tegra_bpmp *bpmp,
+> +		unsigned int cluster_id)
+> +{
+> +	struct cpufreq_frequency_table *freq_table;
+> +	struct mrq_cpu_ndiv_limits_response resp;
+> +	unsigned int num_freqs, ndiv, delta_ndiv;
+> +	struct mrq_cpu_ndiv_limits_request req;
+> +	struct tegra_bpmp_message msg;
+> +	u16 freq_table_step_size;
+> +	int err, index;
+> +
+> +	memset(&req, 0, sizeof(req));
+> +	req.cluster_id = cluster_id;
+> +
+> +	memset(&msg, 0, sizeof(msg));
+> +	msg.mrq = MRQ_CPU_NDIV_LIMITS;
+> +	msg.tx.data = &req;
+> +	msg.tx.size = sizeof(req);
+> +	msg.rx.data = &resp;
+> +	msg.rx.size = sizeof(resp);
+> +
+> +	err = tegra_bpmp_transfer(bpmp, &msg);
+> +	if (err)
+> +		return ERR_PTR(err);
+> +
+> +	/*
+> +	 * Make sure frequency table step is a multiple of mdiv to match
+> +	 * vhint table granularity.
+> +	 */
+> +	freq_table_step_size = resp.mdiv *
+> +			DIV_ROUND_UP(CPUFREQ_TBL_STEP_HZ, resp.ref_clk_hz);
+> +
+> +	dev_dbg(&pdev->dev, "cluster %d: frequency table step size: %d\n",
+> +		cluster_id, freq_table_step_size);
+> +
+> +	delta_ndiv = resp.ndiv_max - resp.ndiv_min;
+> +
+> +	if (unlikely(delta_ndiv == 0)) {
+> +		num_freqs = 1;
+> +	} else {
+> +		/* We store both ndiv_min and ndiv_max hence the +1 */
+> +		num_freqs = delta_ndiv / freq_table_step_size + 1;
+> +	}
+> +
+> +	num_freqs += (delta_ndiv % freq_table_step_size) ? 1 : 0;
+> +
+> +	freq_table = devm_kcalloc(&pdev->dev, num_freqs + 1,
+> +				  sizeof(*freq_table), GFP_KERNEL);
+> +	if (!freq_table)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	for (index = 0, ndiv = resp.ndiv_min;
+> +			ndiv < resp.ndiv_max;
+> +			index++, ndiv += freq_table_step_size) {
+> +		freq_table[index].driver_data = ndiv;
+> +		freq_table[index].frequency = map_ndiv_to_freq(&resp, ndiv);
+> +	}
+> +
+> +	freq_table[index].driver_data = resp.ndiv_max;
+> +	freq_table[index++].frequency = map_ndiv_to_freq(&resp, resp.ndiv_max);
+> +	freq_table[index].frequency = CPUFREQ_TABLE_END;
+> +
+> +	return freq_table;
+> +}
+> +
+> +static int tegra194_cpufreq_probe(struct platform_device *pdev)
+> +{
+> +	struct tegra194_cpufreq_data *data;
+> +	struct tegra_bpmp *bpmp;
+> +	int err, i;
+> +
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	data->num_clusters = MAX_CLUSTERS;
+> +	data->tables = devm_kcalloc(&pdev->dev, data->num_clusters,
+> +				    sizeof(*data->tables), GFP_KERNEL);
+> +	if (!data->tables)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, data);
+> +
+> +	bpmp = tegra_bpmp_get(&pdev->dev);
+> +	if (IS_ERR(bpmp))
+> +		return PTR_ERR(bpmp);
+> +
+> +	read_counters_wq = alloc_workqueue("read_counters_wq", __WQ_LEGACY, 1);
+> +	if (!read_counters_wq) {
+> +		dev_err(&pdev->dev, "fail to create_workqueue\n");
+> +		err = -EINVAL;
+> +		goto put_bpmp;
+> +	}
+> +
+> +	for (i = 0; i < data->num_clusters; i++) {
+> +		data->tables[i] = init_freq_table(pdev, bpmp, i);
+> +		if (IS_ERR(data->tables[i])) {
+> +			err = PTR_ERR(data->tables[i]);
+> +			goto err_free_res;
+> +		}
+> +	}
+> +
+> +	tegra194_cpufreq_driver.driver_data = data;
+> +
+> +	err = cpufreq_register_driver(&tegra194_cpufreq_driver);
+> +	if (err)
+> +		goto err_free_res;
 
-         dev->dma_pfn_offset = mydrivers_pfn_offset;
+You don't need the above if statement now you added the below.
 
-     have been changed to do this:
+> +
+> +	if (!err)
+> +		goto put_bpmp;
+> +
+> +err_free_res:
+> +	tegra194_cpufreq_free_resources();
+> +put_bpmp:
+> +	tegra_bpmp_put(bpmp);
+> +	return err;
+> +}
+> +
+> +static int tegra194_cpufreq_remove(struct platform_device *pdev)
+> +{
+> +	cpufreq_unregister_driver(&tegra194_cpufreq_driver);
+> +	tegra194_cpufreq_free_resources();
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id tegra194_cpufreq_of_match[] = {
+> +	{ .compatible = "nvidia,tegra194-ccplex", },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, tegra194_cpufreq_of_match);
+> +
+> +static struct platform_driver tegra194_ccplex_driver = {
+> +	.driver = {
+> +		.name = "tegra194-cpufreq",
+> +		.of_match_table = tegra194_cpufreq_of_match,
+> +	},
+> +	.probe = tegra194_cpufreq_probe,
+> +	.remove = tegra194_cpufreq_remove,
+> +};
+> +module_platform_driver(tegra194_ccplex_driver);
+> +
+> +MODULE_AUTHOR("Mikko Perttunen <mperttunen@nvidia.com>");
+> +MODULE_AUTHOR("Sumit Gupta <sumitg@nvidia.com>");
+> +MODULE_DESCRIPTION("NVIDIA Tegra194 cpufreq driver");
+> +MODULE_LICENSE("GPL v2");
+> 
 
-         attach_uniform_dma_pfn_offset(dev, pfn_offset);
-
-  Commit "dt-bindings: PCI: Add bindings for more Brcmstb chips"
-  -- Add if/then clause for required props: resets, reset-names (RobH)
-  -- Change compatible list from const to enum (RobH)
-  -- Change list of u32-tuples to u64 (RobH)
-
-  Commit "of: Include a dev param in of_dma_get_range()"
-  -- modify of/unittests.c to add NULL param in of_dma_get_range() call.
-
-  Commit "device core: Add ability to handle multiple dma offsets"
-  -- align comment in device.h (AndyS).
-  -- s/cpu_beg/cpu_start/ and s/dma_beg/dma_start/ in struct
-     dma_pfn_offset_region (AndyS).
-
-v2:
-Commit: "device core: Add ability to handle multiple dma offsets"
-  o Added helper func attach_dma_pfn_offset_map() in address.c (Chistoph)
-  o Helpers funcs added to __phys_to_dma() & __dma_to_phys() (Christoph)
-  o Added warning when multiple offsets are needed and !DMA_PFN_OFFSET_MAP
-  o dev->dma_pfn_map => dev->dma_pfn_offset_map
-  o s/frm/from/ for dma_pfn_offset_frm_{phys,dma}_addr() (Christoph)
-  o In device.h: s/const void */const struct dma_pfn_offset_region */
-  o removed 'unlikely' from unlikely(dev->dma_pfn_offset_map) since
-    guarded by CONFIG_DMA_PFN_OFFSET_MAP (Christoph)
-  o Since dev->dma_pfn_offset is copied in usb/core/{usb,message}.c, now
-    dev->dma_pfn_offset_map is copied as well.
-  o Merged two of the DMA commits into one (Christoph).
-
-Commit "arm: dma-mapping: Invoke dma offset func if needed":
-  o Use helper functions instead of #if CONFIG_DMA_PFN_OFFSET
-
-Other commits' changes:
-  o Removed need for carrying of_id var in priv (Nicolas)
-  o Commit message rewordings (Bjorn)
-  o Commit log messages filled to 75 chars (Bjorn)
-  o devm_reset_control_get_shared())
-    => devm_reset_control_get_optional_shared (Philipp)
-  o Add call to reset_control_assert() in PCIe remove routines (Philipp)
-
-v1:
-This patchset expands the usefulness of the Broadcom Settop Box PCIe
-controller by building upon the PCIe driver used currently by the
-Raspbery Pi.  Other forms of this patchset were submitted by me years
-ago and not accepted; the major sticking point was the code required
-for the DMA remapping needed for the PCIe driver to work [1].
-
-There have been many changes to the DMA and OF subsystems since that
-time, making a cleaner and less intrusive patchset possible.  This
-patchset implements a generalization of "dev->dma_pfn_offset", except
-that instead of a single scalar offset it provides for multiple
-offsets via a function which depends upon the "dma-ranges" property of
-the PCIe host controller.  This is required for proper functionality
-of the BrcmSTB PCIe controller and possibly some other devices.
-
-[1] https://lore.kernel.org/linux-arm-kernel/1516058925-46522-5-git-send-email-jim2101024@gmail.com/
-
-Jim Quinlan (12):
-  PCI: brcmstb: PCIE_BRCMSTB depends on ARCH_BRCMSTB
-  ata: ahci_brcm: Fix use of BCM7216 reset controller
-  dt-bindings: PCI: Add bindings for more Brcmstb chips
-  PCI: brcmstb: Add bcm7278 register info
-  PCI: brcmstb: Add suspend and resume pm_ops
-  PCI: brcmstb: Add bcm7278 PERST# support
-  PCI: brcmstb: Add control of rescal reset
-  device core: Introduce DMA range map, supplanting dma_pfn_offset
-  PCI: brcmstb: Set additional internal memory DMA viewport sizes
-  PCI: brcmstb: Accommodate MSI for older chips
-  PCI: brcmstb: Set bus max burst size by chip type
-  PCI: brcmstb: Add bcm7211, bcm7216, bcm7445, bcm7278 to match list
-
- .../bindings/pci/brcm,stb-pcie.yaml           |  56 ++-
- arch/arm/include/asm/dma-mapping.h            |   9 +-
- arch/arm/mach-keystone/keystone.c             |  17 +-
- arch/sh/drivers/pci/pcie-sh7786.c             |   9 +-
- arch/sh/kernel/dma-coherent.c                 |  16 +-
- arch/x86/pci/sta2x11-fixup.c                  |   7 +-
- drivers/acpi/arm64/iort.c                     |   5 +-
- drivers/ata/ahci_brcm.c                       |  11 +-
- drivers/gpu/drm/sun4i/sun4i_backend.c         |   5 +-
- drivers/iommu/io-pgtable-arm.c                |   2 +-
- .../platform/sunxi/sun4i-csi/sun4i_csi.c      |   5 +-
- .../platform/sunxi/sun6i-csi/sun6i_csi.c      |   4 +-
- drivers/of/address.c                          |  95 ++--
- drivers/of/device.c                           |  47 +-
- drivers/of/of_private.h                       |   9 +-
- drivers/of/unittest.c                         |  35 +-
- drivers/pci/controller/Kconfig                |   3 +-
- drivers/pci/controller/pcie-brcmstb.c         | 408 +++++++++++++++---
- drivers/remoteproc/remoteproc_core.c          |   2 +-
- .../staging/media/sunxi/cedrus/cedrus_hw.c    |   7 +-
- drivers/usb/core/message.c                    |   4 +-
- drivers/usb/core/usb.c                        |   2 +-
- include/linux/device.h                        |   4 +-
- include/linux/dma-direct.h                    |  10 +-
- include/linux/dma-mapping.h                   |  43 ++
- include/linux/pfn.h                           |   2 +
- kernel/dma/coherent.c                         |  10 +-
- kernel/dma/mapping.c                          |  53 +++
- 28 files changed, 683 insertions(+), 197 deletions(-)
+Cheers
+Jon
 
 -- 
-2.17.1
-
+nvpublic
