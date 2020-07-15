@@ -2,106 +2,91 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4FFC433E4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 14:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2263EC433EA
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 15:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0B34206D5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 14:59:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594825185;
-	bh=oY0bSa2V0EHeW/S+pZKL8cobHCUlI74YE8WVvDT9Rn4=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=k6M2QayKIASJEBjAk8Aj5mRnFSYTTDfklunPDepCG2mPkZP1bLj5GDgyBoHFgXj5D
-	 KdS6iBPoqHa79RiEitb1eBI11rPcBJ2XIf/ahcoquolqFiuo6PSaIjOo3UYnCYT1B7
-	 PAGzBSdLfIhMn3K2Rts57ARKR70sDPm4duilsRh4=
+	by mail.kernel.org (Postfix) with ESMTP id EF0BE206D5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 15:27:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgGOO7l (ORCPT
+        id S1726945AbgGOP1V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 10:59:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47786 "EHLO mail.kernel.org"
+        Wed, 15 Jul 2020 11:27:21 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:54352 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725866AbgGOO7l (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jul 2020 10:59:41 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0656F206D5;
-        Wed, 15 Jul 2020 14:59:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594825180;
-        bh=oY0bSa2V0EHeW/S+pZKL8cobHCUlI74YE8WVvDT9Rn4=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=SWuws3Q8Dh9CyWLs4Pp/5SUMxnBsypK69Fr/ueXX5wTTyL6IXR9j8vFPl0tCverVt
-         z1eEvA4CLjjD3R0X5T099EYI4n18xI8tSLVT29kywsL52Cuc+TLYjz4zE69lVX/e/f
-         SUhUCupduGtIVSEQZ4OBFVL++wSv7gg2Aje3/Ka4=
-Date:   Wed, 15 Jul 2020 15:59:30 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Sumit Semwal <sumit.semwal@linaro.org>, lgirdwood@gmail.com,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org, agross@kernel.org
-Cc:     rnayak@codeaurora.org, nishakumari@codeaurora.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, kgunda@codeaurora.org
-In-Reply-To: <20200622124110.20971-1-sumit.semwal@linaro.org>
-References: <20200622124110.20971-1-sumit.semwal@linaro.org>
-Subject: Re: [PATCH v5 0/4] Qualcomm labibb regulator driver
-Message-Id: <159482517093.44733.5508630525614600992.b4-ty@kernel.org>
+        id S1726923AbgGOP1U (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jul 2020 11:27:20 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 76025200319;
+        Wed, 15 Jul 2020 17:27:18 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6759E20028E;
+        Wed, 15 Jul 2020 17:27:18 +0200 (CEST)
+Received: from fsr-ub1864-014.ea.freescale.net (fsr-ub1864-014.ea.freescale.net [10.171.95.219])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 868542035C;
+        Wed, 15 Jul 2020 17:27:17 +0200 (CEST)
+From:   =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
+To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Kaiser <martin@kaiser.cx>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 4/5] ARM: dts: imx6ull: add rng
+Date:   Wed, 15 Jul 2020 18:26:03 +0300
+Message-Id: <20200715152604.10407-5-horia.geanta@nxp.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200715152604.10407-1-horia.geanta@nxp.com>
+References: <20200715152604.10407-1-horia.geanta@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 22 Jun 2020 18:11:06 +0530, Sumit Semwal wrote:
-> This series adds a driver for LAB/IBB regulators found on some Qualcomm SoCs.
-> These regulators provide positive and/or negative boost power supplies
-> for LCD/LED display panels connected to the SoC.
-> 
-> This series adds the support for pmi8998 PMIC found in SDM845 family of SoCs.
-> 
-> Changes from v4:
-> - v4 Review comments incorporated
->   - simplified the driver: removed of_get_child_by_name(); use ENABLE_CTL
->     register and switch over to use the regulator_*_regmap helpers
->   - improved kerneldoc
->   - From the dt-bindings, removed interrupt-names, changed to dual license,
->     added unevaluatedProperties: false, removed interrupt-names, since there
->     is only one interrupt per node
->   - Since the Short Circuit handling needs more details from QC engineers,
->     drop the SC handling patch from this series, to submit it later
-> 
-> [...]
+Add node for the RNGB block.
 
-Applied to
+Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>
+---
+ arch/arm/boot/dts/imx6ull.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+diff --git a/arch/arm/boot/dts/imx6ull.dtsi b/arch/arm/boot/dts/imx6ull.dtsi
+index fcde7f77ae42..9bf67490ac49 100644
+--- a/arch/arm/boot/dts/imx6ull.dtsi
++++ b/arch/arm/boot/dts/imx6ull.dtsi
+@@ -68,6 +68,13 @@
+ 				clock-names = "dcp";
+ 			};
+ 
++			rngb: rng@2284000 {
++				compatible = "fsl,imx6ull-rngb", "fsl,imx25-rngb";
++				reg = <0x02284000 0x4000>;
++				interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clks IMX6UL_CLK_DUMMY>;
++			};
++
+ 			iomuxc_snvs: iomuxc-snvs@2290000 {
+ 				compatible = "fsl,imx6ull-iomuxc-snvs";
+ 				reg = <0x02290000 0x4000>;
+-- 
+2.17.1
 
-Thanks!
-
-[1/3] regulator: Allow regulators to verify enabled during enable()
-      commit: f7d7ad42a9dc2d63cab6a79fe31e6732a30dacf5
-[2/3] regulator: Add labibb regulator binding
-      commit: 88c14de2b6786ef503fd1bc2c952159e65fe45cc
-[3/3] regulator: qcom: Add labibb driver
-      commit: 498ab2fdf8554690c9567c1eee436b858637e3ff
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
