@@ -2,104 +2,165 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B383CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 10:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55877C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 10:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 942E020657
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 10:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38D172067D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 10:32:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731124AbgGOK1C (ORCPT
+        id S1727951AbgGOKce (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 06:27:02 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45296 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731099AbgGOK1B (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 06:27:01 -0400
-Received: by mail-ot1-f65.google.com with SMTP id h1so1043465otq.12;
-        Wed, 15 Jul 2020 03:27:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ciz8EkCooMhWVctMjx/enqnJ4xHAdIZyCLKimNEIWpI=;
-        b=a73Zi2gIBcJTLfSpLzuerVRm2oFaluYrs9sNObx0Xjt3HB0rEGTbbhWU0Zk3F/DPFL
-         nNnV2kFJofY5Up+nND6mZUprAMQyakCNn2dd0+PqAshUpNcfu5tH5g8+IoqehehNLE6b
-         TYV3jrZ9sYMP778eiu4qOeZnC0pX8zom7KZXFJrhXlmZRCvh8X3O5pRknG+oG0/ST+ri
-         6gfjkzjwQTeiTZ7I87XoDAdSwOHlB9HriEWZC3MRAXnEQ0rFZe3yLAO8+NZhMkYV+c00
-         wHmfD3+kDMC26Qnr20neDmeVpHHwqH3aPIIVi9zHMu5GVxobeUc39jPAlclymrVI8VZQ
-         f/tQ==
-X-Gm-Message-State: AOAM5318aQQRx76/TAE+VtzudqGRbLgmYyClOzcZ95EcgiCO+JNyxOzj
-        YqncuaRbN1JAbdxnDJL1wZNw9G+ePUQRRD+onzKvs4xx
-X-Google-Smtp-Source: ABdhPJzDVjcJOqq/OGpX+gREO1lxSpbu/5xXM3HIDSKMrJSDI1LeLrnkzgrrA+c/eG2g6EF5g4F715fy6hnKWubX3NU=
-X-Received: by 2002:a9d:2646:: with SMTP id a64mr7700840otb.107.1594808820643;
- Wed, 15 Jul 2020 03:27:00 -0700 (PDT)
+        Wed, 15 Jul 2020 06:32:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:36604 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726437AbgGOKce (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jul 2020 06:32:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B851230E;
+        Wed, 15 Jul 2020 03:32:33 -0700 (PDT)
+Received: from [10.57.32.45] (unknown [10.57.32.45])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A8E623F718;
+        Wed, 15 Jul 2020 03:32:31 -0700 (PDT)
+Subject: Re: [PATCH v4 2/4] iommu/arm-smmu: Workaround for Marvell
+ Armada-AP806 SoC erratum #582743
+To:     Tomasz Nowicki <tn@semihalf.com>, will@kernel.org, joro@8bytes.org,
+        gregory.clement@bootlin.com, robh+dt@kernel.org, hannah@marvell.com
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        devicetree@vger.kernel.org, catalin.marinas@arm.com,
+        nadavh@marvell.com, linux-arm-kernel@lists.infradead.org,
+        mw@semihalf.com
+References: <20200715070649.18733-1-tn@semihalf.com>
+ <20200715070649.18733-3-tn@semihalf.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <793ede4d-79e9-3615-9da1-57cfe1a44c4d@arm.com>
+Date:   Wed, 15 Jul 2020 11:32:30 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200714142856.58365-1-jacopo+renesas@jmondi.org> <20200714142856.58365-4-jacopo+renesas@jmondi.org>
-In-Reply-To: <20200714142856.58365-4-jacopo+renesas@jmondi.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 15 Jul 2020 12:26:49 +0200
-Message-ID: <CAMuHMdV64srQaDcAPwjA_QR6v_FOykgQpxgdT-srRk1r7NQiGQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] media: MAINTAINERS: ov5647: Add myself as maintainer
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        dongchun.zhu@mediatek.com,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        roman.kovalivskyi@globallogic.com,
-        Luis de Oliveira <Luis.Oliveira@synopsys.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200715070649.18733-3-tn@semihalf.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-CC Luis' last used address
+On 2020-07-15 08:06, Tomasz Nowicki wrote:
+> From: Hanna Hawa <hannah@marvell.com>
+> 
+> Due to erratum #582743, the Marvell Armada-AP806 can't access 64bit to
+> ARM SMMUv2 registers.
+> 
+> Provide implementation relevant hooks:
+> - split the writeq/readq to two accesses of writel/readl.
+> - mask the MMU_IDR2.PTFSv8 fields to not use AArch64 format (but
+> only AARCH32_L) since with AArch64 format 32 bits access is not supported.
+> 
+> Note that most 64-bit registers like TTBRn can be accessed as two 32-bit
+> halves without issue, and AArch32 format ensures that the register writes
+> which must be atomic (for TLBI etc.) need only be 32-bit.
 
-On Tue, Jul 14, 2020 at 4:25 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
->
-> Since the current maintainer email address bounces back, replace
-> the entry and make myself maintainer of the driver since I have the
-> sensor and platforms to test it.
->
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Thanks Tomasz, this has ended up as clean as I'd hoped it could, and 
+there's still room to come back and play more complicated games later if 
+a real need for AARCH64_64K at stage 2 crops up.
+
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+
+> Signed-off-by: Hanna Hawa <hannah@marvell.com>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> Signed-off-by: Tomasz Nowicki <tn@semihalf.com>
 > ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 1742fa1a88cd..e2128afd83b6 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12607,7 +12607,7 @@ T:      git git://linuxtv.org/media_tree.git
->  F:     drivers/media/i2c/ov5640.c
->
->  OMNIVISION OV5647 SENSOR DRIVER
-> -M:     Luis Oliveira <lolivei@synopsys.com>
-> +M:     Jacopo Mondi <jacopo@jmondi.org>
->  L:     linux-media@vger.kernel.org
->  S:     Maintained
->  T:     git git://linuxtv.org/media_tree.git
+>   Documentation/arm64/silicon-errata.rst |  3 ++
+>   drivers/iommu/arm-smmu-impl.c          | 45 ++++++++++++++++++++++++++
+>   2 files changed, 48 insertions(+)
+> 
+> diff --git a/Documentation/arm64/silicon-errata.rst b/Documentation/arm64/silicon-errata.rst
+> index 936cf2a59ca4..157214d3abe1 100644
+> --- a/Documentation/arm64/silicon-errata.rst
+> +++ b/Documentation/arm64/silicon-errata.rst
+> @@ -125,6 +125,9 @@ stable kernels.
+>   | Cavium         | ThunderX2 Core  | #219            | CAVIUM_TX2_ERRATUM_219      |
+>   +----------------+-----------------+-----------------+-----------------------------+
+>   +----------------+-----------------+-----------------+-----------------------------+
+> +| Marvell        | ARM-MMU-500     | #582743         | N/A                         |
+> ++----------------+-----------------+-----------------+-----------------------------+
+> ++----------------+-----------------+-----------------+-----------------------------+
 
-Gr{oetje,eeting}s,
+And in case anyone feels like nit-picking the order here, I think the 
+current respective corporate structures perfectly justify "Marvell" 
+sorting alphabetically before "NXP", to be next to "Cavium" :D
 
-                        Geert
+Robin.
 
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>   | Freescale/NXP  | LS2080A/LS1043A | A-008585        | FSL_ERRATUM_A008585         |
+>   +----------------+-----------------+-----------------+-----------------------------+
+>   +----------------+-----------------+-----------------+-----------------------------+
+> diff --git a/drivers/iommu/arm-smmu-impl.c b/drivers/iommu/arm-smmu-impl.c
+> index c75b9d957b70..59422cb92488 100644
+> --- a/drivers/iommu/arm-smmu-impl.c
+> +++ b/drivers/iommu/arm-smmu-impl.c
+> @@ -147,6 +147,48 @@ static const struct arm_smmu_impl arm_mmu500_impl = {
+>   	.reset = arm_mmu500_reset,
+>   };
+>   
+> +static u64 mrvl_mmu500_readq(struct arm_smmu_device *smmu, int page, int off)
+> +{
+> +	/*
+> +	 * Marvell Armada-AP806 erratum #582743.
+> +	 * Split all the readq to double readl
+> +	 */
+> +	return hi_lo_readq_relaxed(arm_smmu_page(smmu, page) + off);
+> +}
+> +
+> +static void mrvl_mmu500_writeq(struct arm_smmu_device *smmu, int page, int off,
+> +			       u64 val)
+> +{
+> +	/*
+> +	 * Marvell Armada-AP806 erratum #582743.
+> +	 * Split all the writeq to double writel
+> +	 */
+> +	hi_lo_writeq_relaxed(val, arm_smmu_page(smmu, page) + off);
+> +}
+> +
+> +static int mrvl_mmu500_cfg_probe(struct arm_smmu_device *smmu)
+> +{
+> +
+> +	/*
+> +	 * Armada-AP806 erratum #582743.
+> +	 * Hide the SMMU_IDR2.PTFSv8 fields to sidestep the AArch64
+> +	 * formats altogether and allow using 32 bits access on the
+> +	 * interconnect.
+> +	 */
+> +	smmu->features &= ~(ARM_SMMU_FEAT_FMT_AARCH64_4K |
+> +			    ARM_SMMU_FEAT_FMT_AARCH64_16K |
+> +			    ARM_SMMU_FEAT_FMT_AARCH64_64K);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct arm_smmu_impl mrvl_mmu500_impl = {
+> +	.read_reg64 = mrvl_mmu500_readq,
+> +	.write_reg64 = mrvl_mmu500_writeq,
+> +	.cfg_probe = mrvl_mmu500_cfg_probe,
+> +	.reset = arm_mmu500_reset,
+> +};
+> +
+>   
+>   struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu)
+>   {
+> @@ -175,5 +217,8 @@ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu)
+>   	    of_device_is_compatible(np, "qcom,sc7180-smmu-500"))
+>   		return qcom_smmu_impl_init(smmu);
+>   
+> +	if (of_device_is_compatible(np, "marvell,ap806-smmu-500"))
+> +		smmu->impl = &mrvl_mmu500_impl;
+> +
+>   	return smmu;
+>   }
+> 
