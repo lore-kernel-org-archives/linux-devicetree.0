@@ -2,127 +2,116 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2706FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 06:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B10C433E6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 06:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE6CE206F5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 06:20:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594794003;
-	bh=05czjJvRJc8XN686B6X5OIjt1m5Lx94Zy66nZ0TFTuI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VPnpQerZJ69NqisSYnTYkBj51+cfFONGELy6ZvmriNqaAQ8naH5LUo44KQIYHBDsy
-	 urSTGxEo79zaJl8dQqpiaQnfchY4tXQqN1wHGvL1b6IdcEY8s3KVmKkMLaggQyon5T
-	 axytXfAcAdFnJQr96Et7UGu2ukDh6NRkgDnmc7po=
+	by mail.kernel.org (Postfix) with ESMTP id 9CBB82074B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 06:33:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbgGOGUC (ORCPT
+        id S1728672AbgGOGdo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 02:20:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60664 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725866AbgGOGUC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jul 2020 02:20:02 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E49520672;
-        Wed, 15 Jul 2020 06:20:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594794001;
-        bh=05czjJvRJc8XN686B6X5OIjt1m5Lx94Zy66nZ0TFTuI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TkN9kI7sW2FxzrMGLsnMSOwyLrYgRTsapamaHFT5ehvpboZalM4to6Kn4CneZsoAf
-         l4tDgoEVPTgKkzAIWkq6cI1RYmZsqxw6PeL35Jmiwe4gky+oFMzPrqQysl6qj66iMd
-         mZBGDFdxeuRN4wxW83eGEdBuxtQBaZu7WESwQtMo=
-Date:   Wed, 15 Jul 2020 11:49:57 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     EastL Lee <EastL.Lee@mediatek.com>
-Cc:     Sean Wang <sean.wang@mediatek.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, matthias.bgg@gmail.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        wsd_upstream@mediatek.com, cc.hwang@mediatek.com
-Subject: Re: [PATCH v6 2/4] dmaengine: mediatek-cqdma: remove redundant queue
- structure
-Message-ID: <20200715061957.GA34333@vkoul-mobl>
-References: <1593673564-4425-1-git-send-email-EastL.Lee@mediatek.com>
- <1593673564-4425-3-git-send-email-EastL.Lee@mediatek.com>
+        Wed, 15 Jul 2020 02:33:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725823AbgGOGdo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 02:33:44 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 301E4C061755;
+        Tue, 14 Jul 2020 23:33:44 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 06794BC069;
+        Wed, 15 Jul 2020 06:33:39 +0000 (UTC)
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: Xilinx video IP cores
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     hyun.kwon@xilinx.com, mchehab@kernel.org, robh+dt@kernel.org,
+        michal.simek@xilinx.com, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20200705075524.22657-1-grandmaster@al2klimov.de>
+ <20200714235724.GR5854@pendragon.ideasonboard.com>
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Message-ID: <5fca4c17-9e83-3936-0d8f-ad73ae760033@al2klimov.de>
+Date:   Wed, 15 Jul 2020 08:33:35 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1593673564-4425-3-git-send-email-EastL.Lee@mediatek.com>
+In-Reply-To: <20200714235724.GR5854@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Spamd-Bar: +
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 02-07-20, 15:06, EastL Lee wrote:
 
->  static enum dma_status mtk_cqdma_tx_status(struct dma_chan *c,
->  					   dma_cookie_t cookie,
->  					   struct dma_tx_state *txstate)
->  {
-> -	struct mtk_cqdma_vchan *cvc = to_cqdma_vchan(c);
-> -	struct mtk_cqdma_vdesc *cvd;
-> -	struct virt_dma_desc *vd;
-> -	enum dma_status ret;
-> -	unsigned long flags;
-> -	size_t bytes = 0;
-> -
-> -	ret = dma_cookie_status(c, cookie, txstate);
-> -	if (ret == DMA_COMPLETE || !txstate)
-> -		return ret;
-> -
-> -	spin_lock_irqsave(&cvc->vc.lock, flags);
-> -	vd = mtk_cqdma_find_active_desc(c, cookie);
-> -	spin_unlock_irqrestore(&cvc->vc.lock, flags);
-> -
-> -	if (vd) {
-> -		cvd = to_cqdma_vdesc(vd);
-> -		bytes = cvd->residue;
-> -	}
-> -
-> -	dma_set_residue(txstate, bytes);
 
-any reason why you want to remove setting residue?
+Am 15.07.20 um 01:57 schrieb Laurent Pinchart:
+> Hi Alexander,
+> 
+> Thank you for the patch.
+> 
+> The subject line should be
+> 
+> dt-bindings: media: xilinx: Replace HTTP links with HTTPS ones
+> 
+> On Sun, Jul 05, 2020 at 09:55:24AM +0200, Alexander A. Klimov wrote:
+>> Rationale:
+>> Reduces attack surface on kernel devs opening the links for MITM
+>> as HTTPS traffic is much harder to manipulate.
+>>
+>> Deterministic algorithm:
+>> For each file:
+>>    If not .svg:
+>>      For each line:
+>>        If doesn't contain `\bxmlns\b`:
+>>          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>>            If both the HTTP and HTTPS versions
+>>            return 200 OK and serve the same content:
+>>              Replace HTTP with HTTPS.
+>>
+>> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> 
+> Will you get this patch merged as part of a bigger series, or do you
+> expect us to take care of it ? In the latter case, if you agree with the
+I've just followed the patch submission instructions as for any 
+non-treewide patch. So yes, I assume the people I write to take care of 
+the patch.
 
-> -static void mtk_cqdma_free_active_desc(struct dma_chan *c)
-> +static int mtk_cqdma_terminate_all(struct dma_chan *c)
->  {
->  	struct mtk_cqdma_vchan *cvc = to_cqdma_vchan(c);
-> -	bool sync_needed = false;
-> +	struct virt_dma_chan *vc = to_virt_chan(c);
->  	unsigned long pc_flags;
->  	unsigned long vc_flags;
-> +	LIST_HEAD(head);
-> +
-> +	/* wait for the VC to be inactive  */
-> +	if (!wait_for_completion_timeout(&cvc->cmp, msecs_to_jiffies(3000)))
-> +		return -EAGAIN;
->  
->  	/* acquire PC's lock first due to lock dependency in dma ISR */
->  	spin_lock_irqsave(&cvc->pc->lock, pc_flags);
->  	spin_lock_irqsave(&cvc->vc.lock, vc_flags);
->  
-> -	/* synchronization is required if this VC is active */
-> -	if (mtk_cqdma_is_vchan_active(cvc)) {
-> -		cvc->issue_synchronize = true;
-> -		sync_needed = true;
-> -	}
-> +	/* get VDs from lists */
-> +	vchan_get_all_descriptors(vc, &head);
-> +
-> +	/* free all the VDs */
-> +	vchan_dma_desc_free_list(vc, &head);
->  
->  	spin_unlock_irqrestore(&cvc->vc.lock, vc_flags);
->  	spin_unlock_irqrestore(&cvc->pc->lock, pc_flags);
+> subject line change, there's no need to resubmit, I can fix this when
+> applying the patch.
+OK.
 
-Good cleanup, do you need both these locks?
--- 
-~Vinod
+> 
+>> ---
+>>   Continuing my work started at 93431e0607e5.
+>>
+>>   If there are any URLs to be removed completely or at least not HTTPSified:
+>>   Just clearly say so and I'll *undo my change*.
+>>   See also https://lkml.org/lkml/2020/6/27/64
+>>
+>>   If there are any valid, but yet not changed URLs:
+>>   See https://lkml.org/lkml/2020/6/26/837
+>>
+>>   Documentation/devicetree/bindings/media/xilinx/video.txt | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/xilinx/video.txt b/Documentation/devicetree/bindings/media/xilinx/video.txt
+>> index 68ac210e688e..d0335ca0cd57 100644
+>> --- a/Documentation/devicetree/bindings/media/xilinx/video.txt
+>> +++ b/Documentation/devicetree/bindings/media/xilinx/video.txt
+>> @@ -32,4 +32,4 @@ The following properties are common to all Xilinx video IP cores.
+>>     defaults to "mono".
+>>   
+>>   
+>> -[UG934] http://www.xilinx.com/support/documentation/ip_documentation/axi_videoip/v1_0/ug934_axi_videoIP.pdf
+>> +[UG934] https://www.xilinx.com/support/documentation/ip_documentation/axi_videoip/v1_0/ug934_axi_videoIP.pdf
+> 
