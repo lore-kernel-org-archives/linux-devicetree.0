@@ -2,94 +2,262 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A77EC43458
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 11:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6851BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 11:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4219C2075B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 11:13:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594811601;
-	bh=eydGT5vyj3DFkrTR3iGkM6VbuT/mY9iEwObflzBiA5M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pYQpRvaqDCa5oLlr62ydK0J64uCyABw6TVpGgJw3uH8WhRwRMAnlDCnEd+yE/S/fn
-	 jlIQrwnxk7KNgaCW60JOgjCpe+Jm7otwcsDZWSIxJJLAiBfUkDpfie2vsmu4+3tGFm
-	 XqFijVVD91mCmuRIq6r4qtYVAN7rJVn2n9/y5LyU=
+	by mail.kernel.org (Postfix) with ESMTP id 3D41B20658
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 11:16:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cmd08oWT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbgGOLNU (ORCPT
+        id S1728711AbgGOLQg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 07:13:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51210 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726034AbgGOLNU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jul 2020 07:13:20 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21EC220658;
-        Wed, 15 Jul 2020 11:13:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594811600;
-        bh=eydGT5vyj3DFkrTR3iGkM6VbuT/mY9iEwObflzBiA5M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uRYxnG5OXQN4sijkPXo4JIQSHo3Qzo2kvJDps2v9dTJ0oqZ96Rea5oLMtoDrybZEf
-         YHq/nhv6B7uhMyy7b5+bRM81cLS0YnTrkJlEiNxEi2qoxzVHKehGD6hMe8e5faj4Na
-         wjf5BXMWyoj6kPiSBzLZn+xio+Bhagas8hBXFHcQ=
-Date:   Wed, 15 Jul 2020 16:43:15 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 04/11] dmaengine: Introduce max SG list entries
- capability
-Message-ID: <20200715111315.GK34333@vkoul-mobl>
-References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
- <20200709224550.15539-5-Sergey.Semin@baikalelectronics.ru>
- <d667adda-6576-623d-6976-30f60ab3c3dc@ti.com>
- <20200710092738.z7zyywe46mp7uuf3@mobilestation>
- <427bc5c8-0325-bc25-8637-a7627bcac26f@ti.com>
- <20200710161445.t6eradkgt4terdr3@mobilestation>
+        Wed, 15 Jul 2020 07:16:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728411AbgGOLQf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 07:16:35 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4028CC08C5C1
+        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 04:16:35 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id m22so2898389pgv.9
+        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 04:16:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Al8E5HmATuJ+GiI/GL3GJgZoIv0xq0hJd+rjqtG6u28=;
+        b=Cmd08oWTVw0Awoc8Fml8J+O9ZGWu3GHbpoTMQzmIpXnJ3M0FqILbarAKC80qKeQ3vY
+         vdAlCNIddilloNS8cKdhKPXvfBeU1f//RFbN+wY3YsR9PsvflIm1eUN5mpNdYudM1t1j
+         rYDETtx+aaBL3fP8bklgRBrDu8Skx8OKNF5xkG+LizQSf8sGGmOAIx4iphb/9RCuR2u/
+         AHbK21dFJ5yMu97xivHwEPLnIs/4ng1vb7/JBrdw21wS33TbfLxeKmwSwOsA4C8cNvVB
+         ZcmeaDFb6NCdQ+3GioUaDqAcacMNpTxF97FS6lFKyHAW6M5tF1Nny94FOR77WDVlSd3d
+         nhkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Al8E5HmATuJ+GiI/GL3GJgZoIv0xq0hJd+rjqtG6u28=;
+        b=DO8VijEAap1liLaoyi/pvPK4BWdaVG8/mnVDWzugItNwYUBbPCNmDI0SSeWH+pLQPv
+         du5hJrCMf8d+tNLM4xhHAQydO5cXS6eS8bQo0qELf/uBaHC4ub2YoLG2Kcfp0uV+dS34
+         4/IveaFl7g7WtA7OzCryg8sI8/trA0CO0hAhMGKXZyMWeY3CY8J0bwL5MFm0UkWuaeyG
+         2i7wrUeJntpqIN34Ng1rcJ9k/44uIl9qpq8nK5y/0VfSqS380DSEBQLcvEiOGCryZXSO
+         McURGo/mq7rpb0trYT2jevlffcBfep7iuHVOUds6/5BIWTfoxgHFVLAn7a5seB65Tqkb
+         eLNA==
+X-Gm-Message-State: AOAM532TUqXaljTqYLasJrRUebuuUvcbFlocgiZD4IM4AfByStFR3dVW
+        hEF+v94zU13mtL3xmygF3Ys2YA==
+X-Google-Smtp-Source: ABdhPJwYyn51fkcsmGpAYEj+Ce/SdbgTijjhZogOt1iy4T+cQInWGwNY6/4HUVohxJ+skFofTxZPpA==
+X-Received: by 2002:a63:c509:: with SMTP id f9mr7701828pgd.144.1594811794511;
+        Wed, 15 Jul 2020 04:16:34 -0700 (PDT)
+Received: from localhost ([122.172.34.142])
+        by smtp.gmail.com with ESMTPSA id o12sm2053461pfu.188.2020.07.15.04.16.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 Jul 2020 04:16:33 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 16:46:31 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Sumit Gupta <sumitg@nvidia.com>
+Cc:     rjw@rjwysocki.net, catalin.marinas@arm.com, will@kernel.org,
+        thierry.reding@gmail.com, robh+dt@kernel.org,
+        mirq-linux@rere.qmqm.pl, devicetree@vger.kernel.org,
+        jonathanh@nvidia.com, talho@nvidia.com, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, bbasu@nvidia.com,
+        mperttunen@nvidia.com
+Subject: Re: [TEGRA194_CPUFREQ PATCH v5 3/4] cpufreq: Add Tegra194 cpufreq
+ driver
+Message-ID: <20200715111631.o46qgajh56pjkwfo@vireshk-i7>
+References: <1594649209-29394-1-git-send-email-sumitg@nvidia.com>
+ <1594649209-29394-4-git-send-email-sumitg@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200710161445.t6eradkgt4terdr3@mobilestation>
+In-Reply-To: <1594649209-29394-4-git-send-email-sumitg@nvidia.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 10-07-20, 19:14, Serge Semin wrote:
-> On Fri, Jul 10, 2020 at 02:51:33PM +0300, Peter Ujfalusi wrote:
-
-> > Since we should be able to handle longer lists and this is kind of a
-> > hint for clients that above this number of nents the list will be broken
-> > up to smaller 'bursts', which when traversing could cause latency.
-> > 
-> > sg_chunk_len might be another candidate.
+On 13-07-20, 19:36, Sumit Gupta wrote:
+> Add support for CPU frequency scaling on Tegra194. The frequency
+> of each core can be adjusted by writing a clock divisor value to
+> a MSR on the core. The range of valid divisors is queried from
+> the BPMP.
 > 
-> Ok. We've got four candidates:
-> - max_sg_nents_burst
-> - max_sg_burst
-> - max_sg_chain
-> - sg_chunk_len
+> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
+> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+> ---
+>  drivers/cpufreq/Kconfig.arm        |   6 +
+>  drivers/cpufreq/Makefile           |   1 +
+>  drivers/cpufreq/tegra194-cpufreq.c | 397 +++++++++++++++++++++++++++++++++++++
+>  3 files changed, 404 insertions(+)
+>  create mode 100644 drivers/cpufreq/tegra194-cpufreq.c
 > 
-> @Vinod, @Andy, what do you think?
+> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+> index 15c1a12..f3d8f09 100644
+> --- a/drivers/cpufreq/Kconfig.arm
+> +++ b/drivers/cpufreq/Kconfig.arm
+> @@ -314,6 +314,12 @@ config ARM_TEGRA186_CPUFREQ
+>  	help
+>  	  This adds the CPUFreq driver support for Tegra186 SOCs.
+>  
+> +config ARM_TEGRA194_CPUFREQ
+> +	tristate "Tegra194 CPUFreq support"
+> +	depends on ARCH_TEGRA && TEGRA_BPMP
 
-So IIUC your hw supports single sg and in that you would like to publish
-the length of each chunk, is that correct? If so sg_chunk_len seems
-apt..
+Shouldn't this depend on ARCH_TEGRA_194_SOC instead ? And I asked you
+to add a default y here itself instead of patch 4/4.
 
+> +	help
+> +	  This adds CPU frequency driver support for Tegra194 SOCs.
+> +
+>  config ARM_TI_CPUFREQ
+>  	bool "Texas Instruments CPUFreq support"
+>  	depends on ARCH_OMAP2PLUS
+> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+> index f6670c4..66b5563 100644
+> --- a/drivers/cpufreq/Makefile
+> +++ b/drivers/cpufreq/Makefile
+> @@ -83,6 +83,7 @@ obj-$(CONFIG_ARM_TANGO_CPUFREQ)		+= tango-cpufreq.o
+>  obj-$(CONFIG_ARM_TEGRA20_CPUFREQ)	+= tegra20-cpufreq.o
+>  obj-$(CONFIG_ARM_TEGRA124_CPUFREQ)	+= tegra124-cpufreq.o
+>  obj-$(CONFIG_ARM_TEGRA186_CPUFREQ)	+= tegra186-cpufreq.o
+> +obj-$(CONFIG_ARM_TEGRA194_CPUFREQ)	+= tegra194-cpufreq.o
+>  obj-$(CONFIG_ARM_TI_CPUFREQ)		+= ti-cpufreq.o
+>  obj-$(CONFIG_ARM_VEXPRESS_SPC_CPUFREQ)	+= vexpress-spc-cpufreq.o
+>  
+> diff --git a/drivers/cpufreq/tegra194-cpufreq.c b/drivers/cpufreq/tegra194-cpufreq.c
+> +static struct cpufreq_frequency_table *
+> +init_freq_table(struct platform_device *pdev, struct tegra_bpmp *bpmp,
+> +		unsigned int cluster_id)
+> +{
+> +	struct cpufreq_frequency_table *freq_table;
+> +	struct mrq_cpu_ndiv_limits_response resp;
+> +	unsigned int num_freqs, ndiv, delta_ndiv;
+> +	struct mrq_cpu_ndiv_limits_request req;
+> +	struct tegra_bpmp_message msg;
+> +	u16 freq_table_step_size;
+> +	int err, index;
+> +
+> +	memset(&req, 0, sizeof(req));
+> +	req.cluster_id = cluster_id;
+> +
+> +	memset(&msg, 0, sizeof(msg));
+> +	msg.mrq = MRQ_CPU_NDIV_LIMITS;
+> +	msg.tx.data = &req;
+> +	msg.tx.size = sizeof(req);
+> +	msg.rx.data = &resp;
+> +	msg.rx.size = sizeof(resp);
+> +
+> +	err = tegra_bpmp_transfer(bpmp, &msg);
+> +	if (err)
+> +		return ERR_PTR(err);
+> +
+> +	/*
+> +	 * Make sure frequency table step is a multiple of mdiv to match
+> +	 * vhint table granularity.
+> +	 */
+> +	freq_table_step_size = resp.mdiv *
+> +			DIV_ROUND_UP(CPUFREQ_TBL_STEP_HZ, resp.ref_clk_hz);
+> +
+> +	dev_dbg(&pdev->dev, "cluster %d: frequency table step size: %d\n",
+> +		cluster_id, freq_table_step_size);
+> +
+> +	delta_ndiv = resp.ndiv_max - resp.ndiv_min;
+> +
+> +	if (unlikely(delta_ndiv == 0))
+> +		num_freqs = 1;
+> +	else
+> +		/* We store both ndiv_min and ndiv_max hence the +1 */
+> +		num_freqs = delta_ndiv / freq_table_step_size + 1;
+
+You need {} in the if else blocks here because of the comment here.
+
+> +
+> +	num_freqs += (delta_ndiv % freq_table_step_size) ? 1 : 0;
+> +
+> +	freq_table = devm_kcalloc(&pdev->dev, num_freqs + 1,
+> +				  sizeof(*freq_table), GFP_KERNEL);
+> +	if (!freq_table)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	for (index = 0, ndiv = resp.ndiv_min;
+> +			ndiv < resp.ndiv_max;
+> +			index++, ndiv += freq_table_step_size) {
+> +		freq_table[index].driver_data = ndiv;
+> +		freq_table[index].frequency = map_ndiv_to_freq(&resp, ndiv);
+> +	}
+> +
+> +	freq_table[index].driver_data = resp.ndiv_max;
+> +	freq_table[index++].frequency = map_ndiv_to_freq(&resp, resp.ndiv_max);
+> +	freq_table[index].frequency = CPUFREQ_TABLE_END;
+> +
+> +	return freq_table;
+> +}
+> +
+> +static int tegra194_cpufreq_probe(struct platform_device *pdev)
+> +{
+> +	struct tegra194_cpufreq_data *data;
+> +	struct tegra_bpmp *bpmp;
+> +	int err, i;
+> +
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	data->num_clusters = MAX_CLUSTERS;
+> +	data->tables = devm_kcalloc(&pdev->dev, data->num_clusters,
+> +				    sizeof(*data->tables), GFP_KERNEL);
+> +	if (!data->tables)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, data);
+> +
+> +	bpmp = tegra_bpmp_get(&pdev->dev);
+> +	if (IS_ERR(bpmp))
+> +		return PTR_ERR(bpmp);
+> +
+> +	read_counters_wq = alloc_workqueue("read_counters_wq", __WQ_LEGACY, 1);
+> +	if (!read_counters_wq) {
+> +		dev_err(&pdev->dev, "fail to create_workqueue\n");
+> +		err = -EINVAL;
+> +		goto put_bpmp;
+> +	}
+> +
+> +	for (i = 0; i < data->num_clusters; i++) {
+> +		data->tables[i] = init_freq_table(pdev, bpmp, i);
+> +		if (IS_ERR(data->tables[i])) {
+> +			err = PTR_ERR(data->tables[i]);
+> +			goto err_free_res;
+> +		}
+> +	}
+> +
+> +	tegra194_cpufreq_driver.driver_data = data;
+> +
+> +	err = cpufreq_register_driver(&tegra194_cpufreq_driver);
+> +	if (err)
+> +		goto err_free_res;
+> +
+> +	tegra_bpmp_put(bpmp);
+> +
+> +	return err;
+
+rather just do:
+
+if (!err)
+        goto put_bpmp;
+
+> +
+> +err_free_res:
+> +	tegra194_cpufreq_free_resources();
+> +put_bpmp:
+> +	tegra_bpmp_put(bpmp);
+> +	return err;
+> +}
 -- 
-~Vinod
+viresh
