@@ -2,102 +2,93 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B04C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 19:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 355CBC433E6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 19:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FB402065D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 19:29:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594841379;
-	bh=R7q+QrjteQ4SIK04XXZ+1xGD6XAv+4HFsuzeTFoQ00c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Wuqr9A1ZcC+WVHbpDonAc/XTqrRsbtO9ODAVDyYZ2BiJem9vgYz2AR0nhQeyHav5t
-	 0VdPC/FHzck6E8n95Ue6M4+wA3hxl/pj/ib/rARvdMtkmSgQMmgejO2Eq2BV15mIXh
-	 gn1ODMcw2WEBKMf65NIUbFDV7O5AIr0Owib+kAvI=
+	by mail.kernel.org (Postfix) with ESMTP id 0E8FA20657
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 19:36:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XY4/njUi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgGOT3i (ORCPT
+        id S1726852AbgGOTgs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 15:29:38 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42238 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbgGOT3i (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 15:29:38 -0400
-Received: by mail-io1-f66.google.com with SMTP id c16so3465185ioi.9;
-        Wed, 15 Jul 2020 12:29:37 -0700 (PDT)
+        Wed, 15 Jul 2020 15:36:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42482 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726894AbgGOTgo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 15:36:44 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4741FC08C5DD
+        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 12:36:44 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id r8so3142314oij.5
+        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 12:36:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rR8gIS4VQXCjAcXSb96e3TYhEFgbcxFTF7+lqvB96Mc=;
+        b=XY4/njUigM9ia2/yktoamaYQAG98PZrAmqAG1v7JZXdzlb1/ESpHjDqq0eKQPM+lk8
+         G0WIhU2Kel+ShVX/qcF9VFrPlG9QsMhi3qrUJwtnoCYmIXofkDF2fvkINZFZSuQe7dt1
+         P9ZxduaVAGjWE9wZymXly/Z3FU2PN+wsDBdDT4lunmBJ+k3Nx2OpHNUQOndrWWrLouwG
+         vwpV9CrKs02HDW+u/UyVnAsaluvznfqwagXAOO5hsvufcOCSzZjnBLEVaHiJVRdmoDRi
+         X2xfLU1jJaTHx72bTzKBzoPAllsLUCBpwwpAUTstgE+urPI5/dylyUNXZvmtF3zL5Co4
+         AIkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=D93LZtUoWQhV2+rIxfU+EXRRqA3Mro73jmOIm4SVUSI=;
-        b=pcszeq7ox6V6qOFBHI6Wp3AwdIevHLGDfKXhil2+IVGlO71DcU36dhYQbHZJbkQaXM
-         D/PEH/lc2x2sRXn8hQNmmPprqdWLV6PKCyell3b1Yvt0CeEe6AhSfpftXVt5mZW41K5y
-         4GVAAABc1pOWdFWoGK5eVCChQd5mvAQrZb4nwg+4h1JTjWYJMDb35POgvm8xGWSMhAPa
-         MlM6rC0xUCdhthnKHclpvjG8QC5j+J8yzfgLrTMDxHnh+hJRPcTooPealf7iZgeHI/4L
-         mYihwb031b7NSTsaA8KmPSTObIXDEYrTUnGwyOlWBW8M0uIsbisAxmutZyqnlgN70VDd
-         sJiA==
-X-Gm-Message-State: AOAM533LdKvWAPj+dXFGSB0ymMF1MqxNupS1cr7BV8OEi6EuHdedtSDH
-        HwdLVJ/Q9r2xNW4WIXSZZA==
-X-Google-Smtp-Source: ABdhPJz5CUXWiXyWIo2GOUgX7pfaopKLNbdwnQHpV8DX2NGyQLQJHDI2yPF3P1/t/oFO9FJXZ4UerQ==
-X-Received: by 2002:a6b:6b18:: with SMTP id g24mr873118ioc.8.1594841377213;
-        Wed, 15 Jul 2020 12:29:37 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id q2sm1515657ilp.82.2020.07.15.12.29.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 12:29:36 -0700 (PDT)
-Received: (nullmailer pid 685623 invoked by uid 1000);
-        Wed, 15 Jul 2020 19:29:35 -0000
-Date:   Wed, 15 Jul 2020 13:29:35 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     heiko@sntech.de, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1 1/2] dt-bindings: arm: rockchip: add A95X Z2
- description
-Message-ID: <20200715192935.GA684031@bogus>
-References: <20200620134659.4592-1-jbx6244@gmail.com>
- <20200620134659.4592-2-jbx6244@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rR8gIS4VQXCjAcXSb96e3TYhEFgbcxFTF7+lqvB96Mc=;
+        b=motEWGcSeYwHkazo3nMQJgRDyhuUHFvbIAo/Pyvr9xXax4d53MNNLnLZF4QPYfaefP
+         lK/nCQMWcDGYbSAT4Du8qkYzuSlp6BeEAu7wYqq5V6ib9pAr2YozUNpUbOBHCfBY6VrS
+         TCSkvOt7OCobFyvbG9g2d52it0WkC198c+MPrsbEkCI6b4oySVh4LLAxfj7SogTsGPtk
+         X0Kp+rCFkWScp8mNvw157HQfGJya0QVTg75fMnPcRtXs1fJo8AhSbAgmFxztrBwd1k6D
+         Y8HY79bv9nI8qsxdwhrRUZT0+LzaKJhEIhiPU+oIg0aUi2IP0ODR43g9KlrAFt1CwpQP
+         r5vw==
+X-Gm-Message-State: AOAM530FaHJIZsA/FdR8W7kzS3i32MkuV7fLasPa1VDIsazGl++yaPfz
+        Es1/rbs1PpkKn+6yfo8m0TyBcuc8R1GoKtoDwSFWrw==
+X-Google-Smtp-Source: ABdhPJxiRGfd0eoaoROgXUN9uWZUGskblIlhMLdmnnt1Ctbn9jndJMJXv2b3Wfretv7Kef+W1jIxo86dAC31T7EKRgs=
+X-Received: by 2002:a05:6808:8c4:: with SMTP id k4mr1126990oij.177.1594841803655;
+ Wed, 15 Jul 2020 12:36:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200620134659.4592-2-jbx6244@gmail.com>
+References: <20200622075956.171058-1-bjorn.andersson@linaro.org> <20200622075956.171058-5-bjorn.andersson@linaro.org>
+In-Reply-To: <20200622075956.171058-5-bjorn.andersson@linaro.org>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date:   Wed, 15 Jul 2020 22:36:31 +0300
+Message-ID: <CAA8EJpqEXcb2DvA+pr=6PmoG1fVQ5kcH0k0VY_jC_Diu_SK=jw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] arm64: dts: qcom: sm8250: Drop tcsr_mutex syscon
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>, linux-remoteproc@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Jun 20, 2020 at 03:46:58PM +0200, Johan Jonker wrote:
-> Add A95X Z2 description for a board with rk3318 processor.
-> 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> ---
->  Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> index d4a404509..3d44b3cf0 100644
-> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> @@ -25,6 +25,11 @@ properties:
->            - const: vamrs,rock960
->            - const: rockchip,rk3399
->  
-> +      - description: A95X Z2
-> +        items:
-> +          - const: a95x,z2
+On Mon, 22 Jun 2020 at 11:00, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> Now that we don't need the intermediate syscon to represent the TCSR
+> mutexes, update the dts to describe the TCSR mutex directly under /soc.
+>
+> The change also fixes the sort order of the nodes.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Need to document vendor prefix.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-> +          - const: rockchip,rk3318
-> +
->        - description: Amarula Vyasa RK3288
->          items:
->            - const: amarula,vyasa-rk3288
-> -- 
-> 2.11.0
-> 
+
+-- 
+With best wishes
+Dmitry
