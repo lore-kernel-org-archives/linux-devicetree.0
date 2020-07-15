@@ -6,79 +6,80 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CEFC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 19:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 757FCC433E5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 19:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B9D920672
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 19:37:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 506E820657
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 19:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594841830;
-	bh=6qdNSfLXUeC9QZHfbaMinI6ehBLm0/L8INXojLrnX0Q=;
+	s=default; t=1594841861;
+	bh=Hwuppz8tb26UpW8WeKn+TE5VN9M/qmS/s+jNssBtRIE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gARgY7bTvMGfDzQCS2ACFWBkav6653mXrfunkLK0mUgGEklF0I9T3lRNl2oeKWM87
-	 g3thfOgAd4FJLTJjBkUqQ4f0/PLM+ZZILxBbgk97mrYm/79Z6Vl+z1uvxRdJoJrfc8
-	 D2jNRbSFlLWGCNB8NTEVCGB6/69EOwqn7/QrLON0=
+	b=GjtBKz1RLpoK0rQs+fZ/xmGR+c+yghwXg0JFVoeD5uezXf4hKcRc4yoZhBLz5APdI
+	 SaW3HGw/thHlPGo5dTCqk7VvBskPsQq+fwqydBvvgSJQqSl0iWjnk5MfPA9mn9JIPs
+	 DLX4IzRcpve6Aku9GASSz9nK6hLkA5LXrxnPN3Js=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbgGOThG (ORCPT
+        id S1727096AbgGOThh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 15:37:06 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42190 "EHLO
+        Wed, 15 Jul 2020 15:37:37 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41270 "EHLO
         mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727021AbgGOThF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 15:37:05 -0400
-Received: by mail-io1-f66.google.com with SMTP id c16so3488417ioi.9;
-        Wed, 15 Jul 2020 12:37:04 -0700 (PDT)
+        with ESMTP id S1726479AbgGOThf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 15:37:35 -0400
+Received: by mail-io1-f66.google.com with SMTP id p205so3501166iod.8;
+        Wed, 15 Jul 2020 12:37:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=WZaIoDzYYl/HXO7lkwjh/Xm4aTRVdttVJOPKuBMdG0Y=;
-        b=KCb12iau8xG2V+/g++kf3vHPFhzrDZ5WauN19JTO/8JKX4Qy1OtCAngL2FHXN3xT2H
-         6QZ0KO2MxGUueFK2Mz2TqZvzFRc0adoiEgIrlzydwiT7+F/2LbOZuliPQBJiJwvB767+
-         v3Wi83vs427LV48U+TbV2OahhvqgduxTpQW+srTsBBxzPkq3VI9SJRoXc07ZlZdtVZnv
-         uYf4A2+IcB4bVf8uz53vWg9glbvd0DziGvLA7tTSG0aR7llj7sM7myd4tpiTeG0N0NSU
-         T5j4ILG3CQuwz+KgYHWc2oTiMWkVeyJpzEmSgmT5P0wyLf29AcvCAqEllJzmwcuq1OPJ
-         NaGQ==
-X-Gm-Message-State: AOAM531/x88/ZKKzfO+hlbqLnTiRme8WOQYElWTBdMzaz84kMIKrYOMm
-        zC9rhqFkoQI1PWOukhECLLeFoAl3gw==
-X-Google-Smtp-Source: ABdhPJxcBpVavEBVS1LYGqWlui1bdPPAV/Of34Hrn8YE0UAQW3n3OJuA4f90VAJa6/W+EUbZLkh/vg==
-X-Received: by 2002:a6b:8d04:: with SMTP id p4mr901288iod.174.1594841823937;
-        Wed, 15 Jul 2020 12:37:03 -0700 (PDT)
+        bh=6yPEJQ72Q1EfjEQSdgbDJUxAG/Z1XD+AX4bIWkXOAZg=;
+        b=AVTLuYLkPR5aLldQKyhzl1xhO0zyByUQyDzIwaTjSXN9NKZ1HeAAYHB53RUYVcawoN
+         1L0QtA+CWR03pv+uIqmuHUUHDRmLvqQ5qO8GZLXBP2PszKaqQTwZLyJPtDyRgLDYpu3t
+         nVyir8swxNBOiCeXUR0ny6SFUdnLxxzV+TSL+AUZxSKST487kznsl18W8xMEQnH5CIrQ
+         yZV4H2kNgUIO9SVfFD8ShDeAcRI7h2GqqER2Yj2KOA7d2WNlswIYWP2zYnGmMfW5YESN
+         fkehtTt0womhSDOXQytp/QQSXxQR3oi87qm7fdLTBmQC8n9Y5it484K2YO9mu68k0O6q
+         zVOg==
+X-Gm-Message-State: AOAM530TqD6B3NCae2XYUibUQNXeul2jQdRW9AGEf+1c68ZMDnklghxk
+        gq7MdZdLo24NItHJSXL+HQNOPT2u8A==
+X-Google-Smtp-Source: ABdhPJzuQ0nT4s41jp1YOfkEXOeSdQsfn/Wq2jydOXxQtQlEud9sRPHgTsAshlMejXSjulz4/siM4g==
+X-Received: by 2002:a02:cc58:: with SMTP id i24mr1143377jaq.38.1594841855092;
+        Wed, 15 Jul 2020 12:37:35 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id k1sm1506055ilr.35.2020.07.15.12.37.02
+        by smtp.gmail.com with ESMTPSA id c16sm1506198ilh.54.2020.07.15.12.37.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 12:37:03 -0700 (PDT)
-Received: (nullmailer pid 696024 invoked by uid 1000);
-        Wed, 15 Jul 2020 19:37:02 -0000
-Date:   Wed, 15 Jul 2020 13:37:02 -0600
+        Wed, 15 Jul 2020 12:37:34 -0700 (PDT)
+Received: (nullmailer pid 696944 invoked by uid 1000);
+        Wed, 15 Jul 2020 19:37:33 -0000
+Date:   Wed, 15 Jul 2020 13:37:33 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     od@zcrc.me, =?utf-8?B?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Subject: Re: [PATCH 1/7] dt-bindings: vendor-prefixes: Add YLM
-Message-ID: <20200715193702.GA695993@bogus>
+Cc:     =?utf-8?B?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>, od@zcrc.me,
+        devicetree@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/7] dt-bindings: timer/ingenic,tcu: Add compatible
+ strings for JZ4725B SoC
+Message-ID: <20200715193733.GA696896@bogus>
 References: <20200623182432.187843-1-paul@crapouillou.net>
+ <20200623182432.187843-3-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200623182432.187843-1-paul@crapouillou.net>
+In-Reply-To: <20200623182432.187843-3-paul@crapouillou.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 23 Jun 2020 20:24:26 +0200, Paul Cercueil wrote:
-> Shenzhen Yangliming Electronic Technology Co., Ltd., abbreviated YLM or
-> YLMChina, and known as Anbernic in the rest of the world, is a Chinese
-> manufacturer of handheld game consoles, some of which are known to be
-> running Linux.
+On Tue, 23 Jun 2020 20:24:28 +0200, Paul Cercueil wrote:
+> Add compatible strings for the PWM and watchdog IPs on the Ingenic
+> JZ4725B SoC.
 > 
 > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+>  Documentation/devicetree/bindings/timer/ingenic,tcu.yaml | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
