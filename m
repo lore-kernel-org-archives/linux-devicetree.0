@@ -2,110 +2,147 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21201C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 16:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4993AC433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 16:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0A3A20672
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 16:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 213B32075F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 16:17:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o9c4MJmX"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="jaUQqOIp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725861AbgGOQGQ (ORCPT
+        id S1725832AbgGOQRE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 12:06:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37668 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbgGOQC5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 12:02:57 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95F8FC08C5DB
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 09:02:40 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id t6so3297113pgq.1
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 09:02:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FojCQD0soL8L04oOiGd4PA6/4vPUGRHj5zClY/TRPYE=;
-        b=o9c4MJmXZhdJnJvZPE9FDAfuRd9z181vQC0EyB7eV0Vqd13Md5EaEuu7+Xo1aKJR1N
-         itYOoAXd3hF9Vq+MXGUDY4r33mgpBs6bIS5cYT871cdxz1PxpC3wdJjBt77O3SkaagNK
-         1S4V/xo2K8hWtE/o3o8n9HwgVOhXLoHmAVPvtSPIJ8EF+ZEt8HZOPbBsdkEnYHcAvYWR
-         KS2BZ361E7EeWDQCKIOjqyppvfucHF7sxiEhSdPCrmPOYsXmfeVHQeGoSG0qFWDCJCrX
-         d61ByL5zdorBmqdAXDW5nCCyL/ZcuTzfEJIXYEBeyA4loh8VdpYccawhyB7WMq4d7iQL
-         AGFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FojCQD0soL8L04oOiGd4PA6/4vPUGRHj5zClY/TRPYE=;
-        b=O2HwhoJCC2Fw0KPwMki/T7F0SIdRhdl88+UyOqwcROia13fg6zjoOnLaPkPvinG3mQ
-         qZxsTQzGJjrxE+A4V+9eugK5WhOS2HhAwss60JETihl+B9gnTaR1TtsCYBtl7vq8KeVf
-         qA4RbtBiLVu5qyyG6yVEgXrzfgbhfOegMeArwL0fp1Vzx2P1PMqZxYTyiGWSUPGjN9pG
-         iDwU6XY1yvV54PebbSTVDv2Z00KCBVTrOAo2E6otLZaB22k4gnftY0y2cpMxkCvTsh3y
-         6GURgzldU9VAgqQWIZ7wVurW2Ou0rhYnSNGmdciw5vCaP3Tj8xwpGPDuR8zX4zcAUSaD
-         NCxQ==
-X-Gm-Message-State: AOAM5324EKqSwQ+/GXzuXD/CyWb9F6XlVT5Hgn0fUaMzwEWoq46gxTyi
-        myKI8Ys/Ypc48pe+XiO01JIfxOps
-X-Google-Smtp-Source: ABdhPJyxCVqUzd3vAJRX+GM36miY+jtS2+L+UYd39LbvOgCrUKbfH9foNP6Qm4zApSMKeBufYVfUVQ==
-X-Received: by 2002:a65:640c:: with SMTP id a12mr380941pgv.88.1594828959616;
-        Wed, 15 Jul 2020 09:02:39 -0700 (PDT)
-Received: from localhost.localdomain ([103.51.74.198])
-        by smtp.gmail.com with ESMTPSA id 4sm2520157pgk.68.2020.07.15.09.02.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 09:02:38 -0700 (PDT)
-From:   Anand Moon <linux.amoon@gmail.com>
-To:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCHv1 2/3] arm64: dts: meson-g12b-odroid-n2: Disable virtual wake RTC
-Date:   Wed, 15 Jul 2020 16:02:08 +0000
-Message-Id: <20200715160209.652-3-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200715160209.652-1-linux.amoon@gmail.com>
-References: <20200715160209.652-1-linux.amoon@gmail.com>
+        Wed, 15 Jul 2020 12:17:04 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:33506 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725770AbgGOQRE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 12:17:04 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C1612564;
+        Wed, 15 Jul 2020 18:17:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1594829821;
+        bh=IomH7o8rac3NGmFDKq1XchQn1ckZPiqly9xWhwp/YxU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jaUQqOIp4sYgb5+PK2ECSVB6gHmIaFhcSOyjNOzGVkTcMGoxDBN4GFcOHGYUoLEjP
+         s+zYYO6jRFaImebUx8AWRf8RrYYXW27cFtVEzyEXmMPlhc7UTyGLTPgm1pdNSeoXhh
+         kE5d5JEXRS5csWu5w1LJvfqm5M2cIciiNaUA8XnY=
+Date:   Wed, 15 Jul 2020 19:16:47 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Vishal Sagar <vishal.sagar@xilinx.com>
+Cc:     hyunk@xilinx.com, hverkuil@xs4all.nl, mchehab@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, michals@xilinx.com,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        joe@perches.com, sandipk@xilinx.com, dineshk@xilinx.com
+Subject: Re: [PATCH v3 1/3] v4l2-dv-timings: Add timings for 1920x1080P48 and
+ 4KP48
+Message-ID: <20200715161647.GD6144@pendragon.ideasonboard.com>
+References: <20200618053304.14551-1-vishal.sagar@xilinx.com>
+ <20200618053304.14551-2-vishal.sagar@xilinx.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200618053304.14551-2-vishal.sagar@xilinx.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Disable virtual wake RTC node on Odroid N2.
+Hi Vishal,
 
-[    7.171149] meson-vrtc ff8000a8.rtc: registered as rtc0
-[    7.182875] meson-vrtc ff8000a8.rtc: setting system clock to 1970-01-01T00:00:07 UTC (7)
+Thank you for the patch.
 
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
----
- arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+On Thu, Jun 18, 2020 at 11:03:02AM +0530, Vishal Sagar wrote:
+> Add the timing entry for 1920x1080p48, 3840x2160p48 and 4096x2160p48
+> from CTA-861-G.
+> 1920x1080p48 is VIC 111.
+> 3840x2160P48 is VIC 114.
+> 4096x2160P48 is VIC 115.
+> 
+> Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+> ---
+> v3
+> - Added for first time
+> 
+>  include/uapi/linux/v4l2-dv-timings.h | 31 +++++++++++++++++++++++++++-
+>  1 file changed, 30 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/uapi/linux/v4l2-dv-timings.h b/include/uapi/linux/v4l2-dv-timings.h
+> index b52b67c62562..6ceaa7841923 100644
+> --- a/include/uapi/linux/v4l2-dv-timings.h
+> +++ b/include/uapi/linux/v4l2-dv-timings.h
+> @@ -167,6 +167,16 @@
+>  		V4L2_DV_FL_HAS_CEA861_VIC, { 0, 0 }, 20) \
+>  }
+>  
+> +#define V4L2_DV_BT_CEA_1920X1080P48 { \
+> +	.type = V4L2_DV_BT_656_1120, \
+> +	V4L2_INIT_BT_TIMINGS(1920, 1080, 0, \
+> +		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
+> +		148500000, 638, 44, 148, 4, 5, 36, 0, 0, 0, \
+> +		V4L2_DV_BT_STD_CEA861, \
+> +		V4L2_DV_FL_CAN_REDUCE_FPS | V4L2_DV_FL_IS_CE_VIDEO | \
+> +		V4L2_DV_FL_HAS_CEA861_VIC, { 0, 0 }, 111) \
+> +}
+> +
+>  #define V4L2_DV_BT_CEA_1920X1080P50 { \
+>  	.type = V4L2_DV_BT_656_1120, \
+>  	V4L2_INIT_BT_TIMINGS(1920, 1080, 0, \
+> @@ -229,6 +239,16 @@
+>  		{ 0, 0 }, 95, 1) \
+>  }
+>  
+> +#define V4L2_DV_BT_CEA_3840X2160P48 { \
+> +	.type = V4L2_DV_BT_656_1120, \
+> +	V4L2_INIT_BT_TIMINGS(3840, 2160, 0, \
+> +		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
+> +		594000000, 1276, 88, 296, 8, 10, 72, 0, 0, 0, \
+> +		V4L2_DV_BT_STD_CEA861, \
+> +		V4L2_DV_FL_CAN_REDUCE_FPS | V4L2_DV_FL_IS_CE_VIDEO | \
+> +		V4L2_DV_FL_HAS_CEA861_VIC, { 0, 0 }, 114) \
+> +}
+> +
+>  #define V4L2_DV_BT_CEA_3840X2160P50 { \
+>  	.type = V4L2_DV_BT_656_1120, \
+>  	V4L2_INIT_BT_TIMINGS(3840, 2160, 0, \
+> @@ -278,6 +298,16 @@
+>  		V4L2_DV_FL_HAS_CEA861_VIC, { 0, 0 }, 100) \
+>  }
+>  
+> +#define V4L2_DV_BT_CEA_4096X2160P48 { \
+> +	.type = V4L2_DV_BT_656_1120, \
+> +	V4L2_INIT_BT_TIMINGS(4096, 2160, 0, \
+> +		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
+> +		594000000, 1020, 88, 296, 8, 10, 72, 0, 0, 0, \
+> +		V4L2_DV_BT_STD_CEA861, \
+> +		V4L2_DV_FL_CAN_REDUCE_FPS | V4L2_DV_FL_IS_CE_VIDEO | \
+> +		V4L2_DV_FL_HAS_CEA861_VIC, { 0, 0 }, 115) \
+> +}
+> +
+>  #define V4L2_DV_BT_CEA_4096X2160P50 { \
+>  	.type = V4L2_DV_BT_656_1120, \
+>  	V4L2_INIT_BT_TIMINGS(4096, 2160, 0, \
+> @@ -297,7 +327,6 @@
+>  		V4L2_DV_FL_HAS_CEA861_VIC, { 0, 0 }, 102) \
+>  }
+>  
+> -
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-index a447cba4dd53..c8c1262a7bfc 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-@@ -517,3 +517,7 @@ &usb2_phy1 {
- 	/* Enable the hub which is connected to this port */
- 	phy-supply = <&hub_5v>;
- };
-+
-+&vrtc {
-+	status = "disabled";
-+};
+This seems to be an unrelated change. Apart from that,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+>  /* VESA Discrete Monitor Timings as per version 1.0, revision 12 */
+>  
+>  #define V4L2_DV_BT_DMT_640X350P85 { \
+
 -- 
-2.27.0
+Regards,
 
+Laurent Pinchart
