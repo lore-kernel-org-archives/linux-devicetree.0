@@ -2,176 +2,168 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82261C433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 03:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E83AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 04:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5818B2074B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 03:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D675F206F0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 04:14:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gXgfsJJ4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K1HTY9Dw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbgGODto (ORCPT
+        id S1726829AbgGOEOO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jul 2020 23:49:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37364 "EHLO
+        Wed, 15 Jul 2020 00:14:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbgGODto (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jul 2020 23:49:44 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69B64C061755
-        for <devicetree@vger.kernel.org>; Tue, 14 Jul 2020 20:49:44 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id md7so1945746pjb.1
-        for <devicetree@vger.kernel.org>; Tue, 14 Jul 2020 20:49:44 -0700 (PDT)
+        with ESMTP id S1726458AbgGOEON (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 00:14:13 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D4CAC061755;
+        Tue, 14 Jul 2020 21:14:13 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id x62so708835qtd.3;
+        Tue, 14 Jul 2020 21:14:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=L1MZa7I2FUiTYOmy499OnTCIjSLBqRD31P7fdisA5IE=;
-        b=gXgfsJJ4MdMmnwG64cIsG2YaNVG8hFB09bzTK7A8ECgTeHPHJAszwFZTdL2HmdNeKn
-         /FQ/fkWjzPV54P4Hk0AEYpO5EJGVUEka4WxBI4ByQd9Hx3pE0Q2QI54lF8YpXBjj3N2V
-         txcmu7iZy9WrLC9w2AjMl6lIngNd24pEUxvuk=
+        bh=foDNNdgIp5gEZxCFX16NjXsSXtzimT2AqP9s4DUPnRU=;
+        b=K1HTY9DwxKkwlxnhxfdiEyaM+jc4pxAHsm3ZoHLNf46o0NPweVzUmsjJtWpbSuLE+5
+         lvihYceaJxRcEpAn5Y7EIeZe/uvSunAtgqS9kNlEQiAGK00zW7tqpXxTeSY/4j+aQStZ
+         dmrHIkiZe+s8yH734YCb8MWgS9ATNCn5XMcrXihLhLhW4cwiabHZHBVUHd1gjGLW4Q1k
+         a0OvsQS95Pvuit+60T/5UuMN5I0UHd0X5zOBO38F201gGpVLceSzNqKd3aGWubrmj2EM
+         Mn2jFZoMXI7qVziDUAk642VoUW2CExUIyYCmfbb46N7N3LTCKRJRuW2yeEO85s+bRLIn
+         UHIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=L1MZa7I2FUiTYOmy499OnTCIjSLBqRD31P7fdisA5IE=;
-        b=ZiL1KGedxnBpMXO3FInQ+w5d4z73w4VS85cp2Zx3+J/bvo0CHLL3dxwIqbIIOx8p4a
-         mXe5kaQi1rWZffkgQgJCq8IRpP4VQCxstTSGM59skCo3h/+Wz8Mvp1HqV/L6EJBYhCPH
-         IbldyfKpC0ZTq7mGKWpFYTomUrEDOyJmzw6OZJD+7Eiz/uGhESccbZFQwauLsqmo4jbR
-         98koQSatkXvBQcqFH2nFSgjUheFx84cv1xUNk8iFxQuj60lrtRGMHIMZU+zPdefXnqu+
-         Kcwp/H/lO+Ss/+5f2zEaHizemen5GarqtRkkxJ4MW2dkd30pSWd15tp4oyXLbtNGLNOo
-         rgrQ==
-X-Gm-Message-State: AOAM533QeoK9zMJbUnxDvFG+VJs6z1UVq+qphITAGHAJTNQWmW8ooz7L
-        8b9OF5zXbm4a8I8m4ZyrVBJF3oemIds=
-X-Google-Smtp-Source: ABdhPJxfDsYhWcU6wyq2UYPWeghKDW9iFdaOVs9H5ldmF3JQVsRJrRG5K/POUU/CE17m4e0f2RgjwQ==
-X-Received: by 2002:a17:902:d698:: with SMTP id v24mr6450813ply.163.1594784983597;
-        Tue, 14 Jul 2020 20:49:43 -0700 (PDT)
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com. [209.85.215.179])
-        by smtp.gmail.com with ESMTPSA id h15sm528605pfo.192.2020.07.14.20.49.43
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jul 2020 20:49:43 -0700 (PDT)
-Received: by mail-pg1-f179.google.com with SMTP id w2so1927831pgg.10
-        for <devicetree@vger.kernel.org>; Tue, 14 Jul 2020 20:49:43 -0700 (PDT)
-X-Received: by 2002:a92:de42:: with SMTP id e2mr7643677ilr.189.1594784623009;
- Tue, 14 Jul 2020 20:43:43 -0700 (PDT)
+        bh=foDNNdgIp5gEZxCFX16NjXsSXtzimT2AqP9s4DUPnRU=;
+        b=hmLLa0iAOZfoB/jGrNMB3Gg/3clEtRSG3DAq+Bq7T5Xg5Mi//0VQ8Jiheozfl+554W
+         zMufiXJBReL0LbMFP3hY1uQ+I32iv9s0KvU1mGyfAjWeXQvDZ8WFQMHb24rdKzEIH4jY
+         GPzawy7WmqFJcjfb/y7yXuvimo3Rhj1qiMjXp72n6FO8COnt5hsGVmmLamJzLnLKgXPu
+         ApXa4jP4YnVln0nf2vSkUZLdJVNvH+jURhEJqCszEDNOxDPrN9hDnTx6i85PWpT00Ptn
+         L1VmMxaYFXkjYGZ3TIBG0L6gKD5nSCUYsW2GLdUL06xlv1ED7/Me/Lq45eAH5/4Blxwt
+         aKPA==
+X-Gm-Message-State: AOAM533s72WljpwaLq2TYunbmP4u3aHjBj24BQC1pQdJ67/pinMM0HjM
+        7FJ80K/BVR9r5BCWNpES30G/5ocT+n6+/Ln6P34=
+X-Google-Smtp-Source: ABdhPJz9uu3YAldIkZ25DwFl7GQTjr4Q/2qWdCJALV+nDYpRz3j+ggBoJDewGFe15ct9g6o4fvRHNE0l6dRRFxn2zpM=
+X-Received: by 2002:ac8:41c6:: with SMTP id o6mr8114697qtm.292.1594786452616;
+ Tue, 14 Jul 2020 21:14:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200713091211.2183368-1-tientzu@chromium.org> <8a7ce34e-87c0-d224-3974-34f1877fbb0e@arm.com>
-In-Reply-To: <8a7ce34e-87c0-d224-3974-34f1877fbb0e@arm.com>
-From:   Claire Chang <tientzu@chromium.org>
-Date:   Wed, 15 Jul 2020 11:43:31 +0800
-X-Gmail-Original-Message-ID: <CALiNf2_GdC1RSLyYSu+LWXHGQZiAL69zNuW0sowuCDdRWw4HJg@mail.gmail.com>
-Message-ID: <CALiNf2_GdC1RSLyYSu+LWXHGQZiAL69zNuW0sowuCDdRWw4HJg@mail.gmail.com>
-Subject: Re: [PATCH 0/4] Bounced DMA support
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, frowand.list@gmail.com,
-        hch@lst.de, m.szyprowski@samsung.com, treding@nvidia.com,
-        Greg KH <gregkh@linuxfoundation.org>, saravanak@google.com,
-        suzuki.poulose@arm.com, dan.j.williams@intel.com,
-        heikki.krogerus@linux.intel.com, bgolaszewski@baylibre.com,
-        devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, tfiga@chromium.org,
-        Nicolas Boichat <drinkcat@chromium.org>
+References: <1594717536-5188-1-git-send-email-shengjiu.wang@nxp.com>
+ <1594717536-5188-4-git-send-email-shengjiu.wang@nxp.com> <20200714211432.GA10818@Asurada-Nvidia>
+In-Reply-To: <20200714211432.GA10818@Asurada-Nvidia>
+From:   Shengjiu Wang <shengjiu.wang@gmail.com>
+Date:   Wed, 15 Jul 2020 12:14:01 +0800
+Message-ID: <CAA+D8ANQ_B9jJUhLYQnKxKJcVrmvakxPo58h433QqFhdu2nRPA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] ASoC: fsl-asoc-card: Support Headphone and Microphone
+ Jack detection
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        linuxppc-dev@lists.ozlabs.org, Timur Tabi <timur@kernel.org>,
+        kuninori.morimoto.gx@renesas.com, samuel@sholland.org,
+        katsuhiro@katsuster.net,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Takashi Iwai <tiwai@suse.com>, Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 7:40 PM Robin Murphy <robin.murphy@arm.com> wrote:
+On Wed, Jul 15, 2020 at 5:16 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
 >
-> On 2020-07-13 10:12, Claire Chang wrote:
-> > This series implements mitigations for lack of DMA access control on
-> > systems without an IOMMU, which could result in the DMA accessing the
-> > system memory at unexpected times and/or unexpected addresses, possibly
-> > leading to data leakage or corruption.
+> Hi Shengjiu,
+>
+> The whole series looks good to me. Just a couple of small
+> questions inline:
+>
+> On Tue, Jul 14, 2020 at 05:05:36PM +0800, Shengjiu Wang wrote:
+> > Use asoc_simple_init_jack function from simple card to implement
+> > the Headphone and Microphone detection.
+> > Register notifier to disable Speaker when Headphone is plugged in
+> > and enable Speaker when Headphone is unplugged.
+> > Register notifier to disable Digital Microphone when Analog Microphone
+> > is plugged in and enable DMIC when Analog Microphone is unplugged.
 > >
-> > For example, we plan to use the PCI-e bus for Wi-Fi and that PCI-e bus
-> > is not behind an IOMMU. As PCI-e, by design, gives the device full
-> > access to system memory, a vulnerability in the Wi-Fi firmware could
-> > easily escalate to a full system exploit (remote wifi exploits: [1a],
-> > [1b] that shows a full chain of exploits; [2], [3]).
+> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > ---
+> >  sound/soc/fsl/Kconfig         |  1 +
+> >  sound/soc/fsl/fsl-asoc-card.c | 69 ++++++++++++++++++++++++++++++++++-
+> >  2 files changed, 68 insertions(+), 2 deletions(-)
+>
+> >  static int fsl_asoc_card_late_probe(struct snd_soc_card *card)
+> >  {
+> >       struct fsl_asoc_card_priv *priv = snd_soc_card_get_drvdata(card);
+> > @@ -745,8 +789,29 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
+> >       snd_soc_card_set_drvdata(&priv->card, priv);
 > >
-> > To mitigate the security concerns, we introduce bounced DMA. The bounced
-> > DMA ops provide an implementation of DMA ops that bounce streaming DMA
-> > in and out of a specially allocated region. The feature on its own
-> > provides a basic level of protection against the DMA overwriting buffer
-> > contents at unexpected times. However, to protect against general data
-> > leakage and system memory corruption, the system needs to provide a way
-> > to restrict the DMA to a predefined memory region (this is usually done
-> > at firmware level, e.g. in ATF on some ARM platforms).
+> >       ret = devm_snd_soc_register_card(&pdev->dev, &priv->card);
+> > -     if (ret && ret != -EPROBE_DEFER)
+> > -             dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", ret);
+> > +     if (ret) {
+> > +             if (ret != -EPROBE_DEFER)
+> > +                     dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", ret);
 >
-> More to the point, this seems to need some fairly special interconnect
-> hardware too. On typical systems that just stick a TZASC directly in
-> front of the memory controller it would be hard to block DMA access
-> without also blocking CPU access. With something like Arm TZC-400 I
-> guess you could set up a "secure" region for most of DRAM that allows NS
-> accesses by NSAID from the CPUs, then similar regions for the pools with
-> NSAID access for both the respective device and the CPUs, but by that
-> point you've probably used up most of the available regions before even
-> considering what the firmware and TEE might want for actual Secure memory.
+> I think we may move this EPROBE_DEFER to the asrc_fail label.
+
+If we move this to asrc_fail label, then it will be hard to define the
+error message.
+There are many places that goto asrc_fail.
+
 >
-> In short, I don't foresee this being used by very many systems.
-We're going to use this on MTK SoC with MPU (memory protection unit) to
-restrict the DMA access for PCI-e Wi-Fi.
+> > +             goto asrc_fail;
+> > +     }
+> > +
+> > +     if (of_property_read_bool(np, "hp-det-gpio")) {
 >
-> That said,, although the motivation is different, it appears to end up
-> being almost exactly the same end result as the POWER secure
-> virtualisation thingy (essentially: constrain DMA to a specific portion
-> of RAM). The more code can be shared with that, the better.
-Could you share a bit more about the POWER secure virtualisation thingy?
+> Could we move this check inside asoc_simple_init_jack? There's no
+> problem with doing it here though, yet I got a bit confused by it
+> as I thought it's a boolean type property, which would be against
+> the DT bindings until I saw asoc_simple_init_jack() uses the same
+> string to get the GPIO. Just it probably would be a bit tricky as
+> we need it to be optional here.
 >
-> > Currently, 32-bit architectures are not supported because of the need to
-> > handle HIGHMEM, which increases code complexity and adds more
-> > performance penalty for such platforms. Also, bounced DMA can not be
-> > enabled on devices behind an IOMMU, as those require an IOMMU-aware
-> > implementation of DMA ops and do not require this kind of mitigation
-> > anyway.
->
-> Note that we do actually have the notion of bounced DMA with IOMMUs
-> already (to avoid leakage of unrelated data in the same page). I think
-> it's only implemented for intel-iommu so far, but shouldn't take much
-> work to generalise to iommu-dma if anyone wanted to. That's already done
-> a bunch of work to generalise the SWIOTLB routines to be more reusable,
-> so building on top of that would be highly preferable.
-Yes, I'm aware of that and I'll try to put this on top of SWIOTLB.
->
-> Thirdly, the concept of device-private bounce buffers does in fact
-> already exist to some degree too - there are various USB, crypto and
-> other devices that can only DMA to a local SRAM buffer (not to mention
-> subsystems doing their own bouncing for the sake of alignment/block
-> merging/etc.). Again, a slightly more generalised solution that makes
-> this a first-class notion for dma-direct itself and could help supplant
-> some of those hacks would be really really good.
->
-> Robin.
->
-> > [1a] https://googleprojectzero.blogspot.com/2017/04/over-air-exploiting-broadcoms-wi-fi_4.html
-> > [1b] https://googleprojectzero.blogspot.com/2017/04/over-air-exploiting-broadcoms-wi-fi_11.html
-> > [2] https://blade.tencent.com/en/advisories/qualpwn/
-> > [3] https://www.bleepingcomputer.com/news/security/vulnerabilities-found-in-highly-popular-firmware-for-wifi-chips/
-> >
-> >
-> > Claire Chang (4):
-> >    dma-mapping: Add bounced DMA ops
-> >    dma-mapping: Add bounced DMA pool
-> >    dt-bindings: of: Add plumbing for bounced DMA pool
-> >    of: Add plumbing for bounced DMA pool
-> >
-> >   .../reserved-memory/reserved-memory.txt       |  36 +++
-> >   drivers/of/address.c                          |  37 +++
-> >   drivers/of/device.c                           |   3 +
-> >   drivers/of/of_private.h                       |   6 +
-> >   include/linux/device.h                        |   3 +
-> >   include/linux/dma-mapping.h                   |   1 +
-> >   kernel/dma/Kconfig                            |  17 +
-> >   kernel/dma/Makefile                           |   1 +
-> >   kernel/dma/bounced.c                          | 304 ++++++++++++++++++
-> >   9 files changed, 408 insertions(+)
-> >   create mode 100644 kernel/dma/bounced.c
-> >
+> Otherwise, I think we may add a line of comments to indicate that
+> the API would use the same string to get the GPIO.
+
+In asoc_simple_init_jack, gpio_is_valid() will be invalid when there is
+no "hp-det-gpio" property, and asoc_simple_init_jack will return 0.
+
+The reason why I add a check here is mostly for
+snd_soc_jack_notifier_register().
+when there is no jack created, there will be a kernel dump.
+
+or I can use this code:
+
+-       if (of_property_read_bool(np, "hp-det-gpio")) {
+-               ret = asoc_simple_init_jack(&priv->card, &priv->hp_jack,
+-                                           1, NULL, "Headphone Jack");
+-               if (ret)
+-                       goto asrc_fail;
++       ret = asoc_simple_init_jack(&priv->card, &priv->hp_jack,
++                                   1, NULL, "Headphone Jack");
++       if (ret)
++               goto asrc_fail;
+
++       if (priv->hp_jack.jack.jack)
+                snd_soc_jack_notifier_register(&priv->hp_jack.jack,
+&hp_jack_nb);
+-       }
+
+what do you think?
+
+best regards
+wang shengjiu
