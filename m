@@ -8,36 +8,36 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7AEC433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3ED3C432C3
 	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 04:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C9B8206E9
+	by mail.kernel.org (Postfix) with ESMTP id 928E720720
 	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 04:20:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rvBoNDyc"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Ps9SuL2o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728691AbgGOEUp (ORCPT
+        id S1728108AbgGOET0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 00:20:45 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:4601 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728112AbgGOET1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 00:19:27 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f0e83c20000>; Tue, 14 Jul 2020 21:19:14 -0700
+        Wed, 15 Jul 2020 00:19:26 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:11959 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728083AbgGOETZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 00:19:25 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0e83920000>; Tue, 14 Jul 2020 21:18:27 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 14 Jul 2020 21:19:26 -0700
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 14 Jul 2020 21:19:25 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 14 Jul 2020 21:19:26 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jul
- 2020 04:19:26 +0000
+        by hqpgpgate102.nvidia.com on Tue, 14 Jul 2020 21:19:25 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jul
+ 2020 04:19:24 +0000
 Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
  (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 15 Jul 2020 04:19:26 +0000
+ Transport; Wed, 15 Jul 2020 04:19:23 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.160.169]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f0e83cc0004>; Tue, 14 Jul 2020 21:19:25 -0700
+        id <B5f0e83ca0002>; Tue, 14 Jul 2020 21:19:23 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
@@ -47,9 +47,9 @@ CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
         <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-Subject: [RFC PATCH v3 04/18] i2c: tegra: Remove NULL pointer check before clk_enable/disable/prepare/unprepare
-Date:   Tue, 14 Jul 2020 21:20:41 -0700
-Message-ID: <1594786855-26506-5-git-send-email-skomatineni@nvidia.com>
+Subject: [RFC PATCH v3 02/18] arm64: tegra: Add missing clocks and power-domains to Tegra210 VI I2C
+Date:   Tue, 14 Jul 2020 21:20:39 -0700
+Message-ID: <1594786855-26506-3-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
 References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
@@ -57,142 +57,51 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594786754; bh=K1cqc1lt5rx1omIWXrbpyHIFcL/GVkgfSPNdjEnFEXk=;
+        t=1594786707; bh=v4jvA2ws+jGeq8HdlC90J3dYqc1EOn/BsdDD724mHAI=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=rvBoNDycTrsqvlmI/4/NtlrV6CRGHe3zSxK+cM1+PvlVP34uyEOpP+8MYz7JSIA0I
-         IJW4koQ9SUnnDcT2nsT2COn1HOTuVWovEaYFU/8clgodg/FUK/joYjpVVfnje3+jGk
-         TVxJNuPGP0nVjuX8qlM66BCASFNfEyb1CsTw01yhrkdv5EZ23iLBhcPukapummePGE
-         N58btaAvWPpICqtJRm+WtBSQxZbQCNT8mwyT8lNPBKZysA/1E0MuH5boi/Nc58KdNC
-         I+bAIUx2gdJZYtJSsyaEf3BJmYwDR2g5fznJFc6Bf0x+jpgtlSheUnfyP3Hnpct0PU
-         Hzs/zrEjlnIpA==
+        b=Ps9SuL2oJb6j75CIHNyrdHhd8UbkFrZxe1WCcnOux6mjctjrGze2iciHUErXkDdqB
+         CIj1unXhv4hoWgrj2gNEQmqNym3te8EAgNc1asHC3vkbrk0g9u/XIncj2LMv9avzMa
+         WOM8vrkTAtimHYPNevpW6qC8nwAtQpYgMo9uDcZH9zjOxIGk01laX7cPjGek+GTLQi
+         2hu7Jm1tRwG6Z1ppc69lKOrRvNTT0VJdCzCkIh2t1TaIBYdbOLl0nZV49BxpDDROFq
+         v34Z86aRTBjucbb/52qeeIX/S7+zcPHJc+qP1vwVQqbkhXwyRurq7Hlrwp3utxOoGw
+         wmQ0jAxNnxo7Q==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-clk_enable, clk_disable, clk_prepare, and clk_unprepare APIs have
-implementation for checking clk pointer not NULL and clock consumers
-can safely call these APIs without NULL pointer check.
+Tegra210 VI I2C is in VE power domain and i2c-vi node should have
+power-domains property.
 
-So, this patch cleans up Tegra i2c driver to remove explicit checks
-before these APIs.
+Current Tegra210 i2c-vi device node is missing both VI I2C clocks
+and power-domains property.
+
+This patch adds them.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/i2c/busses/i2c-tegra.c | 64 +++++++++++++++---------------------------
- 1 file changed, 23 insertions(+), 41 deletions(-)
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 3be1018..c91307b9 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -655,21 +655,17 @@ static int __maybe_unused tegra_i2c_runtime_resume(struct device *dev)
- 	if (ret)
- 		return ret;
- 
--	if (!i2c_dev->hw->has_single_clk_source) {
--		ret = clk_enable(i2c_dev->fast_clk);
--		if (ret < 0) {
--			dev_err(i2c_dev->dev,
--				"Enabling fast clk failed, err %d\n", ret);
--			return ret;
--		}
-+	ret = clk_enable(i2c_dev->fast_clk);
-+	if (ret < 0) {
-+		dev_err(i2c_dev->dev,
-+			"Enabling fast clk failed, err %d\n", ret);
-+		return ret;
- 	}
- 
--	if (i2c_dev->slow_clk) {
--		ret = clk_enable(i2c_dev->slow_clk);
--		if (ret < 0) {
--			dev_err(dev, "failed to enable slow clock: %d\n", ret);
--			return ret;
--		}
-+	ret = clk_enable(i2c_dev->slow_clk);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to enable slow clock: %d\n", ret);
-+		return ret;
- 	}
- 
- 	ret = clk_enable(i2c_dev->div_clk);
-@@ -688,12 +684,8 @@ static int __maybe_unused tegra_i2c_runtime_suspend(struct device *dev)
- 	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
- 
- 	clk_disable(i2c_dev->div_clk);
--
--	if (i2c_dev->slow_clk)
--		clk_disable(i2c_dev->slow_clk);
--
--	if (!i2c_dev->hw->has_single_clk_source)
--		clk_disable(i2c_dev->fast_clk);
-+	clk_disable(i2c_dev->slow_clk);
-+	clk_disable(i2c_dev->fast_clk);
- 
- 	return pinctrl_pm_select_idle_state(i2c_dev->dev);
- }
-@@ -1716,20 +1708,16 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, i2c_dev);
- 
--	if (!i2c_dev->hw->has_single_clk_source) {
--		ret = clk_prepare(i2c_dev->fast_clk);
--		if (ret < 0) {
--			dev_err(i2c_dev->dev, "Clock prepare failed %d\n", ret);
--			return ret;
--		}
-+	ret = clk_prepare(i2c_dev->fast_clk);
-+	if (ret < 0) {
-+		dev_err(i2c_dev->dev, "Clock prepare failed %d\n", ret);
-+		return ret;
- 	}
- 
--	if (i2c_dev->slow_clk) {
--		ret = clk_prepare(i2c_dev->slow_clk);
--		if (ret < 0) {
--			dev_err(dev, "failed to prepare slow clock: %d\n", ret);
--			goto unprepare_fast_clk;
--		}
-+	ret = clk_prepare(i2c_dev->slow_clk);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to prepare slow clock: %d\n", ret);
-+		goto unprepare_fast_clk;
- 	}
- 
- 	if (i2c_dev->bus_clk_rate > I2C_MAX_FAST_MODE_FREQ &&
-@@ -1843,12 +1831,10 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 	clk_unprepare(i2c_dev->div_clk);
- 
- unprepare_slow_clk:
--	if (i2c_dev->is_vi)
--		clk_unprepare(i2c_dev->slow_clk);
-+	clk_unprepare(i2c_dev->slow_clk);
- 
- unprepare_fast_clk:
--	if (!i2c_dev->hw->has_single_clk_source)
--		clk_unprepare(i2c_dev->fast_clk);
-+	clk_unprepare(i2c_dev->fast_clk);
- 
- 	return ret;
- }
-@@ -1867,12 +1853,8 @@ static int tegra_i2c_remove(struct platform_device *pdev)
- 		tegra_i2c_runtime_suspend(&pdev->dev);
- 
- 	clk_unprepare(i2c_dev->div_clk);
--
--	if (i2c_dev->slow_clk)
--		clk_unprepare(i2c_dev->slow_clk);
--
--	if (!i2c_dev->hw->has_single_clk_source)
--		clk_unprepare(i2c_dev->fast_clk);
-+	clk_unprepare(i2c_dev->slow_clk);
-+	clk_unprepare(i2c_dev->fast_clk);
- 
- 	tegra_i2c_release_dma(i2c_dev);
- 	return 0;
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+index f4e0cc2..3827e43 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+@@ -375,6 +375,12 @@
+ 			compatible = "nvidia,tegra210-i2c-vi";
+ 			reg = <0x0 0x546c0000 0x0 0x00040000>;
+ 			interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&tegra_car TEGRA210_CLK_VI_I2C>,
++				 <&tegra_car TEGRA210_CLK_I2CSLOW>;
++			clock-names = "div-clk", "slow";
++			resets = <&tegra_car TEGRA210_CLK_VI_I2C>;
++			reset-names = "i2c";
++			power-domains = <&pd_venc>;
+ 			status = "disabled";
+ 		};
+ 	};
 -- 
 2.7.4
 
