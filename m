@@ -2,71 +2,159 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC27DC433EC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 09:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D53B0C433E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 09:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6FB42075B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 09:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3183206F5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 09:28:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sHuPXXrR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730376AbgGOJP6 (ORCPT
+        id S1730249AbgGOJ2h (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 05:15:58 -0400
-Received: from bin-mail-out-05.binero.net ([195.74.38.228]:33077 "EHLO
-        bin-mail-out-05.binero.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730526AbgGOJP6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jul 2020 05:15:58 -0400
-X-Halon-ID: ca3f3a42-c67b-11ea-8fb8-005056917f90
-Authorized-sender: niklas@soderlund.pp.se
-Received: from bismarck.berto.se (p4fca2eca.dip0.t-ipconnect.de [79.202.46.202])
-        by bin-vsp-out-02.atm.binero.net (Halon) with ESMTPA
-        id ca3f3a42-c67b-11ea-8fb8-005056917f90;
-        Wed, 15 Jul 2020 11:15:56 +0200 (CEST)
-From:   =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCH v2 3/3] MAINTAINERS: Add ADV7604 bindings documentation
-Date:   Wed, 15 Jul 2020 11:14:55 +0200
-Message-Id: <20200715091455.1772470-4-niklas.soderlund+renesas@ragnatech.se>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200715091455.1772470-1-niklas.soderlund+renesas@ragnatech.se>
-References: <20200715091455.1772470-1-niklas.soderlund+renesas@ragnatech.se>
+        Wed, 15 Jul 2020 05:28:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33244 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729850AbgGOJ2g (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 05:28:36 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF4C4C061755;
+        Wed, 15 Jul 2020 02:28:36 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id d4so2795147pgk.4;
+        Wed, 15 Jul 2020 02:28:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pJvTVWXy3m6W0qHqqi1ZBUoRZaoYbJ8TfIq2rvc7zc0=;
+        b=sHuPXXrR0FXlRt0O0gM1esBKXFMWqSTDJyw4IeTGgOTCe+yeYmq5cKabsfYpOagmHt
+         YnyidHuzjuGVGMy9zKzsSVKJvGWYlGPXQd6wBt8l24TMEgwessmGJv/fK1aoSxn3y7pg
+         HcvGxFnQC1YKf1rXIfZb9VnvCNh+sdObDz/piUsWK7UzyYZajY/cYqC2ZmeMi7bqk9M1
+         TZ5akwzWXVyRgrks0aEAtPWU9V31u1j6utjwZsT6AnDeIKI1BTd/Cu+lLYzqgjR6zJFE
+         qKrNFZU364IDmHSFyCFPozcdC5qLqVzibY8FDfU46BGUCWadWQlx6y8kf+cI6uFxJhYG
+         XCMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pJvTVWXy3m6W0qHqqi1ZBUoRZaoYbJ8TfIq2rvc7zc0=;
+        b=n8QfTXIKBGKHpQkNQLd9q31v1TOCJyOFfaL/SGwoGGYWl9lZZo4MZUefjohYNGZbWV
+         aW0EHJMuEEDHm01YLWLe8hkp91IhbDVZZqiRhouCUm9V+bRqmX3MHtKO0NKOBmJYdlTf
+         5Qa9cbjW7HTdTY9qvtJh9fIaJ+Yh1mNWzlxL5qJmDueNrhW6dulH2wUgvs7ipHDQIGu6
+         OxyKmbmtFPeAwG7aKKukn2N0jdrtBX+y1yjXdw/s79joW1k/tx2UI0nVTvzfv0j4o1cz
+         rHhL/sQrGThteq3QqSVI/8lUkO7E3F3rZ2ta1ijq7wO8GqPTNF+HawITBC6dqCTlX0ls
+         0h3A==
+X-Gm-Message-State: AOAM5335q8wq7rJnxA0MJq6Cja9fWyN91NHB0fFLE9zywp/jCQz+2UV3
+        LUzTIPIe6SmDvIYw+yhcfDM=
+X-Google-Smtp-Source: ABdhPJxOI/TWSkRH4YpTDwc9zURvXajeabWuPS+KR7SoEsT4GhQpTWxvdwrcmGOBgBXTeWfl2oNGkw==
+X-Received: by 2002:a63:ab4f:: with SMTP id k15mr7396434pgp.247.1594805316396;
+        Wed, 15 Jul 2020 02:28:36 -0700 (PDT)
+Received: from nish-HP-Pavilion ([2409:4072:6188:2bbe:d028:8959:a8a3:a7bc])
+        by smtp.gmail.com with ESMTPSA id 17sm1549391pfv.16.2020.07.15.02.28.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 02:28:35 -0700 (PDT)
+From:   Nishant Malpani <nish.malpani25@gmail.com>
+To:     jic23@kernel.org, robh+dt@kernel.org
+Cc:     dragos.bogdan@analog.com, darius.berghe@analog.com,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Nishant Malpani <nish.malpani25@gmail.com>
+Subject: [PATCH 2/2] dt-bindings: iio: gyro: Add DT binding doc for ADXRS290
+Date:   Wed, 15 Jul 2020 14:58:21 +0530
+Message-Id: <20200715092821.14625-1-nish.malpani25@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the YAML dt-bindings document for ADV7604.
+Add devicetree binding document for ADXRS290, a dual-axis MEMS gyroscope.
 
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
 ---
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+ .../bindings/iio/gyroscope/adi,adxrs290.yaml  | 52 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 53 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
 
+diff --git a/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml b/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
+new file mode 100644
+index 000000000000..a997d945fdb0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
+@@ -0,0 +1,52 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2020 Analog Devices Inc.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/gyroscope/adi,adxrs290.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices ADXRS290 Dual-Axis MEMS Gyroscope
++
++maintainers:
++  - Nishant Malpani <nish.malpani25@gmail.com>
++
++description: |
++  Bindings for the Analog Devices ADXRS290 dual-axis MEMS gyroscope device.
++  https://www.analog.com/media/en/technical-documentation/data-sheets/ADXRS290.pdf
++
++properties:
++  compatible:
++    enum:
++      - adi,adxrs290
++
++  reg:
++    maxItems: 1
++
++  spi-max-frequency:
++    maximum: 5000000
++
++  spi-cpol: true
++
++  spi-cpha: true
++
++required:
++  - compatible
++  - reg
++  - spi-max-frequency
++  - spi-cpol
++  - spi-cpha
++
++examples:
++  - |
++    spi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        gyro@0 {
++                   compatible = "adi,adxrs290";
++                   reg = <0>;
++                   spi-max-frequency = <5000000>;
++                   spi-cpol;
++                   spi-cpha;
++        };
++    };
++...
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 496fd4eafb68cccc..b00210a1f6c8da0c 100644
+index dd02cfc410e8..0bb8ac90fba1 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -1091,6 +1091,7 @@ M:	Hans Verkuil <hverkuil-cisco@xs4all.nl>
- L:	linux-media@vger.kernel.org
- S:	Maintained
- F:	drivers/media/i2c/adv7604*
-+F:	Documentation/devicetree/bindings/media/i2c/adv7604.yaml
+@@ -1103,6 +1103,7 @@ M:	Nishant Malpani <nish.malpani25@gmail.com>
+ L:	linux-iio@vger.kernel.org
+ S:	Supported
+ F:	drivers/iio/gyro/adxrs290.c
++F:	Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
  
- ANALOG DEVICES INC ADV7842 DRIVER
- M:	Hans Verkuil <hverkuil-cisco@xs4all.nl>
+ ANALOG DEVICES INC ASOC CODEC DRIVERS
+ M:	Lars-Peter Clausen <lars@metafoo.de>
 -- 
-2.27.0
+2.20.1
 
