@@ -2,312 +2,194 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26105C433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 16:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E00C433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 16:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 024F620663
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 16:29:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="owe9lWhy"
+	by mail.kernel.org (Postfix) with ESMTP id B33E820658
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 16:36:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725866AbgGOQ3O (ORCPT
+        id S1725834AbgGOQgb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 12:29:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41800 "EHLO
+        Wed, 15 Jul 2020 12:36:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbgGOQ3M (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 12:29:12 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09167C061755;
-        Wed, 15 Jul 2020 09:29:12 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 95092564;
-        Wed, 15 Jul 2020 18:29:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1594830548;
-        bh=J0RmO1M1ihQJvW/q2HS1HUBA5UiJRDYlOCO40ivrSEM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=owe9lWhyAxGIol67u3m6+OzIMITqa7IUxf6V+vB33ABRw2f+wURJr7dmS9lLqHJFd
-         aBE5vdEQvPBId8ywbjMCtAGMweNKtXe1C5aCP1Gfyyf/H2VmL+Zi9x41lJkV+DTz1q
-         GMJNQnSuXf49Gq9xxHJdOLXXTEHNcnplNZ2IoQds=
-Date:   Wed, 15 Jul 2020 19:29:01 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Vishal Sagar <vishal.sagar@xilinx.com>
-Cc:     Rob Herring <robh@kernel.org>, hyunk@xilinx.com,
-        hverkuil@xs4all.nl, mchehab@kernel.org, mark.rutland@arm.com,
-        michals@xilinx.com, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, joe@perches.com, sandipk@xilinx.com,
-        dineshk@xilinx.com
-Subject: Re: [PATCH v3 2/3] media: dt-bindings: media: xilinx: Add Xilinx
- UHD-SDI Receiver Subsystem
-Message-ID: <20200715162901.GE6144@pendragon.ideasonboard.com>
-References: <20200618053304.14551-1-vishal.sagar@xilinx.com>
- <20200618053304.14551-3-vishal.sagar@xilinx.com>
- <20200713185447.GA531731@bogus>
+        with ESMTP id S1725792AbgGOQgb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 12:36:31 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7BBEC061755
+        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 09:36:30 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jvkOQ-0001Gr-Qt; Wed, 15 Jul 2020 18:36:26 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jvkOK-0000PJ-M9; Wed, 15 Jul 2020 18:36:20 +0200
+Date:   Wed, 15 Jul 2020 18:36:20 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v5 07/13] pwm: add support for sl28cpld PWM controller
+Message-ID: <20200715163620.xhi24mct5b64qpyp@pengutronix.de>
+References: <20200706175353.16404-1-michael@walle.cc>
+ <20200706175353.16404-8-michael@walle.cc>
+ <20200709085006.b54ype3p4yu64upl@pengutronix.de>
+ <72858253a9094074e9c8cd7a4e1db09f@walle.cc>
+ <20200713084750.qj4hquzd6uz6y526@pengutronix.de>
+ <c0594c34c712ce26b3936d42c92d2361@walle.cc>
+ <20200714160856.rjqi7lv63geil3hm@pengutronix.de>
+ <eedceb44cba9b54e0634f0e8e4f96f70@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="43ja544hwta6zjxk"
 Content-Disposition: inline
-In-Reply-To: <20200713185447.GA531731@bogus>
+In-Reply-To: <eedceb44cba9b54e0634f0e8e4f96f70@walle.cc>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Vishal,
 
-Thank you for the patch.
+--43ja544hwta6zjxk
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 13, 2020 at 12:54:47PM -0600, Rob Herring wrote:
-> On Thu, Jun 18, 2020 at 11:03:03AM +0530, Vishal Sagar wrote:
-> > Add bindings documentation for Xilinx UHD-SDI Receiver Subsystem.
-> > 
-> > The Xilinx UHD-SDI Receiver Subsystem consists of SMPTE UHD-SDI (RX) IP
-> > core, an SDI RX to Video Bridge IP core to convert SDI video to native
-> > video and a Video In to AXI4-Stream IP core to convert native video to
-> > AXI4-Stream.
-> > 
-> > Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
-> > ---
-> > v3
-> > - bpc instead of bpp
-> > - removed bpc as required property (default to 10 bpc)
-> > - add dt-bindings/media/xilinx-sdi.h
-> > - made line-rate as u32 instead of string
-> > - fixed reg
-> > - fixed s/upto/up to/
-> > 
-> > v2
-> > - Removed references to xlnx,video*
-> > - Fixed as per Sakari Ailus and Rob Herring's comments
-> > - Converted to yaml format
-> > 
-> >  .../bindings/media/xilinx/xlnx,sdirxss.yaml   | 132 ++++++++++++++++++
-> >  include/dt-bindings/media/xilinx-sdi.h        |  20 +++
-> >  2 files changed, 152 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
-> >  create mode 100644 include/dt-bindings/media/xilinx-sdi.h
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml b/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
-> > new file mode 100644
-> > index 000000000000..6cfc18ca435f
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
-> > @@ -0,0 +1,132 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/media/xilinx/xlnx,sdirxss.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +
+Hello Michael,
 
-I think a single blank line is enough.
+On Tue, Jul 14, 2020 at 11:09:28PM +0200, Michael Walle wrote:
+> > My wishlist (just as it comes to my mind, so no guarantee of
+> > completeness):
+> >=20
+> >  - can do 0% duty cycle for all supported period lengths
+> >  - can do 100% duty cycle for all supported period lengths
+> >  - supports both polarities
+> >  - supports immediate change of configuration and after completion of
+> >    the currently running period
+> >  - atomic update (i.e. if you go from configuration A to configuration B
+> >    the hardware guarantees to only emit periods of type A and then type
+> >    B. (Depending on the item above, the last A period might be cut off.)
+>=20
+> We actually discussed this, because the implementation would be easier. B=
+ut
+> if the change takes place immediately you might end up with a longer duty
+> cycle. Assume the PWM runs at 80% duty cycle and starts with the on-perio=
+d.
+> If you now change that to 50% you might end up with one successive duty
+> cycle of "130%". Eg. the 80% of the old and right after that you switch to
+> the new 50% and then you'd have a high output which corresponds to a 130%
+> cycle. I don't know if that is acceptable for all applications.
 
-> > +title: Xilinx SMPTE UHD-SDI Receiver Subsystem
-> > +
-> > +maintainers:
-> > +  - Vishal Sagar <vishal.sagar@xilinx.com>
-> > +
-> > +description: |
-> > +  The SMPTE UHD-SDI Receiver (RX) Subsystem allows you to quickly create systems
-> > +  based on SMPTE SDI protocols. It receives unaligned native SDI streams from
-> > +  the SDI GT PHY and outputs an AXI4-Stream video stream, native video, or
-> > +  native SDI using Xilinx transceivers as the physical layer.
-> > +
-> > +  The subsystem consists of
-> > +  1 - SMPTE UHD-SDI Rx
-> > +  2 - SDI Rx to Native Video Bridge
-> > +  3 - Video In to AXI4-Stream Bridge
-> > +
-> > +  The subsystem can capture SDI streams in up to 12G mode 8 data streams and output
-> > +  a dual pixel per clock RGB/YUV444,422/420 10/12 bits per component AXI4-Stream.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - enum:
-> > +        - xlnx,v-smpte-uhdsdi-rx-ss-2.0
-> 
-> Should be indented 2 more spaces.
+I thought this is a "change takes place immediately" implementation?! So
+these problems are actually real here. (And this not happening is exactly
+my wish here. Is there a mis-understanding?)
 
-Or you could simply use
+> >  - emits an irq when configuration changes
+>=20
+> Why would you need the interrupt?
 
-properties:
-  compatible:
-    const: xlnx,v-smpte-uhdsdi-rx-ss-2.0
+To know that the new setting is active. Currently Thierry's ideal PWM
+implementation blocks in pwm_apply_state() until the new setting is
+active. So some signaling is nice.=20
 
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    description: List of clock specifiers
-> 
-> Drop. That's every 'clocks' property.
-> 
-> > +    items:
-> > +      - description: AXI4-Lite clock
-> > +      - description: SMPTE UHD-SDI Rx core clock
-> > +      - description: Video clock
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: s_axi_aclk
-> > +      - const: sdi_rx_clk
-> > +      - const: video_out_clk
-> > +
-> > +  xlnx,bpc:
-> > +    description: Bits per component supported. Can be 10 or 12 bits per component only.
-> > +    allOf:
-> 
-> You can drop the 'allOf' now.
-> 
-> > +      - $ref: "/schemas/types.yaml#/definitions/uint32"
-> > +      - enum: [10, 12]
-> 
-> Seems like this should be a standard property?
+> > > > If you change only cycle but not mode, does the hardware complete t=
+he
+> > > > currently running period?
+> > >=20
+> > > No it does not.
+> >=20
+> > Please document this as a Limitation.
+>=20
+> I've discussed this internally, for now its a limitation. In the worst
+> case you'd do one 100% duty cycle. Maybe we can fix the hardware. I
+> acknowledge that this is a severe limitation, esp. if you use the PWM
+> for controlling stuff (for now its only LCD backlight.. so thats ok).
 
-Rob, if my understanding is correct, this tells for how many bits per
-component the IP core has been synthesized. I think it qualifies as a
-vendor property, as how to express constraints on supported formats (for
-IP cores that can be synthesized with different options) is highly
-vendor-specific.
+That happens if you reduce the duty cycle from A to B and the counter is
+already bigger than B but smaller than A, right? The fix would be to
+compare for counter >=3D match instead of counter =3D match. (Which then
+would result in a period with a duty cycle bigger than B but smaller
+than A. Also not ideal, but probably better.)
 
-Vishal, I think the question I asked in the review of v2 fell through
-the cracks. Is the documentation for the new IP core version available ?
-Should this property only be allowed for the new version, given that in
-v2.0 the BPC is fixed to 10 ?
+> > > > What about disable()?
+> > >=20
+> > > Mhh well, it would do one 100% cycle.. mhh ;) Lets see if there we can
+> > > fix that (in hardware), not much we can do in the driver here. We are
+> > > _very_ constraint in size, therefore all that little edge cases fall
+> > > off
+> > > the table.
+> >=20
+> > You're saying that on disable the hardware emits a constant high level
+> > for one cycle? I hope not ...
+>=20
+> Mh, I was mistaken, disabling the PWM will turn it off immediately, but
 
-> > +
-> > +  xlnx,line-rate:
-> > +    description: |
-> > +      The maximum mode supported by the design. Possible values are as below
-> > +      0 - XSDI_STD_3G      -  3G mode
-> > +      1 - XSDI_STD_6G      -  6G mode
-> > +      2 - XSDI_STD_12G_8DS - 12G mode with 8 data streams
-> > +    allOf:
-> > +      - $ref: "/schemas/types.yaml#/definitions/uint32"
-> > +      - enum: [0, 1, 2]
-> 
-> Standard?
+And does turn off mean, the output gets inactive?
+If so you might also disable the hardware if a 0% duty cycle is
+configured assuming this saves some energy without modifying the
+resulting wave form.
 
-For this one, I'm not sure. There's little support for SDI in the
-kernel, and I'm sure we'll get this wrong the first time. I'd rather try
-not to over-standardize properties before we have more examples.
+> one 100% duty cycle may happen if you change from a higher to a lower
+> duty cycle setting. See above.
+>=20
+> > I never programmed a CPLD to emulate a hardware PWM, but I wonder if
+> > these are really edge cases that increase the size of the binary?!
+>=20
+> At the moment there is only one 8bit register which stores the value
+> which is used for matching. If you want to change that setting after
+> a whole cycle, you'd use another 8bit register to cache the new value.
+> So this would at least needs 8 additional flip-flops. This doesn't
+> sound much, but we are already near 100% usage of the CPLD. So its
+> hard to convince people why this is really necessary.
 
-> > +
-> > +  xlnx,include-edh:
-> > +    type: boolean
-> > +    description: |
-> > +      This is present when the Error Detection and Handling processor is
-> > +      enabled in design.
-> > +
-> > +  ports:
-> > +    type: object
-> > +    description: |
-> > +      Generally the SDI port is connected to a device like SDI Broadcast camera
-> > +      which is independently controlled. Hence port@0 is a source port which can be
-> > +      connected to downstream IP which can work with AXI4 Stream data.
-> > +    properties:
-> > +      port@0:
-> > +        type: object
-> > +        description: Source port
-> > +        properties:
-> > +          reg:
-> > +            const: 0
-> > +          endpoint:
-> > +            type: object
-> > +            properties:
-> > +              remote-endpoint: true
-> > +            required:
-> > +              - remote-endpoint
-> > +            additionalProperties: false
-> > +        additionalProperties: false
+OK. (Maybe there is enough space to allow implementing 100% for mode 0?)
 
-Same here, I explained in the review of v2 that we should have an input
-port.
+Best regards
+Uwe
 
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - clocks
-> > +  - clock-names
-> > +  - xlnx,line-rate
-> > +  - ports
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/media/xilinx-sdi.h>
-> > +    uhdsdirxss: v-smpte-uhdsdi-rxss@80000000 {
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-The label is not used, you can drop it.
+--43ja544hwta6zjxk
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> > +      compatible = "xlnx,v-smpte-uhdsdi-rx-ss-2.0";
-> > +      interrupt-parent = <&gic>;
-> > +      interrupts = <0 89 4>;
-> > +      reg = <0x80000000 0x10000>;
-> > +      xlnx,include-edh;
-> > +      xlnx,line-rate = <XSDI_STD_12G_8DS>;
-> > +      clocks = <&clk_1>, <&si570_1>, <&clk_2>;
-> > +      clock-names = "s_axi_aclk", "sdi_rx_clk", "video_out_clk";
-> > +      xlnx,bpc = <10>;
+-----BEGIN PGP SIGNATURE-----
 
-I would group the xlnx,* properties after the standard properties.
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8PMIEACgkQwfwUeK3K
+7AmkoQf/Xsa5eWznePZ+LGv5Ny4n0jnjIKQDxCWubAooelGqLEF0EsNjO6hA2ShJ
+0/Bkwa4V22BFbXS2s4Ai4KcM6kEqxytEADlIAVvcfDxTq6aFqYrrNt+gYTLyFJvr
+7WkzW1Jh1FZpqTQck7bUAyOd9VA9Y8aEwnqDnZbUrEctYnhylTz0ogj6RLw2EZqL
+lT/EWHA461DnNoJ19v1QNBTolcDgOBMTZuk8bUBtYAJhf3Zf4m+YOYxTiOgNGOaQ
+yKB5hXTsyURWKJhf0+0pDtWry6Dl2B6xCLa/rLbfkAMx00kaKGRCSd2o7bw+mCj5
+71RVew6wqS5+tx2hi20V582pM4qAnA==
+=G5tl
+-----END PGP SIGNATURE-----
 
-> > +
-> > +      ports {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +        port@0 {
-> > +          reg = <0>;
-> > +          sdirx_out: endpoint {
-> > +            remote-endpoint = <&vcap_sdirx_in>;
-> > +          };
-> > +        };
-> > +      };
-> > +    };
-> > +...
-> > diff --git a/include/dt-bindings/media/xilinx-sdi.h b/include/dt-bindings/media/xilinx-sdi.h
-> > new file mode 100644
-> > index 000000000000..11938fade041
-> > --- /dev/null
-> > +++ b/include/dt-bindings/media/xilinx-sdi.h
-> > @@ -0,0 +1,20 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Xilinx SDI device tree bindings
-> > + *
-> > + * Copyright (C) 2020 Xilinx, Inc.
-> > + *
-> > + * Contacts: Vishal Sagar <vishal.sagar@xilinx.com>
-> > + */
-> > +
-> > +#ifndef __DT_BINDINGS_MEDIA_XILINX_SDI_H__
-> > +#define __DT_BINDINGS_MEDIA_XILINX_SDI_H__
-> > +
-> > +/*
-> > + * SDI Configurations
-> > + */
-> > +#define XSDI_STD_3G		0
-> > +#define XSDI_STD_6G		1
-> > +#define XSDI_STD_12G_8DS	2
-> > +
-> > +#endif /* __DT_BINDINGS_MEDIA_XILINX_SDI_H__ */
-
--- 
-Regards,
-
-Laurent Pinchart
+--43ja544hwta6zjxk--
