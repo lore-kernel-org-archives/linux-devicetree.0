@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 514A3C433EB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 14:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 878C2C433F7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 14:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3282E205CB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 14:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 712D8205CB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 14:06:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732036AbgGOOGf (ORCPT
+        id S1732060AbgGOOGk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 10:06:35 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:44711 "EHLO
+        Wed, 15 Jul 2020 10:06:40 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:59171 "EHLO
         relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732039AbgGOOGf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 10:06:35 -0400
+        with ESMTP id S1732042AbgGOOGj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 10:06:39 -0400
 X-Originating-IP: 93.34.118.233
 Received: from uno.lan (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
         (Authenticated sender: jacopo@jmondi.org)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 5E5AFFF814;
-        Wed, 15 Jul 2020 14:06:30 +0000 (UTC)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 475DFFF81A;
+        Wed, 15 Jul 2020 14:06:35 +0000 (UTC)
 From:   Jacopo Mondi <jacopo+renesas@jmondi.org>
 To:     robh+dt@kernel.org, devicetree@vger.kernel.org,
         linux-media@vger.kernel.org
@@ -32,11 +32,10 @@ Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org,
         sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl,
         laurent.pinchart@ideasonboard.com,
         linux-renesas-soc@vger.kernel.org,
-        Todor Tomov <todor.too@gmail.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 2/8] dt-bindings: media: ov5645: Convert to json-schema
-Date:   Wed, 15 Jul 2020 16:09:45 +0200
-Message-Id: <20200715140951.90753-3-jacopo+renesas@jmondi.org>
+Subject: [PATCH 4/8] dt-bindings: media: imx290: Convert to json-schema
+Date:   Wed, 15 Jul 2020 16:09:47 +0200
+Message-Id: <20200715140951.90753-5-jacopo+renesas@jmondi.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200715140951.90753-1-jacopo+renesas@jmondi.org>
 References: <20200715140951.90753-1-jacopo+renesas@jmondi.org>
@@ -47,115 +46,108 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the ov5645 bindings document to json-schema and update
-the MAINTAINERS file accordingly, as the entry was not documented.
-
-Add myself as maintainer for odd fixes only, as I don't have the
-sensor to test with.
+Convert the imx290 bindings document to json-schema and update
+the MAINTAINERS file accordingly.
 
 Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 ---
+ .../devicetree/bindings/media/i2c/imx290.txt  |  57 --------
+ .../devicetree/bindings/media/i2c/imx290.yaml | 124 ++++++++++++++++++
+ MAINTAINERS                                   |   2 +-
+ 3 files changed, 125 insertions(+), 58 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/media/i2c/imx290.txt
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/imx290.yaml
 
-Hello Todor, Manivannan
-   I've added in this patch an entry for ov5645 in the MAINTAINERS
-file, and I've added myself as maintainers for Odd Fixes only.
-
-As you seem to be the author and committers of this bindings respectively,
-would you be interested in maintaining this driver ?
-
----
- .../devicetree/bindings/media/i2c/ov5645.txt  |  54 --------
- .../devicetree/bindings/media/i2c/ov5645.yaml | 123 ++++++++++++++++++
- MAINTAINERS                                   |   8 ++
- 3 files changed, 131 insertions(+), 54 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.yaml
-
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+diff --git a/Documentation/devicetree/bindings/media/i2c/imx290.txt b/Documentation/devicetree/bindings/media/i2c/imx290.txt
 deleted file mode 100644
-index 72ad992f77be..000000000000
---- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+index a3cc21410f7c..000000000000
+--- a/Documentation/devicetree/bindings/media/i2c/imx290.txt
 +++ /dev/null
-@@ -1,54 +0,0 @@
--* Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
+@@ -1,57 +0,0 @@
+-* Sony IMX290 1/2.8-Inch CMOS Image Sensor
 -
--The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
--an active array size of 2592H x 1944V. It is programmable through a serial I2C
--interface.
+-The Sony IMX290 is a 1/2.8-Inch CMOS Solid-state image sensor with
+-Square Pixel for Color Cameras. It is programmable through I2C and 4-wire
+-interfaces. The sensor output is available via CMOS logic parallel SDR output,
+-Low voltage LVDS DDR output and CSI-2 serial data output. The CSI-2 bus is the
+-default. No bindings have been defined for the other busses.
 -
 -Required Properties:
--- compatible: Value should be "ovti,ov5645".
+-- compatible: Should be "sony,imx290"
+-- reg: I2C bus address of the device
 -- clocks: Reference to the xclk clock.
 -- clock-names: Should be "xclk".
--- clock-frequency: Frequency of the xclk clock.
--- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
--  to the hardware pin PWDNB which is physically active low.
--- reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
--  the hardware pin RESETB.
--- vdddo-supply: Chip digital IO regulator.
--- vdda-supply: Chip analog regulator.
--- vddd-supply: Chip digital core regulator.
+-- clock-frequency: Frequency of the xclk clock in Hz.
+-- vdddo-supply: Sensor digital IO regulator.
+-- vdda-supply: Sensor analog regulator.
+-- vddd-supply: Sensor digital core regulator.
 -
--The device node must contain one 'port' child node for its digital output
--video port, in accordance with the video interface bindings defined in
+-Optional Properties:
+-- reset-gpios: Sensor reset GPIO
+-
+-The imx290 device node should contain one 'port' child node with
+-an 'endpoint' subnode. For further reading on port node refer to
 -Documentation/devicetree/bindings/media/video-interfaces.txt.
 -
--Example:
+-Required Properties on endpoint:
+-- data-lanes: check ../video-interfaces.txt
+-- link-frequencies: check ../video-interfaces.txt
+-- remote-endpoint: check ../video-interfaces.txt
 -
+-Example:
 -	&i2c1 {
 -		...
+-		imx290: camera-sensor@1a {
+-			compatible = "sony,imx290";
+-			reg = <0x1a>;
 -
--		ov5645: ov5645@3c {
--			compatible = "ovti,ov5645";
--			reg = <0x3c>;
--
--			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
--			reset-gpios = <&gpio5 20 GPIO_ACTIVE_LOW>;
+-			reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
 -			pinctrl-names = "default";
 -			pinctrl-0 = <&camera_rear_default>;
 -
--			clocks = <&clks 200>;
+-			clocks = <&gcc GCC_CAMSS_MCLK0_CLK>;
 -			clock-names = "xclk";
--			clock-frequency = <24000000>;
+-			clock-frequency = <37125000>;
 -
--			vdddo-supply = <&camera_dovdd_1v8>;
--			vdda-supply = <&camera_avdd_2v8>;
--			vddd-supply = <&camera_dvdd_1v2>;
+-			vdddo-supply = <&camera_vdddo_1v8>;
+-			vdda-supply = <&camera_vdda_2v8>;
+-			vddd-supply = <&camera_vddd_1v5>;
 -
 -			port {
--				ov5645_ep: endpoint {
--					clock-lanes = <1>;
--					data-lanes = <0 2>;
--					remote-endpoint = <&csi0_ep>;
+-				imx290_ep: endpoint {
+-					data-lanes = <1 2 3 4>;
+-					link-frequencies = /bits/ 64 <445500000>;
+-					remote-endpoint = <&csiphy0_ep>;
 -				};
 -			};
 -		};
--	};
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.yaml b/Documentation/devicetree/bindings/media/i2c/ov5645.yaml
+diff --git a/Documentation/devicetree/bindings/media/i2c/imx290.yaml b/Documentation/devicetree/bindings/media/i2c/imx290.yaml
 new file mode 100644
-index 000000000000..ff52d0fffb74
+index 000000000000..f40e349d4b70
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/ov5645.yaml
-@@ -0,0 +1,123 @@
++++ b/Documentation/devicetree/bindings/media/i2c/imx290.yaml
+@@ -0,0 +1,124 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/media/i2c/ov5645.yaml#
++$id: http://devicetree.org/schemas/media/i2c/imx290.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Omnivision OV5645 1/4 Inch 5Mp CMOS Digital Image Sensor
++title: Sony IMX290 1/2.8-Inch CMOS Image Sensor
 +
 +maintainers:
-+  - Jacopo Mondi <jacopo@jmondi.org>
++  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 +
 +description: -|
-+  The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor
-+  with an active array size of 2592H x 1944V. It is programmable through a
-+  serial I2C interface.
++  The Sony IMX290 is a 1/2.8-Inch CMOS Solid-state image sensor with
++  Square Pixel for Color Cameras. It is programmable through I2C and 4-wire
++  interfaces. The sensor output is available via CMOS logic parallel SDR output,
++  Low voltage LVDS DDR output and CSI-2 serial data output. The CSI-2 bus is the
++  default. No bindings have been defined for the other busses.
 +
 +properties:
 +  compatible:
-+    const: ovti,ov5645
++    const: sony,imx290
 +
 +  reg:
 +    description: I2C device address
@@ -170,30 +162,22 @@ index 000000000000..ff52d0fffb74
 +    maxItems: 1
 +
 +  clock-frequency:
-+    description: Frequency of the xclk clock.
-+
-+  enable-gpios:
-+    description: |
-+      Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
-+      to the hardware pin PWDNB which is physically active low.
-+    maxItems: 1
++    description: Frequency of the xclk clock in Hz.
 +
 +  reset-gpios:
-+    description: |
-+      Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
-+      the hardware pin RESETB.
++    description: Sensor reset GPIO.
 +    maxItems: 1
 +
 +  vdddo-supply:
-+    description: Chip digital IO regulator.
++    description: Sensor digital IO regulator.
 +    maxItems: 1
 +
 +  vdda-supply:
-+    description: Chip analog regulator.
++    description: Sensor analog regulator.
 +    maxItems: 1
 +
 +  vddd-supply:
-+    description: Chip digital core regulator.
++    description: Sensor digital core regulator.
 +    maxItems: 1
 +
 +  port:
@@ -208,10 +192,18 @@ index 000000000000..ff52d0fffb74
 +        type: object
 +        properties:
 +          remote-endpoint:
-+            description: A phandle to the bus receiver's endpoint node.
++            description: check ../video-interfaces.txt
++
++          data-lanes:
++            description: check ../video-interfaces.txt
++
++          link-frequencies:
++            description: check ../video-interfaces.txt
 +
 +        required:
 +          - remote-endpoint
++          - data-lanes
++          - link-frequencies
 +
 +    additionalProperties: false
 +
@@ -234,26 +226,25 @@ index 000000000000..ff52d0fffb74
 +        #address-cells = <1>;
 +        #size-cells = <0>;
 +
-+        camera@3c {
-+            compatible = "ovti,ov5645";
-+            reg = <0x3c>;
++        imx290: camera-sensor@1a {
++            compatible = "sony,imx290";
++            reg = <0x1a>;
 +
-+            enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
-+            reset-gpios = <&gpio5 20 GPIO_ACTIVE_LOW>;
++            reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
 +
-+            clocks = <&clks 200>;
++            clocks = <&camera_clk>;
 +            clock-names = "xclk";
-+            clock-frequency = <24000000>;
++            clock-frequency = <37125000>;
 +
-+            vdddo-supply = <&camera_dovdd_1v8>;
-+            vdda-supply = <&camera_avdd_2v8>;
-+            vddd-supply = <&camera_dvdd_1v2>;
++            vdddo-supply = <&camera_vdddo_1v8>;
++            vdda-supply = <&camera_vdda_2v8>;
++            vddd-supply = <&camera_vddd_1v5>;
 +
 +            port {
-+                ov5645_ep: endpoint {
-+                    clock-lanes = <1>;
-+                    data-lanes = <0 2>;
-+                    remote-endpoint = <&csi0_ep>;
++                imx290_ep: endpoint {
++                    data-lanes = <1 2 3 4>;
++                    link-frequencies = /bits/ 64 <445500000>;
++                    remote-endpoint = <&csiphy0_ep>;
 +                };
 +            };
 +        };
@@ -261,24 +252,18 @@ index 000000000000..ff52d0fffb74
 +
 +...
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 0160d7567ed3..bf8902ebbe30 100644
+index 895fff95fd32..8f9b94aaea84 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -12607,6 +12607,14 @@ T:	git git://linuxtv.org/media_tree.git
- F:	drivers/media/i2c/ov5640.c
- F:	Documentation/devicetree/bindings/media/i2c/ov5640.yaml
+@@ -15930,7 +15930,7 @@ M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+ L:	linux-media@vger.kernel.org
+ S:	Maintained
+ T:	git git://linuxtv.org/media_tree.git
+-F:	Documentation/devicetree/bindings/media/i2c/imx290.txt
++F:	Documentation/devicetree/bindings/media/i2c/imx290.yaml
+ F:	drivers/media/i2c/imx290.c
 
-+OMNIVISION OV5645 SENSOR DRIVER
-+M:	Jacopo Mondi <jacopo@jmondi.org>
-+L:	linux-media@vger.kernel.org
-+S:	Odd Fixes
-+T:	git git://linuxtv.org/media_tree.git
-+F:	drivers/media/i2c/ov5645.c
-+F:	Documentation/devicetree/bindings/media/i2c/ov5645.yaml
-+
- OMNIVISION OV5647 SENSOR DRIVER
- M:	Jacopo Mondi <jacopo@jmondi.org>
- M:	Dave Stevenson <dave.stevenson@raspberrypi.com>
+ SONY IMX319 SENSOR DRIVER
 --
 2.27.0
 
