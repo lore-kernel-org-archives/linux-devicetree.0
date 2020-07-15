@@ -2,141 +2,177 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EFF7C433F4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 09:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 309BCC433FE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 09:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D731206E9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 09:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10CC920657
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 09:04:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YEe2issc"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="FS0PNCS4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730477AbgGOJEw (ORCPT
+        id S1730496AbgGOJE4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 05:04:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57784 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730370AbgGOJEv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 05:04:51 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C82A0C061755
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 02:04:50 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id d18so1478946ion.0
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 02:04:50 -0700 (PDT)
+        Wed, 15 Jul 2020 05:04:56 -0400
+Received: from mail-eopbgr1400129.outbound.protection.outlook.com ([40.107.140.129]:38303
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730070AbgGOJEy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jul 2020 05:04:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gNRbOKlAC1AxBvcYlTG+2v6LkAm2Wa1WC1T1oW21AjhSGGgeFYt1zhdYT5DKrSd/QOgusbZ5u6RZ0YnZJcnjFMKSdKV9VcbjG9qZor5lTEfA7tBci8Arv5mezdrpU5K8vcux4nJ5feIigPBleR0hTLLaPxwOHL46du3v+Rb2ucKfUBfNGZh0K6Dmr1ANzRPEjLut5FnvFzmYbD0hiMFDWthejYGE0EpRoFgNpq555GBivsMM8F36McqB4P6/kLvoGg/y+4/GIWMOQa9JqO9Jxa4nFjDGTb5FPPetuhz46gbbmOr9Uea3lmosrVxbXft6Tv5ziQXBa4gBwBF0OY0XaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pFrNx6yvH6gFGTYk13fEo/bSEe1fFI6L+gJYHVEPdMk=;
+ b=WnRIWuTHOpDACr9b0bml231IBjEnVO1Zj36Fy4oxTP1jI5hk50mjgIIY4TkNJXHm+KKpsjd6OW689Te1vg9le4LgDZkShoCveAjy7fvQU78JOKNi7abwCZvXK78Lnak81Kkyuif3Zs9SwXzu+XGuAsvP6CD7DdKZyHBgCxNgL/1njlDuCLVodlTTnj6mWdKXABiRQt9kSGTWVsCnEfHBqkfnHu5A3++A1pxLNHqyjoCDUOCupQGNtdz6nV3dYTMHHVeSZIgkVpa12GvE0Jfe95/fsSX6sGX1IpvzOvoJhur3EBR6cXB/snNvJTiYZgXC1HgqZcBp7yfNU6mrxy2kgw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=q4dxg/x+C61ezLjqHNaCCzjzXw07QWDdBXsi9fVkAUU=;
-        b=YEe2issca20y2/l73T3sa81rOD0zgi1OUm8I/tbIAEmNaSjKhPdRRwJBKafc2gc3jk
-         xDQYds+jIMarrr7rQWr59jGk4zxqH1Wu2H5gqoNbIV8k/iPjTfSnbsRa7W3NEOcMK3up
-         2LgACIRQucnwj+gcTH6lQJtscwwtIK86qjmEo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=q4dxg/x+C61ezLjqHNaCCzjzXw07QWDdBXsi9fVkAUU=;
-        b=LfmI9B8cyaTICiGfWyc185eikW+p8tN6OlPmJeJzCcOeWlKa6NizSv5Wcf1SSFg1eN
-         QY2z38/cRRQsro1duAqLO2NYdxN2Jsi2StGTYh+qxb6pMSKCzN91csmyJVggnEAJbjqd
-         eBVsSkx4jkvxsM7jfsYBzrliF3cfiTA8x1FadeXb4h4QayHRtTSAxbpwGzlHoR8qSCze
-         PSRGRQfu9TM8xxTgUf9gUQrxrc5vmBhCmsW7mZzunNpwkVJgnSiZ08cfyFNH0dVkuqGP
-         tDjizKg380HGfimc/xiE3pJZ4nJv96yvkR6C9tvueVRxhzfXFGmI4dIy5G/YQpTMmfNC
-         VDuA==
-X-Gm-Message-State: AOAM53075nkKrbJ39D73NGD8+DBYlrt9aq4SPT76Q3mDyG+KxsdcMexb
-        goW63C5aB3hC/A42FpTcTCdgQyZ7HQU=
-X-Google-Smtp-Source: ABdhPJxEZmmYXGDflUoRIVqYOX63riAcAxCZck+OdU667dMeln1ptIZf18DSX05x4lwTmxphClELnw==
-X-Received: by 2002:a02:9642:: with SMTP id c60mr10431180jai.71.1594803889746;
-        Wed, 15 Jul 2020 02:04:49 -0700 (PDT)
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com. [209.85.166.173])
-        by smtp.gmail.com with ESMTPSA id u65sm813586iod.45.2020.07.15.02.04.48
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jul 2020 02:04:48 -0700 (PDT)
-Received: by mail-il1-f173.google.com with SMTP id o3so1307893ilo.12
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 02:04:48 -0700 (PDT)
-X-Received: by 2002:a92:de42:: with SMTP id e2mr8593960ilr.189.1594803887732;
- Wed, 15 Jul 2020 02:04:47 -0700 (PDT)
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pFrNx6yvH6gFGTYk13fEo/bSEe1fFI6L+gJYHVEPdMk=;
+ b=FS0PNCS43rXTilrCOYz1cY6mA9WYe48IlWA6ZQBr7UFs2P0nranCCeYXm/ST6gJY4cUNVR86STITmtX3A4MroghYn8Cek6WBKqc3ogK7XlGk68DlicaYZA6nhEvFWxyAThb7qHuVQtb3dWfZ6Z+blWi0DGVvhLZltDMxj5ZeLtk=
+Received: from OSAPR01MB1748.jpnprd01.prod.outlook.com (2603:1096:603:32::19)
+ by OSBPR01MB2439.jpnprd01.prod.outlook.com (2603:1096:604:11::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Wed, 15 Jul
+ 2020 09:04:49 +0000
+Received: from OSAPR01MB1748.jpnprd01.prod.outlook.com
+ ([fe80::8902:d50b:a2a:9f0a]) by OSAPR01MB1748.jpnprd01.prod.outlook.com
+ ([fe80::8902:d50b:a2a:9f0a%2]) with mapi id 15.20.3195.017; Wed, 15 Jul 2020
+ 09:04:49 +0000
+From:   Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Biju Das <biju.das.jz@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH RESEND v7 1/3] dt-bindings: usb: hd3ss3220 device tree
+ binding document
+Thread-Topic: [PATCH RESEND v7 1/3] dt-bindings: usb: hd3ss3220 device tree
+ binding document
+Thread-Index: AQHWWoQQHSaG8cTLpUGjfVTWSFNQ3KkIWJGA
+Date:   Wed, 15 Jul 2020 09:04:49 +0000
+Message-ID: <OSAPR01MB174830C8011B08B89350BB5DAA7E0@OSAPR01MB1748.jpnprd01.prod.outlook.com>
+References: <1567584941-13690-1-git-send-email-biju.das@bp.renesas.com>
+ <1567584941-13690-2-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdVZkjGDFmeQ9XkOqq-ogfSZz99hd0=N-OYLai4UEzKwAQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdVZkjGDFmeQ9XkOqq-ogfSZz99hd0=N-OYLai4UEzKwAQ@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: bp.renesas.com; dkim=none (message not signed)
+ header.d=none;bp.renesas.com; dmarc=none action=none
+ header.from=bp.renesas.com;
+x-originating-ip: [193.141.220.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 9a26dc08-eef2-4c9a-21fa-08d8289e2103
+x-ms-traffictypediagnostic: OSBPR01MB2439:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <OSBPR01MB2439BF29B9E1FFB13129AE5FAA7E0@OSBPR01MB2439.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2887;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 9L/TXoHlymg2665VtzOlDjeil6Vo7cQ9hysqV+uCsOQ7Q6MUCmijPBMJNz1V9PXi2ig2MLH8l5Oi49WtMsHpXqB9qT4ZYSrkK1aVoD8IkgTlUVoQrTFf0VgTuTp27W8luyewz8PYxjQZxAMuJ6dz4I33Bthzxf0Ry2N5q19F0KOaZ3ijHJJdhqhT+96g72+aXkEWxcTLovzIWIlNlU/KpUVpp2rN1iTDvcynpvmMR0B3InNhi7FTbi7pu2IHy1wIM9BZ8XRH1DkLREkY70pHnJ+T9hdLanDvm14HeaR23Pc6Isn4sWyFZcO2/sArU8TA9Or3IJBEJdo3YtEFLCAopg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB1748.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(39860400002)(136003)(346002)(396003)(86362001)(110136005)(54906003)(8676002)(316002)(71200400001)(4326008)(8936002)(478600001)(83380400001)(2906002)(7416002)(52536014)(66556008)(55016002)(66476007)(53546011)(64756008)(66446008)(33656002)(7696005)(76116006)(66946007)(26005)(9686003)(6506007)(186003)(5660300002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: pw6twkV9Z9j7v9lNsZeiotfPUih814mA/Qyme6xGDY78PUs48PsN1z9uiVZlr/SpZI5tOhe2qLmTvufcCV5Ip6ZGAYr3pVaQkViSwgdjFknpvL3VVePm/P0eKQswnGiNmUfh9bh+qz5tLImgW+O/Lh7Lm9s50Jr5blUnavf2z5gCw0pBeEI9buXdBXbTv/jABWiJ+NHOn/okNBaIgiDmPj7ALVXGW7brzBF/5FGTeoFLYN746B8eAecrYYuO7CV/NXJH4XRPNLbT5k1pRGzVgvmQi30XS+ucznrgpA0nKCnJVPLohvGOGm3w0eqOkf0PugC7BY/4tkuG4gYJTKaGoSfs1/W7IrlU4wDo9x6AoFyDxKVE5fcwC9oeYsse5jPU15F+u2fe/LhrBWbMDhbc7Xo8vD5UnpyGuzsTKQmFdsYSoYT++riF/+cWZpz19KnW2LKkiC2sH1uae3McZrCkJl0UnRC1YmFhpN6roXuEySZqKMB0+eC0nzD+S/t60c1H
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200713091211.2183368-1-tientzu@chromium.org>
- <20200713091211.2183368-2-tientzu@chromium.org> <4a2451f9-57d8-2e83-e1d6-f144f37173c0@arm.com>
- <20200714110141.GD16178@lst.de> <CALiNf2-9b5LMjv+KCqFJ9oz2FocT6oQ1zVY_MBaFgNG1DQxZ=Q@mail.gmail.com>
-In-Reply-To: <CALiNf2-9b5LMjv+KCqFJ9oz2FocT6oQ1zVY_MBaFgNG1DQxZ=Q@mail.gmail.com>
-From:   Claire Chang <tientzu@chromium.org>
-Date:   Wed, 15 Jul 2020 17:04:36 +0800
-X-Gmail-Original-Message-ID: <CALiNf28LVobHKLuXAf7P7Avi6n1oU+tbbFJ55ZPanJuq8Q1Ysg@mail.gmail.com>
-Message-ID: <CALiNf28LVobHKLuXAf7P7Avi6n1oU+tbbFJ55ZPanJuq8Q1Ysg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dma-mapping: Add bounced DMA ops
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, frowand.list@gmail.com,
-        m.szyprowski@samsung.com, treding@nvidia.com,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>, suzuki.poulose@arm.com,
-        dan.j.williams@intel.com, heikki.krogerus@linux.intel.com,
-        bgolaszewski@baylibre.com, devicetree@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, tfiga@chromium.org,
-        Nicolas Boichat <drinkcat@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: OSAPR01MB1748.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a26dc08-eef2-4c9a-21fa-08d8289e2103
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jul 2020 09:04:49.4723
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JdQSgBH62YIWbEsySHaMumFo4+eWaqCPnuvb6us/EZtuJZ3pFFRtdtqFOi1gCDX5Vz8TQ1qYOUJgPZrBXJMea9HoqsJDH05MNDNoOGw98bAJqb8VJ+Sim0F3sxQpBu6J
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB2439
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 11:46 AM Claire Chang <tientzu@chromium.org> wrote:
->
-> On Tue, Jul 14, 2020 at 7:01 PM Christoph Hellwig <hch@lst.de> wrote:
-> >
-> > On Mon, Jul 13, 2020 at 12:55:43PM +0100, Robin Murphy wrote:
-> > > On 2020-07-13 10:12, Claire Chang wrote:
-> > >> The bounced DMA ops provide an implementation of DMA ops that bounce
-> > >> streaming DMA in and out of a specially allocated region. Only the
-> > >> operations relevant to streaming DMA are supported.
-> > >
-> > > I think there are too many implicit assumptions here - apparently that
-> > > coherent allocations will always be intercepted by
-> > > dma_*_from_dev_coherent(), and that calling into dma-direct won't actually
-> > > bounce things a second time beyond where you thought they were going,
-> > > manage coherency for a different address, and make it all go subtly wrong.
-> > > Consider "swiotlb=force", for instance...
-If I understand it correctly, reusing SWIOTLB won't prevent the
-coherent allocations
-from always being intercepted by dma_*_from_dev_coherent(), right?
-Since we can't bounce the coherent memory, we still need to rely on
-dma_*_from_dev_coherent() and a reserved-memory region for coherent DMA to
-restrict the device DMA access.
-
-As for calling into dma-direct, in this version, I use set_dma_ops to set the
-dma_bounced_ops, so I just bypass dma-direct and SWIOTLB. "swiotlb=force"
-won't bounce things a second time and the data will still be bounced
-to the region
-set in dts.
-Besides, I did a quick search and found that only two *-iommu.c directly use
-dma_direct_map_page.
-https://elixir.bootlin.com/linux/latest/C/ident/dma_direct_map_page
-Since bounced DMA is to mitigate the lack of DMA access control on systems
-without an IOMMU (see patch#4, only call of_dma_set_bounce_buffer for the
-devices not behind an IOMMU), can we assume no one will use dma-direct?
-(I understand that if we build bounced DMA on top of SWIOTLB, we don't need
-to worry about this.)
-
-> > >
-> > > Again, plumbing this straight into dma-direct so that SWIOTLB can simply
-> > > target a different buffer and always bounce regardless of masks would seem
-> > > a far better option.
-> >
-> > I haven't really had time to read through the details, but I agree that
-> > any bouncing scheme should reuse the swiotlb code and not invent a
-> > parallel infrastructure.
-> Thanks for the feedback. I'll try to reuse SWIOTLB.
-My current plan is to first change the buffers management logic in SWIOTLB to
-use gen_pool like this patch (i.e., gen_pool_dma_alloc, gen_pool_free, ect), and
-then make SWIOTLB use the device's private pool for regular DMA to/from system
-memory if possible.
-Does this sound right?
-
-Thanks!
+K0JpanUuDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR2VlcnQgVXl0
+dGVyaG9ldmVuIDxnZWVydEBsaW51eC1tNjhrLm9yZz4NCj4gU2VudDogMTUgSnVseSAyMDIwIDA5
+OjQ0DQo+IFRvOiBCaWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+DQo+IENjOiBSb2Ig
+SGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRA
+YXJtLmNvbT47IFlvc2hpaGlybyBTaGltb2RhDQo+IDx5b3NoaWhpcm8uc2hpbW9kYS51aEByZW5l
+c2FzLmNvbT47IEdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+
+OyBIZWlra2kgS3JvZ2VydXMNCj4gPGhlaWtraS5rcm9nZXJ1c0BsaW51eC5pbnRlbC5jb20+OyBG
+ZWxpcGUgQmFsYmkgPGJhbGJpQGtlcm5lbC5vcmc+OyBVU0IgbGlzdCA8bGludXgtdXNiQHZnZXIu
+a2VybmVsLm9yZz47IG9wZW4gbGlzdDpPUEVOIEZJUk1XQVJFIEFORA0KPiBGTEFUVEVORUQgREVW
+SUNFIFRSRUUgQklORElOR1MgPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgU2ltb24gSG9y
+bWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+OyBHZWVydCBVeXR0ZXJob2V2ZW4NCj4gPGdlZXJ0K3Jl
+bmVzYXNAZ2xpZGVyLmJlPjsgQ2hyaXMgUGF0ZXJzb24gPENocmlzLlBhdGVyc29uMkByZW5lc2Fz
+LmNvbT47IEZhYnJpemlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPjsg
+TGludXgtDQo+IFJlbmVzYXMgPGxpbnV4LXJlbmVzYXMtc29jQHZnZXIua2VybmVsLm9yZz47IFBy
+YWJoYWthciBNYWhhZGV2IExhZCA8cHJhYmhha2FyLm1haGFkZXYtbGFkLnJqQGJwLnJlbmVzYXMu
+Y29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIFJFU0VORCB2NyAxLzNdIGR0LWJpbmRpbmdzOiB1
+c2I6IGhkM3NzMzIyMCBkZXZpY2UgdHJlZSBiaW5kaW5nIGRvY3VtZW50DQo+DQo+IEhpIEJpanUs
+DQo+DQo+IE9uIFdlZCwgU2VwIDQsIDIwMTkgYXQgMTA6MjIgQU0gQmlqdSBEYXMgPGJpanUuZGFz
+QGJwLnJlbmVzYXMuY29tPiB3cm90ZToNCj4gPiBBZGQgZGV2aWNlIHRyZWUgYmluZGluZyBkb2N1
+bWVudCBmb3IgVEkgSEQzU1MzMjIwIFR5cGUtQyBEUlAgcG9ydA0KPiA+IGNvbnRyb2xsZXIgZHJp
+dmVyLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVz
+YXMuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0K
+Pg0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvdXNiL3RpLGhkM3NzMzIyMC50eHQNCj4gPiBAQCAtMCwwICsxLDM4IEBADQo+ID4g
+K1RJIEhEM1NTMzIyMCBUeXBlQyBEUlAgUG9ydCBDb250cm9sbGVyLg0KPiA+ICsNCj4gPiArUmVx
+dWlyZWQgcHJvcGVydGllczoNCj4gPiArIC0gY29tcGF0aWJsZTogTXVzdCBiZSAidGksaGQzc3Mz
+MjIwIi4NCj4gPiArIC0gcmVnOiBJMkMgc2xhdmUgYWRkcmVzcywgbXVzdCBiZSAweDQ3IG9yIDB4
+NjcgYmFzZWQgb24gQUREUiBwaW4uDQo+ID4gKyAtIGludGVycnVwdHM6IEFuIGludGVycnVwdCBz
+cGVjaWZpZXIuDQo+ID4gKw0KPiA+ICtSZXF1aXJlZCBzdWItbm9kZToNCj4gPiArIC0gY29ubmVj
+dG9yOiBUaGUgInVzYi1jLWNvbm5lY3RvciIgYXR0YWNoZWQgdG8gdGhlIGhkM3NzMzIyMCBjaGlw
+LiBUaGUNCj4gPiArICAgYmluZGluZ3Mgb2YgdGhlIGNvbm5lY3RvciBub2RlIGFyZSBzcGVjaWZp
+ZWQgaW46DQo+ID4gKw0KPiA+ICsgICAgICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Nvbm5lY3Rvci91c2ItY29ubmVjdG9yLnR4dA0KPiA+ICsNCj4gPiArRXhhbXBsZToNCj4g
+PiAraGQzc3MzMjIwQDQ3IHsNCj4gPiArICAgICAgIGNvbXBhdGlibGUgPSAidGksaGQzc3MzMjIw
+IjsNCj4gPiArICAgICAgIHJlZyA9IDwweDQ3PjsNCj4gPiArICAgICAgIGludGVycnVwdC1wYXJl
+bnQgPSA8JmdwaW82PjsNCj4gPiArICAgICAgIGludGVycnVwdHMgPSA8MyBJUlFfVFlQRV9MRVZF
+TF9MT1c+Ow0KPiA+ICsNCj4gPiArICAgICAgIGNvbm5lY3RvciB7DQo+ID4gKyAgICAgICAgICAg
+ICAgIGNvbXBhdGlibGUgPSAidXNiLWMtY29ubmVjdG9yIjsNCj4gPiArICAgICAgICAgICAgICAg
+bGFiZWwgPSAiVVNCLUMiOw0KPiA+ICsgICAgICAgICAgICAgICBkYXRhLXJvbGUgPSAiZHVhbCI7
+DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICBwb3J0cyB7DQo+ID4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgI3NpemUtY2VsbHMgPSA8MD47DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
+IHBvcnRAMSB7DQo+DQo+IFRoaXMgZG9lcyBub3QgY29tcGx5IHdpdGgNCj4gRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nvbm5lY3Rvci91c2ItY29ubmVjdG9yLnlhbWw6DQo+DQo+
+ICAgICBjb25uZWN0b3I6IHBvcnRzOiAncG9ydEAwJyBpcyBhIHJlcXVpcmVkIHByb3BlcnR5DQo+
+DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MT47DQo+ID4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBoZDNzczMyMjBfZXA6IGVuZHBvaW50IHsNCj4g
+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50
+ID0gPCZ1c2IzX3JvbGVfc3dpdGNoPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIH07DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gPiArICAgICAgICAgICAg
+ICAgfTsNCj4gPiArICAgICAgIH07DQo+ID4gK307DQo+DQo+IEdye29ldGplLGVldGluZ31zLA0K
+Pg0KPiAgICAgICAgICAgICAgICAgICAgICAgICBHZWVydA0KPg0KPiAtLQ0KPiBHZWVydCBVeXR0
+ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxp
+bnV4LW02OGsub3JnDQo+DQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmlj
+YWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJJ20gdGFsa2lu
+ZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlr
+ZSB0aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZh
+bGRzDQoNCg0KUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJvcGUgR21iSCwgR2VzY2hhZWZ0c2Z1ZWhy
+ZXIvUHJlc2lkZW50OiBDYXJzdGVuIEphdWNoLCBTaXR6IGRlciBHZXNlbGxzY2hhZnQvUmVnaXN0
+ZXJlZCBvZmZpY2U6IER1ZXNzZWxkb3JmLCBBcmNhZGlhc3RyYXNzZSAxMCwgNDA0NzIgRHVlc3Nl
+bGRvcmYsIEdlcm1hbnksIEhhbmRlbHNyZWdpc3Rlci9Db21tZXJjaWFsIFJlZ2lzdGVyOiBEdWVz
+c2VsZG9yZiwgSFJCIDM3MDggVVN0LUlETnIuL1RheCBpZGVudGlmaWNhdGlvbiBuby46IERFIDEx
+OTM1MzQwNiBXRUVFLVJlZy4tTnIuL1dFRUUgcmVnLiBuby46IERFIDE0OTc4NjQ3DQo=
