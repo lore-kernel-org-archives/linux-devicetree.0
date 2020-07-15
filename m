@@ -2,134 +2,119 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 712CDC433E4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 08:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CED1C433E5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 08:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B7E720657
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 08:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56ED4206E9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 08:46:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729585AbgGOIns (ORCPT
+        id S1729563AbgGOIq5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 04:43:48 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:39018 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729466AbgGOIns (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 04:43:48 -0400
-Received: by mail-oi1-f196.google.com with SMTP id w17so1629890oie.6;
-        Wed, 15 Jul 2020 01:43:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wBSjJT0ORrybEKumemGZpkTJ/Tv11w9vz0K05d4A6Os=;
-        b=CbIvxwbN3InWD5iqe3TXYMPN0UDxbl8A+hNhBd1LmaJF2YeZOQcYUKRqFJcY8e1dm1
-         PTgb8OtSFnufGOJ879bfwEDEmsihs/vr96qon30UoDcplUgfYnoWg8ZcdKvLZZCBfm04
-         a9jZRhyDA5V2P5DntpD3xL5ezyYuDl3iHgiKBNbpHwg2TVPp4tgGTwYjUnJEQ1ZPfKVm
-         JaG9E+JFFTGY0pgbrafVs0hPcLvaUUdqwKusV+2Ue8+9zUC3oZhffc6Q2Vqtx6joVDTU
-         ww3nwTXqJVWdluxkJJ/+wZ0sf/cXHO3FDJ7UE5dJKdZpNk1yiZTQsbOWBdyuYY75zr7u
-         v0ow==
-X-Gm-Message-State: AOAM532mPUm0wiPNiWb9PTI4QnH6d//rAT8s4nY6SkvEIA6tmqjyYrLe
-        Qrsoh9WwHdVOIwrgzz0waV/UBVDb/0laCC7upnA=
-X-Google-Smtp-Source: ABdhPJw86hPfeV6CTJ8KN+UQ+NcI3bICPWChvBe3FWmE48Q4aabU0FIIinMm3s5aHvZ94WJeCrwGRqzFJIK4nhKEjXM=
-X-Received: by 2002:a05:6808:64a:: with SMTP id z10mr6957983oih.54.1594802626935;
- Wed, 15 Jul 2020 01:43:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <1567584941-13690-1-git-send-email-biju.das@bp.renesas.com> <1567584941-13690-2-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1567584941-13690-2-git-send-email-biju.das@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 15 Jul 2020 10:43:36 +0200
-Message-ID: <CAMuHMdVZkjGDFmeQ9XkOqq-ogfSZz99hd0=N-OYLai4UEzKwAQ@mail.gmail.com>
-Subject: Re: [PATCH RESEND v7 1/3] dt-bindings: usb: hd3ss3220 device tree
- binding document
-To:     Biju Das <biju.das@bp.renesas.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Wed, 15 Jul 2020 04:46:57 -0400
+Received: from mga11.intel.com ([192.55.52.93]:61786 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729377AbgGOIq4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jul 2020 04:46:56 -0400
+IronPort-SDR: AVBd4w/lewG8wnDfAgIeB6mv+zgzyBqn7bjk41JbB9qb2ClgbQ0Vnh8G3dNZXONfW7HAGLrRwh
+ QmrTP2vASdHA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9682"; a="147113218"
+X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
+   d="scan'208";a="147113218"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2020 01:46:56 -0700
+IronPort-SDR: DXexAs8H1P9V9yOFnm7lrcgiUiXuzWp57mJFBrWKsRwwIaSGj+DcHhlB7ITlgE7qWM2rj3LQsj
+ K6bIgPBigxIg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,354,1589266800"; 
+   d="scan'208";a="299819931"
+Received: from yren3-mobl.ccr.corp.intel.com ([10.249.174.224])
+  by orsmga002.jf.intel.com with ESMTP; 15 Jul 2020 01:46:54 -0700
+Message-ID: <746420e6b213985518d8b314018e32dc3438e9af.camel@intel.com>
+Subject: Re: [RFC PATCH 3/4] thermal:core:Add genetlink notifications for
+ monitoring falling temperature
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     Thara Gopinath <thara.gopinath@linaro.org>,
+        daniel.lezcano@linaro.org, robh+dt@kernel.org
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 15 Jul 2020 16:46:53 +0800
+In-Reply-To: <20200710135154.181454-4-thara.gopinath@linaro.org>
+References: <20200710135154.181454-1-thara.gopinath@linaro.org>
+         <20200710135154.181454-4-thara.gopinath@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Biju,
+On Fri, 2020-07-10 at 09:51 -0400, Thara Gopinath wrote:
+> Add notification calls for trip type THERMAL_TRIP_COLD when
+> temperature
+> crosses the trip point in either direction.
+> 
+> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> ---
+>  drivers/thermal/thermal_core.c | 21 +++++++++++++++------
+>  1 file changed, 15 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/thermal/thermal_core.c
+> b/drivers/thermal/thermal_core.c
+> index 750a89f0c20a..e2302ca1cd3b 100644
+> --- a/drivers/thermal/thermal_core.c
+> +++ b/drivers/thermal/thermal_core.c
+> @@ -429,12 +429,21 @@ static void handle_thermal_trip(struct
+> thermal_zone_device *tz, int trip)
+>  		tz->ops->get_trip_hyst(tz, trip, &hyst);
+>  
+>  	if (tz->last_temperature != THERMAL_TEMP_INVALID) {
+> -		if (tz->last_temperature < trip_temp &&
+> -		    tz->temperature >= trip_temp)
+> -			thermal_notify_tz_trip_up(tz->id, trip);
+> -		if (tz->last_temperature >= trip_temp &&
+> -		    tz->temperature < (trip_temp - hyst))
+> -			thermal_notify_tz_trip_down(tz->id, trip);
+> +		if (type == THERMAL_TRIP_COLD) {
+> +			if (tz->last_temperature > trip_temp &&
+> +			    tz->temperature <= trip_temp)
+> +				thermal_notify_tz_trip_down(tz->id,
+> trip);
 
-On Wed, Sep 4, 2019 at 10:22 AM Biju Das <biju.das@bp.renesas.com> wrote:
-> Add device tree binding document for TI HD3SS3220 Type-C DRP port
-> controller driver.
->
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+trip_type should also be part of the event because trip_down/trip_up
+for hot trip and cold trip have different meanings.
+Or can we use some more generic names like trip_on/trip_off? trip_on
+means the trip point is violated or actions need to be taken for the
+specific trip points, for both hot and cold trips. I know
+trip_on/trip_off doesn't represent what I mean clearly, but surely you
+can find a better name.
 
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
-> @@ -0,0 +1,38 @@
-> +TI HD3SS3220 TypeC DRP Port Controller.
-> +
-> +Required properties:
-> + - compatible: Must be "ti,hd3ss3220".
-> + - reg: I2C slave address, must be 0x47 or 0x67 based on ADDR pin.
-> + - interrupts: An interrupt specifier.
-> +
-> +Required sub-node:
-> + - connector: The "usb-c-connector" attached to the hd3ss3220 chip. The
-> +   bindings of the connector node are specified in:
-> +
-> +       Documentation/devicetree/bindings/connector/usb-connector.txt
-> +
-> +Example:
-> +hd3ss3220@47 {
-> +       compatible = "ti,hd3ss3220";
-> +       reg = <0x47>;
-> +       interrupt-parent = <&gpio6>;
-> +       interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-> +
-> +       connector {
-> +               compatible = "usb-c-connector";
-> +               label = "USB-C";
-> +               data-role = "dual";
-> +
-> +               ports {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +
-> +                       port@1 {
+thanks,
+rui
 
-This does not comply with
-Documentation/devicetree/bindings/connector/usb-connector.yaml:
+> +			if (tz->last_temperature <= trip_temp &&
+> +			    tz->temperature > (trip_temp + hyst))
+> +				thermal_notify_tz_trip_up(tz->id,
+> trip);
+> +		} else {
+> +			if (tz->last_temperature < trip_temp &&
+> +			    tz->temperature >= trip_temp)
+> +				thermal_notify_tz_trip_up(tz->id,
+> trip);
+> +			if (tz->last_temperature >= trip_temp &&
+> +			    tz->temperature < (trip_temp - hyst))
+> +				thermal_notify_tz_trip_down(tz->id,
+> trip);
+> +		}
+>  	}
+>  
+>  	if (type == THERMAL_TRIP_CRITICAL || type == THERMAL_TRIP_HOT)
 
-    connector: ports: 'port@0' is a required property
-
-> +                               reg = <1>;
-> +                               hd3ss3220_ep: endpoint {
-> +                                       remote-endpoint = <&usb3_role_switch>;
-> +                               };
-> +                       };
-> +               };
-> +       };
-> +};
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
