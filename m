@@ -7,588 +7,326 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2A6C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 19:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A05A4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05FEC2065F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 19:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7552F206F4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 20:03:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594842934;
-	bh=vJV0Gdr4dY5aTFPdeUdfdmawj3ibnxFTEFYvKTWt3e0=;
+	s=default; t=1594843394;
+	bh=vR66C51YorkfYc+kYUxOfTB6WwATL5rGomDmhKj75X4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mQ6XJojsaFnwvAGekCxOSJRrWU3/UmKyFKH2O8DQdsLuBs8GvooFi/JhkNhZJ4am4
-	 bGKwCeVmdKe+9Pay32/rtbPCURXfv01KhbBEFXAEGKac8AjJT1VYfIuUOgw8xLzObR
-	 e+UkcI9eZtDEw4Fr+uql6A+lKY++Z/sLyQJ26fWw=
+	b=E+pHRdWZlOJDJwxj6sI1f9mz/NRTfVFeueLq1hh/9PPRkRoVVLG6McQtoQTZ1nKB5
+	 hGTZXOwadnFCXORn7STNXbUV0RYCszBjETm6r8AYN0hTaXwcYOKwc+man3g5t9H19D
+	 SDSIZpiRmqrR2plFl49KTXrHqsoumtdL4sC/m9P8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgGOTzd (ORCPT
+        id S1726761AbgGOUDN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 15:55:33 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:37047 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbgGOTzd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 15:55:33 -0400
-Received: by mail-io1-f66.google.com with SMTP id v6so3582345iob.4;
-        Wed, 15 Jul 2020 12:55:31 -0700 (PDT)
+        Wed, 15 Jul 2020 16:03:13 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36082 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgGOUDN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 16:03:13 -0400
+Received: by mail-io1-f65.google.com with SMTP id y2so3612175ioy.3;
+        Wed, 15 Jul 2020 13:03:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=wwLSc8ACOFK5x6W6Wvc0FQ/VTmCQze+BtXUUtGB4oGs=;
-        b=Nu7O4X1RDHmNsyZ406/6JhkNjwV9+v31JLfRLDpZAhFFhc2pc6uflmIpYa9wqrJZlo
-         JhcmWXfCDmvzFTQW2459T0B19dsCqENVhO2548AZozqVvm/mir0dTsRrYMCRNKV6MSZE
-         kmqLB8vlyyuiPD62aJXvmf3tnpBiMeI+j2xB0TsOqBMNJ+XL+52jViUJbN7BG9oqqRXn
-         FohWKtaaDttbLWKBbZdxRZ9MuDCZAdgW5cku3x6fzmlA61E/wGy7SnuY1brZOYcETWNb
-         J3JNkNfgJsQ9Ruf+4wYzgV/6Ik6PVP/Y9K+fpiO45pwmVVOFEchEfYc5RuIPxaZ4aIs4
-         2n6A==
-X-Gm-Message-State: AOAM533DrcHnwgzsJkFKYz9Aklhin7oy/B5VhYmEAOqrJDegLsBjghH0
-        XZIrrog4v9tOcAI00RwlpQ==
-X-Google-Smtp-Source: ABdhPJzbwNj6HZcfmjrTSF00MePBWZMUTjuo0Qfo+4m272Hj76BlzCDEDKDNRCkcQY54y9jeKs+5XA==
-X-Received: by 2002:a02:b0d5:: with SMTP id w21mr1176522jah.27.1594842931059;
-        Wed, 15 Jul 2020 12:55:31 -0700 (PDT)
+        bh=ogUOp4JGqgwoafgoFFc1CIX6NEhBBY0MHsAVg2gITFo=;
+        b=tjINtUfgFsA1m5qxYbRcsOQACZGJ3vpzEPU30Wl3dBBrRdZdCM93uvCCtMTqShXsXb
+         dgaAY+m0sBpNbHgbcNQU5rHJTzv0tGn2KuaHmaZ88e2sGuIdJoshiVl4b9GwQ28Zj+DG
+         WNi8rgHFSq/lhPpsCOR2pBlK/jqmeVcExj5egetOedvtuI/lOrEMVj7snNe/j0FH7mxA
+         mTVSo0C4qAKnX+Ms6d1HP09vtVgKbnyfdBov1GNmTU/WQPRbfOaL/DND6LmsKSPRYg7N
+         W437PyfiwfdngS4OQcqQmjy1NzxlOpokuFstzO5LPV0LiFfVL2rDKn0HNeHdq3lgFaRx
+         RAjw==
+X-Gm-Message-State: AOAM5335JD8vH3HSveb9i+g344XKq8c0yioZa4ixs4ESvjEU6NQvkWuX
+        wuklVSj5fXstrFSRZg1OcQ==
+X-Google-Smtp-Source: ABdhPJwsziq59iOlBa+Kt8XZip0UziYyyst0hS+8KBy+vk1ZsVMVPck+D9DwvlfGniQO2Wf4XpW7GA==
+X-Received: by 2002:a5d:9752:: with SMTP id c18mr1048927ioo.10.1594843391130;
+        Wed, 15 Jul 2020 13:03:11 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id t7sm1579252iol.2.2020.07.15.12.55.30
+        by smtp.gmail.com with ESMTPSA id s11sm1573072ili.79.2020.07.15.13.03.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 12:55:30 -0700 (PDT)
-Received: (nullmailer pid 720192 invoked by uid 1000);
-        Wed, 15 Jul 2020 19:55:29 -0000
-Date:   Wed, 15 Jul 2020 13:55:29 -0600
+        Wed, 15 Jul 2020 13:03:10 -0700 (PDT)
+Received: (nullmailer pid 730390 invoked by uid 1000);
+        Wed, 15 Jul 2020 20:03:09 -0000
+Date:   Wed, 15 Jul 2020 14:03:09 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pci: convert QCOM pci bindings to YAML
-Message-ID: <20200715195529.GA710312@bogus>
-References: <1592982124-27160-1-git-send-email-sivaprak@codeaurora.org>
+To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-actions@lists.infradead.org
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: Add bindings for Actions S500
+ SoC
+Message-ID: <20200715200309.GA722435@bogus>
+References: <cover.1593112402.git.cristian.ciocaltea@gmail.com>
+ <2a7610ff9f33cf72d9df6fc4598741fb6d7836e0.1593112402.git.cristian.ciocaltea@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1592982124-27160-1-git-send-email-sivaprak@codeaurora.org>
+In-Reply-To: <2a7610ff9f33cf72d9df6fc4598741fb6d7836e0.1593112402.git.cristian.ciocaltea@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 12:32:04PM +0530, Sivaprakash Murugesan wrote:
-> Convert QCOM pci bindings to YAML schema
+On Thu, Jun 25, 2020 at 11:16:18PM +0300, Cristian Ciocaltea wrote:
+> Add pinctrl and gpio bindings for Actions Semi S500 SoC.
 > 
-> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
 > ---
->  .../devicetree/bindings/pci/qcom,pcie.txt          | 330 ---------------
->  .../devicetree/bindings/pci/qcom,pcie.yaml         | 470 +++++++++++++++++++++
->  2 files changed, 470 insertions(+), 330 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.txt
->  create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-
-
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>  .../pinctrl/actions,s500-pinctrl.yaml         | 228 ++++++++++++++++++
+>  1 file changed, 228 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
 > new file mode 100644
-> index 000000000000..b119ce4711b4
+> index 000000000000..856947c70844
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> @@ -0,0 +1,470 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +
+> +++ b/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
+> @@ -0,0 +1,228 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: "http://devicetree.org/schemas/pci/qcom,pcie.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +$id: http://devicetree.org/schemas/pinctrl/actions,s500-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Qualcomm PCI express root complex
+> +title: Actions Semi S500 SoC pinmux & GPIO controller
 > +
 > +maintainers:
-> +  - Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > +
-> +description:
-> +  QCOM PCIe controller uses Designware IP with Qualcomm specific hardware
-> +  wrappers.
+> +description: |
+> +  Pinmux & GPIO controller manages pin multiplexing & configuration including
+> +  GPIO function selection & GPIO attributes configuration. Please refer to
+> +  pinctrl-bindings.txt in this directory for common binding part and usage.
 > +
-
-Need to reference pci-bus.yaml.
-
 > +properties:
 > +  compatible:
-> +    enum:
-> +      - qcom,pcie-apq8064
-> +      - qcom,pcie-apq8084
-> +      - qcom,pcie-ipq4019
-> +      - qcom,pcie-ipq8064
-> +      - qcom,pcie-ipq8074
-> +      - qcom,pcie-msm8996
-> +      - qcom,pcie-qcs404
-> +      - qcom,pcie-sdm845
+> +    const: actions,s500-pinctrl
 > +
 > +  reg:
-> +    description: Register ranges as listed in the reg-names property
+> +    minItems: 1
 > +    maxItems: 4
-> +
-> +  reg-names:
-> +    items:
-> +      - const: dbi
-> +      - const: elbi
-> +      - const: parf
-> +      - const: config
-> +
 
-> +  "#size-cells":
-> +    const: 2
-> +
-> +  device_type:
-> +    items:
-> +      - const: pci
-> +
-> +  "#address-cells":
-> +    const: 3
+Need to enumerate what each register range is.
 
-Drop these, pci-bus.yaml covers them.
-
-> +
-> +  ranges:
-> +    maxItems: 2
-> +
-> +  interrupts:
-> +    items:
-> +      - description: MSI interrupts
-> +
-> +  interrupt-names:
-> +    const: msi
-> +
-> +  "#interrupt-cells":
-> +    const: 1
-> +
-> +  interrupt-map-mask:
-> +    items:
-> +      - description: standard PCI properties to define mapping of PCIe
-> +                     interface to interrupt numbers.
-> +
-> +  interrupt-map:
-> +    maxItems: 4
 > +
 > +  clocks:
-> +    minItems: 1
-> +    maxItems: 7
+> +    maxItems: 1
 > +
-> +  clock-names:
-> +    minItems: 1
-> +    maxItems: 7
+> +  gpio-controller: true
 > +
-> +  resets:
-> +    minItems: 1
-> +    maxItems: 12
+> +  gpio-ranges:
+> +    maxItems: 1
 > +
-> +  reset-names:
-> +    minItems: 1
-> +    maxItems: 12
+> +  '#gpio-cells':
+> +    description:
+> +      Specifies the pin number and flags, as defined in
+> +      include/dt-bindings/gpio/gpio.h
+> +    const: 2
 > +
-> +  power-domains:
-> +    items:
-> +      - description: phandle to the power domain responsible for collapsing
-> +                     and restoring power to peripherals
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    description:
+> +      Specifies the pin number and flags, as defined in
+> +      include/dt-bindings/interrupt-controller/irq.h
+> +    const: 2
+> +
+> +  interrupts:
+> +    description:
+> +      One interrupt per each of the 5 GPIO ports supported by the controller,
+> +      sorted by port number ascending order.
+> +    minItems: 5
+> +    maxItems: 5
+> +
+> +patternProperties:
+> +  '^.*$':
+> +    if:
+> +      type: object
 
-Just 'maxItems: 1'. No need for generic descriptions.
+For a new binding, can you do '-pins$' for the node names so we don't 
+need this if/then hack.
 
+> +    then:
+> +      patternProperties:
+> +        'pinmux$':
+
+Is this really a pattern? Can't tell from the example.
+
+> +          type: object
+> +          description:
+> +            Pinctrl node's client devices specify pin muxes using subnodes,
+> +            which in turn use the standard properties below.
+> +          $ref: pinmux-node.yaml#
 > +
-> +  vdda-supply:
-> +    items:
-> +      - description: phandle to power supply
-
-*-supply is not an array.
-
+> +          properties:
+> +            groups:
+> +              description:
+> +                List of gpio pin groups affected by the functions specified in
+> +                this subnode.
+> +              items:
+> +                oneOf:
+> +                  - enum: [lcd0_d18_mfp, rmii_crs_dv_mfp, rmii_txd0_mfp,
+> +                      rmii_txd1_mfp, rmii_txen_mfp, rmii_rxen_mfp,
+> +                      rmii_rxd1_mfp, rmii_rxd0_mfp, rmii_ref_clk_mfp,
+> +                      i2s_d0_mfp, i2s_pcm1_mfp, i2s0_pcm0_mfp, i2s1_pcm0_mfp,
+> +                      i2s_d1_mfp, ks_in2_mfp, ks_in1_mfp, ks_in0_mfp,
+> +                      ks_in3_mfp, ks_out0_mfp, ks_out1_mfp, ks_out2_mfp,
+> +                      lvds_o_pn_mfp, dsi_dn0_mfp, dsi_dp2_mfp, lcd0_d17_mfp,
+> +                      dsi_dp3_mfp, dsi_dn3_mfp, dsi_dp0_mfp, lvds_ee_pn_mfp,
+> +                      spi0_i2c_pcm_mfp, spi0_i2s_pcm_mfp, dsi_dnp1_cp_mfp,
+> +                      lvds_e_pn_mfp, dsi_dn2_mfp, uart2_rtsb_mfp,
+> +                      uart2_ctsb_mfp, uart3_rtsb_mfp, uart3_ctsb_mfp,
+> +                      sd0_d0_mfp, sd0_d1_mfp, sd0_d2_d3_mfp, sd1_d0_d3_mfp,
+> +                      sd0_cmd_mfp, sd0_clk_mfp, sd1_cmd_mfp, uart0_rx_mfp,
+> +                      clko_25m_mfp, csi_cn_cp_mfp, sens0_ckout_mfp,
+> +                      uart0_tx_mfp, i2c0_mfp, csi_dn_dp_mfp, sen0_pclk_mfp,
+> +                      pcm1_in_mfp, pcm1_clk_mfp, pcm1_sync_mfp, pcm1_out_mfp,
+> +                      dnand_data_wr_mfp, dnand_acle_ce0_mfp, nand_ceb2_mfp,
+> +                      nand_ceb3_mfp]
+> +              minItems: 1
+> +              maxItems: 32
 > +
-> +  vdda_phy-supply:
-> +    items:
-> +      - description: phandle to the power supply to PHY
+> +            function:
+> +              description:
+> +                Specify the alternative function to be configured for the
+> +                given gpio pin groups.
+> +              enum: [nor, eth_rmii, eth_smii, spi0, spi1, spi2, spi3, sens0,
+> +                sens1, uart0, uart1, uart2, uart3, uart4, uart5, uart6, i2s0,
+> +                i2s1, pcm1, pcm0, ks, jtag, pwm0, pwm1, pwm2, pwm3, pwm4, pwm5,
+> +                p0, sd0, sd1, sd2, i2c0, i2c1, i2c3, dsi, lvds, usb30, clko_25m,
+> +                mipi_csi, nand, spdif, ts, lcd0]
 > +
-> +  vdda_refclk-supply:
-> +    items:
-> +      - description: phandle to power supply for ref clock generator
+> +          required:
+> +            - groups
+> +            - function
 > +
-> +  vddpe-3v3-supply:
-> +    items:
-> +      - description: PCIe endpoint power supply
+> +          additionalProperties: false
 > +
-> +  phys:
-> +    items:
-> +      - description: phandle to the PHY block
-
-maxItems: 1
-
+> +        'pinconf$':
+> +          type: object
+> +          description:
+> +            Pinctrl node's client devices specify pin configurations using
+> +            subnodes, which in turn use the standard properties below.
+> +          $ref: pincfg-node.yaml#
 > +
-> +  phy-names:
-> +    const: pciephy
+> +          properties:
+> +            groups:
+> +              description:
+> +                List of gpio pin groups affected by the drive-strength property
+> +                specified in this subnode.
+> +              items:
+> +                oneOf:
+> +                  - enum: [sirq_drv, rmii_txd01_txen_drv, rmii_rxer_drv,
+> +                      rmii_crs_drv, rmii_rxd10_drv, rmii_ref_clk_drv,
+> +                      smi_mdc_mdio_drv, i2s_d0_drv, i2s_bclk0_drv, i2s3_drv,
+> +                      i2s13_drv, pcm1_drv, ks_in_drv, ks_out_drv, lvds_all_drv,
+> +                      lcd_dsi_drv, dsi_drv, sd0_d0_d3_drv, sd1_d0_d3_drv,
+> +                      sd0_cmd_drv, sd0_clk_drv, sd1_cmd_drv, sd1_clk_drv,
+> +                      spi0_all_drv, uart0_rx_drv, uart0_tx_drv, uart2_all_drv,
+> +                      i2c0_all_drv, i2c12_all_drv, sens0_pclk_drv,
+> +                      sens0_ckout_drv, uart3_all_drv]
+> +              minItems: 1
+> +              maxItems: 32
 > +
-> +  perst-gpios:
-> +    description: Endpoint reset signal line
-
-Add 'maxItems: 1' as *-gpios is an array.
-
+> +            pins:
+> +              description:
+> +                List of gpio pins affected by the bias-pull-* and
+> +                input-schmitt-* properties specified in this subnode.
+> +              items:
+> +                oneOf:
+> +                  - enum: [dnand_dqs, dnand_dqsn, eth_txd0, eth_txd1, eth_txen,
+> +                      eth_rxer, eth_crs_dv, eth_rxd1, eth_rxd0, eth_ref_clk,
+> +                      eth_mdc, eth_mdio, sirq0, sirq1, sirq2, i2s_d0, i2s_bclk0,
+> +                      i2s_lrclk0, i2s_mclk0, i2s_d1, i2s_bclk1, i2s_lrclk1,
+> +                      i2s_mclk1, ks_in0, ks_in1, ks_in2, ks_in3, ks_out0,
+> +                      ks_out1, ks_out2, lvds_oep, lvds_oen, lvds_odp, lvds_odn,
+> +                      lvds_ocp, lvds_ocn, lvds_obp, lvds_obn, lvds_oap,
+> +                      lvds_oan, lvds_eep, lvds_een, lvds_edp, lvds_edn,
+> +                      lvds_ecp, lvds_ecn, lvds_ebp, lvds_ebn, lvds_eap,
+> +                      lvds_ean, lcd0_d18, lcd0_d17, dsi_dp3, dsi_dn3, dsi_dp1,
+> +                      dsi_dn1, dsi_cp, dsi_cn, dsi_dp0, dsi_dn0, dsi_dp2,
+> +                      dsi_dn2, sd0_d0, sd0_d1, sd0_d2, sd0_d3, sd1_d0, sd1_d1,
+> +                      sd1_d2, sd1_d3, sd0_cmd, sd0_clk, sd1_cmd, sd1_clk,
+> +                      spi0_sclk, spi0_ss, spi0_miso, spi0_mosi, uart0_rx,
+> +                      uart0_tx, i2c0_sclk, i2c0_sdata, sensor0_pclk,
+> +                      sensor0_ckout, dnand_ale, dnand_cle, dnand_ceb0,
+> +                      dnand_ceb1, dnand_ceb2, dnand_ceb3, uart2_rx, uart2_tx,
+> +                      uart2_rtsb, uart2_ctsb, uart3_rx, uart3_tx, uart3_rtsb,
+> +                      uart3_ctsb, pcm1_in, pcm1_clk, pcm1_sync, pcm1_out,
+> +                      i2c1_sclk, i2c1_sdata, i2c2_sclk, i2c2_sdata, csi_dn0,
+> +                      csi_dp0, csi_dn1, csi_dp1, csi_dn2, csi_dp2, csi_dn3,
+> +                      csi_dp3, csi_cn, csi_cp, dnand_d0, dnand_d1, dnand_d2,
+> +                      dnand_d3, dnand_d4, dnand_d5, dnand_d6, dnand_d7,
+> +                      dnand_rb, dnand_rdb, dnand_rdbn, dnand_wrb, porb,
+> +                      clko_25m, bsel, pkg0, pkg1, pkg2, pkg3]
+> +              minItems: 1
+> +              maxItems: 64
 > +
-> +  bus-range:
-> +    description: Range of bus numbers associated with this controller
-
-Can drop.
-
+> +            bias-pull-up: true
+> +            bias-pull-down: true
 > +
-> +  num-lanes:
-> +    const: 1
+> +            drive-strength:
+> +              description:
+> +                Selects the drive strength for the specified pins, in mA.
+> +              enum: [2, 4, 8, 12]
 > +
-> +  linux,pci-domain:
-> +    description: pci host bridge domain number
-
-Can drop.
-
+> +            input-schmitt-enable: true
+> +            input-schmitt-disable: true
+> +
+> +          additionalProperties: false
 > +
 > +required:
 > +  - compatible
 > +  - reg
-> +  - reg-names
-> +  - device_type
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - ranges
-> +  - interrupts
-> +  - interrupt-names
-> +  - "#interrupt-cells"
-> +  - interrupt-map-mask
-> +  - interrupt-map
 > +  - clocks
-> +  - clock-names
-> +  - resets
-> +  - reset-names
-> +  - phys
-> +  - phy-names
-
-Can drop everything pci-bus.yaml says is required.
-
+> +  - gpio-controller
+> +  - gpio-ranges
+> +  - '#gpio-cells'
+> +  - interrupt-controller
+> +  - '#interrupt-cells'
+> +  - interrupts
 > +
 > +additionalProperties: false
-
-Will need to be 'unevaluatedProperties: false' with pci-bus.yaml 
-referenced.
-
-> +
-> +allOf:
-> + - if:
-> +     properties:
-> +       compatible:
-> +         contains:
-> +           enum:
-> +             - qcom,pcie-apq8064
-> +   then:
-> +     properties:
-> +       clocks:
-> +         items:
-> +           - description: clock for pcie hw block
-> +           - description: clock for pcie phy block
-> +       clock-names:
-> +         items:
-> +           - const: core
-> +           - const: phy
-> +       resets:
-> +         items:
-> +           - description: AXI reset
-> +           - description: AHB reset
-> +           - description: POR reset
-> +           - description: PCI reset
-> +           - description: PHY reset
-> +       reset-names:
-> +         items:
-> +           - const: axi
-> +           - const: ahb
-> +           - const: por
-> +           - const: pci
-> +           - const: phy
-> + - if:
-> +     properties:
-> +       compatible:
-> +         contains:
-> +           enum:
-> +             - qcom,pcie-apq8084
-> +   then:
-> +     properties:
-> +       clocks:
-> +         items:
-> +           - description: AUX clock
-> +           - description: Master AXI clock
-> +           - description: Slave AXI clock
-> +       clock-names:
-> +         items:
-> +           - const: aux
-> +           - const: bus_master
-> +           - const: bus_slave
-> +       resets:
-> +         items:
-> +           - description: core reset
-> +       reset-names:
-> +         items:
-> +           - const: core
-> + - if:
-> +     properties:
-> +       compatible:
-> +         contains:
-> +           enum:
-> +             - qcom,pcie-ipq4019
-> +   then:
-> +     properties:
-> +       clocks:
-> +         items:
-> +           - description: AUX clock
-> +           - description: Master AXI clock
-> +           - description: Slave AXI clock
-> +       clock-names:
-> +         items:
-> +           - const: aux
-> +           - const: master_bus
-> +           - const: master_slave
-> +       resets:
-> +         items:
-> +           - description: AXI master reset
-> +           - description: AXI slave reset
-> +           - description: PCIE pipe reset
-> +           - description: AXI vmid reset
-> +           - description: AXI XPU reset
-> +           - description: parf reset
-> +           - description: PHY reset
-> +           - description: AXI master sticky reset
-> +           - description: PCIE pipe sticky reset
-> +           - description: pwr reset
-> +           - description: AHB reset
-> +           - description: PHY AHB reset
-> +       reset-names:
-> +         items:
-> +           - const: axi_m
-> +           - const: axi_s
-> +           - const: pipe
-> +           - const: axi_m_vmid
-> +           - const: axi_s_xpu
-> +           - const: parf
-> +           - const: phy
-> +           - const: axi_m_sticky
-> +           - const: pipe_sticky
-> +           - const: pwr
-> +           - const: ahb
-> +           - const: phy_ahb
-> + - if:
-> +     properties:
-> +       compatible:
-> +         contains:
-> +           enum:
-> +             - qcom,pcie-ipq8064
-> +   then:
-> +     properties:
-> +       clocks:
-> +         items:
-> +           - description: core clock
-> +           - description: interface clock
-> +           - description: phy clock
-> +           - description: Auxilary clock
-> +           - description: reference clock
-> +       clock-names:
-> +         items:
-> +           - const: core
-> +           - const: iface
-> +           - const: phy
-> +           - const: aux
-> +           - const: ref
-> +       resets:
-> +         items:
-> +           - description: AXI reset
-> +           - description: AHB reset
-> +           - description: POR reset
-> +           - description: PCI reset
-> +           - description: PHY reset
-> +           - description: External reset
-> +       reset-names:
-> +         items:
-> +           - const: axi
-> +           - const: ahb
-> +           - const: por
-> +           - const: pci
-> +           - const: phy
-> +           - const: ext
-> + - if:
-> +     properties:
-> +       compatible:
-> +         contains:
-> +           enum:
-> +             - qcom,pcie-ipq8074
-> +   then:
-> +     properties:
-> +       clocks:
-> +         items:
-> +           - description: sys noc interface clock
-> +           - description: AXI master clock
-> +           - description: AXI slave clock
-> +           - description: AHB clock
-> +           - description: Auxilary clock
-> +       clock-names:
-> +         items:
-> +           - const: iface
-> +           - const: axi_m
-> +           - const: axi_s
-> +           - const: ahb
-> +           - const: aux
-> +       resets:
-> +         items:
-> +           - description: PIPE reset
-> +           - description: PCIe sleep reset
-> +           - description: PCIe sticky reset
-> +           - description: AXI master reset
-> +           - description: AXI slave reset
-> +           - description: AHB reset
-> +           - description: AXI master sticky reset
-> +       reset-names:
-> +         items:
-> +           - const: pipe
-> +           - const: sleep
-> +           - const: sticky
-> +           - const: axi_m
-> +           - const: axi_s
-> +           - const: ahb
-> +           - const: axi_m_sticky
-> + - if:
-> +     properties:
-> +       compatible:
-> +         contains:
-> +           enum:
-> +             - qcom,pcie-msm8996
-> +   then:
-> +     properties:
-> +       clocks:
-> +         items:
-> +           - description: PCIe pipe clock
-> +           - description: Auxilary clock
-> +           - description: AHB config clock
-> +           - description: AXI master clock
-> +           - description: AXI slave clock
-> +       clock-names:
-> +         items:
-> +           - const: pipe
-> +           - const: aux
-> +           - const: cfg
-> +           - const: bus_master
-> +           - const: bus_slave
-> + - if:
-> +     properties:
-> +       compatible:
-> +         contains:
-> +           enum:
-> +             - qcom,pcie-qcs404
-> +   then:
-> +     properties:
-> +       clocks:
-> +         items:
-> +           - description: interface clock
-> +           - description: Auxilary clock
-> +           - description: AXI master clock
-> +           - description: AXI slave clock
-> +       clock-names:
-> +         items:
-> +           - const: iface
-> +           - const: aux
-> +           - const: master_bus
-> +           - const: slave_bus
-> +       resets:
-> +         items:
-> +           - description: AXI master reset
-> +           - description: AXI slave reset
-> +           - description: AXI master sticky reset
-> +           - description: PCIe pipe sticky reset
-> +           - description: power reset
-> +           - description: AHB reset
-> +       reset-names:
-> +         items:
-> +           - const: axi_m
-> +           - const: axi_s
-> +           - const: axi_m_sticky
-> +           - const: pipe_sticky
-> +           - const: pwr
-> +           - const: ahb
-> + - if:
-> +     properties:
-> +       compatible:
-> +         contains:
-> +           enum:
-> +             - qcom,pcie-sdm845
-> +   then:
-> +     properties:
-> +       clocks:
-> +         items:
-> +           - description: PCIE pipe clock
-> +           - description: Auxilary clock
-> +           - description: AHB config clock
-> +           - description: AXI Master clock
-> +           - description: AXI Slave clock
-> +           - description: AXI Slave Q2A clock
-> +           - description: NOC TBU clock
-> +       clock-names:
-> +         items:
-> +           - const: pipe
-> +           - const: aux
-> +           - const: cfg
-> +           - const: bus_master
-> +           - const: bus_slave
-> +           - const: slave_q2a
-> +           - const: tbu
-> +       resets:
-> +         items:
-> +           - description: PCI reset
-> +       reset-names:
-> +         items:
-> +           - const: pci
 > +
 > +examples:
 > +  - |
-> +    #include <dt-bindings/clock/qcom,gcc-qcs404.h>
 > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    pcie: pci@10000000 {
-> +        compatible = "qcom,pcie-qcs404";
-> +        reg =  <0x10000000 0xf1d>,
-> +               <0x10000f20 0xa8>,
-> +               <0x07780000 0x2000>,
-> +               <0x10001000 0x2000>;
-> +        reg-names = "dbi", "elbi", "parf", "config";
-> +        device_type = "pci";
-> +        linux,pci-domain = <0>;
-> +        bus-range = <0x00 0xff>;
-> +        num-lanes = <1>;
-> +        #address-cells = <3>;
-> +        #size-cells = <2>;
+> +    pinctrl: pinctrl@b01b0000 {
+> +        compatible = "actions,s500-pinctrl";
+> +        reg = <0xe01b0000 0x1000>;
+> +        clocks = <&cmu 20>;
+> +        gpio-controller;
+> +        gpio-ranges = <&pinctrl 0 0 132>;
+> +        #gpio-cells = <2>;
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +        interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
 > +
-> +        ranges = <0x01000000 0 0          0x10003000 0 0x00010000>, /* I/O */
-> +                 <0x02000000 0 0x10013000 0x10013000 0 0x007ed000>; /* memory */
+> +        i2c0_default: i2c0_default {
+> +            pinmux {
+> +                groups = "i2c0_mfp";
+> +                function = "i2c0";
+> +            };
 > +
-> +        interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
-> +        interrupt-names = "msi";
-> +        #interrupt-cells = <1>;
-> +        interrupt-map-mask = <0 0 0 0x7>;
-> +        interrupt-map = <0 0 0 1 &intc GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
-> +                        <0 0 0 2 &intc GIC_SPI 224 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-> +                        <0 0 0 3 &intc GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
-> +                        <0 0 0 4 &intc GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
-> +        clocks = <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
-> +                 <&gcc GCC_PCIE_0_AUX_CLK>,
-> +                 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
-> +                 <&gcc GCC_PCIE_0_SLV_AXI_CLK>;
-> +        clock-names = "iface", "aux", "master_bus", "slave_bus";
-> +
-> +        resets = <&gcc 18>,
-> +                 <&gcc 17>,
-> +                 <&gcc 15>,
-> +                 <&gcc 19>,
-> +                 <&gcc GCC_PCIE_0_BCR>,
-> +                 <&gcc 16>;
-> +        reset-names = "axi_m",
-> +                      "axi_s",
-> +                      "axi_m_sticky",
-> +                      "pipe_sticky",
-> +                      "pwr",
-> +                      "ahb";
-> +
-> +        phys = <&pcie_phy>;
-> +        phy-names = "pciephy";
-> +
+> +            pinconf {
+> +                pins = "i2c0_sclk", "i2c0_sdata";
+> +                bias-pull-up;
+> +            };
+> +        };
 > +    };
+> +
+> +...
 > -- 
-> 2.7.4
+> 2.27.0
 > 
