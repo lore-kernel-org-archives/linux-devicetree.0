@@ -2,168 +2,124 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E83AC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 04:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C92B6C433E7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 04:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D675F206F0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 04:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B925206F5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 04:19:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K1HTY9Dw"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Q4sNDhf7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgGOEOO (ORCPT
+        id S1728068AbgGOETZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 00:14:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41114 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726458AbgGOEON (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 00:14:13 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D4CAC061755;
-        Tue, 14 Jul 2020 21:14:13 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id x62so708835qtd.3;
-        Tue, 14 Jul 2020 21:14:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=foDNNdgIp5gEZxCFX16NjXsSXtzimT2AqP9s4DUPnRU=;
-        b=K1HTY9DwxKkwlxnhxfdiEyaM+jc4pxAHsm3ZoHLNf46o0NPweVzUmsjJtWpbSuLE+5
-         lvihYceaJxRcEpAn5Y7EIeZe/uvSunAtgqS9kNlEQiAGK00zW7tqpXxTeSY/4j+aQStZ
-         dmrHIkiZe+s8yH734YCb8MWgS9ATNCn5XMcrXihLhLhW4cwiabHZHBVUHd1gjGLW4Q1k
-         a0OvsQS95Pvuit+60T/5UuMN5I0UHd0X5zOBO38F201gGpVLceSzNqKd3aGWubrmj2EM
-         Mn2jFZoMXI7qVziDUAk642VoUW2CExUIyYCmfbb46N7N3LTCKRJRuW2yeEO85s+bRLIn
-         UHIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=foDNNdgIp5gEZxCFX16NjXsSXtzimT2AqP9s4DUPnRU=;
-        b=hmLLa0iAOZfoB/jGrNMB3Gg/3clEtRSG3DAq+Bq7T5Xg5Mi//0VQ8Jiheozfl+554W
-         zMufiXJBReL0LbMFP3hY1uQ+I32iv9s0KvU1mGyfAjWeXQvDZ8WFQMHb24rdKzEIH4jY
-         GPzawy7WmqFJcjfb/y7yXuvimo3Rhj1qiMjXp72n6FO8COnt5hsGVmmLamJzLnLKgXPu
-         ApXa4jP4YnVln0nf2vSkUZLdJVNvH+jURhEJqCszEDNOxDPrN9hDnTx6i85PWpT00Ptn
-         L1VmMxaYFXkjYGZ3TIBG0L6gKD5nSCUYsW2GLdUL06xlv1ED7/Me/Lq45eAH5/4Blxwt
-         aKPA==
-X-Gm-Message-State: AOAM533s72WljpwaLq2TYunbmP4u3aHjBj24BQC1pQdJ67/pinMM0HjM
-        7FJ80K/BVR9r5BCWNpES30G/5ocT+n6+/Ln6P34=
-X-Google-Smtp-Source: ABdhPJz9uu3YAldIkZ25DwFl7GQTjr4Q/2qWdCJALV+nDYpRz3j+ggBoJDewGFe15ct9g6o4fvRHNE0l6dRRFxn2zpM=
-X-Received: by 2002:ac8:41c6:: with SMTP id o6mr8114697qtm.292.1594786452616;
- Tue, 14 Jul 2020 21:14:12 -0700 (PDT)
+        Wed, 15 Jul 2020 00:19:25 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:4596 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725824AbgGOETX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 00:19:23 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f0e83be0000>; Tue, 14 Jul 2020 21:19:10 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 14 Jul 2020 21:19:23 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 14 Jul 2020 21:19:23 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jul
+ 2020 04:19:22 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 15 Jul 2020 04:19:22 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.160.169]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f0e83c90003>; Tue, 14 Jul 2020 21:19:22 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
+Subject: [RFC PATCH v3 01/18] dt-bindings: i2c: tegra: Document Tegra210 VI I2C clocks and power-domains
+Date:   Tue, 14 Jul 2020 21:20:38 -0700
+Message-ID: <1594786855-26506-2-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
+References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-References: <1594717536-5188-1-git-send-email-shengjiu.wang@nxp.com>
- <1594717536-5188-4-git-send-email-shengjiu.wang@nxp.com> <20200714211432.GA10818@Asurada-Nvidia>
-In-Reply-To: <20200714211432.GA10818@Asurada-Nvidia>
-From:   Shengjiu Wang <shengjiu.wang@gmail.com>
-Date:   Wed, 15 Jul 2020 12:14:01 +0800
-Message-ID: <CAA+D8ANQ_B9jJUhLYQnKxKJcVrmvakxPo58h433QqFhdu2nRPA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] ASoC: fsl-asoc-card: Support Headphone and Microphone
- Jack detection
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        linuxppc-dev@lists.ozlabs.org, Timur Tabi <timur@kernel.org>,
-        kuninori.morimoto.gx@renesas.com, samuel@sholland.org,
-        katsuhiro@katsuster.net,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Takashi Iwai <tiwai@suse.com>, Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1594786750; bh=M4O0xvH9jkOkIfyCWsWjZaEplFLrJZlC+QemXhCNkTI=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=Q4sNDhf7qMcqUTgPnN0JSwr1ga81wkG28Btq//uewCuxbpPCfCTpeZ0ylf4jHgazr
+         F4uaS1/2O1Sda8TS/+HpVw+SnYsth8tsPUwe+f/bcWJvYnGPHcitFhHCb9ggAuWrDL
+         aUsVbO5kH6zqAO9CS36SLldto9VpyOuGFRFBQiosdunr65Bo1nTllPjpGytFrRmaeX
+         7lfbmz32Xe5+QYVs2WFAYWNBdHPzm5Pt07aF0LY9Fx+yr8aUUX6LNq9KvGd04/RhJg
+         AUfUKLgBiLFYp93sBRU3nde3fAvNYgwiiobctzmI5rZqwxHJ7ZqYk4jhHWI6txGH/b
+         4U5b2duBBKfhA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 5:16 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
->
-> Hi Shengjiu,
->
-> The whole series looks good to me. Just a couple of small
-> questions inline:
->
-> On Tue, Jul 14, 2020 at 05:05:36PM +0800, Shengjiu Wang wrote:
-> > Use asoc_simple_init_jack function from simple card to implement
-> > the Headphone and Microphone detection.
-> > Register notifier to disable Speaker when Headphone is plugged in
-> > and enable Speaker when Headphone is unplugged.
-> > Register notifier to disable Digital Microphone when Analog Microphone
-> > is plugged in and enable DMIC when Analog Microphone is unplugged.
-> >
-> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> > ---
-> >  sound/soc/fsl/Kconfig         |  1 +
-> >  sound/soc/fsl/fsl-asoc-card.c | 69 ++++++++++++++++++++++++++++++++++-
-> >  2 files changed, 68 insertions(+), 2 deletions(-)
->
-> >  static int fsl_asoc_card_late_probe(struct snd_soc_card *card)
-> >  {
-> >       struct fsl_asoc_card_priv *priv = snd_soc_card_get_drvdata(card);
-> > @@ -745,8 +789,29 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
-> >       snd_soc_card_set_drvdata(&priv->card, priv);
-> >
-> >       ret = devm_snd_soc_register_card(&pdev->dev, &priv->card);
-> > -     if (ret && ret != -EPROBE_DEFER)
-> > -             dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", ret);
-> > +     if (ret) {
-> > +             if (ret != -EPROBE_DEFER)
-> > +                     dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", ret);
->
-> I think we may move this EPROBE_DEFER to the asrc_fail label.
+This patch documents missing clocks and power-domains of Tegra210 VI I2C.
 
-If we move this to asrc_fail label, then it will be hard to define the
-error message.
-There are many places that goto asrc_fail.
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ .../devicetree/bindings/i2c/nvidia,tegra20-i2c.txt    | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
->
-> > +             goto asrc_fail;
-> > +     }
-> > +
-> > +     if (of_property_read_bool(np, "hp-det-gpio")) {
->
-> Could we move this check inside asoc_simple_init_jack? There's no
-> problem with doing it here though, yet I got a bit confused by it
-> as I thought it's a boolean type property, which would be against
-> the DT bindings until I saw asoc_simple_init_jack() uses the same
-> string to get the GPIO. Just it probably would be a bit tricky as
-> we need it to be optional here.
->
-> Otherwise, I think we may add a line of comments to indicate that
-> the API would use the same string to get the GPIO.
+diff --git a/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.txt b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.txt
+index 18c0de3..3f2f990 100644
+--- a/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.txt
++++ b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.txt
+@@ -35,12 +35,12 @@ Required properties:
+ 	Due to above changes, Tegra114 I2C driver makes incompatible with
+ 	previous hardware driver. Hence, tegra114 I2C controller is compatible
+ 	with "nvidia,tegra114-i2c".
+-  nvidia,tegra210-i2c-vi: Tegra210 has one I2C controller that is part of the
+-	host1x domain and typically used for camera use-cases. This VI I2C
+-	controller is mostly compatible with the programming model of the
+-	regular I2C controllers with a few exceptions. The I2C registers start
+-	at an offset of 0xc00 (instead of 0), registers are 16 bytes apart
+-	(rather than 4) and the controller does not support slave mode.
++  nvidia,tegra210-i2c-vi: Tegra210 has one I2C controller that is on host1x bus
++	and is part of VE power domain and typically used for camera use-cases.
++	This VI I2C controller is mostly compatible with the programming model
++	of the regular I2C controllers with a few exceptions. The I2C registers
++	start at an offset of 0xc00 (instead of 0), registers are 16 bytes
++	apart (rather than 4) and the controller does not support slave mode.
+ - reg: Should contain I2C controller registers physical address and length.
+ - interrupts: Should contain I2C controller interrupts.
+ - address-cells: Address cells for I2C device address.
+@@ -53,10 +53,17 @@ Required properties:
+   - fast-clk
+   Tegra114:
+   - div-clk
++  Tegra210:
++  - div-clk
++  - slow (only for nvidia,tegra210-i2c-vi compatible node)
+ - resets: Must contain an entry for each entry in reset-names.
+   See ../reset/reset.txt for details.
+ - reset-names: Must include the following entries:
+   - i2c
++- power-domains: Only for nvidia,tegra210-i2c-vi compatible node and must
++  include venc powergate node as vi i2c is part of VE power domain.
++  tegra210-i2c-vi:
++  - pd_venc
+ - dmas: Must contain an entry for each entry in clock-names.
+   See ../dma/dma.txt for details.
+ - dma-names: Must include the following entries:
+-- 
+2.7.4
 
-In asoc_simple_init_jack, gpio_is_valid() will be invalid when there is
-no "hp-det-gpio" property, and asoc_simple_init_jack will return 0.
-
-The reason why I add a check here is mostly for
-snd_soc_jack_notifier_register().
-when there is no jack created, there will be a kernel dump.
-
-or I can use this code:
-
--       if (of_property_read_bool(np, "hp-det-gpio")) {
--               ret = asoc_simple_init_jack(&priv->card, &priv->hp_jack,
--                                           1, NULL, "Headphone Jack");
--               if (ret)
--                       goto asrc_fail;
-+       ret = asoc_simple_init_jack(&priv->card, &priv->hp_jack,
-+                                   1, NULL, "Headphone Jack");
-+       if (ret)
-+               goto asrc_fail;
-
-+       if (priv->hp_jack.jack.jack)
-                snd_soc_jack_notifier_register(&priv->hp_jack.jack,
-&hp_jack_nb);
--       }
-
-what do you think?
-
-best regards
-wang shengjiu
