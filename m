@@ -2,94 +2,170 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6843C433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 11:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77821C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 11:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B800D2071B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 11:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D3A2072E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 11:07:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="tvY8PQWQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbgGOLFZ (ORCPT
+        id S1729299AbgGOLHI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 07:05:25 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2482 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728385AbgGOLFY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jul 2020 07:05:24 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 20E62B0F8FE8CB1CFE7A;
-        Wed, 15 Jul 2020 12:05:22 +0100 (IST)
-Received: from [127.0.0.1] (10.47.6.38) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 15 Jul
- 2020 12:05:21 +0100
-Subject: Re: [PATCH V1 RESEND 2/3] bindings/perf/imx-ddr: update compatible
- string
-To:     Joakim Zhang <qiangqing.zhang@nxp.com>, <will@kernel.org>,
-        <mark.rutland@arm.com>, <robh+dt@kernel.org>, <shawnguo@kernel.org>
-CC:     <linux-imx@nxp.com>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200512073115.14177-1-qiangqing.zhang@nxp.com>
- <20200512073115.14177-3-qiangqing.zhang@nxp.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <1f530ea9-c294-64ec-fd10-54129e0b4845@huawei.com>
-Date:   Wed, 15 Jul 2020 12:03:34 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 15 Jul 2020 07:07:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48400 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729247AbgGOLHI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 07:07:08 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9EBCC08C5DD
+        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 04:07:07 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id x9so2106231ljc.5
+        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 04:07:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=antmicro.com; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=LS4hCUEzoSELDF8hz/hUz8/P4swJmb1Knux4DAvwCKg=;
+        b=tvY8PQWQZsDh/YAzpSCW8KgGWfH/ut9NLsu5C5/0X9wPFGorLTcyD1G44JFNQm6oZV
+         K2TpoM4gFya+SxV4S10GEWIFI6ILbEhuUIHR/w2ViF/aBdf0eeQG7+RwKPlEezU4PFGI
+         1LQEJTyjDCvNu4rN3aM32w9MRpSKGQfRO3O7Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=LS4hCUEzoSELDF8hz/hUz8/P4swJmb1Knux4DAvwCKg=;
+        b=ZZwpG92p2MbQY8kzQCcBxtKVfCc7e7Rc/dg87fzURUqcMEvHGd9gpVzmuom2ijCkn1
+         nCxo/TtsNhqImTDyR5VHDmyB3N/9V1RMqoZlyFKSlne8O8y3cdlBRmMkix7s1p70x1WP
+         VkIt9YGKYIOlCzkxvzROLpzQoLE/lmooKqrtUzPxVbWevRjsDsG7YjXuR56SOMjuGe3M
+         07boSE4VXsL/hYxXWmb5lZyYCz53dGTpnrjbxcRbFNQKv/1RXUep0exvp55XAP07zqGY
+         z5ATm8UrP3jwrlPUmR7G7rqDAG8JqBWtD2ZYa0yelNBic82Kx3OfCpBv45Q01qmeudW4
+         iZUA==
+X-Gm-Message-State: AOAM533bG0qeWDfopLjImZuVEs+O+WRX82e3FygbPXBrHd4KKUTZ2TGq
+        2yHoLMJjn9wUTg+CQ5E/XJajd0fOPIg=
+X-Google-Smtp-Source: ABdhPJy1PC3WtzZvS6+3qsGyi9RvAdJfykrkOKNKr8hT+mKebr7eUBDBcbenv+FYYIgZFXzoLaKNLA==
+X-Received: by 2002:a2e:9a0f:: with SMTP id o15mr4723355lji.450.1594811226020;
+        Wed, 15 Jul 2020 04:07:06 -0700 (PDT)
+Received: from localhost.localdomain (d79-196.icpnet.pl. [77.65.79.196])
+        by smtp.gmail.com with ESMTPSA id u7sm513117lfi.45.2020.07.15.04.07.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 04:07:05 -0700 (PDT)
+Date:   Wed, 15 Jul 2020 13:06:59 +0200
+From:   Mateusz Holenko <mholenko@antmicro.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Cc:     Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mateusz Holenko <mholenko@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org, "Gabriel L. Somlo" <gsomlo@gmail.com>
+Subject: [PATCH v8 0/5] LiteX SoC controller and LiteUART serial driver
+Message-ID: <20200715130641.1953227-0-mholenko@antmicro.com>
 MIME-Version: 1.0
-In-Reply-To: <20200512073115.14177-3-qiangqing.zhang@nxp.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.6.38]
-X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/05/2020 08:31, Joakim Zhang wrote:
-> Update compatible string according to driver change.`
-> 
-> Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
-> ---
->   Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
-> index 7822a806ea0a..b27a1d4fec78 100644
-> --- a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
-> +++ b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
-> @@ -4,7 +4,9 @@ Required properties:
->   
+This patchset introduces support for LiteX SoC Controller
+and LiteUART - serial device from LiteX SoC builder
+(https://github.com/enjoy-digital/litex).
 
-Hi Joakim,
+In the following patchset I will add
+a new mor1kx-based (OpenRISC) platform that
+uses this device.
 
->   - compatible: should be one of:
->   	"fsl,imx8-ddr-pmu"
-> -	"fsl,imx8m-ddr-pmu"
-> +	"fsl,imx8mq-ddr-pmu"
-> +	"fsl,imx8mm-ddr-pmu"
+Later I plan to extend this platform by
+adding support for more devices from LiteX suite.
 
-I noticed that some of the compat strings being added are used in imx 
-dtsi files today:
+Changes in v8:
+    - fixed help messages in LiteUART's KConfig
+    - removed dependency between LiteUART and LiteX SoC drivers
+    - removed `litex_check_accessors()` helper function
+    - added crashing (BUG) on the failed LiteX CSR access test
 
-john@localhost:~/linux> git grep "fsl,imx8mm-ddr-pmu"
-arch/arm64/boot/dts/freescale/imx8mm.dtsi:  compatible = 
-"fsl,imx8mm-ddr-pmu", "fsl,imx8m-ddr-pmu";
+Changes in v7:
+    - added missing include directive in UART's driver
 
-Any specific reason why they are not described in the dt bindings already?
+Changes in v6:
+    - changed accessors in SoC Controller's driver
+    - reworked UART driver
 
-I don't follow dt so much anymore, so don't know the policies.
+Changes in v5:
+    - added Reviewed-by tag
+    - removed custom accessors from SoC Controller's driver
+    - fixed error checking in SoC Controller's driver
 
-> +	"fsl,imx8mn-ddr-pmu"
+Changes in v4:
+    - fixed copyright headers
+    - fixed SoC Controller's yaml 
+    - simplified SoC Controller's driver
 
-Thanks,
-John
+Changes in v3:
+    - added Acked-by and Reviewed-by tags
+    - introduced LiteX SoC Controller driver
+    - removed endianness detection (handled now by LiteX SoC Controller driver)
+    - modified litex.h header
+    - DTS aliases for LiteUART made optional
+    - renamed SERIAL_LITEUART_NR_PORTS to SERIAL_LITEUART_MAX_PORTS
+    - changed PORT_LITEUART from 122 to 123
+
+Changes in v2:
+    - binding description rewritten to a yaml schema file
+    - added litex.h header with common register access functions
+
+Filip Kokosinski (3):
+  dt-bindings: vendor: add vendor prefix for LiteX
+  dt-bindings: serial: document LiteUART bindings
+  drivers/tty/serial: add LiteUART driver
+
+Pawel Czarnecki (2):
+  dt-bindings: soc: document LiteX SoC Controller bindings
+  drivers/soc/litex: add LiteX SoC Controller driver
+
+ .../bindings/serial/litex,liteuart.yaml       |  38 ++
+ .../soc/litex/litex,soc-controller.yaml       |  39 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   9 +
+ drivers/soc/Kconfig                           |   1 +
+ drivers/soc/Makefile                          |   1 +
+ drivers/soc/litex/Kconfig                     |  15 +
+ drivers/soc/litex/Makefile                    |   3 +
+ drivers/soc/litex/litex_soc_ctrl.c            | 192 +++++++++
+ drivers/tty/serial/Kconfig                    |  32 ++
+ drivers/tty/serial/Makefile                   |   1 +
+ drivers/tty/serial/liteuart.c                 | 402 ++++++++++++++++++
+ include/linux/litex.h                         |  24 ++
+ 13 files changed, 759 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serial/litex,liteuart.yaml
+ create mode 100644 Documentation/devicetree/bindings/soc/litex/litex,soc-controller.yaml
+ create mode 100644 drivers/soc/litex/Kconfig
+ create mode 100644 drivers/soc/litex/Makefile
+ create mode 100644 drivers/soc/litex/litex_soc_ctrl.c
+ create mode 100644 drivers/tty/serial/liteuart.c
+ create mode 100644 include/linux/litex.h
+
+-- 
+2.25.1
 
