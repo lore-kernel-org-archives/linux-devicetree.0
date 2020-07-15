@@ -2,79 +2,79 @@ Return-Path: <SRS0=eA0J=A2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7437EC433E4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 23:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F6EAC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 23:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D82C206F5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 23:13:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A4EB2065D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jul 2020 23:15:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JiuD8YFq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ts3s5J/0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgGOXNL (ORCPT
+        id S1727819AbgGOXPD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 19:13:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47582 "EHLO
+        Wed, 15 Jul 2020 19:15:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726908AbgGOXNL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 19:13:11 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDF55C08C5CE
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 16:13:10 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id l6so3678102qkc.6
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 16:13:10 -0700 (PDT)
+        with ESMTP id S1726863AbgGOXPC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 19:15:02 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 592D1C061755
+        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 16:15:02 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id b4so3663736qkn.11
+        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 16:15:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vAehlSiMXOBCPl2Wze087kwOurzcuZOvn7IQRZzFikA=;
-        b=JiuD8YFqFvnmHOANaz54QgP0xf5g9vCr6TrkO7SwhU4atcBVlXcC9PAv+zepmyi7io
-         El06x5r7w14+Ax+DURpDvK4pIPmZPSrfc8xb0unaS3EpJl8p96f4tx5PVGgThhzrblfF
-         QFyHm1DiRVQAgEGdBjWowRsR0lhPVCj1tueD3q82qLTWkgCJPro08Jp7Y2xc2vZPH9zN
-         yJ0EDiSov7q0EwN6K81zJY9XwzdVpF4VkSt2nQ0z+fll5dBolw2RAKxL0Pqbk4YV2+5D
-         Z3hve+BvRo9I1Rlwg53Xa92dBr/wLgAg5UN89r7LhHFK4oJAbWMHcAcUzdiv5N8xPlWJ
-         FcQg==
+        bh=Xd3yKqfzGmIuyChmnHGbxGkkq4tAYE3GR+3CE+pvQXg=;
+        b=Ts3s5J/0Jn86cWG4tF6CjMnwblbzfZlvMliTt+poHpAG7orVq3o3nSe6n6Q1EYPvYa
+         5QSUhh8VkISuEaFNLQ0Nq89faKdYqhaCqvSyPDIKMhJFeMis5CXzx3OzzvMWT5OYXkEG
+         Wx4NhgyxGnvXNO151lP+C0lffDejUl1x+1SXEXqWE+cQjQDKFy5ffljzNj6ryf1HznNK
+         jlebn5peyRii0ZNLjeLReRyhUhDGqBX/hlxs9n0twT5nWn2AKG4yhGKX670b5nh5Y73S
+         NPGhHXQpPmIAxzDFnHK8GzrJvS/dsx1QYdmOgOTEP2xaaIud7o7YYvdDZ9gC431R3Hu8
+         vEkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=vAehlSiMXOBCPl2Wze087kwOurzcuZOvn7IQRZzFikA=;
-        b=OhDHM+YIJyogKhavgOdH6VmkSACTOj8wgZutOYICcmewInfo4yXZARwwPgIPf3PEWu
-         9BUxS9XcQPOhIGpC2nNdNGsu3pyhvERY/afZw/8O7w8k3/ssHAiikAxtpG8K//sNNppZ
-         1ciVfKDasojogtsxS/nzIkMSwgDAsye4oRf9aE+C6Aca40d8pV+54CYlU5oEd1tZbfqu
-         CM3RsUFveM5QUAcLJSeJCo+ClJB4DuyZNiN2w3j8MJeycdkeburmEpxKf7hT8EE/okOI
-         PrRu0at0JbLIGa9tEYEDOJlzWUlOBNg+dyFyo5WgwAO3YnqH0Ii1YyiVq4dP3C8VJp7P
-         uvEw==
-X-Gm-Message-State: AOAM530Cf3BN7FDHZp0exVWzQ2jgB5S2IdCG6StG7ppfYY2d8+OjIHfI
-        EvI2Ov9+EgXPOT00yv6L53Iokg==
-X-Google-Smtp-Source: ABdhPJxZ6l+FRJikK5oRIE1iuRzwQaeFAf5CQjSwrXbnAa5rSaFlH93xrFhXfS2XG+jV25NHNcAVig==
-X-Received: by 2002:a37:b58:: with SMTP id 85mr1435240qkl.26.1594854789870;
-        Wed, 15 Jul 2020 16:13:09 -0700 (PDT)
+        bh=Xd3yKqfzGmIuyChmnHGbxGkkq4tAYE3GR+3CE+pvQXg=;
+        b=rIlfH1UMjq4WlVl3yVPgmb8lfGuYzDo0Hk5lk2g+cDVvaksxTAPWXuv+3t7y4uBLp+
+         uaziU+kc0Si41Hd9DumgvJI/55msArdxFM/BvfTrn43JO61FBlTiQnwBfJmE2xk98zhc
+         dmhMGoxQ1YYu8sWl0gevxCl2KLPLlbCfIeo+QpmWSWHulGzubI6Tj84IACqGSUfEsA2t
+         Irq83h6yj32zffgRXzO0Y47TJ0bL3YIzXdL1z+Jsljxj60u8wRTs2QHC8zToFPduQZN8
+         mibHqJAnAMcgbEAXCbk5boe/Lc3okX6NcjLsKGep9SpCwmhhkgrmmBECza33jqnCY7zY
+         JMXw==
+X-Gm-Message-State: AOAM531MrC3pOoKDhNkcThLqImJvcpARdiXSc7hOvCKeh1OO2gbNR5xq
+        O4hKyO/Y7AryYn/vRC7AdFbQEt4u8fI=
+X-Google-Smtp-Source: ABdhPJzszqQUB8jmldBHMhwuFEBC+z8WHjXAb/q6EGDZuz6YCf/xKyIqVeXUt0vagEfU/5DMKL7TpQ==
+X-Received: by 2002:a05:620a:2002:: with SMTP id c2mr1314654qka.35.1594854901466;
+        Wed, 15 Jul 2020 16:15:01 -0700 (PDT)
 Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.gmail.com with ESMTPSA id v28sm4059355qkv.31.2020.07.15.16.13.08
+        by smtp.gmail.com with ESMTPSA id o187sm4343607qke.76.2020.07.15.16.15.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jul 2020 16:13:08 -0700 (PDT)
-Subject: Re: [RFC PATCH 4/4] thermal: Modify thermal governors to do nothing
- for "cold" trip points
+        Wed, 15 Jul 2020 16:15:00 -0700 (PDT)
+Subject: Re: [RFC PATCH 3/4] thermal:core:Add genetlink notifications for
+ monitoring falling temperature
 To:     Zhang Rui <rui.zhang@intel.com>, daniel.lezcano@linaro.org,
         robh+dt@kernel.org
 Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
 References: <20200710135154.181454-1-thara.gopinath@linaro.org>
- <20200710135154.181454-5-thara.gopinath@linaro.org>
- <d2eeca29328a87433a46c35947ffb490d49c168a.camel@intel.com>
+ <20200710135154.181454-4-thara.gopinath@linaro.org>
+ <746420e6b213985518d8b314018e32dc3438e9af.camel@intel.com>
 From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <5c9eec96-79b6-3499-fe06-7312504ffc4a@linaro.org>
-Date:   Wed, 15 Jul 2020 19:13:08 -0400
+Message-ID: <021bec8e-2cf7-99fb-d224-e16796b95567@linaro.org>
+Date:   Wed, 15 Jul 2020 19:15:00 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <d2eeca29328a87433a46c35947ffb490d49c168a.camel@intel.com>
+In-Reply-To: <746420e6b213985518d8b314018e32dc3438e9af.camel@intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -85,30 +85,49 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 
 
-On 7/15/20 4:35 AM, Zhang Rui wrote:
+On 7/15/20 4:46 AM, Zhang Rui wrote:
 > On Fri, 2020-07-10 at 09:51 -0400, Thara Gopinath wrote:
->> For now, thermal governors do not support monitoring of falling
->> temperature. Hence, in case of calls to the governor for trip points
->> marked
->> as cold, return doing nothing.
+>> Add notification calls for trip type THERMAL_TRIP_COLD when
+>> temperature
+>> crosses the trip point in either direction.
 >>
 >> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
 >> ---
->>   drivers/thermal/gov_bang_bang.c       | 8 ++++++++
->>   drivers/thermal/gov_fair_share.c      | 8 ++++++++
->>   drivers/thermal/gov_power_allocator.c | 8 ++++++++
->>   drivers/thermal/gov_step_wise.c       | 8 ++++++++
->>   4 files changed, 32 insertions(+)
+>>   drivers/thermal/thermal_core.c | 21 +++++++++++++++------
+>>   1 file changed, 15 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/thermal/thermal_core.c
+>> b/drivers/thermal/thermal_core.c
+>> index 750a89f0c20a..e2302ca1cd3b 100644
+>> --- a/drivers/thermal/thermal_core.c
+>> +++ b/drivers/thermal/thermal_core.c
+>> @@ -429,12 +429,21 @@ static void handle_thermal_trip(struct
+>> thermal_zone_device *tz, int trip)
+>>   		tz->ops->get_trip_hyst(tz, trip, &hyst);
+>>   
+>>   	if (tz->last_temperature != THERMAL_TEMP_INVALID) {
+>> -		if (tz->last_temperature < trip_temp &&
+>> -		    tz->temperature >= trip_temp)
+>> -			thermal_notify_tz_trip_up(tz->id, trip);
+>> -		if (tz->last_temperature >= trip_temp &&
+>> -		    tz->temperature < (trip_temp - hyst))
+>> -			thermal_notify_tz_trip_down(tz->id, trip);
+>> +		if (type == THERMAL_TRIP_COLD) {
+>> +			if (tz->last_temperature > trip_temp &&
+>> +			    tz->temperature <= trip_temp)
+>> +				thermal_notify_tz_trip_down(tz->id,
+>> trip);
 > 
-> userspace governor does not support cold trip point neither.
-> 
-> So how about adding the check in handle_non_critical_trips first, and
-> remove the check later, after all the governors support cold trip?
+> trip_type should also be part of the event because trip_down/trip_up
+> for hot trip and cold trip have different meanings.
+> Or can we use some more generic names like trip_on/trip_off? trip_on
+> means the trip point is violated or actions need to be taken for the
+> specific trip points, for both hot and cold trips. I know
+> trip_on/trip_off doesn't represent what I mean clearly, but surely you
+> can find a better name.
 
-Yeah, no governors support cold trip for now. Putting check in 
-handle_non_critical_trips is another way to handle this. I can do it and 
-come back to this solution when one or more governors start supporting 
-cold trip points.
+Makes sense.. I will fix this in the next version. I don't have a good 
+name at the moment but will think of something!
 
 
 -- 
