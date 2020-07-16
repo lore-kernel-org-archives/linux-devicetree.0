@@ -2,256 +2,478 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 720C5C433EC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 01:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF89CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 01:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47A8820791
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 01:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75F8D20791
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 01:53:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sDJkD157"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Ix4JmSMt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbgGPB30 (ORCPT
+        id S1727075AbgGPBxg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 21:29:26 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:49540 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727948AbgGPB3Z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 21:29:25 -0400
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200716012921epoutp032d4e58e2d9f88258ccac6fb655fd3d52~iF2nUBXBD1578815788epoutp03L
-        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 01:29:21 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200716012921epoutp032d4e58e2d9f88258ccac6fb655fd3d52~iF2nUBXBD1578815788epoutp03L
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1594862961;
-        bh=hOa/A7YiqiUgUKfubXBHWOxCskvKIPDJb68BD6K6Sdw=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=sDJkD157ZwKeUhy3Akdkhhi095mTtIZFjR0nR2RYYcGSmYkKkNVmoEpTzQCnUoQ54
-         R7EFZORZO2AvdnDAZrjhQV7vPQ7CCyZ5Y05AiANfQpLAqRcYW96KHe9LZovcvBU0gL
-         Yfy2rjcukJhR6DshEOSLjlHlT5M+k8mZycd86jSU=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-        20200716012920epcas5p2ff4a5f48f3e6b052117db3476bd22e35~iF2m1jJaB0342103421epcas5p2K;
-        Thu, 16 Jul 2020 01:29:20 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        4D.1A.09467.07DAF0F5; Thu, 16 Jul 2020 10:29:20 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200716011732epcas5p4e81ce853962d66b1a48ce24e9f63d7ed~iFsTYGCbK1630116301epcas5p4Z;
-        Thu, 16 Jul 2020 01:17:32 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200716011732epsmtrp219362f3104ebe5bcc0433d9f84bf0c9a~iFsTXS0GR2678726787epsmtrp2V;
-        Thu, 16 Jul 2020 01:17:32 +0000 (GMT)
-X-AuditID: b6c32a49-a29ff700000024fb-ba-5f0fad709991
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        5D.EB.08303.CAAAF0F5; Thu, 16 Jul 2020 10:17:32 +0900 (KST)
-Received: from alimakhtar02 (unknown [107.108.234.165]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200716011730epsmtip1bda720948ff454b86cbda2a5c209b952~iFsRNj4yc3113931139epsmtip19;
-        Thu, 16 Jul 2020 01:17:30 +0000 (GMT)
-From:   "Alim Akhtar" <alim.akhtar@samsung.com>
-To:     "'Vinod Koul'" <vkoul@kernel.org>
-Cc:     <robh+dt@kernel.org>, <krzk@kernel.org>, <kwmad.kim@samsung.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-samsung-soc@vger.kernel.org>, <kishon@ti.com>
-In-Reply-To: <20200713061737.GD34333@vkoul-mobl>
-Subject: RE: [PATCH v12 2/2] phy: samsung-ufs: add UFS PHY driver for
- samsung SoC
-Date:   Thu, 16 Jul 2020 06:47:28 +0530
-Message-ID: <077501d65b0e$e1630100$a4290300$@samsung.com>
+        Wed, 15 Jul 2020 21:53:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43868 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726785AbgGPBxf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 21:53:35 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDEC0C061755;
+        Wed, 15 Jul 2020 18:53:34 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4952D27A;
+        Thu, 16 Jul 2020 03:53:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1594864411;
+        bh=wJKQnDTGKPjhqVFwA7dNKVY6W78s/2iVlYhfoWjh3Xk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ix4JmSMtteFYTwG3kN6WLyDDQoOML8RY+P5hCBsER+RvsE4HenoWiF065hLv9lSxy
+         DjS8yTnK2TWnPp8zUsFu6RIwqY4iQnJ2RHbNc9JDMwadg9U25xp60aGsDSqug81ynd
+         eO1I43Twla0B9KtYp5K97re0XkOVir/DX+RLWGPw=
+Date:   Thu, 16 Jul 2020 04:53:23 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-media@vger.kernel.org, mchehab@kernel.org,
+        sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl,
+        linux-renesas-soc@vger.kernel.org,
+        Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH 1/8] dt-bindings: media: ov5640: Convert to json-schema
+Message-ID: <20200716015323.GQ6144@pendragon.ideasonboard.com>
+References: <20200715140951.90753-1-jacopo+renesas@jmondi.org>
+ <20200715140951.90753-2-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQIAZudAEAONCLYZ7ErPEYM0UJKVzwJEgx3VAd4V62cCg/PmQ6h9FfEw
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCKsWRmVeSWpSXmKPExsWy7bCmpm7BWv54gzM39C3mHznHanHhaQ+b
-        xfnzG9gtbm45ymKx6fE1VovLu+awWcw4v4/JonXvEXaLnXdOMDtwemxa1cnmsXlJvUffllWM
-        HsdvbGfy+LxJLoA1issmJTUnsyy1SN8ugStj+l2rgjXyFfeexDUwfpHoYuTkkBAwkZh7fwcb
-        iC0ksJtR4u4PCQj7E6PE8/aiLkYuIPszo8Sby7tYYBom3rjDDpHYxSjRd+w+E4TzhlHi9Mpp
-        rCBVbAK6EjsWt4GNFRFQldjy5AEbSBGzwDNGiTWbOhhBEpwCBhKn/l0CGyssECzxYd8CZhCb
-        Bajh1pfXYDavgKXEuaWXGSFsQYmTM5+A1TMLyEtsfzuHGeIkBYmfT5cBLeYAWuYm8fleEUSJ
-        uMTRnz3MIHslBBZySKz9f4MZpEZCwEXiz1R1iFZhiVfHt7BD2FISn9/tZYMoyZbo2WUMEa6R
-        WDrvGNTz9hIHrsxhASlhFtCUWL9LHyIsKzH11DomiK18Er2/nzBBxHkldsyDsVUlmt9dhRoj
-        LTGxu5t1AqPSLCR/zULy1ywkD8xC2LaAkWUVo2RqQXFuemqxaYFhXmq5XnFibnFpXrpecn7u
-        JkZwQtLy3MF498EHvUOMTByMhxglOJiVRHh5uHjjhXhTEiurUovy44tKc1KLDzFKc7AoifMq
-        /TgTJySQnliSmp2aWpBaBJNl4uCUamDa0F96qNXs/+fZF/ZuF5syl+kjT4Jb1eMpR64Hm0rW
-        z9aXFo5s1umXNRc/erk+XIVX+nHsM+ZllxXuiS62vrFD2j98XsSjINOkkxbbeRP8Lyy1bAvj
-        2OTP88oo8P4T0RcVYmW/xVX/v8+UL5snv3TRlLeTvaceC+Cv5Ir5Vbxs3UXPrB9hBf/8frpf
-        85+3aMf8FV5Rf0N7D78yM6w8O6Guu+jphplnV6xgl1/7W1D+oOOpWdaHfGU5Ev9HTCxKmKMf
-        1LY0yPX4Ko/FG1YXBHM6rmm402nmmHFjWsvMnh9zX2w/sCEu8oKc4Cmb68Lq+fGrJ7F08nvn
-        ee6xVJtQmWUapZ9UrKvozBi0gatzwRElluKMREMt5qLiRABgTY+wtwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgkeLIzCtJLcpLzFFi42LZdlhJTnfNKv54gxdbNSzmHznHanHhaQ+b
-        xfnzG9gtbm45ymKx6fE1VovLu+awWcw4v4/JonXvEXaLnXdOMDtwemxa1cnmsXlJvUffllWM
-        HsdvbGfy+LxJLoA1issmJTUnsyy1SN8ugStj+l2rgjXyFfeexDUwfpHoYuTkkBAwkZh44w47
-        iC0ksINRYs5HZ4i4tMT1jRPYIWxhiZX/ngPZXEA1rxgl7t/sYQVJsAnoSuxY3MYGYosIqEps
-        efKADaSIWeAdo8TufSfZIDoeM0pcOHIXrIpTwEDi1L9LLCC2sECgxKLZ75hAbBag7ltfXjOD
-        2LwClhLnll5mhLAFJU7OfAJUzwE0VU+ibSNYmFlAXmL72znMENcpSPx8uowVpEREwE3i870i
-        iBJxiaM/e5gnMArPQjJoFsKgWUgGzULSsYCRZRWjZGpBcW56brFhgVFearlecWJucWleul5y
-        fu4mRnBkaWntYNyz6oPeIUYmDsZDjBIczEoivDxcvPFCvCmJlVWpRfnxRaU5qcWHGKU5WJTE
-        eb/OWhgnJJCeWJKanZpakFoEk2Xi4JRqYOJ7c/On3BxlV0eej5Pnp+/7kn385FSmmQqK/Fu2
-        Kf+3l4qSN/pyb+JFwfNvdTvkecrrj/QdORWbt6R78nuF1n9xCfel8/aq8iZtCX7MfKza4R1r
-        9b+dIvzXq3/tSzvf6trWl+j6tyDWzdtmUop0obRatssdhayti8/tOXd/vlc7+58ra/eaxPKG
-        r5a3vj4/Mu366qkne1I8xMR8I29L/nz0v/swi3dlo6X7OZu/alIlPOXf5q0ql41t2CegH8T9
-        jEn45sOqVtVN35x25Oc8/LepbB1bwrOpX2uKTy5wvOi7onuzReS/U76CV4VnLasvn7to5XGZ
-        hxUN11lYd7LqrEpimaP6SdT553ZrPeO3rkosxRmJhlrMRcWJAGADDc8bAwAA
-X-CMS-MailID: 20200716011732epcas5p4e81ce853962d66b1a48ce24e9f63d7ed
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200703173144epcas5p1daa9f5c594e7f299638cc75b7425b7c8
-References: <20200703171135.77389-1-alim.akhtar@samsung.com>
-        <CGME20200703173144epcas5p1daa9f5c594e7f299638cc75b7425b7c8@epcas5p1.samsung.com>
-        <20200703171135.77389-2-alim.akhtar@samsung.com>
-        <20200713061737.GD34333@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200715140951.90753-2-jacopo+renesas@jmondi.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Vinod,
+Hi Jacopo,
 
-> -----Original Message-----
-> From: Vinod Koul <vkoul@kernel.org>
-> Sent: 13 July 2020 11:48
-> To: Alim Akhtar <alim.akhtar@samsung.com>
-> Cc: robh+dt@kernel.org; krzk@kernel.org; kwmad.kim@samsung.com;
-> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> kernel@vger.kernel.org; linux-samsung-soc@vger.kernel.org; kishon@ti.com
-> Subject: Re: [PATCH v12 2/2] phy: samsung-ufs: add UFS PHY driver for
-samsung
-> SoC
-> 
-> On 03-07-20, 22:41, Alim Akhtar wrote:
-> 
-> > +static const struct samsung_ufs_phy_cfg exynos7_post_init_cfg[] = {
-> > +	END_UFS_PHY_CFG
-> > +};
-> 
-> This is dummy, why not add a check to make config optional?
-> 
-Currently this is dummy, however this might be used for the similar platform
-which do some phy tunning post init.
-Will just remove this for now for this platform, will add this check in
-driver.
+Thank you for the patch.
 
-> > +static int samsung_ufs_phy_symbol_clk_init(struct samsung_ufs_phy
-> > +*phy) {
-> > +	int ret = 0;
+On Wed, Jul 15, 2020 at 04:09:44PM +0200, Jacopo Mondi wrote:
+> Convert the ov5640 bindings document to json-schema and update
+> the MAINTAINERS file accordingly.
 > 
-> superfluous init, am sure I flagged it before as well
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+> Hi Steve,
+>   I've added myself as maintainer in the bindings, with your ack
+> I would be happy to add myself as maintainer or reviewer for this driver
+> in MAINTAINERS, as I've recently been looking after this driver, mostly
+> for the MIPI CSI-2 interface part.
 > 
-Yes, you did, but 0-DAY CI kernel test gave warning [1], so I kept this as
-it is.
-[1] https://lkml.org/lkml/2020/7/3/81
+> Thanks
+>   j
+> 
+> ---
+>  .../devicetree/bindings/media/i2c/ov5640.txt  |  92 ---------
+>  .../devicetree/bindings/media/i2c/ov5640.yaml | 181 ++++++++++++++++++
+>  MAINTAINERS                                   |   1 +
+>  3 files changed, 182 insertions(+), 92 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/media/i2c/ov5640.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5640.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5640.txt b/Documentation/devicetree/bindings/media/i2c/ov5640.txt
+> deleted file mode 100644
+> index c97c2f2da12d..000000000000
+> --- a/Documentation/devicetree/bindings/media/i2c/ov5640.txt
+> +++ /dev/null
+> @@ -1,92 +0,0 @@
+> -* Omnivision OV5640 MIPI CSI-2 / parallel sensor
+> -
+> -Required Properties:
+> -- compatible: should be "ovti,ov5640"
+> -- clocks: reference to the xclk input clock.
+> -- clock-names: should be "xclk".
+> -- DOVDD-supply: Digital I/O voltage supply, 1.8 volts
+> -- AVDD-supply: Analog voltage supply, 2.8 volts
+> -- DVDD-supply: Digital core voltage supply, 1.5 volts
+> -
+> -Optional Properties:
+> -- reset-gpios: reference to the GPIO connected to the reset pin, if any.
+> -	       This is an active low signal to the OV5640.
+> -- powerdown-gpios: reference to the GPIO connected to the powerdown pin,
+> -		   if any. This is an active high signal to the OV5640.
+> -- rotation: as defined in
+> -	    Documentation/devicetree/bindings/media/video-interfaces.txt,
+> -	    valid values are 0 (sensor mounted upright) and 180 (sensor
+> -	    mounted upside down).
+> -
+> -The device node must contain one 'port' child node for its digital output
+> -video port, in accordance with the video interface bindings defined in
+> -Documentation/devicetree/bindings/media/video-interfaces.txt.
+> -
+> -OV5640 can be connected to a MIPI CSI-2 bus or a parallel bus endpoint.
+> -
+> -Endpoint node required properties for CSI-2 connection are:
+> -- remote-endpoint: a phandle to the bus receiver's endpoint node.
+> -- clock-lanes: should be set to <0> (clock lane on hardware lane 0)
+> -- data-lanes: should be set to <1> or <1 2> (one or two CSI-2 lanes supported)
+> -
+> -Endpoint node required properties for parallel connection are:
+> -- remote-endpoint: a phandle to the bus receiver's endpoint node.
+> -- bus-width: shall be set to <8> for 8 bits parallel bus
+> -	     or <10> for 10 bits parallel bus
+> -- data-shift: shall be set to <2> for 8 bits parallel bus
+> -	      (lines 9:2 are used) or <0> for 10 bits parallel bus
+> -- hsync-active: active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
+> -- vsync-active: active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
+> -- pclk-sample: sample data on rising (1) or falling (0) edge of the pixel clock
+> -	       signal.
+> -
+> -Examples:
+> -
+> -&i2c1 {
+> -	ov5640: camera@3c {
+> -		compatible = "ovti,ov5640";
+> -		pinctrl-names = "default";
+> -		pinctrl-0 = <&pinctrl_ov5640>;
+> -		reg = <0x3c>;
+> -		clocks = <&clks IMX6QDL_CLK_CKO>;
+> -		clock-names = "xclk";
+> -		DOVDD-supply = <&vgen4_reg>; /* 1.8v */
+> -		AVDD-supply = <&vgen3_reg>;  /* 2.8v */
+> -		DVDD-supply = <&vgen2_reg>;  /* 1.5v */
+> -		powerdown-gpios = <&gpio1 19 GPIO_ACTIVE_HIGH>;
+> -		reset-gpios = <&gpio1 20 GPIO_ACTIVE_LOW>;
+> -		rotation = <180>;
+> -
+> -		port {
+> -			/* MIPI CSI-2 bus endpoint */
+> -			ov5640_to_mipi_csi2: endpoint {
+> -				remote-endpoint = <&mipi_csi2_from_ov5640>;
+> -				clock-lanes = <0>;
+> -				data-lanes = <1 2>;
+> -			};
+> -		};
+> -	};
+> -};
+> -
+> -&i2c1 {
+> -	ov5640: camera@3c {
+> -		compatible = "ovti,ov5640";
+> -		pinctrl-names = "default";
+> -		pinctrl-0 = <&pinctrl_ov5640>;
+> -		reg = <0x3c>;
+> -		clocks = <&clk_ext_camera>;
+> -		clock-names = "xclk";
+> -
+> -		port {
+> -			/* Parallel bus endpoint */
+> -			ov5640_to_parallel: endpoint {
+> -				remote-endpoint = <&parallel_from_ov5640>;
+> -				bus-width = <8>;
+> -				data-shift = <2>; /* lines 9:2 are used */
+> -				hsync-active = <0>;
+> -				vsync-active = <0>;
+> -				pclk-sample = <1>;
+> -			};
+> -		};
+> -	};
+> -};
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5640.yaml b/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
+> new file mode 100644
+> index 000000000000..9c32262a3621
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
+> @@ -0,0 +1,181 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/i2c/ov5640.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Omnivision OV5640 MIPI CSI-2 / parallel sensor
+> +
+> +maintainers:
+> +  - Steve Longerbeam <slongerbeam@gmail.com>
+> +  - Jacopo Mondi <jacopo@jmondi.org>
+> +
+> +description: -|
+> +  OV5640 is a 5 megapixels image sensor capable of producing images in RBG, RAW,
 
-> > +
-> > +	phy->tx0_symbol_clk = devm_clk_get(phy->dev, "tx0_symbol_clk");
-> > +	if (IS_ERR(phy->tx0_symbol_clk)) {
-> > +		dev_err(phy->dev, "failed to get tx0_symbol_clk clock\n");
-> > +		goto out;
-> > +	}
-> > +
-> > +	phy->rx0_symbol_clk = devm_clk_get(phy->dev, "rx0_symbol_clk");
-> > +	if (IS_ERR(phy->rx0_symbol_clk)) {
-> > +		dev_err(phy->dev, "failed to get rx0_symbol_clk clock\n");
-> > +		goto out;
-> > +	}
-> > +
-> > +	phy->rx1_symbol_clk = devm_clk_get(phy->dev, "rx1_symbol_clk");
-> > +	if (IS_ERR(phy->rx0_symbol_clk)) {
-> > +		dev_err(phy->dev, "failed to get rx1_symbol_clk clock\n");
-> > +		goto out;
-> > +	}
-> > +
-> > +	ret = clk_prepare_enable(phy->tx0_symbol_clk);
-> > +	if (ret) {
-> > +		dev_err(phy->dev, "%s: tx0_symbol_clk enable failed %d\n",
-> __func__, ret);
-> > +		goto out;
-> > +	}
-> > +
-> > +	ret = clk_prepare_enable(phy->rx0_symbol_clk);
-> > +	if (ret) {
-> > +		dev_err(phy->dev, "%s: rx0_symbol_clk enable failed %d\n",
-> __func__, ret);
-> > +		clk_disable_unprepare(phy->tx0_symbol_clk);
-> > +		goto out;
-> > +	}
-> > +
-> > +	ret = clk_prepare_enable(phy->rx1_symbol_clk);
-> > +	if (ret) {
-> > +		dev_err(phy->dev, "%s: rx1_symbol_clk enable failed %d\n",
-> __func__, ret);
-> > +		clk_disable_unprepare(phy->tx0_symbol_clk);
-> > +		clk_disable_unprepare(phy->rx0_symbol_clk);
-> 
-> maybe it will look better if we add common rollback and jump to proper
-labels
-> 
-Sure, will change in next version.
+s/OV5640/The OV5640/
+s/RBG/RGB/
 
-> > +static int samsung_ufs_phy_clks_init(struct samsung_ufs_phy *phy) {
-> > +	int ret;
-> > +
-> > +	phy->ref_clk = devm_clk_get(phy->dev, "ref_clk");
-> > +	if (IS_ERR(phy->ref_clk))
-> > +		dev_err(phy->dev, "failed to get ref_clk clock\n");
-> > +
-> > +	ret = clk_prepare_enable(phy->ref_clk);
-> > +	if (ret) {
-> > +		dev_err(phy->dev, "%s: ref_clk enable failed %d\n",
-__func__,
-> ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	dev_info(phy->dev, "UFS MPHY ref_clk_rate = %ld\n",
-> > +clk_get_rate(phy->ref_clk));
-> 
-> debug pls
-> 
-Sure, will change
+> +  YUV and compressed formats. It features a MIPI CSI-2 and a parallel data
+> +  interface and an I2C-compatible (CCI) control interface.
+> +
+> +properties:
+> +  compatible:
+> +    const: ovti,ov5640
+> +
+> +  reg:
+> +    description: I2C device address
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description: Reference to the xclk input clock.
 
-> > +static int samsung_ufs_phy_init(struct phy *phy) {
-> > +	struct samsung_ufs_phy *_phy = get_samsung_ufs_phy(phy);
-> 
-> ss_phy perhaps?
-> 
-Sure, will change 
+I'd drop this, it's implied by the clock-names
 
-> > +	int ret;
-> > +
-> > +	_phy->lane_cnt = phy->attrs.bus_width;
-> > +	_phy->ufs_phy_state = CFG_PRE_INIT;
-> > +
-> > +	if (_phy->drvdata->has_symbol_clk) {
-> > +		ret = samsung_ufs_phy_symbol_clk_init(_phy);
-> > +		if (ret)
-> > +			dev_err(_phy->dev, "failed to set ufs phy symbol
-> clocks\n");
-> > +	}
-> > +
-> > +	ret = samsung_ufs_phy_clks_init(_phy);
-> > +	if (ret)
-> > +		dev_err(_phy->dev, "failed to set ufs phy  clocks\n");
-> > +
-> > +	samsung_ufs_phy_calibrate(phy);
-> > +
-> > +	return 0;
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    description: Should be "xclk".
+
+This should be replaced with
+
+   const: xclk
+
+> +    maxItems: 1
+> +
+> +  DOVDD-supply:
+> +    description: Digital I/O voltage supply, 1.8 volts.
+> +    maxItems: 1
+> +
+> +  AVDD-supply:
+> +    description: Analog voltage supply, 2.8 volts.
+> +    maxItems: 1
+> +
+> +  DVDD-supply:
+> +    description: Digital core voltage supply.
+> +    maxItems: 1
+> +
+> +  reset-gpios:
+> +    description: |
+> +      Reference to the GPIO connected to the reset pin, if any. This is an
+> +      active low signal to the OV5640.
+> +    maxItems: 1
+> +
+> +  powerdown-gpios:
+> +    description: |
+> +      Reference tot he GPIO connected to the powerdown pin, if any. This is an
+> +      active high signal to the OV5640.
+> +    maxItems: 1
+> +
+> +  rotation:
+> +    description: |
+> +      As defined in Documentation/devicetree/bindings/media/video-interfaces.txt,
+> +      valid values are 0 (sensor mounted upright) and 180 (sensor mounted upside
+> +      down).
+
+The second sentence should be replaced with
+  enum:
+    - 0
+    - 180
+
+> +
+> +  port:
+> +    type: object
+> +    description: |
+> +      The device node must contain one 'port' child node for its digital output
+> +      video port, in accordance with the video interface bindings defined in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +      OV5640 can be connected to a MIPI CSI-2 bus or a parallel bus endpoint.
+> +
+> +    properties:
+> +      endpoint:
+> +        type: object
+> +        properties:
+> +          remote-endpoint:
+> +            description: A phandle to the bus receiver's endpoint node.
+> +
+> +          clock-lanes:
+> +            description: Should be set to 0 (clock lane on hardware lane 0).
+
+The description of most of these properties should also be replaced with
+yaml schema rules. Ideally there should also be constraints that tell
+which properties can be specified together. For instance here's the
+corresponding rules from the MT9M114 DT binding (not upstream yet).
+
+  # See ../video-interfaces.txt for more details
+  port:
+    type: object
+    properties:
+      endpoint:
+        type: object
+        properties:
+          bus-type:
+            enum: [4, 5, 6]
+
+          clock-lanes:
+            items:
+              - const: 0
+
+          data-lanes:
+            items:
+              - const: 1
+
+          bus-width:
+            items:
+              - const: 8
+
+          hsync-active:
+            items:
+              - const: 1
+
+          vsync-active:
+            items:
+              - const: 1
+
+        required:
+          - bus-type
+
+        allOf:
+          - if:
+              properties:
+                bus-type:
+                  const: 4
+            then:
+              properties:
+                bus-width: false
+                hsync-active: false
+                vsync-active: false
+
+          - if:
+              properties:
+                bus-type:
+                  const: 5
+            then:
+              properties:
+                clock-lanes: false
+                data-lanes: false
+
+          - if:
+              properties:
+                bus-type:
+                  const: 6
+            then:
+              properties:
+                clock-lanes: false
+                data-lanes: false
+                hsync-active: false
+                vsync-active: false
+
+        unevaluatedProperties: false
+
+These comments apply to other patches in this series.
+
+> +
+> +          data-lanes:
+> +            description: |
+> +              Should be set to <1> or <1 2> (one or two CSI-2 lanes supported).
+> +
+> +          bus-width:
+> +            description: |
+> +              Shall be set to <8> for 8 bits parallel bus or <10> for 10 bits
+> +              parallel bus.
+> +
+> +          data-shift:
+> +            description: |
+> +              Shall be set to <2> for 8 bits parallel bus (lines 9:2 are used) or
+> +              <0> for 10 bits parallel bus.
+> +
+> +          hsync-active:
+> +            description: |
+> +              Active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
+> +
+> +          vsync-active:
+> +            description: |
+> +              Active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
+> +
+> +          pclk-sample:
+> +            description: |
+> +              Sample data on rising (1) or falling (0) edge of the pixel clock
+> +              signal.
+> +
+> +        required:
+> +          - remote-endpoint
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - DOVDD-supply
+> +  - AVDD-supply
+> +  - DVDD-supply
+> +  - port
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/clock/imx6qdl-clock.h>
+> +
+> +    i2c0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        camera@3c {
+> +            compatible = "ovti,ov5640";
+> +            reg = <0x3c>;
+> +            clocks = <&clks IMX6QDL_CLK_CKO>;
+> +            clock-names = "xclk";
+> +            DOVDD-supply = <&vgen4_reg>; /* 1.8v */
+> +            AVDD-supply = <&vgen3_reg>;  /* 2.8v */
+> +            DVDD-supply = <&vgen2_reg>;  /* 1.5v */
+> +            powerdown-gpios = <&gpio1 19 GPIO_ACTIVE_HIGH>;
+> +            reset-gpios = <&gpio1 20 GPIO_ACTIVE_LOW>;
+> +            rotation = <180>;
+> +
+> +            port {
+> +                ov5640_to_mipi_csi2: endpoint {
+> +                    remote-endpoint = <&mipi_csi2_from_ov5640>;
+> +                    clock-lanes = <0>;
+> +                    data-lanes = <1 2>;
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +    i2c1 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        camera@3c {
+> +            compatible = "ovti,ov5640";
+> +            reg = <0x3c>;
+> +            clocks = <&clks IMX6QDL_CLK_CKO>;
+> +            clock-names = "xclk";
+> +            DOVDD-supply = <&vgen4_reg>; /* 1.8v */
+> +            AVDD-supply = <&vgen3_reg>;  /* 2.8v */
+> +            DVDD-supply = <&vgen2_reg>;  /* 1.5v */
+> +            powerdown-gpios = <&gpio1 19 GPIO_ACTIVE_HIGH>;
+> +            reset-gpios = <&gpio1 20 GPIO_ACTIVE_LOW>;
+> +            rotation = <180>;
+> +
+> +            port {
+> +                ov5640_to_parallel: endpoint {
+> +                    remote-endpoint = <&parallel_from_ov5640>;
+> +                    bus-width = <8>;
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c74d25c58e1a..0160d7567ed3 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12605,6 +12605,7 @@ L:	linux-media@vger.kernel.org
+>  S:	Maintained
+>  T:	git git://linuxtv.org/media_tree.git
+>  F:	drivers/media/i2c/ov5640.c
+> +F:	Documentation/devicetree/bindings/media/i2c/ov5640.yaml
 > 
-> not return samsung_ufs_phy_calibrate() ?
-> --
-Will add an error path.
+>  OMNIVISION OV5647 SENSOR DRIVER
+>  M:	Jacopo Mondi <jacopo@jmondi.org>
 
-> ~Vinod
+-- 
+Regards,
 
+Laurent Pinchart
