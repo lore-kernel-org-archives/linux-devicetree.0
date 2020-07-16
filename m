@@ -2,155 +2,93 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6071CC433E5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 03:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6718C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 03:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34C0D20775
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 03:09:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fGQ5lWJT"
+	by mail.kernel.org (Postfix) with ESMTP id 8792D20825
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 03:16:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgGPDJO (ORCPT
+        id S1728173AbgGPDQq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 23:09:14 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:22425 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726770AbgGPDJO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jul 2020 23:09:14 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594868953; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=mw4JTlNVh9hVrQQ8A7sSm35gcNawb7Kka3KE5+3Xp3U=; b=fGQ5lWJThl+IW1UMhXxGA1ERRLtKNrrr7RicNbT26D0wwpHN08U4a464uoyAWxBDj3Ls5lqb
- 4fIa0XDafUyozPUR2ETC4b3LNbYJQQMnFiAwT1vjn0gp8sJz22rNMzVXLpeJhqsKRRfQDnoV
- aQcf+7ytZjv+lKbI3ua7n8lSo4U=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 5f0fc4ce7c8ca473a869d506 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 16 Jul 2020 03:09:02
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AFB18C433C6; Thu, 16 Jul 2020 03:09:01 +0000 (UTC)
-Received: from [192.168.1.11] (unknown [61.1.230.191])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DF20EC433C9;
-        Thu, 16 Jul 2020 03:08:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DF20EC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH 3/3] arm64: dts: sc7180: Add OPP tables and power-domains
- for venus
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     stanimir.varbanov@linaro.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, linux-media@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1593603638-19296-1-git-send-email-rnayak@codeaurora.org>
- <1593603638-19296-4-git-send-email-rnayak@codeaurora.org>
- <20200701165414.GB3191083@google.com>
- <1ce702e1-6deb-8f13-3e17-38170b136b2c@codeaurora.org>
- <20200714003603.GP3191083@google.com>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <069bb34a-a637-6408-f067-43ff418b4776@codeaurora.org>
-Date:   Thu, 16 Jul 2020 08:38:54 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200714003603.GP3191083@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 15 Jul 2020 23:16:46 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:48576 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728149AbgGPDQp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jul 2020 23:16:45 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx7x+Pxg9f1GoFAA--.6749S10;
+        Thu, 16 Jul 2020 11:16:38 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>
+Cc:     Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH v4 8/8] dt-bindings: interrupt-controller: Fix typos in loongson,liointc.yaml
+Date:   Thu, 16 Jul 2020 11:16:30 +0800
+Message-Id: <1594869390-21053-9-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1594869390-21053-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1594869390-21053-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf9Dx7x+Pxg9f1GoFAA--.6749S10
+X-Coremail-Antispam: 1UD129KBjvJXoW7uF4Dtw1kCF47KFy3KFyrXrb_yoW8Xr48pa
+        yDCanFgF4jqF13C3yDta4vkF13Zr98A3ZxGFsav3yxGFsruw1DXrWa9F95J3W5GrWxtFWU
+        ZryFga10gay7Ar7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUBvb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI
+        8067AKxVWUAVCq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28C
+        jxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI
+        8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2
+        z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4
+        xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JVWx
+        JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc2xSY4AK67AK6r48MxAIw2
+        8IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
+        x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrw
+        CI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l
+        IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4
+        A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j4Q6JUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Fix the following typos in loongson,liointc.yaml:
+children -> child
+fron -> from
+connected -> connect
+it's -> its
 
-On 7/14/2020 6:06 AM, Matthias Kaehlcke wrote:
-> On Thu, Jul 02, 2020 at 02:26:14PM +0530, Rajendra Nayak wrote:
->>
->> On 7/1/2020 10:24 PM, Matthias Kaehlcke wrote:
->>> On Wed, Jul 01, 2020 at 05:10:38PM +0530, Rajendra Nayak wrote:
->>>> Add the OPP tables in order to be able to vote on the performance state
->>>> of a power-domain
->>>>
->>>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->>>> ---
->>>>    arch/arm64/boot/dts/qcom/sc7180.dtsi | 35 +++++++++++++++++++++++++++++++++--
->>>>    1 file changed, 33 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->>>> index ad57df2..738a741 100644
->>>> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->>>> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->>>> @@ -2392,8 +2392,10 @@
->>>>    			reg = <0 0x0aa00000 0 0xff000>;
->>>>    			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
->>>>    			power-domains = <&videocc VENUS_GDSC>,
->>>> -					<&videocc VCODEC0_GDSC>;
->>>> -			power-domain-names = "venus", "vcodec0";
->>>> +					<&videocc VCODEC0_GDSC>,
->>>> +					<&rpmhpd SC7180_CX>;
->>>> +			power-domain-names = "venus", "vcodec0", "opp-pd";
->>>> +			operating-points-v2 = <&venus_opp_table>;
->>>>    			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
->>>>    				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
->>>>    				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
->>>> @@ -2414,6 +2416,35 @@
->>>>    			video-encoder {
->>>>    				compatible = "venus-encoder";
->>>>    			};
->>>> +
->>>> +			venus_opp_table: venus-opp-table {
->>>> +				compatible = "operating-points-v2";
->>>> +
->>>> +				opp-200000000 {
->>>> +					opp-hz = /bits/ 64 <150000000>;
->>>> +					required-opps = <&rpmhpd_opp_low_svs>;
->>>> +				};
->>>> +
->>>> +				opp-320000000 {
->>>> +					opp-hz = /bits/ 64 <270000000>;
->>>> +					required-opps = <&rpmhpd_opp_svs>;
->>>> +				};
->>>> +
->>>> +				opp-380000000 {
->>>> +					opp-hz = /bits/ 64 <340000000>;
->>>> +					required-opps = <&rpmhpd_opp_svs_l1>;
->>>> +				};
->>>> +
->>>> +				opp-444000000 {
->>>> +					opp-hz = /bits/ 64 <434000000>;
->>>> +					required-opps = <&rpmhpd_opp_nom>;
->>>> +				};
->>>> +
->>>> +				opp-533000000 {
->>>> +					opp-hz = /bits/ 64 <500000000>;
->>>> +					required-opps = <&rpmhpd_opp_turbo>;
->>>> +				};
->>>
->>> the labels of the OPP nodes don't match the specified frequencies
->>
->> Oops, I'll fix and respin.
-> 
-> ping, it seems the respin is still pending
+Fixes: b6280c8bb6f5 ("dt-bindings: interrupt-controller: Add Loongson LIOINTC")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+---
+ .../devicetree/bindings/interrupt-controller/loongson,liointc.yaml    | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I was waiting on Rob to first ack the bindings update patch [1] before I respin
-these, however I have not seen a response from Rob on the bindings patch yet,
-despite a couple pings. So I'll respin this series anyway.
-
-[1] https://lore.kernel.org/patchwork/patch/1241077/
-
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
+index b1db21e..03fc4f5 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
++++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
+@@ -51,8 +51,8 @@ properties:
+     description: |
+       This property points how the children interrupts will be mapped into CPU
+       interrupt lines. Each cell refers to a parent interrupt line from 0 to 3
+-      and each bit in the cell refers to a children interrupt fron 0 to 31.
+-      If a CPU interrupt line didn't connected with liointc, then keep it's
++      and each bit in the cell refers to a child interrupt from 0 to 31.
++      If a CPU interrupt line didn't connect with liointc, then keep its
+       cell with zero.
+     $ref: /schemas/types.yaml#/definitions/uint32-array
+     minItems: 4
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.1.0
+
