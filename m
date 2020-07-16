@@ -2,105 +2,100 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0229C4345B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 15:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F42C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 15:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE8452082F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 15:39:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="owUjuKkk"
+	by mail.kernel.org (Postfix) with ESMTP id 419762076D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 15:39:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729407AbgGPPjW (ORCPT
+        id S1729452AbgGPPj3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 11:39:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58526 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729376AbgGPPjQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 11:39:16 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FFB2C08C5C0
-        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 08:39:16 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 207so3870398pfu.3
-        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 08:39:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wyr3SbI1oCdH1r4F7MJGMzPIMQ8npf5yNx4WEH8ce+g=;
-        b=owUjuKkkWuKV1LRfGIfOWWmzhKUI7qHe1gaoiNt0XcQEqZ6xMq8wW8NI0mfS1m1HYU
-         4R4fGBNPKLx+IUkJ0Ysifp3YPvbhy7ORdKhMaXKX3Vxb95xbGV/17d1XEq3meifzV55S
-         yjJiB6lRGcft7eQWmKK3wn2TFUTibh9yrv1F5X236i+2wS4PRJPCccp/sCEARqlBhtQn
-         rk8DlwnQ0QHHSCCYCHzK87PQoBF0yXlkbb0uPlQLhkIyfNDnkr4xW0i2p1iTfzUQ8fKe
-         mVBmJrYpgkGbFYXtg1wOKSayJFf3ijPSsQTo208/1fvJgBjiCpmgUHmM9n5inbdHkTBi
-         LYfQ==
+        Thu, 16 Jul 2020 11:39:29 -0400
+Received: from mail-oo1-f65.google.com ([209.85.161.65]:40216 "EHLO
+        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729368AbgGPPj1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 11:39:27 -0400
+Received: by mail-oo1-f65.google.com with SMTP id p26so1262339oos.7;
+        Thu, 16 Jul 2020 08:39:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wyr3SbI1oCdH1r4F7MJGMzPIMQ8npf5yNx4WEH8ce+g=;
-        b=mGaAjZ5k9tddQGGHFUQPzO5vDAlngNfRYIU7kDvgcZ52cbOeghQEqFzg1T5V4F0VM4
-         FaxBnJUYDOJKuOUy0TSa0hoy34qWJqrslIJ20Q9ozFCI1+DdPQmd9jKn1VJ7WGYDs3Ey
-         qpY/zBsqfvGJgtrlDGc11yqRrKfEJYM/ANF7keWww2xHYCSzBkJMt/cbQiQ4sBd0tdRJ
-         VjmSGKyN2qAKDPMczhqp9/PSU4ek+CefV4o48FLQZ6KbQ1zzB/5Xeg+nUSKsLgUMLsht
-         JekFvGNLQylWzBDdulPKmrjn4f1jaxok616TCC1P+Fli+n1wt7a5b8PfLF4+hRVe0znu
-         uOwQ==
-X-Gm-Message-State: AOAM530hfhDBapeTBB7QoaVBrKmJSLCixioElyecPBYLYt5q1OZwQifh
-        XKEasa8pHkXAG6B1gJqHsOPlZQ==
-X-Google-Smtp-Source: ABdhPJyH762SfP1/MeevRjOltGL0CLXQaQ3GApf3PLejmWvDLXcok6iAh0HwkKFpK57hxEPywYJUvw==
-X-Received: by 2002:a63:d605:: with SMTP id q5mr5009426pgg.344.1594913955686;
-        Thu, 16 Jul 2020 08:39:15 -0700 (PDT)
-Received: from nagraj.local ([49.206.21.239])
-        by smtp.gmail.com with ESMTPSA id f14sm417056pjq.36.2020.07.16.08.39.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 08:39:15 -0700 (PDT)
-From:   Sumit Semwal <sumit.semwal@linaro.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Subject: [PATCH 0/2] Add support for Tianma nt36672a video mode panel
-Date:   Thu, 16 Jul 2020 21:08:56 +0530
-Message-Id: <20200716153858.526-1-sumit.semwal@linaro.org>
-X-Mailer: git-send-email 2.27.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4pjrfx9t/+IYZDQ9pVA0sHuiwjeFmOxDZhyCh8pthXQ=;
+        b=OX5OJTSSVe0LHfJcauygy7wC1E2VDUwrbtN1lR+SMQf8SP/UKikv57m8tG/WpIdblK
+         HOxoZWkNnGCJAzIRzrtw7yWnVQISDfd2mCdqiQwHP/U7xxnZ0OLNaAG3SvAbTv6gj47x
+         j6s4kaABTGrZ6vu9ZJZ8wHTDJHp7LMLn9ANmma054RyJZE0ayDzhiXNKIcjeGW/8UoWd
+         n2iP2MfWdHjqLuEZ+tIKOru0JXzJ2hPX6Br4m6X10J794NT3vCwB54wK6cri2xy3NGuY
+         MvfrrSUbn9F6Pnw7VnHTALzNYHOqttdb3Ru8RquSKNZb4AJk27+MQeOdSkVwhMQOPe5m
+         aX3g==
+X-Gm-Message-State: AOAM532XNNLAlpza/L9aIi6ZRrIqdIv03U++rivc8uc+Iel8bPI+Jboh
+        RJGcD7NlCBuUVOlV/SRJtGPEp2a/pZccRgvkdgM=
+X-Google-Smtp-Source: ABdhPJz9yIUHOi4Yj7uBIPuCgrIAlPuTnlxz7ythXKj6Ll90hmgrOzNi3DtW8p8hP8QDMl+aj8TmNfiN/dhuCtEUb2g=
+X-Received: by 2002:a4a:8381:: with SMTP id h1mr4809506oog.11.1594913966555;
+ Thu, 16 Jul 2020 08:39:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594811350-14066-21-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594811350-14066-21-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 16 Jul 2020 17:39:15 +0200
+Message-ID: <CAMuHMdUCyARFwhEkEhyepoe_r7uk_nVpyshkXR=U4XD8_gMJww@mail.gmail.com>
+Subject: Re: [PATCH 20/20] arm64: dts: renesas: r8a774e1: Add CAN[FD] support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-can@vger.kernel.org,
+        netdev <netdev@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some Poco F1 phones from Xiaomi have an nt36672a video mode panel; add support
-for the same.
-Most of the panel data is taken from downstream panel dts, and is converted to
-drm-panel based driver by me.
-It has been validated with v5.8-rc5 on Poco F1 phone; my tree with other
-dependent patches is here [1]
+On Wed, Jul 15, 2020 at 1:11 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add CAN[01] and CANFD support to RZ/G2H (R8A774E1) SoC specific dtsi.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-[1]: https://git.linaro.org/people/sumit.semwal/linux-dev.git/log/?h=dev/poco-panel-upstreaming
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.9.
 
-Sumit Semwal (2):
-  dt-bindings: display: panel: Add bindings for Tianma nt36672a panel
-  drm: panel: Add tianma nt36672a panel driver
+Gr{oetje,eeting}s,
 
- .../display/panel/tianma,nt36672a.yaml        | 110 +++
- MAINTAINERS                                   |   7 +
- drivers/gpu/drm/panel/Kconfig                 |  11 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- drivers/gpu/drm/panel/panel-tianma-nt36672a.c | 859 ++++++++++++++++++
- 5 files changed, 988 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml
- create mode 100644 drivers/gpu/drm/panel/panel-tianma-nt36672a.c
+                        Geert
 
--- 
-2.27.0
 
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
