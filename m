@@ -2,91 +2,113 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12411C433EA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 10:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4364BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 10:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4458208D5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 10:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ED2C20890
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 10:06:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xepg9aIw";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Uyl275Hw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbgGPKCF (ORCPT
+        id S1726710AbgGPKGT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 06:02:05 -0400
-Received: from elvis.franken.de ([193.175.24.41]:38196 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725996AbgGPKCE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jul 2020 06:02:04 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jw0iA-0008Mc-02; Thu, 16 Jul 2020 12:01:54 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 4D421C080E; Thu, 16 Jul 2020 11:51:54 +0200 (CEST)
-Date:   Thu, 16 Jul 2020 11:51:54 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>
-Cc:     robh+dt@kernel.org, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        paulburton@kernel.org, paul@crapouillou.net, ak@linux.intel.com,
-        ebiederm@xmission.com, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com
-Subject: Re: [PATCH v4 0/5] Add support for Ingenic X1830 SoC and Y&A
- CU1830-Neo board.
-Message-ID: <20200716095154.GC8455@alpha.franken.de>
-References: <20200714053229.33195-1-zhouyanjie@wanyeetech.com>
+        Thu, 16 Jul 2020 06:06:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35064 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbgGPKGT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 06:06:19 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C106C061755;
+        Thu, 16 Jul 2020 03:06:19 -0700 (PDT)
+From:   Kurt Kanzenbach <kurt@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594893977;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=BMbqYGokbYrWYQCKCQhi6GP/hhiQLqCSaGXZcbfEaDQ=;
+        b=xepg9aIwWA349TVA8NJuVWIT0sHXzOg3sRkcbaQNTPmfVVCHMdop/CsQCjlkKawPg7ULDV
+        UYsvK1eXe2Iuao6kVxnrn+mTQ/lqFHAH83WMaVKfIW9Y3Q4z+jNV+veKVMQmM5EDPXiBkr
+        2p61p9ZrliXW58aLNRevVTfMJn9ep4vq6n8DssOHtXZU3NSnTXggu0dypsC3KDaNYL+637
+        pXpGl3+dkQn0os/ABP3gEUWtgDTOG8VqSYbOhqrhr6knDp91fW97E7gw6qvu/BmHMRMScH
+        bH0bfj+74eZcs4AEq4BXOPhXdQ6PgUyoTZItZBICjRWzavdJzfc6SwINWYH+BA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594893977;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=BMbqYGokbYrWYQCKCQhi6GP/hhiQLqCSaGXZcbfEaDQ=;
+        b=Uyl275Hwl9eTMks7AqpAcj7t5k4R+dDlGwFRfyLQD4rt40MhZsk8aFdfTL95Z2uuEsmhTN
+        BY6QquKFw7MZXMAA==
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org
+Subject: Re: [PATCH v1 2/8] net: dsa: Add DSA driver for Hirschmann Hellcreek switches
+In-Reply-To: <20200716093924.ueszkwokaer42vjh@skbuf>
+References: <20200710113611.3398-1-kurt@linutronix.de> <20200710113611.3398-3-kurt@linutronix.de> <def49ff6-72fe-7ca0-9e00-863c314c1c3d@gmail.com> <87v9islyf2.fsf@kurt> <20200716082935.snokd33kn52ixk5h@skbuf> <87h7u7x181.fsf@kurt> <20200716093924.ueszkwokaer42vjh@skbuf>
+Date:   Thu, 16 Jul 2020 12:06:16 +0200
+Message-ID: <87eepbwz8n.fsf@kurt>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200714053229.33195-1-zhouyanjie@wanyeetech.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 01:32:24PM +0800, 周琰杰 (Zhou Yanjie) wrote:
-> v3->v4:
-> 1.Modify the commit message and add the change description
->   for CU1000-Neo in patch [2/5].
-> 2.The wrongly written "ingenic,x1000" in compatible is
->   changed to "ingenic,x1000e" in "cu1000-neo.dts".
-> 3.Adjust the order of nodes according to the corresponding
->   address value for X1000.
-> 4.Drop unnecessary node in "wlan_pwrseq" in "cu1000-neo.dts".
-> 5.Add the leds node to "cu1000-neo.dts".
-> 
-> 周琰杰 (Zhou Yanjie) (5):
->   MIPS: Ingenic: Add Ingenic X1830 support.
->   dt-bindings: MIPS: Add X1830 based CU1830-Neo and fix bug in
->     CU1000-Neo.
->   MIPS: Ingenic: Add YSH & ATIL CU Neo board support.
->   MIPS: Ingenic: Fix bugs and add missing LED node for X1000.
->   MIPS: CU1000-Neo: Refresh defconfig to support LED.
-> 
->  .../devicetree/bindings/mips/ingenic/devices.yaml  |  12 +-
->  arch/mips/boot/dts/ingenic/Makefile                |   1 +
->  arch/mips/boot/dts/ingenic/cu1000-neo.dts          | 114 ++++----
->  arch/mips/boot/dts/ingenic/cu1830-neo.dts          | 168 ++++++++++++
->  arch/mips/boot/dts/ingenic/x1000.dtsi              | 126 +++++----
->  arch/mips/boot/dts/ingenic/x1830.dtsi              | 300 +++++++++++++++++++++
->  arch/mips/configs/cu1000-neo_defconfig             |   4 +
->  arch/mips/configs/cu1830-neo_defconfig             | 123 +++++++++
->  arch/mips/jz4740/Kconfig                           |  10 +
->  9 files changed, 733 insertions(+), 125 deletions(-)
->  create mode 100644 arch/mips/boot/dts/ingenic/cu1830-neo.dts
->  create mode 100644 arch/mips/boot/dts/ingenic/x1830.dtsi
->  create mode 100644 arch/mips/configs/cu1830-neo_defconfig
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-series applied to mips-next.
+On Thu Jul 16 2020, Vladimir Oltean wrote:
+> On Thu, Jul 16, 2020 at 11:23:26AM +0200, Kurt Kanzenbach wrote:
+>>=20
+>> As far as I know there is no port forwarding matrix. Traffic is
+>> forwarded between the ports when they're members of the same
+>> vlan. That's why I created them by default.
+>>=20
+>
+> And your hardware doesn't have ACL support, does it (from the fact
+> that you're installing PTP traps via the FDB, I would say no)?  You
+> could have added a match-all entry on all traffic coming from a
+> certain source port, and a 'redirect-to-cpu' action. This would have
+> also achieved port separation in standalone mode.
 
-Thomas.
+Yeah, that'd have worked. But, there is no ACL support.
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+Thanks,
+Kurt
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl8QJpgACgkQeSpbgcuY
+8KbvExAAoE5iqojJzMxtwV/XHHZQar9n10rmGjL27OcwRUVgYstNB3oloeLq9LK1
+1NoUomRcOTtkrdRVJkOSe4PfSBw+YOOxlu4qkQjG3X9yaK0ggRrm0jRxGIWUHRi2
+cpxpAsHmXLGSftql+nKG3o/tiHUCXA1n3c/ccfNMcw8DDgFwyArfWPkjx22ZNw7N
+YXNinh0Fa/b23v5gJVnKyuQA0UWLdu04MWDq5W3apAJgGMwPJhOUErnr7+xOy6b8
+0hFovUeM25pOEsgSVxFDWq41WhAODEo8NBNnDLXWPdWt0olb4Ef7Yxb4C0AFIgLm
+9f4wA+Ha6Fs7cDOsqrUP3JyOtqgY/cRUFFrZuJGQFadGg5I052R9aeseqhBN9RGp
+pyCtQrFgTqsxUusRe7YX+f3C5xvCcw2KFcOiCUVaoRP9Tdru5LTS9xjWJ0NgAzxg
+M4BP0UhpuH2yjKxWDQGyvd2zVBcTzKhUeyuRrJU7k6TIUTi/mjNdaceQ1UVep5Jy
+VUfF3G/JENp+Y5Ehz8BWPr7e2qlOtLe3rzMim0vuIBGdIicVH3iACbZPVKbwA1AJ
+iDH/VIaoDCm1xcS3m6EXs9L+lG73YY23pLqMd7AX+fCgvNhqlT4Ic1iP1T4cMawr
+liqKFVdjrujBGzXX4xyWjdWiDs94NpofjzRDo121SbiB1UZegpw=
+=szY+
+-----END PGP SIGNATURE-----
+--=-=-=--
