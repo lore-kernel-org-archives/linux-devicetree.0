@@ -2,195 +2,77 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB68C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 16:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C38C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 16:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7FB8207E8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 16:33:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594917216;
-	bh=8nYgVzn7R1JYwFxpemva8sGu7z58gW0yeup8lbFxVSU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=oKxAbMhwLiEozwEkZhk0/BOLETDuC+H/phmJ5kb3pCbR9rDk3Ki8FF8/Htv3xtnDt
-	 Ik4aruajmghuk/EZFCwc+4YDMhHouX++XF4J8RpvWSqOg3Qj3TdjEGpz/EANVjRCYy
-	 rN1NSQK5Ugpi74JM7tQkchEPU0bUqoSuXT1qwAcw=
+	by mail.kernel.org (Postfix) with ESMTP id 5CA4A2065E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 16:38:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="DW4WPfv3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729265AbgGPQdf (ORCPT
+        id S1728832AbgGPQiz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 12:33:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37872 "EHLO mail.kernel.org"
+        Thu, 16 Jul 2020 12:38:55 -0400
+Received: from crapouillou.net ([89.234.176.41]:49676 "EHLO crapouillou.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729048AbgGPQdf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jul 2020 12:33:35 -0400
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8DA7207E8;
-        Thu, 16 Jul 2020 16:33:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594917214;
-        bh=8nYgVzn7R1JYwFxpemva8sGu7z58gW0yeup8lbFxVSU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TkffGb9OVFGRbdFNvOa/f8E93aYPUaA/ILPzd0kFE1jO6kBxsGF8oveEy4iCqDzsS
-         mne8At+4ZyFu9inRzBPFFK7wf8yW7ZHBR1FbIRnoKfpSGTkufY31BXGS4Vo5yKNjfv
-         EfATpALj/PHP2N1e1hYH/mKSRwgYzoFzweJlpvws=
-Received: by mail-ot1-f42.google.com with SMTP id 72so4698634otc.3;
-        Thu, 16 Jul 2020 09:33:34 -0700 (PDT)
-X-Gm-Message-State: AOAM532s8+bylLl52PD5DGHt6FbK4BLmNPoly9azsPsXZTvzgp1KFCpk
-        0+V4wQ9YQo1sPFRh2Ialydvvja8s5yI4X+o0LQ==
-X-Google-Smtp-Source: ABdhPJyPc0Kjv1vCFbvbIaKIccPgsAjfPdZ7RG9XG+Zqu0zWrm9pSYRPBnGy8Xj9QgkCxtd7tuOVqmTgASNFMWbm180=
-X-Received: by 2002:a9d:2646:: with SMTP id a64mr4965237otb.107.1594917214014;
- Thu, 16 Jul 2020 09:33:34 -0700 (PDT)
+        id S1725867AbgGPQiy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jul 2020 12:38:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1594917532; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=ZxOxYK7rdmy6ZMNe+mLCkT04eXTl/5csusRl6Ybtnow=;
+        b=DW4WPfv3e2cU56e/brqKRNV82UdkvShqbXyCKQm5WjfWo0pIU1vAqz/epRSvWuSfBm6f3E
+        J4+2HW//hDT1v9V7Tl0zxpWz0va8yn7OErFgf0TuWZC6P+rUiJOcfOt/IyIPB77ZfGgAbf
+        h+JAJUyQzDYPW/GSi6bFpx9I4JaEqg8=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>
+Cc:     Sam Ravnborg <sam@ravnborg.org>, od@zcrc.me,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        stable@vger.kernel.org
+Subject: [PATCH v3 01/12] drm/ingenic: Fix incorrect assumption about plane->index
+Date:   Thu, 16 Jul 2020 18:38:35 +0200
+Message-Id: <20200716163846.174790-1-paul@crapouillou.net>
 MIME-Version: 1.0
-References: <20200715090342.28339-1-yifeng.zhao@rock-chips.com>
- <20200715090342.28339-2-yifeng.zhao@rock-chips.com> <20200715175356.GA502928@bogus>
- <2020071610022540759717@rock-chips.com>
-In-Reply-To: <2020071610022540759717@rock-chips.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 16 Jul 2020 10:33:22 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+5pgsLNS5t=d2yzYukjXurr2B3pUdb_gejqwA7Tv-7mQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+5pgsLNS5t=d2yzYukjXurr2B3pUdb_gejqwA7Tv-7mQ@mail.gmail.com>
-Subject: =?UTF-8?B?UmU6IFJlOiBbUEFUQ0ggdjcgMS84XSBkdC1iaW5kaW5nczogbXRkOiBEZXNjcmliZSBSbw==?=
-        =?UTF-8?B?Y2tjaGlwIFJLM3h4eCBOQU5EIGZsYXNoIGNvbnRyb2xsZXLjgJDor7fms6jmhI/vvIzpgq7ku7bnlLFy?=
-        =?UTF-8?B?b2JoZXJyaW5nMkBnbWFpbC5jb23ku6Plj5HjgJE=?=
-To:     =?UTF-8?B?6LW15Luq5bOw?= <yifeng.zhao@rock-chips.com>
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        vigneshr <vigneshr@ti.com>,
-        =?UTF-8?Q?HeikoSt=C3=BCbner?= <heiko@sntech.de>,
-        richard <richard@nod.at>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        linux-rockchip <linux-rockchip@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 8:04 PM =E8=B5=B5=E4=BB=AA=E5=B3=B0 <yifeng.zhao@ro=
-ck-chips.com> wrote:
->
-> Hi Rob,
->
-> >On Wed, 15 Jul 2020 17:03:39 +0800, Yifeng Zhao wrote:
-> >> Documentation support for Rockchip RK3xxx NAND flash controllers
-> >>
-> >> Signed-off-by: Yifeng Zhao <yifeng.zhao@rock-chips.com>
-> >> ---
-> >>
-> >> Changes in v7:
-> >> - Fix some wrong define
-> >>
-> >> Changes in v6:
-> >> - Fix some wrong define
-> >> - Modified the definition of compatible
-> >>
-> >> Changes in v5:
-> >> - Fix some wrong define.
-> >> - Add boot-medium define.
-> >> - Remove some compatible define.
-> >>
-> >> Changes in v4:
-> >> - The compatible define with rkxx_nfc.
-> >> - Add assigned-clocks.
-> >> - Fix some wrong defineChanges in.
-> >>
-> >> Changes in v3:
-> >> - Change the title for the dt-bindings.
-> >>
-> >> Changes in v2: None
-> >>
-> >>  .../mtd/rockchip,nand-controller.yaml         | 162 +++++++++++++++++=
-+
-> >>  1 file changed, 162 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/mtd/rockchip,nan=
-d-controller.yaml
-> >>
-> >
-> >
-> >My bot found errors running 'make dt_binding_check' on your patch:
-> >
-> >/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd=
-/rockchip,nand-controller.example.dt.yaml: example-0: nand-controller@ff4b0=
-000:reg:0: [0, 4283105280, 0, 16384] is too long
-> >
-> >
-> >See https://patchwork.ozlabs.org/patch/1329325
-> >
-> >If you already ran 'make dt_binding_check' and didn't see the above
-> >error(s), then make sure dt-schema is up to date:
-> >
-> >pip3 install git+https://github.com/devicetree-org/dt-schema.git@master =
---upgrade
-> >
-> >Please check and re-submit.
->
-> make ARCH=3Darm64 dt_binding_check DT_SCHEMA_FILES=3DDocumentation/device=
-tree/bindings/mtd/rockchip,nand-controller.yaml
->   HOSTCC  scripts/basic/fixdep
->   HOSTCC  scripts/dtc/dtc.o
->   HOSTCC  scripts/dtc/flattree.o
->   HOSTCC  scripts/dtc/fstree.o
->   HOSTCC  scripts/dtc/data.o
->   HOSTCC  scripts/dtc/livetree.o
->   HOSTCC  scripts/dtc/treesource.o
->   HOSTCC  scripts/dtc/srcpos.o
->   HOSTCC  scripts/dtc/checks.o
->   HOSTCC  scripts/dtc/util.o
->   LEX     scripts/dtc/dtc-lexer.lex.c
->   YACC    scripts/dtc/dtc-parser.tab.[ch]
->   HOSTCC  scripts/dtc/dtc-lexer.lex.o
->   HOSTCC  scripts/dtc/dtc-parser.tab.o
->   HOSTCC  scripts/dtc/yamltree.o
->   HOSTLD  scripts/dtc/dtc
->   CHKDT   Documentation/devicetree/bindings/mtd/rockchip,nand-controller.=
-yaml
->   SCHEMA  Documentation/devicetree/bindings/processed-schema-examples.yam=
-l
->   DTC     Documentation/devicetree/bindings/mtd/rockchip,nand-controller.=
-example.dt.yaml
->   CHECK   Documentation/devicetree/bindings/mtd/rockchip,nand-controller.=
-example.dt.yaml
-> /home/yifeng/work/linux/Documentation/devicetree/bindings/mtd/rockchip,na=
-nd-controller.example.dt.yaml: example-0: nand-controller@ff4b0000:reg:0: [=
-0, 4283105280, 0, 16384] is too long
->
-> I already ran the "make dt_binding_check" before submit this patch and fo=
-und this issue.
-> The dts examples is for RK3308, ARCH=3Darm64, and the reg define is corre=
-ct.
-> I thought there was something wrong with the check=EF=BC=8C or something =
-configuration I missed.
-> Please give me some suggestions.
->
->
-> diff --git a/Documentation/devicetree/bindings/mtd/rockchip,nand-controll=
-er.yaml b/Documentation/devicetree/bindings/mtd/rockchip,nand-controller.ya=
-ml
-> index 493705a55638..b9d7a8c79402 100644
-> --- a/Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml
-> +++ b/Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml
-> @@ -132,7 +132,7 @@ examples:
->      nfc: nand-controller@ff4b0000 {
->        compatible =3D "rockchip,rk3308-nfc",
->                     "rockchip,rv1108-nfc";
-> -      reg =3D <0x0 0xff4b0000 0x0 0x4000>;
-> +      reg =3D <0xff4b0000 0x4000>;
+plane->index is NOT the index of the color plane in a YUV frame.
+Actually, a YUV frame is represented by a single drm_plane, even though
+it contains three Y, U, V planes.
 
-This is the right fix. Or you can define a parent node with cell sizes of 2=
-.
+v2-v3: No change
 
-The example is just an example and doesn't have to match exactly what
-you do in the dts files.
+Cc: stable@vger.kernel.org # v5.3
+Fixes: 90b86fcc47b4 ("DRM: Add KMS driver for the Ingenic JZ47xx SoCs")
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+---
+ drivers/gpu/drm/ingenic/ingenic-drm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->        interrupts =3D <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
->        clocks =3D <&cru HCLK_NANDC>, <&cru SCLK_NANDC>;
->        clock-names =3D "ahb", "nfc";
+diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
+index deb37b4a8e91..606d8acb0954 100644
+--- a/drivers/gpu/drm/ingenic/ingenic-drm.c
++++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
+@@ -386,7 +386,7 @@ static void ingenic_drm_plane_atomic_update(struct drm_plane *plane,
+ 		addr = drm_fb_cma_get_gem_addr(state->fb, state, 0);
+ 		width = state->src_w >> 16;
+ 		height = state->src_h >> 16;
+-		cpp = state->fb->format->cpp[plane->index];
++		cpp = state->fb->format->cpp[0];
+ 
+ 		priv->dma_hwdesc->addr = addr;
+ 		priv->dma_hwdesc->cmd = width * height * cpp / 4;
+-- 
+2.27.0
+
