@@ -4,79 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A07C433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 06:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D01FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 06:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C54C8207FB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 06:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B0D220578
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 06:19:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="1ShX9mEw"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="WofiQHeT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgGPGQO (ORCPT
+        id S1726141AbgGPGT7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 02:16:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56076 "EHLO
+        Thu, 16 Jul 2020 02:19:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727943AbgGPGQO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 02:16:14 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE23FC08C5C0
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 23:16:13 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id m9so3202735pfh.0
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 23:16:13 -0700 (PDT)
+        with ESMTP id S1726069AbgGPGT6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 02:19:58 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81F05C08C5C0
+        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 23:19:58 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id k27so4335925pgm.2
+        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 23:19:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernelci-org.20150623.gappssmtp.com; s=20150623;
         h=message-id:date:mime-version:content-transfer-encoding:subject:to
          :from:cc;
-        bh=kF7R5DUC1URNMPbAYPkDub6YZWoBbHJrUi/9LeiLYeY=;
-        b=1ShX9mEwNKC3QnGClMktjWkQoAorJK8LcHm8k2oZ2FIpYaNHeq6+U29CZFWoYFbIVj
-         RlR4zvbcjbX9H5mbar9DzS7zFWdIryezMkFQTeCHfkDVyNIbO3dhgtbyG3GJLAj8UJ4T
-         9K49gei1FHE/6r7+0oFVPeaE6zVFf/bck8Odk4zNqR/gCrI7Glu4ZB8jh2x6JF2MHN4w
-         lbfp1yfxFV4dLVZaEXC3UzXnHei1GahBS8k5Oyc+UVSZk0nB2E0IQGEHijJFbKzR0fJP
-         opPTJVvjOC/SOSS5L7aluueiffide0vpYCB3hoYuATsu4I/+njnMtx/gBmkOOBuoTDFn
-         iM9w==
+        bh=FKPcf7JwgOCMRldycKp+o5YHoDwPYEJEd75y9Q84pKg=;
+        b=WofiQHeTUi0IO1eEo2pPnbAF37JHNuCuVBDM2Dti1IQ2zjM8dT8mKHJhJvfeTW5NSG
+         EHJfoxjcR3SEdZ9CXIW/Yem2WKDD8rjR4OcNQ1DjwNADF4B7d0eKkLfRf0knZgKvMNYG
+         F9Y8L5PR9c5iCeNT88Nnf3c06DXYqNcbErgje67WUqwAXq5WFJkuAREAnkk1FvmKj0uQ
+         qmFHoHySG+zlU9OzFUpqMf6/EZEeOSexBYYViXS5i6ckUHtUI5yPVEr14h21yy+mH+fu
+         pjZOwe00rLUZP9OJscCwNaHmg9chso/ORIVoWpJFhXV64+dPSQq4GxMpnBghqfCUzJB3
+         pT9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:mime-version
          :content-transfer-encoding:subject:to:from:cc;
-        bh=kF7R5DUC1URNMPbAYPkDub6YZWoBbHJrUi/9LeiLYeY=;
-        b=fXTVH0mDv1tACOYftxQZq+3/WOltn+JS6rGAWbv9teqfl/EvVso/spxEPtYRXDUfAl
-         QGTC7lHEyAEbN0DYUAvlCkEPPVr2pTvF8mHXB58UzajIcwfJ4FRYmS5ngtgm4qf0kT8v
-         nd5TZRZ0C/A6vp8UBlV2Au6JOMOw5FcKiZY49w5L4Q3DUHCvJU0GdxOnNb+T6rYCQoqa
-         /Syt1IlULuO4k1oYgZ1bVlf0QWxPDlDshWtnxbqcYPYord3GAqV37f4zsDErDeN7A8OT
-         WPEv4CuyTaSE6UNrdBEIVFvyfESud5LNOeh66ETIU9tKAmiWXAw03fEzAuHWyq95a8sV
-         meeQ==
-X-Gm-Message-State: AOAM531KkZdeYS1MsgzhBjX6Rt+VSyKwWTd7nXiKbidLYQpJR7pYBVja
-        BBtoHHzBb/S3daIDS6vWpTFNug==
-X-Google-Smtp-Source: ABdhPJyryvc/9TBR4TsFYlLjrLX7U8VA92b4q2d0e0ZlaHioYcTNQ7tmPnqI8KZkhRJk69YHxNnpdg==
-X-Received: by 2002:a63:5a01:: with SMTP id o1mr2862474pgb.337.1594880173303;
-        Wed, 15 Jul 2020 23:16:13 -0700 (PDT)
+        bh=FKPcf7JwgOCMRldycKp+o5YHoDwPYEJEd75y9Q84pKg=;
+        b=t7OuuLzjpl/LJkzkMsCeQzR8fkmYpJCEo2hF/LQQOARzHvlIMgfdC1Thfbw2KyFbwn
+         XiuutXnDrfey16vhiNkTy/uT+NtVc6ys41jxuYC0J2ebCdX3r3auQxnJk8fiO5fmZ/7A
+         t4FtLPpccLTTaDDhzB+GUzGDPtQVmKnzdQoSRS+KPdgsJpaXpRKgJXbHR3QNeifFkHlr
+         s8gy9wOt+12U6174Q7DRVGoXi8G2PEO76Rx2XmgGmyydTj2cHsfhOU4lvCfhIWiFg+pA
+         eSs/5ggXbDQXnTsIPuokzHJ5+u0d7VTImWeYUTITBV9lcD7FaEQcQmJyecxk0Q8mSN2F
+         EZ0g==
+X-Gm-Message-State: AOAM53297R8LbbxNWfjltUA8suVcNfKn7wL99ctUEu1mD6Re6NOM9GRS
+        Lvx8XaQFul3wllqHifPFMHbeKg==
+X-Google-Smtp-Source: ABdhPJxg+TIg+/m4zJI4ZpHObj5YA20D6VltNo4qLGe2r80SO0ZQyTpQ/TQmxamVOK4YuE+jgNYqeQ==
+X-Received: by 2002:a63:9d87:: with SMTP id i129mr2991954pgd.412.1594880397829;
+        Wed, 15 Jul 2020 23:19:57 -0700 (PDT)
 Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id e10sm3891656pjw.22.2020.07.15.23.16.11
+        by smtp.gmail.com with ESMTPSA id u26sm4028385pgo.71.2020.07.15.23.19.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 23:16:12 -0700 (PDT)
-Message-ID: <5f0ff0ac.1c69fb81.d1a0b.b284@mx.google.com>
-Date:   Wed, 15 Jul 2020 23:16:12 -0700 (PDT)
+        Wed, 15 Jul 2020 23:19:57 -0700 (PDT)
+Message-ID: <5f0ff18d.1c69fb81.da154.b562@mx.google.com>
+Date:   Wed, 15 Jul 2020 23:19:57 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.8-rc5-44-g994e99a96c9b
+X-Kernelci-Kernel: v5.8-rc5-262-g7be1e4d3000e
 X-Kernelci-Report-Type: bisect
-X-Kernelci-Tree: mainline
-X-Kernelci-Branch: master
-X-Kernelci-Lab-Name: lab-cip
-Subject: mainline/master bisection: baseline.dmesg.crit on
+X-Kernelci-Tree: next
+X-Kernelci-Branch: pending-fixes
+X-Kernelci-Lab-Name: lab-collabora
+Subject: next/pending-fixes bisection: baseline.dmesg.crit on
  qemu_arm-vexpress-a15
-To:     Sudeep Holla <sudeep.holla@arm.com>, gtucker@collabora.com,
-        kernelci-results@groups.io, Andre Przywara <andre.przywara@arm.com>
+To:     gtucker@collabora.com, Andre Przywara <andre.przywara@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>, kernelci-results@groups.io
 From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
+Cc:     devicetree@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -94,17 +94,17 @@ X-Mailing-List: devicetree@vger.kernel.org
 * Hope this helps!                                              *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-mainline/master bisection: baseline.dmesg.crit on qemu_arm-vexpress-a15
+next/pending-fixes bisection: baseline.dmesg.crit on qemu_arm-vexpress-a15
 
 Summary:
-  Start:      994e99a96c9b Merge tag 'platform-drivers-x86-v5.8-2' of git:/=
-/git.infradead.org/linux-platform-drivers-x86 into master
-  Plain log:  https://storage.kernelci.org/mainline/master/v5.8-rc5-44-g994=
-e99a96c9b/arm/vexpress_defconfig/gcc-8/lab-cip/baseline-vexpress-v2p-ca15-t=
-c1.txt
-  HTML log:   https://storage.kernelci.org/mainline/master/v5.8-rc5-44-g994=
-e99a96c9b/arm/vexpress_defconfig/gcc-8/lab-cip/baseline-vexpress-v2p-ca15-t=
-c1.html
+  Start:      7be1e4d3000e Merge remote-tracking branch 'drm-misc-fixes/for=
+-linux-next-fixes'
+  Plain log:  https://storage.kernelci.org/next/pending-fixes/v5.8-rc5-262-=
+g7be1e4d3000e/arm/vexpress_defconfig/gcc-8/lab-collabora/baseline-vexpress-=
+v2p-ca15-tc1.txt
+  HTML log:   https://storage.kernelci.org/next/pending-fixes/v5.8-rc5-262-=
+g7be1e4d3000e/arm/vexpress_defconfig/gcc-8/lab-collabora/baseline-vexpress-=
+v2p-ca15-tc1.html
   Result:     38ac46002d1d arm: dts: vexpress: Move mcc node back into moth=
 erboard node
 
@@ -113,13 +113,13 @@ Checks:
   verify:     PASS
 
 Parameters:
-  Tree:       mainline
-  URL:        https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linu=
-x.git
-  Branch:     master
+  Tree:       next
+  URL:        https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-ne=
+xt.git
+  Branch:     pending-fixes
   Target:     qemu_arm-vexpress-a15
   CPU arch:   arm
-  Lab:        lab-cip
+  Lab:        lab-collabora
   Compiler:   gcc-8
   Config:     vexpress_defconfig
   Test case:  baseline.dmesg.crit
@@ -337,25 +337,27 @@ Git bisection log:
 ---------------------------------------------------------------------------=
 ----
 git bisect start
-# good: [719fdd32921fb7e3208db8832d32ae1c2d68900f] afs: Fix storage of cell=
- names
-git bisect good 719fdd32921fb7e3208db8832d32ae1c2d68900f
-# bad: [994e99a96c9b502b3f6ee411457007cd52051cf5] Merge tag 'platform-drive=
-rs-x86-v5.8-2' of git://git.infradead.org/linux-platform-drivers-x86 into m=
-aster
-git bisect bad 994e99a96c9b502b3f6ee411457007cd52051cf5
-# bad: [dcde237b9b0eb1d19306e6f48c0a4e058907619f] Merge tag 'perf-tools-fix=
-es-2020-07-07' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux
-git bisect bad dcde237b9b0eb1d19306e6f48c0a4e058907619f
-# bad: [442ad2254ac56b39870c0cfed96d500921fea5d5] perf record: Fix duplicat=
-ed sideband events with Intel PT system wide tracing
-git bisect bad 442ad2254ac56b39870c0cfed96d500921fea5d5
-# bad: [f7db192b2d71ea42627a32349d59a5f99f2aafcc] Merge tag 'arm-omap-fixes=
--5.8-1' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
-git bisect bad f7db192b2d71ea42627a32349d59a5f99f2aafcc
-# good: [ae71d4bf0074a81cc04255c96e3de0a49b1d95fa] Merge tag 'perf-urgent-2=
-020-06-28' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-git bisect good ae71d4bf0074a81cc04255c96e3de0a49b1d95fa
+# good: [9a33e375d98ece5ea40c576eabd3257acb90c509] platform/x86: asus-wmi: =
+allow BAT1 battery name
+git bisect good 9a33e375d98ece5ea40c576eabd3257acb90c509
+# bad: [7be1e4d3000ef52ab90d0239711df69b881bd807] Merge remote-tracking bra=
+nch 'drm-misc-fixes/for-linux-next-fixes'
+git bisect bad 7be1e4d3000ef52ab90d0239711df69b881bd807
+# good: [668f532da4808688f5162cec6a38875390e1a91d] Merge tag 'timers-urgent=
+-2020-06-28' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+git bisect good 668f532da4808688f5162cec6a38875390e1a91d
+# bad: [a581387e415bbb0085e7e67906c8f4a99746590e] Merge tag 'io_uring-5.8-2=
+020-07-10' of git://git.kernel.dk/linux-block
+git bisect bad a581387e415bbb0085e7e67906c8f4a99746590e
+# bad: [29206c6314a3e5242b23b61cd1270cba9e93b415] Merge tag 'block-5.8-2020=
+-07-05' of git://git.kernel.dk/linux-block
+git bisect bad 29206c6314a3e5242b23b61cd1270cba9e93b415
+# bad: [45564bcd57046ebe8c9309527c114dcd042cb7e5] Merge tag 'for-linus-2020=
+-07-02' of git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux
+git bisect bad 45564bcd57046ebe8c9309527c114dcd042cb7e5
+# bad: [a0271a15cf2cf907ea5b0f2ba611123f1b7935ec] exfat: call sync_filesyst=
+em for read-only remount
+git bisect bad a0271a15cf2cf907ea5b0f2ba611123f1b7935ec
 # good: [d528945d7762be94beca4c111bb95dcc9a9f39c0] Merge tag 'omap-for-v5.8=
 /fixes-rc1-signed' of git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/=
 linux-omap into arm/omap-fixes
