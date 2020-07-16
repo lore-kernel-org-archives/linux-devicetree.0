@@ -2,123 +2,133 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F916C433E4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 12:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D91FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 12:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB5CC2074B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 12:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E7620739
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 12:37:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="tfdHs4lV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dxAyHGv8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728484AbgGPMdD (ORCPT
+        id S1728634AbgGPMhV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 08:33:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57778 "EHLO
+        Thu, 16 Jul 2020 08:37:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727844AbgGPMdC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 08:33:02 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B764C061755
-        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 05:33:02 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id r12so6794559wrj.13
-        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 05:33:02 -0700 (PDT)
+        with ESMTP id S1728595AbgGPMhV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 08:37:21 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8C3FC061755;
+        Thu, 16 Jul 2020 05:37:20 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id lx13so6400772ejb.4;
+        Thu, 16 Jul 2020 05:37:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1zGcH9bVraCGk1IyMWJVQQmzfwhx9ePyMUGS1rXIGzc=;
-        b=tfdHs4lV3K1enQd/i8s/Y6ZQJcIQR2GjSzPEft7fLp2riOkywEsf/h2zgU+UhXyK6G
-         AxAt6X3dUnVl9vizC0D6H8AfMhrF8y5naSh6oNGfDOmbMows6v3dIja6f2KqCs/i2k8K
-         dasNhnny1vRKtRS32czBtK4UeDHp6VwUlRMj4OUrHXlHhcZHRVfmpuAJhHufyHuVftrQ
-         5rnIUkocevRCeyi6vVw/RUWul/oDf3sZqBrr6jYtAJ52EIWeZCLfd9xHS3hUz6TCmYpy
-         +UXs28JOLgCXCzGUtKXuDtxyV2xr0jQ8P4hlqUAOTlKb3xbTNvFZ4JumeLGPD0T3lS+a
-         P2hQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AocC3N5O0Uik9tYTa8moQI4LJJ7GiuwBhVnoPAOMLg4=;
+        b=dxAyHGv8/TE10lSjw/yQqwJGeZjjI08Ao3yIohI6bXl91J5ofEmcPmLjm3VjQSFfHg
+         Jttj08hfnGuNsqTPObfYq4diqcl7Fa9pii54JJUJLL6l9596OD7u1/vw8Z1pTfNSTlwF
+         aUJWF66b4GontU6xmfqKV7uywwkFNntXMS384rkFPOWQTyCaF51q6nJhNN0Saxm+a+06
+         xv3IdB7VSqksw/GzwKUE5MT6InYFiyAtcso5/IChhux6pqAtKzORkEWEpYYM8dAi2/8A
+         1iE0P488pn8eWgn65AIuyWIMiIYcq8soFEbpimPROSh0uMVpVJlvvVlfUgnVvnXSCipD
+         F+Vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1zGcH9bVraCGk1IyMWJVQQmzfwhx9ePyMUGS1rXIGzc=;
-        b=QMGk/cVmjfsUo/6WWa4Qqh49855zk9xKt6iJ+F4/Ev1US+PfzlIOBq4FQLF2ROhx6M
-         BWH4kx4od999c6RF3UUKh0voRpKXtstE7ZxOu19jFPS/cbdlYZm4gmSVO9fDlZ8hxHq5
-         sLKOo0Q/uWqtCHLT0emCBSVQ0X19boEKxBX/mPovxKEl0/hayehsUsQHWTOt+bneHJ/l
-         GGp2LmYJqbH6fN2WfDqs9srEjv/DyTzQDZvS7Pz8dCeW1skilPfQAAnVH7FJhzl/6IwZ
-         1NI04olBDvbGlXIdWiAiYw2PB1/O2lL/lok7G1dxaN3QbIMcjpq+LwOoxJuLtq3GAiuy
-         csKA==
-X-Gm-Message-State: AOAM533ROulA3x88X/HhDpiKT1vZP+sX4PDbMXh55WRz4IRxmQF8LOBu
-        R4xLRqtA3Yfe+o5X/HJ8Curmd2KZzrq5Lr4DZyxMJQ==
-X-Google-Smtp-Source: ABdhPJy6xsdDfH9Ylj/v2yPo1O5OESyNaGSH3ZonHoy9hE4hybzrFM03O2b9Vk7PY574UGsXfxlhXxaQ5iMa+uG7cHE=
-X-Received: by 2002:adf:fcca:: with SMTP id f10mr4795342wrs.325.1594902780957;
- Thu, 16 Jul 2020 05:33:00 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AocC3N5O0Uik9tYTa8moQI4LJJ7GiuwBhVnoPAOMLg4=;
+        b=W6cimUG7BuJimtX/p2jWlmew8r1SYcoGxo5y8l0PIJxDeCmt00euP3yT6+wfDJj0WE
+         AjuErXIX1w37qVSkI3s9MkIpvnLtJK2yW66rD1jLSH/Ie4vp8E6ajDeKr69i7ypzjod2
+         F6bsR0qr7BJU967sgChgrxl+QVQOp+zcPlWfwMJTfVJS5STZBXgKj8RFr/dkbQhvTTwA
+         KZcBPMRqS/rS3QT6xwqT0DTLIhnEXnWrySTkvEFRFnYcjN5W+8UihfaFFqA9ci2fhYoF
+         FGYMV+VkJjK0fahlm0vS++v0zBVm5FBoI2LOJpHShzNtvVIxnZ7u9dlWHzxDCKrvckCO
+         CNeg==
+X-Gm-Message-State: AOAM531oMbEPej1GiR28UbZHNIRn2zHKL0F/tl29vRMWvwHcY3N3cCol
+        FYiIvezyyPeWhmKDsoyceYo=
+X-Google-Smtp-Source: ABdhPJxzzgoaNlh+vbjSbCGiMYEDZpuqnaxyDGO9u2TDK8GFSqsac269SAuIWYX7yVNK1iQ9KS/vnw==
+X-Received: by 2002:a17:906:e210:: with SMTP id gf16mr3443029ejb.386.1594903039688;
+        Thu, 16 Jul 2020 05:37:19 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id ay27sm5289311edb.81.2020.07.16.05.37.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 05:37:16 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 14:37:15 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Sumit Gupta <sumitg@nvidia.com>
+Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
+        catalin.marinas@arm.com, will@kernel.org, robh+dt@kernel.org,
+        mirq-linux@rere.qmqm.pl, devicetree@vger.kernel.org,
+        jonathanh@nvidia.com, talho@nvidia.com, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, bbasu@nvidia.com,
+        mperttunen@nvidia.com
+Subject: Re: [TEGRA194_CPUFREQ PATCH v6 2/3] arm64: tegra: Add t194 ccplex
+ compatible and bpmp property
+Message-ID: <20200716123715.GA535268@ulmo>
+References: <1594819885-31016-1-git-send-email-sumitg@nvidia.com>
+ <1594819885-31016-3-git-send-email-sumitg@nvidia.com>
 MIME-Version: 1.0
-References: <20200715071506.10994-1-anup.patel@wdc.com> <20200715071506.10994-5-anup.patel@wdc.com>
- <20200715175052.GA497000@bogus>
-In-Reply-To: <20200715175052.GA497000@bogus>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Thu, 16 Jul 2020 18:02:49 +0530
-Message-ID: <CAAhSdy04h-PD-=VhjB=5MOf=-RZMrMOcvEtbtUaDc3-kbV47BA@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] dt-bindings: timer: Add CLINT bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     Anup Patel <anup.patel@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Atish Patra <atish.patra@wdc.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        devicetree@vger.kernel.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="9amGYk9869ThD9tj"
+Content-Disposition: inline
+In-Reply-To: <1594819885-31016-3-git-send-email-sumitg@nvidia.com>
+User-Agent: Mutt/1.14.4 (2020-06-18)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 11:20 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, 15 Jul 2020 12:45:05 +0530, Anup Patel wrote:
-> > We add DT bindings documentation for CLINT device.
-> >
-> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> > Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
-> > ---
-> >  .../bindings/timer/sifive,clint.yaml          | 58 +++++++++++++++++++
-> >  1 file changed, 58 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.yaml
-> >
->
->
-> My bot found errors running 'make dt_binding_check' on your patch:
->
-> Error: Documentation/devicetree/bindings/timer/sifive,clint.example.dts:21.39-40 syntax error
-> FATAL ERROR: Unable to parse input tree
-> scripts/Makefile.lib:315: recipe for target 'Documentation/devicetree/bindings/timer/sifive,clint.example.dt.yaml' failed
-> make[1]: *** [Documentation/devicetree/bindings/timer/sifive,clint.example.dt.yaml] Error 1
-> make[1]: *** Waiting for unfinished jobs....
-> Makefile:1347: recipe for target 'dt_binding_check' failed
-> make: *** [dt_binding_check] Error 2
->
->
-> See https://patchwork.ozlabs.org/patch/1329276
->
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure dt-schema is up to date:
->
-> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
->
-> Please check and re-submit.
->
 
-Thanks for these steps. I will fix and send v4.
+--9amGYk9869ThD9tj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-Anup
+On Wed, Jul 15, 2020 at 07:01:24PM +0530, Sumit Gupta wrote:
+> On Tegra194, data on valid operating points for the CPUs needs to be
+> queried from BPMP. In T194, there is no node representing CPU complex.
+> So, add compatible string to the 'cpus' node instead of using dummy
+> node to bind cpufreq driver. Also, add reference to the BPMP instance
+> for the CPU complex.
+>=20
+> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+> ---
+>  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+
+Looks like the DT bindings are now done so I've applied this for v5.9.
+
+Viresh, are you going to pick up the other patches, or do you want me
+to pick them up and send you a pull request?
+
+Thanks,
+Thierry
+
+--9amGYk9869ThD9tj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8QSfkACgkQ3SOs138+
+s6EbDxAAhqiTFGVj3wdEIaQIT0jcQR9+VZIbrzcT3Wob4TFu4TTP+vNGQj6zvqw4
+sluL9jQ8fg43Hl/rR3wsxJvp9IqSqWOeIcI4cqJ3a4ztIC2jyqCL8NDbr+oaL3K+
+k+teHfVv/VqluTyqJC0N9Q+0yOifuZ3BXSmbW8Mfh0VH5U0RX/sYW0Clzsa1dK1t
+LJscfWRHRyoEIi+GVL+B8at7xK/vxP/LjIncFufO//LwAxqb0qm4HUmdixHLESDd
+tnIlUoe2Cta8Q9ksQXsas+6hW7ykoDTlnfLVvJ3WmjBrJPhTMRwub7tglL0smQs6
+KkP2d1cRmCeRIbJkcttClKo/poBGRsANiZrz97ljGujPNjJl8heCcYqdQhwvOvie
+dw2Yv7vATSMxTv0qSBFUqFi7wfevvhRys3Z3qc4Br6o0VsxtR/dmaiOhxcd2xMSk
+7e4bi9/g8NlljezdeI5L8VDj3Phjzho2ItYNFBP3CCLTZwHGVkVsymT+wvoN9TgF
+rU24SGbvTP6/Op8gZ+Gm/CeVuYfYaZ7mRhp0XZVy1Gqw4wnpiVp7/+cM5EIXQTFt
+1tN5+WpPlmH9WDLVWfo2lBKekw5om++Xpvpo7WlVe7FB66XcNtyecmXYWa8SzQQi
+OCFGLe9PDlxfWR6Vi4TIZ5yhLkiaszewktYYt+fo6v8tUaRyxw0=
+=UgfU
+-----END PGP SIGNATURE-----
+
+--9amGYk9869ThD9tj--
