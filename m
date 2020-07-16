@@ -2,260 +2,415 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0726C433E4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 21:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A061C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 21:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A362420787
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 21:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E60C207DD
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 21:28:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RzNAZoej"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="imSpYHKG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgGPV0h (ORCPT
+        id S1726394AbgGPV16 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 17:26:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55782 "EHLO
+        Thu, 16 Jul 2020 17:27:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbgGPV0g (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 17:26:36 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43DB7C061755;
-        Thu, 16 Jul 2020 14:26:36 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id n22so5278352ejy.3;
-        Thu, 16 Jul 2020 14:26:36 -0700 (PDT)
+        with ESMTP id S1726198AbgGPV15 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 17:27:57 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E278C08C5C0
+        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 14:27:57 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id l2so13200009wmf.0
+        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 14:27:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vAseUwcQJdDJQQra5TLeLm+SJbx5n23UWFenIaII7YI=;
-        b=RzNAZoejioCvLIzByvtQGVtgUKb7+UXluj3R4ebR91VeNxXDXqhn/1nQu7qixemUju
-         lvd1pm3mo9dtStJ4jO1jA2sQD+J+y0XTqn0t7HjG/qPGj2is9EUTVvKNkixDUF105Ab5
-         SQINgUAcT3LjEbzb3g3qu4aAzpwfg+6AHBLhWTFZZhLIw1MG02TBNfGXudsDH9sioMwQ
-         hwQtaJoXjnFlddCrOEfOhW732LZQaZSs0Ze+lpLPhhObICHV5LgRJAOlE93qjqiJwmUE
-         QOrPzoZUiJee7xMoTbubCeTtzHCddwETMiGdL34b/4/JFdaUa4E76Lp3tnbBerKHKsin
-         op2A==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5JK92VW764q8+USTjp6WsKDCkLnb7pSW+aOBiWRJygQ=;
+        b=imSpYHKGyCOjJ5Czt9h9k8iCF4SQ6VgenxISWpdI4s/RoZ8vjykJyzRAP3GibqqzCN
+         1zR0OXHHC8eOk/tLf1wSf6Pll7CFEC3R406a0r849aChSB4SsqU36qDOVZwW1wEH2jUQ
+         4Op5zJiIjkFdtTwQFUBsnT18Gq8TI/+1N2VN9+HRguUp0o+4GeiXI90TCA/QI0mqLMU/
+         HzJZ1/jPGxS0yMNm6pUFj3L6bsgVujg/IaJL5AOcKIB+nn1kSpteEKKsheYK46z38xZA
+         WeUlmhG1LM2+gSwo5Xu38m6B+uRNl7B0Z8hdrNvtscJpG+5BGjaaL3Eb4MjdsfqP7zpo
+         CBbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vAseUwcQJdDJQQra5TLeLm+SJbx5n23UWFenIaII7YI=;
-        b=fhjbeqYS/oEfvzNCqL4E5CRF+3V/73tf4+F/941N2qFk/jnp0q1JIMuc+vcQXmhIN1
-         dI54b5iTxs8YcO0sWD22DD5RNJwy1O80GN/qgDWI8bXWhq5OqK/STl5OiAO77KATjWrP
-         UxcGQd5vwa6pE7axwgHQ8gz6NbjIneZllP0vRsoG/V3BunDnBu3J+Iy59lHsizj/O/o1
-         4SIqYHE+/NUuuR5bedNVmwb0YzdBPq5I/AFVfkTKyEAzqj2KoLB22BT6WtNIetRh8wsV
-         SeneGoLy/mD+NZMD4r6oMrt2MTPXRQt8OGEn49Dl8Tg1iLiif8L0FY0/dTDNuTR9jSuc
-         ktqA==
-X-Gm-Message-State: AOAM532CIDkT3P6LsDfmvzp82IdkDiVsa1CVQDzxtmXKHUj0hPrKZyuN
-        dTlU7znYQ4DGchD6n/QH9Hg=
-X-Google-Smtp-Source: ABdhPJy07RGdNa3FOJhhw3BUf5RTKV1JBhUIdwZloMswtbvXh0JJPkU0i4+HLCgqbVLI3plPHTGP+w==
-X-Received: by 2002:a17:906:434c:: with SMTP id z12mr5444703ejm.33.1594934794860;
-        Thu, 16 Jul 2020 14:26:34 -0700 (PDT)
-Received: from BV030612LT ([188.24.137.55])
-        by smtp.gmail.com with ESMTPSA id o15sm6249168edv.55.2020.07.16.14.26.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 14:26:33 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 00:26:31 +0300
-From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: Add bindings for Actions S500
- SoC
-Message-ID: <20200716212631.GA348917@BV030612LT>
-References: <cover.1593112402.git.cristian.ciocaltea@gmail.com>
- <2a7610ff9f33cf72d9df6fc4598741fb6d7836e0.1593112402.git.cristian.ciocaltea@gmail.com>
- <20200715200309.GA722435@bogus>
- <20200716104316.GA309338@BV030612LT>
- <CAL_Jsq+8bX5duv=116e=hve1L-h8a=5quqCHVtSAs4PjK6xc1w@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5JK92VW764q8+USTjp6WsKDCkLnb7pSW+aOBiWRJygQ=;
+        b=Yu01F5JHoZxbrnCRaMT0bMeIXwwrCJ8aYCPeybe8aqFrv5f7PdPL/nw9P5LSvk84lS
+         YlSA5w/s+eDtpnOkcIz5nfWuPSRgtz8EeAfq6qZyp6jjbYy87fq3pLh2i3zV0ymwlAs1
+         qPAjs7CZPH0UtjagaIGMPvY3puGQgvjUozibxlI1LmCDzrO5JfrMcf0DbioBtSWYLJWQ
+         KGtUMzCJG5SrZRMKKGAR5K4YUAOIMz3ZVSYdBc0HUVgUKMwS54NPFFIXr7xsYNXEu6eL
+         B4UXQ8btHyBiSKPydj0fz4Pq1vbz9aEFfilihuCQOIib5fayUfF6iT9/LncQ5rMDY19b
+         NvsA==
+X-Gm-Message-State: AOAM531cid/yBww8Oo8ZMCvCmiyfbIp/cyl7U/FsE7hSLQCchUXb+u5S
+        NuRg8tLh1zFnr+wSJBTfShUQ+GfsJaM=
+X-Google-Smtp-Source: ABdhPJx/j03mgDlvlWgpmQ2ia1yJEQnASVHO1jQdzhgeWj89VUwrgjaN8TNbJuT0Xde214d2LVKjag==
+X-Received: by 2002:a1c:ed05:: with SMTP id l5mr6135208wmh.68.1594934875604;
+        Thu, 16 Jul 2020 14:27:55 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:9880:a643:3e69:6393? ([2a01:e34:ed2f:f020:9880:a643:3e69:6393])
+        by smtp.googlemail.com with ESMTPSA id x185sm10493058wmg.41.2020.07.16.14.27.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jul 2020 14:27:54 -0700 (PDT)
+Subject: Re: [PATCH v3 2/4] clocksource/drivers: Add CLINT timer driver
+To:     Anup Patel <anup.patel@wdc.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Anup Patel <anup@brainfault.org>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20200715071506.10994-1-anup.patel@wdc.com>
+ <20200715071506.10994-3-anup.patel@wdc.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <9a36824c-ef23-de47-b52c-bf680067be6c@linaro.org>
+Date:   Thu, 16 Jul 2020 23:27:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+8bX5duv=116e=hve1L-h8a=5quqCHVtSAs4PjK6xc1w@mail.gmail.com>
+In-Reply-To: <20200715071506.10994-3-anup.patel@wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 08:50:36AM -0600, Rob Herring wrote:
-> On Thu, Jul 16, 2020 at 4:43 AM Cristian Ciocaltea
-> <cristian.ciocaltea@gmail.com> wrote:
-> >
-> > On Wed, Jul 15, 2020 at 02:03:09PM -0600, Rob Herring wrote:
-> > > On Thu, Jun 25, 2020 at 11:16:18PM +0300, Cristian Ciocaltea wrote:
-> > > > Add pinctrl and gpio bindings for Actions Semi S500 SoC.
-> > > >
-> > > > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> > > > ---
-> > > >  .../pinctrl/actions,s500-pinctrl.yaml         | 228 ++++++++++++++++++
-> > > >  1 file changed, 228 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..856947c70844
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
-> > > > @@ -0,0 +1,228 @@
-> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/pinctrl/actions,s500-pinctrl.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: Actions Semi S500 SoC pinmux & GPIO controller
-> > > > +
-> > > > +maintainers:
-> > > > +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > +
-> > > > +description: |
-> > > > +  Pinmux & GPIO controller manages pin multiplexing & configuration including
-> > > > +  GPIO function selection & GPIO attributes configuration. Please refer to
-> > > > +  pinctrl-bindings.txt in this directory for common binding part and usage.
-> > > > +
-> > > > +properties:
-> > > > +  compatible:
-> > > > +    const: actions,s500-pinctrl
-> > > > +
-> > > > +  reg:
-> > > > +    minItems: 1
-> > > > +    maxItems: 4
-> > >
-> > > Need to enumerate what each register range is.
-> >
-> > Hi Rob,
-> >
-> > Thanks for the review!
-> >
-> > Would the update below suffice?
-> >
-> >   reg:
-> >     description: |
-> >       Specifies the memory region(s) associated with the pin-controller.
-> >       To improve granularity, up to four register ranges can be provided:
+
+Hi Anup,
+
+
+On 15/07/2020 09:15, Anup Patel wrote:
+> The TIME CSR and SBI calls are not available in RISC-V M-mode so we
+> separate add CLINT driver for Linux RISC-V M-mode (i.e. RISC-V NoMMU
+> kernel).
+
+The description is confusing, please reword it and give a bit more
+information about the timer itself, especially, the IPI thing.
+
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> ---
+>  drivers/clocksource/Kconfig       |  10 ++
+>  drivers/clocksource/Makefile      |   1 +
+>  drivers/clocksource/timer-clint.c | 229 ++++++++++++++++++++++++++++++
+>  include/linux/cpuhotplug.h        |   1 +
+>  4 files changed, 241 insertions(+)
+>  create mode 100644 drivers/clocksource/timer-clint.c
 > 
-> What does 'improve granularity' mean:
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index 91418381fcd4..eabcf1cfb0c0 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -658,6 +658,16 @@ config RISCV_TIMER
+>  	  is accessed via both the SBI and the rdcycle instruction.  This is
+>  	  required for all RISC-V systems.
+>  
+> +config CLINT_TIMER
+> +	bool "Timer for the RISC-V platform"
+> +	depends on GENERIC_SCHED_CLOCK && RISCV_M_MODE
+> +	default y
+> +	select TIMER_PROBE
+> +	select TIMER_OF
+> +	help
+> +	  This option enables the CLINT timer for RISC-V systems. The CLINT
+> +	  driver is usually used for NoMMU RISC-V systems.
 
-Technically all the registers used by the driver could be specified via
-a single contiguous range. However, there are a few unrelated registers
-(i.e. PWM Output Control) which should be excluded in order to come up
-with a more accurate specification. The 4 ranges below are basically
-the result of this exclusion:
+For the timer, we do silent option and let the platform config select
+it. Please refer to other timer option below as reference.
 
-> >       * GPIO Output + GPIO Input + GPIO Data
-> >       * Multiplexing Control
-> >       * PAD Pull Control + PAD Schmitt Trigger enable + PAD Control
-> >       * PAD Drive Capacity Select
+>  config CSKY_MP_TIMER
+>  	bool "SMP Timer for the C-SKY platform" if COMPILE_TEST
+>  	depends on CSKY
+> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+> index bdda1a2e4097..18e700e703a0 100644
+> --- a/drivers/clocksource/Makefile
+> +++ b/drivers/clocksource/Makefile
+> @@ -87,6 +87,7 @@ obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
+>  obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
+>  obj-$(CONFIG_ATCPIT100_TIMER)		+= timer-atcpit100.o
+>  obj-$(CONFIG_RISCV_TIMER)		+= timer-riscv.o
+> +obj-$(CONFIG_CLINT_TIMER)		+= timer-clint.o
+>  obj-$(CONFIG_CSKY_MP_TIMER)		+= timer-mp-csky.o
+>  obj-$(CONFIG_GX6605S_TIMER)		+= timer-gx6605s.o
+>  obj-$(CONFIG_HYPERV_TIMER)		+= hyperv_timer.o
+> diff --git a/drivers/clocksource/timer-clint.c b/drivers/clocksource/timer-clint.c
+> new file mode 100644
+> index 000000000000..bfc38bb5a589
+> --- /dev/null
+> +++ b/drivers/clocksource/timer-clint.c
+> @@ -0,0 +1,229 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2020 Western Digital Corporation or its affiliates.
+> + *
+> + * Most of the M-mode (i.e. NoMMU) RISC-V systems usually have a
+> + * CLINT MMIO timer device.
+> + */
+> +
+> +#define pr_fmt(fmt) "clint: " fmt
+> +#include <linux/bitops.h>
+> +#include <linux/clocksource.h>
+> +#include <linux/clockchips.h>
+> +#include <linux/cpu.h>
+> +#include <linux/delay.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/sched_clock.h>
+> +#include <linux/io-64-nonatomic-lo-hi.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/smp.h>
+> +
+> +#define CLINT_IPI_OFF		0
+> +#define CLINT_TIMER_CMP_OFF	0x4000
+> +#define CLINT_TIMER_VAL_OFF	0xbff8
+> +
+> +/* CLINT manages IPI and Timer for RISC-V M-mode  */
+> +static u32 __iomem *clint_ipi_base;
+> +static u64 __iomem *clint_timer_cmp;
+> +static u64 __iomem *clint_timer_val;
+> +static unsigned long clint_timer_freq;
+> +static unsigned int clint_timer_irq;
+> +
+> +static void clint_send_ipi(const struct cpumask *target)
+> +{
+> +	unsigned int cpu;
+> +
+> +	for_each_cpu(cpu, target)
+> +		writel(1, clint_ipi_base + cpuid_to_hartid_map(cpu));
+> +}
+> +
+> +static void clint_clear_ipi(void)
+> +{
+> +	writel(0, clint_ipi_base + cpuid_to_hartid_map(smp_processor_id()));
+> +}
+> +
+> +static struct riscv_ipi_ops clint_ipi_ops = {
+> +	.ipi_inject = clint_send_ipi,
+> +	.ipi_clear = clint_clear_ipi,
+> +};
+> +
+> +#ifdef CONFIG_64BIT
+> +#define clint_get_cycles()	readq_relaxed(clint_timer_val)
+> +#else
+> +#define clint_get_cycles()	readl_relaxed(clint_timer_val)
+> +#define clint_get_cycles_hi()	readl_relaxed(((u32 *)clint_timer_val) + 1)
+> +#endif
+> +
+> +#ifdef CONFIG_64BIT
+> +static u64 clint_get_cycles64(void)
+> +{
+> +	return clint_get_cycles();
+> +}
+> +#else /* CONFIG_64BIT */
+> +static u64 clint_get_cycles64(void)
+> +{
+> +	u32 hi, lo;
+> +
+> +	do {
+> +		hi = clint_get_cycles_hi();
+> +		lo = clint_get_cycles();
+> +	} while (hi != clint_get_cycles_hi());
+> +
+> +	return ((u64)hi << 32) | lo;
+> +}
+> +#endif /* CONFIG_64BIT */
+> +static int clint_clock_next_event(unsigned long delta,
+> +				   struct clock_event_device *ce)
+> +{
+> +	void __iomem *r = clint_timer_cmp +
+> +			  cpuid_to_hartid_map(smp_processor_id());
+> +
+> +	csr_set(CSR_IE, IE_TIE);
+> +	writeq_relaxed(clint_get_cycles64() + delta, r);
+> +	return 0;
+> +}
+> +
+> +static DEFINE_PER_CPU(struct clock_event_device, clint_clock_event) = {
+> +	.name			= "clint_clockevent",
+> +	.features		= CLOCK_EVT_FEAT_ONESHOT,
+> +	.rating		= 100,
+> +	.set_next_event	= clint_clock_next_event,
+> +};
+> +
+> +static u64 clint_rdtime(struct clocksource *cs)
+> +{
+> +	return readq_relaxed(clint_timer_val);
+> +}
+> +
+> +static u64 notrace clint_sched_clock(void)
+> +{
+> +	return readq_relaxed(clint_timer_val);
+> +}
+> +
+> +static struct clocksource clint_clocksource = {
+> +	.name		= "clint_clocksource",
+> +	.rating	= 300,
+> +	.mask		= CLOCKSOURCE_MASK(64),
+> +	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
+> +	.read		= clint_rdtime,
+
+What if !CONFIG_64BIT
+
+> +};
+> +
+> +static int clint_timer_starting_cpu(unsigned int cpu)
+> +{
+> +	struct clock_event_device *ce = per_cpu_ptr(&clint_clock_event, cpu);
+> +
+> +	ce->cpumask = cpumask_of(cpu);
+> +	clockevents_config_and_register(ce, clint_timer_freq, 200, ULONG_MAX);
+
+The function is not immune against registering the same clockevents. If
+the CPU is hotplugged several times, this function will be called again
+and again. Why not rely on a for_each_possible_cpu loop in the init
+function ?
+
+> +	enable_percpu_irq(clint_timer_irq,
+> +			  irq_get_trigger_type(clint_timer_irq));
+
+Why do you want to enable / disable the interrrupts ? The should be
+already handle by the hotplug framework no ?
+
+> +	return 0;
+> +}
+> +
+> +static int clint_timer_dying_cpu(unsigned int cpu)
+> +{
+> +	disable_percpu_irq(clint_timer_irq);
+> +	return 0;
+> +}
+> +
+> +static irqreturn_t clint_timer_interrupt(int irq, void *dev_id)
+> +{
+> +	struct clock_event_device *evdev = this_cpu_ptr(&clint_clock_event);
+> +
+> +	csr_clear(CSR_IE, IE_TIE);
+> +	evdev->event_handler(evdev);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int __init clint_timer_init_dt(struct device_node *np)
+> +{
+> +	int rc;
+> +	u32 i, nr_irqs;
+> +	void __iomem *base;
+> +	struct of_phandle_args oirq;
+> +
+> +	/*
+> +	 * Ensure that CLINT device interrupts are either RV_IRQ_TIMER or
+> +	 * RV_IRQ_SOFT. If it's anything else then we ignore the device.
+> +	 */
+> +	nr_irqs = of_irq_count(np);
+> +	for (i = 0; i < nr_irqs; i++) {
+> +		if (of_irq_parse_one(np, i, &oirq)) {
+> +			pr_err("%pOFP: failed to parse irq %d.\n", np, i);
+> +			continue;
+> +		}
+> +
+> +		if ((oirq.args_count != 1) ||
+> +		    (oirq.args[0] != RV_IRQ_TIMER &&
+> +		     oirq.args[0] != RV_IRQ_SOFT)) {
+> +			pr_err("%pOFP: invalid irq %d (hwirq %d)\n",
+> +			       np, i, oirq.args[0]);
+> +			return -ENODEV;
+> +		}
+> +
+> +		/* Find parent irq domain and map timer irq */
+> +		if (!clint_timer_irq &&
+> +		    oirq.args[0] == RV_IRQ_TIMER &&
+> +		    irq_find_host(oirq.np))
+> +			clint_timer_irq = irq_of_parse_and_map(np, i);
+> +	}
+> +
+> +	/* If CLINT timer irq not found then fail */
+> +	if (!clint_timer_irq) {
+> +		pr_err("%pOFP: timer irq not found\n", np);
+> +		return -ENODEV;
+> +	}
+> +
+> +	base = of_iomap(np, 0);
+> +	if (!base) {
+> +		pr_err("%pOFP: could not map registers\n", np);
+> +		return -ENODEV;
+> +	}
+> +
+> +	clint_ipi_base = base + CLINT_IPI_OFF;
+> +	clint_timer_cmp = base + CLINT_TIMER_CMP_OFF;
+> +	clint_timer_val = base + CLINT_TIMER_VAL_OFF;
+> +	clint_timer_freq = riscv_timebase;
+> +
+> +	pr_info("%pOFP: timer running at %ld Hz\n", np, clint_timer_freq);
+> +
+> +	rc = clocksource_register_hz(&clint_clocksource, clint_timer_freq);
+> +	if (rc) {
+> +		iounmap(base);
+> +		pr_err("%pOFP: clocksource register failed [%d]\n", np, rc);
+> +		return rc;
+> +	}
+> +
+> +	sched_clock_register(clint_sched_clock, 64, clint_timer_freq);
+> +
+> +	rc = request_percpu_irq(clint_timer_irq, clint_timer_interrupt,
+> +				 "clint-timer", &clint_clock_event);
+> +	if (rc) {
+> +		iounmap(base);
+> +		pr_err("registering percpu irq failed [%d]\n", rc);
+> +		return rc;
+> +	}
+> +
+> +	rc = cpuhp_setup_state(CPUHP_AP_CLINT_TIMER_STARTING,
+> +				"clockevents/clint/timer:starting",
+> +				clint_timer_starting_cpu,
+> +				clint_timer_dying_cpu);
+> +	if (rc) {
+> +		free_irq(clint_timer_irq, &clint_clock_event);
+> +		iounmap(base);
+> +		pr_err("%pOFP: cpuhp setup state failed [%d]\n", np, rc);
+> +		return rc;
+> +	}
+> +
+> +	riscv_set_ipi_ops(&clint_ipi_ops);
+> +	clint_clear_ipi();
+> +
+> +	return 0;
+> +}
+> +
+> +TIMER_OF_DECLARE(clint_timer, "riscv,clint0", clint_timer_init_dt);
+> +TIMER_OF_DECLARE(clint_timer1, "sifive,clint0", clint_timer_init_dt);
+> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+> index 191772d4a4d7..1451f4625833 100644
+> --- a/include/linux/cpuhotplug.h
+> +++ b/include/linux/cpuhotplug.h
+> @@ -132,6 +132,7 @@ enum cpuhp_state {
+>  	CPUHP_AP_MIPS_GIC_TIMER_STARTING,
+>  	CPUHP_AP_ARC_TIMER_STARTING,
+>  	CPUHP_AP_RISCV_TIMER_STARTING,
+> +	CPUHP_AP_CLINT_TIMER_STARTING,
+>  	CPUHP_AP_CSKY_TIMER_STARTING,
+>  	CPUHP_AP_HYPERV_TIMER_STARTING,
+>  	CPUHP_AP_KVM_STARTING,
 > 
-> The h/w sometimes has these and sometimes doesn't?
 
-No, the h/w is fixed, the only reason of this approach was to allow a
-precise memory region specification, as explained above.
 
-I'm not sure if this should be made mandatory or it's also fine to let
-(a lazy) user provide combined ranges or just a contiguous one (like
-in the example), with the drawback of loosing the accuracy, of course.
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-> If they do stay, then you want:
-> 
-> items:
->   - description: GPIO Output + GPIO Input + GPIO Data
->   - description: ...
-
-Would this be applicable even if we keep this flexible approach and
-don't set 'minItems: 4'?
-
-> >
-> > > > +
-> > > > +  clocks:
-> > > > +    maxItems: 1
-> > > > +
-> > > > +  gpio-controller: true
-> > > > +
-> > > > +  gpio-ranges:
-> > > > +    maxItems: 1
-> > > > +
-> > > > +  '#gpio-cells':
-> > > > +    description:
-> > > > +      Specifies the pin number and flags, as defined in
-> > > > +      include/dt-bindings/gpio/gpio.h
-> > > > +    const: 2
-> > > > +
-> > > > +  interrupt-controller: true
-> > > > +
-> > > > +  '#interrupt-cells':
-> > > > +    description:
-> > > > +      Specifies the pin number and flags, as defined in
-> > > > +      include/dt-bindings/interrupt-controller/irq.h
-> > > > +    const: 2
-> > > > +
-> > > > +  interrupts:
-> > > > +    description:
-> > > > +      One interrupt per each of the 5 GPIO ports supported by the controller,
-> > > > +      sorted by port number ascending order.
-> > > > +    minItems: 5
-> > > > +    maxItems: 5
-> > > > +
-> > > > +patternProperties:
-> > > > +  '^.*$':
-> > > > +    if:
-> > > > +      type: object
-> > >
-> > > For a new binding, can you do '-pins$' for the node names so we don't
-> > > need this if/then hack.
-> >
-> > Right, the idea was to be consistent with the existing bindings for
-> > S700 and S900, which allow free node names, although they are not yet
-> > converted to yaml format.
-> 
-> If we want consistency, those should have their node names updated.
-
-Fair enough, I have already updated the node names to use the '-pins'
-suffix.
-
-> >
-> > > > +    then:
-> > > > +      patternProperties:
-> > > > +        'pinmux$':
-> > >
-> > > Is this really a pattern? Can't tell from the example.
-> >
-> > pinmux and pinconf subnodes may appear multiple times, that's why I
-> > decided to match their names based on the suffix.
-> >
-> > The example is not complex enough, I will change it to the following:
-> >
-> >     mmc0_default: mmc0_default {
-> >         pinmux {
-> >             groups = "sd0_d0_mfp", "sd0_d1_mfp", "sd0_d2_d3_mfp",
-> >                      "sd0_cmd_mfp", "sd0_clk_mfp";
-> >             function = "sd0";
-> >         };
-> >
-> >         drv_pinconf {
-> 
-> drv-pinconf
-> 
-> Make the pattern '-?pinconf' to enforce that. (that '-' may need escaping?)
-
-Actually the pattern should be '^(.*-)?pinconf$', to restrict the names
-to either 'pinconf' or '<label>-pinconf'.
-
-I have just made some more validation tests and noticed I had missed an
-'additionalProperties: false' line, for the 'pins' node. Should be fine
-now!
-
-Thanks,
-Cristi
-
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
