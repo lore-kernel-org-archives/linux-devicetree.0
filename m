@@ -2,163 +2,151 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DD0C433F1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 09:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FC7C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 09:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED4522074B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 09:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BC242074B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 09:23:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="DER8KaZg"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YAdf5+jV";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lYGGEEQO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725975AbgGPJUt (ORCPT
+        id S1726040AbgGPJXf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 05:20:49 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:28500 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726037AbgGPJUs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jul 2020 05:20:48 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06G9K6Dk012022;
-        Thu, 16 Jul 2020 11:20:30 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=YYdEfJ7VryBj+oIRISl+0NE3XQm3xJF36O7Hxx33TUo=;
- b=DER8KaZgqXYt5QUIc87g+W9oYIbTIn83sSD4i0qGguy2ESL9oD2R2WZsxE/bYVL+29Qd
- wbyUSel97hEh2/DEJJYZRUNthWVqIPRKvovDSurABIXK4Olo1K1PshVG53lXUKc4RkcP
- cFHAqG3kFlwM4wn8Y5oImbyLjpsRNE5yLF8l4wlSaaQWx8sg9fI5H96b7K16ZPZmoiHi
- UUi/vkX6jl9MKfeSLVoXBsAA9zaXIUdh4MaMIWsiMhCQ+T8vjQNyrYsfAQXRmytyFN2W
- 3qveZEdYGAkz57tzoQoFTMfsjldkJglAX7qiRv6aYOra4qIOm8cLz7f/bQVY7sMX7XJ6 0A== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 327btt1asu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 11:20:30 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7BE7510002A;
-        Thu, 16 Jul 2020 11:20:28 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5976F2AD9EB;
-        Thu, 16 Jul 2020 11:20:28 +0200 (CEST)
-Received: from lmecxl0995.lme.st.com (10.75.127.47) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 16 Jul
- 2020 11:20:27 +0200
-Subject: Re: [PATCH 1/6] dt-bindings: connector: add power-opmode optional
- property to usb-connector
-To:     Rob Herring <robh@kernel.org>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Fabrice GASNIER <fabrice.gasnier@st.com>
-References: <20200615161512.19150-1-amelie.delaunay@st.com>
- <20200615161512.19150-2-amelie.delaunay@st.com>
- <20200715181916.GA551920@bogus>
-From:   Amelie DELAUNAY <amelie.delaunay@st.com>
-Message-ID: <f186558e-210c-ff11-29e0-fc653d4b865b@st.com>
-Date:   Thu, 16 Jul 2020 11:20:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 16 Jul 2020 05:23:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56706 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726027AbgGPJXf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 05:23:35 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C4EAC061755;
+        Thu, 16 Jul 2020 02:23:35 -0700 (PDT)
+From:   Kurt Kanzenbach <kurt@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1594891413;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Cy5bVorjFk07KMBWryKUafd0Z6XE/mb1/WHYN29Nh+0=;
+        b=YAdf5+jVXhtr/Y5B2YZjgpspyD9dDpUrOk0n2B4jc7XovmREiRorMZmM+WVUb5Wg6K3qjC
+        nM12mGUxPlaFpGWol7iDn6PhPBPHqF9YCR8l7r/FWvSNcxxLhxT26aTJSZxo75U4XwabL0
+        GSINbRejiIo/yuyT/3PorH40+lBFTvaO7BQjixSBN2VsWjvpg4rIM9K46qcSqaZb8qwlhZ
+        DyqFFNesnjEF/dXoMdPxTtrfmc7j6Qh0CaqvXw+52KcWObDrzhVDETE/8xzhCU5dh317bR
+        sEbk1mJ9ZlMs6xGwfOBSC5PuVYxr9+4OanTX7Ro4mDrNCYezyJF8J/R+l9gJtA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1594891413;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Cy5bVorjFk07KMBWryKUafd0Z6XE/mb1/WHYN29Nh+0=;
+        b=lYGGEEQOem02iXgTItvsUpAcdQ/prDe9aqkzF3HBN8B14tPV1/AJROzhFbqmTwxNtM4zx1
+        7nuLTBoizNkTtmDg==
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org
+Subject: Re: [PATCH v1 2/8] net: dsa: Add DSA driver for Hirschmann Hellcreek switches
+In-Reply-To: <20200716082935.snokd33kn52ixk5h@skbuf>
+References: <20200710113611.3398-1-kurt@linutronix.de> <20200710113611.3398-3-kurt@linutronix.de> <def49ff6-72fe-7ca0-9e00-863c314c1c3d@gmail.com> <87v9islyf2.fsf@kurt> <20200716082935.snokd33kn52ixk5h@skbuf>
+Date:   Thu, 16 Jul 2020 11:23:26 +0200
+Message-ID: <87h7u7x181.fsf@kurt>
 MIME-Version: 1.0
-In-Reply-To: <20200715181916.GA551920@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-16_05:2020-07-16,2020-07-16 signatures=0
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-On 7/15/20 8:19 PM, Rob Herring wrote:
-> On Mon, Jun 15, 2020 at 06:15:07PM +0200, Amelie Delaunay wrote:
->> Power operation mode may depends on hardware design, so, add the optional
->> property power-opmode for usb-c connector to select the power operation
->> mode capability.
->> 
->> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
->> ---
->>  .../devicetree/bindings/connector/usb-connector.yaml  | 11 +++++++++++
->>  1 file changed, 11 insertions(+)
->> 
->> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.yaml b/Documentation/devicetree/bindings/connector/usb-connector.yaml
->> index 9bd52e63c935..cd7feb2d4984 100644
->> --- a/Documentation/devicetree/bindings/connector/usb-connector.yaml
->> +++ b/Documentation/devicetree/bindings/connector/usb-connector.yaml
->> @@ -88,6 +88,17 @@ properties:
->>        - device
->>        - dual
->>  
->> +  power-opmode:
->> +    description: Determines the power operation mode that the Type C connector
->> +      will support.
->> +    allOf:
->> +      - $ref: /schemas/types.yaml#definitions/string
->> +    enum:
->> +      - default
-> 
-> Wouldn't this just be no property?
-
-No because the aim of this optional property is to re-configure the 
-Type-C controller power operation mode. So, when using power-opmode = 
-"default", the use can re-configure it to the 'default' USB power 
-operation mode - 500mA for USB2 or 900mA for USB3.
-
-> 
->> +      - 1.5A
->> +      - 3.0A
-> 
-> You'll need to explain these better.
+On Thu Jul 16 2020, Vladimir Oltean wrote:
+> On Mon, Jul 13, 2020 at 08:30:25AM +0200, Kurt Kanzenbach wrote:
+>> On Sat Jul 11 2020, Florian Fainelli wrote:
+>> > On 7/10/2020 4:36 AM, Kurt Kanzenbach wrote:
+>> > [snip]
+>> >
+>> >> +
+>> >> +/* Default setup for DSA:
+>> >> + *  VLAN 2: CPU and Port 1 egress untagged.
+>> >> + *  VLAN 3: CPU and Port 2 egress untagged.
+>> >
+>> > Can you use any of the DSA_TAG_8021Q services to help you with that?
+>>=20
+>> Maybe dsa_port_setup_8021q_tagging() could be used. It does distinguish
+>> between RX and TX, but I assume it'd also work. Needs to be tested.
+>>=20
 >
+> The fundamental role of DSA_TAG_8021Q is not to give you port
+> separation, but port identification, when there is no hardware tagging
+> support, or it cannot be used.
 
-Ok I'll add a description in V2.
+OK. Then it shouldn't be used.
 
->> +      - usb_power_delivery
-> 
-> I would have thought 'default' would be USB-PD. Though I thought Type-C
-> was always USB-PD.
-> 
+> So in fact, it is quite the contrary:
+> tag_8021q assumes that port separation will be achieved by external
+> means. Most switches support a "port forwarding matrix" of sorts (i.e.
+> "is port i allowed to forward to port j?"), and that is what is used, in
+> tag_8021q setups, to isolate one port from another on RX (in standalone
+> mode). I'm not sure what's the status with hellcreek hardware design, it
+> seems very odd to me to not include any sort of port forwarding matrix,
+> and to have to rely on port membership on each port's pvid to achieve
+> that in the .port_bridge_join method.
 
-In fact, the DT property matches the typec_pwr_opmode enum and 
-typec_pwr_opmodes strings tab:
-static const char * const typec_pwr_opmodes[] = {
-	[TYPEC_PWR_MODE_USB]	= "default",
-	[TYPEC_PWR_MODE_1_5A]	= "1.5A",
-	[TYPEC_PWR_MODE_3_0A]	= "3.0A",
-	[TYPEC_PWR_MODE_PD]	= "usb_power_delivery",
-};
-The same is done for data-role and power-role properties.
+As far as I know there is no port forwarding matrix. Traffic is
+forwarded between the ports when they're members of the same
+vlan. That's why I created them by default.
 
-So, I would keep "default", "1.5A", "3.0A" and "usb_power_delivery", and 
-I'll add a description for each. Is it OK for you ?
+> By the way, this brings up another topic: any 'bridge vlan add' for a
+> pvid will break your setup. You should avoid that somehow.
 
-Regards,
-Amelie
+So usually for vlan configurations the bridge is created with
+vlan_filtering set. In that case the default setting is reverted (see
+hellcreek_vlan_filtering()).
 
->> +
->>    # The following are optional properties for "usb-c-connector" with power
->>    # delivery support.
->>    source-pdos:
->> -- 
->> 2.17.1
->> 
+> Please try to set ds->configure_vlan_while_not_filtering =3D true; in your
+> .setup callback.  We're trying to make all switches behave uniformly and
+> be able to deal with VLANs added straight away by the bridge. Don't be
+> confused by the fact that it's an option - there's nothing really
+> optional about it, it is just there to avoid breakage in drivers which
+> haven't been converted.  Since yours is a new driver, it should enable
+> this option from day 1.
+
+OK.
+
+Thanks,
+Kurt
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl8QHI4ACgkQeSpbgcuY
+8KbmCQ/+PoESTzw3Mg0okdUN2cnJA1JoWcKm8DPa4n6gTFjVbSIJotHQcqXGMkg3
+VJ2e8ajL7E5H8eKvhKT1Wf1W8hn+O6Srx+h/zRl+DYg5euH3PBEzC401RB3O78X/
+Yc9YgXl/jiYn7vGbcrtsikUy4dVauzBL0ZzCj2B1xDdgxoRll5G/LrpF5UvDBgxp
+dQXzJG8DSuofKXEI7Q08/KDD6ADsqnsoEVKlr9AYyt856MQLDxsaG/CSBdxwqjr8
+Q0GDsryznOMz16Sq16TC2c/TFWu3SxhBpKiM9m5IucJdoThqaAmsoJEjiH4Uh85d
+7a1oDzLn0ySbjA9oMNcHRlGWyYeCI8STH4fwBIerQuvXrVP+Whast+0MhDC1C2d1
+grptpdwGXh7N3UF3F7Sk9PTReJN2fwH+4Hb3aYmXX2XUtbY3WdvuBnXwaUIpBsOK
+R8E1dPwFPJGefcrttPnKo1Xflvftgumc1c+0zEzcEti+H9tNo7r06F+gB+JYNUD4
+IMdT7lUf3s0Ug62jG5DbXb4tLiHX1k+33a6wV1RCF9IPXmgbayn3tkSNvF/GxRBY
+MaIW+JPScJgcPtzYqMoEo7TVZ0hoJAMxkQdEHKfgk2X60EEFfgPm8hgohgbQ6+v5
+JiKutL7wnFp7LZjLP84X2B+9QCtghe5Mpj42Veoh/fpGuTm7PDo=
+=Tm5p
+-----END PGP SIGNATURE-----
+--=-=-=--
