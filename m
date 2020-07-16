@@ -2,96 +2,302 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E32C433E7
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 18:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CDBC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 18:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5185420578
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 18:01:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C7002070E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 18:05:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f+ArHYoz"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fHBUTi0o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729310AbgGPSBi (ORCPT
+        id S1728947AbgGPSFt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 14:01:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52352 "EHLO
+        Thu, 16 Jul 2020 14:05:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729296AbgGPSBh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 14:01:37 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A33C061755;
-        Thu, 16 Jul 2020 11:01:36 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id t9so4320064lfl.5;
-        Thu, 16 Jul 2020 11:01:36 -0700 (PDT)
+        with ESMTP id S1728837AbgGPSFt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 14:05:49 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10D8AC061755
+        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 11:05:49 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id b13so2055121uav.3
+        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 11:05:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=RO0Ev4XWmJoAtIvt5ezwXcEjz8a/igJfRlR8CqYlcwk=;
-        b=f+ArHYozj9iXY05L2a9mOZncLmIZrkrlfF7f0ox3qDStqRjfkcCoFld6RZ/ia6HTpb
-         cIV5mTlOmVrT2hjAneei3Je1SaJfNb3yJIwSwwU9HsjWOBm8+6U4e7LgxQoI7mr16P0A
-         DgnV8Z4HlfwgS2+n69C5VzbJOQlqN1MIHEt4HdYUP1Ft+s0W1MrsCHpNyCE54wr2zBgN
-         D0Q1+bJul3OgyR6iDe1P+gQE1P0fXPf/yVaz3k35LplZb/agJQcEJgcI9Ko/5w+Cpnvm
-         V4h7GT+PWGjBv2q79K+tqii9a6lhV4v3YUxcsonHparWShvyBB4QFnzyn+jNaSV/vP2t
-         8WpQ==
+        bh=6LJXcaiErt+0IC9WAhFqF+PgHD+Xfmr3j77sKRGuw00=;
+        b=fHBUTi0o7R2ZDnjv7Bf840urtxXMHNAU19jmAKkxEYrc6Pk78KckWPlezDehMCs/1Q
+         hxxgx33laG/g8T4dGc3fZblx3pRHNmBqLsxNbFwE/ZExYBRbTifNAI03v5WghgHjWt30
+         Hxtcg186Z3dmy5Srwbn3Z6rUdC3iK3KE0li2s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=RO0Ev4XWmJoAtIvt5ezwXcEjz8a/igJfRlR8CqYlcwk=;
-        b=ufT6brl52tjobI2hmpYXN1FnC/9LYmn7TTnCQZ7+cl2Yj4oQffwoTXdbn/Fg3zaxGR
-         9U+iStsRuwr4oToOXKwL0O0YfdGeziVt4XqDR/LwTAwKrVON5LB9isbWANqHMwqsajJu
-         qI5689Isp9oAUL5GN+IxjCoxrcqrosvkhwkru4eXYMZVpSowBan3TMZ30HifKIBjyvLy
-         PRFfwDokB9zoOa+UGGDpDERBBcBUt9jb9TXqltuAf686fiYMEaiHFOQbNkWSO3lvEbTO
-         lzrR5KGreSNIRoGAtI7+YlghkvBtMHc4TH5VEvYkz22IX0mDW5tRzSmtIr57r5yJ5BlA
-         LICQ==
-X-Gm-Message-State: AOAM531Jw8H8DFw/WotOFTLE/h5TDnDTwWMqZFsrT76E/yqRSVw4xQv/
-        EhlgybbyH1QkbIwfL5fBqyynpfrMfCVmI17eqccanr2WrWg=
-X-Google-Smtp-Source: ABdhPJx/Zdv8xhyeZFB7H/DVbJijxmGRfl3Fpd8wrS1ku4bzw1EgItsFCIj6+osuQpx/XobNVdvngNL2tfdWEJC+814=
-X-Received: by 2002:a19:428c:: with SMTP id p134mr2325052lfa.70.1594922495164;
- Thu, 16 Jul 2020 11:01:35 -0700 (PDT)
+        bh=6LJXcaiErt+0IC9WAhFqF+PgHD+Xfmr3j77sKRGuw00=;
+        b=Ells0ZeZ94Yq4AKJJEnRR/r5vu4bSs9hJZMrRPHkoLmS7Ki32U04p5FlXEZicf+GaB
+         w6njYBqtrCDaKJQHKO9IxyMFtDCEwicRjKOT3+96GMC3IfE0T0fF+JOjonDN8hOaecxI
+         RcPeFrGqMwJ3hwd/56loWaHi9EckH4kkz5mcJkDQ1wiuL4cChfBYmrcVnXSMbHk2qIIE
+         jsz+0eIc7+qNJBNuZqWNDzHm7PBVXsWXnundYCWDIdBvK6G73EaeWTAdStl1gwZkfnhh
+         3cAhzU1XhfXwiFRW+Q0TkBemZsDhDKqy6Tlr1LdfIWzQZeA80rfiyfgatwSM0sDRTVSO
+         dZHg==
+X-Gm-Message-State: AOAM531s8FjlTw33ezfv085gUh2ArLhT4h+twusqDGn1NUS9tE6jyczV
+        3GpDqX7sQDn/o4h3shLg6B8JRNuqX+k=
+X-Google-Smtp-Source: ABdhPJxgpTB8KtQGhHxyrn7QJY+gMMKyHYOFaMfAAjs1//li5Jo42XhJVWcavYp2SwQKTve8kTjfcQ==
+X-Received: by 2002:ab0:6550:: with SMTP id x16mr4598565uap.17.1594922747833;
+        Thu, 16 Jul 2020 11:05:47 -0700 (PDT)
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
+        by smtp.gmail.com with ESMTPSA id u43sm548087uau.16.2020.07.16.11.05.46
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jul 2020 11:05:47 -0700 (PDT)
+Received: by mail-ua1-f46.google.com with SMTP id n4so2056163uae.5
+        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 11:05:46 -0700 (PDT)
+X-Received: by 2002:ab0:486d:: with SMTP id c42mr4460815uad.64.1594922746099;
+ Thu, 16 Jul 2020 11:05:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200716172611.5349-1-bruno.thomsen@gmail.com> <20200716172611.5349-2-bruno.thomsen@gmail.com>
-In-Reply-To: <20200716172611.5349-2-bruno.thomsen@gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 16 Jul 2020 15:01:23 -0300
-Message-ID: <CAOMZO5B7cJmF4e78xbErzBHfMw4MuF09eXti4xAUFcKOGKXqNw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] ARM: dts: imx7: add support for kamstrup flex concentrator
-To:     Bruno Thomsen <bruno.thomsen@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
+References: <20200716061445.628709-1-cychiang@chromium.org>
+In-Reply-To: <20200716061445.628709-1-cychiang@chromium.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 16 Jul 2020 11:05:34 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=U6oStCh3kyoM-jLEsRrYgnKvUNiQFOqxXm409gDUhcGA@mail.gmail.com>
+Message-ID: <CAD=FV=U6oStCh3kyoM-jLEsRrYgnKvUNiQFOqxXm409gDUhcGA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Add lpass cpu node for I2S driver
+To:     Cheng-Yi Chiang <cychiang@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        Rohit kumar <rohitkr@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Bruno Thomsen <bth@kamstrup.com>
+        <devicetree@vger.kernel.org>, Ajit Pandey <ajitp@codeaurora.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Bruno,
+Hi,
 
-On Thu, Jul 16, 2020 at 2:26 PM Bruno Thomsen <bruno.thomsen@gmail.com> wrote:
+On Wed, Jul 15, 2020 at 11:14 PM Cheng-Yi Chiang <cychiang@chromium.org> wrote:
+>
+> From: Ajit Pandey <ajitp@codeaurora.org>
+>
+> Add the I2S controller node to sc7180 dtsi.
+> Add pinmux for pirmary and secondary I2S.
 
-> Limitations: Ethernet PHY type auto detection does not
-> work when using reset-{assert-us,deassert-us,gpios}
-> properties so it's using a fixed PHY type ID for now. Auto
-> detection worked when using the deprecated FEC properties
-> phy-reset-{gpios,duration,post-delay}.
+s/pirmary/primary
 
-I think we need to understand this better. Why does it fail?
+>
+> Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
+> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+> ---
+> This patch depends on these patch series so it is not ready to be merged now.
+> - clk: qcom: Support for Low Power Audio Clocks on SC7180 https://patchwork.kernel.org/cover/11664273/
+> - arm64: dts: qcom: sc7180: Add LPASS clock controller nodes https://patchwork.kernel.org/patch/11664303/
+> - ASoC: qcom: Add support for SC7180 lpass variant https://patchwork.kernel.org/cover/11650649/
 
-I gave a test on an imx6q-sabresd and the Ethernet PHY (AR8031) could
-be properly detected using reset-{assert-us,deassert-us,gpios}
-properties inside the mdio node.
+Thanks for pointing out the dependencies!
 
-Is this a Micrel KSZ8081 specific issue?
 
-Please report this issue to the Ethernet PHY folks.
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 132 +++++++++++++++++++++++++++
+>  1 file changed, 132 insertions(+)
+
+My review is a bit rote since I don't actually know anything about
+audio.  This is mostly just a dt-hygiene review.
+
+
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 6eb14b6a47f5..2fe3bd89f950 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -511,6 +511,34 @@ qusb2p_hstx_trim: hstx-trim-primary@25b {
+>                         };
+>                 };
+>
+> +               lpass_cpu: lpass {
+
+Missing unit address and also sorted incorrectly.  Nodes should be
+sorted by unit address.
+
+
+> +                       compatible = "qcom,lpass-cpu-sc7180";
+
+Is there a pin config that generally makes sense for all boards?  If
+so, you can add it here so it doesn't need to be added to all
+sub-boards.
+
+
+> +                       reg = <0 0x62F00000 0 0x29000>;
+
+nit: lower case hex for reg address, so 62f not 62F.
+
+
+> +                       reg-names = "lpass-lpaif";
+> +
+> +                       iommus = <&apps_smmu 0x1020 0>;
+> +
+> +                       power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
+> +
+> +                       status = "disabled";
+> +
+> +                       clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>,
+> +                                <&lpasscc LPASS_AUDIO_CORE_CORE_CLK>,
+> +                                <&lpasscc LPASS_AUDIO_CORE_EXT_MCLK0_CLK>,
+> +                                <&lpasscc LPASS_AUDIO_CORE_SYSNOC_MPORT_CORE_CLK>,
+> +                                <&lpasscc LPASS_AUDIO_CORE_LPAIF_PRI_IBIT_CLK>,
+> +                                <&lpasscc LPASS_AUDIO_CORE_LPAIF_SEC_IBIT_CLK>;
+> +
+> +                       clock-names = "noc", "audio-core", "mclk0", "sysnoc_mport",
+> +                                     "pri_ibit", "sec_ibit";
+> +
+> +                       #sound-dai-cells = <1>;
+> +
+> +                       interrupts = <0 160 IRQ_TYPE_LEVEL_HIGH>;
+
+First entry of interrupts should be GIC_SPI, which is what 0 is referring to.
+
+
+> +                       interrupt-names = "lpass-irq-lpaif";
+> +               };
+
+Bindings claim you're supposed to have:
+
+#address-cells = <1>;
+#size-cells = <0>;
+
+Do you not need them for some reason?
+
+
+>                 sdhc_1: sdhci@7c4000 {
+>                         compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
+>                         reg = <0 0x7c4000 0 0x1000>,
+> @@ -1357,6 +1385,110 @@ pinmux {
+>                                 };
+>                         };
+>
+> +                       sec_mi2s_active: sec-mi2s-active {
+> +                               pinmux {
+> +                                       pins = "gpio49";
+> +                                       function = "mi2s_1";
+> +                               };
+> +
+> +                               pinconf {
+> +                                       pins = "gpio49";
+> +                                       drive-strength = <8>;
+> +                                       bias-pull-up;
+> +                               };
+> +                       };
+> +
+> +                       sec_mi2s_ws_active: sec-mi2s-ws-active {
+> +                               pinmux {
+> +                                       pins = "gpio50";
+> +                                       function = "mi2s_1";
+> +                               };
+> +
+> +                               pinconf {
+> +                                       pins = "gpio50";
+> +                                       drive-strength = <8>;
+> +                                       bias-pull-up;
+> +                               };
+> +                       };
+> +
+> +                       sec_mi2s_dout_active: sec-mi2s-dout-active {
+> +                               pinmux {
+> +                                       pins = "gpio51";
+> +                                       function = "mi2s_1";
+> +                               };
+> +
+> +                               pinconf {
+> +                                       pins = "gpio51";
+> +                                       drive-strength = <8>;
+> +                                       bias-pull-up;
+> +                               };
+> +                       };
+> +
+> +                       pri_mi2s_active: pri-mi2s-active {
+> +                               pinmux {
+> +                                       pins = "gpio53";
+> +                                       function = "mi2s_0";
+> +                               };
+> +
+> +                               pinconf {
+> +                                       pins = "gpio53";
+> +                                       drive-strength = <8>;
+> +                                       bias-pull-up;
+> +                               };
+> +                       };
+> +
+> +                       pri_mi2s_ws_active: pri-mi2s-ws-active {
+> +                               pinmux {
+> +                                       pins = "gpio54";
+> +                                       function = "mi2s_0";
+> +                               };
+> +
+> +                               pinconf {
+> +                                       pins = "gpio54";
+> +                                       drive-strength = <8>;
+> +                                       bias-pull-up;
+> +                               };
+> +                       };
+> +
+> +                       pri_mi2s_dout_active: pri-mi2s-dout-active {
+> +                               pinmux {
+> +                                       pins = "gpio55";
+> +                                       function = "mi2s_0";
+> +                               };
+> +
+> +                               pinconf {
+> +                                       pins = "gpio55";
+> +                                       drive-strength = <8>;
+> +                                       bias-pull-up;
+> +                               };
+> +                       };
+> +
+> +                       pri_mi2s_din_active: pri-mi2s-din-active {
+> +                               pinmux {
+> +                                       pins = "gpio56";
+> +                                       function = "mi2s_0";
+> +                               };
+> +
+> +                               pinconf {
+> +                                       pins = "gpio56";
+> +                                       drive-strength = <8>;
+> +                                       bias-pull-up;
+> +                               };
+> +                       };
+
+Can you group together any of the configs?  See, for instance,
+"qup_spi0_default" where we configure 4 pins together.  Then you don't
+need so many separate nodes to add.
+
+Also: pinconf is nearly always done in board files unless you truly
+have a reason to believe that it would be the same for every board.
+
+
+> +                       pri_mi2s_mclk_active: pri-mi2s-mclk-active {
+> +                               pinmux {
+> +                                       pins = "gpio57";
+> +                                       function = "lpass_ext";
+> +                               };
+> +
+> +                               pinconf {
+> +                                       pins = "gpio57";
+> +                                       drive-strength = <8>;
+> +                                       bias-pull-up;
+> +                               };
+> +                       };
+> +
+>                         sdc1_on: sdc1-on {
+>                                 pinconf-clk {
+>                                         pins = "sdc1_clk";
+
+-Doug
