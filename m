@@ -2,111 +2,143 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 784CDC433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 15:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E079DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 15:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55AB9207E8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 15:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C00772083B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 15:15:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LOendPNI"
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="O/bURHF4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbgGPPKf (ORCPT
+        id S1728638AbgGPPPj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 11:10:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728207AbgGPPKe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 11:10:34 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A7DCC08C5CE
-        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 08:10:34 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id z13so7436103wrw.5
-        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 08:10:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=2m1M98EH1nfWkFNzV2VhpZKvvoVfQRllbm5fo3WQqlY=;
-        b=LOendPNIH4Ofg8EGJ+B7ht+ifCEDSJEs0Y7UgjXJxJQUVInRrJUX57gDkVZxGHYjsZ
-         huOkeoMfVADRZfQ+hxvRIZr+u5Kw73rUxW0y/W4OQO3t7mbSNpedFbhfSUi/CdqiP++F
-         dZ8fMAHU7FhFKiF7paIyQ2XQR8qZlSeLOZeQLJCrzL6hVGpAq3BVRID66H3ssWcMrsNP
-         ozgidJwcVDai/+ESiQysfhiLSY1ow3zSgzAp8e/bia4rwkV0FH8pPGVHwWFAYZrzFOak
-         KfQ1/2F5dOZyvvoSt2ZCqsvWoyRER02JfoX87tgwcHKwMRAHLtZkyFcIzGaHF3A0DdNz
-         VxJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=2m1M98EH1nfWkFNzV2VhpZKvvoVfQRllbm5fo3WQqlY=;
-        b=IrEx9z5cHHiuyU+rv3Nq/WgV+rZQR/85Yf0Y1H+2CV+paPIW4ZA99DfKzneiPvvmsC
-         4FpqZM0EUUDK6Qe9fj3xf/RWSpykBM3SDr6OSVyhUjr8sCx5Ihz1nHRfhRF8geg6KdyX
-         eIw6SvLDxntLsLqgneNSgsMAZicFKbdoG88P47ojGH7mO1GM3UN59tk6l5Fe3eAKeBC1
-         FZvyM2pC8aL/Wgj9nKXXzOscCYFhgE4MDUhq1m+wvNBcFNBJDk3NNeS/Wxds2FUuk9ID
-         PY4BVnMnFnzI1Hti+zeN+fsVf8K8+1zlvTlmV+QtG5xKiR7JnSPEZgoswJ/IzpgPdGKa
-         4snQ==
-X-Gm-Message-State: AOAM531sJeI7Vf27am03RAwyGGhA7cI/qWqy2vugyWql3B9Kqm0z1xbk
-        VR4lRn2BxEAxzMksj+//p2GmFg==
-X-Google-Smtp-Source: ABdhPJwBTtAOhrqKUUqfWPZvxA5XjDD38qzwHlXSFn/QJ+SGDyX9onIUUbkdHZL69xzg75el0nUvDw==
-X-Received: by 2002:a5d:55ca:: with SMTP id i10mr5507967wrw.225.1594912233054;
-        Thu, 16 Jul 2020 08:10:33 -0700 (PDT)
-Received: from dell ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id w7sm8654363wmc.32.2020.07.16.08.10.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 08:10:32 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 16:10:29 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Frank Lee <frank@allwinnertech.com>
-Cc:     robh+dt@kernel.org, mripard@kernel.org, wens@csie.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        gregory.clement@bootlin.com, tglx@linutronix.de,
-        jason@lakedaemon.net, maz@kernel.org,
-        srinivas.kandagatla@linaro.org, linus.walleij@linaro.org,
-        anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        p.zabel@pengutronix.de, clabbe@baylibre.com, icenowy@aosc.io,
-        megous@megous.com, stefan@olimex.com, bage@linutronix.de,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pm@vger.kernel.org, huangshuosheng@allwinnertech.com,
-        liyong@allwinnertech.com
-Subject: Re: [PATCH v3 10/16] mfd: axp20x: Allow the AXP803 to be probed by
- I2C
-Message-ID: <20200716151029.GA3165313@dell>
-References: <20200708071942.22595-1-frank@allwinnertech.com>
- <20200708071942.22595-11-frank@allwinnertech.com>
+        Thu, 16 Jul 2020 11:15:39 -0400
+Received: from smtpcmd0756.aruba.it ([62.149.156.56]:35126 "EHLO
+        smtpcmd0756.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728385AbgGPPPi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 11:15:38 -0400
+Received: from [192.168.1.134] ([93.146.66.165])
+        by smtpcmd07.ad.aruba.it with bizsmtp
+        id 3rFa2300k3Zw7e501rFbtF; Thu, 16 Jul 2020 17:15:36 +0200
+Subject: Re: [RFC v2 GPIO lines [was: GPIO User I/O]
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+References: <01afcac0-bd34-3fd0-b991-a8b40d4b4561@enneenne.com>
+ <CACRpkdbX9T9EuN-nxkMPC=sN74PEdoLuWurNLdGCzZJwwFrdpQ@mail.gmail.com>
+ <1c4f1a83-835a-9317-3647-b55f6f39c0ba@enneenne.com>
+ <CACRpkdZPjJSryJc+RtYjRN=X7xKMcao5pYek1fUM2+sE9xgdFQ@mail.gmail.com>
+ <CAMuHMdUtguuu4FWU4nRS=pBUyEwKM1JZ8DYPdCQHXBYN0i_Frg@mail.gmail.com>
+ <87efe96c-3679-14d5-4d79-569b6c047b00@enneenne.com>
+ <CAMuHMdUght0hkJT1N8ub5xR5GB+U18MAhAg+zDmAAuxoRSRaYg@mail.gmail.com>
+ <d30e64c9-ad7f-7cd5-51a4-3f37d6f1e3d8@enneenne.com>
+ <070fa558-6e20-0fbf-d3e4-0a0eca4fe82c@enneenne.com>
+ <CACRpkdYFAW2bcB53M3_b2LsveJO_PWZJhprGhdTtfmW11B1WmQ@mail.gmail.com>
+ <f66dc9c4-b164-c934-72a8-d4aca063fca5@enneenne.com>
+ <CACRpkdbjc6vvpHVjnJNGisRw6LiLZd-95aHWJJORwvaRNigPcw@mail.gmail.com>
+ <cb6e208b-446e-eba4-b324-d88aec94a69b@enneenne.com>
+ <CACRpkdZBUw5UPyZB-aeVwh8-GiCifbwABZ9mOsyK90t3cdMQ+w@mail.gmail.com>
+From:   Rodolfo Giometti <giometti@enneenne.com>
+Message-ID: <80bf1236-aacd-1044-b0e5-5b5718b7e9f0@enneenne.com>
+Date:   Thu, 16 Jul 2020 17:15:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <CACRpkdZBUw5UPyZB-aeVwh8-GiCifbwABZ9mOsyK90t3cdMQ+w@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200708071942.22595-11-frank@allwinnertech.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aruba.it; s=a1;
+        t=1594912536; bh=qy5xLzSkwvbiXuF4Doc3vE85SLMXhiSmCMUGxe7lEAo=;
+        h=Subject:To:From:Date:MIME-Version:Content-Type;
+        b=O/bURHF4YZkhL3M3e7FVw9aVfhSpM/+isp0AWb9s/JkujpZIQoh6MgwesQhn2MptH
+         lEgiBqfiDwQNlo3/Azgv/1uBNGbem4WmnYdDAwuGAZVQmk/zGHRwx8h6ofMXkegYOw
+         mNBs8qG+QtQmRfwf8q5kIbd9wEjmpmN7g00ySqVw2MDBRZZ+spmb/1HINlXJLoQOh6
+         /OOqAEDVsP4GwhZEkgFoxApyga6fY7CwLdekscn3m4SW7bEbWqMqxDT/Bw8ee9MRxn
+         jjaISL5dENHohDyzZ/dsbQWAorKhj96FHmtLa+efVGy4itf3Bkut+q9Ptoqyzn6O32
+         6jzjkCoevT0vg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 08 Jul 2020, Frank Lee wrote:
-
-> The AXP803 can be used both using the RSB proprietary bus, or a more
-> traditional I2C bus.
+On 16/07/2020 15:38, Linus Walleij wrote:
+> On Tue, Jul 14, 2020 at 4:01 PM Rodolfo Giometti <giometti@enneenne.com> wrote:
 > 
-> Let's add that possibility.
+>> I see... however attached is a new version of my proposal patch
 > 
-> Signed-off-by: Frank Lee <frank@allwinnertech.com>
-> ---
->  drivers/mfd/axp20x-i2c.c | 2 ++
->  1 file changed, 2 insertions(+)
+> I looked a bit at this!
+> 
+> IIUC the idea is a "new" sysfs interface that does not require the exporting
+> etc used by the current "old" sysfs interface. Instead of poking around in
+> sysfs to export lines we do that from the device tree.
 
-Applied, thanks.
+Yes.
+
+> It also does not use any global GPIO numbers which would be my other
+> main concern.
+
+Exactly, the idea is to have "names" that describe the IO lines to the userspace
+and a way to fix their usage in each board in the device tree. If a board has a
+relay line is a non-sense allow users in the userland to use it as an input line.
+
+> I must admit that it has some elegance to it. Especially when it comes
+> to scripting.
+
+:)
+
+> The problem I see is that lines are left in whatever state they were in
+> if a script crashes, so there is no "return to the initial value" that was
+> there when the GPIOs were picked from the device tree. This makes
+> this a bit fragile.
+
+I see but this interface is not designed for such complex usage nor to compete
+with the current character interface! It is designed to allow boards
+manufactures to "describe" some I/O lines that are not used by any driver in the
+device tree, and that users may desire to manage in a very simple manner. Let's
+thing about relay lines, or just a locked/unlocked input line which can be
+easily polled.
+
+> Also users regularly need to listen to events. This interface can and
+> should never support that, for this one must use the character device,
+> which will of course not work in parallel with using this sysfs ABI.
+> And the day someone wants that we simply have to say no. There
+> is no way to hold states for event handling in a stateless ABI.
+> 
+> Well of course they can poll for a line to change, but that is not
+> proper event handling that reacts to an interrupt.
+
+Again, the basic idea is not to compete with the current character interface nor
+to manage interrupts lines, but just to have a really simple way to describe
+those I/O lines which at the moment has no name nor references within the device
+tree.
+
+> So while this is much more elegant the old sysfs ABI, and certainly
+> better for scripting, it still suffers from some conflicts with
+> the character device, and there is a risk to make users dissatisfied
+> when they want to e.g. script event handlers.
+> 
+> What are your thoughts on this?
+
+Regarding the event handlers we can add irq supports... however I prefer to keep
+this interface really simple just to not be confused with the character interface.
+
+Ciao,
+
+Rodolfo
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+GNU/Linux Solutions                  e-mail: giometti@enneenne.com
+Linux Device Driver                          giometti@linux.it
+Embedded Systems                     phone:  +39 349 2432127
+UNIX programming                     skype:  rodolfo.giometti
