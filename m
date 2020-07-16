@@ -2,99 +2,127 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E80C433EB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 14:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1ECC433E2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 14:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 401F9206F4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 14:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D7F207CB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 14:33:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e7sZLkgb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728517AbgGPObH (ORCPT
+        id S1727844AbgGPOds (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 10:31:07 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38773 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728385AbgGPObG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 10:31:06 -0400
-Received: by mail-oi1-f195.google.com with SMTP id r8so5232172oij.5;
-        Thu, 16 Jul 2020 07:31:05 -0700 (PDT)
+        Thu, 16 Jul 2020 10:33:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48398 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbgGPOdr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 10:33:47 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8708CC061755;
+        Thu, 16 Jul 2020 07:33:47 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id z17so4904009edr.9;
+        Thu, 16 Jul 2020 07:33:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HEwVwfYlTT2pmymqyaazzSn/Ii+VxfI7QEp8UVQCKaY=;
+        b=e7sZLkgbguIfKzJ416HutW9XQ6G4M3oFl+o6j+dtHOMuJB7FKxXsxDeO7p/kegkV2U
+         F7O1kDbujixm/xIa7RGuCDgl/dw5RgmObd+GzUiIujKTM7y6Hkc18PxG3Nq/Pqm5Yo2t
+         9X4IQiXLCXnvVt5xcFf1BwGqMx3vAN59ZlH1TFxuqSHf00+2eNWkgf3h9MMre2g8+ypk
+         Y+fa0J/M7tj5JrSlnlHsurrejFI/1JN405WgQTBkdA5lTCZdjj9yxUpAIdAvt0+aIxPg
+         Afs1iKUAsH1jILcvehN9TQSJ33AO+71srml1MlMVJzELaPSGyCwNoHNG+mxY1QtQrL9V
+         c4Kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WqlrFbvqA9D4cngrjrCPvsg/0myDvo5cshnJ/d0TFXI=;
-        b=N/9cddSZbnceQfrngHWhiUQlCApV8XCmMZ8USLE7o7mCIHijhBXTVwq6xQtQ8rGUDB
-         +jNjeRmweOC0Sn1+swo1xK5GLGhDckJj25r7ll4R7LL70ofguzjXJ6lTgj2imPJRUCmC
-         mKFCJwu3otrF79rIqKPynFw/4L9oiS2vrKeCkJz04Q4gvalldDUyTmCVdYLMb3qPqyT4
-         b2ZRIKiFkDHyVd5A5+aQQ3LY3kFFkbIxFLOZdfheqoVI0tpdMWYP/RPjbPqNs6ToT9SH
-         GAC2StOIiDSBa3UjBTGTsxFqEXbC+7frtiwDS83+g6h/8L5RTgDNNP1aa3wh3ayei1fB
-         3jGA==
-X-Gm-Message-State: AOAM533z3wAh0d3Bih9JqpqgZrVm566mFIA3jUmv+OP8dRT0bvDdVPoW
-        7LzMwzJH4Dul43igV4n4UP3C4X4Qzp9pwxbHLDI=
-X-Google-Smtp-Source: ABdhPJzDN7cqk3Qhxsw+uqLdV1Ci8OAOQAFFwq8FXnP/ri1XttXWiaSPIkPG+85MGZsFvOFdldBbU8wmQ942oYe18UY=
-X-Received: by 2002:aca:5c41:: with SMTP id q62mr3892778oib.148.1594909865066;
- Thu, 16 Jul 2020 07:31:05 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HEwVwfYlTT2pmymqyaazzSn/Ii+VxfI7QEp8UVQCKaY=;
+        b=lljIeo1+cQec5d4XH5PCh7/Lok3HIagDz12zHZuM7UghmWoWXB096hZJQkYukUVp8H
+         3L/wjCHsJkGn5yP5VqI4GpLuhyxU6jG/IQbGzEfrl29zJ5BkvVQlef+PKn1V+1lDKoRO
+         GLLSnK9Zh4a3eoyxX9VnD4IR5xHebTrbtgRZJ+Vi4fGTwE3pGDzAFapCIJPNBnwKuSif
+         hqw/GyM20xjUBF2fkH5M4+JCQpRxZhKxxIBgTAPBDtjO1GVQ1FXdwI2D75ikDgGgDwIl
+         fSucnBNXr2cb398TT9sufvlvHZMbtEXX9bd0XDpGcRUcjemy7lILtyGdqvlB6faYXIGk
+         ui/Q==
+X-Gm-Message-State: AOAM532rDRwXp3IcKoAhWz327NxrvnOaMziQ/H3qEmauuWyVFqtlrFqe
+        RjvzP0gwikfSXE/o6REH8Wg=
+X-Google-Smtp-Source: ABdhPJwc0FF0XQx/jWz80bghse2U1SS94cy2WHRnJ09AcsyVXGMmc7sXeuw03b8YX8norObXlCyCoQ==
+X-Received: by 2002:aa7:d1c8:: with SMTP id g8mr4787186edp.337.1594910026189;
+        Thu, 16 Jul 2020 07:33:46 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id sa10sm5331518ejb.79.2020.07.16.07.33.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 07:33:45 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Terje Bergstrom <tbergstrom@nvidia.com>,
+        Debarshi Dutta <ddutta@nvidia.com>,
+        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 1/2] dt-bindings: Add documentation for GV11B GPU
+Date:   Thu, 16 Jul 2020 16:33:40 +0200
+Message-Id: <20200716143341.545804-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594811350-14066-17-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594811350-14066-17-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 16 Jul 2020 16:30:53 +0200
-Message-ID: <CAMuHMdUj=VSZ1n6pbiizdm1cnsDk+c=4LbAvPXg259OAtFz0qw@mail.gmail.com>
-Subject: Re: [PATCH 16/20] dt-bindings: watchdog: renesas,wdt: Document
- r8a774e1 support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-can@vger.kernel.org,
-        netdev <netdev@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 1:10 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> RZ/G2H (a.k.a. R8A774E1) watchdog implementation is compatible
-> with R-Car Gen3, therefore add the relevant documentation.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Thierry Reding <treding@nvidia.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+The GV11B's device tree bindings are the same as for GP10B, though the
+GPU is not completely compatible, so all that is needed is a different
+compatible string.
 
-Gr{oetje,eeting}s,
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ .../devicetree/bindings/gpu/nvidia,gk20a.txt  | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-                        Geert
-
+diff --git a/Documentation/devicetree/bindings/gpu/nvidia,gk20a.txt b/Documentation/devicetree/bindings/gpu/nvidia,gk20a.txt
+index f32bbba4d3bc..533edb4c3eec 100644
+--- a/Documentation/devicetree/bindings/gpu/nvidia,gk20a.txt
++++ b/Documentation/devicetree/bindings/gpu/nvidia,gk20a.txt
+@@ -6,6 +6,7 @@ Required properties:
+   - nvidia,gk20a
+   - nvidia,gm20b
+   - nvidia,gp10b
++  - nvidia,gv11b
+ - reg: Physical base address and length of the controller's registers.
+   Must contain two entries:
+   - first entry for bar0
+@@ -88,3 +89,21 @@ Example for GP10B:
+ 		power-domains = <&bpmp TEGRA186_POWER_DOMAIN_GPU>;
+ 		iommus = <&smmu TEGRA186_SID_GPU>;
+ 	};
++
++Example for GV11B:
++
++	gpu@17000000 {
++		compatible = "nvidia,gv11b";
++		reg = <0x17000000 0x10000000>,
++		      <0x18000000 0x10000000>;
++		interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "stall", "nonstall";
++		clocks = <&bpmp TEGRA194_CLK_GPCCLK>,
++			 <&bpmp TEGRA194_CLK_GPU_PWR>;
++		clock-names = "gpu", "pwr";
++		resets = <&bpmp TEGRA194_RESET_GPU>;
++		reset-names = "gpu";
++		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_GPU>;
++		iommus = <&smmu TEGRA194_SID_GPU>;
++	};
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.27.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
