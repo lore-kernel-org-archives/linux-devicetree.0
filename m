@@ -2,158 +2,510 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A200DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 12:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0165EC433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 13:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AAA02074B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 12:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3F9D20760
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 13:08:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="HQ4AGJ95"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="os3J3Qq3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbgGPM6u (ORCPT
+        id S1727044AbgGPNIS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 08:58:50 -0400
-Received: from mail-eopbgr40119.outbound.protection.outlook.com ([40.107.4.119]:47723
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728337AbgGPM6s (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jul 2020 08:58:48 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cd1oFdls+lGKbgT/i0ISvWc+fHum3OkATolfA6bpSGi7KHYvtw7b73eDQuPnVysOBMQ30ocojz85C1NAYgCHjphqTZjVcB2Nn79FpWoOnxEUh7LG7v8qQeTjGdRM/Vk7z+9gbBcpVOjydO3QSPyJrWkV6yE0HVBnPyIpGjUaKvvEy2DdGlWDzwGMufykaztFw0vT9v8o75LmNgUhS1MVLfoisVDvF9nq4WkoXTTTQdvrX8yUu0qyEi0e1M3xEyZD/5mgXmykndw1MTImIDio6t9WpiDsfRi6j9N+dOcnU/CEFDJ86LaBhaCtSu555nBZbr8Ghyd/DsG0G/vZMsIM5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A9riHpQw3WEke/9gDoYP5xi6m6Vp4atFP13WcKUo4kg=;
- b=oAKD12QiPU3/omH+6IjLCyGB4TZ8NhY5n4mkA0US7rXgePPU6PAZrlAP/vEVsqa2K5VrtHjh3pCS70TsAaz80RhL8Pm8SZKuAcW+C2PObU0FJ3tLc2zMEpyPgU9w0C0TdP8GlxaNlOtZlRq73X1JXlgbwFAZXS4umulTsKcHU4FIVMJvSvXuD8y8OUTPp+wtX0/98ise7KSEnuT8lJOlzAAiPTS6Ea3sjx9KDnZhf9qOiVtY/enZt1dfYpcC/2AUO3RDTGjIsTWBz9ifCCcdVejmrOcRePockgnhSWtSNWrS4x7L0twXPpRBgqsUSmT/iSv8A+zuUwlMrjJqztPA2Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A9riHpQw3WEke/9gDoYP5xi6m6Vp4atFP13WcKUo4kg=;
- b=HQ4AGJ95etxIoBbd8l0lDKgcVV/f8u6J6c1FI/vx9wkMyot/IImwv3jEhOvdUlRuMt/garpueqw/+qVnx9amFlywujfuv76rygyfJ43+ej3aIh7k7LJD80rG1Ent9lKju2F+iqEa5/7AUF1zvKT3A28wDJClqa1s557iJTfs5Dg=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=toradex.com;
-Received: from AM6PR05MB6120.eurprd05.prod.outlook.com (2603:10a6:20b:a8::25)
- by AM6PR05MB4885.eurprd05.prod.outlook.com (2603:10a6:20b:b::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.23; Thu, 16 Jul
- 2020 12:58:42 +0000
-Received: from AM6PR05MB6120.eurprd05.prod.outlook.com
- ([fe80::1d81:6a9b:8c26:3b7d]) by AM6PR05MB6120.eurprd05.prod.outlook.com
- ([fe80::1d81:6a9b:8c26:3b7d%4]) with mapi id 15.20.3195.019; Thu, 16 Jul 2020
- 12:58:42 +0000
-From:   Philippe Schenker <philippe.schenker@toradex.com>
-To:     devicetree@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
-        Ahmad Fatoum <a.fatoum@pengutronix.de>
-Cc:     Philippe Schenker <philippe.schenker@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH v2 1/2] ARM: dts: colibri-imx6: add usb dual-role switch capability
-Date:   Thu, 16 Jul 2020 14:58:29 +0200
-Message-Id: <20200716125831.796904-2-philippe.schenker@toradex.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200716125831.796904-1-philippe.schenker@toradex.com>
-References: <20200716125831.796904-1-philippe.schenker@toradex.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: GV0P278CA0029.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:710:28::16) To AM6PR05MB6120.eurprd05.prod.outlook.com
- (2603:10a6:20b:a8::25)
+        Thu, 16 Jul 2020 09:08:18 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:51190 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726537AbgGPNIR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 09:08:17 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 52CF92B7;
+        Thu, 16 Jul 2020 15:08:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1594904894;
+        bh=b2H92RtsUFLgBNuIdYkin8/DyTFT6u1vYp5GDgaey3o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=os3J3Qq3Jgbn1+vuuIq6rg7Y5EzObHjSViwk/59LfNoKAH5G8gBMW4OdLI/mfN4iu
+         jvm2ec5xMPNW/AQTgcpQUcdC3D7h9bibLV0CXxX/lriG9FWu6S38XURvAO+AnZcehV
+         x8E4FAKvgxUQiObtyUt3IBXRRDZ+XDLSeX9pVf8s=
+Date:   Thu, 16 Jul 2020 16:08:06 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        mchehab@kernel.org, sakari.ailus@linux.intel.com,
+        hverkuil-cisco@xs4all.nl, linux-renesas-soc@vger.kernel.org,
+        Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH 1/8] dt-bindings: media: ov5640: Convert to json-schema
+Message-ID: <20200716130806.GB5960@pendragon.ideasonboard.com>
+References: <20200715140951.90753-1-jacopo+renesas@jmondi.org>
+ <20200715140951.90753-2-jacopo+renesas@jmondi.org>
+ <20200716015323.GQ6144@pendragon.ideasonboard.com>
+ <20200716070433.242zj5qnfnokody4@uno.localdomain>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from philippe-pc.toradex.int (31.10.206.124) by GV0P278CA0029.CHEP278.PROD.OUTLOOK.COM (2603:10a6:710:28::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18 via Frontend Transport; Thu, 16 Jul 2020 12:58:42 +0000
-X-Mailer: git-send-email 2.27.0
-X-Originating-IP: [31.10.206.124]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d95c21c4-48fd-46b2-429e-08d82987f7a5
-X-MS-TrafficTypeDiagnostic: AM6PR05MB4885:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM6PR05MB488580209C97D674B06790C1F47F0@AM6PR05MB4885.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2958;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 11QzZ2CIM4fwzdA6ePnCZpH8rQXxP5Ysobr8enEWvMahB7dLXgp7FliDY1HnGXX0qhulKeSj0x+Cx5KcxD/QTe6bZb7Kkp5QwttocBoEPUDbNzXFbQXANJlFe8MoNi1lI42V8qYamX0dwAhPMwnSUev8T5bBVxmeBUQtJdHRCytnQS6SQUasVUsmEexCtAm9oFjzlStlDFCD8ravX/CkYeuPQk00BwOHmH+eg3Jqd9QesEH+/0nBP7nuvVmMqgDC45ugxnVUGiqGC3V7A89kx3eudhHp47DrZkVNCCt4PWex8k1DlJUQlLQB/Lx2xombq8oWApr6Qh3L0YWlq7mGmPMRkM9BRlCCQtYMH3kwMgQhj5mnKzCat6Red24GnjKS
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR05MB6120.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(346002)(376002)(396003)(39850400004)(8936002)(36756003)(44832011)(6506007)(5660300002)(86362001)(52116002)(83380400001)(186003)(66946007)(6512007)(4326008)(6666004)(66556008)(66476007)(16526019)(2906002)(6486002)(8676002)(1076003)(26005)(7416002)(316002)(110136005)(956004)(54906003)(2616005)(478600001)(16060500001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: QDoVHlXGmunifkLGt9WZ/YrMJpCHVbRS34mwTXxPcqmfYw67JeG2dDITVywodjL5i9sAMppqkDT+oko42d+9v+N1+DAs/Evdqby2k0Wezg0Z/wqhfd/aqhS8BBE/TA2gE+AdYPVQ1PpDjYZaIraws+yREOfpbFWqv+f3xTbQloBzuQH4ab65x7DEZOPeUq3fJJGo6Rbd/rYVSo34EmZq3RBbDqBE7ombYAWBa0ymbcIWIRRdGYznB4WFWlQB8mdJmK07cSJ3DQpvpf7Ym9iMlm9epFUwpnYoJaZLkymkZ63XlPz8dzL6wOBN3RImHfBwLkffPFhGGX677pTXu+dkcJwK4SaTRodgL6DRW00g8kC8vM4VHqKZnYtwW3+m4AHjtK3dc+v0CGs31hz3fahnX96vZ8tXv5VmWqjx3BjR13nnMS/e2RwuzXdUZqqTWo7wItzBGw89lmfPpFOeoemJO7zYDFZ19VC18PRMMqVmgxg=
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d95c21c4-48fd-46b2-429e-08d82987f7a5
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR05MB6120.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2020 12:58:42.6490
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ilEEiWasYAANODGoR1u/rl97ScjwUQ3ORY+PJnc0KE7IVgv6J79HevJJIba7Q6gYERL9ItwxzNhpQTRK/rN7XDdcN87HVs/hqHMWf0rpgMw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB4885
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200716070433.242zj5qnfnokody4@uno.localdomain>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Since the runtime-pm wakeup bug was fixed in
-drivers/usb/chipidea/core.c usb dual-role host/device switching is
-working. So make use of it.
+Hi Jacopo,
 
-Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
----
+On Thu, Jul 16, 2020 at 09:04:33AM +0200, Jacopo Mondi wrote:
+> On Thu, Jul 16, 2020 at 04:53:23AM +0300, Laurent Pinchart wrote:
+> > On Wed, Jul 15, 2020 at 04:09:44PM +0200, Jacopo Mondi wrote:
+> > > Convert the ov5640 bindings document to json-schema and update
+> > > the MAINTAINERS file accordingly.
+> > >
+> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > ---
+> > > Hi Steve,
+> > >   I've added myself as maintainer in the bindings, with your ack
+> > > I would be happy to add myself as maintainer or reviewer for this driver
+> > > in MAINTAINERS, as I've recently been looking after this driver, mostly
+> > > for the MIPI CSI-2 interface part.
+> > >
+> > > ---
+> > >  .../devicetree/bindings/media/i2c/ov5640.txt  |  92 ---------
+> > >  .../devicetree/bindings/media/i2c/ov5640.yaml | 181 ++++++++++++++++++
+> > >  MAINTAINERS                                   |   1 +
+> > >  3 files changed, 182 insertions(+), 92 deletions(-)
+> > >  delete mode 100644 Documentation/devicetree/bindings/media/i2c/ov5640.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5640.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5640.txt b/Documentation/devicetree/bindings/media/i2c/ov5640.txt
+> > > deleted file mode 100644
+> > > index c97c2f2da12d..000000000000
+> > > --- a/Documentation/devicetree/bindings/media/i2c/ov5640.txt
+> > > +++ /dev/null
+> > > @@ -1,92 +0,0 @@
+> > > -* Omnivision OV5640 MIPI CSI-2 / parallel sensor
+> > > -
+> > > -Required Properties:
+> > > -- compatible: should be "ovti,ov5640"
+> > > -- clocks: reference to the xclk input clock.
+> > > -- clock-names: should be "xclk".
+> > > -- DOVDD-supply: Digital I/O voltage supply, 1.8 volts
+> > > -- AVDD-supply: Analog voltage supply, 2.8 volts
+> > > -- DVDD-supply: Digital core voltage supply, 1.5 volts
+> > > -
+> > > -Optional Properties:
+> > > -- reset-gpios: reference to the GPIO connected to the reset pin, if any.
+> > > -	       This is an active low signal to the OV5640.
+> > > -- powerdown-gpios: reference to the GPIO connected to the powerdown pin,
+> > > -		   if any. This is an active high signal to the OV5640.
+> > > -- rotation: as defined in
+> > > -	    Documentation/devicetree/bindings/media/video-interfaces.txt,
+> > > -	    valid values are 0 (sensor mounted upright) and 180 (sensor
+> > > -	    mounted upside down).
+> > > -
+> > > -The device node must contain one 'port' child node for its digital output
+> > > -video port, in accordance with the video interface bindings defined in
+> > > -Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > > -
+> > > -OV5640 can be connected to a MIPI CSI-2 bus or a parallel bus endpoint.
+> > > -
+> > > -Endpoint node required properties for CSI-2 connection are:
+> > > -- remote-endpoint: a phandle to the bus receiver's endpoint node.
+> > > -- clock-lanes: should be set to <0> (clock lane on hardware lane 0)
+> > > -- data-lanes: should be set to <1> or <1 2> (one or two CSI-2 lanes supported)
+> > > -
+> > > -Endpoint node required properties for parallel connection are:
+> > > -- remote-endpoint: a phandle to the bus receiver's endpoint node.
+> > > -- bus-width: shall be set to <8> for 8 bits parallel bus
+> > > -	     or <10> for 10 bits parallel bus
+> > > -- data-shift: shall be set to <2> for 8 bits parallel bus
+> > > -	      (lines 9:2 are used) or <0> for 10 bits parallel bus
+> > > -- hsync-active: active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
+> > > -- vsync-active: active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
+> > > -- pclk-sample: sample data on rising (1) or falling (0) edge of the pixel clock
+> > > -	       signal.
+> > > -
+> > > -Examples:
+> > > -
+> > > -&i2c1 {
+> > > -	ov5640: camera@3c {
+> > > -		compatible = "ovti,ov5640";
+> > > -		pinctrl-names = "default";
+> > > -		pinctrl-0 = <&pinctrl_ov5640>;
+> > > -		reg = <0x3c>;
+> > > -		clocks = <&clks IMX6QDL_CLK_CKO>;
+> > > -		clock-names = "xclk";
+> > > -		DOVDD-supply = <&vgen4_reg>; /* 1.8v */
+> > > -		AVDD-supply = <&vgen3_reg>;  /* 2.8v */
+> > > -		DVDD-supply = <&vgen2_reg>;  /* 1.5v */
+> > > -		powerdown-gpios = <&gpio1 19 GPIO_ACTIVE_HIGH>;
+> > > -		reset-gpios = <&gpio1 20 GPIO_ACTIVE_LOW>;
+> > > -		rotation = <180>;
+> > > -
+> > > -		port {
+> > > -			/* MIPI CSI-2 bus endpoint */
+> > > -			ov5640_to_mipi_csi2: endpoint {
+> > > -				remote-endpoint = <&mipi_csi2_from_ov5640>;
+> > > -				clock-lanes = <0>;
+> > > -				data-lanes = <1 2>;
+> > > -			};
+> > > -		};
+> > > -	};
+> > > -};
+> > > -
+> > > -&i2c1 {
+> > > -	ov5640: camera@3c {
+> > > -		compatible = "ovti,ov5640";
+> > > -		pinctrl-names = "default";
+> > > -		pinctrl-0 = <&pinctrl_ov5640>;
+> > > -		reg = <0x3c>;
+> > > -		clocks = <&clk_ext_camera>;
+> > > -		clock-names = "xclk";
+> > > -
+> > > -		port {
+> > > -			/* Parallel bus endpoint */
+> > > -			ov5640_to_parallel: endpoint {
+> > > -				remote-endpoint = <&parallel_from_ov5640>;
+> > > -				bus-width = <8>;
+> > > -				data-shift = <2>; /* lines 9:2 are used */
+> > > -				hsync-active = <0>;
+> > > -				vsync-active = <0>;
+> > > -				pclk-sample = <1>;
+> > > -			};
+> > > -		};
+> > > -	};
+> > > -};
+> > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5640.yaml b/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
+> > > new file mode 100644
+> > > index 000000000000..9c32262a3621
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
+> > > @@ -0,0 +1,181 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/media/i2c/ov5640.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Omnivision OV5640 MIPI CSI-2 / parallel sensor
+> > > +
+> > > +maintainers:
+> > > +  - Steve Longerbeam <slongerbeam@gmail.com>
+> > > +  - Jacopo Mondi <jacopo@jmondi.org>
+> > > +
+> > > +description: -|
+> > > +  OV5640 is a 5 megapixels image sensor capable of producing images in RBG, RAW,
+> >
+> > s/OV5640/The OV5640/
+> > s/RBG/RGB/
+> >
+> 
+> Ups, will fix
+> 
+> > > +  YUV and compressed formats. It features a MIPI CSI-2 and a parallel data
+> > > +  interface and an I2C-compatible (CCI) control interface.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: ovti,ov5640
+> > > +
+> > > +  reg:
+> > > +    description: I2C device address
+> > > +    maxItems: 1
+> > > +
+> > > +  clocks:
+> > > +    description: Reference to the xclk input clock.
+> >
+> > I'd drop this, it's implied by the clock-names
+> >
+> > > +    maxItems: 1
+> > > +
+> > > +  clock-names:
+> > > +    description: Should be "xclk".
+> >
+> > This should be replaced with
+> >
+> >    const: xclk
+> >
+> 
+> Ack for both
+> 
+> > > +    maxItems: 1
+> > > +
+> > > +  DOVDD-supply:
+> > > +    description: Digital I/O voltage supply, 1.8 volts.
+> > > +    maxItems: 1
+> > > +
+> > > +  AVDD-supply:
+> > > +    description: Analog voltage supply, 2.8 volts.
+> > > +    maxItems: 1
+> > > +
+> > > +  DVDD-supply:
+> > > +    description: Digital core voltage supply.
+> > > +    maxItems: 1
+> > > +
+> > > +  reset-gpios:
+> > > +    description: |
+> > > +      Reference to the GPIO connected to the reset pin, if any. This is an
+> > > +      active low signal to the OV5640.
+> > > +    maxItems: 1
+> > > +
+> > > +  powerdown-gpios:
+> > > +    description: |
+> > > +      Reference tot he GPIO connected to the powerdown pin, if any. This is an
+> > > +      active high signal to the OV5640.
+> > > +    maxItems: 1
+> > > +
+> > > +  rotation:
+> > > +    description: |
+> > > +      As defined in Documentation/devicetree/bindings/media/video-interfaces.txt,
+> > > +      valid values are 0 (sensor mounted upright) and 180 (sensor mounted upside
+> > > +      down).
+> >
+> > The second sentence should be replaced with
+> >   enum:
+> >     - 0
+> >     - 180
+> >
+> 
+> I copied this from the existing bindings, but I was a bit skeptical in
+> first place. Support being limited to 0 and 180 only is a driver
+> implementation constraint, there's nothing that prevents you from
+> mounting the sensor 90deg rotated. Should the supported values be
+> mentioned in the bindings at all for this property ?
 
- arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts | 8 ++++++++
- arch/arm/boot/dts/imx6qdl-colibri.dtsi       | 2 +-
- 2 files changed, 9 insertions(+), 1 deletion(-)
+You're right, it doesn't belong here. My point was that constraints
+should be described with rules instead of text. I'd drop the rule in a
+separate patch, or at least explain it clearly in the commit message.
 
-diff --git a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-index 65359aece950..c978b3f19a2d 100644
---- a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-+++ b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-@@ -45,6 +45,13 @@ clk16m: clock-16m {
- 		clock-output-names = "clk16m";
- 	};
- 
-+	extcon_usbc_det: usbc_det {
-+		compatible = "linux,extcon-usb-gpio";
-+		id-gpio = <&gpio7 12 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_usbc_det>;
-+	};
-+
- 	gpio-keys {
- 		compatible = "gpio-keys";
- 		pinctrl-names = "default";
-@@ -220,6 +227,7 @@ &usbh1 {
- };
- 
- &usbotg {
-+	extcon = <0>, <&extcon_usbc_det>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-index 240b86d2eb71..34130f23ceaa 100644
---- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-@@ -364,7 +364,7 @@ &uart3 {
- &usbotg {
- 	pinctrl-names = "default";
- 	disable-over-current;
--	dr_mode = "peripheral";
-+	dr_mode = "otg";
- 	status = "disabled";
- };
- 
+> > > +
+> > > +  port:
+> > > +    type: object
+> > > +    description: |
+> > > +      The device node must contain one 'port' child node for its digital output
+> > > +      video port, in accordance with the video interface bindings defined in
+> > > +      Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > > +
+> > > +      OV5640 can be connected to a MIPI CSI-2 bus or a parallel bus endpoint.
+> > > +
+> > > +    properties:
+> > > +      endpoint:
+> > > +        type: object
+> > > +        properties:
+> > > +          remote-endpoint:
+> > > +            description: A phandle to the bus receiver's endpoint node.
+> > > +
+> > > +          clock-lanes:
+> > > +            description: Should be set to 0 (clock lane on hardware lane 0).
+> >
+> > The description of most of these properties should also be replaced with
+> > yaml schema rules. Ideally there should also be constraints that tell
+> > which properties can be specified together. For instance here's the
+> > corresponding rules from the MT9M114 DT binding (not upstream yet).
+> >
+> >   # See ../video-interfaces.txt for more details
+> >   port:
+> >     type: object
+> >     properties:
+> >       endpoint:
+> >         type: object
+> >         properties:
+> >           bus-type:
+> >             enum: [4, 5, 6]
+> 
+>                ^ this
+> 
+> Initially I considered switching on the bus type to be able to use an
+> if construct like you shown below. But that would make the property
+> mandatory, something that would break old DTB. Now, I used the word
+> "break" and not "break compatibility" as the driver would still
+> support old DTB, as it does not enforce that property being specified.
+> But it would make old DTS invalid from a dt-schema validation point of
+> view. Do we care about maintaining old DTS valid with new schema ?
+
+Not to my knowledge, no. We should of course fix the in-tree device tree
+sources to add the property, but anything out of tree, especially in
+binary form, can fail to validate as long as the drivers don't break
+binary compatibility.
+
+> >
+> >           clock-lanes:
+> >             items:
+> >               - const: 0
+> >
+> >           data-lanes:
+> >             items:
+> >               - const: 1
+> >
+> >           bus-width:
+> >             items:
+> >               - const: 8
+> >
+> >           hsync-active:
+> >             items:
+> >               - const: 1
+> >
+> >           vsync-active:
+> >             items:
+> >               - const: 1
+> >
+> >         required:
+> >           - bus-type
+> >
+> >         allOf:
+> >           - if:
+> >               properties:
+> >                 bus-type:
+> >                   const: 4
+> >             then:
+> >               properties:
+> >                 bus-width: false
+> >                 hsync-active: false
+> >                 vsync-active: false
+> >
+> >           - if:
+> >               properties:
+> >                 bus-type:
+> >                   const: 5
+> >             then:
+> >               properties:
+> >                 clock-lanes: false
+> >                 data-lanes: false
+> >
+> >           - if:
+> >               properties:
+> >                 bus-type:
+> >                   const: 6
+> >             then:
+> >               properties:
+> >                 clock-lanes: false
+> >                 data-lanes: false
+> >                 hsync-active: false
+> >                 vsync-active: false
+> >
+> >         unevaluatedProperties: false
+> >
+> > These comments apply to other patches in this series.
+> >
+> > > +
+> > > +          data-lanes:
+> > > +            description: |
+> > > +              Should be set to <1> or <1 2> (one or two CSI-2 lanes supported).
+> > > +
+> > > +          bus-width:
+> > > +            description: |
+> > > +              Shall be set to <8> for 8 bits parallel bus or <10> for 10 bits
+> > > +              parallel bus.
+> > > +
+> > > +          data-shift:
+> > > +            description: |
+> > > +              Shall be set to <2> for 8 bits parallel bus (lines 9:2 are used) or
+> > > +              <0> for 10 bits parallel bus.
+> 
+> All of these 'supported values' should be expressed with a schema, I agree.
+> 
+> > > +
+> > > +          hsync-active:
+> > > +            description: |
+> > > +              Active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
+> > > +
+> > > +          vsync-active:
+> > > +            description: |
+> > > +              Active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
+> > > +
+> > > +          pclk-sample:
+> > > +            description: |
+> > > +              Sample data on rising (1) or falling (0) edge of the pixel clock
+> > > +              signal.
+> > > +
+> > > +        required:
+> > > +          - remote-endpoint
+> > > +
+> > > +    additionalProperties: false
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - clocks
+> > > +  - clock-names
+> > > +  - DOVDD-supply
+> > > +  - AVDD-supply
+> > > +  - DVDD-supply
+> > > +  - port
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    #include <dt-bindings/gpio/gpio.h>
+> > > +    #include <dt-bindings/clock/imx6qdl-clock.h>
+> > > +
+> > > +    i2c0 {
+> > > +        #address-cells = <1>;
+> > > +        #size-cells = <0>;
+> > > +
+> > > +        camera@3c {
+> > > +            compatible = "ovti,ov5640";
+> > > +            reg = <0x3c>;
+> > > +            clocks = <&clks IMX6QDL_CLK_CKO>;
+> > > +            clock-names = "xclk";
+> > > +            DOVDD-supply = <&vgen4_reg>; /* 1.8v */
+> > > +            AVDD-supply = <&vgen3_reg>;  /* 2.8v */
+> > > +            DVDD-supply = <&vgen2_reg>;  /* 1.5v */
+> > > +            powerdown-gpios = <&gpio1 19 GPIO_ACTIVE_HIGH>;
+> > > +            reset-gpios = <&gpio1 20 GPIO_ACTIVE_LOW>;
+> > > +            rotation = <180>;
+> > > +
+> > > +            port {
+> > > +                ov5640_to_mipi_csi2: endpoint {
+> > > +                    remote-endpoint = <&mipi_csi2_from_ov5640>;
+> > > +                    clock-lanes = <0>;
+> > > +                    data-lanes = <1 2>;
+> > > +                };
+> > > +            };
+> > > +        };
+> > > +    };
+> > > +
+> > > +    i2c1 {
+> > > +        #address-cells = <1>;
+> > > +        #size-cells = <0>;
+> > > +
+> > > +        camera@3c {
+> > > +            compatible = "ovti,ov5640";
+> > > +            reg = <0x3c>;
+> > > +            clocks = <&clks IMX6QDL_CLK_CKO>;
+> > > +            clock-names = "xclk";
+> > > +            DOVDD-supply = <&vgen4_reg>; /* 1.8v */
+> > > +            AVDD-supply = <&vgen3_reg>;  /* 2.8v */
+> > > +            DVDD-supply = <&vgen2_reg>;  /* 1.5v */
+> > > +            powerdown-gpios = <&gpio1 19 GPIO_ACTIVE_HIGH>;
+> > > +            reset-gpios = <&gpio1 20 GPIO_ACTIVE_LOW>;
+> > > +            rotation = <180>;
+> > > +
+> > > +            port {
+> > > +                ov5640_to_parallel: endpoint {
+> > > +                    remote-endpoint = <&parallel_from_ov5640>;
+> > > +                    bus-width = <8>;
+> > > +                };
+> > > +            };
+> > > +        };
+> > > +    };
+> > > +
+> > > +...
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index c74d25c58e1a..0160d7567ed3 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -12605,6 +12605,7 @@ L:	linux-media@vger.kernel.org
+> > >  S:	Maintained
+> > >  T:	git git://linuxtv.org/media_tree.git
+> > >  F:	drivers/media/i2c/ov5640.c
+> > > +F:	Documentation/devicetree/bindings/media/i2c/ov5640.yaml
+> > >
+> > >  OMNIVISION OV5647 SENSOR DRIVER
+> > >  M:	Jacopo Mondi <jacopo@jmondi.org>
+
 -- 
-2.27.0
+Regards,
 
+Laurent Pinchart
