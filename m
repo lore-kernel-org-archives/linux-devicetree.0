@@ -2,65 +2,66 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7342EC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 07:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED94C433E2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 07:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4718520720
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 07:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D84922067D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 07:05:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jWUuOlL7"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="XxyMYSAj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728252AbgGPHFb (ORCPT
+        id S1727883AbgGPHF5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 03:05:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35384 "EHLO
+        Thu, 16 Jul 2020 03:05:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725921AbgGPHFa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 03:05:30 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F6D4C061755
-        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 00:05:30 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id o11so5834192wrv.9
-        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 00:05:30 -0700 (PDT)
+        with ESMTP id S1725921AbgGPHF5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 03:05:57 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0CD4C061755
+        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 00:05:56 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id s10so5796171wrw.12
+        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 00:05:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=xnwEWTM3KmMKzqmUNcrqIITY6Tr4tpmN5RT2gCTfYes=;
-        b=jWUuOlL7mK4Ll5vcGcwYTVTo72RRBKMBcl8zRntFxXiSjrGJTdftTdl0JoXRthWbqI
-         BpyqN5LJkuTV+A8UztBmHrsmY0VHx53332qUbFH1Lp1tMc7LEok3ImVhOrlEsdxfkXKM
-         ED9DyP7NPsQaRYLjYAiDQJFRCmKEj6PfEKtHff6Vc8p7pzhdp8VdNeFak4GppE9FIxjM
-         Fmw+bo4dwISK7gPw18R6WvbCVglEKfZUbdhKd+fM+vqqIGhcMcJzbqJKcmvA/vc6fm+C
-         /SyyFIp3i6rdjIQrDiJ5JgnJDRWg2wW0h6H+835IfKJQyDsWleRaQ3CuLOr5MEOHK1WI
-         87uA==
+        bh=kG2Ckr6ksWb4XNfCW0YJok3mMqYXuc/3qr9M4JRUoTg=;
+        b=XxyMYSAj6QZySARrQoIOyA5p1M0dd5LoO3PkM5ZxjBdn4Ic9c5CjqiXgAJbCmUJO70
+         5g+N06SAoDCtNnfWyYwSfuldZUgAWy+NnRWRwfsilbKnDeDzzFKEl1jTvP9uYb69LtJn
+         +06Zs7BTTUos6S62Tai3WRpnPmukL0RSRAqPxjfn6VcR8GOb0Q4S5HWj56//HxxuHzB8
+         KA7nT0mOT77xAo0+VgLXxBTkQnP4voQZKWJM4fyhwgeTSngx7JDuh0wOPa4Od4Jw/Y+e
+         ZtFijL5j5Hre3WkqZXI5QViAG3ekg/pHMe1xAa4nEv6pQxQvGCpZjjs/ezBnKH2EYLuj
+         bNjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=xnwEWTM3KmMKzqmUNcrqIITY6Tr4tpmN5RT2gCTfYes=;
-        b=BBs2f/XfH8/5S8phnLY/8jUItyMO5ZCtsj6lzdj8cHyVmi8pFoGKkpYSESIKgTh3po
-         EnppgaI3BStgVAmvtjyc8g8z2bWH+NvXu1r5q3qbiQw2T9cloQnVBL3pANiTNh1CAj/Z
-         pRTUyoA5RMfmb1h6g6RJHGBUE6QTgFhXkl8Yqkpi6AsrgJroBrKxpHH7SxoZknXvmzWT
-         JmYJvs5MJGQXwFewTQsoKl8qvpNfVxy2aJva8NXeDzowOojcUI+NXH6zuMV4heq7tFSj
-         xefPCGZM1ltOP6g30OHtLM/eaSHkI5hTagrY/pSICo88MCv0n2MoK4/7otreVwbDXQDq
-         9Q6A==
-X-Gm-Message-State: AOAM532SLjcspdfQr3SR0k9Bvzj0gcgyWTzaWMfmy8p5w18qBPCwGBwB
-        CcZiyJydBs6kjBZnvzzHz638zQ==
-X-Google-Smtp-Source: ABdhPJxX9m0eCJg2dgiB0XA53Is9GKO68rzLt1HUsaNVWlJ/MKPZJoxcmSK1ac6Q0XBipXD3Iasb7w==
-X-Received: by 2002:adf:dc90:: with SMTP id r16mr3600408wrj.264.1594883129111;
-        Thu, 16 Jul 2020 00:05:29 -0700 (PDT)
+        bh=kG2Ckr6ksWb4XNfCW0YJok3mMqYXuc/3qr9M4JRUoTg=;
+        b=FtSRrLqmJveeQzHixmxK8okoHYrJauN9uYHyEhK6orseenPXZFDZ5Y2wdfiQMzF1EP
+         ZKtC3dRdwEpGNL+l2/62ErYnnXJJrmLMyu58mWClaDgxz8h4UfCZbY/K/lnXqFs0X5dr
+         l3RVMuAzoflGONhYvc2h5dIMZCW6+N3wBy7lPqDX7WOoZ6Z9sw5onRB4qZ+wUGrBF+qA
+         vezsxVlgw91GcDEFecDkGuTp/haJdSVKrWG8eXOeHIgsXC3FOzwtfUJn+tR0HOC41hm9
+         1OfBwrhTdnHVnKRfpfpkgY3PkvVsyx30zOfGpP9L+ZKMHjnZepIwFQJEybGG1ZOE6t2j
+         u+og==
+X-Gm-Message-State: AOAM532Sc1hwe7qjacrwUFKGT9m6hniqNAke2hxtCHkv/bcRb2dnDRwu
+        nO9nqCVglT9BcTEZj3KZGuG6vg==
+X-Google-Smtp-Source: ABdhPJxItpE87BBh4aOV8sLOqW7cz+/TG8m1ycyO/DFibfF4DHt5+NyOsuOdM1YWlvwrc0qluCfbGA==
+X-Received: by 2002:adf:e901:: with SMTP id f1mr3622712wrm.80.1594883155437;
+        Thu, 16 Jul 2020 00:05:55 -0700 (PDT)
 Received: from [10.1.3.173] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id a15sm7929400wrh.54.2020.07.16.00.05.28
+        by smtp.gmail.com with ESMTPSA id r1sm7234688wrt.73.2020.07.16.00.05.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 00:05:28 -0700 (PDT)
-Subject: Re: [PATCHv1 0/3] Enable RTC on Odroid N2
+        Thu, 16 Jul 2020 00:05:54 -0700 (PDT)
+Subject: Re: [PATCHv1 2/3] arm64: dts: meson-g12b-odroid-n2: Disable virtual
+ wake RTC
 To:     Anand Moon <linux.amoon@gmail.com>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org
@@ -70,6 +71,7 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Jerome Brunet <jbrunet@baylibre.com>
 References: <20200715160209.652-1-linux.amoon@gmail.com>
+ <20200715160209.652-3-linux.amoon@gmail.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -121,12 +123,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  zR8QplXA5kogS4kLe/7/JmlDMO8Zgm9vKLHSUeesLOrjdZ59EcjldNNBszRZQgEhwaarfz46
  BSwxi7g3Mu7u5kUByanqHyA=
 Organization: Baylibre
-Message-ID: <455f5dcc-3be3-45cd-4947-50f261a502a4@baylibre.com>
-Date:   Thu, 16 Jul 2020 09:05:27 +0200
+Message-ID: <630df1a7-8809-1af2-e424-8190a503a9d6@baylibre.com>
+Date:   Thu, 16 Jul 2020 09:05:54 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200715160209.652-1-linux.amoon@gmail.com>
+In-Reply-To: <20200715160209.652-3-linux.amoon@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -135,44 +137,36 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Anand,
-
-Only the vrtc is able to wakeup the device from suspend,
-the external RTC is not capable.
-
-Neil
+Hi,
 
 On 15/07/2020 18:02, Anand Moon wrote:
-> Inoder for test suspend resume feature on Odroid N2
-> we need to enable RTC module on this device.
+> Disable virtual wake RTC node on Odroid N2.
 > 
-> Following patches enable rtc on Odroid N2
-> but sill rtcwakeup is not working se bellow.
-> Any inputs are welcome.
+> [    7.171149] meson-vrtc ff8000a8.rtc: registered as rtc0
+> [    7.182875] meson-vrtc ff8000a8.rtc: setting system clock to 1970-01-01T00:00:07 UTC (7)
 > 
-> # sudo hwclock -r && date
-> 2020-07-15 15:53:27.706883+00:00
-> Wed Jul 15 15:53:27 UTC 2020
+> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> Cc: Kevin Hilman <khilman@baylibre.com>
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> # echo 1 > /sys/power/pm_debug_messages
-> bash: /sys/power/pm_debug_messages: Permission denied
-> # time rtcwake -s 30 -m mem
-> rtcwake: /dev/rtc0 not enabled for wakeup events
-> 
-> real    0m0.003s
-> user    0m0.003s
-> sys     0m0.000s
-> #
-> 
-> -Anand
-> 
-> Anand Moon (3):
->   arm64: dts: meson-g12b-odroid-n2: Enable RTC controller node
->   arm64: dts: meson-g12b-odroid-n2: Disable virtual wake RTC
->   arm64: defconfig: Enable RTC devices for Amlogic boards
-> 
->  .../boot/dts/amlogic/meson-g12b-odroid-n2.dts  | 18 ++++++++++++++++++
->  arch/arm64/configs/defconfig                   |  1 +
->  2 files changed, 19 insertions(+)
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> index a447cba4dd53..c8c1262a7bfc 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> @@ -517,3 +517,7 @@ &usb2_phy1 {
+>  	/* Enable the hub which is connected to this port */
+>  	phy-supply = <&hub_5v>;
+>  };
+> +
+> +&vrtc {
+> +	status = "disabled";
+> +};
 > 
 
+Please don't, the vrtc is here to wake up the device.
+
+Neil
