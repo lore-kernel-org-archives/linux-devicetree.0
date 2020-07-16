@@ -2,207 +2,87 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0A1C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 08:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BB9C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 08:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64F8020771
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 08:23:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FWOUjBRp"
+	by mail.kernel.org (Postfix) with ESMTP id 8E4CE206C1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 08:27:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726848AbgGPIXB (ORCPT
+        id S1726351AbgGPI1y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 04:23:01 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:37516 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbgGPIXA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 04:23:00 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06G8Mw3O037713;
-        Thu, 16 Jul 2020 03:22:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594887778;
-        bh=5VliJ1eRKODWhjxkf03Nw+kM4cdPS9d8ibF/Wms+xHg=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=FWOUjBRpFUGwDrw3CHdTqK2uwcSjvV5swSguE9Rgu4frdeANw4RF7COEnwmKk6Y//
-         XlhF+mzvTH5kDS8HYP7QeM6m45zwDFRqBkUjlIcFg8c9xzZtbgomVIMrGBoUyOhM2e
-         TEaQf9ko9kWilzXtfZfGq+F2FABfmwneEUOQS9VA=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06G8Mw8C043181;
-        Thu, 16 Jul 2020 03:22:58 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 16
- Jul 2020 03:22:58 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 16 Jul 2020 03:22:57 -0500
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06G8MrSG049495;
-        Thu, 16 Jul 2020 03:22:56 -0500
-From:   Roger Quadros <rogerq@ti.com>
-To:     <kishon@ti.com>
-CC:     <robh+dt@kernel.org>, <nsekhar@ti.com>, <vigneshr@ti.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v4 1/3] dt-binding: phy: convert ti,omap-usb2 to YAML
-Date:   Thu, 16 Jul 2020 11:22:50 +0300
-Message-ID: <20200716082252.21266-2-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200716082252.21266-1-rogerq@ti.com>
-References: <20200716082252.21266-1-rogerq@ti.com>
+        Thu, 16 Jul 2020 04:27:54 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34446 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbgGPI1x (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 04:27:53 -0400
+Received: by mail-oi1-f195.google.com with SMTP id e4so4481421oib.1;
+        Thu, 16 Jul 2020 01:27:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Bw5+hFRH2zrjxX766KqQ5x8VG7OfU7f1ZtUxTkUpoJw=;
+        b=R5pYqgElSt0LWrHTsOX0EMuMjIJZLSBDQIhSjaPimPHHC6D6JFfxzfB6vJuLW1VU0L
+         05ZFhkQv/uvC9JzVu/9e6r4BKlyJiUkYbTC/o93anRmY4RDFH5oJXzdf8NrUGARsxJJ/
+         TSKhTeLSDULpUJwkPq03sHRITtJgUvtKVu7XzUiox/Lu/ifS4u472Tq/I0etun4Erydc
+         Q7zsRlNkFyYXElcL2ZLlaMFGpj3POT3wdWd66+bCCfasnaEJx/RQRC8+A+L1Gs3WT5Fq
+         hrRlKljjuk8xjfz2og02tgefLKCjro7pkG2oVAdVkJaZr/tTN6qOQKjfkbdX3eKKaq5g
+         dgMg==
+X-Gm-Message-State: AOAM533S1xoMzRulEJ5ysg7MMAAA6hy+ls/L13jfDoMUypqejVjf8o7Y
+        YKgYAgoLJ54lBF8oSCoyMqo97eB3g/3jbOKFkw8=
+X-Google-Smtp-Source: ABdhPJzmVMMoJDo1pTauAT6GN+3GQe6F/6FbTlBjJH9IwS6iqkhk9C3/n9B6BXkuhyJVbqprY9aAXpVrsmnj+1oZo4I=
+X-Received: by 2002:aca:5c41:: with SMTP id q62mr2905337oib.148.1594888072391;
+ Thu, 16 Jul 2020 01:27:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200626143638.16512-1-geert+renesas@glider.be> <20200715201037.GA740389@bogus>
+In-Reply-To: <20200715201037.GA740389@bogus>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 16 Jul 2020 10:27:41 +0200
+Message-ID: <CAMuHMdWk6Ma8d3zWui0xAczfJ6jixh46byF5kj3f_JnQFnpP5Q@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: renesas,rza2-pinctrl: Convert to json-schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     Chris Brandt <chris.brandt@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Move ti,omap-usb2 to its own YAML schema.
+On Wed, Jul 15, 2020 at 10:10 PM Rob Herring <robh@kernel.org> wrote:
+> On Fri, 26 Jun 2020 16:36:38 +0200, Geert Uytterhoeven wrote:
+> > Convert the Renesas RZ/A2 combined Pin and GPIO controller Device Tree
+> > binding documentation to json-schema.
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> >  .../bindings/pinctrl/renesas,rza2-pinctrl.txt |  87 ---------------
+> >  .../pinctrl/renesas,rza2-pinctrl.yaml         | 100 ++++++++++++++++++
+> >  2 files changed, 100 insertions(+), 87 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
+> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml
+> >
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/phy/ti,omap-usb2.yaml | 72 +++++++++++++++++++
- .../devicetree/bindings/phy/ti-phy.txt        | 37 ----------
- 2 files changed, 72 insertions(+), 37 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
+Thanks, queueing in sh-pfc-for-v5.9.
 
-diff --git a/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml b/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
-new file mode 100644
-index 000000000000..a05110351814
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
-@@ -0,0 +1,72 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/ti,omap-usb2.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: OMAP USB2 PHY
-+
-+maintainers:
-+ - Kishon Vijay Abraham I <kishon@ti.com>
-+ - Roger Quadros <rogerq@ti.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+        - enum:
-+          - ti,dra7x-usb2
-+          - ti,dra7x-usb2-phy2
-+          - ti,am654-usb2
-+        - enum:
-+          - ti,omap-usb2
-+      - items:
-+        - const: ti,omap-usb2
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  clocks:
-+    minItems: 1
-+    items:
-+      - description: wakeup clock
-+      - description: reference clock
-+
-+  clock-names:
-+    minItems: 1
-+    items:
-+      - const: wkupclk
-+      - const: refclk
-+
-+  syscon-phy-power:
-+    $ref: /schemas/types.yaml#definitions/phandle-array
-+    description:
-+      phandle/offset pair. Phandle to the system control module and
-+      register offset to power on/off the PHY.
-+
-+  ctrl-module:
-+    $ref: /schemas/types.yaml#definitions/phandle
-+    description:
-+      (deprecated) phandle of the control module used by PHY driver
-+      to power on the PHY. Use syscon-phy-power instead.
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#phy-cells"
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    usb0_phy: phy@4100000 {
-+      compatible = "ti,am654-usb2", "ti,omap-usb2";
-+      reg = <0x4100000 0x54>;
-+      syscon-phy-power = <&scm_conf 0x4000>;
-+      clocks = <&k3_clks 151 0>, <&k3_clks 151 1>;
-+      clock-names = "wkupclk", "refclk";
-+      #phy-cells = <0>;
-+    };
-diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
-index 8f93c3b694a7..60c9d0ac75e6 100644
---- a/Documentation/devicetree/bindings/phy/ti-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
-@@ -27,43 +27,6 @@ omap_control_usb: omap-control-usb@4a002300 {
-         reg-names = "otghs_control";
- };
- 
--OMAP USB2 PHY
--
--Required properties:
-- - compatible: Should be "ti,omap-usb2"
--	       Should be "ti,dra7x-usb2" for the 1st instance of USB2 PHY on
--	       DRA7x
--	       Should be "ti,dra7x-usb2-phy2" for the 2nd instance of USB2 PHY
--	       in DRA7x
--	       Should be "ti,am654-usb2" for the USB2 PHYs on AM654.
-- - reg : Address and length of the register set for the device.
-- - #phy-cells: determine the number of cells that should be given in the
--   phandle while referencing this phy.
-- - clocks: a list of phandles and clock-specifier pairs, one for each entry in
--   clock-names.
-- - clock-names: should include:
--   * "wkupclk" - wakeup clock.
--   * "refclk" - reference clock (optional).
--
--Deprecated properties:
-- - ctrl-module : phandle of the control module used by PHY driver to power on
--   the PHY.
--
--Recommended properies:
--- syscon-phy-power : phandle/offset pair. Phandle to the system control
--  module and the register offset to power on/off the PHY.
--
--This is usually a subnode of ocp2scp to which it is connected.
--
--usb2phy@4a0ad080 {
--	compatible = "ti,omap-usb2";
--	reg = <0x4a0ad080 0x58>;
--	ctrl-module = <&omap_control_usb>;
--	#phy-cells = <0>;
--	clocks = <&usb_phy_cm_clk32k>, <&usb_otg_ss_refclk960m>;
--	clock-names = "wkupclk", "refclk";
--};
--
- TI PIPE3 PHY
- 
- Required properties:
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
