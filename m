@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BB4C433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 00:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59001C433E2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 00:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0674D2076C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 00:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EA4F206F5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 00:31:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgGPA3M (ORCPT
+        id S1726998AbgGPAbC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 20:29:12 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:40769 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726776AbgGPA3M (ORCPT
+        Wed, 15 Jul 2020 20:31:02 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:17779 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726778AbgGPAbC (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jul 2020 20:29:12 -0400
-Date:   16 Jul 2020 09:29:10 +0900
+        Wed, 15 Jul 2020 20:31:02 -0400
+Date:   16 Jul 2020 09:31:01 +0900
 X-IronPort-AV: E=Sophos;i="5.75,357,1589209200"; 
-   d="scan'208";a="52023258"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 16 Jul 2020 09:29:10 +0900
+   d="scan'208";a="52235470"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 16 Jul 2020 09:31:01 +0900
 Received: from mercury.renesas.com (unknown [10.166.252.133])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 745844149829;
-        Thu, 16 Jul 2020 09:29:10 +0900 (JST)
-Message-ID: <87zh802tif.wl-kuninori.morimoto.gx@renesas.com>
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 2F3904008C5A;
+        Thu, 16 Jul 2020 09:31:01 +0900 (JST)
+Message-ID: <87y2nk2tfd.wl-kuninori.morimoto.gx@renesas.com>
 From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Subject: [PATCH v3] ASoC: dt-bindings: renesas,fsi: use patternProperties for FSI-A/B
+Subject: [PATCH v3] ASoC: dt-bindings: ak4613: switch to yaml base Documentation
 User-Agent: Wanderlust/2.15.9 Emacs/26.3 Mule/6.0
 To:     Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>
 Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org
@@ -44,60 +44,128 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-FSI has FSI-A and FSI-B, and has fsia-xxx/fsib-xxx properties.
-This patch uses patternProperties, and reduce verbose settings.
+This patch switches from .txt base to .yaml base Document.
 
 Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/87o8osxlow.wl-kuninori.morimoto.gx@renesas.com
-Link: https://lore.kernel.org/r/87pn9v39eo.wl-kuninori.morimoto.gx@renesas.com
+Link: https://lore.kernel.org/r/87mu4cxlo2.wl-kuninori.morimoto.gx@renesas.com
+Link: https://lore.kernel.org/r/87o8pf3923.wl-kuninori.morimoto.gx@renesas.com
 ---
 v2 -> v3
-   - add Reviewd-by
-   - add Link
+	- add Reviewd-by
+	- add Link
+	- use generic node name on examples
+	
+ .../devicetree/bindings/sound/ak4613.txt      | 27 --------
+ .../devicetree/bindings/sound/ak4613.yaml     | 65 +++++++++++++++++++
+ 2 files changed, 65 insertions(+), 27 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/ak4613.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/ak4613.yaml
 
- .../bindings/sound/renesas,fsi.yaml           | 19 ++++---------------
- 1 file changed, 4 insertions(+), 15 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/renesas,fsi.yaml b/Documentation/devicetree/bindings/sound/renesas,fsi.yaml
-index 8a4406be387a..0dd3f7361399 100644
---- a/Documentation/devicetree/bindings/sound/renesas,fsi.yaml
-+++ b/Documentation/devicetree/bindings/sound/renesas,fsi.yaml
-@@ -43,30 +43,19 @@ properties:
-   '#sound-dai-cells':
-     const: 1
- 
--  fsia,spdif-connection:
+diff --git a/Documentation/devicetree/bindings/sound/ak4613.txt b/Documentation/devicetree/bindings/sound/ak4613.txt
+deleted file mode 100644
+index 49a2e74fd9cb..000000000000
+--- a/Documentation/devicetree/bindings/sound/ak4613.txt
++++ /dev/null
+@@ -1,27 +0,0 @@
+-AK4613 I2C transmitter
+-
+-This device supports I2C mode only.
+-
+-Required properties:
+-
+-- compatible : "asahi-kasei,ak4613"
+-- reg : The chip select number on the I2C bus
+-
+-Optional properties:
+-- asahi-kasei,in1-single-end	: Boolean. Indicate input / output pins are single-ended.
+-- asahi-kasei,in2-single-end	  rather than differential.
+-- asahi-kasei,out1-single-end
+-- asahi-kasei,out2-single-end
+-- asahi-kasei,out3-single-end
+-- asahi-kasei,out4-single-end
+-- asahi-kasei,out5-single-end
+-- asahi-kasei,out6-single-end
+-
+-Example:
+-
+-&i2c {
+-	ak4613: ak4613@10 {
+-		compatible = "asahi-kasei,ak4613";
+-		reg = <0x10>;
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/sound/ak4613.yaml b/Documentation/devicetree/bindings/sound/ak4613.yaml
+new file mode 100644
+index 000000000000..5aae6126c540
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/ak4613.yaml
+@@ -0,0 +1,65 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/ak4613.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: AK4613 I2C transmitter Device Tree Bindings
++
++maintainers:
++  - Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
++
++properties:
++  compatible:
++    const: asahi-kasei,ak4613
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  "#sound-dai-cells":
++    const: 0
++
++  # for OF-graph
++  port:
++    $ref: "audio-graph-card.yaml#definitions/port"
++  ports:
++    $ref: "audio-graph-card.yaml#definitions/ports"
++
++# use patternProperties to avoid naming "xxx,yyy" issue
 +patternProperties:
-+  "^fsi(a|b),spdif-connection$":
-     $ref: /schemas/types.yaml#/definitions/flag
-     description: FSI is connected by S/PDIF
- 
--  fsia,stream-mode-support:
-+  "^fsi(a|b),stream-mode-support$":
-     $ref: /schemas/types.yaml#/definitions/flag
-     description: FSI supports 16bit stream mode
- 
--  fsia,use-internal-clock:
-+  "^fsi(a|b),use-internal-clock$":
-     $ref: /schemas/types.yaml#/definitions/flag
-     description: FSI uses internal clock when master mode
- 
--  fsib,spdif-connection:
--    $ref: /schemas/types.yaml#/definitions/flag
--    description: same as fsia
--
--  fsib,stream-mode-support:
--    $ref: /schemas/types.yaml#/definitions/flag
--    description: same as fsia
--
--  fsib,use-internal-clock:
--    $ref: /schemas/types.yaml#/definitions/flag
--    description: same as fsia
--
- required:
-   - compatible
-   - reg
++  "^asahi-kasei,in1-single-end$":
++    $ref: /schemas/types.yaml#/definitions/flag
++  "^asahi-kasei,in2-single-end$":
++    $ref: /schemas/types.yaml#/definitions/flag
++  "^asahi-kasei,out1-single-end$":
++    $ref: /schemas/types.yaml#/definitions/flag
++  "^asahi-kasei,out2-single-end$":
++    $ref: /schemas/types.yaml#/definitions/flag
++  "^asahi-kasei,out3-single-end$":
++    $ref: /schemas/types.yaml#/definitions/flag
++  "^asahi-kasei,out4-single-end$":
++    $ref: /schemas/types.yaml#/definitions/flag
++  "^asahi-kasei,out5-single-end$":
++    $ref: /schemas/types.yaml#/definitions/flag
++  "^asahi-kasei,out6-single-end$":
++    $ref: /schemas/types.yaml#/definitions/flag
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        ak4613: codec@10 {
++            compatible = "asahi-kasei,ak4613";
++            reg = <0x10>;
++        };
++    };
 -- 
 2.25.1
 
