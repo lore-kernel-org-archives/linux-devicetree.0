@@ -2,281 +2,129 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21150C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 18:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4628C433E4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 18:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F044F20739
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 18:07:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594922834;
-	bh=HlSaSCiEPNOBTSTBuAMOcLv7ffieEP5NgVQyzwP20Ac=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DXk4eptC66C9m1X0SQN2yBp0INrKGyxCLtq6NoujZ9yK9eIyE8TVHls1By1IBV34T
-	 GL1TSmhcqrjxjIZTetKW+JoC+KYNZz6R4QosL807d5fXAt/2b8ZH+0BwR6KfM9PplS
-	 s256O2yD9XTxS2QnSToeDHitsk1InfthLOzx5agI=
+	by mail.kernel.org (Postfix) with ESMTP id 7B2962074B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 18:20:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cLW4ksKc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbgGPSHN (ORCPT
+        id S1728412AbgGPSUi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 14:07:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728402AbgGPSHN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jul 2020 14:07:13 -0400
-Received: from earth.universe (dyndsl-095-033-172-209.ewe-ip-backbone.de [95.33.172.209])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3F8A2070E;
-        Thu, 16 Jul 2020 18:07:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594922831;
-        bh=HlSaSCiEPNOBTSTBuAMOcLv7ffieEP5NgVQyzwP20Ac=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mjVECEpSB2yxv9DKO7aACQ0pHBLNljhbrS6vKrmslrHHE8ODmKsqCqbNr4JpwFs8k
-         n6po3ACtQnLAxWuVts1SgT0MMS0xjlzBvY/ymjMJdC2w8Bgcg62o54CCdcVYoEfMht
-         qjt+KOwImQGQp0hTgVjWRIvpgyllWpjqlWHoJO84=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 350E93C08CE; Thu, 16 Jul 2020 20:07:10 +0200 (CEST)
-Date:   Thu, 16 Jul 2020 20:07:10 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-omap@vger.kernel.org, kernel@collabora.com,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv2 1/4] dt-bindings: display: panel-dsi-cm: convert to YAML
-Message-ID: <20200716180710.u6pqe6fvn4usuidf@earth.universe>
-References: <20200716125733.83654-1-sebastian.reichel@collabora.com>
- <20200716125733.83654-2-sebastian.reichel@collabora.com>
- <20200716175258.GE2235355@ravnborg.org>
+        Thu, 16 Jul 2020 14:20:38 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:40302 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728257AbgGPSUh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 14:20:37 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06GIKE2W062286;
+        Thu, 16 Jul 2020 13:20:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594923614;
+        bh=P1znmUxAmB4tbrlAYbwK1egLvuE8Y0mxvVvCrIAwXho=;
+        h=From:To:CC:Subject:Date;
+        b=cLW4ksKcqcrmlrihJDafa2lc4t2MdXXAKXlrxkDIiwR8nQelfx+FR7UI10AMM4Fed
+         0eq6I+wKLy6bqucGuI7iyucvnFQ6m6MoR/CKV28dIBd8KuOy8WohIdsQDmpwrsBULi
+         h0nVFMXexNA+YAstV4cH99O62lP6VmhFvSA6ENy4=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06GIKENL121845
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 16 Jul 2020 13:20:14 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 16
+ Jul 2020 13:20:13 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 16 Jul 2020 13:20:13 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06GIKD1O089464;
+        Thu, 16 Jul 2020 13:20:13 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>,
+        <marek.behun@nic.cz>
+CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v31 00/12] Multicolor Framework v31
+Date:   Thu, 16 Jul 2020 13:19:55 -0500
+Message-ID: <20200716182007.18389-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cl2alezg7yxsq6tn"
-Content-Disposition: inline
-In-Reply-To: <20200716175258.GE2235355@ravnborg.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hello
 
---cl2alezg7yxsq6tn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is the multi color LED framework.   This framework presents clustered
+colored LEDs into an array and allows the user space to adjust the brightness
+of the cluster using a single file write.  The individual colored LEDs
+intensities are controlled via a single file that is an array of LEDs
 
-Hi,
+Globally changed multi color->multicolor.  Simplified adding a new line.
+Updated testing doc to reflect 5.9 kernel.  Rebased on LEDs for-next branch.
 
-On Thu, Jul 16, 2020 at 07:52:58PM +0200, Sam Ravnborg wrote:
-> On Thu, Jul 16, 2020 at 02:57:30PM +0200, Sebastian Reichel wrote:
-> > Convert panel-dsi-cm bindings to YAML and add
-> > missing properties while at it.
-> >=20
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
->=20
-> Hi Sebastian.
->=20
-> Look good now. Applied this patch to drm-misc-next.
+Dan
 
-Thanks!
+Dan Murphy (12):
+  leds: multicolor: Introduce a multicolor class definition
+  dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
+  leds: lp50xx: Add the LP50XX family of the RGB LED driver
+  dt-bindings: leds: Convert leds-lp55xx to yaml
+  leds: lp55xx: Convert LED class registration to devm_*
+  leds: lp55xx: Add multicolor framework support to lp55xx
+  ARM: defconfig: u8500: Add LP55XX_COMMON config flag
+  leds: lp5523: Update the lp5523 code to add multicolor brightness
+    function
+  leds: lp5521: Add multicolor framework multicolor brightness support
+  ARM: dts: n900: Add reg property to the LP5523 channel node
+  ARM: dts: imx6dl-yapp4: Add reg property to the lp5562 channel node
+  ARM: dts: ste-href: Add reg property to the LP5521 channel nodes
 
-> $ ls Documentation/devicetree/bindings/display/panel/*.txt
-> Documentation/devicetree/bindings/display/panel/display-timing.txt
->=20
-> Nice :-)
+ .../ABI/testing/sysfs-class-led-multicolor    |  35 +
+ .../devicetree/bindings/leds/leds-lp50xx.yaml | 130 +++
+ .../devicetree/bindings/leds/leds-lp55xx.txt  | 228 -----
+ .../devicetree/bindings/leds/leds-lp55xx.yaml | 220 +++++
+ Documentation/leds/index.rst                  |   1 +
+ Documentation/leds/leds-class-multicolor.rst  |  86 ++
+ arch/arm/boot/dts/imx6dl-yapp4-common.dtsi    |  14 +-
+ arch/arm/boot/dts/omap3-n900.dts              |  29 +-
+ arch/arm/boot/dts/ste-href.dtsi               |  22 +-
+ arch/arm/configs/u8500_defconfig              |   1 +
+ drivers/leds/Kconfig                          |  32 +-
+ drivers/leds/Makefile                         |   2 +
+ drivers/leds/led-class-multicolor.c           | 203 +++++
+ drivers/leds/leds-lp50xx.c                    | 784 ++++++++++++++++++
+ drivers/leds/leds-lp5521.c                    |  43 +-
+ drivers/leds/leds-lp5523.c                    |  43 +-
+ drivers/leds/leds-lp5562.c                    |  22 +-
+ drivers/leds/leds-lp55xx-common.c             | 190 ++++-
+ drivers/leds/leds-lp55xx-common.h             |  16 +-
+ drivers/leds/leds-lp8501.c                    |  23 +-
+ include/linux/led-class-multicolor.h          | 121 +++
+ include/linux/platform_data/leds-lp55xx.h     |   7 +
+ 22 files changed, 1914 insertions(+), 338 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+ delete mode 100644 Documentation/devicetree/bindings/leds/leds-lp55xx.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
+ create mode 100644 Documentation/leds/leds-class-multicolor.rst
+ create mode 100644 drivers/leds/led-class-multicolor.c
+ create mode 100644 drivers/leds/leds-lp50xx.c
+ create mode 100644 include/linux/led-class-multicolor.h
 
-Indeed.
+-- 
+2.27.0
 
-> The DTS file changes needs to go in via another route.
-
-No worries. I guess Tony will queue them up when he finds some time.
-
--- Sebastian
-
->=20
-> 	Sam
->=20
-> > ---
-> >  .../bindings/display/panel/panel-dsi-cm.txt   | 29 -------
-> >  .../bindings/display/panel/panel-dsi-cm.yaml  | 86 +++++++++++++++++++
-> >  2 files changed, 86 insertions(+), 29 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/display/panel/pan=
-el-dsi-cm.txt
-> >  create mode 100644 Documentation/devicetree/bindings/display/panel/pan=
-el-dsi-cm.yaml
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/display/panel/panel-dsi-=
-cm.txt b/Documentation/devicetree/bindings/display/panel/panel-dsi-cm.txt
-> > deleted file mode 100644
-> > index dce48eb9db57..000000000000
-> > --- a/Documentation/devicetree/bindings/display/panel/panel-dsi-cm.txt
-> > +++ /dev/null
-> > @@ -1,29 +0,0 @@
-> > -Generic MIPI DSI Command Mode Panel
-> > -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > -
-> > -Required properties:
-> > -- compatible: "panel-dsi-cm"
-> > -
-> > -Optional properties:
-> > -- label: a symbolic name for the panel
-> > -- reset-gpios: panel reset gpio
-> > -- te-gpios: panel TE gpio
-> > -
-> > -Required nodes:
-> > -- Video port for DSI input
-> > -
-> > -Example
-> > --------
-> > -
-> > -lcd0: display {
-> > -	compatible =3D "tpo,taal", "panel-dsi-cm";
-> > -	label =3D "lcd0";
-> > -
-> > -	reset-gpios =3D <&gpio4 6 GPIO_ACTIVE_HIGH>;
-> > -
-> > -	port {
-> > -		lcd0_in: endpoint {
-> > -			remote-endpoint =3D <&dsi1_out_ep>;
-> > -		};
-> > -	};
-> > -};
-> > diff --git a/Documentation/devicetree/bindings/display/panel/panel-dsi-=
-cm.yaml b/Documentation/devicetree/bindings/display/panel/panel-dsi-cm.yaml
-> > new file mode 100644
-> > index 000000000000..d766c949c622
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/panel/panel-dsi-cm.yaml
-> > @@ -0,0 +1,86 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/display/panel/panel-dsi-cm.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: DSI command mode panels
-> > +
-> > +maintainers:
-> > +  - Tomi Valkeinen <tomi.valkeinen@ti.com>
-> > +  - Sebastian Reichel <sre@kernel.org>
-> > +
-> > +description: |
-> > +  This binding file is a collection of the DSI panels that
-> > +  are usually driven in command mode. If no backlight is
-> > +  referenced via the optional backlight property, the DSI
-> > +  panel is assumed to have native backlight support.
-> > +  The panel may use an OF graph binding for the association
-> > +  to the display, or it may be a direct child node of the
-> > +  display.
-> > +
-> > +allOf:
-> > +  - $ref: panel-common.yaml#
-> > +
-> > +properties:
-> > +
-> > +  compatible:
-> > +    items:
-> > +      - enum:
-> > +        - motorola,droid4-panel        # Panel from Motorola Droid4 ph=
-one
-> > +        - nokia,himalaya               # Panel from Nokia N950 phone
-> > +        - tpo,taal                     # Panel from OMAP4 SDP board
-> > +      - const: panel-dsi-cm            # Generic DSI command mode pane=
-l compatible fallback
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +    description: DSI virtual channel
-> > +
-> > +  vddi-supply:
-> > +    description:
-> > +      Display panels require power to be supplied. While several panel=
-s need
-> > +      more than one power supply with panel-specific constraints gover=
-ning the
-> > +      order and timings of the power supplies, in many cases a single =
-power
-> > +      supply is sufficient, either because the panel has a single powe=
-r rail, or
-> > +      because all its power rails can be driven by the same supply. In=
- that case
-> > +      the vddi-supply property specifies the supply powering the panel=
- as a
-> > +      phandle to a regulator.
-> > +
-> > +  vpnl-supply:
-> > +    description:
-> > +      When the display panel needs a second power supply, this propert=
-y can be
-> > +      used in addition to vddi-supply. Both supplies will be enabled a=
-t the
-> > +      same time before the panel is being accessed.
-> > +
-> > +  width-mm: true
-> > +  height-mm: true
-> > +  label: true
-> > +  rotation: true
-> > +  panel-timing: true
-> > +  port: true
-> > +  reset-gpios: true
-> > +  te-gpios: true
-> > +  backlight: true
-> > +
-> > +additionalProperties: false
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +
-> > +    dsi-controller {
-> > +        #address-cells =3D <1>;
-> > +        #size-cells =3D <0>;
-> > +
-> > +        panel@0 {
-> > +            compatible =3D "tpo,taal", "panel-dsi-cm";
-> > +            reg =3D <0>;
-> > +            reset-gpios =3D <&gpio4 6 GPIO_ACTIVE_HIGH>;
-> > +        };
-> > +    };
-> > +
-> > +...
-> > --=20
-> > 2.27.0
-
---cl2alezg7yxsq6tn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl8Ql0oACgkQ2O7X88g7
-+preABAAgkV9HVYAck0qetl7wnYhWxP8E2jkCpXkwayunf9Z0HqMEZXXKwky0BHm
-ehDVmkpO0aNUBkrJWWjBsiR/F61UlwPpD+YU91EWCv5nYS0+PIqBM/Qy9NaU0gId
-BcGvoDrcTgQFbeSfxM75jDRvdS6klvpGf+1CQCgfs/PzWB+PifeXX0BKavrpArD/
-SFZqfNzSQZy5zMDXPQaJH0VfVXLlequ1wJcZOR+5jCKyGqh0wbfT28BAvqqg/Z4v
-hmqI9llRv5rSD/gXHU5Dc0tGwrijq4sXQWQ0PGRkKifNM1Dd2BW2JmV9MywJi6W2
-jVK46kFJfY/GZDH3SveuLGDOgynMKGjENbRI2BAuUz+WMBVf6rktIG+N6EQZUcjp
-ok/V7g8HPTMa/CXohVPc/4rK5iVdJW3QDB2GErr3A0daTzM5KM/9LTury8MQo6Y7
-dLEM0LjUjInYaKlE4rCVsiYbm5t7EZRRCdOPRHY/nZakAs5ciRH6W5zXgtkEzqPP
-9v2iyzWY81fcFPtzBQ9LYrF0ZWOoXCGZrkBsdpTYtqJ5CXN6QKxNuPBrGEsc56vy
-5W0vNzsyHszbdpwwybJ9rjSnoOcmbKekXQaspu5YMt7GNcTR9vtX2XhvGaFPAiAI
-SsLbQBegMh2Odapmp9vY8YAzYSGkG+3g2W6hD2Z8W5oquCSFrf8=
-=ZJ4X
------END PGP SIGNATURE-----
-
---cl2alezg7yxsq6tn--
