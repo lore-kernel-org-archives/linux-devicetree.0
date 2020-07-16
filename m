@@ -2,125 +2,93 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4EFC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 07:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72198C433E2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 07:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA85206F4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 07:49:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lfHFuLsL"
+	by mail.kernel.org (Postfix) with ESMTP id 4CFE3206F5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 07:52:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725831AbgGPHta (ORCPT
+        id S1725934AbgGPHwN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 03:49:30 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:60850 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbgGPHt3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 03:49:29 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06G7nRlE027619;
-        Thu, 16 Jul 2020 02:49:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594885767;
-        bh=jSyR9YwoxdBX9QS43xi8Ib08a9fQAkZ5xGyzFevMyNQ=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=lfHFuLsLvlwISZN4jO0EoaVyt/sQjHpsi5ZW1z9pm23MVlFT/Sabag3e5Mo7lse1Y
-         8Ns2KUnOCIoex9mM41z4O4AAOJV5P8JxmLjVvD1KrIGXROhrnX9R+cRz04cfTL+OA8
-         lO24vRQlLeo8wvh/ZKrCIpgYPfpN2sw0sByiE1bQ=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06G7nRak013835
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 16 Jul 2020 02:49:27 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 16
- Jul 2020 02:49:26 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 16 Jul 2020 02:49:26 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06G7nO5v113210;
-        Thu, 16 Jul 2020 02:49:25 -0500
-Subject: Re: [PATCH v3 1/3] dt-binding: phy: convert ti,omap-usb2 to YAML
-From:   Roger Quadros <rogerq@ti.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     <vigneshr@ti.com>, <linux-kernel@vger.kernel.org>,
-        <robh+dt@kernel.org>, <kishon@ti.com>, <nsekhar@ti.com>,
-        <devicetree@vger.kernel.org>
-References: <20200630092729.15346-1-rogerq@ti.com>
- <20200630092729.15346-2-rogerq@ti.com> <20200702204758.GA1665250@bogus>
- <7899660d-936e-6d88-877a-f75d76f34c40@ti.com>
-Message-ID: <0ae2e424-f5d4-83d0-90ea-56acde3d4c9b@ti.com>
-Date:   Thu, 16 Jul 2020 10:49:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 16 Jul 2020 03:52:13 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43082 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbgGPHwN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 03:52:13 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 95so3503912otw.10;
+        Thu, 16 Jul 2020 00:52:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8WlI+YHkueSuF08RQCnLnwIMdn+ACDRoO1h1JCP5bfU=;
+        b=C8ZTow2oSWruCrATvualw8O3DNZd91TOgxfKCov/J67YLtc8lmULvkvqGzP8OPQ6cL
+         sOwyh3kTam21y1GW4mwYMO9lPY312aVp4OGP+mfj+OD5MaNfES0t+yHjiO0pPLoelRns
+         seXWoWdtXT2rE/374xknV51yJID3drLZ73HClGSAaQXRF8waRLgtVMHcPHGTP7CgpfPB
+         p5AqTe+iIbJpipvAw/gCMUTT47esCX2Vym8ycbGGNCOgXbK6o9ELHV8rXpaoGZG6LK4v
+         +lWkjoJS51q71DLUHUm3pyzKafwXxOCIKZqPs41ZI16hOJbzQW5vsszA9e6GbG6fC3By
+         0iXA==
+X-Gm-Message-State: AOAM533jxJEpedWbtx+pIw58SZAHLtDCftE+cgL3XlheIyBd8aftj5vB
+        VmpQkgkpUTPvtIVLa2oMT7syZIf/E4YMW5o9PhA=
+X-Google-Smtp-Source: ABdhPJyFWwITqb6ejbM+toUXP0VUMT8h2tr0L7qnGfNLMwwxUyIsQvFrtRpDRgKqCP4v+ZZ5x4Fa6xXPoCX6ZH6bz8U=
+X-Received: by 2002:a05:6830:1451:: with SMTP id w17mr3330266otp.250.1594885932674;
+ Thu, 16 Jul 2020 00:52:12 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <7899660d-936e-6d88-877a-f75d76f34c40@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200715140951.90753-1-jacopo+renesas@jmondi.org>
+ <20200715140951.90753-2-jacopo+renesas@jmondi.org> <20200716015323.GQ6144@pendragon.ideasonboard.com>
+In-Reply-To: <20200716015323.GQ6144@pendragon.ideasonboard.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 16 Jul 2020 09:52:01 +0200
+Message-ID: <CAMuHMdXYX-6H99B=dkKxeD3f_Mr1tETYGJGBqqKMgjR_kFF2-A@mail.gmail.com>
+Subject: Re: [PATCH 1/8] dt-bindings: media: ov5640: Convert to json-schema
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Steve Longerbeam <slongerbeam@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, Jul 16, 2020 at 3:54 AM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> On Wed, Jul 15, 2020 at 04:09:44PM +0200, Jacopo Mondi wrote:
+> > Convert the ov5640 bindings document to json-schema and update
 
+> > +  rotation:
+> > +    description: |
+> > +      As defined in Documentation/devicetree/bindings/media/video-interfaces.txt,
+> > +      valid values are 0 (sensor mounted upright) and 180 (sensor mounted upside
+> > +      down).
+>
+> The second sentence should be replaced with
+>   enum:
+>     - 0
+>     - 180
 
-On 03/07/2020 11:58, Roger Quadros wrote:
-> Hi Rob,
-> 
-> On 02/07/2020 23:47, Rob Herring wrote:
->> On Tue, 30 Jun 2020 12:27:27 +0300, Roger Quadros wrote:
->>> Move ti,omap-usb2 to its own YAML schema.
->>>
->>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>> Reviewed-by: Rob Herring <robh@kernel.org>
->>> ---
->>>   .../devicetree/bindings/phy/ti,omap-usb2.yaml | 69 +++++++++++++++++++
->>>   .../devicetree/bindings/phy/ti-phy.txt        | 37 ----------
->>>   2 files changed, 69 insertions(+), 37 deletions(-)
->>>   create mode 100644 Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
->>>
->>
->>
->> My bot found errors running 'make dt_binding_check' on your patch:
->>
->> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/ti,omap-usb2.example.dt.yaml: example-0: phy@4100000:reg:0: [0, 68157440, 0, 84] is too long
->>
-> 
-> In my local build in the dt example I see
-> 
->      phy@4100000:
->        compatible: ["ti,am654-usb2", "ti,omap-usb2"]
->        reg: [[0x0, 0x4100000, 0x0, 0x54]]
-> 
-> And I don't see any errors. I've updated my dt-schema as well.
+Or (ignoring Jacopo's later comment):
 
-I'm able to see the issue now. Will fix it and send v4.
+    enum: [ 0, 180 ]
 
-> 
->>
->> See https://patchwork.ozlabs.org/patch/1319665
->>
->> If you already ran 'make dt_binding_check' and didn't see the above
->> error(s), then make sure dt-schema is up to date:
->>
->> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
->>
->> Please check and re-submit.
->>
-> 
+Gr{oetje,eeting}s,
 
-cheers,
--roger
+                        Geert
+
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
