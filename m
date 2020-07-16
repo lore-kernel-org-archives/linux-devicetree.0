@@ -2,174 +2,224 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E45A0C433E5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 06:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23451C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 06:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEFEE20578
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 06:05:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594879518;
-	bh=8P2zKP9fwTAESRcSXu8PidqEv90XXPnh3+R3n6iZJwE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fJknrdU7a/DvgM9Xl5JLEq4OzdcgPTX+naltYz6aifIJCYg4Y6nfyXHCM8nCB/24t
-	 IWGAHynECN+JkJTIaIlJsrhJAwlcMq8hQCoeIsJ2y1N3bB1TegOXDuKy0USdO1P4nE
-	 lhdHcP/1wDWggSqdolmb5cg9pL0pVMfzLUTN/nDg=
+	by mail.kernel.org (Postfix) with ESMTP id 0B12620720
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 06:10:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725921AbgGPGFJ (ORCPT
+        id S1726069AbgGPGKU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 02:05:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42598 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725913AbgGPGFJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jul 2020 02:05:09 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F167120578;
-        Thu, 16 Jul 2020 06:05:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594879508;
-        bh=8P2zKP9fwTAESRcSXu8PidqEv90XXPnh3+R3n6iZJwE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ETyy3TeDfhRQFQtPrFIhGv+A00ZcHddCwE8EzxqgKfBY1/SZpl9tr+ar58K0oEOnv
-         3xoRC4GVghh+vSBw5MHJ+OWjd35oMAKyfy1xL1RO/NBMPQYIGEaPCNngU1AiFHzwdh
-         7TnS/i7HrrT0UZ4441RG7cHELhWtBspgtYApeMbg=
-Date:   Thu, 16 Jul 2020 11:35:04 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Andy Gross <agross@codeaurora.org>,
-        Jonathan McDowell <noodles@earth.li>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+        Thu, 16 Jul 2020 02:10:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55146 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbgGPGKU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 02:10:20 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 255E4C061755
+        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 23:10:20 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jvx5y-0004Ls-Bg; Thu, 16 Jul 2020 08:10:14 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jvx5w-0008GV-5U; Thu, 16 Jul 2020 08:10:12 +0200
+Date:   Thu, 16 Jul 2020 08:10:09 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v8 1/2] phy: qualcomm: add qcom ipq806x dwc usb phy driver
-Message-ID: <20200716060504.GF55478@vkoul-mobl>
-References: <20200713132309.14353-1-ansuelsmth@gmail.com>
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v5 07/13] pwm: add support for sl28cpld PWM controller
+Message-ID: <20200716061009.z7uu4lcwo3wk6dzb@pengutronix.de>
+References: <20200709085006.b54ype3p4yu64upl@pengutronix.de>
+ <72858253a9094074e9c8cd7a4e1db09f@walle.cc>
+ <20200713084750.qj4hquzd6uz6y526@pengutronix.de>
+ <c0594c34c712ce26b3936d42c92d2361@walle.cc>
+ <20200714160856.rjqi7lv63geil3hm@pengutronix.de>
+ <eedceb44cba9b54e0634f0e8e4f96f70@walle.cc>
+ <20200715163620.xhi24mct5b64qpyp@pengutronix.de>
+ <7d8e9f524f0fd81be282be0be50d16ad@walle.cc>
+ <20200715181803.nmgi32tugpbuqvjg@pengutronix.de>
+ <8debe0ee9aff2c49a7567069d7bb9477@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4bah6ckq6xdukftr"
 Content-Disposition: inline
-In-Reply-To: <20200713132309.14353-1-ansuelsmth@gmail.com>
+In-Reply-To: <8debe0ee9aff2c49a7567069d7bb9477@walle.cc>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 13-07-20, 15:23, Ansuel Smith wrote:
 
-> +static inline void usb_phy_write_readback(struct usb_phy *phy_dwc3,
-> +					  u32 offset,
-> +					  const u32 mask, u32 val)
-> +{
-> +	u32 write_val, tmp = readl(phy_dwc3->base + offset);
-> +
-> +	tmp &= ~mask;		/* retain other bits */
-> +	write_val = tmp | val;
-> +
-> +	writel(write_val, phy_dwc3->base + offset);
-> +
-> +	/* Read back to see if val was written */
-> +	tmp = readl(phy_dwc3->base + offset);
-> +	tmp &= mask;		/* clear other bits */
-> +
-> +	if (tmp != val)
-> +		dev_err(phy_dwc3->dev, "write: %x to QSCRATCH: %x FAILED\n",
-> +			val, offset);
+--4bah6ckq6xdukftr
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-lets use single line for these, it looks much better that way. Btw we
-can extend to 100 chars now :)
+Hello Michael,
 
-> +static int qcom_ipq806x_usb_phy_probe(struct platform_device *pdev)
-> +{
-> +	struct resource *res;
-> +	resource_size_t size;
-> +	struct device_node *np;
-> +	struct phy *generic_phy;
-> +	struct usb_phy *phy_dwc3;
-> +	const struct phy_drvdata *data;
-> +	const struct of_device_id *match;
-> +	struct phy_provider *phy_provider;
-> +
-> +	phy_dwc3 = devm_kzalloc(&pdev->dev, sizeof(*phy_dwc3), GFP_KERNEL);
-> +	if (!phy_dwc3)
-> +		return -ENOMEM;
-> +
-> +	match = of_match_node(qcom_ipq806x_usb_phy_table, pdev->dev.of_node);
-> +	data = match->data;
-> +
-> +	phy_dwc3->dev = &pdev->dev;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res)
-> +		return -EINVAL;
-> +	size = resource_size(res);
-> +	phy_dwc3->base = devm_ioremap(phy_dwc3->dev, res->start, size);
-> +
-> +	if (IS_ERR(phy_dwc3->base)) {
-> +		dev_err(phy_dwc3->dev, "failed to map reg\n");
-> +		return PTR_ERR(phy_dwc3->base);
-> +	}
-> +
-> +	phy_dwc3->ref_clk = devm_clk_get(phy_dwc3->dev, "ref");
-> +	if (IS_ERR(phy_dwc3->ref_clk)) {
-> +		dev_dbg(phy_dwc3->dev, "cannot get reference clock\n");
-> +		return PTR_ERR(phy_dwc3->ref_clk);
-> +	}
-> +
-> +	clk_set_rate(phy_dwc3->ref_clk, data->clk_rate);
-> +
-> +	phy_dwc3->xo_clk = devm_clk_get(phy_dwc3->dev, "xo");
-> +	if (IS_ERR(phy_dwc3->xo_clk)) {
-> +		dev_dbg(phy_dwc3->dev, "cannot get TCXO clock\n");
-> +		phy_dwc3->xo_clk = NULL;
-> +	}
-> +
-> +	/* Parse device node to probe HSIO settings */
-> +	np = of_node_get(pdev->dev.of_node);
-> +	if (!of_compat_cmp(match->compatible, "qcom,ipq806x-usb-phy-ss",
-> +			   strlen(match->compatible))) {
+On Wed, Jul 15, 2020 at 10:41:25PM +0200, Michael Walle wrote:
+> Am 2020-07-15 20:18, schrieb Uwe Kleine-K=F6nig:
+> > On Wed, Jul 15, 2020 at 07:45:10PM +0200, Michael Walle wrote:
+> > >=20
+> > > Am 2020-07-15 18:36, schrieb Uwe Kleine-K=F6nig:
+> > > > On Tue, Jul 14, 2020 at 11:09:28PM +0200, Michael Walle wrote:
+> > > > > > My wishlist (just as it comes to my mind, so no guarantee of
+> > > > > > completeness):
+> > > > > >
+> > > > > >  - can do 0% duty cycle for all supported period lengths
+> > > > > >  - can do 100% duty cycle for all supported period lengths
+> > > > > >  - supports both polarities
+> > > > > >  - supports immediate change of configuration and after complet=
+ion of
+> > > > > >    the currently running period
+> > > > > >  - atomic update (i.e. if you go from configuration A to config=
+uration B
+> > > > > >    the hardware guarantees to only emit periods of type A and t=
+hen type
+> > > > > >    B. (Depending on the item above, the last A period might be =
+cut off.)
+> > > > >
+> > > > > We actually discussed this, because the implementation would be
+> > > > > easier. But
+> > > > > if the change takes place immediately you might end up with a lon=
+ger
+> > > > > duty
+> > > > > cycle. Assume the PWM runs at 80% duty cycle and starts with the
+> > > > > on-period.
+> > > > > If you now change that to 50% you might end up with one successive
+> > > > > duty
+> > > > > cycle of "130%". Eg. the 80% of the old and right after that you
+> > > > > switch to
+> > > > > the new 50% and then you'd have a high output which corresponds t=
+o a
+> > > > > 130%
+> > > > > cycle. I don't know if that is acceptable for all applications.
+> > > >
+> > > > I thought this is a "change takes place immediately" implementation=
+?! So
+> > > > these problems are actually real here. (And this not happening is
+> > > > exactly
+> > > > my wish here. Is there a mis-understanding?)
+> > >=20
+> > > I wasn't talking about the sl28cpld btw. What is the difference
+> > > between
+> > > your proposed "change take place immediately" and "after the cycle".
+> > > I understand how the after the cycle should work. But how would the
+> > > immediate change work in your ideal PWM?
+> >=20
+> > If the PWM is running at 1/3 duty cycle and reconfigured for 2/3, then
+> > the two scenarios are (the * marks the moment where pwm_apply_state() is
+> > called, ^ marks the start of a period):
+> >=20
+> > immediately:
+> >=20
+> >   __       __    _____    _____
+> >  /  \_____/  \__/     \__/
+> >  ^        ^     ^        ^
+> >                 *
+>=20
+> Ok lets assume 2/3 and change it to 1/3:
+>=20
+>    ____     ______      __
+>   /    \___/      \____/  \____
+>   ^        ^   ^       ^
+>                *
+> This will then have a longer on period than any of the settings.
 
-aha, why are we doing this? If you want to do this for only phy-ss then
-you can read these optionally and set them if found..
+I think we agree here. With an immediate change to the new setting both
+too long and too short signals can heppen. How bad this is depends on
+the use. The consumers currently in the kernel probably don't care too
+much.
 
+> > > > > > > > What about disable()?
+> > > > > > >
+> > > > > > > Mhh well, it would do one 100% cycle.. mhh ;) Lets see if the=
+re we can
+> > > > > > > fix that (in hardware), not much we can do in the driver here=
+=2E We are
+> > > > > > > _very_ constraint in size, therefore all that little edge cas=
+es fall
+> > > > > > > off
+> > > > > > > the table.
+> > > > > >
+> > > > > > You're saying that on disable the hardware emits a constant hig=
+h level
+> > > > > > for one cycle? I hope not ...
+> > > > >
+> > > > > Mh, I was mistaken, disabling the PWM will turn it off immediatel=
+y,
+> > > > > but
+> > > >
+> > > > And does turn off mean, the output gets inactive?
+> > > > If so you might also disable the hardware if a 0% duty cycle is
+> > > > configured assuming this saves some energy without modifying the
+> > > > resulting wave form.
+> > >=20
+> > > Disabling it has some side effects like switching to another function
+> > > for this multi function pin. So I'd rather keep it on ;)
+> >=20
+> > So IMHO you should also keep it on when pwm_apply_state is called with
+> > state.enabled =3D false to ensure a low output.
+>=20
+> That won't work either, because that is how you would turn on that multi
+> function. Ie. it is GPIO (default input) as long as the PWM is not enable=
+d,
+> otherwise its PWM.
 
-> +		if (of_property_read_u32(np, "qcom,rx-eq", &phy_dwc3->rx_eq) ||
-> +		    of_property_read_u32(np, "qcom,tx-deamp_3_5db",
-> +					 &phy_dwc3->tx_deamp_3_5db) ||
-> +		    of_property_read_u32(np, "qcom,mpll", &phy_dwc3->mpll)) {
-> +			dev_err(phy_dwc3->dev, "cannot get HSIO settings from device node, using default values\n");
-> +
-> +			/* Default HSIO settings */
-> +			phy_dwc3->rx_eq = SSPHY_RX_EQ_VALUE;
-> +			phy_dwc3->tx_deamp_3_5db = SSPHY_TX_DEEMPH_3_5DB;
-> +			phy_dwc3->mpll = SSPHY_MPLL_VALUE;
-> +		}
-> +	}
-> +
-> +	generic_phy = devm_phy_create(phy_dwc3->dev, pdev->dev.of_node,
-> +				      &data->ops);
-> +
-> +	if (IS_ERR(generic_phy))
-> +		return PTR_ERR(generic_phy);
-> +
-> +	phy_set_drvdata(generic_phy, phy_dwc3);
-> +	platform_set_drvdata(pdev, phy_dwc3);
-> +
-> +	phy_provider = devm_of_phy_provider_register(phy_dwc3->dev,
-> +						     of_phy_simple_xlate);
-> +
-> +	if (IS_ERR(phy_provider))
-> +		return PTR_ERR(phy_provider);
-> +
-> +	return 0;
-> +}
+I think you misunderstood what I wrote. The intended behaviour for a
+disabled PWM (as in: pwm_apply_state() was called with state.enabled =3D
+false) is that the output is a constant low (assuming a normal
+polarity). If disabling your hardware results in something else, don't
+disable the hardware. That's another item in the Limitations paragraph.
 
--- 
-~Vinod
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--4bah6ckq6xdukftr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8P7z4ACgkQwfwUeK3K
+7AkERwf7Bnq1RmmZZQEaEwO2ylFCpy6YKnXVLNIu3EmoJGn5P52CsM5A5Qfzg+lh
+FqwhdDqowMO7BpePNly1bdYZzO32kuVb2rJUAgBcXtC06liNeJWCwXgCMola+8LC
+ZXVn66RdWkQpBVO2mHjnTgOLorVIJuytb//evqyxYgNcicNwUGy5Nq9WtQM9OkBl
+nwd1o+p5iqOvwJ5YfjJNTTKoDbzoG0RqfTcwSWiAazSZZBdcERzbCxUuKM+ci55y
+0CjOU+OaEQU2lMc6h+0e+mlYO3+3fHL4wiOF32iRXEabMbaaUxVq+R46VJXBwwwM
+CmDqF+afXcPaPzQqs1QqUj35WTTi5Q==
+=t2cU
+-----END PGP SIGNATURE-----
+
+--4bah6ckq6xdukftr--
