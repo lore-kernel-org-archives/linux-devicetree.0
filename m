@@ -2,114 +2,151 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 634A8C433EB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 14:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B57FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 14:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CA60207BC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 14:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38E17207BC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 14:54:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594911093;
-	bh=A5nQV139ICXlOvqODizFVuH0iIoUmBdWnBm2+f01LEw=;
+	s=default; t=1594911298;
+	bh=FFLad26gcv4LB0SITAY1DjM+ZBIHku25gEYXQd1GGKM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sWKb1VUVvn1VMZCgr84Ql8X3Mopx+HgDn3aFz/3+JxYeRUMuYHKsZr0cUBX2VCbqd
-	 HHfWsYGg5NsNM/6fqZZh5RefVbW7qhECtDqyNn7XVHBoCYJGK4s5gIAD5/4HFyWPoY
-	 NpxMXD9jxfdteXH5qKi7OVAxkmmOB+v/UHVXxtKM=
+	b=zwNuFf1lIWXpy+geY9JdVlTX8kpsV7Zn2Lh7AByajEzBPj5Ah8r1UTOv+9lHfnKMO
+	 V5RtAdwV6H48D2BlhFLeUjSr2zpZnbLjcZk6+4Mm6g/rLEQWCh3kzdXfn3yYljlT66
+	 2N5pq+HLOqkJSB8hB4k9YprG8hKdrs9xK+Texlvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728728AbgGPOvb (ORCPT
+        id S1727844AbgGPOy5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 10:51:31 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:47000 "EHLO
+        Thu, 16 Jul 2020 10:54:57 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39354 "EHLO
         mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728672AbgGPOva (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 10:51:30 -0400
-Received: by mail-io1-f65.google.com with SMTP id a12so6258616ion.13;
-        Thu, 16 Jul 2020 07:51:30 -0700 (PDT)
+        with ESMTP id S1725867AbgGPOy5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 10:54:57 -0400
+Received: by mail-io1-f65.google.com with SMTP id f23so6288590iof.6;
+        Thu, 16 Jul 2020 07:54:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ngsKTcylKTGb0RZyxhVMT1Cu62qS8uD1lZ+51aCDu50=;
-        b=mttiLx5LSyL5XeAB9tOfS0jXtAw4WdjsRO2bzaQelnL2RUuVAawyIBKYg7a2bWfZm8
-         z4BmO9Yw8dm0OAwrjYb22+9kGzl/zdLzTRjM0A3egH5zZmavSPwR2Snb9Kjrho055Mrz
-         AfXJogSJAy9cdEe3ycy/de05pzrn18guef41mXW00npUlLRSea1cSoNhgglEPK0O5ua4
-         Eeh9QRQGCuYgAHaS9aoRQPm8khWpKVc4E7XyPSgm3PPnNG98YljaI0OE09KnKpMSLVjQ
-         6mzNvZ0XCpel7xuk7IYb/HBFaCJsHUV7Rpf9PtBlwA23BkbVPB5v/8G0FGEx1KMEUUpz
-         oJeQ==
-X-Gm-Message-State: AOAM531+F8+PeByLERlK0tJaUVBVx8k8CFoDI5FttPY0uaf4pXEoQrXH
-        hqhwunlRuWmheJVad0U1yA==
-X-Google-Smtp-Source: ABdhPJzb+SG+uyotUL0djsFcO+e+8VskLOvVBatERU7NBC7dJOUzWcBes5gfkVXIU5JUFblimdb4cQ==
-X-Received: by 2002:a02:9182:: with SMTP id p2mr5723913jag.69.1594911088742;
-        Thu, 16 Jul 2020 07:51:28 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=BaqFZG9UWRjhx4RwScgiajamJpelOhhp1Z38o8FrMds=;
+        b=dBYy+tcnR1zmrENGOQ5gkAc7diqBcqnw2Xul/4Io6VqONuy2Hed7+KTKlI/1N9TOrF
+         rmde/GbNv/cWRfUP913Qx5yEDgp8/Mcmv1+dpfFd+zyYBjbn5QAAHp+W0vF0owoObLDx
+         sL39LKUd1YVbxMhfeb2xrxvE6MDyMb50PEDsVtylph9w3uBW/j6CFWCXXgGtOuxQ02Sr
+         MBAP4qpVK6L75mkEbAErX3UDmigAsLveOnk3zAcLFhCOAklXrPrZcqVGscTBfgHcLePh
+         duISAnCyR+MYCZchlgr61/of3NGp+DJUzL1SNnYVgkUSav6YObxG2vOMSxwC9Odz1OI/
+         /Dpw==
+X-Gm-Message-State: AOAM530dBiP2pNpqPS3eb9VJltdNjl4iw0xx8Yl479RBvm0U2ILdJbBI
+        KkI/3VR4jGm/mlauXnKZ+w==
+X-Google-Smtp-Source: ABdhPJzcGGLXa59ebad8ZEMnpSmd8hkKy1t0JWfmwfPJjXYxdbzORCZ9sBc+M3YUvgGK+FSagG6rPQ==
+X-Received: by 2002:a6b:9388:: with SMTP id v130mr4779402iod.134.1594911295879;
+        Thu, 16 Jul 2020 07:54:55 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id o67sm2728012ila.25.2020.07.16.07.51.26
+        by smtp.gmail.com with ESMTPSA id p22sm2946887ili.88.2020.07.16.07.54.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 07:51:28 -0700 (PDT)
-Received: (nullmailer pid 2312016 invoked by uid 1000);
-        Thu, 16 Jul 2020 14:51:25 -0000
-Date:   Thu, 16 Jul 2020 08:51:25 -0600
+        Thu, 16 Jul 2020 07:54:55 -0700 (PDT)
+Received: (nullmailer pid 2316771 invoked by uid 1000);
+        Thu, 16 Jul 2020 14:54:54 -0000
+Date:   Thu, 16 Jul 2020 08:54:54 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com,
-        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        sakari.ailus@linux.intel.com, devicetree@vger.kernel.org,
-        mchehab@kernel.org, robh+dt@kernel.org
-Subject: Re: [PATCH 1/8] dt-bindings: media: ov5640: Convert to json-schema
-Message-ID: <20200716145125.GA2311510@bogus>
-References: <20200715140951.90753-1-jacopo+renesas@jmondi.org>
- <20200715140951.90753-2-jacopo+renesas@jmondi.org>
+To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
+Cc:     linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
+        jacek.anaszewski@gmail.com, Dan Murphy <dmurphy@ti.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 1/3] dt-bindings: leds: add cznic,turris-omnia-leds
+ binding
+Message-ID: <20200716145454.GA2313513@bogus>
+References: <20200716114047.22943-1-marek.behun@nic.cz>
+ <20200716114047.22943-2-marek.behun@nic.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200715140951.90753-2-jacopo+renesas@jmondi.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200716114047.22943-2-marek.behun@nic.cz>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 15 Jul 2020 16:09:44 +0200, Jacopo Mondi wrote:
-> Convert the ov5640 bindings document to json-schema and update
-> the MAINTAINERS file accordingly.
+On Thu, Jul 16, 2020 at 01:40:45PM +0200, Marek Behún wrote:
+> Add device-tree bindings documentation for Turris Omnia RGB LEDs.
 > 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Signed-off-by: Marek Behún <marek.behun@nic.cz>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
 > ---
-> Hi Steve,
->   I've added myself as maintainer in the bindings, with your ack
-> I would be happy to add myself as maintainer or reviewer for this driver
-> in MAINTAINERS, as I've recently been looking after this driver, mostly
-> for the MIPI CSI-2 interface part.
+>  .../leds/cznic,turris-omnia-leds.yaml         | 88 +++++++++++++++++++
+>  1 file changed, 88 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/cznic,turris-omnia-leds.yaml
 > 
-> Thanks
->   j
-> 
-> ---
->  .../devicetree/bindings/media/i2c/ov5640.txt  |  92 ---------
->  .../devicetree/bindings/media/i2c/ov5640.yaml | 181 ++++++++++++++++++
->  MAINTAINERS                                   |   1 +
->  3 files changed, 182 insertions(+), 92 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/media/i2c/ov5640.txt
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5640.yaml
-> 
+> diff --git a/Documentation/devicetree/bindings/leds/cznic,turris-omnia-leds.yaml b/Documentation/devicetree/bindings/leds/cznic,turris-omnia-leds.yaml
+> new file mode 100644
+> index 000000000000..bfe19aee0805
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/cznic,turris-omnia-leds.yaml
+> @@ -0,0 +1,88 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/cznic,turris-omnia-leds.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: CZ.NIC's Turris Omnia LEDs driver
+> +
+> +maintainers:
+> +  - Marek Behún <marek.behun@nic.cz>
+> +
+> +description:
+> +  This module adds support for the RGB LEDs found on the front panel of the
+> +  Turris Omnia router. There are 12 RGB LEDs that are controlled by a
+> +  microcontroller that communicates via the I2C bus. Each LED is described
+> +  as a subnode of this I2C device.
+> +
+> +properties:
+> +  compatible:
+> +    const: cznic,turris-omnia-leds
+> +
+> +  reg:
+> +    description: I2C slave address of the microcontroller.
+> +    maxItems: 1
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
+> +
+> +patternProperties:
+> +  "^multi-led[0-9a-f]$":
+> +    type: object
+> +    allOf:
+> +      - $ref: leds-class-multicolor.yaml#
+> +    description:
+> +      This node represents one of the RGB LED devices on Turris Omnia.
+> +      No subnodes need to be added for subchannels since this controller only
+> +      supports RGB LEDs.
+> +
+> +    properties:
+> +      reg:
+> +        minimum: 0
+> +        maximum: 11
+> +        description:
+> +          This property identifies one of the LEDs on the front panel of the
+> +          Turris Omnia router.
+> +
+> +    required:
+> +      - reg
+> +
 
+Add:
 
-My bot found errors running 'make dt_binding_check' on your patch:
+additionalProperties: false
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/ti,cal.example.dt.yaml: camera-sensor@3c: 'DOVDD-supply' is a required property
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/ti,cal.example.dt.yaml: camera-sensor@3c: 'AVDD-supply' is a required property
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/ti,cal.example.dt.yaml: camera-sensor@3c: 'DVDD-supply' is a required property
+With that,
 
-
-See https://patchwork.ozlabs.org/patch/1329566
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+Reviewed-by: Rob Herring <robh@kernel.org>
