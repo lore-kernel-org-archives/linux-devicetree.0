@@ -2,87 +2,127 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BB9C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 08:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C554C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 08:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E4CE206C1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 08:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 579E5206C1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 08:29:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rc8nd4SC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbgGPI1y (ORCPT
+        id S1725897AbgGPI3k (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 04:27:54 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34446 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgGPI1x (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 04:27:53 -0400
-Received: by mail-oi1-f195.google.com with SMTP id e4so4481421oib.1;
-        Thu, 16 Jul 2020 01:27:52 -0700 (PDT)
+        Thu, 16 Jul 2020 04:29:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48348 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbgGPI3k (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 04:29:40 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9126C061755;
+        Thu, 16 Jul 2020 01:29:39 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id rk21so5679545ejb.2;
+        Thu, 16 Jul 2020 01:29:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=iCEX1fRcVBPy4bLO4xifKAc2cHrh6Cb5pXfFp4MMl3s=;
+        b=rc8nd4SC5uYC3D5FNjGT4r6WgedOIHopEUVWe+EyFYwBj8qLNEjnA9TEEtJAZtS0T1
+         K8LmOSVFhlrYpgc8Iq5pWFFJoIbIREEvN4kPYUF3tbHV3xsiPuf4zOzJ4+RnwttqEN7i
+         sjN/177qLAAmIqQ2zEuojmKaqqCy/U8oiq2Z/UzsUYTS21mXXpM35Tn3MZ6V0vPFfmXb
+         PT7h5TN2X08k61FJ6HVhT/ix7TJIarDDSr+hPTxmGajEnUHHfHVvVD+xQ9Cw0roDecdt
+         Z/NE1GhldxuDsYSb/IlwuEDG63hxwn78DwO3d01zPVkRJviapBu7cBqkUHUCIxzqjy5y
+         MVvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Bw5+hFRH2zrjxX766KqQ5x8VG7OfU7f1ZtUxTkUpoJw=;
-        b=R5pYqgElSt0LWrHTsOX0EMuMjIJZLSBDQIhSjaPimPHHC6D6JFfxzfB6vJuLW1VU0L
-         05ZFhkQv/uvC9JzVu/9e6r4BKlyJiUkYbTC/o93anRmY4RDFH5oJXzdf8NrUGARsxJJ/
-         TSKhTeLSDULpUJwkPq03sHRITtJgUvtKVu7XzUiox/Lu/ifS4u472Tq/I0etun4Erydc
-         Q7zsRlNkFyYXElcL2ZLlaMFGpj3POT3wdWd66+bCCfasnaEJx/RQRC8+A+L1Gs3WT5Fq
-         hrRlKljjuk8xjfz2og02tgefLKCjro7pkG2oVAdVkJaZr/tTN6qOQKjfkbdX3eKKaq5g
-         dgMg==
-X-Gm-Message-State: AOAM533S1xoMzRulEJ5ysg7MMAAA6hy+ls/L13jfDoMUypqejVjf8o7Y
-        YKgYAgoLJ54lBF8oSCoyMqo97eB3g/3jbOKFkw8=
-X-Google-Smtp-Source: ABdhPJzmVMMoJDo1pTauAT6GN+3GQe6F/6FbTlBjJH9IwS6iqkhk9C3/n9B6BXkuhyJVbqprY9aAXpVrsmnj+1oZo4I=
-X-Received: by 2002:aca:5c41:: with SMTP id q62mr2905337oib.148.1594888072391;
- Thu, 16 Jul 2020 01:27:52 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=iCEX1fRcVBPy4bLO4xifKAc2cHrh6Cb5pXfFp4MMl3s=;
+        b=dGAVTvDejHcAf3453koZhnvqE6KdYdKGCGC38O+KQpxiObUdYgKsX1ayeekKeuPdpi
+         rPFhuhrEUT6WIFdEhs7dqKuDF4QUAecaAPaqiQXMdy4RZU0VKEcKlfP5yAIbzc54XD3z
+         LtMmMZweuIQotT0A1gsdBby9vrTrimCu8xLwcdd6PvDBhdmmhHYbq9F4Qug73j73sMKj
+         oFR+Ow91KA/uUd1DpVY4M/JjQ6AxWw7veTEgJAAqYnPqctlt6aV5Vd3USBJSUK9wAJAL
+         Bvcp0SXMPdUr0HkfV7FHhbhvHtUdriOAFFK5mEIWKrMBRepF6Of+ktLRj/T9ut7V6BwS
+         1RLQ==
+X-Gm-Message-State: AOAM530PFluyQzGz+RjrH5h3QbCyIixfiyqvZDFnheRYlgcgOUIVsQcX
+        PE3KXUhEEWT/oz38nFfE88s=
+X-Google-Smtp-Source: ABdhPJz/I3Puu8EkaoFdlPJENnRYnrbeJulUqxoDBVvA9WequmYX9KYtyTj5zIffo+qvg8ZybrsC3A==
+X-Received: by 2002:a17:906:3a17:: with SMTP id z23mr2564639eje.238.1594888178507;
+        Thu, 16 Jul 2020 01:29:38 -0700 (PDT)
+Received: from skbuf ([188.25.219.134])
+        by smtp.gmail.com with ESMTPSA id b18sm4362935ejl.52.2020.07.16.01.29.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 01:29:37 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 11:29:35 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Kurt Kanzenbach <kurt@linutronix.de>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org
+Subject: Re: [PATCH v1 2/8] net: dsa: Add DSA driver for Hirschmann Hellcreek
+ switches
+Message-ID: <20200716082935.snokd33kn52ixk5h@skbuf>
+References: <20200710113611.3398-1-kurt@linutronix.de>
+ <20200710113611.3398-3-kurt@linutronix.de>
+ <def49ff6-72fe-7ca0-9e00-863c314c1c3d@gmail.com>
+ <87v9islyf2.fsf@kurt>
 MIME-Version: 1.0
-References: <20200626143638.16512-1-geert+renesas@glider.be> <20200715201037.GA740389@bogus>
-In-Reply-To: <20200715201037.GA740389@bogus>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 16 Jul 2020 10:27:41 +0200
-Message-ID: <CAMuHMdWk6Ma8d3zWui0xAczfJ6jixh46byF5kj3f_JnQFnpP5Q@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pinctrl: renesas,rza2-pinctrl: Convert to json-schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     Chris Brandt <chris.brandt@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87v9islyf2.fsf@kurt>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 10:10 PM Rob Herring <robh@kernel.org> wrote:
-> On Fri, 26 Jun 2020 16:36:38 +0200, Geert Uytterhoeven wrote:
-> > Convert the Renesas RZ/A2 combined Pin and GPIO controller Device Tree
-> > binding documentation to json-schema.
+On Mon, Jul 13, 2020 at 08:30:25AM +0200, Kurt Kanzenbach wrote:
+> On Sat Jul 11 2020, Florian Fainelli wrote:
+> > On 7/10/2020 4:36 AM, Kurt Kanzenbach wrote:
+> > [snip]
 > >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> >  .../bindings/pinctrl/renesas,rza2-pinctrl.txt |  87 ---------------
-> >  .../pinctrl/renesas,rza2-pinctrl.yaml         | 100 ++++++++++++++++++
-> >  2 files changed, 100 insertions(+), 87 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
-> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml
+> >> +
+> >> +/* Default setup for DSA:
+> >> + *  VLAN 2: CPU and Port 1 egress untagged.
+> >> + *  VLAN 3: CPU and Port 2 egress untagged.
 > >
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> > Can you use any of the DSA_TAG_8021Q services to help you with that?
+> 
+> Maybe dsa_port_setup_8021q_tagging() could be used. It does distinguish
+> between RX and TX, but I assume it'd also work. Needs to be tested.
+> 
 
-Thanks, queueing in sh-pfc-for-v5.9.
+The fundamental role of DSA_TAG_8021Q is not to give you port
+separation, but port identification, when there is no hardware tagging
+support, or it cannot be used. So in fact, it is quite the contrary:
+tag_8021q assumes that port separation will be achieved by external
+means. Most switches support a "port forwarding matrix" of sorts (i.e.
+"is port i allowed to forward to port j?"), and that is what is used, in
+tag_8021q setups, to isolate one port from another on RX (in standalone
+mode). I'm not sure what's the status with hellcreek hardware design, it
+seems very odd to me to not include any sort of port forwarding matrix,
+and to have to rely on port membership on each port's pvid to achieve
+that in the .port_bridge_join method. By the way, this brings up another
+topic: any 'bridge vlan add' for a pvid will break your setup. You
+should avoid that somehow.
+Please try to set ds->configure_vlan_while_not_filtering = true; in your
+.setup callback.  We're trying to make all switches behave uniformly and
+be able to deal with VLANs added straight away by the bridge. Don't be
+confused by the fact that it's an option - there's nothing really
+optional about it, it is just there to avoid breakage in drivers which
+haven't been converted.  Since yours is a new driver, it should enable
+this option from day 1.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks,
+-Vladimir
