@@ -2,417 +2,204 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 676FFC433ED
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 08:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 262B7C433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 08:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F8D72064C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 08:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1BE62071B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 08:35:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="SksTmGnL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728110AbgGPIcy (ORCPT
+        id S1726411AbgGPIfX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 04:32:54 -0400
-Received: from mx.socionext.com ([202.248.49.38]:56533 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728063AbgGPIcx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jul 2020 04:32:53 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 16 Jul 2020 17:32:37 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id ED653180BC2;
-        Thu, 16 Jul 2020 17:32:37 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 16 Jul 2020 17:32:37 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 80B6C1A050A;
-        Thu, 16 Jul 2020 17:32:37 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
+        Thu, 16 Jul 2020 04:35:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49238 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725950AbgGPIfW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 04:35:22 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 304C5C061755
+        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 01:35:22 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id a6so6135308wrm.4
+        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 01:35:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=g9tInc8WAwgb2fltQstKt7OODeMNIe5ubcIW/8rewQU=;
+        b=SksTmGnL7jz5Q3FxpBoKJsvTXyRharbixFCiChPt33feD7qDxqXFskXUSZp+Da6D5i
+         eu9aeQqeWVfIg5zfH3TaA6VG0eY15bzq97adKH8imFnqMvMR3eEbgXCzan1i8BQ+7Ntm
+         cytlfKZclQyyEE8J8IIMxLYdJBLbkpUJm6nRuwMzAOe27SV5nV+Bcm9eIned+xSZzMda
+         btJGu78QeQi92Pv0POTmVOCoODm9H9h/SKvetqzhIM9KemVxHscbYbc0fW2ir782nBBo
+         gOAqxDQtpbAAEjTHn/uh08djW+Ut5g89cXOoQavgDKXrERaBWGV+i59fbVhQwsXNbMzM
+         7Qkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=g9tInc8WAwgb2fltQstKt7OODeMNIe5ubcIW/8rewQU=;
+        b=NXvvospsBWoZ0K/NC7425ECdkZzTNKOgkpoQFFjfgxfSD+fKdCD5+/xrWHqs8X31q6
+         FSNOKem0tubDUuXSHCZB/Ol8fNacU+Vjmx1ab1+JkZfHa4/D9+5RY84lyoApjo3zH++J
+         4TEuFBs/CoDQuzoi9w9ysv3UHGKSK8Z2Gc9rGnAuH9OHSCEh7wl1GE6wgZgbxauKBl9p
+         M4D+fPRiW4M67NZD1IztV25N5S1fR7EWkugOBI4O8Tw3bYBsbk09zDDXfxc8YwCCGlq4
+         oLDlBIV+jg/E8w3UkKuDcA3QSXNn/MjyECns5WkV0GjJciPOC/zCwdOiZpEMiCFMt2jr
+         uWSA==
+X-Gm-Message-State: AOAM530XaekD+3D5UpKb2XIZ2XFBjlRgcjO/vUcyqUSmECyBC1XE1qE3
+        kyW0la5BPzxm/gcpZhmf4dQT/e9w83hxMA==
+X-Google-Smtp-Source: ABdhPJwpoZMhW16XpajJxvEatzAbmJ4MjFZNH3PJ2Va6iRmftJ62oB1QXabHDuVj3Dcbu+bApA3FtQ==
+X-Received: by 2002:adf:e811:: with SMTP id o17mr4164857wrm.53.1594888520686;
+        Thu, 16 Jul 2020 01:35:20 -0700 (PDT)
+Received: from [10.1.2.12] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id w128sm8325501wmb.19.2020.07.16.01.35.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jul 2020 01:35:20 -0700 (PDT)
+Subject: Re: [PATCHv1 0/3] Enable RTC on Odroid N2
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     Anand Moon <linux.amoon@gmail.com>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org,
         Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v4 2/2] phy: socionext: Add UniPhier AHCI PHY driver support
-Date:   Thu, 16 Jul 2020 17:32:24 +0900
-Message-Id: <1594888344-32066-3-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594888344-32066-1-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1594888344-32066-1-git-send-email-hayashi.kunihiko@socionext.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>
+References: <20200715160209.652-1-linux.amoon@gmail.com>
+ <455f5dcc-3be3-45cd-4947-50f261a502a4@baylibre.com>
+ <CANAwSgRXLUqqSqnguV2pgPdumMi8i6T9rh6hNQ0Y03mv_j7V-g@mail.gmail.com>
+ <91fbbe36-d839-d864-7666-5483cc643a5e@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT7CwHsEEwEKACUC
+ GyMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheABQJXDO2CAhkBAAoJEBaat7Gkz/iubGIH/iyk
+ RqvgB62oKOFlgOTYCMkYpm2aAOZZLf6VKHKc7DoVwuUkjHfIRXdslbrxi4pk5VKU6ZP9AKsN
+ NtMZntB8WrBTtkAZfZbTF7850uwd3eU5cN/7N1Q6g0JQihE7w4GlIkEpQ8vwSg5W7hkx3yQ6
+ 2YzrUZh/b7QThXbNZ7xOeSEms014QXazx8+txR7jrGF3dYxBsCkotO/8DNtZ1R+aUvRfpKg5
+ ZgABTC0LmAQnuUUf2PHcKFAHZo5KrdO+tyfL+LgTUXIXkK+tenkLsAJ0cagz1EZ5gntuheLD
+ YJuzS4zN+1Asmb9kVKxhjSQOcIh6g2tw7vaYJgL/OzJtZi6JlIXOwU0EVid/pAEQAND7AFhr
+ 5faf/EhDP9FSgYd/zgmb7JOpFPje3uw7jz9wFb28Cf0Y3CcncdElYoBNbRlesKvjQRL8mozV
+ 9RN+IUMHdUx1akR/A4BPXNdL7StfzKWOCxZHVS+rIQ/fE3Qz/jRmT6t2ZkpplLxVBpdu95qJ
+ YwSZjuwFXdC+A7MHtQXYi3UfCgKiflj4+/ITcKC6EF32KrmIRqamQwiRsDcUUKlAUjkCLcHL
+ CQvNsDdm2cxdHxC32AVm3Je8VCsH7/qEPMQ+cEZk47HOR3+Ihfn1LEG5LfwsyWE8/JxsU2a1
+ q44LQM2lcK/0AKAL20XDd7ERH/FCBKkNVzi+svYJpyvCZCnWT0TRb72mT+XxLWNwfHTeGALE
+ +1As4jIS72IglvbtONxc2OIid3tR5rX3k2V0iud0P7Hnz/JTdfvSpVj55ZurOl2XAXUpGbq5
+ XRk5CESFuLQV8oqCxgWAEgFyEapI4GwJsvfl/2Er8kLoucYO1Id4mz6N33+omPhaoXfHyLSy
+ dxD+CzNJqN2GdavGtobdvv/2V0wukqj86iKF8toLG2/Fia3DxMaGUxqI7GMOuiGZjXPt/et/
+ qeOySghdQ7Sdpu6fWc8CJXV2mOV6DrSzc6ZVB4SmvdoruBHWWOR6YnMz01ShFE49pPucyU1h
+ Av4jC62El3pdCrDOnWNFMYbbon3vABEBAAHCwn4EGAECAAkFAlYnf6QCGwICKQkQFpq3saTP
+ +K7BXSAEGQECAAYFAlYnf6QACgkQd9zb2sjISdGToxAAkOjSfGxp0ulgHboUAtmxaU3viucV
+ e2Hl1BVDtKSKmbIVZmEUvx9D06IijFaEzqtKD34LXD6fjl4HIyDZvwfeaZCbJbO10j3k7FJE
+ QrBtpdVqkJxme/nYlGOVzcOiKIepNkwvnHVnuVDVPcXyj2wqtsU7VZDDX41z3X4xTQwY3SO1
+ 9nRO+f+i4RmtJcITgregMa2PcB0LvrjJlWroI+KAKCzoTHzSTpCXMJ1U/dEqyc87bFBdc+DI
+ k8mWkPxsccdbs4t+hH0NoE3Kal9xtAl56RCtO/KgBLAQ5M8oToJVatxAjO1SnRYVN1EaAwrR
+ xkHdd97qw6nbg9BMcAoa2NMc0/9MeiaQfbgW6b0reIz/haHhXZ6oYSCl15Knkr4t1o3I2Bqr
+ Mw623gdiTzotgtId8VfLB2Vsatj35OqIn5lVbi2ua6I0gkI6S7xJhqeyrfhDNgzTHdQVHB9/
+ 7jnM0ERXNy1Ket6aDWZWCvM59dTyu37g3VvYzGis8XzrX1oLBU/tTXqo1IFqqIAmvh7lI0Se
+ gCrXz7UanxCwUbQBFjzGn6pooEHJYRLuVGLdBuoApl/I4dLqCZij2AGa4CFzrn9W0cwm3HCO
+ lR43gFyz0dSkMwNUd195FrvfAz7Bjmmi19DnORKnQmlvGe/9xEEfr5zjey1N9+mt3//geDP6
+ clwKBkq0JggA+RTEAELzkgPYKJ3NutoStUAKZGiLOFMpHY6KpItbbHjF2ZKIU1whaRYkHpB2
+ uLQXOzZ0d7x60PUdhqG3VmFnzXSztA4vsnDKk7x2xw0pMSTKhMafpxaPQJf494/jGnwBHyi3
+ h3QGG1RjfhQ/OMTX/HKtAUB2ct3Q8/jBfF0hS5GzT6dYtj0Ci7+8LUsB2VoayhNXMnaBfh+Q
+ pAhaFfRZWTjUFIV4MpDdFDame7PB50s73gF/pfQbjw5Wxtes/0FnqydfId95s+eej+17ldGp
+ lMv1ok7K0H/WJSdr7UwDAHEYU++p4RRTJP6DHWXcByVlpNQ4SSAiivmWiwOt490+Ac7ATQRN
+ WQbPAQgAvIoM384ZRFocFXPCOBir5m2J+96R2tI2XxMgMfyDXGJwFilBNs+fpttJlt2995A8
+ 0JwPj8SFdm6FBcxygmxBBCc7i/BVQuY8aC0Z/w9Vzt3Eo561r6pSHr5JGHe8hwBQUcNPd/9l
+ 2ynP57YTSE9XaGJK8gIuTXWo7pzIkTXfN40Wh5jeCCspj4jNsWiYhljjIbrEj300g8RUT2U0
+ FcEoiV7AjJWWQ5pi8lZJX6nmB0lc69Jw03V6mblgeZ/1oTZmOepkagwy2zLDXxihf0GowUif
+ GphBDeP8elWBNK+ajl5rmpAMNRoKxpN/xR4NzBg62AjyIvigdywa1RehSTfccQARAQABwsBf
+ BBgBAgAJBQJNWQbPAhsMAAoJEBaat7Gkz/iuteIH+wZuRDqK0ysAh+czshtG6JJlLW6eXJJR
+ Vi7dIPpgFic2LcbkSlvB8E25Pcfz/+tW+04Urg4PxxFiTFdFCZO+prfd4Mge7/OvUcwoSub7
+ ZIPo8726ZF5/xXzajahoIu9/hZ4iywWPAHRvprXaim5E/vKjcTeBMJIqZtS4u/UK3EpAX59R
+ XVxVpM8zJPbk535ELUr6I5HQXnihQm8l6rt9TNuf8p2WEDxc8bPAZHLjNyw9a/CdeB97m2Tr
+ zR8QplXA5kogS4kLe/7/JmlDMO8Zgm9vKLHSUeesLOrjdZ59EcjldNNBszRZQgEhwaarfz46
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <a7e9b154-ceb2-3915-454a-a53c9b65622e@baylibre.com>
+Date:   Thu, 16 Jul 2020 10:35:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <91fbbe36-d839-d864-7666-5483cc643a5e@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a driver for PHY interface built into ahci controller implemented
-in UniPhier SoCs. This supports PXs2 and PXs3 SoCs.
+Hi,
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- drivers/phy/socionext/Kconfig             |  10 +
- drivers/phy/socionext/Makefile            |   1 +
- drivers/phy/socionext/phy-uniphier-ahci.c | 321 ++++++++++++++++++++++++++++++
- 3 files changed, 332 insertions(+)
- create mode 100644 drivers/phy/socionext/phy-uniphier-ahci.c
+On 16/07/2020 10:20, Neil Armstrong wrote:
+> Hi,
+> 
+> On 16/07/2020 10:14, Anand Moon wrote:
+>> Hi Neil,
+>>
+>> Thanks for your review comments.
+>>
+>> On Thu, 16 Jul 2020 at 12:35, Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>>
+>>> Hi Anand,
+>>>
+>>> Only the vrtc is able to wakeup the device from suspend,
+>>> the external RTC is not capable.
+>>>
+>>> Neil
+>>
+>> Now I have two RTC driver registered
+>>
+>> $ dmesg | grep rtc
+>> [    4.737315] rtc-pcf8563 0-0051: registered as rtc0
+>> [    4.738763] rtc-pcf8563 0-0051: setting system clock to
+>> 2020-07-16T08:00:46 UTC (1594886446)
+>> [    4.790206] meson-vrtc ff8000a8.rtc: registered as rtc1
+>>
+>> And there are two nodes
+>> # ls /dev/rtc*
+>> /dev/rtc  /dev/rtc0  /dev/rtc1
+>>
+>> So it seames an issue that /dev/rtc0 is not able to handle wakeup events.
+>> How can we resolve this issue?
+>>
+>> # time rtcwake -s 30 -m mem
+>> rtcwake: /dev/rtc0 not enabled for wakeup events
+> 
+> rtcwake -d /dev/rtc1 -s 30 -m mem
+> 
+> As Christian reported off-list, it may be necessary to keep the vrtc as rtc0,
+> so you should add aliases in the odroid-n2 DT to have vrtc as rtc0 and the on-board
+> rtc as rtc1, but it may break the hwclock tools, so the reverse may be better
+> but you'll need to specify rtc1 to rtcwake.
 
-diff --git a/drivers/phy/socionext/Kconfig b/drivers/phy/socionext/Kconfig
-index 8c9d7c3..a3970e0 100644
---- a/drivers/phy/socionext/Kconfig
-+++ b/drivers/phy/socionext/Kconfig
-@@ -34,3 +34,13 @@ config PHY_UNIPHIER_PCIE
- 	help
- 	  Enable this to support PHY implemented in PCIe controller
- 	  on UniPhier SoCs. This driver supports LD20 and PXs3 SoCs.
-+
-+config PHY_UNIPHIER_AHCI
-+	tristate "UniPhier AHCI PHY driver"
-+	depends on ARCH_UNIPHIER || COMPILE_TEST
-+	depends on OF && HAS_IOMEM
-+	default SATA_AHCI_PLATFORM
-+	select GENERIC_PHY
-+	help
-+	  Enable this to support PHY implemented in AHCI controller
-+	  on UniPhier SoCs. This driver supports PXs2 and PXs3 SoCs.
-diff --git a/drivers/phy/socionext/Makefile b/drivers/phy/socionext/Makefile
-index 7dc9095..e67c2da 100644
---- a/drivers/phy/socionext/Makefile
-+++ b/drivers/phy/socionext/Makefile
-@@ -6,3 +6,4 @@
- obj-$(CONFIG_PHY_UNIPHIER_USB2)	+= phy-uniphier-usb2.o
- obj-$(CONFIG_PHY_UNIPHIER_USB3)	+= phy-uniphier-usb3hs.o phy-uniphier-usb3ss.o
- obj-$(CONFIG_PHY_UNIPHIER_PCIE)	+= phy-uniphier-pcie.o
-+obj-$(CONFIG_PHY_UNIPHIER_AHCI)	+= phy-uniphier-ahci.o
-diff --git a/drivers/phy/socionext/phy-uniphier-ahci.c b/drivers/phy/socionext/phy-uniphier-ahci.c
-new file mode 100644
-index 0000000..7427c40
---- /dev/null
-+++ b/drivers/phy/socionext/phy-uniphier-ahci.c
-@@ -0,0 +1,321 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * phy-uniphier-ahci.c - PHY driver for UniPhier AHCI controller
-+ * Copyright 2016-2020, Socionext Inc.
-+ * Author: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/bitops.h>
-+#include <linux/clk.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset.h>
-+
-+struct uniphier_ahciphy_priv {
-+	struct device *dev;
-+	void __iomem  *base;
-+	struct clk *clk, *clk_parent;
-+	struct reset_control *rst, *rst_parent;
-+	const struct uniphier_ahciphy_soc_data *data;
-+};
-+
-+struct uniphier_ahciphy_soc_data {
-+	int (*init)(struct uniphier_ahciphy_priv *priv);
-+	int (*power_on)(struct uniphier_ahciphy_priv *priv);
-+	int (*power_off)(struct uniphier_ahciphy_priv *priv);
-+	bool is_ready_high;
-+	bool is_phy_clk;
-+};
-+
-+/* for PXs2/PXs3 */
-+#define CKCTRL				0x0
-+#define CKCTRL_P0_READY			BIT(15)
-+#define CKCTRL_P0_RESET			BIT(10)
-+#define CKCTRL_REF_SSP_EN		BIT(9)
-+#define TXCTRL0				0x4
-+#define TXCTRL0_AMP_G3_MASK		GENMASK(22, 16)
-+#define TXCTRL0_AMP_G2_MASK		GENMASK(14, 8)
-+#define TXCTRL0_AMP_G1_MASK		GENMASK(6, 0)
-+#define TXCTRL1				0x8
-+#define TXCTRL1_DEEMPH_G3_MASK		GENMASK(21, 16)
-+#define TXCTRL1_DEEMPH_G2_MASK		GENMASK(13, 8)
-+#define TXCTRL1_DEEMPH_G1_MASK		GENMASK(5, 0)
-+#define RXCTRL				0xc
-+#define RXCTRL_LOS_LVL_MASK		GENMASK(20, 16)
-+#define RXCTRL_LOS_BIAS_MASK		GENMASK(10, 8)
-+#define RXCTRL_RX_EQ_MASK		GENMASK(2, 0)
-+
-+static void uniphier_ahciphy_pxs2_enable(struct uniphier_ahciphy_priv *priv,
-+					 bool enable)
-+{
-+	u32 val;
-+
-+	val = readl(priv->base + CKCTRL);
-+
-+	if (enable) {
-+		val |= CKCTRL_REF_SSP_EN;
-+		writel(val, priv->base + CKCTRL);
-+		val &= ~CKCTRL_P0_RESET;
-+		writel(val, priv->base + CKCTRL);
-+	} else {
-+		val |= CKCTRL_P0_RESET;
-+		writel(val, priv->base + CKCTRL);
-+		val &= ~CKCTRL_REF_SSP_EN;
-+		writel(val, priv->base + CKCTRL);
-+	}
-+}
-+
-+static int uniphier_ahciphy_pxs2_power_on(struct uniphier_ahciphy_priv *priv)
-+{
-+	int ret;
-+	u32 val;
-+
-+	uniphier_ahciphy_pxs2_enable(priv, true);
-+
-+	/* wait until PLL is ready */
-+	if (priv->data->is_ready_high)
-+		ret = readl_poll_timeout(priv->base + CKCTRL, val,
-+					 (val & CKCTRL_P0_READY), 200, 400);
-+	else
-+		ret = readl_poll_timeout(priv->base + CKCTRL, val,
-+					 !(val & CKCTRL_P0_READY), 200, 400);
-+	if (ret) {
-+		dev_err(priv->dev, "Failed to check whether PHY PLL is ready\n");
-+		uniphier_ahciphy_pxs2_enable(priv, false);
-+	}
-+
-+	return ret;
-+}
-+
-+static int uniphier_ahciphy_pxs2_power_off(struct uniphier_ahciphy_priv *priv)
-+{
-+	uniphier_ahciphy_pxs2_enable(priv, false);
-+
-+	return 0;
-+}
-+
-+static int uniphier_ahciphy_pxs3_init(struct uniphier_ahciphy_priv *priv)
-+{
-+	int i;
-+	u32 val;
-+
-+	/* setup port parameter */
-+	val = readl(priv->base + TXCTRL0);
-+	val &= ~TXCTRL0_AMP_G3_MASK;
-+	val |= FIELD_PREP(TXCTRL0_AMP_G3_MASK, 0x73);
-+	val &= ~TXCTRL0_AMP_G2_MASK;
-+	val |= FIELD_PREP(TXCTRL0_AMP_G2_MASK, 0x46);
-+	val &= ~TXCTRL0_AMP_G1_MASK;
-+	val |= FIELD_PREP(TXCTRL0_AMP_G1_MASK, 0x42);
-+	writel(val, priv->base + TXCTRL0);
-+
-+	val = readl(priv->base + TXCTRL1);
-+	val &= ~TXCTRL1_DEEMPH_G3_MASK;
-+	val |= FIELD_PREP(TXCTRL1_DEEMPH_G3_MASK, 0x23);
-+	val &= ~TXCTRL1_DEEMPH_G2_MASK;
-+	val |= FIELD_PREP(TXCTRL1_DEEMPH_G2_MASK, 0x05);
-+	val &= ~TXCTRL1_DEEMPH_G1_MASK;
-+	val |= FIELD_PREP(TXCTRL1_DEEMPH_G1_MASK, 0x05);
-+
-+	val = readl(priv->base + RXCTRL);
-+	val &= ~RXCTRL_LOS_LVL_MASK;
-+	val |= FIELD_PREP(RXCTRL_LOS_LVL_MASK, 0x9);
-+	val &= ~RXCTRL_LOS_BIAS_MASK;
-+	val |= FIELD_PREP(RXCTRL_LOS_BIAS_MASK, 0x2);
-+	val &= ~RXCTRL_RX_EQ_MASK;
-+	val |= FIELD_PREP(RXCTRL_RX_EQ_MASK, 0x1);
-+
-+	/* dummy read 25 times to make a wait time for the phy to stabilize */
-+	for (i = 0; i < 25; i++)
-+		readl(priv->base + CKCTRL);
-+
-+	return 0;
-+}
-+
-+static int uniphier_ahciphy_init(struct phy *phy)
-+{
-+	struct uniphier_ahciphy_priv *priv = phy_get_drvdata(phy);
-+	int ret;
-+
-+	ret = clk_prepare_enable(priv->clk_parent);
-+	if (ret)
-+		return ret;
-+
-+	ret = reset_control_deassert(priv->rst_parent);
-+	if (ret)
-+		goto out_clk_disable;
-+
-+	if (priv->data->init) {
-+		ret = priv->data->init(priv);
-+		if (ret)
-+			goto out_rst_assert;
-+	}
-+
-+	return 0;
-+
-+out_rst_assert:
-+	reset_control_assert(priv->rst_parent);
-+out_clk_disable:
-+	clk_disable_unprepare(priv->clk_parent);
-+
-+	return ret;
-+}
-+
-+static int uniphier_ahciphy_exit(struct phy *phy)
-+{
-+	struct uniphier_ahciphy_priv *priv = phy_get_drvdata(phy);
-+
-+	reset_control_assert(priv->rst_parent);
-+	clk_disable_unprepare(priv->clk_parent);
-+
-+	return 0;
-+}
-+
-+static int uniphier_ahciphy_power_on(struct phy *phy)
-+{
-+	struct uniphier_ahciphy_priv *priv = phy_get_drvdata(phy);
-+	int ret = 0;
-+
-+	ret = clk_prepare_enable(priv->clk);
-+	if (ret)
-+		return ret;
-+
-+	ret = reset_control_deassert(priv->rst);
-+	if (ret)
-+		goto out_clk_disable;
-+
-+	if (priv->data->power_on) {
-+		ret = priv->data->power_on(priv);
-+		if (ret)
-+			goto out_reset_assert;
-+	}
-+
-+	return 0;
-+
-+out_reset_assert:
-+	reset_control_assert(priv->rst);
-+out_clk_disable:
-+	clk_disable_unprepare(priv->clk);
-+
-+	return ret;
-+}
-+
-+static int uniphier_ahciphy_power_off(struct phy *phy)
-+{
-+	struct uniphier_ahciphy_priv *priv = phy_get_drvdata(phy);
-+	int ret = 0;
-+
-+	if (priv->data->power_off)
-+		ret = priv->data->power_off(priv);
-+
-+	reset_control_assert(priv->rst);
-+	clk_disable_unprepare(priv->clk);
-+
-+	return ret;
-+}
-+
-+static const struct phy_ops uniphier_ahciphy_ops = {
-+	.init  = uniphier_ahciphy_init,
-+	.exit  = uniphier_ahciphy_exit,
-+	.power_on  = uniphier_ahciphy_power_on,
-+	.power_off = uniphier_ahciphy_power_off,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int uniphier_ahciphy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct uniphier_ahciphy_priv *priv;
-+	struct phy *phy;
-+	struct phy_provider *phy_provider;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->dev = dev;
-+	priv->data = of_device_get_match_data(dev);
-+	if (WARN_ON(!priv->data))
-+		return -EINVAL;
-+
-+	priv->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(priv->base))
-+		return PTR_ERR(priv->base);
-+
-+	priv->clk_parent = devm_clk_get(dev, "link");
-+	if (IS_ERR(priv->clk_parent))
-+		return PTR_ERR(priv->clk_parent);
-+
-+	if (priv->data->is_phy_clk) {
-+		priv->clk = devm_clk_get(dev, "phy");
-+		if (IS_ERR(priv->clk))
-+			return PTR_ERR(priv->clk);
-+	}
-+
-+	priv->rst_parent = devm_reset_control_get_shared(dev, "link");
-+	if (IS_ERR(priv->rst_parent))
-+		return PTR_ERR(priv->rst_parent);
-+
-+	priv->rst = devm_reset_control_get_shared(dev, "phy");
-+	if (IS_ERR(priv->rst))
-+		return PTR_ERR(priv->rst);
-+
-+	phy = devm_phy_create(dev, dev->of_node, &uniphier_ahciphy_ops);
-+	if (IS_ERR(phy)) {
-+		dev_err(dev, "failed to create phy\n");
-+		return PTR_ERR(phy);
-+	}
-+
-+	phy_set_drvdata(phy, priv);
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+	if (IS_ERR(phy_provider))
-+		return PTR_ERR(phy_provider);
-+
-+	return 0;
-+}
-+
-+static const struct uniphier_ahciphy_soc_data uniphier_pxs2_data = {
-+	.power_on  = uniphier_ahciphy_pxs2_power_on,
-+	.power_off = uniphier_ahciphy_pxs2_power_off,
-+	.is_ready_high = false,
-+	.is_phy_clk = false,
-+};
-+
-+static const struct uniphier_ahciphy_soc_data uniphier_pxs3_data = {
-+	.init      = uniphier_ahciphy_pxs3_init,
-+	.power_on  = uniphier_ahciphy_pxs2_power_on,
-+	.power_off = uniphier_ahciphy_pxs2_power_off,
-+	.is_ready_high = true,
-+	.is_phy_clk = true,
-+};
-+
-+static const struct of_device_id uniphier_ahciphy_match[] = {
-+	{
-+		.compatible = "socionext,uniphier-pxs2-ahci-phy",
-+		.data = &uniphier_pxs2_data,
-+	},
-+	{
-+		.compatible = "socionext,uniphier-pxs3-ahci-phy",
-+		.data = &uniphier_pxs3_data,
-+	},
-+	{ /* Sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, uniphier_ahciphy_match);
-+
-+static struct platform_driver uniphier_ahciphy_driver = {
-+	.probe = uniphier_ahciphy_probe,
-+	.driver = {
-+		.name = "uniphier-ahci-phy",
-+		.of_match_table = uniphier_ahciphy_match,
-+	},
-+};
-+module_platform_driver(uniphier_ahciphy_driver);
-+
-+MODULE_AUTHOR("Kunihiko Hayashi <hayashi.kunihiko@socionext.com>");
-+MODULE_DESCRIPTION("UniPhier PHY driver for AHCI controller");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+While looking closer to the Odroid-N2 schematics and U-Boot/SCP Firmware, the external on-board
+RTC can wake the device with the GPIO_AO 7, and wakeup is enabled in:
+https://github.com/hardkernel/u-boot/blob/odroidn2-v2015.01/board/hardkernel/odroidn2/firmware/scp_task/pwr_ctrl.c#L143
+
+So, something must be missing.
+
+Neil
+
+> 
+> Neil
+> 
+>>
+>> real    0m0.002s
+>> user    0m0.001s
+>> sys     0m0.002s
+>>
+>> -Anand
+>>
+> 
 
