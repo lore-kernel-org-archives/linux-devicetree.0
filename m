@@ -3,301 +3,280 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CDBC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 18:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21150C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 18:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C7002070E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 18:05:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fHBUTi0o"
+	by mail.kernel.org (Postfix) with ESMTP id F044F20739
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 18:07:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594922834;
+	bh=HlSaSCiEPNOBTSTBuAMOcLv7ffieEP5NgVQyzwP20Ac=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DXk4eptC66C9m1X0SQN2yBp0INrKGyxCLtq6NoujZ9yK9eIyE8TVHls1By1IBV34T
+	 GL1TSmhcqrjxjIZTetKW+JoC+KYNZz6R4QosL807d5fXAt/2b8ZH+0BwR6KfM9PplS
+	 s256O2yD9XTxS2QnSToeDHitsk1InfthLOzx5agI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728947AbgGPSFt (ORCPT
+        id S1728257AbgGPSHN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 14:05:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52996 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728837AbgGPSFt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 14:05:49 -0400
-Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10D8AC061755
-        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 11:05:49 -0700 (PDT)
-Received: by mail-ua1-x944.google.com with SMTP id b13so2055121uav.3
-        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 11:05:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6LJXcaiErt+0IC9WAhFqF+PgHD+Xfmr3j77sKRGuw00=;
-        b=fHBUTi0o7R2ZDnjv7Bf840urtxXMHNAU19jmAKkxEYrc6Pk78KckWPlezDehMCs/1Q
-         hxxgx33laG/g8T4dGc3fZblx3pRHNmBqLsxNbFwE/ZExYBRbTifNAI03v5WghgHjWt30
-         Hxtcg186Z3dmy5Srwbn3Z6rUdC3iK3KE0li2s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6LJXcaiErt+0IC9WAhFqF+PgHD+Xfmr3j77sKRGuw00=;
-        b=Ells0ZeZ94Yq4AKJJEnRR/r5vu4bSs9hJZMrRPHkoLmS7Ki32U04p5FlXEZicf+GaB
-         w6njYBqtrCDaKJQHKO9IxyMFtDCEwicRjKOT3+96GMC3IfE0T0fF+JOjonDN8hOaecxI
-         RcPeFrGqMwJ3hwd/56loWaHi9EckH4kkz5mcJkDQ1wiuL4cChfBYmrcVnXSMbHk2qIIE
-         jsz+0eIc7+qNJBNuZqWNDzHm7PBVXsWXnundYCWDIdBvK6G73EaeWTAdStl1gwZkfnhh
-         3cAhzU1XhfXwiFRW+Q0TkBemZsDhDKqy6Tlr1LdfIWzQZeA80rfiyfgatwSM0sDRTVSO
-         dZHg==
-X-Gm-Message-State: AOAM531s8FjlTw33ezfv085gUh2ArLhT4h+twusqDGn1NUS9tE6jyczV
-        3GpDqX7sQDn/o4h3shLg6B8JRNuqX+k=
-X-Google-Smtp-Source: ABdhPJxgpTB8KtQGhHxyrn7QJY+gMMKyHYOFaMfAAjs1//li5Jo42XhJVWcavYp2SwQKTve8kTjfcQ==
-X-Received: by 2002:ab0:6550:: with SMTP id x16mr4598565uap.17.1594922747833;
-        Thu, 16 Jul 2020 11:05:47 -0700 (PDT)
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
-        by smtp.gmail.com with ESMTPSA id u43sm548087uau.16.2020.07.16.11.05.46
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 11:05:47 -0700 (PDT)
-Received: by mail-ua1-f46.google.com with SMTP id n4so2056163uae.5
-        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 11:05:46 -0700 (PDT)
-X-Received: by 2002:ab0:486d:: with SMTP id c42mr4460815uad.64.1594922746099;
- Thu, 16 Jul 2020 11:05:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200716061445.628709-1-cychiang@chromium.org>
-In-Reply-To: <20200716061445.628709-1-cychiang@chromium.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 16 Jul 2020 11:05:34 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=U6oStCh3kyoM-jLEsRrYgnKvUNiQFOqxXm409gDUhcGA@mail.gmail.com>
-Message-ID: <CAD=FV=U6oStCh3kyoM-jLEsRrYgnKvUNiQFOqxXm409gDUhcGA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Add lpass cpu node for I2S driver
-To:     Cheng-Yi Chiang <cychiang@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Rohit kumar <rohitkr@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Thu, 16 Jul 2020 14:07:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34576 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728402AbgGPSHN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jul 2020 14:07:13 -0400
+Received: from earth.universe (dyndsl-095-033-172-209.ewe-ip-backbone.de [95.33.172.209])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3F8A2070E;
+        Thu, 16 Jul 2020 18:07:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594922831;
+        bh=HlSaSCiEPNOBTSTBuAMOcLv7ffieEP5NgVQyzwP20Ac=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mjVECEpSB2yxv9DKO7aACQ0pHBLNljhbrS6vKrmslrHHE8ODmKsqCqbNr4JpwFs8k
+         n6po3ACtQnLAxWuVts1SgT0MMS0xjlzBvY/ymjMJdC2w8Bgcg62o54CCdcVYoEfMht
+         qjt+KOwImQGQp0hTgVjWRIvpgyllWpjqlWHoJO84=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 350E93C08CE; Thu, 16 Jul 2020 20:07:10 +0200 (CEST)
+Date:   Thu, 16 Jul 2020 20:07:10 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Ajit Pandey <ajitp@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-omap@vger.kernel.org, kernel@collabora.com,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCHv2 1/4] dt-bindings: display: panel-dsi-cm: convert to YAML
+Message-ID: <20200716180710.u6pqe6fvn4usuidf@earth.universe>
+References: <20200716125733.83654-1-sebastian.reichel@collabora.com>
+ <20200716125733.83654-2-sebastian.reichel@collabora.com>
+ <20200716175258.GE2235355@ravnborg.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cl2alezg7yxsq6tn"
+Content-Disposition: inline
+In-Reply-To: <20200716175258.GE2235355@ravnborg.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+
+--cl2alezg7yxsq6tn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
 Hi,
 
-On Wed, Jul 15, 2020 at 11:14 PM Cheng-Yi Chiang <cychiang@chromium.org> wrote:
->
-> From: Ajit Pandey <ajitp@codeaurora.org>
->
-> Add the I2S controller node to sc7180 dtsi.
-> Add pinmux for pirmary and secondary I2S.
+On Thu, Jul 16, 2020 at 07:52:58PM +0200, Sam Ravnborg wrote:
+> On Thu, Jul 16, 2020 at 02:57:30PM +0200, Sebastian Reichel wrote:
+> > Convert panel-dsi-cm bindings to YAML and add
+> > missing properties while at it.
+> >=20
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+>=20
+> Hi Sebastian.
+>=20
+> Look good now. Applied this patch to drm-misc-next.
 
-s/pirmary/primary
+Thanks!
 
->
-> Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
-> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-> ---
-> This patch depends on these patch series so it is not ready to be merged now.
-> - clk: qcom: Support for Low Power Audio Clocks on SC7180 https://patchwork.kernel.org/cover/11664273/
-> - arm64: dts: qcom: sc7180: Add LPASS clock controller nodes https://patchwork.kernel.org/patch/11664303/
-> - ASoC: qcom: Add support for SC7180 lpass variant https://patchwork.kernel.org/cover/11650649/
+> $ ls Documentation/devicetree/bindings/display/panel/*.txt
+> Documentation/devicetree/bindings/display/panel/display-timing.txt
+>=20
+> Nice :-)
 
-Thanks for pointing out the dependencies!
+Indeed.
 
+> The DTS file changes needs to go in via another route.
 
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 132 +++++++++++++++++++++++++++
->  1 file changed, 132 insertions(+)
+No worries. I guess Tony will queue them up when he finds some time.
 
-My review is a bit rote since I don't actually know anything about
-audio.  This is mostly just a dt-hygiene review.
+-- Sebastian
 
+>=20
+> 	Sam
+>=20
+> > ---
+> >  .../bindings/display/panel/panel-dsi-cm.txt   | 29 -------
+> >  .../bindings/display/panel/panel-dsi-cm.yaml  | 86 +++++++++++++++++++
+> >  2 files changed, 86 insertions(+), 29 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/display/panel/pan=
+el-dsi-cm.txt
+> >  create mode 100644 Documentation/devicetree/bindings/display/panel/pan=
+el-dsi-cm.yaml
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/display/panel/panel-dsi-=
+cm.txt b/Documentation/devicetree/bindings/display/panel/panel-dsi-cm.txt
+> > deleted file mode 100644
+> > index dce48eb9db57..000000000000
+> > --- a/Documentation/devicetree/bindings/display/panel/panel-dsi-cm.txt
+> > +++ /dev/null
+> > @@ -1,29 +0,0 @@
+> > -Generic MIPI DSI Command Mode Panel
+> > -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > -
+> > -Required properties:
+> > -- compatible: "panel-dsi-cm"
+> > -
+> > -Optional properties:
+> > -- label: a symbolic name for the panel
+> > -- reset-gpios: panel reset gpio
+> > -- te-gpios: panel TE gpio
+> > -
+> > -Required nodes:
+> > -- Video port for DSI input
+> > -
+> > -Example
+> > --------
+> > -
+> > -lcd0: display {
+> > -	compatible =3D "tpo,taal", "panel-dsi-cm";
+> > -	label =3D "lcd0";
+> > -
+> > -	reset-gpios =3D <&gpio4 6 GPIO_ACTIVE_HIGH>;
+> > -
+> > -	port {
+> > -		lcd0_in: endpoint {
+> > -			remote-endpoint =3D <&dsi1_out_ep>;
+> > -		};
+> > -	};
+> > -};
+> > diff --git a/Documentation/devicetree/bindings/display/panel/panel-dsi-=
+cm.yaml b/Documentation/devicetree/bindings/display/panel/panel-dsi-cm.yaml
+> > new file mode 100644
+> > index 000000000000..d766c949c622
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/panel/panel-dsi-cm.yaml
+> > @@ -0,0 +1,86 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/display/panel/panel-dsi-cm.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: DSI command mode panels
+> > +
+> > +maintainers:
+> > +  - Tomi Valkeinen <tomi.valkeinen@ti.com>
+> > +  - Sebastian Reichel <sre@kernel.org>
+> > +
+> > +description: |
+> > +  This binding file is a collection of the DSI panels that
+> > +  are usually driven in command mode. If no backlight is
+> > +  referenced via the optional backlight property, the DSI
+> > +  panel is assumed to have native backlight support.
+> > +  The panel may use an OF graph binding for the association
+> > +  to the display, or it may be a direct child node of the
+> > +  display.
+> > +
+> > +allOf:
+> > +  - $ref: panel-common.yaml#
+> > +
+> > +properties:
+> > +
+> > +  compatible:
+> > +    items:
+> > +      - enum:
+> > +        - motorola,droid4-panel        # Panel from Motorola Droid4 ph=
+one
+> > +        - nokia,himalaya               # Panel from Nokia N950 phone
+> > +        - tpo,taal                     # Panel from OMAP4 SDP board
+> > +      - const: panel-dsi-cm            # Generic DSI command mode pane=
+l compatible fallback
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +    description: DSI virtual channel
+> > +
+> > +  vddi-supply:
+> > +    description:
+> > +      Display panels require power to be supplied. While several panel=
+s need
+> > +      more than one power supply with panel-specific constraints gover=
+ning the
+> > +      order and timings of the power supplies, in many cases a single =
+power
+> > +      supply is sufficient, either because the panel has a single powe=
+r rail, or
+> > +      because all its power rails can be driven by the same supply. In=
+ that case
+> > +      the vddi-supply property specifies the supply powering the panel=
+ as a
+> > +      phandle to a regulator.
+> > +
+> > +  vpnl-supply:
+> > +    description:
+> > +      When the display panel needs a second power supply, this propert=
+y can be
+> > +      used in addition to vddi-supply. Both supplies will be enabled a=
+t the
+> > +      same time before the panel is being accessed.
+> > +
+> > +  width-mm: true
+> > +  height-mm: true
+> > +  label: true
+> > +  rotation: true
+> > +  panel-timing: true
+> > +  port: true
+> > +  reset-gpios: true
+> > +  te-gpios: true
+> > +  backlight: true
+> > +
+> > +additionalProperties: false
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/gpio/gpio.h>
+> > +
+> > +    dsi-controller {
+> > +        #address-cells =3D <1>;
+> > +        #size-cells =3D <0>;
+> > +
+> > +        panel@0 {
+> > +            compatible =3D "tpo,taal", "panel-dsi-cm";
+> > +            reg =3D <0>;
+> > +            reset-gpios =3D <&gpio4 6 GPIO_ACTIVE_HIGH>;
+> > +        };
+> > +    };
+> > +
+> > +...
+> > --=20
+> > 2.27.0
 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 6eb14b6a47f5..2fe3bd89f950 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -511,6 +511,34 @@ qusb2p_hstx_trim: hstx-trim-primary@25b {
->                         };
->                 };
->
-> +               lpass_cpu: lpass {
+--cl2alezg7yxsq6tn
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Missing unit address and also sorted incorrectly.  Nodes should be
-sorted by unit address.
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl8Ql0oACgkQ2O7X88g7
++preABAAgkV9HVYAck0qetl7wnYhWxP8E2jkCpXkwayunf9Z0HqMEZXXKwky0BHm
+ehDVmkpO0aNUBkrJWWjBsiR/F61UlwPpD+YU91EWCv5nYS0+PIqBM/Qy9NaU0gId
+BcGvoDrcTgQFbeSfxM75jDRvdS6klvpGf+1CQCgfs/PzWB+PifeXX0BKavrpArD/
+SFZqfNzSQZy5zMDXPQaJH0VfVXLlequ1wJcZOR+5jCKyGqh0wbfT28BAvqqg/Z4v
+hmqI9llRv5rSD/gXHU5Dc0tGwrijq4sXQWQ0PGRkKifNM1Dd2BW2JmV9MywJi6W2
+jVK46kFJfY/GZDH3SveuLGDOgynMKGjENbRI2BAuUz+WMBVf6rktIG+N6EQZUcjp
+ok/V7g8HPTMa/CXohVPc/4rK5iVdJW3QDB2GErr3A0daTzM5KM/9LTury8MQo6Y7
+dLEM0LjUjInYaKlE4rCVsiYbm5t7EZRRCdOPRHY/nZakAs5ciRH6W5zXgtkEzqPP
+9v2iyzWY81fcFPtzBQ9LYrF0ZWOoXCGZrkBsdpTYtqJ5CXN6QKxNuPBrGEsc56vy
+5W0vNzsyHszbdpwwybJ9rjSnoOcmbKekXQaspu5YMt7GNcTR9vtX2XhvGaFPAiAI
+SsLbQBegMh2Odapmp9vY8YAzYSGkG+3g2W6hD2Z8W5oquCSFrf8=
+=ZJ4X
+-----END PGP SIGNATURE-----
 
-> +                       compatible = "qcom,lpass-cpu-sc7180";
-
-Is there a pin config that generally makes sense for all boards?  If
-so, you can add it here so it doesn't need to be added to all
-sub-boards.
-
-
-> +                       reg = <0 0x62F00000 0 0x29000>;
-
-nit: lower case hex for reg address, so 62f not 62F.
-
-
-> +                       reg-names = "lpass-lpaif";
-> +
-> +                       iommus = <&apps_smmu 0x1020 0>;
-> +
-> +                       power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
-> +
-> +                       status = "disabled";
-> +
-> +                       clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>,
-> +                                <&lpasscc LPASS_AUDIO_CORE_CORE_CLK>,
-> +                                <&lpasscc LPASS_AUDIO_CORE_EXT_MCLK0_CLK>,
-> +                                <&lpasscc LPASS_AUDIO_CORE_SYSNOC_MPORT_CORE_CLK>,
-> +                                <&lpasscc LPASS_AUDIO_CORE_LPAIF_PRI_IBIT_CLK>,
-> +                                <&lpasscc LPASS_AUDIO_CORE_LPAIF_SEC_IBIT_CLK>;
-> +
-> +                       clock-names = "noc", "audio-core", "mclk0", "sysnoc_mport",
-> +                                     "pri_ibit", "sec_ibit";
-> +
-> +                       #sound-dai-cells = <1>;
-> +
-> +                       interrupts = <0 160 IRQ_TYPE_LEVEL_HIGH>;
-
-First entry of interrupts should be GIC_SPI, which is what 0 is referring to.
-
-
-> +                       interrupt-names = "lpass-irq-lpaif";
-> +               };
-
-Bindings claim you're supposed to have:
-
-#address-cells = <1>;
-#size-cells = <0>;
-
-Do you not need them for some reason?
-
-
->                 sdhc_1: sdhci@7c4000 {
->                         compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
->                         reg = <0 0x7c4000 0 0x1000>,
-> @@ -1357,6 +1385,110 @@ pinmux {
->                                 };
->                         };
->
-> +                       sec_mi2s_active: sec-mi2s-active {
-> +                               pinmux {
-> +                                       pins = "gpio49";
-> +                                       function = "mi2s_1";
-> +                               };
-> +
-> +                               pinconf {
-> +                                       pins = "gpio49";
-> +                                       drive-strength = <8>;
-> +                                       bias-pull-up;
-> +                               };
-> +                       };
-> +
-> +                       sec_mi2s_ws_active: sec-mi2s-ws-active {
-> +                               pinmux {
-> +                                       pins = "gpio50";
-> +                                       function = "mi2s_1";
-> +                               };
-> +
-> +                               pinconf {
-> +                                       pins = "gpio50";
-> +                                       drive-strength = <8>;
-> +                                       bias-pull-up;
-> +                               };
-> +                       };
-> +
-> +                       sec_mi2s_dout_active: sec-mi2s-dout-active {
-> +                               pinmux {
-> +                                       pins = "gpio51";
-> +                                       function = "mi2s_1";
-> +                               };
-> +
-> +                               pinconf {
-> +                                       pins = "gpio51";
-> +                                       drive-strength = <8>;
-> +                                       bias-pull-up;
-> +                               };
-> +                       };
-> +
-> +                       pri_mi2s_active: pri-mi2s-active {
-> +                               pinmux {
-> +                                       pins = "gpio53";
-> +                                       function = "mi2s_0";
-> +                               };
-> +
-> +                               pinconf {
-> +                                       pins = "gpio53";
-> +                                       drive-strength = <8>;
-> +                                       bias-pull-up;
-> +                               };
-> +                       };
-> +
-> +                       pri_mi2s_ws_active: pri-mi2s-ws-active {
-> +                               pinmux {
-> +                                       pins = "gpio54";
-> +                                       function = "mi2s_0";
-> +                               };
-> +
-> +                               pinconf {
-> +                                       pins = "gpio54";
-> +                                       drive-strength = <8>;
-> +                                       bias-pull-up;
-> +                               };
-> +                       };
-> +
-> +                       pri_mi2s_dout_active: pri-mi2s-dout-active {
-> +                               pinmux {
-> +                                       pins = "gpio55";
-> +                                       function = "mi2s_0";
-> +                               };
-> +
-> +                               pinconf {
-> +                                       pins = "gpio55";
-> +                                       drive-strength = <8>;
-> +                                       bias-pull-up;
-> +                               };
-> +                       };
-> +
-> +                       pri_mi2s_din_active: pri-mi2s-din-active {
-> +                               pinmux {
-> +                                       pins = "gpio56";
-> +                                       function = "mi2s_0";
-> +                               };
-> +
-> +                               pinconf {
-> +                                       pins = "gpio56";
-> +                                       drive-strength = <8>;
-> +                                       bias-pull-up;
-> +                               };
-> +                       };
-
-Can you group together any of the configs?  See, for instance,
-"qup_spi0_default" where we configure 4 pins together.  Then you don't
-need so many separate nodes to add.
-
-Also: pinconf is nearly always done in board files unless you truly
-have a reason to believe that it would be the same for every board.
-
-
-> +                       pri_mi2s_mclk_active: pri-mi2s-mclk-active {
-> +                               pinmux {
-> +                                       pins = "gpio57";
-> +                                       function = "lpass_ext";
-> +                               };
-> +
-> +                               pinconf {
-> +                                       pins = "gpio57";
-> +                                       drive-strength = <8>;
-> +                                       bias-pull-up;
-> +                               };
-> +                       };
-> +
->                         sdc1_on: sdc1-on {
->                                 pinconf-clk {
->                                         pins = "sdc1_clk";
-
--Doug
+--cl2alezg7yxsq6tn--
