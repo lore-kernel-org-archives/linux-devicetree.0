@@ -2,401 +2,104 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99422C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 09:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D61CFC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 09:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 691E120656
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 09:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A366820656
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 09:39:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ov5Gd79D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgGPJho (ORCPT
+        id S1726027AbgGPJj3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 05:37:44 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:43394 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbgGPJho (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 05:37:44 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id 045122A5513
-Subject: Re: mainline/master bisection: baseline.dmesg.crit on
- qemu_arm-vexpress-a15
-To:     =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, kernelci-results@groups.io,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-References: <5efec450.1c69fb81.7626b.b08a@mx.google.com>
- <85f43f7f-f423-fe84-81e4-ddefe16c1a53@arm.com>
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-Message-ID: <1f8dbd49-7774-f761-73f4-d96e81acff7e@collabora.com>
-Date:   Thu, 16 Jul 2020 10:37:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 16 Jul 2020 05:39:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59164 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725996AbgGPJj2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 05:39:28 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CB5BC061755;
+        Thu, 16 Jul 2020 02:39:28 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id bm28so4295592edb.2;
+        Thu, 16 Jul 2020 02:39:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=js2i5Cy8OpD9LgEjTR7eWiimO5ZCh1NUG2GhbGVCsuY=;
+        b=Ov5Gd79DOoJHAsnRhVMl2HI5bWUyLpgLFy5ODIGrXyjDHG6IsrBpkpSDLIjL41M1CZ
+         M0YeLyEt+kkyzIAJ8fRuUZm5ddd4ViXIytQAZlwb6qmNY0mBit9wq3KzGuGZXkDxvUtu
+         WcFQXafYY7I0eDxHgwSw0m+LgCVjay59bYAgsOqQSGKk3ajIvdxjlPM5C2J8NKiusTQY
+         gR6rRIZlIIRB1PHi1rBcj0jkN7azeQDe93axp5cxtoTdYvHj4BNEdsq6/S4W18rynaAC
+         MP2LZZl/uTEEHd5W7AYUHNRTlmn/qCxrNFhbYWrKSmCBLzBhc3pIxyWowMsVCX7IPp+g
+         Fhvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=js2i5Cy8OpD9LgEjTR7eWiimO5ZCh1NUG2GhbGVCsuY=;
+        b=tAhm/HjWEMttJpsL8fTMS3RKyro5hVPzSaCs8QIuF9md3/CgXwqrRFXsT1nmQbBtZL
+         2/OaJ0VxOgB4xhzzZZhBq7hpCseeO3AwmvL/VAVqILYzcnFgrKFKQlj9WlOFfMjUKfjP
+         sPg6Ji7Ad0Aw1sYakS8dhGL4hZEDpZCIyV47YtmPq00deCNojUiRlEoaa8seu0PO4NYx
+         WbRlPfpgDGyCVjpvqK7dS7uN8wtDrRlbs6M0/tAqkQrODKMdJwLTvSFcYK1Xy1SCcv5v
+         WhTP1IITMvIVk5idCcn/mXpl4ZXd+qdDUEX1sAe5w0RCdCyEKcpaZTMKLxAlF4iNiula
+         kPxA==
+X-Gm-Message-State: AOAM533n9Wzeh1anlmN3d3L+rvdydv8msbWFbUTno4FNSRa8A2Q8QiEw
+        ErB50iSoE9eVfaOSRo9Erz8=
+X-Google-Smtp-Source: ABdhPJzN+0ojeiMcCy/EowIs69Kgc+Hz0d1vuCQwwVq5yPcmPrXz+vO9/kILCH6rDbu8PsGxAV3mmQ==
+X-Received: by 2002:a05:6402:204e:: with SMTP id bc14mr3734435edb.128.1594892366919;
+        Thu, 16 Jul 2020 02:39:26 -0700 (PDT)
+Received: from skbuf ([188.25.219.134])
+        by smtp.gmail.com with ESMTPSA id p9sm4487463ejd.50.2020.07.16.02.39.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 02:39:26 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 12:39:24 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Kurt Kanzenbach <kurt@linutronix.de>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org
+Subject: Re: [PATCH v1 2/8] net: dsa: Add DSA driver for Hirschmann Hellcreek
+ switches
+Message-ID: <20200716093924.ueszkwokaer42vjh@skbuf>
+References: <20200710113611.3398-1-kurt@linutronix.de>
+ <20200710113611.3398-3-kurt@linutronix.de>
+ <def49ff6-72fe-7ca0-9e00-863c314c1c3d@gmail.com>
+ <87v9islyf2.fsf@kurt>
+ <20200716082935.snokd33kn52ixk5h@skbuf>
+ <87h7u7x181.fsf@kurt>
 MIME-Version: 1.0
-In-Reply-To: <85f43f7f-f423-fe84-81e4-ddefe16c1a53@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87h7u7x181.fsf@kurt>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi André,
-
-Sorry for the delay, I missed the thread on this issue.
-
-On 03/07/2020 11:49, André Przywara wrote:
-> On 03/07/2020 06:38, kernelci.org bot wrote:
+On Thu, Jul 16, 2020 at 11:23:26AM +0200, Kurt Kanzenbach wrote:
 > 
-> Hi Guillaume,
-> 
-> is this report legit? The situation didn't change from Monday, I just
-> repeated the test with mainline compared to my patch reverted.
-> 
-> What is the actual failure here? You pointed to:
-> <2>GIC CPU mask not found - kernel will fail to boot.
-> but I don't see any explicit line stating that as the culprit anywhere
-> in the logs. Actually the last line says:
-> 00:24:07.022224  Job finished correctly
-
-The failure is a "crit" kernel error message.  The test job still
-completes, but it has detected this new error and the bisection
-reliably lands on the same commit mentioned below as the root
-cause.  As you found out, the commit is not to blame so this is a
-false positive.  However, it's a bit more complicated...
-
-> And I see the GIC messages with and without this patch. As mentioned on
-> Monday, "-smp 2" should be added to the QEMU command line to fix that.
-
-All the test jobs involved in this bisection can be found here:
-
-  https://lava.ciplatform.org/scheduler/alljobs?length=25&search=lava-bisection-2224#table
-
-The bisection first ran the "good" and "bad" revisions and didn't
-detect the kernel error message with the "good" one.  However,
-taking a closer look at the logs, the error was actually there:
-
-  https://lava.ciplatform.org/scheduler/job/27647#L454
-
-and then there were some kernel warnings:
-
-  https://lava.ciplatform.org/scheduler/job/27647#L561
-
-which didn't occur with the "bad" revision:
-
-  https://lava.ciplatform.org/scheduler/job/27648
-
-
-For some reason probably related to the kernel warnings, when
-testing the "good" revision the GIC kernel errors got silenced
-and dmesg didn't print them.  This mislead the test into a false
-positive.
-
-Bisections are only run when a regression occurs, and it looks
-like these GIC errors have been around for a long time.  What I
-believe happened is that the errors got hidden at some
-point (allegedly due to the kernel warnings) and then came back
-later.  This was then wrongly detected as a regression.
-
-
-So we have 2 problems to solve, the first one is to actually
-remove these kernel errors and you've explained how to do that
-with the QEMU command line.  I've resubmitted the test job with
-it and it worked indeed:
-
-  https://lava.collabora.co.uk/scheduler/job/2493885
-
-and sent a fix for it:
-
-  https://github.com/kernelci/kernelci-core/pull/442
-
-
-The other problem is about avoiding such cases from occurring
-again in the future on kernelci.org, by making kernel error
-detection more robust.  But that's not a kernel problem.
-
-Please bear with us, hopefully this false positive should not
-come back.  Thanks for your help with investigating the GIC
-errors in the first place.
-
-Guillaume
-
->> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->> * This automated bisection report was sent to you on the basis  *
->> * that you may be involved with the breaking commit it has      *
->> * found.  No manual investigation has been done to verify it,   *
->> * and the root cause of the problem may be somewhere else.      *
->> *                                                               *
->> * If you do send a fix, please include this trailer:            *
->> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
->> *                                                               *
->> * Hope this helps!                                              *
->> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->>
->> mainline/master bisection: baseline.dmesg.crit on qemu_arm-vexpress-a15
->>
->> Summary:
->>   Start:      7cc2a8ea1048 Merge tag 'block-5.8-2020-07-01' of git://git.kernel.dk/linux-block
->>   Plain log:  https://storage.kernelci.org/mainline/master/v5.8-rc3-37-g7cc2a8ea1048/arm/vexpress_defconfig/gcc-8/lab-cip/baseline-vexpress-v2p-ca15-tc1.txt
->>   HTML log:   https://storage.kernelci.org/mainline/master/v5.8-rc3-37-g7cc2a8ea1048/arm/vexpress_defconfig/gcc-8/lab-cip/baseline-vexpress-v2p-ca15-tc1.html
->>   Result:     38ac46002d1d arm: dts: vexpress: Move mcc node back into motherboard node
->>
->> Checks:
->>   revert:     PASS
->>   verify:     PASS
-> 
-> What does that mean? That reverting the patch made the test pass?
-> I did exactly that, and reverting made it worse, because poweroff
-> doesn't work (among other things).
-> So could this be a testing artifact? Because of the failing poweroff the
-> test timed out or something?
-> 
-> Many thanks,
-> Andre
-> 
->>
->> Parameters:
->>   Tree:       mainline
->>   URL:        https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
->>   Branch:     master
->>   Target:     qemu_arm-vexpress-a15
->>   CPU arch:   arm
->>   Lab:        lab-cip
->>   Compiler:   gcc-8
->>   Config:     vexpress_defconfig
->>   Test case:  baseline.dmesg.crit
->>
->> Breaking commit found:
->>
->> -------------------------------------------------------------------------------
->> commit 38ac46002d1df5707566a73486452851341028d2
->> Author: Andre Przywara <andre.przywara@arm.com>
->> Date:   Wed Jun 3 17:22:37 2020 +0100
->>
->>     arm: dts: vexpress: Move mcc node back into motherboard node
->>     
->>     Commit d9258898ad49 ("arm64: dts: arm: vexpress: Move fixed devices
->>     out of bus node") moved the "mcc" DT node into the root node, because
->>     it does not have any children using "reg" properties, so does violate
->>     some dtc checks about "simple-bus" nodes.
->>     
->>     However this broke the vexpress config-bus code, which walks up the
->>     device tree to find the first node with an "arm,vexpress,site" property.
->>     This gave the wrong result (matching the root node instead of the
->>     motherboard node), so broke the clocks and some other devices for
->>     VExpress boards.
->>     
->>     Move the whole node back into its original position. This re-introduces
->>     the dtc warning, but is conceptually the right thing to do. The dtc
->>     warning seems to be overzealous here, there are discussions on fixing or
->>     relaxing this check instead.
->>     
->>     Link: https://lore.kernel.org/r/20200603162237.16319-1-andre.przywara@arm.com
->>     Fixes: d9258898ad49 ("arm64: dts: vexpress: Move fixed devices out of bus node")
->>     Reported-and-tested-by: Guenter Roeck <linux@roeck-us.net>
->>     Signed-off-by: Andre Przywara <andre.przywara@arm.com>
->>     Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
->>
->> diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
->> index e6308fb76183..a88ee5294d35 100644
->> --- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
->> +++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
->> @@ -100,79 +100,6 @@
->>  		};
->>  	};
->>  
->> -	mcc {
->> -		compatible = "arm,vexpress,config-bus";
->> -		arm,vexpress,config-bridge = <&v2m_sysreg>;
->> -
->> -		oscclk0 {
->> -			/* MCC static memory clock */
->> -			compatible = "arm,vexpress-osc";
->> -			arm,vexpress-sysreg,func = <1 0>;
->> -			freq-range = <25000000 60000000>;
->> -			#clock-cells = <0>;
->> -			clock-output-names = "v2m:oscclk0";
->> -		};
->> -
->> -		v2m_oscclk1: oscclk1 {
->> -			/* CLCD clock */
->> -			compatible = "arm,vexpress-osc";
->> -			arm,vexpress-sysreg,func = <1 1>;
->> -			freq-range = <23750000 65000000>;
->> -			#clock-cells = <0>;
->> -			clock-output-names = "v2m:oscclk1";
->> -		};
->> -
->> -		v2m_oscclk2: oscclk2 {
->> -			/* IO FPGA peripheral clock */
->> -			compatible = "arm,vexpress-osc";
->> -			arm,vexpress-sysreg,func = <1 2>;
->> -			freq-range = <24000000 24000000>;
->> -			#clock-cells = <0>;
->> -			clock-output-names = "v2m:oscclk2";
->> -		};
->> -
->> -		volt-vio {
->> -			/* Logic level voltage */
->> -			compatible = "arm,vexpress-volt";
->> -			arm,vexpress-sysreg,func = <2 0>;
->> -			regulator-name = "VIO";
->> -			regulator-always-on;
->> -			label = "VIO";
->> -		};
->> -
->> -		temp-mcc {
->> -			/* MCC internal operating temperature */
->> -			compatible = "arm,vexpress-temp";
->> -			arm,vexpress-sysreg,func = <4 0>;
->> -			label = "MCC";
->> -		};
->> -
->> -		reset {
->> -			compatible = "arm,vexpress-reset";
->> -			arm,vexpress-sysreg,func = <5 0>;
->> -		};
->> -
->> -		muxfpga {
->> -			compatible = "arm,vexpress-muxfpga";
->> -			arm,vexpress-sysreg,func = <7 0>;
->> -		};
->> -
->> -		shutdown {
->> -			compatible = "arm,vexpress-shutdown";
->> -			arm,vexpress-sysreg,func = <8 0>;
->> -		};
->> -
->> -		reboot {
->> -			compatible = "arm,vexpress-reboot";
->> -			arm,vexpress-sysreg,func = <9 0>;
->> -		};
->> -
->> -		dvimode {
->> -			compatible = "arm,vexpress-dvimode";
->> -			arm,vexpress-sysreg,func = <11 0>;
->> -		};
->> -	};
->> -
->>  	bus@8000000 {
->>  		motherboard-bus {
->>  			model = "V2M-P1";
->> @@ -435,6 +362,79 @@
->>  						};
->>  					};
->>  				};
->> +
->> +				mcc {
->> +					compatible = "arm,vexpress,config-bus";
->> +					arm,vexpress,config-bridge = <&v2m_sysreg>;
->> +
->> +					oscclk0 {
->> +						/* MCC static memory clock */
->> +						compatible = "arm,vexpress-osc";
->> +						arm,vexpress-sysreg,func = <1 0>;
->> +						freq-range = <25000000 60000000>;
->> +						#clock-cells = <0>;
->> +						clock-output-names = "v2m:oscclk0";
->> +					};
->> +
->> +					v2m_oscclk1: oscclk1 {
->> +						/* CLCD clock */
->> +						compatible = "arm,vexpress-osc";
->> +						arm,vexpress-sysreg,func = <1 1>;
->> +						freq-range = <23750000 65000000>;
->> +						#clock-cells = <0>;
->> +						clock-output-names = "v2m:oscclk1";
->> +					};
->> +
->> +					v2m_oscclk2: oscclk2 {
->> +						/* IO FPGA peripheral clock */
->> +						compatible = "arm,vexpress-osc";
->> +						arm,vexpress-sysreg,func = <1 2>;
->> +						freq-range = <24000000 24000000>;
->> +						#clock-cells = <0>;
->> +						clock-output-names = "v2m:oscclk2";
->> +					};
->> +
->> +					volt-vio {
->> +						/* Logic level voltage */
->> +						compatible = "arm,vexpress-volt";
->> +						arm,vexpress-sysreg,func = <2 0>;
->> +						regulator-name = "VIO";
->> +						regulator-always-on;
->> +						label = "VIO";
->> +					};
->> +
->> +					temp-mcc {
->> +						/* MCC internal operating temperature */
->> +						compatible = "arm,vexpress-temp";
->> +						arm,vexpress-sysreg,func = <4 0>;
->> +						label = "MCC";
->> +					};
->> +
->> +					reset {
->> +						compatible = "arm,vexpress-reset";
->> +						arm,vexpress-sysreg,func = <5 0>;
->> +					};
->> +
->> +					muxfpga {
->> +						compatible = "arm,vexpress-muxfpga";
->> +						arm,vexpress-sysreg,func = <7 0>;
->> +					};
->> +
->> +					shutdown {
->> +						compatible = "arm,vexpress-shutdown";
->> +						arm,vexpress-sysreg,func = <8 0>;
->> +					};
->> +
->> +					reboot {
->> +						compatible = "arm,vexpress-reboot";
->> +						arm,vexpress-sysreg,func = <9 0>;
->> +					};
->> +
->> +					dvimode {
->> +						compatible = "arm,vexpress-dvimode";
->> +						arm,vexpress-sysreg,func = <11 0>;
->> +					};
->> +				};
->>  			};
->>  		};
->>  	};
->> -------------------------------------------------------------------------------
->>
->>
->> Git bisection log:
->>
->> -------------------------------------------------------------------------------
->> git bisect start
->> # good: [719fdd32921fb7e3208db8832d32ae1c2d68900f] afs: Fix storage of cell names
->> git bisect good 719fdd32921fb7e3208db8832d32ae1c2d68900f
->> # bad: [7cc2a8ea104820dd9e702202621e8fd4d9f6c8cf] Merge tag 'block-5.8-2020-07-01' of git://git.kernel.dk/linux-block
->> git bisect bad 7cc2a8ea104820dd9e702202621e8fd4d9f6c8cf
->> # bad: [e44b59cd758acdd413512d4597a1fabdadfe3abf] Merge tag 'arm-fixes-5.8-1' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
->> git bisect bad e44b59cd758acdd413512d4597a1fabdadfe3abf
->> # good: [91a9a90d040e8b9ff63d48ea71468e0f4db764ff] Merge tag 'sched_urgent_for_5.8_rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
->> git bisect good 91a9a90d040e8b9ff63d48ea71468e0f4db764ff
->> # bad: [42d3f7e8da1bc55e3109f612c519c945f6587194] Merge tag 'imx-fixes-5.8' of git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux into arm/fixes
->> git bisect bad 42d3f7e8da1bc55e3109f612c519c945f6587194
->> # bad: [6d89c73ca5813768a2cc66f7420ac0cbddf4f37d] Merge tag 'arm-soc/for-5.8/soc-fixes' of https://github.com/Broadcom/stblinux into arm/fixes
->> git bisect bad 6d89c73ca5813768a2cc66f7420ac0cbddf4f37d
->> # bad: [0f77ce26ebcf6ea384421d2dd47b924b83649692] Revert "ARM: sti: Implement dummy L2 cache's write_sec"
->> git bisect bad 0f77ce26ebcf6ea384421d2dd47b924b83649692
->> # bad: [d68ec1644dd546851d651787a638aead32a60a6f] Merge tag 'juno-fix-5.8' of git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux into arm/fixes
->> git bisect bad d68ec1644dd546851d651787a638aead32a60a6f
->> # bad: [38ac46002d1df5707566a73486452851341028d2] arm: dts: vexpress: Move mcc node back into motherboard node
->> git bisect bad 38ac46002d1df5707566a73486452851341028d2
->> # first bad commit: [38ac46002d1df5707566a73486452851341028d2] arm: dts: vexpress: Move mcc node back into motherboard node
->> -------------------------------------------------------------------------------
->>
+> As far as I know there is no port forwarding matrix. Traffic is
+> forwarded between the ports when they're members of the same
+> vlan. That's why I created them by default.
 > 
 
+And your hardware doesn't have ACL support, does it (from the fact that
+you're installing PTP traps via the FDB, I would say no)? You could have
+added a match-all entry on all traffic coming from a certain source
+port, and a 'redirect-to-cpu' action. This would have also achieved port
+separation in standalone mode.
+
+-Vladimir
