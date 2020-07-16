@@ -2,133 +2,80 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D7DC433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 05:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDFCEC433E4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 05:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9EAC20775
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 05:16:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KXtFgSRW"
+	by mail.kernel.org (Postfix) with ESMTP id A81572070E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 05:33:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbgGPFQJ (ORCPT
+        id S1725921AbgGPFdQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 01:16:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46866 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgGPFQJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 01:16:09 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38292C061755
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 22:16:09 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id t6so4266273pgq.1
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 22:16:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Y82s5J6jGeE+1WkQgClg6fF8GkRM6k30eJBmLEIoHho=;
-        b=KXtFgSRWIDabNM0L7WxgGCj81mvHpXozzo3Lh5uiL5segDJXmzAmhO7LtFilDnCiFV
-         VCb6APzS/iKl7Iz/JPtBo2M3G4M/mYH3mdSZ0qc9XFLlHw3/VV52KYOQ1XgdjMFp872x
-         8yupOmZqRwAp9T9ZcV0YIa9B48kZCg+cq0Yu8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Y82s5J6jGeE+1WkQgClg6fF8GkRM6k30eJBmLEIoHho=;
-        b=e9T7QAHaIsPD9T4qny16RUeFgtFQBVK1UbbkG0jhmN01pk2U10Y0YHo8XywpjFgY06
-         peG1YpyANTECV3G0z0EyThuPCencKfF/k2jQMuN0wQ1aB0XCCU2ebpPKTy9VGKUzQzg9
-         5iODQsCRyCQYkYB14z7NA1bflVN50N25eufWCia3JHnMhShtfcbe43Ny8sENuijERikD
-         02FEDkDo+3J9EKjDAVxv1Sfb0P3uftdgAYRGjdSV2a7pb7Wx2Tz/OJn+GhvuERxOX/ga
-         pkaWIb12GLpqOEpVRa/AOy+Jwxd9yIDobFSIYHG0JQ9F9o2h4ew/rcD7qAcF5So8d2N1
-         3kVg==
-X-Gm-Message-State: AOAM533XNJuhobr3uCwLs1GKD13UT2RtrojgRZKG7ggJvyg94xp+waOK
-        QwSJYWj08p4JSAHA/idEiKzT2N/6SCk=
-X-Google-Smtp-Source: ABdhPJwXILHXfYYnoTMFXqMHeqxiwrG/soe4t9GpW7yqRWRGtYHxu1CHGk67bfLwW5pMqKEWrUB+YQ==
-X-Received: by 2002:a05:6a00:14ce:: with SMTP id w14mr2279149pfu.121.1594876568096;
-        Wed, 15 Jul 2020 22:16:08 -0700 (PDT)
-Received: from bhanumaiya-glaptop.hsd1.ca.comcast.net ([2601:646:9500:590:250:b6ff:fe8e:b459])
-        by smtp.gmail.com with ESMTPSA id r8sm3493401pfh.29.2020.07.15.22.16.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 22:16:07 -0700 (PDT)
-From:   Bhanu Prakash Maiya <bhanumaiya@chromium.org>
-X-Google-Original-From: Bhanu Prakash Maiya <bhanumaiya@google.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Furquan Shaikh <furquan@chromium.org>,
-        Raul E Rangel <rrangel@chromium.org>,
-        Eric Peers <epeers@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Bhanu Prakash Maiya <bhanumaiya@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.Kernel.org
-Subject: [PATCH v3 2/2] dt-bindings: mfd: Add DT compatible string "google,cros_ec_uart"
-Date:   Wed, 15 Jul 2020 22:16:04 -0700
-Message-Id: <20200715221150.v3.2.I113cdbaf66d48b37ac0faefb9b845480d122f3b9@changeid>
-X-Mailer: git-send-email 2.27.0.389.gc38d7665816-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 16 Jul 2020 01:33:16 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:30429 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725844AbgGPFdQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jul 2020 01:33:16 -0400
+Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 15 Jul 2020 22:33:15 -0700
+Received: from kathirav-linux.qualcomm.com ([10.201.2.228])
+  by ironmsg01-sd.qualcomm.com with ESMTP; 15 Jul 2020 22:33:09 -0700
+Received: by kathirav-linux.qualcomm.com (Postfix, from userid 459349)
+        id 81F512181E; Thu, 16 Jul 2020 11:03:07 +0530 (IST)
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, p.zabel@pengutronix.de,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Subject: [PATCH] clk: qcom: ipq8074: Add correct index for PCIe clocks
+Date:   Thu, 16 Jul 2020 11:02:50 +0530
+Message-Id: <1594877570-9280-1-git-send-email-sivaprak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Bhanu Prakash Maiya <bhanumaiya@chromium.org>
+The PCIe clocks GCC_PCIE0_AXI_S_BRIDGE_CLK, GCC_PCIE0_RCHNG_CLK_SRC,
+GCC_PCIE0_RCHNG_CLK are wrongly added to the gcc reset group.
 
-Add DT compatible string in
-Documentation/devicetree/bindings/mfd/cros_ec.txt
+Move them to the gcc clock group.
 
-Signed-off-by: Bhanu Prakash Maiya <bhanumaiya@chromium.org>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 ---
+ include/dt-bindings/clock/qcom,gcc-ipq8074.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Changes in v3:
-- Rebased changes on google,cros-ec.yaml
-
-Changes in v2:
-- No change
-
- Documentation/devicetree/bindings/mfd/google,cros-ec.yaml | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml b/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
-index 6a7279a85ec1c..552d1c9bf3de4 100644
---- a/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
-+++ b/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
-@@ -10,11 +10,12 @@ maintainers:
-   - Benson Leung <bleung@chromium.org>
-   - Enric Balletbo i Serra <enric.balletbo@collabora.com>
-   - Guenter Roeck <groeck@chromium.org>
-+  - Bhanu Prakash Maiya <bhanumaiya@chromium.org>
+diff --git a/include/dt-bindings/clock/qcom,gcc-ipq8074.h b/include/dt-bindings/clock/qcom,gcc-ipq8074.h
+index e3e018565add..8e2bec1c91bf 100644
+--- a/include/dt-bindings/clock/qcom,gcc-ipq8074.h
++++ b/include/dt-bindings/clock/qcom,gcc-ipq8074.h
+@@ -230,6 +230,9 @@
+ #define GCC_GP1_CLK				221
+ #define GCC_GP2_CLK				222
+ #define GCC_GP3_CLK				223
++#define GCC_PCIE0_AXI_S_BRIDGE_CLK		224
++#define GCC_PCIE0_RCHNG_CLK_SRC			225
++#define GCC_PCIE0_RCHNG_CLK			226
  
- description:
-   Google's ChromeOS EC is a microcontroller which talks to the AP and
-   implements various functions such as keyboard and battery charging.
--  The EC can be connected through various interfaces (I2C, SPI, and others)
-+  The EC can be connected through various interfaces (I2C, SPI, UART and others)
-   and the compatible string specifies which interface is being used.
+ #define GCC_BLSP1_BCR				0
+ #define GCC_BLSP1_QUP1_BCR			1
+@@ -363,8 +366,5 @@
+ #define GCC_PCIE1_AHB_ARES			129
+ #define GCC_PCIE1_AXI_MASTER_STICKY_ARES	130
+ #define GCC_PCIE0_AXI_SLAVE_STICKY_ARES		131
+-#define GCC_PCIE0_AXI_S_BRIDGE_CLK		132
+-#define GCC_PCIE0_RCHNG_CLK_SRC			133
+-#define GCC_PCIE0_RCHNG_CLK			134
  
- properties:
-@@ -29,6 +30,9 @@ properties:
-       - description:
-           For implementations of the EC is connected through RPMSG.
-         const: google,cros-ec-rpmsg
-+      - description:
-+          For implementations of the EC is connected through UART.
-+        const: google,cros-ec-uart
- 
-   google,cros-ec-spi-pre-delay:
-     description:
+ #endif
 -- 
-2.26.2
+2.7.4
 
