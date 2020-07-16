@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCE5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 07:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1DEC433E5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 07:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2086F2071B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 07:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76E0E2071B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 07:08:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="F3EuBoAN"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="nMBzLj7/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726141AbgGPHIP (ORCPT
+        id S1725921AbgGPHIk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 03:08:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35804 "EHLO
+        Thu, 16 Jul 2020 03:08:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725921AbgGPHIP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 03:08:15 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B941AC061755
-        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 00:08:14 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id k6so5875976wrn.3
-        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 00:08:14 -0700 (PDT)
+        with ESMTP id S1727833AbgGPHIk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 03:08:40 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CA36C061755
+        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 00:08:40 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id 17so10129880wmo.1
+        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 00:08:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:organization:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=aMZtU9AuUsvON7YCE8IouP2x+CUhwtrxq0YqrqhDV0g=;
-        b=F3EuBoANuo0HRQ19FIqnWRbtO5MKI7sWdOFmAoJoOiXyTN5JOgkancH/weDpgZeWb8
-         7Tq+3/1Kz6efHeEu73E7jFr7b0gb/e/TBWjjmleLvder4AvXgXE8i39m6QhyqLv3lmB1
-         aRYmcX+yZ80QPy9Qhdrt232c2vY78YvWYFYJ7Fm+wI//taSCuqWFDU77iAiTCVWYpC8n
-         +Gjvow2kYDlXfFmsQrdL5ig+rx+egNhz+lEsUlM5MRtN3jvt/cqyRTnhVuR2NocObMbq
-         wsugo0WZA1QCKdXNwWy5aaYw7jmBgNh+IyHv+U8JT/lvxgyUX327URofNkWIC0yu8NFN
-         U4CA==
+        bh=ckCuttm6P9fXKPCXJBChgBGjMU0ASgZI9TWxKKSJw8E=;
+        b=nMBzLj7/dx4+nKg+WPu+ASorxSS/GYAJjVuskSXw4X5KTDRJWpxLCvWfoPjyhWH4QQ
+         vvJXX5nowHrQ+z78pFda95kyRDW/qKE4UVcMVy78qccVPJLw5Vv2w8mM6iLLZDJMayWX
+         j0H90TVASkLBVpfySPFhfR65mU0ZxN9QOY7N/4OHG3ZizMWZpcfJBJ6yyla9TlYNWdwq
+         Ck1gpmzu+3V+1RvxlWIswiABdw7SsrGH6f5eZwfVzrGKQYK5gVAkxhSw0Sah7sfxSd0r
+         fhvVdPSnZBJSxa4cn7OGcDBOsR1WNIQ7+2XaPyU0aeHxbkbtJsmtlALhWMyD9jvxypRr
+         by/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=aMZtU9AuUsvON7YCE8IouP2x+CUhwtrxq0YqrqhDV0g=;
-        b=MJpJX/WrOf4MI9+9uaccNF64WAblRrhnlz2XQe1cgY7S4iY9+LKQTvPyoZqkEt0C4m
-         nPV0f9/LbyguTZbwuaOpK8Hh34ROHONyHyC63/qVnBTAqwCyHZsSNEgQpy3OnSDS3Os+
-         SFcNket+pLTFDrxTNP6TS6kA9Spe9hDlwC6LvfZa2hCVOFpupgAGNhaNB7DDcfg5Tqte
-         V8pM65SJmiWpS/fV8cCPciZ8CiOb6jBNJNOA3tWvTuwx68liLeEHO4WrMyTtsziid/fH
-         PpbjE0aRNaetiF+A9ht4Yq8ropHT7CVrdCTn1bbb7lt3ZSXcDjCY4Ady3l+GtVQcWcdx
-         oiZQ==
-X-Gm-Message-State: AOAM531aSmzgTOCwPd42DyzWZsRnK99eTwl4KtWfrigIVBs6INX3Tpjg
-        nRmPBtgbc/rPn94U0L9TMuc8WQ==
-X-Google-Smtp-Source: ABdhPJyrJp1rEqf2JqzvWRmUIiStv8drQLfvpqEPr3bYRal4N1XNEUt673ImXo2XoIka8d031v4j0g==
-X-Received: by 2002:adf:db4d:: with SMTP id f13mr3552888wrj.336.1594883293303;
-        Thu, 16 Jul 2020 00:08:13 -0700 (PDT)
+        bh=ckCuttm6P9fXKPCXJBChgBGjMU0ASgZI9TWxKKSJw8E=;
+        b=bURe8WcVlYkC0QMEWTBgMhTXUv4ug0fAQVhjOrDq7JiuP1YUxl6t9Q6TgrAk3o1UzH
+         yrnUegd0SSyhyrU/+VcWF9S3CjOZwY584s6S8QuGVVcMjIMu97Y2Z4ClXMferKmKI63R
+         yRed7KBAR4//zu0YCZ+WjKjBeoXJkviPGfAN7opGCJgEPOezn2RHzz7s3ao1QVMtSRaS
+         t2//Op9RXA9BPZLhByHruVXGMequUo5i5f3yzK6OgHBa5yVpi15YvzKclwAI4kfKPkIO
+         sLk/XB3iOY6P3D9w9SWFuqyEqYIoFIL3MtKPtGHpsrNT7P63Jp7O8Qwi8cmtc68iY5h4
+         Y/cQ==
+X-Gm-Message-State: AOAM530CiV78jd8h0lM+c5CunKdDCgCxTmjmqkADvD7Ow2Knj4gigRDc
+        xtlMXPUAsnNjMiU4s3Pegdco9g==
+X-Google-Smtp-Source: ABdhPJzr3LwrB6M1n4JwZcZyk3wqFDtwSYqeRVDNuZf8LxJZHjVHlTG82sxpe8hZeA8nRvVoRxjaLg==
+X-Received: by 2002:a1c:398b:: with SMTP id g133mr2930134wma.76.1594883318365;
+        Thu, 16 Jul 2020 00:08:38 -0700 (PDT)
 Received: from [10.1.3.173] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id v12sm7478791wrt.31.2020.07.16.00.08.12
+        by smtp.gmail.com with ESMTPSA id j4sm7705280wrp.51.2020.07.16.00.08.37
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 00:08:12 -0700 (PDT)
-Subject: Re: [PATCHv1 1/3] arm64: dts: meson-g12b-odroid-n2: Enable RTC
- controller node
+        Thu, 16 Jul 2020 00:08:37 -0700 (PDT)
+Subject: Re: [PATCHv1 3/3] arm64: defconfig: Enable RTC devices for Amlogic
+ boards
 To:     Anand Moon <linux.amoon@gmail.com>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org
@@ -71,7 +71,7 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Jerome Brunet <jbrunet@baylibre.com>
 References: <20200715160209.652-1-linux.amoon@gmail.com>
- <20200715160209.652-2-linux.amoon@gmail.com>
+ <20200715160209.652-4-linux.amoon@gmail.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -123,12 +123,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  zR8QplXA5kogS4kLe/7/JmlDMO8Zgm9vKLHSUeesLOrjdZ59EcjldNNBszRZQgEhwaarfz46
  BSwxi7g3Mu7u5kUByanqHyA=
 Organization: Baylibre
-Message-ID: <de587578-9da5-cd1d-826a-ab83b7c3dcc1@baylibre.com>
-Date:   Thu, 16 Jul 2020 09:08:12 +0200
+Message-ID: <de056d6c-057d-ee2e-1817-c111e41bef0d@baylibre.com>
+Date:   Thu, 16 Jul 2020 09:08:37 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200715160209.652-2-linux.amoon@gmail.com>
+In-Reply-To: <20200715160209.652-4-linux.amoon@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -137,64 +137,28 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-
 On 15/07/2020 18:02, Anand Moon wrote:
-> Enable RTC PCF8563 node on Odroid-N2 SBC, In order
-> to support the RTC wakealarm feature for suspend and resume.
+> Enables the RTC PCF8563 driver used on Amlogic Libretech-pc
+> and Odroid-N2 boards supported in mainline kernel.
 > 
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
 > Cc: Kevin Hilman <khilman@baylibre.com>
 > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 > ---
-> $ sudo hwclock -r && date
-> 2020-07-15 13:11:53.862508+00:00
-> Wed Jul 15 13:11:54 UTC 2020
+>  arch/arm64/configs/defconfig | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> $ hwclock --show
-> 2020-07-15 13:17:30.903300+00:00
-> 
-> But RTC wake up is not working at my end.
-> Any inputs are welcome.
-> 
-> $ time rtcwake -s 30 -m mem
-> rtcwake: /dev/rtc0 not enabled for wakeup events
-> 
-> real    0m0.002s
-> user    0m0.002s
-> sys     0m0.000s
-> ---
->  .../boot/dts/amlogic/meson-g12b-odroid-n2.dts      | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> index 169ea283d4ee..a447cba4dd53 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> @@ -391,6 +391,20 @@ hdmi_tx_tmds_out: endpoint {
->  	};
->  };
->  
-> +&i2c3 {
-> +	pinctrl-0 = <&i2c3_sda_a_pins>, <&i2c3_sck_a_pins>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-> +
-> +	rtc: rtc@51 {
-> +		reg = <0x51>;
-> +		compatible = "nxp,pcf8563";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <32768>;
-> +		clock-output-names = "rtc_clkout";
-
-The clkout output is not used, so I don't think these 3 lines are needed.
-
-> +	};
-> +};
-> +
->  &ir {
->  	status = "okay";
->  	pinctrl-0 = <&remote_input_ao_pins>;
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 883e8bace3ed..a0e8d46c3d06 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -750,6 +750,7 @@ CONFIG_RTC_DRV_DS1307=m
+>  CONFIG_RTC_DRV_MAX77686=y
+>  CONFIG_RTC_DRV_RK808=m
+>  CONFIG_RTC_DRV_PCF85363=m
+> +CONFIG_RTC_DRV_PCF8563=m
+>  CONFIG_RTC_DRV_RX8581=m
+>  CONFIG_RTC_DRV_S5M=y
+>  CONFIG_RTC_DRV_DS3232=y
 > 
 
-Neil
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
