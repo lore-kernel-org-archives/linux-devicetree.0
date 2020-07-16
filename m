@@ -2,95 +2,110 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC76EC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 03:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FC5C433E4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 03:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87FF920787
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 03:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1238D2076C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 03:42:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jsAfm+JT"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ot8bMGEu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgGPDf1 (ORCPT
+        id S1728186AbgGPDmq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 23:35:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726989AbgGPDf0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 23:35:26 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 839C6C08C5CE
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 20:35:26 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id e8so4156258pgc.5
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 20:35:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=32gy8XoX3I4t0JZZ1KUze/2WJB+9G/goHCEZVw/rbtk=;
-        b=jsAfm+JTZDUEV5ND1bWDoq+HtV3UNsUmLM88Nto4HvBpKTo4sRJK2E6n8gzy7DOQz8
-         ri/kVxRdJRmElrtOD1q6sIWZ3QWiOwkOAeQswW5E7OkjybN8UsUBv4zLWdA7IQ2M8/sK
-         b5HvF1VF6bMrPtIiwrQ00JGXYGOsVJlQrPn6JSi7egqM9SrV/1a9SCCzVqnazqxSwzDu
-         9OWIdSz7/HDJbcoSwW7CvJoTi2KJS4T5pnlM1DjmvRsfx/WvDEc1yOTpuGW7pLVw+OnQ
-         hZQx/pbnHQ7XID4vc+F4sb+arwtMG6eSKL2Am0vTQReYY46vZJ86TDPgGsPi1hUvuoXa
-         5uaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=32gy8XoX3I4t0JZZ1KUze/2WJB+9G/goHCEZVw/rbtk=;
-        b=hKXbSdT25rUYpJBQ9geXc0Nj2iOv+neiKftfd9z5ZLhEPKLLBZ2jKsWcA3jJo4/HFJ
-         r2Mw+JFTZvog69m/5glpimbP4yl+4v7xBXOoJT/CfLhHNx9N62/ixnbI0cXuq8j7DDuQ
-         VSjH9tInUAQ96v38BGGZk7J5lnjNXjdgav6fT7Kb0B82GD6tDH7CJVM+HawZ4vjQNyZw
-         +8HKn2vLan68+kjK42jEPB0nA6kJUAtFeaK4a0qnupryKYLk4U8t1grjfUTvwjRs9H2e
-         yXT3D12uGvrpvtPQ+zmK48BhkbgheE8080KvUyZQUezpid5vGiPusVg7ka/bYQA8ULYD
-         p6UQ==
-X-Gm-Message-State: AOAM532lDDA3blo3xmmts1a+7lf/nCcEV90waBWgTc+dfOgkduJNGsnE
-        uhM/llxzV4K/O5P1peVNGr/23g==
-X-Google-Smtp-Source: ABdhPJycfZpepHR2R4Un/jr6qjGC1YgjN9Wo9S97UbquF2TaoOW9Luy33E0WLtrPkpArvp2nHxz0CA==
-X-Received: by 2002:a05:6a00:15ca:: with SMTP id o10mr1989444pfu.169.1594870525980;
-        Wed, 15 Jul 2020 20:35:25 -0700 (PDT)
-Received: from localhost ([122.172.34.142])
-        by smtp.gmail.com with ESMTPSA id o42sm3544975pje.10.2020.07.15.20.35.24
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 Jul 2020 20:35:25 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 09:05:23 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sumit Gupta <sumitg@nvidia.com>
-Cc:     Jon Hunter <jonathanh@nvidia.com>, rjw@rjwysocki.net,
-        catalin.marinas@arm.com, will@kernel.org, thierry.reding@gmail.com,
-        robh+dt@kernel.org, mirq-linux@rere.qmqm.pl,
-        devicetree@vger.kernel.org, talho@nvidia.com,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        bbasu@nvidia.com, mperttunen@nvidia.com
-Subject: Re: [TEGRA194_CPUFREQ PATCH v6 3/3] cpufreq: Add Tegra194 cpufreq
- driver
-Message-ID: <20200716033523.fhlfh5m5magifspx@vireshk-i7>
-References: <1594819885-31016-1-git-send-email-sumitg@nvidia.com>
- <1594819885-31016-4-git-send-email-sumitg@nvidia.com>
- <d0a4a28a-f471-22bd-273a-dc5c62a79051@nvidia.com>
- <78636522-c433-a015-e4f3-02843ce58139@nvidia.com>
+        Wed, 15 Jul 2020 23:42:46 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:7621 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728179AbgGPDmq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 23:42:46 -0400
+X-UUID: d23062ae6dd24211b7604b952cbb209d-20200716
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=CEsk1XhS81S7YqCL2/cfWNZFVQ4l+rq1KaxE7ps3pAk=;
+        b=ot8bMGEuqZnvlaEM5bTelmKbuXoEhy3D168PxipH1v4qMrueDtoW5Jpa65+AtkCq40uGMlBhPfiX2xRM+UwggvVU7yQjJZ0JCvpm/QFLhItZwRyibzn6zndysV3u2dmJu1IZva0SFd3T3vliUEaZvJRBBf/ipeeS5fVgvsvcK5c=;
+X-UUID: d23062ae6dd24211b7604b952cbb209d-20200716
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1572197662; Thu, 16 Jul 2020 11:42:40 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 16 Jul 2020 11:42:29 +0800
+Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 16 Jul 2020 11:42:29 +0800
+Message-ID: <1594870950.5018.3.camel@mtkswgap22>
+Subject: Re: [PATCH v2 2/2] soc: mediatek: add mtk-devapc driver
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
+CC:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <devicetree@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Date:   Thu, 16 Jul 2020 11:42:30 +0800
+In-Reply-To: <CAAOTY_-6d12FUf5XnYco0f0CfeWsb-XjsCESsLixLr_Q=jnc0Q@mail.gmail.com>
+References: <1594285927-1840-1-git-send-email-neal.liu@mediatek.com>
+         <1594285927-1840-3-git-send-email-neal.liu@mediatek.com>
+         <CAAOTY_-6d12FUf5XnYco0f0CfeWsb-XjsCESsLixLr_Q=jnc0Q@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <78636522-c433-a015-e4f3-02843ce58139@nvidia.com>
-User-Agent: NeoMutt/20180716-391-311a52
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 15-07-20, 20:57, Sumit Gupta wrote:
-> Sorry, missed to remove this. Will wait if any other comments before
-> re-spin.
+SGkgQ2h1bi1LdWFuZywNCg0KT24gVGh1LCAyMDIwLTA3LTE2IGF0IDA3OjQ2ICswODAwLCBDaHVu
+LUt1YW5nIEh1IHdyb3RlOg0KPiBISSwgTmVhbDoNCj4gDQo+IE5lYWwgTGl1IDxuZWFsLmxpdUBt
+ZWRpYXRlay5jb20+IOaWvCAyMDIw5bm0N+aciDnml6Ug6YCx5ZubIOS4i+WNiDU6MTPlr6vpgZPv
+vJoNCj4gPg0KPiA+IE1lZGlhVGVrIGJ1cyBmYWJyaWMgcHJvdmlkZXMgVHJ1c3Rab25lIHNlY3Vy
+aXR5IHN1cHBvcnQgYW5kIGRhdGENCj4gPiBwcm90ZWN0aW9uIHRvIHByZXZlbnQgc2xhdmVzIGZy
+b20gYmVpbmcgYWNjZXNzZWQgYnkgdW5leHBlY3RlZA0KPiA+IG1hc3RlcnMuDQo+ID4gVGhlIHNl
+Y3VyaXR5IHZpb2xhdGlvbiBpcyBsb2dnZWQgYW5kIHNlbnQgdG8gdGhlIHByb2Nlc3NvciBmb3IN
+Cj4gPiBmdXJ0aGVyIGFuYWx5c2lzIG9yIGNvdW50ZXJtZWFzdXJlcy4NCj4gPg0KPiA+IEFueSBv
+Y2N1cnJlbmNlIG9mIHNlY3VyaXR5IHZpb2xhdGlvbiB3b3VsZCByYWlzZSBhbiBpbnRlcnJ1cHQs
+IGFuZA0KPiA+IGl0IHdpbGwgYmUgaGFuZGxlZCBieSBtdGstZGV2YXBjIGRyaXZlci4gVGhlIHZp
+b2xhdGlvbg0KPiA+IGluZm9ybWF0aW9uIGlzIHByaW50ZWQgaW4gb3JkZXIgdG8gZmluZCB0aGUg
+bXVyZGVyZXIuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBOZWFsIExpdSA8bmVhbC5saXVAbWVk
+aWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiANCj4gW3NuaXBdDQo+IA0KPiA+ICsNCj4gPiArLyoNCj4g
+PiArICogbXRrX2RldmFwY19kdW1wX3Zpb19kYmcgLSBzaGlmdCAmIGR1bXAgdGhlIHZpb2xhdGlv
+biBkZWJ1ZyBpbmZvcm1hdGlvbi4NCj4gPiArICovDQo+ID4gK3N0YXRpYyBib29sIG10a19kZXZh
+cGNfZHVtcF92aW9fZGJnKHN0cnVjdCBtdGtfZGV2YXBjX2NvbnRleHQgKmRldmFwY19jdHgsDQo+
+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaW50IHNsYXZlX3R5cGUsIGlu
+dCAqdmlvX2lkeCkNCj4gPiArew0KPiA+ICsgICAgICAgY29uc3Qgc3RydWN0IG10a19kZXZpY2Vf
+aW5mbyAqKmRldmljZV9pbmZvOw0KPiA+ICsgICAgICAgdTMyIHNoaWZ0X2JpdDsNCj4gPiArICAg
+ICAgIGludCBpOw0KPiA+ICsNCj4gPiArICAgICAgIGRldmljZV9pbmZvID0gZGV2YXBjX2N0eC0+
+ZGV2aWNlX2luZm87DQo+ID4gKw0KPiA+ICsgICAgICAgZm9yIChpID0gMDsgaSA8IGdldF92aW9f
+c2xhdmVfbnVtKHNsYXZlX3R5cGUpOyBpKyspIHsNCj4gPiArICAgICAgICAgICAgICAgKnZpb19p
+ZHggPSBkZXZpY2VfaW5mb1tzbGF2ZV90eXBlXVtpXS52aW9faW5kZXg7DQo+ID4gKw0KPiA+ICsg
+ICAgICAgICAgICAgICBpZiAoY2hlY2tfdmlvX21hc2soZGV2YXBjX2N0eCwgc2xhdmVfdHlwZSwg
+KnZpb19pZHgpKQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGNvbnRpbnVlOw0KPiANCj4g
+SSBndWVzcyBpZiBvbmUgdmlvX2lkeCBpcyBtYXNrZWQsIGl0cyBzdGF0dXMgd291bGQgbmV2ZXIg
+YmUgdHJ1ZS4gSWYNCj4gbXkgZ3Vlc3MgaXMgcmlnaHQsIEkgdGhpbmsgeW91IGNvdWxkIHNraXAg
+Y2hlY2tfdmlvX21hc2soKSBhbmQNCj4gZGlyZWN0bHkgY2hlY2tfdmlvX3N0YXR1cygpLg0KDQpO
+by4gRXZlbiBpZiB2aW9faWR4IGlzIG1hc2tlZCwgdmlvX3N0YXR1cyB3aWxsIHN0aWxsIHJhaXNl
+IHdoZW4NCnZpb2xhdGlvbiBpcyB0cmlnZ2VyZWQuDQoNCj4gDQo+ID4gKw0KPiA+ICsgICAgICAg
+ICAgICAgICBpZiAoIWNoZWNrX3Zpb19zdGF0dXMoZGV2YXBjX2N0eCwgc2xhdmVfdHlwZSwgKnZp
+b19pZHgpKQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGNvbnRpbnVlOw0KPiA+ICsNCj4g
+PiArICAgICAgICAgICAgICAgc2hpZnRfYml0ID0gZ2V0X3NoaWZ0X2dyb3VwKGRldmFwY19jdHgs
+IHNsYXZlX3R5cGUsICp2aW9faWR4KTsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgIGlmICgh
+c3luY192aW9fZGJnKGRldmFwY19jdHgsIHNsYXZlX3R5cGUsIHNoaWZ0X2JpdCkpDQo+ID4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgY29udGludWU7DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAg
+ICBkZXZhcGNfZXh0cmFjdF92aW9fZGJnKGRldmFwY19jdHgsIHNsYXZlX3R5cGUpOw0KPiA+ICsN
+Cj4gPiArICAgICAgICAgICAgICAgcmV0dXJuIHRydWU7DQo+IA0KPiBJIHRoaW5rIG11bHRpcGxl
+IHZpb19pZHggd291bGQgdmlvbGF0ZSBhdCB0aGUgc2FtZSB0aW1lLCB3aHkganVzdCBwcm9jZXNz
+IG9uZT8NCg0KV2UgcHJvY2VzcyBlYWNoIHZpb19pZHggZm9yIGVhY2ggaW50ZXJydXB0Lg0KSWYg
+dGhlcmUgYXJlIG11bHRpcGxlIHZpb19pZHggaXMgcmFpc2VkLCBpdCB3aWxsIHRyaWdnZXIgYW5v
+dGhlcg0KaW50ZXJydXB0IHRvIGhhbmRsZSBpdC4NCg0KPiANCj4gUmVnYXJkcywNCj4gQ2h1bi1L
+dWFuZy4NCj4gDQo+ID4gKyAgICAgICB9DQo+ID4gKw0KPiA+ICsgICAgICAgcmV0dXJuIGZhbHNl
+Ow0KPiA+ICt9DQoNCg==
 
-I don't have any further comments, maybe just send a new version of
-this patch alone and name it v6.1.
-
--- 
-viresh
