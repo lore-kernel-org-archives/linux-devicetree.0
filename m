@@ -2,419 +2,147 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3E4C433E5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 02:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC13C433E4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 02:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5057620787
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 02:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19B4220791
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 02:59:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yDC9WRFS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgGPCn1 (ORCPT
+        id S1728050AbgGPC7o (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 22:43:27 -0400
-Received: from mx.socionext.com ([202.248.49.38]:52330 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728066AbgGPCn0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jul 2020 22:43:26 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 16 Jul 2020 11:43:24 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 640B4180BC2;
-        Thu, 16 Jul 2020 11:43:24 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 16 Jul 2020 11:43:24 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 2879C1A0509;
-        Thu, 16 Jul 2020 11:43:24 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
+        Wed, 15 Jul 2020 22:59:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728041AbgGPC7o (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 22:59:44 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3718C08C5DB
+        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 19:59:43 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id m9so3011835pfh.0
+        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 19:59:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LuoIleQ9Ji/xAYuJDXT6Z6dO3ZLl5ioORiaja/lMqvU=;
+        b=yDC9WRFS8c2b76sobDkpCegCdn3qmN6PPKK4I3OvnoOO/1z9MLPmZRkplla4Eg/ukz
+         1yjsgCBhx+fRw0LuToGQnO47Bl+60XCpT96Y0dXbMit9EC6ZdCMqRa6JraA+u7TbAW17
+         euvBlP7GfXe6acQFG64G5x6qEgGoJBqWFEiHSaCnX/VsxbRMG4tS8yt8TyP+Xu+XFWc8
+         s8IvNYvyMn1Ggs7e9HxoGYCErU0nRsm5i2C2E8eXWFut8qs1G363dUt0dmSIwNP+F2WZ
+         pvtlrtM37l/jWHo+7dFbDMGm8W4A4TFN8bSz8LBagKLRQNt3tcBsj0Q/osGEd8IH85lN
+         GHbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LuoIleQ9Ji/xAYuJDXT6Z6dO3ZLl5ioORiaja/lMqvU=;
+        b=C/udk9Glky/TqYxoc1pBFNesNVplBDZiSfEILIj3yKG8Q2LwxvvT26fIkc+VLwAXhG
+         /YiO8zJlhOKf/nPwh5twqOpN5TA0sh2VVUX+xZUezQOPFwyS56SQODgX5ykV1Lc6FNzs
+         WHPO97hIbsBhx2dF4Hi5UcLvugpFX7otHfOw5osC/3pBu0T11rZ4WgorLy287iUsZ3kL
+         tu0rlmLw25QmSkLQqrkdKN8ZQe7kv2A7EartYf5uC3/EHMEiSZ+ibvgajjsL4VjvlEpp
+         pUuFCcrTGHYkLsV48yLUqm5qY842t/MJL4HTzyb5iNFuAhXxAfgKsE+jpIdZjBs/vv1N
+         rejw==
+X-Gm-Message-State: AOAM530SqhSqpuQLQt8yDzIpuqq9gYfdtWN7jgrQVPPjeNzYijlojbxY
+        /L7Qpv7dKWwocVU2ycXjwwkK
+X-Google-Smtp-Source: ABdhPJzWhG+hWqD5f/hYQ2NvZiC3lvnRQfSCnWdqN4YpElhXZ2qpZ/W6KhstotDJpZvgzwohyXYNxw==
+X-Received: by 2002:a62:8688:: with SMTP id x130mr1902048pfd.280.1594868383282;
+        Wed, 15 Jul 2020 19:59:43 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6d89:fed1:9157:c271:c363:4849])
+        by smtp.gmail.com with ESMTPSA id h3sm3217799pjz.23.2020.07.15.19.59.37
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 Jul 2020 19:59:42 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 08:29:32 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v3 2/2] phy: socionext: Add UniPhier AHCI PHY driver support
-Date:   Thu, 16 Jul 2020 11:43:02 +0900
-Message-Id: <1594867382-27509-3-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594867382-27509-1-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1594867382-27509-1-git-send-email-hayashi.kunihiko@socionext.com>
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] arm64: dts: qcom: sm8250: Drop tcsr_mutex syscon
+Message-ID: <20200716025932.GA3271@Mani-XPS-13-9360>
+References: <20200622075956.171058-1-bjorn.andersson@linaro.org>
+ <20200622075956.171058-5-bjorn.andersson@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622075956.171058-5-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a driver for PHY interface built into ahci controller implemented
-in UniPhier SoCs. This supports PXs2 and PXs3 SoCs.
+On Mon, Jun 22, 2020 at 12:59:56AM -0700, Bjorn Andersson wrote:
+> Now that we don't need the intermediate syscon to represent the TCSR
+> mutexes, update the dts to describe the TCSR mutex directly under /soc.
+> 
+> The change also fixes the sort order of the nodes.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- drivers/phy/socionext/Kconfig             |  10 +
- drivers/phy/socionext/Makefile            |   1 +
- drivers/phy/socionext/phy-uniphier-ahci.c | 323 ++++++++++++++++++++++++++++++
- 3 files changed, 334 insertions(+)
- create mode 100644 drivers/phy/socionext/phy-uniphier-ahci.c
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-diff --git a/drivers/phy/socionext/Kconfig b/drivers/phy/socionext/Kconfig
-index 8c9d7c3..a3970e0 100644
---- a/drivers/phy/socionext/Kconfig
-+++ b/drivers/phy/socionext/Kconfig
-@@ -34,3 +34,13 @@ config PHY_UNIPHIER_PCIE
- 	help
- 	  Enable this to support PHY implemented in PCIe controller
- 	  on UniPhier SoCs. This driver supports LD20 and PXs3 SoCs.
-+
-+config PHY_UNIPHIER_AHCI
-+	tristate "UniPhier AHCI PHY driver"
-+	depends on ARCH_UNIPHIER || COMPILE_TEST
-+	depends on OF && HAS_IOMEM
-+	default SATA_AHCI_PLATFORM
-+	select GENERIC_PHY
-+	help
-+	  Enable this to support PHY implemented in AHCI controller
-+	  on UniPhier SoCs. This driver supports PXs2 and PXs3 SoCs.
-diff --git a/drivers/phy/socionext/Makefile b/drivers/phy/socionext/Makefile
-index 7dc9095..e67c2da 100644
---- a/drivers/phy/socionext/Makefile
-+++ b/drivers/phy/socionext/Makefile
-@@ -6,3 +6,4 @@
- obj-$(CONFIG_PHY_UNIPHIER_USB2)	+= phy-uniphier-usb2.o
- obj-$(CONFIG_PHY_UNIPHIER_USB3)	+= phy-uniphier-usb3hs.o phy-uniphier-usb3ss.o
- obj-$(CONFIG_PHY_UNIPHIER_PCIE)	+= phy-uniphier-pcie.o
-+obj-$(CONFIG_PHY_UNIPHIER_AHCI)	+= phy-uniphier-ahci.o
-diff --git a/drivers/phy/socionext/phy-uniphier-ahci.c b/drivers/phy/socionext/phy-uniphier-ahci.c
-new file mode 100644
-index 0000000..d1a79f5
---- /dev/null
-+++ b/drivers/phy/socionext/phy-uniphier-ahci.c
-@@ -0,0 +1,323 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * phy-uniphier-ahci.c - PHY driver for UniPhier AHCI controller
-+ * Copyright 2016-2020, Socionext Inc.
-+ * Author: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/bitops.h>
-+#include <linux/clk.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset.h>
-+
-+struct uniphier_ahciphy_priv {
-+	struct device *dev;
-+	void __iomem  *base;
-+	struct clk *clk, *clk_parent;
-+	struct reset_control *rst, *rst_parent;
-+	const struct uniphier_ahciphy_soc_data *data;
-+};
-+
-+struct uniphier_ahciphy_soc_data {
-+	int (*init)(struct uniphier_ahciphy_priv *priv);
-+	int (*power_on)(struct uniphier_ahciphy_priv *priv);
-+	int (*power_off)(struct uniphier_ahciphy_priv *priv);
-+	bool is_ready_high;
-+	bool is_phy_clk;
-+};
-+
-+/* for PXs2/PXs3 */
-+#define CKCTRL				0x0
-+#define CKCTRL_P0_READY			BIT(15)
-+#define CKCTRL_P0_RESET			BIT(10)
-+#define CKCTRL_REF_SSP_EN		BIT(9)
-+#define TXCTRL0				0x4
-+#define TXCTRL0_AMP_G3_MASK		GENMASK(22, 16)
-+#define TXCTRL0_AMP_G2_MASK		GENMASK(14, 8)
-+#define TXCTRL0_AMP_G1_MASK		GENMASK(6, 0)
-+#define TXCTRL1				0x8
-+#define TXCTRL1_DEEMPH_G3_MASK		GENMASK(21, 16)
-+#define TXCTRL1_DEEMPH_G2_MASK		GENMASK(13, 8)
-+#define TXCTRL1_DEEMPH_G1_MASK		GENMASK(5, 0)
-+#define RXCTRL				0xc
-+#define RXCTRL_LOS_LVL_MASK		GENMASK(20, 16)
-+#define RXCTRL_LOS_BIAS_MASK		GENMASK(10, 8)
-+#define RXCTRL_RX_EQ_MASK		GENMASK(2, 0)
-+
-+static void uniphier_ahciphy_pxs2_enable(struct uniphier_ahciphy_priv *priv,
-+					 bool enable)
-+{
-+	u32 val;
-+
-+	val = readl(priv->base + CKCTRL);
-+
-+	if (enable) {
-+		val |= CKCTRL_REF_SSP_EN;
-+		writel(val, priv->base + CKCTRL);
-+		val &= ~CKCTRL_P0_RESET;
-+		writel(val, priv->base + CKCTRL);
-+	} else {
-+		val |= CKCTRL_P0_RESET;
-+		writel(val, priv->base + CKCTRL);
-+		val &= ~CKCTRL_REF_SSP_EN;
-+		writel(val, priv->base + CKCTRL);
-+	}
-+}
-+
-+static int uniphier_ahciphy_pxs2_power_on(struct uniphier_ahciphy_priv *priv)
-+{
-+	int ret;
-+	u32 val;
-+
-+	uniphier_ahciphy_pxs2_enable(priv, true);
-+
-+	/* wait until PLL is ready */
-+	if (priv->data->is_ready_high)
-+		ret = readl_poll_timeout(priv->base + CKCTRL, val,
-+					 (val & CKCTRL_P0_READY), 200, 400);
-+	else
-+		ret = readl_poll_timeout(priv->base + CKCTRL, val,
-+					 !(val & CKCTRL_P0_READY), 200, 400);
-+	if (ret) {
-+		dev_err(priv->dev, "Failed to check whether PHY PLL is ready\n");
-+		uniphier_ahciphy_pxs2_enable(priv, false);
-+	}
-+
-+	return ret;
-+}
-+
-+static int uniphier_ahciphy_pxs2_power_off(struct uniphier_ahciphy_priv *priv)
-+{
-+	uniphier_ahciphy_pxs2_enable(priv, false);
-+
-+	return 0;
-+}
-+
-+static int uniphier_ahciphy_pxs3_init(struct uniphier_ahciphy_priv *priv)
-+{
-+	int i;
-+	u32 val;
-+
-+	/* setup port parameter */
-+	val = readl(priv->base + TXCTRL0);
-+	val &= ~TXCTRL0_AMP_G3_MASK;
-+	val |= FIELD_PREP(TXCTRL0_AMP_G3_MASK, 0x73);
-+	val &= ~TXCTRL0_AMP_G2_MASK;
-+	val |= FIELD_PREP(TXCTRL0_AMP_G2_MASK, 0x46);
-+	val &= ~TXCTRL0_AMP_G1_MASK;
-+	val |= FIELD_PREP(TXCTRL0_AMP_G1_MASK, 0x42);
-+	writel(val, priv->base + TXCTRL0);
-+
-+	val = readl(priv->base + TXCTRL1);
-+	val &= ~TXCTRL1_DEEMPH_G3_MASK;
-+	val |= FIELD_PREP(TXCTRL1_DEEMPH_G3_MASK, 0x23);
-+	val &= ~TXCTRL1_DEEMPH_G2_MASK;
-+	val |= FIELD_PREP(TXCTRL1_DEEMPH_G2_MASK, 0x05);
-+	val &= ~TXCTRL1_DEEMPH_G1_MASK;
-+	val |= FIELD_PREP(TXCTRL1_DEEMPH_G1_MASK, 0x05);
-+
-+	val = readl(priv->base + RXCTRL);
-+	val &= ~RXCTRL_LOS_LVL_MASK;
-+	val |= FIELD_PREP(RXCTRL_LOS_LVL_MASK, 0x9);
-+	val &= ~RXCTRL_LOS_BIAS_MASK;
-+	val |= FIELD_PREP(RXCTRL_LOS_BIAS_MASK, 0x2);
-+	val &= ~RXCTRL_RX_EQ_MASK;
-+	val |= FIELD_PREP(RXCTRL_RX_EQ_MASK, 0x1);
-+
-+	/* dummy read 25 times to make a wait time for the phy to stablize */
-+	for (i = 0; i < 25; i++)
-+		readl(priv->base + CKCTRL);
-+
-+	return 0;
-+}
-+
-+static int uniphier_ahciphy_init(struct phy *phy)
-+{
-+	struct uniphier_ahciphy_priv *priv = phy_get_drvdata(phy);
-+	int ret;
-+
-+	ret = clk_prepare_enable(priv->clk_parent);
-+	if (ret)
-+		return ret;
-+
-+	ret = reset_control_deassert(priv->rst_parent);
-+	if (ret)
-+		goto out_clk_disable;
-+
-+	if (priv->data->init) {
-+		ret = priv->data->init(priv);
-+		if (ret)
-+			goto out_rst_assert;
-+	}
-+
-+	return 0;
-+
-+out_rst_assert:
-+	reset_control_assert(priv->rst_parent);
-+out_clk_disable:
-+	clk_disable_unprepare(priv->clk_parent);
-+
-+	return ret;
-+}
-+
-+static int uniphier_ahciphy_exit(struct phy *phy)
-+{
-+	struct uniphier_ahciphy_priv *priv = phy_get_drvdata(phy);
-+
-+	reset_control_assert(priv->rst_parent);
-+	clk_disable_unprepare(priv->clk_parent);
-+
-+	return 0;
-+}
-+
-+static int uniphier_ahciphy_power_on(struct phy *phy)
-+{
-+	struct uniphier_ahciphy_priv *priv = phy_get_drvdata(phy);
-+	int ret = 0;
-+
-+	ret = clk_prepare_enable(priv->clk);
-+	if (ret)
-+		return ret;
-+
-+	ret = reset_control_deassert(priv->rst);
-+	if (ret)
-+		goto out_clk_disable;
-+
-+	if (priv->data->power_on) {
-+		ret = priv->data->power_on(priv);
-+		if (ret)
-+			goto out_reset_assert;
-+	}
-+
-+	return 0;
-+
-+out_reset_assert:
-+	reset_control_assert(priv->rst);
-+out_clk_disable:
-+	clk_disable_unprepare(priv->clk);
-+
-+	return ret;
-+}
-+
-+static int uniphier_ahciphy_power_off(struct phy *phy)
-+{
-+	struct uniphier_ahciphy_priv *priv = phy_get_drvdata(phy);
-+	int ret = 0;
-+
-+	if (priv->data->power_off)
-+		ret = priv->data->power_off(priv);
-+
-+	reset_control_assert(priv->rst);
-+	clk_disable_unprepare(priv->clk);
-+
-+	return ret;
-+}
-+
-+
-+static const struct phy_ops uniphier_ahciphy_ops = {
-+	.init  = uniphier_ahciphy_init,
-+	.exit  = uniphier_ahciphy_exit,
-+	.power_on  = uniphier_ahciphy_power_on,
-+	.power_off = uniphier_ahciphy_power_off,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int uniphier_ahciphy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct uniphier_ahciphy_priv *priv;
-+	struct phy *phy;
-+	struct phy_provider *phy_provider;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->dev = dev;
-+	priv->data = of_device_get_match_data(dev);
-+	if (WARN_ON(!priv->data))
-+		return -EINVAL;
-+
-+	priv->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(priv->base))
-+		return PTR_ERR(priv->base);
-+
-+	priv->clk_parent = devm_clk_get(dev, "link");
-+	if (IS_ERR(priv->clk_parent))
-+		return PTR_ERR(priv->clk_parent);
-+
-+	if (priv->data->is_phy_clk) {
-+		priv->clk = devm_clk_get(dev, "phy");
-+		if (IS_ERR(priv->clk))
-+			return PTR_ERR(priv->clk);
-+	}
-+
-+	priv->rst_parent = devm_reset_control_get_shared(dev, "link");
-+	if (IS_ERR(priv->rst_parent))
-+		return PTR_ERR(priv->rst_parent);
-+
-+	priv->rst = devm_reset_control_get_shared(dev, "phy");
-+	if (IS_ERR(priv->rst))
-+		return PTR_ERR(priv->rst);
-+
-+	phy = devm_phy_create(dev, dev->of_node, &uniphier_ahciphy_ops);
-+	if (IS_ERR(phy)) {
-+		dev_err(dev, "failed to create phy\n");
-+		return PTR_ERR(phy);
-+	}
-+
-+	phy_set_drvdata(phy, priv);
-+	phy_provider = devm_of_phy_provider_register(dev,
-+						     of_phy_simple_xlate);
-+	if (IS_ERR(phy_provider))
-+		return PTR_ERR(phy_provider);
-+
-+	return 0;
-+}
-+
-+static const struct uniphier_ahciphy_soc_data uniphier_pxs2_data = {
-+	.power_on  = uniphier_ahciphy_pxs2_power_on,
-+	.power_off = uniphier_ahciphy_pxs2_power_off,
-+	.is_ready_high = false,
-+	.is_phy_clk = false,
-+};
-+
-+static const struct uniphier_ahciphy_soc_data uniphier_pxs3_data = {
-+	.init      = uniphier_ahciphy_pxs3_init,
-+	.power_on  = uniphier_ahciphy_pxs2_power_on,
-+	.power_off = uniphier_ahciphy_pxs2_power_off,
-+	.is_ready_high = true,
-+	.is_phy_clk = true,
-+};
-+
-+static const struct of_device_id uniphier_ahciphy_match[] = {
-+	{
-+		.compatible = "socionext,uniphier-pxs2-ahci-phy",
-+		.data = &uniphier_pxs2_data,
-+	},
-+	{
-+		.compatible = "socionext,uniphier-pxs3-ahci-phy",
-+		.data = &uniphier_pxs3_data,
-+	},
-+	{ /* Sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, uniphier_ahciphy_match);
-+
-+static struct platform_driver uniphier_ahciphy_driver = {
-+	.probe = uniphier_ahciphy_probe,
-+	.driver = {
-+		.name = "uniphier-ahci-phy",
-+		.of_match_table = uniphier_ahciphy_match,
-+	},
-+};
-+module_platform_driver(uniphier_ahciphy_driver);
-+
-+MODULE_AUTHOR("Kunihiko Hayashi <hayashi.kunihiko@socionext.com>");
-+MODULE_DESCRIPTION("UniPhier PHY driver for AHCI controller");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+Thanks,
+Mani
 
+> ---
+> 
+> Changs since v1:
+> - Adjusted sort order of the nodes
+> 
+>  arch/arm64/boot/dts/qcom/sm8250.dtsi | 17 ++++++-----------
+>  1 file changed, 6 insertions(+), 11 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> index 7050adba7995..67a1b6f3301b 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> @@ -144,12 +144,6 @@ scm: scm {
+>  		};
+>  	};
+>  
+> -	tcsr_mutex: hwlock {
+> -		compatible = "qcom,tcsr-mutex";
+> -		syscon = <&tcsr_mutex_regs 0 0x1000>;
+> -		#hwlock-cells = <1>;
+> -	};
+> -
+>  	memory@80000000 {
+>  		device_type = "memory";
+>  		/* We expect the bootloader to fill in the size */
+> @@ -376,6 +370,12 @@ ufs_mem_phy_lanes: lanes@1d87400 {
+>  			};
+>  		};
+>  
+> +		tcsr_mutex: hwlock@1f40000 {
+> +			compatible = "qcom,tcsr-mutex";
+> +			reg = <0x0 0x01f40000 0x0 0x40000>;
+> +			#hwlock-cells = <1>;
+> +		};
+> +
+>  		intc: interrupt-controller@17a00000 {
+>  			compatible = "arm,gic-v3";
+>  			#interrupt-cells = <3>;
+> @@ -486,11 +486,6 @@ rpmhpd_opp_turbo_l1: opp10 {
+>  			};
+>  		};
+>  
+> -		tcsr_mutex_regs: syscon@1f40000 {
+> -			compatible = "syscon";
+> -			reg = <0x0 0x01f40000 0x0 0x40000>;
+> -		};
+> -
+>  		timer@17c20000 {
+>  			#address-cells = <2>;
+>  			#size-cells = <2>;
+> -- 
+> 2.26.2
+> 
