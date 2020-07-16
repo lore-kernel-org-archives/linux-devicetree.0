@@ -2,140 +2,164 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0A0C433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 21:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D150C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 21:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ECA7207DD
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 21:29:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56DE2207DD
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 21:29:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="xTAusJWg"
+	dkim=pass (2048-bit key) header.d=snejp.pl header.i=@snejp.pl header.b="Q8OcFTKP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726090AbgGPV3A (ORCPT
+        id S1726960AbgGPV3I (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 17:29:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56160 "EHLO
+        Thu, 16 Jul 2020 17:29:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbgGPV3A (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 17:29:00 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B599C061755
-        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 14:29:00 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id m16so4433342pls.5
-        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 14:29:00 -0700 (PDT)
+        with ESMTP id S1726243AbgGPV3I (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 17:29:08 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DD72C08C5DB
+        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 14:29:07 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h22so10009071lji.9
+        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 14:29:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=J6Y0MfVHAU4+ZgY/mepQU37GPL024rjIvlsLsAsgOa4=;
-        b=xTAusJWgf6D79cQ/B0ekFnBpDtdUrtkP1aQg35prpLr1pwJx3AmVZ24SZxfwx03hqv
-         hBlmCAF8HI3laFfGzMNK+NSjuhq7nxVB/D951yhkBKkdXgZk88rI2U9cuKUHL8GmYqoQ
-         ANeU/oPb0Gr7BAVRxJSbDduT9d1M0cRsEH26mA2wDIetOBzZPu4OYcW7jYerqq0yunxB
-         JEB02Hv8odPsmDUWkjzT8V76+iLzq5sS3LEQ0qdB3IdA8HmaM3LPjFGb3HPkKs7a/LoN
-         BrelG+oZyEN2AbUqxQiUHuKWfFCYo9mpKp2rk76GJ6b6X6ECx0O/mUu8JUg0JQ7WJnRU
-         9RBA==
+        d=snejp.pl; s=gmail;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=BMW25MccEXBEQKiOayk0XDiCmm5Kg67PbQTIPz8CeXU=;
+        b=Q8OcFTKPw8k3z2elh+O/yAez7MPSAXdHzUNs/Ks0fOM5yKcM8I5iUWNAkZLRO8jVYV
+         Bi1IGEqK4hM3tKFXoVzNwDiXw03mVBOwFZM2ZpD5QMNN8oi/tuqzs/YmofsxLwHFSanG
+         rFA5u6QvyEgmg05+RjOlgBWx164bWRFwGHueXaqHiIF8IiHGDhPO43BOuPYo2ekOAeaq
+         /LFBPfI0ksHYRgg/bnshjk9SVN6q5y0JnVoHg60EqQdfLl6gRSehZshGGbiyLKJw2l8v
+         fBy4ebyhe6m0NS1dY1pvmnrCSLCuqHrql7lR/IcHDRjiuLewIkuNRo4sQhYFvB/xfMWW
+         L78A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=J6Y0MfVHAU4+ZgY/mepQU37GPL024rjIvlsLsAsgOa4=;
-        b=mK34Q4GvkaqUQypLNZ0+4IX9dAlSaqWHi5oIOxbOZTvIYBGxlItoXNytBgqS2txGZH
-         7hVlIj1o0gL1UEh0dEYSW/s5X/G+EwDV/fPc3mho22cdbqm8IV2JTf88XQppLPqQRuyT
-         e/WrMd3bv6s6PhAGe7VUlgDqzC7/XXSPrYNB5wMXqNv58NSYRwa7CCJr+WuPUbF0f3Rk
-         qMc2Ji2p9S9CJOgs7iWq553HMYZr+KLbp3K0PWalJ/AJ1ZHoE8FJ4L8y9L9M5zj/FlOU
-         9WBbox8eQIT+N9QTqMkLG9Hd2pGqrS5m4X7A5YL8BxK2P5isEZ479vu8i8g4CLQamL2+
-         H1Og==
-X-Gm-Message-State: AOAM531Uhh8yOrwAVEKzz+oiRfr5kVuKmR7/OWFZK41KdBI442mImI7+
-        +6F2XA+482fH0dhKl9KLNUVfFw==
-X-Google-Smtp-Source: ABdhPJz73I6mt0zkjhR/MvWi4S5nNWwIcspRU5QvWTWCL6CNuOkaP+j8UFV0E8pijfMGw6CBWKVlUQ==
-X-Received: by 2002:a17:902:8d98:: with SMTP id v24mr5096592plo.301.1594934939634;
-        Thu, 16 Jul 2020 14:28:59 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id x10sm5470069pgp.47.2020.07.16.14.28.58
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BMW25MccEXBEQKiOayk0XDiCmm5Kg67PbQTIPz8CeXU=;
+        b=e8NJcTpWnxAvMENYgCwtLlSXLIieHWxDJIRuKHkpDfF6MhQfUWlqfPo9tq1AXk/eQ+
+         2KhYsMtbKMWOis/+mCOKDt8jphYwASVnn6EeX0MDecy4/HI4z4clgatdNpVlAbNMpjzL
+         71rovxvbvMB9btqDRDsOE21R8SeOO0zwC/s2RZv7BgCBPxsFtD0rJ+Tf6hYsHp5rgX6d
+         GbPa50M4ShLeD9i2YdfDWEBxOtT1yNK8dV8y+KssJILPI6QifcHxelgj9tebGYJvtXWL
+         T8FamPfPp2XbIk7qAB848GLnGZo33fGxwPOmMzzRzS1WUxFZRIhZ8Fb3yawG4xyrKGxj
+         GlYw==
+X-Gm-Message-State: AOAM532uWkj390F5B/vU75LZyZxQfdlQdDCxHWU48MjEP+b0Z5zhuAYi
+        LsEgM85qZz75H3G3HMIJnq8dY+BNjq23eQ==
+X-Google-Smtp-Source: ABdhPJzVYp/5WHye4DJHuSaRnmWrbiRRSCijThWnACJvir4tMmyzsXCyvlLmpk/vX1xE+o8oq9JMeg==
+X-Received: by 2002:a2e:8296:: with SMTP id y22mr3056440ljg.238.1594934945707;
+        Thu, 16 Jul 2020 14:29:05 -0700 (PDT)
+Received: from PackardBell ([82.160.139.10])
+        by smtp.gmail.com with ESMTPSA id k12sm1287608lfe.68.2020.07.16.14.29.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 14:28:58 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Anand Moon <linux.amoon@gmail.com>
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCHv1 0/3] Enable RTC on Odroid N2
-In-Reply-To: <a7e9b154-ceb2-3915-454a-a53c9b65622e@baylibre.com>
-References: <20200715160209.652-1-linux.amoon@gmail.com> <455f5dcc-3be3-45cd-4947-50f261a502a4@baylibre.com> <CANAwSgRXLUqqSqnguV2pgPdumMi8i6T9rh6hNQ0Y03mv_j7V-g@mail.gmail.com> <91fbbe36-d839-d864-7666-5483cc643a5e@baylibre.com> <a7e9b154-ceb2-3915-454a-a53c9b65622e@baylibre.com>
-Date:   Thu, 16 Jul 2020 14:28:58 -0700
-Message-ID: <7hh7u7f8th.fsf@baylibre.com>
+        Thu, 16 Jul 2020 14:29:04 -0700 (PDT)
+Received: from localhost (PackardBell [local])
+        by PackardBell (OpenSMTPD) with ESMTPA id 44c50bbc;
+        Thu, 16 Jul 2020 21:29:03 +0000 (UTC)
+Date:   Thu, 16 Jul 2020 23:29:03 +0200
+From:   Bartosz Dudziak <bartosz.dudziak@snejp.pl>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add msm8226 pinctrl
+ bindings
+Message-ID: <20200716212903.GA23234@PackardBell>
+References: <20200627192833.217531-1-bartosz.dudziak@snejp.pl>
+ <20200627192833.217531-2-bartosz.dudziak@snejp.pl>
+ <20200715202413.GA755488@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200715202413.GA755488@bogus>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+On Wed, Jul 15, 2020 at 02:24:13PM -0600, Rob Herring wrote:
+> On Sat, Jun 27, 2020 at 09:28:30PM +0200, Bartosz Dudziak wrote:
+> > Add device tree binding Documentation details for Qualcomm msm8226
+> > pinctrl driver.
+> > 
+> > - Bindings documentation was based on qcom,sm8250-pinctrl.yaml by
+> >   Bjorn Andersson <bjorn.andersson@linaro.org> and then modified for
+> >   msm8226 content
+> > 
+> > Signed-off-by: Bartosz Dudziak <bartosz.dudziak@snejp.pl>
+> > ---
+> >  .../pinctrl/qcom,msm8226-pinctrl.yaml         | 123 ++++++++++++++++++
+> >  1 file changed, 123 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8226-pinctrl.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8226-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,msm8226-pinctrl.yaml
+> > new file mode 100644
+> > index 0000000000..8d8dc15718
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8226-pinctrl.yaml
+> > @@ -0,0 +1,123 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pinctrl/qcom,msm8226-pinctrl.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Qualcomm Technologies, Inc. MSM8226 TLMM block
+> > +
+> > +maintainers:
+> > +  - Bjorn Andersson <bjorn.andersson@linaro.org>
+> > +
+> > +description: |
+> > +  This binding describes the Top Level Mode Multiplexer block found in the
+> > +  MSM8226 platform.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: qcom,msm8226-pinctrl
+> > +
+> > +  reg:
+> > +    description: Specifies the base address and size of the TLMM register space
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    description: Specifies the TLMM summary IRQ
+> > +    maxItems: 1
+> > +
+> > +  interrupt-controller: true
+> > +
+> > +  '#interrupt-cells':
+> > +    description: Specifies the PIN numbers and Flags, as defined in
+> > +      include/dt-bindings/interrupt-controller/irq.h
+> > +    const: 2
+> > +
+> > +  gpio-controller: true
+> > +
+> > +  '#gpio-cells':
+> > +    description: Specifying the pin number and flags, as defined in
+> > +      include/dt-bindings/gpio/gpio.h
+> > +    const: 2
+> > +
+> > +  gpio-ranges:
+> > +    maxItems: 1
+> > +
+> > +  gpio-reserved-ranges:
+> > +    maxItems: 1
+> > +
+> > +#PIN CONFIGURATION NODES
+> > +patternProperties:
+> > +  '^.*$':
+> > +    if:
+> > +      type: object
+> 
+> For new bindings, do '-pins$' for the node name pattern so we don't have 
+> to do this hack.
+> 
 
-> Hi,
->
-> On 16/07/2020 10:20, Neil Armstrong wrote:
->> Hi,
->> 
->> On 16/07/2020 10:14, Anand Moon wrote:
->>> Hi Neil,
->>>
->>> Thanks for your review comments.
->>>
->>> On Thu, 16 Jul 2020 at 12:35, Neil Armstrong <narmstrong@baylibre.com> wrote:
->>>>
->>>> Hi Anand,
->>>>
->>>> Only the vrtc is able to wakeup the device from suspend,
->>>> the external RTC is not capable.
->>>>
->>>> Neil
->>>
->>> Now I have two RTC driver registered
->>>
->>> $ dmesg | grep rtc
->>> [    4.737315] rtc-pcf8563 0-0051: registered as rtc0
->>> [    4.738763] rtc-pcf8563 0-0051: setting system clock to
->>> 2020-07-16T08:00:46 UTC (1594886446)
->>> [    4.790206] meson-vrtc ff8000a8.rtc: registered as rtc1
->>>
->>> And there are two nodes
->>> # ls /dev/rtc*
->>> /dev/rtc  /dev/rtc0  /dev/rtc1
->>>
->>> So it seames an issue that /dev/rtc0 is not able to handle wakeup events.
->>> How can we resolve this issue?
->>>
->>> # time rtcwake -s 30 -m mem
->>> rtcwake: /dev/rtc0 not enabled for wakeup events
->> 
->> rtcwake -d /dev/rtc1 -s 30 -m mem
->> 
->> As Christian reported off-list, it may be necessary to keep the vrtc as rtc0,
->> so you should add aliases in the odroid-n2 DT to have vrtc as rtc0 and the on-board
->> rtc as rtc1, but it may break the hwclock tools, so the reverse may be better
->> but you'll need to specify rtc1 to rtcwake.
->
-> While looking closer to the Odroid-N2 schematics and U-Boot/SCP Firmware, the external on-board
-> RTC can wake the device with the GPIO_AO 7, and wakeup is enabled in:
-> https://github.com/hardkernel/u-boot/blob/odroidn2-v2015.01/board/hardkernel/odroidn2/firmware/scp_task/pwr_ctrl.c#L143
->
-> So, something must be missing.
-
-A couple possibilities come to mind (without looking at the specific RTC
-driver):
-
-1) pinctrl for that GPIO needs proper settings
-2) DT node for the RTC needs "wakeup-source" property
-
-Kevin
+I have changed the name pattern and sent a v2 patch.
