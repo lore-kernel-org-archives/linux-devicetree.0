@@ -2,136 +2,123 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A94D0C433E8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 23:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D42BC433E4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 23:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 825A0208CA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 23:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 621C0206F4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 23:42:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nFMORG0K"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W9vYm1Lw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgGPXcu (ORCPT
+        id S1725933AbgGPXmi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 19:32:50 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:8511 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbgGPXcn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 19:32:43 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f10d8990000>; Thu, 16 Jul 2020 15:45:45 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 16 Jul 2020 15:46:44 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 16 Jul 2020 15:46:44 -0700
-Received: from [10.2.163.115] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 Jul
- 2020 22:46:43 +0000
-Subject: Re: [RFC PATCH v3 16/18] gpu: host1x: mipi: Split
- tegra_mipi_calibrate and tegra_mipi_wait
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <gregkh@linuxfoundation.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>
-References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
- <1594786855-26506-17-git-send-email-skomatineni@nvidia.com>
- <a06dec8f-7042-767b-545b-048685a7683d@gmail.com>
- <20d63eca-4b2b-584e-a391-a4fb64a16b40@nvidia.com>
- <c4945c77-5de1-e9b1-9f4f-cdd78bca18c7@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <ce0c5ffb-f859-0eab-1ea5-044623dff221@nvidia.com>
-Date:   Thu, 16 Jul 2020 15:49:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 16 Jul 2020 19:42:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48716 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbgGPXmi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 19:42:38 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0E41C08C5C0
+        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 16:42:37 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id k5so5477885pjg.3
+        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 16:42:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+CvHI04bee7ou84OwZFiCwpXnlzPN58BvC/9GjdJkKo=;
+        b=W9vYm1LwlJM95d17qeGx9zV4E+nImNdan0XM+3kJtATqoAFRaD5E2hFuYOhtOaZGZ5
+         FnpVe1QIyPA1FAkkVbWMvO/e13GdXRg6/mt1RnvlNZxibyhvNgjtyms/kRroqQG/LyQ8
+         e6n1WYaTz4HUpHfKVbB/IilJuKEeENNnnkhfMMUm3n9pceNp2MHSX9W60WztQ583k5xS
+         TEvmniXNQPKWB45FxZ7yYIvxaa6zO4hLxbR+tj2Ob0fa2OJ52akYZhEl2lsLgB4D7SOk
+         5XSEMszunLvRU3c2Ju7GK4I74ue1sm4mD1QbOq9QZFS//G3gUwBsVINGUIWIS/FedzZ+
+         V4VA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+CvHI04bee7ou84OwZFiCwpXnlzPN58BvC/9GjdJkKo=;
+        b=PH72wRBxmaqett/Fr/kwzWyWQtw/hahjw+rQ9FdfA6JVBS8u8H7QimBqg2cum0UN3v
+         Isisz9IE/uZhCDk+OiP+vG03Jw6el6ogDUUvyTaJfuiyRLIhZsi4sK3iUbrMknW7EQ9J
+         kUMIpeoQ1FG/b2J5ks3QHxt1b2yOFWM2yQzKxGzH34u5EZbr/dySvRDwcpHzqXmza9JJ
+         urZBYj/h+f5KxxjbtwrYtkBYv4GgtpeTrMVJfeRkDWncGwx3oj93sxfvnhowVy+RAfRk
+         kKVxzeuQ2/QjIyhKf/b5O2e+q+BLhybtXPINjl6TVzyrBk4EpkWHZ38wKy0xrC2pWhtg
+         3awA==
+X-Gm-Message-State: AOAM532DlC3sNHDLcInZnd/ulaGmAS/Kjv7WsubjpaWcorVvWuov9R91
+        IB6/JOcSiphVTdNSfiFkPGS5AQ==
+X-Google-Smtp-Source: ABdhPJxmftRI2/TXZH5UmgckYK3a26ACKc4ckDTkV3rSoYQpJAj7FgJW2jBK5gtFwQNFFLX3lsM0pg==
+X-Received: by 2002:a17:90a:c28f:: with SMTP id f15mr7340552pjt.72.1594942957244;
+        Thu, 16 Jul 2020 16:42:37 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id i132sm5862078pfe.9.2020.07.16.16.42.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 16:42:36 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 16:40:34 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        evgreen@chromium.org, dianders@chromium.org,
+        pillair@codeaurora.org, robh+dt@kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Move the fixed-perm property
+ to SoC dtsi
+Message-ID: <20200716234034.GG1218486@builder.lan>
+References: <20200716191746.23196-1-sibis@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <c4945c77-5de1-e9b1-9f4f-cdd78bca18c7@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1594939545; bh=DBU7rkpSwcdm/T9Ofc9hoI63/nUNEGD1koFVXFhF+U4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=nFMORG0KBm13wQActfeNEGrE1zTfVIyfLJ//f9isZ71e/0m8pSHRFZfxn4Vch+PrK
-         m467l/dCABGM7cypucxeKSO7ihOtmWx2RYRe7ASI+CVwCl89tYZv523OzYt7r+a/Gj
-         QEQJ9pQrzdrWWDsMo1MpeBY8uEOrwGKZcACUvLn7z02tudMGWgEtwLcbDFGcxOxron
-         CFiXdEhydMgbm3yuCd+qzK66L+0iuMRtQ6UtJWoqiN62PuoBS+T3mnls2EKz39D1Qk
-         pXAhGvVOx+t5lirI3vJWIgYvdkLb16b8GqcnX8Mu2SazjFJC+gFicbqDU7WC+jQG0r
-         SGZbpO91WJQdA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200716191746.23196-1-sibis@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu 16 Jul 12:17 PDT 2020, Sibi Sankar wrote:
 
-On 7/16/20 2:18 PM, Dmitry Osipenko wrote:
-> 17.07.2020 00:09, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 7/16/20 1:38 PM, Dmitry Osipenko wrote:
->>> 15.07.2020 07:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> SW can trigger MIPI pads calibration any time after power on
->>>> but calibration results will be latched and applied to the pads
->>>> by MIPI CAL unit only when the link is in LP-11 state and then
->>>> status register will be updated.
->>>>
->>>> For CSI, trigger of pads calibration happen during CSI stream
->>>> enable where CSI receiver is kept ready prior to sensor or CSI
->>>> transmitter stream start.
->>>>
->>>> So, pads may not be in LP-11 at this time and waiting for the
->>>> calibration to be done immediate after calibration start will
->>>> result in timeout.
->>>>
->>>> This patch splits tegra_mipi_calibrate() and tegra_mipi_wait()
->>>> so triggering for calibration and waiting for it to complete can
->>>> happen at different stages.
->>>>
->>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>> ---
->>> ...
->>>>  =C2=A0 int tegra_mipi_calibrate(struct tegra_mipi_device *device)
->>>>  =C2=A0 {
->>>> @@ -370,12 +381,10 @@ int tegra_mipi_calibrate(struct
->>>> tegra_mipi_device *device)
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value |=3D MIPI_CAL_CTRL_START;
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_mipi_writel(device->mipi, value,=
- MIPI_CAL_CTRL);
->>>>  =C2=A0 -=C2=A0=C2=A0=C2=A0 err =3D tegra_mipi_wait(device->mipi);
->>> Doesn't MIPI clock need to be enabled during of the calibration process=
-?
->> MIPI clock is already enabled in tegra_mipi_calibrate
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_unlock(&device->mipi->lock);
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable(device->mipi->clk);
-> What keeps MIPI clock enabled after completion of the
-> tegra_mipi_calibrate() invocation?
+> All the platforms using SC7180 SoC are expected to have the wlan firmware
+> memory statically mapped by the Trusted Firmware. Hence move back the
+> qcom,msa-fixed-perm property to the SoC dtsi.
+> 
+> Fixes: 7d484566087c0 ("arm64: dts: qcom: sc7180: Add missing properties for Wifi node")
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 
-MIPI clock is disabled at end of tegra_mipi_calibrate and is re-enabled=20
-during tegra_mipi_wait.
+Thank you, applied.
 
-I think I should fix this to keep the clock enabled till calibration=20
-results are latched.
-
-All consumers of tegra_mipi_calibrate() will call tegra_mipi_wait().
-
-So will remove clk_disable mipi clk at end of tegra_mipi_calibrate() and=20
-clk_enable mipi_clk at beginning of tegra_mipi_wait()
-
->
->>>>  =C2=A0 -=C2=A0=C2=A0=C2=A0 return err;
->>>> +=C2=A0=C2=A0=C2=A0 return 0;
->>>>  =C2=A0 }
->>>>  =C2=A0 EXPORT_SYMBOL(tegra_mipi_calibrate);
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 1 -
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 1 +
+>  2 files changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index 860fc4658b8b1..26cc4913d3ddc 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -392,7 +392,6 @@ video-firmware {
+>  
+>  &wifi {
+>  	status = "okay";
+> -	qcom,msa-fixed-perm;
+>  	vdd-0.8-cx-mx-supply = <&vreg_l9a_0p6>;
+>  	vdd-1.8-xo-supply = <&vreg_l1c_1p8>;
+>  	vdd-1.3-rfa-supply = <&vreg_l2c_1p3>;
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 126e2fce26c1a..a91d3f074625e 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -3233,6 +3233,7 @@ wifi: wifi@18800000 {
+>  				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
+>  				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
+>  			memory-region = <&wlan_mem>;
+> +			qcom,msa-fixed-perm;
+>  			status = "disabled";
+>  		};
+>  	};
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
