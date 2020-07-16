@@ -2,93 +2,115 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72198C433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 07:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0063FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 07:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CFE3206F5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 07:52:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9CB220760
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 07:57:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594886229;
+	bh=lF6V4pThpgd1ETqa/+C0kE0OsT7SQmJj3FXX4kf+cNU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=wyG09OtnEoK+NjSAXl5relNlsZV5zQg+CU8FJDlVY8cODjlyw6IOJmTUmbEk06C/a
+	 kpfakQW/6EBhV3G7+oWxMKaALPiV5ogq/va9PjsKMh34VGByySQAf9KY5XXKt9y8Ec
+	 vLltpAQHj84uEEAT82IwkZPhvGhLFsmP72RjfwqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725934AbgGPHwN (ORCPT
+        id S1725926AbgGPH5J (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 03:52:13 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43082 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbgGPHwN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 03:52:13 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 95so3503912otw.10;
-        Thu, 16 Jul 2020 00:52:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8WlI+YHkueSuF08RQCnLnwIMdn+ACDRoO1h1JCP5bfU=;
-        b=C8ZTow2oSWruCrATvualw8O3DNZd91TOgxfKCov/J67YLtc8lmULvkvqGzP8OPQ6cL
-         sOwyh3kTam21y1GW4mwYMO9lPY312aVp4OGP+mfj+OD5MaNfES0t+yHjiO0pPLoelRns
-         seXWoWdtXT2rE/374xknV51yJID3drLZ73HClGSAaQXRF8waRLgtVMHcPHGTP7CgpfPB
-         p5AqTe+iIbJpipvAw/gCMUTT47esCX2Vym8ycbGGNCOgXbK6o9ELHV8rXpaoGZG6LK4v
-         +lWkjoJS51q71DLUHUm3pyzKafwXxOCIKZqPs41ZI16hOJbzQW5vsszA9e6GbG6fC3By
-         0iXA==
-X-Gm-Message-State: AOAM533jxJEpedWbtx+pIw58SZAHLtDCftE+cgL3XlheIyBd8aftj5vB
-        VmpQkgkpUTPvtIVLa2oMT7syZIf/E4YMW5o9PhA=
-X-Google-Smtp-Source: ABdhPJyFWwITqb6ejbM+toUXP0VUMT8h2tr0L7qnGfNLMwwxUyIsQvFrtRpDRgKqCP4v+ZZ5x4Fa6xXPoCX6ZH6bz8U=
-X-Received: by 2002:a05:6830:1451:: with SMTP id w17mr3330266otp.250.1594885932674;
- Thu, 16 Jul 2020 00:52:12 -0700 (PDT)
+        Thu, 16 Jul 2020 03:57:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37590 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725921AbgGPH5J (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jul 2020 03:57:09 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3472120657;
+        Thu, 16 Jul 2020 07:57:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594886228;
+        bh=lF6V4pThpgd1ETqa/+C0kE0OsT7SQmJj3FXX4kf+cNU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VsJgQucNe+tORSuGENCHPNa2BMvAsbolf2wFejeM2VFlX2cbvvZUjPeT2UhxohJQv
+         u4qIHJNBHt7wYmWQnDf9Ow829zQsoMD8NiqTe1Ebs+tmttdHnQMVmV+OuwzzjBm5S5
+         T/6aNfgNS271UBnzQ227W+foVJvVP2lSFXLJEcIs=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jvylO-00CEd7-OZ; Thu, 16 Jul 2020 08:57:06 +0100
 MIME-Version: 1.0
-References: <20200715140951.90753-1-jacopo+renesas@jmondi.org>
- <20200715140951.90753-2-jacopo+renesas@jmondi.org> <20200716015323.GQ6144@pendragon.ideasonboard.com>
-In-Reply-To: <20200716015323.GQ6144@pendragon.ideasonboard.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 16 Jul 2020 09:52:01 +0200
-Message-ID: <CAMuHMdXYX-6H99B=dkKxeD3f_Mr1tETYGJGBqqKMgjR_kFF2-A@mail.gmail.com>
-Subject: Re: [PATCH 1/8] dt-bindings: media: ov5640: Convert to json-schema
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 16 Jul 2020 08:57:06 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Makarand Pawagi <makarand.pawagi@nxp.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "Diana Madalina Craciun (OSS)" <diana.craciun@oss.nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Steve Longerbeam <slongerbeam@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Joerg Roedel <joro@8bytes.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [EXT] Re: [PATCH v2 12/12] bus: fsl-mc: Add ACPI support for
+ fsl-mc
+In-Reply-To: <DB7PR04MB498603933E805C0E4053D4B7EB7F0@DB7PR04MB4986.eurprd04.prod.outlook.com>
+References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
+ <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
+ <20200619082013.13661-13-lorenzo.pieralisi@arm.com>
+ <a7845603-9bc9-9099-dfc4-19b7bc4f4e44@nxp.com>
+ <20200709091950.GA18149@e121166-lin.cambridge.arm.com>
+ <DB7PR04MB4986D1A0BB7B685911DF4831EB640@DB7PR04MB4986.eurprd04.prod.outlook.com>
+ <203372be-144c-54ba-d011-30d0746dd615@nxp.com>
+ <DB7PR04MB4986C63772CB47A2A827D028EB640@DB7PR04MB4986.eurprd04.prod.outlook.com>
+ <d41589da-c2f9-a750-f57a-25dccf51e69f@oss.nxp.com>
+ <DB7PR04MB4986A56021750A3D104CA244EB640@DB7PR04MB4986.eurprd04.prod.outlook.com>
+ <20200715100636.GA31330@e121166-lin.cambridge.arm.com>
+ <DB7PR04MB498603933E805C0E4053D4B7EB7F0@DB7PR04MB4986.eurprd04.prod.outlook.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <20ac0bcf43a621e7b51d9badb91d2a71@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: makarand.pawagi@nxp.com, lorenzo.pieralisi@arm.com, diana.craciun@oss.nxp.com, laurentiu.tudor@nxp.com, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, robh+dt@kernel.org, rjw@rjwysocki.net, joro@8bytes.org, guohanjun@huawei.com, bhelgaas@google.com, sudeep.holla@arm.com, robin.murphy@arm.com, catalin.marinas@arm.com, will@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 3:54 AM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> On Wed, Jul 15, 2020 at 04:09:44PM +0200, Jacopo Mondi wrote:
-> > Convert the ov5640 bindings document to json-schema and update
+On 2020-07-16 04:23, Makarand Pawagi wrote:
+>> -----Original Message-----
+>> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 
-> > +  rotation:
-> > +    description: |
-> > +      As defined in Documentation/devicetree/bindings/media/video-interfaces.txt,
-> > +      valid values are 0 (sensor mounted upright) and 180 (sensor mounted upside
-> > +      down).
->
-> The second sentence should be replaced with
->   enum:
->     - 0
->     - 180
+[...]
 
-Or (ignoring Jacopo's later comment):
+>> Anyway - you need to seek feedback from Marc on whether patches
+>> 11 and 12 are OK from an irqchip perspective, it is possible we can 
+>> take the rest
+>> of the series independently if everyone agrees but I don't necessarily 
+>> see a
+>> reason for that.
+>> 
+>> Long story short: you need Marc's ACK on [11-12], it is your code.
+>> 
+> Hi Marc, can you please review/ack this patch?
 
-    enum: [ 0, 180 ]
+https://lore.kernel.org/linux-acpi/bd07f44dad1d029e0d023202cbf5fc94@kernel.org/
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+         M.
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Jazz is not dead. It just smells funny...
