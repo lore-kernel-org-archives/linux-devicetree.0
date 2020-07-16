@@ -7,87 +7,82 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C18C433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 19:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BBFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 19:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7651A2082E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 19:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1542082E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 19:09:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594926503;
-	bh=DQsVaHM0XCrz69/Whg7hTliz4EEyfi090AyIDlqcw+M=;
+	s=default; t=1594926578;
+	bh=qiPstqcKtABN1fD5mhKsw6dVOHZ5WIZtfqThLcqU8jQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pS0DltCUJ6C5tj4kKHYYbEVPExNbgVSkSu+h8E54Zh0NnHWVHAbZEseGEgV+gdGZ6
-	 3jxlvSLaKw15amA5RUTc9GhmVm/R0oEyN+838t7HbTKKjTZ4Duwn67KLXkUVC2jBfC
-	 O3XYxnNHd8wjCIiC9CQ53flC6Zygved68FmeeH8Q=
+	b=xN+ZNMDC+uAme2zHVNG5RxeUBb3JX8mE65DX8kSaD5kjq0xzwovg7CV5H2mSKzPiB
+	 npJisfuVn97ZJvuf3oVEBtI6qCfAhm7z3x+aXFt8z0sMvjynJfhH5iWxvFiSe4GmD1
+	 uLYsLGmesFgFt93UeMfBwTSnD/9KE7zGK2uS1F+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729521AbgGPTIX (ORCPT
+        id S1728560AbgGPTJi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 15:08:23 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:44207 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728163AbgGPTIW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 15:08:22 -0400
-Received: by mail-il1-f193.google.com with SMTP id h16so6016381ilj.11;
-        Thu, 16 Jul 2020 12:08:22 -0700 (PDT)
+        Thu, 16 Jul 2020 15:09:38 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:47021 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728400AbgGPTJh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 15:09:37 -0400
+Received: by mail-io1-f65.google.com with SMTP id a12so7171663ion.13;
+        Thu, 16 Jul 2020 12:09:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=cDpA3rYM1yVNrNZeExXuXrwxkeLlMEpe8XbtLwOxE/E=;
-        b=seeZFUu5nwbYH2UsMos/M6WnDCZaJmy6aCd2mkSj31/Xm5cdtZPeRx1zv9dFGj8Ffk
-         oyCLKcaUjmLyDdF9hX1iaxk9/A+PM0ufmzRx/zsRFXdpSdSXSnEwFGm+HChtODbJsprp
-         BAVLmQeIF19s2VLr3DAwEkwtJQF+6c5xvnwGDDV3jcrBSjOk3YSkdOh6y4Pdw6tU/G/m
-         HcsylEw8d5Vhx7YNtRFidQVWCSjwldxs8LI5tvvpdk5YiukmSLvTgu2DMFhOu5nFxJLR
-         Z+1IXxpgAIncqZ2sEuJijzqUFkY/i2sI2ewhZSVJOFfT7dxRgSeyfTnBFkjmptB1JRlg
-         uqxA==
-X-Gm-Message-State: AOAM5315mvR3xnL5AcKgT708bwa4eixnC12IKBZUCPJPYUDJrWnLsDRO
-        KGXeMeTKEc+/bWRGB7eWhg==
-X-Google-Smtp-Source: ABdhPJzYGfEUybyWdL4OqS0VBQp60v2KMqvKIimCPqW+BTohHRfji7lXRslRbTotCF9Kk4cBkh8m7Q==
-X-Received: by 2002:a92:77c1:: with SMTP id s184mr6124392ilc.196.1594926501714;
-        Thu, 16 Jul 2020 12:08:21 -0700 (PDT)
+        bh=WmN0I5jfW0bngGda6eqXsjReLWui8Z/KXRe8dH1gHbE=;
+        b=NtfI65fjrYZsp7P9PHJeVhmj8r5K40inEZuyuSLng/sKCa/y1Xybxe+ehi7tkDwpjl
+         FIFMWE2hGZqnYKQXaJcn4f3ul/HhU3g6Va3yzg2wj5bvUvJHY06JjB2LqYdrOSxZla+i
+         ARK+/cbw2fV0HpXclzXJWinAe0gbZTX8tZ/R071CzJ0273iMMKTVX6idFaJtNE8pwYFU
+         tE4immoRqq1pzFGWS2eD4JzerR+3iYkpcmd++tzMDD5W4WibPcCQG2q4eOKlfUA/sLJe
+         WsDky73fdGuwZq50QsJcFKdUBjAElRbKQgJfiqsFzSkZjCyI+OHNVV5iGyfi1WOjTwr3
+         vBZw==
+X-Gm-Message-State: AOAM5333BGxIljnVq1oOeeLcbBeZ1W+vrZ3QYOGLMGbpVD9itap10eK/
+        HWxwjl3zV2ux8Cuv5CscGQ==
+X-Google-Smtp-Source: ABdhPJz170yVZyP5HHq8yZ4vT1JgTt7Qg8B1Oju34HwKnwbZ5cGMadOJBmV9Tpy+Dj0KutJq5I1K3A==
+X-Received: by 2002:a6b:8b11:: with SMTP id n17mr5857639iod.155.1594926576428;
+        Thu, 16 Jul 2020 12:09:36 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id f2sm3176638ioc.52.2020.07.16.12.08.20
+        by smtp.gmail.com with ESMTPSA id o64sm3126510ilb.12.2020.07.16.12.09.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 12:08:21 -0700 (PDT)
-Received: (nullmailer pid 2678347 invoked by uid 1000);
-        Thu, 16 Jul 2020 19:08:20 -0000
-Date:   Thu, 16 Jul 2020 13:08:20 -0600
+        Thu, 16 Jul 2020 12:09:35 -0700 (PDT)
+Received: (nullmailer pid 2680082 invoked by uid 1000);
+        Thu, 16 Jul 2020 19:09:34 -0000
+Date:   Thu, 16 Jul 2020 13:09:34 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        devicetree@vger.kernel.org, Huacai Chen <chenhc@lemote.com>
-Subject: Re: [PATCH v4 8/8] dt-bindings: interrupt-controller: Fix typos in
- loongson,liointc.yaml
-Message-ID: <20200716190820.GA2678097@bogus>
-References: <1594869390-21053-1-git-send-email-yangtiezhu@loongson.cn>
- <1594869390-21053-9-git-send-email-yangtiezhu@loongson.cn>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     digetx@gmail.com, frankc@nvidia.com, hverkuil@xs4all.nl,
+        gregkh@linuxfoundation.org, sboyd@kernel.org, sakari.ailus@iki.fi,
+        devicetree@vger.kernel.org, helen.koike@collabora.com,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-media@vger.kernel.org,
+        robh+dt@kernel.org
+Subject: Re: [RFC PATCH v3 11/18] dt-bindings: tegra: Update VI and CSI
+ bindings with port info
+Message-ID: <20200716190934.GA2680032@bogus>
+References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
+ <1594786855-26506-12-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1594869390-21053-9-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1594786855-26506-12-git-send-email-skomatineni@nvidia.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 16 Jul 2020 11:16:30 +0800, Tiezhu Yang wrote:
-> Fix the following typos in loongson,liointc.yaml:
-> children -> child
-> fron -> from
-> connected -> connect
-> it's -> its
+On Tue, 14 Jul 2020 21:20:48 -0700, Sowjanya Komatineni wrote:
+> Update VI and CSI bindings to add port and endpoint nodes as per
+> media video-interfaces DT binding document.
 > 
-> Fixes: b6280c8bb6f5 ("dt-bindings: interrupt-controller: Add Loongson LIOINTC")
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
->  .../devicetree/bindings/interrupt-controller/loongson,liointc.yaml    | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  .../display/tegra/nvidia,tegra20-host1x.txt        | 92 +++++++++++++++++++++-
+>  1 file changed, 90 insertions(+), 2 deletions(-)
 > 
 
-Applied, thanks!
+Acked-by: Rob Herring <robh@kernel.org>
