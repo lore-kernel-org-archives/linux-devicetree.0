@@ -2,360 +2,2706 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3ACC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 15:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 042B2C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 15:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C2852076A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 15:25:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594913124;
-	bh=9+40yAt/nYgZCf//uFqEotTulKNXYearIODt1X6941Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2CZaWY6VEs1Ic31NEp8R62mRpytOB3GHSqxjnzCLTzUArPepC9UREAwAsxavF1wo7
-	 PPyRq6hp27ngRyVGp6nRFabvl6mc45/qkBcLDbF6PwQaiP/Qb5ISmpe3okOJcIzwcC
-	 ssRREkGI8U0UHlgFEXiTqTJ6aqg3ohXoZW7+h5rk=
+	by mail.kernel.org (Postfix) with ESMTP id C4D122076D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 15:36:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbgGPPZY (ORCPT
+        id S1728951AbgGPPgO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 11:25:24 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:33898 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728182AbgGPPZX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 11:25:23 -0400
-Received: by mail-il1-f194.google.com with SMTP id t4so5413282iln.1;
-        Thu, 16 Jul 2020 08:25:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=+8sCFotjHvcqhcaFqEJm3//tlFTHSiLL36jSVd2F5HE=;
-        b=T5ijFrwRfyuwoDV13BZZHj+YhSREKzq1goicXuBjwBkBemzBjhNj9L9qck27Gkztb1
-         dwmZlDbJLDA1G1qZci7+GISr/xYTXm356k0n5e41dYXXk6l6AMBRrHHGZgArVFUqSwfl
-         0dAmxVlcM0qmTCeyGI/FFB+0BjxsBK2TnKf0idtBPNYXPVIwNcA7NWUCHgeJExX9Kec/
-         SpRmb7e6KQMTZmFjcoEDZlF4RpyDSbQzGFSq49o8e/aNGtQNOySnxZ8XZEAkLR7tmDDt
-         TRcOrFib6Lbkr+jCMPb87+8rMm00vzOEjDSsDT3348KN5H0vSOlm1nhEDhxFpmSfjpZA
-         wCQg==
-X-Gm-Message-State: AOAM531lN5/klnR+LKrXNrMdQqQrSLGW8ltwi2O4rJh9nDpUux4LyLtb
-        YncfsQPLE/9O0QeOtd6OUw==
-X-Google-Smtp-Source: ABdhPJwn6vFzj1XNYFeW1m4BKLuhwFnyytZX9Cw/iMShPrTEdtRLc4LiWXYdfH8C0ZpSgSVU5E/RaQ==
-X-Received: by 2002:a92:41d2:: with SMTP id o201mr4910551ila.298.1594913121556;
-        Thu, 16 Jul 2020 08:25:21 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id a13sm2784409ilk.19.2020.07.16.08.25.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 08:25:21 -0700 (PDT)
-Received: (nullmailer pid 2369449 invoked by uid 1000);
-        Thu, 16 Jul 2020 15:25:20 -0000
-Date:   Thu, 16 Jul 2020 09:25:20 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] dt-bindings: adv7604: Convert bindings to
- json-schema
-Message-ID: <20200716152520.GA2351503@bogus>
-References: <20200715091455.1772470-1-niklas.soderlund+renesas@ragnatech.se>
- <20200715091455.1772470-3-niklas.soderlund+renesas@ragnatech.se>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200715091455.1772470-3-niklas.soderlund+renesas@ragnatech.se>
+        Thu, 16 Jul 2020 11:36:14 -0400
+Received: from lists.gateworks.com ([108.161.130.12]:50015 "EHLO
+        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728374AbgGPPgN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 11:36:13 -0400
+Received: from 068-189-091-139.biz.spectrum.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
+        by lists.gateworks.com with esmtp (Exim 4.82)
+        (envelope-from <tharvey@gateworks.com>)
+        id 1jw5zG-0006b0-VC; Thu, 16 Jul 2020 15:39:55 +0000
+From:   Tim Harvey <tharvey@gateworks.com>
+To:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        rjones@gateworks.com
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH v4] ARM: dts: imx6qdl-gw: add Gateworks System Controller support
+Date:   Thu, 16 Jul 2020 08:35:55 -0700
+Message-Id: <1594913755-5661-1-git-send-email-tharvey@gateworks.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1592497149-22526-1-git-send-email-tharvey@gateworks.com>
+References: <1592497149-22526-1-git-send-email-tharvey@gateworks.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 11:14:54AM +0200, Niklas Söderlund wrote:
-> Convert ADV7604 video decoder documentation to json-schema.
-> 
-> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> ---
-> * Changes since v1
-> - Simplify enum for reg-names.
-> ---
->  .../devicetree/bindings/media/i2c/adv7604.txt |  87 ----------
->  .../bindings/media/i2c/adv7604.yaml           | 161 ++++++++++++++++++
->  2 files changed, 161 insertions(+), 87 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/media/i2c/adv7604.txt
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/adv7604.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-> deleted file mode 100644
-> index 8c7cdc7cd7aaebc8..0000000000000000
-> --- a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-> +++ /dev/null
-> @@ -1,87 +0,0 @@
-> -* Analog Devices ADV7604/11/12 video decoder with HDMI receiver
-> -
-> -The ADV7604 and ADV7611/12 are multiformat video decoders with an integrated
-> -HDMI receiver. The ADV7604 has four multiplexed HDMI inputs and one analog
-> -input, and the ADV7611 has one HDMI input and no analog input. The 7612 is
-> -similar to the 7611 but has 2 HDMI inputs.
-> -
-> -These device tree bindings support the ADV7611/12 only at the moment.
-> -
-> -Required Properties:
-> -
-> -  - compatible: Must contain one of the following
-> -    - "adi,adv7611" for the ADV7611
-> -    - "adi,adv7612" for the ADV7612
-> -
-> -  - reg: I2C slave addresses
-> -    The ADV76xx has up to thirteen 256-byte maps that can be accessed via the
-> -    main I2C ports. Each map has it own I2C address and acts as a standard
-> -    slave device on the I2C bus. The main address is mandatory, others are
-> -    optional and revert to defaults if not specified.
+Add Gateworks System Controller support to Gateworks Ventana boards:
+- add dt bindings for GSC mfd driver and hwmon driver for ADC's and
+  fan controllers.
+- add dt bindings for gpio-keys driver for push-button and interrupt events
 
-You've lost this detail which either as a schema or freeform text seems 
-important..
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+---
+v4:
+ - add missing #address-cells to gw5912 gsc node to address dtc warning
 
-> -
-> -The device node must contain one 'port' child node per device input and output
-> -port, in accordance with the video interface bindings defined in
-> -Documentation/devicetree/bindings/media/video-interfaces.txt. The port nodes
-> -are numbered as follows.
-> -
-> -  Port			ADV7611    ADV7612
-> -------------------------------------------------------------
-> -  HDMI			0             0, 1
-> -  Digital output	1                2
-> -
-> -The digital output port node must contain at least one endpoint.
-> -
-> -Optional Properties:
-> -
-> -  - hpd-gpios: References to the GPIOs that control the HDMI hot-plug
-> -    detection pins, one per HDMI input. The active flag indicates the GPIO
-> -    level that enables hot-plug detection.
-> -  - reset-gpios: Reference to the GPIO connected to the device's reset pin.
-> -  - default-input: Select which input is selected after reset.
-> -  - reg-names : Names of maps with programmable addresses.
-> -		It can contain any map needing a non-default address.
-> -		Possible maps names are :
-> -		  "main", "avlink", "cec", "infoframe", "esdp", "dpp", "afe",
-> -		  "rep", "edid", "hdmi", "test", "cp", "vdp"
-> -
-> -Optional Endpoint Properties:
-> -
-> -  The following three properties are defined in video-interfaces.txt and are
-> -  valid for source endpoints only.
-> -
-> -  - hsync-active: Horizontal synchronization polarity. Defaults to active low.
-> -  - vsync-active: Vertical synchronization polarity. Defaults to active low.
-> -  - pclk-sample: Pixel clock polarity. Defaults to output on the falling edge.
-> -
-> -  If none of hsync-active, vsync-active and pclk-sample is specified the
-> -  endpoint will use embedded BT.656 synchronization.
-> -
-> -Example:
-> -
-> -	hdmi_receiver@4c {
-> -		compatible = "adi,adv7611";
-> -		/*
-> -		 * The edid page will be accessible @ 0x66 on the I2C bus. All
-> -		 * other maps will retain their default addresses.
-> -		 */
-> -		reg = <0x4c>, <0x66>;
-> -		reg-names = "main", "edid";
-> -
-> -		reset-gpios = <&ioexp 0 GPIO_ACTIVE_LOW>;
-> -		hpd-gpios = <&ioexp 2 GPIO_ACTIVE_HIGH>;
-> -
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -
-> -		default-input = <0>;
-> -
-> -		port@0 {
-> -			reg = <0>;
-> -		};
-> -		port@1 {
-> -			reg = <1>;
-> -			hdmi_in: endpoint {
-> -				remote-endpoint = <&ccdc_in>;
-> -			};
-> -		};
-> -	};
-> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.yaml b/Documentation/devicetree/bindings/media/i2c/adv7604.yaml
-> new file mode 100644
-> index 0000000000000000..b585745b66d70ac9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.yaml
-> @@ -0,0 +1,161 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/i2c/adv7604.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices ADV7604/11/12 video decoder with HDMI receiver
-> +
-> +maintainers:
-> +  - Hans Verkuil <hverkuil-cisco@xs4all.nl>
-> +
-> +description:
-> +  The ADV7604 and ADV7611/12 are multiformat video decoders with an integrated
-> +  HDMI receiver. The ADV7604 has four multiplexed HDMI inputs and one analog
-> +  input, and the ADV7611 has one HDMI input and no analog input. The 7612 is
-> +  similar to the 7611 but has 2 HDMI inputs.
-> +
-> +  These device tree bindings support the ADV7611/12 only at the moment.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +        - adi,adv7611
-> +        - adi,adv7612
-> +
-> +  reg:
-> +    minItems: 1
-> +    maxItems: 13
-> +
-> +  reg-names:
-> +    minItems: 1
-> +    maxItems: 13
-> +    items:
-> +      enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +
-> +  hpd-gpios:
-> +    minItems: 1
-> +    description:
-> +      References to the GPIOs that control the HDMI hot-plug detection pins,
-> +      one per HDMI input. The active flag indicates the GPIO level that
-> +      enables hot-plug detection.
-> +
-> +  default-input:
-> +    maxItems: 1
-> +    description:
-> +      Select which input is selected after reset.
-> +
-> +  ports:
-> +    type: object
-> +    description:
-> +      A node containing input and output port nodes with endpoint definitions
-> +      as documented in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +required:
-> +  - compatible
-> +  - reg
+v3:
+ - change underscore to hyphen in node names
+ - use generic node name for gsc_gpio nodes
 
-Add:
+v2:
+ - use keycode bindings from linux-event-codes.h
+ - fix gw5910 vdd_bat adc mode
+ - fix gw5913 vdd_bat adc mode
+---
+ arch/arm/boot/dts/imx6qdl-gw51xx.dtsi | 153 +++++++++++++++++++++++++++++--
+ arch/arm/boot/dts/imx6qdl-gw52xx.dtsi | 159 ++++++++++++++++++++++++++++++--
+ arch/arm/boot/dts/imx6qdl-gw53xx.dtsi | 165 +++++++++++++++++++++++++++++++--
+ arch/arm/boot/dts/imx6qdl-gw54xx.dtsi | 167 ++++++++++++++++++++++++++++++++--
+ arch/arm/boot/dts/imx6qdl-gw551x.dtsi | 147 ++++++++++++++++++++++++++++--
+ arch/arm/boot/dts/imx6qdl-gw552x.dtsi | 153 +++++++++++++++++++++++++++++--
+ arch/arm/boot/dts/imx6qdl-gw553x.dtsi | 141 +++++++++++++++++++++++++++-
+ arch/arm/boot/dts/imx6qdl-gw560x.dtsi | 164 +++++++++++++++++++++++++++++++--
+ arch/arm/boot/dts/imx6qdl-gw5903.dtsi | 140 +++++++++++++++++++++++++++-
+ arch/arm/boot/dts/imx6qdl-gw5904.dtsi | 141 +++++++++++++++++++++++++++-
+ arch/arm/boot/dts/imx6qdl-gw5907.dtsi | 142 ++++++++++++++++++++++++++++-
+ arch/arm/boot/dts/imx6qdl-gw5910.dtsi | 160 +++++++++++++++++++++++++++++++-
+ arch/arm/boot/dts/imx6qdl-gw5912.dtsi | 148 +++++++++++++++++++++++++++++-
+ arch/arm/boot/dts/imx6qdl-gw5913.dtsi | 153 ++++++++++++++++++++++++++++++-
+ 14 files changed, 2076 insertions(+), 57 deletions(-)
 
-additionalProperties: false
+diff --git a/arch/arm/boot/dts/imx6qdl-gw51xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw51xx.dtsi
+index 419a7cd..7705285 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw51xx.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw51xx.dtsi
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/linux-event-codes.h>
+ 
+ / {
+ 	/* these are used by bootloader for disabling nodes */
+@@ -19,6 +20,53 @@
+ 		bootargs = "console=ttymxc1,115200";
+ 	};
+ 
++	gpio-keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		user-pb {
++			label = "user_pb";
++			gpios = <&gsc_gpio 0 GPIO_ACTIVE_LOW>;
++			linux,code = <BTN_0>;
++		};
++
++		user-pb1x {
++			label = "user_pb1x";
++			linux,code = <BTN_1>;
++			interrupt-parent = <&gsc>;
++			interrupts = <0>;
++		};
++
++		key-erased {
++			label = "key-erased";
++			linux,code = <BTN_2>;
++			interrupt-parent = <&gsc>;
++			interrupts = <1>;
++		};
++
++		eeprom-wp {
++			label = "eeprom_wp";
++			linux,code = <BTN_3>;
++			interrupt-parent = <&gsc>;
++			interrupts = <2>;
++		};
++
++		tamper {
++			label = "tamper";
++			linux,code = <BTN_4>;
++			interrupt-parent = <&gsc>;
++			interrupts = <5>;
++		};
++
++		switch-hold {
++			label = "switch_hold";
++			linux,code = <BTN_5>;
++			interrupt-parent = <&gsc>;
++			interrupts = <7>;
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -102,6 +150,103 @@
+ 	pinctrl-0 = <&pinctrl_i2c1>;
+ 	status = "okay";
+ 
++	gsc: gsc@20 {
++		compatible = "gw,gsc";
++		reg = <0x20>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <4 GPIO_ACTIVE_LOW>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		#size-cells = <0>;
++
++		adc {
++			compatible = "gw,gsc-adc";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			channel@0 {
++				gw,mode = <0>;
++				reg = <0x00>;
++				label = "temp";
++			};
++
++			channel@2 {
++				gw,mode = <1>;
++				reg = <0x02>;
++				label = "vdd_vin";
++			};
++
++			channel@5 {
++				gw,mode = <1>;
++				reg = <0x05>;
++				label = "vdd_3p3";
++			};
++
++			channel@8 {
++				gw,mode = <1>;
++				reg = <0x08>;
++				label = "vdd_bat";
++			};
++
++			channel@b {
++				gw,mode = <1>;
++				reg = <0x0b>;
++				label = "vdd_5p0";
++			};
++
++			channel@e {
++				gw,mode = <1>;
++				reg = <0xe>;
++				label = "vdd_arm";
++			};
++
++			channel@11 {
++				gw,mode = <1>;
++				reg = <0x11>;
++				label = "vdd_soc";
++			};
++
++			channel@14 {
++				gw,mode = <1>;
++				reg = <0x14>;
++				label = "vdd_3p0";
++			};
++
++			channel@17 {
++				gw,mode = <1>;
++				reg = <0x17>;
++				label = "vdd_1p5";
++			};
++
++			channel@1d {
++				gw,mode = <1>;
++				reg = <0x1d>;
++				label = "vdd_1p8";
++			};
++
++			channel@20 {
++				gw,mode = <1>;
++				reg = <0x20>;
++				label = "vdd_an1";
++			};
++
++			channel@23 {
++				gw,mode = <1>;
++				reg = <0x23>;
++				label = "vdd_2p5";
++			};
++		};
++	};
++
++	gsc_gpio: gpio@23 {
++		compatible = "nxp,pca9555";
++		reg = <0x23>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-parent = <&gsc>;
++		interrupts = <4>;
++	};
++
+ 	eeprom1: eeprom@50 {
+ 		compatible = "atmel,24c02";
+ 		reg = <0x50>;
+@@ -126,13 +271,6 @@
+ 		pagesize = <16>;
+ 	};
+ 
+-	gpio: pca9555@23 {
+-		compatible = "nxp,pca9555";
+-		reg = <0x23>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-	};
+-
+ 	rtc: ds1672@68 {
+ 		compatible = "dallas,ds1672";
+ 		reg = <0x68>;
+@@ -387,6 +525,7 @@
+ 		fsl,pins = <
+ 			MX6QDL_PAD_EIM_D21__I2C1_SCL		0x4001b8b1
+ 			MX6QDL_PAD_EIM_D28__I2C1_SDA		0x4001b8b1
++			MX6QDL_PAD_GPIO_4__GPIO1_IO04		0x0001b0b0 /* GSC_IRQ# */
+ 		>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
+index 60563ff..9e5bec1 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/linux-event-codes.h>
+ 
+ / {
+ 	/* these are used by bootloader for disabling nodes */
+@@ -28,6 +29,53 @@
+ 		default-brightness-level = <7>;
+ 	};
+ 
++	gpio-keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		user-pb {
++			label = "user_pb";
++			gpios = <&gsc_gpio 0 GPIO_ACTIVE_LOW>;
++			linux,code = <BTN_0>;
++		};
++
++		user-pb1x {
++			label = "user_pb1x";
++			linux,code = <BTN_1>;
++			interrupt-parent = <&gsc>;
++			interrupts = <0>;
++		};
++
++		key-erased {
++			label = "key-erased";
++			linux,code = <BTN_2>;
++			interrupt-parent = <&gsc>;
++			interrupts = <1>;
++		};
++
++		eeprom-wp {
++			label = "eeprom_wp";
++			linux,code = <BTN_3>;
++			interrupt-parent = <&gsc>;
++			interrupts = <2>;
++		};
++
++		tamper {
++			label = "tamper";
++			linux,code = <BTN_4>;
++			interrupt-parent = <&gsc>;
++			interrupts = <5>;
++		};
++
++		switch-hold {
++			label = "switch_hold";
++			linux,code = <BTN_5>;
++			interrupt-parent = <&gsc>;
++			interrupts = <7>;
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -165,6 +213,109 @@
+ 	pinctrl-0 = <&pinctrl_i2c1>;
+ 	status = "okay";
+ 
++	gsc: gsc@20 {
++		compatible = "gw,gsc";
++		reg = <0x20>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <4 GPIO_ACTIVE_LOW>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		#size-cells = <0>;
++
++		adc {
++			compatible = "gw,gsc-adc";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			channel@0 {
++				gw,mode = <0>;
++				reg = <0x00>;
++				label = "temp";
++			};
++
++			channel@2 {
++				gw,mode = <1>;
++				reg = <0x02>;
++				label = "vdd_vin";
++			};
++
++			channel@5 {
++				gw,mode = <1>;
++				reg = <0x05>;
++				label = "vdd_3p3";
++			};
++
++			channel@8 {
++				gw,mode = <1>;
++				reg = <0x08>;
++				label = "vdd_bat";
++			};
++
++			channel@b {
++				gw,mode = <1>;
++				reg = <0x0b>;
++				label = "vdd_5p0";
++			};
++
++			channel@e {
++				gw,mode = <1>;
++				reg = <0xe>;
++				label = "vdd_arm";
++			};
++
++			channel@11 {
++				gw,mode = <1>;
++				reg = <0x11>;
++				label = "vdd_soc";
++			};
++
++			channel@14 {
++				gw,mode = <1>;
++				reg = <0x14>;
++				label = "vdd_3p0";
++			};
++
++			channel@17 {
++				gw,mode = <1>;
++				reg = <0x17>;
++				label = "vdd_1p5";
++			};
++
++			channel@1d {
++				gw,mode = <1>;
++				reg = <0x1d>;
++				label = "vdd_1p8";
++			};
++
++			channel@20 {
++				gw,mode = <1>;
++				reg = <0x20>;
++				label = "vdd_1p0";
++			};
++
++			channel@23 {
++				gw,mode = <1>;
++				reg = <0x23>;
++				label = "vdd_2p5";
++			};
++
++			channel@29 {
++				gw,mode = <1>;
++				reg = <0x29>;
++				label = "vdd_an1";
++			};
++		};
++	};
++
++	gsc_gpio: gpio@23 {
++		compatible = "nxp,pca9555";
++		reg = <0x23>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-parent = <&gsc>;
++		interrupts = <4>;
++	};
++
+ 	eeprom1: eeprom@50 {
+ 		compatible = "atmel,24c02";
+ 		reg = <0x50>;
+@@ -189,13 +340,6 @@
+ 		pagesize = <16>;
+ 	};
+ 
+-	gpio: pca9555@23 {
+-		compatible = "nxp,pca9555";
+-		reg = <0x23>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-	};
+-
+ 	rtc: ds1672@68 {
+ 		compatible = "dallas,ds1672";
+ 		reg = <0x68>;
+@@ -504,6 +648,7 @@
+ 		fsl,pins = <
+ 			MX6QDL_PAD_EIM_D21__I2C1_SCL		0x4001b8b1
+ 			MX6QDL_PAD_EIM_D28__I2C1_SDA		0x4001b8b1
++			MX6QDL_PAD_GPIO_4__GPIO1_IO04		0xb0b1
+ 		>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
+index 8942bec..7ea4fdd 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/linux-event-codes.h>
+ 
+ / {
+ 	/* these are used by bootloader for disabling nodes */
+@@ -28,6 +29,53 @@
+ 		default-brightness-level = <7>;
+ 	};
+ 
++	gpio-keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		user-pb {
++			label = "user_pb";
++			gpios = <&gsc_gpio 0 GPIO_ACTIVE_LOW>;
++			linux,code = <BTN_0>;
++		};
++
++		user-pb1x {
++			label = "user_pb1x";
++			linux,code = <BTN_1>;
++			interrupt-parent = <&gsc>;
++			interrupts = <0>;
++		};
++
++		key-erased {
++			label = "key-erased";
++			linux,code = <BTN_2>;
++			interrupt-parent = <&gsc>;
++			interrupts = <1>;
++		};
++
++		eeprom-wp {
++			label = "eeprom_wp";
++			linux,code = <BTN_3>;
++			interrupt-parent = <&gsc>;
++			interrupts = <2>;
++		};
++
++		tamper {
++			label = "tamper";
++			linux,code = <BTN_4>;
++			interrupt-parent = <&gsc>;
++			interrupts = <5>;
++		};
++
++		switch-hold {
++			label = "switch_hold";
++			linux,code = <BTN_5>;
++			interrupt-parent = <&gsc>;
++			interrupts = <7>;
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -158,6 +206,115 @@
+ 	pinctrl-0 = <&pinctrl_i2c1>;
+ 	status = "okay";
+ 
++	gsc: gsc@20 {
++		compatible = "gw,gsc";
++		reg = <0x20>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <4 GPIO_ACTIVE_LOW>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		#size-cells = <0>;
++
++		adc {
++			compatible = "gw,gsc-adc";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			channel@0 {
++				gw,mode = <0>;
++				reg = <0x00>;
++				label = "temp";
++			};
++
++			channel@2 {
++				gw,mode = <1>;
++				reg = <0x02>;
++				label = "vdd_vin";
++			};
++
++			channel@5 {
++				gw,mode = <1>;
++				reg = <0x05>;
++				label = "vdd_3p3";
++			};
++
++			channel@8 {
++				gw,mode = <1>;
++				reg = <0x08>;
++				label = "vdd_bat";
++			};
++
++			channel@b {
++				gw,mode = <1>;
++				reg = <0x0b>;
++				label = "vdd_5p0";
++			};
++
++			channel@e {
++				gw,mode = <1>;
++				reg = <0xe>;
++				label = "vdd_arm";
++			};
++
++			channel@11 {
++				gw,mode = <1>;
++				reg = <0x11>;
++				label = "vdd_soc";
++			};
++
++			channel@14 {
++				gw,mode = <1>;
++				reg = <0x14>;
++				label = "vdd_3p0";
++			};
++
++			channel@17 {
++				gw,mode = <1>;
++				reg = <0x17>;
++				label = "vdd_1p5";
++			};
++
++			channel@1d {
++				gw,mode = <1>;
++				reg = <0x1d>;
++				label = "vdd_1p8";
++			};
++
++			channel@20 {
++				gw,mode = <1>;
++				reg = <0x20>;
++				label = "vdd_1p0";
++			};
++
++			channel@23 {
++				gw,mode = <1>;
++				reg = <0x23>;
++				label = "vdd_2p5";
++			};
++
++			channel@26 {
++				gw,mode = <1>;
++				reg = <0x26>;
++				label = "vdd_gps";
++			};
++
++			channel@29 {
++				gw,mode = <1>;
++				reg = <0x29>;
++				label = "vdd_an1";
++			};
++		};
++	};
++
++	gsc_gpio: gpio@23 {
++		compatible = "nxp,pca9555";
++		reg = <0x23>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-parent = <&gsc>;
++		interrupts = <4>;
++	};
++
+ 	eeprom1: eeprom@50 {
+ 		compatible = "atmel,24c02";
+ 		reg = <0x50>;
+@@ -182,13 +339,6 @@
+ 		pagesize = <16>;
+ 	};
+ 
+-	gpio: pca9555@23 {
+-		compatible = "nxp,pca9555";
+-		reg = <0x23>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-	};
+-
+ 	rtc: ds1672@68 {
+ 		compatible = "dallas,ds1672";
+ 		reg = <0x68>;
+@@ -486,6 +636,7 @@
+ 		fsl,pins = <
+ 			MX6QDL_PAD_EIM_D21__I2C1_SCL		0x4001b8b1
+ 			MX6QDL_PAD_EIM_D28__I2C1_SDA		0x4001b8b1
++			MX6QDL_PAD_GPIO_4__GPIO1_IO04		0xb0b1
+ 		>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+index c40583d..0c19759 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/linux-event-codes.h>
+ #include <dt-bindings/sound/fsl-imx-audmux.h>
+ 
+ / {
+@@ -29,6 +30,53 @@
+ 		default-brightness-level = <7>;
+ 	};
+ 
++	gpio-keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		user-pb {
++			label = "user_pb";
++			gpios = <&gsc_gpio 0 GPIO_ACTIVE_LOW>;
++			linux,code = <BTN_0>;
++		};
++
++		user-pb1x {
++			label = "user_pb1x";
++			linux,code = <BTN_1>;
++			interrupt-parent = <&gsc>;
++			interrupts = <0>;
++		};
++
++		key-erased {
++			label = "key-erased";
++			linux,code = <BTN_2>;
++			interrupt-parent = <&gsc>;
++			interrupts = <1>;
++		};
++
++		eeprom-wp {
++			label = "eeprom_wp";
++			linux,code = <BTN_3>;
++			interrupt-parent = <&gsc>;
++			interrupts = <2>;
++		};
++
++		tamper {
++			label = "tamper";
++			linux,code = <BTN_4>;
++			interrupt-parent = <&gsc>;
++			interrupts = <5>;
++		};
++
++		switch-hold {
++			label = "switch_hold";
++			linux,code = <BTN_5>;
++			interrupt-parent = <&gsc>;
++			interrupts = <7>;
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -195,6 +243,117 @@
+ 	pinctrl-0 = <&pinctrl_i2c1>;
+ 	status = "okay";
+ 
++	gsc: gsc@20 {
++		compatible = "gw,gsc";
++		reg = <0x20>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <4 GPIO_ACTIVE_LOW>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		adc {
++			compatible = "gw,gsc-adc";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			channel@0 {
++				gw,mode = <0>;
++				reg = <0x00>;
++				label = "temp";
++			};
++
++			channel@2 {
++				gw,mode = <1>;
++				reg = <0x02>;
++				label = "vdd_vin";
++			};
++
++			channel@5 {
++				gw,mode = <1>;
++				reg = <0x05>;
++				label = "vdd_3p3";
++			};
++
++			channel@8 {
++				gw,mode = <1>;
++				reg = <0x08>;
++				label = "vdd_bat";
++			};
++
++			channel@b {
++				gw,mode = <1>;
++				reg = <0x0b>;
++				label = "vdd_5p0";
++			};
++
++			channel@e {
++				gw,mode = <1>;
++				reg = <0xe>;
++				label = "vdd_arm";
++			};
++
++			channel@11 {
++				gw,mode = <1>;
++				reg = <0x11>;
++				label = "vdd_soc";
++			};
++
++			channel@14 {
++				gw,mode = <1>;
++				reg = <0x14>;
++				label = "vdd_3p0";
++			};
++
++			channel@17 {
++				gw,mode = <1>;
++				reg = <0x17>;
++				label = "vdd_1p5";
++			};
++
++			channel@1d {
++				gw,mode = <1>;
++				reg = <0x1d>;
++				label = "vdd_1p8";
++			};
++
++			channel@20 {
++				gw,mode = <1>;
++				reg = <0x20>;
++				label = "vdd_1p0";
++			};
++
++			channel@23 {
++				gw,mode = <1>;
++				reg = <0x23>;
++				label = "vdd_2p5";
++			};
++
++			channel@26 {
++				gw,mode = <1>;
++				reg = <0x26>;
++				label = "vdd_gps";
++			};
++		};
++
++		fan-controller@2c {
++			compatible = "gw,gsc-fan";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x2c>;
++		};
++	};
++
++	gsc_gpio: gpio@23 {
++		compatible = "nxp,pca9555";
++		reg = <0x23>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-parent = <&gsc>;
++		interrupts = <4>;
++	};
++
+ 	eeprom1: eeprom@50 {
+ 		compatible = "atmel,24c02";
+ 		reg = <0x50>;
+@@ -219,13 +378,6 @@
+ 		pagesize = <16>;
+ 	};
+ 
+-	gpio: pca9555@23 {
+-		compatible = "nxp,pca9555";
+-		reg = <0x23>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-	};
+-
+ 	rtc: ds1672@68 {
+ 		compatible = "dallas,ds1672";
+ 		reg = <0x68>;
+@@ -571,6 +723,7 @@
+ 		fsl,pins = <
+ 			MX6QDL_PAD_EIM_D21__I2C1_SCL		0x4001b8b1
+ 			MX6QDL_PAD_EIM_D28__I2C1_SDA		0x4001b8b1
++			MX6QDL_PAD_GPIO_4__GPIO1_IO04		0xb0b1
+ 		>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx6qdl-gw551x.dtsi b/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
+index 8c33510..1516e2b 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
+@@ -47,6 +47,7 @@
+ 
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/media/tda1997x.h>
++#include <dt-bindings/input/linux-event-codes.h>
+ #include <dt-bindings/sound/fsl-imx-audmux.h>
+ 
+ / {
+@@ -63,6 +64,53 @@
+ 		bootargs = "console=ttymxc1,115200";
+ 	};
+ 
++	gpio-keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		user-pb {
++			label = "user_pb";
++			gpios = <&gsc_gpio 0 GPIO_ACTIVE_LOW>;
++			linux,code = <BTN_0>;
++		};
++
++		user-pb1x {
++			label = "user_pb1x";
++			linux,code = <BTN_1>;
++			interrupt-parent = <&gsc>;
++			interrupts = <0>;
++		};
++
++		key-erased {
++			label = "key-erased";
++			linux,code = <BTN_2>;
++			interrupt-parent = <&gsc>;
++			interrupts = <1>;
++		};
++
++		eeprom-wp {
++			label = "eeprom_wp";
++			linux,code = <BTN_3>;
++			interrupt-parent = <&gsc>;
++			interrupts = <2>;
++		};
++
++		tamper {
++			label = "tamper";
++			linux,code = <BTN_4>;
++			interrupt-parent = <&gsc>;
++			interrupts = <5>;
++		};
++
++		switch-hold {
++			label = "switch_hold";
++			linux,code = <BTN_5>;
++			interrupt-parent = <&gsc>;
++			interrupts = <7>;
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -167,6 +215,97 @@
+ 	pinctrl-0 = <&pinctrl_i2c1>;
+ 	status = "okay";
+ 
++	gsc: gsc@20 {
++		compatible = "gw,gsc";
++		reg = <0x20>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <4 GPIO_ACTIVE_LOW>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		#size-cells = <0>;
++
++		adc {
++			compatible = "gw,gsc-adc";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			channel@0 {
++				gw,mode = <0>;
++				reg = <0x00>;
++				label = "temp";
++			};
++
++			channel@2 {
++				gw,mode = <1>;
++				reg = <0x02>;
++				label = "vdd_vin";
++			};
++
++			channel@5 {
++				gw,mode = <1>;
++				reg = <0x05>;
++				label = "vdd_3p3";
++			};
++
++			channel@8 {
++				gw,mode = <1>;
++				reg = <0x08>;
++				label = "vdd_bat";
++			};
++
++			channel@b {
++				gw,mode = <1>;
++				reg = <0x0b>;
++				label = "vdd_5p0";
++			};
++
++			channel@e {
++				gw,mode = <1>;
++				reg = <0xe>;
++				label = "vdd_arm";
++			};
++
++			channel@11 {
++				gw,mode = <1>;
++				reg = <0x11>;
++				label = "vdd_soc";
++			};
++
++			channel@14 {
++				gw,mode = <1>;
++				reg = <0x14>;
++				label = "vdd_3p0";
++			};
++
++			channel@17 {
++				gw,mode = <1>;
++				reg = <0x17>;
++				label = "vdd_1p5";
++			};
++
++			channel@1d {
++				gw,mode = <1>;
++				reg = <0x1d>;
++				label = "vdd_1p8a";
++			};
++
++			channel@20 {
++				gw,mode = <1>;
++				reg = <0x20>;
++				label = "vdd_1p0b";
++			};
++		};
++	};
++
++	gsc_gpio: gpio@23 {
++		compatible = "nxp,pca9555";
++		reg = <0x23>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-parent = <&gsc>;
++		interrupts = <4>;
++	};
++
+ 	eeprom1: eeprom@50 {
+ 		compatible = "atmel,24c02";
+ 		reg = <0x50>;
+@@ -191,13 +330,6 @@
+ 		pagesize = <16>;
+ 	};
+ 
+-	gpio: pca9555@23 {
+-		compatible = "nxp,pca9555";
+-		reg = <0x23>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-	};
+-
+ 	rtc: ds1672@68 {
+ 		compatible = "dallas,ds1672";
+ 		reg = <0x68>;
+@@ -464,6 +596,7 @@
+ 		fsl,pins = <
+ 			MX6QDL_PAD_EIM_D21__I2C1_SCL		0x4001b8b1
+ 			MX6QDL_PAD_EIM_D28__I2C1_SDA		0x4001b8b1
++			MX6QDL_PAD_GPIO_4__GPIO1_IO04		0xb0b1
+ 		>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx6qdl-gw552x.dtsi b/arch/arm/boot/dts/imx6qdl-gw552x.dtsi
+index bb35971..0da6e6f 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw552x.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw552x.dtsi
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/linux-event-codes.h>
+ 
+ / {
+ 	/* these are used by bootloader for disabling nodes */
+@@ -20,6 +21,53 @@
+ 		bootargs = "console=ttymxc1,115200";
+ 	};
+ 
++	gpio-keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		user-pb {
++			label = "user_pb";
++			gpios = <&gsc_gpio 0 GPIO_ACTIVE_LOW>;
++			linux,code = <BTN_0>;
++		};
++
++		user-pb1x {
++			label = "user_pb1x";
++			linux,code = <BTN_1>;
++			interrupt-parent = <&gsc>;
++			interrupts = <0>;
++		};
++
++		key-erased {
++			label = "key-erased";
++			linux,code = <BTN_2>;
++			interrupt-parent = <&gsc>;
++			interrupts = <1>;
++		};
++
++		eeprom-wp {
++			label = "eeprom_wp";
++			linux,code = <BTN_3>;
++			interrupt-parent = <&gsc>;
++			interrupts = <2>;
++		};
++
++		tamper {
++			label = "tamper";
++			linux,code = <BTN_4>;
++			interrupt-parent = <&gsc>;
++			interrupts = <5>;
++		};
++
++		switch-hold {
++			label = "switch_hold";
++			linux,code = <BTN_5>;
++			interrupt-parent = <&gsc>;
++			interrupts = <7>;
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -92,6 +140,103 @@
+ 	pinctrl-0 = <&pinctrl_i2c1>;
+ 	status = "okay";
+ 
++	gsc: gsc@20 {
++		compatible = "gw,gsc";
++		reg = <0x20>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <4 GPIO_ACTIVE_LOW>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		#size-cells = <0>;
++
++		adc {
++			compatible = "gw,gsc-adc";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			channel@0 {
++				gw,mode = <0>;
++				reg = <0x00>;
++				label = "temp";
++			};
++
++			channel@2 {
++				gw,mode = <1>;
++				reg = <0x02>;
++				label = "vdd_vin";
++			};
++
++			channel@5 {
++				gw,mode = <1>;
++				reg = <0x05>;
++				label = "vdd_3p3";
++			};
++
++			channel@8 {
++				gw,mode = <1>;
++				reg = <0x08>;
++				label = "vdd_bat";
++			};
++
++			channel@b {
++				gw,mode = <1>;
++				reg = <0x0b>;
++				label = "vdd_5p0";
++			};
++
++			channel@e {
++				gw,mode = <1>;
++				reg = <0xe>;
++				label = "vdd_arm";
++			};
++
++			channel@11 {
++				gw,mode = <1>;
++				reg = <0x11>;
++				label = "vdd_soc";
++			};
++
++			channel@14 {
++				gw,mode = <1>;
++				reg = <0x14>;
++				label = "vdd_3p0";
++			};
++
++			channel@17 {
++				gw,mode = <1>;
++				reg = <0x17>;
++				label = "vdd_1p5";
++			};
++
++			channel@1d {
++				gw,mode = <1>;
++				reg = <0x1d>;
++				label = "vdd_1p8";
++			};
++
++			channel@20 {
++				gw,mode = <1>;
++				reg = <0x20>;
++				label = "vdd_1p0";
++			};
++
++			channel@23 {
++				gw,mode = <1>;
++				reg = <0x23>;
++				label = "vdd_2p5";
++			};
++		};
++	};
++
++	gsc_gpio: gpio@23 {
++		compatible = "nxp,pca9555";
++		reg = <0x23>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-parent = <&gsc>;
++		interrupts = <4>;
++	};
++
+ 	eeprom1: eeprom@50 {
+ 		compatible = "atmel,24c02";
+ 		reg = <0x50>;
+@@ -116,13 +261,6 @@
+ 		pagesize = <16>;
+ 	};
+ 
+-	gpio: pca9555@23 {
+-		compatible = "nxp,pca9555";
+-		reg = <0x23>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-	};
+-
+ 	rtc: ds1672@68 {
+ 		compatible = "dallas,ds1672";
+ 		reg = <0x68>;
+@@ -305,6 +443,7 @@
+ 		fsl,pins = <
+ 			MX6QDL_PAD_EIM_D21__I2C1_SCL		0x4001b8b1
+ 			MX6QDL_PAD_EIM_D28__I2C1_SDA		0x4001b8b1
++			MX6QDL_PAD_GPIO_4__GPIO1_IO04		0xb0b1
+ 		>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx6qdl-gw553x.dtsi b/arch/arm/boot/dts/imx6qdl-gw553x.dtsi
+index ee85031..db30de5 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw553x.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw553x.dtsi
+@@ -46,6 +46,7 @@
+  */
+ 
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/linux-event-codes.h>
+ 
+ / {
+ 	/* these are used by bootloader for disabling nodes */
+@@ -61,6 +62,53 @@
+ 		stdout-path = &uart2;
+ 	};
+ 
++	gpio-keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		user-pb {
++			label = "user_pb";
++			gpios = <&gsc_gpio 0 GPIO_ACTIVE_LOW>;
++			linux,code = <BTN_0>;
++		};
++
++		user-pb1x {
++			label = "user_pb1x";
++			linux,code = <BTN_1>;
++			interrupt-parent = <&gsc>;
++			interrupts = <0>;
++		};
++
++		key-erased {
++			label = "key-erased";
++			linux,code = <BTN_2>;
++			interrupt-parent = <&gsc>;
++			interrupts = <1>;
++		};
++
++		eeprom-wp {
++			label = "eeprom_wp";
++			linux,code = <BTN_3>;
++			interrupt-parent = <&gsc>;
++			interrupts = <2>;
++		};
++
++		tamper {
++			label = "tamper";
++			linux,code = <BTN_4>;
++			interrupt-parent = <&gsc>;
++			interrupts = <5>;
++		};
++
++		switch-hold {
++			label = "switch_hold";
++			linux,code = <BTN_5>;
++			interrupt-parent = <&gsc>;
++			interrupts = <7>;
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -130,11 +178,101 @@
+ 	pinctrl-0 = <&pinctrl_i2c1>;
+ 	status = "okay";
+ 
+-	gpio: pca9555@23 {
++	gsc: gsc@20 {
++		compatible = "gw,gsc";
++		reg = <0x20>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <4 GPIO_ACTIVE_LOW>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		#size-cells = <0>;
++
++		adc {
++			compatible = "gw,gsc-adc";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			channel@0 {
++				gw,mode = <0>;
++				reg = <0x00>;
++				label = "temp";
++			};
++
++			channel@2 {
++				gw,mode = <1>;
++				reg = <0x02>;
++				label = "vdd_vin";
++			};
++
++			channel@5 {
++				gw,mode = <1>;
++				reg = <0x05>;
++				label = "vdd_3p3";
++			};
++
++			channel@8 {
++				gw,mode = <1>;
++				reg = <0x08>;
++				label = "vdd_bat";
++			};
++
++			channel@b {
++				gw,mode = <1>;
++				reg = <0x0b>;
++				label = "vdd_5p0";
++			};
++
++			channel@e {
++				gw,mode = <1>;
++				reg = <0xe>;
++				label = "vdd_arm";
++			};
++
++			channel@11 {
++				gw,mode = <1>;
++				reg = <0x11>;
++				label = "vdd_soc";
++			};
++
++			channel@14 {
++				gw,mode = <1>;
++				reg = <0x14>;
++				label = "vdd_3p0";
++			};
++
++			channel@17 {
++				gw,mode = <1>;
++				reg = <0x17>;
++				label = "vdd_1p5";
++			};
++
++			channel@1d {
++				gw,mode = <1>;
++				reg = <0x1d>;
++				label = "vdd_1p8a";
++			};
++
++			channel@20 {
++				gw,mode = <1>;
++				reg = <0x20>;
++				label = "vdd_1p0b";
++			};
++
++			channel@26 {
++				gw,mode = <1>;
++				reg = <0x26>;
++				label = "vdd_an1";
++			};
++		};
++	};
++
++	gsc_gpio: gpio@23 {
+ 		compatible = "nxp,pca9555";
+ 		reg = <0x23>;
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
++		interrupt-parent = <&gsc>;
++		interrupts = <4>;
+ 	};
+ 
+ 	eeprom1: eeprom@50 {
+@@ -428,6 +566,7 @@
+ 		fsl,pins = <
+ 			MX6QDL_PAD_EIM_D21__I2C1_SCL		0x4001b8b1
+ 			MX6QDL_PAD_EIM_D28__I2C1_SDA		0x4001b8b1
++			MX6QDL_PAD_GPIO_4__GPIO1_IO04		0xb0b1
+ 		>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx6qdl-gw560x.dtsi b/arch/arm/boot/dts/imx6qdl-gw560x.dtsi
+index 69ca70d..940520f 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw560x.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw560x.dtsi
+@@ -88,6 +88,53 @@
+ 		default-on;
+ 	};
+ 
++	gpio-keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		user-pb {
++			label = "user_pb";
++			gpios = <&gsc_gpio 0 GPIO_ACTIVE_LOW>;
++			linux,code = <BTN_0>;
++		};
++
++		user-pb1x {
++			label = "user_pb1x";
++			linux,code = <BTN_1>;
++			interrupt-parent = <&gsc>;
++			interrupts = <0>;
++		};
++
++		key-erased {
++			label = "key-erased";
++			linux,code = <BTN_2>;
++			interrupt-parent = <&gsc>;
++			interrupts = <1>;
++		};
++
++		eeprom-wp {
++			label = "eeprom_wp";
++			linux,code = <BTN_3>;
++			interrupt-parent = <&gsc>;
++			interrupts = <2>;
++		};
++
++		tamper {
++			label = "tamper";
++			linux,code = <BTN_4>;
++			interrupt-parent = <&gsc>;
++			interrupts = <5>;
++		};
++
++		switch-hold {
++			label = "switch_hold";
++			linux,code = <BTN_5>;
++			interrupt-parent = <&gsc>;
++			interrupts = <7>;
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -243,6 +290,115 @@
+ 	pinctrl-0 = <&pinctrl_i2c1>;
+ 	status = "okay";
+ 
++	gsc: gsc@20 {
++		compatible = "gw,gsc";
++		reg = <0x20>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <4 GPIO_ACTIVE_LOW>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		#size-cells = <0>;
++
++		adc {
++			compatible = "gw,gsc-adc";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			channel@0 {
++				gw,mode = <0>;
++				reg = <0x00>;
++				label = "temp";
++			};
++
++			channel@2 {
++				gw,mode = <1>;
++				reg = <0x02>;
++				label = "vdd_vin";
++			};
++
++			channel@5 {
++				gw,mode = <1>;
++				reg = <0x05>;
++				label = "vdd_3p3";
++			};
++
++			channel@8 {
++				gw,mode = <1>;
++				reg = <0x08>;
++				label = "vdd_bat";
++			};
++
++			channel@b {
++				gw,mode = <1>;
++				reg = <0x0b>;
++				label = "vdd_5p0";
++			};
++
++			channel@e {
++				gw,mode = <1>;
++				reg = <0xe>;
++				label = "vdd_arm";
++			};
++
++			channel@11 {
++				gw,mode = <1>;
++				reg = <0x11>;
++				label = "vdd_soc";
++			};
++
++			channel@14 {
++				gw,mode = <1>;
++				reg = <0x14>;
++				label = "vdd_3p0";
++			};
++
++			channel@17 {
++				gw,mode = <1>;
++				reg = <0x17>;
++				label = "vdd_1p5";
++			};
++
++			channel@1d {
++				gw,mode = <1>;
++				reg = <0x1d>;
++				label = "vdd_1p8";
++			};
++
++			channel@20 {
++				gw,mode = <1>;
++				reg = <0x20>;
++				label = "vdd_an1";
++			};
++
++			channel@23 {
++				gw,mode = <1>;
++				reg = <0x23>;
++				label = "vdd_2p5";
++			};
++
++			channel@26 {
++				gw,mode = <1>;
++				reg = <0x26>;
++				label = "vdd_gps";
++			};
++
++			channel@29 {
++				gw,mode = <1>;
++				reg = <0x29>;
++				label = "vdd_an2";
++			};
++		};
++	};
++
++	gsc_gpio: gpio@23 {
++		compatible = "nxp,pca9555";
++		reg = <0x23>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-parent = <&gsc>;
++		interrupts = <4>;
++	};
++
+ 	eeprom1: eeprom@50 {
+ 		compatible = "atmel,24c02";
+ 		reg = <0x50>;
+@@ -267,13 +423,6 @@
+ 		pagesize = <16>;
+ 	};
+ 
+-	pca9555: gpio@23 {
+-		compatible = "nxp,pca9555";
+-		reg = <0x23>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-	};
+-
+ 	ds1672: rtc@68 {
+ 		compatible = "dallas,ds1672";
+ 		reg = <0x68>;
+@@ -608,6 +757,7 @@
+ 		fsl,pins = <
+ 			MX6QDL_PAD_EIM_D21__I2C1_SCL		0x4001b8b1
+ 			MX6QDL_PAD_EIM_D28__I2C1_SDA		0x4001b8b1
++			MX6QDL_PAD_GPIO_4__GPIO1_IO04		0xb0b1
+ 		>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx6qdl-gw5903.dtsi b/arch/arm/boot/dts/imx6qdl-gw5903.dtsi
+index aee9221..0461085 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw5903.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw5903.dtsi
+@@ -46,6 +46,7 @@
+  */
+ 
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/linux-event-codes.h>
+ 
+ / {
+ 	chosen {
+@@ -71,6 +72,53 @@
+ 		default-brightness-level = <100>;
+ 	};
+ 
++	gpio-keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		user-pb {
++			label = "user_pb";
++			gpios = <&gsc_gpio 0 GPIO_ACTIVE_LOW>;
++			linux,code = <BTN_0>;
++		};
++
++		user-pb1x {
++			label = "user_pb1x";
++			linux,code = <BTN_1>;
++			interrupt-parent = <&gsc>;
++			interrupts = <0>;
++		};
++
++		key-erased {
++			label = "key-erased";
++			linux,code = <BTN_2>;
++			interrupt-parent = <&gsc>;
++			interrupts = <1>;
++		};
++
++		eeprom-wp {
++			label = "eeprom_wp";
++			linux,code = <BTN_3>;
++			interrupt-parent = <&gsc>;
++			interrupts = <2>;
++		};
++
++		tamper {
++			label = "tamper";
++			linux,code = <BTN_4>;
++			interrupt-parent = <&gsc>;
++			interrupts = <5>;
++		};
++
++		switch-hold {
++			label = "switch_hold";
++			linux,code = <BTN_5>;
++			interrupt-parent = <&gsc>;
++			interrupts = <7>;
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -183,11 +231,101 @@
+ 	pinctrl-0 = <&pinctrl_i2c1>;
+ 	status = "okay";
+ 
+-	pca9555: gpio@23 {
++	gsc: gsc@20 {
++		compatible = "gw,gsc";
++		reg = <0x20>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <4 GPIO_ACTIVE_LOW>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		#size-cells = <0>;
++
++		adc {
++			compatible = "gw,gsc-adc";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			channel@0 {
++				gw,mode = <0>;
++				reg = <0x00>;
++				label = "temp";
++			};
++
++			channel@2 {
++				gw,mode = <1>;
++				reg = <0x02>;
++				label = "vdd_vin";
++			};
++
++			channel@5 {
++				gw,mode = <1>;
++				reg = <0x05>;
++				label = "vdd_3p3";
++			};
++
++			channel@8 {
++				gw,mode = <1>;
++				reg = <0x08>;
++				label = "vdd_bat";
++			};
++
++			channel@b {
++				gw,mode = <1>;
++				reg = <0x0b>;
++				label = "vdd_5p0";
++			};
++
++			channel@e {
++				gw,mode = <1>;
++				reg = <0xe>;
++				label = "vdd_arm";
++			};
++
++			channel@11 {
++				gw,mode = <1>;
++				reg = <0x11>;
++				label = "vdd_soc";
++			};
++
++			channel@14 {
++				gw,mode = <1>;
++				reg = <0x14>;
++				label = "vdd_3p0";
++			};
++
++			channel@17 {
++				gw,mode = <1>;
++				reg = <0x17>;
++				label = "vdd_1p5";
++			};
++
++			channel@1d {
++				gw,mode = <1>;
++				reg = <0x1d>;
++				label = "vdd_1p8";
++			};
++
++			channel@20 {
++				gw,mode = <1>;
++				reg = <0x20>;
++				label = "vdd_an1";
++			};
++
++			channel@23 {
++				gw,mode = <1>;
++				reg = <0x23>;
++				label = "vdd_2p5";
++			};
++		};
++	};
++
++	gsc_gpio: gpio@23 {
+ 		compatible = "nxp,pca9555";
+ 		reg = <0x23>;
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
++		interrupt-parent = <&gsc>;
++		interrupts = <4>;
+ 	};
+ 
+ 	eeprom1: eeprom@50 {
+diff --git a/arch/arm/boot/dts/imx6qdl-gw5904.dtsi b/arch/arm/boot/dts/imx6qdl-gw5904.dtsi
+index 76d6cf5..e73090f 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw5904.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw5904.dtsi
+@@ -46,6 +46,7 @@
+  */
+ 
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/linux-event-codes.h>
+ 
+ / {
+ 	/* these are used by bootloader for disabling nodes */
+@@ -68,6 +69,53 @@
+ 		default-brightness-level = <7>;
+ 	};
+ 
++	gpio-keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		user-pb {
++			label = "user_pb";
++			gpios = <&gsc_gpio 0 GPIO_ACTIVE_LOW>;
++			linux,code = <BTN_0>;
++		};
++
++		user-pb1x {
++			label = "user_pb1x";
++			linux,code = <BTN_1>;
++			interrupt-parent = <&gsc>;
++			interrupts = <0>;
++		};
++
++		key-erased {
++			label = "key-erased";
++			linux,code = <BTN_2>;
++			interrupt-parent = <&gsc>;
++			interrupts = <1>;
++		};
++
++		eeprom-wp {
++			label = "eeprom_wp";
++			linux,code = <BTN_3>;
++			interrupt-parent = <&gsc>;
++			interrupts = <2>;
++		};
++
++		tamper {
++			label = "tamper";
++			linux,code = <BTN_4>;
++			interrupt-parent = <&gsc>;
++			interrupts = <5>;
++		};
++
++		switch-hold {
++			label = "switch_hold";
++			linux,code = <BTN_5>;
++			interrupt-parent = <&gsc>;
++			interrupts = <7>;
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -205,11 +253,101 @@
+ 	pinctrl-0 = <&pinctrl_i2c1>;
+ 	status = "okay";
+ 
+-	pca9555: gpio@23 {
++	gsc: gsc@20 {
++		compatible = "gw,gsc";
++		reg = <0x20>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <4 GPIO_ACTIVE_LOW>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		#size-cells = <0>;
++
++		adc {
++			compatible = "gw,gsc-adc";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			channel@0 {
++				gw,mode = <0>;
++				reg = <0x00>;
++				label = "temp";
++			};
++
++			channel@2 {
++				gw,mode = <1>;
++				reg = <0x02>;
++				label = "vdd_vin";
++			};
++
++			channel@5 {
++				gw,mode = <1>;
++				reg = <0x05>;
++				label = "vdd_3p3";
++			};
++
++			channel@8 {
++				gw,mode = <1>;
++				reg = <0x08>;
++				label = "vdd_bat";
++			};
++
++			channel@b {
++				gw,mode = <1>;
++				reg = <0x0b>;
++				label = "vdd_5p0";
++			};
++
++			channel@e {
++				gw,mode = <1>;
++				reg = <0xe>;
++				label = "vdd_arm";
++			};
++
++			channel@11 {
++				gw,mode = <1>;
++				reg = <0x11>;
++				label = "vdd_soc";
++			};
++
++			channel@14 {
++				gw,mode = <1>;
++				reg = <0x14>;
++				label = "vdd_3p0";
++			};
++
++			channel@17 {
++				gw,mode = <1>;
++				reg = <0x17>;
++				label = "vdd_1p5";
++			};
++
++			channel@1d {
++				gw,mode = <1>;
++				reg = <0x1d>;
++				label = "vdd_1p8";
++			};
++
++			channel@20 {
++				gw,mode = <1>;
++				reg = <0x20>;
++				label = "vdd_an1";
++			};
++
++			channel@23 {
++				gw,mode = <1>;
++				reg = <0x23>;
++				label = "vdd_2p5";
++			};
++		};
++	};
++
++	gsc_gpio: gpio@23 {
+ 		compatible = "nxp,pca9555";
+ 		reg = <0x23>;
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
++		interrupt-parent = <&gsc>;
++		interrupts = <4>;
+ 	};
+ 
+ 	eeprom1: eeprom@50 {
+@@ -503,6 +641,7 @@
+ 		fsl,pins = <
+ 			MX6QDL_PAD_EIM_D21__I2C1_SCL		0x4001b8b1
+ 			MX6QDL_PAD_EIM_D28__I2C1_SDA		0x4001b8b1
++			MX6QDL_PAD_GPIO_4__GPIO1_IO04		0x0001b0b0 /* GSC_IRQ# */
+ 		>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx6qdl-gw5907.dtsi b/arch/arm/boot/dts/imx6qdl-gw5907.dtsi
+index 0bdebdd..b1ff7c8 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw5907.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw5907.dtsi
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/linux-event-codes.h>
+ 
+ / {
+ 	/* these are used by bootloader for disabling nodes */
+@@ -19,6 +20,53 @@
+ 		stdout-path = &uart2;
+ 	};
+ 
++	gpio-keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		user-pb {
++			label = "user_pb";
++			gpios = <&gsc_gpio 0 GPIO_ACTIVE_LOW>;
++			linux,code = <BTN_0>;
++		};
++
++		user-pb1x {
++			label = "user_pb1x";
++			linux,code = <BTN_1>;
++			interrupt-parent = <&gsc>;
++			interrupts = <0>;
++		};
++
++		key-erased {
++			label = "key-erased";
++			linux,code = <BTN_2>;
++			interrupt-parent = <&gsc>;
++			interrupts = <1>;
++		};
++
++		eeprom-wp {
++			label = "eeprom_wp";
++			linux,code = <BTN_3>;
++			interrupt-parent = <&gsc>;
++			interrupts = <2>;
++		};
++
++		tamper {
++			label = "tamper";
++			linux,code = <BTN_4>;
++			interrupt-parent = <&gsc>;
++			interrupts = <5>;
++		};
++
++		switch-hold {
++			label = "switch_hold";
++			linux,code = <BTN_5>;
++			interrupt-parent = <&gsc>;
++			interrupts = <7>;
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -102,11 +150,101 @@
+ 	pinctrl-0 = <&pinctrl_i2c1>;
+ 	status = "okay";
+ 
+-	gpio@23 {
++	gsc: gsc@20 {
++		compatible = "gw,gsc";
++		reg = <0x20>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <4 GPIO_ACTIVE_LOW>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		#size-cells = <0>;
++
++		adc {
++			compatible = "gw,gsc-adc";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			channel@0 {
++				gw,mode = <0>;
++				reg = <0x00>;
++				label = "temp";
++			};
++
++			channel@2 {
++				gw,mode = <1>;
++				reg = <0x02>;
++				label = "vdd_vin";
++			};
++
++			channel@5 {
++				gw,mode = <1>;
++				reg = <0x05>;
++				label = "vdd_3p3";
++			};
++
++			channel@8 {
++				gw,mode = <1>;
++				reg = <0x08>;
++				label = "vdd_bat";
++			};
++
++			channel@b {
++				gw,mode = <1>;
++				reg = <0x0b>;
++				label = "vdd_5p0";
++			};
++
++			channel@e {
++				gw,mode = <1>;
++				reg = <0xe>;
++				label = "vdd_arm";
++			};
++
++			channel@11 {
++				gw,mode = <1>;
++				reg = <0x11>;
++				label = "vdd_soc";
++			};
++
++			channel@14 {
++				gw,mode = <1>;
++				reg = <0x14>;
++				label = "vdd_3p0";
++			};
++
++			channel@17 {
++				gw,mode = <1>;
++				reg = <0x17>;
++				label = "vdd_1p5";
++			};
++
++			channel@1d {
++				gw,mode = <1>;
++				reg = <0x1d>;
++				label = "vdd_1p8";
++			};
++
++			channel@20 {
++				gw,mode = <1>;
++				reg = <0x20>;
++				label = "vdd_an1";
++			};
++
++			channel@23 {
++				gw,mode = <1>;
++				reg = <0x23>;
++				label = "vdd_2p5";
++			};
++		};
++	};
++
++	gsc_gpio: gpio@23 {
+ 		compatible = "nxp,pca9555";
+ 		reg = <0x23>;
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
++		interrupt-parent = <&gsc>;
++		interrupts = <4>;
+ 	};
+ 
+ 	eeprom@50 {
+@@ -133,7 +271,7 @@
+ 		pagesize = <16>;
+ 	};
+ 
+-	rtc@68 {
++	ds1672@68 {
+ 		compatible = "dallas,ds1672";
+ 		reg = <0x68>;
+ 	};
+diff --git a/arch/arm/boot/dts/imx6qdl-gw5910.dtsi b/arch/arm/boot/dts/imx6qdl-gw5910.dtsi
+index 0857de5..11f84ee 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw5910.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw5910.dtsi
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/linux-event-codes.h>
+ 
+ / {
+ 	/* these are used by bootloader for disabling nodes */
+@@ -22,6 +23,53 @@
+ 		reg = <0x10000000 0x20000000>;
+ 	};
+ 
++	gpio-keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		user-pb {
++			label = "user_pb";
++			gpios = <&gsc_gpio 0 GPIO_ACTIVE_LOW>;
++			linux,code = <BTN_0>;
++		};
++
++		user-pb1x {
++			label = "user_pb1x";
++			linux,code = <BTN_1>;
++			interrupt-parent = <&gsc>;
++			interrupts = <0>;
++		};
++
++		key-erased {
++			label = "key-erased";
++			linux,code = <BTN_2>;
++			interrupt-parent = <&gsc>;
++			interrupts = <1>;
++		};
++
++		eeprom-wp {
++			label = "eeprom_wp";
++			linux,code = <BTN_3>;
++			interrupt-parent = <&gsc>;
++			interrupts = <2>;
++		};
++
++		tamper {
++			label = "tamper";
++			linux,code = <BTN_4>;
++			interrupt-parent = <&gsc>;
++			interrupts = <5>;
++		};
++
++		switch-hold {
++			label = "switch_hold";
++			linux,code = <BTN_5>;
++			interrupt-parent = <&gsc>;
++			interrupts = <7>;
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -111,11 +159,121 @@
+ 	pinctrl-0 = <&pinctrl_i2c1>;
+ 	status = "okay";
+ 
+-	gpio@23 {
++	gsc: gsc@20 {
++		compatible = "gw,gsc";
++		reg = <0x20>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <4 GPIO_ACTIVE_LOW>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		#size-cells = <0>;
++
++		adc {
++			compatible = "gw,gsc-adc";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			channel@6 {
++				gw,mode = <0>;
++				reg = <0x06>;
++				label = "temp";
++			};
++
++			channel@8 {
++				gw,mode = <3>;
++				reg = <0x08>;
++				label = "vdd_bat";
++			};
++
++			channel@82 {
++				gw,mode = <2>;
++				reg = <0x82>;
++				label = "vdd_vin";
++				gw,voltage-divider-ohms = <22100 1000>;
++				gw,voltage-offset-microvolt = <800000>;
++			};
++
++			channel@84 {
++				gw,mode = <2>;
++				reg = <0x84>;
++				label = "vdd_5p0";
++				gw,voltage-divider-ohms = <22100 10000>;
++			};
++
++			channel@86 {
++				gw,mode = <2>;
++				reg = <0x86>;
++				label = "vdd_3p3";
++				gw,voltage-divider-ohms = <10000 10000>;
++			};
++
++			channel@88 {
++				gw,mode = <2>;
++				reg = <0x88>;
++				label = "vdd_2p5";
++				gw,voltage-divider-ohms = <10000 10000>;
++			};
++
++			channel@8c {
++				gw,mode = <2>;
++				reg = <0x8c>;
++				label = "vdd_3p0";
++			};
++
++			channel@8e {
++				gw,mode = <2>;
++				reg = <0x8e>;
++				label = "vdd_arm";
++			};
++
++			channel@90 {
++				gw,mode = <2>;
++				reg = <0x90>;
++				label = "vdd_soc";
++			};
++
++			channel@92 {
++				gw,mode = <2>;
++				reg = <0x92>;
++				label = "vdd_1p5";
++			};
++
++			channel@98 {
++				gw,mode = <2>;
++				reg = <0x98>;
++				label = "vdd_1p8";
++			};
++
++			channel@9a {
++				gw,mode = <2>;
++				reg = <0x9a>;
++				label = "vdd_1p0";
++				gw,voltage-divider-ohms = <10000 10000>;
++			};
++
++			channel@9c {
++				gw,mode = <2>;
++				reg = <0x9c>;
++				label = "vdd_an1";
++				gw,voltage-divider-ohms = <10000 10000>;
++			};
++
++			channel@a2 {
++				gw,mode = <2>;
++				reg = <0xa2>;
++				label = "vdd_gsc";
++				gw,voltage-divider-ohms = <10000 10000>;
++			};
++		};
++	};
++
++	gsc_gpio: gpio@23 {
+ 		compatible = "nxp,pca9555";
+ 		reg = <0x23>;
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
++		interrupt-parent = <&gsc>;
++		interrupts = <4>;
+ 	};
+ 
+ 	eeprom@50 {
+diff --git a/arch/arm/boot/dts/imx6qdl-gw5912.dtsi b/arch/arm/boot/dts/imx6qdl-gw5912.dtsi
+index 8c57fd2..0a1ffff 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw5912.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw5912.dtsi
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/linux-event-codes.h>
+ 
+ / {
+ 	/* these are used by bootloader for disabling nodes */
+@@ -20,6 +21,53 @@
+ 		stdout-path = &uart2;
+ 	};
+ 
++	gpio-keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		user-pb {
++			label = "user_pb";
++			gpios = <&gsc_gpio 0 GPIO_ACTIVE_LOW>;
++			linux,code = <BTN_0>;
++		};
++
++		user-pb1x {
++			label = "user_pb1x";
++			linux,code = <BTN_1>;
++			interrupt-parent = <&gsc>;
++			interrupts = <0>;
++		};
++
++		key-erased {
++			label = "key-erased";
++			linux,code = <BTN_2>;
++			interrupt-parent = <&gsc>;
++			interrupts = <1>;
++		};
++
++		eeprom-wp {
++			label = "eeprom_wp";
++			linux,code = <BTN_3>;
++			interrupt-parent = <&gsc>;
++			interrupts = <2>;
++		};
++
++		tamper {
++			label = "tamper";
++			linux,code = <BTN_4>;
++			interrupt-parent = <&gsc>;
++			interrupts = <5>;
++		};
++
++		switch-hold {
++			label = "switch_hold";
++			linux,code = <BTN_5>;
++			interrupt-parent = <&gsc>;
++			interrupts = <7>;
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -106,11 +154,109 @@
+ 	pinctrl-0 = <&pinctrl_i2c1>;
+ 	status = "okay";
+ 
+-	gpio@23 {
++	gsc: gsc@20 {
++		compatible = "gw,gsc";
++		reg = <0x20>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <4 GPIO_ACTIVE_LOW>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		adc {
++			compatible = "gw,gsc-adc";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			channel@0 {
++				gw,mode = <0>;
++				reg = <0x00>;
++				label = "temp";
++			};
++
++			channel@2 {
++				gw,mode = <1>;
++				reg = <0x02>;
++				label = "vdd_vin";
++			};
++
++			channel@5 {
++				gw,mode = <1>;
++				reg = <0x05>;
++				label = "vdd_3p3";
++			};
++
++			channel@8 {
++				gw,mode = <1>;
++				reg = <0x08>;
++				label = "vdd_bat";
++			};
++
++			channel@b {
++				gw,mode = <1>;
++				reg = <0x0b>;
++				label = "vdd_5p0";
++			};
++
++			channel@e {
++				gw,mode = <1>;
++				reg = <0xe>;
++				label = "vdd_arm";
++			};
++
++			channel@11 {
++				gw,mode = <1>;
++				reg = <0x11>;
++				label = "vdd_soc";
++			};
++
++			channel@14 {
++				gw,mode = <1>;
++				reg = <0x14>;
++				label = "vdd_3p0";
++			};
++
++			channel@17 {
++				gw,mode = <1>;
++				reg = <0x17>;
++				label = "vdd_1p5";
++			};
++
++			channel@1d {
++				gw,mode = <1>;
++				reg = <0x1d>;
++				label = "vdd_1p8";
++			};
++
++			channel@20 {
++				gw,mode = <1>;
++				reg = <0x20>;
++				label = "vdd_1p0";
++			};
++
++			channel@23 {
++				gw,mode = <1>;
++				reg = <0x23>;
++				label = "vdd_2p5";
++			};
++		};
++
++		fan-controller@a {
++			compatible = "gw,gsc-fan";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x0a>;
++		};
++	};
++
++	gsc_gpio: gpio@23 {
+ 		compatible = "nxp,pca9555";
+ 		reg = <0x23>;
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
++		interrupt-parent = <&gsc>;
++		interrupts = <4>;
+ 	};
+ 
+ 	eeprom@50 {
+diff --git a/arch/arm/boot/dts/imx6qdl-gw5913.dtsi b/arch/arm/boot/dts/imx6qdl-gw5913.dtsi
+index 635c203..d62a8da 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw5913.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw5913.dtsi
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/linux-event-codes.h>
+ 
+ / {
+ 	/* these are used by bootloader for disabling nodes */
+@@ -19,6 +20,53 @@
+ 		stdout-path = &uart2;
+ 	};
+ 
++	gpio-keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		user-pb {
++			label = "user_pb";
++			gpios = <&gsc_gpio 0 GPIO_ACTIVE_LOW>;
++			linux,code = <BTN_0>;
++		};
++
++		user-pb1x {
++			label = "user_pb1x";
++			linux,code = <BTN_1>;
++			interrupt-parent = <&gsc>;
++			interrupts = <0>;
++		};
++
++		key-erased {
++			label = "key-erased";
++			linux,code = <BTN_2>;
++			interrupt-parent = <&gsc>;
++			interrupts = <1>;
++		};
++
++		eeprom-wp {
++			label = "eeprom_wp";
++			linux,code = <BTN_3>;
++			interrupt-parent = <&gsc>;
++			interrupts = <2>;
++		};
++
++		tamper {
++			label = "tamper";
++			linux,code = <BTN_4>;
++			interrupt-parent = <&gsc>;
++			interrupts = <5>;
++		};
++
++		switch-hold {
++			label = "switch_hold";
++			linux,code = <BTN_5>;
++			interrupt-parent = <&gsc>;
++			interrupts = <7>;
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -87,11 +135,114 @@
+ 	pinctrl-0 = <&pinctrl_i2c1>;
+ 	status = "okay";
+ 
+-	gpio@23 {
++	gsc: gsc@20 {
++		compatible = "gw,gsc";
++		reg = <0x20>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <4 GPIO_ACTIVE_LOW>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		#size-cells = <0>;
++
++		adc {
++			compatible = "gw,gsc-adc";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			channel@6 {
++				gw,mode = <0>;
++				reg = <0x06>;
++				label = "temp";
++			};
++
++			channel@8 {
++				gw,mode = <3>;
++				reg = <0x08>;
++				label = "vdd_bat";
++			};
++
++			channel@82 {
++				gw,mode = <2>;
++				reg = <0x82>;
++				label = "vdd_vin";
++				gw,voltage-divider-ohms = <22100 1000>;
++				gw,voltage-offset-microvolt = <800000>;
++			};
++
++			channel@84 {
++				gw,mode = <2>;
++				reg = <0x84>;
++				label = "vdd_5p0";
++				gw,voltage-divider-ohms = <22100 10000>;
++			};
++
++			channel@86 {
++				gw,mode = <2>;
++				reg = <0x86>;
++				label = "vdd_3p3";
++				gw,voltage-divider-ohms = <10000 10000>;
++			};
++
++			channel@88 {
++				gw,mode = <2>;
++				reg = <0x88>;
++				label = "vdd_2p5";
++				gw,voltage-divider-ohms = <10000 10000>;
++			};
++
++			channel@8c {
++				gw,mode = <2>;
++				reg = <0x8c>;
++				label = "vdd_arm";
++			};
++
++			channel@8e {
++				gw,mode = <2>;
++				reg = <0x8e>;
++				label = "vdd_soc";
++			};
++
++			channel@90 {
++				gw,mode = <2>;
++				reg = <0x90>;
++				label = "vdd_1p5";
++			};
++
++			channel@92 {
++				gw,mode = <2>;
++				reg = <0x92>;
++				label = "vdd_1p0";
++			};
++
++			channel@98 {
++				gw,mode = <2>;
++				reg = <0x98>;
++				label = "vdd_3p0";
++			};
++
++			channel@9a {
++				gw,mode = <2>;
++				reg = <0x9a>;
++				label = "vdd_an1";
++				gw,voltage-divider-ohms = <10000 10000>;
++			};
++
++			channel@a2 {
++				gw,mode = <2>;
++				reg = <0xa2>;
++				label = "vdd_gsc";
++				gw,voltage-divider-ohms = <10000 10000>;
++			};
++		};
++	};
++
++	gsc_gpio: gpio@23 {
+ 		compatible = "nxp,pca9555";
+ 		reg = <0x23>;
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
++		interrupt-parent = <&gsc>;
++		interrupts = <4>;
+ 	};
+ 
+ 	eeprom@50 {
+-- 
+2.7.4
 
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: adi,adv7611
-> +    then:
-> +      properties:
-> +        ports:
-> +          properties:
-> +            '#address-cells':
-> +              const: 1
-> +            '#size-cells':
-> +              const: 0
-> +            port@0:
-> +              type: object
-> +              description: Input port
-> +            port@1:
-> +              type: object
-> +              description: Output port
-> +
-> +          required:
-> +            - port@1
-> +
-> +          additionalProperties: false
-> +
-> +      required:
-> +        - ports
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: adi,adv7612
-> +    then:
-> +      properties:
-> +        ports:
-> +          properties:
-> +            '#address-cells':
-> +              const: 1
-> +            '#size-cells':
-> +              const: 0
-> +            port@2:
-> +              type: object
-> +              description: Output port
-> +
-> +          patternProperties:
-> +            "^port@[0-1]$":
-> +              type: object
-> +              description: Input port
-> +
-> +          required:
-> +            - port@2
-> +
-> +          additionalProperties: false
-> +
-> +      required:
-> +        - ports
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    i2c {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            hdmi_receiver@4c {
-> +                    compatible = "adi,adv7611";
-> +                    /*
-> +                     * The edid page will be accessible @ 0x66 on the I2C bus. All
-> +                     * other maps will retain their default addresses.
-> +                     */
-> +                    reg = <0x4c>, <0x66>;
-> +                    reg-names = "main", "edid";
-> +
-> +                    reset-gpios = <&ioexp 0 GPIO_ACTIVE_LOW>;
-> +                    hpd-gpios = <&ioexp 2 GPIO_ACTIVE_HIGH>;
-> +                    default-input = <0>;
-> +
-> +                    ports {
-> +                            #address-cells = <1>;
-> +                            #size-cells = <0>;
-> +
-> +                            port@0 {
-> +                                    reg = <0>;
-> +                            };
-> +
-> +                            port@1 {
-> +                                    reg = <1>;
-> +                                    hdmi_in: endpoint {
-> +                                            remote-endpoint = <&ccdc_in>;
-> +                                    };
-> +                            };
-> +                    };
-> +
-> +
-> +            };
-> +    };
-> -- 
-> 2.27.0
-> 
