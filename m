@@ -2,147 +2,155 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC13C433E4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 02:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6071CC433E5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 03:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19B4220791
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 02:59:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34C0D20775
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 03:09:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yDC9WRFS"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fGQ5lWJT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728050AbgGPC7o (ORCPT
+        id S1727798AbgGPDJO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 22:59:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54002 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728041AbgGPC7o (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 22:59:44 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3718C08C5DB
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 19:59:43 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id m9so3011835pfh.0
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 19:59:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LuoIleQ9Ji/xAYuJDXT6Z6dO3ZLl5ioORiaja/lMqvU=;
-        b=yDC9WRFS8c2b76sobDkpCegCdn3qmN6PPKK4I3OvnoOO/1z9MLPmZRkplla4Eg/ukz
-         1yjsgCBhx+fRw0LuToGQnO47Bl+60XCpT96Y0dXbMit9EC6ZdCMqRa6JraA+u7TbAW17
-         euvBlP7GfXe6acQFG64G5x6qEgGoJBqWFEiHSaCnX/VsxbRMG4tS8yt8TyP+Xu+XFWc8
-         s8IvNYvyMn1Ggs7e9HxoGYCErU0nRsm5i2C2E8eXWFut8qs1G363dUt0dmSIwNP+F2WZ
-         pvtlrtM37l/jWHo+7dFbDMGm8W4A4TFN8bSz8LBagKLRQNt3tcBsj0Q/osGEd8IH85lN
-         GHbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LuoIleQ9Ji/xAYuJDXT6Z6dO3ZLl5ioORiaja/lMqvU=;
-        b=C/udk9Glky/TqYxoc1pBFNesNVplBDZiSfEILIj3yKG8Q2LwxvvT26fIkc+VLwAXhG
-         /YiO8zJlhOKf/nPwh5twqOpN5TA0sh2VVUX+xZUezQOPFwyS56SQODgX5ykV1Lc6FNzs
-         WHPO97hIbsBhx2dF4Hi5UcLvugpFX7otHfOw5osC/3pBu0T11rZ4WgorLy287iUsZ3kL
-         tu0rlmLw25QmSkLQqrkdKN8ZQe7kv2A7EartYf5uC3/EHMEiSZ+ibvgajjsL4VjvlEpp
-         pUuFCcrTGHYkLsV48yLUqm5qY842t/MJL4HTzyb5iNFuAhXxAfgKsE+jpIdZjBs/vv1N
-         rejw==
-X-Gm-Message-State: AOAM530SqhSqpuQLQt8yDzIpuqq9gYfdtWN7jgrQVPPjeNzYijlojbxY
-        /L7Qpv7dKWwocVU2ycXjwwkK
-X-Google-Smtp-Source: ABdhPJzWhG+hWqD5f/hYQ2NvZiC3lvnRQfSCnWdqN4YpElhXZ2qpZ/W6KhstotDJpZvgzwohyXYNxw==
-X-Received: by 2002:a62:8688:: with SMTP id x130mr1902048pfd.280.1594868383282;
-        Wed, 15 Jul 2020 19:59:43 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6d89:fed1:9157:c271:c363:4849])
-        by smtp.gmail.com with ESMTPSA id h3sm3217799pjz.23.2020.07.15.19.59.37
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 Jul 2020 19:59:42 -0700 (PDT)
-Date:   Thu, 16 Jul 2020 08:29:32 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] arm64: dts: qcom: sm8250: Drop tcsr_mutex syscon
-Message-ID: <20200716025932.GA3271@Mani-XPS-13-9360>
-References: <20200622075956.171058-1-bjorn.andersson@linaro.org>
- <20200622075956.171058-5-bjorn.andersson@linaro.org>
+        Wed, 15 Jul 2020 23:09:14 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:22425 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726770AbgGPDJO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jul 2020 23:09:14 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594868953; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=mw4JTlNVh9hVrQQ8A7sSm35gcNawb7Kka3KE5+3Xp3U=; b=fGQ5lWJThl+IW1UMhXxGA1ERRLtKNrrr7RicNbT26D0wwpHN08U4a464uoyAWxBDj3Ls5lqb
+ 4fIa0XDafUyozPUR2ETC4b3LNbYJQQMnFiAwT1vjn0gp8sJz22rNMzVXLpeJhqsKRRfQDnoV
+ aQcf+7ytZjv+lKbI3ua7n8lSo4U=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5f0fc4ce7c8ca473a869d506 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 16 Jul 2020 03:09:02
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AFB18C433C6; Thu, 16 Jul 2020 03:09:01 +0000 (UTC)
+Received: from [192.168.1.11] (unknown [61.1.230.191])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DF20EC433C9;
+        Thu, 16 Jul 2020 03:08:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DF20EC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH 3/3] arm64: dts: sc7180: Add OPP tables and power-domains
+ for venus
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     stanimir.varbanov@linaro.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, linux-media@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1593603638-19296-1-git-send-email-rnayak@codeaurora.org>
+ <1593603638-19296-4-git-send-email-rnayak@codeaurora.org>
+ <20200701165414.GB3191083@google.com>
+ <1ce702e1-6deb-8f13-3e17-38170b136b2c@codeaurora.org>
+ <20200714003603.GP3191083@google.com>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <069bb34a-a637-6408-f067-43ff418b4776@codeaurora.org>
+Date:   Thu, 16 Jul 2020 08:38:54 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622075956.171058-5-bjorn.andersson@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200714003603.GP3191083@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 12:59:56AM -0700, Bjorn Andersson wrote:
-> Now that we don't need the intermediate syscon to represent the TCSR
-> mutexes, update the dts to describe the TCSR mutex directly under /soc.
-> 
-> The change also fixes the sort order of the nodes.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+On 7/14/2020 6:06 AM, Matthias Kaehlcke wrote:
+> On Thu, Jul 02, 2020 at 02:26:14PM +0530, Rajendra Nayak wrote:
+>>
+>> On 7/1/2020 10:24 PM, Matthias Kaehlcke wrote:
+>>> On Wed, Jul 01, 2020 at 05:10:38PM +0530, Rajendra Nayak wrote:
+>>>> Add the OPP tables in order to be able to vote on the performance state
+>>>> of a power-domain
+>>>>
+>>>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>>>> ---
+>>>>    arch/arm64/boot/dts/qcom/sc7180.dtsi | 35 +++++++++++++++++++++++++++++++++--
+>>>>    1 file changed, 33 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>>>> index ad57df2..738a741 100644
+>>>> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>>>> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>>>> @@ -2392,8 +2392,10 @@
+>>>>    			reg = <0 0x0aa00000 0 0xff000>;
+>>>>    			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+>>>>    			power-domains = <&videocc VENUS_GDSC>,
+>>>> -					<&videocc VCODEC0_GDSC>;
+>>>> -			power-domain-names = "venus", "vcodec0";
+>>>> +					<&videocc VCODEC0_GDSC>,
+>>>> +					<&rpmhpd SC7180_CX>;
+>>>> +			power-domain-names = "venus", "vcodec0", "opp-pd";
+>>>> +			operating-points-v2 = <&venus_opp_table>;
+>>>>    			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+>>>>    				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
+>>>>    				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
+>>>> @@ -2414,6 +2416,35 @@
+>>>>    			video-encoder {
+>>>>    				compatible = "venus-encoder";
+>>>>    			};
+>>>> +
+>>>> +			venus_opp_table: venus-opp-table {
+>>>> +				compatible = "operating-points-v2";
+>>>> +
+>>>> +				opp-200000000 {
+>>>> +					opp-hz = /bits/ 64 <150000000>;
+>>>> +					required-opps = <&rpmhpd_opp_low_svs>;
+>>>> +				};
+>>>> +
+>>>> +				opp-320000000 {
+>>>> +					opp-hz = /bits/ 64 <270000000>;
+>>>> +					required-opps = <&rpmhpd_opp_svs>;
+>>>> +				};
+>>>> +
+>>>> +				opp-380000000 {
+>>>> +					opp-hz = /bits/ 64 <340000000>;
+>>>> +					required-opps = <&rpmhpd_opp_svs_l1>;
+>>>> +				};
+>>>> +
+>>>> +				opp-444000000 {
+>>>> +					opp-hz = /bits/ 64 <434000000>;
+>>>> +					required-opps = <&rpmhpd_opp_nom>;
+>>>> +				};
+>>>> +
+>>>> +				opp-533000000 {
+>>>> +					opp-hz = /bits/ 64 <500000000>;
+>>>> +					required-opps = <&rpmhpd_opp_turbo>;
+>>>> +				};
+>>>
+>>> the labels of the OPP nodes don't match the specified frequencies
+>>
+>> Oops, I'll fix and respin.
+> 
+> ping, it seems the respin is still pending
 
-Thanks,
-Mani
+I was waiting on Rob to first ack the bindings update patch [1] before I respin
+these, however I have not seen a response from Rob on the bindings patch yet,
+despite a couple pings. So I'll respin this series anyway.
 
-> ---
-> 
-> Changs since v1:
-> - Adjusted sort order of the nodes
-> 
->  arch/arm64/boot/dts/qcom/sm8250.dtsi | 17 ++++++-----------
->  1 file changed, 6 insertions(+), 11 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-> index 7050adba7995..67a1b6f3301b 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-> @@ -144,12 +144,6 @@ scm: scm {
->  		};
->  	};
->  
-> -	tcsr_mutex: hwlock {
-> -		compatible = "qcom,tcsr-mutex";
-> -		syscon = <&tcsr_mutex_regs 0 0x1000>;
-> -		#hwlock-cells = <1>;
-> -	};
-> -
->  	memory@80000000 {
->  		device_type = "memory";
->  		/* We expect the bootloader to fill in the size */
-> @@ -376,6 +370,12 @@ ufs_mem_phy_lanes: lanes@1d87400 {
->  			};
->  		};
->  
-> +		tcsr_mutex: hwlock@1f40000 {
-> +			compatible = "qcom,tcsr-mutex";
-> +			reg = <0x0 0x01f40000 0x0 0x40000>;
-> +			#hwlock-cells = <1>;
-> +		};
-> +
->  		intc: interrupt-controller@17a00000 {
->  			compatible = "arm,gic-v3";
->  			#interrupt-cells = <3>;
-> @@ -486,11 +486,6 @@ rpmhpd_opp_turbo_l1: opp10 {
->  			};
->  		};
->  
-> -		tcsr_mutex_regs: syscon@1f40000 {
-> -			compatible = "syscon";
-> -			reg = <0x0 0x01f40000 0x0 0x40000>;
-> -		};
-> -
->  		timer@17c20000 {
->  			#address-cells = <2>;
->  			#size-cells = <2>;
-> -- 
-> 2.26.2
-> 
+[1] https://lore.kernel.org/patchwork/patch/1241077/
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
