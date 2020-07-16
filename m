@@ -2,252 +2,86 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B4BC433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 19:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECFDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 19:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32F2C2076A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 19:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A81C206F4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 19:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594928871;
-	bh=FPSF6oHPPKmBuh1mX5uveoPx18C0MNAcU5wNlBlJpW4=;
+	s=default; t=1594929206;
+	bh=wILV5KufGlLqxpvSMB+HYlNmiUBm7PW6b26u3pPvo5k=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dqCwI/P5EJPw/2V1SW3/GRfRLeHhRjZgtL8lUoXF5I2TY0i/43/3D81wejq8jZ8o3
-	 NB2hQCmFw9P0NLOq/wMuywCezerkDMdy2obgvriOc4qquIYePH3MbFdK5rOc9lNihr
-	 pGuGJ8Paf0+d4qyC5au5FfUWsRn0vXnpqCtfsJn0=
+	b=IKeiSxXSM0aSoVo0yP+zvYRnaAPKj15RsKn+UHJevIBxaOidf0acV5hiGAbTW3aYD
+	 K4SwXptR5PN2UVRY4qZI7XX9lJ+oewMbgLQ9QvvpJuP1x2u7XWAFj2RabNtAULrL8b
+	 VFs+eSK5sDR9bHzJV0ZHQ83i/P2Z+oqQyMTly2qw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbgGPTru (ORCPT
+        id S1729580AbgGPTx0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 15:47:50 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:41930 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728788AbgGPTru (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 15:47:50 -0400
-Received: by mail-io1-f66.google.com with SMTP id p205so7303345iod.8;
-        Thu, 16 Jul 2020 12:47:49 -0700 (PDT)
+        Thu, 16 Jul 2020 15:53:26 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:44145 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729048AbgGPTxZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 15:53:25 -0400
+Received: by mail-il1-f195.google.com with SMTP id h16so6136948ilj.11;
+        Thu, 16 Jul 2020 12:53:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=JhCyixCktHEpyKaSj8J8HBrewJpvrxr4Dobi9P1P5eg=;
-        b=eWeQt50AI0ovORy09vCEUPrLeoRo1dgKTcRP4zZUHc4OLFmKDKiVjKawplydYMvd+6
-         70EJQty7vJpNbIw17epGsrgOO7T0NA5QWXN6C9bacXY1YkfAgqApKjkBCRU4KVjFS4tG
-         mxZHJepg6huB2cVFugJvMO4N/GvWtv9FR+B8JAgHh/+47RC7YAKCjYJ2zDUukcSzS7oz
-         p+QfgKxalPkfnw7M9lmPAG9LG9BsfailvjjZI/Un2sc3qrnBy8KXcQ7vS3uQDmGAJpHS
-         5xZ8ikJNzBoI+FAJCO5ryBUeirNd5wU+gSHQKSZcyxHGBIPKDrsJFXavj0//Rukuaw3h
-         XmNg==
-X-Gm-Message-State: AOAM530VaHqA5TmLqdJ4koOgHjwReQy6u8PNO/Okfbc7azIkeyboE28f
-        KakDDDVZ34h74ZKt4QIf5w==
-X-Google-Smtp-Source: ABdhPJzNpwEG5H8u/oWt6PabRVpHiT4bMEtqypidWvr8oM/6+PNVOrAOA5uh9w5O8XFY9KPSmwmwTQ==
-X-Received: by 2002:a02:5e88:: with SMTP id h130mr7093109jab.116.1594928868688;
-        Thu, 16 Jul 2020 12:47:48 -0700 (PDT)
+        bh=xPJI5AUNc3GLpKlOl9E8pVIu2DWZ+nUPV7c3Fd1fTW8=;
+        b=C0YlOEB3HlfSQOau0l1nAuJSZNvm6nMyGgGWnXUB+WYKXrnEeIETCBYmbYEm6i27i6
+         g0Pu0CM4NrNp7MUw3nBZKAmGzOAMDKOqzBWNZfDoLCmf1oHJr/ywoR6tPODEIlf4mcUK
+         ESfi7enHHxs9MHkBACte9NKfEuBLtrnoZqY35FfgTTOIh/bBztSxba7p42EQrBdcHzjc
+         YUV1CKHhSppkJH4sHtA1xuaRamITQ6K4kCMDjUDrMsfJrvuvhUBgtil+l5DlEsYhBUeG
+         Qe1TdcWu4TlJnwKsqQWARKPe97FGfSuAUBuHI/IawwsPugC+zkTjxbWfGFRJftzg3zLy
+         lJmQ==
+X-Gm-Message-State: AOAM533waWtZJylo4/lPiB6jdJr3sIp3GFzcjzz7NLRDYITWmF0Dh5l1
+        EKG/G2OgqJmWUPyvPgqPMQ==
+X-Google-Smtp-Source: ABdhPJwbtrb2hzcyMrDtMJ8lQQG2F77dP0WpMBde2WE/BUG6j0yjkG7KFC7V4dHYMGHTHGdG0n/9rA==
+X-Received: by 2002:a92:d186:: with SMTP id z6mr6614069ilz.227.1594929204916;
+        Thu, 16 Jul 2020 12:53:24 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id v13sm3195024iox.12.2020.07.16.12.47.47
+        by smtp.gmail.com with ESMTPSA id a5sm3219354ilt.71.2020.07.16.12.53.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 12:47:48 -0700 (PDT)
-Received: (nullmailer pid 2731552 invoked by uid 1000);
-        Thu, 16 Jul 2020 19:47:46 -0000
-Date:   Thu, 16 Jul 2020 13:47:46 -0600
+        Thu, 16 Jul 2020 12:53:24 -0700 (PDT)
+Received: (nullmailer pid 2739233 invoked by uid 1000);
+        Thu, 16 Jul 2020 19:53:23 -0000
+Date:   Thu, 16 Jul 2020 13:53:23 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     vkoul@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, catalin.marinas@arm.com, will@kernel.org,
-        dan.j.williams@intel.com, angelo@sysam.it, kernel@pengutronix.de,
-        linux-imx@nxp.com, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 6/9] dt-bindings: dma: add fsl-edma3 yaml
-Message-ID: <20200716194746.GA2716872@bogus>
-References: <1594748508-22179-1-git-send-email-yibin.gong@nxp.com>
- <1594748508-22179-7-git-send-email-yibin.gong@nxp.com>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     timur@kernel.org, linuxppc-dev@lists.ozlabs.org, tiwai@suse.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        perex@perex.cz, broonie@kernel.org, festevam@gmail.com,
+        devicetree@vger.kernel.org, lgirdwood@gmail.com,
+        robh+dt@kernel.org, Xiubo.Lee@gmail.com, nicoleotsuka@gmail.com
+Subject: Re: [PATCH v2 2/3] ASoC: bindings: fsl-asoc-card: Support
+ hp-det-gpio and mic-det-gpio
+Message-ID: <20200716195323.GA2739158@bogus>
+References: <1594822179-1849-1-git-send-email-shengjiu.wang@nxp.com>
+ <1594822179-1849-3-git-send-email-shengjiu.wang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1594748508-22179-7-git-send-email-yibin.gong@nxp.com>
+In-Reply-To: <1594822179-1849-3-git-send-email-shengjiu.wang@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 01:41:45AM +0800, Robin Gong wrote:
-> Add device binding doc for fsl-edma3 driver.
+On Wed, 15 Jul 2020 22:09:38 +0800, Shengjiu Wang wrote:
+> Add headphone and microphone detection GPIO support.
+> These properties are optional.
 > 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
 > ---
->  .../devicetree/bindings/dma/nxp,fsl-edma3.yaml     | 134 +++++++++++++++++++++
->  1 file changed, 134 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/nxp,fsl-edma3.yaml
+>  Documentation/devicetree/bindings/sound/fsl-asoc-card.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/nxp,fsl-edma3.yaml b/Documentation/devicetree/bindings/dma/nxp,fsl-edma3.yaml
-> new file mode 100644
-> index 00000000..ebdad90
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/nxp,fsl-edma3.yaml
-> @@ -0,0 +1,134 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/nxp,fsl-edma3.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NXP eDMA3 Controller
-> +
-> +maintainers:
-> +  - Robin Gong <yibin.gong@nxp.com>
-> +
-> +allOf:
-> +  - $ref: "dma-controller.yaml#"
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - fsl,imx8qm-edma  # i.mx8qm/qxp
-> +
-> +  reg:
-> +    minItems: 2
-> +    maxItems: 32
 
-Needs some sort of description as to what each region is.
- 
-> +
-> +  interrupts:
-> +    minItems: 2
-> +    maxItems: 32
-
-ditto
-
-> +
-> +  interrupt-names:
-> +    minItems: 2
-> +    maxItems: 32
-> +    items:
-> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
-> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
-> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
-> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
-> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
-> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
-> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
-> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
-
-What about interrupts 8-31? If you want a pattern for all entries, you 
-do:
-
-items:
-  pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
-
-(If 'items' is a schema instead of a list, then it applies to all 
-entries.)
-
-What does edma[0-2] correspond to? The names should be local to the 
-instance.
-
-Really, what's the point of names that just have the channel number in 
-them? The driver can create names dynamically if needed. We already have 
-properties to define how many channels and a mask of present channels.
-
-> +
-> +  '#dma-cells':
-> +    const: 3
-> +    description: |
-> +      The 1st cell specifies the channel ID.
-> +
-> +      The 2nd cell specifies the channel priority.
-> +
-> +      The 3rd cell specifies the channel attributes:
-> +        bit0 transmit or receive.
-> +          0 = transmit
-> +          1 = receive
-> +        bit1 local or remote access.
-> +          0 = local
-> +          1 = remote
-> +        bit2 dualfifo case or not(only in Audio cyclic now).
-> +          0 = not dual fifo case
-> +          1 =  dualfifo case.
-> +
-> +  dma-channels:
-> +    minimum: 2
-> +    maximum: 32
-> +
-> +  power-domains:
-> +    minItems: 2
-> +    maxItems: 32
-> +
-> +  power-domain-names:
-> +    minItems: 2
-> +    maxItems: 32
-> +    items:
-> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])+$"
-> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])+$"
-> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])+$"
-> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])+$"
-> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])+$"
-> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])+$"
-> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])+$"
-> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])+$"
-
-Again, why do you need names here?
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-names
-> +  - '#dma-cells'
-> +  - dma-channels
-> +  - power-domains
-> +  - power-domain-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/firmware/imx/rsrc.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    edma2: dma-controller@5a1f0000 {
-> +        compatible = "fsl,imx8qm-edma";
-> +        reg = <0x5a280000 0x10000>, /* channel8 UART0 rx */
-> +              <0x5a290000 0x10000>, /* channel9 UART0 tx */
-> +              <0x5a2a0000 0x10000>, /* channel10 UART1 rx */
-> +              <0x5a2b0000 0x10000>, /* channel11 UART1 tx */
-> +              <0x5a2c0000 0x10000>, /* channel12 UART2 rx */
-> +              <0x5a2d0000 0x10000>, /* channel13 UART2 tx */
-> +              <0x5a2e0000 0x10000>, /* channel14 UART3 rx */
-> +              <0x5a2f0000 0x10000>; /* channel15 UART3 tx */
-> +        #dma-cells = <3>;
-> +        dma-channels = <8>;
-> +        interrupts = <GIC_SPI 434 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 435 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 436 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 437 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 438 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 439 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 440 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 441 IRQ_TYPE_LEVEL_HIGH>;
-> +       interrupt-names = "edma2-chan8-rx", "edma2-chan9-tx",
-> +                         "edma2-chan10-rx", "edma2-chan11-tx",
-> +                         "edma2-chan12-rx", "edma2-chan13-tx",
-> +                         "edma2-chan14-rx", "edma2-chan15-tx";
-> +       power-domains = <&pd IMX_SC_R_DMA_2_CH8>,
-> +                       <&pd IMX_SC_R_DMA_2_CH9>,
-> +                       <&pd IMX_SC_R_DMA_2_CH10>,
-> +                       <&pd IMX_SC_R_DMA_2_CH11>,
-> +                       <&pd IMX_SC_R_DMA_2_CH12>,
-> +                       <&pd IMX_SC_R_DMA_2_CH13>,
-> +                       <&pd IMX_SC_R_DMA_2_CH14>,
-> +                       <&pd IMX_SC_R_DMA_2_CH15>;
-> +       power-domain-names = "edma2-chan8", "edma2-chan9",
-> +                            "edma2-chan10", "edma2-chan11",
-> +                            "edma2-chan12", "edma2-chan13",
-> +                            "edma2-chan14", "edma2-chan15";
-> +    };
-> -- 
-> 2.7.4
-> 
+Acked-by: Rob Herring <robh@kernel.org>
