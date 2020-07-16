@@ -2,144 +2,239 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0A9C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 15:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BD4C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 15:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC03B2076D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 15:42:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nkv6LkY6"
+	by mail.kernel.org (Postfix) with ESMTP id 416742076D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 15:46:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594914369;
+	bh=7T7+aec3b3QGQPctlJSnbMZtgTjJtaxTJ2P4f9xA4gE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OEopTU61xyn5541mVDX9l18RgL/s0ZUZ9/X7p1VxpP705QM7NrijleZDB1/jtkdCv
+	 O/1BeVNwcCcwGFHThgsirf8A00jiQ15cHOtHgb3d+wXjgrUjPK+tJrqRw+jRtS6yTG
+	 NPeYv3xuHuWWK13hUr16pubxuZuXhQcHdmtyF1RY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728962AbgGPPmc (ORCPT
+        id S1728714AbgGPPqI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 11:42:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59050 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728714AbgGPPmc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 11:42:32 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B04EC061755
-        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 08:42:32 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id t18so5447390ilh.2
-        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 08:42:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b0u1Ktk7Razombpw+VKtZ2EiV3sdrsnL2SrGFQwq5gc=;
-        b=Nkv6LkY6ZQVCWJ5riUqbyS5rW6CG4x3CXZ6qX031txwjrwFCaXxxqwy65dxKWglT0B
-         gGRCqaoQfXguq3A74GeIz3teSOCSxxTsgNOGfDkt5AVvZM1rJkeqmIrCyLAjz7aCyKIt
-         wVvlAeSW3RyewbKFLmDZXpVnFUKyXPMn4bWEsKW9EgjRSu5SjxLh4cayOz4Jd8DdJxyG
-         ykrx4nEg4bZyRxuKpGYBu5aWsustzUDbNYIvfFu5BITLbEfJoW3aRYYVDS2GBuQNWXd6
-         7DYyfQZJs3hNZaoW6FpX57kb/UgEOyA2cWk82AMiztgUuHQBflr44JOSCBqPCwNoYjRv
-         opxw==
+        Thu, 16 Jul 2020 11:46:08 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:37593 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728669AbgGPPqI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 11:46:08 -0400
+Received: by mail-il1-f193.google.com with SMTP id r12so5452263ilh.4;
+        Thu, 16 Jul 2020 08:46:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b0u1Ktk7Razombpw+VKtZ2EiV3sdrsnL2SrGFQwq5gc=;
-        b=RxD4gu3UsdE5cFPU989UMIXCKg6iGQCxOeSipR/Z3LzFfcXbMFkKAkAhsY72WzR7L9
-         GviyOu3BYRgIR8O0MWwDp52KTpjmIDdvixRkCBGva6N0UHlGGRe/OcNPQ26EVTbKCSR7
-         RkfRHuGYEnppuMeKxLdtyjxazMuG+fq7IdRwjyoln0Qu2jJO1iBlHONHTa8UVKX2n/Lr
-         zLsNRiQc68L9SgYSIBDM+niBrQOZoh2WkSl1MGC2Vi8PwQFN7BSqHejogyV7cLcnpbHO
-         bNKZdapaFcq9GRxEe8gE8G9PTegmzm64QGFUsw+MeH3zWQTQDGmgVWmNBY7fhUpVh7gK
-         Clow==
-X-Gm-Message-State: AOAM530FDfVGrSmkPn/zxN9/M2iOI8aoqsF4w7QGj88I5T0y7aWQgjLD
-        ehVDdjYCacbkMuu1pY+8vb2tpN4947g/PMgbBv4=
-X-Google-Smtp-Source: ABdhPJyB2P2sQk/4pFFdFQV8RmEmUqp4OZPnagXYnUH/VUn4XenhJM/80v/X3TtMOjrgRZ7a/oozy0sIRSh1x07seeI=
-X-Received: by 2002:a92:dc8c:: with SMTP id c12mr5187959iln.243.1594914151188;
- Thu, 16 Jul 2020 08:42:31 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=h94tFRUF4D5bdpqmTblQ19sOobDYu6cH5YoxhApuutc=;
+        b=U07qLmlR+6xzLYL8SV981Mlz/KBwh+dp7i0SBP+P+dVdCrG1udWAZCscGb6w+eUtCc
+         dKW+x/1s+VWosdcsCyY8BemzqqX2W8rcWifZnEdO67kFAq1/xWehv4feejcc1behf5S7
+         u25jctGppCg0oZJuz71RwHX9ZFGcZV/JIn/uJ2eMOgIDXBz0L4Dbji+KojqqxQVSIf86
+         Gl4kj+glCh5QLrqHnilhf9ZrEihDON2qOgkZeCDlplC4wxBrEyWtuL4R74RVP81tU64j
+         98p+fE6iojbBHpl6eEbJ5RfIbP/ZWRWoYGDkux6Xp5vpqm9NQrygNPsTOtoc5nO0aNbd
+         EgeA==
+X-Gm-Message-State: AOAM5337q9Aqhr+mUqh8HoIQYZqNNZ1l2uqhb7fPc4OYnemANe66Dhqz
+        2kunvrkG48k46H6s2RSJGw==
+X-Google-Smtp-Source: ABdhPJx4fv59SMJ3mS2tApSIBDtdSxl4R1aVARuaCzbZSIcb/ZiZYaKPCzzHJT84CfHLcSwsclyD9Q==
+X-Received: by 2002:a92:a04e:: with SMTP id b14mr5301547ilm.261.1594914367140;
+        Thu, 16 Jul 2020 08:46:07 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id w16sm3209593iom.27.2020.07.16.08.46.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 08:46:06 -0700 (PDT)
+Received: (nullmailer pid 2403961 invoked by uid 1000);
+        Thu, 16 Jul 2020 15:46:04 -0000
+Date:   Thu, 16 Jul 2020 09:46:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
+Cc:     simon@arlott.org, jonas.gorski@gmail.com, kishon@ti.com,
+        vkoul@kernel.org, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
+        krzk@kernel.org, gregkh@linuxfoundation.org, alcooperx@gmail.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 1/2] dt-bindings: phy: add bcm63xx-usbh bindings
+Message-ID: <20200716154604.GA2370346@bogus>
+References: <20200715131803.1762064-1-noltari@gmail.com>
+ <20200715131803.1762064-2-noltari@gmail.com>
 MIME-Version: 1.0
-References: <20200715160209.652-1-linux.amoon@gmail.com> <455f5dcc-3be3-45cd-4947-50f261a502a4@baylibre.com>
- <CANAwSgRXLUqqSqnguV2pgPdumMi8i6T9rh6hNQ0Y03mv_j7V-g@mail.gmail.com>
- <91fbbe36-d839-d864-7666-5483cc643a5e@baylibre.com> <a7e9b154-ceb2-3915-454a-a53c9b65622e@baylibre.com>
-In-Reply-To: <a7e9b154-ceb2-3915-454a-a53c9b65622e@baylibre.com>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Thu, 16 Jul 2020 21:12:20 +0530
-Message-ID: <CANAwSgS8FfZ=_GfZBRYLOozzp5dcsuhiiHuwM_dOxdAwaSxWEA@mail.gmail.com>
-Subject: Re: [PATCHv1 0/3] Enable RTC on Odroid N2
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200715131803.1762064-2-noltari@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-hi Neil,
+On Wed, Jul 15, 2020 at 03:18:02PM +0200, Álvaro Fernández Rojas wrote:
+> Document BCM63xx USBH PHY bindings.
+> 
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  v6: introduce changes suggested by Rob:
+>   - Add another if case to device tree binding for SoCs with just 1 clock.
+>   - Ignored "additionalProperties: false" suggestion since it triggers a
+>     warning. This has been reported, but I haven't received any answer yet.
 
-On Thu, 16 Jul 2020 at 14:05, Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Hi,
->
-> On 16/07/2020 10:20, Neil Armstrong wrote:
-> > Hi,
-> >
-> > On 16/07/2020 10:14, Anand Moon wrote:
-> >> Hi Neil,
-> >>
-> >> Thanks for your review comments.
-> >>
-> >> On Thu, 16 Jul 2020 at 12:35, Neil Armstrong <narmstrong@baylibre.com> wrote:
-> >>>
-> >>> Hi Anand,
-> >>>
-> >>> Only the vrtc is able to wakeup the device from suspend,
-> >>> the external RTC is not capable.
-> >>>
-> >>> Neil
-> >>
-> >> Now I have two RTC driver registered
-> >>
-> >> $ dmesg | grep rtc
-> >> [    4.737315] rtc-pcf8563 0-0051: registered as rtc0
-> >> [    4.738763] rtc-pcf8563 0-0051: setting system clock to
-> >> 2020-07-16T08:00:46 UTC (1594886446)
-> >> [    4.790206] meson-vrtc ff8000a8.rtc: registered as rtc1
-> >>
-> >> And there are two nodes
-> >> # ls /dev/rtc*
-> >> /dev/rtc  /dev/rtc0  /dev/rtc1
-> >>
-> >> So it seames an issue that /dev/rtc0 is not able to handle wakeup events.
-> >> How can we resolve this issue?
-> >>
-> >> # time rtcwake -s 30 -m mem
-> >> rtcwake: /dev/rtc0 not enabled for wakeup events
-> >
-> > rtcwake -d /dev/rtc1 -s 30 -m mem
-> >
-> > As Christian reported off-list, it may be necessary to keep the vrtc as rtc0,
-> > so you should add aliases in the odroid-n2 DT to have vrtc as rtc0 and the on-board
-> > rtc as rtc1, but it may break the hwclock tools, so the reverse may be better
-> > but you'll need to specify rtc1 to rtcwake.
->
-> While looking closer to the Odroid-N2 schematics and U-Boot/SCP Firmware, the external on-board
-> RTC can wake the device with the GPIO_AO 7, and wakeup is enabled in:
-> https://github.com/hardkernel/u-boot/blob/odroidn2-v2015.01/board/hardkernel/odroidn2/firmware/scp_task/pwr_ctrl.c#L143
->
-> So, something must be missing.
->
-Ok I have missed this setting.
-But I could not find any more information on this configuration
-in S922X_Public_Datasheet_V0.2-Hardkernel,
+Ask your question here or I have to go look for it...
 
-But HK uses the same set up as we do.
-https://github.com/hardkernel/linux/blob/odroidn2-4.9.y/arch/arm64/boot/dts/amlogic/mesong12_odroid_common.dtsi#L322-L333
-I could not gather much input from this configration.
+Looks like it is for 'clocks' though. The main schema has to define all 
+the properties for 'additionalProperties: false'. More below...
 
-Does VIM3 support VRTC or do they prefer rtc wakeup via RTC ?
+>  v5: no changes.
+>  v4: conditionally require 1/2 clocks and fix clock/reset values.
+>  v3: no changes.
+>  v2: phy-cells changed to 1.
+> 
+>  .../bindings/phy/brcm,bcm63xx-usbh-phy.yaml   | 97 +++++++++++++++++++
+>  1 file changed, 97 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml b/Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml
+> new file mode 100644
+> index 000000000000..8ab0ab3154ed
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml
+> @@ -0,0 +1,97 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/phy/brcm,bcm63xx-usbh-phy.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: BCM63xx USBH PHY
+> +
+> +maintainers:
+> +  - Álvaro Fernández Rojas <noltari@gmail.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - brcm,bcm6318-usbh-phy
+> +      - brcm,bcm6328-usbh-phy
+> +      - brcm,bcm6358-usbh-phy
+> +      - brcm,bcm6362-usbh-phy
+> +      - brcm,bcm6368-usbh-phy
+> +      - brcm,bcm63268-usbh-phy
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  "#phy-cells":
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - resets
+> +  - "#phy-cells"
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - brcm,bcm6328-usbh-phy
+> +            - brcm,bcm6358-usbh-phy
+> +            - brcm,bcm6362-usbh-phy
+> +            - brcm,bcm6368-usbh-phy
+> +    then:
+> +      properties:
+> +        clocks:
+> +          maxItems: 1
+> +        clock-names:
+> +          items:
+> +            - const: usbh
 
--Anand
+With the below changes, this can be:
+
+then:
+  properties:
+    clocks:
+      maxItems: 1
+    clock-names:
+      maxItems: 1
+else:
+  properties:
+    clocks:
+      minItems: 2
+    clock-names:
+      minItems: 2
+
+> +      required:
+> +        - clocks
+> +        - clock-names
+
+Looks like these are always required and can be at the top level.
+
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - brcm,bcm6318-usbh-phy
+> +            - brcm,bcm63268-usbh-phy
+> +    then:
+> +      properties:
+> +        clocks:
+> +          maxItems: 2
+> +        clock-names:
+> +          items:
+> +            - const: usbh
+> +            - const: usb_ref
+
+Move this to the main schema with {minItems: 1, maxItems: 2} for both.
+
+> +      required:
+> +        - clocks
+> +        - clock-names
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - brcm,bcm6318-usbh-phy
+> +            - brcm,bcm6328-usbh-phy
+> +            - brcm,bcm6362-usbh-phy
+> +            - brcm,bcm63268-usbh-phy
+> +    then:
+> +      properties:
+> +        power-domains:
+> +          maxItems: 1
+
+This can be in the main section.
+
+> +      required:
+> +        - power-domains
+
+And then add to disallow power-domains:
+
+else:
+  properties:
+    power-domains: false
+
+> +
+> +examples:
+> +  - |
+> +    usbh: usb-phy@10001700 {
+> +      compatible = "brcm,bcm6368-usbh-phy";
+> +      reg = <0x10001700 0x38>;
+> +      clocks = <&periph_clk 15>;
+> +      clock-names = "usbh";
+> +      resets = <&periph_rst 12>;
+> +      #phy-cells = <1>;
+> +    };
+> -- 
+> 2.27.0
+> 
