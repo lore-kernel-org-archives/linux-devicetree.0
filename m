@@ -2,81 +2,78 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 604A7C433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 02:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 446F3C43460
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 02:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF7D20791
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 02:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21D1E20787
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 02:28:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BJCEiCgj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iJqvRTCj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbgGPC2y (ORCPT
+        id S1727825AbgGPC2Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jul 2020 22:28:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49208 "EHLO
+        Wed, 15 Jul 2020 22:28:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbgGPC2b (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 22:28:31 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F6E9C061755;
-        Wed, 15 Jul 2020 19:28:30 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id 22so8096058wmg.1;
-        Wed, 15 Jul 2020 19:28:30 -0700 (PDT)
+        with ESMTP id S1726479AbgGPC2Y (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jul 2020 22:28:24 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CB39C061755;
+        Wed, 15 Jul 2020 19:28:23 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z2so5266515wrp.2;
+        Wed, 15 Jul 2020 19:28:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jsnFEaPOATe0rU74z4wmdx5Snp9SyB/gn+FbmEyk+5U=;
-        b=BJCEiCgjoizQk0MuwZnjC++IpUrRbuW2pdRAaA62MIRcfaclEvyOXR/tD9ejUx8GMS
-         mF90akZODSnNpjz6Uv4bahWA3cNTRYJUF2aXKAsCNiWNRsllo/6WH5fXcXS2s0t4XrHX
-         lzcNf/9rpffayJ8OKYukNpZHVJO/m1A8HBwouPwdkhMZlHWunkMej7lXrK1gJc8o+H5d
-         URbglFqcIogn5Oj3ZKJdVO5cTaZMaQk5jGAP1KB+VVWMaCatsUOq+tyaQ99Bg78Jju41
-         wMxTLmnysHeG8DpPr9a0EHs1ezob1S+rOScTOxEALW9jw4oZfjilpq28K6UoEwCafva6
-         JGHQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gsRpl4HFoDzQHdJmbJ2aLmqfJZ85+Q+C8XgOBbFtdNk=;
+        b=iJqvRTCjPwF29LVysp5cR+WTjEK0keVLezq5UpBh8TBKpPZMK/F1qaiNn1b5v5B8D/
+         FwctVpY5g6H34diBhlhZNS/o24RejCvBwMPgfodxR9W7lY1L1ma7q9zqrPlsldw+BTW7
+         Gx/b+M7X8ZWs2xUpCoWMwWF94G84TibCIrYoiVvZ2xvCgr/qre442EmfS4tTlmggpjqU
+         fFtFOjQuTtdRrxJ8UgiV9lQGFkf59TbBtj0Ub8HLW+7UYT+vkmOSLKVtdBfxZ9LTLW3Q
+         6qZf2jga/SNKtQ4BSDn07BsiXrSc/MslbL/NgvxM/WzNW1dZCrfFE8aH2/qNTNN8Qd4Q
+         4MmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jsnFEaPOATe0rU74z4wmdx5Snp9SyB/gn+FbmEyk+5U=;
-        b=NPAHDXY218eCwiUwzLshGJ4bp0tvHWjhcEvTCnFHTfuIRYNH8zHgi791DgJK3Hdjcz
-         QNsKPu5czYgTXyNGsyJoEild7alFUzrQujAMmcxdbVDhuB0VKmwvSeH0Dbb+9U6PzcSc
-         sqL3Uvm4041NRd3PyNOXSyLOXQonazQkWCXceYqD92+OgAWcsBehtkFSIdOvHLp9tHoB
-         S4G2auskHd+HodUciACZcGrGnMQkdhe2taZhKPqW5JD91uShjHL9pgvxmLGtsb0XYxN1
-         mVzAs+Uj53U/Sega/4Xe2B/Lh0GeImZGmFUYYHyC+/S8o7oU3hKCjtt8bA2fNZRFfETd
-         Q/vw==
-X-Gm-Message-State: AOAM530tTvTNceZdCm3jwrvgEeakYMLel1J2T20JU8JA0ySjpp0GZ71F
-        GSBvWuDms3TQxwLYVcK1EHw=
-X-Google-Smtp-Source: ABdhPJzCJ+vAQ/QeXIWzlb11w/o7pwBiMD7vR0FI/Iqs4NB5SM67+6BkbQd4gbRfAjNy7ipBfFR+ig==
-X-Received: by 2002:a05:600c:2050:: with SMTP id p16mr2179009wmg.44.1594866508949;
-        Wed, 15 Jul 2020 19:28:28 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gsRpl4HFoDzQHdJmbJ2aLmqfJZ85+Q+C8XgOBbFtdNk=;
+        b=FseyxY/qq96AnUI1ztkjKrsb8l6jUoB+DyeEr7wMLE8l8nVX6pv/vrw5mhs7xvc1Sg
+         B4dF6DArC9XJe/vUY9CmOqJq2fDFfOxxniS3B5GjsdvUOBwRr8XyUUHVWVx2CgRYLDN/
+         AwSxw24HMEWu1uAdbp0/ATSZA63y5rFaZBMJaIWfcFGgVyU6u+X10eO7AWes9CfJR59O
+         tRbEyNEwlt7FJu93dfILXZTcvZoBflqp1do45aPvRjHIFUA4pcIeAqQlq2jNmTVM0/e4
+         rXVncZlCp/SvKuyezUbepDZq/uce2XWqz18I5SlXsGuygwLuKG4e3L/QIbP50nBCYA7Z
+         oO4Q==
+X-Gm-Message-State: AOAM533Dbg7ENMtUGUh+SeJvtcVH3xrX3aqjpvdkR3TqrtxO4f5OCwdi
+        c4jj9KqF1RwFNbfp9nrx8mE=
+X-Google-Smtp-Source: ABdhPJwrSM7RmbkryD0nvdl24d++HH4tjwvWPp/fUZyADj3sIpMbiC0aSTMbqhMcCPbZCNQrTAFH4g==
+X-Received: by 2002:a5d:51ce:: with SMTP id n14mr2579614wrv.155.1594866502289;
+        Wed, 15 Jul 2020 19:28:22 -0700 (PDT)
 Received: from Ansuel-XPS.localdomain (host-87-7-31-173.retail.telecomitalia.it. [87.7.31.173])
-        by smtp.googlemail.com with ESMTPSA id u1sm7477611wrb.78.2020.07.15.19.28.27
+        by smtp.googlemail.com with ESMTPSA id u1sm7477611wrb.78.2020.07.15.19.28.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 19:28:28 -0700 (PDT)
+        Wed, 15 Jul 2020 19:28:21 -0700 (PDT)
 From:   Ansuel Smith <ansuelsmth@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
         Zhang Rui <rui.zhang@intel.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: [PATCH v4 3/7] drivers: thermal: tsens: add ipq8064 support
-Date:   Thu, 16 Jul 2020 04:28:12 +0200
-Message-Id: <20200716022817.30439-4-ansuelsmth@gmail.com>
+Subject: [PATCH v4 0/7] Add support for ipq8064 tsens
+Date:   Thu, 16 Jul 2020 04:28:09 +0200
+Message-Id: <20200716022817.30439-1-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200716022817.30439-1-ansuelsmth@gmail.com>
-References: <20200716022817.30439-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -84,27 +81,34 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Ipq8064 SoCs based use the same 8960 driver.
+Ipq8064 SoCs tsens driver is based on 8960 tsens driver. This patchset 
+expand the 8960 unused driver with interrupt support and set_trip point.
+Ipq8064 needs to be registered as a gcc child as the tsens regs on
+this platform are shared with the controller.
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- drivers/thermal/qcom/tsens.c | 3 +++
- 1 file changed, 3 insertions(+)
+v4:
+* Fix compilation error and warning reported by the bot
+v3:
+* Change driver to register as child instead of use phandle
+v2:
+* Fix dt-bindings problems
 
-diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
-index 39c4462e38f6..23f63dfbf13d 100644
---- a/drivers/thermal/qcom/tsens.c
-+++ b/drivers/thermal/qcom/tsens.c
-@@ -906,6 +906,9 @@ static const struct of_device_id tsens_table[] = {
- 	}, {
- 		.compatible = "qcom,msm8996-tsens",
- 		.data = &data_8996,
-+	}, {
-+		.compatible = "qcom,ipq8064-tsens",
-+		.data = &data_8960,
- 	}, {
- 		.compatible = "qcom,tsens-v1",
- 		.data = &data_tsens_v1,
+Ansuel Smith (7):
+  ipq806x: gcc: add support for child probe
+  drivers: thermal: tsens: try load regmap from parent for 8960
+  drivers: thermal: tsens: add ipq8064 support
+  dt-bindings: thermal: tsens: document ipq8064 bindings
+  drivers: thermal: tsens: add interrupt support for 9860 driver
+  drivers: thermal: tsens: add support for custom set_trip function
+  drivers: thermal: tsens: add set_trip support for 8960
+
+ .../bindings/thermal/qcom-tsens.yaml          |  50 ++-
+ drivers/clk/qcom/gcc-ipq806x.c                |   2 +-
+ drivers/thermal/qcom/tsens-8960.c             | 287 +++++++++++++++++-
+ drivers/thermal/qcom/tsens.c                  |   7 +
+ drivers/thermal/qcom/tsens.h                  |   5 +
+ 5 files changed, 328 insertions(+), 23 deletions(-)
+
 -- 
 2.27.0
 
