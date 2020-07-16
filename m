@@ -2,332 +2,174 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E8F9C433EC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 05:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E45A0C433E5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 06:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 573142071B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 05:46:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DwRYwXJy"
+	by mail.kernel.org (Postfix) with ESMTP id BEFEE20578
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 06:05:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594879518;
+	bh=8P2zKP9fwTAESRcSXu8PidqEv90XXPnh3+R3n6iZJwE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fJknrdU7a/DvgM9Xl5JLEq4OzdcgPTX+naltYz6aifIJCYg4Y6nfyXHCM8nCB/24t
+	 IWGAHynECN+JkJTIaIlJsrhJAwlcMq8hQCoeIsJ2y1N3bB1TegOXDuKy0USdO1P4nE
+	 lhdHcP/1wDWggSqdolmb5cg9pL0pVMfzLUTN/nDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgGPFpx (ORCPT
+        id S1725921AbgGPGFJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 01:45:53 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:37420 "EHLO m43-7.mailgun.net"
+        Thu, 16 Jul 2020 02:05:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726141AbgGPFpx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jul 2020 01:45:53 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594878351; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=6Vjx26zB3N6PoS13fVP5Mviq7ntiZBSI7Ue0OuDFRho=; b=DwRYwXJyKr1dwUjkCps+NyAnslh8t4eC3UKtvO1fY6AC58Imm8kfvN1u7hBNPJ96Eb3EgoC9
- opq6eSYS6N4JjiGzFhJvc8KXm8VHvhU9+uXRDtz7zVgnfHOTzyI42UJSsXRg77Av5nvd0tyQ
- HcVMkYhn/c8OyfRqG/aB5R6cOSs=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-east-1.postgun.com with SMTP id
- 5f0fe98665270fa595025f96 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 16 Jul 2020 05:45:42
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BC506C433C9; Thu, 16 Jul 2020 05:45:41 +0000 (UTC)
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        id S1725913AbgGPGFJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jul 2020 02:05:09 -0400
+Received: from localhost (unknown [122.171.202.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5EED9C433CB;
-        Thu, 16 Jul 2020 05:45:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5EED9C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     stanimir.varbanov@linaro.org, robh+dt@kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v2 2/4] media: venus: core: Add support for opp tables/perf voting
-Date:   Thu, 16 Jul 2020 11:12:17 +0530
-Message-Id: <1594878139-3402-3-git-send-email-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594878139-3402-1-git-send-email-rnayak@codeaurora.org>
-References: <1594878139-3402-1-git-send-email-rnayak@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id F167120578;
+        Thu, 16 Jul 2020 06:05:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594879508;
+        bh=8P2zKP9fwTAESRcSXu8PidqEv90XXPnh3+R3n6iZJwE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ETyy3TeDfhRQFQtPrFIhGv+A00ZcHddCwE8EzxqgKfBY1/SZpl9tr+ar58K0oEOnv
+         3xoRC4GVghh+vSBw5MHJ+OWjd35oMAKyfy1xL1RO/NBMPQYIGEaPCNngU1AiFHzwdh
+         7TnS/i7HrrT0UZ4441RG7cHELhWtBspgtYApeMbg=
+Date:   Thu, 16 Jul 2020 11:35:04 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Andy Gross <agross@codeaurora.org>,
+        Jonathan McDowell <noodles@earth.li>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v8 1/2] phy: qualcomm: add qcom ipq806x dwc usb phy driver
+Message-ID: <20200716060504.GF55478@vkoul-mobl>
+References: <20200713132309.14353-1-ansuelsmth@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713132309.14353-1-ansuelsmth@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support to add OPP tables and perf voting on the OPP powerdomain.
-This is needed so venus votes on the corresponding performance state
-for the OPP powerdomain along with setting the core clock rate.
+On 13-07-20, 15:23, Ansuel Smith wrote:
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
----
- drivers/media/platform/qcom/venus/core.c       | 43 +++++++++++++++++---
- drivers/media/platform/qcom/venus/core.h       |  5 +++
- drivers/media/platform/qcom/venus/pm_helpers.c | 54 ++++++++++++++++++++++++--
- 3 files changed, 92 insertions(+), 10 deletions(-)
+> +static inline void usb_phy_write_readback(struct usb_phy *phy_dwc3,
+> +					  u32 offset,
+> +					  const u32 mask, u32 val)
+> +{
+> +	u32 write_val, tmp = readl(phy_dwc3->base + offset);
+> +
+> +	tmp &= ~mask;		/* retain other bits */
+> +	write_val = tmp | val;
+> +
+> +	writel(write_val, phy_dwc3->base + offset);
+> +
+> +	/* Read back to see if val was written */
+> +	tmp = readl(phy_dwc3->base + offset);
+> +	tmp &= mask;		/* clear other bits */
+> +
+> +	if (tmp != val)
+> +		dev_err(phy_dwc3->dev, "write: %x to QSCRATCH: %x FAILED\n",
+> +			val, offset);
 
-diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-index 203c653..630f61b 100644
---- a/drivers/media/platform/qcom/venus/core.c
-+++ b/drivers/media/platform/qcom/venus/core.c
-@@ -12,6 +12,7 @@
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- #include <linux/types.h>
-+#include <linux/pm_opp.h>
- #include <linux/pm_runtime.h>
- #include <media/videobuf2-v4l2.h>
- #include <media/v4l2-mem2mem.h>
-@@ -216,21 +217,37 @@ static int venus_probe(struct platform_device *pdev)
- 	if (!core->pm_ops)
- 		return -ENODEV;
- 
-+	core->opp_table = dev_pm_opp_set_clkname(dev, "core");
-+	if (IS_ERR(core->opp_table))
-+		return PTR_ERR(core->opp_table);
-+
-+	if (core->res->opp_pmdomain) {
-+		ret = dev_pm_opp_of_add_table(dev);
-+		if (!ret) {
-+			core->has_opp_table = true;
-+		} else if (ret != -ENODEV) {
-+			dev_err(dev, "invalid OPP table in device tree\n");
-+			return ret;
-+		}
-+	}
-+
- 	if (core->pm_ops->core_get) {
- 		ret = core->pm_ops->core_get(dev);
- 		if (ret)
--			return ret;
-+			goto err_opp_cleanup;
- 	}
- 
- 	ret = dma_set_mask_and_coherent(dev, core->res->dma_mask);
- 	if (ret)
--		return ret;
-+		goto err_opp_cleanup;
- 
- 	if (!dev->dma_parms) {
- 		dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
- 					      GFP_KERNEL);
--		if (!dev->dma_parms)
--			return -ENOMEM;
-+		if (!dev->dma_parms) {
-+			ret = -ENOMEM;
-+			goto err_opp_cleanup;
-+		}
- 	}
- 	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
- 
-@@ -242,11 +259,11 @@ static int venus_probe(struct platform_device *pdev)
- 					IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
- 					"venus", core);
- 	if (ret)
--		return ret;
-+		goto err_opp_cleanup;
- 
- 	ret = hfi_create(core, &venus_core_ops);
- 	if (ret)
--		return ret;
-+		goto err_opp_cleanup;
- 
- 	pm_runtime_enable(dev);
- 
-@@ -302,6 +319,10 @@ static int venus_probe(struct platform_device *pdev)
- 	pm_runtime_set_suspended(dev);
- 	pm_runtime_disable(dev);
- 	hfi_destroy(core);
-+err_opp_cleanup:
-+	if (core->has_opp_table)
-+		dev_pm_opp_of_remove_table(dev);
-+	dev_pm_opp_put_clkname(core->opp_table);
- 	return ret;
- }
- 
-@@ -326,6 +347,10 @@ static int venus_remove(struct platform_device *pdev)
- 	pm_runtime_put_sync(dev);
- 	pm_runtime_disable(dev);
- 
-+	if (core->has_opp_table)
-+		dev_pm_opp_of_remove_table(dev);
-+	dev_pm_opp_put_clkname(core->opp_table);
-+
- 	if (pm_ops->core_put)
- 		pm_ops->core_put(dev);
- 
-@@ -355,6 +380,10 @@ static __maybe_unused int venus_runtime_suspend(struct device *dev)
- 	if (ret)
- 		return ret;
- 
-+	/* Drop the performance state vote */
-+	if (core->opp_pmdomain)
-+		dev_pm_opp_set_rate(dev, 0);
-+
- 	if (pm_ops->core_power)
- 		ret = pm_ops->core_power(dev, POWER_OFF);
- 
-@@ -520,6 +549,7 @@ static const struct venus_resources sdm845_res_v2 = {
- 	.vcodec_clks_num = 2,
- 	.vcodec_pmdomains = { "venus", "vcodec0", "vcodec1" },
- 	.vcodec_pmdomains_num = 3,
-+	.opp_pmdomain = (const char *[]) { "opp-pd", NULL },
- 	.vcodec_num = 2,
- 	.max_load = 3110400,	/* 4096x2160@90 */
- 	.hfi_version = HFI_VERSION_4XX,
-@@ -565,6 +595,7 @@ static const struct venus_resources sc7180_res = {
- 	.vcodec_clks_num = 2,
- 	.vcodec_pmdomains = { "venus", "vcodec0" },
- 	.vcodec_pmdomains_num = 2,
-+	.opp_pmdomain = (const char *[]) { "opp-pd", NULL },
- 	.vcodec_num = 1,
- 	.hfi_version = HFI_VERSION_4XX,
- 	.vmem_id = VIDC_RESOURCE_NONE,
-diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
-index 7118612..b0cc544 100644
---- a/drivers/media/platform/qcom/venus/core.h
-+++ b/drivers/media/platform/qcom/venus/core.h
-@@ -62,6 +62,7 @@ struct venus_resources {
- 	unsigned int vcodec_clks_num;
- 	const char * const vcodec_pmdomains[VIDC_PMDOMAINS_NUM_MAX];
- 	unsigned int vcodec_pmdomains_num;
-+	const char **opp_pmdomain;
- 	unsigned int vcodec_num;
- 	enum hfi_version hfi_version;
- 	u32 max_load;
-@@ -145,8 +146,12 @@ struct venus_core {
- 	struct clk *vcodec1_clks[VIDC_VCODEC_CLKS_NUM_MAX];
- 	struct icc_path *video_path;
- 	struct icc_path *cpucfg_path;
-+	struct opp_table *opp_table;
-+	bool has_opp_table;
- 	struct device_link *pd_dl_venus;
- 	struct device *pmdomains[VIDC_PMDOMAINS_NUM_MAX];
-+	struct device_link *opp_dl_venus;
-+	struct device *opp_pmdomain;
- 	struct video_device *vdev_dec;
- 	struct video_device *vdev_enc;
- 	struct v4l2_device v4l2_dev;
-diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
-index abf9315..4149ab8 100644
---- a/drivers/media/platform/qcom/venus/pm_helpers.c
-+++ b/drivers/media/platform/qcom/venus/pm_helpers.c
-@@ -9,6 +9,7 @@
- #include <linux/iopoll.h>
- #include <linux/kernel.h>
- #include <linux/pm_domain.h>
-+#include <linux/pm_opp.h>
- #include <linux/pm_runtime.h>
- #include <linux/types.h>
- #include <media/v4l2-mem2mem.h>
-@@ -66,10 +67,9 @@ static void core_clks_disable(struct venus_core *core)
- 
- static int core_clks_set_rate(struct venus_core *core, unsigned long freq)
- {
--	struct clk *clk = core->clks[0];
- 	int ret;
- 
--	ret = clk_set_rate(clk, freq);
-+	ret = dev_pm_opp_set_rate(core->dev, freq);
- 	if (ret)
- 		return ret;
- 
-@@ -740,13 +740,16 @@ static int venc_power_v4(struct device *dev, int on)
- 
- static int vcodec_domains_get(struct device *dev)
- {
-+	int ret;
-+	struct opp_table *opp_table;
-+	struct device **opp_virt_dev;
- 	struct venus_core *core = dev_get_drvdata(dev);
- 	const struct venus_resources *res = core->res;
- 	struct device *pd;
- 	unsigned int i;
- 
- 	if (!res->vcodec_pmdomains_num)
--		return -ENODEV;
-+		goto skip_pmdomains;
- 
- 	for (i = 0; i < res->vcodec_pmdomains_num; i++) {
- 		pd = dev_pm_domain_attach_by_name(dev,
-@@ -763,7 +766,41 @@ static int vcodec_domains_get(struct device *dev)
- 	if (!core->pd_dl_venus)
- 		return -ENODEV;
- 
-+skip_pmdomains:
-+	if (!core->has_opp_table)
-+		return 0;
-+
-+	/* Attach the power domain for setting performance state */
-+	opp_table = dev_pm_opp_attach_genpd(dev, res->opp_pmdomain, &opp_virt_dev);
-+	if (IS_ERR(opp_table)) {
-+		ret = PTR_ERR(opp_table);
-+		goto opp_attach_err;
-+	}
-+
-+	core->opp_pmdomain = *opp_virt_dev;
-+	core->opp_dl_venus = device_link_add(dev, core->opp_pmdomain,
-+					     DL_FLAG_RPM_ACTIVE |
-+					     DL_FLAG_PM_RUNTIME |
-+					     DL_FLAG_STATELESS);
-+	if (!core->opp_dl_venus) {
-+		ret = -ENODEV;
-+		goto opp_dl_add_err;
-+	}
-+
- 	return 0;
-+
-+opp_dl_add_err:
-+	dev_pm_domain_detach(core->opp_pmdomain, true);
-+opp_attach_err:
-+	if (core->pd_dl_venus) {
-+		device_link_del(core->pd_dl_venus);
-+		for (i = 0; i < res->vcodec_pmdomains_num; i++) {
-+			if (IS_ERR_OR_NULL(core->pmdomains[i]))
-+				continue;
-+			dev_pm_domain_detach(core->pmdomains[i], true);
-+		}
-+	}
-+	return ret;
- }
- 
- static void vcodec_domains_put(struct device *dev)
-@@ -773,7 +810,7 @@ static void vcodec_domains_put(struct device *dev)
- 	unsigned int i;
- 
- 	if (!res->vcodec_pmdomains_num)
--		return;
-+		goto skip_pmdomains;
- 
- 	if (core->pd_dl_venus)
- 		device_link_del(core->pd_dl_venus);
-@@ -783,6 +820,15 @@ static void vcodec_domains_put(struct device *dev)
- 			continue;
- 		dev_pm_domain_detach(core->pmdomains[i], true);
- 	}
-+
-+skip_pmdomains:
-+	if (!core->has_opp_table)
-+		return;
-+
-+	if (core->opp_dl_venus)
-+		device_link_del(core->opp_dl_venus);
-+
-+	dev_pm_domain_detach(core->opp_pmdomain, true);
- }
- 
- static int core_get_v4(struct device *dev)
+lets use single line for these, it looks much better that way. Btw we
+can extend to 100 chars now :)
+
+> +static int qcom_ipq806x_usb_phy_probe(struct platform_device *pdev)
+> +{
+> +	struct resource *res;
+> +	resource_size_t size;
+> +	struct device_node *np;
+> +	struct phy *generic_phy;
+> +	struct usb_phy *phy_dwc3;
+> +	const struct phy_drvdata *data;
+> +	const struct of_device_id *match;
+> +	struct phy_provider *phy_provider;
+> +
+> +	phy_dwc3 = devm_kzalloc(&pdev->dev, sizeof(*phy_dwc3), GFP_KERNEL);
+> +	if (!phy_dwc3)
+> +		return -ENOMEM;
+> +
+> +	match = of_match_node(qcom_ipq806x_usb_phy_table, pdev->dev.of_node);
+> +	data = match->data;
+> +
+> +	phy_dwc3->dev = &pdev->dev;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res)
+> +		return -EINVAL;
+> +	size = resource_size(res);
+> +	phy_dwc3->base = devm_ioremap(phy_dwc3->dev, res->start, size);
+> +
+> +	if (IS_ERR(phy_dwc3->base)) {
+> +		dev_err(phy_dwc3->dev, "failed to map reg\n");
+> +		return PTR_ERR(phy_dwc3->base);
+> +	}
+> +
+> +	phy_dwc3->ref_clk = devm_clk_get(phy_dwc3->dev, "ref");
+> +	if (IS_ERR(phy_dwc3->ref_clk)) {
+> +		dev_dbg(phy_dwc3->dev, "cannot get reference clock\n");
+> +		return PTR_ERR(phy_dwc3->ref_clk);
+> +	}
+> +
+> +	clk_set_rate(phy_dwc3->ref_clk, data->clk_rate);
+> +
+> +	phy_dwc3->xo_clk = devm_clk_get(phy_dwc3->dev, "xo");
+> +	if (IS_ERR(phy_dwc3->xo_clk)) {
+> +		dev_dbg(phy_dwc3->dev, "cannot get TCXO clock\n");
+> +		phy_dwc3->xo_clk = NULL;
+> +	}
+> +
+> +	/* Parse device node to probe HSIO settings */
+> +	np = of_node_get(pdev->dev.of_node);
+> +	if (!of_compat_cmp(match->compatible, "qcom,ipq806x-usb-phy-ss",
+> +			   strlen(match->compatible))) {
+
+aha, why are we doing this? If you want to do this for only phy-ss then
+you can read these optionally and set them if found..
+
+
+> +		if (of_property_read_u32(np, "qcom,rx-eq", &phy_dwc3->rx_eq) ||
+> +		    of_property_read_u32(np, "qcom,tx-deamp_3_5db",
+> +					 &phy_dwc3->tx_deamp_3_5db) ||
+> +		    of_property_read_u32(np, "qcom,mpll", &phy_dwc3->mpll)) {
+> +			dev_err(phy_dwc3->dev, "cannot get HSIO settings from device node, using default values\n");
+> +
+> +			/* Default HSIO settings */
+> +			phy_dwc3->rx_eq = SSPHY_RX_EQ_VALUE;
+> +			phy_dwc3->tx_deamp_3_5db = SSPHY_TX_DEEMPH_3_5DB;
+> +			phy_dwc3->mpll = SSPHY_MPLL_VALUE;
+> +		}
+> +	}
+> +
+> +	generic_phy = devm_phy_create(phy_dwc3->dev, pdev->dev.of_node,
+> +				      &data->ops);
+> +
+> +	if (IS_ERR(generic_phy))
+> +		return PTR_ERR(generic_phy);
+> +
+> +	phy_set_drvdata(generic_phy, phy_dwc3);
+> +	platform_set_drvdata(pdev, phy_dwc3);
+> +
+> +	phy_provider = devm_of_phy_provider_register(phy_dwc3->dev,
+> +						     of_phy_simple_xlate);
+> +
+> +	if (IS_ERR(phy_provider))
+> +		return PTR_ERR(phy_provider);
+> +
+> +	return 0;
+> +}
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
-
+~Vinod
