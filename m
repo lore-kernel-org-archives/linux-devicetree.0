@@ -2,248 +2,378 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0A8C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 06:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A07C433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 06:16:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4077220578
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 06:14:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C54C8207FB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 06:16:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DfaEXmos"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="1ShX9mEw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgGPGOw (ORCPT
+        id S1728098AbgGPGQO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 02:14:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55850 "EHLO
+        Thu, 16 Jul 2020 02:16:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgGPGOw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 02:14:52 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 752C5C061755
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 23:14:52 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id t15so4149010pjq.5
-        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 23:14:52 -0700 (PDT)
+        with ESMTP id S1727943AbgGPGQO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 02:16:14 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE23FC08C5C0
+        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 23:16:13 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id m9so3202735pfh.0
+        for <devicetree@vger.kernel.org>; Wed, 15 Jul 2020 23:16:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rX60TSR1P7XjO+Zan3QrbefgI3vkAw4Lsg0JYzx7KTU=;
-        b=DfaEXmosLkzCXColYdER7fQTE+pnxestTiwogli79YB63MdvbjgeIx7gkFJS1CbxBF
-         o5b5y2FxBgxlnZJbQFsEEwOTkyQq6DYaoAuN81UW48px8AC/6JitpcdVwdzeMjfQD2a8
-         tpLZ9QAuBKCI2jQcymhxWbWcN8sWCef2vk0BA=
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from:cc;
+        bh=kF7R5DUC1URNMPbAYPkDub6YZWoBbHJrUi/9LeiLYeY=;
+        b=1ShX9mEwNKC3QnGClMktjWkQoAorJK8LcHm8k2oZ2FIpYaNHeq6+U29CZFWoYFbIVj
+         RlR4zvbcjbX9H5mbar9DzS7zFWdIryezMkFQTeCHfkDVyNIbO3dhgtbyG3GJLAj8UJ4T
+         9K49gei1FHE/6r7+0oFVPeaE6zVFf/bck8Odk4zNqR/gCrI7Glu4ZB8jh2x6JF2MHN4w
+         lbfp1yfxFV4dLVZaEXC3UzXnHei1GahBS8k5Oyc+UVSZk0nB2E0IQGEHijJFbKzR0fJP
+         opPTJVvjOC/SOSS5L7aluueiffide0vpYCB3hoYuATsu4I/+njnMtx/gBmkOOBuoTDFn
+         iM9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rX60TSR1P7XjO+Zan3QrbefgI3vkAw4Lsg0JYzx7KTU=;
-        b=Z+pVqpMxZVaQhmOtMHh9cRl0UDrEK9+EXGG2dgEbn67XCN61Y0bbE1m4DsjC1zZJT/
-         fWh7FygPbRg9gP4qmNT2BXD1fPBaKscTaTgXZQ9vYGFJ1YR5dMqjRoJVyyGr82ORtF3H
-         nOSLIPXMFpvXH+JLZLgwYCQqzYiFcMeDdTmRjYa6UV2k7NNYKwKfMGEOw8R24DeHarKm
-         5eRcDpEcjrZTA4/SMpv64GVgMHFLyXkmcTpp8iAO/vyoIxZd8vlH1KKfRHsQ3x6dsNAl
-         YNcbInCiy7xgaXcOefggcplO5kHNQG94fKz4a94AiFxONshb4Id9WMlDNAJrA57S38to
-         +nTw==
-X-Gm-Message-State: AOAM533Pxe3U3r1ZfEYTqAV7fIgIFb7iNg6rGVg0EHJvH/vydOPN870F
-        1WaevmBXBWJC40tskzAjkDNStA==
-X-Google-Smtp-Source: ABdhPJytRFsLl3nksVCRoGhLJkXcC9c3Nco6dEzjGhQI7mrBYNaPdjOvYWM0U7xbKS1h4vZ5aIHkJw==
-X-Received: by 2002:a17:90a:ea83:: with SMTP id h3mr3434941pjz.176.1594880091903;
-        Wed, 15 Jul 2020 23:14:51 -0700 (PDT)
-Received: from localhost ([2401:fa00:1:10:de4a:3eff:fe7d:d39c])
-        by smtp.gmail.com with ESMTPSA id j10sm3885604pgh.28.2020.07.15.23.14.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jul 2020 23:14:51 -0700 (PDT)
-From:   Cheng-Yi Chiang <cychiang@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Taniya Das <tdas@codeaurora.org>,
-        Rohit kumar <rohitkr@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, dianders@chromium.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Ajit Pandey <ajitp@codeaurora.org>,
-        Cheng-Yi Chiang <cychiang@chromium.org>
-Subject: [PATCH] arm64: dts: qcom: sc7180: Add lpass cpu node for I2S driver
-Date:   Thu, 16 Jul 2020 14:14:45 +0800
-Message-Id: <20200716061445.628709-1-cychiang@chromium.org>
-X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from:cc;
+        bh=kF7R5DUC1URNMPbAYPkDub6YZWoBbHJrUi/9LeiLYeY=;
+        b=fXTVH0mDv1tACOYftxQZq+3/WOltn+JS6rGAWbv9teqfl/EvVso/spxEPtYRXDUfAl
+         QGTC7lHEyAEbN0DYUAvlCkEPPVr2pTvF8mHXB58UzajIcwfJ4FRYmS5ngtgm4qf0kT8v
+         nd5TZRZ0C/A6vp8UBlV2Au6JOMOw5FcKiZY49w5L4Q3DUHCvJU0GdxOnNb+T6rYCQoqa
+         /Syt1IlULuO4k1oYgZ1bVlf0QWxPDlDshWtnxbqcYPYord3GAqV37f4zsDErDeN7A8OT
+         WPEv4CuyTaSE6UNrdBEIVFvyfESud5LNOeh66ETIU9tKAmiWXAw03fEzAuHWyq95a8sV
+         meeQ==
+X-Gm-Message-State: AOAM531KkZdeYS1MsgzhBjX6Rt+VSyKwWTd7nXiKbidLYQpJR7pYBVja
+        BBtoHHzBb/S3daIDS6vWpTFNug==
+X-Google-Smtp-Source: ABdhPJyryvc/9TBR4TsFYlLjrLX7U8VA92b4q2d0e0ZlaHioYcTNQ7tmPnqI8KZkhRJk69YHxNnpdg==
+X-Received: by 2002:a63:5a01:: with SMTP id o1mr2862474pgb.337.1594880173303;
+        Wed, 15 Jul 2020 23:16:13 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id e10sm3891656pjw.22.2020.07.15.23.16.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 23:16:12 -0700 (PDT)
+Message-ID: <5f0ff0ac.1c69fb81.d1a0b.b284@mx.google.com>
+Date:   Wed, 15 Jul 2020 23:16:12 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.8-rc5-44-g994e99a96c9b
+X-Kernelci-Report-Type: bisect
+X-Kernelci-Tree: mainline
+X-Kernelci-Branch: master
+X-Kernelci-Lab-Name: lab-cip
+Subject: mainline/master bisection: baseline.dmesg.crit on
+ qemu_arm-vexpress-a15
+To:     Sudeep Holla <sudeep.holla@arm.com>, gtucker@collabora.com,
+        kernelci-results@groups.io, Andre Przywara <andre.przywara@arm.com>
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Ajit Pandey <ajitp@codeaurora.org>
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* This automated bisection report was sent to you on the basis  *
+* that you may be involved with the breaking commit it has      *
+* found.  No manual investigation has been done to verify it,   *
+* and the root cause of the problem may be somewhere else.      *
+*                                                               *
+* If you do send a fix, please include this trailer:            *
+*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+*                                                               *
+* Hope this helps!                                              *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-Add the I2S controller node to sc7180 dtsi.
-Add pinmux for pirmary and secondary I2S.
+mainline/master bisection: baseline.dmesg.crit on qemu_arm-vexpress-a15
 
-Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
-Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
----
-This patch depends on these patch series so it is not ready to be merged now.
-- clk: qcom: Support for Low Power Audio Clocks on SC7180 https://patchwork.kernel.org/cover/11664273/
-- arm64: dts: qcom: sc7180: Add LPASS clock controller nodes https://patchwork.kernel.org/patch/11664303/
-- ASoC: qcom: Add support for SC7180 lpass variant https://patchwork.kernel.org/cover/11650649/
+Summary:
+  Start:      994e99a96c9b Merge tag 'platform-drivers-x86-v5.8-2' of git:/=
+/git.infradead.org/linux-platform-drivers-x86 into master
+  Plain log:  https://storage.kernelci.org/mainline/master/v5.8-rc5-44-g994=
+e99a96c9b/arm/vexpress_defconfig/gcc-8/lab-cip/baseline-vexpress-v2p-ca15-t=
+c1.txt
+  HTML log:   https://storage.kernelci.org/mainline/master/v5.8-rc5-44-g994=
+e99a96c9b/arm/vexpress_defconfig/gcc-8/lab-cip/baseline-vexpress-v2p-ca15-t=
+c1.html
+  Result:     38ac46002d1d arm: dts: vexpress: Move mcc node back into moth=
+erboard node
 
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 132 +++++++++++++++++++++++++++
- 1 file changed, 132 insertions(+)
+Checks:
+  revert:     PASS
+  verify:     PASS
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 6eb14b6a47f5..2fe3bd89f950 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -511,6 +511,34 @@ qusb2p_hstx_trim: hstx-trim-primary@25b {
+Parameters:
+  Tree:       mainline
+  URL:        https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linu=
+x.git
+  Branch:     master
+  Target:     qemu_arm-vexpress-a15
+  CPU arch:   arm
+  Lab:        lab-cip
+  Compiler:   gcc-8
+  Config:     vexpress_defconfig
+  Test case:  baseline.dmesg.crit
+
+Breaking commit found:
+
+---------------------------------------------------------------------------=
+----
+commit 38ac46002d1df5707566a73486452851341028d2
+Author: Andre Przywara <andre.przywara@arm.com>
+Date:   Wed Jun 3 17:22:37 2020 +0100
+
+    arm: dts: vexpress: Move mcc node back into motherboard node
+    =
+
+    Commit d9258898ad49 ("arm64: dts: arm: vexpress: Move fixed devices
+    out of bus node") moved the "mcc" DT node into the root node, because
+    it does not have any children using "reg" properties, so does violate
+    some dtc checks about "simple-bus" nodes.
+    =
+
+    However this broke the vexpress config-bus code, which walks up the
+    device tree to find the first node with an "arm,vexpress,site" property.
+    This gave the wrong result (matching the root node instead of the
+    motherboard node), so broke the clocks and some other devices for
+    VExpress boards.
+    =
+
+    Move the whole node back into its original position. This re-introduces
+    the dtc warning, but is conceptually the right thing to do. The dtc
+    warning seems to be overzealous here, there are discussions on fixing or
+    relaxing this check instead.
+    =
+
+    Link: https://lore.kernel.org/r/20200603162237.16319-1-andre.przywara@a=
+rm.com
+    Fixes: d9258898ad49 ("arm64: dts: vexpress: Move fixed devices out of b=
+us node")
+    Reported-and-tested-by: Guenter Roeck <linux@roeck-us.net>
+    Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+    Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+
+diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/ve=
+xpress-v2m-rs1.dtsi
+index e6308fb76183..a88ee5294d35 100644
+--- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
++++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+@@ -100,79 +100,6 @@
+ 		};
+ 	};
+ =
+
+-	mcc {
+-		compatible =3D "arm,vexpress,config-bus";
+-		arm,vexpress,config-bridge =3D <&v2m_sysreg>;
+-
+-		oscclk0 {
+-			/* MCC static memory clock */
+-			compatible =3D "arm,vexpress-osc";
+-			arm,vexpress-sysreg,func =3D <1 0>;
+-			freq-range =3D <25000000 60000000>;
+-			#clock-cells =3D <0>;
+-			clock-output-names =3D "v2m:oscclk0";
+-		};
+-
+-		v2m_oscclk1: oscclk1 {
+-			/* CLCD clock */
+-			compatible =3D "arm,vexpress-osc";
+-			arm,vexpress-sysreg,func =3D <1 1>;
+-			freq-range =3D <23750000 65000000>;
+-			#clock-cells =3D <0>;
+-			clock-output-names =3D "v2m:oscclk1";
+-		};
+-
+-		v2m_oscclk2: oscclk2 {
+-			/* IO FPGA peripheral clock */
+-			compatible =3D "arm,vexpress-osc";
+-			arm,vexpress-sysreg,func =3D <1 2>;
+-			freq-range =3D <24000000 24000000>;
+-			#clock-cells =3D <0>;
+-			clock-output-names =3D "v2m:oscclk2";
+-		};
+-
+-		volt-vio {
+-			/* Logic level voltage */
+-			compatible =3D "arm,vexpress-volt";
+-			arm,vexpress-sysreg,func =3D <2 0>;
+-			regulator-name =3D "VIO";
+-			regulator-always-on;
+-			label =3D "VIO";
+-		};
+-
+-		temp-mcc {
+-			/* MCC internal operating temperature */
+-			compatible =3D "arm,vexpress-temp";
+-			arm,vexpress-sysreg,func =3D <4 0>;
+-			label =3D "MCC";
+-		};
+-
+-		reset {
+-			compatible =3D "arm,vexpress-reset";
+-			arm,vexpress-sysreg,func =3D <5 0>;
+-		};
+-
+-		muxfpga {
+-			compatible =3D "arm,vexpress-muxfpga";
+-			arm,vexpress-sysreg,func =3D <7 0>;
+-		};
+-
+-		shutdown {
+-			compatible =3D "arm,vexpress-shutdown";
+-			arm,vexpress-sysreg,func =3D <8 0>;
+-		};
+-
+-		reboot {
+-			compatible =3D "arm,vexpress-reboot";
+-			arm,vexpress-sysreg,func =3D <9 0>;
+-		};
+-
+-		dvimode {
+-			compatible =3D "arm,vexpress-dvimode";
+-			arm,vexpress-sysreg,func =3D <11 0>;
+-		};
+-	};
+-
+ 	bus@8000000 {
+ 		motherboard-bus {
+ 			model =3D "V2M-P1";
+@@ -435,6 +362,79 @@
+ 						};
+ 					};
+ 				};
++
++				mcc {
++					compatible =3D "arm,vexpress,config-bus";
++					arm,vexpress,config-bridge =3D <&v2m_sysreg>;
++
++					oscclk0 {
++						/* MCC static memory clock */
++						compatible =3D "arm,vexpress-osc";
++						arm,vexpress-sysreg,func =3D <1 0>;
++						freq-range =3D <25000000 60000000>;
++						#clock-cells =3D <0>;
++						clock-output-names =3D "v2m:oscclk0";
++					};
++
++					v2m_oscclk1: oscclk1 {
++						/* CLCD clock */
++						compatible =3D "arm,vexpress-osc";
++						arm,vexpress-sysreg,func =3D <1 1>;
++						freq-range =3D <23750000 65000000>;
++						#clock-cells =3D <0>;
++						clock-output-names =3D "v2m:oscclk1";
++					};
++
++					v2m_oscclk2: oscclk2 {
++						/* IO FPGA peripheral clock */
++						compatible =3D "arm,vexpress-osc";
++						arm,vexpress-sysreg,func =3D <1 2>;
++						freq-range =3D <24000000 24000000>;
++						#clock-cells =3D <0>;
++						clock-output-names =3D "v2m:oscclk2";
++					};
++
++					volt-vio {
++						/* Logic level voltage */
++						compatible =3D "arm,vexpress-volt";
++						arm,vexpress-sysreg,func =3D <2 0>;
++						regulator-name =3D "VIO";
++						regulator-always-on;
++						label =3D "VIO";
++					};
++
++					temp-mcc {
++						/* MCC internal operating temperature */
++						compatible =3D "arm,vexpress-temp";
++						arm,vexpress-sysreg,func =3D <4 0>;
++						label =3D "MCC";
++					};
++
++					reset {
++						compatible =3D "arm,vexpress-reset";
++						arm,vexpress-sysreg,func =3D <5 0>;
++					};
++
++					muxfpga {
++						compatible =3D "arm,vexpress-muxfpga";
++						arm,vexpress-sysreg,func =3D <7 0>;
++					};
++
++					shutdown {
++						compatible =3D "arm,vexpress-shutdown";
++						arm,vexpress-sysreg,func =3D <8 0>;
++					};
++
++					reboot {
++						compatible =3D "arm,vexpress-reboot";
++						arm,vexpress-sysreg,func =3D <9 0>;
++					};
++
++					dvimode {
++						compatible =3D "arm,vexpress-dvimode";
++						arm,vexpress-sysreg,func =3D <11 0>;
++					};
++				};
  			};
  		};
- 
-+		lpass_cpu: lpass {
-+			compatible = "qcom,lpass-cpu-sc7180";
-+
-+			reg = <0 0x62F00000 0 0x29000>;
-+			reg-names = "lpass-lpaif";
-+
-+			iommus = <&apps_smmu 0x1020 0>;
-+
-+			power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
-+
-+			status = "disabled";
-+
-+			clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>,
-+				 <&lpasscc LPASS_AUDIO_CORE_CORE_CLK>,
-+				 <&lpasscc LPASS_AUDIO_CORE_EXT_MCLK0_CLK>,
-+				 <&lpasscc LPASS_AUDIO_CORE_SYSNOC_MPORT_CORE_CLK>,
-+				 <&lpasscc LPASS_AUDIO_CORE_LPAIF_PRI_IBIT_CLK>,
-+				 <&lpasscc LPASS_AUDIO_CORE_LPAIF_SEC_IBIT_CLK>;
-+
-+			clock-names = "noc", "audio-core", "mclk0", "sysnoc_mport",
-+				      "pri_ibit", "sec_ibit";
-+
-+			#sound-dai-cells = <1>;
-+
-+			interrupts = <0 160 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "lpass-irq-lpaif";
-+		};
-+
- 		sdhc_1: sdhci@7c4000 {
- 			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
- 			reg = <0 0x7c4000 0 0x1000>,
-@@ -1357,6 +1385,110 @@ pinmux {
- 				};
- 			};
- 
-+			sec_mi2s_active: sec-mi2s-active {
-+				pinmux {
-+					pins = "gpio49";
-+					function = "mi2s_1";
-+				};
-+
-+				pinconf {
-+					pins = "gpio49";
-+					drive-strength = <8>;
-+					bias-pull-up;
-+				};
-+			};
-+
-+			sec_mi2s_ws_active: sec-mi2s-ws-active {
-+				pinmux {
-+					pins = "gpio50";
-+					function = "mi2s_1";
-+				};
-+
-+				pinconf {
-+					pins = "gpio50";
-+					drive-strength = <8>;
-+					bias-pull-up;
-+				};
-+			};
-+
-+			sec_mi2s_dout_active: sec-mi2s-dout-active {
-+				pinmux {
-+					pins = "gpio51";
-+					function = "mi2s_1";
-+				};
-+
-+				pinconf {
-+					pins = "gpio51";
-+					drive-strength = <8>;
-+					bias-pull-up;
-+				};
-+			};
-+
-+			pri_mi2s_active: pri-mi2s-active {
-+				pinmux {
-+					pins = "gpio53";
-+					function = "mi2s_0";
-+				};
-+
-+				pinconf {
-+					pins = "gpio53";
-+					drive-strength = <8>;
-+					bias-pull-up;
-+				};
-+			};
-+
-+			pri_mi2s_ws_active: pri-mi2s-ws-active {
-+				pinmux {
-+					pins = "gpio54";
-+					function = "mi2s_0";
-+				};
-+
-+				pinconf {
-+					pins = "gpio54";
-+					drive-strength = <8>;
-+					bias-pull-up;
-+				};
-+			};
-+
-+			pri_mi2s_dout_active: pri-mi2s-dout-active {
-+				pinmux {
-+					pins = "gpio55";
-+					function = "mi2s_0";
-+				};
-+
-+				pinconf {
-+					pins = "gpio55";
-+					drive-strength = <8>;
-+					bias-pull-up;
-+				};
-+			};
-+
-+			pri_mi2s_din_active: pri-mi2s-din-active {
-+				pinmux {
-+					pins = "gpio56";
-+					function = "mi2s_0";
-+				};
-+
-+				pinconf {
-+					pins = "gpio56";
-+					drive-strength = <8>;
-+					bias-pull-up;
-+				};
-+			};
-+
-+			pri_mi2s_mclk_active: pri-mi2s-mclk-active {
-+				pinmux {
-+					pins = "gpio57";
-+					function = "lpass_ext";
-+				};
-+
-+				pinconf {
-+					pins = "gpio57";
-+					drive-strength = <8>;
-+					bias-pull-up;
-+				};
-+			};
-+
- 			sdc1_on: sdc1-on {
- 				pinconf-clk {
- 					pins = "sdc1_clk";
--- 
-2.28.0.rc0.105.gf9edc3c819-goog
+ 	};
+---------------------------------------------------------------------------=
+----
 
+
+Git bisection log:
+
+---------------------------------------------------------------------------=
+----
+git bisect start
+# good: [719fdd32921fb7e3208db8832d32ae1c2d68900f] afs: Fix storage of cell=
+ names
+git bisect good 719fdd32921fb7e3208db8832d32ae1c2d68900f
+# bad: [994e99a96c9b502b3f6ee411457007cd52051cf5] Merge tag 'platform-drive=
+rs-x86-v5.8-2' of git://git.infradead.org/linux-platform-drivers-x86 into m=
+aster
+git bisect bad 994e99a96c9b502b3f6ee411457007cd52051cf5
+# bad: [dcde237b9b0eb1d19306e6f48c0a4e058907619f] Merge tag 'perf-tools-fix=
+es-2020-07-07' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux
+git bisect bad dcde237b9b0eb1d19306e6f48c0a4e058907619f
+# bad: [442ad2254ac56b39870c0cfed96d500921fea5d5] perf record: Fix duplicat=
+ed sideband events with Intel PT system wide tracing
+git bisect bad 442ad2254ac56b39870c0cfed96d500921fea5d5
+# bad: [f7db192b2d71ea42627a32349d59a5f99f2aafcc] Merge tag 'arm-omap-fixes=
+-5.8-1' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
+git bisect bad f7db192b2d71ea42627a32349d59a5f99f2aafcc
+# good: [ae71d4bf0074a81cc04255c96e3de0a49b1d95fa] Merge tag 'perf-urgent-2=
+020-06-28' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+git bisect good ae71d4bf0074a81cc04255c96e3de0a49b1d95fa
+# good: [d528945d7762be94beca4c111bb95dcc9a9f39c0] Merge tag 'omap-for-v5.8=
+/fixes-rc1-signed' of git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/=
+linux-omap into arm/omap-fixes
+git bisect good d528945d7762be94beca4c111bb95dcc9a9f39c0
+# bad: [2596ce4b4ded685b67fed407aed2bfe6ebcc39cb] Merge tag 'arm-soc/for-5.=
+8/drivers-fixes' of https://github.com/Broadcom/stblinux into arm/fixes
+git bisect bad 2596ce4b4ded685b67fed407aed2bfe6ebcc39cb
+# bad: [0f77ce26ebcf6ea384421d2dd47b924b83649692] Revert "ARM: sti: Impleme=
+nt dummy L2 cache's write_sec"
+git bisect bad 0f77ce26ebcf6ea384421d2dd47b924b83649692
+# bad: [d68ec1644dd546851d651787a638aead32a60a6f] Merge tag 'juno-fix-5.8' =
+of git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux into ar=
+m/fixes
+git bisect bad d68ec1644dd546851d651787a638aead32a60a6f
+# bad: [38ac46002d1df5707566a73486452851341028d2] arm: dts: vexpress: Move =
+mcc node back into motherboard node
+git bisect bad 38ac46002d1df5707566a73486452851341028d2
+# first bad commit: [38ac46002d1df5707566a73486452851341028d2] arm: dts: ve=
+xpress: Move mcc node back into motherboard node
+---------------------------------------------------------------------------=
+----
