@@ -2,91 +2,100 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7666C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 06:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29680C433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 07:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 995522071B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 06:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCEC52070E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 07:00:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intenta.de header.i=@intenta.de header.b="QX7TJVt0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728234AbgGPGuH (ORCPT
+        id S1728067AbgGPHAN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 02:50:07 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:48851 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728202AbgGPGuH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jul 2020 02:50:07 -0400
-Received: from [78.134.114.177] (port=35166 helo=[192.168.77.62])
-        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1jvxiW-0007gd-82; Thu, 16 Jul 2020 08:50:04 +0200
-Subject: Re: [PATCH v1 2/3] dt-bindings: media: imx274: Add optional xclk and
- supplies
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, leonl@leopardimaging.com, robh+dt@kernel.org,
-        lgirdwood@gmail.com, broonie@kernel.org
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1594787096-26685-1-git-send-email-skomatineni@nvidia.com>
- <1594787096-26685-2-git-send-email-skomatineni@nvidia.com>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <1df13fad-b5ce-3889-c240-3411e97598d2@lucaceresoli.net>
-Date:   Thu, 16 Jul 2020 08:50:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 16 Jul 2020 03:00:13 -0400
+Received: from mail.intenta.de ([178.249.25.132]:43643 "EHLO mail.intenta.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727850AbgGPHAM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jul 2020 03:00:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=intenta.de; s=dkim1;
+        h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:CC:To:From:Date; bh=R8ZNY6kpiRutZDWxdtA7xvK0zflavsSfejaghVd/wvE=;
+        b=QX7TJVt0dQwhgkObelZ/LTXJeDOV2Qkzzut6jQI3T2E4KlzVZgY7juSaDoekWLvTPyXSAolqXpv535ZHRqiYtNoNOoO+7fzQmH4gLvLSp7vegtZ7jk7EEKOIMazZwVtJTZMjYza0fERzGDwhmvUQBhgrYKcnBKMKYJlq4Pq/Y9OydYUSmQoyXg3a6UGK7yg8sxF1toxtKY000sJmfTX0U4kUzssKX3ZlBNW8frhrS4tRuEOmdSGsku9K+k9iy4SfZThcMqJQWvTMzgGnBmqTafPC3MJmmP0xi3RjGOet31mBFm+F+g0X//l29VoHKYdj49/MJr+qz7uB2tlGSDfhpg==;
+Date:   Thu, 16 Jul 2020 09:00:00 +0200
+From:   Helmut Grohne <helmut.grohne@intenta.de>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Woojung Huh <woojung.huh@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH] net: dsa: microchip: look for phy-mode in port nodes
+Message-ID: <20200716070000.GA27587@laureti-dev>
+References: <20200617082235.GA1523@laureti-dev>
+ <20200714120827.GA7939@laureti-dev>
+ <20200714222716.GP1078057@lunn.ch>
+ <20200715073112.GA25047@laureti-dev>
+ <20200715130046.GB1211629@lunn.ch>
 MIME-Version: 1.0
-In-Reply-To: <1594787096-26685-2-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200715130046.GB1211629@lunn.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: ICSMA002.intenta.de (10.10.16.48) To ICSMA002.intenta.de
+ (10.10.16.48)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sowjanya,
-
-On 15/07/20 06:24, Sowjanya Komatineni wrote:
-> This patch adds IMX274 optional external clock input and voltage
-> supplies to device tree bindings.
+On Wed, Jul 15, 2020 at 03:00:46PM +0200, Andrew Lunn wrote:
+> On Wed, Jul 15, 2020 at 09:31:12AM +0200, Helmut Grohne wrote:
+> > You seem to be in favour of more deeply encoding the "there can be only
+> > one CPU port" assumption. Based on that assumption, the rest of what you
+> > write makes very much sense to me. Is that the direction to go?
 > 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  Documentation/devicetree/bindings/media/i2c/imx274.txt | 5 +++++
->  1 file changed, 5 insertions(+)
+> From what i understand, there is only one port which can do RGMII. It
+
+This is not universally true. It does hold for a number of smaller chips
+including KSZ9893, but it does not hold for e.g. KSZ9897R as explained
+in my previous mail on this matter.
+
+I think that this is the sole point of disagreement here. If we assume
+that there only ever is one CPU (or user) port, then I agree with the
+rest of what you wrote. However, my understanding is that this premise
+is violated by larger devices that are partially supported by this
+driver.
+
+> does not really matter if that is the CPU port, or a user
+> port. Ideally, whatever port it is, should have the phy-mode property
+> in its port node.
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/imx274.txt b/Documentation/devicetree/bindings/media/i2c/imx274.txt
-> index 80f2e89..ee427f5 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/imx274.txt
-> +++ b/Documentation/devicetree/bindings/media/i2c/imx274.txt
-> @@ -13,6 +13,11 @@ Required Properties:
->  
->  Optional Properties:
->  - reset-gpios: Sensor reset GPIO
-> +- clocks: Reference to the xclk clock.
-> +- clock-names: Should be "xclk".
+> How you store that information until you need it is up to the
+> driver. But KISS is generally best, reuse what you have, unless there
+> is a good reason to change it. If you see this code being reused when
+> more than one port supports RGMII, then adding a per port members
+> makes sense. But if that is unlikely, keep with the global.
 
-Not sure where the "xclk" name comes from, the datasheet I have calls
-the pin "CKIN". Maybe using the same name as the datasheet is better?
+I've prepared a patch based one the one-CPU-port assumption. It really
+becomes way simpler that way. I'd like to give it a little more testing
+before sending it.
 
-Other than that looks good.
+Given the point of discussion I think that the assumption is a
+reasonable trade-off, because you can support larger devices with
+multiple RGMII-capable ports with this driver as long as you only use
+one of them as CPU port. If someone ever wants to use multiple CPU ports
+(not me), more significant changes are needed anyway. Partially
+supporting this runs afoul KISS as you say.
 
--- 
-Luca
+Helmut
