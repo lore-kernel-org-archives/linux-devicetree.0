@@ -4,86 +4,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A64C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 19:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5FAC433F4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 19:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 864EE2076A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 19:07:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C349E2065F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 19:13:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594926442;
-	bh=eSOL6J4ncyMZAvTOhaq+6TK9qpG1nzRmPHo4rVlNVLU=;
+	s=default; t=1594926809;
+	bh=X1aR/huNEfYLCRr8+3522sI2xD/ke+fRwnZPt7eYnvs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F0Fz7FkS95hg0yckHVyx/DEMnCy4msp1UV6N869GPkAqW8Nm2okJOztHJbDFIAt9u
-	 my+EemzXqvm2ACVn4/dGK9uezvYs7i2b+CzmntFlMEFMiam0uVAfC70iUentjO6ayi
-	 1Jnnu2u/iPInn0EQOYpG/6f4TGChkVXUSPYtuQx0=
+	b=L+SkcaRqa9TnDax74nH839tO3NooPQ4g8WJLoUXjc074WqGH0VeJNR56UjMxEAwU8
+	 5AHURorE+nbTVGxRbkTE3oCJznuO4quGsFJorSlz9lZp+PgunJ5U3kCGdeWNBvSPeP
+	 O5bGjyW8miaoKqyiKHbEBbH6uA+KhLO6XijpjAMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728788AbgGPTHW (ORCPT
+        id S1729535AbgGPTNY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 15:07:22 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:38911 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728163AbgGPTHV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 15:07:21 -0400
-Received: by mail-io1-f67.google.com with SMTP id l1so7182410ioh.5;
-        Thu, 16 Jul 2020 12:07:21 -0700 (PDT)
+        Thu, 16 Jul 2020 15:13:24 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35927 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729551AbgGPTNV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 15:13:21 -0400
+Received: by mail-io1-f68.google.com with SMTP id y2so7227482ioy.3;
+        Thu, 16 Jul 2020 12:13:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=G6dTG9UH4b6ykHKCTmdcq2PPGZi935hwfuAzCkCoreE=;
-        b=mEigJewzQP0wkYRsbshQ4rsG3H/5EV8PmGdaqlgtfyLBDPfoxjRgeZfgHcGRLibmWU
-         rjpalXWgH8dOlB6B00O7K0x8ubt01c/+lwN+dexXFjAy4mJpzCTChYTv7mHUxaOkLyTl
-         EmqGhOFTRgt4Fstwa60CWm3MltGODhx7QexODNg//ji9N6AEu1O78LYW3LGth196sX24
-         i2TeuknrW9b/dp1lPD8YbukgvT8WUoPZ/EibHhLKqlX1abfLDAmxeMM3W39qnMTnr/8i
-         CXD0fBp5KFsHcb5lvcRRDdXJJEPZZK5FXlaov7nMMdhf0zvXHAH1Sn/NCukuVA8x20By
-         /YUg==
-X-Gm-Message-State: AOAM531rMx7dNzjvKHu9FgUJEAqZGDTz+zcO1Hs4cDIhJ+XPInKREqr/
-        sIISBimxdEVTcpVVh2n3jA==
-X-Google-Smtp-Source: ABdhPJx9XPx9ju2mKOiII++3K2uqyxj3tmJirr4/6/QpB07uSd1tmgvamnP/6OpIjJ5+MD07MJLR6w==
-X-Received: by 2002:a02:30ca:: with SMTP id q193mr6845522jaq.125.1594926440640;
-        Thu, 16 Jul 2020 12:07:20 -0700 (PDT)
+        bh=ZIttOoTOPqMFdqazs8PahDWs8uAzKu3fQLp00yEZzEs=;
+        b=TbVAODPO+rMbA9zuoD6Z50MZax9GeDZrdAgkp4ldskfYF8MzHxQyeuv8DAIdgXsLsw
+         mdTkscg0WEm5r3D6c4zaHjMcAPwa5Ok74eEnl3gbjb5VBNFMs1p4A/9cnXmVM15elc1N
+         pBb2Rne6Hw0ffP7AYR5hV1mAcdRvT9vGtnetL11obUkq4bHzub/oh3JNztr8DVcbdj5E
+         wOLQ1WQjoftFpY/peFh5C55qkhKR0dTOIxJ7COF6aPtIhzIJ1ZMwPPOVKrD86xgJDlsr
+         lcLwEZkWBv4Uh1FGUIQg3OB8EZxyUv8Q6x0qRP9FY9hPdrTczQ/rW2LAlLxq0sp3W149
+         t+TQ==
+X-Gm-Message-State: AOAM532+3e17TfSy6YHZ8/ymHyqPtsL5944MTfYMBQ4OGlUbgYebYhyq
+        MMlMf1zAk27KzKvtYkLzKQ==
+X-Google-Smtp-Source: ABdhPJxDve+bGac++TOwwv477fCT+JMtLC0r9pSjhKoL4JqwZLLbzbzYgXnmngm9qddR1vgcFbbpQg==
+X-Received: by 2002:a02:8308:: with SMTP id v8mr6689601jag.101.1594926800526;
+        Thu, 16 Jul 2020 12:13:20 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id w7sm812084iov.1.2020.07.16.12.07.19
+        by smtp.gmail.com with ESMTPSA id p9sm3201232ilc.78.2020.07.16.12.13.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 12:07:19 -0700 (PDT)
-Received: (nullmailer pid 2676844 invoked by uid 1000);
-        Thu, 16 Jul 2020 19:07:18 -0000
-Date:   Thu, 16 Jul 2020 13:07:18 -0600
+        Thu, 16 Jul 2020 12:13:19 -0700 (PDT)
+Received: (nullmailer pid 2685058 invoked by uid 1000);
+        Thu, 16 Jul 2020 19:13:18 -0000
+Date:   Thu, 16 Jul 2020 13:13:18 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-pm@vger.kernel.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>, linux-kernel@vger.kernel.org,
-        Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH v4 4/7] dt-bindings: thermal: tsens: document ipq8064
- bindings
-Message-ID: <20200716190718.GA2676798@bogus>
-References: <20200716022817.30439-1-ansuelsmth@gmail.com>
- <20200716022817.30439-5-ansuelsmth@gmail.com>
+To:     Bhanu Prakash Maiya <bhanumaiya@chromium.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Furquan Shaikh <furquan@chromium.org>,
+        Raul E Rangel <rrangel@chromium.org>,
+        Eric Peers <epeers@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.Kernel.org
+Subject: Re: [PATCH v3 2/2] dt-bindings: mfd: Add DT compatible string
+ "google,cros_ec_uart"
+Message-ID: <20200716191318.GA2683551@bogus>
+References: <20200715221150.v3.2.I113cdbaf66d48b37ac0faefb9b845480d122f3b9@changeid>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200716022817.30439-5-ansuelsmth@gmail.com>
+In-Reply-To: <20200715221150.v3.2.I113cdbaf66d48b37ac0faefb9b845480d122f3b9@changeid>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 16 Jul 2020 04:28:13 +0200, Ansuel Smith wrote:
-> Document the use of bindings used for ipq8064 SoCs tsens.
-> ipq8064 use the same gcc regs and is set as a child of the qcom gcc.
+On Wed, Jul 15, 2020 at 10:16:04PM -0700, Bhanu Prakash Maiya wrote:
+> From: Bhanu Prakash Maiya <bhanumaiya@chromium.org>
 > 
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  .../bindings/thermal/qcom-tsens.yaml          | 50 ++++++++++++++++---
->  1 file changed, 43 insertions(+), 7 deletions(-)
-> 
+> Add DT compatible string in
+> Documentation/devicetree/bindings/mfd/cros_ec.txt
+
+Need to update this.
+
+With that,
 
 Reviewed-by: Rob Herring <robh@kernel.org>
+
+> Signed-off-by: Bhanu Prakash Maiya <bhanumaiya@chromium.org>
+> ---
+> 
+> Changes in v3:
+> - Rebased changes on google,cros-ec.yaml
+> 
+> Changes in v2:
+> - No change
+> 
+>  Documentation/devicetree/bindings/mfd/google,cros-ec.yaml | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
