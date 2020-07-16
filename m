@@ -7,38 +7,40 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C38C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 16:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E86FC433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 16:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CA4A2065E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 16:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7917E2070E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 16:39:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="DW4WPfv3"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="wf97L92u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728832AbgGPQiz (ORCPT
+        id S1729357AbgGPQjS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 12:38:55 -0400
-Received: from crapouillou.net ([89.234.176.41]:49676 "EHLO crapouillou.net"
+        Thu, 16 Jul 2020 12:39:18 -0400
+Received: from crapouillou.net ([89.234.176.41]:50204 "EHLO crapouillou.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725867AbgGPQiy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jul 2020 12:38:54 -0400
+        id S1725867AbgGPQjR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jul 2020 12:39:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1594917532; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1594917536; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=ZxOxYK7rdmy6ZMNe+mLCkT04eXTl/5csusRl6Ybtnow=;
-        b=DW4WPfv3e2cU56e/brqKRNV82UdkvShqbXyCKQm5WjfWo0pIU1vAqz/epRSvWuSfBm6f3E
-        J4+2HW//hDT1v9V7Tl0zxpWz0va8yn7OErFgf0TuWZC6P+rUiJOcfOt/IyIPB77ZfGgAbf
-        h+JAJUyQzDYPW/GSi6bFpx9I4JaEqg8=
+         in-reply-to:in-reply-to:references:references;
+        bh=k5sqYsXXxr5NrmJ4crCbojNwhQtRT7BbgfQatl4FgMY=;
+        b=wf97L92uRROnVzQDLZBhNUccU6SzS1medwFlSC+nHiGzDQq0ojxvTFxep8khGa7VzrNNuo
+        a63LHulL8Zv35Yew7SRyQ4Vin3whzhoJMXR2gDBxGcsS5UBotbAuKDcCdn1dW2UzNVDCOI
+        UtG9LGtwx4zbf9oDHz78kLFydb7fymQ=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>
 Cc:     Sam Ravnborg <sam@ravnborg.org>, od@zcrc.me,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        stable@vger.kernel.org
-Subject: [PATCH v3 01/12] drm/ingenic: Fix incorrect assumption about plane->index
-Date:   Thu, 16 Jul 2020 18:38:35 +0200
-Message-Id: <20200716163846.174790-1-paul@crapouillou.net>
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v3 04/12] drm/ingenic: Rename ingenic-drm.c to ingenic-drm-drv.c
+Date:   Thu, 16 Jul 2020 18:38:38 +0200
+Message-Id: <20200716163846.174790-4-paul@crapouillou.net>
+In-Reply-To: <20200716163846.174790-1-paul@crapouillou.net>
+References: <20200716163846.174790-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -46,33 +48,34 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-plane->index is NOT the index of the color plane in a YUV frame.
-Actually, a YUV frame is represented by a single drm_plane, even though
-it contains three Y, U, V planes.
+Full rename without any modification, except to the Makefile.
 
-v2-v3: No change
+Renaming ingenic-drm.c to ingenic-drm-drv.c allow to decouple the module
+name from the source file name in the Makefile. This will be useful
+later when more source files are added.
 
-Cc: stable@vger.kernel.org # v5.3
-Fixes: 90b86fcc47b4 ("DRM: Add KMS driver for the Ingenic JZ47xx SoCs")
+v2: New patch
+v3: No change
+
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Acked-by: Sam Ravnborg <sam@ravnborg.org>
 ---
- drivers/gpu/drm/ingenic/ingenic-drm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/ingenic/Makefile                             | 1 +
+ drivers/gpu/drm/ingenic/{ingenic-drm.c => ingenic-drm-drv.c} | 0
+ 2 files changed, 1 insertion(+)
+ rename drivers/gpu/drm/ingenic/{ingenic-drm.c => ingenic-drm-drv.c} (100%)
 
-diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
-index deb37b4a8e91..606d8acb0954 100644
---- a/drivers/gpu/drm/ingenic/ingenic-drm.c
-+++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
-@@ -386,7 +386,7 @@ static void ingenic_drm_plane_atomic_update(struct drm_plane *plane,
- 		addr = drm_fb_cma_get_gem_addr(state->fb, state, 0);
- 		width = state->src_w >> 16;
- 		height = state->src_h >> 16;
--		cpp = state->fb->format->cpp[plane->index];
-+		cpp = state->fb->format->cpp[0];
- 
- 		priv->dma_hwdesc->addr = addr;
- 		priv->dma_hwdesc->cmd = width * height * cpp / 4;
+diff --git a/drivers/gpu/drm/ingenic/Makefile b/drivers/gpu/drm/ingenic/Makefile
+index 11cac42ce0bb..9875628dd8bc 100644
+--- a/drivers/gpu/drm/ingenic/Makefile
++++ b/drivers/gpu/drm/ingenic/Makefile
+@@ -1 +1,2 @@
+ obj-$(CONFIG_DRM_INGENIC) += ingenic-drm.o
++ingenic-drm-y += ingenic-drm-drv.o
+diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
+similarity index 100%
+rename from drivers/gpu/drm/ingenic/ingenic-drm.c
+rename to drivers/gpu/drm/ingenic/ingenic-drm-drv.c
 -- 
 2.27.0
 
