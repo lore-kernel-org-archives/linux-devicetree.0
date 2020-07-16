@@ -2,105 +2,360 @@ Return-Path: <SRS0=XaEl=A3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F993C433E8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 15:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3ACC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 15:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D4962065F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 15:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C2852076A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jul 2020 15:25:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594912845;
-	bh=xvlq/EaQKoFxYAnh0dqPU7TeGNOs1bhBceWfFWYVEy0=;
+	s=default; t=1594913124;
+	bh=9+40yAt/nYgZCf//uFqEotTulKNXYearIODt1X6941Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qoM23OkCjygZKS5SaflQuDQYbk/excypfz1cMvdZ/ahFMukdpi2bfLoq7zuY4Pfjk
-	 wVJzaiHlWppB4r2YlHz75CZJAncyp6n9Jrgje18MMAHNPmS8inkwg88jRM84ZB1YA8
-	 WsXne2PDEXggfWCD3se2BkLm7wnVJC/Yb44FudvY=
+	b=2CZaWY6VEs1Ic31NEp8R62mRpytOB3GHSqxjnzCLTzUArPepC9UREAwAsxavF1wo7
+	 PPyRq6hp27ngRyVGp6nRFabvl6mc45/qkBcLDbF6PwQaiP/Qb5ISmpe3okOJcIzwcC
+	 ssRREkGI8U0UHlgFEXiTqTJ6aqg3ohXoZW7+h5rk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbgGPPUo (ORCPT
+        id S1728714AbgGPPZY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 11:20:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42636 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728415AbgGPPUo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jul 2020 11:20:44 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 902232063A;
-        Thu, 16 Jul 2020 15:20:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594912844;
-        bh=xvlq/EaQKoFxYAnh0dqPU7TeGNOs1bhBceWfFWYVEy0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k176FucuYLZhP1LQhCHxFiJ+Kkkp02ggQMcyF7eSyNlaKZMI3w6yNmsuov3eRxKWi
-         +rxQJ0D7CM3kZl235alazbw7hfG4EzQKooPOsi2yT47wJtgc6txWfFtR6GrchOujN2
-         O8koDtq8bIDb1ykHRjyyI9YqyyhSlkrfE5Tn4dRw=
-Date:   Thu, 16 Jul 2020 16:20:34 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3] ASoC: dt-bindings: renesas,fsi: use patternProperties
- for FSI-A/B
-Message-ID: <20200716152034.GC5105@sirena.org.uk>
-References: <87zh802tif.wl-kuninori.morimoto.gx@renesas.com>
+        Thu, 16 Jul 2020 11:25:24 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:33898 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728182AbgGPPZX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 11:25:23 -0400
+Received: by mail-il1-f194.google.com with SMTP id t4so5413282iln.1;
+        Thu, 16 Jul 2020 08:25:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=+8sCFotjHvcqhcaFqEJm3//tlFTHSiLL36jSVd2F5HE=;
+        b=T5ijFrwRfyuwoDV13BZZHj+YhSREKzq1goicXuBjwBkBemzBjhNj9L9qck27Gkztb1
+         dwmZlDbJLDA1G1qZci7+GISr/xYTXm356k0n5e41dYXXk6l6AMBRrHHGZgArVFUqSwfl
+         0dAmxVlcM0qmTCeyGI/FFB+0BjxsBK2TnKf0idtBPNYXPVIwNcA7NWUCHgeJExX9Kec/
+         SpRmb7e6KQMTZmFjcoEDZlF4RpyDSbQzGFSq49o8e/aNGtQNOySnxZ8XZEAkLR7tmDDt
+         TRcOrFib6Lbkr+jCMPb87+8rMm00vzOEjDSsDT3348KN5H0vSOlm1nhEDhxFpmSfjpZA
+         wCQg==
+X-Gm-Message-State: AOAM531lN5/klnR+LKrXNrMdQqQrSLGW8ltwi2O4rJh9nDpUux4LyLtb
+        YncfsQPLE/9O0QeOtd6OUw==
+X-Google-Smtp-Source: ABdhPJwn6vFzj1XNYFeW1m4BKLuhwFnyytZX9Cw/iMShPrTEdtRLc4LiWXYdfH8C0ZpSgSVU5E/RaQ==
+X-Received: by 2002:a92:41d2:: with SMTP id o201mr4910551ila.298.1594913121556;
+        Thu, 16 Jul 2020 08:25:21 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id a13sm2784409ilk.19.2020.07.16.08.25.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 08:25:21 -0700 (PDT)
+Received: (nullmailer pid 2369449 invoked by uid 1000);
+        Thu, 16 Jul 2020 15:25:20 -0000
+Date:   Thu, 16 Jul 2020 09:25:20 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] dt-bindings: adv7604: Convert bindings to
+ json-schema
+Message-ID: <20200716152520.GA2351503@bogus>
+References: <20200715091455.1772470-1-niklas.soderlund+renesas@ragnatech.se>
+ <20200715091455.1772470-3-niklas.soderlund+renesas@ragnatech.se>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="YD3LsXFS42OYHhNZ"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <87zh802tif.wl-kuninori.morimoto.gx@renesas.com>
-X-Cookie: This login session: $13.99
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200715091455.1772470-3-niklas.soderlund+renesas@ragnatech.se>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---YD3LsXFS42OYHhNZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jul 16, 2020 at 09:29:10AM +0900, Kuninori Morimoto wrote:
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
->=20
-> FSI has FSI-A and FSI-B, and has fsia-xxx/fsib-xxx properties.
-> This patch uses patternProperties, and reduce verbose settings.
->=20
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Link: https://lore.kernel.org/r/87o8osxlow.wl-kuninori.morimoto.gx@renesa=
-s.com
-> Link: https://lore.kernel.org/r/87pn9v39eo.wl-kuninori.morimoto.gx@renesa=
-s.com
+On Wed, Jul 15, 2020 at 11:14:54AM +0200, Niklas Söderlund wrote:
+> Convert ADV7604 video decoder documentation to json-schema.
+> 
+> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 > ---
-> v2 -> v3
->    - add Reviewd-by
->    - add Link
+> * Changes since v1
+> - Simplify enum for reg-names.
+> ---
+>  .../devicetree/bindings/media/i2c/adv7604.txt |  87 ----------
+>  .../bindings/media/i2c/adv7604.yaml           | 161 ++++++++++++++++++
+>  2 files changed, 161 insertions(+), 87 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/media/i2c/adv7604.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/adv7604.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+> deleted file mode 100644
+> index 8c7cdc7cd7aaebc8..0000000000000000
+> --- a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+> +++ /dev/null
+> @@ -1,87 +0,0 @@
+> -* Analog Devices ADV7604/11/12 video decoder with HDMI receiver
+> -
+> -The ADV7604 and ADV7611/12 are multiformat video decoders with an integrated
+> -HDMI receiver. The ADV7604 has four multiplexed HDMI inputs and one analog
+> -input, and the ADV7611 has one HDMI input and no analog input. The 7612 is
+> -similar to the 7611 but has 2 HDMI inputs.
+> -
+> -These device tree bindings support the ADV7611/12 only at the moment.
+> -
+> -Required Properties:
+> -
+> -  - compatible: Must contain one of the following
+> -    - "adi,adv7611" for the ADV7611
+> -    - "adi,adv7612" for the ADV7612
+> -
+> -  - reg: I2C slave addresses
+> -    The ADV76xx has up to thirteen 256-byte maps that can be accessed via the
+> -    main I2C ports. Each map has it own I2C address and acts as a standard
+> -    slave device on the I2C bus. The main address is mandatory, others are
+> -    optional and revert to defaults if not specified.
 
-Please don't resend patches for just acks and reviews, if I'm waiting
-for reviews it causes confusion since I'll queue the reviewed version
-then have to unqueue it when I see the resend.  I use tooling which
-picks up reviews from the list.
+You've lost this detail which either as a schema or freeform text seems 
+important..
 
---YD3LsXFS42OYHhNZ
-Content-Type: application/pgp-signature; name="signature.asc"
+> -
+> -The device node must contain one 'port' child node per device input and output
+> -port, in accordance with the video interface bindings defined in
+> -Documentation/devicetree/bindings/media/video-interfaces.txt. The port nodes
+> -are numbered as follows.
+> -
+> -  Port			ADV7611    ADV7612
+> -------------------------------------------------------------
+> -  HDMI			0             0, 1
+> -  Digital output	1                2
+> -
+> -The digital output port node must contain at least one endpoint.
+> -
+> -Optional Properties:
+> -
+> -  - hpd-gpios: References to the GPIOs that control the HDMI hot-plug
+> -    detection pins, one per HDMI input. The active flag indicates the GPIO
+> -    level that enables hot-plug detection.
+> -  - reset-gpios: Reference to the GPIO connected to the device's reset pin.
+> -  - default-input: Select which input is selected after reset.
+> -  - reg-names : Names of maps with programmable addresses.
+> -		It can contain any map needing a non-default address.
+> -		Possible maps names are :
+> -		  "main", "avlink", "cec", "infoframe", "esdp", "dpp", "afe",
+> -		  "rep", "edid", "hdmi", "test", "cp", "vdp"
+> -
+> -Optional Endpoint Properties:
+> -
+> -  The following three properties are defined in video-interfaces.txt and are
+> -  valid for source endpoints only.
+> -
+> -  - hsync-active: Horizontal synchronization polarity. Defaults to active low.
+> -  - vsync-active: Vertical synchronization polarity. Defaults to active low.
+> -  - pclk-sample: Pixel clock polarity. Defaults to output on the falling edge.
+> -
+> -  If none of hsync-active, vsync-active and pclk-sample is specified the
+> -  endpoint will use embedded BT.656 synchronization.
+> -
+> -Example:
+> -
+> -	hdmi_receiver@4c {
+> -		compatible = "adi,adv7611";
+> -		/*
+> -		 * The edid page will be accessible @ 0x66 on the I2C bus. All
+> -		 * other maps will retain their default addresses.
+> -		 */
+> -		reg = <0x4c>, <0x66>;
+> -		reg-names = "main", "edid";
+> -
+> -		reset-gpios = <&ioexp 0 GPIO_ACTIVE_LOW>;
+> -		hpd-gpios = <&ioexp 2 GPIO_ACTIVE_HIGH>;
+> -
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+> -
+> -		default-input = <0>;
+> -
+> -		port@0 {
+> -			reg = <0>;
+> -		};
+> -		port@1 {
+> -			reg = <1>;
+> -			hdmi_in: endpoint {
+> -				remote-endpoint = <&ccdc_in>;
+> -			};
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.yaml b/Documentation/devicetree/bindings/media/i2c/adv7604.yaml
+> new file mode 100644
+> index 0000000000000000..b585745b66d70ac9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.yaml
+> @@ -0,0 +1,161 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/i2c/adv7604.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices ADV7604/11/12 video decoder with HDMI receiver
+> +
+> +maintainers:
+> +  - Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> +
+> +description:
+> +  The ADV7604 and ADV7611/12 are multiformat video decoders with an integrated
+> +  HDMI receiver. The ADV7604 has four multiplexed HDMI inputs and one analog
+> +  input, and the ADV7611 has one HDMI input and no analog input. The 7612 is
+> +  similar to the 7611 but has 2 HDMI inputs.
+> +
+> +  These device tree bindings support the ADV7611/12 only at the moment.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +        - adi,adv7611
+> +        - adi,adv7612
+> +
+> +  reg:
+> +    minItems: 1
+> +    maxItems: 13
+> +
+> +  reg-names:
+> +    minItems: 1
+> +    maxItems: 13
+> +    items:
+> +      enum: [ main, avlink, cec, infoframe, esdp, dpp, afe, rep, edid, hdmi, test, cp, vdp ]
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +
+> +  hpd-gpios:
+> +    minItems: 1
+> +    description:
+> +      References to the GPIOs that control the HDMI hot-plug detection pins,
+> +      one per HDMI input. The active flag indicates the GPIO level that
+> +      enables hot-plug detection.
+> +
+> +  default-input:
+> +    maxItems: 1
+> +    description:
+> +      Select which input is selected after reset.
+> +
+> +  ports:
+> +    type: object
+> +    description:
+> +      A node containing input and output port nodes with endpoint definitions
+> +      as documented in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> +
+> +required:
+> +  - compatible
+> +  - reg
 
------BEGIN PGP SIGNATURE-----
+Add:
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8QcEEACgkQJNaLcl1U
-h9Cg8Qf8D7go8ENKfRGkqhGGLmyFp6v3nBVv9B8mc3+xLFGBPNTLwnfV4D7iRAd3
-qe/LoipG/kht34+hk6vFz86WYJiY8hTz5vS0WN+djz4BcSaD010Fj48qQTaJhty5
-o9HBv4m2IRA2cShAg8/V2OIKJy+IuIWDWw3t828If5DyMMs26AtfxBtItRR66GuE
-OjXShfrW/JbX5rkzDVAbssNdsO64dtU3Z2FHYEcdPpzkuT02sAt7gkAoQPlpqdC6
-UWUwWKu5byZAqPvutksobcuddHfFBZTH7oUQUlgwJYR8Jbx0RgS/1+bRS/HqjHvj
-mim0pKC+93A2wzDB10hO9i0rOgVQQw==
-=VdGZ
------END PGP SIGNATURE-----
+additionalProperties: false
 
---YD3LsXFS42OYHhNZ--
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: adi,adv7611
+> +    then:
+> +      properties:
+> +        ports:
+> +          properties:
+> +            '#address-cells':
+> +              const: 1
+> +            '#size-cells':
+> +              const: 0
+> +            port@0:
+> +              type: object
+> +              description: Input port
+> +            port@1:
+> +              type: object
+> +              description: Output port
+> +
+> +          required:
+> +            - port@1
+> +
+> +          additionalProperties: false
+> +
+> +      required:
+> +        - ports
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: adi,adv7612
+> +    then:
+> +      properties:
+> +        ports:
+> +          properties:
+> +            '#address-cells':
+> +              const: 1
+> +            '#size-cells':
+> +              const: 0
+> +            port@2:
+> +              type: object
+> +              description: Output port
+> +
+> +          patternProperties:
+> +            "^port@[0-1]$":
+> +              type: object
+> +              description: Input port
+> +
+> +          required:
+> +            - port@2
+> +
+> +          additionalProperties: false
+> +
+> +      required:
+> +        - ports
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    i2c {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            hdmi_receiver@4c {
+> +                    compatible = "adi,adv7611";
+> +                    /*
+> +                     * The edid page will be accessible @ 0x66 on the I2C bus. All
+> +                     * other maps will retain their default addresses.
+> +                     */
+> +                    reg = <0x4c>, <0x66>;
+> +                    reg-names = "main", "edid";
+> +
+> +                    reset-gpios = <&ioexp 0 GPIO_ACTIVE_LOW>;
+> +                    hpd-gpios = <&ioexp 2 GPIO_ACTIVE_HIGH>;
+> +                    default-input = <0>;
+> +
+> +                    ports {
+> +                            #address-cells = <1>;
+> +                            #size-cells = <0>;
+> +
+> +                            port@0 {
+> +                                    reg = <0>;
+> +                            };
+> +
+> +                            port@1 {
+> +                                    reg = <1>;
+> +                                    hdmi_in: endpoint {
+> +                                            remote-endpoint = <&ccdc_in>;
+> +                                    };
+> +                            };
+> +                    };
+> +
+> +
+> +            };
+> +    };
+> -- 
+> 2.27.0
+> 
