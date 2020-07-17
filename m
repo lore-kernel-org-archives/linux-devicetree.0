@@ -2,147 +2,413 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C43C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 19:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C1BC433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 19:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA22D2064C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 19:26:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D15B2076D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 19:28:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fMjzFzVm"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="afEArUYL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbgGQT0I (ORCPT
+        id S1728209AbgGQT2j (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 15:26:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33680 "EHLO
+        Fri, 17 Jul 2020 15:28:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727999AbgGQT0H (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 15:26:07 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EB13C0619D2;
-        Fri, 17 Jul 2020 12:26:06 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f18so12284239wrs.0;
-        Fri, 17 Jul 2020 12:26:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=AkK4eyDYfDukVVGQtgB78a5zI96VA608ufKkpODlhC0=;
-        b=fMjzFzVm1SOC5vGih5G//3tySgQLem+30D4ao6tDLAhb1tX1YQWkGlw9X/r0X2DbHs
-         fNDxKs03oWU4VSYYEGt9DlHrweDMGuR7Apnt2al4Zhuu2Uo5eiYk9ITPNQBWYHqEC92s
-         fQnbFXg4yMKnIiiQzm/EAknzsouXtS3jPLt0lKkWPLkudB3rPgaiJ/NdjBgDsqhUMcmp
-         P3QSHNt+YyIN8a0l/zzvlu/we9WyfUTuOjyEMT2tHce7ydUcfMmfjApTu4fGG3dRaIQU
-         nK8ztcvOZqrDbDZ1VCtsXCjugObMoYw79hHv8dibXYPRTCr8+JjFxfEk/Y7afjzuFfAo
-         NsWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AkK4eyDYfDukVVGQtgB78a5zI96VA608ufKkpODlhC0=;
-        b=S7BbXtUNP/NOTCo1vOufAfFr/HiDH4IZeQHPNi5TOwfJ8txuMvaDV6mcVWHMP6BZyM
-         XbA/R5oXIsH/zKtkptXEAg7WdvCknvFBoXBYw6ceKhSLrneAFuRs32hGpOq9dvL0il0G
-         ibCqmaUcs3i0rlEtAiKAv70w9AHobZ/WciYReVEuk935kOVINrQEkJgC+kEO9rmhaNbD
-         KShojIj6EPqhuUQGC9GiIv2KHGdrxjBsH0NwHFDKn5dJyzbG3QJeRkEbB/S+6Wm/TctZ
-         tbZiFOdS4DR0ML4iaoU+25F3FB24bqRhMXaTIHQKiTiw0Med99roGcOGc7f5HNfgCW9o
-         wGOA==
-X-Gm-Message-State: AOAM532Vx94ns8mvNH7azKGCQf7Bm5N2BmDkBTGHlI06SMIdkiUxBzDr
-        8fpvGe4Y+ETvIGRoI7fO4jfkobHT
-X-Google-Smtp-Source: ABdhPJyzzgQauzZrXRLBUtlDbHT36pCVhtn35Z5SW1bVvs345TJZd2iZoA/uNDwvVculMX3hyFJrOQ==
-X-Received: by 2002:adf:ed8c:: with SMTP id c12mr11792085wro.359.1595013965061;
-        Fri, 17 Jul 2020 12:26:05 -0700 (PDT)
-Received: from localhost.localdomain (haganm.plus.com. [212.159.108.31])
-        by smtp.gmail.com with ESMTPSA id g145sm20090812wmg.23.2020.07.17.12.26.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jul 2020 12:26:04 -0700 (PDT)
-Subject: Re: [PATCH 2/2] dt-bindings: net: dsa: qca8k: Add PORT0_PAD_CTRL
- properties
-To:     Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>
-Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        John Crispin <john@phrozen.org>,
-        Jonathan McDowell <noodles@earth.li>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-References: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
- <ea0a35ed686e6dace77e25cb70a8f39fdd1ea8ad.1594668793.git.mnhagan88@gmail.com>
- <20200716150925.0f3e01b8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <20200716223236.GA1314837@lunn.ch>
-From:   Matthew Hagan <mnhagan88@gmail.com>
-Message-ID: <c86c4da0-a740-55cc-33dd-7a91e36c7738@gmail.com>
-Date:   Fri, 17 Jul 2020 20:26:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        with ESMTP id S1727999AbgGQT2j (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 15:28:39 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 076B3C0619D2;
+        Fri, 17 Jul 2020 12:28:39 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id A43CA71D;
+        Fri, 17 Jul 2020 21:28:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1595014115;
+        bh=58QEPNZGsWJAPDZPK7BhOSK2O4YcM/L7nyRGhJuGKE0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=afEArUYLz22IY1RHxusn8pQZtK8xScBT9qJB9M6LxPrN2E6tDbRCHq3iQUL5vxNoj
+         npH+V1t2Q54Lz+M+PYukyDYp1wKsgdp5V50YTyfXIA/HE/SipfW+cnckPjieNJHqGW
+         MfXbMzfezx56eKACHjGRMHgfTusGEyVOc4G3Hg78=
+Date:   Fri, 17 Jul 2020 22:28:27 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        slongerbeam@gmail.com, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH 01/13] dt-bindings: media: ov5640: Convert to json-schema
+Message-ID: <20200717192827.GB5961@pendragon.ideasonboard.com>
+References: <20200717132859.237120-1-jacopo+renesas@jmondi.org>
+ <20200717132859.237120-2-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-In-Reply-To: <20200716223236.GA1314837@lunn.ch>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200717132859.237120-2-jacopo+renesas@jmondi.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Jacopo,
 
+Thank you for the patch.
 
-On 16/07/2020 23:32, Andrew Lunn wrote:
-> On Thu, Jul 16, 2020 at 03:09:25PM -0700, Jakub Kicinski wrote:
->> On Mon, 13 Jul 2020 21:50:26 +0100 Matthew Hagan wrote:
->>> Add names and decriptions of additional PORT0_PAD_CTRL properties.
->>>
->>> Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
->>> ---
->>>  Documentation/devicetree/bindings/net/dsa/qca8k.txt | 8 ++++++++
->>>  1 file changed, 8 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
->>> index ccbc6d89325d..3d34c4f2e891 100644
->>> --- a/Documentation/devicetree/bindings/net/dsa/qca8k.txt
->>> +++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
->>> @@ -13,6 +13,14 @@ Optional properties:
->>>  
->>>  - reset-gpios: GPIO to be used to reset the whole device
->>>  
->>> +Optional MAC configuration properties:
->>> +
->>> +- qca,exchange-mac0-mac6:	If present, internally swaps MAC0 and MAC6.
->>
->> Perhaps we can say a little more here?
->>
->>> +- qca,sgmii-rxclk-falling-edge:	If present, sets receive clock phase to
->>> +				falling edge.
->>> +- qca,sgmii-txclk-falling-edge:	If present, sets transmit clock phase to
->>> +				falling edge.
->>
->> These are not something that other vendors may implement and therefore
->> something we may want to make generic? Andrew?
+On Fri, Jul 17, 2020 at 03:28:47PM +0200, Jacopo Mondi wrote:
+> Convert the ov5640 bindings document to json-schema.
 > 
-> I've never seen any other vendor implement this. Which to me makes me
-> think this is a vendor extension, to Ciscos vendor extension of
-> 1000BaseX.
+> This commit ports the existing bindings, clean up patches
+> will follow.
 > 
-> Matthew, do you have a real use cases of these? I don't see a DT patch
-> making use of them. And if you do, what is the PHY on the other end
-> which also allows you to invert the clocks?
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  .../devicetree/bindings/media/i2c/ov5640.txt  |  92 ---------
+>  .../devicetree/bindings/media/i2c/ov5640.yaml | 181 ++++++++++++++++++
+>  2 files changed, 181 insertions(+), 92 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/media/i2c/ov5640.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5640.yaml
 > 
-The use case I am working on is the Cisco Meraki MX65 which requires bit
-18 set (qca,sgmii-txclk-falling-edge). On the other side is a BCM58625
-SRAB with ports 4 and 5 in SGMII mode. There is no special polarity
-configuration set on this side though I do have very limited info on
-what is available. The settings I have replicate the vendor
-configuration extracted from the device.
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5640.txt b/Documentation/devicetree/bindings/media/i2c/ov5640.txt
+> deleted file mode 100644
+> index c97c2f2da12d..000000000000
+> --- a/Documentation/devicetree/bindings/media/i2c/ov5640.txt
+> +++ /dev/null
+> @@ -1,92 +0,0 @@
+> -* Omnivision OV5640 MIPI CSI-2 / parallel sensor
+> -
+> -Required Properties:
+> -- compatible: should be "ovti,ov5640"
+> -- clocks: reference to the xclk input clock.
+> -- clock-names: should be "xclk".
+> -- DOVDD-supply: Digital I/O voltage supply, 1.8 volts
+> -- AVDD-supply: Analog voltage supply, 2.8 volts
+> -- DVDD-supply: Digital core voltage supply, 1.5 volts
+> -
+> -Optional Properties:
+> -- reset-gpios: reference to the GPIO connected to the reset pin, if any.
+> -	       This is an active low signal to the OV5640.
+> -- powerdown-gpios: reference to the GPIO connected to the powerdown pin,
+> -		   if any. This is an active high signal to the OV5640.
+> -- rotation: as defined in
+> -	    Documentation/devicetree/bindings/media/video-interfaces.txt,
+> -	    valid values are 0 (sensor mounted upright) and 180 (sensor
+> -	    mounted upside down).
+> -
+> -The device node must contain one 'port' child node for its digital output
+> -video port, in accordance with the video interface bindings defined in
+> -Documentation/devicetree/bindings/media/video-interfaces.txt.
+> -
+> -OV5640 can be connected to a MIPI CSI-2 bus or a parallel bus endpoint.
+> -
+> -Endpoint node required properties for CSI-2 connection are:
+> -- remote-endpoint: a phandle to the bus receiver's endpoint node.
+> -- clock-lanes: should be set to <0> (clock lane on hardware lane 0)
+> -- data-lanes: should be set to <1> or <1 2> (one or two CSI-2 lanes supported)
+> -
+> -Endpoint node required properties for parallel connection are:
+> -- remote-endpoint: a phandle to the bus receiver's endpoint node.
+> -- bus-width: shall be set to <8> for 8 bits parallel bus
+> -	     or <10> for 10 bits parallel bus
+> -- data-shift: shall be set to <2> for 8 bits parallel bus
+> -	      (lines 9:2 are used) or <0> for 10 bits parallel bus
+> -- hsync-active: active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
+> -- vsync-active: active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
+> -- pclk-sample: sample data on rising (1) or falling (0) edge of the pixel clock
+> -	       signal.
+> -
+> -Examples:
+> -
+> -&i2c1 {
+> -	ov5640: camera@3c {
+> -		compatible = "ovti,ov5640";
+> -		pinctrl-names = "default";
+> -		pinctrl-0 = <&pinctrl_ov5640>;
+> -		reg = <0x3c>;
+> -		clocks = <&clks IMX6QDL_CLK_CKO>;
+> -		clock-names = "xclk";
+> -		DOVDD-supply = <&vgen4_reg>; /* 1.8v */
+> -		AVDD-supply = <&vgen3_reg>;  /* 2.8v */
+> -		DVDD-supply = <&vgen2_reg>;  /* 1.5v */
+> -		powerdown-gpios = <&gpio1 19 GPIO_ACTIVE_HIGH>;
+> -		reset-gpios = <&gpio1 20 GPIO_ACTIVE_LOW>;
+> -		rotation = <180>;
+> -
+> -		port {
+> -			/* MIPI CSI-2 bus endpoint */
+> -			ov5640_to_mipi_csi2: endpoint {
+> -				remote-endpoint = <&mipi_csi2_from_ov5640>;
+> -				clock-lanes = <0>;
+> -				data-lanes = <1 2>;
+> -			};
+> -		};
+> -	};
+> -};
+> -
+> -&i2c1 {
+> -	ov5640: camera@3c {
+> -		compatible = "ovti,ov5640";
+> -		pinctrl-names = "default";
+> -		pinctrl-0 = <&pinctrl_ov5640>;
+> -		reg = <0x3c>;
+> -		clocks = <&clk_ext_camera>;
+> -		clock-names = "xclk";
+> -
+> -		port {
+> -			/* Parallel bus endpoint */
+> -			ov5640_to_parallel: endpoint {
+> -				remote-endpoint = <&parallel_from_ov5640>;
+> -				bus-width = <8>;
+> -				data-shift = <2>; /* lines 9:2 are used */
+> -				hsync-active = <0>;
+> -				vsync-active = <0>;
+> -				pclk-sample = <1>;
+> -			};
+> -		};
+> -	};
+> -};
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5640.yaml b/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
+> new file mode 100644
+> index 000000000000..ceeacc91c801
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
+> @@ -0,0 +1,181 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/i2c/ov5640.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Omnivision OV5640 MIPI CSI-2 / parallel sensor
+> +
+> +maintainers:
+> +  - Steve Longerbeam <slongerbeam@gmail.com>
+> +
+> +description: -|
+> +  The OV5640 is a 5 megapixels image sensor capable of producing images in RGB,
+> +  RAW, YUV and compressed formats. It features a MIPI CSI-2 and a parallel data
+> +  interface and an I2C-compatible (CCI) control interface.
+> +
+> +properties:
+> +  compatible:
+> +    const: ovti,ov5640
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: xclk
+> +
+> +  DOVDD-supply:
+> +    description: Digital I/O voltage supply, 1.8 volts.
+> +    maxItems: 1
+> +
+> +  AVDD-supply:
+> +    description: Analog voltage supply, 2.8 volts.
+> +    maxItems: 1
+> +
+> +  DVDD-supply:
+> +    description: Digital core voltage supply.
+> +    maxItems: 1
+> +
+> +  reset-gpios:
+> +    description: |
+> +      Reference to the GPIO connected to the reset pin, if any. This is an
+> +      active low signal to the OV5640.
+> +    maxItems: 1
+> +
+> +  powerdown-gpios:
+> +    description: |
+> +      Reference tot he GPIO connected to the powerdown pin, if any. This is an
+> +      active high signal to the OV5640.
+> +    maxItems: 1
+> +
+> +  rotation:
+> +    description: |
+> +      As defined in Documentation/devicetree/bindings/media/video-interfaces.txt
+> +    enum: [0, 180]
+> +
+> +  port:
+> +    type: object
+> +    description: |
+> +      The device node must contain one 'port' child node for its digital output
+> +      video port, in accordance with the video interface bindings defined in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +      OV5640 can be connected to a MIPI CSI-2 bus or a parallel bus endpoint.
+> +
+> +    properties:
+> +      endpoint:
+> +        type: object
+> +        properties:
+> +          remote-endpoint:
+> +            description: A phandle to the bus receiver's endpoint node.
+> +
+> +          clock-lanes:
+> +            const: 0
+> +
+> +          data-lanes:
+> +            description: |
+> +              Should be set to <1> or <1 2> (one or two CSI-2 lanes supported).
 
-The qca,sgmii-rxclk-falling-edge option (bit 19) is commonly used
-according to the device trees found in the OpenWrt, which is still using
-the ar8216 driver. With a count through the ar8327-initvals I see bit 19
-set on 18 of 22 devices using SGMII on MAC0.
->        Andrew
-> 
+I think you can drop the description, it just duplicates the values
+below.
 
-Matthew
+> +            oneOf:
+> +              - items:
+> +                - const: 1
+> +              - items:
+> +                - const: 1
+> +                - const: 2
+
+This could also be written
+
+            minItems: 1
+            items:
+              - const: 1
+              - const: 2
+
+> +
+> +          bus-width:
+> +            description: |
+> +              Shall be set to <8> for 8 bits parallel bus or <10> for 10 bits
+> +              parallel bus.
+
+I think I'd drop the description here too. We need to eventually convert
+Documentation/devicetree/bindings/media/video-interfaces.txt to YAML,
+and descriptions will be stored there.
+
+> +            enum: [8, 10]
+> +
+> +          data-shift:
+> +            description: |
+> +              Shall be set to <2> for 8 bits parallel bus (lines 9:2 are used) or
+> +              <0> for 10 bits parallel bus.
+> +            enum: [0, 2]
+> +
+> +          hsync-active:
+> +            enum: [0, 1]
+> +
+> +          vsync-active:
+> +            enum: [0, 1]
+> +
+> +          pclk-sample:
+> +            enum: [0, 1]
+> +
+> +        required:
+> +          - remote-endpoint
+
+You could add
+
+        allOf:
+          - if:
+              properties:
+                bus-width:
+                  const: 8
+            then:
+              properties:
+                data-shift:
+                  const: 2
+              required:
+                - data-shift
+          - if:
+              properties:
+                bus-width:
+                  const: 10
+            then:
+              properties:
+                data-shift:
+                  const: 0
+              required:
+                - data-shift
+
+To document the relationship between bus-width and data-shift in rules
+instead of in the data-shift description.
+
+Could you please take these comments into account for other patches in
+the series, where applicable ?
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - DOVDD-supply
+> +  - AVDD-supply
+> +  - DVDD-supply
+> +  - port
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/clock/imx6qdl-clock.h>
+> +
+> +    i2c0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        camera@3c {
+> +            compatible = "ovti,ov5640";
+> +            reg = <0x3c>;
+> +            clocks = <&clks IMX6QDL_CLK_CKO>;
+> +            clock-names = "xclk";
+> +            DOVDD-supply = <&vgen4_reg>; /* 1.8v */
+> +            AVDD-supply = <&vgen3_reg>;  /* 2.8v */
+> +            DVDD-supply = <&vgen2_reg>;  /* 1.5v */
+> +            powerdown-gpios = <&gpio1 19 GPIO_ACTIVE_HIGH>;
+> +            reset-gpios = <&gpio1 20 GPIO_ACTIVE_LOW>;
+> +            rotation = <180>;
+> +
+> +            port {
+> +                ov5640_to_mipi_csi2: endpoint {
+> +                    remote-endpoint = <&mipi_csi2_from_ov5640>;
+> +                    clock-lanes = <0>;
+> +                    data-lanes = <1 2>;
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +    i2c1 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        camera@3c {
+> +            compatible = "ovti,ov5640";
+> +            reg = <0x3c>;
+> +            clocks = <&clks IMX6QDL_CLK_CKO>;
+> +            clock-names = "xclk";
+> +            DOVDD-supply = <&vgen4_reg>; /* 1.8v */
+> +            AVDD-supply = <&vgen3_reg>;  /* 2.8v */
+> +            DVDD-supply = <&vgen2_reg>;  /* 1.5v */
+> +            powerdown-gpios = <&gpio1 19 GPIO_ACTIVE_HIGH>;
+> +            reset-gpios = <&gpio1 20 GPIO_ACTIVE_LOW>;
+> +            rotation = <180>;
+> +
+> +            port {
+> +                ov5640_to_parallel: endpoint {
+> +                    remote-endpoint = <&parallel_from_ov5640>;
+> +                    bus-width = <10>;
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +...
+
+-- 
+Regards,
+
+Laurent Pinchart
