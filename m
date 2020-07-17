@@ -2,160 +2,226 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CB3C433E8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 09:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB925C433E6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 09:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B13922076A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 09:07:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RdncPW1l"
+	by mail.kernel.org (Postfix) with ESMTP id 9A2C92070E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 09:12:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726000AbgGQJHG (ORCPT
+        id S1726104AbgGQJMs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 05:07:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50724 "EHLO
+        Fri, 17 Jul 2020 05:12:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbgGQJHB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 05:07:01 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DED1BC08C5DD
-        for <devicetree@vger.kernel.org>; Fri, 17 Jul 2020 02:07:00 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id g10so6821566wmc.1
-        for <devicetree@vger.kernel.org>; Fri, 17 Jul 2020 02:07:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=pTJD2ese6K2dNt2vdiLR06YU7WVcQu8Yel1U2q7XjxE=;
-        b=RdncPW1lDg4IpKF2/cfz2mxyZGwH70KBaBrCHlAamsL4R/bAvK/rxM+IWlU7qIyuan
-         xelunPXzbnc4+mXnnIHQzV2Q7I4VLS07NC6FMJctbAWgk/gPiV3DFh6FOAWO6wBP5n1W
-         CBPMe9ut3SIiMskcvMWaFgVY0Jsx32ZIvN1gBt6+fVgyK2uL7mCW7+CtaniJn3xckqrX
-         mZAknbz3eKXhxSkDrzdJeP5pO6L3DJIPsYa+LtmXApSGgwyAFdQBLpMPomp9c+Dd75j7
-         IEfa26GW1uAFTPFBNzcDH2QJE9d4E3UfGS95nHTVqMXYwEUwvQfxFD06YcbXHpuTrTKP
-         zUiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=pTJD2ese6K2dNt2vdiLR06YU7WVcQu8Yel1U2q7XjxE=;
-        b=VNKwLCAxpyVwLRLGDT+rplq5D9jD/DE/TlBVj1XQzemB+8C4l4Jp815kVvEOF+fqta
-         e8Bk5END5qgunbtYYGPC3C+8f3QvFDQSqhDrdHeo+TeRtkmg2Jyrm1ByB73y62LzxUlo
-         9kwZW8Pd/VVLNVHWgAN30P6ppyQ1/msBPMtpbBfYQIa+ngl+QTDagbazToClmvnzquaz
-         QECaQ93NYS3ya9zpmYW4W9MCcm14kbGDZYSUZbuZTMA6UpIE6DWAMXAbTNg6ANlPhf5V
-         lu3YDW5VPDn4gP6JANvP4ovE+HHg0Px4VEkAh4Zmv7oMDiisv/4JoCf3MBPHZ7cXQvm7
-         3CmA==
-X-Gm-Message-State: AOAM533DRWLO+XRoeQB/EEoTB2lIYVB4tCZQLepcNnPZPTrp8pgjQjGJ
-        KxEg7l1ahtuB2MKS9iM/7bBHdg==
-X-Google-Smtp-Source: ABdhPJzFwUFlTuHxJh9CJGSq2MTaZ8h+vLXDbC5cvbKZoxFQ53eDgLDHJN2B9P6MWQGOIdMYC9QPUQ==
-X-Received: by 2002:a1c:5982:: with SMTP id n124mr8364770wmb.77.1594976819379;
-        Fri, 17 Jul 2020 02:06:59 -0700 (PDT)
-Received: from dell ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id a123sm12657865wmd.28.2020.07.17.02.06.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 02:06:58 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 10:06:56 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v5 02/13] mfd: add simple regmap based I2C driver
-Message-ID: <20200717090656.GF3165313@dell>
-References: <20200706175353.16404-1-michael@walle.cc>
- <20200706175353.16404-3-michael@walle.cc>
+        with ESMTP id S1725864AbgGQJMr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 05:12:47 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE04FC061755
+        for <devicetree@vger.kernel.org>; Fri, 17 Jul 2020 02:12:47 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1jwMQ6-0000xV-VD; Fri, 17 Jul 2020 11:12:43 +0200
+Message-ID: <febb665904a9c3c680363be8ea83f243ccd09cb7.camel@pengutronix.de>
+Subject: Re: [PATCH v5 0/4] Add support for iMX8MQ Display Controller
+ Subsystem
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Daniel Vetter <daniel@ffwll.ch>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+        lukas@mntmn.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Fri, 17 Jul 2020 11:12:39 +0200
+In-Reply-To: <CAKMK7uGsveS+cwxiTq7BGrB1OcE_ff9bAxgSFDMUSmS7gRLJ7g@mail.gmail.com>
+References: <20200709164736.18291-1-laurentiu.palcu@oss.nxp.com>
+         <3c03afff3256ec36e12b9d9408830fbb4853f982.camel@pengutronix.de>
+         <CAKMK7uGsveS+cwxiTq7BGrB1OcE_ff9bAxgSFDMUSmS7gRLJ7g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200706175353.16404-3-michael@walle.cc>
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 06 Jul 2020, Michael Walle wrote:
-
-> There are I2C devices which contain several different functions but
-> doesn't require any special access functions. For these kind of drivers
-> an I2C regmap should be enough.
+Am Freitag, den 17.07.2020, 10:59 +0200 schrieb Daniel Vetter:
+> On Fri, Jul 17, 2020 at 10:18 AM Lucas Stach <l.stach@pengutronix.de> wrote:
+> > Hi Laurentiu,
+> > 
+> > Am Donnerstag, den 09.07.2020, 19:47 +0300 schrieb Laurentiu Palcu:
+> > > From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> > > 
+> > > Hi,
+> > > 
+> > > This patchset adds initial DCSS support for iMX8MQ chip. Initial support
+> > > includes only graphics plane support (no video planes), no HDR10 capabilities,
+> > > no graphics decompression (only linear, tiled and super-tiled buffers allowed).
+> > > 
+> > > Support for the rest of the features will be added incrementally, in subsequent
+> > > patches.
+> > > 
+> > > The patchset was tested with both HDP driver (in the downstream tree) and the upstream
+> > > MIPI-DSI driver (with a couple of patches on top, to make it work correctly with DCSS).
+> > 
+> > I think the series (minus 3/5 and minor correction to the DT binding)
+> > is fine to go in now. So just some formal questions: are you going to
+> > maintain this driver in upstream? If so we should add a MAINTAINERS
+> > entry to that effect. I can offer to act as a reviewer in this case.
+> > 
+> > How do you intend to merge this? IMO pushing this through drm-misc
+> > seems like the right thing to do. If you agree I can help you get this
+> > applied. If you are going to maintain the driver on your own, I think
+> > you should then apply for commit rights to drm-misc.
 > 
-> Create an I2C driver which creates an I2C regmap and enumerates its
-> children. If a device wants to use this as its MFD core driver, it has
-> to add an individual compatible string. It may provide its own regmap
-> configuration.
+> drm/imx isn't listed yet as under the drm-misc umbrella, maybe we
+> should put the entire collective of imx drivers under drm-misc? Or
+> maybe it's just an oversight that the git repo isn't specified in the
+> MAINTAINERS entry. Also maybe we should add the pengutronix kernel
+> team alias there too?
+
+drm/imx was exclusively the IPUv3 up until now, which is in fact
+maintained outside of drm-misc in its own git tree. This has worked
+quite well in the past so even though IPUv3 doesn't see a lot of churn
+these days the motivation to change anything to this workflow is quite
+low. And yes, the git tree is missing from the MAINTAINERS entry.
+
+For the DCSS driver, if it's going to be maintained by NXP, I figured
+it might be easier for Laurentiu to push things into drm-misc than set
+up a separate public git tree. But IMHO that's fully up to him to
+decide.
+
+Regards,
+Lucas
+
+> -Daniel
 > 
-> Subdevices can use dev_get_regmap() on the parent to get their regmap
-> instance.
 > 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
-> Changes since v4:
->  - new patch. Lee, please bear with me. I didn't want to delay the
->    new version (where a lot of remarks on the other patches were
->    addressed) even more, just because we haven't figured out how
->    to deal with the MFD part. So for now, I've included this one.
+> > Regards,
+> > Lucas
+> > 
+> > > Thanks,
+> > > Laurentiu
+> > > 
+> > > Changes in v5:
+> > >  * Rebased to latest;
+> > >  * Took out component framework support and made it a separate patch so
+> > >    that people can still test with HDP driver, which makes use of it.
+> > >    But the idea is to get rid of it once HDP driver's next versions
+> > >    will remove component framework as well;
+> > >  * Slight improvement to modesetting: avoid cutting off the pixel clock
+> > >    if the new mode and the old one are equal. Also, in this case, is
+> > >    not necessary to wait for DTG to shut off. This would allow to switch
+> > >    from 8b RGB to 12b YUV422, for example, with no interruptions (at least
+> > >    from DCSS point of view);
+> > >  * Do not fire off CTXLD when going to suspend, unless it still has
+> > >    entries that need to be committed to DCSS;
+> > >  * Addressed Rob's comments on bindings;
+> > > 
+> > > Changes in v4:
+> > >  * Addressed Lucas and Philipp's comments:
+> > >    * Added DRM_KMS_CMA_HELPER dependency in Kconfig;
+> > >    * Removed usage of devm_ functions since I'm already doing all the
+> > >      clean-up in the submodules_deinit();
+> > >    * Moved the drm_crtc_arm_vblank_event() in dcss_crtc_atomic_flush();
+> > >    * Removed en_completion variable from dcss_crtc since this was
+> > >      introduced mainly to avoid vblank timeout warnings which were fixed
+> > >      by arming the vblank event in flush() instead of begin();
+> > >    * Removed clks_on and irq_enabled flags since all the calls to
+> > >      enabling/disabling clocks and interrupts were balanced;
+> > >    * Removed the custom atomic_commit callback and used the DRM core
+> > >      helper and, in the process, got rid of a workqueue that wasn't
+> > >      necessary anymore;
+> > >    * Fixed some minor DT binding issues flagged by Philipp;
+> > >    * Some other minor changes suggested by Lucas;
+> > >  * Removed YUV formats from the supported formats as these cannot work
+> > >    without the HDR10 module CSCs and LUTs. Will add them back when I
+> > >    will add support for video planes;
+> > > 
+> > > Changes in v3:
+> > >  * rebased to latest linux-next and made it compile as drmP.h was
+> > >    removed;
+> > >  * removed the patch adding the VIDEO2_PLL clock. It's already applied;
+> > >  * removed an unnecessary 50ms sleep in the dcss_dtg_sync_set();
+> > >  * fixed a a spurious hang reported by Lukas Hartmann and encountered
+> > >    by me several times;
+> > >  * mask DPR and DTG interrupts by default, as they may come enabled from
+> > >    U-boot;
+> > > 
+> > > Changes in v2:
+> > >  * Removed '0x' in node's unit-address both in DT and yaml;
+> > >  * Made the address region size lowercase, to be consistent;
+> > >  * Removed some left-over references to P010;
+> > >  * Added a Kconfig dependency of DRM && ARCH_MXC. This will also silence compilation
+> > >    issues reported by kbuild for other architectures;
+> > > 
+> > > Laurentiu Palcu (5):
+> > >   drm/imx: compile imx directory by default
+> > >   drm/imx: Add initial support for DCSS on iMX8MQ
+> > >   drm/imx/dcss: add component framework functionality
+> > >   dt-bindings: display: imx: add bindings for DCSS
+> > >   arm64: dts: imx8mq: add DCSS node
+> > > 
+> > >  .../bindings/display/imx/nxp,imx8mq-dcss.yaml |  84 ++
+> > >  arch/arm64/boot/dts/freescale/imx8mq.dtsi     |  23 +
+> > >  drivers/gpu/drm/Makefile                      |   2 +-
+> > >  drivers/gpu/drm/imx/Kconfig                   |   2 +
+> > >  drivers/gpu/drm/imx/Makefile                  |   1 +
+> > >  drivers/gpu/drm/imx/dcss/Kconfig              |   9 +
+> > >  drivers/gpu/drm/imx/dcss/Makefile             |   6 +
+> > >  drivers/gpu/drm/imx/dcss/dcss-blkctl.c        |  70 ++
+> > >  drivers/gpu/drm/imx/dcss/dcss-crtc.c          | 219 +++++
+> > >  drivers/gpu/drm/imx/dcss/dcss-ctxld.c         | 424 +++++++++
+> > >  drivers/gpu/drm/imx/dcss/dcss-dev.c           | 314 +++++++
+> > >  drivers/gpu/drm/imx/dcss/dcss-dev.h           | 177 ++++
+> > >  drivers/gpu/drm/imx/dcss/dcss-dpr.c           | 562 ++++++++++++
+> > >  drivers/gpu/drm/imx/dcss/dcss-drv.c           | 183 ++++
+> > >  drivers/gpu/drm/imx/dcss/dcss-dtg.c           | 409 +++++++++
+> > >  drivers/gpu/drm/imx/dcss/dcss-kms.c           | 185 ++++
+> > >  drivers/gpu/drm/imx/dcss/dcss-kms.h           |  43 +
+> > >  drivers/gpu/drm/imx/dcss/dcss-plane.c         | 405 +++++++++
+> > >  drivers/gpu/drm/imx/dcss/dcss-scaler.c        | 826 ++++++++++++++++++
+> > >  drivers/gpu/drm/imx/dcss/dcss-ss.c            | 180 ++++
+> > >  20 files changed, 4123 insertions(+), 1 deletion(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> > >  create mode 100644 drivers/gpu/drm/imx/dcss/Kconfig
+> > >  create mode 100644 drivers/gpu/drm/imx/dcss/Makefile
+> > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-blkctl.c
+> > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-crtc.c
+> > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ctxld.c
+> > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.c
+> > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.h
+> > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dpr.c
+> > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-drv.c
+> > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dtg.c
+> > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.c
+> > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.h
+> > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-plane.c
+> > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-scaler.c
+> > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ss.c
+> > > 
+> > 
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
 > 
->  drivers/mfd/Kconfig          |  9 +++++++
->  drivers/mfd/Makefile         |  1 +
->  drivers/mfd/simple-mfd-i2c.c | 50 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 60 insertions(+)
->  create mode 100644 drivers/mfd/simple-mfd-i2c.c
 > 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 33df0837ab41..f1536a710aca 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -1162,6 +1162,15 @@ config MFD_SI476X_CORE
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called si476x-core.
->  
-> +config MFD_SIMPLE_MFD_I2C
-> +	tristate "Simple regmap based I2C devices"
 
-Doesn't look like tristate to me.
-
-Haven't you made this builtin only?
-
-> +	depends on I2C
-> +	select MFD_CORE
-
-Why?
-
-> +	select REGMAP_I2C
-> +	help
-> +	  This is a consolidated driver for all MFD devices which are
-> +	  basically just a regmap bus driver.
-
-Please expand on this.  I think it deserves greater explanation.
-
->  config MFD_SM501
->  	tristate "Silicon Motion SM501"
->  	depends on HAS_DMA
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
