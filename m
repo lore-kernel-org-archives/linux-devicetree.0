@@ -2,144 +2,153 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8351C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 04:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9EEC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 05:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABFD720684
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 04:54:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594961685;
-	bh=T7O5K5FtKVLaW/Ktq1Peyeun0e0dQp3Az5btetAZlFE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=F/vDTEq2283+IZgTpRcN4K/nXg1hi4wof+xV1c5+lmRr2jEYyGeTpfJaug6dfqnbT
-	 8jjZBsHdLyR8oeEAZ0f6ulJ+o3VWvEC4zT0Bi3VO8s2Dp+oiTF59+OrToywAP95chY
-	 jCFLqJlM7Ly/zr4jZiPKWjo780cjJKyyzyG9voVg=
+	by mail.kernel.org (Postfix) with ESMTP id 9D4FB2070A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 05:14:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DE/T7HpE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725811AbgGQEyp (ORCPT
+        id S1726036AbgGQFOG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 00:54:45 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:47446 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725300AbgGQEyo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 00:54:44 -0400
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 06H4sIHU031108;
-        Fri, 17 Jul 2020 13:54:18 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 06H4sIHU031108
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1594961659;
-        bh=sviaHrnMJZujQ/kfSzVdyLTKRQoxe3KftF0ksGJHZt0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sEdbXhZ4rXqBlMoeE+YoAkoj9rNKhW56osfU1/fkgOUzj40HDe2oCN3I4FdzwX7nX
-         vSY9+Ycd29xngkdcrgYXCShqg725WYwrGtSmrCUXpp0PxHYK4olic6aVP2OFnHVl5/
-         i5mGFfVxUPINVktnU9CyirkF7NPxyGDwFxPyHcMHOeoIeRKt0UhixohbkcawRh5Ulb
-         HNKfo2bXbu3yYHNU8C2oLZ8fkDRQ11aOfhrt0oSN5sRpFQt+TJ+oOBJIy/fZo0qvSI
-         4H8fCVlvH5WooExGNixwia9phCIsCYcsQkpf/pfd15zm0z50Z99RUckEWlj8jtpUUV
-         stX4e8osGOpkg==
-X-Nifty-SrcIP: [209.85.222.50]
-Received: by mail-ua1-f50.google.com with SMTP id j21so2492814ual.11;
-        Thu, 16 Jul 2020 21:54:18 -0700 (PDT)
-X-Gm-Message-State: AOAM531CSrm2RwmUXPJJrtNVfPFuSJQChNowzuUR199h+HVcceifc0Z8
-        05DrPF+HAE3DZG7BiQYi1c8xmy/7l+EAH0wWFuA=
-X-Google-Smtp-Source: ABdhPJy8QAUyiGsYNoe7J//N9aC1WKkuYpuvH9y8BqfVTTPpOtmEC3WdCNovEUTiKXjxWrl0eMOA6w9tffFl3RYrSX8=
-X-Received: by 2002:ab0:71d3:: with SMTP id n19mr6086967uao.25.1594961657690;
- Thu, 16 Jul 2020 21:54:17 -0700 (PDT)
+        Fri, 17 Jul 2020 01:14:06 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:35412 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725811AbgGQFOF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Jul 2020 01:14:05 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594962844; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=NpxTil8JCWes0+2Pepn4rr9f/VI4zSITIqSFlcRAvsE=; b=DE/T7HpEgJ/VWG2rZqkGd+RuPHXQCFpbEiACDKffvZj3/n0HRjNHXqp91+efRRq+c1JVT12W
+ s9X01wlXz7+q8daiAvZW1xtUrl38K8a5MixwHfY6qJkSGJwSOj+Oyo7AukNHk7Qx/NHauLy0
+ yq4BxZ7nfluuLurftpHopeOjG4I=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
+ 5f11339c8e36ecda306db6fa (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 17 Jul 2020 05:14:04
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1F23AC43391; Fri, 17 Jul 2020 05:14:04 +0000 (UTC)
+Received: from [192.168.225.150] (unknown [137.97.45.199])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3C87DC433C9;
+        Fri, 17 Jul 2020 05:13:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3C87DC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v2 1/4] dt-bindings: media: venus: Add an optional power
+ domain for perf voting
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     stanimir.varbanov@linaro.org, robh+dt@kernel.org,
+        agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org
+References: <1594878139-3402-1-git-send-email-rnayak@codeaurora.org>
+ <1594878139-3402-2-git-send-email-rnayak@codeaurora.org>
+ <20200716234310.GH1218486@builder.lan>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <0f0ae5f5-b03e-0fd3-865f-b80472fb7a21@codeaurora.org>
+Date:   Fri, 17 Jul 2020 10:43:57 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200707102338.989660-1-yamada.masahiro@socionext.com> <20200716230451.GA3041278@bogus>
-In-Reply-To: <20200716230451.GA3041278@bogus>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 17 Jul 2020 13:53:41 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQN04i14VwrWspTJ7+Y87rgsopv88Dyv_8+4Hk8Kx0Fdw@mail.gmail.com>
-Message-ID: <CAK7LNAQN04i14VwrWspTJ7+Y87rgsopv88Dyv_8+4Hk8Kx0Fdw@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: uniphier-thermal: add minItems to socionext,tmod-calibration
-To:     Rob Herring <robh@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM mailing list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200716234310.GH1218486@builder.lan>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 8:09 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, Jul 07, 2020 at 07:23:38PM +0900, Masahiro Yamada wrote:
-> > As the description says, this property contains a pair of calibration
-> > values. The number of items must be exactly 2.
-> >
-> > Add minItems to check a too short property.
-> >
-> > While I was here, I also added this property to the example because
-> > this is the case in the real DT file,
-> > arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-> >
-> > Also, fix the interrupt type (edge -> level) to align with the
-> > real DT.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
-> >
-> >  .../bindings/thermal/socionext,uniphier-thermal.yaml          | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml b/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
-> > index 553c9dcdaeeb..57ffd0c4c474 100644
-> > --- a/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
-> > +++ b/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
-> > @@ -29,6 +29,7 @@ properties:
-> >
-> >    socionext,tmod-calibration:
-> >      $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +    minItems: 2
->
-> The intent was if minItems is not defined, then the default is the same
-> as maxItems. This is not the default for json-schema, so the tooling is
-> supposed to add it.
 
+On 7/17/2020 5:13 AM, Bjorn Andersson wrote:
+> On Wed 15 Jul 22:42 PDT 2020, Rajendra Nayak wrote:
+> 
+>> Add an optional power domain which when specified can be used for
+>> setting the performance state of Venus.
+>>
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> ---
+>> This is a resend of https://lore.kernel.org/patchwork/patch/1241077/
+>>
+>>   Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml    | 6 +++++-
+>>   Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml | 6 +++++-
+>>   2 files changed, 10 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
+>> index 55f2d67..1e8675b 100644
+>> --- a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
+>> +++ b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
+>> @@ -25,12 +25,16 @@ properties:
+>>       maxItems: 1
+>>   
+>>     power-domains:
+>> -    maxItems: 2
+>> +    minItems: 2
+>> +    maxItems: 3
+>>   
+>>     power-domain-names:
+>> +    minItems: 2
+>> +    maxItems: 3
+>>       items:
+>>         - const: venus
+>>         - const: vcodec0
+>> +      - const: opp-pd
+> 
+> In line with Rob's question, the "opp power-domain" seems like a
+> software construct, wouldn't this be better named e.g. "cx"?
 
-This implication is unclear.
+The reason I chose to call it 'opp-pd' was to signify its the domain
+that supports scaling (performance state) and not something that's just
+turned on/off. I am fine calling it cx if that makes it look more 'real'
 
-maxItems should literally only define the max, and
-we should stick to json-schema as much as possible, IMHO.
+> 
+> Regards,
+> Bjorn
+> 
+>>   
+>>     clocks:
+>>       maxItems: 5
+>> diff --git a/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml b/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml
+>> index 157dff8..437286d 100644
+>> --- a/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml
+>> +++ b/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml
+>> @@ -25,13 +25,17 @@ properties:
+>>       maxItems: 1
+>>   
+>>     power-domains:
+>> -    maxItems: 3
+>> +    minItems: 3
+>> +    maxItems: 4
+>>   
+>>     power-domain-names:
+>> +    minItems: 3
+>> +    maxItems: 4
+>>       items:
+>>         - const: venus
+>>         - const: vcodec0
+>>         - const: vcodec1
+>> +      - const: opp-pd
+>>   
+>>     clocks:
+>>       maxItems: 7
+>> -- 
+>> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+>> of Code Aurora Forum, hosted by The Linux Foundation
+>>
 
-
-
-
-It would be nice if json-schema had something like:
-
-numItems: 2
-
-as a shorthand for
-
-minItems: 2
-maxItems: 2
-
-
-Masahiro Yamada
-
-
-
-
-> But looking at processed-schema.yaml, it doesn't
-> seem to be happening for one case here. I'm working on a fix in the
-> tools.
->
-> Rob
-
-
-
---
-Best Regards
-Masahiro Yamada
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
