@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FE5C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 19:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F088CC433E4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 19:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A2EE2064C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 19:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C69862074B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 19:35:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="X52tyLEz"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="lb+bHSCu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728328AbgGQTkB (ORCPT
+        id S1728347AbgGQTfT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 15:40:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35804 "EHLO
+        Fri, 17 Jul 2020 15:35:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728183AbgGQTkA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 15:40:00 -0400
+        with ESMTP id S1727999AbgGQTfT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 15:35:19 -0400
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAA8EC0619D2;
-        Fri, 17 Jul 2020 12:40:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40EB0C0619D2;
+        Fri, 17 Jul 2020 12:35:19 -0700 (PDT)
 Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0AABD71D;
-        Fri, 17 Jul 2020 21:39:58 +0200 (CEST)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B4A2971D;
+        Fri, 17 Jul 2020 21:35:17 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1595014799;
-        bh=btHyfamC2QRyKiifV3QLadgLjSktL0gmpwZBLM5IQDg=;
+        s=mail; t=1595014517;
+        bh=sNhGPc3xQuBFysuH7SMI1uMpqbxHDIN6W0Sor1W4IlE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=X52tyLEzK58YFtlUIQOim++zFKzLTTFRa5xmK+XQMgxpnYRQ+tNydOeMbD40nUDbQ
-         IR4c9tXl1HYVx+gZ/tmwb2T7/Ss7UMiK71mcsb2ntkYeQXs6ua21OR6zuWTdfxIR1Q
-         gl+QhxJ2/1Ltf9QYyvK1r+YzbddFFH+RCtJrscKE=
-Date:   Fri, 17 Jul 2020 22:39:50 +0300
+        b=lb+bHSCuaE1sPU8nsA6kHrQZOuy7wXCAX0oo1V5VN1QsMKVlC8WbZe1iABSFb+uWU
+         P+SZ8NfjhWDSE+Har7h91s4t2g8S3er42LDaqhHiuyWNQdENC4izWwcQo7KrBHCIXo
+         0/ZwLBXJVeKe+o/ZxfyrbESrnRH+2+FCNvtE+KCg=
+Date:   Fri, 17 Jul 2020 22:35:09 +0300
 From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
 Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
         slongerbeam@gmail.com, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, bparrot@ti.com
-Subject: Re: [PATCH 04/13] dt-bindings: media: ti,cal: Remove sensor from
- example
-Message-ID: <20200717193950.GF5961@pendragon.ideasonboard.com>
+        linux-renesas-soc@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Loic Poulain <loic.poulain@linaro.org>
+Subject: Re: [PATCH 02/13] arm64: dts: qcom: apq8016-sbc: Fix CSI-2 lanes
+ routing
+Message-ID: <20200717193509.GD5961@pendragon.ideasonboard.com>
 References: <20200717132859.237120-1-jacopo+renesas@jmondi.org>
- <20200717132859.237120-5-jacopo+renesas@jmondi.org>
+ <20200717132859.237120-3-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200717132859.237120-5-jacopo+renesas@jmondi.org>
+In-Reply-To: <20200717132859.237120-3-jacopo+renesas@jmondi.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -57,60 +59,55 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hi Jacopo,
 
-Thank you for the patch.
-
-On Fri, Jul 17, 2020 at 03:28:50PM +0200, Jacopo Mondi wrote:
-> The newly introduced dt-schema bindings for the ov5640 image
-> sensor triggered a warning in the ti,cal.yaml bindings file, which
-> has a camera sensor node marked compatible with the sensor.
+On Fri, Jul 17, 2020 at 03:28:48PM +0200, Jacopo Mondi wrote:
+> The ov5640 sensor does not support lanes reconfiguration according
+> to version of the datasheet I have (version 2.03) and the driver
+> does not parse the properties to try to reconfigure them.
 > 
-> As in the example is enough to report a node for the device that
-> the bindings is about, and maintaining the sensor node up-to-date
-> is a non-necessary burden, remove the image sensor node from the
-> ti,cal bindings file.
-
-The sensor node in the example gives a bit more clarity, but it's also
-not super important. I'll let Tomi decide if he wants to keep it (and
-thus get it fixed), or if he's fine dropping it.
-
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
+> Fix the properties values in the camera and cci node.
+> 
 > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 > ---
->  .../devicetree/bindings/media/ti,cal.yaml     | 22 -------------------
->  1 file changed, 22 deletions(-)
+> Loic, I see you added the camera nodes in
+> 39e0ce6cd1bf ("arm64: dts: qcom: apq8016-sbc: Add CCI/Sensor nodes")
 > 
-> diff --git a/Documentation/devicetree/bindings/media/ti,cal.yaml b/Documentation/devicetree/bindings/media/ti,cal.yaml
-> index 5e066629287d..fe5c74dd246e 100644
-> --- a/Documentation/devicetree/bindings/media/ti,cal.yaml
-> +++ b/Documentation/devicetree/bindings/media/ti,cal.yaml
-> @@ -177,26 +177,4 @@ examples:
->          };
->      };
+> Do you have any idea how lanes could be swapped if, from my understanding,
+> nor the sensor nor the driver supports that ?
+
+It's not supported on the OV5640 side, so I think the second hunk of
+this patch is correct, but I believe that the CAMSS supports lane
+reordering, so the first hunk is likely incorrect and should be dropped.
+
+> ---
+>  arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> -    i2c {
-> -        clock-frequency = <400000>;
-> -        #address-cells = <1>;
-> -        #size-cells = <0>;
-> -
-> -        camera-sensor@3c {
-> -               compatible = "ovti,ov5640";
-> -               reg = <0x3c>;
-> -
-> -               clocks = <&clk_ov5640_fixed>;
-> -               clock-names = "xclk";
-> -
-> -               port {
-> -                    csi2_cam0: endpoint {
-> -                            remote-endpoint = <&csi2_phy0>;
-> -                            clock-lanes = <0>;
-> -                            data-lanes = <1 2>;
-> -                    };
-> -               };
-> -        };
-> -    };
-> -
->  ...
+> diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+> index 8a4b790aa7ff..fe6613676e45 100644
+> --- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+> @@ -591,8 +591,8 @@ ports {
+>  		port@0 {
+>  			reg = <0>;
+>  			csiphy0_ep: endpoint {
+> -				clock-lanes = <1>;
+> -				data-lanes = <0 2>;
+> +				clock-lanes = <0>;
+> +				data-lanes = <1 2>;
+>  				remote-endpoint = <&ov5640_ep>;
+>  				status = "okay";
+>  			};
+> @@ -627,8 +627,8 @@ camera_rear@3b {
+> 
+>  		port {
+>  			ov5640_ep: endpoint {
+> -				clock-lanes = <1>;
+> -				data-lanes = <0 2>;
+> +				clock-lanes = <0>;
+> +				data-lanes = <1 2>;
+>  				remote-endpoint = <&csiphy0_ep>;
+>  			};
+>  		};
 
 -- 
 Regards,
