@@ -2,116 +2,97 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E9CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 19:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E40C433EC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 19:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2C472076A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 19:02:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595012551;
-	bh=hY/IiQZ62oMR2cm1BWXEte+UuNUso2tLkvY01Z3Z7so=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mOfNuz+b5wE2ZOFL9bU+aoob5pjKq8Gdwz/nJkJkQiXu0jOedLlHHFD0hmXhu2Aeq
-	 SqIEug/R9tfcYv9zXKecHAlEtx3Mlnr6PTPruCb4JbqezGzXCP6Jwnql8qZQ36KKpz
-	 aWfVhfLshn4t7hOjJqsr4xD/EGx7WivkJ0ZTR+bM=
+	by mail.kernel.org (Postfix) with ESMTP id 8A2C82070E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 19:12:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="J+54t67z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgGQTCa (ORCPT
+        id S1728662AbgGQTMC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 15:02:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34130 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726439AbgGQTCa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Jul 2020 15:02:30 -0400
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66DDE20775;
-        Fri, 17 Jul 2020 19:02:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595012549;
-        bh=hY/IiQZ62oMR2cm1BWXEte+UuNUso2tLkvY01Z3Z7so=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QNwhBCWxtuvTLRSbhixHCBlp73msYY5d2rOsE+qi+9d+WJgBkiDpqBUsQNPg4hTr+
-         mHTMZHwMy/c1hncyNQVipPgFrbmRlFfqK0GiZOCEybSU6XSQTum/kgvhljsXbv0/Im
-         hvjLnb9qvM6T3djT7shhwgAP2Pq0/27HXSUi0QtM=
-Received: by mail-oi1-f170.google.com with SMTP id t4so8832941oij.9;
-        Fri, 17 Jul 2020 12:02:29 -0700 (PDT)
-X-Gm-Message-State: AOAM530Z1EQqa2V5907KbvYFF6G0rAuklBX5F7MqFlTWRnrQBWWFhgAv
-        +G9kaKZhfFvr892kNK9g9IbGw0YJ2P0ru/p6MA==
-X-Google-Smtp-Source: ABdhPJzZY8yy3yKxPk7vB1ABc8/WFSudqSAMcFCsEUF38xcGMuBxhU8wPz3U67XIH6o54FVkR0PRKLPNGbkhbV3VBOE=
-X-Received: by 2002:aca:30d2:: with SMTP id w201mr8975582oiw.147.1595012548740;
- Fri, 17 Jul 2020 12:02:28 -0700 (PDT)
+        Fri, 17 Jul 2020 15:12:02 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:6388 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728620AbgGQTL7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 15:11:59 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f11f7f20000>; Fri, 17 Jul 2020 12:11:46 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 17 Jul 2020 12:11:58 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 17 Jul 2020 12:11:58 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 Jul
+ 2020 19:11:58 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 17 Jul 2020 19:11:58 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.163.115]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f11f7fd0001>; Fri, 17 Jul 2020 12:11:57 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <luca@lucaceresoli.net>, <leonl@leopardimaging.com>,
+        <robh+dt@kernel.org>, <lgirdwood@gmail.com>, <broonie@kernel.org>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 2/3] dt-bindings: media: imx274: Add optional input clock and supplies
+Date:   Fri, 17 Jul 2020 12:15:21 -0700
+Message-ID: <1595013322-15077-2-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1595013322-15077-1-git-send-email-skomatineni@nvidia.com>
+References: <1595013322-15077-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-References: <20200715221150.v3.2.I113cdbaf66d48b37ac0faefb9b845480d122f3b9@changeid>
- <20200716191318.GA2683551@bogus> <3995892c-340c-3419-3c2d-934a3067f51b@collabora.com>
-In-Reply-To: <3995892c-340c-3419-3c2d-934a3067f51b@collabora.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 17 Jul 2020 13:02:17 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+Xr5m4pxqbeEt+Zwb1GCWPKN1KBmdVtyKAmVFiLf=r1A@mail.gmail.com>
-Message-ID: <CAL_Jsq+Xr5m4pxqbeEt+Zwb1GCWPKN1KBmdVtyKAmVFiLf=r1A@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] dt-bindings: mfd: Add DT compatible string "google,cros_ec_uart"
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Bhanu Prakash Maiya <bhanumaiya@chromium.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Furquan Shaikh <furquan@chromium.org>,
-        Raul E Rangel <rrangel@chromium.org>,
-        Eric Peers <epeers@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1595013106; bh=GFC1LF/7lvAW8gpnTVuP0yCQ7aUNS8pw6xjdqQGCq/s=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=J+54t67z4hEeAnjeHc2ks0APmu0OdZJEdPX69TmRi3nt2oU2a+gZqpVQ9s8yzpQfM
+         n4Oiy/ovrAvVEPVQUTDRMKRlrG8OfrijH4f24TUBVcp0gw2nf73UYXfARtSnUDHfP+
+         UvrsYYzkpKzCCxOX573J2JCVVmGMCkclCMX1JGvG5o8R69WTzrCV/MHpUx+/5B2e6R
+         4iwcXFa9/6WWR0jdP3invXNMBF6pEvt4nZix0FM2JAujujuDMHTrh9JeBD8Qbb/2Yf
+         w5eVDxKTrd7JPWPuJzLxAfcPdMrAA5SGFIHJRnffmeGC4Q+Lnt+7WgV/xf+rT6dTC+
+         O/WDy0BfhI35Q==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 3:53 AM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> Hi Rob,
->
-> On 16/7/20 21:13, Rob Herring wrote:
-> > On Wed, Jul 15, 2020 at 10:16:04PM -0700, Bhanu Prakash Maiya wrote:
-> >> From: Bhanu Prakash Maiya <bhanumaiya@chromium.org>
-> >>
-> >> Add DT compatible string in
-> >> Documentation/devicetree/bindings/mfd/cros_ec.txt
-> >
-> > Need to update this.
-> >
-> > With that,
-> >
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> >
->
-> So this is an ACPI-only driver that is instantiated by using the Device Tree
-> namespace link in ACPI. I am not sure how to deal with this, but I suspect we
-> need a proper OF binding definition before accept it.
+This patch adds IMX274 optional external clock input and voltage
+supplies to device tree bindings.
 
-In that case, NAK because I have no bandwidth or desire for ACPI
-stuff. The DT bindings in ACPI concept is flawed.
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ Documentation/devicetree/bindings/media/i2c/imx274.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-> The driver gets at least the baudrate and the flowcontrol from ACPI resources,
-> so I'm wondering if we should also add the properties in the device-tree
-> description (although we're not able to really test because there is not OF
-> hardware that supports it yet). Or is fine to just accept the compatible for now
-> and we can do this later when we have the possibility to test with OF-based
-> hardware.
+diff --git a/Documentation/devicetree/bindings/media/i2c/imx274.txt b/Documentation/devicetree/bindings/media/i2c/imx274.txt
+index 80f2e89..0727079 100644
+--- a/Documentation/devicetree/bindings/media/i2c/imx274.txt
++++ b/Documentation/devicetree/bindings/media/i2c/imx274.txt
+@@ -13,6 +13,11 @@ Required Properties:
+ 
+ Optional Properties:
+ - reset-gpios: Sensor reset GPIO
++- clocks: Reference to the input clock.
++- clock-names: Should be "inck".
++- VANA-supply: Sensor 2.8v analog supply.
++- VDIG-supply: Sensor 1.8v digital core supply.
++- VDDL-supply: Sensor digital IO 1.2v supply.
+ 
+ The imx274 device node should contain one 'port' child node with
+ an 'endpoint' subnode. For further reading on port node refer to
+-- 
+2.7.4
 
-That's all defined by the serial device binding already, so it doesn't
-really matter here.
-
-You can keep my R-by, but don't send me more ACPI crap.
-
-Rob
