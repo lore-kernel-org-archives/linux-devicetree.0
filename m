@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FB6C433EC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 13:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79251C433E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 13:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87DF42076D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 13:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 581BC20775
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 13:23:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="NKRXiZK5"
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="G/PDUzaI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726079AbgGQNWU (ORCPT
+        id S1726593AbgGQNXX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:22:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33650 "EHLO
+        Fri, 17 Jul 2020 09:23:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726851AbgGQNWS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 09:22:18 -0400
+        with ESMTP id S1726627AbgGQNXR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 09:23:17 -0400
 Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0E31C08C5E0
-        for <devicetree@vger.kernel.org>; Fri, 17 Jul 2020 06:22:17 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id e4so12613214ljn.4
-        for <devicetree@vger.kernel.org>; Fri, 17 Jul 2020 06:22:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B69FC08C5E0
+        for <devicetree@vger.kernel.org>; Fri, 17 Jul 2020 06:23:16 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id r19so12532034ljn.12
+        for <devicetree@vger.kernel.org>; Fri, 17 Jul 2020 06:23:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Ss28C0+mM4ryhX0kbHHIUQ4RNo3GN12IhkPjDaqzOeE=;
-        b=NKRXiZK5Vg4lLt6JNcSMS4fVRZqGLbiD3ALj2er8z+jz02t/Me0ivmqvp1Eq4f7cto
-         iSCkX0wRPi8LV3a5neyPSxraBBE4AN80wprYFLY9UCrz8D/D0GmWu0Cvr7RSNz5TTQfy
-         O42+2QyiWUhRw462YRkD8gdgOs8f6GxEZIf1MLRpn6UV+LxJg0+4eZHnA8kUfaoVfV3v
-         fjyPwJSTHsX9XINiTWOt1p0/4oL6AsKumloGbenY15J2SvslvUBg1xIC0bVH5ORZxuMZ
-         2grQrDkqAtCVXtvSstlPbK9ERHW2+ZPX35PPQO5Z6elS8vuDABLJKbuilb5nmyf3rLCX
-         bh5g==
+        bh=r5HS07ICf7E3a3QJxXXjTIF72wcfgMRIm+vhJsEtkcw=;
+        b=G/PDUzaIqdp1Gjj31VxhrrYLJsacpjKxAAeitpvz2KCk8yGUDLzVXlJ3q8zbAFP57j
+         r9tjyIvZkl67/BTM0oesxWME9XtuWS+46jAX+1t27JSS56lOyCbBDij7xZXHOa0dVyuh
+         7FiV92akZrkKRS6MZXvmgsB0stALd/vxBZU13pULuaIUK+0sVBzOXorHxtl227Nbmq6v
+         1uiigkmHl8tttEMfHoQVrbPXVQprxr/JmOjBIyTwAbPoVSPNRu9dqL2MOJAWM0bUcge0
+         RXWVCIoq2wClrs/UG/zsTqBNKGO7IieNNdBfsIyJSyiMRaT3pkmAj24448EPmt1d+j9I
+         m6tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=Ss28C0+mM4ryhX0kbHHIUQ4RNo3GN12IhkPjDaqzOeE=;
-        b=WY/adL7/x56ZXqbNI1IIjidc4w3Qgze517tFfoIrbCWfptcSPfBrrHnjq1PXqtYpvm
-         ns2fgs39ijfYfyUb9kEQR1JfbFtMeEZZSmRBxNeSxtJb25zNM5Z1uNveRGUKkKuUMtRv
-         qsXcdCmbjLuWi/D6MYJoF1FiuQ5G+xBfoqJNInEnRgholfjMRa7zRdqMziEUtShjeujC
-         /Kh/+/P5cxC5phL51uUDGtGLy0kzIUMWlrhylK9SGm/v6lCXcW718OZfYNZ0nX1Evtub
-         If+bed8jWGqy954PfpwdYc+wIKf8W1Ihpe3BMzWzf4adVjxMxTyMfqsodHb2FJbIegjh
-         RFGA==
-X-Gm-Message-State: AOAM532NMjjGaE11oLa0mL2CmHW4fokTuKlHhF4Kb+CtmhXes8oIh9Cd
-        xscNq8LcWp8CvIdtg+gJeQ6ehg==
-X-Google-Smtp-Source: ABdhPJyQdCUcPwXAnEcnnv4mCw6GTSBF7SR7eCeWoXfWqYtwdr9WVEBVseii+1OEhPnuCx8eUP3JQw==
-X-Received: by 2002:a2e:760f:: with SMTP id r15mr4331219ljc.275.1594992135764;
-        Fri, 17 Jul 2020 06:22:15 -0700 (PDT)
+        bh=r5HS07ICf7E3a3QJxXXjTIF72wcfgMRIm+vhJsEtkcw=;
+        b=pp6eQ2odmP/C9s08QjqOObTe5/QN8qkjKG8FsvT2/KQY1Maac3ucLKP0zy6zn27m85
+         M34+iLE5clVOJcl3X475kfkDJUD6puKl/PVOsAnJOFrmoRXTG6mYAzCAg2Zmk0whJCkQ
+         3RjXMYmpD8tBT5tAlwUK2lPkVl3BM/m8j9nfOUAwpUaPc78Jz90PsCcPplM2X/YI8T/L
+         CYurkHiEYpD6khVKs5ebvAgMfcC6Y/PgCmiUjplylfz4S9kSRgsdBwIjFYe1af6iTgsu
+         LkOiPct9RUP7zuozmrRcJrgy8akH4pXrF+p3bxc9L/JakWWZWiSluiawVOxKnJS5oDUx
+         YDjA==
+X-Gm-Message-State: AOAM532ZfEe6TwNNdHa4YyblyC5sfUWSJNmgVhkNcsobbf+hoAXyFea/
+        bBBAx5P6pQv6X/FMnUojsRweTA==
+X-Google-Smtp-Source: ABdhPJzUBTptxuJTLZ8lzud6Q9kGgaD4DEmyeJiAqkYBb3btArneE3fHcpaQCMg8v1lLUysLkIvUDg==
+X-Received: by 2002:a2e:1441:: with SMTP id 1mr4364600lju.93.1594992194884;
+        Fri, 17 Jul 2020 06:23:14 -0700 (PDT)
 Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
-        by smtp.gmail.com with ESMTPSA id 203sm1649722ljf.14.2020.07.17.06.22.14
+        by smtp.gmail.com with ESMTPSA id w5sm1648620lji.49.2020.07.17.06.23.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 06:22:15 -0700 (PDT)
-Date:   Fri, 17 Jul 2020 15:22:14 +0200
+        Fri, 17 Jul 2020 06:23:14 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 15:23:13 +0200
 From:   Niklas <niklas.soderlund@ragnatech.se>
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -84,16 +84,15 @@ Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
         linux-renesas-soc@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-watchdog@vger.kernel.org,
         Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 02/20] dt-bindings: thermal: rcar-gen3-thermal: Add
- r8a774e1 support
-Message-ID: <20200717132214.GA177462@oden.dyn.berto.se>
+Subject: Re: [PATCH 03/20] thermal: rcar_gen3_thermal: Add r8a774e1 support
+Message-ID: <20200717132313.GB177462@oden.dyn.berto.se>
 References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594811350-14066-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594811350-14066-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1594811350-14066-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594811350-14066-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -103,29 +102,35 @@ Hi Lad,
 
 Thanks for your work.
 
-On 2020-07-15 12:08:52 +0100, Lad Prabhakar wrote:
-> Document RZ/G2H (R8A774E1) SoC bindings.
+On 2020-07-15 12:08:53 +0100, Lad Prabhakar wrote:
+> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 > 
+> Add r8a774e1 specific compatible string.
+> 
+> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
 Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
 > ---
->  Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.yaml | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/thermal/rcar_gen3_thermal.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.yaml b/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.yaml
-> index b1a55ae497de..f386f2a7c06c 100644
-> --- a/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.yaml
-> +++ b/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.yaml
-> @@ -20,6 +20,7 @@ properties:
->      enum:
->        - renesas,r8a774a1-thermal # RZ/G2M
->        - renesas,r8a774b1-thermal # RZ/G2N
-> +      - renesas,r8a774e1-thermal # RZ/G2H
->        - renesas,r8a7795-thermal  # R-Car H3
->        - renesas,r8a7796-thermal  # R-Car M3-W
->        - renesas,r8a77961-thermal # R-Car M3-W+
+> diff --git a/drivers/thermal/rcar_gen3_thermal.c b/drivers/thermal/rcar_gen3_thermal.c
+> index c48c5e9b8f20..3f129ce4adc0 100644
+> --- a/drivers/thermal/rcar_gen3_thermal.c
+> +++ b/drivers/thermal/rcar_gen3_thermal.c
+> @@ -314,6 +314,10 @@ static const struct of_device_id rcar_gen3_thermal_dt_ids[] = {
+>  		.compatible = "renesas,r8a774b1-thermal",
+>  		.data = &rcar_gen3_ths_tj_1,
+>  	},
+> +	{
+> +		.compatible = "renesas,r8a774e1-thermal",
+> +		.data = &rcar_gen3_ths_tj_1,
+> +	},
+>  	{
+>  		.compatible = "renesas,r8a7795-thermal",
+>  		.data = &rcar_gen3_ths_tj_1,
 > -- 
 > 2.17.1
 > 
