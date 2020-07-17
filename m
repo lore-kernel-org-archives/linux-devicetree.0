@@ -7,111 +7,149 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB92FC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 02:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0AB8C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 02:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 963B720838
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 02:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AE3120838
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 02:31:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="G2/VmKzn"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Jk+W8BOZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbgGQCT1 (ORCPT
+        id S1726230AbgGQCbO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jul 2020 22:19:27 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:42232 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgGQCT0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jul 2020 22:19:26 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5A7F0561;
-        Fri, 17 Jul 2020 04:19:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1594952364;
-        bh=AY6ngIIQkPlQDWCl5lU11+0P+LyJOnh2DiIlr/M/gJ8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=G2/VmKznn1kMZnyN+GNhRaR2BpD7/aWu2fu8ckX5H7hq3YZ10cvD41elVTybpGJLP
-         0pYrgi6VQ0t303acwAaCzExhHnX2tgiyLV3yp7IeZr89Rp2O4/i5GuNhTp9L/CZcwa
-         1tMSWDFa+Isd5lAHLhJrR2giFVjghC5pQJL/hcUI=
-Date:   Fri, 17 Jul 2020 05:19:16 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        linux-media@vger.kernel.org,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Thu, 16 Jul 2020 22:31:14 -0400
+Received: from mail-eopbgr150054.outbound.protection.outlook.com ([40.107.15.54]:12164
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726229AbgGQCbN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jul 2020 22:31:13 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KjnkHpzEBIi5WzhZl2RgXd/0GlkZ8exMVVebT7Ge62lnla+LDKCSXyONo15FZGb7rCQBkIa/tv6V9bWkwD9umgp60cca+pylK3d8y/zS5b61a6J8UCBIclFO3/07lmFBsvVhfZV2kMhrWqEWZIaEYpVOv4vTxacWCYN+pbcY09UEIaKgwZM8kRyNMEqYdd9DzO/wsyadqWJWKITqZVvLzlGSEe8Bp2TQwDpQqI5hx9hzG9nou/XuSxoBOoAQt6zPOxp04g2sNrqITISDhhrCmBW6sAqSEFXe9TGBp3VN7dgSwEJ7p2MY+zBe9ibL7IZ0QJ2pQBzzNZrcZUItDI7ExA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tsPLI7RyxD/DARATxe+uRlR+KEIu4J+qi/xfai2lFX0=;
+ b=nsG4m+I+5yGXm12NtthymIfPa3PMZ0v81FR++6Ty1+w+rULJQEsF2tuaQNJ4tDjGKYE2TSI7hIOUlzpfxJSfwIyBVSvKjMMiMoQpKqyETvJl72ZaUNYOcVwvEUWkPQedU6pd/R/Ij/+YImHFZJDOJJ/V6A9CP3QepUYEoG5egzQ/y4uA1aXkyD+iAVu4xhmYHi44tCs/AVXRJ5jv9Quvm4s2xbE4giHm6tYH8jJpJCpsABaT9FdcogpAc79cw38PkFqhj/4B/rARzn6uMu91t+ToPCx6xExyZ28TeRiE/vX6ZJXrmLKBZhcdOzmr9TsSRqhApVeRxsP2Tzg4zWq4fw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tsPLI7RyxD/DARATxe+uRlR+KEIu4J+qi/xfai2lFX0=;
+ b=Jk+W8BOZggUxGzbQZSFvq4a5hbCN8gfsJT4HnIkItNAVrQpgOeO0Op72LKEDfeDufhfgjGllQ4SRvsMmk+TBbWf9sS6TYD70NnWJgqbDzd9vhP4qkBEdkjDP3sPR7J2y7rXO1iWxPieX5tcNNoSnZi5+4ThGZ5L+q6ljj/yaEa4=
+Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (2603:10a6:20b:118::20)
+ by AM6PR04MB5813.eurprd04.prod.outlook.com (2603:10a6:20b:ab::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Fri, 17 Jul
+ 2020 02:31:09 +0000
+Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
+ ([fe80::1101:adaa:ee89:af2a]) by AM7PR04MB7157.eurprd04.prod.outlook.com
+ ([fe80::1101:adaa:ee89:af2a%3]) with mapi id 15.20.3174.026; Fri, 17 Jul 2020
+ 02:31:09 +0000
+From:   Peter Chen <peter.chen@nxp.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Philippe Schenker <philippe.schenker@toradex.com>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH v4 1/4] device property: Add a function to test is a
- fwnode is a graph endpoint
-Message-ID: <20200717021916.GA387@pendragon.ideasonboard.com>
-References: <20200701062140.12953-1-laurent.pinchart+renesas@ideasonboard.com>
- <20200701062140.12953-2-laurent.pinchart+renesas@ideasonboard.com>
- <20200701073405.GB836@valkosipuli.retiisi.org.uk>
- <CAJZ5v0iSpC=67p++vyH0WjcsuPG5SMtJJamit2T9vOQPb9jm0w@mail.gmail.com>
- <20200715205717.GF836@valkosipuli.retiisi.org.uk>
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: usb: ci-hdrc-usb2: add property
+ disable-runtime-pm
+Thread-Topic: [PATCH v2 1/3] dt-bindings: usb: ci-hdrc-usb2: add property
+ disable-runtime-pm
+Thread-Index: AQHWWfIOX6WrPbWACU6caDfv2RVZEqkKmaoAgAB3GQA=
+Date:   Fri, 17 Jul 2020 02:31:09 +0000
+Message-ID: <20200717023108.GA17070@b29397-desktop>
+References: <20200714151822.250783-1-philippe.schenker@toradex.com>
+ <20200716192452.GA2699629@bogus>
+In-Reply-To: <20200716192452.GA2699629@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 99216192-2a61-4614-6515-08d829f9775f
+x-ms-traffictypediagnostic: AM6PR04MB5813:
+x-microsoft-antispam-prvs: <AM6PR04MB5813BFA14DD278FED59351048B7C0@AM6PR04MB5813.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: w8Kl+9G7xME97RP4zKVrIci8PhuzYYfJLFlA7BIqRXjzFEgkLG4TY+mFfB2zdnya2+ZgpHAqW3yoSllK8I2ouBsqu3FEt1fac1gfr8XxYjnlPr9qfnE2/nu+5qYvJnl3mhkf187fRHO+HXhcxV1Iw0WTdMmMIsu+9r7QhMkJsOFW71+cFlf/8y6D3ZxBsIP1HBjT0ZMjG0k0yqSOqI9n3O0Ti1L2ADCEZhibISqVmuUyt1EY8qob26RgjRCamSKsY94U+fNbjYJOlVyhznFuRc4Ru6+eezrfQfbCdg5LkuG1W+hIPwiRQAxRSOcNo/MvIqRsMY0xMyKpbSbwx4cioQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7157.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(7916004)(366004)(39860400002)(136003)(376002)(396003)(346002)(54906003)(83380400001)(44832011)(33656002)(33716001)(186003)(5660300002)(4326008)(1076003)(8936002)(66446008)(64756008)(66556008)(6916009)(2906002)(8676002)(478600001)(66476007)(26005)(76116006)(66946007)(91956017)(86362001)(71200400001)(6506007)(316002)(6486002)(53546011)(9686003)(6512007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: CR4VYfakJJ5mx1hhSUx4ei67zXRlHVsAofkXilgJRCI8s/RSFa/WJvo0GsivmtWJXLlbARdXy7ueD4qHHXW0GlhQz5fZuf23Xr66OsuLaTVN/hNBwZpKHwfTUOTq2vSUBJFmzptrvXFwPKp96bdUAmfjxw9c+PdZEZ7qRTcwMKA7FxX6sWFUjElX3kKnzviUT9w6DvRDVPNLj6KPgoPXo+uKXwl5JZ1MAJtF6UhCwCq1Vnx3hT+0c1xleJL+D/2lXqgc28QlwqO5ix3USK61Pmjh64I17yd4lc+eXhCeA7KnqnbXE9tbN5DVBndYFCZNh1YuCz27AqhP7lPjMiXVJeOeIQCRuKFCxJy+iDgGtuPPI9yZt8WEepx1DmMLG/+EHO2NfZxoRkamzMF3yhCrHAv3XobwgvHyDtdJxb1C/NC8cUHoozwWVVDQFiQ4RAaWNYjN146ewQ80zlozd1TWZO5WKQw+Mc86itYg0G98HPM=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <CC0CC7ED8FC97B4E95BE667F252BACE3@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200715205717.GF836@valkosipuli.retiisi.org.uk>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7157.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 99216192-2a61-4614-6515-08d829f9775f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2020 02:31:09.7528
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wO9z0tiSGvIekG35Qf1/AaXrxUAkkYbh1wBGIOXnq2Sni2dfa3Bb4O/gVq8IRuVUUdsYW4cljKPlnUsiiZ2oRA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5813
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sakari,
+On 20-07-16 13:24:52, Rob Herring wrote:
+> On Tue, Jul 14, 2020 at 05:18:20PM +0200, Philippe Schenker wrote:
+> > Chipidea depends on some hardware signals to be there in order
+> > for runtime-pm to work well. Add the possibility to disable runtime
+> > power management that is necessary for certain boards.
+>=20
+> This is why we have SoC specific compatible strings. Use that.
 
-On Wed, Jul 15, 2020 at 11:57:17PM +0300, Sakari Ailus wrote:
-> On Wed, Jul 01, 2020 at 02:19:21PM +0200, Rafael J. Wysocki wrote:
-> > On Wed, Jul 1, 2020 at 9:34 AM Sakari Ailus <sakari.ailus@iki.fi> wrote:
-> > > On Wed, Jul 01, 2020 at 09:21:37AM +0300, Laurent Pinchart wrote:
-> > > > Drivers may need to test if a fwnode is a graph endpoint. To avoid
-> > > > hand-written solutions that wouldn't work for all fwnode types, add a
-> > > > new fwnode_graph_is_endpoint() function for this purpose. We don't need
-> > > > to wire it up to different backends for OF and ACPI for now, as the
-> > > > implementation can simply be based on checkout the presence of a
-> > > > remote-endpoint property.
-> > > >
-> > > > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> > > > ---
-> > > >  include/linux/property.h | 5 +++++
-> > > >  1 file changed, 5 insertions(+)
-> > > >
-> > > > diff --git a/include/linux/property.h b/include/linux/property.h
-> > > > index 10d03572f52e..9f805c442819 100644
-> > > > --- a/include/linux/property.h
-> > > > +++ b/include/linux/property.h
-> > > > @@ -389,6 +389,11 @@ struct fwnode_handle *
-> > > >  fwnode_graph_get_remote_node(const struct fwnode_handle *fwnode, u32 port,
-> > > >                            u32 endpoint);
-> > > >
-> > > > +static inline bool fwnode_graph_is_endpoint(struct fwnode_handle *fwnode)
-> > > > +{
-> > > > +     return fwnode_property_present(fwnode, "remote-endpoint");
-> > > > +}
-> > > > +
-> > > >  /*
-> > > >   * Fwnode lookup flags
-> > > >   *
-> > >
-> > > Thanks for the patch. I've bounced it to devicetree and linux-acpi lists
-> > > (now cc'd) --- hope that works.
-> > >
-> > > Rafael: do you think this simple patch could go though the media tree,
-> > > assuming that folks are generally fine with the patch as such?
-> > 
-> > Yes, it could.
-> 
-> Thanks! I've applied this to my tree.
+It is a board design limitation, not SoC's. To support USB low power
+mode for device mode, either VBUS connects to SoC, or VBUS connect to
+GPIO, or VBUS connect to Type-C IC, but none of the design is used
+at that board. So the USB can't enter low power mode for that board,
+otherwise, the USB controller can't be woken up since no any interrupts
+will occur if USB cable (host at other side) connects to the connector.
 
-Do you mean the whole series ? :-) Do you intend to send a pull request
-for v5.9 ?
+Peter
+>=20
+> >=20
+> > Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+> > ---
+> >=20
+> > Changes in v2: None
+> >=20
+> >  Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/D=
+ocumentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+> > index 51376cbe5f3d..67a31df13e69 100644
+> > --- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+> > +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+> > @@ -90,6 +90,7 @@ Optional properties:
+> >    case, the "idle" state needs to pull down the data and strobe pin
+> >    and the "active" state needs to pull up the strobe pin.
+> >  - pinctrl-n: alternate pin modes
+> > +- disable-runtime-pm: This disables the runtime power management.
+>=20
+> This is a Linux feature, not h/w description or config.
+>=20
+> > =20
+> >  i.mx specific properties
+> >  - fsl,usbmisc: phandler of non-core register device, with one
+> > --=20
+> > 2.27.0
+> >=20
 
--- 
-Regards,
+--=20
 
-Laurent Pinchart
+Thanks,
+Peter Chen=
