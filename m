@@ -2,346 +2,229 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A44C433E4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 08:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BAFCC433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 08:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E67B12071A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 08:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D76AB207F5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 08:59:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K0ahTUhH"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Oewzlb2s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726198AbgGQIuS (ORCPT
+        id S1726256AbgGQI7a (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 04:50:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48110 "EHLO
+        Fri, 17 Jul 2020 04:59:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726113AbgGQIuR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 04:50:17 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90FDBC08C5C0
-        for <devicetree@vger.kernel.org>; Fri, 17 Jul 2020 01:50:17 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id o1so5183780plk.1
-        for <devicetree@vger.kernel.org>; Fri, 17 Jul 2020 01:50:17 -0700 (PDT)
+        with ESMTP id S1726000AbgGQI7a (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 04:59:30 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE9EEC08C5C0
+        for <devicetree@vger.kernel.org>; Fri, 17 Jul 2020 01:59:29 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id a21so6349785otq.8
+        for <devicetree@vger.kernel.org>; Fri, 17 Jul 2020 01:59:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=hRI9+M8x3rX5N8lHLXY7VIxGZcILlVx4V1n6t6KTjFI=;
-        b=K0ahTUhH2yynvg7PEUDHiPPwSqKFNHsIuyZQFnsKDydtS2+ENT9Gpcg8PqlC4czLKB
-         enYbOZiLaphhUtjJJMzdpLNB+kGm6nhaHDY0pkS/rkPBYisHjii54xBmf3xuiaRRRqcw
-         HuNvd5wprfgjrC7jPSA0hrAkrTWOgHuWP9RBj+Np03CH4cNkZDIfKSmlcnVMBt0ZDd4L
-         2uY/ttoFkc1HCEIZgA4SkrKjvjtFkesO/0YrTAoLp8925vMvVN03xHWSlnfXUmoZbsbU
-         Dv48FM4np175PQ7633Iz+ouXAvPZP2nyR02cum4rzvLk8yV1k/7x4/UdCZm0aX6jg5iz
-         1mDg==
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q5PNUfhkPOzCtGqX/oONwFu71YklmBXd7t8O0WuvMto=;
+        b=Oewzlb2sA/hPQSB8gtfajBsMvwNqTXyfDC/wKFjjF0Pe91PrhezKi39jdRtf6W+4vA
+         ANuqVdL6FyNvrYMkmAq7+0NzecMz8JrclHuQ+C3eLNVz5YkUrG8ihNk8BpZ2DBaTbOGn
+         vghS+8FrqB3Vri65uCWCFLqGjmwaPcGItdqug=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hRI9+M8x3rX5N8lHLXY7VIxGZcILlVx4V1n6t6KTjFI=;
-        b=H/qIr4/vYZYmmgO+Br5Y3kGEpiicepczFnfN9TtbrxDKIDnEFRnxD5a3NDkJLj+sNI
-         Ibj5i1BDfvT3XYSsi+Q959q/vgYwM/1OjqTRkCHUyhB1KmdVsU8XoK86laQm8CFbpGMB
-         3YJW60zCOG4SLpyHVmq+FtNO3uTej7So6q1pNwtzDHKXjjK7R5TT08KjAvSF+DpuPkS/
-         MI3kAvZlEC0hmovNqG5nyQ+AmEY+9M/5CvIjLQlPqXKMK5eudZ+f2l5rfBk494/7quuB
-         kdh3yxIFP+aPo+yzrtga6vgojYdixlfhyWSip87LetmZ7DdQ91Ypk7W1+Ag1oRVcJSc9
-         kIaA==
-X-Gm-Message-State: AOAM5305kGJfKL06hPmlFUDdl0RSnqjNjZJEt/QKU1VVLQVFKZ7E/Z3+
-        ku7lzAVol82IURZaOomyEyNEVw==
-X-Google-Smtp-Source: ABdhPJyJhC3CIG6fAVNhBsSC5cPFoP5iorOF53JMHPmgEw5JRbIraPJhbyxByj8fnTaz4V3iQA2nBA==
-X-Received: by 2002:a17:902:eb49:: with SMTP id i9mr6459968pli.231.1594975817050;
-        Fri, 17 Jul 2020 01:50:17 -0700 (PDT)
-Received: from debian.flets-east.jp ([2400:2411:502:a100:c84b:19e2:9b53:48bb])
-        by smtp.gmail.com with ESMTPSA id f207sm7309364pfa.107.2020.07.17.01.50.14
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 Jul 2020 01:50:16 -0700 (PDT)
-From:   Masahisa Kojima <masahisa.kojima@linaro.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     masahisa.kojima@linaro.org, jarkko.sakkinen@linux.intel.com,
-        linux-arm-kernel@lists.infradead.org, ardb@kernel.org,
-        devicetree@vger.kernel.org, linux-integrity@vger.kernel.org,
-        peterhuewe@gmx.de, jgg@ziepe.ca
-Subject: [PATCH v4 1/2] tpm: tis: add support for MMIO TPM on SynQuacer
-Date:   Fri, 17 Jul 2020 17:49:31 +0900
-Message-Id: <20200717084932.3449-2-masahisa.kojima@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200717084932.3449-1-masahisa.kojima@linaro.org>
-References: <20200717084932.3449-1-masahisa.kojima@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q5PNUfhkPOzCtGqX/oONwFu71YklmBXd7t8O0WuvMto=;
+        b=l2r6FjamO0EqE2aPAA83rOfg1YH0U2Dva/Off0O5295o0b0DNunT7K2JnPyBvNN9OJ
+         dZBiPsuATz4/w3YzXcAUQ+knIJNkmPtHnPS1oEBqJbQOGuvYIzFXwPhnq1LltFR1K9FR
+         vTumM3DBwezXLzvspNIzLFTWpil2RHqG7c8kJstCrH4PLpsGNcHm9y/FXDGRed1cvuSD
+         TvBJsxDi8Gk6sDBCEDEla97p5M9oBljcEmdJGzyNmAYncK3fjc8lf++pc+w9gRaddlF6
+         OQmtRoVsx3sC7k57SaXYq91zTAmed5Tr84pzf/41a9vUb9fVnBHf4Uck2py32qve4/cZ
+         V5WA==
+X-Gm-Message-State: AOAM531fN7pews59+iVMyvld5Cvra9WPVqz+HtaGRrfbyAhPyKctIZhn
+        isH2k1QMsjVykUlBRZLjimZjIW7bSa+6kWu5NWkbZw==
+X-Google-Smtp-Source: ABdhPJx8PfObS5k+rQ+XWK2T2u51RwD4F85OqwBcYoWXvllFm+rLrDkuI6R9PbkuRgKJm0z8tGtPMewsgLGzbsopjM8=
+X-Received: by 2002:a05:6830:1d0:: with SMTP id r16mr8383247ota.188.1594976368886;
+ Fri, 17 Jul 2020 01:59:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200709164736.18291-1-laurentiu.palcu@oss.nxp.com> <3c03afff3256ec36e12b9d9408830fbb4853f982.camel@pengutronix.de>
+In-Reply-To: <3c03afff3256ec36e12b9d9408830fbb4853f982.camel@pengutronix.de>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Fri, 17 Jul 2020 10:59:17 +0200
+Message-ID: <CAKMK7uGsveS+cwxiTq7BGrB1OcE_ff9bAxgSFDMUSmS7gRLJ7g@mail.gmail.com>
+Subject: Re: [PATCH v5 0/4] Add support for iMX8MQ Display Controller Subsystem
+To:     Lucas Stach <l.stach@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
+        lukas@mntmn.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-When fitted, the SynQuacer platform exposes its SPI TPM via a MMIO
-window that is backed by the SPI command sequencer in the SPI bus
-controller. This arrangement has the limitation that only byte size
-accesses are supported, and so we'll need to provide a separate module
-that take this into account.
+On Fri, Jul 17, 2020 at 10:18 AM Lucas Stach <l.stach@pengutronix.de> wrote:
+>
+> Hi Laurentiu,
+>
+> Am Donnerstag, den 09.07.2020, 19:47 +0300 schrieb Laurentiu Palcu:
+> > From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> >
+> > Hi,
+> >
+> > This patchset adds initial DCSS support for iMX8MQ chip. Initial support
+> > includes only graphics plane support (no video planes), no HDR10 capabilities,
+> > no graphics decompression (only linear, tiled and super-tiled buffers allowed).
+> >
+> > Support for the rest of the features will be added incrementally, in subsequent
+> > patches.
+> >
+> > The patchset was tested with both HDP driver (in the downstream tree) and the upstream
+> > MIPI-DSI driver (with a couple of patches on top, to make it work correctly with DCSS).
+>
+> I think the series (minus 3/5 and minor correction to the DT binding)
+> is fine to go in now. So just some formal questions: are you going to
+> maintain this driver in upstream? If so we should add a MAINTAINERS
+> entry to that effect. I can offer to act as a reviewer in this case.
+>
+> How do you intend to merge this? IMO pushing this through drm-misc
+> seems like the right thing to do. If you agree I can help you get this
+> applied. If you are going to maintain the driver on your own, I think
+> you should then apply for commit rights to drm-misc.
 
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Masahisa Kojima <masahisa.kojima@linaro.org>
----
- drivers/char/tpm/Kconfig             |  12 ++
- drivers/char/tpm/Makefile            |   1 +
- drivers/char/tpm/tpm_tis_synquacer.c | 209 +++++++++++++++++++++++++++
- 3 files changed, 222 insertions(+)
- create mode 100644 drivers/char/tpm/tpm_tis_synquacer.c
+drm/imx isn't listed yet as under the drm-misc umbrella, maybe we
+should put the entire collective of imx drivers under drm-misc? Or
+maybe it's just an oversight that the git repo isn't specified in the
+MAINTAINERS entry. Also maybe we should add the pengutronix kernel
+team alias there too?
+-Daniel
 
-diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-index 58b4c573d176..a18c314da211 100644
---- a/drivers/char/tpm/Kconfig
-+++ b/drivers/char/tpm/Kconfig
-@@ -74,6 +74,18 @@ config TCG_TIS_SPI_CR50
- 	  If you have a H1 secure module running Cr50 firmware on SPI bus,
- 	  say Yes and it will be accessible from within Linux.
- 
-+config TCG_TIS_SYNQUACER
-+	tristate "TPM Interface Specification 1.2 Interface / TPM 2.0 FIFO Interface (MMIO - SynQuacer)"
-+	depends on ARCH_SYNQUACER
-+	select TCG_TIS_CORE
-+	help
-+	  If you have a TPM security chip that is compliant with the
-+	  TCG TIS 1.2 TPM specification (TPM1.2) or the TCG PTP FIFO
-+	  specification (TPM2.0) say Yes and it will be accessible from
-+	  within Linux on Socionext SynQuacer platform.
-+	  To compile this driver as a module, choose  M here;
-+	  the module will be called tpm_tis_synquacer.
-+
- config TCG_TIS_I2C_ATMEL
- 	tristate "TPM Interface Specification 1.2 Interface (I2C - Atmel)"
- 	depends on I2C
-diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
-index 9567e5197f74..84db4fb3a9c9 100644
---- a/drivers/char/tpm/Makefile
-+++ b/drivers/char/tpm/Makefile
-@@ -21,6 +21,7 @@ tpm-$(CONFIG_EFI) += eventlog/efi.o
- tpm-$(CONFIG_OF) += eventlog/of.o
- obj-$(CONFIG_TCG_TIS_CORE) += tpm_tis_core.o
- obj-$(CONFIG_TCG_TIS) += tpm_tis.o
-+obj-$(CONFIG_TCG_TIS_SYNQUACER) += tpm_tis_synquacer.o
- 
- obj-$(CONFIG_TCG_TIS_SPI) += tpm_tis_spi.o
- tpm_tis_spi-y := tpm_tis_spi_main.o
-diff --git a/drivers/char/tpm/tpm_tis_synquacer.c b/drivers/char/tpm/tpm_tis_synquacer.c
-new file mode 100644
-index 000000000000..ac2a1d2a5001
---- /dev/null
-+++ b/drivers/char/tpm/tpm_tis_synquacer.c
-@@ -0,0 +1,209 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 Linaro Ltd.
-+ *
-+ * This device driver implements MMIO TPM on SynQuacer Platform.
-+ */
-+#include <linux/acpi.h>
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/kernel.h>
-+#include "tpm.h"
-+#include "tpm_tis_core.h"
-+
-+struct tpm_tis_synquacer_info {
-+	struct resource res;
-+	/* irq > 0 means: use irq $irq;
-+	 * irq = 0 means: autoprobe for an irq;
-+	 * irq = -1 means: no irq support
-+	 */
-+	int irq;
-+};
-+
-+struct tpm_tis_synquacer_phy {
-+	struct tpm_tis_data priv;
-+	void __iomem *iobase;
-+};
-+
-+static inline struct tpm_tis_synquacer_phy *to_tpm_tis_tcg_phy(struct tpm_tis_data *data)
-+{
-+	return container_of(data, struct tpm_tis_synquacer_phy, priv);
-+}
-+
-+static int tpm_tis_synquacer_read_bytes(struct tpm_tis_data *data, u32 addr,
-+					u16 len, u8 *result)
-+{
-+	struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
-+
-+	while (len--)
-+		*result++ = ioread8(phy->iobase + addr);
-+
-+	return 0;
-+}
-+
-+static int tpm_tis_synquacer_write_bytes(struct tpm_tis_data *data, u32 addr,
-+					 u16 len, const u8 *value)
-+{
-+	struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
-+
-+	while (len--)
-+		iowrite8(*value++, phy->iobase + addr);
-+
-+	return 0;
-+}
-+
-+static int tpm_tis_synquacer_read16_bw(struct tpm_tis_data *data,
-+				       u32 addr, u16 *result)
-+{
-+	struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
-+
-+	/*
-+	 * Due to the limitation of SPI controller on SynQuacer,
-+	 * 16/32 bits access must be done in byte-wise and descending order.
-+	 */
-+	*result = (ioread8(phy->iobase + addr + 1) << 8) |
-+		  (ioread8(phy->iobase + addr));
-+
-+	return 0;
-+}
-+
-+static int tpm_tis_synquacer_read32_bw(struct tpm_tis_data *data,
-+				       u32 addr, u32 *result)
-+{
-+	struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
-+
-+	/*
-+	 * Due to the limitation of SPI controller on SynQuacer,
-+	 * 16/32 bits access must be done in byte-wise and descending order.
-+	 */
-+	*result = (ioread8(phy->iobase + addr + 3) << 24) |
-+		  (ioread8(phy->iobase + addr + 2) << 16) |
-+		  (ioread8(phy->iobase + addr + 1) << 8) |
-+		  (ioread8(phy->iobase + addr));
-+
-+	return 0;
-+}
-+
-+static int tpm_tis_synquacer_write32_bw(struct tpm_tis_data *data,
-+					u32 addr, u32 value)
-+{
-+	struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
-+
-+	/*
-+	 * Due to the limitation of SPI controller on SynQuacer,
-+	 * 16/32 bits access must be done in byte-wise and descending order.
-+	 */
-+	iowrite8(value >> 24, phy->iobase + addr + 3);
-+	iowrite8(value >> 16, phy->iobase + addr + 2);
-+	iowrite8(value >> 8, phy->iobase + addr + 1);
-+	iowrite8(value, phy->iobase + addr);
-+
-+	return 0;
-+}
-+
-+static const struct tpm_tis_phy_ops tpm_tcg_bw = {
-+	.read_bytes	= tpm_tis_synquacer_read_bytes,
-+	.write_bytes	= tpm_tis_synquacer_write_bytes,
-+	.read16		= tpm_tis_synquacer_read16_bw,
-+	.read32		= tpm_tis_synquacer_read32_bw,
-+	.write32	= tpm_tis_synquacer_write32_bw,
-+};
-+
-+static int tpm_tis_synquacer_init(struct device *dev,
-+				  struct tpm_tis_synquacer_info *tpm_info)
-+{
-+	struct tpm_tis_synquacer_phy *phy;
-+
-+	phy = devm_kzalloc(dev, sizeof(struct tpm_tis_synquacer_phy), GFP_KERNEL);
-+	if (phy == NULL)
-+		return -ENOMEM;
-+
-+	phy->iobase = devm_ioremap_resource(dev, &tpm_info->res);
-+	if (IS_ERR(phy->iobase))
-+		return PTR_ERR(phy->iobase);
-+
-+	return tpm_tis_core_init(dev, &phy->priv, tpm_info->irq, &tpm_tcg_bw,
-+				 ACPI_HANDLE(dev));
-+}
-+
-+static SIMPLE_DEV_PM_OPS(tpm_tis_synquacer_pm, tpm_pm_suspend, tpm_tis_resume);
-+
-+static int tpm_tis_synquacer_probe(struct platform_device *pdev)
-+{
-+	struct tpm_tis_synquacer_info tpm_info = {};
-+	struct resource *res;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (res == NULL) {
-+		dev_err(&pdev->dev, "no memory resource defined\n");
-+		return -ENODEV;
-+	}
-+	tpm_info.res = *res;
-+
-+	tpm_info.irq = -1;
-+
-+	return tpm_tis_synquacer_init(&pdev->dev, &tpm_info);
-+}
-+
-+static int tpm_tis_synquacer_remove(struct platform_device *pdev)
-+{
-+	struct tpm_chip *chip = dev_get_drvdata(&pdev->dev);
-+
-+	tpm_chip_unregister(chip);
-+	tpm_tis_remove(chip);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id tis_synquacer_of_platform_match[] = {
-+	{.compatible = "socionext,synquacer-tpm-mmio"},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, tis_synquacer_of_platform_match);
-+#endif
-+
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id tpm_synquacer_acpi_tbl[] = {
-+	{ "SCX0009" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(acpi, tpm_synquacer_acpi_tbl);
-+#endif
-+
-+static struct platform_driver tis_synquacer_drv = {
-+	.probe = tpm_tis_synquacer_probe,
-+	.remove = tpm_tis_synquacer_remove,
-+	.driver = {
-+		.name		= "tpm_tis_synquacer",
-+		.pm		= &tpm_tis_synquacer_pm,
-+		.of_match_table = of_match_ptr(tis_synquacer_of_platform_match),
-+		.acpi_match_table = ACPI_PTR(tpm_synquacer_acpi_tbl),
-+	},
-+};
-+
-+static int __init tpm_tis_synquacer_module_init(void)
-+{
-+	int rc;
-+
-+	rc = platform_driver_register(&tis_synquacer_drv);
-+	if (rc)
-+		return rc;
-+
-+	return 0;
-+}
-+
-+static void __exit tpm_tis_synquacer_module_exit(void)
-+{
-+	platform_driver_unregister(&tis_synquacer_drv);
-+}
-+
-+module_init(tpm_tis_synquacer_module_init);
-+module_exit(tpm_tis_synquacer_module_exit);
-+MODULE_AUTHOR("Masahisa Kojima (masahisa.kojima@linaro.org)");
-+MODULE_DESCRIPTION("TPM MMIO Driver for Socionext SynQuacer platform");
-+MODULE_VERSION("2.0");
-+MODULE_LICENSE("GPL");
+
+> Regards,
+> Lucas
+>
+> > Thanks,
+> > Laurentiu
+> >
+> > Changes in v5:
+> >  * Rebased to latest;
+> >  * Took out component framework support and made it a separate patch so
+> >    that people can still test with HDP driver, which makes use of it.
+> >    But the idea is to get rid of it once HDP driver's next versions
+> >    will remove component framework as well;
+> >  * Slight improvement to modesetting: avoid cutting off the pixel clock
+> >    if the new mode and the old one are equal. Also, in this case, is
+> >    not necessary to wait for DTG to shut off. This would allow to switch
+> >    from 8b RGB to 12b YUV422, for example, with no interruptions (at least
+> >    from DCSS point of view);
+> >  * Do not fire off CTXLD when going to suspend, unless it still has
+> >    entries that need to be committed to DCSS;
+> >  * Addressed Rob's comments on bindings;
+> >
+> > Changes in v4:
+> >  * Addressed Lucas and Philipp's comments:
+> >    * Added DRM_KMS_CMA_HELPER dependency in Kconfig;
+> >    * Removed usage of devm_ functions since I'm already doing all the
+> >      clean-up in the submodules_deinit();
+> >    * Moved the drm_crtc_arm_vblank_event() in dcss_crtc_atomic_flush();
+> >    * Removed en_completion variable from dcss_crtc since this was
+> >      introduced mainly to avoid vblank timeout warnings which were fixed
+> >      by arming the vblank event in flush() instead of begin();
+> >    * Removed clks_on and irq_enabled flags since all the calls to
+> >      enabling/disabling clocks and interrupts were balanced;
+> >    * Removed the custom atomic_commit callback and used the DRM core
+> >      helper and, in the process, got rid of a workqueue that wasn't
+> >      necessary anymore;
+> >    * Fixed some minor DT binding issues flagged by Philipp;
+> >    * Some other minor changes suggested by Lucas;
+> >  * Removed YUV formats from the supported formats as these cannot work
+> >    without the HDR10 module CSCs and LUTs. Will add them back when I
+> >    will add support for video planes;
+> >
+> > Changes in v3:
+> >  * rebased to latest linux-next and made it compile as drmP.h was
+> >    removed;
+> >  * removed the patch adding the VIDEO2_PLL clock. It's already applied;
+> >  * removed an unnecessary 50ms sleep in the dcss_dtg_sync_set();
+> >  * fixed a a spurious hang reported by Lukas Hartmann and encountered
+> >    by me several times;
+> >  * mask DPR and DTG interrupts by default, as they may come enabled from
+> >    U-boot;
+> >
+> > Changes in v2:
+> >  * Removed '0x' in node's unit-address both in DT and yaml;
+> >  * Made the address region size lowercase, to be consistent;
+> >  * Removed some left-over references to P010;
+> >  * Added a Kconfig dependency of DRM && ARCH_MXC. This will also silence compilation
+> >    issues reported by kbuild for other architectures;
+> >
+> > Laurentiu Palcu (5):
+> >   drm/imx: compile imx directory by default
+> >   drm/imx: Add initial support for DCSS on iMX8MQ
+> >   drm/imx/dcss: add component framework functionality
+> >   dt-bindings: display: imx: add bindings for DCSS
+> >   arm64: dts: imx8mq: add DCSS node
+> >
+> >  .../bindings/display/imx/nxp,imx8mq-dcss.yaml |  84 ++
+> >  arch/arm64/boot/dts/freescale/imx8mq.dtsi     |  23 +
+> >  drivers/gpu/drm/Makefile                      |   2 +-
+> >  drivers/gpu/drm/imx/Kconfig                   |   2 +
+> >  drivers/gpu/drm/imx/Makefile                  |   1 +
+> >  drivers/gpu/drm/imx/dcss/Kconfig              |   9 +
+> >  drivers/gpu/drm/imx/dcss/Makefile             |   6 +
+> >  drivers/gpu/drm/imx/dcss/dcss-blkctl.c        |  70 ++
+> >  drivers/gpu/drm/imx/dcss/dcss-crtc.c          | 219 +++++
+> >  drivers/gpu/drm/imx/dcss/dcss-ctxld.c         | 424 +++++++++
+> >  drivers/gpu/drm/imx/dcss/dcss-dev.c           | 314 +++++++
+> >  drivers/gpu/drm/imx/dcss/dcss-dev.h           | 177 ++++
+> >  drivers/gpu/drm/imx/dcss/dcss-dpr.c           | 562 ++++++++++++
+> >  drivers/gpu/drm/imx/dcss/dcss-drv.c           | 183 ++++
+> >  drivers/gpu/drm/imx/dcss/dcss-dtg.c           | 409 +++++++++
+> >  drivers/gpu/drm/imx/dcss/dcss-kms.c           | 185 ++++
+> >  drivers/gpu/drm/imx/dcss/dcss-kms.h           |  43 +
+> >  drivers/gpu/drm/imx/dcss/dcss-plane.c         | 405 +++++++++
+> >  drivers/gpu/drm/imx/dcss/dcss-scaler.c        | 826 ++++++++++++++++++
+> >  drivers/gpu/drm/imx/dcss/dcss-ss.c            | 180 ++++
+> >  20 files changed, 4123 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/Kconfig
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/Makefile
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-blkctl.c
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-crtc.c
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ctxld.c
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.c
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.h
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dpr.c
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-drv.c
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dtg.c
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.c
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.h
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-plane.c
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-scaler.c
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ss.c
+> >
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+
+
 -- 
-2.20.1
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
