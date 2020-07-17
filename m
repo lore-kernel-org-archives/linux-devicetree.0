@@ -2,313 +2,169 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E22C433E3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 11:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A872AC433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 11:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB3A620768
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 11:02:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594983763;
-	bh=bbLMObkNrniR80ZdzHzteBsWJ5zcpRCBrOI2j6GQ4W0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=1ZoH5gT7FZVYOoJSuDlT7KePemXgThwPLE+yriIiXueW1xH+DYChk1GlDhefRia01
-	 eIOLOHB/IJSCpnyS1r03OBn+b7xEmOKKjOpmiFAjVT8Lud5tuy6ECC7nN6fjuFyVLD
-	 9hc5Gj0k2CJ4o0KbCkjsUBwKJKYQdZvgddT1GDGI=
+	by mail.kernel.org (Postfix) with ESMTP id 8A6D82070E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 11:16:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726198AbgGQLCn (ORCPT
+        id S1726205AbgGQLQs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 07:02:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55164 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbgGQLCm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Jul 2020 07:02:42 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 17 Jul 2020 07:16:48 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:56328 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726013AbgGQLQr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 07:16:47 -0400
+Received: from [IPv6:2a01:e35:2fb5:1510:c567:382e:1974:9868] (unknown [IPv6:2a01:e35:2fb5:1510:c567:382e:1974:9868])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF84D20717;
-        Fri, 17 Jul 2020 11:02:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594983761;
-        bh=bbLMObkNrniR80ZdzHzteBsWJ5zcpRCBrOI2j6GQ4W0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=dqzm/OI6mZOxyuUKPJ7jFTK+TsDEjToHh/tLOy9xUBQ0ukZBFD8kQt8fFOxEk03fW
-         BwU1AfbENm2NKpfpqLKq+ks8pBss9yT0+cwgjABMePaatnRza0S8ZMUDZPZknMAAlL
-         3TXECbw7eZtO0cuZCTRvKCVwNpJnABIlFHvSRfbE=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jwO8V-00CbW3-DI; Fri, 17 Jul 2020 12:02:39 +0100
-Date:   Fri, 17 Jul 2020 12:02:38 +0100
-Message-ID: <87imemxv3l.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
-        <tglx@linutronix.de>, <jason@lakedaemon.net>, <robh+dt@kernel.org>,
-        <lee.jones@linaro.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <david@lechnology.com>,
-        <wmills@ti.com>
-Subject: Re: [PATCHv3 3/6] irqchip/irq-pruss-intc: Add support for shared and invalid interrupts
-In-Reply-To: <3a73bb14-9f7b-970d-fbae-f9c7bb7bdf1e@ti.com>
-References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
-        <1593699479-1445-4-git-send-email-grzegorz.jaszczyk@linaro.org>
-        <2a6b0391f1395eb0aa15ffee6769184e@kernel.org>
-        <3a73bb14-9f7b-970d-fbae-f9c7bb7bdf1e@ti.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: s-anna@ti.com, grzegorz.jaszczyk@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, david@lechnology.com, wmills@ti.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        (Authenticated sender: aferraris)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 589032A5CA8;
+        Fri, 17 Jul 2020 12:16:45 +0100 (BST)
+Subject: Re: [PATCH 0/4] ASoC: fsl_asrc: allow selecting arbitrary clocks
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     kernel@collabora.com, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+References: <20200702142235.235869-1-arnaud.ferraris@collabora.com>
+ <20200702184226.GA23935@Asurada-Nvidia>
+From:   Arnaud Ferraris <arnaud.ferraris@collabora.com>
+Autocrypt: addr=arnaud.ferraris@collabora.com; keydata=
+ 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
+ xZQG6fKWuIur3RI=
+Message-ID: <abdd7265-43d2-49b5-6afd-70d65baac30e@collabora.com>
+Date:   Fri, 17 Jul 2020 13:16:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200702184226.GA23935@Asurada-Nvidia>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 10 Jul 2020 21:59:17 +0100,
-Suman Anna <s-anna@ti.com> wrote:
+Hi Nic,
 
-Hi Suman,
+Le 02/07/2020 à 20:42, Nicolin Chen a écrit :
+> Hi Arnaud,
+> 
+> On Thu, Jul 02, 2020 at 04:22:31PM +0200, Arnaud Ferraris wrote:
+>> The current ASRC driver hardcodes the input and output clocks used for
+>> sample rate conversions. In order to allow greater flexibility and to
+>> cover more use cases, it would be preferable to select the clocks using
+>> device-tree properties.
+> 
+> We recent just merged a new change that auto-selecting internal
+> clocks based on sample rates as the first option -- ideal ratio
+> mode is the fallback mode now. Please refer to:
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20200702&id=d0250cf4f2abfbea64ed247230f08f5ae23979f0
 
-[...]
+While working on fixing the automatic clock selection (see my v3), I
+came across another potential issue, which would be better explained
+with an example:
+  - Input has sample rate 8kHz and uses clock SSI1 with rate 512kHz
+  - Output has sample rate 16kHz and uses clock SSI2 with rate 1024kHz
 
->
-> Hi Marc,
->=20
-> On 7/2/20 12:44 PM, Marc Zyngier wrote:
-> > On 2020-07-02 15:17, Grzegorz Jaszczyk wrote:
-> >> From: Suman Anna <s-anna@ti.com>
-> >>=20
-> >> The PRUSS INTC has a fixed number of output interrupt lines that are
-> >> connected to a number of processors or other PRUSS instances or other
-> >> devices (like DMA) on the SoC. The output interrupt lines 2 through 9
-> >> are usually connected to the main Arm host processor and are referred
-> >> to as host interrupts 0 through 7 from ARM/MPU perspective.
-> >>=20
-> >> All of these 8 host interrupts are not always exclusively connected
-> >> to the Arm interrupt controller. Some SoCs have some interrupt lines
-> >> not connected to the Arm interrupt controller at all, while a few othe=
-rs
-> >> have the interrupt lines connected to multiple processors in which they
-> >> need to be partitioned as per SoC integration needs. For example, AM43=
-7x
-> >> and 66AK2G SoCs have 2 PRUSS instances each and have the host interrup=
-t 5
-> >> connected to the other PRUSS, while AM335x has host interrupt 0 shared
-> >> between MPU and TSC_ADC and host interrupts 6 & 7 shared between MPU a=
-nd
-> >> a DMA controller.
-> >>=20
-> >> Add support to the PRUSS INTC driver to allow both these shared and
-> >> invalid interrupts by not returning a failure if any of these interrup=
-ts
-> >> are skipped from the corresponding INTC DT node.
-> >=20
-> > That's not exactly "adding support", is it? It really is "ignore these
-> > interrupts because they are useless from the main CPU's perspective",
-> > right?
->=20
-> Correct. We can rephrase this to something like
-> "Add logic to the PRUSS INTC driver to ignore.."
->=20
-> >=20
-> >>=20
-> >> Signed-off-by: Suman Anna <s-anna@ti.com>
-> >> Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-> >> ---
-> >> v2->v3:
-> >> - Extra checks for (intc->irqs[i]) in error/remove path was moved from
-> >> =C2=A0 "irqchip/irq-pruss-intc: Add a PRUSS irqchip driver for PRUSS
-> >> =C2=A0 interrupts" to this patch
-> >> v1->v2:
-> >> - https://patchwork.kernel.org/patch/11069757/
-> >> ---
-> >> =C2=A0drivers/irqchip/irq-pruss-intc.c | 73
-> >> +++++++++++++++++++++++++++++++++++++---
-> >> =C2=A01 file changed, 68 insertions(+), 5 deletions(-)
-> >>=20
-> >> diff --git a/drivers/irqchip/irq-pruss-intc.c
-> >> b/drivers/irqchip/irq-pruss-intc.c
-> >> index fb3dda3..49c936f 100644
-> >> --- a/drivers/irqchip/irq-pruss-intc.c
-> >> +++ b/drivers/irqchip/irq-pruss-intc.c
-> >> @@ -65,11 +65,15 @@
-> >> =C2=A0 * @irqs: kernel irq numbers corresponding to PRUSS host interru=
-pts
-> >> =C2=A0 * @base: base virtual address of INTC register space
-> >> =C2=A0 * @domain: irq domain for this interrupt controller
-> >> + * @shared_intr: bit-map denoting if the MPU host interrupt is shared
-> >=20
-> > nit: bitmap
->=20
-> ok
->=20
-> >=20
-> >> + * @invalid_intr: bit-map denoting if host interrupt is not
-> >> connected to MPU
-> >> =C2=A0 */
-> >> =C2=A0struct pruss_intc {
-> >> =C2=A0=C2=A0=C2=A0=C2=A0 unsigned int irqs[MAX_NUM_HOST_IRQS];
-> >> =C2=A0=C2=A0=C2=A0=C2=A0 void __iomem *base;
-> >> =C2=A0=C2=A0=C2=A0=C2=A0 struct irq_domain *domain;
-> >> +=C2=A0=C2=A0=C2=A0 u16 shared_intr;
-> >> +=C2=A0=C2=A0=C2=A0 u16 invalid_intr;
-> >=20
-> > Please represent bitmaps as an unsigned long.
->=20
-> ok. We have atmost 8 interrupts coming in, but agree on the change
-> since we are using the BIT() macro below.
->=20
-> >=20
-> >> =C2=A0};
-> >>=20
-> >> =C2=A0static inline u32 pruss_intc_read_reg(struct pruss_intc *intc,
-> >> unsigned int reg)
-> >> @@ -222,7 +226,8 @@ static int pruss_intc_probe(struct
-> >> platform_device *pdev)
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "host_intr4", "host_i=
-ntr5", "host_intr6", "host_intr7", };
-> >> =C2=A0=C2=A0=C2=A0=C2=A0 struct device *dev =3D &pdev->dev;
-> >> =C2=A0=C2=A0=C2=A0=C2=A0 struct pruss_intc *intc;
-> >> -=C2=A0=C2=A0=C2=A0 int i, irq;
-> >> +=C2=A0=C2=A0=C2=A0 int i, irq, count;
-> >> +=C2=A0=C2=A0=C2=A0 u8 temp_intr[MAX_NUM_HOST_IRQS] =3D { 0 };
-> >>=20
-> >> =C2=A0=C2=A0=C2=A0=C2=A0 intc =3D devm_kzalloc(dev, sizeof(*intc), GFP=
-_KERNEL);
-> >> =C2=A0=C2=A0=C2=A0=C2=A0 if (!intc)
-> >> @@ -235,6 +240,52 @@ static int pruss_intc_probe(struct
-> >> platform_device *pdev)
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return PTR_ERR(intc->=
-base);
-> >> =C2=A0=C2=A0=C2=A0=C2=A0 }
-> >>=20
-> >> +=C2=A0=C2=A0=C2=A0 count =3D of_property_read_variable_u8_array(dev->=
-of_node,
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 "ti,irqs-reserved",
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 temp_intr, 0,
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 MAX_NUM_HOST_IRQS);
-> >> +=C2=A0=C2=A0=C2=A0 /*
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0 * The irqs-reserved is used only for some So=
-C's therefore not
-> >> having
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0 * this property is still valid
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0 */
-> >> +=C2=A0=C2=A0=C2=A0 if (count =3D=3D -EINVAL)
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 count =3D 0;
-> >> +=C2=A0=C2=A0=C2=A0 if (count < 0)
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return count;
-> >> +
-> >> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < count; i++) {
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (temp_intr[i] >=3D MAX_=
-NUM_HOST_IRQS) {
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 de=
-v_warn(dev, "ignoring invalid reserved irq %d\n",
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 temp_intr[i]);
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 co=
-ntinue;
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> >> +
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 intc->invalid_intr |=3D BI=
-T(temp_intr[i]);
-> >> +=C2=A0=C2=A0=C2=A0 }
-> >> +
-> >> +=C2=A0=C2=A0=C2=A0 count =3D of_property_read_variable_u8_array(dev->=
-of_node,
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 "ti,irqs-shared",
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 temp_intr, 0,
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 MAX_NUM_HOST_IRQS);
-> >> +=C2=A0=C2=A0=C2=A0 /*
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0 * The irqs-shared is used only for some SoC'=
-s therefore not having
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0 * this property is still valid
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0 */
-> >> +=C2=A0=C2=A0=C2=A0 if (count =3D=3D -EINVAL)
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 count =3D 0;
-> >> +=C2=A0=C2=A0=C2=A0 if (count < 0)
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return count;
-> >> +
-> >> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < count; i++) {
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (temp_intr[i] >=3D MAX_=
-NUM_HOST_IRQS) {
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 de=
-v_warn(dev, "ignoring invalid shared irq %d\n",
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 temp_intr[i]);
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 co=
-ntinue;
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> >> +
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 intc->shared_intr |=3D BIT=
-(temp_intr[i]);
-> >> +=C2=A0=C2=A0=C2=A0 }
-> >> +
-> >=20
-> > You probably want to move this in a separate function, since you popula=
-te a
-> > common structure.
-> >=20
-> >> =C2=A0=C2=A0=C2=A0=C2=A0 pruss_intc_init(intc);
-> >>=20
-> >> =C2=A0=C2=A0=C2=A0=C2=A0 /* always 64 events */
-> >> @@ -244,8 +295,14 @@ static int pruss_intc_probe(struct
-> >> platform_device *pdev)
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENOMEM;
-> >>=20
-> >> =C2=A0=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < MAX_NUM_HOST_IRQS; i++) {
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (intc->invalid_intr & B=
-IT(i))
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 co=
-ntinue;
-> >> +
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 irq =3D platform_get_=
-irq_byname(pdev, irq_names[i]);
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (irq <=3D 0) {
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if=
- (intc->shared_intr & BIT(i))
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 continue;
-> >=20
-> > I don't really understand why you are treating these "shared" interrupts
-> > differently from the invalid ones. In all cases, they shouldn't be used.
->=20
-> The behavior is the same in how we handle it, but the difference is
-> that an "invalid" one is never even connected to the ARM interrupt
-> controller, while the "shared" one is a choice. So, unless this
-> interrupt is being used/handled by a different processor/entity, you
-> would not see this skipped from the dts node.
+Let's say my v3 patch is merged, then the selected input clock will be
+SSI1, while the selected output clock will be SSI2. In that case, it's
+all good, as the driver will calculate the dividers right.
 
-And I'm saying that all that matters is that you are discarding these
-interrupts. Whether they are flagged invalid or shared, they are not
-available to Linux. So the difference in handling is pointless and
-only makes it harder to understand what you are doing.
+Now, suppose a similar board has the input wired to SSI2 and output to
+SSI1, meaning we're now in the following case:
+  - Input has sample rate 8kHz and uses clock SSI2 with rate 512kHz
+  - Output has sample rate 16kHz and uses clock SSI1 with rate 1024kHz
+(the same result is achieved during capture with the initial example
+setup, as input and output properties are then swapped)
 
-Thanks,
+In that case, the selected clocks will still be SSI1 for input (just
+because it appears first in the clock table), and SSI2 for output,
+meaning the calculated dividers will be:
+  - input: 512 / 16 => 32 (should be 64)
+  - output: 1024 / 8 => 128 (should be 64 here too)
 
-	M.
+---
 
---=20
-Without deviation from the norm, progress is not possible.
+I can't see how the clock selection algorithm could be made smart enough
+to cover cases such as this one, as it would need to be aware of the
+exact relationship between the sample rate and the clock rate (my
+example demonstrates a case where the "sample rate to clock rate"
+multiplier is identical for both input and output, but this can't be
+assumed to be always the case).
+
+Therefore, I still believe being able to force clock selection using
+optional DT properties would make sense, while still using the
+auto-selection by default.
+
+Regards,
+Arnaud
+
+> 
+> Having a quick review at your changes, I think the DT part may
+> not be necessary as it's more likely a software configuration.
+> I personally like the new auto-selecting solution more.
+> 
+>> This series also fix register configuration and clock assignment so
+>> conversion can be conducted effectively in both directions with a good
+>> quality.
+> 
+> If there's any further change that you feel you can improve on
+> the top of mentioned change after rebasing, I'd like to review.
+> 
+> Thanks
+> Nic
+> 
