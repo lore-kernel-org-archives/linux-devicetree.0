@@ -2,101 +2,100 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED840C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 10:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 794E6C43446
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 10:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B873F20768
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 10:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 565022076A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 10:36:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="wA7Qvoi8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="ZnezmrH2";
+	dkim=pass (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="o3D4Xy6p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725932AbgGQKEb (ORCPT
+        id S1726769AbgGQKgB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 06:04:31 -0400
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:54571 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725912AbgGQKEa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Jul 2020 06:04:30 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id wNE8jCJmcNPeYwNEBja7Z4; Fri, 17 Jul 2020 12:04:28 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1594980268; bh=rrZ6Dtj/k5lf5p9V9FIJUPXXEPZN0uR6pQNpSBVg45Y=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=wA7Qvoi8nWloIJsE98VyNHRVU2WLjBRP/jHSCC0jO2T96QWQZITYYxN/CPjJKlpkW
-         HXOjhp/doImZf0ewWfxWtEXfTT+3LkTliD6T7Yd0FyloZE196LrbZuxrWADb6RJDEY
-         1omqL6l2U5RnwCWoab5GF7nHVP5GKtqacUmMysUa5meYXeQkSn2SR7OSaoSDjCPmT2
-         9aHGTq6HRWQxF8TO1gcbJeRrhkOixGAkEZu2ABpcq0F3XL+d2cJ8vBftC/MKcZmapb
-         XWicqRNsRRa2dGV+xMQg+zkVjRIoLd5r/o2rOYS7Y0YDlvvXsJxFqyVB560CmDuAgc
-         LRgm+DNno2MKw==
-Subject: Re: [PATCH 3/3] media: Add support for the AM/FM radio chip KT0913
- from KT Micro.
-To:     Joe Perches <joe@perches.com>,
-        Santiago Hormazabal <santiagohssl@gmail.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-kernel@vger.kernel.org
-References: <20200717004441.116248-1-santiagohssl@gmail.com>
- <20200717004441.116248-4-santiagohssl@gmail.com>
- <b8cb9dbf-2a81-6a12-c754-e524f42a0574@xs4all.nl>
- <9bd42f458908eedd810c5e8805f997997763d32a.camel@perches.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <234961cc-f783-475c-d3db-69720a7da010@xs4all.nl>
-Date:   Fri, 17 Jul 2020 12:04:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 17 Jul 2020 06:36:01 -0400
+Received: from djelibeybi.uuid.uk ([45.91.101.70]:44000 "EHLO
+        djelibeybi.uuid.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbgGQKf7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 06:35:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
+        ; s=20180214; h=Message-ID:References:In-Reply-To:Subject:Cc:To:From:Date:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=kl1i0BpeU/fu3rTjI9F8/qTmUCwKp0XQHy8o4MvhnDA=; b=ZnezmrH2uvIIKja5UcmJ296HUy
+        9F7lNnABjni3m/8Hm9ORXkjYWkI+7eAANE/bW/VtouO4xOx+gYrzl/ONpnwtLZbTmJdJ4XQl3sWwr
+        pDWedRTcLQHK9UWDuPkQ7O9RtJ85C+c2LZfvWDlTjaErwn99t02xqbWM0eO4oJoU9E3aYz3cN+Cm8
+        7g+vLmXG762WRuUwqB/1w7sfhpmNm9Vt4SBI55IrjgrAQ7BcSbzq4ELhe62kOfc8A3XGjxQWRHz4q
+        bsPK/yaZAQl01hDNMOJmyV6/fipG9ppTiZTAHB2cxzLKP3wAw+G3y6fOR3KALCnxLsIFh3rwaOqk2
+        T23PkNKA==;
+Received: by djelibeybi.uuid.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <simon@octiron.net>)
+        id 1jwNiQ-0005an-GU; Fri, 17 Jul 2020 11:35:49 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
+        ; s=20180214; h=Message-ID:References:In-Reply-To:Subject:Cc:To:From:Date:
+        Content-Transfer-Encoding:Content-Type:MIME-Version;
+        bh=kl1i0BpeU/fu3rTjI9F8/qTmUCwKp0XQHy8o4MvhnDA=; b=o3D4Xy6pDQB+ao3CwIk8nyRKzk
+        pspejMBhrBxUzp7ytuuB4kCxZhsOR5sy+0I9zirclzVZgNm7LqUN4kDXfsdlrqGl0Zl8Jn0YG9mMJ
+        cpN9cLmULIT6cGO9krT/1BnACLSWjnecnOVcMT8SxuN+UF18XrJd4zZSdR7js1CEpPpNebk9qgpF8
+        w+RmVYZ4AhOwyCfk4hQ5KNEO2TUdF5Rk86A0ijChV9Wm6HijGqvaP9ar6NsjAWi8vjujLAi7SJ+VV
+        l1mtATUtAIBgZJnZDg5qXX0PZ3hVmuMVEr7Z1F0Q8dFD4ebRc3gHSuycJCohktgUWoRP0lozlUmXt
+        qUvd6S5w==;
+Received: by tsort.uuid.uk with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <simon@octiron.net>)
+        id 1jwNiO-0004d0-9V; Fri, 17 Jul 2020 11:35:40 +0100
+Received: from localhost ([::1]:48888)
+        by skund.uuid.uk with esmtp (Exim 4.86_2)
+        (envelope-from <simon@octiron.net>)
+        id 1jwNiO-0000ML-5e; Fri, 17 Jul 2020 11:35:40 +0100
 MIME-Version: 1.0
-In-Reply-To: <9bd42f458908eedd810c5e8805f997997763d32a.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfJs/gkRtd76okay0EWfgoAD0FciTSEHoyRVPjO3MEwaRjuc8U7lRy9Zt7i+Cjwci9G8RvFYG6RwM8zsP1GIHWBZY2/By70bHpjbCUGIy+/o31u6CmFRe
- WmkH5Zx+ZkcQnlbUQ82YNl1c6LBA2rOjBNEwsaAsLDLIBRzAVfSuj3Ee68BMD0skFhfVEI2DC3THynN/epxt/u+bz385VgLcGJauk8sTo4PQxGKSRLzTfhUb
- Bof+Pk5XKAXA+DNLLSlXIo8MGo8e6HlqnxYcP9AHvlbkMm4k8Kb45J09ej96XBhkQCoc0WwOlV8WWjLkDGtogySnARbvg6vp1LiXLREza1JFl8KkrG8oOD6u
- 0et+8avlUP6mSus8O/GvPzWtTc39QA==
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Fri, 17 Jul 2020 11:35:40 +0100
+From:   Simon Arlott <simon@octiron.net>
+To:     =?UTF-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
+Cc:     jonas.gorski@gmail.com, kishon@ti.com, vkoul@kernel.org,
+        robh+dt@kernel.org, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
+        krzk@kernel.org, gregkh@linuxfoundation.org, alcooperx@gmail.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v7 0/2] phy: bcm63xx-usbh: Add BCM63xx USBH driver
+In-Reply-To: <20200717094756.9951-1-noltari@gmail.com>
+References: <20200717094756.9951-1-noltari@gmail.com>
+Message-ID: <d601559d6e0ab67c3ff02713df3eb32e@arlott.org>
+X-Sender: simon@octiron.net
+User-Agent: Roundcube Webmail/1.2-beta
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 17/07/2020 11:51, Joe Perches wrote:
-> On Fri, 2020-07-17 at 11:29 +0200, Hans Verkuil wrote:
->> It's standard linux codingstyle to use lowercase for hex numbers.
->> Can you change that throughout the source for the next version?
+On 2020-07-17 10:47, Álvaro Fernández Rojas wrote:
+> Add BCM63xx USBH PHY driver for BMIPS.
 > 
-> Is there a standard?  It's not in coding-style.rst.
-> 
-> While I prefer lowercase too, it seems the kernel has
-> only ~2:1 preference for lowercase to uppercase hex.
-> 
-> $ git grep -ohP '\b0[xX][0-9a-f]+\b' | grep [a-f] | wc -l
-> 1149833
-> $ git grep -ohP '\b0[xX][0-9A-F]+\b' | grep [A-F] | wc -l
-> 575781
-> 
-> 
+> v7: remove Simon from authors and introduce changes suggested by Rob:
 
-Well, it's indeed not a standard for the kernel as a whole, but certainly
-for drivers/media:
+I asked you to remove my email address from the source code. All you've
+done is update it. I don't want spam. I know the address appears in the
+commit but you don't have to spray it around everywhere else.
 
-$ git grep -ohP '\b0[xX][0-9a-f]+\b' drivers/media/ | grep [a-f] | wc -l
-109272
-$ git grep -ohP '\b0[xX][0-9A-F]+\b' drivers/media/ | grep [A-F] | wc -l
-22392
+You can keep my name in the MODULE_AUTHOR text but you need to omit the
+email address.
 
-The media subsystem has a 5:1 preference for lowercase. And uppercase is
-mostly found in older drivers.
+None of the original copyright notices included email addresses so I
+don't know why you think it is appropriate for you to add them.
 
-Still, I really prefer lowercase over uppercase, especially in new drivers.
+Please only Cc: this email address, I don't want multiple copies of
+everything.
 
-Regards,
-
-	Hans
+-- 
+Simon Arlott
