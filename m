@@ -2,249 +2,181 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF23C433E5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 13:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CF3C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 13:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B007E20717
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 13:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAC9220717
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 13:19:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X1X650+/"
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="WJr5l5M9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbgGQNQu (ORCPT
+        id S1726359AbgGQNTI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:16:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32772 "EHLO
+        Fri, 17 Jul 2020 09:19:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbgGQNQt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 09:16:49 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDFD4C061755;
-        Fri, 17 Jul 2020 06:16:48 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id s10so11005272wrw.12;
-        Fri, 17 Jul 2020 06:16:48 -0700 (PDT)
+        with ESMTP id S1726204AbgGQNTH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 09:19:07 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8400C061755
+        for <devicetree@vger.kernel.org>; Fri, 17 Jul 2020 06:19:06 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h19so12539551ljg.13
+        for <devicetree@vger.kernel.org>; Fri, 17 Jul 2020 06:19:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=vs4AfRAnPExeeuyiR5DGWNr9f7rEdWEHMwAyJzCVFy0=;
-        b=X1X650+/OJIdkuT8tYULqZ7epcSuQNC0aWmohUOFdAm4DabLoremwwlRcdAvIp7CBF
-         Y15XYfiFFoT9lN+Q9SfCFQD3ihAccJLL6cEwDDtoIYKXrq5qS9+jHMSKEN5zLD4BsnTW
-         sap9hRQk9LnKCRkdEi9gmojGpC2CKHl2K/ScY73WUiwn5Mc4UgOPOkObf/xZRyo729Qd
-         efKiBGb+jpdd1TLT8Mi8V2MQwZ2k+oP45ywvsF/mgO/ZgTpqtvGYSQr2llxuqCTKJzLE
-         IZhOAkoFNxait8ho4i4kXhyRGYEvc0V6dErp5mORYaFA44Pp3FX6ug/jn7TYfmsYoQKO
-         XNBQ==
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=npEG3Q8JCnzZnur7Cq6JNk21xogenaqhRA7YjsM9ezY=;
+        b=WJr5l5M97ciW2c/gjJQoeEJGmETPzM7Qr5IRBgUn1YBScg98hUkSzHSeJTg3OUPsqN
+         2Scj6G4YGWug3QNMtbZFC3QoKcWR/SfrE+ZlfdaUJN+16ebomabpyO890QKs0TfSwssg
+         GlwRJGVRacdblC9JpOlqVPmVq4YaiPWGimGKkIvrIMvoClA502INAywjscaO+jMQtYNV
+         FrdLzlPp8YBw4RfuDqDeOxlxXRKz4NzqUy+mC4V9pnVDfAFmeYBYR87xX8F1retQgweA
+         OtrVCgFfRj6hzdkmswIkViUTlADJQfm9E7KSYC+qLFxp8Njn3jYAupxNP8CkZ765YQba
+         sztw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vs4AfRAnPExeeuyiR5DGWNr9f7rEdWEHMwAyJzCVFy0=;
-        b=ZWGX8w4NmBbj2N3D7hRkQieGxwhXceWtrH/mutabob9Ki40PpoNBAefd/7mLbLD0oN
-         vg6u7TaNGpAwqLR5BxCFKnY+IW2pJr/seTZDoXsY87WJw/wA0UGgwXK+qJvaA5j73jRy
-         bQsAeoHrW96Ci52C/V1QD0+3q8iWQJ3qoPfm9+uR3LS+M2qC6BKT2te7FHsIEGIK0dy9
-         167KXZzUjNr2FZL2tc4/nMREjY9Kkuz7KjYnIH17iI64X4gY7Jo2/BgB6CR6MIag+Usw
-         lMGk5b/ZfWagXFB7Otl+HrSpUnpM5WD7DBr5rO9jqSl07KWWuFud8QvGxKdATSXsyB9i
-         4pBQ==
-X-Gm-Message-State: AOAM530UTXxz84MOScXw0ldN8KcPXv7FtYZiP5m8HDsNL68IfCz0bbD/
-        FjKBkdj4+2vZefE9LHUEX2MDjgDN
-X-Google-Smtp-Source: ABdhPJyXulweRUs3+pX+8YMzfHldby1Vmk6XsWfpdOE7cWknggpCQHsBXrm55Cf7GiHPKNqz9goA7w==
-X-Received: by 2002:a05:6000:1cf:: with SMTP id t15mr11049470wrx.180.1594991807586;
-        Fri, 17 Jul 2020 06:16:47 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host-87-7-31-173.retail.telecomitalia.it. [87.7.31.173])
-        by smtp.googlemail.com with ESMTPSA id y6sm14559922wrr.74.2020.07.17.06.16.45
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=npEG3Q8JCnzZnur7Cq6JNk21xogenaqhRA7YjsM9ezY=;
+        b=uI0El3bsFKytrW+z+ik+/VImU2QLvjNW2RSDl1qazC5/jyk3XKubTb0YPgCzsoyrYL
+         NmwG5lOTLU/KxkaaaYp+ixQtZxTcjXC6uYHEX2hwWH1IVySdliLnQo0/1KrDIfbtyvyH
+         2G9Q9U0mdIXvTxPnKLsryPhCgPWu7oFGcIZF9NTafEZjbReXQcH8ILNbTx7a5PbHLRxF
+         A/Yd2PmPpI9XWsz9jiatv7oNPveyYyOortGkT4WeN7Omh2kOPzsAeGWzcbQtcEDwkMAX
+         S/3cekh75qaOm1E19xxiDbWzStTr0sdidmZmmjekJlEuMY6/ZwU2AG4W1YWURf69zqVJ
+         MC6A==
+X-Gm-Message-State: AOAM530S73uMlocF4rZEvtz4y0HWZGoKjaKlYA1p12306L5qt2kYKauL
+        c17o60MVG9gLeJWz1TdyHjwT9g==
+X-Google-Smtp-Source: ABdhPJxEMQOqJH/bssfF2AGyslt8NjbQrH6kwGSmbOflAyOcRsfWYlCaG5NnnWf5rAblr67M877IMw==
+X-Received: by 2002:a05:651c:c5:: with SMTP id 5mr4934690ljr.9.1594991945447;
+        Fri, 17 Jul 2020 06:19:05 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id y69sm1861534lfa.86.2020.07.17.06.19.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 06:16:47 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>, Rob Herring <robh@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Fri, 17 Jul 2020 06:19:04 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 15:19:04 +0200
+From:   Niklas <niklas.soderlund@ragnatech.se>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v10 2/2] devicetree: bindings: phy: Document ipq806x dwc3 qcom phy
-Date:   Fri, 17 Jul 2020 15:16:32 +0200
-Message-Id: <20200717131635.11076-2-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200717131635.11076-1-ansuelsmth@gmail.com>
-References: <20200717131635.11076-1-ansuelsmth@gmail.com>
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-pci@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 19/20] media: rcar-vin: Enable support for R8A774E1
+Message-ID: <20200717131904.GC175137@oden.dyn.berto.se>
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-20-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1594919915-5225-20-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document dwc3 qcom phy hs and ss phy bindings needed to correctly
-inizialize and use usb on ipq806x SoC.
+Hi Lad,
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-v7:
-* Drop useless AllOf 
-v6:
-* Add maximum value
-v5:
-* Fix dt_binding_check error
-v4:
-* Add qcom to specific bindings
-v3:
-* Use explicit reg instead of regmap
+Thanks for your work.
 
- .../bindings/phy/qcom,ipq806x-usb-phy-hs.yaml | 55 ++++++++++++++
- .../bindings/phy/qcom,ipq806x-usb-phy-ss.yaml | 73 +++++++++++++++++++
- 2 files changed, 128 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+On 2020-07-16 18:18:34 +0100, Lad Prabhakar wrote:
+> Add the SoC specific information for RZ/G2H (R8A774E1) SoC. Also add
+> the routing information between CSI2 and VIN (which is similar to
+> R-Car H3 except it lacks CSI41).
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
-new file mode 100644
-index 000000000000..23887ebe08fd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
-@@ -0,0 +1,55 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-hs.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm ipq806x usb DWC3 HS PHY CONTROLLER
-+
-+maintainers:
-+  - Ansuel Smith <ansuelsmth@gmail.com>
-+
-+description:
-+  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
-+  controllers used in ipq806x. Each DWC3 PHY controller should have its
-+  own node.
-+
-+properties:
-+  compatible:
-+    const: qcom,ipq806x-usb-phy-hs
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - const: ref
-+      - const: xo
-+
-+required:
-+  - compatible
-+  - "#phy-cells"
-+  - reg
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
-+
-+    hs_phy_0: phy@110f8800 {
-+      compatible = "qcom,ipq806x-usb-phy-hs";
-+      reg = <0x110f8800 0x30>;
-+      clocks = <&gcc USB30_0_UTMI_CLK>;
-+      clock-names = "ref";
-+      #phy-cells = <0>;
-+    };
-diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
-new file mode 100644
-index 000000000000..fa30c24b4405
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
-@@ -0,0 +1,73 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-ss.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm ipq806x usb DWC3 SS PHY CONTROLLER
-+
-+maintainers:
-+  - Ansuel Smith <ansuelsmth@gmail.com>
-+
-+description:
-+  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
-+  controllers used in ipq806x. Each DWC3 PHY controller should have its
-+  own node.
-+
-+properties:
-+  compatible:
-+    const: qcom,ipq806x-usb-phy-ss
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - const: ref
-+      - const: xo
-+
-+  qcom,rx-eq:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Override value for rx_eq.
-+    default: 4
-+    maximum: 7
-+
-+  qcom,tx-deamp-3_5db:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Override value for transmit preemphasis.
-+    default: 23
-+    maximum: 63
-+
-+  qcom,mpll:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Override value for mpll.
-+    default: 0
-+    maximum: 7
-+
-+required:
-+  - compatible
-+  - "#phy-cells"
-+  - reg
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
-+
-+    ss_phy_0: phy@110f8830 {
-+      compatible = "qcom,ipq806x-usb-phy-ss";
-+      reg = <0x110f8830 0x30>;
-+      clocks = <&gcc USB30_0_MASTER_CLK>;
-+      clock-names = "ref";
-+      #phy-cells = <0>;
-+    };
+I do not have access to the datasheet so I can't verify the routing 
+table so I trust it is correct.
+
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+
+> ---
+>  drivers/media/platform/rcar-vin/rcar-core.c | 40 +++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+> 
+> diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
+> index 7440c8965d27..4fb76d1df308 100644
+> --- a/drivers/media/platform/rcar-vin/rcar-core.c
+> +++ b/drivers/media/platform/rcar-vin/rcar-core.c
+> @@ -944,6 +944,42 @@ static const struct rvin_info rcar_info_gen2 = {
+>  	.max_height = 2048,
+>  };
+>  
+> +static const struct rvin_group_route rcar_info_r8a774e1_routes[] = {
+> +	{ .csi = RVIN_CSI40, .channel = 0, .vin = 0, .mask = BIT(0) | BIT(3) },
+> +	{ .csi = RVIN_CSI20, .channel = 0, .vin = 0, .mask = BIT(1) | BIT(4) },
+> +	{ .csi = RVIN_CSI40, .channel = 1, .vin = 0, .mask = BIT(2) },
+> +	{ .csi = RVIN_CSI20, .channel = 0, .vin = 1, .mask = BIT(0) },
+> +	{ .csi = RVIN_CSI40, .channel = 1, .vin = 1, .mask = BIT(1) | BIT(3) },
+> +	{ .csi = RVIN_CSI40, .channel = 0, .vin = 1, .mask = BIT(2) },
+> +	{ .csi = RVIN_CSI20, .channel = 1, .vin = 1, .mask = BIT(4) },
+> +	{ .csi = RVIN_CSI20, .channel = 1, .vin = 2, .mask = BIT(0) },
+> +	{ .csi = RVIN_CSI40, .channel = 0, .vin = 2, .mask = BIT(1) },
+> +	{ .csi = RVIN_CSI20, .channel = 0, .vin = 2, .mask = BIT(2) },
+> +	{ .csi = RVIN_CSI40, .channel = 2, .vin = 2, .mask = BIT(3) },
+> +	{ .csi = RVIN_CSI20, .channel = 2, .vin = 2, .mask = BIT(4) },
+> +	{ .csi = RVIN_CSI40, .channel = 1, .vin = 3, .mask = BIT(0) },
+> +	{ .csi = RVIN_CSI20, .channel = 1, .vin = 3, .mask = BIT(1) | BIT(2) },
+> +	{ .csi = RVIN_CSI40, .channel = 3, .vin = 3, .mask = BIT(3) },
+> +	{ .csi = RVIN_CSI20, .channel = 3, .vin = 3, .mask = BIT(4) },
+> +	{ .csi = RVIN_CSI20, .channel = 0, .vin = 4, .mask = BIT(1) | BIT(4) },
+> +	{ .csi = RVIN_CSI20, .channel = 0, .vin = 5, .mask = BIT(0) },
+> +	{ .csi = RVIN_CSI20, .channel = 1, .vin = 5, .mask = BIT(4) },
+> +	{ .csi = RVIN_CSI20, .channel = 1, .vin = 6, .mask = BIT(0) },
+> +	{ .csi = RVIN_CSI20, .channel = 0, .vin = 6, .mask = BIT(2) },
+> +	{ .csi = RVIN_CSI20, .channel = 2, .vin = 6, .mask = BIT(4) },
+> +	{ .csi = RVIN_CSI20, .channel = 1, .vin = 7, .mask = BIT(1) | BIT(2) },
+> +	{ .csi = RVIN_CSI20, .channel = 3, .vin = 7, .mask = BIT(4) },
+> +	{ /* Sentinel */ }
+> +};
+> +
+> +static const struct rvin_info rcar_info_r8a774e1 = {
+> +	.model = RCAR_GEN3,
+> +	.use_mc = true,
+> +	.max_width = 4096,
+> +	.max_height = 4096,
+> +	.routes = rcar_info_r8a774e1_routes,
+> +};
+> +
+>  static const struct rvin_group_route rcar_info_r8a7795_routes[] = {
+>  	{ .csi = RVIN_CSI40, .channel = 0, .vin = 0, .mask = BIT(0) | BIT(3) },
+>  	{ .csi = RVIN_CSI20, .channel = 0, .vin = 0, .mask = BIT(1) | BIT(4) },
+> @@ -1220,6 +1256,10 @@ static const struct of_device_id rvin_of_id_table[] = {
+>  		.compatible = "renesas,vin-r8a774c0",
+>  		.data = &rcar_info_r8a77990,
+>  	},
+> +	{
+> +		.compatible = "renesas,vin-r8a774e1",
+> +		.data = &rcar_info_r8a774e1,
+> +	},
+>  	{
+>  		.compatible = "renesas,vin-r8a7778",
+>  		.data = &rcar_info_m1,
+> -- 
+> 2.17.1
+> 
+
 -- 
-2.27.0
-
+Regards,
+Niklas Söderlund
