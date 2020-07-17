@@ -2,100 +2,150 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 794E6C43446
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 10:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2D1C433E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 10:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 565022076A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 10:36:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="ZnezmrH2";
-	dkim=pass (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="o3D4Xy6p"
+	by mail.kernel.org (Postfix) with ESMTP id A37482076A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 10:51:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgGQKgB (ORCPT
+        id S1725950AbgGQKvF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 06:36:01 -0400
-Received: from djelibeybi.uuid.uk ([45.91.101.70]:44000 "EHLO
-        djelibeybi.uuid.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbgGQKf7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 06:35:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
-        ; s=20180214; h=Message-ID:References:In-Reply-To:Subject:Cc:To:From:Date:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=kl1i0BpeU/fu3rTjI9F8/qTmUCwKp0XQHy8o4MvhnDA=; b=ZnezmrH2uvIIKja5UcmJ296HUy
-        9F7lNnABjni3m/8Hm9ORXkjYWkI+7eAANE/bW/VtouO4xOx+gYrzl/ONpnwtLZbTmJdJ4XQl3sWwr
-        pDWedRTcLQHK9UWDuPkQ7O9RtJ85C+c2LZfvWDlTjaErwn99t02xqbWM0eO4oJoU9E3aYz3cN+Cm8
-        7g+vLmXG762WRuUwqB/1w7sfhpmNm9Vt4SBI55IrjgrAQ7BcSbzq4ELhe62kOfc8A3XGjxQWRHz4q
-        bsPK/yaZAQl01hDNMOJmyV6/fipG9ppTiZTAHB2cxzLKP3wAw+G3y6fOR3KALCnxLsIFh3rwaOqk2
-        T23PkNKA==;
-Received: by djelibeybi.uuid.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <simon@octiron.net>)
-        id 1jwNiQ-0005an-GU; Fri, 17 Jul 2020 11:35:49 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
-        ; s=20180214; h=Message-ID:References:In-Reply-To:Subject:Cc:To:From:Date:
-        Content-Transfer-Encoding:Content-Type:MIME-Version;
-        bh=kl1i0BpeU/fu3rTjI9F8/qTmUCwKp0XQHy8o4MvhnDA=; b=o3D4Xy6pDQB+ao3CwIk8nyRKzk
-        pspejMBhrBxUzp7ytuuB4kCxZhsOR5sy+0I9zirclzVZgNm7LqUN4kDXfsdlrqGl0Zl8Jn0YG9mMJ
-        cpN9cLmULIT6cGO9krT/1BnACLSWjnecnOVcMT8SxuN+UF18XrJd4zZSdR7js1CEpPpNebk9qgpF8
-        w+RmVYZ4AhOwyCfk4hQ5KNEO2TUdF5Rk86A0ijChV9Wm6HijGqvaP9ar6NsjAWi8vjujLAi7SJ+VV
-        l1mtATUtAIBgZJnZDg5qXX0PZ3hVmuMVEr7Z1F0Q8dFD4ebRc3gHSuycJCohktgUWoRP0lozlUmXt
-        qUvd6S5w==;
-Received: by tsort.uuid.uk with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <simon@octiron.net>)
-        id 1jwNiO-0004d0-9V; Fri, 17 Jul 2020 11:35:40 +0100
-Received: from localhost ([::1]:48888)
-        by skund.uuid.uk with esmtp (Exim 4.86_2)
-        (envelope-from <simon@octiron.net>)
-        id 1jwNiO-0000ML-5e; Fri, 17 Jul 2020 11:35:40 +0100
+        Fri, 17 Jul 2020 06:51:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgGQKvF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 06:51:05 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0B86C061755
+        for <devicetree@vger.kernel.org>; Fri, 17 Jul 2020 03:51:04 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1jwNxE-0003u7-5w; Fri, 17 Jul 2020 12:51:00 +0200
+Message-ID: <c325bee7980feb3564de05a0a6d15c1708e2c7c0.camel@pengutronix.de>
+Subject: Re: [PATCH v5 0/4] Add support for iMX8MQ Display Controller
+ Subsystem
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+        lukas@mntmn.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Fri, 17 Jul 2020 12:50:56 +0200
+In-Reply-To: <20200717094517.layssf75bxe3ijs4@fsr-ub1864-141>
+References: <20200709164736.18291-1-laurentiu.palcu@oss.nxp.com>
+         <3c03afff3256ec36e12b9d9408830fbb4853f982.camel@pengutronix.de>
+         <CAKMK7uGsveS+cwxiTq7BGrB1OcE_ff9bAxgSFDMUSmS7gRLJ7g@mail.gmail.com>
+         <febb665904a9c3c680363be8ea83f243ccd09cb7.camel@pengutronix.de>
+         <20200717092758.GR3278063@phenom.ffwll.local>
+         <20200717094517.layssf75bxe3ijs4@fsr-ub1864-141>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Fri, 17 Jul 2020 11:35:40 +0100
-From:   Simon Arlott <simon@octiron.net>
-To:     =?UTF-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
-Cc:     jonas.gorski@gmail.com, kishon@ti.com, vkoul@kernel.org,
-        robh+dt@kernel.org, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
-        krzk@kernel.org, gregkh@linuxfoundation.org, alcooperx@gmail.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v7 0/2] phy: bcm63xx-usbh: Add BCM63xx USBH driver
-In-Reply-To: <20200717094756.9951-1-noltari@gmail.com>
-References: <20200717094756.9951-1-noltari@gmail.com>
-Message-ID: <d601559d6e0ab67c3ff02713df3eb32e@arlott.org>
-X-Sender: simon@octiron.net
-User-Agent: Roundcube Webmail/1.2-beta
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-07-17 10:47, Álvaro Fernández Rojas wrote:
-> Add BCM63xx USBH PHY driver for BMIPS.
+Am Freitag, den 17.07.2020, 12:45 +0300 schrieb Laurentiu Palcu:
+> Hi Lukas and Daniel,
 > 
-> v7: remove Simon from authors and introduce changes suggested by Rob:
+> On Fri, Jul 17, 2020 at 11:27:58AM +0200, Daniel Vetter wrote:
+> > On Fri, Jul 17, 2020 at 11:12:39AM +0200, Lucas Stach wrote:
+> > > Am Freitag, den 17.07.2020, 10:59 +0200 schrieb Daniel Vetter:
+> > > > On Fri, Jul 17, 2020 at 10:18 AM Lucas Stach <l.stach@pengutronix.de> wrote:
+> > > > > Hi Laurentiu,
+> > > > > 
+> > > > > Am Donnerstag, den 09.07.2020, 19:47 +0300 schrieb Laurentiu Palcu:
+> > > > > > From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> > > > > > 
+> > > > > > Hi,
+> > > > > > 
+> > > > > > This patchset adds initial DCSS support for iMX8MQ chip. Initial support
+> > > > > > includes only graphics plane support (no video planes), no HDR10 capabilities,
+> > > > > > no graphics decompression (only linear, tiled and super-tiled buffers allowed).
+> > > > > > 
+> > > > > > Support for the rest of the features will be added incrementally, in subsequent
+> > > > > > patches.
+> > > > > > 
+> > > > > > The patchset was tested with both HDP driver (in the downstream tree) and the upstream
+> > > > > > MIPI-DSI driver (with a couple of patches on top, to make it work correctly with DCSS).
+> > > > > 
+> > > > > I think the series (minus 3/5 and minor correction to the DT binding)
+> > > > > is fine to go in now. So just some formal questions: are you going to
+> > > > > maintain this driver in upstream? If so we should add a MAINTAINERS
+> > > > > entry to that effect. I can offer to act as a reviewer in this case.
+> 
+> I can maintain the DCSS driver, sure, and the more reviewers the better.
+> Thanks for helping out with this. Should I send a v6 then with a patch
+> for MAINTAINERS?
+> 
+> > > > > How do you intend to merge this? IMO pushing this through drm-misc
+> > > > > seems like the right thing to do. If you agree I can help you get this
+> > > > > applied. If you are going to maintain the driver on your own, I think
+> > > > > you should then apply for commit rights to drm-misc.
+> > > > 
+> > > > drm/imx isn't listed yet as under the drm-misc umbrella, maybe we
+> > > > should put the entire collective of imx drivers under drm-misc? Or
+> > > > maybe it's just an oversight that the git repo isn't specified in the
+> > > > MAINTAINERS entry. Also maybe we should add the pengutronix kernel
+> > > > team alias there too?
+> > > 
+> > > drm/imx was exclusively the IPUv3 up until now, which is in fact
+> > > maintained outside of drm-misc in its own git tree. This has worked
+> > > quite well in the past so even though IPUv3 doesn't see a lot of churn
+> > > these days the motivation to change anything to this workflow is quite
+> > > low. And yes, the git tree is missing from the MAINTAINERS entry.
+> > > 
+> > > For the DCSS driver, if it's going to be maintained by NXP, I figured
+> > > it might be easier for Laurentiu to push things into drm-misc than set
+> > > up a separate public git tree. But IMHO that's fully up to him to
+> > > decide.
+> > 
+> > /me puts on maintainer hat
+> > 
+> > Much prefer drm-misc over random people playing maintainer and fumbling
+> > it. I think the reasonable options are either in the current imx tree, or
+> > drm-misc. Standalone tree for these small drivers just doesn't make much
+> > sense.
+> 
+> I don't have anything against either method, though I have to agree I
+> like things to be simple. Going through drm-misc sounds simple enough to me. :)
+> However, since there is going to be more activity in the DRM IMX area in
+> the future, reviving the drm/imx tree, and push all IMX related stuff
+> through drm/imx, could make sense as well.
 
-I asked you to remove my email address from the source code. All you've
-done is update it. I don't want spam. I know the address appears in the
-commit but you don't have to spray it around everywhere else.
+I think drm-misc is the right place then.
 
-You can keep my name in the MODULE_AUTHOR text but you need to omit the
-email address.
+Please send a v6 with the following changes:
+- drop the component framework patch
+- drop the i.MX8MQ DT patch, this should go through Shawn's imx tree
+after the driver and binding has landed in drm-misc
+- you can add my Reviewed-by to the whole series or I can add it when
+applying
+- add a MAINTAINERS entry, please add me as a reviewer if you don't
+mind
 
-None of the original copyright notices included email addresses so I
-don't know why you think it is appropriate for you to add them.
+I can push this initial series into drm-misc until you've got your own
+commit rights.
 
-Please only Cc: this email address, I don't want multiple copies of
-everything.
+Regards,
+Lucas
 
--- 
-Simon Arlott
