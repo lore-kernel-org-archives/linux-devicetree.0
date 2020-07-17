@@ -2,148 +2,66 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8714C433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 08:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CAF0C433E7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 08:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93A302071A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 08:04:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="C6S1AvtT"
+	by mail.kernel.org (Postfix) with ESMTP id 322DD20737
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 08:05:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594973154;
+	bh=R5Xrabo1ypns4x/y+wVu5E5vQZfAi4H2W1OYTh3sGLE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lsEjhK+ygrBOFZYSKZLga9wzaW1o4LA1N93ghnm1e+zF/akhh65GGlREK4jGud6fU
+	 B4KCF1Ndqnf2PbOfkwk9C/RDAyumISFfvu847Ls+w270qPyKQDggf969RRfgM6p/gY
+	 CvjDlCwJiocAKycPjkYkTc3R99RyCX2taqwbgRnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbgGQIEI (ORCPT
+        id S1728179AbgGQIFt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 04:04:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41040 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726793AbgGQIEH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 04:04:07 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00685C061755
-        for <devicetree@vger.kernel.org>; Fri, 17 Jul 2020 01:04:06 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id md7so6019873pjb.1
-        for <devicetree@vger.kernel.org>; Fri, 17 Jul 2020 01:04:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=KEvi0NuPU1IP8yO4PAQchnjzLd/x6LQsk0i3r7vHyn8=;
-        b=C6S1AvtTj8LyBgazLLSZt/LcOQkm40N2bLk8k+vnF1Q/0qesdwGhQOXIbIdrg+K0y3
-         6WRXf56QXTDlMKRmeCFZ40Wmw40hCGXJ7OH5bmuVOTpkjBdpI4cNzzTy063Ne67hZhDA
-         Kdd5l3sMZ+SBT2EsBKzvpMwcqdziXpz8MQdgU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=KEvi0NuPU1IP8yO4PAQchnjzLd/x6LQsk0i3r7vHyn8=;
-        b=RtucFMl9DNG5GanUOd4VNL/KfBYyEdx5wEO10gqMFwUc9nAybWOlKEJhekazFBNvbN
-         SYHafFysGeIqJmHzoTTqQ9w/PvbNi7vJih8j+KeqQTAK4dG4GkCwzzYmOy4A9ISduao/
-         OFbPM7HMo5aGrMxQ8PeKtiUiBD91RPxrH8bJCbGRLq4pLHFru/viIlt2K3/3pRqZy4p8
-         5jB2a9vsU+nFRK/xz2eQt2gSIxnnzesFgDWH+MF4VAeQZ5f2MwXQV7kzNqhFEglIB4Au
-         rbXOqMODYA3hbC3H/z0PFp7j3p1/ZGtTGiFZMNEkDfrXx9/ezIT+EgqaBUlsrBdylBMo
-         kYAw==
-X-Gm-Message-State: AOAM533uLiGEFfS2kYVB4XHtAJs07kpT0xUddR0PleitcZOMG18GN9u9
-        H7kJINTAjNGCzzbex9Zonrso9Q==
-X-Google-Smtp-Source: ABdhPJyIUB2X2bt07ezL/JxWGi7QM9dTUwoDl2jBg2/4sx2zMYj96jaBOidH0UnTgvjoskVWg8dGGQ==
-X-Received: by 2002:a17:902:6b08:: with SMTP id o8mr6813081plk.104.1594973046370;
-        Fri, 17 Jul 2020 01:04:06 -0700 (PDT)
-Received: from localhost.localdomain ([183.83.226.37])
-        by smtp.gmail.com with ESMTPSA id y7sm1933330pjp.47.2020.07.17.01.04.01
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 Jul 2020 01:04:05 -0700 (PDT)
-From:   Suniel Mahesh <sunil@amarulasolutions.com>
-To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        gregkh@linuxfoundation.org, sashal@kernel.org
-Cc:     jagan@amarulasolutions.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-amarula@amarulasolutions.com,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        stable@vger.kernel.org
-Subject: [PATCH v3] ARM: dts: imx6qdl-icore: Fix OTG_ID pin and sdcard detect
-Date:   Fri, 17 Jul 2020 13:33:52 +0530
-Message-Id: <1594973032-29671-1-git-send-email-sunil@amarulasolutions.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <20200711135925.GG21277@dragon>
-References: <20200711135925.GG21277@dragon>
+        Fri, 17 Jul 2020 04:05:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52580 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726198AbgGQIFs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Jul 2020 04:05:48 -0400
+Received: from localhost (unknown [122.171.202.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC9CC20737;
+        Fri, 17 Jul 2020 08:05:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594973148;
+        bh=R5Xrabo1ypns4x/y+wVu5E5vQZfAi4H2W1OYTh3sGLE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iZ7fOzXnBfNPFl8ZRLhe36tRRmNSWBJELk+d4hqCro0BwRxK1gnPS15JAQr+DhkBK
+         rYoNYteTPWKaTORWIzldCOKBRp9WyPRI9IRq5Tjma/4/Nud224WUB1/Pjvkytbk43a
+         8pRmg0mvhvA0Kb5o8KSYJtGApZcpFz1XEMKW03QY=
+Date:   Fri, 17 Jul 2020 13:35:44 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Alim Akhtar <alim.akhtar@samsung.com>
+Cc:     robh+dt@kernel.org, krzk@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH v13 1/2] dt-bindings: phy: Document Samsung UFS PHY
+ bindings
+Message-ID: <20200717080544.GK82923@vkoul-mobl>
+References: <CGME20200716194405epcas5p2da2808b30d8f958290bc5d424aa6a0c7@epcas5p2.samsung.com>
+ <20200716192217.35740-1-alim.akhtar@samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200716192217.35740-1-alim.akhtar@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Michael Trimarchi <michael@amarulasolutions.com>
+On 17-07-20, 00:52, Alim Akhtar wrote:
+> This patch documents Samsung UFS PHY device tree bindings
 
-The current pin muxing scheme muxes GPIO_1 pad for USB_OTG_ID
-because of which when card is inserted, usb otg is enumerated
-and the card is never detected.
+Applied both, thanks
 
-[   64.492645] cfg80211: failed to load regulatory.db
-[   64.492657] imx-sdma 20ec000.sdma: external firmware not found, using ROM firmware
-[   76.343711] ci_hdrc ci_hdrc.0: EHCI Host Controller
-[   76.349742] ci_hdrc ci_hdrc.0: new USB bus registered, assigned bus number 2
-[   76.388862] ci_hdrc ci_hdrc.0: USB 2.0 started, EHCI 1.00
-[   76.396650] usb usb2: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 5.08
-[   76.405412] usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-[   76.412763] usb usb2: Product: EHCI Host Controller
-[   76.417666] usb usb2: Manufacturer: Linux 5.8.0-rc1-next-20200618 ehci_hcd
-[   76.424623] usb usb2: SerialNumber: ci_hdrc.0
-[   76.431755] hub 2-0:1.0: USB hub found
-[   76.435862] hub 2-0:1.0: 1 port detected
-
-The TRM mentions GPIO_1 pad should be muxed/assigned for card detect
-and ENET_RX_ER pad for USB_OTG_ID for proper operation.
-
-This patch fixes pin muxing as per TRM and is tested on a
-i.Core 1.5 MX6 DL SOM.
-
-[   22.449165] mmc0: host does not support reading read-only switch, assuming write-enable
-[   22.459992] mmc0: new high speed SDHC card at address 0001
-[   22.469725] mmcblk0: mmc0:0001 EB1QT 29.8 GiB
-[   22.478856]  mmcblk0: p1 p2
-
-Fixes: 6df11287f7c9 ("ARM: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual initial support")
-Cc: stable@vger.kernel.org
-Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
-Signed-off-by: Suniel Mahesh <sunil@amarulasolutions.com>
----
-Changes for v3:
-- Changed subject of the patch, added fixes tag and copied stable kernel
-  as suggested by Shawn Guo.
-
-Changes for v2:
-- Changed patch description as suggested by Michael Trimarchi to make it
-  more readable/understandable.
-
-NOTE:
-- patch tested on i.Core 1.5 MX6 DL
----
- arch/arm/boot/dts/imx6qdl-icore.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-index f2f475e..23c318d 100644
---- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-@@ -398,7 +398,7 @@
- 
- 	pinctrl_usbotg: usbotggrp {
- 		fsl,pins = <
--			MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x17059
-+			MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID 0x17059
- 		>;
- 	};
- 
-@@ -410,6 +410,7 @@
- 			MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x17070
- 			MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x17070
- 			MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17070
-+			MX6QDL_PAD_GPIO_1__GPIO1_IO01  0x1b0b0
- 		>;
- 	};
- 
 -- 
-2.7.4
-
+~Vinod
