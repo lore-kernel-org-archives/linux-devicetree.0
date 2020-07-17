@@ -2,103 +2,239 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A62CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 20:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D0EC433E5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 20:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C803320684
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 20:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AC512070E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 20:48:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="rGwYawEl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgGQUon (ORCPT
+        id S1728830AbgGQUsn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 16:44:43 -0400
-Received: from nbd.name ([46.4.11.11]:53086 "EHLO nbd.name"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726492AbgGQUon (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Jul 2020 16:44:43 -0400
-Received: from [2a04:4540:1402:e200:f4bc:edb0:b75b:df61]
-        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <john@phrozen.org>)
-        id 1jwXDQ-0005hg-CH; Fri, 17 Jul 2020 22:44:20 +0200
-Subject: Re: [PATCH 2/2] dt-bindings: net: dsa: qca8k: Add PORT0_PAD_CTRL
- properties
-To:     Matthew Hagan <mnhagan88@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>
-Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonathan McDowell <noodles@earth.li>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-References: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
- <ea0a35ed686e6dace77e25cb70a8f39fdd1ea8ad.1594668793.git.mnhagan88@gmail.com>
- <20200716150925.0f3e01b8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <ac7f5f39-9f83-64c0-d8d5-9ea059619f67@gmail.com>
-From:   John Crispin <john@phrozen.org>
-Message-ID: <53851852-0efe-722e-0254-8652cdfea8fc@phrozen.org>
-Date:   Fri, 17 Jul 2020 22:44:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 17 Jul 2020 16:48:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46446 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726492AbgGQUsm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 16:48:42 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E3C6C0619D2;
+        Fri, 17 Jul 2020 13:48:42 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id CE21371D;
+        Fri, 17 Jul 2020 22:48:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1595018918;
+        bh=XYHG8/2rl6p2XqnEsWEfoxx9RfN0fqz7yBhyxsmUQwg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rGwYawElmR3YEQwm/N4Pfa9x5b9wkPNQvkInL7r8g6E+ROHcMuARJFRgyPJ22BLLU
+         uZG6e/yInEmdTtd00cHew6ALJsXywvknnru5QOQxs9wcKZMMELuxY2kFn8zcKMcHeR
+         i2YcNhCZnXYMWBu9QljkTvJRjoHhl/cg+NOu0ATs=
+Date:   Fri, 17 Jul 2020 23:48:29 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        slongerbeam@gmail.com, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "moderated list:ARM/STM32 ARCHITECTURE" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH 07/13] dt-bindings: media: ov5640: Remove clock-lanes
+Message-ID: <20200717204829.GI5961@pendragon.ideasonboard.com>
+References: <20200717132859.237120-1-jacopo+renesas@jmondi.org>
+ <20200717132859.237120-8-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-In-Reply-To: <ac7f5f39-9f83-64c0-d8d5-9ea059619f67@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200717132859.237120-8-jacopo+renesas@jmondi.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Jacopo,
 
-On 17.07.20 22:29, Matthew Hagan wrote:
->
-> On 16/07/2020 23:09, Jakub Kicinski wrote:
->> On Mon, 13 Jul 2020 21:50:26 +0100 Matthew Hagan wrote:
->>> Add names and decriptions of additional PORT0_PAD_CTRL properties.
->>>
->>> Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
->>> ---
->>>   Documentation/devicetree/bindings/net/dsa/qca8k.txt | 8 ++++++++
->>>   1 file changed, 8 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
->>> index ccbc6d89325d..3d34c4f2e891 100644
->>> --- a/Documentation/devicetree/bindings/net/dsa/qca8k.txt
->>> +++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
->>> @@ -13,6 +13,14 @@ Optional properties:
->>>   
->>>   - reset-gpios: GPIO to be used to reset the whole device
->>>   
->>> +Optional MAC configuration properties:
->>> +
->>> +- qca,exchange-mac0-mac6:	If present, internally swaps MAC0 and MAC6.
->> Perhaps we can say a little more here?
->>
->  From John's patch:
-> "The switch allows us to swap the internal wirering of the two cpu ports.
-> For the HW offloading to work the ethernet MAC conencting to the LAN
-> ports must be wired to cpu port 0. There is HW in the wild that does not
-> fulfill this requirement. On these boards we need to swap the cpu ports."
->
-> This option is somewhat linked to instances where both MAC0 and MAC6 are
-> used as CPU ports. I may omit this for now since support for this hasn't
-> been added and MAC0 is hard-coded as the CPU port. The initial intention
-> here was to cover options commonly set by OpenWrt devices, based upon
-> their ar8327-initvals, to allow migration to qca8k.
->
->
-correct, specifically quantenna designs do this, also saw ciscos swap 
-mac0/6 for cpu port, that part of the patch is definitely safe to go. I 
-stumbled across this while making qca8k work for g-fiber on a quantenna SoC.
+Thank you for the patch.
 
-in regards to the sgmii clk skew. I never understood the electrics fully 
-I am afraid, but without the patch it simply does not work. my eletcric 
-foo is unfortunately is not sufficient to understand the "whys" I am afraid.
+On Fri, Jul 17, 2020 at 03:28:53PM +0200, Jacopo Mondi wrote:
+> The ov5640 does not support routing the clock signal to a different
+> lane, and the property has value fixed to 0.
+> 
+> Remove the property from the bindings and update its users
+> accordingly.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-     John
+When we'll convert video-interface.txt to YAML, let's state clearly that
+properties should not be specified when the hardware is configurable.
 
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> ---
+>  Documentation/devicetree/bindings/media/i2c/ov5640.yaml | 6 ------
+>  arch/arm/boot/dts/dra72-evm-common.dtsi                 | 1 -
+>  arch/arm/boot/dts/dra76-evm.dts                         | 1 -
+>  arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi           | 1 -
+>  arch/arm/boot/dts/imx6qdl-icore.dtsi                    | 1 -
+>  arch/arm/boot/dts/imx6qdl-sabrelite.dtsi                | 1 -
+>  arch/arm/boot/dts/imx6qdl-sabresd.dtsi                  | 1 -
+>  arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi               | 1 -
+>  arch/arm64/boot/dts/ti/k3-am654-base-board.dts          | 1 -
+>  9 files changed, 14 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5640.yaml b/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
+> index 8fd54575a1db..5e1662e848bd 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
+> @@ -76,9 +76,6 @@ properties:
+>            bus-type:
+>              enum: [4, 5]
+> 
+> -          clock-lanes:
+> -            const: 0
+> -
+>            data-lanes:
+>              description: |
+>                Should be set to <1> or <1 2> (one or two CSI-2 lanes supported).
+> @@ -125,7 +122,6 @@ properties:
+>                  required:
+>                    - remote-endpoint
+>                    - bus-type
+> -                  - clock-lanes
+>                    - data-lanes
+> 
+>            - if:
+> @@ -134,7 +130,6 @@ properties:
+>                    const: 5
+>              then:
+>                properties:
+> -                clock-lanes: false
+>                  data-lanes: false
+>                required:
+>                  - remote-endpoint
+> @@ -182,7 +177,6 @@ examples:
+>                  ov5640_to_mipi_csi2: endpoint {
+>                      remote-endpoint = <&mipi_csi2_from_ov5640>;
+>                      bus-type = <4>;
+> -                    clock-lanes = <0>;
+>                      data-lanes = <1 2>;
+>                  };
+>              };
+> diff --git a/arch/arm/boot/dts/dra72-evm-common.dtsi b/arch/arm/boot/dts/dra72-evm-common.dtsi
+> index aba7eb55525d..b5b31dc927d4 100644
+> --- a/arch/arm/boot/dts/dra72-evm-common.dtsi
+> +++ b/arch/arm/boot/dts/dra72-evm-common.dtsi
+> @@ -288,7 +288,6 @@ port {
+>  			csi2_cam0: endpoint {
+>  				remote-endpoint = <&csi2_phy0>;
+>  				bus-type = <4>;
+> -				clock-lanes = <0>;
+>  				data-lanes = <1 2>;
+>  			};
+>  		};
+> diff --git a/arch/arm/boot/dts/dra76-evm.dts b/arch/arm/boot/dts/dra76-evm.dts
+> index ddf16e65ec7f..6fcb96abc41d 100644
+> --- a/arch/arm/boot/dts/dra76-evm.dts
+> +++ b/arch/arm/boot/dts/dra76-evm.dts
+> @@ -421,7 +421,6 @@ port {
+>  			csi2_cam0: endpoint {
+>  				remote-endpoint = <&csi2_phy0>;
+>  				bus-type = <4>;
+> -				clock-lanes = <0>;
+>  				data-lanes = <1 2>;
+>  			};
+>  		};
+> diff --git a/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi b/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
+> index dd5765778e87..a12d80a2403e 100644
+> --- a/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
+> +++ b/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
+> @@ -275,7 +275,6 @@ port {
+>  			ov5640_to_mipi_csi2: endpoint {
+>  				remote-endpoint = <&mipi_csi2_in>;
+>  				bus-type = <4>;
+> -				clock-lanes = <0>;
+>  				data-lanes = <1 2>;
+>  			};
+>  		};
+> diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
+> index 2b1f275b8cc4..05bd332f527b 100644
+> --- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
+> @@ -214,7 +214,6 @@ port {
+>  			ov5640_to_mipi_csi2: endpoint {
+>  				remote-endpoint = <&mipi_csi2_in>;
+>  				bus-type = <4>;
+> -				clock-lanes = <0>;
+>  				data-lanes = <1 2>;
+>  			};
+>  		};
+> diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+> index 5752abb48e68..5eb7fbf33069 100644
+> --- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+> @@ -383,7 +383,6 @@ port {
+>  			ov5640_to_mipi_csi2: endpoint {
+>  				remote-endpoint = <&mipi_csi2_in>;
+>  				bus-type = <4>;
+> -				clock-lanes = <0>;
+>  				data-lanes = <1 2>;
+>  			};
+>  		};
+> diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> index 990f4cc345da..02f78b46a8fd 100644
+> --- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> @@ -314,7 +314,6 @@ port {
+>  			ov5640_to_mipi_csi2: endpoint {
+>  				remote-endpoint = <&mipi_csi2_in>;
+>  				bus-type = <4>;
+> -				clock-lanes = <0>;
+>  				data-lanes = <1 2>;
+>  			};
+>  		};
+> diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+> index 5c79ad5e7b5d..8c24fd468a22 100644
+> --- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+> @@ -628,7 +628,6 @@ camera_rear@3b {
+>  		port {
+>  			ov5640_ep: endpoint {
+>  				bus-type = <4>;
+> -				clock-lanes = <0>;
+>  				data-lanes = <1 2>;
+>  				remote-endpoint = <&csiphy0_ep>;
+>  			};
+> diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+> index 33f4eceffbe5..dd6a636ba3af 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+> @@ -255,7 +255,6 @@ port {
+>  			csi2_cam0: endpoint {
+>  				remote-endpoint = <&csi2_phy0>;
+>  				bus-type = <4>;
+> -				clock-lanes = <0>;
+>  				data-lanes = <1 2>;
+>  			};
+>  		};
+
+-- 
+Regards,
+
+Laurent Pinchart
