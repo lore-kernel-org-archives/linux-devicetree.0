@@ -4,101 +4,126 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E625EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 17:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07958C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 17:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3AA12074B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 17:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E70D220737
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 17:00:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgGQRAl (ORCPT
+        id S1728032AbgGQRAp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 13:00:41 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:21061 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726938AbgGQRAc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:00:32 -0400
-X-IronPort-AV: E=Sophos;i="5.75,362,1589209200"; 
-   d="scan'208";a="52419821"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 18 Jul 2020 02:00:30 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 9500D40061A0;
-        Sat, 18 Jul 2020 02:00:28 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 1/2] pinctrl: sh-pfc: r8a7790: Add USB1 PWEN pin and group
-Date:   Fri, 17 Jul 2020 18:00:24 +0100
-Message-Id: <1595005225-11519-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595005225-11519-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1595005225-11519-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Fri, 17 Jul 2020 13:00:45 -0400
+Received: from out28-124.mail.aliyun.com ([115.124.28.124]:54634 "EHLO
+        out28-124.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727810AbgGQRAp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 13:00:45 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07466951|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0939416-0.000470004-0.905588;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03301;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=14;RT=14;SR=0;TI=SMTPD_---.I3U5VZp_1595005212;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I3U5VZp_1595005212)
+          by smtp.aliyun-inc.com(10.147.41.121);
+          Sat, 18 Jul 2020 01:00:22 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     daniel.lezcano@linaro.org, tsbogend@alpha.franken.de,
+        robh+dt@kernel.org
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, tglx@linutronix.de,
+        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
+        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com, paul@crapouillou.net
+Subject: [PATCH v7 4/5] MIPS: X1000: Use SYSOST instead of TCU to provide clocksource.
+Date:   Sat, 18 Jul 2020 00:59:46 +0800
+Message-Id: <20200717165947.56158-5-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200717165947.56158-1-zhouyanjie@wanyeetech.com>
+References: <20200717165947.56158-1-zhouyanjie@wanyeetech.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add USB1 PWEN pin and group for USB1 interface.
+Before this series of patches, X1000 used TCU to provide
+clocksource and clockevent, but because the timer of TCU
+is only 16 bits, so the timing length is only 16 bits. In
+actual use, it is easy to cause some problems such as data
+loss during data transmission. The SYSOST driver is provided
+in this series of patches, which can provide 32bit timing
+length, so use SYSOST instead of TCU to provide clocksource
+and clockevent to solve the aforementioned problems.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a7790.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7790.c b/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
-index f524401fec5f..39ba1e7cc1c3 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
-@@ -3611,6 +3611,13 @@ static const unsigned int usb1_pins[] = {
- static const unsigned int usb1_mux[] = {
- 	USB1_PWEN_MARK, USB1_OVC_MARK,
- };
-+static const unsigned int usb1_pwen_pins[] = {
-+	/* PWEN */
-+	RCAR_GP_PIN(5, 20),
-+};
-+static const unsigned int usb1_pwen_mux[] = {
-+	USB1_PWEN_MARK,
-+};
- /* - USB2 ------------------------------------------------------------------- */
- static const unsigned int usb2_pins[] = {
- 	/* PWEN, OVC */
-@@ -3939,7 +3946,7 @@ static const unsigned int vin3_clk_mux[] = {
- };
+Notes:
+    v7:
+    New patch.
+
+ arch/mips/boot/dts/ingenic/cu1000-neo.dts |  9 +++------
+ arch/mips/boot/dts/ingenic/x1000.dtsi     | 16 ++++++++++++++++
+ 2 files changed, 19 insertions(+), 6 deletions(-)
+
+diff --git a/arch/mips/boot/dts/ingenic/cu1000-neo.dts b/arch/mips/boot/dts/ingenic/cu1000-neo.dts
+index 22a1066d637b..9418dbeccfa6 100644
+--- a/arch/mips/boot/dts/ingenic/cu1000-neo.dts
++++ b/arch/mips/boot/dts/ingenic/cu1000-neo.dts
+@@ -3,7 +3,7 @@
  
- static const struct {
--	struct sh_pfc_pin_group common[289];
-+	struct sh_pfc_pin_group common[290];
- 	struct sh_pfc_pin_group automotive[1];
- } pinmux_groups = {
- 	.common = {
-@@ -4193,6 +4200,7 @@ static const struct {
- 		SH_PFC_PIN_GROUP(usb0),
- 		SH_PFC_PIN_GROUP(usb0_ovc_vbus),
- 		SH_PFC_PIN_GROUP(usb1),
-+		SH_PFC_PIN_GROUP(usb1_pwen),
- 		SH_PFC_PIN_GROUP(usb2),
- 		VIN_DATA_PIN_GROUP(vin0_data, 24),
- 		VIN_DATA_PIN_GROUP(vin0_data, 20),
-@@ -4640,6 +4648,7 @@ static const char * const usb0_groups[] = {
+ #include "x1000.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
+-#include <dt-bindings/clock/ingenic,tcu.h>
++#include <dt-bindings/clock/ingenic,sysost.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
  
- static const char * const usb1_groups[] = {
- 	"usb1",
-+	"usb1_pwen",
+ / {
+@@ -43,13 +43,10 @@
+ 	clock-frequency = <24000000>;
  };
  
- static const char * const usb2_groups[] = {
+-&tcu {
++&ost {
+ 	/* 1500 kHz for the system timer and clocksource */
+-	assigned-clocks = <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER2>;
++	assigned-clocks = <&ost OST_CLK_PERCPU_TIMER>, <&ost OST_CLK_GLOBAL_TIMER>;
+ 	assigned-clock-rates = <1500000>, <1500000>;
+-
+-	/* Use channel #0 for the system timer channel #2 for the clocksource */
+-	ingenic,pwm-channels-mask = <0xfa>;
+ };
+ 
+ &uart2 {
+diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi b/arch/mips/boot/dts/ingenic/x1000.dtsi
+index 9de9e7c2d523..bf7951dc89ef 100644
+--- a/arch/mips/boot/dts/ingenic/x1000.dtsi
++++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
+@@ -47,6 +47,22 @@
+ 		clock-names = "ext", "rtc";
+ 	};
+ 
++	ost: timer@12000000 {
++		compatible = "ingenic,x1000-ost";
++		reg = <0x12000000 0x1000>;
++
++		#clock-cells = <1>;
++
++		clocks = <&cgu X1000_CLK_OST>;
++		clock-names = "ost";
++
++		interrupt-controller;
++		#interrupt-cells = <1>;
++
++		interrupt-parent = <&cpuintc>;
++		interrupts = <3>;
++	};
++
+ 	tcu: timer@10002000 {
+ 		compatible = "ingenic,x1000-tcu", "simple-mfd";
+ 		reg = <0x10002000 0x1000>;
 -- 
-2.17.1
+2.11.0
 
