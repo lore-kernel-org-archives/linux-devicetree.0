@@ -2,124 +2,183 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4E6C433E7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 04:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3F3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 04:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A702C20704
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 04:22:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A759720734
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 04:28:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="dul0ll3U"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cqQG+5HH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgGQEWz (ORCPT
+        id S1726627AbgGQE2G (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 00:22:55 -0400
-Received: from mail-vi1eur05on2070.outbound.protection.outlook.com ([40.107.21.70]:54240
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726442AbgGQEWy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Jul 2020 00:22:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jMwLQHh0rEx0hxDBLccMZJv6du1/nDoTlPUds4biSs2dTk+rZc+bLvbYuTJkUCUrjkZKwsYARqyAKTQPjcFifcW0oM5f/L7grKVPWpWb3XMWkOEjIANOic98xGVnucPD6GQfTg2LRzv0k1m7sKISRbMJ4i8NUvE7qlnfoFU7deZHD4DwK1r9rXkqqM5CZ0NiKZM+0KJxZrTvJ5cxK8kKp2JQYFDDnf8YIlA1bUfVpwzSgNrOrhjKN9FEdHDQ5wcs7PdCWVgonKaWmb+WkdomBSVIihmwjHwKme+ce17Fv+OTHPFfJG9OPKCVeTdTY2E7dFqOK+D252bs+zJFMYztvw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NjyHK8wNMT7oBpsXocRNIYgDv2Iwo8qeASNV3bCBEzo=;
- b=NlpJoVXUteImz1CWW0+6ENGCJBF7cmdeX/Pqj1Um+x9wQYtqNwBFPSUru5D7Y7RO3TMzLDoFUCk4JNL0d7RtbWUuFPJwThdpSxlfF+/X8c2wAXMjRqfSobO2eHtjz0aIh9Uzi5nzFn6vdyMcHBYlKmFik9MoZKF7RMfl2j3dtYdIXwWsUevxcn+ObZiFo5zx6hOHHK6YtTks5nzzb1lSaEGTHSUAVNBMLi0tEWkVtyidK+MczQkS/MwOb3MvKBTUt5BeIf41OoMOk9BjEVPPResQdLHrvERXGdKjikzxlbSJGiHkFoQgEPusalPJyscV98yH6KOjdLVnFfdoPlEWSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NjyHK8wNMT7oBpsXocRNIYgDv2Iwo8qeASNV3bCBEzo=;
- b=dul0ll3Uah/YhVmYZr2lQ21cjh6dquLgbA6n8RHMr8zIITtRgn5pqfhmdCdMu6soV2vrzKMCk7yrKlRPk6EstOpoJiuZ8WP19UEAqnOn7fFWetR0tOrkZla4Yj4BLt2PQGXgT2B8rP4e2muosP6WxpEXbguVE1sCmUAGPABfqTE=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (2603:10a6:20b:118::20)
- by AM6PR04MB6279.eurprd04.prod.outlook.com (2603:10a6:20b:b7::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Fri, 17 Jul
- 2020 04:22:52 +0000
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::1101:adaa:ee89:af2a]) by AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::1101:adaa:ee89:af2a%3]) with mapi id 15.20.3174.026; Fri, 17 Jul 2020
- 04:22:52 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     shawnguo@kernel.org, robh+dt@kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de,
-        devicetree@vger.kernel.org, linux-imx@nxp.com,
-        linux-usb@vger.kernel.org, Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH v2 3/4] arm64: dts: imx8mm-evk: add two parameters for picophy tuning
-Date:   Fri, 17 Jul 2020 12:22:25 +0800
-Message-Id: <20200717042226.18495-3-peter.chen@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200717042226.18495-1-peter.chen@nxp.com>
-References: <20200717042226.18495-1-peter.chen@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR0302CA0010.apcprd03.prod.outlook.com
- (2603:1096:3:2::20) To AM7PR04MB7157.eurprd04.prod.outlook.com
- (2603:10a6:20b:118::20)
+        Fri, 17 Jul 2020 00:28:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36088 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725936AbgGQE2F (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 00:28:05 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7993C08C5DB
+        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 21:28:04 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id b6so9564906wrs.11
+        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 21:28:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xKiHKtXUo7NkO+4s96RBO3/zYsHU2Z/ckyeyMOpjSSk=;
+        b=cqQG+5HHP8FdB3WQLW9wGhsG7SeC7f21rTf6GbiqGayG4UG+Eb/ZxDPESsqFDBOneb
+         lEHteZt/4j7lwXdMwlfN7AdtgbvYmDW+2kPVuSVJSBxwsTSsgv41w+4VCt/Ceg/Qf3gL
+         goYjFGpMHwtDxONpZtwPovrBtog3pC5e3idIBg5Jp2GzhGV4UpPUHG0HFJ5YNbBobQc0
+         GLdY8dcZdbBInXqVuhNQPCBXdS3js1eFHfC/jjTDmX0aCvGeIxVSGpbiF9R4LQkkHkpM
+         sU/J9G4w5VTmV1l9GuHqO1IwyQNmDi9jCG/Llh8/+vJjwhcTSbA5fECuc1o+BYKL0d5A
+         44bA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xKiHKtXUo7NkO+4s96RBO3/zYsHU2Z/ckyeyMOpjSSk=;
+        b=BgxY8ndGMxzZSPx3GFFUny5dpXFlEVwg3kPhHaT+8ddMtIIo/Bkrj4igFG/3b65aX/
+         iVKBrVObu4r5xtXcVXW0v67SiFaf74NdGCJaDYR82VrbtLABbB2N63AxAvPDTAwZqJmW
+         t3VwySbqkVxnfJI2GWBpoX6/aP76LTn4PLTVjQGjlXmba2aE/3jaPwv7/gn9hYA4yZBb
+         xDKugnZIMkrypeRePhiPYTt8/7YREDQ+saOXtiE0AmXyRtzAhTbQN1CMhd25r36Qr4kf
+         rEjYWNJG/H3KTKUsNBIWgUhemRcL01Fu1EjLQTkD8J2SL16rXjaw74HmSIWsyDZ0Vpru
+         78Gg==
+X-Gm-Message-State: AOAM533aGkPr3RAonRj5fiPDa5z3ywxaccajmYwBb1DrlFjRz230gaa8
+        9wmLC+oc1Ynb2QwQAVfwSX+dsg==
+X-Google-Smtp-Source: ABdhPJz608hYHsiwyB/EN+L+jwqQLZomE0K0feZYaj9wTWfFYhecxH/LFSN0LliZKeegIqo1mKBqpQ==
+X-Received: by 2002:adf:9283:: with SMTP id 3mr8013554wrn.231.1594960083192;
+        Thu, 16 Jul 2020 21:28:03 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:9880:a643:3e69:6393? ([2a01:e34:ed2f:f020:9880:a643:3e69:6393])
+        by smtp.googlemail.com with ESMTPSA id u186sm11862848wmu.10.2020.07.16.21.28.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jul 2020 21:28:02 -0700 (PDT)
+Subject: Re: [PATCH v4 00/16] Allwinner A100 Initial support
+To:     Frank Lee <frank@allwinnertech.com>, robh+dt@kernel.org,
+        mripard@kernel.org, wens@csie.org, mturquette@baylibre.com,
+        sboyd@kernel.org, gregory.clement@bootlin.com, tglx@linutronix.de,
+        jason@lakedaemon.net, maz@kernel.org,
+        srinivas.kandagatla@linaro.org, linus.walleij@linaro.org,
+        anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
+        amit.kucheria@verdurent.com, lee.jones@linaro.org,
+        p.zabel@pengutronix.de, clabbe@baylibre.com, icenowy@aosc.io,
+        megous@megous.com, stefan@olimex.com, bage@linutronix.de,
+        devicetree@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org
+References: <cover.1594708863.git.frank@allwinnertech.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <ffd5eead-571c-6548-0527-1e685ec869ef@linaro.org>
+Date:   Fri, 17 Jul 2020 06:28:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from b29397-desktop.ap.freescale.net (119.31.174.67) by SG2PR0302CA0010.apcprd03.prod.outlook.com (2603:1096:3:2::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.9 via Frontend Transport; Fri, 17 Jul 2020 04:22:47 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [119.31.174.67]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 45b5b50d-942b-4020-371c-08d82a0911f2
-X-MS-TrafficTypeDiagnostic: AM6PR04MB6279:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM6PR04MB6279FCC30227D8F25477229B8B7C0@AM6PR04MB6279.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qzqwGr25qfIfWxA9TLdKyE/TmjwVTWqBSybHnuTcMglRA2K0iyqvugotsw4QIkFrHI80o4F3UrokxFtY6whzoQeYuUmo4fpjI4aM2ZHGL8wOUcqHwZ43AM3ytqSMQYSv4qNFULktELPEFYnFI1BFgTh3xVt3tysKRyafL8IKqTP0GSqQI/NWIDurUTmfaUPx9XpWDkn4pnKtdkitStPsLoah9Fd7K2nAzVP0/jHhmlE6TSaNh+Rr2iLUZR8DQQPVPVtNjlfr8j2ldc99dmaaHxpvh+PrWpAb0EK4MniXLLGclVxrUGvlBeT1wIXeSIikDbcvfoBKXvOZ/5sbfWMGO5BtItkQOkKYKyspdrPlUFX1MWdxPfb5qxXvrJH23G5K
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7157.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(346002)(376002)(396003)(366004)(6512007)(86362001)(956004)(6506007)(316002)(4744005)(478600001)(2616005)(6486002)(186003)(66476007)(8676002)(16526019)(52116002)(36756003)(8936002)(26005)(1076003)(66946007)(4326008)(5660300002)(66556008)(44832011)(2906002)(6666004)(32563001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: yGaiur28ABVkU+KhlJBaG/GAmW79Y0DnnYeAjKf9iAOEDyLKdPfoSf8F+8Z9MXJgkyaiBY4bCF5Uyn5CFLAFUu1YA/DKOf+rkqsN4M9SW6IEh8Y5Yv7E0Gnfmckmi43fTNtaVy4jBOAG8scFoLJO+v4He9Bl/RayDd8dyseI5rHEWiqDD95s9SUm8jei9L8HKDxAnnBTCPixDjooJdQmfYxLBPjnneFBixOUQnm3Onc9jY0Cuyr8rouEXkcjQhcuRhYqj5iIZUjR8JnX2KfEUY+OqmW3Ug8/KC5FsXHR5676MCH5bjoMsKvjuQgE/cyEXrdqQIiVXCvBNQplleUM3de/Kz8n32JnhBuEwnOsfocW8/mmWSeL1D7i7LxCLpw8MPAsqjvFfPysr4AOF+ij6jCVfl4Ajs5BKFH27AvvHlRElhC+A7UnCvkc/Zobmol3FYhRYtAaXO7n3DyYJZ2+TSuMqLpAlPEBwVqUk0OfZww=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45b5b50d-942b-4020-371c-08d82a0911f2
-X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7157.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jul 2020 04:22:52.0419
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 70bwfuP5EuLwPG5xNC6mdzBbq9T21JqM3SZoEYexjo186r8Ec/4hMty94KvylQIJtmciT15gnPdrSHzB29E+lw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB6279
+In-Reply-To: <cover.1594708863.git.frank@allwinnertech.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-With these two parameters tuning, it can pass USB eye diagram at evk board.
+On 14/07/2020 08:55, Frank Lee wrote:
+> From: Yangtao Li <frank@allwinnertech.com>
 
-Reviewed-by: Jun Li <jun.li@nxp.com>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
----
-Changes for v2
-- Address Shawn's comment to change subject.
+Do you expect me to pick patches 7,8,9 or ack them ?
 
- arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 2 ++
- 1 file changed, 2 insertions(+)
+> v4:
+> -drop "dt-bindings: pinctrl: sunxi: make gpio banks supplies required"
+> -fix dcdc1 regulator name
+> -get rid of underscore in dts node name
+> -Some trivial things in yaml files
+> 
+> v3:
+> -Add pmu and nmi support
+> -Add read data mask for calibration
+> -Code style
+> -Some trivial things in yaml files
+> 
+> v2:
+> -Some naming consistency
+> -Repair email address
+> -Fix mmc clock
+> -Don't export system clock
+> -Fix checkpatch warning
+> -Drop unneeded pin function, convert to jtag_gpu and i2s_x
+> 
+> Yangtao Li (16):
+>   dt-bindings: clk: sunxi-ccu: add compatible string for A100 CCU and
+>     R-CCU
+>   clk: sunxi-ng: add support for the Allwinner A100 CCU
+>   dt-bindings: pinctrl: sunxi: Get rid of continual nesting
+>   dt-bindings: pinctrl: sunxi: Add A100 pinctrl bindings
+>   pinctrl: sunxi: add support for the Allwinner A100 pin controller
+>   dt-bindings: nvmem: SID: add binding for A100's SID controller
+>   dt-bindings: thermal: sun8i: Add binding for A100's THS controller
+>   thermal: sun8i: add TEMP_CALIB_MASK for calibration data in
+>     sun50i_h6_ths_calibrate
+>   thermal: sun8i: Add A100's THS controller support
+>   mfd: axp20x: Allow the AXP803 to be probed by I2C
+>   dt-bindings: irq: sun7i-nmi: fix dt-binding for a80 nmi
+>   dt-bindings: irq: sun7i-nmi: Add binding for A100's NMI controller
+>   dt-bindings: i2c: mv64xxx: Add compatible for the A100 i2c node.
+>   arm64: allwinner: A100: add the basical Allwinner A100 DTSI file
+>   dt-bindings: arm: sunxi: Add Allwinner A100 Perf1 Board bindings
+>   arm64: allwinner: A100: add support for Allwinner Perf1 board
+> 
+>  .../devicetree/bindings/arm/sunxi.yaml        |    5 +
+>  .../clock/allwinner,sun4i-a10-ccu.yaml        |    7 +-
+>  .../bindings/i2c/marvell,mv64xxx-i2c.yaml     |    3 +
+>  .../allwinner,sun7i-a20-sc-nmi.yaml           |    5 +-
+>  .../nvmem/allwinner,sun4i-a10-sid.yaml        |   19 +-
+>  .../pinctrl/allwinner,sun4i-a10-pinctrl.yaml  |  139 +-
+>  .../thermal/allwinner,sun8i-a83t-ths.yaml     |    6 +-
+>  arch/arm64/boot/dts/allwinner/Makefile        |    1 +
+>  .../allwinner/sun50i-a100-allwinner-perf1.dts |  180 +++
+>  .../arm64/boot/dts/allwinner/sun50i-a100.dtsi |  364 +++++
+>  drivers/clk/sunxi-ng/Kconfig                  |   10 +
+>  drivers/clk/sunxi-ng/Makefile                 |    2 +
+>  drivers/clk/sunxi-ng/ccu-sun50i-a100-r.c      |  214 +++
+>  drivers/clk/sunxi-ng/ccu-sun50i-a100-r.h      |   21 +
+>  drivers/clk/sunxi-ng/ccu-sun50i-a100.c        | 1276 +++++++++++++++++
+>  drivers/clk/sunxi-ng/ccu-sun50i-a100.h        |   56 +
+>  drivers/mfd/axp20x-i2c.c                      |    2 +
+>  drivers/pinctrl/sunxi/Kconfig                 |   10 +
+>  drivers/pinctrl/sunxi/Makefile                |    2 +
+>  drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c |  105 ++
+>  drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c   |  708 +++++++++
+>  drivers/thermal/sun8i_thermal.c               |   16 +-
+>  include/dt-bindings/clock/sun50i-a100-ccu.h   |  116 ++
+>  include/dt-bindings/clock/sun50i-a100-r-ccu.h |   23 +
+>  include/dt-bindings/reset/sun50i-a100-ccu.h   |   68 +
+>  include/dt-bindings/reset/sun50i-a100-r-ccu.h |   18 +
+>  26 files changed, 3308 insertions(+), 68 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
+>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100-r.c
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100-r.h
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100.c
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100.h
+>  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c
+>  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
+>  create mode 100644 include/dt-bindings/clock/sun50i-a100-ccu.h
+>  create mode 100644 include/dt-bindings/clock/sun50i-a100-r-ccu.h
+>  create mode 100644 include/dt-bindings/reset/sun50i-a100-ccu.h
+>  create mode 100644 include/dt-bindings/reset/sun50i-a100-r-ccu.h
+> 
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-index 0f1d7f8aeac4..c432b628e1ed 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-@@ -324,6 +324,8 @@
- 	srp-disable;
- 	adp-disable;
- 	usb-role-switch;
-+	picophy,pre-emp-curr-control = <3>;
-+	picophy,dc-vol-level-adjust = <7>;
- 	status = "okay";
- 
- 	port {
+
 -- 
-2.17.1
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
