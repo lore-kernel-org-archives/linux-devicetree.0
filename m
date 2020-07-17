@@ -2,321 +2,162 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 695BAC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 05:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B961DC433E8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 05:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 414792070A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 05:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9859F20734
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 05:53:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H3SECMdL"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vrZfga1I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725999AbgGQF2r (ORCPT
+        id S1725300AbgGQFxQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 01:28:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45434 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgGQF2q (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 01:28:46 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CBCBC08C5C0
-        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 22:28:46 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id o2so15497544wmh.2
-        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 22:28:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3R841zjQJ873CPLugpq+yROuqcowWRWOM1I9YnQC0yw=;
-        b=H3SECMdLBtoMFmBF8gwG7s68I1WI9g2z6KWf3uQwmopAlMDMBluxJ+IEfjBJ99v07N
-         /dKcpfxRDsYE5eMibCoLsQ315MiIT3MdOv4AxOaq/CGFZsyxa1xVF18O/WlhtHY7j4gp
-         rIcwEd9JNllTxFbyuIbucoyE0hI9NMONm+3mQbPi71qD4veRNfgQfrqn8EuFBlby/qll
-         kRzmBoJRsV0VuonT4YsYyNc8x1zazXe+/fu9Sr0NryKm0Bgo/QJ+I/sJSpD8dTHzvesy
-         XDUMDDtJoEsmjETrFP5jc3Fqyg3xnfOZDZc5D3aWo66R+BPcpISpS+Uv1tjuDxq38m5l
-         okYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3R841zjQJ873CPLugpq+yROuqcowWRWOM1I9YnQC0yw=;
-        b=SX0RZaSnFfn4jd94TjB+I2z0dZ2X7skY+OuepnkTJH//FaEdrUr7pY64xCflWE069r
-         TA6JmmU4jk3EceY5FovcZJhdPZ8aTfoi03DQiEJsh3Z5aAn5Mf7sSx02rJJEeIqDorya
-         pnp+fp60rW9FGQ6JHigTaNJO8Flwn7+i5qCITwwVB2pqkKca5vyTh3Vwra5nZlzEY5Ph
-         eiI+Dp6mXrds43Gsmh0tqfE6MoXdZi0n/bMaFuvL4BYiD4iAfAx4k5yefD65MFL8vf5I
-         t1/jDMTGptZ8qvs/rYt6ciGrhQvCMbQTTycqAL1vQm3KSFYMdrVghIKX8l+cedfVlgQv
-         YIhA==
-X-Gm-Message-State: AOAM5311P5EfykajsgKuYTr87EdbDptS9nf1wG5tD2jzSiAqmlaR5xy1
-        NRnS1eWuf3srbE1xnQgyER9tnSNTfTM=
-X-Google-Smtp-Source: ABdhPJxvGoh8uftGdmqMg5u8XecWSwJcj4NaXq0/cWbuqhlLaZUM5md9QxgWeBOhWPoDygZC0p00kw==
-X-Received: by 2002:a1c:5453:: with SMTP id p19mr7244739wmi.41.1594963724692;
-        Thu, 16 Jul 2020 22:28:44 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:9880:a643:3e69:6393? ([2a01:e34:ed2f:f020:9880:a643:3e69:6393])
-        by smtp.googlemail.com with ESMTPSA id x1sm12158853wrp.10.2020.07.16.22.28.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 22:28:44 -0700 (PDT)
-Subject: Re: [PATCH v3 2/4] clocksource/drivers: Add CLINT timer driver
-To:     Anup Patel <anup@brainfault.org>
-Cc:     Anup Patel <anup.patel@wdc.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-References: <20200715071506.10994-1-anup.patel@wdc.com>
- <20200715071506.10994-3-anup.patel@wdc.com>
- <9a36824c-ef23-de47-b52c-bf680067be6c@linaro.org>
- <CAAhSdy3iurBWELjrjKr4mWdueZqw3xmf2e6AD_Km0PE+5TZHWQ@mail.gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <212eb026-e063-2b64-757b-9ca0e3f430bf@linaro.org>
-Date:   Fri, 17 Jul 2020 07:28:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Fri, 17 Jul 2020 01:53:16 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:52185 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726429AbgGQFxP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Jul 2020 01:53:15 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594965194; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=4tH6ToMxx8+ekSYiqz8suxCIKe0URL0znIrfCOTp/B0=; b=vrZfga1I0mNch/SRWjhVD5+R/TX6CFUoKl5Pu7DlgFRoHQ2f7Oqz8vh+eo7UIUnXhy2tI/R5
+ TWjl9TfUYaCZaqM+rqaPMkdcJ45BRldbpqPN0veAD5RdXJ+bQl6T+R/Z0Xo2G5EBNY3ylSRM
+ YMMs8h3pk+9c1sgbtXvAUenf0S0=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
+ 5f113caec9bd2efa2e50cd58 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 17 Jul 2020 05:52:46
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9480FC433C6; Fri, 17 Jul 2020 05:52:45 +0000 (UTC)
+Received: from [192.168.225.150] (unknown [137.97.45.199])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EC6DCC433CB;
+        Fri, 17 Jul 2020 05:52:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EC6DCC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v2 1/4] dt-bindings: media: venus: Add an optional power
+ domain for perf voting
+To:     Rob Herring <robh@kernel.org>
+Cc:     stanimir.varbanov@linaro.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org
+References: <1594878139-3402-1-git-send-email-rnayak@codeaurora.org>
+ <1594878139-3402-2-git-send-email-rnayak@codeaurora.org>
+ <20200716195913.GA2744252@bogus>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <cd368ea7-6ddc-004c-164d-dbbad8516853@codeaurora.org>
+Date:   Fri, 17 Jul 2020 11:22:24 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <CAAhSdy3iurBWELjrjKr4mWdueZqw3xmf2e6AD_Km0PE+5TZHWQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200716195913.GA2744252@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 17/07/2020 07:21, Anup Patel wrote:
-> On Fri, Jul 17, 2020 at 2:57 AM Daniel Lezcano
-> <daniel.lezcano@linaro.org> wrote:
->>
->>
->> Hi Anup,
->>
->>
->> On 15/07/2020 09:15, Anup Patel wrote:
->>> The TIME CSR and SBI calls are not available in RISC-V M-mode so we
->>> separate add CLINT driver for Linux RISC-V M-mode (i.e. RISC-V NoMMU
->>> kernel).
->>
->> The description is confusing, please reword it and give a bit more
->> information about the timer itself, especially, the IPI thing.
-> 
-> Okay, will update.
-> 
->>
->>> Signed-off-by: Anup Patel <anup.patel@wdc.com>
->>> ---
->>>  drivers/clocksource/Kconfig       |  10 ++
->>>  drivers/clocksource/Makefile      |   1 +
->>>  drivers/clocksource/timer-clint.c | 229 ++++++++++++++++++++++++++++++
->>>  include/linux/cpuhotplug.h        |   1 +
->>>  4 files changed, 241 insertions(+)
->>>  create mode 100644 drivers/clocksource/timer-clint.c
->>>
->>> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
->>> index 91418381fcd4..eabcf1cfb0c0 100644
->>> --- a/drivers/clocksource/Kconfig
->>> +++ b/drivers/clocksource/Kconfig
->>> @@ -658,6 +658,16 @@ config RISCV_TIMER
->>>         is accessed via both the SBI and the rdcycle instruction.  This is
->>>         required for all RISC-V systems.
->>>
->>> +config CLINT_TIMER
->>> +     bool "Timer for the RISC-V platform"
->>> +     depends on GENERIC_SCHED_CLOCK && RISCV_M_MODE
->>> +     default y
->>> +     select TIMER_PROBE
->>> +     select TIMER_OF
->>> +     help
->>> +       This option enables the CLINT timer for RISC-V systems. The CLINT
->>> +       driver is usually used for NoMMU RISC-V systems.
->>
->> For the timer, we do silent option and let the platform config select
->> it. Please refer to other timer option below as reference.
-> 
-> Okay, I will use "default RISCV" instead of "default y" (just like other
-> timer Kconfig options).
 
-Preferably, select it from the platform's Kconfig.
-
->>
->>>  config CSKY_MP_TIMER
->>>       bool "SMP Timer for the C-SKY platform" if COMPILE_TEST
->>>       depends on CSKY
->>> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
->>> index bdda1a2e4097..18e700e703a0 100644
->>> --- a/drivers/clocksource/Makefile
->>> +++ b/drivers/clocksource/Makefile
->>> @@ -87,6 +87,7 @@ obj-$(CONFIG_CLKSRC_ST_LPC)         += clksrc_st_lpc.o
->>>  obj-$(CONFIG_X86_NUMACHIP)           += numachip.o
->>>  obj-$(CONFIG_ATCPIT100_TIMER)                += timer-atcpit100.o
->>>  obj-$(CONFIG_RISCV_TIMER)            += timer-riscv.o
->>> +obj-$(CONFIG_CLINT_TIMER)            += timer-clint.o
->>>  obj-$(CONFIG_CSKY_MP_TIMER)          += timer-mp-csky.o
->>>  obj-$(CONFIG_GX6605S_TIMER)          += timer-gx6605s.o
->>>  obj-$(CONFIG_HYPERV_TIMER)           += hyperv_timer.o
->>> diff --git a/drivers/clocksource/timer-clint.c b/drivers/clocksource/timer-clint.c
->>> new file mode 100644
->>> index 000000000000..bfc38bb5a589
->>> --- /dev/null
->>> +++ b/drivers/clocksource/timer-clint.c
->>> @@ -0,0 +1,229 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +/*
->>> + * Copyright (C) 2020 Western Digital Corporation or its affiliates.
->>> + *
->>> + * Most of the M-mode (i.e. NoMMU) RISC-V systems usually have a
->>> + * CLINT MMIO timer device.
->>> + */
->>> +
->>> +#define pr_fmt(fmt) "clint: " fmt
->>> +#include <linux/bitops.h>
->>> +#include <linux/clocksource.h>
->>> +#include <linux/clockchips.h>
->>> +#include <linux/cpu.h>
->>> +#include <linux/delay.h>
->>> +#include <linux/module.h>
->>> +#include <linux/of_address.h>
->>> +#include <linux/sched_clock.h>
->>> +#include <linux/io-64-nonatomic-lo-hi.h>
->>> +#include <linux/interrupt.h>
->>> +#include <linux/of_irq.h>
->>> +#include <linux/smp.h>
->>> +
->>> +#define CLINT_IPI_OFF                0
->>> +#define CLINT_TIMER_CMP_OFF  0x4000
->>> +#define CLINT_TIMER_VAL_OFF  0xbff8
->>> +
->>> +/* CLINT manages IPI and Timer for RISC-V M-mode  */
->>> +static u32 __iomem *clint_ipi_base;
->>> +static u64 __iomem *clint_timer_cmp;
->>> +static u64 __iomem *clint_timer_val;
->>> +static unsigned long clint_timer_freq;
->>> +static unsigned int clint_timer_irq;
->>> +
->>> +static void clint_send_ipi(const struct cpumask *target)
->>> +{
->>> +     unsigned int cpu;
->>> +
->>> +     for_each_cpu(cpu, target)
->>> +             writel(1, clint_ipi_base + cpuid_to_hartid_map(cpu));
->>> +}
->>> +
->>> +static void clint_clear_ipi(void)
->>> +{
->>> +     writel(0, clint_ipi_base + cpuid_to_hartid_map(smp_processor_id()));
->>> +}
->>> +
->>> +static struct riscv_ipi_ops clint_ipi_ops = {
->>> +     .ipi_inject = clint_send_ipi,
->>> +     .ipi_clear = clint_clear_ipi,
->>> +};
->>> +
->>> +#ifdef CONFIG_64BIT
->>> +#define clint_get_cycles()   readq_relaxed(clint_timer_val)
->>> +#else
->>> +#define clint_get_cycles()   readl_relaxed(clint_timer_val)
->>> +#define clint_get_cycles_hi()        readl_relaxed(((u32 *)clint_timer_val) + 1)
->>> +#endif
->>> +
->>> +#ifdef CONFIG_64BIT
->>> +static u64 clint_get_cycles64(void)
->>> +{
->>> +     return clint_get_cycles();
->>> +}
->>> +#else /* CONFIG_64BIT */
->>> +static u64 clint_get_cycles64(void)
->>> +{
->>> +     u32 hi, lo;
->>> +
->>> +     do {
->>> +             hi = clint_get_cycles_hi();
->>> +             lo = clint_get_cycles();
->>> +     } while (hi != clint_get_cycles_hi());
->>> +
->>> +     return ((u64)hi << 32) | lo;
->>> +}
->>> +#endif /* CONFIG_64BIT */
->>> +static int clint_clock_next_event(unsigned long delta,
->>> +                                struct clock_event_device *ce)
->>> +{
->>> +     void __iomem *r = clint_timer_cmp +
->>> +                       cpuid_to_hartid_map(smp_processor_id());
->>> +
->>> +     csr_set(CSR_IE, IE_TIE);
->>> +     writeq_relaxed(clint_get_cycles64() + delta, r);
->>> +     return 0;
->>> +}
->>> +
->>> +static DEFINE_PER_CPU(struct clock_event_device, clint_clock_event) = {
->>> +     .name                   = "clint_clockevent",
->>> +     .features               = CLOCK_EVT_FEAT_ONESHOT,
->>> +     .rating         = 100,
->>> +     .set_next_event = clint_clock_next_event,
->>> +};
->>> +
->>> +static u64 clint_rdtime(struct clocksource *cs)
->>> +{
->>> +     return readq_relaxed(clint_timer_val);
->>> +}
->>> +
->>> +static u64 notrace clint_sched_clock(void)
->>> +{
->>> +     return readq_relaxed(clint_timer_val);
->>> +}
->>> +
->>> +static struct clocksource clint_clocksource = {
->>> +     .name           = "clint_clocksource",
->>> +     .rating = 300,
->>> +     .mask           = CLOCKSOURCE_MASK(64),
->>> +     .flags          = CLOCK_SOURCE_IS_CONTINUOUS,
->>> +     .read           = clint_rdtime,
->>
->> What if !CONFIG_64BIT
+On 7/17/2020 1:29 AM, Rob Herring wrote:
+> On Thu, Jul 16, 2020 at 11:12:16AM +0530, Rajendra Nayak wrote:
+>> Add an optional power domain which when specified can be used for
+>> setting the performance state of Venus.
 > 
-> The CLINT counter is 64bit for both 32bit and 64bit systems
-> but I should have used clint_get_cycles64() in clint_rdtime().
-> I will update it.
+> The h/w suddenly grew a new power island/domain? Seems like an abuse of
+> power-domains...
+
+The power-domain always existed, we have just managed to survive without
+having venus support DVFS and have the domain always be at a high performance
+level (set statically by boot code)
+Now, if we care to do DVFS and support better PM on the SoC, its important
+for the devices to manage this additional power domain (and dynamically
+scale it)
+
+That said, if the name 'opp-pd' makes it look like a software construct,
+like Bjorn mentioned, I am fine to give it a real name like 'cx-pd'
+Does that sound good?
+
+PS: Like I mentioned earlier [1], cx is a shared power island,
+not a power island specific to this block, and definitely not a software
+pm-domain construct.
+
+[1] https://lore.kernel.org/patchwork/patch/1241077/
+
 > 
 >>
->>> +};
->>> +
->>> +static int clint_timer_starting_cpu(unsigned int cpu)
->>> +{
->>> +     struct clock_event_device *ce = per_cpu_ptr(&clint_clock_event, cpu);
->>> +
->>> +     ce->cpumask = cpumask_of(cpu);
->>> +     clockevents_config_and_register(ce, clint_timer_freq, 200, ULONG_MAX);
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> ---
+>> This is a resend of https://lore.kernel.org/patchwork/patch/1241077/
 >>
->> The function is not immune against registering the same clockevents. If
->> the CPU is hotplugged several times, this function will be called again
->> and again. Why not rely on a for_each_possible_cpu loop in the init
->> function ?
+>>   Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml    | 6 +++++-
+>>   Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml | 6 +++++-
+>>   2 files changed, 10 insertions(+), 2 deletions(-)
 >>
->>> +     enable_percpu_irq(clint_timer_irq,
->>> +                       irq_get_trigger_type(clint_timer_irq));
+>> diff --git a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
+>> index 55f2d67..1e8675b 100644
+>> --- a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
+>> +++ b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
+>> @@ -25,12 +25,16 @@ properties:
+>>       maxItems: 1
+>>   
+>>     power-domains:
+>> -    maxItems: 2
+>> +    minItems: 2
+>> +    maxItems: 3
+>>   
+>>     power-domain-names:
+>> +    minItems: 2
+>> +    maxItems: 3
+>>       items:
+>>         - const: venus
+>>         - const: vcodec0
+>> +      - const: opp-pd
+>>   
+>>     clocks:
+>>       maxItems: 5
+>> diff --git a/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml b/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml
+>> index 157dff8..437286d 100644
+>> --- a/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml
+>> +++ b/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml
+>> @@ -25,13 +25,17 @@ properties:
+>>       maxItems: 1
+>>   
+>>     power-domains:
+>> -    maxItems: 3
+>> +    minItems: 3
+>> +    maxItems: 4
+>>   
+>>     power-domain-names:
+>> +    minItems: 3
+>> +    maxItems: 4
+>>       items:
+>>         - const: venus
+>>         - const: vcodec0
+>>         - const: vcodec1
+>> +      - const: opp-pd
+>>   
+>>     clocks:
+>>       maxItems: 7
+>> -- 
+>> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+>> of Code Aurora Forum, hosted by The Linux Foundation
 >>
->> Why do you want to enable / disable the interrrupts ? The should be
->> already handle by the hotplug framework no ?
-> 
-> The perCPU interrupts are not enabled by default. We have to
-> explicitly enable/disable perCPU interrupts in CPU hotplug callbacks.
-> 
-
-Isn't is possible to do that in the probe/init function ?
-
-
 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
