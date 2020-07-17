@@ -2,106 +2,189 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6360DC433E7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 07:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C75C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 07:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32A032074B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 07:38:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EyE6mm8h"
+	by mail.kernel.org (Postfix) with ESMTP id 8F0072071A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 07:38:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726665AbgGQHio (ORCPT
+        id S1726200AbgGQHi2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 03:38:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37098 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbgGQHio (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 03:38:44 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 098A9C061755;
-        Fri, 17 Jul 2020 00:38:44 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id a8so6959505edy.1;
-        Fri, 17 Jul 2020 00:38:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HYlYHaXrSBXNi0NVDqqqHS+e0SeY67sAsg23gifnEls=;
-        b=EyE6mm8hEbMtxJ+oyKyxzn3TqzKqFG6VN8VirfUtyDZKe8t0Qw+Va9Dg1tJSaoMjeb
-         40wVa4SukSIw80AHHt+iSsSGftd8HWeVwXEhYxbIRrrqKG7v0227ZsuiNYk5FcGFq3jv
-         OELSbp7utYhT5EDGe1O9GEOylhsBK39Nf8vJUIHtrsdCf9V9CUFU2iREu9qJXseas9QZ
-         MzneKq61QmKfC0EKHS76qAQFDp5PnXyp3zCsufMAP+bbx1rKtAYvddpqTU03sMHM+1im
-         Kbhs6aS5NLMsULVy72wkf+ORqSycTQBmnK4nt5WKrw0Jku8FdT/f6RFJJg7xu47yqZPk
-         ga3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HYlYHaXrSBXNi0NVDqqqHS+e0SeY67sAsg23gifnEls=;
-        b=oPUx1h2CGIdMi4Fv+HafVD/q3oE785LrHxJIY47MFMeChtni+SXwtcRrFvVCAmzrwg
-         wyK5urfNR9OhqEoDUehyjNEK9IcDjlrRhBDPdiv0P1QfgwAAwNWJ4rfk96mHS1tmE4z/
-         TA6GHuLWwEH5fs0xo8UYvftTycWvBABWa3IhHJPw572UyJYraUXEOSW20mMHoL75ZWzi
-         H8pQkScn+9lHsASh7aejfk5n6uEpqDQFCMGB/srb2AFzASw2yZqkWoobD6fDq2BRRt5X
-         qZDUIvmtqUj8mrCgJ35M8m0EGEoeHvySjHLz29AbuL8cTohYdzoYq3Z7XDlOy8d5C8s6
-         oUaw==
-X-Gm-Message-State: AOAM532G2cMq6JD6mVuAHmILChebia8ZO/M57s2/Z8uLucPI8wL+6wsC
-        AfthNVSgJw7vs7epb8oaY5GJ54LPkTrm2r1gKqk=
-X-Google-Smtp-Source: ABdhPJxQYjnXkfM8fJrQdkfzoCNdIh8vAoQXVxzKyrXC0Fj3imagKRKKoeb6nvJLoOdtJ7W+TxVYoP2s03ArnQ62KTU=
-X-Received: by 2002:aa7:dd10:: with SMTP id i16mr8203210edv.227.1594971522683;
- Fri, 17 Jul 2020 00:38:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1594708863.git.frank@allwinnertech.com> <ffd5eead-571c-6548-0527-1e685ec869ef@linaro.org>
-In-Reply-To: <ffd5eead-571c-6548-0527-1e685ec869ef@linaro.org>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Fri, 17 Jul 2020 15:38:14 +0800
-Message-ID: <CAEExFWss+KWSDu4VNa8JCkT7QOrgeYCausO0KxkXCbnXE3+-0g@mail.gmail.com>
-Subject: Re: [PATCH v4 00/16] Allwinner A100 Initial support
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Frank Lee <frank@allwinnertech.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, gregory.clement@bootlin.com,
-        Thomas Gleixner <tglx@linutronix.de>, jason@lakedaemon.net,
-        Marc Zyngier <maz@kernel.org>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "p.zabel" <p.zabel@pengutronix.de>, clabbe@baylibre.com,
-        Icenowy Zheng <icenowy@aosc.io>,
-        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
-        stefan@olimex.com, bage@linutronix.de,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>, linux-i2c@vger.kernel.org,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 17 Jul 2020 03:38:28 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:41352 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726060AbgGQHi1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Jul 2020 03:38:27 -0400
+X-IronPort-AV: E=Sophos;i="5.75,362,1589209200"; 
+   d="scan'208";a="52385293"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 17 Jul 2020 16:38:27 +0900
+Received: from be1yocto.ree.adwin.renesas.com (unknown [172.29.43.62])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 373614209D48;
+        Fri, 17 Jul 2020 16:38:24 +0900 (JST)
+From:   Biju Das <biju.das.jz@bp.renesas.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH 2/2] dt-bindings: usb: convert ti,hd3ss3220 bindings to json-schema
+Date:   Fri, 17 Jul 2020 08:34:34 +0100
+Message-Id: <1594971274-48027-2-git-send-email-biju.das.jz@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1594971274-48027-1-git-send-email-biju.das.jz@bp.renesas.com>
+References: <1594971274-48027-1-git-send-email-biju.das.jz@bp.renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 12:28 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> On 14/07/2020 08:55, Frank Lee wrote:
-> > From: Yangtao Li <frank@allwinnertech.com>
->
-> Do you expect me to pick patches 7,8,9 or ack them ?
->
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Please pick it.
+Convert ti,hd3ss3220.txt to YAML.
 
-Thx,
-Yangtao
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+---
+ .../devicetree/bindings/usb/ti,hd3ss3220.txt       | 38 ------------
+ .../devicetree/bindings/usb/ti,hd3ss3220.yaml      | 70 ++++++++++++++++++++++
+ 2 files changed, 70 insertions(+), 38 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/ti,hd3ss3220.yaml
+
+diff --git a/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt b/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
+deleted file mode 100644
+index 2bd21b2..0000000
+--- a/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
++++ /dev/null
+@@ -1,38 +0,0 @@
+-TI HD3SS3220 TypeC DRP Port Controller.
+-
+-Required properties:
+- - compatible: Must be "ti,hd3ss3220".
+- - reg: I2C slave address, must be 0x47 or 0x67 based on ADDR pin.
+- - interrupts: An interrupt specifier.
+-
+-Required sub-node:
+- - connector: The "usb-c-connector" attached to the hd3ss3220 chip. The
+-   bindings of the connector node are specified in:
+-
+-	Documentation/devicetree/bindings/connector/usb-connector.yaml
+-
+-Example:
+-hd3ss3220@47 {
+-	compatible = "ti,hd3ss3220";
+-	reg = <0x47>;
+-	interrupt-parent = <&gpio6>;
+-	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+-
+-	connector {
+-		compatible = "usb-c-connector";
+-		label = "USB-C";
+-		data-role = "dual";
+-
+-		ports {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			port@1 {
+-				reg = <1>;
+-				hd3ss3220_ep: endpoint {
+-					remote-endpoint = <&usb3_role_switch>;
+-				};
+-			};
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/usb/ti,hd3ss3220.yaml b/Documentation/devicetree/bindings/usb/ti,hd3ss3220.yaml
+new file mode 100644
+index 0000000..cd7b124
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/ti,hd3ss3220.yaml
+@@ -0,0 +1,70 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/usb/ti,hd3ss3220.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: TI HD3SS3220 TypeC DRP Port Controller
++
++maintainers:
++  - Biju Das <biju.das.jz@bp.renesas.com>
++
++description: |-
++  HD3SS3220 is a USB SuperSpeed (SS) 2:1 mux with DRP port controller. The device provides Channel
++  Configuration (CC) logic and 5V VCONN sourcing for ecosystems implementing USB Type-C. The
++  HD3SS3220 can be configured as a Downstream Facing Port (DFP), Upstream Facing Port (UFP) or a
++  Dual Role Port (DRP) making it ideal for any application.
++
++properties:
++  compatible:
++   const: ti,hd3ss3220
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  connector:
++    $ref: /schemas/connector/usb-connector.yaml#
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    i2c0 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        hd3ss3220@47 {
++            compatible = "ti,hd3ss3220";
++            reg = <0x47>;
++            interrupt-parent = <&gpio6>;
++            interrupts = <3>;
++
++            connector {
++                compatible = "usb-c-connector";
++                label = "USB-C";
++                data-role = "dual";
++
++                ports {
++                    #address-cells = <1>;
++                    #size-cells = <0>;
++
++                    port@1 {
++                        reg = <1>;
++                        hd3ss3220_ep: endpoint {
++                            remote-endpoint = <&usb3_role_switch>;
++                        };
++                    };
++                };
++            };
++        };
++    };
++
++...
+-- 
+2.7.4
+
