@@ -2,162 +2,127 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD37C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 04:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D6EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 04:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9E4620704
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 04:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B837206F4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 04:22:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ACzxgl8p"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HFkACEDX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726026AbgGQEVD (ORCPT
+        id S1726333AbgGQEWr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 00:21:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34944 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725936AbgGQEVC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 00:21:02 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E362C08C5C0
-        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 21:21:02 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id b6so9555450wrs.11
-        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 21:21:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vTU0fD0RqPTAMbppUiAJYQhElhFYod+EUa58MhwuRFg=;
-        b=ACzxgl8pWNw1qfxqU9+pYlrS4eR6a5e8McuQW2jb5q8hduM5b3kyZe5bs9+gGa8hL1
-         5FJtj/j+394vgNFHlQM2BW4bLEdoCF+hvyq4FnPvtaN4aX3i/NZ8W7szbOj6dDzcvx8M
-         105ReGcsasNaMMmppOs7r6YbsWyMAXlUhgWkN0PKnHnMLoleD5ljIbnU2JNlI0VNQ6hn
-         0mfgfFQO4eCe7L2o9yREBsMif2/QjWS24jxf0p8dmO/28uBfwiLo92hRfocfz8JAjyPN
-         G9AmS9LCbInhyHoihQp3JbZwc63+NvyBXrabUky7sSWI9WzW4HcpKbe0p9kw0VocDwoa
-         fN9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vTU0fD0RqPTAMbppUiAJYQhElhFYod+EUa58MhwuRFg=;
-        b=GF4MMO2XOUhGaqq0FLWcYCS7w0o8Vb17Y9TkygJHO9Ld8iNSP6rO4uqASg/iiiTOY5
-         YhXCeYGfbvn3xbOQuYtclVa9UqzSMrzwQJjelQ1Itz24MYvwR/pftVEI2Li5fPZ1q0Xz
-         2BWxYBxyQJZXjtKE1OfsotfMB/IhmGs7V4e2qCdgWf0HNP5AJa7n6R+snsvkQFkW3BX5
-         mOhGVJcLfGJCyEq32O96Ro9hh9yeR9ijgpFjALxM1t3PpD0hpHr9r5kxizQaPNc86kfM
-         yZye17fFkmowk9txMUvjzi8E1OpENSPa96BYvxvygUiOwTrub4jG0TqysRRJjaqK2mRL
-         B3ww==
-X-Gm-Message-State: AOAM5334GSJFsVfwUIt2BDE5VdeAhXaTGKGM/qMc1aZLD/c7tpyV7KsH
-        wV+ZTcI8JS5yupxUr/CVSiFIlg==
-X-Google-Smtp-Source: ABdhPJwec3DisLdAS02+fUE6IczMefzHYliDuu268Dl6qCiJz8+nAomftZcYkwgKg4V15D7Jeop8BA==
-X-Received: by 2002:adf:dd83:: with SMTP id x3mr9050111wrl.292.1594959660912;
-        Thu, 16 Jul 2020 21:21:00 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:9880:a643:3e69:6393? ([2a01:e34:ed2f:f020:9880:a643:3e69:6393])
-        by smtp.googlemail.com with ESMTPSA id 138sm7175510wmb.1.2020.07.16.21.20.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 21:21:00 -0700 (PDT)
-Subject: Re: [PATCH v6 2/2] clocksource: Ingenic: Add support for the Ingenic
- X1000 OST.
-To:     =?UTF-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>, linux-kernel@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
-        paul@crapouillou.net, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com
-References: <20200710170259.29028-1-zhouyanjie@wanyeetech.com>
- <20200710170259.29028-3-zhouyanjie@wanyeetech.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <dd01a117-265a-e64b-5871-22f0f752834a@linaro.org>
-Date:   Fri, 17 Jul 2020 06:20:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 17 Jul 2020 00:22:47 -0400
+Received: from mail-vi1eur05on2071.outbound.protection.outlook.com ([40.107.21.71]:64918
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725300AbgGQEWq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Jul 2020 00:22:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QrpPUFuyVtRqPq4yrhUJo5RB1Ztz9miJ3PRAOyTQZ2dyrjiWNmXyphE9/33te/T4mJ9e9KFyBa/hWoDgS9vBVyLLaJbsrLHy66xz1df0fgajBJucPOo5D3iiGkHbkqHL4uGSfGUfscgwZvAapdvqyfNezS761QuegnoxiV/nm6/rpX2+7SXrxI1ErWqukpRb46kqCOdWw3b4dK5IcPn4W030MVLoYheMTtWQHgrx+bhWz4lpDqPF+0M4Ry6jqABEefIgxmuQukazER4OsmYy+7ooPA5GCa/Bb0S8Q1le1vjfUGQQC2XuQEDGJ9zfR8TZprERe6DicRlMubWC3TcL9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hK47F9wUT2+uykjkV4AJbG7canpQgtW65gImQZrSpxI=;
+ b=A6yUmPGdRWfOREEmYU2naKrizrVWAOMOqJSK1aMYzS3EXPSCLTAXtLEHLP+S6JyGYO62tS1C3cMVMwSbQJvlvvr3gRYQOBhVrvBxFECorbNsQqnYVt0OuBZWosKaSg4Zszm5oP9o8DukNQ/Sn1Xk9OMYtww7P1fO6EovQ44nJckfCy571RYPdD6leQa0tCksdo84eLlz2wAga+MfV58nDdKPV47dm5kE5Q2Bcz4yxr04T/EXhVyAV/Xai4C6zNQetjlGYr16rQZiB6x6kBpGJuFDen3AiXGvM8qQjkz4Pxc+foaDGVp4bbbfwv1AbNoOj24N9n1Hl1suc1tqVxwxfA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hK47F9wUT2+uykjkV4AJbG7canpQgtW65gImQZrSpxI=;
+ b=HFkACEDX+2HihKdnaQW3g0obyHxYx+SCwXXtXnaH+rFmsbyNITchVo/t8q1N8DHDI1tsdiKLwKcm9lfyJqV3aY5TGtM73lqOmyUjZ98opjGj6kq28LUA7qVUJBplFhTfMKe0KpVljqG7AjyiFTBVXL/skAZvE8vB76nsGjJ11g4=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (2603:10a6:20b:118::20)
+ by AM6PR04MB6279.eurprd04.prod.outlook.com (2603:10a6:20b:b7::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Fri, 17 Jul
+ 2020 04:22:42 +0000
+Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
+ ([fe80::1101:adaa:ee89:af2a]) by AM7PR04MB7157.eurprd04.prod.outlook.com
+ ([fe80::1101:adaa:ee89:af2a%3]) with mapi id 15.20.3174.026; Fri, 17 Jul 2020
+ 04:22:42 +0000
+From:   Peter Chen <peter.chen@nxp.com>
+To:     shawnguo@kernel.org, robh+dt@kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de,
+        devicetree@vger.kernel.org, linux-imx@nxp.com,
+        linux-usb@vger.kernel.org, Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH v2 1/4] doc: dt-binding: ci-hdrc-usb2: add property for imx picophy
+Date:   Fri, 17 Jul 2020 12:22:23 +0800
+Message-Id: <20200717042226.18495-1-peter.chen@nxp.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR0302CA0010.apcprd03.prod.outlook.com
+ (2603:1096:3:2::20) To AM7PR04MB7157.eurprd04.prod.outlook.com
+ (2603:10a6:20b:118::20)
 MIME-Version: 1.0
-In-Reply-To: <20200710170259.29028-3-zhouyanjie@wanyeetech.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from b29397-desktop.ap.freescale.net (119.31.174.67) by SG2PR0302CA0010.apcprd03.prod.outlook.com (2603:1096:3:2::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.9 via Frontend Transport; Fri, 17 Jul 2020 04:22:38 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [119.31.174.67]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: c48e745a-036d-4341-169c-08d82a090c51
+X-MS-TrafficTypeDiagnostic: AM6PR04MB6279:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM6PR04MB627952200A38B67163E992268B7C0@AM6PR04MB6279.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: DATHHaVsXASBgZ8xb5RLT/sTlnkKwTiZcOCZ/yYo1itnwh72Gf555Sat8AltbB3e7/FGJxAoTxAefbRKWdc1DW+qasJs6lt/TvcheynwYsG1nwdC+/QyeAoeqaPp9GoyDuil80NEPeBwoub9J80Up455Lv0/QeFFp2cZ+MtzRFtdZZN1W4TftAWWrsVt3fAQfeLfhKFbIbc1MzqsDvRBqpJQ758MHKePtSa/iheu5a8uWLj1+L+H9mB8jH9BkYOPpzkV3h1IY2jXYsW3BWxlBpwuG7wCH/PEDBnN3jO96bJiPYNPzB5a5kWXBPdidb5l
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7157.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(346002)(376002)(396003)(366004)(6512007)(86362001)(956004)(6506007)(316002)(478600001)(2616005)(6486002)(186003)(66476007)(8676002)(16526019)(52116002)(36756003)(8936002)(26005)(1076003)(66946007)(4326008)(5660300002)(66556008)(44832011)(2906002)(6666004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: NJSfBshSf+hSE1qoTpp2Me2tdvJwQrqjzPamThBduhKpgOJHgn9cu/E9SI2WhiSMjjjIpH2o3KgrALmrqxtT33xkhnWetcjOdH1S4l4seDysXlitU7U3oEDdYxQlf+cJMXJc/sWg91RTnK8Pj8KxF+beWJ3kwsYnb5IGt+9Sr7s/iryFeYu85UK2NMcBn0HfgyA0cM/wUnkjhWrh8FoLj2eFaIDC4KVistiC3ByWo4ru/jn1rH9O01zlyO5Js4NDb5hUhwri+zzHE3h330COFevkWpoIuYoU6wvgVN/8UKDHTQ09xPe+BUkZTpKb8M68VumKTErUrVx+EC2vBG+QcKj/MTw0LfLlj5VBhpqQIMD9Oof5j+NL3VCJ6hPlxA9zkpEY0mBa95+icMXEE4RquOyu44LxzegJUDU4yKQOpBxLR8nMv4WMiBww1zS7rDgwlrBaiGHLtwR1sFztC2rG8/fAbQF0uxXTKgXzI0qlEJA=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c48e745a-036d-4341-169c-08d82a090c51
+X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7157.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jul 2020 04:22:42.7626
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: g3pzALI/IW3L18aIBmBpeSOCNsBlDOHhdK8I9VxVSRh/kAl5W4yAOpfZy4u5Q7cqohJJPksMBn5cRVEkfjOuBQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB6279
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 10/07/2020 19:02, 周琰杰 (Zhou Yanjie) wrote:
-> X1000 and SoCs after X1000 (such as X1500 and X1830) had a separate
-> OST, it no longer belongs to TCU. This driver will register both a
-> clocksource and a sched_clock to the system.
-> 
-> Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
-> Co-developed-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
-> Signed-off-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> Reviewed-by: Paul Cercueil <paul@crapouillou.net>
-> ---
-> 
-> Notes:
->     v1->v2:
->     Fix compile warnings.
->     Reported-by: kernel test robot <lkp@intel.com>
->     
->     v2->v3:
->     No change.
->     
->     v3->v4:
->     1.Rename "ost" to "sysost"
->     1.Remove unrelated changes.
->     2.Remove ost_clock_parent enum.
->     3.Remove ost->percpu_timer_channel/ost->global_timer_channel.
->     4.Set up independent .recalc_rate/.set_rate for percpu/global timer.
->     5.No longer call functions in variable declarations.
->     
->     v4->v5:
->     Use "of_io_request_and_map()" instead "of_iomap()".
->     Suggested-by: Paul Cercueil <paul@crapouillou.net>
->     
->     v5->v6:
->     No change.
-> 
->  drivers/clocksource/Kconfig          |  11 +
->  drivers/clocksource/Makefile         |   1 +
->  drivers/clocksource/ingenic-sysost.c | 539 +++++++++++++++++++++++++++++++++++
->  3 files changed, 551 insertions(+)
->  create mode 100644 drivers/clocksource/ingenic-sysost.c
-> 
-> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> index 91418381fcd4..1bca8b8fb30f 100644
-> --- a/drivers/clocksource/Kconfig
-> +++ b/drivers/clocksource/Kconfig
-> @@ -696,6 +696,17 @@ config INGENIC_TIMER
->  	help
->  	  Support for the timer/counter unit of the Ingenic JZ SoCs.
->  
-> +config INGENIC_SYSOST
-> +	bool "Clocksource/timer using the SYSOST in Ingenic X SoCs"
+Add two parameters which are used to tune USB signal for imx picophy,
+picophy is used at imx7d, imx8mm, and imx8mn.
 
-We usually use silent options and let the platform's Kconfig enable it.
-We show up the option only when COMPILE_TEST is enabled.
+Reviewed-by: Jun Li <jun.li@nxp.com>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+---
+No changes for v2.
 
-Is there a reason to do it differently?
+ Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-> +	default MACH_INGENIC
-> +	depends on MIPS || COMPILE_TEST
-> +	depends on COMMON_CLK
-> +	select MFD_SYSCON
-> +	select TIMER_OF
-> +	select IRQ_DOMAIN
-> +	help
-> +	  Support for the SYSOST of the Ingenic X Series SoCs.
-> +
-
-[ ... ]
-
-
+diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+index 51376cbe5f3d..e9858dafb08f 100644
+--- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
++++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+@@ -100,6 +100,13 @@ i.mx specific properties
+   It's recommended to specify the over current polarity.
+ - power-active-high: power signal polarity is active high
+ - external-vbus-divider: enables off-chip resistor divider for Vbus
++- picophy,pre-emp-curr-control: HS Transmitter Pre-Emphasis Current
++  Control. This signal controls the amount of current sourced to the
++  USB_OTG*_DP and USB_OTG*_DN pins after a J-to-K or K-to-J transition.
++  Details can refer to TXPREEMPAMPTUNE0 bits of USBNC_n_PHY_CFG1.
++- picophy,dc-vol-level-adjust: HS DC Voltage Level Adjustment.
++  Adjust the high-speed transmitter DC level voltage, details can refer
++  to TXVREFTUNE0 bits of USBNC_n_PHY_CFG1.
+ 
+ Example:
+ 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+2.17.1
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
