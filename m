@@ -2,136 +2,188 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB328C433E8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 08:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FDCC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 08:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B94A120768
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 08:14:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594973652;
-	bh=uZeYMXCJtLGh6KMN2nFStTzc1fx/WG+R0GSYBiVJ8vQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=f+uPOJl/E9sa2ylwewwFU8DwKvv62ga84E60oeVcsJ/ij6tOAjW6vvNLZzdkkJPXd
-	 rM1hDE76WFY3DOpK18YuErSwlLel/hCgr9VXcqYgRYGVALoPfIdXQcwpobYH5TWWHV
-	 e4tKQXZYmzqAOnFNyhEZWFYNZxmG/oXDyDNQPbu4=
+	by mail.kernel.org (Postfix) with ESMTP id 754C420737
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 08:18:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727853AbgGQIOJ (ORCPT
+        id S1728301AbgGQISG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 04:14:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726240AbgGQIOI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Jul 2020 04:14:08 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F160A2074B;
-        Fri, 17 Jul 2020 08:14:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594973648;
-        bh=uZeYMXCJtLGh6KMN2nFStTzc1fx/WG+R0GSYBiVJ8vQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=avNKU2emncZKYMwJ/dNul77zD39/U0uTLyZ5KEKPvA/IsNl45CUvnR34pvDfaqc/9
-         rDuKcYcE8DgYtHjAxBxLjRTGccx/i9V4QgFD/OtqJr2xSidQ9iOHT6hURGra9KKYAD
-         PlBv7DKOnhKXTMsEL/+aaPUAsvLKUr6ORCRezq6E=
-Date:   Fri, 17 Jul 2020 13:44:03 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 04/11] dmaengine: Introduce max SG list entries
- capability
-Message-ID: <20200717081403.GL82923@vkoul-mobl>
-References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
- <20200709224550.15539-5-Sergey.Semin@baikalelectronics.ru>
- <d667adda-6576-623d-6976-30f60ab3c3dc@ti.com>
- <20200710092738.z7zyywe46mp7uuf3@mobilestation>
- <427bc5c8-0325-bc25-8637-a7627bcac26f@ti.com>
- <20200710161445.t6eradkgt4terdr3@mobilestation>
- <20200715111315.GK34333@vkoul-mobl>
- <20200715170843.w4rwl7zjwfcr7rg2@mobilestation>
+        Fri, 17 Jul 2020 04:18:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43198 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726113AbgGQISF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 04:18:05 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F4E3C061755
+        for <devicetree@vger.kernel.org>; Fri, 17 Jul 2020 01:18:05 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1jwLZ8-00027w-EL; Fri, 17 Jul 2020 10:17:58 +0200
+Message-ID: <3c03afff3256ec36e12b9d9408830fbb4853f982.camel@pengutronix.de>
+Subject: Re: [PATCH v5 0/4] Add support for iMX8MQ Display Controller
+ Subsystem
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     lukas@mntmn.com, agx@sigxcpu.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Date:   Fri, 17 Jul 2020 10:17:54 +0200
+In-Reply-To: <20200709164736.18291-1-laurentiu.palcu@oss.nxp.com>
+References: <20200709164736.18291-1-laurentiu.palcu@oss.nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200715170843.w4rwl7zjwfcr7rg2@mobilestation>
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 15-07-20, 20:08, Serge Semin wrote:
-> On Wed, Jul 15, 2020 at 04:43:15PM +0530, Vinod Koul wrote:
-> > On 10-07-20, 19:14, Serge Semin wrote:
-> > > On Fri, Jul 10, 2020 at 02:51:33PM +0300, Peter Ujfalusi wrote:
-> > 
-> > > > Since we should be able to handle longer lists and this is kind of a
-> > > > hint for clients that above this number of nents the list will be broken
-> > > > up to smaller 'bursts', which when traversing could cause latency.
-> > > > 
-> > > > sg_chunk_len might be another candidate.
-> > > 
-> > > Ok. We've got four candidates:
-> > > - max_sg_nents_burst
-> > > - max_sg_burst
-> > > - max_sg_chain
-> > > - sg_chunk_len
-> > > 
-> > > @Vinod, @Andy, what do you think?
-> > 
-> 
-> > So IIUC your hw supports single sg and in that you would like to publish
-> > the length of each chunk, is that correct?
-> 
-> No. My DMA engine does support only a single-entry SG-list, but the new DMA
-> {~~slave~~,channel,device,peripheral,...} capability isn't about the length, but
-> is about the maximum number of SG-list entries a DMA engine is able to
-> automatically/"without software help" walk through and execute. In this thread
-> we are debating about that new capability naming.
-> 
-> The name suggested in this patch: max_sg_nents. Peter noted (I mostly agree with
-> him), that it might be ambiguous, since from it (without looking into the
-> dma_slave_caps structure comment) a user might think that it's a maximum number of
-> SG-entries, which can be submitted for the DMA engine execution, while in fact it's
-> about the DMA engine capability of automatic/burst/"without software intervention"
-> SG-list entries walking through. (Such information will be helpful to solve a
-> problem discussed in this mailing thread, and described in the cover-letter to
-> this patchset. We also discussed it with you and Andy in the framework of this
-> patchset many times.)
-> 
-> As an alternative Peter suggested: max_sg_nents_burst. I also think it's better
-> than "max_sg_nents" but for me it seems a bit long. max_sg_burst seems better.
-> There is no need in having the "nents" in the name, since SG-list implies a list,
-> which main parameter (if not to say only parameter) is the number of entries.
-> "burst" is pointing out to the automatic/accelerated/"without software intervention"
-> SG-list entries walking through.
-> 
-> On the second thought suggested by me "max_sg_chain" sounds worse than "max_sg_burst",
-> because it also might be perceived as a parameter limiting the number of SG-list
-> entries is able to be submitted for the DMA engine execution, while in fact it
-> describes another matter.
-> 
-> Regarding "sg_chunk_len". I think it's ambiguous too, since the "chunk
-> length" might be referred to both the entries length and to the sub-SG-list
-> length.
-> 
-> So what do you think? What name is better describing the new DMA capability?
+Hi Laurentiu,
 
-How about max_nents_per_sg or max_nents_sg to signify that this implies
-max nents for sg not sg entries. IMO Burst/chain are not better than
-max_sg_nents.
+Am Donnerstag, den 09.07.2020, 19:47 +0300 schrieb Laurentiu Palcu:
+> From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> 
+> Hi,
+> 
+> This patchset adds initial DCSS support for iMX8MQ chip. Initial support
+> includes only graphics plane support (no video planes), no HDR10 capabilities,
+> no graphics decompression (only linear, tiled and super-tiled buffers allowed).
+> 
+> Support for the rest of the features will be added incrementally, in subsequent
+> patches.
+> 
+> The patchset was tested with both HDP driver (in the downstream tree) and the upstream
+> MIPI-DSI driver (with a couple of patches on top, to make it work correctly with DCSS).
 
--- 
-~Vinod
+I think the series (minus 3/5 and minor correction to the DT binding)
+is fine to go in now. So just some formal questions: are you going to
+maintain this driver in upstream? If so we should add a MAINTAINERS
+entry to that effect. I can offer to act as a reviewer in this case.
+
+How do you intend to merge this? IMO pushing this through drm-misc
+seems like the right thing to do. If you agree I can help you get this
+applied. If you are going to maintain the driver on your own, I think
+you should then apply for commit rights to drm-misc.
+
+Regards,
+Lucas
+
+> Thanks,
+> Laurentiu
+> 
+> Changes in v5:
+>  * Rebased to latest;
+>  * Took out component framework support and made it a separate patch so
+>    that people can still test with HDP driver, which makes use of it.
+>    But the idea is to get rid of it once HDP driver's next versions
+>    will remove component framework as well;
+>  * Slight improvement to modesetting: avoid cutting off the pixel clock
+>    if the new mode and the old one are equal. Also, in this case, is
+>    not necessary to wait for DTG to shut off. This would allow to switch
+>    from 8b RGB to 12b YUV422, for example, with no interruptions (at least
+>    from DCSS point of view);
+>  * Do not fire off CTXLD when going to suspend, unless it still has
+>    entries that need to be committed to DCSS;
+>  * Addressed Rob's comments on bindings;
+> 
+> Changes in v4:
+>  * Addressed Lucas and Philipp's comments:
+>    * Added DRM_KMS_CMA_HELPER dependency in Kconfig;
+>    * Removed usage of devm_ functions since I'm already doing all the
+>      clean-up in the submodules_deinit();
+>    * Moved the drm_crtc_arm_vblank_event() in dcss_crtc_atomic_flush();
+>    * Removed en_completion variable from dcss_crtc since this was
+>      introduced mainly to avoid vblank timeout warnings which were fixed
+>      by arming the vblank event in flush() instead of begin();
+>    * Removed clks_on and irq_enabled flags since all the calls to
+>      enabling/disabling clocks and interrupts were balanced;
+>    * Removed the custom atomic_commit callback and used the DRM core
+>      helper and, in the process, got rid of a workqueue that wasn't
+>      necessary anymore;
+>    * Fixed some minor DT binding issues flagged by Philipp;
+>    * Some other minor changes suggested by Lucas;
+>  * Removed YUV formats from the supported formats as these cannot work
+>    without the HDR10 module CSCs and LUTs. Will add them back when I
+>    will add support for video planes;
+> 
+> Changes in v3:
+>  * rebased to latest linux-next and made it compile as drmP.h was
+>    removed;
+>  * removed the patch adding the VIDEO2_PLL clock. It's already applied;
+>  * removed an unnecessary 50ms sleep in the dcss_dtg_sync_set();
+>  * fixed a a spurious hang reported by Lukas Hartmann and encountered
+>    by me several times;
+>  * mask DPR and DTG interrupts by default, as they may come enabled from
+>    U-boot;
+> 
+> Changes in v2:
+>  * Removed '0x' in node's unit-address both in DT and yaml;
+>  * Made the address region size lowercase, to be consistent;
+>  * Removed some left-over references to P010;
+>  * Added a Kconfig dependency of DRM && ARCH_MXC. This will also silence compilation
+>    issues reported by kbuild for other architectures;
+> 
+> Laurentiu Palcu (5):
+>   drm/imx: compile imx directory by default
+>   drm/imx: Add initial support for DCSS on iMX8MQ
+>   drm/imx/dcss: add component framework functionality
+>   dt-bindings: display: imx: add bindings for DCSS
+>   arm64: dts: imx8mq: add DCSS node
+> 
+>  .../bindings/display/imx/nxp,imx8mq-dcss.yaml |  84 ++
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi     |  23 +
+>  drivers/gpu/drm/Makefile                      |   2 +-
+>  drivers/gpu/drm/imx/Kconfig                   |   2 +
+>  drivers/gpu/drm/imx/Makefile                  |   1 +
+>  drivers/gpu/drm/imx/dcss/Kconfig              |   9 +
+>  drivers/gpu/drm/imx/dcss/Makefile             |   6 +
+>  drivers/gpu/drm/imx/dcss/dcss-blkctl.c        |  70 ++
+>  drivers/gpu/drm/imx/dcss/dcss-crtc.c          | 219 +++++
+>  drivers/gpu/drm/imx/dcss/dcss-ctxld.c         | 424 +++++++++
+>  drivers/gpu/drm/imx/dcss/dcss-dev.c           | 314 +++++++
+>  drivers/gpu/drm/imx/dcss/dcss-dev.h           | 177 ++++
+>  drivers/gpu/drm/imx/dcss/dcss-dpr.c           | 562 ++++++++++++
+>  drivers/gpu/drm/imx/dcss/dcss-drv.c           | 183 ++++
+>  drivers/gpu/drm/imx/dcss/dcss-dtg.c           | 409 +++++++++
+>  drivers/gpu/drm/imx/dcss/dcss-kms.c           | 185 ++++
+>  drivers/gpu/drm/imx/dcss/dcss-kms.h           |  43 +
+>  drivers/gpu/drm/imx/dcss/dcss-plane.c         | 405 +++++++++
+>  drivers/gpu/drm/imx/dcss/dcss-scaler.c        | 826 ++++++++++++++++++
+>  drivers/gpu/drm/imx/dcss/dcss-ss.c            | 180 ++++
+>  20 files changed, 4123 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+>  create mode 100644 drivers/gpu/drm/imx/dcss/Kconfig
+>  create mode 100644 drivers/gpu/drm/imx/dcss/Makefile
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-blkctl.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-crtc.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ctxld.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.h
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dpr.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-drv.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dtg.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.h
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-plane.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-scaler.c
+>  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ss.c
+> 
+
