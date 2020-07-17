@@ -2,303 +2,147 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B849C433F2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 19:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C43C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 19:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 265F92064C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 19:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA22D2064C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 19:26:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bJS9Y8xb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fMjzFzVm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728651AbgGQTMC (ORCPT
+        id S1728103AbgGQT0I (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 15:12:02 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1403 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728639AbgGQTMB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 15:12:01 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f11f7c40001>; Fri, 17 Jul 2020 12:11:00 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 17 Jul 2020 12:12:00 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 17 Jul 2020 12:12:00 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 Jul
- 2020 19:11:59 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 17 Jul 2020 19:11:59 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.163.115]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f11f7fe0001>; Fri, 17 Jul 2020 12:11:59 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <luca@lucaceresoli.net>, <leonl@leopardimaging.com>,
-        <robh+dt@kernel.org>, <lgirdwood@gmail.com>, <broonie@kernel.org>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 3/3] media: i2c: imx274: Add IMX274 power on and off sequence
-Date:   Fri, 17 Jul 2020 12:15:22 -0700
-Message-ID: <1595013322-15077-3-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595013322-15077-1-git-send-email-skomatineni@nvidia.com>
-References: <1595013322-15077-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Fri, 17 Jul 2020 15:26:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33680 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727999AbgGQT0H (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 15:26:07 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EB13C0619D2;
+        Fri, 17 Jul 2020 12:26:06 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f18so12284239wrs.0;
+        Fri, 17 Jul 2020 12:26:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=AkK4eyDYfDukVVGQtgB78a5zI96VA608ufKkpODlhC0=;
+        b=fMjzFzVm1SOC5vGih5G//3tySgQLem+30D4ao6tDLAhb1tX1YQWkGlw9X/r0X2DbHs
+         fNDxKs03oWU4VSYYEGt9DlHrweDMGuR7Apnt2al4Zhuu2Uo5eiYk9ITPNQBWYHqEC92s
+         fQnbFXg4yMKnIiiQzm/EAknzsouXtS3jPLt0lKkWPLkudB3rPgaiJ/NdjBgDsqhUMcmp
+         P3QSHNt+YyIN8a0l/zzvlu/we9WyfUTuOjyEMT2tHce7ydUcfMmfjApTu4fGG3dRaIQU
+         nK8ztcvOZqrDbDZ1VCtsXCjugObMoYw79hHv8dibXYPRTCr8+JjFxfEk/Y7afjzuFfAo
+         NsWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AkK4eyDYfDukVVGQtgB78a5zI96VA608ufKkpODlhC0=;
+        b=S7BbXtUNP/NOTCo1vOufAfFr/HiDH4IZeQHPNi5TOwfJ8txuMvaDV6mcVWHMP6BZyM
+         XbA/R5oXIsH/zKtkptXEAg7WdvCknvFBoXBYw6ceKhSLrneAFuRs32hGpOq9dvL0il0G
+         ibCqmaUcs3i0rlEtAiKAv70w9AHobZ/WciYReVEuk935kOVINrQEkJgC+kEO9rmhaNbD
+         KShojIj6EPqhuUQGC9GiIv2KHGdrxjBsH0NwHFDKn5dJyzbG3QJeRkEbB/S+6Wm/TctZ
+         tbZiFOdS4DR0ML4iaoU+25F3FB24bqRhMXaTIHQKiTiw0Med99roGcOGc7f5HNfgCW9o
+         wGOA==
+X-Gm-Message-State: AOAM532Vx94ns8mvNH7azKGCQf7Bm5N2BmDkBTGHlI06SMIdkiUxBzDr
+        8fpvGe4Y+ETvIGRoI7fO4jfkobHT
+X-Google-Smtp-Source: ABdhPJyzzgQauzZrXRLBUtlDbHT36pCVhtn35Z5SW1bVvs345TJZd2iZoA/uNDwvVculMX3hyFJrOQ==
+X-Received: by 2002:adf:ed8c:: with SMTP id c12mr11792085wro.359.1595013965061;
+        Fri, 17 Jul 2020 12:26:05 -0700 (PDT)
+Received: from localhost.localdomain (haganm.plus.com. [212.159.108.31])
+        by smtp.gmail.com with ESMTPSA id g145sm20090812wmg.23.2020.07.17.12.26.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jul 2020 12:26:04 -0700 (PDT)
+Subject: Re: [PATCH 2/2] dt-bindings: net: dsa: qca8k: Add PORT0_PAD_CTRL
+ properties
+To:     Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, linux@armlinux.org.uk,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        John Crispin <john@phrozen.org>,
+        Jonathan McDowell <noodles@earth.li>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+References: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
+ <ea0a35ed686e6dace77e25cb70a8f39fdd1ea8ad.1594668793.git.mnhagan88@gmail.com>
+ <20200716150925.0f3e01b8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <20200716223236.GA1314837@lunn.ch>
+From:   Matthew Hagan <mnhagan88@gmail.com>
+Message-ID: <c86c4da0-a740-55cc-33dd-7a91e36c7738@gmail.com>
+Date:   Fri, 17 Jul 2020 20:26:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1595013060; bh=boIvlrIG2qx41G9zjbey4MygAAMCqMjJQzTJ18Zg5mk=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=bJS9Y8xb6VvtxfhFTwdZDiBJ6i32INrBvfuyigyXBuwjhoYX2BbDLm1hGxS9hxQve
-         HRfme8lDSqahhvaSrXdkkH4VNEwztHGzi6Q1t8jpW/+TFFQHxkeP4p4FvMt9WGMBWq
-         FqZTgeb0ic02lWjg7rRgDhOl4fSgvaC01ZFV+3GfHwCznUuezQphXSIZGuvLtfPz0P
-         5dj84UYgvKvQH7SuIItAiBevLel53dEFg9sw9W6CmB73aAz9S9P+MSY/Zv7PWpv7Us
-         Q6nU1i6KyE2kIgdxy6G+tbQEFI3FM7kTGhiLcjMsm75ExF6LsssHx6shIHHtr+SxEH
-         k0WF8SR1E1N4g==
+In-Reply-To: <20200716223236.GA1314837@lunn.ch>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-IMX274 has VANA analog 2.8V supply, VDIG digital core 1.8V supply,
-and VDDL digital io 1.2V supply which are optional based on camera
-module design.
 
-IMX274 also need external 24Mhz clock and is optional based on
-camera module design.
 
-This patch adds support for IMX274 power on and off to enable and
-disable these supplies and external clock.
+On 16/07/2020 23:32, Andrew Lunn wrote:
+> On Thu, Jul 16, 2020 at 03:09:25PM -0700, Jakub Kicinski wrote:
+>> On Mon, 13 Jul 2020 21:50:26 +0100 Matthew Hagan wrote:
+>>> Add names and decriptions of additional PORT0_PAD_CTRL properties.
+>>>
+>>> Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/net/dsa/qca8k.txt | 8 ++++++++
+>>>  1 file changed, 8 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+>>> index ccbc6d89325d..3d34c4f2e891 100644
+>>> --- a/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+>>> +++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+>>> @@ -13,6 +13,14 @@ Optional properties:
+>>>  
+>>>  - reset-gpios: GPIO to be used to reset the whole device
+>>>  
+>>> +Optional MAC configuration properties:
+>>> +
+>>> +- qca,exchange-mac0-mac6:	If present, internally swaps MAC0 and MAC6.
+>>
+>> Perhaps we can say a little more here?
+>>
+>>> +- qca,sgmii-rxclk-falling-edge:	If present, sets receive clock phase to
+>>> +				falling edge.
+>>> +- qca,sgmii-txclk-falling-edge:	If present, sets transmit clock phase to
+>>> +				falling edge.
+>>
+>> These are not something that other vendors may implement and therefore
+>> something we may want to make generic? Andrew?
+> 
+> I've never seen any other vendor implement this. Which to me makes me
+> think this is a vendor extension, to Ciscos vendor extension of
+> 1000BaseX.
+> 
+> Matthew, do you have a real use cases of these? I don't see a DT patch
+> making use of them. And if you do, what is the PHY on the other end
+> which also allows you to invert the clocks?
+> 
+The use case I am working on is the Cisco Meraki MX65 which requires bit
+18 set (qca,sgmii-txclk-falling-edge). On the other side is a BCM58625
+SRAB with ports 4 and 5 in SGMII mode. There is no special polarity
+configuration set on this side though I do have very limited info on
+what is available. The settings I have replicate the vendor
+configuration extracted from the device.
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/media/i2c/imx274.c | 135 ++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 132 insertions(+), 3 deletions(-)
+The qca,sgmii-rxclk-falling-edge option (bit 19) is commonly used
+according to the device trees found in the OpenWrt, which is still using
+the ar8216 driver. With a count through the ar8327-initvals I see bit 19
+set on 18 of 22 devices using SGMII on MAC0.
+>        Andrew
+> 
 
-diff --git a/drivers/media/i2c/imx274.c b/drivers/media/i2c/imx274.c
-index 55869ff..c3f7bcd 100644
---- a/drivers/media/i2c/imx274.c
-+++ b/drivers/media/i2c/imx274.c
-@@ -19,6 +19,7 @@
- #include <linux/module.h>
- #include <linux/of_gpio.h>
- #include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/slab.h>
- #include <linux/v4l2-mediabus.h>
- #include <linux/videodev2.h>
-@@ -27,6 +28,8 @@
- #include <media/v4l2-device.h>
- #include <media/v4l2-subdev.h>
- 
-+#define IMX274_DEFAULT_CLK_FREQ			24000000
-+
- /*
-  * See "SHR, SVR Setting" in datasheet
-  */
-@@ -131,6 +134,15 @@
- #define IMX274_TABLE_WAIT_MS			0
- #define IMX274_TABLE_END			1
- 
-+/* regulator supplies */
-+static const char * const imx274_supply_names[] = {
-+	"VDDL",  /* IF (1.2V) supply */
-+	"VDIG",  /* Digital Core (1.8V) supply */
-+	"VANA",  /* Analog (2.8V) supply */
-+};
-+
-+#define IMX274_NUM_SUPPLIES ARRAY_SIZE(imx274_supply_names)
-+
- /*
-  * imx274 I2C operation related structure
-  */
-@@ -501,6 +513,8 @@ struct imx274_ctrls {
-  * @frame_rate: V4L2 frame rate structure
-  * @regmap: Pointer to regmap structure
-  * @reset_gpio: Pointer to reset gpio
-+ * @supplies: imx274 analog and digital supplies
-+ * @inck: input clock to imx274
-  * @lock: Mutex structure
-  * @mode: Parameters for the selected readout mode
-  */
-@@ -514,6 +528,8 @@ struct stimx274 {
- 	struct v4l2_fract frame_interval;
- 	struct regmap *regmap;
- 	struct gpio_desc *reset_gpio;
-+	struct regulator *supplies[IMX274_NUM_SUPPLIES];
-+	struct clk *inck;
- 	struct mutex lock; /* mutex lock for operations */
- 	const struct imx274_mode *mode;
- };
-@@ -767,6 +783,98 @@ static void imx274_reset(struct stimx274 *priv, int rst)
- 	usleep_range(IMX274_RESET_DELAY1, IMX274_RESET_DELAY2);
- }
- 
-+/*
-+ * imx274_power_on - Function called to power on the sensor
-+ * @imx274: Pointer to device structure
-+ */
-+static int imx274_power_on(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-+	struct stimx274 *imx274 = to_imx274(sd);
-+	int i, ret;
-+
-+	ret = clk_prepare_enable(imx274->inck);
-+	if (ret) {
-+		dev_err(&imx274->client->dev, "Failed to enable clock\n");
-+		return ret;
-+	}
-+
-+	for (i = 0; i < IMX274_NUM_SUPPLIES; i++) {
-+		if (imx274->supplies[i]) {
-+			ret = regulator_enable(imx274->supplies[i]);
-+			if (ret < 0) {
-+				dev_err(&imx274->client->dev,
-+					"Failed to enable %s supply: %d\n",
-+					imx274_supply_names[i], ret);
-+				goto fail_reg;
-+			}
-+		}
-+	}
-+
-+	usleep_range(1, 2);
-+	imx274_reset(imx274, 1);
-+
-+	return 0;
-+
-+fail_reg:
-+	for (--i; i >= 0; i--) {
-+		if (imx274->supplies[i])
-+			regulator_disable(imx274->supplies[i]);
-+	}
-+
-+	clk_disable_unprepare(imx274->inck);
-+	return ret;
-+}
-+
-+/*
-+ * imx274_power_off - Function called to power off the sensor
-+ * @imx274: Pointer to device structure
-+ */
-+static int imx274_power_off(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-+	struct stimx274 *imx274 = to_imx274(sd);
-+	int i;
-+
-+	imx274_reset(imx274, 0);
-+
-+	for (i = 0; i < IMX274_NUM_SUPPLIES; i++) {
-+		if (imx274->supplies[i])
-+			regulator_disable(imx274->supplies[i]);
-+	}
-+
-+	clk_disable_unprepare(imx274->inck);
-+
-+	return 0;
-+}
-+
-+static int imx274_get_regulators(struct device *dev, struct stimx274 *imx274)
-+{
-+	int i, err;
-+	const char *supply;
-+
-+	for (i = 0; i < IMX274_NUM_SUPPLIES; i++) {
-+		supply = imx274_supply_names[i];
-+		imx274->supplies[i] = devm_regulator_get_optional(dev, supply);
-+		if (!IS_ERR(imx274->supplies[i]))
-+			continue;
-+		err = PTR_ERR(imx274->supplies[i]);
-+		if (err != -ENODEV) {
-+			if (err != -EPROBE_DEFER)
-+				dev_err(&imx274->client->dev,
-+					"Failed to get %s supply: %d\n",
-+					supply, err);
-+			return err;
-+		}
-+
-+		imx274->supplies[i] = NULL;
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * imx274_s_ctrl - This is used to set the imx274 V4L2 controls
-  * @ctrl: V4L2 control to be set
-@@ -1836,6 +1944,13 @@ static int imx274_probe(struct i2c_client *client)
- 
- 	mutex_init(&imx274->lock);
- 
-+	imx274->inck = devm_clk_get_optional(&client->dev, "inck");
-+	ret = imx274_get_regulators(&client->dev, imx274);
-+	if (ret) {
-+		dev_err(&client->dev, "Failed to get power regulators, err: %d\n", ret);
-+		return ret;
-+	}
-+
- 	/* initialize format */
- 	imx274->mode = &imx274_modes[IMX274_DEFAULT_BINNING];
- 	imx274->crop.width = IMX274_MAX_WIDTH;
-@@ -1883,15 +1998,26 @@ static int imx274_probe(struct i2c_client *client)
- 		goto err_me;
- 	}
- 
--	/* pull sensor out of reset */
--	imx274_reset(imx274, 1);
-+	/* power on the sensor */
-+	ret = imx274_power_on(&client->dev);
-+	if (ret < 0) {
-+		dev_err(&client->dev,
-+			"%s : imx274 power on failed\n", __func__);
-+		goto err_me;
-+	}
-+
-+	ret = clk_set_rate(imx274->inck, IMX274_DEFAULT_CLK_FREQ);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "Failed to set INCK clock rate\n");
-+		return ret;
-+	}
- 
- 	/* initialize controls */
- 	ret = v4l2_ctrl_handler_init(&imx274->ctrls.handler, 4);
- 	if (ret < 0) {
- 		dev_err(&client->dev,
- 			"%s : ctrl handler init Failed\n", __func__);
--		goto err_me;
-+		goto err_power_off;
- 	}
- 
- 	imx274->ctrls.handler.lock = &imx274->lock;
-@@ -1958,6 +2084,8 @@ static int imx274_probe(struct i2c_client *client)
- 
- err_ctrls:
- 	v4l2_ctrl_handler_free(&imx274->ctrls.handler);
-+err_power_off:
-+	imx274_power_off(&client->dev);
- err_me:
- 	media_entity_cleanup(&sd->entity);
- err_regmap:
-@@ -1975,6 +2103,7 @@ static int imx274_remove(struct i2c_client *client)
- 
- 	v4l2_async_unregister_subdev(sd);
- 	v4l2_ctrl_handler_free(&imx274->ctrls.handler);
-+	imx274_power_off(&client->dev);
- 	media_entity_cleanup(&sd->entity);
- 	mutex_destroy(&imx274->lock);
- 	return 0;
--- 
-2.7.4
-
+Matthew
