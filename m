@@ -2,125 +2,147 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A74EC433E8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 12:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE6FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 12:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 588A220734
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 12:22:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1594988548;
-	bh=J1Qt3Lw28H9tRlMCjTFWuJ09Pp5bPH/VYq8pbZMeEGk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fLsKDSTjf0xthP6oyfeM6kUKZDFdoIQrDgidnI4n7Q/4zLCJLTiY2DC6EQK6J2yFJ
-	 wstCsWbPiof/ZCmeCpAslBGSIfZ1uQ+j1SNq118sZa1c+FciLfUiZTgvD0bHEWg5JW
-	 tfvTxIXb0zgVDvWs3Guni9xCs56tlytnmVAmWtjk=
+	by mail.kernel.org (Postfix) with ESMTP id B7CF820717
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 12:36:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgGQMWV (ORCPT
+        id S1726393AbgGQMgc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 08:22:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34602 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbgGQMWV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Jul 2020 08:22:21 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB91820684;
-        Fri, 17 Jul 2020 12:22:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594988540;
-        bh=J1Qt3Lw28H9tRlMCjTFWuJ09Pp5bPH/VYq8pbZMeEGk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LZg5ba3M7HTo/BL5R2W6pSAW7PllQcfqW8aFdAOarRZ7DLNXyk5Oj0PHLN+VCQX2h
-         q3uf68VE9AUxzajSmsN202GOx4mTbFJmPs5YIy9ULnckxHYoKrFfB3QD4iuNza9Ben
-         A8KTxVxAzC3bjpYziEm0coq8ezKTAhI/fuiSabdk=
-Date:   Fri, 17 Jul 2020 13:22:09 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-can@vger.kernel.org,
-        netdev <netdev@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>
-Subject: Re: [PATCH 14/20] dt-bindings: spi: renesas,sh-msiof: Add r8a774e1
- support
-Message-ID: <20200717122209.GF4316@sirena.org.uk>
-References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594811350-14066-15-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200717115915.GD4316@sirena.org.uk>
- <CA+V-a8sxtan=8NCpEryT9NzOqkPRyQBa-ozYNHvi8goaOJQ24w@mail.gmail.com>
+        Fri, 17 Jul 2020 08:36:32 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:44278 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgGQMgc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 08:36:32 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id E09AB8030802;
+        Fri, 17 Jul 2020 12:36:23 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id eSiPeAhr9U96; Fri, 17 Jul 2020 15:36:23 +0300 (MSK)
+Date:   Fri, 17 Jul 2020 15:36:21 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 04/11] dmaengine: Introduce max SG list entries
+ capability
+Message-ID: <20200717123621.6aphtbohvb3l42jc@mobilestation>
+References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+ <20200709224550.15539-5-Sergey.Semin@baikalelectronics.ru>
+ <d667adda-6576-623d-6976-30f60ab3c3dc@ti.com>
+ <20200710092738.z7zyywe46mp7uuf3@mobilestation>
+ <427bc5c8-0325-bc25-8637-a7627bcac26f@ti.com>
+ <20200710161445.t6eradkgt4terdr3@mobilestation>
+ <20200715111315.GK34333@vkoul-mobl>
+ <20200715170843.w4rwl7zjwfcr7rg2@mobilestation>
+ <20200717081403.GL82923@vkoul-mobl>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="3yNHWXBV/QO9xKNm"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <CA+V-a8sxtan=8NCpEryT9NzOqkPRyQBa-ozYNHvi8goaOJQ24w@mail.gmail.com>
-X-Cookie: No other warranty expressed or implied.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200717081403.GL82923@vkoul-mobl>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, Jul 17, 2020 at 01:44:03PM +0530, Vinod Koul wrote:
+> On 15-07-20, 20:08, Serge Semin wrote:
+> > On Wed, Jul 15, 2020 at 04:43:15PM +0530, Vinod Koul wrote:
+> > > On 10-07-20, 19:14, Serge Semin wrote:
+> > > > On Fri, Jul 10, 2020 at 02:51:33PM +0300, Peter Ujfalusi wrote:
+> > > 
+> > > > > Since we should be able to handle longer lists and this is kind of a
+> > > > > hint for clients that above this number of nents the list will be broken
+> > > > > up to smaller 'bursts', which when traversing could cause latency.
+> > > > > 
+> > > > > sg_chunk_len might be another candidate.
+> > > > 
+> > > > Ok. We've got four candidates:
+> > > > - max_sg_nents_burst
+> > > > - max_sg_burst
+> > > > - max_sg_chain
+> > > > - sg_chunk_len
+> > > > 
+> > > > @Vinod, @Andy, what do you think?
+> > > 
+> > 
+> > > So IIUC your hw supports single sg and in that you would like to publish
+> > > the length of each chunk, is that correct?
+> > 
+> > No. My DMA engine does support only a single-entry SG-list, but the new DMA
+> > {~~slave~~,channel,device,peripheral,...} capability isn't about the length, but
+> > is about the maximum number of SG-list entries a DMA engine is able to
+> > automatically/"without software help" walk through and execute. In this thread
+> > we are debating about that new capability naming.
+> > 
+> > The name suggested in this patch: max_sg_nents. Peter noted (I mostly agree with
+> > him), that it might be ambiguous, since from it (without looking into the
+> > dma_slave_caps structure comment) a user might think that it's a maximum number of
+> > SG-entries, which can be submitted for the DMA engine execution, while in fact it's
+> > about the DMA engine capability of automatic/burst/"without software intervention"
+> > SG-list entries walking through. (Such information will be helpful to solve a
+> > problem discussed in this mailing thread, and described in the cover-letter to
+> > this patchset. We also discussed it with you and Andy in the framework of this
+> > patchset many times.)
+> > 
+> > As an alternative Peter suggested: max_sg_nents_burst. I also think it's better
+> > than "max_sg_nents" but for me it seems a bit long. max_sg_burst seems better.
+> > There is no need in having the "nents" in the name, since SG-list implies a list,
+> > which main parameter (if not to say only parameter) is the number of entries.
+> > "burst" is pointing out to the automatic/accelerated/"without software intervention"
+> > SG-list entries walking through.
+> > 
+> > On the second thought suggested by me "max_sg_chain" sounds worse than "max_sg_burst",
+> > because it also might be perceived as a parameter limiting the number of SG-list
+> > entries is able to be submitted for the DMA engine execution, while in fact it
+> > describes another matter.
+> > 
+> > Regarding "sg_chunk_len". I think it's ambiguous too, since the "chunk
+> > length" might be referred to both the entries length and to the sub-SG-list
+> > length.
+> > 
+> > So what do you think? What name is better describing the new DMA capability?
+> 
 
---3yNHWXBV/QO9xKNm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> How about max_nents_per_sg or max_nents_sg to signify that this implies
+> max nents for sg not sg entries.
 
-On Fri, Jul 17, 2020 at 01:15:13PM +0100, Lad, Prabhakar wrote:
-> On Fri, Jul 17, 2020 at 12:59 PM Mark Brown <broonie@kernel.org> wrote:
+Well, as I see it those versions are no better than "max_sg_nents" suggested
+in this patch, which Peter and me considered ambiguous. By reading just
+capability name all "max_sg_nents" and "max_nents_per_sg" and "max_nents_sg"
+seem like describing a hard limitation of the number of SG-list entries, but
+in fact they should merely mean a maximum number of entries executed in a single
+DMA engine transaction without software intervention. We need to have some new
+word which would define that "automatic/accelerated/burst/chained/etc." DMA
+transaction.
 
-> > On Wed, Jul 15, 2020 at 12:09:04PM +0100, Lad Prabhakar wrote:
-> > > Document RZ/G2H (R8A774E1) SoC bindings.
+> IMO Burst/chain are not better than max_sg_nents.
 
-> > Please in future could you split things like this up into per subsystem
-> > serieses?  That's a more normal approach and avoids the huge threads and
-> > CC lists.
+Could you elaborate why? In case of having "max_sg_burst" we could give to a
+user an impression of this capability describing something similar to the
+"max_burst" (maximum burst transaction length), but in application to the
+SG-list. The main SG-list parameter is the number of entries, so having the
+"burst" word in the capability name we'd imply the bursted number of entries
+instead of the total number of entries if the "nents" word would have been used.
 
-> Sorry for doing this, In future I shall keep that in mind. (Wanted to
-> get in most patches for RZ/G2H in V5.9 window)
+-Sergey
 
-If anything sending things as a big series touching lots of subsystems
-can slow things down as people figure out dependencies and who's going
-to actually apply things.
-
---3yNHWXBV/QO9xKNm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8Rl/AACgkQJNaLcl1U
-h9DhTAgAgzuxfwIeWNm0FDyt+K9Mfz5di6xytCvItNaaahcI/Ct9HEQCGPpgG+SN
-OegozumTbxf+HvdgEgg2JsMqKfoCid7/F/M/ywb24/SqHnpgIIKBA7U6bRF2PGMW
-JHXG/oHSBd5yyV6xurj6YfaJidh9KJO5afRb8yisffI8ge1n+X7F2GQZyWke45cp
-Ojag6elp7xYrRwC3ylAp2exRsoSw5SXYwqM4CNkrDEiXq1dKeePsm2vuxf6FmE4n
-WclrCd+/9oWAk7dIoJTBX4BxBudcZlk25Y55Q6GyA/bbGMBWef1vWvUNasjQef0d
-e/mSTsDdN+0RD9lg1rJ0RqtyHnDPhw==
-=mPyM
------END PGP SIGNATURE-----
-
---3yNHWXBV/QO9xKNm--
+> 
+> -- 
+> ~Vinod
