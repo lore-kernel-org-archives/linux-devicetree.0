@@ -2,144 +2,133 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDACC433EB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 08:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75ECBC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 08:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66B2B2074B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 08:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 513F120691
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 08:38:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OUPcgdRG"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZQ57yMa5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726056AbgGQIgX (ORCPT
+        id S1726079AbgGQIie (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 04:36:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45974 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726974AbgGQIgQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 04:36:16 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD740C061755;
-        Fri, 17 Jul 2020 01:36:15 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id d16so7014431edz.12;
-        Fri, 17 Jul 2020 01:36:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UKKt1i+qbb7u1MCS8ODLjX9FpnfwbfNBADcfLCJcoNk=;
-        b=OUPcgdRGfHBaIyE07DxAgHEsGAJchRmLtt8wCEg7nVFBm36LvFl37rxywBzGOJo8wL
-         AujuSqXksDhLCbq74NX1L1e6uZ/+wemBYGjofH5Lxi0dNHgsk6hGmJZjj3G2f08qhgXe
-         RYgKPFa7e4YSNI9UgZXiFmHwzrElsKRhwHyBoxbmUYRLq3Z3cIEQX89nlLNq9LDqj7E1
-         Micu+IvV3G2Dlbfj6pprJonk8ADrb20ZKoU7vM3hEBFKLOsSHTZj7AFRjNrx2BE5PG+w
-         QNQT9THWO94qqD/tsFtnpZaRFtftTWjfIhhGwQUmmtQ5KtJEBQi/eqtJORFGlBaUh8V7
-         7b8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UKKt1i+qbb7u1MCS8ODLjX9FpnfwbfNBADcfLCJcoNk=;
-        b=s2iHmKHEYGrVoDjP7L/7jVIOXrHCp+b1VyR23EJjOZbKYpzny2EvR4bP2xma2R1el5
-         /oXLh/P4UjanShYBvrWDJAUsFamcFxsPjslOW+ePTxptWO3Zy4k6hw5QRc6T7CTED3V1
-         Rw+VRkbybNncHxa6qrHeSL7FFQN/IGTBF+a1O0UZnHS+7y3ZlE59uzUC+G6/4OEXIyoZ
-         rteamcUFCZNPbjUe0UYvuBJs4oWTn5GW9PaJahDQYLqCYXZW4Rd/i7Zcoe+zR1K89Yjv
-         bjiCPSekckR0VPhm/JjFoIdfcqiNjZ4kUjuz5grvAo7r4vuoztxQ7dawVs9daZwVOCPv
-         AA1g==
-X-Gm-Message-State: AOAM532pzWgii07KF12s37dA0TbQ384my13zUKZPH5CzMht5vSYVAOej
-        OU8w0JsH04L1ChPuCfPVmLcXqPYq
-X-Google-Smtp-Source: ABdhPJySzetdMLRbHWosbzzD4UCkj6mQY50Ymnb6XBhSxYEHQLajfwo4shxW66CXpA3k45bJW/QNSA==
-X-Received: by 2002:aa7:c341:: with SMTP id j1mr8557511edr.197.1594974974219;
-        Fri, 17 Jul 2020 01:36:14 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id da20sm7799527edb.27.2020.07.17.01.36.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 01:36:12 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Terje Bergstrom <tbergstrom@nvidia.com>,
-        Debarshi Dutta <ddutta@nvidia.com>,
-        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 1/2] dt-bindings: Add documentation for GV11B GPU
-Date:   Fri, 17 Jul 2020 10:36:08 +0200
-Message-Id: <20200717083609.557205-1-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Fri, 17 Jul 2020 04:38:34 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:51540 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726056AbgGQIie (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 04:38:34 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06H8cMQc035187;
+        Fri, 17 Jul 2020 03:38:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594975102;
+        bh=nAQCGUqo2TKuVDp/7DUdhh3dhnBqiYgA4vqkgj5+R5s=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ZQ57yMa5SWa6rSOSG3EGDx1zmXVwOjgdpKBiymfKbamxzRL7uP1f1ySVuzj4fgxPx
+         gJueY0PwRv0BDBbYCKY+588a1oi3Y37T8SeLEaMCZvSECZhYE2eLAKx2D1jJZfgIHX
+         fcxatk2cp6yCy87uEPSQfWqQtwx+4X7NGd/W09ZU=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06H8cMef036562;
+        Fri, 17 Jul 2020 03:38:22 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 17
+ Jul 2020 03:38:22 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 17 Jul 2020 03:38:22 -0500
+Received: from [10.250.232.88] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06H8cHcm087224;
+        Fri, 17 Jul 2020 03:38:17 -0500
+Subject: Re: [PATCH 7/7] arm64: defconfig: Enable AM654x SDHCI controller
+To:     Arnd Bergmann <arnd@arndb.de>, Sekhar Nori <nsekhar@ti.com>
+List-Id: <soc.lore.kernel.org>
+CC:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        ARM-SoC Maintainers <soc@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+References: <20200619125801.9530-1-faiz_abbas@ti.com>
+ <20200619125801.9530-8-faiz_abbas@ti.com>
+ <3ed03440-7fbd-6abc-8a15-67e7217e2c3d@ti.com>
+ <2e50333c-5387-236f-3fb2-6d8014b224e0@ti.com>
+ <CAK8P3a1JpCCCV-CVQj3+eMfWF+=4AuHPpv390Tyj2pKn63_ZVg@mail.gmail.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <75cd485b-e3eb-19ee-ad1f-84cb04b0c807@ti.com>
+Date:   Fri, 17 Jul 2020 14:08:16 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK8P3a1JpCCCV-CVQj3+eMfWF+=4AuHPpv390Tyj2pKn63_ZVg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+Hi,
 
-The GV11B's device tree bindings are the same as for GP10B, though the
-GPU is not completely compatible, so all that is needed is a different
-compatible string.
+On 16/07/20 11:58 pm, Arnd Bergmann wrote:
+> On Thu, Jul 16, 2020 at 3:25 PM Sekhar Nori <nsekhar@ti.com> wrote:
+>>
+>> On 7/16/20 5:49 PM, Faiz Abbas wrote:
+>>> Hi,
+>>>
+>>> On 19/06/20 6:28 pm, Faiz Abbas wrote:
+>>>> Enable CONFIG_SDHCI_AM654 to Support AM65x sdhci controller.
+>>>>
+>>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>>>> ---
+>>>>  arch/arm64/configs/defconfig | 1 +
+>>>>  1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+>>>> index 883e8bace3ed..40dd13e0adc5 100644
+>>>> --- a/arch/arm64/configs/defconfig
+>>>> +++ b/arch/arm64/configs/defconfig
+>>>> @@ -731,6 +731,7 @@ CONFIG_MMC_DW_ROCKCHIP=y
+>>>>  CONFIG_MMC_SUNXI=y
+>>>>  CONFIG_MMC_BCM2835=y
+>>>>  CONFIG_MMC_SDHCI_XENON=y
+>>>> +CONFIG_MMC_SDHCI_AM654=y
+>>>>  CONFIG_MMC_OWL=y
+>>>>  CONFIG_NEW_LEDS=y
+>>>>  CONFIG_LEDS_CLASS=y
+>>>>
+>>>
+>>> Gentle ping. Will, Catalin, can this patch be picked up?
+>>
+>> From logs, Arnd has been picking up patches for this file. Looping in
+>> Arnd and ARM-SoC team.
+> 
+> I tend to ignore individual patches to the defconfig file unless
+> they are sent to:soc@kernel.org. The best way to get them
+> included is to have the platform maintainers pick up the
+> changes and send them that way as a separate pull request
+> at the same time as sending any DT updates.
+> 
+> The MAINTAINERS file lists Tero and Nishanth as maintainers
+> for the platform. If they want, I can apply this one directly, but in
+> the future, send it to them.
+> 
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
-Changes in v3:
-- document the "fuse" clock which needs to be enabled during the GPU
-  initialization
+Thanks for clarifying Arnd. Tero, can you pick this up?
 
- .../devicetree/bindings/gpu/nvidia,gk20a.txt  | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/gpu/nvidia,gk20a.txt b/Documentation/devicetree/bindings/gpu/nvidia,gk20a.txt
-index f32bbba4d3bc..662a3c8a7d29 100644
---- a/Documentation/devicetree/bindings/gpu/nvidia,gk20a.txt
-+++ b/Documentation/devicetree/bindings/gpu/nvidia,gk20a.txt
-@@ -6,6 +6,7 @@ Required properties:
-   - nvidia,gk20a
-   - nvidia,gm20b
-   - nvidia,gp10b
-+  - nvidia,gv11b
- - reg: Physical base address and length of the controller's registers.
-   Must contain two entries:
-   - first entry for bar0
-@@ -25,6 +26,9 @@ Required properties:
- If the compatible string is "nvidia,gm20b", then the following clock
- is also required:
-   - ref
-+If the compatible string is "nvidia,gv11b", then the following clock is also
-+required:
-+  - fuse
- - resets: Must contain an entry for each entry in reset-names.
-   See ../reset/reset.txt for details.
- - reset-names: Must include the following entries:
-@@ -88,3 +92,24 @@ Example for GP10B:
- 		power-domains = <&bpmp TEGRA186_POWER_DOMAIN_GPU>;
- 		iommus = <&smmu TEGRA186_SID_GPU>;
- 	};
-+
-+Example for GV11B:
-+
-+	gpu@17000000 {
-+		compatible = "nvidia,gv11b";
-+		reg = <0x17000000 0x10000000>,
-+		      <0x18000000 0x10000000>;
-+		interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "stall", "nonstall";
-+		clocks = <&bpmp TEGRA194_CLK_GPCCLK>,
-+			 <&bpmp TEGRA194_CLK_GPU_PWR>,
-+			 <&bpmp TEGRA194_CLK_FUSE>;
-+		clock-names = "gpu", "pwr", "fuse";
-+		resets = <&bpmp TEGRA194_RESET_GPU>;
-+		reset-names = "gpu";
-+		dma-coherent;
-+
-+		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_GPU>;
-+		iommus = <&smmu TEGRA194_SID_GPU>;
-+	};
--- 
-2.27.0
-
+Thanks,
+Faiz
