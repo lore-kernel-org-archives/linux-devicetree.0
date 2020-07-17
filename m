@@ -2,101 +2,113 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8B2C433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 21:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E13FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 21:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B5902076A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 21:03:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFDB42070A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 21:54:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="oVE0Iedl"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="lXUBPhpr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgGQVDn (ORCPT
+        id S1727029AbgGQVyu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 17:03:43 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:37218 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbgGQVDn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 17:03:43 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1A36C71D;
-        Fri, 17 Jul 2020 23:03:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1595019821;
-        bh=CyEALqQh1xp4Upyolpu9NTNkpXnt/sPjRTQBEUUSRZA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oVE0IedlV70n3icc7ShfPuVxpqjzBkg/VbgnwE1PA1ioU3ZGejv44ti+JCuLs2DaK
-         iN8IbWPz8a6mYPP1xS94klIJPc3WYkXRXMY7yOA4jDc/mOYUDpWbkViiArAWZGq3WZ
-         tifcOa5VYRrEZu9SNmKqGiNY7Y0+5zQvT57ig8ik=
-Date:   Sat, 18 Jul 2020 00:03:32 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        slongerbeam@gmail.com, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH 13/13] dt-bindings: media: ov5640: Add myself as
- co-maintainer
-Message-ID: <20200717210332.GO5961@pendragon.ideasonboard.com>
-References: <20200717132859.237120-1-jacopo+renesas@jmondi.org>
- <20200717132859.237120-14-jacopo+renesas@jmondi.org>
+        Fri, 17 Jul 2020 17:54:50 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:37007 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726793AbgGQVyu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 17:54:50 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id BE8012304C;
+        Fri, 17 Jul 2020 23:54:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1595022887;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=CGb6zPojzWptr9RntI9Q3NPEKDFmlMY+j6ZpL+FsLqc=;
+        b=lXUBPhprMxuWRTGWj9ooCq/GJ4mduBqqCqkYMgu/pDyDfu75YE4/ef2ZgJ+fQ3e7CL1Tl9
+        MRG/bXe1GHq2w8n/hrhFFsoN+fiFgxupsc0LkwpgnlFow0FVYgv4Qq4LQRjSeokbD6WD9N
+        nh2GUUA2A7+CA/NgsN+TkqLnuF/u2tk=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200717132859.237120-14-jacopo+renesas@jmondi.org>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 17 Jul 2020 23:54:42 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe Kleine-K??nig <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v5 12/13] arm64: dts: freescale: sl28: enable LED support
+In-Reply-To: <20200717083610.GC1027@bug>
+References: <20200706175353.16404-1-michael@walle.cc>
+ <20200706175353.16404-13-michael@walle.cc> <20200717083610.GC1027@bug>
+User-Agent: Roundcube Webmail/1.4.7
+Message-ID: <af0584da0f43cb6cfffeb8fcf2235acb@walle.cc>
+X-Sender: michael@walle.cc
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jacopo,
+Hi Pavel,
 
-Thank you for the patch.
-
-On Fri, Jul 17, 2020 at 03:28:59PM +0200, Jacopo Mondi wrote:
-> Add myself as co-maintainer of the driver and the bindings
-> file.
-
-I'd squash this with 01/13 too.
-
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
->  Documentation/devicetree/bindings/media/i2c/ov5640.yaml | 1 +
->  MAINTAINERS                                             | 1 +
->  2 files changed, 2 insertions(+)
+Am 2020-07-17 10:36, schrieb Pavel Machek:
+> Hi!
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5640.yaml b/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
-> index 514f8150b52e..e28ea471bc00 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
-> @@ -8,6 +8,7 @@ title: Omnivision OV5640 MIPI CSI-2 / parallel sensor
->  
->  maintainers:
->    - Steve Longerbeam <slongerbeam@gmail.com>
-> +  - Jacopo Mondi <jacopo@jmondi.org>
->  
->  description: -|
->    The OV5640 is a 5 megapixels image sensor capable of producing images in RGB,
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index fc2a2129d18e..b5dd706d072b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12601,6 +12601,7 @@ F:	drivers/media/i2c/ov2740.c
->  
->  OMNIVISION OV5640 SENSOR DRIVER
->  M:	Steve Longerbeam <slongerbeam@gmail.com>
-> +M:	Jacopo Mondi <jacopo@jmondi.org>
->  L:	linux-media@vger.kernel.org
->  S:	Maintained
->  T:	git git://linuxtv.org/media_tree.git
+>> Now that we have support for GPIO lines of the SMARC connector, enable
+>> LED support on the KBox A-230-LS. There are two LEDs without fixed
+>> functions, one is yellow and one is green. Unfortunately, it is just 
+>> one
+>> multi-color LED, thus while it is possible to enable both at the same
+>> time it is hard to tell the difference between "yellow only" and 
+>> "yellow
+>> and green".
+> 
+>> +		user_yellow {
+>> +			label = "s1914:yellow:user";
+>> +			gpios = <&sl28cpld_gpio0 0 0>;
+>> +		};
+>> +
+>> +		user_green {
+>> +			label = "s1914:green:user";
+>> +			gpios = <&sl28cpld_gpio1 3 0>;
+>> +		};
+> 
+> This is not suitable label for such LEDs... there's zero chance 
+> userland will
+> know what to do with these.
+> 
+> Do they have some kind of "usual" function?
 
--- 
-Regards,
+Unfortunately, they do not. I guess the green one could be something 
+like
+"application ready" and the yellow one could be an indication that some
+fault occurred.
 
-Laurent Pinchart
+Do you have any suggestions?
+
+-michael
