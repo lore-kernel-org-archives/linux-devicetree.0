@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8612AC433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 13:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F762C433EA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 13:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A06120775
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 13:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AEE320717
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 13:30:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XRf0Hp00"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LHmet0PT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgGQNak (ORCPT
+        id S1726949AbgGQNat (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 09:30:40 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:47872 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726761AbgGQNak (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:30:40 -0400
+        Fri, 17 Jul 2020 09:30:49 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:41039 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726846AbgGQNas (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Jul 2020 09:30:48 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594992640; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1594992648; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=bPEgtL/MSbVgLWyY5yA0N+moWARpJvT0UPnIgruiK+4=; b=XRf0Hp00enw9niXku20ehU1HtmcMrPTBA+RSLgLQWLycwBulO0HcRFwzt6ooybqDhKd2Oloe
- SXc+zPK3ucqn1tcb+htZceThU2n+OQlqrItitFmTPrgyo66ucM7BUh69OYJujIS41OzeiZfL
- yHy4KXLHuaS35nW6QjIn+S+tyPA=
-X-Mailgun-Sending-Ip: 104.130.122.29
+ bh=YQ4zTOzVY7tD8+0LunMnnTS0zV8fWFiSWwGe3hpL4w0=; b=LHmet0PTh4d0fM8Tt5CNQK4Th70DJV2plFrJasbXLgp0hrYsrDsPv8qXC/W5Z5YoO69c2QhX
+ sugZIqMAAHAOP0FDU+VjFvwJZRxXi/Zosw0VTEVjtt4vhl/BGovjW9KeRTVpvMszUQqp7ANf
+ 9h4AZmN2HkuVRIJnqw4M+cxRO+M=
+X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
- 5f11a7ddc9bd2efa2ef1fb2d (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 17 Jul 2020 13:30:05
+ smtp-out-n17.prod.us-west-2.postgun.com with SMTP id
+ 5f11a7ea75eeb235f684d459 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 17 Jul 2020 13:30:18
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3C315C433B1; Fri, 17 Jul 2020 13:30:05 +0000 (UTC)
+        id 62904C43395; Fri, 17 Jul 2020 13:30:18 +0000 (UTC)
 Received: from akhilpo-linux.qualcomm.com (unknown [202.46.22.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: akhilpo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 720CFC433A0;
-        Fri, 17 Jul 2020 13:29:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 720CFC433A0
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A8527C433AF;
+        Fri, 17 Jul 2020 13:30:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A8527C433AF
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akhilpo@codeaurora.org
 From:   Akhil P Oommen <akhilpo@codeaurora.org>
@@ -56,9 +55,9 @@ Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
         mka@chromium.org, saravanak@google.com, sibis@codeaurora.org,
         viresh.kumar@linaro.org, jonathan@marek.ca, robdclark@gmail.com,
         bjorn.andersson@linaro.org
-Subject: [PATCH v6 3/6] drm: msm: a6xx: use dev_pm_opp_set_bw to scale DDR
-Date:   Fri, 17 Jul 2020 18:59:36 +0530
-Message-Id: <1594992579-20662-4-git-send-email-akhilpo@codeaurora.org>
+Subject: [PATCH v6 6/6] arm64: dts: qcom: sc7180: Add opp-peak-kBps to GPU opp
+Date:   Fri, 17 Jul 2020 18:59:39 +0530
+Message-Id: <1594992579-20662-7-git-send-email-akhilpo@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1594992579-20662-1-git-send-email-akhilpo@codeaurora.org>
 References: <1594992579-20662-1-git-send-email-akhilpo@codeaurora.org>
@@ -69,82 +68,65 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Sharat Masetty <smasetty@codeaurora.org>
 
-This patches replaces the previously used static DDR vote and uses
-dev_pm_opp_set_bw() to scale GPU->DDR bandwidth along with scaling
-GPU frequency. Also since the icc path voting is handled completely
-in the opp driver, remove the icc_path handle and its usage in the
-drm driver.
+Add opp-peak-kBps bindings to the GPU opp table, listing the peak
+GPU -> DDR bandwidth requirement for each opp level. This will be
+used to scale the DDR bandwidth along with the GPU frequency dynamically.
 
 Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
 Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
 ---
- drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 25 +++++++++++++++++--------
- 1 file changed, 17 insertions(+), 8 deletions(-)
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-index 856db46..a6f43ff 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-@@ -133,7 +133,7 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 80fe54b..ff4ddf1 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -1479,36 +1479,43 @@
+ 				opp-800000000 {
+ 					opp-hz = /bits/ 64 <800000000>;
+ 					opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
++					opp-peak-kBps = <8532000>;
+ 				};
  
- 	if (!gmu->legacy) {
- 		a6xx_hfi_set_freq(gmu, perf_index);
--		icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
-+		dev_pm_opp_set_bw(&gpu->pdev->dev, opp);
- 		pm_runtime_put(gmu->dev);
- 		return;
- 	}
-@@ -157,11 +157,7 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
- 	if (ret)
- 		dev_err(gmu->dev, "GMU set GPU frequency error: %d\n", ret);
+ 				opp-650000000 {
+ 					opp-hz = /bits/ 64 <650000000>;
+ 					opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
++					opp-peak-kBps = <7216000>;
+ 				};
  
--	/*
--	 * Eventually we will want to scale the path vote with the frequency but
--	 * for now leave it at max so that the performance is nominal.
--	 */
--	icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
-+	dev_pm_opp_set_bw(&gpu->pdev->dev, opp);
- 	pm_runtime_put(gmu->dev);
- }
+ 				opp-565000000 {
+ 					opp-hz = /bits/ 64 <565000000>;
+ 					opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
++					opp-peak-kBps = <5412000>;
+ 				};
  
-@@ -849,6 +845,19 @@ static void a6xx_gmu_set_initial_freq(struct msm_gpu *gpu, struct a6xx_gmu *gmu)
- 	dev_pm_opp_put(gpu_opp);
- }
+ 				opp-430000000 {
+ 					opp-hz = /bits/ 64 <430000000>;
+ 					opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
++					opp-peak-kBps = <5412000>;
+ 				};
  
-+static void a6xx_gmu_set_initial_bw(struct msm_gpu *gpu, struct a6xx_gmu *gmu)
-+{
-+	struct dev_pm_opp *gpu_opp;
-+	unsigned long gpu_freq = gmu->gpu_freqs[gmu->current_perf_index];
-+
-+	gpu_opp = dev_pm_opp_find_freq_exact(&gpu->pdev->dev, gpu_freq, true);
-+	if (IS_ERR_OR_NULL(gpu_opp))
-+		return;
-+
-+	dev_pm_opp_set_bw(&gpu->pdev->dev, gpu_opp);
-+	dev_pm_opp_put(gpu_opp);
-+}
-+
- int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
- {
- 	struct adreno_gpu *adreno_gpu = &a6xx_gpu->base;
-@@ -873,7 +882,7 @@ int a6xx_gmu_resume(struct a6xx_gpu *a6xx_gpu)
- 	}
+ 				opp-355000000 {
+ 					opp-hz = /bits/ 64 <355000000>;
+ 					opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
++					opp-peak-kBps = <3072000>;
+ 				};
  
- 	/* Set the bus quota to a reasonable value for boot */
--	icc_set_bw(gpu->icc_path, 0, MBps_to_icc(3072));
-+	a6xx_gmu_set_initial_bw(gpu, gmu);
+ 				opp-267000000 {
+ 					opp-hz = /bits/ 64 <267000000>;
+ 					opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
++					opp-peak-kBps = <3072000>;
+ 				};
  
- 	/* Enable the GMU interrupt */
- 	gmu_write(gmu, REG_A6XX_GMU_AO_HOST_INTERRUPT_CLR, ~0);
-@@ -1049,7 +1058,7 @@ int a6xx_gmu_stop(struct a6xx_gpu *a6xx_gpu)
- 		a6xx_gmu_shutdown(gmu);
- 
- 	/* Remove the bus vote */
--	icc_set_bw(gpu->icc_path, 0, 0);
-+	dev_pm_opp_set_bw(&gpu->pdev->dev, NULL);
- 
- 	/*
- 	 * Make sure the GX domain is off before turning off the GMU (CX)
+ 				opp-180000000 {
+ 					opp-hz = /bits/ 64 <180000000>;
+ 					opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
++					opp-peak-kBps = <1804000>;
+ 				};
+ 			};
+ 		};
 -- 
 2.7.4
 
