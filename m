@@ -4,145 +4,206 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C3EC433EA
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 18:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 746C5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 18:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C02FC20704
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 18:36:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F70F20704
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 18:45:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595010973;
-	bh=6IhYIKmVZDeZrypbI87Kz8pgaQhaQha5rJV8Ik5J7bk=;
+	s=default; t=1595011509;
+	bh=aQXux31L0fVJHV4y9kdNGhhZTnpp/2Df3qree3CTJyY=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CIK5f5d5qbVgg4KAS0WLZGzRUX8ZrFWRwHj56c5BiuWjfQrAv5RZYDyFABhDa9idF
-	 WRZ6FvRiuNdN/6ifA/F29pEletNid+2WMgDzZlQyK9pDULos3yZgtjs/KYJLJzDn7N
-	 IzaSJs8jZYH3zM2iNpv0bfB5svsESgPvCQqspgcM=
+	b=zZo0MMsgvzvBnbzGUnSFFoAeo6tpIC/u9QKkHMvIVVOnMSn2JpZhpZRlb3h8hiCsn
+	 w7yBYKVVOOjb/3Hiv5pA7lB/s/CGYQaVBsx3kxoA9Nc/newB7Q1i3bgr/nACL8K4JR
+	 IGsCkhPODE6e71bK5EB0U4/OR3h/IrFoZc7xEBOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbgGQSgN (ORCPT
+        id S1726463AbgGQSpI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 14:36:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50222 "EHLO mail.kernel.org"
+        Fri, 17 Jul 2020 14:45:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728022AbgGQSgN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Jul 2020 14:36:13 -0400
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+        id S1726322AbgGQSpI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Jul 2020 14:45:08 -0400
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38FFD21702;
-        Fri, 17 Jul 2020 18:36:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9644E208C7;
+        Fri, 17 Jul 2020 18:45:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595010972;
-        bh=6IhYIKmVZDeZrypbI87Kz8pgaQhaQha5rJV8Ik5J7bk=;
+        s=default; t=1595011507;
+        bh=aQXux31L0fVJHV4y9kdNGhhZTnpp/2Df3qree3CTJyY=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=s6sCGYdNX1R9qYXHHidspLXuFmtNrCsbL2kIbUlxAtc26Ua7C0ChuGqSMrMxcE/Q+
-         6R3kR+qo1eQ0iYYDZl4fMNgTUOl7lQplKoP3nbgBhX//diF+tyyahGvPnveim25CdD
-         lam63/GQ/3vp0/VXdRFp6dtfix15TcFPGvmcIEkQ=
-Received: by mail-ot1-f54.google.com with SMTP id 5so7518586oty.11;
-        Fri, 17 Jul 2020 11:36:12 -0700 (PDT)
-X-Gm-Message-State: AOAM532ccMUB4I4bDaCcANMdFqCID3aqLE4EdwqVDSHuIUfU19qaeaMx
-        wOI+Ng6jQ9/cneSIIK6OwO6loVCxdhtgSQPM6g==
-X-Google-Smtp-Source: ABdhPJwvWVISrMjnm+UoMBRoocoox6vjA7uZZ0i4pJ9VBySQKqf+ek0xvhn+opfsWguYonw/q0Q7Q/bIE/Tx5LV1iO8=
-X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr10161318ots.192.1595010971464;
- Fri, 17 Jul 2020 11:36:11 -0700 (PDT)
+        b=TTVwmoGLYREFkLJUML0EPVfT4+mQ4tnEEUQwUtlL1R/MoiBcMlrdczMvuFK0qHX9J
+         IkzsNpZsONttrmB7pJxC8IxhESUapmP6QrKH4Pu17h09Hq1CbLoNhRDcFImD05h3rf
+         3dLJbmPAP3mfhuYC9hWPSwcigdOjgHPbSfpKMCr0=
+Received: by mail-ot1-f46.google.com with SMTP id g37so7564228otb.9;
+        Fri, 17 Jul 2020 11:45:07 -0700 (PDT)
+X-Gm-Message-State: AOAM531TwzcD7wW+8uS8C4/6FK8Qs1GdqdcJz2nKYiX4NoYsPxa5ueK0
+        jp6FN2v67F9nMd/gJw6KQAsymH61zXE9vGlb9w==
+X-Google-Smtp-Source: ABdhPJzjAX9VPCvhBaymbD8U6pueMna6x31wFEWxJwYV+L9W8q5c90gNWa24y9cUV9fKEYpCpbjo4E4/s6jNnBO1h5w=
+X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr10192904ots.192.1595011506868;
+ Fri, 17 Jul 2020 11:45:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200707102338.989660-1-yamada.masahiro@socionext.com>
- <20200716230451.GA3041278@bogus> <CAK7LNAQN04i14VwrWspTJ7+Y87rgsopv88Dyv_8+4Hk8Kx0Fdw@mail.gmail.com>
-In-Reply-To: <CAK7LNAQN04i14VwrWspTJ7+Y87rgsopv88Dyv_8+4Hk8Kx0Fdw@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 17 Jul 2020 12:36:00 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKahftcjgtMP9H4NE2df1LxaV+31M8KrmBWCVy05P0hHA@mail.gmail.com>
-Message-ID: <CAL_JsqKahftcjgtMP9H4NE2df1LxaV+31M8KrmBWCVy05P0hHA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: uniphier-thermal: add minItems to socionext,tmod-calibration
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM mailing list <linux-pm@vger.kernel.org>
+References: <20200702191322.2639681-1-helen.koike@collabora.com>
+ <20200702191322.2639681-6-helen.koike@collabora.com> <CAL_JsqKHG4HgcpWvh_qnHPAkaGCd7Q8APk2ai_QxjUQhvd5APg@mail.gmail.com>
+ <822de449-8c01-d790-a9f9-e8b513bd7f87@collabora.com>
+In-Reply-To: <822de449-8c01-d790-a9f9-e8b513bd7f87@collabora.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 17 Jul 2020 12:44:55 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLEXvub_E_nVWtQ1H4Ru=jLuRgr+Aiyu6Hmqb7fObG4Dg@mail.gmail.com>
+Message-ID: <CAL_JsqLEXvub_E_nVWtQ1H4Ru=jLuRgr+Aiyu6Hmqb7fObG4Dg@mail.gmail.com>
+Subject: Re: [PATCH v4 5/9] media: staging: rkisp1: remove unecessary clocks
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     devicetree@vger.kernel.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Mark Rutland <mark.rutland@arm.com>, karthik.poduval@gmail.com,
+        Johan Jonker <jbx6244@gmail.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Eddie Cai <eddie.cai.linux@gmail.com>,
+        Shunqian Zheng <zhengsq@rock-chips.com>,
+        Robin Murphy <robin.murphy@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 10:54 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+On Fri, Jul 17, 2020 at 12:14 PM Helen Koike <helen.koike@collabora.com> wrote:
 >
-> On Fri, Jul 17, 2020 at 8:09 AM Rob Herring <robh@kernel.org> wrote:
+> Hi Rob,
+>
+> Thanks for your review.
+>
+> On 7/17/20 2:49 PM, Rob Herring wrote:
+> > On Thu, Jul 2, 2020 at 1:13 PM Helen Koike <helen.koike@collabora.com> wrote:
+> >>
+> >> aclk_isp_wrap is a child of aclk_isp, and hclk_isp_wrap is a child of
+> >> hclk_isp, thus we can remove parents from the list.
 > >
-> > On Tue, Jul 07, 2020 at 07:23:38PM +0900, Masahiro Yamada wrote:
-> > > As the description says, this property contains a pair of calibration
-> > > values. The number of items must be exactly 2.
-> > >
-> > > Add minItems to check a too short property.
-> > >
-> > > While I was here, I also added this property to the example because
-> > > this is the case in the real DT file,
-> > > arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-> > >
-> > > Also, fix the interrupt type (edge -> level) to align with the
-> > > real DT.
-> > >
-> > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > > ---
-> > >
-> > >  .../bindings/thermal/socionext,uniphier-thermal.yaml          | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml b/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
-> > > index 553c9dcdaeeb..57ffd0c4c474 100644
-> > > --- a/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
-> > > +++ b/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
-> > > @@ -29,6 +29,7 @@ properties:
-> > >
-> > >    socionext,tmod-calibration:
-> > >      $ref: /schemas/types.yaml#/definitions/uint32-array
-> > > +    minItems: 2
+> > But it looks like it is the wrap clocks you are removing.
+>
+> From this binding yes, but the idea is to add in the dt wherever clock
+> responsible for the full ACLK path for instance.
+> In the example below, clock aclk_isp is ACLK_ISP0_WRAPPER.
+> Does this make sense?
+
+Just perhaps clarify the renaming.
+
+>
 > >
-> > The intent was if minItems is not defined, then the default is the same
-> > as maxItems. This is not the default for json-schema, so the tooling is
-> > supposed to add it.
+> >>
+> >> Also, for the isp0, we only need the ISP clock, ACLK and HCLK.
+> >> In the future we'll need a pixel clock for RK3288 and RK3399, and a JPEG
+> >> clock for RK3288.
+> >>
+> >> So with the goal to cleanup the dt-bindings and remove it from staging,
+> >> simplify clock names to isp, aclk and hclk.
+> >>
+> >> For reference, this is the isp clock topology on RK3399:
+> >>
+> >>  xin24m
+> >>     pll_npll
+> >>        npll
+> >>           clk_isp1
+> >>           clk_isp0
+> >>     pll_cpll
+> >>        cpll
+> >>           aclk_isp1
+> >>              aclk_isp1_noc
+> >>              hclk_isp1
+> >>                 aclk_isp1_wrapper
+> >>                 hclk_isp1_noc
+> >>           aclk_isp0
+> >>              hclk_isp1_wrapper
+> >>              aclk_isp0_wrapper
+> >>              aclk_isp0_noc
+> >>              hclk_isp0
+> >>                 hclk_isp0_wrapper
+> >>                 hclk_isp0_noc
+> >>  pclkin_isp1_wrapper
+> >>
+> >> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> >>
+> >> ---
+> >>
+> >> Changes in V4:
+> >> - update binding according to suggestion by Robin Murphy
+> >> on https://patchwork.kernel.org/patch/11475007/
+> >>
+> >> Changes in V3:
+> >> - this is a new patch in the series
+> >> ---
+> >>  .../bindings/media/rockchip-isp1.yaml         | 30 +++++++++----------
+> >>  drivers/staging/media/rkisp1/rkisp1-dev.c     |  8 ++---
+> >>  2 files changed, 17 insertions(+), 21 deletions(-)
+> >>
+> >> diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> >> index 4d111ef2e89c7..f10c53d008748 100644
+> >> --- a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> >> +++ b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> >> @@ -24,20 +24,20 @@ properties:
+> >>      maxItems: 1
+> >>
+> >>    clocks:
+> >> -    items:
+> >> -      - description: ISP clock
+> >> -      - description: ISP AXI clock clock
+> >> -      - description: ISP AXI clock  wrapper clock
+> >> -      - description: ISP AHB clock clock
+> >> -      - description: ISP AHB wrapper clock
+> >
+> > This is the correct way to describe multiple clocks.
 >
+> The idea was to prepare for rk3288 and rk3399 isp1, as suggested here https://patchwork.kernel.org/patch/11475007/#23462085
 >
-> This implication is unclear.
+> Or should we do:
 >
-> maxItems should literally only define the max, and
-> we should stick to json-schema as much as possible, IMHO.
+> clocks:
+>   oneOf:
+>     # rk3288 clocks
+>     - items:
+>       - description: ISP clock
+>       - description: ISP AXI clock
+>       - description: ISP AHB clock
+>       - description: ISP Pixel clock
+>       - description: ISP JPEG source clock
 
-Yes, but we already deviate a bit as the default json-schema behavior
-is a bit different than DT defaults. For example, with just:
+The main section should have this and 'minItems: 3'. IOW, it's a
+superset of what's valid. Then you can restrict specific compatibles
+further with an if/then schema. For rk3288, you need one with
+'minItems: 5'.
 
-items:
-  - const: a
-  - const: b
-  - const: c
+>     # rk3399 isp0 clocks
+>     - items:
+>       - description: ISP clock
+>       - description: ISP AXI clock
+>       - description: ISP AHB clock
 
-All of these pass validation:
+And this would be an if/then schema based on the compatible string and
+defining 'maxItems: 3'.
 
-[]
-[ a ]
-[ a, b, c, 1, 2, true ]
+>     # rk3399 isp1 clocks
+>     - items:
+>       - description: ISP clock
+>       - description: ISP AXI clock
+>       - description: ISP AHB clock
+>       - description: ISP Pixel clock
 
-when we really only want [ a, b, c ] to pass (by default). So we add
-minItems, maxItems, and additionalItems if not specified.
+And an if/then with { minItems: 4, maxItems: 4 }. Or really since
+these are just different instances, just combine them into 1
+conditional allowing 3 or 4 clocks.
 
-> It would be nice if json-schema had something like:
->
-> numItems: 2
->
-> as a shorthand for
->
-> minItems: 2
-> maxItems: 2
-
-Yes, I've been thinking the same thing. It wouldn't be unprecedented
-as they added 'const' to shorten 'enum: [ one_entry ]'. We can add our
-own keywords too, but I try to avoid that so far. The only ones we
-have are internal to dtschema (typeSize and phandle).
+There are lots of examples to follow in the tree.
 
 Rob
