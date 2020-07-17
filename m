@@ -2,119 +2,144 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB863C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 04:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8351C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 04:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85BA02071A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 04:44:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YBTRlAxQ"
+	by mail.kernel.org (Postfix) with ESMTP id ABFD720684
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 04:54:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1594961685;
+	bh=T7O5K5FtKVLaW/Ktq1Peyeun0e0dQp3Az5btetAZlFE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=F/vDTEq2283+IZgTpRcN4K/nXg1hi4wof+xV1c5+lmRr2jEYyGeTpfJaug6dfqnbT
+	 8jjZBsHdLyR8oeEAZ0f6ulJ+o3VWvEC4zT0Bi3VO8s2Dp+oiTF59+OrToywAP95chY
+	 jCFLqJlM7Ly/zr4jZiPKWjo780cjJKyyzyG9voVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725864AbgGQEof (ORCPT
+        id S1725811AbgGQEyp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 00:44:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38676 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725936AbgGQEoe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 00:44:34 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8AC8C061755
-        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 21:44:33 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id w3so15257083wmi.4
-        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 21:44:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=S9S68y6b2mPbKuzgaCo1jN4A32wueiis4gs7MPkym/M=;
-        b=YBTRlAxQNCrp0VWtdAoz7HX1TcMxgP8c+pztXkm9DckROsrCs8s1wiHI5Ty0T6SgrK
-         x1LT/2APXM2vMzv8oPhbWLw0GHTyp4WhkivO6gKr6Fyodd1U8eGi9prToTvyCdvhjwuu
-         D/2FUpr4dbooLhpYGT4dm3UwB8hQ0iuvNDR5WtKOUPmAO1XOPM9iqBTmOIE3rIhpejZD
-         UuV0PnY40TbCaLn4R1LYeLSHKHkJ1uEJRN1YQ2eDSc8zlbJWvqUCqi2RbB/AK2Bmot/z
-         bai/MmFwyt17VnEi9eZU4lF9z9MMd+wSlLUM9q4lUfSN/7KO5Q5X5N7DH8omfftLoyew
-         HClw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=S9S68y6b2mPbKuzgaCo1jN4A32wueiis4gs7MPkym/M=;
-        b=k7QtilIUzrnH8IfbflZf5l3+S+ul1Zkl0oqPheLhUWGfJPGPBv8tIth1DjJ9UK/ZIZ
-         bhT/OxEkhD3el//fipsRH1znaVysPTSYRZ53CEN+S1YcErbNz3kFYq1gwJUak4P/kQD0
-         kjU1upYN26R/jvdqbOxHM6x4l2dWKd4SzUkty3VyYc2N2PWlTuHpCZnANlMp2q5YzTl2
-         iPPYtzPW/qFFn3A1AfZgTCD7ZWtmu6/9F75MJzWjJyjyWfBnuoU1jmnfwQu9RYbNy98P
-         xvucF6lHJ8a8kDrbH7JzGkGsweqfqbrNVMWk07Dk37BYF0llZphAJsw1M3fIk5HFl6hi
-         ZJ5w==
-X-Gm-Message-State: AOAM530k49krpFRway2+BvXW7jw7sdTof/F8X3dxi1BJU5pR55S6S5eH
-        LD+vNGSfp2sNmHbAiJOcntIlJg==
-X-Google-Smtp-Source: ABdhPJyEBG67fJXokeAElVWPCoMwiGiAI/9HSCWG+w7OI40KZczqAmqnOUUNQcrS+TOsyYDFflbNaQ==
-X-Received: by 2002:a7b:ce83:: with SMTP id q3mr7184668wmj.5.1594961072462;
-        Thu, 16 Jul 2020 21:44:32 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:9880:a643:3e69:6393? ([2a01:e34:ed2f:f020:9880:a643:3e69:6393])
-        by smtp.googlemail.com with ESMTPSA id o21sm11356388wmh.18.2020.07.16.21.44.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jul 2020 21:44:31 -0700 (PDT)
-Subject: Re: [PATCH 03/20] thermal: rcar_gen3_thermal: Add r8a774e1 support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Magnus Damm <magnus.damm@gmail.com>
-Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>
-References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594811350-14066-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <bcda3aae-a276-173f-71e2-381736481ab2@linaro.org>
-Date:   Fri, 17 Jul 2020 06:44:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 17 Jul 2020 00:54:45 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:47446 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725300AbgGQEyo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 00:54:44 -0400
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 06H4sIHU031108;
+        Fri, 17 Jul 2020 13:54:18 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 06H4sIHU031108
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1594961659;
+        bh=sviaHrnMJZujQ/kfSzVdyLTKRQoxe3KftF0ksGJHZt0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=sEdbXhZ4rXqBlMoeE+YoAkoj9rNKhW56osfU1/fkgOUzj40HDe2oCN3I4FdzwX7nX
+         vSY9+Ycd29xngkdcrgYXCShqg725WYwrGtSmrCUXpp0PxHYK4olic6aVP2OFnHVl5/
+         i5mGFfVxUPINVktnU9CyirkF7NPxyGDwFxPyHcMHOeoIeRKt0UhixohbkcawRh5Ulb
+         HNKfo2bXbu3yYHNU8C2oLZ8fkDRQ11aOfhrt0oSN5sRpFQt+TJ+oOBJIy/fZo0qvSI
+         4H8fCVlvH5WooExGNixwia9phCIsCYcsQkpf/pfd15zm0z50Z99RUckEWlj8jtpUUV
+         stX4e8osGOpkg==
+X-Nifty-SrcIP: [209.85.222.50]
+Received: by mail-ua1-f50.google.com with SMTP id j21so2492814ual.11;
+        Thu, 16 Jul 2020 21:54:18 -0700 (PDT)
+X-Gm-Message-State: AOAM531CSrm2RwmUXPJJrtNVfPFuSJQChNowzuUR199h+HVcceifc0Z8
+        05DrPF+HAE3DZG7BiQYi1c8xmy/7l+EAH0wWFuA=
+X-Google-Smtp-Source: ABdhPJy8QAUyiGsYNoe7J//N9aC1WKkuYpuvH9y8BqfVTTPpOtmEC3WdCNovEUTiKXjxWrl0eMOA6w9tffFl3RYrSX8=
+X-Received: by 2002:ab0:71d3:: with SMTP id n19mr6086967uao.25.1594961657690;
+ Thu, 16 Jul 2020 21:54:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1594811350-14066-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200707102338.989660-1-yamada.masahiro@socionext.com> <20200716230451.GA3041278@bogus>
+In-Reply-To: <20200716230451.GA3041278@bogus>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 17 Jul 2020 13:53:41 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQN04i14VwrWspTJ7+Y87rgsopv88Dyv_8+4Hk8Kx0Fdw@mail.gmail.com>
+Message-ID: <CAK7LNAQN04i14VwrWspTJ7+Y87rgsopv88Dyv_8+4Hk8Kx0Fdw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: uniphier-thermal: add minItems to socionext,tmod-calibration
+To:     Rob Herring <robh@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM mailing list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 15/07/2020 13:08, Lad Prabhakar wrote:
-> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> 
-> Add r8a774e1 specific compatible string.
-> 
-> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com> ---
+On Fri, Jul 17, 2020 at 8:09 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, Jul 07, 2020 at 07:23:38PM +0900, Masahiro Yamada wrote:
+> > As the description says, this property contains a pair of calibration
+> > values. The number of items must be exactly 2.
+> >
+> > Add minItems to check a too short property.
+> >
+> > While I was here, I also added this property to the example because
+> > this is the case in the real DT file,
+> > arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+> >
+> > Also, fix the interrupt type (edge -> level) to align with the
+> > real DT.
+> >
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > ---
+> >
+> >  .../bindings/thermal/socionext,uniphier-thermal.yaml          | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml b/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
+> > index 553c9dcdaeeb..57ffd0c4c474 100644
+> > --- a/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
+> > +++ b/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
+> > @@ -29,6 +29,7 @@ properties:
+> >
+> >    socionext,tmod-calibration:
+> >      $ref: /schemas/types.yaml#/definitions/uint32-array
+> > +    minItems: 2
+>
+> The intent was if minItems is not defined, then the default is the same
+> as maxItems. This is not the default for json-schema, so the tooling is
+> supposed to add it.
 
-Applied, thanks
+
+This implication is unclear.
+
+maxItems should literally only define the max, and
+we should stick to json-schema as much as possible, IMHO.
 
 
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+It would be nice if json-schema had something like:
+
+numItems: 2
+
+as a shorthand for
+
+minItems: 2
+maxItems: 2
+
+
+Masahiro Yamada
+
+
+
+
+> But looking at processed-schema.yaml, it doesn't
+> seem to be happening for one case here. I'm working on a fix in the
+> tools.
+>
+> Rob
+
+
+
+--
+Best Regards
+Masahiro Yamada
