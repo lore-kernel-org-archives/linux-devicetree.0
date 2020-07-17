@@ -2,229 +2,106 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BAFCC433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 08:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB1CC433E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 09:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D76AB207F5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 08:59:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Oewzlb2s"
+	by mail.kernel.org (Postfix) with ESMTP id 73F20207FB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 09:04:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbgGQI7a (ORCPT
+        id S1726037AbgGQJEh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 04:59:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49522 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgGQI7a (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 04:59:30 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE9EEC08C5C0
-        for <devicetree@vger.kernel.org>; Fri, 17 Jul 2020 01:59:29 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id a21so6349785otq.8
-        for <devicetree@vger.kernel.org>; Fri, 17 Jul 2020 01:59:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=q5PNUfhkPOzCtGqX/oONwFu71YklmBXd7t8O0WuvMto=;
-        b=Oewzlb2sA/hPQSB8gtfajBsMvwNqTXyfDC/wKFjjF0Pe91PrhezKi39jdRtf6W+4vA
-         ANuqVdL6FyNvrYMkmAq7+0NzecMz8JrclHuQ+C3eLNVz5YkUrG8ihNk8BpZ2DBaTbOGn
-         vghS+8FrqB3Vri65uCWCFLqGjmwaPcGItdqug=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=q5PNUfhkPOzCtGqX/oONwFu71YklmBXd7t8O0WuvMto=;
-        b=l2r6FjamO0EqE2aPAA83rOfg1YH0U2Dva/Off0O5295o0b0DNunT7K2JnPyBvNN9OJ
-         dZBiPsuATz4/w3YzXcAUQ+knIJNkmPtHnPS1oEBqJbQOGuvYIzFXwPhnq1LltFR1K9FR
-         vTumM3DBwezXLzvspNIzLFTWpil2RHqG7c8kJstCrH4PLpsGNcHm9y/FXDGRed1cvuSD
-         TvBJsxDi8Gk6sDBCEDEla97p5M9oBljcEmdJGzyNmAYncK3fjc8lf++pc+w9gRaddlF6
-         OQmtRoVsx3sC7k57SaXYq91zTAmed5Tr84pzf/41a9vUb9fVnBHf4Uck2py32qve4/cZ
-         V5WA==
-X-Gm-Message-State: AOAM531fN7pews59+iVMyvld5Cvra9WPVqz+HtaGRrfbyAhPyKctIZhn
-        isH2k1QMsjVykUlBRZLjimZjIW7bSa+6kWu5NWkbZw==
-X-Google-Smtp-Source: ABdhPJx8PfObS5k+rQ+XWK2T2u51RwD4F85OqwBcYoWXvllFm+rLrDkuI6R9PbkuRgKJm0z8tGtPMewsgLGzbsopjM8=
-X-Received: by 2002:a05:6830:1d0:: with SMTP id r16mr8383247ota.188.1594976368886;
- Fri, 17 Jul 2020 01:59:28 -0700 (PDT)
+        Fri, 17 Jul 2020 05:04:37 -0400
+Received: from mga14.intel.com ([192.55.52.115]:64962 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725970AbgGQJEg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Jul 2020 05:04:36 -0400
+IronPort-SDR: ReBdF2kDlJAalE31dpui2BQ7h3F9dIyoi0WpAFFWB2XkGk7Wd9nNZc6VqQKrJc37AI+jHDboxY
+ PlQXi+bh9k8w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="148719402"
+X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
+   d="scan'208";a="148719402"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 02:04:35 -0700
+IronPort-SDR: F67Fa1TCehgIy0lp62zZmEZbdUhBWjDbI/UoAnbdVJ0a2AhLunr2MrXhD3sjlgdPwg6xzZgGhJ
+ fw5nBjSg9pwQ==
+X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
+   d="scan'208";a="460785963"
+Received: from enaessen-mobl1.ger.corp.intel.com (HELO dalessan-mobl1.ir.intel.com) ([10.251.86.9])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 02:04:31 -0700
+From:   Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
+List-Id: <soc.lore.kernel.org>
+To:     linux-arm-kernel@lists.infradead.org, SoC Team <soc@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Daniele Alessandrelli <daniele.alessandrelli@intel.com>,
+        "Paul J. Murphy" <paul.j.murphy@intel.com>,
+        "Paul J. Murphy" <paul.j.murphy@linux.intel.com>,
+        Dinh Nguyen <dinguyen@kernel.org>
+Subject: [PATCH v4 0/5] Add initial Keem Bay SoC / Board support
+Date:   Fri, 17 Jul 2020 10:04:09 +0100
+Message-Id: <20200717090414.313530-1-daniele.alessandrelli@linux.intel.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200709164736.18291-1-laurentiu.palcu@oss.nxp.com> <3c03afff3256ec36e12b9d9408830fbb4853f982.camel@pengutronix.de>
-In-Reply-To: <3c03afff3256ec36e12b9d9408830fbb4853f982.camel@pengutronix.de>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Fri, 17 Jul 2020 10:59:17 +0200
-Message-ID: <CAKMK7uGsveS+cwxiTq7BGrB1OcE_ff9bAxgSFDMUSmS7gRLJ7g@mail.gmail.com>
-Subject: Re: [PATCH v5 0/4] Add support for iMX8MQ Display Controller Subsystem
-To:     Lucas Stach <l.stach@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
-        lukas@mntmn.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 10:18 AM Lucas Stach <l.stach@pengutronix.de> wrote:
->
-> Hi Laurentiu,
->
-> Am Donnerstag, den 09.07.2020, 19:47 +0300 schrieb Laurentiu Palcu:
-> > From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-> >
-> > Hi,
-> >
-> > This patchset adds initial DCSS support for iMX8MQ chip. Initial support
-> > includes only graphics plane support (no video planes), no HDR10 capabilities,
-> > no graphics decompression (only linear, tiled and super-tiled buffers allowed).
-> >
-> > Support for the rest of the features will be added incrementally, in subsequent
-> > patches.
-> >
-> > The patchset was tested with both HDP driver (in the downstream tree) and the upstream
-> > MIPI-DSI driver (with a couple of patches on top, to make it work correctly with DCSS).
->
-> I think the series (minus 3/5 and minor correction to the DT binding)
-> is fine to go in now. So just some formal questions: are you going to
-> maintain this driver in upstream? If so we should add a MAINTAINERS
-> entry to that effect. I can offer to act as a reviewer in this case.
->
-> How do you intend to merge this? IMO pushing this through drm-misc
-> seems like the right thing to do. If you agree I can help you get this
-> applied. If you are going to maintain the driver on your own, I think
-> you should then apply for commit rights to drm-misc.
+Hi,
 
-drm/imx isn't listed yet as under the drm-misc umbrella, maybe we
-should put the entire collective of imx drivers under drm-misc? Or
-maybe it's just an oversight that the git repo isn't specified in the
-MAINTAINERS entry. Also maybe we should add the pengutronix kernel
-team alias there too?
--Daniel
+This patch-set adds initial support for a new Intel Movidius SoC code-named
+Keem Bay. The SoC couples an ARM Cortex A53 CPU with an Intel Movidius VPU.
 
+This initial patch-set enables only the minimal set of components required
+to make the Keem Bay EVM board boot into initramfs.
 
-> Regards,
-> Lucas
->
-> > Thanks,
-> > Laurentiu
-> >
-> > Changes in v5:
-> >  * Rebased to latest;
-> >  * Took out component framework support and made it a separate patch so
-> >    that people can still test with HDP driver, which makes use of it.
-> >    But the idea is to get rid of it once HDP driver's next versions
-> >    will remove component framework as well;
-> >  * Slight improvement to modesetting: avoid cutting off the pixel clock
-> >    if the new mode and the old one are equal. Also, in this case, is
-> >    not necessary to wait for DTG to shut off. This would allow to switch
-> >    from 8b RGB to 12b YUV422, for example, with no interruptions (at least
-> >    from DCSS point of view);
-> >  * Do not fire off CTXLD when going to suspend, unless it still has
-> >    entries that need to be committed to DCSS;
-> >  * Addressed Rob's comments on bindings;
-> >
-> > Changes in v4:
-> >  * Addressed Lucas and Philipp's comments:
-> >    * Added DRM_KMS_CMA_HELPER dependency in Kconfig;
-> >    * Removed usage of devm_ functions since I'm already doing all the
-> >      clean-up in the submodules_deinit();
-> >    * Moved the drm_crtc_arm_vblank_event() in dcss_crtc_atomic_flush();
-> >    * Removed en_completion variable from dcss_crtc since this was
-> >      introduced mainly to avoid vblank timeout warnings which were fixed
-> >      by arming the vblank event in flush() instead of begin();
-> >    * Removed clks_on and irq_enabled flags since all the calls to
-> >      enabling/disabling clocks and interrupts were balanced;
-> >    * Removed the custom atomic_commit callback and used the DRM core
-> >      helper and, in the process, got rid of a workqueue that wasn't
-> >      necessary anymore;
-> >    * Fixed some minor DT binding issues flagged by Philipp;
-> >    * Some other minor changes suggested by Lucas;
-> >  * Removed YUV formats from the supported formats as these cannot work
-> >    without the HDR10 module CSCs and LUTs. Will add them back when I
-> >    will add support for video planes;
-> >
-> > Changes in v3:
-> >  * rebased to latest linux-next and made it compile as drmP.h was
-> >    removed;
-> >  * removed the patch adding the VIDEO2_PLL clock. It's already applied;
-> >  * removed an unnecessary 50ms sleep in the dcss_dtg_sync_set();
-> >  * fixed a a spurious hang reported by Lukas Hartmann and encountered
-> >    by me several times;
-> >  * mask DPR and DTG interrupts by default, as they may come enabled from
-> >    U-boot;
-> >
-> > Changes in v2:
-> >  * Removed '0x' in node's unit-address both in DT and yaml;
-> >  * Made the address region size lowercase, to be consistent;
-> >  * Removed some left-over references to P010;
-> >  * Added a Kconfig dependency of DRM && ARCH_MXC. This will also silence compilation
-> >    issues reported by kbuild for other architectures;
-> >
-> > Laurentiu Palcu (5):
-> >   drm/imx: compile imx directory by default
-> >   drm/imx: Add initial support for DCSS on iMX8MQ
-> >   drm/imx/dcss: add component framework functionality
-> >   dt-bindings: display: imx: add bindings for DCSS
-> >   arm64: dts: imx8mq: add DCSS node
-> >
-> >  .../bindings/display/imx/nxp,imx8mq-dcss.yaml |  84 ++
-> >  arch/arm64/boot/dts/freescale/imx8mq.dtsi     |  23 +
-> >  drivers/gpu/drm/Makefile                      |   2 +-
-> >  drivers/gpu/drm/imx/Kconfig                   |   2 +
-> >  drivers/gpu/drm/imx/Makefile                  |   1 +
-> >  drivers/gpu/drm/imx/dcss/Kconfig              |   9 +
-> >  drivers/gpu/drm/imx/dcss/Makefile             |   6 +
-> >  drivers/gpu/drm/imx/dcss/dcss-blkctl.c        |  70 ++
-> >  drivers/gpu/drm/imx/dcss/dcss-crtc.c          | 219 +++++
-> >  drivers/gpu/drm/imx/dcss/dcss-ctxld.c         | 424 +++++++++
-> >  drivers/gpu/drm/imx/dcss/dcss-dev.c           | 314 +++++++
-> >  drivers/gpu/drm/imx/dcss/dcss-dev.h           | 177 ++++
-> >  drivers/gpu/drm/imx/dcss/dcss-dpr.c           | 562 ++++++++++++
-> >  drivers/gpu/drm/imx/dcss/dcss-drv.c           | 183 ++++
-> >  drivers/gpu/drm/imx/dcss/dcss-dtg.c           | 409 +++++++++
-> >  drivers/gpu/drm/imx/dcss/dcss-kms.c           | 185 ++++
-> >  drivers/gpu/drm/imx/dcss/dcss-kms.h           |  43 +
-> >  drivers/gpu/drm/imx/dcss/dcss-plane.c         | 405 +++++++++
-> >  drivers/gpu/drm/imx/dcss/dcss-scaler.c        | 826 ++++++++++++++++++
-> >  drivers/gpu/drm/imx/dcss/dcss-ss.c            | 180 ++++
-> >  20 files changed, 4123 insertions(+), 1 deletion(-)
-> >  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/Kconfig
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/Makefile
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-blkctl.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-crtc.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ctxld.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.h
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dpr.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-drv.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dtg.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.h
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-plane.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-scaler.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ss.c
-> >
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Changes from v3 to v4:
+* Renamed SoC dt-bindings file to intel,keembay.yaml
+* Dropped clock and power domain dt-binding header files (because currently
+  unused)
 
+Changes from v2 to v3:
+* Split dt-bindings patch into 3 different patches (SoC/board bindings,
+  clock bindings, and power domains bindings).
+* Added dual license (GPL-2.0-only or BSD-3-Clause) to dt-bindings header
+  files and DTS files.
 
+Changes from v1 to v2:
+* Moved keembay-scmi-mailbox driver to a separate patchset
+* Removed Keem Bay SCMI mailbox and SCMI node from Keem Bay SoC device tree
+
+Regards,
+Daniele
+
+Daniele Alessandrelli (5):
+  arm64: Add config for Keem Bay SoC
+  dt-bindings: arm: Add Keem Bay bindings
+  MAINTAINERS: Add maintainers for Keem Bay SoC
+  arm64: dts: keembay: Add device tree for Keem Bay SoC
+  arm64: dts: keembay: Add device tree for Keem Bay EVM board
+
+ .../bindings/arm/intel,keembay.yaml           |  19 +++
+ MAINTAINERS                                   |   8 ++
+ arch/arm64/Kconfig.platforms                  |   5 +
+ arch/arm64/boot/dts/intel/Makefile            |   1 +
+ arch/arm64/boot/dts/intel/keembay-evm.dts     |  37 ++++++
+ arch/arm64/boot/dts/intel/keembay-soc.dtsi    | 123 ++++++++++++++++++
+ 6 files changed, 193 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/intel,keembay.yaml
+ create mode 100644 arch/arm64/boot/dts/intel/keembay-evm.dts
+ create mode 100644 arch/arm64/boot/dts/intel/keembay-soc.dtsi
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.26.2
+
