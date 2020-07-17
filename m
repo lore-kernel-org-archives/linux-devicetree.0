@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E41C433F1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 17:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E625EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 17:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE7820704
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 17:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3AA12074B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 17:00:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbgGQRAf (ORCPT
+        id S1727993AbgGQRAl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 13:00:35 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:46867 "EHLO
+        Fri, 17 Jul 2020 13:00:41 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:21061 "EHLO
         relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727926AbgGQRAf (ORCPT
+        by vger.kernel.org with ESMTP id S1726938AbgGQRAc (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Jul 2020 13:00:35 -0400
+        Fri, 17 Jul 2020 13:00:32 -0400
 X-IronPort-AV: E=Sophos;i="5.75,362,1589209200"; 
-   d="scan'208";a="52419826"
+   d="scan'208";a="52419821"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 18 Jul 2020 02:00:33 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 18 Jul 2020 02:00:30 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 0CC8B40061A0;
-        Sat, 18 Jul 2020 02:00:30 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 9500D40061A0;
+        Sat, 18 Jul 2020 02:00:28 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Rob Herring <robh+dt@kernel.org>,
@@ -37,9 +37,9 @@ Cc:     Magnus Damm <magnus.damm@gmail.com>,
         linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-gpio@vger.kernel.org, Prabhakar <prabhakar.csengg@gmail.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 2/2] ARM: dts: r8a7742-iwg21d-q7: Enable HSUSB, USB2.0 and xHCI
-Date:   Fri, 17 Jul 2020 18:00:25 +0100
-Message-Id: <1595005225-11519-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 1/2] pinctrl: sh-pfc: r8a7790: Add USB1 PWEN pin and group
+Date:   Fri, 17 Jul 2020 18:00:24 +0100
+Message-Id: <1595005225-11519-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595005225-11519-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <1595005225-11519-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -48,79 +48,57 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Enable support for HSUSB, USB2.0 and xHCI on iWave RZ/G1H carrier board.
+Add USB1 PWEN pin and group for USB1 interface.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
 ---
- arch/arm/boot/dts/r8a7742-iwg21d-q7.dts | 42 +++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ drivers/pinctrl/sh-pfc/pfc-r8a7790.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-index e90aaf1c94f0..f4910e709b87 100644
---- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-+++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-@@ -131,6 +131,30 @@
- 	};
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7790.c b/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
+index f524401fec5f..39ba1e7cc1c3 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
+@@ -3611,6 +3611,13 @@ static const unsigned int usb1_pins[] = {
+ static const unsigned int usb1_mux[] = {
+ 	USB1_PWEN_MARK, USB1_OVC_MARK,
+ };
++static const unsigned int usb1_pwen_pins[] = {
++	/* PWEN */
++	RCAR_GP_PIN(5, 20),
++};
++static const unsigned int usb1_pwen_mux[] = {
++	USB1_PWEN_MARK,
++};
+ /* - USB2 ------------------------------------------------------------------- */
+ static const unsigned int usb2_pins[] = {
+ 	/* PWEN, OVC */
+@@ -3939,7 +3946,7 @@ static const unsigned int vin3_clk_mux[] = {
  };
  
-+&hsusb {
-+	pinctrl-0 = <&usb0_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
-+&pci0 {
-+	pinctrl-0 = <&usb0_pins>;
-+	pinctrl-names = "default";
-+	/* Disable hsusb to enable USB2.0 host mode support on J2 */
-+	/* status = "okay"; */
-+};
-+
-+&pci1 {
-+	pinctrl-0 = <&usb1_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
-+&pci2 {
-+	/* Disable xhci to enable USB2.0 host mode support on J23 bottom port */
-+	/* status = "okay"; */
-+};
-+
- &pfc {
- 	avb_pins: avb {
- 		groups = "avb_mdio", "avb_gmii";
-@@ -168,6 +192,16 @@
- 		groups = "ssi34_ctrl", "ssi3_data", "ssi4_data";
- 		function = "ssi";
- 	};
-+
-+	usb0_pins: usb0 {
-+		groups = "usb0";
-+		function = "usb0";
-+	};
-+
-+	usb1_pins: usb1 {
-+		groups = "usb1_pwen";
-+		function = "usb1";
-+	};
+ static const struct {
+-	struct sh_pfc_pin_group common[289];
++	struct sh_pfc_pin_group common[290];
+ 	struct sh_pfc_pin_group automotive[1];
+ } pinmux_groups = {
+ 	.common = {
+@@ -4193,6 +4200,7 @@ static const struct {
+ 		SH_PFC_PIN_GROUP(usb0),
+ 		SH_PFC_PIN_GROUP(usb0_ovc_vbus),
+ 		SH_PFC_PIN_GROUP(usb1),
++		SH_PFC_PIN_GROUP(usb1_pwen),
+ 		SH_PFC_PIN_GROUP(usb2),
+ 		VIN_DATA_PIN_GROUP(vin0_data, 24),
+ 		VIN_DATA_PIN_GROUP(vin0_data, 20),
+@@ -4640,6 +4648,7 @@ static const char * const usb0_groups[] = {
+ 
+ static const char * const usb1_groups[] = {
+ 	"usb1",
++	"usb1_pwen",
  };
  
- &rcar_sound {
-@@ -222,3 +256,11 @@
- &ssi4 {
- 	shared-pin;
- };
-+
-+&usbphy {
-+	status = "okay";
-+};
-+
-+&xhci {
-+	status = "okay";
-+};
+ static const char * const usb2_groups[] = {
 -- 
 2.17.1
 
