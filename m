@@ -3,181 +3,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 054D3C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 12:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE6DC433EA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 12:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9676320717
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 12:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA847206BE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 12:15:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Uhw94F6O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CJYz7qER"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgGQMMl (ORCPT
+        id S1726386AbgGQMPl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 08:12:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51120 "EHLO
+        Fri, 17 Jul 2020 08:15:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgGQMMl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 08:12:41 -0400
-Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BEA2C061755
-        for <devicetree@vger.kernel.org>; Fri, 17 Jul 2020 05:12:41 -0700 (PDT)
-Received: by mail-oo1-xc44.google.com with SMTP id z127so1815222ooa.3
-        for <devicetree@vger.kernel.org>; Fri, 17 Jul 2020 05:12:41 -0700 (PDT)
+        with ESMTP id S1726059AbgGQMPk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 08:15:40 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C214C061755;
+        Fri, 17 Jul 2020 05:15:40 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id 18so6702176otv.6;
+        Fri, 17 Jul 2020 05:15:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=mgpqIN79nCOfCVhNvxr/rGM/YK4i7u/VPV1BFAAPJaw=;
-        b=Uhw94F6OVAquHONB+Evcb0benKNMjZ/MuPp98SVYNLV2GJt53ooUMfBAgndPGC/Qm/
-         DGszdD1dYLOu+W8JqPU+WicbVUR7AVolKq+qDk6I1756ULeegD1oTd8rDhgdkhshGo4+
-         I41Om38utJXWyZIpzRceOjNvGEbRcD0t3Ux0g=
+        bh=8UfQe2BS0rIAs9l2X3cUyxdouGiITDgXDuTDmJG9ZnE=;
+        b=CJYz7qERO+JrQ0074hqAOABKlW/D2IIPxmJcllektshBQP8F8eEHQBg4tQB/0RFKuv
+         XuUlUeXLnPPv5pembGO6vnE96T4oBEfjwWDNPvQw5Ewl0cqz3ycn4QazA97sMDCqC/Lu
+         KUTP9f/rFZ/+pHAPqBn8grpL0C1zeUfu8jag6d7ptBekS2QFn1eDSPe9WDO8EXH6gcQj
+         va7n3gmiG70aIEq08L/65XlxLn0QIvHLJGg7enudp+JLfw+SHduQ9h2ETf4UDqTm9IxQ
+         bUQnD47awsgUHJMQ7BeQTtZS8WUjzYA98xQbeKtgQ1LTKY0ulZ1arXEzQveoUlCIISyS
+         HwwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mgpqIN79nCOfCVhNvxr/rGM/YK4i7u/VPV1BFAAPJaw=;
-        b=gKRDbYnNurduY+P9+W4Iqy7PkGn73Ga8IcHqa56OGKRD3P+heBr3wyvKa3urrqgdLm
-         FDeWfHDsQvM5z7+0Xj2IigGiUbvxJUyO4Tmy3NDam/c4NRTvGetUxI+9nETwHAjqYW4J
-         eOEYieXH1OZtwvF0HDcPmqwpktl7i9ssRq7A4SV5SogFScP9QSwI6oDSCvNNtoZEQgFm
-         wd0G9on2dnt5ZTwWubzSL7LtYtqrToFgjq/IUHfJTeglEfEpEc+h2JFC9L0V6lIL9tUe
-         nEGHfv4bYdgX6QsGNaJeLWicHQOiDIBouG6ukxsWd2PAR5ekkYl2tvmg/vTyh2iycsJM
-         1y7w==
-X-Gm-Message-State: AOAM532nT1YTaJmklrW7MTJHYKZKDVBdSo8kTUHLZugURiICeJi48X0n
-        7Wf97JP80oMHIxaBRqZ3UkLietehhqgKBQRuzw2s4Q==
-X-Google-Smtp-Source: ABdhPJxPDHhBpPwBRT60SUcGdNpykcqlU/t2dXosfVIoY0zbR9Y3+4Q/RU03XCNfEWTJvup70SmMtilH0FFLnJBsJTs=
-X-Received: by 2002:a4a:b6c5:: with SMTP id w5mr8159004ooo.89.1594987960413;
- Fri, 17 Jul 2020 05:12:40 -0700 (PDT)
+        bh=8UfQe2BS0rIAs9l2X3cUyxdouGiITDgXDuTDmJG9ZnE=;
+        b=QNTZntyjat22m6sAyygDPmBRR9N6xnahWSiBmBqrNbAtvTd1Ccs3BfKaIEw4vQl5h9
+         Kb48BUoZmJNVzkxHLb1ljCLGsSy/P3yDieIrA3tcKG8u0q6w7nUlAf1zimD7vR8Tj5Sh
+         S/WggbS0f+WUIg6d7kTIHCbK9Dr9D0/E0W7rXo/ar+lF0JTkOTV0JReOQ7eH2KJXohmE
+         Qvu/fQFSKZXTBzdlXbWDAYgTeglW2j42ErGm0efjCPoxsVkIybxoY0L0WB46JTX36GcE
+         SukBvdLaovbGsxeQaYnajsj2Mam9pYvD5VhkpfBdiQ7GzIZ7QCMlyXL8/UFA5S0IqvIT
+         AW2A==
+X-Gm-Message-State: AOAM532zU3Iaw1t2UX71ZZ/0aP8mn/UFSbQTQPXoqPA5EIPvq2hvWSuU
+        x91zA65XSypV+2hydei0XwrjyEhVkS608Mti22Y=
+X-Google-Smtp-Source: ABdhPJwwDc9s3SXJ2tuMf8tpG8vE++CAe1cFwcMZhsF8v3bJtrQWUbNQCzp8Ew3dfGqS//29NtZDQQ/O1FD5Iv/AozY=
+X-Received: by 2002:a9d:7dd3:: with SMTP id k19mr7944070otn.43.1594988139858;
+ Fri, 17 Jul 2020 05:15:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200709164736.18291-1-laurentiu.palcu@oss.nxp.com>
- <3c03afff3256ec36e12b9d9408830fbb4853f982.camel@pengutronix.de>
- <CAKMK7uGsveS+cwxiTq7BGrB1OcE_ff9bAxgSFDMUSmS7gRLJ7g@mail.gmail.com>
- <febb665904a9c3c680363be8ea83f243ccd09cb7.camel@pengutronix.de>
- <20200717092758.GR3278063@phenom.ffwll.local> <20200717094517.layssf75bxe3ijs4@fsr-ub1864-141>
- <c325bee7980feb3564de05a0a6d15c1708e2c7c0.camel@pengutronix.de>
-In-Reply-To: <c325bee7980feb3564de05a0a6d15c1708e2c7c0.camel@pengutronix.de>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Fri, 17 Jul 2020 14:12:29 +0200
-Message-ID: <CAKMK7uGQbgB_w3-j1GzZdS0ZcqgQc+LZZxSUbBWeEz_vYf4nJQ@mail.gmail.com>
-Subject: Re: [PATCH v5 0/4] Add support for iMX8MQ Display Controller Subsystem
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
-        lukas@mntmn.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594811350-14066-15-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200717115915.GD4316@sirena.org.uk>
+In-Reply-To: <20200717115915.GD4316@sirena.org.uk>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 17 Jul 2020 13:15:13 +0100
+Message-ID: <CA+V-a8sxtan=8NCpEryT9NzOqkPRyQBa-ozYNHvi8goaOJQ24w@mail.gmail.com>
+Subject: Re: [PATCH 14/20] dt-bindings: spi: renesas,sh-msiof: Add r8a774e1 support
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-can@vger.kernel.org,
+        netdev <netdev@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 12:51 PM Lucas Stach <l.stach@pengutronix.de> wrote:
+Hi Mark,
+
+On Fri, Jul 17, 2020 at 12:59 PM Mark Brown <broonie@kernel.org> wrote:
 >
-> Am Freitag, den 17.07.2020, 12:45 +0300 schrieb Laurentiu Palcu:
-> > Hi Lukas and Daniel,
-> >
-> > On Fri, Jul 17, 2020 at 11:27:58AM +0200, Daniel Vetter wrote:
-> > > On Fri, Jul 17, 2020 at 11:12:39AM +0200, Lucas Stach wrote:
-> > > > Am Freitag, den 17.07.2020, 10:59 +0200 schrieb Daniel Vetter:
-> > > > > On Fri, Jul 17, 2020 at 10:18 AM Lucas Stach <l.stach@pengutronix.de> wrote:
-> > > > > > Hi Laurentiu,
-> > > > > >
-> > > > > > Am Donnerstag, den 09.07.2020, 19:47 +0300 schrieb Laurentiu Palcu:
-> > > > > > > From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-> > > > > > >
-> > > > > > > Hi,
-> > > > > > >
-> > > > > > > This patchset adds initial DCSS support for iMX8MQ chip. Initial support
-> > > > > > > includes only graphics plane support (no video planes), no HDR10 capabilities,
-> > > > > > > no graphics decompression (only linear, tiled and super-tiled buffers allowed).
-> > > > > > >
-> > > > > > > Support for the rest of the features will be added incrementally, in subsequent
-> > > > > > > patches.
-> > > > > > >
-> > > > > > > The patchset was tested with both HDP driver (in the downstream tree) and the upstream
-> > > > > > > MIPI-DSI driver (with a couple of patches on top, to make it work correctly with DCSS).
-> > > > > >
-> > > > > > I think the series (minus 3/5 and minor correction to the DT binding)
-> > > > > > is fine to go in now. So just some formal questions: are you going to
-> > > > > > maintain this driver in upstream? If so we should add a MAINTAINERS
-> > > > > > entry to that effect. I can offer to act as a reviewer in this case.
-> >
-> > I can maintain the DCSS driver, sure, and the more reviewers the better.
-> > Thanks for helping out with this. Should I send a v6 then with a patch
-> > for MAINTAINERS?
-> >
-> > > > > > How do you intend to merge this? IMO pushing this through drm-misc
-> > > > > > seems like the right thing to do. If you agree I can help you get this
-> > > > > > applied. If you are going to maintain the driver on your own, I think
-> > > > > > you should then apply for commit rights to drm-misc.
-> > > > >
-> > > > > drm/imx isn't listed yet as under the drm-misc umbrella, maybe we
-> > > > > should put the entire collective of imx drivers under drm-misc? Or
-> > > > > maybe it's just an oversight that the git repo isn't specified in the
-> > > > > MAINTAINERS entry. Also maybe we should add the pengutronix kernel
-> > > > > team alias there too?
-> > > >
-> > > > drm/imx was exclusively the IPUv3 up until now, which is in fact
-> > > > maintained outside of drm-misc in its own git tree. This has worked
-> > > > quite well in the past so even though IPUv3 doesn't see a lot of churn
-> > > > these days the motivation to change anything to this workflow is quite
-> > > > low. And yes, the git tree is missing from the MAINTAINERS entry.
-> > > >
-> > > > For the DCSS driver, if it's going to be maintained by NXP, I figured
-> > > > it might be easier for Laurentiu to push things into drm-misc than set
-> > > > up a separate public git tree. But IMHO that's fully up to him to
-> > > > decide.
-> > >
-> > > /me puts on maintainer hat
-> > >
-> > > Much prefer drm-misc over random people playing maintainer and fumbling
-> > > it. I think the reasonable options are either in the current imx tree, or
-> > > drm-misc. Standalone tree for these small drivers just doesn't make much
-> > > sense.
-> >
-> > I don't have anything against either method, though I have to agree I
-> > like things to be simple. Going through drm-misc sounds simple enough to me. :)
-> > However, since there is going to be more activity in the DRM IMX area in
-> > the future, reviving the drm/imx tree, and push all IMX related stuff
-> > through drm/imx, could make sense as well.
+> On Wed, Jul 15, 2020 at 12:09:04PM +0100, Lad Prabhakar wrote:
+> > Document RZ/G2H (R8A774E1) SoC bindings.
 >
-> I think drm-misc is the right place then.
->
-> Please send a v6 with the following changes:
-> - drop the component framework patch
-> - drop the i.MX8MQ DT patch, this should go through Shawn's imx tree
-> after the driver and binding has landed in drm-misc
-> - you can add my Reviewed-by to the whole series or I can add it when
-> applying
-> - add a MAINTAINERS entry, please add me as a reviewer if you don't
-> mind
->
-> I can push this initial series into drm-misc until you've got your own
-> commit rights.
+> Please in future could you split things like this up into per subsystem
+> serieses?  That's a more normal approach and avoids the huge threads and
+> CC lists.
 
-For drm-misc howto get started:
+Sorry for doing this, In future I shall keep that in mind. (Wanted to
+get in most patches for RZ/G2H in V5.9 window)
 
-https://drm.pages.freedesktop.org/maintainer-tools/getting-started.html
-
-And howto get commit rights:
-
-https://drm.pages.freedesktop.org/maintainer-tools/commit-access.html
-
-Once you have the fd.o bug report to request commit rights pls paste
-it here so we can get the ack from drm-misc maintainers.
-
-Cheers, Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Cheers,
+--Prabhakar
