@@ -2,149 +2,112 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2165C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 20:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4331C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 20:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D6BA2070E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 20:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC56E20704
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 20:14:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eDW8kYcT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I8YXBM35"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbgGQUCI (ORCPT
+        id S1727871AbgGQUO5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 16:02:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39284 "EHLO
+        Fri, 17 Jul 2020 16:14:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726771AbgGQUCI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 16:02:08 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE725C0619D2;
-        Fri, 17 Jul 2020 13:02:07 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id z15so12285113wrl.8;
-        Fri, 17 Jul 2020 13:02:07 -0700 (PDT)
+        with ESMTP id S1726771AbgGQUO4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 16:14:56 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73AF6C0619D2;
+        Fri, 17 Jul 2020 13:14:56 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id q4so14119405lji.2;
+        Fri, 17 Jul 2020 13:14:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QG3TuhYote73k/U/yKrq52X8lFEjdBrRQFB2lYTw5+k=;
-        b=eDW8kYcTFzlD8cyyAdIPMU+koKRP3yAJHaX2IZUK69MSgHEiN01CLFJFk4vnf0I4vJ
-         FCXSjDFqq8Cve4EUW6uXBaXxxe8ZWYQ5dodnJc3jwqwrxggL/3/8GN3JNO/lkYlHwHps
-         LnTlCMZBqCHtGcj9hiQTPPB8ua72rc4wAmB942mVA71a9AdJgW5Bgp+Qj+W+wDqNRyNt
-         os/MLA214XjCLHoC4ZEuwgGwK07KkmVil5kC2iPLOCw9+K6bM0PDaoNSRwyRJhHcMqrz
-         Cev2fcHCW/wSvBPSM0lO9tBAfJL+P44HbxITZJqgCCG+pI1Wq6A9MWXkMNVar9TIvPdH
-         rQSA==
+        bh=FkWVr5zp5BC/cYtB354fZGgMcjVM5l8oIeKEC5H54O8=;
+        b=I8YXBM35hH1s2nXJoK1+VOFw/G3kED5UoxeMOVdBSMzbYvRoB7xrjgniZ743y/0DQ+
+         gRmPH5NJeSL11Wtixy7LpjSo0ZIrciCdcHCzFQrIoRZ+Ar5hi3sm/MsQlDnZkbuhBS5J
+         /fTcm3QddMcLA2PDJd2Xl96Ss6abAZ6xl1YmTE/v6mBZxGjFRk+ZIQAhRXw/Zr6pxnjD
+         vI6tKr2Buo6KCetCoHP2tAgP5ygefnrUcWxU/pOyBNQ1Jx5v82xD5v0jYRumxJY3ZHns
+         YWpf/QLIJvo7XbebIb16XWOyF8ndcZqbVyoTId5pXJJJx9RQPTQGEZFcoOinCc+/h9ux
+         XHMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=QG3TuhYote73k/U/yKrq52X8lFEjdBrRQFB2lYTw5+k=;
-        b=l6Gcjh8TETQTzGP+Ud3gbF4a6wNVhbswV3fiSxzlJm1sdhNYKCgw0Jho8iWjhZrKJR
-         KIgy3MepfDKKwMFAFE38RXjByWPg8nSm/hHsQMk+avin8kH4PN0f1GuaMHcV+N4eVP9b
-         ft6ScQEdQ/00uMgWaV5uvWoRBgk6vbILDF2en4QB+qy+7m6uBG3BDis5DKE9qwm2775O
-         gh3W09fwC5XpxHbE1oULiwMio+eDiqelzv+ngQM0duNa5q4PjWVj/+OQJ1LAVT1cnWih
-         8voZHuHl6mtX3m9XcmgPCCy7QsCbEoGU7XvL05R8ZJbwNXlHqPB90R/mATw94ACIeDos
-         6mKg==
-X-Gm-Message-State: AOAM531LYWo4aAs7ARKRKjZNbfKNNFUDlMfRvhK9BamfJ3ZbA504zqmF
-        F5D/X5Q+7xxfXRdwAzQAX93ZoZf5
-X-Google-Smtp-Source: ABdhPJxTt19Jk+Xfs9t9m5b+deLwUats7rSLs/EHp3W76etVfwbpmKLH71jWVp0Lk6HEFfOT8wwFVA==
-X-Received: by 2002:a5d:6288:: with SMTP id k8mr11381440wru.373.1595016126084;
-        Fri, 17 Jul 2020 13:02:06 -0700 (PDT)
-Received: from [10.230.30.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id h5sm17018118wrc.97.2020.07.17.13.02.02
+        bh=FkWVr5zp5BC/cYtB354fZGgMcjVM5l8oIeKEC5H54O8=;
+        b=rbIph5+wmsJW3Judoy462er/si7r0YskiNFaPjWoldC1nwgEbLxuYm3Rt3YUaaDLoo
+         RcQrjQgW9Mn5H7CN6xi2PUqACCFVczNwG2V3eZRebrz9ajsSwYu+hB/9F2ce4IyzRt3G
+         Gdhw4OeGRoDAs9zXymx+BFg7CcVdG60RK6dL81UTCxcsx5kDSLJSv8gA5oYQoFzxNEzV
+         kT/8kTof94vjSEjEjhLFvJhCeCHQVHmc0Miypyy+Axm5DJ1GZ9YI9lKEaCQYR7J3JAq6
+         GYqqpKd69J/xYnhlNzjt6O6rSLgaNIfv9UbtCstFl2PyodJkaCLP4hEa9rEUjqqGud+X
+         ZmWg==
+X-Gm-Message-State: AOAM531iq4S6YlPwocn6JhA5IIohzBVIGlevoXg5+CU9O40EtrYzlAJW
+        T7EnS7nj2RfTzLB/PxedkbOsh9vJ
+X-Google-Smtp-Source: ABdhPJyp3rS1I8TlETFWJxyFclpR+MDYEDvhNGj1hflmucIV1aJFhc+30qRGfh5li8IzI6Q2NqjREg==
+X-Received: by 2002:a05:651c:1a7:: with SMTP id c7mr5485739ljn.345.1595016894667;
+        Fri, 17 Jul 2020 13:14:54 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-76-4-184.pppoe.mtu-net.ru. [91.76.4.184])
+        by smtp.googlemail.com with ESMTPSA id r11sm1823788ljc.66.2020.07.17.13.14.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jul 2020 13:02:05 -0700 (PDT)
-Subject: Re: [PATCH 2/2] dt-bindings: net: dsa: qca8k: Add PORT0_PAD_CTRL
- properties
-To:     Matthew Hagan <mnhagan88@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        John Crispin <john@phrozen.org>,
-        Jonathan McDowell <noodles@earth.li>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-References: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
- <ea0a35ed686e6dace77e25cb70a8f39fdd1ea8ad.1594668793.git.mnhagan88@gmail.com>
- <20200716150925.0f3e01b8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <20200716223236.GA1314837@lunn.ch>
- <c86c4da0-a740-55cc-33dd-7a91e36c7738@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <50179386-08d4-9162-195e-35ca903452e1@gmail.com>
-Date:   Fri, 17 Jul 2020 13:02:00 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
+        Fri, 17 Jul 2020 13:14:53 -0700 (PDT)
+Subject: Re: [RFC PATCH v3 16/18] gpu: host1x: mipi: Split
+ tegra_mipi_calibrate and tegra_mipi_wait
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
+        helen.koike@collabora.com
+Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+References: <1594786855-26506-1-git-send-email-skomatineni@nvidia.com>
+ <1594786855-26506-17-git-send-email-skomatineni@nvidia.com>
+ <a06dec8f-7042-767b-545b-048685a7683d@gmail.com>
+ <20d63eca-4b2b-584e-a391-a4fb64a16b40@nvidia.com>
+ <c4945c77-5de1-e9b1-9f4f-cdd78bca18c7@gmail.com>
+ <ce0c5ffb-f859-0eab-1ea5-044623dff221@nvidia.com>
+ <a2b8169c-c4a3-4862-cd27-8c1a51ddc558@gmail.com>
+ <4690e682-8495-2327-87c7-c2f06a7a479d@nvidia.com>
+ <66812127-38cf-2af3-51c0-50edbe446e73@nvidia.com>
+ <9b4fbf9d-d651-aa35-c0a6-b8f16aeb0900@gmail.com>
+ <550f1796-67ca-5856-223d-c68360243954@nvidia.com>
+ <ca8f2184-de30-03ec-9caf-e20a22d96a77@nvidia.com>
+ <080b30c7-1dce-dd2f-dd96-40f6e25da4d6@gmail.com>
+ <b125deab-7900-6266-d405-4d7f029089b4@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <ea3d2bb0-bf35-dfdf-ed1f-7656a9558072@gmail.com>
+Date:   Fri, 17 Jul 2020 23:14:52 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <c86c4da0-a740-55cc-33dd-7a91e36c7738@gmail.com>
+In-Reply-To: <b125deab-7900-6266-d405-4d7f029089b4@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 7/17/2020 12:26 PM, Matthew Hagan wrote:
+17.07.2020 18:41, Sowjanya Komatineni пишет:
+...
+>> Also, what about the auto-calibration? Isn't it needed to be enabled for
+>> CSI?
+> STARTCAL does one time calibration and with AUTOCAL calibration will be
+> triggered periodically.
 > 
+> For pads PULLUP/PULLDN/TERM impedance calibration, we only need one-time
+> calibration on pads power up.
 > 
-> On 16/07/2020 23:32, Andrew Lunn wrote:
->> On Thu, Jul 16, 2020 at 03:09:25PM -0700, Jakub Kicinski wrote:
->>> On Mon, 13 Jul 2020 21:50:26 +0100 Matthew Hagan wrote:
->>>> Add names and decriptions of additional PORT0_PAD_CTRL properties.
->>>>
->>>> Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
->>>> ---
->>>>  Documentation/devicetree/bindings/net/dsa/qca8k.txt | 8 ++++++++
->>>>  1 file changed, 8 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
->>>> index ccbc6d89325d..3d34c4f2e891 100644
->>>> --- a/Documentation/devicetree/bindings/net/dsa/qca8k.txt
->>>> +++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
->>>> @@ -13,6 +13,14 @@ Optional properties:
->>>>  
->>>>  - reset-gpios: GPIO to be used to reset the whole device
->>>>  
->>>> +Optional MAC configuration properties:
->>>> +
->>>> +- qca,exchange-mac0-mac6:	If present, internally swaps MAC0 and MAC6.
->>>
->>> Perhaps we can say a little more here?
->>>
->>>> +- qca,sgmii-rxclk-falling-edge:	If present, sets receive clock phase to
->>>> +				falling edge.
->>>> +- qca,sgmii-txclk-falling-edge:	If present, sets transmit clock phase to
->>>> +				falling edge.
->>>
->>> These are not something that other vendors may implement and therefore
->>> something we may want to make generic? Andrew?
->>
->> I've never seen any other vendor implement this. Which to me makes me
->> think this is a vendor extension, to Ciscos vendor extension of
->> 1000BaseX.
->>
->> Matthew, do you have a real use cases of these? I don't see a DT patch
->> making use of them. And if you do, what is the PHY on the other end
->> which also allows you to invert the clocks?
->>
-> The use case I am working on is the Cisco Meraki MX65 which requires bit
-> 18 set (qca,sgmii-txclk-falling-edge). On the other side is a BCM58625
-> SRAB with ports 4 and 5 in SGMII mode. There is no special polarity
-> configuration set on this side though I do have very limited info on
-> what is available. The settings I have replicate the vendor
-> configuration extracted from the device.
+> We always use one time pads calibration for CSI.
 
-The only polarity change that I am aware of on the BCM58625 side is to
-allow for the TXDP/TXDN to be swapped, this is achieved by setting bit 5
-in the TX_ACONTROL0 register (block address is 0x8060), that does look
-different than what this is controlling though.
--- 
-Florian
+Alright, thank you for the clarification!
