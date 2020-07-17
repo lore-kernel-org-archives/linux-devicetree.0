@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B32C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 08:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDACC433EB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 08:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC2CD20691
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 08:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66B2B2074B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 08:36:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QNh1DgPx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OUPcgdRG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbgGQIgU (ORCPT
+        id S1726056AbgGQIgX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 04:36:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45980 "EHLO
+        Fri, 17 Jul 2020 04:36:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727853AbgGQIgS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 04:36:18 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B24EBC061755;
-        Fri, 17 Jul 2020 01:36:17 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id n26so9943743ejx.0;
-        Fri, 17 Jul 2020 01:36:17 -0700 (PDT)
+        with ESMTP id S1726974AbgGQIgQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 04:36:16 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD740C061755;
+        Fri, 17 Jul 2020 01:36:15 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id d16so7014431edz.12;
+        Fri, 17 Jul 2020 01:36:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=DVLHoeYXUjVm2OkdCazu17iCF0dnNHQdzGYYcSDSF20=;
-        b=QNh1DgPx50z+CQu0pLkqwyDbvGV8m0tw/oXYtt5BZZ99oO4KFFA3vXyIvx/4RFbc65
-         wqrPUfR2oxPb3RiCbvRPno351bT/TsZHpIXQzsoWp2RHn5Sdnu3qoFjnphk3wIkptzDX
-         NcDllh+18SudoW5EeQ+k1HQx8lp2KNw20IhZoluSCHn/jLrn9EctnQDEO4MoNFJvXh06
-         s5sgLmcNQhg4UC8MBbErfR1i/DvIxj2U7YBmM+p9FWf1qd8Y3MzNPpfBVj1kIDLT6hAM
-         voWq812peScU3YdLNKAJiq+/mWs31cYlP9g3zwyqRw8s9i2s6vOFxmk0+nb7Wz23FDbw
-         Pckg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UKKt1i+qbb7u1MCS8ODLjX9FpnfwbfNBADcfLCJcoNk=;
+        b=OUPcgdRGfHBaIyE07DxAgHEsGAJchRmLtt8wCEg7nVFBm36LvFl37rxywBzGOJo8wL
+         AujuSqXksDhLCbq74NX1L1e6uZ/+wemBYGjofH5Lxi0dNHgsk6hGmJZjj3G2f08qhgXe
+         RYgKPFa7e4YSNI9UgZXiFmHwzrElsKRhwHyBoxbmUYRLq3Z3cIEQX89nlLNq9LDqj7E1
+         Micu+IvV3G2Dlbfj6pprJonk8ADrb20ZKoU7vM3hEBFKLOsSHTZj7AFRjNrx2BE5PG+w
+         QNQT9THWO94qqD/tsFtnpZaRFtftTWjfIhhGwQUmmtQ5KtJEBQi/eqtJORFGlBaUh8V7
+         7b8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=DVLHoeYXUjVm2OkdCazu17iCF0dnNHQdzGYYcSDSF20=;
-        b=CbTKok3Q2woRGdKpd3EqnbWIn9oZx0z3qfq6y2ztLdPQR7r/RgVXmgzsDhKzQvJTyI
-         ebkkX702HLIb0pckghlTGufzNUUnMkkHgfgDR5ftF7ncyEJ1VIVwNxfmIGVavVsm75fn
-         NtsyjqaKc3qQr+OBgaqg0oC4WtTiT0/zj50QjDI53kXVLfpV9xcHIiaZnBECKwspQK81
-         ct7+ITOHa9BZ4BjzM2o8j/FOD2txNt9IwnjuVKBVG0JDq7RwZNowfVVQsu/ZDsXXwmKe
-         2d741cEvYasjpiVYGgDGMpk39XVzA3u6+IPci5owBYub7b5u5C+r0hmieW9Lq0yN7nG6
-         jnsQ==
-X-Gm-Message-State: AOAM531GoVS320tJ6xD58O6YmmT/QitLB+2Ey26SMoyNcIYo6H50JlMy
-        Uxw3ykJ2nX4IOMq/zQaOdAI=
-X-Google-Smtp-Source: ABdhPJyguMDPLfo8wBAPq/cmard434hTf6HR8HnTBDCt3dI3IRLJCiWigoxyWNWWrWwpwrBZTLVI8g==
-X-Received: by 2002:a17:906:4a44:: with SMTP id a4mr5212375ejv.486.1594974976424;
-        Fri, 17 Jul 2020 01:36:16 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UKKt1i+qbb7u1MCS8ODLjX9FpnfwbfNBADcfLCJcoNk=;
+        b=s2iHmKHEYGrVoDjP7L/7jVIOXrHCp+b1VyR23EJjOZbKYpzny2EvR4bP2xma2R1el5
+         /oXLh/P4UjanShYBvrWDJAUsFamcFxsPjslOW+ePTxptWO3Zy4k6hw5QRc6T7CTED3V1
+         Rw+VRkbybNncHxa6qrHeSL7FFQN/IGTBF+a1O0UZnHS+7y3ZlE59uzUC+G6/4OEXIyoZ
+         rteamcUFCZNPbjUe0UYvuBJs4oWTn5GW9PaJahDQYLqCYXZW4Rd/i7Zcoe+zR1K89Yjv
+         bjiCPSekckR0VPhm/JjFoIdfcqiNjZ4kUjuz5grvAo7r4vuoztxQ7dawVs9daZwVOCPv
+         AA1g==
+X-Gm-Message-State: AOAM532pzWgii07KF12s37dA0TbQ384my13zUKZPH5CzMht5vSYVAOej
+        OU8w0JsH04L1ChPuCfPVmLcXqPYq
+X-Google-Smtp-Source: ABdhPJySzetdMLRbHWosbzzD4UCkj6mQY50Ymnb6XBhSxYEHQLajfwo4shxW66CXpA3k45bJW/QNSA==
+X-Received: by 2002:aa7:c341:: with SMTP id j1mr8557511edr.197.1594974974219;
+        Fri, 17 Jul 2020 01:36:14 -0700 (PDT)
 Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id c9sm7641757edv.8.2020.07.17.01.36.15
+        by smtp.gmail.com with ESMTPSA id da20sm7799527edb.27.2020.07.17.01.36.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 01:36:15 -0700 (PDT)
+        Fri, 17 Jul 2020 01:36:12 -0700 (PDT)
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
@@ -67,12 +67,10 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Debarshi Dutta <ddutta@nvidia.com>,
         linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 2/2] arm64: tegra: Add the GPU on Tegra194
-Date:   Fri, 17 Jul 2020 10:36:09 +0200
-Message-Id: <20200717083609.557205-2-thierry.reding@gmail.com>
+Subject: [PATCH v3 1/2] dt-bindings: Add documentation for GV11B GPU
+Date:   Fri, 17 Jul 2020 10:36:08 +0200
+Message-Id: <20200717083609.557205-1-thierry.reding@gmail.com>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200717083609.557205-1-thierry.reding@gmail.com>
-References: <20200717083609.557205-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -82,64 +80,66 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Thierry Reding <treding@nvidia.com>
 
-The GPU found on NVIDIA Tegra194 SoCs is a Volta generation GPU called
-GV11B.
+The GV11B's device tree bindings are the same as for GP10B, though the
+GPU is not completely compatible, so all that is needed is a different
+compatible string.
 
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
 Changes in v3:
-- mark the GPU as DMA coherent because that's enforced by the MSS
-- add FUSE clock which is needed during GPU initialization
-- enable GPU by default
+- document the "fuse" clock which needs to be enabled during the GPU
+  initialization
 
- arch/arm64/boot/dts/nvidia/tegra194.dtsi | 34 ++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ .../devicetree/bindings/gpu/nvidia,gk20a.txt  | 25 +++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index 98c366ab4aab..48160f48003a 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -1395,6 +1395,40 @@ sor3: sor@15bc0000 {
- 				nvidia,interface = <3>;
- 			};
- 		};
-+
-+		gpu@17000000 {
-+			compatible = "nvidia,gv11b";
-+			reg = <0x17000000 0x10000000>,
-+			      <0x18000000 0x10000000>;
-+			interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "stall", "nonstall";
-+			clocks = <&bpmp TEGRA194_CLK_GPCCLK>,
-+				 <&bpmp TEGRA194_CLK_GPU_PWR>,
-+				 <&bpmp TEGRA194_CLK_FUSE>;
-+			clock-names = "gpu", "pwr", "fuse";
-+			resets = <&bpmp TEGRA194_RESET_GPU>;
-+			reset-names = "gpu";
-+			dma-coherent;
-+
-+			power-domains = <&bpmp TEGRA194_POWER_DOMAIN_GPU>;
-+			interconnects = <&mc TEGRA194_MEMORY_CLIENT_NVL1R &emc>,
-+					<&mc TEGRA194_MEMORY_CLIENT_NVL1RHP &emc>,
-+					<&mc TEGRA194_MEMORY_CLIENT_NVL1W &emc>,
-+					<&mc TEGRA194_MEMORY_CLIENT_NVL2R &emc>,
-+					<&mc TEGRA194_MEMORY_CLIENT_NVL2RHP &emc>,
-+					<&mc TEGRA194_MEMORY_CLIENT_NVL2W &emc>,
-+					<&mc TEGRA194_MEMORY_CLIENT_NVL3R &emc>,
-+					<&mc TEGRA194_MEMORY_CLIENT_NVL3RHP &emc>,
-+					<&mc TEGRA194_MEMORY_CLIENT_NVL3W &emc>,
-+					<&mc TEGRA194_MEMORY_CLIENT_NVL4R &emc>,
-+					<&mc TEGRA194_MEMORY_CLIENT_NVL4RHP &emc>,
-+					<&mc TEGRA194_MEMORY_CLIENT_NVL4W &emc>;
-+			interconnect-names = "dma-mem", "read-0-hp", "write-0",
-+					     "read-1", "read-1-hp", "write-1",
-+					     "read-2", "read-2-hp", "write-2",
-+					     "read-3", "read-3-hp", "write-3";
-+		};
+diff --git a/Documentation/devicetree/bindings/gpu/nvidia,gk20a.txt b/Documentation/devicetree/bindings/gpu/nvidia,gk20a.txt
+index f32bbba4d3bc..662a3c8a7d29 100644
+--- a/Documentation/devicetree/bindings/gpu/nvidia,gk20a.txt
++++ b/Documentation/devicetree/bindings/gpu/nvidia,gk20a.txt
+@@ -6,6 +6,7 @@ Required properties:
+   - nvidia,gk20a
+   - nvidia,gm20b
+   - nvidia,gp10b
++  - nvidia,gv11b
+ - reg: Physical base address and length of the controller's registers.
+   Must contain two entries:
+   - first entry for bar0
+@@ -25,6 +26,9 @@ Required properties:
+ If the compatible string is "nvidia,gm20b", then the following clock
+ is also required:
+   - ref
++If the compatible string is "nvidia,gv11b", then the following clock is also
++required:
++  - fuse
+ - resets: Must contain an entry for each entry in reset-names.
+   See ../reset/reset.txt for details.
+ - reset-names: Must include the following entries:
+@@ -88,3 +92,24 @@ Example for GP10B:
+ 		power-domains = <&bpmp TEGRA186_POWER_DOMAIN_GPU>;
+ 		iommus = <&smmu TEGRA186_SID_GPU>;
  	};
- 
- 	pcie@14100000 {
++
++Example for GV11B:
++
++	gpu@17000000 {
++		compatible = "nvidia,gv11b";
++		reg = <0x17000000 0x10000000>,
++		      <0x18000000 0x10000000>;
++		interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "stall", "nonstall";
++		clocks = <&bpmp TEGRA194_CLK_GPCCLK>,
++			 <&bpmp TEGRA194_CLK_GPU_PWR>,
++			 <&bpmp TEGRA194_CLK_FUSE>;
++		clock-names = "gpu", "pwr", "fuse";
++		resets = <&bpmp TEGRA194_RESET_GPU>;
++		reset-names = "gpu";
++		dma-coherent;
++
++		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_GPU>;
++		iommus = <&smmu TEGRA194_SID_GPU>;
++	};
 -- 
 2.27.0
 
