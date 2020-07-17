@@ -2,339 +2,144 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCF9C433E5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 05:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C95C433E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 06:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6089E2071A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 05:57:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="bN5UieoG"
+	by mail.kernel.org (Postfix) with ESMTP id C8E1E2071A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 06:13:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgGQF5O (ORCPT
+        id S1726113AbgGQGN5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 01:57:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49790 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbgGQF5N (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 01:57:13 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ECDFC061755
-        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 22:57:13 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id f2so9715453wrp.7
-        for <devicetree@vger.kernel.org>; Thu, 16 Jul 2020 22:57:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=JZvHizUVqRN667HIjufhBos1B0Ox7ddF/o24MKYIlJc=;
-        b=bN5UieoGp648UmUuNWTHkpNFPQh/0obFUDF1iszS9wHV7vs6OphAaaxkioqzZvS7BC
-         LscGMWuLhGmYOLHHkfJcjVX7iaHtVNTXOyhd7ZpRy6mw3Gkhb+GKN0w9eOcZYxVBmFlZ
-         j+ATGV0Bt0OUNGiaI8eZlUorZrDO+ymcIha2gMuF2bPXoRhm124LUHFtU1H2OBlfxwRM
-         iWRv6FfH0p1HuAF8VQPFX2jCq+liLlqIFDO3kRIrhzf8bgNEbwGtTYdaoj1tjUSOku1E
-         8n7GyVymcGIH04hJo92u5i/cADZ4OxiB33HybHZB+5IaqaV2Np0vSeE5xAD8oT5nv2vj
-         34bA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=JZvHizUVqRN667HIjufhBos1B0Ox7ddF/o24MKYIlJc=;
-        b=I6XdUrm4GpyXUSmw+a6IhLAexr1eNA6g1t5AIB6mDT6P0W/FgUc4Xmzb12XgdmsCrt
-         stWwRFRryfV+MUPpzpnCVdllTtEpb/ApFaQpBhXLPL74+/MKFGi5Zfa0TBtiBOoRtHtB
-         B4hmweVMj2lS377NYg8F1Uruc2TPn9Ub4/VAcjo9/8vAcydGZg4owfMesTrmsGP87MLs
-         hZM+VQSJukFAdeNi+Fkn5rC8JOms+PLIyNBZk3tTu2dIG0/GZU3CgTybt15CpEt4YENM
-         PXm3XKyFJJ8WxAXii7jfX5QcytNMbm3JA2+M8eEYJyMJfdxM36uIU/JqnWAJC/Ehg6bB
-         vAZw==
-X-Gm-Message-State: AOAM531IISuXzUe8GzD559+4zh8SFo0bl4F3fkP6okSj6y/iC0i5LbEU
-        obb0Kzk95Fta3snKMN0Q7P5tB738/QZvcuEgEkUtSw==
-X-Google-Smtp-Source: ABdhPJzMn/gLFelIa9GUbc6ws3AVutFf7cz4pHclu7dRCQHEMxukp/enYyphRMjX9tXnf3VDAi5srJ+nhmeX645OSwE=
-X-Received: by 2002:adf:ff87:: with SMTP id j7mr9121458wrr.128.1594965432021;
- Thu, 16 Jul 2020 22:57:12 -0700 (PDT)
+        Fri, 17 Jul 2020 02:13:57 -0400
+Received: from out28-75.mail.aliyun.com ([115.124.28.75]:35910 "EHLO
+        out28-75.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbgGQGN5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 02:13:57 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07956585|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.26011-0.00462829-0.735262;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03278;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.I37bnt8_1594966428;
+Received: from 192.168.10.205(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I37bnt8_1594966428)
+          by smtp.aliyun-inc.com(10.147.44.129);
+          Fri, 17 Jul 2020 14:13:49 +0800
+Subject: Re: [PATCH v6 2/2] clocksource: Ingenic: Add support for the Ingenic
+ X1000 OST.
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-kernel@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
+        paul@crapouillou.net, dongsheng.qiu@ingenic.com,
+        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
+        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com
+References: <20200710170259.29028-1-zhouyanjie@wanyeetech.com>
+ <20200710170259.29028-3-zhouyanjie@wanyeetech.com>
+ <dd01a117-265a-e64b-5871-22f0f752834a@linaro.org>
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <f0dd2ea5-0627-35cf-5a58-aaff0bcb22cd@wanyeetech.com>
+Date:   Fri, 17 Jul 2020 14:13:47 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-References: <20200715071506.10994-1-anup.patel@wdc.com> <20200715071506.10994-3-anup.patel@wdc.com>
- <9a36824c-ef23-de47-b52c-bf680067be6c@linaro.org> <CAAhSdy3iurBWELjrjKr4mWdueZqw3xmf2e6AD_Km0PE+5TZHWQ@mail.gmail.com>
- <212eb026-e063-2b64-757b-9ca0e3f430bf@linaro.org>
-In-Reply-To: <212eb026-e063-2b64-757b-9ca0e3f430bf@linaro.org>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Fri, 17 Jul 2020 11:26:59 +0530
-Message-ID: <CAAhSdy1fR-GZfTAD4KOJF7j0LzCjYrscxKDD2cTi-8OYnQL5Fg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] clocksource/drivers: Add CLINT timer driver
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Anup Patel <anup.patel@wdc.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <dd01a117-265a-e64b-5871-22f0f752834a@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 10:58 AM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> On 17/07/2020 07:21, Anup Patel wrote:
-> > On Fri, Jul 17, 2020 at 2:57 AM Daniel Lezcano
-> > <daniel.lezcano@linaro.org> wrote:
-> >>
-> >>
-> >> Hi Anup,
-> >>
-> >>
-> >> On 15/07/2020 09:15, Anup Patel wrote:
-> >>> The TIME CSR and SBI calls are not available in RISC-V M-mode so we
-> >>> separate add CLINT driver for Linux RISC-V M-mode (i.e. RISC-V NoMMU
-> >>> kernel).
-> >>
-> >> The description is confusing, please reword it and give a bit more
-> >> information about the timer itself, especially, the IPI thing.
-> >
-> > Okay, will update.
-> >
-> >>
-> >>> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> >>> ---
-> >>>  drivers/clocksource/Kconfig       |  10 ++
-> >>>  drivers/clocksource/Makefile      |   1 +
-> >>>  drivers/clocksource/timer-clint.c | 229 ++++++++++++++++++++++++++++=
-++
-> >>>  include/linux/cpuhotplug.h        |   1 +
-> >>>  4 files changed, 241 insertions(+)
-> >>>  create mode 100644 drivers/clocksource/timer-clint.c
-> >>>
-> >>> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfi=
-g
-> >>> index 91418381fcd4..eabcf1cfb0c0 100644
-> >>> --- a/drivers/clocksource/Kconfig
-> >>> +++ b/drivers/clocksource/Kconfig
-> >>> @@ -658,6 +658,16 @@ config RISCV_TIMER
-> >>>         is accessed via both the SBI and the rdcycle instruction.  Th=
-is is
-> >>>         required for all RISC-V systems.
-> >>>
-> >>> +config CLINT_TIMER
-> >>> +     bool "Timer for the RISC-V platform"
-> >>> +     depends on GENERIC_SCHED_CLOCK && RISCV_M_MODE
-> >>> +     default y
-> >>> +     select TIMER_PROBE
-> >>> +     select TIMER_OF
-> >>> +     help
-> >>> +       This option enables the CLINT timer for RISC-V systems. The C=
-LINT
-> >>> +       driver is usually used for NoMMU RISC-V systems.
-> >>
-> >> For the timer, we do silent option and let the platform config select
-> >> it. Please refer to other timer option below as reference.
-> >
-> > Okay, I will use "default RISCV" instead of "default y" (just like othe=
-r
-> > timer Kconfig options).
->
-> Preferably, select it from the platform's Kconfig.
+Hi Daniel,
 
-Okay, I will update.
+在 2020/7/17 下午12:20, Daniel Lezcano 写道:
+> On 10/07/2020 19:02, 周琰杰 (Zhou Yanjie) wrote:
+>> X1000 and SoCs after X1000 (such as X1500 and X1830) had a separate
+>> OST, it no longer belongs to TCU. This driver will register both a
+>> clocksource and a sched_clock to the system.
+>>
+>> Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
+>> Co-developed-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
+>> Signed-off-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
+>> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>> Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+>> ---
+>>
+>> Notes:
+>>      v1->v2:
+>>      Fix compile warnings.
+>>      Reported-by: kernel test robot <lkp@intel.com>
+>>      
+>>      v2->v3:
+>>      No change.
+>>      
+>>      v3->v4:
+>>      1.Rename "ost" to "sysost"
+>>      1.Remove unrelated changes.
+>>      2.Remove ost_clock_parent enum.
+>>      3.Remove ost->percpu_timer_channel/ost->global_timer_channel.
+>>      4.Set up independent .recalc_rate/.set_rate for percpu/global timer.
+>>      5.No longer call functions in variable declarations.
+>>      
+>>      v4->v5:
+>>      Use "of_io_request_and_map()" instead "of_iomap()".
+>>      Suggested-by: Paul Cercueil <paul@crapouillou.net>
+>>      
+>>      v5->v6:
+>>      No change.
+>>
+>>   drivers/clocksource/Kconfig          |  11 +
+>>   drivers/clocksource/Makefile         |   1 +
+>>   drivers/clocksource/ingenic-sysost.c | 539 +++++++++++++++++++++++++++++++++++
+>>   3 files changed, 551 insertions(+)
+>>   create mode 100644 drivers/clocksource/ingenic-sysost.c
+>>
+>> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+>> index 91418381fcd4..1bca8b8fb30f 100644
+>> --- a/drivers/clocksource/Kconfig
+>> +++ b/drivers/clocksource/Kconfig
+>> @@ -696,6 +696,17 @@ config INGENIC_TIMER
+>>   	help
+>>   	  Support for the timer/counter unit of the Ingenic JZ SoCs.
+>>   
+>> +config INGENIC_SYSOST
+>> +	bool "Clocksource/timer using the SYSOST in Ingenic X SoCs"
+> We usually use silent options and let the platform's Kconfig enable it.
+> We show up the option only when COMPILE_TEST is enabled.
+>
+> Is there a reason to do it differently?
 
->
-> >>
-> >>>  config CSKY_MP_TIMER
-> >>>       bool "SMP Timer for the C-SKY platform" if COMPILE_TEST
-> >>>       depends on CSKY
-> >>> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makef=
-ile
-> >>> index bdda1a2e4097..18e700e703a0 100644
-> >>> --- a/drivers/clocksource/Makefile
-> >>> +++ b/drivers/clocksource/Makefile
-> >>> @@ -87,6 +87,7 @@ obj-$(CONFIG_CLKSRC_ST_LPC)         +=3D clksrc_st_=
-lpc.o
-> >>>  obj-$(CONFIG_X86_NUMACHIP)           +=3D numachip.o
-> >>>  obj-$(CONFIG_ATCPIT100_TIMER)                +=3D timer-atcpit100.o
-> >>>  obj-$(CONFIG_RISCV_TIMER)            +=3D timer-riscv.o
-> >>> +obj-$(CONFIG_CLINT_TIMER)            +=3D timer-clint.o
-> >>>  obj-$(CONFIG_CSKY_MP_TIMER)          +=3D timer-mp-csky.o
-> >>>  obj-$(CONFIG_GX6605S_TIMER)          +=3D timer-gx6605s.o
-> >>>  obj-$(CONFIG_HYPERV_TIMER)           +=3D hyperv_timer.o
-> >>> diff --git a/drivers/clocksource/timer-clint.c b/drivers/clocksource/=
-timer-clint.c
-> >>> new file mode 100644
-> >>> index 000000000000..bfc38bb5a589
-> >>> --- /dev/null
-> >>> +++ b/drivers/clocksource/timer-clint.c
-> >>> @@ -0,0 +1,229 @@
-> >>> +// SPDX-License-Identifier: GPL-2.0
-> >>> +/*
-> >>> + * Copyright (C) 2020 Western Digital Corporation or its affiliates.
-> >>> + *
-> >>> + * Most of the M-mode (i.e. NoMMU) RISC-V systems usually have a
-> >>> + * CLINT MMIO timer device.
-> >>> + */
-> >>> +
-> >>> +#define pr_fmt(fmt) "clint: " fmt
-> >>> +#include <linux/bitops.h>
-> >>> +#include <linux/clocksource.h>
-> >>> +#include <linux/clockchips.h>
-> >>> +#include <linux/cpu.h>
-> >>> +#include <linux/delay.h>
-> >>> +#include <linux/module.h>
-> >>> +#include <linux/of_address.h>
-> >>> +#include <linux/sched_clock.h>
-> >>> +#include <linux/io-64-nonatomic-lo-hi.h>
-> >>> +#include <linux/interrupt.h>
-> >>> +#include <linux/of_irq.h>
-> >>> +#include <linux/smp.h>
-> >>> +
-> >>> +#define CLINT_IPI_OFF                0
-> >>> +#define CLINT_TIMER_CMP_OFF  0x4000
-> >>> +#define CLINT_TIMER_VAL_OFF  0xbff8
-> >>> +
-> >>> +/* CLINT manages IPI and Timer for RISC-V M-mode  */
-> >>> +static u32 __iomem *clint_ipi_base;
-> >>> +static u64 __iomem *clint_timer_cmp;
-> >>> +static u64 __iomem *clint_timer_val;
-> >>> +static unsigned long clint_timer_freq;
-> >>> +static unsigned int clint_timer_irq;
-> >>> +
-> >>> +static void clint_send_ipi(const struct cpumask *target)
-> >>> +{
-> >>> +     unsigned int cpu;
-> >>> +
-> >>> +     for_each_cpu(cpu, target)
-> >>> +             writel(1, clint_ipi_base + cpuid_to_hartid_map(cpu));
-> >>> +}
-> >>> +
-> >>> +static void clint_clear_ipi(void)
-> >>> +{
-> >>> +     writel(0, clint_ipi_base + cpuid_to_hartid_map(smp_processor_id=
-()));
-> >>> +}
-> >>> +
-> >>> +static struct riscv_ipi_ops clint_ipi_ops =3D {
-> >>> +     .ipi_inject =3D clint_send_ipi,
-> >>> +     .ipi_clear =3D clint_clear_ipi,
-> >>> +};
-> >>> +
-> >>> +#ifdef CONFIG_64BIT
-> >>> +#define clint_get_cycles()   readq_relaxed(clint_timer_val)
-> >>> +#else
-> >>> +#define clint_get_cycles()   readl_relaxed(clint_timer_val)
-> >>> +#define clint_get_cycles_hi()        readl_relaxed(((u32 *)clint_tim=
-er_val) + 1)
-> >>> +#endif
-> >>> +
-> >>> +#ifdef CONFIG_64BIT
-> >>> +static u64 clint_get_cycles64(void)
-> >>> +{
-> >>> +     return clint_get_cycles();
-> >>> +}
-> >>> +#else /* CONFIG_64BIT */
-> >>> +static u64 clint_get_cycles64(void)
-> >>> +{
-> >>> +     u32 hi, lo;
-> >>> +
-> >>> +     do {
-> >>> +             hi =3D clint_get_cycles_hi();
-> >>> +             lo =3D clint_get_cycles();
-> >>> +     } while (hi !=3D clint_get_cycles_hi());
-> >>> +
-> >>> +     return ((u64)hi << 32) | lo;
-> >>> +}
-> >>> +#endif /* CONFIG_64BIT */
-> >>> +static int clint_clock_next_event(unsigned long delta,
-> >>> +                                struct clock_event_device *ce)
-> >>> +{
-> >>> +     void __iomem *r =3D clint_timer_cmp +
-> >>> +                       cpuid_to_hartid_map(smp_processor_id());
-> >>> +
-> >>> +     csr_set(CSR_IE, IE_TIE);
-> >>> +     writeq_relaxed(clint_get_cycles64() + delta, r);
-> >>> +     return 0;
-> >>> +}
-> >>> +
-> >>> +static DEFINE_PER_CPU(struct clock_event_device, clint_clock_event) =
-=3D {
-> >>> +     .name                   =3D "clint_clockevent",
-> >>> +     .features               =3D CLOCK_EVT_FEAT_ONESHOT,
-> >>> +     .rating         =3D 100,
-> >>> +     .set_next_event =3D clint_clock_next_event,
-> >>> +};
-> >>> +
-> >>> +static u64 clint_rdtime(struct clocksource *cs)
-> >>> +{
-> >>> +     return readq_relaxed(clint_timer_val);
-> >>> +}
-> >>> +
-> >>> +static u64 notrace clint_sched_clock(void)
-> >>> +{
-> >>> +     return readq_relaxed(clint_timer_val);
-> >>> +}
-> >>> +
-> >>> +static struct clocksource clint_clocksource =3D {
-> >>> +     .name           =3D "clint_clocksource",
-> >>> +     .rating =3D 300,
-> >>> +     .mask           =3D CLOCKSOURCE_MASK(64),
-> >>> +     .flags          =3D CLOCK_SOURCE_IS_CONTINUOUS,
-> >>> +     .read           =3D clint_rdtime,
-> >>
-> >> What if !CONFIG_64BIT
-> >
-> > The CLINT counter is 64bit for both 32bit and 64bit systems
-> > but I should have used clint_get_cycles64() in clint_rdtime().
-> > I will update it.
-> >
-> >>
-> >>> +};
-> >>> +
-> >>> +static int clint_timer_starting_cpu(unsigned int cpu)
-> >>> +{
-> >>> +     struct clock_event_device *ce =3D per_cpu_ptr(&clint_clock_even=
-t, cpu);
-> >>> +
-> >>> +     ce->cpumask =3D cpumask_of(cpu);
-> >>> +     clockevents_config_and_register(ce, clint_timer_freq, 200, ULON=
-G_MAX);
-> >>
-> >> The function is not immune against registering the same clockevents. I=
-f
-> >> the CPU is hotplugged several times, this function will be called agai=
-n
-> >> and again. Why not rely on a for_each_possible_cpu loop in the init
-> >> function ?
-> >>
-> >>> +     enable_percpu_irq(clint_timer_irq,
-> >>> +                       irq_get_trigger_type(clint_timer_irq));
-> >>
-> >> Why do you want to enable / disable the interrrupts ? The should be
-> >> already handle by the hotplug framework no ?
-> >
-> > The perCPU interrupts are not enabled by default. We have to
-> > explicitly enable/disable perCPU interrupts in CPU hotplug callbacks.
-> >
->
-> Isn't is possible to do that in the probe/init function ?
 
-The enable_percpu_irq() and disable_percpu_irq() work for current
-CPU only. This means we have to call these functions separately on
-each CPU.
+Do you mean
 
+bool "Clocksource/timer using the SYSOST in Ingenic X SoCs"
+
+or
+
+default MACH_INGENIC ?
+
+This driver has some origins from "INGENIC_TIMER" driver and "INGENIC_OST" driver.
+Early Ingenic processors used TCU (timer/counter unit, has 6 or 8 generic timer channels) to provide clocksource and clockevent (both with only 16bit precision). This part of the processor can only use "INGENIC_TIMER" driver.
+
+Later processors provide an independent 32bit or 64bit timer channel (still under TCU, known as ost channel, this channel can not generate interrupt) to provid higher precision clocksource. The "INGENIC_OST" driver is for this channel. These processors can use "INGENIC_TIMER" driver, but using "INGENIC_OST" driver to provide higher precision clocksource would be a better choice (clockevent still needs to be provided by generic timer channel of TCU, and still 16bit precision).
+
+And the recent processors provide a SYSOST components, it is independent from TCU, including a 64bit timer channel for clocksource and a 32bit timer channel for clockevent. Although these processors can also use "INGENIC_TIMER" driver, but the better choice is completely independent use of "INGENIC_SYSOST" driver to provide higher precision clocksource and clockevent.
+
+You may have already noticed that this independent SYSOST component is like an upgraded and streamlined TCU, which only retains one generic timer channel that can generate interrupts, upgrade it from 16bit to 32bit, and then retain the 64bit ost channel. so the driver code and Kconfig code of this patch is largely referenced
+"INGENIC_TIMER" driver and "INGENIC_OST" driver.
+
+Thanks and best regards!
+
+>> +	default MACH_INGENIC
+>> +	depends on MIPS || COMPILE_TEST
+>> +	depends on COMMON_CLK
+>> +	select MFD_SYSCON
+>> +	select TIMER_OF
+>> +	select IRQ_DOMAIN
+>> +	help
+>> +	  Support for the SYSOST of the Ingenic X Series SoCs.
+>> +
+> [ ... ]
 >
 >
->
-> --
-> <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for AR=
-M SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
