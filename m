@@ -2,127 +2,89 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B02C433F1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 07:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 283D8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 07:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 630D12071A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 07:36:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wGVX7Onw"
+	by mail.kernel.org (Postfix) with ESMTP id EC51A2074B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 07:38:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725995AbgGQHgW (ORCPT
+        id S1726101AbgGQHiZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 03:36:22 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:43212 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728123AbgGQHgV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 03:36:21 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06H7aKLt017921;
-        Fri, 17 Jul 2020 02:36:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594971380;
-        bh=XNxA2YHCiMidNevYGW4DHNRVyITdLftF9encdz2b30w=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=wGVX7OnwtYJiSo+PCFXoFa5Cip0Bcu47wR1eox45tAY5NUfIzyUxUQtaNojCk/tnH
-         xO+k+1/YmyrvIlHsAgwTUFYhcF2S1eb4kfTBVDpj8vYUxS+r6fiYd4q168GuWTiBjQ
-         /QcPiYTZmkDkQqUAgUuSol6vlQ0upJsp7wf43A5A=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06H7aKqS043241
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Jul 2020 02:36:20 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 17
- Jul 2020 02:36:19 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 17 Jul 2020 02:36:19 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06H7aDk7044590;
-        Fri, 17 Jul 2020 02:36:16 -0500
-Subject: Re: [PATCH v4 0/6] arm64: ti: k3-j721e: Add SERDES PHY and USB3.0
- support
-To:     Roger Quadros <rogerq@ti.com>
-CC:     <robh@kernel.org>, <kishon@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200629125254.28754-1-rogerq@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <819b80c3-b029-3bb6-4c17-4f694f93b905@ti.com>
-Date:   Fri, 17 Jul 2020 10:36:13 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200629125254.28754-1-rogerq@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 17 Jul 2020 03:38:25 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:41352 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726060AbgGQHiZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Jul 2020 03:38:25 -0400
+X-IronPort-AV: E=Sophos;i="5.75,362,1589209200"; 
+   d="scan'208";a="52385279"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 17 Jul 2020 16:38:23 +0900
+Received: from be1yocto.ree.adwin.renesas.com (unknown [172.29.43.62])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id B32104209D49;
+        Fri, 17 Jul 2020 16:38:19 +0900 (JST)
+From:   Biju Das <biju.das.jz@bp.renesas.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Prashant Malani <pmalani@chromium.org>,
+        Thierry Reding <treding@nvidia.com>, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH 1/2] dt-bindings: update usb-c-connector required property
+Date:   Fri, 17 Jul 2020 08:34:33 +0100
+Message-Id: <1594971274-48027-1-git-send-email-biju.das.jz@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 29/06/2020 15:52, Roger Quadros wrote:
-> Hi Tero,
-> 
-> This series adds SERDES PHY support and Type-C USB Super-Speed support
-> to the J721E EVM.
-> 
-> Please queue this for -next. Thanks.
+Some boards have a single SS capable connector. Update usb-c-connector
+bindings to list port@1 as at least one of the required property.
 
-Queued up for 5.9, thanks.
+Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ Ref: https://patchwork.kernel.org/patch/11129567/
+---
+ Documentation/devicetree/bindings/connector/usb-connector.yaml | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
--Tero
+diff --git a/Documentation/devicetree/bindings/connector/usb-connector.yaml b/Documentation/devicetree/bindings/connector/usb-connector.yaml
+index 9bd52e6..41e0685 100644
+--- a/Documentation/devicetree/bindings/connector/usb-connector.yaml
++++ b/Documentation/devicetree/bindings/connector/usb-connector.yaml
+@@ -139,8 +139,11 @@ properties:
+         description: Sideband Use (SBU), present in USB-C. This describes the
+           alternate mode connection of which SBU is a part.
+ 
+-    required:
+-      - port@0
++    anyOf:
++      - required:
++        - port@0
++      - required:
++        - port@1
+ 
+ required:
+   - compatible
+-- 
+2.7.4
 
-> 
-> cheers,
-> -roger
-> 
-> Changelog:
-> v4:
-> - Removed redundant patch
-> - used compaible string for yaml filename
-> - typo fix s/mdf/mfd in patch subject
-> - added simple-mfd, address-cells, size-cells and ranges
-> 
-> v3:
-> - Add new DT schema for J721E System controller.
-> - Re-order system controller's compatible string i.e. most compatible to least.
-> 
-> v2:
-> - Addressed Rob's comments.
-> - Changed type-C debounce delay from 300ms to 700ms as 300ms is not
-> sufficient on EVM.
-> 
-> 
-> Kishon Vijay Abraham I (2):
->    arm64: dts: ti: k3-j721e-main: Add WIZ and SERDES PHY nodes
->    arm64: dts: ti: k3-j721e-main: Add system controller node and SERDES
->      lane mux
-> 
-> Roger Quadros (4):
->    dt-bindings: mfd: ti,j721e-system-controller.yaml: Add J721e system
->      controller
->    arm64: dts: ti: k3-j721e-main.dtsi: Add USB to SERDES MUX
->    arm64: dts: ti: k3-j721e: Enable Super-Speed support for USB0
->    arm64: dts: k3-j721e-proc-board: Add wait time for sampling Type-C DIR
->      line
-> 
->   .../mfd/ti,j721e-system-controller.yaml       |  74 +++++
->   .../dts/ti/k3-j721e-common-proc-board.dts     |  33 ++-
->   arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 275 ++++++++++++++++++
->   include/dt-bindings/mux/mux-j721e-wiz.h       |  53 ++++
->   4 files changed, 433 insertions(+), 2 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/mfd/ti,j721e-system-controller.yaml
->   create mode 100644 include/dt-bindings/mux/mux-j721e-wiz.h
-> 
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
