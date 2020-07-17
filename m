@@ -2,147 +2,149 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2EB1C433E3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 19:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2165C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 20:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CAB82076A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 19:51:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D6BA2070E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 20:02:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Xkw4ze+k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eDW8kYcT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbgGQTvJ (ORCPT
+        id S1728224AbgGQUCI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 15:51:09 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:35028 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728202AbgGQTvJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 15:51:09 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id AF69971D;
-        Fri, 17 Jul 2020 21:51:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1595015466;
-        bh=oZltVqbFT77MxEwYl4ZqGkdG266h0lg52MSzsPVW8js=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Xkw4ze+kgu0oAVhdIkkSLA/vN5nGtHgsQcJTj3tgHhTLfnquyjuvR/0+28fx5w6cd
-         T/KKI+hp0Le3RFyrw5zweQDdt8bYVuh3dspT5C6B1XaNJZP/v5Co9U2gwV3rhz7Pnf
-         jTmYFTrLqpv5JzUvf52B2Bb1PX85nIlZNm2aoGP0=
-Date:   Fri, 17 Jul 2020 22:50:58 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        slongerbeam@gmail.com, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH 06/13] dt-bindings: media: ov5640: Require ep properties
-Message-ID: <20200717195058.GH5961@pendragon.ideasonboard.com>
-References: <20200717132859.237120-1-jacopo+renesas@jmondi.org>
- <20200717132859.237120-7-jacopo+renesas@jmondi.org>
+        Fri, 17 Jul 2020 16:02:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39284 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726771AbgGQUCI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 16:02:08 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE725C0619D2;
+        Fri, 17 Jul 2020 13:02:07 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id z15so12285113wrl.8;
+        Fri, 17 Jul 2020 13:02:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QG3TuhYote73k/U/yKrq52X8lFEjdBrRQFB2lYTw5+k=;
+        b=eDW8kYcTFzlD8cyyAdIPMU+koKRP3yAJHaX2IZUK69MSgHEiN01CLFJFk4vnf0I4vJ
+         FCXSjDFqq8Cve4EUW6uXBaXxxe8ZWYQ5dodnJc3jwqwrxggL/3/8GN3JNO/lkYlHwHps
+         LnTlCMZBqCHtGcj9hiQTPPB8ua72rc4wAmB942mVA71a9AdJgW5Bgp+Qj+W+wDqNRyNt
+         os/MLA214XjCLHoC4ZEuwgGwK07KkmVil5kC2iPLOCw9+K6bM0PDaoNSRwyRJhHcMqrz
+         Cev2fcHCW/wSvBPSM0lO9tBAfJL+P44HbxITZJqgCCG+pI1Wq6A9MWXkMNVar9TIvPdH
+         rQSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QG3TuhYote73k/U/yKrq52X8lFEjdBrRQFB2lYTw5+k=;
+        b=l6Gcjh8TETQTzGP+Ud3gbF4a6wNVhbswV3fiSxzlJm1sdhNYKCgw0Jho8iWjhZrKJR
+         KIgy3MepfDKKwMFAFE38RXjByWPg8nSm/hHsQMk+avin8kH4PN0f1GuaMHcV+N4eVP9b
+         ft6ScQEdQ/00uMgWaV5uvWoRBgk6vbILDF2en4QB+qy+7m6uBG3BDis5DKE9qwm2775O
+         gh3W09fwC5XpxHbE1oULiwMio+eDiqelzv+ngQM0duNa5q4PjWVj/+OQJ1LAVT1cnWih
+         8voZHuHl6mtX3m9XcmgPCCy7QsCbEoGU7XvL05R8ZJbwNXlHqPB90R/mATw94ACIeDos
+         6mKg==
+X-Gm-Message-State: AOAM531LYWo4aAs7ARKRKjZNbfKNNFUDlMfRvhK9BamfJ3ZbA504zqmF
+        F5D/X5Q+7xxfXRdwAzQAX93ZoZf5
+X-Google-Smtp-Source: ABdhPJxTt19Jk+Xfs9t9m5b+deLwUats7rSLs/EHp3W76etVfwbpmKLH71jWVp0Lk6HEFfOT8wwFVA==
+X-Received: by 2002:a5d:6288:: with SMTP id k8mr11381440wru.373.1595016126084;
+        Fri, 17 Jul 2020 13:02:06 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id h5sm17018118wrc.97.2020.07.17.13.02.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jul 2020 13:02:05 -0700 (PDT)
+Subject: Re: [PATCH 2/2] dt-bindings: net: dsa: qca8k: Add PORT0_PAD_CTRL
+ properties
+To:     Matthew Hagan <mnhagan88@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, linux@armlinux.org.uk,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        John Crispin <john@phrozen.org>,
+        Jonathan McDowell <noodles@earth.li>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+References: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
+ <ea0a35ed686e6dace77e25cb70a8f39fdd1ea8ad.1594668793.git.mnhagan88@gmail.com>
+ <20200716150925.0f3e01b8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <20200716223236.GA1314837@lunn.ch>
+ <c86c4da0-a740-55cc-33dd-7a91e36c7738@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <50179386-08d4-9162-195e-35ca903452e1@gmail.com>
+Date:   Fri, 17 Jul 2020 13:02:00 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <c86c4da0-a740-55cc-33dd-7a91e36c7738@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200717132859.237120-7-jacopo+renesas@jmondi.org>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jacopo,
 
-Thank you for the patch.
 
-On Fri, Jul 17, 2020 at 03:28:52PM +0200, Jacopo Mondi wrote:
-> Now that the bus-type property has been made mandatory for
-> the ov5640 bindings, use the property value to mark endpoint
-> properties as required depending on the data interface in use.
-
-Ah, please disregard my comment on 05/13 that asked for this :-)
-
-> Mark as 'required' all the properties that were defined as required
-> in the original bindings in textual form. Adjust the example to
-> comply with validation requirement but do not update the existing
-> users as most of the required properties will be demoted in the
-> next patches.
+On 7/17/2020 12:26 PM, Matthew Hagan wrote:
 > 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
->  .../devicetree/bindings/media/i2c/ov5640.yaml | 41 +++++++++++++++++--
->  1 file changed, 38 insertions(+), 3 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5640.yaml b/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
-> index 16e6c2dc629a..8fd54575a1db 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
-> @@ -110,9 +110,40 @@ properties:
->            pclk-sample:
->              enum: [0, 1]
->  
-> -        required:
-> -          - remote-endpoint
-> -          - bus-type
-> +        allOf:
-> +          - if:
-> +              properties:
-> +                bus-type:
-> +                  const: 4
-> +            then:
-> +                properties:
+> On 16/07/2020 23:32, Andrew Lunn wrote:
+>> On Thu, Jul 16, 2020 at 03:09:25PM -0700, Jakub Kicinski wrote:
+>>> On Mon, 13 Jul 2020 21:50:26 +0100 Matthew Hagan wrote:
+>>>> Add names and decriptions of additional PORT0_PAD_CTRL properties.
+>>>>
+>>>> Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/net/dsa/qca8k.txt | 8 ++++++++
+>>>>  1 file changed, 8 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+>>>> index ccbc6d89325d..3d34c4f2e891 100644
+>>>> --- a/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+>>>> +++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+>>>> @@ -13,6 +13,14 @@ Optional properties:
+>>>>  
+>>>>  - reset-gpios: GPIO to be used to reset the whole device
+>>>>  
+>>>> +Optional MAC configuration properties:
+>>>> +
+>>>> +- qca,exchange-mac0-mac6:	If present, internally swaps MAC0 and MAC6.
+>>>
+>>> Perhaps we can say a little more here?
+>>>
+>>>> +- qca,sgmii-rxclk-falling-edge:	If present, sets receive clock phase to
+>>>> +				falling edge.
+>>>> +- qca,sgmii-txclk-falling-edge:	If present, sets transmit clock phase to
+>>>> +				falling edge.
+>>>
+>>> These are not something that other vendors may implement and therefore
+>>> something we may want to make generic? Andrew?
+>>
+>> I've never seen any other vendor implement this. Which to me makes me
+>> think this is a vendor extension, to Ciscos vendor extension of
+>> 1000BaseX.
+>>
+>> Matthew, do you have a real use cases of these? I don't see a DT patch
+>> making use of them. And if you do, what is the PHY on the other end
+>> which also allows you to invert the clocks?
+>>
+> The use case I am working on is the Cisco Meraki MX65 which requires bit
+> 18 set (qca,sgmii-txclk-falling-edge). On the other side is a BCM58625
+> SRAB with ports 4 and 5 in SGMII mode. There is no special polarity
+> configuration set on this side though I do have very limited info on
+> what is available. The settings I have replicate the vendor
+> configuration extracted from the device.
 
-I think there's one indentation level too much here.
-
-This should really be moved to video-interfaces.yaml, I'll let you
-decide if you want to bite the bullet now or if it should be done on
-top.
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> +                  bus-width: false
-> +                  data-shift: false
-> +                  hsync-active: false
-> +                  vsync-active: false
-> +                  pclk-sample: false
-> +                required:
-> +                  - remote-endpoint
-> +                  - bus-type
-> +                  - clock-lanes
-> +                  - data-lanes
-> +
-> +          - if:
-> +              properties:
-> +                bus-type:
-> +                  const: 5
-> +            then:
-> +              properties:
-> +                clock-lanes: false
-> +                data-lanes: false
-> +              required:
-> +                - remote-endpoint
-> +                - bus-type
-> +                - bus-width
-> +                - data-shift
-> +                - hsync-active
-> +                - vsync-active
-> +                - pclk-sample
->  
->      additionalProperties: false
->  
-> @@ -179,6 +210,10 @@ examples:
->                      remote-endpoint = <&parallel_from_ov5640>;
->                      bus-type = <5>;
->                      bus-width = <10>;
-> +                    data-shift = <0>;
-> +                    hsync-active = <1>;
-> +                    vsync-active = <1>;
-> +                    pclk-sample = <1>;
->                  };
->              };
->          };
-
+The only polarity change that I am aware of on the BCM58625 side is to
+allow for the TXDP/TXDN to be swapped, this is achieved by setting bit 5
+in the TX_ACONTROL0 register (block address is 0x8060), that does look
+different than what this is controlling though.
 -- 
-Regards,
-
-Laurent Pinchart
+Florian
