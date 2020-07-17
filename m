@@ -2,117 +2,189 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C72C3C433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 14:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AC5C433E4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 14:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A121B20717
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 14:36:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jJxTPb32"
+	by mail.kernel.org (Postfix) with ESMTP id 7C6D9208DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 14:40:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgGQOgz (ORCPT
+        id S1726205AbgGQOkT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 10:36:55 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:16690 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726104AbgGQOgy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:36:54 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594996614; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=NnSb7TJWGqQpSkl7k2UjULzlt0I9AkBaZ3dCnmY8dCM=; b=jJxTPb326ZmDyTCDiM719EJYAO8XdEscIJxJp+n5TecbllIEBNjHnjsk6hidLvCGKvTQKpy3
- VTSvkFXwA3CVQlFoAED7zAXMUemZ1sWAB9cq/RB+Nq2Rf9VHasybLD0lbtvSWlSLEyhNC/8g
- dl+m3UJZP8uD6SMKGwShWnmP9Zs=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
- 5f11b76bc9bd2efa2e1a5982 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 17 Jul 2020 14:36:27
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A6EC1C433CA; Fri, 17 Jul 2020 14:36:26 +0000 (UTC)
-Received: from [192.168.1.9] (unknown [59.99.219.196])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akhilpo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DD85EC433C6;
-        Fri, 17 Jul 2020 14:36:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DD85EC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akhilpo@codeaurora.org
-Subject: Re: [PATCH] drm: msm: a6xx: fix gpu failure after system resume
-To:     Rob Clark <robdclark@gmail.com>,
-        Matthias Kaehlcke <mka@chromium.org>
-Cc:     freedreno <freedreno@lists.freedesktop.org>,
-        dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Jonathan <jonathan@marek.ca>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-References: <1594733130-398-1-git-send-email-akhilpo@codeaurora.org>
- <20200714171036.GS3191083@google.com>
- <CAF6AEGsvbnWiFXQUFR+k-CLJ2CsCEoiVVE8pGVq0X0=VHE3hHA@mail.gmail.com>
-From:   Akhil P Oommen <akhilpo@codeaurora.org>
-Message-ID: <a466103a-7f70-468c-c8d3-16b59ae8b3d5@codeaurora.org>
-Date:   Fri, 17 Jul 2020 20:06:17 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 17 Jul 2020 10:40:19 -0400
+Received: from out28-149.mail.aliyun.com ([115.124.28.149]:40932 "EHLO
+        out28-149.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726198AbgGQOkT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 10:40:19 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07445006|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0713628-0.00445208-0.924185;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03301;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.I3R317z_1594996812;
+Received: from 192.168.10.205(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I3R317z_1594996812)
+          by smtp.aliyun-inc.com(10.147.41.121);
+          Fri, 17 Jul 2020 22:40:13 +0800
+Subject: Re: [PATCH v6 2/2] clocksource: Ingenic: Add support for the Ingenic
+ X1000 OST.
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-kernel@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de,
+        paul@crapouillou.net, dongsheng.qiu@ingenic.com,
+        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
+        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com
+References: <20200710170259.29028-1-zhouyanjie@wanyeetech.com>
+ <20200710170259.29028-3-zhouyanjie@wanyeetech.com>
+ <dd01a117-265a-e64b-5871-22f0f752834a@linaro.org>
+ <f0dd2ea5-0627-35cf-5a58-aaff0bcb22cd@wanyeetech.com>
+ <9c64bc35-c043-6e4b-cfc3-50f19e4cb315@linaro.org>
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <77c49585-63c2-7784-83cc-bf6151095b69@wanyeetech.com>
+Date:   Fri, 17 Jul 2020 22:40:09 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-In-Reply-To: <CAF6AEGsvbnWiFXQUFR+k-CLJ2CsCEoiVVE8pGVq0X0=VHE3hHA@mail.gmail.com>
+In-Reply-To: <9c64bc35-c043-6e4b-cfc3-50f19e4cb315@linaro.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 7/15/2020 12:12 AM, Rob Clark wrote:
-> On Tue, Jul 14, 2020 at 10:10 AM Matthias Kaehlcke <mka@chromium.org> wrote:
->>
->> On Tue, Jul 14, 2020 at 06:55:30PM +0530, Akhil P Oommen wrote:
->>> On targets where GMU is available, GMU takes over the ownership of GX GDSC
->>> during its initialization. So, take a refcount on the GX PD on behalf of
->>> GMU before we initialize it. This makes sure that nobody can collapse the
->>> GX GDSC once GMU owns the GX GDSC. This patch fixes some weird failures
->>> during GPU wake up during system resume.
->>>
->>> Signed-off-by: Akhil P Oommen <akhilpo@codeaurora.org>
->>
->> I went through a few dozen suspend/resume cycles on SC7180 and didn't run
->> into the kernel panic that typically occurs after a few iterations without
->> this patch.
->>
->> Reported-by: Matthias Kaehlcke <mka@chromium.org>
->> Tested-by: Matthias Kaehlcke <mka@chromium.org>
->>
->> On which tree is this patch based on? I had to apply it manually because
->> 'git am' is unhappy when I try to apply it:
->>
->>    error: sha1 information is lacking or useless (drivers/gpu/drm/msm/adreno/a6xx_gmu.c).
->>    error: could not build fake ancestor
->>
->> Both upstream and drm-msm are in my remotes and synced, so I suspect it's
->> some private tree. Please make sure to base patches on the corresponding
->> maintainer tree or upstream, whichs makes life easier for maintainers,
->> testers and reviewers.
-> 
-> I've run into the same issue frequently :-(
-> 
-> BR,
-> -R
-> 
-Sorry, I was using msm-next brand as the base, but had the opp-next 
-branch merged too inadvertently.
+Hi Daniel,
 
--Akhil
+在 2020/7/17 下午4:02, Daniel Lezcano 写道:
+> On 17/07/2020 08:13, Zhou Yanjie wrote:
+>> Hi Daniel,
+>>
+>> 在 2020/7/17 下午12:20, Daniel Lezcano 写道:
+>>> On 10/07/2020 19:02, 周琰杰 (Zhou Yanjie) wrote:
+>>>> X1000 and SoCs after X1000 (such as X1500 and X1830) had a separate
+>>>> OST, it no longer belongs to TCU. This driver will register both a
+>>>> clocksource and a sched_clock to the system.
+>>>>
+>>>> Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
+>>>> Co-developed-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
+>>>> Signed-off-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
+>>>> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>>>> Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+>>>> ---
+>>>>
+>>>> Notes:
+>>>>       v1->v2:
+>>>>       Fix compile warnings.
+>>>>       Reported-by: kernel test robot <lkp@intel.com>
+>>>>            v2->v3:
+>>>>       No change.
+>>>>            v3->v4:
+>>>>       1.Rename "ost" to "sysost"
+>>>>       1.Remove unrelated changes.
+>>>>       2.Remove ost_clock_parent enum.
+>>>>       3.Remove ost->percpu_timer_channel/ost->global_timer_channel.
+>>>>       4.Set up independent .recalc_rate/.set_rate for percpu/global
+>>>> timer.
+>>>>       5.No longer call functions in variable declarations.
+>>>>            v4->v5:
+>>>>       Use "of_io_request_and_map()" instead "of_iomap()".
+>>>>       Suggested-by: Paul Cercueil <paul@crapouillou.net>
+>>>>            v5->v6:
+>>>>       No change.
+>>>>
+>>>>    drivers/clocksource/Kconfig          |  11 +
+>>>>    drivers/clocksource/Makefile         |   1 +
+>>>>    drivers/clocksource/ingenic-sysost.c | 539
+>>>> +++++++++++++++++++++++++++++++++++
+>>>>    3 files changed, 551 insertions(+)
+>>>>    create mode 100644 drivers/clocksource/ingenic-sysost.c
+>>>>
+>>>> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+>>>> index 91418381fcd4..1bca8b8fb30f 100644
+>>>> --- a/drivers/clocksource/Kconfig
+>>>> +++ b/drivers/clocksource/Kconfig
+>>>> @@ -696,6 +696,17 @@ config INGENIC_TIMER
+>>>>        help
+>>>>          Support for the timer/counter unit of the Ingenic JZ SoCs.
+>>>>    +config INGENIC_SYSOST
+>>>> +    bool "Clocksource/timer using the SYSOST in Ingenic X SoCs"
+>>> We usually use silent options and let the platform's Kconfig enable it.
+>>> We show up the option only when COMPILE_TEST is enabled.
+>>>
+>>> Is there a reason to do it differently?
+>>
+>> Do you mean
+>>
+>> bool "Clocksource/timer using the SYSOST in Ingenic X SoCs"
+>>
+>> or
+>>
+>> default MACH_INGENIC ?
+> Both, no default here.
+>
+> eg.
+>
+> bool "Clocksource/timer using the SYSOST in Ingenic X SoCs" if COMPILE_TEST
+>
+> and
+>
+> in arch/mips/Kconfig in the config MACH_INGENIC section :
+>
+> ...
+> select INGENIC_SYSOST
+> ...
+
+
+Sure, I will do it in the next version.
+
+
+Thanks and best regards!
+
+
+>> This driver has some origins from "INGENIC_TIMER" driver and
+>> "INGENIC_OST" driver.
+>> Early Ingenic processors used TCU (timer/counter unit, has 6 or 8
+>> generic timer channels) to provide clocksource and clockevent (both with
+>> only 16bit precision). This part of the processor can only use
+>> "INGENIC_TIMER" driver.
+>>
+>> Later processors provide an independent 32bit or 64bit timer channel
+>> (still under TCU, known as ost channel, this channel can not generate
+>> interrupt) to provid higher precision clocksource. The "INGENIC_OST"
+>> driver is for this channel. These processors can use "INGENIC_TIMER"
+>> driver, but using "INGENIC_OST" driver to provide higher precision
+>> clocksource would be a better choice (clockevent still needs to be
+>> provided by generic timer channel of TCU, and still 16bit precision).
+>>
+>> And the recent processors provide a SYSOST components, it is independent
+>> from TCU, including a 64bit timer channel for clocksource and a 32bit
+>> timer channel for clockevent. Although these processors can also use
+>> "INGENIC_TIMER" driver, but the better choice is completely independent
+>> use of "INGENIC_SYSOST" driver to provide higher precision clocksource
+>> and clockevent.
+> Ok, the rating should do the job then.
+>
+> Thanks for the explanation.
+>
+>> You may have already noticed that this independent SYSOST component is
+>> like an upgraded and streamlined TCU, which only retains one generic
+>> timer channel that can generate interrupts, upgrade it from 16bit to
+>> 32bit, and then retain the 64bit ost channel. so the driver code and
+>> Kconfig code of this patch is largely referenced
+>> "INGENIC_TIMER" driver and "INGENIC_OST" driver.
+>>
+>> Thanks and best regards!
+>>
+>>>> +    default MACH_INGENIC
+>>>> +    depends on MIPS || COMPILE_TEST
+>>>> +    depends on COMMON_CLK
+>>>> +    select MFD_SYSCON
+>>>> +    select TIMER_OF
+>>>> +    select IRQ_DOMAIN
+>>>> +    help
+>>>> +      Support for the SYSOST of the Ingenic X Series SoCs.
+>>>> +
+>>> [ ... ]
+>>>
+>>>
+>
