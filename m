@@ -2,111 +2,114 @@ Return-Path: <SRS0=Xf3c=A4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F25C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 15:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B09CC433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 16:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07E7E2076A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 15:48:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vl3NEvpn"
+	by mail.kernel.org (Postfix) with ESMTP id 71D3321741
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jul 2020 16:00:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595001659;
+	bh=N+frjeuLN/SOI5k+ZS13xE98hyoDAZmLGor2nqjZ138=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VJ7k8cqEsTt89k/xtBLnwWtLcdvCJtFd3rG6ncZJYaY8AGoYL3VJCUI4ysX4wbWFL
+	 OAn1AbeD9jD8l5ElrGwmyfkN68du22sKFwHWVtlB+Jo95FPfk9cXJEzfn29Dh/A0+6
+	 ztk7OHCRg5Pw4hIkzEQTycv3/3qM3GJCVGSc/fNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgGQPsz (ORCPT
+        id S1726557AbgGQQA6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 11:48:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56350 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726322AbgGQPsz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jul 2020 11:48:55 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5745C0619D2;
-        Fri, 17 Jul 2020 08:48:54 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id q4so13299925lji.2;
-        Fri, 17 Jul 2020 08:48:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h11XOtehZDloRQK9LLWJgIGaRhspppMNqDAzBiX5ad0=;
-        b=Vl3NEvpnwvvHcMUF3NitR+46Z8sGTxKpnmW2tSGbSZI5WEMW3t/cfVkfrQKwFVLfmn
-         qeYWAms1UJZ0u2rgIpGXKPqzQRww21hWUFCIGkYU5iU2aI2DNB/ORCPOtTw84QooEoxU
-         RYowe2rX5Fdj+dRoNdNiG6L6UUa+Alrbcl8abG9racjlDwSa72vWTml3oZe1LVxEno23
-         8HqvAdO0M0ijRxSL52knF8JcEemEUtGDRuqD43LXb5rbnu/qG8BBreBmnwIir7x5vGFu
-         M9aVkD5RibFZ132rkt+/LOK5QNQiB843eekX8O2TxJo2RHEHnZOn30hEob39Xp0gVhf+
-         8DpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h11XOtehZDloRQK9LLWJgIGaRhspppMNqDAzBiX5ad0=;
-        b=OcxAdtBkUGH+WxOJ7X7+bilGNiZsr1N2MZhhfMh/59EFre5MAjLXVr/S5gkYQMuf8v
-         A720dS8BlqDBhkEUFlQpJionh83WzLYrGXOvAPUpH7DMGqcOsT9DEpTosHINWU70USed
-         WhxIAjgNHwH6zvbjwVKM7N11ufVG2lSKNBdNBSY5nZjtdb90RHjB5gVtnFeyX5OQ14Uj
-         1B+aoeBGNEQwFYOY8ZCA7qA9xmiQoKwr0nBMGb1W5xfOvSMLwJsutIpDoIb0O1p1/2lT
-         BLK1Yd2B4K+XOYHEY7LyjbUOqY9LADdgnzqfLVqkizuytRq5JKfDv4+QGS5daNuQ6NEl
-         8V5Q==
-X-Gm-Message-State: AOAM533XuFiFXvCPjKZH8r8dBNvwK61VDGrg47pDmXkRL2h5H2HYI5Ml
-        4UkKd4AcGCKO0FzNIjl59YFRYWtam1e5RrfAaxI=
-X-Google-Smtp-Source: ABdhPJwIzsbxel7UyqOZp+lBviG9zAjrG/Jz3iqThbVW0psJDeH5ulOp2LIDuUFpVJDNfOVaozw3oLVmHULgDPnkduQ=
-X-Received: by 2002:a2e:a375:: with SMTP id i21mr4928341ljn.403.1595000933299;
- Fri, 17 Jul 2020 08:48:53 -0700 (PDT)
+        Fri, 17 Jul 2020 12:00:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40680 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726442AbgGQQA6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Jul 2020 12:00:58 -0400
+Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.194.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F9862076D;
+        Fri, 17 Jul 2020 16:00:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595001658;
+        bh=N+frjeuLN/SOI5k+ZS13xE98hyoDAZmLGor2nqjZ138=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bmfnsO+r1r9lb0a6GFXSpvAz5gK3sHoUaE+eEsEGEHv9dM/vcwhgnKTU6kjenlETN
+         mT1RT7ewzQrUw9woDy8G92bLZ89DHyhO92LLQ6YzpBxUhD5t2qMHbMuTmpK35bHbIh
+         IoRgmDjmshEED0u4yVFYMWzuaoZFqQBiAdYq5bnI=
+Received: by wens.tw (Postfix, from userid 1000)
+        id 36E3A5FD80; Sat, 18 Jul 2020 00:00:55 +0800 (CST)
+From:   Chen-Yu Tsai <wens@kernel.org>
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 4/8] arm64: dts: allwinner: h5: Add clock to CPU cores
+Date:   Sat, 18 Jul 2020 00:00:49 +0800
+Message-Id: <20200717160053.31191-5-wens@kernel.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200717160053.31191-1-wens@kernel.org>
+References: <20200717160053.31191-1-wens@kernel.org>
 MIME-Version: 1.0
-References: <20200717132859.237120-1-jacopo+renesas@jmondi.org> <20200717132859.237120-6-jacopo+renesas@jmondi.org>
-In-Reply-To: <20200717132859.237120-6-jacopo+renesas@jmondi.org>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Fri, 17 Jul 2020 12:48:42 -0300
-Message-ID: <CAOMZO5Ap2_3hECqB5K3tbD-0URq0hJrMoNDwq6WmUMVojahfJg@mail.gmail.com>
-Subject: Re: [PATCH 05/13] dt-bindings: media: ov5640: Make bus-type mandatory
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "moderated list:ARM/STM32 ARCHITECTURE" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jacopo,
+From: Chen-Yu Tsai <wens@csie.org>
 
-On Fri, Jul 17, 2020 at 10:25 AM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+The ARM CPU cores are fed by the CPU clock from the CCU. Add a
+reference to the clock for each CPU core, along with the clock
+transition latency.
 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5640.yaml b/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
-> index 503f8b78615c..16e6c2dc629a 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
-> @@ -73,6 +73,9 @@ properties:
->            remote-endpoint:
->              description: A phandle to the bus receiver's endpoint node.
->
-> +          bus-type:
-> +            enum: [4, 5]
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Can we have an explanation for what the values 4 and 5 mean in the yaml doc?
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+index 4462a68c0681..09523f6011c5 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+@@ -13,6 +13,8 @@ cpu0: cpu@0 {
+ 			device_type = "cpu";
+ 			reg = <0>;
+ 			enable-method = "psci";
++			clocks = <&ccu CLK_CPUX>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
+ 		};
+ 
+ 		cpu1: cpu@1 {
+@@ -20,6 +22,8 @@ cpu1: cpu@1 {
+ 			device_type = "cpu";
+ 			reg = <1>;
+ 			enable-method = "psci";
++			clocks = <&ccu CLK_CPUX>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
+ 		};
+ 
+ 		cpu2: cpu@2 {
+@@ -27,6 +31,8 @@ cpu2: cpu@2 {
+ 			device_type = "cpu";
+ 			reg = <2>;
+ 			enable-method = "psci";
++			clocks = <&ccu CLK_CPUX>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
+ 		};
+ 
+ 		cpu3: cpu@3 {
+@@ -34,6 +40,8 @@ cpu3: cpu@3 {
+ 			device_type = "cpu";
+ 			reg = <3>;
+ 			enable-method = "psci";
++			clocks = <&ccu CLK_CPUX>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
+ 		};
+ 	};
+ 
+-- 
+2.27.0
 
-Looking at the series I see that 4 means MIPI-CSI2 and 5 means
-parallel interface, but this is not too obvious (at least for me).
-
-Or maybe we could use a string definition instead of hard coding 4 and 5?
