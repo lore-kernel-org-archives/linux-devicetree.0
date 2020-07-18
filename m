@@ -7,38 +7,34 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CC7C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 10:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B6FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 12:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BCF520724
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 10:55:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3784D2073A
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 12:18:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726507AbgGRKzu (ORCPT
+        id S1726493AbgGRMSZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Jul 2020 06:55:50 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:42782 "EHLO smtp.al2klimov.de"
+        Sat, 18 Jul 2020 08:18:25 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:60044 "EHLO smtp.al2klimov.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726490AbgGRKzu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 18 Jul 2020 06:55:50 -0400
+        id S1726481AbgGRMSZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 18 Jul 2020 08:18:25 -0400
 Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 1C369BC06F;
-        Sat, 18 Jul 2020 10:55:44 +0000 (UTC)
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 2FEAEBC053;
+        Sat, 18 Jul 2020 12:18:22 +0000 (UTC)
 From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     nm@ti.com, t-kristo@ti.com, ssantosh@kernel.org,
-        tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        robh+dt@kernel.org, p.zabel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
+To:     p.zabel@pengutronix.de, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] firmware: ti_sci: Replace HTTP links with HTTPS ones
-Date:   Sat, 18 Jul 2020 12:55:38 +0200
-Message-Id: <20200718105538.9542-1-grandmaster@al2klimov.de>
+Subject: [PATCH] reset: Replace HTTP links with HTTPS ones
+Date:   Sat, 18 Jul 2020 14:18:15 +0200
+Message-Id: <20200718121815.19782-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
+X-Spamd-Bar: +++++
 Authentication-Results: smtp.al2klimov.de;
         auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spam: Yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -63,6 +59,7 @@ Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 ---
  Continuing my work started at 93431e0607e5.
  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
  If there are any URLs to be removed completely
  or at least not (just) HTTPSified:
@@ -74,121 +71,44 @@ Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 
  If you apply the patch, please let me know.
 
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
 
- .../devicetree/bindings/interrupt-controller/ti,sci-intr.txt    | 2 +-
- drivers/firmware/ti_sci.c                                       | 2 +-
- drivers/firmware/ti_sci.h                                       | 2 +-
- drivers/irqchip/irq-ti-sci-inta.c                               | 2 +-
- drivers/irqchip/irq-ti-sci-intr.c                               | 2 +-
- drivers/reset/reset-ti-sci.c                                    | 2 +-
- include/linux/soc/ti/ti_sci_inta_msi.h                          | 2 +-
- include/linux/soc/ti/ti_sci_protocol.h                          | 2 +-
- 8 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
-index 1a8718f8855d..178fca08278f 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
-@@ -55,7 +55,7 @@ Required Properties:
- 			corresponds to a range of host irqs.
- 
- For more details on TISCI IRQ resource management refer:
--http://downloads.ti.com/tisci/esd/latest/2_tisci_msgs/rm/rm_irq.html
-+https://downloads.ti.com/tisci/esd/latest/2_tisci_msgs/rm/rm_irq.html
- 
- Example:
- --------
-diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
-index 4126be9e3216..53cee17d0115 100644
---- a/drivers/firmware/ti_sci.c
-+++ b/drivers/firmware/ti_sci.c
-@@ -2,7 +2,7 @@
- /*
-  * Texas Instruments System Control Interface Protocol Driver
-  *
-- * Copyright (C) 2015-2016 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2015-2016 Texas Instruments Incorporated - https://www.ti.com/
-  *	Nishanth Menon
-  */
- 
-diff --git a/drivers/firmware/ti_sci.h b/drivers/firmware/ti_sci.h
-index f0d068c03944..57cd04062994 100644
---- a/drivers/firmware/ti_sci.h
-+++ b/drivers/firmware/ti_sci.h
-@@ -6,7 +6,7 @@
-  * The system works in a message response protocol
-  * See: http://processors.wiki.ti.com/index.php/TISCI for details
-  *
-- * Copyright (C)  2015-2016 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C)  2015-2016 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- #ifndef __TI_SCI_H
-diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
-index 7e3ebf6ed2cd..85de19fe9b6e 100644
---- a/drivers/irqchip/irq-ti-sci-inta.c
-+++ b/drivers/irqchip/irq-ti-sci-inta.c
-@@ -2,7 +2,7 @@
- /*
-  * Texas Instruments' K3 Interrupt Aggregator irqchip driver
-  *
-- * Copyright (C) 2018-2019 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2018-2019 Texas Instruments Incorporated - https://www.ti.com/
-  *	Lokesh Vutla <lokeshvutla@ti.com>
-  */
- 
-diff --git a/drivers/irqchip/irq-ti-sci-intr.c b/drivers/irqchip/irq-ti-sci-intr.c
-index 59d51a20bbd8..5ea148faf2ab 100644
---- a/drivers/irqchip/irq-ti-sci-intr.c
-+++ b/drivers/irqchip/irq-ti-sci-intr.c
-@@ -2,7 +2,7 @@
- /*
-  * Texas Instruments' K3 Interrupt Router irqchip driver
-  *
-- * Copyright (C) 2018-2019 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2018-2019 Texas Instruments Incorporated - https://www.ti.com/
-  *	Lokesh Vutla <lokeshvutla@ti.com>
-  */
- 
-diff --git a/drivers/reset/reset-ti-sci.c b/drivers/reset/reset-ti-sci.c
-index bf68729ab729..b799aefad547 100644
---- a/drivers/reset/reset-ti-sci.c
-+++ b/drivers/reset/reset-ti-sci.c
+ drivers/reset/reset-ti-syscon.c       | 2 +-
+ include/dt-bindings/reset/ti-syscon.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/reset/reset-ti-syscon.c b/drivers/reset/reset-ti-syscon.c
+index a2635c21db7f..ef97c4dbbb4e 100644
+--- a/drivers/reset/reset-ti-syscon.c
++++ b/drivers/reset/reset-ti-syscon.c
 @@ -1,7 +1,7 @@
  /*
-  * Texas Instrument's System Control Interface (TI-SCI) reset driver
-  *
-- * Copyright (C) 2015-2017 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2015-2017 Texas Instruments Incorporated - https://www.ti.com/
-  *	Andrew F. Davis <afd@ti.com>
-  *
-  * This program is free software; you can redistribute it and/or modify
-diff --git a/include/linux/soc/ti/ti_sci_inta_msi.h b/include/linux/soc/ti/ti_sci_inta_msi.h
-index 11fb5048f5f6..e3aa8b14612e 100644
---- a/include/linux/soc/ti/ti_sci_inta_msi.h
-+++ b/include/linux/soc/ti/ti_sci_inta_msi.h
-@@ -2,7 +2,7 @@
- /*
-  * Texas Instruments' K3 TI SCI INTA MSI helper
-  *
-- * Copyright (C) 2018-2019 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2018-2019 Texas Instruments Incorporated - https://www.ti.com/
-  *	Lokesh Vutla <lokeshvutla@ti.com>
-  */
- 
-diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
-index 9531ec823298..0fc452dd96d4 100644
---- a/include/linux/soc/ti/ti_sci_protocol.h
-+++ b/include/linux/soc/ti/ti_sci_protocol.h
-@@ -2,7 +2,7 @@
- /*
-  * Texas Instruments System Control Interface Protocol
+  * TI SYSCON regmap reset driver
   *
 - * Copyright (C) 2015-2016 Texas Instruments Incorporated - http://www.ti.com/
 + * Copyright (C) 2015-2016 Texas Instruments Incorporated - https://www.ti.com/
-  *	Nishanth Menon
+  *	Andrew F. Davis <afd@ti.com>
+  *	Suman Anna <afd@ti.com>
+  *
+diff --git a/include/dt-bindings/reset/ti-syscon.h b/include/dt-bindings/reset/ti-syscon.h
+index 6d696d2d1508..eacc0f18083e 100644
+--- a/include/dt-bindings/reset/ti-syscon.h
++++ b/include/dt-bindings/reset/ti-syscon.h
+@@ -2,7 +2,7 @@
+ /*
+  * TI Syscon Reset definitions
+  *
+- * Copyright (C) 2015-2016 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2015-2016 Texas Instruments Incorporated - https://www.ti.com/
   */
  
+ #ifndef __DT_BINDINGS_RESET_TI_SYSCON_H__
 -- 
 2.27.0
 
