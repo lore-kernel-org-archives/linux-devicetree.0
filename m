@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD3E5C4345A
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA1CC4345C
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC68F2076D
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9429D2076D
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WENSboNW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oIZEdH/u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbgGRG6E (ORCPT
+        id S1728970AbgGRG5v (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Jul 2020 02:58:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54844 "EHLO
+        Sat, 18 Jul 2020 02:57:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729098AbgGRG6D (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 02:58:03 -0400
+        with ESMTP id S1728957AbgGRG5u (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 02:57:50 -0400
 Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F013DC0619D2;
-        Fri, 17 Jul 2020 23:58:02 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f18so20467581wml.3;
-        Fri, 17 Jul 2020 23:58:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A9E2C0619D2;
+        Fri, 17 Jul 2020 23:57:50 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id l2so20529968wmf.0;
+        Fri, 17 Jul 2020 23:57:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=DR+MN9yI45B0CbPas30C2sDxsoxmrDbz6ZTE82Yi1YU=;
-        b=WENSboNWqFEFKMhQ1tpuQelRMJAoIzuNKBQN5XrO86dudVwcu92a3aNhzf/hlGc70C
-         99QuqYIR8SsFjoVQgDKKzVGUrP4+ay/lkffYF0gtdz02LOYtjut8md2FNXS04mJsRS2o
-         FKK5iZs2FO/SJGqeip0SksH48C2emf6ivIjUSa9R48xoh6LzVmZyv0BwFC4VDA/ow4un
-         S8tOWLsQGbZ5UNLWIWQIZo6hoXZwjY0XIcLO4XR/kj/wM/FZ9KF1x+/ryHYkCYaTQJIT
-         mvGkLlP4D3O7uBc2jdIoLUW+EmFLc1FEDftrBQzCMOxAXBkFyApgX3u020lCf+QzlV+u
-         92ow==
+        bh=d988cBXnFVQ/GWsV54ibiM2GROtIFfDIzMG48hK8mIw=;
+        b=oIZEdH/uh1TtykZuv0ukEQCuPEVWNo4glkJgnskWVrWqZbBySTf3C1iuxSIa/lPFl0
+         v7Jds4ptBemj8bLOAjXDMjvKEigG5o0B5q9GcYZzpCH/deoFab07POBkE1UPCK3yp1kr
+         0tSUJ7vtVYq20TSiWldnLyFEkKTdyiGjF6TFLrCNRqcfqYfGFqigTBFlg1GDqMHtmdeM
+         EYKRLEv1ivQErEBvEOTFlM9L47yBSHMbCXyVnyOJVmB+wjfUqviKWTUcWm0X9xr4LM2V
+         VMoqNU5caMrZV7xp0dEyfjpE7FmP9tNpDlojKJlqVIuHCFBldlmYLp3miy80l15tWeJ0
+         ldXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=DR+MN9yI45B0CbPas30C2sDxsoxmrDbz6ZTE82Yi1YU=;
-        b=eVuucsUH92CqtaGhQeI6NXpuPhQjnn8rPDC73W6O6/UGp5g4yIraL4cprjgYxHtcV1
-         nOOi9IPrKNrOkIQys2I32Wrbu1RRYn7JEm7r6jS2w/TyX3naOmiM6hlpGWKlQS0lv9Tw
-         1Gpm+vkbSONgfs3ZgyOUWQFJh11JexkyzA04t2IBqZrsnB8F6mw6WoCJsDDW6zuUsaeF
-         4lOE7Nph0yg3U0griMqIIWh1vQzXWZx5nWEicv1/igTaC39niGBOioF26hURr3pE+4FV
-         pGTqS04K9pVSiAXzJfaDYLQD3n5QqU0AxTMsccFmAiMtk7IixLDgZ2TYpLuu3RB0LDFC
-         t5iw==
-X-Gm-Message-State: AOAM532FlqjrOcAGd2xhbu032O/0EVpzZL/TSyR5uCnFLwu/YJfXG7cJ
-        bygibEoAQbufadc+etYjC2Bg3aNO
-X-Google-Smtp-Source: ABdhPJweouzzfuZ/Hx+GE+ZOtOp3U/VJVa4dJNLXiSlFEcR7hnZHpn2pOAOKEreYUvRVMOyapB6v0A==
-X-Received: by 2002:a1c:dfd6:: with SMTP id w205mr13231447wmg.118.1595055481607;
-        Fri, 17 Jul 2020 23:58:01 -0700 (PDT)
+        bh=d988cBXnFVQ/GWsV54ibiM2GROtIFfDIzMG48hK8mIw=;
+        b=ifJX4Dm2o+zZd/Ap0jJiri/rHpE/NW1yXxqFQ+9qqJKN/smUKtVIoDXe/lGxKs+wOS
+         +FpCmtAJ9S/kEgcFKPl0fJfXFMy4VG4oh7mg044Iq4hd3rogmkXOABKx6qcYSzgeyj+T
+         1/mPVfYibOPhFvBYGm3r13aeuD5gaPq0vt9bQp7j/59eGUlGpkF1crX/k5xu9a7kSqBE
+         omprWg/vM2dhl3bwnfOVt9qG7Zp99S8LifmBJW1/2A0yuMZBf4XV8AlQy5JtsZPAEbc2
+         0w400eS+k9KQn1o0RXy4epG1WM69d6gRYfxxF3/zCBTVWv8AD8NFZpAFuckYTQ6gsN9f
+         RKYQ==
+X-Gm-Message-State: AOAM532JYfu5rnGGFVgXNgr33pCJV2gNV8kLN6gCtXDXIiD6hgLLl9eJ
+        05vEhnrsjj1sW93eAyzvoAY=
+X-Google-Smtp-Source: ABdhPJw8ufDkdQQhKOK9vRr515PVBi+xsM5aKv/nI0+7N1b5f0/EJP+DP89FJdxMmeJoVO5i9bSfGw==
+X-Received: by 2002:a1c:2e57:: with SMTP id u84mr13315589wmu.52.1595055468849;
+        Fri, 17 Jul 2020 23:57:48 -0700 (PDT)
 Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id x5sm18749191wmg.2.2020.07.17.23.57.59
+        by smtp.gmail.com with ESMTPSA id x5sm18749191wmg.2.2020.07.17.23.57.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 23:58:01 -0700 (PDT)
+        Fri, 17 Jul 2020 23:57:48 -0700 (PDT)
 From:   Christian Hewitt <christianshewitt@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -65,9 +65,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH 08/12] arm64: dts: meson: add audio playback to p212-s905x dtsi
-Date:   Sat, 18 Jul 2020 06:57:35 +0000
-Message-Id: <20200718065739.7802-9-christianshewitt@gmail.com>
+Subject: [PATCH 02/12] arm64: dts: meson: add audio playback to khadas-vim2
+Date:   Sat, 18 Jul 2020 06:57:29 +0000
+Message-Id: <20200718065739.7802-3-christianshewitt@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200718065739.7802-1-christianshewitt@gmail.com>
 References: <20200718065739.7802-1-christianshewitt@gmail.com>
@@ -80,29 +80,33 @@ Add initial audio support limited to HDMI i2s.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- .../dts/amlogic/meson-gxl-s905x-p212.dtsi     | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ .../dts/amlogic/meson-gxm-khadas-vim2.dts     | 44 +++++++++++++++++--
+ 1 file changed, 41 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
-index 05cb2f5e5c36..40776d42bf8e 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
-@@ -11,6 +11,7 @@
- /* Common DTSI for devices which are based on the P212 reference board. */
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+index bff8ec2c1c70..d4734220443c 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+@@ -7,9 +7,9 @@
  
- #include "meson-gxl-s905x.dtsi"
+ /dts-v1/;
+ 
+-#include <dt-bindings/input/input.h>
+-
+ #include "meson-gxm.dtsi"
++#include <dt-bindings/input/input.h>
 +#include <dt-bindings/sound/meson-aiu.h>
  
  / {
- 	aliases {
-@@ -85,6 +86,45 @@
- 		clocks = <&wifi32k>;
- 		clock-names = "ext_clock";
+ 	compatible = "khadas,vim2", "amlogic,s912", "amlogic,meson-gxm";
+@@ -145,6 +145,45 @@
+ 		clock-frequency = <32768>;
+ 		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
  	};
 +
 +	sound {
 +		compatible = "amlogic,gx-sound-card";
-+		model = "GXL-S905X-P212";
++		model = "GXM-KHADAS-VIM2";
 +		assigned-clocks = <&clkc CLKID_MPLL0>,
 +				  <&clkc CLKID_MPLL1>,
 +				  <&clkc CLKID_MPLL2>;
@@ -140,7 +144,15 @@ index 05cb2f5e5c36..40776d42bf8e 100644
 +	status = "okay";
  };
  
- &ethmac {
+ &cec_AO {
+@@ -154,7 +193,6 @@
+ 	hdmi-phandle = <&hdmi_tx>;
+ };
+ 
+-
+ &cpu_cooling_maps {
+ 	map0 {
+ 		cooling-device = <&gpio_fan THERMAL_NO_LIMIT 1>;
 -- 
 2.17.1
 
