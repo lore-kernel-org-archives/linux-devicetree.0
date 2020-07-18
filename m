@@ -2,145 +2,149 @@ Return-Path: <SRS0=fiEU=A5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E376C4345E
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE002C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 07:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E4F12076D
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8724C2076D
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 07:07:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nKEVxq8x"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zOrVrQ8v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbgGRG5t (ORCPT
+        id S1728951AbgGRHHq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Jul 2020 02:57:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54792 "EHLO
+        Sat, 18 Jul 2020 03:07:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725983AbgGRG5s (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 02:57:48 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F035CC0619D2;
-        Fri, 17 Jul 2020 23:57:47 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id o11so13239795wrv.9;
-        Fri, 17 Jul 2020 23:57:47 -0700 (PDT)
+        with ESMTP id S1725920AbgGRHHp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 03:07:45 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7469FC0619D2
+        for <devicetree@vger.kernel.org>; Sat, 18 Jul 2020 00:07:45 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id s26so6437451pfm.4
+        for <devicetree@vger.kernel.org>; Sat, 18 Jul 2020 00:07:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=UrTzQqJfmOE3wc4LgtWfzvjavE1CxqA487snNOvdDF4=;
-        b=nKEVxq8xAgb3BSHbys0l9zq2gcV8D7HhIfslhM/xLae2SyJP+Sg0JAaB6eGnECz8DT
-         RXca2F5O/JilwetdteyW/89mjPpFvb4BxpqWPNhNKjmckmEWfzbxMDLE2gugFREWvUK3
-         PHWgG+u445q55dd1KAsu1Vp22zN3kHuPVG2fm7Fd5gzZ9qZpVNWfBWDq1qKW0uAm0LeC
-         uRUSca4zJ++vK2WxSXib9cWMQzjR9+3YuF7wlJFAl7G5GlqE1Z1qvembQBd638C0NoFt
-         sHd3lH64y+OalOu7bnvroC9NEFZbJWQCn45XCGRkFb7o3verprQfuWNGgqSlXcYTJk2n
-         02vQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=FvB+EstirEoaTYLy3FAmpSy2vtZp1fbnxBznhXtHkyU=;
+        b=zOrVrQ8vs9K/U2uxQicdd0HuHtzFZWRl13/zXu2H/VSzWMsxphMZUUccwK34jqeiRr
+         KYSzLmJrqdrS1FHjnsQxrBD5jirXXrbWPj8UksDOnkWSD9lGGhcFULfAvndSAaH7vbrz
+         di3kEoRa+6Nt83wAeKHtAxGjWguI+iTDqOswGzEDwQ1HwjmRXOMG6tLFULIiSFfQBztv
+         bAVQNa8r7K1RiTJ/0He0A1X5MTFZ9NZo4mfRLsI/3T4z3g3mM6lT2jXLRaL/SFC+mr6C
+         nQP3VAn06OoxobWjoZ0bkub4ez4+feDmW4qpkYZ/BNALw2aDF1EcgC9jV2cbozWHDlBv
+         PMWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=UrTzQqJfmOE3wc4LgtWfzvjavE1CxqA487snNOvdDF4=;
-        b=Xtev2ef4rF/e6OZhE3kWNbuQYSQwJx/pW6gFIEHSGg3g/ssyJH8MlhPaiqa7JKxprY
-         5PzM5m2pbo/4kbCOQ5clZgn19rK9k3kLq5BZvJU8OF+2MtyZajgwYC/yHDzso5J5nSrr
-         IQ4HipVwslww885989HsWzHMifcKE/N0X4xMMyNlQmOI89qTNcAhvYzP0Y0KiXxxGFTH
-         Sn1HRjKHD6Xgqag4ryVZxWAoPNwv0yB/qvGS3OsYrcreKcb+WKHc0WfMoTKrdf8fV7KE
-         I6JQbuH3rw5d0S1KRY6thU0whPOzIyTH4oU4k3CcLaECAqw5W6stUXvoxs4aL52hY6Ws
-         k0DA==
-X-Gm-Message-State: AOAM532C3R5nsjbWXTig82MxFffVE9XXLbR6kpMWxuFpCAWP7UGoDZuq
-        9qyP3Z3fgHiR9Y9A5op0fZM=
-X-Google-Smtp-Source: ABdhPJxT+zWK7JQj0ZP6zsmrAOMrSNN5TIxi/onMGo7pglJq/uFAcC4q4lZL3vH6T/yRTz7ae2lnWg==
-X-Received: by 2002:a5d:4f0e:: with SMTP id c14mr14400539wru.410.1595055466673;
-        Fri, 17 Jul 2020 23:57:46 -0700 (PDT)
-Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id x5sm18749191wmg.2.2020.07.17.23.57.44
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FvB+EstirEoaTYLy3FAmpSy2vtZp1fbnxBznhXtHkyU=;
+        b=ZUkZgOiS7bzHFYOQL7dhOzoK96P72RWJFGN7s+BptNRJqa81uaOUJxnDgezfobAWIG
+         z9MFaouBlYrupXk1wO2Zp8rqV2LVrBNQ0cJHX3slGNIdpeJkTqWl6AvbY4Rf2TeJR2Eh
+         0BsxrRpT/y2wpSbEmkQNPAYPgzoFn3d7dgmiJqwwJTtJWaBQPUgON0UjcIYOFhQcJizI
+         wbR5wHpDZrMhMcHIUU0tmMAwlNtmh2Kh5Ob340fcFRIZAdtRf1r9P3yGF75DSUa3sBu8
+         +T37gD96UWMn6hFv8Tj85DLvChPqmAQ06sshsbkJDJNWFsuVsUMNl5B1VrqVw6zbGpeE
+         iHLA==
+X-Gm-Message-State: AOAM532+ekUeUfw2ZUL/0S8Pdj9eLz86ufD8qDiu1TYOgNMV0laHBMCx
+        TR8MMsm4y7sI6E5oxkshe8B6Ng==
+X-Google-Smtp-Source: ABdhPJxI1f6Tah2zpEfBV0ApJb35RLL0rDSc8ngWpvA54RkvtaT4kEQqaoMfJx9gdGEPqAzFnsReiQ==
+X-Received: by 2002:a63:be4e:: with SMTP id g14mr11652459pgo.193.1595056064925;
+        Sat, 18 Jul 2020 00:07:44 -0700 (PDT)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id r8sm9689269pfh.29.2020.07.18.00.07.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 23:57:46 -0700 (PDT)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH 01/12] arm64: dts: meson: add audio playback to a95x
-Date:   Sat, 18 Jul 2020 06:57:28 +0000
-Message-Id: <20200718065739.7802-2-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200718065739.7802-1-christianshewitt@gmail.com>
-References: <20200718065739.7802-1-christianshewitt@gmail.com>
+        Sat, 18 Jul 2020 00:07:44 -0700 (PDT)
+Date:   Sat, 18 Jul 2020 00:07:40 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        robh+dt@kernel.org, mka@chromium.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, agross@kernel.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Subject: Re: [PATCH V1] arm64: dts: qcom: SD-card GPIO pin set bias-pull up
+Message-ID: <20200718070740.GB61202@yoga>
+References: <1595054041-6872-1-git-send-email-sbhanu@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595054041-6872-1-git-send-email-sbhanu@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add initial audio support limited to HDMI i2s.
+On Fri 17 Jul 23:34 PDT 2020, Shaik Sajida Bhanu wrote:
 
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
- .../dts/amlogic/meson-gxbb-nexbox-a95x.dts    | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
+> From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> 
+> On some sc7180 based platforms where external pull is not present on cd-gpio,
+> this gpio state is getting read as HIGH when sleep config is applied on it.
+> This is resulting in SDcard rescan after suspend-resume even though SDcard
+> is not present.
+> 
+> Update cd-gpio sleep config with bais-pull to fix this issue.
+> 
+> Also include xo clock to sdhc clocks list which will be used
+> in calculating MCLK_FREQ field of DLL_CONFIG2 register.
+> 
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-index 67d901ed2fa3..b5b11cb9f393 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-@@ -10,6 +10,7 @@
- #include "meson-gxbb.dtsi"
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
-+#include <dt-bindings/sound/meson-aiu.h>
- 
- / {
- 	compatible = "nexbox,a95x", "amlogic,meson-gxbb";
-@@ -139,6 +140,45 @@
- 			};
- 		};
- 	};
-+
-+	sound {
-+		compatible = "amlogic,gx-sound-card";
-+		model = "GXBB-NEXBOX-A95X";
-+		assigned-clocks = <&clkc CLKID_MPLL0>,
-+				  <&clkc CLKID_MPLL1>,
-+				  <&clkc CLKID_MPLL2>;
-+		assigned-clock-parents = <0>, <0>, <0>;
-+		assigned-clock-rates = <294912000>,
-+				       <270950400>,
-+				       <393216000>;
-+		status = "okay";
-+
-+		dai-link-0 {
-+			sound-dai = <&aiu AIU_CPU CPU_I2S_FIFO>;
-+		};
-+
-+		dai-link-1 {
-+			sound-dai = <&aiu AIU_CPU CPU_I2S_ENCODER>;
-+			dai-format = "i2s";
-+			mclk-fs = <256>;
-+
-+			codec-0 {
-+				sound-dai = <&aiu AIU_HDMI CTRL_I2S>;
-+			};
-+		};
-+
-+		dai-link-2 {
-+			sound-dai = <&aiu AIU_HDMI CTRL_OUT>;
-+
-+			codec-0 {
-+				sound-dai = <&hdmi_tx>;
-+			};
-+		};
-+	};
-+};
-+
-+&aiu {
-+	status = "okay";
- };
- 
- &cvbs_vdac_port {
--- 
-2.17.1
+Please split this in two patches; one fixing the card detect bias and
+one for adding the xo clock.
 
+
+This needs Veerabhadrarao's signed-off-by as well (followed by yours).
+
+Regards,
+Bjorn
+
+> Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index d78a066..8034fcc 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -682,8 +682,9 @@
+>  			interrupt-names = "hc_irq", "pwr_irq";
+>  
+>  			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
+> -					<&gcc GCC_SDCC1_AHB_CLK>;
+> -			clock-names = "core", "iface";
+> +					<&gcc GCC_SDCC1_AHB_CLK>,
+> +					<&xo_board>;
+> +			clock-names = "core", "iface", "xo";
+>  			interconnects = <&aggre1_noc MASTER_EMMC &mc_virt SLAVE_EBI1>,
+>  				<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_EMMC_CFG>;
+>  			interconnect-names = "sdhc-ddr","cpu-sdhc";
+> @@ -1819,7 +1820,7 @@
+>  
+>  				pinconf-sd-cd {
+>  					pins = "gpio69";
+> -					bias-disable;
+> +					bias-pull-up;
+>  					drive-strength = <2>;
+>  				};
+>  			};
+> @@ -2481,8 +2482,9 @@
+>  			interrupt-names = "hc_irq", "pwr_irq";
+>  
+>  			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
+> -					<&gcc GCC_SDCC2_AHB_CLK>;
+> -			clock-names = "core", "iface";
+> +					<&gcc GCC_SDCC2_AHB_CLK>,
+> +					<&xo_board>;
+> +			clock-names = "core", "iface", "xo";
+>  
+>  			interconnects = <&aggre1_noc MASTER_SDCC_2 &mc_virt SLAVE_EBI1>,
+>  				<&gem_noc MASTER_APPSS_PROC &config_noc	SLAVE_SDCC_2>;
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
