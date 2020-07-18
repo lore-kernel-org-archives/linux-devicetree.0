@@ -2,62 +2,62 @@ Return-Path: <SRS0=fiEU=A5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C6CC433FE
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33367C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00EFD21775
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11BB2207FB
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X9DFora6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JIvb2Ngq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729176AbgGRG6N (ORCPT
+        id S1729195AbgGRG6Q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Jul 2020 02:58:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54862 "EHLO
+        Sat, 18 Jul 2020 02:58:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729145AbgGRG6H (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 02:58:07 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58CC5C0619D2;
-        Fri, 17 Jul 2020 23:58:07 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id q5so13242540wru.6;
-        Fri, 17 Jul 2020 23:58:07 -0700 (PDT)
+        with ESMTP id S1729162AbgGRG6N (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 02:58:13 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94BFFC0619D3;
+        Fri, 17 Jul 2020 23:58:11 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id f7so13262797wrw.1;
+        Fri, 17 Jul 2020 23:58:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=lDvI8JDwLjhA5jkV3AvGA6unyQL/mwAeBeK74iYRYOY=;
-        b=X9DFora6PLpolmzde1+vkKm3Xlx6DbggTZ8o5nYtKAcsql3ir4ARZbrW5AXMiiVh/7
-         uNzvMs80abrDTsEUYxESMVCllcUNylfduzeov5At5F+Da3Ae9Ba8WCM2aDxASsuJ8tmS
-         sLhQirwBv7zQNOr6BeXP3d/P3IoC04FDVPpaejfmil0JvtN+meoWIgvW1XYkx0psjJE7
-         sByosWshlP7xaCM61yHkVwrnblJ9Qg12lEfa6j4KxFR7Lu6uNBlpZGEc0hc8AAI5Y5Tt
-         EaiqcVJGLM00+JfEvbrP8ZO0myGISuv0Qy1Wi8Mx03RRO8jmJxVrZWNM692L0SLnLo1A
-         HBXw==
+        bh=1gIivsKhrs5B4E2eM/SXdSVH3UTq3Ox3b3pPitMs8zM=;
+        b=JIvb2Ngqnjk847TFxnaUZHKhchB8YfVtdu/CTHONMKczeOW8Le0mBfXZDoBYduxujB
+         lTAIwDhYvrjH+Um9LwOxUH5mkHPSGWYRULG0+9+2mucvkp/5p/mdmhaJOHBcrvqNKMSZ
+         xmIFrQEAA/FMLCGEZpQLUvRZrp+Jtslprw1QlZ+mHzVcit9c+ecHYD6BCHXBxImZALwy
+         m6Iw7MCdMPUbaiyNAiGRvKoqKA+FZkanTdd+/KbTTRp8v2fspqCYTYBa3Jp6ijLCZYJk
+         eFtr3EttuKnBPd7OvYPdQZ51rWiu+uIOxN9Mn2XNmiNgGX0OczdUmeNp2GYZsmHMcvis
+         cVtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=lDvI8JDwLjhA5jkV3AvGA6unyQL/mwAeBeK74iYRYOY=;
-        b=ZXP3q0310tB7vzylZypYA0bzeKl6v8CY/qhl1QiRgFYFgoBoixo9KR2Hnp/Kamp4++
-         K0TEhvapyTw7EPKns0/fhCQ9+Zcj2A8qDmq+BoW3ZRIuNjELrwr8NuaGpjW5SxNlf2qJ
-         WFPrisB+kNLYVgYRjckOHuBZTzIcee9aZ5n0Kxebdjjya1EBoIq46gun5wK/z00q3RxM
-         aZy3W/avJDJYDQ2rYLsNvL2LNbqbgnLKcO9mCA0fedxyHcVSrK9O+sBJ7DK24DUjMdRZ
-         QoFOaXh+A1hvqfSZTz01IKh4Y642bWGZJ/53tOIrCez2wwGquMqwHd8vPoOm96/M52FZ
-         LFAA==
-X-Gm-Message-State: AOAM533oA+yMjPLYt8u1r8U0u9Uz9QuJuPTt8yvxYsjdn2XUEN+H4Dav
-        634cO75adqXT28GLAimImQg=
-X-Google-Smtp-Source: ABdhPJwwBSyTTXbuFejDMCxNajPVQD1NVbIaGwfvqV05fGed1WqCOEHAb9iviWWS+Z+yQV1jb0vUjA==
-X-Received: by 2002:a5d:40ca:: with SMTP id b10mr14660567wrq.56.1595055486100;
-        Fri, 17 Jul 2020 23:58:06 -0700 (PDT)
+        bh=1gIivsKhrs5B4E2eM/SXdSVH3UTq3Ox3b3pPitMs8zM=;
+        b=DjA4VPvKKxaihyIrD6fb9pHGwt3U293L96UEDJ7wZCn++2MRd7HmxW95LapKjjb6nH
+         dfuk3xy8xlL3OTfn9vdaWiSoiuIfD7zSy3DvxnLXHRX4A2vrZc2XX6zasjZdM6HqNwjP
+         Pn8sCbTqsrR4Fg5i0fyu3+Zszp+wqf5r5Cs/K8imWfc8DkYtbi9ASgjjKtD8uT70gfrV
+         78GWllsrUzuFZh7Nfdz8LAB0XTtUCeWFHNObwTo3DqEUTQ0Dxdrq4YPmAnx7yRP4lPEo
+         pCezKKH5RUNnuHDDwjEnbfWHbJu+AwOLdrdMUIH9EkWghHH/86STyM/Ravh5J3qgCDCs
+         RVgA==
+X-Gm-Message-State: AOAM532rnOShJstZiV4FyWNC4YI3XZfye20FR4rJ9pLWGchcA1R4K47A
+        hHRyHhYDkMtzGqAxLeUOr+Q=
+X-Google-Smtp-Source: ABdhPJxEIE/fyCFRu3RRxgW1mThwfcZwyiNFLjxzNHyGDN6C7wSEse0IChWCM1AhE9sSWWyDdWzz3g==
+X-Received: by 2002:a5d:5490:: with SMTP id h16mr14399637wrv.394.1595055490357;
+        Fri, 17 Jul 2020 23:58:10 -0700 (PDT)
 Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id x5sm18749191wmg.2.2020.07.17.23.58.04
+        by smtp.gmail.com with ESMTPSA id x5sm18749191wmg.2.2020.07.17.23.58.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 23:58:05 -0700 (PDT)
+        Fri, 17 Jul 2020 23:58:09 -0700 (PDT)
 From:   Christian Hewitt <christianshewitt@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -65,9 +65,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH 10/12] arm64: dts: meson: add audio playback to vega-s95 dtsi
-Date:   Sat, 18 Jul 2020 06:57:37 +0000
-Message-Id: <20200718065739.7802-11-christianshewitt@gmail.com>
+Subject: [PATCH 12/12] arm64: dts: meson: add audio playback to wetek-play2
+Date:   Sat, 18 Jul 2020 06:57:39 +0000
+Message-Id: <20200718065739.7802-13-christianshewitt@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200718065739.7802-1-christianshewitt@gmail.com>
 References: <20200718065739.7802-1-christianshewitt@gmail.com>
@@ -80,24 +80,22 @@ Add initial support limited to HDMI i2s and SPDIF (LPCM).
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi | 61 +++++++++++++++++++
+ .../dts/amlogic/meson-gxbb-wetek-play2.dts    | 61 +++++++++++++++++++
  1 file changed, 61 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-index 222ee8069cfa..1300585a1ec7 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-@@ -4,6 +4,7 @@
-  */
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
+index 2ab8a3d10079..f2562c7de67c 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
+@@ -8,11 +8,19 @@
  
- #include "meson-gxbb.dtsi"
+ #include "meson-gxbb-wetek.dtsi"
+ #include <dt-bindings/input/input.h>
 +#include <dt-bindings/sound/meson-aiu.h>
  
  / {
- 	compatible = "tronsmart,vega-s95", "amlogic,meson-gxbb";
-@@ -17,6 +18,13 @@
- 		stdout-path = "serial0:115200n8";
- 	};
+ 	compatible = "wetek,play2", "amlogic,meson-gxbb";
+ 	model = "WeTek Play 2";
  
 +	spdif_dit: audio-codec-0 {
 +		#sound-dai-cells = <0>;
@@ -107,16 +105,16 @@ index 222ee8069cfa..1300585a1ec7 100644
 +	};
 +
  	leds {
- 		compatible = "gpio-leds";
- 
-@@ -97,6 +105,59 @@
- 		clocks = <&wifi32k>;
- 		clock-names = "ext_clock";
+ 		led-wifi {
+ 			label = "wetek-play:wifi-status";
+@@ -39,6 +47,59 @@
+ 			gpios = <&gpio_ao GPIOAO_3 GPIO_ACTIVE_LOW>;
+ 		};
  	};
 +
 +	sound {
 +		compatible = "amlogic,gx-sound-card";
-+		model = "GXBB-VEGA-S95";
++		model = "GXBB-WETEK-PLAY2";
 +		assigned-clocks = <&clkc CLKID_MPLL0>,
 +				  <&clkc CLKID_MPLL1>,
 +				  <&clkc CLKID_MPLL2>;
@@ -168,7 +166,7 @@ index 222ee8069cfa..1300585a1ec7 100644
 +	pinctrl-names = "default";
  };
  
- &cec_AO {
+ &i2c_A {
 -- 
 2.17.1
 
