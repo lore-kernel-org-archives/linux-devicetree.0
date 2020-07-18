@@ -2,205 +2,107 @@ Return-Path: <SRS0=fiEU=A5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DA8C433E4
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 07:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD55C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 08:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADA5D2074B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 07:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16D1A2073E
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 08:29:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ke+wmC2/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZzHLgOEL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbgGRHZp (ORCPT
+        id S1728885AbgGRI31 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Jul 2020 03:25:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59082 "EHLO
+        Sat, 18 Jul 2020 04:29:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729089AbgGRHZm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 03:25:42 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3887BC0619D2;
-        Sat, 18 Jul 2020 00:25:42 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id g75so17766825wme.5;
-        Sat, 18 Jul 2020 00:25:42 -0700 (PDT)
+        with ESMTP id S1727872AbgGRI31 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 04:29:27 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF5D2C0619D2
+        for <devicetree@vger.kernel.org>; Sat, 18 Jul 2020 01:29:26 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id m22so7761590pgv.9
+        for <devicetree@vger.kernel.org>; Sat, 18 Jul 2020 01:29:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=keAVpGfsQcEDqnbHUMyN/ynnpJsp1LvUpjA6RoHC1Co=;
-        b=Ke+wmC2/T6ELScDbLkHP0eIT7W6dGZGXFAgyiQ/tHK+3jjRYLPqVh9oVmc1nhbz1to
-         t2Gt2E6s2AHP/wcmbsvvCuinTIs2EzumrzEYS7Gb+OTqR8sWS7BTh99PJ79znsf2f129
-         TsmhbcN+xnGHHJOrW6POeg3eR1xrYLIrGwg737I0ssgn2aPxXvJjg8+t6rwvxOJA+uRE
-         eCbsaJ/ZvqCyt7YULkfoZFfKJwFGQuTmnL7lN+/3QqS67IPYXl+62/HX9GeOw9reGJ5i
-         TbsA2uAEqBgKKsNFEGgKkgYAFIalYrwLXZgcGtFwFqzg5ZNt+wjkpfIGJNq29/x0SPho
-         YA9A==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dPX5I2zvoaIfMrTJOaEVmZ8AJ80iRBsKVksO1GxJCNo=;
+        b=ZzHLgOEL6rfH/FrYghVSfVEQktV2G0Ir7o5GkPsQTPiSTXfAartacdCWERPApI4F4h
+         z/xNML4mDKErL7wVRlTVtBRcspOz9kDbKiYzv/yyiLNLwgvPEJoSN37amJBWnAxRy9V2
+         9hVGDkdUX8hOdVMJjPWlhR6l8UlkjZKc+fziFbkc/yru2iiCKqBHpaSOUK5RnZW2S/yn
+         Pn8cacEL/2XGSr+kepi8HbhO+UN1PagUSVAQCnGrKN9SjBqwzxGDJoQQDa/+JnKN6Shy
+         o1suzUkzCeetU7bWUPKA6K7RuhGSovE+CT7GHBU6X1HJ4Oh0B0JzqvprdhMf8kXfmmJ2
+         BA5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=keAVpGfsQcEDqnbHUMyN/ynnpJsp1LvUpjA6RoHC1Co=;
-        b=Wo+AUZEbIOVlk/2rGDFaosQGdQc4mgjaX5gipojGHksmhqtyQvlkNhPvKv16QYNKKT
-         qZau0rKJfZrmEtVW6QJFfDXuPlC7GnO7dCA7b+Xv7xzcHxbLX5a8dCe8GMsHW4HesYp5
-         z7jlc2sIgEl/XOgi13dp7Qc9E2XgfBm+QOsXZZD46bjLYWnBOZQe81u9hgZcT+gYzmMB
-         WELTlfmTfGqEgn1iu0uDAZdUs83HrxEwpBNPQKYBg9gwj34cYSawAYiDhdBebb0ivrUG
-         ghbiwtf3MkCyx3/OEUEnG6AMolLFkg98aq1T0r3pJorAkP3vGWX9AI9+zM9zm1tr3wG0
-         oLwg==
-X-Gm-Message-State: AOAM533I/TXHXrt7RIkxY2Lbp9QWeFtux8o6sI/YtbuFcLaMOmEDc5Oq
-        dGISG0PVpjx5syI7mmDd0e0=
-X-Google-Smtp-Source: ABdhPJwRIuNiryqRIXEdnd8PCtYBUxhPz4wLgti+0y9CRAHUV42vcSY23IDGC39u1ZoKBGL9EYxFUQ==
-X-Received: by 2002:a1c:4b09:: with SMTP id y9mr13033409wma.46.1595057140962;
-        Sat, 18 Jul 2020 00:25:40 -0700 (PDT)
-Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id c7sm19550192wrq.58.2020.07.18.00.25.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jul 2020 00:25:40 -0700 (PDT)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH 2/2] arm64: dts: meson: add audio playback to khadas-vim3l
-Date:   Sat, 18 Jul 2020 07:25:32 +0000
-Message-Id: <20200718072532.8427-3-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200718072532.8427-1-christianshewitt@gmail.com>
-References: <20200718072532.8427-1-christianshewitt@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dPX5I2zvoaIfMrTJOaEVmZ8AJ80iRBsKVksO1GxJCNo=;
+        b=C7NVjj1WcVVv/nUHeMSmLS547klNsSYs7uDE1BfW1wOw0VUQlUsVSHfVP28L+ak1hj
+         4VKNWZga3/mfIRE/4Goic8TxpKUABRyC06sI+HX2eN99ombUCyoLX7dA896nszxmG81C
+         c7ONk13iKMQiRFxweYcGhv08Za7CRl5yGHWPdeiH107KCqZnDcfnMBJO0PpIfacj9rMN
+         GWa1AaD9nJHIwnnxUZ+38rlJmk0VBJTZgNX3JSdqjPeGVz3hgKtNLMRSrAmS711PNiBU
+         VnYSZSnU6kSp0bJaV0q6dEng7yMpoiRuxyuc1LkwXxbRiNKCDGhlDj/Ka1fSjSg2eIB6
+         iC9A==
+X-Gm-Message-State: AOAM531fH8tuafHiqDNuJLwGBWOhHynSQi0xvp1jDKq8NnE2MmLAssE9
+        Dr36JWImNex3eVPncLk0y0ebVQ==
+X-Google-Smtp-Source: ABdhPJxpkjlVoi1K6zt3TxppMxnpJwdAYknEnoLeYjpkZ5qIgAHhN1uKddV4rWohLA2QlS4I+GW9GA==
+X-Received: by 2002:a65:620e:: with SMTP id d14mr11477128pgv.360.1595060966415;
+        Sat, 18 Jul 2020 01:29:26 -0700 (PDT)
+Received: from localhost ([223.190.30.182])
+        by smtp.gmail.com with ESMTPSA id k100sm4874773pjb.57.2020.07.18.01.29.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 18 Jul 2020 01:29:25 -0700 (PDT)
+Date:   Sat, 18 Jul 2020 13:59:14 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Sumit Gupta <sumitg@nvidia.com>, rjw@rjwysocki.net,
+        catalin.marinas@arm.com, will@kernel.org, robh+dt@kernel.org,
+        mirq-linux@rere.qmqm.pl, devicetree@vger.kernel.org,
+        jonathanh@nvidia.com, talho@nvidia.com, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, bbasu@nvidia.com,
+        mperttunen@nvidia.com
+Subject: Re: [TEGRA194_CPUFREQ PATCH v6 2/3] arm64: tegra: Add t194 ccplex
+ compatible and bpmp property
+Message-ID: <20200718082914.ecyngrsoir7j5q6y@vireshk-mac-ubuntu>
+References: <1594819885-31016-1-git-send-email-sumitg@nvidia.com>
+ <1594819885-31016-3-git-send-email-sumitg@nvidia.com>
+ <20200716123715.GA535268@ulmo>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200716123715.GA535268@ulmo>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add initial audio support limited to HDMI i2s, copying the config
-from the existing VIM3 device-tree.
+On 16-07-20, 14:37, Thierry Reding wrote:
+> On Wed, Jul 15, 2020 at 07:01:24PM +0530, Sumit Gupta wrote:
+> > On Tegra194, data on valid operating points for the CPUs needs to be
+> > queried from BPMP. In T194, there is no node representing CPU complex.
+> > So, add compatible string to the 'cpus' node instead of using dummy
+> > node to bind cpufreq driver. Also, add reference to the BPMP instance
+> > for the CPU complex.
+> > 
+> > Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+> > ---
+> >  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 2 ++
+> >  1 file changed, 2 insertions(+)
+> 
+> Looks like the DT bindings are now done so I've applied this for v5.9.
+> 
+> Viresh, are you going to pick up the other patches, or do you want me
+> to pick them up and send you a pull request?
 
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
- .../dts/amlogic/meson-sm1-khadas-vim3l.dts    | 88 +++++++++++++++++++
- 1 file changed, 88 insertions(+)
+Applied the other two patches, Thanks.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
-index dbbf29a0dbf6..b104967dbef1 100644
---- a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
-@@ -8,6 +8,7 @@
- 
- #include "meson-sm1.dtsi"
- #include "meson-khadas-vim3.dtsi"
-+#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
- 
- / {
- 	compatible = "khadas,vim3l", "amlogic,sm1";
-@@ -31,6 +32,69 @@
- 		regulator-boot-on;
- 		regulator-always-on;
- 	};
-+
-+	sound {
-+		compatible = "amlogic,axg-sound-card";
-+		model = "SM1-KHADAS-VIM3L";
-+		audio-aux-devs = <&tdmout_a>;
-+		audio-routing = "TDMOUT_A IN 0", "FRDDR_A OUT 0",
-+				"TDMOUT_A IN 1", "FRDDR_B OUT 0",
-+				"TDMOUT_A IN 2", "FRDDR_C OUT 0",
-+				"TDM_A Playback", "TDMOUT_A OUT";
-+
-+		assigned-clocks = <&clkc CLKID_MPLL2>,
-+				  <&clkc CLKID_MPLL0>,
-+				  <&clkc CLKID_MPLL1>;
-+		assigned-clock-parents = <0>, <0>, <0>;
-+		assigned-clock-rates = <294912000>,
-+				       <270950400>,
-+				       <393216000>;
-+		status = "okay";
-+
-+		dai-link-0 {
-+			sound-dai = <&frddr_a>;
-+		};
-+
-+		dai-link-1 {
-+			sound-dai = <&frddr_b>;
-+		};
-+
-+		dai-link-2 {
-+			sound-dai = <&frddr_c>;
-+		};
-+
-+		/* 8ch hdmi interface */
-+		dai-link-3 {
-+			sound-dai = <&tdmif_a>;
-+			dai-format = "i2s";
-+			dai-tdm-slot-tx-mask-0 = <1 1>;
-+			dai-tdm-slot-tx-mask-1 = <1 1>;
-+			dai-tdm-slot-tx-mask-2 = <1 1>;
-+			dai-tdm-slot-tx-mask-3 = <1 1>;
-+			mclk-fs = <256>;
-+
-+			codec {
-+				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_A>;
-+			};
-+		};
-+
-+		/* hdmi glue */
-+		dai-link-4 {
-+			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
-+
-+			codec {
-+				sound-dai = <&hdmi_tx>;
-+			};
-+		};
-+	};
-+};
-+
-+&arb {
-+	status = "okay";
-+};
-+
-+&clkc_audio {
-+	status = "okay";
- };
- 
- &cpu0 {
-@@ -61,6 +125,18 @@
- 	clock-latency = <50000>;
- };
- 
-+&frddr_a {
-+	status = "okay";
-+};
-+
-+&frddr_b {
-+	status = "okay";
-+};
-+
-+&frddr_c {
-+	status = "okay";
-+};
-+
- &pwm_AO_cd {
- 	pinctrl-0 = <&pwm_ao_d_e_pins>;
- 	pinctrl-names = "default";
-@@ -93,3 +169,15 @@
- 	phy-names = "usb2-phy0", "usb2-phy1";
- };
-  */
-+
-+&tdmif_a {
-+	status = "okay";
-+};
-+
-+&tdmout_a {
-+	status = "okay";
-+};
-+
-+&tohdmitx {
-+	status = "okay";
-+};
 -- 
-2.17.1
-
+viresh
