@@ -2,120 +2,234 @@ Return-Path: <SRS0=fiEU=A5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA9FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 13:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EFDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 13:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 378D82070E
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 13:20:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="hraSxEa8"
+	by mail.kernel.org (Postfix) with ESMTP id A1CF22073A
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 13:42:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgGRNUW (ORCPT
+        id S1726627AbgGRNmj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Jul 2020 09:20:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56662 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbgGRNUW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 09:20:22 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05149C0619D2;
-        Sat, 18 Jul 2020 06:20:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=u1Ta43l8ivno0FCtWUhrqwGXsKGzaaP+vzxnn7dCRs0=; b=hraSxEa8sSRapBAnEdTMHrFww
-        Ws8wbtC3pEWdiPCtvVN0dWA7gC8fH8K68gMZm2aBwDTQ5MLzW6PvXrytg2JhLfYosQs/XtjMQDNL/
-        om5EXahWcp7QwGUyvypqKNWgIhLEmxqjaVi+6vkHizFSWB4LCzL43ge1Hlr0AQvd4TBBqcGvoDsfe
-        duVMfvA2fCgIBQp/ZnN638bEdngPfn/rKugJasNr8X8Mw1me/J/PBHwly1Y7PCdQ0HBmEvSrnSx+K
-        fxva4v0RRLfMFh/UW8/WjxlHNtdT+1KCfUCT6Jrph84E3ik03Qg5Qjv3p0qjdadO2soOA0mda5ffC
-        2v1aC27bw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:41078)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jwmlD-0001bu-P8; Sat, 18 Jul 2020 14:20:15 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jwml9-0002yE-BN; Sat, 18 Jul 2020 14:20:11 +0100
-Date:   Sat, 18 Jul 2020 14:20:11 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     John Crispin <john@phrozen.org>
-Cc:     Matthew Hagan <mnhagan88@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jonathan McDowell <noodles@earth.li>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: net: dsa: qca8k: Add PORT0_PAD_CTRL
- properties
-Message-ID: <20200718132011.GQ1551@shell.armlinux.org.uk>
-References: <2e1776f997441792a44cd35a16f1e69f848816ce.1594668793.git.mnhagan88@gmail.com>
- <ea0a35ed686e6dace77e25cb70a8f39fdd1ea8ad.1594668793.git.mnhagan88@gmail.com>
- <20200716150925.0f3e01b8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <ac7f5f39-9f83-64c0-d8d5-9ea059619f67@gmail.com>
- <53851852-0efe-722e-0254-8652cdfea8fc@phrozen.org>
+        Sat, 18 Jul 2020 09:42:39 -0400
+Received: from out28-172.mail.aliyun.com ([115.124.28.172]:48825 "EHLO
+        out28-172.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726574AbgGRNmi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 09:42:38 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.0743647|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0734282-0.00625248-0.920319;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03278;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.I3vAArz_1595079751;
+Received: from 192.168.10.205(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I3vAArz_1595079751)
+          by smtp.aliyun-inc.com(10.147.41.120);
+          Sat, 18 Jul 2020 21:42:32 +0800
+Subject: Re: [PATCH v6 2/2] clocksource: Ingenic: Add support for the Ingenic
+ X1000 OST.
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, tglx@linutronix.de, dongsheng.qiu@ingenic.com,
+        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
+        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com
+References: <20200710170259.29028-1-zhouyanjie@wanyeetech.com>
+ <20200710170259.29028-3-zhouyanjie@wanyeetech.com>
+ <dd01a117-265a-e64b-5871-22f0f752834a@linaro.org>
+ <f0dd2ea5-0627-35cf-5a58-aaff0bcb22cd@wanyeetech.com>
+ <9c64bc35-c043-6e4b-cfc3-50f19e4cb315@linaro.org>
+ <512ODQ.64YN0BEY1JJG@crapouillou.net>
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <096c8788-3c50-3eae-1c8e-c0c7487b00af@wanyeetech.com>
+Date:   Sat, 18 Jul 2020 21:42:26 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <53851852-0efe-722e-0254-8652cdfea8fc@phrozen.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <512ODQ.64YN0BEY1JJG@crapouillou.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 10:44:19PM +0200, John Crispin wrote:
-> in regards to the sgmii clk skew. I never understood the electrics fully I
-> am afraid, but without the patch it simply does not work. my eletcric foo is
-> unfortunately is not sufficient to understand the "whys" I am afraid.
+Hello Paul and Daniel,
 
-Do you happen to know what frequency the clock is?  Is it 1.25GHz or
-625MHz?  It sounds like it may be 1.25GHz if the edge is important.
+在 2020/7/18 下午9:12, Paul Cercueil 写道:
+> Hi Daniel,
+>
+> Le ven. 17 juil. 2020 à 10:02, Daniel Lezcano 
+> <daniel.lezcano@linaro.org> a écrit :
+>> On 17/07/2020 08:13, Zhou Yanjie wrote:
+>>>  Hi Daniel,
+>>>
+>>>  在 2020/7/17 下午12:20, Daniel Lezcano 写道:
+>>>>  On 10/07/2020 19:02, 周琰杰 (Zhou Yanjie) wrote:
+>>>>>  X1000 and SoCs after X1000 (such as X1500 and X1830) had a separate
+>>>>>  OST, it no longer belongs to TCU. This driver will register both a
+>>>>>  clocksource and a sched_clock to the system.
+>>>>>
+>>>>>  Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
+>>>>>  Co-developed-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
+>>>>>  Signed-off-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
+>>>>>  Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>>>>>  Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+>>>>>  ---
+>>>>>
+>>>>>  Notes:
+>>>>>       v1->v2:
+>>>>>       Fix compile warnings.
+>>>>>       Reported-by: kernel test robot <lkp@intel.com>
+>>>>>            v2->v3:
+>>>>>       No change.
+>>>>>            v3->v4:
+>>>>>       1.Rename "ost" to "sysost"
+>>>>>       1.Remove unrelated changes.
+>>>>>       2.Remove ost_clock_parent enum.
+>>>>>       3.Remove ost->percpu_timer_channel/ost->global_timer_channel.
+>>>>>       4.Set up independent .recalc_rate/.set_rate for percpu/global
+>>>>>  timer.
+>>>>>       5.No longer call functions in variable declarations.
+>>>>>            v4->v5:
+>>>>>       Use "of_io_request_and_map()" instead "of_iomap()".
+>>>>>       Suggested-by: Paul Cercueil <paul@crapouillou.net>
+>>>>>            v5->v6:
+>>>>>       No change.
+>>>>>
+>>>>>    drivers/clocksource/Kconfig          |  11 +
+>>>>>    drivers/clocksource/Makefile         |   1 +
+>>>>>    drivers/clocksource/ingenic-sysost.c | 539
+>>>>>  +++++++++++++++++++++++++++++++++++
+>>>>>    3 files changed, 551 insertions(+)
+>>>>>    create mode 100644 drivers/clocksource/ingenic-sysost.c
+>>>>>
+>>>>>  diff --git a/drivers/clocksource/Kconfig 
+>>>>> b/drivers/clocksource/Kconfig
+>>>>>  index 91418381fcd4..1bca8b8fb30f 100644
+>>>>>  --- a/drivers/clocksource/Kconfig
+>>>>>  +++ b/drivers/clocksource/Kconfig
+>>>>>  @@ -696,6 +696,17 @@ config INGENIC_TIMER
+>>>>>        help
+>>>>>          Support for the timer/counter unit of the Ingenic JZ SoCs.
+>>>>>    +config INGENIC_SYSOST
+>>>>>  +    bool "Clocksource/timer using the SYSOST in Ingenic X SoCs"
+>>>>  We usually use silent options and let the platform's Kconfig 
+>>>> enable it.
+>>>>  We show up the option only when COMPILE_TEST is enabled.
+>>>>
+>>>>  Is there a reason to do it differently?
+>>>
+>>>
+>>>  Do you mean
+>>>
+>>>  bool "Clocksource/timer using the SYSOST in Ingenic X SoCs"
+>>>
+>>>  or
+>>>
+>>>  default MACH_INGENIC ?
+>>
+>> Both, no default here.
+>>
+>> eg.
+>>
+>> bool "Clocksource/timer using the SYSOST in Ingenic X SoCs" if 
+>> COMPILE_TEST
+>>
+>> and
+>>
+>> in arch/mips/Kconfig in the config MACH_INGENIC section :
+>>
+>> ...
+>> select INGENIC_SYSOST
+>> ...
+>
+> Disagreed. That's not how we do things on MIPS. Selecting MACH_INGENIC 
+> means "this kernel will support Ingenic SoCs", but not that it will 
+> only support these. Hence the depends on MIPS / default MACH_INGENIC.
+>
+> As for the select INGENIC_SYSOST, this driver only applies to a few 
+> SoCs, I certainly don't want it to be force-enabled. I don't even wait 
+> it to be force-enabled on X1000, since it is optional there too.
+>
+> Cheers,
+> -Paul
 
-If the clock is 1.25GHz, the "why" is because of hazards (it has
-nothing to do with delays in RGMII being propagated to SGMII).
 
-Quite simply, a flip-flop suffers from metastability if the clock and
-data inputs change at about the same time.  Amongst the parametrics of
-flip-flops will be a data setup time, and a data hold time, referenced
-to the clock signal.
+If we still need to keep the "default MACH_INGENIC", then Daniel can 
+directly apply the v6 version.
 
-If the data changes within the setup and hold times of the clock
-changing, then the output of the flip-flop is unpredictable - it can
-latch a logic 1 or a logic 0, or oscillate between the two until
-settling on one state.
+If we need to use the silent options, maybe we can enable them 
+separately according to 
+MACH_JZ4740/MACH_JZ4770/MACH_JZ4780/MACH_X1000/MACH_X1830.
 
-So, if data is clocked out on the rising edge of a clock signal, and
-clocked in on the rising edge of a clock signal - and the data and
-clock edges arrive within the setup and hold times at the flip-flop
-that is clocking the data in, there is a metastability hazard, and
-the data bit that is latched is unpredictable.
+In fact, I think X1000 and X1830 need to enable this driver in most 
+cases, because the current test has found that use TCU to provide 
+clocksource and clockevent will cause data loss/error when transmitting 
+data through spi or ethernet. And these errors no longer appear after 
+using OST.
 
-One way to solve this is to clock data out on one edge, and clock data
-in on the opposite edge - this is used on buses such as SPI.  Other
-buses such as I2C define minimum separation between transitions between
-the SDA and SCL signals.
+Thanks and best regards!
 
-These solutions don't work with RGMII - the RGMII TXC clocks data on
-both edges.  The only solution there is to ensure a delay is introduced
-between the data and clock changes seen at the receiver - which can be
-done by introducing delays at the transmitter or at the receiver, or by
-serpentine routing of the traces to induce delays to separate the clock
-and data transitions sufficiently to avoid metastability.
 
-If the clock is 625MHz (as with some Marvell devices for SGMII) then
-both clock edges are used, and both edges are used just like RGMII.
-Therefore, the same considerations as RGMII apply there to ensure that
-the data setup and hold times are not violated.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+>
+>>
+>>>  This driver has some origins from "INGENIC_TIMER" driver and
+>>>  "INGENIC_OST" driver.
+>>>  Early Ingenic processors used TCU (timer/counter unit, has 6 or 8
+>>>  generic timer channels) to provide clocksource and clockevent (both 
+>>> with
+>>>  only 16bit precision). This part of the processor can only use
+>>>  "INGENIC_TIMER" driver.
+>>>
+>>>  Later processors provide an independent 32bit or 64bit timer channel
+>>>  (still under TCU, known as ost channel, this channel can not generate
+>>>  interrupt) to provid higher precision clocksource. The "INGENIC_OST"
+>>>  driver is for this channel. These processors can use "INGENIC_TIMER"
+>>>  driver, but using "INGENIC_OST" driver to provide higher precision
+>>>  clocksource would be a better choice (clockevent still needs to be
+>>>  provided by generic timer channel of TCU, and still 16bit precision).
+>>>
+>>>  And the recent processors provide a SYSOST components, it is 
+>>> independent
+>>>  from TCU, including a 64bit timer channel for clocksource and a 32bit
+>>>  timer channel for clockevent. Although these processors can also use
+>>>  "INGENIC_TIMER" driver, but the better choice is completely 
+>>> independent
+>>>  use of "INGENIC_SYSOST" driver to provide higher precision clocksource
+>>>  and clockevent.
+>>
+>> Ok, the rating should do the job then.
+>>
+>> Thanks for the explanation.
+>>
+>>>  You may have already noticed that this independent SYSOST component is
+>>>  like an upgraded and streamlined TCU, which only retains one generic
+>>>  timer channel that can generate interrupts, upgrade it from 16bit to
+>>>  32bit, and then retain the 64bit ost channel. so the driver code and
+>>>  Kconfig code of this patch is largely referenced
+>>>  "INGENIC_TIMER" driver and "INGENIC_OST" driver.
+>>>
+>>>  Thanks and best regards!
+>>>
+>>>>>  +    default MACH_INGENIC
+>>>>>  +    depends on MIPS || COMPILE_TEST
+>>>>>  +    depends on COMMON_CLK
+>>>>>  +    select MFD_SYSCON
+>>>>>  +    select TIMER_OF
+>>>>>  +    select IRQ_DOMAIN
+>>>>>  +    help
+>>>>>  +      Support for the SYSOST of the Ingenic X Series SoCs.
+>>>>>  +
+>>>>  [ ... ]
+>>>>
+>>>>
+>>
+>>
+>> -- 
+>> <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+>>
+>> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+>> <http://twitter.com/#!/linaroorg> Twitter |
+>> <http://www.linaro.org/linaro-blog/> Blog
+>
