@@ -2,107 +2,128 @@ Return-Path: <SRS0=fiEU=A5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD55C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 08:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93760C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 08:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16D1A2073E
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 08:29:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A32520717
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 08:40:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZzHLgOEL"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="JxoOm75V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbgGRI31 (ORCPT
+        id S1726335AbgGRIkI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Jul 2020 04:29:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40544 "EHLO
+        Sat, 18 Jul 2020 04:40:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727872AbgGRI31 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 04:29:27 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF5D2C0619D2
-        for <devicetree@vger.kernel.org>; Sat, 18 Jul 2020 01:29:26 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id m22so7761590pgv.9
-        for <devicetree@vger.kernel.org>; Sat, 18 Jul 2020 01:29:26 -0700 (PDT)
+        with ESMTP id S1726221AbgGRIkH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 04:40:07 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1442C0619D2
+        for <devicetree@vger.kernel.org>; Sat, 18 Jul 2020 01:40:06 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id q7so15316208ljm.1
+        for <devicetree@vger.kernel.org>; Sat, 18 Jul 2020 01:40:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dPX5I2zvoaIfMrTJOaEVmZ8AJ80iRBsKVksO1GxJCNo=;
-        b=ZzHLgOEL6rfH/FrYghVSfVEQktV2G0Ir7o5GkPsQTPiSTXfAartacdCWERPApI4F4h
-         z/xNML4mDKErL7wVRlTVtBRcspOz9kDbKiYzv/yyiLNLwgvPEJoSN37amJBWnAxRy9V2
-         9hVGDkdUX8hOdVMJjPWlhR6l8UlkjZKc+fziFbkc/yru2iiCKqBHpaSOUK5RnZW2S/yn
-         Pn8cacEL/2XGSr+kepi8HbhO+UN1PagUSVAQCnGrKN9SjBqwzxGDJoQQDa/+JnKN6Shy
-         o1suzUkzCeetU7bWUPKA6K7RuhGSovE+CT7GHBU6X1HJ4Oh0B0JzqvprdhMf8kXfmmJ2
-         BA5Q==
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=grHudVuxTrujFcMeBbNEzFtggMnTeKfPICDDWvNm5qQ=;
+        b=JxoOm75VPiSO3PvPhBOYKhjkYBPSzOkEGNvBKzzVHYb9Rjpd/2lw8isqYnFTqXaE21
+         C+3CgK+K5piqQQKYelN5pmjLyYxqfc5aAi0ULmEU0tzBzcQGldVFhG63xZeEbru+b2c5
+         7kXb1Htwvi29RZbiOF+DtZw68CeC9tM32rQ4yyzttv9Gfu0We7eglDXlTwOoWSHj7iaG
+         uFdKHbZ4suTw2Kj1YExnw/5V9FAso4O5mejSjADC/gVT0AAkQZ+Rc2Jyl0rPZXgwLOzm
+         A8yMggODuGPwRx4MTTd/izM2d1i01Iv5Xdj7Z4nCrMtmW+0gIqCPyKiutLZojfM6ClVd
+         Ui0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dPX5I2zvoaIfMrTJOaEVmZ8AJ80iRBsKVksO1GxJCNo=;
-        b=C7NVjj1WcVVv/nUHeMSmLS547klNsSYs7uDE1BfW1wOw0VUQlUsVSHfVP28L+ak1hj
-         4VKNWZga3/mfIRE/4Goic8TxpKUABRyC06sI+HX2eN99ombUCyoLX7dA896nszxmG81C
-         c7ONk13iKMQiRFxweYcGhv08Za7CRl5yGHWPdeiH107KCqZnDcfnMBJO0PpIfacj9rMN
-         GWa1AaD9nJHIwnnxUZ+38rlJmk0VBJTZgNX3JSdqjPeGVz3hgKtNLMRSrAmS711PNiBU
-         VnYSZSnU6kSp0bJaV0q6dEng7yMpoiRuxyuc1LkwXxbRiNKCDGhlDj/Ka1fSjSg2eIB6
-         iC9A==
-X-Gm-Message-State: AOAM531fH8tuafHiqDNuJLwGBWOhHynSQi0xvp1jDKq8NnE2MmLAssE9
-        Dr36JWImNex3eVPncLk0y0ebVQ==
-X-Google-Smtp-Source: ABdhPJxpkjlVoi1K6zt3TxppMxnpJwdAYknEnoLeYjpkZ5qIgAHhN1uKddV4rWohLA2QlS4I+GW9GA==
-X-Received: by 2002:a65:620e:: with SMTP id d14mr11477128pgv.360.1595060966415;
-        Sat, 18 Jul 2020 01:29:26 -0700 (PDT)
-Received: from localhost ([223.190.30.182])
-        by smtp.gmail.com with ESMTPSA id k100sm4874773pjb.57.2020.07.18.01.29.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 18 Jul 2020 01:29:25 -0700 (PDT)
-Date:   Sat, 18 Jul 2020 13:59:14 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Sumit Gupta <sumitg@nvidia.com>, rjw@rjwysocki.net,
-        catalin.marinas@arm.com, will@kernel.org, robh+dt@kernel.org,
-        mirq-linux@rere.qmqm.pl, devicetree@vger.kernel.org,
-        jonathanh@nvidia.com, talho@nvidia.com, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, bbasu@nvidia.com,
-        mperttunen@nvidia.com
-Subject: Re: [TEGRA194_CPUFREQ PATCH v6 2/3] arm64: tegra: Add t194 ccplex
- compatible and bpmp property
-Message-ID: <20200718082914.ecyngrsoir7j5q6y@vireshk-mac-ubuntu>
-References: <1594819885-31016-1-git-send-email-sumitg@nvidia.com>
- <1594819885-31016-3-git-send-email-sumitg@nvidia.com>
- <20200716123715.GA535268@ulmo>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=grHudVuxTrujFcMeBbNEzFtggMnTeKfPICDDWvNm5qQ=;
+        b=slKshHrhFB+HOgrYt9NRM7DCqYg520ALAqqrRldnzpyYwCoCN+7QVEtSMtEghkP/qt
+         28IOCYuoizHhuDVwzx3BuAH8b2Y8zX0k4lERWvP2/XpQ8oKOX4F7YcKSYBZLGEQcH9n2
+         vv1lIKSFEzRuSJuTZvTqzsZ+NM49PWM8xk3i0YH1wNaUDt/gZa4ifMYlpgwWCMFpQJGN
+         dvrz5LIx6/KN6MpST7d0kZEmINhumVLib0ng3G/PcYwigcURJxZ3dfPHFqzXCvR95r46
+         zcEkYAlHqIGYraj2GuCA+H+XmNdUAXy1ohpKwvPbtUyis20CUf6ON910q8hGsGVsVX+s
+         AsFg==
+X-Gm-Message-State: AOAM5302/dX8DzsGd3nhVZ3pRFRJNVsiiywkBKgtPfIBTwPGbUn+t8ZQ
+        G0NYDuCK1fCpIyMuNybuZsjx8A==
+X-Google-Smtp-Source: ABdhPJywOSyHHy2bJZqi1NPJYnFaaf9Tq+T0dfJMvzvTJxykDZd2Oa2LCdCG8Yl4tfAw3QfOH7Ll9w==
+X-Received: by 2002:a05:651c:217:: with SMTP id y23mr6450848ljn.447.1595061604957;
+        Sat, 18 Jul 2020 01:40:04 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:42e3:6011:c93:75dd:e99a:5259? ([2a00:1fa0:42e3:6011:c93:75dd:e99a:5259])
+        by smtp.gmail.com with ESMTPSA id e9sm2083043ljn.61.2020.07.18.01.40.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 18 Jul 2020 01:40:04 -0700 (PDT)
+Subject: Re: [PATCH v7 3/5] MIPS: Ingenic: Let the Kconfig of platform enable
+ the clocksource driver.
+To:     =?UTF-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>, daniel.lezcano@linaro.org,
+        tsbogend@alpha.franken.de, robh+dt@kernel.org
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, tglx@linutronix.de,
+        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
+        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com, paul@crapouillou.net
+References: <20200717165947.56158-1-zhouyanjie@wanyeetech.com>
+ <20200717165947.56158-4-zhouyanjie@wanyeetech.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <4903f4ba-6ecb-5c38-aa5a-4f20bd473124@cogentembedded.com>
+Date:   Sat, 18 Jul 2020 11:39:59 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716123715.GA535268@ulmo>
-User-Agent: NeoMutt/20170609 (1.8.3)
+In-Reply-To: <20200717165947.56158-4-zhouyanjie@wanyeetech.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 16-07-20, 14:37, Thierry Reding wrote:
-> On Wed, Jul 15, 2020 at 07:01:24PM +0530, Sumit Gupta wrote:
-> > On Tegra194, data on valid operating points for the CPUs needs to be
-> > queried from BPMP. In T194, there is no node representing CPU complex.
-> > So, add compatible string to the 'cpus' node instead of using dummy
-> > node to bind cpufreq driver. Also, add reference to the BPMP instance
-> > for the CPU complex.
-> > 
-> > Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
-> > ---
-> >  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 2 ++
-> >  1 file changed, 2 insertions(+)
-> 
-> Looks like the DT bindings are now done so I've applied this for v5.9.
-> 
-> Viresh, are you going to pick up the other patches, or do you want me
-> to pick them up and send you a pull request?
+Hello!
 
-Applied the other two patches, Thanks.
+On 17.07.2020 19:59, 周琰杰 (Zhou Yanjie) wrote:
 
--- 
-viresh
+> The previous clocksource patch in this series ([2/3]) has remove
+
+   Removed.
+
+> "default MACH_INGENIC" and make option silent, so we need to
+
+   Made?
+
+> enable the corresponding driver in the platform's Kconfig.
+> 
+> Suggested-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
+> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> ---
+> 
+> Notes:
+>      v7:
+>      New patch.
+> 
+>   arch/mips/jz4740/Kconfig | 7 +++++++
+>   1 file changed, 7 insertions(+)
+> 
+> diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
+> index 6c065dcaeff8..5ad60998702e 100644
+> --- a/arch/mips/jz4740/Kconfig
+> +++ b/arch/mips/jz4740/Kconfig
+> @@ -36,27 +36,34 @@ endchoice
+>   config MACH_JZ4740
+>   	bool
+>   	select SYS_HAS_CPU_MIPS32_R1
+> +    select INGENIC_TIMER
+
+    Please use tab instead of spaces here an below.
+
+[...]
+
+MBR, Sergei
