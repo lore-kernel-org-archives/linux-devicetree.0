@@ -2,104 +2,105 @@ Return-Path: <SRS0=fiEU=A5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F2FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 16:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20522C433F7
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 16:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F253822B51
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 16:33:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595090021;
-	bh=KdUPr2RAIGryhaGAIOD+pqH9l+8+z5jhUK4ivui7FtU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ORIRJ2L6vP8nwI7/D58cIhOhDgS6ySvJnBGOZB02p96z5Rcck3Ro40snvdPiJ3V8g
-	 XUyXN2N+n473XSA23giGPX7ONKTOTHGY/Qq5OAaexjAoWTZjG1rL3yInJvcbe1Ee5G
-	 DaNAjKDAJkhC3myMYS4kO2ztWxlSi5NZ3lHFMv/M=
+	by mail.kernel.org (Postfix) with ESMTP id F2FBB2073A
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 16:52:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgGRQdk (ORCPT
+        id S1727847AbgGRQwX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Jul 2020 12:33:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39120 "EHLO mail.kernel.org"
+        Sat, 18 Jul 2020 12:52:23 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:44712 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726604AbgGRQdk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 18 Jul 2020 12:33:40 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 781382177B;
-        Sat, 18 Jul 2020 16:33:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595090019;
-        bh=KdUPr2RAIGryhaGAIOD+pqH9l+8+z5jhUK4ivui7FtU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=w6P3M19R8tsqi/bgmXIX9PHHIctE+W+XBZBs/oT/4tR0EaYPEk3LcIO0PltfvhlVl
-         jaeQSoLbztCFjsZZuz/pdLlcm6UD5rNgB5uDgzeh3/Fti1HW0wx8yarQv9DP0kofw5
-         oudRjERbOg9SblXPZu5rgrdExzAYaFkskM4nRCHI=
-Date:   Sat, 18 Jul 2020 17:33:35 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sean Nyekjaer <sean@geanix.com>
-Subject: Re: [PATCH] dt-bindings: iio: ti,ads8688 yaml conversion
-Message-ID: <20200718173335.0b3b8cf2@archlinux>
-In-Reply-To: <20200715215744.GA879805@bogus>
-References: <20200705131720.240574-1-jic23@kernel.org>
-        <20200715215744.GA879805@bogus>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1728240AbgGRQwV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 18 Jul 2020 12:52:21 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id E1245FB03;
+        Sat, 18 Jul 2020 18:52:17 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id wM7kdGGFcpcI; Sat, 18 Jul 2020 18:52:16 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 13A4A42576; Sat, 18 Jul 2020 18:52:16 +0200 (CEST)
+Date:   Sat, 18 Jul 2020 18:52:16 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Ondrej Jirman <megous@megous.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: display: Fix example in nwl-dsi.yaml
+Message-ID: <20200718165215.GA26122@bogon.m.sigxcpu.org>
+References: <20200703114717.2140832-1-megous@megous.com>
+ <20200703114717.2140832-2-megous@megous.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200703114717.2140832-2-megous@megous.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 15 Jul 2020 15:57:44 -0600
-Rob Herring <robh@kernel.org> wrote:
-
-> On Sun, Jul 05, 2020 at 02:17:20PM +0100, Jonathan Cameron wrote:
-> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > 
-> > Fairly simple binding.  Most of the changes were filling in information
-> > not previously found in the binding.  I dropped the previous explicit
-> > mention of spi-max-frequency as that is covered by the generic SPI
-> > binding.
-> > 
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Cc: Sean Nyekjaer <sean@geanix.com>
-> > ---
-> > 
-> > Sean, are you fine with being explicitly listed at the maintainer
-> > of this binding?  Previously we didn't have that formally laid
-> > out in the old txt bindings but it's now a required field.
-> > 
-> > I'm going to slowly work my way through some of the simpler yaml conversions
-> > over the next few months.   Of course I welcome anyone else taking
-> > some of these on but for purposes of review, please keep it to only
-> > a few at a time.  
+Hi,
+On Fri, Jul 03, 2020 at 01:47:16PM +0200, Ondrej Jirman wrote:
+> The example is now validated against rocktech,jh057n00900 schema
+> that was ported to yaml, and didn't validate with:
 > 
-> Actually, I'd really prefer a bunch at a time if it is by one person. 
-> Not because I need more to review :P, but then all the mistakes are the 
-> same and can be fixed in one go. I have a script[1] I use that does some 
-> of the boilerplate, but not the hard part (properties). It works best if 
-> you tweak the template with what's common for a set of bindings.
-
-Fair enough.  Let the deluge begin :)
-
-Applied this one to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to probably ignore it.
-
-Thanks,
-
-Jonathan
-
+> - '#address-cells', '#size-cells', 'port@0' do not match any of
+>   the regexes: 'pinctrl-[0-9]+'
+> - 'vcc-supply' is a required property
+> - 'iovcc-supply' is a required property
+> - 'reset-gpios' is a required property
 > 
-> Rob
+> Fix it.
 > 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git/commit/?h=yaml-bindings-v2
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> ---
+>  .../devicetree/bindings/display/bridge/nwl-dsi.yaml      | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+> index 8aff2d68fc33..2c4c34e3bc29 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+> +++ b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+> @@ -165,6 +165,7 @@ examples:
+>   - |
+>  
+>     #include <dt-bindings/clock/imx8mq-clock.h>
+> +   #include <dt-bindings/gpio/gpio.h>
+>     #include <dt-bindings/interrupt-controller/arm-gic.h>
+>     #include <dt-bindings/reset/imx8mq-reset.h>
+>  
+> @@ -191,12 +192,12 @@ examples:
+>                phy-names = "dphy";
+>  
+>                panel@0 {
+> -                      #address-cells = <1>;
+> -                      #size-cells = <0>;
+>                        compatible = "rocktech,jh057n00900";
+>                        reg = <0>;
+> -                      port@0 {
+> -                           reg = <0>;
+> +                      vcc-supply = <&reg_2v8_p>;
+> +                      iovcc-supply = <&reg_1v8_p>;
+> +                      reset-gpios = <&gpio3 13 GPIO_ACTIVE_LOW>;
+> +                      port {
+>                             panel_in: endpoint {
+>                                       remote-endpoint = <&mipi_dsi_out>;
+>                             };
 
+Reviewed-by: Guido Günther <agx@sigxcpu.org>
+ -- Guido
