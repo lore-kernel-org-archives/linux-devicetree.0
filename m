@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A66CCC4345D
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E376C4345E
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 868FE2076D
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E4F12076D
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MxnpCgiu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nKEVxq8x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbgGRG5z (ORCPT
+        id S1728924AbgGRG5t (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Jul 2020 02:57:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54816 "EHLO
+        Sat, 18 Jul 2020 02:57:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729010AbgGRG5y (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 02:57:54 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61102C0619D2;
-        Fri, 17 Jul 2020 23:57:54 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id q15so17758976wmj.2;
-        Fri, 17 Jul 2020 23:57:54 -0700 (PDT)
+        with ESMTP id S1725983AbgGRG5s (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 02:57:48 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F035CC0619D2;
+        Fri, 17 Jul 2020 23:57:47 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id o11so13239795wrv.9;
+        Fri, 17 Jul 2020 23:57:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=1krktBPS100MfXZ+pc+c++ZJjlsjSR2xUu8yCpuZMDY=;
-        b=MxnpCgiutKDScYhaBSLciizrJAJTJFBr/z8JYY0P+RZ9GzgwghrgNFNaK07MDeEVIO
-         go4TQe+V7RxkyR8z14sUvYAvDojXvhpsKSm9bCl01e305F4dSK2ORKh4vT781h5YU9cj
-         fbQgwezKw96kyZ2O+6mrFEh/UgB1rW1NM8ioBXzfbtxQrE59TCdrcR2A5YN/QOWx/6hL
-         fDDWUPFnWETz9S1Anlrno57q/ch+Bef82ry89P26ZxR8ZWiZvz7jTdy+xyPA8eWqSQQd
-         mneR/5ai/AVUPC3PDw2PZEg95Fuo6fOeCmrhq6+lXSbXGTI9J/qAN96LnBS+nXKmJQCo
-         XKMQ==
+        bh=UrTzQqJfmOE3wc4LgtWfzvjavE1CxqA487snNOvdDF4=;
+        b=nKEVxq8xAgb3BSHbys0l9zq2gcV8D7HhIfslhM/xLae2SyJP+Sg0JAaB6eGnECz8DT
+         RXca2F5O/JilwetdteyW/89mjPpFvb4BxpqWPNhNKjmckmEWfzbxMDLE2gugFREWvUK3
+         PHWgG+u445q55dd1KAsu1Vp22zN3kHuPVG2fm7Fd5gzZ9qZpVNWfBWDq1qKW0uAm0LeC
+         uRUSca4zJ++vK2WxSXib9cWMQzjR9+3YuF7wlJFAl7G5GlqE1Z1qvembQBd638C0NoFt
+         sHd3lH64y+OalOu7bnvroC9NEFZbJWQCn45XCGRkFb7o3verprQfuWNGgqSlXcYTJk2n
+         02vQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=1krktBPS100MfXZ+pc+c++ZJjlsjSR2xUu8yCpuZMDY=;
-        b=MB12HM0lmqgtWkiO2anh0NKzpZA4+lkU13VXY0K8K6VtDNW0p9QSUHXMYEIrrrEjft
-         Mj6gd2Ux8MZ+BpWvzp2oJNYPGc2UfQVHWPH7l2B3Q5xxbkWx5w+7s7JxkrHJ5+u+D8Cq
-         wboib8ZaDIRGDnnI10+Qw/LGm1X2wXlABRNDlVJaVlTjTmRZUZC7nJfD0nKJRBilYvgi
-         2sDfbOSMQyeHOdbFaWviaN/furfuIszOiq3/gDO1xwdVMwpinlJ1xFsWNMrM8bi6uir+
-         ahCK4g17PTBHbdAuvxfOXrxiscbpET3FvWIkuzglTN88Fh+OzxxIP9QWBw/1rKAz2xIC
-         jk9g==
-X-Gm-Message-State: AOAM531Gq9kMZwjQnkTYCGIPNX99Y0PX5Z99B74csC1r69xJ8nJVlwm2
-        Urj7YMNnzpbK6IVPxVd0FpKhs1Fn
-X-Google-Smtp-Source: ABdhPJynB0P8pI+h9iCmq/dMiqpiyDbX2abpYL1dqoXORL7MYzIRgWhjk8zdE4npMk9SNvrzyP4JWQ==
-X-Received: by 2002:a1c:e90d:: with SMTP id q13mr12857564wmc.187.1595055473119;
-        Fri, 17 Jul 2020 23:57:53 -0700 (PDT)
+        bh=UrTzQqJfmOE3wc4LgtWfzvjavE1CxqA487snNOvdDF4=;
+        b=Xtev2ef4rF/e6OZhE3kWNbuQYSQwJx/pW6gFIEHSGg3g/ssyJH8MlhPaiqa7JKxprY
+         5PzM5m2pbo/4kbCOQ5clZgn19rK9k3kLq5BZvJU8OF+2MtyZajgwYC/yHDzso5J5nSrr
+         IQ4HipVwslww885989HsWzHMifcKE/N0X4xMMyNlQmOI89qTNcAhvYzP0Y0KiXxxGFTH
+         Sn1HRjKHD6Xgqag4ryVZxWAoPNwv0yB/qvGS3OsYrcreKcb+WKHc0WfMoTKrdf8fV7KE
+         I6JQbuH3rw5d0S1KRY6thU0whPOzIyTH4oU4k3CcLaECAqw5W6stUXvoxs4aL52hY6Ws
+         k0DA==
+X-Gm-Message-State: AOAM532C3R5nsjbWXTig82MxFffVE9XXLbR6kpMWxuFpCAWP7UGoDZuq
+        9qyP3Z3fgHiR9Y9A5op0fZM=
+X-Google-Smtp-Source: ABdhPJxT+zWK7JQj0ZP6zsmrAOMrSNN5TIxi/onMGo7pglJq/uFAcC4q4lZL3vH6T/yRTz7ae2lnWg==
+X-Received: by 2002:a5d:4f0e:: with SMTP id c14mr14400539wru.410.1595055466673;
+        Fri, 17 Jul 2020 23:57:46 -0700 (PDT)
 Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id x5sm18749191wmg.2.2020.07.17.23.57.51
+        by smtp.gmail.com with ESMTPSA id x5sm18749191wmg.2.2020.07.17.23.57.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 23:57:52 -0700 (PDT)
+        Fri, 17 Jul 2020 23:57:46 -0700 (PDT)
 From:   Christian Hewitt <christianshewitt@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -65,9 +65,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH 04/12] arm64: dts: meson: add audio playback to nexbox-a1
-Date:   Sat, 18 Jul 2020 06:57:31 +0000
-Message-Id: <20200718065739.7802-5-christianshewitt@gmail.com>
+Subject: [PATCH 01/12] arm64: dts: meson: add audio playback to a95x
+Date:   Sat, 18 Jul 2020 06:57:28 +0000
+Message-Id: <20200718065739.7802-2-christianshewitt@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200718065739.7802-1-christianshewitt@gmail.com>
 References: <20200718065739.7802-1-christianshewitt@gmail.com>
@@ -76,71 +76,33 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add initial support is limited to HDMI i2s and SPDIF (LPCM).
+Add initial audio support limited to HDMI i2s.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- .../boot/dts/amlogic/meson-gxm-nexbox-a1.dts  | 80 +++++++++++++++++++
- 1 file changed, 80 insertions(+)
+ .../dts/amlogic/meson-gxbb-nexbox-a95x.dts    | 40 +++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-index 83eca3af44ce..faca6fafc164 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+index 67d901ed2fa3..b5b11cb9f393 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
 @@ -10,6 +10,7 @@
- /dts-v1/;
- 
- #include "meson-gxm.dtsi"
+ #include "meson-gxbb.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
 +#include <dt-bindings/sound/meson-aiu.h>
  
  / {
- 	compatible = "nexbox,a1", "amlogic,s912", "amlogic,meson-gxm";
-@@ -24,11 +25,37 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	spdif_dit: audio-codec-0 {
-+		#sound-dai-cells = <0>;
-+		compatible = "linux,spdif-dit";
-+		status = "okay";
-+		sound-name-prefix = "DIT";
-+	};
-+
- 	memory@0 {
- 		device_type = "memory";
- 		reg = <0x0 0x0 0x0 0x80000000>;
- 	};
- 
-+	vddio_ao18: regulator-vddio_ao18 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_AO18";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+	};
-+
-+	hdmi_5v: regulator-hdmi-5v {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "HDMI_5V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+
-+		gpio = <&gpio GPIOH_3 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
-+
- 	vddio_boot: regulator-vddio-boot {
- 		compatible = "regulator-fixed";
- 		regulator-name = "VDDIO_BOOT";
-@@ -75,6 +102,59 @@
+ 	compatible = "nexbox,a95x", "amlogic,meson-gxbb";
+@@ -139,6 +140,45 @@
  			};
  		};
  	};
 +
 +	sound {
 +		compatible = "amlogic,gx-sound-card";
-+		model = "GXM-NEXBOX-A1";
++		model = "GXBB-NEXBOX-A95X";
 +		assigned-clocks = <&clkc CLKID_MPLL0>,
 +				  <&clkc CLKID_MPLL1>,
 +				  <&clkc CLKID_MPLL2>;
@@ -155,10 +117,6 @@ index 83eca3af44ce..faca6fafc164 100644
 +		};
 +
 +		dai-link-1 {
-+			sound-dai = <&aiu AIU_CPU CPU_SPDIF_FIFO>;
-+		};
-+
-+		dai-link-2 {
 +			sound-dai = <&aiu AIU_CPU CPU_I2S_ENCODER>;
 +			dai-format = "i2s";
 +			mclk-fs = <256>;
@@ -168,15 +126,7 @@ index 83eca3af44ce..faca6fafc164 100644
 +			};
 +		};
 +
-+		dai-link-3 {
-+			sound-dai = <&aiu AIU_CPU CPU_SPDIF_ENCODER>;
-+
-+			codec-0 {
-+				sound-dai = <&spdif_dit>;
-+			};
-+		};
-+
-+		dai-link-4 {
++		dai-link-2 {
 +			sound-dai = <&aiu AIU_HDMI CTRL_OUT>;
 +
 +			codec-0 {
@@ -188,11 +138,9 @@ index 83eca3af44ce..faca6fafc164 100644
 +
 +&aiu {
 +	status = "okay";
-+	pinctrl-0 = <&spdif_out_h_pins>;
-+	pinctrl-names = "default";
  };
  
- &cec_AO {
+ &cvbs_vdac_port {
 -- 
 2.17.1
 
