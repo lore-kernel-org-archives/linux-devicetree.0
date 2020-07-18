@@ -2,239 +2,255 @@ Return-Path: <SRS0=fiEU=A5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0802EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 09:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DB5C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 09:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D146C2073E
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 09:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A0E0207FB
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 09:20:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="beR9fUb9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DtahkAlk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgGRJHJ (ORCPT
+        id S1726524AbgGRJUI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Jul 2020 05:07:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46320 "EHLO
+        Sat, 18 Jul 2020 05:20:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbgGRJHI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 05:07:08 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A35AC0619D2;
-        Sat, 18 Jul 2020 02:07:07 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id q15so17917450wmj.2;
-        Sat, 18 Jul 2020 02:07:07 -0700 (PDT)
+        with ESMTP id S1726055AbgGRJUI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 05:20:08 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5742CC0619D2;
+        Sat, 18 Jul 2020 02:20:08 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id a23so4976447pfk.13;
+        Sat, 18 Jul 2020 02:20:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=0BWRPw8g2XYVXSVbobArkBx7EWxJQQknqmb4NXpsOwM=;
-        b=beR9fUb9+Ju9lRSUK9d40Ng8sbQhSPEP+kpI4XRfDpSg2UtZhGEpV8WGFjBFE0hite
-         H4B24U3qEGTY+NNzNtrKw1wkdr7K/UTZyNbMfCQEzC6J09nQHgMjoSansJWwRNErAPdN
-         T3onXS7bYI9gakeJU5vJRE4NxkBI3kUKtpcSQOXFTJZ84HBb6O/LgjIbAwy2eLwbNG50
-         d/gk67Wiy4i/WQLqYBei6xn6R3rFBPB3avLRlLnZyWDTAsgZj6dT9UbL54p0kWoT9AJI
-         EzmrKdVrPe3E9DI/ouOKEFHu4x6lFdCN4nu+e5cHpDOYOrufNcza2R/tNNVp3kvPu/wD
-         tt6w==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=C6pIxbOUMM4YIylpczsugjr/zEWMDNDTN7jorTB2vew=;
+        b=DtahkAlk/yirqNfs2QfZoR0gccv8wzxCzxD6lNl7+HNbxO0h46T1aeVLL1ukoKxDEA
+         eZGnEWL8w71b+DmxISg+4Z5Gc9dZ1BYJ6kwEqrruilgdg4p3Jot4PI3H5/+SopTASYsQ
+         fjDVxrW0YbjUUizzBNavxX8h+MTZGg484I3MYRqM8j74smNMX4GKSxF6MrddAuhyJsVe
+         FMZwx+bZ0Uiiyz59CuJWxhXnsCQBBVGhyTCHEEF+j1tGA/zCrcaU78gxJpct5MR27XZ8
+         bgPp4mfg/+fHYSrfaSKehnwr1d0Ag2GCJ5V5deIauyVQHbyqJZhPGiK724uGKTyRBGD7
+         gFQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=0BWRPw8g2XYVXSVbobArkBx7EWxJQQknqmb4NXpsOwM=;
-        b=D4RuL9BIqv8cG6pCmRc1FDDIAEX5fRfBdsz/CZ6Nlj+iUtbGAvroNX7mriYraLksLc
-         eKM1I52XK1EZxZMw10MOKFMk0MaxVBCTvg9TT6zmQzpvRTfw5fU7SebCny0KoZueTflp
-         HEdfdzIVioPnGwYETh7FvYM8nGy95yVABcsopFEW6lX9mxOpp1FecfCF/BVEOJZTf019
-         vgNFahzZNTLcJsKdVtsY2TtCXU5BFzqUdb6IawuFj/ER7FzqrH1nDpGvfvjjMqLYqJ0x
-         1YXduDRJz818Pj6BI0+fqQuQUPdciK14uaJDHVszDatVbG9L4I+BOaHO+BzLQV4YYGAZ
-         y8xg==
-X-Gm-Message-State: AOAM531FJHGGn5T29FMUUaDoAq0lriLUeAfDzy1DTEMCN9+1OGS2ZsYl
-        XmBHLDPMEAVW7hGb1vTr1JM=
-X-Google-Smtp-Source: ABdhPJzoshdcpFBb5Yye8csFmbaOC7pfVxul+09SAuay65V7kYX7aTIBoGARazBeNCiCYARxn+7I0A==
-X-Received: by 2002:a05:600c:2317:: with SMTP id 23mr13389823wmo.72.1595063226154;
-        Sat, 18 Jul 2020 02:07:06 -0700 (PDT)
-Received: from [172.16.20.20] ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id w12sm20824919wrm.79.2020.07.18.02.07.04
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=C6pIxbOUMM4YIylpczsugjr/zEWMDNDTN7jorTB2vew=;
+        b=b0kidRwTyZtYCEga9unPn8mqpeByAW3q5iLtLRwFbf7mKh0S3StdCDGlZ5iEyHJb1S
+         du3htDv0p+6Oz+QkZCbYahLO/3v0Y7hruDbuCSo2X5zOGDjsioMEYNnoRTZZu4WdLo9Z
+         4PZ3uTiqPZhkXAPkYpsiLfEhWBN6RjPYtB1Q3NMKMf6hCJH9igWAwMEG4O4/ecLf3zNI
+         IFoAUKBCWq/7clXPRjweuFzh4u2cU2lBROb2luj3v8KVQ4ne+r3ytrVESddBrdEbEi/V
+         6uUA0mokbhnF2KgzQbNvL0wvC6T25lGAoLZdhyHQTSXWUBVey6GNWiE8T4inNzD1FIVB
+         fYuQ==
+X-Gm-Message-State: AOAM532+3dXo86R5QveSLoh7o8nZHknoV6KobK7y03l8JIxFykgKeGt0
+        OPgaNYC1b4sMgIaVFcvE1c8=
+X-Google-Smtp-Source: ABdhPJwYGoouV0+zWdqRYkGRJ4iG5Nj5tVBnAIQUiOC+gcfl2J04HClefmVNd3KbGbDdJ13IO5aDTw==
+X-Received: by 2002:a63:3ec4:: with SMTP id l187mr11550281pga.371.1595064007723;
+        Sat, 18 Jul 2020 02:20:07 -0700 (PDT)
+Received: from localhost.localdomain ([182.69.248.222])
+        by smtp.gmail.com with ESMTPSA id nl5sm5217800pjb.36.2020.07.18.02.20.01
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 18 Jul 2020 02:07:05 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
-Subject: Re: [PATCH 2/2] arm64: dts: meson: add support for the WeTek Core 2
-From:   Christian Hewitt <christianshewitt@gmail.com>
-In-Reply-To: <2ab5e28a-77f6-cac1-68ed-f0a23d5f2a24@baylibre.com>
-Date:   Sat, 18 Jul 2020 13:07:02 +0400
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <109D2AE5-AF4B-4DAF-B2C5-3B8740BF33BD@gmail.com>
-References: <20200718050056.1713-1-christianshewitt@gmail.com>
- <20200718050056.1713-2-christianshewitt@gmail.com>
- <2ab5e28a-77f6-cac1-68ed-f0a23d5f2a24@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-X-Mailer: Apple Mail (2.3445.104.14)
+        Sat, 18 Jul 2020 02:20:07 -0700 (PDT)
+From:   Amit Singh Tomar <amittomer25@gmail.com>
+To:     andre.przywara@arm.com, afaerber@suse.de, vkoul@kernel.org,
+        manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
+Cc:     dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH v6 01/10] dt-bindings: dmaengine: convert Actions Semi Owl SoCs bindings to yaml
+Date:   Sat, 18 Jul 2020 14:49:25 +0530
+Message-Id: <1595063974-24228-2-git-send-email-amittomer25@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1595063974-24228-1-git-send-email-amittomer25@gmail.com>
+References: <1595063974-24228-1-git-send-email-amittomer25@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Converts the device tree bindings for the Actions Semi Owl SoCs DMA
+Controller over to YAML schemas.
 
-> On 18 Jul 2020, at 12:52 pm, Neil Armstrong <narmstrong@baylibre.com> =
-wrote:
->=20
-> Le 18/07/2020 =C3=A0 07:00, Christian Hewitt a =C3=A9crit :
->> The WeTek Core2 is a commercial device based on the Amlogic Q200 =
-reference
->> design but with the following differences:
->>=20
->> - 3GB RAM, 32GB eMMC
->> - Blue and Red LEDs used to signal on/off status
->> - uart_AO can be accessed after opening the case; soldering required
->> - USB OTG is not accessible (inside the case)
->> - Realtek RTL8152 Ethernet (internal USB connection)
->>=20
->> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
->> ---
->> arch/arm64/boot/dts/amlogic/Makefile          |  1 +
->> .../dts/amlogic/meson-gxm-wetek-core2.dts     | 90 =
-+++++++++++++++++++
->> 2 files changed, 91 insertions(+)
->> create mode 100644 =
-arch/arm64/boot/dts/amlogic/meson-gxm-wetek-core2.dts
->>=20
->> diff --git a/arch/arm64/boot/dts/amlogic/Makefile =
-b/arch/arm64/boot/dts/amlogic/Makefile
->> index 5cac4d1d487d..4e2239ffcaa5 100644
->> --- a/arch/arm64/boot/dts/amlogic/Makefile
->> +++ b/arch/arm64/boot/dts/amlogic/Makefile
->> @@ -41,6 +41,7 @@ dtb-$(CONFIG_ARCH_MESON) +=3D meson-gxm-q201.dtb
->> dtb-$(CONFIG_ARCH_MESON) +=3D meson-gxm-rbox-pro.dtb
->> dtb-$(CONFIG_ARCH_MESON) +=3D meson-gxm-s912-libretech-pc.dtb
->> dtb-$(CONFIG_ARCH_MESON) +=3D meson-gxm-vega-s96.dtb
->> +dtb-$(CONFIG_ARCH_MESON) +=3D meson-gxm-wetek-core2.dtb
->> dtb-$(CONFIG_ARCH_MESON) +=3D meson-sm1-sei610.dtb
->> dtb-$(CONFIG_ARCH_MESON) +=3D meson-sm1-khadas-vim3l.dtb
->> dtb-$(CONFIG_ARCH_MESON) +=3D meson-sm1-odroid-c4.dtb
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-wetek-core2.dts =
-b/arch/arm64/boot/dts/amlogic/meson-gxm-wetek-core2.dts
->> new file mode 100644
->> index 000000000000..44fc5ea38dc0
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxm-wetek-core2.dts
->> @@ -0,0 +1,90 @@
->> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->> +/*
->> + * Copyright (c) 2020 Christian Hewitt <christianshewitt@gmail.com>
->> + */
->> +
->> +/dts-v1/;
->> +
->> +#include "meson-gxm.dtsi"
->> +#include "meson-gx-p23x-q20x.dtsi"
->> +#include <dt-bindings/input/input.h>
->> +#include <dt-bindings/leds/common.h>
->> +
->> +/ {
->> +	compatible =3D "wetek,core2", "amlogic,s912", =
-"amlogic,meson-gxm";
->> +	model =3D "WeTek Core 2";
->> +
->> +	memory@0 {
->> +		device_type =3D "memory";
->> +		reg =3D <0x0 0x0 0x0 0x80000000>; /* 2 GiB or 3 GiB */
->> +	};
->> +
->> +	leds {
->> +		compatible =3D "gpio-leds";
->> +
->> +		blue {
->> +			color =3D <LED_COLOR_ID_BLUE>;
->> +			function =3D LED_FUNCTION_STATUS;
->> +			gpios =3D <&gpio GPIODV_24 GPIO_ACTIVE_HIGH>;
->> +			default-state =3D "on";
->> +		};
->> +	};
->> +
->> +	adc-keys {
->> +		compatible =3D "adc-keys";
->> +		io-channels =3D <&saradc 0>;
->> +		io-channel-names =3D "buttons";
->> +		keyup-threshold-microvolt =3D <1710000>;
->> +
->> +		button-update {
->> +			label =3D "update";
->> +			linux,code =3D <KEY_VENDOR>;
->> +			press-threshold-microvolt =3D <10000>;
->> +		};
->> +	};
->> +
->> +	gpio-keys-polled {
->> +		compatible =3D "gpio-keys-polled";
->> +		#address-cells =3D <1>;
->> +		#size-cells =3D <0>;
->> +		poll-interval =3D <100>;
->> +
->> +		button-power {
->> +			label =3D "power";
->> +			linux,code =3D <KEY_POWER>;
->> +			gpios =3D <&gpio_ao GPIOAO_2 GPIO_ACTIVE_LOW>;
->> +		};
->> +	};
->> +};
->> +
->> +/* This is disabled as Realtek RTL8152 USB provides Ethernet */
->> +&ethmac {
->> +	status =3D "disabled";
->> +	phy-mode =3D "rmii";
->> +	phy-handle =3D <&internal_phy>;
->=20
-> I think you can remove these 2 lines
->=20
->> +};
->> +
->> +&internal_phy {
->> +	pinctrl-0 =3D <&eth_link_led_pins>, <&eth_act_led_pins>;
->> +	pinctrl-names =3D "default";
->=20
-> Simply add :
-> status =3D "disabled";
->=20
->> +};
->> +
->> +&ir {
->> +	linux,rc-map-name =3D "rc-wetek-play2";
->> +};
->> +
->> +/* This is connected to the Bluetooth module: */
->> +&uart_A {
->> +	status =3D "okay";
->> +	pinctrl-0 =3D <&uart_a_pins>, <&uart_a_cts_rts_pins>;
->> +	pinctrl-names =3D "default";
->> +	uart-has-rtscts;
->> +
->> +	bluetooth {
->> +		compatible =3D "brcm,bcm43438-bt";
->> +		enable-gpios =3D <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
->> +		max-speed =3D <2000000>;
->> +		clocks =3D <&wifi32k>;
->> +		clock-names =3D "lpo";
->> +	};
->> +};
->>=20
->=20
->=20
-> Otherwise looks good
->=20
-> Neil
+It also adds new compatible string "actions,s700-dma".
 
-I=E2=80=99ve tested both changes, both are fine so will send v2.
+Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
+---
+Changes since v5:
+	* Removed Rob's Reviewed-by tag as his bot found errors
+	  running 'make dt_binding_check'.
+	* Fixed the errore reported by Rob's bot, adjusting the reg
+	  property in example.
+Changes since v4:
+        * Added Rob's Reviewed-by tag.
+        * Re-order it from 05/10 to 01/10.
+Changes since v3:
+        * No change.
+Changes since v2:
+        * Addressed Rob's comments:
+           - removed unnecessary description.
+           - added unevaluatedProperties
+           - added relevant information about
+             dma-channels and dma-request
+        * Added power-domain property.
+Change since v1:
+        * Updated the description field to reflect
+          only the necessary information.
+        * replaced the maxItems field with description for each
+          controller attribute(except interrupts).
+        * Replaced the clock macro with number to keep the example
+          as independent as possible.
+---
+ Documentation/devicetree/bindings/dma/owl-dma.txt  | 47 -------------
+ Documentation/devicetree/bindings/dma/owl-dma.yaml | 79 ++++++++++++++++++++++
+ 2 files changed, 79 insertions(+), 47 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/dma/owl-dma.txt
+ create mode 100644 Documentation/devicetree/bindings/dma/owl-dma.yaml
 
-Thanks for the quick review.
-
-Christian
+diff --git a/Documentation/devicetree/bindings/dma/owl-dma.txt b/Documentation/devicetree/bindings/dma/owl-dma.txt
+deleted file mode 100644
+index 03e9bb12b75f..000000000000
+--- a/Documentation/devicetree/bindings/dma/owl-dma.txt
++++ /dev/null
+@@ -1,47 +0,0 @@
+-* Actions Semi Owl SoCs DMA controller
+-
+-This binding follows the generic DMA bindings defined in dma.txt.
+-
+-Required properties:
+-- compatible: Should be "actions,s900-dma".
+-- reg: Should contain DMA registers location and length.
+-- interrupts: Should contain 4 interrupts shared by all channel.
+-- #dma-cells: Must be <1>. Used to represent the number of integer
+-              cells in the dmas property of client device.
+-- dma-channels: Physical channels supported.
+-- dma-requests: Number of DMA request signals supported by the controller.
+-                Refer to Documentation/devicetree/bindings/dma/dma.txt
+-- clocks: Phandle and Specifier of the clock feeding the DMA controller.
+-
+-Example:
+-
+-Controller:
+-                dma: dma-controller@e0260000 {
+-                        compatible = "actions,s900-dma";
+-                        reg = <0x0 0xe0260000 0x0 0x1000>;
+-                        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
+-                                     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
+-                                     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
+-                                     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
+-                        #dma-cells = <1>;
+-                        dma-channels = <12>;
+-                        dma-requests = <46>;
+-                        clocks = <&clock CLK_DMAC>;
+-                };
+-
+-Client:
+-
+-DMA clients connected to the Actions Semi Owl SoCs DMA controller must
+-use the format described in the dma.txt file, using a two-cell specifier
+-for each channel.
+-
+-The two cells in order are:
+-1. A phandle pointing to the DMA controller.
+-2. The channel id.
+-
+-uart5: serial@e012a000 {
+-        ...
+-        dma-names = "tx", "rx";
+-        dmas = <&dma 26>, <&dma 27>;
+-        ...
+-};
+diff --git a/Documentation/devicetree/bindings/dma/owl-dma.yaml b/Documentation/devicetree/bindings/dma/owl-dma.yaml
+new file mode 100644
+index 000000000000..256d62af2c64
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/owl-dma.yaml
+@@ -0,0 +1,79 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/owl-dma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Actions Semi Owl SoCs DMA controller
++
++description: |
++  The OWL DMA is a general-purpose direct memory access controller capable of
++  supporting 10 and 12 independent DMA channels for S700 and S900 SoCs
++  respectively.
++
++maintainers:
++  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
++
++allOf:
++  - $ref: "dma-controller.yaml#"
++
++properties:
++  compatible:
++    enum:
++      - actions,s900-dma
++      - actions,s700-dma
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    description:
++      controller supports 4 interrupts, which are freely assignable to the
++      DMA channels.
++    maxItems: 4
++
++  "#dma-cells":
++    const: 1
++
++  dma-channels:
++    maximum: 12
++
++  dma-requests:
++    maximum: 46
++
++  clocks:
++    maxItems: 1
++    description:
++      Phandle and Specifier of the clock feeding the DMA controller.
++
++  power-domains:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - "#dma-cells"
++  - dma-channels
++  - dma-requests
++  - clocks
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    dma: dma-controller@e0260000 {
++        compatible = "actions,s900-dma";
++        reg = <0xe0260000 0x1000>;
++        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
++        #dma-cells = <1>;
++        dma-channels = <12>;
++        dma-requests = <46>;
++        clocks = <&clock 22>;
++    };
++
++...
+-- 
+2.7.4
 
