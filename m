@@ -2,99 +2,121 @@ Return-Path: <SRS0=fiEU=A5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 527E4C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 05:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA98AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 06:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25EB62083B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 05:45:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rl90+3Ww"
+	by mail.kernel.org (Postfix) with ESMTP id AFB862076A
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 06:33:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgGRFpL (ORCPT
+        id S1726535AbgGRGdz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Jul 2020 01:45:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43698 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbgGRFpL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 01:45:11 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE52CC0619D2;
-        Fri, 17 Jul 2020 22:45:10 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id 88so2880130wrh.3;
-        Fri, 17 Jul 2020 22:45:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=3oYWHEmLW5s7KbA+l575vtPAkEWPi2PPTZYrMFMNqDQ=;
-        b=rl90+3WwRZrv/R9/B5pJfTLLA76r1jpsCq5y/2hvR3rfIgQQtX72aqr4C6jru4K2U2
-         z9i9D6dmVSJkFJJRGe2PW1BrfewDTXF4ST7Z16K6Lqw3HU3Aafq5U2UxBTNfNzAybxs4
-         vkT8nXzXkd7PBTrmPIH0rAcBRkduxh3z7Md9yaf4MAMd+g2656B7Sb66MVPSULdp8s5v
-         mZPGOm89Fis2QPrOhskoZYeo3ZT9Qd+0nYQQXu+nyVSVvVJhkbXYso7gv+AJ2wzKkBMr
-         oyAsR70Htl9MiM66aqQnoLlF9LJ8QBgxjmdh4rbWkoQwarn9lsfyeywWx1vUNQhZ1tWs
-         BWNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=3oYWHEmLW5s7KbA+l575vtPAkEWPi2PPTZYrMFMNqDQ=;
-        b=Bm0GA+FBvGrH2RC+oOchyht4QVmD7NzcnxkVjg2rhUDM81O2dUFo/cz3J3PCW2Wegj
-         vMQt8s6CiOGsmSWvqav3i4Zo+vsxTUABqHu4NnYQkC9eINezWOi9xXve3xvLEPzmql3x
-         R3Nw8GKgjvaBrnFwh303xtt0P14Xb7+bBasbMQkHQ6dUESY2XMqW81tfCxd5QzhuJdXM
-         M+wvku+YVtvPWHjOv9vWO8IJVFM5S4ev/MHZfsIKJSWGy+hrExrJouaCKDKlRcOplgAq
-         qQX2DQMB4HpasTmHb89iOAE3S6vrpF4Ooiwv1Pd4Yjtt8nka40UnAo78vTZJ9XrmKR3x
-         G5/w==
-X-Gm-Message-State: AOAM530rtm0HftSLzoJl3IUehAQMNQSp3CNJHUuGHXCVE5tjSz8BG+07
-        1F9UrJi3ZNVsOLIGRLfKzD3W/9d/
-X-Google-Smtp-Source: ABdhPJyaiTeH7lXyaFaxsJ1ijc2hXhd94evVQetqFIWG5Q8KwT+medqxNHw8dGjRnsXqi+3Q5EOgQg==
-X-Received: by 2002:a5d:6a90:: with SMTP id s16mr13075188wru.8.1595051109672;
-        Fri, 17 Jul 2020 22:45:09 -0700 (PDT)
-Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id d13sm18735481wrn.61.2020.07.17.22.45.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 22:45:09 -0700 (PDT)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH] arm64: dts: meson: update spifc node name on Khadas VIM3/VIM3L
-Date:   Sat, 18 Jul 2020 05:45:05 +0000
-Message-Id: <20200718054505.4165-1-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 18 Jul 2020 02:33:55 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:29992 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726226AbgGRGdy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 02:33:54 -0400
+Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
+  by alexa-out.qualcomm.com with ESMTP; 17 Jul 2020 23:33:54 -0700
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 17 Jul 2020 23:33:52 -0700
+Received: from c-sbhanu-linux.qualcomm.com ([10.242.50.201])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 18 Jul 2020 12:03:30 +0530
+Received: by c-sbhanu-linux.qualcomm.com (Postfix, from userid 2344807)
+        id B895E3FD5; Sat, 18 Jul 2020 12:03:28 +0530 (IST)
+From:   Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        robh+dt@kernel.org, mka@chromium.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org,
+        Pradeep P V K <ppvk@codeaurora.org>,
+        Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+Subject: [PATCH V1] arm64: dts: qcom: Add bandwidth votes for eMMC and SDcard
+Date:   Sat, 18 Jul 2020 12:03:26 +0530
+Message-Id: <1595054006-6803-1-git-send-email-sbhanu@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The VIM3/VIM3L Boards use w25q128 not w25q32 - this is a cosmetic change
-only - the device probes fine with the current device-tree.
+From: Pradeep P V K <ppvk@codeaurora.org>
 
-Fixes: 0e1610e726d3 ("arm64: dts: khadas-vim3: add SPIFC controller node")
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Add the bandwidth domain supporting performance state and
+the corresponding OPP tables for the sdhc device on sc7180.
+
+Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This change is depends on the patch series
+https://lkml.org/lkml/2020/6/30/1280
+Also depends on documentation commit 557ed5f (Present on linux-next)
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-index 27408c10a811..6b75157265e1 100644
---- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-@@ -360,7 +360,7 @@
- 	pinctrl-0 = <&nor_pins>;
- 	pinctrl-names = "default";
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 68f9894..d78a066 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -684,6 +684,9 @@
+ 			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
+ 					<&gcc GCC_SDCC1_AHB_CLK>;
+ 			clock-names = "core", "iface";
++			interconnects = <&aggre1_noc MASTER_EMMC &mc_virt SLAVE_EBI1>,
++				<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_EMMC_CFG>;
++			interconnect-names = "sdhc-ddr","cpu-sdhc";
+ 			power-domains = <&rpmhpd SC7180_CX>;
+ 			operating-points-v2 = <&sdhc1_opp_table>;
  
--	w25q32: spi-flash@0 {
-+	w25q128: spi-flash@0 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		compatible = "winbond,w25q128fw", "jedec,spi-nor";
+@@ -704,11 +707,15 @@
+ 				opp-100000000 {
+ 					opp-hz = /bits/ 64 <100000000>;
+ 					required-opps = <&rpmhpd_opp_low_svs>;
++					opp-peak-kBps = <100000 100000>;
++					opp-avg-kBps = <100000 50000>;
+ 				};
+ 
+ 				opp-384000000 {
+ 					opp-hz = /bits/ 64 <384000000>;
+ 					required-opps = <&rpmhpd_opp_svs_l1>;
++					opp-peak-kBps = <600000 900000>;
++					opp-avg-kBps = <261438 300000>;
+ 				};
+ 			};
+ 		};
+@@ -2476,6 +2483,10 @@
+ 			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
+ 					<&gcc GCC_SDCC2_AHB_CLK>;
+ 			clock-names = "core", "iface";
++
++			interconnects = <&aggre1_noc MASTER_SDCC_2 &mc_virt SLAVE_EBI1>,
++				<&gem_noc MASTER_APPSS_PROC &config_noc	SLAVE_SDCC_2>;
++			interconnect-names = "sdhc-ddr","cpu-sdhc";
+ 			power-domains = <&rpmhpd SC7180_CX>;
+ 			operating-points-v2 = <&sdhc2_opp_table>;
+ 
+@@ -2489,11 +2500,15 @@
+ 				opp-100000000 {
+ 					opp-hz = /bits/ 64 <100000000>;
+ 					required-opps = <&rpmhpd_opp_low_svs>;
++					opp-peak-kBps = <160000 100000>;
++					opp-avg-kBps = <80000 50000>;
+ 				};
+ 
+ 				opp-202000000 {
+ 					opp-hz = /bits/ 64 <202000000>;
+ 					required-opps = <&rpmhpd_opp_svs_l1>;
++					opp-peak-kBps = <200000	120000>;
++					opp-avg-kBps = <100000 60000>;
+ 				};
+ 			};
+ 		};
 -- 
-2.17.1
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
+of Code Aurora Forum, hosted by The Linux Foundation
 
