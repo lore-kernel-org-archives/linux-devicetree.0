@@ -2,141 +2,115 @@ Return-Path: <SRS0=fiEU=A5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F139C433F4
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 19:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C701C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 20:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CE582073E
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 19:35:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JzUqKQqN"
+	by mail.kernel.org (Postfix) with ESMTP id 6129A2073A
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 20:39:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbgGRTfS (ORCPT
+        id S1726801AbgGRUj4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Jul 2020 15:35:18 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:14280 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728127AbgGRTfP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 15:35:15 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f134eb70000>; Sat, 18 Jul 2020 12:34:15 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sat, 18 Jul 2020 12:35:15 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sat, 18 Jul 2020 12:35:15 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 18 Jul
- 2020 19:35:11 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Sat, 18 Jul 2020 19:35:10 +0000
-Received: from vdumpa-ubuntu.nvidia.com (Not Verified[172.17.173.140]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f134eed0003>; Sat, 18 Jul 2020 12:35:10 -0700
-From:   Krishna Reddy <vdumpa@nvidia.com>
-To:     <joro@8bytes.org>, <will@kernel.org>, <robin.murphy@arm.com>,
-        <robh+dt@kernel.org>, <treding@nvidia.com>, <jonathanh@nvidia.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <yhsu@nvidia.com>,
-        <snikam@nvidia.com>, <praithatha@nvidia.com>, <talho@nvidia.com>,
-        <bbiswas@nvidia.com>, <mperttunen@nvidia.com>,
-        <nicolinc@nvidia.com>, <bhuntsman@nvidia.com>,
-        <nicoleotsuka@gmail.com>, Krishna Reddy <vdumpa@nvidia.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v11 4/5] dt-bindings: arm-smmu: add binding for Tegra194 SMMU
-Date:   Sat, 18 Jul 2020 12:34:56 -0700
-Message-ID: <20200718193457.30046-5-vdumpa@nvidia.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200718193457.30046-1-vdumpa@nvidia.com>
-References: <20200718193457.30046-1-vdumpa@nvidia.com>
+        Sat, 18 Jul 2020 16:39:56 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:49197 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726989AbgGRUj4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 16:39:56 -0400
+X-Originating-IP: 91.175.115.186
+Received: from localhost (91-175-115-186.subs.proxad.net [91.175.115.186])
+        (Authenticated sender: gregory.clement@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 99EC140004;
+        Sat, 18 Jul 2020 20:39:52 +0000 (UTC)
+From:   Gregory CLEMENT <gregory.clement@bootlin.com>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        jason@lakedaemon.net, andrew@lunn.ch,
+        sebastian.hesselbarth@gmail.com, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: Re: [PATCH] ARM: dts: kirkwood: Replace HTTP links with HTTPS ones
+In-Reply-To: <20200713070908.31846-1-grandmaster@al2klimov.de>
+References: <20200713070908.31846-1-grandmaster@al2klimov.de>
+Date:   Sat, 18 Jul 2020 22:39:52 +0200
+Message-ID: <87wo3036cn.fsf@FE-laptop>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1595100855; bh=Y2GkTsQPdZaXJ3/ZSfPDjVUpBzjiUKOjktXU6d24nFk=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=JzUqKQqNncVSoo1ttjCQA2/b08DCu9lGElLEyC7u6129abh0YWGJLXNmcf5JCG3Qt
-         YK52ulKn10OO8sT57ZA6a3Ln3/0UR9LwvuGtKU9bgL9VfQEa4DgZNpvVSRwa+tj8tt
-         iHvaYJAMWlvn0p18m0Yysf1H702r0+TH36/jdb9drqvAFl/8rRaNrvkiPhIlI0p20d
-         zIBc7HxKFuR5Qo2dRmcdffP1n15fw9nu/Q0Y5V5d9PqgHrxs0BY+s5I0JrbFCFClun
-         +2hPd4wifnK8zisRUUkauu0SGnGldYq9rMz7nzpo5V1ijCVrEujQ1lDxGgOhHPKTbn
-         WTerEMONdvyWg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add binding for NVIDIA's Tegra194 SoC SMMU.
+"Alexander A. Klimov" <grandmaster@al2klimov.de> writes:
 
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
----
- .../devicetree/bindings/iommu/arm,smmu.yaml   | 25 ++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+>
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+>
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 
-diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Docume=
-ntation/devicetree/bindings/iommu/arm,smmu.yaml
-index 93fb9fe068b9..503160a7b9a0 100644
---- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-+++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-@@ -44,6 +44,11 @@ properties:
-         items:
-           - const: marvell,ap806-smmu-500
-           - const: arm,mmu-500
-+      - description: NVIDIA SoCs that program two ARM MMU-500s identically
-+        items:
-+          - enum:
-+              - nvidia,tegra194-smmu
-+          - const: nvidia,smmu-500
-       - items:
-           - const: arm,mmu-500
-           - const: arm,smmu-v2
-@@ -61,7 +66,8 @@ properties:
-           - cavium,smmu-v2
-=20
-   reg:
--    maxItems: 1
-+    minItems: 1
-+    maxItems: 2
-=20
-   '#global-interrupts':
-     description: The number of global interrupts exposed by the device.
-@@ -144,6 +150,23 @@ required:
-=20
- additionalProperties: false
-=20
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - nvidia,tegra194-smmu
-+    then:
-+      properties:
-+        reg:
-+          minItems: 2
-+          maxItems: 2
-+    else:
-+      properties:
-+        reg:
-+          maxItems: 1
-+
- examples:
-   - |+
-     /* SMMU with stream matching or stream indexing */
---=20
-2.26.2
+Applied on mvebu/dt
 
+Thanks,
+
+Gregory
+> ---
+>  Continuing my work started at 93431e0607e5.
+>  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+>  (Actually letting a shell for loop submit all this stuff for me.)
+>
+>  If there are any URLs to be removed completely or at least not just HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also: https://lkml.org/lkml/2020/6/27/64
+>
+>  If there are any valid, but yet not changed URLs:
+>  See: https://lkml.org/lkml/2020/6/26/837
+>
+>  If you apply the patch, please let me know.
+>
+>  Sorry again to all maintainers who complained about subject lines.
+>  Now I realized that you want an actually perfect prefixes,
+>  not just subsystem ones.
+>  I tried my best...
+>  And yes, *I could* (at least half-)automate it.
+>  Impossible is nothing! :)
+>
+>
+>  arch/arm/boot/dts/kirkwood-b3.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/kirkwood-b3.dts b/arch/arm/boot/dts/kirkwood-b3.dts
+> index 17f48f88a983..a7636fe28501 100644
+> --- a/arch/arm/boot/dts/kirkwood-b3.dts
+> +++ b/arch/arm/boot/dts/kirkwood-b3.dts
+> @@ -9,7 +9,7 @@
+>   * L2 cache. If your B3 silently fails to boot, u-boot is probably too
+>   * old. Either upgrade, or consider the following email:
+>   *
+> - * http://lists.debian.org/debian-arm/2012/08/msg00128.html
+> + * https://lists.debian.org/debian-arm/2012/08/msg00128.html
+>   */
+>  
+>  /dts-v1/;
+> -- 
+> 2.27.0
+>
+
+-- 
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
