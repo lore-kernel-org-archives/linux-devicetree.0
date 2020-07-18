@@ -4,126 +4,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93760C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 08:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA29C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 08:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A32520717
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 08:40:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8F3622B4E
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 08:48:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="JxoOm75V"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="BhMPO6/9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgGRIkI (ORCPT
+        id S1726096AbgGRIsi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Jul 2020 04:40:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42186 "EHLO
+        Sat, 18 Jul 2020 04:48:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726221AbgGRIkH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 04:40:07 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1442C0619D2
-        for <devicetree@vger.kernel.org>; Sat, 18 Jul 2020 01:40:06 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id q7so15316208ljm.1
-        for <devicetree@vger.kernel.org>; Sat, 18 Jul 2020 01:40:06 -0700 (PDT)
+        with ESMTP id S1725947AbgGRIsh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 04:48:37 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92C7CC0619D2
+        for <devicetree@vger.kernel.org>; Sat, 18 Jul 2020 01:48:37 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z15so13362854wrl.8
+        for <devicetree@vger.kernel.org>; Sat, 18 Jul 2020 01:48:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=grHudVuxTrujFcMeBbNEzFtggMnTeKfPICDDWvNm5qQ=;
-        b=JxoOm75VPiSO3PvPhBOYKhjkYBPSzOkEGNvBKzzVHYb9Rjpd/2lw8isqYnFTqXaE21
-         C+3CgK+K5piqQQKYelN5pmjLyYxqfc5aAi0ULmEU0tzBzcQGldVFhG63xZeEbru+b2c5
-         7kXb1Htwvi29RZbiOF+DtZw68CeC9tM32rQ4yyzttv9Gfu0We7eglDXlTwOoWSHj7iaG
-         uFdKHbZ4suTw2Kj1YExnw/5V9FAso4O5mejSjADC/gVT0AAkQZ+Rc2Jyl0rPZXgwLOzm
-         A8yMggODuGPwRx4MTTd/izM2d1i01Iv5Xdj7Z4nCrMtmW+0gIqCPyKiutLZojfM6ClVd
-         Ui0Q==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-transfer-encoding;
+        bh=BjhOckuzjQ8qA75c221JxO7XJtdarvNGL84ItYCWCv0=;
+        b=BhMPO6/9G8wcxqz03YbmYYe/ndNtetAFO8a9Nx1XnyNOd0DDSBgR4SPJ3F2BqOgEOH
+         r6i64c8vNlLEwNuvtbj6qKL0rV4hr5KXaEi40lJ45Nq05z0OaG2oVroJQv5fCJUCR5U+
+         +PfGmmAXnm03NUWLQx1tJFLDhd70zUzHJJkacc9c1FL1+Hc5NiQO40kjt7uUqNTE65eN
+         gjuEDgOsI/Kjd8PWXxtqdySW8DgcHg2agIHhxrVHX/XhGK7Oa8DbQ0GUQGOBYGUP1njC
+         4tGWi49W4Oqnale+QiNfsCM0qi+oJF6bcV/gIUMHXJB2SEzCfFSZ4mq8rkUfFrntdKG3
+         79Bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=grHudVuxTrujFcMeBbNEzFtggMnTeKfPICDDWvNm5qQ=;
-        b=slKshHrhFB+HOgrYt9NRM7DCqYg520ALAqqrRldnzpyYwCoCN+7QVEtSMtEghkP/qt
-         28IOCYuoizHhuDVwzx3BuAH8b2Y8zX0k4lERWvP2/XpQ8oKOX4F7YcKSYBZLGEQcH9n2
-         vv1lIKSFEzRuSJuTZvTqzsZ+NM49PWM8xk3i0YH1wNaUDt/gZa4ifMYlpgwWCMFpQJGN
-         dvrz5LIx6/KN6MpST7d0kZEmINhumVLib0ng3G/PcYwigcURJxZ3dfPHFqzXCvR95r46
-         zcEkYAlHqIGYraj2GuCA+H+XmNdUAXy1ohpKwvPbtUyis20CUf6ON910q8hGsGVsVX+s
-         AsFg==
-X-Gm-Message-State: AOAM5302/dX8DzsGd3nhVZ3pRFRJNVsiiywkBKgtPfIBTwPGbUn+t8ZQ
-        G0NYDuCK1fCpIyMuNybuZsjx8A==
-X-Google-Smtp-Source: ABdhPJywOSyHHy2bJZqi1NPJYnFaaf9Tq+T0dfJMvzvTJxykDZd2Oa2LCdCG8Yl4tfAw3QfOH7Ll9w==
-X-Received: by 2002:a05:651c:217:: with SMTP id y23mr6450848ljn.447.1595061604957;
-        Sat, 18 Jul 2020 01:40:04 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:42e3:6011:c93:75dd:e99a:5259? ([2a00:1fa0:42e3:6011:c93:75dd:e99a:5259])
-        by smtp.gmail.com with ESMTPSA id e9sm2083043ljn.61.2020.07.18.01.40.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 Jul 2020 01:40:04 -0700 (PDT)
-Subject: Re: [PATCH v7 3/5] MIPS: Ingenic: Let the Kconfig of platform enable
- the clocksource driver.
-To:     =?UTF-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>, daniel.lezcano@linaro.org,
-        tsbogend@alpha.franken.de, robh+dt@kernel.org
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, tglx@linutronix.de,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com, paul@crapouillou.net
-References: <20200717165947.56158-1-zhouyanjie@wanyeetech.com>
- <20200717165947.56158-4-zhouyanjie@wanyeetech.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <4903f4ba-6ecb-5c38-aa5a-4f20bd473124@cogentembedded.com>
-Date:   Sat, 18 Jul 2020 11:39:59 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=BjhOckuzjQ8qA75c221JxO7XJtdarvNGL84ItYCWCv0=;
+        b=gXsa3DM1x4SYiTq2O6UdHbv8Ua4KIe5TCUxVb2eMZUTwFqkZ0tGv9qeRArF6k6OGZD
+         zK/83g36AWowDMBAgtahiS1FDycO0hW+R5VDGxrA3cS8KLroUne00UulROOSEllwHQWP
+         ynx/+Tb3nXfsd7KPFsGp+Y1B9W06xmcntFnHS+pf0MwRVljoPWOBhBq79uFMm25uC+Ke
+         qBAIRYSiedItJfwLl9ayW8j7W8wFB5SsQznAwfnmF19p6rvQiHxc+8HX9MOqIyUlniCT
+         ZOBU0QiE+9yUExDBr2Lc7iXpv08RPboIUjYu6Z/3nwjYn4J36qxpajDvwjKfbXIoctNo
+         0Kyg==
+X-Gm-Message-State: AOAM531yAy6MRO0S9E9YUI5lwB9BMPX2qmrgWgZTvX7Re5fLzJ0evJMI
+        gLs04eJvbpEFz+xfiTfX5C14ZA==
+X-Google-Smtp-Source: ABdhPJx/Kazr2a2GBlOYCPRTxUJoU9hxnfl4aBe6j1HembJqBpTiqWfE52+z9kxOmbbOyQYIVrVhMQ==
+X-Received: by 2002:adf:a4c8:: with SMTP id h8mr118367wrb.262.1595062115944;
+        Sat, 18 Jul 2020 01:48:35 -0700 (PDT)
+Received: from Armstrongs-MacBook-Pro.local ([2a01:e35:2ec0:82b0:9d0:bf63:799d:4aa1])
+        by smtp.gmail.com with ESMTPSA id k131sm19391018wmb.36.2020.07.18.01.48.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 18 Jul 2020 01:48:35 -0700 (PDT)
+Subject: Re: [PATCH] arm64: dts: meson: update spifc node name on Khadas
+ VIM3/VIM3L
+To:     Christian Hewitt <christianshewitt@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200718054505.4165-1-christianshewitt@gmail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Message-ID: <a3b745d9-c73e-b56e-5b94-6c79f2197bc4@baylibre.com>
+Date:   Sat, 18 Jul 2020 10:48:35 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:45.0)
+ Gecko/20100101 Thunderbird/45.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200717165947.56158-4-zhouyanjie@wanyeetech.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <20200718054505.4165-1-christianshewitt@gmail.com>
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello!
 
-On 17.07.2020 19:59, 周琰杰 (Zhou Yanjie) wrote:
-
-> The previous clocksource patch in this series ([2/3]) has remove
-
-   Removed.
-
-> "default MACH_INGENIC" and make option silent, so we need to
-
-   Made?
-
-> enable the corresponding driver in the platform's Kconfig.
+Le 18/07/2020 � 07:45, Christian Hewitt a �crit :
+> The VIM3/VIM3L Boards use w25q128 not w25q32 - this is a cosmetic change
+> only - the device probes fine with the current device-tree.
 > 
-> Suggested-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> Fixes: 0e1610e726d3 ("arm64: dts: khadas-vim3: add SPIFC controller node")
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 > ---
+>  arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Notes:
->      v7:
->      New patch.
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+> index 27408c10a811..6b75157265e1 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+> @@ -360,7 +360,7 @@
+>  	pinctrl-0 = <&nor_pins>;
+>  	pinctrl-names = "default";
+>  
+> -	w25q32: spi-flash@0 {
+> +	w25q128: spi-flash@0 {
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+>  		compatible = "winbond,w25q128fw", "jedec,spi-nor";
 > 
->   arch/mips/jz4740/Kconfig | 7 +++++++
->   1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
-> index 6c065dcaeff8..5ad60998702e 100644
-> --- a/arch/mips/jz4740/Kconfig
-> +++ b/arch/mips/jz4740/Kconfig
-> @@ -36,27 +36,34 @@ endchoice
->   config MACH_JZ4740
->   	bool
->   	select SYS_HAS_CPU_MIPS32_R1
-> +    select INGENIC_TIMER
 
-    Please use tab instead of spaces here an below.
-
-[...]
-
-MBR, Sergei
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
