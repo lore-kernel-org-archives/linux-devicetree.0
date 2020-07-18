@@ -2,133 +2,113 @@ Return-Path: <SRS0=fiEU=A5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92726C433E2
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 00:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD3BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 05:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FCE820759
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 00:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7C092076A
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 05:01:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YVGERfFC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dIll9+b0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728691AbgGRAlF (ORCPT
+        id S1725809AbgGRFBC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jul 2020 20:41:05 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:24384 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728276AbgGRAlE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Jul 2020 20:41:04 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595032864; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=iNKJj+TLzkBnI4NSsc5gA6qzfp4yaENwEEBOKVBFHZM=; b=YVGERfFCTvjK5Kh6ZfPvrAEEOAORfxq7l4yOJIE7v+k8Si6r5U7/A01WW8peViKkVtLlHDUV
- K+l23ypb4YSQ6MuKajuVyktYT0haYnrxHIeLEc78pwoL+XIz14F1QFv39qHnDqo35TSvO8Rm
- MUhSesU26sUPDqysXYHf+LXxh2Y=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
- 5f12451fe3bee125108f0b52 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 18 Jul 2020 00:41:03
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C3AFEC433CB; Sat, 18 Jul 2020 00:41:02 +0000 (UTC)
-Received: from [192.168.1.117] (ip70-179-20-127.sd.sd.cox.net [70.179.20.127])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mdtipton)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BF392C433C9;
-        Sat, 18 Jul 2020 00:41:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BF392C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mdtipton@codeaurora.org
-Subject: Re: [PATCH v2 2/6] dt-bindings: interconnect: Add property to set BCM
- TCS wait behavior
-To:     Rob Herring <robh@kernel.org>
-Cc:     georgi.djakov@linaro.org, bjorn.andersson@linaro.org,
-        agross@kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200710015652.19206-1-mdtipton@codeaurora.org>
- <20200710015652.19206-3-mdtipton@codeaurora.org>
- <20200710163119.GA2753833@bogus>
-From:   Mike Tipton <mdtipton@codeaurora.org>
-Message-ID: <43a0638a-ea3d-eb96-16d0-524148f86bc3@codeaurora.org>
-Date:   Fri, 17 Jul 2020 17:41:01 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200710163119.GA2753833@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sat, 18 Jul 2020 01:01:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36934 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbgGRFBB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 01:01:01 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51E69C0619D2;
+        Fri, 17 Jul 2020 22:01:01 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id f18so13163379wrs.0;
+        Fri, 17 Jul 2020 22:01:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=EfRpQHmTESiZa6dhnw2iqpiFLGjitNFlRILsGoZarsc=;
+        b=dIll9+b0ojdGaPeKMBKId83+B8KbMveTAmCWS1sIQmbKhYv8QwbEcBX88GtnAtcDKv
+         FUoewwWUnKer4iV05EGQsLinBue5HL6U3sa3SkxirQYiFaLEPnWGGMjqM5e8CYhve+JS
+         ix6Hk77ztollOD1W1ESVneu68fgPsY64nA3lRp9oyT3QQ5Celvfl8a0acW3e+r7EmjBw
+         8cJc7YYUhQRhKjQZBc17hsOOx5t01JHiPKQ70IYwT4vek02kRYfAtXE9p0anP+h9y+Mc
+         +SZesfDtM7OHablnUiOHNlNunhjbByEecKA1j1qoxm/WV2WoIr5mYC4HA4OlQ4I0oE8n
+         c9BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=EfRpQHmTESiZa6dhnw2iqpiFLGjitNFlRILsGoZarsc=;
+        b=eHQc1AChJPZGLkEiNl1iLQ1ak7PxSdmRQTV2FnGkhFmYEbVGOKb0JyZlckfCGgBSdh
+         r2QGHFlDA/V2hSX2PrwAynn6TYJ8OgRxlEWXYqdvlo+45kC5R9hJ7VscMLdWPF90NnEK
+         PRMOCejynWHDS9dVkCeRau/WBSGROiOfwp8sL4u2uDIz/r7YfYqi/benj/3uTJJxb1yy
+         bWw+lHEcuwxvepeIuo/vy+UgL26ML1uI7E9SdtAZTwUngVX4S+2X4oB+/1lt3AkEqb9f
+         8zOqk0ceCQKJp2YIM3M/YeNGzWtzaNcMrN4Zmx3Q0j1WBcgpUBbrWP3+XhPyjqnmr+o7
+         NHTw==
+X-Gm-Message-State: AOAM532INpL/lzv1ppolbcC/iElK64k1lR8vXxSdjWpIM8Je7TYpNZar
+        hYRtjnUl9N4MN6Rec+SyuYA=
+X-Google-Smtp-Source: ABdhPJx/2ArNMwm6dr01jNjTNfwVaYpjTt1gM76uZewiIW0Z7JUdHnjE5jkMaZ8Q+8Ht+cjuxUblGA==
+X-Received: by 2002:a5d:4c82:: with SMTP id z2mr12728799wrs.287.1595048459891;
+        Fri, 17 Jul 2020 22:00:59 -0700 (PDT)
+Received: from localhost.localdomain ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id 68sm18179815wmz.40.2020.07.17.22.00.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 22:00:59 -0700 (PDT)
+From:   Christian Hewitt <christianshewitt@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH 1/2] dt-bindings: arm: amlogic: add support for the WeTek Core 2
+Date:   Sat, 18 Jul 2020 05:00:55 +0000
+Message-Id: <20200718050056.1713-1-christianshewitt@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 7/10/2020 9:31 AM, Rob Herring wrote:
-> On Thu, Jul 09, 2020 at 06:56:48PM -0700, Mike Tipton wrote:
->> Add "qcom,tcs-wait" property to set which TCS should wait for completion
->> when triggering.
->>
->> Signed-off-by: Mike Tipton <mdtipton@codeaurora.org>
->> ---
->>   .../bindings/interconnect/qcom,bcm-voter.yaml       | 13 +++++++++++++
->>   1 file changed, 13 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
->> index 5971fc1df08d..f0c3d6b01831 100644
->> --- a/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
->> +++ b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
->> @@ -21,6 +21,16 @@ properties:
->>       enum:
->>         - qcom,bcm-voter
->>   
->> +  qcom,tcs-wait:
->> +    description: |
->> +      Optional mask of which TCSs (Triggered Command Sets) wait for completion
->> +      upon triggering. In most cases, it's necessary to wait in both the AMC
->> +      and WAKE sets to ensure resources are available before use. If a specific
->> +      RSC and its use cases can ensure sufficient delay by other means, then
->> +      this can be overridden to reduce latencies.
-> 
-> I have no idea what any of this means to provide any meaningful comment.
-> 
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    default: QCOM_ICC_TAG_ACTIVE_ONLY
-> 
-> Can't use defines here.
+The WeTek Core 2 is a commercial Android device based on the Amlogic Q200
+reference design using the S912-H chipset. Specs:
 
-What's the recommended alternative? The meaning isn't obvious as a raw 
-number (3). We expect the defines to be used in the dt files themselves 
-(see example below). Is this just a restriction for the `default` 
-documentation specifically? I could just mention the default behavior in 
-the description I suppose, but that seems to defeat the purpose of 
-having a separate `default` key.
+3GB DDR3 RAM
+32GB eMMC storage
+10/100 Ethernet using Realtek RTL8152 (internal USB)
+802.11 a/b/g/n/ac + BT 4.1 sdio wireless module (AP6356S)
+2x single colour LEDs to indicate power
+1x power button
+1x reset button on the underside of the box
+HDMI 2.0 (4k@60p) video
+Composite video + 2-channel audio output on 3.5mm jack
+S/PDIF audio output
+2x USB 2.0 ports
+1x USB OTG port (internal)
+1x micro SD card slot
+UART pins (internal)
+IR Sensor
 
-> 
->> +
->>   required:
->>     - compatible
->>   
->> @@ -39,7 +49,10 @@ examples:
->>     # as defined in Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
->>     - |
->>   
->> +    #include <dt-bindings/interconnect/qcom,icc.h>
->> +
->>       disp_bcm_voter: bcm_voter {
->>           compatible = "qcom,bcm-voter";
->> +        qcom,tcs-wait = <QCOM_ICC_TAG_AMC>;
->>       };
->>   ...
->> -- 
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->> a Linux Foundation Collaborative Project
->>
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+---
+ Documentation/devicetree/bindings/arm/amlogic.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
+index 378229fa8310..5eba9f48823e 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.yaml
++++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
+@@ -121,6 +121,7 @@ properties:
+               - libretech,aml-s912-pc
+               - nexbox,a1
+               - tronsmart,vega-s96
++              - wetek,core2
+           - const: amlogic,s912
+           - const: amlogic,meson-gxm
+ 
+-- 
+2.17.1
+
