@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 342DCC433E2
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 05:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0546CC433E4
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 05:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EDF12076A
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 05:01:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D457D2076D
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 05:23:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T2MHOb96"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ahoKNN/2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726248AbgGRFBE (ORCPT
+        id S1726601AbgGRFXH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Jul 2020 01:01:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36940 "EHLO
+        Sat, 18 Jul 2020 01:23:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725791AbgGRFBD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 01:01:03 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68101C0619D2;
-        Fri, 17 Jul 2020 22:01:03 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id z13so13117554wrw.5;
-        Fri, 17 Jul 2020 22:01:03 -0700 (PDT)
+        with ESMTP id S1725887AbgGRFXG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 01:23:06 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECEF0C0619D2;
+        Fri, 17 Jul 2020 22:23:05 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id o2so20440364wmh.2;
+        Fri, 17 Jul 2020 22:23:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=pdW+Mjjnec0fSYPYQpDNjTJP81EjQ4GG3syPqnLR7Sc=;
-        b=T2MHOb96zwRInfSLZlWUZTvE51GWOTjRoEfY/e1F9wRGBHS7xuq7BpVecTZUTEUF1W
-         n/zz0kXeHWfy5gWgr6M45vy3Bd8cWRXlj9YUMZVSAUNDjp1tO1wE3yEEJVR8WTAyTX/o
-         t8jKPqv0RoK1WJow8GD155dFpuO+hbSH7rjJvhHTAq0mqfm00ZEEFPHtaUk73oDZcZ1m
-         QBigDfwRfa9diYYtY3k6bz9p5hwvOGbxjl/uQs5YoSxb50ktVsQDgOa5LtldlXPx84RM
-         qdsFTenMH212uwVF4PaJJmKp5aAZt/9UKAltbrdc7V9ypwy06/UavuAfp9wi2FCThowM
-         DZeA==
+        bh=cAYxwf3PWKuckY2hB45qBXD12qyW8EWqiGVEnf1AhJ8=;
+        b=ahoKNN/2UsGf2261/PlAzJzMU5wSe7qP1X+NHH1C5XFRC9/Eixnma6gwZKnybt4GAt
+         Tk9O4FMkcXWGGNEfeV4pOWJVh8CBI/X5iBSamDa/WungfMcVb9TTFeTrrf/MQwPTsvRa
+         2XmgDnOiP+4khMX0h6UwQE53Kyc0fyxeSCS0wN8ZMi3atYkNM+2AHtnwMetN+VFpphHF
+         DEGcD6XS2v9jPs8LRhVE6+vbVsTRSTXLdf3+pYnXE8NnFw0Lk/aX11oevj51tuLJzXiL
+         OfeVYxLdDdgExNGWp4wNQOPMAWnbIPj4YZIpzvsI7eJ0HbZhsc+demln5eAzf0ZTl1cl
+         pZ8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=pdW+Mjjnec0fSYPYQpDNjTJP81EjQ4GG3syPqnLR7Sc=;
-        b=Uwk0vhiJ0bf2YxkpEx3EL1mlE8m3HKUG9WbkQpTCQBGuVVMJ7ncCtREoit7cOx0O4r
-         3dppFPRbZ0iMwJcFYG8g5iVJI4nuDQvTNTEfacLyPtYnAlbwyDwpxatWMdP77bazH0wX
-         E2TdleUv7zJ/IG2mMgjtEAIATUVO87eOqiRul33RcK9MeJiWw0rGXuEM/reF8kW9ma05
-         xiqFrSaFItcp11SDW13ARcK27hJp0JnUhtrpXxOxnoDzzw6zmmxhTi5X+Fazz2az3ZFu
-         OEH1+/SKq9DqbgBiAUrz5rBApCJc5MKV4aJ1nsXRyP7eRDkA8K5swXi3HLubJVJqVxL0
-         CXNQ==
-X-Gm-Message-State: AOAM5332eEuKNffQy2WCv2ysMCSuonptdWBHOCv1D7qh9bmh/Tlg/dD7
-        avd0FeDzuNLSwa3UfPaN2No=
-X-Google-Smtp-Source: ABdhPJxHRWHgh67kxq9xkuW198zVtS8jYB21lXDt27XPbgKgq2mt1y4z1UjeejNofF1NYKxGFZ/d9w==
-X-Received: by 2002:a5d:4b45:: with SMTP id w5mr12527495wrs.4.1595048462119;
-        Fri, 17 Jul 2020 22:01:02 -0700 (PDT)
+        bh=cAYxwf3PWKuckY2hB45qBXD12qyW8EWqiGVEnf1AhJ8=;
+        b=D9MzmfwMQI5gGexxMWqlhENCHUV69cdnX4Mlhk13donZQ1hOJL2k6gS79vHv8yPpMa
+         uaHDP6/xtln4EugWAQnxp+0eli3pOm++bU6CLW0R85w9fU8VPtMy0gnJUYlexfsUjI44
+         IxMD/uXsdU6LcXLSo90XxflcYrDjXR4SNdEVSWVxcMBY7T6Hza95Ub93PrhVBnFmZmQ4
+         50RdIqWHnxSvW78OpgaPachVH78RZmftKWq9WDZG0H5RvbUsGRkDy4mWYT0CQXE+VoZN
+         4GrOFjjFl87zGebX5ySBg6Om/GXs044pbCZP4v0p0VJT7wPDFooIT9LMqKEBEm8h7GTd
+         LprQ==
+X-Gm-Message-State: AOAM530fXyvBFNPdXh38Mhnc3I5tGbqk27at94GmVVrcpKrSartcwyN4
+        nlwhsL2W0FgFUZz7DeFuDv4=
+X-Google-Smtp-Source: ABdhPJyrAZ3UMP5EXqPvxtY9rGSpOSCytCxrVZqOS0PbHzzpVTWW4bmMK2/AusJFj00YMzB2B2WBjg==
+X-Received: by 2002:a1c:4183:: with SMTP id o125mr12180611wma.101.1595049784690;
+        Fri, 17 Jul 2020 22:23:04 -0700 (PDT)
 Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id 68sm18179815wmz.40.2020.07.17.22.01.00
+        by smtp.gmail.com with ESMTPSA id f16sm17536608wmf.17.2020.07.17.22.23.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 22:01:01 -0700 (PDT)
+        Fri, 17 Jul 2020 22:23:04 -0700 (PDT)
 From:   Christian Hewitt <christianshewitt@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -65,70 +65,89 @@ To:     Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH 2/2] arm64: dts: meson: add support for the WeTek Core 2
-Date:   Sat, 18 Jul 2020 05:00:56 +0000
-Message-Id: <20200718050056.1713-2-christianshewitt@gmail.com>
+Subject: [PATCH 2/2] arm64: dts: meson: add initial Beelink GS-King-X device-tree
+Date:   Sat, 18 Jul 2020 05:22:58 +0000
+Message-Id: <20200718052258.2890-2-christianshewitt@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200718050056.1713-1-christianshewitt@gmail.com>
-References: <20200718050056.1713-1-christianshewitt@gmail.com>
+In-Reply-To: <20200718052258.2890-1-christianshewitt@gmail.com>
+References: <20200718052258.2890-1-christianshewitt@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The WeTek Core2 is a commercial device based on the Amlogic Q200 reference
-design but with the following differences:
+The Shenzen AZW (Beelink) GS-King-X is based on the Amlogic W400 reference
+board with an S922X-H chip.
 
-- 3GB RAM, 32GB eMMC
-- Blue and Red LEDs used to signal on/off status
-- uart_AO can be accessed after opening the case; soldering required
-- USB OTG is not accessible (inside the case)
-- Realtek RTL8152 Ethernet (internal USB connection)
+- 4GB LPDDR4 RAM
+- 64GB eMMC storage
+- 10/100/1000 Base-T Ethernet
+- AP6356S Wireless (802.11 a/b/g/n/ac, BT 4.1)
+- HDMI 2.1 video
+- S/PDIF optical output
+- 2x ESS9018 audio DACs
+- 4x Ricor RT6862 audio amps
+- Analogue headphone output
+- 1x USB 2.0 OTG port
+- 3x USB 3.0 ports
+- IR receiver
+- 1x micro SD card slot (internal)
+- USB SATA controller with 2x 3.5" drive bays
+- 1x Power on/off button
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- arch/arm64/boot/dts/amlogic/Makefile          |  1 +
- .../dts/amlogic/meson-gxm-wetek-core2.dts     | 90 +++++++++++++++++++
- 2 files changed, 91 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxm-wetek-core2.dts
+ arch/arm64/boot/dts/amlogic/Makefile          |   1 +
+ .../boot/dts/amlogic/meson-g12b-gsking-x.dts  | 170 ++++++++++++++++++
+ 2 files changed, 171 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-gsking-x.dts
 
 diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-index 5cac4d1d487d..4e2239ffcaa5 100644
+index 5cac4d1d487d..99a6e8e0b644 100644
 --- a/arch/arm64/boot/dts/amlogic/Makefile
 +++ b/arch/arm64/boot/dts/amlogic/Makefile
-@@ -41,6 +41,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q201.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxm-rbox-pro.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxm-s912-libretech-pc.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxm-vega-s96.dtb
-+dtb-$(CONFIG_ARCH_MESON) += meson-gxm-wetek-core2.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-sm1-sei610.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-sm1-khadas-vim3l.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-sm1-odroid-c4.dtb
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-wetek-core2.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-wetek-core2.dts
+@@ -3,6 +3,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-axg-s400.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-g12a-sei510.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-g12a-u200.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-g12a-x96-max.dtb
++dtb-$(CONFIG_ARCH_MESON) += meson-g12b-gsking-x.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-g12b-gtking.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-g12b-gtking-pro.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-g12b-a311d-khadas-vim3.dtb
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-gsking-x.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-gsking-x.dts
 new file mode 100644
-index 000000000000..44fc5ea38dc0
+index 000000000000..60b681d6cfe3
 --- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-wetek-core2.dts
-@@ -0,0 +1,90 @@
++++ b/arch/arm64/boot/dts/amlogic/meson-g12b-gsking-x.dts
+@@ -0,0 +1,170 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +/*
-+ * Copyright (c) 2020 Christian Hewitt <christianshewitt@gmail.com>
++ * Copyright (c) 2019 BayLibre, SAS
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ * Copyright (c) 2019 Christian Hewitt <christianshewitt@gmail.com>
 + */
 +
 +/dts-v1/;
 +
-+#include "meson-gxm.dtsi"
-+#include "meson-gx-p23x-q20x.dtsi"
-+#include <dt-bindings/input/input.h>
++#include "meson-g12b-w400.dtsi"
 +#include <dt-bindings/leds/common.h>
++#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
 +
 +/ {
-+	compatible = "wetek,core2", "amlogic,s912", "amlogic,meson-gxm";
-+	model = "WeTek Core 2";
++	compatible = "azw,gsking-x", "amlogic,g12b";
++	model = "Beelink GS-King X";
 +
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x80000000>; /* 2 GiB or 3 GiB */
++	gpio-keys-polled {
++		compatible = "gpio-keys-polled";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		poll-interval = <100>;
++
++		power-button {
++			label = "power";
++			linux,code = <KEY_POWER>;
++			gpios = <&gpio_ao GPIOAO_3 GPIO_ACTIVE_HIGH>;
++		};
 +	};
 +
 +	leds {
@@ -137,68 +156,139 @@ index 000000000000..44fc5ea38dc0
 +		blue {
 +			color = <LED_COLOR_ID_BLUE>;
 +			function = LED_FUNCTION_STATUS;
-+			gpios = <&gpio GPIODV_24 GPIO_ACTIVE_HIGH>;
++			gpios = <&gpio_ao GPIOAO_11 GPIO_ACTIVE_HIGH>;
 +			default-state = "on";
 +		};
 +	};
 +
-+	adc-keys {
-+		compatible = "adc-keys";
-+		io-channels = <&saradc 0>;
-+		io-channel-names = "buttons";
-+		keyup-threshold-microvolt = <1710000>;
-+
-+		button-update {
-+			label = "update";
-+			linux,code = <KEY_VENDOR>;
-+			press-threshold-microvolt = <10000>;
-+		};
++	spdif_dit: audio-codec-1 {
++		#sound-dai-cells = <0>;
++		compatible = "linux,spdif-dit";
++		status = "okay";
++		sound-name-prefix = "DIT";
 +	};
 +
-+	gpio-keys-polled {
-+		compatible = "gpio-keys-polled";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		poll-interval = <100>;
++	sound {
++		compatible = "amlogic,axg-sound-card";
++		model = "G12B-GSKING-X";
++		audio-aux-devs = <&tdmout_b>;
++		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
++				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
++				"TDMOUT_B IN 2", "FRDDR_C OUT 1",
++				"TDM_B Playback", "TDMOUT_B OUT",
++				"SPDIFOUT IN 0", "FRDDR_A OUT 3",
++				"SPDIFOUT IN 1", "FRDDR_B OUT 3",
++				"SPDIFOUT IN 2", "FRDDR_C OUT 3";
 +
-+		button-power {
-+			label = "power";
-+			linux,code = <KEY_POWER>;
-+			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_LOW>;
++		assigned-clocks = <&clkc CLKID_MPLL2>,
++				  <&clkc CLKID_MPLL0>,
++				  <&clkc CLKID_MPLL1>;
++		assigned-clock-parents = <0>, <0>, <0>;
++		assigned-clock-rates = <294912000>,
++				       <270950400>,
++				       <393216000>;
++		status = "okay";
++
++		dai-link-0 {
++			sound-dai = <&frddr_a>;
++		};
++
++		dai-link-1 {
++			sound-dai = <&frddr_b>;
++		};
++
++		dai-link-2 {
++			sound-dai = <&frddr_c>;
++		};
++
++		/* 8ch hdmi interface */
++		dai-link-3 {
++			sound-dai = <&tdmif_b>;
++			dai-format = "i2s";
++			dai-tdm-slot-tx-mask-0 = <1 1>;
++			dai-tdm-slot-tx-mask-1 = <1 1>;
++			dai-tdm-slot-tx-mask-2 = <1 1>;
++			dai-tdm-slot-tx-mask-3 = <1 1>;
++			mclk-fs = <256>;
++
++			codec {
++				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_B>;
++			};
++		};
++
++		/* spdif hdmi or toslink interface */
++		dai-link-4 {
++			sound-dai = <&spdifout>;
++
++			codec-0 {
++				sound-dai = <&spdif_dit>;
++			};
++
++			codec-1 {
++				sound-dai = <&tohdmitx TOHDMITX_SPDIF_IN_A>;
++			};
++		};
++
++		/* spdif hdmi interface */
++		dai-link-5 {
++			sound-dai = <&spdifout_b>;
++
++			codec {
++				sound-dai = <&tohdmitx TOHDMITX_SPDIF_IN_B>;
++			};
++		};
++
++		/* hdmi glue */
++		dai-link-6 {
++			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
++
++			codec {
++				sound-dai = <&hdmi_tx>;
++			};
 +		};
 +	};
 +};
 +
-+/* This is disabled as Realtek RTL8152 USB provides Ethernet */
-+&ethmac {
-+	status = "disabled";
-+	phy-mode = "rmii";
-+	phy-handle = <&internal_phy>;
-+};
-+
-+&internal_phy {
-+	pinctrl-0 = <&eth_link_led_pins>, <&eth_act_led_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&ir {
-+	linux,rc-map-name = "rc-wetek-play2";
-+};
-+
-+/* This is connected to the Bluetooth module: */
-+&uart_A {
++&arb {
 +	status = "okay";
-+	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
-+	pinctrl-names = "default";
-+	uart-has-rtscts;
++};
 +
-+	bluetooth {
-+		compatible = "brcm,bcm43438-bt";
-+		enable-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
-+		max-speed = <2000000>;
-+		clocks = <&wifi32k>;
-+		clock-names = "lpo";
-+	};
++&clkc_audio {
++	status = "okay";
++};
++
++&frddr_a {
++	status = "okay";
++};
++
++&frddr_b {
++	status = "okay";
++};
++
++&frddr_c {
++	status = "okay";
++};
++
++&spdifout {
++	pinctrl-0 = <&spdif_out_h_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++};
++
++&spdifout_b {
++	status = "okay";
++};
++
++&tdmif_b {
++	status = "okay";
++};
++
++&tdmout_b {
++	status = "okay";
++};
++
++&tohdmitx {
++	status = "okay";
 +};
 -- 
 2.17.1
