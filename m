@@ -6,52 +6,96 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D96FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 14:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C56C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 14:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F69920657
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 14:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 223CC20657
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 14:49:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726611AbgGROqQ (ORCPT
+        id S1727853AbgGROtu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Jul 2020 10:46:16 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:38998 "EHLO gloria.sntech.de"
+        Sat, 18 Jul 2020 10:49:50 -0400
+Received: from mga17.intel.com ([192.55.52.151]:3940 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726574AbgGROqQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 18 Jul 2020 10:46:16 -0400
-Received: from x2f7f83e.dyn.telefonica.de ([2.247.248.62] helo=phil.sntech)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jwo6P-0007Kd-Ng; Sat, 18 Jul 2020 16:46:13 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: rockchip: remove bus-width from mmc nodes in px30 dts files
-Date:   Sat, 18 Jul 2020 16:46:11 +0200
-Message-Id: <159508352745.11968.2223741912292679297.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200715070954.1992-1-jbx6244@gmail.com>
-References: <20200715070954.1992-1-jbx6244@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1726574AbgGROtu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 18 Jul 2020 10:49:50 -0400
+IronPort-SDR: n7S/by3Rn5yOOcIlQ3nY/paaTJpxGc94XU1wsGoMCv/9S7bFplSp/S56C9yIK4bvhf487WCv8l
+ +NtH37Xx5Abg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9686"; a="129826074"
+X-IronPort-AV: E=Sophos;i="5.75,367,1589266800"; 
+   d="scan'208";a="129826074"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2020 07:49:49 -0700
+IronPort-SDR: Qs5FOH/KGRjHIxH7hzwqRwO17rep0PZL79RWsCNVoloriKerAApip/mzV+PVq5WI46m9XVg4Ol
+ 9/lnW6xyDscg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,367,1589266800"; 
+   d="scan'208";a="300836341"
+Received: from vgjayaku-ilbpg7.png.intel.com ([10.88.227.96])
+  by orsmga002.jf.intel.com with ESMTP; 18 Jul 2020 07:49:47 -0700
+From:   vineetha.g.jaya.kumaran@intel.com
+To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        robh+dt@kernel.org
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        wan.ahmad.zainie.wan.mohamad@intel.com, andriy.shevchenko@intel.com
+Subject: [PATCH v2 0/2] Add PWM support for Intel Keem Bay SoC
+Date:   Sat, 18 Jul 2020 22:47:06 +0800
+Message-Id: <1595083628-20734-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 15 Jul 2020 09:09:54 +0200, Johan Jonker wrote:
-> 'bus-width' has been added to px30.dtsi mmc nodes, so now it can be
-> removed from the dts files that include it.
+From: "Vineetha G. Jaya Kumaran" <vineetha.g.jaya.kumaran@intel.com>
 
-Applied, thanks!
+Hi,
 
-[1/1] arm64: dts: rockchip: remove bus-width from mmc nodes in px30 dts files
-      (no commit info)
+This patch set enables support for PWM on the Intel Keem Bay SoC.
+Keem Bay is an ARM based SoC, and the GPIO module allows
+configuration of 6 PWM outputs. Patch 1 adds the PWM driver and
+Patch 2 is for the required Device Tree bindings documentation.
+
+This driver was tested on the Keem Bay evaluation module board.
+
+Thank you.
 
 Best regards,
+Vineetha
+
+Changes since v1:
+-Updated licensing info, "clocks" property and example in DT bindings
+-Updated name of DT bindings document to match compatible string
+-Removed 1 patch for addition of new sysfs attribute "count"
+-Added support for COMPILE_TEST in Kconfig
+-Updated naming of defines and regmap attribute
+-Updated calculation of waveform high time and low time
+-Added range checking for waveform high/low time
+-Implemented .get_state
+-Removed register writes for lead-in and count values (left to default)
+-Updated register access to single-access
+-Folded keembay_pwm_enable/disable_channel, keembay_pwm_config_period/duty_cycle,
+ and keembay_pwm_config into keembay_pwm_apply
+-Updated error messages/error codes
+-Removed pwm_disable from keembay_pwm_remove
+-Removed clk_prepare/clk_enable/clk_disable from driver
+
+Lai, Poey Seng (1):
+  pwm: Add PWM driver for Intel Keem Bay
+
+Vineetha G. Jaya Kumaran (1):
+  dt-bindings: pwm: keembay: Add bindings for Intel Keem Bay PWM
+
+ .../devicetree/bindings/pwm/intel,keembay-pwm.yaml |  45 ++++
+ drivers/pwm/Kconfig                                |   9 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-keembay.c                          | 239 +++++++++++++++++++++
+ 4 files changed, 294 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-keembay.c
+
 -- 
-Heiko Stuebner <heiko@sntech.de>
+1.9.1
+
