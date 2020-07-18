@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7609EC43459
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD3E5C4345A
 	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5631A207FB
+	by mail.kernel.org (Postfix) with ESMTP id BC68F2076D
 	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 06:58:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MLVfAbEE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WENSboNW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729162AbgGRG6V (ORCPT
+        id S1729107AbgGRG6E (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Jul 2020 02:58:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54868 "EHLO
+        Sat, 18 Jul 2020 02:58:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729158AbgGRG6J (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 02:58:09 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7654FC0619D2;
-        Fri, 17 Jul 2020 23:58:09 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f18so13287590wrs.0;
-        Fri, 17 Jul 2020 23:58:09 -0700 (PDT)
+        with ESMTP id S1729098AbgGRG6D (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 02:58:03 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F013DC0619D2;
+        Fri, 17 Jul 2020 23:58:02 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f18so20467581wml.3;
+        Fri, 17 Jul 2020 23:58:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=+sbzGxZrB59pV6U+pYub8QGMoi1y6WlUsM0RAR+NpTo=;
-        b=MLVfAbEEt8OAz+5SAcw5V9iCQGbToqL+cmlSIIL8EpSA5td5CPH+5VRKLJ1yqXeMNK
-         SzgM3CMnrxFlqh42qGcDI48MkYDTAgACq+2sa/8OcFzSi097xlhleH7JcH25pC/h55QB
-         RS81OLa3zJ8ip/sWEf6dYPZBbdEylZpZjwDebRMra5YFEgliCzfnerO5rY8hvyMaRaqN
-         89DZCM2CS71AcUqH43J+kAeuGlS/jc+O7SIle0NI5gmVQb892V5Xentb5B5s7Qta3tQL
-         jGNXwoamC+JYy85rOlDgOAs+AEGuK+t6p4cYBtSLMAsDV+gO3ITZrbxyLInK1DRfLow+
-         tIJA==
+        bh=DR+MN9yI45B0CbPas30C2sDxsoxmrDbz6ZTE82Yi1YU=;
+        b=WENSboNWqFEFKMhQ1tpuQelRMJAoIzuNKBQN5XrO86dudVwcu92a3aNhzf/hlGc70C
+         99QuqYIR8SsFjoVQgDKKzVGUrP4+ay/lkffYF0gtdz02LOYtjut8md2FNXS04mJsRS2o
+         FKK5iZs2FO/SJGqeip0SksH48C2emf6ivIjUSa9R48xoh6LzVmZyv0BwFC4VDA/ow4un
+         S8tOWLsQGbZ5UNLWIWQIZo6hoXZwjY0XIcLO4XR/kj/wM/FZ9KF1x+/ryHYkCYaTQJIT
+         mvGkLlP4D3O7uBc2jdIoLUW+EmFLc1FEDftrBQzCMOxAXBkFyApgX3u020lCf+QzlV+u
+         92ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=+sbzGxZrB59pV6U+pYub8QGMoi1y6WlUsM0RAR+NpTo=;
-        b=RHJgZW54H84WJMalQhffmi/BL2//I0t05oq1mFe45OJ9h4J7JHxlXU4lbI7Mpf2Ann
-         GVctVLuLgqZPiWmYTzOtV9ylJVcjXvFAsaMX/aSKWgGgKQ6d3CKtXk0vD65eN7CwuE9f
-         ekm6xiel1TTDEUiurfsQGPskhktomj4pU93gR8NIsbdtkC9Ntc/EhV5gsKpKC4dwu8md
-         jj75wbfMUEQ5+W+hhHCV44agY1AbrO58jyQIYYle0iio1iNdzSZT15veqEV8TNWaxqbi
-         FteGzVrYc82ug5ykWLHZnrunZFCHbVpaprUU6siHolVTaA8KeoEznS9f4/3RZUGkx2jP
-         fJ+Q==
-X-Gm-Message-State: AOAM531+T7raE7tYVS7S8M1BpTUy06wtu85mY3lrsXMC31SJ4+y7bBBv
-        Oj1TBdQB0NXNKGU+VUkgh5s=
-X-Google-Smtp-Source: ABdhPJzzF7AVveOnVICfgyrqrnbw/GMJl08joyt9cIy/Hji+DY2GExCAGi3oh67Ji1N4fp8pOjJmyw==
-X-Received: by 2002:a5d:68c7:: with SMTP id p7mr14296531wrw.16.1595055488234;
-        Fri, 17 Jul 2020 23:58:08 -0700 (PDT)
+        bh=DR+MN9yI45B0CbPas30C2sDxsoxmrDbz6ZTE82Yi1YU=;
+        b=eVuucsUH92CqtaGhQeI6NXpuPhQjnn8rPDC73W6O6/UGp5g4yIraL4cprjgYxHtcV1
+         nOOi9IPrKNrOkIQys2I32Wrbu1RRYn7JEm7r6jS2w/TyX3naOmiM6hlpGWKlQS0lv9Tw
+         1Gpm+vkbSONgfs3ZgyOUWQFJh11JexkyzA04t2IBqZrsnB8F6mw6WoCJsDDW6zuUsaeF
+         4lOE7Nph0yg3U0griMqIIWh1vQzXWZx5nWEicv1/igTaC39niGBOioF26hURr3pE+4FV
+         pGTqS04K9pVSiAXzJfaDYLQD3n5QqU0AxTMsccFmAiMtk7IixLDgZ2TYpLuu3RB0LDFC
+         t5iw==
+X-Gm-Message-State: AOAM532FlqjrOcAGd2xhbu032O/0EVpzZL/TSyR5uCnFLwu/YJfXG7cJ
+        bygibEoAQbufadc+etYjC2Bg3aNO
+X-Google-Smtp-Source: ABdhPJweouzzfuZ/Hx+GE+ZOtOp3U/VJVa4dJNLXiSlFEcR7hnZHpn2pOAOKEreYUvRVMOyapB6v0A==
+X-Received: by 2002:a1c:dfd6:: with SMTP id w205mr13231447wmg.118.1595055481607;
+        Fri, 17 Jul 2020 23:58:01 -0700 (PDT)
 Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id x5sm18749191wmg.2.2020.07.17.23.58.06
+        by smtp.gmail.com with ESMTPSA id x5sm18749191wmg.2.2020.07.17.23.57.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 23:58:07 -0700 (PDT)
+        Fri, 17 Jul 2020 23:58:01 -0700 (PDT)
 From:   Christian Hewitt <christianshewitt@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -65,9 +65,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH 11/12] arm64: dts: meson: add audio playback to wetek-hub
-Date:   Sat, 18 Jul 2020 06:57:38 +0000
-Message-Id: <20200718065739.7802-12-christianshewitt@gmail.com>
+Subject: [PATCH 08/12] arm64: dts: meson: add audio playback to p212-s905x dtsi
+Date:   Sat, 18 Jul 2020 06:57:35 +0000
+Message-Id: <20200718065739.7802-9-christianshewitt@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200718065739.7802-1-christianshewitt@gmail.com>
 References: <20200718065739.7802-1-christianshewitt@gmail.com>
@@ -80,26 +80,29 @@ Add initial audio support limited to HDMI i2s.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- .../boot/dts/amlogic/meson-gxbb-wetek-hub.dts | 40 +++++++++++++++++++
+ .../dts/amlogic/meson-gxl-s905x-p212.dtsi     | 40 +++++++++++++++++++
  1 file changed, 40 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts
-index 83b985bb015e..0c1570153842 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts
-@@ -7,10 +7,50 @@
- /dts-v1/;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
+index 05cb2f5e5c36..40776d42bf8e 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
+@@ -11,6 +11,7 @@
+ /* Common DTSI for devices which are based on the P212 reference board. */
  
- #include "meson-gxbb-wetek.dtsi"
+ #include "meson-gxl-s905x.dtsi"
 +#include <dt-bindings/sound/meson-aiu.h>
  
  / {
- 	compatible = "wetek,hub", "amlogic,meson-gxbb";
- 	model = "WeTek Hub";
+ 	aliases {
+@@ -85,6 +86,45 @@
+ 		clocks = <&wifi32k>;
+ 		clock-names = "ext_clock";
+ 	};
 +
 +	sound {
 +		compatible = "amlogic,gx-sound-card";
-+		model = "GXBB-WETEK-HUB";
++		model = "GXL-S905X-P212";
 +		assigned-clocks = <&clkc CLKID_MPLL0>,
 +				  <&clkc CLKID_MPLL1>,
 +				  <&clkc CLKID_MPLL2>;
@@ -137,7 +140,7 @@ index 83b985bb015e..0c1570153842 100644
 +	status = "okay";
  };
  
- &ir {
+ &ethmac {
 -- 
 2.17.1
 
