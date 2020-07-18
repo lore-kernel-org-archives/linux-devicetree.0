@@ -8,153 +8,107 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A18BC433F7
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 09:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F34BC433E4
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 09:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E5812065E
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 09:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E386B20702
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Jul 2020 09:44:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZM5hEzlo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GTjGxonL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbgGRJUw (ORCPT
+        id S1726786AbgGRJoH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Jul 2020 05:20:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48424 "EHLO
+        Sat, 18 Jul 2020 05:44:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbgGRJUv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 05:20:51 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B19EC0619D2;
-        Sat, 18 Jul 2020 02:20:51 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ch3so7630637pjb.5;
-        Sat, 18 Jul 2020 02:20:51 -0700 (PDT)
+        with ESMTP id S1726683AbgGRJoH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 05:44:07 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94BDAC0619D2;
+        Sat, 18 Jul 2020 02:44:06 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id c80so17975094wme.0;
+        Sat, 18 Jul 2020 02:44:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=NviHgVjQuLhyVmkMejGiB4uUEB9WSVa/9K89QO1Z6/I=;
-        b=ZM5hEzloNLoubWfThl0I5dMBiNGbpj9DKGspRnyV8UUzXDQe3d/EJMi7efD+x2u+xF
-         ADbidj8qK8bHRy78+YNMxoyuT3c7ldE6qCtN/IXtaqt7w6gHIVvTx+EiUCpyjZ4MWY+R
-         ki0wVBCMiam4VSAajGm6kjDk0jxU1O78nd31qw9RGyEV5REhc+fvLABEdEkDL/+3HzVC
-         1uueZZkggn6ZGBmfKSc35mT3bEpDElG+zp2YqnWJXEKtIuMpNx3kkefIqSBACSZisf6R
-         bZTXjzvpXZ1ZhcMejWI3RmcW6WsW1Cgy4f0ucedeM5/qu3h8GEmORS5ty4ZpPDxIoI+F
-         +Vpw==
+        h=from:to:cc:subject:date:message-id;
+        bh=EfRpQHmTESiZa6dhnw2iqpiFLGjitNFlRILsGoZarsc=;
+        b=GTjGxonLjkWGrMuLbbJvKhXcTeSeWvXJqUELgSwAm3OIwyFFfCMC/UyPFzebhhnUn0
+         IboBUh0Rqf1XqDDnCLZtrj6lxn1veK0X5ks95qXwH2KjgmlGoJoSwqbgITA5+a636cma
+         v3GO6xYfcbgr5cMdh9/vtDtgNj2nchoao28sNBLkhjh9KxoiH4qkW8Dc+KrWngqyjbge
+         j76qKpZdBtcQyVGZCrpDuUDZkt4/kr3Lx8b0Bg+coweAUOao7E8q1F6EnytYK1A+7SjN
+         XZdgEAu0+rUElcQeGli2ySDP6BHm1Ifoi8IbVBUlGmyxp1or5pCVjb62xIKftAncg0hA
+         EcOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=NviHgVjQuLhyVmkMejGiB4uUEB9WSVa/9K89QO1Z6/I=;
-        b=dOCsmFt7zE/zDGFTeETAwKZoj55aKGU+GxEpVo9WMdWFvkTVbAYm1sIR74NuRji0h3
-         7ueiuNkQisLodFoO1P/xxd0No/r3MtXy25uvFz3RV9X6BFoxelTSbVRw4mjYZ+lpUkQ8
-         JIwP7VxBukRByFAGDhOwkRdrftuEhg25D+dT/wiWNgx4kYrBkx6iu5TxmMC60Ql06osV
-         V8vT8hxME4AbGHjdgSbaJe8TComMVz5R0xn1yLJrWbv4EdELfH3lq4UtUWOVNiD9OeNF
-         MjbBEoYMMEa9Pp7dCf3soJsbtkjlOXLQJ7eHQ56Ic+Dhrquvs3lxxcre/RvhUGw+Yuwt
-         C7Ug==
-X-Gm-Message-State: AOAM530ZgCjvTAVzwYkh80VISqmFtGylWP205C25Pb7qvXRsXeWxr8yu
-        FjN0SIBk0nyAK3ejgHJhL7g=
-X-Google-Smtp-Source: ABdhPJxRdlZFbb/t7neWxYozgmgI5MV4OV5IXTLjyB4u0x7K7aV8E8sKRr+rwIYz+sWqHJb11bPzSw==
-X-Received: by 2002:a17:902:c402:: with SMTP id k2mr10664183plk.184.1595064050702;
-        Sat, 18 Jul 2020 02:20:50 -0700 (PDT)
-Received: from localhost.localdomain ([182.69.248.222])
-        by smtp.gmail.com with ESMTPSA id nl5sm5217800pjb.36.2020.07.18.02.20.46
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 18 Jul 2020 02:20:50 -0700 (PDT)
-From:   Amit Singh Tomar <amittomer25@gmail.com>
-To:     andre.przywara@arm.com, afaerber@suse.de,
-        manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
-Cc:     cristian.ciocaltea@gmail.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH v6 10/10] arm64: dts: actions: Add uSD support for Cubieboard7
-Date:   Sat, 18 Jul 2020 14:49:34 +0530
-Message-Id: <1595063974-24228-11-git-send-email-amittomer25@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595063974-24228-1-git-send-email-amittomer25@gmail.com>
-References: <1595063974-24228-1-git-send-email-amittomer25@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=EfRpQHmTESiZa6dhnw2iqpiFLGjitNFlRILsGoZarsc=;
+        b=OyXTEEmm17dDsKFTJfwO7TzvC2w1H0MlzGkMaUU/5zDzqukPJ970UOgESHk4LqKoAB
+         cxBk0nEFlTQayOUNx13rVQ/2lHm0kcvFu042zoKftgWl/y8LvDR0cpSQjVTHPNehFeJO
+         HcQ7jtwh5uDK7xT/Ewar5PEJAljGnzAdFhPbBQBjNvEPJP/vwhdpDlZMdnd0tDpamajT
+         k9+Dg4PgRg4b5E9KEr3ZSGhCWiQJd8b9VaKu1x4y0+Rp4vKFNcsdKs5tQgP6KeBigjUU
+         L9vWhnaIEcm+noe+XUoNxD0Gm3wlr4pke045+vJ3SP7TXCBnqyaY/vmhUWNsmhiTU6to
+         Nc1Q==
+X-Gm-Message-State: AOAM5339gEAyoHVMxRzvgmN8w3VkyaAV3XAb+c92A/Hd2XhXzlcihL5Q
+        lnfpTXpEnrDkh+y942xTeHQ=
+X-Google-Smtp-Source: ABdhPJxGFHDqfM/xtoygZRnkiL6JT1wqGkfnbCWi4IOx7FgEddgf0xEIgvpiJ7+QBPUxTJI4o4DxhA==
+X-Received: by 2002:a05:600c:313:: with SMTP id q19mr13662362wmd.9.1595065445206;
+        Sat, 18 Jul 2020 02:44:05 -0700 (PDT)
+Received: from localhost.localdomain ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id v11sm16764554wmb.3.2020.07.18.02.44.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Jul 2020 02:44:04 -0700 (PDT)
+From:   Christian Hewitt <christianshewitt@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH v2 1/2] dt-bindings: arm: amlogic: add support for the WeTek Core 2
+Date:   Sat, 18 Jul 2020 09:43:59 +0000
+Message-Id: <20200718094400.1185-1-christianshewitt@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This commit adds uSD support for Cubieboard7 board based on Actions Semi
-S700 SoC. SD0 is connected to uSD slot. Since there is no PMIC support
-added yet, fixed regulator has been used as a regulator node.
+The WeTek Core 2 is a commercial Android device based on the Amlogic Q200
+reference design using the S912-H chipset. Specs:
 
-Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
----
-Changes since v5:
-	* Removed the Fixed regulators as these are 
-	  not needed.
-Changes since v4:
-        * No change.
-Changes since v3:
-        * No change.
-Changes since v2:
-        * No change.
-Changes since v1:
-        * No change.
-Changes since RFC:
-        * No change.
----
- arch/arm64/boot/dts/actions/s700-cubieboard7.dts | 22 ++++++++++++++++++++++
- arch/arm64/boot/dts/actions/s700.dtsi            |  1 +
- 2 files changed, 23 insertions(+)
+3GB DDR3 RAM
+32GB eMMC storage
+10/100 Ethernet using Realtek RTL8152 (internal USB)
+802.11 a/b/g/n/ac + BT 4.1 sdio wireless module (AP6356S)
+2x single colour LEDs to indicate power
+1x power button
+1x reset button on the underside of the box
+HDMI 2.0 (4k@60p) video
+Composite video + 2-channel audio output on 3.5mm jack
+S/PDIF audio output
+2x USB 2.0 ports
+1x USB OTG port (internal)
+1x micro SD card slot
+UART pins (internal)
+IR Sensor
 
-diff --git a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-index 63e375cd9eb4..eaaf8f876203 100644
---- a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-+++ b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-@@ -13,6 +13,7 @@
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+---
+ Documentation/devicetree/bindings/arm/amlogic.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
+index 378229fa8310..5eba9f48823e 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.yaml
++++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
+@@ -121,6 +121,7 @@ properties:
+               - libretech,aml-s912-pc
+               - nexbox,a1
+               - tronsmart,vega-s96
++              - wetek,core2
+           - const: amlogic,s912
+           - const: amlogic,meson-gxm
  
- 	aliases {
- 		serial3 = &uart3;
-+		mmc0 = &mmc0;
- 	};
- 
- 	chosen {
-@@ -81,6 +82,14 @@
- 			bias-pull-up;
- 		};
- 	};
-+
-+	mmc0_default: mmc0_default {
-+		pinmux {
-+			groups = "sd0_d0_mfp", "sd0_d1_mfp", "sd0_d2_d3_mfp",
-+				 "sd0_cmd_mfp", "sd0_clk_mfp";
-+			function = "sd0";
-+		};
-+	};
- };
- 
- &timer {
-@@ -90,3 +99,16 @@
- &uart3 {
- 	status = "okay";
- };
-+
-+/* uSD */
-+&mmc0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_default>;
-+	cd-gpios = <&pinctrl 120 GPIO_ACTIVE_LOW>;
-+	no-sdio;
-+	no-mmc;
-+	no-1-8-v;
-+	bus-width = <4>;
-+};
-+
-diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
-index 9ed88aafc2da..ba498cf9217d 100644
---- a/arch/arm64/boot/dts/actions/s700.dtsi
-+++ b/arch/arm64/boot/dts/actions/s700.dtsi
-@@ -4,6 +4,7 @@
-  */
- 
- #include <dt-bindings/clock/actions,s700-cmu.h>
-+#include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/power/owl-s700-powergate.h>
- #include <dt-bindings/reset/actions,s700-reset.h>
 -- 
-2.7.4
+2.17.1
 
