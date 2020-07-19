@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA25C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 17:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC24C433E8
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 17:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51EF521775
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 17:42:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B2AA21744
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 17:43:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qniJkCyp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N9N4kia5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgGSRm4 (ORCPT
+        id S1726687AbgGSRnM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 19 Jul 2020 13:42:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34036 "EHLO
+        Sun, 19 Jul 2020 13:43:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgGSRmz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jul 2020 13:42:55 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3865DC0619D2;
-        Sun, 19 Jul 2020 10:42:55 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 207so7922582pfu.3;
-        Sun, 19 Jul 2020 10:42:55 -0700 (PDT)
+        with ESMTP id S1725783AbgGSRnM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jul 2020 13:43:12 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26EC4C0619D2;
+        Sun, 19 Jul 2020 10:43:12 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id j19so9202117pgm.11;
+        Sun, 19 Jul 2020 10:43:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=bZxcR2KZzn+4XZ0ufduODiRcz7ZfigdmNagILQzXPSU=;
-        b=qniJkCyp1nHKRjS4t75bL6r00uUD1VRlgUFg/d1qpq50yyoK/6XC/Ni5h+4Blm/ubE
-         IqrXREPesdEnzkmGSxyt8BgMtvMM8etn8Ks9f/FrqFROsB+Fc/zY/I7DLF8vXV5bEEKz
-         u4fyGV9n6yMy/KHffy27rq5VmtHMiK55R/o3+oqT8Tda/rNK8RiUSHOfACd7p5Gfxwow
-         BlBicKHTPsC1oVNLR+RL7LHPvSMU72Zr6lLDwqyh4NyA9MWjvhFVKdAXiebP3AzkMGUq
-         DabfV2TeAoygnwgP9cATknegkWln+stj3kHxi1ghEThV6DaEbcleojeEMCsagL8o4KQt
-         bXNw==
+        bh=gLYlz5zLcstFedwvUClCeYbR/tSrAZj+4PU7wzkVOas=;
+        b=N9N4kia58MB/FvuKAs/VVvfVXPD4GIw3Ta9I5UnPtNq3jV2eSUFdWHB+BhRE4Fmcdo
+         ClxJ6QxP8EEs2XWR/t8e7RbiPvfurrlgtuUzFsOfDKp878aPcbrUNJaWTvQnwkflYvQI
+         vaE9PUUa/T0ewyKA4jUNpe55VlwM0C+X+1LeEvTTbWOy0F4x6+aocJdA7QwYxag1N8WY
+         sjqSsqWAypktiKWytnA9P962Gj3XhWYpo2sNthV95xCxvjvCj5U0VjzEq/j1heNZs0nP
+         GFEyg2vf71i1+b9JBfIH2Cgns9WpUVqeItznMd0j0yVztxSyqCvxCxsc2JmVrdsj8Ymo
+         rLuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=bZxcR2KZzn+4XZ0ufduODiRcz7ZfigdmNagILQzXPSU=;
-        b=Mz09y1HOOQwOYoFTDuyFD71uiWftZ1vBwY/8Ih+vS51GEjruRw4LABUbMdglrWzt9/
-         EvMfRP9tSFN0VMxVjfayt4CwFoJ0fUTrHvqmYqrDks11KIuaQeepoXk2W2fFgEjl6iDL
-         ZjFwYvJsQgST/w9mwxNY41CNB4eM27fZXUxNy8yE5neQjmdWiOR78Fzko31t4tuw3bmh
-         irGBc5/k7PYazUkJIUrABvKqejunaoM924vVzb+tDytpS5g0lacROhLfbt1s7093qPN5
-         YCT3Axs5reADlwkctmYKAs3isyrzijpvwFUb6bymWliM1NsosEJoGZDVkBbEXA8A5VoL
-         0SQQ==
-X-Gm-Message-State: AOAM533waeiaZL5DpEyuzAezwPbi4ACauWd8S86XW1f55iAUGPBKtF2/
-        cBIygb3SZ3dEJK1enpr3eOg=
-X-Google-Smtp-Source: ABdhPJwTHRQChGBUhy+aOEq3A5g+j6eC9CZB7yP9nkAAjETquKlYP/Xx+R0WHz8fxyKyN91ctp2YHw==
-X-Received: by 2002:a62:4ec8:: with SMTP id c191mr15859767pfb.15.1595180574674;
-        Sun, 19 Jul 2020 10:42:54 -0700 (PDT)
+        bh=gLYlz5zLcstFedwvUClCeYbR/tSrAZj+4PU7wzkVOas=;
+        b=QfcS5dVMovkGNp/or396czKNHmw7EwVr9X9bAsPBittkCDM1t4MTlHk+Mqa2U8qK3N
+         K0hEgEtfN++vr8T9Lhx27Pz/sJMIE+Mjxw+TybB8qGijcTMerSi8XGKyBJHovCUPXj9c
+         /G+eW6CqCBvMtVr7gWTd+rLgbyZcV6nGmnivWkBb2vZ1r8qfjDVKpG3Fbs9fOug5qG3k
+         wdLisCfdlqlpve8x5IBahBILLr3zhgJAnkbh6A7+aK3C3eN4oLHaV4bXpqKJKuLjl4mH
+         PV2EDNDk7VVO6fvbS6mZSJvpNJcZl2bmsp75nrNxlDnydr7r4ovrmThf4C9+BSC6YzFn
+         HXSA==
+X-Gm-Message-State: AOAM5333Jpecifjh7/NpcqYCAVx9NvqIdVBfvJTvi2JVB+apbwctYIqf
+        2x+EKsBjPiMHBngHrGmPYZU=
+X-Google-Smtp-Source: ABdhPJw2SMFYwWepGI+YF3ckzmJDKG8q0mMNIP8cSV1HMt2lZLcmct73XbifuRtMfVg/0hNG6Jcj6Q==
+X-Received: by 2002:a62:be06:: with SMTP id l6mr16645381pff.310.1595180591638;
+        Sun, 19 Jul 2020 10:43:11 -0700 (PDT)
 Received: from localhost.localdomain ([182.69.248.222])
-        by smtp.gmail.com with ESMTPSA id e191sm13906083pfh.42.2020.07.19.10.42.50
+        by smtp.gmail.com with ESMTPSA id e191sm13906083pfh.42.2020.07.19.10.43.05
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 19 Jul 2020 10:42:53 -0700 (PDT)
+        Sun, 19 Jul 2020 10:43:11 -0700 (PDT)
 From:   Amit Singh Tomar <amittomer25@gmail.com>
 To:     andre.przywara@arm.com, afaerber@suse.de,
         manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
 Cc:     cristian.ciocaltea@gmail.com, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-actions@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH v7 05/10] arm64: dts: actions: limit address range for pinctrl node
-Date:   Sun, 19 Jul 2020 23:12:02 +0530
-Message-Id: <1595180527-11320-6-git-send-email-amittomer25@gmail.com>
+Subject: [PATCH v7 08/10] dt-bindings: mmc: owl: add compatible string actions,s700-mmc
+Date:   Sun, 19 Jul 2020 23:12:05 +0530
+Message-Id: <1595180527-11320-9-git-send-email-amittomer25@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595180527-11320-1-git-send-email-amittomer25@gmail.com>
 References: <1595180527-11320-1-git-send-email-amittomer25@gmail.com>
@@ -75,28 +75,14 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-After commit 7cdf8446ed1d ("arm64: dts: actions: Add pinctrl node for
-Actions Semi S700") following error has been observed while booting
-Linux on Cubieboard7-lite(based on S700 SoC).
+The commit adds a new SoC specific compatible string "actions,s700-mmc"
+in combination with more generic string "actions,owl-mmc".
 
-[    0.257415] pinctrl-s700 e01b0000.pinctrl: can't request region for
-resource [mem 0xe01b0000-0xe01b0fff]
-[    0.266902] pinctrl-s700: probe of e01b0000.pinctrl failed with error -16
-
-This is due to the fact that memory range for "sps" power domain controller
-clashes with pinctrl.
-
-One way to fix it, is to limit pinctrl address range which is safe
-to do as current pinctrl driver uses address range only up to 0x100.
-
-This commit limits the pinctrl address range to 0x100 so that it doesn't
-conflict with sps range.
-
-Fixes: 7cdf8446ed1d ("arm64: dts: actions: Add pinctrl node for Actions
-Semi S700")
+Placement order of these strings should abide by the principle of
+"from most specific to most general".
 
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Suggested-by: Andre Przywara <andre.przywara@arm.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
 ---
 Changes since v6:
@@ -104,35 +90,32 @@ Changes since v6:
 Changes since v5:
         * Added Mani's Reviewed-by: tag.
 Changes since v4:
-        * Reordered it from 04/10 to 05/10.
+        * No change.
 Changes since v3:
         * No change.
 Changes since v2:
-        * this is no more don't merge and fixed
-          the broken S700 boot by limiting pinctrl
-          address range.
-        * Modified the subject to reflect the changes.
-Changes since v1:
-        * No change.
-Changes since RFC:
-        * kept as do not merge.
+        * Added Rob's Reviewed-by tag
 ---
- arch/arm64/boot/dts/actions/s700.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/mmc/owl-mmc.yaml | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
-index 2006ad5424fa..f8eb72bb4125 100644
---- a/arch/arm64/boot/dts/actions/s700.dtsi
-+++ b/arch/arm64/boot/dts/actions/s700.dtsi
-@@ -231,7 +231,7 @@
+diff --git a/Documentation/devicetree/bindings/mmc/owl-mmc.yaml b/Documentation/devicetree/bindings/mmc/owl-mmc.yaml
+index 1380501fb8f0..5eab25ccf7ae 100644
+--- a/Documentation/devicetree/bindings/mmc/owl-mmc.yaml
++++ b/Documentation/devicetree/bindings/mmc/owl-mmc.yaml
+@@ -14,7 +14,11 @@ maintainers:
  
- 		pinctrl: pinctrl@e01b0000 {
- 			compatible = "actions,s700-pinctrl";
--			reg = <0x0 0xe01b0000 0x0 0x1000>;
-+			reg = <0x0 0xe01b0000 0x0 0x100>;
- 			clocks = <&cmu CLK_GPIO>;
- 			gpio-controller;
- 			gpio-ranges = <&pinctrl 0 0 136>;
+ properties:
+   compatible:
+-    const: actions,owl-mmc
++    oneOf:
++      - const: actions,owl-mmc
++      - items:
++          - const: actions,s700-mmc
++          - const: actions,owl-mmc
+ 
+   reg:
+     maxItems: 1
 -- 
 2.7.4
 
