@@ -2,83 +2,76 @@ Return-Path: <SRS0=PhKm=A6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA460C433E4
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 22:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FA5C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 22:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B111E207FC
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 22:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99C30207FC
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 22:12:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726284AbgGSWQ1 (ORCPT
+        id S1726159AbgGSWMX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 19 Jul 2020 18:16:27 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:53269 "EHLO
+        Sun, 19 Jul 2020 18:12:23 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:57701 "EHLO
         relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726156AbgGSWQ1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jul 2020 18:16:27 -0400
-Received: from webmail.gandi.net (webmail15.sd4.0x35.net [10.200.201.15])
+        with ESMTP id S1726156AbgGSWMX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jul 2020 18:12:23 -0400
+X-Originating-IP: 195.189.32.242
+Received: from pc.localdomain (unknown [195.189.32.242])
         (Authenticated sender: contact@artur-rojek.eu)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPA id DE1C0FF803;
-        Sun, 19 Jul 2020 22:16:23 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 20 Jul 2020 00:16:23 +0200
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id C6362FF805;
+        Sun, 19 Jul 2020 22:12:18 +0000 (UTC)
 From:   Artur Rojek <contact@artur-rojek.eu>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Jonathan Cameron <jic23@kernel.org>,
         Paul Cercueil <paul@crapouillou.net>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
         Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 0/6] iio/adc: ingenic: Cleanups & add touchscreen mode.
-In-Reply-To: <12263784.1eIgeU1MTH@phil>
-References: <20200709152200.10039-1-contact@artur-rojek.eu>
- <12263784.1eIgeU1MTH@phil>
-Message-ID: <60b5e2ea0ae9884a0506688a1c8670a5@artur-rojek.eu>
-X-Sender: contact@artur-rojek.eu
-User-Agent: Roundcube Webmail/1.3.14
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
+Subject: [PATCH v8 0/2] input: ADC joystick driver & DT bindings
+Date:   Mon, 20 Jul 2020 00:11:01 +0200
+Message-Id: <20200719221103.91644-1-contact@artur-rojek.eu>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-07-14 20:33, Heiko Stuebner wrote:
-> Hi Artur,
-> 
-> Am Donnerstag, 9. Juli 2020, 17:21:54 CEST schrieb Artur Rojek:
->> Hi all,
->> 
->> v8 of this patchset introduces some structural changes, which I deemed
->> worthy highlighting here:
->> 
->>  - adc-joystick related changes have been dropped from this patchset 
->> and
->>    will be upstreamed separately. Their only connection to this 
->> patchset
->>    was that they used INGENIC_ADC_TOUCH_* defines in the DTS example,
->>    causing trouble to Rob's scripts.
-> 
-> as I'm mainly eyeing your adc-joystick patch ... did you post that 
-> already
-> somewhere - separately as you wrote?
-> 
-> Thanks
-> Heiko
+Hi all,
 
-Hi Heiko,
+this series is a continuation of adc-joystick changes split from:
+https://lore.kernel.org/linux-iio/20200709152200.10039-1-contact@artur-rojek.eu/
 
-sorry for a late reply. As you have surely noticed in your mailbox, I 
-have sent the adc-joystick changes in the following series:
-https://lore.kernel.org/linux-input/20200719221103.91644-1-contact@artur-rojek.eu/
+Rob, the bindings example in patch 1/2 depends on changes introduced
+in another patchset, still to be merged:
+https://lore.kernel.org/linux-iio/20200719205307.87385-4-contact@artur-rojek.eu/  
+Your scripts will most likely fail to validate this. You have already
+reviewed this patch when it was still part of the aforementioned series.
 
-Regards,
+Cheers,
 Artur
+
+Artur Rojek (2):
+  dt-bindings: input: Add docs for ADC driven joystick.
+  input: joystick: Add ADC attached joystick driver.
+
+ .../bindings/input/adc-joystick.yaml          | 121 +++++++++
+ drivers/input/joystick/Kconfig                |  10 +
+ drivers/input/joystick/Makefile               |   1 +
+ drivers/input/joystick/adc-joystick.c         | 253 ++++++++++++++++++
+ 4 files changed, 385 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/adc-joystick.yaml
+ create mode 100644 drivers/input/joystick/adc-joystick.c
+
+-- 
+2.27.0
+
