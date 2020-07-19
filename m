@@ -4,34 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBDCC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 10:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B29FAC433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 10:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 168FC2073A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 10:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AE5E207DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 10:10:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726021AbgGSKAJ (ORCPT
+        id S1726051AbgGSKKU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 19 Jul 2020 06:00:09 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:53764 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726012AbgGSKAI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 19 Jul 2020 06:00:08 -0400
+        Sun, 19 Jul 2020 06:10:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbgGSKKT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jul 2020 06:10:19 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 963A0C0619D2;
+        Sun, 19 Jul 2020 03:10:19 -0700 (PDT)
 Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 2A33ABC06F;
-        Sun, 19 Jul 2020 10:00:04 +0000 (UTC)
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 6DB27BC078;
+        Sun, 19 Jul 2020 10:10:14 +0000 (UTC)
 From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     robh+dt@kernel.org, u.kleine-koenig@pengutronix.de,
-        kernel@pengutronix.de, linux@armlinux.org.uk,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
+To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        b.zolnierkie@samsung.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
 Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH for v5.9] ARM: dts: efm32: Replace HTTP links with HTTPS ones
-Date:   Sun, 19 Jul 2020 11:59:58 +0200
-Message-Id: <20200719095958.57555-1-grandmaster@al2klimov.de>
+Subject: [PATCH for v5.9] ARM: dts: mxs: Replace HTTP links with HTTPS ones
+Date:   Sun, 19 Jul 2020 12:10:08 +0200
+Message-Id: <20200719101008.57623-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spamd-Bar: ++++++
@@ -82,47 +86,88 @@ Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
  Impossible is nothing! :)
 
 
- arch/arm/boot/dts/efm32gg-dk3750.dts | 2 +-
- arch/arm/boot/dts/efm32gg.dtsi       | 2 +-
- arch/arm/mach-efm32/Makefile.boot    | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/imx23-pinfunc.h     | 4 ++--
+ arch/arm/boot/dts/imx28-pinfunc.h     | 4 ++--
+ arch/arm/boot/dts/imx53-tx53-x13x.dts | 4 ++--
+ arch/arm/boot/dts/mxs-pinfunc.h       | 4 ++--
+ include/video/imx-ipu-v3.h            | 4 ++--
+ 5 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/boot/dts/efm32gg-dk3750.dts b/arch/arm/boot/dts/efm32gg-dk3750.dts
-index adfa559a488b..f310a8191ce5 100644
---- a/arch/arm/boot/dts/efm32gg-dk3750.dts
-+++ b/arch/arm/boot/dts/efm32gg-dk3750.dts
-@@ -3,7 +3,7 @@
-  * Device tree for EFM32GG-DK3750 development board.
+diff --git a/arch/arm/boot/dts/imx23-pinfunc.h b/arch/arm/boot/dts/imx23-pinfunc.h
+index 5c0f32ca3a93..f9d7eb6679de 100644
+--- a/arch/arm/boot/dts/imx23-pinfunc.h
++++ b/arch/arm/boot/dts/imx23-pinfunc.h
+@@ -7,8 +7,8 @@
+  * License. You may obtain a copy of the GNU General Public License
+  * Version 2 at the following locations:
   *
-  * Documentation available from
-- * http://www.silabs.com/Support%20Documents/TechnicalDocs/efm32gg-dk3750-ug.pdf
-+ * https://www.silabs.com/Support%20Documents/TechnicalDocs/efm32gg-dk3750-ug.pdf
+- * http://www.opensource.org/licenses/gpl-license.html
+- * http://www.gnu.org/copyleft/gpl.html
++ * https://www.opensource.org/licenses/gpl-license.html
++ * https://www.gnu.org/copyleft/gpl.html
+  */
+ 
+ #ifndef __DT_BINDINGS_MX23_PINCTRL_H__
+diff --git a/arch/arm/boot/dts/imx28-pinfunc.h b/arch/arm/boot/dts/imx28-pinfunc.h
+index e11f69ba0fe4..ffd5412b70ae 100644
+--- a/arch/arm/boot/dts/imx28-pinfunc.h
++++ b/arch/arm/boot/dts/imx28-pinfunc.h
+@@ -7,8 +7,8 @@
+  * License. You may obtain a copy of the GNU General Public License
+  * Version 2 at the following locations:
+  *
+- * http://www.opensource.org/licenses/gpl-license.html
+- * http://www.gnu.org/copyleft/gpl.html
++ * https://www.opensource.org/licenses/gpl-license.html
++ * https://www.gnu.org/copyleft/gpl.html
+  */
+ 
+ #ifndef __DT_BINDINGS_MX28_PINCTRL_H__
+diff --git a/arch/arm/boot/dts/imx53-tx53-x13x.dts b/arch/arm/boot/dts/imx53-tx53-x13x.dts
+index 6cdf2082c742..a34d98cf6ed4 100644
+--- a/arch/arm/boot/dts/imx53-tx53-x13x.dts
++++ b/arch/arm/boot/dts/imx53-tx53-x13x.dts
+@@ -41,8 +41,8 @@
+  * License. You may obtain a copy of the GNU General Public License
+  * Version 2 at the following locations:
+  *
+- * http://www.opensource.org/licenses/gpl-license.html
+- * http://www.gnu.org/copyleft/gpl.html
++ * https://www.opensource.org/licenses/gpl-license.html
++ * https://www.gnu.org/copyleft/gpl.html
   */
  
  /dts-v1/;
-diff --git a/arch/arm/boot/dts/efm32gg.dtsi b/arch/arm/boot/dts/efm32gg.dtsi
-index 8a58e49144cc..633c7b0809ed 100644
---- a/arch/arm/boot/dts/efm32gg.dtsi
-+++ b/arch/arm/boot/dts/efm32gg.dtsi
-@@ -3,7 +3,7 @@
-  * Device tree for Energy Micro EFM32 Giant Gecko SoC.
+diff --git a/arch/arm/boot/dts/mxs-pinfunc.h b/arch/arm/boot/dts/mxs-pinfunc.h
+index c6da987b20cb..6766292eee30 100644
+--- a/arch/arm/boot/dts/mxs-pinfunc.h
++++ b/arch/arm/boot/dts/mxs-pinfunc.h
+@@ -7,8 +7,8 @@
+  * License. You may obtain a copy of the GNU General Public License
+  * Version 2 at the following locations:
   *
-  * Documentation available from
-- * http://www.silabs.com/Support%20Documents/TechnicalDocs/EFM32GG-RM.pdf
-+ * https://www.silabs.com/Support%20Documents/TechnicalDocs/EFM32GG-RM.pdf
+- * http://www.opensource.org/licenses/gpl-license.html
+- * http://www.gnu.org/copyleft/gpl.html
++ * https://www.opensource.org/licenses/gpl-license.html
++ * https://www.gnu.org/copyleft/gpl.html
   */
  
- #include "armv7-m.dtsi"
-diff --git a/arch/arm/mach-efm32/Makefile.boot b/arch/arm/mach-efm32/Makefile.boot
-index cec195d4fcba..5dde7328a7a9 100644
---- a/arch/arm/mach-efm32/Makefile.boot
-+++ b/arch/arm/mach-efm32/Makefile.boot
-@@ -1,4 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
- # Empty file waiting for deletion once Makefile.boot isn't needed any more.
- # Patch waits for application at
--# http://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=7889/1 .
-+# https://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=7889/1 .
+ #ifndef __DT_BINDINGS_MXS_PINCTRL_H__
+diff --git a/include/video/imx-ipu-v3.h b/include/video/imx-ipu-v3.h
+index 06b0b57e996c..749490e3c66e 100644
+--- a/include/video/imx-ipu-v3.h
++++ b/include/video/imx-ipu-v3.h
+@@ -5,8 +5,8 @@
+  * Public License.  You may obtain a copy of the GNU Lesser General
+  * Public License Version 2.1 or later at the following locations:
+  *
+- * http://www.opensource.org/licenses/lgpl-license.html
+- * http://www.gnu.org/copyleft/lgpl.html
++ * https://www.opensource.org/licenses/lgpl-license.html
++ * https://www.gnu.org/copyleft/lgpl.html
+  */
+ 
+ #ifndef __DRM_IPU_H__
 -- 
 2.27.0
 
