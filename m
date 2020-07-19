@@ -2,70 +2,71 @@ Return-Path: <SRS0=PhKm=A6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C527DC433E3
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 17:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5935BC433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 17:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A26E720B1F
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 17:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EF292176B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 17:10:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="YSp5HYd2";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="dELVP1rf"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="Xc44/Knw";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="CX6l72cj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726264AbgGSREr (ORCPT
+        id S1726049AbgGSRKt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 19 Jul 2020 13:04:47 -0400
-Received: from relay5.mymailcheap.com ([159.100.248.207]:40753 "EHLO
+        Sun, 19 Jul 2020 13:10:49 -0400
+Received: from relay5.mymailcheap.com ([159.100.248.207]:40762 "EHLO
         relay5.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgGSREq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jul 2020 13:04:46 -0400
-Received: from relay2.mymailcheap.com (relay2.mymailcheap.com [217.182.66.162])
-        by relay5.mymailcheap.com (Postfix) with ESMTPS id 926B226207;
-        Sun, 19 Jul 2020 17:04:43 +0000 (UTC)
+        with ESMTP id S1725783AbgGSRKt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jul 2020 13:10:49 -0400
+Received: from relay4.mymailcheap.com (relay4.mymailcheap.com [137.74.199.117])
+        by relay5.mymailcheap.com (Postfix) with ESMTPS id A8ACD262A5;
+        Sun, 19 Jul 2020 17:10:46 +0000 (UTC)
 Received: from filter2.mymailcheap.com (filter2.mymailcheap.com [91.134.140.82])
-        by relay2.mymailcheap.com (Postfix) with ESMTPS id 40EBE3EDEC;
-        Sun, 19 Jul 2020 19:04:41 +0200 (CEST)
+        by relay4.mymailcheap.com (Postfix) with ESMTPS id 5D5FA3F1CF;
+        Sun, 19 Jul 2020 19:10:44 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by filter2.mymailcheap.com (Postfix) with ESMTP id 209F12A6D5;
-        Sun, 19 Jul 2020 19:04:41 +0200 (CEST)
+        by filter2.mymailcheap.com (Postfix) with ESMTP id 2D1FA2A6D5;
+        Sun, 19 Jul 2020 19:10:44 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
-        s=default; t=1595178281;
-        bh=osOYVWjBgvnZfBvRnCBhngvsXrIwFrLGFgseB6Kbr8M=;
-        h=From:To:Cc:Subject:Date:From;
-        b=YSp5HYd2xSeFOyiw9Clx6R1EP3lQBKhlSLfh7SW6fMLcyeo58Cb1R9lZqnVNjjfdt
-         w+lvjHIzwCA0tZorz1p8cNOw2ezplhdlTEp1QX4zn1Enu8z5iQyLgHs4ciEwi6zlVU
-         dHlE5DlqApjYe55n6EODr+5V46TEAE76kRZZ9UnI=
+        s=default; t=1595178644;
+        bh=aXuCOvvLAl4OmE5tmJwl21v9ZPBFCzifF5ABa0V0PTc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Xc44/Knw+AibcszcHj9z+RUJuKo17W5VK7c4SYulyBirEbT9YPPl0xKo+1hWU+Fy7
+         OomwFdXOeknmF6DhOwvZ9wvFP51R+I1dtqd9XyveWusITWokwNhm521UXTu3tuZ8OF
+         8eH7eMdztn2X+/qQlzXoUFLbPYc97AqGbfgZ//Yo=
 X-Virus-Scanned: Debian amavisd-new at filter2.mymailcheap.com
 Received: from filter2.mymailcheap.com ([127.0.0.1])
         by localhost (filter2.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id h4fQaNZ63w1v; Sun, 19 Jul 2020 19:04:40 +0200 (CEST)
+        with ESMTP id cTExEHgjk77B; Sun, 19 Jul 2020 19:10:43 +0200 (CEST)
 Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
         (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         by filter2.mymailcheap.com (Postfix) with ESMTPS;
-        Sun, 19 Jul 2020 19:04:40 +0200 (CEST)
-Received: from [213.133.102.83] (ml.mymailcheap.com [213.133.102.83])
-        by mail20.mymailcheap.com (Postfix) with ESMTP id 35FA840856;
-        Sun, 19 Jul 2020 17:04:39 +0000 (UTC)
+        Sun, 19 Jul 2020 19:10:43 +0200 (CEST)
+Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
+        by mail20.mymailcheap.com (Postfix) with ESMTP id B0BCA40B41;
+        Sun, 19 Jul 2020 17:10:42 +0000 (UTC)
 Authentication-Results: mail20.mymailcheap.com;
-        dkim=pass (1024-bit key; unprotected) header.d=aosc.io header.i=@aosc.io header.b="dELVP1rf";
+        dkim=pass (1024-bit key; unprotected) header.d=aosc.io header.i=@aosc.io header.b="CX6l72cj";
         dkim-atps=neutral
 AI-Spam-Status: Not processed
 Received: from ice-e5v2.lan (unknown [59.41.163.116])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail20.mymailcheap.com (Postfix) with ESMTPSA id 726D240856;
-        Sun, 19 Jul 2020 17:04:25 +0000 (UTC)
+        by mail20.mymailcheap.com (Postfix) with ESMTPSA id 04B7B40856;
+        Sun, 19 Jul 2020 17:10:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-        t=1595178270; bh=osOYVWjBgvnZfBvRnCBhngvsXrIwFrLGFgseB6Kbr8M=;
-        h=From:To:Cc:Subject:Date:From;
-        b=dELVP1rfpxCKnJXBbSFQScCMFzIyvjoVyNtU4cGpk/qFe/70Cve2OT83eNeyS0As/
-         0cWAwLEIUa8uFIK3OQTMUZ5Ek4baF7IObNp8wLO2w0mHxE976aGMjMIF3q3oRFrDKK
-         TkUfnhONd1bvQmVTrNOXrDHCNHhABB8I9XOBF9vo=
+        t=1595178631; bh=aXuCOvvLAl4OmE5tmJwl21v9ZPBFCzifF5ABa0V0PTc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CX6l72cjdJ+z+xm3OQ3msOC7aRWmZBW5c50MqJUm/u3Phxm5cO6ij7TGMg8VTYLaR
+         69OsZ8w7EoiYoL+uRv0dXoN4u0qIt4JbwWgPXsRqYOGLcDTsI0UFiTh+eVN9+z0ThV
+         Vwh3L85YEW8rbz4LiZER3Q7cKOPz0vFWku9/iSLk=
 From:   Icenowy Zheng <icenowy@aosc.io>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
@@ -73,20 +74,22 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH 0/4] Add support for Feixin K101-IM2BYL02 panel
-Date:   Mon, 20 Jul 2020 01:04:06 +0800
-Message-Id: <20200719170411.275812-1-icenowy@aosc.io>
+Subject: [PATCH 2/4] dt-bindings: ili9881c: add compatible string for Feixin K101-IM2BYL02
+Date:   Mon, 20 Jul 2020 01:10:04 +0800
+Message-Id: <20200719171007.276383-1-icenowy@aosc.io>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200719170411.275812-1-icenowy@aosc.io>
+References: <20200719170411.275812-1-icenowy@aosc.io>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 35FA840856
+X-Rspamd-Queue-Id: B0BCA40B41
 X-Spamd-Result: default: False [6.40 / 20.00];
          RCVD_VIA_SMTP_AUTH(0.00)[];
          TO_DN_SOME(0.00)[];
          R_MISSING_CHARSET(2.50)[];
          BROKEN_CONTENT_TYPE(1.50)[];
          R_SPF_SOFTFAIL(0.00)[~all];
-         ML_SERVERS(-3.10)[213.133.102.83];
+         ML_SERVERS(-3.10)[148.251.23.173];
          DKIM_TRACE(0.00)[aosc.io:+];
          RCPT_COUNT_SEVEN(0.00)[8];
          FREEMAIL_TO(0.00)[gmail.com,ravnborg.org,kernel.org];
@@ -94,7 +97,7 @@ X-Spamd-Result: default: False [6.40 / 20.00];
          RECEIVED_SPAMHAUS_PBL(0.00)[59.41.163.116:received];
          FROM_EQ_ENVFROM(0.00)[];
          MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:24940, ipnet:213.133.96.0/19, country:DE];
+         ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
          ARC_NA(0.00)[];
          R_DKIM_ALLOW(0.00)[aosc.io:s=default];
          FROM_HAS_DN(0.00)[];
@@ -104,8 +107,7 @@ X-Spamd-Result: default: False [6.40 / 20.00];
          MIME_GOOD(-0.10)[text/plain];
          DMARC_NA(0.00)[aosc.io];
          MID_CONTAINS_FROM(1.00)[];
-         RCVD_IN_DNSWL_NONE(0.00)[213.133.102.83:from];
-         HFILTER_HELO_BAREIP(3.00)[213.133.102.83,1];
+         HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1];
          RCVD_COUNT_TWO(0.00)[2];
          SUSPICIOUS_RECIPS(1.50)[]
 X-Rspamd-Server: mail20.mymailcheap.com
@@ -114,28 +116,29 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The controller chip of Feixin K101-IM2BA02 is going to be discontinued,
-so Feixin start to provide K101-IM2BYL02 panel as a replacement, which
-utilizes Ilitek ILI9881C controller.
+Feixin K101-IM2BYL02 is a drop-in replacement of K101-IM2BA02 panel
+(which is already supported by panel-feixin-k101-im2ba02 driver) with
+the same pinout. It utilizes an Ilitek ILI9881C controller chip, so its
+compatible string should be added to ilitek,ili9881c file.
 
-Add support for K101-IM2BYL02 panel.
+Add the compatible string for it.
 
-By the way, is there a way that can try both kind of panels in the same
-kernel/DTB combo? K101-IM2BYL02 has the same pinout with K101-IM2BA02,
-and PineTab schedule to switch to it w/o modifying the mainboard.
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+---
+ .../devicetree/bindings/display/panel/ilitek,ili9881c.yaml       | 1 +
+ 1 file changed, 1 insertion(+)
 
-Icenowy Zheng (4):
-  drm/panel: ilitek-ili9881c: prepare for adding support for extra
-    panels
-  dt-bindings: ili9881c: add compatible string for Feixin K101-IM2BYL02
-  drm/panel: ilitek-ili9881c: add support for Feixin K101-IM2BYL02 panel
-  [DO NOT MERGE] arm64: allwinner: dts: a64: enable K101-IM2BYL02 panel
-    for PineTab
-
- .../display/panel/ilitek,ili9881c.yaml        |   1 +
- .../boot/dts/allwinner/sun50i-a64-pinetab.dts |  10 +
- drivers/gpu/drm/panel/panel-ilitek-ili9881c.c | 273 ++++++++++++++++--
- 3 files changed, 265 insertions(+), 19 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.yaml b/Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.yaml
+index a39332276bab2..c60b3bd74337e 100644
+--- a/Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.yaml
++++ b/Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.yaml
+@@ -14,6 +14,7 @@ properties:
+     items:
+       - enum:
+         - bananapi,lhr050h41
++        - feixin,k101-im2byl02
+ 
+       - const: ilitek,ili9881c
+ 
 -- 
 2.27.0
