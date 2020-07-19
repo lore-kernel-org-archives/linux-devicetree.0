@@ -2,257 +2,112 @@ Return-Path: <SRS0=PhKm=A6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A318C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 17:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C07C433E4
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 18:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D4912176B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 17:42:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D868E208DB
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 18:36:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WAJ0vaNf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dKZLawbb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726009AbgGSRmi (ORCPT
+        id S1726612AbgGSSgD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 19 Jul 2020 13:42:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33984 "EHLO
+        Sun, 19 Jul 2020 14:36:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgGSRmh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jul 2020 13:42:37 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4D1CC0619D2;
-        Sun, 19 Jul 2020 10:42:37 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id n5so9219430pgf.7;
-        Sun, 19 Jul 2020 10:42:37 -0700 (PDT)
+        with ESMTP id S1726009AbgGSSgC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jul 2020 14:36:02 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4427C0619D2;
+        Sun, 19 Jul 2020 11:36:02 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id k27so9263802pgm.2;
+        Sun, 19 Jul 2020 11:36:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=yzbjFfaJs/MFsRpCaMHXJlGCvB9Qsqv8l66YZ1v9PZk=;
-        b=WAJ0vaNfQ79aLVy+JrxT4z+mIq1Rb2ACQ77SdmdK4e4fr86H0sthDMM2Nh6iWGpz6V
-         6xXG4V0uMbv6Nnax/BainfcaP0MNodZlwnomuVleoKI+zgq4fs8uQPn5f7JSog5z2g6o
-         defscOesLL0Fm9bGv0RDxqVZptj4GPaVQn0R+GigVdgqMD5y9QUILFhsHYty2W9yv8I0
-         35XInkHGEG9OSf6YssypNeL67ucfCJ+mom6BaO/iNnTPK+5HlR8fI645+8VKFJxAAvNT
-         jQT2lrfi5bKNCgJelWgs4bnH9X8JfQOSo0+E4zYCWQzviRxXWyZbK6ajWZx5rxEotl7T
-         C8pw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sY6yoJK7n313gNhifc/ruWkdji4zjYN/sZWct3ewZp8=;
+        b=dKZLawbb1kpmrdq+ONhwPuDhDtRLQ5sf0Fx6hybaSuP7JQegE9OwVqrIZEhBDumtnd
+         IIazLgfYVkOjidxMIipflq1hTSXNjFsAMV2rwnsQi7r4Vs6WrxN7dRCh5A7SJel+sxnR
+         i19mGf+CQLZDraTPdiAdvwPbHxx6O1q26WGP4O9qimCOeK7RLqTU7BtLF3sP4MiJT1Ia
+         1/0+pSSF1ALgB886ntm0tGhOlf25yHPVbKR5aql/Itnjl7V3Rc6Q4AkhIER9Bj+Pnkbs
+         YBNIMlV+x4zTbJFNfA8xIxZPCN7TXWYwT2n3O5m1RaNjY9gCpEPGnsOe94s0dxuDWqUl
+         SROA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=yzbjFfaJs/MFsRpCaMHXJlGCvB9Qsqv8l66YZ1v9PZk=;
-        b=WIaHBuyii+O8MuhBLVeeNp2mpFm8A30hqLd60Yp6n/uq9JwpwUzQDEfeLJn7UNIqVI
-         pCT/rQhnSV8XP8PWkuHLXRTb/F682YdallZ4tdZ6jvpjLibIJAO2p6U3743jIag+mOFG
-         uFcnG1RFFIjcW6CKerl/F78/M6kGG9vj6ByJUoOZmYfCFGinmAtDV2pGQdYCOjIRK6a4
-         N/JehHTr7WFanYjRlmugzHGQSaVJuLo1SpGxKA9P+UPy/W2jocfS/i9TctyaJtUsbPhG
-         txrWAWYKNyoBezQ2DTLtjww/nzBH6zDo3fkcEbyVj/q5Y9EA9TX/RKFaDpXJEFzXvaVy
-         +PnQ==
-X-Gm-Message-State: AOAM530BzWhfYyfiiTP08iU4mIcC7zsN/dfiy2iRN5x6JXjShUKC3ny/
-        MD2IBnvsjzh/KXjUYbvyEIM=
-X-Google-Smtp-Source: ABdhPJyjfCxfT0e+XoaE1dIzLI+XgLmOT0sqD2+4M7PZRlLgD987tRyjpT6QzmHkM0Y8cGnxulwzdg==
-X-Received: by 2002:a63:5d54:: with SMTP id o20mr15856803pgm.253.1595180557306;
-        Sun, 19 Jul 2020 10:42:37 -0700 (PDT)
-Received: from localhost.localdomain ([182.69.248.222])
-        by smtp.gmail.com with ESMTPSA id e191sm13906083pfh.42.2020.07.19.10.42.32
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 19 Jul 2020 10:42:36 -0700 (PDT)
-From:   Amit Singh Tomar <amittomer25@gmail.com>
-To:     andre.przywara@arm.com, afaerber@suse.de, vkoul@kernel.org,
-        manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
-Cc:     dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH v7 01/10] dt-bindings: dmaengine: convert Actions Semi Owl SoCs bindings to yaml
-Date:   Sun, 19 Jul 2020 23:11:58 +0530
-Message-Id: <1595180527-11320-2-git-send-email-amittomer25@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595180527-11320-1-git-send-email-amittomer25@gmail.com>
-References: <1595180527-11320-1-git-send-email-amittomer25@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sY6yoJK7n313gNhifc/ruWkdji4zjYN/sZWct3ewZp8=;
+        b=UfE6Q1eetbKvevEPKHp9eJG2CM5rGrLqoSiqvknKJ5XSrxyjytzKErjilmfINZyz1x
+         f419a/eB3m9FgjxGWivCMvVDK1f9UyCe12H7Ma5tWYjFkb+I2xZxOL0d8IPWwJfaf3x/
+         e/bJPjTratBAvBWovnO2vqQelfkVy+wTvdNrWWH1fBQFHqJLRBszcVn+egIQV+TomdhO
+         XKqZZw4Ey6w3vMrsAtDQS55zlaJPYhPJfycAFQxgaW1Vr6RWkEq2tQZzuWCzGOvGzDLH
+         9aITDJDQF425FbFQs4cEGiWFSHyJTB33Qgvqihy/b1IrArwI6CBDLOAqiZBaab1XF+w0
+         HX2A==
+X-Gm-Message-State: AOAM531kAL95AYwGFKGHsQ1e12jcV6Mhy3e0rWxp0qZJ4o494tDazKER
+        aiRUDtzyb3Dv/cf0wazmE+Ky8eet7rjsmg2Fu/k=
+X-Google-Smtp-Source: ABdhPJysOG+lEBrx7r/irP580NL19hL0iNrok9ERpQjiyv4dBgaa/kolMq3BlTQ0I0wZHRDRiHkVtsMc4h3epTTRirI=
+X-Received: by 2002:a63:ce41:: with SMTP id r1mr16517190pgi.203.1595183762060;
+ Sun, 19 Jul 2020 11:36:02 -0700 (PDT)
+MIME-Version: 1.0
+References: <01afcac0-bd34-3fd0-b991-a8b40d4b4561@enneenne.com>
+ <CACRpkdbX9T9EuN-nxkMPC=sN74PEdoLuWurNLdGCzZJwwFrdpQ@mail.gmail.com>
+ <1c4f1a83-835a-9317-3647-b55f6f39c0ba@enneenne.com> <CACRpkdZPjJSryJc+RtYjRN=X7xKMcao5pYek1fUM2+sE9xgdFQ@mail.gmail.com>
+ <CAMuHMdUtguuu4FWU4nRS=pBUyEwKM1JZ8DYPdCQHXBYN0i_Frg@mail.gmail.com>
+ <87efe96c-3679-14d5-4d79-569b6c047b00@enneenne.com> <CAMuHMdUght0hkJT1N8ub5xR5GB+U18MAhAg+zDmAAuxoRSRaYg@mail.gmail.com>
+ <d30e64c9-ad7f-7cd5-51a4-3f37d6f1e3d8@enneenne.com> <070fa558-6e20-0fbf-d3e4-0a0eca4fe82c@enneenne.com>
+ <CACRpkdYFAW2bcB53M3_b2LsveJO_PWZJhprGhdTtfmW11B1WmQ@mail.gmail.com>
+ <f66dc9c4-b164-c934-72a8-d4aca063fca5@enneenne.com> <CACRpkdbjc6vvpHVjnJNGisRw6LiLZd-95aHWJJORwvaRNigPcw@mail.gmail.com>
+ <cb6e208b-446e-eba4-b324-d88aec94a69b@enneenne.com> <CACRpkdZBUw5UPyZB-aeVwh8-GiCifbwABZ9mOsyK90t3cdMQ+w@mail.gmail.com>
+ <80bf1236-aacd-1044-b0e5-5b5718b7e9f0@enneenne.com>
+In-Reply-To: <80bf1236-aacd-1044-b0e5-5b5718b7e9f0@enneenne.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 19 Jul 2020 21:35:45 +0300
+Message-ID: <CAHp75Vc1ezuW9m8OCQUmEJoNVoD-Z3eWF=Lzcr2v32Br8Gr60w@mail.gmail.com>
+Subject: Re: [RFC v2 GPIO lines [was: GPIO User I/O]
+To:     Rodolfo Giometti <giometti@enneenne.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Converts the device tree bindings for the Actions Semi Owl SoCs DMA
-Controller over to YAML schemas.
+On Thu, Jul 16, 2020 at 6:17 PM Rodolfo Giometti <giometti@enneenne.com> wrote:
+> On 16/07/2020 15:38, Linus Walleij wrote:
 
-It also adds new compatible string "actions,s700-dma".
+...
 
-Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
----
-Changes since v6:
-	* No change.
-Changes since v5:
-        * Removed Rob's Reviewed-by tag as his bot found errors
-          running 'make dt_binding_check'.
-        * Fixed the errore reported by Rob's bot, adjusting the reg
-          property in example.
-Changes since v4:
-        * Added Rob's Reviewed-by tag.
-        * Re-order it from 05/10 to 01/10.
-Changes since v3:
-        * No change.
-Changes since v2:
-        * Addressed Rob's comments:
-           - removed unnecessary description.
-           - added unevaluatedProperties
-           - added relevant information about
-             dma-channels and dma-request
-        * Added power-domain property.
-Change since v1:
-        * Updated the description field to reflect
-          only the necessary information.
-        * replaced the maxItems field with description for each
-          controller attribute(except interrupts).
-        * Replaced the clock macro with number to keep the example
-          as independent as possible.
----
- Documentation/devicetree/bindings/dma/owl-dma.txt  | 47 -------------
- Documentation/devicetree/bindings/dma/owl-dma.yaml | 79 ++++++++++++++++++++++
- 2 files changed, 79 insertions(+), 47 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/dma/owl-dma.txt
- create mode 100644 Documentation/devicetree/bindings/dma/owl-dma.yaml
+> I see but this interface is not designed for such complex usage nor to compete
+> with the current character interface! It is designed to allow boards
+> manufactures to "describe" some I/O lines that are not used by any driver in the
+> device tree,
 
-diff --git a/Documentation/devicetree/bindings/dma/owl-dma.txt b/Documentation/devicetree/bindings/dma/owl-dma.txt
-deleted file mode 100644
-index 03e9bb12b75f..000000000000
---- a/Documentation/devicetree/bindings/dma/owl-dma.txt
-+++ /dev/null
-@@ -1,47 +0,0 @@
--* Actions Semi Owl SoCs DMA controller
--
--This binding follows the generic DMA bindings defined in dma.txt.
--
--Required properties:
--- compatible: Should be "actions,s900-dma".
--- reg: Should contain DMA registers location and length.
--- interrupts: Should contain 4 interrupts shared by all channel.
--- #dma-cells: Must be <1>. Used to represent the number of integer
--              cells in the dmas property of client device.
--- dma-channels: Physical channels supported.
--- dma-requests: Number of DMA request signals supported by the controller.
--                Refer to Documentation/devicetree/bindings/dma/dma.txt
--- clocks: Phandle and Specifier of the clock feeding the DMA controller.
--
--Example:
--
--Controller:
--                dma: dma-controller@e0260000 {
--                        compatible = "actions,s900-dma";
--                        reg = <0x0 0xe0260000 0x0 0x1000>;
--                        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
--                                     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
--                                     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
--                                     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
--                        #dma-cells = <1>;
--                        dma-channels = <12>;
--                        dma-requests = <46>;
--                        clocks = <&clock CLK_DMAC>;
--                };
--
--Client:
--
--DMA clients connected to the Actions Semi Owl SoCs DMA controller must
--use the format described in the dma.txt file, using a two-cell specifier
--for each channel.
--
--The two cells in order are:
--1. A phandle pointing to the DMA controller.
--2. The channel id.
--
--uart5: serial@e012a000 {
--        ...
--        dma-names = "tx", "rx";
--        dmas = <&dma 26>, <&dma 27>;
--        ...
--};
-diff --git a/Documentation/devicetree/bindings/dma/owl-dma.yaml b/Documentation/devicetree/bindings/dma/owl-dma.yaml
-new file mode 100644
-index 000000000000..256d62af2c64
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/owl-dma.yaml
-@@ -0,0 +1,79 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/owl-dma.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Actions Semi Owl SoCs DMA controller
-+
-+description: |
-+  The OWL DMA is a general-purpose direct memory access controller capable of
-+  supporting 10 and 12 independent DMA channels for S700 and S900 SoCs
-+  respectively.
-+
-+maintainers:
-+  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+
-+allOf:
-+  - $ref: "dma-controller.yaml#"
-+
-+properties:
-+  compatible:
-+    enum:
-+      - actions,s900-dma
-+      - actions,s700-dma
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description:
-+      controller supports 4 interrupts, which are freely assignable to the
-+      DMA channels.
-+    maxItems: 4
-+
-+  "#dma-cells":
-+    const: 1
-+
-+  dma-channels:
-+    maximum: 12
-+
-+  dma-requests:
-+    maximum: 46
-+
-+  clocks:
-+    maxItems: 1
-+    description:
-+      Phandle and Specifier of the clock feeding the DMA controller.
-+
-+  power-domains:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - "#dma-cells"
-+  - dma-channels
-+  - dma-requests
-+  - clocks
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    dma: dma-controller@e0260000 {
-+        compatible = "actions,s900-dma";
-+        reg = <0xe0260000 0x1000>;
-+        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
-+        #dma-cells = <1>;
-+        dma-channels = <12>;
-+        dma-requests = <46>;
-+        clocks = <&clock 22>;
-+    };
-+
-+...
+Why are they not in firmware tables? Platform is a set of hardware
+that makes it so.
+If something is not in DT, then there is no possible way to know what
+is that line?
+
+Or in other words how does the OS know that the certain line is
+connected to a relay?
+
+> and that users may desire to manage in a very simple manner. Let's
+> thing about relay lines, or just a locked/unlocked input line which can be
+> easily polled.
+
+
 -- 
-2.7.4
-
+With Best Regards,
+Andy Shevchenko
