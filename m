@@ -2,271 +2,155 @@ Return-Path: <SRS0=PhKm=A6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D05DCC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 17:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B298C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 17:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A437C208B3
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 17:14:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="eiG6FIV1";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="P8jCNWOJ"
+	by mail.kernel.org (Postfix) with ESMTP id 43609208B3
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 17:18:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726024AbgGSROc (ORCPT
+        id S1726009AbgGSRSN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 19 Jul 2020 13:14:32 -0400
-Received: from relay5.mymailcheap.com ([159.100.241.64]:55625 "EHLO
-        relay5.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgGSROb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jul 2020 13:14:31 -0400
-X-Greylist: delayed 517 seconds by postgrey-1.27 at vger.kernel.org; Sun, 19 Jul 2020 13:14:29 EDT
-Received: from relay3.mymailcheap.com (relay3.mymailcheap.com [217.182.66.161])
-        by relay5.mymailcheap.com (Postfix) with ESMTPS id 2D16F200DB;
-        Sun, 19 Jul 2020 17:05:51 +0000 (UTC)
-Received: from filter1.mymailcheap.com (filter1.mymailcheap.com [149.56.130.247])
-        by relay3.mymailcheap.com (Postfix) with ESMTPS id 3E3EF3ECDF;
-        Sun, 19 Jul 2020 19:05:49 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by filter1.mymailcheap.com (Postfix) with ESMTP id 6C07D2A3B7;
-        Sun, 19 Jul 2020 13:05:48 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
-        s=default; t=1595178348;
-        bh=ELid77VVNx1YqQOuhBe9RsMJyM8XGB3o70MJQYb+aSg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eiG6FIV1vosAbrlmJwsm/wKN0XpWi3TSovx82MTQ4k/EfDix9FaxUK3eFKXyGqmei
-         yh+0qWrr8pTshIrTeETpmqrXAfAFW2R61uw8Rxw27uDTinnWGOGkmKPI+AnFPvko2g
-         AVaT2Z7YlKtZCNugYyU3wxIGL7qMShLYNtS4N+fQ=
-X-Virus-Scanned: Debian amavisd-new at filter1.mymailcheap.com
-Received: from filter1.mymailcheap.com ([127.0.0.1])
-        by localhost (filter1.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id nThCY5Q6kNSb; Sun, 19 Jul 2020 13:05:47 -0400 (EDT)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        Sun, 19 Jul 2020 13:18:13 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:38242 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgGSRSN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jul 2020 13:18:13 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by filter1.mymailcheap.com (Postfix) with ESMTPS;
-        Sun, 19 Jul 2020 13:05:47 -0400 (EDT)
-Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
-        by mail20.mymailcheap.com (Postfix) with ESMTP id 405A540B41;
-        Sun, 19 Jul 2020 17:05:46 +0000 (UTC)
-Authentication-Results: mail20.mymailcheap.com;
-        dkim=pass (1024-bit key; unprotected) header.d=aosc.io header.i=@aosc.io header.b="P8jCNWOJ";
-        dkim-atps=neutral
-AI-Spam-Status: Not processed
-Received: from ice-e5v2.lan (unknown [59.41.163.116])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail20.mymailcheap.com (Postfix) with ESMTPSA id 74C9440856;
-        Sun, 19 Jul 2020 17:04:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-        t=1595178276; bh=ELid77VVNx1YqQOuhBe9RsMJyM8XGB3o70MJQYb+aSg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P8jCNWOJReR+5ws3sHnR5DPKdnVjun1ZNOfRVIoUjIRq4asnZDvDvMS0pgQ1Mh46h
-         4JqkGsxyUxGZ7UrHgB3QvQabO/61SqqJVIv/g/7hWN846TWF2qfpzOjtuB5sHHuDR1
-         AFZ8lcQMXf75aablWf8Si0LzjnX52wUxYwfIViZs=
-From:   Icenowy Zheng <icenowy@aosc.io>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maxime Ripard <mripard@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH 1/4] drm/panel: ilitek-ili9881c: prepare for adding support for extra panels
-Date:   Mon, 20 Jul 2020 01:04:07 +0800
-Message-Id: <20200719170411.275812-2-icenowy@aosc.io>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200719170411.275812-1-icenowy@aosc.io>
-References: <20200719170411.275812-1-icenowy@aosc.io>
+        by asavdk3.altibox.net (Postfix) with ESMTPS id CE31220026;
+        Sun, 19 Jul 2020 19:18:07 +0200 (CEST)
+Date:   Sun, 19 Jul 2020 19:18:06 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        Rob Clark <robdclark@gmail.com>, linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH v5 3/4] drm/bridge: Introduce LT9611 DSI to HDMI bridge
+Message-ID: <20200719171806.GA55541@ravnborg.org>
+References: <20200708103559.132300-1-vkoul@kernel.org>
+ <20200708103559.132300-4-vkoul@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 405A540B41
-X-Spamd-Result: default: False [6.40 / 20.00];
-         RCVD_VIA_SMTP_AUTH(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         R_SPF_SOFTFAIL(0.00)[~all:c];
-         ML_SERVERS(-3.10)[148.251.23.173];
-         DKIM_TRACE(0.00)[aosc.io:+];
-         RCPT_COUNT_SEVEN(0.00)[8];
-         FREEMAIL_TO(0.00)[gmail.com,ravnborg.org,kernel.org];
-         RCVD_NO_TLS_LAST(0.10)[];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
-         RECEIVED_SPAMHAUS_PBL(0.00)[59.41.163.116:received];
-         ARC_NA(0.00)[];
-         R_DKIM_ALLOW(0.00)[aosc.io:s=default];
-         FROM_HAS_DN(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DMARC_NA(0.00)[aosc.io];
-         MID_CONTAINS_FROM(1.00)[];
-         HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1];
-         RCVD_COUNT_TWO(0.00)[2];
-         SUSPICIOUS_RECIPS(1.50)[]
-X-Rspamd-Server: mail20.mymailcheap.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200708103559.132300-4-vkoul@kernel.org>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8 a=KKAkSRfTAAAA:8 a=VwQbUJbxAAAA:8
+        a=fbRPyE8KL9-ZYcdT3u0A:9 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=cvBusfyB2V15izCimMoJ:22 a=AjGcO6oz07-iQ99wixmX:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There're more panels with ILI9881C controller than the Bananapi one
-supported by this driver.
+Hi Vinod.
 
-Extract the mode and init sequence part, to prepare the driver for
-adding new panels.
+Three trivial points below.
+The rest looks good.
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
----
- drivers/gpu/drm/panel/panel-ilitek-ili9881c.c | 56 ++++++++++++-------
- 1 file changed, 37 insertions(+), 19 deletions(-)
+With these fixed you can add:
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 
-diff --git a/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c b/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c
-index 3ed8635a6fbdf..4f8e6865029f1 100644
---- a/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c
-+++ b/drivers/gpu/drm/panel/panel-ilitek-ili9881c.c
-@@ -10,6 +10,7 @@
- #include <linux/fb.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of_device.h>
- 
- #include <linux/gpio/consumer.h>
- #include <linux/regulator/consumer.h>
-@@ -20,14 +21,6 @@
- 
- #include <video/mipi_display.h>
- 
--struct ili9881c {
--	struct drm_panel	panel;
--	struct mipi_dsi_device	*dsi;
--
--	struct regulator	*power;
--	struct gpio_desc	*reset;
--};
--
- enum ili9881c_op {
- 	ILI9881C_SWITCH_PAGE,
- 	ILI9881C_COMMAND,
-@@ -45,6 +38,21 @@ struct ili9881c_instr {
- 	} arg;
- };
- 
-+struct ili9881c_desc {
-+	const struct ili9881c_instr *init;
-+	const size_t init_length;
-+	const struct drm_display_mode *mode;
-+};
-+
-+struct ili9881c {
-+	struct drm_panel	panel;
-+	struct mipi_dsi_device	*dsi;
-+	const struct ili9881c_desc	*desc;
-+
-+	struct regulator	*power;
-+	struct gpio_desc	*reset;
-+};
-+
- #define ILI9881C_SWITCH_PAGE_INSTR(_page)	\
- 	{					\
- 		.op = ILI9881C_SWITCH_PAGE,	\
-@@ -64,7 +72,7 @@ struct ili9881c_instr {
- 		},					\
- 	}
- 
--static const struct ili9881c_instr ili9881c_init[] = {
-+static const struct ili9881c_instr lhr050h41_init[] = {
- 	ILI9881C_SWITCH_PAGE_INSTR(3),
- 	ILI9881C_COMMAND_INSTR(0x01, 0x00),
- 	ILI9881C_COMMAND_INSTR(0x02, 0x00),
-@@ -311,8 +319,8 @@ static int ili9881c_prepare(struct drm_panel *panel)
- 	gpiod_set_value(ctx->reset, 0);
- 	msleep(20);
- 
--	for (i = 0; i < ARRAY_SIZE(ili9881c_init); i++) {
--		const struct ili9881c_instr *instr = &ili9881c_init[i];
-+	for (i = 0; i < ctx->desc->init_length; i++) {
-+		const struct ili9881c_instr *instr = &ctx->desc->init[i];
- 
- 		if (instr->op == ILI9881C_SWITCH_PAGE)
- 			ret = ili9881c_switch_page(ctx, instr->arg.page);
-@@ -368,7 +376,7 @@ static int ili9881c_unprepare(struct drm_panel *panel)
- 	return 0;
- }
- 
--static const struct drm_display_mode bananapi_default_mode = {
-+static const struct drm_display_mode lhr050h41_default_mode = {
- 	.clock		= 62000,
- 
- 	.hdisplay	= 720,
-@@ -380,6 +388,9 @@ static const struct drm_display_mode bananapi_default_mode = {
- 	.vsync_start	= 1280 + 10,
- 	.vsync_end	= 1280 + 10 + 10,
- 	.vtotal		= 1280 + 10 + 10 + 20,
-+
-+	.width_mm	= 62,
-+	.height_mm	= 110,
- };
- 
- static int ili9881c_get_modes(struct drm_panel *panel,
-@@ -388,12 +399,12 @@ static int ili9881c_get_modes(struct drm_panel *panel,
- 	struct ili9881c *ctx = panel_to_ili9881c(panel);
- 	struct drm_display_mode *mode;
- 
--	mode = drm_mode_duplicate(connector->dev, &bananapi_default_mode);
-+	mode = drm_mode_duplicate(connector->dev, ctx->desc->mode);
- 	if (!mode) {
- 		dev_err(&ctx->dsi->dev, "failed to add mode %ux%ux@%u\n",
--			bananapi_default_mode.hdisplay,
--			bananapi_default_mode.vdisplay,
--			drm_mode_vrefresh(&bananapi_default_mode));
-+			ctx->desc->mode->hdisplay,
-+			ctx->desc->mode->vdisplay,
-+			drm_mode_vrefresh(ctx->desc->mode));
- 		return -ENOMEM;
- 	}
- 
-@@ -402,8 +413,8 @@ static int ili9881c_get_modes(struct drm_panel *panel,
- 	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
- 	drm_mode_probed_add(connector, mode);
- 
--	connector->display_info.width_mm = 62;
--	connector->display_info.height_mm = 110;
-+	connector->display_info.width_mm = mode->width_mm;
-+	connector->display_info.height_mm = mode->height_mm;
- 
- 	return 1;
- }
-@@ -426,6 +437,7 @@ static int ili9881c_dsi_probe(struct mipi_dsi_device *dsi)
- 		return -ENOMEM;
- 	mipi_dsi_set_drvdata(dsi, ctx);
- 	ctx->dsi = dsi;
-+	ctx->desc = of_device_get_match_data(&dsi->dev);
- 
- 	drm_panel_init(&ctx->panel, &dsi->dev, &ili9881c_funcs,
- 		       DRM_MODE_CONNECTOR_DSI);
-@@ -467,8 +479,14 @@ static int ili9881c_dsi_remove(struct mipi_dsi_device *dsi)
- 	return 0;
- }
- 
-+static const struct ili9881c_desc lhr050h41_desc = {
-+	.init = lhr050h41_init,
-+	.init_length = ARRAY_SIZE(lhr050h41_init),
-+	.mode = &lhr050h41_default_mode,
-+};
-+
- static const struct of_device_id ili9881c_of_match[] = {
--	{ .compatible = "bananapi,lhr050h41" },
-+	{ .compatible = "bananapi,lhr050h41", .data = &lhr050h41_desc },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, ili9881c_of_match);
--- 
-2.27.0
+	Sam
+
+On Wed, Jul 08, 2020 at 04:05:58PM +0530, Vinod Koul wrote:
+> Lontium Lt9611 is a DSI to HDMI bridge which supports two DSI ports and
+> I2S port as an input and HDMI port as output
+> 
+> Co-developed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Co-developed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Tested-by: John Stultz <john.stultz@linaro.org>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  drivers/gpu/drm/bridge/Kconfig          |   13 +
+>  drivers/gpu/drm/bridge/Makefile         |    1 +
+>  drivers/gpu/drm/bridge/lontium-lt9611.c | 1142 +++++++++++++++++++++++
+>  3 files changed, 1156 insertions(+)
+>  create mode 100644 drivers/gpu/drm/bridge/lontium-lt9611.c
+> 
+> +
+> +#include <drm/drm_probe_helper.h>
+> +#include <drm/drm_atomic_helper.h>
+> +#include <drm/drm_bridge.h>
+> +#include <drm/drm_mipi_dsi.h>
+> +#include <drm/drm_print.h>
+
+In alphabetical order. drm_probe_helper needs to be moved.
+
+> +
+> +#define EDID_SEG_SIZE	256
+> +#define EDID_LEN	32
+> +#define EDID_LOOP	8
+> +#define KEY_DDC_ACCS_DONE 0x02
+> +#define DDC_NO_ACK	0x50
+> +
+
+
+> +static void lt9611_pcr_setup(struct lt9611 *lt9611, const struct drm_display_mode *mode)
+> +{
+> +	const struct reg_sequence reg_cfg[] = {
+> +		{ 0x830b, 0x01 },
+> +		{ 0x830c, 0x10 },
+> +		{ 0x8348, 0x00 },
+> +		{ 0x8349, 0x81 },
+> +
+> +		/* stage 1 */
+> +		{ 0x8321, 0x4a },
+> +		{ 0x8324, 0x71 },
+> +		{ 0x8325, 0x30 },
+> +		{ 0x832a, 0x01 },
+> +
+> +		/* stage 2 */
+> +		{ 0x834a, 0x40 },
+> +		{ 0x831d, 0x10 },
+> +
+> +		/* MK limit */
+> +		{ 0x832d, 0x38 },
+> +		{ 0x8331, 0x08 },
+> +	};
+> +	const struct reg_sequence reg_cfg2[] = {
+> +			{ 0x830b, 0x03 },
+> +			{ 0x830c, 0xd0 },
+> +			{ 0x8348, 0x03 },
+> +			{ 0x8349, 0xe0 },
+> +			{ 0x8324, 0x72 },
+> +			{ 0x8325, 0x00 },
+> +			{ 0x832a, 0x01 },
+> +			{ 0x834a, 0x10 },
+> +			{ 0x831d, 0x10 },
+> +			{ 0x8326, 0x37 },
+Block above is indented one tab too much.
+
+> +static int lt9611_bridge_attach(struct drm_bridge *bridge,
+> +				enum drm_bridge_attach_flags flags)
+> +{
+> +	struct lt9611 *lt9611 = bridge_to_lt9611(bridge);
+> +	int ret;
+> +
+> +	if (!(flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR)) {
+> +		dev_err(lt9611->dev, "Fix bridge driver to make connector optional!");
+> +		return -EINVAL;
+> +	}
+This should say that the display driver should be fixed.
+If a display driver expects this bridge to create the connector
+it would not work.
+
+
