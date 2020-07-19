@@ -4,37 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D54EC433E2
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 09:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBDCC433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 10:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 239E021744
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 09:39:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 168FC2073A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 10:00:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726021AbgGSJjt (ORCPT
+        id S1726021AbgGSKAJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 19 Jul 2020 05:39:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45184 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgGSJjt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jul 2020 05:39:49 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F2A8C0619D2;
-        Sun, 19 Jul 2020 02:39:49 -0700 (PDT)
+        Sun, 19 Jul 2020 06:00:09 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:53764 "EHLO smtp.al2klimov.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726012AbgGSKAI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 19 Jul 2020 06:00:08 -0400
 Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id A8817BC073;
-        Sun, 19 Jul 2020 09:39:45 +0000 (UTC)
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 2A33ABC06F;
+        Sun, 19 Jul 2020 10:00:04 +0000 (UTC)
 From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     robh+dt@kernel.org, kgene@kernel.org, krzk@kernel.org,
-        linux@armlinux.org.uk, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     robh+dt@kernel.org, u.kleine-koenig@pengutronix.de,
+        kernel@pengutronix.de, linux@armlinux.org.uk,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
 Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH for v5.9] ARM: SAMSUNG: Replace HTTP links with HTTPS ones
-Date:   Sun, 19 Jul 2020 11:39:39 +0200
-Message-Id: <20200719093939.57412-1-grandmaster@al2klimov.de>
+Subject: [PATCH for v5.9] ARM: dts: efm32: Replace HTTP links with HTTPS ones
+Date:   Sun, 19 Jul 2020 11:59:58 +0200
+Message-Id: <20200719095958.57555-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spamd-Bar: ++++++
@@ -85,92 +82,47 @@ Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
  Impossible is nothing! :)
 
 
- arch/arm/boot/dts/exynos5410-pinctrl.dtsi | 2 +-
- arch/arm/mach-s3c24xx/Kconfig             | 2 +-
- arch/arm/mach-s3c24xx/mach-h1940.c        | 2 +-
- arch/arm/mach-s3c24xx/mach-mini2440.c     | 2 +-
- arch/arm/mach-s3c24xx/mach-n30.c          | 2 +-
- arch/arm/mach-s3c24xx/mach-rx3715.c       | 2 +-
- 6 files changed, 6 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/efm32gg-dk3750.dts | 2 +-
+ arch/arm/boot/dts/efm32gg.dtsi       | 2 +-
+ arch/arm/mach-efm32/Makefile.boot    | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos5410-pinctrl.dtsi b/arch/arm/boot/dts/exynos5410-pinctrl.dtsi
-index 369a8a7f2105..e5d0a2a4f648 100644
---- a/arch/arm/boot/dts/exynos5410-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/exynos5410-pinctrl.dtsi
+diff --git a/arch/arm/boot/dts/efm32gg-dk3750.dts b/arch/arm/boot/dts/efm32gg-dk3750.dts
+index adfa559a488b..f310a8191ce5 100644
+--- a/arch/arm/boot/dts/efm32gg-dk3750.dts
++++ b/arch/arm/boot/dts/efm32gg-dk3750.dts
 @@ -3,7 +3,7 @@
-  * Exynos5410 SoC pin-mux and pin-config device tree source
+  * Device tree for EFM32GG-DK3750 development board.
   *
-  * Copyright (c) 2013 Hardkernel Co., Ltd.
-- *              http://www.hardkernel.com
-+ *              https://www.hardkernel.com
+  * Documentation available from
+- * http://www.silabs.com/Support%20Documents/TechnicalDocs/efm32gg-dk3750-ug.pdf
++ * https://www.silabs.com/Support%20Documents/TechnicalDocs/efm32gg-dk3750-ug.pdf
   */
  
- #include <dt-bindings/pinctrl/samsung.h>
-diff --git a/arch/arm/mach-s3c24xx/Kconfig b/arch/arm/mach-s3c24xx/Kconfig
-index c5c06d98b147..7673dde9671a 100644
---- a/arch/arm/mach-s3c24xx/Kconfig
-+++ b/arch/arm/mach-s3c24xx/Kconfig
-@@ -267,7 +267,7 @@ config MACH_TCT_HAMMER
- 	select S3C_DEV_USB_HOST
- 	help
- 	  Say Y here if you are using the TinCanTools Hammer Board
--	  <http://www.tincantools.com>
-+	  <https://www.tincantools.com>
- 
- config MACH_VR1000
- 	bool "Thorcom VR1000"
-diff --git a/arch/arm/mach-s3c24xx/mach-h1940.c b/arch/arm/mach-s3c24xx/mach-h1940.c
-index e1c372e5447b..f4710052843a 100644
---- a/arch/arm/mach-s3c24xx/mach-h1940.c
-+++ b/arch/arm/mach-s3c24xx/mach-h1940.c
+ /dts-v1/;
+diff --git a/arch/arm/boot/dts/efm32gg.dtsi b/arch/arm/boot/dts/efm32gg.dtsi
+index 8a58e49144cc..633c7b0809ed 100644
+--- a/arch/arm/boot/dts/efm32gg.dtsi
++++ b/arch/arm/boot/dts/efm32gg.dtsi
 @@ -3,7 +3,7 @@
- // Copyright (c) 2003-2005 Simtec Electronics
- //   Ben Dooks <ben@simtec.co.uk>
- //
--// http://www.handhelds.org/projects/h1940.html
-+// https://www.handhelds.org/projects/h1940.html
+  * Device tree for Energy Micro EFM32 Giant Gecko SoC.
+  *
+  * Documentation available from
+- * http://www.silabs.com/Support%20Documents/TechnicalDocs/EFM32GG-RM.pdf
++ * https://www.silabs.com/Support%20Documents/TechnicalDocs/EFM32GG-RM.pdf
+  */
  
- #include <linux/kernel.h>
- #include <linux/types.h>
-diff --git a/arch/arm/mach-s3c24xx/mach-mini2440.c b/arch/arm/mach-s3c24xx/mach-mini2440.c
-index 9035f868fb34..113b69ba4921 100644
---- a/arch/arm/mach-s3c24xx/mach-mini2440.c
-+++ b/arch/arm/mach-s3c24xx/mach-mini2440.c
-@@ -6,7 +6,7 @@
- //      Weibing <http://weibing.blogbus.com> and
- //      Michel Pollet <buserror@gmail.com>
- //
--// For product information, visit http://code.google.com/p/mini2440/
-+// For product information, visit https://code.google.com/p/mini2440/
- 
- #include <linux/kernel.h>
- #include <linux/types.h>
-diff --git a/arch/arm/mach-s3c24xx/mach-n30.c b/arch/arm/mach-s3c24xx/mach-n30.c
-index d856f23939af..9ebde6dc6169 100644
---- a/arch/arm/mach-s3c24xx/mach-n30.c
-+++ b/arch/arm/mach-s3c24xx/mach-n30.c
-@@ -9,7 +9,7 @@
- // Copyright (c) 2005-2008 Christer Weinigel <christer@weinigel.se>
- //
- // There is a wiki with more information about the n30 port at
--// http://handhelds.org/moin/moin.cgi/AcerN30Documentation .
-+// https://handhelds.org/moin/moin.cgi/AcerN30Documentation .
- 
- #include <linux/kernel.h>
- #include <linux/types.h>
-diff --git a/arch/arm/mach-s3c24xx/mach-rx3715.c b/arch/arm/mach-s3c24xx/mach-rx3715.c
-index 529c6faf862f..995f1ff34a1b 100644
---- a/arch/arm/mach-s3c24xx/mach-rx3715.c
-+++ b/arch/arm/mach-s3c24xx/mach-rx3715.c
-@@ -3,7 +3,7 @@
- // Copyright (c) 2003-2004 Simtec Electronics
- //	Ben Dooks <ben@simtec.co.uk>
- //
--// http://www.handhelds.org/projects/rx3715.html
-+// https://www.handhelds.org/projects/rx3715.html
- 
- #include <linux/kernel.h>
- #include <linux/types.h>
+ #include "armv7-m.dtsi"
+diff --git a/arch/arm/mach-efm32/Makefile.boot b/arch/arm/mach-efm32/Makefile.boot
+index cec195d4fcba..5dde7328a7a9 100644
+--- a/arch/arm/mach-efm32/Makefile.boot
++++ b/arch/arm/mach-efm32/Makefile.boot
+@@ -1,4 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ # Empty file waiting for deletion once Makefile.boot isn't needed any more.
+ # Patch waits for application at
+-# http://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=7889/1 .
++# https://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=7889/1 .
 -- 
 2.27.0
 
