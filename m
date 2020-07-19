@@ -2,81 +2,74 @@ Return-Path: <SRS0=PhKm=A6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 281B0C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 15:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2CEC433E3
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 15:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A02221775
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 15:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34C1E20738
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 15:27:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726073AbgGSPAi (ORCPT
+        id S1726109AbgGSP1d (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 19 Jul 2020 11:00:38 -0400
-Received: from guitar.tcltek.co.il ([192.115.133.116]:33660 "EHLO
-        mx.tkos.co.il" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbgGSPAi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jul 2020 11:00:38 -0400
-Received: from tarshish (unknown [10.0.8.3])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPS id 43799440428;
-        Sun, 19 Jul 2020 18:00:33 +0300 (IDT)
-References: <20200719145028.3370-1-miguelborgesdefreitas@gmail.com> <20200719145028.3370-3-miguelborgesdefreitas@gmail.com>
-User-agent: mu4e 1.4.10; emacs 26.3
-From:   Baruch Siach <baruch@tkos.co.il>
-To:     miguelborgesdefreitas@gmail.com
-Cc:     a.zummo@towertech.it, devicetree@vger.kernel.org,
-        alexandre.belloni@bootlin.com, festevam@gmail.com,
-        s.hauer@pengutronix.de, linux@armlinux.org.uk,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        linux-imx@nxp.com, kernel@pengutronix.de, shawnguo@kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] ARM: dts: imx6qdl-cubox-i: enable DSM for the RTC
-In-reply-to: <20200719145028.3370-3-miguelborgesdefreitas@gmail.com>
-Date:   Sun, 19 Jul 2020 18:00:32 +0300
-Message-ID: <87pn8reei7.fsf@tarshish>
+        Sun, 19 Jul 2020 11:27:33 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:43540 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726038AbgGSP1d (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 19 Jul 2020 11:27:33 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jxBDn-005szR-Ol; Sun, 19 Jul 2020 17:27:23 +0200
+Date:   Sun, 19 Jul 2020 17:27:23 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Russell King <rmk+kernel@armlinux.org.uk>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Martin Rowe <martin.p.rowe@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>
+Subject: Re: [PATCH net] arm64: dts: clearfog-gt-8k: fix switch link
+ configuration
+Message-ID: <20200719152723.GG1383417@lunn.ch>
+References: <E1jx73g-0006mp-UI@rmk-PC.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <E1jx73g-0006mp-UI@rmk-PC.armlinux.org.uk>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Miguel,
+On Sun, Jul 19, 2020 at 12:00:40PM +0100, Russell King wrote:
+> The commit below caused a regression for clearfog-gt-8k, where the link
+> between the switch and the host does not come up.
+> 
+> Investigation revealed two issues:
+> - MV88E6xxx DSA no longer allows an in-band link to come up as the link
+>   is programmed to be forced down. Commit "net: dsa: mv88e6xxx: fix
+>   in-band AN link establishment" addresses this.
+> 
+> - The dts configured dissimilar link modes at each end of the host to
+>   switch link; the host was configured using a fixed link (so has no
+>   in-band status) and the switch was configured to expect in-band
+>   status.
+> 
+> With both issues fixed, the regression is resolved.
+> 
+> Fixes: 34b5e6a33c1a ("net: dsa: mv88e6xxx: Configure MAC when using fixed link")
+> Reported-by: Martin Rowe <martin.p.rowe@gmail.com>
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 
-On Sun, Jul 19 2020, miguelborgesdefreitas@gmail.com wrote:
-> From: Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
->
-> Signed-off-by: Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
-> ---
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-The commit log should explain why you enable this for Cubox-i. The
-information is in your cover letter. But the cover letter is not
-preserved in the git commit log history.
-
-Thanks,
-baruch
-
->  arch/arm/boot/dts/imx6qdl-cubox-i.dtsi | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-> index e3be453..a226c4e 100644
-> --- a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-> @@ -144,6 +144,7 @@
->  	rtc@68 {
->  		compatible = "nxp,pcf8523";
->  		reg = <0x68>;
-> +		pm-enable-dsm;
->  	};
->  };
-
-
--- 
-                                                     ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+    Andrew
