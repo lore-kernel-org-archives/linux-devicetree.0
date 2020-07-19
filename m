@@ -7,35 +7,33 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B29FAC433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 10:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DABD5C433E2
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 10:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE5E207DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 10:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB1DC20734
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 10:20:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726051AbgGSKKU (ORCPT
+        id S1726051AbgGSKUb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 19 Jul 2020 06:10:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49814 "EHLO
+        Sun, 19 Jul 2020 06:20:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgGSKKT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jul 2020 06:10:19 -0400
+        with ESMTP id S1725988AbgGSKUb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jul 2020 06:20:31 -0400
 Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 963A0C0619D2;
-        Sun, 19 Jul 2020 03:10:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0153C0619D2;
+        Sun, 19 Jul 2020 03:20:30 -0700 (PDT)
 Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 6DB27BC078;
-        Sun, 19 Jul 2020 10:10:14 +0000 (UTC)
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 339CDBC062;
+        Sun, 19 Jul 2020 10:20:27 +0000 (UTC)
 From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        b.zolnierkie@samsung.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+To:     nsekhar@ti.com, bgolaszewski@baylibre.com, robh+dt@kernel.org,
+        linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH for v5.9] ARM: dts: mxs: Replace HTTP links with HTTPS ones
-Date:   Sun, 19 Jul 2020 12:10:08 +0200
-Message-Id: <20200719101008.57623-1-grandmaster@al2klimov.de>
+Subject: [PATCH for v5.9] ARM: mach-davinci: Replace HTTP links with HTTPS ones
+Date:   Sun, 19 Jul 2020 12:20:20 +0200
+Message-Id: <20200719102020.57779-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spamd-Bar: ++++++
@@ -86,88 +84,197 @@ Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
  Impossible is nothing! :)
 
 
- arch/arm/boot/dts/imx23-pinfunc.h     | 4 ++--
- arch/arm/boot/dts/imx28-pinfunc.h     | 4 ++--
- arch/arm/boot/dts/imx53-tx53-x13x.dts | 4 ++--
- arch/arm/boot/dts/mxs-pinfunc.h       | 4 ++--
- include/video/imx-ipu-v3.h            | 4 ++--
- 5 files changed, 10 insertions(+), 10 deletions(-)
+ arch/arm/boot/dts/da850-evm.dts             | 2 +-
+ arch/arm/mach-davinci/Kconfig               | 4 ++--
+ arch/arm/mach-davinci/board-da850-evm.c     | 2 +-
+ arch/arm/mach-davinci/board-mityomapl138.c  | 2 +-
+ arch/arm/mach-davinci/board-neuros-osd2.c   | 2 +-
+ arch/arm/mach-davinci/board-omapl138-hawk.c | 2 +-
+ arch/arm/mach-davinci/cpuidle.c             | 2 +-
+ arch/arm/mach-davinci/cpuidle.h             | 2 +-
+ arch/arm/mach-davinci/da850.c               | 2 +-
+ arch/arm/mach-davinci/da8xx-dt.c            | 2 +-
+ arch/arm/mach-davinci/include/mach/pm.h     | 2 +-
+ arch/arm/mach-davinci/pm.c                  | 2 +-
+ arch/arm/mach-davinci/sleep.S               | 2 +-
+ 13 files changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx23-pinfunc.h b/arch/arm/boot/dts/imx23-pinfunc.h
-index 5c0f32ca3a93..f9d7eb6679de 100644
---- a/arch/arm/boot/dts/imx23-pinfunc.h
-+++ b/arch/arm/boot/dts/imx23-pinfunc.h
-@@ -7,8 +7,8 @@
-  * License. You may obtain a copy of the GNU General Public License
-  * Version 2 at the following locations:
+diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+index f2e7609e5346..87c517d65f62 100644
+--- a/arch/arm/boot/dts/da850-evm.dts
++++ b/arch/arm/boot/dts/da850-evm.dts
+@@ -2,7 +2,7 @@
+ /*
+  * Device Tree for DA850 EVM board
   *
-- * http://www.opensource.org/licenses/gpl-license.html
-- * http://www.gnu.org/copyleft/gpl.html
-+ * https://www.opensource.org/licenses/gpl-license.html
-+ * https://www.gnu.org/copyleft/gpl.html
+- * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2012 Texas Instruments Incorporated - https://www.ti.com/
   */
- 
- #ifndef __DT_BINDINGS_MX23_PINCTRL_H__
-diff --git a/arch/arm/boot/dts/imx28-pinfunc.h b/arch/arm/boot/dts/imx28-pinfunc.h
-index e11f69ba0fe4..ffd5412b70ae 100644
---- a/arch/arm/boot/dts/imx28-pinfunc.h
-+++ b/arch/arm/boot/dts/imx28-pinfunc.h
-@@ -7,8 +7,8 @@
-  * License. You may obtain a copy of the GNU General Public License
-  * Version 2 at the following locations:
-  *
-- * http://www.opensource.org/licenses/gpl-license.html
-- * http://www.gnu.org/copyleft/gpl.html
-+ * https://www.opensource.org/licenses/gpl-license.html
-+ * https://www.gnu.org/copyleft/gpl.html
-  */
- 
- #ifndef __DT_BINDINGS_MX28_PINCTRL_H__
-diff --git a/arch/arm/boot/dts/imx53-tx53-x13x.dts b/arch/arm/boot/dts/imx53-tx53-x13x.dts
-index 6cdf2082c742..a34d98cf6ed4 100644
---- a/arch/arm/boot/dts/imx53-tx53-x13x.dts
-+++ b/arch/arm/boot/dts/imx53-tx53-x13x.dts
-@@ -41,8 +41,8 @@
-  * License. You may obtain a copy of the GNU General Public License
-  * Version 2 at the following locations:
-  *
-- * http://www.opensource.org/licenses/gpl-license.html
-- * http://www.gnu.org/copyleft/gpl.html
-+ * https://www.opensource.org/licenses/gpl-license.html
-+ * https://www.gnu.org/copyleft/gpl.html
-  */
- 
  /dts-v1/;
-diff --git a/arch/arm/boot/dts/mxs-pinfunc.h b/arch/arm/boot/dts/mxs-pinfunc.h
-index c6da987b20cb..6766292eee30 100644
---- a/arch/arm/boot/dts/mxs-pinfunc.h
-+++ b/arch/arm/boot/dts/mxs-pinfunc.h
-@@ -7,8 +7,8 @@
-  * License. You may obtain a copy of the GNU General Public License
-  * Version 2 at the following locations:
+ #include "da850.dtsi"
+diff --git a/arch/arm/mach-davinci/Kconfig b/arch/arm/mach-davinci/Kconfig
+index d028d38a44bf..5b0125f1265c 100644
+--- a/arch/arm/mach-davinci/Kconfig
++++ b/arch/arm/mach-davinci/Kconfig
+@@ -201,7 +201,7 @@ config MACH_MITYOMAPL138
+ 	help
+ 	  Say Y here to select the Critical Link MityDSP-L138/MityARM-1808
+ 	  System on Module.  Information on this SoM may be found at
+-	  http://www.mitydsp.com
++	  https://www.mitydsp.com
+ 
+ config MACH_OMAPL138_HAWKBOARD
+ 	bool "TI AM1808 / OMAPL-138 Hawkboard platform"
+@@ -209,7 +209,7 @@ config MACH_OMAPL138_HAWKBOARD
+ 	help
+ 	  Say Y here to select the TI AM1808 / OMAPL-138 Hawkboard platform .
+ 	  Information of this board may be found at
+-	  http://www.hawkboard.org/
++	  https://www.hawkboard.org/
+ 
+ config DAVINCI_MUX
+ 	bool "DAVINCI multiplexing support"
+diff --git a/arch/arm/mach-davinci/board-da850-evm.c b/arch/arm/mach-davinci/board-da850-evm.c
+index 5b3549f1236c..6751292e5f8f 100644
+--- a/arch/arm/mach-davinci/board-da850-evm.c
++++ b/arch/arm/mach-davinci/board-da850-evm.c
+@@ -1,7 +1,7 @@
+ /*
+  * TI DA850/OMAP-L138 EVM board
   *
-- * http://www.opensource.org/licenses/gpl-license.html
-- * http://www.gnu.org/copyleft/gpl.html
-+ * https://www.opensource.org/licenses/gpl-license.html
-+ * https://www.gnu.org/copyleft/gpl.html
+- * Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2009 Texas Instruments Incorporated - https://www.ti.com/
+  *
+  * Derived from: arch/arm/mach-davinci/board-da830-evm.c
+  * Original Copyrights follow:
+diff --git a/arch/arm/mach-davinci/board-mityomapl138.c b/arch/arm/mach-davinci/board-mityomapl138.c
+index dfce421c0579..3382b93d9a2a 100644
+--- a/arch/arm/mach-davinci/board-mityomapl138.c
++++ b/arch/arm/mach-davinci/board-mityomapl138.c
+@@ -1,7 +1,7 @@
+ /*
+  * Critical Link MityOMAP-L138 SoM
+  *
+- * Copyright (C) 2010 Critical Link LLC - http://www.criticallink.com
++ * Copyright (C) 2010 Critical Link LLC - https://www.criticallink.com
+  *
+  * This file is licensed under the terms of the GNU General Public License
+  * version 2. This program is licensed "as is" without any warranty of
+diff --git a/arch/arm/mach-davinci/board-neuros-osd2.c b/arch/arm/mach-davinci/board-neuros-osd2.c
+index ce99f782811a..6cf46bbc7e1d 100644
+--- a/arch/arm/mach-davinci/board-neuros-osd2.c
++++ b/arch/arm/mach-davinci/board-neuros-osd2.c
+@@ -214,7 +214,7 @@ static __init void davinci_ntosd2_init(void)
+ 	 * Mux the pins to be GPIOs, VLYNQEN is already done at startup.
+ 	 * The AEAWx are five new AEAW pins that can be muxed by separately.
+ 	 * They are a bitmask for GPIO management. According TI
+-	 * documentation (http://www.ti.com/lit/gpn/tms320dm6446) to employ
++	 * documentation (https://www.ti.com/lit/gpn/tms320dm6446) to employ
+ 	 * gpio(10,11,12,13) for leds any combination of bits works except
+ 	 * four last. So we are to reset all five.
+ 	 */
+diff --git a/arch/arm/mach-davinci/board-omapl138-hawk.c b/arch/arm/mach-davinci/board-omapl138-hawk.c
+index 5390a8630cf0..6c79039002c9 100644
+--- a/arch/arm/mach-davinci/board-omapl138-hawk.c
++++ b/arch/arm/mach-davinci/board-omapl138-hawk.c
+@@ -3,7 +3,7 @@
+  *
+  * Initial code: Syed Mohammed Khasim
+  *
+- * Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com
++ * Copyright (C) 2009 Texas Instruments Incorporated - https://www.ti.com
+  *
+  * This file is licensed under the terms of the GNU General Public License
+  * version 2. This program is licensed "as is" without any warranty of
+diff --git a/arch/arm/mach-davinci/cpuidle.c b/arch/arm/mach-davinci/cpuidle.c
+index b795f671bd03..dd38785536d5 100644
+--- a/arch/arm/mach-davinci/cpuidle.c
++++ b/arch/arm/mach-davinci/cpuidle.c
+@@ -2,7 +2,7 @@
+ /*
+  * CPU idle for DaVinci SoCs
+  *
+- * Copyright (C) 2009 Texas Instruments Incorporated. http://www.ti.com/
++ * Copyright (C) 2009 Texas Instruments Incorporated. https://www.ti.com/
+  *
+  * Derived from Marvell Kirkwood CPU idle code
+  * (arch/arm/mach-kirkwood/cpuidle.c)
+diff --git a/arch/arm/mach-davinci/cpuidle.h b/arch/arm/mach-davinci/cpuidle.h
+index 74f088b0edfb..0d9193aefab5 100644
+--- a/arch/arm/mach-davinci/cpuidle.h
++++ b/arch/arm/mach-davinci/cpuidle.h
+@@ -1,7 +1,7 @@
+ /*
+  * TI DaVinci cpuidle platform support
+  *
+- * 2009 (C) Texas Instruments, Inc. http://www.ti.com/
++ * 2009 (C) Texas Instruments, Inc. https://www.ti.com/
+  *
+  * This file is licensed under the terms of the GNU General Public License
+  * version 2. This program is licensed "as is" without any warranty of any
+diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
+index 73b7cc53f966..68156e7239a6 100644
+--- a/arch/arm/mach-davinci/da850.c
++++ b/arch/arm/mach-davinci/da850.c
+@@ -1,7 +1,7 @@
+ /*
+  * TI DA850/OMAP-L138 chip specific setup
+  *
+- * Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2009 Texas Instruments Incorporated - https://www.ti.com/
+  *
+  * Derived from: arch/arm/mach-davinci/da830.c
+  * Original Copyrights follow:
+diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
+index 9c0dd028d5ad..0cd2f30aeb9c 100644
+--- a/arch/arm/mach-davinci/da8xx-dt.c
++++ b/arch/arm/mach-davinci/da8xx-dt.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2012 Texas Instruments Incorporated - https://www.ti.com/
+  *
+  * Modified from mach-omap/omap2/board-generic.c
+  */
+diff --git a/arch/arm/mach-davinci/include/mach/pm.h b/arch/arm/mach-davinci/include/mach/pm.h
+index 37b19bf35a85..5a5f0ecc0704 100644
+--- a/arch/arm/mach-davinci/include/mach/pm.h
++++ b/arch/arm/mach-davinci/include/mach/pm.h
+@@ -1,7 +1,7 @@
+ /*
+  * TI DaVinci platform support for power management.
+  *
+- * Copyright (C) 2009 Texas Instruments, Inc. http://www.ti.com/
++ * Copyright (C) 2009 Texas Instruments, Inc. https://www.ti.com/
+  *
+  * This program is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU General Public License as
+diff --git a/arch/arm/mach-davinci/pm.c b/arch/arm/mach-davinci/pm.c
+index e33c6bcb4598..323ee4e657c4 100644
+--- a/arch/arm/mach-davinci/pm.c
++++ b/arch/arm/mach-davinci/pm.c
+@@ -2,7 +2,7 @@
+ /*
+  * DaVinci Power Management Routines
+  *
+- * Copyright (C) 2009 Texas Instruments, Inc. http://www.ti.com/
++ * Copyright (C) 2009 Texas Instruments, Inc. https://www.ti.com/
   */
  
- #ifndef __DT_BINDINGS_MXS_PINCTRL_H__
-diff --git a/include/video/imx-ipu-v3.h b/include/video/imx-ipu-v3.h
-index 06b0b57e996c..749490e3c66e 100644
---- a/include/video/imx-ipu-v3.h
-+++ b/include/video/imx-ipu-v3.h
-@@ -5,8 +5,8 @@
-  * Public License.  You may obtain a copy of the GNU Lesser General
-  * Public License Version 2.1 or later at the following locations:
-  *
-- * http://www.opensource.org/licenses/lgpl-license.html
-- * http://www.gnu.org/copyleft/lgpl.html
-+ * https://www.opensource.org/licenses/lgpl-license.html
-+ * https://www.gnu.org/copyleft/lgpl.html
+ #include <linux/pm.h>
+diff --git a/arch/arm/mach-davinci/sleep.S b/arch/arm/mach-davinci/sleep.S
+index 71262dcdbca3..d5affab4396d 100644
+--- a/arch/arm/mach-davinci/sleep.S
++++ b/arch/arm/mach-davinci/sleep.S
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
+ /*
+- * (C) Copyright 2009, Texas Instruments, Inc. http://www.ti.com/
++ * (C) Copyright 2009, Texas Instruments, Inc. https://www.ti.com/
   */
  
- #ifndef __DRM_IPU_H__
+ /* replicated define because linux/bitops.h cannot be included in assembly */
 -- 
 2.27.0
 
