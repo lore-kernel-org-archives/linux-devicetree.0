@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 786F5C433E5
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 02:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8ABC433E6
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 02:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57DF822482
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 02:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC8D320738
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 02:46:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OBkm5yZB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LyELbglL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgGSCqC (ORCPT
+        id S1726557AbgGSCp5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Jul 2020 22:46:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38590 "EHLO
+        Sat, 18 Jul 2020 22:45:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbgGSCqB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 22:46:01 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91883C0619D2;
-        Sat, 18 Jul 2020 19:46:00 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id 22so19144726wmg.1;
-        Sat, 18 Jul 2020 19:46:00 -0700 (PDT)
+        with ESMTP id S1726382AbgGSCp5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 22:45:57 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B82D2C0619D2;
+        Sat, 18 Jul 2020 19:45:56 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id z15so14628773wrl.8;
+        Sat, 18 Jul 2020 19:45:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=aDlMbyjXbF67HGTAUvI4dBM3JFAclGFOXiFtjc3PP5g=;
-        b=OBkm5yZBxqZNX3JWP/0xtIJqilNQ+sQ2OdaYW+DSf3sWEl0Z7wRdxDy7MnGyTaECup
-         yrHW041kNMOsICMTd1OcBvFNlW7L8osiYeRd3DTObPZE2Yl7tVYa9+FQKwT6BrMxVGxZ
-         tcKiPwtGFIHZmTyhvgZIoUqRUHTbV2cEgEMfP+u1oyzCHvI+wWbL+FlOe++xqZibPMnX
-         OooeApTErxNeJ3o5jrlxIs8vi/rlRkONnu+IN/gTBe4uWXD12SMF+3A9w/LKTk7dbqcQ
-         3GJaJdlbE31wcBclN3C2e9JLsGmSOMzf+qKmxjldli7bxG/NDeXCJKLuMH5cWXyx1tVl
-         S9CQ==
+        bh=a0raR8kuawAw4Zwd1EY7iQ1XE5SS8HIOS1kFKtesceU=;
+        b=LyELbglLP8QhhXUc6DClCstA2/Gl4Fw2P+jtTbqaZKiEZBK2V/sBjXTjXgqqmDw2S0
+         7iX9qAjlBro9G3o6MV3gWDPj2WEvXyoPPIlpHH0SKZl9cNvZpxqbtjM8ao9+lt77Cszy
+         2VbVwsIyhu96SgQaaIyzUCCXoo+VFdlztCNYJOTNgNppApub2UqTRARsJwavqz7ridkx
+         7T/OdlGwO6RZfRhJ1uQDrN/szSdbsTcANu5pp7JyVadRXgAyv7y4FhMpXWdUot7HgYWh
+         /WMrZNce6YG6XRl++1HsnQrd6IDmvA5W+MyVYEFE+yJ1+1LgGD77aJCgMChSN3mJtzPK
+         CDfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=aDlMbyjXbF67HGTAUvI4dBM3JFAclGFOXiFtjc3PP5g=;
-        b=gmV0ffpng8G483DtzkgFQC4+u8NdaxVdOlpSy0rpau4eJSWATx/GQfE4g+jbiEah1/
-         vGidSnWvM4vJRcqNls4wH4MZKTy8LqI46XWZ9Gr7Av5vm996Mg8eYGynctsRyF7SvMTC
-         DDDZcqWQEBHPnY2LPYEmMU8zkyTvBkQ8cc8nli38WKBvd6cct0pR5ee3V7WN3TcqPMbs
-         RPdkncquPgKokcnhpZR9Ht6xSr2MiQzVnVC+Am1AR3u5zf0Q80PUbEDFBE0yO8io7RzW
-         qLQukRzs9uQDSkaT9OiOkhnaduggoo0zUbut2BoLzzQE8w5jkw2rlz7Pw/kawKCwbumQ
-         xT4w==
-X-Gm-Message-State: AOAM533T6u6oyZP46RPk5Y7Fyy2X5BLlMl3hJr8/USTnwbI+eMqR32Va
-        XEa0oIeat8iZ6fM5sVTA+DNIX4Ri
-X-Google-Smtp-Source: ABdhPJyYLXrdLbPXFHWT/nFJ2Ld9X7eWl9Ks4YZeNZaMwCthZKPlmXCGnUBHku/1InWBePW4oDCUTg==
-X-Received: by 2002:a1c:7402:: with SMTP id p2mr15953197wmc.117.1595126759292;
-        Sat, 18 Jul 2020 19:45:59 -0700 (PDT)
+        bh=a0raR8kuawAw4Zwd1EY7iQ1XE5SS8HIOS1kFKtesceU=;
+        b=DiSVJUyO2W4jJ4G5QAn50b8pmrysO831yNP4IjOBdpnjm/3/7ZCIyWUKz+fRVGqRy6
+         Yhv7eiGbcpT32fUNVxzhxTsq9QOxxLdZYUIQRaXTjKylJG3E2doYQKj3iKtftMRoLTO0
+         jpH28Qcoty85ac0CNScwC9DSC/E4vwxuuf9b+2sJg5Y1RtBXgjIBV8Vk0ijCxmfzsdLX
+         OfKVEvwf471DB3YrILPzqySm2d4p28STXB6C8WNDg0KNRzWRfTc/MEm4JJe3DpAblpnP
+         SmCJOqfeucq/Z3jJNPSU6K+Fjz+HH0cF1yv/rGAnSTEX1zTUQjKXqKUWMz8aYq+vTTTk
+         55Lw==
+X-Gm-Message-State: AOAM531Gt0TWuVG0j2UPOFyR3oQwLA1Wdl+R71m5YOvvkoentKY9aR0j
+        xwSPVetGCeG0wxkv0mkSyXQ=
+X-Google-Smtp-Source: ABdhPJyEGk/A6JStVM7UM5LerwPOyjrqVVF/olwEii2vfNdRomVwi2MB5UhM1cUhy6QYIirt0TAaLw==
+X-Received: by 2002:adf:ab46:: with SMTP id r6mr16648219wrc.260.1595126755054;
+        Sat, 18 Jul 2020 19:45:55 -0700 (PDT)
 Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id e5sm5176242wrc.37.2020.07.18.19.45.57
+        by smtp.gmail.com with ESMTPSA id e5sm5176242wrc.37.2020.07.18.19.45.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jul 2020 19:45:58 -0700 (PDT)
+        Sat, 18 Jul 2020 19:45:54 -0700 (PDT)
 From:   Christian Hewitt <christianshewitt@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -65,9 +65,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH v2 3/3] arm64: dts: meson: add audio playback to u200
-Date:   Sun, 19 Jul 2020 02:45:48 +0000
-Message-Id: <20200719024548.8940-4-christianshewitt@gmail.com>
+Subject: [PATCH v2 1/3] arm64: dts: meson: add audio playback to odroid-c4
+Date:   Sun, 19 Jul 2020 02:45:46 +0000
+Message-Id: <20200719024548.8940-2-christianshewitt@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200719024548.8940-1-christianshewitt@gmail.com>
 References: <20200719024548.8940-1-christianshewitt@gmail.com>
@@ -76,56 +76,38 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add initial support limited to HDMI i2s and S/PDIF (LPCM).
+Add initial audio support limited to HDMI i2s.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- .../boot/dts/amlogic/meson-g12a-u200.dts      | 131 ++++++++++++++++++
- 1 file changed, 131 insertions(+)
+ .../boot/dts/amlogic/meson-sm1-odroid-c4.dts  | 88 +++++++++++++++++++
+ 1 file changed, 88 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-index a26bfe72550f..dde7e258a184 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
+diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-odroid-c4.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-odroid-c4.dts
+index 00d90b30f8b4..cf5a98f0e47c 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-sm1-odroid-c4.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-sm1-odroid-c4.dts
 @@ -8,6 +8,7 @@
- #include "meson-g12a.dtsi"
- #include <dt-bindings/gpio/gpio.h>
+ #include "meson-sm1.dtsi"
  #include <dt-bindings/gpio/meson-g12a-gpio.h>
+ #include <dt-bindings/leds/common.h>
 +#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
  
  / {
- 	compatible = "amlogic,u200", "amlogic,g12a";
-@@ -18,6 +19,13 @@
- 		ethernet0 = &ethmac;
+ 	compatible = "hardkernel,odroid-c4", "amlogic,sm1";
+@@ -186,6 +187,69 @@
+ 			};
+ 		};
  	};
- 
-+	spdif_dit: audio-codec-1 {
-+		#sound-dai-cells = <0>;
-+		compatible = "linux,spdif-dit";
-+		status = "okay";
-+		sound-name-prefix = "DIT";
-+	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-@@ -147,6 +155,91 @@
- 		regulator-boot-on;
- 		regulator-always-on;
- 	};
-+
 +
 +	sound {
 +		compatible = "amlogic,axg-sound-card";
-+		model = "G12A-U200";
++		model = "SM1-ODROID-C4";
 +		audio-aux-devs = <&tdmout_b>;
 +		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
 +				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
 +				"TDMOUT_B IN 2", "FRDDR_C OUT 1",
-+				"TDM_B Playback", "TDMOUT_B OUT",
-+				"SPDIFOUT IN 0", "FRDDR_A OUT 3",
-+				"SPDIFOUT IN 1", "FRDDR_B OUT 3",
-+				"SPDIFOUT IN 2", "FRDDR_C OUT 3";
++				"TDM_B Playback", "TDMOUT_B OUT";
 +
 +		assigned-clocks = <&clkc CLKID_MPLL2>,
 +				  <&clkc CLKID_MPLL0>,
@@ -163,30 +145,8 @@ index a26bfe72550f..dde7e258a184 100644
 +			};
 +		};
 +
-+		/* spdif hdmi or toslink interface */
-+		dai-link-4 {
-+			sound-dai = <&spdifout>;
-+
-+			codec-0 {
-+				sound-dai = <&spdif_dit>;
-+			};
-+
-+			codec-1 {
-+				sound-dai = <&tohdmitx TOHDMITX_SPDIF_IN_A>;
-+			};
-+		};
-+
-+		/* spdif hdmi interface */
-+		dai-link-5 {
-+			sound-dai = <&spdifout_b>;
-+
-+			codec {
-+				sound-dai = <&tohdmitx TOHDMITX_SPDIF_IN_B>;
-+			};
-+		};
-+
 +		/* hdmi glue */
-+		dai-link-6 {
++		dai-link-4 {
 +			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
 +
 +			codec {
@@ -198,22 +158,15 @@ index a26bfe72550f..dde7e258a184 100644
 +
 +&arb {
 +	status = "okay";
- };
- 
- &cec_AO {
-@@ -163,6 +256,10 @@
- 	hdmi-phandle = <&hdmi_tx>;
- };
- 
-+&clkc_audio {
-+	status = "okay";
 +};
 +
++&clkc_audio {
++	status = "okay";
+ };
+ 
  &cpu0 {
- 	cpu-supply = <&vddcpu>;
- 	operating-points-v2 = <&cpu_opp_table>;
-@@ -203,6 +300,18 @@
- 	phy-mode = "rmii";
+@@ -237,6 +301,18 @@
+ 	amlogic,tx-delay-ns = <2>;
  };
  
 +&frddr_a {
@@ -228,23 +181,13 @@ index a26bfe72550f..dde7e258a184 100644
 +	status = "okay";
 +};
 +
- &hdmi_tx {
- 	status = "okay";
- 	pinctrl-0 = <&hdmitx_hpd_pins>, <&hdmitx_ddc_pins>;
-@@ -288,6 +397,28 @@
+ &gpio {
+ 	gpio-line-names =
+ 		/* GPIOZ */
+@@ -381,6 +457,18 @@
  	vqmmc-supply = <&flash_1v8>;
  };
  
-+&spdifout {
-+	pinctrl-0 = <&spdif_out_h_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
-+&spdifout_b {
-+	status = "okay";
-+};
-+
 +&tdmif_b {
 +	status = "okay";
 +};
