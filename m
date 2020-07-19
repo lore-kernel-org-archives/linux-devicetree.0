@@ -2,96 +2,175 @@ Return-Path: <SRS0=PhKm=A6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE70AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 02:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D54EC433E2
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 09:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C54AF20738
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 02:45:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xm5JNULg"
+	by mail.kernel.org (Postfix) with ESMTP id 239E021744
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 09:39:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbgGSCpz (ORCPT
+        id S1726021AbgGSJjt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Jul 2020 22:45:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38568 "EHLO
+        Sun, 19 Jul 2020 05:39:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbgGSCpy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Jul 2020 22:45:54 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49EF8C0619D2;
-        Sat, 18 Jul 2020 19:45:54 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f18so21911157wml.3;
-        Sat, 18 Jul 2020 19:45:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=KYbiuW9akHYr4iGm+mhAKAzYf50rap2sHQ/b1EeZvQE=;
-        b=Xm5JNULgk+HvV4lgvqpxTOveb26IsydL5sSDuPK0E1GVOb+NGB6SaTXc0TGUReH8jc
-         7+m2kBC/t4nvRSWEp0wms+TbeI2UGSdKj3hDwHrZkKXoqfcLkQ4UJyWf8sRfMxi2lA3c
-         6cQFq6qqy56dloeFcH57da/Uqg7U2pCv8t2aogBTCAqj4NW3euw06yLWzLNHSOMPG38w
-         SOIPAcC/SNq2dAiVijmo2DOPH5qtB93CmHdVTIkLuyBQeBSwtaftisObpMQQ2O1n94fl
-         vSR5A1TUYPp+OswW8zxeZaUJ2brIdvEV7IHtOImUAEC7CiUh4PRiEYfKsUhudbl7r/5Q
-         DIjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=KYbiuW9akHYr4iGm+mhAKAzYf50rap2sHQ/b1EeZvQE=;
-        b=tZaIVReV4kS3ZRXRY5A5TvQEZXECNfYC2kt5QJTsqfmjqiu6nCYAze+ff/J7MFqrsI
-         FFozUMOAHTs4xklBaj/MYs8W3pQiaSFFE3nHjHUBgrPv2Co2N/TRmGfEpOKKqADCHUvS
-         Tf0+DGQyXIyvB9I2dFAMkV8a8rRUIVZgBZ8V0OyLZzKIgFN5Pb6c+V5FyTeWhPe5jFxM
-         u1rVOu8BfCdLluMq1krIqikqGwXCSvquH9uFJNtjuaql2Zx9lBKnJDjEktzr02HB2QUY
-         +2qKRB7CxIxrJo0SsVHo/yGboOx4WBhC9gdHuLs4FZ48NTHNkGZ2tKYOlpFqkNPo/1eP
-         kiiw==
-X-Gm-Message-State: AOAM532HpfPSi2DxbREqHXjMr1c4A1jEosyAGHbpXSKu9v2ANhhc3SUs
-        N1u4tAp3q5lX0wNcf9Sk+JU=
-X-Google-Smtp-Source: ABdhPJyQ5SsSC6XvJcXlOahk61Svf/sAlbNZHZmBPNv0Ob764zWHfiQXHNOoK5Z3xOmT5d/aq77zkQ==
-X-Received: by 2002:a05:600c:2058:: with SMTP id p24mr15573644wmg.74.1595126752945;
-        Sat, 18 Jul 2020 19:45:52 -0700 (PDT)
-Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id e5sm5176242wrc.37.2020.07.18.19.45.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jul 2020 19:45:52 -0700 (PDT)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH v2 0/3] arm64: dts: meson: add more G12/SM1 soundcards
-Date:   Sun, 19 Jul 2020 02:45:45 +0000
-Message-Id: <20200719024548.8940-1-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        with ESMTP id S1725988AbgGSJjt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jul 2020 05:39:49 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F2A8C0619D2;
+        Sun, 19 Jul 2020 02:39:49 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id A8817BC073;
+        Sun, 19 Jul 2020 09:39:45 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     robh+dt@kernel.org, kgene@kernel.org, krzk@kernel.org,
+        linux@armlinux.org.uk, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH for v5.9] ARM: SAMSUNG: Replace HTTP links with HTTPS ones
+Date:   Sun, 19 Jul 2020 11:39:39 +0200
+Message-Id: <20200719093939.57412-1-grandmaster@al2klimov.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spam: Yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This series adds basic support for LPCM audio over HDMI interfaces
-to the Khadas VIM3L (reusing the same config as the VIM3) and the
-HardKernel ODROID-C4 devices, and HDMI + S/PDIF on U200 reference
-board (reusing the config from the X96-Max box), I'm sure support
-can be extended to include other hardware but this gets the HDMI
-port working as a minimum capability. I have tested with VIM3L/C4
-devices and a no-name S905X2 box.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-v2 changes - include u200
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-Christian Hewitt (3):
-  arm64: dts: meson: add audio playback to odroid-c4
-  arm64: dts: meson: add audio playback to khadas-vim3l
-  arm64: dts: meson: add audio playback to u200
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
- .../boot/dts/amlogic/meson-g12a-u200.dts      | 131 ++++++++++++++++++
- .../dts/amlogic/meson-sm1-khadas-vim3l.dts    |  88 ++++++++++++
- .../boot/dts/amlogic/meson-sm1-odroid-c4.dts  |  88 ++++++++++++
- 3 files changed, 307 insertions(+)
+ If there are any URLs to be removed completely
+ or at least not (just) HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
 
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ arch/arm/boot/dts/exynos5410-pinctrl.dtsi | 2 +-
+ arch/arm/mach-s3c24xx/Kconfig             | 2 +-
+ arch/arm/mach-s3c24xx/mach-h1940.c        | 2 +-
+ arch/arm/mach-s3c24xx/mach-mini2440.c     | 2 +-
+ arch/arm/mach-s3c24xx/mach-n30.c          | 2 +-
+ arch/arm/mach-s3c24xx/mach-rx3715.c       | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm/boot/dts/exynos5410-pinctrl.dtsi b/arch/arm/boot/dts/exynos5410-pinctrl.dtsi
+index 369a8a7f2105..e5d0a2a4f648 100644
+--- a/arch/arm/boot/dts/exynos5410-pinctrl.dtsi
++++ b/arch/arm/boot/dts/exynos5410-pinctrl.dtsi
+@@ -3,7 +3,7 @@
+  * Exynos5410 SoC pin-mux and pin-config device tree source
+  *
+  * Copyright (c) 2013 Hardkernel Co., Ltd.
+- *              http://www.hardkernel.com
++ *              https://www.hardkernel.com
+  */
+ 
+ #include <dt-bindings/pinctrl/samsung.h>
+diff --git a/arch/arm/mach-s3c24xx/Kconfig b/arch/arm/mach-s3c24xx/Kconfig
+index c5c06d98b147..7673dde9671a 100644
+--- a/arch/arm/mach-s3c24xx/Kconfig
++++ b/arch/arm/mach-s3c24xx/Kconfig
+@@ -267,7 +267,7 @@ config MACH_TCT_HAMMER
+ 	select S3C_DEV_USB_HOST
+ 	help
+ 	  Say Y here if you are using the TinCanTools Hammer Board
+-	  <http://www.tincantools.com>
++	  <https://www.tincantools.com>
+ 
+ config MACH_VR1000
+ 	bool "Thorcom VR1000"
+diff --git a/arch/arm/mach-s3c24xx/mach-h1940.c b/arch/arm/mach-s3c24xx/mach-h1940.c
+index e1c372e5447b..f4710052843a 100644
+--- a/arch/arm/mach-s3c24xx/mach-h1940.c
++++ b/arch/arm/mach-s3c24xx/mach-h1940.c
+@@ -3,7 +3,7 @@
+ // Copyright (c) 2003-2005 Simtec Electronics
+ //   Ben Dooks <ben@simtec.co.uk>
+ //
+-// http://www.handhelds.org/projects/h1940.html
++// https://www.handhelds.org/projects/h1940.html
+ 
+ #include <linux/kernel.h>
+ #include <linux/types.h>
+diff --git a/arch/arm/mach-s3c24xx/mach-mini2440.c b/arch/arm/mach-s3c24xx/mach-mini2440.c
+index 9035f868fb34..113b69ba4921 100644
+--- a/arch/arm/mach-s3c24xx/mach-mini2440.c
++++ b/arch/arm/mach-s3c24xx/mach-mini2440.c
+@@ -6,7 +6,7 @@
+ //      Weibing <http://weibing.blogbus.com> and
+ //      Michel Pollet <buserror@gmail.com>
+ //
+-// For product information, visit http://code.google.com/p/mini2440/
++// For product information, visit https://code.google.com/p/mini2440/
+ 
+ #include <linux/kernel.h>
+ #include <linux/types.h>
+diff --git a/arch/arm/mach-s3c24xx/mach-n30.c b/arch/arm/mach-s3c24xx/mach-n30.c
+index d856f23939af..9ebde6dc6169 100644
+--- a/arch/arm/mach-s3c24xx/mach-n30.c
++++ b/arch/arm/mach-s3c24xx/mach-n30.c
+@@ -9,7 +9,7 @@
+ // Copyright (c) 2005-2008 Christer Weinigel <christer@weinigel.se>
+ //
+ // There is a wiki with more information about the n30 port at
+-// http://handhelds.org/moin/moin.cgi/AcerN30Documentation .
++// https://handhelds.org/moin/moin.cgi/AcerN30Documentation .
+ 
+ #include <linux/kernel.h>
+ #include <linux/types.h>
+diff --git a/arch/arm/mach-s3c24xx/mach-rx3715.c b/arch/arm/mach-s3c24xx/mach-rx3715.c
+index 529c6faf862f..995f1ff34a1b 100644
+--- a/arch/arm/mach-s3c24xx/mach-rx3715.c
++++ b/arch/arm/mach-s3c24xx/mach-rx3715.c
+@@ -3,7 +3,7 @@
+ // Copyright (c) 2003-2004 Simtec Electronics
+ //	Ben Dooks <ben@simtec.co.uk>
+ //
+-// http://www.handhelds.org/projects/rx3715.html
++// https://www.handhelds.org/projects/rx3715.html
+ 
+ #include <linux/kernel.h>
+ #include <linux/types.h>
 -- 
-2.17.1
+2.27.0
 
