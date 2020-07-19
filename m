@@ -7,40 +7,42 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D788C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 20:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 499BCC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 22:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54FF52176B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 20:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33248207FC
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 22:12:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726131AbgGSUyR (ORCPT
+        id S1726582AbgGSWM0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 19 Jul 2020 16:54:17 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:37081 "EHLO
+        Sun, 19 Jul 2020 18:12:26 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:55959 "EHLO
         relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbgGSUyR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jul 2020 16:54:17 -0400
+        with ESMTP id S1726156AbgGSWM0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jul 2020 18:12:26 -0400
 X-Originating-IP: 195.189.32.242
 Received: from pc.localdomain (unknown [195.189.32.242])
         (Authenticated sender: contact@artur-rojek.eu)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id BF667FF804;
-        Sun, 19 Jul 2020 20:54:10 +0000 (UTC)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 7DE2FFF806;
+        Sun, 19 Jul 2020 22:12:21 +0000 (UTC)
 From:   Artur Rojek <contact@artur-rojek.eu>
 To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Jonathan Cameron <jic23@kernel.org>,
         Paul Cercueil <paul@crapouillou.net>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
+        Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     Heiko Stuebner <heiko@sntech.de>,
         Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH v9 1/5] IIO: Ingenic JZ47xx: Error check clk_enable calls.
-Date:   Sun, 19 Jul 2020 22:53:03 +0200
-Message-Id: <20200719205307.87385-1-contact@artur-rojek.eu>
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v8 1/2] dt-bindings: input: Add docs for ADC driven joystick.
+Date:   Mon, 20 Jul 2020 00:11:02 +0200
+Message-Id: <20200719221103.91644-2-contact@artur-rojek.eu>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200719221103.91644-1-contact@artur-rojek.eu>
+References: <20200719221103.91644-1-contact@artur-rojek.eu>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -48,129 +50,171 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Introduce error checks for the clk_enable calls used in this driver.
-As part of the changes, move clk_enable/clk_disable calls out of
-ingenic_adc_set_config and into respective logic of its callers.
+Add documentation for the adc-joystick driver, used to provide support
+for joysticks connected over ADC.
 
 Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
 Tested-by: Paul Cercueil <paul@crapouillou.net>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 
  Changes:
 
- v6: new patch
+ v2: - Add `reg` property to axis subnode in order to enumerate the axes,
+     - rename `linux,abs-code` property to `linux,code`,
+     - drop `linux,` prefix from the remaining properties of axis subnode
 
- v7: no change
+ v3: no change
 
- v8: move `clk_disable` outside the lock
+ v4: - remove "bindings" from the unique identifier string,
+     - replace `|` with `>` for all description properties,
+     - specify the number of items for `io-channels`,
+     - correct the regex pattern of `axis` property,
+     - specify the value range of `reg` property for each axis,
+     - put `abs-range` properties under `allOf` 
 
- v9: remove `iio_priv_to_dev` usage
+ v5: add `a-f` to the regex pattern of `axis` property
 
- drivers/iio/adc/ingenic-adc.c | 30 ++++++++++++++++++++++++------
- 1 file changed, 24 insertions(+), 6 deletions(-)
+ v6-v8: no change
 
-diff --git a/drivers/iio/adc/ingenic-adc.c b/drivers/iio/adc/ingenic-adc.c
-index 39c0a609fc94..059c2573e4a9 100644
---- a/drivers/iio/adc/ingenic-adc.c
-+++ b/drivers/iio/adc/ingenic-adc.c
-@@ -73,7 +73,6 @@ static void ingenic_adc_set_config(struct ingenic_adc *adc,
- {
- 	uint32_t cfg;
- 
--	clk_enable(adc->clk);
- 	mutex_lock(&adc->lock);
- 
- 	cfg = readl(adc->base + JZ_ADC_REG_CFG) & ~mask;
-@@ -81,7 +80,6 @@ static void ingenic_adc_set_config(struct ingenic_adc *adc,
- 	writel(cfg, adc->base + JZ_ADC_REG_CFG);
- 
- 	mutex_unlock(&adc->lock);
--	clk_disable(adc->clk);
- }
- 
- static void ingenic_adc_enable(struct ingenic_adc *adc,
-@@ -124,6 +122,8 @@ static int ingenic_adc_write_raw(struct iio_dev *iio_dev,
- 				 long m)
- {
- 	struct ingenic_adc *adc = iio_priv(iio_dev);
-+	struct device *dev = iio_dev->dev.parent;
-+	int ret;
- 
- 	switch (m) {
- 	case IIO_CHAN_INFO_SCALE:
-@@ -131,6 +131,14 @@ static int ingenic_adc_write_raw(struct iio_dev *iio_dev,
- 		case INGENIC_ADC_BATTERY:
- 			if (!adc->soc_data->battery_vref_mode)
- 				return -EINVAL;
+ Notes:
+
+ Rob, the bindings example in this patch depends on changes introduced
+ in another patchset, still to be merged:
+ https://lore.kernel.org/linux-iio/20200719205307.87385-4-contact@artur-rojek.eu/  
+ Your scripts will most likely fail to validate this.
+
+ .../bindings/input/adc-joystick.yaml          | 121 ++++++++++++++++++
+ 1 file changed, 121 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/adc-joystick.yaml
+
+diff --git a/Documentation/devicetree/bindings/input/adc-joystick.yaml b/Documentation/devicetree/bindings/input/adc-joystick.yaml
+new file mode 100644
+index 000000000000..054406bbd22b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/adc-joystick.yaml
+@@ -0,0 +1,121 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019-2020 Artur Rojek
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/input/adc-joystick.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+			ret = clk_enable(adc->clk);
-+			if (ret) {
-+				dev_err(dev, "Failed to enable clock: %d\n",
-+					ret);
-+				return ret;
-+			}
++title: ADC attached joystick
 +
- 			if (val > JZ_ADC_BATTERY_LOW_VREF) {
- 				ingenic_adc_set_config(adc,
- 						       JZ_ADC_REG_CFG_BAT_MD,
-@@ -142,6 +150,9 @@ static int ingenic_adc_write_raw(struct iio_dev *iio_dev,
- 						       JZ_ADC_REG_CFG_BAT_MD);
- 				adc->low_vref_mode = true;
- 			}
++maintainers:
++  - Artur Rojek <contact@artur-rojek.eu>
 +
-+			clk_disable(adc->clk);
++description: >
++  Bindings for joystick devices connected to ADC controllers supporting
++  the Industrial I/O subsystem.
 +
- 			return 0;
- 		default:
- 			return -EINVAL;
-@@ -312,11 +323,19 @@ static int ingenic_adc_read_avail(struct iio_dev *iio_dev,
- 	};
- }
- 
--static int ingenic_adc_read_chan_info_raw(struct ingenic_adc *adc,
-+static int ingenic_adc_read_chan_info_raw(struct iio_dev *iio_dev,
- 					  struct iio_chan_spec const *chan,
- 					  int *val)
- {
- 	int bit, ret, engine = (chan->channel == INGENIC_ADC_BATTERY);
-+	struct ingenic_adc *adc = iio_priv(iio_dev);
++properties:
++  compatible:
++    const: adc-joystick
 +
-+	ret = clk_enable(adc->clk);
-+	if (ret) {
-+		dev_err(iio_dev->dev.parent, "Failed to enable clock: %d\n",
-+			ret);
-+		return ret;
-+	}
- 
- 	/* We cannot sample AUX/AUX2 in parallel. */
- 	mutex_lock(&adc->aux_lock);
-@@ -325,7 +344,6 @@ static int ingenic_adc_read_chan_info_raw(struct ingenic_adc *adc,
- 		ingenic_adc_set_config(adc, JZ_ADC_REG_CFG_AUX_MD, bit);
- 	}
- 
--	clk_enable(adc->clk);
- 	ret = ingenic_adc_capture(adc, engine);
- 	if (ret)
- 		goto out;
-@@ -342,8 +360,8 @@ static int ingenic_adc_read_chan_info_raw(struct ingenic_adc *adc,
- 
- 	ret = IIO_VAL_INT;
- out:
--	clk_disable(adc->clk);
- 	mutex_unlock(&adc->aux_lock);
-+	clk_disable(adc->clk);
- 
- 	return ret;
- }
-@@ -358,7 +376,7 @@ static int ingenic_adc_read_raw(struct iio_dev *iio_dev,
- 
- 	switch (m) {
- 	case IIO_CHAN_INFO_RAW:
--		return ingenic_adc_read_chan_info_raw(adc, chan, val);
-+		return ingenic_adc_read_chan_info_raw(iio_dev, chan, val);
- 	case IIO_CHAN_INFO_SCALE:
- 		switch (chan->channel) {
- 		case INGENIC_ADC_AUX:
++  io-channels:
++    minItems: 1
++    maxItems: 1024
++    description: >
++      List of phandle and IIO specifier pairs.
++      Each pair defines one ADC channel to which a joystick axis is connected.
++      See Documentation/devicetree/bindings/iio/iio-bindings.txt for details.
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++required:
++  - compatible
++  - io-channels
++  - '#address-cells'
++  - '#size-cells'
++
++additionalProperties: false
++
++patternProperties:
++  "^axis@[0-9a-f]+$":
++    type: object
++    description: >
++      Represents a joystick axis bound to the given ADC channel.
++      For each entry in the io-channels list, one axis subnode with a matching
++      reg property must be specified.
++
++    properties:
++      reg:
++        minimum: 0
++        maximum: 1023
++        description: Index of an io-channels list entry bound to this axis.
++
++      linux,code:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        description: EV_ABS specific event code generated by the axis.
++
++      abs-range:
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/uint32-array
++          - items:
++              - description: minimum value
++              - description: maximum value
++        description: >
++          Minimum and maximum values produced by the axis.
++          For an ABS_X axis this will be the left-most and right-most
++          inclination of the joystick. If min > max, it is left to userspace to
++          treat the axis as inverted.
++          This property is interpreted as two signed 32 bit values.
++
++      abs-fuzz:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        description: >
++          Amount of noise in the input value.
++          Omitting this property indicates the axis is precise.
++
++      abs-flat:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        description: >
++          Axial "deadzone", or area around the center position, where the axis
++          is considered to be at rest.
++          Omitting this property indicates the axis always returns to exactly
++          the center position.
++
++    required:
++      - reg
++      - linux,code
++      - abs-range
++
++    additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/iio/adc/ingenic,adc.h>
++    #include <dt-bindings/input/input.h>
++
++    joystick: adc-joystick {
++      compatible = "adc-joystick";
++      io-channels = <&adc INGENIC_ADC_TOUCH_XP>,
++                    <&adc INGENIC_ADC_TOUCH_YP>;
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      axis@0 {
++              reg = <0>;
++              linux,code = <ABS_X>;
++              abs-range = <3300 0>;
++              abs-fuzz = <4>;
++              abs-flat = <200>;
++      };
++      axis@1 {
++              reg = <1>;
++              linux,code = <ABS_Y>;
++              abs-range = <0 3300>;
++              abs-fuzz = <4>;
++              abs-flat = <200>;
++      };
++    };
 -- 
 2.27.0
 
