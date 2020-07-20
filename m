@@ -2,191 +2,95 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C653C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 05:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FCBC433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 06:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16F3F20758
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 05:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D59DD2176B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 06:12:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MkS0shFE"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OpOzfIAb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgGTFgk (ORCPT
+        id S1726783AbgGTGMk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 01:36:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58044 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgGTFgj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 01:36:39 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE818C0619D2
-        for <devicetree@vger.kernel.org>; Sun, 19 Jul 2020 22:36:39 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id s26so8481692pfm.4
-        for <devicetree@vger.kernel.org>; Sun, 19 Jul 2020 22:36:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=17xC3zHkV5PUpI7z+zPeu3cX7BA+aM3Er4zehoS3ak4=;
-        b=MkS0shFE3ftUVhWnfoXUc5V+S6atgTtJF+ILzCVuPl7dWk9GjKhBSMQR+DKIInroEA
-         Q0DC89HoowRni0/JcTBmWhY3Khw1xm66xuFiFRM2u3jDFOiknyQJka0C+StFEeca27/E
-         Cr6KcH9jU5kCU+/Whd/bL67VQLvgD+eMKbjDuEoxSrnCFH804cHYNfbzsWkGEgY3lRSD
-         dse7igiiuO33+4ibTGyaoqByQzFjxnA27Ir/3jppWH/8ppSvWtgPoIDp9C8h/Fi+rPuh
-         X04HUZqLCuYdNiLEXM7gcqgfRZde3fJTqWt6/3NzFpvaMV1vYw6+kLmx6qi8ZH8ux79w
-         ufRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=17xC3zHkV5PUpI7z+zPeu3cX7BA+aM3Er4zehoS3ak4=;
-        b=HHeMl9SMRvAyTFaMAuOop7+gtJO3V+RMdRs8YmqvxHCY15fKqLgTFbAm+JU0k+xBFp
-         kCKTOvZsgqRikw2lYMRJ1/Ix/9HccfvFGjvS/LLyZMGc07lXn+gKNAb/wbcNLtHhMqTY
-         pSXgiZ0pUuxcXexBRhrhmvTt2+gLHK3UO4Yoqx+qNv+sOMmV9pYJJNANVtGoqBc15EZc
-         hzzCSSKBpLIQrnO/yYdYSfFJM+Yn8uX2g5+fE8Mi6eDqyN3aWuR7g/fFQaNGTMvdOgYk
-         BidF0AC6JLnDRwUPN6Kpal9rVv//j0oM7/Zbb6AhZ5mZI5/nla3jtqmp3YIwRwmI+Dbt
-         G3Hw==
-X-Gm-Message-State: AOAM533tEsE0HUDJCK4INe7xWwjfNQAHMKAYw/j5fydCJVJIohds3Ptg
-        FYO5iPBTqjUgT0PTG7k2O5ij
-X-Google-Smtp-Source: ABdhPJwvvC1me79D5JJyNEBxZZAHQxK1zws8J+BsAgLETk0wPX18DOEZrZF+OpBszSIeFlBylyZk7A==
-X-Received: by 2002:a62:190a:: with SMTP id 10mr18189612pfz.29.1595223399205;
-        Sun, 19 Jul 2020 22:36:39 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6d8b:7b19:7469:2fbc:c3c3:3562])
-        by smtp.gmail.com with ESMTPSA id z2sm15054596pfq.67.2020.07.19.22.36.32
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 19 Jul 2020 22:36:38 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 11:06:29 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Amit Singh Tomar <amittomer25@gmail.com>
-Cc:     andre.przywara@arm.com, afaerber@suse.de, robh+dt@kernel.org,
-        cristian.ciocaltea@gmail.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v7 10/10] arm64: dts: actions: Add uSD support for
- Cubieboard7
-Message-ID: <20200720053628.GA19022@Mani-XPS-13-9360>
-References: <1595180527-11320-1-git-send-email-amittomer25@gmail.com>
- <1595180527-11320-11-git-send-email-amittomer25@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595180527-11320-11-git-send-email-amittomer25@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Mon, 20 Jul 2020 02:12:40 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:42805 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725805AbgGTGMj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Jul 2020 02:12:39 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595225559; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=vqsEmAjv+qRcg2NQ6PB2AlTP521/eX6OgTdveeztlpg=; b=OpOzfIAbFkYdOn5UvEXYFRoKbCQNVI/37LWT9PgONwigIgr+sxpsTJpI9UrjKKwUnsBtEeTD
+ tE0/puCdLXnkRnWYGibEZG8jb/8v65JmJOc9rlorGvLlFrNxC2VZH2UFZmO1d7PMMAiJRB5l
+ ZNahNf93GX173F+NrvVLJKyqZbI=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5f1535d41e603dbb447bb1aa (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 20 Jul 2020 06:12:36
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C2125C4339C; Mon, 20 Jul 2020 06:12:35 +0000 (UTC)
+Received: from kathirav-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kathirav)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 27EFEC433C9;
+        Mon, 20 Jul 2020 06:12:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 27EFEC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kathirav@codeaurora.org
+From:   Kathiravan T <kathirav@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, robh+dt@kernel.org, kathirav@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     sivaprak@codeaurora.org, sricharan@codeaurora.org
+Subject: [PATCH V3 0/4] Add frequency / voltage scaling support for IPQ6018 SoC
+Date:   Mon, 20 Jul 2020 11:42:19 +0530
+Message-Id: <1595225543-12127-1-git-send-email-kathirav@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Jul 19, 2020 at 11:12:07PM +0530, Amit Singh Tomar wrote:
-> This commit adds uSD support for Cubieboard7 board based on Actions Semi
-> S700 SoC. SD0 is connected to uSD slot. Since there is no PMIC support
-> added yet, fixed regulator has been used as a regulator node.
-> 
-> Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
+IPQ6018 SoC uses the PMIC MP5496. SMPA2 and LDOA2 regulator of MP5496
+controls the APSS and SDCC voltage scaling respectively. Add support
+for the same.
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+changes since V2:
+	- Rebased on top of linux-next 20200717 tag
+	- Addressed Rob's comment to drop the 'syscon' node in qcom,smd-rpm.yaml
+	- Picked up the Reviewed-by tag for qcom,smd-rpm-regulator.yaml
+	- Regulator patches part of V2 was picked up by Mark and it's available in linux-next tree
 
-Thanks,
-Mani
+changes since V1:
+	- Moved YAML conversion to the last as per Mark's comments
 
-> ---
-> Changes since v6:
-> 	* Brought back the uSD fixed regulator.
-> Changes since v5:
->         * Removed the Fixed regulators as these are
->           not needed.
-> Changes since v4:
->         * No change.
-> Changes since v3:
->         * No change.
-> Changes since v2:
->         * No change.
-> Changes since v1:
->         * No change.
-> Changes since RFC:
->         * No change.
-> ---
->  arch/arm64/boot/dts/actions/s700-cubieboard7.dts | 33 ++++++++++++++++++++++++
->  arch/arm64/boot/dts/actions/s700.dtsi            |  1 +
->  2 files changed, 34 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-> index 63e375cd9eb4..f81d63261ba2 100644
-> --- a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-> +++ b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-> @@ -13,6 +13,7 @@
->  
->  	aliases {
->  		serial3 = &uart3;
-> +		mmc0 = &mmc0;
->  	};
->  
->  	chosen {
-> @@ -28,6 +29,15 @@
->  		device_type = "memory";
->  		reg = <0x1 0xe0000000 0x0 0x0>;
->  	};
-> +
-> +	/* Fixed regulator used in the absence of PMIC */
-> +	sd_vcc: sd-vcc {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "fixed-3.1V";
-> +		regulator-min-microvolt = <3100000>;
-> +		regulator-max-microvolt = <3100000>;
-> +		regulator-always-on;
-> +	};
->  };
->  
->  &i2c0 {
-> @@ -81,6 +91,14 @@
->  			bias-pull-up;
->  		};
->  	};
-> +
-> +	mmc0_default: mmc0_default {
-> +		pinmux {
-> +			groups = "sd0_d0_mfp", "sd0_d1_mfp", "sd0_d2_d3_mfp",
-> +				 "sd0_cmd_mfp", "sd0_clk_mfp";
-> +			function = "sd0";
-> +		};
-> +	};
->  };
->  
->  &timer {
-> @@ -90,3 +108,18 @@
->  &uart3 {
->  	status = "okay";
->  };
-> +
-> +/* uSD */
-> +&mmc0 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mmc0_default>;
-> +	cd-gpios = <&pinctrl 120 GPIO_ACTIVE_LOW>;
-> +	no-sdio;
-> +	no-mmc;
-> +	no-1-8-v;
-> +	bus-width = <4>;
-> +	vmmc-supply = <&sd_vcc>;
-> +	vqmmc-supply = <&sd_vcc>;
-> +};
-> +
-> diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
-> index 9ed88aafc2da..ba498cf9217d 100644
-> --- a/arch/arm64/boot/dts/actions/s700.dtsi
-> +++ b/arch/arm64/boot/dts/actions/s700.dtsi
-> @@ -4,6 +4,7 @@
->   */
->  
->  #include <dt-bindings/clock/actions,s700-cmu.h>
-> +#include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/power/owl-s700-powergate.h>
->  #include <dt-bindings/reset/actions,s700-reset.h>
-> -- 
-> 2.7.4
-> 
+Kathiravan T (4):
+  dt-bindings: soc: qcom: Add IPQ6018 compatible
+  soc: qcom: smd-rpm: Add IPQ6018 compatible
+  dt-bindings: soc: qcom: convert the SMD-RPM document to YAML schema
+  dt-bindings: regulator: convert QCOM SMD-RPM regulator document to
+    YAML schema
+
+ .../bindings/regulator/qcom,smd-rpm-regulator.txt  | 321 ---------------------
+ .../bindings/regulator/qcom,smd-rpm-regulator.yaml | 106 +++++++
+ .../devicetree/bindings/soc/qcom/qcom,smd-rpm.txt  |  64 ----
+ .../devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml |  87 ++++++
+ drivers/soc/qcom/smd-rpm.c                         |   1 +
+ 5 files changed, 194 insertions(+), 385 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.yaml
+ delete mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
