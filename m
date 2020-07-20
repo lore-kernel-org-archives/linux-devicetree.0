@@ -2,194 +2,117 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B9FC433E6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 13:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 648BDC433F8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 13:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81DFE20729
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 13:12:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n7iU+nx6"
+	by mail.kernel.org (Postfix) with ESMTP id 3BF4B22B4D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 13:38:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595252338;
+	bh=czVg5VP9cic+HNMM9EeJP1WPX3dNun3L9ybH81L69GU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=2rqoaRWz9Iyz1fBY26ry/kBythSdqGypqk3mLns6YY4pyhWArjfJncsJsKDhmwP/E
+	 owAArkMZIKLQncsdZk0OQb64RjwdiWko2q2uVXbobSomn4siuFfw3Db0mp7uYvlUdq
+	 BvQ94y3o59S9wWzmy+XWx29C3QLPRrapU7nP6qO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgGTNMV (ORCPT
+        id S1726437AbgGTNi5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 09:12:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44304 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbgGTNMT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 09:12:19 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28BD6C061794;
-        Mon, 20 Jul 2020 06:12:19 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id s10so17747829wrw.12;
-        Mon, 20 Jul 2020 06:12:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=KqgEqWWYilY633bNavPrC0sTJz/E0BBmplyUh2qxTX4=;
-        b=n7iU+nx6m2JaTjSyRZxLipY4+VOyK0z9FJ21EzSa1l5XRRGslLe9mKBhf5pQvZ03aR
-         TlDF8hnaC3qlu+UA8RWScCa/vJk13mTt158+VQjuwdm0JGuU3oR8aoUOQGY8ZIcTn2ua
-         aQTArKxf9SCVDlglKr4SzoMheyhz11IfhIHXRnxHGAIu1qT+4BcQFQIreajbf8OtaOCp
-         SeRfvskHeCuaetVAHQPPpRGdTpr4nfW6k6QsRR+tvTFifbsKgGfPtkxOPf7wNSShsf7D
-         gRG2p9k653EAmS6Jwxj8ZK7avc6xBYJe/p/Pqru6BkJkS0MbuCXWO1S7/LeJtkHtl2tZ
-         xdvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KqgEqWWYilY633bNavPrC0sTJz/E0BBmplyUh2qxTX4=;
-        b=mKDwchPdy4EDAe5VbkmwrYBMEzwi/O416BlHL2jpgoTISellpBEYBwTRqZN522947l
-         NmcR35zgFxhgcek+HvArK3HhVR0+zOhUG8bwsnwcdebvZ1/xDUhg4+gfzMm6skV6U77J
-         gC/758ghtu+O5qxavdfSUCRgxGpy6Yxe0VyYjG3iQ/uONWmcgP7ezDqszO6hbFYBvjQo
-         KCoPMsJxn0CL6ikLWZkx84CobE2FlvN68vmJRrVw4/aWP/ejsSNmQp2owbxNS9zzRcBB
-         zd45oD8cP/CdZP1p/5PM/WSajorMNeDIl6o1UI+4pQL0shUv6dPR2ZVnkhyKcQoVtWaA
-         /Oew==
-X-Gm-Message-State: AOAM533NF2WCIW2ma1RtDvvmhl4BBVVDgfIlsxGNO1Cxd5gbhiAbR8jr
-        u61QhIn3Mcp/eTtalJMH3oI=
-X-Google-Smtp-Source: ABdhPJyNfds8vvKHsKQWyUI/6Vmg4+HcKyFdg4KO5sHFaK7JF2p7cBVPf6R9Z3ajU88I6EHSu9NZaw==
-X-Received: by 2002:a5d:6386:: with SMTP id p6mr21968326wru.417.1595250737763;
-        Mon, 20 Jul 2020 06:12:17 -0700 (PDT)
-Received: from skynet.lan (67.red-88-15-120.dynamicip.rima-tde.net. [88.15.120.67])
-        by smtp.gmail.com with ESMTPSA id j24sm2725293wrb.49.2020.07.20.06.12.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 06:12:17 -0700 (PDT)
-From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-To:     jonas.gorski@gmail.com, kishon@ti.com, vkoul@kernel.org,
-        robh+dt@kernel.org, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
-        krzk@kernel.org, gregkh@linuxfoundation.org, alcooperx@gmail.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-Subject: [PATCH v8 1/2] dt-bindings: phy: add bcm63xx-usbh bindings
-Date:   Mon, 20 Jul 2020 15:12:08 +0200
-Message-Id: <20200720131209.1236590-2-noltari@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200720131209.1236590-1-noltari@gmail.com>
-References: <20200720131209.1236590-1-noltari@gmail.com>
+        Mon, 20 Jul 2020 09:38:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59384 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725936AbgGTNi5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Jul 2020 09:38:57 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC63422CAF;
+        Mon, 20 Jul 2020 13:38:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595252336;
+        bh=czVg5VP9cic+HNMM9EeJP1WPX3dNun3L9ybH81L69GU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=jITVCBjAUt2cPaPDVBBKtC66dsFGpZkRHHVtvGaHcFY4mt6+CHsnnrq3FPq5A9yIy
+         QSrH4PalL86AcHlQ0uBw9M1q1ba3oTJFUaNx7ey77ZGUdVR5a8YPFbKcWSa0LjW9lZ
+         wd+QY+Wx460OdY9EMF3JvTwKUcDtaTdJ/Hdbdbec=
+Date:   Mon, 20 Jul 2020 14:38:51 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Kamel Bouhara <kamel.bouhara@bootlin.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH v6 0/5] Microchip TCB Capture driver
+Message-ID: <20200720143851.2fced464@archlinux>
+In-Reply-To: <20200715213003.GD23553@piout.net>
+References: <20200706114347.174452-1-kamel.bouhara@bootlin.com>
+        <20200712143534.278ea3c7@archlinux>
+        <20200715213003.GD23553@piout.net>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document BCM63xx USBH PHY bindings.
+On Wed, 15 Jul 2020 23:30:03 +0200
+Alexandre Belloni <alexandre.belloni@bootlin.com> wrote:
 
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
----
- v8: no changes.
- v7: introduce changes suggested by Rob:
-  - Move clock conditions to the main section.
-  - Set missing additionalProperties to false.
- v6: introduce changes suggested by Rob:
-  - Add another if case to device tree binding for SoCs with just 1 clock.
-  - Ignored "additionalProperties: false" suggestion since it triggers a
-    warning. This has been reported, but I haven't received any answer yet.
- v5: no changes.
- v4: conditionally require 1/2 clocks and fix clock/reset values.
- v3: no changes.
- v2: phy-cells changed to 1.
+> Hi Jonathan,
+> 
+> On 12/07/2020 14:35:34+0100, Jonathan Cameron wrote:
+> > On Mon,  6 Jul 2020 13:43:42 +0200
+> > Kamel Bouhara <kamel.bouhara@bootlin.com> wrote:
+> >   
+> > > Hello,
+> > > 
+> > > Here is a new counter driver to support Microchip TCB capture devices.
+> > > 
+> > > Each SoC has two TCB blocks, each one including three independent
+> > > channels.The following series adds support for two counter modes:
+> > > increase and quadrature decoder.
+> > > 
+> > > As for the atmel clocksource and pwm, the counter driver needs to fill
+> > > some tcb capabilities in order to operate with the right configuration.
+> > > This is achieved in first patch of this series.
+> > > 
+> > > Please feel free to comment.  
+> > 
+> > As far as I can see we have all the necessary acks etc and it looks
+> > good to me as well.
+> > 
+> > Shall I do an immutable branch with the whole lot or should we split it
+> > up?  Patches 1 and 5 need to go through the same tree, but bindings
+> > could go via another route.  I'm also fine if the whole lot goes
+> > via the appropriate soc tree if that is easier.
+> >   
+> 
+> I think the best would be an immutable branch as I have another series
+> that depends on the three preliminary patches that should go through the
+> clocksource/tip tree this cycle:
+> 
+> https://lore.kernel.org/linux-arm-kernel/20200710230813.1005150-1-alexandre.belloni@bootlin.com/
+I've pushed applied the patches to an immutable branch
+https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git/log/?h=ib-5.8-tcb
+and merged that into the togreg branch of iio.git which is pushed out as testing or
+the autobuilders to play with it.
 
- .../bindings/phy/brcm,bcm63xx-usbh-phy.yaml   | 79 +++++++++++++++++++
- 1 file changed, 79 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml
+Thanks,
 
-diff --git a/Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml b/Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml
-new file mode 100644
-index 000000000000..9a2e779e6d38
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml
-@@ -0,0 +1,79 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/phy/brcm,bcm63xx-usbh-phy.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: BCM63xx USBH PHY
-+
-+maintainers:
-+  - Álvaro Fernández Rojas <noltari@gmail.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - brcm,bcm6318-usbh-phy
-+      - brcm,bcm6328-usbh-phy
-+      - brcm,bcm6358-usbh-phy
-+      - brcm,bcm6362-usbh-phy
-+      - brcm,bcm6368-usbh-phy
-+      - brcm,bcm63268-usbh-phy
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - const: usbh
-+      - const: usb_ref
-+
-+  resets:
-+    maxItems: 1
-+
-+  "#phy-cells":
-+    const: 1
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - resets
-+  - "#phy-cells"
-+
-+if:
-+  properties:
-+    compatible:
-+      enum:
-+        - brcm,bcm6318-usbh-phy
-+        - brcm,bcm6328-usbh-phy
-+        - brcm,bcm6362-usbh-phy
-+        - brcm,bcm63268-usbh-phy
-+then:
-+  properties:
-+    power-domains:
-+      maxItems: 1
-+  required:
-+    - power-domains
-+else:
-+  properties:
-+    power-domains: false
-+
-+examples:
-+  - |
-+    usbh: usb-phy@10001700 {
-+      compatible = "brcm,bcm6368-usbh-phy";
-+      reg = <0x10001700 0x38>;
-+      clocks = <&periph_clk 15>;
-+      clock-names = "usbh";
-+      resets = <&periph_rst 12>;
-+      #phy-cells = <1>;
-+    };
--- 
-2.27.0
+Jonathan
+
+> 
+> 
 
